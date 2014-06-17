@@ -265,4 +265,33 @@ class MemberPage extends PageWithActiveSkin
     {
 /*        $this->__call('teaserContent', array()); */
     }
+
+    /*
+     * @return HTML snippet with a form to select the status of a user
+     */
+    public function statusForm($member)
+    {
+        $form = '';
+        if ($this->statuses) {
+            $layoutkit = $this->layoutkit;
+            $formkit = $layoutkit->formkit;
+            $callbackTags = $formkit->setPostCallback('MembersController', 'setStatusCallback');
+            if (($logged_member = $this->model->getLoggedInMember()) && $logged_member->hasOldRight(array('Admin' => '', 'SafetyTeam' => '', 'Accepter' => '', 'Profile' => ''))) {
+                $form .= '<div><form method="post" name="member-status" id="member-status">' . $callbackTags;
+                $form .= '<input type="hidden" name="member-id" value="' . $member->id . '">';
+                $form .= '<select name="new-status">';
+                foreach ($this->statuses as $status) {
+                    $form .= '<option value="' . $status . '"';
+                    if ($status == $member->Status) {
+                        $form .= ' selected="selected"';
+                    }
+                    $form .= '>' . $this->words->getSilent('MemberStatus' .
+                            $status) . '</option>';
+                }
+                $form .= '</select>&nbsp;&nbsp;<input type="submit" value="Submit"/>';
+                $form .= '</form>' . $this->words->FlushBuffer() . '</div>';
+            }
+        }
+        return $form;
+    }
 }

@@ -121,7 +121,8 @@ class MembersController extends RoxControllerBase
 
         $adminMember = false;
         $rights_self = $member_self->getOldRights();
-        if (in_array("SafetyTeam", array_keys($rights_self)) || in_array("Admin", array_keys($rights_self)))
+        if (in_array("SafetyTeam", array_keys($rights_self)) || in_array("Admin", array_keys($rights_self))
+            || in_array("Profile", array_keys($rights_self)))
         {
             $adminMember = true;
         }
@@ -377,6 +378,7 @@ class MembersController extends RoxControllerBase
                                 $page = new InactiveProfilePage();
                             } else {
                                 $page = new ProfilePage();
+                                $page->statuses = $this->model->getStatuses();
                             }
 
                             break;
@@ -387,6 +389,7 @@ class MembersController extends RoxControllerBase
                             } else {
                                 $page = new ProfilePage();
                                 $this->model->set_profile_language($request[2]);
+                                $page->statuses = $this->model->getStatuses();
                             }
                             break;
                     }
@@ -1013,4 +1016,26 @@ class MembersController extends RoxControllerBase
         $page->member = $member;
         return $page;
     }
+
+    /**
+     * setStatusCallback
+     *
+     * @param Object $args
+     * @param Object $action
+     * @param Object $mem_redirect memory for the page after redirect
+     * @param Object $mem_resend memory for resending the form
+     * @return string relative request for redirect
+     */
+    public function setStatusCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect,
+                      ReadWriteObject $mem_resend)
+    {
+        $vars = $args->post;
+        $success = $this->model->setStatus($vars['member-id'], $vars['new-status']);
+        if ($success) {
+            $this->setFlashNotice('Changed status');
+        }
+        return true;
+    }
+
+
 }

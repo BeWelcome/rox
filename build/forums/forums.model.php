@@ -510,7 +510,7 @@ WHERE
         'AS' => 'Asia',
         'EU' => 'Europe',
         'NA' => 'North America',
-        'SA' => 'South Amercia',
+        'SA' => 'South America',
         'OC' => 'Oceania'
     );
 

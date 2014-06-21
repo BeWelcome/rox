@@ -28,17 +28,7 @@ jQuery.widget( "custom.catcomplete", jQuery.ui.autocomplete, {
     }
 });
 
-function enableMultiSelect() {
-    jQuery(".multiselect").multiselect( {
-        checkAllText: checkAllTextTranslation,
-        uncheckAllText: uncheckAllTextTranslation,
-        noneSelectedText: noneSelectedTextTranslation,
-        selectedText: selectedTextTranslation
-    } );
-}
-
 jQuery(function() {
-    enableMultiSelect();
     jQuery( "#search-location" ).on( "keydown", function( event ) {
 		jQuery( "#search-geoname-id" ).val( 0 );
 	});

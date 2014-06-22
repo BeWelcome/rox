@@ -8,12 +8,13 @@ class GalleryImagesCreator extends ImagesCreator
      * @param integer $limit Maximum number of images to be created
      * @return array Queryresult
      **/
-    protected function getImageRecords($limit)
+    protected function getImageRecords($limit, $startId = null)
     {
         $sSql = '
 SELECT id picid, user_id_foreign id, `file` name, mimetype, width, height
-FROM gallery_items
-ORDER BY user_id_foreign ASC ' . $this->getLimitText($limit);
+FROM gallery_items '.
+$this->getStartingPointText($startId) . '
+ORDER BY picid ASC ' . $this->getLimitText($limit);
         return $this->db->selectQuery($sSql);
     }
 
@@ -27,6 +28,22 @@ ORDER BY user_id_foreign ASC ' . $this->getLimitText($limit);
     {
         $dummy = new GalleryDummyImage($pic);
         $this->imgCount += $dummy->filesMake();
+    }
+
+    /**
+    * Check if a starting-id id given and create code for that
+    *
+    * @access protected
+    * @param integer $startId Itemid that was previously the last one to be processed
+    * @return string Sql code to limit results
+    **/
+    protected function getStartingPointText($startId)
+    {
+        if ($startId !== null){
+            return 'WHERE id > ' . (int)$startId;
+        } else {
+            return '';
+        }
     }
 
     /**

@@ -1,14 +1,17 @@
 <?php
 
+
 class ImagesCreator
 {
     public $db; // instance of DatabaseController
     public $imgCount; // number of produced images
+    public $lastId = array(); // start id's defined in status.csv
     
     public function __construct()
     {
         $this->getDB();
         $this->imgCount = 0;
+        $this->getStatus();
     }
 
     /**
@@ -19,38 +22,102 @@ class ImagesCreator
      **/    
     public function getImages($limit = null)
     {
+        $limit = $this->getLimit();
+        $lastId = $this->getLastId();
         $t1 = time();
-        $this->createImages($limit);
+        $this->lastId[$this->getType()] = $this->createImages($limit,$lastId);
         $t2 = time();
         $this->displayResult($t2-$t1);
+        $this->writeLastId();
     }
 
     /**
-     * Retrieve limit from URL
+     * Retrieve limit from URL or cli
      *
      * Limit is to be defined as a url paramater, <type>=<number>
+     * or a cli parameter, --<type>=<number>
      * where type is one of the relevant types, <number> is the maximum number
      * of imagesets that will be created
+     * 'max' can be used as a value to indicate there's no limit
      *
-     * @access public
+     * @access protected
      * @return integer|boolean Number of images to be created as a maximum, false if no limit applies
      **/
-    public function getLimit()
+    protected function getLimit()
     {
         $type = $this->getType();
         
+        // get variables from cli, in case it is run through there
+        $cliOption = getopt('',array($type . '::'));
+        
+        if (isset($_GET[$type])){
+            $limitVar = $_GET[$type];
+        } elseif (isset($cliOption[$type])){
+            $limitVar = $cliOption[$type];            
+        } else {
+            $limitVar = '';
+        }
+        
         // default to zero, if parameter is omitted or empty
-        if (!isset($_GET[$type]) || $_GET[$type] === ''){
+        if ($limitVar === ''){
             return 0;
         }
         
         // no limit if value 'max' is given
-        if (strtolower($_GET[$type]) === 'max'){
+        if (strtolower($limitVar) === 'max'){
             return false;
         }
         
         // use limit as given in URL
-        return (int)$_GET[$type];
+        return (int)$limitVar;
+    }
+
+    /**
+     * Read status.csv
+     *
+     * @access protected
+     **/    
+    protected function getStatus()
+    {
+        if (is_readable('status.csv')){
+            if (($handle = fopen('status.csv', 'r')) !== false) {
+                while (($data = fgetcsv($handle, 1000, ",")) !== false) {
+                    $this->lastId[$data[0]] = $data[1];
+                }
+            }
+        fclose($handle);
+        }
+    }
+
+    /**
+     * Get the last previously processed item for this type
+     *
+     * @access protected
+     **/    
+    protected function getLastId(){
+        $type = $this->getType();
+        if (isset($this->lastId[$type]))
+        {
+            return (int)$this->lastId[$type];
+        }
+        return 0;
+    }
+
+    /**
+     * Write new value to status.csv
+     *
+     * @access protected
+     **/    
+    protected function writeLastId()
+    {
+        $type = $this->getType();
+        $handle = fopen('status.csv', 'w');
+        foreach ($this->lastId as $key => $val){
+            if ($val>0){
+                fputcsv($handle,array($key,$val));
+            }
+        }
+        fclose($handle);
     }
     
     /**
@@ -59,11 +126,14 @@ class ImagesCreator
      * @param integer $limit Number of items to be created maximum
      * @access protected
      **/    
-    protected function createImages($limit)
+    protected function createImages($limit,$startId)
     {
-        foreach ($this->getImageRecords($limit) as $pic){
+        $lastId = $startId;
+        foreach ($this->getImageRecords($limit,$startId) as $pic){
             $this->getDummyImage($pic);
+            $lastId = $pic['picid'];
         }
+        return $lastId;
     }
     
     /**
@@ -78,7 +148,7 @@ class ImagesCreator
             (int)$this->imgCount.' '.
             $this->getType().'images.'.
             ($time>1?' ('.(int)($this->imgCount/$time).' imgs/sec)':'').
-            '<br>';
+            '<br>'.PHP_EOL;
     }
 
     /**
@@ -106,4 +176,5 @@ class ImagesCreator
             return '';
         }
     }
+
 }

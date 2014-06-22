@@ -9,6 +9,7 @@ htdocs/.htaccess
 htdocs/update_status.txt
 htdocs/revision.txt
 htdocs/cache/
+tools/testenv/images/status.csv
 revision.txt
 .buildpath
 .project

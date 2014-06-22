@@ -8,7 +8,7 @@ class GroupImagesCreator extends ImagesCreator
      * @param integer $limit Maximum number of images to be created
      * @return array Queryresult
      **/
-    protected function getImageRecords($limit)
+    protected function getImageRecords($limit, $startId = null)
     {
         $sSql = '
 SELECT id,Picture name

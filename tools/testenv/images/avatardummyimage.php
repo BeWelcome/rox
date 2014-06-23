@@ -12,7 +12,7 @@ class AvatarDummyImage extends DummyImage
      **/
     public function __construct($data)
     {
-        $this->id = $data['id'];
+        $this->id = $data['picid'];
         $this->name = $data['name'];
         $this->setImageDir();
         $this->size = getimagesize(STATIC::BASEIMAGE);

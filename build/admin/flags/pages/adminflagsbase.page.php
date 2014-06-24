@@ -67,9 +67,9 @@ class AdminFlagsBasePage extends AdminBasePage
             if ($current == $flag->id) {
                 $select .= ' selected="selected"';
             }
-            $select .= '>' . $flag->Name . '</option>';
+            $select .= '>' . $this->getWords()->getSilent('AdminFlags' . $flag->Name) . '</option>';
         }
-        $select .= '</select>';
+        $select .= '</select>' . $this->getWords()->FlushBuffer();
         return $select;
     }
 

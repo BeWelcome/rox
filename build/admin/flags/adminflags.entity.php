@@ -42,6 +42,7 @@ class Flag extends RoxEntityBase
             WHERE
                 fm.IdFlag = " . $this->id . "
                 AND fm.IdMember = " . $member->id . "
+                AND fm.Level <> 0
             ";
         return $this->singleLookup($query);
     }

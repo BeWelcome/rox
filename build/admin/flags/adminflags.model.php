@@ -68,8 +68,8 @@ class AdminFlagsModel extends RoxModelBase {
                 IdMember = '" . $member->id . "',
                 Scope = '" . $this->dao->escape($vars['scope']) . "',
                 Level = '" . $this->dao->escape($vars['level']) . "',
-				Comment = '" . $this->dao->escape($vars['comment']) . "',
-				created = NOW()";
+                Comment = '" . $this->dao->escape($vars['comment']) . "',
+                created = NOW()";
         $this->dao->query($query);
     }
 
@@ -107,6 +107,7 @@ class AdminFlagsModel extends RoxModelBase {
         $query .= '
                 AND fm.IdMember = m.id
                 AND fm.IdFlag = f.id
+                AND f.Relevance <> 0
                 AND m.IdCity = g.geonameid
                 AND g.country = gc.country ';
         if (!$includeLevelZero) {
@@ -114,6 +115,7 @@ class AdminFlagsModel extends RoxModelBase {
         }
         $query .= '
             ORDER BY
+                f.Relevance DESC,
                 m.Username,
                 f.Name
             ';
@@ -169,18 +171,21 @@ class AdminFlagsModel extends RoxModelBase {
             WHERE
                 m.Status in (' . Member::ACTIVE_ALL . ')
                 AND fm.IdMember = m.id
-                AND fm.IdFlag = f.id';
+                AND fm.IdFlag = f.id
+                AND f.Relevance <> 0';
         if ($flagId) {
             $query .= ' AND f.id = ' . $flagId;
         }
         $query .= '
                 AND m.IdCity = g.geonameid
-                AND g.country = gc.country ';
+                AND g.country = gc.country
+                ';
         if (!$includeLevelZero) {
             $query .= ' AND fm.Level <> 0';
         }
         $query .= '
             ORDER BY
+                f.Relevance DESC,
                 f.Name,
                 m.Username
             ';
@@ -214,16 +219,19 @@ class AdminFlagsModel extends RoxModelBase {
      * @return array list of flags
      */
     public function getFlags($memberFlagsOnly = false, $member = false) {
-		$query = "
+        $query = "
             SELECT
                 *
             FROM
-                flags";
-		if ($memberFlagsOnly) {
+                flags f
+            WHERE
+                f.Relevance <> 0";
+        if ($memberFlagsOnly) {
         }
-		$query .= "
-			ORDER BY
-                Name
+        $query .= "
+            ORDER BY
+                f.Relevance DESC,
+                f.Name
             ";
         $memberFlags = array();
         if ($member) {
@@ -252,15 +260,15 @@ class AdminFlagsModel extends RoxModelBase {
         $member = $temp->findByUsername($vars['username']);
         $query = "
             UPDATE
-                flagsmembers
+                flagsmembers fm
             SET
-                Level = '" . $this->dao->escape($vars['level']) . "',
-                Scope = '" . $this->dao->escape($vars['scope']) . "',
-                Comment = '" . $this->dao->escape($vars['comment']) . "',
-                Updated = NOW()
+                fm.Level = '" . $this->dao->escape($vars['level']) . "',
+                fm.Scope = '" . $this->dao->escape($vars['scope']) . "',
+                fm.Comment = '" . $this->dao->escape($vars['comment']) . "',
+                fm.Updated = NOW()
             WHERE
-                IdMember = " . $member->id . "
-                AND IdFlag = " . $this->dao->escape($vars['flagid']) . "
+                fm.IdMember = " . $member->id . "
+                AND fm.IdFlag = " . $this->dao->escape($vars['flagid']) . "
             ";
         $this->dao->query($query);
         return true;
@@ -282,15 +290,15 @@ class AdminFlagsModel extends RoxModelBase {
             . date('Y-m-d');
         $query = "
             UPDATE
-                flagsmembers
+                flagsmembers fm
             SET
-                Level = '0',
-                Scope = '" . $this->dao->escape($vars['scope']) . "',
-                Comment = '" . $this->dao->escape( $comment ) . "',
-                Updated = NOW()
+                fm.Level = '0',
+                fm.Scope = '" . $this->dao->escape($vars['scope']) . "',
+                fm.Comment = '" . $this->dao->escape( $comment ) . "',
+                fm.Updated = NOW()
             WHERE
-                IdMember = " . $member->id . "
-                AND IdFlag = " . $this->dao->escape($vars['flagid']) . "
+                fm.IdMember = " . $member->id . "
+                AND fm.IdFlag = " . $this->dao->escape($vars['flagid']) . "
             ";
         $this->dao->query($query);
         return true;
@@ -316,6 +324,9 @@ class AdminFlagsModel extends RoxModelBase {
         if (empty($vars['description'])) {
             $errors[] = 'AdminFlagsDescriptionEmpty';
         }
+        if (empty($vars['relevance'])) {
+            $errors[] = 'AdminFlagsRelevance';
+        }
         return $errors;
     }
 
@@ -325,7 +336,9 @@ class AdminFlagsModel extends RoxModelBase {
                 flags
             SET
                 `Name` = '" . $this->dao->escape($vars['name']) . "',
-                `Description` = '" . $this->dao->escape($vars['description']) . "'";
+                `Description` = '" . $this->dao->escape($vars['description']) . "',
+                `Relevance` = '100'
+             ";
         $this->dao->query($query);
 
         return true;

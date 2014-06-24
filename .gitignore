@@ -14,3 +14,6 @@ revision.txt
 .buildpath
 .project
 .idea
+
+/vendor/*
+composer.lock

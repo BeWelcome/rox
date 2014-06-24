@@ -28,7 +28,7 @@ Download
 
       $ git clone git://gitorious.org/bewelcome/rox.git
 
-  2. Done. For a fist look a simple read-only clone will do. See
+  2. Done. For a first look a simple read-only clone will do. See
      http://trac.bewelcome.org/wiki/Download for more details on branches and
      pushing code.
 
@@ -71,6 +71,12 @@ Create files and set permissions
           pthacks/autoload.cache.ini \
           build/alias.cache.ini \
           htdocs/exception.log
+
+  5. Get composer (getcomposer.org) if you don't have it already.
+
+  Install the rox dependencies for
+
+  php composer.phar install
 
 
 Database installation
@@ -122,7 +128,25 @@ Database installation
   7. Remove dumps and other files:
 
       $ rm bewelcome.sql languages.sql words.sql allCountries.txt alternateNames.txt iso-languagecodes.txt allCountries.zip alternateNames.zip countryInfo.txt
+	  
+  8. Migrate the DB to the latest version
+  
+    If you use another DB than bewelcome update the testing section of phinx.yml to match with your DB name.
 
+    In this case call 
+	    
+		git update-index --assume-unchanged phinx.yml
+	
+	to avoid unintended commits to the repository for this file.
+	
+    Now run the migration
+	
+        vendor/bin/phinx migrate
+
+    (Note this is most useful if you switch to the development branch beforehand
+	
+	   git checkout origin develop)
+	
 Configure Apache
 ----------------
 

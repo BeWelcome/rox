@@ -281,11 +281,10 @@ class ForumNotificationMailbot extends Mailbot
                 posts_notificationqueue.*,
                 Username
             FROM
-                posts_notificationqueue,
-                members
+                posts_notificationqueue
+            RIGHT JOIN members ON posts_notificationqueue.IdMember = members.id  AND
+                (members.Status = 'Active' OR members.Status = 'ActiveHidden')
             WHERE
-                posts_notificationqueue.IdMember = members.id  AND
-                (members.Status = 'Active' OR members.Status = 'ActiveHidden')  AND
                 posts_notificationqueue.Status = 'ToSend' AND
                 (posts_notificationqueue.created < subtime(now(), sec_to_time($grace_period *60)) OR NOT
                 (posts_notificationqueue.Type = 'newthread' OR

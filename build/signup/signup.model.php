@@ -130,17 +130,16 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
     public function takeCareForNonUniqueEmailAddress($email)
     {
         $email = str_replace("@", "%40", $email);
-        $query = '
+        $query = "
 SELECT `Username`, members.`Status`, members.`id` AS `idMember`
-FROM `members`, '. PVars::getObj('syshcvol')->Crypted .'`cryptedfields`
-WHERE members.`id` = cryptedfields.`IdMember`';
+FROM " . PVars::getObj('syshcvol')->Crypted . "`cryptedfields`
+RIGHT JOIN `members` ON members.`id` = cryptedfields.`IdMember`";
         if (isset($_SESSION['IdMember'])) {
         $query .= '
 AND members.`id`!=' . $_SESSION['IdMember']
 ; }
-        $query .= '
-AND `AdminCryptedValue` = \'<admincrypted>' . $email .'</admincrypted>\''
-;
+        $query .= "
+    WHERE `AdminCryptedValue` = '<admincrypted>" . $email . "</admincrypted>'";
 
         $s = $this->dao->query($query);
         if ($s->numRows() == 0) {

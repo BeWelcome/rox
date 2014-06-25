@@ -340,6 +340,4 @@ switch (GetParam("action")) {
 
 }
 
-
-// 			sql_query("update groups set NbChilds=(select count(*) from groupshierarchy where IdGroupParent=groups.id");
 ?>

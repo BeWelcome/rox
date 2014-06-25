@@ -48,7 +48,7 @@ class BootstrapMemberPage extends PageWithActiveSkin
         $layoutkit = $this->layoutkit;
         $formkit = $layoutkit->formkit;
         $words = $layoutkit->getWords();
-        require(BUILD_DIR .'members/templates/bootstrapmembersteaser.php');
+        $this->__call('teaserContent', array());
     }
     
     protected function getSubmenuItems()
@@ -163,11 +163,6 @@ class BootstrapMemberPage extends PageWithActiveSkin
     }
 
     protected function submenu() {
-    }
-
-    protected function teaserReplacement() {
-        $this->__call('teaserContent', array());
-        //parent::submenu();
     }
 
     protected function getStylesheets() {

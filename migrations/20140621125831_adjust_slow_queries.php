@@ -2,7 +2,13 @@
 
 use Phinx\Migration\AbstractMigration;
 
-// Ticket #2216
+/************************************************
+ * Class AdjustSlowQueries
+ *
+ * Adjusts some indices to reduce the number of slow queries
+ *
+ * See ticket: #2216
+ */
 class AdjustSlowQueries extends AbstractMigration
 {
     /**
@@ -34,7 +40,7 @@ class AdjustSlowQueries extends AbstractMigration
     {
         $table = $this->table('messages');
         $table->removeIndex(array("DeleteRequest"));
-        $table->removeIndex(array("WWhenFirstRead"));
+        $table->removeIndex(array("WhenFirstRead"));
 
         $table = $this->table('forums_posts');
         $table->removeIndex(array("PostVisibility"))

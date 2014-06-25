@@ -36,7 +36,7 @@ class DropObsoleteDbItems1 extends AbstractMigration
             'cal_event_to_tag','cal_eventdata','cal_events','cal_tags',
             'chat_messages','chat_room_moderators','chat_rooms','chat_rooms_members',
             'comments_ofthemomment_votes',
-            'counters_cities_nbmembers','counters_regions_nbcities','counters_regions_nbmembers',
+            'counters_cities_nbmembers','counters_regions_nbmembers',
             'geo_location','geo_usage_before_jyh_touch_it',
             'groups_locations','groupshierarchy',
             'localvolmessages','localvolmessages_location',
@@ -177,13 +177,6 @@ CREATE TABLE `counters_cities_nbmembers` (
   `IdCity` int(11) NOT NULL DEFAULT '0' COMMENT 'This is the id of the corresponding city in the cities view table',
   `NbMembers` int(11) NOT NULL DEFAULT '0' COMMENT 'Current number of members in this city (redudancy, it is computed)',
   PRIMARY KEY (`IdCity`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='OBSOLETE'
-                        ");
-        $this->execute("
-CREATE TABLE `counters_regions_nbcities` (
-  `IdRegion` int(11) NOT NULL DEFAULT '0' COMMENT 'This is the id of the corresponding region in the regions view table',
-  `NbCities` int(11) NOT NULL DEFAULT '0' COMMENT 'Current number of cities in this region (redudancy, it is computed)',
-  PRIMARY KEY (`IdRegion`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='OBSOLETE'
                         ");
         $this->execute("

@@ -1221,6 +1221,10 @@ WHERE `postid` = $this->messageId
                     $vars['PostVisibility'] = $vars['ThreadVisibility'];
                 }
 
+                if (!isset($vars['PostVisibility'])) {
+                    $vars['PostVisibility'] = 'MembersOnly';
+                }
+
                 $this->editPost($vars, $User->getId());
                 if ($is_topic) {
                     $this->editTopic($vars, $postinfo->threadid);

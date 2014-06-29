@@ -226,8 +226,7 @@ class ForumsController extends PAppController
             $this->_view->rules();
         }
         else if ($this->action == self::ACTION_NEW) {
-            if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if teh user has right for this, 
-                if not rough exit
+            if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if teh user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowedToPostInForum","FlagEvent") ;
                 die("You can't do this because you are not allowed to post in Forum (Flag NotAllowedToPostInForum)") ;
             }

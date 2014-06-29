@@ -101,7 +101,6 @@ bwrox.selectScripts([
         // JQuery has to be included before prototype to avoid conflicts
     min: true,
     file: "jquery-1.11.0.js",
-            "admin/flags",
     },
     {
         // complete jquery ui with theme smoothness

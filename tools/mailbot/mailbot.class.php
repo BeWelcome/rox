@@ -223,7 +223,8 @@ class MassMailbot extends Mailbot
     {
         $qry = $this->_getMessageList();
         while ($msg = $qry->fetch(PDB::FETCH_OBJ)) {
-            $Email = GetEmail($msg->IdReceiver);
+            $receiver = new Member($msg->IdReceiver);
+            $email = $receiver->get_email();
             $language = GetDefaultLanguage($msg->IdReceiver);
             $subj = $this->words->getFormattedInLang("BroadCast_Title_".$msg->word, $language, $msg->Username);
             $text = $this->words->getFormattedInLang("BroadCast_Body_".$msg->word, $language, $msg->Username);
@@ -236,7 +237,11 @@ class MassMailbot extends Mailbot
             } else {
                 $sender_mail=$msg->EmailFrom ;
             }
-            if (!$this->sendEmail($subj, $sender_mail, $Email, $subj, $text, $language)) {
+            $memberPrefersHtml = true;
+            if ($receiver->getPreference('PreferenceHtmlMails') == 'No') {
+                $memberPrefersHtml = false;
+            }
+            if (!$this->sendEmail($subj, $sender_mail, $email, $subj, $text, $language, $memberPrefersHtml)) {
                 $this->_updateMessageStatus($msg->IdBroadcast, 'Failed', $msg->IdReceiver);
                 $this->log("Cannot send broadcastmessages.id=#" . $msg->IdBroadcast . " to <b>".$msg->Username."</b> \$Email=[".$Email."] Type=[".$msg->broadcast_type."]", "mailbot");
             } else {
@@ -492,7 +497,12 @@ class ForumNotificationMailbot extends Mailbot
             if (empty($to)) {
                 continue;
             }
-            if (!$this->sendEmail($msg['subject'], $from, $to, $msg['subject'], $msg['body'], $MemberIdLanguage)) {
+            $memberPrefersHtml = true;
+            if ($recipient->getPreference('PreferenceHtmlMails') == 'No') {
+                $memberPrefersHtml = false;
+            }
+            if (!$this->sendEmail($msg['subject'], $from, $to, $msg['subject'], $msg['body'], $MemberIdLanguage,
+                $memberPrefersHtml)) {
                 $this->_updateNotificationStatus($notification->id, 'Failed');
                 $this->log("Could not send posts_notificationqueue=#" . $notification->id . " to <b>".$post->Username."</b> \$Email=[".$Email."]", "mailbot");
             } else {

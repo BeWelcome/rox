@@ -141,36 +141,32 @@ class MOD_mail
             //Set the To addresses with an associative array
             ->setTo($to);
 
-        // Translate footer text (used in HTML template)
-        $words = new MOD_words();
-        $footer_message = $words->getPurified('MailFooterMessage', array(date('Y')), $language);
-
-        // Using a html-template
-        ob_start();
-        require SCRIPT_BASE . 'templates/shared/mail_html.php';
-        $mail_html = ob_get_contents();
-        ob_end_clean();
+        // Purify HTML. Only allow tags that are alowed in forum posts (biggest set anyway).
+        $purifier = MOD_htmlpure::get()->getForumsHtmlPurifier();
+        $body = $purifier->purify($body);
 
         require_once SCRIPT_BASE . '/modules/mail/lib/html2text.php';
-        $h2t = new Html2Text($mail_html);
-        $mail_plain = $h2t->get_text();
-        $message->setBody($mail_plain);
+        $h2t = new Html2Text($body);
+        $plain = $h2t->get_text();
+        $message->setBody($plain);
 
-        $message->addPart($mail_plain, 'text/plain');
+        $message->addPart($plain, 'text/plain');
 
         // Add the html-body only if the member wants HTML mails
         if ($html) {
-            $message->addPart($mail_html, 'text/html');
-        }
+            // Translate footer text (used in HTML template)
+            $words = new MOD_words();
+            $footer_message = $words->getPurified('MailFooterMessage', array(date('Y')), $language);
 
-        //Optionally add any attachments
-        if (!empty($attach)) {
-            foreach ($attach as $path) {
-                $message->attach(Swift_Attachment::fromPath($path));
-            }
+            // Using a html-template
+            ob_start();
+            require SCRIPT_BASE . 'templates/shared/mail_html.php';
+            $mail_html = ob_get_contents();
+            ob_end_clean();
+
+            $message->addPart($mail_html, 'text/html');
         }
 
         return self::sendSwift($message);
     }
-
 }

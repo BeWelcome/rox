@@ -511,6 +511,7 @@ class GalleryController extends RoxControllerBase {
     }
 
     private function ajaxImage() {
+        $words = $this->getWords();
         PRequest::ignoreCurrentRequest();
         if (!$member = $this->loggedInMember)
             return false;
@@ -530,7 +531,11 @@ class GalleryController extends RoxControllerBase {
                     $str = htmlentities($_GET['text'], ENT_QUOTES, "UTF-8");
                     $this->_model->ajaxModImage($id,'',$str);
                     $str = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
-                    echo $str;
+                    if ($str === '') {
+                        echo $words->get('GalleryAddDescription');
+                    } else {
+                        echo $str;
+                    }
                 }
             PPHP::PExit();
             }
@@ -543,6 +548,7 @@ class GalleryController extends RoxControllerBase {
     
     private function ajaxGallery() {
         // Modifying a PHOTOSET(GALLERY) using an ajax-request
+        $words = $this->getWords();
         PRequest::ignoreCurrentRequest();
         if (!$member = $this->loggedInMember)
             return false;
@@ -558,11 +564,12 @@ class GalleryController extends RoxControllerBase {
                     } else echo 'Can`t be empty! Click to edit!';
                 } elseif( isset($_GET['text']) ) {
                     $str = htmlentities($_GET['text'], ENT_QUOTES, "UTF-8");
-                    if (empty($str)) {
-                    $str = ' ';
-                    }
                     $this->_model->ajaxModGallery($id,'',$str);
-                    echo $str;
+                    if ($str === '') {
+                        echo $words->get('GalleryAddDescription');
+                    } else {
+                        echo $str;
+                    }
                 }
             PPHP::PExit();
             }

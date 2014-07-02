@@ -85,13 +85,19 @@ VALUES
     }
     public function ajaxModImage($id, $title = false, $text = false)
     {
-		$this->dao->query("START TRANSACTION");
-        $query = "UPDATE `gallery_items` ";
-        if ($title) $query .= "SET `title` = '".$title."'";
-        elseif ($text) $query .= "SET `description` = '".$text."'";
-        $query .= "WHERE `id`= ".$id;
-        $this->dao->exec($query);
-		$this->dao->query("COMMIT");
+	if ($title || $text !== false){
+            $this->dao->query("START TRANSACTION");
+            $query = "UPDATE `gallery_items` ";
+            if ($title) {
+                $query .= "SET `title` = '".$title."'";
+            }
+            elseif ($text !== false) {
+                $query .= "SET `description` = '".$text."'";
+            }
+            $query .= "WHERE `id`= ".$id;
+            $this->dao->exec($query);
+            $this->dao->query("COMMIT");
+        }
     }
 
 	public function reorderTripItems($items) {
@@ -108,13 +114,19 @@ VALUES
 	}
     public function ajaxModGallery($id, $title = false, $text = false)
     {
-		$this->dao->query("START TRANSACTION");
-        $query = "UPDATE `gallery` ";
-        if ($title) $query .= "SET `title` = '".$title."'";
-        elseif ($text) $query .= "SET `text` = '".$text."'";
-        $query .= "WHERE `id`= ".$id;
-        $this->dao->exec($query);
-		$this->dao->query("COMMIT");
+	if ($title || $text !== false){
+            $this->dao->query("START TRANSACTION");
+            $query = "UPDATE `gallery` ";
+            if ($title) {
+                $query .= "SET `title` = '".$title."'";
+            }
+            elseif ($text !== false) {
+                $query .= "SET `text` = '".$text."'";
+            }
+            $query .= "WHERE `id`= ".$id;
+            $this->dao->exec($query);
+            $this->dao->query("COMMIT");
+        }
     }
 
     public function editGalleryProcess($vars)

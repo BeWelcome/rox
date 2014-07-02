@@ -61,15 +61,7 @@ VALUES
         if (($member->get_userid() == $this->imageOwner($image->id)) || ($GalleryRight > 1)) {
             // Log the deletion to prevent admin abuse
             MOD_log::get()->write("Deleting a gallery item #".$image->id." filename: ".$image->file." belonging to user: ".$image->user_id_foreign, "Gallery");
-            // Start the deletion process
-            $filename = $image->file;
-            $userDir = new PDataDir('gallery/user'.$image->user_id_foreign);
-            $userDir->delFile($filename);
-            $userDir->delFile('thumb'.$filename);
-            $userDir->delFile('thumb1'.$filename);
-            $userDir->delFile('thumb2'.$filename);
-            $this->dao->exec('DELETE FROM `gallery_items` WHERE `id` = '.$image->id);
-            $this->deleteComments($image->id);
+            $this->deleteThisImage($image);
             return true;
         } else return false;
     }
@@ -147,18 +139,34 @@ VALUES
                 $image = $this->imageData($image);
                 // Log the deletion to prevent admin abuse
                 MOD_log::get()->write("Deleting multiple gallery items #".$image->id." filename: ".$image->file." belonging to user: ".$image->user_id_foreign, "Gallery");
-                // Start the deletion process
-                $filename = $image->file;
-                $userDir = new PDataDir('gallery/user'.$image->user_id_foreign);
-                $userDir->delFile($filename);
-                $userDir->delFile('thumb'.$filename);
-                $userDir->delFile('thumb1'.$filename);
-                $userDir->delFile('thumb2'.$filename);
-                $this->dao->exec('DELETE FROM `gallery_items` WHERE `id` = '.$image->id);
-                $this->dao->exec("DELETE FROM `gallery_items_to_gallery` WHERE `item_id_foreign`= ".$image->id);
-                $this->deleteComments($image->id);
+                $this->deleteThisImage($image);
             } else return false;
         }
+    }
+
+    /**
+     * Actual deletion of files and database entries for removed item
+     *
+     * @access protected
+     * @param MOD_images_Image $image The image to be deleted
+     **/ 
+    protected function deleteThisImage($image)
+    {
+        $filename = $image->file;
+        $userDir = new PDataDir('gallery/user'.$image->user_id_foreign);
+        $userDir->delFile($filename);
+        $userDir->delFile('thumb'.$filename);
+        $userDir->delFile('thumb1'.$filename);
+        $userDir->delFile('thumb2'.$filename);
+
+        $this->dao->exec('
+DELETE FROM `gallery_items_to_gallery`
+WHERE `item_id_foreign`= ' . (int)$image->id);
+        $this->dao->exec('
+DELETE FROM `gallery_items`
+WHERE `id` = ' . (int)$image->id);
+
+        $this->deleteComments($image->id);
     }
 
     public function deleteComments($table_id,$table = 'gallery_items') {

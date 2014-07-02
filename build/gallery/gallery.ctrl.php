@@ -207,7 +207,7 @@ class GalleryController extends RoxControllerBase {
                         }
                         
                     default:
-                        return $this->overview();
+                        $this->redirect('main');
                 }
         }
     }

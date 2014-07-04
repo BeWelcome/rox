@@ -302,20 +302,17 @@ class GroupsController extends RoxControllerBase
         $member_id = $this->_getMemberIdFromRequest();
         $group = $this->_getGroupFromRequest();
         $invitedby = $this->_model->getLoggedInMember();
-        if ($group->Status != 'Public' && !$group->isGroupOwner($invitedby))
-        {
-            $this->redirect($this->router->url('groups_overview'));
-        }
-        $page = new GroupStartPage;
-        if ($this->_model->inviteMember($group, $member_id))
-        {
-            $this->_model->sendInvitation($group, $member_id, $this->_model->getLoggedInMember());
-            $page->memberinvited = true;
-            $this->logWrite("Member #{$member_id} was invited to group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
-        }
-        else
-        {
-            $page->memberinvited = false;
+        if ($group->Status != 'Public' && !$group->isGroupOwner($invitedby)) {
+            $this->redirectAbsolute($this->router->url('groups_overview'));
+        } else {
+            $page = new GroupStartPage;
+            if ($this->_model->inviteMember($group, $member_id)) {
+                $this->_model->sendInvitation($group, $member_id, $this->_model->getLoggedInMember());
+                $page->memberinvited = true;
+                $this->logWrite("Member #{$member_id} was invited to group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
+            } else {
+                $page->memberinvited = false;
+            }
         }
         $this->_fillObject($page);
         $page->group = $group;
@@ -394,20 +391,19 @@ class GroupsController extends RoxControllerBase
     {
         $group = $this->_getGroupFromRequest();
         $member_id = $this->_getMemberIdFromRequest();
-        if (!$this->_model->getLoggedInMember() )
-        {
+        if (!$this->_model->getLoggedInMember() ) {
             $this->redirectToLogin($this->router->url('group_acceptinvitation', array('group_id' => $group->getPKValue(), 'member_id' => $member_id), false));
-        }
-        elseif ($this->_model->getLoggedInMember()->getPkValue() != $member_id || !$this->_model->memberAcceptedInvitation($group, $member_id))
-        {
+        } elseif ($this->_model->getLoggedInMember()->getPkValue() != $member_id
+                  || !$this->_model->memberAcceptedInvitation($group, $member_id)) {
             $this->redirectAbsolute($this->router->url('groups_overview'));
+        } else {
+            $this->logWrite("Member #{$member_id} accepted invitation to join group #{$group->getPKValue()}");
+            $page = new GroupMemberSettingsPage();
+            $this->setFlashNotice($this->getWords()->getSilent('GroupJoinSuccess'));
+            $this->_fillObject($page);
+            $page->group = $group;
+            return $page;
         }
-        $this->logWrite("Member #{$member_id} accepted invitation to join group #{$group->getPKValue()}");
-        $page = new GroupMemberSettingsPage();
-        $this->setFlashNotice($this->getWords()->getSilent('GroupJoinSuccess'));
-        $this->_fillObject($page);
-        $page->group = $group;
-        return $page;
     }
 
     /**
@@ -424,9 +420,7 @@ class GroupsController extends RoxControllerBase
         {
             $this->_model->memberDeclinedInvitation($group, $member_id);
             $this->logWrite("Member #{$member_id} declined invitation to join group #{$group->getPKValue()}");
-        }
-        else
-        {
+        } else {
             $this->redirectToLogin($this->router->url('group_declineinvitation', array('group_id' => $group->getPKValue(), 'member_id' => $member_id), false));
         }
         $this->redirectAbsolute($this->router->url('groups_overview'));
@@ -443,22 +437,20 @@ class GroupsController extends RoxControllerBase
     {
         $group = $this->_getGroupFromRequest();
         $member_id = $this->_getMemberIdFromRequest();
-        if (!$this->_model->getLoggedInMember())
-        {
+        if (!$this->_model->getLoggedInMember()) {
             $this->redirectToLogin($this->router->url('group_banmember', array('group_id' => $group->getPKValue(), 'member_id' => $member_id), false));
-        }
-        elseif (!$this->_model->canAccessGroupAdmin($group) || empty($member_id))
-        {
+        } elseif (!$this->_model->canAccessGroupAdmin($group) || empty($member_id)) {
             $this->redirectAbsolute($this->router->url('groups_overview'));
+        } else {
+            $banned = $this->_model->banGroupMember($group, $member_id, false);
+            if ($banned){
+                $this->setFlashNotice($this->getWords()->getSilent('GroupsMemberBanSuccess'));
+                $this->logWrite("Member #{$member_id} was banned from group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
+            } else {
+                $this->setFlashError($this->getWords()->getSilent('GroupsMemberBanFail'));
+            }
+            return $this->FillGroupMemberAdminPage($group);
         }
-
-        $this->_model->banGroupMember($group, $member_id, true);
-        $this->logWrite("Member #{$member_id} was banned from group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
-
-        $page = new GroupStartPage;
-        $this->_fillObject($page);
-        $page->group = $group;
-        return $page;
     }
 
     /**
@@ -471,32 +463,53 @@ class GroupsController extends RoxControllerBase
     {
         $group = $this->_getGroupFromRequest();
         $member_id = $this->_getMemberIdFromRequest();
-        if (!$this->_model->getLoggedInMember())
-        {
+        if (!$this->_model->getLoggedInMember()) {
             $this->redirectToLogin($this->router->url('group_kickmember', array('group_id' => $group->getPKValue(), 'member_id' => $member_id), false));
-        }
-        elseif (!$this->_model->canAccessGroupAdmin($group) || empty($member_id))
-        {
+        } elseif (!$this->_model->canAccessGroupAdmin($group) || empty($member_id)) {
             $this->redirectAbsolute($this->router->url('groups_overview'));
+        } else {
+            $kicked = $this->_model->banGroupMember($group, $member_id, false);
+            if ($kicked){
+                $this->setFlashNotice($this->getWords()->getSilent('MemberKickSuccess'));
+                $this->logWrite("Member #{$member_id} was kicked from group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
+            } else {
+                $this->setFlashError($this->getWords()->getSilent('MemberKickFail'));
+            }
+            return $this->FillGroupMemberAdminPage($group);
         }
-
-        $page = new GroupStartPage();
-        $kicked = $this->_model->banGroupMember($group, $member_id, false);
-        if ($kicked)
-        {
-            $this->setFlashNotice($this->getWords()->getSilent('MemberKickSuccess'));
-            $this->logWrite("Member #{$member_id} was kicked from group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
-        }
-        else
-        {
-            $this->setFlashError($this->getWords()->getSilent('MemberKickFail'));
-        }
-        $page->group = $group;
-        
-        return $page;
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * declines member request to join a group, by just taking them out of the group
+     *
+     * @access public
+     * @return object $page
+     */
+    public function declineMember()
+    {
+        $group = $this->_getGroupFromRequest();
+        $member_id = $this->_getMemberIdFromRequest();
+        if (!$this->_model->getLoggedInMember()) {
+            $this->redirectToLogin($this->router->url('group_declinemember', array('group_id' => $group->getPKValue(), 'member_id' => $member_id), false));
+        } elseif (!$this->_model->canAccessGroupAdmin($group) || empty($member_id)) {
+            $this->redirectAbsolute($this->router->url('groups_overview'));
+        } else {
+            $declined = $this->_model->banGroupMember($group, $member_id, false);
+            if ($declined){
+                $this->setFlashNotice($this->getWords()->getSilent('GroupsMemberDeclineSuccess'));
+                $this->logWrite("Member #{$member_id} was declined access to group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
+            } else {
+                $this->setFlashError($this->getWords()->getSilent('GroupsMemberDeclineFail'));
+            }
+            return $this->FillGroupMemberAdminPage($group);
+        }
+    }
+
+
+    /**
+>>>>>>> a88ea60... [] small additions3
      * adds a member of a group as admin
      *
      * @access public
@@ -506,28 +519,22 @@ class GroupsController extends RoxControllerBase
     {
         $group = $this->_getGroupFromRequest();
         $member_id = $this->_getMemberIdFromRequest();
-        if (!$this->_model->getLoggedInMember())
-        {
+        if (!$this->_model->getLoggedInMember()) {
             $this->redirectToLogin($this->router->url('group_addadmin', array('group_id' => $group->getPKValue(), 'member_id' => $member_id), false));
-        }
-        elseif (!$this->_model->canAccessGroupAdmin($group) || empty($member_id))
-        {
-            $this->redirectAbsolute($this->router->url('groups_overview'));
-        }
-
-        $newAdmin = $this->_model->addGroupMemberAsAdmin($group, $member_id);
-        if (!$newAdmin)
-        {
-            $this->setFlashError($this->getWords()->getSilent('GroupAdminResignationFailed'));
+        } elseif (!$this->_model->canAccessGroupAdmin($group) || empty($member_id)) {
             $this->redirectAbsolute($this->router->url('groups_overview'));
         } else {
-            $this->logWrite("Member #{$member_id} added as admin to the group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
-            $this->setFlashNotice($this->getWords()->getSilent('GroupNewAdminSuccess'));
+            $newAdmin = $this->_model->addGroupMemberAsAdmin($group, $member_id);
+            if ($newAdmin)
+            {
+                $this->logWrite("Member #{$member_id} added as admin to the group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
+                $this->setFlashNotice($this->getWords()->getSilent('GroupNewAdminSuccess'));
+            } else {
+                $this->setFlashError($this->getWords()->getSilent('GroupNewAdminFailed'));
+                $this->redirectAbsolute($this->router->url('groups_overview'));
+            }
+            return $this->FillGroupMemberAdminPage($group);
         }
-        $page = new GroupStartPage;
-        $this->_fillObject($page);
-        $page->group = $group;
-        return $page;
     }
 
 
@@ -541,31 +548,29 @@ class GroupsController extends RoxControllerBase
     {
         $group = $this->_getGroupFromRequest();
         $resigner = $this->_model->getLoggedInMember();
-        if (!$resigner)
-        {
+        if (!$resigner) {
             $this->redirectAbsolute($this->router->url('groups_overview'));
-        }
-        elseif (!$this->_model->canAccessGroupAdmin($group) && !$group->isGroupOwner($resigner))
-        {
+        } elseif (!$this->_model->canAccessGroupAdmin($group) && !$group->isGroupOwner($resigner)) {
             $this->redirectAbsolute($this->router->url('groups_overview'));
-        }
-        $owners = $group->getGroupOwners();
-        if (is_array($owners) && count($owners) < 2) {
-            $this->setFlashError($this->getWords()->getSilent('GroupAdminResignationFailed_LastAdmin'));
         } else {
-            $resigned = $this->_model->resignGroupAdmin($group, $resigner->getPKValue());
-            if (!$resigned)
-            {
-                $this->setFlashError($this->getWords()->getSilent('GroupAdminResignationFailed'));
+            $owners = $group->getGroupOwners();
+            if (is_array($owners) && count($owners) < 2) {
+                $this->setFlashError($this->getWords()->getSilent('GroupAdminResignationFailed_LastAdmin'));
             } else {
-                $this->logWrite("Member #{$resigner->Username} resigned as admin from the group #{$group->Name}");
-                $this->setFlashNotice($this->getWords()->getSilent('GroupAdminResignationSuccess'));
+                $resigned = $this->_model->resignGroupAdmin($group, $resigner->getPKValue());
+                if ($resigned)
+                {
+                    $this->logWrite("Member #{$resigner->Username} resigned as admin from the group #{$group->Name}");
+                    $this->setFlashNotice($this->getWords()->getSilent('GroupAdminResignationSuccess'));
+                } else {
+                    $this->setFlashError($this->getWords()->getSilent('GroupAdminResignationFailed'));
+                }
             }
+            $page = new GroupStartPage;
+            $this->_fillObject($page);
+            $page->group = $group;
+            return $page;
         }
-        $page = new GroupStartPage;
-        $this->_fillObject($page);
-        $page->group = $group;
-        return $page;
     }
 
 
@@ -579,22 +584,28 @@ class GroupsController extends RoxControllerBase
     {
         $group = $this->_getGroupFromRequest();
         $member_id = $this->_getMemberIdFromRequest();
-        if (!$this->_model->getLoggedInMember())
-        {
+        if (!$this->_model->getLoggedInMember()) {
             $this->redirectToLogin($this->router->url('group_acceptmember', array('group_id' => $group->getPKValue(), 'member_id' => $member_id), false));
-        }
-        elseif (!$this->_model->canAccessGroupAdmin($group) || empty($member_id))
-        {
+        } elseif (!$this->_model->canAccessGroupAdmin($group) || empty($member_id)) {
             $this->redirectAbsolute($this->router->url('groups_overview'));
+        } else {
+            $acceptedby = $this->_model->getLoggedInMember();
+            $accepted = $this->_model->acceptGroupMember($group, $member_id, $acceptedby->getPKValue());
+            if ($accepted) {
+                $this->logWrite("Member #{$member_id} was accepted into group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
+                $this->setFlashNotice($this->getWords()->getSilent('GroupsMemberAcceptSuccess'));
+            } else {
+                $this->setFlashError($this->getWords()->getSilent('GroupsMemberAcceptFailed'));
+                $this->redirectAbsolute($this->router->url('groups_overview'));
+            }
+            return $this->FillGroupMemberAdminPage($group);
         }
-        $acceptedby = $this->_model->getLoggedInMember();
-        $this->_model->acceptGroupMember($group, $member_id, $acceptedby->getPKValue());
-        $this->logWrite("Member #{$member_id} was accepted into group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
+        return $this->FillGroupMemberAdminPage($group);
 
-        $page = new GroupStartPage();
-        $this->_fillObject($page);
-        $page->group = $group;
-        return $page;
+//        $page = new GroupMemberAdministrationPage;
+//        $this->_fillObject($page);
+//        $page->group = $group;
+//        return $page;
     }
 
 
@@ -607,15 +618,18 @@ class GroupsController extends RoxControllerBase
     public function memberAdministration()
     {
         $group = $this->_getGroupFromRequest();
-        if (!$this->_model->getLoggedInMember())
-        {
+        if (!$this->_model->getLoggedInMember()) {
             $this->redirectToLogin($this->router->url('group_memberadministration', array('group_id' => $group->getPKValue()), false));
         }
-        elseif (!$this->_model->canAccessGroupAdmin($group))
-        {
+        elseif (!$this->_model->canAccessGroupAdmin($group)) {
             $this->redirectAbsolute($this->router->url('groups_overview'));
+        } else {
+            return $this->FillGroupMemberAdminPage($group);
         }
+    }
 
+    protected function FillGroupMemberAdminPage($group)
+    {
         $isBWAdmin = false;
         $member = $this->_model->getLoggedInMember();
         $rights = $member->getOldRights();
@@ -632,8 +646,9 @@ class GroupsController extends RoxControllerBase
         $pager_params->items = $page->group->getMemberCount();
         $pager_params->items_per_page = 50;
         $page->pager_widget = new PagerWidget($pager_params);
-        return $page;
+        return $page;        
     }
+
 
     /**
      * handles member joining a group

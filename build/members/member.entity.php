@@ -56,8 +56,12 @@ class Member extends RoxEntityBase
             $this->findById($member_id);
         }
         $this->words=new MOD_words;
+        if (isset($_SESSION['lang'])) {
         $langarr = explode('-', $_SESSION['lang']);
         $this->lang = $langarr[0];
+        } else {
+            $this->lang = 'en';
+        }
     }
 
     public function init($values, $dao)
@@ -1654,7 +1658,8 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         {
             return false;
         }
-        $query = 'UPDATE `members` SET `PassWord` = PASSWORD(\''.trim($pw).'\') WHERE `id` = '.$this->id;
+        $pw = $this->dao->escape(trim($pw));
+        $query = "'UPDATE `members` SET `PassWord` = PASSWORD('" . $pw . "') WHERE `id` = ".$this->id;
         if( $this->model->dao->exec($query)) {
             $L = MOD_log::get();
             $L->write("Password changed", "change password");

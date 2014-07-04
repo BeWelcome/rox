@@ -573,8 +573,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             $dir = new PDataDir('groups');
             $img = new MOD_images_Image($_FILES['group_image']['tmp_name']);
             $new_name = $img->getHash();
-
-            if (filesize($_FILES['group_image']['tmp_name']) > (500*1024) || !($dir->fileExists($new_name) || $dir->copyTo($_FILES['group_image']['tmp_name'], $new_name)))
+            if (!($dir->fileExists($new_name) || $dir->copyTo($_FILES['group_image']['tmp_name'], $new_name)))
             {
                 return false;
             }

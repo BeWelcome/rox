@@ -128,25 +128,17 @@ Database installation
   7. Remove dumps and other files:
 
       $ rm bewelcome.sql languages.sql words.sql allCountries.txt alternateNames.txt iso-languagecodes.txt allCountries.zip alternateNames.zip countryInfo.txt
-	  
+
   8. Migrate the DB to the latest version
   
-    If you use another DB than bewelcome update the testing section of phinx.yml to match with your DB name.
+    Run the phinx migration
 
-    In this case call 
-	    
-		git update-index --assume-unchanged phinx.yml
-	
-	to avoid unintended commits to the repository for this file.
-	
-    Now run the migration
-	
-        vendor/bin/phinx migrate
+        vendor/bin/phinx migrate -c phinx.php
 
     (Note this is most useful if you switch to the development branch beforehand
-	
-	   git checkout origin develop)
-	
+
+       git checkout origin develop)
+
 Configure Apache
 ----------------
 

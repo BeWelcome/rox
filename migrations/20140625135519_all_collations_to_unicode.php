@@ -12,19 +12,6 @@ use Phinx\Migration\AbstractMigration;
  */
 class AllCollationsToUnicode extends AbstractMigration
 {
-    /**
-     * Change Method.
-     *
-     * More information on this method is available here:
-     * http://docs.phinx.org/en/latest/migrations.html#the-change-method
-     *
-     * Uncomment this method if you would like to use it.
-     *
-    public function change()
-    {
-    }
-    */
-
     // All tables that contain columns that need to be converted
     private $convertArr = array(
         'latin1_swedish_ci' => array(

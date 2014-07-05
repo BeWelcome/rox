@@ -442,7 +442,7 @@ class GroupsController extends RoxControllerBase
         } elseif (!$this->_model->canAccessGroupAdmin($group) || empty($member_id)) {
             $this->redirectAbsolute($this->router->url('groups_overview'));
         } else {
-            $banned = $this->_model->banGroupMember($group, $member_id, false);
+            $banned = $this->_model->banGroupMember($group, $member_id, true);
             if ($banned){
                 $this->setFlashNotice($this->getWords()->getSilent('GroupsMemberBanSuccess'));
                 $this->logWrite("Member #{$member_id} was banned from group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
@@ -480,8 +480,6 @@ class GroupsController extends RoxControllerBase
     }
 
     /**
-<<<<<<< HEAD
-=======
      * declines member request to join a group, by just taking them out of the group
      *
      * @access public
@@ -509,7 +507,6 @@ class GroupsController extends RoxControllerBase
 
 
     /**
->>>>>>> a88ea60... [] small additions3
      * adds a member of a group as admin
      *
      * @access public

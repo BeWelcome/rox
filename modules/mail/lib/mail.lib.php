@@ -62,9 +62,6 @@ class MOD_mail
 
     private function __construct()
     {
-        // Swift autoloader conflicts with the BW autoloader so we need to include swift_init.php
-        // and leave the rest to our autoloader
-        require_once SCRIPT_BASE . 'lib/misc/swift-5.0.1/lib/swift_init.php';
     }
 
     private function __clone() {}
@@ -141,13 +138,13 @@ class MOD_mail
             //Set the To addresses with an associative array
             ->setTo($to);
 
-        // Purify HTML. Only allow tags that are alowed in forum posts (biggest set anyway).
+        // Purify HTML. Only allow tags that are allowed in forum posts (biggest set anyway).
         $purifier = MOD_htmlpure::get()->getForumsHtmlPurifier();
         $body = $purifier->purify($body);
 
-        require_once SCRIPT_BASE . '/modules/mail/lib/html2text.php';
-        $h2t = new Html2Text($body);
-        $plain = $h2t->get_text();
+        $html2text = new Html2Text\Html2Text($body, false, array('do_links' => 'table', 'width' => 75));
+        $plain = $html2text->get_text();
+
         $message->setBody($plain);
 
         $message->addPart($plain, 'text/plain');

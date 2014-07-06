@@ -68,8 +68,8 @@
     background: #f8f8f8;
     border: 1px #ddd solid;
     border-left: 8px #ddd solid;
-    padding: 1em 1em 0 1em;
-    margin: 0 0 1em 1em;
+    padding: 1em 1em 0 0.25em;
+    margin: 0 0 1em 0.25em;
   }
 
   hr {

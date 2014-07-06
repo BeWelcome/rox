@@ -16,7 +16,7 @@ class ComposeMessageProhibitedPage extends MessagesBasePage
      */
     protected function column_col3()
     {
-        require_once 'templates/composeprohibited.php';
+        require_once SCRIPT_BASE . 'build/messages/templates/composeprohibited.php';
     }
 
     protected function getFieldValues()

@@ -71,11 +71,11 @@ class ComposeMessagePage extends MessagesBasePage
 
             // problems from previous form
             if (is_array($memory->problems)) {
-                require_once 'templates/compose_warning.php';
+                require_once SCRIPT_BASE . 'build/messages/templates/compose_warning.php';
             }
         }
 
-        require_once 'templates/compose.php';
+        require_once SCRIPT_BASE . 'build/messages/templates/compose.php';
     }
 
     protected function getFieldValues()
@@ -92,7 +92,7 @@ class ComposeMessagePage extends MessagesBasePage
     public function getLateLoadScriptFiles()
     {
         $scripts = parent::getLateLoadScriptfiles();
-        if ($this->sender->getPreference("PreferenceDisableTinyMCE", $default = "No") == 'No') {
+        if ($this->sender && $this->sender->getPreference("PreferenceDisableTinyMCE", $default = "No") == 'No') {
             $scripts[] = 'tinymceconfig.js';
         }
         return $scripts;

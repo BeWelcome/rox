@@ -8,6 +8,8 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
+use Michelf\Markdown;
+
 class MessagesModel extends RoxModelBase
 {
     public $sort_element;
@@ -181,8 +183,15 @@ WHERE
         MOD_log::get()->write("Request to delete message #$message_id in Tab: $DeleteRequest del message  (MessagesModel::deleteMessage)", "message");
     } // end of deleteMessage
 
-    // Mark a message as "read" or "unread"
-    public function markReadMessage($message_id, $read = true)
+    /**
+     * Mark a message as 'read' or 'unread'
+     *
+     * @param int     message_id   id of the message to update
+     * @param boolean read         determines if the message should be marked as read or unread
+     *
+     * @return nothing
+     */
+    public function markMessage($message_id, $read = true)
     {
         $this->dao->query(
             "
@@ -192,8 +201,13 @@ SET
 WHERE id = $message_id
             "
         );
-        MOD_log::get()->write("Has read message #" . $message_id."  (MessagesModel::markReadMessage)", "readmessage");
-    } // end of markReadMessage
+        if ($read) {
+            MOD_log::get()->write("Has read message #" . $message_id . "  (MessagesModel::markMessage)", "readmessage");
+        } else {
+            MOD_log::get()->write("Has marked message #" . $message_id . "  as unread (MessagesModel::markMessage)",
+                "unreadmessage");
+        }
+    } // end of markMessage
 
     /**
      * Mark a message as 'sent' (or failed) by mailbot
@@ -223,7 +237,12 @@ SET
         $this->dao->query($query_str);
     }
 
-    // Mark a message as "read" or "unread"
+    /**
+     * Moves a message to the given folder
+     *
+     * @param $message_id  id of the message to be moved
+     * @param $folder      the folder to which the message is moved
+     */
     public function moveMessage($message_id, $folder)
     {
         $this->dao->query(
@@ -402,13 +421,14 @@ AND DeleteRequest != 'receiverdeleted'
 // End of Test what the Spam mark should be
 
 
-// Case AlwayCheckSendMail
-        if ($Right->hasFlag("AlwayCheckSendMail","",$IdSender)) {
+// Case AlwaysCheckSendMail
+        if ($Right->hasFlag("AlwaysCheckSendMail","",$IdSender)) {
               $Status = 'ToCheck';
-              $CheckerComment.="Sent by member with AlwayCheckSendMail \n";
+              $CheckerComment.="Sent by member with AlwaysCheckSendMail \n";
               $str = "update messages set Status='".$Status."',CheckerComment='".$CheckerComment."',SpamInfo='" . $SpamInfo . "' where id=" . $Mes->id . " and Status!='Sent'";
               sql_query($str);
-              LogStr("AlwayCheckSendMail for message #".$IdMess." from <b>".fUsername($Mes->IdSender)."</b> to <b>".fUsername($Mes->IdReceiver)."</b>","AutoSpamCheck");
+              LogStr("AlwaysCheckSendMail for message #".$IdMess." from <b>".fUsername($Mes->IdSender)."</b> to <b>"
+                  .fUsername($Mes->IdReceiver)."</b>","AutoSpamCheck");
               return($Status);
         }
 
@@ -493,31 +513,45 @@ WHERE id = ".$input['receiver_id']."
 
         if (!empty($problems)) {
             $message_id = false;
-        } else if (!isset($input['draft_id'])) {
-            // this was a new message
-            if ($message_id = $this->_createMessage($input)) {
-                MOD_log::get()->write("Has sent message #" . $message_id." to ".$rReceiver->Username." (MessagesModel::sendOrComplain new message)", "contactmember");
-            }
-            else { // SOmething has failed
-                $problems['sender_id'] = MOD_words::getFormatted("MustProvideTheRightCaptcha");
-            }
-        } else if (!$this->getMessage($draft_id = $input['message_id'] = $input['draft_id'])) {
-            // draft id says this is a draft, but it doesn't exist in database.
-            // this means, something stinks.
-            // Anyway, we insert a new message.
-            if ($message_id = $this->_createMessage($input)) {
-                MOD_log::get()->write("Has sent message #" . $message_id." to ".$rReceiver->Username." (MessagesModel::sendOrComplain from draft)", "contactmember");
-            }
-            else { // SOmething has failed
-                $problems['sender_id'] = 'Bad Captcha';
-            }
-            $message_id = $this->_createMessage($input);
         } else {
-            // this was a draft, so we only have to change the status in DB
-            $this->_updateMessage($draft_id, $input);
-            $message_id = $draft_id;
-        }
+            $member = $this->getLoggedInMember();
+            $disabledTinyMce = $member->getPreference("PreferenceDisableTinyMCE", $default = "No") == 'Yes';
+            if ($disabledTinyMce) {
+                // the entered text is in markdown format -> convert to HTML
+                $html = MarkDown::defaultTransform($input['text']);
+            }
+            // make sure that the text only contains valid HTML
+            $purifier = new MOD_htmlpure();
+            $purifier = $purifier->getAdvancedHtmlPurifier();
+            $input['text'] = $purifier->purify($html);
 
+            if (!isset($input['draft_id'])) {
+                // this was a new message
+                if ($message_id = $this->_createMessage($input)) {
+                    MOD_log::get()->write("Has sent message #" . $message_id." to ".$rReceiver->Username." (MessagesModel::sendOrComplain new message)", "contactmember");
+                }
+                else { // SOmething has failed
+                    $problems['sender_id'] = MOD_words::getFormatted("MustProvideTheRightCaptcha");
+                }
+            } else {
+                if (!$this->getMessage($draft_id = $input['message_id'] = $input['draft_id'])) {
+                    // draft id says this is a draft, but it doesn't exist in database.
+                    // this means, something stinks.
+                    // Anyway, we insert a new message.
+                    if ($message_id = $this->_createMessage($input)) {
+                        MOD_log::get()->write("Has sent message #" . $message_id." to ".$rReceiver->Username." (MessagesModel::sendOrComplain from draft)", "contactmember");
+                    }
+                    else { // SOmething has failed
+                        $problems['sender_id'] = 'Bad Captcha';
+                    }
+                    $message_id = $this->_createMessage($input);
+                } else {
+                    // this was a draft, so we only have to change the status in DB
+                    $this->_updateMessage($draft_id, $input);
+                    $message_id = $draft_id;
+                }
+            }
+        }
         return array(
             'problems' => $problems,
             'message_id' => $message_id

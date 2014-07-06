@@ -1,8 +1,6 @@
 <?php
 
 
-
-
 class MessagesDraftsboxPage extends MessagesPageWithMailbox
 {
     protected function getSubmenuActiveItem() {

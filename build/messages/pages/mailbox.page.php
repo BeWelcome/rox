@@ -22,7 +22,7 @@ class MessagesPageWithMailbox extends MessagesBasePage
         $request = PRequest::get()->request;
         $message_page = (isset($request[1])) ? $request[1] : '';
         $words = $this->getWords();
-        require 'templates/actions.php';
+        require SCRIPT_BASE . 'build/messages/templates/actions.php';
     }
         
     protected function column_col3()

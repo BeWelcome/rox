@@ -29,6 +29,7 @@
     $this->addRoute('group_addadmin','groups/:group_id:/addAdmin/:member_id:', 'GroupsController', 'addMemberAsAdmin');
     $this->addRoute('group_resignadmin','groups/:group_id:/resignAdmin', 'GroupsController', 'resignAsAdmin');
     $this->addRoute('group_declineinvitation','groups/:group_id:/declineinvitation/:member_id:', 'GroupsController', 'declineInvitation');
+    $this->addRoute('group_declinemember','groups/:group_id:/declinemember/:member_id:', 'GroupsController', 'declineMember');
     $this->addRoute('group_delete','groups/:group_id:/delete', 'GroupsController', 'delete');
     $this->addRoute('group_deleted','groups/:group_id:/delete/true', 'GroupsController', 'delete');
     $this->addRoute('group_forum','groups/:group_id:/forum', 'GroupsController', 'forum');

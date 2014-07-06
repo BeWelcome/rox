@@ -181,7 +181,11 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                     <tr>
                         <td><?=MOD_layoutbits::linkWithPicture($member->Username) ?></td>
                         <td><a href="members/<?=$member->Username ?>" class="username"><?=$member->Username ?></a></td>
-                        <td><?= (($this->member->getPKValue() == $member->getPKValue()) ? '' : "<a class='accept' href='groups/{$this->group->getPKValue()}/acceptmember/{$member->getPKValue()}'>Accept?</a>");?></td>
+                        <td><?= (($this->member->getPKValue() == $member->getPKValue()) ? '' :
+                                 "<a class='accept' href='groups/{$this->group->getPKValue()}/acceptmember/{$member->getPKValue()}'>".$words->get('GroupsAcceptMember')."</a><br>
+                                  <a class='kick' href='groups/{$this->group->getPKValue()}/declinemember/{$member->getPKValue()}'>".$words->get('GroupsDeclineMember')."</a><br>
+                                  <a class='ban' href='groups/{$this->group->getPKValue()}/banmember/{$member->getPKValue()}'>".$words->get('GroupsBanMember')."</a>");?>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
                 </table>
@@ -213,6 +217,26 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                 <?=$words->flushBuffer()?>
             </div>
             <script type='text/javascript'>
+                var newmemberban = $('possible_members').getElementsBySelector('a.ban');
+                var newmemberkick = $('possible_members').getElementsBySelector('a.kick');
+                newmemberban.each(function(elem){
+                    elem.observe('click', function(e){
+                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberBan'));?>'))
+                        {
+                            Event.stop(e);
+                        }
+                    })
+                });
+                newmemberkick.each(function(elem){
+                    elem.observe('click', function(e){
+                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberDecline'));?>'))
+                        {
+                            Event.stop(e);
+                        }
+                    })
+                });
+
+
                 var search_handler = {
                     display_result: function(member_object){
                         var search_div = $('search_result');

@@ -33,6 +33,7 @@ $i_am_the_mailbot = true;
 // manually define the script base. mailbot MUST be run from the root directory (like php tools/mailbot/mailbot.class.php)
 define('SCRIPT_BASE', dirname(__FILE__) . "/../../");
 
+require_once SCRIPT_BASE . 'vendor/autoload.php';
 require_once SCRIPT_BASE . 'roxlauncher/roxloader.php';
 require_once SCRIPT_BASE . 'roxlauncher/environmentexplorer.php';
 
@@ -137,6 +138,12 @@ class Mailbot
         return MOD_mail::sendEmail($subject, $from, $to, $title, $body, $language, $html);
     }
 
+    protected function getEmailAddress(Member $member) {
+        // Nasty hack: Get email address //
+
+        return $member->getEmailWithoutPermissionChecks();
+    }
+
     /**
      * Log results for the bot execution
      *
@@ -224,7 +231,7 @@ class MassMailbot extends Mailbot
         $qry = $this->_getMessageList();
         while ($msg = $qry->fetch(PDB::FETCH_OBJ)) {
             $receiver = new Member($msg->IdReceiver);
-            $email = $receiver->get_email();
+            $email = $this->getEmailAddress($receiver);
             $language = GetDefaultLanguage($msg->IdReceiver);
             $subj = $this->words->getFormattedInLang("BroadCast_Title_".$msg->word, $language, $msg->Username);
             $text = $this->words->getFormattedInLang("BroadCast_Body_".$msg->word, $language, $msg->Username);
@@ -243,7 +250,8 @@ class MassMailbot extends Mailbot
             }
             if (!$this->sendEmail($subj, $sender_mail, $email, $subj, $text, $language, $memberPrefersHtml)) {
                 $this->_updateMessageStatus($msg->IdBroadcast, 'Failed', $msg->IdReceiver);
-                $this->log("Cannot send broadcastmessages.id=#" . $msg->IdBroadcast . " to <b>".$msg->Username."</b> \$Email=[".$Email."] Type=[".$msg->broadcast_type."]", "mailbot");
+                $this->log("Cannot send broadcastmessages.id=#" . $msg->IdBroadcast . " to <b>".$msg->Username."</b>
+                \$Email=[".$email."] Type=[".$msg->broadcast_type."]", "mailbot");
             } else {
                 if ($msg->broadcast_type == "RemindToLog") {
                     $this->queryDB("update members set NbRemindWithoutLogingIn=NbRemindWithoutLogingIn+1 where members.id=".$msg->IdReceiver);
@@ -427,7 +435,6 @@ class ForumNotificationMailbot extends Mailbot
             break ;
         case 'buggy':
         default :
-            $word->$text="Problem in forum notification Type=".$notification->Type."<br />" ;
             break ;
         }
 
@@ -493,7 +500,7 @@ class ForumNotificationMailbot extends Mailbot
                 $from = array('forum@bewelcome.org' => '"BW ' . $recipient->Username . '"');
             }
 
-            $to = $recipient->get_email();
+            $to = $this->getEmailAddress($recipient);
             if (empty($to)) {
                 continue;
             }
@@ -504,7 +511,8 @@ class ForumNotificationMailbot extends Mailbot
             if (!$this->sendEmail($msg['subject'], $from, $to, $msg['subject'], $msg['body'], $MemberIdLanguage,
                 $memberPrefersHtml)) {
                 $this->_updateNotificationStatus($notification->id, 'Failed');
-                $this->log("Could not send posts_notificationqueue=#" . $notification->id . " to <b>".$post->Username."</b> \$Email=[".$Email."]", "mailbot");
+                $this->log("Could not send posts_notificationqueue=#" . $notification->id . " to <b>".$post->Username
+                    ."</b> \$Email=[" . $to . "]", "mailbot");
             } else {
                 $this->_updateNotificationStatus($notification->id, 'Sent');
             }
@@ -626,10 +634,11 @@ class MemberToMemberMailbot extends Mailbot
                 // TODO: replies are marked with IdParent != 0 in DB, check that earlier than in markMsgStatus if possible
 
                 $this->_updateMessageStatus($msg->id, 'Freeze');
-                $this->log("Message ".$msg->id." from ".$msg->senderUsername." is rejected (".$this->Sender->Status.")", "mailbot");
+                $this->log("Message ".$msg->id." from ". $this->Sender->Username." is rejected ("
+                    .$this->Sender->Status.")", "mailbot");
             } else {
                 $from = array($this->_calculateReplyAddress() => '"BW ' . $msg->senderUsername . '"' );
-                $to = $this->Receiver->get_email();
+                $to = $this->getEmailAddress($this->Receiver);
                 if (empty($to)) {
                     $this->_updateMessageStatus($msg->id, 'Failed');
                     continue;

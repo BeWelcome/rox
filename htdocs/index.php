@@ -22,6 +22,8 @@ Boston, MA  02111-1307, USA.
 
 */
 
+require '../vendor/autoload.php';
+
 function main() {
 
     if (!version_compare(phpversion(), '5.1.0', '>=')) {

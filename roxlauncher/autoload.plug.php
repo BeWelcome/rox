@@ -4,7 +4,7 @@
 /**
  * To be as flexible as possible,
  * our autoload uses a dynamically set callback
- * to determine wher a class is defined.
+ * to determine where a class is defined.
  */
 class AutoloadPlug
 {
@@ -44,20 +44,7 @@ class AutoloadPlug
  */
 function __autoload($classname)
 {
-    // Swift autoloader and rox autoloader collide; rebuild functionality here
-    if (strpos($classname, 'Swift_') !== false) {
-        // require the path to the swift source file
-
-        $path = SCRIPT_BASE .'lib/misc/swift-5.0.1/lib/classes/'. str_replace('_', '/', $classname).'.php';
-
-        if (!file_exists($path)) {
-            return;
-        }
-
-        require $path;
-    } else {
-        AutoloadPlug::autoload($classname);
-    }
+    AutoloadPlug::autoload($classname);
 }
 
 

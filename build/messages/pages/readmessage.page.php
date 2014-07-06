@@ -7,7 +7,7 @@ class ReadMessagePage extends MessagesBasePage
         $words = new MOD_words();
         $message = $this->message;
         $purifier = new MOD_htmlpure();
-        $purifier = $purifier->getAdvancedPurifier();
+        $purifier = $purifier->getAdvancedHtmlPurifier();
         $contact_username = $message->senderUsername;
         $model = new MembersModel();
         $direction_in = true;

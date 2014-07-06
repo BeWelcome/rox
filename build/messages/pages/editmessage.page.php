@@ -10,8 +10,9 @@ class EditMessagePage extends ComposeMessagePage
         // Sender becomes Receiver
         $disabledTinyMce = $this->sender->getPreference("PreferenceDisableTinyMCE", $default = "No") == 'Yes';
         if ($disabledTinyMce) {
-            MOD_html2text::setHtml($message->Message);
-            $message->Message = MOD_html2text::getMarkdown();
+            $html2text = new Html2Text\Html2Text($message->Message, false, array('dolinks' => 'inline',
+                'width' => 75));
+            $message->Message = $html2text->get_text();
         } else {
             $purifier = new MOD_htmlpure();
             $purifier = $purifier->getAdvancedHtmlPurifier();

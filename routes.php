@@ -93,15 +93,11 @@
     $this->addRoute('admin_activity_overview', 'admin/activitylogs', 'AdminGeneralController', 'activityLogs');
     
     // admin comments
-    $this->addRoute('admin_comments_list', 'admin/comments/list', 'AdminCommentsController', 'listComments');
-    $this->addRoute('admin_comments_toggle_hide', 'admin/comments/toggleHide', 'AdminCommentsController', 'toggleHide');
-    $this->addRoute('admin_comments_mark_checked', 'admin/comments/markChecked', 'AdminCommentsController', 'markChecked');    
-    $this->addRoute('admin_comments_update', 'admin/comments/update', 'AdminCommentsController', 'update');    
-    $this->addRoute('admin_comments_delete', 'admin/comments/delete', 'AdminCommentsController', 'delete');    
-    $this->addRoute('admin_comments_toggle_allow_edit', 'admin/comments/toggleAllowEdit', 'AdminCommentsController', 'toggleAllowEdit');
-    $this->addRoute('admin_comments_mark_admin_abuser_must_check', 'admin/comments/markAdminAbuserMustCheck', 'AdminCommentsController', 'markAdminAbuserMustCheck');
-    $this->addRoute('admin_comments_mark_admin_comment_must_check', 'admin/comments/markAdminCommentMustCheck', 'AdminCommentsController', 'markAdminCommentMustCheck');
-
+    $this->addRoute('admin_comments_list_from', 'admin/comments/list/from/:id:', 'AdminCommentsController', 'from');
+    $this->addRoute('admin_comments_list_to', 'admin/comments/list/to/:id:', 'AdminCommentsController', 'to');
+    $this->addRoute('admin_comments_list_single', 'admin/comments/list/single/:id:', 'AdminCommentsController', 'single');
+    $this->addRoute('admin_comments_list_subset', 'admin/comments/list/:subset:', 'AdminCommentsController', 'subset');
+    
     // admin rights
     $this->addRoute('admin_rights', 'admin/rights', 'AdminRightsController', 'assign');
     $this->addRoute('admin_rights_overview', 'admin/rights/overview', 'AdminRightsController', 'overview');

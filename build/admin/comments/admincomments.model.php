@@ -11,27 +11,49 @@ class AdminCommentsModel extends RoxModelBase {
      * @access public
      * @return array
      */
-    public function get($type, $from, $to)
+    public function getSubset($subset)
     {
         $entity = $this->createEntity('Comment');
         $entity->sql_order = "updated DESC";
-        if(isset($from) && $from>0)
-            return $entity->findByWhereMany("IdFromMember = ".$from);
-        elseif(isset($to) && $to>0)
-            return $entity->findByWhereMany("IdToMember = ".$to);
-        elseif($type === "showAll")
+        if($subset === "all")
             // TODO: this limitation is not like on production, but I found it
             // in the given code and it makes sense. I therefore assume it's
             // here on purpose, as an improvement, and leave it.
             return $entity->findByWhereMany(
                     "AdminAction NOT IN ('NothingNeeded', 'Checked')");
-        elseif($type === "showAbusive")
+        elseif($subset === "abusive")
             return $entity->findByWhereMany(
                     "AdminAction = 'AdminAbuserMustCheck'");
-        // default: "Negative"
-        return $entity->findByWhereMany("AdminAction = 'AdminCommentMustCheck'");
+        elseif($subset === "negative")
+            return $entity->findByWhereMany("AdminAction = 'AdminCommentMustCheck'");
+        // TODO: throw error
+        return null;
     }
     
+    public function getFrom($id)
+    {
+        $entity = $this->createEntity('Comment');
+        $entity->sql_order = "updated DESC";
+        return $entity->findByWhereMany("IdFromMember = ".$id);
+    }
+    
+    public function getTo($id)
+    {
+        $entity = $this->createEntity('Comment');
+        $entity->sql_order = "updated DESC";
+        return $entity->findByWhereMany("IdToMember = ".$id);
+    }
+    
+//    public function getFromTo($id)
+//    {
+//        $entity = $this->createEntity('Comment');
+//        $cs = $entity->findByWhereMany("id = " . $id);
+//        $c = $cs[0];
+//        $arr = array("from" => $c->getFromMember()->Username,
+//            "to" => $c->getToMember()->Username);
+//        return $arr;
+//    }
+//    
     /**
      * TODO: this a duplicate of a method in members.model.php: consolidate the two!
      *
@@ -41,7 +63,9 @@ class AdminCommentsModel extends RoxModelBase {
     public function getSingle($id)
     {
         $result = $this->createEntity('Comment')->findById($id);
-        return $result;
+        $a = array();
+        $a[] = $result;
+        return $a;
     }
     
     // TODO: this is a dummy
@@ -67,6 +91,10 @@ class AdminCommentsModel extends RoxModelBase {
         $proximity = "";
         foreach($syshcvol->LenghtComments as $elem)
         {
+            if(!array_key_exists($elem, $vars))
+            {
+                $vars[$elem] = "off";
+            }
             $this->dao->escape($vars[$elem]);
             $proximity .= ($vars[$elem]=='on' ? ($elem.',') : '');
         }
@@ -103,17 +131,17 @@ class AdminCommentsModel extends RoxModelBase {
     
     public function markChecked($id)
     {
-        $this->_setAdminAction($id, "Checked");
+        return $this->_setAdminAction($id, "Checked");
     }
     
     public function markAdminAbuserMustCheck($id)
     {
-        $this->_setAdminAction($id, "AdminAbuserMustCheck");
+        return $this->_setAdminAction($id, "AdminAbuserMustCheck");
     }
     
     public function markAdminCommentMustCheck($id)
     {
-        $this->_setAdminAction($id, "AdminCommentMustCheck");
+        return $this->_setAdminAction($id, "AdminCommentMustCheck");
     }
     
     private function _setAdminAction($id, $value)

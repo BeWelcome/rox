@@ -29,22 +29,15 @@ $userRights = MOD_right::get();
 $scope = $userRights->RightScope('Comments');
 
 ?>
-<h3>
-    <?php
-        // TODO: this doesn't work with the latest db, the code is archived! 
-        echo $this->words->get('VolunteerToolsBarTitle');
-    ?>
-</h3>
-<!-- TODO: how to insert ../../templates/adminoverview.leftsidebar.php? -->
-<br/>
+
 <h3><?php echo $words->get('Action'); ?></h3>
 <ul class="linklist">
-    <li><a href="<?php echo $this->router->url('admin_comments_list'); ?>?action=showNegative">Negative comments</a></li>
+    <li><a href="<?php echo $this->router->url('admin_comments_list_subset', array('subset' => 'negative')); ?>">Negative comments</a></li>
     <?php
         if ($scope=="AdminAbuser" || $scope=='"All"')
         {
     ?>
-        <li><a href="<?php echo $this->router->url('admin_comments_list'); ?>?action=showAbusive">Abusive comments</a></li>
+        <li><a href="<?php echo $this->router->url('admin_comments_list_subset', array('subset' => 'abusive')); ?>">Abusive comments</a></li>
     <?php } ?>
-    <li><a href="<?php echo $this->router->url('admin_comments_list'); ?>?action=showAll">All comments</a></li>
+    <li><a href="<?php echo $this->router->url('admin_comments_list_subset', array('subset' => 'all')); ?>">All comments</a></li>
 </ul>

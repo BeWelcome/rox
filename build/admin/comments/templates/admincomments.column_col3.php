@@ -19,35 +19,26 @@ along with this program; if not, see <http://www.gnu.org/licenses/> or
 write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
 Boston, MA  02111-1307, USA.
 */
-    /** 
-     * @author crumbking  
-     * @author Felix <fvanhove@gmx.de>
-     */
-
-    /** 
-     * comments management overview template
-     * 
-     * @package Apps
-     * @subpackage Admin
-     */
-
-$userRights = MOD_right::get();
-$scope = $userRights->RightScope('Comments');
+/** 
+ *
+ * comments management overview template
+ * 
+ * @author crumbking  
+ * @author Felix <fvanhove@gmx.de>
+ * @package Apps
+ * @subpackage Admin
+ */
 $total_comments = count($this->comments);
-$styles = array( 'highlight', 'blank' ); // alternating background for table rows
-
-if(isset($this->message) && strlen($this.message)>0)
-{
-    echo "<p class=\"note\">" . $this->message . "</p>";
-}
-
+if(!$this->comments[0])
+    return;
 echo <<<HTML
-<h2>Your Scope: {$scope}</h2>
+<h2>Your Scope: {$this->scope}</h2>
 
-<p>Displaying {$total_comments} comments.</p>
+<p>Displaying {$total_comments} comment(s).</p>
 
 HTML;
 $this->pager->render();
+
 foreach ($this->pager->getActiveSubset($this->comments) as $comment)
 {
     $from = ($member = $comment->getFromMember()) ? $member->Username : '';
@@ -57,9 +48,8 @@ foreach ($this->pager->getActiveSubset($this->comments) as $comment)
     $allowEdit = $this->allowEdit($comment->AllowEdit);
     $displayInPublic = $this->displayInPublic($comment->DisplayInPublic);
     echo <<<HTML
-<form name="update" action="{$this->router->url('admin_comments_list')}" method="POST">
-<div class="checkcomment {$styles[$total_bad_comments%2]}">
-    <div class="floatbox">
+<form name="update" method="POST" action="">
+<div class="floatbox box" style="background-color:#eee">
         <div class="float_left">
             <p><b>{$comment->AdminAction}</b></p>
             <p>
@@ -74,7 +64,7 @@ foreach ($this->pager->getActiveSubset($this->comments) as $comment)
                 <a href="members/{$from}">
                     <img class="framed" src="members/avatar/{$from}/?xs" height="100px" width="100px" alt="Profile" />
                 </a><br>
-                <a href="{$this->router->url('admin_comments_list')}?from={$comment->getFromMember()->id}">my comments</a><br>
+                <a href="{$this->router->url('admin_comments_list_from', array('id' => $comment->getFromMember()->id))}">my comments</a><br>
                 <a href="messages/compose/{$from}">contact me</a>
             </div>
             
@@ -83,7 +73,7 @@ foreach ($this->pager->getActiveSubset($this->comments) as $comment)
                 <a href="members/{$to}">
                     <img class="framed"  src="members/avatar/{$to}/?xs"  height="100px"  width="100px"  alt="Profile" />
                 </a><br>
-                <a href="{$this->router->url('admin_comments_list')}?to={$comment->getToMember()->id}">comments about me</a><br>
+                <a href="{$this->router->url('admin_comments_list_to', array('id' => $comment->getToMember()->id))}">comments about me</a><br>
                 <a href="messages/compose/{$to}">contact me</a>
             </div>
         </div>
@@ -94,66 +84,64 @@ foreach ($this->pager->getActiveSubset($this->comments) as $comment)
             <h4>Meeting type:</h4>
             <p>{$proximityBlock}</p>
         </div>    
-    </div>
      
-    <br>
+    <p style="clear: both;">
+    
     <h4>Meeting place:</h4>
     <textarea rows="5" cols="70" name="TextWhere">{$comment->TextWhere}</textarea>   
        
     <h4>Comment text:</h4>
     <textarea rows="8" cols="70" name="TextFree">{$comment->TextFree}</textarea>
 
-    <br>
-    <br>
+    <br/>
+    <br/>
     <input type="hidden" name="id" value="{$comment->id}"/>
-    {$this->getCallbackTag()}
+    <input type="hidden" name="nameFrom" value="{$comment->getFromMember()->Username}" />
+    <input type="hidden" name="nameTo" value="{$comment->getToMember()->Username}" />
+    <input type="hidden" name="subset" value="{$this->subset}" />
+    {$this->getCallbackTags()}
     <input type="submit" value="Update" />&nbsp;&nbsp;
-</div>
-</form>
 HTML;
     if($comment->AdminAction != "Checked" && $comment->AdminAction != "NothingNeeded")
     {
-        echo <<<HTML
-    <a href="{$this->router->url('admin_comments_toggle_allow_edit')}?id={$comment->id}" class="button">
-        {$allowEdit}
-    </a>&nbsp;&nbsp;
-        
-    <a href="{$this->router->url('admin_comments_toggle_hide')}?id={$comment->id}" class="button">
-        {$displayInPublic}
-    </a>
-        
-        <br/>
-        
-    <a href="{$this->router->url('admin_comments_mark_checked')}?id={$comment->id}" class="button">
-        Mark As Checked
-    </a>&nbsp;&nbsp;
-HTML;
-        if($scope=="AdminAbuser"||$scope=="\"All\"")
-        {
-            echo <<<HTML
-    <a href="{$this->router->url('admin_comments_mark_admin_abuser_must_check')}?id={$comment->id}" class="button">
-        Mark As Abuse
-    </a>&nbsp;&nbsp;
-HTML;
-        }
-        
-        if($scope=="AdminComment"||$scope=="\"All\"")
-        {
-            echo <<<HTML
-    <a href="{$this->router->url('admin_comments_mark_admin_comment_must_check')}?id={$comment->id}" class="button">
-        Move To Negative
-    </a>&nbsp;&nbsp;
-HTML;
-        }
+        $url = $this->router->url('admin_comments_list_single', array('id' => $comment->id));
+        ?>
+        <a href="<?php echo $url; ?>?toggleAllowEdit=<?=$comment->id ?>&nameFrom=<?= $comment->getFromMember()->Username ?>&nameTo=<?= $comment->getToMember()->Username ?>" class="button">
+            <?= $allowEdit ?>
+        </a>&nbsp;&nbsp;
+        <a href="<?php echo $url; ?>?toggleHide=<?=$comment->id ?>&nameFrom=<?= $comment->getFromMember()->Username ?>&nameTo=<?= $comment->getToMember()->Username ?>" class="button">
+            <?= $displayInPublic ?>
+        </a>
+        <br/>    
+        <a href="<?php echo $url ?>?markChecked=<?=$comment->id ?>&nameFrom=<?= $comment->getFromMember()->Username ?>&nameTo=<?= $comment->getToMember()->Username ?>" class="button">
+            Mark As Checked
+        </a>&nbsp;&nbsp;
+        <?php
 
-        if($scope=="AdminDelete"||$scope=="\"All\"")
-        {
-            echo <<<HTML
-        <a href="{$this->router->url('admin_comments_delete')}?id={$comment->id}&action={$this->action}" class="button">
+            if($this->scope=="AdminAbuser"||$this->scope=="\"All\"")
+            { ?>
+        <a href="<?php echo $url ?>?markAdminAbuserMustCheck=<?=$comment->id ?>&nameFrom=<?= $comment->getFromMember()->Username ?>&nameTo=<?= $comment->getToMember()->Username ?>" class="button">
+            Mark As Abuse
+        </a>&nbsp;&nbsp;    
+            <?php }
+
+            if($this->scope=="AdminComment"||$this->scope=="\"All\"")
+            { ?>
+        <a href="<?php echo $url ?>?markAdminCommentMustCheck=<?=$comment->id ?>&nameFrom=<?= $comment->getFromMember()->Username ?>&nameTo=<?= $comment->getToMember()->Username ?>" class="button">
+            Move To Negative
+        </a>&nbsp;&nbsp;
+            <?php }
+
+            if($this->scope=="AdminDelete"||$this->scope=="\"All\"")
+            { ?>
+        <a href="<?php echo $url ?>?delete=<?=$comment->id ?>&nameFrom=<?= $comment->getFromMember()->Username ?>&nameTo=<?= $comment->getToMember()->Username ?>" class="button">
             Delete
         </a>
-        </div>
-HTML;
-        }
+            <?php }
     }
+?>
+    </div>
+</form>
+<?php
 }
+?>

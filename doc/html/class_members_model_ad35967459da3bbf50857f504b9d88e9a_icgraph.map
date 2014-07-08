@@ -1,6 +1,0 @@
-<map id="MembersModel\writeMemberphoto" name="MembersModel\writeMemberphoto">
-<area shape="rect" id="node2" href="$class_members_model.html#a4d36f5c1ea18046e0da0ac00a0bb8f68" title="MembersModel\\avatarMake" alt="" coords="275,31,456,57"/>
-<area shape="rect" id="node3" href="$class_members_model.html#a3c484042bae7cc2de6313cbd66a1473d" title="MembersModel\\hasAvatar" alt="" coords="514,5,686,32"/>
-<area shape="rect" id="node5" href="$class_members_model.html#a5b3a1b31cd52fd45b61a78c38787ca8a" title="MembersModel\\updateProfile" alt="" coords="505,56,695,83"/>
-<area shape="rect" id="node4" href="$class_members_model.html#ac2b7e085df58f29a3324b669aa3d3bfa" title="MembersModel\\showAvatar" alt="" coords="744,5,925,32"/>
-</map>

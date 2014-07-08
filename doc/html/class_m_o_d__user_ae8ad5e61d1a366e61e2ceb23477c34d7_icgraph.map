@@ -1,5 +1,0 @@
-<map id="MOD_user\setAuth" name="MOD_user\setAuth">
-<area shape="rect" id="node2" href="$class_m_o_d__user.html#a90bd88ba077bf3c336eecb63b0600a36" title="MOD_user\\doBWLogin" alt="" coords="187,5,341,32"/>
-<area shape="rect" id="node4" href="$class_m_o_d__user.html#a08baeb68d8123818e19ffa4dde68c9c2" title="MOD_user\\doLogin" alt="" coords="197,56,331,83"/>
-<area shape="rect" id="node3" href="$class_m_o_d__bw__user___auth.html#a54b3a40fe0b630df21bad8de4929d752" title="MOD_bw_user_Auth\\doLogin" alt="" coords="390,5,581,32"/>
-</map>

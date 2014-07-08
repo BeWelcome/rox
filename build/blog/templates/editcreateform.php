@@ -25,7 +25,7 @@ $words = new MOD_words();
 <?php
 if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
     $textarea = 'create-txt';
-    require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js';
+    require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig_php.js';
 }
 ?>
 <form method="post" action="<?=$actionUrl?>" class="fieldset-menu-form" id="blog-create-form">

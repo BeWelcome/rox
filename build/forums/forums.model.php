@@ -510,7 +510,7 @@ WHERE
         'AS' => 'Asia',
         'EU' => 'Europe',
         'NA' => 'North America',
-        'SA' => 'South Amercia',
+        'SA' => 'South America',
         'OC' => 'Oceania'
     );
 
@@ -1219,6 +1219,10 @@ WHERE `postid` = $this->messageId
                         $vars['ThreadVisibility'] = 'MembersOnly';
                     }
                     $vars['PostVisibility'] = $vars['ThreadVisibility'];
+                }
+
+                if (!isset($vars['PostVisibility'])) {
+                    $vars['PostVisibility'] = 'MembersOnly';
                 }
 
                 $this->editPost($vars, $User->getId());

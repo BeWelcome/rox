@@ -1,5 +1,0 @@
-<map id="setMap" name="setMap">
-<area shape="rect" id="node2" href="$blog_small_map_geo_location_8js.html#af71ebc652d9facedc2a90278b559a549" title="changeMarkerBlog" alt="" coords="141,5,272,32"/>
-<area shape="rect" id="node3" href="$blog_small_map_geo_location_8js.html#ae805d5416a8b5347bc2eb6cd8ea33130" title="removeHighlight" alt="" coords="150,56,263,83"/>
-<area shape="rect" id="node4" href="$blog_small_map_geo_location_8js.html#a80b1aa5160a63b73c119b331d26548f5" title="setGeonameIdInFormBlog" alt="" coords="121,107,293,133"/>
-</map>

@@ -1,6 +1,0 @@
-<map id="LinkModel\createLinkList" name="LinkModel\createLinkList">
-<area shape="rect" id="node2" href="$class_link_model.html#a502a0cddaf9c1ebf6bf1ccd7741840fc" title="LinkModel\\getComments" alt="" coords="237,5,403,32"/>
-<area shape="rect" id="node4" href="$class_link_model.html#a1fa46f283f95db3d84ed4238e405672d" title="LinkModel\\getLinkPreferences" alt="" coords="222,56,418,83"/>
-<area shape="rect" id="node5" href="$class_link_model.html#a657166dc395fbf6855dbcf18bb77df5d" title="LinkModel\\getSpecialRelation" alt="" coords="223,107,417,133"/>
-<area shape="rect" id="node3" href="$class_rox_model_base.html#aa555ff4841071cf011132ef42ec8b791" title="RoxModelBase\\bulkLookup" alt="" coords="467,56,647,83"/>
-</map>

@@ -29,6 +29,7 @@
     $this->addRoute('group_addadmin','groups/:group_id:/addAdmin/:member_id:', 'GroupsController', 'addMemberAsAdmin');
     $this->addRoute('group_resignadmin','groups/:group_id:/resignAdmin', 'GroupsController', 'resignAsAdmin');
     $this->addRoute('group_declineinvitation','groups/:group_id:/declineinvitation/:member_id:', 'GroupsController', 'declineInvitation');
+    $this->addRoute('group_declinemember','groups/:group_id:/declinemember/:member_id:', 'GroupsController', 'declineMember');
     $this->addRoute('group_delete','groups/:group_id:/delete', 'GroupsController', 'delete');
     $this->addRoute('group_deleted','groups/:group_id:/delete/true', 'GroupsController', 'delete');
     $this->addRoute('group_forum','groups/:group_id:/forum', 'GroupsController', 'forum');
@@ -82,6 +83,8 @@
     $this->addRoute('members_update_note', 'members/:username:/note/edit', 'MembersController', 'addNote');
     $this->addRoute('members_delete_note', 'members/:username:/note/delete', 'MembersController', 'deleteNote');
 
+    $this->addRoute('members_edit_flags', 'members/:username:/flags', 'MembersController', 'editFlags');
+
     // admin temporary vol page route
     $this->addRoute('admin_tempvolstart', 'volunteer', 'AdminGeneralController', 'tempVolStart');
 
@@ -110,6 +113,20 @@
     $this->addRoute('admin_rights_edit', 'admin/rights/edit/:id:/:username:', 'AdminRightsController', 'edit');
     $this->addRoute('admin_rights_remove', 'admin/rights/remove/:id:/:username:', 'AdminRightsController', 'remove');
     $this->addRoute('admin_rights_tooltip', 'admin/rights/tooltip', 'AdminRightsController', 'tooltip');
+
+    // admin flags
+    $this->addRoute('admin_flags', 'admin/flags', 'AdminFlagsController', 'listMembers');
+    $this->addRoute('admin_flags_overview', 'admin/flags/overview', 'AdminFlagsController', 'overview');
+    $this->addRoute('admin_flags_members', 'admin/flags/list/members', 'AdminFlagsController', 'listMembers');
+    $this->addRoute('admin_flags_member', 'admin/flags/list/members/:username:', 'AdminFlagsController', 'listMembers');
+    $this->addRoute('admin_flags_flags', 'admin/flags/list/flags', 'AdminFlagsController', 'listFlags');
+    $this->addRoute('admin_flags_right', 'admin/flags/list/flags/:id:', 'AdminFlagsController', 'listFlags');
+    $this->addRoute('admin_flags_create', 'admin/flags/create', 'AdminFlagsController', 'create');
+    $this->addRoute('admin_flags_assign', 'admin/flags/assign', 'AdminFlagsController', 'assign');
+    $this->addRoute('admin_flags_assign', 'admin/flags/assign/:username:', 'AdminFlagsController', 'assign');
+    $this->addRoute('admin_flags_edit', 'admin/flags/edit/:id:/:username:', 'AdminFlagsController', 'edit');
+    $this->addRoute('admin_flags_remove', 'admin/flags/remove/:id:/:username:', 'AdminFlagsController', 'remove');
+    $this->addRoute('admin_flags_tooltip', 'admin/flags/tooltip', 'AdminFlagsController', 'tooltip');
 
     // admin words routes
     // the overview route redirects to an empty edit screen,
@@ -260,3 +277,6 @@
     $this->addRoute('safety_faq', 'safety/faq', 'safetyController', 'safetyFaq');
     $this->addRoute('safety_team', 'safety/team', 'safetyController', 'safetyTeam');
     $this->addRoute('safety_contact', 'feedback?IdCategory=2', 'safetyController', 'safetyContact');
+
+    // Update statistics
+    $this->addRoute('updatestats', 'about/updatestats', 'AboutController', 'updateStatistics');

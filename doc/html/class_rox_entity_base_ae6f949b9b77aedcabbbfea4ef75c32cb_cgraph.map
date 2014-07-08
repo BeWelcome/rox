@@ -1,6 +1,0 @@
-<map id="RoxEntityBase\findAll" name="RoxEntityBase\findAll">
-<area shape="rect" id="node2" href="$class_rox_entity_base.html#ab323bb7926fa55e45d9a24554637a0bb" title="RoxEntityBase\\getTableName" alt="" coords="209,5,405,32"/>
-<area shape="rect" id="node3" href="$class_rox_entity_base.html#a6aeb649cf94583fd93a2173cd9d6d000" title="RoxEntityBase\\queryForEntities" alt="" coords="203,56,411,83"/>
-<area shape="rect" id="node4" href="$class_rox_entity_base.html#a21c6b3bca8467772d4356378a084bde1" title="RoxEntityBase\\loadEntities" alt="" coords="459,56,640,83"/>
-<area shape="rect" id="node5" href="$class_rox_model_base.html#af80ad09d7c0c201e2a5732fb59feb334" title="RoxModelBase\\createEntity" alt="" coords="688,56,872,83"/>
-</map>

@@ -1,7 +1,0 @@
-<map id="set_stupidly_fast" name="set_stupidly_fast">
-<area shape="rect" id="node2" href="$class_simple_pie.html#a6ee35474cdb704d43762d47a1ae7a984" title="enable_order_by_date" alt="" coords="173,5,323,32"/>
-<area shape="rect" id="node3" href="$class_simple_pie.html#a9b86eec68c41a6b290ca136773998605" title="strip_htmltags" alt="" coords="196,56,300,83"/>
-<area shape="rect" id="node5" href="$class_simple_pie.html#ab0b064cf743bb7d7ee2c467493848db4" title="strip_attributes" alt="" coords="194,107,302,133"/>
-<area shape="rect" id="node6" href="$class_simple_pie.html#a3a38e3cf1b378fcb4ef7a6ad6411889b" title="set_image_handler" alt="" coords="183,157,313,184"/>
-<area shape="rect" id="node4" href="$class_simple_pie.html#a6b303a2312e4285288254980c646931c" title="sanitize" alt="" coords="371,107,437,133"/>
-</map>

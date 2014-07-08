@@ -1,7 +1,0 @@
-<map id="LoginModel\createMissingTBUser" name="LoginModel\createMissingTBUser">
-<area shape="rect" id="node2" href="$class_login_model.html#ab18e47413f9ea5654bd2a45c62ea17d3" title="LoginModel\\checkAuth" alt="" coords="253,5,408,32"/>
-<area shape="rect" id="node4" href="$class_login_model.html#ae93cac415ec44af6f216bd9b7ab82b26" title="LoginModel\\encryptPasswordTB" alt="" coords="227,56,435,83"/>
-<area shape="rect" id="node6" href="$class_rox_model_base.html#a7b9edf679f49fa2bea9b14d9b0f7a2f3" title="RoxModelBase\\singleLookup" alt="" coords="235,107,426,133"/>
-<area shape="rect" id="node3" href="$class_p_exception.html#a669262d781cd19942dc81f3d7ff897ce" title="PException\\addInfo" alt="" coords="501,5,635,32"/>
-<area shape="rect" id="node5" href="$class_login_model.html#a0817afc097f0e8096702de88d639865c" title="LoginModel\\randomString" alt="" coords="483,56,653,83"/>
-</map>

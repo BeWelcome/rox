@@ -1,7 +1,0 @@
-<map id="LoginModel\setupBWSession" name="LoginModel\setupBWSession">
-<area shape="rect" id="node2" href="$class_m_o_d__log.html#affe895ff124632e4c8c4d510ae4f73b6" title="MOD_log\\get" alt="" coords="295,5,393,32"/>
-<area shape="rect" id="node3" href="$class_login_model.html#a0f615f7c686ce0ebedca85208d3b996e" title="LoginModel\\logout" alt="" coords="281,56,407,83"/>
-<area shape="rect" id="node6" href="$class_rox_model_base.html#a7b9edf679f49fa2bea9b14d9b0f7a2f3" title="RoxModelBase\\singleLookup" alt="" coords="249,107,439,133"/>
-<area shape="rect" id="node4" href="$class_rox_model_base.html#a9857a4097be598f85aef9ea231910c42" title="RoxModelBase\\getLoggedIn\lMember" alt="" coords="488,49,672,90"/>
-<area shape="rect" id="node5" href="$class_rox_model_base.html#af80ad09d7c0c201e2a5732fb59feb334" title="RoxModelBase\\createEntity" alt="" coords="720,56,904,83"/>
-</map>

@@ -1,7 +1,0 @@
-<map id="loadEntity" name="loadEntity">
-<area shape="rect" id="node2" href="$class_rox_entity_base.html#a6287262cb9628d7a89d8fc16dcb51177" title="getColumns" alt="" coords="273,21,364,48"/>
-<area shape="rect" id="node4" href="$class_rox_entity_base.html#a4fea73e12c9f974d5e00573ccf744e61" title="isPKSet" alt="" coords="139,72,210,98"/>
-<area shape="rect" id="node6" href="$class_rox_entity_base.html#aea52249e2ff121bc2b9ea37e13cff95f" title="wipeEntity" alt="" coords="133,21,216,48"/>
-<area shape="rect" id="node3" href="$class_rox_entity_base.html#aa4afd6ae68aa53bee950d3d2c7b72f18" title="getTableDescription" alt="" coords="421,46,557,73"/>
-<area shape="rect" id="node5" href="$class_rox_entity_base.html#a7ec14e8ec3cff8883cd8ca176af2807c" title="getPrimaryKey" alt="" coords="265,72,373,98"/>
-</map>

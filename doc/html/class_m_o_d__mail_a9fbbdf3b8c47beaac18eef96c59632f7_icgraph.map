@@ -1,5 +1,0 @@
-<map id="MOD_mail\sendEmail" name="MOD_mail\sendEmail">
-<area shape="rect" id="node2" href="$class_signup_view.html#a0c9b2a3b698ed8406099e8bcec4637c7" title="SignupView\\registerMail" alt="" coords="217,5,378,32"/>
-<area shape="rect" id="node3" href="$class_invite_model.html#a405b3d70a5de728eda86fe812c2d6f8e" title="InviteModel\\sendOrComplain" alt="" coords="204,56,391,83"/>
-<area shape="rect" id="node4" href="$class_signup_view.html#a82e4435b9280b71f90013eb85ef7a2a5" title="SignupView\\signupTeamMail" alt="" coords="203,107,391,133"/>
-</map>

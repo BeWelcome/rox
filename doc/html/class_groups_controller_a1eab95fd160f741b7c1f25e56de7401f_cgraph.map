@@ -1,8 +1,0 @@
-<map id="acceptInvitation" name="acceptInvitation">
-<area shape="rect" id="node2" href="$class_rox_controller_base.html#a7a06d1c908cbeb60ebca15ecececfb68" title="RoxControllerBase\\redirect\lToLogin" alt="" coords="178,5,355,46"/>
-<area shape="rect" id="node3" href="$class_rox_component_base.html#a33a50c503ce289d20e2146edbe6abdbf" title="RoxComponentBase\\logWrite" alt="" coords="170,71,363,97"/>
-<area shape="rect" id="node6" href="$class_rox_controller_base.html#a3d2e9e7e4ee68e8c919812952ce83ac2" title="RoxControllerBase\\setFlash\lNotice" alt="" coords="175,122,359,163"/>
-<area shape="rect" id="node7" href="$class_rox_component_base.html#a4c107ce6073949a3af095193ea3530bc" title="RoxComponentBase\\getWords" alt="" coords="166,188,367,215"/>
-<area shape="rect" id="node4" href="$class_rox_component_base.html#af8283af3e7c972d9c276dc634eec0bdc" title="RoxComponentBase\\getLog" alt="" coords="416,71,600,97"/>
-<area shape="rect" id="node5" href="$class_m_o_d__log.html#a5ba61361bf0695a285bbaefefc427191" title="MOD_log\\get" alt="" coords="648,71,747,97"/>
-</map>

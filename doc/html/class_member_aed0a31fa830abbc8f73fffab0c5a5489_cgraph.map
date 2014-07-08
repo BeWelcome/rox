@@ -1,6 +1,0 @@
-<map id="hasRole" name="hasRole">
-<area shape="rect" id="node2" href="$class_rox_entity_base.html#a4fea73e12c9f974d5e00573ccf744e61" title="RoxEntityBase\\isPKSet" alt="" coords="134,5,295,32"/>
-<area shape="rect" id="node5" href="$class_rox_model_base.html#a31265ca609e83367571773a2e4db3035" title="RoxModelBase\\createEntity" alt="" coords="123,56,307,83"/>
-<area shape="rect" id="node3" href="$class_rox_entity_base.html#a7ec14e8ec3cff8883cd8ca176af2807c" title="RoxEntityBase\\getPrimaryKey" alt="" coords="355,5,554,32"/>
-<area shape="rect" id="node4" href="$class_rox_entity_base.html#aa4afd6ae68aa53bee950d3d2c7b72f18" title="RoxEntityBase\\getTableDescription" alt="" coords="603,5,829,32"/>
-</map>

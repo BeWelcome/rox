@@ -1415,14 +1415,14 @@ function ewiki_page_edit($id, $data, $action) {
    #-- "Edit Me"
    $o = ewiki_make_title($id, ewiki_t("EDITTHISPAGE").(" '{$id}'"), 2, $action, "", "_MAY_SPLIT=1");
 
-   #-- normalize to UNIX newlines
+    #-- normalize to UNIX newlines
    $_REQUEST["content"] = str_replace("\015\012", "\012", $_REQUEST["content"]);
    $_REQUEST["content"] = str_replace("\015", "\012", $_REQUEST["content"]);
 
     // encode entities -dh
-    $_REQUEST["content"] = htmlentities($_REQUEST["content"], ENT_NOQUOTES);
+    $_REQUEST["content"] = htmlentities($_REQUEST["content"], ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8');
 
-   #-- preview
+    #-- preview
    if (isset($_REQUEST["preview"])) {
       $o .= $ewiki_plugins["edit_preview"][0]($data);
    }

@@ -1,6 +1,0 @@
-<map id="findByWhereMany" name="findByWhereMany">
-<area shape="rect" id="node2" href="$class_rox_entity_base.html#a93566f2c8d709d410ae8ec46b813999b" title="getTableName" alt="" coords="187,5,293,32"/>
-<area shape="rect" id="node3" href="$class_rox_entity_base.html#a4583df34edb9afa955044027de7d57d3" title="queryForEntities" alt="" coords="181,56,299,83"/>
-<area shape="rect" id="node4" href="$class_rox_entity_base.html#a540d3feaa287dff42642c68bc7b57206" title="loadEntities" alt="" coords="347,56,437,83"/>
-<area shape="rect" id="node5" href="$class_rox_model_base.html#a31265ca609e83367571773a2e4db3035" title="RoxModelBase\\createEntity" alt="" coords="485,56,669,83"/>
-</map>

@@ -22,13 +22,7 @@
     <div class="c50l">
       <div class="subcl">
 
-        <?php if (($logged_member = $this->model->getLoggedInMember()) && $logged_member->hasOldRight(array('Admin' => '', 'SafetyTeam' => '', 'Accepter' => ''))) : ?>
-        <div id='member-status'>
-          <?php  if ($member->Status!="Active") {
-                    echo $words->get('MemberStatus') . ': ' . $member->Status;
-                }; ?>
-        </div>
-        <?php endif ;?>
+        <?php echo $this->statusForm($member); ?>
         <div id="navigation-path" >
           <h2>
             <?php

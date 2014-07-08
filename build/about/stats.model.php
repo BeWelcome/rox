@@ -538,5 +538,52 @@ LIMIT 0,60
         fwrite($stats, date('Y-m-d'));
         fclose($stats);
     }
+
+    public function updateStatistics()
+    {
+        // Number of member
+        $query = "SELECT COUNT(*) AS cnt FROM members WHERE Status in ('Active','ChoiceInactive','OutOfRemind')";
+        $row = $this->singleLookup($query);
+        $NbActiveMembers = $row->cnt;
+
+        // Number of member with at least one positive comment
+        $query = "SELECT COUNT(DISTINCT(members.id)) AS cnt FROM members,comments WHERE Status in ('Active','ChoiceInactive','OutOfRemind') AND members.id=comments.IdToMember AND comments.Quality='Good'";
+        $row = $this->singleLookup($query);
+        $NbMemberWithOneTrust = $row->cnt;
+
+        $d1 = strftime("%Y-%m-%d 00:00:00", mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
+        $d2 = strftime("%Y-%m-%d 00:00:00", mktime(0, 0, 0, date("m"), date("d"), date("Y")));
+
+        // Number of member who have logged
+        $NbMemberWhoLoggedToday = 0;
+        $str = "SELECT COUNT(distinct(members.id)) as cnt from members right join " . PVars::getObj('syshcvol')->ARCH_DB . ".logs on  members.id=" . PVars::getObj('syshcvol')->ARCH_DB . ".logs.IdMember and " . PVars::getObj('syshcvol')->ARCH_DB . ".logs.type='Login' and " . PVars::getObj('syshcvol')->ARCH_DB . ".logs.created between '$d1' and '$d2' and " . PVars::getObj('syshcvol')->ARCH_DB . ".logs.Str like 'Successful login%' ";
+        $rr = $this->dao->query($str);
+        if ($rr) {
+            $row = $rr->fetch(PDB::FETCH_OBJ);
+            $NbMemberWhoLoggedToday = $row->cnt;
+        }
+
+        $NbMessageSent = 0;
+        $str = "SELECT COUNT(*) as cnt from messages where DateSent between '$d1' and '$d2' ";
+        $rr = $this->dao->query($str);
+        if ($rr) {
+            $row = $rr->fetch(PDB::FETCH_OBJ);
+            $NbMessageSent = $row->cnt;
+        }
+
+        // Number of message read
+        $NbMessageRead = 0;
+        $str = "SELECT COUNT(*) as cnt from messages where WhenFirstRead between '$d1' and '$d2' ";
+        $rr = $this->dao->query($str);
+        if ($rr) {
+            $row = $rr->fetch(PDB::FETCH_OBJ);
+            $NbMessageRead = $row->cnt;
+        }
+
+        $str = "INSERT INTO stats ( id , created , NbActiveMembers , NbMessageSent , NbMessageRead , NbMemberWithOneTrust , NbMemberWhoLoggedToday )VALUES (NULL ,CURRENT_TIMESTAMP , $NbActiveMembers , $NbMessageSent , $NbMessageRead , $NbMemberWithOneTrust , $NbMemberWhoLoggedToday )";
+        $this->dao->query($str);
+
+        return true;
+    }
 }
 

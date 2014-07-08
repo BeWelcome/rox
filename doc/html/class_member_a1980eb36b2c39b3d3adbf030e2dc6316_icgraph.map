@@ -1,6 +1,0 @@
-<map id="Member\get_trads_fields" name="Member\get_trads_fields">
-<area shape="rect" id="node2" href="$class_member.html#a35117f93b3f08a7a7727256a5c59499e" title="Member\\get_trads" alt="" coords="219,5,346,32"/>
-<area shape="rect" id="node3" href="$class_member.html#a689f7e2b8eefc4cbc042a4bd546bdb36" title="Member\\get_trad" alt="" coords="584,5,704,32"/>
-<area shape="rect" id="node5" href="$class_member.html#aefdaed5f6eba6a5342d7c23288b72fa9" title="Member\\get_trad_by\l_tradid" alt="" coords="395,27,536,69"/>
-<area shape="rect" id="node4" href="$class_api_model.html#a8246a5a00f0dc94d47b4f19028b26491" title="ApiModel\\getMemberData" alt="" coords="753,5,925,32"/>
-</map>

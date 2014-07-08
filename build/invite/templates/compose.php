@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 */
 ?>
 
-<form method="post" action="<?=$page_url ?>">
+<form method="post" action="<?=$page_url ?>" id="invite-form">
     <?=$callback_tag ?>
     <div class="row">
         <h3><label for="email"><?php echo $words->getFormatted("InviteEmailLabel"); ?></label></h3>
@@ -40,15 +40,9 @@ Boston, MA  02111-1307, USA.
     
     <div class="row">
         <h3><label for="text"><?php echo $words->getFormatted("InviteTextLabel"); ?></label></h3>
-        <p><textarea name="text" id="text" rows="13" cols="60"><?= htmlspecialchars($text, ENT_QUOTES) ?></textarea></p>
+        <p><textarea name="text" id="text" class="mce" rows="13" cols="60"><?= htmlspecialchars($text,
+                    ENT_QUOTES) ?></textarea></p>
         <span class="desc"><?php echo $words->getFormatted("InviteSubjectDesc"); ?></span>
-    </div>
-    
-    <div class="row">
-        <p>
-            <input type="checkbox" name="attach_picture" id="JoinMemberPict"<?=$attach_picture ?>/>
-            <label for="JoinMemberPict"><?php echo $words->getFormatted("InvitePicture"); ?></label>
-        </p>
     </div>
     
     <p><input type="submit" value="Send Invitation"/></p>

@@ -1,6 +1,0 @@
-<map id="MOD_user_Auth\hasRight" name="MOD_user_Auth\hasRight">
-<area shape="rect" id="node2" href="$class_m_o_d__user___auth.html#a6df867cc20fe0784e28d0b1af9c1d253" title="MOD_user_Auth\\checkRight" alt="" coords="227,31,413,57"/>
-<area shape="rect" id="node3" href="$class_m_o_d__user___auth.html#a5d0620889a8a2c20498cffded64b2515" title="MOD_user_Auth\\addApp" alt="" coords="470,5,637,32"/>
-<area shape="rect" id="node5" href="$class_m_o_d__user___auth.html#a26328d221af30a61d0e275470abee9e7" title="MOD_user_Auth\\rightExists" alt="" coords="461,56,645,83"/>
-<area shape="rect" id="node4" href="$class_m_o_d__user___auth.html#aabf7688cf5f309796202bca7b0a420b6" title="MOD_user_Auth\\appExists" alt="" coords="694,5,874,32"/>
-</map>

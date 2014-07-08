@@ -1,8 +1,0 @@
-<map id="resignAsAdmin" name="resignAsAdmin">
-<area shape="rect" id="node2" href="$class_rox_controller_base.html#a8ef67f8cbc60e5041c18da020e1e0ac6" title="RoxControllerBase\\setFlash\lError" alt="" coords="175,5,359,46"/>
-<area shape="rect" id="node3" href="$class_rox_component_base.html#a4c107ce6073949a3af095193ea3530bc" title="RoxComponentBase\\getWords" alt="" coords="166,71,367,97"/>
-<area shape="rect" id="node4" href="$class_rox_component_base.html#a33a50c503ce289d20e2146edbe6abdbf" title="RoxComponentBase\\logWrite" alt="" coords="170,121,363,148"/>
-<area shape="rect" id="node7" href="$class_rox_controller_base.html#a3d2e9e7e4ee68e8c919812952ce83ac2" title="RoxControllerBase\\setFlash\lNotice" alt="" coords="175,173,359,214"/>
-<area shape="rect" id="node5" href="$class_rox_component_base.html#af8283af3e7c972d9c276dc634eec0bdc" title="RoxComponentBase\\getLog" alt="" coords="416,121,600,148"/>
-<area shape="rect" id="node6" href="$class_m_o_d__log.html#a5ba61361bf0695a285bbaefefc427191" title="MOD_log\\get" alt="" coords="648,121,747,148"/>
-</map>

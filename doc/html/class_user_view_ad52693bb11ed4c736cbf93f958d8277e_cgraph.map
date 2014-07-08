@@ -1,5 +1,0 @@
-<map id="UserView\registerMail" name="UserView\registerMail">
-<area shape="rect" id="node2" href="$class_m_o_d__mail___multipart.html#ab6b0cccee0bdab580f791de9d83d5121" title="MOD_mail_Multipart\l\\addAttachment" alt="" coords="206,5,346,46"/>
-<area shape="rect" id="node3" href="$class_p_exception.html#a669262d781cd19942dc81f3d7ff897ce" title="PException\\addInfo" alt="" coords="209,71,343,97"/>
-<area shape="rect" id="node4" href="$class_a_p_p___user.html#afb9dac964c0c50d69d297dd891cf5e40" title="APP_User\\getSetting" alt="" coords="203,121,349,148"/>
-</map>

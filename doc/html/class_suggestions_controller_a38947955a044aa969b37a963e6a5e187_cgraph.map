@@ -1,6 +1,0 @@
-<map id="SuggestionsController\editCreate" name="SuggestionsController\editCreate">
-<area shape="rect" id="node2" href="$class_rox_component_base.html#a89d9333d4f8c1d421c68fd580942d532" title="RoxComponentBase\\getWords" alt="" coords="203,5,405,32"/>
-<area shape="rect" id="node3" href="$class_rox_controller_base.html#a6f01a8f8d31733a545556d2b36e4071e" title="RoxControllerBase\\redirect" alt="" coords="215,56,393,83"/>
-<area shape="rect" id="node4" href="$class_rox_controller_base.html#a2c5d64649e0267f32198dd37a02c5d28" title="RoxControllerBase\\redirect\lAbsolute" alt="" coords="454,74,631,115"/>
-<area shape="rect" id="node5" href="$class_rox_controller_base.html#a08b2e66b9f6d0349269bf0aeb35dd5b9" title="RoxControllerBase\\setFlash\lNotice" alt="" coords="212,158,396,199"/>
-</map>

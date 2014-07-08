@@ -520,6 +520,11 @@ class ForumsView extends RoxAppView {
             return '';
         }
 
+        if ($IdGroup == SuggestionsModel::getGroupId()) {
+            // Indicate to the form that only MembersOnly is allowed;
+            return '';
+        }
+
         if ($highestVisibility == 'GroupOnly') {
             // This will tell the form that the post is GroupOnly (IdGroup set and no visibilityCheckbox content
             return '';

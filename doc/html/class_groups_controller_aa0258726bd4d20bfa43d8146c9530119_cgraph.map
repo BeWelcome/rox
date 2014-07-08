@@ -1,9 +1,0 @@
-<map id="left" name="left">
-<area shape="rect" id="node2" href="$class_rox_controller_base.html#a7a06d1c908cbeb60ebca15ecececfb68" title="RoxControllerBase\\redirect\lToLogin" alt="" coords="106,5,283,46"/>
-<area shape="rect" id="node3" href="$class_rox_controller_base.html#a3d2e9e7e4ee68e8c919812952ce83ac2" title="RoxControllerBase\\setFlash\lNotice" alt="" coords="103,70,287,111"/>
-<area shape="rect" id="node4" href="$class_rox_component_base.html#a4c107ce6073949a3af095193ea3530bc" title="RoxComponentBase\\getWords" alt="" coords="94,136,295,163"/>
-<area shape="rect" id="node5" href="$class_rox_component_base.html#a33a50c503ce289d20e2146edbe6abdbf" title="RoxComponentBase\\logWrite" alt="" coords="98,187,291,213"/>
-<area shape="rect" id="node8" href="$class_rox_controller_base.html#a8ef67f8cbc60e5041c18da020e1e0ac6" title="RoxControllerBase\\setFlash\lError" alt="" coords="103,238,287,279"/>
-<area shape="rect" id="node6" href="$class_rox_component_base.html#af8283af3e7c972d9c276dc634eec0bdc" title="RoxComponentBase\\getLog" alt="" coords="344,187,528,213"/>
-<area shape="rect" id="node7" href="$class_m_o_d__log.html#a5ba61361bf0695a285bbaefefc427191" title="MOD_log\\get" alt="" coords="576,187,675,213"/>
-</map>

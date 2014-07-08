@@ -52,15 +52,25 @@ class MembersModel extends RoxModelBase
     }
 
     public function getStatuses() {
-        // get list of possible statuses
-        $res = $this->dao->query("SHOW COLUMNS FROM members LIKE 'status'");
-        if (!$res) {
-            return array();
-        }
-        $line = $res->fetch(PDB::FETCH_ASSOC);
-        $set = $line['Type'];
-        $set = substr($set, 6, strlen($set) - 8); // Remove "enum(" at start and ");" at end
-        return preg_split("/','/", $set); // Split into and array
+        return array('Active',
+            'MailToConfirm',
+            'PassedAway',
+            'Pending',
+            'DuplicateSigned',
+            'NeedMore',
+            'Banned',
+            'ChoiceInactive',
+            'OutOfRemind',
+            'Rejected',
+            'CompletedPending',
+            'TakenOut',
+            'Sleeper',
+            'Renamed',
+            'ActiveHidden',
+            'SuspendedBeta',
+            'AskToLeave',
+            'StopBoringMe',
+            'Buggy');
     }
 
     /**
@@ -1545,8 +1555,24 @@ VALUES
      */
     public function deleteNoteForMember($memberId) {
         $loggedInMember = $this->getLoggedInMember();
-        // Check if it is a new note
+
         $sql = "DELETE FROM mycontacts WHERE IdMember = ". $loggedInMember->id . " AND IdContact = ". $memberId;
         $res = $this->dao->query($sql);
+    }
+
+    /**
+     * Deletes the note for a member
+     *
+     * @param string memberId Id of the member for which the note was written
+     */
+    public function setStatus($memberId, $newStatus)
+    {
+        $member = $this->createEntity('Member', $memberId);
+        if ($member) {
+            $member->Status = $newStatus;
+            $member->update();
+            return true;
+        }
+        return false;
     }
 }

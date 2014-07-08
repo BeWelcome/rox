@@ -1,6 +1,0 @@
-<map id="SuggestionsModel\getGroupId" name="SuggestionsModel\getGroupId">
-<area shape="rect" id="node2" href="$class_suggestions_model.html#a4a9ea5149a8f9b6b874122237f2c9a8f" title="SuggestionsModel\\_\l_construct" alt="" coords="294,5,434,46"/>
-<area shape="rect" id="node3" href="$class_forums.html#a08743cb0310073ce7a5eb84a7e43e013" title="Forums\\__construct" alt="" coords="295,71,433,97"/>
-<area shape="rect" id="node4" href="$class_forums_controller.html#a49d9113342b70e6241275435b118406c" title="ForumsController\\replySuggestions\lProcess" alt="" coords="251,122,477,163"/>
-<area shape="rect" id="node5" href="$class_forums_controller.html#ad614b04d05cd365a72b0f1ff95073a15" title="ForumsController\\showExternal\lSuggestionsThreadReply" alt="" coords="525,122,728,163"/>
-</map>

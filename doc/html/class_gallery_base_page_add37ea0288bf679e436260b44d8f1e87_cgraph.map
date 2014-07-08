@@ -1,8 +1,0 @@
-<map id="GalleryBasePage\teaser" name="GalleryBasePage\teaser">
-<area shape="rect" id="node2" href="$class_gallery_base_page.html#a63d5c9e965dc71d226844fd4eb6be5df" title="GalleryBasePage\\breadcrumbs" alt="" coords="221,5,424,32"/>
-<area shape="rect" id="node4" href="$class_gallery_base_page.html#a3abf67318000fa72301e0f79441b98ee" title="GalleryBasePage\\submenu" alt="" coords="233,107,413,133"/>
-<area shape="rect" id="node7" href="$class_gallery_base_page.html#a99e0bee207d754cc63453feef6a316b9" title="GalleryBasePage\\teaserHeadline" alt="" coords="216,56,429,83"/>
-<area shape="rect" id="node3" href="$class_rox_component_base.html#a89d9333d4f8c1d421c68fd580942d532" title="RoxComponentBase\\getWords" alt="" coords="478,27,679,53"/>
-<area shape="rect" id="node5" href="$class_gallery_base_page.html#a3134272ec98e8c8c5a1b81b1e8d641e3" title="GalleryBasePage\\getSubmenu\lActiveItem" alt="" coords="479,89,679,130"/>
-<area shape="rect" id="node6" href="$class_gallery_base_page.html#a4dc3474c4f6dce1ef9046f4fcb424a5b" title="GalleryBasePage\\getSubmenu\lItems" alt="" coords="479,154,679,195"/>
-</map>

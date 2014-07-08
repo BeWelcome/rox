@@ -1,6 +1,0 @@
-<map id="getActivitiesForMember" name="getActivitiesForMember">
-<area shape="rect" id="node2" href="$class_rox_entity_base.html#ad3dea9437766859053a5c8af2f69a1b9" title="RoxEntityBase\\findBySQLMany" alt="" coords="214,5,421,32"/>
-<area shape="rect" id="node3" href="$class_rox_entity_base.html#a4583df34edb9afa955044027de7d57d3" title="RoxEntityBase\\queryForEntities" alt="" coords="469,5,677,32"/>
-<area shape="rect" id="node4" href="$class_rox_entity_base.html#a540d3feaa287dff42642c68bc7b57206" title="RoxEntityBase\\loadEntities" alt="" coords="725,5,907,32"/>
-<area shape="rect" id="node5" href="$class_rox_model_base.html#a31265ca609e83367571773a2e4db3035" title="RoxModelBase\\createEntity" alt="" coords="955,5,1139,32"/>
-</map>

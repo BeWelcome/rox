@@ -39,18 +39,11 @@ class GalleryController extends RoxControllerBase {
         }
         switch ($request[1]) {
             case 'ajax':
-                if (!isset($request[2]))
+                if (!isset($request[2])){
                     PPHP::PExit();
-                switch ($request[2]) {
-                    case 'set':
-                        $this->ajaxGallery();
-                        break;
-                    case 'image':
-                        $this->ajaxImage();
-                        break;
                 }
+                $this->ajaxImageGallery($request[2]);
                 break;
-
             case 'thumbimg':
                 PRequest::ignoreCurrentRequest();
                 if (!isset($_GET['id'])) {
@@ -207,7 +200,7 @@ class GalleryController extends RoxControllerBase {
                         }
                         
                     default:
-                        return $this->overview();
+                        $this->redirect('main');
                 }
         }
     }
@@ -407,10 +400,6 @@ class GalleryController extends RoxControllerBase {
         $page->statement = $this->_model->getLatestItems($userId);
         $page->cnt_pictures = $page->statement? $page->statement->numRows() : 0;
         $page->model = $this->_model;
-        
-        // $P->content .= $vw->allGalleries($galleries);
-        // $P->content .= $vw->userControls($request[3], 'galleries');
-        // $P->content .= $vw->userOverviewSimple($statement, $request[3], '');
         $page->loggedInMember = $this->loggedInMember;
         return $page;
     }
@@ -510,59 +499,42 @@ class GalleryController extends RoxControllerBase {
         require_once 'templates/overview.php';
     }
 
-    private function ajaxImage() {
+    /**
+     * Handles edits to titles and descriptions of galleries and galleryitems
+     *
+     * that the user makes through Ajaxrequests
+     *
+     * @access private
+     * @param string $type Indicator for Gallery ('set') or Image ('image')
+     **/
+    private function ajaxImageGallery($type) {
+        $words = $this->getWords();
         PRequest::ignoreCurrentRequest();
         if (!$member = $this->loggedInMember)
             return false;
     	// Modifying an IMAGE using an ajax-request
         if( isset($_GET['item']) ) {
             $id = $_GET['item'];
-            if ($member->get_userId() == $this->_model->imageOwner($id)) {
+            if ($member->get_userId() == $this->_model->imageGalleryOwner($type,$id)) {
                 if( isset($_GET['title']) ) {
                     $str = htmlentities($_GET['title'], ENT_QUOTES, "UTF-8");
-                    if (!empty($str)) {
-                    $this->_model->ajaxModImage($id,$str,'');
-                    $str2 = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
-                    echo $str2;
-                    } else echo 'Can`t be empty! Click to edit!';
+                    if ($str === '') {
+                        echo $words->get('GalleryCannotBeEmpty');
+                    } else {
+                        $this->_model->ajaxModImageGallery($type,$id,$str,'');
+                        $str = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
+                        echo $str;
+                    }
                 }
                 if( isset($_GET['text']) ) {
                     $str = htmlentities($_GET['text'], ENT_QUOTES, "UTF-8");
-                    $this->_model->ajaxModImage($id,'',$str);
+                    $this->_model->ajaxModImageGallery($type, $id,'',$str);
                     $str = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
-                    echo $str;
-                }
-            PPHP::PExit();
-            }
-        }
-        echo 'Error!';
-        PPHP::PExit();
-    }
-    
-    // NEW FUNCTIONS
-    
-    private function ajaxGallery() {
-        // Modifying a PHOTOSET(GALLERY) using an ajax-request
-        PRequest::ignoreCurrentRequest();
-        if (!$member = $this->loggedInMember)
-            return false;
-        if (isset($_GET['item']) ) {
-            $id = $_GET['item'];
-            if ($member->get_userId() == $this->_model->galleryOwner($id)) {
-                if( isset($_GET['title']) ) {
-                    $str = htmlentities($_GET['title'], ENT_QUOTES, "UTF-8");
-                    if (!empty($str)) {
-                    $this->_model->ajaxModGallery($id,$str,'');
-                    $str2 = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
-                    echo $str2;
-                    } else echo 'Can`t be empty! Click to edit!';
-                } elseif( isset($_GET['text']) ) {
-                    $str = htmlentities($_GET['text'], ENT_QUOTES, "UTF-8");
-                    if (empty($str)) {
-                    $str = ' ';
+                    if ($str === '') {
+                        echo $words->get('GalleryAddDescription');
+                    } else {
+                        echo $str;
                     }
-                    $this->_model->ajaxModGallery($id,'',$str);
-                    echo $str;
                 }
             PPHP::PExit();
             }

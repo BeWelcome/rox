@@ -26,7 +26,7 @@ if (!$this->viewOnly) { ?>
 </div>
 <div class="subcolumns row">
     <label for="suggestion-option-desc"><?php echo $words->get('suggestionAddOptionDesc'); ?>*</label><br/>
-    <textarea id="suggestion-option-desc" name="suggestion-option-desc" rows="10" cols="80" style="width:99%"><?php echo $vars['suggestion-option-desc']; ?></textarea>
+    <textarea id="suggestion-option-desc" name="suggestion-option-desc" class="mce" rows="10" cols="80" style="width:99%"><?php echo $vars['suggestion-option-desc']; ?></textarea>
 </div>
 <div class="subcolumns row">
 <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $this->suggestion->id; ?>" />

@@ -1,6 +1,0 @@
-<map id="getPrivileges" name="getPrivileges">
-<area shape="rect" id="node2" href="$class_role.html#ab056a45d9bd671b6b0865d42a463fe2f" title="getEquivalentPrivilege" alt="" coords="164,5,311,32"/>
-<area shape="rect" id="node3" href="$class_role.html#abe87885caa28fea1fa297965cb3a7ac5" title="addForMember" alt="" coords="183,56,292,83"/>
-<area shape="rect" id="node4" href="$class_role.html#a818ae870f17bf21b8f8e8a8308036d53" title="removeFromMember" alt="" coords="167,107,307,133"/>
-<area shape="rect" id="node5" href="$class_role.html#ad996cd64a5cee8d98523aed9133cf23e" title="getScopesForMemberRole" alt="" coords="149,157,325,184"/>
-</map>

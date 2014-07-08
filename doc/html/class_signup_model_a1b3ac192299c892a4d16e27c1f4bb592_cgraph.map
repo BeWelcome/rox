@@ -1,9 +1,0 @@
-<map id="registerProcess" name="registerProcess">
-<area shape="rect" id="node2" href="$class_signup_model.html#a828af61057cdc8e3ced9107eda1b021b" title="checkRegistrationForm" alt="" coords="187,5,343,32"/>
-<area shape="rect" id="node3" href="$class_signup_model.html#afbabdd3eb53dabb999ebfe388c6a17fb" title="polishFormValues" alt="" coords="202,56,329,83"/>
-<area shape="rect" id="node4" href="$class_m_o_d__log.html#a5ba61361bf0695a285bbaefefc427191" title="MOD_log\\get" alt="" coords="411,216,509,243"/>
-<area shape="rect" id="node5" href="$class_signup_model.html#ae1ca0f4e0304c34c7ac1f435de30e751" title="registerBWMember" alt="" coords="198,157,333,184"/>
-<area shape="rect" id="node6" href="$class_signup_model.html#afacf7bb21425893949f75efdc1321577" title="takeCareForNonUniqueEmail\lAddress" alt="" coords="171,209,360,250"/>
-<area shape="rect" id="node7" href="$class_signup_model.html#ae8abdd45cf38f64d008a4117e66b8fa1" title="takeCareForComputerUsedBy\lBWMember" alt="" coords="168,274,363,315"/>
-<area shape="rect" id="node8" href="$class_signup_model.html#add6ccc66a376e8abac58c652e1fca04b" title="writeFeedback" alt="" coords="212,340,319,367"/>
-</map>

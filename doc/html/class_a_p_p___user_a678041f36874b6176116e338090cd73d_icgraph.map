@@ -1,6 +1,0 @@
-<map id="getSetting" name="getSetting">
-<area shape="rect" id="node2" href="$class_signup_model.html#ae2f8e2e3bbf72f9c78b5514f442f5a92" title="SignupModel\\confirmRegister" alt="" coords="137,5,327,32"/>
-<area shape="rect" id="node3" href="$class_signup_view.html#a37af7e5d44b9e26db75389b260dab683" title="SignupView\\registerMail" alt="" coords="151,56,313,83"/>
-<area shape="rect" id="node4" href="$class_user.html#ae2f8e2e3bbf72f9c78b5514f442f5a92" title="User\\confirmRegister" alt="" coords="161,107,303,133"/>
-<area shape="rect" id="node5" href="$class_user_view.html#acc6aa83ae3859f5a4a60eb604cb712e4" title="UserView\\registerMail" alt="" coords="158,157,306,184"/>
-</map>

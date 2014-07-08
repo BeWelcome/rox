@@ -1,6 +1,0 @@
-<map id="countAll" name="countAll">
-<area shape="rect" id="node2" href="$class_rox_entity_base.html#a93566f2c8d709d410ae8ec46b813999b" title="getTableName" alt="" coords="125,5,230,32"/>
-<area shape="rect" id="node3" href="$class_rox_entity_base.html#a7ec14e8ec3cff8883cd8ca176af2807c" title="getPrimaryKey" alt="" coords="123,56,231,83"/>
-<area shape="rect" id="node5" href="$class_rox_entity_base.html#a0a662e767f4500a295bceae6a8d881e4" title="sqlCount" alt="" coords="141,107,214,133"/>
-<area shape="rect" id="node4" href="$class_rox_entity_base.html#aa4afd6ae68aa53bee950d3d2c7b72f18" title="getTableDescription" alt="" coords="280,56,416,83"/>
-</map>

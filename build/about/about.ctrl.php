@@ -135,4 +135,16 @@ class AboutController extends RoxControllerBase
         }
     }
 
+    public function updateStatistics() {
+        if ($_SERVER['REMOTE_ADDR'] !== '127.0.0.1') {
+            header("Location: http://www.bewelcome.org");
+            exit(0);
+        }
+        ob_start();
+        $statsModel = new StatsModel();
+        echo $statsModel->updateStatistics();
+        ob_end_clean();
+        echo "success";
+        exit(0);
+    }
 }

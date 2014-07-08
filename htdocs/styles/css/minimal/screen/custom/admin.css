@@ -38,19 +38,20 @@ textarea {margin-bottom: 1em;}
     text-align: left;
 }
 
-#rights table {
+#rights table, #flags table {
     width: 100%;
     border: 2px solid black;
 }
 
-#rights td,
-#rights th {
+#rights td, #flags td,
+#rights th, #flags th
+{
     vertical-align: top;
     border: 1px solid #eee;
     word-wrap: break-word;
 }
 
-#rights td.usercol {
+#rights td.usercol, #flags td.usercol{
     text-align: center;
     max-width: 10em;
     width: 10em;
@@ -61,16 +62,21 @@ textarea {margin-bottom: 1em;}
     width: 10em;
 }
 
-#rights td.level {
+#flags td.flag {
+    max-width: 13em;
+    width: 13em;
+}
+
+    #rights td.level, #flags td.level {
     width: 2em;
 }
 
-#rights td.scope {
+#rights td.scope, #flags td.scope {
     max-width: 25em;
     width: 25em;
 }
 
-#rights td.icon {
+#rights td.icon, #flags td.icon {
     max-width: 20px;
     width: 20px;
 }

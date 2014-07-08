@@ -1,6 +1,0 @@
-<map id="ScrolltableWidget" name="ScrolltableWidget">
-<area shape="rect" id="node2" href="$class_itemlist_widget.html" title="ItemlistWidget" alt="" coords="23,229,128,256"/>
-<area shape="rect" id="node3" href="$class_rox_widget.html" title="RoxWidget" alt="" coords="33,155,119,181"/>
-<area shape="rect" id="node4" href="$class_visual_component.html" title="VisualComponent" alt="" coords="14,80,137,107"/>
-<area shape="rect" id="node5" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="5,5,147,32"/>
-</map>

@@ -30,10 +30,13 @@ class EnvironmentExplorer
 
         AutoloadPlug::setCallback(array($class_loader, 'autoload'));
 
+        spl_autoload_register(array('AutoloadPlug', 'autoload'), true, true);
+
         $this->loadRoxClasses($class_loader);
         $this->loadPTClasses($class_loader);
 
         require_once SCRIPT_BASE.'pthacks/classes.php';
+
         Classes::set($class_loader);  // ???
 
         PSurveillance::get();

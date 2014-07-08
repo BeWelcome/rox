@@ -1,5 +1,0 @@
-<map id="MOD_user\passwordEncrypt" name="MOD_user\passwordEncrypt">
-<area shape="rect" id="node2" href="$class_user.html#a2101748f605b8ebda58167191883d9cc" title="User\\registerProcess" alt="" coords="276,5,420,32"/>
-<area shape="rect" id="node3" href="$class_m_o_d__bw__user___auth.html#a2a130165464819b2d3563a07040d7f1d" title="MOD_bw_user_Auth\\updateUser" alt="" coords="243,56,453,83"/>
-<area shape="rect" id="node4" href="$class_m_o_d__bw__user___auth.html#a54b3a40fe0b630df21bad8de4929d752" title="MOD_bw_user_Auth\\doLogin" alt="" coords="502,56,693,83"/>
-</map>

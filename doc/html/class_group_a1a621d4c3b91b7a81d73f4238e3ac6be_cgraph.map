@@ -1,6 +1,0 @@
-<map id="memberLeave" name="memberLeave">
-<area shape="rect" id="node2" href="$class_group.html#a58e12fc455d79122dbb64562a3296c21" title="isGroupOwner" alt="" coords="341,5,445,32"/>
-<area shape="rect" id="node4" href="$class_rox_model_base.html#a31265ca609e83367571773a2e4db3035" title="RoxModelBase\\createEntity" alt="" coords="493,107,677,133"/>
-<area shape="rect" id="node5" href="$class_group.html#a5d727a426a9b286a73d36ff055f1f049" title="removeGroupOwner" alt="" coords="158,56,293,83"/>
-<area shape="rect" id="node3" href="$class_rox_entity_base.html#a2f27c20674620565aa8b3433bffe305d" title="RoxEntityBase\\isLoaded" alt="" coords="503,31,668,57"/>
-</map>

@@ -1,7 +1,0 @@
-<map id="GroupsController\banMember" name="GroupsController\banMember">
-<area shape="rect" id="node2" href="$class_rox_component_base.html#a2204c3415eb543b4a40f27de2a1ea265" title="RoxComponentBase\\logWrite" alt="" coords="246,5,439,32"/>
-<area shape="rect" id="node5" href="$class_rox_controller_base.html#a2c5d64649e0267f32198dd37a02c5d28" title="RoxControllerBase\\redirect\lAbsolute" alt="" coords="491,82,669,123"/>
-<area shape="rect" id="node6" href="$class_rox_controller_base.html#a9eb839502ecc59346e700b0b0c8de737" title="RoxControllerBase\\redirect\lToLogin" alt="" coords="254,107,431,149"/>
-<area shape="rect" id="node3" href="$class_rox_component_base.html#a41835e2ea2fd3b14ba0d5aa963b8fb38" title="RoxComponentBase\\getLog" alt="" coords="488,5,672,32"/>
-<area shape="rect" id="node4" href="$class_m_o_d__log.html#affe895ff124632e4c8c4d510ae4f73b6" title="MOD_log\\get" alt="" coords="720,5,819,32"/>
-</map>

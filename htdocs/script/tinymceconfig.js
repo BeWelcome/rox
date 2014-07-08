@@ -1,10 +1,10 @@
-<script type="text/javascript">//<!--
 tinymce.srcMode = '';
 tinymce.baseURL = http_baseuri+'script/tinymce';
 tinymce.init({
     menubar : false,
-    mode: "exact",
-    elements: "<?php echo $textarea; ?>",
+    mode: "textareas",
+    editor_selector : "mce",
+    editor_deselector : "nomce",
     // plugins : "advimage,preview,fullscreen,autolink",
     plugins: "image, charmap, link, autolink, paste, preview",
     theme: "modern",
@@ -21,5 +21,3 @@ tinymce.init({
     plugin_preview_height : "500",
     body_class : "forumsmessage",
 });
-//-->
-</script>

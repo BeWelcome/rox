@@ -1,6 +1,0 @@
-<map id="APP_User\getSetting" name="APP_User\getSetting">
-<area shape="rect" id="node2" href="$class_user.html#a8f39328d907153f03554636f1cc64b13" title="User\\confirmRegister" alt="" coords="225,5,367,32"/>
-<area shape="rect" id="node3" href="$class_signup_model.html#a8c2ec78f5bef30afba87a4e6cd8e6eec" title="SignupModel\\confirmRegister" alt="" coords="201,56,391,83"/>
-<area shape="rect" id="node4" href="$class_user_view.html#ad52693bb11ed4c736cbf93f958d8277e" title="UserView\\registerMail" alt="" coords="222,107,370,133"/>
-<area shape="rect" id="node5" href="$class_signup_view.html#a0c9b2a3b698ed8406099e8bcec4637c7" title="SignupView\\registerMail" alt="" coords="215,157,377,184"/>
-</map>

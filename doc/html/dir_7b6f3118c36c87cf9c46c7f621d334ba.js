@@ -1,5 +1,0 @@
-var dir_7b6f3118c36c87cf9c46c7f621d334ba =
-[
-    [ "0.7.2", "dir_56340765e4e65e4a567d6bb65723c52d.html", "dir_56340765e4e65e4a567d6bb65723c52d" ],
-    [ "plugins", "dir_1fd7d18f53d08fa71552851d3506b381.html", "dir_1fd7d18f53d08fa71552851d3506b381" ]
-];

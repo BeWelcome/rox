@@ -273,6 +273,10 @@ class AdminMassmailModel extends RoxModelBase
                 IdLanguage = 0,
                 Sentence = '" . $this->dao->escape($subject) . "',
                 updated = NOW(),
+                created = NOW(),
+                majorupdate = NOW(),
+                isarchived = 0,
+                donottranslate = 'no',
                 IdMember = " . $this->getLoggedInMember()->id . ",
                 Description = '" . $this->dao->escape($description) . "'";
         $this->dao->query($query);
@@ -286,6 +290,10 @@ class AdminMassmailModel extends RoxModelBase
                 IdLanguage = 0,
                 Sentence = '" . $this->dao->escape($body) . "',
                 updated = NOW(),
+                created = NOW(),
+                majorupdate = NOW(),
+                isarchived = 0,
+                donottranslate = 'no',
                 IdMember = " . $this->getLoggedInMember()->id . ",
                 Description = '" . $this->dao->escape($description) . "'";
         $this->dao->query($query);

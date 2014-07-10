@@ -449,7 +449,7 @@ class GroupsController extends RoxControllerBase
             } else {
                 $this->setFlashError($this->getWords()->getSilent('GroupsMemberBanFail'));
             }
-            return $this->FillGroupMemberAdminPage($group);
+            $this->redirectAbsolute($this->router->url('group_memberadministration',array('group_id' => $group->getPKValue())));
         }
     }
 
@@ -475,7 +475,7 @@ class GroupsController extends RoxControllerBase
             } else {
                 $this->setFlashError($this->getWords()->getSilent('MemberKickFail'));
             }
-            return $this->FillGroupMemberAdminPage($group);
+            $this->redirectAbsolute($this->router->url('group_memberadministration',array('group_id' => $group->getPKValue())));
         }
     }
 
@@ -501,7 +501,7 @@ class GroupsController extends RoxControllerBase
             } else {
                 $this->setFlashError($this->getWords()->getSilent('GroupsMemberDeclineFail'));
             }
-            return $this->FillGroupMemberAdminPage($group);
+            $this->redirectAbsolute($this->router->url('group_memberadministration',array('group_id' => $group->getPKValue())));
         }
     }
 
@@ -530,7 +530,7 @@ class GroupsController extends RoxControllerBase
                 $this->setFlashError($this->getWords()->getSilent('GroupNewAdminFailed'));
                 $this->redirectAbsolute($this->router->url('groups_overview'));
             }
-            return $this->FillGroupMemberAdminPage($group);
+            $this->redirectAbsolute($this->router->url('group_memberadministration',array('group_id' => $group->getPKValue())));
         }
     }
 
@@ -595,14 +595,8 @@ class GroupsController extends RoxControllerBase
                 $this->setFlashError($this->getWords()->getSilent('GroupsMemberAcceptFailed'));
                 $this->redirectAbsolute($this->router->url('groups_overview'));
             }
-            return $this->FillGroupMemberAdminPage($group);
+            $this->redirectAbsolute($this->router->url('group_memberadministration',array('group_id' => $group->getPKValue())));
         }
-        return $this->FillGroupMemberAdminPage($group);
-
-//        $page = new GroupMemberAdministrationPage;
-//        $this->_fillObject($page);
-//        $page->group = $group;
-//        return $page;
     }
 
 

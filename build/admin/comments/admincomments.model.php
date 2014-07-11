@@ -6,19 +6,16 @@
 class AdminCommentsModel extends RoxModelBase {
 
      /**
-     * returns all comments marked bad
-     *
-     * @access public
-     * @return array
+     * @return array of all comments but those that are checked or don't need anything;
+     * array of negative comments; or array of abusive comments.
      */
     public function getSubset($subset)
     {
         $entity = $this->createEntity('Comment');
         $entity->sql_order = "updated DESC";
         if($subset === "all")
-            // TODO: this limitation is not like on production, but I found it
-            // in the given code and it makes sense. I therefore assume it's
-            // here on purpose, as an improvement, and leave it.
+            // This filter is unlike production, but I found it in the given code for /build and it makes 
+            // sense. I therefore keep it as an improvement.
             return $entity->findByWhereMany(
                     "AdminAction NOT IN ('NothingNeeded', 'Checked')");
         elseif($subset === "abusive")
@@ -26,39 +23,46 @@ class AdminCommentsModel extends RoxModelBase {
                     "AdminAction = 'AdminAbuserMustCheck'");
         elseif($subset === "negative")
             return $entity->findByWhereMany("AdminAction = 'AdminCommentMustCheck'");
-        // TODO: throw error
         return null;
     }
     
+    /**
+     * 
+     * @param type $id of author
+     * @return array of comments written by user with given ID
+     */
     public function getFrom($id)
     {
+        if(!is_int($id))
+        {
+            return null;
+        }
         $entity = $this->createEntity('Comment');
         $entity->sql_order = "updated DESC";
         return $entity->findByWhereMany("IdFromMember = ".$id);
     }
     
+    /**
+     * 
+     * @param type $id of user that is subject of a comment
+     * @return array of comments written about user with given ID
+     */
     public function getTo($id)
     {
+        if(!is_int($id))
+        {
+            return null;
+        }
         $entity = $this->createEntity('Comment');
         $entity->sql_order = "updated DESC";
         return $entity->findByWhereMany("IdToMember = ".$id);
     }
     
-//    public function getFromTo($id)
-//    {
-//        $entity = $this->createEntity('Comment');
-//        $cs = $entity->findByWhereMany("id = " . $id);
-//        $c = $cs[0];
-//        $arr = array("from" => $c->getFromMember()->Username,
-//            "to" => $c->getToMember()->Username);
-//        return $arr;
-//    }
-//    
     /**
      * TODO: this a duplicate of a method in members.model.php: consolidate the two!
      *
-     * @param type $id
-     * @return type
+     * @param type $id of a comment
+     * @return array containing a single comment
      */
     public function getSingle($id)
     {
@@ -78,10 +82,15 @@ class AdminCommentsModel extends RoxModelBase {
 //        }
         return $errors;
     }
-        
+    
+    /**
+     * 
+     * @param type $c the comment to update
+     * @param string $vars the array used to update the attributes of the comment
+     * @return the updated comment
+     */
     public function update($c, &$vars)
     {
-        // TODO: all must be escaped in order to avoid SQL injection, right?
         $this->dao->escape($vars['TextWhere']);
         $this->dao->escape($vars['TextFree']);
         $this->dao->escape($vars['Quality']);
@@ -110,11 +119,21 @@ class AdminCommentsModel extends RoxModelBase {
         return $c->update();
     }
 
+    /**
+     * 
+     * @param type $id of the comment that is to be deleted
+     * @return type
+     */
     public function delete($id)
     {
         return $this->createEntity('Comment')->findById($id)->delete();
     }
     
+    /**
+     * 
+     * @param type $id of the comment that is to be hidden/shown
+     * @return type
+     */
     public function toggleHide($id)
     {
         $c = $this->createEntity('Comment')->findById($id);
@@ -122,6 +141,11 @@ class AdminCommentsModel extends RoxModelBase {
         return $c->update();
     }
     
+    /**
+     * 
+     * @param type $id of the comment that is to be allowed/forbidden for updates
+     * @return type
+     */
     public function toggleAllowEdit($id)
     {
         $c = $this->createEntity('Comment')->findById($id);
@@ -129,21 +153,43 @@ class AdminCommentsModel extends RoxModelBase {
         return $c->update();
     }
     
+    /**
+     * 
+     * @param type $id of the comment that is to be marked as checked
+     * @return type
+     */
     public function markChecked($id)
     {
         return $this->_setAdminAction($id, "Checked");
     }
     
+    /**
+     * 
+     * @param type $id of the comment that is to be marked as must-check
+     * @return type
+     */
     public function markAdminAbuserMustCheck($id)
     {
         return $this->_setAdminAction($id, "AdminAbuserMustCheck");
     }
     
+    /**
+     * 
+     * @param type $id of the comment that is to be marked as must-check
+     * @return type
+     */
     public function markAdminCommentMustCheck($id)
     {
         return $this->_setAdminAction($id, "AdminCommentMustCheck");
     }
     
+    /**
+     * Helper function to update a specific attribute of a comment.
+     * 
+     * @param type $id
+     * @param type $value
+     * @return type
+     */
     private function _setAdminAction($id, $value)
     {
         $c = $this->createEntity('Comment')->findById($id);

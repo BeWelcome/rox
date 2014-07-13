@@ -204,7 +204,7 @@ WHERE   id = $tb_user->id
 
     function checkBWPassword($member, $password)
     {
-        $password = $this->dao->escape(trim($password));
+        $password = $member->preparePassword($password);
         if (!$pw_enc_lookup = $this->singleLookup(
             "
 SELECT  PASSWORD('$password')  AS  PassMysqlEncrypted

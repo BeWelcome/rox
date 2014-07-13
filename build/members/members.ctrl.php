@@ -506,16 +506,13 @@ class MembersController extends RoxControllerBase
             $this->model->set_public_profile($vars['memberid'],($vars['PreferencePublicProfile'] == 'Yes') ? true : false);
         }
         // set new password
-        if( isset($vars['passwordnew']) && strlen($vars['passwordnew']) > 0) {
-            $query = 'UPDATE `members` SET `PassWord` = PASSWORD(\''.trim($vars['passwordnew']).'\') WHERE `id` = '.$_SESSION['IdMember'];
-            if( $this->model->dao->exec($query)) {
-                $messages[] = 'ChangePasswordUpdated';
-                $L = MOD_log::get();
-                $L->write("Password changed", "change password");
-            } else {
+        if (isset($vars['passwordnew']) && strlen($vars['passwordnew']) > 0) {
+            $m = $this->model->getMemberWithId($vars['memberid']);
+            if (!$m->setPassword($vars['passwordnew'])){
                 $mem_redirect->problems = array(0 => 'ChangePasswordNotUpdated');
             }
-        }
+        }        
+ 
         return false;
     }
 

@@ -1654,17 +1654,25 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
      */
     public function setPassword($pw)
     {
-        if (!$this->isLoaded())
-        {
+        if (!$this->isLoaded()) {
             return false;
         }
-        $pw = $this->dao->escape(trim($pw));
-        $query = "'UPDATE `members` SET `PassWord` = PASSWORD('" . $pw . "') WHERE `id` = ".$this->id;
-        if( $this->model->dao->exec($query)) {
+        $pw = $this->preparePassword($pw);
+        $query = "UPDATE `members` SET `PassWord` = PASSWORD('" . $pw . "') WHERE `id` = ".$this->id;
+        if ($this->dao->exec($query)) {
             $L = MOD_log::get();
             $L->write("Password changed", "change password");
             return true;
-        } else return false;
+        } else {
+            return false;
+        }
+    }
+
+    public function preparePassword($pw)
+    {
+        $pwn = trim($pw);
+        $pwn = $this->dao->escape($pwn);
+        return $pwn;    
     }
 
     /**

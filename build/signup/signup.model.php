@@ -300,8 +300,8 @@ FROM `user` WHERE
 
             $idTB = $this->registerTBMember($vars);
             if (!$idTB) {
-				MOD_log::get()->write("TB registration failed","Signup") ;
-				return false;
+		MOD_log::get()->write("TB registration failed","Signup") ;
+		return false;
             }
 
             $id = $this->registerBWMember($vars);
@@ -398,7 +398,6 @@ INSERT INTO `members`
 	`Gender`,
 	`HideGender`,
 	`created`,
-	`Password`,
 	`BirthDate`,
 	`HideBirthDate`
 )
@@ -409,12 +408,16 @@ VALUES
 	\'' . $vars['gender'] . '\',
 	\'' . $vars['genderhidden'] . '\',
 	now(),
-	password(\'' . $vars['password'] . '\'),
 	\'' . $vars['iso_date'] . '\',
 	\'' . $vars['agehidden'] . '\'
 )';
         $members = $this->dao->query($query);
         $memberID = $members->insertId();
+
+        $MembersModel = new MembersModel();
+        $member = $MembersModel->getMemberWithId($memberID);
+        $vars['password'] = $member->preparePassword($vars['password']);
+        $member->setPassword($vars['password']);
 
         // ********************************************************************
         // e-mail, names/members
@@ -521,19 +524,16 @@ VALUES
             $vars['IdCity'] = $vars['geonameid'];
         }
 
-        // $vars['city'] =
-        // MOD_geo::get()->getCityID($this->dao->escape($vars['city']));
-
-        // TODO: this is not done so in BW 2007-08-14!
         $vars['email'] = strtolower($vars['email']);
 
-        $escapeList = array('username', 'email', 'password', 'gender',
+        $escapeList = array('username', 'email', 'gender',
                             'feedback', 'housenumber', 'street','FirstName','SecondName','LastName', 'zip');
         foreach($escapeList as $formfield) {
             if(!empty($vars[$formfield])) {  // e.g. feedback...
                 $vars[$formfield] = $this->dao->escape($vars[$formfield]);
             }
         }
+        
     }
 
     public function registerTBMember($vars)
@@ -545,14 +545,13 @@ VALUES
         // but for now it's to get nearer to the BW style
         $query = '
 INSERT INTO `user`
-(`id`, `auth_id`, `handle`, `email`, `pw`, `active`)
+(`id`, `auth_id`, `handle`, `email`, `active`)
 VALUES
 (
     '.$this->dao->nextId('user').',
     '.(int)$authId.',
     \'' . $vars['username'] . '\',
     \'' . $vars['email'] . '\',
-	password(\'' . $vars['password'] . '\'),
     0
 )';
         $s = $this->dao->query($query);

@@ -414,10 +414,9 @@ VALUES
         $members = $this->dao->query($query);
         $memberID = $members->insertId();
 
-        $MembersModel = new MembersModel();
-        $member = $MembersModel->getMemberWithId($memberID);
-        $vars['password'] = $member->preparePassword($vars['password']);
-        $member->setPassword($vars['password']);
+        $memberEntity = $this->createEntity('Member', $memberID);
+        $vars['password'] = $memberEntity->preparePassword($vars['password']);
+        $memberEntity->setPassword($vars['password']);
 
         // ********************************************************************
         // e-mail, names/members

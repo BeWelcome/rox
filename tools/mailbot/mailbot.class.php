@@ -245,7 +245,7 @@ class MassMailbot extends Mailbot
                 $sender_mail=$msg->EmailFrom ;
             }
             $memberPrefersHtml = true;
-            if ($receiver->getPreference('PreferenceHtmlMails') == 'No') {
+            if ($receiver->getPreference('PreferenceHtmlMails', 'Yes') == 'No') {
                 $memberPrefersHtml = false;
             }
             if (!$this->sendEmail($subj, $sender_mail, $email, $subj, $text, $language, $memberPrefersHtml)) {
@@ -505,7 +505,7 @@ class ForumNotificationMailbot extends Mailbot
                 continue;
             }
             $memberPrefersHtml = true;
-            if ($recipient->getPreference('PreferenceHtmlMails') == 'No') {
+            if ($recipient->getPreference('PreferenceHtmlMails', 'Yes') == 'No') {
                 $memberPrefersHtml = false;
             }
             if (!$this->sendEmail($msg['subject'], $from, $to, $msg['subject'], $msg['body'], $MemberIdLanguage,
@@ -645,7 +645,7 @@ class MemberToMemberMailbot extends Mailbot
                 }
                 $MemberIdLanguage = $this->Receiver->getLanguagePreference();
                 $memberPrefersHtml = true;
-                if ($this->Receiver->getPreference('PreferenceHtmlMails') == 'No') {
+                if ($this->Receiver->getPreference('PreferenceHtmlMails', 'Yes') == 'No') {
                     $memberPrefersHtml = false;
                 }
                 $subject = $this->words->get("YouveGotAMail", $this->Sender->Username);

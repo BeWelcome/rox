@@ -519,6 +519,8 @@ WHERE id = ".$input['receiver_id']."
             if ($disabledTinyMce) {
                 // the entered text is in markdown format -> convert to HTML
                 $html = MarkDown::defaultTransform($input['text']);
+            } else{
+                $html = $input['text'];
             }
             // make sure that the text only contains valid HTML
             $purifier = new MOD_htmlpure();

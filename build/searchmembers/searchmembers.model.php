@@ -197,7 +197,7 @@ WHERE
 
                 if(strlen($_searchtext) > 1) { // Needs to give more that two chars for a place
             $searchtext = $this->dao->escape($_searchtext) ;
-            $str = "SELECT DISTINCT(geonames_cache.geonameId) AS geonameid FROM geonames_alternate_names,geonames_cache WHERE alternateName='{$searchtext}' and geonames_alternate_names.geonameid=geonames_cache.geonameid";
+            $str = "SELECT DISTINCT(geonames_cache.geonameId) AS geonameid FROM geonamesalternatenames,geonames_cache WHERE alternateName='{$searchtext}' and geonamesalternatenames.geonameid=geonames_cache.geonameid";
             $qry = $this->dao->query($str);
 
             while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {

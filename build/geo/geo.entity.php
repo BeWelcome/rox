@@ -389,7 +389,7 @@ UNION
 SELECT
     geonameid
 FROM
-    geonames_alternate_names
+    geonamesalternatenames
 WHERE
     alternateName = '{$place_name}'
 SQL;

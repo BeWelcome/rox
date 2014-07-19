@@ -215,29 +215,7 @@ CURRENT_TIMESTAMP COMMENT 'when the record was updated';
         FROM members
       );
 
-
-/* reducing alternatenames */
-
-    TRUNCATE TABLE geonames_alternate_names;
-
-    INSERT INTO geonames_alternate_names (
-        alternateNameId,
-        geonameId,
-        isoLanguage,
-        alternateName,
-        ispreferredName,
-        isshortName
-    )
-    SELECT alternatenameId,
-        geonameid,
-        isolanguage,
-        alternatename,
-        ispreferred,
-        isshort
-    FROM geonamesalternatenames
-    WHERE geonameid IN (SELECT geonameid FROM geonames);
-
-    DELETE FROM geonamesalternatenames 
+    DELETE FROM geonamesalternatenames
     WHERE geonameid NOT IN ( 
         SELECT geonameid FROM geonames);
 

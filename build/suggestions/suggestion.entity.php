@@ -210,8 +210,14 @@ class Suggestion extends RoxEntityBase
                 SET
                     summary = '" . $this->dao->escape($this->summary) . "',
                     description = '" . $this->dao->escape($this->description) . "',
-                    modified = NOW(),
-                    `flags` = " . $this->dao->escape($this->flags) . ",
+                    modified = NOW(),";
+            // Check if flags is 0 and ensure correct value
+            if ($this->flags === 0) {
+                $query .= " `flags` = 0";
+            } else {
+                $query .= " `flags` = " . $this->dao->escape($this->flags);
+            }
+            $query .= ",
                     modifiedby = " . $this->getLoggedInMember()->id . "
                 WHERE
                     id = " . $this->id;

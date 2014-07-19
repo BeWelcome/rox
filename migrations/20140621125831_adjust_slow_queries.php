@@ -12,25 +12,33 @@ use Phinx\Migration\AbstractMigration;
 class AdjustSlowQueries extends AbstractMigration
 {
     /**
-     * Migrate Up.
+     * Change.
      */
-    public function up()
+    public function change()
     {
+        // add some indices
         $table = $this->table('forums_threads');
         $table->addIndex(array("ThreadVisibility"))
             ->addIndex(array("ThreadDeleted"))
-            ->save();
+            ->update();
 
         $table = $this->table('forums_posts');
         $table->addIndex(array("PostVisibility"))
             ->addIndex(array("PostDeleted"))
             ->addIndex(array("create_time"))
-            ->save();
+            ->update();
 
         $table = $this->table('messages');
         $table->addIndex(array("DeleteRequest"))
             ->addIndex(array("WhenFirstRead"))
-            ->save();
+            ->update();
+    }
+
+    /**
+     * Migrate Up.
+     */
+    public function up()
+    {
     }
 
     /**
@@ -38,20 +46,6 @@ class AdjustSlowQueries extends AbstractMigration
      */
     public function down()
     {
-        $table = $this->table('messages');
-        $table->removeIndex(array("DeleteRequest"));
-        $table->removeIndex(array("WhenFirstRead"));
-
-        $table = $this->table('forums_posts');
-        $table->removeIndex(array("PostVisibility"))
-            ->removeIndex(array("PostDeleted"))
-            ->removeIndex(array("create_time"))
-            ->save();
-
-        $table = $this->table('forums_threads');
-        $table->removeIndex(array("ThreadVisibility"))
-            ->removeIndex(array("ThreadDeleted"))
-            ->save();
-
     }
 }
+

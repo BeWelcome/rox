@@ -35,21 +35,21 @@ class LoginModel extends RoxModelBase
     const KEY_IN_SESSION = 'APP_User_id';
 
 
-    function encryptPasswordBW($password)
-    {
-        $password = $this->dao->escape(trim($password));
-        if (!$row = $this->singleLookup(
-            "
-SELECT  PASSWORD('$password')  AS  pw_enc_bw
-            "
-        )) {
-            MOD_log::get()->write("qry_jyh failed do retrieve encrypted value for password", "Login");
-            return false;
-        } else {
-            // pw match
-            return $row->pw_enc_bw;
-        }
-    }
+//    function encryptPasswordBW($password)
+//    {
+//        $password = $this->dao->escape(trim($password));
+//        if (!$row = $this->singleLookup(
+//            "
+//SELECT  PASSWORD('$password')  AS  pw_enc_bw
+//            "
+//        )) {
+//            MOD_log::get()->write("qry_jyh failed do retrieve encrypted value for password", "Login");
+//            return false;
+//        } else {
+//            // pw match
+//            return $row->pw_enc_bw;
+//        }
+//    }
 
 
     function encryptPasswordTB($password)

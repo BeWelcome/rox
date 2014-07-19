@@ -211,11 +211,11 @@ class Suggestion extends RoxEntityBase
                     summary = '" . $this->dao->escape($this->summary) . "',
                     description = '" . $this->dao->escape($this->description) . "',
                     modified = NOW(),";
-            // Check if flags is 0 and ensure correct value
-            if ($this->flags === 0) {
-                $query .= " `flags` = 0";
-            } else {
+            // Check if flags is set and ensure correct value
+            if ($this->flags) {
                 $query .= " `flags` = " . $this->dao->escape($this->flags);
+            } else {
+                $query .= " `flags` = 0";
             }
             $query .= ",
                     modifiedby = " . $this->getLoggedInMember()->id . "

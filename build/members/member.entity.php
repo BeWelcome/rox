@@ -1878,14 +1878,20 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
         $bodyHTML = $purifier->purify($body);
 
+        if ($this->getPreference('PreferenceHtmlMails', 'Yes') == 'No') {
+            $memberPrefersHtml = false;
+        } else {
+            $memberPrefersHtml = true;
+        }
+
         //clear <br> tags stored in database
-        $body = strip_tags($body);
+        //$body = strip_tags($body);
 
         // Set language for email translations
         $languageCode = $this->getLanguagePreference();
 
         // TODO: Error handling
-        $result = MOD_mail::sendEmail($subject, $from, $to, false, $body, $bodyHTML, false, $languageCode);
+        $result = MOD_mail::sendEmail($subject, $from, $to, false, $body, $bodyHTML, $memberPrefersHtml, $languageCode);
     }
 
     /**

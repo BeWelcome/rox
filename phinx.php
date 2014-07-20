@@ -1,4 +1,6 @@
 <?php
+include_once 'tools/RoxMigration/roxmigration.php';
+
 function parseDSN($dsn)
 {
     $dsn = preg_split('%[:;=]%', $dsn, -1, PREG_SPLIT_NO_EMPTY);
@@ -74,5 +76,5 @@ if (!empty($inifile)) {
     $config['environments']['development'] = $devarray;
     $config['environments']['testing'] = $testarray;
 }
-print_r($config);
+
 return $config;

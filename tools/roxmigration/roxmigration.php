@@ -118,8 +118,8 @@ class RoxMigration extends AbstractMigration
         $query = "
 UPDATE `words`
 SET `isarchived` = 1
-WHERE `code` = '$code'
-                    ";
+WHERE `code` = " . $code
+                    ;
         $this->execute($query);
     }
 
@@ -136,8 +136,8 @@ WHERE `code` = '$code'
         $query = "
 UPDATE `words`
 SET `isarchived` = 0
-WHERE `code` = '$code'
-                    ";
+WHERE `code` = " . $code
+                    ;
         $this->execute($query);
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Rox;
+namespace Rox\Tools;
 
 use Phinx\Migration\AbstractMigration;
 
@@ -8,7 +8,7 @@ use Phinx\Migration\AbstractMigration;
  * Class RoxMigration
  * @package Rox
  *
- * Adds two methods to the phinx migration class to enable easy adding/removal of word codes as part of migrations
+ * Adds methods to the phinx migration class to enable easy adding/removal of word codes as part of migrations
  *
  */
 class RoxMigration extends AbstractMigration
@@ -29,14 +29,7 @@ class RoxMigration extends AbstractMigration
      */
     private function _writeWordCodeToDb($add, $code, $sentence, $description, $majorUpdate = false, $dnt = 'No', $priority = '5')
     {
-        $adapter= $this->getAdapter();
-        $connection = $adapter->getConnection();
-
-        // Escape everything
-        $code = $connection->quote($code);
-        $sentence = $connection->quote($sentence);
-        $description = $connection->quote($description);
-        $dnt = $connection->quote($dnt);
+        list($code,$sentence,$description,$dnt) = $this->EscapeVariables(array($code,$sentence,$description,$dnt));
 
         // Check if $dnt is either 'Yes' or 'No', if not throw exception
         $dnt = strtolower($dnt);
@@ -113,19 +106,71 @@ class RoxMigration extends AbstractMigration
     }
 
     /****
+     * Archive the wordcode and all translations from the database
+     *
+     * Generally used in up-migrations only
+     *
+     * @param $code The WordCode to archive
+     */
+    protected function ArchiveWordCode($code)
+    {
+        list($code) = $this->EscapeVariables(array($code));
+        $query = "
+UPDATE `words`
+SET `isarchived` = 1
+WHERE `code` = " . $code
+                    ;
+        $this->execute($query);
+    }
+
+    /****
+     * Archive the wordcode and all translations from the database
+     *
+     * Generally used in down-migrations only
+     *
+     * @param $code The WordCode to archive
+     */
+    protected function UnarchiveWordCode($code)
+    {
+        list($code) = $this->EscapeVariables(array($code));
+        $query = "
+UPDATE `words`
+SET `isarchived` = 0
+WHERE `code` = " . $code
+                    ;
+        $this->execute($query);
+    }
+
+
+    /****
      * Remove the word code and all translations from the database
      *
      * @param $code The WordCode to remove
      */
     protected function RemoveWordCode($code)
     {
+        list($code) = $this->EscapeVariables(array($code));
+        $query = "DELETE FROM words WHERE code = " . $code;
+        $this->execute($query);
+    }
+    
+    /****
+     * Escape query variables
+     *
+     * @param array $vars Collection of raw variables
+     * @return array Collection of escaped variables
+     */
+    protected function EscapeVariables($vars)
+    {
         $adapter= $this->getAdapter();
         $connection = $adapter->getConnection();
 
         // Escape everything
-        $code = $connection->quote($code);
-
-        $query = "DELETE FROM words WHERE code = " . $code;
-        $this->execute($query);
+        $varSafe = array();
+        foreach ($vars as $var)
+        {
+            $varSafe[] = $connection->quote($var);
+        }
+        return $varSafe;        
     }
 }

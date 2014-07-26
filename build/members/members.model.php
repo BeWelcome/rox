@@ -562,7 +562,7 @@ INSERT INTO
             } else {
                 $commentId = $qry->insertId();
                 $noteWordCode = 'Notify_profile_comment';
-                $messageWordCode = 'Message_profile_comment';
+                $messageWordCode = 'CommentNotificationMessageNew';
                 $messageSubjectWordCode = 'Message_profile_comment_subject';
             }
             $this->logWrite("Adding a comment quality <b>" . $vars['Quality'] . "</b> on " . $commentRecipient->Username, "Comment");
@@ -587,7 +587,7 @@ WHERE
             } else {
                 $commentId = $TCom->id;
                 $noteWordCode = 'Notify_profile_comment_update';
-                $messageWordCode = 'Message_profile_comment_update';
+                $messageWordCode = 'CommentNotificationMessageUpdate';
                 $messageSubjectWordCode = 'Message_profile_comment_update_subject';
             }
             $this->logWrite("Updating a comment quality <b>" . $vars['Quality'] . "</b> on " . $commentRecipient->Username, "Comment");
@@ -816,12 +816,10 @@ WHERE
     public function checkMyPreferences(&$vars)
     {
         $errors = array();
-        $member = $this->createEntity('Member', $_SESSION['IdMember']);
-
 
         // Password Check
         if (isset($vars['passwordnew']) && $vars['passwordnew'] != '') {
-            $query = "select id from members where id=" . $_SESSION['IdMember'] . " and PassWord=PASSWORD('" . $member->preparePassword($vars['passwordold']) . "')";
+            $query = "select id from members where id=" . $_SESSION["IdMember"] . " and PassWord=PASSWORD('" . trim($vars['passwordold']) . "')";
             $qry = $this->dao->query($query);
             $rr = $qry->fetch(PDB::FETCH_OBJ);
             if (!$rr || !array_key_exists('id', $rr))
@@ -1371,7 +1369,6 @@ ORDER BY
                                          $note['commentText'],
                                          $commentsUrl,
                                          $replyUrl,
-                                         $fromMember->Username,
                                          $reportUrl),
                                    $languageCode);
             // TODO: Error handling

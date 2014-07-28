@@ -600,7 +600,7 @@ WHERE
                 'IdRelMember' => $_SESSION['IdMember'],
                 'Type' => 'profile_comment' . $c_add,
                 'Quality' => $vars['Quality'],
-                'commentText' => htmlspecialchars($vars['TextFree']),
+                'commentText' => $vars['TextFree'],
                 'Link' => 'members/' . $commentRecipient->Username . '/comments',
                 'replyLink'   => 'members/' . $commentSender->Username . '/comments/add',
                 'reportLink'  => 'members/reportcomment/' . $commentRecipient->Username . '/' . $commentId,

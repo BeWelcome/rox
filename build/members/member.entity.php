@@ -1889,9 +1889,8 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
 
         // Set language for email translations
         $languageCode = $this->getLanguagePreference();
-
         // TODO: Error handling
-        $result = MOD_mail::sendEmail($subject, $from, $to, false, $body, $bodyHTML, $memberPrefersHtml, $languageCode);
+        $result = MOD_mail::sendEmail($subject, $from, $to, false, $bodyHTML, $languageCode, $memberPrefersHtml);
     }
 
     /**

@@ -816,11 +816,11 @@ WHERE
     public function checkMyPreferences(&$vars)
     {
         $errors = array();
+        $member = $this->createEntity('Member', $_SESSION['IdMember']);
 
         // Password Check
         if (isset($vars['passwordnew']) && $vars['passwordnew'] != '') {
-            $query = "select id from members where id=" . $_SESSION["IdMember"] . " and PassWord=PASSWORD('" . trim($vars['passwordold']) . "')";
-            $qry = $this->dao->query($query);
+        $query = "select id from members where id=" . $_SESSION['IdMember'] . " and PassWord=PASSWORD('" . $member->preparePassword($vars['passwordold']) . "')";            $qry = $this->dao->query($query);
             $rr = $qry->fetch(PDB::FETCH_OBJ);
             if (!$rr || !array_key_exists('id', $rr))
                 $errors[] = 'ChangePasswordInvalidPasswordError';

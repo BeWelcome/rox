@@ -90,7 +90,7 @@ class GroupMembership extends RoxEntityBase
 
         $sql = "SELECT COUNT(*) AS count FROM members AS m, " . $this->getTableName() 
             . " AS mg WHERE mg.IdGroup = " . $group_id . " AND mg.Status = 'In' "
-            . " AND mg.IdMember = m.id AND m.Status IN ('Active')";
+            . " AND mg.IdMember = m.id AND m.Status IN (" . Member::ACTIVE_ALL . ")";
         
         $rr = $this->dao->query($sql);
         $count = 0;
@@ -163,7 +163,7 @@ class GroupMembership extends RoxEntityBase
         if ($notLoggedIn) {
             $sql .= ", memberspublicprofiles as mp ";
         }        
-        $sql .= " WHERE m.Status IN ('Active', 'Pending') AND m.id IN ('" . implode("','", $members) . "') AND mg.IdMember = m.id AND mg.IdGroup = {$group_id}";
+        $sql .= " WHERE m.Status IN ( " . Member::ACTIVE_ALL . ") AND m.id IN ('" . implode("','", $members) . "') AND mg.IdMember = m.id AND mg.IdGroup = {$group_id}";
         if ($notLoggedIn) {
             $sql .= " AND mp.IdMember=m.id";
         }

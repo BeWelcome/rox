@@ -65,7 +65,7 @@ class AdminFlagsController extends AdminBaseController
     }
 
     public function assign() {
-        $this->checkFlags('Flags');
+        $this->checkRights('Flags');
         $member = false;
         if (isset($this->route_vars['username'])) {
             $temp = new Member();
@@ -104,7 +104,7 @@ class AdminFlagsController extends AdminBaseController
 
     public function listMembers()
     {
-        $this->checkFlags('Flags');
+        $this->checkRights('Flags');
         $member = false;
         if (isset($this->route_vars['username'])) {
             $temp = new Member();
@@ -142,7 +142,7 @@ class AdminFlagsController extends AdminBaseController
 
     public function listFlags()
     {
-        $this->checkFlags('Flags');
+        $this->checkRights('Flags');
         $flagId = false;
         if (isset($this->route_vars['id']) && is_numeric($this->route_vars['id'])) {
             $flagId = $this->route_vars['id'];
@@ -157,7 +157,7 @@ class AdminFlagsController extends AdminBaseController
     }
 
     public function overview() {
-        $this->checkFlags('Flags');
+        $this->checkRights('Flags');
         $page = new AdminFlagsOverviewPage();
         $page->current = 'AdminFlagsOverview';
         $page->flags = $this->model->getFlags();
@@ -193,7 +193,7 @@ class AdminFlagsController extends AdminBaseController
 
     public function edit()
     {
-        $this->checkFlags('Flags');
+        $this->checkRights('Flags');
 
         $flagId = $this->route_vars['id'];
         $username = $this->route_vars['username'];
@@ -254,7 +254,7 @@ class AdminFlagsController extends AdminBaseController
 
     public function remove()
     {
-        $this->checkFlags('Flags');
+        $this->checkRights('Flags');
         $flagId = $this->route_vars['id'];
         $username = $this->route_vars['username'];
         // Check if flag and user exist and if flag is assigned to user at all; redirect if not
@@ -319,10 +319,10 @@ class AdminFlagsController extends AdminBaseController
 
     public function create()
     {
-        list($loggedInMember, $Flags) = $this->checkFlags('Flags');
+        list($loggedInMember, $Rights) = $this->checkRights('Flags');
         // Check if member has create flag if not redirect to overview
-        if ((stripos($Flags['Flags']['Scope'], 'create') === false
-            && stripos($Flags['Flags']['Scope'], 'all') === false)) {
+        if ((stripos($Rights['Flags']['Scope'], 'create') === false
+            && stripos($Rights['Flags']['Scope'], 'all') === false)) {
             $this->redirectAbsolute($this->router->url('admin_flags_overview'));
         }
         $page = new AdminFlagsCreatePage();

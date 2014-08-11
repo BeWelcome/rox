@@ -278,5 +278,10 @@
     $this->addRoute('safety_team', 'safety/team', 'safetyController', 'safetyTeam');
     $this->addRoute('safety_contact', 'feedback?IdCategory=2', 'safetyController', 'safetyContact');
 
+    // New Members Be Welcome
+    $this->addRoute('newmembers', 'admin/newmembers', 'AdminNewMembersController', 'listMembers');
+    $this->addRoute('newmembers_local_greeting', 'admin/newmembers/local/:username:', 'AdminNewMembersController', 'composeMessage');
+    $this->addRoute('newmembers_global_greeting', 'admin/newmembers/global/:username:', 'AdminNewMembersController', 'composeMessage');
+
     // Update statistics
     $this->addRoute('updatestats', 'about/updatestats', 'AboutController', 'updateStatistics');

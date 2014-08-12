@@ -1,5 +1,5 @@
 <?php
-include_once 'tools/RoxMigration/roxmigration.php';
+include_once 'tools/roxmigration/roxmigration.php';
 
 function parseDSN($dsn)
 {

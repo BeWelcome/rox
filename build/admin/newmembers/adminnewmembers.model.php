@@ -158,6 +158,7 @@ LIMIT 1
                 m.FirstName,
                 m.SecondName,
                 m.LastName,
+                m.email,
                 m.bewelcomed,
                 g.geonameid as geonameid,
                 g.country as country
@@ -193,6 +194,11 @@ LIMIT 1
             $LastName = $this->getNamePart($member->LastName);
             $member->Name = trim($FirstName . " " . $SecondName . " " . $LastName);
             $member->ProfileSummary = $aboutMe;
+
+            if ($safetyTeamOrAdmin) {
+                $email = Mod_crypt::AdminReadCrypted($member->email);
+                $member->EmailAddress = $email;
+            }
 
             if ($member->HideBirthDate=="No") {
                 $member->Age =floor($layoutBits->fage_value($member->BirthDate));

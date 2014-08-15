@@ -41,7 +41,10 @@ $layoutbits = new MOD_layoutbits();
             <a href="/members/<?= $details->Username ?>'"><?= $details->Username ?></a><br/>
             <?= $details->CityName ?>, <?= $details->CountryName ?><br />(<?= $details->created ?>)
         </td>
-        <td><?= $details->ProfileSummary ?></td>
+        <td><?php if ($this->SafetyTeamOrAdmin) :
+                echo $details->EmailAddress . "<br /><br />";
+            endif; ?>
+            <?= $details->ProfileSummary ?></td>
         <td><?php if ($details->languages) :
             $str = "";
             foreach($details->languages as $language) :

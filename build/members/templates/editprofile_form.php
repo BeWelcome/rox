@@ -154,7 +154,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                             <input type='text' disabled='disabled' value='{$vars['languages_selected'][$ii]->Name}'/>
                           </td>
                           <td>
-                              <select name="memberslanguageslevel[]" >
+                              <select class="mll" name="memberslanguageslevel[]" >
 HTML;
                                 for ($jj = 0; $jj < count($vars['language_levels']); $jj++)
                                 {
@@ -174,7 +174,7 @@ HTML;
                         }
                       echo <<<HTML
                         <tr id="lang1">
-                          <td><select class='lang_selector' name="memberslanguages[]" >
+                          <td><select class='lang_selector' name="memberslanguages[]">
                           <option selected="selected">-{$words->get("ChooseNewLanguage")}-</option>
                           <optgroup label="{$words->getSilent('SpokenLanguages')}">
 HTML;
@@ -207,7 +207,7 @@ HTML;
                           </select>
                           </td>
                           <td>
-                            <select name="memberslanguageslevel[]" >
+                            <select class="mll" name="memberslanguageslevel[]" >
 HTML;
                                 for ($jj = 0; $jj < count($vars['language_levels']); $jj++)
                                 {
@@ -729,3 +729,7 @@ HTML;
               </tr>
             </tbody>
           </table>
+<script type="text/javascript">
+    jQuery(".lang_selector").select2({dropdownAutoWidth: true, width: 'element'});
+    jQuery(".mll").select2({dropdownAutoWidth: true, width: 'element'});
+</script>

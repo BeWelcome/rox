@@ -29,8 +29,8 @@ class CommentNotificationNewWordcodes extends Rox\Tools\RoxMigration
 
         $code1 = 'CommentNotificationMessageNew';
         $sentence1 = '<p>Hi %1$s,</p>
-<p>%2$s has left you a %3$s comment. The comment says:<br />
-<i> "%4$s"</i></p>
+<p>%2$s has left you a %3$s comment. The comment says:</p>
+<p><i>"%4$s"</i></p>
 <p><a href="%5$s">Read more</a> about the comment.<br />
 <a href="%6$s">Write or update</a> your comment about %2$s</p>
 <p>Have a great time!<br />
@@ -41,8 +41,8 @@ The BeWelcome Team</p>
 
         $code2 = 'CommentNotificationMessageUpdate';
         $sentence2 = '<p>Hi %1$s,</p>
-<p>%2$s has updated the comment about you. This is now a %3$s comment and says:<br />
-<i>"%4$s"</i></p>
+<p>%2$s has updated the comment about you. This is now a %3$s comment and says:</p>
+<p><i>"%4$s"</i></p>
 <p><a href="%5$s">Read more</a> about the comment.<br>
 <a href="%6$s">Write or update</a> your comment about %2$s</p>
 <p>Have a great time!<br />

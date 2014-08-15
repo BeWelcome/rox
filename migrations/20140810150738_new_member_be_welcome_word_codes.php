@@ -7,7 +7,7 @@ use Phinx\Migration\AbstractMigration;
  *
  * Adds a column to members to show the number of messages a member got from the New Members Be Welcome team
  *
- * See ticket: #todo
+ * See ticket: #2240
  *
  */
 class NewMemberBeWelcomeWordCodes extends Rox\Tools\RoxMigration
@@ -17,7 +17,7 @@ class NewMemberBeWelcomeWordCodes extends Rox\Tools\RoxMigration
      */
     public function up()
     {
-        // todo: Add word codes as needed
+        // Add word codes as needed
         $this->AddWordCode('AdminNewMembers', 'New Members BeWelcome', 'Teaser item in admin/newmembers');
         $this->AddWordCode('AdminNewMembersMemberDetails', 'Member details', 'Header text on admin/newmembers');
         $this->AddWordCode('AdminNewMembersGlobalGreetingUsername', 'Send an international greeting to %1$s', 'Alt text for the local greeting icon in admin/newmembers');
@@ -31,7 +31,7 @@ class NewMemberBeWelcomeWordCodes extends Rox\Tools\RoxMigration
      */
     public function down()
     {
-        // todo: Remove word codes
+        // Remove word codes
         $this->RemoveWordCode('AdminNewMembers');
         $this->RemoveWordCode('AdminNewMembersMemberDetails');
         $this->RemoveWordCode('AdminNewMembersGlobalGreetingUsername');

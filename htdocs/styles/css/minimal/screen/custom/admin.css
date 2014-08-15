@@ -40,7 +40,7 @@ textarea {margin-bottom: 1em;}
 
 #rights table, #flags table, #newmembers table {
     width: 100%;
-    border: 2px solid black;
+    border: 1px solid black;
 }
 
 #rights td, #flags td,

@@ -63,7 +63,7 @@ class AdminNewMembersListMembersPage extends AdminNewMembersBasePage
                 <img src="images/icons/map.png" alt="' . $words->getSilent('AdminNewMembersLocalGreetingUsername', $details->Username) . '
                 title="' . $words->getSilent('AdminNewMembersLocalGreetingUsername', $details->Username) . ' /></a><br />
                 <a href="/admin/newmembers/local/' . $details->Username . '" target="_blank">' .
-                $words->getBuffered("AdminNewMembersLocalGreeting") . '</a><br />';
+                $words->getBuffered("AdminNewMembersLocalGreeting") . '</a><br /><br />';
         }
         if (($bewelcomed & 2) != 2) {
             $greetings .= '<a href="/admin/newmembers/global/' . $details->Username .'" target="_blank">

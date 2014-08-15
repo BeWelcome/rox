@@ -16,9 +16,9 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminNewMembersContr
 $layoutbits = new MOD_layoutbits();
 
 ?>
-<div>
-    <div style="height:50px">&nbsp;</div>
-    <table id="newmembers">
+<div id="newmembers">
+    <?= $this->pager->render() ?>
+    <table>
         <tr>
             <th class="usercol" colspan="3"><?= $words->get('AdminNewMembersMemberDetails') ?></th>
             <th class="send"></th>
@@ -36,8 +36,11 @@ $layoutbits = new MOD_layoutbits();
         $class = 'blank';
     }?>
     <tr class="<?= $class ?>">
-        <td class="usercol"><?= $layoutbits->PIC_50_50($details->Username, 'class="framed"') ?><br />
-		<a href="/members/<?= $details->Username ?>'"><?= $details->Username ?></a><br/><?= $details->CityName ?>, <?= $details->CountryName ?><br />(<?= $details->created ?>)</td>
+        <td class="usercol">
+            <?= $layoutbits->PIC_50_50($details->Username, 'class="framed"') ?><br />
+            <a href="/members/<?= $details->Username ?>'"><?= $details->Username ?></a><br/>
+            <?= $details->CityName ?>, <?= $details->CountryName ?><br />(<?= $details->created ?>)
+        </td>
         <td><?= $details->ProfileSummary ?></td>
         <td><?php if ($details->languages) :
             $str = "";
@@ -48,8 +51,8 @@ $layoutbits = new MOD_layoutbits();
                 $str = substr($str, 0, -6);
             }
             echo $str;
-        endif;
-        ?></td>
+            endif;?>
+        </td>
         <td class="send"><?= $this->localGlobal($words, $details); ?></td>
         <?php if ($this->SafetyTeamOrAdmin) : ?>
         <td><?= $this->statusForm($details->id, $details->Status) ?></td>
@@ -59,4 +62,5 @@ $layoutbits = new MOD_layoutbits();
     $i++;
     endforeach; ?>
     </table>
+    <?= $this->pager->render() ?>
 </div>

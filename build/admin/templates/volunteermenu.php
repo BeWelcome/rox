@@ -92,6 +92,12 @@ Boston, MA  02111-1307, USA.
                 'manage comments'
             ),
             array(
+                'NewMembersBeWelcome',
+                'admin/newmembers',
+                'AdminNewMembersBeWelcome',
+                'Greet new members'
+            ),
+            array(
                 'Pannel',
                 'bw/admin/adminpanel.php',
                 'AdminPanel',
@@ -100,7 +106,7 @@ Boston, MA  02111-1307, USA.
             array(
                 'Checker',
                 'bw/admin/adminchecker.php',
-                'AdminSpam('.$numberMessagesToBeChecked.'/'.$numberSpamToBeChecked.')',
+                'AdminSpam ('.$numberMessagesToBeChecked.' / '.$numberSpamToBeChecked.')',
                 'check spam reports'
             ),
             array(

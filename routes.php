@@ -280,6 +280,7 @@
 
     // New Members Be Welcome
     $this->addRoute('newmembers', 'admin/newmembers', 'AdminNewMembersController', 'listMembers');
+    $this->addRoute('newmembers_pages', 'admin/newmembers/page/:pageno:', 'AdminNewMembersController', 'listMembers');
     $this->addRoute('newmembers_local_greeting', 'admin/newmembers/local/:username:', 'AdminNewMembersController', 'composeMessage');
     $this->addRoute('newmembers_global_greeting', 'admin/newmembers/global/:username:', 'AdminNewMembersController', 'composeMessage');
 

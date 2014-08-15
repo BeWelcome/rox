@@ -35,6 +35,8 @@ Boston, MA  02111-1307, USA.
  */
 class AdminNewMembersController extends AdminBaseController
 {
+    const MEMBERS_PER_PAGE = 30;
+
     private $model;
 
     public function __construct() {
@@ -64,11 +66,39 @@ class AdminNewMembersController extends AdminBaseController
     public function listMembers()
     {
         list($loggedInMember, $rights) = $this->CheckRights();
-        // todo: Add check for NewMembers or Safety or Admin rights
+        $safetyTeamOrAdmin = false;
+        if (isset($rights['SafetyTeam']) || isset($Rights['Admin'])) {
+            $safetyTeamOrAdmin = true;
+        }
+        $newMemberBeWelcomeTeam = false;
+        if (isset($rights['NewMembersBeWelcome'])) {
+            $newMemberBeWelcomeTeam = true;
+        }
+        if (!($safetyTeamOrAdmin | $newMemberBeWelcomeTeam)) {
+            $this->redirectAbsolute('/');
+        }
+        $pageno = 1;
+        if (isset($this->route_vars['pageno'])) {
+            $pageno = ($this->route_vars['pageno']);
+        }
+        $start = ($pageno - 1) * self::MEMBERS_PER_PAGE;
+
         $page = new AdminNewMembersListMembersPage();
         $page->current = 'AdminNewMembersListMembers';
-        $page->members = $this->model->getMembers(0, 50);
-        if (isset($rights['SafetyTeam']) || isset($Rights['Admin'])) {
+        $page->count = $this->model->getMembersCount($safetyTeamOrAdmin);
+        $page->members = $this->model->getMembers($start, self::MEMBERS_PER_PAGE, $safetyTeamOrAdmin);
+
+        $params = new StdClass;
+        $params->strategy = new FullPagePager();
+        $params->page_url = 'admin/newmembers/';
+        $params->page_url_marker = 'page';
+        $params->page_method = 'url';
+        $params->items = $page->count;
+        $params->active_page = $pageno;
+        $params->items_per_page = self::MEMBERS_PER_PAGE;
+        $pager = new PagerWidget($params);
+        $page->pager = $pager;
+        if ($safetyTeamOrAdmin) {
             $page->SafetyTeamOrAdmin = true;
             $page->url = implode('/', $this->request_vars);
         }

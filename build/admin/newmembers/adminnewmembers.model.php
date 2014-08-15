@@ -102,15 +102,43 @@ LIMIT 1
 
     /**
      *
+     */
+    public function getMembersCount($safetyTeamOrAdmin) {
+        $statuses = "'Active'";
+        if ($safetyTeamOrAdmin) {
+            $statuses .= ", 'MailToConfirm'";
+        }
+        $query = "
+            SELECT
+                count(*) as cnt
+            FROM
+                members m
+            WHERE
+                m.Status IN (" . $statuses . ")";
+        if (!$safetyTeamOrAdmin) {
+            $query .= " AND bewelcomed < 3";
+        }
+        $query .= " AND DATEDIFF(NOW(), created) < 120";
+        $row = $this->singleLookup($query);
+        return $row->cnt;
+    }
+
+    /**
+     *
      * @param array $vars
      * @param string $admin1
      * @param string $country
      * @return multitype:unknown
      */
-    public function getMembers($first, $count) {
+    public function getMembers($first, $count, $safetyTeamOrAdmin) {
         $langarr = explode('-', $_SESSION['lang']);
         $lang = $langarr[0];
         // First get current page and limits
+
+        $statuses = "'Active'";
+        if ($safetyTeamOrAdmin) {
+            $statuses .= ", 'MailToConfirm'";
+        }
 
         $str = "
             SELECT DISTINCT
@@ -137,9 +165,12 @@ LIMIT 1
                 members m,
                 geonames g
             WHERE
-                m.Status IN ('Active')
-                AND bewelcomed < 3
-                AND m.IdCity = g.geonameid
+                m.Status IN (" . $statuses . ")
+                AND DATEDIFF(NOW(), created) < 120";
+        if (!$safetyTeamOrAdmin) {
+            $str .= " AND bewelcomed < 3";
+        }
+        $str .= " AND m.IdCity = g.geonameid
             ORDER BY
                 m.created DESC
             LIMIT
@@ -173,21 +204,6 @@ LIMIT 1
             }
             $member->Occupation = MOD_layoutbits::truncate_words($this->FindTrad($member->Occupation), 10);
 
-            if ($loggedInMember) {
-                // get message count for found member with current member
-                $query = "
-                    SELECT
-                        COUNT(*) cnt
-                    FROM
-                        `messages`
-                    WHERE
-                        (IdSender = " . $member->id . " OR IdReceiver = " . $member->id . ")
-                        AND (IdSender = " . $loggedInMember->id . " OR IdReceiver = " . $loggedInMember->id . ")";
-                $messageCount = $this->singleLookup($query);
-                $member->MessageCount = $messageCount->cnt;
-            } else {
-                $member->MessageCount = 0;
-            }
             $query = "
                 SELECT
                     mll.Level,

@@ -399,5 +399,5 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
 <?php //var_dump($vars['errors']); ?>
 </div> <!-- signup -->
 <script type="text/javascript">
-    jQuery(".chosen-select").chosen(); // {no_results_text: "<?= htmlentities($words->getSilent('SignupNoLanguageFound'), ENT_COMPAT); ?>"});
+    jQuery(".chosen-select").select2(); // {no_results_text: "<?= htmlentities($words->getSilent('SignupNoLanguageFound'), ENT_COMPAT); ?>"});
 </script>

@@ -98,7 +98,9 @@ bwrox.selectScripts([
             "searchmembers",
             "search",
             "signup/2",
+            "signup/3",
             "signup/4",
+            "editmyprofile",
             "setlocation",
             "blog",
             "trip",
@@ -148,10 +150,11 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "chosen/chosen.jquery.min.js",
+        file: "select2/select2.min.js",
         pages: [
             "signup/2",
-            "signup/4"
+            "signup/4",
+            "editmyprofile"
         ]
     },
     {

@@ -192,5 +192,5 @@ Boston, MA  02111-1307, USA.
 
 <script type="text/javascript">
  Register.initialize('user-register-form');
- jQuery(".chosen-select").chosen(); // {no_results_text: "<?= htmlentities($words->getSilent('SignupNoLanguageFound'), ENT_COMPAT); ?>"});
+ jQuery(".chosen-select").select2(); // {no_results_text: "<?= htmlentities($words->getSilent('SignupNoLanguageFound'), ENT_COMPAT); ?>"});
 </script>

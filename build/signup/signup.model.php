@@ -37,15 +37,8 @@ class SignupModel extends RoxModelBase
      * user
      * TODO: should get a more specific name - refactoring needed!
      */
-    // const HANDLE_PREGEXP = '%^[a-z][a-z0-9_-\.]{3,19}$%i';
     // Allow usernames with up to 20 chars for new signup. Allow ., - and _. Don't allow consecutive special chars.
     const HANDLE_PREGEXP = '/^[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9]$/i';
-
-    /**
-     * TODO: check, if this is indeed the best form; I don't believe it (steinwinde, 2008-08-04)
-     */
-    const HANDLE_PREGEXP_EMAIL =
-'^[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+@[-!#$%&\'*+\\/0-9=?A-Z^_`a-z{|}~]+\.[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+$';
 
     /**
      * FIXME: use BW constant from config file instead of this one
@@ -318,7 +311,7 @@ FROM `user` WHERE
             $View = new SignupView($this);
             // TODO: BW 2007-08-19: $_SYSHCVOL['EmailDomainName']
             define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
-            $View->registerMail($id,$idTB);
+            $View->registerMail($vars, $id,$idTB);
             $View->signupTeamMail($vars);
             // PPostHandler::clearVars();
             return PVars::getObj('env')->baseuri.'signup/register/finish';
@@ -417,6 +410,10 @@ VALUES
         $memberEntity = $this->createEntity('Member', $memberID);
         $vars['password'] = $memberEntity->preparePassword($vars['password']);
         $memberEntity->setPassword($vars['password']);
+        $language = $this->createEntity('Language', $vars['mothertongue']);
+        $memberLanguageEntity = $this->createEntity('MemberLanguage');
+        $memberLanguageEntity->setSpokenLanguage($memberEntity, $language, 'MotherLanguage');
+        $memberEntity->update();
 
         // ********************************************************************
         // e-mail, names/members
@@ -624,6 +621,10 @@ VALUES
             $errors[] = 'SignupErrorPasswordCheck';
         }
 
+        if (!empty($vars['sweet'])) {
+            $errors[] = 'SignupErrorSomethingWentWrong';
+        }
+
         // firstname, lastname
         if (empty($vars['firstname']) || empty($vars['lastname']))
         {
@@ -631,6 +632,10 @@ VALUES
         }
 
         // (skipped:) secondname
+
+        if (empty($vars['mothertongue'])) {
+            $errors[] = 'SignupErrorNoMotherTongue';
+        }
 
         // gender
         if (empty($vars['gender']) || ($vars['gender']!='female' && $vars['gender']!='male'

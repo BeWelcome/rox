@@ -97,7 +97,8 @@ bwrox.selectScripts([
         pages: [
             "searchmembers",
             "search",
-            "signup/3",
+            "signup/2",
+            "signup/4",
             "setlocation",
             "blog",
             "trip",
@@ -144,6 +145,13 @@ bwrox.selectScripts([
         file: "jquery.multiselect.min.js",
         pages: [
             "search"
+        ]
+    },
+    {
+        file: "chosen/chosen.jquery.min.js",
+        pages: [
+            "signup/2",
+            "signup/4"
         ]
     },
     {

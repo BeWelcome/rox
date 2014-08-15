@@ -45,7 +45,12 @@ Boston, MA  02111-1307, USA.
   <fieldset>
     <legend><?php echo $words->get('SignupName'); ?></legend>
 
-    <!-- First Name -->
+        <div class="signup-row floatbox sweet">
+            <label for="sweet"><?php echo $words->get('SignupSweet'); ?></label>
+            <input type="text" id="sweet" name="sweet" value="" title="Leave free of content"/>
+        </div>
+
+      <!-- First Name -->
         <div class="signup-row floatbox">
           <label for="register-firstname"><?php echo $words->get('FirstName'); ?>* </label>
           <input type="text" id="register-firstname" name="firstname" class="float_left" <?php
@@ -75,8 +80,8 @@ Boston, MA  02111-1307, USA.
           -->
         </div> <!-- signup-row -->
 
-    <!-- Last Name -->
-        <div class="signup-row floatbox">
+      <!-- Last Name -->
+      <div class="signup-row floatbox">
           <label for="lastname"><?php echo $words->get('LastName'); ?>* </label>
           <input type="text" id="lastname" name="lastname" class="float_left" <?php
           echo isset($vars['lastname']) ? 'value="'.htmlentities($vars['lastname'], ENT_COMPAT, 'utf-8').'" ' : '';
@@ -84,9 +89,23 @@ Boston, MA  02111-1307, USA.
           <!--
           <span class="small"><?php echo $words->get('SignupLastNameShortDesc'); ?></span>
           -->
-        </div> <!-- signup-row -->
+      </div> <!-- signup-row -->
 
-    <!-- Birthdate -->
+      <!-- Mother tongue(s)-->
+      <div>
+          <label for="mothertongue"><?php echo $words->get('LanguageLevel_MotherLanguage'); ?>* </label>
+          <select name="mothertongue" id="mothertongue" data-placeholder="<?= $words->getBuffered('SignupSelectMotherTongue')?>" style="width: 350px;" class="chosen-select">
+              <option value=""></option>
+              <optgroup label="<?= $words->getSilent('SpokenLanguages') ?>">
+                  <?= $this->getAllLanguages(true); ?>
+              </optgroup>
+              <optgroup label="<?= $words->getSilent('SignedLanguages') ?>">
+                  <?= $this->getAllLanguages(false); ?>
+              </optgroup>
+          </select>
+      </div> <!-- signup-row -->
+
+      <!-- Birthdate -->
         <div class="signup-row floatbox">
           <label for="BirthDate"><?php echo $words->get('SignupBirthDate'); ?>*</label>
           <select id="BirthDate" name="birthyear">
@@ -173,5 +192,5 @@ Boston, MA  02111-1307, USA.
 
 <script type="text/javascript">
  Register.initialize('user-register-form');
-
+ jQuery(".chosen-select").chosen(); // {no_results_text: "<?= htmlentities($words->getSilent('SignupNoLanguageFound'), ENT_COMPAT); ?>"});
 </script>

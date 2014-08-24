@@ -120,6 +120,9 @@ class AdminRightsController extends AdminBaseController
         $page->members = $this->model->getMembersWithRights();
         // get list of members with rights (as assigned, filter by $member if set)
         $page->membersWithRights = $this->model->getMembersWithRights($member);
+        if (($member) && (count($page->membersWithRights) == 0)) {
+            $this->redirectAbsolute('/admin/rights/assign/' . $this->route_vars['username']);
+        }
         return $page;
     }
 

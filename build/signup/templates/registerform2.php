@@ -91,16 +91,22 @@ Boston, MA  02111-1307, USA.
           -->
       </div> <!-- signup-row -->
 
+      <?php
+        $motherTongue = -1;
+        if (isset($vars['mothertongue'])) {
+            $motherTongue = $vars['mothertongue'];
+        }
+      ?>
       <!-- Mother tongue(s)-->
       <div>
           <label for="mothertongue"><?php echo $words->get('LanguageLevel_MotherLanguage'); ?>* </label>
           <select name="mothertongue" id="mothertongue" data-placeholder="<?= $words->getBuffered('SignupSelectMotherTongue')?>" style="width: 350px;" class="chosen-select">
-              <option value=""></option>
+              <option value="-1"></option>
               <optgroup label="<?= $words->getSilent('SpokenLanguages') ?>">
-                  <?= $this->getAllLanguages(true); ?>
+                  <?= $this->getAllLanguages(true, $motherTongue); ?>
               </optgroup>
               <optgroup label="<?= $words->getSilent('SignedLanguages') ?>">
-                  <?= $this->getAllLanguages(false); ?>
+                  <?= $this->getAllLanguages(false, $motherTongue); ?>
               </optgroup>
           </select>
       </div> <!-- signup-row -->
@@ -152,7 +158,7 @@ Boston, MA  02111-1307, USA.
     <!-- Gender -->
         <div class="signup-row">
           <label for="gender"><?php echo $words->get('Gender'); ?>*</label>
-            <input class="radio" style="float: left" type="radio" id="gender" name="gender" value="female"<?php
+            <input class="radio" type="radio" id="gender" name="gender" value="female"<?php
              if (isset($vars['gender']) && $vars['gender'] == 'female') {
                  echo ' checked="checked"';
               }

@@ -633,7 +633,7 @@ VALUES
 
         // (skipped:) secondname
 
-        if (empty($vars['mothertongue'])) {
+        if (!isset($vars['mothertongue']) || ($vars['mothertongue'] == -1)) {
             $errors[] = 'SignupErrorNoMotherTongue';
         }
 

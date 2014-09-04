@@ -364,7 +364,14 @@ class PageWithRoxLayout extends PageWithHTML
      * @return string Flash notice message
      */
     public function getFlashNotice($remove = false) {
-        return $this->getFlash('notice', $remove);
+        $flash = $this->getFlash('notice', $remove);
+        if (file_exists(SCRIPT_BASE . 'flash.txt')) {
+            if (!empty($flash)) {
+                $flash .= "<br /><br />";
+            }
+            $flash .= file_get_contents(SCRIPT_BASE . 'flash.txt');
+        }
+        return $flash;
     }
 
     /**

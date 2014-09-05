@@ -409,11 +409,11 @@ VALUES
 
         $memberEntity = $this->createEntity('Member', $memberID);
         $vars['password'] = $memberEntity->preparePassword($vars['password']);
-        $memberEntity->setPassword($vars['password']);
         $language = $this->createEntity('Language', $vars['mothertongue']);
         $memberLanguageEntity = $this->createEntity('MemberLanguage');
         $memberLanguageEntity->setSpokenLanguage($memberEntity, $language, 'MotherLanguage');
         $memberEntity->update();
+        $memberEntity->setPassword($vars['password']);
 
         // ********************************************************************
         // e-mail, names/members

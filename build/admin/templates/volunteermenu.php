@@ -143,7 +143,7 @@ Boston, MA  02111-1307, USA.
     ;
     foreach($array_of_items as $item) {
         if ($R->hasRight($item[0])) {
-            echo '<li><a href="'.$item[1].'" title="'.$item[3].'">'.$item[2].'</a></li>';
+            echo '<li><a href="'. $item[1] .'" title="'.$words->getBuffered($item[3]).'">'.$words->getBuffered($item[2]).'</a></li>';
         }
     }
 ?>

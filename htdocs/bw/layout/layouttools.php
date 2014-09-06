@@ -61,7 +61,11 @@ function bwlink( $relative_url, $omit_bw = false )
     }
     
     if (class_exists('PVars')) {
-        $baseuri = PVars::getObj('env')->baseuri;  // . 'bw/' . $relative_url;
+        if (isset($_SERVER['HTTPS'])) {
+            $baseuri = PVars::getObj('env')->baseuri_https;  // https://. 'bw/' . $relative_url;
+        } else {
+            $baseuri = PVars::getObj('env')->baseuri;  // http:// . 'bw/' . $relative_url;
+        }
     } else {
         $protocol_exploded = explode('/', $_SERVER['SERVER_PROTOCOL']);
         $baseuri =

@@ -50,100 +50,59 @@ Boston, MA  02111-1307, USA.
     $array_of_items =
         array(
             array(
-                'Words',
-                'admin/word',
                 'AdminWord',
-                'Words management'
-            ),
-            array(
-                'Grep',
-                'bw/admin/admingrep.php',
-                'AdminGrep',
-                'grep files'
+                'AdminWord',
+                'admin/word'
             ),
             array(
                 'Flags',
-                'admin/flags',
                 'AdminFlags',
-                'manage member flags'
-            ),
-            array(
-                'Flags (old)',
-                'bw/admin/adminflags.php',
-                'AdminFlags',
-                'administrate member flags'
+                'admin/flags'
             ),
             array(
                 'Rights',
-                'admin/rights',
                 'AdminRights',
-                'manage admin rights of other members'
+                'admin/rights'
             ),
             array(
                 'Logs',
-                'bw/admin/adminlogs.php',
                 'AdminLogs',
-                'logs of member activity'
+                'bw/admin/adminlogs.php'
             ),
             array(
-                'Comments',
-                'bw/admin/admincomments.php',
                 'AdminComments',
-                'manage comments'
+                'bw/admin/admincomments.php'
             ),
             array(
                 'NewMembersBeWelcome',
-                'admin/newmembers',
                 'AdminNewMembersBeWelcome',
-                'Greet new members'
-            ),
-            array(
-                'Pannel',
-                'bw/admin/adminpanel.php',
-                'AdminPanel',
-                'managing panel'
-            ),
-            array(
-                'Checker',
-                'bw/admin/adminchecker.php',
-                'AdminSpam ('.$numberMessagesToBeChecked.' / '.$numberSpamToBeChecked.')',
-                'check spam reports'
-            ),
-            array(
-                'Debug',
-                PVars::getObj('env')->baseuri . 'bw/admin/phplog.php?showerror=10',
-                'php error log',
-                'Show last 10 php errors in log'
+                'admin/newmembers',
             ),
             array(
                 'MassMail',
-                'admin/massmail',
-                'Mass mailings',
-                'broadcast messages'
+                'AdminMassMail',
+                'admin/massmail'
             ),
             array(
                 'Treasurer',
-                'admin/treasurer',
-                'Treasurer',
-                'Manage donations, start/stop donation campaign'
+                'AdminTreasurer',
+                'admin/treasurer'
             ),
             array(
                 'FAQ',
-                'bw/faq.php',
-                'Faq',
-                'Manage FAQs'
+                'AdminFAQ',
+                'bw/faq.php'
             ),
             array(
                 'SqlForVolunteers',
-                'bw/admin/adminquery.php',
-                'Queries for volunteers',
-                'access to volunteers dedicated queries'
+                'AdminSqlForVolunteers',
+                'bw/admin/adminquery.php'
             ),
         )
     ;
     foreach($array_of_items as $item) {
         if ($R->hasRight($item[0])) {
-            echo '<li><a href="'. $item[1] .'" title="'.$words->getBuffered($item[3]).'">'.$words->getBuffered($item[2]).'</a></li>';
+            echo '<li><a href="'. $item[2] .'" title="'.$words->getBuffered($item[1] . 'Info').'">'.$words->getBuffered($item[1]).'</a></li>';
         }
     }
 ?>

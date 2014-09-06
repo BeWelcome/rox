@@ -18,10 +18,10 @@ class RoxMigration extends AbstractMigration
      *
      * Basically the same query but the created column is handled differently
      *
-     * @param $add true means we add a word codee
-     * @param $code
-     * @param $sentence
-     * @param $description
+     * @param bool $add true means we add a word codee
+     * @param string $code
+     * @param string $sentence
+     * @param string $description
      * @param bool $majorUpdate
      * @param string $dnt
      * @param string $priority
@@ -74,9 +74,9 @@ class RoxMigration extends AbstractMigration
      *
      * If the word code already exists an PDO exception will be thrown
      *
-     * @param $code The new WordCode
-     * @param $sentence The 'translation'
-     * @param $description The description needs to be at least 15 characters long
+     * @param string $code The new WordCode
+     * @param string $sentence The 'translation'
+     * @param string $description The description needs to be at least 15 characters long
      * @param string $dnt Sets the donottranslate flag (either 'yes' or 'no')
      * @param string $priority Sets the translation priority
      * @throws \Exception
@@ -92,10 +92,10 @@ class RoxMigration extends AbstractMigration
     /*****
      * Updates a word code during a migration (English language only)
      *
-     * @param $code The new WordCode
-     * @param $sentence The 'translation'
-     * @param $description The description needs to be at least 15 characters long
-     * @param $majorupdate The update is a major one rendering the old translation obsolete
+     * @param string $code The new WordCode
+     * @param string $sentence The 'translation'
+     * @param string $description The description needs to be at least 15 characters long
+     * @param bool $majorupdate The update is a major one rendering the old translation obsolete
      * @param string $dnt Sets the donottranslate flag (either 'yes' or 'no')
      * @param string $priority Sets the translation priority
      * @throws \Exception
@@ -110,7 +110,7 @@ class RoxMigration extends AbstractMigration
      *
      * Generally used in up-migrations only
      *
-     * @param $code The WordCode to archive
+     * @param string $code The WordCode to archive
      */
     protected function ArchiveWordCode($code)
     {
@@ -128,7 +128,7 @@ WHERE `code` = " . $code
      *
      * Generally used in down-migrations only
      *
-     * @param $code The WordCode to archive
+     * @param string $code The WordCode to archive
      */
     protected function UnarchiveWordCode($code)
     {
@@ -145,7 +145,7 @@ WHERE `code` = " . $code
     /****
      * Remove the word code and all translations from the database
      *
-     * @param $code The WordCode to remove
+     * @param string $code The WordCode to remove
      */
     protected function RemoveWordCode($code)
     {

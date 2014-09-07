@@ -50,7 +50,7 @@ Boston, MA  02111-1307, USA.
     $array_of_items =
         array(
             array(
-                'AdminWord',
+                'Word',
                 'AdminWord',
                 'admin/word'
             ),
@@ -70,12 +70,13 @@ Boston, MA  02111-1307, USA.
                 'bw/admin/adminlogs.php'
             ),
             array(
+                'Comments',
                 'AdminComments',
                 'bw/admin/admincomments.php'
             ),
             array(
                 'NewMembersBeWelcome',
-                'AdminNewMembersBeWelcome',
+                'AdminNewMembers',
                 'admin/newmembers',
             ),
             array(
@@ -100,9 +101,12 @@ Boston, MA  02111-1307, USA.
             ),
         )
     ;
+
     foreach($array_of_items as $item) {
         if ($R->hasRight($item[0])) {
-            echo '<li><a href="'. $item[2] .'" title="'.$words->getBuffered($item[1] . 'Info').'">'.$words->getBuffered($item[1]).'</a></li>';
+            $text = $words->getSilent($item[1]);
+            // $info = $words->getSilent($item[1] . 'Info');
+            echo '<li><a href="'. $item[2] . '">' . $text . '</a></li>';
         }
     }
 ?>

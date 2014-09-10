@@ -71,7 +71,8 @@ else {
 	$sList=str_replace("\"","",$IdQueryScope) ;
 	$sList=str_replace("'","",$sList) ;
 	$sList=str_replace(";",",",$sList) ;
-	$swhere=" where  (sqlforvolunteers.id in (".$sList.")) " ;
+    $queries = array_filter(explode(',', $sList), 'strlen');
+	$swhere=" where  (sqlforvolunteers.id in ('" . implode("','", $queries) . "')) " ;
 }
 
 

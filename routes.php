@@ -120,10 +120,10 @@
     $this->addRoute('admin_flags_members', 'admin/flags/list/members', 'AdminFlagsController', 'listMembers');
     $this->addRoute('admin_flags_member', 'admin/flags/list/members/:username:', 'AdminFlagsController', 'listMembers');
     $this->addRoute('admin_flags_flags', 'admin/flags/list/flags', 'AdminFlagsController', 'listFlags');
-    $this->addRoute('admin_flags_right', 'admin/flags/list/flags/:id:', 'AdminFlagsController', 'listFlags');
+    $this->addRoute('admin_flags_flag', 'admin/flags/list/flags/:id:', 'AdminFlagsController', 'listFlags');
     $this->addRoute('admin_flags_create', 'admin/flags/create', 'AdminFlagsController', 'create');
     $this->addRoute('admin_flags_assign', 'admin/flags/assign', 'AdminFlagsController', 'assign');
-    $this->addRoute('admin_flags_assign', 'admin/flags/assign/:username:', 'AdminFlagsController', 'assign');
+    $this->addRoute('admin_flags_assign_user', 'admin/flags/assign/:username:', 'AdminFlagsController', 'assign');
     $this->addRoute('admin_flags_edit', 'admin/flags/edit/:id:/:username:', 'AdminFlagsController', 'edit');
     $this->addRoute('admin_flags_remove', 'admin/flags/remove/:id:/:username:', 'AdminFlagsController', 'remove');
     $this->addRoute('admin_flags_tooltip', 'admin/flags/tooltip', 'AdminFlagsController', 'tooltip');
@@ -256,6 +256,8 @@
     $this->addRoute('suggestions_resultslist_pages', 'suggestions/results/page/:pageno:', 'suggestionsController', 'resultsList');
     $this->addRoute('suggestions_results', 'suggestions/:id:/results', 'suggestionsController', 'results');
     $this->addRoute('suggestions_team', 'suggestions/team', 'suggestionsController', 'team');
+    $this->addRoute('suggestions_search_results', 'suggestions/search/:keyword:', 'suggestionsController', 'search');
+    $this->addRoute('suggestions_search_results_page', 'suggestions/search/:keyword:/page/:pageno:', 'suggestionsController', 'search');
 
     // searchmembers
     $this->addRoute('searchmembers', 'search', 'SearchController', 'searchMembers');

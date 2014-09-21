@@ -120,6 +120,9 @@ class AdminFlagsController extends AdminBaseController
         $page->members = $this->model->getMembersWithFlags();
         // get list of members with Flags (as assigned, filter by $member if set)
         $page->membersWithFlags = $this->model->getMembersWithFlags($member);
+        if (($member) && (count($page->membersWithFlags) == 0)) {
+            $this->redirectAbsolute('/admin/flags/assign/' . $this->route_vars['username']);
+        }
         return $page;
     }
 

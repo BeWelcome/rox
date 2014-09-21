@@ -228,7 +228,7 @@ class ForumsController extends PAppController
         else if ($this->action == self::ACTION_NEW) {
             if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if the user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowedToPostInForum","FlagEvent") ;
-                $words = $this->_model->getWords();
+                $words = new MOD_Words();
                 die($words->get('NotAllowedToPostInForum'));
             }
             if (!$User) {
@@ -250,7 +250,7 @@ class ForumsController extends PAppController
         else if ($this->action == self::ACTION_REPORT_TO_MOD) {
             if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if the user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowedToPostInForum","FlagEvent") ;
-                $words = $this->_model->getWords();
+                $words = new MOD_Words();
                 die($words->get('NotAllowedToPostInForum'));
             }
             if (!$User) {
@@ -298,7 +298,7 @@ class ForumsController extends PAppController
         else if ($this->action == self::ACTION_REPLY) {
             if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if teh user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowedToPostInForum","FlagEvent") ;
-                $words = $this->_model->getWords();
+                $words = new MOD_Words();
                 die($words->get('NotAllowedToPostInForum'));
             }
             if (!$User) {
@@ -332,7 +332,7 @@ class ForumsController extends PAppController
         } else if ($this->action == self::ACTION_DELETE) {
             if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if the user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowedToPostInForum","FlagEvent") ;
-                $words = $this->_model->getWords();
+                $words = new MOD_Words();
                 die($words->get('NotAllowedToPostInForum'));
             }
             if (!$User || !$this->BW_Right->HasRight("ForumModerator","Delete")) {
@@ -342,7 +342,7 @@ class ForumsController extends PAppController
         } else if ($this->action == self::ACTION_EDIT) {
             if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if the user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowedToPostInForum","FlagEvent") ;
-                $words = $this->_model->getWords();
+                $words = new MOD_Words();
                 die($words->get('NotAllowedToPostInForum'));
             }
             if (!$User) {
@@ -356,7 +356,7 @@ class ForumsController extends PAppController
         } else if ($this->action == self::ACTION_TRANSLATE) {
             if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if the user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowedToPostInForum","FlagEvent") ;
-                $words = $this->_model->getWords();
+                $words = new MOD_Words();
                 die($words->get('NotAllowedToPostInForum'));
             }
             if (!$User) {

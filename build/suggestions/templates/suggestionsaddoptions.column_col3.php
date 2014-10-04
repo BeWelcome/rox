@@ -8,10 +8,6 @@ if (empty($vars)) {
     $vars['suggestion-option-summary'] = '';
     $vars['suggestion-option-desc'] = '';
 }
-if (!isset($this->disableTinyMCE) || ($this->disableTinyMCE == 'No')) {
-    $textarea = 'suggestion-option-desc';
-    require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js';
-}
 
 // Show suggestion head (as on every page)
 include 'suggestion.php'; ?>

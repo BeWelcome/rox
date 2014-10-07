@@ -27,15 +27,10 @@ $User = APP_User::login();
     <div class="float_right">
         <!-- Google froum search bar -->
         <p><?php echo $this->_model->words->getFormatted('ForumSearch'); ?></p>
-        <form action="https://www.google.com/cse" id="cse-search-box">
-            <div>
-                <input type="hidden" name="cx" value="003793464580395137050:n7s_x10-itw" />
-                <input type="hidden" name="cof" value="FORID:9" />
-                <input type="hidden" name="ie" value="UTF-8" />
-                <input type="text" name="q" size="15" />
-                <input type="submit" name="sa" value="<?php echo $this->_model->words->getSilent('Search')?>" /> <?php echo $this->_model->words->flushBuffer(); ?>
-            </div>
+        <form action="/forums/search" method="POST" id="search-box"><div>
+            <input type="hidden" name="<?= $this->searchCallbackId ?>" value="1" />
+            <input type="text" name="fs-keyword" size="15" placeholder="<?php echo $this->_model->words->getSilent('ForumsSearchInfo')?>" />
+            <input type="submit" name="fss" value="<?php echo $this->_model->words->getSilent('Search')?>" /> <?php echo $this->_model->words->flushBuffer(); ?></div>
         </form>
-        <script type="text/javascript" src="https://www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en"></script>
     </div> <!-- float_right -->
 </div> <!-- teaser -->

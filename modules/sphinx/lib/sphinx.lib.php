@@ -56,6 +56,18 @@ class MOD_sphinx
         return self::$_instance;
     }
 
+    private function _getSphinxClient()
+    {
+        require_once(SCRIPT_BASE . 'lib/sphinx-2.1.9/sphinxapi.php');
+        $sphinxClient = new SphinxClient();
+        $sphinxClient->SetServer ( '127.0.0.1', 9312 );
+        $sphinxClient->SetConnectTimeout ( 20 );
+        $sphinxClient->SetArrayResult ( true );
+        $sphinxClient->SetWeights ( array ( 1000, 1 ) );
+        $sphinxClient->SetMatchMode ( SPH_MATCH_EXTENDED );
+        return $sphinxClient;
+    }
+
     /**
      * wrapper for lazy loading and instantiating a Sphinx client object
      *
@@ -64,16 +76,36 @@ class MOD_sphinx
      */
     public function getSphinxGeoname()
     {
-        require_once(SCRIPT_BASE . 'lib/sphinx-2.0.8/sphinxapi.php');
-        $sphinxClient = new SphinxClient();
-        $sphinxClient->SetServer ( '127.0.0.1', 9312 );
-        $sphinxClient->SetConnectTimeout ( 20 );
-        $sphinxClient->SetArrayResult ( true );
-        $sphinxClient->SetWeights ( array ( 100, 1 ) );
-        $sphinxClient->SetMatchMode ( SPH_MATCH_EXTENDED );
+        $sphinxClient = $this->_getSphinxClient();
+        $sphinxClient->SetLimits(0, 20);
+        $sphinxClient->SetSortMode( SPH_SORT_EXPR, "@weight");
+        return $sphinxClient;
+    }
+
+    /**
+     * wrapper for lazy loading and instantiating a Sphinx client object
+     *
+     * @access public
+     * @return object
+     */
+    public function getSphinxSuggestions()
+    {
+        $sphinxClient = $this->_getSphinxClient();
         $sphinxClient->SetLimits(0, 10);
-        // $sphinxClient->SetRankingMode( SPH_RANK_SPH04 );
-        $sphinxClient->SetSortMode( SPH_SORT_EXPR, "@weight + LN(population + 1 ) * 2");
+        $sphinxClient->SetSortMode( SPH_SORT_EXPR, "@weight");
+        return $sphinxClient;
+    }
+
+    /**
+     * wrapper for lazy loading and instantiating a Sphinx client object
+     *
+     * @access public
+     * @return object
+     */
+    public function getSphinxForums()
+    {
+        $sphinxClient = $this->_getSphinxClient();
+        $sphinxClient->SetLimits(0, 15);
         return $sphinxClient;
     }
 }

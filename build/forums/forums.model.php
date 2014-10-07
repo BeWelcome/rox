@@ -4014,6 +4014,71 @@ SQL;
         $member = $this->getLoggedInMember();
         return $member->getPreference("PreferenceDisableTinyMCE", $default = "No");
     }
+
+	/**
+	 * @param $keywords Keywords to search for in the Sphinx index
+	 * @return array
+	 */
+	public function searchForums($keywords) {
+		$sphinx = new MOD_sphinx();
+
+		$results = array();
+		$member = $this->getLoggedInMember();
+		if (!$member) {
+			$result['error'] = array( 'ForumSearchNotLoggedIn' );
+		} else {
+			$groupEntities = $member->getGroups();
+			$groups = array( 0 );
+			foreach($groupEntities as $group) {
+				$groups[] = $group->id;
+			}
+
+			$sphinxClient = $sphinx->getSphinxForums();
+			$sphinxClient->SetFilter('IdGroup', $groups);
+			$sphinxClient->SetSortMode(SPH_SORT_ATTR_DESC, 'created' );;
+			$resultsThreads = $sphinxClient->Query($sphinxClient->EscapeString($keywords), 'forums');
+
+			if ($resultsThreads['total'] <> 0) {
+				$threadIds = array();
+				foreach ($resultsThreads['matches'] as $match) {
+					$threadIds[] = $match['id'];
+				}
+				$this->board->initThreads(1, false, $threadIds);
+			}
+		}
+		return $results;
+	}
+
+	/**
+	 * Checks for correctness of search box vars (not empty)
+	 *
+	 * @param $vars
+	 * @return bool
+	 */
+	private function _checkVarsSearch($vars) {
+		return true;
+	}
+
+	/**
+	 * Fetches matching threads/posts from the Sphinx index
+	 *
+	 * @return mixed Either false if there was a problem with the search box content or a list of matches.
+	 */
+	public function searchProcess() {
+		if (!($User = APP_User::login())) {
+			return false;
+		}
+
+		$vars =& PPostHandler::getVars();
+
+		$vars_ok = $this->_checkVarsSearch($vars);
+		if ($vars_ok) {
+			$keyword = htmlspecialchars($vars['fs-keyword']);
+			PPostHandler::clearVars();
+			return PVars::getObj('env')->baseuri.$this->forums_uri.'search/'. $keyword;
+		}
+		return false;
+	}
 } // end of class Forums
 
 
@@ -4149,8 +4214,13 @@ class Board implements Iterator {
 	$this->IdGroup ;
 	$this->geonameid ;
 */
-	public function FilterThreadListResultsWithIdCriteria() {
+	public function FilterThreadListResultsWithIdCriteria($ids = array()) {
         $wherethread="" ;
+
+		if (count($ids) <> 0) {
+			$wherethread = " AND `forums_threads`.`threadid` in ('" . implode("', '", $ids) . "') ";
+			return $wherethread;
+		}
 
         if (isset($this->continent) && $this->continent !== false) {
             $wherethread .= sprintf("AND `forums_threads`.`continent` = '%s' ", $this->continent);
@@ -4172,9 +4242,20 @@ class Board implements Iterator {
 		return($wherethread) ;
 	} // end of FilterThreadListResultsWithIdCriteria
 
-    public function initThreads($page = 1, $showsticky = true) {
+	/**
+	 * Initializes the thread storages.
+	 *
+	 * If ids is set only threads with the given ids will be loaded
+	 *
+	 * @param int $page
+	 * @param bool $showsticky
+	 * @param array $ids
+	 * @throws PException
+	 */
+    public function initThreads($page = 1, $showsticky = true, $ids = array()) {
 
-        $wherethread=$this->FilterThreadListResultsWithIdCriteria() ;
+		$this->threads = array();
+        $wherethread=$this->FilterThreadListResultsWithIdCriteria($ids) ;
 
         if ($showsticky) {
             $orderby = " ORDER BY `stickyvalue` ASC,`last_create_time` DESC";

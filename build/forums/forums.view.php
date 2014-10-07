@@ -439,6 +439,34 @@ class ForumsView extends RoxAppView {
         require 'templates/topcategories.php';
     } // end of showTopLevelCategories
 
+    /**
+     * @param bool $result The set of results to be shown
+     */
+    public function showSearchResultPage($keyword) {
+        $this->_model->searchForums($keyword);
+        $boards = $this->_model->getBoard();
+        $request = PRequest::get()->request;
+        $uri = implode('/', $request);
+        $uri = rtrim($uri, '/').'/';
+        $this->SetPageTitle($boards->getBoardName().' - BeWelcome '.$this->words->getBuffered('Forum'));
+
+        if ($boards->IdGroup != 0) {
+            $memberIsGroupMember = $this->_model->checkGroupMembership($boards->IdGroup);
+            if (!$memberIsGroupMember) {
+                $noForumNewTopicButton = true;
+            }
+        }
+        if ($boards->IdGroup == SuggestionsModel::getGroupId()) {
+            $noForumNewTopicButton = true;
+        }
+        $pages = $this->getBoardPageLinks();
+        $currentPage = $this->_model->getPage();
+        $max = $this->_model->getBoard()->getNumberOfThreads();
+        $maxPage = ceil($max / $this->_model->THREADS_PER_PAGE);
+
+        require 'templates/board.php';
+    }
+
     public function displaySearchResultSubscriptions($TResults) {
         require 'templates/searchresultsubscriptions.php';
     }

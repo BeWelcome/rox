@@ -38,7 +38,7 @@ $layoutbits = new MOD_layoutbits();
     <tr class="<?= $class ?>">
         <td class="usercol">
             <?= $layoutbits->PIC_50_50($details->Username, 'class="framed"') ?><br />
-            <a href="/members/<?= $details->Username ?>'"><?= $details->Username ?></a><br/>
+            <a href="/members/<?= $details->Username ?>"><?= $details->Username ?></a><br/>
             <?= $details->CityName ?>, <?= $details->CountryName ?><br />(<?= $details->created ?>)
         </td>
         <td><?php if ($this->SafetyTeamOrAdmin) :

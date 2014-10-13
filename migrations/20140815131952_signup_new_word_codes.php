@@ -3,9 +3,9 @@
 use Phinx\Migration\AbstractMigration;
 
 /**
- * Class NewMembersBeWelcome
+ * Class SignupNewWordCodes
  *
- * Adds a column to members to show the number of messages a member got from the New Members Be Welcome team
+ * New word codes needed for signup due to the honey pot
  *
  * See ticket: #2240
  *

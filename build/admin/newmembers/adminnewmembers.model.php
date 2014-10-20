@@ -118,7 +118,7 @@ LIMIT 1
         if (!$safetyTeamOrAdmin) {
             $query .= " AND bewelcomed < 3";
         }
-        $query .= " AND DATEDIFF(NOW(), created) < 120";
+        $query .= " AND DATEDIFF(NOW(), created) < 60";
         $row = $this->singleLookup($query);
         return $row->cnt;
     }
@@ -167,14 +167,18 @@ LIMIT 1
                 geonames g
             WHERE
                 m.Status IN (" . $statuses . ")
-                AND DATEDIFF(NOW(), created) < 120";
+                AND DATEDIFF(NOW(), created) < 60";
         if (!$safetyTeamOrAdmin) {
             $str .= " AND bewelcomed < 3";
         }
         $str .= " AND m.IdCity = g.geonameid
-            ORDER BY
-                m.created DESC
-            LIMIT
+            ORDER BY m.created ";
+        if (!$safetyTeamOrAdmin) {
+            $str .= " DESC";
+        } else {
+            $str .= " ASC";
+        }
+        $str .= " LIMIT
                 " . $first . ", " . $count;
 
         $rawMembers = $this->bulkLookup($str);

@@ -62,14 +62,14 @@ class AdminNewMembersListMembersPage extends AdminNewMembersBasePage
             $greetings .= '<a href="/admin/newmembers/local/' . $details->Username .'" target="_blank">
                 <img src="images/icons/map.png" alt="' . $words->getSilent('AdminNewMembersLocalGreetingUsername', $details->Username) . '
                 title="' . $words->getSilent('AdminNewMembersLocalGreetingUsername', $details->Username) . ' /></a><br />
-                <a href="/admin/newmembers/local/' . $details->Username . '" target="_blank">' .
+                <a href="/admin/newmembers/local/' . $details->Username . '" target="_blank" onclick="location.reload(true);">' .
                 $words->getBuffered("AdminNewMembersLocalGreeting") . '</a><br /><br />';
         }
         if (($bewelcomed & 2) != 2) {
             $greetings .= '<a href="/admin/newmembers/global/' . $details->Username .'" target="_blank">
                 <img src="images/icons/world.png" alt="' . $words->getSilent('AdminNewMembersGlobalGreetingUsername', $details->Username) . '
                 title="' . $words->getSilent('AdminNewMembersGlobalGreetingUsername', $details->Username) . ' /></a><br />
-                <a href="/admin/newmembers/global/' . $details->Username . '" target="_blank">' .
+                <a href="/admin/newmembers/global/' . $details->Username . '" target="_blank" onclick="location.reload(true);">' .
                 $words->getBuffered("AdminNewMembersGlobalGreeting") . '</a>';
         }
         return $greetings;

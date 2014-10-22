@@ -18,7 +18,7 @@ class ReplyMessagePage extends ComposeMessagePage
             $purifier = new MOD_htmlpure();
             $purifier = $purifier->getAdvancedHtmlPurifier();
             $message->Message = $purifier->purify($message->Message);
-            $message->Message = "<blockquote>" . $message->Message . "</blockquote><p></p>";
+            $message->Message = "<p></p><blockquote>" . $message->Message . "</blockquote><p></p>";
         }
         $contact_username = $message->senderUsername;
         $direction_in = true;

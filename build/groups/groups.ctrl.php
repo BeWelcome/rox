@@ -1070,12 +1070,13 @@ class GroupsController extends RoxControllerBase
         }
 
         $result = $this->_model->updateGroupSettings($group, $post['GroupDesc_'], $post['Type'], $post['VisiblePosts'], $post['VisibleComments']);
-
-        if ($result)
-        {
+        if ($result === true || !is_array($result)){
             $this->logWrite("Member #{$this->_model->getLoggedInMember()->getPKValue()} changed group settings for group #{$post['group_id']}");
+            $mem_redirect->result = true;
+        } else {
+            $mem_redirect->problems = $result;
+            $mem_redirect->result = false;
         }
-        $mem_redirect->result = $result;
         $mem_redirect->post = $post;
         return $return;
     }

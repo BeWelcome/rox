@@ -78,6 +78,7 @@ class GroupSettingsPage extends GroupsBasePage
             $problems = array();
         }
 ?>
+
     <div id="groups">
 
 
@@ -89,7 +90,15 @@ class GroupSettingsPage extends GroupsBasePage
                 <div class="c50l">
                     <div class="subcl">
                             <input type='hidden' name='group_id' value='<?=$this->group->getPKValue(); ?>' />
-                            <?= ((!empty($problems['General'])) ? "<p class='error'>" . $words->get('GroupsChangeFailed') . "</p>" : '' ); ?>
+                            <?php if (!empty($problems)){
+                                      if (!empty($problems['General']) && $problems['General']){
+                                          echo "<p class='error'>" . $words->get('GroupsChangeFailed') . "</p>";
+                                      }                                
+                                  } else {
+                                    if ($redirected) {
+                                        echo "<p class='success'>" . $words->get('GroupsChangeSucceeded') . "</p>";
+                                        }}
+                            ?>
                             <label for="description"><h3><?= $words->get('Description');?>:</label></h3><?= ((!empty($problems['GroupDesc_'])) ? "<span class='error'>" . $words->get('GroupsCreationDescriptionMissing') ."</span>" : '' ); ?>
                             <textarea  id="description" name="GroupDesc_" cols="40" rows="4" class="long" ><?=htmlspecialchars($GroupDesc_, ENT_QUOTES)?></textarea><br /><br />
                     </div><!-- subcl -->
@@ -124,6 +133,12 @@ class GroupSettingsPage extends GroupsBasePage
                 </div><!-- c50l -->
                 <div class="c50r">
                     <div class="subcr">
+                      <?php if (!empty($problems['ImageUploadTooBig']) && $problems['ImageUploadTooBig']){
+                                echo "<p class='error'>" . $words->get('GroupsImageUploadTooBig') . "</p>";
+                            }
+                            if (!empty($problems['ImageUpload']) && $problems['ImageUpload']){
+                                echo "<p class='error'>" . $words->get('GroupsImageUploadFailed') . "</p>";
+                            }?>
                      <h3><?= $words->get('GroupsAddImage'); ?></h3>
                             <label for='group_image'><?= $words->get('GroupsImage'); ?></label><br /><input id='group_image' name='group_image' type='file' />
 

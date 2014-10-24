@@ -346,15 +346,25 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             $problems['Type'] = true;
         }
 
-        if (!empty($_FILES['group_image']) && empty($problems) && $_FILES['group_image']['tmp_name'] != '')
-        {
-            if ($picture = $this->handleImageUpload())
-            {
-                $input['Picture'] = $picture;
-            }
-            else
-            {
-                $problems['image'] = true;
+
+        // errorcode 4 is 'no file uploaded'
+        if (!empty($_FILES['group_image']) && $_FILES['group_image']['error'] !== 4){
+            // when a temporary file exists
+            if (!empty($_FILES['group_image']['tmp_name'])){
+                if (!$picture = $this->handleImageUpload()){
+                    $problems['ImageUpload'] = true;
+                }
+            } else {
+                // when the upload returned an error
+                if (!empty($_FILES['group_image']['error']) && $_FILES['group_image']['error']>0){
+                    switch ($_FILES['group_image']['error']){
+                        case 1:
+                            $problems['ImageUploadTooBig'] = true;
+                        default:
+                            $problems['ImageUpload'] = true;
+                    }
+                           
+                }
             }
         }
 
@@ -541,18 +551,28 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
     {
         if (!is_object($group) || !$group->isLoaded())
         {
-            return false;
+            return array('General' => true);
         }
-
         $picture = '';
-        if (!empty($_FILES['group_image']) && !empty($_FILES['group_image']['tmp_name']))
-        {
-            if (!$picture = $this->handleImageUpload())
-            {
-                return false;
+        if (!empty($_FILES['group_image'])){
+            // when a temporary file exists
+            if (!empty($_FILES['group_image']['tmp_name'])){
+                if (!$picture = $this->handleImageUpload()){
+                    return array('ImageUpload' => true);
+                }
+            } else {
+                // when the upload returned an error
+                if (!empty($_FILES['group_image']['error']) && $_FILES['group_image']['error']>0){
+                    switch ($_FILES['group_image']['error']){
+                        case 1:
+                            return array('ImageUploadTooBig' => true);
+                        default:
+                            return array('ImageUpload' => true);
+                    }
+                           
+                }
             }
         }
-
         return $group->updateSettings($description, $type, $visible_posts, $visible_comments, $picture);
     }
 
@@ -573,6 +593,9 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             $dir = new PDataDir('groups');
             $img = new MOD_images_Image($_FILES['group_image']['tmp_name']);
             $new_name = $img->getHash();
+            if (empty($new_name)){
+                return false;
+            }
             if (!($dir->fileExists($new_name) || $dir->copyTo($_FILES['group_image']['tmp_name'], $new_name)))
             {
                 return false;

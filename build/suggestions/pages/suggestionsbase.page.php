@@ -59,6 +59,15 @@ class SuggestionsBasePage extends PageWithActiveSkin
         return '<a href="/suggestions">' . $words->get('Suggestions') . '</a>';
     }
 
+    protected function teaserContent()
+    {
+        $layoutkit = $this->layoutkit;
+        $formkit = $layoutkit->formkit;
+        $callbackTags = $formkit->setPostCallback('SuggestionsController', 'searchSuggestionsCallback');
+        $words = $layoutkit->getWords();
+        require(SCRIPT_BASE . 'build/suggestions/templates/teaser.php');
+    }
+
     private function checkSuggestionRight()
     {
         $rights = $this->member->getOldRights();
@@ -81,8 +90,8 @@ class SuggestionsBasePage extends PageWithActiveSkin
         $items[] = array('about', 'suggestions/about', $words->getSilent('SuggestionsAbout'));
 		if ($this->member) {
 			$items[] = array('create', 'suggestions/create', $words->getSilent('SuggestionsCreate'));
+            $items[] = array('approve', 'suggestions/approve', $words->getSilent('SuggestionsAwaitApproval'));
         }
-		$items[] = array('approve', 'suggestions/approve', $words->getSilent('SuggestionsAwaitApproval'));
         $items[] = array('discuss', 'suggestions/discuss', $words->getSilent('SuggestionsDiscuss'));
         $items[] = array('addoptions', 'suggestions/addoptions', $words->getSilent('SuggestionsAddOptions'));
         $items[] = array('vote', 'suggestions/vote', $words->getSilent('SuggestionsVote'));

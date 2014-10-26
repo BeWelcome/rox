@@ -148,7 +148,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                             $lang_ids[] = $vars['languages_selected'][$ii]->IdLanguage;
                             echo <<<HTML
                         <tr>
-                        <td>
+                        <td style="vertical-align: middle;">
 
                             <input type='hidden' name='memberslanguages[]' value='{$vars['languages_selected'][$ii]->IdLanguage}'/>
                             <input type='text' disabled='disabled' value='{$vars['languages_selected'][$ii]->Name}'/>
@@ -167,7 +167,7 @@ HTML;
                             </select>
                             {$words->flushBuffer()}
                           </td>
-                          <td><a href='#' class='remove_lang'>{$words->get('RemoveLanguage')}</a>
+                          <td style="vertical-align: middle;"><a href='#' class='remove_lang'>{$words->get('RemoveLanguage')}</a>
                           </td>
                         </tr>
 HTML;
@@ -729,7 +729,9 @@ HTML;
               </tr>
             </tbody>
           </table>
-<script type="text/javascript">
+<script type="text/javascript">//<!--
+    jQuery.noConflict();
     jQuery(".lang_selector").select2({dropdownAutoWidth: true, width: 'element'});
     jQuery(".mll").select2({dropdownAutoWidth: true, width: 'element'});
+    //-->
 </script>

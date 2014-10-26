@@ -60,13 +60,16 @@ class SearchModel extends RoxModelBase
         self::ORDER_DISTANCE => array('WordCode' => 'SearchOrderDistance', 'Column' => 'Distance'),
         self::ORDER_LOGIN => array('WordCode' => 'SearchOrderLogin', 'Column' => 'LastLogin'),
         self::ORDER_MEMBERSHIP => array('WordCode' => 'SearchOrderMembership', 'Column' => 'm.created'),
-        self::ORDER_COMMENTS => array('WordCode' => 'SearchOrderComments', 'Column' => 'CommentCount'));
+        self::ORDER_COMMENTS => array('WordCode' => 'SearchOrderComments', 'Column' => 'CommentCount')
+    );
 
-    public static function getOrderByArray() {
+    public static function getOrderByArray()
+    {
         return self::$ORDERBY;
     }
 
-    private function getOrderBy($orderBy) {
+    private function getOrderBy($orderBy)
+    {
         $orderType = $orderBy - ($orderBy % 2);
         $order = self::$ORDERBY[$orderType]['Column'];
         if ($orderBy % 2 == 1) {
@@ -75,33 +78,39 @@ class SearchModel extends RoxModelBase
             $order .= " ASC";
         }
         switch ($orderType) {
-        	case self::ORDER_ACCOM:
-        	case self::ORDER_COMMENTS:
-        	    $order .= ', Distance ASC, HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
-        	    break;
-        	case self::ORDER_DISTANCE:
-        	    $order .= ', m.Accomodation, HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
-        	    break;
+            case self::ORDER_ACCOM:
+            case self::ORDER_COMMENTS:
+                $order .= ', Distance ASC, HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
+                break;
+            case self::ORDER_DISTANCE:
+                $order .= ', m.Accomodation, HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
+                break;
         }
+
         return $order;
     }
 
-    private function ReplaceWithBR($ss,$ReplaceWith=false) {
-        if (!$ReplaceWith) return ($ss);
-        return(str_replace("\n","<br>",$ss));
+    private function ReplaceWithBR($ss, $ReplaceWith = false)
+    {
+        if (!$ReplaceWith) {
+            return ($ss);
+        }
+
+        return (str_replace("\n", "<br>", $ss));
     }
 
-    private function FindTrad($IdTrad,$ReplaceWithBr=false) {
+    private function FindTrad($IdTrad, $ReplaceWithBr = false)
+    {
 
         $AllowedTags = "<b><i><br>";
-        if ($IdTrad == "")
+        if ($IdTrad == "") {
             return ("");
+        }
 
         if (isset($_SESSION['IdLanguage'])) {
-             $IdLanguage=$_SESSION['IdLanguage'] ;
-        }
-        else {
-             $IdLanguage=0 ; // by default laguange 0
+            $IdLanguage = $_SESSION['IdLanguage'];
+        } else {
+            $IdLanguage = 0; // by default laguange 0
         }
         // Try default language
         $query = $this->dao->query(
@@ -120,12 +129,12 @@ WHERE
             if (isset ($row->Sentence) == "") {
                 //LogStr("Blank Sentence for language " . $IdLanguage . " with MembersTrads.IdTrad=" . $IdTrad, "Bug");
             } else {
-               return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+                return (strip_tags($this->ReplaceWithBr($row->Sentence, $ReplaceWithBr), $AllowedTags));
             }
         }
         // Try default eng
         $query = $this->dao->query(
-           "
+            "
 SELECT SQL_CACHE
     Sentence
 FROM
@@ -140,7 +149,7 @@ WHERE
             if (isset ($row->Sentence) == "") {
                 //LogStr("Blank Sentence for language 1 (eng) with memberstrads.IdTrad=" . $IdTrad, "Bug");
             } else {
-               return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+                return (strip_tags($this->ReplaceWithBr($row->Sentence, $ReplaceWithBr), $AllowedTags));
             }
         }
         // Try first language available
@@ -161,13 +170,15 @@ LIMIT 1
             if (isset ($row->Sentence) == "") {
                 //LogStr("Blank Sentence (any language) memberstrads.IdTrad=" . $IdTrad, "Bug");
             } else {
-               return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+                return (strip_tags($this->ReplaceWithBr($row->Sentence, $ReplaceWithBr), $AllowedTags));
             }
         }
+
         return ("");
     } // end of FindTrad
 
-    private function getNamePart($namePartId) {
+    private function getNamePart($namePartId)
+    {
         $namePart = "";
         if ($namePartId == 0) {
             return $namePart;
@@ -176,6 +187,7 @@ LIMIT 1
         } else {
             $namePart = MOD_crypt::get_crypted($namePartId, "");
         }
+
         return $namePart;
     }
 
@@ -183,12 +195,14 @@ LIMIT 1
      * @param array $vars
      * r@return string
      */
-    private function getStatusCondition($vars) {
+    private function getStatusCondition($vars)
+    {
         if (array_key_exists('search-membership', $vars) && ($vars['search-membership'] == 1)) {
             $statusCondition = " AND m.status IN (" . Member::ACTIVE_SEARCH . ") ";
         } else {
             $statusCondition = " AND m.status IN ( 'Active') ";
         }
+
         return $statusCondition;
     }
 
@@ -199,7 +213,8 @@ LIMIT 1
      * @param string $country
      * @return string
      */
-    private function getLocationCondition($vars, $admin1, $country) {
+    private function getLocationCondition($vars, $admin1, $country)
+    {
         if ($country) {
             if ($admin1) {
                 // We run based on an admin unit
@@ -254,7 +269,7 @@ LIMIT 1
                     $condition .= "
                             AND g.geonameid IN ('";
                     $geonameids = $this->bulkLookup($query);
-                    foreach($geonameids as $geonameid) {
+                    foreach ($geonameids as $geonameid) {
                         $condition .= $geonameid->geonameid . "', '";
                     }
                     $condition = substr($condition, 0, -3) . ")";
@@ -263,14 +278,16 @@ LIMIT 1
                 }
             }
         }
+
         return $condition;
     }
 
-    private function getGenderCondition($vars) {
+    private function getGenderCondition($vars)
+    {
         $condition = "";
         if (isset($vars['search-gender'])) {
             $gender = $vars['search-gender'];
-            switch($gender) {
+            switch ($gender) {
                 case "male":
                 case "female":
                     $condition = " AND m.Gender = '" . $gender . "' AND m.HideGender = 'No'";
@@ -280,10 +297,12 @@ LIMIT 1
                     break;
             }
         }
+
         return $condition;
     }
 
-    private function getAgeCondition($vars) {
+    private function getAgeCondition($vars)
+    {
         $condition = "";
         if (isset($vars['search-age-minimum']) && ($vars['search-age-minimum'] != 0)) {
             $minAge = $vars['search-age-minimum'];
@@ -291,15 +310,17 @@ LIMIT 1
         }
         if (isset($vars['search-age-maximum']) && ($vars['search-age-maximum'] != 0)) {
             $maxAge = $vars['search-age-maximum'];
-            $condition .= ' AND m.BirthDate >= (NOW() - INTERVAL ' . $maxAge . ' YEAR)' ;
+            $condition .= ' AND m.BirthDate >= (NOW() - INTERVAL ' . $maxAge . ' YEAR)';
         }
-        if(!empty($condition)) {
+        if (!empty($condition)) {
             $condition .= " AND m.HideBirthDate='No'";
         }
+
         return $condition;
     }
 
-    private function getUsernameCondition($vars) {
+    private function getUsernameCondition($vars)
+    {
         $condition = "";
         if (isset($vars['search-username']) && (!empty($vars['search-username']))) {
             $username = $vars['search-username'];
@@ -309,36 +330,44 @@ LIMIT 1
             }
             $condition = " AND m.username LIKE '" . $this->dao->escape($username) . "'";
         }
+
         return $condition;
     }
 
-    private function getKeywordCondition($vars) {
+    private function getKeywordCondition($vars)
+    {
         $condition = "";
         if (isset($vars['search-text']) && (!empty($vars['search-text']))) {
-            $condition = "AND mt.Sentence LIKE '%" . $this->dao->escape($vars['search-text']) . "%' AND mt.IdOwner = m.id";
+            $condition = "AND mt.Sentence LIKE '%" . $this->dao->escape(
+                    $vars['search-text']
+                ) . "%' AND mt.IdOwner = m.id";
         }
+
         return $condition;
     }
 
-    private function getGroupsCondition($vars) {
+    private function getGroupsCondition($vars)
+    {
         $condition = "";
         if (isset($vars['search-groups'])) {
             $groups = array();
-            foreach($vars['search-groups'] as $group) {
+            foreach ($vars['search-groups'] as $group) {
                 $groups[] = $group;
             }
             if (!empty($groups)) {
                 $condition = " AND mg.IdMember = m.id AND mg.IdGroup IN ('" . implode("', '", $groups) . "')";
             }
         }
+
         return $condition;
     }
 
-    private function getLanguagesCondition($vars) {
+    private function getLanguagesCondition($vars)
+    {
         $condition = "";
         if (isset($vars['search-languages'])) {
             $languages = array();
-            foreach($vars['search-languages'] as $language) {
+            foreach ($vars['search-languages'] as $language) {
                 $languages[] = $language;
             }
             if (!empty($languages)) {
@@ -346,18 +375,21 @@ LIMIT 1
                     AND mll.Level <> 'HelloOnly'";
             }
         }
+
         return $condition;
     }
 
-    private function getAccommodationCondition($vars) {
+    private function getAccommodationCondition($vars)
+    {
         $condition = "";
-        if(isset($vars['search-accommodation'])) {
+        if (isset($vars['search-accommodation'])) {
             $accommodations = array();
             $accommodation = $vars['search-accommodation'];
-            if(is_array($accommodation))
-            {
+            if (is_array($accommodation)) {
                 foreach ($accommodation as $value) {
-                    if ($value == '') continue;
+                    if ($value == '') {
+                        continue;
+                    }
                     $accommodations[] = "Accomodation = '" . $this->dao->escape($value) . "'";
                 }
             }
@@ -365,18 +397,21 @@ LIMIT 1
                 $condition = " AND (" . implode(" OR ", $accommodations) . ")";
             }
         }
+
         return $condition;
     }
 
-    private function getTypicalOfferCondition($vars) {
+    private function getTypicalOfferCondition($vars)
+    {
         $condition = "";
-        if(isset($vars['search-typical-offer'])) {
+        if (isset($vars['search-typical-offer'])) {
             $typicalOffers = array();
             $typicalOffer = $vars['search-typical-offer'];
-            if(is_array($typicalOffer))
-            {
+            if (is_array($typicalOffer)) {
                 foreach ($typicalOffer as $value) {
-                    if ($value == '') continue;
+                    if ($value == '') {
+                        continue;
+                    }
                     $typicalOffers[] = " FIND_IN_SET('" . $this->dao->escape($value) . "', TypicOffer)";
                 }
             }
@@ -384,10 +419,12 @@ LIMIT 1
                 $condition = " AND ( " . implode(" AND ", $typicalOffers) . ") ";
             }
         }
+
         return $condition;
     }
 
-    private function getMembersCount($publicOnly) {
+    private function getMembersCount($publicOnly)
+    {
         // Fetch count of public members at/around the given place
         $str = "
             SELECT
@@ -402,7 +439,7 @@ LIMIT 1
             WHERE
                 m.id = a.IdMember
                 " . $this->maxGuestCondition . "
-                " .$this->statusCondition;
+                " . $this->statusCondition;
         if ($publicOnly) {
             $str .= "
                 AND m.id = mpp.IdMember ";
@@ -419,14 +456,17 @@ LIMIT 1
         $count = $this->dao->query($str);
 
         $row = $count->fetch(PDB::FETCH_OBJ);
+
         return $row->cnt;
     }
 
-    private function getParameter($vars, $var, $default) {
+    private function getParameter($vars, $var, $default)
+    {
         $result = $default;
         if (isset($vars[$var])) {
             $result = $vars[$var];
         }
+
         return $result;
     }
 
@@ -437,7 +477,8 @@ LIMIT 1
      * @param string $country
      * @return multitype:unknown
      */
-    private function getMemberDetails(&$vars, $admin1 = false, $country = false) {
+    private function getMemberDetails(&$vars, $admin1 = false, $country = false)
+    {
         $langarr = explode('-', $_SESSION['lang']);
         $lang = $langarr[0];
         // First get current page and limits
@@ -560,18 +601,18 @@ LIMIT 1
         $geonameIds = array();
         $countryIds = array();
         $layoutBits = new MOD_layoutbits();
-        foreach($rawMembers as $member) {
+        foreach ($rawMembers as $member) {
             $geonameIds[$member->geonameid] = $member->geonameid;
             $countryIds[$member->country] = $member->country;
-            $aboutMe = MOD_layoutbits::truncate_words($this->FindTrad($member->ProfileSummary,true), 70);
+            $aboutMe = MOD_layoutbits::truncate_words($this->FindTrad($member->ProfileSummary, true), 70);
             $FirstName = $this->getNamePart($member->FirstName);
             $SecondName = $this->getNamePart($member->SecondName);
             $LastName = $this->getNamePart($member->LastName);
             $member->Name = trim($FirstName . " " . $SecondName . " " . $LastName);
             $member->ProfileSummary = $aboutMe;
 
-            if ($member->HideBirthDate=="No") {
-                $member->Age =floor($layoutBits->fage_value($member->BirthDate));
+            if ($member->HideBirthDate == "No") {
+                $member->Age = floor($layoutBits->fage_value($member->BirthDate));
             } else {
                 $member->Age = "";
             }
@@ -615,7 +656,7 @@ LIMIT 1
                 geonameid, source, ispreferred DESC, isshort DESC";
         $rawNames = $this->bulkLookup($query);
         $names = array();
-        foreach($rawNames as $rawName) {
+        foreach ($rawNames as $rawName) {
             if (!isset($names[$rawName->geonameid])) {
                 $names[$rawName->geonameid] = $rawName->name;
             }
@@ -639,24 +680,26 @@ LIMIT 1
                 geonameid, source, ispreferred DESC, isshort DESC";
         $countryRawNames = $this->bulkLookup($query);
         $countryNames = array();
-        foreach($countryRawNames as $countryRawName) {
+        foreach ($countryRawNames as $countryRawName) {
             if (!isset($countryNames[$countryRawName->countryCode])) {
                 $countryNames[$countryRawName->countryCode] = $countryRawName->country;
             }
         }
-        foreach($members as &$member) {
+        foreach ($members as &$member) {
             $member->CityName = $names[$member->geonameid];
             $member->CountryName = $countryNames[$member->country];
         }
+
         return $members;
     }
 
-    private function getPlacesFromDatabase($ids) {
+    private function getPlacesFromDatabase($ids)
+    {
         $query = "
             SELECT
                 g.geonameid AS geonameid, g.name AS name, g.latitude AS latitude, g.longitude AS longitude,
                 a.name AS admin1, c.name AS country, IF(m.id IS NULL, 0, COUNT(g.geonameid)) AS cnt, '"
-                    . $this->getWords()->getSilent('SearchPlaces') . "' AS category
+            . $this->getWords()->getSilent('SearchPlaces') . "' AS category
             FROM
                 geonames g
             LEFT JOIN
@@ -690,15 +733,17 @@ LIMIT 1
         while ($row = $sql->fetch(PDB::FETCH_OBJ)) {
             $rows[] = $row;
         }
+
         return $rows;
     }
 
-    private function getFromDataBase($ids, $category = "") {
+    private function getFromDataBase($ids, $category = "")
+    {
         // get country names for found ids
         $query = "
             SELECT
                 a.geonameid AS geonameid, a.latitude AS latitude, a.longitude AS longitude, a.name AS admin1, c.name AS country, 0 AS cnt, '"
-                    . $this->dao->escape($category) . "' AS category
+            . $this->dao->escape($category) . "' AS category
             FROM
                 geonames a
             LEFT JOIN
@@ -717,24 +762,28 @@ LIMIT 1
         while ($row = $sql->fetch(PDB::FETCH_OBJ)) {
             $rows[] = $row;
         }
+
         return $rows;
     }
 
-    private function sphinxSearch( $location, $places, $count = false ) {
+    private function sphinxSearch($location, $places, $count = false)
+    {
         $sphinx = new MOD_sphinx();
         $sphinxClient = $sphinx->getSphinxGeoname();
         if ($places) {
-            $sphinxClient->SetFilter("isplace", array( 1 ));
+            $sphinxClient->SetFilter("isplace", array(1));
         } else {
-            $sphinxClient->SetFilter("isadmin", array( 1 ));
+            $sphinxClient->SetFilter("isadmin", array(1));
         }
         if ($count) {
             $sphinxClient->SetLimits(0, $count);
         }
+
         return $sphinxClient->Query($sphinxClient->EscapeString("^" . $location . "*"));
     }
 
-    private function getCountryNames($countryIds, $lang) {
+    private function getCountryNames($countryIds, $lang)
+    {
         $inCountries = implode("', '", $countryIds);
         // fetch country names, prefer alternate names (preferred, short) over geonames entry
         $query = "
@@ -754,7 +803,7 @@ LIMIT 1
                 geonameid, source, ispreferred DESC, isshort DESC";
         $countryRawNames = $this->bulkLookup($query);
         $countryNames = array();
-        foreach($countryRawNames as $countryRawName) {
+        foreach ($countryRawNames as $countryRawName) {
             if (!isset($countryNames[$countryRawName->countryCode])) {
                 $data = new StdClass;
                 $data->country = $countryRawName->country;
@@ -763,10 +812,12 @@ LIMIT 1
             }
         }
         asort($countryNames);
+
         return $countryNames;
     }
 
-    private function getAdminUnitNames($admin1Ids, $countryIds, $lang) {
+    private function getAdminUnitNames($admin1Ids, $countryIds, $lang)
+    {
         // fetch admin units, prefer alternate names (preferred, short) over geonames entry
         // just fetch all for the given countries short out which are needed later
         $inCountries = implode("', '", $countryIds);
@@ -788,7 +839,7 @@ LIMIT 1
                 geonameid, source, ispreferred DESC, isshort DESC";
         $admin1Names = array();
         $admin1RawNames = $this->bulkLookup($query);
-        foreach($admin1RawNames as $admin1RawName) {
+        foreach ($admin1RawNames as $admin1RawName) {
             if (!isset($admin1Names[$admin1RawName->country])) {
                 $admin1Names[$admin1RawName->country] = array();
             }
@@ -798,14 +849,16 @@ LIMIT 1
                 $admin1Names[$admin1RawName->country][$admin1RawName->admin1Code] = $data;
             }
         }
+
         return $admin1Names;
     }
 
-    private function getPlaces($place, $admin1 = false, $country = false, $limit = false) {
+    private function getPlaces($place, $admin1 = false, $country = false, $limit = false)
+    {
         $langarr = explode('-', $_SESSION['lang']);
         $lang = $langarr[0];
         $constraint = "";
-        if ($country && count($country) > 0 ) {
+        if ($country && count($country) > 0) {
             $constraint .= " AND g.country IN ('" . implode("', '", $country) . "')";
             if ($admin1 && count($admin1) > 0) {
                 $constraint .= " AND g.admin1 IN ('" . implode("', '", $admin1) . "')";
@@ -816,19 +869,21 @@ LIMIT 1
                 COUNT(m.idCity) cnt, geo.*
             FROM (
                 SELECT
-                    a.geonameid geonameid, g.latitude, g.longitude, g.admin1, g.country, '" . $this->getWords()->getSilent('SearchPlaces') . "' category
+                    a.geonameid geonameid, g.latitude, g.longitude, g.admin1, g.country, '" . $this->getWords(
+            )->getSilent('SearchPlaces') . "' category
                 FROM
                     geonamesalternatenames a, geonames g
                 WHERE
                     a.alternatename like '" . $this->dao->escape($place) . (strlen($place) >= 3 ? "%" : "") . "'
                     AND a.geonameid = g.geonameid AND " . self::PLACES_FILTER . $constraint . "
                 UNION SELECT
-                    g.geonameid geonameid, g.latitude, g.longitude, g.admin1, g.country, '" . $this->getWords()->getSilent('SearchPlaces') . "' category
+                    g.geonameid geonameid, g.latitude, g.longitude, g.admin1, g.country, '" . $this->getWords(
+            )->getSilent('SearchPlaces') . "' category
                 FROM
                     geonames g
                 WHERE
                     g.name like '" . $this->dao->escape($place) . (strlen($place) >= 3 ? "%" : "") . "' AND "
-                    . self::PLACES_FILTER . $constraint . "
+            . self::PLACES_FILTER . $constraint . "
             ) geo
             LEFT JOIN
                 members m
@@ -850,8 +905,8 @@ LIMIT 1
         $adminUnits = array();
         $countries = array();
         $geonameIds = array();
-        foreach($places as $place) {
-            $adminUnits[$place->country . "-" .$place->admin1] = $place->admin1;
+        foreach ($places as $place) {
+            $adminUnits[$place->country . "-" . $place->admin1] = $place->admin1;
             $countries[$place->country] = $place->country;
             $geonameIds[$place->geonameid] = $place->geonameid;
         }
@@ -877,12 +932,12 @@ LIMIT 1
                 geonameid, source, ispreferred DESC, isshort DESC";
         $rawNames = $this->bulkLookup($query);
         $names = array();
-        foreach($rawNames as $rawName) {
+        foreach ($rawNames as $rawName) {
             if (!isset($names[$rawName->geonameid])) {
                 $names[$rawName->geonameid] = $rawName->name;
             }
         }
-        foreach($places as &$place) {
+        foreach ($places as &$place) {
             // sequence is key here as $place->country (isocode) will be replaced with country name in the second statement
             if (isset($admin1Names[$place->country][$place->admin1])) {
                 $place->admin1 = $admin1Names[$place->country][$place->admin1]->admin1;
@@ -892,6 +947,7 @@ LIMIT 1
             $place->country = $countryNames[$place->country]->country;
             $place->name = $names[$place->geonameid];
         }
+
         return $places;
     }
 
@@ -902,7 +958,8 @@ LIMIT 1
      *
      * No filtering of country codes is done based on admin1 (meaning the result will be broader than needed)
      */
-    private function getIdsForCountriesAndAdminUnits($country, $admin1) {
+    private function getIdsForCountriesAndAdminUnits($country, $admin1)
+    {
         $countryIds = array();
         if (!empty($country)) {
             $query = "
@@ -919,7 +976,12 @@ LIMIT 1
                 WHERE
                     c.name LIKE '" . $this->dao->escape($country) . "%'";
             $countryIds = $this->bulkLookup_assoc($query);
-            $countryIds = array_map(function($a) {  return array_pop($a); }, $countryIds);
+            $countryIds = array_map(
+                function ($a) {
+                    return array_pop($a);
+                },
+                $countryIds
+            );
         }
         // if admin1 is given fetch the admin1's codes based on the given countries
         $admin1Ids = array();
@@ -940,7 +1002,12 @@ LIMIT 1
                     a.fcode = 'ADM1' AND a.name LIKE '" . $this->dao->escape($admin1) . "%'
                     AND a.country IN ('" . implode("', '", $countryIds) . "')";
             $admin1Ids = $this->bulkLookup_assoc($query);
-            $admin1Ids = array_map(function($a) {  return array_pop($a); }, $admin1Ids);
+            $admin1Ids = array_map(
+                function ($a) {
+                    return array_pop($a);
+                },
+                $admin1Ids
+            );
         }
 
         return array($countryIds, $admin1Ids);
@@ -949,7 +1016,8 @@ LIMIT 1
     /**
      * Returns an array with the default settings for the advanced options.
      */
-    public function getDefaultAdvancedOptions() {
+    public function getDefaultAdvancedOptions()
+    {
         $vars = array();
         $vars['search-username'] = '';
         $vars['search-text'] = '';
@@ -963,13 +1031,15 @@ LIMIT 1
         $vars['search-membership'] = 0;
         $vars['search-languages'] = array();
         $vars['member'] = $this->getLoggedInMember();
+
         return $vars;
     }
 
     /**
      * Returns an array with the default settings for the advanced options.
      */
-    public function getDefaultSimpleOptions() {
+    public function getDefaultSimpleOptions()
+    {
         $vars = array();
         $vars['search-location'] = '';
         $vars['search-can-host'] = 1;
@@ -980,17 +1050,20 @@ LIMIT 1
         $vars['search-number-items'] = 10;
         $vars['search-sort-order'] = SearchModel::ORDER_ACCOM;
         $vars['search-page'] = 1;
+
         return $vars;
     }
 
     /**
      *
      */
-    public function checkSearchVarsOk($vars) {
+    public function checkSearchVarsOk($vars)
+    {
         $errors = array();
         if (empty($vars['search-location'])) {
             $errors[] = 'SearchLocationEmpty';
         }
+
         return $errors;
     }
 
@@ -998,10 +1071,11 @@ LIMIT 1
      * Returns either a list of members for a selected location or
     * a list of possible locations based on the input text
     */
-    public function getResultsForLocation(&$vars) {
+    public function getResultsForLocation(&$vars)
+    {
         // first we need to check if someone clicked on one of the suggestions buttons
         $geonameid = 0;
-        foreach(array_keys($vars) as $key) {
+        foreach (array_keys($vars) as $key) {
             if (strstr($key, 'geonameid-') !== false) {
                 $geonameid = str_replace('geonameid-', '', $key);
             }
@@ -1047,7 +1121,7 @@ LIMIT 1
         }
         $country = $admin1 = "";
         $countryCode = $admin1Code = "";
-        foreach($vars as $key => $value) {
+        foreach ($vars as $key => $value) {
             if (strstr($key, 'country-') !== false) {
                 $countryCode = str_replace('country-', '', $key);
                 $country = $value;
@@ -1065,7 +1139,7 @@ LIMIT 1
             $vars['search-location'] = $locationParts[0] . ", " . $admin1 . ", " . $locationParts[1];
         }
         $results = array();
-        $geonameid=$vars['search-geoname-id'];
+        $geonameid = $vars['search-geoname-id'];
         if ($geonameid == 0) {
             if (empty($vars['search-location'])) {
                 // Search all over the world
@@ -1094,13 +1168,19 @@ LIMIT 1
                 // check if found unit is a country
                 if (strstr($location->fcode, 'PCL') === false) {
                     $results['type'] = 'members';
-                    $results['members'] = $this->getMemberDetails($vars,
-                            $location->admin1, $location->country);
+                    $results['members'] = $this->getMemberDetails(
+                        $vars,
+                        $location->admin1,
+                        $location->country
+                    );
                 } else {
                     // get all members of that country
                     $results['type'] = 'members';
-                    $results['members'] = $this->getMemberDetails($vars,
-                            false, $location->country);
+                    $results['members'] = $this->getMemberDetails(
+                        $vars,
+                        false,
+                        $location->country
+                    );
                 }
             } else {
                 // just get all active members from that place
@@ -1110,10 +1190,12 @@ LIMIT 1
         }
         $results['countOfMembers'] = $vars['countOfMembers'];
         $results['countOfPublicMembers'] = $vars['countOfPublicMembers'];
+
         return $results;
     }
 
-    private function getAdmin1UnitIdsForPlace($place, $countryIds) {
+    private function getAdmin1UnitIdsForPlace($place, $countryIds)
+    {
         $query = "
             SELECT
                  g.admin1
@@ -1130,10 +1212,17 @@ LIMIT 1
                 g.name LIKE '" . $this->dao->escape($place) . "%'
                 AND g.country IN ('" . implode("', '", $countryIds) . "')";
         $temp = $this->bulkLookup_assoc($query);
-        return array_map(function($a) {  return array_pop($a); }, $temp);
+
+        return array_map(
+            function ($a) {
+                return array_pop($a);
+            },
+            $temp
+        );
     }
 
-    private function getCountryIdsForPlace($place) {
+    private function getCountryIdsForPlace($place)
+    {
         $query = "
             SELECT
                 g.country AS country
@@ -1141,7 +1230,7 @@ LIMIT 1
                 geonames g
             WHERE
                 g.name LIKE '" . $this->dao->escape($place) . "%' AND "
-                    . self::PLACES_FILTER . "
+            . self::PLACES_FILTER . "
             UNION SELECT
                 g.country AS country
             FROM
@@ -1150,11 +1239,17 @@ LIMIT 1
             WHERE
                 a.alternatename LIKE '" . $this->dao->escape($place) . "%'
                 AND a.geonameid = g.geonameid AND "
-                    . self::PLACES_FILTER . "
+            . self::PLACES_FILTER . "
             ORDER BY
                 country";
         $temp = $this->bulkLookup_assoc($query);
-        return array_map(function($a) {  return array_pop($a); }, $temp);
+
+        return array_map(
+            function ($a) {
+                return array_pop($a);
+            },
+            $temp
+        );
     }
 
     /*
@@ -1173,7 +1268,8 @@ LIMIT 1
      *
      * The function doesn't return members. It is up to the callee to deal with the results
      */
-    public function suggestLocationsFromDatabase($location) {
+    public function suggestLocationsFromDatabase($location)
+    {
         $langarr = explode('-', $_SESSION['lang']);
         $lang = $langarr[0];
 
@@ -1183,17 +1279,17 @@ LIMIT 1
         $locationParts = explode(',', $location);
         $place = trim($locationParts[0]);
         switch (count($locationParts)) {
-        	case 3:
-        	    $admin1 = trim($locationParts[1]);
+            case 3:
+                $admin1 = trim($locationParts[1]);
                 $country = trim($locationParts[2]);
                 break;
-        	case 2:
-        	    $country = trim($locationParts[1]);
-        	    break;
+            case 2:
+                $country = trim($locationParts[1]);
+                break;
         }
         $result['status'] = 'failed';
         // fetch ids for countries and admin units
-        list( $countryIds, $admin1Ids) = $this->getIdsForCountriesAndAdminUnits($country, $admin1);
+        list($countryIds, $admin1Ids) = $this->getIdsForCountriesAndAdminUnits($country, $admin1);
         $query = "
             SELECT COUNT(*) cnt FROM (
             SELECT
@@ -1209,9 +1305,9 @@ LIMIT 1
                 AND " . self::PLACES_FILTER;
         if (count($countryIds) > 0) {
             $query .= " AND g.country IN ('" . implode("', '", $countryIds) . "') ";
-           if (count($admin1Ids) > 0) {
-               $query .= " AND g.admin1 IN ('" . implode("', '", $admin1Ids) . "') ";
-           }
+            if (count($admin1Ids) > 0) {
+                $query .= " AND g.admin1 IN ('" . implode("', '", $admin1Ids) . "') ";
+            }
         }
         $query .= "UNION SELECT
                 g.geonameid
@@ -1228,9 +1324,9 @@ LIMIT 1
                 AND " . self::PLACES_FILTER;
         if (count($countryIds) > 0) {
             $query .= " AND g.country IN ('" . implode("', '", $countryIds) . "') ";
-           if (count($admin1Ids) > 0) {
-               $query .= " AND g.admin1 IN ('" . implode("', '", $admin1Ids) . "') ";
-           }
+            if (count($admin1Ids) > 0) {
+                $query .= " AND g.admin1 IN ('" . implode("', '", $admin1Ids) . "') ";
+            }
         }
         $query .= ") geo";
         $row = $this->singleLookup($query);
@@ -1249,12 +1345,13 @@ LIMIT 1
             }
             $result['biggest'] = $this->getPlaces($place, $admin1Ids, $countryIds, 3);
         } else {
-           $locations = $this->getPlaces($place, $admin1Ids, $countryIds);
+            $locations = $this->getPlaces($place, $admin1Ids, $countryIds);
             $result['type'] = 'places';
         }
         $result['status'] = 'success';
         $result['locations'] = $locations;
         $result['count'] = count($locations);
+
         return $result;
     }
 
@@ -1321,6 +1418,7 @@ LIMIT 1
             $result['status'] = 'success';
         }
         $result["locations"] = $locations;
+
         return $result;
     }
 
@@ -1347,7 +1445,28 @@ LIMIT 1
             $result['status'] = 'success';
         }
         $result['usernames'] = $usernames;
+
         return $result;
     }
+
+    /**
+     * Returns a list of suggestions that match with a given text
+     */
+    public function searchSuggestions($text)
+    {
+        $sphinx = new MOD_sphinx();
+        $sphinxClient = $sphinx->getSphinxSuggestions();
+
+        $results = $sphinxClient->Query($sphinxClient->EscapeString($text), 'suggestions');
+
+        $suggestions = array();
+        if ($results['total'] <> 0) {
+            foreach( $results['matches'] as $match) {
+                $suggestion = new Suggestion($match['id']);
+                $suggestions[] = $suggestion;
+            }
+        }
+        return $suggestions;
+    }
 }
-?>
+

@@ -1,5 +1,9 @@
 <?php
 $User = APP_User::login();
+$keyword = '';
+if (isset($this->keyword)) {
+    $keyword = $this->keyword;
+}
 ?>
 
 <div id="teaser" class="clearfix">
@@ -29,7 +33,7 @@ $User = APP_User::login();
         <p><?php echo $this->_model->words->getFormatted('ForumSearch'); ?></p>
         <form action="/forums/search" method="POST" id="search-box"><div>
             <input type="hidden" name="<?= $this->searchCallbackId ?>" value="1" />
-            <input type="text" name="fs-keyword" size="15" placeholder="<?php echo $this->_model->words->getSilent('ForumsSearchInfo')?>" />
+            <input type="text" name="fs-keyword" size="15" placeholder="<?php echo $this->_model->words->getSilent('ForumsSearchInfo')?>" value="<?=$keyword?>"/>
             <input type="submit" name="fss" value="<?php echo $this->_model->words->getSilent('Search')?>" /> <?php echo $this->_model->words->flushBuffer(); ?></div>
         </form>
     </div> <!-- float_right -->

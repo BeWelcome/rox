@@ -383,6 +383,7 @@ class ForumsController extends PAppController
             PPostHandler::clearVars($callbackId);
         } else if ($this->action == self::ACTION_SEARCH_FORUMS) {
             if (count($request) == 3) {
+                $this->_view->keyword = $request[2];
                 $this->_view->showSearchResultPage($request[2]);
             }
             PPostHandler::clearVars($searchCallbackId);

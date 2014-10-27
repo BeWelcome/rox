@@ -4022,7 +4022,7 @@ SQL;
 	public function searchForums($keywords) {
 		$sphinx = new MOD_sphinx();
 
-		$results = array();
+		$results = array( 'count' => 0);
 		$member = $this->getLoggedInMember();
 		if (!$member) {
 			$result['error'] = array( 'ForumSearchNotLoggedIn' );
@@ -4038,12 +4038,15 @@ SQL;
 			$sphinxClient->SetSortMode(SPH_SORT_ATTR_DESC, 'created' );;
 			$resultsThreads = $sphinxClient->Query($sphinxClient->EscapeString($keywords), 'forums');
 
+			$results['count'] = $resultsThreads['total'];
 			if ($resultsThreads['total'] <> 0) {
 				$threadIds = array();
 				foreach ($resultsThreads['matches'] as $match) {
 					$threadIds[] = $match['id'];
 				}
 				$this->board->initThreads(1, false, $threadIds);
+			} else {
+				$this->board->initThreads(1, false, array("error"));
 			}
 		}
 		return $results;

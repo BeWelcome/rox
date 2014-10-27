@@ -837,6 +837,7 @@ class SuggestionsController extends RoxControllerBase
             $pageno = $this->route_vars['pageno'] - 1;
         }
         $page = new SuggestionsSearchResultsPage($this->_model->getLoggedInMember());
+        $page->keyword = $keyword;
         $searchModel = new SearchModel();
         $suggestions = $searchModel->searchSuggestions($keyword);
         $count = count($suggestions);

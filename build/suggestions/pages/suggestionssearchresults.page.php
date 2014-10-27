@@ -32,6 +32,8 @@ Boston, MA  02111-1307, USA.
  */
 class SuggestionsSearchResultsPage extends SuggestionsBasePage
 {
+    protected $NoItems = 'SuggestionsSearchNoResults';
+
     protected function teaserContent()
     {
         $this->hideSearch = true;

@@ -54,7 +54,7 @@
                     echo $strGender . "<br />";
                 }
              ?>
-            <?php if (!empty($logged_member)) : ?>
+            <?php if ($this->loggedInMember) : ?>
                 <?php echo $words->get("MemberSince").': ';
                     if (strtotime($member->created) > strtotime('-1 week')){
                         echo $words->get("LastLoginPrivacy");

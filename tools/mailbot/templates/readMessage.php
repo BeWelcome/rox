@@ -45,7 +45,7 @@
     </table>
     <div id="messagecontent" style="padding: 2em 3em;">
         <p style="color: #333; font-family: Georgia; font-size: 1.3em; font-style: italic;">
-        <?php echo $purifier->purify(str_replace("\n", "<br />", $message->Message)); ?>
+        <?= $message->Message ?>
         </p>
     </div> <!-- messagecontent -->
     <div id="messagefooter" style="border-top: 1px solid #E5E5E5; padding: 2em 3em;">

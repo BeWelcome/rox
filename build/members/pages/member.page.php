@@ -242,7 +242,8 @@ class MemberPage extends PageWithActiveSkin
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/profile.css?2';
-       return $stylesheets;
+       $stylesheets[] = "styles/css/minimal/screen/custom/select2/select2.css";
+        return $stylesheets;
     }
     
     /*
@@ -272,7 +273,8 @@ class MemberPage extends PageWithActiveSkin
             $layoutkit = $this->layoutkit;
             $formkit = $layoutkit->formkit;
             $callbackTags = $formkit->setPostCallback('MembersController', 'setStatusCallback');
-            if (($logged_member = $this->model->getLoggedInMember()) && $logged_member->hasOldRight(array('Admin' => '', 'SafetyTeam' => '', 'Accepter' => '', 'Profile' => ''))) {
+            $logged_member = $this->model->getLoggedInMember();
+            if ($logged_member && $logged_member->hasOldRight(array('Admin' => '', 'SafetyTeam' => '', 'Accepter' => '', 'Profile' => ''))) {
                 $form .= '<div><form method="post" name="member-status" id="member-status">' . $callbackTags;
                 $form .= '<input type="hidden" name="member-id" value="' . $member->id . '">';
                 $form .= '<select name="new-status">';

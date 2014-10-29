@@ -136,7 +136,7 @@ class SignupView extends PAppView
         $from = PVars::getObj('mailAddresses')->registration;
 
         // Use MOD_mail to create and send a message
-        $result = MOD_mail::sendEmail($subject,$from,$to,$subject,$body, false, array());
+        $result = MOD_mail::sendEmail($subject,$from,$to,$subject,$body);
         //Now check if Swift actually sends it
         if ($result) {
             $status = true;
@@ -180,7 +180,7 @@ class SignupView extends PAppView
         $subject = $words->get('SignupSubjRegistration', PVars::getObj('env')->sitename);
 
         // Use MOD_mail to create and send a message
-        $result = MOD_mail::sendEmail($subject, $from, $to, $title, $body, $body_html, $attach = array());
+        $result = MOD_mail::sendEmail($subject, $from, $to, $title, $body);
 
         //Now check if Swift actually sends it
         if (!$result)

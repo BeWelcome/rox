@@ -3,12 +3,13 @@
 
 class SignupPage extends PageWithRoxLayout
 {
-    
+
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/screen/custom/tour.css';
         $stylesheets[] = "styles/css/minimal/screen/custom/signup.css?2";
+        $stylesheets[] = "styles/css/minimal/screen/custom/select2/select2.css";
         return $stylesheets;
     }
     
@@ -31,7 +32,46 @@ class SignupPage extends PageWithRoxLayout
         else $step = $request[1];
         require 'templates/sidebar.php';
     }
-    
+
+    private function _cmpEditLang($a, $b)
+    {
+        if ($a == $b) {
+            return 0;
+        }
+        return (strtolower($a->TranslatedName) < strToLower($b->TranslatedName)) ? -1 : 1;
+    }
+
+    private function _sortLanguages($languages)
+    {
+        $words = new MOD_words;
+        $langarr = array();
+        foreach($languages as $language) {
+            $lang = $language;
+            $lang->TranslatedName = $words->getSilent($language->WordCode);
+            $langarr[] = $lang;
+        }
+        usort($langarr, array($this, "_cmpEditLang"));
+        return $langarr;
+    }
+
+    protected function getAllLanguages($spoken, $selected) {
+        $member = new Member();
+        if ($spoken) {
+            $languages = $this->_sortLanguages($member->get_all_spoken_languages());
+        } else {
+            $languages = $this->_sortLanguages($member->get_all_signed_languages());
+        }
+        $options = "";
+        foreach($languages as $language) {
+            $options .= '<option value="' . $language->id . '"';
+            if ($language->id == $selected) {
+                $options .= ' selected="selected"';
+            }
+            $options .= '>' . $language->TranslatedName . '</option>';
+        }
+        return $options;
+    }
+
     protected function column_col3()
     {
         // default values

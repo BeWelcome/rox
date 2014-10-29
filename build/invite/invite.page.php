@@ -100,6 +100,23 @@ class InvitePage extends RoxPageView
         
         return $field_values;
     }
+
+    protected function getStylesheets() {
+        $styleSheets = parent::getStylesheets();
+        $styleSheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
+        $styleSheets[] = 'styles/css/minimal/screen/custom/invite.css';
+        return $styleSheets;
+    }
+
+    public function getLateLoadScriptFiles()
+    {
+        $scripts = parent::getLateLoadScriptfiles();
+        $member = $this->getModel()->getLoggedInMember();
+        if ($member->getPreference("PreferenceDisableTinyMCE", $default = "No") == 'No') {
+            $scripts[] = 'tinymceconfig.js';
+        }
+        return $scripts;
+    }
 }
 
 /**
@@ -152,9 +169,20 @@ class InviteSentPage extends RoxPageView
         
     }
 
-    
+    protected function getStylesheets() {
+        $styleSheets = parent::getStylesheets();
+        $styleSheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
+        $styleSheets[] = 'styles/css/minimal/screen/custom/invite.css';
+        return $styleSheets;
+    }
+
+    public function getLateLoadScriptFiles()
+    {
+        $scripts = parent::getLateLoadScriptfiles();
+        $member = $this->getModel()->getLoggedInMember();
+        if ($member->getPreference("PreferenceDisableTinyMCE", $default = "No") == 'No') {
+            $scripts[] = 'tinymceconfig.js';
+        }
+        return $scripts;
+    }
 }
-
-
-
-?>

@@ -502,6 +502,7 @@ WHERE
     {
         $return = true;
         $commentRecipient = $this->createEntity('Member', $vars['IdMember']);
+        $commentSender = $this->createEntity('Member', $_SESSION['IdMember']);
         // Mark if an admin's check is needed for this comment (in case it is "bad")
         $AdminAction = "NothingNeeded";
         if ($vars['Quality'] == "Bad") {
@@ -529,7 +530,7 @@ WHERE
                 $LenghtComments = $LenghtComments . $var;
             }
         }
-        $mReceiver=$this->getMemberWithId($vars["IdMember"]) ;
+//        $mReceiver=$this->getMemberWithId($vars["IdMember"]) ;
         if (!isset ($TCom->id)) {
             $str = "
 INSERT INTO
@@ -559,11 +560,12 @@ INSERT INTO
             if(!$qry) {
                 $return = false;
             } else {
+                $commentId = $qry->insertId();
                 $noteWordCode = 'Notify_profile_comment';
-                $messageWordCode = 'Message_profile_comment';
+                $messageWordCode = 'CommentNotificationMessageNew';
                 $messageSubjectWordCode = 'Message_profile_comment_subject';
             }
-            $this->logWrite("Adding a comment quality <b>" . $vars['Quality'] . "</b> on " . $mReceiver->Username, "Comment");
+            $this->logWrite("Adding a comment quality <b>" . $vars['Quality'] . "</b> on " . $commentRecipient->Username, "Comment");
         } else {
             $str = "
 UPDATE
@@ -583,11 +585,12 @@ WHERE
             if(!$qry) {
                 $return = false;
             } else {
+                $commentId = $TCom->id;
                 $noteWordCode = 'Notify_profile_comment_update';
-                $messageWordCode = 'Message_profile_comment_update';
+                $messageWordCode = 'CommentNotificationMessageUpdate';
                 $messageSubjectWordCode = 'Message_profile_comment_update_subject';
             }
-            $this->logWrite("Updating a comment quality <b>" . $vars['Quality'] . "</b> on " . $mReceiver->Username, "Comment");
+            $this->logWrite("Updating a comment quality <b>" . $vars['Quality'] . "</b> on " . $commentRecipient->Username, "Comment");
         }
         if ($return != false) {
             // Create a note (member-notification) for this action
@@ -596,10 +599,15 @@ WHERE
                 'IdMember' => $vars['IdMember'],
                 'IdRelMember' => $_SESSION['IdMember'],
                 'Type' => 'profile_comment' . $c_add,
+                'Quality' => $vars['Quality'],
+                'commentText' => $vars['TextFree'],
                 'Link' => 'members/' . $commentRecipient->Username . '/comments',
+                'replyLink'   => 'members/' . $commentSender->Username . '/comments/add',
+                'reportLink'  => 'members/reportcomment/' . $commentRecipient->Username . '/' . $commentId,
                 'WordCode' => $noteWordCode
             );
-            if ($TCom->DisplayInPublic == 1) {
+            
+            if (!$TCom || $TCom->DisplayInPublic == 1) {
                 $this->sendCommentNotification($note, $messageWordCode, $messageSubjectWordCode);
             }
             $noteEntity = $this->createEntity('Note');
@@ -808,11 +816,11 @@ WHERE
     public function checkMyPreferences(&$vars)
     {
         $errors = array();
+        $member = $this->createEntity('Member', $_SESSION['IdMember']);
 
         // Password Check
         if (isset($vars['passwordnew']) && $vars['passwordnew'] != '') {
-            $query = "select id from members where id=" . $_SESSION["IdMember"] . " and PassWord=PASSWORD('" . trim($vars['passwordold']) . "')";
-            $qry = $this->dao->query($query);
+        $query = "select id from members where id=" . $_SESSION['IdMember'] . " and PassWord=PASSWORD('" . $member->preparePassword($vars['passwordold']) . "')";            $qry = $this->dao->query($query);
             $rr = $qry->fetch(PDB::FETCH_OBJ);
             if (!$rr || !array_key_exists('id', $rr))
                 $errors[] = 'ChangePasswordInvalidPasswordError';
@@ -1348,12 +1356,21 @@ ORDER BY
         if ($fromMember && $toMember) {
             $words = new MOD_words();
             $commentsUrl = PVars::getObj('env')->baseuri . $note['Link'];
+            $replyUrl = PVars::getObj('env')->baseuri . $note['replyLink'];
+            $reportUrl = PVars::getObj('env')->baseuri . $note['reportLink'];
             $languageCode = $toMember->getLanguagePreference();
 
             // Prepare email content
             $subject = $words->getRaw($subjectWordCode, array(), $languageCode);
-            $body = $words->getRaw($messageWordCode, array($toMember->Username, $fromMember->Username, $commentsUrl, $commentsUrl), $languageCode);
-
+            $body = $words->getRaw($messageWordCode,
+                                   array($toMember->Username,
+                                         $fromMember->Username,
+                                         $words->get('CommentQuality'.$note['Quality'].'InSentence'),
+                                         $note['commentText'],
+                                         $commentsUrl,
+                                         $replyUrl,
+                                         $reportUrl),
+                                   $languageCode);
             // TODO: Error handling
             $toMember->sendMail($subject, $body);
         }

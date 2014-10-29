@@ -703,6 +703,16 @@ class AdminMassmailModel extends RoxModelBase
     }
 
     public function untriggerMassMail($id) {
+        // If mass mail is untriggered set status of broadcast entry back to 'Created'
+        $query = "
+            UPDATE
+                broadcast
+            SET
+                Status = 'Created'
+            WHERE
+                id = " . $this->dao->escape($id);
+        $this->dao->query($query);
+
         $query = "
             DELETE FROM
                 broadcastmessages
@@ -714,6 +724,16 @@ class AdminMassmailModel extends RoxModelBase
     }
 
     public function triggerMassMail($id) {
+        // If mass mail is triggered set status of broadcast entry to 'Triggered' as well
+        $query = "
+            UPDATE
+                broadcast
+            SET
+                Status = 'Triggered'
+            WHERE
+                id = " . $this->dao->escape($id);
+        $this->dao->query($query);
+
         $query = "
             UPDATE
                 broadcastmessages

@@ -32,63 +32,48 @@ Boston, MA  02111-1307, USA.
 
 class AdminCommentsPage extends AdminBasePage
 {
-    // TODO: is ugly, because it repeats some of the information in the 
-    // controller
-    // TODO: the mechanism behind this doesn't have a process in case an
-    // update fails or another exception appears
-    private $_action2Teaser = array(
-        "delete" => "Comments",
-        "update" => "Updated Comment",
-        "markChecked" => "Checked Comment",
-        "markAdminCommentMustCheck" => "???", // TODO
-        "markAdminAbuserMustCheck" => "???", // TODO
-        "toggleAllowEdit" => "Allow / Disallow Edit Comment",
-        "toggleHide" => "Hidden / Unhidden Comment",
-        "showAll" => "All Comments",
-        "showAbusive" => "Abusive Comments",
-        "" => "Negative Comments",
-        "showNegative" => "Negative Comments"
+    private $_subset2Teaser = array(
+        "all" => "All Comments",
+        "abusive" => "Abusive Comments",
+        "negative" => "Negative Comments",
+        "from" => "User Comments",
+        "to" => "User Comments",
+        "single" => "Edit Comment"
     );
     
-     /**
-     * @var string
-     */
     private $teaser = "";
 
+    protected $subset;
+    
     private $words;
 
     protected $action;
     
-    protected $message;
+    protected $scope;
     
-    public function __construct($action, $message)
+    public function __construct($model)
     {
-        parent::__construct();
-        $this->action = $action;
-        $this->message = $message;
+        parent::__construct($model);
         $this->words = new MOD_words();
-        $this->teaser = $this->_action2Teaser[$action];
+        $this->scope = $this->rights['Comments']['Scope'];
+    }
+    
+    public function setSubset($subset)
+    {
+        $this->teaser = $this->_subset2Teaser[$subset];
         if($this->teaser=="")
         {
             // TODO: throw exception
-            echo "Unsupported action: " . $action;
+            echo "Unsupported subset: " . $subset;
         }
+        $this->subset = $subset;
     }
 
     public function teaserHeadline()
     {
         return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin'>{$this->teaser}</a>";
     }
-    
-    protected function message()
-    {
-        if($action==="delete"||$action==="update")
-        {
-            return "Successfully updated database";
-        }
-        return "";
-    }
-    
+
     protected function displayInPublic($f)
     {
         return ($f ? "Hide" : "Show");
@@ -96,8 +81,7 @@ class AdminCommentsPage extends AdminBasePage
 
     protected function allowEdit($f)
     {
-        // TODO: or is it the other way around?
-        return ($f ? "Allow Editing" : "Default Editing");
+        return ($f ? "Default Editing" : "Allow Editing");
     }
 
     protected function getProximityBlock($sel)
@@ -137,10 +121,9 @@ class AdminCommentsPage extends AdminBasePage
         </select>';
     }
     
-    // One way is described here:
-    // http://trac.bewelcome.org/wiki/Handler_POST
-    // ... but here it's apparantly even simpler!
-    public function getCallbackTag()
+    // TODO: unnecessary to have this here; layoutbits are available via $this-> in the template
+    // context, see adminrightsreate.column_col3.php - and build similar logic then!
+    public function getCallbackTags()
     {
         $layoutbits = new MOD_layoutbits;
         $formkit = $this->layoutkit->formkit;

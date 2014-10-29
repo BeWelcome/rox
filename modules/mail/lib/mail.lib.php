@@ -62,9 +62,6 @@ class MOD_mail
 
     private function __construct()
     {
-        // Swift autoloader conflicts with the BW autoloader so we need to include swift_init.php
-        // and leave the rest to our autoloader
-        require_once SCRIPT_BASE . 'lib/misc/swift-5.0.1/lib/swift_init.php';
     }
 
     private function __clone() {}
@@ -141,36 +138,32 @@ class MOD_mail
             //Set the To addresses with an associative array
             ->setTo($to);
 
-        // Translate footer text (used in HTML template)
-        $words = new MOD_words();
-        $footer_message = $words->getPurified('MailFooterMessage', array(date('Y')), $language);
+        // Purify HTML. Only allow tags that are allowed in forum posts (biggest set anyway).
+        $purifier = MOD_htmlpure::get()->getForumsHtmlPurifier();
+        $body = $purifier->purify($body);
 
-        // Using a html-template
-        ob_start();
-        require SCRIPT_BASE . 'templates/shared/mail_html.php';
-        $mail_html = ob_get_contents();
-        ob_end_clean();
+        $html2text = new Html2Text\Html2Text($body, false, array('do_links' => 'table', 'width' => 75));
+        $plain = $html2text->get_text();
 
-        require_once SCRIPT_BASE . '/modules/mail/lib/html2text.php';
-        $h2t = new Html2Text($mail_html);
-        $mail_plain = $h2t->get_text();
-        $message->setBody($mail_plain);
+        $message->setBody($plain);
 
-        $message->addPart($mail_plain, 'text/plain');
+        $message->addPart($plain, 'text/plain');
 
         // Add the html-body only if the member wants HTML mails
         if ($html) {
-            $message->addPart($mail_html, 'text/html');
-        }
+            // Translate footer text (used in HTML template)
+            $words = new MOD_words();
+            $footer_message = $words->getPurified('MailFooterMessage', array(date('Y')), $language);
 
-        //Optionally add any attachments
-        if (!empty($attach)) {
-            foreach ($attach as $path) {
-                $message->attach(Swift_Attachment::fromPath($path));
-            }
+            // Using a html-template
+            ob_start();
+            require SCRIPT_BASE . 'templates/shared/mail_html.php';
+            $mail_html = ob_get_contents();
+            ob_end_clean();
+
+            $message->addPart($mail_html, 'text/html');
         }
 
         return self::sendSwift($message);
     }
-
 }

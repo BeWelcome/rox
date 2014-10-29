@@ -38,7 +38,7 @@ foreach($this->suggestion->options as $option) :
 <?php else : ?>
 <div class="subcolumns row">
     <label for="suggestion-option-summary"><?php echo $words->get('suggestionEditOptionSummary'); ?>*</label><br/>
-    <input type="text" id="suggestion-option-summary" name="suggestion-option-summary" maxlength="80" class="long" style="width:99%" value="<?php echo $vars['suggestion-option-summary']; ?>" />
+    <input type="text" id="suggestion-option-summary" name="suggestion-option-summary" maxlength="80" class="long" style="width:99%" value="<?php echo htmlspecialchars($vars['suggestion-option-summary']); ?>" />
 </div>
 <div class="subcolumns row">
     <label for="suggestion-option-desc"><?php echo $words->get('suggestionEditOptionDesc'); ?>*</label><br/>

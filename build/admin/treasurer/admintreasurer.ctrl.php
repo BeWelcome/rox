@@ -74,11 +74,7 @@ class AdminTreasurerController extends AdminBaseController
             return false;
         }
         $countryid = $this->model->getGeonameIdForCountryCode($vars['donate-country']);
-        if (!$countryid) {
-            $mem_redirect->vars = $vars;
-            $mem_redirect->errors = array('AdminTreasurerDbCountry');
-            return false;
-        }
+
         $id = $vars['id'];
         if ($id == 0) {
             $success = $this->model->createDonation($vars['IdMember'], $vars['DonatedOn'],

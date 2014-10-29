@@ -215,29 +215,7 @@ CURRENT_TIMESTAMP COMMENT 'when the record was updated';
         FROM members
       );
 
-
-/* reducing alternatenames */
-
-    TRUNCATE TABLE geonames_alternate_names;
-
-    INSERT INTO geonames_alternate_names (
-        alternateNameId,
-        geonameId,
-        isoLanguage,
-        alternateName,
-        ispreferredName,
-        isshortName
-    )
-    SELECT alternatenameId,
-        geonameid,
-        isolanguage,
-        alternatename,
-        ispreferred,
-        isshort
-    FROM geonamesalternatenames
-    WHERE geonameid IN (SELECT geonameid FROM geonames);
-
-    DELETE FROM geonamesalternatenames 
+    DELETE FROM geonamesalternatenames
     WHERE geonameid NOT IN ( 
         SELECT geonameid FROM geonames);
 
@@ -447,73 +425,15 @@ UPDATE user SET pw = '';
 /* more cleanup */
 DROP TABLE `alternatenames`;
 DROP TABLE `bm`;
-ALTER TABLE `cal_event_to_tag` COMMENT 'OBSOLETE';
-ALTER TABLE `cal_eventdata` COMMENT 'OBSOLETE';
-ALTER TABLE `cal_events` COMMENT 'OBSOLETE';
-ALTER TABLE `cal_tags` COMMENT 'OBSOLETE';
-ALTER TABLE `chat_messages` COMMENT 'OBSOLETE';
-ALTER TABLE `chat_room_moderators` COMMENT 'OBSOLETE';
-ALTER TABLE `chat_rooms` COMMENT 'OBSOLETE';
-ALTER TABLE `chat_rooms_members` COMMENT 'OBSOLETE';
-ALTER TABLE `comments_ofthemomment_votes` COMMENT 'OBSOLETE';
 DROP TABLE `copy_translation`;
-ALTER TABLE `counters_cities_nbmembers` COMMENT 'OBSOLETE';
-ALTER TABLE `counters_regions_nbcities` COMMENT 'OBSOLETE';
-ALTER TABLE `counters_regions_nbmembers` COMMENT 'OBSOLETE';
-ALTER TABLE `countries` COMMENT 'OBSOLETE';
-ALTER TABLE `forums_posts_votes` COMMENT 'DEPRECATED';
-ALTER TABLE `geo_hierarchy` COMMENT 'DEPRECATED';
-ALTER TABLE `geo_location` COMMENT 'OBSOLETE';
-ALTER TABLE `geo_type` COMMENT 'OBSOLETE';
-ALTER TABLE `geo_usage` COMMENT 'OBSOLETE';
 DROP TABLE `geo_usage_before_jyh_touch_it`;
-ALTER TABLE `geonames_admincodes` COMMENT 'DEPRECATED';
-ALTER TABLE `geonames_alternate_names` COMMENT 'DEPRECATED';
-ALTER TABLE `geonames_cache` COMMENT 'DEPRECATED';
-ALTER TABLE `geonames_cache_backup` COMMENT 'DEPRECATED';
-ALTER TABLE `geonames_countries` COMMENT 'DEPRECATED';
-ALTER TABLE `geonames_timezones` COMMENT 'DEPRECATED';
-ALTER TABLE `groups_locations` COMMENT 'OBSOLETE';
-ALTER TABLE `groupshierarchy` COMMENT 'OBSOLETE';
-ALTER TABLE `guestsonline` COMMENT 'OBSOLETE';
-ALTER TABLE `intermembertranslations` COMMENT 'DEPRECATED';
-ALTER TABLE `linklist` COMMENT 'DEPRECATED (no longer updated)';
-ALTER TABLE `localvolmessages` COMMENT 'OBSOLETE';
-ALTER TABLE `localvolmessages_location` COMMENT 'OBSOLETE';
-ALTER TABLE `members_updating_status` COMMENT 'OBSOLETE';
-ALTER TABLE `memberscounters` COMMENT 'OBSOLETE';
 DROP TABLE `message`;
 DROP TABLE `messages_copy`;
-ALTER TABLE `mod_user_apps` COMMENT 'DEPRECATED';
-ALTER TABLE `mod_user_apps_seq` COMMENT 'DEPRECATED';
-ALTER TABLE `mod_user_auth` COMMENT 'DEPRECATED';
-ALTER TABLE `mod_user_auth_seq` COMMENT 'DEPRECATED';
-ALTER TABLE `mod_user_authgroups` COMMENT 'DEPRECATED';
-ALTER TABLE `mod_user_authrights` COMMENT 'DEPRECATED';
-ALTER TABLE `mod_user_groupauth` COMMENT 'DEPRECATED';
-ALTER TABLE `mod_user_grouprights` COMMENT 'DEPRECATED';
-ALTER TABLE `mod_user_implications` COMMENT 'DEPRECATED';
-ALTER TABLE `mod_user_rights` COMMENT 'DEPRECATED';
-ALTER TABLE `mod_user_rights_seq` COMMENT 'DEPRECATED';
 DROP TABLE `oldvisits`;
-ALTER TABLE `online` COMMENT 'DEPRECATED';
-ALTER TABLE `pendingmandatory` COMMENT 'OBSOLETE';
-ALTER TABLE `recentvisits` COMMENT 'DEPRECATED';
-ALTER TABLE `recorded_usernames_of_left_members` COMMENT 'DEPRECATED';
-ALTER TABLE `regions_count` COMMENT 'OBSOLETE';
-ALTER TABLE `sqlforgroupsmembers` COMMENT 'DEPRECATED';
 DROP TABLE `t_countries`;
 TRUNCATE `timezone`;
 DROP TABLE `tmp_test`;
 DROP TABLE `translations_copy7`;
-ALTER TABLE `urlheader_languages` COMMENT 'DEPRECATED';
-ALTER TABLE `user_friends` COMMENT 'DEPRECATED';
-ALTER TABLE `user_inbox` COMMENT 'DEPRECATED';
-ALTER TABLE `user_outbox` COMMENT 'DEPRECATED';
-ALTER TABLE `user_settings` COMMENT 'DEPRECATED';
-ALTER TABLE `verifiedmembers` COMMENT 'DEPRECATED';
-ALTER TABLE `volunteer_boards` COMMENT 'OBSOLETE';
-ALTER TABLE `volunteers_reports_schedule` COMMENT 'OBSOLETE';
 DROP TABLE `words_copy`;
 DROP TABLE `words_original`;
 

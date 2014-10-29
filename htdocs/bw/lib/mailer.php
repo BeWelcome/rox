@@ -23,8 +23,6 @@ Boston, MA  02111-1307, USA.
 */
 // error_reporting(E_ALL & ~E_STRICT);
 //Load the files we'll need
-require_once __DIR__."/../../../lib/htmlpurifier-4.5.0-standalone/HTMLPurifier.standalone.php";
-require_once __DIR__."/../../../lib/misc/swift-5.0.1/lib/swift_init.php";
 require_once __DIR__.'/../../../modules/mail/lib/mail.lib.php';
 
 // -----------------------------------------------------------------------------

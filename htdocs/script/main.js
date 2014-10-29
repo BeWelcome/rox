@@ -101,6 +101,9 @@ bwrox.selectScripts([
         // JQuery has to be included before prototype to avoid conflicts
     min: true,
     file: "jquery-1.11.0.js",
+            "signup/2",
+            "signup/4",
+            "editmyprofile",
     },
     {
         // complete jquery ui with theme smoothness
@@ -136,6 +139,14 @@ bwrox.selectScripts([
         file: "jquery.multiselect.min.js",
         pages: [
             "search"
+        ]
+    },
+    {
+        file: "select2/select2.min.js",
+        pages: [
+            "signup/2",
+            "signup/4",
+            "editmyprofile"
         ]
     },
     {
@@ -204,7 +215,8 @@ bwrox.selectScripts([
             "groups",
             "suggestions",
             "trip",
-            "messages/"
+            "messages/",
+            "invite"
         ]
     },
     {

@@ -103,7 +103,7 @@ class MessagesController extends RoxControllerBase
                             //Only mark as read when the receiver reads the message, not when the message is presented to the Sender with url /messages/77/sent
                             $MessagedReader = $model->getLoggedInMember();
                             if ($MessagedReader->getPKValue() == $message->IdReceiver) {
-                                $model->markReadMessage($message->id);
+                                $model->markMessage($message->id);
                             }
                         }
                         if (!isset($request[2])) {
@@ -116,6 +116,7 @@ class MessagesController extends RoxControllerBase
                                 break;
                             case 'edit':
                                 $page = new EditMessagePage();
+                                $page->sender = $model->getLoggedInMember();
                                 break;
                             case 'reply':
                                 $page = new ReplyMessagePage();
@@ -286,7 +287,7 @@ class MessagesController extends RoxControllerBase
                 elseif ($post['submit_multi'] == 'delete')
                     $result = $model->deleteMessage($m->id);
                 elseif ($post['submit_multi'] == 'markasread')
-                    $result = $model->markReadMessage($m->id);
+                    $result = $model->markMessage($m->id);
                 elseif ($post['submit_multi'] == 'markasspam') {
                     $result = $model->moveMessage($m->id,'Spam');
                     $model->updateSpamInfo($m->id, 'SpamSayMember', 'NotSpam', $m->SpamInfo);

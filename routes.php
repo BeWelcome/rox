@@ -29,6 +29,7 @@
     $this->addRoute('group_addadmin','groups/:group_id:/addAdmin/:member_id:', 'GroupsController', 'addMemberAsAdmin');
     $this->addRoute('group_resignadmin','groups/:group_id:/resignAdmin', 'GroupsController', 'resignAsAdmin');
     $this->addRoute('group_declineinvitation','groups/:group_id:/declineinvitation/:member_id:', 'GroupsController', 'declineInvitation');
+    $this->addRoute('group_declinemember','groups/:group_id:/declinemember/:member_id:', 'GroupsController', 'declineMember');
     $this->addRoute('group_delete','groups/:group_id:/delete', 'GroupsController', 'delete');
     $this->addRoute('group_deleted','groups/:group_id:/delete/true', 'GroupsController', 'delete');
     $this->addRoute('group_forum','groups/:group_id:/forum', 'GroupsController', 'forum');
@@ -95,15 +96,11 @@
     $this->addRoute('admin_activity_overview', 'admin/activitylogs', 'AdminGeneralController', 'activityLogs');
     
     // admin comments
-    $this->addRoute('admin_comments_list', 'admin/comments/list', 'AdminCommentsController', 'listComments');
-    $this->addRoute('admin_comments_toggle_hide', 'admin/comments/toggleHide', 'AdminCommentsController', 'toggleHide');
-    $this->addRoute('admin_comments_mark_checked', 'admin/comments/markChecked', 'AdminCommentsController', 'markChecked');    
-    $this->addRoute('admin_comments_update', 'admin/comments/update', 'AdminCommentsController', 'update');    
-    $this->addRoute('admin_comments_delete', 'admin/comments/delete', 'AdminCommentsController', 'delete');    
-    $this->addRoute('admin_comments_toggle_allow_edit', 'admin/comments/toggleAllowEdit', 'AdminCommentsController', 'toggleAllowEdit');
-    $this->addRoute('admin_comments_mark_admin_abuser_must_check', 'admin/comments/markAdminAbuserMustCheck', 'AdminCommentsController', 'markAdminAbuserMustCheck');
-    $this->addRoute('admin_comments_mark_admin_comment_must_check', 'admin/comments/markAdminCommentMustCheck', 'AdminCommentsController', 'markAdminCommentMustCheck');
-
+    $this->addRoute('admin_comments_list_from', 'admin/comments/list/from/:id:', 'AdminCommentsController', 'from');
+    $this->addRoute('admin_comments_list_to', 'admin/comments/list/to/:id:', 'AdminCommentsController', 'to');
+    $this->addRoute('admin_comments_list_single', 'admin/comments/list/single/:id:', 'AdminCommentsController', 'single');
+    $this->addRoute('admin_comments_list_subset', 'admin/comments/list/:subset:', 'AdminCommentsController', 'subset');
+    
     // admin rights
     $this->addRoute('admin_rights', 'admin/rights', 'AdminRightsController', 'assign');
     $this->addRoute('admin_rights_overview', 'admin/rights/overview', 'AdminRightsController', 'overview');
@@ -123,10 +120,10 @@
     $this->addRoute('admin_flags_members', 'admin/flags/list/members', 'AdminFlagsController', 'listMembers');
     $this->addRoute('admin_flags_member', 'admin/flags/list/members/:username:', 'AdminFlagsController', 'listMembers');
     $this->addRoute('admin_flags_flags', 'admin/flags/list/flags', 'AdminFlagsController', 'listFlags');
-    $this->addRoute('admin_flags_right', 'admin/flags/list/flags/:id:', 'AdminFlagsController', 'listFlags');
+    $this->addRoute('admin_flags_flag', 'admin/flags/list/flags/:id:', 'AdminFlagsController', 'listFlags');
     $this->addRoute('admin_flags_create', 'admin/flags/create', 'AdminFlagsController', 'create');
     $this->addRoute('admin_flags_assign', 'admin/flags/assign', 'AdminFlagsController', 'assign');
-    $this->addRoute('admin_flags_assign', 'admin/flags/assign/:username:', 'AdminFlagsController', 'assign');
+    $this->addRoute('admin_flags_assign_user', 'admin/flags/assign/:username:', 'AdminFlagsController', 'assign');
     $this->addRoute('admin_flags_edit', 'admin/flags/edit/:id:/:username:', 'AdminFlagsController', 'edit');
     $this->addRoute('admin_flags_remove', 'admin/flags/remove/:id:/:username:', 'AdminFlagsController', 'remove');
     $this->addRoute('admin_flags_tooltip', 'admin/flags/tooltip', 'AdminFlagsController', 'tooltip');
@@ -259,6 +256,8 @@
     $this->addRoute('suggestions_resultslist_pages', 'suggestions/results/page/:pageno:', 'suggestionsController', 'resultsList');
     $this->addRoute('suggestions_results', 'suggestions/:id:/results', 'suggestionsController', 'results');
     $this->addRoute('suggestions_team', 'suggestions/team', 'suggestionsController', 'team');
+    $this->addRoute('suggestions_search_results', 'suggestions/search/:keyword:', 'suggestionsController', 'search');
+    $this->addRoute('suggestions_search_results_page', 'suggestions/search/:keyword:/page/:pageno:', 'suggestionsController', 'search');
 
     // searchmembers
     $this->addRoute('searchmembers', 'search', 'SearchController', 'searchMembers');
@@ -280,6 +279,12 @@
     $this->addRoute('safety_faq', 'safety/faq', 'safetyController', 'safetyFaq');
     $this->addRoute('safety_team', 'safety/team', 'safetyController', 'safetyTeam');
     $this->addRoute('safety_contact', 'feedback?IdCategory=2', 'safetyController', 'safetyContact');
+
+    // New Members Be Welcome
+    $this->addRoute('newmembers', 'admin/newmembers', 'AdminNewMembersController', 'listMembers');
+    $this->addRoute('newmembers_pages', 'admin/newmembers/page/:pageno:', 'AdminNewMembersController', 'listMembers');
+    $this->addRoute('newmembers_local_greeting', 'admin/newmembers/local/:username:', 'AdminNewMembersController', 'composeMessage');
+    $this->addRoute('newmembers_global_greeting', 'admin/newmembers/global/:username:', 'AdminNewMembersController', 'composeMessage');
 
     // Update statistics
     $this->addRoute('updatestats', 'about/updatestats', 'AboutController', 'updateStatistics');

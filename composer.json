@@ -1,1 +1,1 @@
-{    "require": {        "robmorgan/phinx": "*"    }}
+{    "require": {        "robmorgan/phinx": "*",        "html2text/html2text": "*",        "michelf/php-markdown": "*",        "swiftmailer/swiftmailer": "*"    }}

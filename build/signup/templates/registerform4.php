@@ -142,7 +142,16 @@ Boston, MA  02111-1307, USA.
   <!-- Personal Information -->
   <fieldset>
     <legend><?php echo $words->get('SignupName'); ?></legend>
-<?php
+      <?php
+      if (in_array('SignupErrorSomethingWentWrong', $vars['errors'])) :
+        echo '<div class="error">'.$words->get('SignupErrorSomethingWentWrong').'</div>';
+      ?>
+      <div class="signup-row-thin sweet">
+          <label for="sweet"><?php echo $words->get('SignupSweet'); ?></label>
+          <input type="text" id="sweet" name="sweet" value="" title="Leave free of content"/>
+      </div>
+       <?php endif;
+
 if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
       echo '<div class="error">'.$words->get('SignupErrorFullNameRequired').'</div>';
 ?>
@@ -191,18 +200,40 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
           <p class="entered"><?=strip_tags($vars['firstname']) .' ' . strip_tags($vars['secondname']) .' '. strip_tags($vars['lastname']) ;?></p>
         </div> <!-- signup-row-thin -->
 
-<?php } ?>
+<?php }
+      $disable = true;
+        if (in_array('SignupErrorNoMotherTongue', $vars['errors'])) {
+            echo '<div class="error">' . $words->get('SignupErrorNoMotherTongue') . '</div>';
+            $disable = false;
+        }
+      ?>
+
+    <!-- Mother tongue(s)-->
+    <div class="signup-row-thin">
+        <label for="mothertongue"><?php echo $words->get('LanguageLevel_MotherLanguage'); ?>* </label>
+        <select name="mothertongue" id="mothertongue" data-placeholder="<?= $words->getBuffered('SignupSelectMotherTongue')?>" style="width: 350px;" class="select2"
+            <?= ($disable) ? 'disabled="disabled"' : ''?> >
+            <option value=""></option>
+            <optgroup label="<?= $words->getSilent('SpokenLanguages') ?>">
+                <?= $this->getAllLanguages(true, $vars['mothertongue']); ?>
+            </optgroup>
+            <optgroup label="<?= $words->getSilent('SignedLanguages') ?>">
+                <?= $this->getAllLanguages(false, $vars['mothertongue']); ?>
+            </optgroup>
+        </select>
+    </div> <!-- signup-row -->
+
     <!-- Birthdate -->
         <div class="signup-row-thin">
           <label for="BirthDate"><?php echo $words->get('SignupBirthDate'); ?>*</label>
         <?php
         if (in_array('SignupErrorBirthDate', $vars['errors']) || in_array('SignupErrorBirthDateToLow', $vars['errors'])) {
         ?>
-          <select id="BirthDate" name="birthyear">
+          <select id="BirthDate" name="birthyear" style="width: 100px;" class="select2">
             <option value=""><?php echo $words->get('SignupBirthYear'); ?></option>
             <?php echo $birthYearOptions; ?>
-          </select>
-          <select name="birthmonth">
+          </select>&nbsp;
+          <select name="birthmonth" style="width:100px" class="select2">
             <option value=""><?php echo $words->get('SignupBirthMonth'); ?></option>
             <?php for ($i=1; $i<=12; $i++) { ?>
             <option value="<?php echo $i; ?>"<?php
@@ -211,8 +242,8 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
             }
             ?>><?php echo $i; ?></option>
             <?php } ?>
-          </select>
-          <select name="birthday">
+          </select>&nbsp;
+          <select name="birthday" style="width: 100px;" class="select2">
             <option value=""><?php echo $words->get('SignupBirthDay'); ?></option>
             <?php for ($i=1; $i<=31; $i++) { ?>
             <option value="<?php echo $i; ?>"<?php
@@ -367,3 +398,6 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
 </form>
 <?php //var_dump($vars['errors']); ?>
 </div> <!-- signup -->
+<script type="text/javascript">
+    jQuery(".select2").select2(); // {no_results_text: "<?= htmlentities($words->getSilent('SignupNoLanguageFound'), ENT_COMPAT); ?>"});
+</script>

@@ -38,20 +38,23 @@ textarea {margin-bottom: 1em;}
     text-align: left;
 }
 
-#rights table, #flags table {
+#rights table, #flags table, #newmembers table {
     width: 100%;
-    border: 2px solid black;
+    border: 1px solid black;
 }
 
 #rights td, #flags td,
-#rights th, #flags th
+#rights th, #flags th,
+#newmembers th, #newmembers td
 {
     vertical-align: top;
     border: 1px solid #eee;
     word-wrap: break-word;
 }
 
-#rights td.usercol, #flags td.usercol{
+#rights td.usercol, #flags td.usercol,
+#newmembers td.usercol
+{
     text-align: center;
     max-width: 10em;
     width: 10em;
@@ -67,7 +70,7 @@ textarea {margin-bottom: 1em;}
     width: 13em;
 }
 
-    #rights td.level, #flags td.level {
+#rights td.level, #flags td.level {
     width: 2em;
 }
 
@@ -81,4 +84,9 @@ textarea {margin-bottom: 1em;}
     width: 20px;
 }
 
+#newmembers td.send {
+    width: 6em;
+    max-width: 6em;
+    text-align: center;
+}
 }

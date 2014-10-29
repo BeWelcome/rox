@@ -60,7 +60,12 @@ class ForumsController extends PAppController
             return;
         }
 
+        // Determine the search callback and tell the view about it
+        $searchCallbackId = $this->searchProcess();
+
         $view = $this->_view;
+        $view->searchCallbackId = $searchCallbackId;
+
         $page = $view->page = new RoxGenericPage();
 
         $request = $this->request;
@@ -226,9 +231,10 @@ class ForumsController extends PAppController
             $this->_view->rules();
         }
         else if ($this->action == self::ACTION_NEW) {
-            if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if teh user has right for this, if not rough exit
+            if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if the user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowedToPostInForum","FlagEvent") ;
-                die("You can't do this because you are not allowed to post in Forum (Flag NotAllowedToPostInForum)") ;
+                $words = new MOD_Words();
+                die($words->get('NotAllowedToPostInForum'));
             }
             if (!$User) {
                 PRequest::home();
@@ -249,7 +255,8 @@ class ForumsController extends PAppController
         else if ($this->action == self::ACTION_REPORT_TO_MOD) {
             if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if the user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowedToPostInForum","FlagEvent") ;
-                die("You can't do this because you are not allowed to post in Forum (Flag NotAllowedToPostInForum)") ;
+                $words = new MOD_Words();
+                die($words->get('NotAllowedToPostInForum'));
             }
             if (!$User) {
                 PRequest::home();
@@ -296,7 +303,8 @@ class ForumsController extends PAppController
         else if ($this->action == self::ACTION_REPLY) {
             if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if teh user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowedToPostInForum","FlagEvent") ;
-                die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowedToPostInForum)") ;
+                $words = new MOD_Words();
+                die($words->get('NotAllowedToPostInForum'));
             }
             if (!$User) {
                 PRequest::home();
@@ -327,9 +335,10 @@ class ForumsController extends PAppController
             echo $this->_view->getLocationDropdowns();
             PPHP::PExit();
         } else if ($this->action == self::ACTION_DELETE) {
-            if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if teh user has right for this, if not rough exit
+            if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if the user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowedToPostInForum","FlagEvent") ;
-                die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowedToPostInForum)") ;
+                $words = new MOD_Words();
+                die($words->get('NotAllowedToPostInForum'));
             }
             if (!$User || !$this->BW_Right->HasRight("ForumModerator","Delete")) {
                 PRequest::home();
@@ -338,7 +347,8 @@ class ForumsController extends PAppController
         } else if ($this->action == self::ACTION_EDIT) {
             if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if the user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowedToPostInForum","FlagEvent") ;
-                die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowedToPostInForum)") ;
+                $words = new MOD_Words();
+                die($words->get('NotAllowedToPostInForum'));
             }
             if (!$User) {
                 PRequest::home();
@@ -351,7 +361,8 @@ class ForumsController extends PAppController
         } else if ($this->action == self::ACTION_TRANSLATE) {
             if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if the user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowedToPostInForum","FlagEvent") ;
-                die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowedToPostInForum)") ;
+                $words = new MOD_Words();
+                die($words->get('NotAllowedToPostInForum'));
             }
             if (!$User) {
                 PRequest::home();
@@ -370,6 +381,12 @@ class ForumsController extends PAppController
             $this->_model->getEditData($callbackId);
             $this->_view->ModeditPost($callbackId);
             PPostHandler::clearVars($callbackId);
+        } else if ($this->action == self::ACTION_SEARCH_FORUMS) {
+            if (count($request) == 3) {
+                $this->_view->keyword = $request[2];
+                $this->_view->showSearchResultPage($request[2]);
+            }
+            PPostHandler::clearVars($searchCallbackId);
         } else if ($this->action == self::ACTION_SEARCH_USERPOSTS) {
             if (!isset($request[2])) {
                 PPHP::PExit();
@@ -675,6 +692,7 @@ class ForumsController extends PAppController
     const ACTION_SUGGEST = 4;
     const ACTION_DELETE = 5;
     const ACTION_LOCATIONDROPDOWNS = 6;
+    const ACTION_SEARCH_FORUMS = 23;
     const ACTION_SEARCH_USERPOSTS = 7;
     const ACTION_RULES = 8;
     const ACTION_SEARCH_SUBSCRIPTION=9 ;
@@ -727,6 +745,8 @@ class ForumsController extends PAppController
             $this->action = self::ACTION_VIEW;
         } else if (isset($request[1]) && $request[1] == 'suggestTags') {
             $this->action = self::ACTION_SUGGEST;
+        } else if (isset($request[1]) && $request[1] == 'search') {
+            $this->action = self::ACTION_SEARCH_FORUMS;
         } else if (isset($request[1]) && $request[1] == 'member') {
             $this->action = self::ACTION_SEARCH_USERPOSTS;
         } else if (isset($request[1]) && $request[1] == 'modfulleditpost') {
@@ -824,5 +844,20 @@ class ForumsController extends PAppController
             }
         }
     } // end of parserequest
+
+    /**
+     * Handles the post request of the forums search box
+     */
+    public function searchProcess() {
+        $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+
+        if (PPostHandler::isHandling()) {
+            $this->parseRequest();
+            return $this->_model->searchProcess();
+        } else {
+            PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
+            return $callbackId;
+        }
+    }
 }
 ?>

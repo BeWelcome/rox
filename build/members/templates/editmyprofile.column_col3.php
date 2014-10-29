@@ -20,13 +20,13 @@ require_once 'editprofile_form.php';
             element.disable;
         } */
         var node1 = $('lang'+iterator);
-        var sel1 = node1.cells[0].firstChild;
+        var sel1 = node1.cells[0].children[1];
         if (sel1.selectedIndex > 0)
         {
             var langval = sel1.options[sel1.selectedIndex].value;
             
             var removelink = document.createElement('a');
-            removelink.appendChild(document.createTextNode('Remove'));
+            removelink.appendChild(document.createTextNode('<?= $words->getSilent('RemoveLanguage')?>'));
             removelink.setAttribute('href','#');
             $(removelink).observe('click', removeLang);
             var langid = document.createElement('input');
@@ -37,24 +37,36 @@ require_once 'editprofile_form.php';
             langname.value = sel1.options[sel1.selectedIndex].text;
             langname.type = 'text';
             langname.setAttribute('disabled', 'disabled');
+
+            // Cleanup select2 states
+            var cell2 = node1.cells[1];
+            var mll = cell2.children[1];
+            jQuery(sel1).select2("destroy");
+            jQuery(mll).select2("destroy");
+
             var node2 = node1.cloneNode(true);
-            node1.cells[0].removeChild(sel1);
-            node1.cells[0].appendChild(document.createTextNode(' '));
+            node1.cells[0].removeChild(node1.cells[0].children[0]);
             node1.cells[0].appendChild(langid);
             node1.cells[0].appendChild(langname);
             node1.cells[2].appendChild(removelink);
+            node1.cells[0].setStyle("vertical-align: middle;");
+            node1.cells[2].setStyle("vertical-align: middle;");
+            jQuery(mll).select2({dropdownAutoWidth: true, width: 'element'});
+
             iterator++;
             node2.setAttribute('id', 'lang'+iterator);
             node1.parentNode.appendChild(node2);
-            var sel2 = node2.cells[0].firstChild;
+            var sel2 = node2.cells[0].children[0];
             for (var i = 0; sel2.options.length; i++)
             {
                 if (sel2.options[i].value == langval)
                 {
-                    sel2.removeChild(sel2.options[i]);
+                    sel2.options[i].remove();
                     break;
                 }
             }
+            jQuery(sel2).select2({dropdownAutoWidth: true, width: 'element'});
+            jQuery(node2.cells[1].children[0]).select2({dropdownAutoWidth: true, width: 'element'});
         }
     }
 

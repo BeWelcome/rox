@@ -265,17 +265,27 @@ function VolMenu($link = "", $tt = "") {
 		$res .= " title=\"managing comments\">AdminComments</a></li>\n";
 	}
 
-	if (HasRight("Pannel")) {
-		$res .= "<li><a";
-		if ($link == "admin/adminpanel.php") {
-			$res .= " id=current ";
-		} else {
-			$res .= " href=\"".bwlink("admin/adminpanel.php")."\" method=post ";
-		}
-		$res .= " title=\"managing Panel\">AdminPanel</a></li>\n";
-	}
+    if (HasRight("NewMembersBeWelcome") || HasRight("SafetyTeam") || HasRight("Admin")) {
+        $res .= "<li><a";
+        if ($link == "admin/newmembers") {
+            $res .= " id=current ";
+        } else {
+            $res .= " href=\"admin/newmembers\" method=post ";
+        }
+        $res .= " title=\"Greet new members\">AdminPanel</a></li>\n";
+    }
 
-	if (HasRight("AdminFlags")) {
+    if (HasRight("Pannel")) {
+        $res .= "<li><a";
+        if ($link == "admin/adminpanel.php") {
+            $res .= " id=current ";
+        } else {
+            $res .= " href=\"".bwlink("admin/adminpanel.php")."\" method=post ";
+        }
+        $res .= " title=\"managing Panel\">AdminPanel</a></li>\n";
+    }
+
+    if (HasRight("AdminFlags")) {
 		$res .= "<li><a";
 		if ($link == "admin/adminflags.php") {
 			$res .= " id=current ";

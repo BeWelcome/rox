@@ -59,10 +59,10 @@ if (IsLoggedIn()) {
 	}
 	$stylesheet = "minimal"; // force YAML also for logged member (for now, todo several layout)
 }
-echo "  <link href=\"".bwlink("styles/css/minimal/minimal.css\"", true)." rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
-echo "  <link href=\"".bwlink("styles/css/bewelcome.css\"", true)." rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
-
-?>
+echo '  <link href="/styles/css/' . $stylesheet. '/minimal.css" rel="stylesheet" type="text/css" media="screen" />';
+echo '<!--[if lte IE 7]>';
+echo '  <link href="/styles/css/' . $stylesheet. '/patches/iehacks_3col_vlines.css" rel="stylesheet" type="text/css" media="screen" />';
+echo '<![endif]-->';
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>

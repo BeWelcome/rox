@@ -152,9 +152,6 @@ SQL
             $sender = 'dummy_address@bewelcome.org';
         }
 
-        //Load the files we'll need
-        require_once SCRIPT_BASE . 'lib/misc/swift-5.0.1/lib/swift_init.php';
-
         //Create the Transport
         $transport = Swift_SmtpTransport::newInstance('localhost', 25, false);
 

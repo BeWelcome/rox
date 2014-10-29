@@ -210,8 +210,8 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
 
     <!-- Mother tongue(s)-->
     <div class="signup-row-thin">
-        <label for="mothertongue"><?php echo $words->get('MotherTongue'); ?>* </label>
-        <select name="mothertongue" id="mothertongue" data-placeholder="<?= $words->getBuffered('SignupSelectMotherTongue')?>" style="width: 350px;" class="chosen-select"
+        <label for="mothertongue"><?php echo $words->get('LanguageLevel_MotherLanguage'); ?>* </label>
+        <select name="mothertongue" id="mothertongue" data-placeholder="<?= $words->getBuffered('SignupSelectMotherTongue')?>" style="width: 350px;" class="select2"
             <?= ($disable) ? 'disabled="disabled"' : ''?> >
             <option value=""></option>
             <optgroup label="<?= $words->getSilent('SpokenLanguages') ?>">
@@ -229,11 +229,11 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
         <?php
         if (in_array('SignupErrorBirthDate', $vars['errors']) || in_array('SignupErrorBirthDateToLow', $vars['errors'])) {
         ?>
-          <select id="BirthDate" name="birthyear">
+          <select id="BirthDate" name="birthyear" style="width: 100px;" class="select2">
             <option value=""><?php echo $words->get('SignupBirthYear'); ?></option>
             <?php echo $birthYearOptions; ?>
-          </select>
-          <select name="birthmonth">
+          </select>&nbsp;
+          <select name="birthmonth" style="width:100px" class="select2">
             <option value=""><?php echo $words->get('SignupBirthMonth'); ?></option>
             <?php for ($i=1; $i<=12; $i++) { ?>
             <option value="<?php echo $i; ?>"<?php
@@ -242,8 +242,8 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
             }
             ?>><?php echo $i; ?></option>
             <?php } ?>
-          </select>
-          <select name="birthday">
+          </select>&nbsp;
+          <select name="birthday" style="width: 100px;" class="select2">
             <option value=""><?php echo $words->get('SignupBirthDay'); ?></option>
             <?php for ($i=1; $i<=31; $i++) { ?>
             <option value="<?php echo $i; ?>"<?php
@@ -399,5 +399,5 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
 <?php //var_dump($vars['errors']); ?>
 </div> <!-- signup -->
 <script type="text/javascript">
-    jQuery(".chosen-select").select2(); // {no_results_text: "<?= htmlentities($words->getSilent('SignupNoLanguageFound'), ENT_COMPAT); ?>"});
+    jQuery(".select2").select2(); // {no_results_text: "<?= htmlentities($words->getSilent('SignupNoLanguageFound'), ENT_COMPAT); ?>"});
 </script>

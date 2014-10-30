@@ -15,7 +15,7 @@ class EditMessagePage extends ComposeMessagePage
             $message->Message = $html2text->get_text();
         } else {
             $purifier = new MOD_htmlpure();
-            $purifier = $purifier->getAdvancedHtmlPurifier();
+            $purifier = $purifier->getMessagesHtmlPurifier();
             $message->Message = $purifier->purify($message->Message);
         }
 

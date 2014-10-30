@@ -1,3 +1,4 @@
+<?php
 class MustloginPage extends MessagesBasePage
 {
     private $_redirect_url = 'messages';

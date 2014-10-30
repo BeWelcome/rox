@@ -16,7 +16,7 @@ class ReplyMessagePage extends ComposeMessagePage
             $message->Message = "\n\n>" . str_replace("\n", "\n>", $message->Message);
         } else {
             $purifier = new MOD_htmlpure();
-            $purifier = $purifier->getAdvancedHtmlPurifier();
+            $purifier = $purifier->getMessagesHtmlPurifier();
             $message->Message = $purifier->purify($message->Message);
             $message->Message = "<p></p><blockquote>" . $message->Message . "</blockquote><p></p>";
         }

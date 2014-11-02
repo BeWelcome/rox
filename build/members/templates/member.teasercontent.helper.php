@@ -29,5 +29,3 @@ if ($member->age == "hidden") {
 }
 
 $occupation = $member->get_trad("Occupation", $profile_language,true);
-
-?>

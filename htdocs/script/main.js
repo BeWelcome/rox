@@ -97,13 +97,17 @@ bwrox.selectScripts([
         pages: [
             "searchmembers",
             "search",
+            "signup/2",
             "signup/3",
+            "signup/4",
+            "editmyprofile",
             "setlocation",
             "blog",
             "trip",
             "admin/massmail/enqueue",
             "admin/word/list/update",
             "admin/rights",
+            "admin/flags",
             "suggestions/rank",
             "activities/",
             "about/faq",
@@ -114,8 +118,10 @@ bwrox.selectScripts([
         file: "jquery-ui-1.10.4.custom.min.js",
         pages: [
             "activities",
-            "search" ,
-            "admin/rights" /*,
+            "search",
+            "signup/3",
+            "admin/rights",
+             "admin/flags" /*,
              "blog",
              "trip",
              "admin/treasurer" */
@@ -141,6 +147,14 @@ bwrox.selectScripts([
         file: "jquery.multiselect.min.js",
         pages: [
             "search"
+        ]
+    },
+    {
+        file: "select2/select2.min.js",
+        pages: [
+            "signup/2",
+            "signup/4",
+            "editmyprofile"
         ]
     },
     {
@@ -178,7 +192,7 @@ bwrox.selectScripts([
         file: "scriptaculous18/scriptaculous.js?load=effects,controls,builder,dragdrop"
     },
     {
-        file: "registerrox.js?1",
+        file: "registerrox.js?2",
         pages: [
             "signup"
         ]
@@ -190,14 +204,16 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "tinymce/tinymce.min.js",
+        file: "tinymce-4.0.28/tinymce.min.js",
         pages: [
             "activities",
             "blog",
             "forums",
             "groups",
             "suggestions",
-            "trip"
+            "trip",
+            "messages/",
+            "invite"
         ]
     },
     {
@@ -348,8 +364,17 @@ bwrox.selectScripts([
         pages: ["searchmembers"]
     },
     {
-        file: "search/search.js?1",
-        pages: ["search/"]
+        file: "search/searchlocation.js?1",
+        pages: [
+            "search/",
+            "signup/3"
+        ]
+    },
+    {
+        file: "search/searchmultiselect.js",
+        pages: [
+            "search/"
+        ]
     },
     {
         file: "map/activities/activities_map.js?4",

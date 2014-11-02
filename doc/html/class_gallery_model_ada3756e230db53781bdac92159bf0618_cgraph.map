@@ -1,6 +1,0 @@
-<map id="GalleryModel\uploadProcess" name="GalleryModel\uploadProcess">
-<area shape="rect" id="node2" href="$class_p_exception.html#a46ddd42b5cd216c3b47cd4ebd542fabb" title="PException\\__toString" alt="" coords="269,5,421,32"/>
-<area shape="rect" id="node3" href="$class_gallery_model.html#a946a81b7dd00873afa47478054582223" title="GalleryModel\\createThumbnails" alt="" coords="243,56,447,83"/>
-<area shape="rect" id="node4" href="$class_rox_model_base.html#a9857a4097be598f85aef9ea231910c42" title="RoxModelBase\\getLoggedIn\lMember" alt="" coords="253,107,437,149"/>
-<area shape="rect" id="node5" href="$class_rox_model_base.html#af80ad09d7c0c201e2a5732fb59feb334" title="RoxModelBase\\createEntity" alt="" coords="496,115,680,141"/>
-</map>

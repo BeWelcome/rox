@@ -95,9 +95,6 @@ class SuggestionsModel extends RoxModelBase
             $receivers[$email] = "BW " . $row->username;
         }
 
-        //Load the files we'll need
-        require_once SCRIPT_BASE . 'lib/misc/swift-5.0.1/lib/swift_init.php';
-
         //Create the Transport
         $transport = Swift_SmtpTransport::newInstance('localhost', 25);
 
@@ -627,7 +624,7 @@ class SuggestionsModel extends RoxModelBase
 
         $words = $this->getWords();
         $restoreOptionPostText = '<p>The option \'' . $option->summary . '\' has been restored.</p>';
-        $postId = $this->addPost($option->modifiedby, $restoreOptionPostText, $suggestion->threadId);
+        $postId = $this->addPost($option->modifiedBy, $restoreOptionPostText, $suggestion->threadId);
 
         $option->deleted = null;
         $option->deletedBy = null;

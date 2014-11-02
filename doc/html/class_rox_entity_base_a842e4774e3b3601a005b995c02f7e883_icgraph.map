@@ -1,9 +1,0 @@
-<map id="update" name="update">
-<area shape="rect" id="node2" href="$class_volunteer_board.html#a3940c8c209f17ba0200e1429103db3b2" title="VolunteerBoard\\updateText" alt="" coords="147,5,325,32"/>
-<area shape="rect" id="node3" href="$class_group.html#a31fad3e39336ea079ea758e051866627" title="Group\\setDescription" alt="" coords="164,56,308,83"/>
-<area shape="rect" id="node4" href="$class_group.html#a788abfc672df9ec973801157c1c79efd" title="Group\\updateSettings" alt="" coords="406,81,554,108"/>
-<area shape="rect" id="node5" href="$class_group_membership.html#aa57a4cc294fd3369e82df35de3179387" title="GroupMembership\\updateMembership" alt="" coords="115,157,357,184"/>
-<area shape="rect" id="node6" href="$class_group_membership.html#abdf0b2f7d161c5f2eeb584984fd669d0" title="GroupMembership\\updateStatus" alt="" coords="131,208,341,235"/>
-<area shape="rect" id="node7" href="$class_note.html#a32e30e1fbf8dc7b2f588efe5826c6c15" title="Note\\updateNote" alt="" coords="177,259,295,285"/>
-<area shape="rect" id="node8" href="$class_suggestion.html#ab3be0a69000721ac2d99006eea00193b" title="Suggestion\\loadEntity" alt="" coords="161,309,311,336"/>
-</map>

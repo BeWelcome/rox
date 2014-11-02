@@ -1,5 +1,0 @@
-<map id="NotifyAdminPage\column_col3" name="NotifyAdminPage\column_col3">
-<area shape="rect" id="node2" href="$class_abstract_base_page.html#a25df119c6d8f6a1bba6bdf804530865e" title="AbstractBasePage\\getModel" alt="" coords="261,5,449,32"/>
-<area shape="rect" id="node3" href="$class_notify_admin_page.html#aad0152b9f99bc4cda32249134ce7e981" title="NotifyAdminPage\\notesActions" alt="" coords="253,56,456,83"/>
-<area shape="rect" id="node4" href="$class_rox_component_base.html#a89d9333d4f8c1d421c68fd580942d532" title="RoxComponentBase\\getWords" alt="" coords="505,56,706,83"/>
-</map>

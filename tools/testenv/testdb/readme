@@ -1,0 +1,13 @@
+This directory contains all information to create an anonymized dump from the live DB.
+
+First thing to do is to dump the live DB, drop your old test DB and import the dump from live.
+
+Now run the anonymizer SQL script
+
+ mysql -u root -p < anonymizer.sql
+
+If you feel like 'First Last' or 'First Second Last' and 'Random Street' isn't your thing, run the randomize script to create random name association
+
+php rqandomize.php
+
+It will pick up the credentials for DB access from the rox_local.ini file (and take a while to finish).

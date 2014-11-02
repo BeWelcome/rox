@@ -56,8 +56,12 @@ class Member extends RoxEntityBase
             $this->findById($member_id);
         }
         $this->words=new MOD_words;
+        if (isset($_SESSION['lang'])) {
         $langarr = explode('-', $_SESSION['lang']);
         $this->lang = $langarr[0];
+        } else {
+            $this->lang = 'en';
+        }
     }
 
     public function init($values, $dao)
@@ -1650,16 +1654,25 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
      */
     public function setPassword($pw)
     {
-        if (!$this->isLoaded())
-        {
+        if (!$this->isLoaded()) {
             return false;
         }
-        $query = 'UPDATE `members` SET `PassWord` = PASSWORD(\''.trim($pw).'\') WHERE `id` = '.$this->id;
-        if( $this->model->dao->exec($query)) {
+        $pw = $this->preparePassword($pw);
+        $query = "UPDATE `members` SET `PassWord` = PASSWORD('" . $pw . "') WHERE `id` = ".$this->id;
+        if ($this->dao->exec($query)) {
             $L = MOD_log::get();
             $L->write("Password changed", "change password");
             return true;
-        } else return false;
+        } else {
+            return false;
+        }
+    }
+
+    public function preparePassword($pw)
+    {
+        $pwn = trim($pw);
+        $pwn = $this->dao->escape($pwn);
+        return $pwn;    
     }
 
     /**
@@ -1865,14 +1878,19 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
         $bodyHTML = $purifier->purify($body);
 
+        if ($this->getPreference('PreferenceHtmlMails', 'Yes') == 'No') {
+            $memberPrefersHtml = false;
+        } else {
+            $memberPrefersHtml = true;
+        }
+
         //clear <br> tags stored in database
-        $body = strip_tags($body);
+        //$body = strip_tags($body);
 
         // Set language for email translations
         $languageCode = $this->getLanguagePreference();
-
         // TODO: Error handling
-        $result = MOD_mail::sendEmail($subject, $from, $to, false, $body, $bodyHTML, false, $languageCode);
+        $result = MOD_mail::sendEmail($subject, $from, $to, false, $bodyHTML, $languageCode, $memberPrefersHtml);
     }
 
     /**

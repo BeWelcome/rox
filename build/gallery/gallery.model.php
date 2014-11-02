@@ -61,15 +61,7 @@ VALUES
         if (($member->get_userid() == $this->imageOwner($image->id)) || ($GalleryRight > 1)) {
             // Log the deletion to prevent admin abuse
             MOD_log::get()->write("Deleting a gallery item #".$image->id." filename: ".$image->file." belonging to user: ".$image->user_id_foreign, "Gallery");
-            // Start the deletion process
-            $filename = $image->file;
-            $userDir = new PDataDir('gallery/user'.$image->user_id_foreign);
-            $userDir->delFile($filename);
-            $userDir->delFile('thumb'.$filename);
-            $userDir->delFile('thumb1'.$filename);
-            $userDir->delFile('thumb2'.$filename);
-            $this->dao->exec('DELETE FROM `gallery_items` WHERE `id` = '.$image->id);
-            $this->deleteComments($image->id);
+            $this->deleteThisImage($image);
             return true;
         } else return false;
     }
@@ -91,38 +83,38 @@ VALUES
             return false;
         }
     }
-    public function ajaxModImage($id, $title = false, $text = false)
+    public function ajaxModImageGallery($type, $id, $title = false, $text = false)
     {
-		$this->dao->query("START TRANSACTION");
-        $query = "UPDATE `gallery_items` ";
-        if ($title) $query .= "SET `title` = '".$title."'";
-        elseif ($text) $query .= "SET `description` = '".$text."'";
-        $query .= "WHERE `id`= ".$id;
-        $this->dao->exec($query);
-		$this->dao->query("COMMIT");
+        $tableName = ($type == 'set' ? 'gallery' : 'gallery_items');
+        $descField = ($type == 'set' ? 'text'    : 'description'  );
+
+	if ($title || $text !== false){
+            $this->dao->query("START TRANSACTION");
+            $query = "UPDATE $tableName ";
+            if ($title) {
+                $query .= "SET `title` = '".$title."'";
+            }
+            elseif ($text !== false) {
+                $query .= "SET $descField = '".$text."'";
+            }
+            $query .= "WHERE `id`= ".$id;
+            $this->dao->exec($query);
+            $this->dao->query("COMMIT");
+        }
     }
 
-	public function reorderTripItems($items) {
-		if (!$this->checkTripItemOwnerShip($items)) {
-			return;
-		}
-
-		$this->dao->query("START TRANSACTION");
-		foreach ($items as $position => $item) {
-			$query = sprintf("UPDATE `blog_data` SET `blog_display_order` = '%d' WHERE `blog_id` = '%d'", ($position + 1), $item);
-			$this->dao->query($query);
-		}
-		$this->dao->query("COMMIT");
-	}
-    public function ajaxModGallery($id, $title = false, $text = false)
+    public function reorderTripItems($items)
     {
-		$this->dao->query("START TRANSACTION");
-        $query = "UPDATE `gallery` ";
-        if ($title) $query .= "SET `title` = '".$title."'";
-        elseif ($text) $query .= "SET `text` = '".$text."'";
-        $query .= "WHERE `id`= ".$id;
-        $this->dao->exec($query);
-		$this->dao->query("COMMIT");
+        if (!$this->checkTripItemOwnerShip($items)) {
+            return;
+        }
+
+        $this->dao->query("START TRANSACTION");
+        foreach ($items as $position => $item) {
+            $query = sprintf("UPDATE `blog_data` SET `blog_display_order` = '%d' WHERE `blog_id` = '%d'", ($position + 1), $item);
+            $this->dao->query($query);
+        }
+        $this->dao->query("COMMIT");
     }
 
     public function editGalleryProcess($vars)
@@ -147,18 +139,34 @@ VALUES
                 $image = $this->imageData($image);
                 // Log the deletion to prevent admin abuse
                 MOD_log::get()->write("Deleting multiple gallery items #".$image->id." filename: ".$image->file." belonging to user: ".$image->user_id_foreign, "Gallery");
-                // Start the deletion process
-                $filename = $image->file;
-                $userDir = new PDataDir('gallery/user'.$image->user_id_foreign);
-                $userDir->delFile($filename);
-                $userDir->delFile('thumb'.$filename);
-                $userDir->delFile('thumb1'.$filename);
-                $userDir->delFile('thumb2'.$filename);
-                $this->dao->exec('DELETE FROM `gallery_items` WHERE `id` = '.$image->id);
-                $this->dao->exec("DELETE FROM `gallery_items_to_gallery` WHERE `item_id_foreign`= ".$image->id);
-                $this->deleteComments($image->id);
+                $this->deleteThisImage($image);
             } else return false;
         }
+    }
+
+    /**
+     * Actual deletion of files and database entries for removed item
+     *
+     * @access protected
+     * @param MOD_images_Image $image The image to be deleted
+     **/ 
+    protected function deleteThisImage($image)
+    {
+        $filename = $image->file;
+        $userDir = new PDataDir('gallery/user'.$image->user_id_foreign);
+        $userDir->delFile($filename);
+        $userDir->delFile('thumb'.$filename);
+        $userDir->delFile('thumb1'.$filename);
+        $userDir->delFile('thumb2'.$filename);
+
+        $this->dao->exec('
+DELETE FROM `gallery_items_to_gallery`
+WHERE `item_id_foreign`= ' . (int)$image->id);
+        $this->dao->exec('
+DELETE FROM `gallery_items`
+WHERE `id` = ' . (int)$image->id);
+
+        $this->deleteComments($image->id);
     }
 
     public function deleteComments($table_id,$table = 'gallery_items') {
@@ -192,9 +200,6 @@ VALUES
                     if (!isset($vars['removeOnly']) || !$vars['removeOnly']) {
                         $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$this->dao->escape($vars['gallery'])."',`item_id_foreign`= ".$d);
                     }
-                    // else {
-                    //                         return 'gallery/show/user/'.$User->getHandle();
-                    //                     }
                 }
             }
             return 'gallery/show/sets/'.$vars['gallery'];
@@ -365,17 +370,6 @@ ORDER BY `id` DESC';
 
     public function getGalleriesNotEmptyEntities()
     {
-        /* Different way of getting the galleries
-        $galleries = array();
-        $allgalleries = $this->createEntity('Gallery')->findAll();
-        if (!empty($allgalleries))
-        foreach ($allgalleries as $gallery)
-        {
-            if ($gallery->countItems())
-            $galleries[] = $gallery;
-        }
-        return $galleries;
-        */
         $sql = <<<SQL
             SELECT DISTINCT
             `id`, `user_id_foreign`, `flags`, `title`, `text`
@@ -589,36 +583,20 @@ AND m.Status IN ('Active', 'Pending', 'OutOfRemind')
         return $d;
     }
 
-    public function imageOwner($imageId)
+    public function imageGalleryOwner($type,$id)
     {
         $query = '
 SELECT
     `user_id_foreign`
-FROM `gallery_items`
+FROM ' . ($type === 'set'?'`gallery`':'`gallery_items`') . '
 WHERE
-    `id` = '.(int)$imageId.'
+    `id` = '.(int)$id.'
         ';
         $s = $this->dao->query($query);
-        if ($s->numRows() != 1)
+        if ($s->numRows() !== 1)
             return false;
         return $s->fetch(PDB::FETCH_OBJ)->user_id_foreign;
     }
-
-    public function galleryOwner($galleryId)
-    {
-        $query = '
-SELECT
-    `user_id_foreign`
-FROM `gallery`
-WHERE
-    `id` = '.(int)$galleryId.'
-        ';
-        $s = $this->dao->query($query);
-        if ($s->numRows() != 1)
-            return false;
-        return $s->fetch(PDB::FETCH_OBJ)->user_id_foreign;
-    }
-
 
     /**
      * processing image uploads

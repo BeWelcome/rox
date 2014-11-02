@@ -68,8 +68,8 @@
     background: #f8f8f8;
     border: 1px #ddd solid;
     border-left: 8px #ddd solid;
-    padding: 1em 1em 0 1em;
-    margin: 0 0 1em 1em;
+    padding: 1em 1em 0 0.25em;
+    margin: 0 0 1em 0.25em;
   }
 
   hr {
@@ -1285,6 +1285,12 @@ form .date {
   font-style: normal;
 */
   font-size: 1.1em;
+}
+#messagecontent ol li {
+  list-style-type: decimal !important;
+}
+#messagecontent ul li {
+  list-style-type: disc !important;
 }
 #messageside {
   width: 22em;

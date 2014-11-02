@@ -1,8 +1,0 @@
-<map id="get_housenumber" name="get_housenumber">
-<area shape="rect" id="node2" href="$class_member.html#abbb2f52f98584a0bcc043e3a1b7c51a5" title="get_address" alt="" coords="179,56,272,83"/>
-<area shape="rect" id="node5" href="$class_member.html#a4a9795d498ebb037d00f0d9d34488ea1" title="get_crypted" alt="" coords="180,107,271,133"/>
-<area shape="rect" id="node3" href="$class_rox_model_base.html#a9096e57fe15a61d5ba9dfc1fc3b24415" title="RoxModelBase\\bulkLookup" alt="" coords="333,5,513,32"/>
-<area shape="rect" id="node4" href="$class_rox_model_base.html#a31265ca609e83367571773a2e4db3035" title="RoxModelBase\\createEntity" alt="" coords="331,56,515,83"/>
-<area shape="rect" id="node6" href="$class_m_o_d__crypt.html#ade2bb7c1df92fe342706bdaf73c9b7a7" title="MOD_crypt\\AdminReadCrypted" alt="" coords="321,107,525,133"/>
-<area shape="rect" id="node7" href="$class_m_o_d__crypt.html#aaf82a004ddb4de960f472b0039869177" title="MOD_crypt\\get_crypted" alt="" coords="343,157,503,184"/>
-</map>

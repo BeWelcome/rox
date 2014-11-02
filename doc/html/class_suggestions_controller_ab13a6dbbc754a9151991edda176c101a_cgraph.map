@@ -1,5 +1,0 @@
-<map id="SuggestionsController\moveSuggestionToImplemented" name="SuggestionsController\moveSuggestionToImplemented">
-<area shape="rect" id="node2" href="$class_rox_component_base.html#a89d9333d4f8c1d421c68fd580942d532" title="RoxComponentBase\\getWords" alt="" coords="265,5,466,32"/>
-<area shape="rect" id="node3" href="$class_rox_controller_base.html#a2c5d64649e0267f32198dd37a02c5d28" title="RoxControllerBase\\redirect\lAbsolute" alt="" coords="277,57,454,98"/>
-<area shape="rect" id="node4" href="$class_rox_controller_base.html#a08b2e66b9f6d0349269bf0aeb35dd5b9" title="RoxControllerBase\\setFlash\lNotice" alt="" coords="273,122,457,163"/>
-</map>

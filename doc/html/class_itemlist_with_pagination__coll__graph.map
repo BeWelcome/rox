@@ -1,6 +1,0 @@
-<map id="ItemlistWithPagination" name="ItemlistWithPagination">
-<area shape="rect" id="node2" href="$class_itemlist_widget.html" title="ItemlistWidget" alt="" coords="29,229,133,256"/>
-<area shape="rect" id="node3" href="$class_rox_widget.html" title="RoxWidget" alt="" coords="38,155,124,181"/>
-<area shape="rect" id="node4" href="$class_visual_component.html" title="VisualComponent" alt="" coords="19,80,143,107"/>
-<area shape="rect" id="node5" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="11,5,152,32"/>
-</map>

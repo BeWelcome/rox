@@ -1,0 +1,28 @@
+This file contains the list of cron job files used on the production environment:
+
+cron_forum_cleanup.sh
+cron_geonames_update.sh
+cron_guests_cleanup.sh
+cron_mailbot.sh
+cron_statistics.sh
+cron_update_fulltext_index.sh
+
+And here's the cron file (adapt accordingly):
+
+# Run message delivery (mailbot) every 5 minutes
+*/5 * * * * root <rox dir>/setup/cron_mailbot.sh www.bewelcome.org > /dev/null
+
+# Clean anonymous sessions every hour
+0 * * * * root <rox dir>/setup/cron_guests_cleanup.sh
+
+# Deactivate edit for certain forum posts every 30 minutes
+0,30 * * * * root <rox dir>/setup/cron_forum_cleanup.sh
+
+# Update Geonames database at 2:05am
+5 2 * * * root <rox dir>/setup/cron_geonames_update.sh www.bewelcome.org
+
+# Generate user statistics at 7am
+0 7 * * * root <rox dir>/setup/cron_statistics.sh www.bewelcome.org
+
+# Reindex full text indices every hour
+0 * * * * root <rox dir>/setup/cron_update_fulltext_indices.sh

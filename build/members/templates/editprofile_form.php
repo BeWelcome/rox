@@ -148,13 +148,13 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                             $lang_ids[] = $vars['languages_selected'][$ii]->IdLanguage;
                             echo <<<HTML
                         <tr>
-                        <td>
+                        <td style="vertical-align: middle;">
 
                             <input type='hidden' name='memberslanguages[]' value='{$vars['languages_selected'][$ii]->IdLanguage}'/>
                             <input type='text' disabled='disabled' value='{$vars['languages_selected'][$ii]->Name}'/>
                           </td>
                           <td>
-                              <select name="memberslanguageslevel[]" >
+                              <select class="mll" name="memberslanguageslevel[]" >
 HTML;
                                 for ($jj = 0; $jj < count($vars['language_levels']); $jj++)
                                 {
@@ -167,14 +167,14 @@ HTML;
                             </select>
                             {$words->flushBuffer()}
                           </td>
-                          <td><a href='#' class='remove_lang'>{$words->get('RemoveLanguage')}</a>
+                          <td style="vertical-align: middle;"><a href='#' class='remove_lang'>{$words->get('RemoveLanguage')}</a>
                           </td>
                         </tr>
 HTML;
                         }
                       echo <<<HTML
                         <tr id="lang1">
-                          <td><select class='lang_selector' name="memberslanguages[]" >
+                          <td><select class='lang_selector' name="memberslanguages[]">
                           <option selected="selected">-{$words->get("ChooseNewLanguage")}-</option>
                           <optgroup label="{$words->getSilent('SpokenLanguages')}">
 HTML;
@@ -207,7 +207,7 @@ HTML;
                           </select>
                           </td>
                           <td>
-                            <select name="memberslanguageslevel[]" >
+                            <select class="mll" name="memberslanguageslevel[]" >
 HTML;
                                 for ($jj = 0; $jj < count($vars['language_levels']); $jj++)
                                 {
@@ -729,3 +729,9 @@ HTML;
               </tr>
             </tbody>
           </table>
+<script type="text/javascript">//<!--
+    jQuery.noConflict();
+    jQuery(".lang_selector").select2({dropdownAutoWidth: true, width: 'element'});
+    jQuery(".mll").select2({dropdownAutoWidth: true, width: 'element'});
+    //-->
+</script>

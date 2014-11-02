@@ -63,7 +63,7 @@ class MessagesController extends RoxControllerBase
                     $page->active_page = $this->getPageNumber($request, 2);
                     break;
                 case 'compose':
-                    if (!($logged_member = $model->getLoggedInMember()))  { // We only resquest the Sender to be logged in
+                    if (!($logged_member = $model->getLoggedInMember()))  { // We only request the Sender to be logged in
                         $page = new ContactNotPossible();
                     }
                     else if (!isset($request[2])) { // $request[2] should be the member who is going to receive the message
@@ -75,6 +75,7 @@ class MessagesController extends RoxControllerBase
                             $page = new ComposeMessageProhibitedPage();
                         }   else {
                             $page = new ComposeMessagePage();
+                            $page->sender = $model->getLoggedInMember();
                             $page->receiver = $member;
                         }
                     }
@@ -102,7 +103,7 @@ class MessagesController extends RoxControllerBase
                             //Only mark as read when the receiver reads the message, not when the message is presented to the Sender with url /messages/77/sent
                             $MessagedReader = $model->getLoggedInMember();
                             if ($MessagedReader->getPKValue() == $message->IdReceiver) {
-                                $model->markReadMessage($message->id);
+                                $model->markMessage($message->id);
                             }
                         }
                         if (!isset($request[2])) {
@@ -115,9 +116,11 @@ class MessagesController extends RoxControllerBase
                                 break;
                             case 'edit':
                                 $page = new EditMessagePage();
+                                $page->sender = $model->getLoggedInMember();
                                 break;
                             case 'reply':
                                 $page = new ReplyMessagePage();
+                                $page->sender = $model->getLoggedInMember();
                                 break;
                             case 'sent':
                                 $page = new MessageSentPage();
@@ -161,9 +164,9 @@ class MessagesController extends RoxControllerBase
             $s = $request[$req_index];
             if (is_numeric($s)) {
                 return $s;
-            } else if (preg_match_all('/page([0-9]+)/i', $r, $regs)) {
+            } else if (preg_match_all('/page([0-9]+)/i', $s, $regs)) {
                 return $regs[1][0];
-            } else if (preg_match_all('/p([0-9]+)/i', $r, $regs)) {
+            } else if (preg_match_all('/p([0-9]+)/i', $s, $regs)) {
                 return $regs[1][0];
             } else {
                 // not the right format for page
@@ -284,7 +287,7 @@ class MessagesController extends RoxControllerBase
                 elseif ($post['submit_multi'] == 'delete')
                     $result = $model->deleteMessage($m->id);
                 elseif ($post['submit_multi'] == 'markasread')
-                    $result = $model->markReadMessage($m->id);
+                    $result = $model->markMessage($m->id);
                 elseif ($post['submit_multi'] == 'markasspam') {
                     $result = $model->moveMessage($m->id,'Spam');
                     $model->updateSpamInfo($m->id, 'SpamSayMember', 'NotSpam', $m->SpamInfo);

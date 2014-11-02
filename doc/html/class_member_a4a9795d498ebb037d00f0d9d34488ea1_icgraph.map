@@ -1,6 +1,0 @@
-<map id="get_crypted" name="get_crypted">
-<area shape="rect" id="node2" href="$class_member.html#af76abee22772fe2860a5525c1b34a515" title="get_email" alt="" coords="167,5,246,32"/>
-<area shape="rect" id="node3" href="$class_member.html#a7eb25e23d4c69f61328c76a2e21a48e9" title="get_housenumber" alt="" coords="144,56,269,83"/>
-<area shape="rect" id="node4" href="$class_member.html#a61aa38d35bb4962a08438bf25463bbe4" title="get_street" alt="" coords="167,107,247,133"/>
-<area shape="rect" id="node5" href="$class_member.html#a263fd906f99ccca15a12fe34a79656e4" title="get_zip" alt="" coords="175,157,239,184"/>
-</map>

@@ -54,4 +54,15 @@ class ActivitiesEditCreatePage extends ActivitiesBasePage
        $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/datetimepicker.css';
        return $stylesheets;
     }
+
+
+    public function getLateLoadScriptFiles()
+    {
+        $scripts = parent::getLateLoadScriptfiles();
+        $pref = $this->member->getPreference("PreferenceDisableTinyMCE", $default = "No");
+        if ($this->member->getPreference("PreferenceDisableTinyMCE", $default = "No") == 'No') {
+            $scripts[] = 'tinymceconfig.js';
+        }
+        return $scripts;
+    }
 }

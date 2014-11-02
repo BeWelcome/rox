@@ -1,8 +1,0 @@
-<map id="hasPrivilege" name="hasPrivilege">
-<area shape="rect" id="node2" href="$class_rox_entity_base.html#a2f27c20674620565aa8b3433bffe305d" title="RoxEntityBase\\isLoaded" alt="" coords="144,5,309,32"/>
-<area shape="rect" id="node3" href="$class_rox_model_base.html#a31265ca609e83367571773a2e4db3035" title="RoxModelBase\\createEntity" alt="" coords="357,56,541,83"/>
-<area shape="rect" id="node4" href="$class_member.html#aa676cae5ee8d7fb6862a8724adc2660d" title="getRoles" alt="" coords="190,107,263,133"/>
-<area shape="rect" id="node5" href="$class_rox_entity_base.html#a4fea73e12c9f974d5e00573ccf744e61" title="RoxEntityBase\\isPKSet" alt="" coords="369,107,530,133"/>
-<area shape="rect" id="node6" href="$class_rox_entity_base.html#a7ec14e8ec3cff8883cd8ca176af2807c" title="RoxEntityBase\\getPrimaryKey" alt="" coords="590,107,789,133"/>
-<area shape="rect" id="node7" href="$class_rox_entity_base.html#aa4afd6ae68aa53bee950d3d2c7b72f18" title="RoxEntityBase\\getTableDescription" alt="" coords="837,107,1064,133"/>
-</map>

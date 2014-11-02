@@ -1,7 +1,0 @@
-<map id="get_image_tags" name="get_image_tags">
-<area shape="rect" id="node2" href="$class_simple_pie.html#a2afc664ab5338c08ee7962d88e191d22" title="get_image_title" alt="" coords="175,5,286,32"/>
-<area shape="rect" id="node3" href="$class_simple_pie.html#a6059f56430d80d68802c28d03e39b386" title="get_image_url" alt="" coords="179,56,282,83"/>
-<area shape="rect" id="node4" href="$class_simple_pie.html#a90c2d1fd691f85ea01c05c66401e58bf" title="get_image_link" alt="" coords="176,107,285,133"/>
-<area shape="rect" id="node5" href="$class_simple_pie.html#af7ec0e0e893fa08838e8a9db988a732b" title="get_image_width" alt="" coords="171,157,290,184"/>
-<area shape="rect" id="node6" href="$class_simple_pie.html#a5b0dc9a358e4cb5ec2d9b13b9469dfa9" title="get_image_height" alt="" coords="169,208,293,235"/>
-</map>

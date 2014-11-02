@@ -1,6 +1,0 @@
-<map id="PersonalStartpage\teaserContent" name="PersonalStartpage\teaserContent">
-<area shape="rect" id="node2" href="$class_visual_component.html#aa3258f7bd513d00393bc5bf376378817" title="VisualComponent\\__call" alt="" coords="224,41,387,68"/>
-<area shape="rect" id="node3" href="$class_visual_component.html#a46cfd3db33c269b95a07abb87d1b1b74" title="VisualComponent\\getTemplate\lPrefix" alt="" coords="437,5,635,46"/>
-<area shape="rect" id="node5" href="$class_rox_component_base.html#a89d9333d4f8c1d421c68fd580942d532" title="RoxComponentBase\\getWords" alt="" coords="435,71,637,97"/>
-<area shape="rect" id="node4" href="$class_class_loader.html#a0f14af05a840106c7daa36cb1ec57a86" title="ClassLoader\\whereIsClass" alt="" coords="686,12,861,39"/>
-</map>

@@ -1,6 +1,0 @@
-<map id="PollsModel\AddVote" name="PollsModel\AddVote">
-<area shape="rect" id="node2" href="$class_rox_model_base.html#aa555ff4841071cf011132ef42ec8b791" title="RoxModelBase\\bulkLookup" alt="" coords="201,5,381,32"/>
-<area shape="rect" id="node3" href="$class_m_o_d__log.html#affe895ff124632e4c8c4d510ae4f73b6" title="MOD_log\\get" alt="" coords="241,56,340,83"/>
-<area shape="rect" id="node4" href="$class_polls_model.html#a18e360878dbc3f8c70f155dbf19e000b" title="PollsModel\\IsMemberAllowed" alt="" coords="195,107,387,133"/>
-<area shape="rect" id="node5" href="$class_rox_model_base.html#a7b9edf679f49fa2bea9b14d9b0f7a2f3" title="RoxModelBase\\singleLookup" alt="" coords="435,132,626,159"/>
-</map>

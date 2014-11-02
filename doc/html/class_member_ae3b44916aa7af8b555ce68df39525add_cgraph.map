@@ -1,6 +1,0 @@
-<map id="Member\getLanguagePreference" name="Member\getLanguagePreference">
-<area shape="rect" id="node2" href="$class_member.html#ad23384b697e2f3b22878540cf591468d" title="Member\\get_all_translatable\l_languages" alt="" coords="281,5,466,46"/>
-<area shape="rect" id="node3" href="$class_member.html#ac04a9dae1087e8578ac5be4cecf1ceb8" title="Member\\getLanguagePreferenceId" alt="" coords="264,71,483,97"/>
-<area shape="rect" id="node4" href="$class_member.html#a57ed0a4627c17b06f3305ee6633e9c4d" title="Member\\getPreference" alt="" coords="531,71,685,97"/>
-<area shape="rect" id="node5" href="$class_member.html#ae79962ed14049d1dcb4347aa2bbcfd56" title="Member\\get_preferences" alt="" coords="733,71,899,97"/>
-</map>

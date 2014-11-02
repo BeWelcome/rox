@@ -1,8 +1,0 @@
-<map id="set_authority" name="set_authority">
-<area shape="rect" id="node2" href="$class_simple_pie___i_r_i.html#a6595d2ccbb4f36d1f0f0045aec7d2647" title="set_userinfo" alt="" coords="153,16,245,43"/>
-<area shape="rect" id="node4" href="$class_simple_pie___i_r_i.html#a1c7c44c55082496e39f0d5a381a4e041" title="set_host" alt="" coords="163,71,235,97"/>
-<area shape="rect" id="node7" href="$class_simple_pie___i_r_i.html#a260d188a1b538330092d9305bc9cab6a" title="set_port" alt="" coords="164,121,233,148"/>
-<area shape="rect" id="node3" href="$class_simple_pie___i_r_i.html#abc99bfecfa33b0a2aafe0ac10ccd008f" title="replace_invalid_with\l_pct_encoding" alt="" coords="295,5,431,46"/>
-<area shape="rect" id="node5" href="$class_simple_pie___net___i_pv6.html#a919d0bfb1b9c4939d018075afa0ecc14" title="SimplePie_Net_IPv6\l\\check_ipv6" alt="" coords="293,70,432,111"/>
-<area shape="rect" id="node6" href="$class_simple_pie___net___i_pv6.html#a8be0f9972acba03e92315823db2f0d06" title="SimplePie_Net_IPv6\l\\compress" alt="" coords="293,135,432,177"/>
-</map>

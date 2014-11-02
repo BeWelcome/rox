@@ -307,7 +307,7 @@ class MOD_words
     {
         $text = $this->getRaw($code, $replacements, $language);
         // hack to work around a problem during signup
-        require_once '../modules/htmlpurify/lib/htmlpurify.lib.php';
+        require_once SCRIPT_BASE . '/modules/htmlpurify/lib/htmlpurify.lib.php';
         $purifier = MOD_htmlpure::get()->getAdvancedHtmlPurifier();
         return $purifier->purify($text);
     }

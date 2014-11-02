@@ -1,9 +1,0 @@
-<map id="RequestRouter\findRoute" name="RequestRouter\findRoute">
-<area shape="rect" id="node2" href="$class_request_router.html#aa7625d0600448605efac07ae882c2230" title="RequestRouter\\controller\lClassnameForString" alt="" coords="231,34,396,75"/>
-<area shape="rect" id="node8" href="$class_request_router.html#a45fdb30c03508aa89c212dfe79ac74b0" title="RequestRouter\\matchRoute" alt="" coords="222,100,405,127"/>
-<area shape="rect" id="node3" href="$class_request_router.html#a1c45486d2fd7491865c28f9499b14db6" title="RequestRouter\\defaultController\lClassname" alt="" coords="453,5,659,46"/>
-<area shape="rect" id="node4" href="$class_request_router.html#ab6a3e790f02bca8da0e8f3980b987dcd" title="RequestRouter\\translate" alt="" coords="475,71,637,97"/>
-<area shape="rect" id="node5" href="$class_request_router.html#a727e04eea37c3d1902e9fbf4634dad7d" title="RequestRouter\\loadRouting\lAliasTable" alt="" coords="707,63,887,105"/>
-<area shape="rect" id="node6" href="$class_request_router.html#a65be918233c3565bf0ba3afe1d7e9266" title="RequestRouter\\iniParse" alt="" coords="937,45,1095,72"/>
-<area shape="rect" id="node7" href="$class_request_router.html#a654e6846be25ef0d7458e9112638cad7" title="RequestRouter\\iniWrite" alt="" coords="938,96,1094,123"/>
-</map>

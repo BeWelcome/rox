@@ -82,7 +82,7 @@ $member = $model->getMemberWithUsername($receiver_username);
             <?php } ?>
 
             <p>
-                <textarea name="text" rows="15" cols="60" ><?=$text ?></textarea>
+                <textarea name="text" rows="15" cols="60" autofocus="autofocus" class="mce"><?=$text ?></textarea>
             </p>
 
           <?php

@@ -1,8 +1,0 @@
-<map id="MailboxWidget_WithMember" name="MailboxWidget_WithMember">
-<area shape="rect" id="node2" href="$class_mailbox_widget.html" title="MailboxWidget" alt="" coords="46,379,153,405"/>
-<area shape="rect" id="node3" href="$class_itemlist_with_pagination.html" title="ItemlistWithPagination" alt="" coords="24,304,176,331"/>
-<area shape="rect" id="node4" href="$class_itemlist_widget.html" title="ItemlistWidget" alt="" coords="47,229,152,256"/>
-<area shape="rect" id="node5" href="$class_rox_widget.html" title="RoxWidget" alt="" coords="57,155,143,181"/>
-<area shape="rect" id="node6" href="$class_visual_component.html" title="VisualComponent" alt="" coords="38,80,161,107"/>
-<area shape="rect" id="node7" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="29,5,171,32"/>
-</map>

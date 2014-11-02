@@ -1,5 +1,0 @@
-<map id="APP_User\userId" name="APP_User\userId">
-<area shape="rect" id="node2" href="$class_user.html#a8f39328d907153f03554636f1cc64b13" title="User\\confirmRegister" alt="" coords="201,5,343,32"/>
-<area shape="rect" id="node3" href="$class_signup_model.html#a8c2ec78f5bef30afba87a4e6cd8e6eec" title="SignupModel\\confirmRegister" alt="" coords="177,56,367,83"/>
-<area shape="rect" id="node4" href="$class_user_view.html#abba0c6ae614d01050bee355456d6f905" title="UserView\\userPage" alt="" coords="204,107,340,133"/>
-</map>

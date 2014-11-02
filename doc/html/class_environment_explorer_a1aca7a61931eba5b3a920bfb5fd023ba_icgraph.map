@@ -1,6 +1,0 @@
-<map id="EnvironmentExplorer\initSession" name="EnvironmentExplorer\initSession">
-<area shape="rect" id="node2" href="$class_environment_explorer.html#a864e91b3955bb8e21fb5cc8ea489e8c7" title="EnvironmentExplorer\l\\initializeGlobalState" alt="" coords="195,23,336,65"/>
-<area shape="rect" id="node3" href="$class_rox_launcher.html#a126f906fbb02ab48d97d59894e5a2883" title="RoxLauncher\\initializeGlobal\lState" alt="" coords="384,23,571,65"/>
-<area shape="rect" id="node4" href="$class_rox_launcher.html#a24a37ef0b547c9ca21823b7ce1f811ff" title="RoxLauncher\\launch" alt="" coords="619,5,759,32"/>
-<area shape="rect" id="node5" href="$class_rox_launcher.html#a5ec2ed1e8c1dcd8ba7f667ed4f1daf5a" title="RoxLauncher\\initBW" alt="" coords="619,56,760,83"/>
-</map>

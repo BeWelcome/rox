@@ -1,6 +1,0 @@
-<map id="Member\get_preferences" name="Member\get_preferences">
-<area shape="rect" id="node2" href="$class_member.html#a57ed0a4627c17b06f3305ee6633e9c4d" title="Member\\getPreference" alt="" coords="219,31,373,57"/>
-<area shape="rect" id="node3" href="$class_member.html#ac04a9dae1087e8578ac5be4cecf1ceb8" title="Member\\getLanguagePreferenceId" alt="" coords="421,5,640,32"/>
-<area shape="rect" id="node5" href="$class_member.html#a580a8cf1dadfee68ff25ab7ac49d1220" title="Member\\recordVisit" alt="" coords="463,56,598,83"/>
-<area shape="rect" id="node4" href="$class_member.html#ae3b44916aa7af8b555ce68df39525add" title="Member\\getLanguagePreference" alt="" coords="689,5,898,32"/>
-</map>

@@ -1,5 +1,0 @@
-<map id="PollsModel\CanUserContribute" name="PollsModel\CanUserContribute">
-<area shape="rect" id="node2" href="$class_m_o_d__log.html#affe895ff124632e4c8c4d510ae4f73b6" title="MOD_log\\get" alt="" coords="316,5,415,32"/>
-<area shape="rect" id="node3" href="$class_polls_model.html#a363bd569e962bb588cb82be37923275d" title="PollsModel\\HasAlreadyContributed" alt="" coords="254,56,477,83"/>
-<area shape="rect" id="node4" href="$class_rox_model_base.html#a7b9edf679f49fa2bea9b14d9b0f7a2f3" title="RoxModelBase\\singleLookup" alt="" coords="526,81,717,108"/>
-</map>

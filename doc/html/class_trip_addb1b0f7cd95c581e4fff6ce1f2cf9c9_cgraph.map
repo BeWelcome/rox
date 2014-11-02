@@ -1,5 +1,0 @@
-<map id="Trip\createTrip" name="Trip\createTrip">
-<area shape="rect" id="node2" href="$class_trip.html#a1cc4ecec29d12ae38a6b1c6980acfcee" title="Trip\\assignGallery" alt="" coords="177,5,303,32"/>
-<area shape="rect" id="node3" href="$class_trip.html#a384b0e1bacfaf18fc78a2efebfe7eb69" title="Trip\\insertTrip" alt="" coords="190,56,290,83"/>
-<area shape="rect" id="node4" href="$class_rox_entity_base.html#a80e77c5933530af9918ca8389c4c6f38" title="RoxEntityBase\\isLoaded" alt="" coords="157,107,323,133"/>
-</map>

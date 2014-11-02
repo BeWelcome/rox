@@ -24,6 +24,7 @@ class MyVisitorsPage extends ProfilePage
             return;
         }
 
+        $params = new StdClass();
         $params->strategy = new HalfPagePager('right');
         $params->items = $visitor_count;
         $params->items_per_page = 20;

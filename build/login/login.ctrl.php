@@ -64,7 +64,7 @@ class LoginController extends RoxControllerBase
             if (PVars::getObj('development')->skip_password_check != 1) {
                 $errmsg = $this->getWords()->get("LoginErrorNoPassword");
             }
-        } else if (!$this->model->checkBWPassword($bw_member, $password = trim($post['p']))) {
+        } else if (!$this->model->checkBWPassword($bw_member, $post['p'])) {
             if (PVars::getObj('development')->skip_password_check != 1) {
                 $errmsg = $this->getWords()->get("LoginErrorWrongCredentials");
             }

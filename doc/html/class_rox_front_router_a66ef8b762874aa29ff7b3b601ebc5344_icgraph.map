@@ -1,6 +1,0 @@
-<map id="RoxFrontRouter\createLayoutkit" name="RoxFrontRouter\createLayoutkit">
-<area shape="rect" id="node2" href="$class_rox_front_router.html#a2d092ed46de889011ccd223357ab9156" title="RoxFrontRouter\\renderPage" alt="" coords="262,12,445,39"/>
-<area shape="rect" id="node3" href="$class_rox_front_router.html#a12ae8a994589b79fd7cc24054fc5da74" title="RoxFrontRouter\\runController\lMethod" alt="" coords="494,5,685,46"/>
-<area shape="rect" id="node4" href="$class_rox_front_router.html#a25ddd65b368b63c726412d3cb5cf3a51" title="RoxFrontRouter\\route\l_normal" alt="" coords="733,5,880,46"/>
-<area shape="rect" id="node5" href="$class_rox_front_router.html#adae1dc8c693313b4ab014fae7d7ce0a9" title="RoxFrontRouter\\route" alt="" coords="928,12,1075,39"/>
-</map>

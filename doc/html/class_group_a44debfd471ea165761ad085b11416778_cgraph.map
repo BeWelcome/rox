@@ -1,6 +1,0 @@
-<map id="setGroupOwner" name="setGroupOwner">
-<area shape="rect" id="node2" href="$class_rox_entity_base.html#a2f27c20674620565aa8b3433bffe305d" title="RoxEntityBase\\isLoaded" alt="" coords="175,5,340,32"/>
-<area shape="rect" id="node3" href="$class_rox_model_base.html#a31265ca609e83367571773a2e4db3035" title="RoxModelBase\\createEntity" alt="" coords="397,81,581,108"/>
-<area shape="rect" id="node4" href="$class_group.html#a2405fe28eb4b635e2d1129733c23dde0" title="isMember" alt="" coords="218,107,297,133"/>
-<area shape="rect" id="node5" href="$class_rox_entity_base.html#aa1def550942dd330be4ed6bf784344f7" title="RoxEntityBase\\getPKValue" alt="" coords="166,157,349,184"/>
-</map>

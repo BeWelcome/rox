@@ -12,7 +12,7 @@
 #signuprox input {margin-bottom: 0.5em; margin-right: 0.5em;}
 #signuprox textarea {width: 30em; height: 10em; margin-bottom: 0.8em;}
 #signuprox select { margin-top: 0.2em; margin-right: 0.3em;}
-#signuprox ul li{ margin-bottom: 2em; margin-top: 1em; }
+/* #signuprox ul li{ margin-bottom: 2em; margin-top: 1em; }  */
 
 #signuprox #map {width: 200px; min-height: 200px; height: 200px; border: 1px solid; margin: 1em; }
 
@@ -30,8 +30,11 @@
 #signuprox .error {font-size: 11px; clear:both; width: 30em; }
 #signuprox .statbtn {padding: 5px; float:left;}
 #signuprox a.back {color: #888}
+#signuprox .sweet { width:0; height: 0; display: inline; }
 
 #signuprox #spaf_map{ position: relative; display: block;}
 #signuprox #spaf_map span{ display: none;}
 #signuprox #spaf_map label span{ display: inline;}
 #signuprox ol li{ margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: center no-repeat; background-position: 250px}
+
+#signuprox .sweet {display: none;}

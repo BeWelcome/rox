@@ -1,9 +1,0 @@
-<map id="SuggestionsApproveListPage" name="SuggestionsApproveListPage">
-<area shape="rect" id="node2" href="$class_suggestions_base_page.html" title="SuggestionsBasePage" alt="" coords="23,453,177,480"/>
-<area shape="rect" id="node3" href="$class_page_with_active_skin.html" title="PageWithActiveSkin" alt="" coords="30,379,169,405"/>
-<area shape="rect" id="node4" href="$class_page_with_rox_layout.html" title="PageWithRoxLayout" alt="" coords="29,304,171,331"/>
-<area shape="rect" id="node5" href="$class_page_with_h_t_m_l.html" title="PageWithHTML" alt="" coords="43,229,156,256"/>
-<area shape="rect" id="node6" href="$class_abstract_base_page.html" title="AbstractBasePage" alt="" coords="35,155,165,181"/>
-<area shape="rect" id="node7" href="$class_visual_component.html" title="VisualComponent" alt="" coords="38,80,161,107"/>
-<area shape="rect" id="node8" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="29,5,171,32"/>
-</map>

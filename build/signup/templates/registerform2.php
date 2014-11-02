@@ -45,7 +45,12 @@ Boston, MA  02111-1307, USA.
   <fieldset>
     <legend><?php echo $words->get('SignupName'); ?></legend>
 
-    <!-- First Name -->
+        <div class="signup-row floatbox sweet">
+            <label for="sweet"><?php echo $words->get('SignupSweet'); ?></label>
+            <input type="text" id="sweet" name="sweet" value="" title="Leave free of content"/>
+        </div>
+
+      <!-- First Name -->
         <div class="signup-row floatbox">
           <label for="register-firstname"><?php echo $words->get('FirstName'); ?>* </label>
           <input type="text" id="register-firstname" name="firstname" class="float_left" <?php
@@ -75,8 +80,8 @@ Boston, MA  02111-1307, USA.
           -->
         </div> <!-- signup-row -->
 
-    <!-- Last Name -->
-        <div class="signup-row floatbox">
+      <!-- Last Name -->
+      <div class="signup-row floatbox">
           <label for="lastname"><?php echo $words->get('LastName'); ?>* </label>
           <input type="text" id="lastname" name="lastname" class="float_left" <?php
           echo isset($vars['lastname']) ? 'value="'.htmlentities($vars['lastname'], ENT_COMPAT, 'utf-8').'" ' : '';
@@ -84,16 +89,36 @@ Boston, MA  02111-1307, USA.
           <!--
           <span class="small"><?php echo $words->get('SignupLastNameShortDesc'); ?></span>
           -->
-        </div> <!-- signup-row -->
+      </div> <!-- signup-row -->
 
-    <!-- Birthdate -->
+      <?php
+        $motherTongue = -1;
+        if (isset($vars['mothertongue'])) {
+            $motherTongue = $vars['mothertongue'];
+        }
+      ?>
+      <!-- Mother tongue(s)-->
+      <div>
+          <label for="mothertongue"><?php echo $words->get('LanguageLevel_MotherLanguage'); ?>* </label>
+          <select name="mothertongue" id="mothertongue" data-placeholder="<?= $words->getBuffered('SignupSelectMotherTongue')?>" style="width: 350px;" class="select2">
+              <option value="-1"></option>
+              <optgroup label="<?= $words->getSilent('SpokenLanguages') ?>">
+                  <?= $this->getAllLanguages(true, $motherTongue); ?>
+              </optgroup>
+              <optgroup label="<?= $words->getSilent('SignedLanguages') ?>">
+                  <?= $this->getAllLanguages(false, $motherTongue); ?>
+              </optgroup>
+          </select>
+      </div> <!-- signup-row -->
+
+      <!-- Birthdate -->
         <div class="signup-row floatbox">
           <label for="BirthDate"><?php echo $words->get('SignupBirthDate'); ?>*</label>
-          <select id="BirthDate" name="birthyear">
+          <select id="BirthDate" name="birthyear" style="width:100px;" class="select2">
             <option value=""><?php echo $words->getSilent('SignupBirthYear'); ?></option>
             <?php echo $birthYearOptions; ?>
-          </select>
-          <select name="birthmonth">
+          </select>&nbsp;
+          <select name="birthmonth" style="width:100px;" class="select2">
             <option value=""><?php echo $words->getSilent('SignupBirthMonth'); ?></option>
             <?php for ($i=1; $i<=12; $i++) { ?>
             <option value="<?php echo $i; ?>"<?php
@@ -102,8 +127,8 @@ Boston, MA  02111-1307, USA.
             }
             ?>><?php echo $i; ?></option>
             <?php } ?>
-          </select>
-          <select name="birthday">
+          </select>&nbsp;
+          <select name="birthday" style="width:100px;" class="select2">
             <option value=""><?php echo $words->getSilent('SignupBirthDay'); ?></option>
             <?php for ($i=1; $i<=31; $i++) { ?>
             <option value="<?php echo $i; ?>"<?php
@@ -133,7 +158,7 @@ Boston, MA  02111-1307, USA.
     <!-- Gender -->
         <div class="signup-row">
           <label for="gender"><?php echo $words->get('Gender'); ?>*</label>
-            <input class="radio" style="float: left" type="radio" id="gender" name="gender" value="female"<?php
+            <input class="radio" type="radio" id="gender" name="gender" value="female"<?php
              if (isset($vars['gender']) && $vars['gender'] == 'female') {
                  echo ' checked="checked"';
               }
@@ -173,5 +198,5 @@ Boston, MA  02111-1307, USA.
 
 <script type="text/javascript">
  Register.initialize('user-register-form');
-
+ jQuery(".select2").select2(); // {no_results_text: "<?= htmlentities($words->getSilent('SignupNoLanguageFound'), ENT_COMPAT); ?>"});
 </script>

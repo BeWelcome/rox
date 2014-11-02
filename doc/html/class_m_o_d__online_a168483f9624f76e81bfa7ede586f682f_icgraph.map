@@ -1,6 +1,0 @@
-<map id="MOD_online\get" name="MOD_online\get">
-<area shape="rect" id="node2" href="$class_rox_front_router.html#a7793200515ca5900276b8e6c886a8397" title="RoxFrontRouter\\initUser" alt="" coords="195,5,357,32"/>
-<area shape="rect" id="node4" href="$class_page_with_rox_layout.html#a7b68376f6bab5c675e56c90144d7b5f4" title="PageWithRoxLayout\\quicksearch" alt="" coords="169,56,383,83"/>
-<area shape="rect" id="node5" href="$class_page_with_rox_layout.html#a37bdf9ab44a068468bb9a396337baa4c" title="PageWithRoxLayout\\topnav" alt="" coords="185,107,367,133"/>
-<area shape="rect" id="node3" href="$class_rox_front_router.html#adae1dc8c693313b4ab014fae7d7ce0a9" title="RoxFrontRouter\\route" alt="" coords="432,5,579,32"/>
-</map>

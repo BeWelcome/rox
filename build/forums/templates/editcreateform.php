@@ -53,7 +53,7 @@ if (isset($vars['tags']) && $vars['tags']) {
 <?php
 if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
     $textarea = 'topic_text';
-    require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js';
+    require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig_php.js';
 }
 ?>
 <h2>
@@ -370,7 +370,7 @@ if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
     // purpose here is to force the user to select a language
     function check_SelectedLanguage() {
         if (document.editform.IdLanguage.value == -1) {
-            alert("<?php echo $words->getFormatted("YouMustSelectALanguage") ?>");
+            alert('<?php echo $words->getFormatted("YouMustSelectALanguage") ?>');
             document.editform.IdLanguage.focus();
             return(false);
         }

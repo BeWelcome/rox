@@ -37,26 +37,16 @@ class SignupModel extends RoxModelBase
      * user
      * TODO: should get a more specific name - refactoring needed!
      */
-    // const HANDLE_PREGEXP = '%^[a-z][a-z0-9_-\.]{3,19}$%i';
     // Allow usernames with up to 20 chars for new signup. Allow ., - and _. Don't allow consecutive special chars.
     const HANDLE_PREGEXP = '/^[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9]$/i';
-
-    /**
-     * TODO: check, if this is indeed the best form; I don't believe it (steinwinde, 2008-08-04)
-     */
-    const HANDLE_PREGEXP_EMAIL =
-'^[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+@[-!#$%&\'*+\\/0-9=?A-Z^_`a-z{|}~]+\.[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+$';
 
     /**
      * FIXME: use BW constant from config file instead of this one
      */
     const YOUNGEST_MEMBER = 18;
 
-    // TODO: obviously this should be standardized
     const BW_TRUE = 'Yes';
     const BW_FALSE = 'No';
-    const BW_TRUE_A = 'True';
-    const BW_FALSE_A = 'False';
 
     /**
      * Constructor
@@ -133,17 +123,16 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
     public function takeCareForNonUniqueEmailAddress($email)
     {
         $email = str_replace("@", "%40", $email);
-        $query = '
+        $query = "
 SELECT `Username`, members.`Status`, members.`id` AS `idMember`
-FROM `members`, '. PVars::getObj('syshcvol')->Crypted .'`cryptedfields`
-WHERE members.`id` = cryptedfields.`IdMember`';
+FROM " . PVars::getObj('syshcvol')->Crypted . "`cryptedfields`
+RIGHT JOIN `members` ON members.`id` = cryptedfields.`IdMember`";
         if (isset($_SESSION['IdMember'])) {
         $query .= '
 AND members.`id`!=' . $_SESSION['IdMember']
 ; }
-        $query .= '
-AND `AdminCryptedValue` = \'<admincrypted>' . $email .'</admincrypted>\''
-;
+        $query .= "
+    WHERE `AdminCryptedValue` = '<admincrypted>" . $email . "</admincrypted>'";
 
         $s = $this->dao->query($query);
         if ($s->numRows() == 0) {
@@ -304,8 +293,8 @@ FROM `user` WHERE
 
             $idTB = $this->registerTBMember($vars);
             if (!$idTB) {
-				MOD_log::get()->write("TB registration failed","Signup") ;
-				return false;
+		MOD_log::get()->write("TB registration failed","Signup") ;
+		return false;
             }
 
             $id = $this->registerBWMember($vars);
@@ -322,7 +311,7 @@ FROM `user` WHERE
             $View = new SignupView($this);
             // TODO: BW 2007-08-19: $_SYSHCVOL['EmailDomainName']
             define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
-            $View->registerMail($id,$idTB);
+            $View->registerMail($vars, $id,$idTB);
             $View->signupTeamMail($vars);
             // PPostHandler::clearVars();
             return PVars::getObj('env')->baseuri.'signup/register/finish';
@@ -402,7 +391,6 @@ INSERT INTO `members`
 	`Gender`,
 	`HideGender`,
 	`created`,
-	`Password`,
 	`BirthDate`,
 	`HideBirthDate`
 )
@@ -413,12 +401,19 @@ VALUES
 	\'' . $vars['gender'] . '\',
 	\'' . $vars['genderhidden'] . '\',
 	now(),
-	password(\'' . $vars['password'] . '\'),
 	\'' . $vars['iso_date'] . '\',
 	\'' . $vars['agehidden'] . '\'
 )';
         $members = $this->dao->query($query);
         $memberID = $members->insertId();
+
+        $memberEntity = $this->createEntity('Member', $memberID);
+        $vars['password'] = $memberEntity->preparePassword($vars['password']);
+        $language = $this->createEntity('Language', $vars['mothertongue']);
+        $memberLanguageEntity = $this->createEntity('MemberLanguage');
+        $memberLanguageEntity->setSpokenLanguage($memberEntity, $language, 'MotherLanguage');
+        $memberEntity->update();
+        $memberEntity->setPassword($vars['password']);
 
         // ********************************************************************
         // e-mail, names/members
@@ -525,19 +520,16 @@ VALUES
             $vars['IdCity'] = $vars['geonameid'];
         }
 
-        // $vars['city'] =
-        // MOD_geo::get()->getCityID($this->dao->escape($vars['city']));
-
-        // TODO: this is not done so in BW 2007-08-14!
         $vars['email'] = strtolower($vars['email']);
 
-        $escapeList = array('username', 'email', 'password', 'gender',
+        $escapeList = array('username', 'email', 'gender',
                             'feedback', 'housenumber', 'street','FirstName','SecondName','LastName', 'zip');
         foreach($escapeList as $formfield) {
             if(!empty($vars[$formfield])) {  // e.g. feedback...
                 $vars[$formfield] = $this->dao->escape($vars[$formfield]);
             }
         }
+        
     }
 
     public function registerTBMember($vars)
@@ -549,14 +541,13 @@ VALUES
         // but for now it's to get nearer to the BW style
         $query = '
 INSERT INTO `user`
-(`id`, `auth_id`, `handle`, `email`, `pw`, `active`)
+(`id`, `auth_id`, `handle`, `email`, `active`)
 VALUES
 (
     '.$this->dao->nextId('user').',
     '.(int)$authId.',
     \'' . $vars['username'] . '\',
     \'' . $vars['email'] . '\',
-	password(\'' . $vars['password'] . '\'),
     0
 )';
         $s = $this->dao->query($query);
@@ -630,6 +621,10 @@ VALUES
             $errors[] = 'SignupErrorPasswordCheck';
         }
 
+        if (!empty($vars['sweet'])) {
+            $errors[] = 'SignupErrorSomethingWentWrong';
+        }
+
         // firstname, lastname
         if (empty($vars['firstname']) || empty($vars['lastname']))
         {
@@ -637,6 +632,10 @@ VALUES
         }
 
         // (skipped:) secondname
+
+        if (!isset($vars['mothertongue']) || ($vars['mothertongue'] == -1)) {
+            $errors[] = 'SignupErrorNoMotherTongue';
+        }
 
         // gender
         if (empty($vars['gender']) || ($vars['gender']!='female' && $vars['gender']!='male'
@@ -695,7 +694,7 @@ VALUES
 	 */
 	public function checkEmail($email)
 	{
-		return preg_match('/'.self::HANDLE_PREGEXP_EMAIL.'/', $email);
+		return filter_var($email, FILTER_VALIDATE_EMAIL);
 	}
 
 	/**
@@ -755,8 +754,6 @@ WHERE id=" . $m->id; // The email is confirmed > make the status Active
 	 */
 	public function resendConfirmationMail($username) {
         // fetch ID for member $username
-        $html_purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
-        $mail = MOD_mail::sendEmail("HAllo", "a@b.cd", "a@b.cd", "body", "body");
         $vars = array();
         $MembersModel = new MembersModel();
         $member = $MembersModel->getMemberWithUsername($username);

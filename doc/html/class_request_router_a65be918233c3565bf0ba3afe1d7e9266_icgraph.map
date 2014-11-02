@@ -1,6 +1,0 @@
-<map id="RequestRouter\iniParse" name="RequestRouter\iniParse">
-<area shape="rect" id="node2" href="$class_request_router.html#a727e04eea37c3d1902e9fbf4634dad7d" title="RequestRouter\\loadRouting\lAliasTable" alt="" coords="214,5,394,46"/>
-<area shape="rect" id="node3" href="$class_request_router.html#ab6a3e790f02bca8da0e8f3980b987dcd" title="RequestRouter\\translate" alt="" coords="443,12,605,39"/>
-<area shape="rect" id="node4" href="$class_request_router.html#aa7625d0600448605efac07ae882c2230" title="RequestRouter\\controller\lClassnameForString" alt="" coords="653,5,819,46"/>
-<area shape="rect" id="node5" href="$class_request_router.html#a4823ef636d6755cafb5947e11c23209b" title="RequestRouter\\findRoute" alt="" coords="867,12,1034,39"/>
-</map>

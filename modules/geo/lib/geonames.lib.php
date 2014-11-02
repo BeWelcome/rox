@@ -142,8 +142,8 @@ class MOD_geonames
 				        isolanguage = '".$this->dao->escape($change[2])."',
 				        alternateName = '".$this->dao->escape($change[3])."',
 				        ispreferred = '".$this->dao->escape($change[4])."',
-				        isshort = '".$this->dao->escape($change[5])."'
-				        isColloquial = '".$this->dao->escape($change[6])."'
+				        isshort = '".$this->dao->escape($change[5])."',
+				        isColloquial = '".$this->dao->escape($change[6])."',
 				        isHistoric = '".$this->dao->escape($change[7])."'";
 				$res = $this->dao->query($query);
 				if (!$res) {

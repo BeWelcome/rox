@@ -1,7 +1,0 @@
-<map id="LinkModel\getFriendsFull" name="LinkModel\getFriendsFull">
-<area shape="rect" id="node2" href="$class_link_model.html#a913f72f1007a7578d779fe5d3c18e0e5" title="LinkModel\\dbFriendsID" alt="" coords="232,5,387,32"/>
-<area shape="rect" id="node4" href="$class_link_model.html#a5ac93d09dc5fbb2e66e98f22e7840dc6" title="LinkModel\\getMemberdata" alt="" coords="222,56,397,83"/>
-<area shape="rect" id="node6" href="$class_link_model.html#a167d181fc13c0ae650128f5295781915" title="LinkModel\\getMemberID" alt="" coords="228,107,391,133"/>
-<area shape="rect" id="node3" href="$class_rox_model_base.html#aa555ff4841071cf011132ef42ec8b791" title="RoxModelBase\\bulkLookup" alt="" coords="451,31,631,57"/>
-<area shape="rect" id="node5" href="$class_rox_model_base.html#a7b9edf679f49fa2bea9b14d9b0f7a2f3" title="RoxModelBase\\singleLookup" alt="" coords="446,93,637,120"/>
-</map>

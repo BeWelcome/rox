@@ -51,8 +51,7 @@ class InvitePage extends RoxPageView
         $subject = $words->get("MailInviteAFriendSubject", $member->name(),$_SESSION['Username']);
         $urltosignup = PVars::getObj('env')->baseuri.'signup';
         $text = str_replace('<br />','',$words->getFormatted('InviteAFriendStandardText','<a href="'.PVars::getObj('env')->baseuri.'members/'.$_SESSION["Username"].'">'.$_SESSION["Username"].'</a>',$urltosignup));
-        $attach_picture = '';
-        
+
         if (!$memory = $formkit->getMemFromRedirect()) {
             // no memory
         } else {
@@ -66,9 +65,6 @@ class InvitePage extends RoxPageView
                 }
                 if (isset($memory->post['text'])) {
                     $text = $memory->post['text'];
-                }
-                if (isset($memory->post['attach_picture'])) {
-                    $attach_picture = ' checked';
                 }
             }
             
@@ -103,6 +99,23 @@ class InvitePage extends RoxPageView
         );
         
         return $field_values;
+    }
+
+    protected function getStylesheets() {
+        $styleSheets = parent::getStylesheets();
+        $styleSheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
+        $styleSheets[] = 'styles/css/minimal/screen/custom/invite.css';
+        return $styleSheets;
+    }
+
+    public function getLateLoadScriptFiles()
+    {
+        $scripts = parent::getLateLoadScriptfiles();
+        $member = $this->getModel()->getLoggedInMember();
+        if ($member->getPreference("PreferenceDisableTinyMCE", $default = "No") == 'No') {
+            $scripts[] = 'tinymceconfig.js';
+        }
+        return $scripts;
     }
 }
 
@@ -156,9 +169,20 @@ class InviteSentPage extends RoxPageView
         
     }
 
-    
+    protected function getStylesheets() {
+        $styleSheets = parent::getStylesheets();
+        $styleSheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
+        $styleSheets[] = 'styles/css/minimal/screen/custom/invite.css';
+        return $styleSheets;
+    }
+
+    public function getLateLoadScriptFiles()
+    {
+        $scripts = parent::getLateLoadScriptfiles();
+        $member = $this->getModel()->getLoggedInMember();
+        if ($member->getPreference("PreferenceDisableTinyMCE", $default = "No") == 'No') {
+            $scripts[] = 'tinymceconfig.js';
+        }
+        return $scripts;
+    }
 }
-
-
-
-?>

@@ -139,13 +139,13 @@ class MemberPage extends PageWithActiveSkin
         }
         if (MOD_right::get()->HasRight('SafetyTeam') || MOD_right::get()->HasRight('Admin'))
         {
-            $tt[] = array('admin',"members/{$username}/adminedit",'Admin: Edit Profile');
+            $tt[] = array('adminedit',"members/{$username}/adminedit",'Admin: Edit Profile');
         }
         if (MOD_right::get()->HasRight('Rights')) {
-            array_push($tt,array('admin','admin/rights/list/members/'.$username,$ww->AdminRights) ) ;
+            array_push($tt,array('adminrights','admin/rights/list/members/'.$username,$ww->AdminRights) ) ;
         }
         if (MOD_right::get()->HasRight('Flags')) {
-            array_push($tt,array('admin','bw/admin/adminflags.php?username='.$username,$ww->AdminFlags) ) ;
+            array_push($tt,array('adminflags', 'admin/flags/list/members/'. $username, $ww->AdminFlags) ) ;
         }
         if (MOD_right::get()->HasRight('Logs')) {
             array_push($tt,array('admin','bw/admin/adminlogs.php?Username='.$username,$ww->AdminLogs) ) ;
@@ -246,7 +246,8 @@ class MemberPage extends PageWithActiveSkin
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/profile.css?2';
-       return $stylesheets;
+       $stylesheets[] = "styles/css/minimal/screen/custom/select2/select2.css";
+        return $stylesheets;
     }
     
     /*
@@ -264,5 +265,35 @@ class MemberPage extends PageWithActiveSkin
     protected function teaserContent()
     {
 /*        $this->__call('teaserContent', array()); */
+    }
+
+    /*
+     * @return HTML snippet with a form to select the status of a user
+     */
+    public function statusForm($member)
+    {
+        $form = '';
+        if ($this->statuses) {
+            $layoutkit = $this->layoutkit;
+            $formkit = $layoutkit->formkit;
+            $callbackTags = $formkit->setPostCallback('MembersController', 'setStatusCallback');
+            $logged_member = $this->model->getLoggedInMember();
+            if ($logged_member && $logged_member->hasOldRight(array('Admin' => '', 'SafetyTeam' => '', 'Accepter' => '', 'Profile' => ''))) {
+                $form .= '<div><form method="post" name="member-status" id="member-status">' . $callbackTags;
+                $form .= '<input type="hidden" name="member-id" value="' . $member->id . '">';
+                $form .= '<select name="new-status">';
+                foreach ($this->statuses as $status) {
+                    $form .= '<option value="' . $status . '"';
+                    if ($status == $member->Status) {
+                        $form .= ' selected="selected"';
+                    }
+                    $form .= '>' . $this->words->getSilent('MemberStatus' .
+                            $status) . '</option>';
+                }
+                $form .= '</select>&nbsp;&nbsp;<input type="submit" value="Submit"/>';
+                $form .= '</form>' . $this->words->FlushBuffer() . '</div>';
+            }
+        }
+        return $form;
     }
 }

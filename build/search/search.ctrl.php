@@ -159,5 +159,23 @@ class SearchController extends RoxControllerBase
         echo $javascript . "\n";
         exit;
     }
+
+    /**
+     *
+     */
+    public function searchSuggestionsCallback(StdClass $args, ReadOnlyObject $action,
+        ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) {
+
+        $vars = $args->post;
+        $errors = $this->model->checkSuggestionVarsOk($vars);
+        if (count($errors)>0)  {
+            $mem_redirect->vars = $vars;
+            $mem_redirect->errors = $errors;
+            return false;
+        }
+        $mem_redirect->results = $this->model->searchSuggestions($vars['text']);
+        $mem_redirect->vars = $vars;
+        return true;
+    }
 }
 ?>

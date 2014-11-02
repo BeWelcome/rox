@@ -1,7 +1,0 @@
-<map id="sqlCount" name="sqlCount">
-<area shape="rect" id="node2" href="$class_activity.html#a35533f75e07d7623fc141860300d1504" title="Activity\\getActivitiesFor\lMemberCount" alt="" coords="129,5,287,46"/>
-<area shape="rect" id="node3" href="$class_activity.html#ab61432ff36d3ec8e7b846550d175b5fe" title="Activity\\searchActivities\lCount" alt="" coords="129,70,287,111"/>
-<area shape="rect" id="node4" href="$class_rox_entity_base.html#a36832535d804ee9fcf121045e0ba9a74" title="countAll" alt="" coords="173,136,243,163"/>
-<area shape="rect" id="node5" href="$class_rox_entity_base.html#a16cd29d255eb65e1a728d98162080305" title="countWhere" alt="" coords="162,187,254,213"/>
-<area shape="rect" id="node6" href="$class_post.html#a11b188cc58602b684cbd8b3318397e00" title="Post\\getMemberPostCount" alt="" coords="336,187,515,213"/>
-</map>

@@ -53,10 +53,10 @@ class GeoModel extends RoxModelBase {
             $alternateName = $this->singleLookup(
                 "
                 SELECT *
-                FROM `geonames_alternate_names`
+                FROM `geonamesalternatenames`
                 WHERE `geonameId` = '".$geonameId."'
                 AND `isoLanguage` = '".$lang."'
-                ORDER BY `isPreferredName`
+                ORDER BY `isPreferred`
                 ");
         }
         // var_dump ($alternateName);

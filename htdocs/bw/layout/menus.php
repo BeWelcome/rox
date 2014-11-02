@@ -58,13 +58,13 @@ function Menu1_old($link = "", $tt = "") {
     }
 	
 	if (IsLoggedIn('NeedMore,Pending')) {
-	    echo "        <span><img src=\"" . PVars::getObj('env')->baseuri . "styles/css/minimal/images/icon_grey_mail.png\" alt=\"mymessages\" /><a href=\"" . PVars::getObj('env')->baseuri . "messages\">" . ww("Mymessages") . "</a></span>\n";
-	    echo "        <span><img src=\"" . PVars::getObj('env')->baseuri . "styles/css/minimal/images/icon_grey_pref.png\" alt=\"mypreferences\" /><a href=\"" . PVars::getObj('env')->baseuri . "mypreferences\">" . ww("MyPreferences") . "</a></span>\n";
-	    echo "        <span><img src=\"" . PVars::getObj('env')->baseuri . "styles/css/minimal/images/icon_grey_logout.png\" alt=\"logout\" /> <a href=\"" . PVars::getObj('env')->baseuri . "user/logout\" id='header-logout-link'>", ww("Logout"), "</a></span>\n";
+	    echo '        <span><img src="' . bwlink('styles/css/minimal/images/icon_grey_mail.png', true) . '" alt="' . ww('MyMessages') . '" /><a href="messages">' . ww('Mymessages') . '</a></span>' . "\n";
+	    echo '        <span><img src="' . bwlink('styles/css/minimal/images/icon_grey_pref.png', true ) . '" alt="' . ww('mypreferences') . '" /><a href="mypreferences">' . ww("MyPreferences") . '</a></span>' . "\n";
+	    echo '        <span><img src="' . bwlink('styles/css/minimal/images/icon_grey_logout.png', true) . '" alt="' . ww('logout') . '" /> <a href="user/logout" id="header-logout-link">' . ww("Logout") . '</a></span>' . "\n";
 	} else {
 	    // menu_link($link, "index.php", ww("Login"));
-	    echo "        <span><img src=\"" . PVars::getObj('env')->baseuri . "styles/css/minimal/images/icon_grey_logout.png\" alt=\"logout\" /><a href=\"" . PVars::getObj('env')->baseuri . "logout\">" . ww("Login") . "</a></span>\n";
-	    echo "<span><a href=\"" . PVars::getObj('env')->baseuri . "signup\">", ww("Signup"), "</a></span>\n";
+	    echo '        <span><img src="' . bwlink('styles/css/minimal/images/icon_grey_logout.png') . '" alt="' . ww ('logout') . '" /><a href="logout">' . ww("Login") . '</a></span>' . "\n";
+	    echo '<span><a href="signup">' . ww("Signup") . '</a></span>'. "\n";
 	}
 ?>
     </div> <!-- topnav -->
@@ -269,17 +269,27 @@ function VolMenu($link = "", $tt = "") {
 		$res .= " title=\"managing comments\">AdminComments</a></li>\n";
 	}
 
-	if (HasRight("Pannel")) {
-		$res .= "<li><a";
-		if ($link == "admin/adminpanel.php") {
-			$res .= " id=current ";
-		} else {
-			$res .= " href=\"".bwlink("admin/adminpanel.php")."\" method=post ";
-		}
-		$res .= " title=\"managing Panel\">AdminPanel</a></li>\n";
-	}
+    if (HasRight("NewMembersBeWelcome") || HasRight("SafetyTeam") || HasRight("Admin")) {
+        $res .= "<li><a";
+        if ($link == "admin/newmembers") {
+            $res .= " id=current ";
+        } else {
+            $res .= " href=\"admin/newmembers\" method=post ";
+        }
+        $res .= " title=\"Greet new members\">AdminPanel</a></li>\n";
+    }
 
-	if (HasRight("AdminFlags")) {
+    if (HasRight("Pannel")) {
+        $res .= "<li><a";
+        if ($link == "admin/adminpanel.php") {
+            $res .= " id=current ";
+        } else {
+            $res .= " href=\"".bwlink("admin/adminpanel.php")."\" method=post ";
+        }
+        $res .= " title=\"managing Panel\">AdminPanel</a></li>\n";
+    }
+
+    if (HasRight("AdminFlags")) {
 		$res .= "<li><a";
 		if ($link == "admin/adminflags.php") {
 			$res .= " id=current ";

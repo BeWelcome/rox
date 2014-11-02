@@ -38,9 +38,6 @@ class AdminTreasurerModel extends RoxModelBase {
                 $vars['DonatedOn'] = date('YmdHis', $start);
             }
         }
-        if (is_numeric($vars['donate-country'])) {
-            $errors[] = 'AdminTreasurerNoCountry';
-        }
         return $errors;
     }
 
@@ -57,7 +54,7 @@ class AdminTreasurerModel extends RoxModelBase {
         if ($cc) {
             return $cc->geonameid;
         }
-        return false;
+        return 0;
     }
 
     public function getCountryCodeForGeonameId($geonameid) {

@@ -99,10 +99,10 @@ class MembersController extends RoxControllerBase
                         case 'profile':
                         case '':
                         case false:
-                            $page = new BootstrapProfilePage();
+                            $page = new ProfilePage();
                             break;
                         default:
-                            $page = new BootstrapProfilePage();
+                            $page = new ProfilePage();
                             $this->model->set_profile_language($request[2]);
                             break;
                     }
@@ -159,7 +159,7 @@ class MembersController extends RoxControllerBase
                 break;
             case 'self':
             case 'myself':
-                $page = new BootstrapProfilePage;
+                $page = new ProfilePage;
                 break;
             case 'my':
                 switch (isset($request[1]) ? $request[1] : false) {
@@ -174,7 +174,7 @@ class MembersController extends RoxControllerBase
                         return;
                     case 'profile':
                     default:
-                        $page = new BootstrapProfilePage;
+                        $page = new ProfilePage;
                 }
                 break;
             case 'flagcomment':
@@ -377,7 +377,7 @@ class MembersController extends RoxControllerBase
                             if ($hideProfile) {
                                 $page = new InactiveProfilePage();
                             } else {
-                                $page = new BootstrapProfilePage();
+                                $page = new ProfilePage();
                                 $page->statuses = $this->model->getStatuses();
                             }
 
@@ -387,7 +387,7 @@ class MembersController extends RoxControllerBase
                             if ($hideProfile) {
                                 $page = new InactiveProfilePage();
                             } else {
-                                $page = new BootstrapProfilePage();
+                                $page = new ProfilePage();
                                 $this->model->set_profile_language($request[2]);
                                 $page->statuses = $this->model->getStatuses();
                             }

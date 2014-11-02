@@ -423,7 +423,7 @@ class ForumNotificationMailbot extends Mailbot
             $NotificationType = '';
             break ;
         case 'reply':
-            $NotificationType = 'Re';
+            $NotificationType = 'Re: ';
             break ;
         case 'moderatoraction':
         case 'deletepost':
@@ -438,26 +438,22 @@ class ForumNotificationMailbot extends Mailbot
             break ;
         }
 
-        $msg['subject'] = $NotificationType.": ".$post->thread_title;
+        $msg['subject'] = $NotificationType . $post->thread_title;
         if ($post->groupId) {
             $msg['subject'] .= ' [' . $this->_getGroupName($post->groupId)->Name . ']';
         }
 
         $text ='<table border="0" cellpadding="0" cellspacing="10" style="margin: 20px; background-color: #fff; font-family:Arial, Helvetica, sans-serif; font-size:12px; color: #333;">' ;
-        $text.='<tr><th colspan="2"  align="left"><a href="'.$this->baseuri.'forums/s'.$post->IdThread.'">'.$post->thread_title.'</a></th></tr>' ;
-        $text.='<tr><td colspan="2">from: <a href="'.$this->baseuri.'members/'.$author->Username.'">'.$author->Username.'</a> ('.$author->City.', '.$author->Country.')</td></tr>' ;
-        $text.='<tr><td valign="top">';
-
-        $PictureFilePath = $this->baseuri.'members/avatar/'.$author->Username ;
-        $text .= '<img alt="picture of '.$author->Username.'" src="'.$PictureFilePath.'"/>';
-        $text .= '</td><td>'.$post->message.'</td></tr>';
+        $text.='<tr><th align="left"><a href="'.$this->baseuri.'forums/s'.$post->IdThread.'">'.$post->thread_title.'</a></th></tr>' ;
+        $text.='<tr><td align="left">from: <a href="'.$this->baseuri.'members/'.$author->Username.'">'.$author->Username.'</a> ('.$author->City.', '.$author->Country.')</td></tr>' ;
+        $text.='<tr><td>'.$post->message.'</td></tr>';
 
         $UnsubscribeLink = $this->_buildUnsubscribeLink($notification, $language);
         if ($UnsubscribeLink!="") {
-            $text .= '<tr><td colspan="2">'.$UnsubscribeLink.'</td></tr>';
+            $text .= '<tr><td>'.$UnsubscribeLink.'</td></tr>';
         } else {
             // This case should be for moderators only
-            $text .= '<tr><td colspan="2"> IdPost #'.$notification->IdPost.' action='.$NotificationType.'</td></tr>';
+            $text .= '<tr><td> IdPost #'.$notification->IdPost.' action='.$NotificationType.'</td></tr>';
         }
         $text .= '</table>';
 

@@ -101,9 +101,6 @@ bwrox.selectScripts([
         // JQuery has to be included before prototype to avoid conflicts
     min: true,
     file: "jquery-1.11.0.js",
-            "signup/2",
-            "signup/4",
-            "editmyprofile",
     },
     {
         // complete jquery ui with theme smoothness

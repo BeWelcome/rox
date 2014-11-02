@@ -109,6 +109,10 @@ class MOD_htmlpure
         return self::getSophisticatedHtmlPurifier();
     }
 
+    public function getMessagesHtmlPurifier() {
+        return self::getSophisticatedHtmlPurifier();
+    }
+
     public function getForumsHtmlPurifier() {
         // allow tables in forum posts to be able to format the suggestion results nicely
         // don't offer tables in TinyMCE for now

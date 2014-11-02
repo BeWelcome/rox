@@ -1,4 +1,5 @@
-class MustloginPage extends MessagesBasePage
+<?php
+class MessagesMustloginPage extends MessagesBasePage
 {
     private $_redirect_url = 'messages';
 

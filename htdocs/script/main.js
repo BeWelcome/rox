@@ -192,7 +192,7 @@ bwrox.selectScripts([
         ]
   },
     {
-        file: "registerrox.js?1",
+        file: "registerrox.js?2",
         pages: [
             "signup"
         ]
@@ -204,7 +204,7 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "tinymce/tinymce.min.js",
+        file: "tinymce-4.0.28/tinymce.min.js",
         pages: [
             "activities",
             "blog",

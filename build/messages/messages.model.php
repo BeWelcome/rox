@@ -524,7 +524,7 @@ WHERE id = ".$input['receiver_id']."
             }
             // make sure that the text only contains valid HTML
             $purifier = new MOD_htmlpure();
-            $purifier = $purifier->getAdvancedHtmlPurifier();
+            $purifier = $purifier->getMessagesHtmlPurifier();
             $input['text'] = $purifier->purify($html);
 
             if (!isset($input['draft_id'])) {

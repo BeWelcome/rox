@@ -1076,6 +1076,12 @@ form .date {
 */
   font-size: 1.1em;
 }
+#messagecontent ol li {
+  list-style-type: decimal !important;
+}
+#messagecontent ul li {
+  list-style-type: disc !important;
+}
 #messageside {
   width: 22em;
   text-align: right;

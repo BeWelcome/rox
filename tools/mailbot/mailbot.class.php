@@ -491,9 +491,9 @@ class ForumNotificationMailbot extends Mailbot
             $msg = $this->_buildMessage($notification, $post, $author, $MemberIdLanguage);
 
             if ($post->groupId) {
-                $from = array('group@bewelcome.org' => '"BW ' . $recipient->Username . '"');
+                $from = array('group@bewelcome.org' => '"BW ' . $author->Username . '"');
             } else {
-                $from = array('forum@bewelcome.org' => '"BW ' . $recipient->Username . '"');
+                $from = array('forum@bewelcome.org' => '"BW ' . $author->Username . '"');
             }
 
             $to = $this->getEmailAddress($recipient);

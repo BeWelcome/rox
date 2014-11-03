@@ -51,7 +51,7 @@ _{WIKIDUMP}
 <form action="$url" method="POST" enctype="multipart/form-data">
 <input type="hidden" name="dump_id" value="$id">
 <input type="hidden" name="dump_depth" value=1>
-<input type="submit" name="download_tarball" value= "_{DOWNLOAD_ARCHIVE}">
+<input type="submit" class="button" name="download_tarball" value= "_{DOWNLOAD_ARCHIVE}">
 <br /><br />
 <input type="checkbox" name="dump_images" value="1" checked> _{with images}<br />
 <input type="hidden" name="dump_fullhtml" value="1">

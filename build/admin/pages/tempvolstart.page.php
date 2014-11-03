@@ -42,11 +42,10 @@ class TempVolStartPage extends AdminBasePage
         return "<a href='admin'>{$this->words->get('VolunteerPage')}</a>";
     }
     
-    protected function getStylesheets() 
+        protected function getColumnNames()
     {
-       $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
-       return $stylesheets;
+        // we don't need the other columns
+        return array('col3');
     }
     
     protected function column_col3() {

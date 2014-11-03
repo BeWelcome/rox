@@ -60,8 +60,8 @@ then replace with string<br />
 <small>can contain backreferences \1 and \$1 if the regex search field was
 used</small><br />
 <br />
-<input type="submit" name="snr_test" value="dry run / test regex"> &nbsp;
-<input type="submit" name="snr_go" value="Replace All">
+<input type="submit" class="button" name="snr_test" value="dry run / test regex"> &nbsp;
+<input type="submit" class="button" name="snr_go" value="Replace All">
 </form>
 <br />
 <br />
@@ -145,7 +145,7 @@ END
          }
 
          if ($save) {
-            $o .= "· <a href=\"" . ewiki_script("", $id) . "\">" . htmlentities($id)
+            $o .= "ï¿½ <a href=\"" . ewiki_script("", $id) . "\">" . htmlentities($id)
                . "</a> matched given search pattern<br />\n";
             if ($do) {
                $row["lastmodified"] = time();

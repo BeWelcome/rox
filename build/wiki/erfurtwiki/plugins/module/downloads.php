@@ -70,10 +70,10 @@ $ewiki_t["en"]["DWNL_ENTRY_FORMAT"] =
 $ewiki_t["de"]["UPLOAD0"] = "Mit diesem Formular kannst du beliebige Dateien in das Wiki abspeichern:<br />";
 $ewiki_t["de"]["UPL_NEWNAM"] = "Mit unterschiedlichem Dateinamen speichern";
 $ewiki_t["de"]["UPL_INSECT"] = "Hochladen in Bereich:";
-$ewiki_t["de"]["UPL_TOOLARGE"] = "Deine Datei wurde nicht aufgenommen, weil sie zu groß war!";
-$ewiki_t["de"]["UPL_REJSECT"] = 'Der angegebene Download-Bereich "$sect" wird nicht verwendet. Bitte verwende einen von den voreingestellten Bereichen, damit Andere die Datei später auch finden können, oder frag den Administrator das Hochladen für beliebige Seiten zu aktivieren.<br /><br />';
+$ewiki_t["de"]["UPL_TOOLARGE"] = "Deine Datei wurde nicht aufgenommen, weil sie zu groï¿½ war!";
+$ewiki_t["de"]["UPL_REJSECT"] = 'Der angegebene Download-Bereich "$sect" wird nicht verwendet. Bitte verwende einen von den voreingestellten Bereichen, damit Andere die Datei spï¿½ter auch finden kï¿½nnen, oder frag den Administrator das Hochladen fï¿½r beliebige Seiten zu aktivieren.<br /><br />';
 $ewiki_t["de"]["UPL_OK"] = "Deine Datei wurde korrekt hochgeladen, sehe einfach auf der <a href=\"\$script\">".EWIKI_PAGE_DOWNLOAD."</a> nach.<br /><br />";
-$ewiki_t["de"]["UPL_ERROR"] = "'Tschuldige, aber irgend etwas ist während des Hochladens gründlich schief gelaufen.<br /><br />";
+$ewiki_t["de"]["UPL_ERROR"] = "'Tschuldige, aber irgend etwas ist wï¿½hrend des Hochladens grï¿½ndlich schief gelaufen.<br /><br />";
 $ewiki_t["de"]["DWNL_SEEUPL"] = 'Siehe auch <a href="$script'.EWIKI_PAGE_UPLOAD.'">DateiHochladen</a>, auf dieser Seite stehen nur die Downloads.<br /><br />';
 $ewiki_t["de"]["DWNL_NOFILES"] = "Noch keine Dateien hochgeladen.<br />\n";
 $ewiki_t["de"]["file"] = "Datei";
@@ -106,7 +106,7 @@ function ewiki_page_fileupload($id, $data, $action, $def_sec="") {
             ewiki_script( ($action!="view" ? $action : ""), $id).
             '" method="POST" enctype="multipart/form-data">' .
             '<b>'.ewiki_t("file").'</b><br /><input type="file" name="'.EWIKI_UP_UPLOAD.'"><br /><br />' .
-            '<input type="submit" value="' . EWIKI_PAGE_UPLOAD . '"><br /><br />';
+            '<input type="submit" class="button" value="' . EWIKI_PAGE_UPLOAD . '"><br /><br />';
 
       $o .= '<b>' . ewiki_t("comment") . '</b><br /><textarea name="comment" cols="35" rows="3"></textarea><br /><br />';
 

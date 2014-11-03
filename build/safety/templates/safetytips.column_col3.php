@@ -1,4 +1,4 @@
-<div class="row">
+<div class="bw-row">
     <div class="subcolumns">
         <div class="c50l">
             <div class="subcl">

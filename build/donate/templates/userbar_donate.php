@@ -18,7 +18,7 @@ if ($TDonationArray) {
     //if ($TextState > 160) $TextState = 160;
     $TextState= 5;
 ?>
-<div class="row">
+<div class="bw-row">
     <table>
         <tr>
             <td style="padding-left:0">

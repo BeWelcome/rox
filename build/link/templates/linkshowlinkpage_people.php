@@ -31,7 +31,7 @@ $words = new MOD_words();
         <h3><?php  echo $words->get('LinksBewteen',$mem_redirect->from,$mem_redirect->to);?></h3>
 <?php foreach ($linksData as $row) {
 ?>		
-        <div class="floatbox">
+        <div class="clearfix">
 	
 <?php	foreach ($row as $e) {
 	$m=$e['memberdata'] ;
@@ -70,7 +70,7 @@ $words = new MOD_words();
             </div> <!-- float_left -->
 
 	<?php } ?>
-        </div> <!-- floatbox -->
+        </div> <!-- clearfix -->
 <?php } ?>		
       </div> <!-- info index -->
   </div> <!-- index row2 -->

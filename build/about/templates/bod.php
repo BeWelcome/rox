@@ -49,7 +49,7 @@ $words = new MOD_words();
 </div>
 
 <h3><?php echo $words->get('BoD_TheBoardMembers'); ?></h3>
-<ul class="floatbox">
+<ul class="clearfix">
     <li class="userpicbox_big float_left"><h4><a href="members/thorgal67"><img src="http://www.bewelcome.org/members/avatar/thorgal67" class="framed float_left" style="height:70px; width: 70px;" alt="Frank" />Frank</a><br /><span class="small"><?php echo $words->get('BoD_RoleOfThorgal67'); ?></span></h4>
     <p>
     <a href="javascript:;" id="infocol1" onclick="new Effect.BlindUp('info1', {duration: .3}); $('infocol1', 'infoexp1').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;">&lt;&lt; hide info</a> <a id="infoexp1" href="javascript:;" onclick="new Effect.BlindDown('info1', {duration: .3}); $('infocol1', 'infoexp1').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> &gt;&gt;</a>

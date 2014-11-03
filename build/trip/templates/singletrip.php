@@ -8,7 +8,7 @@
  * 
  */
 ?>
-<div class="floatbox">
+<div class="clearfix">
 
 <?php
 if (isset($trip_data[$trip->trip_id])) {

@@ -18,7 +18,7 @@ function ewiki_edit_form_append_delete($id, $data, $action)
 {     
     return <<<END
 <script type="text/javascript" language="JavaScript"><!--
-document.write('<br /><input type="submit" name="save" id="save" value="Delete Page" onClick="document.ewiki.content.value=&quot;DeleteMe&quot;;" />');
+document.write('<br /><input type="submit" class="button" name="save" id="save" value="Delete Page" onClick="document.ewiki.content.value=&quot;DeleteMe&quot;;" />');
 --></script>
 END;
 }

@@ -60,7 +60,7 @@ the "LAST minus 10"-th version.
 
      echo '
 </table>
-<br><input type="submit" value="strip page versions"><br>
+<br><input type="submit" class="button" value="strip page versions"><br>
 </form>
 <br>
 [<a href="javascript:sel_all();">select all</a>]

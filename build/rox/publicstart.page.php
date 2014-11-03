@@ -3,6 +3,9 @@
 
 class PublicStartpage extends RoxPageView
 {
+protected function topnav() {
+
+    }
 
     protected function getStylesheets()
     {

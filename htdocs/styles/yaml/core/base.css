@@ -153,7 +153,7 @@
 
   /* (en) overflow method for clearing floats */
   /* (de) Overflow-Methode zum Clearen der Float-Umgebungen */
-  .floatbox { overflow:hidden; }
+  .clearfix { overflow:hidden; }
 
   /* (en) IE-Clearing: Only used in Internet Explorer, switched on in iehacks.css */
   /* (de) IE-Clearing: Benötigt nur der Internet Explorer und über iehacks.css zugeschaltet */

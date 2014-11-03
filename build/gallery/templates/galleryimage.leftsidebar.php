@@ -23,7 +23,7 @@ $Previous = $this->previous;
 $Next = $this->next;
 $userpic = MOD_layoutbits::PIC_30_30($d->user_handle,'',$style='float_left');
 echo <<<HTML
-    <div class="floatbox" style="padding-top: 30px;">
+    <div class="clearfix" style="padding-top: 30px;">
         {$userpic}
         {$words->flushBuffer()}
         <h3><a href="gallery/show/user/{$image->user_handle}">{$words->getFormatted('galleryUserOthers',$image->user_handle)}</a></h3>
@@ -35,12 +35,12 @@ $SetId = false;
 require_once 'surrounditems_small.php';
 
 if ($this->gallery) {
-    echo '<div class="floatbox" style="padding-top: 30px;"><h3 class="borderless">'.$words->getFormatted('Belongs to album').'</h3>';
+    echo '<div class="clearfix" style="padding-top: 30px;"><h3 class="borderless">'.$words->getFormatted('Belongs to album').'</h3>';
     echo '<a href="gallery/show/sets/'.$this->gallery->id.'">'.htmlspecialchars($this->gallery->title).'</a>
     </div>';
 }
 $d = $image;
-echo '    <div class="floatbox" style="padding-top: 30px;">
+echo '    <div class="clearfix" style="padding-top: 30px;">
 <h3 class="borderless">'.$words->getFormatted('GalleryImageAdditionalInfo').'</h3>';
 echo '  
     <p class="small" title="'.$d->created.'">'.$words->get('created').': '.$layoutbits->ago(strtotime($d->created)).'</br>'.$words->getFormatted('by').' <a href="members/'.$d->user_handle.'">'.$d->user_handle.'</a></p>

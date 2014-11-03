@@ -21,16 +21,16 @@ if ($this->hasSuggestionRight) : ?>
     <div class="subcolumns">
         <div class="c62l">
             <div class="subcl">
-                <div class="row">
+                <div class="bw-row">
                     <form method="post" id="suggestion-approve-form">
                         <?php echo $callbackTags; ?>
                         <input type="hidden" id="suggestion-id"
                             name="suggestion-id" value="<?php echo $this->suggestion->id; ?>" />
-                        <input type="submit" id="suggestion-approve"
+                        <input type="submit" class="button" id="suggestion-approve"
                             name="suggestion-approve"
                             value="<?php echo $words->getSilent('SuggestionsSubmitApprove'); ?>"
                             class="submit" /><?php echo $words->flushBuffer(); ?>
-                        <input type="submit" id="suggestion-duplicate"
+                        <input type="submit" class="button" id="suggestion-duplicate"
                             name="suggestion-duplicate"
                             value="<?php echo $words->getSilent('SuggestionsSubmitDuplicate'); ?>"
                             class="submit" /><?php echo $words->flushBuffer(); ?>

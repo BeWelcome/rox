@@ -51,7 +51,7 @@ $map_conf = PVars::getObj('map');
 
         <legend><?php echo $words->get('Location'); ?></legend>
 
-        <div class="floatbox" id="geoselectorjs" style="display: none;" >
+        <div class="clearfix" id="geoselectorjs" style="display: none;" >
 
             <div class="subcolumns">
               <div class="c50l">
@@ -144,7 +144,7 @@ $map_conf = PVars::getObj('map');
     <input type="hidden" name="newgeo" id="newgeo" value="0" />
 
   <div id="submit_button" style="display: none;">
-    <input type="submit" value="<?php echo $words->get('Save Location'); ?>" class="button"
+    <input type="submit" class="button" value="<?php echo $words->get('Save Location'); ?>" class="button"
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
     />
   </div>

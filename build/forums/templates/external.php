@@ -32,7 +32,7 @@ $layoutbits = new MOD_layoutbits();
     if ($threads = $boards->getThreads()) {
 ?>
 
-<table class="forumsboardthreads floatbox">
+<table class="forumsboardthreads clearfix">
 
 <?php 
 $threadsliced = array_slice($threads, 0, 5);
@@ -91,11 +91,11 @@ $threadsliced = array_slice($threads, 0, 5);
 
     if ($showNewTopicButton && $User && $uri != 'forums/') {
     ?>
-    <div id="boardnewtopicbottom"><a class="button" href="<?php echo $this->uri; ?>new
+    <div id="boardnewtopicbottom"><a class="button" role="button" href="<?php echo $this->uri; ?>new
     <?php 
     if (!empty($this->_model->IdGroup)) echo "/u" . $this->_model->IdGroup ;
-    echo "\"><span>",$words->getBuffered('ForumNewTopic');
-    ?></span></a><?php echo $words->flushBuffer(); ?></div>
+    echo "\">",$words->getBuffered('ForumNewTopic');
+    ?></a><?php echo $words->flushBuffer(); ?></div>
     <?php
     }
 

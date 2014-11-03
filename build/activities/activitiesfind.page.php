@@ -34,7 +34,7 @@ class ActivitiesFindPage extends ActivitiesBasePage
     protected function column_col3()
     {
         $words = $this->getWords();
-        echo '<div class="row"><h3>Upcoming Activities</h3>';
+        echo '<div class="bw-row"><h3>Upcoming Activities</h3>';
         echo '<table class="forumsboardthreads">';
         echo '<tr>';
         echo '<th>Category</th>';
@@ -65,9 +65,9 @@ class ActivitiesFindPage extends ActivitiesBasePage
         }
         echo '</table>';
         echo '</div>';
-        echo '<div id="boardnewtopicbottom"><span class="button"><a href="Activities/create">New event</a></span></div>';
+        echo '<div id="boardnewtopicbottom"><a class="button" role="button" href="Activities/create">New event</a></div>';
         echo '
-<div class="pages">
+<div class="pages clearfix">
 	<ul>
 		<li>
 

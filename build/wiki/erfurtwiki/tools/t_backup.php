@@ -54,7 +54,7 @@
      <input type="checkbox" name="force" value="1"> <b>enforce</b>, override problems (use this only if first try failed)<br>
      <br>
 
-     <input type="submit" name="backup" value="backup">
+     <input type="submit" class="button" name="backup" value="backup">
      <br><br>
 
     </form>

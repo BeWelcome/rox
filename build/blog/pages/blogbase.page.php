@@ -108,10 +108,6 @@ class BlogBasePage extends PageWithActiveSkin
     {
         $array = parent::getStylesheets();
         $array[] = "styles/css/minimal/screen/custom/blog.css?3";
-        if (!$this->member)
-        {
-            $array[] = "styles/css/minimal/screen/custom/bw_basemod_blog_public.css";
-        }
         return $array;
     }
 

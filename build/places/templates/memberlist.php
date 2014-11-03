@@ -34,7 +34,7 @@ if (!$this->members) {
     $pager = new PagerWidget($params);
 
     // show members if there are any to show
-    echo '<ul class="floatbox">';
+    echo '<ul class="clearfix">';
     foreach ($this->members as $member) {
         $image = new MOD_images_Image('',$member->username);
         if ($member->HideBirthDate=="No") {

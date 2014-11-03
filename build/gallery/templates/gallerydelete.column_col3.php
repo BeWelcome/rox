@@ -4,4 +4,4 @@
 
 ?>
     <p><?=$words->get('DeleteAlbumSure', htmlspecialchars($this->gallery->title))?></p>
-    <p><a class="button" href="gallery/show/sets/<?=$this->gallery->id?>/delete/true" ><?=$words->get('Yep, just delete it!')?></a> <a class="button" href="gallery/show/sets/<?=$this->gallery->id?>" ><?=$words->get('Cancel')?></a></p>
+    <p><a class="button" role="button" href="gallery/show/sets/<?=$this->gallery->id?>/delete/true" ><?=$words->get('Yep, just delete it!')?></a> <a class="button" role="button" href="gallery/show/sets/<?=$this->gallery->id?>" ><?=$words->get('Cancel')?></a></p>

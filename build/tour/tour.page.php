@@ -15,12 +15,6 @@ class TourPage extends PageWithActiveSkin
         $stylesheets[] = 'styles/css/minimal/screen/custom/lightview.css';
         return $stylesheets;
     }
-    
-    protected function getStylesheetPatches()
-    {
-        $stylesheet_patches[] = 'styles/YAML/patches/patch_2col_left_seo.css';
-        return $stylesheet_patches;
-    }
 
     protected function getPageTitle()
     {
@@ -31,7 +25,7 @@ class TourPage extends PageWithActiveSkin
     {
         $words = $this->getWords();
         ?>
-        <div id="teaser" class="clearfix">
+        <div id="teaser" class="page-teaser clearfix">
         <h1><a href="tour"><?= $words->get("TheTour");?></a> 
         <?php 
         switch ($this->page_number) {
@@ -57,7 +51,7 @@ class TourPage extends PageWithActiveSkin
         
     }
     
-    protected function column_col2()
+    protected function column_col1()
     {
         $request = PRequest::get()->request;
         if (!isset($request[1]) || $request[1]== '')

@@ -17,7 +17,13 @@ class PageWithRoxLayout extends PageWithHTML
     {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/minimal.css?1';
-        return $stylesheets;
+        $stylesheets[] = 'styles/css/bewelcome.css?1';
+        if (PVars::getObj('development')->uncompress_css != 1) {
+            $stylesheets = str_replace(".css", ".min.css", $stylesheets);
+            return $stylesheets;
+        } else {
+            return $stylesheets;
+        }
     }
 
     protected function getPage_meta_keyword()
@@ -72,7 +78,7 @@ class PageWithRoxLayout extends PageWithHTML
     protected function getStylesheetPatches()
     {
         $stylesheet_patches = parent::getStylesheetPatches();
-        $stylesheet_patches[] = 'styles/css/minimal/patches/iehacks_3col_vlines.css';
+        //$stylesheet_patches[] = 'styles/css/minimal/patches/iehacks_3col_vlines.css';
         return $stylesheet_patches;
     }
 
@@ -88,10 +94,6 @@ class PageWithRoxLayout extends PageWithHTML
             $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
             $items[] = array('profile', 'members/'.$username, $username, true);
         }
-        // $items[] = array('searchmembers', 'searchmembers/index', 'FindMembers');
-        // $items[] = array('forums', 'forums', 'Community');
-        // $items[] = array('groups', 'bw/groups.php', 'Groups');
-        // $items[] = array('gallery', 'gallery', 'Gallery');
         $items[] = array('getanswers', 'about', 'GetAnswers');
         $items[] = array('findhosts', 'findmembers', 'FindHosts');
         $items[] = array('explore', 'explore', 'Explore');
@@ -106,7 +108,7 @@ class PageWithRoxLayout extends PageWithHTML
      * Override this method to define which of the top menu items is active, e.g.
      * return 'forums';
      */
-    protected function getTopmenuActiveItem() {
+   protected function getTopmenuActiveItem() {
         return 0;
     }
 
@@ -129,6 +131,14 @@ class PageWithRoxLayout extends PageWithHTML
     protected function topnav()
     {
         $words = $this->getWords();
+        $model = new VolunteerbarModel();
+        $numberPersonsToBeAccepted = $model->getNumberPersonsToBeAccepted() ;
+        $numberReportedComments = $model->getNumberReportedComments();
+        $numberPersonsToBeChecked = $model->getNumberPersonsToBeChecked() ;
+        $numberSpamToBeChecked = $model->getNumberSpamToBeChecked() ;
+        $numberPersonsToAcceptInGroup = $model->getNumberPersonsToAcceptInGroup() ;
+        $R = MOD_right::get();
+        
         $logged_in = APP_User::IsBWLoggedIn("NeedMore,Pending");
         if (!$logged_in) {
             $request = PRequest::get()->request;
@@ -149,10 +159,18 @@ class PageWithRoxLayout extends PageWithHTML
                 $IdMember = intval($_SESSION["IdMember"]);
                 $roxmodel = new Rox();
                 $numberOfNewMessagees = $roxmodel->getNewMessagesNumber($IdMember);
+                if ($numberOfNewMessagees > 0) {
+                    $envelopestyle = "fa fa-envelope"; 
+                    $nbOfNewMessagees = "(" . intval($numberOfNewMessagees) . ")";
+                    echo $words->flushBuffer();
+                } else {
+                    $envelopestyle = "fa fa-envelope-o";
+                    $nbOfNewMessagees = '';
+                }
             }
         }
 
-        if (class_exists('MOD_online')) {
+        /*if (class_exists('MOD_online')) {
             $who_is_online_count = MOD_online::get()->howManyMembersOnline();
         } else {
             // echo 'MOD_online not active';
@@ -161,8 +179,7 @@ class PageWithRoxLayout extends PageWithHTML
             } else {
                 $who_is_online_count = 0;
             }
-        }
-
+        }*/
         require TEMPLATE_DIR . 'shared/roxpage/topnav.php';
     }
 

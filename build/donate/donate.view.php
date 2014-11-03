@@ -16,7 +16,7 @@ class DonateView extends PAppView
     public function ShowSimpleTeaser($title)
     {
         $words = new MOD_words();
-        echo '<div id="teaser" class="clearfix">';
+        echo '<div id="teaser" class="page-header clearfix">';
         echo '<h1>'.$words->getFormatted($title).'</h1>';
         echo '</div>';
     }
@@ -35,7 +35,6 @@ class DonateView extends PAppView
     }
 
     public function submenu($sub) {
-//       $Stat=$this->_model->getStatForDonations() ;
         require 'templates/submenu_donate.php';
     }
 }

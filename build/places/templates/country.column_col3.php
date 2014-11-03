@@ -3,7 +3,7 @@
     <?php
     define('MINROWS',5); // minimum number of rows to be used before next column
     define('MAXCOLS',4); // maximum number columns before extending rows beyound MINROWS
-    echo '<div id="places" class="floatbox places">';
+    echo '<div id="places" class="clearfix places">';
     echo '<ul class="float_left">';
     $listcnt = 0;
     $memberCount = 0;

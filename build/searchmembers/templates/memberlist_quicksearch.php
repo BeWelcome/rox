@@ -2,12 +2,12 @@
 $words = new MOD_words();
 ?>
 <div id="nextmap">
-<p class="floatbox">
+<p class="clearfix">
     <a <?php if ($mapstyle=='mapon') { ?> href="searchmembers/mapoff" <?php } ?> class="small <?php if ($mapstyle=='mapoff') echo 'active'; ?> float_right">
     <img src="images/misc/list6<?php if ($mapstyle=='mapoff') echo '_green'; ?>.gif" class="list-icon"> <?php echo $words->getFormatted('searchmembersViewText');  ?> &nbsp;
     </a>
 </p>
-<p class="floatbox">
+<p class="clearfix">
     <a <?php if ($mapstyle=='mapoff') { ?> href="searchmembers/mapon" <?php } ?> class="small <?php if ($mapstyle=='mapon') echo 'active'; ?> float_right">
     <img src="images/misc/list-map<?php if ($mapstyle=='mapon') echo '_green'; ?>.gif" class="list-icon"> <?php echo $words->getFormatted('searchmembersViewMap');  ?> &nbsp;
     </a>

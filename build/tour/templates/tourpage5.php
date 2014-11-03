@@ -27,7 +27,7 @@ $words = new MOD_words();
     <h3><?php echo $words->get('tour_trips')?></h3>
         
     <h4><?php echo $words->getFormatted('tour_trips_title1')?></h4>
-    <div class="floatbox">
+    <div class="clearfix">
         <img src="images/tour/trips-example.png" class="float_left" alt="trips" />
         <p><?php echo $words->getFormatted('tour_trips_text1')?></p>
     </div>
@@ -36,6 +36,6 @@ $words = new MOD_words();
     <p><?php echo $words->getFormatted('tour_trips_text2')?></p>
     <h4><?php echo $words->getFormatted('tour_trips_title3')?></h4>
     <p><?php echo $words->getFormatted('tour_trips_text3')?></p>
-    <a class="bigbutton" href="tour/maps" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_goNext')?> &raquo; <?php echo $words->getFormatted('tour_link_maps')?></span></a> 
+    <a class="button" href="tour/maps" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_goNext')?> &raquo; <?php echo $words->getFormatted('tour_link_maps')?></span></a> 
 </div>
         

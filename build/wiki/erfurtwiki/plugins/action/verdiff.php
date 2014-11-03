@@ -27,7 +27,7 @@ function ewiki_action_verdiff($id, $data, $action) {
       $o = ewiki_make_title($id, "$id version differences");
 
       $o .= '<form action="' . ewiki_script($action, $id) . '" method="GET">';
-      $o .= '<input type="submit" value="diff">';
+      $o .= '<input type="submit" class="button" value="diff">';
       $o .= '<input type="hidden" name="id" value="'.$action."/".htmlentities($id).'">';
 
       $o .= "\n".'<table border="1" class="diff"><tr>'

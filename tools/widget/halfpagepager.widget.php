@@ -7,7 +7,7 @@ class HalfPagePager extends RoxWidget
 
     private $style;
 
-    public function __construct($style = 'right')
+    public function __construct($style = 'pull-right')
     {
         $this->style = $style;
     }
@@ -39,7 +39,7 @@ class HalfPagePager extends RoxWidget
     {
         if ($page == $this->active_page)
         {
-            return "<li class='current'>{$page}</li>\n";
+            return "<li class='active'><a>{$page}</a></li>\n";
         }
         else
         {
@@ -56,8 +56,8 @@ class HalfPagePager extends RoxWidget
     public function getHtml()
     {
         $return =<<<HTML
-<div class="pages">
-    <ul style="float: {$this->style}">
+<div class="pages clearfix">
+    <ul class="pagination pull-{$this->style}">
 HTML;
         if ($this->active_page > 1)
         {
@@ -71,9 +71,9 @@ HTML;
         {
             if ($this->pages > self::block_links)
             {
-                $return .= "<li><a class=\"off\">&lt;&lt;</a></li>\n";
+                $return .= "<li class=\"disabled\"><a>&lt;&lt;</a></li>\n";
             }
-            $return .= "<li><a class=\"off\">&lt;</a></li>\n";
+            $return .= "<li class=\"disabled\"><a>&lt;</a></li>\n";
         }
         for ($i = 1; $i <= self::block_links && $i <= $this->pages; $i++)
         {
@@ -90,7 +90,7 @@ HTML;
 
             if (($this->active_page - 1) > (self::block_links + 1))
             {
-                $return .= "<li>...</li>\n";
+                $return .= "<li class=\"disabled\"><a>...</a></li>\n";
             }
 
             if ($this->active_page >= self::block_links && $this->active_page <= $end_range)
@@ -107,7 +107,7 @@ HTML;
 
             if ($end_range > ($this->active_page + 1) && $end_range > (self::block_links + 1))
             {
-                $return .= "<li>...</li>\n";
+                $return .= "<li class=\"disabled\"><a>...</a></li>\n";
             }
 
             while ($end_range <= $this->pages)
@@ -127,10 +127,10 @@ HTML;
         }
         else
         {
-            $return .= "<li><a class=\"off\">&gt;</a></li>\n";
+            $return .= "<li class=\"disabled\"><a>&gt;</a></li>\n";
             if ($this->pages > self::block_links)
             {
-                $return .= "<li><a class=\"off\">&gt;&gt;</a></li>\n";
+                $return .= "<li class=\"disabled\"><a>&gt;&gt;</a></li>\n";
             }
         }
         $return .= <<<HTML

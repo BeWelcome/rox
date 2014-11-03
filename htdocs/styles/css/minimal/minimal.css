@@ -16,13 +16,13 @@
  */
 
 /* import core styles | Basis-Stylesheets einbinden */
-@import url(../../yaml/core/slim_base.css);
+/*@import url(../../yaml/core/slim_base.css);
 
 /* import screen layout | Screen-Layout einbinden */
 /* #### BW Costumizing #### */
-@import url(screen/basemod_minimal.css);
+/*@import url(screen/basemod_minimal.css);*/
 @import url(screen/content_minimal.css?9);
-@import url(navigation/nav_minimal.css?1);
+/*@import url(navigation/nav_minimal.css?1);
 
 /* import print layout | Druck-Layout einbinden */
 /* @import url(/css/print/print_003.css); */

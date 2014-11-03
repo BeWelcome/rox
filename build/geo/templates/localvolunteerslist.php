@@ -20,7 +20,7 @@ if (!$volunteers) {
     $p = PFunctions::paginate($volunteers, $page, $itemsPerPage = 15);
     $volunteers = $p[0];
 ?>
-<ul class="floatbox">
+<ul class="clearfix">
 <?php
     foreach ($volunteers as $member) {
         $image = new MOD_images_Image('',$member->username);

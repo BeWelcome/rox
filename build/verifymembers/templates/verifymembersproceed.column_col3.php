@@ -106,8 +106,8 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
 
     </div> <!-- subcolumns -->
 
-    <div class="row">
-        <input type="submit" value="<?=$words->getFormatted("verifymembers_proceedtocheck") ?>" />
+    <div class="bw-row">
+        <input type="submit" class="button" value="<?=$words->getFormatted("verifymembers_proceedtocheck") ?>" />
     </div>
 
 </form>

@@ -7,20 +7,6 @@
    *
    */
 
-    #col1 {
-      width: 29%;
-    }
-
-    #col2, #main #col2_content{
-        display: none;
-    }
-
-    #col3 {
-        width: 70%;
-        margin-right: 29%;
-        margin-left: 0;
-    }
-
     .faq ul {
         margin-bottom: 2em;
     }

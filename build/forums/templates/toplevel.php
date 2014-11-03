@@ -47,7 +47,7 @@ if ($User && $ownGroupsButtonCallbackId) {
     <div class="float_right">
         <form method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
             <input type="hidden" name="<?php echo $ownGroupsButtonCallbackId; ?>"  value="1">
-            <input type="submit" name="submit" value="<?php echo $buttonText; ?>">
+            <input type="submit" class="button" name="submit" value="<?php echo $buttonText; ?>">
         </form>
     </div>
     <?php
@@ -61,14 +61,14 @@ $uri = 'forums/';
 <?php
     if ($threads = $boards->getThreads()) {
 ?>
-  <div class="row"> 
+  <div class="bw-row"> 
     <h3><?php echo $this->words->getFormatted('ForumRecentPosts'); $boards->getTotalThreads(); ?>
     </h3>
   </div><!--  row -->
 
 <?php if (!$noForumNewTopicButton) { ?>
   <div id="boardnewtopictop">
-      <span class="button"><a href="<?php echo $uri; ?>new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $this->words->flushBuffer(); ?>
+      <a class="button" role="button" href="<?php echo $uri; ?>new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a><?php echo $this->words->flushBuffer(); ?>
   </div>
 <?php
 }

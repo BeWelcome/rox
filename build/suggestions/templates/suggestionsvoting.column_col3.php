@@ -46,12 +46,12 @@ include 'suggestionserrors.php'; ?>
         <p><?php echo $words->get('SuggestionsVoteDiscussion', '<a href="/groups/' . SuggestionsModel::getGroupId() . '/forum/s' . $this->suggestion->threadId . '">', '</a>'); ?></p>
     <?php endif; ?>
     <hr class="suggestion" />
-    <?php foreach($this->suggestion->options as $option) : ?><div class="option floatbox">
-    <div class="floatbox float_left">
+    <?php foreach($this->suggestion->options as $option) : ?><div class="option clearfix">
+    <div class="clearfix float_left">
         <p><strong><?php echo $this->purifier->purify($option->summary); ?></strong></p>
         <p><?php echo $this->purifier->purify($option->description); ?></p></div>
         <?php if (!$this->viewOnly) : ?>
-            <div class="vote floatbox float_right">
+            <div class="vote clearfix float_right">
             <?php foreach($ranks as $key => $rank) :
                 $name = "option" . $option->id . 'rank'; $id= $name . $rank; ?>
                 <input type="radio" class="toggle" <?php if ($key == $this->suggestion->memberVotes[$option->id]->rank) :
@@ -65,7 +65,7 @@ include 'suggestionserrors.php'; ?>
     <?php endforeach;
     if (!$this->viewOnly) : ?>
     <p style="padding-top: 1em;"><?php echo $words->get('SuggestionsVoteHint', $this->suggestion->nextstatechange);?></p>
-    <p><input type="submit" class="button float_right" name="suggestion-vote-submit" value="<?php echo $words->getSilent('SuggestionsVoteSubmit'); ?>" /><?php echo $words->flushBuffer(); ?></p>
+    <p><input type="submit" class="button" class="button float_right" name="suggestion-vote-submit" value="<?php echo $words->getSilent('SuggestionsVoteSubmit'); ?>" /><?php echo $words->flushBuffer(); ?></p>
     <?php endif; ?>
 </form>
 </fieldset>
@@ -74,7 +74,7 @@ include 'suggestionserrors.php'; ?>
 <form method="post"><?php echo $callbackStatus;
     echo $this->getStateSelect($this->suggestion->state); ?>
     <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $this->suggestion->id;?>" />
-    <input type="submit" id="suggestions-submit-status" name="suggestions-submit-status" value="change" />
+    <input type="submit" class="button" id="suggestions-submit-status" name="suggestions-submit-status" value="change" />
 </form>
 <?php endif;?>
 </div>

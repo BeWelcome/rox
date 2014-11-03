@@ -96,8 +96,8 @@
   /*------------------------------------------------------------------------------------------------------*/
 
   /**
-   * (en) Adjustment of .floatbox class for IE
-   * (de) Anpassung der .floatbox-Klasse für IE
+   * (en) Adjustment of .clearfix class for IE
+   * (de) Anpassung der .clearfix-Klasse für IE
    *
    * @workaround
    * @affected   IE 5.x/Win, IE6, IE7
@@ -105,7 +105,7 @@
    * @valid      yes
    */
 
-  .floatbox { width:100%; }
+  .clearfix { width:100%; }
 
   /*------------------------------------------------------------------------------------------------------*/
 

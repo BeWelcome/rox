@@ -118,6 +118,6 @@
             <dd><input type="password" name="passwordconfirm" /></dd>
         </dl>
 
-        <p><input type="submit" id="submit"  value="<?php echo $words->getSilent('SubmitForm'); ?>" /> <?php echo $words->flushBuffer(); ?></p>
+        <p><input type="submit" class="button" id="submit"  value="<?php echo $words->getSilent('SubmitForm'); ?>" /> <?php echo $words->flushBuffer(); ?></p>
         </fieldset>
         </form>

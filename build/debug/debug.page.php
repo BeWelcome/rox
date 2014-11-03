@@ -78,7 +78,7 @@ class DebugPage extends RoxPageView
         
         <form action="debug" method="post">
         <input name="farbe" value="what color"/>
-        <input type="submit" value="Submit"/>
+        <input type="submit" class="button" value="Submit"/>
         </form>
         ';
     }

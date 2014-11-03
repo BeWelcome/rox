@@ -49,7 +49,7 @@ $query_list = PVars::get()->query_history;
 function translator_block() {
 
     if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
-        ?><div id="translator" class="row"><?php
+        ?><div id="translator" class="bw-row"><?php
         $request_string = implode('/',PVars::get()->request);
         $rox_tr = PVars::getObj("env")->baseuri . "rox/tr_mode";
         $words = new MOD_words();

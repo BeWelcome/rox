@@ -10,7 +10,7 @@ body{position:relative;height:1%}
 #main{position:relative}
 .clearfix{display:block}
 * html .clearfix{height:1%}
-.floatbox{width:100%}
+.clearfix{width:100%}
 .slidebox{position:relative;margin-right:-1000px;height:1%}
 * html #col1,* html #col2,* html #col3{position:relative}
 #page_margins,#page,.page_margins,.page,#header,#nav,#main,#footer{zoom:1}

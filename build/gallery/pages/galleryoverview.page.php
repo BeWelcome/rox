@@ -21,7 +21,7 @@ class GalleryOverviewPage extends GalleryBasePage
     }
     
     protected function teaser() {
-        echo '<div id="teaser" class="clearfix">'.$this->teaserHeadline().'</div>';
+        echo '<div id="teaser" class="page-teaser clearfix">'.$this->teaserHeadline().'</div>';
     }
 
     protected function teaserHeadline() {

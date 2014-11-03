@@ -38,7 +38,7 @@ class AddRelationPage extends RelationsPage
             <legend><?=$words->get($action.'Relation')?></legend>
             <p><?=$words->get('MyRelationListExplanation',$member->Username,$member->Username)?></p>
             <? if (count($relation['member']) <= 0) : ?>
-            <div class="row">
+            <div class="bw-row">
             <label class="grey"><?=$words->get('RelationListCategory')?></label><br />
             <?php
                 $tt=$TabRelationsType;
@@ -53,11 +53,11 @@ class AddRelationPage extends RelationsPage
             <p class="desc"><?=$words->get('RelationListExplanation')?></p>
             </div>
             <? else : ?>
-            <div class="row">
+            <div class="bw-row">
             <?=$words->get('RelationType')?>: <strong><?=$words->get("Relation_Type_" . $relation['member']->Type)?></strong>
             </div>
             <? endif ?>
-            <div class="row">
+            <div class="bw-row">
                 <label class="grey"><?=$words->get("RelationText",$member->Username)?>:</label><br />
                 <textarea rows="4" cols="60" name="Comment"><?php
                     if (isset($relation['myself']->Comment)) {
@@ -88,7 +88,7 @@ class AddRelationPage extends RelationsPage
             }
             ?>
             <br />
-            <input type="submit" name="submit" value="<?=$words->getSilent($action.'Relation')?>" /><?php echo $words->flushBuffer(); ?>
+            <input type="submit" class="button" name="submit" value="<?=$words->getSilent($action.'Relation')?>" /><?php echo $words->flushBuffer(); ?>
             <br />
         </fieldset>
         </form>

@@ -8,7 +8,7 @@ endif; ?>
     <div class="subcolumns row">
         <div class="<?php echo $class; ?>">
             <div class="subcl">
-                <div class="row">
+                <div class="bw-row">
                     <?php echo $this->purifier->purify($this->suggestion->description); ?>
                 </div>
             </div> <!-- subcl -->
@@ -21,7 +21,7 @@ endif; ?>
                 <form method="post"><?php echo $callbackStatus;
                     echo $this->getStateSelect($this->suggestion->state); ?>
                     <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $this->suggestion->id;?>" />
-                    <input type="submit" id="suggestions-submit-status" name="suggestions-submit-status" value="change" />
+                    <input type="submit" class="button" id="suggestions-submit-status" name="suggestions-submit-status" value="change" />
                 </form>
                <?php endif;?>
                <div class="subcolumns">

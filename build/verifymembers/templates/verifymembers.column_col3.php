@@ -95,7 +95,7 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
             if ($verification_status) $verification_text = $words->getSilent('verifymembers_'.$verification_status);
             ?>
 
-            <div class="row">
+            <div class="bw-row">
                 <table>
                     <tr>
                         <td><?php echo MOD_layoutbits::PIC_50_50($m->Username,'',$style='framed') ?></td>
@@ -111,7 +111,7 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
 
             <input type="hidden" name="cid1" value="<?=$m->id?>" />
             <input type="hidden" name="username1" value="<?=$m->Username?>" />
-            <div class="row">
+            <div class="bw-row">
             <label for="password1"><?=$words->getFormatted("verifymembers_member_pw", $m->Username) ?></label>
             <input id="password1" type="password"  name="password1" />
             </div>
@@ -129,7 +129,7 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
             if ($verification_status) $verification_text = $words->getSilent('verifymembers_'.$verification_status);
             ?>
 
-            <div class="row">
+            <div class="bw-row">
                 <table>
                     <tr>
                         <td><?php echo MOD_layoutbits::PIC_50_50($m->Username,'',$style='framed') ?></td>
@@ -145,7 +145,7 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
 
             <input type="hidden" name="cid2" value="<?=$m->id?>" />
             <input type="hidden" name="username2" value="<?=$m->Username?>" />
-            <div class="row">
+            <div class="bw-row">
             <label for="password2"><?=$words->getFormatted("verifymembers_member_pw", $m->Username) ?></label>
             <input id="password2" type="password"  name="password2" />
             </div>

@@ -39,7 +39,7 @@ if (in_array('password_not_updated', $errors)) {
 <fieldset id="user-profile">
     <legend><?=$settingsText['legend_profile']?></legend>
         <h3><?=$settingsText['title_location']?></h3>
-        <div class="row"><?=$settingsText['current_location']?><br />
+        <div class="bw-row"><?=$settingsText['current_location']?><br />
         <?php
     if ($location && $location->location) {
         echo $location->location;
@@ -51,7 +51,7 @@ if (in_array('password_not_updated', $errors)) {
     }
 ?>
         </div>
-        <div class="row">
+        <div class="bw-row">
     <label for="create-location"><?=$settingsText['label_location']?></label><br />
     <input type="text" name="create-location" id="create-location" value="" /> <input type="button" id="btn-create-location" value="<?=$settingsText['label_search_location']?>" />
     <?php
@@ -69,7 +69,7 @@ if (in_array('location', $errors)) {
 $google_conf = PVars::getObj('config_google');
 if ($google_conf && $google_conf->maps_api_key) {
 ?>
-    <div class="row">
+    <div class="bw-row">
          <script type="text/javascript">
          var map = null;
     
@@ -167,7 +167,7 @@ if ($google_conf && $google_conf->maps_api_key) {
 ?>
         <p>
             <input type="hidden" name="<?=$callbackId?>" value="1"/>
-            <input type="submit" value="<?=$settingsText['submit_save_location']?>" onclick="$('locationform').submit();" />
+            <input type="submit" class="button" value="<?=$settingsText['submit_save_location']?>" onclick="$('locationform').submit();" />
         </p>
 
 </fieldset>

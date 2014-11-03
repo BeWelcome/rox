@@ -68,7 +68,7 @@ if (!empty($errormessage)) {
         <textarea name="comment" cols="50" rows="5"></textarea>
     </td></tr>
     <tr><td align="center">
-        <input type="submit" value="<?=$words->getFormatted("verifymembers_proceedtocheck") ?>">
+        <input type="submit" class="button" value="<?=$words->getFormatted("verifymembers_proceedtocheck") ?>">
     </td></tr>
     </table>
 
@@ -83,7 +83,7 @@ if (!empty($errormessage)) {
             if ($verification_status) $verification_text = $words->getSilent('verifymembers_'.$verification_status);
             ?>
 
-            <div class="row">
+            <div class="bw-row">
                 <table>
                     <tr>
                         <td><?php echo MOD_layoutbits::PIC_50_50($m->Username,'',$style='framed') ?></td>
@@ -100,7 +100,7 @@ if (!empty($errormessage)) {
             <!-- The following will disable the nasty PPostHandler -->
             <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
             <input type="hidden" name="username1" value="<?=$m->Username?>">
-            <div class="row">
+            <div class="bw-row">
             <label for="password1"><?=$words->getFormatted("verifymembers_member_pw", $m->Username) ?></label>
             <input type="password"  name="password1">
             </div>
@@ -116,7 +116,7 @@ if (!empty($errormessage)) {
             if ($verification_status) $verification_text = $words->getSilent('verifymembers_'.$verification_status);
             ?>
 
-            <div class="row">
+            <div class="bw-row">
                 <table>
                     <tr>
                         <td><?php echo MOD_layoutbits::PIC_50_50($m->Username,'',$style='framed') ?></td>
@@ -133,7 +133,7 @@ if (!empty($errormessage)) {
             <!-- The following will disable the nasty PPostHandler -->
             <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
             <input type="hidden" name="username2" value="<?=$m->Username?>">
-            <div class="row">
+            <div class="bw-row">
             <label for="password2"><?=$words->getFormatted("verifymembers_member_pw", $m->Username) ?></label>
             <input type="password"  name="password2"><br />
             </div>

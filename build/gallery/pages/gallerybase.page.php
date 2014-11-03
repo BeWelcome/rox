@@ -18,11 +18,11 @@ class GalleryBasePage extends PageWithActiveSkin
     
     protected function teaser() {
         ?>
-        <div id="teaser">
+        <div id="teaser" class="page-header clearfix">
         <div class="breadcrumbs">
         <?=$this->breadcrumbs()?>
         </div>
-        <div class="floatbox">
+        <div class="clearfix">
             <?=$this->teaserHeadline()?>
             <div class="gallery_menu">
             <?=$this->submenu()?>
@@ -49,10 +49,9 @@ class GalleryBasePage extends PageWithActiveSkin
     {
         return 'overview';
     }
-    
+   
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
         $stylesheets[] = 'styles/css/minimal/screen/custom/lightview.css';
         $stylesheets[] = 'styles/css/minimal/screen/custom/gallery.css';
         return $stylesheets;

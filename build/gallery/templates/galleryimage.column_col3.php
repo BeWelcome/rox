@@ -22,7 +22,7 @@ if ($canEdit  || ($GalleryRight > 1)) {
     <fieldset id="image-edit" class="inline NotDisplayed">
     <legend><?php echo $words->getFormatted('GalleryTitleEdit'); ?></legend>
 
-        <div class="row">
+        <div class="bw-row">
             <label for="image-edit-t"><?php echo $words->getFormatted('GalleryLabelTitle'); ?></label><br/>
             <input type="text" id="image-edit-t" name="t" class="short"<?php
                 echo ' value="'.htmlentities($d->title, ENT_COMPAT, 'utf-8').'"';
@@ -35,9 +35,9 @@ if ($canEdit  || ($GalleryRight > 1)) {
 	        <input type="hidden" name="<?php echo $callbackId; ?>" value="1"/>
 	        <input type="hidden" name="id" value="<?=$d->id?>"/>
             <p class="desc"><?php echo $words->getFormatted('GalleryDescTitle'); ?></p>
-            <input type="submit" name="button" value="submit" id="button" />
+            <input type="submit" class="button" name="button" value="submit" id="button" />
         </div>
-        <div class="row">
+        <div class="bw-row">
         </div>
 </fieldset>
 </form>
@@ -67,7 +67,7 @@ if ($canEdit  || ($GalleryRight > 1)) {
         })
     </script>
 <?php } ?>
-<div class="floatbox">
+<div class="clearfix">
 <div class="img">
 <?php
 echo '<a id="link_'.$d->id.'" href="gallery/img?id='.$d->id.'" title="'.$d->title.' :: '.$d->description.'" class="lightview" rel="image">

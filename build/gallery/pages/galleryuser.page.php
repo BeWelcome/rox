@@ -72,7 +72,7 @@ class GalleryUserPage extends GalleryBasePage
         <div class="breadcrumbs">
         <?=$this->breadcrumbs()?>
         </div>
-        <div class="floatbox">
+        <div class="clearfix">
             <?=$this->teaserHeadline()?>
             <div class="gallery_menu">
             <?=$this->submenu()?>

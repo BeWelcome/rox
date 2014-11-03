@@ -38,7 +38,7 @@ class GroupsFeaturedPage extends GroupsBasePage
         $words = $this->getWords();
         // &gt; or &raquo; ?
         ?>
-        <div id="teaser" class="clearfix">
+        <div id="teaser" class="page-teaser clearfix">
             <div id="teaser_l1"> 
                 <h1><a href="groups"><?= $words->get('Groups');?></a> &raquo; <a href="groups/featured"><?= $words->get('GroupsFeaturedTeaser'); ?></a></h1>
             </div>

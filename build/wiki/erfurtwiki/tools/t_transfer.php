@@ -131,14 +131,14 @@ else {
         <option value="dat.gz">.dat.gz</option>
         <option value="dat">.dat</option>
        </select>
-       <br> <input type="submit" value="save">
+       <br> <input type="submit" class="button" value="save">
      </form>
      <br>
 
      <h4>reinsert dump</h4>
      <form action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="POST" enctype="multipart/form-data">
        <input type="file" name="data">
-       <br> <input type="submit" value="upload">
+       <br> <input type="submit" class="button" value="upload">
      </form>
      <br>
 

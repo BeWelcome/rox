@@ -1,6 +1,6 @@
 <div id="groups">
         <h3><?= $words->get('GroupsMyGroups'); ?></h3>
-        <div class="floatbox">
+        <div class="clearfix">
         <?php
         $search_result = $this->search_result;
         if ($search_result)

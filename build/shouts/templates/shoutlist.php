@@ -92,7 +92,7 @@ if (isset($_SESSION['IdMember']) && $_SESSION['IdMember']) {
 ?>
 <div id="comment-form">
 <form method="post" action="" class="def-form" id="blog-comment-form">
-    <div class="row">
+    <div class="bw-row">
     <label for="comment-title"><?=$words->get('CommentsLabel')?>:</label><br/>
         <input type="text" id="comment-title" name="ctit" class="long" <?php
 echo isset($vars['ctit']) ? 'value="'.htmlentities($vars['ctit'], ENT_COMPAT, 'utf-8').'" ' : '';
@@ -105,7 +105,7 @@ if (in_array('title', $vars['errors'])) {
 ?>
         <p class="desc"></p>
     </div>
-    <div class="row">
+    <div class="bw-row">
         <label for="comment-text"><?=$words->get('CommentsTextLabel')?>:</label><br />
         <textarea id="comment-text" name="ctxt" cols="40" rows="10"><?php
 echo isset($vars['ctxt']) ? htmlentities($vars['ctxt'], ENT_COMPAT, 'utf-8') : '';
@@ -119,7 +119,7 @@ if (in_array('textlen', $vars['errors'])) {
         <p class="desc"><?=$words->get('CommentsSublineText')?></p>
     </div>
     <p>
-        <input type="submit" value="<?=$words->getSilent('CommentsSubmitForm')?>" class="submit" /><?php echo $words->flushBuffer(); ?>
+        <input type="submit" class="button" value="<?=$words->getSilent('CommentsSubmitForm')?>" class="submit" /><?php echo $words->flushBuffer(); ?>
         <input type="hidden" name="table" value="<?=$table?>"/>
         <input type="hidden" name="table_id" value="<?=$table_id?>"/>
         <input type="hidden" name="<?php

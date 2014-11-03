@@ -54,7 +54,7 @@
 
      }
 
-     echo '</table><input type="submit" value="&nbsp;    change settings    &nbsp;"></form>';
+     echo '</table><input type="submit" class="button" value="&nbsp;    change settings    &nbsp;"></form>';
 
   }
   else {
@@ -72,7 +72,7 @@
            }
         }
 
-        echo "· ".htmlentities($page)." ({$flags}=<small>[{$fstr}]</small>)";
+        echo "ï¿½ ".htmlentities($page)." ({$flags}=<small>[{$fstr}]</small>)";
 
         $data = ewiki_db::GET($page);
 

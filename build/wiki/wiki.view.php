@@ -20,16 +20,12 @@ class WikiView extends PAppView {
     {
         $words = new MOD_words();
 ?>
-        <div id="teaser" class="clearfix">
+        <div id="teaser" class="page-teaser clearfix">
             <h1><a href="wiki"><?php echo $words->getFormatted('WikiTitle'); ?></a></h1>
         </div>
 <?php
     }
-    public function stylesFullWidth()
-    {
-         echo "<link rel=\"stylesheet\" href=\"styles/css/minimal/screen/basemod_minimal_col3.css\" type=\"text/css\"/>";
-    }
-    
+
     public function indicateRSS()
     {
         global $ewiki_id;
@@ -49,9 +45,9 @@ class WikiView extends PAppView {
     {
         $words = new MOD_words();
 ?>
-    <div class="row">
+    <div class="bw-row">
     </div>
-    <div class="row">
+    <div class="bw-row">
         <h3><?php echo $words->getFormatted('WikiPages'); ?></h3>
         <ul>
               <li>
@@ -77,10 +73,10 @@ class WikiView extends PAppView {
             <option value="id"><?= $words->getSilent('WikiSearch_Titles') ?></option>
             <option value="author"><?= $words->getSilent('WikiSearch_AuthorNames') ?></option>
         </select>
-        <input type="submit" value="<?= $words->getSilent('Search') ?>">
+        <input type="submit" class="button" value="<?= $words->getSilent('Search') ?>">
         </form>
         </div>
-        <div class="row">
+        <div class="bw-row">
         </div>
 
         <p><?php echo $words->getFormatted('WikiIntroduction'); ?></p>

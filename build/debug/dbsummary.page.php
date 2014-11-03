@@ -18,13 +18,13 @@ class DatabaseSummaryPage extends DebugPage
         <h3>Search for table names</h3>
         <form action="debug/dbsummary" method="get">
         <input name="table_filter" size="14" value="'.$this->table_filter.'"/>
-        <input type="submit" value="search"/>
+        <input type="submit" class="button" value="search"/>
         </form>
         <br>
         <h3>Search for column names</h3>
         <form action="debug/dbsummary" method="get">
         <input name="column_filter" size="14" value="'.$this->column_filter.'"/>
-        <input type="submit" value="search"/>
+        <input type="submit" class="button" value="search"/>
         </form>
         <br>';
     }

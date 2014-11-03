@@ -2,7 +2,7 @@
 if (!is_array($pages) || count($pages) == 0)
     return false;
 ?>
-<div class="pages">
+<div class="pages clearfix">
     <ul>
         <li>
 <?php

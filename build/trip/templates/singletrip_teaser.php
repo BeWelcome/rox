@@ -6,11 +6,11 @@ if (isset($_GET['s']) && $_GET['s'])
     $search = $_GET['s'];
 ?>
 
-<div id="teaser" class="clearfix">
+<div id="teaser" class="page-teaser clearfix">
 	<div class="subcolumns">
     	<div class="c50l">
 			<div class="subr">
-                <div class="floatbox">
+                <div class="clearfix">
                 <h1 id="trip_name">
                     <a href="trip/<?=$trip->trip_id ?>" style="padding-right: 10px;">
                     <?=$trip->trip_name ?>

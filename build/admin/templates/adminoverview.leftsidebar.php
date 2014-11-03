@@ -52,6 +52,14 @@ HTML;
 <li><a href='{$this->router->url('admin_word_overview')}' title='{$description}' class='header'>Words</a></li>
 HTML;
     }
+    if (in_array('MassMail', $right_names))
+    {
+        $description = htmlspecialchars($this->rights['MassMail']['Description'], ENT_QUOTES);
+        echo <<<HTML
+<li><a href='{$this->router->url('admin_massmail')}' title='{$description}' class='header'>Massmail</a></li>
+HTML;
+    }
+
     if (in_array('Comments', $right_names))
     {
         $description = htmlspecialchars($this->rights['Comments']['Description'], ENT_QUOTES);
@@ -59,11 +67,20 @@ HTML;
 <li><a href='{$this->router->url('admin_comments_list')}' title='{$description}' class='header'>Comments</a></li>
 HTML;
     }
+    
     if (in_array('Checker', $right_names))
     {
         $description = htmlspecialchars($this->rights['Checker']['Description'], ENT_QUOTES);
         echo <<<HTML
 <li><a href='{$this->router->url('admin_spam_overview')}' title='{$description}' class='header'>Spam</a></li>
+HTML;
+    }
+    
+    if (in_array('Treasurer', $right_names))
+    {
+        $description = htmlspecialchars($this->rights['Treasurer']['Description'], ENT_QUOTES);
+        echo <<<HTML
+<li><a href='{$this->router->url('admin_treasurer_overview')}' title='{$description}' class='header'>Treasurer</a></li>
 HTML;
     }
 ?>

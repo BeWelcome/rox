@@ -1625,7 +1625,7 @@ function ewiki_page_edit_form_final_imgupload(&$o, &$id, &$data, &$action) {
       . '<input type="hidden" name="'.EWIKI_UP_BINARY.'" value="'.EWIKI_IDF_INTERNAL.'">'
       . '<input type="hidden" name="'.EWIKI_UP_PARENTID.'" value="'.htmlentities($id).'">'
       . '&nbsp;&nbsp;&nbsp;'
-      . '<input type="submit" value="'.ewiki_t("UPLOAD_PICTURE_BUTTON").'">'
+      . '<input type="submit" class="button" value="'.ewiki_t("UPLOAD_PICTURE_BUTTON").'">'
       . '</form></div>'. "\n";
   }
 }
@@ -1671,7 +1671,7 @@ function ewiki_control_links($id, &$data, $action, $hide_hr=0, $hide_mtime=0) {
 
             '<input type="hidden" name="edit" value="old">' .
             '<input type="hidden" name="version" value="'.$ewiki_config["forced_version"].'">' .
-            '<input type="submit" value="' . ewiki_t("OLDVERCOMEBACK") . '"></form> ';
+            '<input type="submit" class="button" value="' . ewiki_t("OLDVERCOMEBACK") . '"></form> ';
    }
    else {
       $o .= ewiki_control_links_list($id, $data, $action_links);
@@ -1698,7 +1698,7 @@ function ewiki_control_links_list($id, &$data, $action_links, $version=0) {
       if (EWIKI_PROTECTED_MODE && EWIKI_PROTECTED_MODE_HIDING && !ewiki_auth($id, $data, $action)) {
          continue;
       }
-      $o .= $ins[1] . '<a class="button" href="' .
+      $o .= $ins[1] . '<a class="button" role="button" href="' .
          ( strpos($action, "://")
             ? $action   # an injected "action" URL
             : ewiki_script($action, $id, $version?array("version"=>$version):NULL)

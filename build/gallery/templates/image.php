@@ -51,7 +51,7 @@ HTML;
     <fieldset id="image-edit" class="inline NotDisplayed">
     <legend>{$words->getFormatted('GalleryTitleEdit')}</legend>
     
-        <div class="row">
+        <div class="bw-row">
             <label for="image-edit-t">{$words->getFormatted('GalleryLabelTitle')}</label><br/>
             <input type="text" id="image-edit-t" name="t" class="short" value="{$title}" />
             <br/><br/>
@@ -61,9 +61,9 @@ HTML;
 	        <input type="hidden" name="{$callbackId}" value="1"/>
 	        <input type="hidden" name="id" value="{$d->id}"/>
             <p class="desc">{$words->getFormatted('GalleryDescTitle')}</p>
-            <input type="submit" name="button" value="{$words->getFormatted('SubmitForm')}" id="button" />
+            <input type="submit" class="button" name="button" value="{$words->getFormatted('SubmitForm')}" id="button" />
         </div>
-        <div class="row">
+        <div class="bw-row">
         </div>    
 </fieldset>
 </form>
@@ -95,7 +95,7 @@ HTML;
 HTML;
 }
 echo <<<HTML
-<div class="floatbox">
+<div class="clearfix">
 <div class="img">
 HTML;
 
@@ -130,7 +130,7 @@ if (!$comments) {
 if ($member) {
 ?>
 <form method="post" action="gallery/show/image/<?=$d->id?>/comment" class="def-form" id="gallery-comment-form">
-    <div class="row">
+    <div class="bw-row">
     <label for="comment-title"><?php echo $words->getFormatted('CommentsLabel'); ?>:</label><br/>
         <input type="text" id="comment-title" name="ctit" class="long" <?php 
 echo isset($varsCom['ctit']) ? 'value="'.htmlentities($varsCom['ctit'], ENT_COMPAT, 'utf-8').'" ' : ''; 
@@ -143,7 +143,7 @@ if (in_array('title', $vars['errors'])) {
 ?>
         <p class="desc"></p>
     </div>
-    <div class="row">
+    <div class="bw-row">
         <label for="comment-text"><?php echo $words->getFormatted('CommentsTextLabel'); ?>:</label><br />
         <textarea id="comment-text" name="ctxt" cols="40" rows="5"><?php 
 echo isset($varsCom['ctxt']) ? htmlentities($varsCom['ctxt'], ENT_COMPAT, 'utf-8') : ''; 
@@ -157,7 +157,7 @@ if (in_array('textlen', $vars['errors'])) {
         <p class="desc"><?php echo $words->getFormatted('CommentsSublineText'); ?></p>
     </div>
     <p>
-        <input type="submit" value="<?php echo $words->getFormatted('SubmitForm'); ?>" class="submit" />
+        <input type="submit" class="button" value="<?php echo $words->getFormatted('SubmitForm'); ?>" class="submit" />
         <input type="hidden" name="<?php
 // IMPORTANT: callback ID for post data 
 echo $callbackIdCom; ?>" value="1"/>

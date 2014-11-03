@@ -398,8 +398,8 @@ function ewiki_page_liveuser_admin_users($id, $data, $action)
 	?>
             </table>
             <input type="reset" value="Reset" />
-            <input type="submit" name="submit_deleteusers" value="Delete Selected" />
-            <input type="submit" name="submit_changeusers" value="Submit Changes" />
+            <input type="submit" class="button" name="submit_deleteusers" value="Delete Selected" />
+            <input type="submit" class="button" name="submit_changeusers" value="Submit Changes" />
         <?php
         
         if (is_array($groups) && !empty($groups)) {
@@ -414,8 +414,8 @@ function ewiki_page_liveuser_admin_users($id, $data, $action)
 	    
             ?>
                 </select><br />
-                <input type="submit" name="submit_adduserstogroup" value="Add Selected" />
-                <input type="submit" name="submit_removeusersfromgroup" value="Remove Selected" />
+                <input type="submit" class="button" name="submit_adduserstogroup" value="Add Selected" />
+                <input type="submit" class="button" name="submit_removeusersfromgroup" value="Remove Selected" />
             <?php
         }
         
@@ -435,7 +435,7 @@ function ewiki_page_liveuser_admin_users($id, $data, $action)
 	<input id="username_text" name="username_text" type="text" /><br />
 	<label for="pw_text">Password</label>
 	<input id="pw_text" name="pw_text" type="text" /><br />
-	<input type="submit" name="submit_adduser" value="Add User" />
+	<input type="submit" class="button" name="submit_adduser" value="Add User" />
 	</form>
     <?php
 	
@@ -468,7 +468,7 @@ function ewiki_page_liveuser_admin_users($id, $data, $action)
     
     ?>
         <p><input type="checkbox" name="pwgen_addusers" checked="checked"> Generate random passwords.</p>
-        <input type="submit" name="submit_addusers" value="Add Users" />    
+        <input type="submit" class="button" name="submit_addusers" value="Add Users" />    
         </form>
     <?php
     
@@ -516,7 +516,7 @@ function ewiki_page_liveuser_admin_users($id, $data, $action)
 	<input id="groupname_text" name="groupname_text" type="text"><br />
 	<label for="addright">Add/Link Right</label>
 	<input id="addright" name="addright" type="checkbox" checked="checked"><br />
-	<input type="submit" name="submit_addgroup" value="Add Group" />
+	<input type="submit" class="button" name="submit_addgroup" value="Add Group" />
 	</form>
     <?php
 	

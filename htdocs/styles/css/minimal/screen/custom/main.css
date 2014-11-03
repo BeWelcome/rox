@@ -1,0 +1,79 @@
+/* more padding to the left for the middle column on personal startpage */
+.midcl {
+  padding-left: 1em;
+}
+
+.newsitem {
+  margin-bottom: 1.5em;
+  line-height: 1.5em;
+}
+
+.newsitem p {
+  margin: 0;
+  padding: 0;
+}
+  /* css for personal startpage menu */
+  
+    #personalmenu, #personalmenu ul { /* all lists */
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        width : 100%;
+    }
+    
+    #personalmenu li { /* all list items */
+        display: inline;
+        position : relative;
+        line-height : 2.25em;
+        font-size: 1.4em;
+        width : 90%;
+        padding: 0;
+    }
+    
+    #personalmenu.sm li { /* all list items */
+        position : relative;
+        line-height : 2.25em;
+        font-size: 1.2em;
+        width : 90%;
+        padding: 0;
+    }
+
+    #personalmenu li a {
+        display : block;
+        color:#777777;
+        padding: 0;
+        font-weight : bold;
+        text-decoration : none;
+        background-color : transparent;
+        border-left : none;
+        border-right : none;
+        border-bottom : none;
+        border-top : 1px solid #dddddd;
+    }
+    
+    #personalmenu li a.first,#personalmenu li#sub0 a {
+        border-top : 1px solid transparent;
+    }
+    
+    #personalmenu li a:hover {
+        background-color : #fff;
+    }
+    #personalmenu li a:focus {
+        outline-style:none;
+        outline-width:0;
+    }
+    
+    #personalmenu li a.active-tab,#personalmenu li.active a {
+        color:#333;
+    }
+.newmember, .visitors {
+    margin: 0 0 1em;
+    width: 170px;
+    float: left;
+    white-space:nowrap;
+    overflow: hidden;
+    display: inline;
+}
+#newmembers, #visitors {
+    margin-bottom: 1em;
+}

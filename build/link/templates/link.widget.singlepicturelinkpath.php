@@ -46,7 +46,7 @@ Boston, MA  02111-1307, USA.
         <h3><?php  echo $words->get('HowDoIKnow');?></h3>
             <?php foreach ($link->linkpath as $row) {
             ?>      
-        <div class="floatbox">          
+        <div class="clearfix">          
             <?php   foreach ($row as $e) {
             ?>
             <div class="float_left" style="padding-right: 15px">
@@ -73,7 +73,7 @@ Boston, MA  02111-1307, USA.
             </div> <!-- float_left -->
 
     <?php } ?>
-        </div> <!-- floatbox -->
+        </div> <!-- clearfix -->
 <?php } ?>      
       </div> <!-- info index -->
   </div> <!-- index row2 -->

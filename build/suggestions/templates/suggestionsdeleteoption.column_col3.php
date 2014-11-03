@@ -23,14 +23,14 @@ include 'suggestion.php';
 <div class="subcolumns">
     <div class="c62l">
         <div class="subcl">
-            <div class="row">
+            <div class="bw-row">
             <?php echo $this->purifier->purify($this->option->description);?>
         </div>
     </div>
 </div>
 <div class="c38r">
     <div class="subcl">
-        <div class="row">
+        <div class="bw-row">
         </div>
     </div>
 </div>
@@ -38,7 +38,7 @@ include 'suggestion.php';
 <p><?php echo $words->get('SuggestionsReallyDeleteOption');?></p>
 <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $this->suggestion->id; ?>" />
 <input type="hidden" id="suggestion-option-id" name="suggestion-option-id" value="<?php echo $vars['suggestion-option-id']; ?>" />
-<input type="submit" id="suggestion-delete-option" name="suggestion-delete-option"
+<input type="submit" class="button" id="suggestion-delete-option" name="suggestion-delete-option"
     value="<?php echo $words->getSilent('SuggestionsSubmitDeleteOption'); ?>" class="submit float_right" /><?php echo $words->flushBuffer(); ?>
 </div>
 </form>

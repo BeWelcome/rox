@@ -33,26 +33,26 @@ if ($galleryId) $postURL = 'gallery/show/sets/'.$galleryId;
     <h4><?=$words->getFormatted('Gallery_UploadInstruction')?></h4>
     <div class="notify"><?=$words->getFormatted('Gallery_UploadWarning')?> <? printf("%.1f MB", PFunctions::returnBytes(ini_get('upload_max_filesize')) / 1048576); ?></div>
     <div id="gallery-img-upload-files">
-        <div class="row">
+        <div class="bw-row">
             <input type="file" name="gallery-file[]"/>
         </div>
-        <div class="row">
+        <div class="bw-row">
             <input type="file" name="gallery-file[]"/>
         </div>
-        <div class="row">
+        <div class="bw-row">
             <input type="file" name="gallery-file[]"/>
         </div>
-        <div class="row">
+        <div class="bw-row">
             <input type="file" name="gallery-file[]"/>
         </div>
-        <div class="row">
+        <div class="bw-row">
             <input type="file" name="gallery-file[]"/>
         </div>
     </div>
     <p>
         <input type="hidden" name="galleryId" value="<?=$galleryId;?>"/>
         <?php echo $callbacktag; ?>
-        <input type="submit" value="<?=$words->getSilent('Gallery_UploadSubmit')?>"/>
+        <input type="submit" class="button" value="<?=$words->getSilent('Gallery_UploadSubmit')?>"/>
         <?=$words->flushBuffer()?>
     </p>
     </form>

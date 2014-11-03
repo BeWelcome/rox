@@ -28,7 +28,7 @@ function ewiki_aedit_templates(&$html, $id, &$data, $action)
       if ($list) {
          $o = '<form action="'.ewiki_script("", $id).'" method="POST" entype="multipart/form-data">'
             . '<input type="hidden" name="id" value="'.$action.'/'.$id.'">'
-            . '<input type="submit" value="load"> '
+            . '<input type="submit" class="button" value="load"> '
             . '<select name="load_template">';
          foreach ($list as $i) {
             $o .= '<option value="'.$i.'">'.$i.'</option>';

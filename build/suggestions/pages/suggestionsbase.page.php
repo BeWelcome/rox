@@ -103,11 +103,16 @@ class SuggestionsBasePage extends PageWithActiveSkin
         return $items;
     }
 
+    protected function getColumnNames()
+    {
+        // we don't need the other columns
+        return array('col3');
+    }
+
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css?8';
        $stylesheets[] = 'styles/css/minimal/screen/custom/suggestions.css?5';
-       $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
        $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome.min.css';
        $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome-ie7.min.css';
        return $stylesheets;

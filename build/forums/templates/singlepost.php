@@ -69,7 +69,7 @@ if (isset($_SESSION["IdMember"])) {
 ?>
     </div> <!-- forumsauthor -->
     <div class="forumsmessage">
-        <div class="floatbox">
+        <div class="clearfix">
         <!-- Display the time the post was made -->
         <p class="forumstime">
             <?php
@@ -234,7 +234,7 @@ if (isset($_SESSION["IdMember"])) {
             }
         }
 
-        echo '<div class="floatbox clearfix" style="clear: both;"><hr /><p class="float_left"><a href="forums/s' . $post->threadid . '/#post' . $post->IdPost . '">' . $words->get('ForumPermalink') . '</a></p>';
+        echo '<div class="clearfix clearfix" style="clear: both;"><hr /><p class="float_left"><a href="forums/s' . $post->threadid . '/#post' . $post->IdPost . '">' . $words->get('ForumPermalink') . '</a></p>';
         $TheReports=$this->_model->GetReports($post->IdPost,$_SESSION["IdMember"]) ; // Check if there is a pending report for this member
         echo '<p class="float_right">';
         if (isset($TheReports[0]->IdReporter)) {

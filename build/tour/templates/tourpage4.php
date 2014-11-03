@@ -77,7 +77,7 @@ Boston, MA  02111-1307, USA.
         ?>
     </div>
 
-    <div class="floatbox" style="padding-top: 30px">
+    <div class="clearfix" style="padding-top: 30px">
         <h4><?php 
         echo $words->getFormatted('tour_meet_title2')?></h4>
         <p><?php echo $words->getFormatted('tour_meet_text2')?></p>
@@ -100,5 +100,5 @@ for ($ii=0;$ii<count($members);$ii++) {
 <?php } ?>
 
     </div>
-    <a class="bigbutton" href="tour/trips" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_goNext')?> &raquo; <?php echo $words->getFormatted('tour_link_trips')?></span></a>
+    <a class="button" href="tour/trips" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_goNext')?> &raquo; <?php echo $words->getFormatted('tour_link_trips')?></span></a>
 </div>

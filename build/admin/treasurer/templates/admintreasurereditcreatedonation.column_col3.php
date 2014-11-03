@@ -57,7 +57,7 @@ if (!empty($errors))
     echo "</div>";
 }
 ?>
-<div class="row">
+<div class="bw-row">
         <div class="c33l">
             <div class=" subcl type-text">
             <label for="donate-username"><?php echo $words->get('AdminTreasurerDonor'); ?></label>
@@ -110,7 +110,7 @@ if (!empty($errors))
     </select><?php echo $words->flushBuffer(); ?>
 </div>
 <div class="type-button float_right">
-          <input type="submit" name="addDonation" value="<?php 
+          <input type="submit" class="button" name="addDonation" value="<?php 
             if ($vars['id'] == 0) {
             echo $words->getBuffered('AdminTreasurerAddDonation');
             } else {

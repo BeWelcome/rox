@@ -1,4 +1,4 @@
-<div class="row">
+<div class="bw-row">
 <h3><?php echo $words->get('Safety_How');?></h3>
 <p><?php echo $words->get('Safety_HowText');?></p>
 </div>

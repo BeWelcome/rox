@@ -37,13 +37,13 @@
  $ewiki_t["en"]["PROTE6"] = "the email address you've clicked on is:";
  $ewiki_t["en"]["PROTE7"] = "<b>spammers, please eat these:</b>";
 
- $ewiki_t["de"]["PROTE0"] = "Geschützte EMail-Adresse";
- $ewiki_t["de"]["PROTE1"] = "Die EMail-Adresse, die du angeklickt hast, wird durch dieses Formular vor <a href=\"http://google.com/search?q=spambots\">spambots</a> (automatisierte Suchwerkzeuge, die das Netz zur Freude der MarketingMafia nach Adressen abgrasen) beschützt.";
- $ewiki_t["de"]["PROTE2"] = "Die Seite, die du ändern willst, enthält momentan wenigstens eine EMail-Adresse. Um diese zu schützen müssen wir sicherstellen, daß kein Spambot an die Edit-Box kommt (weil dort die Adresse ja im Klartext steht).";
+ $ewiki_t["de"]["PROTE0"] = "Geschï¿½tzte EMail-Adresse";
+ $ewiki_t["de"]["PROTE1"] = "Die EMail-Adresse, die du angeklickt hast, wird durch dieses Formular vor <a href=\"http://google.com/search?q=spambots\">spambots</a> (automatisierte Suchwerkzeuge, die das Netz zur Freude der MarketingMafia nach Adressen abgrasen) beschï¿½tzt.";
+ $ewiki_t["de"]["PROTE2"] = "Die Seite, die du ï¿½ndern willst, enthï¿½lt momentan wenigstens eine EMail-Adresse. Um diese zu schï¿½tzen mï¿½ssen wir sicherstellen, daï¿½ kein Spambot an die Edit-Box kommt (weil dort die Adresse ja im Klartext steht).";
  $ewiki_t["de"]["PROTE4"] = "Ich bin wirklich kein Spambot!";
  $ewiki_t["de"]["PROTE5"] = "<b>noch mehr fingierte Adressen anzeigen</b>";
  $ewiki_t["de"]["PROTE6"] = "die EMail-Adresse die du angeklickt hast lautet:";
- $ewiki_t["de"]["PROTE7"] = "<b>Liebe Spammer, bitte freßt das:</b>";
+ $ewiki_t["de"]["PROTE7"] = "<b>Liebe Spammer, bitte freï¿½t das:</b>";
 
  #-- plugin glue
  $ewiki_plugins["page"][EWIKI_PAGE_EMAIL] = "ewiki_email_protect_form";
@@ -145,7 +145,7 @@
                 }
              }
              $html .= '<input type="checkbox" name="'.EWIKI_UP_NOSPAMBOT.'" value="true" id="no_spambot_checkbox"><label for="no_spambot_checkbox"> ' . ewiki_t("PROTE4") . '</label><br /><br />';
-             $html .= '<input type="submit" name="go"></form><br /><br />';
+             $html .= '<input type="submit" class="button" name="go"></form><br /><br />';
 
              if (EWIKI_FAKE_EMAIL_LOOP) {
                 $html .= "\n" . ewiki_t("PROTE7") . "<br />\n";
@@ -192,7 +192,7 @@
           while (($rd = strrpos($string, ".")) > strpos($string, "@")) {
              $string = substr($string, 0, $rd);
           }
-          $string = strtr($string, "@.-_", "»·±¯");
+          $string = strtr($string, "@.-_", "ï¿½ï¿½ï¿½ï¿½");
           break;
 
        case 1:  // encode

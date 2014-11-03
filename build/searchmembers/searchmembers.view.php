@@ -90,9 +90,7 @@ class SearchmembersView extends PAppView {
     
     /* This adds other custom styles to the page*/
     public function customStyles($mapstyle,$quicksearch=0) {
-        $out = '<link rel="stylesheet" href="styles/css/minimal/screen/basemod_minimal_col3.css" type="text/css"/>';
-        $out .= '<!--[if lte IE 7]><link rel="stylesheet" href="styles/css/minimal/patches/patch_3col.css" type="text/css"/><![endif]-->';
-        $out .= '<link rel="stylesheet" href="styles/css/minimal/screen/custom/searchmembers.css?1" type="text/css"/>';
+        $out = '<link rel="stylesheet" href="styles/css/minimal/screen/custom/searchmembers.css?1" type="text/css"/>';
         $out .= '<link rel="stylesheet" type="text/css" href="styles/css/minimal/screen/custom/prototip.css" />';
         return $out;
     }

@@ -67,7 +67,7 @@ function ewiki_mpi_survey($action, &$args, &$iii, &$s)
             $o .= '<input type="radio" name="'.EWIKI_UP_SURVEY.'" value="'
                 . htmlentities($name) . '"> ' . $text . "<br />\n";
          }
-         $o .= '<input type="submit" value="vote">';
+         $o .= '<input type="submit" class="button" value="vote">';
          $o .= "\n</form>\n<br /><br />\n";
          $o .= '<a href="'.ewiki_script("",$ewiki_id,array(EWIKI_UP_SURVEY=>"$")).'">show results</a><br />';
       }

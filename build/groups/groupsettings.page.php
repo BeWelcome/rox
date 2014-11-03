@@ -36,7 +36,7 @@ class GroupSettingsPage extends GroupsBasePage
         // &gt; or &raquo; ?
         $words = $this->getWords();
         ?>
-        <div id="teaser" class="clearfix">
+        <div id="teaser" class="page-teaser clearfix">
         <div id="teaser_l1">
         <h1><a href="groups"><?= $words->get('Groups');?></a> &raquo; <a href=""><?= $words->get('GroupsAdministrateGroup');?></a></h1>
         </div>
@@ -145,18 +145,18 @@ class GroupSettingsPage extends GroupsBasePage
                     </div><!-- subcr -->
                 </div><!-- c50r -->
             </div><!-- subcolumns -->
-           <div class="groupsettinginfo"><input type="submit" value="<?= $words->getSilent('GroupsUpdateGroupSettings'); ?>" /></div>  <?php echo $words->flushBuffer(); ?>
+           <div class="groupsettinginfo"><input type="submit" class="button" value="<?= $words->getSilent('GroupsUpdateGroupSettings'); ?>" /></div>  <?php echo $words->flushBuffer(); ?>
             <div class="subcolumns">
                 <div class="c50l">
                     <div class="subcl">
                     <h3><?= $words->get('GroupsAdministrateMembers'); ?></h3>
-                    <a class="button" href="groups/<?= $this->group->id; ?>/memberadministration"><?= $words->get('GroupsAdministrateMembers'); ?></a>
+                    <a class="button" role="button" href="groups/<?= $this->group->id; ?>/memberadministration"><?= $words->get('GroupsAdministrateMembers'); ?></a>
                     </div><!-- subcl -->
                 </div><!-- c50l -->
                 <div class="c50r">
                     <div class="subcr">
                     <h3><?= $words->get('GroupsDeleteGroup'); ?></h3>
-                    <a class="button" href="groups/<?= $this->group->id; ?>/delete"><?= $words->get('GroupsDeleteGroup'); ?></a>
+                    <a class="button" role="button" href="groups/<?= $this->group->id; ?>/delete"><?= $words->get('GroupsDeleteGroup'); ?></a>
                     </div><!-- subcr -->
                 </div><!-- c50r -->
             </div><!-- subcolumns -->

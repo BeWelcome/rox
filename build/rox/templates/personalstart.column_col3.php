@@ -28,7 +28,7 @@ Boston, MA  02111-1307, USA.
         <div class="subcl">
             <!-- Community news -->
             <h3 class="first" ><a href="blog/tags/Community News for the frontpage"><?php echo $words->getFormatted('CommunityNews') ?></a> <a href="rss/blog/tags/Community%20News%20for%20the%20frontpage"><img src="images/icons/feed.png" alt="<?=$words->getSilent('GetRSSFeed')?>"></a><?php $words->flushBuffer()?></h3>
-            <div class="floatbox">
+            <div class="clearfix">
                 <?php
                 $blogModel = new Blog();
                 $view = new BlogView($blogModel);
@@ -76,7 +76,7 @@ Boston, MA  02111-1307, USA.
                 }
                 ?>
                 <p><a href="blog/tags/Community News for the frontpage" ><?echo $words->get('ReadMore');?></a></p>
-            </div> <!-- floatbox -->
+            </div> <!-- clearfix -->
         </div> <!-- subcl -->
     </div> <!-- c33l -->
 
@@ -87,7 +87,7 @@ Boston, MA  02111-1307, USA.
                 // to avoid direct spam hits
                 if (time() - strtotime($member->created) >  7 * 24 * 60 * 60) { ?>
                 <h3 class="first"><?php echo $words->getFormatted('RecentMember') ?></h3>
-                <div id="newmembers" class="floatbox">
+                <div id="newmembers" class="clearfix">
                     <?php
                         // Display the last created members with a picture
                         if ($showVisitors) {
@@ -99,7 +99,7 @@ Boston, MA  02111-1307, USA.
                         for ($ii=0;$ii<count($latestmembers);$ii++)
                         {
                             $m=$latestmembers[$ii];
-                            $img = MOD_layoutbits::PIC_30_30($m->Username,'',$style='float_left framed');
+                            $img = MOD_layoutbits::PIC_50_50($m->Username,'',$style='float_left framed');
                             echo <<<HTML
                         <div class="newmember" >
                             {$img}
@@ -111,19 +111,19 @@ Boston, MA  02111-1307, USA.
 HTML;
                         }
                         echo <<<HTML
-                </div> <!-- floatbox -->
+                </div> <!-- clearfix -->
 HTML;
                 }
                 if ($showVisitors) {
                         echo <<<HTML
+                <div id="visitors" class="clearfix">
                 <h3><a href="myvisitors">{$words->get('RecentVisitsOfyourProfile')}</a></h3>
-                <div id="visitors" class="floatbox">
 HTML;
 
                         $last_visits=MOD_visits::get()->BuildLastVisits(0, 4) ;
                         for ($ii=0;$ii<count($last_visits);$ii++) {
                             $m=$last_visits[$ii] ;
-                            $img = MOD_layoutbits::PIC_30_30($m->Username,'',$style='float_left framed');
+                            $img = MOD_layoutbits::PIC_50_50($m->Username,'',$style='float_left framed');
                             echo <<<HTML
                         <div class="visitors" >
                             {$img}
@@ -135,7 +135,7 @@ HTML;
 HTML;
                         }
                         ?>
-                </div> <!-- floatbox -->
+                </div> <!-- clearfix -->
 <?php
                 }
 
@@ -145,20 +145,20 @@ $next_trips_count = count($next_trips);
 ?>
                 <?php if ($next_trips_count > 0): ?>
                 <h3 class="first"><?php echo $words->getFormatted('TripCity'); ?></h3>
-                <div id="nextvisitors" class="floatbox">
+                <div id="nextvisitors" class="clarfix">
                     <?php for ($ii = 0; $ii < $next_trips_count; $ii++): ?>
                     <?php
                         $m = $next_trips[$ii];
                         $tripDate = date('Y-m-d', strtotime($m->tripDate));
                     ?>
                     <div class="visitors">
-                        <?php echo MOD_layoutbits::PIC_30_30($m->Username, '', $style = 'float_left framed'); ?>
+                        <?php echo MOD_layoutbits::PIC_50_50($m->Username, '', $style = 'float_left framed'); ?>
                         <?php echo '<a href="members/' . $m->Username . '">' . $m->Username . '</a>'; ?><br />
                         <?php echo $m->country; ?><br />
                         <?php echo '<a href="blog/' . $m->Username . '/' . $m->tripId . '">' . $tripDate . '</a>'; ?>
                     </div> <!-- visitors -->
                     <?php endfor; ?>
-                </div> <!-- floatbox -->
+                </div> <!-- clearfix -->
                 <?php endif; ?>
             </div> <!-- subcl -->
         </div> <!-- c33l -->
@@ -166,9 +166,9 @@ $next_trips_count = count($next_trips);
         <div class="c33r">
             <div class="subcr">
                 <h3 class="first" ><a href="forums"><?php echo $words->getFormatted('ForumRecentPostsLong') ?></a></h3>
-                <div class="floatbox">
+                <div class="clearfix">
                     <?php $Forums->showExternalLatest(true); ?>
-                </div> <!-- floatbox -->
+                </div> <!-- clearfix -->
             </div> <!-- subcr -->
         </div> <!-- c33r -->
 

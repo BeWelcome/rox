@@ -44,11 +44,11 @@ if (!empty($errors)) {
     echo $errStr;
 }
 ?>
-    <div class="row">
+    <div class="bw-row">
         <label class="float_left"for="activity-title"><?php echo $words->get('ActivityTitle'); ?>*</label><span class="small float_right" style="margin-right: 0.3em;">* <?php echo $words->get('ActivityMandatoryFields'); ?></span><br />
         <input type="text" id="activity-title" name="activity-title" maxlength="80" class="long" style="width:99%" value="<?php echo $vars['activity-title']; ?>" />
     </div>
-    <div class="row">
+    <div class="bw-row">
         <label for="activity-location"><?php echo $words->get('ActivityLocation'); ?>*</label><br/>
         <input type="text" id="activity-location" name="activity-location" class="long" value="<?php echo $vars['activity-location']; ?>" style="width:70%" />
         <input class="button" type="submit" id="activity-location-button" name="activity-location-button" value="<?php echo $words->getBuffered('ActivitiesLocationSearch'); ?>" /><?php echo $words->flushBuffer(); ?>
@@ -56,7 +56,7 @@ if (!empty($errors)) {
     <div id="activity-location-suggestion" style="display: none;">
         <ol id="locations" class="plain"></ol>
     </div>
-    <div class="row">
+    <div class="bw-row">
         <label for="activity-address"><?php echo $words->get('ActivityAddress'); ?>*</label><br/>
         <textarea id="activity-address" name="activity-address" class="nomce" rows="3" cols="80" class="long" style="width:99%" ><?php echo $vars['activity-address']; ?></textarea>
     </div>
@@ -85,16 +85,16 @@ if (!empty($errors)) {
              $activitieseditcreatebutton = $words->getSilent('ActivitiesSubmit');
         }
         ?>
-        <input type="submit" id="activity-submit" name="activity-submit" value="<?php echo $activitieseditcreatebutton; ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
+        <input type="submit" class="button" id="activity-submit" name="activity-submit" value="<?php echo $activitieseditcreatebutton; ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
     </div>
 </form>
 <form method="post" id="activity-show-form">
-    <div class="row">
+    <div class="bw-row">
         <?php echo $callbackTagsCancelUncancel; ?>
-        <input class="row" type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
+        <input class="bw-row" type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
         <?php
             if (!$this->activity->status == 1 && $vars['activity-id'] != 0) {
-                echo '<input type="submit" class="back" id="activity-cancel" name="activity-cancel" value="' . $words->getSilent('ActivityEditCreateCancel') . '"/>';
+                echo '<input type="submit" class="button" class="back" id="activity-cancel" name="activity-cancel" value="' . $words->getSilent('ActivityEditCreateCancel') . '"/>';
             }
         ?>
     </div>

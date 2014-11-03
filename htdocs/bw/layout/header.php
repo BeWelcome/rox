@@ -26,9 +26,8 @@ Boston, MA  02111-1307, USA.
 
 require_once("layouttools.php");
 
-echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
-echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
-echo "<html xmlns=\"http://www.w3.org/1999/xhtml\"" ;
+echo "<!DOCTYPE html>\n";
+echo "<html " ;
 if (isset($_SESSION["lang"])) echo " lang=\"".($_SESSION["lang"])."\"" ;
 echo ">\n";
 global $_SYSHCVOL;
@@ -38,7 +37,9 @@ if (isset ($title)) {
 } else {
 	echo "\n<title>", $_SYSHCVOL['SiteName'], "</title>\n";
 }
-echo "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n";
+echo "  <meta charset=\"utf-8\">\n";
+echo "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n";
+echo "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n";
 if (empty($meta_description)) $meta_description=ww("default_meta_description") ;
 echo "  <meta name=\"description\" content=\"",$meta_description,"\" />\n" ;
 if (empty($meta_keyword)) $meta_keyword=ww("default_meta_keyword") ;
@@ -62,6 +63,13 @@ echo '  <link href="/styles/css/' . $stylesheet. '/minimal.css" rel="stylesheet"
 echo '<!--[if lte IE 7]>';
 echo '  <link href="/styles/css/' . $stylesheet. '/patches/iehacks_3col_vlines.css" rel="stylesheet" type="text/css" media="screen" />';
 echo '<![endif]-->';
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+<?php
 echo "</head>";
 
 if (isset($onLoadAction)) {

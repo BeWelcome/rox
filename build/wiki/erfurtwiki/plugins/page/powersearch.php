@@ -36,7 +36,7 @@ function ewiki_page_powersearch($id, &$data, $action) {
         <input type="text" id="q" name="q" size="30">
         in <select name="where"><option value="content">page texts</option><option value="id">titles</option><option value="author">author names</option></select>
         <br /><br />
-        <input type="submit" value=" &nbsp; &nbsp; S E A R C H &nbsp; &nbsp; ">
+        <input type="submit" class="button" value=" &nbsp; &nbsp; S E A R C H &nbsp; &nbsp; ">
         </form></div>
         <script type="text/javascript"><!--
         document.powersearch.q.focus();

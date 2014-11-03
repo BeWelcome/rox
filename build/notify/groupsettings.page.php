@@ -10,7 +10,7 @@ class GroupSettingsPage extends GroupsBasePage
     {
         // &gt; or &raquo; ?
         ?>
-        <div id="teaser" class="clearfix">
+        <div id="teaser" class="page-teaser clearfix">
         <div id="teaser_l1"> 
         <h1><a href="groups">Groups</a> &raquo; <a href="">Admininstrate group</a></h1>
         </div>
@@ -83,16 +83,16 @@ class GroupSettingsPage extends GroupsBasePage
                             <h3><?= $words->get('GroupsAddImage'); ?></h3>
                             <label for='group_image'><?= $words->get('GroupsImage'); ?></label><br /><input id='group_image' name='group_image' type='file' />
                         <fieldset>
-                        <p class="center"><input type="submit" value="<?= $words->get('GroupsUpdateGroupSettings'); ?>" /></p>
+                        <p class="center"><input type="submit" class="button" value="<?= $words->get('GroupsUpdateGroupSettings'); ?>" /></p>
                     </form>
                 </div>
             </div>
             <div class="c38r">
                 <div class="subcr">
                     <h3><?= $words->get('GroupsAdministrateMembers'); ?></h3>
-                        <p><a class="button" href="groups/<?= $this->group->id; ?>/memberadministration"><?= $words->get('GroupsAdministrateMembers'); ?></a></p>
+                        <p><a class="button" role="button" href="groups/<?= $this->group->id; ?>/memberadministration"><?= $words->get('GroupsAdministrateMembers'); ?></a></p>
                     <h3><?= $words->get('GroupsDeleteGroup'); ?></h3>
-                        <p><a class="button" href="groups/<?= $this->group->id; ?>/delete"><?= $words->get('GroupsDeleteGroup'); ?></a></p>
+                        <p><a class="button" role="button" href="groups/<?= $this->group->id; ?>/delete"><?= $words->get('GroupsDeleteGroup'); ?></a></p>
                 </div>
             </div>
         </div>

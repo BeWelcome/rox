@@ -16,7 +16,7 @@ if ($galleries) {
     if (!isset($itemsPerPage)) $itemsPerPage = 6;
     $p = PFunctions::paginate($galleries, $page, $itemsPerPage);
     $galleriesonpage = $p[0];
-    echo '<div class="floatbox">';
+    echo '<div class="clearfix">';
     foreach ($galleriesonpage as $g) {
     	static $ii = 0;
         $d = $Gallery->getLatestGalleryItem($g->id);

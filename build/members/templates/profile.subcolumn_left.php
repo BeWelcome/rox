@@ -1,5 +1,5 @@
 
-<div id="profilesummary" class="floatbox box">
+<div id="profilesummary" class="clearfix box">
     <?php if ($showEditLinks): ?>
     <span class="float_right profile-edit-link">
         <a href="editmyprofile/<?php echo $profile_language_code; ?>"><?php echo $words->get('Edit'); ?></a>
@@ -12,7 +12,7 @@
 ?>
 </div> <!-- profilesummary -->
 
-<div id="languages" class="floatbox box">
+<div id="languages" class="clearfix box">
     <?php if ($showEditLinks): ?>
     <span class="float_right profile-edit-link">
         <a href="editmyprofile/<?php echo $profile_language_code; ?>"><?php echo $words->get('Edit'); ?></a>
@@ -35,7 +35,7 @@ HTML;
         if ($member->get_trad("Hobbies", $profile_language,true) != "" || $member->get_trad("Organizations", $profile_language,true) != "" || $member->get_trad("Books", $profile_language,true) != "" || $member->get_trad("Music", $profile_language,true) != "" || $member->get_trad("Movies", $profile_language,true) != "")
         { 
 ?>
-<div id="interests" class="floatbox box">
+<div id="interests" class="clearfix box">
     <?php if ($showEditLinks): ?>
     <span class="float_right profile-edit-link">
         <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileinterests"><?php echo $words->get('Edit'); ?></a>
@@ -93,7 +93,7 @@ HTML;
         if ($member->get_trad("PastTrips", $profile_language,true) != "" || $member->get_trad("PlannedTrips", $profile_language,true) != "")
         {
 ?>
-<div id="travel" class="floatbox box">
+<div id="travel" class="clearfix box">
     <?php if ($showEditLinks): ?>
     <span class="float_right profile-edit-link">
         <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileinterests"><?php echo $words->get('Edit'); ?></a>
@@ -114,7 +114,7 @@ HTML;
         $my_groups = $member->getGroups();
         if (!empty($my_groups)) :
             echo <<<HTML
-<div id="groups" class="floatbox box">
+<div id="groups" class="clearfix box">
 HTML;
 ?>
     <?php if ($showEditLinks): ?>
@@ -131,7 +131,7 @@ HTML;
                 $group_name = htmlspecialchars($my_groups[$i]->Name, ENT_QUOTES);
                 $comment = $purifier->purify($words->mInTrad($member->getGroupMembership($my_groups[$i])->Comment,$profile_language));
                 echo <<<HTML
-                <div class="groupbox floatbox">
+                <div class="groupbox clearfix">
                     <a href="groups/{$group_id}">
                         <img class="framed float_left"  width="50px" height="50px" alt="Group" src="{$group_img}"/>
                     </a>

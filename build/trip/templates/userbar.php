@@ -19,7 +19,7 @@ if ($member)
                     $m = $next_trips[$ii];
                     $tripDate = explode(" ",$m->tripDate);
             ?>
-                    <p class="floatbox UserpicFloated">
+                    <p class="clearfix UserpicFloated">
                         <?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='float_left framed') ?><?php echo $words->flushBuffer(); ?>
                         <?php echo '<a href="members/'.$m->Username.'">'.$m->Username.'</a>' ?>
                         <br />

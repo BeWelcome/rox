@@ -41,11 +41,8 @@ Boston, MA  02111-1307, USA.
     }
     $words = new MOD_words();
 
-    echo
-        '<ul>'
-    ;
-   echo
-    '<li><a href="volunteer">'. $words->get("VolunteerpageLink") . '</a></li>';
+    echo '<ul class="dropdown-menu">';
+    echo '<li><a href="volunteer">'. $words->get("VolunteerpageLink") . '</a></li>';
 
     $array_of_items =
         array(

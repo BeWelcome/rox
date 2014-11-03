@@ -191,7 +191,7 @@ class UserView extends PAppView
 				Group of '.$userHandle.':
 				<select name="newgroup">';
 			foreach ($groups as $groupid => $group){$out .= '<option value="'.$groupid.'"'.($groupid == $current_user->auth_id ? ' selected="selected"' : '').'>'.$group.'</option>';}
-			$out .= '</select><input type="submit" value="Change" /></form>';
+			$out .= '</select><input type="submit" class="button" value="Change" /></form>';
 			
 			return $out;
 		}

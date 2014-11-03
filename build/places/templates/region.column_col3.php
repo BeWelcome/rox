@@ -2,7 +2,7 @@
 echo '<h2>' . $words->get('Cities') . '</h2>';
 define('MINROWS',5); // minimum number of rows to be used before next column
 define('MAXCOLS',4); // maximum number columns before extending rows beyond MINROWS
-echo '<div id="places" class="floatbox">';
+echo '<div id="places" class="clearfix">';
 echo '<ul class="float_left">';
 
 $listcnt = 0;

@@ -6,8 +6,8 @@ if (isset($this->keyword)) {
 }
 ?>
 
-<div id="teaser" class="clearfix">
-    <div id="title" class="float_left">
+<div id="teaser" class="page-teaser clearfix">
+    <div id="title" class="pull-left">
         <h1>
             <a href="forums"><?php echo $this->_model->words->getFormatted('CommunityLanding'); ?></a>
 
@@ -28,7 +28,7 @@ if (isset($this->keyword)) {
     </div> <!-- title -->
 
 
-    <div class="float_right">
+    <div class="pull-right">
         <!-- Google froum search bar -->
         <p><?php echo $this->_model->words->getFormatted('ForumSearch'); ?></p>
         <form action="/forums/search" method="POST" id="search-box"><div>

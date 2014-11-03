@@ -64,7 +64,7 @@ class GroupJoinPage extends GroupsBasePage
                 <input type='hidden' name='group_id' value='{$this->group->id}' />
                 <label for="comment">{$words->get('GroupsMemberComments')}</label><br />
                 <textarea id="comment" name="membershipinfo_comment" cols="60" rows="5" class="long" ></textarea>
-                <div class="row">
+                <div class="bw-row">
                     <label>{$words->get('GroupsMemberAcceptMail')}:</label>
                     <input id='no_option' type="radio" value="no" name="membershipinfo_acceptgroupmail" />
                     <label for="no_option">{$words->get('no')}</label>
@@ -74,7 +74,7 @@ class GroupJoinPage extends GroupsBasePage
                 </div> <!-- row -->
                 <h3>{$words->get('GroupsJoinNamedGroup', $group_name_html)}</h3>
                 <input type='submit' value='{$words->getSilent('GroupsGetMeIn')}' name='join'/>
-                <span class="button"><a href="groups/{$this->group->id}">{$words->get('GroupsDontGetMeIn')}</a></span>
+                <a class="button" role="button" href="groups/{$this->group->id}">{$words->get('GroupsDontGetMeIn')}</a>
             </fieldset>           
         </form>
 HTML;

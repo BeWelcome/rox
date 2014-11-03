@@ -97,7 +97,7 @@ function ewiki_editable_intermap($id, $data, $action) {
       <input type="hidden" name="id" value="$id">
       :<input name="add_moniker" value="WikiName" size="16">:<input name="add_url" value="http://www.example.com/..." size="42">
       <br />
-      <input type="submit" value="_{add}">
+      <input type="submit" class="button" value="_{add}">
     </form>
 EOT
    );

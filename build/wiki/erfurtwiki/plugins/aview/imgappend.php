@@ -29,7 +29,7 @@ function ewiki_aview_image_append($id, $data, $action) {
 <form action="$URL" method="POST" enctype="multipart/form-data">
   $TXT
   <input type="file" name="imagefile" $accept><br />
-  <input type="submit" value="$BTN1">
+  <input type="submit" class="button" value="$BTN1">
 </form>
 </div>
 ___

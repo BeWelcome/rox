@@ -134,7 +134,7 @@ function ewiki_page_liveuser_admin_add_users($id, $data, $action)
     <tr><td><label for="country_text">Country</label></td>
     <td><input name="text_Country" type="text" /></td></tr>
   </table>
-	<input type="submit" name="submit_addusers" />
+	<input type="submit" class="button" name="submit_addusers" />
 	</form>
     <?php
     

@@ -9,7 +9,7 @@ if (!$option->deleted | ($this->hasSuggestionRight)) : ?>
 // \todo: define a cleaner setup ?>
     <div class="<?php echo $class;?>">
         <div class="subcl">
-            <div class="row">
+            <div class="bw-row">
             <?php echo $this->purifier->purify($option->description);?>
             </div>
         </div>
@@ -17,16 +17,16 @@ if (!$option->deleted | ($this->hasSuggestionRight)) : ?>
 <?php if (!$this->viewOnly) : ?>
     <div class="c38r">
         <div class="subcr">
-            <div class="row">
+            <div class="bw-row">
                 <?php if (!$option->deleted) : ?>
-                <a class="button" href="/suggestions/<?php echo $this->suggestion->id ?>/addoptions/<?php echo $option->id; ?>/edit">
+                <a class="button" role="button" href="/suggestions/<?php echo $this->suggestion->id ?>/addoptions/<?php echo $option->id; ?>/edit">
                 <?php echo $words->getSilent('SuggestionsSubmitEditOption'); ?></a>
                 <?php endif;
                 if ($option->deleted) :?>
-                <a class="button" href="/suggestions/<?php echo $this->suggestion->id ?>/addoptions/<?php echo $option->id; ?>/restore">
+                <a class="button" role="button" href="/suggestions/<?php echo $this->suggestion->id ?>/addoptions/<?php echo $option->id; ?>/restore">
                 <?php echo $words->getSilent('SuggestionsSubmitRestoreOption'); ?></a><br />
                 <?php else : ?>
-                <a class="button" href="/suggestions/<?php echo $this->suggestion->id ?>/addoptions/<?php echo $option->id; ?>/delete">
+                <a class="button" role="button" href="/suggestions/<?php echo $this->suggestion->id ?>/addoptions/<?php echo $option->id; ?>/delete">
                 <?php echo $words->getSilent('SuggestionsSubmitDeleteOption'); ?></a><br />
                 <?php endif;?>
                 <div class="subcolumns"><div class="c50l"><div class="subcl">

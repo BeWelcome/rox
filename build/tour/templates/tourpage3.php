@@ -27,7 +27,7 @@ $words = new MOD_words();
     <h3><?php echo $words->get('tour_share')?></h3>
 
     <h4><?php echo $words->getFormatted('tour_share_title1')?></h4>
-    <div class="floatbox" style="margin-top: 20px">
+    <div class="clearfix" style="margin-top: 20px">
         <img src="images/tour/share4_small.jpg" class="framed float_left" style="margin-bottom: 20px; margin-right: 20px;" alt="share" />
         <p><?php echo $words->getFormatted('tour_share_text1')?></p>
         
@@ -37,6 +37,6 @@ $words = new MOD_words();
         <h4><?php echo $words->getFormatted('tour_share_title3')?></h4>
         <p><?php echo $words->getFormatted('tour_share_text3')?></p>
         
-        <a class="bigbutton" href="tour/meet" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_goNext')?> &raquo; <?php echo $words->getFormatted('tour_link_meet')?></span></a>
+        <a class="button" href="tour/meet" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_goNext')?> &raquo; <?php echo $words->getFormatted('tour_link_meet')?></span></a>
     </div>
 </div>

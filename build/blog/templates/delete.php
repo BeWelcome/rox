@@ -7,8 +7,8 @@ echo <<<HTML
     <p>
         <input type="hidden" name="id" value="{$post->blog_id}"/>
         {$callback}
-        <input type="submit" name="n" value="{$words->get('No')}"/>
-        <input type="submit" name="y" value="{$words->get('Yes')}"/>
+        <input type="submit" class="button" name="n" value="{$words->get('No')}"/>
+        <input type="submit" class="button" name="y" value="{$words->get('Yes')}"/>
     </p>
 </form>
 HTML;

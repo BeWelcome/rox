@@ -35,7 +35,7 @@ Boston, MA  02111-1307, USA.
         <textarea name="explanation" id="explain" cols="65" rows="6"></textarea>
     </div>
     <p class="center">
-    <input type="submit" value="<?php echo $words->getBuffered('DeleteProfile') ?>"
+    <input type="submit" class="button" value="<?php echo $words->getBuffered('DeleteProfile') ?>"
         onclick="return confirm ('<?php echo $words->getBuffered ('retire_WarningConfirmRetire'); ?>')" />
         <?php echo $words->flushBuffer(); ?>    </p>
 </form>

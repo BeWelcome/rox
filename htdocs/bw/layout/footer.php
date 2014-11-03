@@ -105,9 +105,7 @@ echo "	</p>";
 echo "      <p class=\"center\">&copy;2007-2008 <strong>BeWelcome</strong> - ".ww("TheHospitalityNetwork")."</p>\n";
 
 echo "    </div>   <!-- footer --> \n"; 
-echo "  </div>   <!-- page --> \n"; 
-echo "</div>   <!-- page_margins --> \n"; 
-
+echo "</div>   <!-- container --> \n";
 echo "</body>\n";
 echo "</html>\n";
 

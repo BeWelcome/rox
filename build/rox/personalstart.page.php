@@ -7,20 +7,21 @@ class PersonalStartpage extends RoxPageView
         return 'main';
     }
     
-    protected function getStylesheets() {
-        $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
-        return $stylesheets;
+    protected function getColumnNames()
+    {
+        // we don't need the other columns
+        return array('col3');
     }
     
     /*
      * The idea was that stylesheetpatches was for MSIE
      */
-    protected function getStylesheetPatches()
+
+    protected function getStylesheets()
     {
-        //$stylesheet_patches = parent::getStylesheetPatches();
-        $stylesheet_patches[] = 'styles/css/minimal/patches/patch_3col.css';
-        return $stylesheet_patches;
+        $stylesheets = parent::getStylesheets();
+        $stylesheets[] = 'styles/css/minimal/screen/custom/main.css';
+        return $stylesheets;
     }
 
     protected function teaserContent()
@@ -74,11 +75,11 @@ class MailboxWidget_Personalstart extends MailboxWidget_Received
         //print_r($message);
         ?>
         
-        <div class="floatbox">
-            <a class="float_right" href="messages/<?=$id?>/reply" >
+        <div class="clearfix">
+            <a class="pull-right" href="messages/<?=$id?>/reply" >
                 <img src="images/icons/email_go.png" alt="Reply" />
             </a>
-            <?= MOD_layoutbits::PIC_30_30($senderUsername,'','float_left framed')?>
+            <?= MOD_layoutbits::PIC_50_50($senderUsername,'','pull-left framed')?>
             <a href="messages/<?=$id?>" class="<?=$readstyle?>">
         
             <?php

@@ -1,0 +1,407 @@
+// Core variables and mixins
+@import "variables.less";
+@import "../../../vendor/twbs/bootstrap/less/mixins.less";
+
+// Reset and dependencies
+@import "../../../vendor/twbs/bootstrap/less/normalize.less";
+@import "../../../vendor/twbs/bootstrap/less/print.less";
+@import "../../../vendor/twbs/bootstrap/less/glyphicons.less";
+
+// Core CSS
+@import "../../../vendor/twbs/bootstrap/less/scaffolding.less";
+@import "../../../vendor/twbs/bootstrap/less/type.less";
+@import "../../../vendor/twbs/bootstrap/less/code.less";
+@import "../../../vendor/twbs/bootstrap/less/grid.less";
+@import "../../../vendor/twbs/bootstrap/less/tables.less";
+@import "../../../vendor/twbs/bootstrap/less/forms.less";
+@import "../../../vendor/twbs/bootstrap/less/buttons.less";
+
+// Components
+@import "../../../vendor/twbs/bootstrap/less/component-animations.less";
+@import "../../../vendor/twbs/bootstrap/less/dropdowns.less";
+@import "../../../vendor/twbs/bootstrap/less/button-groups.less";
+@import "../../../vendor/twbs/bootstrap/less/input-groups.less";
+@import "../../../vendor/twbs/bootstrap/less/navs.less";
+@import "../../../vendor/twbs/bootstrap/less/navbar.less";
+@import "../../../vendor/twbs/bootstrap/less/breadcrumbs.less";
+@import "../../../vendor/twbs/bootstrap/less/pagination.less";
+@import "../../../vendor/twbs/bootstrap/less/pager.less";
+@import "../../../vendor/twbs/bootstrap/less/labels.less";
+@import "../../../vendor/twbs/bootstrap/less/badges.less";
+@import "../../../vendor/twbs/bootstrap/less/jumbotron.less";
+@import "../../../vendor/twbs/bootstrap/less/thumbnails.less";
+@import "../../../vendor/twbs/bootstrap/less/alerts.less";
+@import "../../../vendor/twbs/bootstrap/less/progress-bars.less";
+@import "../../../vendor/twbs/bootstrap/less/media.less";
+@import "../../../vendor/twbs/bootstrap/less/list-group.less";
+@import "../../../vendor/twbs/bootstrap/less/panels.less";
+@import "../../../vendor/twbs/bootstrap/less/responsive-embed.less";
+@import "../../../vendor/twbs/bootstrap/less/wells.less";
+@import "../../../vendor/twbs/bootstrap/less/close.less";
+
+// Components w/ JavaScript
+@import "../../../vendor/twbs/bootstrap/less/modals.less";
+@import "../../../vendor/twbs/bootstrap/less/tooltip.less";
+@import "../../../vendor/twbs/bootstrap/less/popovers.less";
+@import "../../../vendor/twbs/bootstrap/less/carousel.less";
+
+// Utility classes
+@import "../../../vendor/twbs/bootstrap/less/utilities.less";
+@import "../../../vendor/twbs/bootstrap/less/responsive-utilities.less";
+
+//Font-awesome
+@import "font-awesome/less/font-awesome.less";
+
+// Moving content below fixed navbar
+body { 
+  padding-top: 70px; 
+  //#gradient > .vertical(@start-color: #f7f7f7; @end-color: #fff;);
+  background: url("../../images/bggrey.png") repeat-x scroll left top #F7F7F7;
+}
+.page-teaser {
+  border-bottom: 1px solid #EEEEEE;
+  margin: 20px 0 -1px;
+}
+  /**
+   * Footer
+   * (en) Generic classes for footer
+   *
+   * @section content-footer
+   */
+
+
+
+footer a {margin: 0.1em 0 0 0; padding: 0.2em 0 0 0; color:#999; font-weight: normal; text-align: left; white-space: nowrap; }
+footer a:hover { text-decoration:underline; }
+footer a:focus { text-decoration:underline; }
+footer .linklist {padding-top: 0.2em;}  
+footer  {padding: 2em; color: #999;}
+footer a:hover {color: #999; text-decoration:underline; }
+footer a:focus {color: #999; text-decoration:underline; }
+//#footer { padding: 2.5em 4em; color:#666; border-top: 5px #efefef solid; }
+
+.pagination-nomargin {
+  margin: 0;
+}
+.button, input.button, .control-links a, .control-links input, a.cancel {
+  .btn;
+  .btn-default;
+  border-color: #E5E5E5 #BBBBBB #BBBBBB #E5E5E5;
+  border-style: solid;
+  border-width:1px;
+}
+
+// Inverted custome BeWelcome (gradient) navbar
+.navbar-inverse {
+  #gradient > .vertical(@start-color: #ffbc00; @end-color: @navbar-inverse-bg);
+  .reset-filter(); // Remove gradient in IE<10 to fix bug where dropdowns don't get triggered
+  
+  .navbar-nav > .active > a {
+    #gradient > .vertical(@start-color: @navbar-inverse-bg; @end-color: lighten(@navbar-inverse-bg, 2.5%));
+    .box-shadow(inset 0 3px 9px rgba(0,0,0,.25));
+    
+  }
+}
+.navbar-fixed-top {
+  border-width: 0px;
+}
+.navbar-inverse {
+  font-weight: bold;
+}
+.dropdown-menu {
+  border:none;
+}
+.dropdown-menu {
+  > li > a {
+  font-weight: bold;
+  font-color: #fff;
+  }
+}
+// middle submenu
+// custom .nav version for BW
+.nav {
+  > li {
+    // Disabled state sets text to gray
+    &.disabled > a {
+      color: @nav-disabled-link-color;
+      font-weight: bold;
+      
+      &:hover,
+      &:focus {
+        color: @nav-disabled-link-hover-color;
+        text-decoration: none;
+        background-color: @nav-link-hover-bg;
+        cursor: pointer;
+      }
+    }
+  }
+}
+// custom .nav-pills version for BW
+.nav-pills {
+  > li {
+    // Active state
+    &.active-bw > a {
+      &,
+      &:hover,
+      &:focus {
+        color: #fff;
+        font-weight: bold;
+        #gradient > .vertical(@start-color:#FFBC00 ; @end-color: #FF8700; @start-percent: 0%; @end-percent: 80%);
+        
+      }
+    }
+  }
+}
+@media (min-width: @screen-sm-min){
+  .nav-pills .active-bw a:after {
+      border-top: 15px solid #FF8700;
+      border-left: 15px solid rgba(0, 0, 0, 0);
+      border-right: 15px solid rgba(0, 0, 0, 0);
+      bottom: -15px;
+      content: " ";
+      display: block;
+      height: 0;
+      left: 50%;
+      margin-left: -15px;
+      position: absolute;
+      vertical-align: middle;
+      width: 0;
+  }
+}
+// custom .nav-justified version for BW
+.nav-justifiedmedia {
+  width: 100%;
+
+  > li {
+    float: none;
+     > a {
+      text-align: center;
+      margin-bottom: 5px;
+    }
+  }
+
+  > .dropdown .dropdown-menu {
+    top: auto;
+    left: auto;
+  }
+
+  @media (min-width: @screen-sm-min) {
+    > li {
+      float: left;
+      > a {
+        margin-bottom: 0;
+      }
+    }
+  }
+  }
+/* topnav menu (little greys) */
+.topnav > li > a, i { color: #777;}
+
+/* Login Widget */
+#login-widget {
+    padding: 1em;
+    padding-top: 0;
+    border: 1px solid #ccc;
+    background-color: #f5f5f5;
+    margin: 0 auto;
+    max-width: 360px;
+}
+.form-signin {
+    margin: 0 auto;
+    max-width: 330px;
+    padding: 15px;
+}
+.form-signin .form-signin-heading, .form-signin .checkbox {
+    margin-bottom: 10px;
+}
+.form-signin .checkbox {
+    font-weight: normal;
+}
+.form-signin .form-control {
+    -moz-box-sizing: border-box;
+    font-size: 16px;
+    height: auto;
+    padding: 10px;
+    position: relative;
+}
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+.form-signin input[type="text"] {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-bottom: -1px;
+}
+.form-signin input[type="password"] {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-bottom: 10px;
+}
+
+.dividerbox {
+    border-bottom: solid #DFDFDF;
+    position: relative;
+    margin-bottom: 10px;
+    padding-bottom: 20px;
+}
+.ordivider {
+    background-color: #F5F5F5;
+    color: #666666;
+    left: 40%;
+    position: absolute;
+    text-align: center;
+    bottom: -11px;
+    text-transform: uppercase;
+    width: 60px;
+}
+th, td {
+    padding: 0.5em;
+}
+#BeWelcome {
+   opacity:0;
+  .animation(fadein 3.5s ease-in 1);
+   animation-fill-mode:forwards;
+   -webkit-animation-fill-mode:forwards;
+}
+
+#opendoor {
+   opacity:0;
+  .animation(fadein 2.5s ease-in 1.5s 1);
+   animation-fill-mode:forwards;
+  -webkit-animation-fill-mode:forwards;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+/* Safari and Chrome */
+@-webkit-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Opera */
+@-o-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+.submenu {
+  margin-bottom: 1.5em;
+}
+.bw-row {
+  padding: .5em 0;
+}
+.subcolumns {
+  .make-row();
+}
+
+.c50l {
+.make-sm-column(6);
+}
+.c50r {
+.make-sm-column(6);
+}
+
+.c66l {
+.make-sm-column(8);
+}
+.c33r {
+.make-sm-column(4);
+}
+
+.c33l {
+.make-sm-column(4);
+}
+.c66r {
+.make-sm-column(8);
+}
+.c75l {
+.make-sm-column(9);
+}
+.c25r {
+.make-sm-column(3);
+}
+
+.c25l {
+.make-sm-column(3);
+}
+.c75r {
+.make-sm-column(9);
+}
+.c62l {
+.make-sm-column(7);
+}
+.c38r {
+.make-sm-column(5);
+}
+
+.c38l {
+.make-sm-column(5);
+}
+.c62r {
+.make-sm-column(7);
+}
+
+// ******************
+// Full width col3 layout will be implemented with:
+//
+//        protected function getColumnNames()
+//    {
+//        return array('col3');
+//    }
+//
+// This way is needed as a 12 columns grid does not need any markup. 
+// To be backward compatible we create a grid with current BW semantic in less:
+// Default: col1 or col 2 as left sidebar, col3 as main content.
+//******************
+#col1{
+.make-xs-column(12);
+.make-xs-column-push (0);
+.make-sm-column(4);
+.make-sm-column-push (8);
+.make-md-column(3);
+.make-md-column-push (9);
+.make-lg-column(3);
+.make-lg-column-push (9);
+}
+
+#col2{
+.make-xs-column(12);
+.make-xs-column-push (0);
+.make-sm-column(4);
+.make-sm-column-push (8);
+.make-md-column(3);
+.make-md-column-push (9);
+.make-lg-column(3);
+.make-lg-column-push (9);
+}
+#col3{
+.make-xs-column(12);
+.make-sm-column-pull (12);
+.make-sm-column(8);
+.make-sm-column-pull (4);
+.make-md-column(9);
+.make-md-column-pull (3);
+.make-lg-column(9);
+.make-lg-column-pull (3);
+}
+// Custom: col1_right or col 2_right as right sidebar, col3 as main content (example: profile)
+#col1_left{
+.make-xs-column(12);
+.make-sm-column(4);
+.make-md-column(3);
+.make-lg-column(3);
+}
+#col2_left{
+.make-xs-column(12);
+.make-sm-column(4);
+.make-md-column(3);
+.make-lg-column(3);
+}
+#col3_right{
+.make-xs-column(12);
+.make-sm-column(8);
+.make-md-column(9);
+.make-lg-column(9);
+}

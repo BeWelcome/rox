@@ -26,12 +26,12 @@ HTML;
                 else return false;
             }
         </script>
-        <p class="row">
+        <p class="bw-row">
             <input type="checkbox" name="selectAllRadio" class="checker" onclick="common.selectAll(this);">
             &nbsp;&nbsp;{$words->get('SelectAll')}            
         </p>
         <hr>
-        <p class="row">
+        <p class="bw-row">
 HTML;
         if (isset($galleries) && $galleries) { 
         echo <<<HTML
@@ -59,12 +59,12 @@ HTML;
         <input name="g-user" type="hidden" value="{$member->get_userid()}">
         <input name="g-title" id="g-title" type="text" size="20" maxlength="30" onclick="$('newGallery').checked = true;  $('deleteonly').value = 0;">
         <br />
-        <input type="submit" name="button" value="{$words->getBuffered('Move images')}" id="button" onclick="$('deleteonly').value = 0; return submitStuff();"/>
+        <input type="submit" class="button" name="button" value="{$words->getBuffered('Move images')}" id="button" onclick="$('deleteonly').value = 0; return submitStuff();"/>
         </p>
         <hr>
-        <p class="row">
+        <p class="bw-row">
             <input name="deleteOnly" id="deleteonly" type="hidden" value="0">
-            <input type="submit" name="button" value="{$words->getBuffered('Delete images')}" class="button" onclick="return askDelete()" style="cursor:pointer"/>
+            <input type="submit" class="button" name="button" value="{$words->getBuffered('Delete images')}" class="button" onclick="return askDelete()" style="cursor:pointer"/>
         </p>
 
         </form>

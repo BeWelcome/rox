@@ -35,7 +35,7 @@ $ToogleTagCloud=true ;
 if ($User) $TagCloud=true ;
 if (!$User) {
 ?>
-    <div class="subcolumns">
+    <div class="bw-row">
         <?=$this->words->getFormatted('ForumOnlyForBeWelcomeMember'); ?>
     </div>
 <?php
@@ -49,7 +49,7 @@ if (!$User) {
 <!--       <span class="float_right">
         <?= $this->words->get('GroupsSearchHeading'); ?>
         <form action="groups/search" method="get">
-            <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $this->words->getSilent('GroupsSearchSubmit'); ?>" /><br />
+            <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" class="button" value="<?= $this->words->getSilent('GroupsSearchSubmit'); ?>" /><br />
         </form><?php echo $this->words->flushBuffer(); ?>
     </span> -->
     <h2><a href="groups/forums"><?php echo $this->words->getFormatted('Groups'); ?></a> <span class="small">&ndash; <?php echo $this->words->get('GroupsTagLine'); ?></span></h2>
@@ -75,13 +75,13 @@ if ($threads = $groups->getThreads()) {
         <form class="morelessbuttons" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
             <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
             <input type="hidden" name="agoragroupsthreadscountmoreless" value="moregroups">
-            <input type="submit" name="submit" value="<?php echo $this->words->getSilent('ShowMore'); ?>">
+            <input type="submit" class="button" name="submit" value="<?php echo $this->words->getSilent('ShowMore'); ?>">
         </form>
 
         <form class="morelessbuttons" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
             <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
             <input type="hidden" name="agoragroupsthreadscountmoreless" value="lessgroups">
-            <input type="submit" name="submit" value="<?php echo $this->words->getSilent('ShowLess'); ?>">
+            <input type="submit" class="button" name="submit" value="<?php echo $this->words->getSilent('ShowLess'); ?>">
         </form>
 <?php
     }
@@ -95,7 +95,7 @@ if ($threads = $groups->getThreads()) {
 ?>
         <form class="morelessbuttons" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
             <input type="hidden" name="<?php echo $ownGroupsButtonCallbackId; ?>"  value="1">
-            <input type="submit" name="submit" value="<?php echo $buttonText; ?>">
+            <input type="submit" class="button" name="submit" value="<?php echo $buttonText; ?>">
         </form>
 <?php
     echo $words->flushBuffer();
@@ -148,13 +148,13 @@ if ($threads = $forum->getThreads()) {
         <form class="morelessbuttons" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
             <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
             <input type="hidden" name="agoragroupsthreadscountmoreless" value="moreagora">
-            <input type="submit" name="submit" value="<?php echo $this->words->getSilent('ShowMore'); ?>">
+            <input type="submit" class="button" name="submit" value="<?php echo $this->words->getSilent('ShowMore'); ?>">
         </form>
 
         <form class="morelessbuttons" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
             <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
             <input type="hidden" name="agoragroupsthreadscountmoreless" value="lessagora">
-            <input type="submit" name="submit" value="<?php echo $this->words->getSilent('ShowLess'); ?>">
+            <input type="submit" class="button" name="submit" value="<?php echo $this->words->getSilent('ShowLess'); ?>">
         </form>
 <?php
     echo $words->flushBuffer();

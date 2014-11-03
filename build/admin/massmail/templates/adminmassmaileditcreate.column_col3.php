@@ -96,7 +96,7 @@ if ($id != 0) {
 </div>
 
 <div class="type-button">
-  <input type="submit" name="submit" value="<?php
+  <input type="submit" class="button" name="submit" value="<?php
   if ($id != 0) {
     echo $words->get('AdminMassMailUpdate');
   }  else {

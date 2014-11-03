@@ -24,6 +24,16 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
 
-<div id="teaser">
-  <h1><?php echo $words->get('signup'); ?></h1>
-</div> <!-- teaser -->
+<div id="teaser" class="page-teaser clearfix">
+
+<div id="teaser_tour" style="width: 700px">
+<?php
+    echo "<h1 class=\"float_left\">", $words->get('thetourpage'),"</h1><img src=\"images/misc/steps.gif\" alt=\"steps\" />\n";
+?>
+<?php   //if ($step)
+    //echo "<h2>", $words->get($title.'desc_'.$step),"</h2>\n"; // Needs to be something like "Go, travel the world!"
+?>
+</div>
+<!--<div id="teaser_r">
+</div>-->
+</div>

@@ -17,7 +17,7 @@ if ($statement) {
     $p = PFunctions::paginate($statement, $page, $itemsPerPage);
     $statement = $p[0];
 
-    echo '<div class="floatbox thumb_wrapper">';
+    echo '<div class="clearfix thumb_wrapper">';
     foreach ($statement as $d) {
     	echo '
 <div class="img thumb float_left size'.$thumbsize.'">
@@ -42,7 +42,7 @@ echo '
     </div>';
     }
     echo '</div>';
-    echo '<div class="floatbox">';
+    echo '<div class="clearfix">';
     $pages = $p[1];
     $maxPage = $p[2];
     $currentPage = $page;

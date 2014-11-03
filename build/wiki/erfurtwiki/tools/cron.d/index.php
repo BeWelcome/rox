@@ -74,11 +74,11 @@ can as last resort start the scripts in the cron.d/ directory by hand.
 <br>
 
 <form action="run-parts.php" method="POST" enctype="multipart/form-data" style="display:inline">
-<input type="submit" value="run-parts">
+<input type="submit" class="button" value="run-parts">
 </form>
 
 <form action="index.php" method="POST" enctype="multipart/form-data" style="display:inline">
-<input type="submit" name="unlock" value="remove stale lock" style="font-size:10px;" <?php if (!file_exists($lock)) echo "disabled";?>>
+<input type="submit" class="button" name="unlock" value="remove stale lock" style="font-size:10px;" <?php if (!file_exists($lock)) echo "disabled";?>>
 </form>
 
 <br>

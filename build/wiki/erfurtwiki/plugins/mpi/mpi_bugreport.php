@@ -109,7 +109,7 @@ long error description:<br />
 <textarea name="content" cols="75" rows="8">
 </textarea>
 <br/><br/>
-<input type="submit" name="br_save" value="create bug page">
+<input type="submit" class="button" name="br_save" value="create bug page">
 <br/>
 <br/>
 email notification <input type="text" name="br_notify" value="" size="16">

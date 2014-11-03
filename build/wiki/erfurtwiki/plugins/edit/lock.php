@@ -52,7 +52,7 @@ function ewiki_edit_lock($id, &$data, $action) {
             . " "
             . '<form action="'.$_SERVER[REQUEST_URI].'" method="POST">'
             . '<input type="id" name="'."$action/$id".'">'
-            . '<input type="submit" name="edit_unlock" value="_{unlock}">'
+            . '<input type="submit" class="button" name="edit_unlock" value="_{unlock}">'
             . '</form>'
             . "</p>\n");
       }

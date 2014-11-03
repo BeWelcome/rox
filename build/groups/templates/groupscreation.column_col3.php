@@ -67,7 +67,6 @@
             <h3><?= $words->get('GroupsAddImage'); ?></h3>
             <label for='group_image'><?= $words->get('GroupsImage'); ?></label><br /><input id='group_image' name='group_image' type='file' />
 
-            <p style="padding-top: 2em"><input type="submit" value="<?php echo $words->get('GroupsCreateNew'); ?>" /></p>
             </fieldset>
         </form>
     </div>

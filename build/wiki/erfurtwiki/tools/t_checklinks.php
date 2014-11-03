@@ -25,7 +25,7 @@ wiki page with the dead links marked for easier editing.
 </select>
 <input name="page" size="40" value="LinkDirectory"><br><br>
 
-<input type="submit" value="check http:// links"><br><br>
+<input type="submit" class="button" value="check http:// links"><br><br>
 
 <input type="checkbox" name="opt[modify]" checked value="1" id="opt-modify"><label for="opt-modify"> modify pages, mark bad links</label><br>
 <input type="checkbox" name="opt[404]" checked value="1" id="opt-404"><label for="opt-404"> extened error 404 checks (to detect text-only/human-visible error messages of buggy portal scripts)</label><br>
@@ -93,7 +93,7 @@ function check_links_for($id, $ext404=1, $modify=1) {
      if ($modify) {
          #-- replace dead links
          foreach ($badlinks as $href) {
-            $content = preg_replace("\377^(.*$href)\377m", ' µµ__~[OFFLINE]__µµ   $1', $content);
+            $content = preg_replace("\377^(.*$href)\377m", ' ï¿½ï¿½__~[OFFLINE]__ï¿½ï¿½   $1', $content);
          }
 
          #-- compare against db content

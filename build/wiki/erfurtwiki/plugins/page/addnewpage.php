@@ -11,12 +11,12 @@
 
 $ewiki_plugins["page"]["AddNewPage"] = "ewiki_addpage";
 $ewiki_plugins["page"]["CreatePage"] = "ewiki_addpage";
-$ewiki_plugins["page"]["EineSeiteHinzufügen"] = "ewiki_addpage";
+$ewiki_plugins["page"]["EineSeiteHinzufï¿½gen"] = "ewiki_addpage";
 
 $ewiki_t["de"]["name of the new page"] = "Name der neuen Seite";
 $ewiki_t["de"]["link it from"] = "verlinken von";
 $ewiki_t["de"]["create"] = "erstellen";
-$ewiki_t["de"]["AddedPages"] = "HinzugefügteSeiten";
+$ewiki_t["de"]["AddedPages"] = "Hinzugefï¿½gteSeiten";
 
 
 function ewiki_addpage($id, &$data, $version) {
@@ -30,7 +30,7 @@ function ewiki_addpage($id, &$data, $version) {
          '<form action="'.ewiki_script("",$id).'" method="POST" enctype="multipart/formdata"> '
          .'_{name of the new page} <input type="text" name="new_id" size="26" value="">'
          .'<br />'
-         .'<input type="submit" value="_{create}">'
+         .'<input type="submit" class="button" value="_{create}">'
          .'<br /><br />'
          .'<input type="checkbox" name="add_link_from" value="1" checked="checked">'
          .' _{link it from} '

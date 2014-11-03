@@ -31,5 +31,5 @@ Boston, MA  02111-1307, USA.
     <p><?php echo $this->getCallbackOutput('MembersController','setProfileActiveCallback'); ?></p>
     <p><?php echo $words->getFormatted('ProfileSetActiveInfo'); ?></p>
     <p class="center">
-    <input type="submit" value="<?php echo $words->getBuffered('ProfileSetActive') ?>" /></p>
+    <input type="submit" class="button" value="<?php echo $words->getBuffered('ProfileSetActive') ?>" /></p>
 </form>

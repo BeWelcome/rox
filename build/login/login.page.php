@@ -37,6 +37,12 @@ class LoginPage extends RoxPageView
         return '';
     }
 
+    protected function getColumnNames()
+    {
+        // we don't need the other columns
+        return array('col3');
+    }
+
     protected function column_col3()
     {
         $login_widget = $this->createWidget('LoginFormWidget');

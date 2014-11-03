@@ -114,7 +114,7 @@ function ewiki_mpi_tableeditor($action, $args, &$iii, &$s) {
 
    #-- print <textarea> table variant
    if ($_REQUEST["te_load"]) {
-      $o .= '<input type="submit" name="te_save" value="SaveTable"><br />';
+      $o .= '<input type="submit" class="button" name="te_save" value="SaveTable"><br />';
       $o .= '<table border="1" cellspacing="1" cellpadding="2">';
       if ($add_empty_row) {
          $y++;
@@ -133,7 +133,7 @@ function ewiki_mpi_tableeditor($action, $args, &$iii, &$s) {
    #-- reconvert into WikiMarkup, and insert into $iii
    else {
       #-- insert <html> form at current position
-      $o .= '<input type="submit" name="te_load" value="TableEditor"><br />';
+      $o .= '<input type="submit" class="button" name="te_load" value="TableEditor"><br />';
       $in = $s["in"];
       $iii[$in][0] = "WILL BE REPLACED with \$o...";
 

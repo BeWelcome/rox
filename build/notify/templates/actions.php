@@ -1,4 +1,4 @@
-<div class="floatbox small">
+<div class="clearfix small">
     <img src="images/icons/add.png" class="float_left">
     <div class="float_left">
     <label>IdMember</label><br />
@@ -35,4 +35,4 @@
 </div>
     <input type="hidden" name="action" value="create"/>
     <?=$callback_tag?>
-    <input type="submit" name="button" value="Create" id="button" />
+    <input type="submit" class="button" name="button" value="Create" id="button" />

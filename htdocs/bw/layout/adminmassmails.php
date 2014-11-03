@@ -214,7 +214,7 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
     echo '</p>';
     echo '</div>';
     echo '<p>';
-    echo '<input type="submit" name="action" value="test" />';
+    echo '<input type="submit" class="button" name="action" value="test" />';
     echo ' (Shows number of matching members and list of recipients)';
     echo '</p>';
   }

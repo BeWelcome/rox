@@ -17,8 +17,8 @@ $ewiki_plugins["edit_form_append"][] = "ewiki_edit_field_pwlock";
 $ewiki_plugins["edit_save"][] = "ewiki_edit_save_pwlock";
 
 #-- text/translations
-$ewiki_t["de"]["lock page with"] = "Seite schützen mit";
-$ewiki_t["de"]["password"] = "Paßwort";
+$ewiki_t["de"]["lock page with"] = "Seite schï¿½tzen mit";
+$ewiki_t["de"]["password"] = "Paï¿½wort";
 
 
 #-- this prints the password query <form>
@@ -49,7 +49,7 @@ function ewiki_auth_login_password(&$data, &$author, &$ring, $force) {
 <form action="{$_SERVER['REQUEST_URI']}" method="POST" enctype="multipart/form-data">
 _{password} <input type="password" size="16" name="unlock_password">
 <br />
-<input type="submit" value="_{access}">
+<input type="submit" class="button" value="_{access}">
 </form><br /><br />
 END
       );

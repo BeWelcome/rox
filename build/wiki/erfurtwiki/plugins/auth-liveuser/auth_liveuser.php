@@ -223,8 +223,8 @@ $ewiki_t['en']['LOGINFORM']         = '
     <tr>
         <td>&nbsp;</td>
         <td align="right">
-            <input type="submit" name="submit_login" value="Login now">
-            <input type="submit" name="cancel_login" value="Cancel">            
+            <input type="submit" class="button" name="submit_login" value="Login now">
+            <input type="submit" class="button" name="cancel_login" value="Cancel">            
         </td>
     </tr>
     </table>
@@ -263,7 +263,7 @@ $ewiki_t['en']['CHPW_FORM'] = '
     <tr>
         <td>&nbsp;</td>
         <td align=right>
-            <input type="submit" name="submit" value="Change Password">
+            <input type="submit" class="button" name="submit" value="Change Password">
             <input type="button" name="cancel_pwchng" value="Cancel">            
         </td>
     </tr>

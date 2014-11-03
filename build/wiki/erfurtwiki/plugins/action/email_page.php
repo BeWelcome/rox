@@ -84,7 +84,7 @@ _{EMAILPAGE}
         <textarea rows="5" cols="40" name="email_text"></textarea>
     <p>
         <input type="hidden" name="not_first_time" value="1">
-        <input type="submit" name="email_page" value= "_{EMAIL_THIS_PAGE}">
+        <input type="submit" class="button" name="email_page" value= "_{EMAIL_THIS_PAGE}">
     </form>
 END
 ));

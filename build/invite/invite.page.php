@@ -17,7 +17,7 @@ class InvitePage extends RoxPageView
         $words = $layoutkit->getWords();
 
         ?>
-        <div id="teaser" class="clearfix">
+        <div id="teaser" class="page-teaser clearfix">
             <div id="teaser_l1"> 
                 <h1><?php echo $words->getFormatted("InviteAFriend"); ?></h1>
             </div>
@@ -137,7 +137,7 @@ class InviteSentPage extends RoxPageView
         $words = $layoutkit->getWords();
         
         ?>
-        <div id="teaser" class="clearfix">
+        <div id="teaser" class="page-teaser clearfix">
             <div id="teaser_l1"> 
                 <h1><?php echo $words->getFormatted("InviteAFriend"); ?></h1>
             </div>

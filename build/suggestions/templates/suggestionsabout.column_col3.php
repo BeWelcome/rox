@@ -1,5 +1,5 @@
 <h2><a href="suggestions"><?php echo $words->get('SuggestionsIntro'); ?></a></h2>
-<div class="row">
+<div class="bw-row">
 	<p><?php echo $words->get('SuggestionsIntroText');?></p>
     <a name="suggestionsprocessoverview"></a>
 	<h3><?php echo $words->get('SuggestionsProcessOverview');?></h3>
@@ -63,7 +63,7 @@
 <a name="decisionmakingprocess"></a>
 <h3><?php echo $words->get('DecisionMakingProcess'); ?></h3>
 <div class="small grey"><?php echo $words->get('DecisionMakingProcessValidity');?></div>
-<div class="row">
+<div class="bw-row">
     <h4><?php echo $words->get('MakingSuggestions');?></h4>
     <p><?php echo $words->get('MakingSuggestionsText');?></p>
     <h4><?php echo $words->get('SuggestionsLifeCycle');?></h4>

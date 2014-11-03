@@ -22,7 +22,12 @@ class MembersMustloginPage extends RoxPageView
     {
 
     }
-    
+
+    protected function getColumnNames ()
+    {
+        return array('col3');
+    }
+
     protected function column_col3()
     {
         $loginWidget = $this->layoutkit->createWidget('LoginFormWidget');

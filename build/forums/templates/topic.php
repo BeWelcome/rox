@@ -151,18 +151,18 @@ This File display a topic and the messages which are inside it
   ?>
 
     <div id="forumsthreadreplytop" >
-      <span class="button"><a href="
+      <a class="button" role="button" href="
       <?php
 
       if (isset($topic->IdSubscribe)) {
-        echo ForumsView::getURI()."/subscriptions/unsubscribe/thread/",$topic->IdSubscribe,"/",$topic->IdKey,"\">",$words->getBuffered('ForumUnsubscribe'),"</a></span>",$words->flushBuffer();
+        echo ForumsView::getURI()."/subscriptions/unsubscribe/thread/",$topic->IdSubscribe,"/",$topic->IdKey,"\">",$words->getBuffered('ForumUnsubscribe'),"</a>",$words->flushBuffer();
       }
       else {
-        echo ForumsView::getURI()."/subscribe/thread/",$topic->IdThread,"\">",$words->getBuffered('ForumSubscribe'),"</a></span>",$words->flushBuffer();
+        echo ForumsView::getURI()."/subscribe/thread/",$topic->IdThread,"\">",$words->getBuffered('ForumSubscribe'),"</a>",$words->flushBuffer();
       }
       if ((!$topic->topicinfo->IsClosed)and($topic->topicinfo->CanReply)) {
         ?>
-        <span class="button"><a href="<?php echo $replyuri; ?>"><?php echo $words->getBuffered('ForumReply'); ?></a></span><?php echo $words->flushBuffer() ?>
+        <a class="button" role="button" href="<?php echo $replyuri; ?>"><?php echo $words->getBuffered('ForumReply'); ?></a><?php echo $words->flushBuffer() ?>
 
       <?php
       }
@@ -199,7 +199,7 @@ This File display a topic and the messages which are inside it
 
     if (!$topic->topicinfo->IsClosed) {
   ?>
-  <div id="forumsthreadreplybottom"><span class="button"><a href="<?php echo $replyuri; ?>"><?php echo $words->getBuffered('ForumReply');; ?></a></span><?php echo $words->flushBuffer() ?></div>
+  <div id="forumsthreadreplybottom"><a class="button" role="button" href="<?php echo $replyuri; ?>"><?php echo $words->getBuffered('ForumReply');; ?></a><?php echo $words->flushBuffer() ?></div>
   <?php
     }
 

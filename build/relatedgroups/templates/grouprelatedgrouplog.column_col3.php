@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
     <legend><?= $words->get('AdministrateRelatedGroupsTitle'); ?></legend>
     <div class="subcolumns">
     <h3><?php echo $words->getFormatted('CurrentRelatedGroupsTitle');?></h3>
-        <ul class="floatbox">
+        <ul class="clearfix">
             <?php 
             $relatedgroups = $this->group->findRelatedGroups($groupId);
             foreach ($relatedgroups as $group_data) :
@@ -58,7 +58,7 @@ Boston, MA  02111-1307, USA.
             ?>
             <div class="c50l">
                 <div class="subcl">
-                    <a class="button" href="<?php echo $add_button_link; ?>">
+                    <a class="button" role="button" href="<?php echo $add_button_link; ?>">
                         <span><?php echo $add_button_word; ?></span>
                     </a>
                 </div><!-- subcl -->
@@ -66,7 +66,7 @@ Boston, MA  02111-1307, USA.
             <div class="c50r">
                 <div class="subcr"> <?php 
                     if (!empty($relatedgroups)) { ?>
-                        <a class="button" href="<?php echo $delete_button_link; ?>">
+                        <a class="button" role="button" href="<?php echo $delete_button_link; ?>">
                             <span><?php echo $delete_button_word; ?></span>
                         </a><?php
                     } ?>
@@ -80,7 +80,7 @@ Boston, MA  02111-1307, USA.
         <div class="subcolumns">
             <br />
             <h4> <?php echo $words->get('NbOfLogEntries', count($logvar)); ?> </h4>
-            <ul class="floatbox"> <?php
+            <ul class="clearfix"> <?php
                 foreach ($logvar as &$value) : ?>
                     <li class="picbox_relatedgroup float_left">
                         <img class="framed_relatedgroup float_left" src="members/avatar/<?php echo $value->member->Username; ?>?xs"/>
@@ -98,7 +98,7 @@ Boston, MA  02111-1307, USA.
                         </div>
                     </li>
                 <?php endforeach; ?>
-            </ul>  <!-- floatbox --> 
+            </ul>  <!-- clearfix --> 
         </div><!-- subcolumns -->  
         <?php
     }

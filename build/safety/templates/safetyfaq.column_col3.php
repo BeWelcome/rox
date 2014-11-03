@@ -1,4 +1,4 @@
-<div class="row">
+<div class="bw-row">
 <a name="general"></a>
 <h3><?php echo $words->get('SafetyFaqCategoryGeneral');?></h3>
 <p><strong><?php echo $words->get('FaqQ_IsItSafe');?></strong></p>

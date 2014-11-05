@@ -8305,6 +8305,20 @@ a.cancel .badge {
   color: #eeeeee;
   background-color: #ff8800;
 }
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
+  margin-top: 0;
+}
 .navbar-inverse {
   background-image: -webkit-linear-gradient(top, #ffbc00 0%, #ff8700 100%);
   background-image: -o-linear-gradient(top, #ffbc00 0%, #ff8700 100%);

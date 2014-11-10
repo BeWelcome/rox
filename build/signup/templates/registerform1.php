@@ -25,128 +25,153 @@ Boston, MA  02111-1307, USA.
 /*
  * REGISTER FORM TEMPLATE
  */
-?>
-<div id="signuprox">
-<p><?php echo $words->get('SignupIntroduction'); ?></p>
-
-<form method="post" action="<?php echo $baseuri.'signup/2'?>" name="signup" id="user-register-form">
-  <?=$callback_tag ?>
-  <input type="hidden" name="javascriptactive" value="false" />
-
-  <?php
+ ?>
+<div id="signuprox2">
+<!-- Custom BeWelcome signup progress bar -->
+<div class="progress">
+    <div class="progress-bar progress-bar-default" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
+        <span class="bw-progress hidden-xs">
+            <a href="signup/1" <?=($step =='1') ? 'onclick="$(\'user-register-form\').action = \'signup/1\'; $(\'user-register-form\').submit(); return false"' : '' ?>>1. <?php echo $words->getFormatted('LoginInformation')?></a>
+        </span>
+        <span class="bw-progress visible-xs-inline">
+            <a href="signup/1" <?=($step =='1') ? 'onclick="$(\'user-register-form\').action = \'signup/1\'; $(\'user-register-form\').submit(); return false"' : '' ?>>Schritt 1.</a>
+        </span>
+    </div>
+    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
+        <span class="bw-progress hidden-xs">
+            <a href="signup/2" <?=($step <='2') ? 'onclick="$(\'user-register-form\').action = \'signup/2\'; $(\'user-register-form\').submit(); return false"' : '' ?>>2. <?php echo $words->getFormatted('SignupName')?></a>
+        </span>
+        <span class="bw-progress visible-xs-inline">
+            <a href="signup/2" <?=($step <='2') ? 'onclick="$(\'user-register-form\').action = \'signup/2\'; $(\'user-register-form\').submit(); return false"' : '' ?>>Schritt 2.</a>
+        </span>
+    </div>
+    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
+        <span class="bw-progress hidden-xs">
+            <a href="signup/3" <?=($step <='3') ? 'onclick="$(\'user-register-form\').action = \'signup/3\'; $(\'user-register-form\').submit(); return false"' : '' ?>>3. <?php echo $words->getFormatted('Location')?></a>
+        </span>
+        <span class="bw-progress visible-xs-inline">
+            <a href="signup/3" <?=($step <='3') ? 'onclick="$(\'user-register-form\').action = \'signup/3\'; $(\'user-register-form\').submit(); return false"' : '' ?>>Schritt 3.</a>
+        </span>
+    </div>
+    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
+        <span class="bw-progress hidden-xs">
+            <a href="signup/4" <?=($step <='4') ? 'onclick="$(\'user-register-form\').action = \'signup/4\'; $(\'user-register-form\').submit(); return false"' : '' ?>>4. <?php echo $words->getFormatted('SignupSummary')?></a>
+        </span>
+        <span class="bw-progress visible-xs-inline">
+            <a href="signup/4" <?=($step <='4') ? 'onclick="$(\'user-register-form\').action = \'signup/4\'; $(\'user-register-form\').submit(); return false"' : '' ?>>Schritt 4.</a>
+        </span>
+    </div>
+</div>
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingOne">
+            <h4 class="panel-title">
+                <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Wo werden meine Daten angezeigt?
+                </a>
+            </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body">
+            <?php echo $words->get('SignupIntroduction'); ?>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"><?php echo $words->get('LoginInformation'); ?><small class="pull-right">Bitte fülle alle Felder aus.</small></h3> 
+  </div>
+  <div class="panel-body">
+<form method="post" action="<?php echo $baseuri.'signup/2'?>" name="signup" id="user-register-form" class="form" role="form">
+    <?=$callback_tag ?>
+    <input type="hidden" name="javascriptactive" value="false" />
+    <?php
         if (in_array('inserror', $vars['errors'])) {
-            echo '<p class="error">'.$errors['inserror'].'</p>';
+            echo '<span class="help-block alert alert-danger">'.$errors['inserror'].'</span>';
+        }
+    ?>
+    <!-- username -->
+    <div class="form-group has-feedback">
+        <label for="register-username" class="control-label sr-only"><?php echo $words->get('SignupUsername'); ?></label>
+        <input type="text" class="form-control" name="username" placeholder="<?php echo $words->get('SignupUsername'); ?>" id="register-username" 
+        <?php
+        echo isset($vars['username']) ? 'value="'.htmlentities($vars['username'], ENT_COMPAT, 'utf-8').'" ' : '';
+        ?> >
+
+        <?php
+        if (in_array('SignupErrorWrongUsername', $vars['errors'])) {
+            echo '<span class="help-block alert alert-danger">'.$words->get('SignupErrorWrongUsername').'</span>';
+        }
+        if (in_array('SignupErrorUsernameAlreadyTaken', $vars['errors'])) {
+            echo '<span class="help-block alert alert-danger">'.
+                $words->getFormatted('SignupErrorUsernameAlreadyTaken', $vars['username']).
+            '</span>';
         }
         ?>
-
-  <!-- Login Information -->
-  <fieldset>
-    <legend><?php echo $words->get('LoginInformation'); ?></legend>
-
-    <!-- username -->
-        <div class="signup-row clearfix">
-          <label for="register-username"><?php echo $words->get('SignupUsername'); ?>* </label>
-          <input type="text" id="register-username" name="username" class="float_left" <?php
-            echo isset($vars['username']) ? 'value="'.htmlentities($vars['username'], ENT_COMPAT, 'utf-8').'" ' : '';
-            ?> />
-             <?php
-          // DEACTIVATED NOW
-          // if (in_array('SignupErrorWrongUsername', $vars['errors'])) {
-              // $err = 1;
-          // } else $err = 0;
-          if (in_array('SignupErrorWrongUsername', $vars['errors'])) {
-              echo '<div class="error">'.$words->get('SignupErrorWrongUsername').'</div>';
-          }
-          if (in_array('SignupErrorUsernameAlreadyTaken', $vars['errors'])) {
-              echo '<div class="error"><br/>'.
-                  $words->getFormatted('SignupErrorUsernameAlreadyTaken', $vars['username']).
-                  '</div>';
-          }
-          ?>
-          <!--
-          <a href="#" onclick="return false;" >
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo $words->get('SignupUsernameDescription'); ?></span></a><br />
-          <span class="small"><?php echo $words->get('SignupUsernameShortDesc'); ?></span>
-          -->
-          <p class="desc" style="margin-left:11.3em; display:inline-block"><?=$words->get('subline_username')?></p>
-        </div> <!-- signup-row -->
-
+        <span class="help-block"><?=$words->get('subline_username')?></span>
+    </div>
+    
     <!-- password -->
-        <div class="signup-row clearfix">
-          <label for="register-password"><?php echo $words->get('SignupPassword'); ?>* </label>
-          <input type="password" id="register-password" name="password" class="float_left" <?php
-          echo isset($vars['password']) ? 'value="'.$vars['password'].'" ' : '';
-          ?> />
-          <?php
-          if (in_array('SignupErrorPasswordCheck', $vars['errors'])) {
-              echo '<div class="error">'.$words->get('SignupErrorPasswordCheck').'</div>';
-          }
-          ?>
-          <!--
-          <a href="#" onclick="return false;" >
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo $words->get('SignupPasswordDescription'); ?></span></a><br />
-          <span class="small"><?php echo $words->get('SignupPasswordChoose'); ?></span>
-          -->
-       </div> <!-- signup-row -->
+    <div class="form-group has-feedback">
+        <label for="register-password" class="control-label sr-only"><?php echo $words->get('SignupPassword'); ?></label>
+        <input type="password" class="form-control" id="register-password" name="password" placeholder="<?php echo $words->get('SignupPassword'); ?>"
+        <?php
+        echo isset($vars['password']) ? 'value="'.$vars['password'].'" ' : '';
+        ?> >
+    </div>
 
     <!-- confirm password -->
-        <div class="signup-row clearfix">
-          <label for="register-passwordcheck"><?php echo $words->get('SignupCheckPassword'); ?>* </label>
-          <input type="password" id="register-passwordcheck" name="passwordcheck" class="float_left" <?php
-            echo isset($vars['passwordcheck']) ? 'value="'.$vars['passwordcheck'].'" ' : '';
-            ?> />
-          <!--
-          <span class="small"><?php echo $words->get('SignupPasswordConfirmShortDesc'); ?></span>
-          -->
-        </div> <!-- signup-row -->
-
+    <div class="form-group has-feedback">
+        <label for="register-passwordcheck" class="control-label sr-only"><?php echo $words->get('SignupCheckPassword'); ?></label>
+        <input type="password" class="form-control" id="register-passwordcheck" name="passwordcheck" placeholder="<?php echo $words->get('SignupCheckPassword'); ?>"
+        <?php
+        echo isset($vars['passwordcheck']) ? 'value="'.$vars['passwordcheck'].'" ' : '';
+        ?> >
+        <?php
+        if (in_array('SignupErrorPasswordCheck', $vars['errors'])) {
+          echo '<span class="help-block alert alert-danger">'.$words->get('SignupErrorPasswordCheck').'</span>';
+        }
+        ?>
+    </div>
+    
     <!-- email -->
-        <div class="signup-row clearfix">
-          <label for="register-email"><?php echo $words->get('SignupEmail'); ?>* </label>
-          <input type="text" id="register-email" name="email" class="float_left" <?php
-          echo isset($vars['email']) ? 'value="'.htmlentities($vars['email'], ENT_COMPAT, 'utf-8').'" ' : '';
-          ?> />
-          <?php
+    <div class="form-group has-feedback">
+        <label for="register-email" class="control-label sr-only"><?php echo $words->get('SignupEmail'); ?></label>
+        <input type="text" class="form-control" id="register-email" name="email" placeholder="<?php echo $words->get('SignupEmail'); ?>"
+        <?php
+        echo isset($vars['email']) ? 'value="'.htmlentities($vars['email'], ENT_COMPAT, 'utf-8').'" ' : '';
+        ?> />
+    </div>
+        
+    <!-- confirm email -->
+    <div class="form-group has-feedback">
+        <label for="register-emailcheck" class="control-label sr-only"><?php echo $words->get('SignupCheckEmail'); ?></label>
+        <input type="text" class="form-control" id="register-emailcheck" name="emailcheck" placeholder="<?php echo $words->get('SignupCheckEmail'); ?>"
+        <?php
+          echo isset($vars['emailcheck']) ? 'value="'.$vars['emailcheck'].'" ' : '';
+        ?> />
+        <?php
           if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
-              echo '<div class="error">'.$words->get('SignupErrorInvalidEmail').'</div>';
+              echo '<span class="help-block alert alert-danger">'.$words->get('SignupErrorInvalidEmail').'</span>';
           } elseif (in_array('SignupErrorEmailCheck', $vars['errors'])) {
-              echo '<div class="error">'.$words->get('SignupErrorEmailCheck').'</div>';
+              echo '<span class="help-block alert alert-danger">'.$words->get('SignupErrorEmailCheck').'</span>';
           } elseif (in_array('SignupErrorEmailAddressAlreadyInUse', $vars['errors'])) {
-              echo '<div class="error">'.$words->get('SignupErrorEmailAddressAlreadyInUse').'</div>';
+              echo '<span class="help-block alert alert-danger">'.$words->get('SignupErrorEmailAddressAlreadyInUse').'</span>';
           } else {
-            echo '<br>';
+                echo '<br>';
           }
           ?>
-          <!--
-          <a href="#" onclick="return false;" >
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo $words->get('SignupEmailDescription'); ?></span></a><br />
-          <span class="small"><?php echo $words->get('SignupEmailShortDesc'); ?></span>
-          -->
-        </div> <!-- signup-row -->
-        
-        <!-- confirm email -->
-        <div class="signup-row clearfix">
-          <label for="register-emailcheck"><?php echo $words->get('SignupCheckEmail'); ?>* </label>
-          <input type="text" id="register-emailcheck" name="emailcheck" class="float_left" <?php
-            echo isset($vars['emailcheck']) ? 'value="'.$vars['emailcheck'].'" ' : '';
-            ?> />
-        </div> <!-- signup-row -->
-
-  </fieldset>
-
-  <p>
-    <input type="submit" class="button" value="<?php echo $words->getSilent('NextStep'); ?>" class="button"
+    </div>
+    <!-- Next step button -->
+    <input type="submit" class="btn btn-default" value="<?php echo $words->getSilent('NextStep'); ?>"
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
     /><?php echo $words->flushBuffer(); ?>
-  </p>
-
 </form>
-</div> <!-- signup -->
+  </div>
+</div>
+</div> <!-- signuprox2 -->
 
 <script type="text/javascript">
  Register.initialize('user-register-form');
-
 </script>

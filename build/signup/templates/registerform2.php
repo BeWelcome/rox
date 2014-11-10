@@ -27,80 +27,100 @@ Boston, MA  02111-1307, USA.
  */
 ?>
 
-<div id="signuprox">
-
-<form method="post" action="<?php echo $baseuri.'signup/3'?>" name="signup" id="user-register-form">
-  <?=$callback_tag ?>
-  <input type="hidden" name="javascriptactive" value="false" />
-
-  <?php
+<div id="signuprox2">
+<!-- Custom BeWelcome signup progress bar -->
+<div class="progress">
+    <div class="progress-bar progress-bar-default" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
+        <span class="bw-progress hidden-xs">
+            <a href="signup/1" <?=($step =='1') ? 'onclick="$(\'user-register-form\').action = \'signup/1\'; $(\'user-register-form\').submit(); return false"' : '' ?>>1. <?php echo $words->getFormatted('LoginInformation')?></a>
+        </span>
+        <span class="bw-progress visible-xs-inline">
+            <a href="signup/1" <?=($step =='1') ? 'onclick="$(\'user-register-form\').action = \'signup/1\'; $(\'user-register-form\').submit(); return false"' : '' ?>>Schritt 1.</a>
+        </span>
+    </div>
+    <div class="progress-bar progress-bar-default" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
+        <span class="bw-progress hidden-xs">
+            <a href="signup/2" <?=($step <='2') ? 'onclick="$(\'user-register-form\').action = \'signup/2\'; $(\'user-register-form\').submit(); return false"' : '' ?>>2. <?php echo $words->getFormatted('SignupName')?></a>
+        </span>
+        <span class="bw-progress visible-xs-inline">
+            <a href="signup/2" <?=($step <='2') ? 'onclick="$(\'user-register-form\').action = \'signup/2\'; $(\'user-register-form\').submit(); return false"' : '' ?>>Schritt 2.</a>
+        </span>
+    </div>
+    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
+        <span class="bw-progress hidden-xs">
+            <a href="signup/3" <?=($step <='3') ? 'onclick="$(\'user-register-form\').action = \'signup/3\'; $(\'user-register-form\').submit(); return false"' : '' ?>>3. <?php echo $words->getFormatted('Location')?></a>
+        </span>
+        <span class="bw-progress visible-xs-inline">
+            <a href="signup/3" <?=($step <='3') ? 'onclick="$(\'user-register-form\').action = \'signup/3\'; $(\'user-register-form\').submit(); return false"' : '' ?>>Schritt 3.</a>
+        </span>
+    </div>
+    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
+        <span class="bw-progress hidden-xs">
+            <a href="signup/4" <?=($step <='4') ? 'onclick="$(\'user-register-form\').action = \'signup/4\'; $(\'user-register-form\').submit(); return false"' : '' ?>>4. <?php echo $words->getFormatted('SignupSummary')?></a>
+        </span>
+        <span class="bw-progress visible-xs-inline">
+            <a href="signup/4" <?=($step <='4') ? 'onclick="$(\'user-register-form\').action = \'signup/4\'; $(\'user-register-form\').submit(); return false"' : '' ?>>Schritt 4.</a>
+        </span>
+    </div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"><?php echo $words->get('SignupName'); ?><small class="pull-right">Bitte fülle alle Felder aus.</small></h3> 
+  </div>
+  <div class="panel-body">
+<form method="post" action="<?php echo $baseuri.'signup/3'?>" name="signup" id="user-register-form" class="form" role="form">
+    <?=$callback_tag ?>
+    <input type="hidden" name="javascriptactive" value="false" />
+    <?php
         if (in_array('inserror', $vars['errors'])) {
-            echo '<p class="error">'.$errors['inserror'].'</p>';
+            echo '<span class="help-block alert alert-danger">'.$errors['inserror'].'</span';
         }
-        ?>
-
-
-
-  <!-- Personal Information -->
-  <fieldset>
-    <legend><?php echo $words->get('SignupName'); ?></legend>
-
-        <div class="signup-row floatbox sweet">
-            <label for="sweet"><?php echo $words->get('SignupSweet'); ?></label>
-            <input type="text" id="sweet" name="sweet" value="" title="Leave free of content"/>
-        </div>
-
-      <!-- First Name -->
-        <div class="signup-row clearfix">
-          <label for="register-firstname"><?php echo $words->get('FirstName'); ?>* </label>
-          <input type="text" id="register-firstname" name="firstname" class="float_left" <?php
-          echo isset($vars['firstname']) ? 'value="'.htmlentities($vars['firstname'], ENT_COMPAT, 'utf-8').'" ' : '';
-          ?> />
-          <?php
+    ?>
+    <div class="form-group hidden">
+        <label for="sweet"><?php echo $words->get('SignupSweet'); ?></label>
+        <input type="text" class="form-control" id="sweet" name="sweet" placeholder="<?php echo $words->get('SignupSweet'); ?>" value="" title="Leave free of content"/>
+    </div>
+    <!-- First name -->
+    <div class="form-group has-feedback">
+        <label for="register-firstname" class="control-label sr-only"><?php echo $words->get('FirstName'); ?></label>
+            <input type="text" class="form-control" name="firstname" id="register-firstname" placeholder="<?php echo $words->get('FirstName'); ?>" 
+            <?php
+            echo isset($vars['firstname']) ? 'value="'.htmlentities($vars['firstname'], ENT_COMPAT, 'utf-8').'" ' : '';
+            ?> />
+            <?php
             if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
-                echo '<div class="error">'.$words->get('SignupErrorFullNameRequired').'</div>';
+                echo '<span class="help-block alert alert-danger">'.$words->get('SignupErrorFullNameRequired').'</span>';
             }
             ?>
-          <!--
-          <a href="#" onclick="return false;" >
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo $words->get('SignupNameDescription'); ?></span></a><br />
-          <span class="small"><?php echo $words->get('SignupFirstNameShortDesc'); ?></span>
-          -->
-        </div> <!-- signup-row -->
-
-    <!-- Second Name -->
-        <div class="signup-row clearfix">
-          <label for="secondname"><?php echo $words->get('SignupSecondNameOptional'); ?></label>
-          <input type="text" id="secondname" name="secondname" class="float_left" <?php
-          echo isset($vars['secondname']) ? 'value="'.htmlentities($vars['secondname'], ENT_COMPAT, 'utf-8').'" ' : '';
-          ?> />
-          <!--
-          <span class="small"><?php echo $words->get('SignupSecondNameShortDesc'); ?></span>
-          -->
-        </div> <!-- signup-row -->
-
-      <!-- Last Name -->
-        <div class="signup-row clearfix">
-          <label for="lastname"><?php echo $words->get('LastName'); ?>* </label>
-          <input type="text" id="lastname" name="lastname" class="float_left" <?php
-          echo isset($vars['lastname']) ? 'value="'.htmlentities($vars['lastname'], ENT_COMPAT, 'utf-8').'" ' : '';
-          ?>/>
-          <!--
-          <span class="small"><?php echo $words->get('SignupLastNameShortDesc'); ?></span>
-          -->
-      </div> <!-- signup-row -->
-
-      <?php
+    </div>
+    <!-- Second name -->
+    <div class="form-group has-feedback">
+        <label for="secondname" class="control-label sr-only"><?php echo $words->get('SignupSecondNameOptional'); ?></label>
+            <input type="text" class="form-control" name="secondname" id="secondname" placeholder="<?php echo $words->get('SignupSecondNameOptional'); ?>" 
+            <?php
+            echo isset($vars['secondname']) ? 'value="'.htmlentities($vars['secondname'], ENT_COMPAT, 'utf-8').'" ' : '';
+            ?> />
+    </div>
+    <!-- Last name -->
+    <div class="form-group has-feedback">
+        <label for="lastname" class="control-label sr-only"><?php echo $words->get('LastName'); ?></label>
+            <input type="text" class="form-control" name="lastname" id="lastname" placeholder="<?php echo $words->get('LastName'); ?>" 
+            <?php
+            echo isset($vars['lastname']) ? 'value="'.htmlentities($vars['lastname'], ENT_COMPAT, 'utf-8').'" ' : '';
+            ?> />
+    </div>
+    
+    <!-- Mother tongue(s)-->
+    <?php
         $motherTongue = -1;
         if (isset($vars['mothertongue'])) {
             $motherTongue = $vars['mothertongue'];
         }
-      ?>
-      <!-- Mother tongue(s)-->
-      <div>
-          <label for="mothertongue"><?php echo $words->get('LanguageLevel_MotherLanguage'); ?>* </label>
-          <select name="mothertongue" id="mothertongue" data-placeholder="<?= $words->getBuffered('SignupSelectMotherTongue')?>" style="width: 350px;" class="select2">
+    ?>
+    <div class="form-group">
+          <label for="mothertongue" class="control-label sr-only"><?php echo $words->get('LanguageLevel_MotherLanguage'); ?></label>
+          <select class="select2 form-control" name="mothertongue" id="mothertongue" data-placeholder="<?= $words->getBuffered('SignupSelectMotherTongue')?>">
+              <option></option>
               <option value="-1"></option>
               <optgroup label="<?= $words->getSilent('SpokenLanguages') ?>">
                   <?= $this->getAllLanguages(true, $motherTongue); ?>
@@ -109,92 +129,96 @@ Boston, MA  02111-1307, USA.
                   <?= $this->getAllLanguages(false, $motherTongue); ?>
               </optgroup>
           </select>
-      </div> <!-- signup-row -->
-
-      <!-- Birthdate -->
-        <div class="signup-row clearfix">
-          <label for="BirthDate"><?php echo $words->get('SignupBirthDate'); ?>*</label>
-          <select id="BirthDate" name="birthyear" style="width:100px;" class="select2">
-            <option value=""><?php echo $words->getSilent('SignupBirthYear'); ?></option>
-            <?php echo $birthYearOptions; ?>
-          </select>&nbsp;
-          <select name="birthmonth" style="width:100px;" class="select2">
-            <option value=""><?php echo $words->getSilent('SignupBirthMonth'); ?></option>
-            <?php for ($i=1; $i<=12; $i++) { ?>
-            <option value="<?php echo $i; ?>"<?php
-            if (isset($vars['birthmonth']) && $vars['birthmonth'] == $i) {
-                echo ' selected="selected"';
+    </div>
+    <div class="form-group has-feedback">
+        <label class="control-label"><?php echo $words->get('SignupBirthDate'); ?></label>
+        <div class="form-inline">
+            <div class="form-group">
+                <select id="BirthDate" name="birthyear" class="select2 form-control">
+                    <option value=""><?php echo $words->getSilent('SignupBirthYear'); ?></option>
+                    <?php echo $birthYearOptions; ?>
+                </select>
+            </div>
+            <div class="form-group">
+                <select name="birthmonth" class="select2 form-control">
+                    <option value=""><?php echo $words->getSilent('SignupBirthMonth'); ?></option>
+                    <?php for ($i=1; $i<=12; $i++) { ?>
+                        <option value="<?php echo $i; ?>"<?php
+                            if (isset($vars['birthmonth']) && $vars['birthmonth'] == $i) {
+                            echo ' selected="selected"';
+                            }
+                            ?>><?php echo $i; ?>
+                        </option>
+                    <?php } ?>
+                </select>
+            </div>
+            <div class="form-group">
+                <select name="birthday" class="select2 form-control">
+                    <option value=""><?php echo $words->getSilent('SignupBirthDay'); ?></option>
+                    <?php for ($i=1; $i<=31; $i++) { ?>
+                    <option value="<?php echo $i; ?>"<?php
+                        if (isset($vars['birthday']) && $vars['birthday'] == $i) {
+                        echo ' selected="selected"';
+                        }
+                        ?>><?php echo $i; ?>
+                    </option>
+                    <?php } ?>
+                    <?php echo $words->flushBuffer(); ?>
+                </select>
+            </div>
+        </div>
+        <?php
+            if (in_array('SignupErrorBirthDate', $vars['errors'])) {
+                echo '<span class="help-block alert alert-danger">'.$words->get('SignupErrorBirthDate').'</span>';
             }
-            ?>><?php echo $i; ?></option>
-            <?php } ?>
-          </select>&nbsp;
-          <select name="birthday" style="width:100px;" class="select2">
-            <option value=""><?php echo $words->getSilent('SignupBirthDay'); ?></option>
-            <?php for ($i=1; $i<=31; $i++) { ?>
-            <option value="<?php echo $i; ?>"<?php
-            if (isset($vars['birthday']) && $vars['birthday'] == $i) {
-                echo ' selected="selected"';
+            if (in_array('SignupErrorBirthDateToLow', $vars['errors'])) {
+                echo '<span class="help-block alert alert-danger">'.$words->getFormatted('SignupErrorBirthDateToLow',SignupModel::YOUNGEST_MEMBER).'</span>';
             }
-            ?>><?php echo $i; ?></option>
-            <?php } ?>
-            </select>
-            <?php echo $words->flushBuffer(); ?>
-            <?php
-          if (in_array('SignupErrorBirthDate', $vars['errors'])) {
-              echo '<div class="error">'.$words->get('SignupErrorBirthDate').'</div>';
-          }
-          if (in_array('SignupErrorBirthDateToLow', $vars['errors'])) {
-              echo '<div class="error">'.$words->getFormatted('SignupErrorBirthDateToLow',SignupModel::YOUNGEST_MEMBER).'</div>';
-          }
-          ?>
-          <!--
-          <a href="#" onclick="return false;" >
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo $words->get('SignupBirthDateDescription'); ?></span></a><br />
-          <span class="small"><?php echo $words->get('SignupBirthDateShape'); ?></span>
-          -->
-        </div> <!-- signup-row -->
-
+        ?>
+    </div>
     <!-- Gender -->
-        <div class="signup-row">
-          <label for="gender"><?php echo $words->get('Gender'); ?>*</label>
-            <input class="radio" type="radio" id="gender" name="gender" value="female"<?php
-             if (isset($vars['gender']) && $vars['gender'] == 'female') {
-                 echo ' checked="checked"';
-              }
-              ?> /><?php echo $words->get('female'); ?>&nbsp;
-              <input class="radio" type="radio" name="gender" value="male"<?php
-              if (isset($vars['gender']) && $vars['gender'] == 'male') {
-                  echo ' checked="checked"';
-              }
-              ?> /><?php echo $words->get('male'); ?>&nbsp;
-              <input class="radio" type="radio" name="gender" value="other"<?php
-              if (isset($vars['gender']) && $vars['gender'] == 'other') {
-                  echo ' checked="checked"';
-              }
-              ?> /><?php echo $words->get('GenderOther'); ?>
-              <?php if (in_array('SignupErrorProvideGender', $vars['errors'])) {
-                  echo '<div class="error">'.$words->get('SignupErrorProvideGender').'</div>';
+    <div class="form-group has-feedback">
+      <label for="gender" class="control-label"><?php echo $words->get('Gender'); ?></label>
+        <div class="form-inline">
+            <div class="form-group">
+                <label class="radio-inline">
+                    <input type="radio" id="gender" name="gender" value="female"<?php
+                     if (isset($vars['gender']) && $vars['gender'] == 'female') {
+                         echo ' checked="checked"';
                       }
-          ?>
-
-          <!--
-          <a href="#" onclick="return false;" >
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo $words->get('SignupGenderDescription'); ?></span></a><br />
-          -->
-        </div> <!-- signup-row -->
-  </fieldset>
-
-  <p class="clearfix">
-    <input style="float:left" type="submit" value="<?php echo $words->getSilent('NextStep'); ?>" class="button"
-    onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
-    /><?php echo $words->flushBuffer(); ?><br /><br />
-    <a href="signup/1" class="button back" title="<?php echo $words->getSilent('LastStep'); ?>" ><?php echo $words->get('Back'); ?> </a><?php echo $words->flushBuffer(); ?>
-  </p>
-
+                      ?> /><?php echo $words->get('female'); ?>
+                </label>
+                <label class="radio-inline">
+                  <input type="radio" name="gender" value="male"<?php
+                  if (isset($vars['gender']) && $vars['gender'] == 'male') {
+                      echo ' checked="checked"';
+                  }
+                  ?> /><?php echo $words->get('male'); ?>
+                </label>
+                <label class="radio-inline">
+                  <input type="radio" name="gender" value="other"<?php
+                  if (isset($vars['gender']) && $vars['gender'] == 'other') {
+                      echo ' checked="checked"';
+                  }
+                  ?> /><?php echo $words->get('GenderOther'); ?>
+                  </label>
+            </div>
+            <?php if (in_array('SignupErrorProvideGender', $vars['errors'])) {
+                echo '<span class="help-block alert alert-danger">'.$words->get('SignupErrorProvideGender').'</span>';
+                }
+            ?>    
+        </div>
+    </div>
+    <div class="clearfix">
+        <input type="submit" value="<?php echo $words->getSilent('NextStep'); ?>" class="button pull-left"
+        onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
+        /><?php echo $words->flushBuffer(); ?>
+    <a href="signup/1" class="button back pull-right" title="<?php echo $words->getSilent('LastStep'); ?>" ><?php echo $words->get('Back'); ?> </a><?php echo $words->flushBuffer(); ?>
+  </div> 
 </form>
-</div> <!-- signup -->
+  </div>
+</div>
+</div> <!-- signup2 -->
 
 <script type="text/javascript">
  Register.initialize('user-register-form');

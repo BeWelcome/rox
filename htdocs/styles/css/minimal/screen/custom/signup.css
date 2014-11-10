@@ -28,8 +28,8 @@
 #signuprox .input_float .number input { padding: 2px; width: 3em; float:left; margin-right: 0.3em;}
 #signuprox .small { font-size: 0.9em; color: #888;}
 #signuprox .error {font-size: 11px; clear:both; width: 30em; }
-#signuprox .statbtn {padding: 5px; float:left;}
-#signuprox a.back {color: #888}
+#signuprox2 .statbtn {padding: 5px; float:left;}
+#signuprox2 a.back {color: #888}
 #signuprox .sweet { width:0; height: 0; display: inline; }
 
 #signuprox #spaf_map{ position: relative; display: block;}

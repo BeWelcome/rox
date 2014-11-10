@@ -9,8 +9,13 @@ class SignupPage extends PageWithRoxLayout
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/screen/custom/tour.css';
         $stylesheets[] = "styles/css/minimal/screen/custom/signup.css?3";
-        $stylesheets[] = "styles/css/minimal/screen/custom/select2/select2.css";
+        //$stylesheets[] = "styles/css/minimal/screen/custom/select2/select2.css";
         return $stylesheets;
+    }
+    
+    protected function getPageTitle() {
+        $words = $this->getWords();
+        return $words->getBuffered('signup') . ' - BeWelcome';
     }
     
     protected function teaserHeadline()
@@ -19,20 +24,26 @@ class SignupPage extends PageWithRoxLayout
         echo $words->get('signup');
     }
     
-    protected function leftSidebar()
-    {
+    //protected function leftSidebar()
+    //{
 
+    //}
+    
+   // protected function column_col1()
+    //{
+      //  $request = PRequest::get()->request;
+       // if (!isset($request[1]) || $request[1]== '')
+        //    $step = '1';
+        //else $step = $request[1];
+        //require 'templates/sidebar.php';
+    //}
+    
+    protected function getColumnNames()
+    {
+        // we don't need the other columns
+        return array('col3');
     }
     
-    protected function column_col1()
-    {
-        $request = PRequest::get()->request;
-        if (!isset($request[1]) || $request[1]== '')
-            $step = '1';
-        else $step = $request[1];
-        require 'templates/sidebar.php';
-    }
-
     private function _cmpEditLang($a, $b)
     {
         if ($a == $b) {
@@ -136,7 +147,7 @@ class SignupPage extends PageWithRoxLayout
         
         // get current request
         $request = PRequest::get()->request;
-        
+        $step = (isset($request[1]) && $request[1]) ? $request[1] : '1';
         if (!isset($vars['errors']) || !is_array($vars['errors'])) {
             $vars['errors'] = array();
         }
@@ -164,8 +175,6 @@ Related page: <a href="signup/finish">Signup confirmation</a>
         }
 
         require 'templates/registerform'.$this->step.'.php';
-        
-        echo '<p class="small">* '.$words->get('SignupMandatoryFields').'</p>';
     }
     
 // END OF LAYOUT FUNCTIONS

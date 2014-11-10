@@ -52,6 +52,13 @@
 //Font-awesome
 @import "font-awesome/less/font-awesome.less";
 
+//Select2-css
+@import "../css/minimal/screen/custom/select2/select2.css";
+
+//Select2-bootstrap-css
+@import "../../../node_modules/select2-bootstrap-css/lib/select2-bootstrap.less";
+
+
 // Moving content below fixed navbar
 body { 
   padding-top: 70px; 
@@ -99,7 +106,29 @@ h5, .h5,
 h6, .h6 {
   margin-top: 0;
 }
-// Inverted custome BeWelcome (gradient) navbar
+// Custom BeWelcome signup progress bar
+.progress-bar > .bw-progress > a {
+  color: #fff;
+  display: block;
+}
+// Custom BeWecome collapse panel for signup
+.panel-heading .accordion-toggle:after {
+    /* symbol for "opening" panels */
+    font-family: 'FontAwesome';  /* essential for FontAwesome */
+    content: "\f077";    /* adjust as needed */
+    float: right;        /* adjust as needed */
+    color: grey;         /* adjust as needed */
+}
+.panel-heading .accordion-toggle.collapsed:after {
+    /* symbol for "collapsed" panels */
+    content: "\f078";    /* adjust as needed */
+}
+
+//** Placeholder text color
+@media (min-width: @screen-sm-min) {
+@input-color-placeholder: white;
+}
+// Inverted custom BeWelcome (gradient) navbar
 .navbar-inverse {
   #gradient > .vertical(@start-color: #ffbc00; @end-color: @navbar-inverse-bg);
   .reset-filter(); // Remove gradient in IE<10 to fix bug where dropdowns don't get triggered

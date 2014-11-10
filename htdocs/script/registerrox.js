@@ -130,7 +130,7 @@ var Register = {
             alt = 'button';
         var imgId = 'b'+$(e).id;
         if (!$(imgId)) {
-            new Insertion.After(e, '<div id="'+imgId+'" class="statbtn"></div>');
+            new Insertion.After(e, '<div id="'+imgId+'" class="form-control-feedback"></div>');
         }
         var htmlSrc = '<img src="'+http_baseuri+img+'" alt="'+alt+'"/>';
         Element.update(imgId, htmlSrc);

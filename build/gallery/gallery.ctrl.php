@@ -143,7 +143,7 @@ class GalleryController extends RoxControllerBase {
                     case 'galleries':
                     case 'sets':
                         if (!isset($request[3]) || !$gallery = $this->_model->getGallery($request[3])) {
-                            return $this->allgalleries();
+                            $this->redirect('main');
                         }
                         if (!$loggedInMember) {
                             // Check if gallery owner's profile is public,
@@ -293,29 +293,7 @@ class GalleryController extends RoxControllerBase {
         $page->num_rows = $this->_model->getGalleryItems($gallery->id,1);
         return $page;
     }
-    
-    
-    /**
-     * handles showing all galleries available
-     *
-     * @access public
-     * @return object $page
-     */
-    public function allgalleries()
-    {
-        $loggedInMember = $this->loggedInMember;
-        $page = new GalleryAllGalleriesPage();
-        $page->member = $this->member;
-        if ($loggedInMember) {
-            $page->galleries = $this->_model->getGalleriesNotEmpty();
-        } else {
-            $page->galleries = $this->_model->getGalleriesNotEmpty(false,
-                true);
-        }
-        $page->loggedInMember = $loggedInMember;
-        return $page;
-    }
-    
+
     /**
      * handles showing an overview of images and galleries of a user
      *

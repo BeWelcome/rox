@@ -457,7 +457,11 @@ class GalleryController extends RoxControllerBase {
         } else {
             $this->message = 'Gallery_ImageNotDeleted';
             $this->member = $this->loggedInMember;
-            return $this->image($image->id);
+            if (!$this->member) {
+                return false;
+            }
+            $userId =$this->loggedInMember->get_userId();
+            return $this->user($userId);
         }
     }
     

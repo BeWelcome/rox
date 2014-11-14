@@ -134,13 +134,13 @@ Boston, MA  02111-1307, USA.
         <label class="control-label"><?php echo $words->get('SignupBirthDate'); ?></label>
         <div class="form-inline">
             <div class="form-group">
-                <select id="BirthDate" name="birthyear" class="select2 form-control">
+                <select id="BirthDate" name="birthyear" class="form-control">
                     <option value=""><?php echo $words->getSilent('SignupBirthYear'); ?></option>
                     <?php echo $birthYearOptions; ?>
                 </select>
             </div>
             <div class="form-group">
-                <select name="birthmonth" class="select2 form-control">
+                <select name="birthmonth" class="form-control">
                     <option value=""><?php echo $words->getSilent('SignupBirthMonth'); ?></option>
                     <?php for ($i=1; $i<=12; $i++) { ?>
                         <option value="<?php echo $i; ?>"<?php
@@ -153,7 +153,7 @@ Boston, MA  02111-1307, USA.
                 </select>
             </div>
             <div class="form-group">
-                <select name="birthday" class="select2 form-control">
+                <select name="birthday" class="form-control">
                     <option value=""><?php echo $words->getSilent('SignupBirthDay'); ?></option>
                     <?php for ($i=1; $i<=31; $i++) { ?>
                     <option value="<?php echo $i; ?>"<?php

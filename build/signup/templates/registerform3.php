@@ -72,41 +72,39 @@ $map_conf = PVars::getObj('map');
   </div>
   <div class="panel-body">
 <form method="post" action="<?php echo $baseuri.'signup/3'?>" class="form" name="geo-form-js" id="geo-form-js">
-    <?=$callback_tag ?>
-    <input type="hidden" name="javascriptactive" value="false" />
-    <div class="clearfix" id="geoselectorjs" style="display: none;" >
-        <div class"form-group has-feedback">
-            <div class="input-group">
-            <label for="create-location" class="control-label sr-only"><?=$words->getSilent('label_setlocation')?></label><?php echo $words->flushBuffer(); ?>
-            <input type="text" name="create-location" id="create-location" class="form-control" aria-describedby="create-location-loading-status" placeholder="<?=$words->get('label_setlocation')?>"
-            <?php
-                echo isset($vars['create-location']) ? 'value="'.htmlentities($vars['create-location'], ENT_COMPAT, 'utf-8').'" ' : '';
-            ?>
-            >
-            <span id="location-status" class="form-control-feedback form-control-feedback-location" aria-hidden="true"></span>
-            <span id="create-location-loading-status" class="sr-only">(loading icon)</span>
-            <span class="input-group-btn">
-                <button class="button" type="submit" id="btn-create-location" onclick="javascript:return false;"><?=$words->getSilent('label_search_location')?></button>
-            </span>
-            </div><!-- /input-group -->
-            <span class="help-block"><?=$words->get('subline_location')?></span>
-        </div>
-                    <label for="create-location" style="width:15em"><?=$words->getSilent('label_setlocation')?>:</label><?php echo $words->flushBuffer(); ?><br />
-                    <input type="text" name="create-location" id="create-location" <?php
-                    echo isset($vars['create-location']) ? 'value="'.htmlentities($vars['create-location'], ENT_COMPAT, 'utf-8').'" ' : '';
+    <div class="subcolumns">
+        <div class="c50l">
+            <?=$callback_tag ?>
+            <input type="hidden" name="javascriptactive" value="false" />
+            <div class="clearfix" id="geoselectorjs" style="display: none;" >
+                <div class"form-group has-feedback">
+                    <div class="input-group">
+                    <label for="create-location" class="control-label sr-only"><?=$words->getSilent('label_setlocation')?></label><?php echo $words->flushBuffer(); ?>
+                    <input type="text" name="create-location" id="create-location" class="form-control" aria-describedby="create-location-loading-status" placeholder="<?=$words->get('label_setlocation')?>"
+                    <?php
+                        echo isset($vars['create-location']) ? 'value="'.htmlentities($vars['create-location'], ENT_COMPAT, 'utf-8').'" ' : '';
                     ?>
-                     />
-                     <input id="btn-create-location" class="button" onclick="javascript:return false;" type="submit" value="<?=$words->getSilent('label_search_location')?>" /><?php echo $words->flushBuffer(); ?>
-                    <p class="desc"><?=$words->get('subline_location')?></p>
-
-                    <div id="location-status"></div>
-
-
-    </div> <!-- geoselectorjs -->
+                    >
+                    <span id="location-status" class="form-control-feedback form-control-feedback-location" aria-hidden="true"></span>
+                    <span id="create-location-loading-status" class="sr-only">(loading icon)</span>
+                    <span class="input-group-btn">
+                        <button class="button" type="submit" id="btn-create-location" onclick="javascript:return false;"><?=$words->getSilent('label_search_location')?></button>
+                    </span>
+                    </div><!-- /input-group -->
+                    <span class="help-block"><?=$words->get('subline_location')?></span>
+                </div>
+            </div>
+        </div>
+        <div class="c50r">
+            <!-- Content of right block -->
+            <div id="spaf_map" style="width:100%; height:160px; border: 2px solid #333; display:none;">
+            </div>
+        </div>
+    </div><!-- subcolumns -->
         <div id="location-suggestion">
             <?php if (isset($vars['geonamename']) && isset($vars['geonameid']) && $vars['geonameid'] != '') { ?>
             <p><b><?=$words->get('Geo_choosenLocation')?>:</b></p>
-            <ol id="locations" class="plain">
+            <ol id="locations" class="plain-signup-location">
                 <li style="background-color: #f5f5f5; font-weight: bold; background-image: url(images/icons/tick.png);">
                     <a id="href_4544349"><?= urldecode($vars['geonamename']) ?><br/><?php if (isset($vars['geonamecountrycode']) && isset($vars['countryname']) && isset($vars['admincode'])) { ?>
                     <img alt="<?=$vars['countryname']?>" src="images/icons/flags/<?=strtolower($vars['geonamecountrycode'])?>.png" height="11px;" width="16px;" />
@@ -117,8 +115,6 @@ $map_conf = PVars::getObj('map');
             </ol>
             <?php } ?>
         </div>
-
-    </fieldset>
 </form>
 
     <?php
@@ -129,13 +125,14 @@ $map_conf = PVars::getObj('map');
         isset($mem_redirect->location);
     ?>
 
+
 <form method="post" action="signup/4" name="signup" id="user-register-form">
   <?=$callback_tag ?>
   <input type="hidden" name="javascriptactive" value="false" />
 
   <?php
         if (in_array('inserror', $vars['errors'])) {
-            echo '<p class="error">'.$errors['inserror'].'</p>';
+            echo '<span class="help-block alert alert-danger">'.$errors['inserror'].'</span>';
         }
         ?>
 
@@ -162,12 +159,12 @@ $map_conf = PVars::getObj('map');
         ?>" />
     <input type="hidden" name="newgeo" id="newgeo" value="0" />
 
-  <p>
-    <input type="submit" class="button" value="<?php echo $words->getSilent('Save Location'); ?>" class="button"
-    onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
-    /><?php echo $words->flushBuffer(); ?><br /><br />
-    <a href="signup/2" class="button back" title="<?php echo $words->getSilent('LastStep'); ?>" ><span><?php echo $words->getSilent('Back'); ?></span></a><?php echo $words->flushBuffer(); ?>
-  </p>
+  <div class="clearfix">
+        <a href="signup/2" class="button back pull-left" title="<?php echo $words->getSilent('LastStep'); ?>" ><span><?php echo $words->getSilent('Back'); ?></span></a><?php echo $words->flushBuffer(); ?>
+        <input type="submit" value="<?php echo $words->getSilent('Save Location'); ?>" class="button pull-right"
+        onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
+        /><?php echo $words->flushBuffer(); ?>
+  </div>
 </form>
   </div>
 </div>
@@ -187,21 +184,3 @@ $map_conf = PVars::getObj('map');
         echo '<input type="hidden" id="markerLongitude" name="markerLongitude" value="0"/>';
     } 
 ?>        
-<!-- Modal -->
-  <div class="modal fade" id="mapmodals">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title">Peggy Guggenheim Collection - Venice</h4>
-        </div>
-        <div class="modal-body">
-            <div id="spaf_map">
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="close" data-dismiss="modal">Close</button>
-        </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-  </div><!-- /.modal -->
-</div><!-- /container -->

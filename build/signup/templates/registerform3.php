@@ -30,22 +30,67 @@ $map_conf = PVars::getObj('map');
 <input type="hidden" id="osm-tiles-provider-base-url" value="<?php echo ($map_conf->osm_tiles_provider_base_url); ?>"/>
 <input type="hidden" id="osm-tiles-provider-api-key" value="<?php echo ($map_conf->osm_tiles_provider_api_key); ?>"/>
 
-<div id="signuprox">
-
-<form method="post" action="<?php echo $baseuri.'signup/3'?>" name="geo-form-js" id="geo-form-js">
-    <fieldset>
-        <?=$callback_tag ?>
-        <input type="hidden" name="javascriptactive" value="false" />
-
-        <legend><?php echo $words->get('Location'); ?></legend>
-
-        <div class="clearfix" id="geoselectorjs" style="display: none;" >
-
-            <div class="subcolumns">
-              <div class="c50l">
-                <div class="subcl">
-                  <!-- Content of left block -->
-
+<div id="signuprox2">
+<!-- Custom BeWelcome signup progress bar -->
+<div class="progress">
+    <div class="progress-bar progress-bar-default" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
+        <span class="bw-progress hidden-xs">
+            <a href="signup/1" <?=($step =='1') ? 'onclick="$(\'user-register-form\').action = \'signup/1\'; $(\'user-register-form\').submit(); return false"' : '' ?>>1. <?php echo $words->getFormatted('LoginInformation')?></a>
+        </span>
+        <span class="bw-progress progress-bar-default visible-xs-inline">
+            <a href="signup/1" <?=($step =='1') ? 'onclick="$(\'user-register-form\').action = \'signup/1\'; $(\'user-register-form\').submit(); return false"' : '' ?>>Schritt 1.</a>
+        </span>
+    </div>
+    <div class="progress-bar progress-bar-default" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
+        <span class="bw-progress hidden-xs">
+            <a href="signup/2" <?=($step <='2') ? 'onclick="$(\'user-register-form\').action = \'signup/2\'; $(\'user-register-form\').submit(); return false"' : '' ?>>2. <?php echo $words->getFormatted('SignupName')?></a>
+        </span>
+        <span class="bw-progress visible-xs-inline">
+            <a href="signup/2" <?=($step <='2') ? 'onclick="$(\'user-register-form\').action = \'signup/2\'; $(\'user-register-form\').submit(); return false"' : '' ?>>Schritt 2.</a>
+        </span>
+    </div>
+    <div class="progress-bar progress-bar-default" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
+        <span class="bw-progress hidden-xs">
+            <a href="signup/3" <?=($step <='3') ? 'onclick="$(\'user-register-form\').action = \'signup/3\'; $(\'user-register-form\').submit(); return false"' : '' ?>>3. <?php echo $words->getFormatted('Location')?></a>
+        </span>
+        <span class="bw-progress visible-xs-inline">
+            <a href="signup/3" <?=($step <='3') ? 'onclick="$(\'user-register-form\').action = \'signup/3\'; $(\'user-register-form\').submit(); return false"' : '' ?>>Schritt 3.</a>
+        </span>
+    </div>
+    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
+        <span class="bw-progress hidden-xs">
+            <a href="signup/4" <?=($step <='4') ? 'onclick="$(\'user-register-form\').action = \'signup/4\'; $(\'user-register-form\').submit(); return false"' : '' ?>>4. <?php echo $words->getFormatted('SignupSummary')?></a>
+        </span>
+        <span class="bw-progress visible-xs-inline">
+            <a href="signup/4" <?=($step <='4') ? 'onclick="$(\'user-register-form\').action = \'signup/4\'; $(\'user-register-form\').submit(); return false"' : '' ?>>Schritt 4.</a>
+        </span>
+    </div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"><?php echo $words->get('Location'); ?><small class="pull-right">Bitte fülle alle Felder aus.</small></h3> 
+  </div>
+  <div class="panel-body">
+<form method="post" action="<?php echo $baseuri.'signup/3'?>" class="form" name="geo-form-js" id="geo-form-js">
+    <?=$callback_tag ?>
+    <input type="hidden" name="javascriptactive" value="false" />
+    <div class="clearfix" id="geoselectorjs" style="display: none;" >
+        <div class"form-group has-feedback">
+            <div class="input-group">
+            <label for="create-location" class="control-label sr-only"><?=$words->getSilent('label_setlocation')?></label><?php echo $words->flushBuffer(); ?>
+            <input type="text" name="create-location" id="create-location" class="form-control" aria-describedby="create-location-loading-status" placeholder="<?=$words->get('label_setlocation')?>"
+            <?php
+                echo isset($vars['create-location']) ? 'value="'.htmlentities($vars['create-location'], ENT_COMPAT, 'utf-8').'" ' : '';
+            ?>
+            >
+            <span id="location-status" class="form-control-feedback form-control-feedback-location" aria-hidden="true"></span>
+            <span id="create-location-loading-status" class="sr-only">(loading icon)</span>
+            <span class="input-group-btn">
+                <button class="button" type="submit" id="btn-create-location" onclick="javascript:return false;"><?=$words->getSilent('label_search_location')?></button>
+            </span>
+            </div><!-- /input-group -->
+            <span class="help-block"><?=$words->get('subline_location')?></span>
+        </div>
                     <label for="create-location" style="width:15em"><?=$words->getSilent('label_setlocation')?>:</label><?php echo $words->flushBuffer(); ?><br />
                     <input type="text" name="create-location" id="create-location" <?php
                     echo isset($vars['create-location']) ? 'value="'.htmlentities($vars['create-location'], ENT_COMPAT, 'utf-8').'" ' : '';
@@ -56,26 +101,15 @@ $map_conf = PVars::getObj('map');
 
                     <div id="location-status"></div>
 
-                </div>
-              </div>
 
-              <div class="c50r">
-                <div class="subcr">
-                  <!-- Content of right block -->
-                    <div id="spaf_map" style="width:240px; height:180px; border: 2px solid #333; display:none;">
-                    </div>
-                </div>
-              </div>
-            </div>
-
-        </div> <!-- geoselectorjs -->
+    </div> <!-- geoselectorjs -->
         <div id="location-suggestion">
             <?php if (isset($vars['geonamename']) && isset($vars['geonameid']) && $vars['geonameid'] != '') { ?>
             <p><b><?=$words->get('Geo_choosenLocation')?>:</b></p>
             <ol id="locations" class="plain">
                 <li style="background-color: #f5f5f5; font-weight: bold; background-image: url(images/icons/tick.png);">
                     <a id="href_4544349"><?= urldecode($vars['geonamename']) ?><br/><?php if (isset($vars['geonamecountrycode']) && isset($vars['countryname']) && isset($vars['admincode'])) { ?>
-                    <img alt="<?=$vars['countryname']?>" src="images/icons/flags/<?=strtolower($vars['geonamecountrycode'])?>.png"/>
+                    <img alt="<?=$vars['countryname']?>" src="images/icons/flags/<?=strtolower($vars['geonamecountrycode'])?>.png" height="11px;" width="16px;" />
                     <span class="small"><?= urldecode($vars['countryname']) ?> / <?= urldecode($vars['admincode']) ?></span>
                     <?php } ?>
                     </a>
@@ -94,7 +128,6 @@ $map_conf = PVars::getObj('map');
         if (isset($vars['geonameid']) && !isset($_SESSION['GeoVars']['geonameid'])) { }
         isset($mem_redirect->location);
     ?>
-
 
 <form method="post" action="signup/4" name="signup" id="user-register-form">
   <?=$callback_tag ?>
@@ -136,7 +169,9 @@ $map_conf = PVars::getObj('map');
     <a href="signup/2" class="button back" title="<?php echo $words->getSilent('LastStep'); ?>" ><span><?php echo $words->getSilent('Back'); ?></span></a><?php echo $words->flushBuffer(); ?>
   </p>
 </form>
-</div> 
+  </div>
+</div>
+</div>
         
 <?php
     if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] && $vars['longitude']) {
@@ -152,3 +187,21 @@ $map_conf = PVars::getObj('map');
         echo '<input type="hidden" id="markerLongitude" name="markerLongitude" value="0"/>';
     } 
 ?>        
+<!-- Modal -->
+  <div class="modal fade" id="mapmodals">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Peggy Guggenheim Collection - Venice</h4>
+        </div>
+        <div class="modal-body">
+            <div id="spaf_map">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="close" data-dismiss="modal">Close</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</div><!-- /container -->

@@ -95,7 +95,7 @@ class GeoView extends PAppView {
         $add_out = '';
         if ($locations) {
             $out = '<p class="desc">'.$words->get('Geo_hint_click_location').'</p>';
-            $out .= '<ol id="locations" class="plain">';
+            $out .= '<ol id="locations" class="clearfix plain-location">';
             $dohide = '';
             $add_out = '';
             $ii = 0;
@@ -109,14 +109,14 @@ class GeoView extends PAppView {
                     if(!isset($location['countryName'])) $location['countryName'] = '';
                     // hide all results above 10
                     if ($ii++ == $hideAfter) {
-                        $dohide = 'style="display:none" class="hidden"';
+                        $dohide = 'style="display:none" class="hidden-location"';
                         $out .= '<p style="padding: 1em 0; clear:both" id="moreHint">'.$words->get('Geo_results_foundmore','<a id="showAllResults" href="#">','</a>').'</p>';
                         $add_out = '
                             <script>
                                 jQuery.noConflict();
                                 jQuery(\'a#showAllResults\').on(\'click\',
                                     function () {
-                                        jQuery(\'li.hidden\').show();
+                                        jQuery(\'li.hidden-location\').show();
                                         jQuery(\'p#moreHint\').hide();
                                         return false;
                                     }

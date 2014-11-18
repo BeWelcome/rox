@@ -30,11 +30,12 @@
 #signuprox .error {font-size: 11px; clear:both; width: 30em; }
 #signuprox2 .statbtn {padding: 5px; float:left;}
 #signuprox2 a.back {color: #888}
-#signuprox .sweet { width:0; height: 0; display: inline; }
-
-#signuprox #spaf_map{ position: relative; display: block;}
-#signuprox #spaf_map span{ display: none;}
-#signuprox #spaf_map label span{ display: inline;}
-#signuprox ol li{ margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: center no-repeat; background-position: 250px}
-
-#signuprox .sweet {display: none;}
+#signuprox2 .sweet { width:0; height: 0; display: inline; }
+#signuprox2 .sweet {display: none;}
+#signuprox2 .form-control-feedback-location {right: 100px;}
+#signuprox2 ol.plain-location {padding-left: 0px;}
+#signuprox2 li.hidden-location {display: none;}
+#signuprox2 #spaf_map{ position: relative; display: block;}
+#signuprox2 #spaf_map span{ display: none;}
+#signuprox2 #spaf_map label span{ display: inline;}
+#signuprox2 ol li{ margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: center no-repeat; background-position: 250px}

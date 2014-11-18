@@ -23,21 +23,6 @@ class SignupPage extends PageWithRoxLayout
         $words = $this->layoutkit->words;
         echo $words->get('signup');
     }
-    
-    //protected function leftSidebar()
-    //{
-
-    //}
-    
-   // protected function column_col1()
-    //{
-      //  $request = PRequest::get()->request;
-       // if (!isset($request[1]) || $request[1]== '')
-        //    $step = '1';
-        //else $step = $request[1];
-        //require 'templates/sidebar.php';
-    //}
-    
     protected function getColumnNames()
     {
         // we don't need the other columns

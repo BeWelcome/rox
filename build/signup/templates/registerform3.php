@@ -37,7 +37,7 @@ $map_conf = PVars::getObj('map');
         <span class="bw-progress hidden-xs">
             <a href="signup/1" <?=($step =='1') ? 'onclick="$(\'user-register-form\').action = \'signup/1\'; $(\'user-register-form\').submit(); return false"' : '' ?>>1. <?php echo $words->getFormatted('LoginInformation')?></a>
         </span>
-        <span class="bw-progress progress-bar-default visible-xs-inline">
+        <span class="bw-progress visible-xs-inline">
             <a href="signup/1" <?=($step =='1') ? 'onclick="$(\'user-register-form\').action = \'signup/1\'; $(\'user-register-form\').submit(); return false"' : '' ?>>Schritt 1.</a>
         </span>
     </div>

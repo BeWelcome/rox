@@ -67,7 +67,7 @@ Boston, MA  02111-1307, USA.
         <div class="panel-heading" role="tab" id="headingOne">
             <h4 class="panel-title">
                 <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    Wo werden meine Daten angezeigt?
+                    <?php echo $words->get('SignupIntroductionTitle'); ?>
                 </a>
             </h4>
         </div>

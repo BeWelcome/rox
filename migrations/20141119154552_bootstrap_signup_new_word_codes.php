@@ -18,7 +18,7 @@ class BootstrapSignupNewWordCodes extends Rox\Tools\RoxMigration
     public function up()
     {
         // Add word codes as needed
-        $this->AddWordCode('SignupIntroductionTitle', 'Where will my personal information be displayed?', 'Panel title for signup introduction');
+        $this->AddWordCode('SignupIntroductionTitle', 'Privacy Information', 'Panel title for signup introduction');
     }
 
     /**

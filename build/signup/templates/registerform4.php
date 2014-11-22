@@ -162,20 +162,17 @@ Boston, MA  02111-1307, USA.
 
 		<!-- confirm email -->
 		<div class="form-group">
-			 <?php
-			 if (in_array('SignupErrorEmailCheck', $vars['errors']) || in_array('SignupErrorInvalidEmail', $vars['errors']) || in_array('SignupErrorEmailAddressAlreadyInUse', $vars['errors'])) { ?>
-				<label for="register-emailcheck" class="control-label sr-only">><?php echo $words->get('SignupCheckEmail'); ?></label>
-				<input type="text" class="form-control" id="register-emaildcheck" name="emailcheck" placeholder="<?php echo $words->get('SignupCheckEmail'); ?>" <?php
-					echo isset($vars['emailcheck']) ? 'value="'.$vars['emailcheck'].'" ' : '';
-					?>
-				>
-
 			<?php
-			} else { ?>
+			
+			//if (in_array('SignupErrorEmailCheck', $vars['errors']) || in_array('SignupErrorInvalidEmail', $vars['errors']) || in_array('SignupErrorEmailAddressAlreadyInUse', $vars['errors'])) { ?>
+				<label for="register-emailcheck" class="control-label sr-only"><?php echo $words->get('SignupCheckEmail'); ?></label>
+				<input type="text" class="form-control" id="register-emaildcheck" name="emailcheck" placeholder="<?php echo $words->get('SignupCheckEmail'); ?>" <?php
+					echo isset($vars['emailcheck']) ? 'value="'.$vars['emailcheck'].'" ' : ''; ?>
+				>
+			<?php //} else { ?>
 				<label for="register-emailcheck" class="control-label"><?php echo $words->get('SignupCheckEmail'); ?></label>
 				<?php echo '<p class="form-control-static">'.$vars['email'].'</p>'; ?>
-			}
-			?>
+			//} ?>
 		</div>
 	</div><!-- panel-body: Login information -->
 
@@ -462,7 +459,7 @@ Boston, MA  02111-1307, USA.
   			</label>
 		</div>
 		<div class="clearfix">
-			<input type="submit" class="button" value="<?php echo $words->getSilent('SubmitForm'); ?>" class="submit"
+			<input type="submit" class="button" value="<?php echo $words->getSilent('SubmitForm'); ?>"
 			onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;">
 			<?php echo $words->flushBuffer(); ?>
 			<a href="signup/3" class="button back" title="<?php echo $words->getSilent('LastStep'); ?>" ><?php echo $words->getSilent('Back'); ?></a>

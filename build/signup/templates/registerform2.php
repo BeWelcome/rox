@@ -209,12 +209,13 @@ Boston, MA  02111-1307, USA.
             ?>    
         </div>
     </div>
-    <div class="clearfix">
-    <a href="signup/1" class="button back pull-left" title="<?php echo $words->getSilent('LastStep'); ?>" ><?php echo $words->get('Back'); ?> </a><?php echo $words->flushBuffer(); ?>
-        <input type="submit" value="<?php echo $words->getSilent('NextStep'); ?>" class="button pull-right"
+        <input type="submit" value="<?php echo $words->getSilent('NextStep'); ?>" class="btn btn-default btn-lg pull-right hidden-xs"
         onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
-        /><?php echo $words->flushBuffer(); ?>
-    </div> 
+        >
+        <input type="submit" value="<?php echo $words->getSilent('NextStep'); ?>" class="btn btn-default btn-lg pull-right btn-block visible-xs-block"
+        onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
+        >
+        <?php echo $words->flushBuffer(); ?>
 </form>
   </div>
 </div>

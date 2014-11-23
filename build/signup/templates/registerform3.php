@@ -91,7 +91,7 @@ $map_conf = PVars::getObj('map');
                         <button class="button" type="submit" id="btn-create-location" onclick="javascript:return false;"><?=$words->getSilent('label_search_location')?></button>
                     </span>
                     </div><!-- /input-group -->
-                    <span class="help-block"><?=$words->get('subline_location')?></span>
+                    <span class="help-block text-justify"><?=$words->get('subline_location')?></span>
                 </div>
             </div>
         </div>
@@ -103,16 +103,18 @@ $map_conf = PVars::getObj('map');
     </div><!-- subcolumns -->
         <div id="location-suggestion">
             <?php if (isset($vars['geonamename']) && isset($vars['geonameid']) && $vars['geonameid'] != '') { ?>
-            <p><b><?=$words->get('Geo_choosenLocation')?>:</b></p>
-            <ol id="locations" class="plain-signup-location">
-                <li style="background-color: #f5f5f5; font-weight: bold; background-image: url(images/icons/tick.png);">
-                    <a id="href_4544349"><?= urldecode($vars['geonamename']) ?><br/><?php if (isset($vars['geonamecountrycode']) && isset($vars['countryname']) && isset($vars['admincode'])) { ?>
-                    <img alt="<?=$vars['countryname']?>" src="images/icons/flags/<?=strtolower($vars['geonamecountrycode'])?>.png" height="11px;" width="16px;" />
-                    <span class="small"><?= urldecode($vars['countryname']) ?> / <?= urldecode($vars['admincode']) ?></span>
-                    <?php } ?>
-                    </a>
-                </li>
-            </ol>
+                <div class="form-group clearfix">
+                <p><b><?=$words->get('Geo_choosenLocation')?>:</b></p>
+                <ol id="locations" class="plain-location">
+                    <li style="background-color: #f5f5f5; font-weight: bold; background-image: url(images/icons/tick.png);">
+                        <a id="href_4544349"><?= urldecode($vars['geonamename']) ?><br/><?php if (isset($vars['geonamecountrycode']) && isset($vars['countryname']) && isset($vars['admincode'])) { ?>
+                        <img alt="<?=$vars['countryname']?>" src="images/icons/flags/<?=strtolower($vars['geonamecountrycode'])?>.png" height="11px;" width="16px;" />
+                        <span class="small"><?= urldecode($vars['countryname']) ?> / <?= urldecode($vars['admincode']) ?></span>
+                        <?php } ?>
+                        </a>
+                    </li>
+                </ol>
+            </div>
             <?php } ?>
         </div>
 </form>
@@ -158,13 +160,13 @@ $map_conf = PVars::getObj('map');
             echo isset($vars['admincode']) ? htmlentities($vars['admincode'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
     <input type="hidden" name="newgeo" id="newgeo" value="0" />
-
-  <div class="clearfix">
-        <a href="signup/2" class="button back pull-left" title="<?php echo $words->getSilent('LastStep'); ?>" ><span><?php echo $words->getSilent('Back'); ?></span></a><?php echo $words->flushBuffer(); ?>
-        <input type="submit" value="<?php echo $words->getSilent('Save Location'); ?>" class="button pull-right"
+        <input type="submit" value="<?php echo $words->getSilent('NextStep'); ?>" class="btn btn-default btn-block btn-lg pull-right visible-xs-block"
         onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
-        /><?php echo $words->flushBuffer(); ?>
-  </div>
+        >
+        <input type="submit" value="<?php echo $words->getSilent('NextStep'); ?>" class="btn btn-default btn-lg pull-right hidden-xs"
+        onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
+        >
+<?php echo $words->flushBuffer(); ?>
 </form>
   </div>
 </div>

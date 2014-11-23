@@ -631,8 +631,6 @@ VALUES
             $errors[] = 'SignupErrorFullNameRequired';
         }
 
-        // (skipped:) secondname
-
         if (!isset($vars['mothertongue']) || ($vars['mothertongue'] == -1)) {
             $errors[] = 'SignupErrorNoMotherTongue';
         }
@@ -660,12 +658,6 @@ VALUES
                 $errors[] = 'SignupErrorBirthDateToLow';
             }
         }
-
-        // (skipped:) birthmonth
-
-        // (skipped:) birthday
-
-        // (skipped:) age hidden
 
         // terms
         if (empty($vars['terms']) || !$vars['terms']) {

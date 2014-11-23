@@ -164,7 +164,10 @@ Boston, MA  02111-1307, USA.
           ?>
     </div>
     <!-- Next step button -->
-    <input type="submit" class="btn btn-default" value="<?php echo $words->getSilent('NextStep'); ?>"
+    <input type="submit" class="btn btn-default btn-lg pull-right hidden-xs" value="<?php echo $words->getSilent('NextStep'); ?>"
+    onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
+    /><?php echo $words->flushBuffer(); ?>
+    <input type="submit" class="btn btn-default btn-lg pull-right btn-block visible-xs-block" value="<?php echo $words->getSilent('NextStep'); ?>"
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
     /><?php echo $words->flushBuffer(); ?>
 </form>

@@ -1,1 +1,10 @@
-{    "require": {        "robmorgan/phinx": "*",        "html2text/html2text": "*",        "michelf/php-markdown": "*",        "swiftmailer/swiftmailer": "*",        "twbs/bootstrap": "3.3.0",        "fortawesome/font-awesome": "4.2.0"        }}
+{
+    "require": {
+        "robmorgan/phinx": "*",
+        "html2text/html2text": "*",
+        "michelf/php-markdown": "*",
+        "swiftmailer/swiftmailer": "*",
+        "twbs/bootstrap": "3.3.0",
+        "fortawesome/font-awesome": "4.2.0"
+        }
+}

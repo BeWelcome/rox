@@ -5,7 +5,7 @@
 // Reset and dependencies
 @import "../../../vendor/twbs/bootstrap/less/normalize.less";
 @import "../../../vendor/twbs/bootstrap/less/print.less";
-@import "../../../vendor/twbs/bootstrap/less/glyphicons.less";
+// @import "../../../vendor/twbs/bootstrap/less/glyphicons.less"; //we use font-awesome, see below
 
 // Core CSS
 @import "../../../vendor/twbs/bootstrap/less/scaffolding.less";
@@ -192,8 +192,8 @@ h6, .h6 {
 @media (min-width: @screen-sm-min){
   .nav-pills .active-bw a:after {
       border-top: 15px solid #FF8700;
-      border-left: 15px solid rgba(0, 0, 0, 0);
-      border-right: 15px solid rgba(0, 0, 0, 0);
+      border-left: 15px solid rgb(0, 0, 0) transparent;
+      border-right: 15px solid rgb(0, 0, 0) transparent;
       bottom: -15px;
       content: " ";
       display: block;
@@ -255,7 +255,9 @@ h6, .h6 {
     font-weight: normal;
 }
 .form-signin .form-control {
+    -box-sizing: border-box;
     -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
     font-size: 16px;
     height: auto;
     padding: 10px;

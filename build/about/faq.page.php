@@ -20,8 +20,8 @@ class AboutFaqPage extends AboutBasePage
         foreach ($this->faq_categories as $key => $category) {
             echo '
             <div class="'.($j%2 ? 'odd' : 'even').'"><a href="about/faq/'.$key.'">
-            '.$words->get($category->Description).'
-            </a></div>
+            '.$words->getBuffered($category->Description).'
+            </a>' . $words->flushBuffer() . '</div>
             <hr />';
             ++ $j;
         }
@@ -45,7 +45,7 @@ class AboutFaqPage extends AboutBasePage
         
         foreach ($categories as $key => $category) {
             echo '
-            <h3><a href="about/faq/'.$key.'">'.$words->get($category->Description).'</a></h3>';
+            <h3><a href="about/faq/'.$key.'">'.$words->getBuffered($category->Description).'</a></h3>' . $words->flushBuffer();
             foreach ($category->faqs as &$faq) {
                 echo '
                 <p>'.$faq->words_Q[0]->Sentence.'</p>';

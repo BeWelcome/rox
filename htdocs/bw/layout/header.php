@@ -64,13 +64,11 @@ echo '<!--[if lte IE 7]>';
 echo '  <link href="/styles/css/' . $stylesheet. '/patches/iehacks_3col_vlines.css" rel="stylesheet" type="text/css" media="screen" />';
 echo '<![endif]-->';
 echo '<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->';
-
 echo '<!--[if lt IE 9]>';
 echo '<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>';
 echo '<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>';
 echo '<![endif]-->';
-<?php
-echo "</head>";
+echo '</head>';
 
 if (isset($onLoadAction)) {
     echo "<body onload='$onLoadAction'>";

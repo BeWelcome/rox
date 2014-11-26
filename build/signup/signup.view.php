@@ -44,64 +44,6 @@ class SignupView extends PAppView
         $this->_model = $model;
     }
 
-    /**
-     * Loading Custom CSS for signup
-     *
-     * @param void
-     */
-    public function customStylesSignup()    {
-        echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/signup.css?3\" type=\"text/css\"/>";
-    }
-
-    /**
-     * Loading Simple Teaser - just needs defined title
-     *
-     * @param void
-     */
-    public function ShowSimpleTeaser($title)    {
-        require 'templates/teaser_simple.php';
-    }
-
-    /**
-     * Loading register confirm error template
-     *
-     * @param void
-     */
-    public function confirmation($username, $email)
-    {
-        require 'templates/confirmation.php';
-    }
-
-    /**
-     * Loading register form template
-     *
-     * @param void
-     */
-    public function registerForm()
-    {
-        // instantiate signup model
-        $Signup = new Signup;
-        // retrieve the callback ID
-        $callbackId = $Signup->registerProcess();
-        // get the saved post vars
-        $vars =& PPostHandler::getVars($callbackId);
-
-        $javascript = false;
-        if (isset($vars['javascriptactive'])) {
-}
-        if (isset($vars['javascriptactive']) && $vars['javascriptactive'] === 'true') {
-            $javascript = true;
-        }
-
-        $selYear = 0;
-        if (isset($vars['birthyear'])) {
-            $selYear = $vars['birthyear'];
-        }
-        $birthYearOptions = $this->buildBirthYearOptions($selYear);
-
-        require 'templates/registerform.php';
-        PPostHandler::clearVars($callbackId);
-    }
 
 
     /**

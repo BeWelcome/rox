@@ -33,9 +33,9 @@ echo ">\n";
 global $_SYSHCVOL;
 echo "<head>\n";
 if (isset ($title)) {
-	echo "  <title>", $title, "</title>\n";
+    echo "  <title>", $title, "</title>\n";
 } else {
-	echo "\n<title>", $_SYSHCVOL['SiteName'], "</title>\n";
+    echo "\n<title>", $_SYSHCVOL['SiteName'], "</title>\n";
 }
 echo "  <meta charset=\"utf-8\">\n";
 echo "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n";
@@ -51,24 +51,24 @@ $stylesheet = "minimal"; // this is the default style sheet
 
 // If is logged try to load appropriated style sheet
 if (IsLoggedIn()) {
-	if (!isset($_SESSION["stylesheet"]))  { // cache in session to avoid a reload at each new page
-		 $rrstylesheet = LoadRow("select Value from memberspreferences where IdMember=" . $_SESSION['IdMember'] . " and IdPreference=6");
-		 if (isset ($rrstylesheet->Value)) {
-		 		$_SESSION["stylesheet"]=$stylesheet = $rrstylesheet->Value;
-		 }
-	}
-	$stylesheet = "minimal"; // force YAML also for logged member (for now, todo several layout)
+    if (!isset($_SESSION["stylesheet"]))  { // cache in session to avoid a reload at each new page
+         $rrstylesheet = LoadRow("select Value from memberspreferences where IdMember=" . $_SESSION['IdMember'] . " and IdPreference=6");
+         if (isset ($rrstylesheet->Value)) {
+                $_SESSION["stylesheet"]=$stylesheet = $rrstylesheet->Value;
+         }
+    }
+    $stylesheet = "minimal"; // force YAML also for logged member (for now, todo several layout)
 }
 echo '  <link href="/styles/css/' . $stylesheet. '/minimal.css" rel="stylesheet" type="text/css" media="screen" />';
 echo '<!--[if lte IE 7]>';
 echo '  <link href="/styles/css/' . $stylesheet. '/patches/iehacks_3col_vlines.css" rel="stylesheet" type="text/css" media="screen" />';
 echo '<![endif]-->';
-<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
+echo '<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->';
+
+echo '<!--[if lt IE 9]>';
+echo '<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>';
+echo '<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>';
+echo '<![endif]-->';
 <?php
 echo "</head>";
 
@@ -80,8 +80,8 @@ else {
 }
 
 if ($_SYSHCVOL['SiteStatus'] == 'Closed') {
-	echo "<p>", $_SYSHCVOL['SiteCloseMessage'], "</p>\n";
-	echo "</body>\n</html>\n";
-	exit (0);
+    echo "<p>", $_SYSHCVOL['SiteCloseMessage'], "</p>\n";
+    echo "</body>\n</html>\n";
+    exit (0);
 }
 ?>

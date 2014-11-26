@@ -1,4 +1,4 @@
-<div id="teaser" class="floatbox">
+<div id="teaser" class="clearfix">
 <div class="float_left">
 <h1><a href="/suggestions"><?= $words->get('Suggestions') ?></a></h1>
 </div>

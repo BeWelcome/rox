@@ -78,7 +78,7 @@ endif; ?>
             </td>
         </tr>
     </table>
-    <div id="search-advanced" class="floatbox">
+    <div id="search-advanced" class="clearfix">
         <?php if ($this->showAdvanced) {
                 $vars = $this->vars; // Needed because advanced options might be loaded through ajax as well
                 require_once('advancedoptions.php');
@@ -99,7 +99,7 @@ endif; ?>
     </div>
 </div>
 
-<div class="floatbox row">
+<div class="clearfix row">
     <div class="row"><?php
         $numberOfItems = array('5', '10', '20', '50', '100');
         $select = '<select name="search-number-items">';
@@ -225,7 +225,7 @@ if ($this->membersResultsReturned) :
 endif;
 if ($this->locationsResultsReturned) :
     echo '<p><strong>' . $words->get('SearchSelectLocation') . '</strong></p>';
-    echo '<div class="floatbox">';
+    echo '<div class="clearfix">';
     if (isset($this->results['biggest'])) :
         // biggest
         $i = 0;

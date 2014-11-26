@@ -29,7 +29,7 @@
  * @link     http://www.bewelcome.org
  */
 ?>
-<div id="message" class="floatbox" style="font-size: 100%">
+<div id="message" class="clearfix" style="font-size: 100%">
     <div id="shade_top"> </div>
     <table id="messageheader" style="background-color: #FFF; border-bottom:1px solid #E5E5E5; border-top:1px solid #E5E5E5; padding: 2em 3em 1em;">
         <td style="color:#777">
@@ -49,7 +49,7 @@
         </p>
     </div> <!-- messagecontent -->
     <div id="messagefooter" style="border-top: 1px solid #E5E5E5; padding: 2em 3em;">
-        <p class="floatbox">
+        <p class="clearfix">
           <a style="border: 1px solid; border-color: #E5E5E5 #BBBBBB #BBBBBB #E5E5E5; color: #FF8800; float: right; font-size: 1.1em; font-weight: bold; line-height: 24px; padding: 3px 8px; text-decoration:none;" href="<?php echo $messageUrl ?>/reply"><?php echo $words->get('replymessage')?></a>
         </p>
     </div> <!-- messagefooter -->

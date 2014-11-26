@@ -4,7 +4,7 @@
 **********************/
 
 if (!$this->passedAway){ ?>
-    <div id="accommodationinfo" class="floatbox box">
+    <div id="accommodationinfo" class="clearfix box">
         <?php if ($showEditLinks): ?>
         <span class="float_right profile-edit-link">
             <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileaccommodation">
@@ -211,7 +211,7 @@ if (count($relations) > 0) { ?>
 
     $max = 3;
     if (count($comments) > 0) {
-        ?> <div id="comments" class="floatbox box"> <?php
+        ?> <div id="comments" class="clearfix box"> <?php
             if ($showEditLinks): ?>
     <span class="float_right profile-edit-link">
         <a href="members/<?php echo $member->Username; ?>/comments/"><?php echo $words->get('Edit'); ?></a>

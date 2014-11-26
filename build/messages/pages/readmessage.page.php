@@ -18,10 +18,10 @@ class ReadMessagePage extends MessagesBasePage
         $member = $model->getMemberWithUsername($contact_username);
 
         ?>
-        <div id="message" class="floatbox">
+        <div id="message" class="clearfix">
             <div id="shade_top"></div>
             <div id="buttonstop">
-                <p class="floatbox">
+                <p class="clearfix">
                     <?php if ($direction_in) { ?>
                         <a class="button float_left"
                            href="messages/<?= $message->id ?>/reply"><?= $words->get('replymessage') ?></a>
@@ -42,7 +42,7 @@ class ReadMessagePage extends MessagesBasePage
                 </p>
             </div>
             <!-- buttonstop -->
-            <div id="messageheader" class="floatbox">
+            <div id="messageheader" class="clearfix">
                 <div id="messageside" class="float_right">
                     <p class="small grey">
                         <?= $words->get('LivesIn') ?> <strong><?= $member->City ?>, <?= $member->Country ?></strong>
@@ -92,7 +92,7 @@ class ReadMessagePage extends MessagesBasePage
             </div>
             <!-- messagecontent -->
             <div id="messagefooter">
-                <p class="floatbox">
+                <p class="clearfix">
                     <?php if ($direction_in) { ?>
                         <a class="button float_left"
                            href="messages/<?= $message->id ?>/reply"><?= $words->get('replymessage') ?></a>

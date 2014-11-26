@@ -49,7 +49,7 @@ foreach ($this->pager->getActiveSubset($this->comments) as $comment)
     $displayInPublic = $this->displayInPublic($comment->DisplayInPublic);
     echo <<<HTML
 <form name="update" method="POST" action="">
-<div class="floatbox box" style="background-color:#eee">
+<div class="clearfix box" style="background-color:#eee">
         <div class="float_left">
             <p><b>{$comment->AdminAction}</b></p>
             <p>

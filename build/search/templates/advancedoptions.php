@@ -21,14 +21,14 @@ $words = new MOD_words;
         <td valign="top" rowspan="3">
             <span class="small"><?php echo $words->getFormatted('FindPeopleAccomodationTitle'); ?></span><br/>
             <?php echo getAccommodationOptions($vars); ?>
-            <span class="small floatbox">
+            <span class="small clearfix">
                 <span class="float_right"><i><?php echo $words->getFormatted('FindPeopleAccomodationTip'); ?></i></span>
             </span>
             <br/>
             <br/>
          <span class="small"><?php echo $words->getFormatted('FindPeopleOfferTypeTitle'); ?></span><br/>
             <?php echo getTypicalOfferOptions($vars); ?>
-            <span class="small floatbox">
+            <span class="small clearfix">
                 <span class="float_right"><i><?php echo $words->getFormatted('FindPeopleTypicOfferTip'); ?></i></span>
             </span>
         </td>
@@ -41,7 +41,7 @@ $words = new MOD_words;
         <td colspan="2"><?php echo getLanguagesOptionsDropDown($vars); ?></td>
     </tr>
     <tr>
-        <td colspan="2" class="floatbox">
+        <td colspan="2" class="clearfix">
             <div class="float_left advance-margin">
                 <span class="small"><?php echo $words->getFormatted('FindPeopleMinimumAge'); ?></span><br/>
                 <?php echo getAgeDropDown($vars, 'search-age-minimum'); ?>

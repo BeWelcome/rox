@@ -8304,8 +8304,8 @@ h6,
     vertical-align: middle;
     content: " ";
     border-top: 15px solid #ff8700;
-    border-right: 15px solid #000 transparent;
-    border-left: 15px solid #000 transparent;
+    border-right: 15px solid transparent;
+    border-left: 15px solid transparent;
   }
 }
 .nav-justifiedmedia {

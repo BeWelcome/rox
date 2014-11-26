@@ -73,7 +73,7 @@ module.exports = function(grunt) {
     },
     watch: {
         files: "htdocs/styles/less/*",
-        tasks: ['less:compileBeWelcome', 'autoprefixer:bewelcome', 'csscomb:bewelcome',  'cssmin:bewelcome', 'csslint:bewelcome']
+        tasks: ['less:compileBeWelcome', 'autoprefixer:bewelcome', 'csscomb:bewelcome',  'cssmin:bewelcome']
     } 
 });
 

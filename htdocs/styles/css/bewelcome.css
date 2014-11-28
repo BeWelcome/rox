@@ -8285,12 +8285,12 @@ h6,
 .nav-pills > li.active-bw > a:focus {
   font-weight: bold;
   color: #fff;
-  background-image: -webkit-linear-gradient(top, #ffbc00 0%, #ff8700 80%);
-  background-image:      -o-linear-gradient(top, #ffbc00 0%, #ff8700 80%);
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffbc00), color-stop(80%, #ff8700));
-  background-image:         linear-gradient(to bottom, #ffbc00 0%, #ff8700 80%);
+  background-image: -webkit-linear-gradient(#ffbc00, #ff8700 80%, #ff8700);
+  background-image:      -o-linear-gradient(#ffbc00, #ff8700 80%, #ff8700);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffbc00), color-stop(80%, #ff8700), to(#ff8700));
+  background-image:         linear-gradient(#ffbc00, #ff8700 80%, #ff8700);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffbc00', endColorstr='#ffff8700', GradientType=0);
-  background-repeat: repeat-x;
+  background-repeat: no-repeat;
 }
 @media (min-width: 768px) {
   .nav-pills .active-bw a:after {

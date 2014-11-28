@@ -123,10 +123,6 @@ h6, .h6 {
     /* symbol for "collapsed" panels */
     content: "\f078";    /* adjust as needed */
 }
-//** Placeholder text color
-@media (min-width: @screen-sm-min) {
-@input-color-placeholder: white;
-}
 // Inverted custom BeWelcome (gradient) navbar
 .navbar-inverse {
   #gradient > .vertical(@start-color: #ffbc00; @end-color: @navbar-inverse-bg);
@@ -182,7 +178,8 @@ h6, .h6 {
       &:focus {
         color: #fff;
         font-weight: bold;
-        #gradient > .vertical(@start-color:#FFBC00 ; @end-color: #FF8700; @start-percent: 0%; @end-percent: 80%);
+        #gradient > .vertical-three-colors(#FFBC00; #FF8700; 80%; #FF8700);
+        //#gradient > .vertical(@start-color:#FFBC00 ; @end-color: #FF8700; @start-percent: 0%; @end-percent: 80%);
         
       }
     }

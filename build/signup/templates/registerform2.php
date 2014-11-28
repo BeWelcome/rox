@@ -80,6 +80,7 @@ Boston, MA  02111-1307, USA.
         <label for="sweet"><?php echo $words->get('SignupSweet'); ?></label>
         <input type="text" class="form-control" id="sweet" name="sweet" placeholder="<?php echo $words->get('SignupSweet'); ?>" value="" title="Leave free of content"/>
     </div>
+    
     <!-- First name -->
     <div class="form-group has-feedback">
         <label for="register-firstname" class="control-label sr-only"><?php echo $words->get('FirstName'); ?></label>
@@ -93,6 +94,7 @@ Boston, MA  02111-1307, USA.
             }
             ?>
     </div>
+    
     <!-- Second name -->
     <div class="form-group has-feedback">
         <label for="secondname" class="control-label sr-only"><?php echo $words->get('SignupSecondNameOptional'); ?></label>
@@ -130,7 +132,7 @@ Boston, MA  02111-1307, USA.
               </optgroup>
           </select>
     </div>
-    <div class="form-group has-feedback">
+    <div class="form-group">
         <label class="control-label"><?php echo $words->get('SignupBirthDate'); ?></label>
         <div class="form-inline">
             <div class="form-group">
@@ -176,39 +178,35 @@ Boston, MA  02111-1307, USA.
             }
         ?>
     </div>
+    
     <!-- Gender -->
-    <div class="form-group has-feedback">
-      <label for="gender" class="control-label"><?php echo $words->get('Gender'); ?></label>
-        <div class="form-inline">
-            <div class="form-group">
-                <label class="radio-inline">
-                    <input type="radio" id="gender" name="gender" value="female"<?php
-                     if (isset($vars['gender']) && $vars['gender'] == 'female') {
-                         echo ' checked="checked"';
-                      }
-                      ?> /><?php echo $words->get('female'); ?>
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" name="gender" value="male"<?php
-                  if (isset($vars['gender']) && $vars['gender'] == 'male') {
-                      echo ' checked="checked"';
-                  }
-                  ?> /><?php echo $words->get('male'); ?>
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" name="gender" value="other"<?php
-                  if (isset($vars['gender']) && $vars['gender'] == 'other') {
-                      echo ' checked="checked"';
-                  }
-                  ?> /><?php echo $words->get('GenderOther'); ?>
-                  </label>
-            </div>
-            <?php if (in_array('SignupErrorProvideGender', $vars['errors'])) {
-                echo '<span class="help-block alert alert-danger">'.$words->get('SignupErrorProvideGender').'</span>';
-                }
-            ?>    
-        </div>
+    <div class="form-group">
+        <label class="radio-inline">
+            <input type="radio" id="gender" name="gender" value="female"<?php
+             if (isset($vars['gender']) && $vars['gender'] == 'female') {
+                 echo ' checked="checked"';
+              }
+              ?> ><?php echo $words->get('female'); ?>
+        </label>
+        <label class="radio-inline">
+          <input type="radio" name="gender" value="male"<?php
+          if (isset($vars['gender']) && $vars['gender'] == 'male') {
+              echo ' checked="checked"';
+          }
+          ?> ><?php echo $words->get('male'); ?>
+        </label>
+        <label class="radio-inline">
+          <input type="radio" name="gender" value="other"<?php
+          if (isset($vars['gender']) && $vars['gender'] == 'other') {
+              echo ' checked="checked"';
+          }
+          ?> ><?php echo $words->get('GenderOther'); ?>
+          </label>
     </div>
+    <?php if (in_array('SignupErrorProvideGender', $vars['errors'])) {
+        echo '<span class="help-block alert alert-danger">'.$words->get('SignupErrorProvideGender').'</span>';
+        }
+    ?>    
         <input type="submit" value="<?php echo $words->getSilent('NextStep'); ?>" class="btn btn-default btn-lg pull-right hidden-xs"
         onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
         >

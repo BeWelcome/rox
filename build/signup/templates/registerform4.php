@@ -263,10 +263,9 @@ Boston, MA  02111-1307, USA.
         <div class="form-group">
           <label for="mothertongue" class="control-label sr-only"><?php echo $words->get('LanguageLevel_MotherLanguage'); ?></label>
           <select class="select2 form-control" name="mothertongue" id="mothertongue" data-placeholder="<?= $words->getBuffered('SignupSelectMotherTongue')?>"
-              <?= ($disable) ? 'disabled="disabled"' : ''?>
-              >
+          <?= ($disable) ? 'disabled="disabled"' : ''?> >
               <option></option>
-              <option value="-1"></option>
+              <option value=""></option>
               <optgroup label="<?= $words->getSilent('SpokenLanguages') ?>">
                   <?= $this->getAllLanguages(true, $motherTongue); ?>
               </optgroup>
@@ -274,7 +273,7 @@ Boston, MA  02111-1307, USA.
                   <?= $this->getAllLanguages(false, $motherTongue); ?>
               </optgroup>
           </select>
-    </div>
+    	</div>
 
         <!-- Birthdate -->
         <div class="form-group">
@@ -351,36 +350,33 @@ Boston, MA  02111-1307, USA.
         <!-- Gender -->
         <?php if (in_array('SignupErrorProvideGender', $vars['errors'])) { ?>
         <div class="form-group">
-            <label for="gender" class="control-label sr-only"><?php echo $words->get('Gender'); ?></label>
-            <div class="form-inline">
-                <div class="form-group">
-                    <input class="radio-inline"  type="radio" id="gender" name="gender" value="female" 
-                    <?php
-                    if (isset($vars['gender']) && $vars['gender'] == 'female') {
-                        echo ' checked="checked"';
-                    } ?>
-                    >
-                    <?php echo $words->get('female'); ?>
-                </div>
-                <div class="form-group">
-                    <input class="radio" type="radio" name="gender" value="male"
-                    <?php
-                    if (isset($vars['gender']) && $vars['gender'] == 'male') {
-                        echo ' checked="checked"';
-                    } ?>
-                    >
-                    <?php echo $words->get('male');?>
-                </div>
-                <div class="form-group">
-                    <input class="radio" type="radio" name="gender" value="other"
-                    <?php
-                    if (isset($vars['gender']) && $vars['gender'] == 'other') {
-                        echo ' checked="checked"';
-                    } ?>
-                    >
-                    <?php echo $words->get('Genderother');?>
-                </div>
-            </div>
+                <label class="radio-inline">
+                <input type="radio" id="gender" name="gender" value="female" 
+                <?php
+                if (isset($vars['gender']) && $vars['gender'] == 'female') {
+                    echo ' checked="checked"';
+                } ?>
+                >
+                <?php echo $words->get('female'); ?>
+            </label>
+            <label class="radio-inline">
+                <input class="radio" type="radio" name="gender" value="male"
+                <?php
+                if (isset($vars['gender']) && $vars['gender'] == 'male') {
+                    echo ' checked="checked"';
+                } ?>
+                >
+                <?php echo $words->get('male');?>
+            </label>
+            <label class="radio-inline">
+                <input class="radio" type="radio" name="gender" value="other"
+                <?php
+                if (isset($vars['gender']) && $vars['gender'] == 'other') {
+                    echo ' checked="checked"';
+                } ?>
+                >
+                <?php echo $words->get('Genderother');?>
+            </label>>
         </div>
         <span class="help-block alert alert-danger"><?=$words->get('SignupErrorProvideGender') ?></span>
         <?php } else { ?>

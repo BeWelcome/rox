@@ -267,11 +267,11 @@ Boston, MA  02111-1307, USA.
               <option></option>
               <option value=""></option>
               <optgroup label="<?= $words->getSilent('SpokenLanguages') ?>">
-                  <?= $this->getAllLanguages(true, $motherTongue); ?>
-              </optgroup>
-              <optgroup label="<?= $words->getSilent('SignedLanguages') ?>">
-                  <?= $this->getAllLanguages(false, $motherTongue); ?>
-              </optgroup>
+                <?= $this->getAllLanguages(true, $vars['mothertongue']); ?>
+            </optgroup>
+            <optgroup label="<?= $words->getSilent('SignedLanguages') ?>">
+                <?= $this->getAllLanguages(false, $vars['mothertongue']); ?>
+            </optgroup>
           </select>
     	</div>
 

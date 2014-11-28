@@ -360,7 +360,7 @@ Boston, MA  02111-1307, USA.
                 <?php echo $words->get('female'); ?>
             </label>
             <label class="radio-inline">
-                <input class="radio" type="radio" name="gender" value="male"
+                <input type="radio" name="gender" value="male"
                 <?php
                 if (isset($vars['gender']) && $vars['gender'] == 'male') {
                     echo ' checked="checked"';

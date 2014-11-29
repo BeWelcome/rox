@@ -55,9 +55,8 @@ if (!isset($trip_data[$trip->trip_id])) {
 
 ?>
 <!-- Subtemplate: 2 columns 50/50 size -->
-<div class="subcolumns" style="width: 500px">
-  <div class="c50l">
-    <div class="subcl">
+<div class="row">
+  <div class="col-md-6">
 <?php
     if (isset($trip->trip_descr) && $trip->trip_descr) {
         echo '<p>'.$trip->trip_descr.'</p>';
@@ -67,11 +66,9 @@ if (!isset($trip_data[$trip->trip_id])) {
     }
 ?>
 <!-- End of contents for left subtemplate -->
-    </div> <!-- subcl -->
   </div> <!-- c50l -->
 
-  <div class="c50r">
-    <div class="subcr">
+  <div class="col-md-6">
       <!-- Contents for right subtemplate -->
 <?php
     echo '<ul>';
@@ -108,7 +105,6 @@ if (!isset($trip_data[$trip->trip_id])) {
     echo '</ul>';
 ?>
 <!-- End of contents for right subtemplate -->
-    </div> <!-- subcr -->
   </div> <!-- c50r -->
 </div> <!-- subcolumns -->
 <?

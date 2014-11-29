@@ -8,19 +8,18 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id: trip.ctrl.php 233 2007-02-28 13:37:19Z marco $
  */
-class TripController extends PAppController {
+class TripController extends RoxControllerBase {
     private $_model;
     private $_view;
-    
+    private $_page;
+
     public function __construct() {
         parent::__construct();
         $this->_model = new Trip();
-        $this->_view  = new TripView($this->_model);
     }
     
     public function __destruct() {
         unset($this->_model);
-        unset($this->_view);
     }
     
     public function index() 
@@ -31,14 +30,8 @@ class TripController extends PAppController {
             $request[1] = '';
             
         // Enable ViewWrap for cleaner code
-        $P = PVars::getObj('page');
-        $vw = new ViewWrap($this->_view);
+        $this->_page = null;
 
-        // Show the teaser
-        $this->showTeaser();
-        
-        // then include the col2-stylesheet
-        $P->addStyles .= $vw->customStyles();
         $member = $this->_model->getLoggedInMember();
 
         switch($request[1]) {
@@ -93,14 +86,20 @@ class TripController extends PAppController {
 					return $this->showTrip($request[1]);
 				} else {
                     if ($member) {
-                        $this->showAllTrips();
+                        $p = new BlogPage($this->_model);
+                        $p->page = $page;
+                        $p->member = $memberBlog;
+                        $p->initPager($this->_model->countRecentPosts($memberBlog->id, false), $page);
+                        $p->trips = $this->_model->getRecentPostsArray($memberBlog->id, false, $page);
                     } else {
                         $this->notLoggedIn();
                     }
 	                break;
 	            }
         }
-        // Show the user functions in the sidebar
+        return $p;
+        // Show the user functions in
+        // the sidebar
         $P->newBar .= $vw->userbar();
     }
     
@@ -236,18 +235,6 @@ class TripController extends PAppController {
     
     private function showTrips($handle)
     {
-        $page = $this->getPage();
-		$trips = $this->_model->getTrips($handle);
-		$trip_data = $this->_model->getTripData();
-        $P = PVars::getObj('page');
-        $vw = new ViewWrap($this->_view);
-        $P->newBar = $vw->displayMap($trips, $trip_data);
-        $P->content .= $vw->displayTrips($trips, $trip_data, $page);
-        
-        if (($member = $this->_model->getLoggedInMember()) && ($handle = $member->Username) && !$trips)
-        {
-            $P->content .= $vw->createForm();
-    	}
     }
 
     private function showMap($trip)
@@ -268,10 +255,23 @@ class TripController extends PAppController {
         $P->teaserBar .= $vw->teaser($trip);
     }
     
-    private function showAllTrips()
+    public function showAllTrips()
     {
-    	$this->showTrips(false);
-        //$this->showMap(false);
+        $page_no = 1;
+        if (isset($this->route_vars['page_no'])) {
+            $page_no = $this->route_vars['page_no'];
+        }
+        $member = $this->_model->getLoggedInMember();
+        if (!$member) {
+            return false;
+        }
+        $page = new TripPage();
+        $count = $this->_model->getTripsCount();
+        $page->trips = $this->_model->getTrips(false, $page_no);
+        $page->trip_data = $this->_model->getTripData();
+        $page->initPager($count);
+        $page->member = $member;
+        return $page;
     }
     
     /*

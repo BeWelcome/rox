@@ -1,3 +1,6 @@
+<?php $map_conf = PVars::getObj('map'); ?>
+<input type="hidden" id="osm-tiles-provider-base-url" value="<?php echo ($map_conf->osm_tiles_provider_base_url); ?>"/>
+<input type="hidden" id="osm-tiles-provider-api-key" value="<?php echo ($map_conf->osm_tiles_provider_api_key); ?>"/>
 <?php
 $words = new MOD_words();
 $request = PRequest::get()->request;

@@ -118,8 +118,41 @@ INSERT INTO `trip_data` (`trip_id`, `trip_name`, `trip_text`, `trip_descr`) VALU
     }
 
     private $tripids;
-	public function getTrips($handle = false)
+	public function getTripsCount($handle = false) {
+		$query = "
+		SELECT count(*) cnt
+		FROM trip
+		RIGHT JOIN trip_data ON trip.trip_id = trip_data.trip_id
+		LEFT JOIN members ON members.id = trip.IdMember AND members.Status IN (" . Member::ACTIVE_ALL . ")
+		WHERE NOT members.Username IS NULL
+";
+		if ($handle) {
+			$query .= " AND members.Username = '{$this->dao->escape($handle)}'";
+		}
+		$query .= "
+		AND (
+		(
+			`trip_options` & '.(int)Blog::FLAG_VIEW_PRIVATE.' = 0
+			AND `trip_options` & '.(int)Blog::FLAG_VIEW_PROTECTED.' = 0
+		)
+		    ";
+		$member = $this->getLoggedInMember();
+		if ($member) {
+		    $query .= '
+	        		OR (`trip_options` & '.(int)Blog::FLAG_VIEW_PRIVATE.' AND trip.IdMember = '.(int)$member->id.')
+	        		OR (`trip_options` & '.(int)Blog::FLAG_VIEW_PROTECTED.' AND trip.IdMember = '.(int)$member->id.')
+                    ';
+		}
+        $query .= ")";
+		$result = $this->singleLookup($query);
+		if (!$result) {
+			throw new PException('Could not retrieve count for trips.');
+		}
+		return $result->cnt;
+	}
+	public function getTrips($handle = false, $page_no = 1, $items = 5)
     {
+		$low = ($page_no -1) * $items;
 		$query = "
 SELECT trip.trip_id, trip_data.trip_name, trip_text, trip_descr, members.Username AS handle, geonames_cache.fk_countrycode, trip_to_gallery.gallery_id_foreign
     FROM trip
@@ -146,15 +179,9 @@ WHERE NOT members.Username IS NULL
 	        		OR (`trip_options` & '.(int)Blog::FLAG_VIEW_PRIVATE.' AND trip.IdMember = '.(int)$member->id.')
 	        		OR (`trip_options` & '.(int)Blog::FLAG_VIEW_PROTECTED.' AND trip.IdMember = '.(int)$member->id.')
                     ';
-		    /* pending deletion
-		     OR (
-		                     `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.'
-		                     AND
-		                     (SELECT COUNT(*) FROM `user_friends` WHERE `user_id_foreign` = blog.`user_id_foreign` AND `user_id_foreign_friend` = '.(int)$User->getId().')
-		     )';
-		    */
 		}
-        $query .= ") ORDER BY `trip_touched` DESC";
+        $query .= ") ORDER BY `trip_touched` DESC
+        		LIMIT " . $low . ", " . $items;
 		$result = $this->dao->query($query);
 		if (!$result) {
 			throw new PException('Could not retrieve trips.');

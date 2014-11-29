@@ -1,22 +1,5 @@
-
-/*
-*  Show col2 on the right side for the tour-menu
-*
-*/
 @media all
 {
-
-#col1 { width: 40%; float: right; display: block;}
-#col2 { width: 0; display: none;}
-
-#col3 {
-    margin-left: 0; padding:0;
-    margin-right:40%;
-}
-#col3_content {
-    padding-left: 1.5em;
-}
-
 /* modification for trip pages */
 
 div.infobox {

@@ -1,4 +1,5 @@
 <?php
+$trip_data = $this->trip_data;
 
 $words = new MOD_words();
 // processing to display date ranges of trip correctly

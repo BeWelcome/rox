@@ -41,7 +41,7 @@ class TripView extends PAppView {
         $this->pages($pages, $currentPage, $maxPage, $requestStr.'/page%d');
     }
     
-    public function pages($pages, $currentPage, $maxPage, $request) 
+    public function pages($pages, $currentPage, $maxPage, $request)
     {
         require 'templates/pages.php';
     }
@@ -99,6 +99,6 @@ class TripView extends PAppView {
 	/* This adds other custom styles to the page*/
 	public function customStyles() {
         $out = '<link rel="stylesheet" href="styles/css/minimal/screen/custom/trip.css?2" type="text/css"/>';
-		// echo $out;
+		echo $out;
     }
 }

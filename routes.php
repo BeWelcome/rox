@@ -286,5 +286,9 @@
     $this->addRoute('newmembers_local_greeting', 'admin/newmembers/local/:username:', 'AdminNewMembersController', 'composeMessage');
     $this->addRoute('newmembers_global_greeting', 'admin/newmembers/global/:username:', 'AdminNewMembersController', 'composeMessage');
 
+    // Trips
+    $this->addRoute('trips', 'trip', 'TripController', 'showAllTrips');
+    $this->addRoute('trips_pager', 'trip/page/:page_no:', 'TripController', 'showAllTrips');
+
     // Update statistics
     $this->addRoute('updatestats', 'about/updatestats', 'AboutController', 'updateStatistics');

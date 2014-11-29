@@ -1,7 +1,6 @@
 <?php
 $words = new MOD_words();
-
-$member = $this->_model->getLoggedInMember();
+$member = $this->member;
 if ($member)
 {
 ?>

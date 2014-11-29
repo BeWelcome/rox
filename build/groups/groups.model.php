@@ -554,7 +554,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             return array('General' => true);
         }
         $picture = '';
-        if (!empty($_FILES['group_image'])){
+        if (!empty($_FILES['group_image']) && $_FILES['group_image']['error'] !== 4){
             // when a temporary file exists
             if (!empty($_FILES['group_image']['tmp_name'])){
                 if (!$picture = $this->handleImageUpload()){

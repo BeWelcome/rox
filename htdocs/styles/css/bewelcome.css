@@ -8220,6 +8220,9 @@ h6,
   display: block;
   color: #fff;
 }
+.white-text {
+  color: #fff;
+}
 .panel-heading .accordion-toggle:after {
   /* adjust as needed */
   float: right;

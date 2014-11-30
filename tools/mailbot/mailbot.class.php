@@ -140,7 +140,7 @@ class Mailbot
             $result = MOD_mail::sendEmail($subject, $from, $to, $title, $body, $language, $html);
         }
         catch (Exception $e) {
-            $this->log("Error: Couldn't send mail to " . $to );
+            $this->log("Error (" . date("Y-m-d\TH:i:sO") . "): Couldn't send mail to " . $to );
             $this->log($e->getTraceAsString());
         }
         return $result;

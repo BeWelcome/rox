@@ -471,7 +471,19 @@ WHERE IdMember = ".$this->id
      * @return string|bool Email address of member, false on database error
      */
     public function getEmailWithoutPermissionChecks() {
-        return urldecode(strip_tags(MOD_crypt::AdminReadCrypted($this->Email)));
+        $crypt_db = PVars::getObj('syshcvol')->Crypted;
+$query = "
+SELECT
+    MemberCryptedValue
+FROM
+    ".$crypt_db."cryptedfields
+WHERE
+    id = " . $this->Email;
+        $rr = $this->singleLookup($query);
+        $email = strip_tags($rr->MemberCryptedValue);
+        str_replace('%40', '@', $email);
+        str_replace('%2B', '+', $email);
+        return $email;
     }
 
     public function get_messengers() {

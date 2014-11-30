@@ -135,7 +135,15 @@ class Mailbot
      */
     protected function sendEmail($subject, $from, $to, $title, $body, $language, $html)
     {
-        return MOD_mail::sendEmail($subject, $from, $to, $title, $body, $language, $html);
+        $result = false;
+        try {
+            $result = MOD_mail::sendEmail($subject, $from, $to, $title, $body, $language, $html);
+        }
+        catch (Exception $e) {
+            $this->log("Error: Couldn't send mail to " . $to );
+            $this->log($e->getTraceAsString());
+        }
+        return $result;
     }
 
     protected function getEmailAddress(Member $member) {

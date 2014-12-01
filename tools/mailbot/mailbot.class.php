@@ -482,12 +482,12 @@ class ForumNotificationMailbot extends Mailbot
         while ($notification = $qry->fetch(PDB::FETCH_OBJ)) {
 
             $post = $this->_getPost($notification->IdPost);
-            $author = $this->members_model->getMemberWithId($post->IdWriter);
             // Skip to next item in queue if there was no result from database
             if (!is_object($post)) {
                 continue;
             }
 
+            $author = $this->members_model->getMemberWithId($post->IdWriter);
             $recipient = $this->members_model->getMemberWithId($notification->IdMember);
 
             // Rewrite the title and the message to the corresponding default language for this member if any

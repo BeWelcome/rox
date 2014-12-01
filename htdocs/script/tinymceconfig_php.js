@@ -1,6 +1,6 @@
 <script type="text/javascript">//<!--
 tinymce.srcMode = '';
-tinymce.baseURL = http_baseuri+'script/tinymce';
+tinymce.baseURL = http_baseuri+'script/tinymce-4.0.28';
 tinymce.init({
     menubar : false,
     mode: "exact",

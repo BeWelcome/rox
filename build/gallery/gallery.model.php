@@ -51,14 +51,20 @@ VALUES
         return true;
     }
 
-    // delete own uploaded pictures as logged in user or user with gallery rights
+    /**
+     * Delete a single selfuploaded picture as loggedin owner or with gallery rights
+     *
+     * @access public
+     * @param Object $image Image to be deleted
+     * @return boolean
+     */
     public function deleteOneProcess($image)
     {
         if (!$member = $this->getLoggedInMember())
             return false;
         $R = MOD_right::get();
         $GalleryRight = $R->hasRight('Gallery');
-        if (($member->get_userid() == $this->imageOwner($image->id)) || ($GalleryRight > 1)) {
+        if (($member->get_userid() == $image->user_id_foreign) || ($GalleryRight > 1)) {
             // Log the deletion to prevent admin abuse
             MOD_log::get()->write("Deleting a gallery item #".$image->id." filename: ".$image->file." belonging to user: ".$image->user_id_foreign, "Gallery");
             $this->deleteThisImage($image);
@@ -124,23 +130,32 @@ VALUES
         return false;
     }
 
+    /**
+     * Delete several selfuploaded pictures as loggedin owner or with gallery rights
+     *
+     * @access public
+     * @param Object $image Image to be deleted
+     * @return boolean
+     */
     public function deleteMultiple($images)
     {
-        if (!$member = $this->getLoggedInMember())
-        {
+        if (!$member = $this->getLoggedInMember()){
             return false;
         }
         $R = MOD_right::get();
         $GalleryRight = $R->hasRight('Gallery');
         foreach ($images as $image) {
-            if (!$image)
+            if (!$image) {
                 return false;
-            if (($member->get_userid() == $this->imageOwner($image)) || ($GalleryRight > 1)) {
+            }
+            if ($member->get_userid() == $this->imageGalleryOwner('image',$image) || ($GalleryRight > 1)) {
                 $image = $this->imageData($image);
                 // Log the deletion to prevent admin abuse
                 MOD_log::get()->write("Deleting multiple gallery items #".$image->id." filename: ".$image->file." belonging to user: ".$image->user_id_foreign, "Gallery");
                 $this->deleteThisImage($image);
-            } else return false;
+            } else {
+                return false;
+            }
         }
     }
 

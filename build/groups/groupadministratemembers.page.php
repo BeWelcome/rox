@@ -217,25 +217,25 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                 <?=$words->flushBuffer()?>
             </div>
             <script type='text/javascript'>
-                var newmemberban = $('possible_members').getElementsBySelector('a.ban');
-                var newmemberkick = $('possible_members').getElementsBySelector('a.kick');
-                newmemberban.each(function(elem){
-                    elem.observe('click', function(e){
-                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberBan'));?>'))
-                        {
-                            Event.stop(e);
-                        }
-                    })
-                });
-                newmemberkick.each(function(elem){
-                    elem.observe('click', function(e){
-                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberDecline'));?>'))
-                        {
-                            Event.stop(e);
-                        }
-                    })
-                });
-
+                var possiblemembers = $('possible_members');
+                if (possiblemembers) {
+                    var newmemberban = $('possible_members').getElementsBySelector('a.ban');
+                    var newmemberkick = $('possible_members').getElementsBySelector('a.kick');
+                    newmemberban.each(function (elem) {
+                        elem.observe('click', function (e) {
+                            if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberBan'));?>')) {
+                                Event.stop(e);
+                            }
+                        })
+                    });
+                    newmemberkick.each(function (elem) {
+                        elem.observe('click', function (e) {
+                            if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberDecline'));?>')) {
+                                Event.stop(e);
+                            }
+                        })
+                    });
+                }
 
                 var search_handler = {
                     display_result: function(member_object){

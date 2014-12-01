@@ -6,7 +6,7 @@
  
 $map_conf = PVars::getObj('map');
 
-if ($isOwnTrip) {
+if ($this->isOwnTrip) {
 ?>
     <div style="padding: 20px 0" id="destination-form">
     <h3>
@@ -43,7 +43,12 @@ if (!$member) {
 }
 ?>
 
-<form method="post" action="<?=$actionUrl?>" class="fieldset-menu-form" id="destination-edit-form">
+    <form>
+        <fieldset><legend>test</legend>
+            <input type="text"></fieldset>
+        <fieldset><legend>test2 test2 test2</legend><input type="text"></fieldset>
+    </form>
+<form method="post" action="<?=$actionUrl?>" class="form-horizontal" id="destination-edit-form">
 
 <?php
 if (in_array('inserror', $vars['errors'])) {

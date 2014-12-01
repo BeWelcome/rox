@@ -61,7 +61,7 @@ class ActivitiesEditCreatePage extends ActivitiesBasePage
         $scripts = parent::getLateLoadScriptfiles();
         $pref = $this->member->getPreference("PreferenceDisableTinyMCE", $default = "No");
         if ($this->member->getPreference("PreferenceDisableTinyMCE", $default = "No") == 'No') {
-            $scripts[] = 'tinymceconfig.js';
+            $scripts[] = 'tinymceconfig.js?1';
         }
         return $scripts;
     }

@@ -235,6 +235,7 @@ class GroupsController extends RoxControllerBase
         }
 
         $page = new GroupsMyGroupsPage();
+        $params = new StdClass;
         $params->strategy = new HalfPagePager('left');
         $params->items = $this->_model->countMyGroups();
         $params->items_per_page = 20;
@@ -255,6 +256,7 @@ class GroupsController extends RoxControllerBase
     {
         $page = new GroupsFeaturedPage();
         $order = ((!empty($this->args_vars->get['order'])) ? $this->args_vars->get['order'] : 'nameasc');
+        $params = new StdClass;
         $params->strategy = new HalfPagePager('left');
         $params->items = $this->_model->countGroupsBySearchterms(null);
         $params->items_per_page = 20;
@@ -632,6 +634,7 @@ class GroupsController extends RoxControllerBase
         $this->_fillObject($page);
         $page->group = $group;
         $page->$isBWAdmin = $isBWAdmin;
+        $pager_params = new StdClass;
         $pager_params->strategy = new HalfPagePager;
         $pager_params->page_method = 'url';
         $pager_params->items = $page->group->getMemberCount();
@@ -871,6 +874,7 @@ class GroupsController extends RoxControllerBase
         $page = new GroupMembersPage();
         $page->group = $this->_getGroupFromRequest();
         $this->_fillObject($page);
+        $pager_params = new StdClass;
         $pager_params->strategy = new HalfPagePager;
         $pager_params->page_method = 'url';
         $pager_params->items = count($page->group->getMembers());
@@ -1017,7 +1021,7 @@ class GroupsController extends RoxControllerBase
         else
         {
             // TODO: check for rights before updating ... but as these are not in place yet, let anyone do it
-            $result = $this->_model->updateMembershipSettings($membership, $post['membershipinfo_acceptgroupmail'], $post['membershipinfo_comment']);
+            $result = $this->_model->updateMembershipSettings($membership, $post['membershipinfo_acceptgroupmail'], $post['membershipinfo_comment'], '');
         }
 
         if ($result)

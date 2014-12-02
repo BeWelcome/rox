@@ -112,7 +112,7 @@ if (isset($this->trip->trip_text) && $this->trip->trip_text) {
     ?>
 </div>
 
-<?php // require 'subtrip_createform.php';
+<?php require 'subtrip_createform.php';
 
 $shoutsCtrl = new ShoutsController;
 $shoutsCtrl->shoutsList('trip', $this->trip->trip_id);

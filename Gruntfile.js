@@ -72,8 +72,14 @@ module.exports = function(grunt) {
       },
     },
     watch: {
-        files: "htdocs/styles/less/*",
-        tasks: ['less:compileBeWelcome', 'autoprefixer:bewelcome', 'csscomb:bewelcome',  'cssmin:bewelcome']
+        dev: {
+            files: "htdocs/styles/less/*",
+            tasks: ['less:compileBeWelcome', 'cssmin:bewelcome']
+        },
+        dist: {
+            files: "htdocs/styles/less/*",
+            tasks: ['less:compileBeWelcome', 'autoprefixer:bewelcome', 'csscomb:bewelcome', 'cssmin:bewelcome', 'csslint:bewelcome']
+        },
     } 
 });
 
@@ -88,5 +94,6 @@ module.exports = function(grunt) {
   
 
   // Default task(s).
-  grunt.registerTask('default', ['watch']);
+  grunt.registerTask('default', ['watch:dev']);
+  grunt.registerTask('dist', ['watch:dist']);
 };

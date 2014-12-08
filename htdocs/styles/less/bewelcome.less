@@ -67,7 +67,13 @@ body {
 }
 .page-teaser {
   border-bottom: 1px solid #EEEEEE;
-  margin: 20px 0 -1px;
+  margin: 30px 0 -1px;
+  > h1 {
+    font-size: ceil((@font-size-base * 1.7));
+    @media (min-width: @screen-sm-min) {
+      font-size: (@font-size-h1);
+    }
+  }
 }
   /**
    * Footer

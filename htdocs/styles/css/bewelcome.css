@@ -7830,7 +7830,15 @@ body {
 }
 .page-teaser {
   border-bottom: 1px solid #EEEEEE;
-  margin: 20px 0 -1px;
+  margin: 30px 0 -1px;
+}
+.page-teaser > h1 {
+  font-size: 24px;
+}
+@media (min-width: 768px) {
+  .page-teaser > h1 {
+    font-size: 36px;
+  }
 }
 /**
    * Footer

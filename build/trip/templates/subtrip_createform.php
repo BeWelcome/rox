@@ -1,4 +1,40 @@
-<?php 
+<div class="container">
+    <div id="content">
+        <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+            <li class="active"><a href="#red" data-toggle="tab">Red</a></li>
+            <li><a href="#orange" data-toggle="tab">Orange</a></li>
+            <li><a href="#yellow" data-toggle="tab">Yellow</a></li>
+            <li><a href="#green" data-toggle="tab">Green</a></li>
+            <li><a href="#blue" data-toggle="tab">Blue</a></li>
+        </ul>
+        <div id="my-tab-content" class="tab-content">
+            <div class="tab-pane active" id="red">
+                <h1>Red</h1>
+                <p>red red red red red red</p>
+            </div>
+            <div class="tab-pane" id="orange">
+                <h1>Orange</h1>
+                <p>orange orange orange orange orange</p>
+            </div>
+            <div class="tab-pane" id="yellow">
+                <h1>Yellow</h1>
+                <p>yellow yellow yellow yellow yellow</p>
+            </div>
+            <div class="tab-pane" id="green">
+                <h1>Green</h1>
+                <p>green green green green green</p>
+            </div>
+            <div class="tab-pane" id="blue">
+                <h1>Blue</h1>
+                <p>blue blue blue blue blue</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php
+return true;
+
 /*
  * template content: 
  * shows the add destinations form with destination and options tab
@@ -6,9 +42,9 @@
  
 $map_conf = PVars::getObj('map');
 
-if ($isOwnTrip) {
+if ($this->isOwnTrip) {
 ?>
-    <div style="padding: 20px 0" id="destination-form">
+    <div id="destination-form">
     <h3>
     <img src="images/icons/note_add.png" alt="<?=$words->getSilent('Trip_SubtripsCreate')?>"/> <?=$words->getSilent('Trip_SubtripsCreate')?><?php echo $words->flushBuffer(); ?><br />
     </h3>
@@ -18,32 +54,53 @@ if ($isOwnTrip) {
     <input type="hidden" id="osm-tiles-provider-base-url" value="<?php echo ($map_conf->osm_tiles_provider_base_url); ?>"/>
     <input type="hidden" id="osm-tiles-provider-api-key" value="<?php echo ($map_conf->osm_tiles_provider_api_key); ?>"/>
 <?php
-        if (!isset($vars['errors']) || !is_array($vars['errors'])) {
-            $vars['errors'] = array();
-        }
-        
-        if (!isset($request[2]) || $request[2] != 'finish') {
-            $actionUrl = implode('/', $request);
-            $submitName = '';
-            $submitValue = $words->getSilent('BlogCreateSubmit');
-        } else if (isset($request[2]) && $request[2] === 'finish') {
-            echo '<p>'.$words->getSilent('BlogCreateFinishText')."</p>\n";
-            $submitValue = $words->getSilent('BlogCreateSubmit');
-            $actionUrl = 'trip/' . $request[1];
-        }
-        echo $words->flushBuffer();
 /**
  * edit and create form template controller // mostly copied from Blog Application
  * for documentation look at build/blog/editcreateform.php
  * @author: Michael Dettbarn (bw: lupochen)
  */
-if (!$member) {
+if (!$this->member) {
     echo '<p class="error">'.$words->get('BlogErrors_not_logged_in').'</p>';
     return false;
 }
 ?>
 
-<form method="post" action="<?=$actionUrl?>" class="fieldset-menu-form" id="destination-edit-form">
+    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+        <li class="active"><a href="#red" data-toggle="tab">Red</a></li>
+        <li><a href="#orange" data-toggle="tab">Orange</a></li>
+        <li><a href="#yellow" data-toggle="tab">Yellow</a></li>
+        <li><a href="#green" data-toggle="tab">Green</a></li>
+        <li><a href="#blue" data-toggle="tab">Blue</a></li>
+    </ul>
+    <div id="my-tab-content" class="tab-content">
+        <div class="tab-pane active" id="red">
+            <h1>Red</h1>
+            <p>red red red red red red</p>
+        </div>
+        <div class="tab-pane" id="orange">
+            <h1>Orange</h1>
+            <p>orange orange orange orange orange</p>
+        </div>
+        <div class="tab-pane" id="yellow">
+            <h1>Yellow</h1>
+            <p>yellow yellow yellow yellow yellow</p>
+        </div>
+        <div class="tab-pane" id="green">
+            <h1>Green</h1>
+            <p>green green green green green</p>
+        </div>
+        <div class="tab-pane" id="blue">
+            <h1>Blue</h1>
+            <p>blue blue blue blue blue</p>
+        </div>
+    </div>
+
+    <form>
+        <fieldset><legend>test</legend>
+            <input type="text"></fieldset>
+        <fieldset><legend>test2 test2 test2</legend><input type="text"></fieldset>
+    </form>
+<form method="post" action="<?=$actionUrl?>" class="form-horizontal" id="destination-edit-form">
 
 <?php
 if (in_array('inserror', $vars['errors'])) {

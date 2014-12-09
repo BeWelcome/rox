@@ -85,7 +85,7 @@ class TripView extends PAppView {
 	}
 	
 	public function delTrip($callbackId) {
-		require 'templates/delform.php';
+		require 'templates/tripdelete.column_col3.php';
 	}
     
     public function searchPage($trips = false, $trip_data = false) {

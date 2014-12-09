@@ -11,8 +11,7 @@
 class TripController extends RoxControllerBase {
     private $_model;
     private $_view;
-    private $_page;
-
+    
     public function __construct() {
         parent::__construct();
         $this->_model = new Trip();
@@ -21,7 +20,7 @@ class TripController extends RoxControllerBase {
     public function __destruct() {
         unset($this->_model);
     }
-    
+    /*
     public function index() 
     {
         // index is called when http request = ./trip
@@ -102,7 +101,7 @@ class TripController extends RoxControllerBase {
         // the sidebar
         $P->newBar .= $vw->userbar();
     }
-    
+    */
     private function delTrip($tripId) {
 		$callbackId = $this->delProcess();
 		PPostHandler::clearVars($callbackId);
@@ -120,7 +119,7 @@ class TripController extends RoxControllerBase {
 		$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
 		
 		if (PPostHandler::isHandling()) {
-			return $this->_model->delProcess($callbackId);
+			return $this->_model->deleteTrip($callbackId);
 		} else {
 			PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
 			return $callbackId;
@@ -163,7 +162,7 @@ class TripController extends RoxControllerBase {
     	}
     }
 
-    private function editTrip($tripId)
+    private function editTrip_old($tripId)
     {
 		$callbackId = $this->editProcess();
 		PPostHandler::clearVars($callbackId);
@@ -254,17 +253,19 @@ class TripController extends RoxControllerBase {
         $vw = new ViewWrap($this->_view);
         $P->teaserBar .= $vw->teaser($trip);
     }
-    
+
     public function showAllTrips()
     {
-        $page_no = 1;
-        if (isset($this->route_vars['page_no'])) {
-            $page_no = $this->route_vars['page_no'];
-        }
         $member = $this->_model->getLoggedInMember();
         if (!$member) {
             return false;
         }
+
+        $page_no = 1;
+        if (isset($this->route_vars['pageno'])) {
+            $page_no = $this->route_vars['pageno'];
+        }
+
         $page = new TripPage();
         $count = $this->_model->getTripsCount();
         $page->trips = $this->_model->getTrips(false, $page_no);
@@ -273,25 +274,165 @@ class TripController extends RoxControllerBase {
         $page->member = $member;
         return $page;
     }
-    
-    /*
-    * Show a single trip (details, map, possibiltiy to reorder)
-    */
-    private function showTrip($tripid)
+
+    public function showTripsForUsername() {
+        $member = $this->_model->getLoggedInMember();
+        if (!$member) {
+            return false;
+        }
+
+        $page_no = 1;
+        if (isset($this->route_vars['pageno'])) {
+            $page_no = $this->route_vars['pageno'];
+        }
+        $userName = $this->route_vars['username'];
+        $page = new TripPage();
+        $count = $this->_model->getTripsCount($userName);
+        $page->trips = $this->_model->getTrips($userName, $page_no);
+        $page->trip_data = $this->_model->getTripData();
+        $page->initPager($count);
+        $page->member = $member;
+        return $page;
+    }
+
+    /**
+     * @param $tripid
+     * @return SingleTripPage
+     * @throws PException
+     */
+    public function showSingleTrip()
     {
-    	$trip = $this->_model->getTrip($tripid);
-    	$trip_data = $this->_model->getTripData();
+        $member = $this->_model->getLoggedInMember();
+        if (!$member) {
+            return false;
+        }
+        $tripId = $this->route_vars['tripid'];
+        $trip = $this->_model->getTrip($tripId);
+        $trip_data = $this->_model->getTripData();
         if (!$trip)
         {
-            header("Location: " . PVars::getObj('env')->baseuri . "trip");
+            return false;
         }
         $page = new TripSingleTripPage();
+        $page->member = $member;
         $page->trip = $trip;
         $page->trip_data = $trip_data;
-        $vw = new ViewWrap($this->_view);	
-        $page->heading = $vw->heading_singleTrip($trip, $trip_data);
-        $page->model = $this->_model;
+        $page->isOwnTrip = ($trip->IdMember == $member->id);
+
         return $page;
-        //$P->content .= $vw->displaySingleTrip($trip, $trip_data);
+    }
+
+    public function editCreateCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) {
+        // Check variables
+        $vars = $args->post;
+        $mem_redirect->vars = $vars;
+        $errors = $this->_model->checkCreateEditVars( $vars );
+        if (!empty($errors)) {
+            $mem_redirect->errors = $errors;
+            return false;
+        }
+        $member = $this->_model->getLoggedInMember();
+        if ($vars['trip-id'] == 0) {
+            $errors = $this->_model->createTrip($vars, $member);
+        } else {
+            $errors = $this->_model->editTrip($vars, $member);
+        }
+
+        if (!empty($errors)) {
+            $mem_redirect->errors = $errors;
+            return false;
+        }
+        return $this->router->url('trip_show', array('username' => $member->Username), false);
+    }
+
+
+    /**
+     *
+     */
+    public function createTrip()
+    {
+        $member = $this->_model->getLoggedInMember();
+        if (!$member) {
+            return false;
+        }
+        $page = new TripEditCreatePage(false);
+        $page->member = $member;
+        $page->vars = array(
+            "trip-id" => 0,
+            "trip-name" => "",
+            "trip-desc" => ""
+        );
+
+        return $page;
+    }
+
+    public function editTrip()
+    {
+        $member = $this->_model->getLoggedInMember();
+        if (!$member) {
+            return false;
+        }
+        $tripId = $this->route_vars['tripid'];
+        $trip = $this->_model->getTrip($tripId);
+
+        if (!$trip) {
+            return false;
+        }
+
+        if ($trip->handle != $member->Username) {
+            return false;
+        }
+
+        $page = new TripEditCreatePage(true);
+        $page->member = $member;
+        $page->vars = array(
+            "trip-id" => $trip->trip_id,
+            "trip-name" => $trip->trip_name,
+            "trip-desc" => $trip->trip_descr
+        );
+
+        return $page;
+    }
+
+    public function deleteCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) {
+        $errors = array();
+        $vars = $args->post;
+        $member = $this->_model->getLoggedInMember();
+        if (isset($vars['trip-yes'])) {
+            $errors = $this->_model->deleteTrip($vars, $member);
+        }
+        if (!empty($errors)) {
+            $mem_redirect->errors = $errors;
+            return false;
+        }
+        return $this->router->url('trip_show', array('username' => $member->Username), false);
+    }
+
+    public function deleteTrip()
+    {
+        $member = $this->_model->getLoggedInMember();
+        if (!$member) {
+            return false;
+        }
+        $tripId = $this->route_vars['tripid'];
+        $trip = $this->_model->getTrip($tripId);
+
+        if (!$trip) {
+            return false;
+        }
+
+        if ($trip->handle != $member->Username) {
+            return false;
+        }
+
+        $page = new TripDeletePage(true);
+        $page->member = $member;
+        $page->vars = array(
+            "trip-id" => $trip->trip_id,
+            "trip-name" => $trip->trip_name,
+            "trip-desc" => $trip->trip_descr
+        );
+
+        return $page;
     }
 }

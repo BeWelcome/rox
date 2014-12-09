@@ -175,7 +175,8 @@ bwrox.selectScripts([
     file: "prototype162.js",
     pages: [
     "signup",
-    "searchmembers"
+    "searchmembers",
+        "trip"
     ]
   },
   {

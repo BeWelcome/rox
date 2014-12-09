@@ -67,7 +67,13 @@ body {
 }
 .page-teaser {
   border-bottom: 1px solid #EEEEEE;
-  margin: 20px 0 -1px;
+  margin: 30px 0 -1px;
+  > h1 {
+    font-size: ceil((@font-size-base * 1.7));
+    @media (min-width: @screen-sm-min) {
+      font-size: (@font-size-h1);
+    }
+  }
 }
   /**
    * Footer
@@ -415,7 +421,7 @@ th, td {
 }
 #col3{
 .make-xs-column(12);
-.make-sm-column-pull (12);
+.make-xs-column-pull (0);
 .make-sm-column(8);
 .make-sm-column-pull (4);
 .make-md-column(9);
@@ -423,7 +429,7 @@ th, td {
 .make-lg-column(9);
 .make-lg-column-pull (3);
 }
-// Custom: col1_right or col 2_right as right sidebar, col3 as main content (example: profile)
+// Custom: col1_left or col 2_left as left sidebar, col3_right as main content (example: profile)
 #col1_left{
 .make-xs-column(12);
 .make-sm-column(4);

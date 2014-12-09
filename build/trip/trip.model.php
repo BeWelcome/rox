@@ -42,17 +42,30 @@ INSERT INTO `trip_to_gallery` (`trip_id_foreign`, `gallery_id_foreign`) VALUES
         return $this->createEntity('Geo')->findById($geonameid);
     }
 
+	public function checkCreateEditVars($vars) {
+		$errors = array();
+		if(empty($vars['trip-name'])) {
+			$errors[] = 'TripErrorNameEmpty';
+		}
+		if(empty($vars['trip-desc'])) {
+			$errors[] = 'TripErrorDescEmpty';
+		}
+
+		return $errors;
+	}
+
     public function createTrip($vars, Member $user)
     {
+		$errors = array();
         if (!is_array($vars) || !$user->isLoaded())
         {
-            $vars['errors'][] = 'not_created';
+            $errors[] = 'TripErrorNotCreated';
             return false;
         }
-        $tripId = $this->insertTrip($vars['n'], $vars['d'], $user->id);
+        $tripId = $this->insertTrip($vars['trip-name'], $vars['trip-desc'], $user->id);
         if (!$tripId)
         {
-            $vars['errors'][] = 'not_created';
+            $errors[] = 'TripErrorNotCreated';
             return false;
         }
         if (isset($vars['cg']) && $vars['cg'])
@@ -61,14 +74,14 @@ INSERT INTO `trip_to_gallery` (`trip_id_foreign`, `gallery_id_foreign`) VALUES
             $galleryId = $Gallery->createGallery($vars['n']);
             if (!$galleryId)
             {
-                $vars['errors'][] = 'gallery_not_created';
+                $errors[] = 'TripErrorGalleryNotCreated';
             }
             else
             {
                 $this->assignGallery($tripId, $galleryId);
             }
         }
-        return $tripId;
+        return $errors;
     }
 
     /**
@@ -342,55 +355,35 @@ SQL;
         $vars['gallery'] = $trip->gallery_id_foreign;
 	}
 
-    // todo: refactor call to getVars
-	public function editProcess($callbackId)
+	public function editTrip($vars, $member)
     {
-		$vars =& PPostHandler::getVars($callbackId);
-
-		if ($this->checkTripOwnership($vars['trip_id'])) {
+		$errors = array();
+		if ($this->checkTripOwnership($vars['trip-id'], $member)) {
 
 			// Update the Tripdata
 	        $query = <<<SQL
 UPDATE `trip_data`
 SET
-    `trip_name` = '{$this->dao->escape($vars['n'])}',
-    `trip_descr` = '{$this->dao->escape($vars['d'])}',
+    `trip_name` = '{$this->dao->escape($vars['trip-name'])}',
+    `trip_descr` = '{$this->dao->escape($vars['trip-desc'])}',
     `edited` = NOW()
-WHERE `trip_id` = '{$this->dao->escape($vars['trip_id'])}'
+WHERE `trip_id` = '{$this->dao->escape($vars['trip-id'])}'
 SQL;
 
 			$this->dao->query($query);
-
-            if (isset($vars['cg']) && $vars['cg']) {
-                $Gallery = new GalleryModel;
-                $galleryId = $Gallery->createGallery($vars['n']);
-                if (!$galleryId) {
-                    $vars['errors'][] = 'gallery_not_created';
-                } else {
-                	$this->assignGallery($vars['trip_id'], $galleryId);
-                }
-            } elseif (isset($vars['gallery']) && $vars['gallery']) {
-                $this->assignGallery($vars['trip_id'], $vars['gallery']);
-            }
-
-			return PVars::getObj('env')->baseuri.'trip/'.$vars['trip_id'];
+		} else {
+			$errors[] = 'TripErrorNotOwner';
 		}
+		return $errors;
 	}
 
-    // todo: refactor call to getloggedinmember
-	private function checkTripOwnership($tripid)
+	private function checkTripOwnership($tripId, $member)
     {
 		// Check the ownership of the trip - better safe than sorry
-
-		if (!$member = $this->getLoggedInMember())
-        {
-			return false;
-		}
-
 		$query = <<<SQL
 SELECT trip_id
 FROM trip
-WHERE trip_id = '{$this->dao->escape($tripid)}' AND IdMember = '{$member->id}'
+WHERE trip_id = '{$this->dao->escape($tripId)}' AND IdMember = '{$member->id}'
 SQL;
 		$result = $this->dao->query($query);
 		if (!$result)
@@ -401,32 +394,32 @@ SQL;
 		return ($row->trip_id > 0);
 	}
 
-    // todo: refactor call to getVars
-	public function delProcess($callbackId)
+	public function deleteTrip($vars, $member)
     {
-		$vars =& PPostHandler::getVars($callbackId);
-		if ($this->checkTripOwnership($vars['trip_id'])) {
+		$errors = array();
+		if ($this->checkTripOwnership($vars['trip-id'], $member)) {
 			$this->dao->query('START TRANSACTION');
 
 			// Update all blog entries and remove the trip-foreign key
 	        $query = sprintf("UPDATE `blog` SET `trip_id_foreign` = NULL WHERE `trip_id_foreign` = '%d'",
-				$vars['trip_id']);
+				$vars['trip-id']);
 			$this->dao->query($query);
 
 			// Delete the trip data
 	        $query = sprintf("DELETE FROM `trip_data` WHERE `trip_id` = '%d' LIMIT 1",
-				$vars['trip_id']);
+				$vars['trip-id']);
 			$this->dao->query($query);
 
 			// Delete the trip
 	        $query = sprintf("DELETE FROM `trip` WHERE `trip_id` = '%d' LIMIT 1",
-				$vars['trip_id']);
+				$vars['trip-id']);
 			$this->dao->query($query);
 
 			$this->dao->query('COMMIT');
-
-			return PVars::getObj('env')->baseuri.'trip';
+		} else {
+			$errors[] = 'TripErrorNotOwner';
 		}
+		return $errors;
 	}
 
 	public function getTripsDataForLocation($search)

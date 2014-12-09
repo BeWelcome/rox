@@ -39,6 +39,7 @@ var markers = new Array();
 $zoomLevel = 4;    
 $point = 0;
     $locations = array();
+    $trips = $this->trips;
     foreach($trips as $trip) { 
         if (isset($trip_data[$trip->trip_id])) {
             foreach ($trip_data[$trip->trip_id] as $blogid => $blog) {

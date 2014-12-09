@@ -82,4 +82,4 @@ if ($member && $isOwnTrip) {?>
 } // end if tripdata
 ?>
 </div>
-<?php require 'subtrip_createform.php' ?>
+<?php // require 'subtrip_createform.php' ?>

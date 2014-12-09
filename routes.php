@@ -288,7 +288,13 @@
 
     // Trips
     $this->addRoute('trips', 'trip', 'TripController', 'showAllTrips');
-    $this->addRoute('trips_pager', 'trip/page/:page_no:', 'TripController', 'showAllTrips');
+    $this->addRoute('trips_pages', 'trip/page/:pageno:', 'TripController', 'showAllTrips');
+    $this->addRoute('trip_numerical', 'trip/:tripid:', 'TripController', 'showSingleTrip');
+    $this->addRoute('trip_create', 'trip/create', 'TripController', 'createTrip');
+    $this->addRoute('trip_edit', 'trip/edit/:tripid:', 'TripController', 'editTrip');
+    $this->addRoute('trip_delete', 'trip/delete/:tripid:', 'TripController', 'deleteTrip');
+    $this->addRoute('trip_show', 'trip/show/:username:', 'TripController', 'showTripsForUsername');
+    $this->addRoute('trip_show_pages', 'trip/show/:username:/page/:pageno:', 'TripController', 'showTripsForUsername');
 
     // Update statistics
     $this->addRoute('updatestats', 'about/updatestats', 'AboutController', 'updateStatistics');

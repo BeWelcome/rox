@@ -20,40 +20,27 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
-    /**
+    /** 
      * @author Fake51
      */
-    /**
-     * displays a login widget
+
+    /** 
+     * generic page for blogs app
      *
      * @package Apps
-     * @subpackage Login
+     * @subpackage Blog
      */
 
-class LoginPage extends RoxPageView
+class TripEditCreatePage extends TripBasePage
 {
-    protected function teaserContent()
-    {
-        return '';
-    }
-    protected function topnav()
-    {
-        return '';
+    protected $_editing;
+
+    public function __construct($editing = false) {
+        $this->_editing = $editing;
     }
 
     protected function getColumnNames()
     {
-        // we don't need the other columns
-        return array('col3');
-    }
-
-    protected function column_col3()
-    {
-        $login_widget = $this->createWidget('LoginFormWidget');
-        $login_widget->render();
-    }
-
-    protected function leftSideBar()
-    {
+        return array('col1', 'col3');
     }
 }

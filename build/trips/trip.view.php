@@ -93,7 +93,7 @@ class TripView extends PAppView {
     }
 
     public function notLoggedIn() {
-        require 'templates/tripsnotloggedin.php';
+        require 'templates/tripsnotloggedin.column_col3.php';
     }
 
 	/* This adds other custom styles to the page*/

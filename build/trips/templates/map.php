@@ -26,9 +26,9 @@ if (isset($request[1]) && $request[1] == 'show' && isset($request[2])) {
 
 <?=$words->flushBuffer()?>
 
-<!-- <script type="text/javascript" src="script/marker_manager.js"></script>    -->
-<script type="text/javascript" src="script/resizable.js"></script>  
-<!-- <script type="text/javascript" src="script/trip_functions.js"></script> -->
+<!-- <script type="text/javascript" src="script/marker_manager.js"></script>
+// <script type="text/javascript" src="script/resizable.js"></script>
+<script type="text/javascript" src="script/trip_functions.js"></script> -->
 <script type="text/javascript">
 //<![CDATA[
 
@@ -41,8 +41,8 @@ $point = 0;
     $locations = array();
     $trips = $this->trips;
     foreach($trips as $trip) { 
-        if (isset($trip_data[$trip->trip_id])) {
-            foreach ($trip_data[$trip->trip_id] as $blogid => $blog) {
+        if (isset($this->trip_data[$trip->trip_id])) {
+            foreach ($this->trip_data[$trip->trip_id] as $blogid => $blog) {
                 if ($blog->latitude && $blog->longitude) {
                     ++$point;
                     echo 'markers['.($point-1).']={latitude:'.$blog->latitude
@@ -80,32 +80,32 @@ var iconData = {
   "headquarters-shadow": { width: 59, height: 32 }
 };
 
-function HighlightUp() {
-    new Effect.Highlight(this, {startcolor: '#333333',endcolor: '#666666',restorecolor: '#666666',duration: .5});
-}
-function HighlightDown() {
-    new Effect.Highlight(this, {startcolor: '#666666',endcolor: '#333333',restorecolor: '#333333',duration: .5});
-}
+//function HighlightUp() {
+//    jQuery(this).animate({ color: '#333333' });
+//}
+//function HighlightDown() {
+//    jQuery(this).animate({ color: '#666666' });
+//}
+//
+//function startRest() {
+//	var markermanager = document.createElement("markermanager");
+//	markermanager.setAttribute("src", "script/marker_manager.js");
+//	markermanager.setAttribute("type", "text/javascript");
+//	var resizable = document.createElement("resizable");
+//	resizable.setAttribute("src", "script/resizable.js");
+//	resizable.setAttribute("type", "text/javascript");
+//	var tripfunctions = document.createElement("tripfunctions");
+//	tripfunctions.setAttribute("src", "script/trip_functions.js");
+//	tripfunctions.setAttribute("type", "text/javascript");
+//
+//	document.documentElement.firstChild.appendChild(markermanager);
+//	document.documentElement.firstChild.appendChild(resizable);
+//	document.documentElement.firstChild.appendChild(tripfunctions);
+//}
 
-function startRest() {
-	var markermanager = document.createElement("markermanager");
-	markermanager.setAttribute("src", "script/marker_manager.js");
-	markermanager.setAttribute("type", "text/javascript");
-	var resizable = document.createElement("resizable");
-	resizable.setAttribute("src", "script/resizable.js");
-	resizable.setAttribute("type", "text/javascript");
-	var tripfunctions = document.createElement("tripfunctions");
-	tripfunctions.setAttribute("src", "script/trip_functions.js");
-	tripfunctions.setAttribute("type", "text/javascript");
-    
-	document.documentElement.firstChild.appendChild(markermanager);
-	document.documentElement.firstChild.appendChild(resizable);
-	document.documentElement.firstChild.appendChild(tripfunctions);
-}
-
-$('handle2').onmouseover = HighlightUp;
-$('handle2').onmouseout = HighlightDown;
-new Resizable('tripMap', {minWidth:0, minHeight:200, handle:'handle2', constraint:'vertical'});
+// jQuery('handle2').mouseover( HighlightUp);
+// jQuery('handle2').mouseout(HighlightDown );
+// new Resizable('tripMap', {minWidth:0, minHeight:200, handle:'handle2', constraint:'vertical'});
     //]]>
 </script>
 

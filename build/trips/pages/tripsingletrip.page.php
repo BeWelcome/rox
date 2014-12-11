@@ -4,7 +4,7 @@ class TripSingleTripPage extends TripBasePage
 {
     protected function getColumnNames()
     {
-        return array('col3');
+        return array('col1', 'col3');
     }
 
     protected function teaserHeadline()

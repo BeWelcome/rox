@@ -31,12 +31,6 @@ Boston, MA  02111-1307, USA.
      * @subpackage Blog
      */
 
-class TripPage extends TripBasePage
+class TripsPastPage extends TripsBasePage
 {
-    protected function leftSideBar()
-    {
-        require_once SCRIPT_BASE . 'build/trip/templates/map.php';
-
-        parent::leftSideBar();
-    }
 }

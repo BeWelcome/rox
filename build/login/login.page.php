@@ -36,6 +36,10 @@ class LoginPage extends RoxPageView
     {
         return '';
     }
+    protected function topnav()
+    {
+        return '';
+    }
 
     protected function getColumnNames()
     {

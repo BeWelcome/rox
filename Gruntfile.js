@@ -72,8 +72,14 @@ module.exports = function(grunt) {
       },
     },
     watch: {
-        files: "htdocs/styles/less/*",
-        tasks: ['less:compileBeWelcome', 'autoprefixer:bewelcome', 'csscomb:bewelcome',  'cssmin:bewelcome']
+        dev: {
+            files: "htdocs/styles/less/*",
+            tasks: ['less:compileBeWelcome', 'cssmin:bewelcome']
+        },
+        dist: {
+            files: "htdocs/styles/less/*",
+            tasks: ['less:compileBeWelcome', 'autoprefixer:bewelcome', 'csscomb:bewelcome', 'cssmin:bewelcome', 'csslint:bewelcome']
+        },
     } 
 });
 
@@ -87,6 +93,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-csslint');
   
 
-  // Default task(s).
-  grunt.registerTask('default', ['watch']);
+  // Default task for development (simply turn less to css )
+  grunt.registerTask('default', ['watch:dev']);
+  // Distribution task 
+  grunt.registerTask('dist', ['watch:dist']);
 };

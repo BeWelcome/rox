@@ -119,7 +119,7 @@ class LoginFormWidget extends RoxWidget
                             <div class="center">
                                 <h3><?=$ww->SignupNow ?></h3>
                                 <?=$ww->IndexPageWord17('<a class="button btn-block" role="button" href="signup">', '</a>') ?>
-                                <p class="visible-xs"><a class="btn btn-primary btn-block" role="button" href="tour"><?php echo $words->get('tour_take');?></a></p>
+                                <p class="visible-xs bw-row"><a class="btn btn-primary btn-block" role="button" href="tour"><?php echo $words->get('tour_take');?></a></p>
 
                             </div>
         </form>

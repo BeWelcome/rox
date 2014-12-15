@@ -16,20 +16,21 @@ $counter = 0;
     <?php
     foreach ($tripData as $subTripId => $subTrip) {
         $counter++;
-    if ($counter % 3 == 1) {
+    if ($counter % 4 == 1) {
         echo '</div><div class="row">';
     }
         switch ($counter) {
-            case 1:
+            case 1: $flag = 'flag_yellow.png';
+                break;
             case $count:
-                $flag = 'flag_yellow.png';
+                $flag = 'flag_red.png';
                 break;
             default:
                 $flag = 'bullet_go.png';
                 break;
         }
     ?>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <img src="styles/css/minimal/images/iconsfam/<?= $flag ?>" alt="flag" />
         <strong><?= $subTrip['location'] ?></strong>, <?= $subTrip['startdate'] ?>
         <?php

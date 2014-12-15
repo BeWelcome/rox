@@ -309,7 +309,7 @@ WHERE NOT members.Username IS NULL
 	{
 		$query = "
 			SELECT
-				count(*) AS cnt
+				count(DISTINCT t.trip_id) AS cnt
 			FROM
 				trip t
 			LEFT JOIN blog b ON b.trip_id_foreign = t.trip_id
@@ -325,8 +325,8 @@ WHERE NOT members.Username IS NULL
 	public function getPastTripsCount()
 	{
 		$query = "
-			SELECT
-				count(*) AS cnt
+			SELECT DISTINCT
+				count(DISTINCT t.trip_id) AS cnt
 			FROM
 				trip t
 			LEFT JOIN blog b ON b.trip_id_foreign = t.trip_id
@@ -339,126 +339,28 @@ WHERE NOT members.Username IS NULL
 		return $row->cnt;
 	}
 
+	/**
+	 * Gets the data to the found trips needs to be done in a two step process due to the organisation of the tables
+	 * otherwise the limit for the trips per page is enforced on the sub trips leading to a rather strange layout
+	 *
+	 * @param $result
+	 * @return array
+	 */
 	private function _getTripData($result)
 	{
-		$startDate = $endDate = 0;
-		$lastTripId = null;
-
-		$trips = array();
-		$tripData = array();
-		$tripInfo = new StdClass;
+		// get all trip ids first
+		$tripIds = array();
 		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$tripId = $row->trip_id;
-			if ($tripId <> $lastTripId) {
-				if ($lastTripId <> null) {
-					$duration = '';
-					if ($startDate <> 0) {
-						$duration .= date('Y-m-d', $startDate);
-					}
-					if ($endDate <> 0) {
-						$duration .= " - " . date('Y-m-d', $endDate);
-					}
-					$tripInfo->startdate = date('Y-m-d', $startDate);
-					$tripInfo->enddate = date('Y-m-d', $endDate);
-					$tripInfo->duration = $duration;
-					$tripInfo->data = $tripData;
-					$trips[$tripId] = $tripInfo;
-				}
-				$tripData = array();
-				$tripInfo = new StdClass;
-				$tripInfo->name = $row->trip_name;
-				$tripInfo->description = $row->trip_descr;
-				$tripInfo->member = new Member($row->IdMember);
-				if ($row->tripStartDate != 0) {
-					$blogStart = $row->tripStartDate;
-					if ($startDate == 0) {
-						$startDate = $blogStart;
-					}
-					if ($blogStart <> 0) {
-						if ($blogStart < $startDate) {
-							$startDate = $blogStart;
-						}
-					}
-				}
-				if ($row->tripEndDate != 0) {
-					$blogEnd = $row->tripEndDate;
-					if ($endDate == 0) {
-						$endDate = $blogEnd;
-					}
-					if ($blogEnd <> 0) {
-						if ($blogEnd > $endDate) {
-							$endDate = $blogEnd;
-						}
-					}
-				}
-				$lastTripId = $tripId;
-			}
-			$geo = new Geo($row->geonameid);
-			$geoAlternateName = $this->createEntity('GeoAlternateName');
-			$geoName = $geoAlternateName->getNameForLocation($geo, $_SESSION['lang']);
-			if (!$geoName) {
-				$geoName = $geo->getName();
-			}
-			$tripData[$row->blog_id] = array(
-				"title" => $row->blog_title,
-				"startdate" => date('Y-m-d', $row->tripStartDate),
-				"enddate" => date('Y-m-d', $row->tripEndDate),
-				"location" => $geoName,
-			);
+			$tripIds[] = $row->trip_id;
 		}
 
-	if ($tripId <> $lastTripId) {
-		if ($lastTripId <> null) {
-			$duration = '';
-			if ($startDate <> 0) {
-				$duration .= date('Y-m-d', $startDate);
-			}
-			if ($endDate <> 0) {
-				$duration .= " - " . date('Y-m-d', $endDate);
-			}
-			$tripInfo->startdate = date('Y-m-d', $startDate);
-			$tripInfo->enddate = date('Y-m-d', $endDate);
-			$tripInfo->duration = $duration;
-			$tripInfo->data = $tripData;
-			$trips[$tripId] = $tripInfo;
+		if (count($tripIds) == 0) {
+			return array();
 		}
-		$tripData = array();
-		$tripInfo = new StdClass;
-		$tripInfo->name = $row->trip_name;
-		$tripInfo->description = $row->trip_descr;
-		$tripInfo->member = new Member($row->IdMember);
-		if ($row->tripStartDate != 0) {
-			$blogStart = $row->tripStartDate;
-			if ($startDate == 0) {
-				$startDate = $blogStart;
-			}
-			if ($blogStart <> 0) {
-				if ($blogStart < $startDate) {
-					$startDate = $blogStart;
-				}
-			}
-		}
-		if ($row->tripEndDate != 0) {
-			$blogEnd = $row->tripEndDate;
-			if ($endDate == 0) {
-				$endDate = $blogEnd;
-			}
-			if ($blogEnd <> 0) {
-				if ($blogEnd > $endDate) {
-					$endDate = $blogEnd;
-				}
-			}
-		}
-	}
-	return $trips;
-}
 
-	public function getUpcomingTrips($pageNumber, $itemsPerPage) {
-		$limit = ($pageNumber-1) * $itemsPerPage;
-
+		// Now get the trip data
 		$query = "
-			SELECT
-				t.*,
+		SELECT
 				td.*,
 				b.*,
 				bd.blog_title,
@@ -476,10 +378,92 @@ WHERE NOT members.Username IS NULL
 			LEFT JOIN geonames g ON bd.blog_geonameid = g.geonameid
 			LEFT JOIN members m ON m.id = t.IdMember
 			WHERE
-				t.trip_id = 1804 AND ((bd.blog_start IS NOT NULL) AND (DATE(bd.blog_start) >= NOW()))
-				 OR ((bd.blog_end IS NOT NULL ) AND (DATE(bd.blog_end) >= NOW()))
+				t.trip_id IN ('" . implode("', '", $tripIds) . "')
 			ORDER BY
-				t.trip_id, bd.blog_start, bd.blog_end
+				t.trip_id, bd.blog_start, bd.blog_end";
+		$result = $this->dao->query($query);
+
+		$trips = array();
+		$tripInfo = new StdClass;
+		$lastTripId = 0;
+		while ($row= $result->fetch(PDB::FETCH_OBJ)) {
+			$tripId = $row->trip_id;
+			if ($tripId <> $lastTripId) {
+				$lastTripId = $tripId;
+				$tripInfo = new StdClass;
+				$tripInfo->name = $row->trip_name;
+				$tripInfo->description = $row->trip_descr;
+				$tripInfo->member = new Member($row->IdMember);
+				$tripInfo->data = array();
+				$startDate = $endDate = 0;
+			}
+			$tripData = $tripInfo->data;
+			if ($row->tripStartDate != 0) {
+				$blogStart = $row->tripStartDate;
+				if ($startDate == 0) {
+					$startDate = $blogStart;
+				}
+				if ($blogStart <> 0) {
+					$startDate = min($blogStart, $startDate);
+				}
+			}
+			if (($row->tripEndDate != 0) || (($row->tripEndDate == null) && ($row->tripStartDate !=0))) {
+				$blogEnd = max($row->tripEndDate, $row->tripStartDate);
+				if ($endDate == 0) {
+					$endDate = $blogEnd;
+				}
+				if ($blogEnd <> 0) {
+					$endDate = max($blogEnd, $endDate);
+				}
+			}
+			if ($row->geonameid) {
+				$geo = new Geo($row->geonameid);
+				$geoAlternateName = $this->createEntity('GeoAlternateName');
+				$geoName = $geoAlternateName->getNameForLocation($geo, $_SESSION['lang']);
+				if (!$geoName) {
+					$geoName = $geo->getName();
+				}
+				$tripData[$row->blog_id] = array(
+					"title" => $row->blog_title,
+					"startdate" => date('Y-m-d', $row->tripStartDate),
+					"enddate" => date('Y-m-d', $row->tripEndDate),
+					"location" => $geoName,
+				);
+			}
+			$duration = '';
+			if ($startDate <> 0) {
+				$duration .= date('Y-m-d', $startDate);
+			}
+			if ($endDate != $startDate) {
+				$duration .= " - " . date('Y-m-d', $endDate);
+			}
+			$tripInfo->startdate = date('Y-m-d', $startDate);
+			$tripInfo->enddate = date('Y-m-d', $endDate);
+			$tripInfo->duration = $duration;
+
+			$tripInfo->data = $tripData;
+			$trips[$tripId] = $tripInfo;
+		}
+
+		return $trips;
+	}
+
+	public function getUpcomingTrips($pageNumber, $itemsPerPage) {
+		$limit = ($pageNumber-1) * $itemsPerPage;
+
+		$query = "
+			SELECT DISTINCT
+				t.trip_id
+			FROM
+				trip t
+			LEFT JOIN trip_data td ON t.trip_id = td.trip_id
+			LEFT JOIN blog b ON b.trip_id_foreign = t.trip_id
+			LEFT JOIN blog_data bd ON bd.blog_id = b.blog_id
+			WHERE
+				((bd.blog_start IS NOT NULL) AND (DATE(bd.blog_start) >= NOW()))
+				OR ((bd.blog_end IS NOT NULL ) AND (DATE(bd.blog_end) >= NOW()))
+			ORDER BY
+				t.trip_id ASC, bd.blog_start, bd.blog_end
 			LIMIT " . $limit . "," . $itemsPerPage;
 
 		$result = $this->dao->query($query);
@@ -494,29 +478,17 @@ WHERE NOT members.Username IS NULL
 		$limit = ($pageNumber-1) * $itemsPerPage;
 
 		$query = "
-			SELECT
-				t.*,
-				td.*,
-				b.*,
-				bd.blog_title,
-				UNIX_TIMESTAMP(bd.blog_start) AS tripStartDate,
-				UNIX_TIMESTAMP(bd.blog_end) AS tripEndDate,
-				g.latitude AS latitude,
-				g.longitude AS longitude,
-				g.geonameid AS geonameid,
-				m.username
+			SELECT DISTINCT
+				t.trip_id
 			FROM
 				trip t
-			LEFT JOIN trip_data td ON t.trip_id = td.trip_id
 			LEFT JOIN blog b ON b.trip_id_foreign = t.trip_id
 			LEFT JOIN blog_data bd ON bd.blog_id = b.blog_id
-			LEFT JOIN geonames g ON bd.blog_geonameid = g.geonameid
-			LEFT JOIN members m ON m.id = t.IdMember
 			WHERE
 				((bd.blog_start IS NOT NULL) AND (DATE(bd.blog_start) <= NOW()))
 				 OR ((bd.blog_end IS NOT NULL ) AND (DATE(bd.blog_end) <= NOW()))
 			ORDER BY
-				t.trip_id, bd.blog_start, bd.blog_end
+				t.trip_id DESC, bd.blog_start DESC, bd.blog_end DESC
 			LIMIT " . $limit . "," . $itemsPerPage;
 
 		$result = $this->dao->query($query);

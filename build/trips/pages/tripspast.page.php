@@ -33,4 +33,8 @@ Boston, MA  02111-1307, USA.
 
 class TripsPastPage extends TripsBasePage
 {
+    protected function getSubmenuActiveItem()
+    {
+        return 'pasttrips';
+    }
 }

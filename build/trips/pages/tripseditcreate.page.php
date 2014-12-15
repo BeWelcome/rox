@@ -31,7 +31,7 @@ Boston, MA  02111-1307, USA.
      * @subpackage Blog
      */
 
-class TripEditCreatePage extends TripBasePage
+class TripsEditCreatePage extends TripsBasePage
 {
     protected $_editing;
 
@@ -39,8 +39,25 @@ class TripEditCreatePage extends TripBasePage
         $this->_editing = $editing;
     }
 
-    protected function getColumnNames()
+    protected function getSubmenuActiveItem()
     {
-        return array('col1', 'col3');
+        if ($this->_editing) {
+            return 'edittrips';
+        } else {
+            return 'createtrips';
+        }
+    }
+
+    protected function getStylesheets() {
+        $stylesheets = parent::getStylesheets();
+        $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery.ui.all.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/search.css?1';
+        return $stylesheets;
+    }
+
+    public function getLateLoadScriptfiles() {
+        $scriptFiles = parent::getLateLoadScriptfiles();
+        $scriptFiles[] = 'search/searchlocation.js?1';
+        return $scriptFiles;
     }
 }

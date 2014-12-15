@@ -204,7 +204,7 @@ class TripsController extends RoxControllerBase {
         if (!$member) {
             return false;
         }
-        $page = new TripEditCreatePage(false);
+        $page = new TripsEditCreatePage(false);
         $page->member = $member;
         $page->vars = array(
             "trip-id" => 0,

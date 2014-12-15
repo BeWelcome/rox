@@ -70,9 +70,12 @@ class TripsBasePage extends PageWithActiveSkin
         $geo = new Geo($this->member->IdCity);
         $items[] = array('tripssnearme', 'trips/nearme', $words->getSilent('TripsTripsNear', $geo->name));
         if ($this->update) {
-            $items[] = array('createtrips', 'trips/' . $this->activity->id . '/edit', $words->getSilent('TripsEdit'));
+            $items[] = array('edittrips', 'trips/' . $this->activity->id . '/edit', $words->getSilent('TripsEdit'));
         } else {
             $items[] = array('createtrips', 'trips/create', $words->getSilent('TripsCreate'));
+        }
+        if ($this->delete) {
+            $items[] = array('deltrips', 'trips/' . $this->activity->id . '/delete', $words->getSilent('TripsDelete'));
         }
         return $items;
     }

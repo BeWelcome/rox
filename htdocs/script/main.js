@@ -110,7 +110,9 @@ bwrox.selectScripts([
             "search",
             "signup/3",
             "admin/rights",
-            "admin/flags"
+            "admin/flags",
+            "trips/create",
+            "trips/edit"
             /*,
              "blog",
              "trip",
@@ -397,19 +399,6 @@ bwrox.selectScripts([
     {
         file: "searchmembers.js?4",
         pages: ["searchmembers"]
-    },
-    {
-        file: "search/searchlocation.js?1",
-        pages: [
-            "search/",
-            "signup/3"
-        ]
-    },
-    {
-        file: "search/searchmultiselect.js",
-        pages: [
-            "search/"
-        ]
     },
     {
         file: "map/activities/activities_map.js?4",

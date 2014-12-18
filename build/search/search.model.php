@@ -228,15 +228,15 @@ LIMIT 1
             }
         } else {
             $condition = "AND a.IdCity = g.geonameid";
-            if (empty($vars['search-location'])) {
+            if (empty($vars['location'])) {
                 // we search around the world.
             } else {
                 // a simple place with a square rectangle around it
                 $distance = $vars['search-distance'];
                 if ($distance != 0) {
                     // calculate rectangle around place with given distance
-                    $lat = deg2rad(doubleval($vars['search-latitude']));
-                    $long = deg2rad(doubleval($vars['search-longitude']));
+                    $lat = deg2rad(doubleval($vars['location-latitude']));
+                    $long = deg2rad(doubleval($vars['location-longitude']));
 
                     $longne = rad2deg(($distance + self::EARTH_RADIUS * $long) / self::EARTH_RADIUS);
                     $longsw = rad2deg((self::EARTH_RADIUS * $long - $distance) / self::EARTH_RADIUS);
@@ -274,7 +274,7 @@ LIMIT 1
                     }
                     $condition = substr($condition, 0, -3) . ")";
                 } else {
-                    $condition .= " AND g.geonameid = " . $this->dao->escape($vars['search-geoname-id']);
+                    $condition .= " AND g.geonameid = " . $this->dao->escape($vars['location-geoname-id']);
                 }
             }
         }
@@ -541,8 +541,8 @@ LIMIT 1
                 g.country,
                 g.latitude,
                 g.longitude,
-                ((g.latitude - " . $vars['search-latitude'] . ") * (g.latitude - " . $vars['search-latitude'] . ") +
-                        (g.longitude - " . $vars['search-longitude'] . ") * (g.longitude - " . $vars['search-longitude'] . "))  AS Distance,
+                ((g.latitude - " . $vars['location-latitude'] . ") * (g.latitude - " . $vars['location-latitude'] . ") +
+                        (g.longitude - " . $vars['location-longitude'] . ") * (g.longitude - " . $vars['location-longitude'] . "))  AS Distance,
                 IF(c.IdToMember IS NULL, 0, c.commentCount) AS CommentCount
             *FROM*
                 " . $this->tables . "
@@ -1041,12 +1041,12 @@ LIMIT 1
     public function getDefaultSimpleOptions()
     {
         $vars = array();
-        $vars['search-location'] = '';
+        $vars['search'] = '';
         $vars['search-can-host'] = 1;
         $vars['search-distance'] = 25;
-        $vars['search-geoname-id'] = 0;
-        $vars['search-latitude'] = 0;
-        $vars['search-longitude'] = 0;
+        $vars['location-geoname-id'] = 0;
+        $vars['location-latitude'] = 0;
+        $vars['location-longitude'] = 0;
         $vars['search-number-items'] = 10;
         $vars['search-sort-order'] = SearchModel::ORDER_ACCOM;
         $vars['search-page'] = 1;
@@ -1060,7 +1060,7 @@ LIMIT 1
     public function checkSearchVarsOk($vars)
     {
         $errors = array();
-        if (empty($vars['search-location'])) {
+        if (empty($vars['location'])) {
             $errors[] = 'SearchLocationEmpty';
         }
 
@@ -1081,12 +1081,12 @@ LIMIT 1
             }
         }
         if ($geonameid != 0) {
-            $vars['search-geoname-id'] = $geonameid;
+            $vars['location-geoname-id'] = $geonameid;
             // We need longitude and latitude for the search so let's fetch that
             $query = "SELECT * FROM geonames g WHERE g.geonameid = " . $geonameid;
             $rowGeonameId = $this->singleLookup($query);
-            $vars['search-latitude'] = $rowGeonameId->latitude;
-            $vars['search-longitude'] = $rowGeonameId->longitude;
+            $vars['location-latitude'] = $rowGeonameId->latitude;
+            $vars['location-longitude'] = $rowGeonameId->longitude;
             // Now collect admin1 (if any) and country information to set search location correctly
             // Additionally we need to set the admin1 unit and the country for the given geonameid
             $query = "
@@ -1117,7 +1117,7 @@ LIMIT 1
                 $searchLocation .= $row->admin1 . ", ";
             }
             $searchLocation .= $row->country;
-            $vars['search-location'] = $searchLocation;
+            $vars['location'] = $searchLocation;
         }
         $country = $admin1 = "";
         $countryCode = $admin1Code = "";
@@ -1139,9 +1139,9 @@ LIMIT 1
             $vars['search-location'] = $locationParts[0] . ", " . $admin1 . ", " . $locationParts[1];
         }
         $results = array();
-        $geonameid = $vars['search-geoname-id'];
+        $geonameid = $vars['location-geoname-id'];
         if ($geonameid == 0) {
-            if (empty($vars['search-location'])) {
+            if (empty($vars['location'])) {
                 // Search all over the world
                 $results['type'] = 'members';
                 $results['members'] = $this->getMemberDetails($vars);

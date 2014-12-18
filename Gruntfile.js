@@ -93,7 +93,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-csslint');
   
 
-  // Default task(s).
+  // Default task for development (simply turn less to css )
   grunt.registerTask('default', ['watch:dev']);
+  // Distribution task 
   grunt.registerTask('dist', ['watch:dist']);
 };

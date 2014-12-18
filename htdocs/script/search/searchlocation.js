@@ -28,51 +28,66 @@ jQuery.widget( "custom.catcomplete", jQuery.ui.autocomplete, {
     }
 });
 
-jQuery(function() {
-    jQuery( "#search-location" ).on( "keydown", function( event ) {
-		jQuery( "#search-geoname-id" ).val( 0 );
-	});
-
-    jQuery( "#search-location" ).catcomplete({
-  source: function( request, response ) {
-    jQuery.ajax({
-      url: "/search/locations/all",
-      dataType: "jsonp",
-      data: {
-        name: request.term
-      },
-      success: function( data ) {
-        if (data.status != "success") {
-        	data.locations = [{ name: noMatchesFound, category: "Information", cnt: 0 }];
-        }
-          response(
-          jQuery.map( data.locations, function( item ) {
-            return {
-              label: (item.name ? item.name : "")+ (item.admin1 ? (item.name ? ", " : "") + item.admin1 : "") + (item.country ? ", " + item.country : "")  + (item.cnt != 0 ? " (" + item.cnt +")" : ""),
-              labelnocount: (item.name ? item.name : "")+ (item.admin1 ? (item.name ? ", " : "") + item.admin1 : "") + (item.country ? ", " + item.country : ""),
-              value: item.geonameid, latitude: item.latitude, longitude: item.longitude,
-              category: item.category
-            };
-          }));
-    }
-  });
-  },
-  change: function( event, ui ) {
-    if (ui.item == null) {
-      jQuery( "#search-geoname-id" ).val( 0 );
-    } else {
-      jQuery( "#search-geoname-id" ).val(ui.item.value);
-    }
-  },
-  select: function( event, ui ) {
-    jQuery( "#search-geoname-id" ).val( ui.item.value );
-    jQuery( "#search-latitude" ).val( ui.item.latitude );
-    jQuery( "#search-longitude" ).val( ui.item.longitude );
-    jQuery( this ).val( ui.item.labelnocount );
-
-    return false;
-  },
-  minLength: 1,
-  delay: 500
+function enableAutoComplete(addMarker) {
+    jQuery( ".location-picker" ).on( "keydown", function( event ) {
+        jQuery( "#" + this.id + "-geoname-id" ).val( "" );
+        jQuery( "#" + this.id + "-latitude" ).val( "" );
+        jQuery( "#" + this.id + "-longitude" ).val( "" );
     });
+
+    jQuery( ".location-picker" ).catcomplete({
+        source: function (request, response) {
+            jQuery.ajax({
+                url: "/search/locations/all",
+                dataType: "jsonp",
+                data: {
+                    name: request.term
+                },
+                success: function (data) {
+                    if (data.status != "success") {
+                        data.locations = [{name: noMatchesFound, category: "Information", cnt: 0}];
+                    }
+                    response(
+                        jQuery.map(data.locations, function (item) {
+                            return {
+                                label: (item.name ? item.name : "") + (item.admin1 ? (item.name ? ", " : "") + item.admin1 : "") + (item.country ? ", " + item.country : "") + (item.cnt != 0 ? " (" + item.cnt + ")" : ""),
+                                labelnocount: (item.name ? item.name : "") + (item.admin1 ? (item.name ? ", " : "") + item.admin1 : "") + (item.country ? ", " + item.country : ""),
+                                value: item.geonameid, latitude: item.latitude, longitude: item.longitude,
+                                category: item.category
+                            };
+                        }));
+                }
+            });
+        },
+        change: function (event, ui) {
+            if (ui.item == null) {
+                jQuery("#" + this.id + "-geoname-id").val(0);
+                jQuery( "#" + this.id + "-latitude" ).val( "" );
+                jQuery( "#" + this.id + "-longitude" ).val( "" );
+            } else {
+                jQuery("#" + this.id + "-geoname-id").val( ui.item.value );
+                jQuery("#" + this.id + "-latitude").val(ui.item.latitude);
+                jQuery("#" + this.id + "-longitude").val(ui.item.longitude);
+            }
+        },
+        select: function (event, ui) {
+            jQuery("#" + this.id + "-geoname-id").val(ui.item.value);
+            jQuery("#" + this.id + "-latitude").val(ui.item.latitude);
+            jQuery("#" + this.id + "-longitude").val(ui.item.longitude);
+            jQuery(this).val(ui.item.labelnocount);
+
+            addMarker(ui.item.labelnocount, ui.item.value, ui.item.latitude, ui.item.longitude);
+
+            return false;
+        },
+        minLength: 1,
+        delay: 500
+    });
+}
+
+jQuery(function() {
+    if (addMarker === undefined) {
+        addMarker = function() {};
+    }
+    enableAutoComplete(addMarker);
 });

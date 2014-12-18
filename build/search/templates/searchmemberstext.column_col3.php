@@ -34,15 +34,15 @@ endif; ?>
     <table class="full">
         <tr>
             <td>
-                <label for='search-location'><span class="small"><?= $words->get('SearchEnterLocation'); ?></span></label><br/>
+                <label for='location'><span class="small"><?= $words->get('SearchEnterLocation'); ?></span></label><br/>
                     <div>
-                        <input type="hidden" name="search-geoname-id" id="search-geoname-id"
-                            value="<?php echo $this->vars['search-geoname-id']; ?>"/>
-                        <input type="hidden" name="search-latitude" id="search-latitude"
-                            value="<?php echo $this->vars['search-latitude']; ?>"/>
-                        <input type="hidden" name="search-longitude" id="search-longitude"
-                            value="<?php echo $this->vars['search-longitude']; ?>"/>
-                        <input name="search-location" id="search-location" value="<?php echo $this->vars['search-location']; ?>"/>
+                        <input type="hidden" name="location-geoname-id" id="location-geoname-id"
+                            value="<?php echo $this->vars['location-geoname-id']; ?>"/>
+                        <input type="hidden" name="location-latitude" id="location-latitude"
+                            value="<?php echo $this->vars['location-latitude']; ?>"/>
+                        <input type="hidden" name="location-longitude" id="location-longitude"
+                            value="<?php echo $this->vars['location-longitude']; ?>"/>
+                        <input name="location" id="location" class="location-picker" value="<?php echo $this->vars['location']; ?>"/>
                    </div>
                     <?php echo $words->flushBuffer(); ?>
             </td>

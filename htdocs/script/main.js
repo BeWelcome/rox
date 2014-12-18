@@ -51,12 +51,12 @@ BWRox.prototype.selectScripts = function (scripts) {
         } else {
             var prefix = 'script/';
         }
-    // add min.js if we have a min version
-    if (typeof script.min === "boolean" && script.min === true && typeof bwroxConfig != 'undefined' && bwroxConfig.uncompress_js == '1') {
-      script.file = script.file.replace('.js','.min.js');
-    } else {
-      script.file;
-    }
+        // add min.js if we have a min version
+        if (typeof script.min === "boolean" && script.min === true && typeof bwroxConfig != 'undefined' && bwroxConfig.uncompress_js == '1') {
+            script.file = script.file.replace('.js', '.min.js');
+        } else {
+            script.file;
+        }
         var src = prefix + script.file;
 
         // Loop through pages array, if it exists
@@ -99,18 +99,21 @@ var bwrox = new BWRox;
 bwrox.selectScripts([
     {
         // JQuery has to be included before prototype to avoid conflicts
-    min: true,
-    file: "jquery-1.11.0.js",
+        min: true,
+        file: "jquery-1.11.0.js"
     },
     {
         // complete jquery ui with theme smoothness
-        file: "jquery-ui-1.10.4.custom.min.js",
+        file: "jquery-ui-1.11.2/jquery-ui.min.js",
         pages: [
             "activities",
             "search",
             "signup/3",
             "admin/rights",
-             "admin/flags" /*,
+            "admin/flags",
+            "trips/create",
+            "trips/edit"
+            /*,
              "blog",
              "trip",
              "admin/treasurer" */
@@ -119,7 +122,8 @@ bwrox.selectScripts([
     {
         file: "jquery-ui-timepicker-addon.js?2",
         pages: [
-            "activities" /*,
+            "activities"
+            /*,
              "blog",
              "trip",
              "admin/treasurer" */
@@ -147,16 +151,22 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "leaflet/0.7.2/leaflet.js",
-        pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip", "activities"]
-    },
-    {
-        file: "leaflet/0.7.2/leaflet.include-css.js",
-        pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip", "activities"]
+        file: "leaflet/0.7.3/leaflet.js",
+        pages: [
+            "searchmembers",
+            "signup/3",
+            "setlocation",
+            "blog",
+            "trips",
+            "activities"
+        ]
     },
     {
         file: "leaflet/plugins/Leaflet.markercluster/0.4.0/leaflet.markercluster.js",
-        pages: ["activities"]
+        pages: [
+            "activities",
+            "trips"
+        ]
     },
     {
         file: "leaflet/plugins/Leaflet.markercluster/0.4.0/leaflet.markercluster.include-css.js",
@@ -165,33 +175,24 @@ bwrox.selectScripts([
     {
         file: "//maps.googleapis.com/maps/api/js?sensor=false",
         remote: true,
-        pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+        pages: [
+            "searchmembers",
+            "signup/3",
+            "setlocation",
+            "blog",
+            "trips"
+        ]
     },
     {
         file: "leaflet/plugins/shramov-leaflet-plugins/1.1.0/layer/tile/Google.js",
-        pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
-    },
-  {
-    file: "prototype162.js",
-    pages: [
-    "signup",
-    "searchmembers",
-        "trip"
-    ]
-  },
-  {
-    file: "fabtabulous.js",
-    pages: [
-    "signup",
-    "searchmembers"]
-  },
-  {
-    file: "scriptaculous18/scriptaculous.js?load=effects,controls,builder,dragdrop",
         pages: [
-        "signup",
-        "searchmembers"
+            "searchmembers",
+            "signup/3",
+            "setlocation",
+            "blog",
+            "trips"
         ]
-  },
+    },
     {
         file: "registerrox.js?2",
         pages: [
@@ -201,18 +202,19 @@ bwrox.selectScripts([
     {
         file: "geo_suggest.js?2",
         pages: [
-            "signup", "setlocation"
+            "signup",
+            "setlocation"
         ]
     },
     {
-        file: "tinymce-4.0.28/tinymce.min.js",
+        file: "tinymce-4.1.7/tinymce.min.js",
         pages: [
             "activities",
             "blog",
             "forums",
             "groups",
             "suggestions",
-            "trip",
+//            "trip",
             "messages/",
             "invite"
         ]
@@ -221,7 +223,7 @@ bwrox.selectScripts([
         file: "blog_suggest.js?1",
         pages: [
             "blog",
-            "trip"
+//            "trip"
         ]
     },
     {
@@ -233,9 +235,9 @@ bwrox.selectScripts([
     {
         file: "datepicker.js?1",
         pages: [
-            "activities",
-            "blog",
-            "trip",
+//            "activities",
+//            "blog",
+//            "trip",
             "admin/treasurer"
         ]
     },
@@ -251,9 +253,9 @@ bwrox.selectScripts([
             "blog/create",
             "blog/edit",
             "user/settings",
-            "trip/create",
-            "trip/edit",
-            "trip",
+//            "trip/create",
+//            "trip/edit",
+//            "trip",
             "gallery/show/image",
             "message/write",
             "editmyprofile",
@@ -310,15 +312,31 @@ bwrox.selectScripts([
     },
     {
         file: "map/geolocation/BWGoogleMapReverseGeolocator.js?2",
-        pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+        pages: [
+            "searchmembers",
+            "signup/3",
+            "setlocation",
+            "blog",
+            //    "trip"
+        ]
     },
     {
         file: "map/leaflet/LeafletFlagIcon.js?1",
-        pages: ["signup/3", "setlocation", "blog", "trip"]
+        pages: [
+            "signup/3",
+            "setlocation",
+            "blog",
+            "trip"
+        ]
     },
     {
         file: "map/builder/BWSimpleMapBuilder.js?4",
-        pages: ["signup/3", "setlocation", "blog", "trip"]
+        pages: [
+            "signup/3",
+            "setlocation",
+            "blog",
+            "trip"
+        ]
     },
     {
         file: "map/builder/BWGeosearchMapBuilder.js?4",
@@ -326,11 +344,23 @@ bwrox.selectScripts([
     },
     {
         file: "map/BWMapMaths.js?1",
-        pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+        pages: [
+            "searchmembers",
+            "signup/3",
+            "setlocation",
+            "blog",
+            //    "trip"
+        ]
     },
     {
         file: "map/BWMapAddressPoint.js?1",
-        pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+        pages: [
+            "searchmembers",
+            "signup/3",
+            "setlocation",
+            "blog",
+            //    "trip"
+        ]
     },
     {
         file: "map/BWMapHostPoint.js?1",
@@ -342,11 +372,17 @@ bwrox.selectScripts([
     },
     {
         file: "map/small/smallMapGeoLocation.js?4",
-        pages: ["signup/3", "setlocation"]
+        pages: [
+            "signup/3",
+            "setlocation"
+        ]
     },
     {
         file: "map/small/blogSmallMapGeoLocation.js?4",
-        pages: ["blog", "trip"]
+        pages: [
+            "blog"
+            //, "trip"
+        ]
     },
     {
         file: "map/small/blogMap.js?4",
@@ -365,28 +401,16 @@ bwrox.selectScripts([
         pages: ["searchmembers"]
     },
     {
-        file: "search/searchlocation.js?1",
-        pages: [
-            "search/",
-            "signup/3"
-        ]
-    },
-    {
-        file: "search/searchmultiselect.js",
-        pages: [
-            "search/"
-        ]
-    },
-    {
         file: "map/activities/activities_map.js?4",
         pages: ["activities"]
-  },
-  {
-    file: "jqueryprototypefix.js",
-    pages: [
-    "signup",
-    "searchmembers"
-    ]
+    },
+    {
+        file: "jqueryprototypefix.js",
+        pages: [
+            "signup",
+            "searchmembers"
+            // "trip"
+        ]
     }
 ]);
 

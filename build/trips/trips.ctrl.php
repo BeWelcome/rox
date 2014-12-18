@@ -196,6 +196,16 @@ class TripsController extends RoxControllerBase {
 
 
     /**
+     * returns a template for a new location row (used through an Ajax call)
+     */
+    public function addLocation() {
+        $locationRow = $this->route_vars['number'];
+        header('Content-type: text/html, charset=utf-8');
+        include(SCRIPT_BASE . 'build/trips/templates/locationrow.php');
+        exit;
+    }
+
+    /**
      *
      */
     public function createTrip()
@@ -207,9 +217,9 @@ class TripsController extends RoxControllerBase {
         $page = new TripsEditCreatePage(false);
         $page->member = $member;
         $page->vars = array(
-            "trip-id" => 0,
-            "trip-name" => "",
-            "trip-desc" => ""
+            "tripid" => 0,
+            "tripname" => "",
+            "tripdescription" => ""
         );
 
         return $page;
@@ -235,9 +245,9 @@ class TripsController extends RoxControllerBase {
         $page = new TripEditCreatePage(true);
         $page->member = $member;
         $page->vars = array(
-            "trip-id" => $trip->trip_id,
-            "trip-name" => $trip->trip_name,
-            "trip-desc" => $trip->trip_descr
+            "tripid" => $trip->trip_id,
+            "tripname" => $trip->trip_name,
+            "tripdescription" => $trip->trip_descr
         );
 
         return $page;

@@ -23,79 +23,65 @@ $words = $this->getWords();
 if ($this->_editing == true) {
     $panelTitle = $words->get('Triptitle_edit');
     $buttonTitle = $words->getSilent('TripSubmit_edit');
-} else{
-    $panelTitle = $words->get('TripTitle_create');  
-    $buttonTitle =  $words->getSilent('TripSubmit_create');
-}  
+} else {
+    $panelTitle = $words->get('TripTitle_create');
+    $buttonTitle = $words->getSilent('TripSubmit_create');
+}
 ?>
 <div class="panel panel-default">
     <div class="panel-heading"><?= $panelTitle ?></div>
     <div class="panel-body">
-    <form method="post" class="form" role="form">
-        <?= $callback_tag; ?>
-        <div class="form-group has-feedback">
-            <label for="trip-name" class="control-label sr-only"><?php echo $words->get('TripLabel_name'); ?></label>
-            <input type="text" class="form-control" name="trip-name" placeholder="<?= $words->getBuffered('TripLabel_name'); ?>" id="trip-name"
-                value="<?= htmlentities($vars['trip-name'], ENT_COMPAT, 'utf-8') ?>" />
-        <?php
-        if (in_array('TripErrorNameEmpty', $errors)) {
-            echo '<span class="help-block alert alert-danger">'.$words->get('TripErrorNameEmpty').'</span>';
-        }
-        ?>
-        </div>
+        <form method="post" class="form tripseditcreate" role="form">
+            <?= $callback_tag; ?>
+            <div class="form-group has-feedback">
+                <label for="tripname"
+                       class="control-label sr-only"><?php echo $words->get('TripLabel_name'); ?></label>
+                <input type="text" class="form-control" name="tripname"
+                       placeholder="<?= $words->getBuffered('TripLabel_name'); ?>" id="tripname"
+                       value="<?= htmlentities($vars['tripname'], ENT_COMPAT, 'utf-8') ?>"/>
+            </div>
 
-        <!-- password -->
-        <div class="form-group has-feedback">
-            <label for="trip-desc" class="control-label sr-only"><?= $words->get('TripLabel_desc'); ?></label>
-            <textarea class="form-control" id="trip-desc" name="trip-desc" cols="48" rows="7" placeholder="<?= $words->getBuffered('TripLabel_desc') ?>"><?php
-                if (!empty($vars['trip-desc'])) {
-                    echo htmlentities($vars['trip-desc'], ENT_COMPAT, 'utf-8');
+            <!-- password -->
+            <div class="form-group has-feedback">
+                <label for="tripdescription" class="control-label sr-only"><?= $words->get('TripLabel_desc'); ?></label>
+            <textarea class="form-control" id="tripdescription" name="tripdescription" cols="48" rows="7"
+                      placeholder="<?= $words->getBuffered('TripLabel_desc') ?>"><?php
+                if (!empty($vars['tripdescription'])) {
+                    echo htmlentities($vars['tripdescription'], ENT_COMPAT, 'utf-8');
                 } ?></textarea>
-            <?php
-            if (in_array('TripErrorDescEmpty', $errors)) {
-                echo '<span class="help-block alert alert-danger">'.$words->get('TripErrorDescEmpty').'</span>';
-            }
-            ?>
-            <span class="help-block"><?=$words->get('TripDesc_desc2')?></span>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading"><?= $words->get("TripsAddLocations") ?></div>
-            <div class="panel-body">
-                <div class="row">
-                    <input type="text" name="trip-location"
-                    <div class="form-group has-feedback col-md-6">
-                        <label for="trip-location-1" class="control-label sr-only"><?php echo $words->get('TripLocation'); ?></label>
-                        <div class="input-group">
-                            <input type="text" class="form-control location-picker" name="trip-location-1" placeholder="<?= $words->getBuffered('TripLocation'); ?>" id="search-location"
-                                   value="" />
-                            <label for="trip-location-1" class="control-label input-group-addon btn"><span class="fa fa-map-marker"></span></label>
-                        </div>
+                <?php
+                if (in_array('TripErrorDescEmpty', $errors)) {
+                    echo '<span class="help-block alert alert-danger">' . $words->get('TripErrorDescEmpty') . '</span>';
+                }
+                ?>
+                <span class="help-block"><?= $words->get('TripDesc_desc2') ?></span>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading"><?= $words->get("TripsAddLocations") ?></div>
+                <div class="panel-body">
+                    <div id="div-location-1" name="div-location-1" class="row">
+                    <?php $locationRow = 1; include SCRIPT_BASE . '/build/trips/templates/locationrow.php'; ?>
                     </div>
-        <div class="form-group has-feedback col-md-3">
-            <label for="trip-startdate-1" class="control-label sr-only"><?php echo $words->get('TripDateStart'); ?></label>
-            <div class="input-group">
-                <input type="text" class="form-control date-picker" name="trip-startdate-1" placeholder="<?= $words->getBuffered('TripDateStart'); ?>" id="trip-startdate-1"
-                       value="" />
-                <label for="trip-startdate-1" class="control-label input-group-addon btn"><span class="fa fa-calendar"></span></label>
-            </div>
-        </div>
-        <div class="form-group has-feedback col-md-3">
-            <label for="trip-enddate-1" class="control-label sr-only"><?php echo $words->get('TripDateEnd'); ?></label>
-                <div class="input-group">
-                    <input type="text" class="form-control date-picker" name="trip-enddate-1" placeholder="<?= $words->getBuffered('TripDateEnd'); ?>" id="trip-enddate-1"
-                           value="" />
-                    <label for="trip-enddate-1" class="control-label input-group-addon btn"><span class="fa fa-calendar"></span></label>
+                    <div id="empty-location"><img id="location-loading"
+                                                  src="/styles/css/minimal/screen/custom/jquery-ui/smoothness/images/ui-anim_basic_16x16.gif" style="display:none;">
+                    </div>
+                    <div id="add-button" class="row"><div class="col-md-12">
+                            <input type="submit" id="trip-add-location" class="btn btn-default pull-right"
+                                   value="<?= $words->getBuffered('TripsAddLocation')  ?>"/><?php echo $words->flushBuffer(); ?></div>
+                    </div>
+                    <?php $map_conf = PVars::getObj('map'); ?>
+                    <input type="hidden" id="osm-tiles-provider-base-url" value="<?php echo ($map_conf->osm_tiles_provider_base_url); ?>"/>
+                    <input type="hidden" id="osm-tiles-provider-api-key" value="<?php echo ($map_conf->osm_tiles_provider_api_key); ?>"/>
+                    <input type="hidden" id="trip-data-min-latitude" value="-60" >
+                    <input type="hidden" id="trip-data-max-latitude" value="70" >
+                    <input type="hidden" id="trip-data-min-longitude" value="-179" >
+                    <input type="hidden" id="trip-data-max-longitude" value="179" >
+                    <div class="row"><div class="col-md-12"><div id="trips-map" style="height:300px;"></div></div></div>
                 </div>
-        </div>
-        <div class="col-md-12" id="trip-map"></div>
-        <input type="submit" class="btn btn-default btn-lg pull-left hidden-xs" value="<?= $buttonTitle ?>"/><?php echo $words->flushBuffer(); ?>
             </div>
-            </div>
-        </div>
-        <div class="control-group">
-        </div>
-            <input type="hidden" name="trip-id" value="<?= $vars['trip-id'] ?>" />
-        <input type="submit" class="btn btn-default btn-lg  pull-right hidden-xs" value="<?= $buttonTitle ?>"/><?php echo $words->flushBuffer(); ?>
-    </form>
+            <input type="hidden" name="tripid" value="<?= $vars['tripid'] ?>"/>
+            <input type="submit" class="btn btn-default btn-lg  pull-right hidden-xs"
+                   value="<?= $buttonTitle ?>"/><?php echo $words->flushBuffer(); ?>
+        </form>
     </div>
 </div>

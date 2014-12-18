@@ -26,7 +26,7 @@ if ($this->allTrips != null && sizeof($this->allTrips) > 0) {
                     <td><?= $trip->tripEndDate ?></td>
                     <td><?= $trip->latitude ?></td>
                     <td><?= $trip->longitude ?></td>
-                    <td><?= $env_conf->baseuri . 'trip/' . $trip->trip_id ?></td>
+                    <td><?= $env_conf->baseuri . 'trips/' . $trip->trip_id ?></td>
                 </tr>
                 <?php
                 // update the bounds of the map with this point

@@ -28,10 +28,12 @@ jQuery.widget( "custom.catcomplete", jQuery.ui.autocomplete, {
     }
 });
 
-jQuery(function() {
+function enableAutoComplete(addMarker) {
     jQuery( ".location-picker" ).on( "keydown", function( event ) {
-		jQuery( "#" + this.id + "-geoname-id" ).val( 0 );
-	});
+        jQuery( "#" + this.id + "-geoname-id" ).val( "" );
+        jQuery( "#" + this.id + "-latitude" ).val( "" );
+        jQuery( "#" + this.id + "-longitude" ).val( "" );
+    });
 
     jQuery( ".location-picker" ).catcomplete({
         source: function (request, response) {
@@ -60,8 +62,12 @@ jQuery(function() {
         change: function (event, ui) {
             if (ui.item == null) {
                 jQuery("#" + this.id + "-geoname-id").val(0);
+                jQuery( "#" + this.id + "-latitude" ).val( "" );
+                jQuery( "#" + this.id + "-longitude" ).val( "" );
             } else {
                 jQuery("#" + this.id + "-geoname-id").val( ui.item.value );
+                jQuery("#" + this.id + "-latitude").val(ui.item.latitude);
+                jQuery("#" + this.id + "-longitude").val(ui.item.longitude);
             }
         },
         select: function (event, ui) {
@@ -70,9 +76,18 @@ jQuery(function() {
             jQuery("#" + this.id + "-longitude").val(ui.item.longitude);
             jQuery(this).val(ui.item.labelnocount);
 
+            addMarker(ui.item.labelnocount, ui.item.value, ui.item.latitude, ui.item.longitude);
+
             return false;
         },
         minLength: 1,
         delay: 500
     });
+}
+
+jQuery(function() {
+    if (addMarker === undefined) {
+        addMarker = function() {};
+    }
+    enableAutoComplete(addMarker);
 });

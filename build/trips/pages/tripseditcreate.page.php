@@ -51,13 +51,20 @@ class TripsEditCreatePage extends TripsBasePage
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery.ui.all.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery-ui-1.10.4.custom.min.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/datetimepicker.css';
+        $stylesheets[] = 'styles/css/bootstrapValidator.min.css';
         $stylesheets[] = 'styles/css/minimal/screen/custom/search.css?1';
         return $stylesheets;
     }
 
     public function getLateLoadScriptfiles() {
         $scriptFiles = parent::getLateLoadScriptfiles();
+        // $scriptFiles[] = 'bootstrapvalidator/bootstrapvalidator.min.js';
+        // $scriptFiles[] = 'bootstrapvalidator/language/' . strtolower($_SESSION['lang']) . '_' . strtoupper($_SESSION['lang']) . '.js';
+        $scriptFiles[] = 'trips/editcreate.js';
         $scriptFiles[] = 'search/searchlocation.js?1';
+//        $scriptFiles[] = 'map/small/tripMap.js';
         return $scriptFiles;
     }
 }

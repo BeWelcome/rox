@@ -104,7 +104,7 @@ bwrox.selectScripts([
     },
     {
         // complete jquery ui with theme smoothness
-        file: "jquery-ui-1.10.4.custom.min.js",
+        file: "jquery-ui-1.11.2/jquery-ui.min.js",
         pages: [
             "activities",
             "search",
@@ -157,7 +157,7 @@ bwrox.selectScripts([
             "signup/3",
             "setlocation",
             "blog",
-            "trip",
+            "trips",
             "activities"
         ]
     },
@@ -165,7 +165,7 @@ bwrox.selectScripts([
         file: "leaflet/plugins/Leaflet.markercluster/0.4.0/leaflet.markercluster.js",
         pages: [
             "activities",
-            "trip"
+            "trips"
         ]
     },
     {
@@ -180,7 +180,7 @@ bwrox.selectScripts([
             "signup/3",
             "setlocation",
             "blog",
-            "trip"
+            "trips"
         ]
     },
     {
@@ -190,7 +190,7 @@ bwrox.selectScripts([
             "signup/3",
             "setlocation",
             "blog",
-            "trip"
+            "trips"
         ]
     },
     {
@@ -235,8 +235,8 @@ bwrox.selectScripts([
     {
         file: "datepicker.js?1",
         pages: [
-            "activities",
-            "blog",
+//            "activities",
+//            "blog",
 //            "trip",
             "admin/treasurer"
         ]

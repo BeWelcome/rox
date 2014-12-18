@@ -47,7 +47,7 @@ Boston, MA  02111-1307, USA.
     $array_of_items =
         array(
             array(
-                'Word',
+                'Words',
                 'AdminWord',
                 'admin/word'
             ),

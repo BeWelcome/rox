@@ -3980,7 +3980,7 @@ a.label:focus {
   vertical-align: baseline;
   white-space: nowrap;
   text-align: center;
-  background-color: #777777;
+  background-color: #000000;
   border-radius: 10px;
 }
 .badge:empty {
@@ -8215,6 +8215,14 @@ h6,
 .dropdown-menu > li > a {
   font-weight: bold;
   font-color: #fff;
+}
+.navbar-username {
+  padding-left: 0px;
+}
+.navbar-username > p {
+  border-left: 1px solid #fff;
+  padding-left: 15px;
+  font-size: 14px;
 }
 .nav > li.disabled > a {
   color: #777777;

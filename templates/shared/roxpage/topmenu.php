@@ -10,6 +10,16 @@
         <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand" href="<?=$active_menu_item == ('main' || '') ? 'main' : ''; ?>"><img height="19px" src="images/logo_index_top.png" alt="Be Welcome" /></a>
+      <?php if ($logged_in) { ?>
+      <div class="navbar-brand navbar-username visible-xs-block">
+          <p>
+              <a href="logout" data-toggle="tooltip" data-placement="bottom" title="<?php echo $words->getBuffered('Logout'); ?>" id="header-logout-link"><?php echo $words->flushBuffer(); ?><i class="fa fa-sign-out" > </i><?php echo $username; ?></a>
+              <span class="<?php echo $badgestyle ?>"><a href="messages" data-toggle="tooltip" data-placement="bottom" title="<?php echo $words->getBuffered('Mymessages'); ?>"><i class="fa fa-envelope" title="<?php echo $words->getBuffered('Mymessages'); ?>"></i>
+                   <?php echo $nbOfNewMessagees;?></a>
+              </span>
+          </p>
+      </div>
+      <?php } ?>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -72,3 +82,10 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container -->
 </nav>
+<script type="text/javascript">
+<!--
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+//-->
+</script>

@@ -193,6 +193,25 @@ class PageWithRoxLayout extends PageWithHTML
         $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
         $rights = new MOD_right();
         $volunteer = $rights->hasRightAny();
+        if ($logged_in) 
+        {
+        $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
+            if (isset($_SESSION["IdMember"])) 
+            {
+                $IdMember = intval($_SESSION["IdMember"]);
+                $roxmodel = new Rox();
+                $numberOfNewMessagees = $roxmodel->getNewMessagesNumber($IdMember);
+                if ($numberOfNewMessagees > 0) 
+                {
+                    $badgestyle = "badge"; 
+                    $nbOfNewMessagees = intval($numberOfNewMessagees);
+                    echo $words->flushBuffer();
+                } else {
+                    $badgestyle = "badge hidden";
+                    $nbOfNewMessagees = '';
+                }
+            }
+        }
         require TEMPLATE_DIR . 'shared/roxpage/topmenu.php';
     }
 

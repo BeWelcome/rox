@@ -59,6 +59,19 @@ function enableAutoComplete(addMarker) {
                 }
             });
         },
+        focus: function( event, ui ) {
+            if (ui != undefined) {
+                jQuery(this).val(ui.item.labelnocount);
+                jQuery("#" + this.id + "-geoname-id").val(ui.item.value);
+                jQuery("#" + this.id + "-latitude").val(ui.item.latitude);
+                jQuery("#" + this.id + "-longitude").val(ui.item.longitude);
+            } else {
+                jQuery("#" + this.id + "-geoname-id").val(0);
+                jQuery( "#" + this.id + "-latitude" ).val( "" );
+                jQuery( "#" + this.id + "-longitude" ).val( "" );
+            }
+            return false;
+        },
         change: function (event, ui) {
             if (ui.item == null) {
                 jQuery("#" + this.id + "-geoname-id").val(0);
@@ -71,12 +84,14 @@ function enableAutoComplete(addMarker) {
             }
         },
         select: function (event, ui) {
+            if (ui == undefined) return false;
+
             jQuery("#" + this.id + "-geoname-id").val(ui.item.value);
             jQuery("#" + this.id + "-latitude").val(ui.item.latitude);
             jQuery("#" + this.id + "-longitude").val(ui.item.longitude);
             jQuery(this).val(ui.item.labelnocount);
 
-            addMarker(ui.item.labelnocount, ui.item.value, ui.item.latitude, ui.item.longitude);
+            addMarker(this.id, ui.item.labelnocount, ui.item.value, ui.item.latitude, ui.item.longitude);
 
             return false;
         },

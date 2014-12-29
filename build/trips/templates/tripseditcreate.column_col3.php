@@ -1,4 +1,12 @@
-<?php
+<script type="text/Javascript">
+    var noMatchesFound = "<?php echo $words->getSilent('SearchNoMatchesFound');?>";
+    var searchSimple = "<?php echo $words->getSilent('SearchMembersSimple');?>";
+    var searchAdvanced = "<?php echo $words->getSilent('SearchMembersAdvanced');?>";
+    var checkAllTextTranslation = "<?php echo $words->getSilent('SearchMembersCheckAll');?>";
+    var uncheckAllTextTranslation = "<?php echo $words->getSilent('SearchMembersUncheckAll');?>";
+    var noneSelectedTextTranslation = "<?php echo $words->getSilent('SearchMembersNoneSelected');?>";
+    var selectedTextTranslation = "<?php echo $words->getSilent('SearchMembersSelected');?>";
+</script><?php
 /**
  * trip createform template
  *
@@ -28,9 +36,7 @@ if ($this->_editing == true) {
     $buttonTitle = $words->getSilent('TripSubmit_create');
 }
 ?>
-<div class="panel panel-default">
-    <div class="panel-heading"><?= $panelTitle ?></div>
-    <div class="panel-body">
+    <h2><?= $panelTitle ?></h2>
         <form method="post" class="form tripseditcreate" role="form">
             <?= $callback_tag; ?>
             <div class="form-group has-feedback">
@@ -45,7 +51,7 @@ if ($this->_editing == true) {
             <div class="form-group has-feedback">
                 <label for="tripdescription" class="control-label sr-only"><?= $words->get('TripLabel_desc'); ?></label>
             <textarea class="form-control" id="tripdescription" name="tripdescription" cols="48" rows="7"
-                      placeholder="<?= $words->getBuffered('TripLabel_desc') ?>"><?php
+                      placeholder="<?= $words->getBuffered('TripDesc_desc2') ?>"><?php
                 if (!empty($vars['tripdescription'])) {
                     echo htmlentities($vars['tripdescription'], ENT_COMPAT, 'utf-8');
                 } ?></textarea>
@@ -54,10 +60,9 @@ if ($this->_editing == true) {
                     echo '<span class="help-block alert alert-danger">' . $words->get('TripErrorDescEmpty') . '</span>';
                 }
                 ?>
-                <span class="help-block"><?= $words->get('TripDesc_desc2') ?></span>
             </div>
             <div class="panel panel-default">
-                <div class="panel-heading"><?= $words->get("TripsAddLocations") ?></div>
+                <div class="panel-heading"><?= $words->get("TripsLocations") ?></div>
                 <div class="panel-body">
                     <div id="div-location-1" name="div-location-1" class="row">
                     <?php $locationRow = 1; include SCRIPT_BASE . '/build/trips/templates/locationrow.php'; ?>
@@ -67,7 +72,7 @@ if ($this->_editing == true) {
                     </div>
                     <div id="add-button" class="row"><div class="col-md-12">
                             <input type="submit" id="trip-add-location" class="btn btn-default pull-right"
-                                   value="<?= $words->getBuffered('TripsAddLocation')  ?>"/><?php echo $words->flushBuffer(); ?></div>
+                                   value="<?= $words->getBuffered('TripsAddLocation')  ?>" ><?php echo $words->flushBuffer(); ?></div>
                     </div>
                     <?php $map_conf = PVars::getObj('map'); ?>
                     <input type="hidden" id="osm-tiles-provider-base-url" value="<?php echo ($map_conf->osm_tiles_provider_base_url); ?>"/>
@@ -83,5 +88,3 @@ if ($this->_editing == true) {
             <input type="submit" class="btn btn-default btn-lg  pull-right hidden-xs"
                    value="<?= $buttonTitle ?>"/><?php echo $words->flushBuffer(); ?>
         </form>
-    </div>
-</div>

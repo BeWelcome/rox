@@ -64,10 +64,10 @@ function fitMapToBounds(map) {
     var tripDataMinLongitude = parseFloat(jQuery('#trip-data-min-longitude').val());
     var tripDataMaxLongitude = parseFloat(jQuery('#trip-data-max-longitude').val());
 
-    tripDataMaxLatitude = (isNaN(tripDataMaxLatitude)) ? 90 : tripDataMaxLatitude;
-    tripDataMinLatitude = (isNaN(tripDataMinLatitude)) ? -90 : tripDataMinLatitude;
-    tripDataMaxLongitude = (isNaN(tripDataMaxLongitude)) ? 90 : tripDataMaxLongitude;
-    tripDataMinLongitude = (isNaN(tripDataMinLongitude)) ? -90 : tripDataMinLongitude;
+    tripDataMaxLatitude = (isNaN(tripDataMaxLatitude)) ? 70 : tripDataMaxLatitude;
+    tripDataMinLatitude = (isNaN(tripDataMinLatitude)) ? -60 : tripDataMinLatitude;
+    tripDataMaxLongitude = (isNaN(tripDataMaxLongitude)) ? 179 : tripDataMaxLongitude;
+    tripDataMinLongitude = (isNaN(tripDataMinLongitude)) ? -179 : tripDataMinLongitude;
 
     bwrox.debug(tripDataMinLatitude, tripDataMaxLatitude, tripDataMinLongitude, tripDataMaxLongitude);
     var southWest = new L.LatLng(tripDataMinLatitude, tripDataMinLongitude);

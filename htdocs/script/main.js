@@ -393,10 +393,6 @@ bwrox.selectScripts([
         pages: ["blog"]
     },
     {
-        file: "map/small/tripMap.js?4",
-        pages: ["trip"]
-    },
-    {
         file: "searchmembers.js?4",
         pages: ["searchmembers"]
     },

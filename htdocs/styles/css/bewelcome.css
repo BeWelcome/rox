@@ -5433,8 +5433,8 @@ button.close {
 .panel-body:after,
 .modal-footer:before,
 .modal-footer:after,
-.subcolumns:before,
-.subcolumns:after {
+.ordivider .subcolumns:before,
+.ordivider .subcolumns:after {
   content: " ";
   display: table;
 }
@@ -5453,7 +5453,7 @@ button.close {
 .pager:after,
 .panel-body:after,
 .modal-footer:after,
-.subcolumns:after {
+.ordivider .subcolumns:after {
   clear: both;
 }
 .center-block {
@@ -7828,364 +7828,6 @@ body {
   padding-top: 70px;
   background: url("../../images/bggrey.png") repeat-x scroll left top #f7f7f7;
 }
-.page-teaser {
-  border-bottom: 1px solid #EEEEEE;
-  margin: 30px 0 -1px;
-}
-.page-teaser > h1 {
-  font-size: 24px;
-}
-@media (min-width: 768px) {
-  .page-teaser > h1 {
-    font-size: 36px;
-  }
-}
-/**
-   * Footer
-   * (en) Generic classes for footer
-   *
-   * @section content-footer
-   */
-footer a {
-  margin: 0.1em 0 0 0;
-  padding: 0.2em 0 0 0;
-  color: #999;
-  font-weight: normal;
-  text-align: left;
-  white-space: nowrap;
-}
-footer a:hover {
-  text-decoration: underline;
-}
-footer a:focus {
-  text-decoration: underline;
-}
-footer .linklist {
-  padding-top: 0.2em;
-}
-footer {
-  padding: 2em;
-  color: #999;
-}
-footer a:hover {
-  color: #999;
-  text-decoration: underline;
-}
-footer a:focus {
-  color: #999;
-  text-decoration: underline;
-}
-.pagination-nomargin {
-  margin: 0;
-}
-.button,
-input.button,
-.control-links a,
-.control-links input,
-a.cancel {
-  display: inline-block;
-  margin-bottom: 0;
-  font-weight: bold;
-  text-align: center;
-  vertical-align: middle;
-  touch-action: manipulation;
-  cursor: pointer;
-  background-image: none;
-  border: 1px solid transparent;
-  white-space: nowrap;
-  padding: 6px 12px;
-  font-size: 14px;
-  line-height: 1.42857143;
-  border-radius: 0px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  color: #ff8800;
-  background-color: #eeeeee;
-  border-color: #cccccc;
-  border-color: #E5E5E5 #BBBBBB #BBBBBB #E5E5E5;
-  border-style: solid;
-  border-width: 1px;
-}
-.button:focus,
-input.button:focus,
-.control-links a:focus,
-.control-links input:focus,
-a.cancel:focus,
-.button:active:focus,
-input.button:active:focus,
-.control-links a:active:focus,
-.control-links input:active:focus,
-a.cancel:active:focus,
-.button.active:focus,
-input.button.active:focus,
-.control-links a.active:focus,
-.control-links input.active:focus,
-a.cancel.active:focus,
-.button.focus,
-input.button.focus,
-.control-links a.focus,
-.control-links input.focus,
-a.cancel.focus,
-.button:active.focus,
-input.button:active.focus,
-.control-links a:active.focus,
-.control-links input:active.focus,
-a.cancel:active.focus,
-.button.active.focus,
-input.button.active.focus,
-.control-links a.active.focus,
-.control-links input.active.focus,
-a.cancel.active.focus {
-  outline: thin dotted;
-  outline: 5px auto -webkit-focus-ring-color;
-  outline-offset: -2px;
-}
-.button:hover,
-input.button:hover,
-.control-links a:hover,
-.control-links input:hover,
-a.cancel:hover,
-.button:focus,
-input.button:focus,
-.control-links a:focus,
-.control-links input:focus,
-a.cancel:focus,
-.button.focus,
-input.button.focus,
-.control-links a.focus,
-.control-links input.focus,
-a.cancel.focus {
-  color: #ff8800;
-  text-decoration: none;
-}
-.button:active,
-input.button:active,
-.control-links a:active,
-.control-links input:active,
-a.cancel:active,
-.button.active,
-input.button.active,
-.control-links a.active,
-.control-links input.active,
-a.cancel.active {
-  outline: 0;
-  background-image: none;
-  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-}
-.button.disabled,
-input.button.disabled,
-.control-links a.disabled,
-.control-links input.disabled,
-a.cancel.disabled,
-.button[disabled],
-input.button[disabled],
-.control-links a[disabled],
-.control-links input[disabled],
-a.cancel[disabled],
-fieldset[disabled] .button,
-fieldset[disabled] input.button,
-fieldset[disabled] .control-links a,
-fieldset[disabled] .control-links input,
-fieldset[disabled] a.cancel {
-  cursor: not-allowed;
-  pointer-events: none;
-  opacity: 0.65;
-  filter: alpha(opacity=65);
-  -webkit-box-shadow: none;
-  box-shadow: none;
-}
-.button:hover,
-input.button:hover,
-.control-links a:hover,
-.control-links input:hover,
-a.cancel:hover,
-.button:focus,
-input.button:focus,
-.control-links a:focus,
-.control-links input:focus,
-a.cancel:focus,
-.button.focus,
-input.button.focus,
-.control-links a.focus,
-.control-links input.focus,
-a.cancel.focus,
-.button:active,
-input.button:active,
-.control-links a:active,
-.control-links input:active,
-a.cancel:active,
-.button.active,
-input.button.active,
-.control-links a.active,
-.control-links input.active,
-a.cancel.active,
-.open > .dropdown-toggle.button,
-.open > .dropdown-toggleinput.button,
-.open > .dropdown-toggle.control-links a,
-.open > .dropdown-toggle.control-links input,
-.open > .dropdown-togglea.cancel {
-  color: #ff8800;
-  background-color: #d5d5d5;
-  border-color: #adadad;
-}
-.button:active,
-input.button:active,
-.control-links a:active,
-.control-links input:active,
-a.cancel:active,
-.button.active,
-input.button.active,
-.control-links a.active,
-.control-links input.active,
-a.cancel.active,
-.open > .dropdown-toggle.button,
-.open > .dropdown-toggleinput.button,
-.open > .dropdown-toggle.control-links a,
-.open > .dropdown-toggle.control-links input,
-.open > .dropdown-togglea.cancel {
-  background-image: none;
-}
-.button.disabled,
-input.button.disabled,
-.control-links a.disabled,
-.control-links input.disabled,
-a.cancel.disabled,
-.button[disabled],
-input.button[disabled],
-.control-links a[disabled],
-.control-links input[disabled],
-a.cancel[disabled],
-fieldset[disabled] .button,
-fieldset[disabled] input.button,
-fieldset[disabled] .control-links a,
-fieldset[disabled] .control-links input,
-fieldset[disabled] a.cancel,
-.button.disabled:hover,
-input.button.disabled:hover,
-.control-links a.disabled:hover,
-.control-links input.disabled:hover,
-a.cancel.disabled:hover,
-.button[disabled]:hover,
-input.button[disabled]:hover,
-.control-links a[disabled]:hover,
-.control-links input[disabled]:hover,
-a.cancel[disabled]:hover,
-fieldset[disabled] .button:hover,
-fieldset[disabled] input.button:hover,
-fieldset[disabled] .control-links a:hover,
-fieldset[disabled] .control-links input:hover,
-fieldset[disabled] a.cancel:hover,
-.button.disabled:focus,
-input.button.disabled:focus,
-.control-links a.disabled:focus,
-.control-links input.disabled:focus,
-a.cancel.disabled:focus,
-.button[disabled]:focus,
-input.button[disabled]:focus,
-.control-links a[disabled]:focus,
-.control-links input[disabled]:focus,
-a.cancel[disabled]:focus,
-fieldset[disabled] .button:focus,
-fieldset[disabled] input.button:focus,
-fieldset[disabled] .control-links a:focus,
-fieldset[disabled] .control-links input:focus,
-fieldset[disabled] a.cancel:focus,
-.button.disabled.focus,
-input.button.disabled.focus,
-.control-links a.disabled.focus,
-.control-links input.disabled.focus,
-a.cancel.disabled.focus,
-.button[disabled].focus,
-input.button[disabled].focus,
-.control-links a[disabled].focus,
-.control-links input[disabled].focus,
-a.cancel[disabled].focus,
-fieldset[disabled] .button.focus,
-fieldset[disabled] input.button.focus,
-fieldset[disabled] .control-links a.focus,
-fieldset[disabled] .control-links input.focus,
-fieldset[disabled] a.cancel.focus,
-.button.disabled:active,
-input.button.disabled:active,
-.control-links a.disabled:active,
-.control-links input.disabled:active,
-a.cancel.disabled:active,
-.button[disabled]:active,
-input.button[disabled]:active,
-.control-links a[disabled]:active,
-.control-links input[disabled]:active,
-a.cancel[disabled]:active,
-fieldset[disabled] .button:active,
-fieldset[disabled] input.button:active,
-fieldset[disabled] .control-links a:active,
-fieldset[disabled] .control-links input:active,
-fieldset[disabled] a.cancel:active,
-.button.disabled.active,
-input.button.disabled.active,
-.control-links a.disabled.active,
-.control-links input.disabled.active,
-a.cancel.disabled.active,
-.button[disabled].active,
-input.button[disabled].active,
-.control-links a[disabled].active,
-.control-links input[disabled].active,
-a.cancel[disabled].active,
-fieldset[disabled] .button.active,
-fieldset[disabled] input.button.active,
-fieldset[disabled] .control-links a.active,
-fieldset[disabled] .control-links input.active,
-fieldset[disabled] a.cancel.active {
-  background-color: #eeeeee;
-  border-color: #cccccc;
-}
-.button .badge,
-input.button .badge,
-.control-links a .badge,
-.control-links input .badge,
-a.cancel .badge {
-  color: #eeeeee;
-  background-color: #ff8800;
-}
-h1,
-.h1,
-h2,
-.h2,
-h3,
-.h3,
-h4,
-.h4,
-h5,
-.h5,
-h6,
-.h6 {
-  margin-top: 0;
-}
-.progress-bar > .bw-progress > a {
-  color: #fff;
-  display: block;
-}
-.white-text {
-  color: #fff;
-}
-.panel-heading .accordion-toggle:after {
-  /* symbol for "opening" panels */
-  font-family: 'FontAwesome';
-  /* essential for FontAwesome */
-  content: "\f077";
-  /* adjust as needed */
-  float: right;
-  /* adjust as needed */
-  color: grey;
-  /* adjust as needed */
-}
-.panel-heading .accordion-toggle.collapsed:after {
-  /* symbol for "collapsed" panels */
-  content: "\f078";
-  /* adjust as needed */
-}
 .navbar-inverse {
   background-image: -webkit-linear-gradient(top, #ffbc00 0%, #ff8700 100%);
   background-image: -o-linear-gradient(top, #ffbc00 0%, #ff8700 100%);
@@ -8223,6 +7865,25 @@ h6,
   border-left: 1px solid #fff;
   padding-left: 15px;
   font-size: 14px;
+}
+.topnav > li > a,
+i {
+  color: #777;
+}
+.page-teaser {
+  border-bottom: 1px solid #EEEEEE;
+  margin: 30px 0 -1px;
+}
+.page-teaser > h1 {
+  font-size: 24px;
+}
+@media (min-width: 768px) {
+  .page-teaser > h1 {
+    font-size: 36px;
+  }
+}
+.submenu {
+  margin-bottom: 1.5em;
 }
 .nav > li.disabled > a {
   color: #777777;
@@ -8285,12 +7946,35 @@ h6,
     margin-bottom: 0;
   }
 }
-/* topnav menu (little greys) */
-.topnav > li > a,
-i {
-  color: #777;
+footer a {
+  margin: 0.1em 0 0 0;
+  padding: 0.2em 0 0 0;
+  color: #999;
+  font-weight: normal;
+  text-align: left;
+  white-space: nowrap;
 }
-/* Login Widget */
+footer a:hover {
+  text-decoration: underline;
+}
+footer a:focus {
+  text-decoration: underline;
+}
+footer .linklist {
+  padding-top: 0.2em;
+}
+footer {
+  padding: 2em;
+  color: #999;
+}
+footer a:hover {
+  color: #999;
+  text-decoration: underline;
+}
+footer a:focus {
+  color: #999;
+  text-decoration: underline;
+}
 #login-widget {
   padding: 1em;
   padding-top: 0;
@@ -8349,9 +8033,699 @@ i {
   text-transform: uppercase;
   width: 60px;
 }
-th,
-td {
+.ordivider .pagination-nomargin {
+  margin: 0;
+}
+.ordivider .button,
+.ordivider input.button,
+.ordivider .control-links a,
+.ordivider .control-links input,
+.ordivider a.cancel {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 0px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: #ff8800;
+  background-color: #eeeeee;
+  border-color: #cccccc;
+  border-color: #E5E5E5 #BBBBBB #BBBBBB #E5E5E5;
+  border-style: solid;
+  border-width: 1px;
+}
+.ordivider .button:focus,
+.ordivider input.button:focus,
+.ordivider .control-links a:focus,
+.ordivider .control-links input:focus,
+.ordivider a.cancel:focus,
+.ordivider .button:active:focus,
+.ordivider input.button:active:focus,
+.ordivider .control-links a:active:focus,
+.ordivider .control-links input:active:focus,
+.ordivider a.cancel:active:focus,
+.ordivider .button.active:focus,
+.ordivider input.button.active:focus,
+.ordivider .control-links a.active:focus,
+.ordivider .control-links input.active:focus,
+.ordivider a.cancel.active:focus,
+.ordivider .button.focus,
+.ordivider input.button.focus,
+.ordivider .control-links a.focus,
+.ordivider .control-links input.focus,
+.ordivider a.cancel.focus,
+.ordivider .button:active.focus,
+.ordivider input.button:active.focus,
+.ordivider .control-links a:active.focus,
+.ordivider .control-links input:active.focus,
+.ordivider a.cancel:active.focus,
+.ordivider .button.active.focus,
+.ordivider input.button.active.focus,
+.ordivider .control-links a.active.focus,
+.ordivider .control-links input.active.focus,
+.ordivider a.cancel.active.focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.ordivider .button:hover,
+.ordivider input.button:hover,
+.ordivider .control-links a:hover,
+.ordivider .control-links input:hover,
+.ordivider a.cancel:hover,
+.ordivider .button:focus,
+.ordivider input.button:focus,
+.ordivider .control-links a:focus,
+.ordivider .control-links input:focus,
+.ordivider a.cancel:focus,
+.ordivider .button.focus,
+.ordivider input.button.focus,
+.ordivider .control-links a.focus,
+.ordivider .control-links input.focus,
+.ordivider a.cancel.focus {
+  color: #ff8800;
+  text-decoration: none;
+}
+.ordivider .button:active,
+.ordivider input.button:active,
+.ordivider .control-links a:active,
+.ordivider .control-links input:active,
+.ordivider a.cancel:active,
+.ordivider .button.active,
+.ordivider input.button.active,
+.ordivider .control-links a.active,
+.ordivider .control-links input.active,
+.ordivider a.cancel.active {
+  outline: 0;
+  background-image: none;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.ordivider .button.disabled,
+.ordivider input.button.disabled,
+.ordivider .control-links a.disabled,
+.ordivider .control-links input.disabled,
+.ordivider a.cancel.disabled,
+.ordivider .button[disabled],
+.ordivider input.button[disabled],
+.ordivider .control-links a[disabled],
+.ordivider .control-links input[disabled],
+.ordivider a.cancel[disabled],
+fieldset[disabled] .ordivider .button,
+fieldset[disabled] .ordivider input.button,
+fieldset[disabled] .ordivider .control-links a,
+fieldset[disabled] .ordivider .control-links input,
+fieldset[disabled] .ordivider a.cancel {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.ordivider .button:hover,
+.ordivider input.button:hover,
+.ordivider .control-links a:hover,
+.ordivider .control-links input:hover,
+.ordivider a.cancel:hover,
+.ordivider .button:focus,
+.ordivider input.button:focus,
+.ordivider .control-links a:focus,
+.ordivider .control-links input:focus,
+.ordivider a.cancel:focus,
+.ordivider .button.focus,
+.ordivider input.button.focus,
+.ordivider .control-links a.focus,
+.ordivider .control-links input.focus,
+.ordivider a.cancel.focus,
+.ordivider .button:active,
+.ordivider input.button:active,
+.ordivider .control-links a:active,
+.ordivider .control-links input:active,
+.ordivider a.cancel:active,
+.ordivider .button.active,
+.ordivider input.button.active,
+.ordivider .control-links a.active,
+.ordivider .control-links input.active,
+.ordivider a.cancel.active,
+.open > .dropdown-toggle.ordivider .button,
+.open > .dropdown-toggle.ordivider input.button,
+.open > .dropdown-toggle.ordivider .control-links a,
+.open > .dropdown-toggle.ordivider .control-links input,
+.open > .dropdown-toggle.ordivider a.cancel {
+  color: #ff8800;
+  background-color: #d5d5d5;
+  border-color: #adadad;
+}
+.ordivider .button:active,
+.ordivider input.button:active,
+.ordivider .control-links a:active,
+.ordivider .control-links input:active,
+.ordivider a.cancel:active,
+.ordivider .button.active,
+.ordivider input.button.active,
+.ordivider .control-links a.active,
+.ordivider .control-links input.active,
+.ordivider a.cancel.active,
+.open > .dropdown-toggle.ordivider .button,
+.open > .dropdown-toggle.ordivider input.button,
+.open > .dropdown-toggle.ordivider .control-links a,
+.open > .dropdown-toggle.ordivider .control-links input,
+.open > .dropdown-toggle.ordivider a.cancel {
+  background-image: none;
+}
+.ordivider .button.disabled,
+.ordivider input.button.disabled,
+.ordivider .control-links a.disabled,
+.ordivider .control-links input.disabled,
+.ordivider a.cancel.disabled,
+.ordivider .button[disabled],
+.ordivider input.button[disabled],
+.ordivider .control-links a[disabled],
+.ordivider .control-links input[disabled],
+.ordivider a.cancel[disabled],
+fieldset[disabled] .ordivider .button,
+fieldset[disabled] .ordivider input.button,
+fieldset[disabled] .ordivider .control-links a,
+fieldset[disabled] .ordivider .control-links input,
+fieldset[disabled] .ordivider a.cancel,
+.ordivider .button.disabled:hover,
+.ordivider input.button.disabled:hover,
+.ordivider .control-links a.disabled:hover,
+.ordivider .control-links input.disabled:hover,
+.ordivider a.cancel.disabled:hover,
+.ordivider .button[disabled]:hover,
+.ordivider input.button[disabled]:hover,
+.ordivider .control-links a[disabled]:hover,
+.ordivider .control-links input[disabled]:hover,
+.ordivider a.cancel[disabled]:hover,
+fieldset[disabled] .ordivider .button:hover,
+fieldset[disabled] .ordivider input.button:hover,
+fieldset[disabled] .ordivider .control-links a:hover,
+fieldset[disabled] .ordivider .control-links input:hover,
+fieldset[disabled] .ordivider a.cancel:hover,
+.ordivider .button.disabled:focus,
+.ordivider input.button.disabled:focus,
+.ordivider .control-links a.disabled:focus,
+.ordivider .control-links input.disabled:focus,
+.ordivider a.cancel.disabled:focus,
+.ordivider .button[disabled]:focus,
+.ordivider input.button[disabled]:focus,
+.ordivider .control-links a[disabled]:focus,
+.ordivider .control-links input[disabled]:focus,
+.ordivider a.cancel[disabled]:focus,
+fieldset[disabled] .ordivider .button:focus,
+fieldset[disabled] .ordivider input.button:focus,
+fieldset[disabled] .ordivider .control-links a:focus,
+fieldset[disabled] .ordivider .control-links input:focus,
+fieldset[disabled] .ordivider a.cancel:focus,
+.ordivider .button.disabled.focus,
+.ordivider input.button.disabled.focus,
+.ordivider .control-links a.disabled.focus,
+.ordivider .control-links input.disabled.focus,
+.ordivider a.cancel.disabled.focus,
+.ordivider .button[disabled].focus,
+.ordivider input.button[disabled].focus,
+.ordivider .control-links a[disabled].focus,
+.ordivider .control-links input[disabled].focus,
+.ordivider a.cancel[disabled].focus,
+fieldset[disabled] .ordivider .button.focus,
+fieldset[disabled] .ordivider input.button.focus,
+fieldset[disabled] .ordivider .control-links a.focus,
+fieldset[disabled] .ordivider .control-links input.focus,
+fieldset[disabled] .ordivider a.cancel.focus,
+.ordivider .button.disabled:active,
+.ordivider input.button.disabled:active,
+.ordivider .control-links a.disabled:active,
+.ordivider .control-links input.disabled:active,
+.ordivider a.cancel.disabled:active,
+.ordivider .button[disabled]:active,
+.ordivider input.button[disabled]:active,
+.ordivider .control-links a[disabled]:active,
+.ordivider .control-links input[disabled]:active,
+.ordivider a.cancel[disabled]:active,
+fieldset[disabled] .ordivider .button:active,
+fieldset[disabled] .ordivider input.button:active,
+fieldset[disabled] .ordivider .control-links a:active,
+fieldset[disabled] .ordivider .control-links input:active,
+fieldset[disabled] .ordivider a.cancel:active,
+.ordivider .button.disabled.active,
+.ordivider input.button.disabled.active,
+.ordivider .control-links a.disabled.active,
+.ordivider .control-links input.disabled.active,
+.ordivider a.cancel.disabled.active,
+.ordivider .button[disabled].active,
+.ordivider input.button[disabled].active,
+.ordivider .control-links a[disabled].active,
+.ordivider .control-links input[disabled].active,
+.ordivider a.cancel[disabled].active,
+fieldset[disabled] .ordivider .button.active,
+fieldset[disabled] .ordivider input.button.active,
+fieldset[disabled] .ordivider .control-links a.active,
+fieldset[disabled] .ordivider .control-links input.active,
+fieldset[disabled] .ordivider a.cancel.active {
+  background-color: #eeeeee;
+  border-color: #cccccc;
+}
+.ordivider .button .badge,
+.ordivider input.button .badge,
+.ordivider .control-links a .badge,
+.ordivider .control-links input .badge,
+.ordivider a.cancel .badge {
+  color: #eeeeee;
+  background-color: #ff8800;
+}
+.ordivider h1,
+.ordivider .h1,
+.ordivider h2,
+.ordivider .h2,
+.ordivider h3,
+.ordivider .h3,
+.ordivider h4,
+.ordivider .h4,
+.ordivider h5,
+.ordivider .h5,
+.ordivider h6,
+.ordivider .h6 {
+  margin-top: 0;
+}
+.ordivider .subcolumns {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+.ordivider .c50l {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .ordivider .c50l {
+    float: left;
+    width: 50%;
+  }
+}
+.ordivider .c50r {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .ordivider .c50r {
+    float: left;
+    width: 50%;
+  }
+}
+.ordivider .c66l {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .ordivider .c66l {
+    float: left;
+    width: 66.66666667%;
+  }
+}
+.ordivider .c33r {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .ordivider .c33r {
+    float: left;
+    width: 33.33333333%;
+  }
+}
+.ordivider .c33l {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .ordivider .c33l {
+    float: left;
+    width: 33.33333333%;
+  }
+}
+.ordivider .c66r {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .ordivider .c66r {
+    float: left;
+    width: 66.66666667%;
+  }
+}
+.ordivider .c75l {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .ordivider .c75l {
+    float: left;
+    width: 75%;
+  }
+}
+.ordivider .c25r {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .ordivider .c25r {
+    float: left;
+    width: 25%;
+  }
+}
+.ordivider .c25l {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .ordivider .c25l {
+    float: left;
+    width: 25%;
+  }
+}
+.ordivider .c75r {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .ordivider .c75r {
+    float: left;
+    width: 75%;
+  }
+}
+.ordivider .c62l {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .ordivider .c62l {
+    float: left;
+    width: 58.33333333%;
+  }
+}
+.ordivider .c38r {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .ordivider .c38r {
+    float: left;
+    width: 41.66666667%;
+  }
+}
+.ordivider .c38l {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .ordivider .c38l {
+    float: left;
+    width: 41.66666667%;
+  }
+}
+.ordivider .c62r {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .ordivider .c62r {
+    float: left;
+    width: 58.33333333%;
+  }
+}
+.ordivider #col1 {
+  float: left;
+  width: 100%;
+  left: 0%;
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .ordivider #col1 {
+    float: left;
+    width: 33.33333333%;
+  }
+}
+@media (min-width: 768px) {
+  .ordivider #col1 {
+    left: 66.66666667%;
+  }
+}
+@media (min-width: 992px) {
+  .ordivider #col1 {
+    float: left;
+    width: 25%;
+  }
+}
+@media (min-width: 992px) {
+  .ordivider #col1 {
+    left: 75%;
+  }
+}
+@media (min-width: 1200px) {
+  .ordivider #col1 {
+    float: left;
+    width: 25%;
+  }
+}
+@media (min-width: 1200px) {
+  .ordivider #col1 {
+    left: 75%;
+  }
+}
+.ordivider #col2 {
+  float: left;
+  width: 100%;
+  left: 0%;
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .ordivider #col2 {
+    float: left;
+    width: 33.33333333%;
+  }
+}
+@media (min-width: 768px) {
+  .ordivider #col2 {
+    left: 66.66666667%;
+  }
+}
+@media (min-width: 992px) {
+  .ordivider #col2 {
+    float: left;
+    width: 25%;
+  }
+}
+@media (min-width: 992px) {
+  .ordivider #col2 {
+    left: 75%;
+  }
+}
+@media (min-width: 1200px) {
+  .ordivider #col2 {
+    float: left;
+    width: 25%;
+  }
+}
+@media (min-width: 1200px) {
+  .ordivider #col2 {
+    left: 75%;
+  }
+}
+.ordivider #col3 {
+  float: left;
+  width: 100%;
+  right: 0%;
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .ordivider #col3 {
+    float: left;
+    width: 66.66666667%;
+  }
+}
+@media (min-width: 768px) {
+  .ordivider #col3 {
+    right: 33.33333333%;
+  }
+}
+@media (min-width: 992px) {
+  .ordivider #col3 {
+    float: left;
+    width: 75%;
+  }
+}
+@media (min-width: 992px) {
+  .ordivider #col3 {
+    right: 25%;
+  }
+}
+@media (min-width: 1200px) {
+  .ordivider #col3 {
+    float: left;
+    width: 75%;
+  }
+}
+@media (min-width: 1200px) {
+  .ordivider #col3 {
+    right: 25%;
+  }
+}
+.ordivider #col1_left {
+  float: left;
+  width: 100%;
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .ordivider #col1_left {
+    float: left;
+    width: 33.33333333%;
+  }
+}
+@media (min-width: 992px) {
+  .ordivider #col1_left {
+    float: left;
+    width: 25%;
+  }
+}
+@media (min-width: 1200px) {
+  .ordivider #col1_left {
+    float: left;
+    width: 25%;
+  }
+}
+.ordivider #col2_left {
+  float: left;
+  width: 100%;
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .ordivider #col2_left {
+    float: left;
+    width: 33.33333333%;
+  }
+}
+@media (min-width: 992px) {
+  .ordivider #col2_left {
+    float: left;
+    width: 25%;
+  }
+}
+@media (min-width: 1200px) {
+  .ordivider #col2_left {
+    float: left;
+    width: 25%;
+  }
+}
+.ordivider #col3_right {
+  float: left;
+  width: 100%;
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .ordivider #col3_right {
+    float: left;
+    width: 66.66666667%;
+  }
+}
+@media (min-width: 992px) {
+  .ordivider #col3_right {
+    float: left;
+    width: 75%;
+  }
+}
+@media (min-width: 1200px) {
+  .ordivider #col3_right {
+    float: left;
+    width: 75%;
+  }
+}
+.ordivider .bw-row {
+  padding: .5em 0;
+}
+.ordivider .white-text {
+  color: #fff;
+}
+.ordivider th,
+.ordivider td {
   padding: 0.5em;
+}
+.ordivider .progress-bar > .bw-progress > a {
+  color: #fff;
+  display: block;
+}
+.ordivider .panel-heading .accordion-toggle:after {
+  /* symbol for "opening" panels */
+  font-family: 'FontAwesome';
+  /* essential for FontAwesome */
+  content: "\f077";
+  /* adjust as needed */
+  float: right;
+  /* adjust as needed */
+  color: grey;
+  /* adjust as needed */
+}
+.ordivider .panel-heading .accordion-toggle.collapsed:after {
+  /* symbol for "collapsed" panels */
+  content: "\f078";
+  /* adjust as needed */
 }
 #BeWelcome {
   opacity: 0;
@@ -8393,388 +8767,6 @@ td {
   }
   to {
     opacity: 1;
-  }
-}
-.submenu {
-  margin-bottom: 1.5em;
-}
-.bw-row {
-  padding: .5em 0;
-}
-.subcolumns {
-  margin-left: -15px;
-  margin-right: -15px;
-}
-.c50l {
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-@media (min-width: 768px) {
-  .c50l {
-    float: left;
-    width: 50%;
-  }
-}
-.c50r {
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-@media (min-width: 768px) {
-  .c50r {
-    float: left;
-    width: 50%;
-  }
-}
-.c66l {
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-@media (min-width: 768px) {
-  .c66l {
-    float: left;
-    width: 66.66666667%;
-  }
-}
-.c33r {
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-@media (min-width: 768px) {
-  .c33r {
-    float: left;
-    width: 33.33333333%;
-  }
-}
-.c33l {
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-@media (min-width: 768px) {
-  .c33l {
-    float: left;
-    width: 33.33333333%;
-  }
-}
-.c66r {
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-@media (min-width: 768px) {
-  .c66r {
-    float: left;
-    width: 66.66666667%;
-  }
-}
-.c75l {
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-@media (min-width: 768px) {
-  .c75l {
-    float: left;
-    width: 75%;
-  }
-}
-.c25r {
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-@media (min-width: 768px) {
-  .c25r {
-    float: left;
-    width: 25%;
-  }
-}
-.c25l {
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-@media (min-width: 768px) {
-  .c25l {
-    float: left;
-    width: 25%;
-  }
-}
-.c75r {
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-@media (min-width: 768px) {
-  .c75r {
-    float: left;
-    width: 75%;
-  }
-}
-.c62l {
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-@media (min-width: 768px) {
-  .c62l {
-    float: left;
-    width: 58.33333333%;
-  }
-}
-.c38r {
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-@media (min-width: 768px) {
-  .c38r {
-    float: left;
-    width: 41.66666667%;
-  }
-}
-.c38l {
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-@media (min-width: 768px) {
-  .c38l {
-    float: left;
-    width: 41.66666667%;
-  }
-}
-.c62r {
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-@media (min-width: 768px) {
-  .c62r {
-    float: left;
-    width: 58.33333333%;
-  }
-}
-#col1 {
-  float: left;
-  width: 100%;
-  left: 0%;
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-@media (min-width: 768px) {
-  #col1 {
-    float: left;
-    width: 33.33333333%;
-  }
-}
-@media (min-width: 768px) {
-  #col1 {
-    left: 66.66666667%;
-  }
-}
-@media (min-width: 992px) {
-  #col1 {
-    float: left;
-    width: 25%;
-  }
-}
-@media (min-width: 992px) {
-  #col1 {
-    left: 75%;
-  }
-}
-@media (min-width: 1200px) {
-  #col1 {
-    float: left;
-    width: 25%;
-  }
-}
-@media (min-width: 1200px) {
-  #col1 {
-    left: 75%;
-  }
-}
-#col2 {
-  float: left;
-  width: 100%;
-  left: 0%;
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-@media (min-width: 768px) {
-  #col2 {
-    float: left;
-    width: 33.33333333%;
-  }
-}
-@media (min-width: 768px) {
-  #col2 {
-    left: 66.66666667%;
-  }
-}
-@media (min-width: 992px) {
-  #col2 {
-    float: left;
-    width: 25%;
-  }
-}
-@media (min-width: 992px) {
-  #col2 {
-    left: 75%;
-  }
-}
-@media (min-width: 1200px) {
-  #col2 {
-    float: left;
-    width: 25%;
-  }
-}
-@media (min-width: 1200px) {
-  #col2 {
-    left: 75%;
-  }
-}
-#col3 {
-  float: left;
-  width: 100%;
-  right: 0%;
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-@media (min-width: 768px) {
-  #col3 {
-    float: left;
-    width: 66.66666667%;
-  }
-}
-@media (min-width: 768px) {
-  #col3 {
-    right: 33.33333333%;
-  }
-}
-@media (min-width: 992px) {
-  #col3 {
-    float: left;
-    width: 75%;
-  }
-}
-@media (min-width: 992px) {
-  #col3 {
-    right: 25%;
-  }
-}
-@media (min-width: 1200px) {
-  #col3 {
-    float: left;
-    width: 75%;
-  }
-}
-@media (min-width: 1200px) {
-  #col3 {
-    right: 25%;
-  }
-}
-#col1_left {
-  float: left;
-  width: 100%;
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-@media (min-width: 768px) {
-  #col1_left {
-    float: left;
-    width: 33.33333333%;
-  }
-}
-@media (min-width: 992px) {
-  #col1_left {
-    float: left;
-    width: 25%;
-  }
-}
-@media (min-width: 1200px) {
-  #col1_left {
-    float: left;
-    width: 25%;
-  }
-}
-#col2_left {
-  float: left;
-  width: 100%;
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-@media (min-width: 768px) {
-  #col2_left {
-    float: left;
-    width: 33.33333333%;
-  }
-}
-@media (min-width: 992px) {
-  #col2_left {
-    float: left;
-    width: 25%;
-  }
-}
-@media (min-width: 1200px) {
-  #col2_left {
-    float: left;
-    width: 25%;
-  }
-}
-#col3_right {
-  float: left;
-  width: 100%;
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-@media (min-width: 768px) {
-  #col3_right {
-    float: left;
-    width: 66.66666667%;
-  }
-}
-@media (min-width: 992px) {
-  #col3_right {
-    float: left;
-    width: 75%;
-  }
-}
-@media (min-width: 1200px) {
-  #col3_right {
-    float: left;
-    width: 75%;
   }
 }
 /*# sourceMappingURL=bewelcome.css.map */

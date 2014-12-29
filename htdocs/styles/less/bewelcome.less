@@ -1,3 +1,11 @@
+//
+// Imports
+// --------------------------------------------------
+
+
+// Bootstrap imports
+// -------------------------
+
 // Core variables and mixins
 @import "variables.less";
 @import "../../../vendor/twbs/bootstrap/less/mixins.less";
@@ -49,6 +57,9 @@
 @import "../../../vendor/twbs/bootstrap/less/utilities.less";
 @import "../../../vendor/twbs/bootstrap/less/responsive-utilities.less";
 
+// Bewelcome imports
+// -------------------------
+
 //Font-awesome
 @import "font-awesome/less/font-awesome.less";
 
@@ -59,79 +70,23 @@
 @import "../../../node_modules/select2-bootstrap-css/lib/select2-bootstrap.less";
 
 
-// Moving content below fixed navbar
+//
+// Bewelcome general layout elements
+// --------------------------------------------------
+
+
+// Bewelcome body styles
+// -------------------------
+
+// Moving content below fixed navbar and add grey background 
 body { 
   padding-top: 70px; 
-  //#gradient > .vertical(@start-color: #f7f7f7; @end-color: #fff;);
   background: url("../../images/bggrey.png") repeat-x scroll left top #F7F7F7;
 }
-.page-teaser {
-  border-bottom: 1px solid #EEEEEE;
-  margin: 30px 0 -1px;
-  > h1 {
-    font-size: ceil((@font-size-base * 1.7));
-    @media (min-width: @screen-sm-min) {
-      font-size: (@font-size-h1);
-    }
-  }
-}
-  /**
-   * Footer
-   * (en) Generic classes for footer
-   *
-   * @section content-footer
-   */
 
+// Bewelcome topmenu (navbar) styles
+// -------------------------
 
-
-footer a {margin: 0.1em 0 0 0; padding: 0.2em 0 0 0; color:#999; font-weight: normal; text-align: left; white-space: nowrap; }
-footer a:hover { text-decoration:underline; }
-footer a:focus { text-decoration:underline; }
-footer .linklist {padding-top: 0.2em;}  
-footer  {padding: 2em; color: #999;}
-footer a:hover {color: #999; text-decoration:underline; }
-footer a:focus {color: #999; text-decoration:underline; }
-//#footer { padding: 2.5em 4em; color:#666; border-top: 5px #efefef solid; }
-
-.pagination-nomargin {
-  margin: 0;
-}
-.button, input.button, .control-links a, .control-links input, a.cancel {
-  .btn;
-  .btn-default;
-  border-color: #E5E5E5 #BBBBBB #BBBBBB #E5E5E5;
-  border-style: solid;
-  border-width:1px;
-}
-
-h1, .h1,
-h2, .h2,
-h3, .h3,
-h4, .h4,
-h5, .h5,
-h6, .h6 {
-  margin-top: 0;
-}
-// Custom BeWelcome signup progress bar
-.progress-bar > .bw-progress > a {
-  color: #fff;
-  display: block;
-}
-.white-text {
-  color: #fff;
-}
-// Custom BeWecome collapse panel for signup
-.panel-heading .accordion-toggle:after {
-    /* symbol for "opening" panels */
-    font-family: 'FontAwesome';  /* essential for FontAwesome */
-    content: "\f077";    /* adjust as needed */
-    float: right;        /* adjust as needed */
-    color: grey;         /* adjust as needed */
-}
-.panel-heading .accordion-toggle.collapsed:after {
-    /* symbol for "collapsed" panels */
-    content: "\f078";    /* adjust as needed */
-}
 // Inverted custom BeWelcome (gradient) navbar
 .navbar-inverse {
   #gradient > .vertical(@start-color: #ffbc00; @end-color: @navbar-inverse-bg);
@@ -166,7 +121,33 @@ h6, .h6 {
    font-size: @font-size-base;
    }
 }
-// middle submenu
+  
+// Bewelcome topnav styles
+// ------------------------
+.topnav > li > a, i { color: #777;}
+
+// Bewelcome teaser styles
+// ------------------------
+
+// Grey line below the teaser and smaller font-size for small screens
+.page-teaser {
+  border-bottom: 1px solid #EEEEEE;
+  margin: 30px 0 -1px;
+  > h1 {
+    font-size: ceil((@font-size-base * 1.7));
+    @media (min-width: @screen-sm-min) {
+      font-size: (@font-size-h1);
+    }
+  }
+}
+
+// Bewelcome submenu styles
+// -------------------------
+
+.submenu {
+  margin-bottom: 1.5em;
+}
+
 // custom .nav version for BW
 .nav {
   > li {
@@ -243,10 +224,22 @@ h6, .h6 {
     }
   }
   }
-/* topnav menu (little greys) */
-.topnav > li > a, i { color: #777;}
 
-/* Login Widget */
+// Bewelcome footer styles
+// -------------------------
+
+footer a {margin: 0.1em 0 0 0; padding: 0.2em 0 0 0; color:#999; font-weight: normal; text-align: left; white-space: nowrap; }
+footer a:hover { text-decoration:underline; }
+footer a:focus { text-decoration:underline; }
+footer .linklist {padding-top: 0.2em;}  
+footer  {padding: 2em; color: #999;}
+footer a:hover {color: #999; text-decoration:underline; }
+footer a:focus {color: #999; text-decoration:underline; }
+//#footer { padding: 2.5em 4em; color:#666; border-top: 5px #efefef solid; }
+
+// Bewelcome login and login widget styles
+// -------------------------
+
 #login-widget {
     padding: 1em;
     padding-top: 0;
@@ -304,45 +297,36 @@ h6, .h6 {
     bottom: -11px;
     text-transform: uppercase;
     width: 60px;
+
+// Bewelcome pagination and button styles
+// -------------------------
+
+.pagination-nomargin {
+  margin: 0;
 }
-th, td {
-    padding: 0.5em;
-}
-#BeWelcome {
-   opacity:0;
-  .animation(fadein 3.5s ease-in 1);
-   animation-fill-mode:forwards;
-   -webkit-animation-fill-mode:forwards;
+.button, input.button, .control-links a, .control-links input, a.cancel {
+  .btn;
+  .btn-default;
+  border-color: #E5E5E5 #BBBBBB #BBBBBB #E5E5E5;
+  border-style: solid;
+  border-width:1px;
 }
 
-#opendoor {
-   opacity:0;
-  .animation(fadein 2.5s ease-in 1.5s 1);
-   animation-fill-mode:forwards;
-  -webkit-animation-fill-mode:forwards;
+// Bewelcome typo styles
+// -------------------------
+
+h1, .h1,
+h2, .h2,
+h3, .h3,
+h4, .h4,
+h5, .h5,
+h6, .h6 {
+  margin-top: 0;
 }
 
-@keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
-/* Safari and Chrome */
-@-webkit-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
+// Bewelcome grid styles
+// -------------------------
 
-/* Opera */
-@-o-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
-.submenu {
-  margin-bottom: 1.5em;
-}
-.bw-row {
-  padding: .5em 0;
-}
 .subcolumns {
   .make-row();
 }
@@ -455,4 +439,79 @@ th, td {
 .make-sm-column(8);
 .make-md-column(9);
 .make-lg-column(9);
+}
+
+// Bewelcome helper styles
+// -------------------------
+.bw-row {
+  padding: .5em 0;
+}
+
+.white-text {
+  color: #fff;
+}
+
+th, td {
+    padding: 0.5em;
+}
+
+//
+// Bewelcome build (app) specific styles
+// --------------------------------------------------
+
+
+// Bewelcome signup styles
+// -------------------------
+
+// Custom BeWelcome signup progress bar
+.progress-bar > .bw-progress > a {
+  color: #fff;
+  display: block;
+}
+// Custom BeWecome collapse panel for signup
+.panel-heading .accordion-toggle:after {
+    /* symbol for "opening" panels */
+    font-family: 'FontAwesome';  /* essential for FontAwesome */
+    content: "\f077";    /* adjust as needed */
+    float: right;        /* adjust as needed */
+    color: grey;         /* adjust as needed */
+}
+.panel-heading .accordion-toggle.collapsed:after {
+    /* symbol for "collapsed" panels */
+    content: "\f078";    /* adjust as needed */
+}
+
+}
+
+// Bewelcome startpage styles
+// -------------------------
+
+#BeWelcome {
+   opacity:0;
+  .animation(fadein 3.5s ease-in 1);
+   animation-fill-mode:forwards;
+   -webkit-animation-fill-mode:forwards;
+}
+
+#opendoor {
+   opacity:0;
+  .animation(fadein 2.5s ease-in 1.5s 1);
+   animation-fill-mode:forwards;
+  -webkit-animation-fill-mode:forwards;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+/* Safari and Chrome */
+@-webkit-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Opera */
+@-o-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }

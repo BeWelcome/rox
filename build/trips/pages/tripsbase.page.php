@@ -131,4 +131,11 @@ class TripsBasePage extends PageWithActiveSkin
         $styleSheets[] = 'script/leaflet/plugins/Leaflet.markercluster/0.4.0/MarkerCluster.css';
         return $styleSheets;
     }
+
+    public function getLateLoadScriptfiles() {
+        $scriptFiles = parent::getLateLoadScriptfiles();
+        $scriptFiles[] = 'map/initmap.js';
+        return $scriptFiles;
+    }
+
 }

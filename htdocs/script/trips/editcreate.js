@@ -56,6 +56,8 @@ function BWTripsLocations(htmlMapId) // Constructor
         // get current location number
         var parts = id.split("-");
         var current = parts[1] - 1;
+        jQuery('#remove-' + parts[1]).attr('disabled', '');
+        jQuery('#remove-' + parts[1]).click( instance.removeRow );
         if (current == instance.latLngs.length) {
             instance.latLngs.push(new L.LatLng(latitude, longitude));
         } else {
@@ -71,6 +73,13 @@ function BWTripsLocations(htmlMapId) // Constructor
 
     instance.removeMarker = function(id) {
 
+    }
+
+    instance.removeRow = function( e ) {
+        var parts = this.id.split("-");
+        var current = parts[1] - 1;
+
+        return false;
     }
 }
 

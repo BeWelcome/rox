@@ -62,8 +62,8 @@ class TripsEditCreatePage extends TripsBasePage
         $scriptFiles = parent::getLateLoadScriptfiles();
         // $scriptFiles[] = 'bootstrapvalidator/bootstrapvalidator.min.js';
         // $scriptFiles[] = 'bootstrapvalidator/language/' . strtolower($_SESSION['lang']) . '_' . strtoupper($_SESSION['lang']) . '.js';
-        $scriptFiles[] = 'leaflet/plugins/polylinedecorator/0.7.2/leaflet.polylineDecorator.js';
-        $scriptFiles[] = 'map/initmap.js';
+        // $scriptFiles[] = 'leaflet/plugins/polylinedecorator/0.7.2/leaflet.polylineDecorator.js';
+        // $scriptFiles[] = 'map/initmap.js';
         $scriptFiles[] = 'trips/editcreate.js';
         $scriptFiles[] = 'search/searchlocation.js?1';
 //        $scriptFiles[] = 'map/small/tripMap.js';

@@ -126,6 +126,7 @@ class TripsBasePage extends PageWithActiveSkin
     protected function getStylesheets()
     {
         $styleSheets = parent::getStylesheets();
+        $stylesheets[] = 'script/leaflet/0.7.3/leaflet.css?1';
         $styleSheets[] = "styles/css/minimal/screen/custom/trip.css?3";
         $styleSheets[] = 'script/leaflet/plugins/Leaflet.markercluster/0.4.0/MarkerCluster.Default.css';
         $styleSheets[] = 'script/leaflet/plugins/Leaflet.markercluster/0.4.0/MarkerCluster.css';

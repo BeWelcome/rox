@@ -481,8 +481,8 @@ WHERE
     id = " . $this->Email;
         $rr = $this->singleLookup($query);
         $email = strip_tags($rr->MemberCryptedValue);
-        str_replace('%40', '@', $email);
-        str_replace('%2B', '+', $email);
+        $email = str_replace('%40', '@', $email);
+        $email = str_replace('%2B', '+', $email);
         return $email;
     }
 

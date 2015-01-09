@@ -135,15 +135,14 @@ class Mailbot
      */
     protected function sendEmail($subject, $from, $to, $title, $body, $language, $html)
     {
-        $result = false;
         try {
-            $result = MOD_mail::sendEmail($subject, $from, $to, $title, $body, $language, $html);
+            return MOD_mail::sendEmail($subject, $from, $to, $title, $body, $language, $html);
         }
         catch (Exception $e) {
             $this->log("Error (" . date("Y-m-d\TH:i:sO") . "): Couldn't send mail to " . $to );
             $this->log($e->getTraceAsString());
         }
-        return $result;
+        return false;
     }
 
     protected function getEmailAddress(Member $member) {
@@ -229,6 +228,45 @@ class MassMailbot extends Mailbot
         return $this->queryDB($str);
     }
 
+    private function _getBroadCastElement($wordCode, $languageId, $username = false, $email = false)
+    {
+        $sentence = "";
+        $str = "select SQL_CACHE Sentence,donottranslate from words where code='$wordCode' and IdLanguage='" . $languageId . "'";
+        $rr = $this->getSingleRow($str);
+        if (isset ($rr->Sentence)){
+            $sentence = stripslashes($rr->Sentence);
+        }
+
+        if ($sentence == "") {
+            $rEnglish = LoadRow("select SQL_CACHE Sentence,donottranslate from words where code='$wordCode' and IdLanguage=0");
+            if (!isset ($rEnglish->Sentence)) {
+                $sentence = $wordCode; // The code of the word will be return
+            } else {
+                $sentence = stripslashes($rEnglish->Sentence);
+            }
+        }
+        if ($username) {
+            // we prepare to send or display the send mail therefore change nls to <br>
+            $sentence = nl2br($sentence);
+
+            // backwards compatibility replace %s with username and %% with % (just in case someone
+            // wants to send an old newsletter again
+            $sentence = str_replace('%s', $username, $sentence);
+            $sentence = str_replace('%%', '%', $sentence);
+
+            // replace %username% with real username. allow some different writings.
+            $sentence = str_replace('%UserName%', $username, $sentence);
+            $sentence = str_replace('%username%', $username, $sentence);
+            $sentence = str_replace('%Username%', $username, $sentence);
+        }
+        if ($email) {
+            $sentence = str_replace('%emailaddress%', $email, $sentence);
+            $sentence = str_replace('%Emailaddress%', $email, $sentence);
+            $sentence = str_replace('%EmailAddress%', $email, $sentence);
+        }
+        return $sentence;
+    }
+
     /**
      * Actually run the bot
      *
@@ -240,9 +278,10 @@ class MassMailbot extends Mailbot
         while ($msg = $qry->fetch(PDB::FETCH_OBJ)) {
             $receiver = new Member($msg->IdReceiver);
             $email = $this->getEmailAddress($receiver);
-            $language = GetDefaultLanguage($msg->IdReceiver);
-            $subj = $this->words->getFormattedInLang("BroadCast_Title_".$msg->word, $language, $msg->Username);
-            $text = $this->words->getFormattedInLang("BroadCast_Body_".$msg->word, $language, $msg->Username);
+            $language = $receiver->getLanguagePreferenceId();
+
+            $subj = $this->_getBroadCastElement("BroadCast_Title_".$msg->word, $language, $msg->Username);
+            $text = $this->_getBroadCastElement("BroadCast_Body_".$msg->word, $language, $msg->Username);
 
             if (empty($msg->EmailFrom)) {
                 $sender_mail="newsletter@bewelcome.org" ;
@@ -481,8 +520,8 @@ class ForumNotificationMailbot extends Mailbot
         $qry = $this->_getNotificationList($grace_period);
         while ($notification = $qry->fetch(PDB::FETCH_OBJ)) {
 
-            $post = $this->_getPost($notification->IdPost);
             // Skip to next item in queue if there was no result from database
+            $post = $this->_getPost($notification->IdPost);
             if (!is_object($post)) {
                 continue;
             }

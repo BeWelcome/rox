@@ -238,7 +238,7 @@ class MassMailbot extends Mailbot
         }
 
         if ($sentence == "") {
-            $rEnglish = LoadRow("select SQL_CACHE Sentence,donottranslate from words where code='$wordCode' and IdLanguage=0");
+            $rEnglish = $this->getSingleRow("select SQL_CACHE Sentence,donottranslate from words where code='$wordCode' and IdLanguage=0");
             if (!isset ($rEnglish->Sentence)) {
                 $sentence = $wordCode; // The code of the word will be return
             } else {
@@ -246,9 +246,6 @@ class MassMailbot extends Mailbot
             }
         }
         if ($username) {
-            // we prepare to send or display the send mail therefore change nls to <br>
-            $sentence = nl2br($sentence);
-
             // backwards compatibility replace %s with username and %% with % (just in case someone
             // wants to send an old newsletter again
             $sentence = str_replace('%s', $username, $sentence);

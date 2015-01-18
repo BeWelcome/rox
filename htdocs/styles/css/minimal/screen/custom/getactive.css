@@ -1,0 +1,11 @@
+.smallinfo {
+    font-size: 10px;
+    color: #666666
+}
+.rounded{
+    background-color: #FFFFFF;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 20px;
+}

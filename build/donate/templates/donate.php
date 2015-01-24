@@ -39,18 +39,15 @@ if ($error) {?>
 	<div class="c50l">
 		<div class="subcl">
 			<h3><?=$words->get('Donate_Account_Legend')?></h3>
+			<p><?=$words->get('Donate_Account2')?></p>			
 			<p><?=$words->get('Donate_Account')?></p>
-			<p><?=$words->get('Donate_Account2')?></p>
 
 			<h3><?php echo $words->get('Donate_Bitcoins');?> <img src="images/misc/bitcoin.gif" alt="bitcoin" /></h3>
 			<p><?php echo $words->get('Donate_Bitcoins_Text');?></p>
-			<h3><?php echo $words->get('Donate_FurtherInfo'); ?></h3>
-			<p><?php echo $words->get('Donate_FurtherInfoText');?></p>		
 		
 			<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 			<h3><?=$words->get('Donate_Paypal_Legend')?></h3>
 			<p><img src="images/misc/paymethods.gif" alt="methods of payment" /></p>
-			<p><?=$words->get('Donate_Process')?></p>
 			<p>
 			<input type="hidden" name="cmd" value="_xclick" />
 			<input type="hidden" name="business" value="treasurer@bevolunteer.org" />
@@ -105,8 +102,11 @@ if ($error) {?>
 			<input type="submit" class="button" name="submit" alt="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" onmouseover="return('<?php echo $words->getBuffered('Donate_DonateNow'); ?>')" value="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" />
 			<img alt="Donate now" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
 			</p>
-			</form>		
-		
+			</form>
+			<p><?=$words->get('Donate_Process')?></p>	
+			
+			<h3><?php echo $words->get('Donate_FurtherInfo'); ?></h3>
+			<p><?php echo $words->get('Donate_FurtherInfoText');?></p>		
 		</div>
 		
 	</div>

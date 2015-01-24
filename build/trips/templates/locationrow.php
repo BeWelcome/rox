@@ -1,8 +1,8 @@
 <?php $words = new MOD_words();
 $location = 'location-' . $locationRow; ?>
-<input type="hidden" name="location-geoname-id[]" id="<?= $location ?>-geoname-id">
-<input type="hidden" name="location-latitude[]" id="<?= $location ?>-latitude">
-<input type="hidden" name="location-longitude[]" id="<?= $location ?>-longitude">
+<input type="hidden" name="location-geoname-id[]" id="<?= $location ?>-geoname-id" value="<?= $locationDetails->geonameId ?>">
+<input type="hidden" name="location-latitude[]" id="<?= $location ?>-latitude" value="<?= $locationDetails->latitude ?>">
+<input type="hidden" name="location-longitude[]" id="<?= $location ?>-longitude" value="<?= $locationDetails->longitude ?>">
 <div class="form-group has-feedback col-md-5">
     <label for="<?= $location ?>"
            class="control-label sr-only"><?php echo $words->get('TripLocation'); ?></label>
@@ -10,7 +10,7 @@ $location = 'location-' . $locationRow; ?>
     <div class="input-group">
         <input type="text" class="form-control location-picker" name="location[]"
                placeholder="<?= $words->getBuffered('TripLocation'); ?>" id="<?= $location ?>"
-               value=""/>
+               value="<?= $locationDetails->name ?>"/>
 
         <label for="<?= $location ?>"
                class="control-label input-group-addon btn"><span
@@ -18,28 +18,38 @@ $location = 'location-' . $locationRow; ?>
     </div>
     </div>
     <div class="form-group has-feedback col-md-3">
-        <label for="startdate-<?= $locationRow ?>"
+        <label for="startDate-<?= $locationRow ?>"
                class="control-label sr-only"><?php echo $words->get('TripDateStart'); ?></label>
 
         <div class="input-group">
-            <input type="text" class="form-control date-picker-start" name="startdate[]"
-                   placeholder="<?= $words->getBuffered('TripDateStart'); ?>" id="startdate-<?= $locationRow ?>"
-                   value=""/>
-            <label for="startdate-<?= $locationRow ?>" class="control-label input-group-addon btn"><span
+            <input type="text" class="form-control date-picker-start" name="location-start-date[]"
+                   placeholder="<?= $words->getBuffered('TripDateStart'); ?>" id="start-date-<?= $locationRow ?>"
+                   value="<?= $locationDetails->startDateString ?>"/>
+            <label for="start-date-<?= $locationRow ?>" class="control-label input-group-addon btn"><span
                     class="fa fa-fw fa-calendar"></span></label>
         </div>
+        <?php
+        if (in_array('TripErrorStartDateWrongFormat###' . $locationRow, $errors)) {
+            echo '<span class="help-block alert alert-danger">' . $words->get('TripErrorStartDateWrongFormat') . '</span>';
+        }
+        ?>
     </div>
     <div class="form-group has-feedback col-md-3">
-        <label for="enddate-<?= $locationRow ?>"
+        <label for="endDate-<?= $locationRow ?>"
                class="control-label sr-only"><?php echo $words->get('TripDateEnd'); ?></label>
 
         <div class="input-group">
-            <input type="text" class="form-control date-picker-end" name="enddate[]"
-                   placeholder="<?= $words->getBuffered('TripDateStart'); ?>" id="enddate-<?= $locationRow ?>"
-                   value=""/>
-            <label for="enddate-<?= $locationRow ?>" class="control-label input-group-addon btn"><span
+            <input type="text" class="form-control date-picker-end" name="location-end-date[]"
+                   placeholder="<?= $words->getBuffered('TripDateStart'); ?>" id="end-date-<?= $locationRow ?>"
+                   value="<?= $locationDetails->endDateString ?>"/>
+            <label for="end-date-<?= $locationRow ?>" class="control-label input-group-addon btn"><span
                     class="fa fa-fw fa-calendar"></span></label>
         </div>
+        <?php
+        if (in_array('TripErrorEndDateWrongFormat###' . $locationRow, $errors)) {
+            echo '<span class="help-block alert alert-danger">' . $words->get('TripErrorEndDateWrongFormat') . '</span>';
+        }
+        ?>
     </div>
 <div class="form-group col-md-1">
     <label for="remove-<?= $locationRow ?>"

@@ -31,10 +31,11 @@ Boston, MA  02111-1307, USA.
      * @subpackage Blog
      */
 
-class TripsPastPage extends TripsClusteredMapPage
+class TripsClusteredMapPage extends TripsBasePage
 {
-    protected function getSubmenuActiveItem()
-    {
-        return 'pasttrips';
+    public function getLateLoadScriptfiles() {
+        $scriptFiles = parent::getLateLoadScriptfiles();
+        $scriptFiles[] = 'trips/showmap.js';
+        return $scriptFiles;
     }
 }

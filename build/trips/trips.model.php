@@ -19,55 +19,192 @@ class TripsModel extends RoxModelBase
 		parent::__construct();
 	}
 
+	public function getEmptyLocationDetails() {
+		$locationDetails = new StdClass;
+		$locationDetails->geonameId = "";
+		$locationDetails->latitude = "";
+		$locationDetails->longitude = "";
+		$locationDetails->name = "";
+		$locationDetails->startDate = "";
+		$locationDetails->startDateString = "";
+		$locationDetails->endDate = "";
+		$locationDetails->endDateString = "";
+		return $locationDetails;
+	}
+
 	public function checkCreateEditVars($vars)
 	{
+		$tripInfo = array(
+			'trip-id' => 0,
+			'trip-name' => '',
+			'trip-description' => ''
+		);
 		$errors = array();
-		if (empty($vars['trip-name'])) {
+		if (isset($vars['trip-id'])) {
+			$tripInfo['trip-id'] = $vars['trip-id'];
+		}
+		if (isset($vars['trip-name'])) {
+			$tripInfo['trip-name'] = $vars['trip-name'];
+		}
+		if (empty($tripInfo['trip-name'])) {
 			$errors[] = 'TripErrorNameEmpty';
 		}
-		if (empty($vars['trip-desc'])) {
-			$errors[] = 'TripErrorDescEmpty';
+		if (isset($vars['trip-description'])) {
+			$tripInfo['trip-description'] = $vars['trip-description'];
+		}
+		if (empty($tripInfo['trip-description'])) {
+			$errors[] = 'TripErrorDescriptionEmpty';
 		}
 
-		return $errors;
+		$locations = array();
+		if (isset($vars['location'])) {
+
+			// remove empty rows and build locations array
+			$count = count($vars['location']);
+			for ($i = 0; $i < $count; $i++) {
+				$location = new StdClass;
+				$location->geonameId = $vars['location-geoname-id'][$i];
+				$location->latitude = $vars['location-latitude'][$i];
+				$location->name = $vars['location'][$i];
+				$location->longitude = $vars['location-longitude'][$i];
+				$location->startDateString = $vars['location-start-date'][$i];
+				$location->startDate = strtotime($vars['location-start-date'][$i]);
+				$location->endDateString = $vars['location-end-date'][$i];
+				$location->endDate = strtotime($vars['location-end-date'][$i]);
+				$emptyRow = empty($location->name) && empty($location->startDateString) && empty($location->endDateString);
+				if (!$emptyRow) {
+					$locations[] = $location;
+					if (!($location->startDate)) {
+						if (!in_array('TripErrorWrongStartDateFormat###' . $i, $errors)) {
+							$errors[] = 'TripErrorWrongStartDateFormat###' . $i;
+						}
+					}
+					if (!($location->endDate)) {
+						if (!in_array('TripErrorWrongEndDateFormat###' . $i, $errors)) {
+							$errors[] = 'TripErrorWrongEndDateFormat###' . $i;
+						}
+					}
+				}
+			}
+
+			$count = count($locations);
+			if ($count == 0) {
+				$errors[] = 'TripErrorNoLocationSpecified';
+			}
+
+			// check that date range is start <= end
+			if (count($locations) > 1) {
+				for($i = 0; $i < $count; $i++) {
+					$start = $locations[$i]->startDate;
+					$end = $locations[$i]->endDate;
+					if ($start && $end && ($start > $end)) {
+						$temp = $locations[$i]->startDate;
+						$tempString = $locations[$i]->startDateString;
+						$locations[$i]->startDate = $locations[$i]->endDate;
+						$locations[$i]->startDateString = $locations[$i]->endDateString;
+						$locations[$i]->endDate =  $temp;
+						$locations[$i]->endDateString =  $tempString;
+					}
+				}
+			}
+
+			// check that date range don't overlap (except on start and end dates)
+			if (count($locations) > 1) {
+				$overlap = false;
+				for ($i = 0; $i < $count - 1; $i++) {
+					$start1 = $locations[$i]->startDate;
+					$end1 = $locations[$i]->endDate;
+					for ($j = $i + 1; $j < $count; $j++) {
+						$start2 = $locations[$j]->startDate;
+						$end2 = $locations[$j]->endDate;
+						$overlap |= (($start1 < $end2) and ($end1 > $start2));
+					}
+				}
+				if ($overlap) {
+					$errors[] = 'TripErrorOverlappingDates';
+				}
+			}
+
+			if (count($errors) == 0) {
+				// order locations by start date (ascending)
+				usort($locations, function($a, $b)
+				{
+					if ($a->startDate == $b->startDate)
+					{
+						if ($a->endDate < $b->endDate) {
+							return -1;
+						} else {
+							return 1;
+						}
+					}
+					else if ($a->startDate < $b->startDate)
+					{
+						return -1;
+					}
+					else {
+						return 1;
+					}
+				});
+			}
+		} else {
+			$errors[] = 'TripErrorNoLocationSpecified';
+		}
+		if (count($errors) > 0) {
+			// Make sure that there is an location empty row in case of an error
+			$locations[] = $this->getEmptyLocationDetails();
+		}
+		$tripInfo['locations'] = $locations;
+
+		return array($errors, $tripInfo);
 	}
 
-	public function createTrip($vars, Member $user)
+	public function createTrip($tripInfo, Member $member)
 	{
 		$errors = array();
-		if (!is_array($vars) || !$user->isLoaded()) {
-			$errors[] = 'TripErrorNotCreated';
-			return false;
-		}
-		$tripId = $this->insertTrip($vars['trip-name'], $vars['trip-desc'], $user->id);
+		$tripId = $this->insertTrip($tripInfo['trip-name'], $tripInfo['trip-description'], $member->id);
 		if (!$tripId) {
 			$errors[] = 'TripErrorNotCreated';
-			return false;
+			return $errors;
 		}
-		if (isset($vars['cg']) && $vars['cg']) {
-			$Gallery = new GalleryModel;
-			$galleryId = $Gallery->createGallery($vars['n']);
-			if (!$galleryId) {
-				$errors[] = 'TripErrorGalleryNotCreated';
-			} else {
-				$this->assignGallery($tripId, $galleryId);
+		foreach($tripInfo['locations'] as $location) {
+			// Insert the subtrips...
+			$s = $this->dao->prepare('
+INSERT INTO `blog`
+(`blog_id`, `flags`, `blog_created`, `country_id_foreign`, `trip_id_foreign`, `IdMember`)
+VALUES
+(?, 0, NOW(), NULL, ?, ?)
+        ');
+			$s->execute(
+				array(
+					0 => $this->dao->nextId('blog'),
+					1 => $tripId,
+					2 => $member->id
+				)
+			);
+			$blogId = $s->insertId();
+			if (!$blogId) {
+				$errors[] = 'TripErrorNotCreated';
+				return $errors;
 			}
+			$s = $this->dao->prepare("
+INSERT INTO `blog_data`
+(`blog_id`, `edited`, `blog_title`, `blog_text`, `blog_start`, `blog_end`, `blog_latitude`, `blog_longitude`, `blog_geonameid`)
+VALUES
+(?, NULL, '', '', ?, ?, ?, ?, ?)
+        ");
+			$s->execute(
+				array(
+					0 => $blogId,
+					1 => date('Y-m-d', $location->startDate),
+					2 => ($location->startDate != $location->endDate) ? date('Y-m-d', $location->endDate) : 'NULL',
+					3 => $location->latitude,
+					4 => $location->longitude,
+					5 => $location->geonameId,
+				)
+			);
+
 		}
 		return $errors;
-	}
-
-	public function assignGallery($tripId, $galleryId)
-	{
-		$query = '
-DELETE FROM `trip_to_gallery` WHERE
-`trip_id_foreign` = ' . (int)$tripId;
-		$this->dao->exec($query);
-		$query = '
-INSERT INTO `trip_to_gallery` (`trip_id_foreign`, `gallery_id_foreign`) VALUES
-(' . (int)$tripId . ', ' . (int)$galleryId . ')
-        ';
-		$s = $this->dao->query($query);
-		return ($s->affectedRows() != -1);
 	}
 
 	/**
@@ -242,10 +379,11 @@ WHERE NOT members.Username IS NULL
 		}
 		switch ($type) {
 			case self::TRIPS_TYPE_PAST:
-				$typeQuery = "	HAVING (tripEndDate IS NOT NULL) AND (tripEndDate <= NOW())";
+				$typeQuery = "	WHERE (((bd.blog_start IS NOT NULL) AND (bd.blog_start <= NOW())) OR
+					((bd.blog_end IS NOT NULL) AND (bd.blog_end <= NOW())))";
 				break;
 			case self::TRIPS_TYPE_UPCOMING:
-				$typeQuery = "	HAVING (tripStartDate IS NOT NULL) AND (tripStartDate >= NOW())";
+				$typeQuery = "	WHERE (bd.blog_start IS NOT NULL) AND (bd.blog_start >= NOW())";
 				break;
 			default:
 				$typeQuery = "";
@@ -260,23 +398,22 @@ WHERE NOT members.Username IS NULL
 				t.*,
 				td.*,
 				b.*,
-				UNIX_TIMESTAMP(bd.blog_start) AS tripStartDate,
-				UNIX_TIMESTAMP(bd.blog_end) AS tripEndDate,
+				UNIX_TIMESTAMP(bd.blog_start) AS tripstartDate,
+				UNIX_TIMESTAMP(bd.blog_end) AS tripendDate,
 				g.latitude AS latitude,
-				g.longitude AS longitude,
-				m.username
+				g.longitude AS longitude
 			FROM
 				trip t
 			LEFT JOIN trip_data td ON t.trip_id = td.trip_id
 			LEFT JOIN blog b ON b.trip_id_foreign = t.trip_id
 			LEFT JOIN blog_data bd ON bd.blog_id = b.blog_id
 			LEFT JOIN geonames g ON bd.blog_geonameid = g.geonameid
-			LEFT JOIN members m ON m.id = t.IdMember
-			WHERE " . $memberQuery . "
-			ORDER BY
-				tripStartDate DESC
-		";
+			";
 		$query .= $typeQuery;
+		$query .= "
+			ORDER BY
+				tripstartDate DESC
+		";
 		$query .= " LIMIT 0, " . $limit;
 
 		$result = $this->dao->query($query);
@@ -292,12 +429,17 @@ WHERE NOT members.Username IS NULL
 
 	public function getAllTrips($type = self::TRIPS_TYPE_ALL, $limit = false)
 	{
-		return $this->_getAllTrips($limit);
+		return $this->_getAllTrips(false, $type, $limit);
 	}
 
 	public function getAllUpcomingTrips()
 	{
-		return $this->_getAllTrips(false, self::TRIPS_TYPE_UPCOMING);
+		return $this->_getAllTrips(false, self::TRIPS_TYPE_UPCOMING, false);
+	}
+
+	public function getAllPastTrips()
+	{
+		return $this->_getAllTrips(false, self::TRIPS_TYPE_PAST, false);
 	}
 
 	public function getAllTripsForMember($member, $type = self::TRIPS_TYPE_ALL, $limit = false)
@@ -364,8 +506,8 @@ WHERE NOT members.Username IS NULL
 				td.*,
 				b.*,
 				bd.blog_title,
-				UNIX_TIMESTAMP(bd.blog_start) AS tripStartDate,
-				UNIX_TIMESTAMP(bd.blog_end) AS tripEndDate,
+				UNIX_TIMESTAMP(bd.blog_start) AS tripstartDate,
+				UNIX_TIMESTAMP(bd.blog_end) AS tripendDate,
 				g.latitude AS latitude,
 				g.longitude AS longitude,
 				g.geonameid AS geonameid,
@@ -398,8 +540,8 @@ WHERE NOT members.Username IS NULL
 				$startDate = $endDate = 0;
 			}
 			$tripData = $tripInfo->data;
-			if ($row->tripStartDate != 0) {
-				$blogStart = $row->tripStartDate;
+			if ($row->tripstartDate != 0) {
+				$blogStart = $row->tripstartDate;
 				if ($startDate == 0) {
 					$startDate = $blogStart;
 				}
@@ -407,8 +549,8 @@ WHERE NOT members.Username IS NULL
 					$startDate = min($blogStart, $startDate);
 				}
 			}
-			if (($row->tripEndDate != 0) || (($row->tripEndDate == null) && ($row->tripStartDate !=0))) {
-				$blogEnd = max($row->tripEndDate, $row->tripStartDate);
+			if (($row->tripendDate != 0) || (($row->tripendDate == null) && ($row->tripstartDate !=0))) {
+				$blogEnd = max($row->tripendDate, $row->tripstartDate);
 				if ($endDate == 0) {
 					$endDate = $blogEnd;
 				}
@@ -425,8 +567,8 @@ WHERE NOT members.Username IS NULL
 				}
 				$tripData[$row->blog_id] = array(
 					"title" => $row->blog_title,
-					"startdate" => date('Y-m-d', $row->tripStartDate),
-					"enddate" => date('Y-m-d', $row->tripEndDate),
+					"startDate" => date('Y-m-d', $row->tripstartDate),
+					"endDate" => date('Y-m-d', $row->tripendDate),
 					"location" => $geoName,
 				);
 			}
@@ -437,8 +579,8 @@ WHERE NOT members.Username IS NULL
 			if ($endDate != $startDate) {
 				$duration .= " - " . date('Y-m-d', $endDate);
 			}
-			$tripInfo->startdate = date('Y-m-d', $startDate);
-			$tripInfo->enddate = date('Y-m-d', $endDate);
+			$tripInfo->startDate = date('Y-m-d', $startDate);
+			$tripInfo->endDate = date('Y-m-d', $endDate);
 			$tripInfo->duration = $duration;
 
 			$tripInfo->data = $tripData;
@@ -446,6 +588,69 @@ WHERE NOT members.Username IS NULL
 		}
 
 		return $trips;
+	}
+
+	public function getTripsNearMe($member, $pageNumber, $itemsPerPage)
+	{
+		// Reuse activities nearme or add new preference
+		$distance = 50;
+		$limit = ($pageNumber-1) * $itemsPerPage;
+
+		// get all locations in a certain area
+		$query = "SELECT latitude, longitude FROM geonames WHERE geonameid = " . $member->IdCity;
+		$sql = $this->dao->query($query);
+		if (!$sql) {
+			return false;
+		}
+		$row = $sql->fetch(PDB::FETCH_OBJ);
+
+		// calculate rectangle around place with given distance
+		$lat = deg2rad(doubleval($row->latitude));
+		$long = deg2rad(doubleval($row->longitude));
+
+		$longne = rad2deg(($distance + 6378 * $long) / 6378);
+		$longsw = rad2deg((6378 * $long - $distance) / 6378);
+
+		$radiusAtLatitude = 6378 * cos($lat);
+		$latne = rad2deg(($distance + $radiusAtLatitude * $lat) / $radiusAtLatitude);
+		$latsw = rad2deg(($radiusAtLatitude * $lat - $distance) / $radiusAtLatitude);
+		if ($latne < $latsw) {
+			$tmp = $latne;
+			$latne = $latsw;
+			$latsw = $tmp;
+		}
+		if ($longne < $longsw) {
+			$tmp = $longne;
+			$longne = $longsw;
+			$longsw = $tmp;
+		}
+
+		$rectangle = 'geonames.latitude < ' . $latne . '
+            AND geonames.latitude > ' . $latsw . '
+            AND geonames.longitude < ' . $longne . '
+            AND geonames.longitude > ' . $longsw;
+
+		// retrieve the visiting members handle and trip data
+		$query = "
+            SELECT
+            	t.trip_id
+            FROM
+            	trip AS t
+			LEFT JOIN blog b ON b.trip_id_foreign = t.trip_id
+			LEFT JOIN blog_data bd ON bd.blog_id = b.blog_id
+            LEFT JOIN geonames ON bd.blog_geonameid = geonames.geonameid
+            WHERE " .
+			$rectangle . "
+            ORDER BY
+                t.trip_id, bd.blog_start ASC
+            LIMIT " . $limit . "," . $itemsPerPage;
+//                 AND bd.blog_start >= CURDATE() AND bd.blog_start <= DATE_ADD(CURDATE(), INTERVAL 3 MONTH)
+		$result = $this->dao->query($query);
+		if (!$result) {
+			throw new PException('Could not retrieve trips');
+		}
+
+		return $this->_getTripData($result);
 	}
 
 	public function getUpcomingTrips($pageNumber, $itemsPerPage) {
@@ -456,7 +661,6 @@ WHERE NOT members.Username IS NULL
 				t.trip_id
 			FROM
 				trip t
-			LEFT JOIN trip_data td ON t.trip_id = td.trip_id
 			LEFT JOIN blog b ON b.trip_id_foreign = t.trip_id
 			LEFT JOIN blog_data bd ON bd.blog_id = b.blog_id
 			WHERE
@@ -517,37 +721,18 @@ WHERE NOT members.Username IS NULL
 
 		$query = "
 			SELECT
-				t.*,
-				td.*,
-				b.*,
-				bd.*,
-				DATE(bd.blog_start) AS tripStartDate,
-				DATE(bd.blog_end) AS tripEndDate,
-				g.latitude AS latitude,
-				g.longitude AS longitude,
-				m.username
+				t.trip_id
 			FROM
 				trip t
-			LEFT JOIN trip_data td ON t.trip_id = td.trip_id
-			LEFT JOIN blog b ON b.trip_id_foreign = t.trip_id
-			LEFT JOIN blog_data bd ON bd.blog_id = b.blog_id
-			LEFT JOIN geonames g ON bd.blog_geonameid = g.geonameid
-			LEFT JOIN members m ON m.id = t.IdMember
 			WHERE
 				t.IdMember = " . $member->id . "
-			ORDER BY
-				tripStartDate DESC
 			LIMIT " . $limit . "," . $itemsPerPage;
 
 		$result = $this->dao->query($query);
 		if (!$result) {
 			throw new PException('Could not retrieve trips.');
 		}
-		$trips = array();
-		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$trips[] = $row;
-		}
-		return $trips;
+		return $this->_getTripData($result);
 	}
 
 	public function getTrip($tripid)

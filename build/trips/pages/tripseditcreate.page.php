@@ -60,13 +60,16 @@ class TripsEditCreatePage extends TripsBasePage
 
     public function getLateLoadScriptfiles() {
         $scriptFiles = parent::getLateLoadScriptfiles();
-        // $scriptFiles[] = 'bootstrapvalidator/bootstrapvalidator.min.js';
-        // $scriptFiles[] = 'bootstrapvalidator/language/' . strtolower($_SESSION['lang']) . '_' . strtoupper($_SESSION['lang']) . '.js';
+        /*
+        $scriptFiles[] = 'bootstrapvalidator/bootstrapvalidator.min.js';
+        $languageFile = 'bootstrapvalidator/language/' . strtolower($_SESSION['lang']) . '_' . strtoupper($_SESSION['lang']) . '.js';
+        if (file_exists($languageFile)) {
+            $scriptFiles[] = $languageFile;
+        }
+        */
         // $scriptFiles[] = 'leaflet/plugins/polylinedecorator/0.7.2/leaflet.polylineDecorator.js';
-        // $scriptFiles[] = 'map/initmap.js';
         $scriptFiles[] = 'trips/editcreate.js';
         $scriptFiles[] = 'search/searchlocation.js?1';
-//        $scriptFiles[] = 'map/small/tripMap.js';
         return $scriptFiles;
     }
 }

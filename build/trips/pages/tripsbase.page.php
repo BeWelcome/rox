@@ -68,14 +68,17 @@ class TripsBasePage extends PageWithActiveSkin
         $items[] = array('upcomingtrips', 'trips/upcoming', $words->getSilent('TripsUpcoming'));
         $items[] = array('pasttrips', 'trips/past', $words->getSilent('TripsPastTrips'));
         $geo = new Geo($this->member->IdCity);
-        $items[] = array('tripssnearme', 'trips/nearme', $words->getSilent('TripsTripsNear', $geo->name));
+        $items[] = array('tripsnearme', 'trips/nearme', $words->getSilent('TripsTripsNear', $geo->name));
         if ($this->update) {
-            $items[] = array('edittrips', 'trips/' . $this->activity->id . '/edit', $words->getSilent('TripsEdit'));
+            $items[] = array('edittrips', 'trips/' . $this->trip->id . '/edit', $words->getSilent('TripsEdit'));
         } else {
             $items[] = array('createtrips', 'trips/create', $words->getSilent('TripsCreate'));
         }
         if ($this->delete) {
-            $items[] = array('deltrips', 'trips/' . $this->activity->id . '/delete', $words->getSilent('TripsDelete'));
+            $items[] = array('deltrips', 'trips/' . $this->trip->id . '/delete', $words->getSilent('TripsDelete'));
+        }
+        if ($this->show) {
+            $items[] = array('showtrip', 'trips/show/' . $this->trip->id, $words->getSilent('TripsShow'));
         }
         return $items;
     }
@@ -125,12 +128,12 @@ class TripsBasePage extends PageWithActiveSkin
 
     protected function getStylesheets()
     {
-        $styleSheets = parent::getStylesheets();
+        $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'script/leaflet/0.7.3/leaflet.css?1';
-        $styleSheets[] = "styles/css/minimal/screen/custom/trip.css?3";
-        $styleSheets[] = 'script/leaflet/plugins/Leaflet.markercluster/0.4.0/MarkerCluster.Default.css';
-        $styleSheets[] = 'script/leaflet/plugins/Leaflet.markercluster/0.4.0/MarkerCluster.css';
-        return $styleSheets;
+        $stylesheets[] = "styles/css/minimal/screen/custom/trip.css?3";
+        $stylesheets[] = 'script/leaflet/plugins/Leaflet.markercluster/0.4.0/MarkerCluster.Default.css';
+        $stylesheets[] = 'script/leaflet/plugins/Leaflet.markercluster/0.4.0/MarkerCluster.css';
+        return $stylesheets;
     }
 
     public function getLateLoadScriptfiles() {

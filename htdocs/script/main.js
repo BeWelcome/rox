@@ -144,11 +144,11 @@ bwrox.selectScripts([
     },
     {
         file: "select2/select2.min.js",
-        pages: [
-            "signup/2",
-            "signup/4",
-            "editmyprofile"
-        ]
+//        pages: [
+//            "signup/2",
+//            "signup/4",
+//            "editmyprofile"
+//        ]
     },
     {
         file: "leaflet/0.7.3/leaflet.js",

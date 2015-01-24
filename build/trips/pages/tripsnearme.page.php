@@ -31,10 +31,11 @@ Boston, MA  02111-1307, USA.
      * @subpackage Blog
      */
 
-class TripsPastPage extends TripsClusteredMapPage
+class TripsNearMePage extends TripsClusteredMapPage
 {
     protected function getSubmenuActiveItem()
     {
-        return 'pasttrips';
+        return 'tripsnearme';
     }
+
 }

@@ -31,7 +31,7 @@ Boston, MA  02111-1307, USA.
      * @subpackage Blog
      */
 
-class TripsUpcomingPage extends TripsBasePage
+class TripsUpcomingPage extends TripsClusteredMapPage
 {
     protected function getSubmenuActiveItem()
     {

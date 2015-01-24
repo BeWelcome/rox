@@ -16,6 +16,10 @@ $counter = 0;
     <?php
     foreach ($tripData as $subTripId => $subTrip) {
         $counter++;
+        $highlight = false;
+        if ($subTrip['location'] == $geoname) {
+            $highlight = true;
+        }
     if ($counter % 4 == 1) {
         echo '</div><div class="row">';
     }
@@ -32,10 +36,15 @@ $counter = 0;
     ?>
     <div class="col-md-3">
         <img src="styles/css/minimal/images/iconsfam/<?= $flag ?>" alt="flag" />
-        <strong><?= $subTrip['location'] ?></strong>, <?= $subTrip['startdate'] ?>
+        <?php if ($highlight) { ?>
+            <span style="background-color: yellow" class="highlight">
+        <?php } ?><strong><?= $subTrip['location'] ?></strong>, <?= $subTrip['startDate'] ?>
         <?php
-            if ($subTrip['enddate'] <> '1970-01-01') { ?>
-             - <?= $subTrip['enddate'] ?>
+            if ($subTrip['endDate'] <> '1970-01-01') { ?>
+             - <?= $subTrip['endDate'] ?>
+        <?php }
+            if ($highlight) { ?>
+                </span>
         <?php }
         ?>
     </div>

@@ -792,6 +792,7 @@ SQL;
         }
 
         $set_string = "";
+        $tableDescription = $this->getTableDescription();
         foreach ($this->getColumns() as $key)
         {
             if (is_array($this->getPrimaryKey()))
@@ -812,7 +813,11 @@ SQL;
             if ($this->$key) {
                 $set_string .= "{$key} = '{$this->dao->escape($this->$key)}'";
             } else {
-                $set_string .= "{$key} = NULL";
+                if ($tableDescription[$key]['allow_null']) {
+                    $set_string .= "{$key} = NULL";
+                } else {
+                    $set_string .= "{$key} = 0";
+                }
             }
         }
 

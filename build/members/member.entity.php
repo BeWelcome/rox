@@ -278,9 +278,9 @@ class Member extends RoxEntityBase
     }
 
     /**
-     * Use to retrieve all the fields in members table which are a a foreign key to memberstrads
-     * This is typically neded when you want to delete a a given translation
-     * @return unknown
+     * Use to retrieve all the fields in members table which are a foreign key to memberstrads
+     * This is typically need when you want to delete a a given translation
+     * @return array
      */
     public function get_trads_fields()
     {
@@ -305,6 +305,26 @@ class Member extends RoxEntityBase
             'PastTrips',
             'PlannedTrips',
             'ProfileSummary'
+        );
+    }
+
+    public function get_crypted_fields()
+    {
+        return array(
+            'FirstName',
+            'SecondName',
+            'LastName',
+            'Email',
+            'HomePhoneNumber',
+            'CellPhoneNumber',
+            'WorkPhoneNumber',
+            'chat_GOOGLE',
+            'chat_ICQ',
+            'chat_AOL',
+            'chat_YAHOO',
+            'chat_SKYPE',
+            'chat_Others',
+            'chat_MSN'
         );
     }
 

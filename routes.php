@@ -288,3 +288,6 @@
 
     // Update statistics
     $this->addRoute('updatestats', 'about/updatestats', 'AboutController', 'updateStatistics');
+
+    // Data retention (#1885)
+    $this->addRoute('dataretention', 'members/dataretention', 'MembersController', 'dataRetention');

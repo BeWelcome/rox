@@ -384,22 +384,8 @@ AND membersgroups.IdMember='. $_idUser;
 		else return false;
     }
 
-    public static function getMember_userId($userId)
-    {
-        if ($row = self::_getDAO()->query(
-            'SELECT SQL_CACHE Username '.
-            'FROM members '.
-            "WHERE id='$id' "
-        )->fetch(PDB::FETCH_OBJ)) {
-            return new MOD_member($id, $row->Username);
-        } else {
-            return 0;
-        }
-    }
-    
     /**
-		
-     * Retrieve the last accepted profile with a picture 
+     * Retrieve the last accepted profile with a picture
      * COPIED FROM VISITS - MODULE
      */
     public function getMembersStartpage($limit = 0,$sortOrder = false)
@@ -585,7 +571,7 @@ SQL;
                    $payment_currency="$" ;
                 }
                 else if ($keyarray['mc_currency']=="EUR") {
-                   $payment_currency="€" ;
+                   $payment_currency="â‚¬" ;
                 }
                 else {
                    $payment_currency=$keyarray['mc_currency'] ;

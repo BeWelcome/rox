@@ -1629,9 +1629,9 @@ VALUES
             DELETE FROM " .
                 $cryptedTable . "
             WHERE
-                id IN ( :ids )
+                id IN ( '" . implode("', '", $cryptedFields) . "')
                 ");
-            $query->execute(array('ids' => "'" . implode("', '", $cryptedFields) . "'"));
+            $query->execute();
             $query = $this->pdo->prepare("
             DELETE FROM
                 addresses
@@ -1670,9 +1670,9 @@ VALUES
             DELETE FROM " .
                 $cryptedTable . "
             WHERE
-                id IN ( :ids )
+                id IN ( '" . implode("', '", $cryptedIds) . "' )
                 ");
-            $query->execute(array('ids' => "'" . implode("', '", $cryptedIds) . "'"));
+            $query->execute();
         }
         return $member;
     }
@@ -1712,12 +1712,11 @@ VALUES
                 memberstrads
             WHERE
                 IdOwner = :memberId
-                AND IdTrad IN ( :tradIds )
+                AND IdTrad IN ( '" . implode("', '", $tradIds) . "' )
                 ");
         $query->execute(
             array(
-                ':memberId' => $member->id,
-                'tradIds' => "'" . implode("', '", $tradIds) . "'"
+                ':memberId' => $member->id
             )
         );
         return $member;
@@ -1732,12 +1731,8 @@ VALUES
      */
     private function _cleanupMembersTable(Member $member, $remainingColumns, $tableDescription) {
         foreach($remainingColumns as $column) {
-            // Skip some columns
-            if (($column == 'id') || ($column == 'Status') || ($column == 'Username')
-                || ($column == 'password')) {
-                continue;
-            }
             switch($tableDescription[$column]['type']) {
+                case 'set':
                 case 'int':
                     $member->$column = 0;
                     break;
@@ -1748,7 +1743,11 @@ VALUES
                 case 'timestamp':
                     break;
                 case "enum":
-                    $member->$column = $tableDescription[$column]['values'][0];
+                    if ($tableDescription[$column]['allow_null']) {
+                        $member->$column = 0;
+                    } else {
+                        $member->$column = $tableDescription[$column]['values'][0];
+                    }
                     break;
                 case "tinytext":
                     $member->$column = '';
@@ -1757,8 +1756,29 @@ VALUES
                     break;
             }
         }
+        $member->Accomodation = 'NeverAsk';
         $member->updated = date('Y-m-d H:i:s');
         $member->setPassword('password');
+        return $member;
+    }
+
+    /**
+     * Helper function for removeMembers. Cleans the memberslanguageslevel table.
+     *
+     * @param Member $member
+     */
+    private function _cleanupMemberLanguages(Member $member) {
+        $query = $this->pdo->prepare("
+            DELETE FROM
+                memberslanguageslevel
+            WHERE
+                IdMember = :memberId
+        ");
+        $query->execute(
+            array(
+                'memberId' => $member->id
+            )
+        );
         return $member;
     }
 
@@ -1810,29 +1830,16 @@ VALUES
         $tradIdFields = $entity->get_trads_fields();
         $cryptedFields = $entity->get_crypted_fields();
 
-        $remainingColumns = array_diff($columns, $tradIdFields, $cryptedFields);
+        $remainingColumns = array_diff($columns, $tradIdFields, $cryptedFields,
+            array(
+                'id',
+                'Status',
+                'Username',
+                'password',
+                'Accomodation'
+            )
+        );
 
-        $lastRetired = $this->pdoSingleLookup("
-            SELECT
-                Username
-            FROM
-                members
-            WHERE
-                Username LIKE 'retired\_%'
-            ORDER BY
-                updated DESC
-            LIMIT 1
-                ");
-        if ($lastRetired === false) {
-            $next = 1;
-        } else {
-            $temp = str_ireplace("retired_", "", $lastRetired->Username);
-            $next = intval($temp);
-            if ($next == 0) {
-                $next = 1;
-            }
-            $next++;
-        }
         $rawMembers = $this->pdoBulkLookup("
             SELECT
                 id
@@ -1841,18 +1848,18 @@ VALUES
             WHERE
                 status = 'AskToLeave'
                 AND Username NOT LIKE 'retired\_%'
-                AND DATEDIFF(NOW(), updated) > 365
+                AND LastLogin < CURDATE() - INTERVAL 1 YEAR
              ");
         if (count($rawMembers) != 0) {
             foreach ($rawMembers as $rawMember) {
                 $member = new Member($rawMember->id);
-                $newUsername = 'retired_' . strval($next);
+                $newUsername = 'retired_' . $member->id;
                 $member = $this->_removeCryptedInfo($member, $cryptedTable);
                 $member = $this->_removeProfileInfo($member, $tradIdFields);
                 $member = $this->_cleanupMembersTable($member, $remainingColumns, $tableDescription);
+                $member = $this->_cleanupMemberLanguages($member);
                 $member = $this->_updateUserTable($member, $newUsername);
                 $member->update();
-                $next++;
             }
         }
         return count($rawMembers);

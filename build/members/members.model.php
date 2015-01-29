@@ -112,6 +112,10 @@ SQL
         return $this->createEntity('Member')->findByUsername($username);
     }
 
+    /**
+     * @param $id
+     * @return Member
+     */
     public function getMemberWithId($id)
     {
         if (!($id = intval($id)))

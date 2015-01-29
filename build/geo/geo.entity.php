@@ -190,9 +190,6 @@ class Geo extends RoxEntityBase
         {
             return '';
         }
-        if ($this->id == 0) {
-            return false;
-        }
         if (!$lang)
         {
             return $this->name;

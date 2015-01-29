@@ -747,7 +747,7 @@ VALUES
         $query = '
 SELECT members.Status AS Status
 FROM members
-WHERE members.id = \''.$m->id.'\'
+WHERE members.id = \''.$member->id.'\'
         ';
         $s = $this->dao->query($query);
         if ($s->numRows() != 1)

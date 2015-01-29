@@ -199,7 +199,8 @@ class SignupView extends PAppView
             return false;
         $words = new MOD_words();
 
-        $body = $words->get("SignupBodyActivationMail", $member->Firstname, $member->Secondname, $member->Lastname, PVars::getObj('env')->sitename);
+        $body = $words->get("SignupBodyActivationMail", $member->Firstname, $member->Secondname, $member->Lastname,
+                    PVars::getObj('env')->sitename, $member->Username);
 
         // set the sender & receiver
         $from    = PVars::getObj('mailAddresses')->registration;

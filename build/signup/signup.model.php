@@ -742,8 +742,8 @@ VALUES
             return $error = 'NoStoredKey';
         if( $keyDB->value != $key)
             return $error = 'WrongKey';
-        $M = MOD_member::getMember_username($username);
-        $m->id = $M->getUserId();
+        $memberEntity = new Member();
+        $member = $memberEntity->findByUsername ($username);
         $query = '
 SELECT members.Status AS Status
 FROM members
@@ -759,7 +759,7 @@ WHERE members.id = \''.$m->id.'\'
         $query = "
 UPDATE members
 SET Status = 'Active'
-WHERE id=" . $m->id; // The email is confirmed > make the status Active
+WHERE id=" . $member->id; // The email is confirmed > make the status Active
         $s = $this->dao->query($query);
         if (!$s) {    // TODO: always integrate this check?
             throw new PException('Could not determine if email is in use!');
@@ -767,7 +767,7 @@ WHERE id=" . $m->id; // The email is confirmed > make the status Active
 
         $View = new SignupView($this);
         define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
-        $View->sendActivationMail($m);
+        $View->sendActivationMail($member);
 
         return false; // no error
 	}

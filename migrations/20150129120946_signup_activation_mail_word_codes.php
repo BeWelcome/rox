@@ -3,11 +3,11 @@
 use Phinx\Migration\AbstractMigration;
 
 /**
- * Class FirstLoginWordCode
+ * Class SignupActivationMailWordCodes
  *
  * Add the word code for the flash notice shown after the first login
  *
- * See ticket: #2264
+ * See ticket: #2255
  *
  */
 class SignupActivationMailWordCodes extends Rox\Tools\RoxMigration

@@ -37,6 +37,7 @@ class Member extends RoxEntityBase
     const ACTIVE_ALL = "'Active', 'ActiveHidden', 'ChoiceInactive', 'OutOfRemind', 'Pending'";
     const ACTIVE_SEARCH = "'Active', 'ActiveHidden', 'OutOfRemind', 'Pending'";
     const ACTIVE_WITH_MESSAGES = "'Active', 'OutOfRemind', 'Pending'";
+    const MEMBER_COMMENTS = "'Active', 'ActiveHidden', 'AskToLeave', 'ChoiceInactive', 'OutOfRemind', 'Pending'";
 
     protected $_table_name = 'members';
 
@@ -743,7 +744,7 @@ WHERE
                 AND
                 members.id = comments.IdFromMember
                 AND
-                members.status IN (" . self::ACTIVE_ALL . ")
+                members.status IN (" . self::MEMBER_COMMENTS . ")
             "
         );
 
@@ -759,7 +760,7 @@ WHERE
                 AND
                 members.id = comments.IdFromMember
                 AND
-                members.status IN (" . self::ACTIVE_ALL . ")
+                members.status IN (" . self::MEMBER_COMMENTS . ")
                 AND
                 DisplayInPublic = 1
             "
@@ -1208,7 +1209,7 @@ WHERE
     comments.IdToMember   = " . $this->id . " AND
     comments.IdFromMember = members.Id AND
     comments.IdToMember = members2.Id
-    AND members.Status IN (" . self::ACTIVE_ALL . ")
+    AND members.Status IN (" . self::MEMBERS_COMMENTS . ")
 ORDER BY
     comments.updated DESC
           ";

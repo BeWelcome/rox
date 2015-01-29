@@ -18,7 +18,7 @@ class FirstLoginWordCode extends Rox\Tools\RoxMigration
     public function up()
     {
         // Add word codes as needed
-        $this->AddWordCode('FirstLoginFirst', 'Welcome %s, as it is the first time you login please fill out your profile.', 'Flash notice shown on first login');
+        $this->AddWordCode('LoginFirstLogin', 'Welcome %s, as it is the first time you login please fill out your profile.', 'Flash notice shown on first login');
     }
 
     /**
@@ -26,6 +26,6 @@ class FirstLoginWordCode extends Rox\Tools\RoxMigration
      */
     public function down()
     {
-        $this->RemoveWordCode('FirstLoginFirst');
+        $this->RemoveWordCode('LoginFirstLogin');
     }
 }

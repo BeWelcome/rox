@@ -10,7 +10,7 @@ use Phinx\Migration\AbstractMigration;
  * See ticket: #2208
  *
  */
-class RemoveOldAlternateNames extends RoxMigration
+class RemoveOldAlternateNames extends Rox\Tools\RoxMigration
 {
     /**
      * Migrate Up.

@@ -1209,7 +1209,7 @@ WHERE
     comments.IdToMember   = " . $this->id . " AND
     comments.IdFromMember = members.Id AND
     comments.IdToMember = members2.Id
-    AND members.Status IN (" . self::MEMBERS_COMMENTS . ")
+    AND members.Status IN (" . self::MEMBER_COMMENTS . ")
 ORDER BY
     comments.updated DESC
           ";

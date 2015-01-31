@@ -689,10 +689,12 @@ class MemberToMemberMailbot extends Mailbot
                     $memberPrefersHtml = false;
                 }
                 $subject = $this->words->get("YouveGotAMail", $this->Sender->Username);
+                $title = $this->words->get("YouveGotAMail", '<a href="https://www.bewelcome.org/members/' . $this->Sender->Username . '>'
+                    . $this->Sender->Username . '</a>');
                 $body = $this->_formatMessage($msg);
 
                 // send email and update DB according to result
-                if (!$this->sendEmail($subject, $from, $to, $subject, $body, $MemberIdLanguage, $memberPrefersHtml)) {
+                if (!$this->sendEmail($subject, $from, $to, $title, $body, $MemberIdLanguage, $memberPrefersHtml)) {
                     $this->_updateMessageStatus($msg->id, 'Failed');
                     $this->log("Cannot send messages.id=#" . $msg->id . " to <b>".$this->Receiver->Username."</b> \$Email=[".$to."]", "mailbot");
                 } else {

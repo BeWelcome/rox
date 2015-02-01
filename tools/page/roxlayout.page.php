@@ -147,11 +147,6 @@ class PageWithRoxLayout extends PageWithHTML
             }
         } else {
             $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
-            if (isset($_SESSION["IdMember"])) {
-                $IdMember = intval($_SESSION["IdMember"]);
-                $roxmodel = new Rox();
-                $numberOfNewMessagees = $roxmodel->getNewMessagesNumber($IdMember);
-            }
         }
 
         if (class_exists('MOD_online')) {
@@ -178,6 +173,11 @@ class PageWithRoxLayout extends PageWithHTML
         $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
         $rights = new MOD_right();
         $volunteer = $rights->hasRightAny();
+        if (isset($_SESSION["IdMember"])) {
+            $IdMember = intval($_SESSION["IdMember"]);
+            $roxmodel = new Rox();
+            $numberOfNewMessagees = $roxmodel->getNewMessagesNumber($IdMember);
+        }
         require TEMPLATE_DIR . 'shared/roxpage/topmenu.php';
     }
 

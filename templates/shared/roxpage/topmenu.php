@@ -73,7 +73,7 @@
     <?php if ($logged_in) { ?>
     <ul id="nav_right">
         <li><a style="font-weight: normal" href="main"><?= $username ?></a></li>
-        <li><a href="messages"><i class="icon icon-envelope-alt"></i> [5]</a>
+        <li><a href="messages"><i class="icon icon-envelope-alt"></i> [<?= $numberOfNewMessagees ?>]</a>
             <ul>
                 <li><a href="messages"><?=$words->getBuffered('MyMessages')?></a></li>
             </ul>

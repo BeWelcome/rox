@@ -31,11 +31,12 @@ $numberSpamToBeChecked = $model->getNumberSpamToBeChecked() ;
 $R = MOD_right::get();
 ?>
 
-<ul>
 <?php
 if ($logged_in) {
     $roxModel = new RoxModelBase();
-    echo '<li><b>' . $roxModel->getLoggedInMember()->Username . '</b></li>';
+if ($R->hasRight('Comments') || ($R->hasRight('Checker'))) {
+    echo '<ul>';
+}
 if ($R->hasRight('Comments')) {
     echo '<li><a href="bw/admin/admincomments.php" title="Review negative comments">Negative comments (' . $numberReportedComments . ')</a></li>';
 }
@@ -43,15 +44,8 @@ if ($R->hasRight('Checker')) {
     echo '<li><a href="bw/admin/adminchecker.php?action=viewSpamSayMember" title="Review messages reported by users as spam">Reported messages ('.$numberSpamToBeChecked.')</a></li>';
 }
       ?>
-      <li><img src="styles/css/minimal/images/icon_grey_mail.png" alt="mymessages"/><a href="messages"><?php echo $words->getBuffered('Mymessages'); ?></a>
-          <?php if ($numberOfNewMessagees > 0) {
-              echo "(" . intval($numberOfNewMessagees) . ")";
-              echo $words->flushBuffer();
-          } ?>
-      </li>
-  <li><img src="styles/css/minimal/images/icon_grey_logout.png" alt="logout" /><a href="logout" id="header-logout-link"><?php echo $words->getBuffered('Logout'); ?></a><?php echo $words->flushBuffer(); ?></li>
+      </ul>
   <?php } else { ?>
-  <li><img src="styles/css/minimal/images/icon_grey_logout.png" alt="login" /><a href="<?php echo $login_url ?>#login-widget" id="header-login-link"><?php echo $words->getBuffered('Login'); ?></a><?php echo $words->flushBuffer(); ?></li>
-  <li><a href="signup"><?php echo $words->getBuffered('Signup'); ?></a><?php echo $words->flushBuffer(); ?></li>
+  <ul><li><img src="styles/css/minimal/images/icon_grey_logout.png" alt="login" /><a href="<?php echo $login_url ?>#login-widget" id="header-login-link"><?php echo $words->getBuffered('Login'); ?></a><?php echo $words->flushBuffer(); ?></li>
+  <li><a href="signup"><?php echo $words->getBuffered('Signup'); ?></a><?php echo $words->flushBuffer(); ?></li></ul>
 <?php } ?>
-</ul>

@@ -8,6 +8,8 @@ class PublicStartpage extends RoxPageView
     {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/screen/custom/index.css?3';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome.min.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome-ie7.min.css';
         return $stylesheets;
     }
 

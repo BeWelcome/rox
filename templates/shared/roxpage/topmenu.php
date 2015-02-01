@@ -26,56 +26,72 @@
             <img src="images/logo_index_top.png" alt="Be Welcome" />
           </a>
         </li>
-  <?php if ($logged_in) { ?>
-      <li><a href="members/<?=$username?>"><?=$words->get('MyProfile')?></a>
-          <ul>
-              <li><a href="members/<?=$username?>"><?=$words->get('Profile')?></a></li>
-              <li><a href="editmyprofile"><?=$words->get('EditMyProfile')?></a></li>
-              <li><a href="mypreferences"><?=$words->get('MyPreferences')?></a></li>
-              <li><a href="messages"><?=$words->get('MyMessages')?></a></li>
-              <li><a href="mynotes"><?=$words->get('ProfileMyNotes')?></a></li>
-              <li><a href="groups/mygroups"><?=$words->get('MyGroups')?></a></li>
-          </ul>
-      </li>
-  <?php } ?>
-        <li><a href="search"><?=$words->get('FindMembers')?></a>
+        <li><a href="search"><?=$words->getBuffered('FindMembers')?></a>
             <ul>
-                <li><a href="searchmembers"><?=$words->get('MapSearch')?></a></li>
-                <li><a href="search"><?=$words->get('TextSearch')?></a></li>
-                <li><a href="places"><?=$words->get('BrowseCountries')?></a></li>
+                <li><a href="searchmembers"><?=$words->getBuffered('MapSearch')?></a></li>
+                <li><a href="search"><?=$words->getBuffered('TextSearch')?></a></li>
+                <li><a href="places"><?=$words->getBuffered('BrowseCountries')?></a></li>
             </ul>
         </li>
-        <li><a href="community"><?=$words->get('CommunityMenu')?></a>
+        <li><a href="community"><?=$words->getBuffered('CommunityMenu')?></a>
             <ul>
-                <li><a href="forums" title="<?=$words->getSilent('AgoraTagLine')?>"><?=$words->get('CommunityDiscussions')?></a><?php echo $words->flushBuffer(); ?></li>
-                <li><a href="groups/search" title="<?=$words->getSilent('GroupsTagLine')?>"><?=$words->get('Groups')?></a><?php echo $words->flushBuffer(); ?></li>
-                <li><a href="activities"><?=$words->get('Activities')?></a></li>
+                <li><a href="forums" title="<?=$words->getSilent('AgoraTagLine')?>"><?=$words->getBuffered('CommunityDiscussions')?></a><?php echo $words->flushBuffer(); ?></li>
+                <li><a href="groups/search" title="<?=$words->getSilent('GroupsTagLine')?>"><?=$words->getBuffered('Groups')?></a><?php echo $words->flushBuffer(); ?></li>
+                <li><a href="activities"><?=$words->getBuffered('Activities')?></a></li>
                 <?php // if ($logged_in) { ?>
-                <li><a href="suggestions"><?=$words->get('Suggestions')?></a></li>
+                <li><a href="suggestions"><?=$words->getBuffered('Suggestions')?></a></li>
                 <?php // } ?>
-                <li><a href="trip"><?=$words->get('Trips')?></a></li>
-                <li><a href="blog"><?=$words->get('Blogs')?></a></li>
-                <li><a href="wiki"><?=$words->get('Wiki')?></a></li>
+                <li><a href="trip"><?=$words->getBuffered('Trips')?></a></li>
+                <li><a href="blog"><?=$words->getBuffered('Blogs')?></a></li>
+                <li><a href="wiki"><?=$words->getBuffered('Wiki')?></a></li>
             </ul>
         </li>
-        <li><a href="safety"><?=$words->get('Safety')?></a></li>
-        <li><a href="about"><?=$words->get('GetAnswers')?></a>
+        <li><a href="safety"><?=$words->getBuffered('Safety')?></a></li>
+        <li><a href="about"><?=$words->getBuffered('GetAnswers')?></a>
             <ul>
-                <li><a href="faq"><?=$words->get('Faq')?></a></li>
-                <li><a href="feedback"><?=$words->get('ContactUs')?></a></li>
-                <li><a href="about/getactive"><?=$words->get('About_GetActive')?></a></li>
-                <li><a href="donate"><?=$words->get('DonateLink')?></a></li>
+                <li><a href="faq"><?=$words->getBuffered('Faq')?></a></li>
+                <li><a href="feedback"><?=$words->getBuffered('ContactUs')?></a></li>
+                <li><a href="about/getactive"><?=$words->getBuffered('About_GetActive')?></a></li>
+                <li><a href="donate"><?=$words->getBuffered('DonateLink')?></a></li>
             </ul>
         </li>
         <? if (isset($volunteer) && $volunteer) { ?>
-        <li><a href="volunteer"><?=$words->get('Volunteer')?></a>
-            <?=$this->volunteerMenu() ?>
-        </li>
+            <li><a href="volunteer"><?=$words->getBuffered('Volunteer')?></a>
+                <?=$this->volunteerMenu() ?>
+            </li>
         <? } ?>
+        <?php if ($logged_in) { ?>
+        <!--
+        <li><a href="#"><span class="icon icon-search"></span></a>
+            <ul>
+                <li><?= $this->quicksearch() ?></li>
+            </ul>
+        </li>
+        -->
+        <?php } ?>
     </ul>
+    <?php if ($logged_in) { ?>
+    <ul id="nav_right">
+        <li><a style="font-weight: normal" href="main"><?= $username ?></a></li>
+        <li><a href="messages"><i class="icon icon-envelope-alt"></i> [5]</a>
+            <ul>
+                <li><a href="messages"><?=$words->getBuffered('MyMessages')?></a></li>
+            </ul>
+        </li>
+        <li><a href="mypreferences"><i class="icon icon-gears"></i></a>
+        <ul>
+            <li><a href="members/<?=$username?>"><?=$words->getBuffered('Profile')?></a></li>
+            <li><a href="editmyprofile"><?=$words->getBuffered('EditMyProfile')?></a></li>
+            <li><a href="mypreferences"><?=$words->getBuffered('MyPreferences')?></a></li>
+            <li><a href="messages"><?=$words->getBuffered('MyMessages')?></a></li>
+            <li><a href="mynotes"><?=$words->getBuffered('ProfileMyNotes')?></a></li>
+            <li><a href="groups/mygroups"><?=$words->getBuffered('MyGroups')?></a></li>
+            <li><a href="Logout"><?=$words->getBuffered('Logout')?></a></li>
+        </ul>
+        </li>
+    </ul>
+    <?php } ?>
 
-<!-- show login fields or searchbox, depending if logged in or not-->
-    <?php $this->quicksearch() ?>
 
 </div> <!-- nav -->
 

@@ -17,6 +17,8 @@ class PageWithRoxLayout extends PageWithHTML
     {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/minimal.css?1';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome.min.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome-ie7.min.css';
         return $stylesheets;
     }
 
@@ -256,12 +258,17 @@ class PageWithRoxLayout extends PageWithHTML
 
     protected function leftoverTranslationLinks()
     {
+        $remainingHeader = "";
+        $remainingBody = "";
         $tr_buffer_body = $this->getWords()->flushBuffer();
         if($this->_tr_buffer_header != '') {
-            echo '<br>Remaining words in header: ' . $this->_tr_buffer_header . '<br><br>';
+            $remainingHeader = '<div class="row">Remaining words in header: ' . $this->_tr_buffer_header . '</div>';
         }
         if($tr_buffer_body != '') {
-            echo '<br>Remaining words in body: ' . $tr_buffer_body . '<br><br>';
+            $remainingBody = '<div class="row">Remaining words in body: ' . $tr_buffer_body . '</div>';
+        }
+        if (!empty($remainingHeader) || !empty($remainingBody)) {
+            echo $remainingHeader . $remainingBody;
         }
     }
 

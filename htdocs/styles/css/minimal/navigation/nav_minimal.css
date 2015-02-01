@@ -112,13 +112,13 @@
     padding: 0;
   }
 
-#nav_sub .active .nav_sub_start {
+#nav_sub .active #nav_sub_start {
   	height: 120px;
   	border-right: 1px solid #ccc;
 	padding: 0;
 }
 
-#nav_sub .active .nav_sub_end {
+#nav_sub .active #nav_sub_end {
   	height: 120px;
   	border-left: 1px solid #ccc;
 	padding: 0;
@@ -312,4 +312,89 @@
         padding:0 4px 0 0;
         vertical-align:middle;
     }
+}
+
+#nav_right {
+    float: right;
+    font-weight: bold;
+    font-size: 1.2em;
+    padding: 0;
+    margin: 0;
+    z-index: 999;
+}
+
+#nav_right #logo a {
+    padding: 0.3em 1em;
+}
+
+#nav_right a {
+    display: block;
+    color: #fff;
+    text-decoration: none;
+    line-height: 1.2em;
+    padding: 1.25em 1em;
+}
+
+#nav_right li {
+    float: left;
+    padding: 0;
+    display: block;
+    border-left: 1px solid #ff9922;
+    position: relative;
+}
+
+#nav_right li ul {
+    position:absolute;
+    left: -999em;
+    height: auto;
+    margin: 0;
+    background: #333;
+    font-size: .8em;
+    width: 160px;
+    background: transparent url(images/nav_main_ul.png) no-repeat scroll left bottom;
+    padding: 1em 0;
+}
+
+
+#nav_right li li {
+    width: 140px;
+    border: none;
+}
+#nav_right li li.bottom {
+    width: 140px;
+}
+
+#nav_right li ul a {
+    width: 140px;
+    padding: 0.4em 1.6em;
+}
+
+#nav_right li:hover ul ul, #nav_right li:hover ul ul ul, #nav_right li.sfhover ul ul, #nav_right li.sfhover ul ul ul {
+    left: -999em;
+}
+
+#nav_right li:hover ul, #nav_right li li:hover ul, #nav_right li li li:hover ul, #nav_right li.sfhover ul, #nav_right li li.sfhover ul, #nav_right li li li.sfhover ul {
+    left: auto;
+    right: 0;
+    margin-right: -2em;
+}
+#nav_right li:hover, #nav_right li.sfhover {
+    background: #333;
+}
+#nav_right li#logo,#nav_right li#logo:hover {
+    background: transparent;
+    border: none;
+}
+#nav_right li ul li:hover, #nav_right li ul li.sfhover {
+    background: #454B54;
+}
+#nav_right li:hover, #nav_right li.sfhover {
+    background: #333;
+}
+#nav_right li#logo,#nav_right li#logo:hover {
+    background: transparent;
+    border: none;
+}
+#nav_right li ul li:hover, #nav_right li ul li.sfhover {
+    background: #454B54;
 }

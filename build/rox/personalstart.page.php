@@ -10,6 +10,8 @@ class PersonalStartpage extends RoxPageView
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome.min.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome-ie7.min.css';
         return $stylesheets;
     }
     

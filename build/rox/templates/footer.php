@@ -24,7 +24,6 @@ Boston, MA  02111-1307, USA.
 require_once "footer.helper.php";
 ?>
 
-  <?php translator_block() ?>
 <form style="display: inline;" action="a" method="post">
 <p><?= $words->get('FooterSiteDisplayed', _languageFooterSelectorDropDown()) ?>. <?= $words->get('FooterHelpUsTranslate', '<a href="http://www.bewelcome.org/groups/60/wiki">', '</a>')?></p>
 </form>

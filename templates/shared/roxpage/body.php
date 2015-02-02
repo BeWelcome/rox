@@ -23,7 +23,13 @@
         <?php $this->columnsArea() ?>
     </div> <!-- main -->
 
+      <div>
+          <?php $this->translator_block() ?>
+          <?php $this->debugInfo() ?>
+          <?php $this->leftoverTranslationLinks() ?>
+      </div>
   </div> <!-- page -->
+
 </div>
 <?php
 $piwikBaseURL = PVars::getObj('piwik')->baseurl;

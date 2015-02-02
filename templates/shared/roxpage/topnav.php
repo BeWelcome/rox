@@ -45,7 +45,4 @@ if ($R->hasRight('Checker')) {
 }
       ?>
       </ul>
-  <?php } else { ?>
-  <ul><li><img src="styles/css/minimal/images/icon_grey_logout.png" alt="login" /><a href="<?php echo $login_url ?>#login-widget" id="header-login-link"><?php echo $words->getBuffered('Login'); ?></a><?php echo $words->flushBuffer(); ?></li>
-  <li><a href="signup"><?php echo $words->getBuffered('Signup'); ?></a><?php echo $words->flushBuffer(); ?></li></ul>
-<?php } ?>
+  <?php }?>

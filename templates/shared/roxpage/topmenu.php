@@ -70,15 +70,15 @@
         -->
         <?php } ?>
     </ul>
-    <?php if ($logged_in) { ?>
     <ul id="nav_right">
+    <?php if ($logged_in) { ?>
         <li><a style="font-weight: normal" href="main"><?= $username ?></a></li>
         <li><a href="messages"><i class="icon icon-envelope-alt"></i> [<?= $numberOfNewMessagees ?>]</a>
             <ul>
                 <li><a href="messages"><?=$words->getBuffered('MyMessages')?></a></li>
             </ul>
         </li>
-        <li><a href="mypreferences"><i class="icon icon-gear"></i></a>
+        <li><a href="mypreferences">&nbsp;<i class="icon icon-gear"></i></a>
         <ul>
             <li><a href="members/<?=$username?>"><?=$words->getBuffered('Profile')?></a></li>
             <li><a href="editmyprofile"><?=$words->getBuffered('EditMyProfile')?></a></li>
@@ -89,10 +89,11 @@
             <li><a href="Logout"><?=$words->getBuffered('Logout')?></a></li>
         </ul>
         </li>
-    </ul>
+    <?php }  else { ?>
+    <li><a href="<?= $login_url ?>#login-widget" id="header-login-link"><i class="icon icon-off"></i> <?php echo $words->getBuffered('Login'); ?></a><?php echo $words->flushBuffer(); ?></li>
+    <li><a href="signup"><?php echo $words->getBuffered('Signup'); ?></a><?php echo $words->flushBuffer(); ?></li>
     <?php } ?>
-
-
+    </ul>
 </div> <!-- nav -->
 
 

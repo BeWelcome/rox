@@ -28,7 +28,7 @@
 }
 
 #nav_main #logo a {
-    padding: 0.3em 1em;
+    padding: 0.4em 1em;
     margin-left: -30px;
 }
 
@@ -60,17 +60,23 @@
     display: block;
     float: left;
     padding: 1em 0;
+    min-width: 10em;
+    width: auto;
 }
-
 
 #nav_main li li {
     border: none;
+    float: left;
+    clear: left;
+    width: auto;
+    min-width: 100%;
 }
 #nav_main li li.bottom {
 }
 
 #nav_main li ul a {
     display: block;
+    float:left;
     clear: both;
     padding: 0.4em 1.6em;
 }
@@ -354,21 +360,17 @@
     margin: 0;
     background: #333;
     font-size: .8em;
-    width: 160px;
+    width: auto;
+    min-width: 10em;
     padding: 1em 0;
 }
 
 
 #nav_right li li {
-    width: 158px;
+    min-width: 100%;
     border: none;
 }
-#nav_right li li.bottom {
-    width: 158px;
-}
-
 #nav_right li ul a {
-    width: 158px;
     padding: 0.4em 1.6em;
 }
 

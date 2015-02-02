@@ -275,3 +275,4 @@ ul.icons li [class*=" icon-"] {
 .icon-search:before { content: "\f002"; }
 .icon-envelope-alt:before { content: "\f003"; }
 .icon-gear:before { content: "\f013"; }
+.icon-off:before { content: "\f011"; }

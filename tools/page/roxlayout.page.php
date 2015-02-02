@@ -132,22 +132,6 @@ class PageWithRoxLayout extends PageWithHTML
     {
         $words = $this->getWords();
         $logged_in = APP_User::IsBWLoggedIn("NeedMore,Pending");
-        if (!$logged_in) {
-            $request = PRequest::get()->request;
-            if (!isset($request[0])) {
-                $login_url = 'login';
-            } else switch ($request[0]) {
-                case 'login':
-                case 'main':
-                case 'start':
-                    $login_url = 'login';
-                    break;
-                default:
-                    $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
-            }
-        } else {
-            $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
-        }
 
         if (class_exists('MOD_online')) {
             $who_is_online_count = MOD_online::get()->howManyMembersOnline();
@@ -170,7 +154,23 @@ class PageWithRoxLayout extends PageWithHTML
         $menu_items = $this->getTopmenuItems();
         $active_menu_item = $this->getTopmenuActiveItem();
         $logged_in = APP_User::isBWLoggedIn('NeedMore,Pending');
-        $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
+        if (!$logged_in) {
+            $request = PRequest::get()->request;
+            if (!isset($request[0])) {
+                $login_url = 'login';
+            } else switch ($request[0]) {
+                case 'login':
+                case 'main':
+                case 'start':
+                    $login_url = 'login';
+                    break;
+                default:
+                    $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
+            }
+        } else {
+            $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
+        }
+
         $rights = new MOD_right();
         $volunteer = $rights->hasRightAny();
         if (isset($_SESSION["IdMember"])) {

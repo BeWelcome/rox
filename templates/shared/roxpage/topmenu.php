@@ -56,7 +56,7 @@
             </ul>
         </li>
         <? if (isset($volunteer) && $volunteer) { ?>
-            <li><a href="volunteer"><?=$words->getBuffered('Volunteer')?></a>
+            <li class="last"><a href="volunteer"><?=$words->getBuffered('Volunteer')?></a>
                 <?=$this->volunteerMenu() ?>
             </li>
         <? } ?>
@@ -78,7 +78,7 @@
                 <li><a href="messages"><?=$words->getBuffered('MyMessages')?></a></li>
             </ul>
         </li>
-        <li><a href="mypreferences"><i class="icon icon-gears"></i></a>
+        <li><a href="mypreferences"><i class="icon icon-gear"></i></a>
         <ul>
             <li><a href="members/<?=$username?>"><?=$words->getBuffered('Profile')?></a></li>
             <li><a href="editmyprofile"><?=$words->getBuffered('EditMyProfile')?></a></li>

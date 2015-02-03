@@ -47,7 +47,7 @@
             </ul>
         </li>
         <li><a href="safety"><?=$words->getBuffered('Safety')?></a></li>
-        <li><a href="about"><?=$words->getBuffered('GetAnswers')?></a>
+        <li <?php echo ((!$volunteer) ? 'class="last"' : '') ?>><a href="about"><?=$words->getBuffered('GetAnswers')?></a>
             <ul>
                 <li><a href="faq"><?=$words->getBuffered('Faq')?></a></li>
                 <li><a href="feedback"><?=$words->getBuffered('ContactUs')?></a></li>
@@ -55,7 +55,7 @@
                 <li><a href="donate"><?=$words->getBuffered('DonateLink')?></a></li>
             </ul>
         </li>
-        <? if (isset($volunteer) && $volunteer) { ?>
+        <?php if (isset($volunteer) && $volunteer) { ?>
             <li class="last"><a href="volunteer"><?=$words->getBuffered('Volunteer')?></a>
                 <?=$this->volunteerMenu() ?>
             </li>
@@ -73,12 +73,8 @@
     <ul id="nav_right">
     <?php if ($logged_in) { ?>
         <li><a style="font-weight: normal" href="main"><?= $username ?></a></li>
-        <li><a href="messages"><i class="icon icon-envelope-alt"></i> [<?= $numberOfNewMessagees ?>]</a>
-            <ul>
-                <li><a href="messages"><?=$words->getBuffered('MyMessages')?></a></li>
-            </ul>
-        </li>
-        <li><a href="mypreferences">&nbsp;<i class="icon icon-gear"></i></a>
+        <li><a href="messages"><i class="icon icon-inbox"></i> <span style="font-weight: normal" >[<?= $numberOfNewMessagees ?>]</span></a></li>
+        <li style="padding-left:0"><a href="mypreferences">&nbsp;<i class="icon icon-gear"></i></a>
         <ul>
             <li><a href="members/<?=$username?>"><?=$words->getBuffered('Profile')?></a></li>
             <li><a href="editmyprofile"><?=$words->getBuffered('EditMyProfile')?></a></li>
@@ -86,9 +82,10 @@
             <li><a href="messages"><?=$words->getBuffered('MyMessages')?></a></li>
             <li><a href="mynotes"><?=$words->getBuffered('ProfileMyNotes')?></a></li>
             <li><a href="groups/mygroups"><?=$words->getBuffered('MyGroups')?></a></li>
-            <li><a href="Logout"><?=$words->getBuffered('Logout')?></a></li>
+            <li><a href="logout"><?=$words->getBuffered('Logout')?></a></li>
         </ul>
         </li>
+        <li style="padding-left:0"><a href="logout">&nbsp;<i class="icon icon-off"></i></a></li>
     <?php }  else { ?>
     <li><a href="<?= $login_url ?>#login-widget" id="header-login-link"><i class="icon icon-off"></i> <?php echo $words->getBuffered('Login'); ?></a><?php echo $words->flushBuffer(); ?></li>
     <li><a href="signup"><?php echo $words->getBuffered('Signup'); ?></a><?php echo $words->flushBuffer(); ?></li>

@@ -28,7 +28,7 @@
 
   /* Layout Alignment | Layout-Ausrichtung */
   #page_margins { min-width: 900px; max-width: 960px; margin: 0 auto; width: auto;
-      padding-bottom:10em;   /* Height of the footer */
+      padding-bottom:8em;   /* Height of the footer */
   }
   #page { padding: 0;
   }
@@ -43,7 +43,7 @@
   #nav { top: 0; padding: 0 2em; background-color: #f37000;}
   #teaser { margin: 0 0 1em 0; background: transparent url(../images/teaser_bg_white2.png) no-repeat bottom left; }
   #main { padding: 0 4em; }
-  #bottom { height:10em;
+  #bottom { height:8em;
       position:absolute;
       bottom:0;
       border-top: 1px solid white;

@@ -316,7 +316,7 @@ class PageWithHTML extends AbstractBasePage
 
     protected function translator_block() {
         if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
-        ?><div id="translator" class="row"><?php
+        ?><div id="translator" class="float_right"><?php
         $request_string = implode('/',PVars::get()->request);
         $rox_tr = PVars::getObj("env")->baseuri . "rox/tr_mode";
         $words = new MOD_words();

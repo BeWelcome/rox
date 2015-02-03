@@ -17,7 +17,9 @@
 
 @media all
 {
-
+#nav li ul li a:hover {
+    color: #f37000;
+}
 #nav_main, #nav_main ul {
     float: left;
     font-weight: bold;
@@ -56,10 +58,11 @@
     height: auto;
     margin: 0;
     background: #333;
+    background: rgba(3,3,3,0.7);
     font-size: .8em;
     display: block;
     float: left;
-    padding: 1em 0;
+    padding: 0;
     min-width: 10em;
     width: auto;
 }
@@ -78,7 +81,7 @@
     display: block;
     float:left;
     clear: both;
-    padding: 0.4em 1.6em;
+    padding: 1em 1.6em;
 }
 
 #nav_main li:hover ul ul, #nav_main li:hover ul ul ul, #nav_main li.sfhover ul ul, #nav_main li.sfhover ul ul ul {
@@ -96,7 +99,7 @@
     border: none;
 }
 #nav_main li ul li:hover, #nav_main li ul li.sfhover {
-    background: #454B54;
+    color: #f37000;
 }
 
   /* css for menus insides applications */
@@ -359,23 +362,33 @@
     height: auto;
     margin: 0;
     background: #333;
+    background: rgba(3,3,3,0.7);
     font-size: .8em;
+    display: block;
+    float: left;
+    padding: 0;
     width: auto;
     min-width: 10em;
-    padding: 1em 0;
 }
-
 
 #nav_right li li {
-    min-width: 100%;
     border: none;
+    float: left;
+    clear: left;
+    width: auto;
+    min-width: 100%;
+    white-space: nowrap;
 }
+
 #nav_right li ul a {
-    padding: 0.4em 1.6em;
+    display: block;
+    float:left;
+    clear: both;
+    padding: 1em 1.6em;
 }
 
 #nav_right li:hover ul ul, #nav_right li:hover ul ul ul, #nav_right li.sfhover ul ul, #nav_right li.sfhover ul ul ul {
-    left: -999em;
+    left: auto;
 }
 
 #nav_right li:hover ul, #nav_right li li:hover ul, #nav_right li li li:hover ul, #nav_right li.sfhover ul, #nav_right li li.sfhover ul, #nav_right li li li.sfhover ul {
@@ -390,7 +403,6 @@
     border: none;
 }
 #nav_right li ul li:hover, #nav_right li ul li.sfhover {
-    background: #454B54;
 }
 #nav_right li:hover, #nav_right li.sfhover {
     background: #333;
@@ -400,5 +412,5 @@
     border: none;
 }
 #nav_right li ul li:hover, #nav_right li ul li.sfhover {
-    background: #454B54;
+    background: #333;
 }

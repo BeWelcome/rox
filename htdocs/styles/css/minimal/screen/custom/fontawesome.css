@@ -276,3 +276,4 @@ ul.icons li [class*=" icon-"] {
 .icon-envelope-alt:before { content: "\f003"; }
 .icon-gear:before { content: "\f013"; }
 .icon-off:before { content: "\f011"; }
+.icon-inbox:before{content:"\f01c";}

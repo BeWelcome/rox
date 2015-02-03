@@ -24,7 +24,6 @@
     </div> <!-- main -->
 
       <div>
-          <?php $this->translator_block() ?>
           <?php $this->debugInfo() ?>
           <?php $this->leftoverTranslationLinks() ?>
       </div>

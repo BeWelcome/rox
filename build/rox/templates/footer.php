@@ -25,8 +25,15 @@ require_once "footer.helper.php";
 ?>
 
 <form style="display: inline;" action="a" method="post">
-<p><?= $words->get('FooterSiteDisplayed', _languageFooterSelectorDropDown()) ?>. <?= $words->get('FooterHelpUsTranslate', '<a href="http://www.bewelcome.org/groups/60/wiki">', '</a>')?></p>
+<div class="float_left"><?= $words->get('FooterSiteDisplayed', _languageFooterSelectorDropDown()) ?>.
+    <?php         if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
+        echo '</div>';
+        $this->translator_block();
+    } else {
+    echo $words->get('FooterHelpUsTranslate', '<a href="http://www.bewelcome.org/groups/60/wiki">', '</a>') . '</div>';
+} ?>
 </form>
+<div class="clearfix"></div>
 <p>
     <a href="about" class="larger"><?php echo $words->getFormatted('AboutUsPage'); ?></a> •
     <a href="terms" target="new"><?php echo $words->getFormatted('TermsOfUse'); ?></a> •

@@ -85,7 +85,6 @@
             <li><a href="logout"><?=$words->getBuffered('Logout')?></a></li>
         </ul>
         </li>
-        <li style="padding-left:0"><a href="logout">&nbsp;<i class="icon icon-off"></i></a></li>
     <?php }  else { ?>
     <li><a href="<?= $login_url ?>#login-widget" id="header-login-link"><i class="icon icon-off"></i> <?php echo $words->getBuffered('Login'); ?></a><?php echo $words->flushBuffer(); ?></li>
     <li><a href="signup"><?php echo $words->getBuffered('Signup'); ?></a><?php echo $words->flushBuffer(); ?></li>

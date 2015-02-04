@@ -74,7 +74,7 @@
     <?php if ($logged_in) { ?>
         <li><a style="font-weight: normal" href="main"><?= $username ?></a></li>
         <li><a href="messages"><i class="icon icon-inbox"></i> <span style="font-weight: normal" >[<?= $numberOfNewMessagees ?>]</span></a></li>
-        <li style="padding-left:0"><a href="mypreferences">&nbsp;<i class="icon icon-gear"></i></a>
+        <li><a href="mypreferences" style="line-height: 1.6em; padding: 1em 0.75em">&nbsp;<i class="icon icon-gear" style="vertical-align: middle; font-size: 1.6em; font-weight: normal;"></i></a>
         <ul>
             <li><a href="members/<?=$username?>"><?=$words->getBuffered('Profile')?></a></li>
             <li><a href="editmyprofile"><?=$words->getBuffered('EditMyProfile')?></a></li>

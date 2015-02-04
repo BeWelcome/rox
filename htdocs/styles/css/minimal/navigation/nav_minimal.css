@@ -30,19 +30,26 @@
 }
 
 #nav_main #logo a {
-    padding: 0.4em 1em;
+    padding-top: 0.7em;
+    padding-right: 1em;
+    padding-bottom: 0.25em;
     margin-left: -30px;
 }
+    .gear {
+        line-height: 1.7em;
+        padding: 1em 0.75em;
+    }
 
-#nav_main a {
-    display: block;
-    color: #fff;
-    text-decoration: none;
-    line-height: 1.2em;
-    padding: 1.25em 0.75em;
-}
 
-#nav_main li {
+    #nav_main a {
+        display: block;
+        color: #fff;
+        text-decoration: none;
+        line-height: 1.2em;
+        padding: 1.25em 0.75em;
+    }
+
+    #nav_main li {
     float: left;
     padding: 0;
     display: block;
@@ -58,7 +65,7 @@
     height: auto;
     margin: 0;
     background: #333;
-    background: rgba(3,3,3,0.7);
+    background: rgba(3,3,3,0.8);
     font-size: .8em;
     display: block;
     float: left;
@@ -362,7 +369,7 @@
     height: auto;
     margin: 0;
     background: #333;
-    background: rgba(3,3,3,0.7);
+    background: rgba(3,3,3,0.8);
     font-size: .8em;
     display: block;
     float: left;

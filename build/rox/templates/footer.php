@@ -25,7 +25,7 @@ require_once "footer.helper.php";
 ?>
 
 <form style="display: inline;" action="a" method="post">
-<div class="float_left"><?= $words->get('FooterSiteDisplayed', _languageFooterSelectorDropDown()) ?>.
+<div class="float_left"><?= $words->get('FooterSiteDisplayed', _languageFooterSelectorDropDown()) ?>
     <?php         if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
         echo '</div>';
         $this->translator_block();
@@ -35,7 +35,7 @@ require_once "footer.helper.php";
 </form>
 <div class="clearfix"></div>
 <p>
-    <a href="about" class="larger"><?php echo $words->getFormatted('AboutUsPage'); ?></a> •
+    <a href="about"><strong><?php echo $words->getFormatted('AboutUsPage'); ?></strong></a> •
     <a href="terms" target="new"><?php echo $words->getFormatted('TermsOfUse'); ?></a> •
     <a href="privacy" target="new"><?php echo $words->getFormatted('Privacy'); ?></a> •
     <a href="impressum"><?php echo $words->getFormatted('Impressum') ?></a> •

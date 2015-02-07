@@ -543,26 +543,27 @@ dl.list {
    */
 
   #footer {
-    border: none;
+    // border: none;
     text-align: left;
-    color: #6A6A5B;
+    color: #e3e3e3;
   }
-  #footer p {font-size: 0.9em;}
+  #footer p {font-size: 1em;}
 
-  #footer a {margin: 0.1em 0 0 0; padding: 0.2em 0 0 0; color:#777; font-weight: normal; text-align: left; white-space: nowrap; }
-  #footer a:hover { text-decoration:underline; }
-  #footer a:focus { text-decoration:underline; }
+  #footer a {margin: 0.1em 0 0 0; padding: 0.2em 0 0 0; color:#e3e3e3; font-weight: normal; text-align: left; white-space: nowrap; }
+  #footer a:hover { color: white; text-decoration:underline; }
+  #footer a:focus { color: white; text-decoration:underline; }
   #footer .linklist {padding-top: 0.2em;}
-  #footer #language-select { font-size: 0.9em; }
-  
+  #footer #language { font-size: 0.9em; border: 0; outline: 0; background-color: #646464; color: #e3e3e3;}
+  #footer .larger { font-size: 1.2em}
+
   #footer #flags {padding: 0 0 2.5em 0; line-height: 1em; }
   #footer #flags a {
-    color: #333;
+    color: #e3e3e3;
     margin: 0.1em 0.2em 0 0;
     padding: 0.2em 0.3em 0 0;
   }
-  #footer #flags a:hover {color: #333; text-decoration:underline; }
-  #footer #flags a:focus {color: #333; text-decoration:underline; }
+  #footer #flags a:hover {color: #e3e3e3; text-decoration:underline; }
+  #footer #flags a:focus {color: #e3e3e3; text-decoration:underline; }
 
 
 /* ###########################################
@@ -1010,13 +1011,6 @@ div.box div.boxbottom div.links {
 #loginmessage.false {
     background: #222222 url(../images/iconsfam/exclamation.png) no-repeat scroll 1em 1em;
     border-bottom: 4px solid #ff0000;
-}
-#language_select {
-  color: #ffffff;
-  float: right;
-  padding: 1.4em 1.7em 0em;
-  font-size: 1.1em;
-  font-weight: bold;
 }
 
 /**

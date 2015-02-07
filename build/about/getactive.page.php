@@ -23,5 +23,12 @@ class AboutGetactivePage extends AboutBasePage
     protected function column_col3() {
         require 'templates/getactive.php';
     }
+
+    protected function getStylesheets()
+    {
+        $stylesheets = parent::getStylesheets();
+        $stylesheets[] = 'styles/css/minimal/screen/custom/getactive.css';
+        return $stylesheets;
+    }
 }
 

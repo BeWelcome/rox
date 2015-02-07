@@ -143,11 +143,11 @@ class MOD_mail
         $body = $purifier->purify($body);
 
         $html2text = new Html2Text\Html2Text($body, false, array('do_links' => 'table', 'width' => 75));
-        $plain = $html2text->get_text();
+        $plain = $html2text->getText();
 
         $message->setBody($plain);
 
-        $message->addPart($plain, 'text/plain');
+//        $message->addPart($plain, 'text/plain');
 
         // Add the html-body only if the member wants HTML mails
         if ($html) {

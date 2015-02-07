@@ -68,12 +68,8 @@ function _languageSelectorDropDown()
     $words = new MOD_words();
     $langsel = '';
     $request_string = htmlspecialchars(implode('/',PVars::get()->request), ENT_QUOTES);
-    $langsel = '
-    <form id="language_select" action="a" method="post">';
-    // '.$words->get('Languages').':
-    $langsel.= '<select id="language" name="language" class="combo" onchange="window.location.href=this.value; return false">'
-    ;
-    $langsel .= _languageOptions($words) . '</select></form>';
+    $langsel.= '<select id="language" name="language" class="combo" onchange="window.location.href=this.value; return false">';
+    $langsel .= _languageOptions($words) . '</select>';
     return $langsel;
 }
 
@@ -83,9 +79,8 @@ function _languageFooterSelectorDropDown()
     $langsel = '';
     $request_string = htmlspecialchars(implode('/',PVars::get()->request), ENT_QUOTES);
     $langsel = '
-    <form style="display: inline;" action="a" method="post">
       <select id="language" name="language" class="combo" onchange="window.location.href=this.value; return false">';
-    $langsel .= _languageOptions($words) . '</select></form>';
+    $langsel .= _languageOptions($words) . '</select>';
     return $langsel;
 }
 

@@ -17,7 +17,9 @@
 
 @media all
 {
-
+#nav li ul li a:hover {
+    color: #f37000;
+}
 #nav_main, #nav_main ul {
     float: left;
     font-weight: bold;
@@ -28,48 +30,65 @@
 }
 
 #nav_main #logo a {
-    padding: 0.3em 1em;
+    padding-top: 0.7em;
+    padding-right: 1em;
+    padding-bottom: 0.25em;
+    margin-left: -30px;
 }
+    .gear {
+        line-height: 1.7em;
+        padding: 1em 0.75em;
+    }
 
-#nav_main a {
-    display: block;
-    color: #fff;
-    text-decoration: none;
-    line-height: 1.2em;
-    padding: 1.25em 1em;
-}
 
-#nav_main li {
+    #nav_main a {
+        display: block;
+        color: #fff;
+        text-decoration: none;
+        line-height: 1.2em;
+        padding: 1.25em 0.75em;
+    }
+
+    #nav_main li {
     float: left;
     padding: 0;
     display: block;
-    border-left: 1px solid #ff9922;
+    border-left: 1px solid white;
 }
 
+#nav_main li.last {
+    border-right: 1px solid white;
+}
 #nav_main li ul {
     position:absolute;
     left: -999em;
     height: auto;
     margin: 0;
     background: #333;
+    background: rgba(3,3,3,0.8);
     font-size: .8em;
-    width: 160px;
-    background: transparent url(images/nav_main_ul.png) no-repeat scroll left bottom;
-    padding: 1em 0;
+    display: block;
+    float: left;
+    padding: 0;
+    min-width: 10em;
+    width: auto;
 }
-
 
 #nav_main li li {
-    width: 140px;
     border: none;
+    float: left;
+    clear: left;
+    width: auto;
+    min-width: 100%;
 }
 #nav_main li li.bottom {
-    width: 140px;
 }
 
 #nav_main li ul a {
-    width: 140px;
-    padding: 0.4em 1.6em;
+    display: block;
+    float:left;
+    clear: both;
+    padding: 1em 1.6em;
 }
 
 #nav_main li:hover ul ul, #nav_main li:hover ul ul ul, #nav_main li.sfhover ul ul, #nav_main li.sfhover ul ul ul {
@@ -87,7 +106,7 @@
     border: none;
 }
 #nav_main li ul li:hover, #nav_main li ul li.sfhover {
-    background: #454B54;
+    color: #f37000;
 }
 
   /* css for menus insides applications */
@@ -112,13 +131,13 @@
     padding: 0;
   }
 
-#nav_sub .active .nav_sub_start {
+#nav_sub .active #nav_sub_start {
   	height: 120px;
   	border-right: 1px solid #ccc;
 	padding: 0;
 }
 
-#nav_sub .active .nav_sub_end {
+#nav_sub .active #nav_sub_end {
   	height: 120px;
   	border-left: 1px solid #ccc;
 	padding: 0;
@@ -312,4 +331,93 @@
         padding:0 4px 0 0;
         vertical-align:middle;
     }
+}
+
+#nav_right {
+    float: right;
+    font-weight: bold;
+    font-size: 1.2em;
+    padding: 0;
+    margin: 0;
+    z-index: 999;
+    background-color: #f37000;
+}
+
+#nav_right #logo a {
+    padding: 0.3em 1em;
+}
+
+#nav_right a {
+    display: block;
+    color: #fff;
+    text-decoration: none;
+    line-height: 1.2em;
+    padding: 1.25em 0.75em;
+}
+
+#nav_right li {
+    float: left;
+    padding: 0;
+    display: block;
+    position: relative;
+    z-index: 900;
+}
+
+#nav_right li ul {
+    position:absolute;
+    left: -999em;
+    height: auto;
+    margin: 0;
+    background: #333;
+    background: rgba(3,3,3,0.8);
+    font-size: .8em;
+    display: block;
+    float: left;
+    padding: 0;
+    width: auto;
+    min-width: 10em;
+}
+
+#nav_right li li {
+    border: none;
+    float: left;
+    clear: left;
+    width: auto;
+    min-width: 100%;
+    white-space: nowrap;
+}
+
+#nav_right li ul a {
+    display: block;
+    float:left;
+    clear: both;
+    padding: 1em 1.6em;
+}
+
+#nav_right li:hover ul ul, #nav_right li:hover ul ul ul, #nav_right li.sfhover ul ul, #nav_right li.sfhover ul ul ul {
+    left: auto;
+}
+
+#nav_right li:hover ul, #nav_right li li:hover ul, #nav_right li li li:hover ul, #nav_right li.sfhover ul, #nav_right li li.sfhover ul, #nav_right li li li.sfhover ul {
+    left: auto;
+    right: 0;
+}
+#nav_right li:hover, #nav_right li.sfhover {
+    background: #333;
+}
+#nav_right li#logo,#nav_right li#logo:hover {
+    background: transparent;
+    border: none;
+}
+#nav_right li ul li:hover, #nav_right li ul li.sfhover {
+}
+#nav_right li:hover, #nav_right li.sfhover {
+    background: #333;
+}
+#nav_right li#logo,#nav_right li#logo:hover {
+    background: transparent;
+    border: none;
+}
+#nav_right li ul li:hover, #nav_right li ul li.sfhover {
+    background: #333;
 }

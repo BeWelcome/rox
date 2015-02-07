@@ -112,6 +112,10 @@ SQL
         return $this->createEntity('Member')->findByUsername($username);
     }
 
+    /**
+     * @param $id
+     * @return Member
+     */
     public function getMemberWithId($id)
     {
         if (!($id = intval($id)))
@@ -1591,5 +1595,277 @@ VALUES
             return true;
         }
         return false;
+    }
+
+    /**
+     * Helper function for removeMembers. Removes private information.
+     *
+     * Links to private information are stored in addresses and members.
+     * The info itself is stored in syshcvol|Crypted.cryptedfields.
+     *
+     * @param Member $member
+     */
+    private function _removeCryptedInfo(Member $member, $cryptedTable) {
+        // First get information from addresses
+        $rows = $this->pdoBulkLookup("
+            SELECT
+                HouseNumber,
+                StreetName,
+                Zip,
+                Explanation,
+                IdGettingThere
+            FROM
+                addresses
+            WHERE
+                IdMember = :memberId
+            ", array(':memberId' => $member->id)
+        );
+        if (count($rows) != 0) {
+            $cryptedFields = array();
+            foreach ($rows as $row) {
+                $cryptedFields[] = $row->HouseNumber;
+                $cryptedFields[] = $row->StreetName;
+                $cryptedFields[] = $row->Zip;
+                $cryptedFields[] = $row->Explanation;
+                $cryptedFields[] = $row->IdGettingThere;
+            }
+            $query = $this->pdo->prepare("
+            DELETE FROM " .
+                $cryptedTable . "
+            WHERE
+                id IN ( '" . implode("', '", $cryptedFields) . "')
+                ");
+            $query->execute();
+            $query = $this->pdo->prepare("
+            DELETE FROM
+                addresses
+            WHERE
+                IdMember = :memberId
+            ");
+            $query->execute(array('memberId' => $member->id));
+        }
+
+        // Now remove link between members table and addresses
+        $member->IdCity = 0;
+        $member->Id4City = 0;
+
+        // Second remove links to crypted fields stored in members table
+        $cryptedFields = $member->get_crypted_fields();
+        $rows = $this->pdoBulkLookup("
+            SELECT "
+            . implode(', ', $cryptedFields) .
+            " FROM
+                members
+            WHERE
+                id = :memberId
+            ", array('memberId' => $member->id)
+        );
+        if (count($rows) != 0) {
+            $cryptedIds = array();
+            foreach ($rows as $row) {
+                foreach ($row as $key => $value) {
+                    // Collect original value
+                    $cryptedIds[$key] = $value;
+                    // Remove link
+                    $member->$key = 0;
+                }
+            }
+            $query = $this->pdo->prepare("
+            DELETE FROM " .
+                $cryptedTable . "
+            WHERE
+                id IN ( '" . implode("', '", $cryptedIds) . "' )
+                ");
+            $query->execute();
+        }
+        return $member;
+    }
+
+    /**
+     * Helper function for removeMembers. Removes profile information.
+     *
+     * Links to private information are stored in members.
+     * The info itself is stored in memberstrads.
+     *
+     * @param Member $member
+     */
+    private function _removeProfileInfo(Member $member, $tradIdFields) {
+        // First get information from addresses
+        $rows = $this->pdoBulkLookup("
+            SELECT "
+                . implode(', ', $tradIdFields) .
+            " FROM
+                members
+            WHERE
+                id = :memberId
+            ", array(
+                'memberId' => $member->id
+            )
+        );
+        $tradIds = array();
+        foreach($rows as $row) {
+            foreach($row as $key => $value) {
+                // Collect original value
+                $tradIds[$key] = $value;
+                // Remove link
+                $member->$key = 0;
+            }
+        }
+        $query = $this->pdo->prepare("
+            DELETE FROM
+                memberstrads
+            WHERE
+                IdOwner = :memberId
+                AND IdTrad IN ( '" . implode("', '", $tradIds) . "' )
+                ");
+        $query->execute(
+            array(
+                ':memberId' => $member->id
+            )
+        );
+        return $member;
+    }
+
+    /**
+     * Helper function for removeMembers. Cleans the members table.
+     *
+     * @param Member $member
+     * @param array remainingColumns All columns that are neither crypted nor translations
+     * @param array tableDescription Detailed information about the different columns
+     */
+    private function _cleanupMembersTable(Member $member, $remainingColumns, $tableDescription) {
+        foreach($remainingColumns as $column) {
+            switch($tableDescription[$column]['type']) {
+                case 'set':
+                case 'int':
+                    $member->$column = 0;
+                    break;
+                case 'date':
+                case 'datetime':
+                    $member->$column = '1970-01-01';
+                    break;
+                case 'timestamp':
+                    break;
+                case "enum":
+                    if ($tableDescription[$column]['allow_null']) {
+                        $member->$column = 0;
+                    } else {
+                        $member->$column = $tableDescription[$column]['values'][0];
+                    }
+                    break;
+                case "tinytext":
+                    $member->$column = '';
+                    break;
+                default:
+                    break;
+            }
+        }
+        $member->Accomodation = 'NeverAsk';
+        $member->updated = date('Y-m-d H:i:s');
+        $member->setPassword('password');
+        return $member;
+    }
+
+    /**
+     * Helper function for removeMembers. Cleans the memberslanguageslevel table.
+     *
+     * @param Member $member
+     */
+    private function _cleanupMemberLanguages(Member $member) {
+        $query = $this->pdo->prepare("
+            DELETE FROM
+                memberslanguageslevel
+            WHERE
+                IdMember = :memberId
+        ");
+        $query->execute(
+            array(
+                'memberId' => $member->id
+            )
+        );
+        return $member;
+    }
+
+    /**
+     * Helper function for removeMembers
+     *
+     * Sets the user handle to retired_xyz, removes the password and email address
+     * from the user table
+     */
+    private function _updateUserTable(Member $member, $newUsername)
+    {
+        $query = $this->pdo->prepare("
+            UPDATE
+                user
+            SET
+                handle = :newHandle,
+                pw = PASSWORD(:password),
+                email = :email
+            WHERE
+                handle = :handle
+            ");
+        $query->bindValue('handle', $member->Username);
+        $query->bindValue('newHandle', $newUsername);
+        $query->bindValue(':password', 'password');
+        $query->bindValue('email', 'noemail@example.com');
+        $query->execute();
+        $member->Username = $newUsername;
+        return $member;
+    }
+
+    /**
+     * This functions is called daily by a cron job to ensure that data of members that asked to leave a year ago
+     * are removed from the database.
+     *
+     * The following is done for each member:
+     * - Collect all member trad IDs and delete the rows from the member trads table
+     * - set all ids to 0
+     * - delete row for this member from address
+     * - delete row for this member from user
+     * - delete all personal information
+     * - Set username to retired_xyz
+     */
+    public function removeMembers()
+    {
+        $cryptedTable = PVars::getObj('syshcvol')->Crypted . "cryptedfields";
+        $entity = new Member();
+        $tableDescription = $entity->getTableDescription();
+        $columns = $entity->getColumns();
+        $tradIdFields = $entity->get_trads_fields();
+        $cryptedFields = $entity->get_crypted_fields();
+
+        $remainingColumns = array_diff($columns, $tradIdFields, $cryptedFields,
+            array(
+                'id',
+                'Status',
+                'Username',
+                'password',
+                'Accomodation'
+            )
+        );
+
+        $rawMembers = $this->pdoBulkLookup("
+            SELECT
+                id
+            FROM
+                members
+            WHERE
+                status = 'AskToLeave'
+                AND Username NOT LIKE 'retired\_%'
+                AND LastLogin < CURDATE() - INTERVAL 1 YEAR
+             ");
+        if (count($rawMembers) != 0) {
+            foreach ($rawMembers as $rawMember) {
+                $member = new Member($rawMember->id);
+                $newUsername = 'retired_' . $member->id;
+                $member = $this->_removeCryptedInfo($member, $cryptedTable);
+                $member = $this->_removeProfileInfo($member, $tradIdFields);
+                $member = $this->_cleanupMembersTable($member, $remainingColumns, $tableDescription);
+                $member = $this->_cleanupMemberLanguages($member);
+                $member = $this->_updateUserTable($member, $newUsername);
+                $member->update();
+            }
+        }
+        return count($rawMembers);
     }
 }

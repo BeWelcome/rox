@@ -407,11 +407,32 @@ VALUES
         $members = $this->dao->query($query);
         $memberID = $members->insertId();
 
-        $memberEntity = $this->createEntity('Member', $memberID);
+        $memberEntity = new Member($memberID);
         $vars['password'] = $memberEntity->preparePassword($vars['password']);
-        $language = $this->createEntity('Language', $vars['mothertongue']);
+        $motherTongue = $this->createEntity('Language', $vars['mothertongue']);
         $memberLanguageEntity = $this->createEntity('MemberLanguage');
-        $memberLanguageEntity->setSpokenLanguage($memberEntity, $language, 'MotherLanguage');
+        $memberLanguageEntity->setSpokenLanguage($memberEntity, $motherTongue, 'MotherLanguage');
+
+        // Check if selected MotherTongue is in the list of translated languages and set it as preferred language
+        $model = new FlaglistModel();
+        $languages = $model->getLanguages();
+
+        $languageFilter = function ($lang)
+        {
+            return function ($v) use ($lang) { return $v->id == $lang; };
+        };
+
+        $filteredLanguages = array_filter($languages, $languageFilter($motherTongue->id));
+        if (!empty($filteredLanguages)) {
+            $update="
+                INSERT INTO
+                    memberspreferences
+                SET
+                    IdMember = " . $memberEntity->id . ",
+                    IdPreference = 1,
+                    Value = " . $motherTongue->id;
+            $this->dao->query($update);
+        }
         $memberEntity->update();
         $memberEntity->setPassword($vars['password']);
 
@@ -721,12 +742,12 @@ VALUES
             return $error = 'NoStoredKey';
         if( $keyDB->value != $key)
             return $error = 'WrongKey';
-        $M = MOD_member::getMember_username($username);
-        $m->id = $M->getUserId();
+        $memberEntity = new Member();
+        $member = $memberEntity->findByUsername ($username);
         $query = '
 SELECT members.Status AS Status
 FROM members
-WHERE members.id = \''.$m->id.'\'
+WHERE members.id = \''.$member->id.'\'
         ';
         $s = $this->dao->query($query);
         if ($s->numRows() != 1)
@@ -738,11 +759,16 @@ WHERE members.id = \''.$m->id.'\'
         $query = "
 UPDATE members
 SET Status = 'Active'
-WHERE id=" . $m->id; // The email is confirmed > make the status Active
+WHERE id=" . $member->id; // The email is confirmed > make the status Active
         $s = $this->dao->query($query);
         if (!$s) {    // TODO: always integrate this check?
             throw new PException('Could not determine if email is in use!');
         }
+
+        $View = new SignupView($this);
+        define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
+        $View->sendActivationMail($member);
+
         return false; // no error
 	}
 

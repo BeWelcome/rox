@@ -689,7 +689,7 @@ class MemberToMemberMailbot extends Mailbot
                     $memberPrefersHtml = false;
                 }
                 $subject = $this->words->get("YouveGotAMail", $this->Sender->Username);
-                $title = $this->words->get("YouveGotAMail", '<a href="https://www.bewelcome.org/members/' . $this->Sender->Username . '>'
+                $title = $this->words->get("YouveGotAMail", '<a href="https://www.bewelcome.org/members/' . $this->Sender->Username . '"">'
                     . $this->Sender->Username . '</a>');
                 $body = $this->_formatMessage($msg);
 

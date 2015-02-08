@@ -16,7 +16,7 @@ class PageWithRoxLayout extends PageWithHTML
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'styles/css/minimal/minimal.css?1';
+        $stylesheets[] = 'styles/css/minimal/minimal.css?2';
         $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome.min.css';
         $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome-ie7.min.css';
         return $stylesheets;

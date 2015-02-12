@@ -38,21 +38,10 @@ class RoxModelBase extends RoxComponentBase
         MOD_params::get()->loadParams();
         $this->_entity_factory = new RoxEntityFactory;
         parent::__construct();
-
-        $dbConfig = PVars::getObj('config_rdbms');
-        $this->pdo = new PDO(
-            $dbConfig->dsn . ';charset=utf8',
-            $dbConfig->user,
-            $dbConfig->password,
-            array(
-                PDO::ATTR_EMULATE_PREPARES => false,
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-            )
-        );
     }
 
     public function __destruct() {
-        $this->pdo = null;
+        // $this->pdo = null;
     }
 
     /**
@@ -237,25 +226,57 @@ class RoxModelBase extends RoxComponentBase
     }
 
     public function pdoBulkLookup($sql, $values = array()) {
-        $query = $this->pdo->prepare($sql);
+        $dbConfig = PVars::getObj('config_rdbms');
+        $pdo = new PDO(
+            $dbConfig->dsn . ';charset=utf8',
+            $dbConfig->user,
+            $dbConfig->password,
+            array(
+                PDO::ATTR_EMULATE_PREPARES => false,
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+            )
+        );
+        $query = $pdo->prepare($sql);
         $query->execute($values);
         $query->setFetchMode(PDO::FETCH_OBJ);
         $result = $query->fetchall();
         $query = null;
+        $pdo = null;
         return $result;
     }
     
     public function pdoSingleLookup($sql, $values = array()) {
-        $query = $this->pdo->prepare($sql);
+        $dbConfig = PVars::getObj('config_rdbms');
+        $pdo = new PDO(
+            $dbConfig->dsn . ';charset=utf8',
+            $dbConfig->user,
+            $dbConfig->password,
+            array(
+                PDO::ATTR_EMULATE_PREPARES => false,
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+            )
+        );
+        $query = $pdo->prepare($sql);
         $query->execute($values);
         $query->setFetchMode(PDO::FETCH_OBJ);
         $result = $query->fetch();
         $query = null;
+        $pdo = null;
         return $result;
     }
 
     public function pdoQuery($sql, $values = array()) {
-        $query = $this->pdo->prepare($sql);
+        $dbConfig = PVars::getObj('config_rdbms');
+        $pdo = new PDO(
+            $dbConfig->dsn . ';charset=utf8',
+            $dbConfig->user,
+            $dbConfig->password,
+            array(
+                PDO::ATTR_EMULATE_PREPARES => false,
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+            )
+        );
+        $query = $pdo->prepare($sql);
         $query->execute($values);
         if ($query->rowCount() == 0) {
             $result = false;
@@ -263,6 +284,7 @@ class RoxModelBase extends RoxComponentBase
             $result = true;
         }
         $query = null;
+        $pdo = null;
         return $result;
     }
 

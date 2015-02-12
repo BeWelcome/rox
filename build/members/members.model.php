@@ -1780,7 +1780,7 @@ VALUES
         ");
         $query->execute(
             array(
-                'memberId' => $member->id
+                ':memberId' => $member->id
             )
         );
         return $member;
@@ -1804,10 +1804,10 @@ VALUES
             WHERE
                 handle = :handle
             ");
-        $query->bindValue('handle', $member->Username);
-        $query->bindValue('newHandle', $newUsername);
+        $query->bindValue(':handle', $member->Username);
+        $query->bindValue(':newHandle', $newUsername);
         $query->bindValue(':password', 'password');
-        $query->bindValue('email', 'noemail@example.com');
+        $query->bindValue(':email', 'noemail@example.com');
         $query->execute();
         $member->Username = $newUsername;
         return $member;

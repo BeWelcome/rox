@@ -51,6 +51,10 @@ class RoxModelBase extends RoxComponentBase
         );
     }
 
+    public function __destruct() {
+        $this->pdo = null;
+    }
+
     /**
      * returns the currently logged in member
      *
@@ -237,6 +241,7 @@ class RoxModelBase extends RoxComponentBase
         $query->execute($values);
         $query->setFetchMode(PDO::FETCH_OBJ);
         $result = $query->fetchall();
+        $query = null;
         return $result;
     }
     
@@ -245,6 +250,7 @@ class RoxModelBase extends RoxComponentBase
         $query->execute($values);
         $query->setFetchMode(PDO::FETCH_OBJ);
         $result = $query->fetch();
+        $query = null;
         return $result;
     }
 
@@ -252,11 +258,14 @@ class RoxModelBase extends RoxComponentBase
         $query = $this->pdo->prepare($sql);
         $query->execute($values);
         if ($query->rowCount() == 0) {
-            return false;
+            $result = false;
         } else {
-            return true;
+            $result = true;
         }
+        $query = null;
+        return $result;
     }
+
     /**
      * normally the $dao should be injected.
      * If it's not, this function creates a new one out of the blue..

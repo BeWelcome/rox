@@ -1857,6 +1857,7 @@ VALUES
         if (count($rawMembers) != 0) {
             foreach ($rawMembers as $rawMember) {
                 $member = new Member($rawMember->id);
+                $username = $member->Username;
                 $newUsername = 'retired_' . $member->id;
                 $member = $this->_removeCryptedInfo($member, $cryptedTable);
                 $member = $this->_removeProfileInfo($member, $tradIdFields);
@@ -1864,6 +1865,7 @@ VALUES
                 $member = $this->_cleanupMemberLanguages($member);
                 $member = $this->_updateUserTable($member, $newUsername);
                 $member->update();
+                MOD_log::get()->write("Removed private data for " . $username, "Data Retention");
             }
         }
         return count($rawMembers);

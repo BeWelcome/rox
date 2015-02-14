@@ -1690,7 +1690,7 @@ VALUES
      * @param Member $member
      */
     private function _removeProfileInfo(Member $member, $tradIdFields) {
-        // First get information from addresses
+        // First get information from members for profile info
         $rows = $this->pdoBulkLookup("
             SELECT "
                 . implode(', ', $tradIdFields) .
@@ -1762,7 +1762,7 @@ VALUES
         }
         $member->Accomodation = 'NeverAsk';
         $member->updated = date('Y-m-d H:i:s');
-        $member->setPassword('password');
+        $member->setPassword('password', false);
         return $member;
     }
 
@@ -1855,6 +1855,7 @@ VALUES
                 AND LastLogin < CURDATE() - INTERVAL 1 YEAR
              ");
         if (count($rawMembers) != 0) {
+            MOD_log::get()->write("Removing private data for " . count($rawMembers) . " members.", "Data Retention");
             foreach ($rawMembers as $rawMember) {
                 $member = new Member($rawMember->id);
                 $username = $member->Username;
@@ -1867,6 +1868,7 @@ VALUES
                 $member->update();
                 MOD_log::get()->write("Removed private data for " . $username, "Data Retention");
             }
+            MOD_log::get()->write("Removed private data for " . count($rawMembers) . " members.", "Data Retention");
         }
         return count($rawMembers);
     }

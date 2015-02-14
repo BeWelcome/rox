@@ -41,7 +41,7 @@ class RoxModelBase extends RoxComponentBase
     }
 
     public function __destruct() {
-        // $this->pdo = null;
+        $this->pdo = null;
     }
 
     /**
@@ -226,65 +226,46 @@ class RoxModelBase extends RoxComponentBase
     }
 
     public function pdoBulkLookup($sql, $values = array()) {
-        $dbConfig = PVars::getObj('config_rdbms');
-        $pdo = new PDO(
-            $dbConfig->dsn . ';charset=utf8',
-            $dbConfig->user,
-            $dbConfig->password,
-            array(
-                PDO::ATTR_EMULATE_PREPARES => false,
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-            )
-        );
-        $query = $pdo->prepare($sql);
-        $query->execute($values);
-        $query->setFetchMode(PDO::FETCH_OBJ);
-        $result = $query->fetchall();
-        $query = null;
-        $pdo = null;
+        try {
+            $query = $this->get_pdo()->prepare($sql);
+            $query->execute($values);
+            $query->setFetchMode(PDO::FETCH_OBJ);
+            $result = $query->fetchall();
+            $query = null;
+        }
+        catch (PDOException $e) {
+            ExceptionLogger::logException($e);
+        }
         return $result;
     }
     
     public function pdoSingleLookup($sql, $values = array()) {
-        $dbConfig = PVars::getObj('config_rdbms');
-        $pdo = new PDO(
-            $dbConfig->dsn . ';charset=utf8',
-            $dbConfig->user,
-            $dbConfig->password,
-            array(
-                PDO::ATTR_EMULATE_PREPARES => false,
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-            )
-        );
-        $query = $pdo->prepare($sql);
-        $query->execute($values);
-        $query->setFetchMode(PDO::FETCH_OBJ);
-        $result = $query->fetch();
-        $query = null;
-        $pdo = null;
+        try {
+            $query = $this->get_pdo()->prepare($sql);
+            $query->execute($values);
+            $query->setFetchMode(PDO::FETCH_OBJ);
+            $result = $query->fetch();
+            $query = null;
+        }
+        catch (PDOException $e) {
+            ExceptionLogger::logException($e);
+        }
         return $result;
     }
 
     public function pdoQuery($sql, $values = array()) {
-        $dbConfig = PVars::getObj('config_rdbms');
-        $pdo = new PDO(
-            $dbConfig->dsn . ';charset=utf8',
-            $dbConfig->user,
-            $dbConfig->password,
-            array(
-                PDO::ATTR_EMULATE_PREPARES => false,
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-            )
-        );
-        $query = $pdo->prepare($sql);
-        $query->execute($values);
-        if ($query->rowCount() == 0) {
-            $result = false;
-        } else {
-            $result = true;
+        try {
+            $query = $this->get_pdo()->prepare($sql);
+            $query->execute($values);
+            if ($query->rowCount() == 0) {
+                $result = false;
+            } else {
+                $result = true;
+            }
+            $query = null;
+        } catch (PDOException $e) {
+            ExceptionLogger::logException($e);
         }
-        $query = null;
-        $pdo = null;
         return $result;
     }
 
@@ -306,6 +287,25 @@ class RoxModelBase extends RoxComponentBase
      */
     protected function get_pdo()
     {
+        if ($this->pdo == null) {
+            $dbConfig = PVars::getObj('config_rdbms');
+            try {
+                $this->pdo = new PDO(
+                    $dbConfig->dsn,
+                    $dbConfig->user,
+                    $dbConfig->password,
+                    array(
+                        PDO::ATTR_EMULATE_PREPARES => false,
+                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                        PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+                    )
+                );
+            }
+            catch(PDOException $e) {
+                ExceptionLogger::logException($e);
+                $this->pdo = null;
+            }
+        }
         return $this->pdo;
     }
 

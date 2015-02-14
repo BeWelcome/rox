@@ -1629,14 +1629,14 @@ VALUES
                 $cryptedFields[] = $row->Explanation;
                 $cryptedFields[] = $row->IdGettingThere;
             }
-            $query = $this->pdo->prepare("
+            $query = $this->get_pdo()->prepare("
             DELETE FROM " .
                 $cryptedTable . "
             WHERE
                 id IN ( '" . implode("', '", $cryptedFields) . "')
                 ");
             $query->execute();
-            $query = $this->pdo->prepare("
+            $query = $this->get_pdo()->prepare("
             DELETE FROM
                 addresses
             WHERE
@@ -1670,7 +1670,7 @@ VALUES
                     $member->$key = 0;
                 }
             }
-            $query = $this->pdo->prepare("
+            $query = $this->get_pdo()->prepare("
             DELETE FROM " .
                 $cryptedTable . "
             WHERE
@@ -1711,7 +1711,7 @@ VALUES
                 $member->$key = 0;
             }
         }
-        $query = $this->pdo->prepare("
+        $query = $this->get_pdo()->prepare("
             DELETE FROM
                 memberstrads
             WHERE
@@ -1772,7 +1772,7 @@ VALUES
      * @param Member $member
      */
     private function _cleanupMemberLanguages(Member $member) {
-        $query = $this->pdo->prepare("
+        $query = $this->get_pdo()->prepare("
             DELETE FROM
                 memberslanguageslevel
             WHERE
@@ -1794,7 +1794,7 @@ VALUES
      */
     private function _updateUserTable(Member $member, $newUsername)
     {
-        $query = $this->pdo->prepare("
+        $query = $this->get_pdo()->prepare("
             UPDATE
                 user
             SET

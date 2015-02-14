@@ -144,7 +144,7 @@ class LoginController extends RoxControllerBase
                     }
                     $flashNotice = '';
                     if ($firstLogin) {
-                        $flashNotice .= '<p>' . $words->get('LoginFirstLogin') . '</p>';
+                        $flashNotice .= '<p>' . $words->get('LoginFirstLogin', $bw_member->Username) . '</p>';
                     }
                     if ($this->model->setPreferredLanguage( $bw_member)) {
                         $flashNotice .= '<p>' . $words->get('LoginPreferredLanguageSet', $words->getSilent('lang_' . $_SESSION['lang'])) . '</p>';

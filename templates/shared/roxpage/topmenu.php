@@ -84,7 +84,7 @@
             </ul>
         </li>
         <li><a href="/messages"><i class="icon icon-inbox"></i> <span style="font-weight: normal" >[<?= $numberOfNewMessagees ?>]</span></a></li>
-        <li><a href="/logout" style="line-height: 1.6em; padding: 1em 0.75em">&nbsp;<i class="icon icon-off" style="vertical-align: middle; font-size: 1.6em; font-weight: normal;"></i></a>
+        <li><a href="/logout" >&nbsp;<i class="icon icon-off"></i></a>
     <?php }  else { ?>
     <li><a href="<?= $login_url ?>#login-widget" id="header-login-link"><i class="icon icon-off"></i> <?php echo $words->getBuffered('Login'); ?></a><?php echo $words->flushBuffer(); ?></li>
     <li><a href="signup"><?php echo $words->getBuffered('Signup'); ?></a><?php echo $words->flushBuffer(); ?></li>

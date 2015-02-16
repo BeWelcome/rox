@@ -72,19 +72,19 @@
     </ul>
     <ul id="nav_right">
     <?php if ($logged_in) { ?>
-        <li><a style="font-weight: normal" href="main"><?= $username ?></a></li>
-        <li><a href="messages"><i class="icon icon-inbox"></i> <span style="font-weight: normal" >[<?= $numberOfNewMessagees ?>]</span></a></li>
-        <li><a href="mypreferences" style="line-height: 1.6em; padding: 1em 0.75em">&nbsp;<i class="icon icon-gear" style="vertical-align: middle; font-size: 1.6em; font-weight: normal;"></i></a>
-        <ul>
-            <li><a href="members/<?=$username?>"><?=$words->getBuffered('Profile')?></a></li>
-            <li><a href="editmyprofile"><?=$words->getBuffered('EditMyProfile')?></a></li>
-            <li><a href="mypreferences"><?=$words->getBuffered('MyPreferences')?></a></li>
-            <li><a href="messages"><?=$words->getBuffered('MyMessages')?></a></li>
-            <li><a href="mynotes"><?=$words->getBuffered('ProfileMyNotes')?></a></li>
-            <li><a href="groups/mygroups"><?=$words->getBuffered('MyGroups')?></a></li>
-            <li><a href="logout"><?=$words->getBuffered('Logout')?></a></li>
-        </ul>
+        <li><a style="font-weight: normal" href="main"><?= $username ?></a>
+            <ul>
+                <li><a href="members/<?=$username?>"><?=$words->getBuffered('Profile')?></a></li>
+                <li><a href="editmyprofile"><?=$words->getBuffered('EditMyProfile')?></a></li>
+                <li><a href="mypreferences"><?=$words->getBuffered('MyPreferences')?></a></li>
+                <li><a href="messages"><?=$words->getBuffered('MyMessages')?></a></li>
+                <li><a href="mynotes"><?=$words->getBuffered('ProfileMyNotes')?></a></li>
+                <li><a href="groups/mygroups"><?=$words->getBuffered('MyGroups')?></a></li>
+                <li><a href="logout"><?=$words->getBuffered('Logout')?></a></li>
+            </ul>
         </li>
+        <li><a href="/messages"><i class="icon icon-inbox"></i> <span style="font-weight: normal" >[<?= $numberOfNewMessagees ?>]</span></a></li>
+        <li><a href="/logout" >&nbsp;<i class="icon icon-off"></i></a>
     <?php }  else { ?>
     <li><a href="<?= $login_url ?>#login-widget" id="header-login-link"><i class="icon icon-off"></i> <?php echo $words->getBuffered('Login'); ?></a><?php echo $words->flushBuffer(); ?></li>
     <li><a href="signup"><?php echo $words->getBuffered('Signup'); ?></a><?php echo $words->flushBuffer(); ?></li>

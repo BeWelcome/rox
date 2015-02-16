@@ -1694,11 +1694,12 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
      * sets a new password for this member
      *
      * @param string $pw - new password as string
+     * @param boolean $noisy used during data retention to avoid password changed logs
      *
      * @access public
      * @return bool
      */
-    public function setPassword($pw)
+    public function setPassword($pw, $noisy = true)
     {
         if (!$this->isLoaded()) {
             return false;
@@ -1706,8 +1707,10 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         $pw = $this->preparePassword($pw);
         $query = "UPDATE `members` SET `PassWord` = PASSWORD('" . $pw . "') WHERE `id` = ".$this->id;
         if ($this->dao->exec($query)) {
-            $L = MOD_log::get();
-            $L->write("Password changed", "change password");
+            if ($noisy) {
+                $L = MOD_log::get();
+                $L->write("Password changed", "change password");
+            }
             return true;
         } else {
             return false;

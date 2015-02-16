@@ -63,6 +63,7 @@
         array ( "timeshift" => -25200, "city" => "Calgari", "utc" => "-7"), // $words->get('Calgari');
         array ( "timeshift" => -21600, "city" => "Mexico City", "utc" => "-6"), // $words->get('Mexico City');
         array ( "timeshift" => -18000, "city" => "New York", "utc" => "-5"), // $words->get('New York');
+        array ( "timeshift" => -16200, "city" => "Carracas", "utc" => "-4.5"), // $words->get('Carracas');
         array ( "timeshift" => -14400, "city" => "Santiago", "utc" => "-4"), // $words->get('Santiago');
         array ( "timeshift" => -10800, "city" => "Sao Paulo", "utc" => "-3"), // $words->get('Sao Paulo');
         array ( "timeshift" => -7200, "city" => "Fernando de Noronha", "utc" => "-2"), // $words->get('Fernando de Noronha');

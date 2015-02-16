@@ -1045,11 +1045,11 @@ class MembersController extends RoxControllerBase
             $this->model->removeMembers();
         }
         catch(Exception $e) {
+            ExceptionLogger::logException($e);
             header("Location: " . PVars::getObj('env')->baseuri);
             exit(0);
         }
         ob_end_clean();
-        echo "success";
         exit(0);
     }
 }

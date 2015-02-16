@@ -1411,8 +1411,8 @@ ORDER BY
         }
 
         $member = $this->createEntity('Member', $memberId);
-
-        if (!$this->hasAvatar($memberId, $suffix) || (!$member->publicProfile && !$this->getLoggedInMember())) {
+        $browseable = $member->isBrowsable();
+        if ((!$browseable) || !$this->hasAvatar($memberId, $suffix) || (!$member->publicProfile && !$this->getLoggedInMember())) {
             header('Content-type: image/png');
             @copy(HTDOCS_BASE.'images/misc/empty_avatar'.(isset($suffix) ? $suffix : '').'.png', 'php://output');
             PPHP::PExit();
@@ -1629,14 +1629,14 @@ VALUES
                 $cryptedFields[] = $row->Explanation;
                 $cryptedFields[] = $row->IdGettingThere;
             }
-            $query = $this->pdo->prepare("
+            $query = $this->get_pdo()->prepare("
             DELETE FROM " .
                 $cryptedTable . "
             WHERE
                 id IN ( '" . implode("', '", $cryptedFields) . "')
                 ");
             $query->execute();
-            $query = $this->pdo->prepare("
+            $query = $this->get_pdo()->prepare("
             DELETE FROM
                 addresses
             WHERE
@@ -1670,7 +1670,7 @@ VALUES
                     $member->$key = 0;
                 }
             }
-            $query = $this->pdo->prepare("
+            $query = $this->get_pdo()->prepare("
             DELETE FROM " .
                 $cryptedTable . "
             WHERE
@@ -1690,7 +1690,7 @@ VALUES
      * @param Member $member
      */
     private function _removeProfileInfo(Member $member, $tradIdFields) {
-        // First get information from addresses
+        // First get information from members for profile info
         $rows = $this->pdoBulkLookup("
             SELECT "
                 . implode(', ', $tradIdFields) .
@@ -1711,7 +1711,7 @@ VALUES
                 $member->$key = 0;
             }
         }
-        $query = $this->pdo->prepare("
+        $query = $this->get_pdo()->prepare("
             DELETE FROM
                 memberstrads
             WHERE
@@ -1762,7 +1762,7 @@ VALUES
         }
         $member->Accomodation = 'NeverAsk';
         $member->updated = date('Y-m-d H:i:s');
-        $member->setPassword('password');
+        $member->setPassword('password', false);
         return $member;
     }
 
@@ -1772,7 +1772,7 @@ VALUES
      * @param Member $member
      */
     private function _cleanupMemberLanguages(Member $member) {
-        $query = $this->pdo->prepare("
+        $query = $this->get_pdo()->prepare("
             DELETE FROM
                 memberslanguageslevel
             WHERE
@@ -1780,7 +1780,7 @@ VALUES
         ");
         $query->execute(
             array(
-                'memberId' => $member->id
+                ':memberId' => $member->id
             )
         );
         return $member;
@@ -1794,7 +1794,7 @@ VALUES
      */
     private function _updateUserTable(Member $member, $newUsername)
     {
-        $query = $this->pdo->prepare("
+        $query = $this->get_pdo()->prepare("
             UPDATE
                 user
             SET
@@ -1804,13 +1804,30 @@ VALUES
             WHERE
                 handle = :handle
             ");
-        $query->bindValue('handle', $member->Username);
-        $query->bindValue('newHandle', $newUsername);
+        $query->bindValue(':handle', $member->Username);
+        $query->bindValue(':newHandle', $newUsername);
         $query->bindValue(':password', 'password');
-        $query->bindValue('email', 'noemail@example.com');
+        $query->bindValue(':email', 'noemail@example.com');
         $query->execute();
         $member->Username = $newUsername;
         return $member;
+    }
+
+    /**
+     * Helper function for removeMembers
+     *
+     * Deletes the profile picture files
+     */
+    private function _removeProfilePictures(Member $member)
+    {
+        $memberPath = $this->avatarDir->dirName() . '/' . $member->id;
+        $suffixes = array("_xs", "_30_30", "_150", "_200", "_500", "_original", "");
+        foreach($suffixes as $suffix) {
+            $filename =  $memberPath . $suffix;
+            if (file_exists($filename)) {
+                unlink($filename);
+            }
+        }
     }
 
     /**
@@ -1855,16 +1872,21 @@ VALUES
                 AND LastLogin < CURDATE() - INTERVAL 1 YEAR
              ");
         if (count($rawMembers) != 0) {
+            MOD_log::get()->write("Removing private data for " . count($rawMembers) . " members.", "Data Retention");
             foreach ($rawMembers as $rawMember) {
                 $member = new Member($rawMember->id);
+                $username = $member->Username;
                 $newUsername = 'retired_' . $member->id;
                 $member = $this->_removeCryptedInfo($member, $cryptedTable);
                 $member = $this->_removeProfileInfo($member, $tradIdFields);
                 $member = $this->_cleanupMembersTable($member, $remainingColumns, $tableDescription);
                 $member = $this->_cleanupMemberLanguages($member);
                 $member = $this->_updateUserTable($member, $newUsername);
+                $this->_removeProfilePictures($member);
                 $member->update();
+                MOD_log::get()->write("Removed private data for " . $username, "Data Retention");
             }
+            MOD_log::get()->write("Removed private data for " . count($rawMembers) . " members.", "Data Retention");
         }
         return count($rawMembers);
     }

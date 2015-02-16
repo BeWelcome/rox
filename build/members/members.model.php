@@ -1411,8 +1411,8 @@ ORDER BY
         }
 
         $member = $this->createEntity('Member', $memberId);
-
-        if ((!$member->$member->isBrowsable()) || !$this->hasAvatar($memberId, $suffix) || (!$member->publicProfile && !$this->getLoggedInMember())) {
+        $browseable = $member->isBrowsable();
+        if ((!$browseable) || !$this->hasAvatar($memberId, $suffix) || (!$member->publicProfile && !$this->getLoggedInMember())) {
             header('Content-type: image/png');
             @copy(HTDOCS_BASE.'images/misc/empty_avatar'.(isset($suffix) ? $suffix : '').'.png', 'php://output');
             PPHP::PExit();

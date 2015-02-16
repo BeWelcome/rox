@@ -33,7 +33,7 @@ class ExternalContentPage extends RoxPageView
     }
 
     protected function getStylesheets() {
-        $stylesheets[] = 'styles/css/minimal/minimal.css';
+        $stylesheets[] = 'styles/css/minimal/minimal.css?3';
         $stylesheets[] = 'styles/css/minimal/screen/bw_basemod_2col_right_31.css';
         return $stylesheets;
     }

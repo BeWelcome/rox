@@ -1412,7 +1412,7 @@ ORDER BY
 
         $member = $this->createEntity('Member', $memberId);
 
-        if (!$this->hasAvatar($memberId, $suffix) || (!$member->publicProfile && !$this->getLoggedInMember())) {
+        if ((!$member->$member->isBrowsable()) || !$this->hasAvatar($memberId, $suffix) || (!$member->publicProfile && !$this->getLoggedInMember())) {
             header('Content-type: image/png');
             @copy(HTDOCS_BASE.'images/misc/empty_avatar'.(isset($suffix) ? $suffix : '').'.png', 'php://output');
             PPHP::PExit();
@@ -1814,6 +1814,23 @@ VALUES
     }
 
     /**
+     * Helper function for removeMembers
+     *
+     * Deletes the profile picture files
+     */
+    private function _removeProfilePictures(Member $member)
+    {
+        $memberPath = $this->avatarDir->dirName() . '/' . $member->id;
+        $suffixes = array("_xs", "_30_30", "_150", "_200", "_500", "_original", "");
+        foreach($suffixes as $suffix) {
+            $filename =  $memberPath . $suffix;
+            if (file_exists($filename)) {
+                unlink($filename);
+            }
+        }
+    }
+
+    /**
      * This functions is called daily by a cron job to ensure that data of members that asked to leave a year ago
      * are removed from the database.
      *
@@ -1865,6 +1882,7 @@ VALUES
                 $member = $this->_cleanupMembersTable($member, $remainingColumns, $tableDescription);
                 $member = $this->_cleanupMemberLanguages($member);
                 $member = $this->_updateUserTable($member, $newUsername);
+                $this->_removeProfilePictures($member);
                 $member->update();
                 MOD_log::get()->write("Removed private data for " . $username, "Data Retention");
             }

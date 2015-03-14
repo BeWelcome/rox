@@ -1,5 +1,9 @@
 <div>
 <?php
+if (!isset($geoname)) {
+    $geoname = "";
+}
+
 if ($this->trips) {
     $layoutbits = new MOD_layoutbits();
 

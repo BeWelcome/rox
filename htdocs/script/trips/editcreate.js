@@ -1,43 +1,104 @@
 var bwTripsLocations;
 
-function enableDatePicker() {
-    jQuery( ".date-picker-start" ).datepicker({
-        changeMonth: true,
-        numberOfMonths: 1,
-        onClose: function( selectedDate ) {
-            var id = this.id.replace('startdate', 'enddate');
-            jQuery( '#' + id ).datepicker( "option", "minDate", selectedDate );
-        }
+/**
+ * Checks if all rows are filled now. If so adds a new row
+ * @returns {boolean}
+ */
+function checkLocationRows() {
+    var complete = true;
+    $('div[name^=div-location]').find(':input:not(:button)').each( function() {
+        var value = $(this).val();
+        complete &= (value != '');
     });
-    jQuery( ".date-picker-end" ).datepicker({
-        changeMonth: true,
-        numberOfMonths: 1,
-        onClose: function( selectedDate ) {
-            var id = this.id.replace('enddate', 'startdate');
-            jQuery( '#'+ id ).datepicker( "option", "maxDate", selectedDate );
+    if (complete) {
+        var next = $('div[name^=div-location]').length + 1;
+        $('#location-loading').show();
+        var url = '/trips/addlocation/' + next;
+        var newLocation = $('<div id="div-location-' + next + '" name="div-location-' + next + '" class="row">').load(url,
+            function () {
+                $('#empty-location').before(newLocation);
+                setTimeout(enableAutoComplete(addMarker), 500);
+                setTimeout(enableDatePicker(), 500);
+                // setTimeout(enableBootstrapValidator, 500);
+                $('#location-loading').hide();
+            });
+    }
+    return false;
+}
+
+function enableBootstrapValidator() {
+    $('.tripseditcreate').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            tripname: {
+                validators: {
+                    notEmpty: { }
+                }
+            },
+            tripdescription: {
+                validators: {
+                    notEmpty: { }
+                }
+            },
+            'location[]' : {
+                validators: {
+                    notEmpty: {}
+                }
+            },
+            'startdate[]' : {
+                validators: {
+                    notEmpty: { },
+                    date: {
+                        format: 'YYYY-MM-DD',
+                        message: 'The date is not a valid'
+                    }
+                }
+            },
+            'enddate[]' : {
+                validators: {
+                    notEmpty: { },
+                    date: {
+                        format: 'YYYY-MM-DD',
+                        message: 'The date is not a valid'
+                    }
+                }
+            }
         }
     });
 }
 
-var arrowPolyline = L.Polyline.extend({
-    addArrows: function(map){
-        var points = this.getLatLngs()
-        for (var p = 0; p +1 < points.length; p++){
-            var diffLat = points[p+1]["lat"] - points[p]["lat"]
-            var diffLng = points[p+1]["lng"] - points[p]["lng"]
-            var center = [points[p]["lat"] + diffLat/2,points[p]["lng"] + diffLng/2]
-            var angle = 360 - (Math.atan2(diffLat, diffLng)*57.295779513082)
-            var arrowM = new L.marker(center,{
-                icon: new L.divIcon({
-                    className : "arrowIcon",
-                    iconSize: new L.Point(30,30),
-                    iconAnchor: new L.Point(15,15),
-                    html : "<div style = 'font-size: 20px; -webkit-transform: rotate("+ angle +"deg)'>&#10152;</div>"
-                })
-            }).addTo(map);
+function enableDatePicker() {
+    $( ".date-picker-start" ).datepicker({
+        changeMonth: true,
+        numberOfMonths: 1,
+        dateFormat: "yy-mm-dd",
+        onClose: function( selectedDate ) {
+            var id = this.id.replace('startdate', 'enddate');
+            $( '#' + id ).datepicker( "option", "minDate", selectedDate );
+            var date = $( '#' + id).val();
+            if (date == undefined || date == '') {
+                $( '#' + id).val(selectedDate);
+            }
+            checkLocationRows();
         }
-    }
-})
+
+    });
+    $( ".date-picker-end" ).datepicker({
+        changeMonth: true,
+        numberOfMonths: 1,
+        dateFormat: "yy-mm-dd",
+        onClose: function( selectedDate ) {
+            var id = this.id.replace('enddate', 'startdate');
+            $( '#'+ id ).datepicker( "option", "maxDate", selectedDate );
+        }
+    });
+}
+
 /**
  *
  * @constructor
@@ -56,6 +117,8 @@ function BWTripsLocations(htmlMapId) // Constructor
         // get current location number
         var parts = id.split("-");
         var current = parts[1] - 1;
+        $('#remove-' + parts[1]).removeAttr('disabled');
+        $('#remove-' + parts[1]).click( instance.removeRow );
         if (current == instance.latLngs.length) {
             instance.latLngs.push(new L.LatLng(latitude, longitude));
         } else {
@@ -64,57 +127,44 @@ function BWTripsLocations(htmlMapId) // Constructor
         if (instance.polyline != null) {
             instance.map.removeLayer(instance.polyline);
         }
-        instance.polyline = new arrowPolyline(instance.latLngs, {color: 'red'}).addTo(instance.map);
-        instance.polyline.addArrows(instance.map)
+        instance.polyline = new L.polyline(instance.latLngs, {color: 'red'}).addTo(instance.map);
         instance.map.fitBounds(instance.polyline.getBounds());
-    }
+        checkLocationRows();
+    };
 
     instance.removeMarker = function(id) {
 
+    };
+
+    instance.removeRow = function( e ) {
+        var parts = this.id.split("-");
+        var current = parts[1] - 1;
+
+        return false;
     }
 }
 
-jQuery(function() {
+$( document ).ready(function() {
     enableDatePicker();
+    // enableBootstrapValidator();
 
     bwTripsLocations = new BWTripsLocations('trips-map');
-//    bwTripsLocations.initMap('trips-map');
 
     addMarker = bwTripsLocations.addMarker;
 
-    jQuery( "#trip-add-location").click(function( e ) {
+
+    $( "#trip-add-location").click(function( e ) {
         // e.PreventDefault();
-        var next = jQuery('div[name^=div-location]').length + 1;
-        jQuery('#location-loading').show();
+        var next = $('div[name^=div-location]').length + 1;
+        $('#location-loading').show();
         var url = '/trips/addlocation/' + next;
-        var newLocation = jQuery('<div id="div-location-' + next + '" name="div-location-' + next + '" class="row">').load(url,
+        var newLocation = $('<div id="div-location-' + next + '" name="div-location-' + next + '" class="row">').load(url,
             function() {
-                jQuery('#empty-location').before( newLocation );
+                $('#empty-location').before( newLocation );
                 setTimeout(enableAutoComplete(addMarker), 500);
                 setTimeout(enableDatePicker(), 500);
-                jQuery('#location-loading').hide();
+                $('#location-loading').hide();
             });
         return false;
     });
-
-    //jQuery('.tripseditcreate').bootstrapValidator({
-    //    message: 'This value is not valid',
-    //    feedbackIcons: {
-    //        valid: 'glyphicon glyphicon-ok',
-    //        invalid: 'glyphicon glyphicon-remove',
-    //        validating: 'glyphicon glyphicon-refresh'
-    //    },
-    //    fields: {
-    //        tripname: {
-    //            validators: {
-    //                notEmpty: { }
-    //            }
-    //        },
-    //        tripdescription: {
-    //            validators: {
-    //                notEmpty: { }
-    //            }
-    //        }
-    //    }
-    //});
 });

@@ -134,7 +134,7 @@ if (!isset($vars['trip_id_foreign']) && isset($trip->trip_id)) $vars['trip_id_fo
                     ?>
                     <p class="desc"></p>
                 </div>
-                                <label for="create-date"><?=$words->get('BlogCreateTrips_LabelStartdate')?>:</label><br />
+                                <label for="create-date"><?=$words->get('BlogCreateTrips_LabelstartDate')?>:</label><br />
                 <div class="clearfix">
                     <input type="text" id="create-date" name="date" class="date" maxlength="10" <?php
                     echo isset($vars['date']) ? 'value="'.htmlentities($vars['date'], ENT_COMPAT, 'utf-8').'" ' : '';
@@ -152,13 +152,13 @@ if (!isset($vars['trip_id_foreign']) && isset($trip->trip_id)) $vars['trip_id_fo
                 	</script>
                 </div>
                     <?php
-                    if (in_array('startdate', $vars['errors'])) {
-                        echo '<span class="error">'.$words->get('BlogErrors_startdate').'</span>';
+                    if (in_array('startDate', $vars['errors'])) {
+                        echo '<span class="error">'.$words->get('BlogErrors_startDate').'</span>';
                     } elseif (in_array('duration', $vars['errors'])) {
                         echo '<span class="error">'.$words->get('BlogErrors_duration').'</span>';
                     }
                     ?>
-                    <p class="desc"><?=$words->get('BlogCreateTrips_SublineStartdate')?></p>
+                    <p class="desc"><?=$words->get('BlogCreateTrips_SublinestartDate')?></p>
                     
                     <input id="create-trip" name="tr" type="hidden" value="<?=$vars['trip_id_foreign'] ? $vars['trip_id_foreign'] : ''?>" />
                     <?php

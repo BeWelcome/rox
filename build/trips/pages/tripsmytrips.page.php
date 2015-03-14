@@ -30,7 +30,7 @@ Boston, MA  02111-1307, USA.
  * @package Apps
  * @subpackage Activities
  */
-class TripsMyTripsPage extends TripsBasePage
+class TripsMyTripsPage extends TripsClusteredMapPage
 {
     protected function getSubmenuActiveItem() 
     {

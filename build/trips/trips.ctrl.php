@@ -76,7 +76,7 @@ class TripsController extends RoxControllerBase {
         $page->trips = $trips;
         $page->initPager('upcoming', $count, $pageNumber);
 
-        $page->allTrips = $this->_model->getAllTrips(TripsModel::TRIPS_TYPE_UPCOMING);
+        $page->allTrips = $this->_model->getAllUpcomingTrips();
 
         return $page;
     }
@@ -97,7 +97,7 @@ class TripsController extends RoxControllerBase {
         $page->trips = $trips;
         $page->initPager('past', $count, $pageNumber);
 
-        $page->allTrips = $this->_model->getAllTrips(TripsModel::TRIPS_TYPE_PAST);
+        $page->allTrips = $this->_model->getAllPastTrips();
 
         return $page;
     }
@@ -144,6 +144,25 @@ class TripsController extends RoxControllerBase {
         return $page;
     }
 
+    public function tripsNearMe() {
+        $member = $this->_model->getLoggedInMember();
+        if (!$member) {
+            return false;
+        }
+
+        $pageNumber = 1;
+        if (isset($this->route_vars['pageno'])) {
+            $pageNumber = $this->route_vars['pageno'];
+        }
+        $page = new TripsNearMePage();
+        $count = 10; // $this->_model->getTripsNearMeCount();
+        $page->trips = $this->_model->getTripsNearMe($member, $pageNumber, self::TRIPS_PER_PAGE);
+        $page->initPager('past', $count, $pageNumber);
+        $page->member = $member;
+        return $page;
+
+    }
+
     /**
      * @param $tripid
      * @return SingleTripPage
@@ -175,16 +194,18 @@ class TripsController extends RoxControllerBase {
         // Check variables
         $vars = $args->post;
         $mem_redirect->vars = $vars;
-        $errors = $this->_model->checkCreateEditVars( $vars );
+        list($errors, $tripInfo) = $this->_model->checkCreateEditVars( $vars );
         if (!empty($errors)) {
             $mem_redirect->errors = $errors;
+            $mem_redirect->tripInfo = $tripInfo;
             return false;
         }
+
         $member = $this->_model->getLoggedInMember();
         if ($vars['trip-id'] == 0) {
-            $errors = $this->_model->createTrip($vars, $member);
+            $errors = $this->_model->createTrip($tripInfo, $member);
         } else {
-            $errors = $this->_model->editTrip($vars, $member);
+            $errors = $this->_model->editTrip($tripInfo, $member);
         }
 
         if (!empty($errors)) {
@@ -200,6 +221,7 @@ class TripsController extends RoxControllerBase {
      */
     public function addLocation() {
         $locationRow = $this->route_vars['number'];
+        $locationDetails = $this->_model->getEmptyLocationDetails();
         header('Content-type: text/html, charset=utf-8');
         include(SCRIPT_BASE . 'build/trips/templates/locationrow.php');
         exit;
@@ -217,9 +239,12 @@ class TripsController extends RoxControllerBase {
         $page = new TripsEditCreatePage(false);
         $page->member = $member;
         $page->vars = array(
-            "tripid" => 0,
-            "tripname" => "",
-            "tripdescription" => ""
+            "trip-id" => 0,
+            "trip-name" => "",
+            "trip-description" => "",
+            "locations" => array(
+                0 => $this->_model->getEmptyLocationDetails()
+            )
         );
 
         return $page;

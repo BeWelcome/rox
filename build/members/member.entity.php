@@ -754,9 +754,9 @@ WHERE IdMember = ".$this->id
             return false;
         }
 
-        $tripmodel = new Trip();
-        $usertrips = $tripmodel->getTrips($this->Username);
-        $trip_data = $tripmodel->getTripData();
+        $tripsModel = new TripsModel();
+        $usertrips = $tripsModel->getTrips($this->Username);
+        $trip_data = $tripsModel->getTripData();
         return array($usertrips,$trip_data);
     }
 

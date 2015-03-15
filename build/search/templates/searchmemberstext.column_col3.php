@@ -29,7 +29,7 @@ $layoutbits = new MOD_layoutbits();
     echo '</div>';
 endif; ?>
 <?php echo $this->layoutkit->formkit->setPostCallback('SearchController', 'searchMembersCallback'); ?>
-<form method="get" id="searchmembers-form" name="searchmembers-form"action="">
+<form method="get" id="searchmembers-form" action="#">
 <div class="greybackground">
     <table class="full">
         <tr>

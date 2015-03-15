@@ -1,5 +1,5 @@
 <!-- #nav: main navigation -->
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-fixed-top" role="navigation">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -9,7 +9,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="<?=$active_menu_item == ('main' || '') ? 'main' : ''; ?>"><img height="19px" src="images/logo_index_top.png" alt="Be Welcome" /></a>
+      <a class="navbar-brand" href="main"><img src="images/logo_index_top.png" alt="Be Welcome" /></a>
       <?php if ($logged_in) { ?>
       <div class="navbar-brand navbar-username visible-xs-block">
           <p>
@@ -24,20 +24,7 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bewelcome-navbar-collapse-1">
-    <ul class="nav navbar-nav">
-<?php if ($logged_in) { ?>
-        <li class="dropdown">
-          <a href="members/<?=$username?>" class="dropdown-toggle" data-toggle="dropdown"><?=$words->get('MyProfile')?> <b class="caret"></b></a>
-          <ul class="dropdown-menu">
-              <li><a href="members/<?=$username?>"><?=$words->get('Profile')?></a></li>
-              <li><a href="editmyprofile"><?=$words->get('EditMyProfile')?></a></li>
-              <li><a href="mypreferences"><?=$words->get('MyPreferences')?></a></li>
-              <li><a href="messages"><?=$words->get('MyMessages')?></a></li>
-              <li><a href="mynotes"><?=$words->get('ProfileMyNotes')?></a></li>
-              <li><a href="groups/mygroups"><?=$words->get('MyGroups')?></a></li>
-          </ul>
-        </li>
-<?php } ?>
+    <ul class="nav navbar-nav navbar-left">
         <li class="dropdown">
           <a href="search" class="dropdown-toggle" data-toggle="dropdown"><?=$words->get('FindMembers')?> <b class="caret"></b></a>
           <ul class="dropdown-menu">
@@ -48,7 +35,7 @@
           </ul>
         </li>
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?=$words->get('CommunityMenu')?> <b class="caret"></b></a>
+          <a href="community" class="dropdown-toggle" data-toggle="dropdown"><?=$words->get('CommunityMenu')?> <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="forums" title="<?=$words->getSilent('AgoraTagLine')?>"><?=$words->get('CommunityDiscussions')?></a><?php echo $words->flushBuffer(); ?></li>
             <li><a href="groups/search" title="<?=$words->getSilent('GroupsTagLine')?>"><?=$words->get('Groups')?></a><?php echo $words->flushBuffer(); ?></li>
@@ -77,8 +64,31 @@
           <?=$this->volunteerMenu() ?>
         </li>
 <? } ?>
-      </ul>
-        <?php $this->quicksearch() ?>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+        <?php if ($logged_in) { ?>
+            <li>
+                <a style="font-weight: normal" href="main"><?= $username ?></a>
+            </li>
+            <li>
+                <a href="/messages"><i class="fa  fa-lg fa-inbox" style="vertical-align: middle;"></i> <span style="font-weight: normal" >[<?= $numberOfNewMessagees ?>]</span></a>
+            </li>
+            <li class="dropdown"><a href="/logout" class="dropdown-toggle" data-toggle="dropdown">&nbsp;<i class="fa fa-lg fa-gear" style="vertical-align: middle"></i> <span class="caret"></span></a>
+                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                    <li><a href="members/<?=$username?>"><?=$words->get('Profile')?></a></li>
+                    <li><a href="editmyprofile"><?=$words->get('EditMyProfile')?></a></li>
+                    <li><a href="mypreferences"><?=$words->get('MyPreferences')?></a></li>
+                    <li><a href="messages"><?=$words->get('MyMessages')?></a></li>
+                    <li><a href="mynotes"><?=$words->get('ProfileMyNotes')?></a></li>
+                    <li><a href="groups/mygroups"><?=$words->get('MyGroups')?></a></li>
+                    <li><a href="logout"><?=$words->getBuffered('Logout')?></a></li>
+                </ul>
+            </li>
+        <?php }  else { ?>
+            <li><a href="<?= $login_url ?>#login-widget" id="header-login-link"><i class="fa fa-power-off"></i> <?php echo $words->getBuffered('Login'); ?></a><?php echo $words->flushBuffer(); ?></li>
+            <li><a href="signup"><?php echo $words->getBuffered('Signup'); ?></a><?php echo $words->flushBuffer(); ?></li>
+        <?php } ?>
+        </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container -->
 </nav>

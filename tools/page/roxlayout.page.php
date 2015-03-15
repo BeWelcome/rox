@@ -140,14 +140,6 @@ class PageWithRoxLayout extends PageWithHTML
         $R = MOD_right::get();
         
         $logged_in = APP_User::IsBWLoggedIn("NeedMore,Pending");
-                if ($numberOfNewMessagees > 0) {
-                    $envelopestyle = "fa fa-envelope"; 
-                    $nbOfNewMessagees = "(" . intval($numberOfNewMessagees) . ")";
-                    echo $words->flushBuffer();
-                } else {
-                    $envelopestyle = "fa fa-envelope-o";
-                    $nbOfNewMessagees = '';
-                }
 
         /*if (class_exists('MOD_online')) {
             $who_is_online_count = MOD_online::get()->howManyMembersOnline();

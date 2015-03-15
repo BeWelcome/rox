@@ -172,28 +172,19 @@ class PageWithHTML extends AbstractBasePage
         <![endif]-->
         </head>
         <body>
-        <div id="container">
-        <div id="header">
-            <div style="min-width: 900px; max-width: 960px; margin: 0 auto; width: auto;">
-                <?php $this->topmenu() ?>
-            </div>
-        </div> <!-- header -->
-
+        <?php $this->topmenu() ?>
+        <div class="container">
         <?php
 
         echo (is_object($this->layoutkit) && (is_object($this->layoutkit->mem_from_redirect))) ? $this->layoutkit->mem_from_redirect->buffered_text : '';
 
         $this->body();
-
-        $this->includeLateScriptfiles();
         ?>
-        <div id="bottom">
-                <div id="footer">
-                <?php $this->footer() ?>
-                </div>
-        </div> <!-- footer -->
-
         </div>
+        <?php
+            $this->footer();
+            $this->includeLateScriptfiles();
+        ?>
         </body>
         </html><?php
     }

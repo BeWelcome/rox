@@ -1041,7 +1041,7 @@ LIMIT 1
     public function getDefaultSimpleOptions()
     {
         $vars = array();
-        $vars['search'] = '';
+        $vars['location'] = '';
         $vars['search-can-host'] = 1;
         $vars['search-distance'] = 25;
         $vars['location-geoname-id'] = 0;

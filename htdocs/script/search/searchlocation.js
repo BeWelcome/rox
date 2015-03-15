@@ -101,7 +101,7 @@ function enableAutoComplete(addMarker) {
 }
 
 jQuery(function() {
-    if (addMarker === undefined) {
+    if (typeof addMarker === 'undefined') {
         addMarker = function() {};
     }
     enableAutoComplete(addMarker);

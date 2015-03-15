@@ -113,7 +113,7 @@ class InvitePage extends RoxPageView
         $scripts = parent::getLateLoadScriptfiles();
         $member = $this->getModel()->getLoggedInMember();
         if ($member->getPreference("PreferenceDisableTinyMCE", $default = "No") == 'No') {
-            $scripts[] = 'tinymceconfig.js';
+            $scripts[] = 'tinymceconfig.js?1';
         }
         return $scripts;
     }
@@ -181,7 +181,7 @@ class InviteSentPage extends RoxPageView
         $scripts = parent::getLateLoadScriptfiles();
         $member = $this->getModel()->getLoggedInMember();
         if ($member->getPreference("PreferenceDisableTinyMCE", $default = "No") == 'No') {
-            $scripts[] = 'tinymceconfig.js';
+            $scripts[] = 'tinymceconfig.js?1';
         }
         return $scripts;
     }

@@ -12,6 +12,12 @@ class RoxModelBase extends RoxComponentBase
 {
 
     /**
+     * stores the currently logged in member
+     *
+     * @var object
+     */
+    private static $logged_in_member = false;
+    /**
      * Holds an object of the entity factory, used for instantiating entities (obviously)
      * Loaded by __construct() - so all descendants of RoxModelBase has access to it
      *
@@ -20,12 +26,7 @@ class RoxModelBase extends RoxComponentBase
      */
     protected $_entity_factory;
 
-    /**
-     * stores the currently logged in member
-     *
-     * @var object
-     */
-    private static $logged_in_member = false;
+    protected $pdo;
 
     /**
      * used to instantiate an RoxEntityFactory - other than that, just calls the parent
@@ -39,34 +40,8 @@ class RoxModelBase extends RoxComponentBase
         parent::__construct();
     }
 
-    /**
-     * normally the $dao should be injected.
-     * If it's not, this function creates a new one out of the blue..
-     */
-    protected function get_dao()
-    {
-        if (!$dbconfig = PVars::getObj('config_rdbms')) {
-            throw new PException('DB config error!');
-        }
-        return PDB::get($dbconfig->dsn, $dbconfig->user, $dbconfig->password);
-    }
-
-    /**
-     * calls the entity factory to create an entity, passes along any arguments
-     *
-     * @param string - first parameter must be the name of the entity to create
-     * @return object
-     * @access protected
-     */
-    protected function createEntity(/* args */)
-    {
-        $args = func_get_args();
-        return call_user_func_array(array($this->_entity_factory, 'create'), $args);
-    }
-
-    
-    protected function getDao() {
-        return $this->dao;
+    public function __destruct() {
+        $this->pdo = null;
     }
 
     /**
@@ -81,7 +56,7 @@ class RoxModelBase extends RoxComponentBase
         {
             return $this->logged_in_member;
         }
-        
+
         if (!isset($_SESSION['IdMember']))
         {
             return false;
@@ -89,6 +64,19 @@ class RoxModelBase extends RoxComponentBase
         $this->logged_in_member = $this->createEntity('Member')->findById($_SESSION['IdMember']);
 
         return $this->logged_in_member;
+    }
+
+    /**
+     * calls the entity factory to create an entity, passes along any arguments
+     *
+     * @param string - first parameter must be the name of the entity to create
+     * @return object
+     * @access protected
+     */
+    protected function createEntity(/* args */)
+    {
+        $args = func_get_args();
+        return call_user_func_array(array($this->_entity_factory, 'create'), $args);
     }
 
     /**
@@ -134,12 +122,11 @@ class RoxModelBase extends RoxComponentBase
     protected function setMemoryCookie($id,$seriesToken='',$authToken='') {
         if ($id !== false) {
             // set new cookie
-            setcookie('bwRemember', serialize(array($id, $seriesToken, $authToken)), time() + 1209600, '/'); // cookie expires after 14 days
+            setcookie('bwRemember', serialize(array($id, $seriesToken, $authToken)), time() + 1209600, '/', null, true, true); // cookie expires after 14 days
         } else { // unset cookie
             setcookie('bwRemember', false, 1, '/');
         }
     }
-
 
     /**
      * This method fetches a bunch of rows from the database.
@@ -193,8 +180,7 @@ class RoxModelBase extends RoxComponentBase
         }
         return $rows;
     }
-    
-    
+
     /**
      * This is the same as the above bulkLookup,
      * but the rows are associative arrays instead of objects.
@@ -212,8 +198,7 @@ class RoxModelBase extends RoxComponentBase
         }
         return $rows;
     }
-    
-    
+
     public function singleLookup($query_string)
     {
         if (!$sql_result = $this->dao->query($query_string)) {
@@ -226,8 +211,7 @@ class RoxModelBase extends RoxComponentBase
             return $row;
         }
     }
-    
-        
+
     public function singleLookup_assoc($query_string)
     {
         if (!$sql_result = $this->dao->query($query_string)) {
@@ -239,5 +223,97 @@ class RoxModelBase extends RoxComponentBase
         } else {
             return $row;
         }
+    }
+
+    public function pdoBulkLookup($sql, $values = array()) {
+        try {
+            $query = $this->get_pdo()->prepare($sql);
+            $query->execute($values);
+            $query->setFetchMode(PDO::FETCH_OBJ);
+            $result = $query->fetchall();
+            $query = null;
+        }
+        catch (PDOException $e) {
+            ExceptionLogger::logException($e);
+        }
+        return $result;
+    }
+    
+    public function pdoSingleLookup($sql, $values = array()) {
+        try {
+            $query = $this->get_pdo()->prepare($sql);
+            $query->execute($values);
+            $query->setFetchMode(PDO::FETCH_OBJ);
+            $result = $query->fetch();
+            $query = null;
+        }
+        catch (PDOException $e) {
+            ExceptionLogger::logException($e);
+        }
+        return $result;
+    }
+
+    public function pdoQuery($sql, $values = array()) {
+        try {
+            $query = $this->get_pdo()->prepare($sql);
+            $query->execute($values);
+            if ($query->rowCount() == 0) {
+                $result = false;
+            } else {
+                $result = true;
+            }
+            $query = null;
+        } catch (PDOException $e) {
+            ExceptionLogger::logException($e);
+        }
+        return $result;
+    }
+
+    /**
+     * normally the $dao should be injected.
+     * If it's not, this function creates a new one out of the blue..
+     */
+    protected function get_dao()
+    {
+        if (!$dbconfig = PVars::getObj('config_rdbms')) {
+            throw new PException('DB config error!');
+        }
+        return PDB::get($dbconfig->dsn, $dbconfig->user, $dbconfig->password);
+    }
+    
+    /**
+     * normally the $pdo should be injected.
+     * If it's not, this function creates a new one out of the blue..
+     */
+    protected function get_pdo()
+    {
+        if ($this->pdo == null) {
+            $dbConfig = PVars::getObj('config_rdbms');
+            try {
+                $this->pdo = new PDO(
+                    $dbConfig->dsn,
+                    $dbConfig->user,
+                    $dbConfig->password,
+                    array(
+                        PDO::ATTR_EMULATE_PREPARES => false,
+                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                        PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+                    )
+                );
+            }
+            catch(PDOException $e) {
+                ExceptionLogger::logException($e);
+                $this->pdo = null;
+            }
+        }
+        return $this->pdo;
+    }
+
+    protected function getPDO() {
+        return $this->pdo;
+    }
+
+    protected function getDao() {
+        return $this->dao;
     }
 }

@@ -37,6 +37,7 @@ class Member extends RoxEntityBase
     const ACTIVE_ALL = "'Active', 'ActiveHidden', 'ChoiceInactive', 'OutOfRemind', 'Pending'";
     const ACTIVE_SEARCH = "'Active', 'ActiveHidden', 'OutOfRemind', 'Pending'";
     const ACTIVE_WITH_MESSAGES = "'Active', 'OutOfRemind', 'Pending'";
+    const MEMBER_COMMENTS = "'Active', 'ActiveHidden', 'AskToLeave', 'ChoiceInactive', 'OutOfRemind', 'Pending'";
 
     protected $_table_name = 'members';
 
@@ -278,9 +279,9 @@ class Member extends RoxEntityBase
     }
 
     /**
-     * Use to retrieve all the fields in members table which are a a foreign key to memberstrads
-     * This is typically neded when you want to delete a a given translation
-     * @return unknown
+     * Use to retrieve all the fields in members table which are a foreign key to memberstrads
+     * This is typically need when you want to delete a a given translation
+     * @return array
      */
     public function get_trads_fields()
     {
@@ -305,6 +306,26 @@ class Member extends RoxEntityBase
             'PastTrips',
             'PlannedTrips',
             'ProfileSummary'
+        );
+    }
+
+    public function get_crypted_fields()
+    {
+        return array(
+            'FirstName',
+            'SecondName',
+            'LastName',
+            'Email',
+            'HomePhoneNumber',
+            'CellPhoneNumber',
+            'WorkPhoneNumber',
+            'chat_GOOGLE',
+            'chat_ICQ',
+            'chat_AOL',
+            'chat_YAHOO',
+            'chat_SKYPE',
+            'chat_Others',
+            'chat_MSN'
         );
     }
 
@@ -471,7 +492,19 @@ WHERE IdMember = ".$this->id
      * @return string|bool Email address of member, false on database error
      */
     public function getEmailWithoutPermissionChecks() {
-        return urldecode(strip_tags(MOD_crypt::AdminReadCrypted($this->Email)));
+        $crypt_db = PVars::getObj('syshcvol')->Crypted;
+$query = "
+SELECT
+    MemberCryptedValue
+FROM
+    ".$crypt_db."cryptedfields
+WHERE
+    id = " . $this->Email;
+        $rr = $this->singleLookup($query);
+        $email = strip_tags($rr->MemberCryptedValue);
+        $email = str_replace('%40', '@', $email);
+        $email = str_replace('%2B', '+', $email);
+        return $email;
     }
 
     public function get_messengers() {
@@ -711,7 +744,7 @@ WHERE IdMember = ".$this->id
                 AND
                 members.id = comments.IdFromMember
                 AND
-                members.status IN (" . self::ACTIVE_ALL . ")
+                members.status IN (" . self::MEMBER_COMMENTS . ")
             "
         );
 
@@ -727,7 +760,7 @@ WHERE IdMember = ".$this->id
                 AND
                 members.id = comments.IdFromMember
                 AND
-                members.status IN (" . self::ACTIVE_ALL . ")
+                members.status IN (" . self::MEMBER_COMMENTS . ")
                 AND
                 DisplayInPublic = 1
             "
@@ -894,8 +927,9 @@ WHERE IdMember = ".$this->id
      * TODO: Translate errors
      */
     protected function get_address() {
-        $id = $this->id;
-        $query = "
+        if ($this->Status != 'AskToLeave') {
+            $id = $this->id;
+            $query = "
             SELECT
                 SQL_CACHE a.*
             FROM
@@ -905,44 +939,56 @@ WHERE IdMember = ".$this->id
             LIMIT
                 1
             ";
-        $rows = $this->bulkLookup($query);
+            $rows = $this->bulkLookup($query);
 
-        // Check if address was found
-        if($rows != null && sizeof($rows) > 0) {
-            $addressRow = $rows[0];
-            $city = $this->createEntity('Geo')->findById($addressRow->IdCity);
-            if ($city) {
-                // Set city name
-                $cityName = $city->getName($this->lang);
-                if ($cityName == '') {
-                    $cityName = 'Error: City name not set';
-                }
+            // Check if address was found
+            if ($rows != null && sizeof($rows) > 0) {
+                $addressRow = $rows[0];
+                $city = $this->createEntity('Geo')->findById($addressRow->IdCity);
+                if ($city) {
+                    // Set city name
+                    $cityName = $city->getName($this->lang);
+                    if ($cityName == '') {
+                        $cityName = 'Error: City name not set';
+                    }
 
-                // Set region name
-                $region = $city->getParent();
-                if ($region) {
-                    $regionName = $region->getName($this->lang);
-                    $regionCode = $region->admin1;
+                    // Set region name
+                    $region = $city->getParent();
+                    if ($region) {
+                        $regionName = $region->getName($this->lang);
+                        $regionCode = $region->admin1;
+                    } else {
+                        // Suppress display in template
+                        $regionName = '';
+                    }
+
+                    // Set country name and code
+                    $country = $city->getCountry();
+                    if ($country) {
+                        $countryName = $country->getName($this->lang);
+                        $countryCode = $country->country;
+                    }
+
+                    // Set remaining address fields
+                    $idCity = $addressRow->IdCity;
+                    $houseNumber = $addressRow->HouseNumber;
+                    $streetName = $addressRow->StreetName;
+                    $zip = $addressRow->Zip;
                 } else {
-                    // Suppress display in template
-                    $regionName = '';
+                    // Use error message everywhere if city could not be found
+                    $errorMessage = 'Error: City not found';
+                    $idCity = '';
+                    $cityName = $errorMessage;
+                    $houseNumber = $errorMessage;
+                    $streetName = $errorMessage;
+                    $zip = $errorMessage;
+                    $regionName = $errorMessage;
+                    $countryName = $errorMessage;
+                    $countryCode = $errorMessage;
                 }
-
-                // Set country name and code
-                $country = $city->getCountry();
-                if ($country) {
-                    $countryName = $country->getName($this->lang);
-                    $countryCode = $country->country;
-                }
-
-                // Set remaining address fields
-                $idCity = $addressRow->IdCity;
-                $houseNumber = $addressRow->HouseNumber;
-                $streetName = $addressRow->StreetName;
-                $zip = $addressRow->Zip;
             } else {
-                // Use error message everywhere if city could not be found
-                $errorMessage = 'Error: City not found';
+                // Use error message everywhere if database returned no address
+                $errorMessage = 'Error: Address not set';
                 $idCity = '';
                 $cityName = $errorMessage;
                 $houseNumber = $errorMessage;
@@ -952,31 +998,31 @@ WHERE IdMember = ".$this->id
                 $countryName = $errorMessage;
                 $countryCode = $errorMessage;
             }
-        } else {
-            // Use error message everywhere if database returned no address
-            $errorMessage = 'Error: Address not set';
-            $idCity = '';
-            $cityName = $errorMessage;
-            $houseNumber = $errorMessage;
-            $streetName = $errorMessage;
-            $zip = $errorMessage;
-            $regionName = $errorMessage;
-            $countryName = $errorMessage;
-            $countryCode = $errorMessage;
+            // Build address
+            $address = new stdClass();
+            $address->IdCity = $idCity;
+            $address->HouseNumber = $houseNumber;
+            $address->StreetName = $streetName;
+            $address->Zip = $zip;
+            $address->CityName = $cityName;
+            $address->RegionName = $regionName;
+            $address->RegionCode = $regionCode;
+            $address->CountryName = $countryName;
+            $address->CountryCode = $countryCode;
         }
-
-        // Build address
-        $address = new stdClass();
-        $address->IdCity = $idCity;
-        $address->HouseNumber = $houseNumber;
-        $address->StreetName = $streetName;
-        $address->Zip = $zip;
-        $address->CityName = $cityName;
-        $address->RegionName = $regionName;
-        $address->RegionCode = $regionCode;
-        $address->CountryName = $countryName;
-        $address->CountryCode = $countryCode;
-
+        else {
+            // Build address
+            $address = new stdClass();
+            $address->IdCity = '';
+            $address->HouseNumber = '';
+            $address->StreetName = '';
+            $address->Zip = '';
+            $address->CityName = '';
+            $address->RegionName = '';
+            $address->RegionCode = '';
+            $address->CountryName = '';
+            $address->CountryCode = '';
+        }
         $this->address = $address;
     }
 
@@ -1163,7 +1209,7 @@ WHERE
     comments.IdToMember   = " . $this->id . " AND
     comments.IdFromMember = members.Id AND
     comments.IdToMember = members2.Id
-    AND members.Status IN (" . self::ACTIVE_ALL . ")
+    AND members.Status IN (" . self::MEMBER_COMMENTS . ")
 ORDER BY
     comments.updated DESC
           ";
@@ -1648,11 +1694,12 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
      * sets a new password for this member
      *
      * @param string $pw - new password as string
+     * @param boolean $noisy used during data retention to avoid password changed logs
      *
      * @access public
      * @return bool
      */
-    public function setPassword($pw)
+    public function setPassword($pw, $noisy = true)
     {
         if (!$this->isLoaded()) {
             return false;
@@ -1660,8 +1707,10 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         $pw = $this->preparePassword($pw);
         $query = "UPDATE `members` SET `PassWord` = PASSWORD('" . $pw . "') WHERE `id` = ".$this->id;
         if ($this->dao->exec($query)) {
-            $L = MOD_log::get();
-            $L->write("Password changed", "change password");
+            if ($noisy) {
+                $L = MOD_log::get();
+                $L->write("Password changed", "change password");
+            }
             return true;
         } else {
             return false;

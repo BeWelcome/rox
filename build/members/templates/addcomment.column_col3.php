@@ -208,4 +208,4 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
 <?php 
 } 
 $words->flushBuffer();?>
-</div>
+

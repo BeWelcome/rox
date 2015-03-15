@@ -1,4 +1,3 @@
-    <?php $this->topmenu() ?>
 <div class="container">
         <?php $this->topnav() ?>
 
@@ -17,9 +16,10 @@
         <?php $this->columnsArea() ?>
     </div> <!-- main -->
 
-    <?php $this->footer() ?>
-    <?php $this->leftoverTranslationLinks() ?>
-    <?php $this->debugInfo() ?>
+      <div>
+          <?php $this->debugInfo() ?>
+          <?php $this->leftoverTranslationLinks() ?>
+</div>
 </div>
 <?php
 $piwikBaseURL = PVars::getObj('piwik')->baseurl;

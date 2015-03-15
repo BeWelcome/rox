@@ -492,16 +492,24 @@ dl.list {
    * @section content-footer
    */
 
+    // border: none;
+    color: #e3e3e3;
+  #footer p {font-size: 1em;}
 
+  #footer a {margin: 0.1em 0 0 0; padding: 0.2em 0 0 0; color:#e3e3e3; font-weight: normal; text-align: left; white-space: nowrap; }
+  #footer a:hover { color: white; text-decoration:underline; }
+  #footer a:focus { color: white; text-decoration:underline; }
+  #footer #language { font-size: 0.9em; border: 0; outline: 0; background-color: #646464; color: #e3e3e3;}
+  #footer .larger { font-size: 1.2em}
 
   footer a {margin: 0.1em 0 0 0; padding: 0.2em 0 0 0; color:#999; font-weight: normal; text-align: left; white-space: nowrap; }
   footer a:hover { text-decoration:underline; }
-  footer a:focus { text-decoration:underline; }
+    color: #e3e3e3;
   footer .linklist {padding-top: 0.2em;}
   
   footer  {padding: 2em; color: #999;}
-  footer a:hover {color: #999; text-decoration:underline; }
-  footer a:focus {color: #999; text-decoration:underline; }
+  #footer #flags a:hover {color: #e3e3e3; text-decoration:underline; }
+  #footer #flags a:focus {color: #e3e3e3; text-decoration:underline; }
 
 
 /* ###########################################

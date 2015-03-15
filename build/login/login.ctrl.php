@@ -137,11 +137,27 @@ class LoginController extends RoxControllerBase
                     }
                     $this->model->setupBWSession($bw_member);
                     $this->model->setTBUserAsLoggedIn($tb_user);
-                    if ($this->model->setPreferredLanguage()) {
-                        $this->setFlashNotice($words->get('LoginPreferredLanguageSet', $words->getSilent('lang_' . $_SESSION['lang'])));
+                    if ($bw_member->LastLogin == '0000-00-00 00:00:00') {
+                        $firstLogin = true;
+                    } else {
+                        $firstLogin = false;
+                    }
+                    $flashNotice = '';
+                    if ($firstLogin) {
+                        $flashNotice .= '<p>' . $words->get('LoginFirstLogin', $bw_member->Username) . '</p>';
+                    }
+                    if ($this->model->setPreferredLanguage( $bw_member)) {
+                        $flashNotice .= '<p>' . $words->get('LoginPreferredLanguageSet', $words->getSilent('lang_' . $_SESSION['lang'])) . '</p>';
+                    }
+                    if (!empty($flashNotice)) {
+                        $this->setFlashNotice($flashNotice);
                     }
                     if (!empty($post['r']) && $post['r']) { // member wants to stay logged in
                         $bw_member->refreshMemoryCookie(true);
+                    }
+                    if ($firstLogin) {
+                        $redirect_url = 'editmyprofile';
+                        return $redirect_url;
                     }
                     if (isset($request[0]) && 'login' == $request[0]) {
                         $redirect_url = implode('/', array_slice($request, 1));

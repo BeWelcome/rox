@@ -66,8 +66,7 @@ class SignupView extends PAppView
         $confirmUrl_html ="<a href=\"".$confirmUrl."\">".$confirmUrl."</a>";
 
         $title = $words->get("Welcome").'!';
-        $body_html = $words->get("SignupTextRegistration", $vars['firstname'], $vars['secondname'], $vars['lastname'], PVars::getObj('env')->sitename, $confirmUrl_html);
-        $body = strip_tags($body_html);
+        $body = $words->get("SignupTextRegistration", $vars['firstname'], $vars['secondname'], $vars['lastname'], PVars::getObj('env')->sitename, $confirmUrl_html);
 
         // set the sender & receiver
         $from    = PVars::getObj('mailAddresses')->registration;
@@ -77,11 +76,42 @@ class SignupView extends PAppView
         $subject = $words->get('SignupSubjRegistration', PVars::getObj('env')->sitename);
 
         // Use MOD_mail to create and send a message
-        $result = MOD_mail::sendEmail($subject, $from, $to, $title, $body);
+        $result = MOD_mail::sendEmail($subject, $from, $to, $title, $body, $member->getLanguagePreference());
 
         //Now check if Swift actually sends it
         if (!$result)
             MOD_log::get()->write(" in signup view registerMail: Failed to send a mail to [".$to."]", "signup");
+
+        return $result;
+    }
+
+    /**
+     * Sends a confirmation e-mail
+     *
+     * @param string $userId
+     */
+    public function sendActivationMail(Member $member)
+    {
+        if (!$member)
+            return false;
+        $words = new MOD_words();
+
+        $body = $words->get("SignupBodyActivationMail", $member->Firstname, $member->Secondname, $member->Lastname,
+                    PVars::getObj('env')->sitename, $member->Username);
+
+        // set the sender & receiver
+        $from    = PVars::getObj('mailAddresses')->registration;
+        $to  = $member->getEmailWithoutPermissionChecks();
+
+        // set the subject
+        $subject = $words->get('SignupSubjectActivationMail', PVars::getObj('env')->sitename);
+
+        // Use MOD_mail to create and send a message
+        $result = MOD_mail::sendEmail($subject, $from, $to, '', $body);
+
+        //Now check if Swift actually sends it
+        if (!$result)
+            MOD_log::get()->write(" in signup view " . __FUNCTION__ . ": Failed to send a mail to [".$to."]", "signup");
 
         return $result;
     }

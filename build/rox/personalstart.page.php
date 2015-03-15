@@ -11,6 +11,7 @@ class PersonalStartpage extends RoxPageView
     {
         // we don't need the other columns
         return array('col3');
+        $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome-ie7.min.css';
     }
     
     /*

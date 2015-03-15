@@ -21,23 +21,28 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+$words = new MOD_words();
+
+$model = new VolunteerbarModel();
+
+$numberReportedComments = $model->getNumberReportedComments();
+$numberSpamToBeChecked = $model->getNumberSpamToBeChecked() ;
+
+$R = MOD_right::get();
 ?>
-<ul class="list-inline pull-right topnav">
+
 <?php
 if ($logged_in) {
-echo '<li><b>' . $username . '</b></li>';
+    $roxModel = new RoxModelBase();
+if ($R->hasRight('Comments') || ($R->hasRight('Checker'))) {
+    echo '<ul>';
+}
 if ($R->hasRight('Comments')) {
     echo '<li><a href="bw/admin/admincomments.php" title="Review negative comments">Negative comments (' . $numberReportedComments . ')</a></li>';
 }
 if ($R->hasRight('Checker')) {
     echo '<li><a href="bw/admin/adminchecker.php?action=viewSpamSayMember" title="Review messages reported by users as spam">Reported messages ('.$numberSpamToBeChecked.')</a></li>';
 }
-    ?>
-    <li><i class="<?php echo $envelopestyle ?>" title="<?php echo $words->getBuffered('Mymessages'); ?>"></i> <a href="messages"><?php echo $words->getBuffered('Mymessages'); ?></a> <?php echo $nbOfNewMessagees;?>
-    </li>
-    <li><i class="fa fa-sign-out" title="<?php echo $words->getBuffered('Logout'); ?>"></i> <a href="logout" id="header-logout-link"><?php echo $words->getBuffered('Logout'); ?></a><?php echo $words->flushBuffer(); ?></li>
-<?php } else { ?>
-    <li><i class="fa fa-power-off" title="<?php echo $words->getBuffered('Login'); ?>"></i> <a href="<?php echo $login_url ?>#login-widget" id="header-login-link"><?php echo $words->getBuffered('Login'); ?></a><?php echo $words->flushBuffer(); ?></li>
-    <li><a href="signup"><?php echo $words->getBuffered('Signup'); ?></a><?php echo $words->flushBuffer(); ?></li>
-<?php } ?>
-</ul>
+      ?>
+      </ul>
+  <?php }?>

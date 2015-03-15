@@ -1034,5 +1034,22 @@ class MembersController extends RoxControllerBase
         return true;
     }
 
-
+    public function dataRetention()
+    {
+        if ($_SERVER['REMOTE_ADDR'] !== '127.0.0.1') {
+            header("Location: " . PVars::getObj('env')->baseuri);
+            exit(0);
+        }
+        ob_start();
+        try {
+            $this->model->removeMembers();
+        }
+        catch(Exception $e) {
+            ExceptionLogger::logException($e);
+            header("Location: " . PVars::getObj('env')->baseuri);
+            exit(0);
+        }
+        ob_end_clean();
+        exit(0);
+    }
 }

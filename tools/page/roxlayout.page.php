@@ -16,7 +16,7 @@ class PageWithRoxLayout extends PageWithHTML
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'styles/css/minimal/minimal.css?1';
+        $stylesheets[] = 'styles/css/minimal/minimal.css?2';
         $stylesheets[] = 'styles/css/bewelcome.css?1';
         if (PVars::getObj('development')->uncompress_css != 1) {
             $stylesheets = str_replace(".css", ".min.css", $stylesheets);
@@ -140,25 +140,6 @@ class PageWithRoxLayout extends PageWithHTML
         $R = MOD_right::get();
         
         $logged_in = APP_User::IsBWLoggedIn("NeedMore,Pending");
-        if (!$logged_in) {
-            $request = PRequest::get()->request;
-            if (!isset($request[0])) {
-                $login_url = 'login';
-            } else switch ($request[0]) {
-                case 'login':
-                case 'main':
-                case 'start':
-                    $login_url = 'login';
-                    break;
-                default:
-                    $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
-            }
-        } else {
-            $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
-            if (isset($_SESSION["IdMember"])) {
-                $IdMember = intval($_SESSION["IdMember"]);
-                $roxmodel = new Rox();
-                $numberOfNewMessagees = $roxmodel->getNewMessagesNumber($IdMember);
                 if ($numberOfNewMessagees > 0) {
                     $envelopestyle = "fa fa-envelope"; 
                     $nbOfNewMessagees = "(" . intval($numberOfNewMessagees) . ")";
@@ -167,8 +148,6 @@ class PageWithRoxLayout extends PageWithHTML
                     $envelopestyle = "fa fa-envelope-o";
                     $nbOfNewMessagees = '';
                 }
-            }
-        }
 
         /*if (class_exists('MOD_online')) {
             $who_is_online_count = MOD_online::get()->howManyMembersOnline();
@@ -190,9 +169,30 @@ class PageWithRoxLayout extends PageWithHTML
         $menu_items = $this->getTopmenuItems();
         $active_menu_item = $this->getTopmenuActiveItem();
         $logged_in = APP_User::isBWLoggedIn('NeedMore,Pending');
-        $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
+        if (!$logged_in) {
+            $request = PRequest::get()->request;
+            if (!isset($request[0])) {
+                $login_url = 'login';
+            } else switch ($request[0]) {
+                case 'login':
+                case 'main':
+                case 'start':
+                    $login_url = 'login';
+                    break;
+                default:
+                    $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
+            }
+        } else {
+            $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
+        }
+
         $rights = new MOD_right();
         $volunteer = $rights->hasRightAny();
+        if (isset($_SESSION["IdMember"])) {
+            $IdMember = intval($_SESSION["IdMember"]);
+            $roxmodel = new Rox();
+            $numberOfNewMessagees = $roxmodel->getNewMessagesNumber($IdMember);
+        }
         require TEMPLATE_DIR . 'shared/roxpage/topmenu.php';
     }
 
@@ -273,12 +273,17 @@ class PageWithRoxLayout extends PageWithHTML
 
     protected function leftoverTranslationLinks()
     {
+        $remainingHeader = "";
+        $remainingBody = "";
         $tr_buffer_body = $this->getWords()->flushBuffer();
         if($this->_tr_buffer_header != '') {
-            echo '<br>Remaining words in header: ' . $this->_tr_buffer_header . '<br><br>';
+            $remainingHeader = '<div class="row">Remaining words in header: ' . $this->_tr_buffer_header . '</div>';
         }
         if($tr_buffer_body != '') {
-            echo '<br>Remaining words in body: ' . $tr_buffer_body . '<br><br>';
+            $remainingBody = '<div class="row">Remaining words in body: ' . $tr_buffer_body . '</div>';
+        }
+        if (!empty($remainingHeader) || !empty($remainingBody)) {
+            echo $remainingHeader . $remainingBody;
         }
     }
 

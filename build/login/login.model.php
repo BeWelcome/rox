@@ -502,8 +502,7 @@ WHERE   id = $tb_user_id
         );
     }
 
-    public function setPreferredLanguage() {
-        $member = $this->getLoggedInMember();
+    public function setPreferredLanguage( Member $member ) {
         $prefLang = $member->getPreference('PreferenceLanguage', 'none');
         if ($prefLang === 'none') {
             // the member has no preferred language set

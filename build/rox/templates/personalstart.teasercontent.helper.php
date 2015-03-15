@@ -20,9 +20,9 @@ $inbox_widget = new MailboxWidget_Personalstart;
 $inbox_widget->model = new MessagesModel;
 $inbox_widget->items_per_page = 4;
 
-$Trip = new Trip;
-$TripcallbackId = $Trip->createProcess();
-$editing = false;
+//$Trip = new Trip;
+//$TripcallbackId = $Trip->createProcess();
+//$editing = false;
 
 $Places = new Places;
 $Countries = $Places->getAllCountries();

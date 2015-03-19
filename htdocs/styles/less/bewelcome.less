@@ -73,7 +73,21 @@
 //
 // Bewelcome general layout elements
 // --------------------------------------------------
+body > .container {
+  padding: 60px 15px 0;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
 
+.footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+code {
+  font-size: 80%;
+}
 
 // Bewelcome body styles
 // -------------------------
@@ -84,33 +98,45 @@ body {
   background: url("../../images/bggrey.png") repeat-x scroll left top #F7F7F7;
 }
 
-// Bewelcome topmenu (navbar) styles
-// -------------------------
-
-// Inverted custom BeWelcome (gradient) navbar
-.navbar-inverse {
-  #gradient > .vertical(@start-color: #ffbc00; @end-color: @navbar-inverse-bg);
-  .reset-filter(); // Remove gradient in IE<10 to fix bug where dropdowns don't get triggered
-  
-  .navbar-nav > .active > a {
-    #gradient > .vertical(@start-color: @navbar-inverse-bg; @end-color: lighten(@navbar-inverse-bg, 2.5%));
-    .box-shadow(inset 0 3px 9px rgba(0,0,0,.25));
-    
-  }
+.navbar {
+  font-weight: bold;
+  color: white;
+  background: #f37000;
+  border-top: 1px solid white;
+  border-bottom: 1px solid white;
 }
 .navbar-fixed-top {
-  border-width: 0px;
-}
-.navbar-inverse {
-  font-weight: bold;
 }
 .dropdown-menu {
   border:none;
 }
 .dropdown-menu {
+  > li {
+    background: #333;
+    background: rgba(3,3,3,0.8);
+  }
   > li > a {
-  font-weight: bold;
-  font-color: #fff;
+    font-weight: bold;
+    color: white;
+  }
+}
+.navbar-brand {
+  padding: 5px;
+}
+.navbar-nav {
+  > li > a {
+    font-weight: bold;
+    color: #fff;
+  }
+}
+
+.navbar-left {
+  > li {
+    border-left: 1px solid white;
+  }
+  > li:last-child {
+    border-left: 1px solid white;
+    border-right: 1px solid white;
   }
 }
 .navbar-username {
@@ -122,10 +148,6 @@ body {
    }
 }
   
-// Bewelcome topnav styles
-// ------------------------
-.topnav > li > a, i { color: #777;}
-
 // Bewelcome teaser styles
 // ------------------------
 
@@ -148,93 +170,17 @@ body {
   margin-bottom: 1.5em;
 }
 
-// custom .nav version for BW
-.nav {
-  > li {
-    // Disabled state sets text to gray
-    &.disabled > a {
-      color: @nav-disabled-link-color;
-      font-weight: bold;
-      
-      &:hover,
-      &:focus {
-        color: @nav-disabled-link-hover-color;
-        text-decoration: none;
-        background-color: @nav-link-hover-bg;
-        cursor: pointer;
-      }
-    }
-  }
-}
-// custom .nav-pills version for BW
-.nav-pills {
-  > li {
-    // Active state
-    &.active-bw > a {
-      &,
-      &:hover,
-      &:focus {
-        color: #fff;
-        font-weight: bold;
-        #gradient > .vertical(@start-color:#FFBC00 ; @end-color: #FF8700; @start-percent: 0%; @end-percent: 80%);
-        background-color:#FF8700;
-      }
-    }
-  }
-}
-@media (min-width: @screen-sm-min){
-  .nav-pills .active-bw a:after {
-      border-top: 15px solid #FF8700;
-      border-left: 15px solid transparent;
-      border-right: 15px solid transparent;
-      bottom: -15px;
-      content: " ";
-      display: block;
-      height: 0;
-      left: 50%;
-      margin-left: -15px;
-      position: absolute;
-      vertical-align: middle;
-      width: 0;
-  }
-}
-// custom .nav-justified version for BW
-.nav-justifiedmedia {
+footer { height:8em;
+  position:absolute;
+  bottom:0;
+  border-top: 1px solid white;
+  background-color: #646464;
   width: 100%;
-
-  > li {
-    float: none;
-     > a {
-      text-align: center;
-      margin-bottom: 5px;
-    }
-  }
-
-  > .dropdown .dropdown-menu {
-    top: auto;
-    left: auto;
-  }
-
-  @media (min-width: @screen-sm-min) {
-    > li {
-      float: left;
-      > a {
-        margin-bottom: 0;
-      }
-    }
-  }
-}
-
-// Bewelcome footer styles
-// -------------------------
-
+padding: 1em;}
 footer a {margin: 0.1em 0 0 0; padding: 0.2em 0 0 0; color:#999; font-weight: normal; text-align: left; white-space: nowrap; }
 footer a:hover { text-decoration:underline; }
 footer a:focus { text-decoration:underline; }
 footer .linklist {padding-top: 0.2em;}  
-footer  {padding: 2em; color: #999;}
-footer a:hover {color: #999; text-decoration:underline; }
-footer a:focus {color: #999; text-decoration:underline; }
 //#footer { padding: 2.5em 4em; color:#666; border-top: 5px #efefef solid; }
 
 // Bewelcome login and login widget styles

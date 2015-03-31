@@ -644,7 +644,7 @@ class AdminMassmailModel extends RoxModelBase
                 members AS m
             WHERE
                 m.Status = 'MailToConfirm'
-                AND created > '2015-01-01'";
+                AND created BETWEEN '2015-01-01' AND (NOW() - INTERVAL 1 WEEK)";
         $r = $this->dao->query($query);
         $count = $r->affectedRows();
         return $count;

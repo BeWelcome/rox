@@ -228,7 +228,7 @@ class MassMailbot extends Mailbot
         return $this->queryDB($str);
     }
 
-    private function _getBroadCastElement($wordCode, $languageId, $username = false, $email = false)
+    private function _getBroadCastElement($wordCode, $languageId, $username = false, $email = false, $link = false)
     {
         $sentence = "";
         $str = "select SQL_CACHE Sentence,donottranslate from words where code='$wordCode' and IdLanguage='" . $languageId . "'";
@@ -261,6 +261,10 @@ class MassMailbot extends Mailbot
             $sentence = str_replace('%Emailaddress%', $email, $sentence);
             $sentence = str_replace('%EmailAddress%', $email, $sentence);
         }
+        if ($link) {
+            $sentence = str_replace('%link%', $link, $sentence);
+            $sentence = str_replace('%Link%', $link, $sentence);
+        }
         return $sentence;
     }
 
@@ -277,13 +281,31 @@ class MassMailbot extends Mailbot
             $email = $this->getEmailAddress($receiver);
             $language = $receiver->getLanguagePreferenceId();
 
+            $link = false;
+            if ($msg->broadcast_type == 'MailToConfirmReminder') {
+                $userId = APP_User::userId($receiver->Username);
+                if( !$userId)
+                    continue;
+                $keyDB = APP_User::getSetting($userId, 'regkey');
+                if( !$keyDB)
+                    continue;
+                $link = $this->baseuri . 'signup/confirm/' . $receiver->Username . '/' . $keyDB->value;
+            }
+
             $subj = $this->_getBroadCastElement("BroadCast_Title_".$msg->word, $language, $msg->Username);
-            $text = $this->_getBroadCastElement("BroadCast_Body_".$msg->word, $language, $msg->Username);
+            $text = $this->_getBroadCastElement("BroadCast_Body_".$msg->word, $language, $msg->Username, $email, $link);
 
             if (empty($msg->EmailFrom)) {
-                $sender_mail="newsletter@bewelcome.org" ;
-                if ($msg->broadcast_type=="RemindToLog") {
-                    $sender_mail="reminder@bewelcome.org" ;
+                switch($msg->broadcast_type) {
+                    case "RemindToLog":
+                    case "MailToConfirmReminder":
+                        $sender_mail = "reminder@bewelcome.org";
+                        break;
+                    case "SuggestionReminder":
+                        $sender_mail="suggestions@bewelcome.org" ;
+                        break;
+                    default:
+                        $sender_mail="newsletter@bewelcome.org" ;
                 }
             } else {
                 $sender_mail=$msg->EmailFrom ;
@@ -717,11 +739,11 @@ function runMailbots()
     $env_explorer = new EnvironmentExplorer;
     $env_explorer->initializeGlobalState();
 
-    $m2mbot = new MemberToMemberMailbot();
-    $m2mbot->run();
+//    $m2mbot = new MemberToMemberMailbot();
+//    $m2mbot->run();
 
-    $forum_bot = new ForumNotificationMailbot();
-    $forum_bot->run();
+//    $forum_bot = new ForumNotificationMailbot();
+//    $forum_bot->run();
 
     $massmailbot = new MassMailbot();
     $massmailbot->run();

@@ -29,6 +29,12 @@
             case 'enqueueLoginReminder' :
                 $activefieldset = 'reminder';
                 break;
+            case 'enqueueSuggestionReminder' :
+                $activefieldset = 'suggestionsreminder';
+                break;
+            case 'enqueueMailToConfirmReminder' :
+                $activefieldset = 'mailtoconfirm';
+                break;
             case 'enqueueTermsOfUse' :
                 $activefieldset = 'termsofuse';
                 break;
@@ -154,16 +160,26 @@
         value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitReminder'); ?>" /><?php echo $words->flushBuffer(); ?></div>
 </fieldset>
 <?php } ?>
-<?php if ($this->type == 'SuggestionReminder' && $this->canEnqueueSuggestionsReminder) { ?>
-<fieldset id="reminder">
-    <legend><?php echo $words->getBuffered('AdminMassMailEnqueueSuggestionsReminder');?></legend></legend><?php echo $words->flushBuffer(); ?>
-    <div class="type-text">
-        <?php echo $words->get('AdminMassMailEnqueueSuggestionsReminderInfo', $this->votersCount); ?>
-    </div>
-    <div class="float_right"><br /><input class="button" type="submit" name="enqueuesuggestionsreminder"
-        value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitSuggestionsReminder'); ?>" /><?php echo $words->flushBuffer(); ?></div>
-</fieldset>
-<?php } ?>
+    <?php if ($this->type == 'SuggestionReminder' && $this->canEnqueueSuggestionsReminder) { ?>
+        <fieldset id="suggestionsreminder">
+            <legend><?php echo $words->getBuffered('AdminMassMailEnqueueSuggestionsReminder');?></legend></legend><?php echo $words->flushBuffer(); ?>
+            <div class="type-text">
+                <?php echo $words->get('AdminMassMailEnqueueSuggestionsReminderInfo', $this->votersCount); ?>
+            </div>
+            <div class="float_right"><br /><input class="button" type="submit" name="enqueuesuggestionsreminder"
+                                                  value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitSuggestionsReminder'); ?>" /><?php echo $words->flushBuffer(); ?></div>
+        </fieldset>
+    <?php } ?>
+    <?php if ($this->type == 'MailToConfirmReminder' && $this->canEnqueueMailToConfirmReminder) { ?>
+        <fieldset id="mailtoconfirmreminder">
+            <legend><?php echo $words->getBuffered('AdminMassMailEnqueueMailToConfirmReminder');?></legend></legend><?php echo $words->flushBuffer(); ?>
+            <div class="type-text">
+                <?php echo $words->get('AdminMassMailEnqueueMailToConfirmReminderInfo', $this->mailToConfirmCount); ?>
+            </div>
+            <div class="float_right"><br /><input class="button" type="submit" name="enqueuemailtoconfirmreminder"
+                                                  value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitMailToConfirmReminder'); ?>" /><?php echo $words->flushBuffer(); ?></div>
+        </fieldset>
+    <?php } ?>
 <?php if ($this->type == 'TermsOfUse' && $this->canEnqueueTermsOfUse) { ?>
 <fieldset id="termsofuse">
     <legend><?php echo $words->getBuffered('AdminMassMailEnqueueTermsOfUse');?></legend></legend><?php echo $words->flushBuffer(); ?>

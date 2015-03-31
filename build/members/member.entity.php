@@ -1678,7 +1678,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
 
         if (!$this->old_rights)
         {
-            $query = "SELECT * FROM rightsvolunteers AS rv, rights AS r WHERE rv.IdMember = {$this->getPKValue()} AND rv.IdRight = r.id";
+            $query = "SELECT * FROM rightsvolunteers AS rv, rights AS r WHERE rv.IdMember = {$this->getPKValue()} AND rv.IdRight = r.id AND rv.Level > 0";
             $result = $this->dao->query($query);
             $return = array();
             while ($row = $result->fetch(PDB::FETCH_ASSOC))

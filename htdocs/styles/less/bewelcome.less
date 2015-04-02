@@ -7,8 +7,9 @@
 // -------------------------
 
 // Core variables and mixins
-@import "variables.less";
 @import "../../../vendor/twbs/bootstrap/less/mixins.less";
+@import "../../../vendor/twbs/bootstrap/less/variables.less";
+@import "variables.less";
 
 // Reset and dependencies
 @import "../../../vendor/twbs/bootstrap/less/normalize.less";
@@ -73,30 +74,37 @@
 //
 // Bewelcome general layout elements
 // --------------------------------------------------
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 120px;
+  background: url("../../images/bggrey.png") repeat-x scroll left top #F7F7F7;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 120px;
+  background-color: #555;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
 body > .container {
   padding: 60px 15px 0;
 }
-.container .text-muted {
-  margin: 20px 0;
-}
-
-.footer > .container {
-  padding-right: 15px;
-  padding-left: 15px;
-}
-
-code {
-  font-size: 80%;
-}
-
 // Bewelcome body styles
 // -------------------------
-
-// Moving content below fixed navbar and add grey background 
-body { 
-  padding-top: 70px; 
-  background: url("../../images/bggrey.png") repeat-x scroll left top #F7F7F7;
-}
 
 .navbar {
   font-weight: bold;
@@ -112,6 +120,10 @@ body {
 }
 .dropdown-menu {
   > li {
+    background: #333;
+    background: rgba(3,3,3,0.8);
+  }
+  > li > ul {
     background: #333;
     background: rgba(3,3,3,0.8);
   }
@@ -458,4 +470,8 @@ th, td {
 @-o-keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }
+}
+
+.map {
+  height: 300px;
 }

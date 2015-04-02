@@ -34,15 +34,16 @@ $R = MOD_right::get();
 <?php
 if ($logged_in) {
     $roxModel = new RoxModelBase();
-if ($R->hasRight('Comments') || ($R->hasRight('Checker'))) {
-    echo '<ul>';
+    if ($R->hasRight('Comments') || ($R->hasRight('Checker'))) {
+        echo '<ul>';
+    }
+    if ($R->hasRight('Comments')) {
+        echo '<li><a href="bw/admin/admincomments.php" title="Review negative comments">Negative comments (' . $numberReportedComments . ')</a></li>';
+    }
+    if ($R->hasRight('Checker')) {
+        echo '<li><a href="bw/admin/adminchecker.php?action=viewSpamSayMember" title="Review messages reported by users as spam">Reported messages (' . $numberSpamToBeChecked . ')</a></li>';
+    }
+    if ($R->hasRight('Comments') || ($R->hasRight('Checker'))) {
+        echo '</ul>';
+    }
 }
-if ($R->hasRight('Comments')) {
-    echo '<li><a href="bw/admin/admincomments.php" title="Review negative comments">Negative comments (' . $numberReportedComments . ')</a></li>';
-}
-if ($R->hasRight('Checker')) {
-    echo '<li><a href="bw/admin/adminchecker.php?action=viewSpamSayMember" title="Review messages reported by users as spam">Reported messages ('.$numberSpamToBeChecked.')</a></li>';
-}
-      ?>
-      </ul>
-  <?php }?>

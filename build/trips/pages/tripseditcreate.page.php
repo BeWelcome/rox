@@ -53,23 +53,16 @@ class TripsEditCreatePage extends TripsBasePage
         $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery.ui.all.css';
         $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery-ui-1.10.4.custom.min.css';
         $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/datetimepicker.css';
-        $stylesheets[] = 'styles/css/bootstrapValidator.min.css';
         $stylesheets[] = 'styles/css/minimal/screen/custom/search.css?1';
+        // $stylesheets[] = 'styles/css/minimal/screen/custom/select2/select2.min.css';
         return $stylesheets;
     }
 
     public function getLateLoadScriptfiles() {
         $scriptFiles = parent::getLateLoadScriptfiles();
-        /*
-        $scriptFiles[] = 'bootstrapvalidator/bootstrapvalidator.min.js';
-        $languageFile = 'bootstrapvalidator/language/' . strtolower($_SESSION['lang']) . '_' . strtoupper($_SESSION['lang']) . '.js';
-        if (file_exists($languageFile)) {
-            $scriptFiles[] = $languageFile;
-        }
-        */
-        // $scriptFiles[] = 'leaflet/plugins/polylinedecorator/0.7.2/leaflet.polylineDecorator.js';
         $scriptFiles[] = 'trips/editcreate.js';
         $scriptFiles[] = 'search/searchlocation.js?1';
+        $scriptFiles[] = 'select2/select2.min.js';
         return $scriptFiles;
     }
 }

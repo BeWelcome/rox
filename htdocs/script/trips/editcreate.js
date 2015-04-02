@@ -5,71 +5,25 @@ var bwTripsLocations;
  * @returns {boolean}
  */
 function checkLocationRows() {
-    var complete = true;
-    $('div[name^=div-location]').find(':input:not(:button)').each( function() {
+    complete = true;
+    $('div[id^=div-location]').find('.validate').each( function() {
         var value = $(this).val();
         complete &= (value != '');
     });
     if (complete) {
-        var next = $('div[name^=div-location]').length + 1;
+        var next = $('div[id^=div-location]').length + 1;
         $('#location-loading').show();
         var url = '/trips/addlocation/' + next;
-        var newLocation = $('<div id="div-location-' + next + '" name="div-location-' + next + '" class="row">').load(url,
+        var newLocation = $('<div id="div-location-' + next + '">').load(url,
             function () {
                 $('#empty-location').before(newLocation);
                 setTimeout(enableAutoComplete(addMarker), 500);
                 setTimeout(enableDatePicker(), 500);
-                // setTimeout(enableBootstrapValidator, 500);
+                setTimeout(enableSelect2, 500);
                 $('#location-loading').hide();
             });
     }
     return false;
-}
-
-function enableBootstrapValidator() {
-    $('.tripseditcreate').bootstrapValidator({
-        message: 'This value is not valid',
-        feedbackIcons: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
-        fields: {
-            tripname: {
-                validators: {
-                    notEmpty: { }
-                }
-            },
-            tripdescription: {
-                validators: {
-                    notEmpty: { }
-                }
-            },
-            'location[]' : {
-                validators: {
-                    notEmpty: {}
-                }
-            },
-            'startdate[]' : {
-                validators: {
-                    notEmpty: { },
-                    date: {
-                        format: 'YYYY-MM-DD',
-                        message: 'The date is not a valid'
-                    }
-                }
-            },
-            'enddate[]' : {
-                validators: {
-                    notEmpty: { },
-                    date: {
-                        format: 'YYYY-MM-DD',
-                        message: 'The date is not a valid'
-                    }
-                }
-            }
-        }
-    });
 }
 
 function enableDatePicker() {
@@ -95,7 +49,20 @@ function enableDatePicker() {
         onClose: function( selectedDate ) {
             var id = this.id.replace('enddate', 'startdate');
             $( '#'+ id ).datepicker( "option", "maxDate", selectedDate );
+            checkLocationRows();
         }
+    });
+}
+
+/**
+ * enableSelect2
+ */
+function enableSelect2() {
+    $(".select2").select2({
+        allowClear: true,
+        dropdownAutoWidth: true,
+        width: '100%',
+        minimumResultsForSearch: -1
     });
 }
 
@@ -146,25 +113,9 @@ function BWTripsLocations(htmlMapId) // Constructor
 
 $( document ).ready(function() {
     enableDatePicker();
-    // enableBootstrapValidator();
+    enableSelect2();
 
     bwTripsLocations = new BWTripsLocations('trips-map');
 
     addMarker = bwTripsLocations.addMarker;
-
-
-    $( "#trip-add-location").click(function( e ) {
-        // e.PreventDefault();
-        var next = $('div[name^=div-location]').length + 1;
-        $('#location-loading').show();
-        var url = '/trips/addlocation/' + next;
-        var newLocation = $('<div id="div-location-' + next + '" name="div-location-' + next + '" class="row">').load(url,
-            function() {
-                $('#empty-location').before( newLocation );
-                setTimeout(enableAutoComplete(addMarker), 500);
-                setTimeout(enableDatePicker(), 500);
-                $('#location-loading').hide();
-            });
-        return false;
-    });
 });

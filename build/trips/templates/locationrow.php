@@ -1,59 +1,70 @@
-<?php $words = new MOD_words();
+<?php $words = $this->getWords();
 $location = 'location-' . $locationRow; ?>
-<input type="hidden" name="location-geoname-id[]" id="<?= $location ?>-geoname-id" value="<?= $locationDetails->geonameId ?>">
-<input type="hidden" name="location-latitude[]" id="<?= $location ?>-latitude" value="<?= $locationDetails->latitude ?>">
-<input type="hidden" name="location-longitude[]" id="<?= $location ?>-longitude" value="<?= $locationDetails->longitude ?>">
+<div class="row">
+<input type="hidden" class="validate" cname="location-geoname-id[]" id="<?= $location ?>-geoname-id"
+       value="<?= $locationDetails->geonameId ?>">
+<input type="hidden" class="validate" name="location-latitude[]" id="<?= $location ?>-latitude"
+       value="<?= $locationDetails->latitude ?>">
+<input type="hidden" class="validate" name="location-longitude[]" id="<?= $location ?>-longitude"
+       value="<?= $locationDetails->longitude ?>">
 <div class="form-group has-feedback col-md-5">
     <label for="<?= $location ?>"
            class="control-label sr-only"><?php echo $words->get('TripLocation'); ?></label>
 
     <div class="input-group">
-        <input type="text" class="form-control location-picker" name="location[]"
+        <input type="text" class="form-control location-picker validate" name="location[]"
                placeholder="<?= $words->getBuffered('TripLocation'); ?>" id="<?= $location ?>"
                value="<?= $locationDetails->name ?>"/>
 
         <label for="<?= $location ?>"
                class="control-label input-group-addon btn"><span
-                    class="fa fa-fw fa-map-marker"></span></label>
+                class="fa fa-fw fa-map-marker"></span></label>
     </div>
-    </div>
-    <div class="form-group has-feedback col-md-3">
-        <label for="startDate-<?= $locationRow ?>"
-               class="control-label sr-only"><?php echo $words->get('TripDateStart'); ?></label>
+</div>
+<div class="form-group has-feedback col-md-3">
+    <label for="arrival-<?= $locationRow ?>"
+           class="control-label sr-only"><?php echo $words->get('TripDateStart'); ?></label>
 
-        <div class="input-group">
-            <input type="text" class="form-control date-picker-start" name="location-start-date[]"
-                   placeholder="<?= $words->getBuffered('TripDateStart'); ?>" id="start-date-<?= $locationRow ?>"
-                   value="<?= $locationDetails->startDateString ?>"/>
-            <label for="start-date-<?= $locationRow ?>" class="control-label input-group-addon btn"><span
-                    class="fa fa-fw fa-calendar"></span></label>
-        </div>
-        <?php
-        if (in_array('TripErrorStartDateWrongFormat###' . $locationRow, $errors)) {
-            echo '<span class="help-block alert alert-danger">' . $words->get('TripErrorStartDateWrongFormat') . '</span>';
-        }
-        ?>
+    <div class="input-group">
+        <input type="text" class="form-control date-picker-start validate" name="location-start-date[]"
+               placeholder="<?= $words->getBuffered('TripArrival'); ?>" id="arrival-<?= $locationRow ?>"
+               value="<?= $locationDetails->startDateString ?>"/>
+        <label for="arrival-<?= $locationRow ?>" class="control-label input-group-addon btn"><span
+                class="fa fa-fw fa-calendar"></span></label>
     </div>
-    <div class="form-group has-feedback col-md-3">
-        <label for="endDate-<?= $locationRow ?>"
-               class="control-label sr-only"><?php echo $words->get('TripDateEnd'); ?></label>
+    <?php
+    if (in_array('TripErrorStartDateWrongFormat###' . $locationRow, $errors)) {
+        echo '<span class="help-block alert alert-danger">' . $words->get('TripErrorStartDateWrongFormat') . '</span>';
+    }
+    ?>
+</div>
+<div class="form-group has-feedback col-md-3">
+    <label for="departure-<?= $locationRow ?>"
+           class="control-label sr-only"><?php echo $words->get('TripDeparture'); ?></label>
 
-        <div class="input-group">
-            <input type="text" class="form-control date-picker-end" name="location-end-date[]"
-                   placeholder="<?= $words->getBuffered('TripDateStart'); ?>" id="end-date-<?= $locationRow ?>"
-                   value="<?= $locationDetails->endDateString ?>"/>
-            <label for="end-date-<?= $locationRow ?>" class="control-label input-group-addon btn"><span
-                    class="fa fa-fw fa-calendar"></span></label>
-        </div>
-        <?php
-        if (in_array('TripErrorEndDateWrongFormat###' . $locationRow, $errors)) {
-            echo '<span class="help-block alert alert-danger">' . $words->get('TripErrorEndDateWrongFormat') . '</span>';
-        }
-        ?>
+    <div class="input-group">
+        <input type="text" class="form-control date-picker-end validate" name="location-end-date[]"
+               placeholder="<?= $words->getBuffered('TripDeparture'); ?>" id="departure-<?= $locationRow ?>"
+               value="<?= $locationDetails->endDateString ?>"/>
+        <label for="departure-<?= $locationRow ?>" class="control-label input-group-addon btn"><span
+                class="fa fa-fw fa-calendar"></span></label>
     </div>
+    <?php
+    if (in_array('TripErrorEndDateWrongFormat###' . $locationRow, $errors)) {
+        echo '<span class="help-block alert alert-danger">' . $words->get('TripErrorEndDateWrongFormat') . '</span>';
+    }
+    ?>
+</div>
 <div class="form-group col-md-1">
     <label for="remove-<?= $locationRow ?>"
            class="control-label sr-only"><?php echo $words->get('TripRemoveLocation'); ?></label>
-    <button name="remove-<?= $locationRow ?>" id="remove-<?= $locationRow ?>" disabled class="btn form-control btn-default"><span class="fa fa-fw fa-remove"></span></button>
+    <button name="remove-<?= $locationRow ?>" id="remove-<?= $locationRow ?>" disabled
+            class="btn form-control btn-default"><span class="fa fa-fw fa-remove"></span></button>
 </div>
-
+</div>
+<div class="row">
+    <div class="form-group col-md-12"><label for="trip-location-options-<?= $locationRow ?>"
+           class="control-label sr-only"><?php echo $words->get('TripLocationOptionsLabel'); ?></label>
+        <?= _getOptionsDropdown($locationRow, $locationDetails->options, $words) ?>
+    </div>
+</div>

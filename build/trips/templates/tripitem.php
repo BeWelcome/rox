@@ -24,18 +24,22 @@ $counter = 0;
         echo '</div><div class="row">';
     }
         switch ($counter) {
-            case 1: $flag = 'flag_yellow.png';
-                break;
             case $count:
-                $flag = 'flag_red.png';
+                $color = 'red';
+                $fa = 'fa-map-marker';
+                break;
+            case 1:
+                $color = 'blue';
+                $fa = 'fa-map-marker';
                 break;
             default:
-                $flag = 'bullet_go.png';
+                $color = 'green';
+                $fa = 'fa-caret-right';
                 break;
         }
     ?>
     <div class="col-md-3">
-        <img src="styles/css/minimal/images/iconsfam/<?= $flag ?>" alt="flag" />
+        <i class="fa <?= $fa ?>" style="color: <?= $color ?>"></i>
         <?php if ($highlight) { ?>
             <span style="background-color: yellow" class="highlight">
         <?php } ?><strong><?= $subTrip['location'] ?></strong>, <?= $subTrip['startDate'] ?>
@@ -45,8 +49,10 @@ $counter = 0;
         <?php }
             if ($highlight) { ?>
                 </span>
-        <?php }
-        ?>
+        <?php
+        }
+
+        ?><i class="fa fa-bed" style="color: <?= $color ?>"></i>
     </div>
 <?php
         }

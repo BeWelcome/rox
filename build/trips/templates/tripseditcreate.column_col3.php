@@ -29,8 +29,6 @@ if ($this->_editing == true) {
     $panelTitle = $words->get('TripTitle_create');
     $buttonTitle = $words->getSilent('TripSubmit_create');
 }
-var_dump($errors);
-var_dump($tripInfo);
 ?>
     <h2><?= $panelTitle ?></h2>
 
@@ -40,17 +38,16 @@ var_dump($tripInfo);
                 <label for="trip-name"
                        class="control-label sr-only"><?php echo $words->get('TripNameLabel'); ?></label>
                 <input type="text" class="form-control" name="trip-name"
-                       placeholder="<?= $words->getBuffered('TripNamePlaceHolder'); ?>" id="trip-name"
+                       placeholder="<?= $words->getBuffered('TripNamePlaceholder'); ?>"
                        value="<?= htmlentities($tripInfo['trip-name'], ENT_COMPAT, 'utf-8') ?>"/>
                 <?php if (in_array('TripErrorNameEmpty', $errors)) : ?>
                     <span class="help-block alert alert-danger"><?= $words->get('TripErrorNameEmpty') ?></span>
                 <?php endif; ?>
             </div>
 
-            <!-- password -->
             <div class="form-group has-feedback">
                 <label for="trip-description" class="control-label sr-only"><?= $words->get('TripDescriptionLabel'); ?></label>
-            <textarea class="form-control" id="trip-description" name="trip-description" cols="48" rows="7"
+            <textarea class="form-control" name="trip-description" cols="48" rows="7"
                       placeholder="<?= $words->getBuffered('TripDescriptionPlaceholder') ?>"><?php
                 if (!empty($tripInfo['trip-description'])) {
                     echo htmlentities($tripInfo['trip-description'], ENT_COMPAT, 'utf-8');
@@ -59,32 +56,41 @@ var_dump($tripInfo);
                     <span class="help-block alert alert-danger"><?= $words->get('TripErrorDescriptionEmpty') ?></span>
                 <?php endif; ?>
             </div>
+            <div class="row">
+            <div class="form-group has-feedback col-md-6">
+                <label for="trip-count"
+                       class="control-label sr-only"><?php echo $words->get('TripCountLabel'); ?></label>
+                <?= _getCountDropdown($tripInfo['trip-count'], $words->getBuffered('TripCountPlaceholder')) ?>
+            </div>
+            <div class="form-group has-feedback col-md-6">
+                <label for="trip-additional-info"
+                       class="control-label sr-only"><?php echo $words->get('TripAdditionalInfoLabel'); ?></label>
+                <?= _getAdditionalInfoDropdown($tripInfo['trip-additional-info'], $words) ?>
+            </div>
+            </div>
             <div class="panel panel-default">
                 <div class="panel-heading"><?= $words->get("TripsLocations") ?></div>
                 <div class="panel-body">
                     <?php
-                    $i=1;
+                    $locationRow=0;
                     foreach($tripInfo['locations'] as $locationDetails) :
-                    ?>
-                    <div id="div-location-<?= $i ?>" name="div-location-<?= $i ?>" class="row">
-                        <?php $locationRow = $i; include SCRIPT_BASE . '/build/trips/templates/locationrow.php'; ?>
-                    </div>
-                    <?php
-                        $i++;
-                    endforeach; ?>
+                        $locationRow++; ?>
+                        <div id="div-location-<?= $locationRow ?>">
+                            <?php require_once SCRIPT_BASE . '/build/trips/templates/locationrow.php'; ?>
+                        </div>
+                    <?php endforeach; ?>
                     <div id="empty-location"><img id="location-loading"
-                                                  src="/styles/css/minimal/screen/custom/jquery-ui/smoothness/images/ui-anim_basic_16x16.gif" style="display:none;">
+                                                  src="/styles/css/minimal/screen/custom/jquery-ui/smoothness/images/ui-anim_basic_16x16.gif" alt="loading..." style="display:none;">
                     </div>
                     <?php
                     if (in_array('TripErrorNoLocationSpecified', $errors)) {
                         echo '<span class="help-block alert alert-danger">' . $words->get('TripErrorNoLocationSpecified') . '</span>';
                     }
                     ?>
-
                     <?php $map_conf = PVars::getObj('map'); ?>
                     <input type="hidden" id="osm-tiles-provider-base-url" value="<?php echo ($map_conf->osm_tiles_provider_base_url); ?>"/>
                     <input type="hidden" id="osm-tiles-provider-api-key" value="<?php echo ($map_conf->osm_tiles_provider_api_key); ?>"/>
-                    <div class="row"><div class="col-md-12"><div id="trips-map"></div></div></div>
+                    <div class="row"><div class="col-md-12"><div id="trips-map" class="map"></div></div></div>
                 </div>
             </div>
             <input type="hidden" name="trip-id" value="<?= $tripInfo['trip-id'] ?>"/>

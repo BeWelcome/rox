@@ -22,13 +22,16 @@ class TripsModel extends RoxModelBase
 	public function getEmptyLocationDetails() {
 		$locationDetails = new StdClass;
 		$locationDetails->geonameId = "";
+		$locationDetails->name = "";
+		$locationDetails->arrival = "";
+		$locationDetails->departure = "";
+		$locationDetails->endDate = "";
+		$locationDetails->startDate = "";
+		$locationDetails->endDateString = "";
+		$locationDetails->startDateString = "";
 		$locationDetails->latitude = "";
 		$locationDetails->longitude = "";
-		$locationDetails->name = "";
-		$locationDetails->startDate = "";
-		$locationDetails->startDateString = "";
-		$locationDetails->endDate = "";
-		$locationDetails->endDateString = "";
+		$locationDetails->options = 0;
 		return $locationDetails;
 	}
 

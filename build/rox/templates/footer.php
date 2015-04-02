@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 require_once "footer.helper.php";
 ?>
 
-<footer>
+<footer class="footer">
     <div class="container">
 <form style="display: inline;" action="a" method="post">
 <div class="float_left"><?= $words->get('FooterSiteDisplayed', _languageFooterSelectorDropDown()) ?>

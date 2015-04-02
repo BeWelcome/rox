@@ -306,6 +306,7 @@
     $this->addRoute('trips_search_results', 'trips/search/:keyword:', 'TripsController', 'search');
     $this->addRoute('trips_search_results_pages', 'trips/search/:keyword:/page/:pageno:', 'TripsController', 'search');
     $this->addRoute('trips_add_location', 'trips/addlocation/:number:', 'TripsController', 'addLocation');
+    $this->addRoute('trips_empty', 'trips/empty', 'TripsController', 'emptyPage');
 
 // $this->addRoute('trip_numerical', 'trip/:tripid:', 'TripController', 'showSingleTrip');
 // $this->addRoute('trip_create', 'trip/create', 'TripController', 'createTrip');

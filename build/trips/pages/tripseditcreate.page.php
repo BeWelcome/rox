@@ -21,14 +21,14 @@ Boston, MA  02111-1307, USA.
 */
 
     /** 
-     * @author Fake51
+     * @author thisismeonmounteverest
      */
 
     /** 
      * generic page for blogs app
      *
      * @package Apps
-     * @subpackage Blog
+     * @subpackage Trips
      */
 
 class TripsEditCreatePage extends TripsBasePage
@@ -54,7 +54,6 @@ class TripsEditCreatePage extends TripsBasePage
         $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery-ui-1.10.4.custom.min.css';
         $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/datetimepicker.css';
         $stylesheets[] = 'styles/css/minimal/screen/custom/search.css?1';
-        // $stylesheets[] = 'styles/css/minimal/screen/custom/select2/select2.min.css';
         return $stylesheets;
     }
 

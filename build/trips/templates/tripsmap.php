@@ -11,14 +11,14 @@
     <div id="trips-data">
         <table>
             <?php
-            // trips data is stored in a hidden table in order to retrieve it from activities_map.js script
+            // trips data is stored in a hidden table in order to retrieve it from trips_map.js script
             if ($this->allTrips) {
                 foreach ($this->allTrips as $trip) { ?>
                     <tr>
-                        <td><?= $trip->trip_name ?></td>
+                        <td><?= $trip->name ?></td>
                         <td><?= $trip->username ?></td>
-                        <td><?= $trip->tripstartDate ?></td>
-                        <td><?= $trip->tripendDate ?></td>
+                        <td><?= $trip->arrival ?></td>
+                        <td><?= $trip->departure ?></td>
                         <td><?= $trip->latitude ?></td>
                         <td><?= $trip->longitude ?></td>
                         <td><?= $env_conf->baseuri . 'trips/' . $trip->trip_id ?></td>

@@ -6,20 +6,21 @@ var bwTripsLocations;
  */
 function checkLocationRows() {
     complete = true;
-    $('div[id^=div-location]').find('.validate').each( function() {
+    var locations = $('div[id^=div-location]');
+    locations.find('.validate').each( function() {
         var value = $(this).val();
         complete &= (value != '');
     });
     if (complete) {
-        var next = $('div[id^=div-location]').length + 1;
+        var next = locations.length + 1;
         $('#location-loading').show();
         var url = '/trips/addlocation/' + next;
         var newLocation = $('<div id="div-location-' + next + '">').load(url,
             function () {
                 $('#empty-location').before(newLocation);
-                setTimeout(enableAutoComplete(addMarker), 500);
-                setTimeout(enableDatePicker(), 500);
-                setTimeout(enableSelect2, 500);
+                setTimeout(enableSelect2, 100);
+                setTimeout(enableAutoComplete(addMarker), 100);
+                setTimeout(enableDatePicker(), 100);
                 $('#location-loading').hide();
             });
     }
@@ -32,11 +33,12 @@ function enableDatePicker() {
         numberOfMonths: 1,
         dateFormat: "yy-mm-dd",
         onClose: function( selectedDate ) {
-            var id = this.id.replace('startdate', 'enddate');
-            $( '#' + id ).datepicker( "option", "minDate", selectedDate );
-            var date = $( '#' + id).val();
-            if (date == undefined || date == '') {
-                $( '#' + id).val(selectedDate);
+            var id = this.id.replace('arrival', 'departure');
+            var that = $( '#' + id );
+            that.datepicker( "option", "minDate", selectedDate );
+            var date = that.val();
+            if (typeof date === 'undefined' || date == '') {
+                that.val(selectedDate);
             }
             checkLocationRows();
         }
@@ -47,7 +49,7 @@ function enableDatePicker() {
         numberOfMonths: 1,
         dateFormat: "yy-mm-dd",
         onClose: function( selectedDate ) {
-            var id = this.id.replace('enddate', 'startdate');
+            var id = this.id.replace('departure', 'arrival');
             $( '#'+ id ).datepicker( "option", "maxDate", selectedDate );
             checkLocationRows();
         }
@@ -84,8 +86,9 @@ function BWTripsLocations(htmlMapId) // Constructor
         // get current location number
         var parts = id.split("-");
         var current = parts[1] - 1;
-        $('#remove-' + parts[1]).removeAttr('disabled');
-        $('#remove-' + parts[1]).click( instance.removeRow );
+        var that = $('#remove-' + parts[1]);
+        that.removeAttr('disabled');
+        that.click( instance.removeRow );
         if (current == instance.latLngs.length) {
             instance.latLngs.push(new L.LatLng(latitude, longitude));
         } else {
@@ -118,4 +121,42 @@ $( document ).ready(function() {
     bwTripsLocations = new BWTripsLocations('trips-map');
 
     addMarker = bwTripsLocations.addMarker;
+    // get currently available lat/long pairs.
+    var latLon = [];
+    $('.collect').each(function() {
+        id = $(this).attr('id');
+        var parts = id.split("-");
+        var current = parts[1] - 1;
+        if (latLon.length == current) {
+            latLon[current] = {label: null, geonameId: NaN, lat: NaN, lon: NaN};
+        }
+        ll = latLon[current];
+        if (parts.length == 2) {
+            ll.label = $(this).val();
+        } else {
+            switch(parts[2]) {
+                case 'geoname':
+                    ll.geonameId = $(this).val();
+                    break;
+                case 'latitude':
+                    ll.lat = $(this).val();
+                    break;
+                case 'longitude':
+                    ll.lon = $(this).val();
+                    break;
+            }
+        }
+        latLon[current] = ll;
+    });
+
+    for(i= 0; i < latLon.length; i++) {
+        label = latLon[i].label;
+        geonameId = latLon[i].geonameId;
+        lat = latLon[i].lat;
+        lon = latLon[i].lon;
+        if (label != "") {
+            bwTripsLocations.addMarker('location-' + (i + 1), label, geonameId, lat, lon);
+        }
+    }
+
 });

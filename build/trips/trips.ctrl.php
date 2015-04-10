@@ -190,6 +190,27 @@ class TripsController extends RoxControllerBase {
         return $page;
     }
 
+    /**
+     * returns a template for a new location row (used through an Ajax call)
+     */
+    public function addLocation() {
+        $locationRow = $this->route_vars['number'];
+        $locationDetails = $this->_model->getEmptyLocationDetails();
+        $errors = array();
+        header('Content-type: text/html, charset=utf-8');
+        include(SCRIPT_BASE . 'build/trips/templates/locationrow.helper.php');
+        include(SCRIPT_BASE . 'build/trips/templates/locationrow.php');
+        exit;
+    }
+
+    /**
+     * Callback to check for correct variables and redirecting after successful creation or edition of a trip
+     * @param StdClass $args
+     * @param ReadOnlyObject $action
+     * @param ReadWriteObject $mem_redirect
+     * @param ReadWriteObject $mem_resend
+     * @return bool
+     */
     public function editCreateCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) {
         // Check variables
         $vars = $args->post;
@@ -203,31 +224,14 @@ class TripsController extends RoxControllerBase {
 
         $member = $this->_model->getLoggedInMember();
         if ($vars['trip-id'] == 0) {
-            $errors = $this->_model->createTrip($tripInfo, $member);
+            $trip = $this->_model->createTrip($tripInfo);
         } else {
-            $errors = $this->_model->editTrip($tripInfo, $member);
+            $trip = $this->_model->editTrip($tripInfo);
         }
 
-        if (!empty($errors)) {
-            $mem_redirect->errors = $errors;
-            return false;
-        }
-        return $this->router->url('trip_show', array('username' => $member->Username), false);
+        return $this->router->url('trip_show', array('id' => $trip->id), false);
     }
 
-
-    /**
-     * returns a template for a new location row (used through an Ajax call)
-     */
-    public function addLocation() {
-        $locationRow = $this->route_vars['number'];
-        $locationDetails = $this->_model->getEmptyLocationDetails();
-        $errors = array();
-        header('Content-type: text/html, charset=utf-8');
-        include(SCRIPT_BASE . 'build/trips/templates/locationrow.helper.php');
-        include(SCRIPT_BASE . 'build/trips/templates/locationrow.php');
-        exit;
-    }
 
     /**
      *
@@ -260,25 +264,24 @@ class TripsController extends RoxControllerBase {
         if (!$member) {
             return false;
         }
-        $tripId = $this->route_vars['tripid'];
-        $trip = $this->_model->getTrip($tripId);
+        $tripId = $this->route_vars['id'];
+        $trip = new Trip($tripId);
 
         if (!$trip) {
             return false;
         }
 
-        if ($trip->handle != $member->Username) {
+        if ($trip->memberId != $member->id) {
             return false;
         }
 
-        $page = new TripEditCreatePage(true);
+        $page = new TripsEditCreatePage(true);
         $page->member = $member;
-        $page->vars = array(
-            "tripid" => $trip->trip_id,
-            "tripname" => $trip->trip_name,
-            "tripdescription" => $trip->trip_descr
-        );
-
+        $tripInfo = $trip->getPostVariables();
+        $locations = $tripInfo['locations'];
+        $locations[] = $this->_model->getEmptyLocationDetails();
+        $tripInfo['locations'] = $locations;
+        $page->vars = $tripInfo;
         return $page;
     }
 

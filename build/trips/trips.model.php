@@ -14,6 +14,24 @@ class TripsModel extends RoxModelBase
 	const TRIPS_TYPE_UPCOMING = 2;
 	const TRIPS_TYPE_ALL = 3;
 
+	const TRIPS_ADDITIONAL_INFO_SINGLE = 1;
+	const TRIPS_ADDITIONAL_INFO_COUPLE = 2;
+	const TRIPS_ADDITIONAL_INFO_FRIENDS_MIXED = 4;
+	const TRIPS_ADDITIONAL_INFO_FRIENDS_SAME = 8;
+	const TRIPS_ADDITIONAL_INFO_FAMILY = 16;
+
+	public static function getAdditonalInfoOptions() {
+		$words = new MOD_words(); // self::getWords();
+		$options = array(
+			self::TRIPS_ADDITIONAL_INFO_SINGLE => $words->getBuffered('TripsAdditionalInfoSingle'),
+			self::TRIPS_ADDITIONAL_INFO_COUPLE => $words->getBuffered('TripsAdditionalInfoCouple'),
+			self::TRIPS_ADDITIONAL_INFO_FRIENDS_MIXED => $words->getBuffered('TripsAdditionalInfoFriendsMixed'),
+			self::TRIPS_ADDITIONAL_INFO_FRIENDS_SAME => $words->getBuffered('TripsAdditionalInfoFriendsSame'),
+			self::TRIPS_ADDITIONAL_INFO_FAMILY => $words->getBuffered('TripsAdditionalInfoFamily'),
+		);
+		return $options;
+	}
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -25,143 +43,15 @@ class TripsModel extends RoxModelBase
 		$locationDetails->name = "";
 		$locationDetails->arrival = "";
 		$locationDetails->departure = "";
-		$locationDetails->endDate = "";
-		$locationDetails->startDate = "";
-		$locationDetails->endDateString = "";
-		$locationDetails->startDateString = "";
+		$locationDetails->arrivalTS = "";
+		$locationDetails->departureTS = "";
 		$locationDetails->latitude = "";
 		$locationDetails->longitude = "";
 		$locationDetails->options = 0;
 		return $locationDetails;
 	}
 
-	public function checkCreateEditVars($vars)
-	{
-		$tripInfo = array(
-			'trip-id' => 0,
-			'trip-name' => '',
-			'trip-description' => ''
-		);
-		$errors = array();
-		if (isset($vars['trip-id'])) {
-			$tripInfo['trip-id'] = $vars['trip-id'];
-		}
-		if (isset($vars['trip-name'])) {
-			$tripInfo['trip-name'] = $vars['trip-name'];
-		}
-		if (empty($tripInfo['trip-name'])) {
-			$errors[] = 'TripErrorNameEmpty';
-		}
-		if (isset($vars['trip-description'])) {
-			$tripInfo['trip-description'] = $vars['trip-description'];
-		}
-		if (empty($tripInfo['trip-description'])) {
-			$errors[] = 'TripErrorDescriptionEmpty';
-		}
-
-		$locations = array();
-		if (isset($vars['location'])) {
-
-			// remove empty rows and build locations array
-			$count = count($vars['location']);
-			for ($i = 0; $i < $count; $i++) {
-				$location = new StdClass;
-				$location->geonameId = $vars['location-geoname-id'][$i];
-				$location->latitude = $vars['location-latitude'][$i];
-				$location->name = $vars['location'][$i];
-				$location->longitude = $vars['location-longitude'][$i];
-				$location->startDateString = $vars['location-start-date'][$i];
-				$location->startDate = strtotime($vars['location-start-date'][$i]);
-				$location->endDateString = $vars['location-end-date'][$i];
-				$location->endDate = strtotime($vars['location-end-date'][$i]);
-				$emptyRow = empty($location->name) && empty($location->startDateString) && empty($location->endDateString);
-				if (!$emptyRow) {
-					$locations[] = $location;
-					if (!($location->startDate)) {
-						if (!in_array('TripErrorWrongStartDateFormat###' . $i, $errors)) {
-							$errors[] = 'TripErrorWrongStartDateFormat###' . $i;
-						}
-					}
-					if (!($location->endDate)) {
-						if (!in_array('TripErrorWrongEndDateFormat###' . $i, $errors)) {
-							$errors[] = 'TripErrorWrongEndDateFormat###' . $i;
-						}
-					}
-				}
-			}
-
-			$count = count($locations);
-			if ($count == 0) {
-				$errors[] = 'TripErrorNoLocationSpecified';
-			}
-
-			// check that date range is start <= end
-			if (count($locations) > 1) {
-				for($i = 0; $i < $count; $i++) {
-					$start = $locations[$i]->startDate;
-					$end = $locations[$i]->endDate;
-					if ($start && $end && ($start > $end)) {
-						$temp = $locations[$i]->startDate;
-						$tempString = $locations[$i]->startDateString;
-						$locations[$i]->startDate = $locations[$i]->endDate;
-						$locations[$i]->startDateString = $locations[$i]->endDateString;
-						$locations[$i]->endDate =  $temp;
-						$locations[$i]->endDateString =  $tempString;
-					}
-				}
-			}
-
-			// check that date range don't overlap (except on start and end dates)
-			if (count($locations) > 1) {
-				$overlap = false;
-				for ($i = 0; $i < $count - 1; $i++) {
-					$start1 = $locations[$i]->startDate;
-					$end1 = $locations[$i]->endDate;
-					for ($j = $i + 1; $j < $count; $j++) {
-						$start2 = $locations[$j]->startDate;
-						$end2 = $locations[$j]->endDate;
-						$overlap |= (($start1 < $end2) and ($end1 > $start2));
-					}
-				}
-				if ($overlap) {
-					$errors[] = 'TripErrorOverlappingDates';
-				}
-			}
-
-			if (count($errors) == 0) {
-				// order locations by start date (ascending)
-				usort($locations, function($a, $b)
-				{
-					if ($a->startDate == $b->startDate)
-					{
-						if ($a->endDate < $b->endDate) {
-							return -1;
-						} else {
-							return 1;
-						}
-					}
-					else if ($a->startDate < $b->startDate)
-					{
-						return -1;
-					}
-					else {
-						return 1;
-					}
-				});
-			}
-		} else {
-			$errors[] = 'TripErrorNoLocationSpecified';
-		}
-		if (count($errors) > 0) {
-			// Make sure that there is an location empty row in case of an error
-			$locations[] = $this->getEmptyLocationDetails();
-		}
-		$tripInfo['locations'] = $locations;
-
-		return array($errors, $tripInfo);
-	}
-
-	public function createTrip($tripInfo, Member $member)
+	public function createTripOld($tripInfo, Member $member)
 	{
 		$errors = array();
 		$tripId = $this->insertTrip($tripInfo['trip-name'], $tripInfo['trip-description'], $member->id);
@@ -711,168 +601,20 @@ WHERE NOT members.Username IS NULL
 			SELECT
 				count(*) as cnt
 			FROM
-				trip t
+				trips t
 			WHERE
-				t.IdMember = " . $member->id . "
+				t.memberId = " . $member->id . "
 			";
 		$row = $this->singleLookup($query);
 		return $row->cnt;
 	}
 
-	public function getTripsForMember($member, $pageNumber, $itemsPerPage) {
-		$limit = ($pageNumber-1) * $itemsPerPage;
-
-		$query = "
-			SELECT
-				t.trip_id
-			FROM
-				trip t
-			WHERE
-				t.IdMember = " . $member->id . "
-			LIMIT " . $limit . "," . $itemsPerPage;
-
-		$result = $this->dao->query($query);
-		if (!$result) {
-			throw new PException('Could not retrieve trips.');
-		}
-		return $this->_getTripData($result);
-	}
-
-	public function getTrip($tripid)
-    {
-		$this->tripids = array($tripid);
-        $query = <<<SQL
-        SELECT `trip`.`trip_id`, `trip_data`.`trip_name`, `trip_text`, `trip_descr`, members.Username AS handle, members.id AS IdMember, members.id AS user_id_foreign, `trip_to_gallery`.`gallery_id_foreign`
-			FROM `trip`
-			RIGHT JOIN `trip_data` ON (`trip`.`trip_id` = `trip_data`.`trip_id`)
-			LEFT JOIN `trip_to_gallery` ON (`trip_to_gallery`.`trip_id_foreign` = `trip`.`trip_id`)
-			LEFT JOIN members ON (members.id = trip.IdMember)
-			WHERE `trip`.`trip_id` = '{$this->dao->escape($tripid)}'
-SQL;
-		$result = $this->dao->query($query);
-		if (!$result)
-        {
-			throw new PException('Could not retrieve trips.');
-		}
-		return $result->fetch(PDB::FETCH_OBJ);
-	}
-
-	public function reorderTripItems($items)
-    {
-		if (!$this->checkTripItemOwnerShip($items)) {
-			return;
-		}
-
-		$this->dao->query("START TRANSACTION");
-		foreach ($items as $position => $item)
-        {
-			$query = sprintf("UPDATE `blog_data` SET `blog_display_order` = '%d' WHERE `blog_id` = '%d'", ($position + 1), $item);
-			$this->dao->query($query);
-		}
-		$this->dao->query("COMMIT");
-	}
-
-	private function checkTripItemOwnerShip($items)
-    {
-        if (!$member = $this->getLoggedInMember() || !is_array($items))
-        {
-            return false;
-        }
-		// Get the blog entries matching the items in the request
-        $i = array();
-        foreach ($items as $it)
-        {
-            $i[] = $this->dao->escape($it);
-        }
-        $items = implode("','", $i);
-		$query = "SELECT blog_id, IdMember FROM blog WHERE blog_id IN ('{$items}')";
-		$result = $this->dao->query($query);
-		if (!$result) {
-			throw new PException('Could not retrieve blogs to check.');
-		}
-		$entries = array();
-		while ($row = $result->fetch(PDB::FETCH_OBJ))
-        {
-			$entries[$row->blog_id] = $row->IdMember;
-		}
-
-		foreach ($entries as $entry)
-        {
-			if ($entry != $member->id)
-            {
-				return false;
-			}
-		}
-		return true;
-	}
-
-    // todo: refactor call to getloggedinmember
-    // todo: refactor call to getVars
-	public function prepareEditData($tripId, $callbackId)
-    {
-		if (!$member = $this->getLoggedInMember()) {
-			throw new PException('Permission denied, Login required');
-		}
-        $trip_id = $this->dao->escape($tripId);
-
-		$query = <<<SQL
-SELECT `trip`.`trip_id`, `trip_data`.`trip_name`, `trip_text`, `trip_descr`, IdMember AS `user_id_foreign`, IdMember, `trip_to_gallery`.`gallery_id_foreign`
-    FROM `trip`
-    RIGHT JOIN `trip_data` ON (`trip`.`trip_id` = `trip_data`.`trip_id`)
-    LEFT JOIN `trip_to_gallery` ON (`trip_to_gallery`.`trip_id_foreign` = `trip`.`trip_id`)
-    WHERE `trip`.`trip_id` = '{$trip_id}' AND IdMember = '{$member->id}'
-SQL;
-		$result = $this->dao->query($query);
-		if (!$result) {
-			throw new PException('Could not retrieve trip (Access Error?).');
-		}
-		$trip = $result->fetch(PDB::FETCH_OBJ);
-
-		$vars =& PPostHandler::getVars($callbackId);
-		$vars['trip_id'] = $trip->trip_id;
-		$vars['n'] = $trip->trip_name;
-		$vars['trip_text'] = $trip->trip_text;
-		$vars['d'] = $trip->trip_descr;
-        $vars['gallery'] = $trip->gallery_id_foreign;
-	}
-
-	public function editTrip($vars, $member)
-    {
-		$errors = array();
-		if ($this->checkTripOwnership($vars['trip-id'], $member)) {
-
-			// Update the Tripdata
-	        $query = <<<SQL
-UPDATE `trip_data`
-SET
-    `trip_name` = '{$this->dao->escape($vars['trip-name'])}',
-    `trip_descr` = '{$this->dao->escape($vars['trip-desc'])}',
-    `edited` = NOW()
-WHERE `trip_id` = '{$this->dao->escape($vars['trip-id'])}'
-SQL;
-
-			$this->dao->query($query);
-		} else {
-			$errors[] = 'TripErrorNotOwner';
-		}
-		return $errors;
-	}
-
-	private function checkTripOwnership($tripId, $member)
-    {
-		// Check the ownership of the trip - better safe than sorry
-		$query = <<<SQL
-SELECT trip_id
-FROM trip
-WHERE trip_id = '{$this->dao->escape($tripId)}' AND IdMember = '{$member->id}'
-SQL;
-		$result = $this->dao->query($query);
-		if (!$result)
-        {
-			return false;
-		}
-		$row = $result->fetch(PDB::FETCH_OBJ);
-		return ($row->trip_id > 0);
+	public function getTripsForMember($member, $pageNumber, $itemsPerPage)
+	{
+		$temp = new Trip();
+		$offset = ($pageNumber - 1) * $itemsPerPage;
+		$trips = $temp->findByWhereMany('memberId = ' . $member->id, $offset , $itemsPerPage);
+		return $trips;
 	}
 
 	public function deleteTrip($vars, $member)
@@ -962,4 +704,196 @@ WHERE `trip_id` = '{$this->dao->escape($tripId)}'
 SQL;
         return $this->dao->exec($query);
     }
+
+	public function checkCreateEditVars($vars)
+	{
+		$tripInfo = array(
+			'trip-id' => 0,
+			'trip-name' => '',
+			'trip-description' => '',
+			'trip-count' => null,
+			'trip-additional-info' => null
+		);
+		$errors = array();
+		if (isset($vars['trip-id'])) {
+			$tripInfo['trip-id'] = $vars['trip-id'];
+		}
+		if (isset($vars['trip-name'])) {
+			$tripInfo['trip-name'] = $vars['trip-name'];
+		}
+		if (empty($tripInfo['trip-name'])) {
+			$errors[] = 'TripErrorNameEmpty';
+		}
+		if (isset($vars['trip-description'])) {
+			$tripInfo['trip-description'] = $vars['trip-description'];
+		}
+		if (empty($tripInfo['trip-description'])) {
+			$errors[] = 'TripErrorDescriptionEmpty';
+		}
+		if (isset($vars['trip-count'])) {
+			// Check if count and additional info matches
+			$tripInfo['trip-count'] = $vars['trip-count'];
+			$count = $tripInfo['trip-count'];
+			$additionalInfo = isset($vars['trip-additional-info']) ? $vars['trip-additional-info'] : false;
+			if (($count == 1) && ($additionalInfo <> self::TRIPS_ADDITIONAL_INFO_SINGLE)) {
+				$errors[] = 'TripErrorCountAdditionalMismatch';
+			}
+			if (($count <> 1) && ($additionalInfo == self::TRIPS_ADDITIONAL_INFO_SINGLE)) {
+				$errors[] = 'TripErrorCountAdditionalMismatch';
+			}
+			if (($count == 2) && ($additionalInfo == self::TRIPS_ADDITIONAL_INFO_SINGLE
+					|| $additionalInfo == self::TRIPS_ADDITIONAL_INFO_FAMILY)) {
+				$errors[] = 'TripErrorCountAdditionalMismatch';
+			}
+		}
+		if (isset($vars['trip-additional-info'])) {
+			$tripInfo['trip-additional-info'] = $vars['trip-additional-info'];
+			$additionalInfo = $tripInfo['trip-additional-info'];
+			$count = isset($vars['trip-count']) ? $vars['trip-count'] : false;
+			if (!$count && ($additionalInfo == self::TRIPS_ADDITIONAL_INFO_FRIENDS_MIXED
+					|| $additionalInfo == self::TRIPS_ADDITIONAL_INFO_FRIENDS_SAME
+					|| $additionalInfo == self::TRIPS_ADDITIONAL_INFO_FAMILY)) {
+				$errors[] = 'TripErrorNumberOfPartyMissing';
+			}
+		}
+		$locations = array();
+		if (isset($vars['location'])) {
+			// remove empty rows and build locations array
+			$count = count($vars['location']);
+			for ($i = 0; $i < $count; $i++) {
+				$location = new StdClass;
+				$location->geonameId = $vars['location-geoname-id'][$i];
+				$location->latitude = $vars['location-latitude'][$i];
+				$location->name = $vars['location'][$i];
+				$location->longitude = $vars['location-longitude'][$i];
+				$location->arrival = $vars['location-arrival'][$i];
+				$location->arrivalTS = strtotime($vars['location-arrival'][$i]);
+				$location->departure = $vars['location-departure'][$i];
+				$location->departureTS = strtotime($vars['location-departure'][$i]);
+				$location->options = $vars['location-options'][$i];
+				$emptyRow = empty($location->name) && empty($location->arrival) && empty($location->departure);
+				if (!$emptyRow) {
+					$locations[] = $location;
+					if (!($location->arrivalTS)) {
+						if (!in_array('TripErrorWrongArrivalFormat###' . ($i +1), $errors)) {
+							$errors[] = 'TripErrorWrongArrivalFormat###' . ($i + 1);
+						}
+					}
+					if (!($location->departureTS)) {
+						if (!in_array('TripErrorWrongDepartureFormat###' . ($i + 1), $errors)) {
+							$errors[] = 'TripErrorWrongDepartureFormat###' . ($i + 1);
+						}
+					}
+				}
+			}
+
+			$count = count($locations);
+			if ($count == 0) {
+				$errors[] = 'TripErrorNoLocationSpecified';
+			}
+
+			// check that date range is start <= end
+			if (count($locations) > 1) {
+				for($i = 0; $i < $count; $i++) {
+					$start = $locations[$i]->arrivalTS;
+					$end = $locations[$i]->departureTS;
+					if ($start && $end && ($start > $end)) {
+						$temp = $locations[$i]->arrivalTS;
+						$tempString = $locations[$i]->arrival;
+						$locations[$i]->arrival = $locations[$i]->departure;
+						$locations[$i]->arrivalTS = $locations[$i]->departureTS;
+						$locations[$i]->departure =  $temp;
+						$locations[$i]->departureTS =  $tempString;
+					}
+				}
+			}
+
+			// check that date range don't overlap (except on start and end dates)
+			if (count($locations) > 1) {
+				$overlap = false;
+				for ($i = 0; $i < $count - 1; $i++) {
+					$start1 = $locations[$i]->arrivalTS;
+					$end1 = $locations[$i]->departureTS;
+					for ($j = $i + 1; $j < $count; $j++) {
+						$start2 = $locations[$j]->arrivalTS;
+						$end2 = $locations[$j]->departureTS;
+						$overlap |= (($start1 < $end2) and ($end1 > $start2));
+					}
+				}
+				if ($overlap) {
+					$errors[] = 'TripErrorOverlappingDates';
+				}
+			}
+
+			if (count($errors) == 0) {
+				// order locations by start date (ascending)
+				usort($locations, function($a, $b)
+				{
+					if ($a->arrivalTS == $b->arrivalTS)
+					{
+						if ($a->departureTS < $b->departureTS) {
+							return -1;
+						} else {
+							return 1;
+						}
+					}
+					else if ($a->arrivalTS < $b->arrivalTS)
+					{
+						return -1;
+					}
+					else {
+						return 1;
+					}
+				});
+			}
+		} else {
+			$errors[] = 'TripErrorNoLocationSpecified';
+		}
+		if (count($errors) > 0) {
+			// Make sure that there is an location empty row in case of an error
+			$locations[] = $this->getEmptyLocationDetails();
+		}
+		$tripInfo['locations'] = $locations;
+
+		return array($errors, $tripInfo);
+	}
+
+	public function createTrip($tripInfo) {
+		$member = $this->getLoggedInMember();
+		if (!$member) {
+			return false;
+		}
+		$trip = new Trip();
+		$trip->name = $tripInfo['trip-name'];
+		$trip->description = $tripInfo['trip-description'];
+		$trip->countOfTravellers = $tripInfo['trip-count'];
+		$trip->additionalInfo = $tripInfo['trip-additional-info'];
+		$trip->memberId = $member->id;
+		// add sub trips
+		foreach($tripInfo['locations'] as $location) {
+			$trip->addSubtrip($location);
+		}
+		$trip->insert();
+		return $trip;
+	}
+
+	public function editTrip($tripInfo) {
+		$member = $this->getLoggedInMember();
+		if (!$member) {
+			return false;
+		}
+		if ($member->id != $tripInfo->memberId)
+		$trip = new Trip($tripInfo['trip-id']);
+		$trip->name = $tripInfo['trip-name'];
+		$trip->description = $tripInfo['trip-description'];
+		$trip->countOfTravellers = $tripInfo['trip-count'];
+		$trip->additionalInfo = $tripInfo['trip-additional-info'];
+		$trip->memberId = $member->id;
+		// add sub trips
+		foreach($tripInfo['locations'] as $location) {
+			$trip->addSubtrip($location);
+		}
+		$trip->update();
+		return $trip;
+	}
 }

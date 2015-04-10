@@ -44,4 +44,34 @@ class Subtrip extends RoxEntityBase
             $this->findById(intval($id));
         }
     }
+
+    private function _getLocationName(Geo $location) {
+        $lang = $_SESSION['lang'];
+        $admin1 = $location->getParent();
+        $country = $location->getCountry();
+        $locationName = $location->getName($lang);
+        $admin1Name = $admin1->getName($lang);
+        $countryName = $country->getName($lang);
+        $name = $locationName;
+        if (!empty($admin1Name)) {
+            $name .= ', ' . $admin1Name;
+        }
+        $name .= ', ' . $countryName;
+        return $name;
+    }
+
+    public function getSubtripDetails() {
+        $vars = new StdClass;
+        $vars->geonameId = $this->geonameId;
+        $location = new Geo($this->geonameId);
+        $vars->name = $this->_getLocationName($location);
+        $vars->latitude = $location->latitude;
+        $vars->longitude = $location->longitude;
+        $vars->arrivalTS = strtotime($this->arrival);
+        $vars->arrival = $this->arrival;
+        $vars->departureTS = strtotime($this->departure);
+        $vars->departure = $this->departure;
+        $vars->options = $this->options;
+        return $vars;
+    }
 }

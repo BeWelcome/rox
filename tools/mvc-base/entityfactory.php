@@ -50,10 +50,12 @@ class RoxEntityFactory
         'Right'             => 'build/admin/rights/adminrights.entity',
         'Role'              => 'build/rights/role.entity',
         'RolePrivilege'     => 'build/rights/roleprivilege.entity',
+        'Subtrip'           => 'build/trips/subtrip.entity',
         'Suggestion'        => 'build/suggestions/suggestion.entity',
         'SuggestionOption'  => 'build/suggestions/suggestionoption.entity',
         'Thread'            => 'build/forums/thread.entity',
         'ThreadVote'        => 'build/forums/threadvote.entity',
+        'Trip'              => 'build/trips/trip.entity',
         'VolunteerBoard'    => 'build/admin/volunteerboard.entity',
         );
 

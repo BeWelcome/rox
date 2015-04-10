@@ -112,7 +112,7 @@ bwrox.selectScripts([
             "admin/rights",
             "admin/flags",
             "trips/create",
-            "trips/edit"
+            "trips/edit/"
             /*,
              "blog",
              "trip",

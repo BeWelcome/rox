@@ -5,7 +5,7 @@ include 'locationrow.helper.php';
 
 function _getCountDropdown($value, $placeholder) {
     $select = '
-        <select class="select2" id="trip-count" data-placeholder="' . $placeholder . '">
+        <select class="select2" name="trip-count" data-placeholder="' . $placeholder . '">
             <option label="empty"></option>
             <option>1</option>
             <option>2</option>
@@ -20,18 +20,19 @@ function _getCountDropdown($value, $placeholder) {
     return $select;
 }
 
-function _getAdditionalInfoDropdown($value, $words) {
-    $select = '
-        <select class="select2" id="trip-additional-info" data-placeholder="' . $words->getBuffered('TripCountPlaceholder') . '">
-            <option label="empty"></option>
-            <option value="1">' . $words->getBuffered('TripSingleTraveller') . '</option>
-            <option value="2">' . $words->getBuffered('TripCouple') . '</option>
-            <option value="4">' . $words->getBuffered('TripFriendsMixedGender') . '</option>
-            <option value="8">' . $words->getBuffered('TripFriendsSameGender') . '</option>
-            <option value="16">' . $words->getBuffered('TripFamily') . '</option>
-        </select>';
-    if ($value != "") {
-        str_replace('value="' . $value . '"', 'value="' . $value . '" selected', $select);
+function _getAdditionalInfoDropdown($current, $words) {
+    $options = TripsModel::getAdditonalInfoOptions();
+
+    $select = '<select class="select2" name="trip-additional-info" data-placeholder="'
+        . $words->getBuffered('TripCountPlaceholder') . '">';
+    $select .= '<option label="empty"></option>';
+   foreach($options as $value => $optionText) {
+        $select .= '<option value="' . $value . '"';
+        if ($current && $current == $value) {
+            $select .= ' selected';
+        }
+        $select .= '>' . $optionText . '</option>';
     }
+    $select .= '</select>';
     return $select;
 }

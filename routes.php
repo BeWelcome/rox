@@ -289,7 +289,8 @@
     // Trips
     $this->addRoute('trips', 'trips', 'TripsController', 'trips');
     $this->addRoute('trips_my_trips', 'trips/mytrips', 'TripsController', 'myTrips');
-    $this->addRoute('trips_my_trips_pages', 'activities/myactivities/page/:pageno:', 'TripsController', 'myTrips');
+    $this->addRoute('trips_my_trips_pages', 'trips/mytrips/page/:pageno:', 'TripsController', 'myTrips');
+    $this->addRoute('trips_show', 'trips/show/:id:', 'TripsController', 'showTrip');
     $this->addRoute('trip_show_username', 'trip/show/:username:', 'TripController', 'showTripsForUsername');
     $this->addRoute('trip_show_usernamepages', 'trip/show/:username:/page/:pageno:', 'TripController', 'showTripsForUsername');
     $this->addRoute('trips_create', 'trips/create', 'TripsController', 'createTrip');
@@ -300,8 +301,8 @@
     $this->addRoute('trips_near_me', 'trips/nearme', 'TripsController', 'tripsNearMe');
     $this->addRoute('trips_near_me_pages', 'trips/nearme/page/:pageno:', 'TripsController', 'tripsNearMe');
     $this->addRoute('trips_show', 'trips/:id:', 'TripsController', 'show');
-    $this->addRoute('trips_edit', 'trips/:id:/edit', 'TripsController', 'editTrip');
-    $this->addRoute('trip_delete', 'trip/:tripid:/delete', 'TripController', 'deleteTrip');
+    $this->addRoute('trips_edit', 'trips/edit/:id:', 'TripsController', 'editTrip');
+    $this->addRoute('trip_delete', 'trip/:id:/delete', 'TripController', 'deleteTrip');
     $this->addRoute('trips_search', 'trips/search', 'TripsController', 'search');
     $this->addRoute('trips_search_results', 'trips/search/:keyword:', 'TripsController', 'search');
     $this->addRoute('trips_search_results_pages', 'trips/search/:keyword:/page/:pageno:', 'TripsController', 'search');

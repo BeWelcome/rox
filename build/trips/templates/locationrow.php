@@ -1,18 +1,18 @@
 <?php $words = $this->getWords();
 $location = 'location-' . $locationRow; ?>
 <div class="row">
-<input type="hidden" class="validate" cname="location-geoname-id[]" id="<?= $location ?>-geoname-id"
+<input type="hidden" class="validate collect" name="location-geoname-id[]" id="<?= $location ?>-geoname-id"
        value="<?= $locationDetails->geonameId ?>">
-<input type="hidden" class="validate" name="location-latitude[]" id="<?= $location ?>-latitude"
+<input type="hidden" class="validate collect" name="location-latitude[]" id="<?= $location ?>-latitude"
        value="<?= $locationDetails->latitude ?>">
-<input type="hidden" class="validate" name="location-longitude[]" id="<?= $location ?>-longitude"
+<input type="hidden" class="validate collect" name="location-longitude[]" id="<?= $location ?>-longitude"
        value="<?= $locationDetails->longitude ?>">
 <div class="form-group has-feedback col-md-5">
     <label for="<?= $location ?>"
            class="control-label sr-only"><?php echo $words->get('TripLocation'); ?></label>
 
     <div class="input-group">
-        <input type="text" class="form-control location-picker validate" name="location[]"
+        <input type="text" class="form-control location-picker validate collect" name="location[]"
                placeholder="<?= $words->getBuffered('TripLocation'); ?>" id="<?= $location ?>"
                value="<?= $locationDetails->name ?>"/>
 
@@ -26,15 +26,15 @@ $location = 'location-' . $locationRow; ?>
            class="control-label sr-only"><?php echo $words->get('TripDateStart'); ?></label>
 
     <div class="input-group">
-        <input type="text" class="form-control date-picker-start validate" name="location-start-date[]"
+        <input type="text" class="form-control date-picker-start validate" name="location-arrival[]"
                placeholder="<?= $words->getBuffered('TripArrival'); ?>" id="arrival-<?= $locationRow ?>"
-               value="<?= $locationDetails->startDateString ?>"/>
+               value="<?= $locationDetails->arrival ?>"/>
         <label for="arrival-<?= $locationRow ?>" class="control-label input-group-addon btn"><span
                 class="fa fa-fw fa-calendar"></span></label>
     </div>
     <?php
-    if (in_array('TripErrorStartDateWrongFormat###' . $locationRow, $errors)) {
-        echo '<span class="help-block alert alert-danger">' . $words->get('TripErrorStartDateWrongFormat') . '</span>';
+    if (in_array('TripErrorWrongArrivalFormat###' . $locationRow, $errors)) {
+        echo '<span class="help-block alert alert-danger">' . $words->get('TripErrorWrongArrivalFormat') . '</span>';
     }
     ?>
 </div>
@@ -43,15 +43,15 @@ $location = 'location-' . $locationRow; ?>
            class="control-label sr-only"><?php echo $words->get('TripDeparture'); ?></label>
 
     <div class="input-group">
-        <input type="text" class="form-control date-picker-end validate" name="location-end-date[]"
+        <input type="text" class="form-control date-picker-end validate" name="location-departure[]"
                placeholder="<?= $words->getBuffered('TripDeparture'); ?>" id="departure-<?= $locationRow ?>"
-               value="<?= $locationDetails->endDateString ?>"/>
+               value="<?= $locationDetails->departure ?>"/>
         <label for="departure-<?= $locationRow ?>" class="control-label input-group-addon btn"><span
                 class="fa fa-fw fa-calendar"></span></label>
     </div>
     <?php
-    if (in_array('TripErrorEndDateWrongFormat###' . $locationRow, $errors)) {
-        echo '<span class="help-block alert alert-danger">' . $words->get('TripErrorEndDateWrongFormat') . '</span>';
+    if (in_array('TripErrorWrongDepartureFormat###' . $locationRow, $errors)) {
+        echo '<span class="help-block alert alert-danger">' . $words->get('TripErrorWrongDepartureFormat') . '</span>';
     }
     ?>
 </div>

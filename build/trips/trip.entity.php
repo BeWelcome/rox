@@ -1,6 +1,6 @@
 <?php
 /*
-Copyright (c) 2009 BeVolunteer
+Copyright (c) 2009 - 2015 BeVolunteer
 
 This file is part of BW Rox.
 
@@ -21,10 +21,6 @@ Boston, MA  02111-1307, USA.
 */
 
     /**
-     * @author thisismeonmounteverest
-     */
-
-    /**
      * represents a single trip including subtrips
      *
      * @author thisismeonmounteverest
@@ -33,7 +29,7 @@ Boston, MA  02111-1307, USA.
      */
 class Trip extends RoxEntityBase
 {
-    public $subtrips = null;
+    private $subtrips = array();
     protected $_table_name = 'trips';
 
     public function __construct($id = null)
@@ -55,7 +51,66 @@ class Trip extends RoxEntityBase
         {
             // get subtrips for this trip
             $temp = new Subtrip();
-            $subtrips = $temp->FindByWhereMany('tripId = ' . $this->getPK());
+            $this->subtrips = $temp->FindByWhereMany('tripId = ' . $this->getPKValue());
         }
+        return $status;
+    }
+
+    public function update() {
+        // write data into the database
+        // update subtrips as necessary
+        parent::update();
+        // Now take care of the subtrips
+        foreach($this->subtrips as $subtrip) {
+            if ($subtrip->getPKValue() == 0) {
+                $subtrip->insert();
+            } else {
+                $subtrip->update();
+            }
+        }
+
+    }
+
+    public function insert() {
+        parent::insert();
+        // Now write all subtrips
+        foreach($this->subtrips as $subtrip) {
+            $subtrip->tripId = $this->getPKValue();
+            $subtrip->insert();
+        }
+    }
+
+    public function addSubTrip($subtripInfo) {
+        if ($subtripInfo->id == 0) {
+            $subtrip = new Subtrip();
+        } else {
+            $subtrip = $this->subtrips[$subtripInfo->id];
+        }
+        $subtrip->geonameId = $subtripInfo->geonameId;
+        $subtrip->arrival = $subtripInfo->arrival;
+        $subtrip->departure = $subtripInfo->departure;
+        $subtrip->options = $subtripInfo->options;
+        if ($subtripInfo->id == 0) {
+            $this->subtrips[] = $subtrip;
+        } else {
+            $this->subtrips[$subtripInfo->id] = $subtrip;
+        }
+    }
+
+    public function getPostVariables() {
+        $vars = array();
+        $vars['trip-id'] = $this->getPKValue();
+        $vars['trip-name'] = $this->name;
+        $vars['trip-description'] = $this->description;
+        $vars['trip-count'] = $this->countOfTravellers;
+        $vars['trip-additional-info'] = $this->additionalInfo;
+        $geonameIds = $arrivals = $departures = $options = array();
+        $locations = array();
+        foreach($this->subtrips as $subtrip) {
+            $subtripDetails = $subtrip->getSubtripDetails();
+            $locations[] = $subtripDetails;
+        }
+        $vars['locations'] = $locations;
+        return $vars;
     }
 }

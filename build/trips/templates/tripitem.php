@@ -1,34 +1,28 @@
-<h1><a href="/trips/<?= $tripId ?>"><?= $trip->name ?></a></h1>
+<h1><a href="/trips/<?= $trip->id ?>"><?= $trip->name ?></a></h1>
 <p><?= $trip->duration ?></p>
 <?php
-$words = $this->getWords();
-$tripData = $trip->data;
-if (!empty($trip->description )) { ?>
-    <div class="row"><div class="col-xs-12"><?= $trip->description ?></div></div>
-<?php }
-if (!empty($tripData)) {
-$count = count($tripData);
+$words = $this->getWords(); ?>
+<div class="row"><div class="col-xs-12"><?= $trip->description ?></div></div>
+<?php
+$count = count($trip->subtrips);
 $counter = 0;
 ?>
 <!-- Subtemplate: 2 columns 50/50 size -->
 <div class="row">
     <!-- Contents for right subtemplate -->
     <?php
-    foreach ($tripData as $subTripId => $subTrip) {
+    foreach ($trip->subtrips as $subTrip) {
         $counter++;
         $highlight = false;
-        if ($subTrip['location'] == $geoname) {
+        if ($subTrip->geonameId == $geoname) {
             $highlight = true;
         }
     if ($counter % 4 == 1) {
         echo '</div><div class="row">';
     }
         switch ($counter) {
-            case $count:
-                $color = 'red';
-                $fa = 'fa-map-marker';
-                break;
             case 1:
+            case $count:
                 $color = 'blue';
                 $fa = 'fa-map-marker';
                 break;
@@ -51,11 +45,15 @@ $counter = 0;
                 </span>
         <?php
         }
-
-        ?><i class="fa fa-bed" style="color: <?= $color ?>"></i>
+        if ($subTrip->additional & 1 == 1) {
+            echo '<i class="fa fa-bed"></i>';
+        }
+        if ($subTrip->additional & 2 == 2) {
+            echo '<i class="fa fa-drink"></i>';
+        }
+        ?>
     </div>
 <?php
-        }
 }
 ?>
 </div>

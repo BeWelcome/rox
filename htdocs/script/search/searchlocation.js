@@ -84,7 +84,7 @@ function enableAutoComplete(addMarker) {
             }
         },
         select: function (event, ui) {
-            if (ui == undefined) return false;
+            if (typeof ui === 'undefined') return false;
 
             jQuery("#" + this.id + "-geoname-id").val(ui.item.value);
             jQuery("#" + this.id + "-latitude").val(ui.item.latitude);

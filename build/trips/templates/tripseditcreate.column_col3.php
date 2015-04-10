@@ -34,17 +34,17 @@ if ($this->_editing == true) {
 
         <form method="post" class="tripseditcreate" role="form">
             <?= $callback_tag; ?>
+            <input type="hidden" name="trip-id" value="<?= $tripInfo['trip-id'] ?>" >
             <div class="form-group has-feedback">
                 <label for="trip-name"
                        class="control-label sr-only"><?php echo $words->get('TripNameLabel'); ?></label>
                 <input type="text" class="form-control" name="trip-name"
                        placeholder="<?= $words->getBuffered('TripNamePlaceholder'); ?>"
-                       value="<?= htmlentities($tripInfo['trip-name'], ENT_COMPAT, 'utf-8') ?>"/>
+                       value="<?= htmlentities($tripInfo['trip-name'], ENT_COMPAT, 'utf-8') ?>" />
                 <?php if (in_array('TripErrorNameEmpty', $errors)) : ?>
                     <span class="help-block alert alert-danger"><?= $words->get('TripErrorNameEmpty') ?></span>
                 <?php endif; ?>
             </div>
-
             <div class="form-group has-feedback">
                 <label for="trip-description" class="control-label sr-only"><?= $words->get('TripDescriptionLabel'); ?></label>
             <textarea class="form-control" name="trip-description" cols="48" rows="7"
@@ -56,27 +56,38 @@ if ($this->_editing == true) {
                     <span class="help-block alert alert-danger"><?= $words->get('TripErrorDescriptionEmpty') ?></span>
                 <?php endif; ?>
             </div>
-            <div class="row">
-            <div class="form-group has-feedback col-md-6">
+            <div class="row has-feedback">
+            <div class="form-group col-md-6">
                 <label for="trip-count"
                        class="control-label sr-only"><?php echo $words->get('TripCountLabel'); ?></label>
                 <?= _getCountDropdown($tripInfo['trip-count'], $words->getBuffered('TripCountPlaceholder')) ?>
+                <?php if (in_array('TripErrorNumberOfPartyMissing', $errors)) : ?>
+                    <span class="help-block alert alert-danger"><?= $words->get('TripErrorNumberOfPartyMissing') ?></span>
+                <?php endif; ?>
             </div>
-            <div class="form-group has-feedback col-md-6">
+            <div class="form-group col-md-6">
                 <label for="trip-additional-info"
                        class="control-label sr-only"><?php echo $words->get('TripAdditionalInfoLabel'); ?></label>
                 <?= _getAdditionalInfoDropdown($tripInfo['trip-additional-info'], $words) ?>
+                <?php if (in_array('TripErrorCountAdditionalMismatch', $errors)) : ?>
+                    <span class="help-block alert alert-danger"><?= $words->get('TripErrorCountAdditionalMismatch') ?></span>
+                <?php endif; ?>
             </div>
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading"><?= $words->get("TripsLocations") ?></div>
                 <div class="panel-body">
                     <?php
+                    if (in_array('TripErrorOverlappingDates', $errors)) {
+                        echo '<span class="help-block alert alert-danger">' . $words->get('TripErrorOverlappingDates') . '</span>';
+                    }
+                    ?>
+                    <?php
                     $locationRow=0;
                     foreach($tripInfo['locations'] as $locationDetails) :
                         $locationRow++; ?>
                         <div id="div-location-<?= $locationRow ?>">
-                            <?php require_once SCRIPT_BASE . '/build/trips/templates/locationrow.php'; ?>
+                            <?php include SCRIPT_BASE . '/build/trips/templates/locationrow.php'; ?>
                         </div>
                     <?php endforeach; ?>
                     <div id="empty-location"><img id="location-loading"

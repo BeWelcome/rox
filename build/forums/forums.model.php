@@ -2329,7 +2329,7 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d,'%s')
     `forums_threads`.`expiredate`,
     `forums_threads`.`stickyvalue`,
     `forums_threads`.`continent`,
-    `forums_threads`.`IdGroup`,
+    `forums_threads`.`IdGroup` AS `groupId`,
     `forums_threads`.`geonameid`, `geonames_cache`.`name` AS `geonames_name`,
     `forums_threads`.`admincode`, `geonames_admincodes`.`name` AS `adminname`,
     `forums_threads`.`countrycode`, `geonames_countries`.`name` AS `countryname`,
@@ -2469,10 +2469,9 @@ LIMIT %d, %d",$this->threadid,$from,$this->POSTS_PER_PAGE);
 			$this->topic->posts[] = $row;
         } // end  // Now retrieve all the Posts of this thread
 
-
         // Check if the current user has subscribe to this thread or not (to display the proper option, subscribe or unsubscribe)
         if (isset($_SESSION["IdMember"])) {
-            $query = sprintf( "
+			$query = sprintf( "
 SELECT
     `members_threads_subscribed`.`id` AS IdSubscribe,
     `members_threads_subscribed`.`UnSubscribeKey` AS IdKey
@@ -2492,7 +2491,7 @@ AND IdSubscriber=%d
                 $this->topic->IdSubscribe= $row->IdSubscribe ;
                 $this->topic->IdKey= $row->IdKey ;
             }
-        }
+		}
 
 /*
         $query = sprintf(  "
@@ -2592,6 +2591,59 @@ LIMIT %d
         }
     } // end of initLastPosts
 
+    private function updateSubscriptions($memberId, $enable) {
+        // update subscription (keep old assignments through negating if disabling)
+        // members_tags_subscribed
+        // members_threads_subscribed
+        if ($enable) {
+            $newSubscriberId = $memberId;
+            $oldSubscriberId = (-1) * $memberId;
+        } else {
+            $newSubscriberId = (-1) * $memberId;
+            $oldSubscriberId = $memberId;
+        }
+        $query = "
+            UPDATE
+                members_tags_subscribed
+            SET
+                IdSubscriber = " . $newSubscriberId . "
+            WHERE
+                IdSubscriber = " . $oldSubscriberId;
+        $this->dao->query($query);
+        $query ="
+            UPDATE
+                members_threads_subscribed
+            SET
+                IdSubscriber = " . $newSubscriberId . "
+            WHERE
+                IdSubscriber = " . $oldSubscriberId;
+        $this->dao->query($query);
+        $query = "
+            UPDATE
+                membersgroups
+            SET
+                IdMember = " . $newSubscriberId . "
+            WHERE
+                IdMember = " . $oldSubscriberId . "
+                AND IacceptMassMailFromThisGroup = 'Yes'
+        ";
+        $this->dao->query($query);
+    }
+
+    public function disableSubscriptions() {
+        $member = $this->getLoggedInMember();
+        if ($member) {
+            $this->updateSubscriptions($member->id, false);
+        }
+    }
+
+    public function enableSubscriptions() {
+        $member = $this->getLoggedInMember();
+        if ($member) {
+            $this->updateSubscriptions($member->id, true);
+        }
+    }
+
     /**
      * This function retrieve the subscriptions for the member $cid and/or the the thread IdThread and/or theIdTag
      * @$cid : either the IdMember or the username of the member we are searching the subscription
@@ -2610,11 +2662,12 @@ LIMIT %d
         if (!empty($_SESSION["IdMember"])) { // By default current members
             $IdMember=$_SESSION["IdMember"];
         }
-        if (($cid!=0) and ($this->BW_Right->HasRight("ForumModerator","SeeSubscriptions"))) {
+		$seeSubscriptions = $this->BW_Right->HasRight("ForumModerator","SeeSubscriptions");
+        if (($cid!=0) && ($seeSubscriptions != 0)) {
             // Moderators can see the subscriptions of other members
             if (is_numeric($cid)) {
                 $IdMember=$cid ;
-                $query = sprintf("select id,Username from members where id%d=",$IdMember) ;
+                $query = sprintf("select id,Username from members where id=%d",$IdMember) ;
                 $s = $this->dao->query($query);
                 if (!$s) {
                     throw new PException('Could not retrieve members username via id!');
@@ -2680,11 +2733,10 @@ SELECT
     `forums_threads`.`IdTitle`,
     `members_threads_subscribed`.`ActionToWatch`,
     `members_threads_subscribed`.`UnSubscribeKey`,
-    `members`.`Username`
-FROM `forums_threads`,`members`,`members_threads_subscribed`
+    `members_threads_subscribed`.`IdSubscriber`
+FROM `forums_threads`,`members_threads_subscribed`
 WHERE `forums_threads`.`threadid` = `members_threads_subscribed`.`IdThread`
-and `members_threads_subscribed`.`IdSubscriber`=%d
-and `members`.`id`=`members_threads_subscribed`.`IdSubscriber`
+and (`members_threads_subscribed`.`IdSubscriber`=%1\$d OR `members_threads_subscribed`.`IdSubscriber`=-%1\$d)
 ORDER BY `subscribedtime` DESC
                 ",
                 $IdMember
@@ -2744,11 +2796,10 @@ SELECT
     `forums_tags`.`IdName`,
     `members_tags_subscribed`.`ActionToWatch`,
     `members_tags_subscribed`.`UnSubscribeKey`,
-    `members`.`Username`
-FROM `forums_tags`,`members`,`members_tags_subscribed`
+    `members_tags_subscribed`.`IdSubscriber`
+FROM `forums_tags`,`members_tags_subscribed`
 WHERE `forums_tags`.`id` = `members_tags_subscribed`.`IdTag`
-and `members_tags_subscribed`.`IdSubscriber`=%d
-and `members`.`id`=`members_tags_subscribed`.`IdSubscriber`
+and (`members_tags_subscribed`.`IdSubscriber`=%1\$d OR `members_tags_subscribed`.`IdSubscriber`=-%1\$d)
 ORDER BY `subscribedtime` DESC
                 ",
                 $IdMember
@@ -2871,30 +2922,88 @@ AND IdThread=%d
      * It also check that member is not yet subscribing to thread
      */
     public function SubscribeThread($IdThread,$ParamIdMember=0) {
-       $IdMember=$ParamIdMember ;
-       if (isset($_SESSION["IdMember"]) and $IdMember==0) {
-                 $IdMember=$_SESSION["IdMember"] ;
-       }
+        $IdMember=$ParamIdMember ;
+        if (isset($_SESSION["IdMember"]) and $IdMember==0) {
+            $IdMember=$_SESSION["IdMember"] ;
+        }
 
-       // Check if there is a previous Subscription
-       if ($this->IsThreadSubscribed($IdThread,$_SESSION["IdMember"])) {
-             MOD_log::get()->write("Allready subscribed to Thread=#".$IdThread, "Forum");
-          return(false) ;
-       }
-       $key=MD5(rand(100000,900000)) ;
-       $query = "insert into members_threads_subscribed(IdThread,IdSubscriber,UnSubscribeKey)  values(".$IdThread.",".$_SESSION["IdMember"].",'".$this->dao->escape($key)."')" ;
-       $s = $this->dao->query($query);
-       if (!$s) {
-              throw new PException('Forum->SubscribeThread failed !');
-       }
-       $IdSubscribe=mysql_insert_id() ;
-         MOD_log::get()->write("Subscribing to Thread=#".$IdThread." IdSubscribe=#".$IdSubscribe, "Forum");
+        // Check if there is a previous Subscription
+        if ($this->IsThreadSubscribed($IdThread,$_SESSION["IdMember"])) {
+            MOD_log::get()->write("Allready subscribed to Thread=#".$IdThread, "Forum");
+            return(false) ;
+        }
+        $key=MD5(rand(100000,900000)) ;
+        $query = "insert into members_threads_subscribed(IdThread,IdSubscriber,UnSubscribeKey)  values(".$IdThread.",".$_SESSION["IdMember"].",'".$this->dao->escape($key)."')" ;
+        $s = $this->dao->query($query);
+        if (!$s) {
+            throw new PException('Forum->SubscribeThread failed !');
+        }
+        $IdSubscribe=mysql_insert_id() ;
+        MOD_log::get()->write("Subscribing to Thread=#".$IdThread." IdSubscribe=#".$IdSubscribe, "Forum");
     } // end of UnsubscribeThread
 
 
 
 
     /**
+     * This function allow to enable a thread that has been disabled
+     *
+     * @$IdThread : The thread we want the user to subscribe to
+     * @$ParamIdMember optional IdMember, by default set to 0 in this case current logged member will be used
+     * It also check that member is not yet subscribing to thread
+     */
+    public function EnableThread($IdThread) {
+        $member = $this->getLoggedInMember();
+        if (!$member) {
+            return;
+        }
+
+        // Check if there is a previous Subscription
+        if ($this->IsThreadSubscribed($IdThread,(-1) * $member->id)) {
+            $query = "
+                UPDATE
+                    members_threads_subscribed
+                SET
+                    IdSubscriber = " . $member->id . "
+                WHERE
+                    IdThread = " . $IdThread . "
+                    AND IdSubscriber = " . ((-1) * $member->id);
+			$this->dao->query($query);
+        }
+    } // end of UnsubscribeThread
+
+
+	/**
+	 * This function allow to enable a thread that has been disabled
+	 *
+	 * @$IdThread : The thread we want the user to subscribe to
+	 * @$ParamIdMember optional IdMember, by default set to 0 in this case current logged member will be used
+	 * It also check that member is not yet subscribing to thread
+	 */
+	public function EnableTag($IdTag) {
+		$member = $this->getLoggedInMember();
+		if (!$member) {
+			return;
+		}
+
+		// Check if there is a previous Subscription
+		if ($this->IsTagSubscribed($IdTag,(-1) * $member->id)) {
+			$query = "
+                UPDATE
+                    members_tags_subscribed
+                SET
+                    IdSubscriber = " . $member->id . "
+                WHERE
+                    IdThread = " . $IdTag . "
+                    AND IdSubscriber = " . ((-1) * $member->id);
+			$this->dao->query($query);
+		}
+	} // end of UnsubscribeThread
+
+
+
+
+	/**
      * This function remove the subscription marked by IdSubscribe
      * @IdSubscribe is the primary key of the members_tags_subscribed area to remove
      * @Key is  the key to check to be sure it is not an abuse of url

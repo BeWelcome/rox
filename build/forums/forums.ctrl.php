@@ -418,6 +418,21 @@ class ForumsController extends PAppController
                 $operation=$request[2] ;
             }
             switch($operation) {
+                case "enable":
+                    if (isset($request[3])) {
+                        if (isset($request[3]) and ($request[3]=='thread')) {
+                            $this->EnableThread($request[4]);
+                        }
+                        if (isset($request[3]) and ($request[3]=='tag')) {
+                            $this->EnableTag($request[4]);
+                        }
+                    } else {
+                        $this->enableSubscriptions();
+                    }
+                    break;
+                case "disable":
+                    $this->disableSubscriptions();
+                    break;
                 case "member" ;
                     $this->searchSubscriptions($request[3]);
                     break ;
@@ -450,6 +465,16 @@ class ForumsController extends PAppController
         $page->render();
     } // end of index
 
+    private function enableSubscriptions() {
+        $this->_model->enableSubscriptions();
+        $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
+        $this->_view->displaySearchResultSubscriptions($TResults);
+    }
+    private function disableSubscriptions() {
+        $this->_model->disableSubscriptions();
+        $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
+        $this->_view->displaySearchResultSubscriptions($TResults);
+    }
     private function searchSubscriptions($cid=0,$IdThread=0,$IdTag=0) {
         $TResults = $this->_model->searchSubscriptions($cid,$IdThread,$IdTag);
         $this->_view->displaySearchResultSubscriptions($TResults);
@@ -474,6 +499,18 @@ class ForumsController extends PAppController
     private function UnsubscribeTag($IdSubscribe=0,$Key="") {
         $res = $this->_model->UnsubscribeTag($IdSubscribe,$Key);
         $this->_view->Unsubscribe($res);
+    }
+    private function EnableThread($IdThread) {
+        $res = $this->_model->EnableThread($IdThread);
+        $this->_view->SubscribeThread($res);
+        $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
+        $this->_view->displaySearchResultSubscriptions($TResults);
+    }
+    private function EnableTag($IdTag) {
+        $res = $this->_model->EnableTag($IdTag);
+        $this->_view->SubscribeTag($res);
+        $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
+        $this->_view->displaySearchResultSubscriptions($TResults);
     }
 
     private function searchUserposts($user) {

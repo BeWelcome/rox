@@ -29,45 +29,62 @@ Boston, MA  02111-1307, USA.
 	if ($this->BW_Right->HasRight("ForumModerator","All")) {
 	   echo " As a forum moderator with right \"ForumModerator\", \"All\" you are automatically subscribed to everything in the forum.<hr />" ;
 	}
-	if (!empty($TResults->Username)) {
-	   echo "<h3>Subscriptions for <a href=\"bw/member.php?cid=".$TResults->Username."\">".$TResults->Username."</a></h3>" ;
-	}
-	else if (!empty($TResults->ThreadTitle)) {
-	   echo "<h3>Subscriptions for thread <a href=\"forums/s".$TResults->IdThread."\">".$TResults->ThreadTitle."</a></h3>" ;
-	}
-	else {
-	   if (count($TResults->TData)==0) {
-	   		echo $words->getFormatted("forum_YourDontHaveSubscription") ;
-	   }
-	   else {
-	   		echo "<h3>".$words->getFormatted("forum_YourSubscription")."</h3>" ;
-	   }
-	}
-    echo "<table><tr><td colspan=3>" ;
-	echo "</td></tr>\n" ;
-	echo "<tr><td colspan=3><h4>",$words->getFormatted("forum_YourThreadSubscribted"),"</h4></td>" ;
-	foreach ($TResults->TData as $data) {
-		echo "<tr><td> ",$data->subscribedtime,"</td><td>" ;
-		if ($data->IdThread!=0) {
-		   echo " <a href=\"forums/s".$data->IdThread."\">",$words->fTrad($data->IdTitle),"</a>" ;
-		}
-		else {
-		   echo "<a href=\"bw/member.php?cid=".$data->Username."\">".$data->Username."</a>" ;
-		}
-		echo "</td><td><a href=\"forums/subscriptions/unsubscribe/thread/" . $data->IdSubscribe . "/" . $data->UnSubscribeKey . "\" . class=\"button\">" . $words->getSilent('Unsubscribe') . "</a>{$words->flushBuffer()}</td></tr>\n";
-        }
-      	echo "<tr><td colspan=2><h4>",$words->getFormatted("forum_YourTagSubscribted"),"</h4></td>" ;
-
-	foreach ($TResults->TDataTag as $data) {
-		echo "<tr><td> ",$data->subscribedtime,"</td><td>" ;
-		if ($data->IdTag!=0) {
-		   echo " <a href=\"forums/t".$data->IdTag."\">",$words->fTrad($data->IdName),"</a>" ;
-		}
-		else {
-		   echo "<a href=\"bw/member.php?cid=".$data->Username."\">".$data->Username."</a>" ;
-		}
-		echo "</td><td><a href=\"forums/subscriptions/unsubscribe/tag/".$data->IdSubscribe."/".$data->UnSubscribeKey."\" . class=\"button\">" . $words->getSilent('Unsubscribe') . "</a>{$words->flushBuffer()}</td></tr>\n";
-	}
-	echo "</table>" ;
-
 ?>
+<p></p>
+<table>
+    <tr><td colspan="2"><?= $words->getFormatted("ForumDisableAllNotifications") ?></td>
+        <td><a href="forums/subscriptions/disable" class="button"><?= $words->getSilent('ForumDisable') ?></a><?= $words->flushBuffer() ?></td></tr>
+    <tr><td colspan="2"><?= $words->getFormatted("ForumEnableAllNotifications") ?></td>
+        <td><a href="forums/subscriptions/enable" class="button"><?= $words->getSilent('ForumEnable') ?></a><?= $words->flushBuffer() ?></td></tr>
+    <tr><td colspan="3"><?php
+    if (!empty($TResults->Username)) {
+    echo "<h3>Subscriptions for <a href=\"bw/member.php?cid=".$TResults->Username."\">".$TResults->Username."</a></h3>" ;
+    }
+    else if (!empty($TResults->ThreadTitle)) {
+    echo "<h3>Subscriptions for thread <a href=\"forums/s".$TResults->IdThread."\">".$TResults->ThreadTitle."</a></h3>" ;
+    }
+    else {
+    if (count($TResults->TData)==0) {
+    echo $words->getFormatted("forum_YourDontHaveSubscription") ;
+    }
+    else {
+    echo "<h3>".$words->getFormatted("forum_YourSubscription")."</h3>" ;
+    }
+    } ?>
+</td></tr>
+<?php
+if (count($TResults->TData) > 0) {
+    echo "<tr><td colspan=3><h4>", $words->getFormatted("forum_YourThreadSubscribted"), "</h4></td>";
+    foreach ($TResults->TData as $data) {
+        echo "<tr><td> ", $data->subscribedtime, "</td><td>";
+        if ($data->IdThread != 0) {
+            echo " <a href=\"forums/s" . $data->IdThread . "\">", $words->fTrad($data->IdTitle), "</a>";
+        } else {
+            echo "<a href=\"bw/member.php?cid=" . $data->Username . "\">" . $data->Username . "</a>";
+        }
+        if ($data->IdSubscriber > 0) {
+            echo "</td><td><a href=\"forums/subscriptions/unsubscribe/thread/" . $data->IdSubscribe . "/" . $data->UnSubscribeKey . "\" . class=\"button\">" . $words->getSilent('Unsubscribe') . "</a>{$words->flushBuffer()}</td></tr>\n";
+        } else {
+            echo "</td><td><a href=\"forums/subscriptions/enable/thread/" . $data->IdThread . "/" . $data->UnSubscribeKey . "\" . class=\"button\">" . $words->getSilent('ForumEnable') . "</a>{$words->flushBuffer()}</td></tr>\n";
+        }
+    }
+}
+if (count($TResults->TDataTag) > 0) {
+    echo "<tr><td colspan=2><h4>", $words->getFormatted("forum_YourTagSubscribted"), "</h4></td>";
+
+    foreach ($TResults->TDataTag as $data) {
+        echo "<tr><td> ", $data->subscribedtime, "</td><td>";
+        if ($data->IdTag != 0) {
+            echo " <a href=\"forums/t" . $data->IdTag . "\">", $words->fTrad($data->IdName), "</a>";
+        } else {
+            echo "<a href=\"bw/member.php?cid=" . $data->Username . "\">" . $data->Username . "</a>";
+        }
+        if ($data->IdSubscriber > 0) {
+            echo "</td><td><a href=\"forums/subscriptions/unsubscribe/tag/" . $data->IdSubscribe . "/" . $data->UnSubscribeKey . "\" . class=\"button\">" . $words->getSilent('Unsubscribe') . "</a>{$words->flushBuffer()}</td></tr>\n";
+        } else {
+            echo "</td><td><a href=\"forums/subscriptions/enable/tag/" . $data->IdTag . "/" . $data->UnSubscribeKey . "\" . class=\"button\">" . $words->getSilent('ForumEnable') . "</a>{$words->flushBuffer()}</td></tr>\n";
+        }
+    }
+}
+?>
+</table>

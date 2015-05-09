@@ -142,11 +142,11 @@ HTML;
                 </div> <!-- groupbox clearfix -->
 HTML;
             endfor;
-            echo <<<HTML
-            <p class="float_right"><a href="members/{$member->Username}/groups">{$words->get('GroupsAllMyLink')}</a></p>
-</div> <!-- profile_groups -->
-HTML;
+            if (count($my_groups) > 3) :
+            echo '<p class="float_right"><a href="members/{$member->Username}/groups">' . $words->get('GroupsAllMyLink') . '</a></p>';
             endif;
+        echo '</div> <!-- profile_groups -->';
+        endif;
 ?>
 
 <?php if ($this->model->getLoggedInMember() && !$this->passedAway) : ?>

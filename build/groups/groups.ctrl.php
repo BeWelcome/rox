@@ -238,7 +238,7 @@ class GroupsController extends RoxControllerBase
         $params = new stdClass;
         $params->strategy = new HalfPagePager('left');
         $params->items = $this->_model->countMyGroups();
-        $params->items_per_page = 20;
+        $params->items_per_page = 30;
         $pager = new PagerWidget($params);
         $page->search_result = $this->_model->getMyGroups();
         $page->pager = $pager;
@@ -878,7 +878,7 @@ class GroupsController extends RoxControllerBase
         $pager_params->strategy = new HalfPagePager;
         $pager_params->page_method = 'url';
         $pager_params->items = count($page->group->getMembers());
-        $pager_params->items_per_page = 10;
+        $pager_params->items_per_page = 20;
         $page->pager_widget = new PagerWidget($pager_params);
         return $page;
     }

@@ -56,7 +56,7 @@ class GroupMembership extends RoxEntityBase
             return false;
         }
 
-        return $this->findByWhere("IdMember = {$member_id} AND IdGroup = {$group_id}");
+        return $this->findByWhere("(IdMember = {$member_id} OR IdMember = -{$member_id}) AND IdGroup = {$group_id}");
         
     }
 
@@ -90,7 +90,7 @@ class GroupMembership extends RoxEntityBase
 
         $sql = "SELECT COUNT(*) AS count FROM members AS m, " . $this->getTableName() 
             . " AS mg WHERE mg.IdGroup = " . $group_id . " AND mg.Status = 'In' "
-            . " AND mg.IdMember = m.id AND m.Status IN (" . Member::ACTIVE_ALL . ")";
+            . " AND (mg.IdMember = m.id OR mg.IdMember = -(m.id)) AND m.Status IN (" . Member::ACTIVE_ALL . ")";
         
         $rr = $this->dao->query($sql);
         $count = 0;
@@ -133,7 +133,11 @@ class GroupMembership extends RoxEntityBase
         $members = array();
         foreach ($links as &$link)
         {
-            $members[] = $link->IdMember;
+            $memberId = $link->IdMember;
+            if ($memberId < 0) {
+                $memberId = - $memberId;
+            }
+            $members[] = $memberId;
             unset($link);
         }
         unset($links);
@@ -163,9 +167,9 @@ class GroupMembership extends RoxEntityBase
         if ($notLoggedIn) {
             $sql .= ", memberspublicprofiles as mp ";
         }        
-        $sql .= " WHERE m.Status IN ( " . Member::ACTIVE_ALL . ") AND m.id IN ('" . implode("','", $members) . "') AND mg.IdMember = m.id AND mg.IdGroup = {$group_id}";
+        $sql .= " WHERE m.Status IN ( " . Member::ACTIVE_ALL . ") AND m.id IN ('" . implode("','", $members) . "') AND (mg.IdMember = m.id OR mg.IdMember = -(m.id)) AND mg.IdGroup = {$group_id}";
         if ($notLoggedIn) {
-            $sql .= " AND mp.IdMember=m.id";
+            $sql .= " AND (mp.IdMember=m.id OR mp.IdMember = -(m.id))";
         }
         $sql .= " ORDER BY {$orderby}{$limit_clause}{$offset_clause}";
         return $this->createEntity('Member')->findBySQLMany($sql);
@@ -174,7 +178,8 @@ class GroupMembership extends RoxEntityBase
     /**
      * return the groups for a member
      *
-     * @param object $member - member entity to find groups for
+     * @param Member $member - member entity to find groups for
+     * @param string $status - member status enum('In','WantToBeIn','Kicked','Invited')
      * @access public
      * @return array
      */
@@ -185,7 +190,7 @@ class GroupMembership extends RoxEntityBase
             return array();
         }
 
-        $links = $this->findByWhereMany("IdMember = '{$member_id}'" . ((!empty($status)) ? " AND Status = '" . $this->dao->escape($status) . "'" : ''));
+        $links = $this->findByWhereMany("(IdMember = '{$member_id}' OR IdMember = '-{$member_id}')" . ((!empty($status)) ? " AND Status = '" . $this->dao->escape($status) . "'" : ''));
 
         $groups = array();
         foreach ($links as &$link)
@@ -220,7 +225,7 @@ class GroupMembership extends RoxEntityBase
             return false;
         }
 
-        if ($this->findByWhere("IdMember = '{$member_id}' AND IdGroup = '{$group_id}'" . (($only_in) ? " AND Status = 'In'" : '')))
+        if ($this->findByWhere("(IdMember = '{$member_id}' OR IdMember = '-{$member_id}') AND IdGroup = '{$group_id}'" . (($only_in) ? " AND Status = 'In'" : '')))
         {
             return true;
         }
@@ -304,7 +309,9 @@ class GroupMembership extends RoxEntityBase
                 $this->Comment = $comment_id;
             }
         }
-
+        if ($this->IdMember < 0) {
+            $this->IdMember = (-1) * $this->IdMember;
+        }
         $this->IacceptMassMailFromThisGroup = $acceptgroupmail;
         $this->updated = date('Y-m-d H:i:s');
         return $this->update();

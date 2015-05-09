@@ -2493,46 +2493,6 @@ AND IdSubscriber=%d
             }
 		}
 
-/*
-        $query = sprintf(  "
-SELECT
-    `forums_threads`.`title`,
-    `forums_threads`.`IdTitle`,
-    `ThreadVisibility`,
-    `ThreadDeleted`,
-    `forums_threads`.`replies`,
-    `forums_threads`.`views`,
-    `forums_threads`.`first_postid`,
-    `forums_threads`.`IdGroup`,
-    `forums_threads`.`continent`,
-    `forums_threads`.`geonameid`, `geonames_cache`.`name` AS `geonames_name`,
-    `forums_threads`.`admincode`, `geonames_admincodes`.`name` AS `adminname`,
-    `forums_threads`.`countrycode`, `geonames_countries`.`name` AS `countryname`,
-    `forums_threads`.`tag1` AS `tag1id`, `tags1`.`tag` AS `tag1`,
-    `forums_threads`.`tag2` AS `tag2id`, `tags2`.`tag` AS `tag2`,
-    `forums_threads`.`tag3` AS `tag3id`, `tags3`.`tag` AS `tag3`,
-    `forums_threads`.`tag4` AS `tag4id`, `tags4`.`tag` AS `tag4`,
-    `forums_threads`.`tag5` AS `tag5id`, `tags5`.`tag` AS `tag5`,
-    `groups`.`Name` AS `GroupName`
-FROM `forums_threads`
-LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)
-LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)
-LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)
-LEFT JOIN `forums_tags` AS `tags1` ON (`forums_threads`.`tag1` = `tags1`.`tagid`)
-LEFT JOIN `forums_tags` AS `tags2` ON (`forums_threads`.`tag2` = `tags2`.`tagid`)
-LEFT JOIN `forums_tags` AS `tags3` ON (`forums_threads`.`tag3` = `tags3`.`tagid`)
-LEFT JOIN `forums_tags` AS `tags4` ON (`forums_threads`.`tag4` = `tags4`.`tagid`)
-LEFT JOIN `forums_tags` AS `tags5` ON (`forums_threads`.`tag5` = `tags5`.`tagid`)
-LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
-WHERE `threadid` = '%d'
-            ",
-            $this->threadid
-        );
-        $s = $this->dao->query($query);
-        if (!$s) {
-            throw new PException('Could not retrieve Thread=#".$this->threadid." !');
-        }
-*/
         // Increase the number of views
         $query = "
 UPDATE `forums_threads`
@@ -2570,6 +2530,8 @@ AND addresses.IdMember = members.id AND addresses.rank = 0
 	and ({$this->PublicPostVisibility})
 	and ({$this->PublicThreadVisibility})
 	and ({$this->PostGroupsRestriction})
+	and ThreadDeleted <> 'Deleted'
+	And PostDeleted <> 'Deleted'
 ORDER BY `posttime` DESC
 LIMIT %d
             ",
@@ -2630,28 +2592,99 @@ LIMIT %d
         $this->dao->query($query);
     }
 
-    public function disableSubscriptions() {
-        $member = $this->getLoggedInMember();
-        if ($member) {
-            $this->updateSubscriptions($member->id, false);
-        }
-    }
+	private function updateGroupNotifications($memberId, $enable) {
+		if ($enable) {
+			$newSubscriberId = $memberId;
+			$oldSubscriberId = (-1) * $memberId;
+		} else {
+			$newSubscriberId = (-1) * $memberId;
+			$oldSubscriberId = $memberId;
+		}
+		$query = "
+            UPDATE
+                membersgroups
+            SET
+                IdMember = " . $newSubscriberId . "
+            WHERE
+                IdMember = " . $oldSubscriberId . "
+                AND IacceptMassMailFromThisGroup = 'Yes'
+        ";
+		$this->dao->query($query);
+	}
 
-    public function enableSubscriptions() {
-        $member = $this->getLoggedInMember();
-        if ($member) {
-            $this->updateSubscriptions($member->id, true);
-        }
-    }
+	private function updateGroupNotification($groupId, $memberId, $enable) {
+		if ($enable) {
+			$newSubscriberId = $memberId;
+			$oldSubscriberId = (-1) * $memberId;
+		} else {
+			$newSubscriberId = (-1) * $memberId;
+			$oldSubscriberId = $memberId;
+		}
+		$query = "
+            UPDATE
+                membersgroups
+            SET
+                IdMember = " . $newSubscriberId . "
+            WHERE
+            	IdGroup = " . $groupId . "
+                AND IdMember = " . $oldSubscriberId . "
+                AND IacceptMassMailFromThisGroup = 'Yes'
+        ";
+		$this->dao->query($query);
+	}
 
-    /**
+	public function disableSubscriptions() {
+		$member = $this->getLoggedInMember();
+		if ($member) {
+			$this->updateSubscriptions($member->id, false);
+			$this->updateGroupNotifications($member->id, false);
+		}
+	}
+
+	public function enableSubscriptions() {
+		$member = $this->getLoggedInMember();
+		if ($member) {
+			$this->updateSubscriptions($member->id, true);
+			$this->updateGroupNotifications($member->id, true);
+		}
+	}
+
+	public function disableGroup($IdGroup) {
+		$member = $this->getLoggedInMember();
+		if ($member) {
+			$this->updateGroupNotification($IdGroup, $member->id, false);
+		}
+	}
+
+	public function enableGroup($IdGroup) {
+		$member = $this->getLoggedInMember();
+		if ($member) {
+			$this->updateGroupNotification($IdGroup, $member->id, true);
+		}
+	}
+
+	public function subscribeGroup($IdGroup) {
+		$member = $this->getLoggedInMember();
+		if ($member) {
+			$group = $this->createEntity('Group', $IdGroup);
+			if (!($membership = $this->createEntity('GroupMembership')->getMembership($group, $member)))
+			{
+				return false;
+			}
+			// Get group comment if any
+
+			$membership->updateMembership(strtolower('yes'), $membership->Comment);
+		}
+	}
+
+	/**
      * This function retrieve the subscriptions for the member $cid and/or the the thread IdThread and/or theIdTag
      * @$cid : either the IdMember or the username of the member we are searching the subscription
      * this $cid and $IdThread and $IdTag parameters are only used if the current member has moderator rights
      * It returns a $TResults structure
      * Very important  : member who are not moderators cannot see other people subscriptions
      */
-    public function searchSubscriptions($cid=0,$IdThread=0,$IdTag=0) {
+    public function searchSubscriptions($cid = false, $IdThread = false, $IdTag = false) {
         $IdMember=0 ;
 
         $TResults = new StdClass();
@@ -2663,40 +2696,42 @@ LIMIT %d
             $IdMember=$_SESSION["IdMember"];
         }
 		$seeSubscriptions = $this->BW_Right->HasRight("ForumModerator","SeeSubscriptions");
-        if (($cid!=0) && ($seeSubscriptions != 0)) {
-            // Moderators can see the subscriptions of other members
-            if (is_numeric($cid)) {
-                $IdMember=$cid ;
-                $query = sprintf("select id,Username from members where id=%d",$IdMember) ;
-                $s = $this->dao->query($query);
-                if (!$s) {
-                    throw new PException('Could not retrieve members username via id!');
-                }
-                $row = $s->fetch(PDB::FETCH_OBJ) ;
-                if (isset($row->Username)) {
-                    $TResults->Username=$row->Username ;
-                }
-            } else {
-                $query = sprintf(
-                    "
+		if ($seeSubscriptions) {
+			if ($cid) {
+				// Moderators can see the subscriptions of other members
+				if (is_numeric($cid)) {
+					$IdMember = $cid;
+					$query = sprintf("SELECT id,Username FROM members WHERE id=%d", $IdMember);
+					$s = $this->dao->query($query);
+					if (!$s) {
+						throw new PException('Could not retrieve members username via id!');
+					}
+					$row = $s->fetch(PDB::FETCH_OBJ);
+					if (isset($row->Username)) {
+						$TResults->Username = $row->Username;
+					}
+				} else {
+					$query = sprintf(
+						"
 SELECT id
 FROM members
 WHERE username='%s'
                     ",
-                    $this->dao->escape($cid)
-                );
-                $s = $this->dao->query($query);
-                if (!$s) {
-                    throw new PException('Could not retrieve members id via username !');
-                }
-                $row = $s->fetch(PDB::FETCH_OBJ) ;
-                if (isset($row->id)) {
-                    $IdMember=$row->id ;
-                }
-            }
-        }
+						$this->dao->escape($cid)
+					);
+					$s = $this->dao->query($query);
+					if (!$s) {
+						throw new PException('Could not retrieve members id via username !');
+					}
+					$row = $s->fetch(PDB::FETCH_OBJ);
+					if (isset($row->id)) {
+						$IdMember = $row->id;
+					}
+				}
+			}
+		}
 
-        if (!empty($IdThread) and ($this->BW_Right->HasRight("ForumModerator","SeeSubscriptions"))) {
+        if (!empty($IdThread) and ($seeSubscriptions)) {
             // In this case we will browse all the threads
             $query = sprintf(
                 "
@@ -2762,7 +2797,7 @@ ORDER BY `subscribedtime` DESC
 
 // now the Tags
 
-        if (!empty($IdTag) and ($this->BW_Right->HasRight("ForumModerator","SeeSubscriptions"))) {
+        if (!empty($IdTag) and ($seeSubscriptions)) {
             // In this case we will browse all the tags
             $query = sprintf(
                 "
@@ -2818,6 +2853,30 @@ ORDER BY `subscribedtime` DESC
             $TResults->TDataTag[] = $row;
         }
 
+		// now fetch group memberships of member
+		$member = new Member($IdMember);
+		if ($member) {
+            $query = "
+                SELECT
+                    Name, IdGroup, IdMember, IacceptMassMailFromThisGroup As AcceptMails
+                FROM
+                    `membersgroups` mg,
+                    `groups` g
+                WHERE
+                    g.id = mg.IdGroup
+                    AND (IdMember = '{$IdMember}' OR IdMember = '-{$IdMember}')
+                    AND Status = 'In'
+                ORDER BY
+                	Name";
+            $s = $this->dao->query($query);
+            if (!$s) {
+                throw new PException('Could load group memberships');
+            }
+            $TResults->Groups = array();
+            while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+                $TResults->Groups[] = $row;
+            }
+		}
         return $TResults;
     } // end of searchSubscriptions
 

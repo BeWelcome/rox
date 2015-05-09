@@ -468,6 +468,7 @@ class ForumsView extends RoxAppView {
     }
 
     public function displaySearchResultSubscriptions($TResults) {
+        $member = $this->_model->getLoggedInMember();
         require 'templates/searchresultsubscriptions.php';
     }
     public function displaySearchResultPosts($posts) {

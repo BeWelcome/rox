@@ -420,18 +420,31 @@ class ForumsController extends PAppController
             switch($operation) {
                 case "enable":
                     if (isset($request[3])) {
-                        if (isset($request[3]) and ($request[3]=='thread')) {
-                            $this->EnableThread($request[4]);
-                        }
-                        if (isset($request[3]) and ($request[3]=='tag')) {
-                            $this->EnableTag($request[4]);
+                        switch($request[3]) {
+                            case 'thread':
+                                $this->EnableThread($request[4]);
+                                break;
+                            case 'tag':
+                                $this->EnableTag($request[4]);
+                                break;
+                            case 'group':
+                                $this->EnableGroup($request[4]);
+                                break;
                         }
                     } else {
                         $this->enableSubscriptions();
                     }
                     break;
                 case "disable":
-                    $this->disableSubscriptions();
+                    if (isset($request[3])) {
+                        switch($request[3]) {
+                            case 'group':
+                                $this->DisableGroup($request[4]);
+                                break;
+                        }
+                    } else {
+                        $this->disableSubscriptions();
+                    }
                     break;
                 case "member" ;
                     $this->searchSubscriptions($request[3]);
@@ -439,6 +452,11 @@ class ForumsController extends PAppController
                 case "thread" ;
                     $this->searchSubscriptions(0,$request[3]);
                     break ;
+                case "subscribe":
+                    if (isset($request[3]) and ($request[3]=='group')) {
+                        $this->SubscribeGroup($request[4]);
+                    }
+                    break;
                 case "unsubscribe" ;
                     if (isset($request[3]) and ($request[3]=='thread')) {
                         $this->UnsubscribeThread($request[4],$request[5]);
@@ -465,6 +483,21 @@ class ForumsController extends PAppController
         $page->render();
     } // end of index
 
+    private function EnableGroup($IdGroup) {
+        $this->_model->enableGroup($IdGroup);
+        $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
+        $this->_view->displaySearchResultSubscriptions($TResults);
+    }
+    private function DisableGroup($IdGroup) {
+        $this->_model->disableGroup($IdGroup);
+        $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
+        $this->_view->displaySearchResultSubscriptions($TResults);
+    }
+    private function SubscribeGroup($IdGroup) {
+        $this->_model->subscribeGroup($IdGroup);
+        $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
+        $this->_view->displaySearchResultSubscriptions($TResults);
+    }
     private function enableSubscriptions() {
         $this->_model->enableSubscriptions();
         $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member

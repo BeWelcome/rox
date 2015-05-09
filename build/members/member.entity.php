@@ -960,6 +960,7 @@ WHERE
                     } else {
                         // Suppress display in template
                         $regionName = '';
+                        $regionCode = '';
                     }
 
                     // Set country name and code
@@ -983,6 +984,7 @@ WHERE
                     $streetName = $errorMessage;
                     $zip = $errorMessage;
                     $regionName = $errorMessage;
+                    $regionCode = $errorMessage;
                     $countryName = $errorMessage;
                     $countryCode = $errorMessage;
                 }
@@ -995,6 +997,7 @@ WHERE
                 $streetName = $errorMessage;
                 $zip = $errorMessage;
                 $regionName = $errorMessage;
+                $regionCode = $errorMessage;
                 $countryName = $errorMessage;
                 $countryCode = $errorMessage;
             }

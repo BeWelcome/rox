@@ -2480,7 +2480,7 @@ WHERE IdThread=%d
 AND IdSubscriber=%d
                 ",
                 $this->threadid,
-                $_SESSION["IdMember"]
+				$_SESSION["IdMember"]
             );
             $s = $this->dao->query($query);
             if (!$s) {
@@ -2490,7 +2490,15 @@ AND IdSubscriber=%d
             if (isset($row->IdSubscribe)) {
                 $this->topic->IdSubscribe= $row->IdSubscribe ;
                 $this->topic->IdKey= $row->IdKey ;
-            }
+            } else {
+				if ($this->topic->groupId > 0) {
+					// Check if member has enabled group mails
+					$membership = $this->createEntity('groupmembership')->getMembership($this->topic->groupId, new Member($_SESSION["IdMember"]));
+					if ($membership->IAcceptMassMailFromThisGroup == 'yes') {
+						$this->topic->IdSubscribe = 'groupSubscribed';
+					}
+				}
+			}
 		}
 
         // Increase the number of views

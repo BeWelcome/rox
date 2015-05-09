@@ -405,7 +405,7 @@ class MembersController extends RoxControllerBase
         }
         $page->loggedInMember = $this->model->getLoggedInMember();
         $page->model = $this->model;
-        if ($page->member->Status == 'PassedAway') {
+        if ($page->member && $page->member->Status == 'PassedAway') {
             $page->passedAway = true;
         } else {
             $page->passedAway = false;

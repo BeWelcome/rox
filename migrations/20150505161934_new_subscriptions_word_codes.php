@@ -15,7 +15,7 @@ class NewSubscriptionsWordCodes  extends Rox\Tools\RoxMigration
         $this->AddWordCode('ForumEnable', 'Enable', 'Button label shown in forums/subscriptions');
         $this->AddWordCode('ForumDisable', 'Disable', 'Button label shown in forums/subscriptions');
         $this->AddWordCode('ForumDisabled', 'Disabled', 'Info text (shown as Button label) in forums/subscriptions if a subscription is disabled');
-        $this->AddWordCode('GroupsUpdateMemberSettings', 'Email delivery is currently disabled, just click on \'Update Membership\' to enable it again', 'Info text shown on /groups/&lt;id&gt;/membersettings if mail notifications hae been disabled on /forums/subscriptions');
+        $this->AddWordCode('GroupMemberSettingsDisabledInfo', 'Email delivery is currently disabled, just click on \'Update Membership\' to enable it again', 'Info text shown on /groups/&lt;id&gt;/membersettings if mail notifications hae been disabled on /forums/subscriptions');
         $this->AddWordCode('ForumGroupSubscriptions', 'Group Subscriptions', 'Headline for the group subscriptions shown on /forums/subscriptions');
         $this->AddWordCode('ForumThreadSubscriptions', 'Thread Subscriptions', 'Headline for the thread subscriptions shown on /forums/subscriptions');
         $this->AddWordCode('ForumTagSubscriptions', 'Tag Subscriptions', 'Headline for the tag subscriptions shown on /forums/subscriptions');
@@ -35,7 +35,7 @@ class NewSubscriptionsWordCodes  extends Rox\Tools\RoxMigration
         $this->RemoveWordCode('ForumEnable');
         $this->RemoveWordCode('ForumDisable');
         $this->RemoveWordCode('ForumDisabled');
-        $this->RemoveWordCode('GroupsUpdateMemberSettings');
+        $this->RemoveWordCode('GroupMemberSettingsDisabledInfo');
         $this->RemoveWordCode('ForumGroupSubscriptions');
         $this->RemoveWordCode('ForumThreadSubscriptions');
         $this->RemoveWordCode('ForumTagSubscriptions');

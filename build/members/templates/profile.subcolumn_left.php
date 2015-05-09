@@ -143,7 +143,7 @@ HTML;
 HTML;
             endfor;
             if (count($my_groups) > 3) :
-            echo '<p class="float_right"><a href="members/{$member->Username}/groups">' . $words->get('GroupsAllMyLink') . '</a></p>';
+            echo '<p class="float_right"><a href="members/' . $member->Username . '/groups">' . $words->get('GroupsAllMyLink') . '</a></p>';
             endif;
         echo '</div> <!-- profile_groups -->';
         endif;

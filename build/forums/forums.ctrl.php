@@ -438,6 +438,9 @@ class ForumsController extends PAppController
                 case "disable":
                     if (isset($request[3])) {
                         switch($request[3]) {
+                            case 'thread':
+                                $this->DisableThread($request[4]);
+                                break;
                             case 'group':
                                 $this->DisableGroup($request[4]);
                                 break;
@@ -446,27 +449,26 @@ class ForumsController extends PAppController
                         $this->disableSubscriptions();
                     }
                     break;
-                case "member" ;
-                    $this->searchSubscriptions($request[3]);
-                    break ;
-                case "thread" ;
-                    $this->searchSubscriptions(0,$request[3]);
-                    break ;
                 case "subscribe":
                     if (isset($request[3]) and ($request[3]=='group')) {
                         $this->SubscribeGroup($request[4]);
                     }
                     break;
-                case "unsubscribe" ;
-                    if (isset($request[3]) and ($request[3]=='thread')) {
-                        $this->UnsubscribeThread($request[4],$request[5]);
+                case "unsubscribe":
+                    switch ($request[3]) {
+                        case 'thread' :
+                            $this->UnsubscribeThread($request[4],$request[5]);
+                            break;
+                        case 'tag':
+                            $this->UnsubscribeTag($request[4],$request[5]);
+                            break;
+                        case 'group':
+                            $this->UnsubscribeGroup($request[4]);
+                            break;
                     }
-                    if (isset($request[3]) and ($request[3]=='tag')) {
-                        $this->UnsubscribeTag($request[4],$request[5]);
-                    }
-                    break ;
+                    break;
                 default :
-                $this->searchSubscriptions(0);
+                    $this->searchSubscriptions();
             }
         } else {
             if (PVars::get()->debug) {
@@ -485,31 +487,36 @@ class ForumsController extends PAppController
 
     private function EnableGroup($IdGroup) {
         $this->_model->enableGroup($IdGroup);
-        $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
+        $TResults = $this->_model->searchSubscriptions(); // retrieve subscription for the member
         $this->_view->displaySearchResultSubscriptions($TResults);
     }
     private function DisableGroup($IdGroup) {
         $this->_model->disableGroup($IdGroup);
-        $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
+        $TResults = $this->_model->searchSubscriptions(); // retrieve subscription for the member
         $this->_view->displaySearchResultSubscriptions($TResults);
     }
     private function SubscribeGroup($IdGroup) {
         $this->_model->subscribeGroup($IdGroup);
-        $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
+        $TResults = $this->_model->searchSubscriptions(); // retrieve subscription for the member
+        $this->_view->displaySearchResultSubscriptions($TResults);
+    }
+    private function UnsubscribeGroup($IdGroup) {
+        $this->_model->unsubscribeGroup($IdGroup);
+        $TResults = $this->_model->searchSubscriptions(); // retrieve subscription for the member
         $this->_view->displaySearchResultSubscriptions($TResults);
     }
     private function enableSubscriptions() {
         $this->_model->enableSubscriptions();
-        $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
+        $TResults = $this->_model->searchSubscriptions(); // retrieve subscription for the member
         $this->_view->displaySearchResultSubscriptions($TResults);
     }
     private function disableSubscriptions() {
         $this->_model->disableSubscriptions();
-        $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
+        $TResults = $this->_model->searchSubscriptions(); // retrieve subscription for the member
         $this->_view->displaySearchResultSubscriptions($TResults);
     }
-    private function searchSubscriptions($cid=0,$IdThread=0,$IdTag=0) {
-        $TResults = $this->_model->searchSubscriptions($cid,$IdThread,$IdTag);
+    private function searchSubscriptions() {
+        $TResults = $this->_model->searchSubscriptions();
         $this->_view->displaySearchResultSubscriptions($TResults);
     }
     private function SubscribeThread($IdThread) {
@@ -521,6 +528,8 @@ class ForumsController extends PAppController
     private function UnsubscribeThread($IdSubscribe=0,$Key="") {
         $res = $this->_model->UnsubscribeThread($IdSubscribe,$Key);
         $this->_view->Unsubscribe($res);
+        $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
+        $this->_view->displaySearchResultSubscriptions($TResults);
     }
 
     private function SubscribeTag($IdTag) {
@@ -534,23 +543,23 @@ class ForumsController extends PAppController
         $this->_view->Unsubscribe($res);
     }
     private function EnableThread($IdThread) {
-        $res = $this->_model->EnableThread($IdThread);
-        $this->_view->SubscribeThread($res);
+        $this->_model->EnableThread($IdThread);
+        // \todo show FlashNotice and thread
+    }
+    private function EnableTag($IdTag) {
+        $this->_model->EnableTag($IdTag);
         $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
         $this->_view->displaySearchResultSubscriptions($TResults);
     }
-    private function EnableTag($IdTag) {
-        $res = $this->_model->EnableTag($IdTag);
-        $this->_view->SubscribeTag($res);
-        $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
-        $this->_view->displaySearchResultSubscriptions($TResults);
+    private function DisableThread($IdThread) {
+        $this->_model->DisableThread($IdThread);
+        // \tofo show FlashNotice and thread
     }
 
     private function searchUserposts($user) {
         // Data will be displayed only if the current user is Logged
-        if (APP_User::isBWLoggedIn()) {
-            $roxModel = new RoxModelBase;
-            $profileVisitor = $roxModel->getLoggedInMember();
+        $profileVisitor = $this->_model->getLoggedInMember();
+        if (!$profileVisitor) {
             $userId = APP_User::memberId($user);
             $membersForumPostsPagePublic = $this->_model->isMembersForumPostsPagePublic($userId);
             if ($membersForumPostsPagePublic || ($profileVisitor->getPKValue() == $userId) || $this->BW_Right->HasRight("Admin") || $this->BW_Right->HasRight("ForumModerator") || $this->BW_Right->HasRight("SafetyTeam") ) {

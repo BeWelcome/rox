@@ -341,6 +341,7 @@ class MembersController extends RoxControllerBase
                             break;
                         case 'groups':
                             $my_groups = $member->getGroups();
+                            $params = new stdClass();
                             $params->strategy = new HalfPagePager('left');
                             $params->items = $my_groups;
                             $params->items_per_page = 10;

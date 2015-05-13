@@ -2481,17 +2481,17 @@ LIMIT %d, %d",$this->threadid,$from,$this->POSTS_PER_PAGE);
 SELECT
     `members_threads_subscribed`.`id` AS IdSubscribe,
     `members_threads_subscribed`.`UnSubscribeKey` AS IdKey,
-    `members_threads_subscribed`.`IdSubscriber` AS IdSubscriber
+    `members_threads_subscribed`.`notificationsEnabled` AS notificationsEnabled
 FROM members_threads_subscribed
 WHERE IdThread = {$this->threadid}
-AND (IdSubscriber = {$memberId} OR IdSubscriber = -{$memberId})";
+AND IdSubscriber = {$memberId}";
             $s = $this->dao->query($query);
             if (!$s) {
                 throw new PException('Could if has subscribed to Thread=#".$this->threadid." !');
             }
             $row = $s->fetch(PDB::FETCH_OBJ) ;
             if (isset($row->IdSubscribe)) {
-				$this->topic->IdSubscriber = $row->IdSubscriber;
+				$this->topic->notificationsEnabled = $row->notificationsEnabled;
                 $this->topic->IdSubscribe= $row->IdSubscribe ;
                 $this->topic->IdKey= $row->IdKey ;
             }
@@ -2502,7 +2502,7 @@ AND (IdSubscriber = {$memberId} OR IdSubscriber = -{$memberId})";
                 $membership = $this->createEntity('GroupMembership')->getMembership($group, $member);
                 if ($membership) {
 					$this->topic->isGroupSubscribed = ($membership->IacceptMassMailFromThisGroup == 'yes');
-					$this->topic->areNotificationsEnabled = ($membership->IdMember > 0);
+					$this->topic->areNotificationsEnabled = ($membership->notificationsEnabled);
                 }
 			}
 		}
@@ -2571,77 +2571,48 @@ LIMIT %d
         // update subscription (keep old assignments through negating if disabling)
         // members_tags_subscribed
         // members_threads_subscribed
-        if ($enable) {
-            $newSubscriberId = $memberId;
-            $oldSubscriberId = (-1) * $memberId;
-        } else {
-            $newSubscriberId = (-1) * $memberId;
-            $oldSubscriberId = $memberId;
-        }
         $query = "
             UPDATE
                 members_tags_subscribed
             SET
-                IdSubscriber = " . $newSubscriberId . "
+                notificationsEnabled = '" . ($enable ? 1 : 0) . "'
             WHERE
-                IdSubscriber = " . $oldSubscriberId;
+                IdSubscriber = " . $memberId;
         $this->dao->query($query);
         $query ="
             UPDATE
                 members_threads_subscribed
             SET
-                IdSubscriber = " . $newSubscriberId . "
+                notificationsEnabled = '" . ($enable ? 1 : 0) . "'
             WHERE
-                IdSubscriber = " . $oldSubscriberId;
+                IdSubscriber = " . $memberId;
         $this->dao->query($query);
-        $query = "
-            UPDATE
-                membersgroups
-            SET
-                IdMember = " . $newSubscriberId . "
-            WHERE
-                IdMember = " . $oldSubscriberId . "
-                AND IacceptMassMailFromThisGroup = 'Yes'
-        ";
+		$this->updateGroupNotifications($memberId, $enable);
         $this->dao->query($query);
     }
 
 	private function updateGroupNotifications($memberId, $enable) {
-		if ($enable) {
-			$newSubscriberId = $memberId;
-			$oldSubscriberId = (-1) * $memberId;
-		} else {
-			$newSubscriberId = (-1) * $memberId;
-			$oldSubscriberId = $memberId;
-		}
 		$query = "
             UPDATE
                 membersgroups
             SET
-                IdMember = " . $newSubscriberId . "
+                notificationsEnabled = '" . ($enable ? 1 : 0) . "'
             WHERE
-                IdMember = " . $oldSubscriberId . "
+                IdMember = " . $memberId . "
                 AND IacceptMassMailFromThisGroup = 'Yes'
         ";
 		$this->dao->query($query);
 	}
 
 	private function updateGroupNotification($groupId, $memberId, $enable) {
-		if ($enable) {
-			$newSubscriberId = $memberId;
-			$oldSubscriberId = (-1) * $memberId;
-		} else {
-			$newSubscriberId = (-1) * $memberId;
-			$oldSubscriberId = $memberId;
-		}
 		$query = "
             UPDATE
                 membersgroups
             SET
-                IdMember = " . $newSubscriberId . "
+                notificationsEnabled = '" . ($enable ? 1 : 0) . "'
             WHERE
             	IdGroup = " . $groupId . "
-                AND IdMember = " . $oldSubscriberId . "
+                AND IdMember = " . $memberId . "
                 AND IacceptMassMailFromThisGroup = 'Yes'
         ";
 		$this->dao->query($query);
@@ -2651,7 +2622,6 @@ LIMIT %d
 		$member = $this->getLoggedInMember();
 		if ($member) {
 			$this->updateSubscriptions($member->id, false);
-			$this->updateGroupNotifications($member->id, false);
 		}
 	}
 
@@ -2659,7 +2629,6 @@ LIMIT %d
 		$member = $this->getLoggedInMember();
 		if ($member) {
 			$this->updateSubscriptions($member->id, true);
-			$this->updateGroupNotifications($member->id, true);
 		}
 	}
 
@@ -2731,10 +2700,10 @@ SELECT
     `forums_threads`.`IdTitle`,
     `members_threads_subscribed`.`ActionToWatch`,
     `members_threads_subscribed`.`UnSubscribeKey`,
-    `members_threads_subscribed`.`IdSubscriber`
+    `members_threads_subscribed`.`notificationsEnabled`
 FROM `forums_threads`,`members_threads_subscribed`
 WHERE `forums_threads`.`threadid` = `members_threads_subscribed`.`IdThread`
-and (`members_threads_subscribed`.`IdSubscriber`= {$member->id} OR `members_threads_subscribed`.`IdSubscriber`= -{$member->id})
+AND `members_threads_subscribed`.`IdSubscriber`= {$member->id}
 ORDER BY `subscribedtime` DESC
                 ";
         $s = $this->dao->query($query);
@@ -2760,10 +2729,10 @@ SELECT
     `forums_tags`.`IdName`,
     `members_tags_subscribed`.`ActionToWatch`,
     `members_tags_subscribed`.`UnSubscribeKey`,
-    `members_tags_subscribed`.`IdSubscriber`
+    `members_tags_subscribed`.`notificationsEnabled`
 FROM `forums_tags`,`members_tags_subscribed`
 WHERE `forums_tags`.`id` = `members_tags_subscribed`.`IdTag`
-and (`members_tags_subscribed`.`IdSubscriber` = {$member->id}  OR `members_tags_subscribed`.`IdSubscriber` = -{$member->id})
+AND `members_tags_subscribed`.`IdSubscriber` = {$member->id}
 ORDER BY `subscribedtime` DESC
                 ";
         $s = $this->dao->query($query);
@@ -2778,13 +2747,13 @@ ORDER BY `subscribedtime` DESC
 
             $query = "
                 SELECT
-                    Name, IdGroup, IdMember, IacceptMassMailFromThisGroup As AcceptMails
+                    Name, IdGroup, IdMember, IacceptMassMailFromThisGroup As AcceptMails, notificationsEnabled
                 FROM
                     `membersgroups` mg,
                     `groups` g
                 WHERE
                     g.id = mg.IdGroup
-                    AND (IdMember = '{$member->id}' OR IdMember = '-{$member->id}')
+                    AND IdMember = '{$member->id}'
                     AND Status = 'In'
                 ORDER BY
                 	Name";
@@ -2815,7 +2784,7 @@ SELECT
     IdSubscriber,
     Username from members,
     members_threads_subscribed
-WHERE (members.id=members_threads_subscribed.IdSubscriber OR members.id= -members_threads_subscribed.IdSubscriber)
+WHERE members.id=members_threads_subscribed.IdSubscriber
 AND members_threads_subscribed.id=%d
 AND UnSubscribeKey='%s'
             ",
@@ -2937,18 +2906,18 @@ AND IdThread=%d
         }
 
         // Check if there is a previous Subscription
-        if ($this->IsThreadSubscribed($IdThread,(-1) * $member->id)) {
+        if ($this->IsThreadSubscribed($IdThread,$member->id)) {
             $query = "
                 UPDATE
                     members_threads_subscribed
                 SET
-                    IdSubscriber = " . $member->id . "
+                    notificationsEnabled = '1'
                 WHERE
                     IdThread = " . $IdThread . "
-                    AND IdSubscriber = " . ((-1) * $member->id);
+                    AND IdSubscriber = " . $member->id;
             $this->dao->query($query);
         }
-    } // end of UnsubscribeThread
+    } // end of EnableThread
 
     /**
      * This function allow to disable notifications for a thread if the group has been subscribed
@@ -2971,12 +2940,12 @@ AND IdThread=%d
             UPDATE
                 members_threads_subscribed
             SET
-                IdSubscriber = " . ((-1) * $member->id) . "
+                notificationsEnabled = '0'
             WHERE
                 IdThread = " . $IdThread . "
                 AND IdSubscriber = " . $member->id;
         $this->dao->query($query);
-    } // end of UnsubscribeThread
+    } // end of DisableThread
 
 
     /**
@@ -2993,21 +2962,18 @@ AND IdThread=%d
 		}
 
 		// Check if there is a previous Subscription
-		if ($this->IsTagSubscribed($IdTag,(-1) * $member->id)) {
+		if ($this->IsTagSubscribed($IdTag,$member->id)) {
 			$query = "
                 UPDATE
                     members_tags_subscribed
                 SET
-                    IdSubscriber = " . $member->id . "
+                    notificationsEnabled = '1'
                 WHERE
                     IdThread = " . $IdTag . "
-                    AND IdSubscriber = " . ((-1) * $member->id);
+                    AND IdSubscriber = " . $member->id;
 			$this->dao->query($query);
 		}
-	} // end of UnsubscribeThread
-
-
-
+	} // end of EnableTag
 
 	/**
      * This function remove the subscription marked by IdSubscribe
@@ -3773,7 +3739,8 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 		// Set notifications for subscribed threads
 		$query = "
             SELECT
-                IdSubscriber as subscriber,
+            	IdSubscriber as subscriber,
+                notificationsEnabled,
                 members_threads_subscribed.id as subscriptionId
             FROM
                 members_threads_subscribed
@@ -3785,14 +3752,14 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 		}
 		$membersTemp = array();
 		while ($row = $res->fetch(PDB::FETCH_OBJ)) {
-			if ($row->subscriber > 0) {
+			if ($row->subscriber > 0 && $row->notificationsEnabled) {
 				// if member already gets notification don't add one
 				if (array_search($row->subscriber, $members, true) === false) {
 					$membersTemp[$row->subscriber] = $row->subscriptionId;
 				}
 			} else {
 				// did member disable notifications for this thread?
-				if (array_search((-1) * $row->subscriber, $members, true) !== false) {
+				if (array_search($row->subscriber, $members, true) !== false) {
 					unset($membersTemp[$row->subscriber]);
 				}
 			}
@@ -3829,6 +3796,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 		$query = "
             SELECT
                 mts.IdSubscriber as subscriber,
+                mts.notificationsEnabled AS notificationsEnabled,
                 mts.id as subscriptionId
             FROM
                 members_tags_subscribed mts,
@@ -3846,7 +3814,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 		while ($row = $res->fetch(PDB::FETCH_OBJ)) {
 			// Unfortunately the DB has a lot of faulty entries
 			$subscriber = $row->subscriber;
-			if ($subscriber > 0) {
+			if ($subscriber > 0 && $row->notificationsEnabled) {
 				// Add only if the member doesn't already get a notification
 				if (array_search($subscriber, $members, true) === false) {
 					$membersTemp[$subscriber] = $row->subscriptionId;

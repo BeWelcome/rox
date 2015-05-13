@@ -153,7 +153,7 @@ if ((!isset($topic->topicinfo->IdTitle)) and (!isset($topic->topicinfo->ThreadDe
                 <?php
                 if (isset($topic->isGroupSubscribed) && ($topic->isGroupSubscribed)) {
                     if (isset($topic->IdSubscribe)) {
-                        if ($topic->IdSubscriber > 0) {
+                        if ($topic->notificationsEnabled > 0) {
                             echo '<a class="button" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
                                 . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                         } else {
@@ -171,7 +171,7 @@ if ((!isset($topic->topicinfo->IdTitle)) and (!isset($topic->topicinfo->ThreadDe
                     }
                 } else {
                     if (isset($topic->IdSubscribe)) {
-                        if ($topic->IdSubscriber > 0) {
+                        if ($topic->notificationsEnabled > 0) {
                             echo '<a class="button" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
                                 . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                         } else {

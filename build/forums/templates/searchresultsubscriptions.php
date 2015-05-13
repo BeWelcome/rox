@@ -34,7 +34,7 @@ Boston, MA  02111-1307, USA.
     <tr><td><?= $words->getFormatted("ForumDisableAllNotifications") ?></td>
         <td style="text-align: right"><a href="forums/subscriptions/disable" class="button"><?= $words->getSilent('ForumDisable') ?></a><?= $words->flushBuffer() ?></td></tr>
     <tr><td><?= $words->getFormatted("ForumEnableAllNotifications") ?></td>
-        <td style="text-align: right"><a href="forums/subscriptions/enable" class="button"><?= $words->getSilent('ForumEnable') ?></a><?= $words->flushBuffer() ?></td></tr>
+        <td style="text-align: right"><a href="forums/subscriptions/enable" class="highlightbutton"><?= $words->getSilent('ForumEnable') ?></a><?= $words->flushBuffer() ?></td></tr>
     <tr><td colspan="2"></td></tr>
     <tr><td colspan="2"><h3><?= $words->get('ForumGroupSubscriptions') ?></h3></td></tr>
 <?php
@@ -66,7 +66,7 @@ if (count($TResults->TData) > 0) {
         echo $data->subscribedtime;
         echo '</td>' . PHP_EOL;
         echo '<td style="text-align: right; text-wrap: none; width: 40%">';
-        if ($data->IdSubscriber > 0) {
+        if ($data->notificationsEnabled > 0) {
             echo '<a href="forums/subscriptions/disable/thread/' . $data->IdThread . '/' . $data->UnSubscribeKey
                 . '" class="button">' . $words->getSilent('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
         } else {
@@ -91,15 +91,15 @@ if (count($TResults->TDataTag) > 0) {
         echo $data->subscribedtime;
         echo '</td>' . PHP_EOL;
         echo '<td style="text-align: right; text-wrap: none: width: 40%">';
-        if ($data->IdSubscriber > 0) {
+        if ($data->notificationsEnabled > 0) {
             echo '<a href="forums/subscriptions/disable/tag/' . $data->IdTag . '/' . $data->UnSubscribeKey . '"'
                 . ' class="button">' . $words->getSilent('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
         } else {
             echo '<a href="forums/subscriptions/enable/tag/' . $data->IdTag . '/' . $data->UnSubscribeKey . '"'
-                . ' class="button">' . $words->getSilent('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
+                . ' class="highlightbutton">' . $words->getSilent('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
         }
         echo '<a href="forums/subscriptions/unsubscribe/tag/' . $data->IdSubscribe . '/' . $data->UnSubscribeKey . '"'
-            . ' class="highlightbutton">' . $words->getSilent('Unsubscribe') . '</a>' . $words->flushBuffer() . PHP_EOL;
+            . ' class="button">' . $words->getSilent('Unsubscribe') . '</a>' . $words->flushBuffer() . PHP_EOL;
         echo '</td>' . PHP_EOL;
         echo '</tr>' . PHP_EOL;
     }

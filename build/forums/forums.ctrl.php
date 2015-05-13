@@ -487,33 +487,33 @@ class ForumsController extends PAppController
 
     private function EnableGroup($IdGroup) {
         $this->_model->enableGroup($IdGroup);
-        $TResults = $this->_model->searchSubscriptions(); // retrieve subscription for the member
-        $this->_view->displaySearchResultSubscriptions($TResults);
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
     }
     private function DisableGroup($IdGroup) {
         $this->_model->disableGroup($IdGroup);
-        $TResults = $this->_model->searchSubscriptions(); // retrieve subscription for the member
-        $this->_view->displaySearchResultSubscriptions($TResults);
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
     }
     private function SubscribeGroup($IdGroup) {
         $this->_model->subscribeGroup($IdGroup);
-        $TResults = $this->_model->searchSubscriptions(); // retrieve subscription for the member
-        $this->_view->displaySearchResultSubscriptions($TResults);
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
     }
     private function UnsubscribeGroup($IdGroup) {
         $this->_model->unsubscribeGroup($IdGroup);
-        $TResults = $this->_model->searchSubscriptions(); // retrieve subscription for the member
-        $this->_view->displaySearchResultSubscriptions($TResults);
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
     }
     private function enableSubscriptions() {
         $this->_model->enableSubscriptions();
-        $TResults = $this->_model->searchSubscriptions(); // retrieve subscription for the member
-        $this->_view->displaySearchResultSubscriptions($TResults);
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
     }
     private function disableSubscriptions() {
         $this->_model->disableSubscriptions();
-        $TResults = $this->_model->searchSubscriptions(); // retrieve subscription for the member
-        $this->_view->displaySearchResultSubscriptions($TResults);
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
     }
     private function searchSubscriptions() {
         $TResults = $this->_model->searchSubscriptions();
@@ -521,39 +521,39 @@ class ForumsController extends PAppController
     }
     private function SubscribeThread($IdThread) {
         $res = $this->_model->SubscribeThread($IdThread);
-        $this->_view->SubscribeThread($res);
-        $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
-        $this->_view->displaySearchResultSubscriptions($TResults);
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
     }
     private function UnsubscribeThread($IdSubscribe=0,$Key="") {
-        $res = $this->_model->UnsubscribeThread($IdSubscribe,$Key);
-        $this->_view->Unsubscribe($res);
-        $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
-        $this->_view->displaySearchResultSubscriptions($TResults);
+        $this->_model->UnsubscribeThread($IdSubscribe,$Key);
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
     }
 
     private function SubscribeTag($IdTag) {
         $res = $this->_model->SubscribeTag($IdTag);
-        $this->_view->SubscribeTag($res);
-        $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
-        $this->_view->displaySearchResultSubscriptions($TResults);
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
     }
     private function UnsubscribeTag($IdSubscribe=0,$Key="") {
         $res = $this->_model->UnsubscribeTag($IdSubscribe,$Key);
-        $this->_view->Unsubscribe($res);
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
     }
     private function EnableThread($IdThread) {
         $this->_model->EnableThread($IdThread);
-        // \todo show FlashNotice and thread
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
     }
     private function EnableTag($IdTag) {
         $this->_model->EnableTag($IdTag);
-        $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
+        $TResults = $this->_model->searchSubscriptions(); // retrieve subscription for the member
         $this->_view->displaySearchResultSubscriptions($TResults);
     }
     private function DisableThread($IdThread) {
         $this->_model->DisableThread($IdThread);
-        // \tofo show FlashNotice and thread
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
     }
 
     private function searchUserposts($user) {

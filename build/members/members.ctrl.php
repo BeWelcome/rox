@@ -512,6 +512,7 @@ class MembersController extends RoxControllerBase
             if (!$m->setPassword($vars['passwordnew'])){
                 $mem_redirect->problems = array(0 => 'ChangePasswordNotUpdated');
             }
+            $this->setFlashNotice($this->getWords()->get('PasswordSetFlashNotice'));
         }        
  
         return false;
@@ -872,19 +873,6 @@ class MembersController extends RoxControllerBase
     public function resetPassword()
     {
         $page = new ResetPasswordPage();
-        $page->model = $this->model;
-        return $page;
-    }
-
-    /**
-     * displays the reset your password page
-     *
-     * @access public
-     * @return ResetPasswordFinishPage
-     */
-    public function resetPasswordFinish()
-    {
-        $page = new ResetPasswordFinishPage();
         $page->model = $this->model;
         return $page;
     }

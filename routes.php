@@ -292,4 +292,5 @@
     // Data retention (#1885)
     $this->addRoute('dataretention', 'members/dataretention', 'MembersController', 'dataRetention');
 
-$this->addRoute('admin_subscriptions', 'admin/subscriptions', 'AdminSubscriptionsController', 'manage');
+    $this->addRoute('admin_subscriptions', 'admin/subscriptions', 'AdminSubscriptionsController', 'manage');
+    $this->addRoute('login_message_close', 'close/:id:', 'LoginController', 'close');

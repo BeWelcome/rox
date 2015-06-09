@@ -37,6 +37,7 @@ class RoxEntityFactory
         'GroupMembership'   => 'build/groups/groupmembership.entity',
         'RelatedGroup'      => 'build/relatedgroups/relatedgroup.entity',
         'Language'          => 'build/rox/language.entity',
+        'LoginMessage'      => 'build/login/loginmessage.entity',
         'Member'            => 'build/members/member.entity',
         'MemberLanguage'    => 'build/members/memberlanguage.entity',
         'MemberRole'        => 'build/rights/memberrole.entity',

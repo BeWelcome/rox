@@ -16,6 +16,7 @@ class EntityException extends PException {}
  * The entity has its own database connection
  * and can answer questions about its associations in the database.
  *
+ * @property PDB dao
  */
 class RoxEntityBase extends RoxModelBase
 {
@@ -70,6 +71,11 @@ class RoxEntityBase extends RoxModelBase
     protected $_validation_errors = array();
 
     private $_method_cache = array();
+
+    /**
+     * @var PDB
+     */
+    protected $_dao = null;
 
     public function __construct()
     {

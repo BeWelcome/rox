@@ -305,10 +305,8 @@ class GroupMembership extends RoxEntityBase
                 $this->Comment = $comment_id;
             }
         }
-        if ($this->IdMember < 0) {
-            $this->IdMember = (-1) * $this->IdMember;
-        }
         $this->IacceptMassMailFromThisGroup = $acceptgroupmail;
+        $this->notificationsEnabled = ($acceptgroupmail == 'yes' ? 1 : 0);
         $this->updated = date('Y-m-d H:i:s');
         return $this->update();
     }

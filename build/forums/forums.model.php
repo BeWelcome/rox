@@ -2502,7 +2502,7 @@ AND IdSubscriber = {$memberId}";
                 $membership = $this->createEntity('GroupMembership')->getMembership($group, $member);
                 if ($membership) {
 					$this->topic->isGroupSubscribed = ($membership->IacceptMassMailFromThisGroup == 'yes');
-					$this->topic->areNotificationsEnabled = ($membership->notificationsEnabled);
+					$this->topic->notificationsEnabled = ($membership->notificationsEnabled);
                 }
 			}
 		}
@@ -2655,7 +2655,7 @@ LIMIT %d
 				return false;
 			}
 
-			$membership->updateMembership(strtolower('yes'), $membership->Comment);
+			$membership->updateMembership('yes', $membership->Comment);
 		}
 	}
 
@@ -2668,7 +2668,7 @@ LIMIT %d
 				return false;
 			}
 
-			$membership->updateMembership(strtolower('no'), $membership->Comment);
+			$membership->updateMembership('no', $membership->Comment);
 		}
 	}
 

@@ -40,10 +40,10 @@ Boston, MA  02111-1307, USA.
 <?php
 if (count($TResults->Groups) > 0) {
     foreach ($TResults->Groups as $group) {
-        echo '<tr><td><a href="groups/' . $group->IdGroup . '/discuss/forum">'. htmlspecialchars($group->Name) . "</a></td>";
+        echo '<tr><td><a href="groups/' . $group->IdGroup . '/forum">'. htmlspecialchars($group->Name) . "</a></td>";
         echo '<td style="text-align: right; text-wrap: none">';
         if ($group->AcceptMails == 'yes') {
-            if ($group->IdMember > 0) {
+            if ($group->notificationsEnabled) {
                 echo '<a href="forums/subscriptions/disable/group/' . $group->IdGroup . '" class="button">' . $words->getSilent('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
             } else {
                 echo '<a href="forums/subscriptions/enable/group/' . $group->IdGroup . '" class="highlightbutton">' . $words->getSilent('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;

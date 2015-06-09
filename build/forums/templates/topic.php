@@ -161,7 +161,7 @@ if ((!isset($topic->topicinfo->IdTitle)) and (!isset($topic->topicinfo->ThreadDe
                                 . '">' . $words->getBuffered('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                         }
                     } else {
-                        if ($topic->areNotificationsEnabled) {
+                        if ($topic->notificationsEnabled) {
                             echo '<a class="button" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
                                 . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                         } else {

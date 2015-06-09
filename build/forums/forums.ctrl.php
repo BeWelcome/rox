@@ -485,35 +485,45 @@ class ForumsController extends PAppController
         $page->render();
     } // end of index
 
+    private function redirectSubscriptions() {
+        if (!isset($_SERVER['HTTP_REFERER'])) {
+            $redirect = PVars::getObj('env')->baseuri . 'forums/subscriptions';
+        } else {
+            $pos = strpos($_SERVER['HTTP_REFERER'], 'forums/subscriptions/');
+            if ($pos !== false) {
+                // make sure no infinite redirect happens
+                $redirect = substr($pos) . 'forums/subscriptions';
+            } else {
+                $redirect = $_SERVER['HTTP_REFERER'];
+            }
+        }
+        header('Location: ' . $redirect);
+        exit;
+    }
+
     private function EnableGroup($IdGroup) {
         $this->_model->enableGroup($IdGroup);
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
-        exit;
+        $this->redirectSubscriptions();
     }
     private function DisableGroup($IdGroup) {
         $this->_model->disableGroup($IdGroup);
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
-        exit;
+        $this->redirectSubscriptions();
     }
     private function SubscribeGroup($IdGroup) {
         $this->_model->subscribeGroup($IdGroup);
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
-        exit;
+        $this->redirectSubscriptions();
     }
     private function UnsubscribeGroup($IdGroup) {
         $this->_model->unsubscribeGroup($IdGroup);
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
-        exit;
+        $this->redirectSubscriptions();
     }
     private function enableSubscriptions() {
         $this->_model->enableSubscriptions();
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
-        exit;
+        $this->redirectSubscriptions();
     }
     private function disableSubscriptions() {
         $this->_model->disableSubscriptions();
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
-        exit;
+        $this->redirectSubscriptions();
     }
     private function searchSubscriptions() {
         $TResults = $this->_model->searchSubscriptions();
@@ -521,29 +531,24 @@ class ForumsController extends PAppController
     }
     private function SubscribeThread($IdThread) {
         $res = $this->_model->SubscribeThread($IdThread);
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
-        exit;
+        $this->redirectSubscriptions();
     }
     private function UnsubscribeThread($IdSubscribe=0,$Key="") {
         $this->_model->UnsubscribeThread($IdSubscribe,$Key);
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
-        exit;
+        $this->redirectSubscriptions();
     }
 
     private function SubscribeTag($IdTag) {
         $res = $this->_model->SubscribeTag($IdTag);
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
-        exit;
+        $this->redirectSubscriptions();
     }
     private function UnsubscribeTag($IdSubscribe=0,$Key="") {
         $res = $this->_model->UnsubscribeTag($IdSubscribe,$Key);
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
-        exit;
+        $this->redirectSubscriptions();
     }
     private function EnableThread($IdThread) {
         $this->_model->EnableThread($IdThread);
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
-        exit;
+        $this->redirectSubscriptions();
     }
     private function EnableTag($IdTag) {
         $this->_model->EnableTag($IdTag);
@@ -552,8 +557,7 @@ class ForumsController extends PAppController
     }
     private function DisableThread($IdThread) {
         $this->_model->DisableThread($IdThread);
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
-        exit;
+        $this->redirectSubscriptions();
     }
 
     private function searchUserposts($user) {

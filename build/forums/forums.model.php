@@ -2889,11 +2889,8 @@ AND IdThread=%d
         MOD_log::get()->write("Subscribing to Thread=#".$IdThread." IdSubscribe=#".$IdSubscribe, "Forum");
     } // end of UnsubscribeThread
 
-
-
-
     /**
-     * This function allow to enable a thread that has been disabled
+     * This function allows to enable a thread that has been disabled
      *
      * @$IdThread : The thread we want the user to subscribe to
      * @$ParamIdMember optional IdMember, by default set to 0 in this case current logged member will be used
@@ -2919,24 +2916,24 @@ AND IdThread=%d
         }
     } // end of EnableThread
 
-    /**
-     * This function allow to disable notifications for a thread if the group has been subscribed
-     *
-     * @$IdThread : The thread we want the user to disable
-     */
-    public function DisableThread($IdThread) {
-        $member = $this->getLoggedInMember();
-        if (!$member) {
-            return;
-        }
+	/**
+	 * This function allows to disable notifications for a thread if the group has been subscribed
+	 *
+	 * @$IdThread : The thread we want the user to disable
+	 */
+	public function DisableThread($IdThread) {
+		$member = $this->getLoggedInMember();
+		if (!$member) {
+			return;
+		}
 
-        // Make sure there is something to disable
-        if (!$this->IsThreadSubscribed($IdThread,$member->id)) {
-            $this->SubscribeThread($IdThread);
-        }
+		// Make sure there is something to disable
+		if (!$this->IsThreadSubscribed($IdThread,$member->id)) {
+			$this->SubscribeThread($IdThread);
+		}
 
-        // if there was already a disable notification this won't change it.
-        $query = "
+		// if there was already a disable notification this won't change it.
+		$query = "
             UPDATE
                 members_threads_subscribed
             SET
@@ -2944,16 +2941,44 @@ AND IdThread=%d
             WHERE
                 IdThread = " . $IdThread . "
                 AND IdSubscriber = " . $member->id;
-        $this->dao->query($query);
-    } // end of DisableThread
+		$this->dao->query($query);
+	} // end of DisableThread
 
 
-    /**
-	 * This function allow to enable a thread that has been disabled
+	/**
+	 * This function allows to disable notifications for a thread if the group has been subscribed
 	 *
-	 * @$IdThread : The thread we want the user to subscribe to
-	 * @$ParamIdMember optional IdMember, by default set to 0 in this case current logged member will be used
-	 * It also check that member is not yet subscribing to thread
+	 * @$IdTag integer The tag we want the user to disable
+	 */
+	public function DisableTag($IdTag) {
+		$member = $this->getLoggedInMember();
+		if (!$member) {
+			return;
+		}
+
+		// Make sure there is something to disable
+		if (!$this->IsTagSubscribed($IdTag,$member->id)) {
+			$this->SubscribeTag($IdTag);
+		}
+
+		// if there was already a disable notification this won't change it.
+		$query = "
+            UPDATE
+                members_tags_subscribed
+            SET
+                notificationsEnabled = '0'
+            WHERE
+                IdTag = " . $IdTag . "
+                AND IdSubscriber = " . $member->id;
+		$this->dao->query($query);
+	} // end of DisableThread
+
+
+	/**
+	 * This function allows to enable a tag that has been disabled
+	 *
+	 * @$IdTag integer The thread we want the user to subscribe to
+	 * It also checks that member is currently subscribed to tag
 	 */
 	public function EnableTag($IdTag) {
 		$member = $this->getLoggedInMember();
@@ -2969,7 +2994,7 @@ AND IdThread=%d
                 SET
                     notificationsEnabled = '1'
                 WHERE
-                    IdThread = " . $IdTag . "
+                    IdTag = " . $IdTag . "
                     AND IdSubscriber = " . $member->id;
 			$this->dao->query($query);
 		}

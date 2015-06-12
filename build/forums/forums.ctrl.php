@@ -438,6 +438,9 @@ class ForumsController extends PAppController
                 case "disable":
                     if (isset($request[3])) {
                         switch($request[3]) {
+                            case 'tag':
+                                $this->DisableTag($request[4]);
+                                break;
                             case 'thread':
                                 $this->DisableThread($request[4]);
                                 break;
@@ -552,11 +555,14 @@ class ForumsController extends PAppController
     }
     private function EnableTag($IdTag) {
         $this->_model->EnableTag($IdTag);
-        $TResults = $this->_model->searchSubscriptions(); // retrieve subscription for the member
-        $this->_view->displaySearchResultSubscriptions($TResults);
+        $this->redirectSubscriptions();
     }
     private function DisableThread($IdThread) {
         $this->_model->DisableThread($IdThread);
+        $this->redirectSubscriptions();
+    }
+    private function DisableTag($IdThread) {
+        $this->_model->DisableTag($IdThread);
         $this->redirectSubscriptions();
     }
 

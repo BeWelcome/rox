@@ -40,7 +40,8 @@ class LoginMessage extends RoxEntityBase
             ORDER BY
                 lm.created DESC
             ");
-        $q->bindParam(0, $member->id);
+        $memberId = $member->id;
+        $q->bindParam(0, $memberId);
         $q->execute();
         $messages = array();
         while ($row = $q->fetch(PDB::FETCH_OBJ)) {

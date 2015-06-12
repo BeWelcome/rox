@@ -856,7 +856,7 @@ class MembersController extends RoxControllerBase
             $subject = $this->getWords()->get("ResetPasswordSubject");
             $body = $this->getWords()->get("ResetPasswordBody", $password, $member->Username);
             $member->sendMail($subject, $body);
-            $this->setFlashNotice($this->getWords()->get('PasswordResetFlashNotice'));
+            $this->setFlashNotice($this->getWords()->get('ResetPasswordFlashNotice'));
             return $this->router->url('members_reset_password_finish', array(), false);
         } else {
             $mem_redirect->errors = array('ResetPasswordNoLogin');

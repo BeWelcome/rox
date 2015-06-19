@@ -95,17 +95,15 @@ class MOD_sphinx
         $sphinxClient->SetSortMode( SPH_SORT_EXPR, "@weight");
         return $sphinxClient;
     }
-
     /**
      * wrapper for lazy loading and instantiating a Sphinx client object
      *
-     * @access public
-     * @return object
+     * @return SphinxClient
      */
     public function getSphinxForums()
     {
         $sphinxClient = $this->_getSphinxClient();
-        $sphinxClient->SetLimits(0, 15);
+        $sphinxClient->SetLimits(0, 300);
         return $sphinxClient;
     }
 }

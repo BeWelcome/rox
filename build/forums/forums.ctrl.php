@@ -91,7 +91,7 @@ class ForumsController extends PAppController
         } // end of test "if feature is closed"
 
 
-        if (APP_User::isBWLoggedIn()) {
+        if ( APP_User::isBWLoggedIn()) {
             $User = APP_User::login();
         }
         else {
@@ -119,21 +119,27 @@ class ForumsController extends PAppController
 
         // we can't replace this ob_start()
         ob_start();
-        if ($this->action == self::ACTION_VOTE_POST) {
+        if ($this->action == self::ACTION_NOT_LOGGED_IN) {
+            $this->_view->showNotLoggedIn();
+            $page->content .= ob_get_contents();
+            ob_end_clean();
+            $page->render();
+            PPHP::PExit();
+        } elseif ($this->action == self::ACTION_VOTE_POST) {
             if (!isset($request[2])) {
-                 die("Need to have a IdPost") ;
+                die("Need to have a IdPost") ;
             }
             $IdPost=$request[2] ;
             if (!isset($request[3])) {
-                 die("Need to have a vote value") ;
+                die("Need to have a vote value") ;
             }
             $Value=$request[3] ;
-			$this->_model->VoteForPost($IdPost,$Value);
+            $this->_model->VoteForPost($IdPost,$Value);
             $this->_model->setThreadId($this->_model->GetIdThread($IdPost));
             $this->isTopLevel = false;
             $this->_model->prepareTopic(true);
             $this->_view->showTopic();
-         }
+        }
         elseif ($this->action == self::ACTION_DELETEVOTE_POST) {
             if (!isset($request[2])) {
                  die("Need to have a IdPost") ;
@@ -382,10 +388,8 @@ class ForumsController extends PAppController
             $this->_view->ModeditPost($callbackId);
             PPostHandler::clearVars($callbackId);
         } else if ($this->action == self::ACTION_SEARCH_FORUMS) {
-            if (count($request) == 3) {
-                $this->_view->keyword = $request[2];
-                $this->_view->showSearchResultPage($request[2]);
-            }
+            $this->_view->keyword = $request[2];
+            $this->_view->showSearchResultPage($request[2]);
             PPostHandler::clearVars($searchCallbackId);
         } else if ($this->action == self::ACTION_SEARCH_USERPOSTS) {
             if (!isset($request[2])) {
@@ -798,6 +802,7 @@ class ForumsController extends PAppController
     const ACTION_VIEW_LANDING = 20;
     const ACTION_VIEW_FORUM = 21;
     const ACTION_VIEW_GROUPS = 22;
+    const ACTION_NOT_LOGGED_IN = 24;
 
 
     /**
@@ -829,13 +834,19 @@ class ForumsController extends PAppController
                 }
             }
         }
-        if (!isset($request[1])) {
+        if (!APP_User::isBWLoggedIn()) {
+            $this->action = self::ACTION_NOT_LOGGED_IN;
+        } else if (!isset($request[1])) {
             $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);
             $this->action = self::ACTION_VIEW;
         } else if (isset($request[1]) && $request[1] == 'suggestTags') {
             $this->action = self::ACTION_SUGGEST;
         } else if (isset($request[1]) && $request[1] == 'search') {
             $this->action = self::ACTION_SEARCH_FORUMS;
+            if (preg_match_all('/page([0-9]+)/i', $request[3], $regs)) {
+                $this->_model->setPage($regs[1][0]);
+                $this->_model->pushToPageArray($regs[1][0]);
+            }
         } else if (isset($request[1]) && $request[1] == 'member') {
             $this->action = self::ACTION_SEARCH_USERPOSTS;
         } else if (isset($request[1]) && $request[1] == 'modfulleditpost') {

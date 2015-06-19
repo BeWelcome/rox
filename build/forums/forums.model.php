@@ -536,10 +536,15 @@ WHERE
     } // end of boardTopLevelGroups
 
     private function boardTopLevelLanding($showsticky = true) {
+        if (!($User = APP_User::login())) {
+            // Show informal message that the forums are limited to members only
+            return false;
+        }
+
         $MAX_THREADS = 1000; //An upper limit of threads th show just in case the preference goes silly
         if ($this->tags) {
             $this->boardTopLevelLastPosts() ;
-            return ;
+            return true;
         }
 
         $layoutbits = new MOD_layoutbits();
@@ -578,7 +583,7 @@ WHERE
 
         $this->board->add($forum);
         $this->board->add($groups);
-
+        return true;
     } // end of boardTopLevelLanding
 
     private function boardTopLevelLastPosts($showsticky = true) {
@@ -4140,7 +4145,7 @@ SQL;
 		$results = array( 'count' => 0);
 		$member = $this->getLoggedInMember();
 		if (!$member) {
-			$result['error'] = array( 'ForumSearchNotLoggedIn' );
+			$results['errors'][] = 'ForumSearchNotLoggedIn';
 		} else {
 			$groupEntities = $member->getGroups();
 			$groups = array( 0 );
@@ -4148,20 +4153,24 @@ SQL;
 				$groups[] = $group->id;
 			}
 
-			$sphinxClient = $sphinx->getSphinxForums();
+            $sphinxClient = $sphinx->getSphinxForums();
 			$sphinxClient->SetFilter('IdGroup', $groups);
-			$sphinxClient->SetSortMode(SPH_SORT_ATTR_DESC, 'created' );;
+            $sphinxClient->SetSortMode(SPH_SORT_ATTR_DESC, 'created' );;
 			$resultsThreads = $sphinxClient->Query($sphinxClient->EscapeString($keywords), 'forums');
 
-			$results['count'] = $resultsThreads['total'];
-			if ($resultsThreads['total'] <> 0) {
-				$threadIds = array();
-				foreach ($resultsThreads['matches'] as $match) {
-					$threadIds[] = $match['id'];
+			if ($resultsThreads) {
+				$results['count'] = $resultsThreads['total'];
+				if ($resultsThreads['total'] <> 0) {
+					$threadIds = array();
+					foreach ($resultsThreads['matches'] as $match) {
+						$threadIds[] = $match['id'];
+					}
+					$this->board->initThreads($this->getPage(), false, $threadIds);
+				} else {
+					$results['errors'][] = 'ForumSearchNoResults';
 				}
-				$this->board->initThreads(1, false, $threadIds);
 			} else {
-				$this->board->initThreads(1, false, array("error"));
+				$results['errors'][] = 'ForumSearchNoSphinx';
 			}
 		}
 		return $results;

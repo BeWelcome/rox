@@ -440,31 +440,28 @@ class ForumsView extends RoxAppView {
     } // end of showTopLevelCategories
 
     /**
-     * @param bool $result The set of results to be shown
+     * @param string $keyword The term to be searched for
      */
     public function showSearchResultPage($keyword) {
-        $this->_model->searchForums($keyword);
-        $boards = $this->_model->getBoard();
-        $request = PRequest::get()->request;
-        $uri = implode('/', $request);
-        $uri = rtrim($uri, '/').'/';
-        $this->SetPageTitle($boards->getBoardName().' - BeWelcome '.$this->words->getBuffered('Forum'));
+        $result = $this->_model->searchForums($keyword);
+        if (isset($result['errors'])) {
+            require 'templates/searcherror.php';
+        } else {
+            $boards = $this->_model->getBoard();
+            $request = PRequest::get()->request;
+            $uri = implode('/', $request);
+            $uri = rtrim($uri, '/') . '/';
+            $this->SetPageTitle($boards->getBoardName() . ' - BeWelcome ' . $this->words->getBuffered('Forum'));
 
-        if ($boards->IdGroup != 0) {
-            $memberIsGroupMember = $this->_model->checkGroupMembership($boards->IdGroup);
-            if (!$memberIsGroupMember) {
-                $noForumNewTopicButton = true;
-            }
-        }
-        if ($boards->IdGroup == SuggestionsModel::getGroupId()) {
             $noForumNewTopicButton = true;
-        }
-        $pages = $this->getBoardPageLinks();
-        $currentPage = $this->_model->getPage();
-        $max = $this->_model->getBoard()->getNumberOfThreads();
-        $maxPage = ceil($max / $this->_model->THREADS_PER_PAGE);
 
-        require 'templates/board.php';
+            $pages = $this->getBoardPageLinks();
+            $currentPage = $this->_model->getPage();
+            $max = $this->_model->getBoard()->getNumberOfThreads();
+            $maxPage = ceil($max / $this->_model->THREADS_PER_PAGE);
+
+            require 'templates/board.php';
+        }
     }
 
     public function displaySearchResultSubscriptions($TResults) {
@@ -622,17 +619,6 @@ class ForumsView extends RoxAppView {
         return $out;
     }
 
-    private function getCategoriesDropdown($category, $preselect = false) {
-        $tags = $this->_model->getTopCategoryLevelTags();
-        $out = '<select name="d_geoname" id="d_geoname" onchange="javascript: updateGeonames();">
-            <option value="">' . $this->words->getFormatted("SelectNone") . '</option>';
-        foreach ($locations as $code => $location) {
-            $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$location.'</option>';
-        }
-        $out .= '</select>';
-        return $out;
-    }
-
     private function getGroupsDropdowns($IdGroup=0) {
         $tt = $this->_model->GroupChoice();
         $out = '<select name="IdGroup" id="IdGroup"><option value="0">'. $this->words->getFormatted("SelectNone").'</option>';
@@ -687,5 +673,10 @@ class ForumsView extends RoxAppView {
                 $this->SetPageTitle('Feature Closed - Bewelcome') ;
         require 'templates/featureclosed.php';
         } // end of showFeatureIsClosed()
+
+    public function showNotLoggedIn() {
+        $this->SetPageTitle(' - Bewelcome') ;
+        require 'templates/notloggedin.php';
+    }
 }
 ?>

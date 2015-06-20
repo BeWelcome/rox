@@ -843,7 +843,7 @@ class ForumsController extends PAppController
             $this->action = self::ACTION_SUGGEST;
         } else if (isset($request[1]) && $request[1] == 'search') {
             $this->action = self::ACTION_SEARCH_FORUMS;
-            if (preg_match_all('/page([0-9]+)/i', $request[3], $regs)) {
+            if (isset($request[3]) && preg_match_all('/page([0-9]+)/i', $request[3], $regs)) {
                 $this->_model->setPage($regs[1][0]);
                 $this->_model->pushToPageArray($regs[1][0]);
             }

@@ -214,7 +214,6 @@ bwrox.selectScripts([
             "groups",
             "suggestions",
             "trip",
-            "messages/",
             "invite"
         ]
     },

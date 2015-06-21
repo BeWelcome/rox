@@ -52,15 +52,15 @@ Boston, MA  02111-1307, USA.
 
       <!-- First Name -->
         <div class="signup-row floatbox">
-          <label for="register-firstname"><?php echo $words->get('FirstName'); ?>* </label>
-          <input type="text" id="register-firstname" name="firstname" class="float_left" <?php
-          echo isset($vars['firstname']) ? 'value="'.htmlentities($vars['firstname'], ENT_COMPAT, 'utf-8').'" ' : '';
-          ?> />
-          <?php
+            <?php
             if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
                 echo '<div class="error">'.$words->get('SignupErrorFullNameRequired').'</div>';
             }
             ?>
+          <label for="register-firstname"><?php echo $words->get('FirstName'); ?>* </label>
+          <input type="text" id="register-firstname" name="firstname" class="float_left" <?php
+          echo isset($vars['firstname']) ? 'value="'.htmlentities($vars['firstname'], ENT_COMPAT, 'utf-8').'" ' : '';
+          ?> />
           <!--
           <a href="#" onclick="return false;" >
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
@@ -109,6 +109,9 @@ Boston, MA  02111-1307, USA.
                   <?= $this->getAllLanguages(false, $motherTongue); ?>
               </optgroup>
           </select>
+          <?php if (in_array('SignupErrorNoMotherTongue', $vars['errors'])) {
+              echo '<p></p><div class="error">' . $words->get('SignupErrorNoMotherTongue') . '</div>';
+          } ?>
       </div> <!-- signup-row -->
 
       <!-- Birthdate -->
@@ -138,7 +141,7 @@ Boston, MA  02111-1307, USA.
             ?>><?php echo $i; ?></option>
             <?php } ?>
             </select>
-            <?php echo $words->flushBuffer(); ?>
+            <?php echo '<p>' . $words->flushBuffer() . '</p>'; ?>
             <?php
           if (in_array('SignupErrorBirthDate', $vars['errors'])) {
               echo '<div class="error">'.$words->get('SignupErrorBirthDate').'</div>';

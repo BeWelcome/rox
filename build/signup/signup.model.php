@@ -392,7 +392,8 @@ INSERT INTO `members`
 	`HideGender`,
 	`created`,
 	`BirthDate`,
-	`HideBirthDate`
+	`HideBirthDate`,
+	`Accomodation`
 )
 VALUES
 (
@@ -402,7 +403,8 @@ VALUES
 	\'' . $vars['genderhidden'] . '\',
 	now(),
 	\'' . $vars['iso_date'] . '\',
-	\'' . $vars['agehidden'] . '\'
+	\'' . $vars['agehidden'] . '\',
+	\'' . $vars['accommodation'] . '\'
 )';
         $members = $this->dao->query($query);
         $memberID = $members->insertId();
@@ -640,6 +642,12 @@ VALUES
                 strcmp($vars['password'], $vars['passwordcheck']) != 0
         ) {
             $errors[] = 'SignupErrorPasswordCheck';
+        }
+
+        // accommodation
+        if (empty($vars['accommodation']) || ($vars['accommodation']!='anytime' && $vars['accommodation']!='dependonrequest'
+                && $vars['accommodation']!='neverask')) {
+            $errors[] = 'SignupErrorProvideAccommodation';
         }
 
         if (!empty($vars['sweet'])) {

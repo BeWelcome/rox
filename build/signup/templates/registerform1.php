@@ -135,6 +135,30 @@ Boston, MA  02111-1307, USA.
             ?> />
         </div> <!-- signup-row -->
 
+      <!-- Accommodation -->
+      <div class="signup-row">
+          <label for="accommodation"><?php echo $words->get('Accommodation'); ?>*</label>
+          <input class="radio" type="radio" id="accommodation" name="accommodation" value="anytime"<?php
+          if (isset($vars['accommodation']) && $vars['accommodation'] == 'anytime') {
+              echo ' checked="checked"';
+          }
+          ?> /><?php echo $words->get('Accomodation_anytime'); ?>&nbsp;
+          <input class="radio" type="radio" id="accommodation" name="accommodation" value="dependonrequest"<?php
+          if (isset($vars['accommodation']) && $vars['accommodation'] == 'dependonrequest') {
+              echo ' checked="checked"';
+          }
+          ?> /><?php echo $words->get('Accomodation_dependonrequest'); ?>&nbsp;
+          <input class="radio" type="radio" id="accommodation" name="accommodation" value="neverask"<?php
+          if (isset($vars['accommodation']) && $vars['accommodation'] == 'neverask') {
+              echo ' checked="checked"';
+          }
+          ?> /><?php echo $words->get('Accomodation_neverask'); ?>&nbsp;
+          <?php if (in_array('SignupErrorProvideAccommodation', $vars['errors'])) {
+              echo '<div class="error">'.$words->get('SignupErrorProvideAccommodation').'</div>';
+          }
+          ?>
+      </div>
+
   </fieldset>
 
   <p>

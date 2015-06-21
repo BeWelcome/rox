@@ -431,10 +431,10 @@ class ForumNotificationMailbot extends Mailbot
      */
     private function _buildUnsubscribeLink($notification, $MemberIdLanguage, $post)
     {
-        $link="" ;
+        $link="-- \n<br/><br/>" ;
         if ($notification->TableSubscription == 'membersgroups') {
             // Prefer group subscriptions over tags or threads
-            $link = "-- \n<br/><br/>"
+            $link = ""
                 . $this->words->getFormattedInLang('ForumUnSubscribeGroup', $MemberIdLanguage) . '<br />'
                 . '<a href="' .$this->baseuri.'forums/subscriptions/disable/thread/' . $post->IdThread . '">' . $this->words->getFormattedInLang('MailbotDisableThread', $MemberIdLanguage) . '</a><br />'
                 . '<a href="' .$this->baseuri.'forums/subscriptions/disable/group/' . $post->groupId . '">' . $this->words->getFormattedInLang('MailbotDisableGroup', $MemberIdLanguage) . '</a><br />'
@@ -451,8 +451,12 @@ class ForumNotificationMailbot extends Mailbot
                   id = $notification->IdSubscription"
             );
             if ($notification->TableSubscription == "members_threads_subscribed") {
-                $link = '<a href="'.$this->baseuri.'forums/subscriptions/unsubscribe/thread/'.$rSubscription->id.'/'.$rSubscription->UnSubscribeKey.'">'.$this->words->getFormattedInLang('ForumUnSubscribe', $MemberIdLanguage).'</a><br>';
-                $link .= '<a href="' .$this->baseuri.'forums/subscriptions/disable/thread/' . $post->IdThread .'">"'.$this->words->getFormattedInLang('ForumUnSubscribe', $MemberIdLanguage).'</a>';
+                $link = '<a href="'.$this->baseuri.'forums/subscriptions/unsubscribe/thread/'.$rSubscription->id.'/'.$rSubscription->UnSubscribeKey.'">'.$this->words->getFormattedInLang('ForumUnSubscribeThread', $MemberIdLanguage).'</a><br>';
+                $link .= '<a href="' .$this->baseuri.'forums/subscriptions/disable/thread/' . $rSubscription->IdThread .'">'.$this->words->getFormattedInLang('ForumDisableThread', $MemberIdLanguage).'</a>';
+            }
+            if ($notification->TableSubscription == "members_tags_subscribed") {
+                $link = '<a href="'.$this->baseuri.'forums/subscriptions/unsubscribe/tag/'.$rSubscription->id.'/'.$rSubscription->UnSubscribeKey.'">'.$this->words->getFormattedInLang('ForumUnSubscribeTag', $MemberIdLanguage).'</a><br>';
+                $link .= '<a href="' .$this->baseuri.'forums/subscriptions/disable/tag/' . $rSubscription->IdTag .'">'.$this->words->getFormattedInLang('ForumDisableTag', $MemberIdLanguage).'</a>';
             }
         }
         return $link;

@@ -118,14 +118,12 @@ class ForumsController extends PAppController
         $page->newBar .= $view->getAsString('userBar');
 
         // we can't replace this ob_start()
-        ob_start();
         if ($this->action == self::ACTION_NOT_LOGGED_IN) {
-            $this->_view->showNotLoggedIn();
-            $page->content .= ob_get_contents();
-            ob_end_clean();
-            $page->render();
-            PPHP::PExit();
-        } elseif ($this->action == self::ACTION_VOTE_POST) {
+            $this->_redirectNotLoggedIn();
+        }
+
+        ob_start();
+        if ($this->action == self::ACTION_VOTE_POST) {
             if (!isset($request[2])) {
                 die("Need to have a IdPost") ;
             }
@@ -492,16 +490,24 @@ class ForumsController extends PAppController
         $page->render();
     } // end of index
 
+    private function _redirectNotLoggedIn() {
+        $request = PVars::getObj('env')->baseuri . 'login/' . implode('/', $this->request) . '#login-widget';
+        header('Location: ' . $request);
+        PPHP::PExit();
+    }
+
     private function redirectSubscriptions() {
         if (!isset($_SERVER['HTTP_REFERER'])) {
             $redirect = PVars::getObj('env')->baseuri . 'forums/subscriptions';
         } else {
-            $pos = strpos($_SERVER['HTTP_REFERER'], 'forums/subscriptions/');
+            $referrer = $_SERVER['HTTP_REFERER'];
+            $referrer = str_replace('/login/', '/', $referrer);
+            $pos = strpos($referrer, 'forums/subscriptions/');
             if ($pos !== false) {
                 // make sure no infinite redirect happens
-                $redirect = substr($pos) . 'forums/subscriptions';
+                $redirect = substr($referrer, 0, $pos) . 'forums/subscriptions';
             } else {
-                $redirect = $_SERVER['HTTP_REFERER'];
+                $redirect = $referrer;
             }
         }
         header('Location: ' . $redirect);

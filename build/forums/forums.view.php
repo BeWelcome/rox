@@ -673,10 +673,5 @@ class ForumsView extends RoxAppView {
                 $this->SetPageTitle('Feature Closed - Bewelcome') ;
         require 'templates/featureclosed.php';
         } // end of showFeatureIsClosed()
-
-    public function showNotLoggedIn() {
-        $this->SetPageTitle(' - Bewelcome') ;
-        require 'templates/notloggedin.php';
-    }
 }
 ?>

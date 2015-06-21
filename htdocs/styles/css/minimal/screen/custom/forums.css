@@ -73,7 +73,8 @@ div.forumsmessage ol li{
     padding-bottom: 0em;
 }
 div.forumsmessage .text {
-    line-height: 1.5em;
+    line-height: 1.1;
+    font-size:1.1em;
 }
 p.forumstime {
     font-size: 11px;
@@ -263,7 +264,7 @@ div.forums_subtitle {
 }
 .region ul li {
     line-height: 1em;
-    margin: 0 5px 5px 5px 0;
+    margin: 0 5px 5px 5px;
     padding-bottom: 5px;
     padding-top: 0;
 }

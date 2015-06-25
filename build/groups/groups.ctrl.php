@@ -61,8 +61,10 @@ class GroupsController extends RoxControllerBase
         $this->_model->setGroupVisit($group->getPKValue());
         $page = new GroupStartPage();
         $page->group = $group;
-        $page->member = $this->_model->getLoggedInMember();
-        $page->model = $this->_model;
+        $this->_fillObject($page);
+        if (!$page->member) {
+            $this->setFlashNotice('GroupsFullFunctionalityLoggedIn');
+        }
         return $page;
     }
 
@@ -854,6 +856,9 @@ class GroupsController extends RoxControllerBase
         $page = new GroupForumPage();
         $page->group = $this->_getGroupFromRequest();
         $this->_fillObject($page);
+        if (!$page->member) {
+            $this->setFlashNotice('GroupsFullFunctionalityLoggedIn');
+        }
         return $page;
     }
 

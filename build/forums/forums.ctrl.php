@@ -598,7 +598,7 @@ class ForumsController extends PAppController
     * show latest threads belonging to a group
     *
     **/
-    public function showExternalGroupThreads($groupId, $showsticky = true, $showNewTopicButton = true) {
+    public function showExternalGroupThreads($groupId, $isGroupMember = true, $showsticky = true, $showNewTopicButton = true) {
 
         $request = $this->request;
         $this->parseRequest();
@@ -606,7 +606,7 @@ class ForumsController extends PAppController
         $this->isTopLevel = false;
         $this->_model->prepareForum($showsticky);
         $this->_view->uri = 'groups/'.$request[1].'/forum/';
-        $this->_view->showExternal(true, $showsticky, $showNewTopicButton);
+        $this->_view->showExternal(true, $showsticky, $showNewTopicButton, $isGroupMember);
     }
 
     /**

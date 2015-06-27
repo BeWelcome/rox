@@ -9,7 +9,6 @@ class MailbotLinkWordCodes extends Rox\Tools\RoxMigration
      */
     public function up()
     {
-        $this->AddWordCode('MailbotDisableThread','Disable notifications for this thread (temporarily)', 'Used in the notification to point the member how to disable the notification for a thread');
         $this->AddWordCode('MailbotDisableGroup','Disable group notifications (this group only, temporarily)', 'Used in the notification to point the member how to disable the notifications for a group');
         $this->AddWordCode('MailbotUnsubscribeGroup','Unsubscribe group notification (this group only)', 'Used in the notification to point the member how to unsubscribe from the group');
         $this->AddWordCode('MailbotUnsubscribeThread','Unsubscribe from this thread', 'Used in the notification to allow member to quickly unsubscribe from a thread');
@@ -27,7 +26,6 @@ class MailbotLinkWordCodes extends Rox\Tools\RoxMigration
         $this->RemoveWordCode('MailbotDisableGroup');
         $this->RemoveWordCode('MailbotUnsubscribeGroup');
         $this->RemoveWordCode('MailbotUnsubscribeThread');
-        $this->RemoveWordCode('MailbotDisableThread');
         $this->RemoveWordCode('MailbotUnsubscribeTag');
         $this->RemoveWordCode('MailbotDisableTag');
     }

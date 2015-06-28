@@ -11,6 +11,7 @@
 class TripsController extends RoxControllerBase {
 
     const TRIPS_PER_PAGE = 10;
+    const TRIPS_MAXIMUM = 1000;
 
     private $_model;
     private $_view;
@@ -39,6 +40,22 @@ class TripsController extends RoxControllerBase {
         }
     }
 
+    public function tripsAll() {
+        $type = $this->route_vars['type'];
+        switch($type) {
+            case TripsModel::TRIPS_TYPE_MYTRIPS:
+            case TripsModel::TRIPS_TYPE_UPCOMING:
+            case TripsModel::TRIPS_TYPE_PAST:
+                $trips = $this->_model->getAllTrips($type);
+                break;
+            default:
+                $trips = array();
+        }
+        header('Content-type: application/json');
+        echo json_encode($trips) . "\n";
+        exit;
+    }
+
     public function myTrips() {
         $loggedInMember = $this->_model->getLoggedInMember();
         if (!$loggedInMember) {
@@ -50,12 +67,10 @@ class TripsController extends RoxControllerBase {
         }
         $page = new TripsMyTripsPage();
         $page->member = $loggedInMember;
-        $count = $this->_model->getTripsForMemberCount($loggedInMember);
-        $trips = $this->_model->getTripsForMember($loggedInMember, $pageNumber, self::TRIPS_PER_PAGE);
+        $count = $this->_model->getTripsCount(TripsModel::TRIPS_TYPE_MYTRIPS);
+        $trips = $this->_model->getTrips(TripsModel::TRIPS_TYPE_MYTRIPS, $pageNumber, self::TRIPS_PER_PAGE);
         $page->trips = $trips;
         $page->initPager('mytrips', $count, $pageNumber);
-
-        $page->allTrips = $this->_model->getAllTripsForMember($loggedInMember);
 
         return $page;
     }
@@ -69,14 +84,15 @@ class TripsController extends RoxControllerBase {
         if (isset($this->route_vars['pageno'])) {
             $pageNumber = $this->route_vars['pageno'];
         }
+        $offset = ($pageNumber -1) * self::TRIPS_PER_PAGE;
         $page = new TripsUpcomingPage();
         $page->member = $loggedInMember;
-        $count = $this->_model->getUpcomingTripsCount();
-        $trips = $this->_model->getUpcomingTrips($pageNumber, self::TRIPS_PER_PAGE);
-        $page->trips = $trips;
-        $page->initPager('upcoming', $count, $pageNumber);
+        $count = $this->_model->getTripsCount(TripsModel::TRIPS_TYPE_UPCOMING);
+        $trips = $this->_model->getTrips(TripsModel::TRIPS_TYPE_UPCOMING, $pageNumber, self::TRIPS_PER_PAGE);
 
-        $page->allTrips = $this->_model->getAllUpcomingTrips();
+        $page->trips = $trips;
+        $page->initPager('upcoming', $count, $pageNumber, self::TRIPS_PER_PAGE);
+
 
         return $page;
     }
@@ -92,12 +108,10 @@ class TripsController extends RoxControllerBase {
         }
         $page = new TripsPastPage();
         $page->member = $loggedInMember;
-        $count = $this->_model->getPastTripsCount();
-        $trips = $this->_model->getPastTrips($pageNumber, self::TRIPS_PER_PAGE);
+        $count = $this->_model->getTripsCount(TripsModel::TRIPS_TYPE_PAST);
+        $trips = $this->_model->getTrips(TripsModel::TRIPS_TYPE_PAST, $pageNumber, self::TRIPS_PER_PAGE);
         $page->trips = $trips;
         $page->initPager('past', $count, $pageNumber);
-
-        $page->allTrips = $this->_model->getAllPastTrips();
 
         return $page;
     }
@@ -246,7 +260,7 @@ class TripsController extends RoxControllerBase {
         $page->member = $member;
         $page->vars = array(
             "trip-id" => 0,
-            "trip-name" => "",
+            "trip-title" => "",
             "trip-description" => "",
             "trip-count" => "",
             "trip-additional-info" => "",
@@ -264,7 +278,10 @@ class TripsController extends RoxControllerBase {
         if (!$member) {
             return false;
         }
-        $tripId = $this->route_vars['id'];
+        $tripId = intval($this->route_vars['id']);
+        if ($tripId == 0) {
+            return false;
+        }
         $trip = new Trip($tripId);
 
         if (!$trip) {
@@ -277,7 +294,7 @@ class TripsController extends RoxControllerBase {
 
         $page = new TripsEditCreatePage(true);
         $page->member = $member;
-        $tripInfo = $trip->getPostVariables();
+        $tripInfo = $trip->getTripDetails();
         $locations = $tripInfo['locations'];
         $locations[] = $this->_model->getEmptyLocationDetails();
         $tripInfo['locations'] = $locations;
@@ -320,7 +337,7 @@ class TripsController extends RoxControllerBase {
         $page->member = $member;
         $page->vars = array(
             "trip-id" => $trip->trip_id,
-            "trip-name" => $trip->trip_name,
+            "trip-title" => $trip->trip_name,
             "trip-desc" => $trip->trip_descr
         );
 

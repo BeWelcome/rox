@@ -62,16 +62,14 @@
 // -------------------------
 
 //Font-awesome
-@import "font-awesome/less/font-awesome.less";
+@import "../../../vendor/components/font-awesome/less/font-awesome.less";
 
-//Select2-css
-@import "../css/minimal/screen/custom/select2/select2.css";
+// select2
+@import (less) "../../../vendor/select2/select2/dist/css/select2.css";
 
-//Select2-bootstrap-css
-@import "../../../node_modules/select2-bootstrap-css/lib/select2-bootstrap.less";
+//select2 bootstrap them
+@import (less) "../../../node_modules/select2-bootstrap-theme/dist/select2-bootstrap.css";
 
-
-//
 // Bewelcome general layout elements
 // --------------------------------------------------
 /* Sticky footer styles
@@ -442,7 +440,7 @@ th, td {
 // Bewelcome startpage styles
 // -------------------------
 
-#BeWelcome {
+#BeWelcome  {
    opacity:0;
   .animation(fadein 3.5s ease-in 1);
    animation-fill-mode:forwards;
@@ -475,3 +473,24 @@ th, td {
 .map {
   height: 300px;
 }
+
+.map > #progress {
+  position: absolute;
+  width: 40%;
+  height: 30px;
+  top: 50%;
+  left: 50%;
+  margin-left: -20%;
+  margin-top: -1em;
+  z-index: 1000;
+}
+
+.map > #progress > #progress-label {
+  position: absolute;
+  left: 50%;
+  margin-left: -50%;
+  top: 5px;
+  height: 20px;
+}
+
+

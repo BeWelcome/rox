@@ -58,12 +58,8 @@ class AddTripsTables extends AbstractMigration
             COMMENT = 'Stores the information about subtrips. Links into trips.';"
         );
         // Migrate as much as possible of the old trips
-        $this->execute("
-            ALTER TABLE trips ADD COLUMN `oldTripId` INT;
-            INSERT INTO trips SELECT NULL, td.trip_name, td.trip_descr, NULL, t.IdMember, t.trip_touched, NULL, t.trip_id from trip t, trip_data td WHERE t.trip_id = td.trip_id;
-            INSERT INTO subtrips select NULL, t.id, bd.blog_geonameid, blog_start, blog_end, NULL from trips t, trip_data td, blog b, blog_data bd WHERE t.oldTripId = td.trip_id AND td.trip_id = b.trip_id_foreign AND b.blog_id = bd.blog_id AND bd.blog_start IS NOT NULL AND bd.blog_geonameid IS NOT NULL ORDER BY td.trip_id, bd.blog_start;
-            ALTER TABLE trips DROP COLUMN `oldTripId`;
-         ");
+        // this needs to be done programatically to avoid missing geonameID, or locations like mountains or countries
+        // \todo Write migration code
     }
 
     /**

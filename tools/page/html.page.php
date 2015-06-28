@@ -9,11 +9,11 @@ class PageWithHTML extends AbstractBasePage
     // reload the file (e.g. "?1" -> "?2")
     private $_early_scriptfiles = array(
         'script/main.js?9',
-        'script/common.js?1',
+        'script/common/common.js?1',
     );
 
     private $_late_scriptfiles = array(
-    'bootstrap/bootstrap.js',
+        'script/bootstrap/bootstrap.js',
     );
 
     public function render() {
@@ -275,7 +275,7 @@ class PageWithHTML extends AbstractBasePage
         {
             foreach($scriptfiles as $url)
             {
-                echo "<script type='text/javascript' src='script/{$url}'></script>";
+                echo "<script type='text/javascript' src='script/{$url}'></script>" . PHP_EOL;
             }
         }
     }

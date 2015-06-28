@@ -1,6 +1,7 @@
 <?php $words = $this->getWords();
 $location = 'location-' . $locationRow; ?>
 <div class="row">
+<input type="hidden" name="location-subtrip-id[]" id="<?= $location ?>-subtrip-id" value="<?= $locationDetails->subTripId ?>">
 <input type="hidden" class="validate collect" name="location-geoname-id[]" id="<?= $location ?>-geoname-id"
        value="<?= $locationDetails->geonameId ?>">
 <input type="hidden" class="validate collect" name="location-latitude[]" id="<?= $location ?>-latitude"

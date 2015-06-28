@@ -54,14 +54,16 @@ class TripsEditCreatePage extends TripsBasePage
         $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery-ui-1.10.4.custom.min.css';
         $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/datetimepicker.css';
         $stylesheets[] = 'styles/css/minimal/screen/custom/search.css?1';
+        $stylesheets[] = 'script/leaflet/plugins/Leaflet.markercluster/0.4.0/MarkerCluster.Default.css';
+        $stylesheets[] = 'script/leaflet/plugins/Leaflet.markercluster/0.4.0/MarkerCluster.css';
         return $stylesheets;
     }
 
     public function getLateLoadScriptfiles() {
         $scriptFiles = parent::getLateLoadScriptfiles();
-        $scriptFiles[] = 'trips/editcreate.js';
         $scriptFiles[] = 'search/searchlocation.js?1';
-        $scriptFiles[] = 'select2/select2.min.js';
+        $scriptFiles[] = 'select2/select2.full.js';
+        $scriptFiles[] = 'trips/editcreate.js';
         return $scriptFiles;
     }
 }

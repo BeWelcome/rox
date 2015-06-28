@@ -1,0 +1,268 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'c:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'c:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.33
+4 verbose readDependencies using package.json deps
+5 verbose install where, deps [ 'c:\\xampp\\htdocs\\rox',
+5 verbose install   [ 'fk/select2-bootstrap-theme',
+5 verbose install     'Leaflet/Leaflet.markercluster',
+5 verbose install     'grunt',
+5 verbose install     'grunt-autoprefixer',
+5 verbose install     'grunt-contrib-csslint',
+5 verbose install     'grunt-contrib-cssmin',
+5 verbose install     'grunt-contrib-less',
+5 verbose install     'grunt-contrib-watch',
+5 verbose install     'grunt-csscomb',
+5 verbose install     'grunt-recess',
+5 verbose install     'pixelcog/parallax.js' ] ]
+6 info preinstall bewelcome-rox@3.0.0
+7 warn package.json leaflet.markercluster@0.4.0 No repository field.
+8 verbose readDependencies using package.json deps
+9 verbose cache add [ 'fk/select2-bootstrap-theme@>0', null ]
+10 verbose cache add name=undefined spec="fk/select2-bootstrap-theme@>0" args=["fk/select2-bootstrap-theme@>0",null]
+11 verbose parsed url { protocol: null,
+11 verbose parsed url   slashes: null,
+11 verbose parsed url   auth: null,
+11 verbose parsed url   host: null,
+11 verbose parsed url   port: null,
+11 verbose parsed url   hostname: null,
+11 verbose parsed url   hash: null,
+11 verbose parsed url   search: null,
+11 verbose parsed url   query: null,
+11 verbose parsed url   pathname: 'fk/select2-bootstrap-theme@%3E0',
+11 verbose parsed url   path: 'fk/select2-bootstrap-theme@%3E0',
+11 verbose parsed url   href: 'fk/select2-bootstrap-theme@%3E0' }
+12 verbose cache add [ 'Leaflet/Leaflet.markercluster@>0', null ]
+13 verbose cache add name=undefined spec="Leaflet/Leaflet.markercluster@>0" args=["Leaflet/Leaflet.markercluster@>0",null]
+14 verbose parsed url { protocol: null,
+14 verbose parsed url   slashes: null,
+14 verbose parsed url   auth: null,
+14 verbose parsed url   host: null,
+14 verbose parsed url   port: null,
+14 verbose parsed url   hostname: null,
+14 verbose parsed url   hash: null,
+14 verbose parsed url   search: null,
+14 verbose parsed url   query: null,
+14 verbose parsed url   pathname: 'Leaflet/Leaflet.markercluster@%3E0',
+14 verbose parsed url   path: 'Leaflet/Leaflet.markercluster@%3E0',
+14 verbose parsed url   href: 'Leaflet/Leaflet.markercluster@%3E0' }
+15 verbose already installed skipping grunt@~0.4.2 c:\xampp\htdocs\rox
+16 verbose already installed skipping grunt-autoprefixer@~1.0.1 c:\xampp\htdocs\rox
+17 verbose already installed skipping grunt-contrib-csslint@^0.3.1 c:\xampp\htdocs\rox
+18 verbose already installed skipping grunt-contrib-cssmin@^0.10.0 c:\xampp\htdocs\rox
+19 verbose already installed skipping grunt-contrib-less@^1.0.1 c:\xampp\htdocs\rox
+20 verbose already installed skipping grunt-contrib-watch@~0.5.3 c:\xampp\htdocs\rox
+21 verbose already installed skipping grunt-csscomb@^3.0.0 c:\xampp\htdocs\rox
+22 verbose already installed skipping grunt-recess@~0.5.0 c:\xampp\htdocs\rox
+23 verbose cache add [ 'pixelcog/parallax.js@~1.3.2', null ]
+24 verbose cache add name=undefined spec="pixelcog/parallax.js@~1.3.2" args=["pixelcog/parallax.js@~1.3.2",null]
+25 verbose parsed url { protocol: null,
+25 verbose parsed url   slashes: null,
+25 verbose parsed url   auth: null,
+25 verbose parsed url   host: null,
+25 verbose parsed url   port: null,
+25 verbose parsed url   hostname: null,
+25 verbose parsed url   hash: null,
+25 verbose parsed url   search: null,
+25 verbose parsed url   query: null,
+25 verbose parsed url   pathname: 'pixelcog/parallax.js@~1.3.2',
+25 verbose parsed url   path: 'pixelcog/parallax.js@~1.3.2',
+25 verbose parsed url   href: 'pixelcog/parallax.js@~1.3.2' }
+26 verbose cache add name="fk/select2-bootstrap-theme" spec=">0" args=["fk/select2-bootstrap-theme",">0"]
+27 verbose parsed url { protocol: null,
+27 verbose parsed url   slashes: null,
+27 verbose parsed url   auth: null,
+27 verbose parsed url   host: null,
+27 verbose parsed url   port: null,
+27 verbose parsed url   hostname: null,
+27 verbose parsed url   hash: null,
+27 verbose parsed url   search: null,
+27 verbose parsed url   query: null,
+27 verbose parsed url   pathname: '%3E0',
+27 verbose parsed url   path: '%3E0',
+27 verbose parsed url   href: '%3E0' }
+28 verbose addNamed [ 'fk/select2-bootstrap-theme', '>0' ]
+29 verbose addNamed [ null, '>=1.0.0-0' ]
+30 verbose cache add name="Leaflet/Leaflet.markercluster" spec=">0" args=["Leaflet/Leaflet.markercluster",">0"]
+31 verbose parsed url { protocol: null,
+31 verbose parsed url   slashes: null,
+31 verbose parsed url   auth: null,
+31 verbose parsed url   host: null,
+31 verbose parsed url   port: null,
+31 verbose parsed url   hostname: null,
+31 verbose parsed url   hash: null,
+31 verbose parsed url   search: null,
+31 verbose parsed url   query: null,
+31 verbose parsed url   pathname: '%3E0',
+31 verbose parsed url   path: '%3E0',
+31 verbose parsed url   href: '%3E0' }
+32 verbose addNamed [ 'Leaflet/Leaflet.markercluster', '>0' ]
+33 verbose addNamed [ null, '>=1.0.0-0' ]
+34 verbose cache add name="pixelcog/parallax.js" spec="~1.3.2" args=["pixelcog/parallax.js","~1.3.2"]
+35 verbose parsed url { protocol: null,
+35 verbose parsed url   slashes: null,
+35 verbose parsed url   auth: null,
+35 verbose parsed url   host: null,
+35 verbose parsed url   port: null,
+35 verbose parsed url   hostname: null,
+35 verbose parsed url   hash: null,
+35 verbose parsed url   search: null,
+35 verbose parsed url   query: null,
+35 verbose parsed url   pathname: '~1.3.2',
+35 verbose parsed url   path: '~1.3.2',
+35 verbose parsed url   href: '~1.3.2' }
+36 verbose addNamed [ 'pixelcog/parallax.js', '~1.3.2' ]
+37 verbose addNamed [ null, '>=1.3.2-0 <1.4.0-0' ]
+38 silly lockFile 8c7cfee4-fk-select2-bootstrap-theme-0 fk/select2-bootstrap-theme@>0
+39 verbose lock fk/select2-bootstrap-theme@>0 C:\Users\raymund\AppData\Roaming\npm-cache\8c7cfee4-fk-select2-bootstrap-theme-0.lock
+40 silly lockFile a678c2d8-Leaflet-Leaflet-markercluster-0 Leaflet/Leaflet.markercluster@>0
+41 verbose lock Leaflet/Leaflet.markercluster@>0 C:\Users\raymund\AppData\Roaming\npm-cache\a678c2d8-Leaflet-Leaflet-markercluster-0.lock
+42 silly lockFile 5945f3ac-pixelcog-parallax-js-1-3-2 pixelcog/parallax.js@~1.3.2
+43 verbose lock pixelcog/parallax.js@~1.3.2 C:\Users\raymund\AppData\Roaming\npm-cache\5945f3ac-pixelcog-parallax-js-1-3-2.lock
+44 silly addNameRange { name: 'pixelcog/parallax.js',
+44 silly addNameRange   range: '>=1.3.2-0 <1.4.0-0',
+44 silly addNameRange   hasData: false }
+45 silly addNameRange { name: 'fk/select2-bootstrap-theme',
+45 silly addNameRange   range: '>=1.0.0-0',
+45 silly addNameRange   hasData: false }
+46 silly addNameRange { name: 'Leaflet/Leaflet.markercluster',
+46 silly addNameRange   range: '>=1.0.0-0',
+46 silly addNameRange   hasData: false }
+47 verbose request where is /pixelcog/parallax.js
+48 verbose request registry https://registry.npmjs.org/
+49 verbose request id c7a4b0e0b7a11517
+50 verbose url raw /pixelcog/parallax.js
+51 verbose url resolving [ 'https://registry.npmjs.org/', './pixelcog/parallax.js' ]
+52 verbose url resolved https://registry.npmjs.org/pixelcog/parallax.js
+53 verbose request where is https://registry.npmjs.org/pixelcog/parallax.js
+54 info trying registry request attempt 1 at 10:56:27
+55 http GET https://registry.npmjs.org/pixelcog/parallax.js
+56 verbose request where is /fk/select2-bootstrap-theme
+57 verbose request registry https://registry.npmjs.org/
+58 verbose url raw /fk/select2-bootstrap-theme
+59 verbose url resolving [ 'https://registry.npmjs.org/',
+59 verbose url resolving   './fk/select2-bootstrap-theme' ]
+60 verbose url resolved https://registry.npmjs.org/fk/select2-bootstrap-theme
+61 verbose request where is https://registry.npmjs.org/fk/select2-bootstrap-theme
+62 info trying registry request attempt 1 at 10:56:27
+63 http GET https://registry.npmjs.org/fk/select2-bootstrap-theme
+64 verbose request where is /Leaflet/Leaflet.markercluster
+65 verbose request registry https://registry.npmjs.org/
+66 verbose url raw /Leaflet/Leaflet.markercluster
+67 verbose url resolving [ 'https://registry.npmjs.org/',
+67 verbose url resolving   './Leaflet/Leaflet.markercluster' ]
+68 verbose url resolved https://registry.npmjs.org/Leaflet/Leaflet.markercluster
+69 verbose request where is https://registry.npmjs.org/Leaflet/Leaflet.markercluster
+70 info trying registry request attempt 1 at 10:56:27
+71 http GET https://registry.npmjs.org/Leaflet/Leaflet.markercluster
+72 http 404 https://registry.npmjs.org/pixelcog/parallax.js
+73 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+73 verbose headers   'content-type': 'application/json',
+73 verbose headers   'cache-control': 'max-age=0',
+73 verbose headers   'content-length': '51',
+73 verbose headers   'accept-ranges': 'bytes',
+73 verbose headers   date: 'Sun, 31 May 2015 08:56:33 GMT',
+73 verbose headers   via: '1.1 varnish',
+73 verbose headers   age: '0',
+73 verbose headers   connection: 'keep-alive',
+73 verbose headers   'x-served-by': 'cache-fra1224-FRA',
+73 verbose headers   'x-cache': 'MISS',
+73 verbose headers   'x-cache-hits': '0',
+73 verbose headers   'x-timer': 'S1433062593.233661,VS0,VE427' }
+74 silly registry.get cb [ 404,
+74 silly registry.get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+74 silly registry.get     'content-type': 'application/json',
+74 silly registry.get     'cache-control': 'max-age=0',
+74 silly registry.get     'content-length': '51',
+74 silly registry.get     'accept-ranges': 'bytes',
+74 silly registry.get     date: 'Sun, 31 May 2015 08:56:33 GMT',
+74 silly registry.get     via: '1.1 varnish',
+74 silly registry.get     age: '0',
+74 silly registry.get     connection: 'keep-alive',
+74 silly registry.get     'x-served-by': 'cache-fra1224-FRA',
+74 silly registry.get     'x-cache': 'MISS',
+74 silly registry.get     'x-cache-hits': '0',
+74 silly registry.get     'x-timer': 'S1433062593.233661,VS0,VE427' } ]
+75 silly lockFile 5945f3ac-pixelcog-parallax-js-1-3-2 pixelcog/parallax.js@~1.3.2
+76 silly lockFile 5945f3ac-pixelcog-parallax-js-1-3-2 pixelcog/parallax.js@~1.3.2
+77 http 404 https://registry.npmjs.org/Leaflet/Leaflet.markercluster
+78 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+78 verbose headers   'content-type': 'application/json',
+78 verbose headers   'cache-control': 'max-age=0',
+78 verbose headers   'content-length': '51',
+78 verbose headers   'accept-ranges': 'bytes',
+78 verbose headers   date: 'Sun, 31 May 2015 08:56:42 GMT',
+78 verbose headers   via: '1.1 varnish',
+78 verbose headers   age: '0',
+78 verbose headers   connection: 'keep-alive',
+78 verbose headers   'x-served-by': 'cache-fra1228-FRA',
+78 verbose headers   'x-cache': 'MISS',
+78 verbose headers   'x-cache-hits': '0',
+78 verbose headers   'x-timer': 'S1433062602.466403,VS0,VE181' }
+79 silly registry.get cb [ 404,
+79 silly registry.get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+79 silly registry.get     'content-type': 'application/json',
+79 silly registry.get     'cache-control': 'max-age=0',
+79 silly registry.get     'content-length': '51',
+79 silly registry.get     'accept-ranges': 'bytes',
+79 silly registry.get     date: 'Sun, 31 May 2015 08:56:42 GMT',
+79 silly registry.get     via: '1.1 varnish',
+79 silly registry.get     age: '0',
+79 silly registry.get     connection: 'keep-alive',
+79 silly registry.get     'x-served-by': 'cache-fra1228-FRA',
+79 silly registry.get     'x-cache': 'MISS',
+79 silly registry.get     'x-cache-hits': '0',
+79 silly registry.get     'x-timer': 'S1433062602.466403,VS0,VE181' } ]
+80 silly lockFile a678c2d8-Leaflet-Leaflet-markercluster-0 Leaflet/Leaflet.markercluster@>0
+81 silly lockFile a678c2d8-Leaflet-Leaflet-markercluster-0 Leaflet/Leaflet.markercluster@>0
+82 http 404 https://registry.npmjs.org/fk/select2-bootstrap-theme
+83 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+83 verbose headers   etag: '"A7HWSHVBY150YXR4SWYMWC79B"',
+83 verbose headers   'content-type': 'application/json',
+83 verbose headers   'cache-control': 'max-age=0',
+83 verbose headers   'content-length': '54',
+83 verbose headers   'accept-ranges': 'bytes',
+83 verbose headers   date: 'Sun, 31 May 2015 08:56:43 GMT',
+83 verbose headers   via: '1.1 varnish',
+83 verbose headers   age: '0',
+83 verbose headers   connection: 'keep-alive',
+83 verbose headers   'x-served-by': 'cache-fra1233-FRA',
+83 verbose headers   'x-cache': 'MISS',
+83 verbose headers   'x-cache-hits': '0',
+83 verbose headers   'x-timer': 'S1433062603.341133,VS0,VE427',
+83 verbose headers   vary: 'Accept' }
+84 silly registry.get cb [ 404,
+84 silly registry.get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+84 silly registry.get     etag: '"A7HWSHVBY150YXR4SWYMWC79B"',
+84 silly registry.get     'content-type': 'application/json',
+84 silly registry.get     'cache-control': 'max-age=0',
+84 silly registry.get     'content-length': '54',
+84 silly registry.get     'accept-ranges': 'bytes',
+84 silly registry.get     date: 'Sun, 31 May 2015 08:56:43 GMT',
+84 silly registry.get     via: '1.1 varnish',
+84 silly registry.get     age: '0',
+84 silly registry.get     connection: 'keep-alive',
+84 silly registry.get     'x-served-by': 'cache-fra1233-FRA',
+84 silly registry.get     'x-cache': 'MISS',
+84 silly registry.get     'x-cache-hits': '0',
+84 silly registry.get     'x-timer': 'S1433062603.341133,VS0,VE427',
+84 silly registry.get     vary: 'Accept' } ]
+85 silly lockFile 8c7cfee4-fk-select2-bootstrap-theme-0 fk/select2-bootstrap-theme@>0
+86 silly lockFile 8c7cfee4-fk-select2-bootstrap-theme-0 fk/select2-bootstrap-theme@>0
+87 error 404 404 Not Found: pixelcog
+87 error 404
+87 error 404 'pixelcog' is not in the npm registry.
+87 error 404 You should bug the author to publish it
+87 error 404 It was specified as a dependency of 'bewelcome-rox'
+87 error 404
+87 error 404 Note that you can also install from a
+87 error 404 tarball, folder, or http url, or git url.
+88 error System Windows_NT 6.2.9200
+89 error command "c:\\Program Files\\nodejs\\node.exe" "c:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install"
+90 error cwd c:\xampp\htdocs\rox
+91 error node -v v0.10.33
+92 error npm -v 1.4.28
+93 error code E404
+94 verbose exit [ 1, true ]

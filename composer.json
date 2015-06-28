@@ -4,7 +4,16 @@
         "html2text/html2text": "*",
         "michelf/php-markdown": "*",
         "swiftmailer/swiftmailer": "*",
-        "twbs/bootstrap": "3.3.0",
-        "fortawesome/font-awesome": "4.2.0"
-        }
+        "twbs/bootstrap": "3.*",
+        "components/font-awesome": "4.*",
+        "Twig/Twig": "1.*",
+        "symfony/twig-bridge": "*",
+        "symfony/translation": "*",
+        "psr/log": "*",
+        "select2/select2": "*@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.*",
+        "phpdocumentor/phpdocumentor": "2.*"
+    }
 }

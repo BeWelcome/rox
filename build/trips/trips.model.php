@@ -10,8 +10,9 @@
  */
 class TripsModel extends RoxModelBase
 {
-	const TRIPS_TYPE_PAST = 1;
-	const TRIPS_TYPE_UPCOMING = 2;
+	const TRIPS_TYPE_PAST = 'past';
+    const TRIPS_TYPE_UPCOMING = 'upcoming';
+    const TRIPS_TYPE_MYTRIPS = 'mytrips';
 	const TRIPS_TYPE_ALL = 3;
 
 	const TRIPS_ADDITIONAL_INFO_SINGLE = 1;
@@ -19,6 +20,9 @@ class TripsModel extends RoxModelBase
 	const TRIPS_ADDITIONAL_INFO_FRIENDS_MIXED = 4;
 	const TRIPS_ADDITIONAL_INFO_FRIENDS_SAME = 8;
 	const TRIPS_ADDITIONAL_INFO_FAMILY = 16;
+
+	const TRIPS_OPTIONS_LOOKING_FOR_A_HOST = 1;
+	const TRIPS_OPTIONS_LIKE_TO_MEETUP = 2;
 
 	public static function getAdditonalInfoOptions() {
 		$words = new MOD_words(); // self::getWords();
@@ -32,6 +36,15 @@ class TripsModel extends RoxModelBase
 		return $options;
 	}
 
+	public static function getLocationOptions() {
+		$words = new MOD_words(); // self::getWords();
+		$options = array(
+			self::TRIPS_OPTIONS_LOOKING_FOR_A_HOST => $words->getBuffered('TripsLocationOptionLookingForAHost'),
+			self::TRIPS_OPTIONS_LIKE_TO_MEETUP => $words->getBuffered('TripsLocationOptionLikeToMeetup'),
+		);
+		return $options;
+	}
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -39,6 +52,7 @@ class TripsModel extends RoxModelBase
 
 	public function getEmptyLocationDetails() {
 		$locationDetails = new StdClass;
+		$locationDetails->subTripId = 0;
 		$locationDetails->geonameId = "";
 		$locationDetails->name = "";
 		$locationDetails->arrival = "";
@@ -51,437 +65,151 @@ class TripsModel extends RoxModelBase
 		return $locationDetails;
 	}
 
-	public function createTripOld($tripInfo, Member $member)
-	{
-		$errors = array();
-		$tripId = $this->insertTrip($tripInfo['trip-name'], $tripInfo['trip-description'], $member->id);
-		if (!$tripId) {
-			$errors[] = 'TripErrorNotCreated';
-			return $errors;
-		}
-		foreach($tripInfo['locations'] as $location) {
-			// Insert the subtrips...
-			$s = $this->dao->prepare('
-INSERT INTO `blog`
-(`blog_id`, `flags`, `blog_created`, `country_id_foreign`, `trip_id_foreign`, `IdMember`)
-VALUES
-(?, 0, NOW(), NULL, ?, ?)
-        ');
-			$s->execute(
-				array(
-					0 => $this->dao->nextId('blog'),
-					1 => $tripId,
-					2 => $member->id
-				)
-			);
-			$blogId = $s->insertId();
-			if (!$blogId) {
-				$errors[] = 'TripErrorNotCreated';
-				return $errors;
-			}
-			$s = $this->dao->prepare("
-INSERT INTO `blog_data`
-(`blog_id`, `edited`, `blog_title`, `blog_text`, `blog_start`, `blog_end`, `blog_latitude`, `blog_longitude`, `blog_geonameid`)
-VALUES
-(?, NULL, '', '', ?, ?, ?, ?, ?)
-        ");
-			$s->execute(
-				array(
-					0 => $blogId,
-					1 => date('Y-m-d', $location->startDate),
-					2 => ($location->startDate != $location->endDate) ? date('Y-m-d', $location->endDate) : 'NULL',
-					3 => $location->latitude,
-					4 => $location->longitude,
-					5 => $location->geonameId,
-				)
-			);
+    private function _getWhereForTripsType($type) {
+        switch($type) {
+            case self::TRIPS_TYPE_UPCOMING:
+                $where = 'AND (st.arrival >= NOW() or st.departure >= NOW())';
+                break;
+            case self::TRIPS_TYPE_PAST:
+                $where = 'AND (st.arrival < NOW() or st.departure < NOW())';
+                break;
+            case self::TRIPS_TYPE_MYTRIPS:
+                $member = $this->getLoggedInMember();
+                $where = 'AND t.memberId = ' . $member->id;
+                break;
+            default:
+                $where = (1 != 0);
+        }
+        return $where;
+    }
 
-		}
-		return $errors;
-	}
+    private function _getOrderForTripsType($type) {
+        switch($type) {
+            case self::TRIPS_TYPE_UPCOMING:
+                $order = 'st.arrival, st.departure';
+                break;
+            case self::TRIPS_TYPE_PAST:
+                $order = 'st.arrival DESC, st.departure DESC';
+                break;
+            default:
+                $order = "t.id DESC";
+        }
+        return $order;
+    }
 
-	/**
-	 * fetches a geo identity, by geoname_id
-	 *
-	 * @param int $geonameid
-	 * @access public
-	 * @return object|false
-	 */
-	public function getBlogGeo($geonameid)
-	{
-		return $this->createEntity('Geo')->findById($geonameid);
-	}
+    private function _getTrips($type, $offset = false, $limit = false) {
+        $where = $this->_getWhereForTripsType($type);
+        $order = $this->_getOrderForTripsType($type);
+        if (($offset !== false) && ($limit !== false)) {
+            $sqlLimit = "LIMIT " . $offset . ", " . $limit;
+        } else {
+            $sqlLimit = "";
+        }
 
-	public function insertTrip($name, $description, $userId)
-	{
-		if (!intval($userId)) {
-			return false;
-		}
-		$s = $this->dao->prepare('
-INSERT INTO `trip`
-(`trip_id`, `trip_options`, `trip_touched`, IdMember)
-VALUES
-(?, 0, NOW(), ?)
-        ');
-		$s->prepare("
-INSERT INTO `trip_data` (`trip_id`, `trip_name`, `trip_text`, `trip_descr`) VALUES (?, ?, '', ?);
-");
-		$s->setCursor(0);
-		$s->execute(array(0 => $this->dao->nextId('trip'), 1 => $userId));
-		if (!$tripId = $s->insertId())
-			return false;
-		$s->setCursor(1);
-		$s->execute(array(0 => $tripId, 1 => $name, 2 => $description));
-		return $tripId;
-	}
+        // get trip ids for $type trips from the database and
+        // afterwards create entities
 
-	private $tripids;
-
-	public function getTripsCount($handle = false)
-	{
-		$query = "
-		SELECT count(*) cnt
-		FROM trip
-		RIGHT JOIN trip_data ON trip.trip_id = trip_data.trip_id
-		LEFT JOIN members ON members.id = trip.IdMember AND members.Status IN (" . Member::ACTIVE_ALL . ")
-		WHERE NOT members.Username IS NULL
-";
-		if ($handle) {
-			$query .= " AND members.Username = '{$this->dao->escape($handle)}'";
-		}
-		$query .= "
-		AND (
-		(
-			`trip_options` & '.(int)Blog::FLAG_VIEW_PRIVATE.' = 0
-			AND `trip_options` & '.(int)Blog::FLAG_VIEW_PROTECTED.' = 0
-		)
-		    ";
-		$member = $this->getLoggedInMember();
-		if ($member) {
-			$query .= '
-	        		OR (`trip_options` & ' . (int)Blog::FLAG_VIEW_PRIVATE . ' AND trip.IdMember = ' . (int)$member->id . ')
-	        		OR (`trip_options` & ' . (int)Blog::FLAG_VIEW_PROTECTED . ' AND trip.IdMember = ' . (int)$member->id . ')
-                    ';
-		}
-		$query .= ")";
-		$result = $this->singleLookup($query);
-		if (!$result) {
-			throw new PException('Could not retrieve count for trips.');
-		}
-		return $result->cnt;
-	}
-
-	public function getTrips($handle = false, $page_no = 1, $items = 5)
-	{
-		$low = ($page_no - 1) * $items;
-		$query = "
-SELECT trip.trip_id, trip_data.trip_name, trip_text, trip_descr, members.Username AS handle, geonames_cache.fk_countrycode, trip_to_gallery.gallery_id_foreign
-    FROM trip
-    RIGHT JOIN trip_data ON trip.trip_id = trip_data.trip_id
-    LEFT JOIN members ON members.id = trip.IdMember AND members.Status IN (" . Member::ACTIVE_ALL . ")
-    LEFT JOIN addresses ON addresses.IdMember = members.id
-    LEFT JOIN geonames_cache ON addresses.IdCity = geonames_cache.geonameid
-    LEFT JOIN trip_to_gallery ON trip_to_gallery.trip_id_foreign = trip.trip_id
-WHERE NOT members.Username IS NULL
-";
-		if ($handle) {
-			$query .= " AND members.Username = '{$this->dao->escape($handle)}'";
-		}
-		$query .= "
-            AND (
-            (
-                `trip_options` & '.(int)Blog::FLAG_VIEW_PRIVATE.' = 0
-                AND `trip_options` & '.(int)Blog::FLAG_VIEW_PROTECTED.' = 0
-            )
-		    ";
-		$member = $this->getLoggedInMember();
-		if ($member) {
-			$query .= '
-	        		OR (`trip_options` & ' . (int)Blog::FLAG_VIEW_PRIVATE . ' AND trip.IdMember = ' . (int)$member->id . ')
-	        		OR (`trip_options` & ' . (int)Blog::FLAG_VIEW_PROTECTED . ' AND trip.IdMember = ' . (int)$member->id . ')
-                    ';
-		}
-		$query .= ") ORDER BY `trip_touched` DESC
-        		LIMIT " . $low . ", " . $items;
-		$result = $this->dao->query($query);
-		if (!$result) {
-			throw new PException('Could not retrieve trips.');
-		}
-		$trips = array();
-		$this->tripids = array();
-		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$trips[] = $row;
-			$this->tripids[] = $row->trip_id;
-		}
-		return $result;
-	}
-
-	public function getTripData()
-	{
-		if (!$this->tripids) {
-			return array();
-		}
-
-		$query = sprintf("SELECT `blog`.`trip_id_foreign`, `blog`.`blog_id`,
-				`blog_title`, `blog_text`, DATE(`blog_start`) AS `blog_start`, `blog_geonameid`,
-				`geonames_cache`.`name`, `geonames_cache`.`latitude`, `geonames_cache`.`longitude`
-			FROM `blog`
-			LEFT JOIN `blog_data` ON (`blog`.`blog_id` = `blog_data`.`blog_id`)
-			LEFT JOIN `geonames_cache` ON (`blog_data`.`blog_geonameid` = `geonames_cache`.`geonameid`)
-			WHERE `blog`.`trip_id_foreign` IN (%s)",
-			implode(',', $this->tripids));
-
-		// Copied from blog.model
-		$query .= "AND
-				(
-        			(
-			            `flags` & " . (int)Blog::FLAG_VIEW_PRIVATE . " = 0
-			            AND `flags` & " . (int)Blog::FLAG_VIEW_PROTECTED . " = 0
-        			)
-	        ";
-		if ($member = $this->getLoggedInMember()) {
-			$query .= '
-	        		OR (`flags` & ' . (int)Blog::FLAG_VIEW_PRIVATE . ' AND blog.IdMember = ' . (int)$member->id . ')
-	        		OR (`flags` & ' . (int)Blog::FLAG_VIEW_PROTECTED . ' AND blog.IdMember = ' . (int)$member->id . ')
-                    ';
-			/* pending deletion
-            OR (
-                `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.'
-                AND
-                (SELECT COUNT(*) FROM `user_friends` WHERE `user_id_foreign` = blog.`user_id_foreign` AND `user_id_foreign_friend` = '.(int)$User->getId().')
-            )';
-            */
-		}
-		$query .= ") ORDER BY `blog_start` ASC, `name` ASC";
-
-		$result = $this->dao->query($query);
-		if (!$result) {
-			throw new PException('Could not retrieve tripdata.');
-		}
-		$trip_data = array();
-		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$trip_data[$row->trip_id_foreign][$row->blog_id] = $row;
-		}
-		return $trip_data;
-	}
-
-	private function _getAllTrips($member = false, $type = self::TRIPS_TYPE_ALL, $limit = false)
-	{
-		if (!$limit) {
-			$limit = PVars::getObj('activities')->max_activities_on_map;
-		}
-		switch ($type) {
-			case self::TRIPS_TYPE_PAST:
-				$typeQuery = "	WHERE (((bd.blog_start IS NOT NULL) AND (bd.blog_start <= NOW())) OR
-					((bd.blog_end IS NOT NULL) AND (bd.blog_end <= NOW())))";
-				break;
-			case self::TRIPS_TYPE_UPCOMING:
-				$typeQuery = "	WHERE (bd.blog_start IS NOT NULL) AND (bd.blog_start >= NOW())";
-				break;
-			default:
-				$typeQuery = "";
-		};
-		$memberQuery = " t.IdMember = m.id ";
-		if ($member) {
-			$memberQuery .= "AND m.id = " . $member->id;
-		}
-
-		$query = "
-			SELECT
-				t.*,
-				td.*,
-				b.*,
-				UNIX_TIMESTAMP(bd.blog_start) AS tripstartDate,
-				UNIX_TIMESTAMP(bd.blog_end) AS tripendDate,
-				g.latitude AS latitude,
-				g.longitude AS longitude
-			FROM
-				trip t
-			LEFT JOIN trip_data td ON t.trip_id = td.trip_id
-			LEFT JOIN blog b ON b.trip_id_foreign = t.trip_id
-			LEFT JOIN blog_data bd ON bd.blog_id = b.blog_id
-			LEFT JOIN geonames g ON bd.blog_geonameid = g.geonameid
-			";
-		$query .= $typeQuery;
-		$query .= "
-			ORDER BY
-				tripstartDate DESC
-		";
-		$query .= " LIMIT 0, " . $limit;
-
-		$result = $this->dao->query($query);
-		if (!$result) {
-			throw new PException('Could not retrieve trips.');
-		}
-		$trips = array();
-		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$trips[] = $row;
-		}
-		return $trips;
-	}
-
-	public function getAllTrips($type = self::TRIPS_TYPE_ALL, $limit = false)
-	{
-		return $this->_getAllTrips(false, $type, $limit);
-	}
-
-	public function getAllUpcomingTrips()
-	{
-		return $this->_getAllTrips(false, self::TRIPS_TYPE_UPCOMING, false);
-	}
-
-	public function getAllPastTrips()
-	{
-		return $this->_getAllTrips(false, self::TRIPS_TYPE_PAST, false);
-	}
-
-	public function getAllTripsForMember($member, $type = self::TRIPS_TYPE_ALL, $limit = false)
-	{
-		return $this->_getAllTrips($member, $type, $limit);
-	}
-
-	public function getUpcomingTripsCount()
-	{
-		$query = "
-			SELECT
-				count(DISTINCT t.trip_id) AS cnt
-			FROM
-				trip t
-			LEFT JOIN blog b ON b.trip_id_foreign = t.trip_id
-			LEFT JOIN blog_data bd ON bd.blog_id = b.blog_id
-			WHERE
-				((bd.blog_start IS NOT NULL) AND (DATE(bd.blog_start) >= NOW()))
-				 OR ((bd.blog_end IS NOT NULL ) AND (DATE(bd.blog_end) >= NOW()))
-			";
-		$row = $this->singleLookup($query);
-		return $row->cnt;
-	}
-
-	public function getPastTripsCount()
-	{
-		$query = "
+        $trips = array();
+        $query = "
 			SELECT DISTINCT
-				count(DISTINCT t.trip_id) AS cnt
+				t.id AS id
 			FROM
-				trip t
-			LEFT JOIN blog b ON b.trip_id_foreign = t.trip_id
-			LEFT JOIN blog_data bd ON bd.blog_id = b.blog_id
+				trips t,
+				subtrips st
 			WHERE
-				((bd.blog_start IS NOT NULL) AND (DATE(bd.blog_start) <= NOW()))
-				 OR ((bd.blog_end IS NOT NULL ) AND (DATE(bd.blog_end) <= NOW()))
-			";
-		$row = $this->singleLookup($query);
-		return $row->cnt;
-	}
+				t.id = st.tripId " . $where . "
+			ORDER BY "
+                . $order . "
+            " . $sqlLimit;
+        $sql = $this->dao->query($query);
+        if ($sql) {
+            while ($row = $sql->fetch(PDB::FETCH_OBJ)) {
+                $trips[] = $row->id;
+            }
+        }
+        return $trips;
 
-	/**
-	 * Gets the data to the found trips needs to be done in a two step process due to the organisation of the tables
-	 * otherwise the limit for the trips per page is enforced on the sub trips leading to a rather strange layout
-	 *
-	 * @param $result
-	 * @return array
-	 */
-	private function _getTripData($result)
+    }
+
+    /**
+     * @param int $type
+     * @return array
+     */
+    public function getAllTrips($type = self::TRIPS_TYPE_ALL)
 	{
-		// get all trip ids first
-		$tripIds = array();
-		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$tripIds[] = $row->trip_id;
-		}
-
-		if (count($tripIds) == 0) {
-			return array();
-		}
-
-		// Now get the trip data
-		$query = "
-		SELECT
-				td.*,
-				b.*,
-				bd.blog_title,
-				UNIX_TIMESTAMP(bd.blog_start) AS tripstartDate,
-				UNIX_TIMESTAMP(bd.blog_end) AS tripendDate,
-				g.latitude AS latitude,
-				g.longitude AS longitude,
-				g.geonameid AS geonameid,
-				m.username
-			FROM
-				trip t
-			LEFT JOIN trip_data td ON t.trip_id = td.trip_id
-			LEFT JOIN blog b ON b.trip_id_foreign = t.trip_id
-			LEFT JOIN blog_data bd ON bd.blog_id = b.blog_id
-			LEFT JOIN geonames g ON bd.blog_geonameid = g.geonameid
-			LEFT JOIN members m ON m.id = t.IdMember
-			WHERE
-				t.trip_id IN ('" . implode("', '", $tripIds) . "')
-			ORDER BY
-				t.trip_id, bd.blog_start, bd.blog_end";
-		$result = $this->dao->query($query);
-
-		$trips = array();
-		$tripInfo = new StdClass;
-		$lastTripId = 0;
-		while ($row= $result->fetch(PDB::FETCH_OBJ)) {
-			$tripId = $row->trip_id;
-			if ($tripId <> $lastTripId) {
-				$lastTripId = $tripId;
-				$tripInfo = new StdClass;
-				$tripInfo->name = $row->trip_name;
-				$tripInfo->description = $row->trip_descr;
-				$tripInfo->member = new Member($row->IdMember);
-				$tripInfo->data = array();
-				$startDate = $endDate = 0;
-			}
-			$tripData = $tripInfo->data;
-			if ($row->tripstartDate != 0) {
-				$blogStart = $row->tripstartDate;
-				if ($startDate == 0) {
-					$startDate = $blogStart;
-				}
-				if ($blogStart <> 0) {
-					$startDate = min($blogStart, $startDate);
-				}
-			}
-			if (($row->tripendDate != 0) || (($row->tripendDate == null) && ($row->tripstartDate !=0))) {
-				$blogEnd = max($row->tripendDate, $row->tripstartDate);
-				if ($endDate == 0) {
-					$endDate = $blogEnd;
-				}
-				if ($blogEnd <> 0) {
-					$endDate = max($blogEnd, $endDate);
-				}
-			}
-			if ($row->geonameid) {
-				$geo = new Geo($row->geonameid);
-				$geoAlternateName = $this->createEntity('GeoAlternateName');
-				$geoName = $geoAlternateName->getNameForLocation($geo, $_SESSION['lang']);
-				if (!$geoName) {
-					$geoName = $geo->getName();
-				}
-				$tripData[$row->blog_id] = array(
-					"title" => $row->blog_title,
-					"startDate" => date('Y-m-d', $row->tripstartDate),
-					"endDate" => date('Y-m-d', $row->tripendDate),
-					"location" => $geoName,
-				);
-			}
-			$duration = '';
-			if ($startDate <> 0) {
-				$duration .= date('Y-m-d', $startDate);
-			}
-			if ($endDate != $startDate) {
-				$duration .= " - " . date('Y-m-d', $endDate);
-			}
-			$tripInfo->startDate = date('Y-m-d', $startDate);
-			$tripInfo->endDate = date('Y-m-d', $endDate);
-			$tripInfo->duration = $duration;
-
-			$tripInfo->data = $tripData;
-			$trips[$tripId] = $tripInfo;
-		}
-
-		return $trips;
+        $mapTrips = array();
+        switch($type) {
+            case self::TRIPS_TYPE_PAST;
+            case self::TRIPS_TYPE_UPCOMING:
+            case self::TRIPS_TYPE_MYTRIPS:
+                $trips = $this->_getTrips($type);
+                // Collect information needed for maps overlay
+                foreach($trips as $trip) {
+                    $trip = new Trip($trip);
+                    $t = array(
+                        'id' => $trip->getPKValue(),
+                        'title' => $trip->title,
+                        'username' => $trip->username,
+                        'subtrips' => array(),
+                    );
+                    $subTrips = array();
+                    foreach($trip->getSubTrips() as $subTrip) {
+                        $st = array(
+                            'id' => $subTrip->id,
+                            'latitude' => $subTrip->latitude,
+                            'longitude' => $subTrip->longitude,
+                            'arrival' => $subTrip->arrival,
+                            'departure' => $subTrip->departure
+                        );
+                        $subTrips[] = $st;
+                    }
+                    $t['subtrips'] = $subTrips;
+                    $mapTrips[] = $t;
+                }
+                break;
+        }
+        return array('trips' => $mapTrips);
 	}
+
+    private function _getTripsCount($type) {
+        $where = $this->_getWhereForTripsType($type);
+        $count = 0;
+        $query = "
+			SELECT
+				COUNT(DISTINCT t.id) AS count
+			FROM
+				trips t,
+				subtrips st
+			WHERE
+				t.id = st.tripId " . $where;
+        $sql = $this->dao->query($query);
+        if ($sql) {
+            $row = $sql->fetch(PDB::FETCH_OBJ);
+            $count = $row->count;
+        }
+        return $count;
+
+    }
+
+	public function getTripsCount($type)
+	{
+        switch($type) {
+            case self::TRIPS_TYPE_PAST;
+            case self::TRIPS_TYPE_UPCOMING:
+            case self::TRIPS_TYPE_MYTRIPS:
+                $count = $this->_getTripsCount($type);
+                break;
+            default:
+                $count = 0;
+        }
+        return $count;
+	}
+
+    public function getTrips($type, $pageNumber, $itemsPerPage) {
+        $offset = ($pageNumber -1) * $itemsPerPage;
+
+        return $this->_getTrips($type, $offset, TripsController::TRIPS_PER_PAGE);
+    }
 
 	public function getTripsNearMe($member, $pageNumber, $itemsPerPage)
 	{
@@ -541,56 +269,6 @@ WHERE NOT members.Username IS NULL
 		$result = $this->dao->query($query);
 		if (!$result) {
 			throw new PException('Could not retrieve trips');
-		}
-
-		return $this->_getTripData($result);
-	}
-
-	public function getUpcomingTrips($pageNumber, $itemsPerPage) {
-		$limit = ($pageNumber-1) * $itemsPerPage;
-
-		$query = "
-			SELECT DISTINCT
-				t.trip_id
-			FROM
-				trip t
-			LEFT JOIN blog b ON b.trip_id_foreign = t.trip_id
-			LEFT JOIN blog_data bd ON bd.blog_id = b.blog_id
-			WHERE
-				((bd.blog_start IS NOT NULL) AND (DATE(bd.blog_start) >= NOW()))
-				OR ((bd.blog_end IS NOT NULL ) AND (DATE(bd.blog_end) >= NOW()))
-			ORDER BY
-				t.trip_id ASC, bd.blog_start, bd.blog_end
-			LIMIT " . $limit . "," . $itemsPerPage;
-
-		$result = $this->dao->query($query);
-		if (!$result) {
-			throw new PException('Could not retrieve trips.');
-		}
-
-		return $this->_getTripData($result);
-	}
-
-	public function getPastTrips($pageNumber, $itemsPerPage) {
-		$limit = ($pageNumber-1) * $itemsPerPage;
-
-		$query = "
-			SELECT DISTINCT
-				t.trip_id
-			FROM
-				trip t
-			LEFT JOIN blog b ON b.trip_id_foreign = t.trip_id
-			LEFT JOIN blog_data bd ON bd.blog_id = b.blog_id
-			WHERE
-				((bd.blog_start IS NOT NULL) AND (DATE(bd.blog_start) <= NOW()))
-				 OR ((bd.blog_end IS NOT NULL ) AND (DATE(bd.blog_end) <= NOW()))
-			ORDER BY
-				t.trip_id DESC, bd.blog_start DESC, bd.blog_end DESC
-			LIMIT " . $limit . "," . $itemsPerPage;
-
-		$result = $this->dao->query($query);
-		if (!$result) {
-			throw new PException('Could not retrieve trips.');
 		}
 
 		return $this->_getTripData($result);
@@ -709,7 +387,7 @@ SQL;
 	{
 		$tripInfo = array(
 			'trip-id' => 0,
-			'trip-name' => '',
+			'trip-title' => '',
 			'trip-description' => '',
 			'trip-count' => null,
 			'trip-additional-info' => null
@@ -718,10 +396,10 @@ SQL;
 		if (isset($vars['trip-id'])) {
 			$tripInfo['trip-id'] = $vars['trip-id'];
 		}
-		if (isset($vars['trip-name'])) {
-			$tripInfo['trip-name'] = $vars['trip-name'];
+		if (isset($vars['trip-title'])) {
+			$tripInfo['trip-title'] = $vars['trip-title'];
 		}
-		if (empty($tripInfo['trip-name'])) {
+		if (empty($tripInfo['trip-title'])) {
 			$errors[] = 'TripErrorNameEmpty';
 		}
 		if (isset($vars['trip-description'])) {
@@ -762,6 +440,7 @@ SQL;
 			$count = count($vars['location']);
 			for ($i = 0; $i < $count; $i++) {
 				$location = new StdClass;
+                $location->subTripId = $vars['location-subtrip-id'][$i];
 				$location->geonameId = $vars['location-geoname-id'][$i];
 				$location->latitude = $vars['location-latitude'][$i];
 				$location->name = $vars['location'][$i];
@@ -770,7 +449,11 @@ SQL;
 				$location->arrivalTS = strtotime($vars['location-arrival'][$i]);
 				$location->departure = $vars['location-departure'][$i];
 				$location->departureTS = strtotime($vars['location-departure'][$i]);
-				$location->options = $vars['location-options'][$i];
+				if (isset($vars['location-options'])) {
+					$location->options = $vars['location-options'][$i];
+				} else {
+					$location->options = '';
+				}
 				$emptyRow = empty($location->name) && empty($location->arrival) && empty($location->departure);
 				if (!$emptyRow) {
 					$locations[] = $location;
@@ -864,14 +547,14 @@ SQL;
 			return false;
 		}
 		$trip = new Trip();
-		$trip->name = $tripInfo['trip-name'];
+		$trip->title = $tripInfo['trip-title'];
 		$trip->description = $tripInfo['trip-description'];
 		$trip->countOfTravellers = $tripInfo['trip-count'];
 		$trip->additionalInfo = $tripInfo['trip-additional-info'];
 		$trip->memberId = $member->id;
 		// add sub trips
 		foreach($tripInfo['locations'] as $location) {
-			$trip->addSubtrip($location);
+			$trip->addSubTrip($location);
 		}
 		$trip->insert();
 		return $trip;
@@ -884,14 +567,14 @@ SQL;
 		}
 		if ($member->id != $tripInfo->memberId)
 		$trip = new Trip($tripInfo['trip-id']);
-		$trip->name = $tripInfo['trip-name'];
+		$trip->title = $tripInfo['trip-title'];
 		$trip->description = $tripInfo['trip-description'];
 		$trip->countOfTravellers = $tripInfo['trip-count'];
 		$trip->additionalInfo = $tripInfo['trip-additional-info'];
 		$trip->memberId = $member->id;
 		// add sub trips
 		foreach($tripInfo['locations'] as $location) {
-			$trip->addSubtrip($location);
+			$trip->addSubTrip($location);
 		}
 		$trip->update();
 		return $trip;

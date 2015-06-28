@@ -15,7 +15,7 @@ unzip allCountries.zip
 unzip alternateNames.zip
 
 # This assumes that you setup your DB as outlined in INSTALL
-mysql -u bewelcome -pbewelcome bewelcome < import.sql
+mysql -u root bewelcome < import.sql
 
 # Some cleanup
 rm -rf allCountries.*

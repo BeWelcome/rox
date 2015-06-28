@@ -113,5 +113,20 @@ class PDBStatement implements Iterator
             return false;
         return true;
     }
+
+    /**
+     * returns all rows from a query result
+     *
+     * @param bool $style
+     * @return array
+     */
+    public function fetchAll($style = false) {
+        $rows = array();
+        while($rows[] = $this->fetch($style));
+        array_pop($rows);  // pop the last row off, which is an empty row
+        return $rows;
+    }
+
+
 }
 ?>

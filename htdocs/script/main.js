@@ -111,8 +111,6 @@ bwrox.selectScripts([
             "signup/3",
             "admin/rights",
             "admin/flags",
-            "trips/create",
-            "trips/edit/"
             /*,
              "blog",
              "trip",
@@ -142,14 +140,14 @@ bwrox.selectScripts([
             "search"
         ]
     },
-    {
-        file: "select2/select2.min.js",
+//    {
+//        file: "select2/select2.min.js",
 //        pages: [
 //            "signup/2",
 //            "signup/4",
 //            "editmyprofile"
 //        ]
-    },
+//    },
     {
         file: "leaflet/0.7.3/leaflet.js",
         pages: [
@@ -157,15 +155,13 @@ bwrox.selectScripts([
             "signup/3",
             "setlocation",
             "blog",
-            "trips",
             "activities"
         ]
     },
     {
         file: "leaflet/plugins/Leaflet.markercluster/0.4.0/leaflet.markercluster.js",
         pages: [
-            "activities",
-            "trips"
+            "activities"
         ]
     },
     {
@@ -179,8 +175,7 @@ bwrox.selectScripts([
             "searchmembers",
             "signup/3",
             "setlocation",
-            "blog",
-            "trips"
+            "blog"
         ]
     },
     {
@@ -189,8 +184,7 @@ bwrox.selectScripts([
             "searchmembers",
             "signup/3",
             "setlocation",
-            "blog",
-            "trips"
+            "blog"
         ]
     },
     {
@@ -325,8 +319,7 @@ bwrox.selectScripts([
         pages: [
             "signup/3",
             "setlocation",
-            "blog",
-            "trip"
+            "blog"
         ]
     },
     {
@@ -334,8 +327,7 @@ bwrox.selectScripts([
         pages: [
             "signup/3",
             "setlocation",
-            "blog",
-            "trip"
+            "blog"
         ]
     },
     {

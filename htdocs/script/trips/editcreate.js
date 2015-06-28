@@ -61,11 +61,37 @@ function enableDatePicker() {
  */
 function enableSelect2() {
     $(".select2").select2({
+        dropdownAutoWidth: true,
+        width: '100%',
+        minimumResultsForSearch: Infinity,
+        theme: "bootstrap"
+    });
+
+    $( ".select2-allow-clear" ).select2( {
         allowClear: true,
         dropdownAutoWidth: true,
         width: '100%',
-        minimumResultsForSearch: -1
+        minimumResultsForSearch: Infinity,
+        theme: "bootstrap"
+    } );
+    // copy Bootstrap validation states to Select2 dropdown
+    //
+    // add .has-waring, .has-error, .has-succes to the Select2 dropdown
+    // (was #select2-drop in Select2 v3.x, in Select2 v4 can be selected via
+    // body > .select2-container) if _any_ of the opened Select2's parents
+    // has one of these forementioned classes (YUCK! ;-))
+    $("select[class^=select2]").on( "select2:open", function() {
+        if ( $( this ).parents( "[class*='has-']" ).length ) {
+            var classNames = $( this ).parents( "[class*='has-']" )[ 0 ].className.split( /\s+/ );
+
+            for ( var i = 0; i < classNames.length; ++i ) {
+                if ( classNames[ i ].match( "has-" ) ) {
+                    $( "body > .select2-container" ).addClass( classNames[ i ] );
+                }
+            }
+        }
     });
+
 }
 
 /**

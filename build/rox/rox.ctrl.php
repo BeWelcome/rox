@@ -33,6 +33,10 @@ Boston, MA  02111-1307, USA.
  */
 class RoxController extends RoxControllerBase
 {
+
+    /**
+     * @RoxModelBase Rox
+     */
     private $_model;
     
     // for some things we still need a class-scope view object
@@ -46,7 +50,7 @@ class RoxController extends RoxControllerBase
     public function __construct()
     {
         parent::__construct();
-        $this->_model = new Rox();
+        $this->_model = new RoxModelBase();
         $this->_view  = new RoxView($this->_model);
     }
     
@@ -59,7 +63,7 @@ class RoxController extends RoxControllerBase
     public function index($args = false)
     {
         if (PPostHandler::isHandling()) {
-            return;
+            return false;
         }
         
         $request = $args->request;
@@ -112,6 +116,8 @@ class RoxController extends RoxControllerBase
             default:
                 if (APP_User::isBWLoggedIn("NeedMore,Pending")) {
                     $page = new PersonalStartpage();		// This is the Main Start page for logged in members
+                    $page->addEarlyLoadScriptFile('bootstrap-autohidingnavbar/jquery.bootstrap-autohidingnavbar.js');
+                    $this->addEarlyLoadScriptFile('start/start.js');
                 } else {
                     $page = new PublicStartpage(); 	// This is the Default Start page for not logged in members
                 }
@@ -122,7 +128,19 @@ class RoxController extends RoxControllerBase
         
         return $page;
     }
-    
+
+    public function mainPage() {
+        $member = $this->_model->getLoggedInMember();
+        if ($member) {
+            $page = new PersonalStartpage();
+            $page->addEarlyLoadScriptFile('bootstrap-autohidingnavbar/jquery.bootstrap-autohidingnavbar.js');
+            $page->addEarlyLoadScriptFile('start/start.js');
+            $page->model = $this->_model;
+        } else {
+            $page =  new PublicStartpage();
+        }
+        return $page;
+    }
     
     /**
      * redirect to a location obtained by array_slice on the current url

@@ -36,11 +36,11 @@ if ($this->_editing == true) {
             <?= $callback_tag; ?>
             <input type="hidden" name="trip-id" value="<?= $tripInfo['trip-id'] ?>" >
             <div class="form-group has-feedback">
-                <label for="trip-name"
+                <label for="trip-title"
                        class="control-label sr-only"><?php echo $words->get('TripNameLabel'); ?></label>
-                <input type="text" class="form-control" name="trip-name"
+                <input type="text" class="form-control" name="trip-title"
                        placeholder="<?= $words->getBuffered('TripNamePlaceholder'); ?>"
-                       value="<?= htmlentities($tripInfo['trip-name'], ENT_COMPAT, 'utf-8') ?>" />
+                       value="<?= htmlentities($tripInfo['trip-title'], ENT_COMPAT, 'utf-8') ?>" />
                 <?php if (in_array('TripErrorNameEmpty', $errors)) : ?>
                     <span class="help-block alert alert-danger"><?= $words->get('TripErrorNameEmpty') ?></span>
                 <?php endif; ?>

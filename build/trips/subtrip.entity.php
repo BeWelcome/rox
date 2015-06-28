@@ -31,9 +31,8 @@ Boston, MA  02111-1307, USA.
      * @package    Apps
      * @subpackage Entities
      */
-class Subtrip extends RoxEntityBase
+class SubTrip extends RoxEntityBase
 {
-
     protected $_table_name = 'subtrips';
 
     public function __construct($id = null)
@@ -45,12 +44,35 @@ class Subtrip extends RoxEntityBase
         }
     }
 
+    protected function loadEntity(array $data)
+    {
+        if ($status = parent::loadEntity($data))
+        {
+            $geo = new Geo($this->geonameId);
+            $this->latitude = $geo->latitude;
+            $this->longitude = $geo->longitude;
+            if (!$this->departure || $this->departure == '0000-00-00' ) {
+                $this->departure = $this->arrival;
+            }
+            $this->arrivalTS = strtotime($this->arrival);
+            $this->departureTS = strtotime($this->departure);
+        }
+        return $status;
+    }
+
+
     private function _getLocationName(Geo $location) {
         $lang = $_SESSION['lang'];
         $admin1 = $location->getParent();
         $country = $location->getCountry();
         $locationName = $location->getName($lang);
+        if (!$admin1) {
+            return false;
+        }
         $admin1Name = $admin1->getName($lang);
+        if (!$country) {
+            return false;
+        }
         $countryName = $country->getName($lang);
         $name = $locationName;
         if (!empty($admin1Name)) {
@@ -60,11 +82,22 @@ class Subtrip extends RoxEntityBase
         return $name;
     }
 
-    public function getSubtripDetails() {
+    public function getSubTripDetails() {
+        // check if location exists if not let the caller know
+        $location = $this->_entity_factory->create('Geo')->FindById($this->geonameId);
+        if (!$location) {
+            return false;
+        }
         $vars = new StdClass;
+        $vars->subTripId = $this->getPKValue();
         $vars->geonameId = $this->geonameId;
-        $location = new Geo($this->geonameId);
-        $vars->name = $this->_getLocationName($location);
+        $location = $this->_entity_factory->create('Geo')->FindById($this->geonameId);
+        $vars->shortName = $location->getName($_SESSION['lang']);
+        $name = $this->_getLocationName($location);
+        if (!$name) {
+            return false;
+        }
+        $vars->name = $name;
         $vars->latitude = $location->latitude;
         $vars->longitude = $location->longitude;
         $vars->arrivalTS = strtotime($this->arrival);

@@ -1,12 +1,18 @@
 <?php
-function _getOptionsDropdown($locationRow, $locationOptions, $words) {
+function _getOptionsDropdown($locationRow, $current, $words) {
+    $options = TripsModel::getLocationOptions();
     $select = '
         <select class="select2" name="location-options[]" id="trip-location-options-' . $locationRow .'" data-placeholder="' .
         $words->getBuffered('TripLocationOptionsPlaceholder') . '" multiple>
-            <option label="empty"></option>
-            <option value="1">' . $words->getBuffered('TripLikeToMeetup') .'</option>
-            <option value="2">' . $words->getBuffered('TripLookingForAHost') .'</option>
-        </select>';
+            <option label="empty"></option>';
+    foreach($options as $value => $optionText) {
+        $select .= '<option value="' . $value . '"';
+        if (($current & $value) == $value) {
+            $select .= ' selected';
+        }
+        $select .= '>' . $optionText . '</option>';
+    }
+    $select .= '</select>';
     return $select;
 }
 

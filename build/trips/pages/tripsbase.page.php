@@ -47,7 +47,7 @@ class TripsBasePage extends PageWithActiveSkin
      * @param int $page
      * @access public
      */
-    public function initPager($url, $elements, $page = 1, $items_per_page = 5)
+    public function initPager($url, $elements, $page = 1, $items_per_page = TripsController::TRIPS_PER_PAGE)
     {
         $params = new StdClass;
         $params->strategy = new HalfPagePager('right');
@@ -56,6 +56,7 @@ class TripsBasePage extends PageWithActiveSkin
         $params->page_url = 'trips/' . $url;
         $params->page_url_marker = 'page';
         $params->page_method = 'url';
+        $params->page = $page;
         $this->pager = new PagerWidget($params);
     }
 
@@ -130,7 +131,6 @@ class TripsBasePage extends PageWithActiveSkin
     {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'script/leaflet/0.7.3/leaflet.css?1';
-//         $stylesheets[] = "styles/css/minimal/screen/custom/trip.css?3";
         $stylesheets[] = 'script/leaflet/plugins/Leaflet.markercluster/0.4.0/MarkerCluster.Default.css';
         $stylesheets[] = 'script/leaflet/plugins/Leaflet.markercluster/0.4.0/MarkerCluster.css';
         return $stylesheets;
@@ -138,8 +138,11 @@ class TripsBasePage extends PageWithActiveSkin
 
     public function getLateLoadScriptfiles() {
         $scriptFiles = parent::getLateLoadScriptfiles();
-        $scriptFiles[] = 'map/initmap.js';
+        $scriptFiles[] = 'jquery-ui-1.11.2/jquery-ui.min.js';
+        $scriptFiles[] = 'leaflet/0.7.3/leaflet.js';
+        $scriptFiles[] = 'leaflet/plugins/shramov-leaflet-plugins/1.1.0/layer/tile/Google.js';
+        $scriptFiles[] = 'map/leaflet/LeafletFlagIcon.js?1';
+        $scriptFiles[] = 'map/initMap.js';
         return $scriptFiles;
     }
-
 }

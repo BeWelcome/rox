@@ -20,7 +20,7 @@ if (empty($vars)) {
 
 $member = $this->member;
 $words = new MOD_words();
-$panelTitle = $words->get('TripDelete_title', $vars['trip-name']);
+$panelTitle = $words->get('TripDelete_title', $vars['trip-title']);
 ?>
 <div class="panel panel-default disabled">
     <div class="panel-heading"><?= $panelTitle ?></div>

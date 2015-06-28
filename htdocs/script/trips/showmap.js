@@ -1,53 +1,58 @@
 function addMarkers(map) {
     var latLngs = [];
-    var markers = new L.MarkerClusterGroup();
+    var markers = new L.markerClusterGroup();
 
     var icon = new L.DivIcon({
         html: '<div><span>1</span></div>',
-        className: '"leaflet-marker-icon marker-cluster marker-cluster-unique',
         iconSize: new L.Point(40, 40)
     });
 
-    var i = 0;
 
-    jQuery('#trips-data tr').each(function (index, value) {
+    $("#progress").progressbar({value: false});
 
-        // for each row of data
-        var cols = jQuery(this).children('td');
+    // calculate 'all' URL
+    req = location.pathname.toLowerCase();
+    pos = req.indexOf('/page');
+    if (pos >= 0) {
+        // remove page part
+        req = req.substr(0, pos);
+    }
+    req = req + '/all';
 
-        // cols: activity title, location name, location latitude, location longitude, activity details link URL
-        var tripName = jQuery(cols[0]).html();
-        var userName = jQuery(cols[1]).html();
-        var tripStartDate = jQuery(cols[2]).html();
-        var tripEndDate = jQuery(cols[3]).html();
-        var latitude = jQuery(cols[4]).html();
-        var longitude = jQuery(cols[5]).html();
-        var tripUrl = jQuery(cols[6]).html();
+    // get markers using AJAX so that the page loads faster
+    $.ajax({
+        url: req,
+        dataType: "json",
+        complete: function () {
+            $("#progress").hide();
+        },
+        success: function (data) {
+            data.trips.forEach( function(trip){
+                trip.subtrips.forEach( function(subtrip)
+                {
+                    var marker = new L.Marker([
+                        subtrip.latitude,
+                        subtrip.longitude
+                    ], {icon: icon});
+                    var popupContent = '<h4><a href="trips/' + trip.id + '">' + trip.title + '</a></h4>';
+                    popupContent += '<p>' + trip.username + '<br>';
+                    popupContent += subtrip.arrival;
+                    if (subtrip.arrival != subtrip.departure) {
+                        popupContent += ' - ' + subtrip.departure;
+                    }
+                    popupContent += '</p>';
+                    marker.bindPopup(popupContent).openPopup();
 
-        var lat = isNaN(latitude) || (latitude == "");
-        var lon = isNaN(longitude) || (longitude == "");
-        if (!( lat || lon )) {
-            var marker = new L.Marker([
-                latitude,
-                longitude
-            ], {icon: icon});
-
-            var popupContent = '<h4><a href="' + tripUrl + '">' + tripName + '</a></h4>';
-            popupContent += '<p>' + userName + '<br>';
-            popupContent += tripStartDate + ' - ' + tripEndDate + '</p>';
-
-            marker.bindPopup(popupContent).openPopup();
-
-            markers.addLayer(marker);
-            latLngs[latLngs.length] = [latitude, longitude];
+                    markers.addLayer(marker);
+                    latLngs[latLngs.length] = [subtrip.latitude, subtrip.longitude];
+                });
+            });
         }
-
-        i++;
     });
 
     map.addLayer(markers);
 
-    bwrox.debug('%s markers added to trips map.', i);
+    bwrox.debug('Added markers to trips map.');
 
     return latLngs;
 }

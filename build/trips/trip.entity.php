@@ -29,7 +29,8 @@ Boston, MA  02111-1307, USA.
      */
 class Trip extends RoxEntityBase
 {
-    private $subtrips = array();
+    // @array SubTrip
+    private $_subTrips = array();
     protected $_table_name = 'trips';
 
     public function __construct($id = null)
@@ -45,13 +46,37 @@ class Trip extends RoxEntityBase
         return $this->FindByWhereMany('idMember = ' . $member->id, $offset, $limit);
     }
 
-    public function loadEntity(array $data)
+    protected function loadEntity($data)
     {
         if ($status = parent::loadEntity($data))
         {
+            $member = new Member($this->memberId);
+            $this->username = $member->Username;
             // get subtrips for this trip
-            $temp = new Subtrip();
-            $this->subtrips = $temp->FindByWhereMany('tripId = ' . $this->getPKValue());
+            $temp = new SubTrip();
+            $subTrips = $temp->FindByWhereMany('tripId = ' . $this->getPKValue());
+
+            $this->_subTrips = array();
+            // \todo: The database contains some strange entries
+            $arrival = null;
+            $departure = null;
+            foreach($subTrips as $subTrip) {
+                $details = $subTrip->getSubTripDetails();
+                if ($details) {
+                    $this->_subTrips[$subTrip->id] = $subTrip;
+                    if (($subTrip->arrivalTS <> 0) && (($arrival == null) || ($arrival > $subTrip->arrivalTS))) {
+                        $arrival = $subTrip->arrivalTS;
+                    }
+                    if (($subTrip->departureTS <> 0) && (($departure == null) || ($departure < $subTrip->departureTS))) {
+                        $departure = $subTrip->departureTS;
+                    }
+                }
+            }
+            $duration = date('Y-m-d', $arrival);
+            if ($departure <> $arrival) {
+                $duration .= " - " . date('Y-m-d', $departure);
+            }
+            $this->duration = $duration;
         }
         return $status;
     }
@@ -61,7 +86,7 @@ class Trip extends RoxEntityBase
         // update subtrips as necessary
         parent::update();
         // Now take care of the subtrips
-        foreach($this->subtrips as $subtrip) {
+        foreach($this->_subTrips as $subtrip) {
             if ($subtrip->getPKValue() == 0) {
                 $subtrip->insert();
             } else {
@@ -74,43 +99,49 @@ class Trip extends RoxEntityBase
     public function insert() {
         parent::insert();
         // Now write all subtrips
-        foreach($this->subtrips as $subtrip) {
+        foreach($this->_subTrips as $subtrip) {
             $subtrip->tripId = $this->getPKValue();
             $subtrip->insert();
         }
     }
 
     public function addSubTrip($subtripInfo) {
-        if ($subtripInfo->id == 0) {
-            $subtrip = new Subtrip();
+        if ($subtripInfo->subTripId == 0) {
+            $subtrip = new SubTrip();
         } else {
-            $subtrip = $this->subtrips[$subtripInfo->id];
+            $subtrip = $this->subtrips[$subtripInfo->subTripId];
         }
         $subtrip->geonameId = $subtripInfo->geonameId;
         $subtrip->arrival = $subtripInfo->arrival;
         $subtrip->departure = $subtripInfo->departure;
         $subtrip->options = $subtripInfo->options;
-        if ($subtripInfo->id == 0) {
-            $this->subtrips[] = $subtrip;
+        if ($subtripInfo->subTripId == 0) {
+            $this->_subTrips[] = $subtrip;
         } else {
-            $this->subtrips[$subtripInfo->id] = $subtrip;
+            $this->_subTrips[$subtripInfo->id] = $subtrip;
         }
     }
 
-    public function getPostVariables() {
+    public function getTripDetails() {
         $vars = array();
         $vars['trip-id'] = $this->getPKValue();
-        $vars['trip-name'] = $this->name;
+        $vars['trip-title'] = $this->title;
         $vars['trip-description'] = $this->description;
         $vars['trip-count'] = $this->countOfTravellers;
         $vars['trip-additional-info'] = $this->additionalInfo;
         $geonameIds = $arrivals = $departures = $options = array();
         $locations = array();
-        foreach($this->subtrips as $subtrip) {
-            $subtripDetails = $subtrip->getSubtripDetails();
-            $locations[] = $subtripDetails;
+        foreach($this->_subTrips as $subtrip) {
+            $subtripDetails = $subtrip->getSubTripDetails();
+            if ($subtripDetails) {
+                $locations[] = $subtripDetails;
+            }
         }
         $vars['locations'] = $locations;
         return $vars;
+    }
+
+    public function getSubTrips() {
+        return $this->_subTrips;
     }
 }

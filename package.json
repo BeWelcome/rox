@@ -1,19 +1,20 @@
 {
   "name": "bewelcome-rox",
-  "version": "2.6.0",
+  "version": "3.0.0",
   "repository": {
     "type": "git",
     "url": "https://gitorious.org/bewelcome/rox.git"
   },
   "devDependencies": {
+    "fk/select2-bootstrap-theme": ">0",
+    "Leaflet/Leaflet.markercluster": ">0",
     "grunt": "~0.4.2",
     "grunt-autoprefixer": "~1.0.1",
     "grunt-contrib-csslint": "^0.3.1",
     "grunt-contrib-cssmin": "^0.10.0",
-    "grunt-contrib-less": "~0.12.0",
+    "grunt-contrib-less": "^1.0.1",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-csscomb": "^3.0.0",
     "grunt-recess": "~0.5.0",
-    "select2-bootstrap-css": "^1.4.1"
   }
 }

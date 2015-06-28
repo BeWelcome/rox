@@ -28,21 +28,17 @@ class Geo extends RoxEntityBase
         {
             return false;
         }
-        if ($this->parentId == 0)
-        {
-            if ($this->admin1)
-            {
+        if ($this->parentId == 0) {
+            if ($this->admin1) {
                 $this->parentGeo = $this->createEntity('Geo')->findByWhere("admin1 = '{$this->admin1}' AND fcode = 'ADM1' AND country = '{$this->country}'");
-            }
-            elseif ($this->country)
-            {
+            } elseif ($this->country) {
                 $this->parentGeo = $this->createEntity('Geo')->findByWhere("fcode LIKE 'PCL%' AND fcode <> 'PCLH' AND country = '{$this->country}'");
-            }
-            else
-            {
+            } else {
                 return false;
             }
-            $this->parentId = $this->parentGeo->geonameid;
+            if ($this->parentGeo) {
+                $this->parentId = $this->parentGeo->geonameid;
+            }
         }
         return $this->parentGeo;
     }

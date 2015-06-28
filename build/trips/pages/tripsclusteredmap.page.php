@@ -33,8 +33,18 @@ Boston, MA  02111-1307, USA.
 
 class TripsClusteredMapPage extends TripsBasePage
 {
+    protected function getStylesheets() {
+        $stylesheets = parent::getStylesheets();
+        $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery.ui.all.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery-ui-1.10.4.custom.min.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/datetimepicker.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/search.css?1';
+        return $stylesheets;
+    }
+
     public function getLateLoadScriptfiles() {
         $scriptFiles = parent::getLateLoadScriptfiles();
+        $scriptFiles[] = 'leaflet/plugins/Leaflet.markercluster/0.4.0/leaflet.markercluster.js';
         $scriptFiles[] = 'trips/showmap.js';
         return $scriptFiles;
     }

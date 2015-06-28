@@ -1,8 +1,13 @@
 /**
+ * Creating "BWRox" namespace.
+ */
+function BWRox() {
+};
+
+/**
  * Write debug output to browser console
  *
  * @param {string} message Text to write to console
- * @param {string}* Replacement strings, will be passed on
  */
 BWRox.prototype.debug = function(message) {
   if (typeof bwroxConfig != 'undefined' && bwroxConfig.debug == '1') {
@@ -14,7 +19,6 @@ BWRox.prototype.debug = function(message) {
  * Write info output to browser console
  *
  * @param {string} message Text to write to console
- * @param {string}* Replacement strings, will be passed on
  */
 BWRox.prototype.info = function(message) {
   if (typeof bwroxConfig != 'undefined' && bwroxConfig.info == '1') {
@@ -26,7 +30,6 @@ BWRox.prototype.info = function(message) {
  * Write warn output to browser console
  *
  * @param {string} message Text to write to console
- * @param {string}* Replacement strings, will be passed on
  */
 BWRox.prototype.warn = function(message) {
   if (typeof bwroxConfig != 'undefined' && bwroxConfig.warn == '1') {
@@ -38,7 +41,6 @@ BWRox.prototype.warn = function(message) {
  * Write error output to browser console
  *
  * @param {string} message Text to write to console
- * @param {string}* Replacement strings, will be passed on
  */
 BWRox.prototype.error = function(message) {
   if (typeof bwroxConfig != 'undefined' && bwroxConfig.error == '1') {
@@ -50,7 +52,6 @@ BWRox.prototype.error = function(message) {
  * Write log output to browser console
  *
  * @param {string} message Text to write to console
- * @param {string}* Replacement strings, will be passed on
  */
 BWRox.prototype.log = function(message) {
   if (typeof bwroxConfig != 'undefined' && bwroxConfig.log == '1') {

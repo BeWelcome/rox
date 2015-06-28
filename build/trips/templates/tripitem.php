@@ -1,25 +1,29 @@
-<h1><a href="/trips/<?= $trip->id ?>"><?= $trip->name ?></a></h1>
+<h1><a href="/trips/<?= $trip->id ?>"><?= $trip->title ?></a></h1>
 <p><?= $trip->duration ?></p>
 <?php
 $words = $this->getWords(); ?>
 <div class="row"><div class="col-xs-12"><?= $trip->description ?></div></div>
 <?php
-$count = count($trip->subtrips);
+$subtrips = $trip->getSubtrips();
+$count = count($subtrips);
 $counter = 0;
+$divider = 3;
+$class = "col-md-4";
 ?>
 <!-- Subtemplate: 2 columns 50/50 size -->
 <div class="row">
     <!-- Contents for right subtemplate -->
     <?php
-    foreach ($trip->subtrips as $subTrip) {
+    foreach ($subtrips as $subtrip) {
+        $details = $subtrip->getSubTripDetails();
         $counter++;
         $highlight = false;
-        if ($subTrip->geonameId == $geoname) {
+        if ($details->geonameId == $geoname) {
             $highlight = true;
         }
-    if ($counter % 4 == 1) {
-        echo '</div><div class="row">';
-    }
+        if ($counter % $divider == 1) {
+            echo '</div><div class="row">';
+        }
         switch ($counter) {
             case 1:
             case $count:
@@ -32,24 +36,24 @@ $counter = 0;
                 break;
         }
     ?>
-    <div class="col-md-3">
+    <div class="<?= $class ?>">
         <i class="fa <?= $fa ?>" style="color: <?= $color ?>"></i>
         <?php if ($highlight) { ?>
             <span style="background-color: yellow" class="highlight">
-        <?php } ?><strong><?= $subTrip['location'] ?></strong>, <?= $subTrip['startDate'] ?>
+        <?php } ?><strong><?= $details->shortName ?></strong>, <?= $details->arrival ?>
         <?php
-            if ($subTrip['endDate'] <> '1970-01-01') { ?>
-             - <?= $subTrip['endDate'] ?>
+            if ($details->departure <> $details->arrival) { ?>
+             - <?= $details->departure ?>
         <?php }
             if ($highlight) { ?>
                 </span>
         <?php
         }
-        if ($subTrip->additional & 1 == 1) {
+        if (($details->options & TripsModel::TRIPS_OPTIONS_LOOKING_FOR_A_HOST) == TripsModel::TRIPS_OPTIONS_LOOKING_FOR_A_HOST) {
             echo '<i class="fa fa-bed"></i>';
         }
-        if ($subTrip->additional & 2 == 2) {
-            echo '<i class="fa fa-drink"></i>';
+        if (($details->options & TripsModel::TRIPS_OPTIONS_LIKE_TO_MEETUP) == TripsModel::TRIPS_OPTIONS_LIKE_TO_MEETUP) {
+            echo '<i class="fa fa-glass"></i>';
         }
         ?>
     </div>

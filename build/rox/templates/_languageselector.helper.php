@@ -79,7 +79,7 @@ function _languageFooterSelectorDropDown()
     $langsel = '';
     $request_string = htmlspecialchars(implode('/',PVars::get()->request), ENT_QUOTES);
     $langsel = '
-      <select id="language" name="language" class="combo" onchange="window.location.href=this.value; return false">';
+      <select id="language" name="language" class="select2 combo" onchange="window.location.href=this.value; return false">';
     $langsel .= _languageOptions($words) . '</select>';
     return $langsel;
 }

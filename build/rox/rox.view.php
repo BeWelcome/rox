@@ -30,7 +30,7 @@ Boston, MA  02111-1307, USA.
 class RoxView extends PAppView {
     private $_model;
 
-    public function __construct(Rox $model)
+    public function __construct(RoxModelBase $model)
     {
         $this->_model = $model;
     }

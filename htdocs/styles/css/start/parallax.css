@@ -1,0 +1,136 @@
+/* general styles */
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+/* padded section */
+.pad-section {
+    padding: 50px 0;
+}
+.pad-section img {
+    width: 100%;
+}
+
+/* vertical-centered text */
+.text-vcenter {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+.text-vcenter h1 {
+    font-size: 4.5em;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+}
+
+#footer {
+    width: 100%;
+    position: fixed;
+    z-index: 1000;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    font-size: 11px;
+    line-height: 14px;
+    padding: 6px;
+    height: 40px;
+}
+
+.chevron{
+    border: 6px solid #FFFFFF;
+    border-radius: 50%;
+    display: inline-block;
+    font-size: 50px;
+    height: 80px;
+    line-height: 70px;
+    text-align: center;
+    vertical-align: middle;
+    width: 80px;
+    color: white;
+    background: rgba(255, 255, 255, 0.6);
+}
+
+/* additional sections */
+#home {
+    background: url(/images/homepicture-1200px_1.jpg) no-repeat center center fixed;
+    display: table;
+    height: 100%;
+    position: relative;
+    width: 100%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+#about {
+    background-color: #ff8800;
+    color: white;
+}
+
+#about_trailing {
+    background: url(/images/homepicture-1200px_2.jpg) no-repeat center center fixed;
+    display: table;
+    height: 50%;
+    position: relative;
+    width: 100%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+#statistics {
+    background-color: #f3a806;
+    color: white;
+}
+
+#statistics_trailing {
+    background: url(/images/homepicture-1200px_4.jpg) no-repeat center center fixed;
+    display: table;
+    height: 50%;
+    position: relative;
+    width: 100%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+#search {
+    background-color: #afaaa4;
+    color: white;
+}
+
+#search_trailing {
+    background: url(/images/homepicture-1200px_3.jpg) no-repeat center center fixed;
+    display: table;
+    height: 70%;
+    position: relative;
+    width: 100%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+h1 {
+    font-size: 2em;
+    font-weight: bolder;
+    text-align: center;
+}
+
+h2 {
+    font-size: 1.7em;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+h3 {
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+}

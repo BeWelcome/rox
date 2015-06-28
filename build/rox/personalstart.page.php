@@ -1,7 +1,7 @@
 <?php
 
 
-class PersonalStartpage extends RoxPageView
+class PersonalStartpage extends PageWithRoxLayout
 {
     protected function getTopmenuActiveItem() {
         return 'main';
@@ -11,7 +11,6 @@ class PersonalStartpage extends RoxPageView
     {
         // we don't need the other columns
         return array('col3');
-        $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome-ie7.min.css';
     }
     
     /*
@@ -22,6 +21,7 @@ class PersonalStartpage extends RoxPageView
     {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/screen/custom/main.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome-ie7.min.css';
         return $stylesheets;
     }
 

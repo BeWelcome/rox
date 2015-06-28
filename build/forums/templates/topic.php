@@ -157,7 +157,7 @@ if ((!isset($topic->topicinfo->IdTitle)) and (!isset($topic->topicinfo->ThreadDe
                             echo '<a class="button" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
                                 . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                         } else {
-                            echo '<a class="highlightbutton" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
+                            echo '<a class="button" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
                                 . '">' . $words->getBuffered('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                         }
                     } else {
@@ -165,7 +165,7 @@ if ((!isset($topic->topicinfo->IdTitle)) and (!isset($topic->topicinfo->ThreadDe
                             echo '<a class="button" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
                                 . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                         } else {
-                            echo '<a class="highlightbutton" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
+                            echo '<a class="button" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
                                 . '">' . $words->getBuffered('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                         }
                     }
@@ -175,13 +175,13 @@ if ((!isset($topic->topicinfo->IdTitle)) and (!isset($topic->topicinfo->ThreadDe
                             echo '<a class="button" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
                                 . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                         } else {
-                            echo '<a class="highlightbutton" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
+                            echo '<a class="button" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
                                 . '">' . $words->getBuffered('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                         }
                         echo '<a class="button" href="' . $this->getURI() . '/subscriptions/unsubscribe/thread/' . $topic->IdSubscribe
                             . '/' . $topic->IdKey . '">' . $words->getBuffered('ForumUnsubscribe') . '</a>' . $words->flushBuffer() . PHP_EOL;
                     } else {
-                        echo '<a class="highlightbutton" href="' . $this->getURI() . '/subscribe/thread/' . $topic->IdThread . '">'
+                        echo '<a class="button" href="' . $this->getURI() . '/subscribe/thread/' . $topic->IdThread . '">'
                             . $words->getBuffered('ForumSubscribe') . '</a>' . $words->flushBuffer() . PHP_EOL;
                     }
                 }

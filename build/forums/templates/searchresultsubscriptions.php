@@ -34,7 +34,8 @@ Boston, MA  02111-1307, USA.
     <tr><td><?= $words->getFormatted("ForumDisableAllNotifications") ?></td>
         <td style="text-align: right"><a href="forums/subscriptions/disable" class="button"><?= $words->getSilent('ForumDisable') ?></a><?= $words->flushBuffer() ?></td></tr>
     <tr><td><?= $words->getFormatted("ForumEnableAllNotifications") ?></td>
-        <td style="text-align: right"><a href="forums/subscriptions/enable" class="highlightbutton"><?= $words->getSilent('ForumEnable') ?></a><?= $words->flushBuffer() ?></td></tr>
+        <td style="text-align: right"><a href="forums/subscriptions/enable" class="button"><?= $words->getSilent('ForumEnable') ?></a><?= $words->flushBuffer() ?></td></tr>
+    <tr><td colspan="2"><?= $words->get('ForumNotificationsInfo') ?></td></tr>
     <tr><td colspan="2"></td></tr>
     <tr><td colspan="2"><h3><?= $words->get('ForumGroupSubscriptions') ?></h3></td></tr>
 <?php
@@ -46,11 +47,11 @@ if (count($TResults->Groups) > 0) {
             if ($group->notificationsEnabled) {
                 echo '<a href="forums/subscriptions/disable/group/' . $group->IdGroup . '" class="button">' . $words->getSilent('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
             } else {
-                echo '<a href="forums/subscriptions/enable/group/' . $group->IdGroup . '" class="highlightbutton">' . $words->getSilent('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
+                echo '<a href="forums/subscriptions/enable/group/' . $group->IdGroup . '" class="button">' . $words->getSilent('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
             }
             echo ' <a href="forums/subscriptions/unsubscribe/group/' . $group->IdGroup . '" class="button">' . $words->getSilent('ForumUnsubscribe') . '</a>' . $words->flushBuffer()  . PHP_EOL;
         } else {
-            echo ' <a href="forums/subscriptions/subscribe/group/' . $group->IdGroup . '" class="highlightbutton">' . $words->getSilent('ForumSubscribe') . '</a>' . $words->flushBuffer()  . PHP_EOL;
+            echo ' <a href="forums/subscriptions/subscribe/group/' . $group->IdGroup . '" class="button">' . $words->getSilent('ForumSubscribe') . '</a>' . $words->flushBuffer()  . PHP_EOL;
         }
         echo '</td></tr>';
     }
@@ -71,7 +72,7 @@ if (count($TResults->TData) > 0) {
                 . '" class="button">' . $words->getSilent('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
         } else {
             echo '<a href="forums/subscriptions/enable/thread/' . $data->IdThread . '/' . $data->UnSubscribeKey
-                . '" class="highlightbutton">' . $words->getSilent('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
+                . '" class="button">' . $words->getSilent('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
         }
         echo '<a href="forums/subscriptions/unsubscribe/thread/'
             . $data->IdSubscribe . '/' . $data->UnSubscribeKey . '" class="button">'
@@ -96,7 +97,7 @@ if (count($TResults->TDataTag) > 0) {
                 . ' class="button">' . $words->getSilent('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
         } else {
             echo '<a href="forums/subscriptions/enable/tag/' . $data->IdTag . '/' . $data->UnSubscribeKey . '"'
-                . ' class="highlightbutton">' . $words->getSilent('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
+                . ' class="button">' . $words->getSilent('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
         }
         echo '<a href="forums/subscriptions/unsubscribe/tag/' . $data->IdSubscribe . '/' . $data->UnSubscribeKey . '"'
             . ' class="button">' . $words->getSilent('Unsubscribe') . '</a>' . $words->flushBuffer() . PHP_EOL;

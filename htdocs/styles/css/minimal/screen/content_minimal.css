@@ -661,21 +661,6 @@ input.button, .control-links input { /* Only for inputs. Otherwise we have probl
 .button a:hover,a:hover.button,input.button:hover {background:transparent url(../images/button_bg.png) repeat-x scroll 0 0; color: #333; text-decoration:none; line-height: 21px;}
 .button a:focus,a:focus.button {background:transparent url(../images/button_bg.png) repeat-x scroll 0 0; color: #333; text-decoration:none; line-height: 21px;}
 
-.highlightbutton {
-  background: transparent url(../images/button_bg_checked.png) repeat-x scroll 0 0;
-  border-color:#a5a5a5;
-  border-style:solid;
-  border-width:1px;
-  color:white;
-  font-size:1.1em;
-  font-weight:bold;
-  height:24px !important;
-  line-height:24px !important;
-  margin:1px;
-  padding:3px 8px;
-  text-align:center;
-  width:auto;
-}
 button.button {
     font-size: 13px;
     height: 2.5em !important;

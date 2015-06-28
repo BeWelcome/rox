@@ -52,15 +52,17 @@ class AdminMassmailBasePage extends AdminBasePage
         $this->newsletterGeneral = (stripos($scope, '"general"') !== false);
         $this->loginReminder = (stripos($scope, '"remindtologin"') !== false);
         $this->suggestionsReminder = (stripos($scope, '"suggestionsreminder"') !== false);
+        $this->mailToConfirmReminder = (stripos($scope, '"mailtoconfirmreminder"') !== false);
         $this->termsOfUse = (stripos($scope, '"termsofuse"') !== false);
 
         // if no type is set assume all
         if (!($this->newsletterSpecific || $this->newsletterGeneral || $this->loginReminder ||
-              $this->suggestionsReminder || $this->termsOfUse)) {
+            $this->suggestionsReminder || $this->mailToConfirmReminder || $this->termsOfUse)) {
             $this->newsletterSpecific = true;
             $this->newsletterGeneral = true;
             $this->loginReminder = true;
             $this->suggestionsReminder = true;
+            $this->mailToConfirmReminder = true;
             $this->termsOfUse = true;
         }
         $this->enqueueGroups = array();
@@ -94,17 +96,20 @@ class AdminMassmailBasePage extends AdminBasePage
         }
         $this->canEnqueueReminder = (stripos($scope, "reminder") !== false);
         $this->canEnqueueSuggestionsReminder = (stripos($scope, "suggestionsreminder") !== false);
+        $this->canEnqueueMailToConfirmReminder = (stripos($scope, "mailtoconfirmreminder") !== false);
         $this->canEnqueueTermsOfUse = (stripos($scope, "termsofuse") !== false);
 
         // if no scope was given for enqueueing assume full scope
-        $enqueueAny = $this->canEnqueueMembers | $this->canEnqueueLocation |
-            $this->canEnqueueGroup | $this->canEnqueueReminder | $this->canEnqueueSuggestionsReminder | $this->canEnqueueTermsOfUse;
+        $enqueueAny = $this->canEnqueueMembers || $this->canEnqueueLocation || $this->canEnqueueGroup
+            || $this->canEnqueueReminder || $this->canEnqueueSuggestionsReminder
+            || $this->canEnqueueMailToConfirmReminder || $this->canEnqueueTermsOfUse;
         if ($enqueueAny == false) {
             $this->canEnqueueMembers = true;
             $this->canEnqueueLocation = true;
             $this->canEnqueueGroup = true;
             $this->canEnqueueReminder = true;
             $this->canEnqueueSuggestionsReminder = true;
+            $this->canEnqueueMailToConfirmReminder = true;
             $this->canEnqueueTermsOfUse = true;
         }
 
@@ -121,6 +126,8 @@ class AdminMassmailBasePage extends AdminBasePage
             $this->canEnqueueLocation = true;
             $this->canEnqueueGroup = true;
             $this->canEnqueueReminder = true;
+            $this->canEnqueueSuggestionsReminder = true;
+            $this->canEnqueueMailToConfirmReminder = true;
             $this->canEnqueueTermsOfUse = true;
             $this->canChangeType = true;
             $this->canTrigger = true;
@@ -128,6 +135,7 @@ class AdminMassmailBasePage extends AdminBasePage
             $this->generalNewsletter = true;
             $this->loginReminder = true;
             $this->suggestionsReminder = true;
+            $this->mailToConfirmReminder = true;
             $this->termsOfUse = true;
         }
     }

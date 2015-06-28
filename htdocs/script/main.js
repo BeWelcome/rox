@@ -108,6 +108,7 @@ bwrox.selectScripts([
             "admin/word/list/update",
             "admin/rights",
             "admin/flags",
+            "admin/subscriptions",
             "suggestions/rank",
             "activities/",
             "about/faq",
@@ -121,7 +122,8 @@ bwrox.selectScripts([
             "search",
             "signup/3",
             "admin/rights",
-             "admin/flags" /*,
+             "admin/flags",
+              "admin/subscriptions" /*,
              "blog",
              "trip",
              "admin/treasurer" */
@@ -212,7 +214,6 @@ bwrox.selectScripts([
             "groups",
             "suggestions",
             "trip",
-            "messages/",
             "invite"
         ]
     },

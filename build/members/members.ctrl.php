@@ -341,6 +341,7 @@ class MembersController extends RoxControllerBase
                             break;
                         case 'groups':
                             $my_groups = $member->getGroups();
+                            $params = new stdClass();
                             $params->strategy = new HalfPagePager('left');
                             $params->items = $my_groups;
                             $params->items_per_page = 10;
@@ -405,7 +406,7 @@ class MembersController extends RoxControllerBase
         }
         $page->loggedInMember = $this->model->getLoggedInMember();
         $page->model = $this->model;
-        if ($page->member->Status == 'PassedAway') {
+        if ($page->member && $page->member->Status == 'PassedAway') {
             $page->passedAway = true;
         } else {
             $page->passedAway = false;
@@ -511,6 +512,7 @@ class MembersController extends RoxControllerBase
             if (!$m->setPassword($vars['passwordnew'])){
                 $mem_redirect->problems = array(0 => 'ChangePasswordNotUpdated');
             }
+            $this->setFlashNotice($this->getWords()->get('PasswordSetFlashNotice'));
         }        
  
         return false;
@@ -854,6 +856,7 @@ class MembersController extends RoxControllerBase
             $subject = $this->getWords()->get("ResetPasswordSubject");
             $body = $this->getWords()->get("ResetPasswordBody", $password, $member->Username);
             $member->sendMail($subject, $body);
+            $this->setFlashNotice($this->getWords()->get('ResetPasswordFlashNotice'));
             return $this->router->url('members_reset_password_finish', array(), false);
         } else {
             $mem_redirect->errors = array('ResetPasswordNoLogin');
@@ -870,19 +873,6 @@ class MembersController extends RoxControllerBase
     public function resetPassword()
     {
         $page = new ResetPasswordPage();
-        $page->model = $this->model;
-        return $page;
-    }
-
-    /**
-     * displays the reset your password page
-     *
-     * @access public
-     * @return ResetPasswordFinishPage
-     */
-    public function resetPasswordFinish()
-    {
-        $page = new ResetPasswordFinishPage();
         $page->model = $this->model;
         return $page;
     }

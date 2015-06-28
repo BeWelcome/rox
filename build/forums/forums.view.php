@@ -288,7 +288,7 @@ class ForumsView extends RoxAppView {
      * @param bool $showGroups Set true if group name and link should be shown
      *                         in teasers
      */
-    public function showExternal($showGroups = false, $showsticky = true, $showNewTopicButton = true) {
+    public function showExternal($showGroups = false, $showsticky = true, $showNewTopicButton = true, $isGroupMember = false) {
         $boards = $this->_model->getBoard($showsticky);
         $request = PRequest::get()->request;
         require 'templates/external.php';
@@ -324,7 +324,7 @@ class ForumsView extends RoxAppView {
     /* This adds custom styles to the page*/
     public function customStyles() {
         $out = '';
-        $out .= '<link rel="stylesheet" href="styles/css/minimal/screen/custom/forums.css?8" type="text/css"/>';
+        $out .= '<link rel="stylesheet" href="styles/css/minimal/screen/custom/forums.css?10" type="text/css"/>';
         return $out;
     }
 
@@ -440,34 +440,32 @@ class ForumsView extends RoxAppView {
     } // end of showTopLevelCategories
 
     /**
-     * @param bool $result The set of results to be shown
+     * @param string $keyword The term to be searched for
      */
     public function showSearchResultPage($keyword) {
-        $this->_model->searchForums($keyword);
-        $boards = $this->_model->getBoard();
-        $request = PRequest::get()->request;
-        $uri = implode('/', $request);
-        $uri = rtrim($uri, '/').'/';
-        $this->SetPageTitle($boards->getBoardName().' - BeWelcome '.$this->words->getBuffered('Forum'));
+        $result = $this->_model->searchForums($keyword);
+        if (isset($result['errors'])) {
+            require 'templates/searcherror.php';
+        } else {
+            $boards = $this->_model->getBoard();
+            $request = PRequest::get()->request;
+            $uri = implode('/', $request);
+            $uri = rtrim($uri, '/') . '/';
+            $this->SetPageTitle($boards->getBoardName() . ' - BeWelcome ' . $this->words->getBuffered('Forum'));
 
-        if ($boards->IdGroup != 0) {
-            $memberIsGroupMember = $this->_model->checkGroupMembership($boards->IdGroup);
-            if (!$memberIsGroupMember) {
-                $noForumNewTopicButton = true;
-            }
-        }
-        if ($boards->IdGroup == SuggestionsModel::getGroupId()) {
             $noForumNewTopicButton = true;
-        }
-        $pages = $this->getBoardPageLinks();
-        $currentPage = $this->_model->getPage();
-        $max = $this->_model->getBoard()->getNumberOfThreads();
-        $maxPage = ceil($max / $this->_model->THREADS_PER_PAGE);
 
-        require 'templates/board.php';
+            $pages = $this->getBoardPageLinks();
+            $currentPage = $this->_model->getPage();
+            $max = $this->_model->getBoard()->getNumberOfThreads();
+            $maxPage = ceil($max / $this->_model->THREADS_PER_PAGE);
+
+            require 'templates/board.php';
+        }
     }
 
     public function displaySearchResultSubscriptions($TResults) {
+        $member = $this->_model->getLoggedInMember();
         require 'templates/searchresultsubscriptions.php';
     }
     public function displaySearchResultPosts($posts) {
@@ -612,17 +610,6 @@ class ForumsView extends RoxAppView {
 
     private function getLocationDropdown($country, $areacode, $preselect = false) {
         $locations = $this->_model->getAllLocations($country, $areacode);
-        $out = '<select name="d_geoname" id="d_geoname" onchange="javascript: updateGeonames();">
-            <option value="">' . $this->words->getFormatted("SelectNone") . '</option>';
-        foreach ($locations as $code => $location) {
-            $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$location.'</option>';
-        }
-        $out .= '</select>';
-        return $out;
-    }
-
-    private function getCategoriesDropdown($category, $preselect = false) {
-        $tags = $this->_model->getTopCategoryLevelTags();
         $out = '<select name="d_geoname" id="d_geoname" onchange="javascript: updateGeonames();">
             <option value="">' . $this->words->getFormatted("SelectNone") . '</option>';
         foreach ($locations as $code => $location) {

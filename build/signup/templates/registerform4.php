@@ -137,6 +137,30 @@ Boston, MA  02111-1307, USA.
         } 
         ?>
         <!-- signup-row -->
+      <!-- Accommodation -->
+      <div class="signup-row-thin">
+          <label for="accommodation"><?php echo $words->get('Accommodation'); ?>*</label>
+          <input class="radio" type="radio" id="accommodation" name="accommodation" value="anytime"<?php
+          if (isset($vars['accommodation']) && $vars['accommodation'] == 'anytime') {
+              echo ' checked="checked"';
+          }
+          ?> /><?php echo $words->get('Accomodation_anytime'); ?>&nbsp;
+          <input class="radio" type="radio" id="accommodation" name="accommodation" value="dependonrequest"<?php
+          if (isset($vars['accommodation']) && $vars['accommodation'] == 'dependonrequest') {
+              echo ' checked="checked"';
+          }
+          ?> /><?php echo $words->get('Accomodation_dependonrequest'); ?>&nbsp;
+          <input class="radio" type="radio" id="accommodation" name="accommodation" value="neverask"<?php
+          if (isset($vars['accommodation']) && $vars['accommodation'] == 'neverask') {
+              echo ' checked="checked"';
+          }
+          ?> /><?php echo $words->get('Accomodation_neverask'); ?>&nbsp;
+          <?php if (in_array('SignupErrorProvideAccommodation', $vars['errors'])) {
+              echo '<div class="error">'.$words->get('SignupErrorProvideAccommodation').'</div>';
+          }
+          ?>
+      </div>
+
   </fieldset>
 
   <!-- Personal Information -->
@@ -151,9 +175,8 @@ Boston, MA  02111-1307, USA.
           <input type="text" id="sweet" name="sweet" value="" title="Leave free of content"/>
       </div>
        <?php endif;
-
 if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
-      echo '<div class="error">'.$words->get('SignupErrorFullNameRequired').'</div>';
+      echo '<div class="signup-row-thin"><div class="error">'.$words->get('SignupErrorFullNameRequired').'</div></div>';
 ?>
     <!-- First Name -->
         <div class="signup-row-thin">
@@ -203,7 +226,6 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
 <?php }
       $disable = true;
         if (in_array('SignupErrorNoMotherTongue', $vars['errors'])) {
-            echo '<div class="error">' . $words->get('SignupErrorNoMotherTongue') . '</div>';
             $disable = false;
         }
       ?>
@@ -221,6 +243,9 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
                 <?= $this->getAllLanguages(false, $vars['mothertongue']); ?>
             </optgroup>
         </select>
+        <?php if (in_array('SignupErrorNoMotherTongue', $vars['errors'])) {
+            echo '<p></p><div class="error">' . $words->get('SignupErrorNoMotherTongue') . '</div>';
+        } ?>
     </div> <!-- signup-row -->
 
     <!-- Birthdate -->
@@ -252,7 +277,7 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
             }
             ?>><?php echo $i; ?></option>
             <?php } ?>
-            </select>
+            </select><p></p>
             <?php
         } else {
         ?>
@@ -330,7 +355,7 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
 <?php if (in_array('SignupErrorProvideLocation', $vars['errors'])) { ?>
             <a href="signup/3" class="button" title="<?php echo $words->get('label_setlocation'); ?>" ><span><?php echo $words->get('label_setlocation'); ?></span></a>
 <br />
-            <div class="error"><?=$words->get('SignupErrorProvideLocation')?></div>
+            <p></p><div class="error"><?=$words->get('SignupErrorProvideLocation')?></div>
 <?php } else { ?>
           <input type="hidden" id="geonameid" name="geonameid" <?php
             echo isset($vars['geonameid']) ? 'value="'.htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8').'" ' : '';
@@ -379,7 +404,7 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
   <?php
     if (in_array('SignupMustacceptTerms', $vars['errors'])) {
         // SignupMustacceptTerms contains unknown placeholder
-        echo '<div class="error">'.$words->get('SignupTermsAndConditions').'</div>';
+        echo '<div class="flash notice">'.$words->get('SignupTermsAndConditions').'</div>';
     }
     ?>
   <p class="checkbox"><input type="checkbox" name="terms"

@@ -216,7 +216,7 @@ class GroupsModel extends  RoxModelBase
     public function countMyGroups()
     {
         $membership = $this->createEntity('GroupMembership');
-        return $membership->countWhere("IdMember = {$this->getLoggedInMember()->getPKValue()} AND Status = 'In'");
+        return $membership->countWhere("(IdMember = {$this->getLoggedInMember()->getPKValue()} OR IdMember = -{$this->getLoggedInMember()->getPKValue()}) AND Status = 'In'");
     }
 
     /**

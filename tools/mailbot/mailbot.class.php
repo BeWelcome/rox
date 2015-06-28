@@ -228,7 +228,7 @@ class MassMailbot extends Mailbot
         return $this->queryDB($str);
     }
 
-    private function _getBroadCastElement($wordCode, $languageId, $username = false, $email = false)
+    private function _getBroadCastElement($wordCode, $languageId, $username = false, $email = false, $link = false)
     {
         $sentence = "";
         $str = "select SQL_CACHE Sentence,donottranslate from words where code='$wordCode' and IdLanguage='" . $languageId . "'";
@@ -261,6 +261,10 @@ class MassMailbot extends Mailbot
             $sentence = str_replace('%Emailaddress%', $email, $sentence);
             $sentence = str_replace('%EmailAddress%', $email, $sentence);
         }
+        if ($link) {
+            $sentence = str_replace('%link%', $link, $sentence);
+            $sentence = str_replace('%Link%', $link, $sentence);
+        }
         return $sentence;
     }
 
@@ -277,13 +281,31 @@ class MassMailbot extends Mailbot
             $email = $this->getEmailAddress($receiver);
             $language = $receiver->getLanguagePreferenceId();
 
+            $link = false;
+            if ($msg->broadcast_type == 'MailToConfirmReminder') {
+                $userId = APP_User::userId($receiver->Username);
+                if( !$userId)
+                    continue;
+                $keyDB = APP_User::getSetting($userId, 'regkey');
+                if( !$keyDB)
+                    continue;
+                $link = $this->baseuri . 'signup/confirm/' . $receiver->Username . '/' . $keyDB->value;
+            }
+
             $subj = $this->_getBroadCastElement("BroadCast_Title_".$msg->word, $language, $msg->Username);
-            $text = $this->_getBroadCastElement("BroadCast_Body_".$msg->word, $language, $msg->Username);
+            $text = $this->_getBroadCastElement("BroadCast_Body_".$msg->word, $language, $msg->Username, $email, $link);
 
             if (empty($msg->EmailFrom)) {
-                $sender_mail="newsletter@bewelcome.org" ;
-                if ($msg->broadcast_type=="RemindToLog") {
-                    $sender_mail="reminder@bewelcome.org" ;
+                switch($msg->broadcast_type) {
+                    case "RemindToLog":
+                    case "MailToConfirmReminder":
+                        $sender_mail = "reminder@bewelcome.org";
+                        break;
+                    case "SuggestionReminder":
+                        $sender_mail="suggestions@bewelcome.org" ;
+                        break;
+                    default:
+                        $sender_mail="newsletter@bewelcome.org" ;
                 }
             } else {
                 $sender_mail=$msg->EmailFrom ;
@@ -295,7 +317,7 @@ class MassMailbot extends Mailbot
             if (!$this->sendEmail($subj, $sender_mail, $email, $subj, $text, $language, $memberPrefersHtml)) {
                 $this->_updateMessageStatus($msg->IdBroadcast, 'Failed', $msg->IdReceiver);
                 $this->log("Cannot send broadcastmessages.id=#" . $msg->IdBroadcast . " to <b>".$msg->Username."</b>
-                \$Email=[".$email."] Type=[".$msg->broadcast_type."]", "mailbot");
+                \$Email=[".$email."] Type=[".$msg->broadcast_type."]");
             } else {
                 if ($msg->broadcast_type == "RemindToLog") {
                     $this->queryDB("update members set NbRemindWithoutLogingIn=NbRemindWithoutLogingIn+1 where members.id=".$msg->IdReceiver);
@@ -403,13 +425,23 @@ class ForumNotificationMailbot extends Mailbot
      *
      * @param object $notification     the notification object returned by the SQL query
      * @param string $MemberIdLanguage the language code to use
+     * @param integer $post            The associated post
      *
      * @return string the url to unsubscribe
      */
-    private function _buildUnsubscribeLink($notification, $MemberIdLanguage)
+    private function _buildUnsubscribeLink($notification, $MemberIdLanguage, $post)
     {
-        $link="" ;
-        if ($notification->IdSubscription!=0) { // Compute the unsubscribe link according to the table where the subscription was coming from
+        $link="-- \n<br/><br/>" ;
+        if ($notification->TableSubscription == 'membersgroups') {
+            // Prefer group subscriptions over tags or threads
+            $link = ""
+                . $this->words->getFormattedInLang('ForumUnSubscribeGroup', $MemberIdLanguage) . '<br />'
+                . '<a href="' .$this->baseuri.'forums/subscriptions/disable/thread/' . $post->IdThread . '">' . $this->words->getFormattedInLang('MailbotDisableThread', $MemberIdLanguage) . '</a><br />'
+                . '<a href="' .$this->baseuri.'forums/subscriptions/disable/group/' . $post->groupId . '">' . $this->words->getFormattedInLang('MailbotDisableGroup', $MemberIdLanguage) . '</a><br />'
+                . '<a href="' .$this->baseuri.'forums/subscriptions/unsubscribe/group/' . $post->groupId . '">' . $this->words->getFormattedInLang('MailbotUnsubscribeGroup', $MemberIdLanguage) . '</a>'
+            ;
+        } elseif ($notification->IdSubscription!=0) {
+            // Compute the unsubscribe link according to the table where the subscription was coming from
             $rSubscription = $this->getSingleRow(
                 "SELECT
                   *
@@ -419,10 +451,13 @@ class ForumNotificationMailbot extends Mailbot
                   id = $notification->IdSubscription"
             );
             if ($notification->TableSubscription == "members_threads_subscribed") {
-                $link = '<a href="'.$this->baseuri.'forums/subscriptions/unsubscribe/thread/'.$rSubscription->id.'/'.$rSubscription->UnSubscribeKey.'">'.$this->words->getFormattedInLang('ForumUnSubscribe', $MemberIdLanguage).'</a>';
+                $link = '<a href="'.$this->baseuri.'forums/subscriptions/unsubscribe/thread/'.$rSubscription->id.'/'.$rSubscription->UnSubscribeKey.'">'.$this->words->getFormattedInLang('MailbotUnsubscribeThread', $MemberIdLanguage).'</a><br>';
+                $link .= '<a href="' .$this->baseuri.'forums/subscriptions/disable/thread/' . $rSubscription->IdThread .'">'.$this->words->getFormattedInLang('MailbotDisableThread', $MemberIdLanguage).'</a>';
             }
-        } elseif ($notification->TableSubscription == 'membersgroups') {
-            $link = "----<br/><br/>\n\n" . $this->words->getFormattedInLang('ForumUnSubscribeGroup', $MemberIdLanguage);
+            if ($notification->TableSubscription == "members_tags_subscribed") {
+                $link = '<a href="'.$this->baseuri.'forums/subscriptions/unsubscribe/tag/'.$rSubscription->id.'/'.$rSubscription->UnSubscribeKey.'">'.$this->words->getFormattedInLang('MailbotUnsubscribeTag', $MemberIdLanguage).'</a><br>';
+                $link .= '<a href="' .$this->baseuri.'forums/subscriptions/disable/tag/' . $rSubscription->IdTag .'">'.$this->words->getFormattedInLang('MailbotDisableTag', $MemberIdLanguage).'</a>';
+            }
         }
         return $link;
     }
@@ -462,9 +497,9 @@ class ForumNotificationMailbot extends Mailbot
     private function _buildMessage($notification, $post, $author, $language)
     {
         $msg = array();
+        $NotificationType = '';
         switch ($notification->Type) {
         case 'newthread':
-            $NotificationType = '';
             break ;
         case 'reply':
             $NotificationType = 'Re: ';
@@ -492,7 +527,7 @@ class ForumNotificationMailbot extends Mailbot
         $text.='<tr><td align="left">from: <a href="'.$this->baseuri.'members/'.$author->Username.'">'.$author->Username.'</a> ('.$author->City.', '.$author->Country.')</td></tr>' ;
         $text.='<tr><td>'.$post->message.'</td></tr>';
 
-        $UnsubscribeLink = $this->_buildUnsubscribeLink($notification, $language);
+        $UnsubscribeLink = $this->_buildUnsubscribeLink($notification, $language, $post);
         if ($UnsubscribeLink!="") {
             $text .= '<tr><td>'.$UnsubscribeLink.'</td></tr>';
         } else {
@@ -513,7 +548,7 @@ class ForumNotificationMailbot extends Mailbot
      */
     public function run()
     {
-        $grace_period = 0; // minutes, don't email notifications until after grace period to allow author to edit post
+        $grace_period = 5; // minutes, don't email notifications until after grace period to allow author to edit post
         $qry = $this->_getNotificationList($grace_period);
         while ($notification = $qry->fetch(PDB::FETCH_OBJ)) {
 
@@ -552,7 +587,7 @@ class ForumNotificationMailbot extends Mailbot
                 $memberPrefersHtml)) {
                 $this->_updateNotificationStatus($notification->id, 'Failed');
                 $this->log("Could not send posts_notificationqueue=#" . $notification->id . " to <b>".$post->Username
-                    ."</b> \$Email=[" . $to . "]", "mailbot");
+                    ."</b> \$Email=[" . $to . "]");
             } else {
                 $this->_updateNotificationStatus($notification->id, 'Sent');
             }
@@ -675,7 +710,7 @@ class MemberToMemberMailbot extends Mailbot
 
                 $this->_updateMessageStatus($msg->id, 'Freeze');
                 $this->log("Message ".$msg->id." from ". $this->Sender->Username." is rejected ("
-                    .$this->Sender->Status.")", "mailbot");
+                    .$this->Sender->Status.")");
             } else {
                 $from = array($this->_calculateReplyAddress() => '"BW ' . $msg->senderUsername . '"' );
                 $to = $this->getEmailAddress($this->Receiver);
@@ -696,7 +731,7 @@ class MemberToMemberMailbot extends Mailbot
                 // send email and update DB according to result
                 if (!$this->sendEmail($subject, $from, $to, $title, $body, $MemberIdLanguage, $memberPrefersHtml)) {
                     $this->_updateMessageStatus($msg->id, 'Failed');
-                    $this->log("Cannot send messages.id=#" . $msg->id . " to <b>".$this->Receiver->Username."</b> \$Email=[".$to."]", "mailbot");
+                    $this->log("Cannot send messages.id=#" . $msg->id . " to <b>".$this->Receiver->Username."</b> \$Email=[".$to."]");
                 } else {
                     $this->_updateMessageStatus($msg->id, 'Sent');
                 }

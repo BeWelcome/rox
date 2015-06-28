@@ -50,7 +50,7 @@ class SignupView extends PAppView
      * @param void
      */
     public function customStylesSignup()    {
-        echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/signup.css?3\" type=\"text/css\"/>";
+        echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/signup.css?4\" type=\"text/css\"/>";
     }
 
     /**

@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-class OnlineModel extends PAppModel {
+class OnlineModel extends RoxModelBase {
     public function __construct() {
         parent::__construct();
     }

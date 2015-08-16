@@ -33,6 +33,14 @@ Download
      pushing code.
 
 
+(Note now is a good time to switch to the branch you are interested in running,
+ so in the next steps you get the right dependencies and migrations in already.
+ For example change to development branch:
+
+    $ git checkout origin develop
+)
+
+
 Create files and set permissions
 --------------------------------
 
@@ -125,6 +133,12 @@ Database installation
 
       This will take a while as files are relatively large.
 
+(Some mysql implementations will perform especially bad here or might even
+ timeout and crash if you have multiple innodb_adaptive_hash_index_partitions
+ and multiple innodb_buffer_pool_instances. On the other hand making your
+ innodb_buffer_pool_size relatively big helps.)
+        
+
   7. Remove dumps and other files:
 
       $ rm bewelcome.sql languages.sql words.sql allCountries.txt alternateNames.txt iso-languagecodes.txt allCountries.zip alternateNames.zip countryInfo.txt
@@ -135,9 +149,7 @@ Database installation
 
         vendor/bin/phinx migrate -c phinx.php
 
-    (Note this is most useful if you switch to the development branch beforehand
 
-       git checkout origin develop)
 
 Configure Apache
 ----------------

@@ -40,7 +40,12 @@ class RoxMigration extends AbstractMigration
             throw new \Exception("AddWordCode: Priority has to be numeric");
         }
 
-        $query = "REPLACE INTO
+        if ($add) {
+            $query = "INSERT";
+        } else {
+            $query = "REPLACE";
+        }
+        $query .= " INTO
                 words
             SET
                 code = " . $code . ",
@@ -61,7 +66,14 @@ class RoxMigration extends AbstractMigration
         if ($majorUpdate) {
             $query .= ", majorupdate = NOW()";
         }
-        $this->execute($query);
+        try {
+            $this->execute($query);
+        }
+        catch(\Exception $e) {
+            echo "Couldn't add/update wordcode " . $code . PHP_EOL;
+            echo $e->getMessage() . PHP_EOL;
+            echo PHP_EOL;
+        }
     }
 
     /*****

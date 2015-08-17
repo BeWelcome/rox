@@ -40,12 +40,7 @@ class RoxMigration extends AbstractMigration
             throw new \Exception("AddWordCode: Priority has to be numeric");
         }
 
-        if ($add) {
-            $query = "INSERT ";
-        } else {
-            $query = "REPLACE ";
-        }
-        $query .= "INTO
+        $query = "REPLACE INTO
                 words
             SET
                 code = " . $code . ",

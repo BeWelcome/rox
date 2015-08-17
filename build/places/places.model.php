@@ -454,7 +454,9 @@ class Places extends RoxModelBase {
             return false;
         }
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-            $regions[$row->admin1]['number'] = $row->number;
+            if (array_key_exists($row->admin1, $regions)){
+                $regions[$row->admin1]['number'] = $row->number;
+            }
         }
         
         // remove regions without members

@@ -17,7 +17,7 @@ class LoginMessagesTables extends Rox\Tools\RoxMigration
         $loginMessages = $this->table('login_messages');
         $loginMessages
             ->addColumn('text', 'string')
-            ->addColumn('created', 'datetime', array('default' => 'CURRENT_TIMESTAMP'))
+            ->addColumn('created', 'datetime')
             ->create();
         $loginMessagesAcknowledged = $this->table('login_messages_acknowledged',
             array('id' => false, 'primary_key' => array('messageId', 'memberId')));

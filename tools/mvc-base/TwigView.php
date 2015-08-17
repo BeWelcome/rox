@@ -13,11 +13,9 @@ class TwigView extends AbstractBasePage {
     protected $_translator;
     private $_stylesheets = array(
         'bewelcome.css?1',
-/*
-                 'minimal/screen/custom/index.css?3',
+//                 'minimal/screen/custom/index.css?3',
                 'minimal/screen/custom/font-awesome.min.css',
-                'minimal/screen/custom/font-awesome-ie7.min.css'
-                */
+                'minimal/screen/custom/font-awesome-ie7.min.css',
         'select2.css',
         'select2-bootstrap.css',
 
@@ -35,11 +33,12 @@ class TwigView extends AbstractBasePage {
     public function __construct($logged_in = false) {
         $this->_loader = new Twig_Loader_Filesystem();
         $this->_loader->addPath(SCRIPT_BASE . 'templates/twig/base', 'base');
+        $this->_loader->addPath(SCRIPT_BASE . 'templates/twig/start', 'start');
         $this->_environment = new Twig_Environment(
             $this->_loader ,
             array(
-                'cache' => SCRIPT_BASE . 'data/twig',
-                'auto_reload' => true,
+                // 'cache' => SCRIPT_BASE . 'data/twig',
+                // 'auto_reload' => true,
             )
         );
         $this->_defaults = $this->_getDefaults(new RoxModelBase());
@@ -60,6 +59,7 @@ class TwigView extends AbstractBasePage {
         $loggedIn = ($member !== false);
         return array(
             'logged_in' => $loggedIn,
+            'messages' => 123,
             'meta.robots' => 'ALL'
         );
     }

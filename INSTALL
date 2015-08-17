@@ -98,7 +98,7 @@ Database installation
 
   3. Uncompress dumps:
 
-      $ gunzip bewelcome.sql.gz
+      $ bunzip2 bewelcome.sql.bz2
       $ bunzip2 languages.sql.bz2 words.sql.bz2
 
   4. Import dumps into database (first line needs root because of routines):

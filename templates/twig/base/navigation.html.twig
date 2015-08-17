@@ -10,7 +10,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="main"><img src="images/logo_index_top.png"
+            <a class="navbar-brand" href="main"><img src="/images/logo_index_top.png"
                                                      alt="{{ 'BeWelcome' | trans }}"/></a>
         </div>
 
@@ -53,35 +53,26 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                {% if logged_in %}
-                    <li>
-                        <a style="font-weight: normal" href="main">{{ username }}</a>
-                    </li>
-                    <li>
-                        <a href="/messages"><i class="fa  fa-lg fa-inbox" style="vertical-align: middle;"></i> <span
-                                    style="font-weight: normal">[{{ messages }}]</span></a>
-                    </li>
-                    <li class="dropdown"><a href="/logout" class="dropdown-toggle" data-toggle="dropdown">&nbsp;<i
-                                    class="fa fa-lg fa-gear" style="vertical-align: middle"></i> <span
-                                    class="caret"></span></a>
-                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                            <li><a href="members/{{ username }}">{{ Profile | trans }}</a></li>
-                            <li><a href="editmyprofile">EditMyProfile</a></li>
-                            <li><a href="mypreferences">MyPreferences</a></li>
-                            <li><a href="messages">MyMessages</a></li>
-                            <li><a href="mynotes">ProfileMyNotes</a></li>
-                            <li><a href="groups/mygroups">MyGroups</a></li>
-                            <li><a href="logout">Logout</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="login#login-widget" id="header-login-link"><i class="fa fa-power-off"></i> Login</a>
-                    </li>
-                    <li><a href="signup">Signup</a></li>
-                {% else %}
-                    <li><a href="login#login-widget" id="header-login-link"><i class="fa fa-power-off"></i> Login</a>
-                    </li>
-                    <li><a href="signup">Signup</a></li>
-                {% endif %}
+                <li>
+                    <a style="font-weight: normal" href="main">{{ username }}</a>
+                </li>
+                <li>
+                    <a href="/messages"><i class="fa  fa-lg fa-inbox" style="vertical-align: middle;"></i> <span
+                                style="font-weight: normal">[{{ messages }}]</span></a>
+                </li>
+                <li class="dropdown"><a href="/logout" class="dropdown-toggle" data-toggle="dropdown">&nbsp;<i
+                                class="fa fa-lg fa-gear" style="vertical-align: middle"></i> <span
+                                class="caret"></span></a>
+                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                        <li><a href="members/{{ username }}">{{ Profile | trans }}</a></li>
+                        <li><a href="editmyprofile">EditMyProfile</a></li>
+                        <li><a href="mypreferences">MyPreferences</a></li>
+                        <li><a href="messages">MyMessages</a></li>
+                        <li><a href="mynotes">ProfileMyNotes</a></li>
+                        <li><a href="groups/mygroups">MyGroups</a></li>
+                        <li><a href="logout">Logout</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->

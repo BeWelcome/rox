@@ -319,3 +319,5 @@
 
     // Data retention (#1885)
     $this->addRoute('dataretention', 'members/dataretention', 'MembersController', 'dataRetention');
+
+$this->addRoute('m_dashboard', 'mockups/dashboard', 'MockupsController', 'dashboard');

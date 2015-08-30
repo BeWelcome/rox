@@ -474,10 +474,10 @@ WHERE
 
 
     // checkCommentForm - NOT FINISHED YET !
-    public function checkCommentForm(&$vars)
+    public function checkCommentForm(&$vars, $random)
     {
         $errors = array();
-
+        $member = $this->getLoggedInMember();
         $syshcvol = PVars::getObj('syshcvol');
         $max = count($syshcvol->LenghtComments);
         $tt = $syshcvol->LenghtComments;
@@ -486,6 +486,51 @@ WHERE
             if (isset($vars[$chkName])) {
                 $one_selected = true;
             }
+        }
+        switch($random) {
+            case 1:
+                // Check number of comments written in the last two minutes
+                $query = "
+                    SELECT
+                        COUNT(*) as cnt
+                    FROM
+                        comments C
+                    WHERE
+                        c.IdFromMember = " . $member->id . "
+                        AND TIMEDIFF(NOW(), created) < '00:02:00'
+                    ";
+                $s = $this->dao->query($query);
+                $row = $s->fetch(PDB::FETCH_OBJ);
+                $count = $row->cnt;
+                if ($count > 0) {
+                    $errors[] = 'CommentSomethingWentWrong';
+                }
+                break;
+            case 2:
+                if (!isset($vars['sweet'])) {
+                    $errors[] = 'CommentSomethingWentWrong';
+                } elseif ($vars['sweet'] != '') {
+                    $errors[] = 'CommentSomethingWentWrong';
+                }
+                break;
+            case 3:
+                // Check number of comments written in the last two minutes
+                $query = "
+                    SELECT
+                        COUNT(*) as cnt
+                    FROM
+                        comments C
+                    WHERE
+                        c.IdFromMember = " . $member->id . "
+                        AND TIMEDIFF(NOW(), created) < '00:10:00'
+                    ";
+                $s = $this->dao->query($query);
+                $row = $s->fetch(PDB::FETCH_OBJ);
+                $count = $row->cnt;
+                if ($count > 5) {
+                    $errors[] = 'CommentSomethingWentWrong';
+                }
+                break;
         }
         if ($vars['Quality'] == "") {
             $errors[] = 'Comment_MustSelectQuality';

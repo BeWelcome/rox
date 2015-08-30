@@ -88,6 +88,7 @@ class MembersController extends RoxControllerBase
                             break;
                         case 'groups':
                             $my_groups = $member->getGroups();
+                            $params = new StdClass;
                             $params->strategy = new HalfPagePager('left');
                             $params->items = $my_groups;
                             $params->items_per_page = 10;
@@ -518,6 +519,21 @@ class MembersController extends RoxControllerBase
         return false;
     }
 
+    public function commentCallback1($args, $action, $mem_redirect, $mem_resend)
+    {
+        return $this->commentCallback($args, $action, $mem_redirect, $mem_resend, 1);
+    }
+
+    public function commentCallback2($args, $action, $mem_redirect, $mem_resend)
+    {
+        return $this->commentCallback($args, $action, $mem_redirect, $mem_resend, 2);
+    }
+
+    public function commentCallback3($args, $action, $mem_redirect, $mem_resend)
+    {
+        return $this->commentCallback($args, $action, $mem_redirect, $mem_resend, 3);
+    }
+
     /**
      * commentCallback
      *
@@ -527,11 +543,11 @@ class MembersController extends RoxControllerBase
      * @param Object $mem_resend memory for resending the form
      * @return string relative request for redirect
      */
-    public function commentCallback($args, $action, $mem_redirect, $mem_resend)
+    public function commentCallback($args, $action, $mem_redirect, $mem_resend, $random)
     {
         $vars = $args->post;
         $request = $args->request;
-        $errors = $this->model->checkCommentForm($vars); // TODO: checkCommentForm still needs more finetuning
+        $errors = $this->model->checkCommentForm($vars, $random); // TODO: checkCommentForm still needs more finetuning
 
         if (count($errors) > 0) {
             // show form again

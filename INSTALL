@@ -1,25 +1,30 @@
 INSTALLATION (GNU/Linux)
 ========================
 
-Follow these steps to install BW-Rox. Please note that there is a developer
-Virtualbox image available at http://bewelcome.penpal4u.net/ which could save
-you some work.
+Follow these steps to install BW-Rox.
 
 These steps have been tested on Debian/Ubuntu based systems. Commands,
 usernames and locations might differ on your distribution.
 
+Windows users may use XAMPP and execute most of the commands in the git bash.
+Commands for mysql need to be run in the XAMPP shell. Instead of wget either download
+using a browser or use curl <wget url> > filename.
 
 Requirements
 ------------
 
   * Apache with mod_rewrite enabled
-  * PHP version >= 5.1
+  * PHP version >= 5.4
   * PHP GD lib enabled
   * PHP short opening tags enabled
   * PHP magic quotes gpc disabled
   * MySQL server >= 5.1
   * SMTP server for email features
-
+  * Composer (getcomposer.org)
+  * Node.js (https://nodejs.org/)
+  * Grunt (http://gruntjs.com/)
+  * Sphinxsearch (http://sphinxsearch.com/)
+  * wget (if you want to follow the instructions word to word)
 
 Download
 --------
@@ -72,13 +77,6 @@ Create files and set permissions
           build/alias.cache.ini \
           htdocs/exception.log
 
-  5. Get composer (getcomposer.org) if you don't have it already.
-
-  Install the rox dependencies for
-
-  php composer.phar install
-
-
 Database installation
 ---------------------
 
@@ -92,9 +90,7 @@ Database installation
 
   2. Download development database dumps:
 
-      $ wget http://downloads.bewelcome.org/for_developers/rox_test_db/bewelcome.sql.gz
-      $ wget http://downloads.bewelcome.org/for_developers/rox_test_db/languages.sql.bz2
-      $ wget http://downloads.bewelcome.org/for_developers/rox_test_db/words.sql.bz2
+      $ wget http://downloads.bewelcome.org/for_developers/rox_test_db/bewelcome.sql.bz2
 
   3. Uncompress dumps:
 
@@ -104,10 +100,8 @@ Database installation
   4. Import dumps into database (first line needs root because of routines):
 
       $ mysql bewelcome -u root -p < bewelcome.sql
-      $ mysql bewelcome -u bewelcome -pbewelcome < languages.sql
-      $ mysql bewelcome -u bewelcome -pbewelcome < words.sql
 
-  5. Get geonames database tables and uncompress files:
+  5. Get geonames database tables, uncompress files and import into DB (can be skipped):
   
       Change to your BW-Rox directory and download the geonames tables
 
@@ -119,25 +113,45 @@ Database installation
 
       unzip alternateNames.zip
 
-  6. Import into the database:
+      Import into the database (skip if you skip :
   
       $ mysql --local-infile bewelcome -u bewelcome -pbewelcome < import.sql
 
       This will take a while as files are relatively large.
 
-  7. Remove dumps and other files:
+      Cleanup afterwards
 
-      $ rm bewelcome.sql languages.sql words.sql allCountries.txt alternateNames.txt iso-languagecodes.txt allCountries.zip alternateNames.zip countryInfo.txt
+      $ rm allCountries.txt alternateNames.txt iso-languagecodes.txt allCountries.zip alternateNames.zip countryInfo.txt
 
-  8. Migrate the DB to the latest version
+  8. Install the rox dependencies
+
+      $ php composer.phar install
+
+      $ npm install
+
+  9. Migrate the DB to the latest version
+
+      git checkout develop
   
-    Run the phinx migration
-
-        vendor/bin/phinx migrate -c phinx.php
+      vendor/bin/phinx migrate -c phinx.php
 
     (Note this is most useful if you switch to the development branch beforehand
 
        git checkout origin develop)
+
+  10. Update words table to match the current translation on the site
+
+       $ wget http://downloads.bewelcome.org/for_developers/rox_test_db/languages.sql.bz2
+       $ wget http://downloads.bewelcome.org/for_developers/rox_test_db/words.sql.bz2
+       $ mysql bewelcome -u bewelcome -pbewelcome < languages.sql
+       $ mysql bewelcome -u bewelcome -pbewelcome < words.sql
+
+  11. Remove dumps and other files:
+
+       $ rm bewelcome.sql.bz2 bewelcome.sql languages.sql.bz2 languages.sql words.sql.bz2 words.sql
+
+  12. Configure Sphinxsearch
+
 
 Configure Apache
 ----------------
@@ -145,6 +159,10 @@ Configure Apache
   1. Create a new virtual host file:
 
       $ sudo touch /etc/apache2/sites-available/bewelcome
+
+    1a. Create self-signed certificate
+
+    openssl req -nodes -x509 -newkey rsa:2048 -keyout key.pem -out cert.crt -subj '//CN=bewelcome' -days 2000
 
   2. Edit virtual host file, add basic settings and rewrites:
 
@@ -191,7 +209,9 @@ Configure BW-Rox
 
       $ cp rox_local.example.ini rox_local.ini
 
-  3. Edit rox_local.ini and modify at least these sections to your needs:
+  3. (You only need to edit the rox_local.ini if you didn't follow the instructions above)
+
+     Modify at least these sections to your needs:
 
        [db]
        [env]

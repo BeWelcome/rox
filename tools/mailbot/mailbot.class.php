@@ -431,14 +431,15 @@ class ForumNotificationMailbot extends Mailbot
      */
     private function _buildUnsubscribeLink($notification, $MemberIdLanguage, $post)
     {
-        $link="-- \n<br/><br/>" ;
+        $link = '<hr><span class="unsubscribe">' ;
         if ($notification->TableSubscription == 'membersgroups') {
             // Prefer group subscriptions over tags or threads
-            $link = ""
+            $link .= ''
                 . $this->words->getFormattedInLang('ForumUnSubscribeGroup', $MemberIdLanguage) . '<br />'
                 . '<a href="' .$this->baseuri.'forums/subscriptions/disable/thread/' . $post->IdThread . '">' . $this->words->getFormattedInLang('MailbotDisableThread', $MemberIdLanguage) . '</a><br />'
                 . '<a href="' .$this->baseuri.'forums/subscriptions/disable/group/' . $post->groupId . '">' . $this->words->getFormattedInLang('MailbotDisableGroup', $MemberIdLanguage) . '</a><br />'
                 . '<a href="' .$this->baseuri.'forums/subscriptions/unsubscribe/group/' . $post->groupId . '">' . $this->words->getFormattedInLang('MailbotUnsubscribeGroup', $MemberIdLanguage) . '</a>'
+                . '</span>';
             ;
         } elseif ($notification->IdSubscription!=0) {
             // Compute the unsubscribe link according to the table where the subscription was coming from
@@ -451,14 +452,15 @@ class ForumNotificationMailbot extends Mailbot
                   id = $notification->IdSubscription"
             );
             if ($notification->TableSubscription == "members_threads_subscribed") {
-                $link = '<a href="'.$this->baseuri.'forums/subscriptions/unsubscribe/thread/'.$rSubscription->id.'/'.$rSubscription->UnSubscribeKey.'">'.$this->words->getFormattedInLang('MailbotUnsubscribeThread', $MemberIdLanguage).'</a><br>';
+                $link .= '<a href="'.$this->baseuri.'forums/subscriptions/unsubscribe/thread/'.$rSubscription->id.'/'.$rSubscription->UnSubscribeKey.'">'.$this->words->getFormattedInLang('MailbotUnsubscribeThread', $MemberIdLanguage).'</a><br>';
                 $link .= '<a href="' .$this->baseuri.'forums/subscriptions/disable/thread/' . $rSubscription->IdThread .'">'.$this->words->getFormattedInLang('MailbotDisableThread', $MemberIdLanguage).'</a>';
             }
             if ($notification->TableSubscription == "members_tags_subscribed") {
-                $link = '<a href="'.$this->baseuri.'forums/subscriptions/unsubscribe/tag/'.$rSubscription->id.'/'.$rSubscription->UnSubscribeKey.'">'.$this->words->getFormattedInLang('MailbotUnsubscribeTag', $MemberIdLanguage).'</a><br>';
+                $link .= '<a href="'.$this->baseuri.'forums/subscriptions/unsubscribe/tag/'.$rSubscription->id.'/'.$rSubscription->UnSubscribeKey.'">'.$this->words->getFormattedInLang('MailbotUnsubscribeTag', $MemberIdLanguage).'</a><br>';
                 $link .= '<a href="' .$this->baseuri.'forums/subscriptions/disable/tag/' . $rSubscription->IdTag .'">'.$this->words->getFormattedInLang('MailbotDisableTag', $MemberIdLanguage).'</a>';
             }
         }
+        $link .= '</span></div>';
         return $link;
     }
 
@@ -520,21 +522,20 @@ class ForumNotificationMailbot extends Mailbot
         $msg['subject'] = $NotificationType . $post->thread_title;
         if ($post->groupId) {
             $msg['subject'] .= ' [' . $this->_getGroupName($post->groupId)->Name . ']';
+            $msg['title'] = '<a href="' .$this->baseuri. 'groups/' . $post->groupId . '/forum/s' . $post->IdThread .'">' . $msg['subject'] . '</a>';
+        } else {
+            $msg['title'] = '<a href="' .$this->baseuri. '/forums/s' . $post->IdThread . '">' . $msg['subject'] . '</a>';
         }
 
-        $text ='<table border="0" cellpadding="0" cellspacing="10" style="margin: 20px; background-color: #fff; font-family:Arial, Helvetica, sans-serif; font-size:12px; color: #333;">' ;
-        $text.='<tr><th align="left"><a href="'.$this->baseuri.'forums/s'.$post->IdThread.'">'.$post->thread_title.'</a></th></tr>' ;
-        $text.='<tr><td align="left">from: <a href="'.$this->baseuri.'members/'.$author->Username.'">'.$author->Username.'</a> ('.$author->City.', '.$author->Country.')</td></tr>' ;
-        $text.='<tr><td>'.$post->message.'</td></tr>';
+        $text = $post->message;
 
         $UnsubscribeLink = $this->_buildUnsubscribeLink($notification, $language, $post);
         if ($UnsubscribeLink!="") {
-            $text .= '<tr><td>'.$UnsubscribeLink.'</td></tr>';
+            $text .= $UnsubscribeLink;
         } else {
             // This case should be for moderators only
-            $text .= '<tr><td> IdPost #'.$notification->IdPost.' action='.$NotificationType.'</td></tr>';
+            $text .= 'IdPost #' . $notification->IdPost . ' action=' . $NotificationType;
         }
-        $text .= '</table>';
 
         $msg['body'] = $text;
 
@@ -544,11 +545,11 @@ class ForumNotificationMailbot extends Mailbot
     /**
      * Actually run the bot
      *
+     * @param integer grace_period Wait for grace period minutes before sending email notifications to allow author to edit post
      * @return nothing
      */
-    public function run()
+    public function run($grace_period = 5)
     {
-        $grace_period = 5; // minutes, don't email notifications until after grace period to allow author to edit post
         $qry = $this->_getNotificationList($grace_period);
         while ($notification = $qry->fetch(PDB::FETCH_OBJ)) {
 
@@ -560,13 +561,13 @@ class ForumNotificationMailbot extends Mailbot
 
             $author = $this->members_model->getMemberWithId($post->IdWriter);
             $recipient = $this->members_model->getMemberWithId($notification->IdMember);
+            $MemberIdLanguage = $recipient->getLanguagePreferenceId();
 
             // Rewrite the title and the message to the corresponding default language for this member if any
-            $post->thread_title = $this->words->fTrad($post->IdTitle);
-            $post->message = $this->words->fTrad($post->IdContent);
+            $post->thread_title = $this->words->fTrad($post->IdTitle, $MemberIdLanguage);
+            $post->message = $this->words->fTrad($post->IdContent, $MemberIdLanguage);
             $post->message = str_replace('<p><br>\n</p>', '', $post->message);
 
-            $MemberIdLanguage = $recipient->getLanguagePreference();
             $msg = $this->_buildMessage($notification, $post, $author, $MemberIdLanguage);
 
             if ($post->groupId) {
@@ -583,7 +584,7 @@ class ForumNotificationMailbot extends Mailbot
             if ($recipient->getPreference('PreferenceHtmlMails', 'Yes') == 'No') {
                 $memberPrefersHtml = false;
             }
-            if (!$this->sendEmail($msg['subject'], $from, $to, $msg['subject'], $msg['body'], $MemberIdLanguage,
+            if (!$this->sendEmail($msg['subject'], $from, $to, $msg['title'], $msg['body'], $MemberIdLanguage,
                 $memberPrefersHtml)) {
                 $this->_updateNotificationStatus($notification->id, 'Failed');
                 $this->log("Could not send posts_notificationqueue=#" . $notification->id . " to <b>".$post->Username

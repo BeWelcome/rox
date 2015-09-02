@@ -1,5 +1,5 @@
 <?php
-include_once 'vendor/autloload.php';
+include_once 'vendor/autoload.php';
 include_once 'tools/roxmigration/roxmigration.php';
 
 function parseDSN($dsn)

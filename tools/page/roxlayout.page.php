@@ -389,7 +389,7 @@ class PageWithRoxLayout extends PageWithHTML
         return $this->getFlash('error', $remove);
     }
 
-    private function _getLoginMessages() {
+    protected function _getLoginMessages() {
         $model = new RoxModelBase();
         $member = $model->getLoggedInMember();
         if ($member) {

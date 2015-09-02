@@ -579,7 +579,7 @@ class ForumsController extends PAppController
     private function searchUserposts($user) {
         // Data will be displayed only if the current user is Logged
         $profileVisitor = $this->_model->getLoggedInMember();
-        if (!$profileVisitor) {
+        if ($profileVisitor) {
             $userId = APP_User::memberId($user);
             $membersForumPostsPagePublic = $this->_model->isMembersForumPostsPagePublic($userId);
             if ($membersForumPostsPagePublic || ($profileVisitor->getPKValue() == $userId) || $this->BW_Right->HasRight("Admin") || $this->BW_Right->HasRight("ForumModerator") || $this->BW_Right->HasRight("SafetyTeam") ) {

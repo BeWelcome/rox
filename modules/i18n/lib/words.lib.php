@@ -797,12 +797,12 @@ WHERE
 	 } // end of mTrad
 
     /**
-	 * @param $IdTrad the id of a translations.IdTrad record to retrieve
-	 * @param $ReplaceWithBr allows
-	 * @parame $IdForceLanguage optional can be use to force the routine to try to choose a specific language
+	 * @param integer $IdTrad the id of a translations.IdTrad record to retrieve
+	 * @parame integer $IdForceLanguage optional can be use to force the routine to try to choose a specific language
+     * @param boolean $ReplaceWithBr allows
 	 * @return string translated according to the best language find
 	 */
-    public function fTrad($IdTrad,$ReplaceWithBr=false,$IdForceLanguage=-1) {
+    public function fTrad($IdTrad,$IdForceLanguage=-1, $ReplaceWithBr=false) {
 
 			global $fTradIdLastUsedLanguage ; // Horrible way of returning a variable you forget when you designed the method (jyh)
 			$fTradIdLastUsedLanguage=-1 ; // Horrible way of returning a variable you forget when you designed the method (jyh)

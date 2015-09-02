@@ -1686,7 +1686,9 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
             $return = array();
             while ($row = $result->fetch(PDB::FETCH_ASSOC))
             {
-                $return[$row['Name']] = $row;
+                if ($row['Level'] > 0) {
+                    $return[$row['Name']] = $row;
+                }
             }
             $this->old_rights = $return;
         }

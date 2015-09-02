@@ -63,7 +63,7 @@ class GroupsController extends RoxControllerBase
         $page->group = $group;
         $this->_fillObject($page);
         if (!$page->member) {
-            $this->setFlashNotice('GroupsFullFunctionalityLoggedIn');
+            $this->setFlashNotice($this->_model->getWords()->get('GroupsFullFunctionalityLoggedIn'));
         }
         return $page;
     }
@@ -857,7 +857,7 @@ class GroupsController extends RoxControllerBase
         $page->group = $this->_getGroupFromRequest();
         $this->_fillObject($page);
         if (!$page->member) {
-            $this->setFlashNotice('GroupsFullFunctionalityLoggedIn');
+            $this->setFlashNotice($this->_model->getWords()->get('GroupsFullFunctionalityLoggedIn'));
         }
         return $page;
     }

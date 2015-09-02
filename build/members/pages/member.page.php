@@ -245,7 +245,7 @@ class MemberPage extends PageWithActiveSkin
 
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/profile.css?2';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/profile.css?3';
        $stylesheets[] = "styles/css/minimal/screen/custom/select2/select2.css";
         return $stylesheets;
     }

@@ -1,1 +1,13 @@
-{    "require": {        "robmorgan/phinx": "*",        "html2text/html2text": "*",        "michelf/php-markdown": "*",        "swiftmailer/swiftmailer": "*"    }}
+{
+  "require": {
+      "robmorgan/phinx": "*",
+      "html2text/html2text": "*",
+      "michelf/php-markdown": "*",
+      "swiftmailer/swiftmailer": "*",
+      "ezyang/htmlpurifier": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.8.*",
+    "phpdocumentor/phpdocumentor": "2.*"
+  }
+}

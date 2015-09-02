@@ -2507,7 +2507,9 @@ AND IdSubscriber = {$memberId}";
                 $membership = $this->createEntity('GroupMembership')->getMembership($group, $member);
                 if ($membership) {
 					$this->topic->isGroupSubscribed = ($membership->IacceptMassMailFromThisGroup == 'yes');
-					$this->topic->notificationsEnabled = ($membership->notificationsEnabled);
+					if (!isset($row->IdSubscribe)) {
+						$this->topic->notificationsEnabled = ($membership->notificationsEnabled);
+					}
                 }
 			}
 		}

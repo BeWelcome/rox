@@ -472,8 +472,59 @@ WHERE
     }
 
 
+    public function _checkSimilarity($comments, $weight = 95) {
+        $similar = 0;
+        $count = count($comments);
+        for($i = 0;$i < $count - 1; $i++) {
+            for ($j = $i + 1; $j < $count; $j++) {
+                similar_text(
+                    $comments[$i]->TextFree, $comments[$j]->TextFree, $percent
+                );
+                if ($percent > $weight) {
+                    $similar++;
+                }
+            }
+        }
+        $result = ($similar == $count * ($count -1));
+        return $result;
+    }
 
-    // checkCommentForm - NOT FINISHED YET !
+    private function _checkCommentQuality($memberId, $duration, $count) {
+        $result = false;
+        // Check number of comments written in the last two minutes
+        $query = "
+            SELECT
+                COUNT(*) as cnt
+            FROM
+                comments c
+            WHERE
+                c.IdFromMember = " . $memberId . "
+                AND TIMEDIFF(NOW(), created) < '" . $duration . "'
+            ";
+        $s = $this->dao->query($query);
+        $row = $s->fetch(PDB::FETCH_OBJ);
+        $cnt = $row->cnt;
+        if ($cnt >= $count) {
+            // Okay limit was hit, check for comment quality
+            // Get all comments written during the given duration
+            $query = "
+                SELECT
+                    c.TextFree,
+                    c.TextWhere
+                FROM
+                    comments c
+                WHERE
+                    c.IdFromMember = " . $memberId . "
+                    AND TIMEDIFF(NOW(), created) < '" . $duration . "'
+                ";
+            $comments = $this->bulkLookup($query);
+
+            $result = $this->_checkSimilarity($comments);
+        }
+        return $result;
+    }
+
+    // checkCommentForm
     public function checkCommentForm(&$vars, $random)
     {
         $errors = array();
@@ -487,51 +538,6 @@ WHERE
                 $one_selected = true;
             }
         }
-        switch($random) {
-            case 1:
-                // Check number of comments written in the last two minutes
-                $query = "
-                    SELECT
-                        COUNT(*) as cnt
-                    FROM
-                        comments C
-                    WHERE
-                        c.IdFromMember = " . $member->id . "
-                        AND TIMEDIFF(NOW(), created) < '00:02:00'
-                    ";
-                $s = $this->dao->query($query);
-                $row = $s->fetch(PDB::FETCH_OBJ);
-                $count = $row->cnt;
-                if ($count > 0) {
-                    $errors[] = 'CommentSomethingWentWrong';
-                }
-                break;
-            case 2:
-                if (!isset($vars['sweet'])) {
-                    $errors[] = 'CommentSomethingWentWrong';
-                } elseif ($vars['sweet'] != '') {
-                    $errors[] = 'CommentSomethingWentWrong';
-                }
-                break;
-            case 3:
-                // Check number of comments written in the last two minutes
-                $query = "
-                    SELECT
-                        COUNT(*) as cnt
-                    FROM
-                        comments C
-                    WHERE
-                        c.IdFromMember = " . $member->id . "
-                        AND TIMEDIFF(NOW(), created) < '00:10:00'
-                    ";
-                $s = $this->dao->query($query);
-                $row = $s->fetch(PDB::FETCH_OBJ);
-                $count = $row->cnt;
-                if ($count > 5) {
-                    $errors[] = 'CommentSomethingWentWrong';
-                }
-                break;
-        }
         if ($vars['Quality'] == "") {
             $errors[] = 'Comment_MustSelectQuality';
         }
@@ -544,7 +550,15 @@ WHERE
         if (!isset ($vars["CommentGuidelines"])) {
             $errors[] = 'CommentMustAcceptGuidelines';
         }
-        return $errors;       
+
+        $check1 = $this->_checkCommentQuality($member->id, '00:02:00', 1);
+        $check2 = $this->_checkCommentQuality($member->id, '00:20:00', 5);
+        $check3 = $this->_checkCommentQuality($member->id, '06:00:00', 25);
+
+        if ($check1 || $check2 || $check3) {
+            $errors[] = 'CommentSomethingWentWrong';
+        }
+        return $errors;
     }
 
     public function addComment($TCom,&$vars)

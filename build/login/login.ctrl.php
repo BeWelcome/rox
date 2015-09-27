@@ -169,6 +169,10 @@ class LoginController extends RoxControllerBase
                 }
             }
         }
+        if (empty($errmsg)) {
+            return true;
+        }
+        return false;
     }
 
     /**

@@ -321,3 +321,4 @@
     $this->addRoute('dataretention', 'members/dataretention', 'MembersController', 'dataRetention');
 
 $this->addRoute('m_dashboard', 'mockups/dashboard', 'MockupsController', 'dashboard');
+$this->addRoute('m_select2', 'mockups/select2', 'MockupsController', 'select2');

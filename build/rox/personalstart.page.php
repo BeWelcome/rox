@@ -1,7 +1,7 @@
 <?php
 
 
-class PersonalStartpage extends PageWithRoxLayout
+class OhoPersonalStartpage extends PageWithRoxLayout
 {
     protected function getTopmenuActiveItem() {
         return 'main';

@@ -6,7 +6,12 @@
 
         <!-- #main: content begins here -->
         <div id="main">
-
+            {{ macros.avatar('member-101', 15) }}
+            {{ macros.avatar('member-101', 30) }}
+            {{ macros.avatar('member-101', 50) }}
+            {{ macros.avatar('member-101', 75) }}
+            {{ macros.avatar('member-101', 200) }}
+            {{ macros.avatar('member-101', 1) }}
             <div class="bw-row" style="min-height: 130px; padding: 1em; background-color: #EEEEEE; border: 3px solid #FFFFFF; box-shadow: 0 0 1px #888888;">
                 <div id="avatar" class="col-xs-2"><a href="members/member-101" title="See profile member-101" ><img height="100" width="100" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a><span style="position:relative; left: -20px; top: 40px;"><img height="30" width="30" class="float_left framed" src="styles/css/minimal/images/iconsfam/group.png" alt="status" /></span></div>
                 <div id="welcometext" class="col-xs-7"><span style="font-size: 2.4em; font-weight: 900;">Welcome back, %username!</span><br /><span style="font-size: 1.2em; font-weight: bold;">You're currently in <a href="#">Lyon</a>, your hosting status is <a href="#">yes</a></span></div>
@@ -74,7 +79,7 @@
                         <div id="messagebottom" style="height: 5em; background-color: #FFF; text-align: center; padding: 1em 0;">
                             <div class="btn-group" role="group" aria-label="...">
                                 <button type="button" class="btn btn-default"><a href="#mygroups"><span class="glyphicons glyphicons-search"></span> Search my messages</a></button>
-                                <button type="button" class="btn btn-default"><a href="#subscriptions"> <span class="glyphicons glyphicons-inbox"></span> My inbox</span></a></button>
+                                <button type="button" class="btn btn-default"><a href="#subscriptions"> <span class="glyphicons glyphicons-inbox"></span> My inbox</a></button>
                             </div>
                         </div>
 
@@ -117,25 +122,25 @@
 
                             <div id="discussion1" class="row" style="background-color: #EEE; padding: 1em;">
                                 <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
-                                <div id="text" class="col-xs-9"><span>Discussion #1<span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
+                                <div id="text" class="col-xs-9"><span>Discussion #1</span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
                                 <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
                             </div>
 
                             <div id="discussion2" class="row" style="background-color: #FFF; padding: 1em;">
                                 <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
-                                <div id="text" class="col-xs-9"><span>Discussion #2<span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
+                                <div id="text" class="col-xs-9"><span>Discussion #2</span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
                                 <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
                             </div>
 
                             <div id="discussion3" class="row" style="background-color: #EEE; padding: 1em;">
                                 <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
-                                <div id="text" class="col-xs-9"><span>Discussion #3<span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
+                                <div id="text" class="col-xs-9"><span>Discussion #3</span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
                                 <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
                             </div>
 
                             <div id="discussion4" class="row" style="background-color: #FFF; padding: 1em;">
                                 <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
-                                <div id="text" class="col-xs-9"><span>Discussion #4<span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
+                                <div id="text" class="col-xs-9"><span>Discussion #4</span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
                                 <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
                             </div>
 

@@ -3,9 +3,8 @@
     <!-- first section - Home -->
     <div id="home">
         <div class="container">
-        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
             <div class="row"><div class="col-sm-2 col-sm-offset-5">
-            <i class="fa fa-chevron-down chevron"></i>
+            <i class="fa fa-4x fa-chevron-down"></i>
                 </div>
                 </div>
         </div>
@@ -13,7 +12,14 @@
     <div id="footer">
         <div class="container">
         <div class="row">
-            <div class="col-sm-12 text-left">About BeWelcome • Terms of use • Privacy policy • Legal note • FAQ • Contact us • Report bug<br>
+        <div class="col-sm-12 text-left">
+            <a href="about"><strong>{{ 'AboutUsPage' | trans }}</strong></a> •
+            <a href="terms" target="new">{{ 'TermsOfUse' | trans }}</a> •
+            <a href="privacy" target="new">{{ 'Privacy' | trans }}</a> •
+            <a href="impressum">{{ 'Impressum' | trans }}</a> •
+            <a href="faq">{{  'faq' | trans }}</a> •
+            <a href="about/feedback">{{ 'Contact us' | trans }}</a> •
+            <a href="{{ path( 'feedback', { 'IdCategory': 1, 'RequestURI': url('start') }) }}">{{ 'Reportbug' | trans }}</a><br>
             &copy; 2007-2015 BeVolunteer and contributors - Running on open source BW Rox rev. ca44ccc (27 Jun 2015)</div>
         </div>
         </div>

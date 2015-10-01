@@ -9813,10 +9813,16 @@ top: 10px;
   height: 30px;
   width: 30px;
 }
+.dashbox{
+  border: 0.3em solid #FFF;
+  overflow: hidden;
+  box-shadow: 0 0 2px #888;
+  height: 30em;
+}
 .scrollablecontent{
   position:relative;
-  height:100%;
   max-height: 20em;
+  height:100%;
   width: 105%;
   width: calc(100% + 20px);
   overflow-x:hidden;

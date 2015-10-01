@@ -22,45 +22,79 @@
             <!-- #two-boxes: messages and website activity -->
             <div id="two-boxes" class="row">
 
+                <!-- entire messages box -->
                 <div id="messagecontainer" class="col-xs-12 col-md-6">
+
                     <!-- messages tabs -->
                     <ul class="nav nav-tabs">
                         <li role="presentation" class="active"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages received [2]</a></li>
                         <li role="presentation"><a href="#sent" aria-controls="sent" role="tab" data-toggle="tab">Sent messages</a></li>
                     </ul>
 
-                    <div id="borderbox" style="border: 0.3em solid #FFF; overflow: hidden; box-shadow: 0 0 2px #888;">
+                    <!-- bordered box around content -->
+                    <div id="borderbox" class="dashbox">
+
                         <div class="tab-content">
 
                             <!-- messages content div -->
                             <div role="tabpanel" class="tab-pane active" id="messages">
 
-                                <div id="message1" class="row" style="background-color: #FFF; padding: 1em;">
-                                    <div id="sender1" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-105?50_50" alt="Profile" /></a></div>
-                                    <div id="type1" class="col-xs-1"><i class="fa fa-bed"></i></div>
-                                    <div id="text1" class="col-xs-8"><span>Here's the text of message #1</span><br /><span>by <a href="#user">Membername</a> - 10 minutes ago</span></div>
-                                    <div id="arrow-right" class="col-xs-1"><i class="fa fa-chevron-right"></i></div>
+                                <div id="readunread" class="row" style="background-color: #FFF; padding: 1em;">
+                                    <span class="col-xs-3">Show:</span>
+                                    <div class="btn-group col-xs-9" data-toggle="buttons">
+                                            <label class="btn btn-primary active">
+                                                <input type="radio" name="options" id="option1" autocomplete="off" checked>All
+                                            </label>
+                                            <label class="btn btn-primary">
+                                                <input type="radio" name="options" id="option2" autocomplete="off">Unread
+                                            </label>
+                                            <label class="btn btn-primary">
+                                                <input type="radio" name="options" id="option3" autocomplete="off">Read
+                                            </label>
+                                    </div>
                                 </div>
+                                <div id="showmessages" class="scrollablecontent">
+                                    <div id="message1" class="row" style="background-color: #FFF; padding: 1em;">
+                                        <div id="sender1" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-105?50_50" alt="Profile" /></a></div>
+                                        <div id="type1" class="col-xs-1"><i class="fa fa-bed"></i></div>
+                                        <div id="text1" class="col-xs-8"><span>Here's the text of message #1</span><br /><span>by <a href="#user">Membername</a> - 10 minutes ago</span></div>
+                                        <div id="arrow-right" class="col-xs-1"><i class="fa fa-chevron-right"></i></div>
+                                    </div>
 
-                                <div id="message2" class="row" style="background-color: #EEE; padding: 1em;">
-                                    <div id="sender2" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-109?50_50" alt="Profile" /></a></div>
-                                    <div id="type2" class="col-xs-1"><i class="fa fa-newspaper-o"></i></div>
-                                    <div id="text2" class="col-xs-8"><span>Here's the text of message #2</span><br /><span>by <a href="#user">Membername</a> - 10 minutes ago</span></div>
-                                    <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
-                                </div>
+                                    <div id="message2" class="row" style="background-color: #EEE; padding: 1em;">
+                                        <div id="sender2" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-109?50_50" alt="Profile" /></a></div>
+                                        <div id="type2" class="col-xs-1"><i class="fa fa-newspaper-o"></i></div>
+                                        <div id="text2" class="col-xs-8"><span>Here's the text of message #2</span><br /><span>by <a href="#user">Membername</a> - 10 minutes ago</span></div>
+                                        <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                    </div>
 
-                                <div id="message3" class="row" style="background-color: #FFF; padding: 1em;">
-                                    <div id="sender3" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-111?50_50" alt="Profile" /></a></div>
-                                    <div id="type3" class="col-xs-1"><img height="30" width="30" class="float_left framed" src="styles/css/minimal/images/iconsfam/group.png" alt="status" /></div>
-                                    <div id="text3" class="col-xs-8"><span>Here's the text of message #1</span><br /><span>by <a href="#user">Membername</a> - 10 minutes ago</span></div>
-                                    <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
-                                </div>
+                                    <div id="message3" class="row" style="background-color: #FFF; padding: 1em;">
+                                        <div id="sender3" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-111?50_50" alt="Profile" /></a></div>
+                                        <div id="type3" class="col-xs-1"><img height="30" width="30" class="float_left framed" src="styles/css/minimal/images/iconsfam/group.png" alt="status" /></div>
+                                        <div id="text3" class="col-xs-8"><span>Here's the text of message #1</span><br /><span>by <a href="#user">Membername</a> - 10 minutes ago</span></div>
+                                        <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                    </div>
 
-                                <div id="message4" class="row" style="background-color: #EEE; padding: 1em;">
-                                    <div id="sender4" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-118?50_50" alt="Profile" /></a></div>
-                                    <div id="type4" class="col-xs-1"><img height="30" width="30" class="float_left framed" src="styles/css/minimal/images/iconsfam/group.png" alt="status" /></div>
-                                    <div id="text4" class="col-xs-8"><span>Here's the text of message #2</span><br /><span>by <a href="#user">Membername</a> - 10 minutes ago</span></div>
-                                    <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                    <div id="message4" class="row" style="background-color: #EEE; padding: 1em;">
+                                        <div id="sender4" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-118?50_50" alt="Profile" /></a></div>
+                                        <div id="type4" class="col-xs-1"><img height="30" width="30" class="float_left framed" src="styles/css/minimal/images/iconsfam/group.png" alt="status" /></div>
+                                        <div id="text4" class="col-xs-8"><span>Here's the text of message #2</span><br /><span>by <a href="#user">Membername</a> - 10 minutes ago</span></div>
+                                        <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                    </div>
+
+                                    <div id="message3" class="row" style="background-color: #FFF; padding: 1em;">
+                                        <div id="sender3" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-111?50_50" alt="Profile" /></a></div>
+                                        <div id="type3" class="col-xs-1"><img height="30" width="30" class="float_left framed" src="styles/css/minimal/images/iconsfam/group.png" alt="status" /></div>
+                                        <div id="text3" class="col-xs-8"><span>Here's the text of message #1</span><br /><span>by <a href="#user">Membername</a> - 10 minutes ago</span></div>
+                                        <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                    </div>
+
+                                    <div id="message4" class="row" style="background-color: #EEE; padding: 1em;">
+                                        <div id="sender4" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-118?50_50" alt="Profile" /></a></div>
+                                        <div id="type4" class="col-xs-1"><img height="30" width="30" class="float_left framed" src="styles/css/minimal/images/iconsfam/group.png" alt="status" /></div>
+                                        <div id="text4" class="col-xs-8"><span>Here's the text of message #2</span><br /><span>by <a href="#user">Membername</a> - 10 minutes ago</span></div>
+                                        <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                    </div>
                                 </div>
 
                             </div>
@@ -70,13 +104,14 @@
                                 sent
                             </div>
                         </div>
+
+                        <!-- message menu -->
                         <div id="messagebottom" style="background-color: #FFF; text-align: center; padding: 1em 0;">
                             <div class="btn-group" role="group" aria-label="...">
                                 <button type="button" class="btn btn-default"><a href="#searchmessages"><i class="fa fa-search"></i> Search my messages</a></button>
                                 <button type="button" class="btn btn-default"><a href="#messages"><i class="fa fa-envelope"></i> My inbox</a></button>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
@@ -87,89 +122,93 @@
                         <li role="presentation" class="active"><a href="#forum" aria-controls="news" role="tab" data-toggle="tab">Forum [2]</a></li>
                         <li role="presentation"><a href="#activities" aria-controls="news" role="tab" data-toggle="tab">Activities</a></li>
                     </ul>
-                    <div class="tab-content" style="border: 0.3em solid #FFF; overflow: hidden; box-shadow: 0 0 2px #888;">
 
-                        <!-- news content div -->
-                        <div role="tabpanel" class="tab-pane" id="news">
-                            NEWS
-                        </div>
+                    <!-- bordered box around content -->
+                    <div id="borderbox2" class="dashbox">
+                        <div class="tab-content">
 
-                        <!-- discussion content div -->
-                        <div role="tabpanel" class="tab-pane active" id="forum">
-
-                            <!-- discussion settings -->
-                            <div id="settings" class="row" style="background-color: #FFF; padding: 1em;">
-                                <span class="col-xs-4">Show messages of:</span>
-                                <div class="btn-group col-xs-8" data-toggle="buttons">
-                                    <label class="btn btn-primary active">
-                                        <input type="checkbox" autocomplete="off" checked> groups
-                                    </label>
-                                    <label class="btn btn-primary">
-                                        <input type="checkbox" autocomplete="off"> forum
-                                    </label>
-                                    <label class="btn btn-primary">
-                                        <input type="checkbox" autocomplete="off"> threads I'm following
-                                    </label>
-                                </div>
+                            <!-- news content div -->
+                            <div role="tabpanel" class="tab-pane" id="news">
+                                NEWS
                             </div>
 
-                            <div id="forumscroll" class="scrollablecontent">
+                            <!-- discussion content div -->
+                            <div role="tabpanel" class="tab-pane active" id="forum">
 
-                                <div id="discussion1" class="row" style="background-color: #EEE; padding: 1em;">
-                                    <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
-                                    <div id="text" class="col-xs-9"><span>Discussion #1<span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
-                                    <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                <!-- discussion settings -->
+                                <div id="settings" class="row" style="background-color: #FFF; padding: 1em;">
+                                    <span class="col-xs-4">Show messages of:</span>
+                                    <div class="btn-group col-xs-8" data-toggle="buttons">
+                                        <label class="btn btn-primary active">
+                                            <input type="checkbox" autocomplete="off" checked> groups
+                                        </label>
+                                        <label class="btn btn-primary">
+                                            <input type="checkbox" autocomplete="off"> forum
+                                        </label>
+                                        <label class="btn btn-primary">
+                                            <input type="checkbox" autocomplete="off"> threads I'm following
+                                        </label>
+                                    </div>
                                 </div>
 
-                                <div id="discussion2" class="row" style="background-color: #FFF; padding: 1em;">
-                                    <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
-                                    <div id="text" class="col-xs-9"><span>Discussion #2<span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
-                                    <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                <div id="forumscroll" class="scrollablecontent">
+
+                                    <div id="discussion1" class="row" style="background-color: #EEE; padding: 1em;">
+                                        <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
+                                        <div id="text" class="col-xs-9"><span>Discussion #1<span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
+                                        <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                    </div>
+
+                                    <div id="discussion2" class="row" style="background-color: #FFF; padding: 1em;">
+                                        <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
+                                        <div id="text" class="col-xs-9"><span>Discussion #2<span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
+                                        <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                    </div>
+
+                                    <div id="discussion3" class="row" style="background-color: #EEE; padding: 1em;">
+                                        <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
+                                        <div id="text" class="col-xs-9"><span>Discussion #3<span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
+                                        <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                    </div>
+
+                                    <div id="discussion4" class="row" style="background-color: #FFF; padding: 1em;">
+                                        <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
+                                        <div id="text" class="col-xs-9"><span>Discussion #4<span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
+                                        <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                    </div>
+
+                                    <div id="discussion3" class="row" style="background-color: #EEE; padding: 1em;">
+                                        <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
+                                        <div id="text" class="col-xs-9"><span>Discussion #3<span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
+                                        <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                    </div>
+
+                                    <div id="discussion4" class="row" style="background-color: #FFF; padding: 1em;">
+                                        <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
+                                        <div id="text" class="col-xs-9"><span>Discussion #4<span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
+                                        <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                    </div>
+
+                                    <div id="discussion4" class="row" style="background-color: #FFF; padding: 1em;">
+                                        show more
+                                    </div>
+
                                 </div>
 
-                                <div id="discussion3" class="row" style="background-color: #EEE; padding: 1em;">
-                                    <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
-                                    <div id="text" class="col-xs-9"><span>Discussion #3<span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
-                                    <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
-                                </div>
-
-                                <div id="discussion4" class="row" style="background-color: #FFF; padding: 1em;">
-                                    <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
-                                    <div id="text" class="col-xs-9"><span>Discussion #4<span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
-                                    <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
-                                </div>
-
-                                <div id="discussion3" class="row" style="background-color: #EEE; padding: 1em;">
-                                    <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
-                                    <div id="text" class="col-xs-9"><span>Discussion #3<span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
-                                    <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
-                                </div>
-
-                                <div id="discussion4" class="row" style="background-color: #FFF; padding: 1em;">
-                                    <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
-                                    <div id="text" class="col-xs-9"><span>Discussion #4<span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
-                                    <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
-                                </div>
-
-                                <div id="discussion4" class="row" style="background-color: #FFF; padding: 1em;">
-                                    show more
+                                <div id="messagebottom" style="background-color: #FFF; text-align: center; padding: 1em;">
+                                    <div class="btn-group" role="group" aria-label="...">
+                                        <button type="button" class="btn btn-default"><a href="#alldiscussions"><i class="fa fa-comments"></i> View forum</a></button>
+                                        <button type="button" class="btn btn-default"><a href="#mygroups"><i class="fa fa-users"></i> My groups</a></button>
+                                        <button type="button" class="btn btn-default"><a href="#subscriptions"><i class="fa fa-check-square-o"></i> My subscriptions</a></button>
+                                    </div>
                                 </div>
 
                             </div>
 
-                            <div id="messagebottom" style="background-color: #FFF; text-align: center; padding: 1em;">
-                                <div class="btn-group" role="group" aria-label="...">
-                                    <button type="button" class="btn btn-default"><a href="#alldiscussions"><i class="fa fa-comments"></i> View forum</a></button>
-                                    <button type="button" class="btn btn-default"><a href="#mygroups"><i class="fa fa-users"></i> My groups</a></button>
-                                    <button type="button" class="btn btn-default"><a href="#subscriptions"><i class="fa fa-check-square-o"></i> My subscriptions</a></button>
-                                </div>
+                            <!-- activities content div -->
+                            <div role="tabpanel" class="tab-pane" id="activities">
+                                Activities
                             </div>
-
-                        </div>
-
-                        <!-- activities content div -->
-                        <div role="tabpanel" class="tab-pane" id="activities">
-                            Activities
                         </div>
                     </div>
                 </div>

@@ -2786,7 +2786,7 @@ tbody.collapse.in {
 .dropdown-menu > li > a:focus {
   text-decoration: none;
   color: #ffffff;
-  background-color: #555555;
+  background-color: rgba(255,120,0,1);
 }
 .dropdown-menu > .active > a,
 .dropdown-menu > .active > a:hover,
@@ -3205,7 +3205,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav > li > a:hover,
 .nav > li > a:focus {
   text-decoration: none;
-  background-color: #eeeeee;
+  background-color: rgba(3,3,3,0.2);
 }
 .nav > li.disabled > a {
   color: #777777;
@@ -3220,7 +3220,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav .open > a,
 .nav .open > a:hover,
 .nav .open > a:focus {
-  background-color: #eeeeee;
+  background-color: rgba(3,3,3,0.4);
   border-color: #2184e8;
 }
 .nav .nav-divider {
@@ -8818,9 +8818,11 @@ body > .container {
 .navbar {
   font-weight: bold;
   color: white;
-  background: #f37000;
   border-top: 1px solid white;
   border-bottom: 1px solid white;
+  background: linear-gradient(to bottom, rgba(255,189,0,1) 0%,rgba(255,136,0,1) 100%);
+  box-shadow: 0 8px 6px 2px #888888;
+/*  background: #f37000; */
 }
 .dropdown-menu {
   border: none;
@@ -9692,6 +9694,11 @@ h6,
 }
 .bw-row {
   padding: .5em 0;
+  min-height: 120px;
+  background-color: #EEEEEE;
+  border: 3px solid #FFFFFF;
+  box-shadow: 0 0 1px #888888;
+  margin-bottom: 2em;
 }
 .white-text {
   color: #fff;
@@ -9783,3 +9790,46 @@ td {
   height: 20px;
 }
 /*# sourceMappingURL=bewelcome.css.map */
+
+#two-boxes{
+  margin-bottom: 2em;
+}
+.block {
+  display: block;
+}
+#welcometext{
+top: 10px;
+}
+.dashavatar {
+  height: 100px;
+  width: 100px;
+}
+.dashstatus{
+  position:relative;
+  left: -20px;
+  top: 40px;
+}
+.dashstatusimg{
+  height: 30px;
+  width: 30px;
+}
+.dashbox{
+  border: 0.3em solid #FFF;
+  overflow: hidden;
+  box-shadow: 0 0 2px #888;
+  height: 30em;
+}
+.scrollablecontent{
+  position:relative;
+  max-height: 20em;
+  height:100%;
+  width: 105%;
+  width: calc(100% + 20px);
+  overflow-x:hidden;
+  overflow-y:visible;
+}
+.widget{
+  background-color: #FFF;
+  box-shadow: 0 0 2px #999;
+  padding: 1em;
+}

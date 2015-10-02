@@ -1417,12 +1417,18 @@ ORDER BY
 
         if (!$this->hasAvatar($memberId, $suffix) || (!$member->publicProfile && !$this->getLoggedInMember())) {
             header('Content-type: image/png');
+            header ("cache-control: must-revalidate");
+            $offset = 48 * 60 * 60;
+            $expire = "Expires: " . gmdate ("D, d M Y H:i:s", time() + $offset) . " GMT";
+            header ($expire);
             @copy(HTDOCS_BASE.'images/misc/empty_avatar'.(isset($suffix) ? $suffix : '').'.png', 'php://output');
             PPHP::PExit();
         }
         $img = new MOD_images_Image($this->avatarDir->dirName().'/'.$file);
         if (!$img->isImage()) {
             header('Content-type: image/png');
+            $expires = new DateTime("now + 11 months");
+            header("Expires:" . $expires->format(DateTime::RFC1123));
             @copy(HTDOCS_BASE.'images/misc/empty_avatar'.(isset($suffix) ? $suffix : '').'.png', 'php://output');
             PPHP::PExit();
         }

@@ -1,5 +1,7 @@
 <?php
 
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
 function FriendlyErrorType($type)
 {
     switch($type)
@@ -107,22 +109,10 @@ $errorHandler = function (Symfony\Component\Debug\Exception\FlattenException $ex
     return new Symfony\Component\HttpFoundation\Response($msg, $exception->getStatusCode());
 };
 
-$dispatcher = new Symfony\Component\EventDispatcher\EventDispatcher();
+$dispatcher = new EventDispatcher();
 $dispatcher->addSubscriber(new Symfony\Component\HttpKernel\EventListener\RouterListener($matcher));
 $dispatcher->addSubscriber(new Symfony\Component\HttpKernel\EventListener\ExceptionListener($errorHandler));
-
-$dispatcher->addListener('kernel.controller', function ( \Symfony\Component\HttpKernel\Event\FilterControllerEvent $event) {
-    global $router;
-    $controller= $event->getController();
-
-    if (!is_object($controller[0])) {
-        return;
-    }
-
-    $controller[0]->router = $router;
-    $event->setController($controller);
-});
-
+$dispatcher->addSubscriber(new Rox\Framework\ControllerResolverListener($router));
 $framework = new Rox\Framework($dispatcher, $resolver);
 
 $response = $framework->handle($request);

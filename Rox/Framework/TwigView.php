@@ -44,6 +44,7 @@ class TwigView extends AbstractBasePage {
     public function __construct(Router $router, $logged_in = false) {
         $this->_loader = new Twig_Loader_Filesystem();
         $this->_loader->addPath(SCRIPT_BASE . 'templates/twig/base', 'base');
+        $this->_loader->addPath(SCRIPT_BASE . 'templates/twig/start', 'start');
         $this->_loader->addPath(SCRIPT_BASE . 'templates/twig/macros', 'macros');
         $this->_environment = new Twig_Environment(
             $this->_loader ,
@@ -53,6 +54,7 @@ class TwigView extends AbstractBasePage {
             )
         );
         $this->_defaults = $this->_getDefaults();
+        $this->_words = $this->getWords();
 
         $this->_translator = new Translator($_SESSION['lang'], new MessageSelector());
         if ($_SESSION['lang'] <> 'en') {

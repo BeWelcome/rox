@@ -17,4 +17,6 @@ revision.txt
 
 /vendor/*
 /node_modules/*
+/components/*
 composer.lock
+auth.json

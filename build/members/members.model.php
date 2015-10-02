@@ -1392,22 +1392,25 @@ ORDER BY
      * Shows a members picture in different sizes
      *
      */
-    public function showAvatar($memberId = false)
+    public function showAvatar($memberId = false, $suffix = null)
     {
         $file = (int)$memberId;
-        if (isset($_GET)) {
-            if (isset($_GET['xs']) or isset($_GET['50_50']))
-                $suffix = '_xs';
-            elseif (isset($_GET['30_30']))
-                $suffix = '_30_30';
-            elseif (isset($_GET['150']))
-                $suffix = '_150';
-            elseif (isset($_GET['200']))
-                $suffix = '_200';
-            elseif (isset($_GET['500']))
-                $suffix = '_500';
-            else $suffix = '';
+        if ($suffix == null) {
+            if (isset($_GET)) {
+                if (isset($_GET['xs']) or isset($_GET['50_50']))
+                    $suffix = '_xs';
+                elseif (isset($_GET['30_30']))
+                    $suffix = '_30_30';
+                elseif (isset($_GET['150']))
+                    $suffix = '_150';
+                elseif (isset($_GET['200']))
+                    $suffix = '_200';
+                elseif (isset($_GET['500']))
+                    $suffix = '_500';
+            }
             $file .= $suffix;
+        } else {
+            $file = $file . $suffix;
         }
 
         $member = $this->createEntity('Member', $memberId);

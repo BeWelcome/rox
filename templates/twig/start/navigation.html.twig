@@ -16,23 +16,21 @@
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bewelcome-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-center"><form class="navbar-form" role="login">
-                <div class="form-group">
-                    <input type="text" class="form-control" name="username" placeholder="Username">
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" name="password" placeholder="Password">
-                </div>
-                <button type="submit" class="btn btn-default">Sign In</button>
-            </form>
+            <ul class="nav navbar-nav navbar-center">
+                <form class="navbar-form" method="post" action="{{ url('login') }}">
+                    {{ macros.input('u', 'Username') }}
+                    {{ macros.input('p', 'Password') }}
+                    {{ macros.submit('Login') }}
+                </form>
             </ul>
+
             <ul class="nav navbar-nav navbar-right">
-                <form class="navbar-form" role="language-switch">
-                        <select id="language" name="language" class="form-control select2" onchange="window.location.href=this.value; return false">
-                            {% for lang in languages %}
-                                <option {% if lang.ShortCode == language %}selected="selected"{% endif %} value="{{ baseuri }}/rox/in/{{ lang.ShortCode }}">{{ lang.TranslatedName|raw }} ({{ lang.NativeName|raw }})</option>
-                            {% endfor %}
-                        </select>
+                <form class="navbar-form">
+                    <select id="language" name="language" class="select2 combo" onchange="window.location.href=this.value; return false">
+                        {% for lang in languages %}
+                            <option {% if lang.ShortCode == language %}selected="selected"{% endif %} value="{{ baseuri }}/rox/in/{{ lang.ShortCode }}">{{ lang.TranslatedName|raw }} ({{ lang.NativeName|raw }})</option>
+                        {% endfor %}
+                    </select>
                 </form>
             </ul>
         </div>

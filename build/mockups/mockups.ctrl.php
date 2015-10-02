@@ -39,4 +39,9 @@ class MockupsController extends RoxControllerBase
         $page = new DashboardPage();
         return $page;
     }
+
+    public function select2() {
+        $page = new Select2Page();
+        return $page;
+    }
 }

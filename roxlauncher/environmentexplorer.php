@@ -21,33 +21,7 @@ class EnvironmentExplorer
 
         $this->initSession($settings);
 
-
-
-        // initialize classes autoloading
-        require_once SCRIPT_BASE.'roxlauncher/autoload.plug.php';
-        require_once SCRIPT_BASE.'roxlauncher/classloader.php';
-        $class_loader = new ClassLoader;
-
-        AutoloadPlug::setCallback(array($class_loader, 'autoload'));
-
-        spl_autoload_register(array('AutoloadPlug', 'autoload'), true, true);
-
-        $this->loadRoxClasses($class_loader);
-        $this->loadPTClasses($class_loader);
-
-        require_once SCRIPT_BASE.'pthacks/classes.php';
-
-        Classes::set($class_loader);  // ???
-
         PSurveillance::get();
-
-        // $this->loadRoxClasses($class_loader);
-        $this->loadPModules($class_loader);
-        $this->loadPApps($class_loader);
-
-        // TODO: fill with class names..
-        $this->classes = array();
-
 
         // these two may actually kill the process
         $this->loadDefaults($base_xml_xpath, $settings);

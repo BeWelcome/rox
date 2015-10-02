@@ -1,5 +1,6 @@
 <?php
 
+use Symfony\Component\HttpFoundation\Response;
 
 class MembersController extends RoxControllerBase
 {
@@ -1051,5 +1052,15 @@ class MembersController extends RoxControllerBase
         }
         ob_end_clean();
         exit(0);
+    }
+
+    /**
+     * @return Response
+     */
+    public function avatar($username, $size) {
+        $member = $this->getMember($username);
+        ob_start();
+        $this->model->showAvatar($member->id, $size);
+        return new Response(ob_end_clean());
     }
 }

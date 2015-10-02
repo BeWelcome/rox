@@ -1,8 +1,5 @@
 <?php
 
-require_once SCRIPT_BASE.'roxlauncher/roxloader.php';
-require_once 'environmentexplorer.php';
-
 /**
  * methods in here get called by other methods in PTLauncher.
  *
@@ -13,10 +10,8 @@ class RoxLauncher
      * central starting point.
      * to be called in htdocs/index.php
      */
-    function launch()
+    function launch(EnvironmentExplorer $env_explore)
     {
-        $env_explore = $this->initializeGlobalState();
-        
         try {
             // find an app and run it.
             $this->chooseAndRunApplication($env_explore);
@@ -60,7 +55,7 @@ HTML;
      */
     protected function chooseAndRunApplication($env_explore)
     {
-        $router = new RoxFrontRouter();
+        $router = new \RoxFrontRouter();
         $router->classes = $env_explore->classes;
         $router->env = $env_explore;
         $router->session_memory = new SessionMemory('SessionMemory');

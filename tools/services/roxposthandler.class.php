@@ -138,6 +138,7 @@ class RoxPostHandler extends ObjectWithInjection
         );
         
         $this->_registered_callbacks[$key_in_table] = array(
+            'key_on_page' => $key_on_page,
             'classname' => $classname,
             'methodname' => $methodname,
             'count' => 0,

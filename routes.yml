@@ -1,0 +1,23 @@
+# routes.yml
+start:
+    path:     /
+    defaults: { _controller: '\Rox\Main\Start\StartController::showAction' }
+
+home:
+    path:     /home
+    defaults: { _controller: '\Rox\Main\Home\HomeController::showAction' }
+
+login:
+    path:     /login_symfony
+    defaults: { _controller: 'Rox\Login\LoginController::checkCredentials' }
+    schemes:  [https]
+
+feedback:
+    path:     /feedback
+    methods:  [GET]
+    defaults: { _controller: '\Rox\Main\Home\HomeController::showAction' }
+
+avatar:
+    path:     /members/avatar/{username}/{size}
+    methods:  [GET]
+    defaults: { _controller: '\MembersController::avatar' }

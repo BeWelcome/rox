@@ -1,9 +1,12 @@
 <?php
 
+namespace Rox\Framework;
+
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\MessageSelector;
+use \AbstractBasePage;
 
-class TwigView extends AbstractBasePage {
+class TwigViewOld extends AbstractBasePage {
 
     protected $_loader;
     private $_environment;
@@ -13,13 +16,13 @@ class TwigView extends AbstractBasePage {
     protected $_translator;
     private $_stylesheets = array(
         'bewelcome.css?1',
-//                 'minimal/screen/custom/index.css?3',
-                'minimal/screen/custom/font-awesome.min.css',
-                'minimal/screen/custom/font-awesome-ie7.min.css',
+/*        'bootstrap.css',
         'select2.css',
         'select2-bootstrap.css',
-
-    );
+          'minimal/screen/custom/index.css?3',
+          'minimal/screen/custom/font-awesome.min.css',
+          'minimal/screen/custom/font-awesome-ie7.min.css',
+*/    );
     private $_lateScriptFiles = array(
         'bootstrap' => 'bootstrap/bootstrap.min.js',
         'initialize' => 'common/initialize.js'

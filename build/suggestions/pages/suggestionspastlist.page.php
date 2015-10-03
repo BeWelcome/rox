@@ -30,7 +30,7 @@ Boston, MA  02111-1307, USA.
  * @package Apps
  * @subpackage Suggestions
  */
-class SuggestionsRejectedListPage extends SuggestionsBasePage
+class SuggestionsPastListPage extends SuggestionsBasePage
 {
     protected $NoItems = 'SuggestionsNoRejected';
 

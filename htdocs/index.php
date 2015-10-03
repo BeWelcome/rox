@@ -88,6 +88,31 @@ require SCRIPT_BASE . 'vendor/autoload.php';
 $environmentExplorer = new EnvironmentExplorer;
 $environmentExplorer->initializeGlobalState();
 
+// Setup database connection with Eloquent
+use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Events\Dispatcher;
+use Illuminate\Container\Container;
+
+$capsule = new Capsule;
+$capsule->addConnection([
+    'driver'    => 'mysql',
+    'host'      => 'localhost',
+    'database'  => 'bewelcome',
+    'username'  => 'root',
+    'password'  => '',
+    'charset'   => 'utf8',
+    'collation' => 'utf8_unicode_ci',
+    'prefix'    => '',
+]);
+
+$capsule->setEventDispatcher(new Dispatcher(new Container));
+
+// Make this Capsule instance available globally via static methods... (optional)
+$capsule->setAsGlobal();
+
+// Setup the Eloquent ORM... (optional; unless you've used setEventDispatcher())
+$capsule->bootEloquent();
+
 // Create global router object
 $locator = new Symfony\Component\Config\FileLocator(array(__DIR__));
 $request = Symfony\Component\HttpFoundation\Request::createFromGlobals();
@@ -111,100 +136,38 @@ $errorHandler = function (Symfony\Component\Debug\Exception\FlattenException $ex
 
 $dispatcher = new EventDispatcher();
 $dispatcher->addSubscriber(new Symfony\Component\HttpKernel\EventListener\RouterListener($matcher));
-$dispatcher->addSubscriber(new Symfony\Component\HttpKernel\EventListener\ExceptionListener($errorHandler));
+// $dispatcher->addSubscriber(new Symfony\Component\HttpKernel\EventListener\ExceptionListener($errorHandler));
 $dispatcher->addSubscriber(new Rox\Framework\ControllerResolverListener($router));
 $framework = new Rox\Framework($dispatcher, $resolver);
 
-$response = $framework->handle($request);
-$response->send();
-
-exit;
-
-function main()
-{
-    if (!version_compare(phpversion(), '5.4.0', '>=')) {
-        die('Only for PHP version 5.4.0 or greater!');
-    }
-
-    ini_set('display_errors', 1);
-    ini_set('allow_url_fopen', 1);
-
-    ini_set('error_log', SCRIPT_BASE . 'errors.log');
-
-    // error_reporting(E_ALL);
-    // for php5.4x uncomment the below and comment out the above
-    error_reporting(E_ALL & ~E_STRICT);
-
-    // Setup old rox autoloader
-    $environmentExplorer = new EnvironmentExplorer;
-    $environmentExplorer->initializeGlobalState();
-
-    // First check if anyone is logged in
-    $roxModel = new RoxModelBase();
-
-    $loggedInMember = $roxModel->getLoggedInMember();
-
-    // Create global router object
-    $locator = new FileLocator(array(__DIR__));
-    $request = Request::createFromGlobals();
-    $requestContext = new RequestContext();
-    $requestContext->fromRequest($request);
-
-    $yamlFileLocator = new YamlFileLoader($locator);
-    $router = new Router(
-        $yamlFileLocator,
-        SCRIPT_BASE . 'routes.yml',
-        array('cache_dir' => null),
-        $requestContext
-    );
-    $matcher = new UrlMatcher($router->getRouteCollection(), $requestContext);
-
+try {
+    $response = $framework->handle($request);
+    $response->send();
+}
+catch (Twig_Error $e) {
+    echo 'Exception: ' . $e->getMessage();
+    echo "\n{$e->getFile()} ({$e->getLine()})";
+    exit();
+}
+catch (Exception $e) {
+    require_once SCRIPT_BASE . 'roxlauncher/roxlauncher.php';
+    $launcher = new RoxLauncher();
     try {
-        $request->attributes->add($matcher->match($request->getPathInfo()));
-        $resolver = new ControllerResolver();
-
-        $controller = $resolver->getController($request);
-        $controller[0]->router = $router;
-        $arguments = $resolver->getArguments($request, $controller);
-
-        $response = call_user_func_array($controller, $arguments);
-
-        $response->prepare($request);
-        $response->send();
+        $launcher->launch($environmentExplorer);
     }
-    catch (Twig_Error $e) {
+    catch (PException $e) {
+        // XML header is a bad idea in this case,
+        // because most likely the application already started with XHTML
+        // header('Content-type: application/xml; charset=utf-8');
+        echo '<pre>';
+        print_r($e);
+        echo '</pre>';
+        exit();
+    } catch (Exception $e) {
         echo 'Exception: ' . $e->getMessage();
         echo "\n{$e->getFile()} ({$e->getLine()})";
         exit();
     }
-    catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
-        $response = new Response('Not Found', 404);
-    }
-    catch (Exception $e) {
-        require_once SCRIPT_BASE . 'roxlauncher/roxlauncher.php';
-        $launcher = new RoxLauncher();
-        try {
-            $launcher->launch($environmentExplorer);
-        }
-        catch (PException $e) {
-            // XML header is a bad idea in this case,
-            // because most likely the application already started with XHTML
-            // header('Content-type: application/xml; charset=utf-8');
-            echo '<pre>';
-            print_r($e);
-            echo '</pre>';
-            exit();
-        } catch (Exception $e) {
-            echo 'Exception: ' . $e->getMessage();
-            echo "\n{$e->getFile()} ({$e->getLine()})";
-            exit();
-        }
-    }
-
-    session_write_close();
 }
 
-
-$framework = new Rox\Framework();
-
-main();
+session_write_close();

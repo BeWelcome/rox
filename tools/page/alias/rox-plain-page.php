@@ -10,11 +10,11 @@
  * 
  * inject the parameters using functionality defined in ObjectWithInjection
  */
-class RoxGenericPage extends PageWithParameterizedRoxLayout
+class RoxGenericPage2 extends PageWithParameterizedRoxLayout
 {   
 }
 
-class RoxGenericPage_OLD
+class RoxGenericPage2_OLD
 {
     private $_attributes = array();
     

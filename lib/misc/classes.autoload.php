@@ -22,7 +22,7 @@
  * @version $Id: classes.autoload.php 68 2006-06-23 12:10:27Z kang $
  * @link http://de3.php.net/manual/de/language.oop5.autoload.php
  */
-class Classes {
+class Classes1 {
 	/**
 	 * the instance for using the singleton pattern
 	 *

@@ -5,7 +5,7 @@
  * This class is necessary to cheat on PlatformPT
  * It allows us to have our own autoload mechanism, instead of using the PT one.
  */
-class Classes
+class Classes2
 {
     private static $_sim_classes;
     

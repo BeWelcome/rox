@@ -4,7 +4,7 @@
  * This page allows to create a new group
  *
  */
-class GroupSettingsPage extends GroupsBasePage
+class GroupSettingsPage2 extends GroupsBasePage
 {
     protected function teaserContent()
     {

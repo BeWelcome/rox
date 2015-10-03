@@ -7,8 +7,6 @@
         "twbs/bootstrap": "3.*",
         "components/font-awesome": "4.*",
         "Twig/Twig": "1.*",
-        "psr/log": "*",
-        "illuminate/database": "*",
         "doctrine/orm": "*",
         "select2/select2": "4.*",
         "symfony/twig-bridge": "*",
@@ -18,9 +16,10 @@
         "symfony/http-foundation" : "2.*",
         "symfony/debug": "^2.7",
         "psr/log": "*",
-        "select2/select2": "*@dev",
         "ezyang/htmlpurifier": "*",
-        "illuminate/database": "*"
+        "illuminate/database": "*",
+        "illuminate/support": "*",
+        "illuminate/events": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "4.*",

@@ -13,6 +13,7 @@ use \Twig_Loader_Filesystem;
 use \Twig_Environment;
 use \RoxModelBase;
 use \FlaglistModel;
+use \Illuminate\Database\Capsule\Manager as Capsule;
 
 class TwigView extends AbstractBasePage {
 
@@ -73,9 +74,20 @@ class TwigView extends AbstractBasePage {
         $roxModel = new RoxModelBase();
         $member = $roxModel->getLoggedInMember();
         $loggedIn = ($member !== false);
+        $messageCount = 0;
+        if ($loggedIn) {
+            $messageCount = \Rox\Models\Message::where(
+                function ($q) use ($member) {
+                    $q->where('IdReceiver', (int)$member->id)
+                        ->where('WhenFirstRead', '0000-00-00 00:00')
+                        ->where('Status', 'Sent');
+                    return $q;
+                }
+            )->count();
+        }
         return array(
             'logged_in' => $loggedIn,
-            'messages' => 123,
+            'messages' => $messageCount,
             'meta.robots' => 'ALL'
         );
     }

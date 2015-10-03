@@ -21,7 +21,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id: exception.lib.php 108 2006-07-08 17:03:54Z kang $
  */
-class PException extends Exception  {
+class PException2 extends Exception  {
     private $_info = array();
     
     public function __construct($msg = NULL, $code = 0) {

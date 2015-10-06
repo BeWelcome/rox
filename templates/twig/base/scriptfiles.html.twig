@@ -1,6 +1,3 @@
-{% for key, scriptFile in scriptFiles %}
-    {% if key %}
-        <!-- {{ key }} -->
-    {% endif %}
+{% for scriptFile in scriptFiles %}
     <script type="text/javascript" src="/script/{{ scriptFile }}"></script>
 {% endfor %}

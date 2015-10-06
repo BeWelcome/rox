@@ -2,6 +2,7 @@
 
 namespace Rox\Framework;
 
+use Rox\Models\Message;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\MessageSelector;
@@ -32,29 +33,32 @@ class TwigView extends AbstractBasePage {
 //          'minimal/screen/custom/font-awesome.min.css',
 //          'minimal/screen/custom/font-awesome-ie7.min.css',
     );
+
     private $_lateScriptFiles = array(
-        'bootstrap' => 'bootstrap/bootstrap.min.js',
-        'initialize' => 'common/initialize.js'
-    );
-    private $_earlyScriptFiles = array(
-        'common' => 'common/common.js?1',
-        'jQuery' => 'jquery-1.11.2/jquery-1.11.2.min.js',
-        'select2' => 'select2/select2.min.js'
+        'bootstrap/bootstrap.min.js',
+        'common/initialize.js',
+        'select2/select2.min.js',
+        'bootstrap-autohidingnavbar/jquery.bootstrap-autohidingnavbar.js',
     );
 
-    public function __construct(Router $router, $logged_in = false) {
+    private $_earlyScriptFiles = array(
+        'common/common.js?1',
+        'jquery-1.11.2/jquery-1.11.2.min.js',
+    );
+
+    public function __construct(Router $router) {
         $this->_loader = new Twig_Loader_Filesystem();
-        $this->_loader->addPath(SCRIPT_BASE . 'templates/twig/base', 'base');
-        $this->_loader->addPath(SCRIPT_BASE . 'templates/twig/start', 'start');
-        $this->_loader->addPath(SCRIPT_BASE . 'templates/twig/macros', 'macros');
+        $this->addNamespace('base');
+        $this->addNamespace('macros');
+
         $this->_environment = new Twig_Environment(
             $this->_loader ,
             array(
                 'cache' => SCRIPT_BASE . 'data/twig',
                 'auto_reload' => true,
+                'debug' => true,
             )
         );
-        $this->_defaults = $this->_getDefaults();
         $this->_words = $this->getWords();
 
         $this->_translator = new Translator($_SESSION['lang'], new MessageSelector());
@@ -68,6 +72,18 @@ class TwigView extends AbstractBasePage {
         if ($router != null) {
             $this->_environment->addExtension(new RoutingExtension($router->getGenerator()));
         }
+        $this->_environment->addExtension(new \Twig_Extension_Debug());
+    }
+
+    /**
+     * Adds a namespace for Twig templates (set path accordingly)
+     *
+     * @param $namespace
+     * @throws \Twig_Error_Loader
+     */
+    public function addNameSpace($namespace) {
+        $path = realpath(SCRIPT_BASE . 'templates/twig/' . $namespace);
+        $this->_loader->addPath($path, $namespace);
     }
 
     private function _getDefaults() {
@@ -76,19 +92,17 @@ class TwigView extends AbstractBasePage {
         $loggedIn = ($member !== false);
         $messageCount = 0;
         if ($loggedIn) {
-            $messageCount = \Rox\Models\Message::where(
-                function ($q) use ($member) {
-                    $q->where('IdReceiver', (int)$member->id)
-                        ->where('WhenFirstRead', '0000-00-00 00:00')
-                        ->where('Status', 'Sent');
-                    return $q;
-                }
-            )->count();
+            $messageCount =
+                Message::where('IdReceiver', (int)$member->id)
+                    ->where('WhenFirstRead', '0000-00-00 00:00')
+                    ->where('Status', 'Sent')
+                    ->count();
         }
         return array(
             'logged_in' => $loggedIn,
             'messages' => $messageCount,
-            'meta.robots' => 'ALL'
+            'meta.robots' => 'ALL',
+            'title' => 'BeWelcome'
         );
     }
 
@@ -156,24 +170,32 @@ class TwigView extends AbstractBasePage {
 
     public function setTemplate($template, $namespace = false, $parameters = array()) {
         if ($namespace) {
-            $this->_loader->addPath(SCRIPT_BASE . 'templates/twig/' . $namespace, $namespace);
+            $this->addNameSpace($namespace);
             $this->_template = '@' . $namespace . '/' . $template;
         } else {
             $this->_template = $template;
         }
+        $this->setParameters($parameters);
+    }
+
+    /**
+     * Set the parameters to be used during rendering
+     *
+     * @param array $parameters
+     */
+    public function setParameters($parameters) {
         $finalParameters = array_merge(
             $parameters,
             $this->_getStylesheets(),
             $this->_getLanguages(),
             $this->_getEarlyJavascriptFiles(),
             $this->_getLateJavascriptFiles(),
-            $this->_defaults
+            $this->_getDefaults()
         );
         $this->_parameters = $finalParameters;
     }
 
     public function render() {
         echo $this->_environment->render($this->_template, $this->_parameters);
-        \PVars::getObj('page')->output_done = true;
     }
 }

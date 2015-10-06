@@ -1,0 +1,9 @@
+{% extends '@base/base.html.twig' %}
+
+{% block content %}
+    <div class="container" style="padding: 50px 15px 0px;">
+    {% for log in logs %}
+        {% if log.member.Username %}{{ log.member.Username }}{% else %}Not logged{% endif %}
+    {% endfor %}
+</div>
+{% endblock content %}

@@ -3,7 +3,8 @@
 namespace Rox\Admin\Logs;
 
 use Rox\Models\Log;
-use Symfony\Component\Routing\Router;
+use Rox\Models\Member;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -16,7 +17,7 @@ class LogsController extends \RoxControllerBase
 {
 
     /**
-     * @var RoxModelBase
+     * @var \RoxModelBase
      */
     private $_model;
 
@@ -31,32 +32,108 @@ class LogsController extends \RoxControllerBase
         unset($this->_model);
     }
 
-    public function showOverviewAction() {
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    public function showOverview($pageNumber, $itemsPerPage) {
+        $first = ($pageNumber - 1) * $itemsPerPage;
         $page = new AdminLogsPage($this->router);
 
-        $results = Log::with('member')->get()->take(2);
+        $query = Log::with('member')->orderBy('created', 'desc');
+        $count = $query->count();
+        $logs = $query->skip($first)->take($itemsPerPage)->get();
+        $lastPage = ceil($count / $itemsPerPage);
         $page->setParameters(
-            ['logs' => $results->all(), 'logs_array' => $results->toArray()]
+            [
+                'currentPage' => $pageNumber,
+                'lastPage' => $lastPage,
+                'route' => 'admin_logs',
+                'routeParams' => ['itemsPerPage' => $itemsPerPage],
+                'count' => $count,
+                'logs' => $logs
+            ]
         );
         return new Response($page->render());
     }
 
-    public function showIpOverview() {
+    /**
+     * @param $ipAddress
+     * @param $currentPage
+     * @param $itemsPerPage
+     * @return Response
+     */
+    public function showIpOverview($ipAddress, $currentPage, $itemsPerPage) {
+        $first = ($currentPage - 1) * $itemsPerPage;
         $page = new AdminLogsPage($this->router);
 
-        $results = Log::with('member')->get()->take(2);
+        $query = Log::with('member')->where('ipAddress', ip2long($ipAddress))->orderBy('created', 'desc');
+        $count = $query->count();
+        $logs = $query->skip($first)->take($itemsPerPage)->get();
+        $lastPage = ceil($count / $itemsPerPage);
         $page->setParameters(
-            ['logs' => $results->all(), 'logs_array' => $results->toArray()]
+            [
+                'currentPage' => $currentPage,
+                'lastPage' => $lastPage,
+                'route' => 'admin_logs_ip',
+                'routeParams' => ['itemsPerPage' => $itemsPerPage, 'ipAddress' => $ipAddress],
+                'count' => $count,
+                'logs' => $logs
+            ]
         );
         return new Response($page->render());
     }
 
-    public function showUsernameOverview() {
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    public function showUsernameOverview($username, $currentPage, $itemsPerPage) {
+        $member = Member::where('Username', '=', $username)->first();
+        if ($member) {
+            $first = ($currentPage - 1) * $itemsPerPage;
+            $page = new AdminLogsPage($this->router);
+
+            $query = Log::with('member')->where('IdMember', $member->id)->orderBy('created', 'desc');
+            $count = $query->count();
+            $logs = $query->skip($first)->take($itemsPerPage)->get();
+            $lastPage = ceil($count / $itemsPerPage);
+            $page->setParameters(
+                [
+                    'currentPage' => $currentPage,
+                    'lastPage' => $lastPage,
+                    'route' => 'admin_logs_username',
+                    'routeParams' => ['itemsPerPage' => $itemsPerPage, 'username' => $username],
+                    'count' => $count,
+                    'logs' => $logs
+                ]
+            );
+            return new Response($page->render());
+        } else {
+            return new Response('Not found', 404);
+        }
+    }
+
+    /**
+     * @return Response
+     */
+    public function showTypeOverview($type, $currentPage, $itemsPerPage) {
+        $first = ($currentPage - 1) * $itemsPerPage;
         $page = new AdminLogsPage($this->router);
 
-        $results = Log::with('member')->get()->take(2);
+        $query = Log::with('member')->where('Type', $type)->orderBy('created', 'desc');
+        $count = $query->count();
+        $logs = $query->skip($first)->take($itemsPerPage)->get();
+        $lastPage = ceil($count / $itemsPerPage);
         $page->setParameters(
-            ['logs' => $results->all(), 'logs_array' => $results->toArray()]
+            [
+                'currentPage' => $currentPage,
+                'lastPage' => $lastPage,
+                'route' => 'admin_logs_type',
+                'routeParams' => ['itemsPerPage' => $itemsPerPage, 'type' => $type],
+                'count' => $count,
+                'logs' => $logs
+            ]
         );
         return new Response($page->render());
     }

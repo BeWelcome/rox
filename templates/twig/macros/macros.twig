@@ -22,8 +22,76 @@
     {% elseif size == 200  %}
         {% set suffix = '_200' %}
     {%  endif %}
-    {{ username }}*
-    {{ size }}*
-    {{ suffix }}
     <img src="{{ path('avatar', { 'username': username , 'size': suffix }) }}" >
+{% endmacro %}
+
+{% macro memberlink(username) %}
+<a href="path('member', { username: username } ) }}">{{ username }}</a>
+{% endmacro %}
+
+{% macro pagination(currentPage, lastPage, route, routeParams) %}
+    {#
+      Source: http://dev.dbl-a.com/symfony-2-0/symfony2-and-twig-pagination/
+      Updated by: Simon Schick <simonsimcity@gmail.com>
+
+      Parameters:
+        * currentPage (int) : the current page you are in
+        * lastPage (int) : represents the total number of existing pages
+        * route (string) : the route name to use for links
+    #}
+    {% spaceless %}
+        {% if lastPage > 1 %}
+
+            {# the number of first and last pages to be displayed #}
+            {% set extremePagesLimit = 3 %}
+
+            {# the number of pages that are displayed around the active page #}
+            {% set nearbyPagesLimit = 2 %}
+
+            {# always show first and last link (disabled) #}
+            {% set showAlwaysFirstAndLast = true %}
+
+            <nav>
+                <ul class="pagination">
+                {% if currentPage > 1 %}
+                    <li><a href="{{ path(route, routeParams|merge({currentPage: currentPage - 1})) }}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+
+                    {% for i in range(1, extremePagesLimit) if ( i < currentPage - nearbyPagesLimit ) %}
+                        <li><a href="{{ path(route, routeParams|merge({page: i})) }}">{{ i }}</a></li>
+                    {% endfor %}
+
+                    {% if extremePagesLimit + 1 < currentPage - nearbyPagesLimit %}
+                        <li class="disabled"><a href="#">...</a></li>
+                    {% endif %}
+
+                    {% for i in range(currentPage-nearbyPagesLimit, currentPage-1) if ( i > 0 ) %}
+                        <li><a href="{{ path(route, routeParams|merge({currentPage: i})) }}">{{ i }}</a></li>
+                    {% endfor %}
+                {% elseif showAlwaysFirstAndLast %}
+                    <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                {% endif %}
+
+                <li class="active"><a href="{{ path(route, routeParams|merge({ currentPage: currentPage })) }}">{{ currentPage }}</a></li>
+
+                {% if currentPage < lastPage %}
+                    {% for i in range(currentPage+1, currentPage + nearbyPagesLimit) if ( i <= lastPage ) %}
+                        <li><a href="{{ path(route, routeParams|merge({currentPage: i})) }}">{{ i }}</a></li>
+                    {% endfor %}
+
+                    {% if  (lastPage - extremePagesLimit) > (currentPage + nearbyPagesLimit) %}
+                        <li class="disabled"><a href="#">...</a></li>
+                    {% endif %}
+
+                    {% for i in range(lastPage - extremePagesLimit+1, lastPage) if ( i > currentPage + nearbyPagesLimit ) %}
+                        <li><a href="{{ path(route, routeParams|merge({currentPage: i})) }}">{{ i }}</a></li>
+                    {% endfor %}
+
+                    <li><a href="{{ path(route, routeParams|merge({currentPage: currentPage+1})) }}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                {% elseif showAlwaysFirstAndLast %}
+                    <li class="disabled"><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    {% endspaceless %}
 {% endmacro %}

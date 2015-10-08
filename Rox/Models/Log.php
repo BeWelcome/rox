@@ -14,4 +14,9 @@ class Log extends Model {
     {
         return $this->hasOne('Rox\Models\Member', 'id', 'IdMember');
     }
+
+    public function IpAddressString()
+    {
+        return long2ip($this->IpAddress);
+    }
 }

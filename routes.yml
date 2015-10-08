@@ -1,41 +1,68 @@
 # routes.yml
 start:
     path:     /
-    defaults: { _controller: '\Rox\Main\Start\StartController::showAction' }
+    defaults:
+        _controller: '\Rox\Main\Start\StartController::showAction'
 
 home:
     path:     /home
-    defaults: { _controller: '\Rox\Main\Home\HomeController::showAction' }
+    defaults:
+        _controller: '\Rox\Main\Home\HomeController::showAction'
 
 login:
     path:     /login_symfony
-    defaults: { _controller: 'Rox\Login\LoginController::checkCredentials' }
+    defaults:
+        _controller: 'Rox\Login\LoginController::checkCredentials'
     schemes:  [https]
 
 feedback:
     path:     /feedback
     methods:  [GET]
-    defaults: { _controller: '\Rox\Main\Home\HomeController::showAction' }
+    defaults:
+        _controller: '\Rox\Main\Home\HomeController::showAction'
 
 avatar:
     path:     /members/avatar/{username}/{size}
-    methods:  [GET]
-    defaults: { _controller: '\MembersController::avatar' }
-
-admin_log_username:
-    path:     /admin/logs/{username}/{page}
     requirements:
         username: "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"
-    defaults: { _controller: '\Rox\Admin\Logs\LogsController::showUsernameOverview', page: 1 }
+    defaults:
+        _controller: '\MembersController::avatar'
+
+member:
+    path:     /members/{username}
+    requirements:
+        username: "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"
+    defaults:
+        _controller: '\MembersController::index'
+
+admin_logs_type:
+    path:     /admin/logs/type/{type}/{currentPage}/{itemsPerPage}
+    defaults:
+        _controller: '\Rox\Admin\Logs\LogsController::showTypeOverview'
+        currentPage: 1
+        itemsPerPage: 20
+
+admin_logs_username:
+    path:     /admin/logs/username/{username}/{currentPage}/{itemsPerPage}
+    requirements:
+        username: "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"
+    defaults:
+        _controller: '\Rox\Admin\Logs\LogsController::showUsernameOverview'
+        currentPage: 1
+        itemsPerPage: 20
 
 admin_logs_ip:
-    path:     /admin/logs/{ip}/{page}
+    path:     /admin/logs/ip/{ipAddress}/{currentPage}/{itemsPerPage}
     requirements:
-        ip: "(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"
-    defaults: { _ controller: '\Rox\Admin\Logs\LogsController::showIPOverview', page: 1 }
+        ipAddress: "(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"
+    defaults:
+        _controller: '\Rox\Admin\Logs\LogsController::showIPOverview'
+        currentPage: 1
+        itemsPerPage: 20
 
 admin_logs:
-    path:     /admin/logs/{page}
-    defaults: { _controller: '\Rox\Admin\Logs\LogsController::showOverviewAction', page: 1 }
-
-
+    path:     /admin/logs/{currentPage}/{itemsPerPage}
+    defaults:
+        _controller: '\Rox\Admin\Logs\LogsController::showOverview'
+        currentPage: 1
+        itemsPerPage: 20

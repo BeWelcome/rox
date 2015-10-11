@@ -1,14 +1,15 @@
 {% extends '@base/base.html.twig' %}
 
 {% block content %}
+
     <div class="container" style="padding: 50px 15px 0px;">
 
         <!-- #main: content begins here -->
         <div id="main">
 
-            <div class="bw-row">
-                <div id="avatar" class="col-xs-2"><a href="members/member-101" title="See profile member-101" ><img class="float_left framed dashavatar" src="/members/avatar/member-101?50_50" alt="Profile" /></a><span class="dashstatus"><a href="#status"><img class="float_left framed dashstatusimg" src="/members/avatar/member-102?50_50" alt="status" /></a></span></div>
-                <div id="welcometext" class="col-xs-7"><span style="font-size: 2.4em; font-weight: 900;">Welcome back, %username!</span><br /><span style="font-size: 1.2em; font-weight: bold;">You're currently in <a href="#">Lyon</a>, your hosting status is <a href="#">yes</a></span></div>
+            <div class="bw-row" style="padding: .5em 0; min-height: 120px; background-color: #EEEEEE; border: 3px solid #FFFFFF; box-shadow: 0 0 1px #888888; margin-bottom: 2em;">
+                <div id="avatar" class="col-xs-2"><a href="members/member-101" title="See profile member-101" >{{ macros.avatar('member-101') }}</a><span class="dashstatus" style="position:relative; left: -20px;s top: 40px;"><a href="#status">hosting</a></span></div>
+                <div id="welcometext" class="col-xs-7"><span style="font-size: 2.4em; font-weight: 900;">Welcome back, {{ macros.memberlink('member-101') }}</span><br /><span style="font-size: 1.2em; font-weight: bold;">You're registered as <span><a href="#">hosting</a></span> in <a href="#">Lyon</a></span></div>
                 <div class="col-xs-3">
                     <div class="input-group" style="position: absolute; top: 30px; right: 10px;">
                         <input type="text" class="form-control" placeholder="Where do you want to go?">
@@ -20,7 +21,7 @@
             </div>
 
             <!-- #two-boxes: messages and website activity -->
-            <div id="two-boxes" class="row">
+            <div id="two-boxes" class="row" style="margin-bottom: 2em;">
 
                 <!-- entire messages box -->
                 <div id="messagecontainer" class="col-xs-12 col-md-6">
@@ -32,7 +33,7 @@
                     </ul>
 
                     <!-- bordered box around content -->
-                    <div id="borderbox" class="dashbox">
+                    <div id="borderbox" class="dashbox" style="border: 0.3em solid #FFF; overflow: hidden; box-shadow: 0 0 2px #888; height: 30em;">
 
                         <div class="tab-content">
 
@@ -53,7 +54,7 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div id="showmessages" class="scrollablecontent">
+                                <div id="showmessages" class="scrollablecontent" style="position:relative; max-height: 20em; height:100%; width: 105%; width: calc(100% + 20px); overflow-x:hidden; overflow-y:visible;">
                                     <div id="message1" class="row" style="background-color: #FFF; padding: 1em;">
                                         <div id="sender1" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-105?50_50" alt="Profile" /></a></div>
                                         <div id="type1" class="col-xs-1"><i class="fa fa-bed"></i></div>
@@ -124,7 +125,7 @@
                     </ul>
 
                     <!-- bordered box around content -->
-                    <div id="borderbox2" class="dashbox">
+                    <div id="borderbox2" class="dashbox" style="border: 0.3em solid #FFF; overflow: hidden; box-shadow: 0 0 2px #888; height: 30em;">
                         <div class="tab-content">
 
                             <!-- news content div -->
@@ -151,7 +152,7 @@
                                     </div>
                                 </div>
 
-                                <div id="forumscroll" class="scrollablecontent">
+                                <div id="forumscroll" class="scrollablecontent" style="position:relative; max-height: 20em; height:100%; width: 105%; width: calc(100% + 20px); overflow-x:hidden; overflow-y:visible;">
 
                                     <div id="discussion1" class="row" style="background-color: #EEE; padding: 1em;">
                                         <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
@@ -217,15 +218,17 @@
             <!-- #widgets: 4 columns with additional info -->
             <div class="row">
                 <div id="beinvolved" class="col-xs-6 col-md-4">
-                    <div class="widget">
-                        <h3>Be Involved <small>help the community</small></h3>
-                            <span class="block">BeWelcome is run by volunteers - free of charge and open source. Volunteering for the project is a great opportunity for you to get to know enthusiastic people who really believe in promoting hospitality and respect for each other. And it's fun, too!<span>
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button"><i class="fa fa-wrench"></i> Help BeWelcome</button>
-                            </span>
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button"><i class="fa fa-euro"></i> <i class="fa fa-usd"></i> <i class="fa fa-gbp"></i> <i class="fa fa-yen"></i> <i class="fa fa-btc"></i> <i class="fa fa-paypal"></i> Donate</button>
-                            </span>
+                    <div class="widget" style="background-color: #FFF; box-shadow: 0 0 2px #999; padding: 1em;">
+                        <h3>Be Involved<br /><small>help the community</small></h3>
+                            <p style="margin-bottom: 1em;"><span class="block">BeWelcome is run by volunteers - free of charge and open source. Volunteering for the project is a great opportunity for you to get to know enthusiastic people who really believe in promoting hospitality and respect for each other. And it's fun, too!<span></p>
+                            <div id="beinvolved-buttons" style="margin-bottom: 1em;">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button"><i class="fa fa-wrench"></i> Help BeWelcome</button>
+                                </span>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button"><i class="fa fa-euro"></i> Please donate</button>
+                                </span>
+                            </div>
                             <div class="progress">
                                 <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
                                     <span>60%</span>
@@ -236,48 +239,89 @@
                 </div>
 
                 <div id="next" class="col-xs-6 col-md-3">
-                    <div class="widget">
-                        <h3>Potential guests</h3>
-                        <h4>people traveling in your area</h4>
+                    <div class="widget" style="background-color: #FFF; box-shadow: 0 0 2px #999; padding: 1em;">
+                        <h3>Potential guests<br /><small>people traveling in your area</small></h3>
 
-                        <div id="nextmember1">
-                            member1
-                        </div>
-                        <div id="nextmember2">
-                            member2
+                        <div id="nextmember1" style="margin-bottom: 1em;">
+
+                            <div class="media">
+                                <div class="media-left">
+                                    <a href="#">
+                                        <img class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" />
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <i class="fa fa-calendar"></i> 01-10-2015 - 3 days
+                                    <h4 class="media-heading">Username</h4>
+                                    <h5>Berlin, Germany</h5>
+                                </div>
+                            </div>
                         </div>
 
-                        <div><a href="#viewmore"><img height="20" width="80" src="members/avatar/member-101?50_50" alt="Mygroups" /></a></div>
-                        <div><a href="#findaguest"><img height="20" width="80" src="members/avatar/member-101?50_50" alt="Mygroups" /></a></div>
+                        <div id="nextmember2" style="margin-bottom: 1em;">
+                            <div class="media">
+                                <div class="media-left">
+                                    <a href="#">
+                                        <img class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" />
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <i class="fa fa-calendar"></i> 14-10-2015 - 5 days
+                                    <h4 class="media-heading">Username</h4>
+                                    <h5>Paris, France</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="text-align: center;">
+                                <span><button class="btn btn-default" type="button"><i class="fa fa-plus-circle"></i> View more</button></span>
+                                <span><button class="btn btn-default" type="button"><i class="fa fa-map-signs"></i> Plan your trip</button></span>
+                        </div>
 
                     </div>
                 </div>
 
                 <div id="recent" class="col-xs-6 col-md-3">
-                    <div class="widget">
-                        <h3>Recent visitors</h3>
-                        <h4>of your profile</h4>
-                        <div id="memberprofile">
-                            lastvisitor1
+                    <div class="widget" style="background-color: #FFF; box-shadow: 0 0 2px #999; padding: 1em;">
+                        <h3>Your settings<br /><small>and preferences</small></h3>
+                        <p>Accommodation status</p>
+                        <div id="slider">
+                            <input class="bar" type="range" id="rangeinput" value="2" max="2" onchange="rangevalue.value=value"/>
+                            <span class="highlight"></span>
+                            <output id="rangevalue">2</output>
                         </div>
 
-                        <div id="memberprofile">
-                            lastvisitor2
+                        <p>Public profile?</p>
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-primary active">
+                                <input type="radio" name="options" id="option1" autocomplete="off" checked>Yes
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="options" id="option2" autocomplete="off">No
+                            </label>
                         </div>
 
-                        <div id="memberprofile">
-                            lastvisitor3
+                        <p>Newsletter?</p>
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-primary active">
+                                <input type="radio" name="options" id="option1" autocomplete="off" checked>Yes
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="options" id="option2" autocomplete="off">No
+                            </label>
                         </div>
-
-                        <div><a href="#viewmore"><img height="20" width="80" src="members/avatar/member-101?50_50" alt="Mygroups" /></a></div>
-                        <div><a href="#findaguest"><img height="20" width="80" src="members/avatar/member-101?50_50" alt="Mygroups" /></a></div>
                     </div>
                 </div>
 
                 <div id="beinformed" class="col-xs-6 col-md-2">
-                    <div class="widget">
-                        <h3>Be Informed</h3>
-                        <h4>Transparency</h4>
+                    <div class="widget" style="background-color: #FFF; box-shadow: 0 0 2px #999; padding: 1em;">
+                        <h3>Be Informed<br /><small>Transparency</small></h3>
+                        <ul class="nav nav-pills nav-stacked">
+                            <li role="presentation"><a href="#"><i class="fa fa-question"></i> FAQ</a></li>
+                            <li role="presentation"><a href="#"><i class="fa fa-shield"></i> Safety</a></li>
+                            <li role="presentation"><a href="#"><i class="fa fa-bullseye"></i> BeVolunteer</a></li>
+                            <li role="presentation"><a href="#"><i class="fa fa-money"></i> Finances</a></li>
+                            <li role="presentation"><a href="#"><i class="fa fa-book"></i> Annual report</a></li>
+                        </ul>
                     </div>
                 </div>
             </div><!-- end of #widgets -->

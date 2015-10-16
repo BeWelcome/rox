@@ -315,10 +315,10 @@ class Places extends RoxModelBase {
                 members m
             WHERE
                 m.Status = 'Active'
-                AND m.IdCity = g.geonameid
-                AND g.country = c.country
-                AND g.fclass = 'P'
                 AND m.MaxGuest >= 1
+                AND m.IdCity = g.geonameid
+                AND g.fclass = 'P'
+                AND g.country = c.country
             GROUP BY
                 c.country";
 

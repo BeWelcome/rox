@@ -674,7 +674,7 @@ WHERE
 
     private function boardContinent()  {
         if (!isset(Forums::$continents[$this->continent]) || !Forums::$continents[$this->continent]) {
-            throw new PException('Invalid Continent');
+            return;
         }
 
         $subboards = array('forums/' => 'Forums');

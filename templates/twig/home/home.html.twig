@@ -8,7 +8,9 @@
         <div id="main">
 
             <div class="bw-row" style="padding: .5em 0; min-height: 100px; background-color: #EEEEEE; border: 3px solid #FFFFFF; box-shadow: 0 0 1px #888888; margin-bottom: 2em;">
-                <div id="avatar" class="col-xs-2"><a href="members/member-101" title="See profile member-101" >{{ macros.avatar('member-101') }}</a><span class="dashstatus" style="position:relative; left: -20px;s top: 40px;"><a href="#status">hosting</a></span></div>
+                <div id="avatar" class="col-xs-2">
+                    {{ macros.avatar('member-101', 75, true) }}
+                    <a href="members/member-101" title="See profile member-101" >{{ macros.avatar('member-101', 75) }}</a><span class="dashstatus" style="position:relative; left: -20px; top: 40px;"><a href="#status">hosting</a></span></div>
                 <div id="welcometext" class="col-xs-7"><span style="font-size: 2.4em; font-weight: 900;">Welcome back, {{ macros.memberlink('member-101') }}</span><br /><span style="font-size: 1.2em; font-weight: bold;">You're registered as <span><a href="#">hosting</a></span> in <a href="#">Lyon</a></span></div>
                 <div class="col-xs-3">
                     <div class="input-group" style="position: absolute; top: 30px; right: 10px;">

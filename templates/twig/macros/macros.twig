@@ -7,22 +7,27 @@
     <input class="form-control" type="submit" value="{{ text|trans }}" />
 {% endmacro %}
 
-{% macro avatar(username, size) %}
+{% macro avatar(username, size, linked = false) %}
     {% set suffix = '_30_30' %}
     {% if size == 30 %}
         {% set suffix = '_30_30' %}
     {% elseif size == 50  %}
         {% set suffix = '_50_50' %}
     {% elseif size == 75  %}
-        {% set suffix = '_150' %}
+        {% set suffix = '_75_75' %}
     {% elseif size == 150  %}
         {% set suffix = '_150' %}
-    {% elseif size == 150  %}
-        {% set suffix = '_150' %}
+    {% elseif size == 500  %}
+        {% set suffix = '_500' %}
     {% elseif size == 200  %}
         {% set suffix = '_200' %}
-    {%  endif %}
-    <img src="{{ path('avatar', { 'username': username , 'size': suffix }) }}" >
+    {% endif %}
+    {% set img %}<img src="{{ path('avatar', { 'username': username , 'size': suffix }) }}" >{% endset %}
+    {% if linked %}
+        {{ macro.memberlink(username, img) }}
+    {% else %}
+        {{ img }}
+    {% endif %}
 {% endmacro %}
 
 {% macro memberlink(username) %}

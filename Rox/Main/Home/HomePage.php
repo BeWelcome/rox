@@ -8,6 +8,7 @@ class HomePage extends \Rox\Framework\TwigView
 {
     public function __construct(Router $router) {
         parent::__construct($router);
+        $this->addStylesheet('home.css');
         $this->setTemplate('home.html.twig', 'home', array('title' => 'BeWelcome'));
     }
 }

@@ -55,11 +55,11 @@
                 }
              ?>
             <?php if ($this->loggedInMember) : ?>
-                <?php echo $words->get("MemberSince").': ';
+                <?php echo $words->get("MemberSince"). ': ';
                     if (strtotime($member->created) > strtotime('-1 week')){
                         echo $words->get("LastLoginPrivacy");
                     } else {
-                        echo $layoutbits->ago(strtotime($member->created));
+                        echo $layoutbits->ago(strtotime($member->created)) . $this->memberSinceDate($member);
                     }
                     echo '<br>'.$words->get("LastLogin").': ';
                     if (strtotime($member->LastLogin) > strtotime('-1 week')){

@@ -296,4 +296,19 @@ class MemberPage extends PageWithActiveSkin
         }
         return $form;
     }
+
+    public function memberSinceDate($member)
+    {
+        $dateSince = '';
+        $logged_member = $this->model->getLoggedInMember();
+        if ($logged_member
+            && $logged_member->hasOldRight(
+                array('SafetyTeam' => '')
+            )
+        ) {
+            $dateSince = ' ('.$member->created.')';
+        }
+
+        return $dateSince;
+    }
 }

@@ -42,7 +42,6 @@ if (!empty($DataPost->Error)) {
 
 $request = PRequest::get()->request;
 $uri = implode('/', $request);
-
 ?>
 
 <table bgcolor="lightgray" align="left" border="3">"
@@ -177,12 +176,14 @@ foreach ($DataPost->Thread->Title as $Title) {
 //  echo "<option value=\"-1\">-</option>" ;
 
     foreach ($ArrayLanguage as $Choices) {
+        if (is_object($Choices)) {
             echo "<option value=\"",$Choices->IdLanguage,"\"" ;
             if ($Choices->IdLanguage==$Title->IdLanguage) echo " selected ";
-            echo "\">",$Choices->EnglishName,"</option>" ;
+            echo "\">",$Choices->Name,"</option>" ;
+        }
     }
     echo "</select>" ;
-    echo "</td><td><textarea class=\"long\" name=\"Sentence\" cols=\"60\" rows=\"5\">",$Title->Sentence,"</textarea><input type=\"hidden\" name=\"IdForumTrads\" value=\"".$Title->IdForumTrads."\"></td><td><input type=\"submit\" value=\"update\"></td>" ;
+    echo "</td><td><textarea name=\"Sentence\" cols=\"60\" rows=\"5\">",$Title->Sentence,"</textarea><input type=\"hidden\" name=\"IdForumTrads\" value=\"".$Title->IdForumTrads."\"></td><td><input type=\"submit\" value=\"update\"></td>" ;
     echo "</form>" ;
 }
 
@@ -206,7 +207,7 @@ echo "<tr><th colspan=3 align=left>Title of thread ($max translations)</th>" ;
         }
     }
     echo "</select>" ;
-    echo "</td><td>New Title<br /><textarea class=\"long\" name=\"NewTranslatedTitle\" cols=\"60\" rows=\"5\"></textarea>" ;
+    echo "</td><td>New Title<br /><textarea name=\"NewTranslatedTitle\" cols=\"60\" rows=\"5\"></textarea>" ;
     echo "<td><input type=\"submit\" name=\"submit\" value=\"add translated title\"></td>" ;
     echo "</form>" ;
 
@@ -293,7 +294,7 @@ if (isset($DataPost->Post->message)) echo "<tr><td>message (old TB way)</td><td 
 				</select><br />
 	<?php
 	echo "</td>"  ;
-    echo "<td><input name=\"submit\" type=\"submit\" value=\"update post\"></td>" ;
+    echo '<td><input type="hidden" name="IdThread"  value="' . $DataPost->Thread->id . '" /><input name="submit" type="submit" value="update post"></td>' ;
     echo "</form>\n" ;
 
 
@@ -313,14 +314,18 @@ foreach ($DataPost->Post->Content as $Content) {
 //  echo "<option value=\"-1\">-</option>" ;
 
     foreach ($ArrayLanguage as $Choices) {
-            echo "<option value=\"",$Choices->IdLanguage,"\"" ;
-            if ($Choices->IdLanguage==$Content->IdLanguage) echo " selected ";
-            echo "\">" . $Choices->Name . "</option>" ;
+        if (is_object($Choices)) {
+            echo "<option value=\"", $Choices->IdLanguage, "\"";
+            if ($Choices->IdLanguage == $Content->IdLanguage) {
+                echo " selected ";
+            }
+            echo "\">" . $Choices->Name . "</option>";
+        }
     }
     echo "</select>\n" ;
 
 
-    echo "</td><td><textarea class=\"long\" name=\"Sentence\" cols=\"60\" rows=\"5\">",$Content->Sentence,"</textarea>\n<input id=\"IdForumTrads\" type=\"hidden\" name=\"IdForumTrads\" value=\"".$Content->IdForumTrads."\"></td><td><input type=\"submit\" value=\"update\"></td>" ;
+    echo "</td><td><textarea name=\"Sentence\" cols=\"60\" rows=\"5\">",$Content->Sentence,"</textarea>\n<input id=\"IdForumTrads\" type=\"hidden\" name=\"IdForumTrads\" value=\"".$Content->IdForumTrads."\"></td><td><input type=\"submit\" value=\"update\"></td>" ;
     echo "</form>\n" ;
 }
 
@@ -347,7 +352,7 @@ foreach ($DataPost->Post->Content as $Content) {
     echo "</select>\n" ;
 
 
-    echo "</td><td>new translation<br /><textarea class=\"long\" name=\"NewTranslatedPost\" cols=\"60\" rows=\"5\"></textarea>\n</td><td><input type=\"submit\" value=\"add translated post\" name=\"submit\"></td>" ;
+    echo "</td><td>new translation<br /><textarea name=\"NewTranslatedPost\" cols=\"60\" rows=\"5\"></textarea>\n</td><td><input type=\"submit\" value=\"add translated post\" name=\"submit\"></td>" ;
 echo "</form>" ;
 
 
@@ -380,7 +385,7 @@ echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
 echo "<input type=\"hidden\" name=\"IdThread\"  value=\"".$DataPost->Thread->id."\"/><br />" ;
 echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/>" ;
 echo "<td>" ;
-echo "<select Name=\"IdTag\">" ;
+echo "<select Name=\"IdTag\" style='width:400px'>" ;
 echo "<option value=\"0\">Choose a Tag to add</option>" ;
 foreach ($DataPost->AllNoneTags as $Tag) {
     echo "<option value=\"".$Tag->IdTag."\">",$words->fTrad($Tag->IdName)."(".$Tag->cnt.")","</option>\n" ;

@@ -674,7 +674,7 @@ WHERE
 
     private function boardContinent()  {
         if (!isset(Forums::$continents[$this->continent]) || !Forums::$continents[$this->continent]) {
-            throw new PException('Invalid Continent');
+            return;
         }
 
         $subboards = array('forums/' => 'Forums');
@@ -1709,6 +1709,7 @@ WHERE `threadid` = '%d' ",
      }
 
      $vars =& PPostHandler::getVars();
+        error_log(print_r($vars, true));
 		 if (isset($vars["submit"]) and ($vars["submit"]=="update thread")) { // if an effective update was chosen for a forum trads
 		 	$IdThread=(int)$vars["IdThread"] ;
 		 	$IdGroup=(int)$vars["IdGroup"] ;
@@ -1762,12 +1763,35 @@ WHERE `threadid` = '%d' ",
 	   $IdPost=(int)$vars['IdPost'] ;
 
 		if (isset($vars["submit"]) and ($vars["submit"]=="update post")) { // if an effective update was chosen for a forum trads
+            $IdThread=(int)$vars["IdThread"] ;
 		 	$OwnerCanStillEdit=$vars["OwnerCanStillEdit"]  ;
 		 	$PostVisibility=$vars["PostVisibility"]  ;
 		 	$PostDeleted=$vars["PostDeleted"]  ;
 
         	MOD_log::get()->write("Updating Post=#".$IdPost." Setting OwnerCanStillEdit=[".$OwnerCanStillEdit."] PostVisibility=[".$PostVisibility."] PostDeleted=[".$PostDeleted."] ","ForumModerator");
 			$this->dao->query("update forums_posts set OwnerCanStillEdit='".$OwnerCanStillEdit."',PostVisibility='".$PostVisibility."',PostDeleted='".$PostDeleted."' where id=".$IdPost);
+                // Update last post id
+                $query = "
+                    SELECT
+                        id
+                    FROM
+                       forums_posts
+                    WHERE
+                        threadid = " . $IdThread . "
+                        AND PostDeleted = 'NotDeleted'
+                    ORDER BY create_time DESC
+                    LIMIT 1";
+                $s = $this->dao->query($query);
+                $row = $s->fetch(PDB::FETCH_OBJ);
+                $id = $row->id;
+                $update = "
+                    UPDATE
+                        forums_threads
+                    SET
+                        last_postid = " . $id . "
+                    WHERE
+                        id = " . $IdThread;
+                $this->dao->query($update);
 		}
 
 		if (isset($vars["submit"]) and ($vars["submit"]=="delete Tag")) { // if an effective update was chosen for a forum trads

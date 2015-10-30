@@ -2,18 +2,18 @@
 
 {% block content %}
 
-    <div class="container" style="padding: 50px 15px 0px;">
+    <div class="container containerhome">
 
         <!-- #main: content begins here -->
         <div id="main">
 
-            <div class="bw-row" style="padding: .5em 0; min-height: 100px; background-color: #EEEEEE; border: 3px solid #FFFFFF; box-shadow: 0 0 1px #888888; margin-bottom: 2em;">
-                <div id="avatar" class="col-xs-2">
+            <div class="bw-row welcomeback marginbottom">
+                <div class="col-xs-2">
                     {{ macros.avatar('member-101', 75, true) }}
-                    <a href="members/member-101" title="See profile member-101" >{{ macros.avatar('member-101', 75) }}</a><span class="dashstatus" style="position:relative; left: -20px; top: 40px;"><a href="#status">hosting</a></span></div>
-                <div id="welcometext" class="col-xs-7"><span style="font-size: 2.4em; font-weight: 900;">Welcome back, {{ macros.memberlink('member-101') }}</span><br /><span style="font-size: 1.2em; font-weight: bold;">You're registered as <span><a href="#">hosting</a></span> in <a href="#">Lyon</a></span></div>
+                    <a href="members/member-101" title="See profile member-101" >{{ macros.avatar('member-101', 50) }}</a><span class="dashstatus"><a href="#status">hosting</a></span></div>
+                <div class="col-xs-7"><span class="welcome">Welcome back, {{ macros.memberlink('member-101') }}</span><br /><span class="hostcity">You're registered as <span><a href="#">hosting</a></span> in <a href="#">Lyon</a></span></div>
                 <div class="col-xs-3">
-                    <div class="input-group" style="position: absolute; top: 30px; right: 10px;">
+                    <div class="input-group searchhost">
                         <input type="text" class="form-control" placeholder="Where do you want to go?">
 			      <span class="input-group-btn">
 			        <button class="btn btn-default" type="button"><i class="fa fa-globe"></i> Go</button>
@@ -22,8 +22,8 @@
                 </div>
             </div>
 
-            <!-- #two-boxes: messages and website activity -->
-            <div id="two-boxes" class="row" style="margin-bottom: 2em;">
+            <!-- two-boxes: messages and website activity -->
+            <div class="row marginbottom">
 
                 <!-- entire messages box -->
                 <div id="messagecontainer" class="col-xs-12 col-md-6">
@@ -35,14 +35,14 @@
                     </ul>
 
                     <!-- bordered box around content -->
-                    <div id="borderbox" class="dashbox" style="border: 0.3em solid #FFF; overflow: hidden; box-shadow: 0 0 2px #888; height: 30em;">
+                    <div id="borderbox" class="dashbox">
 
                         <div class="tab-content">
 
                             <!-- messages content div -->
                             <div role="tabpanel" class="tab-pane active" id="messages">
-
-                                <div id="readunread" class="row" style="background-color: #FFF; padding: 1em; text-align: center;">
+                                <!-- all / unread messages toggle -->
+                                <div class="row readunread">
 
                                     <div class="btn-group" data-toggle="buttons">
                                         <label class="btn btn-primary active">
@@ -53,55 +53,71 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div id="showmessages" class="scrollablecontent" style="position:relative; max-height: 20em; height:100%; width: 105%; width: calc(100% + 20px); overflow-x:hidden; overflow-y:visible;">
+                                <!-- load received messages -->
+                                <div class="scrollcontent">
 
-                                    <div id="message1" class="row" style="background-color: #FFF; padding: 1em;">
-                                        <div id="sender1" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-105?50_50" alt="Profile" /></a></div>
-                                        <div id="text1" class="col-xs-9" style="display: block; cursor: pointer;"><!-- type of message --><p style="font-size: 1.2em;"><i class="fa fa-bed"></i> <a href=""#"><strong>Here's the text of message #1</strong></a></p><span>from</span> <span><a href="#user">Membername</a> - 10 minutes ago</span></div>
-                                        <div id="arrow-right" class="col-xs-1"><i class="fa fa-chevron-right"></i></div>
+                                    <div class="row dashentry odd">
+                                        <!-- avatar -->
+                                        <div class="col-xs-2">
+                                            <a href="#user"><img class="float_left framed" src="/members/avatar/member-105?50_50" alt="Profile" /></a>
+                                        </div>
+                                        <!-- message data -->
+                                        <div class="col-xs-9">
+                                            <p class="dashentrytext">
+                                                <!-- type of message --><i class="fa fa-bed"></i>
+                                                <a href=""#"><span class="unread">Here's the text of message #1</span></a>
+                                            </p>
+                                            <span class="smalltext">from</span>&nbsp;
+                                            <span> <a href="#user">Membername</a><span>
+                                                    <span class="smalltext">10 minutes ago</span>
+                                        </div>
+                                        <!-- chevron -->
+                                        <div class="col-xs-1 chevplace">
+                                            <a href="#"><i class="fa fa-chevron-right"></i></a>
+                                        </div>
                                     </div>
 
-                                    <div id="message2" class="row" style="background-color: #EEE; padding: 1em;">
-                                        <div id="sender2" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-109?50_50" alt="Profile" /></a></div>
+                                    <div class="row dashentry even">
+                                        <div id="sender2" class="col-xs-2"><a href="#user"><img class="float_left framed" src="/members/avatar/member-109?50_50" alt="Profile" /></a></div>
                                         <div id="text2" class="col-xs-9"><i class="fa fa-newspaper-o"></i> <span>Here's the text of message #2</span><br /><span>from</span> <span><a href="#user">Membername</a> - 10 minutes ago</span></div>
-                                        <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                        <div class="col-xs-1 chevplace"><i class="fa fa-chevron-right"></i></div>
                                     </div>
 
-                                    <div id="message3" class="row" style="background-color: #FFF; padding: 1em;">
-                                        <div id="sender3" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-111?50_50" alt="Profile" /></a></div>
+                                    <div class="row dashentry odd">
+                                        <div id="sender3" class="col-xs-2"><a href="#user"><img class="float_left framed" src="/members/avatar/member-111?50_50" alt="Profile" /></a></div>
                                         <div id="text3" class="col-xs-9"><span>Here's the text of message #1</span><br /><span>from</span> <span><a href="#user">Membername</a> - 10 minutes ago</span></div>
-                                        <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                        <div class="col-xs-1 chevplace"><i class="fa fa-chevron-right"></i></div>
                                     </div>
 
-                                    <div id="message4" class="row" style="background-color: #EEE; padding: 1em;">
-                                        <div id="sender4" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-118?50_50" alt="Profile" /></a></div>
+                                    <div class="row dashentry even">
+                                        <div id="sender4" class="col-xs-2"><a href="#user"><img class="float_left framed" src="/members/avatar/member-118?50_50" alt="Profile" /></a></div>
                                         <div id="text4" class="col-xs-9"><span>Here's the text of message #2</span><br /><span>from</span> <span><a href="#user">Membername</a> - 10 minutes ago</span></div>
-                                        <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                        <div class="col-xs-1 chevplace"><i class="fa fa-chevron-right"></i></div>
                                     </div>
 
-                                    <div id="message3" class="row" style="background-color: #FFF; padding: 1em;">
-                                        <div id="sender3" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-111?50_50" alt="Profile" /></a></div>
+                                    <div class="row dashentry odd">
+                                        <div id="sender3" class="col-xs-2"><a href="#user"><img class="float_left framed" src="/members/avatar/member-111?50_50" alt="Profile" /></a></div>
                                         <div id="text3" class="col-xs-9"><span>Here's the text of message #1</span><br /><span>from</span> <span><a href="#user">Membername</a> - 10 minutes ago</span></div>
-                                        <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                        <div class="col-xs-1 chevplace"><i class="fa fa-chevron-right"></i></div>
                                     </div>
 
-                                    <div id="message4" class="row" style="background-color: #EEE; padding: 1em;">
-                                        <div id="sender4" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-118?50_50" alt="Profile" /></a></div>
+                                    <div class="row dashentry even">
+                                        <div id="sender4" class="col-xs-2"><a href="#user"><img class="float_left framed" src="/members/avatar/member-118?50_50" alt="Profile" /></a></div>
                                         <div id="text4" class="col-xs-9"><span>Here's the text of message #2</span><br /><span>from</span> <span><a href="#user">Membername</a> - 10 minutes ago</span></div>
-                                        <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                        <div class="col-xs-1 chevplace"><i class="fa fa-chevron-right"></i></div>
                                     </div>
                                 </div>
 
                             </div>
 
-                            <!-- sent messages content div -->
+                            <!-- load sent messages -->
                             <div role="tabpanel" class="tab-pane" id="sent">
                                 sent
                             </div>
                         </div>
 
-                        <!-- message menu -->
-                        <div id="messagebottom" style="background-color: #FFF; text-align: center; padding: 1em 0;">
+                        <!-- message buttons -->
+                        <div class="dashentry odd center">
                             <div class="btn-group" role="group" aria-label="...">
                                 <button type="button" class="btn btn-default"><a href="#searchmessages"><i class="fa fa-search"></i> Search my messages</a></button>
                                 <button type="button" class="btn btn-default"><a href="#messages"><i class="fa fa-envelope"></i> My inbox</a> <span class="badge">3</span></button>
@@ -110,23 +126,24 @@
                     </div>
                 </div>
 
-
-                <div id="newsforumcontainer" class="col-xs-12 col-md-6">
+                <!-- entire notifications box -->
+                <div class="col-xs-12 col-md-6">
                     <ul class="nav nav-tabs">
                         <li role="presentation" class="active"><a href="#forum" aria-controls="news" role="tab" data-toggle="tab">Forum <span class="badge">2</span></a></li>
                         <li role="presentation"><a href="#activities" aria-controls="news" role="tab" data-toggle="tab">Activities</a></li>
-                        <li role="presentation"><a href="#news" aria-controls="news" role="tab" data-toggle="tab">News <span class="badge">1</span></a></li>
+                        <li role="presentation"><a href="#news" aria-controls="news" role="tab" data-toggle="tab">News / Notifications <span class="badge">1</span></a></li>
+                        <li role="presentation"><a href="#suggestions" aria-controls="news" role="tab" data-toggle="tab">Suggestions <span class="badge">4</span></a></li>
                     </ul>
 
                     <!-- bordered box around content -->
-                    <div id="borderbox2" class="dashbox" style="border: 0.3em solid #FFF; overflow: hidden; box-shadow: 0 0 2px #888; height: 30em;">
+                    <div class="dashbox">
+                        <!-- load tab content -->
                         <div class="tab-content">
-
                             <!-- discussion content div -->
                             <div role="tabpanel" class="tab-pane active" id="forum">
 
                                 <!-- discussion settings -->
-                                <div id="settings" class="row" style="background-color: #FFF; padding: 1em; text-align: center;">
+                                <div class="row dashentry odd center">
                                     <div class="btn-group" data-toggle="buttons">
                                         <label class="btn btn-primary active">
                                             <input type="checkbox" autocomplete="off" checked> groups
@@ -140,51 +157,51 @@
                                     </div>
                                 </div>
 
-                                <div id="forumscroll" class="scrollablecontent" style="position:relative; max-height: 20em; height:100%; width: 105%; width: calc(100% + 20px); overflow-x:hidden; overflow-y:visible;">
+                                <div class="scrollcontent">
 
-                                    <div id="discussion1" class="row" style="background-color: #EEE; padding: 1em;">
-                                        <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
+                                    <div class="row dashentry odd">
+                                        <div id="avatar" class="col-xs-2"><a href="#user"><img class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
                                         <div id="text" class="col-xs-9"><span>Discussion #1<span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
-                                        <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                        <div id="arrow-right" class="col-xs-1 chevplace"><i class="fa fa-chevron-right"></i></div>
                                     </div>
 
-                                    <div id="discussion2" class="row" style="background-color: #FFF; padding: 1em;">
-                                        <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
+                                    <div class="row dashentry even">
+                                        <div id="avatar" class="col-xs-2"><a href="#user"><img class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
                                         <div id="text" class="col-xs-9"><span>Discussion #2<span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
-                                        <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                        <div id="arrow-right" class="col-xs-1 chevplace"><i class="fa fa-chevron-right"></i></div>
                                     </div>
 
-                                    <div id="discussion3" class="row" style="background-color: #EEE; padding: 1em;">
-                                        <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
+                                    <div class="row dashentry odd">
+                                        <div id="avatar" class="col-xs-2"><a href="#user"><img class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
                                         <div id="text" class="col-xs-9"><span>Discussion #3<span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
-                                        <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                        <div id="arrow-right" class="col-xs-1 chevplace"><i class="fa fa-chevron-right"></i></div>
                                     </div>
 
-                                    <div id="discussion4" class="row" style="background-color: #FFF; padding: 1em;">
-                                        <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
+                                    <div class="row dashentry even">
+                                        <div id="avatar" class="col-xs-2"><a href="#user"><img class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
                                         <div id="text" class="col-xs-9"><span>Discussion #4<span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
-                                        <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                        <div id="arrow-right" class="col-xs-1 chevplace"><i class="fa fa-chevron-right"></i></div>
                                     </div>
 
-                                    <div id="discussion3" class="row" style="background-color: #EEE; padding: 1em;">
-                                        <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
+                                    <div class="row dashentry odd">
+                                        <div id="avatar" class="col-xs-2"><a href="#user"><img class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
                                         <div id="text" class="col-xs-9"><span>Discussion #3<span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
-                                        <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                        <div id="arrow-right" class="col-xs-1 chevplace"><i class="fa fa-chevron-right"></i></div>
                                     </div>
 
-                                    <div id="discussion4" class="row" style="background-color: #FFF; padding: 1em;">
-                                        <div id="avatar" class="col-xs-2"><a href="#user"><img style="width: 80%;" class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
+                                    <div class="row dashentry even">
+                                        <div id="avatar" class="col-xs-2"><a href="#user"><img class="float_left framed" src="/members/avatar/member-101?50_50" alt="Profile" /></a></div>
                                         <div id="text" class="col-xs-9"><span>Discussion #4<span><br /><span>by</span> <a href="#user"><span>Membername</span></a> - <span>10 minutes ago</span></div>
-                                        <div id="arrow-right" class="col-xs-1"><span class="fa fa-chevron-right"></span></div>
+                                        <div id="arrow-right" class="col-xs-1 chevplace"><i class="fa fa-chevron-right"></i></div>
                                     </div>
 
-                                    <div id="discussion4" class="row" style="background-color: #FFF; padding: 1em;">
-                                        show more
+                                    <div class="row dashentry odd">
+                                        [BUTTON] show more
                                     </div>
 
                                 </div>
 
-                                <div id="messagebottom" style="background-color: #FFF; text-align: center; padding: 1em;">
+                                <div class="dashentry odd center">
                                     <div class="btn-group" role="group" aria-label="...">
                                         <button type="button" class="btn btn-default"><a href="#alldiscussions"><i class="fa fa-comments"></i> View forum</a></button>
                                         <button type="button" class="btn btn-default"><a href="#mygroups"><i class="fa fa-users"></i> My groups</a></button>
@@ -194,14 +211,18 @@
 
                             </div>
 
-                            <!-- activities content div -->
+                            <!-- load activities -->
                             <div role="tabpanel" class="tab-pane" id="activities">
                                 Activities
                             </div>
 
-                            <!-- news content div -->
+                            <!-- load news -->
                             <div role="tabpanel" class="tab-pane" id="news">
-                                NEWS
+                                NEWS and Notifications
+                            </div>
+
+                            <div role="tabpanel" class="tab-pane" id="suggestions">
+                                Suggestions
                             </div>
 
                         </div>
@@ -211,12 +232,12 @@
 
             <!-- #widgets: 4 columns with additional info -->
             <div class="row">
-                <!-- information on helping BeWelcome -->
+                <!-- BeInvolved widget -->
                 <div id="beinvolved" class="col-xs-12 col-md-4">
-                    <div class="widget" style="background-color: #FFF; box-shadow: 0 0 2px #999; padding: 1em;">
+                    <div class="widget">
                         <h3>Be Involved<br /><small>help the community</small></h3>
-                            <p style="margin-bottom: 1em;"><span class="block">BeWelcome is run by volunteers - free of charge and open source. Volunteering for the project is a great opportunity for you to get to know enthusiastic people who really believe in promoting hospitality and respect for each other. And it's fun, too!<span></p>
-                            <div id="beinvolved-buttons" style="margin-bottom: 1em;">
+                            <p class="smallmargin"><span class="block">BeWelcome is run by volunteers - free of charge and open source. Volunteering for the project is a great opportunity for you to get to know enthusiastic people who really believe in promoting hospitality and respect for each other. And it's fun, too!<span></p>
+                            <div class="smallmargin">
                                 <span class="input-group-btn">
                                     <button class="btn btn-default" type="button"><i class="fa fa-wrench"></i> Help BeWelcome</button>
                                 </span>
@@ -232,12 +253,12 @@
                             <span>€600.00 of €1000.00 received</span>
                     </div>
                 </div>
-
+                <!-- Next visitors widget -->
                 <div id="next" class="col-xs-12 col-md-3">
-                    <div class="widget" style="background-color: #FFF; box-shadow: 0 0 2px #999; padding: 1em;">
+                    <div class="widget">
                         <h3>Potential guests<br /><small>people traveling in your area</small></h3>
 
-                        <div id="nextmember1" style="margin-bottom: 1em;">
+                        <div id="nextmember1" class="smallmargin">
 
                             <div class="media">
                                 <div class="media-left">
@@ -253,7 +274,7 @@
                             </div>
                         </div>
 
-                        <div id="nextmember2" style="margin-bottom: 1em;">
+                        <div id="nextmember2" class="smallmargin">
                             <div class="media">
                                 <div class="media-left">
                                     <a href="#">
@@ -267,16 +288,16 @@
                                 </div>
                             </div>
                         </div>
-                        <div style="text-align: center;">
-                                <span><button class="btn btn-default" type="button"><i class="fa fa-plus-circle"></i> View more</button></span>
+                        <div class="center">
+                                <span><button class="btn btn-default smallmargin" type="button"><i class="fa fa-plus-circle"></i> View more</button></span>
                                 <span><button class="btn btn-default" type="button"><i class="fa fa-map-signs"></i> Plan your trip</button></span>
                         </div>
 
                     </div>
                 </div>
-
+                <!-- Settings widget -->
                 <div id="settings" class="col-xs-12 col-md-3">
-                    <div class="widget" style="background-color: #FFF; box-shadow: 0 0 2px #999; padding: 1em; text-align: center;">
+                    <div class="widget center">
 
                         <h3>Your settings<br /><small>and preferences</small></h3>
 
@@ -322,9 +343,9 @@
 
                     </div>
                 </div>
-
-                <div id="beinformed" class="col-xs-12 col-md-2">
-                    <div class="widget" style="background-color: #FFF; box-shadow: 0 0 2px #999; padding: 1em;">
+                <!-- Be Informed widget -->
+                <div class="col-xs-12 col-md-2">
+                    <div class="widget">
                         <h3>Be Informed<br /><small>Transparency</small></h3>
                         <ul class="nav nav-pills nav-stacked">
                             <li role="presentation"><a href="#"><i class="fa fa-question"></i> FAQ</a></li>
@@ -336,8 +357,6 @@
                     </div>
                 </div>
             </div><!-- end of #widgets -->
-
-
         </div> <!-- main -->
     </div> <!-- container -->
 {% endblock content %}

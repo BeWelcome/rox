@@ -2758,7 +2758,6 @@ tbody.collapse.in {
   list-style: none;
   font-size: 14px;
   text-align: left;
-  background-color: #222222;
   border: 1px solid #cccccc;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 0px;
@@ -2789,7 +2788,7 @@ tbody.collapse.in {
 .dropdown-menu > li > a:focus {
   text-decoration: none;
   color: #ffffff;
-  background-color: #555555;
+  background-color: #f37000;
 }
 .dropdown-menu > .active > a,
 .dropdown-menu > .active > a:hover,
@@ -9156,9 +9155,11 @@ body > .container {
 .navbar {
   font-weight: bold;
   color: white;
-  background: #f37000;
   border-top: 1px solid white;
   border-bottom: 1px solid white;
+  background: linear-gradient(to bottom, rgba(255,189,0,1) 0%,rgba(255,136,0,1) 100%);
+  box-shadow: 0 8px 6px 2px #888888;
+  /* background: #f37000; */
 }
 .dropdown-menu {
   border: none;

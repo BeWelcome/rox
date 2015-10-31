@@ -69,28 +69,21 @@ class VisualComponent extends RoxComponentBase
     }
     
     protected function getTemplatePrefix($classname = false) {
-        if (!$classname) $classname = get_class($this);
-        $file = ClassLoader::whereIsClass($classname);
-        if (!is_string($file)) {
-            $appname = 'yummydummy';
-        } else if (!is_file($file)) {
-            $appname = 'yummygummy';
-        } else {
-            // using a heuristic to guess which is the correct application directory name
-            $subdirs = preg_split('/[\\/\\\]/', dirname($file));
-            $build = array_search('build', $subdirs, true);
-            if (!$build) {
-                $appname = 'yummytummy';
-            } else {
-                $len = count($subdirs) - $build - 2;
-                if (end($subdirs) != 'pages') {
-                    $len++;
-                }
-                $appname = implode('/', array_slice($subdirs, $build + 1, $len));
-            }
+        // Get path to the page class
+        $rc = new ReflectionClass(get_class($this));
+        $classFilename = $rc->getFileName();
+        // remove '.page.php' from class filename to get template name
+        $templateName = str_replace('.page.php', '', basename($classFilename));
+        $path = dirname($classFilename);
+        // Make sure we see a Unix path even on Windows
+        $path = str_replace('\\', '/', $path);
+        $parts = explode('/', $path);
+        if ($parts[count($parts) -1 ] == 'pages') {
+            array_pop($parts);
         }
-        $filename_prefix = basename($file, '.page.php');
-        return SCRIPT_BASE.'build/'.$appname.'/templates/'.$filename_prefix.'.';
+        $parts[] = 'templates';
+        $templatePrefix = implode('/', $parts) . '/' . $templateName . '.';
+        return $templatePrefix;
     }
     
     protected function getAppname($classname) {

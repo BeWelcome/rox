@@ -58,7 +58,8 @@ class LoginFormWidget extends RoxWidget
             $url .= '?'.$_SERVER['QUERY_STRING'];
         }
 
-        $logged_in = APP_User::IsBWLoggedIn("NeedMore,Pending");
+        $user = new APP_User();
+        $logged_in = $user->IsBWLoggedIn("NeedMore,Pending");
 
         if ($logged_in) {
             // already logged in

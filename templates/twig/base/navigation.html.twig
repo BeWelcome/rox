@@ -1,101 +1,88 @@
-<!-- #nav: main navigation -->
-<nav class="navbar navbar-fixed-top" role="navigation">
-    <div class="container">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse"
-                    data-target="#bewelcome-navbar-collapse-1">
-                <span class="sr-only">{{ 'ToggleNavigation' | trans }}</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="main"><img src="/images/logo_index_top.png"
-                                                     alt="{{ 'BeWelcome' | trans }}"/></a>
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bewelcome-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-left">
-                <li class="dropdown">
-                    <a href="search" class="dropdown-toggle" data-toggle="dropdown">{{ 'FindMembers' | trans }}<b
-                                class="caret"></b></a>
+    <nav class="navbar navbar-sticky-top navbar-light bg-primary">
+        <div class="container">
+    <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
+        &#9776;
+    </button>
+    <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">
+        <a class="navbar-brand" href="main"><img src="/images/logo_index_top.png"
+                                                 alt="{{ 'BeWelcome' | trans }}"/></a>
+        <ul class="nav navbar-nav">
+            <li class="navbar-divider"></li>
+            <li class="nav-item dropdown">
+                <a href="search" class="nav-link dropdown-toggle" data-toggle="dropdown">{{ 'FindMembers' | trans }}<b
+                            class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="searchmembers" class="dropdown-item">{{ 'MapSearch' | trans }}</a></li>
+                    <li><a href="search" class="dropdown-item">{{ 'TextSearch' | trans }}</a></li>
+                    <li><a href="places" class="dropdown-item">{{ 'BrowseCountries' | trans}}</a></li>
+                </ul>
+            </li>
+            <li class="navbar-divider"></li>
+            <li class="nav-item dropdown">
+                <a href="community" class="nav-link dropdown-toggle" data-toggle="dropdown">{{ 'CommunityMenu' | trans }} <b
+                            class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="forums"  class="dropdown-item"title="{{ 'AgoraTagLine' | trans }}">{{ 'CommunityDiscussions' | trans }}</a></li>
+                    <li><a href="groups/search"  class="dropdown-item"title="{{ 'GroupTagLine' | trans }}">{{ 'Groups' | trans }}</a></li>
+                    <li><a href="activities" class="dropdown-item">{{ 'Activities' | trans}}</a></li>
+                    <li><a href="suggestions" class="dropdown-item">{{ 'Suggestions' | trans}}</a></li>
+                    <li><a href="trip" class="dropdown-item">{{ 'Trips' | trans}}</a></li>
+                    <li><a href="blog" class="dropdown-item">{{ 'Blogs' | trans}}</a></li>
+                    <li><a href="wiki" class="dropdown-item">{{ 'Wiki' | trans}}</a></li>
+                </ul>
+            </li>
+            <li class="navbar-divider"></li>
+            <li class="nav-item">
+                <a href="safety" class="nav-link">{{ 'Safety' | trans}}</a>
+            </li>
+            <li class="navbar-divider"></li>
+            <li class="nav-item dropdown">
+                <a href="about" class="nav-link dropdown-toggle" data-toggle="dropdown">{{ 'GetAnswers' | trans}} <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="faq" class="dropdown-item">{{ 'Faq' | trans}}</a></li>
+                    <li><a href="feedback" class="dropdown-item">{{ 'ContactUs' | trans}}</a></li>
+                    <li><a href="about/getactive" class="dropdown-item">{{ 'About_GetActive' | trans}}</a></li>
+                    <li><a href="donate" class="dropdown-item">{{ 'DonateLink'  | trans}}</a></li>
+                </ul>
+            </li>
+            <li class="navbar-divider"></li>
+            <li class="nav-item dropdown">
+                <a href="volunteer"
+                        {%- if not(teams is empty) -%}
+                    class="nav-link dropdown-toggle" data-toggle="dropdown"
+                                                     {%- else -%}
+                   class="nav-link"
+                        {%- endif -%}>{{ 'Volunteer' | trans}}{% if not(teams is empty) %} <b class="caret"></b>{% endif %}</a>
+                {% if not (teams is empty) %}
                     <ul class="dropdown-menu">
-                        <li><a href="searchmembers">{{ 'MapSearch' | trans }}</a></li>
-                        <li><a href="search">{{ 'TextSearch' | trans }}</a></li>
-                        <li><a href="places">{{ 'BrowseCountries' | trans}}</a></li>
+                        {% for team in teams %}
+                            <li><a href="{{ team }}" class="dropdown-item">{{ team | trans}}</a></li>
+                        {% endfor %}
                     </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="community" class="dropdown-toggle" data-toggle="dropdown">{{ 'CommunityMenu' | trans }} <b
-                                class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="forums" title="{{ 'AgoraTagLine' | trans }}">{{ 'CommunityDiscussions' | trans }}</a></li>
-                        <li><a href="groups/search" title="{{ 'GroupTagLine' | trans }}">{{ 'Groups' | trans }}</a></li>
-                        <li><a href="activities">{{ 'Activities' | trans}}</a></li>
-                        <li><a href="suggestions">{{ 'Suggestions' | trans}}</a></li>
-                        <li><a href="trip">{{ 'Trips' | trans}}</a></li>
-                        <li><a href="blog">{{ 'Blogs' | trans}}</a></li>
-                        <li><a href="wiki">{{ 'Wiki' | trans}}</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="safety">{{ 'Safety' | trans}}</a>
-                </li>
-                <li class="dropdown">
-                    <a href="about" class="dropdown-toggle" data-toggle="dropdown">{{ 'GetAnswers' | trans}} <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="faq">{{ 'Faq' | trans}}</a></li>
-                        <li><a href="feedback">{{ 'ContactUs' | trans}}</a></li>
-                        <li><a href="about/getactive">{{ 'About_GetActive' | trans}}Get active</a></li>
-                        <li><a href="donate">{{ 'DonateLink'  | trans}}</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="volunteer"
-                            {% if not(teams is empty) %}
-                                class="dropdown-toggle" data-toggle="dropdown"
-                            {% endif %}>{{ 'Volunteer' | trans}}{% if not(teams is empty) %} <b class="caret"></b>{% endif %}</a>
-                    {% if not (teams is empty) %}
-                        <ul class="dropdown-menu">
-                            {% for team in teams %}
-                                <li><a href="{{ team }}">{{ team | trans}}</a></li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <a style="font-weight: normal" href="main">{{ username }}</a>
-                </li>
-                <li>
-                    <a href="/messages"><i class="fa  fa-lg fa-inbox" style="vertical-align: middle;"></i> <span
-                                style="font-weight: normal">[{{ messages }}]</span></a>
-                </li>
-                <li class="dropdown"><a href="/logout" class="dropdown-toggle" data-toggle="dropdown">&nbsp;<i
-                                class="fa fa-lg fa-gear" style="vertical-align: middle"></i> <span
-                                class="caret"></span></a>
-                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                        <li><a href="members/{{ username }}">{{ Profile | trans }}</a></li>
-                        <li><a href="editmyprofile">EditMyProfile</a></li>
-                        <li><a href="mypreferences">MyPreferences</a></li>
-                        <li><a href="messages">MyMessages</a></li>
-                        <li><a href="mynotes">ProfileMyNotes</a></li>
-                        <li><a href="groups/mygroups">MyGroups</a></li>
-                        <li><a href="logout">Logout</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
+                {% endif %}
+            </li>
+            <li class="navbar-divider"></li>
+            <li class="nav-item pull-right dropdown"><a href="/logout" class="nav-link dropdown-toggle" data-toggle="dropdown">&nbsp;<i
+                            class="fa fa-lg fa-gear" style="vertical-align: middle"></i> <span
+                            class="caret"></span></a>
+                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                    <li><a href="members/{{ username }}" class="dropdown-item">{{ 'Profile' | trans }}</a></li>
+                    <li><a href="editmyprofile" class="dropdown-item">{{ 'EditMyProfile' | trans }}</a></li>
+                    <li><a href="mypreferences" class="dropdown-item">{{ 'MyPreferences' | trans }}</a></li>
+                    <li><a href="messages" class="dropdown-item">{{ 'MyMessages' | trans }}</a></li>
+                    <li><a href="mynotes" class="dropdown-item">{{ 'ProfileMyNotes' | trans }}</a></li>
+                    <li><a href="groups/mygroups" class="dropdown-item">{{ 'MyGroups' | trans }}</a></li>
+                    <li><a href="logout" class="dropdown-item">{{ 'Logout' | trans }}</a></li>
+                </ul>
+            </li>
+            <li class="nav-item pull-right">
+                <a href="/messages" class="nav-link"><i class="fa  fa-lg fa-inbox" style="vertical-align: middle;"></i> <span
+                            style="font-weight: normal">[{{ messages }}]</span></a>
+            </li>
+            <li class="nav-item pull-right">
+                <a class="nav-link" style="font-weight: normal" href="main">{{ username }}</a>
+            </li>
+        </ul>
     </div>
-    <!-- /.container -->
-</nav>
-<script type="text/javascript">
-    <!--
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-    })
-    //-->
-</script>
+        </div>
+    </nav>

@@ -13,7 +13,7 @@ module.exports = function(grunt) {
           sourceMapFilename: 'htdocs/styles/css/bewelcome.css.map'
         },
         files: {
-          'htdocs/styles/css/bewelcome.css': 'htdocs/styles/less/bewelcome.less',
+          'htdocs/styles/css/bewelcome.css': 'htdocs/styles/less/bewelcome.scss',
         }
       },
     },

@@ -101,6 +101,7 @@ class TwigView extends AbstractBasePage {
         return array(
             'logged_in' => $loggedIn,
             'messages' => $messageCount,
+            'username' => $member->Username,
             'meta.robots' => 'ALL',
             'title' => 'BeWelcome'
         );
@@ -195,7 +196,12 @@ class TwigView extends AbstractBasePage {
         $this->_parameters = $finalParameters;
     }
 
+    /**
+     * Actually renders the page
+     *
+     * @return string
+     */
     public function render() {
-        echo $this->_environment->render($this->_template, $this->_parameters);
+        return $this->_environment->render($this->_template, $this->_parameters);
     }
 }

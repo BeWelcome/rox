@@ -10,6 +10,7 @@ class PageWithHTML extends AbstractBasePage
     private $_early_scriptfiles = array(
         '/script/main.js?9',
         '/script/common/common.js?1',
+        '/script/bootstrap/bootstrap.js?1',
     );
 
     private $_late_scriptfiles = array(
@@ -304,7 +305,8 @@ class PageWithHTML extends AbstractBasePage
     {
         $words = new MOD_words();
         // messages about the member's status preceed the info messages
-        $logged_in = APP_User::IsBWLoggedIn("NeedMore,Pending");
+        $user = new APP_User();
+        $logged_in = $user->IsBWLoggedIn("NeedMore,Pending");
         if ($logged_in && $_SESSION['Status'] != 'Active') echo '<p class="status note big">'.$words->get('StatusMessage_'.$_SESSION['Status']).'</p>';
 
         // infoMessage should be used by other Pages to show post-form-messages and other status-messages to the member

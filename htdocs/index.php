@@ -1,12 +1,11 @@
 <?php
 
-use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager as Capsule;
-use Illuminate\Events\Dispatcher;
 use Rox\Framework\ControllerResolverListener;
-use Rox\Security\RoxFirewall;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Security\Http\Firewall;
 
 function FriendlyErrorType($type)
 {
@@ -54,10 +53,10 @@ function catch_errors()
     if (isset($lastError['type'])) {
 
         $errorMessage
-            = "Type: ".FriendlyErrorType($lastError['type']). PHP_EOL .
-              "Message: ".$lastError['message']. PHP_EOL .
-              "File: ".$lastError['file']. PHP_EOL .
-              "Line: ".$lastError['line']. PHP_EOL;
+            = "Type: ".FriendlyErrorType($lastError['type']).PHP_EOL.
+            "Message: ".$lastError['message'].PHP_EOL.
+            "File: ".$lastError['file'].PHP_EOL.
+            "Line: ".$lastError['line'].PHP_EOL;
         switch ($lastError['type']) {
             case E_ERROR:
                 $response = new Symfony\Component\HttpFoundation\Response(
@@ -98,46 +97,20 @@ require SCRIPT_BASE.'vendor/autoload.php';
 $environmentExplorer = new EnvironmentExplorer;
 $environmentExplorer->initializeGlobalState();
 
-/**
- * Setup dependency injection container
- */
-
-use Symfony\Component\DependencyInjection;
-use Symfony\Component\DependencyInjection\Reference;
-
-$container = new DependencyInjection\ContainerBuilder();
 $locator = new Symfony\Component\Config\FileLocator(array(SCRIPT_BASE));
-$container->register('locator', 'Symfony\Component\Config\FileLocator')
-    ->setArguments(array(SCRIPT_BASE));
-
 $yamlFileLocator = new Symfony\Component\Routing\Loader\YamlFileLoader(
     $locator
 );
-$container->register('yamllocator', 'Symfony\Component\Routing\Loader\YamlFileLoader')
-    ->setArguments(array($locator));
-
 $router = new Symfony\Component\Routing\Router(
     $yamlFileLocator,
     SCRIPT_BASE.'routes.yml'
 );
 
-$container->register('router', 'Symfony\Component\Routing\Router')
-    ->setArguments(array(new Reference('yamllocator'), 'routes.yml'))
-    ->addMethodCall('getRouteCollection');
-
-$dicRouter = $container->get('router');
-$collection = $container->get('router.getRouteCollection');
-
 $context = new Symfony\Component\Routing\RequestContext();
-$container->register('context', 'Symfony\Component\Routing\RequestContext');
 
 $matcher = new Symfony\Component\Routing\Matcher\UrlMatcher(
     $router->getRouteCollection(), $context
 );
-$container->register('matcher', 'Symfony\Component\Routing\Matcher\Url')
-    ->setArguments(array(new Reference('router.getCollection'), new Reference('context')));
-
-$dicMatcher = $container->get('matcher');
 
 // Setup database connection with Eloquent
 
@@ -154,22 +127,11 @@ $capsule->addConnection(
         'prefix' => '',
     ]
 );
-
-$capsule->setEventDispatcher(new Dispatcher(new Container));
-
-// Make this Capsule instance available globally via static methods... (optional)
-$capsule->setAsGlobal();
-
-// Setup the Eloquent ORM... (optional; unless you've used setEventDispatcher())
 $capsule->bootEloquent();
 
 // Create global router object
 $request = Symfony\Component\HttpFoundation\Request::createFromGlobals();
-
-$router = new Symfony\Component\Routing\Router(
-    $yamlFileLocator,
-    SCRIPT_BASE.'routes.yml'
-);
+$requestContext = new RequestContext($request);
 
 $resolver = new Symfony\Component\HttpKernel\Controller\ControllerResolver();
 
@@ -186,17 +148,13 @@ $errorHandler = function (
 $dispatcher = new EventDispatcher();
 
 $dispatcher->addSubscriber(
-    new RouterListener($matcher)
+    new RouterListener($matcher, $requestContext)
 );
 // $dispatcher->addSubscriber(new Symfony\Component\HttpKernel\EventListener\ExceptionListener($errorHandler));
 $dispatcher->addSubscriber(
     new ControllerResolverListener($router)
 );
 $framework = new Rox\Framework($dispatcher, $resolver);
-
-$firewall = new RoxFirewall($framework, $router->getGenerator(), $dispatcher);
-$dispatcher->addSubscriber($firewall);
-
 
 try {
     $response = $framework->handle($request);

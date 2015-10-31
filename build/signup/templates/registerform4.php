@@ -26,63 +26,23 @@ Boston, MA  02111-1307, USA.
  * REGISTER FORM TEMPLATE
  */
 ?>
-<div id="signuprox2">
-<!-- Custom BeWelcome signup progress bar -->
-<div class="progress">
-    <div class="progress-bar progress-bar-default" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
-        <span class="bw-progress hidden-xs">
-            1. <?php echo $words->getFormatted('LoginInformation')?> <i class="fa fa-check white-text"></i>
-        </span>
-        <span class="bw-progress visible-xs-inline">
-            Schritt 1. <i class="fa fa-check white-text"></i>
-        </span>
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"><?php echo $words->getFormatted('SignupSummary')?></h3>
     </div>
-    <div class="progress-bar progress-bar-default" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
-        <span class="bw-progress hidden-xs">
-            2. <?php echo $words->getFormatted('SignupName')?> <i class="fa fa-check white-text"></i>
-        </span>
-        <span class="bw-progress visible-xs-inline">
-            Schritt 2. <i class="fa fa-check white-text"></i>
-        </span>
-    </div>
-    <div class="progress-bar progress-bar-default" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
-        <span class="bw-progress hidden-xs">
-            3. <?php echo $words->getFormatted('Location')?> <i class="fa fa-check white-text"></i>
-        </span>
-        <span class="bw-progress visible-xs-inline">
-            Schritt 3. <i class="fa fa-check white-text"></i>
-        </span>
-    </div>
-    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
-        <span class="bw-progress hidden-xs">
-            4. <?php echo $words->getFormatted('SignupSummary')?>
-        </span>
-        <span class="bw-progress visible-xs-inline">
-            Schritt 4.
-        </span>
-    </div>
-</div>
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title"><?php echo $words->getFormatted('SignupSummary')?></h3>
-    </div>
-    <div class="panel-body">
-        <div class="note"><?php echo $words->get('SignupCheckIntro'); ?></div>
-    </div>
-<form method="post" action="<?php echo $baseuri.'signup/4'?>" name="signup" id="user-register-form">
+    <div class="card-block">
+        <form method="post" action="<?php echo $baseuri.'signup/4'?>" name="signup" id="user-register-form">
 <?=$callback_tag ?>
-<input type="hidden" name="javascriptactive" value="false" />
 <?php
     if (in_array('inserror', $vars['errors'])) {
         echo '<span class="help-block alert alert-danger">'.$errors['inserror'].'</span>';
     }
 ?>
 
-    <!-- List group: Login information -->
-    <ul class="list-group">
-        <li class="list-group-item"><b><?php echo $words->get('LoginInformation'); ?></b></li>
-    </ul>
-    <div class="panel-body"><!-- panel-body: Login information -->
+    <!-- Login information -->
+            <div class="card">
+                <div class="card-header"><b>Login info</b></div>
+            <div class="card-block">
         <!-- username -->
         <div class="form-group">
             <label for="register-username" class="<?=(in_array('SignupErrorWrongUsername', $vars['errors']) || in_array('SignupErrorUsernameAlreadyTaken', $vars['errors'])) ? 'control-label sr-only' : 'control-label'; ?>"><?php echo $words->get('SignupUsername'); ?></label>
@@ -174,15 +134,12 @@ Boston, MA  02111-1307, USA.
                 <?php echo '<p class="form-control-static">'.$vars['email'].'</p>';
             } ?>
         </div>
-    </div><!-- panel-body: Login information -->
-
-    <!-- List group: Personal information -->
-    <ul class="list-group bg-info">
-        <li class="list-group-item"><b><?php echo $words->get('SignupName'); ?></b></li>
-    </ul>
-
+            </div>
+                </div>
+            <div class="card">
+    <div class="card-header"><b><?php echo $words->get('SignupName'); ?></b></div>
+<div class="card-block">
     <!-- panel-body: Personal information -->
-    <div class="panel-body">
         <?php
         if (in_array('SignupErrorSomethingWentWrong', $vars['errors'])) :
             echo '<span class="help-block alert alert-danger">'.$words->get('SignupErrorSomethingWentWrong').'</span>';
@@ -393,17 +350,12 @@ Boston, MA  02111-1307, USA.
             <?php }?>
         </div>
         <?php } ?>
-        
+</div>
 
-    </div><!-- panel-body: Personal information -->
-    
-    <!-- List group: Location -->
-    <ul class="list-group">
-        <li class="list-group-item"><b><?php echo $words->get('Location'); ?></b></li>
-    </ul>
-    
-    <!-- panel-body: Location -->
-    <div class="panel-body">
+</div>
+        <div class="card">
+            <div class="card-header"><b><?php echo $words->get('Location'); ?></b></div>
+            <div class="card-block">
         <div class="form-group">
             <label for="geonameid" class="control-label sr-only"><?php echo $words->get('Location'); ?></label>
     <?php if (in_array('SignupErrorProvideLocation', $vars['errors'])) { ?>
@@ -439,16 +391,12 @@ Boston, MA  02111-1307, USA.
                     echo isset($vars['admincode']) ? htmlentities($vars['admincode'], ENT_COMPAT, 'utf-8') : '';
                 ?>" >
         </div>
-    </div><!-- panel-body: Location -->
+</div>
+            </div>
 
-    <!-- List group: Feedback -->
-    <ul class="list-group">
-        <li class="list-group-item"><b><?php echo $words->get('SignupFeedback'); ?></b></li>
-    </ul>
-    
-    <!-- panel-body: Feedback -->
-    <div class="panel-body">
-        
+                <div class="card">
+        <div class="card-header"><b><?php echo $words->get('SignupFeedback'); ?></b></div>
+                    <div class="card-block">
         <!-- Feedback -->
         <div class="form-group">
             <p><?php echo $words->get('SignupFeedbackDescription'); ?></p>
@@ -474,14 +422,13 @@ Boston, MA  02111-1307, USA.
                 echo '<span class="help-block alert alert-danger">'.$words->get('SignupTermsAndConditions').'</span>';
         }
         ?>
-            <input type="submit" class="btn btn-default btn-lg pull-right hidden-xs" value="<?php echo $words->getSilent('SubmitForm'); ?>"
-            onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;">
-            <input type="submit" class="btn btn-default btn-lg pull-right btn-block visible-xs-block" value="<?php echo $words->getSilent('SubmitForm'); ?>"
-            onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;">
+                    </div>
+                    </div>
+            <input type="submit" class="form-control btn btn-primary" value="<?php echo $words->getSilent('SubmitForm'); ?>">
             <?php echo $words->flushBuffer(); ?>
-    </div>
+
 </form>
-</div>
+    </div>
 </div> <!-- signup2 -->
 <script type="text/javascript">
     jQuery(".select2").select2(); // {no_results_text: "<?= htmlentities($words->getSilent('SignupNoLanguageFound'), ENT_COMPAT); ?>"});

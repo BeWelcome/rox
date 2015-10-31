@@ -1,4 +1,5 @@
 <?php
+
 /*
 
 Copyright (c) 2007 BeVolunteer
@@ -26,66 +27,29 @@ Boston, MA  02111-1307, USA.
  * REGISTER FORM TEMPLATE
  */
  ?>
-<div id="signuprox2">
-<!-- Custom BeWelcome signup progress bar -->
-<div class="progress">
-    <div class="progress-bar progress-bar-default" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
-        <span class="bw-progress hidden-xs">
-            1. <?php echo $words->getFormatted('LoginInformation')?>
-        </span>
-        <span class="bw-progress visible-xs-inline">
-            Schritt 1.
-        </span>
-    </div>
-    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
-        <span class="bw-progress hidden-xs">
-            2. <?php echo $words->getFormatted('SignupName')?>
-        </span>
-        <span class="bw-progress visible-xs-inline">
-            Schritt 2.
-        </span>
-    </div>
-    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
-        <span class="bw-progress hidden-xs">
-            3. <?php echo $words->getFormatted('Location')?>
-        </span>
-        <span class="bw-progress visible-xs-inline">
-            Schritt 3.
-        </span>
-    </div>
-    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
-        <span class="bw-progress hidden-xs">
-            4. <?php echo $words->getFormatted('SignupSummary')?>
-        </span>
-        <span class="bw-progress visible-xs-inline">
-            Schritt 4.
-        </span>
-    </div>
-</div>
-<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-    <div class="panel panel-default">
-        <div class="panel-heading" role="tab" id="headingOne">
-            <h4 class="panel-title">
-                <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    <?php echo $words->get('SignupIntroductionTitle'); ?>
-                </a>
-            </h4>
+    <div class="card">
+        <div class="card-header">
+             <h4 class="card-title"><?php echo $words->get('LoginInformation'); ?><small class="pull-right">Bitte fülle alle Felder aus.</small></h4>
         </div>
-        <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-            <div class="panel-body">
-            <?php echo $words->get('SignupIntroduction'); ?>
+    <div class="card-block">
+        <div>
+            <div class="card ">
+                <div class="card-header" role="tab" id="headingOne">
+                    <h4 class="card-title">
+                        <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            <?php echo $words->get('SignupIntroductionTitle'); ?>
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseOne" class="card-block collapse" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="card-block">
+                        <?php echo $words->get('SignupIntroduction'); ?>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title"><?php echo $words->get('LoginInformation'); ?><small class="pull-right">Bitte fülle alle Felder aus.</small></h3> 
-  </div>
-  <div class="panel-body">
 <form method="post" action="<?php echo $baseuri.'signup/2'?>" name="signup" id="user-register-form" class="form" role="form">
     <?=$callback_tag ?>
-    <input type="hidden" name="javascriptactive" value="false" />
     <?php
         if (in_array('inserror', $vars['errors'])) {
             echo '<span class="help-block alert alert-danger">'.$errors['inserror'].'</span>';
@@ -143,7 +107,7 @@ Boston, MA  02111-1307, USA.
         echo isset($vars['email']) ? 'value="'.htmlentities($vars['email'], ENT_COMPAT, 'utf-8').'" ' : '';
         ?> />
     </div>
-        
+
     <!-- confirm email -->
     <div class="form-group has-feedback">
         <label for="register-emailcheck" class="control-label sr-only"><?php echo $words->get('SignupCheckEmail'); ?></label>
@@ -163,18 +127,7 @@ Boston, MA  02111-1307, USA.
           }
           ?>
     </div>
-    <!-- Next step button -->
-    <input type="submit" class="btn btn-default btn-lg pull-right hidden-xs" value="<?php echo $words->getSilent('NextStep'); ?>"
-    onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
-    /><?php echo $words->flushBuffer(); ?>
-    <input type="submit" class="btn btn-default btn-lg pull-right btn-block visible-xs-block" value="<?php echo $words->getSilent('NextStep'); ?>"
-    onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
-    /><?php echo $words->flushBuffer(); ?>
+        <input type="submit" class="form-control btn btn-primary" value="<?php echo $words->getSilent('NextStep'); ?>" /><?php echo $words->flushBuffer(); ?>
 </form>
-  </div>
 </div>
-</div> <!-- signuprox2 -->
-
-<script type="text/javascript">
- Register.initialize('user-register-form');
-</script>
+</div>

@@ -15,6 +15,7 @@ revision.txt
 .project
 .idea
 
+/doc/*
 /vendor/*
 /node_modules/*
 /components/*

@@ -1,6 +1,7 @@
 <?php
+use Symfony\Component\Routing\Router;
 
-  /**
+/**
    *
    */
 class PageWithRoxLayout extends PageWithHTML
@@ -163,7 +164,8 @@ class PageWithRoxLayout extends PageWithHTML
         $words = $this->getWords();
         $menu_items = $this->getTopmenuItems();
         $active_menu_item = $this->getTopmenuActiveItem();
-        $logged_in = APP_User::isBWLoggedIn('NeedMore,Pending');
+        $user = new APP_User();
+        $logged_in = $user->isBWLoggedIn('NeedMore,Pending');
         if (!$logged_in) {
             $request = PRequest::get()->request;
             if (!isset($request[0])) {
@@ -202,7 +204,20 @@ class PageWithRoxLayout extends PageWithHTML
                 }
             }
         }
-        require TEMPLATE_DIR . 'shared/roxpage/topmenu.php';
+        // require TEMPLATE_DIR . 'shared/roxpage/topmenu.php';
+        $locator = new Symfony\Component\Config\FileLocator(array(SCRIPT_BASE));
+        $yamlFileLocator = new Symfony\Component\Routing\Loader\YamlFileLoader(
+            $locator
+        );
+        $router = new Symfony\Component\Routing\Router(
+            $yamlFileLocator,
+            SCRIPT_BASE.'routes.yml'
+        );
+
+        $twigView = new \Rox\Framework\TwigView($router);
+        $twigView->setTemplate('navigation.html.twig', 'base');
+        $topmenu =  $twigView->render();
+        echo $topmenu;
     }
 
     /**
@@ -211,7 +226,8 @@ class PageWithRoxLayout extends PageWithHTML
     protected function quicksearch()
     {
         $words = $this->getWords();
-        $logged_in = APP_User::isBWLoggedIn('NeedMore,Pending');
+        $user = new APP_User();
+        $logged_in = $user->isBWLoggedIn('NeedMore,Pending');
         if (!$logged_in) {
             $request = PRequest::get()->request;
             if (!isset($request[0])) {

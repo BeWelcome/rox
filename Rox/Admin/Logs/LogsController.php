@@ -21,6 +21,9 @@ class LogsController extends \RoxControllerBase
      */
     private $_model;
 
+    /**
+     * LogsController constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -33,11 +36,13 @@ class LogsController extends \RoxControllerBase
     }
 
     /**
-     * @param Request $request
+     * @param $currentPage
+     * @param $itemsPerPage
+     *
      * @return Response
      */
-    public function showOverview($pageNumber, $itemsPerPage) {
-        $first = ($pageNumber - 1) * $itemsPerPage;
+    public function showOverview($currentPage, $itemsPerPage) {
+        $first = ($currentPage - 1) * $itemsPerPage;
         $page = new AdminLogsPage($this->router);
 
         $query = Log::with('member')->orderBy('created', 'desc');
@@ -46,7 +51,7 @@ class LogsController extends \RoxControllerBase
         $lastPage = ceil($count / $itemsPerPage);
         $page->setParameters(
             [
-                'currentPage' => $pageNumber,
+                'currentPage' => $currentPage,
                 'lastPage' => $lastPage,
                 'route' => 'admin_logs',
                 'routeParams' => ['itemsPerPage' => $itemsPerPage],
@@ -61,7 +66,9 @@ class LogsController extends \RoxControllerBase
      * @param $ipAddress
      * @param $currentPage
      * @param $itemsPerPage
+     *
      * @return Response
+     * @internal param Request $request
      */
     public function showIpOverview($ipAddress, $currentPage, $itemsPerPage) {
         $first = ($currentPage - 1) * $itemsPerPage;
@@ -85,8 +92,12 @@ class LogsController extends \RoxControllerBase
     }
 
     /**
-     * @param Request $request
+     * @param $username
+     * @param $currentPage
+     * @param $itemsPerPage
+     *
      * @return Response
+     * @internal param Request $request
      */
     public function showUsernameOverview($username, $currentPage, $itemsPerPage) {
         $member = Member::where('Username', '=', $username)->first();
@@ -115,6 +126,10 @@ class LogsController extends \RoxControllerBase
     }
 
     /**
+     * @param $type
+     * @param $currentPage
+     * @param $itemsPerPage
+     *
      * @return Response
      */
     public function showTypeOverview($type, $currentPage, $itemsPerPage) {

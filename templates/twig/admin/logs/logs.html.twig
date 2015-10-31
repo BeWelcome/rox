@@ -1,7 +1,7 @@
 {% extends '@base/base.html.twig' %}
 
 {% block content %}
-    <div class="container" style="padding: 50px 15px;">
+    <div class="container">
         {{ macros.pagination(currentPage, lastPage, route, routeParams) }}
         <table>
             <tr>
@@ -13,7 +13,7 @@
             </tr>
     {% for log in logs %}
         <tr>
-        <td>{% if log.member.Username %}{{ macros.avatar(log.member.Username) }}
+        <td>{% if log.member.Username %}{{ macros.avatar(log.member.Username, true) }}
             <a href="{{path('admin_logs_username', { username: log.member.Username} )}}">{{ log.member.Username }}</a>{% else %}Not logged{% endif %}</td>
             <td><a href="{{ path('admin_logs_type', { type: log.Type }) }}">{{ log.Type }}</a></td>
             <td>{{ log.Str }}</td>

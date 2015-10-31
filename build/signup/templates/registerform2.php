@@ -27,53 +27,17 @@ Boston, MA  02111-1307, USA.
  */
 ?>
 
-<div id="signuprox2">
-<!-- Custom BeWelcome signup progress bar -->
-<div class="progress">
-    <div class="progress-bar progress-bar-default" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
-        <span class="bw-progress hidden-xs">
-            1. <?php echo $words->getFormatted('LoginInformation')?> <i class="fa fa-check white-text"></i>
-        </span>
-        <span class="bw-progress visible-xs-inline">
-            Schritt 1. <i class="fa fa-check white-text"></i>
-        </span>
-    </div>
-    <div class="progress-bar progress-bar-default" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
-        <span class="bw-progress hidden-xs">
-            2. <?php echo $words->getFormatted('SignupName')?>
-        </span>
-        <span class="bw-progress visible-xs-inline">
-            Schritt 2.
-        </span>
-    </div>
-    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
-        <span class="bw-progress hidden-xs">
-            3. <?php echo $words->getFormatted('Location')?>
-        </span>
-        <span class="bw-progress visible-xs-inline">
-            Schritt 3.
-        </span>
-    </div>
-    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 25%;">
-        <span class="bw-progress hidden-xs">
-            4. <?php echo $words->getFormatted('SignupSummary')?>
-        </span>
-        <span class="bw-progress visible-xs-inline">
-            Schritt 4.
-        </span>
-    </div>
-</div>
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title"><?php echo $words->get('SignupName'); ?><small class="pull-right">Bitte fülle alle Felder aus.</small></h3> 
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title"><?php echo $words->get('SignupName'); ?><small class="pull-right">Bitte fülle alle Felder aus.</small></h3>
   </div>
-  <div class="panel-body">
+  <div class="card-block">
 <form method="post" action="<?php echo $baseuri.'signup/3'?>" name="signup" id="user-register-form" class="form" role="form">
     <?=$callback_tag ?>
     <input type="hidden" name="javascriptactive" value="false" />
     <?php
         if (in_array('inserror', $vars['errors'])) {
-            echo '<span class="help-block alert alert-danger">'.$errors['inserror'].'</span';
+            echo '<span class="help-block alert alert-danger">'.$errors['inserror'].'</span>';
         }
     ?>
     <div class="form-group hidden">
@@ -181,45 +145,41 @@ Boston, MA  02111-1307, USA.
     
     <!-- Gender -->
     <div class="form-group">
-        <label class="radio-inline">
+        <div class="btn-group" data-toggle="buttons">
+        <label class="btn btn-primary">
             <input type="radio" id="gender" name="gender" value="female"<?php
              if (isset($vars['gender']) && $vars['gender'] == 'female') {
                  echo ' checked="checked"';
               }
               ?> ><?php echo $words->get('female'); ?>
         </label>
-        <label class="radio-inline">
+        <label class="btn btn-primary">
           <input type="radio" name="gender" value="male"<?php
           if (isset($vars['gender']) && $vars['gender'] == 'male') {
               echo ' checked="checked"';
           }
           ?> ><?php echo $words->get('male'); ?>
         </label>
-        <label class="radio-inline">
+        <label class="btn btn-primary">
           <input type="radio" name="gender" value="other"<?php
           if (isset($vars['gender']) && $vars['gender'] == 'other') {
               echo ' checked="checked"';
           }
           ?> ><?php echo $words->get('GenderOther'); ?>
           </label>
+        </div>
     </div>
     <?php if (in_array('SignupErrorProvideGender', $vars['errors'])) {
         echo '<span class="help-block alert alert-danger">'.$words->get('SignupErrorProvideGender').'</span>';
         }
     ?>    
-        <input type="submit" value="<?php echo $words->getSilent('NextStep'); ?>" class="btn btn-default btn-lg pull-right hidden-xs"
-        onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
-        >
-        <input type="submit" value="<?php echo $words->getSilent('NextStep'); ?>" class="btn btn-default btn-lg pull-right btn-block visible-xs-block"
-        onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
-        >
+        <input type="submit" value="<?php echo $words->getSilent('NextStep'); ?>" class="form-control btn btn-primary" >
         <?php echo $words->flushBuffer(); ?>
 </form>
   </div>
 </div>
-</div> <!-- signup2 -->
+
 
 <script type="text/javascript">
- Register.initialize('user-register-form');
  jQuery(".select2").select2(); // {no_results_text: "<?= htmlentities($words->getSilent('SignupNoLanguageFound'), ENT_COMPAT); ?>"});
 </script>

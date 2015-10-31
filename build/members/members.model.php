@@ -1401,6 +1401,8 @@ ORDER BY
                     $suffix = '_xs';
                 elseif (isset($_GET['30_30']))
                     $suffix = '_30_30';
+                elseif (isset($_GET['75_75']))
+                    $suffix = '_75_75';
                 elseif (isset($_GET['150']))
                     $suffix = '_150';
                 elseif (isset($_GET['200']))

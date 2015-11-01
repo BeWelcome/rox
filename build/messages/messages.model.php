@@ -514,8 +514,7 @@ WHERE id = ".$input['receiver_id']."
             $problems['Message Limit Exceeded'] = $limitResult;
         }
 
-        // Check if member is a spammer
-        $spammer = false;
+        $irregular = false;
         if ($replyToId == 0) {
             // Get number of messages sent in the last minute
             $query = "SELECT
@@ -528,7 +527,7 @@ WHERE id = ".$input['receiver_id']."
             ";
             $row = $this->singleLookup($query);
             $count = $row->cnt;
-            if ($count > 1) {
+            if ($count <> 0) {
                 // Let's check some details
                 $member = new Member($input['sender_id']);
                 $trads_for_member = $this->bulkLookup(
@@ -537,10 +536,10 @@ WHERE id = ".$input['receiver_id']."
                   SQL_CACHE Sentence from memberstrads,languages
                   where languages.id=memberstrads.IdLanguage and IdOwner = $member->id and IdTrad=$member->ProfileSummary") ;
             if (count($trads_for_member)) {
-                $spammer = false;
+                $irregular = false;
                 foreach($trads_for_member as $trad) {
                     $found = preg_match('#^<a href="(.*)">(.*)</a>#', $trad->Sentence);
-                    $spammer |= ($found > 0);
+                    $irregular |= ($found > 0);
                 }
             }
             }
@@ -566,7 +565,7 @@ WHERE id = ".$input['receiver_id']."
 
             if (!isset($input['draft_id'])) {
                 // this was a new message
-                if ($message_id = $this->_createMessage($input, $spammer)) {
+                if ($message_id = $this->_createMessage($input, $irregular)) {
                     MOD_log::get()->write("Has sent message #" . $message_id." to ".$rReceiver->Username." (MessagesModel::sendOrComplain new message)", "contactmember");
                 }
                 else { // SOmething has failed
@@ -632,10 +631,10 @@ WHERE id = ".$input['receiver_id']."
         return(true) ;
     } // end of Check for Captcha
 
-    private function _createMessage($fields, $spammer = false)    {
+    private function _createMessage($fields, $irregular = false)    {
         //if (!$this->CheckForCaptcha($fields)) return false ;
         $attach_picture = (isset($fields['attach_picture']) ? ($fields['attach_picture'] ? 'yes' : 'no') : 'no');
-        if ($spammer) {
+        if ($irregular) {
             $status = 'Freeze';
         } else {
             $status = $this->dao->escape($fields['status']);
@@ -656,12 +655,12 @@ WHERE id = ".$input['receiver_id']."
                 Status = '{$status}',
                 JoinMemberPict = '{$attach_picture}',
                 IdParent = {$parent}";
-        if ($spammer) {
+        if ($irregular) {
             $query .= ", SpamInfo = 'SpamSayMember'";
         }
         $iMes= $this->dao->query($query)->insertId();
 
-        if ($spammer) {
+        if ($irregular) {
             $iMes = 0;
         }
         return ($iMes) ;

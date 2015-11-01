@@ -1,16 +1,11 @@
-.containerhome{
-    padding: 50px 15px 0px !important;
-}
 .welcomeback{
-    padding: .5em 0;
     min-height: 100px;
     background-color: #EEEEEE;
     border: 3px solid #FFFFFF;
     box-shadow: 0 0 1px #888888;
 }
-.dashstatus{
+.hoststatus{
     position:relative;
-    left: -20px;
     top: 40px;
 }
 .welcome{
@@ -42,6 +37,7 @@
 }
 .dashentry{
     padding: 1em;
+    line-height: 1em;
 }
 .odd{
     background-color: #FFF;
@@ -74,7 +70,7 @@
     padding: 1em;
 }
 .smallmargin{
-    margin-bottom: 1em;
+    margin: 1em 0 1em 0;
 }
 .dashentrytext{
     font-size: 1.2em;
@@ -84,4 +80,8 @@
 }
 .smalltext{
     font-size:0.7em;
+}
+.nomarginpadding{
+    margin: 0;
+    padding: 0;
 }

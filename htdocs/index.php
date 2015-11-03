@@ -113,15 +113,24 @@ $matcher = new Symfony\Component\Routing\Matcher\UrlMatcher(
 );
 
 // Setup database connection with Eloquent
+$params = parse_ini_file('../rox_local.ini');
+
+$parts = explode('=', $params['dsn']);
+
+$driver = substr($parts[0], 0, strpos($parts[0], ':'));
+$host = substr($parts[1], 0, strpos($parts[1], ';'));
+$db = $parts[2];
+$user = $params['user'];
+$password = $params['password'];
 
 $capsule = new Capsule;
 $capsule->addConnection(
     [
-        'driver' => 'mysql',
-        'host' => 'localhost',
-        'database' => 'bewelcome',
-        'username' => 'root',
-        'password' => '',
+        'driver' => $driver,
+        'host' => $host,
+        'database' => $db,
+        'username' => $user,
+        'password' => $password,
         'charset' => 'utf8',
         'collation' => 'utf8_unicode_ci',
         'prefix' => '',

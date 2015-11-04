@@ -6,8 +6,8 @@
     "url": "https://gitorious.org/bewelcome/rox.git"
   },
   "devDependencies": {
-    "fk/select2-bootstrap-theme": ">0",
-    "Leaflet/Leaflet.markercluster": ">0",
+    "select2-bootstrap-theme": "~0.1.0",
+    "leaflet.markercluster": "~0.4.0",
     "grunt": "~0.4.2",
     "grunt-autoprefixer": "~1.0.1",
     "grunt-contrib-csslint": "^0.3.1",

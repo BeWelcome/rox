@@ -22,6 +22,15 @@
                 </div>
             </div>
 
+            <!-- ALERT: only trigger on some events -->
+            <div class="alert alert-info alert-dismissible fade in" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                Please <a href="#" class="alert-link">upload a profile picture</a>
+            </div>
+
             <!-- two-boxes: messages and website activity -->
             <div class="row marginbottom">
 
@@ -32,6 +41,7 @@
                     <ul class="nav nav-tabs">
                         <li role="presentation" class="nav-item"><a href="#messages" class="nav-link active" aria-controls="messages" role="tab" data-toggle="tab">Messages received <span class="label label-primary label-pill">3</span></a></li>
                         <li role="presentation" class="nav-item"><a href="#sent" class="nav-link" aria-controls="sent" role="tab" data-toggle="tab">Sent messages</a></li>
+                        <li role="presentation" class="nav-item"><a href="#notifications" class="nav-link" aria-controls="sent" role="tab" data-toggle="tab">Notifications</a></li>
                     </ul>
 
                     <!-- bordered box around content -->
@@ -67,9 +77,9 @@
                                                 <!-- type of message --><i class="fa fa-bed"></i>
                                                 <span class="unread"><a href="#">Here's the text of message #1</a></span>
                                             </p>
-                                            <span class="smalltext">from</span>&nbsp;
-                                            <span><a href="#user">Membername</a></span>
-                                            <span class="smalltext">10 minutes ago</span>
+                                            <span class="smaller">from</span>&nbsp;
+                                            <span class="small"><a href="#user">Membername</a></span>
+                                            <span class="smaller">10 minutes ago</span>
                                         </div>
                                         <!-- chevron -->
                                         <div class="col-xs-1 chevplace">
@@ -88,9 +98,9 @@
                                                 <!-- type of message --><i class="fa fa-newspaper"></i>
                                                 <a href="#"><span>Here's the text of message #2</span></a>
                                             </p>
-                                            <span class="smalltext">from</span>&nbsp;
-                                            <span><a href="#user">Membername</a></span>
-                                            <span class="smalltext">10 minutes ago</span>
+                                            <span class="smaller">from</span>&nbsp;
+                                            <span class="small"><a href="#user">Membername</a></span>
+                                            <span class="smaller">10 minutes ago</span>
                                         </div>
                                         <!-- chevron -->
                                         <div class="col-xs-1 chevplace">
@@ -109,9 +119,9 @@
                                                 <!-- type of message --><i class="fa fa-bed"></i>
                                                 <a href="#"><span class="unread">Here's the text of message #3</span></a>
                                             </p>
-                                            <span class="smalltext">from</span>&nbsp;
-                                            <span><a href="#user">Membername</a></span>
-                                            <span class="smalltext">10 minutes ago</span>
+                                            <span class="smaller">from</span>&nbsp;
+                                            <span class="small"><a href="#user">Membername</a></span>
+                                            <span class="smaller">10 minutes ago</span>
                                         </div>
                                         <!-- chevron -->
                                         <div class="col-xs-1 chevplace">
@@ -130,9 +140,9 @@
                                                 <!-- type of message --><i class="fa fa-newspaper"></i>
                                                 <a href="#"><span>Here's the text of message #2</span></a>
                                             </p>
-                                            <span class="smalltext">from</span>&nbsp;
-                                            <span><a href="#user">Membername</a></span>
-                                            <span class="smalltext">10 minutes ago</span>
+                                            <span class="smaller">from</span>&nbsp;
+                                            <span class="small"><a href="#user">Membername</a></span>
+                                            <span class="smaller">10 minutes ago</span>
                                         </div>
                                         <!-- chevron -->
                                         <div class="col-xs-1 chevplace">
@@ -151,9 +161,9 @@
                                                 <!-- type of message --><i class="fa fa-bed"></i>
                                                 <a href="#"><span class="unread">Here's the text of message #3</span></a>
                                             </p>
-                                            <span class="smalltext">from</span>&nbsp;
-                                            <span><a href="#user">Membername</a></span>
-                                            <span class="smalltext">10 minutes ago</span>
+                                            <span class="smaller">from</span>&nbsp;
+                                            <span class="small"><a href="#user">Membername</a></span>
+                                            <span class="smaller">10 minutes ago</span>
                                         </div>
                                         <!-- chevron -->
                                         <div class="col-xs-1 chevplace">
@@ -172,9 +182,9 @@
                                                 <!-- type of message --><i class="fa fa-newspaper"></i>
                                                 <a href="#"><span>Here's the text of message #2</span></a>
                                             </p>
-                                            <span class="smalltext">from</span>&nbsp;
-                                            <span><a href="#user">Membername</a></span>
-                                            <span class="smalltext">10 minutes ago</span>
+                                            <span class="smaller">from</span>&nbsp;
+                                            <span class="small"><a href="#user">Membername</a></span>
+                                            <span class="smaller">10 minutes ago</span>
                                         </div>
                                         <!-- chevron -->
                                         <div class="col-xs-1 chevplace">
@@ -193,9 +203,9 @@
                                                 <!-- type of message --><i class="fa fa-bed"></i>
                                                 <a href="#"><span class="unread">Here's the text of message #3</span></a>
                                             </p>
-                                            <span class="smalltext">from</span>&nbsp;
-                                            <span><a href="#user">Membername</a></span>
-                                            <span class="smalltext">10 minutes ago</span>
+                                            <span class="smaller">from</span>&nbsp;
+                                            <span class="small"><a href="#user">Membername</a></span>
+                                            <span class="smaller">10 minutes ago</span>
                                         </div>
                                         <!-- chevron -->
                                         <div class="col-xs-1 chevplace">
@@ -212,14 +222,16 @@
                             <div role="tabpanel" class="tab-pane" id="sent">
                                 sent
                             </div>
+
+                            <!-- load system notifications -->
+                            <div role="tabpanel" class="tab-pane" id="notifications">
+                                system notifications
+                            </div>
                         </div>
 
                         <!-- message buttons -->
                         <div class="dashentry odd center">
-                            <div class="btn-group" role="group" aria-label="...">
-                                <button type="button" class="btn btn-primary-outline"><i class="fa fa-search"></i> Search my messages</button>
-                                <button type="button" class="btn btn-primary-outline"><i class="fa fa-envelope"></i> My inbox <span class="label label-primary label-pill">3</span></button>
-                            </div>
+                                <a href="messages" class="btn btn-primary-outline"><i class="fa fa-envelope"></i> My inbox <span class="label label-primary label-pill">3</span></a>
                         </div>
                     </div>
                 </div>
@@ -241,7 +253,7 @@
                             <div role="tabpanel" class="tab-pane active" id="forum">
 
                                 <!-- discussion settings -->
-                                <div class="row dashentry odd center">
+                                <div class="row readunread">
                                     <div class="btn-group" data-toggle="buttons">
                                         <label class="btn btn-primary active">
                                             <input type="checkbox" autocomplete="off" checked> groups
@@ -267,9 +279,11 @@
                                             <p class="dashentrytext">
                                                 <span class="unread"><a href="#">Discussion 1</a></span>
                                             </p>
-                                            <span class="smalltext">by</span>
-                                            <span><a href="#user">Membername</a></span>
-                                            <span class="smalltext">10 minutes ago</span>
+                                            <span class="smaller">by</span>
+                                            <span class="small"><a href="#user">Membername</a></span>
+                                            <span class="smaller">in</span>
+                                            <span class="small"><a href="#user">Group name</a></span>
+                                            <span class="smaller">10 minutes ago</span>
                                         </div>
                                         <!-- chevron -->
                                         <div class="col-xs-1 chevplace">
@@ -287,9 +301,11 @@
                                             <p class="dashentrytext">
                                                 <a href="#"><span>Discussion 2, if the title is long, this could even span over 2 lines. Maybe limit it there</span></a>
                                             </p>
-                                            <span class="smalltext">by</span>&nbsp;
-                                            <span><a href="#user">Membername</a></span>
-                                            <span class="smalltext">14 minutes ago</span>
+                                            <span class="smaller">by</span>&nbsp;
+                                            <span class="small"><a href="#user">Membername</a></span>
+                                            <span class="smaller">in</span>
+                                            <span class="small"><a href="#user">Group name</a></span>
+                                            <span class="smaller">14 minutes ago</span>
                                         </div>
                                         <!-- chevron -->
                                         <div class="col-xs-1 chevplace">
@@ -307,9 +323,11 @@
                                             <p class="dashentrytext">
                                                 <span class="unread"><a href="#">Discussion 3</a></span>
                                             </p>
-                                            <span class="smalltext">by</span>
-                                            <span><a href="#user">Membername</a></span>
-                                            <span class="smalltext">10 minutes ago</span>
+                                            <span class="smaller">by</span>
+                                            <span class="small"><a href="#user">Membername</a></span>
+                                            <span class="smaller">in</span>
+                                            <span class="small"><a href="#user">Group name</a></span>
+                                            <span class="smaller">10 minutes ago</span>
                                         </div>
                                         <!-- chevron -->
                                         <div class="col-xs-1 chevplace">
@@ -327,9 +345,11 @@
                                             <p class="dashentrytext">
                                                 <a href="#"><span>Discussion 4</span></a>
                                             </p>
-                                            <span class="smalltext">by</span>&nbsp;
-                                            <span><a href="#user">Membername</a></span>
-                                            <span class="smalltext">14 minutes ago</span>
+                                            <span class="smaller">by</span>&nbsp;
+                                            <span class="small"><a href="#user">Membername</a></span>
+                                            <span class="smaller">in</span>
+                                            <span class="small"><a href="#user">Group name</a></span>
+                                            <span class="smaller">14 minutes ago</span>
                                         </div>
                                         <!-- chevron -->
                                         <div class="col-xs-1 chevplace">
@@ -347,9 +367,11 @@
                                             <p class="dashentrytext">
                                                 <span class="unread"><a href="#">Discussion 5</a></span>
                                             </p>
-                                            <span class="smalltext">by</span>
-                                            <span><a href="#user">Membername</a></span>
-                                            <span class="smalltext">10 minutes ago</span>
+                                            <span class="smaller">by</span>
+                                            <span class="small"><a href="#user">Membername</a></span>
+                                            <span class="smaller">in</span>
+                                            <span class="small"><a href="#group">Group name</a></span>
+                                            <span class="smaller">10 minutes ago</span>
                                         </div>
                                         <!-- chevron -->
                                         <div class="col-xs-1 chevplace">
@@ -367,9 +389,11 @@
                                             <p class="dashentrytext">
                                                 <a href="#"><span>Discussion 6</span></a>
                                             </p>
-                                            <span class="smalltext">by</span>&nbsp;
-                                            <span><a href="#user">Membername</a></span>
-                                            <span class="smalltext">14 minutes ago</span>
+                                            <span class="smaller">by</span>&nbsp;
+                                            <span class="small"><a href="#user">Membername</a></span>
+                                            <span class="smaller">in</span>
+                                            <span class="small"><a href="#user">Group name</a></span>
+                                            <span class="smaller">14 minutes ago</span>
                                         </div>
                                         <!-- chevron -->
                                         <div class="col-xs-1 chevplace">
@@ -385,9 +409,9 @@
 
                                 <div class="dashentry odd center">
                                     <div class="btn-group" role="group" aria-label="...">
-                                        <button type="button" class="btn btn-primary-outline"><i class="fa fa-comments"></i> View forum</button>
-                                        <button type="button" class="btn btn-primary-outline"><i class="fa fa-users"></i> My groups</button>
-                                        <button type="button" class="btn btn-primary-outline"><i class="fa fa-check-square-o"></i> My subscriptions</button>
+                                        <a href="forums" class="btn btn-primary-outline"><i class="fa fa-comments"></i> View forums</a>
+                                        <a href="groups/mygroups" class="btn btn-primary-outline"><i class="fa fa-users"></i> My groups</a>
+                                        <a href="forums/subscriptions" class="btn btn-primary-outline"><i class="fa fa-check-square-o"></i> My subscriptions</a>
                                     </div>
                                 </div>
 
@@ -421,10 +445,10 @@
                             <p class="smallmargin"><span class="block">BeWelcome is run by volunteers - free of charge and open source. Volunteering for the project is a great opportunity for you to get to know enthusiastic people who really believe in promoting hospitality and respect for each other. And it's fun, too!</span></p>
                             <div class="smallmargin">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-warning-outline" type="button"><i class="fa fa-wrench"></i> Help BeWelcome</button>
+                                    <a href="about/getactive" class="btn btn-warning-outline"><i class="fa fa-wrench"></i> Help BeWelcome</a>
                                 </span>
                                 <span class="input-group-btn">
-                                    <button class="btn btn-warning-outline" type="button"><i class="fa fa-euro"></i> Please donate</button>
+                                   <a href="donate" class="btn btn-warning-outline"><i class="fa fa-euro"></i> Please donate</a>
                                 </span>
                             </div>
                             <progress class="progress progress-warning" value="60" max="100">60%</progress>
@@ -445,8 +469,8 @@
                                     </a>
                                 </div>
                                 <div class="media-body">
-                                    <p class="m-a-0 p-a-0"><i class="fa fa-calendar"></i> <span class="smalltext">01-10-2015 - 3 days</span></p>
-                                    <p class="m-a-0 p-a-0"><i class="fa fa-home"></i> <span class="smalltext">Berlin, Germany</span></p>
+                                    <p class="m-a-0 p-a-0"><i class="fa fa-calendar"></i> <span class="smaller">01-10-2015 - 3 days</span></p>
+                                    <p class="m-a-0 p-a-0"><i class="fa fa-home"></i> <span class="smaller">Berlin, Germany</span></p>
                                 </div>
                             </div>
                         </div>
@@ -460,15 +484,15 @@
                                     </a>
                                 </div>
                                 <div class="media-body">
-                                    <p class="m-a-0 p-a-0"><i class="fa fa-calendar"></i> <span class="smalltext">20-10-2015 - 5 days</span></p>
-                                    <p class="m-a-0 p-a-0"><i class="fa fa-home"></i> <span class="smalltext">Paris, France</span></p>
+                                    <p class="m-a-0 p-a-0"><i class="fa fa-calendar"></i> <span class="smaller">20-10-2015 - 5 days</span></p>
+                                    <p class="m-a-0 p-a-0"><i class="fa fa-home"></i> <span class="smaller">Paris, France</span></p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="center">
-                                <button class="btn btn-warning-outline" type="button"><i class="fa fa-plus-circle"></i> View more</button>
-                                <button class="btn btn-warning-outline smallmargin" type="button"><i class="fa fa-map-marker"></i> Plan your trip</button>
+                            <a href="trips" class="btn btn-warning-outline"><i class="fa fa-plus-circle"></i> View more</a>
+                            <a href="trips/create" class="btn btn-warning-outline smallmargin"><i class="fa fa-map-marker"></i> Plan your trip</a>
                         </div>
 
                     </div>
@@ -510,7 +534,7 @@
                                     </label>
                                 </div>
 
-                        <span><button class="btn btn-warning-outline" type="button"><i class="fa fa-cogs"></i> more settings</button></span>
+                        <a href="mypreferences" class="btn btn-warning-outline"><i class="fa fa-cogs"></i> more settings</a>
 
                     </div>
                 </div>
@@ -518,18 +542,11 @@
                 <div class="col-xs-12 col-md-2">
                     <div class="widget">
                         <h4>Be Informed<br /><small>Transparency</small></h4>
-                        <ul class="nav nav-pills nav-stacked">
-                            <li class="nav-item"><a href="#"><i class="fa fa-question"></i> FAQ</a></li>
-                            <li class="nav-item"><a href="#"><i class="fa fa-shield"></i> Safety</a></li>
-                            <li class="nav-item"><a href="#"><i class="fa fa-bullseye"></i> BeVolunteer</a></li>
-                            <li class="nav-item"><a href="#"><i class="fa fa-money"></i> Finances</a></li>
-                            <li class="nav-item"><a href="#"><i class="fa fa-book"></i> Annual report</a></li>
-                        </ul>
-                        <button type="button" class="btn btn-warning-outline btn-sm btn-block"><i class="fa fa-question"></i> FAQ</button>
-                        <button type="button" class="btn btn-warning-outline btn-sm btn-block"><i class="fa fa-shield"></i> Safety</button>
-                        <button type="button" class="btn btn-warning-outline btn-sm btn-block"><i class="fa fa-bullseye"></i> BeVolunteer</button>
-                        <button type="button" class="btn btn-warning-outline btn-sm btn-block"><i class="fa fa-money"></i> Finances</button>
-                        <button type="button" class="btn btn-warning-outline btn-sm btn-block"><i class="fa fa-book"></i> Annual report</button>
+                        <a href="faq" class="btn btn-warning-outline btn-sm btn-block"><i class="fa fa-question"></i> FAQ</a>
+                        <a href="safety" class="btn btn-warning-outline btn-sm btn-block"><i class="fa fa-shield"></i> Safety</a>
+                        <a href="wiki/BeVolunteer" class="btn btn-warning-outline btn-sm btn-block"><i class="fa fa-bullseye"></i> BeVolunteer</a>
+                        <a href="wiki/Finances" class="btn btn-warning-outline btn-sm btn-block"><i class="fa fa-money"></i> Finances</a>
+                        <a href="wiki/Annual_Report" class="btn btn-warning-outline btn-sm btn-block"><i class="fa fa-book"></i> Annual report</a>
                     </div>
                 </div>
             </div><!-- end of #widgets -->

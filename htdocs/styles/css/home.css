@@ -9,11 +9,11 @@
     top: 40px;
 }
 .welcome{
-    font-size: 2.4em;
-    font-weight: 900;
+    font-size: 2em;
+    font-weight: 700;
 }
 .hostcity{
-    font-size: 1.2em;
+    font-size: 1.1em;
     font-weight: bold;
 }
 .searchhost{
@@ -28,15 +28,15 @@
     border: 0.3em solid #FFF;
     overflow: hidden;
     box-shadow: 0 0 2px #888;
-    height: 30em;
+    min-height: 27em;
 }
 .readunread{
     background-color: #FFF;
-    padding: 1em;
+    padding: 0.2em;
     text-align: center;
 }
 .dashentry{
-    padding: 1em;
+    padding: 0.5em;
     line-height: 1em;
 }
 .odd{
@@ -68,16 +68,20 @@
     background-color: #FFF;
     box-shadow: 0 0 2px #999;
     padding: 1em;
+    min-height: 25em;
 }
 .smallmargin{
     margin: 1em 0 1em 0;
 }
 .dashentrytext{
-    font-size: 1.2em;
+    margin: 0.2em;
 }
 .unread{
     font-weight: bold;
 }
-.smalltext{
+.smaller{
     font-size:0.7em;
+}
+.small{
+    font-size:0.8em;
 }

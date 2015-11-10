@@ -117,7 +117,6 @@ $params = parse_ini_file('../rox_local.ini');
 
 $parts = explode('=', $params['dsn']);
 
-$driver = substr($parts[0], 0, strpos($parts[0], ':'));
 $host = substr($parts[1], 0, strpos($parts[1], ';'));
 $db = $parts[2];
 $user = $params['user'];
@@ -126,7 +125,7 @@ $password = $params['password'];
 $capsule = new Capsule;
 $capsule->addConnection(
     [
-        'driver' => $driver,
+        'driver' => 'mysql',
         'host' => $host,
         'database' => $db,
         'username' => $user,

@@ -21,3 +21,4 @@ revision.txt
 /components/*
 composer.lock
 auth.json
+/.vagrant/*

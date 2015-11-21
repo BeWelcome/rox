@@ -1,0 +1,12 @@
+---
+- name: Create data folder
+  # do something
+
+- name: Create working files
+  # do something
+  with_items: rox.working_files
+
+- name: Make things writable by webserver
+  with_items:
+    - rox.working_files
+    - www-data

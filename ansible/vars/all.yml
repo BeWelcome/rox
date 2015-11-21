@@ -1,0 +1,40 @@
+---
+server:
+    install: '1'
+    packages: [nodejs]
+    timezone: Europe/Paris
+    locale: en_US.UTF-8
+vagrant_local:
+    install: '1'
+    vm: { base_box: wheezy64, hostname: bewelcome, ip: 192.168.33.99, memory: '1024', sharedfolder: ./, useVagrantCloud: '1', syncType: nfs }
+apache:
+    install: '1'
+    docroot: /vagrant
+    servername: bewelcome
+mysql:
+    install: '1'
+    # root_password: '123'
+    database: bewelcome
+    user: bewelcome
+    password: bewelcome
+    dump: foobar
+php:
+    install: '1'
+    # ppa: php5-5.6
+    packages: [
+        php5-cli,
+        php5-intl,
+        php5-mcrypt,
+        php5-mysql,
+        php5-readline,
+        php5-common,
+        php5-gd,
+        php5-dev,
+        php5-curl,
+        php5-xdebug,
+        php5-xmlrpc,
+        php5-ssh2
+    ]
+composer:
+    install: '1'
+

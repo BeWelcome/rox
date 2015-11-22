@@ -20,7 +20,6 @@ mysql:
     dump: foobar
 php:
     install: '1'
-    # ppa: php5-5.6
     packages: [
         php5-cli,
         php5-intl,
@@ -36,5 +35,7 @@ php:
         php5-ssh2
     ]
 composer:
+    install: '1'
+js_packages:
     install: '1'
 

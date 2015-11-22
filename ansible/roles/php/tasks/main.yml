@@ -1,11 +1,4 @@
 ---
-- name: Add dotdeb Repository (php 5.6)
-  sudo: yes
-  apt_repository: repo="{{ item }}"
-  with_items:
-    - "deb http://packages.dotdeb.org wheezy-php56 all"
-    - "deb-src http://packages.dotdeb.org wheezy-php56 all"
-
 - name: Update apt
   sudo: yes
   apt: update_cache=yes

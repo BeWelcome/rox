@@ -25,7 +25,7 @@
 
 - name: mysql | Set privileges
   sudo: yes
-  mysql_user: name={{ mysql.user }} password={{ mysq.password }} priv={{ mysql.db }}.*:ALL state=present
+  mysql_user: name={{ mysql.user }} password={{ mysql.password }} priv={{ mysql.database }}.*:ALL state=present
   notify: restart mysql
 # - name: mysql | Import dump
 #   mysql_db: name={{ mysql.database }} state=import login_user=root login_password={{ mysql.root_password }} target=/vagrant/{{ mysql.dump }}

@@ -8,6 +8,7 @@
     - vagrant_local
     - apache
     - php
-    # - mysql
-    # - composer
+    - composer
+    - js_packages
+    #- mysql
     # - rox

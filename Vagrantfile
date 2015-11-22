@@ -29,7 +29,7 @@ Vagrant.configure("2") do |config|
         ]
     end
 
-    config.vm.box = "debian/wheezy64"
+    config.vm.box = "debian/jessie64"
 
     config.vm.network :private_network, ip: "192.168.33.10"
     config.ssh.forward_agent = true

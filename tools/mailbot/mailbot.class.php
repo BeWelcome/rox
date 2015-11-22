@@ -571,9 +571,9 @@ class ForumNotificationMailbot extends Mailbot
             $msg = $this->_buildMessage($notification, $post, $author, $MemberIdLanguage);
 
             if ($post->groupId) {
-                $from = array('group@bewelcome.org' => '"BW ' . $author->Username . '"');
+                $from = array('group@bewelcome.org' => '"BeWelcome - ' . $author->Username . '"');
             } else {
-                $from = array('forum@bewelcome.org' => '"BW ' . $author->Username . '"');
+                $from = array('forum@bewelcome.org' => '"BeWelcome - ' . $author->Username . '"');
             }
 
             $to = $this->getEmailAddress($recipient);
@@ -713,7 +713,7 @@ class MemberToMemberMailbot extends Mailbot
                 $this->log("Message ".$msg->id." from ". $this->Sender->Username." is rejected ("
                     .$this->Sender->Status.")");
             } else {
-                $from = array($this->_calculateReplyAddress() => '"BW ' . $msg->senderUsername . '"' );
+                $from = array($this->_calculateReplyAddress() => '"BeWelcome - ' . $msg->senderUsername . '"' );
                 $to = $this->getEmailAddress($this->Receiver);
                 if (empty($to)) {
                     $this->_updateMessageStatus($msg->id, 'Failed');

@@ -33,5 +33,6 @@ $words = new MOD_words();
         35500 Vitre<br />
         France
     </p>
-    <p><strong><?=$words->get('SignupEmail'); ?>:</strong> info[at]bevolunteer.org</p>
+    <p><strong><?=$words->get('SignupEmail'); ?>: </strong>info[at]bevolunteer.org</p>
+    <p><strong><?=$words->get('PhoneNumber'); ?>: </strong>+49 211 26130480</p>
     <p><?=$words->get('YamlLayout'); ?></p>

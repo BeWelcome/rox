@@ -11,14 +11,6 @@
     - mysql-client
     - python-mysqldb
 
-# - name: mysql | Update root password for all root accounts
-#   mysql_user: name=root host={{ item }} check_implicit_admin=yes password={{ mysql.root_password }} login_user=root login_password={{ mysql.root_password }}
-#   with_items:
-#     - "{{ current_hostname.stdout | lower }}"
-#     - 127.0.0.1
-#     - ::1
-#     - localhost
-
 - name: mysql | Create databases
   sudo: yes
   mysql_db: name={{ mysql.database }} state=present
@@ -27,6 +19,25 @@
   sudo: yes
   mysql_user: name={{ mysql.user }} password={{ mysql.password }} priv={{ mysql.database }}.*:ALL state=present
   notify: restart mysql
-# - name: mysql | Import dump
-#   mysql_db: name={{ mysql.database }} state=import login_user=root login_password={{ mysql.root_password }} target=/vagrant/{{ mysql.dump }}
-#   when: mysql.dump
+
+- name: mysql | Fetch dump files
+  sudo: yes
+  get_url: url=http://downloads.bewelcome.org/for_developers/rox_test_db/{{ item }} dest={{ rox.root_folder }}
+  with_flattened:
+    - mysql.dump_root
+    - mysql.dump
+
+- name: mysql | Import root dump
+  mysql_db: name={{ mysql.database }} state=import target={{ rox.root_folder }}/{{ item }}
+  with_flattened: mysql.dump_root
+
+- name: mysql | Import normal dumps
+  mysql_db: name={{ mysql.database }} state=import login_user={{ mysql.user }} login_password={{ mysql.password }} target={{ rox.root_folder }}/{{ item }}
+  with_flattened: mysql.dump
+
+- name: mysql | Remove dump files
+  sudo: yes
+  file: path={{ rox.root_folder }}/{{ item }} state=absent
+  with_flattened:
+    - mysql.dump_root
+    - mysql.dump

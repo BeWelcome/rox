@@ -10,5 +10,5 @@
     - php
     - composer
     - js_packages
-    #- mysql
+    - mysql
     # - rox

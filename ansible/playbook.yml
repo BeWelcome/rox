@@ -11,4 +11,4 @@
     - composer
     - js_packages
     - mysql
-    # - rox
+    - rox

@@ -1,12 +1,42 @@
 ---
-- name: Create data folder
-  # do something
+- name: Create data dir
+  sudo: yes
+  file: path={{ rox.root_folder }}/data state=directory mode="g+rw" group=www-data
 
 - name: Create working files
-  # do something
+  sudo: yes
+  file: path={{ rox.root_folder }}/{{ item }} state=touch mode="g+rw" group=www-data
   with_items: rox.working_files
 
-- name: Make things writable by webserver
-  with_items:
-    - rox.working_files
-    - www-data
+- name: Force https for Composer
+  sudo: yes
+  shell: composer config --global github-protocols https
+
+- name: Install Rox dependencies | Composer
+  composer: command=install working_dir={{ rox.root_folder }}
+
+
+- name: Install Rox dependencies | Npm
+  sudo: yes
+  npm: path={{ rox.root_folder }}
+
+# - name: Migrate database
+#   shell: vendor/bin/phinx migrate -c phinx.php
+
+- name: Create virtualhost file
+  sudo: yes
+  template: src=bewelcome.conf.tpl dest=/etc/apache2/sites-available/bewelcome.conf
+  notify: restart apache
+
+- name: Create self-signed certificate
+  shell: openssl req -nodes -x509 -newkey rsa:2048 -keyout key.pem -out cert.crt -subj '//CN=bewelcome' -days 2000
+
+- name: Enable virtual host
+  sudo: yes
+  shell: a2ensite bewelcome
+
+- name: Restart Apache
+  service: name=apache2 enabled=yes state=restarted
+
+- name: Create ini file
+  shell: cp {{ rox.root_folder }}/rox_local.example.ini {{ rox.root_folder }}/rox_local.ini

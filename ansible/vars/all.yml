@@ -1,7 +1,7 @@
 ---
 server:
     install: '1'
-    packages: [nodejs]
+    packages: [nodejs, git]
     timezone: Europe/Paris
     locale: en_US.UTF-8
 vagrant_local:
@@ -41,4 +41,14 @@ composer:
     install: '1'
 js_packages:
     install: '1'
+rox:
+    root_folder: /vagrant
+    working_files: [
+        build/alias.cache.ini,
+        build/autoload.cache.ini,
+        modules/autoload.cache.ini,
+        pthacks/autoload.cache.ini,
+        tools/autoload.cache.ini,
+        htdocs/exception.log,
+    ]
 

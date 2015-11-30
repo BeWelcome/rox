@@ -1,11 +1,11 @@
 ---
 - name: Create data dir
   sudo: yes
-  file: path={{ rox.root_folder }}/data state=directory mode="g+rw" group=www-data
+  file: path={{ rox.root_folder }}/data state=directory group="www-data" mode="g+rw"
 
 - name: Create working files
   sudo: yes
-  file: path={{ rox.root_folder }}/{{ item }} state=touch mode="g+rw" group=www-data
+  file: path={{ rox.root_folder }}/{{ item }} state=touch group="www-data" mode="g+rw"
   with_items: rox.working_files
 
 - name: Force https for Composer

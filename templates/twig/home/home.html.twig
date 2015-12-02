@@ -10,7 +10,7 @@
             <div class="bw-row welcomeback marginbottom">
                 <div class="col-xs-1">
                     {{ macros.avatar('member-101', 75, true) }}
-                    <a href="members/member-101" title="See profile member-101" >{{ macros.avatar('member-101', 50) }}</a><span class="hoststatus"><a href="#status">hosting</a></span></div>
+                    <a href="members/member-101" title="See profile member-101" ><img src="/members/avatar/member-101?50_50"></a><span class="hoststatus"><a href="#status">hosting</a></span></div>
                 <div class="col-xs-7"><span class="welcome">Welcome back, {{ macros.memberlink('member-101') }}</span><br /><span class="hostcity">You're registered as <span><a href="#">hosting</a></span> in <a href="#">Lyon</a></span></div>
                 <div class="col-xs-4">
                     <div class="input-group searchhost">
@@ -436,13 +436,15 @@
                 </div>
             </div>
 
-            <!-- #widgets: 4 columns with additional info -->
-            <div class="row marginbottom">
-                <!-- BeInvolved widget -->
-                <div class="col-xs-12 col-md-4">
-                    <div class="widget">
-                        <h4>Be Involved<br /><small>help the community</small></h4>
-                            <p class="smallmargin"><span class="block">BeWelcome is run by volunteers - free of charge and open source. Volunteering for the project is a great opportunity for you to get to know enthusiastic people who really believe in promoting hospitality and respect for each other. And it's fun, too!</span></p>
+            <!-- 4 Widgets -->
+            <div class="card-deck-wrapper marginbottom">
+                <div class="card-deck">
+
+                    <!-- BeInvolved widget -->
+                    <div class="card">
+                        <div class="card-block">
+                            <h4 class="card-title">Be Involved<br /><small>help the community</small></h4>
+                            <p class="card-text">BeWelcome is run by volunteers - free of charge and open source. Volunteering for the project is a great opportunity for you to get to know enthusiastic people who really believe in promoting hospitality and respect for each other. And it's fun, too!</p>
                             <div class="smallmargin">
                                 <span class="input-group-btn">
                                     <a href="about/getactive" class="btn btn-warning-outline"><i class="fa fa-wrench"></i> Help BeWelcome</a>
@@ -452,104 +454,108 @@
                                 </span>
                             </div>
                             <progress class="progress progress-warning" value="60" max="100">60%</progress>
-                            <span>€600.00 of €1000.00 received</span>
+                            <p class="card-text">€600.00 of €1000.00 received</p>
+                        </div>
                     </div>
-                </div>
-                <!-- Next visitors widget -->
-                <div class="col-xs-12 col-md-3">
-                    <div class="widget">
-                        <h4>Potential guests<br /><small>travelers in your area</small></h4>
 
-                        <div class="smallmargin">
-                            <div class="media">
-                                <div><h5 class="media-heading">Username</h5></div>
-                                <div class="media-left">
-                                    <a href="#">
-                                        <img class="float_left framed" src="/members/avatar/member-150?50_50" alt="Profile" />
-                                    </a>
-                                </div>
-                                <div class="media-body">
-                                    <p class="m-a-0 p-a-0"><i class="fa fa-calendar"></i> <span class="smaller">01-10-2015 - 3 days</span></p>
-                                    <p class="m-a-0 p-a-0"><i class="fa fa-home"></i> <span class="smaller">Berlin, Germany</span></p>
+                    <!-- Guests widget -->
+                    <div class="card">
+                        <div class="card-block">
+                            <h4 class="card-title">Potential guests<br /><small>travelers in your area</small></h4>
+
+                            <div class="smallmargin">
+                                <div class="media">
+                                    <div><h5 class="media-heading">Username</h5></div>
+                                    <div class="media-left">
+                                        <a href="#">
+                                            <img class="float_left framed" src="/members/avatar/member-150?50_50" alt="Profile" />
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        <p class="m-a-0 p-a-0"><i class="fa fa-calendar"></i> <span class="smaller">01-10-2015 - 3 days</span></p>
+                                        <p class="m-a-0 p-a-0"><i class="fa fa-home"></i> <span class="smaller">Berlin, Germany</span></p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="smallmargin">
-                            <div class="media">
-                                <div><h5 class="media-heading">Username</h5></div>
-                                <div class="media-left">
-                                    <a href="#">
-                                        <img class="float_left framed" src="/members/avatar/member-161?50_50" alt="Profile" />
-                                    </a>
-                                </div>
-                                <div class="media-body">
-                                    <p class="m-a-0 p-a-0"><i class="fa fa-calendar"></i> <span class="smaller">20-10-2015 - 5 days</span></p>
-                                    <p class="m-a-0 p-a-0"><i class="fa fa-home"></i> <span class="smaller">Paris, France</span></p>
+                            <div class="smallmargin">
+                                <div class="media">
+                                    <div><h5 class="media-heading">Username</h5></div>
+                                    <div class="media-left">
+                                        <a href="#">
+                                            <img class="float_left framed" src="/members/avatar/member-161?50_50" alt="Profile" />
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        <p class="m-a-0 p-a-0"><i class="fa fa-calendar"></i> <span class="smaller">20-10-2015 - 5 days</span></p>
+                                        <p class="m-a-0 p-a-0"><i class="fa fa-home"></i> <span class="smaller">Paris, France</span></p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="center">
-                            <a href="trips" class="btn btn-warning-outline"><i class="fa fa-plus-circle"></i> View more</a>
-                            <a href="trips/create" class="btn btn-warning-outline smallmargin"><i class="fa fa-map-marker"></i> Plan your trip</a>
+                            <div class="center">
+                                <a href="trips" class="btn btn-warning-outline"><i class="fa fa-plus-circle"></i> View more</a>
+                                <a href="trips/create" class="btn btn-warning-outline smallmargin"><i class="fa fa-map-marker"></i> Plan your trip</a>
+                            </div>
                         </div>
-
                     </div>
-                </div>
-                <!-- Settings widget -->
-                <div class="col-xs-12 col-md-3">
-                    <div class="widget center">
-                        <h4>Your settings<br /><small>and preferences</small></h4>
+
+                    <!-- Settings widget -->
+                    <div class="card">
+                        <div class="card-block">
+                            <h4 class="card-title">Your settings<br /><small>and preferences</small></h4>
                             <h6 class="list-group-item-heading">Accommodation status</h6><i class="fa fa-info-circle"></i>
-                                <div class="btn-group" data-toggle="buttons">
-                                    <label class="btn btn-primary active">
-                                        <input type="radio" name="options" id="option1" autocomplete="off" checked>Yes
-                                    </label>
-                                    <label class="btn btn-primary">
-                                        <input type="radio" name="options" id="option2" autocomplete="off">No
-                                    </label>
-                                    <label class="btn btn-primary">
-                                        <input type="radio" name="options" id="option3" autocomplete="off">Maybe
-                                    </label>
-                                </div>
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-primary active">
+                                    <input type="radio" name="options" id="option1" autocomplete="off" checked>Yes
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="options" id="option2" autocomplete="off">No
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="options" id="option3" autocomplete="off">Maybe
+                                </label>
+                            </div>
 
                             <h6 class="list-group-item-heading">Public profile?</h6><i class="fa fa-info-circle"></i>
-                                <div class="btn-group" data-toggle="buttons">
-                                    <label class="btn btn-primary active">
-                                        <input type="radio" name="options" id="option1" autocomplete="off" checked>Yes
-                                    </label>
-                                    <label class="btn btn-primary">
-                                        <input type="radio" name="options" id="option2" autocomplete="off">No
-                                    </label>
-                                </div>
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-primary active">
+                                    <input type="radio" name="options" id="option1" autocomplete="off" checked>Yes
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="options" id="option2" autocomplete="off">No
+                                </label>
+                            </div>
 
                             <h6 class="list-group-item-heading">Receive newsletter?</h6><i class="fa fa-info-circle"></i>
-                                <div class="btn-group" data-toggle="buttons">
-                                    <label class="btn btn-primary active">
-                                        <input type="radio" name="options" id="option1" autocomplete="off" checked>Yes
-                                    </label>
-                                    <label class="btn btn-primary">
-                                        <input type="radio" name="options" id="option2" autocomplete="off">No
-                                    </label>
-                                </div>
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-primary active">
+                                    <input type="radio" name="options" id="option1" autocomplete="off" checked>Yes
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="options" id="option2" autocomplete="off">No
+                                </label>
+                            </div>
 
-                        <a href="mypreferences" class="btn btn-warning-outline"><i class="fa fa-cogs"></i> more settings</a>
+                            <a href="mypreferences" class="btn btn-warning-outline"><i class="fa fa-cogs"></i> more settings</a>
+                        </div>
+                    </div>
 
+                    <!-- Transparency widget -->
+                    <div class="card">
+                        <div class="card-block">
+                            <h4 class="card-title">Be Informed<br /><small>Transparency</small></h4>
+                            <a href="faq" class="btn btn-warning-outline btn-sm btn-block"><i class="fa fa-question"></i> FAQ</a>
+                            <a href="safety" class="btn btn-warning-outline btn-sm btn-block"><i class="fa fa-shield"></i> Safety</a>
+                            <a href="wiki/BeVolunteer" class="btn btn-warning-outline btn-sm btn-block"><i class="fa fa-bullseye"></i> BeVolunteer</a>
+                            <a href="wiki/Finances" class="btn btn-warning-outline btn-sm btn-block"><i class="fa fa-money"></i> Finances</a>
+                            <a href="wiki/Annual_Report" class="btn btn-warning-outline btn-sm btn-block"><i class="fa fa-book"></i> Annual report</a>
+                        </div>
                     </div>
+
                 </div>
-                <!-- Be Informed widget -->
-                <div class="col-xs-12 col-md-2">
-                    <div class="widget">
-                        <h4>Be Informed<br /><small>Transparency</small></h4>
-                        <a href="faq" class="btn btn-warning-outline btn-sm btn-block"><i class="fa fa-question"></i> FAQ</a>
-                        <a href="safety" class="btn btn-warning-outline btn-sm btn-block"><i class="fa fa-shield"></i> Safety</a>
-                        <a href="wiki/BeVolunteer" class="btn btn-warning-outline btn-sm btn-block"><i class="fa fa-bullseye"></i> BeVolunteer</a>
-                        <a href="wiki/Finances" class="btn btn-warning-outline btn-sm btn-block"><i class="fa fa-money"></i> Finances</a>
-                        <a href="wiki/Annual_Report" class="btn btn-warning-outline btn-sm btn-block"><i class="fa fa-book"></i> Annual report</a>
-                    </div>
-                </div>
-            </div><!-- end of #widgets -->
+            </div>
+            <!-- end of widgets -->
         </div> <!-- main -->
     </div> <!-- container -->
 {% endblock content %}

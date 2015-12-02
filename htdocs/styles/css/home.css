@@ -1,3 +1,5 @@
+
+
 .welcomeback{
     min-height: 100px;
     background-color: #EEEEEE;
@@ -85,4 +87,26 @@
 .small{
     font-size:0.8em;
 }
-/*Jesús*/
+.navbar {
+    line-height: 1.9;
+}
+.smallerpadding {
+    padding:0.5em 0.7em !important;
+} 
+.framed {
+    border-radius:26px;
+}
+.nav-link.active {
+    box-shadow: 0px 3px 0px 0px white, 0px 0px 2px #888;
+    border:none;
+}
+.nav-tabs .nav-link {
+    border-radius: 20px 20px 0 0 !important;
+}
+.welcomeback, .alert {
+    background-color: #FEE8D6;
+}
+.alert-info {
+    border: 3px solid #8A8A8A;
+    border-radius: 0.45rem;
+}

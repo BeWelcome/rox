@@ -46,5 +46,5 @@ Vagrant.configure("2") do |config|
     #    config.vm.provision :shell, path: "ansible/windows.sh", args: ["bewelcome"]
     # end
 
-    config.vm.synced_folder "./", "/vagrant", :group=>"www-data", :mount_options=>["dmode=775","fmode=665"]
+    config.vm.synced_folder "./", "/vagrant", :group=>"www-data", :mount_options=>["dmode=775","fmode=665"], type: "rsync", rsync__args: ["--verbose", "--archive", "--delete", "-z"]
 end

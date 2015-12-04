@@ -1,8 +1,34 @@
 // Core variables and mixins
 @import "../../../vendor/twbs/bootstrap4/scss/variables";
+@import "mixins";
+
+// Include fonts
+
+$font-path: '../fonts/';
+@include font-face('Signika-Bold', $font-path + 'signika-bold', normal, normal);
+@include font-face('Signika-Regular', $font-path + 'signika-regular', normal, normal);
+@include font-face('LatoWebBlack', $font-path + 'Lato-Black', normal, normal);
+@include font-face('LatoWebBlack', $font-path + 'Lato-BlackItalic', normal, italic);
+@include font-face('LatoWebBold', $font-path + 'Lato-Bold', normal, normal);
+@include font-face('LatoWebBold', $font-path + 'Lato-BoldItalic', normal, italic);
+@include font-face('LatoWebSemiBold', $font-path + 'Lato-Semibold', normal, normal);
+@include font-face('LatoWebSemiBold', $font-path + 'Lato-SemiboldItalic', normal, italic);
+@include font-face('LatoWebHairline', $font-path + 'Lato-Hairline', normal, normal);
+@include font-face('LatoWebHairline', $font-path + 'Lato-HairlineItalic', normal, italic);
+@include font-face('LatoWeb', $font-path + 'Lato-Regular', normal, normal);
+@include font-face('LatoWeb', $font-path + 'Lato-Italic', normal, italic);
+@include font-face('LatoWebThin', $font-path + 'Lato-Thin', normal, normal);
+@include font-face('LatoWebThin', $font-path + 'Lato-ThinItalic', normal, italic);
+@include font-face('LatoWebLight', $font-path + 'Lato-Light', normal, normal);
+@include font-face('LatoWebLight', $font-path + 'Lato-LightItalic', normal, italic);
+@include font-face('LatoWebMedium', $font-path + 'Lato-Medium', normal, normal);
+@include font-face('LatoWebMedium', $font-path + 'Lato-MediumItalic', normal, italic);
 
 // Setting up BW styles
 $brand-primary: #f37000;
+$btn-primary-color: white;
+$btn-primary-bg: #f37000;
+$btn-primary-border: #ddd;
 
 $navbar-border-radius: 3;
 $navbar-padding-vertical: 0;
@@ -17,6 +43,11 @@ $navbar-light-color:                white;
 $navbar-light-hover-color:          black;
 $navbar-light-active-color:         black;
 $navbar-light-disabled-color:       grey;
+
+$enable-flex: false;
+
+$font-family-base: LatoWeb, Arial, sans-serif;
+$headings-font-family: Signika, LatoWeb, sans-serif;
 
 @import "../../../vendor/twbs/bootstrap4/scss/mixins";
 
@@ -40,6 +71,7 @@ $navbar-light-disabled-color:       grey;
 @import "../../../vendor/twbs/bootstrap4/scss/button-group";
 @import "../../../vendor/twbs/bootstrap4/scss/input-group";
 @import "../../../vendor/twbs/bootstrap4/scss/custom-forms";
+
 @import "../../../vendor/twbs/bootstrap4/scss/nav";
 @import "../../../vendor/twbs/bootstrap4/scss/navbar";
 @import "../../../vendor/twbs/bootstrap4/scss/card";
@@ -63,9 +95,13 @@ $navbar-light-disabled-color:       grey;
 
 // Utility classes
 @import "../../../vendor/twbs/bootstrap4/scss/utilities";
+@import "../../../vendor/twbs/bootstrap4/scss/utilities-background";
 @import "../../../vendor/twbs/bootstrap4/scss/utilities-spacing";
 @import "../../../vendor/twbs/bootstrap4/scss/utilities-responsive";
 
+body {
+  text-rendering: optimizeLegibility;
+}
 .navbar-nav {
   .nav-item {
     padding: .25rem .5rem;
@@ -100,3 +136,29 @@ $navbar-light-disabled-color:       grey;
 
 // select2
 @import "../../../vendor/select2/select2/src/scss/core";
+@import "select2-bootstrap4";
+
+#col1{
+  @include make-col();
+  @media (max-width: 32em) {
+    @include make-col-span(12);
+  }
+  @media (min-width: 32.1em) {
+    @include make-col-span(3);
+    @include make-col-push(9);
+  }
+}
+
+#col2{
+  display: none;
+}
+#col3{
+  @include make-col();
+  @media (max-width: 32em) {
+    @include make-col-span(12);
+  }
+  @media (min-width: 32.1em) {
+    @include make-col-span(9);
+    @include make-col-pull(3);
+  }
+}

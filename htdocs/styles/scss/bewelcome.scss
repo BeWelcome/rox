@@ -5,8 +5,8 @@
 // Include fonts
 
 $font-path: '../fonts/';
-@include font-face('Signika-Bold', $font-path + 'signika-bold', normal, normal);
-@include font-face('Signika-Regular', $font-path + 'signika-regular', normal, normal);
+@include font-face('Signika-Bold', $font-path + 'signika-bold-webfont', normal, normal);
+@include font-face('Signika-Regular', $font-path + 'signika-regular-webfont', normal, normal);
 @include font-face('LatoWebBlack', $font-path + 'Lato-Black', normal, normal);
 @include font-face('LatoWebBlack', $font-path + 'Lato-BlackItalic', normal, italic);
 @include font-face('LatoWebBold', $font-path + 'Lato-Bold', normal, normal);
@@ -47,7 +47,7 @@ $navbar-light-disabled-color:       grey;
 $enable-flex: false;
 
 $font-family-base: LatoWeb, Arial, sans-serif;
-$headings-font-family: Signika, LatoWeb, sans-serif;
+$headings-font-family: "Signika-Regular", LatoWeb, sans-serif;
 
 @import "../../../vendor/twbs/bootstrap4/scss/mixins";
 

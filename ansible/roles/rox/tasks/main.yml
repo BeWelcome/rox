@@ -23,17 +23,17 @@
 # - name: Migrate database
 #   shell: vendor/bin/phinx migrate -c phinx.php
 
-- name: Create virtualhost file
-  sudo: yes
-  template: src=bewelcome.conf.tpl dest=/etc/apache2/sites-available/bewelcome.conf
-  notify: restart apache
+# - name: Create virtualhost file
+#   sudo: yes
+#   template: src=bewelcome.conf.tpl dest=/etc/apache2/sites-available/bewelcome.conf
+#   notify: restart apache
 
 - name: Create self-signed certificate
   shell: openssl req -nodes -x509 -newkey rsa:2048 -keyout key.pem -out cert.crt -subj '//CN=bewelcome' -days 2000
 
-- name: Enable virtual host
-  sudo: yes
-  shell: a2ensite bewelcome
+# - name: Enable virtual host
+#   sudo: yes
+#   shell: a2ensite bewelcome
 
 - name: Restart Apache
   service: name=apache2 enabled=yes state=restarted

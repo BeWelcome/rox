@@ -9,7 +9,7 @@ vagrant_local:
     vm: { base_box: jessie64, hostname: bewelcome, ip: 192.168.33.99, memory: '1024', sharedfolder: ./, useVagrantCloud: '1', syncType: nfs }
 apache:
     install: '1'
-    docroot: /vagrant
+    docroot: /vagrant/htdocs
     servername: bewelcome
 mysql:
     install: '1'

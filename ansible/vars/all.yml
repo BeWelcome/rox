@@ -33,7 +33,6 @@ php:
         php5-gd,
         php5-dev,
         php5-curl,
-        php5-xdebug,
         php5-xmlrpc,
         php5-ssh2
     ]

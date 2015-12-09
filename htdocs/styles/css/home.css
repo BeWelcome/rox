@@ -22,9 +22,6 @@
     top: 25px;
     right: 10px;
 }
-.marginbottom{
-    margin-bottom: 2em;
-}
 .dashbox{
     border: 0.3em solid #FFF;
     overflow: hidden;
@@ -59,26 +56,14 @@
     top: 1.1em;
     right: 0px;
 }
-.center{
-    text-align: center;
-}
 .shadow{
     box-shadow: 0 0 2px #888;
-}
-.widget{
-    background-color: #FFF;
-    box-shadow: 0 0 2px #999;
-    padding: 1em;
-    min-height: 25em;
 }
 .smallmargin{
     margin: 1em 0 1em 0;
 }
 .dashentrytext{
     margin: 0.2em;
-}
-.unread{
-    font-weight: bold;
 }
 .navbar {
     line-height: 1.9;

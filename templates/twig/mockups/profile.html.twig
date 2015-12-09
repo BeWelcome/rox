@@ -1,0 +1,202 @@
+{% extends '@base/base.html.twig' %}
+
+{% block content %}
+
+<div class="container m-b-2">
+
+    <!-- #main: content begins here -->
+    <div id="main">
+
+        <div class="col-xs-12 col-md-2 m-t-1">
+            <div class="m-b-1">
+                <img src="/members/avatar/member-101?100_100">
+            </div>
+
+            <div class="btn-group-vertical btn-block m-b-1">
+                <a href="#" class="btn btn-secondary text-xs-left">Send message</a>
+                <a href="#" class="btn btn-secondary text-xs-left">Write comment</a>
+                <a href="#" class="btn btn-secondary text-xs-left">Friend</a>
+
+                <div class="btn-group" role="group">
+                    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle text-xs-left" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Add to...
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                        <a class="dropdown-item text-xs-left" href="#">...list 1</a>
+                        <a class="dropdown-item text-xs-left" href="#">...list 2</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group-vertical btn-block m-b-1">
+                <a href="#" class="btn btn-warning text-xs-left">Profile</a>
+                <a href="#" class="btn btn-secondary text-xs-left">Comments</a>
+                <a href="#" class="btn btn-secondary text-xs-left">Gallery</a>
+                <a href="#" class="btn btn-secondary text-xs-left">Groups</a>
+                <a href="#" class="btn btn-secondary text-xs-left">Trips</a>
+            </div>
+
+        </div>
+
+        <div class="col-xs-12 col-md-5 m-t-1">
+
+            <div class="card card-inverse card-warning text-xs-center">
+                <div class="p-a-1">
+
+                    <div class="btn-group pull-xs-left">
+                        <h4 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Member-101</h4>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#">About me</a>
+                            <a class="dropdown-item" href="#">Interests</a>
+                            <a class="dropdown-item" href="#">Spoken languages</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Groups</a>
+                        </div>
+                    </div>
+                    <small class="pull-xs-right"><i class="fa fa-home"></i> <a href="#">Berlin</a>, <a href="#">Germany</a></small>
+                </div>
+
+                <div class="card-block">
+                    <blockquote class="card-blockquote text-xs-left">
+                        <p class="m-b-0"><i class="fa fa-mars"></i> 99 years old, Working slave</p>
+                        <footer>Member since: <cite title="Source Title">x years</cite></footer>
+                        <footer>Last login: <cite title="Source Title">x days</cite><a href="#" class="btn btn-sm btn-primary pull-xs-right">Send message</a></footer>
+                    </blockquote>
+                </div>
+            </div>
+
+            <div class="card">
+                <h5 class="card-header">
+                    About me
+                </h5>
+                <div class="card-block p-t-0">
+                    <p class="card-text">Some text about me</p>
+                    <p class="card-text">Using many paragraphs to describe and profile me</p>
+                    <p class="card-text">I'm really a laid back person... promise!</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h5 class="card-header">
+                    Spoken languages
+                </h5>
+                <div class="card-block p-t-0 p-b-0">
+                    <p>English <span class="label label-default">mother tongue</span></p>
+                    <p>German <span class="label label-default">fluent</span></p>
+                    <p>French <span class="label label-default">beginner</span></p>
+                    <p>Dutch <span class="label label-default">can only say Welcome</span></p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h5 class="card-header">
+                    Interests
+                </h5>
+                <div class="card-block p-t-0">
+                    <h5 class="card-title">Movies</h5>
+                    <p class="card-text">A lot of movies</p>
+
+                    <h5 class="card-title">Books</h5>
+                    <p class="card-text">None</p>
+
+                    <h5 class="card-title">Board games</h5>
+                    <p class="card-text">Who doesn't love them?</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h5 class="card-header">
+                    Travelled to
+                </h5>
+                <div class="card-block p-t-0 p-b-0">
+                    <p>Germany</p>
+                    <p>France</p>
+                    <p>England</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-xs-12 col-md-5 m-t-1">
+            <div class="card card-success">
+                <h5 class="card-header">
+                    Hosting information
+                </h5>
+                <div class="card-block p-t-0">
+                    <p class="card-text">I'm hosting <a href="#" class="btn btn-primary btn-sm pull-xs-right">Send a request</a></p>
+                </div>
+
+                <div id="accordion" role="tablist" aria-multiselectable="true" class="p-a-1">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingOne">
+                            <h4 class="panel-title">
+                                <a class="collapsed btn text-xs-left p-l-0" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                    Please bring
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                            A sleeping bag
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingTwo">
+                            <h4 class="panel-title">
+                                <a class="collapsed btn text-xs-left p-l-0" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    House rules
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                            No smoking inside
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingThree">
+                            <h4 class="panel-title">
+                                <a class="collapsed btn text-xs-left p-l-0" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    I can offer my guests
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                            A warm meal
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingFour">
+                            <h4 class="panel-title">
+                                <a class="collapsed btn text-xs-left p-l-0" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                    Other information for guests
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+                            Lots of dust: allergic guests be aware
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingFive">
+                            <h4 class="panel-title">
+                                <a class="collapsed btn text-xs-left p-l-0" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                    Directions
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+                            Take the hoovercraft to the helipad and then land on the big H
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+
+
+
+    </div> <!-- main -->
+</div> <!-- container -->
+{% endblock content %}

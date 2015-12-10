@@ -85,3 +85,19 @@
     border: 1px solid #8A8A8A;
     border-radius: 0.15rem;
 }
+
+.card {
+    width: 25%;
+}
+.card:nth-child(1) {
+    width: 30%;
+}
+.card:nth-child(2) {
+    width: 30%;
+}
+.card:nth-child(3) {
+    width: 25%;
+}
+.card:nth-child(4) {
+    width: 15%;
+}

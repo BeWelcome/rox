@@ -73,41 +73,41 @@ WHERE code = \'WelcomeToSignup\'';
     {
         return in_array($lang, $this->_langs);
     }
-    
+
     /**
      * @param
-     * @return associative array mapping language abbreviations to 
+     * @return associative array mapping language abbreviations to
      * 			long, English names of the language
      */
     public function getLangNames()
     {
-        
+
         $l =  '';
 		foreach ($this->_langs as $lang) {
 		    $l .= '\'' . $lang . '\',';
 		}
 		$l = substr($l, 0, (strlen($l)-1));
-		
+
         $query = '
 SELECT `EnglishName`, `ShortCode`
 FROM `languages`
 WHERE `ShortCode` in (' . $l . ')
 		';
         $result = $this->dao->query($query);
-        
+
         $langNames = array();
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {
             $langNames[$row->ShortCode] = $row->EnglishName;
         }
         return $langNames;
     }
-    
+
     public function getNewMessagesNumber($_idUser)
     {
         $query = '
 SELECT COUNT(*) AS n
 FROM `messages`
-WHERE `IdReceiver` = ' . mysql_real_escape_string($_idUser) . '
+WHERE `IdReceiver` = ' . $_idUser . '
 AND `Status` = \'Sent\'
 AND (NOT FIND_IN_SET(\'receiverdeleted\', `DeleteRequest`))
 AND `WhenFirstRead` = 0';

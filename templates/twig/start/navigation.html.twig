@@ -7,12 +7,12 @@
         <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">
             <a class="navbar-brand" href="main"><img src="/images/logo_index_top.png"
                                                      alt="{{ 'BeWelcome' | trans }}"/></a>
-            <form class="form-inline navbar-form pull-left" method="post" action="{{ url('login') }}">
+            <form class="form-inline navbar-form pull-xs-left" method="post" action="{{ path('login') }}">
                 {{ macros.input('u', 'Username') }}
                 {{ macros.input('p', 'Password', '', 'password') }}
                 {{ macros.submit('Login') }}
             </form>
-            <form class="form-inline navbar-form pull-right">
+            <form class="form-inline navbar-form pull-xs-right">
                 <select id="language" name="language" class="form-control select2 combo" onchange="window.location.href=this.value; return false">
                     {% for lang in languages %}
                         <option {% if lang.ShortCode == language %}selected="selected"{% endif %} value="{{ baseuri }}/rox/in/{{ lang.ShortCode }}">{{ lang.TranslatedName|raw }} ({{ lang.NativeName|raw }})</option>

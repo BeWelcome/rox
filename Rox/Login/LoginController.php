@@ -2,6 +2,7 @@
 
 namespace Rox\Login;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -28,9 +29,9 @@ class LoginController
         $result = $loginController->loginCallback($args, null, null);
         if ($result) {
             // redirect to /home
-            header('Location: /home');
+            return new RedirectResponse('/home');
         } else {
-            header('Location: /');
+            return new RedirectResponse('/');
         }
     }
 }

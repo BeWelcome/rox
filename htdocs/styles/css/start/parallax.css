@@ -1,16 +1,7 @@
-@font-face {
-    font-family: Signika;
-    src: url(../../fonts/Signika-Regular.otf);
-}
-
-div {
-
-}
 /* general styles */
 html, body {
     height: 100%;
     width: 100%;
-    font-family: Signika;
 }
 
 /* padded section */
@@ -47,16 +38,38 @@ html, body {
     height: 40px;
 }
 
-.chevron{
-    border: 6px solid #FFFFFF;
+#footer a {
+    color: white;
+}
+
+#footer a:hover {
+    color: #f37000;
+}
+
+#footer a:focus{
+    color: #f37000;
+}
+
+.chevron_down{
+    bottom: 100px;
+    display: block;
+    font-size: 20px;
+    left: 0;
+    position: absolute;
+    right: 0;
+    width: 50px;
+    margin: 0 auto;
+    outline: none;
+    text-decoration: none;
+    color: #fff;
+    z-index: 200;
+}
+
+.chevron_icon {
+    border: 2px solid #fff;
     border-radius: 50%;
-    display: inline-block;
-    font-size: 50px;
-    height: 80px;
-    line-height: 70px;
-    text-align: center;
+
     vertical-align: middle;
-    width: 80px;
     color: white;
     background: rgba(255, 255, 255, 0.6);
 }

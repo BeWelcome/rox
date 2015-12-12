@@ -1,0 +1,28 @@
+{% extends '@base/base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        {{ macros.pagination(currentPage, lastPage, route, routeParams) }}
+        <table>
+            <tr>
+                <th>Member</th>
+                <th>Type</th>
+                <th>Message</th>
+                <th>Date and Time</th>
+                <th>IP address</th>
+            </tr>
+    {% for log in logs %}
+        <tr>
+        <td>{% if log.member.Username %}{{ macros.avatar(log.member.Username, true) }}
+            <a href="{{path('admin_logs_username', { username: log.member.Username} )}}">{{ log.member.Username }}</a>{% else %}Not logged{% endif %}</td>
+            <td><a href="{{ path('admin_logs_type', { type: log.Type }) }}">{{ log.Type }}</a></td>
+            <td>{{ log.Str }}</td>
+            <td>{{ log.created }}</td>
+        <td><a href="{{ path('admin_logs_ip', { ipAddress: log.IpAddressString }) }}">{{ log.IpAddressString }}</a></td>
+        </tr>
+    {% endfor %}
+        </table>
+        Found: {{  count }}
+        {{ macros.pagination(currentPage, lastPage, route, routeParams) }}
+</div>
+{% endblock content %}

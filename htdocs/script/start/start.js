@@ -22,5 +22,6 @@ $(document).ready(function(){
     $(".navbar-fixed-top").autoHidingNavbar({
         // see next for specifications
     });
+
 }); // close out script
 

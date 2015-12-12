@@ -1,8 +1,5 @@
-// Core variables and mixins
-@import "../../../vendor/twbs/bootstrap4/scss/variables";
-@import "mixins";
-
 // Include fonts
+@import "mixins";
 
 $font-path: '../fonts/';
 @include font-face('Signika-Bold', $font-path + 'signika-bold-webfont', normal, normal);
@@ -23,6 +20,12 @@ $font-path: '../fonts/';
 @include font-face('LatoWebLight', $font-path + 'Lato-LightItalic', normal, italic);
 @include font-face('LatoWebMedium', $font-path + 'Lato-Medium', normal, normal);
 @include font-face('LatoWebMedium', $font-path + 'Lato-MediumItalic', normal, italic);
+
+//Font-awesome
+@import "../../../vendor/components/font-awesome/scss/font-awesome";
+
+// Core variables and mixins
+@import "../../../vendor/twbs/bootstrap4/scss/variables";
 
 // Setting up BW styles
 $brand-primary: #f37000;
@@ -99,9 +102,39 @@ $headings-font-family: "Signika-Regular", LatoWeb, sans-serif;
 @import "../../../vendor/twbs/bootstrap4/scss/utilities-spacing";
 @import "../../../vendor/twbs/bootstrap4/scss/utilities-responsive";
 
-body {
-  text-rendering: optimizeLegibility;
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
 }
+
+body {
+  /* Margin bottom by footer height */
+  text-rendering: optimizeLegibility;
+  margin-bottom: 8rem;
+  background: url("../../images/bggrey.png") repeat-x scroll left top #F7F7F7;
+}
+
+body > footer {
+  font-size: 80%;
+  line-height: 1.1;
+  font-weight: normal;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: .5rem 0;
+
+  /* Set the fixed height of the footer here */
+  height: 8rem;
+  background-color: #555;
+  color: #999;
+
+  a {padding: 2em 0; color:#aaa; white-space: nowrap; }
+  a:hover { color:#fff; }
+  a:focus { color:#fff; }
+}
+
 .navbar-nav {
   .nav-item {
     padding: .25rem .5rem;
@@ -131,8 +164,14 @@ body {
 
 }
 
-//Font-awesome
-@import "../../../vendor/components/font-awesome/scss/font-awesome";
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 8rem;
+  background-color: #555;
+}
 
 // select2
 @import "../../../vendor/select2/select2/src/scss/core";

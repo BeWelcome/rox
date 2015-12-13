@@ -185,6 +185,7 @@ body > footer {
 #col2{
   display: none;
 }
+
 #col3{
   @include make-col();
   @media (max-width: 32em) {
@@ -194,4 +195,12 @@ body > footer {
     @include make-col-span(9);
     @include make-col-pull(3);
   }
+}
+
+.fullheight{
+  height: 100%;
+}
+
+.verticalalign{
+  @include vertical-align();
 }

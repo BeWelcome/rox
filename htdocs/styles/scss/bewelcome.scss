@@ -197,10 +197,17 @@ body > footer {
   }
 }
 
-.fullheight{
-  height: 100%;
-}
+@include media-breakpoint-up(md){
+  .verticalalign{
+    @include vertical-align();
+  }
 
-.verticalalign{
-  @include vertical-align();
+  .welcomeback{
+    height: 7em;
+  }
+
+  .fullheight{
+    height: 100%;
+  }
+
 }

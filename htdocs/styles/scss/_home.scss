@@ -17,19 +17,15 @@
   font-weight: bold;
 }
 .dashbox{
-  border: 0.3em solid #FFF;
   overflow: hidden;
   box-shadow: 0 0 2px #888;
-  min-height: 27em;
+  height: 27em;
+  background: #fff;
 }
 .readunread{
   background-color: #FFF;
   padding: 0.2em;
   text-align: center;
-}
-.dashentry{
-  padding: 0.5em;
-  line-height: 1em;
 }
 .odd{
   background-color: #FFF;
@@ -39,12 +35,8 @@
 }
 .scrollcontent{
   position:relative;
-  max-height: 20em;
-  height:100%;
-  width: 105%;
-  width: calc(100% + 20px);
-  overflow-x:hidden;
-  overflow-y:visible;
+  height: 19em;
+  overflow:hidden;
 }
 .chevplace{
   top: 1.1em;
@@ -94,4 +86,42 @@
 }
 .card:nth-child(4) {
   width: 15%;
+}
+
+.dashentry{
+  height: 100%;
+  float: left;
+  padding: $spacer-y $spacer-x !important;
+}
+.scrollcontent .row:nth-of-type(odd){
+  background-color: $table-bg-accent;
+}
+.scrollcontent .row:nth-of-type(even){
+  background-color: #fff;
+}
+
+@include media-breakpoint-up(md){
+
+  .welcomeback{
+    height: 7em;
+  }
+
+  .dashentry{
+    width: calc(100% - 70px);
+  }
+
+  .dashentry p{
+    @include vertical-align();
+  }
+
+  .scrollcontent .row {
+    height: 70px;
+  }
+
+}
+
+@include media-breakpoint-down(xs) {
+  .dashentry{
+    width: calc(100% - 20px);
+  }
 }

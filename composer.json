@@ -37,6 +37,7 @@
         "symfony/http-kernel" : "~3.0",
         "symfony/http-foundation" : "~3.0",
         "symfony/debug": "~3.0",
+        "symfony/form": "~3.0",
         "symfony/security": "~3.0",
         "symfony/security-guard": "3.0.*",
         "psr/log": "*",
@@ -44,7 +45,7 @@
         "illuminate/database": "5.*",
         "illuminate/support": "5.*",
         "illuminate/events": "5.*",
-        "components/jquery": "^2.1"
+        "components/jquery": "^2.1",
         "symfony/dependency-injection": "~3.0",
         "symfony/validator": "3.0 as 2.2"
     },

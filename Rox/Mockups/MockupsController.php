@@ -33,7 +33,7 @@ class MockupsController extends \RoxControllerBase
      * @return Response
      */
     public function showMockup(Request $request, $mockup) {
-        $page = new MockupPage($this->router, $mockup);
+        $page = new MockupPage($this->routing, $mockup);
         return new Response($page->render());
     }
 }

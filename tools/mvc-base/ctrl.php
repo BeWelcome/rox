@@ -4,23 +4,24 @@
 abstract class RoxControllerBase extends RoxComponentBase
 {
     /** @var \Symfony\Component\Routing\Router */
-    protected $router;
+    protected $routing;
 
-    /** @var  \Symfony\Component\Form\FormFactory */
+    /** @var  \Symfony\Component\Form\FormFactoryInterface */
     protected $formFactory;
 
     /**
-     * @param \Symfony\Component\Routing\Router $router
-     * @return RoxControllerBase
+     * @param \Symfony\Component\Routing\Router $routing
+     *
+*@return RoxControllerBase
      */
-    public function setRouter($router)
+    public function setRouting($routing)
     {
-        $this->router = $router;
+        $this->routing = $routing;
         return $this;
     }
 
     /**
-     * @param \Symfony\Component\Form\FormFactory $formFactory
+     * @param \Symfony\Component\Form\FormFactoryInterface $formFactory
      * @return RoxControllerBase
      */
     public function setFormFactory($formFactory)

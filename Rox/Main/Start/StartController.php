@@ -24,7 +24,7 @@ class StartController extends \RoxControllerBase
     /**
      * @Router
      */
-    public $router;
+    public $routing;
 
     public function __construct()
     {
@@ -43,7 +43,7 @@ class StartController extends \RoxControllerBase
      * @return StartPage
      */
     public function showAction() {
-        $page = new StartPage($this->router);
+        $page = new StartPage($this->routing);
         return new Response($page->render());
     }
 }

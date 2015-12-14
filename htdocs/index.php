@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Capsule\Manager as Capsule;
-use Illuminate\Support\Fluent;
 use Rox\Framework\ControllerResolverListener;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\Debug\ErrorHandler;
@@ -50,8 +49,13 @@ $yamlFileLocator = new Symfony\Component\Routing\Loader\YamlFileLoader(
     $locator
 );
 
+$params = parse_ini_file('../rox_local.ini');
+
 $context = new Symfony\Component\Routing\RequestContext();
-$context->setHost('bewelcome');
+$hostname = $params['baseuri'];
+$hostname = str_replace('http://', '', $hostname);
+$hostname = str_replace('/', '', $hostname);
+$context->setHost($hostname);
 
 $validator = Validation::createValidator();
 
@@ -74,9 +78,6 @@ $matcher = new Symfony\Component\Routing\Matcher\UrlMatcher(
     $router->getRouteCollection(), $requestContext
 );
 
-// Setup database connection with Eloquent
-$params = parse_ini_file('../rox_local.ini');
-
 $parts = explode('=', $params['dsn']);
 
 $host = substr($parts[1], 0, strpos($parts[1], ';'));
@@ -84,13 +85,9 @@ $db = $parts[2];
 $user = $params['user'];
 $password = $params['password'];
 
-$container = new \Illuminate\Container\Container();
-if (! $container->bound('config')) {
-    $container->instance('config', new Fluent);
-}
-$connections = $container['config']['database.connections'];
-
-$connections['default'] = [
+// Setup database connection with Eloquent
+$capsule = new Capsule();
+$capsule->addConnection([
     'driver' => 'mysql',
     'host' => $host,
     'database' => $db,
@@ -99,11 +96,8 @@ $connections['default'] = [
     'charset' => 'utf8',
     'collation' => 'utf8_unicode_ci',
     'prefix' => '',
-];
+]);
 
-$capsule->setAsGlobal();
-
-$capsule = new Capsule($container);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 

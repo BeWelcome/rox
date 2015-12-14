@@ -64,7 +64,7 @@ class QueriesController extends \RoxControllerBase
             ->getForm();
 
         $form->handleRequest($request);
-        $page = new AdminQueriesOverviewPage($this->router, $form);
+        $page = new AdminQueriesOverviewPage($this->routing, $form);
         if ($form->isValid()) {
             $page->addParameters(['results' => 'These are the results.']);
         }

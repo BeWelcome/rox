@@ -100,12 +100,13 @@
   background-color: #fff;
 }
 
+
 @include media-breakpoint-up(md){
 
   .welcomeback{
     height: 7em;
   }
-
+  
   .dashentry{
     width: calc(100% - 70px);
   }

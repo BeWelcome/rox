@@ -3,6 +3,11 @@
 namespace Rox\Framework;
 
 use Rox\Models\Message;
+use Symfony\Bridge\Twig\Extension\FormExtension;
+use Symfony\Bridge\Twig\Form\TwigRenderer;
+use Symfony\Bridge\Twig\Form\TwigRendererEngine;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\MessageSelector;
@@ -19,9 +24,11 @@ use \Illuminate\Database\Capsule\Manager as Capsule;
 class TwigView extends AbstractBasePage {
 
     protected $_loader;
+    private $_forms = array();
+    private $_container;
     private $_environment;
     private $_template;
-    private $_parameters;
+    private $_parameters = array();
     protected $_words;
     protected $_translator;
     private $_stylesheets = array(
@@ -46,10 +53,17 @@ class TwigView extends AbstractBasePage {
         'jquery-1.11.2/jquery-1.11.2.min.js',
     );
 
-    public function __construct(Router $router) {
+    /**
+     * TwigView constructor.
+     * @param Router $router
+     * @param bool $container
+     */
+    public function __construct(Router $router, $container = true) {
+        $this->_container = $container;
         $this->_loader = new Twig_Loader_Filesystem();
         $this->addNamespace('base');
         $this->addNamespace('macros');
+        $this->addNamespace('forms');
 
         $this->_environment = new Twig_Environment(
             $this->_loader ,
@@ -73,6 +87,21 @@ class TwigView extends AbstractBasePage {
             $this->_environment->addExtension(new RoutingExtension($router->getGenerator()));
         }
         $this->_environment->addExtension(new \Twig_Extension_Debug());
+
+        // Setting up the form template
+        $defaultFormTheme = '@forms/bootstrap_4_layout.html.twig';
+
+        $appVariableReflection = new \ReflectionClass('\Symfony\Bridge\Twig\AppVariable');
+        $vendorTwigBridgeDir = dirname($appVariableReflection->getFileName());
+        $this->_loader->addPath($vendorTwigBridgeDir . '/Resources/views/Form');
+
+        $formEngine = new TwigRendererEngine(array($defaultFormTheme));
+        $formEngine->setEnvironment($this->_environment);
+        // add the FormExtension to Twig
+        $this->_environment->addExtension(
+            new FormExtension(new TwigRenderer($formEngine))
+        );
+
     }
 
     /**
@@ -84,6 +113,14 @@ class TwigView extends AbstractBasePage {
     public function addNameSpace($namespace) {
         $path = realpath(SCRIPT_BASE . 'templates/twig/' . $namespace);
         $this->_loader->addPath($path, $namespace);
+    }
+
+    /**
+     * @param Form $form
+     * @param string $name
+     */
+    protected function addForm(Form $form, $name = 'form') {
+        $this->_forms[$name] = $form->createView();
     }
 
     private function _getDefaults() {
@@ -99,6 +136,7 @@ class TwigView extends AbstractBasePage {
                     ->count();
         }
         return array(
+            'container' => $this->_container,
             'logged_in' => $loggedIn,
             'messages' => $messageCount,
             'username' => $member->Username,
@@ -176,7 +214,7 @@ class TwigView extends AbstractBasePage {
         } else {
             $this->_template = $template;
         }
-        $this->setParameters($parameters);
+        $this->addParameters($parameters);
     }
 
     /**
@@ -184,16 +222,8 @@ class TwigView extends AbstractBasePage {
      *
      * @param array $parameters
      */
-    public function setParameters($parameters) {
-        $finalParameters = array_merge(
-            $parameters,
-            $this->_getStylesheets(),
-            $this->_getLanguages(),
-            $this->_getEarlyJavascriptFiles(),
-            $this->_getLateJavascriptFiles(),
-            $this->_getDefaults()
-        );
-        $this->_parameters = $finalParameters;
+    public function addParameters($parameters) {
+        $this->_parameters = array_merge($this->_parameters, $parameters);
     }
 
     /**
@@ -202,6 +232,15 @@ class TwigView extends AbstractBasePage {
      * @return string
      */
     public function render() {
-        return $this->_environment->render($this->_template, $this->_parameters);
+        $finalParameters = array_merge(
+            $this->_parameters,
+            $this->_forms,
+            $this->_getStylesheets(),
+            $this->_getLanguages(),
+            $this->_getEarlyJavascriptFiles(),
+            $this->_getLateJavascriptFiles(),
+            $this->_getDefaults()
+        );
+        return $this->_environment->render($this->_template, $finalParameters);
     }
 }

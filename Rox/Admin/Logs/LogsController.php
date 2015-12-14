@@ -49,7 +49,7 @@ class LogsController extends \RoxControllerBase
         $count = $query->count();
         $logs = $query->skip($first)->take($itemsPerPage)->get();
         $lastPage = ceil($count / $itemsPerPage);
-        $page->setParameters(
+        $page->addParameters(
             [
                 'currentPage' => $currentPage,
                 'lastPage' => $lastPage,
@@ -78,7 +78,7 @@ class LogsController extends \RoxControllerBase
         $count = $query->count();
         $logs = $query->skip($first)->take($itemsPerPage)->get();
         $lastPage = ceil($count / $itemsPerPage);
-        $page->setParameters(
+        $page->addParameters(
             [
                 'currentPage' => $currentPage,
                 'lastPage' => $lastPage,
@@ -109,7 +109,7 @@ class LogsController extends \RoxControllerBase
             $count = $query->count();
             $logs = $query->skip($first)->take($itemsPerPage)->get();
             $lastPage = ceil($count / $itemsPerPage);
-            $page->setParameters(
+            $page->addParameters(
                 [
                     'currentPage' => $currentPage,
                     'lastPage' => $lastPage,
@@ -140,7 +140,7 @@ class LogsController extends \RoxControllerBase
         $count = $query->count();
         $logs = $query->skip($first)->take($itemsPerPage)->get();
         $lastPage = ceil($count / $itemsPerPage);
-        $page->setParameters(
+        $page->addParameters(
             [
                 'currentPage' => $currentPage,
                 'lastPage' => $lastPage,

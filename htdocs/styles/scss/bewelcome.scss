@@ -30,7 +30,7 @@ $font-path: '../fonts/';
 // Setting up BW styles
 $brand-primary: #f37000;
 $btn-primary-color: white;
-$btn-primary-bg: #f37000;
+$btn-primary-bg: $brand-primary;
 $btn-primary-border: #ddd;
 
 $navbar-border-radius: 3;
@@ -46,6 +46,12 @@ $navbar-light-color:                white;
 $navbar-light-hover-color:          black;
 $navbar-light-active-color:         black;
 $navbar-light-disabled-color:       grey;
+
+$pagination-active-bg: $brand-primary;
+$pagination-active-color: #fff;
+$pagination-bg: #ddd;
+$pagination-disabled-bg: $pagination-bg;
+$pagination-color: $brand-primary;
 
 $enable-flex: false;
 
@@ -112,7 +118,7 @@ html {
 body {
   /* Margin bottom by footer height */
   text-rendering: optimizeLegibility;
-  margin-bottom: 8rem;
+  margin-bottom: 8em;
   background: url("../../images/bggrey.png") repeat-x scroll left top #F7F7F7;
 }
 
@@ -126,7 +132,7 @@ body > footer {
   padding: .5rem 0;
 
   /* Set the fixed height of the footer here */
-  height: 8rem;
+  height: 8em;
   background-color: #555;
   color: #999;
 
@@ -207,3 +213,89 @@ body > footer {
   }
 
 }
+
+.button {
+  display: inline-block;
+  font-weight: $btn-font-weight;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: $input-btn-border-width solid transparent;
+  @include button-size($btn-padding-y, $btn-padding-x, $font-size-base, $line-height, $btn-border-radius);
+  @include transition(all .2s ease-in-out);
+
+  &,
+  &:active,
+  &.active {
+    &:focus,
+    &.focus {
+      @include tab-focus();
+    }
+  }
+
+  @include hover-focus {
+    text-decoration: none;
+  }
+  &.focus {
+    text-decoration: none;
+  }
+
+  &:active,
+  &.active {
+    background-image: none;
+    outline: 0;
+    @include box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
+  }
+
+  &.disabled,
+  &:disabled {
+    cursor: $cursor-disabled;
+    opacity: .65;
+    @include box-shadow(none);
+  }
+
+  @include button-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border);
+}
+
+#groups {
+  .groupbox {
+    margin-top: 0.8em;
+    margin-bottom: 0.8em;
+    margin-right: 2em;
+    width: 260px;
+  }
+  .groupboxright {
+    margin-top: 0.8em;
+    margin-bottom: 0.8em;
+    width: 260px;
+  }
+  .group_float_left {
+    float: left;
+  }
+  .groupinfo {
+    margin-left: 100px;
+  }
+  .groupinfo ul {
+    padding-top: 0;
+  }
+  .groupinfo li {
+    font-size: 0.9em;
+    color: #888;
+  }
+  .groupinfo p {
+    clear: both;
+  }
+
+  .groupmembers {
+    padding-right: 25px;
+    width: 60px;
+    overflow: hidden;
+  }
+
+  .groupsettinginfo {
+    margin-bottom: 1.5em;
+  }
+}
+

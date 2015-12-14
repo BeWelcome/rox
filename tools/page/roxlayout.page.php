@@ -215,7 +215,7 @@ class PageWithRoxLayout extends PageWithHTML
         );
 
         $twigView = new \Rox\Framework\TwigView($router);
-        $twigView->setTemplate('navigation.html.twig', 'base');
+        $twigView->setTemplate('menu.html.twig', 'base');
         $topmenu =  $twigView->render();
         echo $topmenu;
     }

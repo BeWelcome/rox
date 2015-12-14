@@ -3,8 +3,8 @@
            value="{{ value|e }}" />
 {% endmacro %}
 
-{% macro submit(text) %}
-    <input class="form-control" type="submit" value="{{ text|trans }}" />
+{% macro submit(text, class = false) %}
+    <input class="form-control {%  if class %}{{ class }}{% endif %}" type="submit" value="{{ text|trans }}" />
 {% endmacro %}
 
 {% macro avatar(username, size, linked = false) %}

@@ -24,12 +24,17 @@
 </head>
 <body>
     {% if logged_in %}
-        {% include '@base/navigation.html.twig' %}
-    {%  else %}
-        {% include '@start/navigation.html.twig' %}
+        {% include '@base/menu.html.twig' %}
+    {% else %}
+        {% include '@base/loginbar.html.twig' %}
+    {% endif %}
+    {% if container %}
+        {# Add container div only if needed #}
+        <div class="container">
     {% endif %}
     {% block content %}{% endblock %}
-    {% if logged_in %}
+    {% if container %}
+        </div>
         {% include '@base/footer.html.twig' %}
     {% endif %}
     {% include '@base/scriptfiles.html.twig' with {scriptFiles : lateScriptFiles} %}

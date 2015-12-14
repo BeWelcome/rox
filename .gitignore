@@ -29,4 +29,5 @@ revision.txt
 /node_modules/*
 /components/*
 composer.lock
+composer.phar
 auth.json

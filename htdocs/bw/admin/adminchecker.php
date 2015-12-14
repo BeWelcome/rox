@@ -29,10 +29,10 @@ require_once "layout/adminchecker.php";
 $username = fUsername(GetStrParam("username"));
 $sResult="" ; // initialisation to avoid a warning
 $RightLevel = HasRight('Checker'); // Check the rights
-if ($RightLevel < 1) {
-	echo "This Need the suffcient <b>Checker</b> rights<br>";
-	exit (0);
-}
+//if ($RightLevel < 1) {
+//	echo "This Need the suffcient <b>Checker</b> rights<br>";
+//	exit (0);
+//}
 
 
 // this function call the view of reported spam

@@ -46,7 +46,7 @@ if (is_array($pages) && count($pages) > 0) {
 ?>
 
 <div class="pages clearfix">
-	<ul class="pagination pagination-nomargin pull-right">
+	<ul class="pagination pagination-sm pull-xs-right">
 		
 
 <?php
@@ -55,29 +55,29 @@ if ($currentPage != 1) {
 
 ?>
 			
-			<li><a href="<?=sprintf($req, ($currentPage - 1))?>">&laquo;</a></li>
+			<li class="page-item"><a class="page-link" href="<?=sprintf($req, ($currentPage - 1))?>">&laquo;</a></li>
 
 <?php
 
 } else {
-	echo '<li class="disabled"><a>&laquo;</a></li>';
+	echo '<li class="pager-previous page-item disabled"><a class="page-link">&laquo;</a></li>';
 }
 ?>
 		
 <?php
 foreach ($pages as $page) {
 	if (!is_array($page)) {
-		echo '<li class="disabled"><a>...</a></li>';
+		echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
 		continue;
 	}
 	if (!isset($page['current'])) {
-		echo '<li>';
-		echo '<a href="'.sprintf($req, $page['pageno']).'">';
+		echo '<li class="page-item">';
+		echo '<a class="page-link" href="'.sprintf($req, $page['pageno']).'">';
 		echo $page['pageno'];
 		echo '</a>';
 		echo '</li>';
 	} else {
-		echo '<li class="active"><a>'.$page['pageno'].'</a></li>';
+		echo '<li class="page-item active"><a class="page-link">'.$page['pageno'].'</a></li>';
 	}
 }
 ?>
@@ -85,10 +85,10 @@ foreach ($pages as $page) {
 <?php
 if ($currentPage != $maxPage) {
 ?>
-			<li><a href="<?=sprintf($req, ($currentPage + 1))?>">&raquo;</a></li>
+			<li class="page-item"><a  class="page-link" href="<?=sprintf($req, ($currentPage + 1))?>">&raquo;</a></li>
 <?php
 } else {
-	echo '<li class="disabled"><a>&raquo;</a></li>';
+	echo '<li class="page-item disabled"><a class="page-link">&raquo;</a></li>';
 }
 ?>
 	</ul>

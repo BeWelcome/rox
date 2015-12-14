@@ -209,7 +209,7 @@ class RoxFrontRouter
             $posthandler = new RoxPostHandler();
         }
         $this->posthandler = $posthandler;
-        $posthandler->classes = $this->classes;
+        // $posthandler->classes = $this->classes;
         
         if ($action = $posthandler->getCallbackAction($this->args->post)) {
             

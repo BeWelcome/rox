@@ -219,7 +219,7 @@ class PagerWidget extends RoxWidget
                 break;
         }
         $url = htmlspecialchars($url, ENT_COMPAT | ENT_QUOTES, 'utf-8');
-        return "<a href='{$url}'" . (($title) ? " title='{$title}'" : '') . ">{$text}</a>";
+        return "<a class='page-link' href='{$url}'" . (($title) ? " title='{$title}'" : '') . ">{$text}</a>";
     }
 
     /**

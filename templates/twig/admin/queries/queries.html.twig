@@ -1,9 +1,14 @@
 {% extends '@base/base.html.twig' %}
 
 {% block content %}
-{{ form_start(form) }}
-    {{ form_widget(form) }}
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
 
-    <input type="submit" class="btn btn-primary">
-{{ form_end(form) }}
+        <input type="submit" class="pull-xs-right btn btn-primary" value="{{ 'Submitted' | trans }}">
+    {{ form_end(form) }}
+
+    {{ dump( results ) }}
+    {% if results %}
+        <div>{{ results }}</div>
+    {% endif %}
 {% endblock content %}

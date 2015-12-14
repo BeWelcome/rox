@@ -7,12 +7,12 @@ start:
 home:
     path:     /home
     defaults:
-        _controller: "\\Rox\\Main\\Home\\HomeController::showAction"
+        _controller: "Rox\\Main\\Home\\HomeController::showAction"
 
 login:
     path:     /login_symfony
     defaults:
-        _controller: "Rox\\Login\\LoginController::checkCredentials"
+        _controller: "\\Rox\\Login\\LoginController::checkCredentials"
     schemes:  [https]
 
 feedback:
@@ -68,8 +68,16 @@ admin_logs:
         currentPage: 1
         itemsPerPage: 20
 
+admin_queries:
+    path:     /admin/queries
+    methods: [GET, POST]
+    defaults:
+        _controller: "\\Rox\\Admin\\Queries\\QueriesController::showOverview"
+        currentPage: 1
+        itemsPerPage: 20
+
 mockups:
     path: /mockups/{mockup}
     defaults:
-      _controller: "\\Rox\Mockups\MockupsController::showMockup"
+      _controller: "\\Rox\\Mockups\\MockupsController::showMockup"
 

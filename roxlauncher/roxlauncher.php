@@ -56,7 +56,7 @@ HTML;
     protected function chooseAndRunApplication($env_explore)
     {
         $router = new \RoxFrontRouter();
-        $router->classes = $env_explore->classes;
+        // $router->classes = $env_explore->classes;
         $router->env = $env_explore;
         $router->session_memory = new SessionMemory('SessionMemory');
         

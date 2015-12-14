@@ -20,7 +20,7 @@ $layoutbits = new MOD_layoutbits();
 // The whole page is in one form to be able to fill the fields with the correct content even
 // when switching between pages of the result
 ?>
-<div class="row"><!--  around form -->
+<div class="bw_row"><!--  around form -->
 <?php if (count($this->errors) > 0) :
     echo '<div class="error">';
     foreach ($this->errors as $error) :
@@ -99,8 +99,8 @@ endif; ?>
     </div>
 </div>
 
-<div class="clearfix row">
-    <div class="row"><?php
+<div class="clearfix bw_row">
+    <div class="bw_row"><?php
         $numberOfItems = array('5', '10', '20', '50', '100');
         $select = '<select name="search-number-items">';
         foreach ($numberOfItems as $number) :
@@ -234,7 +234,7 @@ if ($this->locationsResultsReturned) :
             $class = 'c33l';
             if ($i % 3 == 0) {
                 echo '
-                        <div class="subcolumns row">';
+                        <div class="subcolumns bw_row">';
             };
             if ($i % 3 == 2) {
                 $class = 'c33r';
@@ -268,7 +268,7 @@ if ($this->locationsResultsReturned) :
     foreach ($this->locations as $location) :
         $class = 'c33l';
         if ($i % 3 == 0) {
-            echo '<div class="subcolumns row">';
+            echo '<div class="subcolumns bw_row">';
         }
         if ($i % 3 == 2) {
             $class = 'c33r';

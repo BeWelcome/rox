@@ -2,19 +2,42 @@
 
 {% block content %}
     <div class="container">
+    <div class="row">
+        <form class="form-inline" method="get">
+            <div class="form-group col-xs-12 col-sm-6 col-md-3">
+                <label class="sr-only" for="username">{{ 'Username' | trans }}</label>
+                {# {{ macros.input('membername', 'Username', membername) }} #}
+                {# {{ macros.select2ajax('membername', 'form-control memberpicker', 'Type membername...', '/search/members/username', membername, membername ) }} #}
+                <select class="select2" name="membername" data-placeholder="{{ 'Select member...' | trans }}" style="width: 100%"></select>
+            </div>
+            <div class="form-group col-xs-12 col-sm-6 col-md-3">
+                <label class="sr-only" for="logtype">Type</label>
+                {{ macros.select2('logtype', 'form-control', 'Select type...', types, logtype, true) }}
+            </div>
+            <div class="form-group col-xs-12 col-sm-6 col-md-3">
+                <label class="sr-only" for="ipaddress">IP address</label>
+                {{ macros.input('ipaddress', 'IP address', ipaddress) }}
+            </div>
+            <div class="form-group col-xs-12 col-sm-6 col-md-3">
+                <button type="submit" class="form-control btn btn-primary">Update</button>
+            </div>
+        </form>
+            </div>
         {{ macros.pagination(currentPage, lastPage, route, routeParams) }}
-        <table>
+        <table class="table table-striped table-bordered">
+            <thead class="thead-default">
             <tr>
                 <th>Member</th>
                 <th>Type</th>
                 <th>Message</th>
-                <th>Date and Time</th>
-                <th>IP address</th>
+                <th>Date</th>
+                <th>IP</th>
             </tr>
+            </thead>
     {% for log in logs %}
         <tr>
         <td>{% if log.member.Username %}{{ macros.avatar(log.member.Username, true) }}
-            <a href="{{path('admin_logs_username', { username: log.member.Username} )}}">{{ log.member.Username }}</a>{% else %}Not logged{% endif %}</td>
+            <a href="{{path('admin_logs_username', { membername: log.member.Username} )}}">{{ log.member.Username }}</a>{% else %}Not logged{% endif %}</td>
             <td><a href="{{ path('admin_logs_type', { type: log.Type }) }}">{{ log.Type }}</a></td>
             <td>{{ log.Str }}</td>
             <td>{{ log.created }}</td>

@@ -1,9 +1,9 @@
 <?php foreach ( $this->suggestion->options as $option ) :
 if (!$option->deleted | ($this->hasSuggestionRight)) : ?>
-<div class="subcolumns row">
+<div class="subcolumns bw_row">
     <h3><?php echo $this->purifier->purify($option->summary);?></h3>
 </div>
-<div class="subcolumns row">
+<div class="subcolumns bw_row">
 <?php // reuse $class variable defined in suggestion.php
 // as this is always called before this file
 // \todo: define a cleaner setup ?>

@@ -33,24 +33,19 @@ class TwigView extends AbstractBasePage {
     protected $_translator;
     private $_stylesheets = array(
          'bewelcome.css?1',
-//        'bootstrap.css',
-//        'select2.css',
-//        'select2-bootstrap.css',
-//          'minimal/screen/custom/index.css?3',
-//          'minimal/screen/custom/font-awesome.min.css',
-//          'minimal/screen/custom/font-awesome-ie7.min.css',
     );
 
     private $_lateScriptFiles = array(
-        'bootstrap/bootstrap.min.js',
+        // 'bootstrap/bootstrap.min.js',
         'common/initialize.js',
-        'select2/select2.min.js',
-        'bootstrap-autohidingnavbar/jquery.bootstrap-autohidingnavbar.js',
     );
 
     private $_earlyScriptFiles = array(
         'common/common.js?1',
-        'jquery-1.11.2/jquery-1.11.2.min.js',
+        'jquery/jquery-2.1.4.min.js',
+        'select2/select2.js',
+        'bootstrap/bootstrap.min.js',
+        'bootstrap-autohidingnavbar/jquery.bootstrap-autohidingnavbar.js',
     );
 
     /**
@@ -75,6 +70,9 @@ class TwigView extends AbstractBasePage {
         );
         $this->_words = $this->getWords();
 
+        if (!isset($_SESSION['lang'])) {
+            $_SESSION['lang'] = 'en';
+        }
         $this->_translator = new Translator($_SESSION['lang'], new MessageSelector());
         if ($_SESSION['lang'] <> 'en') {
             $this->_translator->setFallbackLocales(array('en'));
@@ -139,7 +137,7 @@ class TwigView extends AbstractBasePage {
             'container' => $this->_container,
             'logged_in' => $loggedIn,
             'messages' => $messageCount,
-            'username' => $member->Username,
+            'username' => ($loggedIn ? $member->Username : ''),
             'meta.robots' => 'ALL',
             'title' => 'BeWelcome'
         );
@@ -173,17 +171,17 @@ class TwigView extends AbstractBasePage {
         $this->_stylesheets[] = $stylesheet;
     }
 
-    protected function addEarlyJavascriptFile($scriptFile, $name = false) {
-        if ($name) {
-            $this->_earlyScriptFiles[$name] = $scriptFile;
+    protected function addEarlyJavascriptFile($scriptFile, $prepend = false) {
+        if ($prepend) {
+            array_unshift($this->_earlyScriptFiles, $scriptFile);
         } else {
             $this->_earlyScriptFiles[] = $scriptFile;
         }
     }
 
-    protected function addLateJavascriptFile($scriptFile, $name = false) {
-        if ($name) {
-            $this->_lateScriptFiles[$name] = $scriptFile;
+    protected function addLateJavascriptFile($scriptFile, $prepend = false) {
+        if ($prepend) {
+            array_unshift($this->_lateScriptFiles, $scriptFile);
         } else {
             $this->_lateScriptFiles[] = $scriptFile;
         }

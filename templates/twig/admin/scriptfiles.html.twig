@@ -1,0 +1,6 @@
+{% for scriptFile in lateScriptFiles %}
+    {% if key %}
+        <!-- {{ key }} -->
+    {% endif %}
+    <script type="text/javascript" src="/script/{{ scriptFile }}"></script>
+{% endfor %}

@@ -2,7 +2,7 @@
 <p><?= $trip->duration ?></p>
 <?php
 $words = $this->getWords(); ?>
-<div class="row"><div class="col-xs-12"><?= $trip->description ?></div></div>
+<div class="bw_row"><div class="col-xs-12"><?= $trip->description ?></div></div>
 <?php
 $subtrips = $trip->getSubtrips();
 $count = count($subtrips);
@@ -11,7 +11,7 @@ $divider = 3;
 $class = "col-md-4";
 ?>
 <!-- Subtemplate: 2 columns 50/50 size -->
-<div class="row">
+<div class="bw_row">
     <!-- Contents for right subtemplate -->
     <?php
     foreach ($subtrips as $subtrip) {
@@ -22,7 +22,7 @@ $class = "col-md-4";
             $highlight = true;
         }
         if ($counter % $divider == 1) {
-            echo '</div><div class="row">';
+            echo '</div><div class="bw_row">';
         }
         switch ($counter) {
             case 1:

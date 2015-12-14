@@ -1,7 +1,7 @@
-        <?php $this->topnav() ?>
 
     <!-- #main: content begins here -->
     <div id="main">
+        <?php $this->topnav() ?>
         <?php $this->statusMessage() ?>
         <?php $this->teaser() ?>
 

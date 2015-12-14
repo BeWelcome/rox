@@ -285,6 +285,12 @@ bwrox.selectScripts([
         ]
     },
     {
+        file: "prototype162.js",
+        pages: [
+            "searchmembers"
+        ]
+    },
+    {
         file: "prototip.js?2",
         pages: [
             "searchmembers"

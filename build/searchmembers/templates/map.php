@@ -50,5 +50,8 @@ Boston, MA  02111-1307, USA.
     </div>
 <input onclick="searchByMap(0);" type="button" id="mapBoundariesSearchButton" class="button" value="<?php echo $words->getSilent('FindPeopleSubmitMapSearch'); ?>" ><?=$words->flushBuffer()?>
    <?php } ?>
-
+    <p><strong>Lorem Ipsum</strong> is simply dummy text of the printing and typesetting industry. <i>Lorem Ipsum has been the industry's standard dummy</i> text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+    <p style="font-family: Lato">It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. <i>It was popularised in the 1960s with the release of Letraset</i> sheets containing Lorem Ipsum passages, and more recently</p>
+    <p>with desktop publishing software like Aldus PageMaker <i style="font-family: Lato">including versions of</i> Lorem Ipsum.</p>
 <?php echo $words->flushBuffer();
+

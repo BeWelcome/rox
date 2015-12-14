@@ -115,7 +115,7 @@ class RoxController extends RoxControllerBase
             case '':
             default:
                 if (APP_User::isBWLoggedIn("NeedMore,Pending")) {
-                    $page = new PersonalStartpage();		// This is the Main Start page for logged in members
+                    $page = new \PersonalStartpage();		// This is the Main Start page for logged in members
                     $page->addEarlyLoadScriptFile('bootstrap-autohidingnavbar/jquery.bootstrap-autohidingnavbar.js');
                     $this->addEarlyLoadScriptFile('start/start.js');
                 } else {
@@ -132,7 +132,7 @@ class RoxController extends RoxControllerBase
     public function mainPage() {
         $member = $this->_model->getLoggedInMember();
         if ($member) {
-            $page = new PersonalStartpage();
+            $page = new \PersonalStartpage();
             $page->addEarlyLoadScriptFile('bootstrap-autohidingnavbar/jquery.bootstrap-autohidingnavbar.js');
             $page->addEarlyLoadScriptFile('start/start.js');
             $page->model = $this->_model;

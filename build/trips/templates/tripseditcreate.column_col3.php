@@ -101,7 +101,7 @@ if ($this->_editing == true) {
                     <?php $map_conf = PVars::getObj('map'); ?>
                     <input type="hidden" id="osm-tiles-provider-base-url" value="<?php echo ($map_conf->osm_tiles_provider_base_url); ?>"/>
                     <input type="hidden" id="osm-tiles-provider-api-key" value="<?php echo ($map_conf->osm_tiles_provider_api_key); ?>"/>
-                    <div class="row"><div class="col-md-12"><div id="trips-map" class="map"></div></div></div>
+                    <div class="bw_row"><div class="col-md-12"><div id="trips-map" class="map"></div></div></div>
                 </div>
             </div>
             <input type="hidden" name="trip-id" value="<?= $tripInfo['trip-id'] ?>"/>

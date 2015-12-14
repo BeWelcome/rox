@@ -41,7 +41,7 @@ $map_conf = PVars::getObj('map');
     <div class="card-block">
         <form method="post" action="<?php echo $baseuri.'signup/3' ?>"
               class="form" name="geo-form-js" id="geo-form-js">
-            <div class="row">
+            <div class="bw_row">
                 <div class="col-xs-6">
                     <?= $callback_tag ?>
                     <input type="hidden" name="javascriptactive" value="false"/>
@@ -96,7 +96,7 @@ $map_conf = PVars::getObj('map');
             </div>
     </div><!-- subcolumns -->
     </form>
-    <div class="row">
+    <div class="bw_row">
         <?php if (isset($vars['geonamename']) && isset($vars['geonameid'])
             && $vars['geonameid'] != ''
         ) { ?>

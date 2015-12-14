@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Support\Fluent;
 use Rox\Framework\ControllerResolverListener;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\Debug\ErrorHandler;
@@ -66,8 +67,11 @@ $router = new Symfony\Component\Routing\Router(
     $context
 );
 
+// Create global router object
+$request = Symfony\Component\HttpFoundation\Request::createFromGlobals();
+$requestContext = new RequestContext($request);
 $matcher = new Symfony\Component\Routing\Matcher\UrlMatcher(
-    $router->getRouteCollection(), $context
+    $router->getRouteCollection(), $requestContext
 );
 
 // Setup database connection with Eloquent
@@ -80,22 +84,31 @@ $db = $parts[2];
 $user = $params['user'];
 $password = $params['password'];
 
-$capsule = new Capsule;
-$capsule->addConnection(
-    [
-        'driver' => 'mysql',
-        'host' => $host,
-        'database' => $db,
-        'username' => $user,
-        'password' => $password,
-        'charset' => 'utf8',
-        'collation' => 'utf8_unicode_ci',
-        'prefix' => '',
-    ]
-);
+$container = new \Illuminate\Container\Container();
+if (! $container->bound('config')) {
+    $container->instance('config', new Fluent);
+}
+$connections = $container['config']['database.connections'];
+
+$connections['default'] = [
+    'driver' => 'mysql',
+    'host' => $host,
+    'database' => $db,
+    'username' => $user,
+    'password' => $password,
+    'charset' => 'utf8',
+    'collation' => 'utf8_unicode_ci',
+    'prefix' => '',
+];
+
+$capsule->setAsGlobal();
+
+$capsule = new Capsule($container);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
+$requestStack = new RequestStack();
+$requestStack->push($request);
 // Create global router object
 $request = Symfony\Component\HttpFoundation\Request::createFromGlobals();
 $requestContext = new RequestContext($request);

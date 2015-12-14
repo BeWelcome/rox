@@ -18,7 +18,7 @@ include 'suggestion.php';
 <?php echo $callbackTags;
 foreach($this->suggestion->options as $option) :
     if ($option->id <> $vars['suggestion-option-id']) : ?>
-<div class="subcolumns row"><h3><?php echo $this->purifier->purify($option->summary);?></h3></div>
+<div class="subcolumns bw_row"><h3><?php echo $this->purifier->purify($option->summary);?></h3></div>
 <div class="subcolumns">
 <div class="c62l">
             <div class="subcl">
@@ -36,15 +36,15 @@ foreach($this->suggestion->options as $option) :
 </div>
 </div>
 <?php else : ?>
-<div class="subcolumns row">
+<div class="subcolumns bw_row">
     <label for="suggestion-option-summary"><?php echo $words->get('suggestionEditOptionSummary'); ?>*</label><br/>
     <input type="text" id="suggestion-option-summary" name="suggestion-option-summary" maxlength="80" class="long" style="width:99%" value="<?php echo htmlspecialchars($vars['suggestion-option-summary']); ?>" />
 </div>
-<div class="subcolumns row">
+<div class="subcolumns bw_row">
     <label for="suggestion-option-desc"><?php echo $words->get('suggestionEditOptionDesc'); ?>*</label><br/>
     <textarea id="suggestion-option-desc" name="suggestion-option-desc" class="mce" rows="10" cols="80" style="width:99%"><?php echo $vars['suggestion-option-desc']; ?></textarea>
 </div>
-<div class="subcolumns row">
+<div class="subcolumns bw_row">
 <div class="float_left">
     <input type="checkbox" name="suggestion-minor-edit" id="suggestion-minor-edit" value="1"> <label for="suggestion-minor-edit"><?php echo $words->get('suggestionMinorEdit'); ?></label>
 </div>

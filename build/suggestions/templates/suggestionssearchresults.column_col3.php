@@ -3,7 +3,7 @@ $layoutkit = $this->layoutkit;
 $formkit = $layoutkit->formkit;
 $callbackTags = $formkit->setPostCallback('SuggestionsController', 'searchSuggestionsCallback');
 $words = $layoutkit->getWords();
-?><div class="subcolumns row">
+?><div class="subcolumns bw_row">
     <div class="c66l">
         <div class="subcl">
             <form id="suggestions-search-box" method="post">

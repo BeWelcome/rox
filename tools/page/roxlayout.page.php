@@ -17,11 +17,8 @@ class PageWithRoxLayout extends PageWithHTML
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
-        // $stylesheets[] = 'styles/css/minimal/minimal.css?2';
-        $stylesheets[] = 'styles/css/bewelcome.css?2';
-        // $stylesheets[] = 'styles/css/bootstrap.css?1';
-        // $stylesheets[] = 'styles/css/minimal/screen/custom/select2/select2.min.css';
-        // $stylesheets[] = 'styles/css/select2-bootstrap.css';
+        $stylesheets[] = 'styles/css/bewelcome.css';
+        $stylesheets[] = 'styles/css/minimal/minimal.css';
         if (PVars::getObj('development')->uncompress_css != 1) {
             $stylesheets = str_replace(".css", ".min.css", $stylesheets);
             return $stylesheets;

@@ -14,5 +14,7 @@ class AdminLogsPage extends \Rox\Framework\TwigView
     public function __construct(Router $router) {
         parent::__construct($router);
         $this->setTemplate('logs/logs.html.twig', 'admin');
+        $this->addLateJavascriptFile('admin/logs.js', true);
     }
+
 }

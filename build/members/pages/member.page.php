@@ -160,7 +160,7 @@ class MemberPage extends PageWithActiveSkin
     protected function columnsArea()
     {
         ?>
-        <div class="row">
+        <div class="bw_row">
           <div id="col1_left">
             <div id="col1_content">
               <? $name = 'column_col1';?>

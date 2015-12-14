@@ -1,6 +1,6 @@
 <?php $words = $this->getWords();
 $location = 'location-' . $locationRow; ?>
-<div class="row">
+<div class="bw_row">
 <input type="hidden" name="location-subtrip-id[]" id="<?= $location ?>-subtrip-id" value="<?= $locationDetails->subTripId ?>">
 <input type="hidden" class="validate collect" name="location-geoname-id[]" id="<?= $location ?>-geoname-id"
        value="<?= $locationDetails->geonameId ?>">
@@ -63,7 +63,7 @@ $location = 'location-' . $locationRow; ?>
             class="btn form-control btn-default"><span class="fa fa-fw fa-remove"></span></button>
 </div>
 </div>
-<div class="row">
+<div class="bw_row">
     <div class="form-group col-md-12"><label for="trip-location-options-<?= $locationRow ?>"
            class="control-label sr-only"><?php echo $words->get('TripLocationOptionsLabel'); ?></label>
         <?= _getOptionsDropdown($locationRow, $locationDetails->options, $words) ?>

@@ -9,40 +9,70 @@
  * @-yaml-minver  3.1
  */
 
-@media screen, projection
-{
-  /*-------------------------------------------------------------------------*/
-  
-  body { background: #f7f7f7 url(../images/bggrey.png) top left repeat-x;
-      margin:0;
-      padding:0;
-      height:100%;
-  }
+@media screen, projection {
+    /*-------------------------------------------------------------------------*/
+    body {
+        background: #f7f7f7 url(../images/bggrey.png) top left repeat-x;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+    }
 
     #container {
-        min-height:100%;
-        position:relative;
+        min-height: 100%;
+        position: relative;
     }
-  #page_margins { min-width: 900px; max-width: 960px; margin: 0 auto; width: auto;
-      padding-bottom:8em;   /* Height of the footer */
-  }
-  #page { padding: 0;
-  }
-  /* Layout Properties | Layout-Eigenschaften */
-  #header { background: #f37000; width: 100%;
-      border-top: 1px solid white;
-      border-bottom: 1px solid white;
-    display: inline-block}
-  #nav { top: 0; padding: 0 2em; background-color: #f37000;}
-  #bottom { height:8em;
-      position:absolute;
-      bottom:0;
-      border-top: 1px solid white;
-      background-color: #646464;
-      width: 100%;
-  }
-  #footer { min-width: 900px; max-width: 960px; margin: 0 auto; width: auto; padding: 1em 2em 0.25em 2em; color:#e3e3e3; }
-  
-  #footer { padding: 2.5em 4em; color:#666; border-top: 5px #efefef solid; }
 
+    #page_margins {
+        min-width: 900px;
+        max-width: 960px;
+        margin: 0 auto;
+        width: auto;
+        padding-bottom: 8em; /* Height of the footer */
+    }
+
+    #page {
+        padding: 0;
+    }
+
+    /* Layout Properties | Layout-Eigenschaften */
+    #header {
+        background: #f37000;
+        width: 100%;
+        border-top: 1px solid white;
+        border-bottom: 1px solid white;
+        display: inline-block
+    }
+
+    #nav {
+        top: 0;
+        padding: 0 2em;
+        background-color: #f37000;
+    }
+
+    #bottom {
+        height: 8em;
+        position: absolute;
+        bottom: 0;
+        border-top: 1px solid white;
+        background-color: #646464;
+        width: 100%;
+    }
+
+    #footer {
+        min-width: 900px;
+        max-width: 960px;
+        margin: 0 auto;
+        width: auto;
+        padding: 1em 2em 0.25em 2em;
+        color: #e3e3e3;
+    }
+
+    #footer {
+        padding: 2.5em 4em;
+        color: #666;
+        border-top: 5px #efefef solid;
+    }
+
+}
  /*------------------------------------------------------------------------------------------------------*/

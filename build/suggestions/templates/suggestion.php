@@ -5,7 +5,7 @@ if ($this->viewOnly & !$this->hasSuggestionRight) :
 endif; ?>
 <div id="suggestion">
 <h2><?php echo $this->purifier->purify($this->suggestion->summary); ?></h2>
-    <div class="subcolumns row">
+    <div class="subcolumns bw_row">
         <div class="<?php echo $class; ?>">
             <div class="subcl">
                 <div class="bw-row">

@@ -48,6 +48,7 @@ class TwigViewOld extends AbstractBasePage {
 
         $this->_words = $this->getWords();
 
+        if (isset($_SESSION['lang']))
         $this->_translator = new Translator($_SESSION['lang'], new MessageSelector());
         if ($_SESSION['lang'] <> 'en') {
             $this->_translator->setFallbackLocales(array('en'));

@@ -60,7 +60,7 @@ if (!empty($errors)) {
         <label for="activity-address"><?php echo $words->get('ActivityAddress'); ?>*</label><br/>
         <textarea id="activity-address" name="activity-address" class="nomce" rows="3" cols="80" class="long" style="width:99%" ><?php echo $vars['activity-address']; ?></textarea>
     </div>
-    <div class="subcolumns row">
+    <div class="subcolumns bw_row">
     <div class="c50l"><div class="subcl">
         <label for="activity-start-date"><?php echo $words->get('ActivityStart'); ?>*</label><br />
         <input type="text" id="activity-start-date" name="activity-start-date" class="date" maxlength="16" style="width:90%" value="<?php echo $vars['activity-start-date'];?>" />
@@ -70,14 +70,14 @@ if (!empty($errors)) {
         <input type="text" id="activity-end-date" name="activity-end-date" class="time" maxlength="16" style="width:98%" value="<?php echo $vars['activity-end-date']; ?>" />
         </div></div>
     </div>
-    <div class="subcolumns row">
+    <div class="subcolumns bw_row">
         <label for="activity-description"><?php echo $words->get('ActivityDescription'); ?>*</label><br/>
         <textarea id="activity-description" name="activity-description" class="mce" rows="10" cols="80" style="width:99%"><?php echo $vars['activity-description']; ?></textarea>
     </div>
-    <div class="subcolumns row">
+    <div class="subcolumns bw_row">
         <input type="checkbox" id="activity-public" name="activity-public" <?php if (isset($vars['activity-public'])) { echo 'checked="checked"'; } ?>/>&nbsp;<label for="activity-public"><?php echo $words->get('ActivityPublic'); ?></label>
     </div>
-    <div class="subcolumns row">
+    <div class="subcolumns bw_row">
         <?php
         if ($vars['activity-id'] != 0) {
              $activitieseditcreatebutton = $words->getSilent('ActivitiesEditCreateUpdate');

@@ -17,7 +17,7 @@ include 'suggestion.php';
 <div id='suggestion-form'>
 <form method="post" id="suggestion-addoptions-form">
 <?php echo $callbackTags; ?>
-<div class="subcolumns row">
+<div class="subcolumns bw_row">
 <h3><?php echo $this->purifier->purify($this->option->summary);?></h3>
 </div>
 <div class="subcolumns">
@@ -34,7 +34,7 @@ include 'suggestion.php';
         </div>
     </div>
 </div>
-<div class="subcolumns row">
+<div class="subcolumns bw_row">
 <p><?php echo $words->get('SuggestionsReallyDeleteOption');?></p>
 <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $this->suggestion->id; ?>" />
 <input type="hidden" id="suggestion-option-id" name="suggestion-option-id" value="<?php echo $vars['suggestion-option-id']; ?>" />

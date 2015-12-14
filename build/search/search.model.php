@@ -1430,7 +1430,7 @@ LIMIT 1
         $result = array();
         $query = "
             SELECT
-                username
+                id as tag_id, username as tag_value
             FROM
                 members m
             WHERE
@@ -1441,12 +1441,8 @@ LIMIT 1
             LIMIT
                 0,10";
         $usernames = $this->bulkLookup($query);
-        if (!empty($usernames)) {
-            $result['status'] = 'success';
-        }
-        $result['usernames'] = $usernames;
 
-        return $result;
+        return $usernames;
     }
 
     /**

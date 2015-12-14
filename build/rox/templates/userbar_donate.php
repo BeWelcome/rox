@@ -17,7 +17,7 @@ $Stats = $DModel->getStatForDonations() ;
     //if ($TextState > 160) $TextState = 160;
     $TextState= 50;
 ?>
-<div class="row">
+<div class="bw_row">
 <h3><?=$ww->Donate_DonationNeeded ?></h3>
 <p><?=$ww->Donate_MoreInfo('<a href="donate">','</a>') ?></p>
 <table>

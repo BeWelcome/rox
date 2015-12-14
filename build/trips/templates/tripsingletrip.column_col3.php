@@ -53,7 +53,7 @@ if (isset($this->trip->trip_text) && $this->trip->trip_text) {
             ?>
 
             <!-- Subtemplate: 2 columns 50/50 size -->
-            <div class="row">
+            <div class="bw_row">
                 <div class="col-md-1">
                         <?php
                         if ($blog->blog_start) {

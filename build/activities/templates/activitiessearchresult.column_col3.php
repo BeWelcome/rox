@@ -17,7 +17,7 @@ if (!empty($errors)) {
     echo '</div>';
 }
 ?>
-<div class="subcolumns row">
+<div class="subcolumns bw_row">
     <div class="c66l">
         <div class="subcl">
             <form id="activities-search-box" method="post" >

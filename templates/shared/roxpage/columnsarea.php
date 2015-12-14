@@ -1,5 +1,5 @@
 <?php if ($side_column_names){ ?>
-    <div class="row">
+    <div class="bw_row">
         <?php foreach ($side_column_names as $column_name) { ?>
           <div id="<?=$column_name ?>">
               <?php $this->_column($column_name) ?>

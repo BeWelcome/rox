@@ -183,7 +183,7 @@ if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
     } ?>
 
 <?php if (isset($this->suggestionsGroupId) || ($groupsforum == SuggestionsModel::getGroupId())) { ?>
-    <fieldset class="row" id = "fpost_vis_fieldset" >
+    <fieldset class="bw_row" id = "fpost_vis_fieldset" >
         <legend onclick = "toggleFieldsets('fpost_vis');" ><?php echo $words->getFormatted("ForumSuggestionsVisibilityAndLanguage"); ?></legend>
         <div id="fpost_vis">
             <p><?= $words->get('SuggestionsGroupInfoReply') ?></p>

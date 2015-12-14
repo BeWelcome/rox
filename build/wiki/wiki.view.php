@@ -64,7 +64,7 @@ class WikiView extends PAppView {
               </li>
         </ul>
 </div>
-        <div class="search-form row">
+        <div class="search-form bw_row">
         <form name="powersearch" action="<?=ewiki_script("", "PowerSearch") ?>" method="GET">
         <input type="hidden" name="id" value="<?=$id?>">
         <input type="text" id="q" name="q" size="15" style="width: 95%"><br />

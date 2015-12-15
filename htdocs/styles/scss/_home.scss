@@ -3,89 +3,72 @@
   border: 3px solid #FFFFFF;
   box-shadow: 0 0 1px #888888;
 }
+
 .hoststatus{
   position:relative;
   top: -16px;
   right: -32px;
 }
-.welcome{
-  font-size: 2em;
-  font-weight: 700;
-}
-.hostcity{
-  font-size: 1.1em;
-  font-weight: bold;
-}
+
 .dashbox{
   overflow: hidden;
   box-shadow: 0 0 2px #888;
-  height: 27em;
+  height: 26em;
   background: #fff;
 }
-.readunread{
-  background-color: #FFF;
-  padding: 0.2em;
-  text-align: center;
-}
-.odd{
-  background-color: #FFF;
-}
-.even{
-  background-color: #EEE;
-}
+
 .scrollcontent{
   position:relative;
-  height: 19em;
+  height: 18em;
   overflow:hidden;
 }
+
 .chevplace{
-  top: 1.1em;
-  right: 0px;
+  position: relative;
+  right: 0;
+  top: 25px;
 }
+
 .shadow{
   box-shadow: 0 0 2px #888;
 }
+
 .smallmargin{
   margin: 1em 0 1em 0;
 }
+
 .dashentrytext{
   margin: 0.2em;
 }
-.navbar {
-  line-height: 1.9;
-}
-.smallerpadding {
-  padding:0.5em 0.7em !important;
-}
+
 .framed {
   border-radius:2px;
 }
+
 .nav-link.active {
   box-shadow: 0px 3px 0px 0px white, 0px 0px 2px #888;
   border:none;
 }
+
 .nav-tabs .nav-link {
   border-radius: 3px 3px 0 0 !important;
 }
+
 .alert-info {
   border: 1px solid #8A8A8A;
   border-radius: 0.15rem;
 }
 
-.card {
-  width: 25%;
+.card-4 {
+  width: 33.33% !important;
 }
-.card:nth-child(1) {
-  width: 30%;
+
+.card-3 {
+  width: 25% !important;;
 }
-.card:nth-child(2) {
-  width: 30%;
-}
-.card:nth-child(3) {
-  width: 25%;
-}
-.card:nth-child(4) {
-  width: 15%;
+
+.card-2 {
+  width: 16.67% !important;;
 }
 
 .dashentry{
@@ -93,20 +76,21 @@
   float: left;
   padding: $spacer-y $spacer-x !important;
 }
+
 .scrollcontent .row:nth-of-type(odd){
   background-color: $table-bg-accent;
 }
+
 .scrollcontent .row:nth-of-type(even){
   background-color: #fff;
 }
 
-
 @include media-breakpoint-up(md){
 
-  .welcomeback{
+  .welcomeback {
     height: 7em;
   }
-  
+
   .dashentry{
     width: calc(100% - 70px);
   }
@@ -121,8 +105,34 @@
 
 }
 
+/* Occurs when viewed on medium to very small screens only */
+
+@include media-breakpoint-down(md) {
+
+  .welcomeback {
+    height: auto;
+  }
+
+  .verticalalign {
+    transform: translateY(0%) !important;
+  }
+
+}
+
+/* Occurs when viewed on very small screens only */
 @include media-breakpoint-down(xs) {
+
   .dashentry{
     width: calc(100% - 20px);
+
   }
+
+  .card {
+    width: 100% !important;
+  }
+
+  .card-deck .card{
+    display: block;
+  }
+
 }

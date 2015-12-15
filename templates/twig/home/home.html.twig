@@ -2,9 +2,7 @@
 
 {% block content %}
 
-    <div class="container">
-
-        <!-- #main: content begins here -->
+        {# main: content begins here #}
         <div id="main">
 
             <div class="row m-b-2">
@@ -22,7 +20,7 @@
                             <div class="col-xs-12 col-md-12 col-lg-7 fullheight">
                                 <div class="verticalalign">
                                     <span class="h1">Welcome back, {{ macros.memberlink('member-101') }}</span><br />
-                                    <span class="h4">You're hosting status is
+                                    <span class="h4 hidden-xs-down">You're hosting status is
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 hosting
@@ -36,21 +34,22 @@
                                          in <a href="#">Lyon</a></span>
                                 </div>
                             </div>
+                            {# where do you want to go?#}
                             <div class="col-xs-12 col-md-12 col-lg-4 fullheight">
                                 <div class="input-group verticalalign">
                                     <input type="text" class="form-control" placeholder="Where do you want to go?">
                                       <span class="input-group-btn">
                                         <button class="btn btn-primary" type="button"><i class="fa fa-globe"></i> Go</button>
                                       </span>
-                                </div><!-- /input-group -->
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ALERT: only trigger on some events -->
-            <div class="alert alert-info alert-dismissible fade in" role="alert">
+            {# Alert: only triggers at some events #}
+            <div class="alert alert-info alert-dismissible fade in hidden-sm-down" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     <span class="sr-only">Close</span>
@@ -58,7 +57,7 @@
                 Please <a href="#" class="alert-link">upload a profile picture</a>
             </div>
 
-            <!-- two-boxes: messages and website activity -->
+            {# two boxes: messages and community activity #}
             <div class="row m-b-2">
 
                 <!-- entire messages box -->
@@ -66,8 +65,8 @@
 
                     <!-- messages tabs -->
                     <ul class="nav nav-tabs">
-                        <li role="presentation" class="nav-item"><a href="#messages" class="nav-link active smallerpadding" aria-controls="messages" role="tab" data-toggle="tab">Messages received <span class="label label-primary label-pill">3</span></a></li>
-                        <li role="presentation" class="nav-item"><a href="#notifications" class="nav-link smallerpadding" aria-controls="sent" role="tab" data-toggle="tab">Notifications</a></li>
+                        <li class="nav-item"><a href="#messages" class="nav-link active" aria-controls="messages" role="tab" data-toggle="tab">Messages received <span class="label label-primary label-pill">3</span></a></li>
+                        <li class="nav-item"><a href="#notifications" class="nav-link" aria-controls="sent" role="tab" data-toggle="tab">Notifications</a></li>
                     </ul>
 
                     <!-- bordered box around content -->
@@ -89,10 +88,10 @@
                                         </label>
                                     </div>
                                 </div>
-                                <!-- load received messages -->
+                                {# received messages #}
                                 <div class="scrollcontent">
 
-                                    {# messages data #}
+                                    {# 4x messages data per row #}
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
                                             <div class="hidden-xs-down pull-xs-left" style="padding: 10px 0;">
@@ -104,11 +103,12 @@
                                                     <small>from <a href="#user">Membername</a> 10 minutes ago</small>
                                                 </p>
                                             </div>
-                                            <div class="pull-xs-right" style="position: relative; right: 0; top: 18px;">
+                                            <div class="pull-xs-right chevplace">
                                                 <a href="#"><i class="fa fa-chevron-right"></i></a>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
                                             <div class="hidden-xs-down pull-xs-left" style="padding: 10px 0;">
@@ -120,11 +120,12 @@
                                                     <small>from <a href="#user">Membername</a> 10 minutes ago</small>
                                                 </p>
                                             </div>
-                                            <div class="pull-xs-right" style="position: relative; right: 0; top: 18px;">
+                                            <div class="pull-xs-right chevplace">
                                                 <a href="#"><i class="fa fa-chevron-right"></i></a>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
                                             <div class="hidden-xs-down pull-xs-left" style="padding: 10px 0;">
@@ -136,11 +137,12 @@
                                                     <small>from <a href="#user">Membername</a> 10 minutes ago</small>
                                                 </p>
                                             </div>
-                                            <div class="pull-xs-right" style="position: relative; right: 0; top: 18px;">
+                                            <div class="pull-xs-right chevplace">
                                                 <a href="#"><i class="fa fa-chevron-right"></i></a>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
                                             <div class="hidden-xs-down pull-xs-left" style="padding: 10px 0;">
@@ -152,7 +154,7 @@
                                                     <small>from <a href="#user">Membername</a> 10 minutes ago</small>
                                                 </p>
                                             </div>
-                                            <div class="pull-xs-right" style="position: relative; right: 0; top: 18px;">
+                                            <div class="pull-xs-right chevplace">
                                                 <a href="#"><i class="fa fa-chevron-right"></i></a>
                                             </div>
                                         </div>
@@ -162,20 +164,20 @@
 
                             </div>
 
-                            <!-- load system notifications -->
+                            {# load system notifications #}
                             <div role="tabpanel" class="tab-pane" id="notifications">
                                 system notifications
                             </div>
                         </div>
 
                         <!-- message buttons -->
-                        <div class="odd text-xs-center">
+                        <div class="text-xs-center">
                                 <a href="messages" class="btn btn-primary-outline"><i class="fa fa-envelope"></i> My inbox <span class="label label-primary label-pill">3</span></a>
                         </div>
                     </div>
                 </div>
 
-                <!-- entire notifications box -->
+                {# community updates box #}
                 <div class="col-md-12 col-lg-7">
                     <ul class="nav nav-tabs">
                         <li class="nav-item"><a href="#forum" class="nav-link active" aria-controls="forum" role="tab" data-toggle="tab">Forum <span class="label label-primary label-pill">2</span></a></li>
@@ -184,15 +186,15 @@
                         <li class="nav-item"><a href="#suggestions" class="nav-link" aria-controls="suggestions" role="tab" data-toggle="tab">Suggestions <span class="label label-primary label-pill">4</span></a></li>
                     </ul>
 
-                    <!-- bordered box around content -->
+                    {# bordered box #}
                     <div class="dashbox">
-                        <!-- load tab content -->
+                        {# tabs content #}
                         <div class="tab-content">
-                            <!-- discussion content div -->
+                            {# forum discussions #}
                             <div role="tabpanel" class="tab-pane active" id="forum">
 
-                                <!-- discussion settings -->
-                                <div class="row readunread">
+                                {# display settings#}
+                                <div class="row text-xs-center p-a-1">
                                     <div class="btn-group" data-toggle="buttons">
                                         <label class="btn btn-primary active">
                                             <input type="checkbox" autocomplete="off" checked> groups
@@ -208,125 +210,80 @@
 
                                 <div class="scrollcontent">
 
-                                    <div class="row dashentry odd">
-                                        <!-- avatar -->
-                                        <div class="col-xs-2">
-                                            <a href="#user"><img class="float_left framed" src="/members/avatar/member-128?50_50" alt="Profile" /></a>
-                                        </div>
-                                        <!-- message data -->
-                                        <div class="col-xs-9">
-                                            <p class="dashentrytext">
-                                                <span class="font-weight-bold"><a href="#">Discussion 1</a></span>
-                                            </p>
-                                            <small>by</small>
-                                            <small><a href="#user">Membername</a></small>
-                                            <small>in</small>
-                                            <small><a href="#user">Group name</a></small>
-                                            <small>10 minutes ago</small>
-                                        </div>
-                                        <!-- chevron -->
-                                        <div class="col-xs-1 chevplace">
-                                            <a href="#"><i class="fa fa-chevron-right"></i></a>
+                                    {# 4 most recent forum messages #}
+                                    <div class="row p-l-1 p-r-1">
+                                        <div class="col-xs-12 fullheight">
+                                            <div class="hidden-xs-down pull-xs-left" style="padding: 10px 0;">
+                                                <a href="#user"><img class="float_left framed" src="/members/avatar/member-105?50_50" alt="Profile" /></a>
+                                            </div>
+                                            <div class="dashentry">
+                                                <p class="text-truncate">
+                                                    <strong><a href="#">Will this be the first couple of words of the last added forum message?</a></strong><br>
+                                                    <small>from <a href="#user">Membername</a> 10 minutes ago</small>
+                                                </p>
+                                            </div>
+                                            <div class="pull-xs-right chevplace">
+                                                <a href="#"><i class="fa fa-chevron-right"></i></a>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div class="row dashentry even">
-                                        <!-- avatar -->
-                                        <div class="col-xs-2">
-                                            <a href="#user"><img class="float_left framed" src="/members/avatar/member-108?50_50" alt="Profile" /></a>
-                                        </div>
-                                        <!-- message data -->
-                                        <div class="col-xs-9">
-                                            <p class="dashentrytext">
-                                                <a href="#"><span>Discussion 2, if the title is long, this could even span over 2 lines. Maybe limit it there</span></a>
-                                            </p>
-                                            <small>by <a href="#user">Membername</a> in <a href="#user">Group name</a> - 14 minutes ago</small>
-                                        </div>
-                                        <!-- chevron -->
-                                        <div class="col-xs-1 chevplace">
-                                            <a href="#"><i class="fa fa-chevron-right"></i></a>
-                                        </div>
-                                    </div>
-
-                                    <div class="row dashentry odd">
-                                        <!-- avatar -->
-                                        <div class="col-xs-2">
-                                            <a href="#user"><img class="float_left framed" src="/members/avatar/member-128?50_50" alt="Profile" /></a>
-                                        </div>
-                                        <!-- message data -->
-                                        <div class="col-xs-9">
-                                            <p class="dashentrytext">
-                                                <span class="font-weight-bold"><a href="#">Discussion 3</a></span>
-                                            </p>
-                                            <small>by <a href="#user">Membername</a> in <a href="#user">Group name</a> - 14 minutes ago</small>
-                                        </div>
-                                        <!-- chevron -->
-                                        <div class="col-xs-1 chevplace">
-                                            <a href="#"><i class="fa fa-chevron-right"></i></a>
+                                    <div class="row p-l-1 p-r-1">
+                                        <div class="col-xs-12 fullheight">
+                                            <div class="hidden-xs-down pull-xs-left" style="padding: 10px 0;">
+                                                <a href="#user"><img class="float_left framed" src="/members/avatar/member-105?50_50" alt="Profile" /></a>
+                                            </div>
+                                            <div class="dashentry">
+                                                <p class="text-truncate">
+                                                    <a href="#">Or will it be the title?</a><br>
+                                                    <small>from <a href="#user">Membername</a> 11 minutes ago</small>
+                                                </p>
+                                            </div>
+                                            <div class="pull-xs-right chevplace">
+                                                <a href="#"><i class="fa fa-chevron-right"></i></a>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div class="row dashentry even">
-                                        <!-- avatar -->
-                                        <div class="col-xs-2">
-                                            <a href="#user"><img class="float_left framed" src="/members/avatar/member-108?50_50" alt="Profile" /></a>
-                                        </div>
-                                        <!-- message data -->
-                                        <div class="col-xs-9">
-                                            <p class="dashentrytext">
-                                                <a href="#"><span>Discussion 4</span></a>
-                                            </p>
-                                            <small>by <a href="#user">Membername</a> in <a href="#user">Group name</a> - 14 minutes ago</small>
-                                        </div>
-                                        <!-- chevron -->
-                                        <div class="col-xs-1 chevplace">
-                                            <a href="#"><i class="fa fa-chevron-right"></i></a>
-                                        </div>
-                                    </div>
-
-                                    <div class="row dashentry odd">
-                                        <!-- avatar -->
-                                        <div class="col-xs-2">
-                                            <a href="#user"><img class="float_left framed" src="/members/avatar/member-128?50_50" alt="Profile" /></a>
-                                        </div>
-                                        <!-- message data -->
-                                        <div class="col-xs-9">
-                                            <p class="dashentrytext">
-                                                <span class="font-weight-bold"><a href="#">Discussion 5</a></span>
-                                            </p>
-                                            <small>by <a href="#user">Membername</a> in <a href="#user">Group name</a> - 14 minutes ago</small>
-                                        </div>
-                                        <!-- chevron -->
-                                        <div class="col-xs-1 chevplace">
-                                            <a href="#"><i class="fa fa-chevron-right"></i></a>
+                                    <div class="row p-l-1 p-r-1">
+                                        <div class="col-xs-12 fullheight">
+                                            <div class="hidden-xs-down pull-xs-left" style="padding: 10px 0;">
+                                                <a href="#user"><img class="float_left framed" src="/members/avatar/member-105?50_50" alt="Profile" /></a>
+                                            </div>
+                                            <div class="dashentry">
+                                                <p class="text-truncate">
+                                                    <strong><a href="#">And will it be possible to make it strong when new after last login?</a></strong><br>
+                                                    <small>from <a href="#user">Membername</a> 10 minutes ago</small>
+                                                </p>
+                                            </div>
+                                            <div class="pull-xs-right chevplace">
+                                                <a href="#"><i class="fa fa-chevron-right"></i></a>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div class="row dashentry even">
-                                        <!-- avatar -->
-                                        <div class="col-xs-2">
-                                            <a href="#user"><img class="float_left framed" src="/members/avatar/member-128?50_50" alt="Profile" /></a>
-                                        </div>
-                                        <!-- message data -->
-                                        <div class="col-xs-9">
-                                            <p class="dashentrytext">
-                                                <a href="#"><span>Discussion 6</span></a>
-                                            </p>
-                                            <small>by <a href="#user">Membername</a> in <a href="#user">Group name</a> - 14 minutes ago</small>
-                                        </div>
-                                        <!-- chevron -->
-                                        <div class="col-xs-1 chevplace">
-                                            <a href="#"><i class="fa fa-chevron-right"></i></a>
+                                    <div class="row p-l-1 p-r-1">
+                                        <div class="col-xs-12 fullheight">
+                                            <div class="hidden-xs-down pull-xs-left" style="padding: 10px 0;">
+                                                <a href="#user"><img class="float_left framed" src="/members/avatar/member-105?50_50" alt="Profile" /></a>
+                                            </div>
+                                            <div class="dashentry">
+                                                <p class="text-truncate">
+                                                    <a href="#">Or will all messages be without extra attributes?</a><br>
+                                                    <small>from <a href="#user">Membername</a> 10 minutes ago</small>
+                                                </p>
+                                            </div>
+                                            <div class="pull-xs-right chevplace">
+                                                <a href="#"><i class="fa fa-chevron-right"></i></a>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div class="row dashentry odd">
-                                        [BUTTON] show more
-                                    </div>
+                                    {# infinite scroll??? #}
 
                                 </div>
 
-                                <div class="dashentry odd text-xs-center">
+                                <div class="text-xs-center">
                                     <div class="btn-group" role="group" aria-label="...">
                                         <a href="forums" class="btn btn-primary-outline"><i class="fa fa-comments"></i> View forums</a>
                                         <a href="groups/mygroups" class="btn btn-primary-outline"><i class="fa fa-users"></i> My groups</a>
@@ -336,16 +293,17 @@
 
                             </div>
 
-                            <!-- load activities -->
+                            {# load activities #}
                             <div role="tabpanel" class="tab-pane" id="activities">
                                 Activities
                             </div>
 
-                            <!-- load news -->
+                            {# load news #}
                             <div role="tabpanel" class="tab-pane" id="news">
                                 NEWS and Notifications
                             </div>
 
+                            {# load suggestions #}
                             <div role="tabpanel" class="tab-pane" id="suggestions">
                                 Suggestions
                             </div>
@@ -355,12 +313,12 @@
                 </div>
             </div>
 
-            <!-- 4 Widgets -->
+            {# 4 widgets#}
             <div class="card-deck-wrapper m-b-2">
                 <div class="card-deck">
-                    <!-- BeInvolved widget -->
 
-                    <div class="card">
+                    {# Be Involved #}
+                    <div class="card card-4">
                         <div class="card-block">
                             <h4 class="card-title">Be Involved<br /><small>help the community</small></h4>
                             <p class="card-text">BeWelcome is run by volunteers - free of charge and open source. Volunteering for the project is a great opportunity for you to get to know enthusiastic people who really believe in promoting hospitality and respect for each other. And it's fun, too!</p>
@@ -373,9 +331,8 @@
                         </div>
                     </div>
 
-                    <!-- Guests widget -->
-
-                    <div class="card">
+                    {# Potential guests #}
+                    <div class="card card-3 hidden-md-down">
                         <div class="card-block">
                             <h4 class="card-title">Potential guests<br /><small>travelers in your area</small></h4>
 
@@ -418,8 +375,8 @@
                         </div>
                     </div>
 
-                    <!-- Settings widget -->
-                    <div class="card">
+                    {# Settings #}
+                    <div class="card card-3 hidden-md-down">
                         <div class="card-block">
                             <h4 class="card-title">Your settings<br /><small>and preferences</small></h4>
                             <h6 class="list-group-item-heading">Accommodation status</h6><i class="fa fa-info-circle"></i>
@@ -456,8 +413,8 @@
                         </div>
                     </div>
 
-                    <!-- Transparency widget -->
-                    <div class="card">
+                    {# Be Informed #}
+                    <div class="card card-2">
                         <div class="card-block">
                             <h4 class="card-title">Be Informed<br /><small>Transparency</small></h4>
                             <a href="faq" class="btn btn-primary-outline btn-sm btn-block"><i class="fa fa-question"></i> FAQ</a>
@@ -470,27 +427,7 @@
 
                 </div>
             </div>
-            <!-- end of widgets -->
-        </div> <!-- main -->
-        <div class="row">
-            <div class="deckwrapper">
-                <div class="deck">
-            <div class="col-sm-9">
-                <div class="card card-block">
-                    <h3 class="card-title">Special title treatment</h3>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="card card-block">
-                    <h3 class="card-title">Special title treatment</h3>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-            </div>
-                </div>
-            </div>
-        </div>
-    </div> <!-- container -->
+            {# end of widgets #}
+        </div>{# end of main #}
+
 {% endblock content %}

@@ -20,24 +20,21 @@
   mysql_user: name={{ mysql.user }} password={{ mysql.password }} priv={{ mysql.database }}.*:ALL state=present
   notify: restart mysql
 
+- name: mysql | Create db_dumps directory
+  sudo: yes
+  file: path={{ rox.root_folder }}/db_dumps state=directory group="www-data" mode="g+rw"
+
 - name: mysql | Fetch dump files
   sudo: yes
-  get_url: url=http://downloads.bewelcome.org/for_developers/rox_test_db/{{ item }} dest={{ rox.root_folder }}
+  get_url: url=http://downloads.bewelcome.org/for_developers/rox_test_db/{{ item }} dest={{ rox.root_folder }}/db_dumps
   with_flattened:
     - mysql.dump_root
     - mysql.dump
 
 - name: mysql | Import root dump
-  mysql_db: name={{ mysql.database }} state=import target={{ rox.root_folder }}/{{ item }}
+  mysql_db: name={{ mysql.database }} state=import target={{ rox.root_folder }}/db_dumps/{{ item }}
   with_flattened: mysql.dump_root
 
 - name: mysql | Import normal dumps
-  mysql_db: name={{ mysql.database }} state=import login_user={{ mysql.user }} login_password={{ mysql.password }} target={{ rox.root_folder }}/{{ item }}
+  mysql_db: name={{ mysql.database }} state=import login_user={{ mysql.user }} login_password={{ mysql.password }} target={{ rox.root_folder }}/db_dumps/{{ item }}
   with_flattened: mysql.dump
-
-- name: mysql | Remove dump files
-  sudo: yes
-  file: path={{ rox.root_folder }}/{{ item }} state=absent
-  with_flattened:
-    - mysql.dump_root
-    - mysql.dump

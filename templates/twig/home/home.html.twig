@@ -11,7 +11,7 @@
                         <div class="row welcomeback">
                             <div class="hidden-md-down col-lg-1 fullheight">
                                 <div class="verticalalign">
-                                    <div style="height: 50px;">
+                                    <div class="welcomeavatar">
                                         <a href="members/member-101" title="See profile member-101" ><img src="/members/avatar/member-101?50_50"></a>
                                         <a href="#"><img src="/images/icons/nosorry.png" class="hoststatus"></a>
                                     </div>
@@ -94,7 +94,7 @@
                                     {# 4x messages data per row #}
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
-                                            <div class="hidden-xs-down pull-xs-left" style="padding: 10px 0;">
+                                            <div class="hidden-xs-down pull-xs-left avatarpadding">
                                                 <a href="#user"><img class="float_left framed" src="/members/avatar/member-105?50_50" alt="Profile" /></a>
                                             </div>
                                             <div class="dashentry">
@@ -111,7 +111,7 @@
 
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
-                                            <div class="hidden-xs-down pull-xs-left" style="padding: 10px 0;">
+                                            <div class="hidden-xs-down pull-xs-left avatarpadding">
                                                 <a href="#user"><img class="float_left framed" src="/members/avatar/member-105?50_50" alt="Profile" /></a>
                                             </div>
                                             <div class="dashentry">
@@ -128,7 +128,7 @@
 
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
-                                            <div class="hidden-xs-down pull-xs-left" style="padding: 10px 0;">
+                                            <div class="hidden-xs-down pull-xs-left avatarpadding">
                                                 <a href="#user"><img class="float_left framed" src="/members/avatar/member-105?50_50" alt="Profile" /></a>
                                             </div>
                                             <div class="dashentry">
@@ -145,7 +145,7 @@
 
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
-                                            <div class="hidden-xs-down pull-xs-left" style="padding: 10px 0;">
+                                            <div class="hidden-xs-down pull-xs-left avatarpadding">
                                                 <a href="#user"><img class="float_left framed" src="/members/avatar/member-105?50_50" alt="Profile" /></a>
                                             </div>
                                             <div class="dashentry">
@@ -213,7 +213,7 @@
                                     {# 4 most recent forum messages #}
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
-                                            <div class="hidden-xs-down pull-xs-left" style="padding: 10px 0;">
+                                            <div class="hidden-xs-down pull-xs-left avatarpadding">
                                                 <a href="#user"><img class="float_left framed" src="/members/avatar/member-105?50_50" alt="Profile" /></a>
                                             </div>
                                             <div class="dashentry">
@@ -230,7 +230,7 @@
 
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
-                                            <div class="hidden-xs-down pull-xs-left" style="padding: 10px 0;">
+                                            <div class="hidden-xs-down pull-xs-left avatarpadding">
                                                 <a href="#user"><img class="float_left framed" src="/members/avatar/member-105?50_50" alt="Profile" /></a>
                                             </div>
                                             <div class="dashentry">
@@ -247,7 +247,7 @@
 
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
-                                            <div class="hidden-xs-down pull-xs-left" style="padding: 10px 0;">
+                                            <div class="hidden-xs-down pull-xs-left avatarpadding">
                                                 <a href="#user"><img class="float_left framed" src="/members/avatar/member-105?50_50" alt="Profile" /></a>
                                             </div>
                                             <div class="dashentry">
@@ -264,7 +264,7 @@
 
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
-                                            <div class="hidden-xs-down pull-xs-left" style="padding: 10px 0;">
+                                            <div class="hidden-xs-down pull-xs-left avatarpadding">
                                                 <a href="#user"><img class="float_left framed" src="/members/avatar/member-105?50_50" alt="Profile" /></a>
                                             </div>
                                             <div class="dashentry">
@@ -295,7 +295,36 @@
 
                             {# load activities #}
                             <div role="tabpanel" class="tab-pane" id="activities">
-                                Activities
+
+                                <div class="row p-l-1 p-r-1">
+                                    <div class="col-xs-12 fullheight">
+                                        <div class="hidden-xs-down pull-xs-left avatarpadding">
+                                            <a href="#user"><img class="float_left framed" src="/members/avatar/member-105?50_50" alt="Profile" /></a>
+                                        </div>
+                                        <div class="pull-xs-left">
+                                            <div class="calendar calendar-icon-12">
+                                                <div class="calendar-day">24</div>
+                                                <div class="calendar-year">2015</div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            Location
+                                        </div>
+                                        <div class="dashentry">
+                                            <p class="text-truncate">
+                                                <strong><a href="#">Title of the activity</a></strong><br>
+                                                <small>from <a href="#user">Membername</a> 10 minutes ago</small>
+                                            </p>
+                                        </div>
+                                        <div>
+                                            Attendees
+                                        </div>
+                                        <div class="pull-xs-right chevplace">
+                                            <a href="#"><i class="fa fa-chevron-right"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
 
                             {# load news #}
@@ -378,38 +407,17 @@
                     {# Settings #}
                     <div class="card card-3 hidden-md-down">
                         <div class="card-block">
-                            <h4 class="card-title">Your settings<br /><small>and preferences</small></h4>
-                            <h6 class="list-group-item-heading">Accommodation status</h6><i class="fa fa-info-circle"></i>
-                            <div class="btn-group" data-toggle="buttons">
-                                <label class="btn btn-primary active">
-                                    <input type="radio" name="options" id="option1" autocomplete="off" checked>Yes
-                                </label>
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="options" id="option2" autocomplete="off">No
-                                </label>
+                            <h4 class="card-title">Community news<br /><small>and updates</small></h4>
+
+                            <div class="list-group">
+                                <a href="#" class="list-group-item">
+                                    <h5 class="list-group-item-heading">Outcomes GA2015</h5>
+                                    <p class="list-group-item-text">Just the first line. Maybe the second. Let's say about twenty-five words, so someone can read something. Then ...</p>
+                                    <p>Read more...</p>
+                                </a>
                             </div>
 
-                            <h6 class="list-group-item-heading">Public profile?</h6><i class="fa fa-info-circle"></i>
-                            <div class="btn-group" data-toggle="buttons">
-                                <label class="btn btn-primary active">
-                                    <input type="radio" name="options" id="option1" autocomplete="off" checked>Yes
-                                </label>
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="options" id="option2" autocomplete="off">No
-                                </label>
-                            </div>
-
-                            <h6 class="list-group-item-heading">Receive newsletter?</h6><i class="fa fa-info-circle"></i>
-                            <div class="btn-group" data-toggle="buttons">
-                                <label class="btn btn-primary active">
-                                    <input type="radio" name="options" id="option1" autocomplete="off" checked>Yes
-                                </label>
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="options" id="option2" autocomplete="off">No
-                                </label>
-                            </div>
-
-                            <a href="mypreferences" class="btn btn-primary-outline btn-block"><i class="fa fa-cogs"></i> more settings</a>
+                            <a href="mypreferences" class="btn btn-primary-outline btn-block"><i class="fa fa-newspaper-o"></i> Older news</a>
                         </div>
                     </div>
 

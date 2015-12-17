@@ -85,6 +85,14 @@
   background-color: #fff;
 }
 
+.avatarpadding{
+  padding: 10px 0;
+}
+
+.welcomeavatar{
+  height: 50px;
+}
+
 @include media-breakpoint-up(md){
 
   .welcomeback {

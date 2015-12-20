@@ -1,3 +1,4 @@
+{% import '@macros/macros.twig' as macros %}
 <!-- #nav: main navigation -->
 <nav class="navbar navbar-light bg-primary">
     <div class="container">
@@ -12,16 +13,18 @@
                 {{ macros.input('p', 'Password', '', 'password') }}
                 {{ macros.submit('Login', 'bg-primary') }}
             </form>
-            <form class="form-inline navbar-form pull-xs-right">
-                <div class="input-group">
-                    <span class="input-group-addon bg-primary"><i class="fa fa-lg fa-globe"></i></span>
-                    <select id="language" name="language" class="form-control select2 combo bg-primary" onchange="window.location.href=this.value; return false">
-                        {% for lang in languages %}
-                            <option {% if lang.ShortCode == language %}selected="selected"{% endif %} value="{{ baseuri }}/rox/in/{{ lang.ShortCode }}">{{ lang.TranslatedName|raw }} ({{ lang.NativeName|raw }})</option>
-                        {% endfor %}
-                    </select>
+            <div class="dropdown pull-xs-right">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-lg fa-globe m-r-1"></i>
+                    {{ language.NativeName|raw }}
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" style="width: 40rem">
+                    <h6 class="dropdown-header">Choose a language</h6>
+                    {% for lang in languages %}
+                        <a href="/rox/in/{{ lang.ShortCode }}" class="btn {% if lang.ShortCode == language.ShortCode %}btn-primary{% else %}btn-secondary{% endif %} m-l-1 m-b-1" style="width: 12rem">{{ lang.NativeName|raw }}</a>
+                    {% endfor %}
                 </div>
-            </form>
+            </div>
             </div>
     <!-- /.navbar-collapse -->
     </div>

@@ -15,7 +15,7 @@ login:
         _controller: "\\Rox\\Login\\LoginController::checkCredentials"
     schemes:  [https]
 
-feedback:
+feedback_symfony:
     path:     /feedback
     methods:  [GET]
     defaults:

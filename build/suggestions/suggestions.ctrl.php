@@ -15,7 +15,7 @@ class SuggestionsController extends RoxControllerBase
     public function __construct()
     {
         parent::__construct();
-        $this->_model = new suggestionsModel();
+        $this->_model = new SuggestionsModel();
     }
 
     public function suggestions()

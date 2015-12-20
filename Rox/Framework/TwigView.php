@@ -151,7 +151,7 @@ class TwigView extends AbstractBasePage {
             $lang->NativeName = $language->Name;
             $lang->TranslatedName = $this->_words->getSilent($language->WordCode);
             $lang->ShortCode = $language->ShortCode;
-            $langarr[] = $lang;
+            $langarr[$language->ShortCode] = $lang;
         }
         $ascending = function($a, $b) {
             if ($a == $b) {
@@ -159,10 +159,10 @@ class TwigView extends AbstractBasePage {
             }
             return (strtolower($a->TranslatedName) < strToLower($b->TranslatedName)) ? -1 : 1;
         };
-        usort($langarr, $ascending);
+        uksort($langarr, $ascending);
 
         return array(
-            'language' => $_SESSION['lang'],
+            'language' => $langarr[$_SESSION['lang']],
             'languages' => $langarr
         );
     }

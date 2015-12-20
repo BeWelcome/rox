@@ -1,0 +1,48 @@
+#nav_sub {
+  padding: 1rem 0;
+}
+
+#main > .nav-pills {
+  padding: 1rem 0;
+}
+
+.nav-pills {
+
+  .nav-item {
+    background-color: #ddd;
+    color: $brand-primary;
+    border-radius: 5px;
+    font-family: Signika-Bold, LatoWeb, sans-serif;
+    font-weight: normal;
+  }
+
+  .nav-item > .active  {
+    position: relative;
+  }
+
+  .nav-item > .active:after, .nav-item > .active:before {
+    top: 100%;
+    left: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .nav-item > .active:after {
+    border-color: rgba(243, 112, 0, 0);;
+    border-top-color: $brand-primary;
+    border-width: 7px;
+    margin-left: -7px;
+  }
+
+/*  .nav-item > .active:before {
+    border-color: rgba(255, 255, 255, 0);
+    border-top-color: #fff;
+    border-width: 10px;
+    margin-left: -10px;
+  }
+  */
+}

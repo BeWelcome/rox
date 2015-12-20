@@ -9,24 +9,22 @@ class AboutFaqsectionPage extends AboutFaqPage
         $req = $_SERVER['REQUEST_URI'];
         $categories = $this->faq_categories;
         echo '
-        <ol class="faq">';
+        <div class="list-group">';
         
         $j = 0;
         foreach ($categories as $key => $category) {
             if ($key == $this->key) {
-                $add = 'selected';
+                $add = 'active';
             } else $add = '';
             echo '
-            <li class="'.($j%2 ? 'odd' : 'even').'"><a href="about/faq/'.$key.'" class="'.$add.'">
+            <a href="about/faq/'.$key.'" class="list-group-item '.$add.'">
             '.$words->get($category->Description).'
             </a>';
-            echo '
-            </li>';
             ++ $j;
         }
         
         echo '
-        </ol>';
+        </div>';
     }
     
     protected function teaserHeadline()

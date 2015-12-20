@@ -140,6 +140,13 @@ bwrox.selectScripts([
             "search"
         ]
     },
+    {
+        file: "prototype173.js",
+        pages: [
+            "searchmembers",
+            "blog"
+        ]
+    },
 //    {
 //        file: "select2/select2.min.js",
 //        pages: [
@@ -230,7 +237,7 @@ bwrox.selectScripts([
         file: "datepicker.js?1",
         pages: [
 //            "activities",
-//            "blog",
+            "blog",
 //            "trip",
             "admin/treasurer"
         ]
@@ -282,12 +289,6 @@ bwrox.selectScripts([
         file: "transition.js?1",
         pages: [
             "thepeople"
-        ]
-    },
-    {
-        file: "prototype162.js",
-        pages: [
-            "searchmembers"
         ]
     },
     {

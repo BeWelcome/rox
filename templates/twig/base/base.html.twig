@@ -1,6 +1,6 @@
 {% import '@macros/macros.twig' as macros %}
 <!DOCTYPE html>
-<html lang="{{ language }}">
+<html lang="{{ language.ShortCode }}">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -31,6 +31,7 @@
     {% if container %}
         {# Add container div only if needed #}
         <div class="container">
+            {{ dump(logged_in) }}
     {% endif %}
     {% block content %}{% endblock %}
     {% if container %}

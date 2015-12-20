@@ -212,7 +212,11 @@ class PageWithRoxLayout extends PageWithHTML
         );
 
         $twigView = new \Rox\Framework\TwigView($router);
-        $twigView->setTemplate('menu.html.twig', 'base');
+        if ($logged_in) {
+            $twigView->setTemplate('menu.html.twig', 'base');
+        } else {
+            $twigView->setTemplate('loginbar.html.twig', 'base');
+        }
         $topmenu =  $twigView->render();
         echo $topmenu;
     }

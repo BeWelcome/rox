@@ -56,10 +56,10 @@ class ItemlistWithPagination extends ItemlistWidget
         <ul class="pagination pagination-nomargin pull-right">';
         if ($active_page > 1) {
             echo '
-            <li><a href="'.$this->hrefPage($active_page-1).'">&laquo;</a></li>';
+            <li class="page-item"><a class="page-link">href="'.$this->hrefPage($active_page-1).'">&laquo;</a></li>';
         } else {
             echo '
-            <li class="disabled"><a>&laquo;</a></li>';
+            <li class="page-item"><a class="page-link disabled">&laquo;</a></li>';
         }
         if ($visible_range = $this->visible_range) {
             
@@ -73,7 +73,7 @@ class ItemlistWithPagination extends ItemlistWidget
             
             if ($active_page - $visible_range > 2) {
                 echo '
-                <li class="disabled"><a>...</a></li>';
+                <li class="page-item"><a class="page-link disabled">...</a></li>';
             }
             
             // links for pages 5 6 7
@@ -99,7 +99,7 @@ class ItemlistWithPagination extends ItemlistWidget
             
             if ($active_page + $visible_range < $n_pages - 1) {
                 echo '
-                <li class="disabled"><a>...</a></li>';
+                <li class="page-item"><a class="page-link disabled">...</a></li>';
             }
             
             // link for page 31
@@ -128,10 +128,10 @@ class ItemlistWithPagination extends ItemlistWidget
         }
         if ($active_page < $n_pages) {
             echo '
-            <li><a href="'.$this->hrefPage($active_page+1).'">&raquo;</a></li>';
+            <li class="page-item"><a class="page-link" href="'.$this->hrefPage($active_page+1).'">&raquo;</a></li>';
         } else {
             echo '
-            <li class="disabled"><a>&raquo;</a></li>';
+            <li class="page-item"><a class="page-link disabled">&raquo;</a></li>';
         }
         echo '
         </ul>
@@ -177,11 +177,11 @@ class ItemlistWithPagination extends ItemlistWidget
     }
     
     protected function showPageLink($i_page) {
-        echo '<li><a href="'.$this->hrefPage($i_page).'">'.$i_page.'</a></li>';
+        echo '<li class="page-item"><a class="page-link" href="'.$this->hrefPage($i_page).'">'.$i_page.'</a></li>';
     }
     
     protected function showActivePageLink($i_page) {
-        echo '<li class="active"><a>'.$i_page.'</a></li>';
+        echo '<li class="page-item active"><a class="page-link">'.$i_page.'</a></li>';
     }
 
     

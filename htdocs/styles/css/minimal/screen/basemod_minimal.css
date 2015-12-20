@@ -11,13 +11,6 @@
 
 @media screen, projection {
     /*-------------------------------------------------------------------------*/
-    body {
-        background: #f7f7f7 url(../images/bggrey.png) top left repeat-x;
-        margin: 0;
-        padding: 0;
-        height: 100%;
-    }
-
     #container {
         min-height: 100%;
         position: relative;

@@ -14,7 +14,7 @@ $font-path: '../fonts/';
 @include font-face('LatoWebHairline', $font-path + 'Lato-HairlineItalic', normal, italic);
 @include font-face('LatoWeb', $font-path + 'Lato-Regular', normal, normal);
 @include font-face('LatoWeb', $font-path + 'Lato-Italic', normal, italic);
-@include font-face('LatoWebThin', $font-path + 'Lato-Thin', normal, normal);
+@include font-face('LatoWebThin',  $font-path + 'Lato-Thin', normal, normal);
 @include font-face('LatoWebThin', $font-path + 'Lato-ThinItalic', normal, italic);
 @include font-face('LatoWebLight', $font-path + 'Lato-Light', normal, normal);
 @include font-face('LatoWebLight', $font-path + 'Lato-LightItalic', normal, italic);
@@ -27,16 +27,18 @@ $font-path: '../fonts/';
 // Core variables and mixins
 @import "../../../vendor/twbs/bootstrap4/scss/variables";
 
+$a: $input-border-focus;
+
 // Setting up BW styles
 $brand-primary: #f37000;
 $btn-primary-color: white;
 $btn-primary-bg: $brand-primary;
 $btn-primary-border: #ddd;
 
-$navbar-border-radius: 3;
-$navbar-padding-vertical: 0;
+$navbar-border-radius: 0;
+$navbar-padding-y: 0;
+$navbar-padding-x:0;
 
-$border-radius: 0;
 $dropdown-bg: transparentize(#000, 0.5);
 $dropdown-link-color: #fff;
 $dropdown-link-hover-color: $brand-primary;
@@ -47,11 +49,29 @@ $navbar-light-hover-color:          black;
 $navbar-light-active-color:         black;
 $navbar-light-disabled-color:       grey;
 
+$component-active-bg: $brand-primary;
+$component-active-color: #fff;
+
 $pagination-active-bg: $brand-primary;
 $pagination-active-color: #fff;
 $pagination-bg: #ddd;
 $pagination-disabled-bg: $pagination-bg;
 $pagination-color: $brand-primary;
+$pagination-active-border: #fff;
+$pagination-border-color: #fff;
+$pagination-disabled-color: #aaa;
+$pagination-disabled-bg: #ddd;
+$pagination-disabled-border: #fff;
+$pagination-hover-color: #fff;
+$pagination-hover-bg: $brand-primary;
+$pagination-hover-border: #fff;
+
+
+$list-group-bg: #fff;
+$list-group-border-color: #fff;
+$list-group-active-color: #fff;
+$list-group-active-bg: $brand-primary;
+$list-group-active-border: #fff;
 
 $enable-flex: false;
 
@@ -66,6 +86,12 @@ $headings-font-family: "Signika-Regular", LatoWeb, sans-serif;
 
 // Core CSS
 @import "../../../vendor/twbs/bootstrap4/scss/reboot";
+
+// Override the legend width to auto
+legend {
+  width: auto;
+}
+
 @import "../../../vendor/twbs/bootstrap4/scss/type";
 @import "../../../vendor/twbs/bootstrap4/scss/images";
 @import "../../../vendor/twbs/bootstrap4/scss/code";
@@ -177,31 +203,9 @@ body > footer {
 @import "../../../vendor/select2/select2/src/scss/core";
 @import "select2-bootstrap4";
 
-#col1{
-  @include make-col();
-  @media (max-width: 32em) {
-    @include make-col-span(12);
-  }
-  @media (min-width: 32.1em) {
-    @include make-col-span(3);
-    @include make-col-push(9);
-  }
-}
-
-#col2{
-  display: none;
-}
-
-#col3{
-  @include make-col();
-  @media (max-width: 32em) {
-    @include make-col-span(12);
-  }
-  @media (min-width: 32.1em) {
-    @include make-col-span(9);
-    @include make-col-pull(3);
-  }
-}
+// Set yaml classes to keep old style alive and constistent
+@import "_yaml";
+@import "_navs";
 
 @include media-breakpoint-up(md){
   .verticalalign{
@@ -298,4 +302,3 @@ body > footer {
     margin-bottom: 1.5em;
   }
 }
-

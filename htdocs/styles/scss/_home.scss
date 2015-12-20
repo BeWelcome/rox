@@ -16,7 +16,11 @@
   height: 26em;
   background: #fff;
 }
-
+.readunread{
+  background-color: #FFF;
+  padding: 0.2em;
+  text-align: center;
+}
 .scrollcontent{
   position:relative;
   height: 18em;
@@ -44,7 +48,6 @@
 .framed {
   border-radius:2px;
 }
-
 .nav-link.active {
   box-shadow: 0px 3px 0px 0px white, 0px 0px 2px #888;
   border:none;

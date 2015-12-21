@@ -170,7 +170,7 @@ class ImagesCreator
     **/
     protected function getLimitText($limit)
     {
-        if ($limit !== false){
+        if ($limit > 0){
             return 'LIMIT ' . (int)$limit;
         } else {
             return '';

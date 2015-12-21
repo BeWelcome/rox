@@ -1,7 +1,7 @@
 <?php
 class DummyImage
 {
-    protected $blueprint;// Imageresource where fysical images will be based on
+    protected $blueprint;// Imageresource where physical images will be based on
     protected $size;     // Array containing metadata about original image
     protected $id;       // pictureid for this image
     protected $name;     // filename for this image
@@ -122,7 +122,9 @@ class DummyImage
     protected function createFiles($thumbData)
     {
         $imgCount = 0;
+        echo "Processing image";
         foreach ($thumbData as $thname => $th){
+            echo "... " . $thname;
             $newImage = ImageCreateTrueColor($th[4], $th[5]);
             $newFile = $this->imgDir . '/' . $this->getFileName($thname);
             imagecopyresized($newImage, $this->blueprint,$th[0], $th[1],
@@ -144,7 +146,10 @@ class DummyImage
             }
             if (is_readable($newFile)) {$imgCount++;}
         }
-        imagedestroy($this->blueprint);
+        if ($this->blueprint) {
+            imagedestroy($this->blueprint);
+        }
+        echo " ...done" . PHP_EOL;
         return $imgCount;
     }
     

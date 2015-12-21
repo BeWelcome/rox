@@ -12,14 +12,26 @@ class AvatarDummyImage extends DummyImage
      **/
     public function __construct($data)
     {
+        srand();
+        echo "Generate images for user " . $data['name'] . PHP_EOL;
         $this->id = $data['picid'];
         $this->name = $data['name'];
         $this->setImageDir();
-        $this->size = getimagesize(STATIC::BASEIMAGE);
-        $this->blueprint = imagecreatefrompng(STATIC::BASEIMAGE);
+        $count = 1;
+        $blue = false;
+        while (($count < 10) && (!$blue)) {
+            $image = rand(0, 99);
+            $this->size = getimagesize('lfw/image'.$image.'.png');
+            $this->blueprint = imagecreatefrompng('lfw/image'.$image.'.png');
+            $blue = $this->blueprint;
+            $count++;
+        }
+        if($count == 10) {
+            throw new Exception();
+        }
 
-        list($backclr,$puppet) = $this->getColor(14,12,11,1,2);
-        imagefill($this->blueprint,75,75,$puppet);
+         list($backclr,$puppet) = $this->getColor(14,12,11,1,2);
+         imagefill($this->blueprint,75,75,$puppet);
         imagefill($this->blueprint,1,1,$backclr);
     }
 
@@ -40,6 +52,7 @@ class AvatarDummyImage extends DummyImage
         $thumbData['_original']=array(0,0,0,0,$original_x, $original_y, $this->size[0],$this->size[1]);
         $thumbData['_200']    = $this->getThumbSize(200, 266, 'ratio' , $this->size);
         $thumbData['_xs']     = $this->getThumbSize( 50,  50, 'square', $this->size);
+        $thumbData['_75_75']  = $this->getThumbSize( 75,  75, 'square', $this->size);
         $thumbData['_150']    = $this->getThumbSize(150, 150, 'square', $this->size);
         $thumbData['_30_30']  = $this->getThumbSize( 30,  30, 'square', $this->size);
         $thumbData['_500']    = $this->getThumbSize(500, 500, 'ratio' , $this->size);

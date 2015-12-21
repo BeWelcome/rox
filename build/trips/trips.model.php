@@ -78,7 +78,7 @@ class TripsModel extends RoxModelBase
                 $where = 'AND t.memberId = ' . $member->id;
                 break;
             default:
-                $where = (1 != 0);
+                $where = 'AND (1 != 0)';
         }
         return $where;
     }

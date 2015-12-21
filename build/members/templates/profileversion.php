@@ -46,22 +46,22 @@ if (count($languages) > 1 || $myself) {
 <div class="clearfix">
     <div class="profile_translations float_right">
         <strong><?=$words->get('ProfileTranslations')?></strong>
-        <p class="clearfix"><?php
+        <div class="clearfix btn-group btn-group-sm"><?php
             $ii = 0;
             $activelang_set = false;
             $max = count($languages);
             foreach($languages as $language) {
                 if (($language->ShortCode == $profile_language_code)) {
                 ?>
-                    <span class="activelanguage"><?=$profile_language_name ?><? if ($this->myself && $max > 1) { ?><a href="editmyprofile/<?=$profile_language_code?>/delete"> <img src="images/icons/cancel.png" title="<?=$words->getSilent('delete')?>" alt="<?=$words->getSilent('delete')?>" /></a> <? } ?></span><?
+                    <span class="btn btn-primary activelanguage"><?=$profile_language_name ?><? if ($this->myself && $max > 1) { ?><a href="editmyprofile/<?=$profile_language_code?>/delete"> <img src="images/icons/cancel.png" title="<?=$words->getSilent('delete')?>" alt="<?=$words->getSilent('delete')?>" /></a> <? } ?></span><?
                     $activelang_set = true;
                 } else {
                     
-                ?><a class="availablelanguages" href="<?=$urlstring?>/<?=$language->ShortCode ?>"><?=$language->Name ?></a> <?
+                ?><a class="btn btn-secondary availablelanguages" href="<?=$urlstring?>/<?=$language->ShortCode ?>"><?=$language->Name ?></a> <?
                 $ii++;
                 }
             }
-            ?><?php echo $words->flushBuffer(); ?></p>
+            ?><?php echo $words->flushBuffer(); ?></div>
 <?php if ($myself) { ?>
 <select class="clearfix" id="add_language">
     <option>- <?=$wwsilent->AddLanguage?> -</option>

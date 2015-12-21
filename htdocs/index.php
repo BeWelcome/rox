@@ -122,9 +122,18 @@ $dispatcher->addSubscriber(
 );
 $framework = new Rox\Framework($dispatcher, $resolver);
 
+$oldRouter = new RequestRouter();
+$oldRequestAndArgs = $oldRouter->getRequestAndArgs();
+$oldRequest = $oldRequestAndArgs->request;
+$route = $oldRouter->findRouteNoRedirect($oldRequest);
+
 try {
+    if ($route) {
+        throw new \Symfony\Component\HttpKernel\Exception\HttpException(303);
+    }
     $response = $framework->handle($request);
     $response->send();
+    $framework->terminate($request, $response);
 } catch (Twig_Error $e) {
     echo 'Exception: '.$e->getMessage();
     echo "\n{$e->getFile()} ({$e->getLine()})";

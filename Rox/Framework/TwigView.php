@@ -69,7 +69,6 @@ class TwigView extends AbstractBasePage {
             )
         );
         $this->_words = $this->getWords();
-
         if (!isset($_SESSION['lang'])) {
             $_SESSION['lang'] = 'en';
         }
@@ -81,8 +80,11 @@ class TwigView extends AbstractBasePage {
         $this->_translator->addResource('database', null, $_SESSION['lang']);
         $this->_environment->addExtension(new TranslationExtension($this->_translator));
         $this->_environment->addExtension(new RoxTwigExtension());
+        $oldRouter = new \RequestRouter();
+
         if ($router != null) {
             $this->_environment->addExtension(new RoutingExtension($router->getGenerator()));
+            $this->_environment->addExtension(new RoutingExtension($oldRouter));
         }
         $this->_environment->addExtension(new \Twig_Extension_Debug());
 
@@ -154,7 +156,7 @@ class TwigView extends AbstractBasePage {
             $langarr[$language->ShortCode] = $lang;
         }
         $ascending = function($a, $b) {
-            if ($a == $b) {
+            if ($a->TranslatedName == $b->TranslatedName) {
                 return 0;
             }
             return (strtolower($a->TranslatedName) < strToLower($b->TranslatedName)) ? -1 : 1;

@@ -15,26 +15,6 @@ login:
         _controller: "\\Rox\\Login\\LoginController::checkCredentials"
     schemes:  [https]
 
-feedback_symfony:
-    path:     /feedback
-    methods:  [GET]
-    defaults:
-        _controller: "\\Rox\\Main\\Home\\HomeController::showAction"
-
-avatar:
-    path:     /members/avatar/{username}/{size}
-    requirements:
-        username: "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"
-    defaults:
-        _controller: "\\MembersController::avatar"
-
-member:
-    path:     /members/{username}
-    requirements:
-        username: "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"
-    defaults:
-        _controller: "\\MembersController::index"
-
 admin_logs_type:
     path:     /admin/logs/type/{type}/{currentPage}/{itemsPerPage}
     defaults:

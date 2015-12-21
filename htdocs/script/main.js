@@ -143,18 +143,17 @@ bwrox.selectScripts([
     {
         file: "prototype173.js",
         pages: [
+            "editmyprofile",
             "searchmembers",
             "blog"
         ]
     },
-//    {
-//        file: "select2/select2.min.js",
-//        pages: [
-//            "signup/2",
-//            "signup/4",
-//            "editmyprofile"
-//        ]
-//    },
+    {
+        file: "select2/select2.min.js",
+        pages: [
+            "editmyprofile"
+        ]
+    },
     {
         file: "leaflet/0.7.3/leaflet.js",
         pages: [
@@ -208,7 +207,7 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "tinymce-4.1.7/tinymce.min.js",
+        file: "tinymce-4.3.2/tinymce.min.js",
         pages: [
             "activities",
             "blog",

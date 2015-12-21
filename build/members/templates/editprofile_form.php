@@ -36,7 +36,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
               <tbody>
 <?php if ($this->adminedit) : ?>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileStatus')?>:</td>
+                  <td ><?=$words->get('ProfileStatus')?>:</td>
                   <td colspan="3" >
                     <select id="Status" name="Status">
                         <?php echo $statusOptions; ?>
@@ -45,14 +45,14 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 </tr>
 <?php endif;?>
               <tr align="left" >
-                  <td class="label"><?= $words->get('SignupUsername')?>:</td>
+                  <td><?= $words->get('SignupUsername')?>:</td>
                   <td colspan="3">
                     <strong><?=$member->Username ?></strong>
                     <div class="small"><?=$words->get('subline_username_edit')?></div>
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfilePicture')?>:<br/><img src="members/avatar/<?=$member->Username?>?xs" title="Current picture" alt="Current picture" style="padding: 1em"/></td>
+                  <td ><?=$words->get('ProfilePicture')?>:<br/><img src="members/avatar/<?=$member->Username?>?xs" title="Current picture" alt="Current picture" style="padding: 1em"/></td>
                   <td colspan="3" >
                     <label for="profile_picture"><?= $words->get('uploadselectpicture'); ?></label><br />
                     <span class="small"><?= $words->get('Profile_UploadWarning', sprintf("%.1f MB", PFunctions::returnBytes(ini_get('upload_max_filesize')) / 1048576)); ?></span><br /><br />
@@ -60,7 +60,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileSummary')?>:</td>
+                  <td ><?=$words->get('ProfileSummary')?>:</td>
                   <td colspan="3" >
                     <textarea name="ProfileSummary" id="ProfileSummary" class="long" cols="50"  rows="6" ><?php echo htmlentities($vars['ProfileSummary'], ENT_COMPAT, 'UTF-8'); ?></textarea>
                   </td>
@@ -68,7 +68,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
 
 
                 <tr align="left" >
-                  <td class="label" ><strong><?=$words->get('SignupBirthDate')?></strong>: *</td>
+                  <td ><strong><?=$words->get('SignupBirthDate')?></strong>: *</td>
                   <td colspan="2" >
                     <select id="BirthYear" name="BirthYear">
                         <option value="0"><?php echo $words->getSilent('SignupBirthYear'); ?></option>
@@ -107,7 +107,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                   <td><?=$words->get('EmailIsAlwayHidden')?></td>
                   </tr>
                   <tr align="left" >
-                  <td class="label"><?= $words->get('Age')?>:</td>
+                  <td><?= $words->get('Age')?>:</td>
                   <td colspan="3">
                         <input name="HideBirthDate" value="Yes" type="checkbox" <?= ($vars['HideBirthDate'] == 'Yes') ? 'checked="checked"' : '' ?> /> <?= $words->get('Hidden');?>
                         <div class="small"><?= $words->get('HiddenAgeInfo'); ?></div>
@@ -115,11 +115,14 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 </tr>
 
                 <tr align='left'>
-                    <td class='label'><?= $words->get('Gender'); ?>:</td>
+                    <td><?= $words->get('Gender'); ?>:</td>
                     <td colspan='2' >
-                        <input class="radio" type="radio" id="genderF" name="gender" value="female" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'female') ? ' checked="checked"' : ''); ?>/><label for='genderF'> <?= $words->get('female'); ?></label>&nbsp;&nbsp;
-                        <input class="radio" type="radio" id='genderM' name="gender" value="male" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'male') ? ' checked="checked"' : '');?>/><label for='genderM'> <?= $words->get('male'); ?></label>&nbsp;&nbsp;
-                        <input class="radio" type="radio" id='genderX' name="gender" value="other" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'other') ? ' checked="checked"' : '');?>/><label for='genderX'> <?= $words->get('GenderOther'); ?></label></td>
+                        <div class="btn-group" data-toggle="buttons">
+                            <label for='genderF' class="btn btn-primary <?= (isset($vars['Gender']) && $vars['Gender'] == 'female') ? 'active' : ''?>">
+                            <input type="radio" id="genderF" name="gender" value="female" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'female') ? ' checked="checked"' : ''); ?>/><?= $words->get('female'); ?></label>
+                            <label for='genderM' class="btn btn-primary <?= (isset($vars['Gender']) && $vars['Gender'] == 'male') ? 'active' : ''?>"><input type="radio" id='genderM' name="gender" value="male" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'male') ? ' checked="checked"' : '');?>/> <?= $words->get('male'); ?></label>
+                            <label for='genderX' class="btn btn-primary <?= (isset($vars['Gender']) && $vars['Gender'] == 'other') ? 'active' : ''?>"><input type="radio" id='genderX' name="gender" value="other" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'other') ? ' checked="checked"' : '');?>/> <?= $words->get('GenderOther'); ?></label>
+                    </div></td>
 
                      <td><input name="HideGender" value="Yes" type="checkbox" id='HideGender' <?= ((isset($vars['HideGender']) && $vars['HideGender'] == "Yes") ? ' checked="checked"' : '');?>/><label for='HideGender'> <?= $words->get("Hidden");?></label></td>
                     <?php
@@ -131,13 +134,13 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 </tr>
 
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileOccupation')?>:</td>
+                  <td ><?=$words->get('ProfileOccupation')?>:</td>
                   <td colspan="2" >
                     <input type="text"  name="Occupation" value="<?php echo htmlentities($vars['Occupation'], ENT_COMPAT, 'UTF-8'); ?>" />
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileLanguagesSpoken')?>:</td>
+                  <td ><?=$words->get('ProfileLanguagesSpoken')?>:</td>
                   <td colspan="3" >
                     <table>
                       <tbody>
@@ -243,7 +246,7 @@ HTML;
     if ($this->adminedit || !$CanTranslate) { // member translator is not allowed to update crypted data
 ?>
                 <tr align="left" >
-                  <td class="label" ><strong><?=$words->get('FirstName')?></strong>: *</td>
+                  <td ><strong><?=$words->get('FirstName')?></strong>: *</td>
                   <td>
                     <input class="<?php if (isset($errorFirstName)) { ?>error-input-text<?php } ?>" type="text" name="FirstName" value="<?php echo htmlentities($vars['FirstName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     <?php if (isset($errorFirstName)) { ?>
@@ -259,7 +262,7 @@ HTML;
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('SecondName')?>:</td>
+                  <td ><?=$words->get('SecondName')?>:</td>
                   <td><input type="text" name="SecondName" value="<?php echo htmlentities($vars['SecondName'], ENT_COMPAT, 'UTF-8'); ?>"/></td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_SecondName"
@@ -270,7 +273,7 @@ HTML;
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><strong><?=$words->get('LastName')?></strong>: *</td>
+                  <td ><strong><?=$words->get('LastName')?></strong>: *</td>
                   <td>
                     <input class="<?php if (isset($errorLastName)) { ?>error-input-text<?php } ?>" type="text" name="LastName" value="<?php echo htmlentities($vars['LastName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     <?php if (isset($errorLastName)) { ?>
@@ -286,7 +289,7 @@ HTML;
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('Street')?>:</td>
+                  <td ><?=$words->get('Street')?>:</td>
                   <td>
                     <input class="<?php if (isset($errorStreet)) { ?>error-input-text<?php } ?>" type="text" name="Street" id="Street" value="<?php echo htmlentities($vars['Street'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     <?php if (isset($errorStreet)) { ?>
@@ -302,7 +305,7 @@ HTML;
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('HouseNumber')?>:</td>
+                  <td ><?=$words->get('HouseNumber')?>:</td>
                   <td>
                     <input class="short<?php if (isset($errorHouseNumber)) { ?> error-input-text<?php } ?>" type="text" name="HouseNumber" id="HouseNumber" value="<?php echo htmlentities($vars['HouseNumber'], ENT_COMPAT, 'UTF-8'); ?>" size="6"/>
                     <?php if (isset($errorHouseNumber)) { ?>
@@ -313,7 +316,7 @@ HTML;
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('Post code')?>:</td>
+                  <td ><?=$words->get('Post code')?>:</td>
                   <td>
                     <input class="short <?php if (isset($errorZip)) { ?> error-input-text<?php } ?>" type="text" name="Zip" value="<?php echo htmlentities($vars['Zip'], ENT_COMPAT, 'UTF-8'); ?>" size="6"/>
                     <?php if (isset($errorZip)) { ?>
@@ -332,7 +335,7 @@ HTML;
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('Location')?>:</td>
+                  <td ><?=$words->get('Location')?>:</td>
                   <td >
                     <?=$member->city?>
                     <br />
@@ -346,7 +349,7 @@ HTML;
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileHomePhoneNumber')?>:</td>
+                  <td ><?=$words->get('ProfileHomePhoneNumber')?>:</td>
                   <td>
                     <input type="text" size="25" name="HomePhoneNumber"  value="<?php echo htmlentities($vars['HomePhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>" />
                   </td>
@@ -359,7 +362,7 @@ HTML;
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileCellPhoneNumber')?>:</td>
+                  <td ><?=$words->get('ProfileCellPhoneNumber')?>:</td>
                   <td>
                     <input type="text" size="25" name="CellPhoneNumber" value="<?php echo htmlentities($vars['CellPhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>" />
                   </td>
@@ -372,7 +375,7 @@ HTML;
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileWorkPhoneNumber')?>:</td>
+                  <td ><?=$words->get('ProfileWorkPhoneNumber')?>:</td>
                   <td>
                     <input type="text" size="25"  name="WorkPhoneNumber" value="<?php echo htmlentities($vars['WorkPhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>" />
                   </td>
@@ -385,7 +388,7 @@ HTML;
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><strong><?=$words->get('SignupEmail')?></strong>: *</td>
+                  <td ><strong><?=$words->get('SignupEmail')?></strong>: *</td>
                   <td>
                     <input class="<?php if (isset($errorEmail)) { ?>error-input-text<?php } ?>" type="text" size="25" name="Email" value="<?=str_replace('%40', '@', $vars['Email'])?>" />
                     <?php if (isset($errorEmail)) { ?>
@@ -396,7 +399,7 @@ HTML;
 
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('Website')?>:</td>
+                  <td ><?=$words->get('Website')?>:</td>
                   <td>
                     <input type="text" size="25"  name="WebSite"  value="<?php echo htmlentities($vars['WebSite'], ENT_COMPAT, 'UTF-8'); ?>" />
                   </td>
@@ -408,7 +411,7 @@ HTML;
                     $val = 'chat_' . $me['network_raw'];
                 ?>
                 <tr align="left" >
-                  <td class="label" ><?=$me["network"]?>
+                  <td ><?=$me["network"]?>
                   <?="<img src='".PVars::getObj('env')->baseuri."images/icons/icons1616/".$me["image"]."' width='16' height='16' title='".$me["network"]."' alt='".$me["network"]."' />"?>
                   </td>
                   <td>
@@ -435,7 +438,7 @@ HTML;
               </colgroup>
               <tbody>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileAccommodation')?></td>
+                  <td ><?=$words->get('ProfileAccommodation')?></td>
                   <td>
                     <select name="Accomodation" >
                     <?php
@@ -453,7 +456,7 @@ HTML;
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileNumberOfGuests')?>:</td>
+                  <td ><?=$words->get('ProfileNumberOfGuests')?>:</td>
                   <td>
                   <select name="MaxGuest" >
                   <?php
@@ -467,37 +470,37 @@ HTML;
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileMaxLenghtOfStay')?>:</td>
+                  <td ><?=$words->get('ProfileMaxLenghtOfStay')?>:</td>
                   <td colspan="2" >
                     <textarea name="MaxLenghtOfStay" class="long"  cols="50" rows="4" ><?=$vars['MaxLenghtOfStay']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileILiveWith')?>:</td>
+                  <td ><?=$words->get('ProfileILiveWith')?>:</td>
                   <td colspan="2" >
                     <textarea name="ILiveWith" class="long"  cols="50" rows="4" ><?=$vars['ILiveWith']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfilePleaseBring')?>:</td>
+                  <td ><?=$words->get('ProfilePleaseBring')?>:</td>
                   <td colspan="2" >
                     <textarea name="PleaseBring" class="long"  cols="50" rows="4" ><?=$vars['PleaseBring']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileOfferGuests')?>:</td>
+                  <td ><?=$words->get('ProfileOfferGuests')?>:</td>
                   <td colspan="2" >
                     <textarea name="OfferGuests" class="long"  cols="50" rows="4" ><?=$vars['OfferGuests']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileOfferHosts')?>:</td>
+                  <td ><?=$words->get('ProfileOfferHosts')?>:</td>
                   <td colspan="2" >
                     <textarea name="OfferHosts" class="long"  cols="50" rows="4" ><?=$vars['OfferHosts']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ICanAlsoOffer')?>:</td>
+                  <td ><?=$words->get('ICanAlsoOffer')?>:</td>
                   <td colspan="2" >
                     <ul>
                     <?php
@@ -514,13 +517,13 @@ HTML;
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfilePublicTransport')?>:</td>
+                  <td ><?=$words->get('ProfilePublicTransport')?>:</td>
                   <td colspan="2" >
                     <textarea name="PublicTransport" class="long"  cols="50" rows="4" ><?=$vars['PublicTransport']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileRestrictionForGuest')?>:</td>
+                  <td ><?=$words->get('ProfileRestrictionForGuest')?>:</td>
                   <td colspan="2" >
                     <ul>
                     <?php
@@ -537,13 +540,13 @@ HTML;
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileHouseRules')?>:</td>
+                  <td ><?=$words->get('ProfileHouseRules')?>:</td>
                   <td colspan="2" >
                     <textarea name="OtherRestrictions" class="long" cols="50" rows="4" ><?=$vars['OtherRestrictions']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileAdditionalAccomodationInfo')?>:</td>
+                  <td ><?=$words->get('ProfileAdditionalAccomodationInfo')?>:</td>
                   <td colspan="2" >
                     <textarea name="AdditionalAccomodationInfo" class="long" cols="50"  rows="4" ><?=$vars['AdditionalAccomodationInfo']?></textarea>
                   </td>
@@ -560,31 +563,31 @@ HTML;
               </colgroup>
               <tbody>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileHobbies')?>:</td>
+                  <td ><?=$words->get('ProfileHobbies')?>:</td>
                   <td>
                     <textarea name="Hobbies" class="long" cols="50"  rows="4" ><?=$vars['Hobbies']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileBooks')?>:</td>
+                  <td ><?=$words->get('ProfileBooks')?>:</td>
                   <td>
                     <textarea name="Books" class="long" cols="50"  rows="4" ><?=$vars['Books']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileMusic')?>:</td>
+                  <td ><?=$words->get('ProfileMusic')?>:</td>
                   <td>
                     <textarea name="Music" class="long" cols="50"  rows="4" ><?=$vars['Music']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileMovies')?>:</td>
+                  <td ><?=$words->get('ProfileMovies')?>:</td>
                   <td>
                     <textarea name="Movies" class="long" cols="50"  rows="4" ><?=$vars['Movies']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileOrganizations')?>:</td>
+                  <td ><?=$words->get('ProfileOrganizations')?>:</td>
                   <td>
                     <textarea name="Organizations" class="long" cols="50"  rows="4" ><?=$vars['Organizations']?></textarea>
                   </td>
@@ -599,13 +602,13 @@ HTML;
               </colgroup>
               <tbody>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfilePastTrips')?>:</td>
+                  <td ><?=$words->get('ProfilePastTrips')?>:</td>
                   <td>
                     <textarea name="PastTrips" class="long" cols="50"  rows="4" ><?=$vars['PastTrips']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfilePlannedTrips')?>:</td>
+                  <td ><?=$words->get('ProfilePlannedTrips')?>:</td>
                   <td>
                     <textarea name="PlannedTrips" class="long" cols="50"  rows="4" ><?=$vars['PlannedTrips']?></textarea>
                   </td>
@@ -636,7 +639,7 @@ HTML;
                     }
                 ?>
                 <tr align="left" >
-                  <td class="label" >
+                  <td >
                   <?php
                   if ($Relation->Confirmed=='Yes') {
                     echo "<b>",$Relation->Username,"</b>" ;
@@ -690,7 +693,7 @@ HTML;
                     $group_comment_translated = htmlspecialchars($words->mInTrad($member->getGroupMembership($group)->Comment,$profile_language), ENT_QUOTES);
                 ?>
                 <tr align="left" >
-                  <td class="label" ><a href="groups/<?=$group_id?>" ><?php echo $group_name_translated," ",$group->Location ;?></a></td>
+                  <td ><a href="groups/<?=$group_id?>" ><?php echo $group_name_translated," ",$group->Location ;?></a></td>
                   <td colspan="2" >
                     <input type="hidden" Name="Group_id<?=$group->id?>" value="<?=$group->id?>">
                     <textarea cols="50"  rows="6"  name="GroupMembership_<?=$member->getGroupMembership($group)->id?>" ><?=$group_comment_translated?></textarea>
@@ -731,7 +734,14 @@ HTML;
           </table>
 <script type="text/javascript">//<!--
     jQuery.noConflict();
-    jQuery(".lang_selector").select2({dropdownAutoWidth: true, width: 'element'});
-    jQuery(".mll").select2({dropdownAutoWidth: true, width: 'element'});
+    jQuery(".lang_selector").select2({
+        dropdownAutoWidth: true,
+        width: 'element'
+    });
+    jQuery(".mll").select2({
+        dropdownAutoWidth: true,
+        width: 'element',
+        minimumResultsForSearch: -1
+    });
     //-->
 </script>

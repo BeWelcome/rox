@@ -66,7 +66,7 @@ class MemberPage extends PageWithActiveSkin
 
         $galleryItemsCount = $member->getGalleryItemsCount();
 
-        $viewForumPosts = $words->get("ViewForumPosts",$member->forums_posts_count());
+        $viewForumPosts = $words->get("ViewForumPosts",'<span class="label label-primary pull-xs-right">' . $member->forums_posts_count() . '</span>');
         $membersForumPostsPagePublic = $member->getPreference("MyForumPostsPagePublic", $default = "No");
         $linkMembersForumPosts = false;
         if ($membersForumPostsPagePublic == "Yes") {
@@ -84,7 +84,7 @@ class MemberPage extends PageWithActiveSkin
             $tt=array(
                 array('editmyprofile', 'editmyprofile/' . $profile_language_code, $ww->EditMyProfile, 'editmyprofile'),
                 array('mypreferences', 'mypreferences', $ww->MyPreferences, 'mypreferences'),
-                array('mynotes', 'mynotes', $words->get('MyNotes', $mynotes_count), 'mynotes')
+                array('mynotes', 'mynotes', $words->get('MyNotes', '<span class="label label-primary pull-xs-right">' . $mynotes_count . '</span>'), 'mynotes')
                 );
 
             if ($this instanceof EditMyProfilePage)
@@ -105,8 +105,8 @@ class MemberPage extends PageWithActiveSkin
             $tt[] = array('space', '', '', 'space');
 
             $tt[] = array('profile', "members/$username", $ww->MemberPage);
-            $tt[] = array('comments', "members/$username/comments", $ww->ViewComments.' ('.$comments_count['all'].')');
-            $tt[] = array('gallery', "gallery/show/user/$username/pictures", $ww->Gallery . ' (' . $galleryItemsCount . ')');
+            $tt[] = array('comments', "members/$username/comments", $ww->ViewComments.' <span class="label label-primary pull-xs-right">'.$comments_count['all'].'</span>');
+            $tt[] = array('gallery', "gallery/show/user/$username/pictures", $ww->Gallery . ' <span class="label label-primary pull-xs-right">' . $galleryItemsCount . '</span>');
             $tt[] = array('blogs', "blog/$username", $ww->Blog);
             $tt[] = array('trips', "trip/show/$username", $ww->Trips);
             $tt[] = array('forum', "forums/member/$username", $viewForumPosts);
@@ -128,8 +128,8 @@ class MemberPage extends PageWithActiveSkin
                 /**array('verificationadd', "verification/$username", $ww->addVerification, 'verificationadd'),*/
                 array('space', '', '', 'space'),
                 array('profile', "members/$username", $ww->MemberPage),
-                array('comments', "members/$username/comments", $ww->ViewComments.' ('.$comments_count['all'].')'),
-                array('gallery', "gallery/show/user/$username/pictures", $ww->Gallery . ' (' . $galleryItemsCount . ')'),
+                array('comments', "members/$username/comments", $ww->ViewComments.' <span class="label label-primary pull-xs-right">'.$comments_count['all'].'</span>'),
+                array('gallery', "gallery/show/user/$username/pictures", $ww->Gallery . ' <span class="label label-primary pull-xs-right">' . $galleryItemsCount . '</span>'),
                 array('blogs', "blog/$username", $ww->Blog),
                 array('trips', "trip/show/$username", $ww->Trips)
             );
@@ -209,7 +209,7 @@ class MemberPage extends PageWithActiveSkin
                 </script>
         </div> <!-- profile_pic -->
 
-            <ul class="linklist" id="profile_linklist">
+            <div class="list-group m-t-1">
               <?php
 
         $active_menu_item = $this->getSubmenuActiveItem();
@@ -219,29 +219,28 @@ class MemberPage extends PageWithActiveSkin
             $label = $item[2];
             $class = isset($item[3]) ? $item[3] : 'leftpadding';
             if ($name === $active_menu_item) {
-                $attributes = ' class="active '.$class.'"';
+                $attributes = ' class="list-group-item active '.$class.'"';
                 $around = '';
             } else {
-                $attributes = ' class="'.$class.'"';
+                $attributes = ' class="list-group-item '.$class.'"';
                 $around = '';
             }
 
-            ?><li id="sub<?=$index ?>" <?=$attributes ?>>
-              <?=$around?><a style="cursor:pointer;" href="<?=$url ?>"><span><?=$label ?></span></a><?=$around?>
+            ?>
+              <?=$around?><a <?=$attributes ?> href="<?=$url ?>"><?=$label ?></a><?=$around?>
               <?=$words->flushBuffer(); ?>
-            </li>
             <?php
 
         }
 
-            ?></ul>
+            ?></div>
 <?php
     }
 
 
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'styles/css/minimal/screen/custom/profile.css?2';
+        // $stylesheets[] = 'styles/css/minimal/screen/custom/profile.css?2';
         return $stylesheets;
     }
     

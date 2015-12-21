@@ -47,7 +47,7 @@ HTML;
             if ($member->get_trad("Hobbies", $profile_language,true) != "")
             {
                 echo <<<HTML
-            <dt class="label">{$words->get('ProfileHobbies')}:</dt>
+            <dt>{$words->get('ProfileHobbies')}:</dt>
             <dd>{$purifier->purify($member->get_trad("Hobbies", $profile_language,true))}</dd>
 HTML;
             }
@@ -55,7 +55,7 @@ HTML;
             if ($member->get_trad("Books", $profile_language,true) != "")
             { 
                 echo <<<HTML
-            <dt class="label">{$words->get('ProfileBooks')}:</dt>
+            <dt>{$words->get('ProfileBooks')}:</dt>
             <dd>{$purifier->purify($member->get_trad("Books", $profile_language,true))}</dd>
 HTML;
             }
@@ -63,7 +63,7 @@ HTML;
             if ($member->get_trad("Music", $profile_language,true) != "")
             {
                 echo <<<HTML
-            <dt class="label">{$words->get('ProfileMusic')}:</dt>
+            <dt>{$words->get('ProfileMusic')}:</dt>
             <dd>{$purifier->purify($member->get_trad("Music", $profile_language,true))}</dd>
 HTML;
             }
@@ -71,7 +71,7 @@ HTML;
             if ($member->get_trad("Movies", $profile_language,true) != "")
             {
                 echo <<<HTML
-            <dt class="label">{$words->get('ProfileMovies')}:</dt>
+            <dt>{$words->get('ProfileMovies')}:</dt>
             <dd>{$purifier->purify($member->get_trad("Movies", $profile_language,true))}</dd>
 HTML;
             }
@@ -79,7 +79,7 @@ HTML;
             if ($member->get_trad("Organizations", $profile_language,true) != "")
             {
                 echo <<<HTML
-            <dt class="label" >{$words->get('ProfileOrganizations')}:</dt>
+            <dt>{$words->get('ProfileOrganizations')}:</dt>
             <dd>{$purifier->purify($member->get_trad("Organizations", $profile_language,true))}</dd>
 HTML;
             }

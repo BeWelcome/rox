@@ -70,7 +70,7 @@ class VisualComponent extends RoxComponentBase
     
     protected function getTemplatePrefix($classname = false) {
         // Get path to the page class
-        $rc = new ReflectionClass(get_class($this));
+        $rc = new ReflectionClass($classname);
         $classFilename = $rc->getFileName();
         // remove '.page.php' from class filename to get template name
         $templateName = str_replace('.page.php', '', basename($classFilename));

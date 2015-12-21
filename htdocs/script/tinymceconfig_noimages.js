@@ -1,5 +1,5 @@
 tinymce.srcMode = '';
-tinymce.baseURL = http_baseuri+'script/tinymce-4.1.7';
+tinymce.baseURL = http_baseuri+'script/tinymce-4.3.2';
 tinymce.init({
     menubar : false,
     mode: "textareas",

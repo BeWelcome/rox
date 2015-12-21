@@ -1,0 +1,11 @@
+{
+  "name": "leaflet-master",
+  "_cacheHeaders": {
+    "Content-Type": "text/html; charset=utf-8"
+  },
+  "main": "index",
+  "_source": "https://github.com/Leaflet/Leaflet.markercluster/tree/leaflet-master",
+  "_target": "*",
+  "_originalSource": "https://github.com/Leaflet/Leaflet.markercluster/tree/leaflet-master",
+  "_direct": true
+}

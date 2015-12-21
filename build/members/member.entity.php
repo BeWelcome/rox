@@ -1515,12 +1515,8 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
     // sql_get_set returns in an array the possible set values of the colum of table name
     public function sql_get_set($table, $column)
     {
-        return array();
-        $sql = "SHOW COLUMNS FROM $table LIKE '$column'";
-        if (!($ret = mysql_query($sql)))
-            die("Error: Could not show columns $column");
-
-        $line = mysql_fetch_assoc($ret);
+        $s = $this->dao->query("SHOW COLUMNS FROM $table LIKE '$column'");
+        $line = $s->fetch(PDB::FETCH_ASSOC);
         $set = $line['Type'];
         $set = substr($set, 5, strlen($set) - 7); // Remove "set(" at start and ");" at end
         return preg_split("/','/", $set); // Split into and array
@@ -1530,12 +1526,8 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
     // sql_get_enum returns in an array the possible set values of the colum of table name
     public function sql_get_enum($table, $column)
     {
-        return array();
-        $sql = "SHOW COLUMNS FROM $table LIKE '$column'";
-        if (!($ret = mysql_query($sql)))
-            die("Error: Could not show columns $column");
-
-        $line = mysql_fetch_assoc($ret);
+        $s = $this->dao->query("SHOW COLUMNS FROM $table LIKE '$column'");
+        $line = $s->fetch(PDB::FETCH_ASSOC);
         $set = $line['Type'];
         $set = substr($set, 6, strlen($set) - 8); // Remove "enum(" at start and ");" at end
         return preg_split("/','/", $set); // Split into and array

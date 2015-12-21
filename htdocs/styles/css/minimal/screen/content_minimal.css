@@ -351,14 +351,16 @@ dl.list {
     padding: 5px;
   }
 
-  textarea.long {width: 95%; }
+  textarea.long {width: 100%; }
 
   input, textarea {
     border: 1px #ccc solid;
     background: #ffffff;
     color: #777;
     padding: 2px;
+/*
     font-size:1.1em;
+*/
   }
   input[type=image] {
     border: 0;

@@ -49,19 +49,19 @@ if (!$this->passedAway){ ?>
     </div> <!-- quickinfo -->
         <dl id="accommodation" >
         <?php if ($member->MaxGuest != 0 && $member->MaxGuest != "") { ?>
-                <dt class="label guests" ><?=$words->get('ProfileNumberOfGuests');?>:</dt>
+                <dt class="guests" ><?=$words->get('ProfileNumberOfGuests');?>:</dt>
                 <dd><?php echo $member->MaxGuest ?></dd>
         <?php }
             if ($member->get_trad("MaxLenghtOfStay", $profile_language,true) != "") { ?>
-                <dt class="label stay" ><?=$words->get('ProfileMaxLenghtOfStay');?>:</dt>
+                <dt class="stay" ><?=$words->get('ProfileMaxLenghtOfStay');?>:</dt>
                 <dd><?php echo $purifier->purify($member->get_trad("MaxLenghtOfStay", $profile_language,true)); ?></dd>
         <?php }
             if ($member->get_trad("ILiveWith", $profile_language,true) != "") { ?>
-                <dt class="label" ><?=$words->get('ProfileILiveWith');?>:</dt>
+                <dt><?=$words->get('ProfileILiveWith');?>:</dt>
                 <dd><?php echo $purifier->purify($member->get_trad("ILiveWith", $profile_language,true)); ?></dd>
         <?php }
             if ($member->get_trad("PleaseBring", $profile_language,true) != "") { ?>
-                <dt class="label" ><?=$words->get('ProfilePleaseBring');?>:</dt>
+                <dt><?=$words->get('ProfilePleaseBring');?>:</dt>
                 <dd><?php echo $purifier->purify($member->get_trad("PleaseBring", $profile_language,true)); ?></dd>
         <?php }
     
@@ -91,16 +91,16 @@ if (!$this->passedAway){ ?>
             }
             if (!empty($offers)) { ?>
     
-            <dt class="label" ><?=$words->get('ProfileOfferGuests');?>:</dt>
+            <dt><?=$words->get('ProfileOfferGuests');?>:</dt>
             <dd><?php echo $offers;?></dd>
         <?php }
             if ($member->get_trad("OfferHosts", $profile_language,true) != "") { ?>
-                <dt class="label" ><?=$words->get('ProfileOfferHosts');?>:</dt>
+                <dt><?=$words->get('ProfileOfferHosts');?>:</dt>
                 <dd><?php echo $purifier->purify($member->get_trad("OfferHosts", $profile_language,true)); ?></dd>
         <?php }
             if ($member->get_trad("AdditionalAccomodationInfo", $profile_language,true) != ""
                 or $member->get_trad("InformationToGuest", $profile_language,true) != "") { ?>
-                <dt class="label" ><?=$words->get('OtherInfosForGuest');?>:</dt>
+                <dt><?=$words->get('OtherInfosForGuest');?>:</dt>
                 <dd>
                     <?php echo $purifier->purify($member->get_trad("AdditionalAccomodationInfo", $profile_language,true)); ?>
                     <?php echo $purifier->purify($member->get_trad("InformationToGuest", $profile_language,true)); ?>
@@ -108,7 +108,7 @@ if (!$this->passedAway){ ?>
         <?php } 
     
         if ($member->get_trad("PublicTransport", $profile_language,true) != "") { ?>
-                <dt class="label" ><?=$words->get('ProfilePublicTransport');?>:</dt>
+                <dt><?=$words->get('ProfilePublicTransport');?>:</dt>
                 <dd><?php echo $purifier->purify($member->get_trad("PublicTransport", $profile_language,true)); ?></dd>
         <?php }
         
@@ -138,7 +138,7 @@ if (!$this->passedAway){ ?>
                 $restrictions .= $purifier->purify($otherRestrictions);
             }
             if (!empty($restrictions)) { ?>
-                <dt class="label" ><?=$words->get('ProfileHouseRules');?>:</dt>
+                <dt><?=$words->get('ProfileHouseRules');?>:</dt>
                 <dd><?php echo $restrictions; ?></dd>
             <?php } ?>
         </dl>

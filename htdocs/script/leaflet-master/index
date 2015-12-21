@@ -1,0 +1,1110 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en" class="">
+  <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# object: http://ogp.me/ns/object# article: http://ogp.me/ns/article# profile: http://ogp.me/ns/profile#">
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Language" content="en">
+    <meta name="viewport" content="width=1020">
+    
+    
+    <title>Leaflet/Leaflet.markercluster at leaflet-master · GitHub</title>
+    <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="GitHub">
+    <link rel="fluid-icon" href="https://github.com/fluidicon.png" title="GitHub">
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-114.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-144.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144.png">
+    <meta property="fb:app_id" content="1401488693436528">
+
+      <meta content="@github" name="twitter:site" /><meta content="summary" name="twitter:card" /><meta content="Leaflet/Leaflet.markercluster" name="twitter:title" /><meta content="Leaflet.markercluster - Marker Clustering plugin for Leaflet" name="twitter:description" /><meta content="https://avatars0.githubusercontent.com/u/2854298?v=3&amp;s=400" name="twitter:image:src" />
+      <meta content="GitHub" property="og:site_name" /><meta content="object" property="og:type" /><meta content="https://avatars0.githubusercontent.com/u/2854298?v=3&amp;s=400" property="og:image" /><meta content="Leaflet/Leaflet.markercluster" property="og:title" /><meta content="https://github.com/Leaflet/Leaflet.markercluster" property="og:url" /><meta content="Leaflet.markercluster - Marker Clustering plugin for Leaflet" property="og:description" />
+      <meta name="browser-stats-url" content="https://api.github.com/_private/browser/stats">
+    <meta name="browser-errors-url" content="https://api.github.com/_private/browser/errors">
+    <link rel="assets" href="https://assets-cdn.github.com/">
+    
+    <meta name="pjax-timeout" content="1000">
+    
+
+    <meta name="msapplication-TileImage" content="/windows-tile.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="selected-link" value="repo_source" data-pjax-transient>
+
+    <meta name="google-site-verification" content="KT5gs8h0wvaagLKAVWq8bbeNwnZZK1r1XQysX3xurLU">
+    <meta name="google-analytics" content="UA-3769691-2">
+
+<meta content="collector.githubapp.com" name="octolytics-host" /><meta content="github" name="octolytics-app-id" /><meta content="9234D6FD:5926:1023F7BD:563DB4AB" name="octolytics-dimension-request_id" />
+
+<meta content="Rails, view, files#disambiguate" data-pjax-transient="true" name="analytics-event" />
+
+
+  <meta class="js-ga-set" name="dimension1" content="Logged Out">
+    <meta class="js-ga-set" name="dimension4" content="Current repo nav">
+
+
+
+
+    <meta name="is-dotcom" content="true">
+        <meta name="hostname" content="github.com">
+    <meta name="user-login" content="">
+
+      <link rel="mask-icon" href="https://assets-cdn.github.com/pinned-octocat.svg" color="#4078c0">
+      <link rel="icon" type="image/x-icon" href="https://assets-cdn.github.com/favicon.ico">
+
+    <meta content="b5a8b9b38dceef7037e6048013af741ab2f59859" name="form-nonce" />
+
+    <link crossorigin="anonymous" href="https://assets-cdn.github.com/assets/github-e1c13e7309dc7f723b21b2afc0a6ee6a9e8e5978fe25dccb3251d923cab472df.css" media="all" rel="stylesheet" />
+    <link crossorigin="anonymous" href="https://assets-cdn.github.com/assets/github2-8660e134f8078fe75046e2c8cf09a2fd65d94446a9c3d11ecf672cb4c5842b6a.css" media="all" rel="stylesheet" />
+    
+    
+    
+
+
+    <meta http-equiv="x-pjax-version" content="bfd96d846aa5a35d072709105fddd787">
+
+      
+  <meta name="description" content="Leaflet.markercluster - Marker Clustering plugin for Leaflet">
+  <meta name="go-import" content="github.com/Leaflet/Leaflet.markercluster git https://github.com/Leaflet/Leaflet.markercluster.git">
+
+  <meta content="2854298" name="octolytics-dimension-user_id" /><meta content="Leaflet" name="octolytics-dimension-user_login" /><meta content="4983184" name="octolytics-dimension-repository_id" /><meta content="Leaflet/Leaflet.markercluster" name="octolytics-dimension-repository_nwo" /><meta content="true" name="octolytics-dimension-repository_public" /><meta content="false" name="octolytics-dimension-repository_is_fork" /><meta content="4983184" name="octolytics-dimension-repository_network_root_id" /><meta content="Leaflet/Leaflet.markercluster" name="octolytics-dimension-repository_network_root_nwo" />
+  <link href="https://github.com/Leaflet/Leaflet.markercluster/commits/leaflet-master.atom" rel="alternate" title="Recent Commits to Leaflet.markercluster:leaflet-master" type="application/atom+xml">
+
+  </head>
+
+
+  <body class="logged_out   env-production  vis-public">
+    <a href="#start-of-content" tabindex="1" class="accessibility-aid js-skip-to-content">Skip to content</a>
+
+    
+    
+    
+
+
+
+      
+      <div class="header header-logged-out" role="banner">
+  <div class="container clearfix">
+
+    <a class="header-logo-wordmark" href="https://github.com/" data-ga-click="(Logged out) Header, go to homepage, icon:logo-wordmark">
+      <span class="mega-octicon octicon-logo-github"></span>
+    </a>
+
+    <div class="header-actions" role="navigation">
+        <a class="btn btn-primary" href="/join" data-ga-click="(Logged out) Header, clicked Sign up, text:sign-up">Sign up</a>
+      <a class="btn" href="/login?return_to=%2FLeaflet%2FLeaflet.markercluster%2Ftree%2Fleaflet-master" data-ga-click="(Logged out) Header, clicked Sign in, text:sign-in">Sign in</a>
+    </div>
+
+    <div class="site-search repo-scope js-site-search" role="search">
+      <!-- </textarea> --><!-- '"` --><form accept-charset="UTF-8" action="/Leaflet/Leaflet.markercluster/search" class="js-site-search-form" data-global-search-url="/search" data-repo-search-url="/Leaflet/Leaflet.markercluster/search" method="get"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /></div>
+  <label class="js-chromeless-input-container form-control">
+    <div class="scope-badge">This repository</div>
+    <input type="text"
+      class="js-site-search-focus js-site-search-field is-clearable chromeless-input"
+      data-hotkey="s"
+      name="q"
+      placeholder="Search"
+      aria-label="Search this repository"
+      data-global-scope-placeholder="Search GitHub"
+      data-repo-scope-placeholder="Search"
+      tabindex="1"
+      autocapitalize="off">
+  </label>
+</form>
+    </div>
+
+      <ul class="header-nav left" role="navigation">
+          <li class="header-nav-item">
+            <a class="header-nav-link" href="/explore" data-ga-click="(Logged out) Header, go to explore, text:explore">Explore</a>
+          </li>
+          <li class="header-nav-item">
+            <a class="header-nav-link" href="/features" data-ga-click="(Logged out) Header, go to features, text:features">Features</a>
+          </li>
+          <li class="header-nav-item">
+            <a class="header-nav-link" href="https://enterprise.github.com/" data-ga-click="(Logged out) Header, go to enterprise, text:enterprise">Enterprise</a>
+          </li>
+          <li class="header-nav-item">
+            <a class="header-nav-link" href="/pricing" data-ga-click="(Logged out) Header, go to pricing, text:pricing">Pricing</a>
+          </li>
+      </ul>
+
+  </div>
+</div>
+
+
+
+    <div id="start-of-content" class="accessibility-aid"></div>
+
+    <div id="js-flash-container">
+</div>
+
+
+    <div role="main" class="main-content">
+        <div itemscope itemtype="http://schema.org/WebPage">
+    <div class="pagehead repohead instapaper_ignore readability-menu">
+
+      <div class="container">
+
+        <div class="clearfix">
+          
+
+<ul class="pagehead-actions">
+
+  <li>
+      <a href="/login?return_to=%2FLeaflet%2FLeaflet.markercluster"
+    class="btn btn-sm btn-with-count tooltipped tooltipped-n"
+    aria-label="You must be signed in to watch a repository" rel="nofollow">
+    <span class="octicon octicon-eye"></span>
+    Watch
+  </a>
+  <a class="social-count" href="/Leaflet/Leaflet.markercluster/watchers">
+    108
+  </a>
+
+  </li>
+
+  <li>
+      <a href="/login?return_to=%2FLeaflet%2FLeaflet.markercluster"
+    class="btn btn-sm btn-with-count tooltipped tooltipped-n"
+    aria-label="You must be signed in to star a repository" rel="nofollow">
+    <span class="octicon octicon-star"></span>
+    Star
+  </a>
+
+    <a class="social-count js-social-count" href="/Leaflet/Leaflet.markercluster/stargazers">
+      1,275
+    </a>
+
+  </li>
+
+  <li>
+      <a href="/login?return_to=%2FLeaflet%2FLeaflet.markercluster"
+        class="btn btn-sm btn-with-count tooltipped tooltipped-n"
+        aria-label="You must be signed in to fork a repository" rel="nofollow">
+        <span class="octicon octicon-repo-forked"></span>
+        Fork
+      </a>
+
+    <a href="/Leaflet/Leaflet.markercluster/network" class="social-count">
+      425
+    </a>
+  </li>
+</ul>
+
+          <h1 itemscope itemtype="http://data-vocabulary.org/Breadcrumb" class="entry-title public ">
+  <span class="mega-octicon octicon-repo"></span>
+  <span class="author"><a href="/Leaflet" class="url fn" itemprop="url" rel="author"><span itemprop="title">Leaflet</span></a></span><!--
+--><span class="path-divider">/</span><!--
+--><strong><a href="/Leaflet/Leaflet.markercluster" data-pjax="#js-repo-pjax-container">Leaflet.markercluster</a></strong>
+
+  <span class="page-context-loader">
+    <img alt="" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+  </span>
+
+</h1>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="repository-with-sidebar repo-container new-discussion-timeline with-full-navigation">
+        <div class="repository-sidebar clearfix">
+          
+<nav class="sunken-menu repo-nav js-repo-nav js-sidenav-container-pjax js-octicon-loaders"
+     role="navigation"
+     data-pjax="#js-repo-pjax-container"
+     data-issue-count-url="/Leaflet/Leaflet.markercluster/issues/counts">
+  <ul class="sunken-menu-group">
+    <li class="tooltipped tooltipped-w" aria-label="Code">
+      <a href="/Leaflet/Leaflet.markercluster/tree/leaflet-master" aria-label="Code" aria-selected="true" class="js-selected-navigation-item selected sunken-menu-item" data-hotkey="g c" data-selected-links="repo_source repo_downloads repo_commits repo_releases repo_tags repo_branches /Leaflet/Leaflet.markercluster/tree/leaflet-master">
+        <span class="octicon octicon-code"></span> <span class="full-word">Code</span>
+        <img alt="" class="mini-loader" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+</a>    </li>
+
+      <li class="tooltipped tooltipped-w" aria-label="Issues">
+        <a href="/Leaflet/Leaflet.markercluster/issues" aria-label="Issues" class="js-selected-navigation-item sunken-menu-item" data-hotkey="g i" data-selected-links="repo_issues repo_labels repo_milestones /Leaflet/Leaflet.markercluster/issues">
+          <span class="octicon octicon-issue-opened"></span> <span class="full-word">Issues</span>
+          <span class="js-issue-replace-counter"></span>
+          <img alt="" class="mini-loader" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+</a>      </li>
+
+    <li class="tooltipped tooltipped-w" aria-label="Pull requests">
+      <a href="/Leaflet/Leaflet.markercluster/pulls" aria-label="Pull requests" class="js-selected-navigation-item sunken-menu-item" data-hotkey="g p" data-selected-links="repo_pulls /Leaflet/Leaflet.markercluster/pulls">
+          <span class="octicon octicon-git-pull-request"></span> <span class="full-word">Pull requests</span>
+          <span class="js-pull-replace-counter"></span>
+          <img alt="" class="mini-loader" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+</a>    </li>
+
+  </ul>
+  <div class="sunken-menu-separator"></div>
+  <ul class="sunken-menu-group">
+
+    <li class="tooltipped tooltipped-w" aria-label="Pulse">
+      <a href="/Leaflet/Leaflet.markercluster/pulse" aria-label="Pulse" class="js-selected-navigation-item sunken-menu-item" data-selected-links="pulse /Leaflet/Leaflet.markercluster/pulse">
+        <span class="octicon octicon-pulse"></span> <span class="full-word">Pulse</span>
+        <img alt="" class="mini-loader" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+</a>    </li>
+
+    <li class="tooltipped tooltipped-w" aria-label="Graphs">
+      <a href="/Leaflet/Leaflet.markercluster/graphs" aria-label="Graphs" class="js-selected-navigation-item sunken-menu-item" data-selected-links="repo_graphs repo_contributors /Leaflet/Leaflet.markercluster/graphs">
+        <span class="octicon octicon-graph"></span> <span class="full-word">Graphs</span>
+        <img alt="" class="mini-loader" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+</a>    </li>
+  </ul>
+
+
+</nav>
+
+            <div class="only-with-full-nav">
+                
+<div class="js-clone-url clone-url open"
+  data-protocol-type="http">
+  <h3 class="text-small text-muted"><span class="text-emphasized">HTTPS</span> clone URL</h3>
+  <div class="input-group js-zeroclipboard-container">
+    <input type="text" class="input-mini text-small text-muted input-monospace js-url-field js-zeroclipboard-target"
+           value="https://github.com/Leaflet/Leaflet.markercluster.git" readonly="readonly" aria-label="HTTPS clone URL">
+    <span class="input-group-button">
+      <button aria-label="Copy to clipboard" class="js-zeroclipboard btn btn-sm zeroclipboard-button tooltipped tooltipped-s" data-copied-hint="Copied!" type="button"><span class="octicon octicon-clippy"></span></button>
+    </span>
+  </div>
+</div>
+
+  
+<div class="js-clone-url clone-url "
+  data-protocol-type="subversion">
+  <h3 class="text-small text-muted"><span class="text-emphasized">Subversion</span> checkout URL</h3>
+  <div class="input-group js-zeroclipboard-container">
+    <input type="text" class="input-mini text-small text-muted input-monospace js-url-field js-zeroclipboard-target"
+           value="https://github.com/Leaflet/Leaflet.markercluster" readonly="readonly" aria-label="Subversion checkout URL">
+    <span class="input-group-button">
+      <button aria-label="Copy to clipboard" class="js-zeroclipboard btn btn-sm zeroclipboard-button tooltipped tooltipped-s" data-copied-hint="Copied!" type="button"><span class="octicon octicon-clippy"></span></button>
+    </span>
+  </div>
+</div>
+
+
+
+<div class="clone-options text-small text-muted">You can clone with
+  <!-- </textarea> --><!-- '"` --><form accept-charset="UTF-8" action="/users/set_protocol?protocol_selector=http&amp;protocol_type=clone" class="inline-form js-clone-selector-form " data-form-nonce="b5a8b9b38dceef7037e6048013af741ab2f59859" data-remote="true" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="dOUhy537BkgjQYLwI0CNnFhQmLkZ46KVyhmzjfCyxsSrkIP3lpEnVVZ7OgZ7csdBFPSlHkz9bgbHNEOG6Uq1JA==" /></div><button class="btn-link js-clone-selector" data-protocol="http" type="submit">HTTPS</button></form> or <!-- </textarea> --><!-- '"` --><form accept-charset="UTF-8" action="/users/set_protocol?protocol_selector=subversion&amp;protocol_type=clone" class="inline-form js-clone-selector-form " data-form-nonce="b5a8b9b38dceef7037e6048013af741ab2f59859" data-remote="true" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="f4B//G8CZ+crMwniv7XKT2OKsuscElcxRVMZuX/aVK6g/U0dNbg7F9kVIhAqgwXcVjF+CXdojulicC5sKYamXA==" /></div><button class="btn-link js-clone-selector" data-protocol="subversion" type="submit">Subversion</button></form>.
+  <a href="https://help.github.com/articles/which-remote-url-should-i-use" class="help tooltipped tooltipped-n" aria-label="Get help on which URL is right for you.">
+    <span class="octicon octicon-question"></span>
+  </a>
+</div>
+
+              <a href="/Leaflet/Leaflet.markercluster/archive/leaflet-master.zip"
+                 class="btn btn-sm sidebar-button"
+                 aria-label="Download the contents of Leaflet/Leaflet.markercluster as a zip file"
+                 title="Download the contents of Leaflet/Leaflet.markercluster as a zip file"
+                 rel="nofollow">
+                <span class="octicon octicon-cloud-download"></span>
+                Download ZIP
+              </a>
+            </div>
+        </div>
+        <div id="js-repo-pjax-container" class="repository-content context-loader-container" data-pjax-container>
+
+          
+<span id="js-show-full-navigation"></span>
+
+  <div class="repository-meta js-details-container ">
+    <div class="repository-description">
+      Marker Clustering plugin for Leaflet
+    </div>
+
+
+</div>
+
+
+<div class="overall-summary overall-summary-bottomless">
+
+  <div class="stats-switcher-viewport js-stats-switcher-viewport">
+    <div class="stats-switcher-wrapper">
+    <ul class="numbers-summary">
+      <li class="commits">
+        <a data-pjax href="/Leaflet/Leaflet.markercluster/commits/leaflet-master">
+            <span class="octicon octicon-history"></span>
+            <span class="num text-emphasized">
+              508
+            </span>
+            commits
+        </a>
+      </li>
+      <li>
+        <a data-pjax href="/Leaflet/Leaflet.markercluster/branches">
+          <span class="octicon octicon-git-branch"></span>
+          <span class="num text-emphasized">
+            6
+          </span>
+          branches
+        </a>
+      </li>
+
+      <li>
+        <a data-pjax href="/Leaflet/Leaflet.markercluster/releases">
+          <span class="octicon octicon-tag"></span>
+          <span class="num text-emphasized">
+            6
+          </span>
+          releases
+        </a>
+      </li>
+
+      <li>
+        
+  <a href="/Leaflet/Leaflet.markercluster/graphs/contributors">
+    <span class="octicon octicon-organization"></span>
+    <span class="num text-emphasized">
+      33
+    </span>
+    contributors
+  </a>
+      </li>
+    </ul>
+
+      <div class="repository-lang-stats">
+        <ol class="repository-lang-stats-numbers">
+          <li>
+              <a href="/Leaflet/Leaflet.markercluster/search?l=javascript">
+                <span class="color-block language-color" style="background-color:#f1e05a;"></span>
+                <span class="lang">JavaScript</span>
+                <span class="percent">97.5%</span>
+              </a>
+          </li>
+          <li>
+              <a href="/Leaflet/Leaflet.markercluster/search?l=html">
+                <span class="color-block language-color" style="background-color:#e44b23;"></span>
+                <span class="lang">HTML</span>
+                <span class="percent">2.4%</span>
+              </a>
+          </li>
+          <li>
+              <a href="/Leaflet/Leaflet.markercluster/search?l=css">
+                <span class="color-block language-color" style="background-color:#563d7c;"></span>
+                <span class="lang">CSS</span>
+                <span class="percent">0.1%</span>
+              </a>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+  <div class="repository-lang-stats-graph js-toggle-lang-stats" title="Click for language details">
+    <span class="language-color" aria-label="JavaScript 97.5%" style="width:97.5%; background-color:#f1e05a;" itemprop="keywords">JavaScript</span>
+    <span class="language-color" aria-label="HTML 2.4%" style="width:2.4%; background-color:#e44b23;" itemprop="keywords">HTML</span>
+    <span class="language-color" aria-label="CSS 0.1%" style="width:0.1%; background-color:#563d7c;" itemprop="keywords">CSS</span>
+  </div>
+
+<include-fragment src="/Leaflet/Leaflet.markercluster/show_partial?partial=tree%2Frecently_touched_branches_list"></include-fragment>
+
+  <div class="file-navigation in-mid-page">
+  <a href="/Leaflet/Leaflet.markercluster/find/leaflet-master"
+        class="js-show-file-finder btn btn-sm empty-icon tooltipped tooltipped-s right"
+        data-pjax
+        data-hotkey="t"
+        aria-label="Quickly jump between files"
+        data-ga-click="Repository, find file, location:repo overview">
+    <span class="octicon octicon-list-unordered"></span>
+  </a>
+
+
+    <a href="/Leaflet/Leaflet.markercluster/compare/leaflet-master" aria-label="Compare, review, create a pull request" class="btn btn-sm btn-primary tooltipped tooltipped-se left compare-button" aria-label="Compare &amp; review" data-pjax data-ga-click="Repository, go to compare view, location:repo overview; icon:git-compare">
+      <span class="octicon octicon-git-compare"></span>
+    </a>
+
+  
+<div class="select-menu js-menu-container js-select-menu left">
+  <button class="btn btn-sm select-menu-button js-menu-target css-truncate" data-hotkey="w"
+    title="leaflet-master"
+    type="button" aria-label="Switch branches or tags" tabindex="0" aria-haspopup="true">
+    <i>Branch:</i>
+    <span class="js-select-button css-truncate-target">leaflet-master</span>
+  </button>
+
+  <div class="select-menu-modal-holder js-menu-content js-navigation-container" data-pjax aria-hidden="true">
+
+    <div class="select-menu-modal">
+      <div class="select-menu-header">
+        <span class="octicon octicon-x js-menu-close" role="button" aria-label="Close"></span>
+        <span class="select-menu-title">Switch branches/tags</span>
+      </div>
+
+      <div class="select-menu-filters">
+        <div class="select-menu-text-filter">
+          <input type="text" aria-label="Filter branches/tags" id="context-commitish-filter-field" class="js-filterable-field js-navigation-enable" placeholder="Filter branches/tags">
+        </div>
+        <div class="select-menu-tabs">
+          <ul>
+            <li class="select-menu-tab">
+              <a href="#" data-tab-filter="branches" data-filter-placeholder="Filter branches/tags" class="js-select-menu-tab" role="tab">Branches</a>
+            </li>
+            <li class="select-menu-tab">
+              <a href="#" data-tab-filter="tags" data-filter-placeholder="Find a tag…" class="js-select-menu-tab" role="tab">Tags</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="select-menu-list select-menu-tab-bucket js-select-menu-tab-bucket" data-tab-filter="branches" role="menu">
+
+        <div data-filterable-for="context-commitish-filter-field" data-filterable-type="substring">
+
+
+            <a class="select-menu-item js-navigation-item js-navigation-open "
+               href="/Leaflet/Leaflet.markercluster/tree/better-loading"
+               data-name="better-loading"
+               data-skip-pjax="true"
+               rel="nofollow">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <span class="select-menu-item-text css-truncate-target" title="better-loading">
+                better-loading
+              </span>
+            </a>
+            <a class="select-menu-item js-navigation-item js-navigation-open "
+               href="/Leaflet/Leaflet.markercluster/tree/gh-pages"
+               data-name="gh-pages"
+               data-skip-pjax="true"
+               rel="nofollow">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <span class="select-menu-item-text css-truncate-target" title="gh-pages">
+                gh-pages
+              </span>
+            </a>
+            <a class="select-menu-item js-navigation-item js-navigation-open "
+               href="/Leaflet/Leaflet.markercluster/tree/leaflet-master-merge"
+               data-name="leaflet-master-merge"
+               data-skip-pjax="true"
+               rel="nofollow">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <span class="select-menu-item-text css-truncate-target" title="leaflet-master-merge">
+                leaflet-master-merge
+              </span>
+            </a>
+            <a class="select-menu-item js-navigation-item js-navigation-open selected"
+               href="/Leaflet/Leaflet.markercluster/tree/leaflet-master"
+               data-name="leaflet-master"
+               data-skip-pjax="true"
+               rel="nofollow">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <span class="select-menu-item-text css-truncate-target" title="leaflet-master">
+                leaflet-master
+              </span>
+            </a>
+            <a class="select-menu-item js-navigation-item js-navigation-open "
+               href="/Leaflet/Leaflet.markercluster/tree/master"
+               data-name="master"
+               data-skip-pjax="true"
+               rel="nofollow">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <span class="select-menu-item-text css-truncate-target" title="master">
+                master
+              </span>
+            </a>
+            <a class="select-menu-item js-navigation-item js-navigation-open "
+               href="/Leaflet/Leaflet.markercluster/tree/prototype-animate-during-zoom"
+               data-name="prototype-animate-during-zoom"
+               data-skip-pjax="true"
+               rel="nofollow">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <span class="select-menu-item-text css-truncate-target" title="prototype-animate-during-zoom">
+                prototype-animate-during-zoom
+              </span>
+            </a>
+        </div>
+
+          <div class="select-menu-no-results">Nothing to show</div>
+      </div>
+
+      <div class="select-menu-list select-menu-tab-bucket js-select-menu-tab-bucket" data-tab-filter="tags">
+        <div data-filterable-for="context-commitish-filter-field" data-filterable-type="substring">
+
+
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/Leaflet/Leaflet.markercluster/tree/v0.4.0"
+                 data-name="v0.4.0"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="v0.4.0">v0.4.0</a>
+            </div>
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/Leaflet/Leaflet.markercluster/tree/v0.4.0-hotfix.1"
+                 data-name="v0.4.0-hotfix.1"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="v0.4.0-hotfix.1">v0.4.0-hotfix.1</a>
+            </div>
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/Leaflet/Leaflet.markercluster/tree/0.4"
+                 data-name="0.4"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="0.4">0.4</a>
+            </div>
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/Leaflet/Leaflet.markercluster/tree/0.3"
+                 data-name="0.3"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="0.3">0.3</a>
+            </div>
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/Leaflet/Leaflet.markercluster/tree/0.2"
+                 data-name="0.2"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="0.2">0.2</a>
+            </div>
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/Leaflet/Leaflet.markercluster/tree/0.1"
+                 data-name="0.1"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="0.1">0.1</a>
+            </div>
+        </div>
+
+        <div class="select-menu-no-results">Nothing to show</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+  <div class="breadcrumb"><span class="repo-root js-repo-root"><span itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb"><a href="/Leaflet/Leaflet.markercluster/tree/leaflet-master" class="" data-branch="leaflet-master" data-pjax="true" itemscope="url"><span itemprop="title">Leaflet.markercluster</span></a></span></span><span class="separator">/</span>
+  <span class="tooltipped tooltipped-e disabled text-muted" aria-label="You must be signed in to make or propose changes">
+    <span class="octicon octicon-plus"></span>
+  </span>
+</div>
+</div>
+
+
+
+  <div class="branch-infobar">
+    <span class="right">
+        <a class="muted-link" href="/Leaflet/Leaflet.markercluster/pull/new/leaflet-master">
+          <span class="octicon octicon-git-pull-request"></span>
+          Pull request
+        </a>
+      <a class="muted-link" href="/Leaflet/Leaflet.markercluster/compare/leaflet-master">
+        <span class="octicon octicon-diff"></span>
+        Compare
+      </a>
+    </span>
+
+      This branch is 13 commits ahead, 140 commits behind master.
+  </div>
+
+
+  <div class="commit-tease js-details-container">
+    <span class="right">
+      Latest commit
+      <a class="commit-tease-sha" href="/Leaflet/Leaflet.markercluster/commit/102f14718fd35d8c81ad4e6ecc022c856e4cb76d" data-pjax>
+        102f147
+      </a>
+      <time datetime="2015-03-31T03:38:50Z" is="relative-time">Mar 31, 2015</time>
+    </span>
+
+
+    <span class="commit-author-section">
+      <img alt="@danzel" class="avatar" height="20" src="https://avatars1.githubusercontent.com/u/393086?v=3&amp;s=40" width="20" />
+      <a href="/danzel" class="user-mention" rel="contributor">danzel</a>
+    </span>
+
+        <a href="/Leaflet/Leaflet.markercluster/commit/102f14718fd35d8c81ad4e6ecc022c856e4cb76d" class="message" data-pjax="true" title="Merge pull request #472 from Eschon/leaflet-master
+
+rounded zoom to work with fractional zoom levels">Merge pull request</a> <a href="https://github.com/Leaflet/Leaflet.markercluster/pull/472" class="issue-link" title="rounded zoom to work with fractional zoom levels">#472</a> <a href="/Leaflet/Leaflet.markercluster/commit/102f14718fd35d8c81ad4e6ecc022c856e4cb76d" class="message" data-pjax="true" title="Merge pull request #472 from Eschon/leaflet-master
+
+rounded zoom to work with fractional zoom levels">from Eschon/leaflet-master</a>
+          <span class="hidden-text-expander inline">
+            <a href="#" class="js-details-target">…</a>
+          </span>
+    </span>
+
+      <div class="commit-desc"><pre class="text-small">rounded zoom to work with fractional zoom levels</pre></div>
+  </div>
+
+
+<div class="file-wrap">
+  <a href="/Leaflet/Leaflet.markercluster/tree/102f14718fd35d8c81ad4e6ecc022c856e4cb76d" class="hidden js-permalink-shortcut" data-hotkey="y">Permalink</a>
+
+  <table class="files js-navigation-container js-active-navigation-container" data-pjax>
+
+
+    <tbody>
+      <tr class="warning include-fragment-error">
+        <td class="icon"><span class="octicon octicon-alert"></span></td>
+        <td class="content" colspan="3">Failed to load latest commit information.</td>
+      </tr>
+
+        <tr class="js-navigation-item">
+          <td class="icon">
+            <span class="octicon octicon-file-directory"></span>
+            <img alt="" class="spinner" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+          </td>
+          <td class="content">
+            <span class="css-truncate css-truncate-target"><a href="/Leaflet/Leaflet.markercluster/tree/leaflet-master/build" class="js-directory-link js-navigation-open" id="b0da275520918e23dd615e2a747528f1-53e6db6edac0d2fe881f9890806da895a931884b" title="build">build</a></span>
+          </td>
+          <td class="message">
+            <span class="css-truncate css-truncate-target">
+                  <a href="/Leaflet/Leaflet.markercluster/commit/b11665eb8347b42b3b8cfc280359daf5d109cb86" class="message" data-pjax="true" title="Replace all build scripts with latest ones from leaflet. Add a package.json">Replace all build scripts with latest ones from leaflet. Add a packag…</a>
+            </span>
+          </td>
+          <td class="age">
+            <span class="css-truncate css-truncate-target"><time datetime="2013-06-13T22:56:53Z" is="time-ago">Jun 14, 2013</time></span>
+          </td>
+        </tr>
+        <tr class="js-navigation-item">
+          <td class="icon">
+            <span class="octicon octicon-file-directory"></span>
+            <img alt="" class="spinner" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+          </td>
+          <td class="content">
+            <span class="css-truncate css-truncate-target"><a href="/Leaflet/Leaflet.markercluster/tree/leaflet-master/dist" class="js-directory-link js-navigation-open" id="2a6d07eef8b10b84129b42424ed99327-12e2511a3c3b017cf32f42bebee707a411d94c2c" title="dist">dist</a></span>
+          </td>
+          <td class="message">
+            <span class="css-truncate css-truncate-target">
+                  <a href="/Leaflet/Leaflet.markercluster/commit/436caf0f6c5a4714dd71279425efca4f1c7b6ac6" class="message" data-pjax="true" title="Update build">Update build</a>
+            </span>
+          </td>
+          <td class="age">
+            <span class="css-truncate css-truncate-target"><time datetime="2014-01-21T20:26:23Z" is="time-ago">Jan 22, 2014</time></span>
+          </td>
+        </tr>
+        <tr class="js-navigation-item">
+          <td class="icon">
+            <span class="octicon octicon-file-directory"></span>
+            <img alt="" class="spinner" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+          </td>
+          <td class="content">
+            <span class="css-truncate css-truncate-target"><a href="/Leaflet/Leaflet.markercluster/tree/leaflet-master/example" class="js-directory-link js-navigation-open" id="1a79a4d60de6718e8e5b326e338ae533-4807c960e0ad0a9d21a55e05e00e02c02606971b" title="example">example</a></span>
+          </td>
+          <td class="message">
+            <span class="css-truncate css-truncate-target">
+                  <a href="/Leaflet/Leaflet.markercluster/commit/78ccf986650a60e12b7f6a15661accae8124a2e2" class="message" data-pjax="true" title="More whitespace fixes :)">More whitespace fixes :)</a>
+            </span>
+          </td>
+          <td class="age">
+            <span class="css-truncate css-truncate-target"><time datetime="2014-01-21T20:23:55Z" is="time-ago">Jan 22, 2014</time></span>
+          </td>
+        </tr>
+        <tr class="js-navigation-item">
+          <td class="icon">
+            <span class="octicon octicon-file-directory"></span>
+            <img alt="" class="spinner" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+          </td>
+          <td class="content">
+            <span class="css-truncate css-truncate-target"><a href="/Leaflet/Leaflet.markercluster/tree/leaflet-master/spec" class="js-directory-link js-navigation-open" id="b979c2934ac0b4ba3f08dabfdd1b2299-dfee4e9a515f6ac31658c1b2b6969c38c8c57da9" title="spec">spec</a></span>
+          </td>
+          <td class="message">
+            <span class="css-truncate css-truncate-target">
+                  <a href="/Leaflet/Leaflet.markercluster/commit/53eab49a7ecac32218c6d5e6dbba15ca7e80558b" class="message" data-pjax="true" title="Fix incorrectly adding parent clusters when doing a big move that changes zoom levels. Fixes #281">Fix incorrectly adding parent clusters when doing a big move that cha…</a>
+            </span>
+          </td>
+          <td class="age">
+            <span class="css-truncate css-truncate-target"><time datetime="2013-12-06T00:34:43Z" is="time-ago">Dec 6, 2013</time></span>
+          </td>
+        </tr>
+        <tr class="js-navigation-item">
+          <td class="icon">
+            <span class="octicon octicon-file-directory"></span>
+            <img alt="" class="spinner" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+          </td>
+          <td class="content">
+            <span class="css-truncate css-truncate-target"><a href="/Leaflet/Leaflet.markercluster/tree/leaflet-master/src" class="js-directory-link js-navigation-open" id="25d902c24283ab8cfbac54dfa101ad31-9fb44ae5ce5f86be2289fadfca5a61c4a46070f5" title="src">src</a></span>
+          </td>
+          <td class="message">
+            <span class="css-truncate css-truncate-target">
+                  <a href="/Leaflet/Leaflet.markercluster/commit/6e35cf74b14440ce77f55677f29dca39f705aec5" class="message" data-pjax="true" title="rounded zoom to work with fractional zoom levels">rounded zoom to work with fractional zoom levels</a>
+            </span>
+          </td>
+          <td class="age">
+            <span class="css-truncate css-truncate-target"><time datetime="2015-03-30T08:51:12Z" is="time-ago">Mar 30, 2015</time></span>
+          </td>
+        </tr>
+        <tr class="js-navigation-item">
+          <td class="icon">
+            <span class="octicon octicon-file-text"></span>
+            <img alt="" class="spinner" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+          </td>
+          <td class="content">
+            <span class="css-truncate css-truncate-target"><a href="/Leaflet/Leaflet.markercluster/blob/leaflet-master/.gitignore" class="js-directory-link js-navigation-open" id="a084b794bc0759e7a6b77810e01874f2-07b06cbdb1d529206772c28e75457f988251ba75" title=".gitignore">.gitignore</a></span>
+          </td>
+          <td class="message">
+            <span class="css-truncate css-truncate-target">
+                  <a href="/Leaflet/Leaflet.markercluster/commit/b104ace6f8eda2b6fac34dfe7b6fdadcffe62806" class="message" data-pjax="true" title="Add build scripts from leaflet updated for our files.">Add build scripts from leaflet updated for our files.</a>
+            </span>
+          </td>
+          <td class="age">
+            <span class="css-truncate css-truncate-target"><time datetime="2012-07-24T22:47:00Z" is="time-ago">Jul 25, 2012</time></span>
+          </td>
+        </tr>
+        <tr class="js-navigation-item">
+          <td class="icon">
+            <span class="octicon octicon-file-text"></span>
+            <img alt="" class="spinner" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+          </td>
+          <td class="content">
+            <span class="css-truncate css-truncate-target"><a href="/Leaflet/Leaflet.markercluster/blob/leaflet-master/.travis.yml" class="js-directory-link js-navigation-open" id="354f30a63fb0907d4ad57269548329e3-4cee540246ea4be55873ffddde1b49f5f24ca3a2" title=".travis.yml">.travis.yml</a></span>
+          </td>
+          <td class="message">
+            <span class="css-truncate css-truncate-target">
+                  <a href="/Leaflet/Leaflet.markercluster/commit/c1211c573f2ff9e186901b7147b7961237aea81e" class="message" data-pjax="true" title="Add travis config">Add travis config</a>
+            </span>
+          </td>
+          <td class="age">
+            <span class="css-truncate css-truncate-target"><time datetime="2013-10-14T03:12:08Z" is="time-ago">Oct 14, 2013</time></span>
+          </td>
+        </tr>
+        <tr class="js-navigation-item">
+          <td class="icon">
+            <span class="octicon octicon-file-text"></span>
+            <img alt="" class="spinner" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+          </td>
+          <td class="content">
+            <span class="css-truncate css-truncate-target"><a href="/Leaflet/Leaflet.markercluster/blob/leaflet-master/CHANGELOG.md" class="js-directory-link js-navigation-open" id="4ac32a78649ca5bdd8e0ba38b7006a1e-007712fbe1cd93fd45c7ed33a375c4107f849786" title="CHANGELOG.md">CHANGELOG.md</a></span>
+          </td>
+          <td class="message">
+            <span class="css-truncate css-truncate-target">
+                  <a href="/Leaflet/Leaflet.markercluster/commit/a6628a605bdf309e19bc3ee48b9d7a8390f7b3ef" class="message" data-pjax="true" title="correcting date of v0.4 changes in CHANGELOG.md">correcting date of v0.4 changes in CHANGELOG.md</a>
+            </span>
+          </td>
+          <td class="age">
+            <span class="css-truncate css-truncate-target"><time datetime="2013-12-19T05:21:50Z" is="time-ago">Dec 19, 2013</time></span>
+          </td>
+        </tr>
+        <tr class="js-navigation-item">
+          <td class="icon">
+            <span class="octicon octicon-file-text"></span>
+            <img alt="" class="spinner" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+          </td>
+          <td class="content">
+            <span class="css-truncate css-truncate-target"><a href="/Leaflet/Leaflet.markercluster/blob/leaflet-master/Jakefile.js" class="js-directory-link js-navigation-open" id="b9cf5d85d3f069782d8b050d115be052-4af806db4bc5babd40092f7b6bc7fab0add16797" title="Jakefile.js">Jakefile.js</a></span>
+          </td>
+          <td class="message">
+            <span class="css-truncate css-truncate-target">
+                  <a href="/Leaflet/Leaflet.markercluster/commit/b11665eb8347b42b3b8cfc280359daf5d109cb86" class="message" data-pjax="true" title="Replace all build scripts with latest ones from leaflet. Add a package.json">Replace all build scripts with latest ones from leaflet. Add a packag…</a>
+            </span>
+          </td>
+          <td class="age">
+            <span class="css-truncate css-truncate-target"><time datetime="2013-06-13T22:56:53Z" is="time-ago">Jun 13, 2013</time></span>
+          </td>
+        </tr>
+        <tr class="js-navigation-item">
+          <td class="icon">
+            <span class="octicon octicon-file-text"></span>
+            <img alt="" class="spinner" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+          </td>
+          <td class="content">
+            <span class="css-truncate css-truncate-target"><a href="/Leaflet/Leaflet.markercluster/blob/leaflet-master/MIT-LICENCE.txt" class="js-directory-link js-navigation-open" id="6df2f6bb363e3fb68be91e2c1be0d13e-19af06829ce0c79becc5e95efe8131c04e0db972" title="MIT-LICENCE.txt">MIT-LICENCE.txt</a></span>
+          </td>
+          <td class="message">
+            <span class="css-truncate css-truncate-target">
+                  <a href="/Leaflet/Leaflet.markercluster/commit/9161de52cc4c89da18a23a6012d511ba00cc2fd9" class="message" data-pjax="true" title="Add MIT Licence and update the readme">Add MIT Licence and update the readme</a>
+            </span>
+          </td>
+          <td class="age">
+            <span class="css-truncate css-truncate-target"><time datetime="2012-07-16T04:33:57Z" is="time-ago">Jul 16, 2012</time></span>
+          </td>
+        </tr>
+        <tr class="js-navigation-item">
+          <td class="icon">
+            <span class="octicon octicon-file-text"></span>
+            <img alt="" class="spinner" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+          </td>
+          <td class="content">
+            <span class="css-truncate css-truncate-target"><a href="/Leaflet/Leaflet.markercluster/blob/leaflet-master/README.md" class="js-directory-link js-navigation-open" id="04c6e90faac2675aa89e2176d2eec7d8-a88c5a252727e734563432c556b7c70c7bde2290" title="README.md">README.md</a></span>
+          </td>
+          <td class="message">
+            <span class="css-truncate css-truncate-target">
+                  <a href="/Leaflet/Leaflet.markercluster/commit/ba53f30a577ba3967b4d3f7e8a7e24662271f5c0" class="message" data-pjax="true" title="Updated README to include instructions on installing via Bower">Updated README to include instructions on installing via Bower</a>
+            </span>
+          </td>
+          <td class="age">
+            <span class="css-truncate css-truncate-target"><time datetime="2014-01-19T21:49:32Z" is="time-ago">Jan 19, 2014</time></span>
+          </td>
+        </tr>
+        <tr class="js-navigation-item">
+          <td class="icon">
+            <span class="octicon octicon-file-text"></span>
+            <img alt="" class="spinner" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+          </td>
+          <td class="content">
+            <span class="css-truncate css-truncate-target"><a href="/Leaflet/Leaflet.markercluster/blob/leaflet-master/bower.json" class="js-directory-link js-navigation-open" id="0a08a7565aba4405282251491979bb6b-e57641424ed51cc4ec582a2317588e66b9e9e890" title="bower.json">bower.json</a></span>
+          </td>
+          <td class="message">
+            <span class="css-truncate css-truncate-target">
+                  <a href="/Leaflet/Leaflet.markercluster/commit/3ad6e759266e5bb5c768f83da569537cd2ebb140" class="message" data-pjax="true" title="Added Bower configuration file">Added Bower configuration file</a>
+            </span>
+          </td>
+          <td class="age">
+            <span class="css-truncate css-truncate-target"><time datetime="2014-01-19T21:49:22Z" is="time-ago">Jan 19, 2014</time></span>
+          </td>
+        </tr>
+        <tr class="js-navigation-item">
+          <td class="icon">
+            <span class="octicon octicon-file-text"></span>
+            <img alt="" class="spinner" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+          </td>
+          <td class="content">
+            <span class="css-truncate css-truncate-target"><a href="/Leaflet/Leaflet.markercluster/blob/leaflet-master/package.json" class="js-directory-link js-navigation-open" id="b9cfc7f2cdf78a7f4b91a753d10865a2-2bd70c2b1341cc3ebf334fe056c840dd55bdedef" title="package.json">package.json</a></span>
+          </td>
+          <td class="message">
+            <span class="css-truncate css-truncate-target">
+                  <a href="/Leaflet/Leaflet.markercluster/commit/20cf8edd0dfc51ace1db1eee0cf34cf0533a2fb9" class="message" data-pjax="true" title="Update change log, bump to 0.4.0 and rebuild">Update change log, bump to 0.4.0 and rebuild</a>
+            </span>
+          </td>
+          <td class="age">
+            <span class="css-truncate css-truncate-target"><time datetime="2013-12-19T03:27:52Z" is="time-ago">Dec 19, 2013</time></span>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+</div>
+
+
+  <div id="readme" class="boxed-group flush clearfix announce instapaper_body md">
+    <h3>
+      <span class="octicon octicon-book"></span>
+      README.md
+    </h3>
+
+    <article class="markdown-body entry-content" itemprop="mainContentOfPage"><h1><a id="user-content-leafletmarkercluster" class="anchor" href="#leafletmarkercluster" aria-hidden="true"><span class="octicon octicon-link"></span></a>Leaflet.markercluster</h1>
+
+<p>Provides Beautiful Animated Marker Clustering functionality for <a href="http://leafletjs.com">Leaflet</a>, a JS library for interactive maps.</p>
+
+<p><em>Requires Leaflet 0.7.0 or newer.</em></p>
+
+<p>For a Leaflet 0.5 compatible version, <a href="https://github.com/Leaflet/Leaflet.markercluster/archive/b128e950d8f5d7da5b60bd0aa9a88f6d3dd17c98.zip">Download b128e950</a><br>
+For a Leaflet 0.4 compatible version, <a href="https://github.com/Leaflet/Leaflet.markercluster/archive/0.2.zip">Download the 0.2 release</a></p>
+
+<h2><a id="user-content-using-the-plugin" class="anchor" href="#using-the-plugin" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using the plugin</h2>
+
+<p>Install with Bower: <code>bower install leaflet.markercluster</code></p>
+
+<p>See the included examples for usage.</p>
+
+<p>The <a href="http://leaflet.github.com/Leaflet.markercluster/example/marker-clustering-realworld.388.html">realworld example</a> is a good place to start, it uses all of the defaults of the clusterer.
+Or check out the <a href="http://leaflet.github.com/Leaflet.markercluster/example/marker-clustering-custom.html">custom example</a> for how to customise the behaviour and appearance of the clusterer</p>
+
+<h3><a id="user-content-usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h3>
+
+<p>Create a new MarkerClusterGroup, add your markers to it, then add it to the map</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> markers <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">L.MarkerClusterGroup</span>();
+markers.addLayer(<span class="pl-k">new</span> <span class="pl-en">L.Marker</span>(getRandomLatLng(map)));
+... Add more layers ...
+map.addLayer(markers);</pre></div>
+
+<h3><a id="user-content-defaults" class="anchor" href="#defaults" aria-hidden="true"><span class="octicon octicon-link"></span></a>Defaults</h3>
+
+<p>By default the Clusterer enables some nice defaults for you:</p>
+
+<ul>
+<li><strong>showCoverageOnHover</strong>: When you mouse over a cluster it shows the bounds of its markers.</li>
+<li><strong>zoomToBoundsOnClick</strong>: When you click a cluster we zoom to its bounds.</li>
+<li><strong>spiderfyOnMaxZoom</strong>: When you click a cluster at the bottom zoom level we spiderfy it so you can see all of its markers.</li>
+<li><strong>removeOutsideVisibleBounds</strong>: Clusters and markers too far from the viewport are removed from the map for performance.</li>
+</ul>
+
+<p>You can disable any of these as you want in the options when you create the MarkerClusterGroup:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> markers <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">L.MarkerClusterGroup</span>({ spiderfyOnMaxZoom<span class="pl-k">:</span> <span class="pl-c1">false</span>, showCoverageOnHover<span class="pl-k">:</span> <span class="pl-c1">false</span>, zoomToBoundsOnClick<span class="pl-k">:</span> <span class="pl-c1">false</span> });</pre></div>
+
+<h3><a id="user-content-customising-the-clustered-markers" class="anchor" href="#customising-the-clustered-markers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Customising the Clustered Markers</h3>
+
+<p>As an option to MarkerClusterGroup you can provide your own function for creating the Icon for the clustered markers.
+The default implementation changes color at bounds of 10 and 100, but more advanced uses may require customising this.
+You do not need to include the .Default css if you go this way.
+You are passed a MarkerCluster object, you'll probably want to use getChildCount() or getAllChildMarkers() to work out the icon to show</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> markers <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">L.MarkerClusterGroup</span>({
+    <span class="pl-en">iconCreateFunction</span><span class="pl-k">:</span> <span class="pl-k">function</span>(<span class="pl-smi">cluster</span>) {
+        <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-en">L.DivIcon</span>({ html<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;b&gt;<span class="pl-pds">'</span></span> <span class="pl-k">+</span> cluster.getChildCount() <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;/b&gt;<span class="pl-pds">'</span></span> });
+    }
+});</pre></div>
+
+<p>Check out the <a href="http://leaflet.github.com/Leaflet.markercluster/example/marker-clustering-custom.html">custom example</a> for an example of this.</p>
+
+<h3><a id="user-content-all-options" class="anchor" href="#all-options" aria-hidden="true"><span class="octicon octicon-link"></span></a>All Options</h3>
+
+<p>Enabled by default (boolean options):</p>
+
+<ul>
+<li><strong>showCoverageOnHover</strong>: When you mouse over a cluster it shows the bounds of its markers.</li>
+<li><strong>zoomToBoundsOnClick</strong>: When you click a cluster we zoom to its bounds.</li>
+<li><strong>spiderfyOnMaxZoom</strong>: When you click a cluster at the bottom zoom level we spiderfy it so you can see all of its markers.</li>
+<li><strong>removeOutsideVisibleBounds</strong>: Clusters and markers too far from the viewport are removed from the map for performance.</li>
+</ul>
+
+<p>Other options</p>
+
+<ul>
+<li><strong>animateAddingMarkers</strong>: If set to true then adding individual markers to the MarkerClusterGroup after it has been added to the map will add the marker and animate it in to the cluster. Defaults to false as this gives better performance when bulk adding markers. addLayers does not support this, only addLayer with individual Markers.</li>
+<li><strong>disableClusteringAtZoom</strong>: If set, at this zoom level and below markers will not be clustered. This defaults to disabled. <a href="http://leaflet.github.com/Leaflet.markercluster/example/marker-clustering-realworld-maxzoom.388.html">See Example</a></li>
+<li><strong>maxClusterRadius</strong>: The maximum radius that a cluster will cover from the central marker (in pixels). Default 80. Decreasing will make more smaller clusters. You can also use a function that accepts the current map zoom and returns the maximum cluster radius in pixels.</li>
+<li><strong>polygonOptions</strong>: Options to pass when creating the L.Polygon(points, options) to show the bounds of a cluster</li>
+<li><strong>singleMarkerMode</strong>: If set to true, overrides the icon for all added markers to make them appear as a 1 size cluster</li>
+<li><strong>spiderfyDistanceMultiplier</strong>: Increase from 1 to increase the distance away from the center that spiderfied markers are placed. Use if you are using big marker icons (Default:1)</li>
+<li><strong>iconCreateFunction</strong>: Function used to create the cluster icon <a href="https://github.com/Leaflet/Leaflet.markercluster/blob/15ed12654acdc54a4521789c498e4603fe4bf781/src/MarkerClusterGroup.js#L542">See default as example</a>.</li>
+</ul>
+
+<h2><a id="user-content-events" class="anchor" href="#events" aria-hidden="true"><span class="octicon octicon-link"></span></a>Events</h2>
+
+<p>If you register for click, mouseover, etc events just related to Markers in the cluster.
+To recieve events for clusters listen to 'cluster' + 'eventIWant', ex: 'clusterclick', 'clustermouseover'.</p>
+
+<p>Set your callback up as follows to handle both cases:</p>
+
+<div class="highlight highlight-source-js"><pre>markers.on(<span class="pl-s"><span class="pl-pds">'</span>click<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">a</span>) {
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">'</span>marker <span class="pl-pds">'</span></span> <span class="pl-k">+</span> a.layer);
+});
+
+markers.on(<span class="pl-s"><span class="pl-pds">'</span>clusterclick<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">a</span>) {
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">'</span>cluster <span class="pl-pds">'</span></span> <span class="pl-k">+</span> a.layer.getAllChildMarkers().<span class="pl-c1">length</span>);
+});</pre></div>
+
+<h2><a id="user-content-methods" class="anchor" href="#methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>Methods</h2>
+
+<h3><a id="user-content-getting-the-bounds-of-a-cluster" class="anchor" href="#getting-the-bounds-of-a-cluster" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting the bounds of a cluster</h3>
+
+<p>When you recieve an event from a cluster you can query it for the bounds.
+See <a href="http://leaflet.github.com/Leaflet.markercluster/example/marker-clustering-convexhull.html">example/marker-clustering-convexhull.html</a> for a working example.</p>
+
+<div class="highlight highlight-source-js"><pre>markers.on(<span class="pl-s"><span class="pl-pds">'</span>clusterclick<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">a</span>) {
+    map.addLayer(<span class="pl-k">new</span> <span class="pl-en">L.Polygon</span>(a.layer.getConvexHull()));
+});</pre></div>
+
+<h3><a id="user-content-zooming-to-the-bounds-of-a-cluster" class="anchor" href="#zooming-to-the-bounds-of-a-cluster" aria-hidden="true"><span class="octicon octicon-link"></span></a>Zooming to the bounds of a cluster</h3>
+
+<p>When you recieve an event from a cluster you can zoom to its bounds in one easy step.
+If all of the markers will appear at a higher zoom level, that zoom level is zoomed to instead.
+See <a href="http://leaflet.github.com/Leaflet.markercluster/example/marker-clustering-zoomtobounds.html">marker-clustering-zoomtobounds.html</a> for a working example.</p>
+
+<div class="highlight highlight-source-js"><pre>markers.on(<span class="pl-s"><span class="pl-pds">'</span>clusterclick<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">a</span>) {
+    a.layer.zoomToBounds();
+});</pre></div>
+
+<h3><a id="user-content-getting-the-visible-parent-of-a-marker" class="anchor" href="#getting-the-visible-parent-of-a-marker" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting the visible parent of a marker</h3>
+
+<p>If you have a marker in your MarkerClusterGroup and you want to get the visible parent of it (Either itself or a cluster it is contained in that is currently visible on the map).
+This will return null if the marker and its parent clusters are not visible currently (they are not near the visible viewpoint)</p>
+
+<pre><code>var visibleOne = markerClusterGroup.getVisibleParent(myMarker);
+console.log(visibleOne.getLatLng());
+</code></pre>
+
+<h3><a id="user-content-adding-and-removing-markers" class="anchor" href="#adding-and-removing-markers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Adding and removing Markers</h3>
+
+<p>addLayer, removeLayer and clearLayers are supported and they should work for most uses.</p>
+
+<h3><a id="user-content-bulk-adding-and-removing-markers" class="anchor" href="#bulk-adding-and-removing-markers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bulk adding and removing Markers</h3>
+
+<p>addLayers and removeLayers are bulk methods for adding and removing markers and should be favoured over the single versions when doing bulk addition/removal of markers. Each takes an array of markers</p>
+
+<p>If you are removing a lot of markers it will almost definitely be better to call clearLayers then call addLayers to add the markers you don't want to remove back in. See <a href="https://github.com/Leaflet/Leaflet.markercluster/issues/59#issuecomment-9320628">#59</a> for details.</p>
+
+<h3><a id="user-content-other-methods" class="anchor" href="#other-methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>Other Methods</h3>
+
+<pre><code>hasLayer(layer): Returns true if the given layer (marker) is in the MarkerClusterGroup
+zoomToShowLayer(layer, callback): Zooms to show the given marker (spidifying if required), calls the callback when the marker is visible on the map
+addLayers(layerArray): Adds the markers in the given array from the MarkerClusterGroup in an efficent bulk method.
+removeLayers(layerArray): Removes the markers in the given array from the MarkerClusterGroup in an efficent bulk method.
+</code></pre>
+
+<h2><a id="user-content-handling-lots-of-markers" class="anchor" href="#handling-lots-of-markers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Handling LOTS of markers</h2>
+
+<p>The Clusterer can handle 10000 or even 50000 markers (in chrome). IE9 has some issues with 50000.
+<a href="http://leaflet.github.com/Leaflet.markercluster/example/marker-clustering-realworld.10000.html">realworld 10000 example</a>
+<a href="http://leaflet.github.com/Leaflet.markercluster/example/marker-clustering-realworld.50000.html">realworld 50000 example</a>
+Performance optimizations could be done so these are handled more gracefully (Running the initial clustering over multiple JS calls rather than locking the browser for a long time)</p>
+
+<h3><a id="user-content-license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h3>
+
+<p>Leaflet.markercluster is free software, and may be redistributed under the MIT-LICENSE.</p>
+
+<p><a href="https://travis-ci.org/Leaflet/Leaflet.markercluster"><img src="https://camo.githubusercontent.com/d6807ddb8450855f64bbf424e7f451e055cc24c3/68747470733a2f2f7472617669732d63692e6f72672f4c6561666c65742f4c6561666c65742e6d61726b6572636c75737465722e706e673f6272616e63683d6d6173746572" alt="Build Status" data-canonical-src="https://travis-ci.org/Leaflet/Leaflet.markercluster.png?branch=master" style="max-width:100%;"></a></p>
+</article>
+  </div>
+
+
+        </div>
+      </div>
+      <div class="modal-backdrop"></div>
+    </div>
+  </div>
+
+
+    </div>
+
+      <div class="container">
+  <div class="site-footer" role="contentinfo">
+    <ul class="site-footer-links right">
+        <li><a href="https://status.github.com/" data-ga-click="Footer, go to status, text:status">Status</a></li>
+      <li><a href="https://developer.github.com" data-ga-click="Footer, go to api, text:api">API</a></li>
+      <li><a href="https://training.github.com" data-ga-click="Footer, go to training, text:training">Training</a></li>
+      <li><a href="https://shop.github.com" data-ga-click="Footer, go to shop, text:shop">Shop</a></li>
+        <li><a href="https://github.com/blog" data-ga-click="Footer, go to blog, text:blog">Blog</a></li>
+        <li><a href="https://github.com/about" data-ga-click="Footer, go to about, text:about">About</a></li>
+        <li><a href="https://github.com/pricing" data-ga-click="Footer, go to pricing, text:pricing">Pricing</a></li>
+
+    </ul>
+
+    <a href="https://github.com" aria-label="Homepage">
+      <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+</a>
+    <ul class="site-footer-links">
+      <li>&copy; 2015 <span title="0.05417s from github-fe133-cp1-prd.iad.github.net">GitHub</span>, Inc.</li>
+        <li><a href="https://github.com/site/terms" data-ga-click="Footer, go to terms, text:terms">Terms</a></li>
+        <li><a href="https://github.com/site/privacy" data-ga-click="Footer, go to privacy, text:privacy">Privacy</a></li>
+        <li><a href="https://github.com/security" data-ga-click="Footer, go to security, text:security">Security</a></li>
+        <li><a href="https://github.com/contact" data-ga-click="Footer, go to contact, text:contact">Contact</a></li>
+        <li><a href="https://help.github.com" data-ga-click="Footer, go to help, text:help">Help</a></li>
+    </ul>
+  </div>
+</div>
+
+
+
+    
+    
+    
+
+    <div id="ajax-error-message" class="flash flash-error">
+      <span class="octicon octicon-alert"></span>
+      <button type="button" class="flash-close js-flash-close js-ajax-error-dismiss" aria-label="Dismiss error">
+        <span class="octicon octicon-x"></span>
+      </button>
+      Something went wrong with that request. Please try again.
+    </div>
+
+
+      <script crossorigin="anonymous" src="https://assets-cdn.github.com/assets/frameworks-2e7fc3d264a208e1383de85b815379beccff56c1f977714515d4cac7820eef3e.js"></script>
+      <script async="async" crossorigin="anonymous" src="https://assets-cdn.github.com/assets/github-e3b6c0d7324e75ba03f85bd9a58697e1fb0c02d10c9326805d511fa6cb6a0d21.js"></script>
+      
+      
+    <div class="js-stale-session-flash stale-session-flash flash flash-warn flash-banner hidden">
+      <span class="octicon octicon-alert"></span>
+      <span class="signed-in-tab-flash">You signed in with another tab or window. <a href="">Reload</a> to refresh your session.</span>
+      <span class="signed-out-tab-flash">You signed out in another tab or window. <a href="">Reload</a> to refresh your session.</span>
+    </div>
+  </body>
+</html>
+

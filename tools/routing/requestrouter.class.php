@@ -1,8 +1,13 @@
 <?php
 
 
-class RequestRouter
+class RequestRouter implements \Symfony\Component\Routing\Generator\UrlGeneratorInterface
 {
+    /**
+     * @var \Symfony\Component\Routing\RequestContext
+     */
+    private $_context = null;
+
     /**
      * where the routes are stored
      *
@@ -182,6 +187,15 @@ class RequestRouter
         }
     }
 
+    public function findRouteNoRedirect($request) {
+        $route = $this->matchRoute(implode('/',$request));
+        if (!empty($route))
+        {
+            return array($route['controller'], $route['method'], $route['vars']);
+        }
+        return false;
+    }
+
     /**
      * find the name of the controller to be called,
      * given the first part of the request string
@@ -310,33 +324,63 @@ class RequestRouter
     }
 
     /**
-     * get the controller classname
+     * Sets the request context.
      *
-     * @return classname of the controller that should be run
+     * @param \Symfony\Component\Routing\RequestContext $context The context
      */
-/* seemingly not used anymore - cut off, pending deletion
-
-    public function chooseControllerClassnameAndMethodname($request)
-    {
-        if (!isset($request[0])) {
-            $classname = $this->controllerClassnameForString(false);
-            $methodname = 'index';
-        } else switch($request[0]) {
-            case 'ajax':
-            case 'json':
-            case 'xml':
-                $classname = $this->controllerClassnameForString(isset($request[1]) ? $request[1] : false);
-                $methodname = $request[0];
-                break;
-            default:
-                $classname = $this->controllerClassnameForString($request[0]);
-                $methodname = 'index';
-        }
-
-        return array($classname, $methodname);
+    public function setContext(
+        \Symfony\Component\Routing\RequestContext $context
+    ) {
+        $this->_context = $context;
     }
-*/
 
+    /**
+     * Gets the request context.
+     *
+     * @return \Symfony\Component\Routing\RequestContext The context
+     */
+    public function getContext()
+    {
+        return $this->_context;
+    }
+
+    /**
+     * Generates a URL or path for a specific route based on the given parameters.
+     *
+     * Parameters that reference placeholders in the route pattern will substitute them in the
+     * path or host. Extra params are added as query string to the URL.
+     *
+     * When the passed reference type cannot be generated for the route because it requires a different
+     * host or scheme than the current one, the method will return a more comprehensive reference
+     * that includes the required params. For example, when you call this method with $referenceType = ABSOLUTE_PATH
+     * but the route requires the https scheme whereas the current scheme is http, it will instead return an
+     * ABSOLUTE_URL with the https scheme and the current host. This makes sure the generated URL matches
+     * the route in any case.
+     *
+     * If there is no route with the given name, the generator must throw the RouteNotFoundException.
+     *
+     * @param string $name          The name of the route
+     * @param mixed  $parameters    An array of parameters
+     * @param int    $referenceType The type of reference to be generated (one of the constants)
+     *
+     * @return string The generated URL
+     *
+     * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException              If the named route doesn't exist
+     * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException When some parameters are missing that are mandatory for the route
+     * @throws \Symfony\Component\Routing\Exception\InvalidParameterException           When a parameter value for a placeholder is not correct because
+     *                                             it does not match the requirement
+     */
+    public function generate(
+        $name,
+        $parameters = array(),
+        $referenceType = self::ABSOLUTE_PATH
+    ) {
+        $url = $this->url($name, $parameters, $referenceType == self::ABSOLUTE_PATH ? true : false);
+        if (empty($url)) {
+            $url = false;
+        }
+        return $url;
+    }
 }
 
 

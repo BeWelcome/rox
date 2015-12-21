@@ -9,8 +9,7 @@ htdocs/.htaccess
 htdocs/update_status.txt
 htdocs/revision.txt
 htdocs/cache/
-htdocs/styles/css/bewelcome.css
-htdocs/styles/css/bewelcome.css.map
+htdocs/styles/css/bewelcome.*
 tools/testenv/images/status.csv
 components/*
 htdocs/js/*

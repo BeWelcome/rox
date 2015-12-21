@@ -14,9 +14,6 @@
      *                                              if the method to call is a post callback
      */
 
-    // general routes
-    $this->addRoute('main_page','', 'RoxController', 'mainPage');
-
     // login routes
     $this->addRoute('login_helper','login/:url:#login-widget', 'LoginController', 'login_helper', true);
     $this->addRoute('logout', 'logout', 'LoginController', 'logOut');

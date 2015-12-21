@@ -91,7 +91,7 @@ class MOD_layoutbits
 
 
     protected function member_pic_url() {
-        return 'members/avatar/';
+        return '/members/avatar/';
     }
 
     public static function test() {}
@@ -141,7 +141,7 @@ class MOD_layoutbits
         } else {
             return
                 '<a '.
-                    'href="members/'.$username.'" '.
+                    'href="/members/'.$username.'" '.
                     'title="'.$words->getBuffered('SeeProfileOf', $username).'" '.
                 '><img '.
                     'class="framed" '.
@@ -187,7 +187,7 @@ class MOD_layoutbits
         */
             return
                 '<a '.
-                    'href="members/'.$username.'" '.
+                    'href="/members/'.$username.'" '.
                     'title="'.$words->getBuffered('SeeProfileOf', $username).'" '.
                 '><img height="'.$height.'" width="'.$width.'" '.
                     'class="'.$style.'" '.
@@ -208,7 +208,7 @@ class MOD_layoutbits
         //first of all, check if a pic in the new data folder is available
         $avatarDir = new PDataDir('user/avatars');
         if($avatarDir->fileExists((int)$userId.'_xs'))
-            return 'members/avatar/'.$userId.'/?xs';
+            return '/members/avatar/'.$userId.'/?xs';
 
         $picfile = self::userPic_userId($userId);
         $thumbfile = self::_getThumb($picfile, 100, 100, 100);

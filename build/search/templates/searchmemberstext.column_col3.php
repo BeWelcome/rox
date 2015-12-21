@@ -89,12 +89,12 @@ endif; ?>
         <div class="advance-link">
         <?php if ($this->showAdvanced) { ?>
             <a name="search-simple"
-                href="search/members/text"><?php echo $words->getFormatted('SearchMembersSimple'); ?></a>
+                href="/search/members/text"><?php echo $words->getFormatted('SearchMembersSimple'); ?></a>
         <?php } else { ?>
             <img id="search-advanced-loading"
                  src="/styles/css/minimal/screen/custom/jquery-ui/smoothness/images/ui-anim_basic_16x16.gif" style="width:10px" alt="<?php echo $words->getSilent("SearchMembersAdvancedLoading"); ?>" />
             <a name="search-advanced"
-                href="search/members/text/advanced"><?php echo $words->getFormatted('SearchMembersAdvanced'); ?></a>
+                href="/search/members/text/advanced"><?php echo $words->getFormatted('SearchMembersAdvanced'); ?></a>
         <?php } ?>
     </div>
 </div>
@@ -161,11 +161,11 @@ if ($this->membersResultsReturned) :
                 echo '<tr class="' . (($ii % 2) ? 'blank' : 'highlight') . '">';
                 echo '<td class="memberleft">';
                 echo '<div class="picture"><div>' . $layoutbits->PIC_75_75($member->Username) . '</div>';
-                echo '<div><a href="members/' . $member->Username . '" target="_blank">' . $member->Username . '</a></div>';
+                echo '<div><a href="/members/' . $member->Username . '" target="_blank">' . $member->Username . '</a></div>';
                 echo '</div>';
                 echo '</td><td class="memberright">';
                 echo '<div class="left">';
-                echo '<strong><a href="members/' . $member->Username . '" target="_blank">' . (empty($member->Name) ? $member->Username : $member->Name) . '</a></strong>';
+                echo '<strong><a href="/members/' . $member->Username . '" target="_blank">' . (empty($member->Name) ? $member->Username : $member->Name) . '</a></strong>';
                 if ($member->MessageCount) {
                     echo '<a href="messages/with/' . $member->Username . '"><img src="images/icons/comments.png" alt="'
                         . $words->getSilent('messages_allmessageswith', $member->Username)

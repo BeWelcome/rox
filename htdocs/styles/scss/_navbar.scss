@@ -1,0 +1,64 @@
+nav {
+  position: fixed;
+}
+
+.navbar-nav {
+  .nav-item {
+    padding: .25rem .5rem;
+    margin: 0;
+  }
+
+  .nav-link {
+    display: block;
+    padding-top:    .425rem;
+    padding-bottom: .425rem;
+
+    + .nav-link {
+      margin-left: 0;
+    }
+  }
+
+  .nav-item + .nav-item {
+    margin-left: 0;
+  }
+
+  .navbar-divider {
+    padding-top: .675rem;
+    padding-bottom: .675rem;
+    margin: 0 .5rem;
+    background-color: $navbar-light-color;
+  }
+
+}
+
+.navbar-extras{
+  border-top: 1px solid $navbar-light-color;
+  border-bottom: 1px solid $navbar-light-color;
+  box-shadow: 0px 5px 3px #888;
+}
+
+.subnav{
+  background-color: rgba(255,120,0,1);
+  border-top: 1px solid #fff;
+}
+
+.subnav a{
+  color: #fda;
+}
+
+.subnav a:hover{
+  color: #fff;
+  text-decoration: none;
+}
+
+.subnav dd{
+  margin-bottom: 0 !important;
+}
+
+.subnav dd:hover{
+  background-color: $brand-primary;
+}
+
+.subnav .h4{
+  color: #fff !important;
+}

@@ -25,60 +25,9 @@ $font-path: '../fonts/';
 @import "../../../vendor/components/font-awesome/scss/font-awesome";
 
 // Core variables and mixins
-@import "../../../vendor/twbs/bootstrap4/scss/variables";
-
-$a: $input-border-focus;
-
-// Setting up BW styles
-$brand-primary: #f37000;
-$btn-primary-color: white;
-$btn-primary-bg: $brand-primary;
-$btn-primary-border: #ddd;
-
-$navbar-border-radius: 0;
-$navbar-padding-y: 0;
-$navbar-padding-x:0;
-
-$dropdown-bg: transparentize(#000, 0.5);
-$dropdown-link-color: #fff;
-$dropdown-link-hover-color: $brand-primary;
-$dropdown-link-hover-bg: #000;
-
-$navbar-light-color:                white;
-$navbar-light-hover-color:          black;
-$navbar-light-active-color:         black;
-$navbar-light-disabled-color:       grey;
-
-$component-active-bg: $brand-primary;
-$component-active-color: #fff;
-
-$pagination-active-bg: $brand-primary;
-$pagination-active-color: #fff;
-$pagination-bg: #ddd;
-$pagination-disabled-bg: $pagination-bg;
-$pagination-color: $brand-primary;
-$pagination-active-border: #fff;
-$pagination-border-color: #fff;
-$pagination-disabled-color: #aaa;
-$pagination-disabled-bg: #ddd;
-$pagination-disabled-border: #fff;
-$pagination-hover-color: #fff;
-$pagination-hover-bg: $brand-primary;
-$pagination-hover-border: #fff;
-
-$label-primary-bg: $brand-primary;
-
-
-$list-group-bg: #fff;
-$list-group-border-color: #fff;
-$list-group-active-color: #fff;
-$list-group-active-bg: $brand-primary;
-$list-group-active-border: #fff;
+@import "variables";
 
 $enable-flex: false;
-
-$font-family-base: LatoWeb, Arial, sans-serif;
-$headings-font-family: "Signika-Regular", LatoWeb, sans-serif;
 
 @import "../../../vendor/twbs/bootstrap4/scss/mixins";
 
@@ -164,7 +113,7 @@ body > footer {
   background-color: #555;
   color: #999;
 
-  a {padding: 2em 0; color:#aaa; white-space: nowrap; }
+  a {color:#aaa; white-space: nowrap; }
   a:hover { color:#fff; }
   a:focus { color:#fff; }
 }

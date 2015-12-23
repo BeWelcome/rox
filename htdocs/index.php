@@ -26,9 +26,8 @@ define('HTDOCS_BASE', dirname(__FILE__).'/');
 /**
  * Configure PHP
  */
-ini_set('display_errors', 1);
 ini_set('allow_url_fopen', 1);
-
+ini_set( 'display_errors', 1 );
 ini_set('error_log', SCRIPT_BASE.'errors.log');
 
 /**
@@ -38,8 +37,7 @@ ini_set('error_log', SCRIPT_BASE.'errors.log');
 require SCRIPT_BASE.'vendor/autoload.php';
 
 Debug::enable();
-ErrorHandler::register();
-ExceptionHandler::register();
+ini_set('error_reporting', -1);
 
 $environmentExplorer = new EnvironmentExplorer;
 $environmentExplorer->initializeGlobalState();
@@ -128,9 +126,6 @@ $oldRequest = $oldRequestAndArgs->request;
 $route = $oldRouter->findRouteNoRedirect($oldRequest);
 
 try {
-    if ($route) {
-        throw new \Symfony\Component\HttpKernel\Exception\HttpException(303);
-    }
     $response = $framework->handle($request);
     $response->send();
     $framework->terminate($request, $response);

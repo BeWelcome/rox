@@ -4,11 +4,16 @@
 class SignupPage extends PageWithRoxLayout
 {
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->addLateLoadScriptFile('/bs4validator/bs4validator.js');
+        $this->addLateLoadScriptFile('/signup/enablevalidation.js');
+    }
+
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
-        $stylesheets[] = "styles/css/minimal/screen/custom/signup.css?3";
-
         return $stylesheets;
     }
     
@@ -27,7 +32,7 @@ class SignupPage extends PageWithRoxLayout
         // we don't need the other columns
         return array('col3');
     }
-    
+
     private function _cmpEditLang($a, $b)
     {
         if ($a == $b) {

@@ -39,7 +39,7 @@
         "symfony/debug": "~2.8",
         "symfony/form": "~2.8",
         "symfony/security": "~2.8",
-        "symfony/security-guard": "3.0.*",
+        "symfony/security-guard": "~2.8",
         "psr/log": "*",
         "ezyang/htmlpurifier": "4.*",
         "illuminate/database": "5.*",

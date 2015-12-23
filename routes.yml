@@ -9,11 +9,10 @@ home:
     defaults:
         _controller: "Rox\\Main\\Home\\HomeController::showAction"
 
-login:
+login_symfony:
     path:     /login_symfony
     defaults:
         _controller: "\\Rox\\Login\\LoginController::checkCredentials"
-    schemes:  [https]
 
 admin_logs_type:
     path:     /admin/logs/type/{type}/{currentPage}/{itemsPerPage}

@@ -283,7 +283,7 @@ WHERE   id = $IdMember
      * Nota no need to test if the profile exist in the language, since this setting is used for the sub-headers of the page (profile content is something else than headers)
      */
     public function set_profile_language($langcode){
-        $langcode = mysql_real_escape_string($langcode);
+        $langcode = $this->dao->escape($langcode);
         if (is_numeric($langcode)) {
             $ss=  "
 SELECT SQL_CACHE

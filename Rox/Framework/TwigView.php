@@ -36,16 +36,15 @@ class TwigView extends AbstractBasePage {
     );
 
     private $_lateScriptFiles = array(
-        // 'bootstrap/bootstrap.min.js',
-        'common/initialize.js',
-    );
-
-    private $_earlyScriptFiles = array(
         'common/common.js?1',
         'jquery/jquery-2.1.4.min.js',
         'select2/select2.js',
         'bootstrap/bootstrap.min.js',
         'bootstrap-autohidingnavbar/jquery.bootstrap-autohidingnavbar.js',
+        'common/initialize.js',
+    );
+
+    private $_earlyScriptFiles = array(
     );
 
     /**
@@ -80,11 +79,9 @@ class TwigView extends AbstractBasePage {
         $this->_translator->addResource('database', null, $_SESSION['lang']);
         $this->_environment->addExtension(new TranslationExtension($this->_translator));
         $this->_environment->addExtension(new RoxTwigExtension());
-        $oldRouter = new \RequestRouter();
 
         if ($router != null) {
             $this->_environment->addExtension(new RoutingExtension($router->getGenerator()));
-            $this->_environment->addExtension(new RoutingExtension($oldRouter));
         }
         $this->_environment->addExtension(new \Twig_Extension_Debug());
 
@@ -155,16 +152,16 @@ class TwigView extends AbstractBasePage {
             $lang->ShortCode = $language->ShortCode;
             $langarr[$language->ShortCode] = $lang;
         }
-        $ascending = function($a, $b) {
+        $defaultLanguage = $langarr[isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en'];
+        usort($langarr, function($a, $b) {
             if ($a->TranslatedName == $b->TranslatedName) {
                 return 0;
             }
             return (strtolower($a->TranslatedName) < strToLower($b->TranslatedName)) ? -1 : 1;
-        };
-        uksort($langarr, $ascending);
+        });
 
         return array(
-            'language' => $langarr[$_SESSION['lang']],
+            'language' => $defaultLanguage,
             'languages' => $langarr
         );
     }

@@ -4,7 +4,7 @@
 {% endmacro %}
 
 {% macro submit(text, class = false) %}
-    <input class="form-control {%  if class %}{{ class }}{% endif %}" type="submit" value="{{ text|trans }}" />
+    <button class="form-control btn btn-primary{%  if class %}{{ class }}{% endif %}" type="submit">{{ text|trans }}</button>
 {% endmacro %}
 
 {% macro select(name, values, value, class) %}
@@ -63,7 +63,7 @@
 {% endmacro %}
 
 {% macro memberlink(username) %}
-<a href="{{ path('member', { username: username } ) }}">{{ username }}</a>
+<a href="members/{{ username }}">{{ username }}</a>
 {% endmacro %}
 
 {% macro pagination(currentPage, lastPage, route, routeParams) %}

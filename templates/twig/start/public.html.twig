@@ -4,7 +4,7 @@
     <div id="home">
         <div class="container">
         <div class="row" style="width: 100%">
-                    <a href="#about" class="chevron_down"><i class="chevron_icon fa fa-4x fa-chevron-down"></i></a>
+                    <a href="#about" class="chevron_down"><i class="chevron_icon fa fa-3x fa-chevron-down"></i></a>
         </div>
             </div>
     </div>
@@ -18,7 +18,7 @@
                     <a href="impressum">{{ 'Impressum' | trans }}</a> •
                     <a href="faq">{{  'faq' | trans }}</a> •
                     <a href="about/feedback">{{ 'Contact us' | trans }}</a> •
-                    <a href="{{ path( 'feedback', { 'IdCategory': 1, 'RequestURI': url('start') }) }}">{{ 'Reportbug' | trans }}</a><br>
+                    <a href="about/feedback?IdCategory=1&RequestURI={{ url('start') }}">{{ 'Reportbug' | trans }}</a><br>
                     &copy; 2007-2015 BeVolunteer and contributors - Running on open source BW Rox rev. ca44ccc (27 Jun 2015)
                 </div>
             </div>

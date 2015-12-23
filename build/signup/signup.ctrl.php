@@ -93,19 +93,23 @@ class SignupController extends RoxControllerBase {
             case 'checkhandle':
                 // ignore current request, so we can use the last request
                 PRequest::ignoreCurrentRequest();
-                if (!isset($request[2])) {
-                    echo '0';
+                if ((!isset($_REQUEST['field']) || (!isset($_REQUEST['value'])))) {
+                    echo json_encode(
+                        array(
+                            "value" => '',
+                            "valid" => false,
+                            "message" => "Username already in use."
+                        ));
                     PPHP::PExit();
                 }
-                if (!preg_match(User::HANDLE_PREGEXP, $request[2])) {
-                    echo '0';
-                    PPHP::PExit();
-                }
-                if (strpos($request[2], 'xn--') !== false) { // Don't allow IDN-Prefixes
-                    echo '0';
-                    PPHP::PExit();
-                }
-                echo (bool)!$model->UsernameInUse($request[2]);
+                $usernameValid = preg_match(User::HANDLE_PREGEXP, $_REQUEST['value']);
+                $valid = !$model->UsernameInUse($_REQUEST['value']);
+                echo json_encode(
+                    array(
+                        "value" => $_REQUEST["value"],
+                        "valid" => $valid,
+                        "message" => "Username already in use."
+                    ));
                 PPHP::PExit();
                 break;
 

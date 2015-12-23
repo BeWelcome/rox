@@ -107,7 +107,7 @@ WHERE `ShortCode` in (' . $l . ')
         $query = '
 SELECT COUNT(*) AS n
 FROM `messages`
-WHERE `IdReceiver` = ' . mysql_real_escape_string($_idUser) . '
+WHERE `IdReceiver` = ' . $this->dao->escape($_idUser) . '
 AND `Status` = \'Sent\'
 AND (NOT FIND_IN_SET(\'receiverdeleted\', `DeleteRequest`))
 AND `WhenFirstRead` = 0';

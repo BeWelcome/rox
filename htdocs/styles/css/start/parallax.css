@@ -66,12 +66,12 @@ html, body {
 }
 
 .chevron_icon {
-    border: 2px solid #fff;
+    border: 3px solid #fff;
     border-radius: 50%;
-
+    padding: 1rem;
     vertical-align: middle;
     color: white;
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(0, 0, 0, 0.3);
 }
 
 /* additional sections */

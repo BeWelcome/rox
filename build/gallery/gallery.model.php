@@ -328,11 +328,12 @@ ORDER BY `id` DESC';
     {
         $query = '
 SELECT
-COUNT(*)
+COUNT(*) cnt
 FROM `gallery_items`
 WHERE `gallery_items`.`user_id_foreign` = ' . (int) $userId;
         $s = $this->dao->query($query);
-        $count = (int) $s->fetchColumn();
+        $result = $s->fetchColumn();
+        $count = (int) $result->cnt;
         return $count;
     }
 

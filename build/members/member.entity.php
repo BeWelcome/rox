@@ -147,8 +147,8 @@ class Member extends RoxEntityBase
           "memberslanguageslevel.Level AS Level,WordCode FROM memberslanguageslevel,languages " .
           "WHERE memberslanguageslevel.IdMember=" . $this->id .
           " AND memberslanguageslevel.IdLanguage=languages.id AND memberslanguageslevel.Level != 'DontKnow' order by memberslanguageslevel.Level asc";
-        $qry = mysql_query($str);
-        while ($rr = mysql_fetch_object($qry)) {
+        $qry = $this->dao->query($str);
+        while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
             //if (isset($rr->Level)) $rr->Level = ("LanguageLevel_".$rr->Level);
             array_push($TLanguages, $rr);
         }

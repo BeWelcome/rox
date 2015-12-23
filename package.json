@@ -20,9 +20,7 @@
     "select2-bootstrap-theme": "~0.1.0-beta.4"
   },
   "dependencies": {
-    "jquery": "^2.1.4",
-    "leaflet": "git+https://github.com/Leaflet/Leaflet.git#master",
-    "leaflet.markercluster": "git+https://github.com/Leaflet/Leaflet.markercluster.git#leaflet-master"
+    "jquery": "^2.1.4"
   },
   "scripts": {
     "postinstall": "grunt copyfiles"

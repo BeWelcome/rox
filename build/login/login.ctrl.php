@@ -202,6 +202,6 @@ class LoginController extends RoxControllerBase
     public function logOut()
     {
         $this->model->logout();
-        $this->redirectAbsolute($this->router->url('main_page'));
+        $this->redirectAbsolute($this->router->url('start'));
     }
 }

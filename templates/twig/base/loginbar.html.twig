@@ -8,23 +8,25 @@
         <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">
             <a class="navbar-brand" href="main"><img src="/images/logo_index_top.png"
                                                      alt="{{ 'BeWelcome' | trans }}"/></a>
-            <form class="form-inline navbar-form pull-xs-left" method="post" action="{{ path('login') }}">
+            <ul class="nav navbar-nav">
+            <form class="form-inline nav-item" method="post" action="{{ path('login_symfony') }}">
                 {{ macros.input('u', 'Username') }}
                 {{ macros.input('p', 'Password', '', 'password') }}
-                {{ macros.submit('Login', 'bg-primary') }}
+                {{ macros.submit('Login') }}
             </form>
-            <div class="dropdown pull-xs-right">
-                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-lg fa-globe m-r-1"></i>
-                    {{ language.NativeName|raw }}
-                </button>
-                <div class="dropdown-menu dropdown-menu-right" style="width: 40rem">
-                    <h6 class="dropdown-header">Choose a language</h6>
-                    {% for lang in languages %}
-                        <a href="/rox/in/{{ lang.ShortCode }}" class="btn {% if lang.ShortCode == language.ShortCode %}btn-primary{% else %}btn-secondary{% endif %} m-l-1 m-b-1" style="width: 12rem">{{ lang.NativeName|raw }}</a>
-                    {% endfor %}
-                </div>
-            </div>
+                <li class="nav-item dropdown  pull-xs-right">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-lg fa-globe m-r-1"></i>
+                        {{ language.NativeName|raw }}
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" style="width: 40rem">
+                        <h6 class="dropdown-header">Choose a language</h6>
+                        {% for lang in languages %}
+                            <a href="/rox/in/{{ lang.ShortCode }}" class="btn {% if lang.ShortCode == language.ShortCode %}btn-primary{% else %}btn-secondary{% endif %} m-l-1 m-b-1" style="width: 12rem">{{ lang.NativeName|raw }}</a>
+                        {% endfor %}
+                    </div>
+                </li>
+            </ul>
             </div>
     <!-- /.navbar-collapse -->
     </div>

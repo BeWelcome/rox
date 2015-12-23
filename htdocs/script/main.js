@@ -98,11 +98,6 @@ var bwrox = new BWRox;
  */
 bwrox.selectScripts([
     {
-        // JQuery has to be included before prototype to avoid conflicts
-        min: true,
-        file: "jquery-1.11.0.js"
-    },
-    {
         // complete jquery ui with theme smoothness
         file: "jquery-ui-1.11.2/jquery-ui.min.js",
         pages: [
@@ -138,20 +133,6 @@ bwrox.selectScripts([
         file: "jquery.multiselect.min.js",
         pages: [
             "search"
-        ]
-    },
-    {
-        file: "prototype173.js",
-        pages: [
-            "editmyprofile",
-            "searchmembers",
-            "blog"
-        ]
-    },
-    {
-        file: "select2/select2.min.js",
-        pages: [
-            "editmyprofile"
         ]
     },
     {
@@ -191,12 +172,6 @@ bwrox.selectScripts([
             "signup/3",
             "setlocation",
             "blog"
-        ]
-    },
-    {
-        file: "registerrox.js?2",
-        pages: [
-            "signup"
         ]
     },
     {
@@ -397,14 +372,6 @@ bwrox.selectScripts([
     {
         file: "map/activities/activities_map.js?4",
         pages: ["activities"]
-    },
-    {
-        file: "jqueryprototypefix.js",
-        pages: [
-            "signup",
-            "searchmembers"
-            // "trip"
-        ]
     }
 ]);
 

@@ -311,7 +311,7 @@ VALUES
 *
 * @return boolean
 */
-	function isBWLoggedIn($ExtraAllowedStatus="") {
+	static function isBWLoggedIn($ExtraAllowedStatus="") {
 		if (empty($_SESSION['IdMember'])) {
 			return false;
 		}

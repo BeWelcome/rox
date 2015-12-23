@@ -28,10 +28,10 @@
     {% else %}
         {% include '@base/loginbar.html.twig' %}
     {% endif %}
+    <noscript><h1>Please activate Javascript for bewelcome.org<small>Without it some function won't work.</small></h1></noscript>
     {% if container %}
         {# Add container div only if needed #}
         <div class="container">
-            {{ dump(logged_in) }}
     {% endif %}
     {% block content %}{% endblock %}
     {% if container %}

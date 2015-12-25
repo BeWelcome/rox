@@ -197,6 +197,32 @@ class Geo extends RoxEntityBase
     }
 
     /**
+     * returns the name of the location
+     *
+     * @param string $lang - if provided, the name in this language is tried
+     *
+     * @access public
+     * @return string
+     */
+    public function getFullName($lang = null)
+    {
+        if (!$this->isLoaded())
+        {
+            return '';
+        }
+        $name = $this->getName($lang);
+        $admin = $this->getParent();
+        if ($admin) {
+            $name .= ", " . $admin->getName($lang);
+        }
+        $country =  $this->getCountry();
+        if ($country) {
+            $name .= ", " . $country->getName($lang);
+        }
+        return $name;
+    }
+
+    /**
      * returns array of all alternate names for a location
      *
      * @access public

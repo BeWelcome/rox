@@ -187,89 +187,63 @@ SQL
     /**
      * set the location of a member
      */
-    public function setLocation($IdMember,$geonameid = false)
+    public function setLocation($vars)
     {
+        // Address IdCity address must only consider Populated places (definition of cities), it also must consider the address checking process
+        $rank = 0; // Rank=0 means the main address, todo when we will deal with several addresses we will need to consider the other rank Values ;
+        $member = $this->getLoggedInMember();;
 
-        // Address IdCity address must only consider Populated palces (definition of cities), it also must consider the address checking process
-
-        $Rank=0 ; // Rank=0 means the main address, todo when we will deal with several addresses we will need to consider the other rank Values ;
-        $IdMember = (int)$IdMember;
-        $geonameid = (int)($geonameid);
-
+        $geonameid = 0;
+        $latitude = null;
+        $longitude = null;
         $errors = array();
-
-        if (empty($IdMember)) {
-            // name is not set:
-            $errors['Name'] = 'Name not set';
+        if (!isset($vars['location-geoname-id'])) {
+            $errors['Geonameid'] = 'Geoname not set';
+        } else {
+            $geonameid = $vars['location-geoname-id'];
         }
-        if (empty($geonameid)) {
-            // name is not set:
+
+        if (!isset($vars['location-latitude'])) {
+            $errors['Latitude'] = 'Latitude not set';
+        } else {
+            $latitude = $vars['location-latitude'];
+        }
+
+        if (!isset($vars['location-longitude'])) {
+            $errors['Longitude'] = 'Longitude not set';
+        } else {
+            $longitude = $vars['location-longitude'];
+        }
+
+        // Set members location even if the geoname id didn't change as exact location might have been updated
+        $result = $this->dao->query("
+            UPDATE  addresses
+            SET     IdCity = {$geonameid}
+            WHERE   IdMember = {$member->id} and Rank=" . $rank
+        );
+
+        if (!$result) {
             $errors['Geonameid'] = 'Geoname not set';
         }
 
-        // get Member's current Location
-        $result = $this->singleLookup(
-            "
-SELECT  a.IdCity
-FROM    addresses AS a
-WHERE   a.IdMember = '{$IdMember}'
-    AND a.rank = 0
-            "
-        );
-        if (!isset($result) || $result->IdCity != $geonameid) {
-            // Check Geo and maybe add location
-            $geomodel = new GeoModel();
-            if(!$geomodel->getDataById($geonameid)) {
-                // if the geonameid is not in our DB, let's add it
-                if (!$geomodel->addGeonameId($geonameid,'member_primary')) {
-                    $vars['errors'] = array('geoinserterror');
-                    return false;
-                }
-            } else {
-                // the geonameid is in our DB, so just update the counters
-                //get id for usagetype:
-                $usagetypeId = $geomodel->getUsagetypeId('member_primary')->id;
-                $update = $geomodel->updateUsageCounter($geonameid,$usagetypeId,'add');
-            }
-
-            $result = $this->singleLookup(
-                "
-UPDATE  addresses
-SET     IdCity = $geonameid
-WHERE   IdMember = $IdMember and Rank=".$Rank
+        if (empty($errors))
+        {
+            $member->IdCity = $geonameid;
+            $member->Latitude = $latitude;
+            $member->Longitude = $longitude;
+            $member->update();
+            $this->logWrite(
+                "The Member with the Id: ". $member->id
+                . " changed his location to Geo-Id ". $geonameid
+                . " and set exact position to (" . ($latitude <> null) ? $latitude : 'NULL'
+                . ", " . ($longitude <> null) ? $longitude : 'NULL' . ")",
+                "Members"
             );
-
-            // name is not set:
-            if (!empty($result)) $errors['Geonameid'] = 'Geoname not set';
-
-            $result = $this->singleLookup(
-                "
-UPDATE  members
-SET     IdCity = $geonameid
-WHERE   id = $IdMember
-                "
-            );
-            if (!empty($result)) $errors['Geonameid'] = 'Member IdCity not set';
-            else $this->logWrite ("The Member with the Id: ".$IdMember." changed his location to Geo-Id: ".$geonameid, "Members");
-
-            if (empty($errors) && ($m = $this->createEntity('Member')->findById($IdMember)))
-            {
-                // if a member with status NeedMore updates her/his profile, moving them back to pending
-                if ($m->Status == 'NeedMore')
-                {
-                    $m->Status = 'Pending';
-                    $m->update();
-                }
-            }
-
-            return array(
-                'errors' => $errors,
-                'IdMember' => $result
-                );
-        } else {
-            // geonameid hasn't changed
-            return false;
         }
+
+        return array(
+            'errors' => $errors,
+        );
     }
 
 

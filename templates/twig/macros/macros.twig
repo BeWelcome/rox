@@ -132,3 +132,11 @@
         {% endif %}
     {% endspaceless %}
 {% endmacro %}
+
+{% macro link( route, type ) %}
+    {% set class = 'default' %}
+    {% if type == 'dropdown'  %}
+        {% set class = 'dropdown-item' %}
+    {% endif %}
+    <a class="{{ class }}" href="{{ path( route | lower ) }}">{{ route | trans }}</a>
+{% endmacro %}

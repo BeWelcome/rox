@@ -1,4 +1,5 @@
-    <nav class="navbar navbar-sticky-top navbar-dark navbar-extras bg-primary">
+{% import '@macros/macros.twig' as macros %}
+<nav class="navbar navbar-sticky-top navbar-dark navbar-extras bg-primary">
         <div class="container">
 
             <button class="navbar-toggler hidden-lg-up" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -19,6 +20,7 @@
                     <ul class="dropdown-menu">
                         <li><a href="/searchmembers" class="dropdown-item">{{ 'MapSearch' | trans }}</a></li>
                         <li><a href="/search" class="dropdown-item">{{ 'TextSearch' | trans }}</a></li>
+                        <li>{{ macros.link('TextSearch', 'dropdown') }}</li>
                         <li><a href="/places" class="dropdown-item">{{ 'BrowseCountries' | trans}}</a></li>
                     </ul>
                 </li>

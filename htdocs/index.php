@@ -37,6 +37,7 @@ ini_set('error_log', SCRIPT_BASE.'errors.log');
 require SCRIPT_BASE.'vendor/autoload.php';
 
 Debug::enable();
+
 ini_set('error_reporting', -1);
 
 $environmentExplorer = new EnvironmentExplorer;
@@ -119,11 +120,6 @@ $dispatcher->addSubscriber(
     new ControllerResolverListener($router, $formFactory)
 );
 $framework = new Rox\Framework($dispatcher, $resolver);
-
-$oldRouter = new RequestRouter();
-$oldRequestAndArgs = $oldRouter->getRequestAndArgs();
-$oldRequest = $oldRequestAndArgs->request;
-$route = $oldRouter->findRouteNoRedirect($oldRequest);
 
 try {
     $response = $framework->handle($request);

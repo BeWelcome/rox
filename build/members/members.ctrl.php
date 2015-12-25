@@ -131,6 +131,17 @@ class MembersController extends RoxControllerBase
         switch (isset($request[0]) ? $request[0] : false) {
             case 'setlocation':
                 $page = new SetLocationPage();
+                $geo = new Geo($member_self->IdCity);
+                $vars = [];
+                if ($geo) {
+                    $vars['location'] = $geo->getFullName($_SESSION['lang']);
+                } else {
+                    $vars['location'] = '';
+                }
+                $vars['location-geoname-id'] = $member_self->IdCity;
+                $vars['location-latitude'] = $member_self->Latitude;
+                $vars['location-longitude'] = $member_self->Longitude;
+                $page->vars = $vars;
                 break;
             case 'mypreferences':
                 $page = new MyPreferencesPage();
@@ -446,15 +457,10 @@ class MembersController extends RoxControllerBase
             }
 
             $errors = array();
-            // member id
-            if (empty($vars['id'])) {
-                $errors[] = 'GeoErrorProvideMemberId';
-                unset($vars['id']);
-            }
             // geonameid
-            if (empty($vars['geonameid'])) {
+            if (empty($vars['location-geoname-id'])) {
                 $errors[] = 'SignupErrorProvideLocation';
-                unset($vars['geonameid']);
+                unset($vars['location-geoname-id']);
             }
 
             if (count($errors) > 0) {
@@ -465,10 +471,12 @@ class MembersController extends RoxControllerBase
             }
 
             // set the location
-            $result = $this->model->setLocation($vars['id'],$vars['geonameid']);
+            $result = $this->model->setLocation($vars);
             $errors['Geonameid'] = 'Geoname not set';
             if (count($result['errors']) > 0) {
                 $mem_redirect->errors = $result['errors'];
+            } else {
+                $this->setFlashNotice('Successfully changed your location');
             }
             return false;
         }

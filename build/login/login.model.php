@@ -503,6 +503,11 @@ WHERE   id = $tb_user_id
     }
 
     public function setPreferredLanguage( Member $member ) {
+        // Check if language is set (in case we used a Symfony route to get here)
+        if (!isset($_SESSION['IdLanguage'])) {
+            $frontRouter = new \RoxFrontRouter();
+            $frontRouter->setLanguage();
+        }
         $prefLang = $member->getPreference('PreferenceLanguage', 'none');
         if ($prefLang === 'none') {
             // the member has no preferred language set

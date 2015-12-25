@@ -111,7 +111,7 @@ class RoxFrontRouter
 		
 		
 	*/
-    protected function setLanguage()
+    public function setLanguage()
     {
         if (!isset ($_SESSION['lang']) ) {
             $Model = new RoxFrontRouterModel;

@@ -11,8 +11,6 @@ class EnvironmentExplorer
         // load data in base.xml
         $base_xml_xpath = $this->loadBaseXML();
 
-        $this->simulateMissingFunctions();
-
         if (!$settings = $this->loadConfiguration()) {
             // ini files are not set..
             // launch repair program!!
@@ -112,24 +110,6 @@ class EnvironmentExplorer
         // Do the same for $memberphotosdir = SCRIPT_BASE.'htdocs/memberphotos';
 
         return $xpath;
-    }
-
-
-    /**
-     * some native PHP functions could be missing, if they require a newer PHP version.
-     *
-     */
-    protected function simulateMissingFunctions()
-    {
-        foreach (scandir(SCRIPT_BASE.'roxlauncher/missingfunctions') as $filename) {
-            $file = SCRIPT_BASE.'roxlauncher/missingfunctions/'.$filename;
-            if (is_file($file)) {
-                $functionname = basename($file, '.php');
-                if (!function_exists($functionname)) {
-                    require_once $file;
-                }
-            }
-        }
     }
 
 

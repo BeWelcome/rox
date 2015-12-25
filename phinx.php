@@ -39,9 +39,10 @@ if (!empty($inifile)) {
         "paths" => array(
             "migrations" => "%%PHINX_CONFIG_DIR%%/migrations",
         ),
+        "migration_base_class" => "Rox\\Tools\\RoxMigration",
         "environments" => array(
             "default_migration_table" => "phinxlog",
-            "default_database" => "testing"
+            "default_database" => "testing",
         )
     );
     if ($production) {
@@ -63,7 +64,7 @@ if (!empty($inifile)) {
         "user" => $user,
         "pass" => $password,
         "port" => "3306",
-        "charset" => "utf8",
+        "charset" => "utf8"
     );
     $testarray = array(
         "adapter" => "mysql",
@@ -72,7 +73,7 @@ if (!empty($inifile)) {
         "user" => $user,
         "pass" => $password,
         "port" => "3306",
-        "charset" => "utf8",
+        "charset" => "utf8"
     );
     $config['environments']['development'] = $devarray;
     $config['environments']['testing'] = $testarray;

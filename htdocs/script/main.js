@@ -103,7 +103,6 @@ bwrox.selectScripts([
         pages: [
             "activities",
             "search",
-            "signup/3",
             "admin/rights",
             "admin/flags",
             /*,
@@ -139,8 +138,6 @@ bwrox.selectScripts([
         file: "leaflet/0.7.3/leaflet.js",
         pages: [
             "searchmembers",
-            "signup/3",
-            "setlocation",
             "blog",
             "activities"
         ]
@@ -160,8 +157,6 @@ bwrox.selectScripts([
         remote: true,
         pages: [
             "searchmembers",
-            "signup/3",
-            "setlocation",
             "blog"
         ]
     },
@@ -169,16 +164,7 @@ bwrox.selectScripts([
         file: "leaflet/plugins/shramov-leaflet-plugins/1.1.0/layer/tile/Google.js",
         pages: [
             "searchmembers",
-            "signup/3",
-            "setlocation",
             "blog"
-        ]
-    },
-    {
-        file: "geo_suggest.js?2",
-        pages: [
-            "signup",
-            "setlocation"
         ]
     },
     {
@@ -289,8 +275,6 @@ bwrox.selectScripts([
         file: "map/geolocation/BWGoogleMapReverseGeolocator.js?2",
         pages: [
             "searchmembers",
-            "signup/3",
-            "setlocation",
             "blog",
             //    "trip"
         ]
@@ -298,16 +282,12 @@ bwrox.selectScripts([
     {
         file: "map/leaflet/LeafletFlagIcon.js?1",
         pages: [
-            "signup/3",
-            "setlocation",
             "blog"
         ]
     },
     {
         file: "map/builder/BWSimpleMapBuilder.js?4",
         pages: [
-            "signup/3",
-            "setlocation",
             "blog"
         ]
     },
@@ -319,8 +299,6 @@ bwrox.selectScripts([
         file: "map/BWMapMaths.js?1",
         pages: [
             "searchmembers",
-            "signup/3",
-            "setlocation",
             "blog",
             //    "trip"
         ]
@@ -329,8 +307,6 @@ bwrox.selectScripts([
         file: "map/BWMapAddressPoint.js?1",
         pages: [
             "searchmembers",
-            "signup/3",
-            "setlocation",
             "blog",
             //    "trip"
         ]
@@ -342,13 +318,6 @@ bwrox.selectScripts([
     {
         file: "map/BWMapSearchResult.js?1",
         pages: ["searchmembers"]
-    },
-    {
-        file: "map/small/smallMapGeoLocation.js?4",
-        pages: [
-            "signup/3",
-            "setlocation"
-        ]
     },
     {
         file: "map/small/blogSmallMapGeoLocation.js?4",

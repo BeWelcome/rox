@@ -1,38 +1,42 @@
 <?php
 
 
-class SignupPage extends PageWithRoxLayout
+class SignupPage extends SignupBasePage
 {
+    /** @var int Stores the current signup step */
+    private $_step;
 
-    public function __construct()
+    /**
+     * SignupPage constructor.
+     *
+     * @param int $step
+     */
+    public function __construct($step = 0)
     {
         parent::__construct();
-        $this->addLateLoadScriptFile('/bs4validator/bs4validator.js');
-        $this->addLateLoadScriptFile('/signup/enablevalidation.js');
+        $this->_step = $step;
+        if ($step != 3) {
+            $this->addLateLoadScriptFile('/bs4validator/bs4validator.js');
+            $this->addLateLoadScriptFile('/signup/enablevalidation.js');
+        }
+        if ($step == 3) {
+            $this->addLateLoadScriptFile('/jquery-ui-1.11.2/jquery-ui.js');
+            $this->addLateLoadScriptFile('leaflet/1.0.0-master/leaflet.js');
+            $this->addLateLoadScriptFile('signup/createmap.js');
+            $this->addLateLoadScriptFile('search/searchlocation.js');
+        }
     }
 
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
+        if ($this->_step == 3) {
+            $stylesheets[] = '/script/leaflet/1.0.0-master/leaflet.css';
+            $stylesheets[] = '/script/jquery-ui-1.11.2/jquery-ui.css';
+        }
         return $stylesheets;
     }
     
-    protected function getPageTitle() {
-        $words = $this->getWords();
-        return $words->getBuffered('signup') . ' - BeWelcome';
-    }
-    
-    protected function teaserHeadline()
-    {
-        $words = $this->layoutkit->words;
-        echo $words->get('signup');
-    }
-    protected function getColumnNames()
-    {
-        // we don't need the other columns
-        return array('col3');
-    }
-
     private function _cmpEditLang($a, $b)
     {
         if ($a == $b) {
@@ -74,10 +78,6 @@ class SignupPage extends PageWithRoxLayout
 
     protected function column_col3()
     {
-        // default values
-        $selCountry = 0;
-        $javascript = false;
-        $selCity = null;
         $selYear = 0;
 
         //get baseuri
@@ -86,7 +86,6 @@ class SignupPage extends PageWithRoxLayout
             $baseuri = PVars::getObj('env')->baseuri_https;
         }
 
-        
         // Overwrite Signup-Geo-Info with GeoVars-Session (used for non-js users), afterwards unset it again.
         if (isset($_SESSION['GeoVars'])) {
             foreach ($_SESSION['GeoVars'] as $key => $value) {
@@ -102,31 +101,10 @@ class SignupPage extends PageWithRoxLayout
             if (isset($_SESSION['SignupBWVars'])) {
                 // we have vars stored already
                 $vars = $_SESSION['SignupBWVars'];
-            }
-            else $vars = $mem_redirect->post;
-            
-            // last time something went wrong.
-            // recover old form input.  
-            if (isset($vars['country'])) {
-                $selCountry = $vars['country'];
+            } else {
+                $vars = $mem_redirect->post;
             }
             
-            if (isset($vars['city'])) {
-                $selCity = $vars['city'];
-            }
-            
-            if (isset($vars['admincode'])) {
-                $selCity = $vars['admincode'];
-            }
-    
-            if (isset($vars['javascriptactive'])) {
-                // nothing?
-            }
-            
-            if (isset($vars['javascriptactive']) && $vars['javascriptactive'] === 'true') {
-                $javascript = true;
-            }
-
             if (isset($vars['birthyear'])) {
                 $selYear = $vars['birthyear'];
             }
@@ -136,7 +114,6 @@ class SignupPage extends PageWithRoxLayout
         
         // get current request
         $request = PRequest::get()->request;
-        $step = (isset($request[1]) && $request[1]) ? $request[1] : '1';
         if (!isset($vars['errors']) || !is_array($vars['errors'])) {
             $vars['errors'] = array();
         }
@@ -163,7 +140,7 @@ Related page: <a href="signup/finish">Signup confirmation</a>
             ;
         }
 
-        require 'templates/registerform'.$this->step.'.php';
+        require 'templates/registerform'.$this->_step.'.php';
     }
     
 // END OF LAYOUT FUNCTIONS

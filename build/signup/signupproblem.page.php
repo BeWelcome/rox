@@ -1,7 +1,7 @@
 <?php
 
 
-class SignupProblemPage extends SignupPage
+class SignupProblemPage extends SignupBasePage
 {
     
     protected function teaserHeadline()

@@ -81,9 +81,6 @@ legend {
 
 // Utility classes
 @import "../../../vendor/twbs/bootstrap4/scss/utilities";
-@import "../../../vendor/twbs/bootstrap4/scss/utilities-background";
-@import "../../../vendor/twbs/bootstrap4/scss/utilities-spacing";
-@import "../../../vendor/twbs/bootstrap4/scss/utilities-responsive";
 
 /* Sticky footer styles
 -------------------------------------------------- */
@@ -141,6 +138,13 @@ body > footer {
     height: 100%;
   }
 
+}
+
+.ui-menu-item-highlight {
+    font-weight: bold;
+}
+.ui-autocomplete-loading {
+  background: white url("images/ui-anim_basic_16x16.gif") right center no-repeat;
 }
 
 .button {
@@ -227,3 +231,26 @@ body > footer {
     margin-bottom: 1.5em;
   }
 }
+
+.map {
+
+}
+
+.flash {
+  border: 1px solid;
+  border-radius: 5px;
+  clear: both;
+  margin-bottom: 1em;
+  padding: 1.25em;
+
+  &.error {
+    background: #ffebe8;
+    border: 2px #ff0000;
+  }
+
+  &.notice {
+    background: #fff8c3;
+    border-color: #888;
+  }
+}
+

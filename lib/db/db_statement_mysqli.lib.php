@@ -105,12 +105,17 @@ class PDBStatement_mysqli extends PDBStatement {
                 $bstring .= is_int($val) ? 'i' : is_float($val) ? 'd' : 's';
                 $args[] = $val;
             }
-            array_unshift($args, $bstring);
-            $callback = array(&$this->_statement[$this->_i], 'bind_param');
-            if (!call_user_func_array($callback, $args)) {
+            $tmp = array();
+            foreach($args as $key => $value) {
+                $tmp[$key] = &$args[$key];
+            }
+
+            $callback = array($this->_statement[$this->_i], 'bind_param');
+            $newargs = array_merge([$bstring], $tmp);
+            if (!call_user_func_array($callback, $newargs )) {
             	print_r($callback);print_r($this);exit();
             }
-            $offs = 0;
+/*            $offs = 0;
             if (substr_count($args[0], 'b') > 0) {
                 while ($pos = strpos($args[0], 'b', $offs)) {
                     $blob = str_split($args[$pos], ini_get('max_allowed_packet'));
@@ -120,7 +125,7 @@ class PDBStatement_mysqli extends PDBStatement {
                     $offs = $pos;
                 }
             }
-        }
+  */      }
         $q = @$this->_statement[$this->_i]->execute();
         if (!$q) {
             $e = new PException('MySQL error!', 1000);
@@ -160,15 +165,15 @@ class PDBStatement_mysqli extends PDBStatement {
         switch ($style) {
             case PDB::FETCH_BOTH:
             default:
-                $res = $this->result->fetch_array(MYSQL_BOTH);
+                $res = $this->result->fetch_array(MYSQLI_BOTH);
                 break;
                 
             case PDB::FETCH_ASSOC:
-                $res = $this->result->fetch_array(MYSQL_ASSOC);
+                $res = $this->result->fetch_array(MYSQLI_ASSOC);
                 break;
                 
             case PDB::FETCH_NUM:
-                $res = $this->result->fetch_array(MYSQL_NUM);
+                $res = $this->result->fetch_array(MYSQLI_NUM);
                 break;
                 
             case PDB::FETCH_OBJ:

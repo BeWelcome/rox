@@ -1,5 +1,5 @@
 <?php
-class SignupResentMailPage extends SignupPage
+class SignupResentMailPage extends SignupBasePage
 {
 
     protected function teaserHeadline()

@@ -60,3 +60,9 @@ mockups:
     defaults:
       _controller: "\\Rox\\Mockups\\MockupsController::showMockup"
 
+
+textsearch:
+    path: /search/members
+    defaults:
+      _controller: "\\Rox\\Search\\Members\\SearchMembersController::searchAction"
+

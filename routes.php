@@ -21,7 +21,7 @@
     // login routes
     $this->addRoute('login_helper','login/:url:#login-widget', 'LoginController', 'login_helper', true);
     $this->addRoute('logout', 'logout', 'LoginController', 'logOut');
-//    $this->addRoute('login', 'login*', 'LoginController', 'logIn');
+    $this->addRoute('login', 'login*', 'LoginController', 'logIn');
 
     // group routes
     $this->addRoute('group_acceptinvitation','groups/:group_id:/acceptinvitation/:member_id:', 'GroupsController', 'acceptInvitation');

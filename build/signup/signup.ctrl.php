@@ -71,19 +71,31 @@ class SignupController extends RoxControllerBase {
             case 'checkemail':
                 // ignore current request, so we can use the last request
                 PRequest::ignoreCurrentRequest();
-                if (!isset($_GET['email'])) {
-                    echo '0';
+                if ((!isset($_REQUEST['field']) || (!isset($_REQUEST['value'])))) {
+                    echo json_encode(
+                        array(
+                            "value" => '',
+                            "valid" => false,
+                            "message" => "Interesting an attack :-)"
+                        ));
                     PPHP::PExit();
                 }
-                if (!PFunctions::isEmailAddress($_GET['email'])) {
-                    echo '0';
-                    PPHP::PExit();
-                }
-                $users = $model->takeCareForNonUniqueEmailAddress($_GET['email']);
+                $users = $model->takeCareForNonUniqueEmailAddress($_REQUEST['value']);
                 if ($users == '') {
-                    echo "1";
+                    echo json_encode(
+                        array(
+                            "value" => $_REQUEST['value'],
+                            "valid" => true,
+                            "message" => "Email address is unique."
+                        ));
                 } else {
-                    echo "0";
+                    echo json_encode(
+                        [
+                            "value" => $_REQUEST['value'],
+                            "valid" => false,
+                            "message" => $model->getWords()->getSilent('SignupErrorEmailAddressAlreadyInUse')
+                        ]
+                    );
                 }
                 PPHP::PExit();
                 break;
@@ -98,27 +110,30 @@ class SignupController extends RoxControllerBase {
                         array(
                             "value" => '',
                             "valid" => false,
-                            "message" => "Username already in use."
+                            "message" => "Interesting an attack :-)"
                         ));
                     PPHP::PExit();
                 }
+                $words = $model->getWords();
                 $usernameValid = preg_match(User::HANDLE_PREGEXP, $_REQUEST['value']);
+                if (!$usernameValid) {
+                    echo json_encode(
+                        array(
+                            "value" => $_REQUEST["value"],
+                            "valid" => $usernameValid,
+                            "message" => $words->getSilent('SignupErrorWrongUsername')
+                        ));
+                    PPHP::PExit();
+                }
                 $valid = !$model->UsernameInUse($_REQUEST['value']);
                 echo json_encode(
                     array(
                         "value" => $_REQUEST["value"],
                         "valid" => $valid,
-                        "message" => "Username already in use."
+                        "message" => $words->getFormatted('SignupErrorUsernameAlreadyTaken', $_REQUEST['value'])
                     ));
                 PPHP::PExit();
                 break;
-
-            case 'getRegions':
-            // ignore current request, so we can use the last request
-            PRequest::ignoreCurrentRequest();
-            if (!isset($request[2])) {
-                PPHP::PExit();
-            }
 
             case 'confirm':  // or give it a different name?
                 // this happens when you click the link in the confirmation email
@@ -156,8 +171,8 @@ class SignupController extends RoxControllerBase {
                 break;
 
             default:
-                $page = new SignupPage();
-                $page->step = (isset($request[1]) && $request[1]) ? $request[1] : '1';
+                $step = (isset($request[1]) && $request[1]) ? $request[1] : '1';
+                $page = new SignupPage($step);
 				$StrLog="Entering Signup step: #".$page->step ;
 				MOD_log::get()->write($StrLog,"Signup") ;
                 $page->model = $model;
@@ -179,9 +194,15 @@ class SignupController extends RoxControllerBase {
 		if (!empty($args->post["Username"])) {
 			$StrLog=$StrLog." Username=[".$args->post["Username"]."]" ;
 		}
-		if (!empty($args->post["geonameid"])) {
-			$StrLog=$StrLog." geonameid=[".$args->post["geonameid"]."]" ;
-		}
+        if (!empty($args->post["location-geoname-id"])) {
+            $StrLog=$StrLog." geonameid=[".$args->post["location-geoname-id"]."]" ;
+        }
+        if (!empty($args->post["location-latitude"])) {
+            $StrLog=$StrLog." latitude=[".$args->post["location-latitude"]."]" ;
+        }
+        if (!empty($args->post["location-longitude"])) {
+            $StrLog=$StrLog." longitude=[".$args->post["location-longitude"]."]" ;
+        }
 		if (!empty($args->post["iso_date"])) {
 			$StrLog=$StrLog." iso_date=[".$args->post["iso_date"]."]" ;
 		}
@@ -226,7 +247,6 @@ class SignupController extends RoxControllerBase {
 
                 define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
                 $View->registerMail($vars, $id, $idTB);
-                $View->signupTeamMail($vars);
                 unset($_SESSION['IdMember']);
                 return 'signup/finish';
             }

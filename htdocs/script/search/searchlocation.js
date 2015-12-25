@@ -33,9 +33,7 @@ function enableAutoComplete(addMarker) {
         jQuery( "#" + this.id + "-geoname-id" ).val( "" );
         jQuery( "#" + this.id + "-latitude" ).val( "" );
         jQuery( "#" + this.id + "-longitude" ).val( "" );
-    });
-
-    jQuery( ".location-picker" ).catcomplete({
+    }).catcomplete({
         source: function (request, response) {
             jQuery.ajax({
                 url: "/search/locations/all",
@@ -60,31 +58,32 @@ function enableAutoComplete(addMarker) {
             });
         },
         focus: function( event, ui ) {
-            if (ui.item != undefined) {
+            if ((ui.item) === undefined) {
+                jQuery("#" + this.id + "-geoname-id").val("");
+                jQuery( "#" + this.id + "-latitude" ).val( "" );
+                jQuery( "#" + this.id + "-longitude" ).val( "" );
+            } else {
                 jQuery(this).val(ui.item.labelnocount);
                 jQuery("#" + this.id + "-geoname-id").val(ui.item.value);
                 jQuery("#" + this.id + "-latitude").val(ui.item.latitude);
                 jQuery("#" + this.id + "-longitude").val(ui.item.longitude);
-            } else {
-                jQuery("#" + this.id + "-geoname-id").val("");
-                jQuery( "#" + this.id + "-latitude" ).val( "" );
-                jQuery( "#" + this.id + "-longitude" ).val( "" );
             }
             return false;
         },
         change: function (event, ui) {
-            if (ui.item == null) {
+            if ((ui.item) === undefined) {
                 jQuery("#" + this.id + "-geoname-id").val("");
                 jQuery( "#" + this.id + "-latitude" ).val( "" );
                 jQuery( "#" + this.id + "-longitude" ).val( "" );
             } else {
+                jQuery(this).val(ui.item.labelnocount);
                 jQuery("#" + this.id + "-geoname-id").val( ui.item.value );
                 jQuery("#" + this.id + "-latitude").val(ui.item.latitude);
                 jQuery("#" + this.id + "-longitude").val(ui.item.longitude);
             }
         },
         select: function (event, ui) {
-            if (typeof ui === 'undefined') return false;
+            if ((ui.item) === undefined) return false;
 
             jQuery("#" + this.id + "-geoname-id").val(ui.item.value);
             jQuery("#" + this.id + "-latitude").val(ui.item.latitude);

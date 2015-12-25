@@ -29,13 +29,18 @@ Boston, MA  02111-1307, USA.
 <div class="card">
     <div class="card-header">
         <h3 class="card-title"><?php echo $words->getFormatted('SignupSummary')?></h3>
+        <progress class="progress progress-success" value="100" max="100">
+            <div class="progress">
+                <span class="progress-bar" style="width: 100%;">100%</span>
+            </div>
+        </progress>
     </div>
     <div class="card-block">
         <form method="post" action="<?php echo $baseuri.'signup/4'?>" name="signup" id="user-register-form">
 <?=$callback_tag ?>
 <?php
     if (in_array('inserror', $vars['errors'])) {
-        echo '<span class="help-block alert alert-danger">'.$errors['inserror'].'</span>';
+        echo '<small class="text-muted has-danger">'.$errors['inserror'].'</small>';
     }
 ?>
 
@@ -54,12 +59,12 @@ Boston, MA  02111-1307, USA.
             ?> >
              <?php
           if (in_array('SignupErrorWrongUsername', $vars['errors'])) {
-              echo '<span class="help-block alert alert-danger">'.$words->get('SignupErrorWrongUsername').'</span>';
+              echo '<small class="text-muted has-danger">'.$words->get('SignupErrorWrongUsername').'</small>';
           }
           if (in_array('SignupErrorUsernameAlreadyTaken', $vars['errors'])) {
-              echo '<span class="help-block alert alert-danger">'.
+              echo '<small class="text-muted has-danger">'.
                   $words->getFormatted('SignupErrorUsernameAlreadyTaken', $vars['username']).
-                  '</span>';
+                  '</small>';
           }
           ?>
         </div>
@@ -357,38 +362,23 @@ Boston, MA  02111-1307, USA.
             <div class="card-header"><b><?php echo $words->get('Location'); ?></b></div>
             <div class="card-block">
         <div class="form-group">
-            <label for="geonameid" class="control-label sr-only"><?php echo $words->get('Location'); ?></label>
+            <label for="location-geoname-id" class="control-label sr-only"><?php echo $words->get('Location'); ?></label>
     <?php if (in_array('SignupErrorProvideLocation', $vars['errors'])) { ?>
             <p class="form-control-static"><a href="signup/3" class="button" title="<?php echo $words->get('label_setlocation'); ?>" ><?php echo $words->get('label_setlocation'); ?></a></p>
-            <span class="help-block alert alert-danger"><?=$words->get('SignupErrorProvideLocation')?></span>
+            <span class="text-muted alert alert-danger"><?=$words->get('SignupErrorProvideLocation')?></span>
     <?php } else { ?>
-            <input type="hidden" id="geonameid" name="geonameid" <?php
-                echo isset($vars['geonameid']) ? 'value="'.htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8').'" ' : '';
+            <input type="hidden" id="location-geoname-id" name="location-geoname-id" <?php
+                echo isset($vars['location-geoname-id']) ? 'value="'.htmlentities($vars['location-geoname-id'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?>
             >
-            <p class="form-control-static"><?= urldecode($vars['geonamename']);?><?=isset($vars['countryname']) ? ', ' . urldecode($vars['countryname']) : '' ?><?=isset($vars['admincode']) ? ' / ' . urldecode($vars['admincode']) : '' ?></p>
+            <p class="form-control-static"><?= urldecode($vars['location']);?></p>
     <?php } ?>
     
-            <input type="hidden" name="geonameid" id="geonameid" value="<?php
-                    echo isset($vars['geonameid']) ? htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8') : '';
+            <input type="hidden" name="location-latitude" id="location-latitude" value="<?php
+                    echo isset($vars['location-latitude']) ? htmlentities($vars['location-latitude'], ENT_COMPAT, 'utf-8') : '';
                 ?>" >
-            <input type="hidden" name="latitude" id="latitude" value="<?php
-                    echo isset($vars['latitude']) ? htmlentities($vars['latitude'], ENT_COMPAT, 'utf-8') : '';
-                ?>" >
-            <input type="hidden" name="longitude" id="longitude" value="<?php
-                    echo isset($vars['longitude']) ? htmlentities($vars['longitude'], ENT_COMPAT, 'utf-8') : '';
-                ?>" >
-            <input type="hidden" name="geonamename" id="geonamename" value="<?php
-                    echo isset($vars['geonamename']) ? htmlentities($vars['geonamename'], ENT_COMPAT, 'utf-8') : '';
-                ?>" >
-            <input type="hidden" name="countryname" id="countryname" value="<?php
-                    echo isset($vars['countryname']) ? htmlentities($vars['countryname'], ENT_COMPAT, 'utf-8') : '';
-                ?>" >
-            <input type="hidden" name="geonamecountrycode" id="geonamecountrycode" value="<?php
-                    echo isset($vars['geonamecountrycode']) ? htmlentities($vars['geonamecountrycode'], ENT_COMPAT, 'utf-8') : '';
-                ?>" >
-            <input type="hidden" name="admincode" id="admincode" value="<?php
-                    echo isset($vars['admincode']) ? htmlentities($vars['admincode'], ENT_COMPAT, 'utf-8') : '';
+            <input type="hidden" name="location-longitude" id="location-longitude" value="<?php
+                    echo isset($vars['location-longitude']) ? htmlentities($vars['location-longitude'], ENT_COMPAT, 'utf-8') : '';
                 ?>" >
         </div>
 </div>
@@ -408,7 +398,7 @@ Boston, MA  02111-1307, USA.
         <!-- terms -->
         <div class="checkbox">
             <label>
-            <input type="checkbox" name="terms"
+            <input type="checkbox" id="terms" name="terms" required
             <?php
             if (isset ($vars["terms"])) echo " checked=\"checked\"" ; // if user has already clicked, we will not bore him again
                 echo " >";
@@ -417,9 +407,8 @@ Boston, MA  02111-1307, USA.
             </label>
         </div>
         <?php
-        if (in_array('SignupMustacceptTerms', $vars['errors'])) {
-                // SignupMustacceptTerms contains unknown placeholder
-                echo '<span class="help-block alert alert-danger">'.$words->get('SignupTermsAndConditions').'</span>';
+        if (in_array('SignupMustAcceptTerms', $vars['errors'])) {
+                echo '<small class="text-muted alert alert-danger">'.$words->get('SignupTermsAndConditions').'</small>';
         }
         ?>
                     </div>

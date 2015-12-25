@@ -1,9 +1,6 @@
-/* Based on jqBootstrapValidation - v1.3.7
+/*! jqBootstrapValidation - v1.3.7 - 2015-12-24
 * http://reactiveraven.github.com/jqBootstrapValidation
-*
-* Adapted to work with Bootstrap4
-*
-* Copyright (c) 2015 David Godfrey, thisismeonmounteverest; Licensed MIT */
+* Copyright (c) 2015 David Godfrey; Licensed MIT */
 (function ($) {
 
     var createdElements = [];
@@ -46,9 +43,9 @@
                     var $form = $(this);
                     var warningsFound = 0;
                     // Get all inputs
-                    var $allInputs = $form.find("input,textarea,select").not("[type=submit],[type=image]").filter(settings.options.filter);
+                    var $allInputs = $form.find("input,textarea,select,checkbox").not("[type=submit],[type=image]").filter(settings.options.filter);
                     var $allControlGroups = $form.find(".form-group");
-
+                    
                     // Only trigger validation on the ones that actually _have_ validation
                     var $inputsWithValidators = $allInputs.filter(function () {
                         return $(this).triggerHandler("getValidatorCount.validation") > 0;
@@ -61,8 +58,8 @@
                     // Okay, now check each controlgroup for errors (or warnings)
                     $allControlGroups.each(function (i, el) {
                         var $controlGroup = $(el);
-                        if ($controlGroup.hasClass("has-warning") || $controlGroup.hasClass("has-error")) {
-                            $controlGroup.removeClass("has-warning").addClass("has-error");
+                        if ($controlGroup.hasClass("has-warning") || $controlGroup.hasClass("has-danger")) {
+                            $controlGroup.removeClass("has-warning").addClass("has-danger");
                             warningsFound++;
                         }
                     });
@@ -74,14 +71,14 @@
                             e.preventDefault();
                             e.stopImmediatePropagation();
                         }
-                        $form.addClass("has-error");
+                        $form.addClass("has-danger");
                         if ($.isFunction(settings.options.submitError)) {
                             settings.options.submitError($form, e, $inputsWithValidators.jqBootstrapValidation("collectErrors", true));
                         }
                     } else {
                         // Woo! No errors! We can pass the submit event to submitSuccess
                         // (if it has been set up)
-                        $form.removeClass("has-error");
+                        $form.removeClass("has-danger");
                         if ($.isFunction(settings.options.submitSuccess)) {
                             settings.options.submitSuccess($form, e);
                         }
@@ -100,7 +97,7 @@
                     // create message container if not exists
                     if (!$helpBlock.length && settings.options.autoAdd && settings.options.autoAdd.helpBlocks) {
                         $helpBlock = $('<small class="text-muted" />');
-                        $controlGroup.find('.controls').append($helpBlock);
+                        $controlGroup.find('input').append($helpBlock);
                         createdElements.push($helpBlock[0]);
                     }
 
@@ -562,7 +559,7 @@
                             // Were there any errors?
                             if (errorsFound.length) {
                                 // Better flag it up as a warning.
-                                $controlGroup.removeClass("has-success has-error has-warning").addClass(formIsSubmitting ? "has-error" : "has-warning");
+                                $controlGroup.removeClass("has-success has-danger has-warning").addClass(formIsSubmitting ? "has-danger" : "has-warning");
                                 $this.removeClass("form-control-success form-control-error form-control-warning").addClass(formIsSubmitting ? "form-control-error" : "form-control-warning");
                                 // How many errors did we find?
                                 if (settings.options.semanticallyStrict && errorsFound.length === 1) {
@@ -575,7 +572,7 @@
                                         ( settings.options.prependExistingHelpBlock ? $helpBlock.data("original-contents") : "" ));
                                 }
                             } else {
-                                $controlGroup.removeClass("has-warning has-error has-success");
+                                $controlGroup.removeClass("has-warning has-danger has-success");
                                 $this.removeClass("form-control-success form-control-error form-control-warning");
                                 if (value.length > 0) {
                                     $controlGroup.addClass("has-success");

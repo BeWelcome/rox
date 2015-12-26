@@ -10,69 +10,56 @@
             </button>
 
             <div class="collapse navbar-toggleable-md" id="exCollapsingNavbar2">
-            <a class="navbar-brand" href="/home"><img src="/images/logo_index_top.png"
-                                                     alt="{{ 'BeWelcome' | trans }}"/></a>
-            <ul class="nav navbar-nav">
-                <li class="navbar-divider"></li>
-                <li class="nav-item dropdown">
-                    <a href="/search" class="nav-link dropdown-toggle" data-toggle="dropdown">{{ 'FindMembers' | trans }}<b
-                                class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/searchmembers" class="dropdown-item">{{ 'MapSearch' | trans }}</a></li>
-                        <li><a href="/search" class="dropdown-item">{{ 'TextSearch' | trans }}</a></li>
-                        <li>{{ macros.link('TextSearch', 'dropdown') }}</li>
-                        <li><a href="/places" class="dropdown-item">{{ 'BrowseCountries' | trans}}</a></li>
+                <a class="navbar-brand" href="/home"><img src="/images/logo_index_top.png" alt="{{ 'BeWelcome' | trans }}"/></a>
+                    <ul class="nav navbar-nav">
+                        <li class="navbar-divider"></li>
+                        <li class="nav-item">
+                            <a href="/search" class="nav-link">{{ 'FindMembers' | trans }}</a>
+                        </li>
+                        <li class="navbar-divider"></li>
+                        <li class="nav-item">
+                            <a href="/community" class="nav-link">{{ 'CommunityMenu' | trans }}</a>
+                        </li>
+                        <li class="navbar-divider"></li>
+                        <li class="nav-item">
+                            <a href="/safety" class="nav-link">{{ 'Safety' | trans}}</a>
+                        </li>
+                        <li class="navbar-divider"></li>
+                        <li class="nav-item">
+                            <button class="navbar-toggler hidden-md-down" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar1">
+                                &#9776;
+                            </button>
+                        </li>
+                        <li class="nav-item dropdown pull-xs-right">
+                            <a href="/logout" class="nav-link dropdown-toggle" data-toggle="dropdown">&nbsp;<i class="fa fa-lg fa-gear" style="vertical-align: middle"></i> <span class="caret"></span></a>
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                <li><a href="/members/{{ username }}" class="dropdown-item">{{ 'Profile' | trans }}</a></li>
+                                <li><a href="/editmyprofile" class="dropdown-item">{{ 'EditMyProfile' | trans }}</a></li>
+                                <li><a href="/mypreferences" class="dropdown-item">{{ 'MyPreferences' | trans }}</a></li>
+                                <li><a href="/messages" class="dropdown-item">{{ 'MyMessages' | trans }}</a></li>
+                                <li><a href="/mynotes" class="dropdown-item">{{ 'ProfileMyNotes' | trans }}</a></li>
+                                <li><a href="/groups/mygroups" class="dropdown-item">{{ 'MyGroups' | trans }}</a></li>
+                                <li><a href="/logout" class="dropdown-item">{{ 'Logout' | trans }}</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item  pull-xs-right">
+                            <a href="/messages" class="nav-link"><i class="fa fa-lg fa-inbox"></i> <span
+                                        style="font-weight: normal">[{{ messages }}]</span></a>
+                        </li>
+                        <li class="hidden-sm-down nav-item pull-xs-right">
+                            <a class="nav-link" style="font-weight: normal" href="home">{{ username }}</a>
+                        </li>
                     </ul>
-                </li>
-                <li class="navbar-divider"></li>
-                <li class="nav-item dropdown">
-                    <a href="/community" class="nav-link dropdown-toggle" data-toggle="dropdown">{{ 'CommunityMenu' | trans }} <b
-                                class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/forums"  class="dropdown-item"title="{{ 'AgoraTagLine' | trans }}">{{ 'CommunityDiscussions' | trans }}</a></li>
-                        <li><a href="/groups/search"  class="dropdown-item"title="{{ 'GroupTagLine' | trans }}">{{ 'Groups' | trans }}</a></li>
-                        <li><a href="/activities" class="dropdown-item">{{ 'Activities' | trans}}</a></li>
-                        <li><a href="/suggestions" class="dropdown-item">{{ 'Suggestions' | trans}}</a></li>
-                        <li><a href="/trip" class="dropdown-item">{{ 'Trips' | trans}}</a></li>
-                        <li><a href="/blog" class="dropdown-item">{{ 'Blogs' | trans}}</a></li>
-                        <li><a href="/wiki" class="dropdown-item">{{ 'Wiki' | trans}}</a></li>
-                    </ul>
-                </li>
-                <li class="navbar-divider"></li>
-                <li class="nav-item">
-                    <a href="/safety" class="nav-link">{{ 'Safety' | trans}}</a>
-                </li>
-                <li class="navbar-divider"></li>
-                <li class="nav-item">
-                    <button class="navbar-toggler hidden-md-down" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar1">
-                        &#9776;
-                    </button>
-                </li>
-                <li class="nav-item dropdown pull-xs-right"><a href="/logout" class="nav-link dropdown-toggle" data-toggle="dropdown">&nbsp;<i
-                                class="fa fa-lg fa-gear" style="vertical-align: middle"></i> <span
-                                class="caret"></span></a>
-                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                        <li><a href="/members/{{ username }}" class="dropdown-item">{{ 'Profile' | trans }}</a></li>
-                        <li><a href="/editmyprofile" class="dropdown-item">{{ 'EditMyProfile' | trans }}</a></li>
-                        <li><a href="/mypreferences" class="dropdown-item">{{ 'MyPreferences' | trans }}</a></li>
-                        <li><a href="/messages" class="dropdown-item">{{ 'MyMessages' | trans }}</a></li>
-                        <li><a href="/mynotes" class="dropdown-item">{{ 'ProfileMyNotes' | trans }}</a></li>
-                        <li><a href="/groups/mygroups" class="dropdown-item">{{ 'MyGroups' | trans }}</a></li>
-                        <li><a href="/logout" class="dropdown-item">{{ 'Logout' | trans }}</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item  pull-xs-right">
-                    <a href="/messages" class="nav-link"><i class="fa fa-lg fa-inbox" style="vertical-align: middle;"></i> <span
-                                style="font-weight: normal">[{{ messages }}]</span></a>
-                </li>
-                <li class="hidden-sm-down nav-item pull-xs-right">
-                    <a class="nav-link" style="font-weight: normal" href="home">{{ username }}</a>
-                </li>
-            </ul>
+            </div>
         </div>
-        </div>
-
-        <div class="row collapse navbar-toggleable-lg p-t-1 p-b-1 subnav" id="exCollapsingNavbar1">
+    <div class="subnav p-t-1 p-b-1">
+        <div class="container">
+        <div id="exCollapsingNavbar1" class="row collapse navbar-toggleable-lg">
+            <div class="col-xs-12">
+                <button type="button" class="close pull-xs-right" aria-label="Close" data-toggle="collapse" data-target="#exCollapsingNavbar1">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
             <div class="col-xs-2 p-l-3">
                 <a href="/about" class="h4">{{ 'GetAnswers' | trans}}</a>
                 <dl>
@@ -119,30 +106,26 @@
                     {% endif %}
             </div>
 
-            <div class="col-xs-3">
+            <div class="col-xs-4">
                 <div class="col-xs-12 text-xs-center">
-                    <a href="/members/{{ username }}" class="h4">{{ username }}</a>
+                    <a href="/members/{{ username }}" class="h4"><i class="fa fa-user"></i> {{ username }}</a>
                 </div>
 
                 <div class="col-xs-6 pull-xs-left">
-                    <a href="/editmyprofile" class="btn btn-sm btn-block btn-primary-outline text-xs-left">{{ 'Profile' | trans }}</a>
-                    <a href="/mypreferences" class="btn btn-sm btn-block btn-primary-outline text-xs-left">{{ 'MyPreferences' | trans }}</a>
-                    <a href="/groups/mygroups" class="btn btn-sm btn-block btn-primary-outline text-xs-left">{{ 'MyGroups' | trans }}</a>
+                    <a href="/editmyprofile" class="btn btn-sm btn-block btn-primary-outline text-xs-left"><i class="fa fa-edit"></i> {{ 'Profile' | trans }}</a>
+                    <a href="/mypreferences" class="btn btn-sm btn-block btn-primary-outline text-xs-left"><i class="fa fa-sliders"></i> {{ 'MyPreferences' | trans }}</a>
+                    <a href="/groups/mygroups" class="btn btn-sm btn-block btn-primary-outline text-xs-left"><i class="fa fa-users"></i> {{ 'MyGroups' | trans }}</a>
                 </div>
 
                 <div class="col-xs-6 pull-xs-left">
-                    <a href="/messages" class="btn btn-sm btn-block btn-primary-outline text-xs-left">{{ 'MyMessages' | trans }}</a>
-                    <a href="/mynotes" class="btn btn-sm btn-block btn-primary-outline text-xs-left">{{ 'ProfileMyNotes' | trans }}</a>
-                    <a href="/logout" class="btn btn-sm btn-block btn-primary-outline text-xs-left">{{ 'Logout' | trans }}</a>
+                    <a href="/messages" class="btn btn-sm btn-block btn-primary-outline text-xs-left"><i class="fa fa-envelope-o"></i> {{ 'MyMessages' | trans }}</a>
+                    <a href="/mynotes" class="btn btn-sm btn-block btn-primary-outline text-xs-left"><i class="fa fa-list"></i> {{ 'ProfileMyNotes' | trans }}</a>
+                    <a href="/logout" class="btn btn-sm btn-block btn-primary-outline text-xs-left"><i class="fa fa-power-off"></i> {{ 'Logout' | trans }}</a>
                 </div>
-            </div>
-
-            <div class="col-xs-1">
-                <button type="button" class="close pull-xs-left" aria-label="Close" data-toggle="collapse" data-target="#exCollapsingNavbar1">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
 
         </div>
+        </div>
+    </div>
 
     </nav>

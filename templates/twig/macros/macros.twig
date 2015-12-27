@@ -16,10 +16,12 @@
     </select>
 {% endmacro %}
 
-{% macro select2(name, class, placeholder, values, value, allowClear) %}
-    <select name="{{ name }}" class="{% if class %}{{ class }} {% endif %}select2" style="width:100%"
+{% macro select2(name, class, placeholder, values, value, allowClear, noSearchBox, width) %}
+    <select name="{{ name }}" class="{% if class %}{{ class }} {% endif %}select2"
             {% if placeholder %}data-placeholder="{{ placeholder }}"{% endif %}
-            {% if allowClear %}data-allow-clear="{{ allowClear }}"{% endif %}>
+            {% if allowClear %}data-allow-clear="{{ allowClear }}"{% endif %}
+            {% if noSearchBox %}data-minimum-results-for-search="-1"{% endif %}
+            {% if width %}style="width: {{ width }}em;"{% endif %}>
         {% for key, name in values %}
             {% if key == -1 %}
                 <option></option>

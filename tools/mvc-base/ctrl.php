@@ -12,7 +12,7 @@ abstract class RoxControllerBase extends RoxComponentBase
     /**
      * @param \Symfony\Component\Routing\Router $routing
      *
-*@return RoxControllerBase
+     * @return RoxControllerBase
      */
     public function setRouting($routing)
     {

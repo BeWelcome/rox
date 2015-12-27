@@ -2,36 +2,37 @@
 
 namespace Rox\Login;
 
+use Rox\Framework\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
-* dashboard controller
+* Login controller
 *
-* @package Dashboard
-* @author Amnesiac84
+* @package Framework
+* @author shevek
 */
-class LoginController
+class LoginController extends Controller
 {
     /**
-     * Shows the public start page
+     * @param Request $request
      *
-     * @return StartPage
+     * @return RedirectResponse
      */
     public function checkCredentials(Request $request) {
+        // Use the old login controller to do the checks for now
         $loginController = new \LoginController();
         $args = new \stdClass();
         $args->post = array(
             'u' => $request->request->get('u'),
             'p' => $request->request->get('p')
         );
-        $args->request = '';
+        $args->request = $request->getPathInfo();
         $result = $loginController->loginCallback($args, null, null);
         if ($result) {
-            // redirect to /home
-            return new RedirectResponse('/home');
+            return $this->redirect('/home');
         } else {
-            return new RedirectResponse('/');
+            return $this->redirect('/');
         }
     }
 }

@@ -139,7 +139,7 @@ class SearchController extends RoxControllerBase
         $type = $this->route_vars['type'];
         $location = $this->args_vars->get['name'];
         $callback = $this->args_vars->get['callback'];
-        $locations = $this->model->suggestLocations($location, $type, $callback);
+        $locations = $this->model->suggestLocations($location, $type);
         header('Content-type: application/javascript, charset=utf-8');
         $javascript = $callback . '(' . json_encode($locations) . ')';
         echo $javascript . "\n";

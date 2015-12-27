@@ -32,19 +32,21 @@ class TwigView extends AbstractBasePage {
     protected $_words;
     protected $_translator;
     private $_stylesheets = array(
-         'bewelcome.css?1',
+        'bewelcome.css',
+        '/script/tether-1.1.1/css/tether.min.css'
     );
 
     private $_lateScriptFiles = array(
-        'common/common.js?1',
-        'jquery/jquery-2.1.4.min.js',
-        'select2/select2.js',
+        'thether-1.1.1/js/tether.js',
         'bootstrap/bootstrap.min.js',
         'bootstrap-autohidingnavbar/jquery.bootstrap-autohidingnavbar.js',
         'common/initialize.js',
     );
 
     private $_earlyScriptFiles = array(
+        'jquery/jquery-2.1.4.min.js',
+        'select2/select2.js',
+        'common/common.js?1',
     );
 
     /**
@@ -84,21 +86,6 @@ class TwigView extends AbstractBasePage {
             $this->_environment->addExtension(new RoutingExtension($router->getGenerator()));
         }
         $this->_environment->addExtension(new \Twig_Extension_Debug());
-
-        // Setting up the form template
-        $defaultFormTheme = '@forms/bootstrap_4_layout.html.twig';
-
-        $appVariableReflection = new \ReflectionClass('\Symfony\Bridge\Twig\AppVariable');
-        $vendorTwigBridgeDir = dirname($appVariableReflection->getFileName());
-        $this->_loader->addPath($vendorTwigBridgeDir . '/Resources/views/Form');
-
-        $formEngine = new TwigRendererEngine(array($defaultFormTheme));
-        $formEngine->setEnvironment($this->_environment);
-        // add the FormExtension to Twig
-        $this->_environment->addExtension(
-            new FormExtension(new TwigRenderer($formEngine))
-        );
-
     }
 
     /**
@@ -112,11 +99,34 @@ class TwigView extends AbstractBasePage {
         $this->_loader->addPath($path, $namespace);
     }
 
+    public function setFormStyle($inlineForm = false) {
+        $formTemplate = ($inlineForm) ? 'inline' : '';
+        // Setting up the form template
+        $defaultFormTheme = 'form_div_layout.html.twig';
+
+        $appVariableReflection = new \ReflectionClass(
+            '\Symfony\Bridge\Twig\AppVariable'
+        );
+        $vendorTwigBridgeDir = dirname(
+            $appVariableReflection->getFileName()
+        );
+        $this->_loader->addPath(
+            $vendorTwigBridgeDir.'/Resources/views/Form'
+        );
+
+        $formEngine = new TwigRendererEngine(array($defaultFormTheme));
+        $formEngine->setEnvironment($this->_environment);
+        // add the FormExtension to Twig
+        $this->_environment->addExtension(
+            new FormExtension(new TwigRenderer($formEngine))
+        );
+
+    }
     /**
      * @param Form $form
      * @param string $name
      */
-    protected function addForm(Form $form, $name = 'form') {
+    public function addForm(Form $form, $name = 'form') {
         $this->_forms[$name] = $form->createView();
     }
 

@@ -15,9 +15,8 @@ class AdminQueriesOverviewPage extends \Rox\Framework\TwigView
      * @param Router $router
      * @param array|bool $parameters
      */
-    public function __construct(Router $router, Form $form) {
+    public function __construct(Router $router) {
         parent::__construct($router);
-        $this->addForm($form);
         $this->setTemplate('queries/queries.html.twig', 'admin');
     }
 }

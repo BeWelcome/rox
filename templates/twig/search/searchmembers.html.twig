@@ -1,0 +1,117 @@
+{% extends '@base/base.html.twig' %}
+
+{% block content %}
+    {# main: content begins here #}
+    <div id="main">
+        <div class="container">
+            {{ form_start(form, {'attr': {'class': 'form-inline p-a-1 m-b-2 framed shadowed'}}) }}
+            <div class="row">
+                <div class="col-xs-12">
+            {{ form_row(form.search_geoname_id) }}
+            {{ form_row(form.search_latitude) }}
+            {{ form_row(form.search_longitude) }}
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-lg fa-bed"></i></span>
+                    {{ form_row(form.search, {'attr': {'class': 'search-picker form-control'}}) }}
+                </div>
+            </div>
+    <div class="form-group">
+    <div class="hostcheckimg"><img src="/images/icons/yesicanhost.png"/>
+        <div class="hostcheckbox">{{ form_widget(form.search_accommodation_anytime) }}</div>
+    </div>
+    <div class="hostcheckimg"><img src="/images/icons/maybe.png"/>
+        <div class="hostcheckbox">
+            {{ form_widget(form.search_accommodation_dependonrequest) }}</div>
+    </div>
+    <div class="hostcheckimg"><img src="/images/icons/nosorry.png"/>
+        <div class="hostcheckbox">
+            {{ form_widget(form.search_accommodation_dontask) }}</div>
+    </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.search_can_host) }}
+            {{ form_widget(form.search_can_host, {'attr': {'class' : 'form-control select2',
+                'data-minimum-results-for-search': '-1'} }) }}
+            </div>
+        <div class="form-group">
+            {{ form_label(form.search_distance) }}
+            {{ form_widget(form.search_distance, {'attr': {'class' : 'form-control select2',
+                'data-minimum-results-for-search': '-1'} }) }}
+        </div>
+            {{ form_widget(form.update_map) }}
+            </div>
+                </div>
+            <div class="row"><div class="col-xs-12 m-t-1">
+                    {{ form_widget(form.advanced_options) }}
+                </div></div>
+        {{ form_end(form) }}
+        </div>
+<!--         <div class="container">
+            <form method="get" class="form-inline p-a-1 m-b-2 framed shadowed">
+                <input type="hidden" name="search-geoname-id" id="search-geoname-id"
+                       value="{{ location.geonameid }}"/>
+                <input type="hidden" name="search-latitude" id="search-latitude"
+                       value="{{ location.latitude }}"/>
+                <input type="hidden" name="search-longitude" id="search-longitude"
+                       value="{{ location.longitude }}"/>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-lg fa-bed"></i></span>
+                                <input type="text" class="form-control search-picker" id="search" name="search-location"
+                                       placeholder="Where do you want to go?"
+                                       value="{{ location.name }}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="hostcheckimg"><img src="/images/icons/yesicanhost.png"/>
+                                <div class="hostcheckbox"><input name="search-accommodation[]" id="search-accommodation-anytime" type="checkbox"{% if accommodation.yes %} checked="checked"{% endif %}></div>
+                            </div>
+                            <div class="hostcheckimg"><img src="/images/icons/maybe.png"/>
+                                <div class="hostcheckbox"><input name="search-accommodation[]" id="search-accommodation-dependonrequest" type="checkbox"{% if accommodation.maybe %} checked="checked"{% endif %}></div>
+                            </div>
+                            <div class="hostcheckimg"><img src="/images/icons/nosorry.png"/>
+                                <div class="hostcheckbox"><input name="search-accommodation[]" id="search-accommodation-dontask" type="checkbox"{% if accommodation.no %} checked="checked"{% endif %}></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="search-can-host" class="form-control-label">Can host at least</label>
+                            {{ macros.select2('search-can-host', false, false, canhost.values, canhost.value, false, true, 4 ) }}
+                        </div>
+                        <div class="form-group">
+                            <label for="search-distance" class="form-control-label">in a radius of </label>
+                            {{ macros.select2('search-distance', false, false, radius.values, radius.value, false, true, 9 ) }}
+                        </div>
+                        <button type="submit" class="btn btn-primary pull-xs-right">Update map</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 m-t-1">
+                        <button type="submit" class="btn btn-sm btn-primary pull-xs-right">Advanced options
+                        </button>
+                    </div>
+                </div>
+            </form>
+        -->
+
+        <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div id="map" class=" framed" style="width: 100%; height: 440px;"></div>
+            </div>
+        </div>
+        </div>
+        {% if results %}
+        {# Add results for the map #}
+        <table id="mapresults" style="display:none;">
+            {%  for row in results.map %}
+            <tr><td class="accommodation">{{ row.Accommodation }}</td><td class="username">{{ row.Username }}</td><td class="latitude">{{ row.latitude }}</td><td class="longitude">{{ row.longitude }}</td></tr>
+            {% endfor %}
+        </table>
+        {# include '@search/results.html.twig' #}
+        {% endif %}
+    </div> {# end of main #}
+
+{% endblock content %}

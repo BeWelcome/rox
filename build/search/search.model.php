@@ -20,6 +20,11 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+
+use Foolz\SphinxQL\Drivers\Mysqli\Connection;
+use Foolz\SphinxQL\SphinxQL;
+use AnthonyMartin\GeoLocation\GeoLocation as GeoLocation;
+
 /**
  * Search model
  *
@@ -28,6 +33,10 @@ Boston, MA  02111-1307, USA.
  */
 class SearchModel extends RoxModelBase
 {
+    const SPHINX_PLACES = 1;
+    const SPHINX_ADMINUNITS = 2;
+    const SPHINX_COUNTRIES = 4;
+
     const EARTH_RADIUS = 6378;
 
     // const ORDER_NOSORT = 0; // Not needed as this would be the same as for MEMBERSHIP
@@ -204,6 +213,26 @@ LIMIT 1
         }
 
         return $statusCondition;
+    }
+
+    /**
+     * @param $latitude
+     * @param $longitude
+     * @param $distance
+     *
+     * @return stdClass
+     */
+    private function _getRectangle($latitude, $longitude, $distance) {
+
+        $edison = GeoLocation::fromDegrees($latitude, $longitude);
+        $coordinates = $edison->boundingCoordinates($distance, 'km');
+
+        $result = new stdClass;
+        $result->latne = $coordinates[0]->getLatitudeInDegrees();
+        $result->longne = $coordinates[0]->getLongitudeInDegrees();
+        $result->latsw = $coordinates[1]->getLatitudeInDegrees();
+        $result->longsw = $coordinates[1]->getLongitudeInDegrees();
+        return $result;
     }
 
     /**
@@ -766,22 +795,6 @@ LIMIT 1
         return $rows;
     }
 
-    private function sphinxSearch($location, $places, $count = false)
-    {
-        $sphinx = new MOD_sphinx();
-        $sphinxClient = $sphinx->getSphinxGeoname();
-        if ($places) {
-            $sphinxClient->SetFilter("isplace", array(1));
-        } else {
-            $sphinxClient->SetFilter("isadmin", array(1));
-        }
-        if ($count) {
-            $sphinxClient->SetLimits(0, $count);
-        }
-
-        return $sphinxClient->Query($sphinxClient->EscapeString("^" . $location . "*"));
-    }
-
     private function getCountryNames($countryIds, $lang)
     {
         $inCountries = implode("', '", $countryIds);
@@ -1186,6 +1199,7 @@ LIMIT 1
                 // just get all active members from that place
                 $results['type'] = 'members';
                 $results['members'] = $this->getMemberDetails($vars);
+                $results['map'] = $this->_getMembersLowDetails($vars['location-latitude'], $vars['location-longitude'], $vars['search-distance'], $vars['search-can-host']);
             }
         }
         $results['countOfMembers'] = $vars['countOfMembers'];
@@ -1355,6 +1369,37 @@ LIMIT 1
         return $result;
     }
 
+    private function sphinxSearch($location, $type, $count = false)
+    {
+        $conn = new Connection();
+        $conn->setParams(array('host' => 'localhost', 'port' => 9306));
+
+        $query = SphinxQL::create($conn)
+            ->select('*')
+            ->from('geonames')
+            ->match('', "*" . $location . "*");
+
+        switch($type) {
+            case self::SPHINX_PLACES:
+                $query->where('isplace', '=', 1);
+                $query->limit(0, 5);
+                $query->orderBy('membercount', 'desc');
+                break;
+            case self::SPHINX_ADMINUNITS:
+                $query->where('isadmin', '=', 1);
+                $query->limit(0, 3);
+                break;
+            case self::SPHINX_COUNTRIES:
+                $query->where('iscountry', '=', 1);
+                $query->limit(0, 2);
+                break;
+        }
+
+        // Now, you have an array of results stored.
+        $result = $query->execute();
+        return $result;
+    }
+
     /**
      * Used as AJAX source by the autosuggest on the search form
      */
@@ -1362,38 +1407,46 @@ LIMIT 1
     {
         $result = array();
         $locations = array();
-        /*        $result['status'] = 'failed';
-                // First get places with BW members
-                $resPlaces = $this->sphinxSearch( $location, true );
-                if ($resPlaces !== false && $res['total'] != 0) {
-                    $ids = array();
-                    if (is_array($res['matches'])) {
-                        foreach ( $res['matches'] as $docinfo ) {
-                            $ids[] = $docinfo['id'];
-                        }
-                    }
-                    $places = $this->getPlacesFromDataBase($ids);
-                    $locations = array_merge($locations, $places);
-                    $result['result'] = 'success';
-                    $result['places'] = 1;
-                }
-                if ($resPlaces !== false) {
-                    // Get administrative units only when places call actually worked
-                    $res = $this->sphinxSearch( $location, false );
-                    if ( $res !==false  && $res['total'] != 0) {
-                        $ids = array();
-                        if (is_array($res['matches'])) {
-                            foreach ( $res['matches'] as $docinfo ) {
-                                $ids[] = $docinfo['id'];
-                            }
-                        }
-                        $adminunits= $this->getFromDataBase($ids, $this->getWords()->getSilent('SearchAdminUnits'));
-                        $locations = array_merge($locations, $adminunits);
-                        $result["status"] = "success";
-                        $result['adminunits'] = 1;
-                    }
-                }
-        */
+        $result['status'] = 'failed';
+        // First get places from sphinx
+        $resPlaces = $this->sphinxSearch( $location, self::SPHINX_PLACES );
+        if ( $resPlaces) {
+            $result = $resPlaces->fetchAllAssoc();
+            $ids = array();
+            foreach ( $result as $row) {
+                $ids[] = $row['id'];
+            }
+            $places = $this->getPlacesFromDataBase($ids);
+            $locations = array_merge($locations, $places);
+            $result['result'] = 'success';
+            $result['places'] = 1;
+        }
+        // Get administrative units
+        $resAdminUnits = $this->sphinxSearch( $location, self::SPHINX_ADMINUNITS );
+        if ( $resAdminUnits) {
+            $result = $resAdminUnits->fetchAllAssoc();
+            $ids = array();
+            foreach ( $result as $row) {
+                $ids[] = $row['id'];
+            }
+            $adminunits= $this->getFromDataBase($ids, $this->getWords()->getSilent('SearchAdminUnits'));
+            $locations = array_merge($locations, $adminunits);
+            $result["status"] = "success";
+            $result['adminunits'] = 1;
+        }
+        // Get countries
+        $resCountries = $this->sphinxSearch( $location, self::SPHINX_COUNTRIES );
+        if ( $resCountries) {
+            $result = $resCountries->fetchAllAssoc();
+            $ids = array();
+            foreach ( $result as $row) {
+                $ids[] = $row['id'];
+            }
+            $countries= $this->getFromDataBase($ids, $this->getWords()->getSilent('SearchCountries'));
+            $locations = array_merge($locations, $countries);
+            $result["status"] = "success";
+            $result['countries'] = 1;
+        }
         // If nothing was found assume that search daemon isn't running and
         // try to get something from the database
         if (empty($locations)) {
@@ -1463,6 +1516,34 @@ LIMIT 1
             }
         }
         return $suggestions;
+    }
+
+    /**
+     * Gets only username and accommodation status for the given location and distance
+     *
+     * Used on the map to show the results
+     *
+     * @param $location
+     * @param $distance
+     */
+    private function _getMembersLowDetails($latitude, $longitude, $distance, $canhost = 1) {
+        $rectangle = $this->_getRectangle($latitude, $longitude, $distance);
+        $query = "
+            SELECT
+                m.Accomodation as Accommodation, m.Username, latitude, longitude
+            FROM
+                members m
+            WHERE
+                m.Status IN ('Active', 'OutOfRemind')
+                AND m.maxGuest >= {$canhost}
+                AND m.latitude BETWEEN $rectangle->latne AND $rectangle->latsw
+                AND m.longitude BETWEEN $rectangle->longne AND $rectangle->longsw
+        ";
+        $query .= $this->accommodationCondition;
+        $query .= " ORDER BY Accomodation";
+        $results = $this->bulkLookup($query);
+
+        return $results;
     }
 }
 

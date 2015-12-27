@@ -1,3 +1,7 @@
 {% for stylesheet in stylesheets %}
-    <link rel="stylesheet" type="text/css" href="/styles/css/{{ stylesheet }}">
+    {% if stylesheet starts with '/' %}
+        <link rel="stylesheet" type="text/css" href="{{ stylesheet }}">
+    {% else %}
+        <link rel="stylesheet" type="text/css" href="/styles/css/{{ stylesheet }}">
+    {% endif %}
 {% endfor %}

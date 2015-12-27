@@ -14,7 +14,7 @@ use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Http\Firewall;
 use Symfony\Component\Validator\Validation;
-
+use Rox\Framework;
 /**
  * Setup some stuff to be used by old Rox components
  */

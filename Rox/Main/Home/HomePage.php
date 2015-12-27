@@ -2,9 +2,10 @@
 
 namespace Rox\Main\Home;
 
+use Rox\Framework\TwigView;
 use Symfony\Component\Routing\Router;
 
-class HomePage extends \Rox\Framework\TwigView
+class HomePage extends TwigView
 {
     public function __construct(Router $router) {
         parent::__construct($router);

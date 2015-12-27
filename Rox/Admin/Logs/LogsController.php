@@ -2,6 +2,7 @@
 
 namespace Rox\Admin\Logs;
 
+use Rox\Framework\Controller;
 use Rox\Models\Log;
 use Rox\Models\Member;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,26 +14,15 @@ use Symfony\Component\HttpFoundation\Response;
  * @package Dashboard
  * @author Amnesiac84
  */
-class LogsController extends \RoxControllerBase
+class LogsController extends Controller
 {
-
-    /**
-     * @var \RoxModelBase
-     */
-    private $_model;
 
     /**
      * LogsController constructor.
      */
     public function __construct()
     {
-        parent::__construct();
-        $this->_model = new \RoxModelBase();
-    }
-
-    public function __destruct()
-    {
-        unset($this->_model);
+        $this->setModel(new \RoxModelBase());
     }
 
     private function _getParameters(Request $request) {
@@ -85,15 +75,14 @@ class LogsController extends \RoxControllerBase
         $count = $query->count();
         $logs = $query->skip($first)->take($itemsPerPage)->get();
         $lastPage = ceil($count / $itemsPerPage);
-        $page->addParameters(
+        $page->addParameters([
             'currentPage' => $currentPage,
             'lastPage' => $lastPage,
             'route' => 'admin_logs',
             'routeParams' => ['itemsPerPage' => $itemsPerPage],
             'count' => $count,
             'logs' => $logs
-            ];
-        $page->setParameters(array_merge($pageParameters, $parameters));
+            ]);
         return new Response($page->render());
     }
 
@@ -115,15 +104,14 @@ class LogsController extends \RoxControllerBase
         $count = $query->count();
         $logs = $query->skip($first)->take($itemsPerPage)->get();
         $lastPage = ceil($count / $itemsPerPage);
-        $page->addParameters(
+        $page->addParameters([
             'currentPage' => $currentPage,
             'lastPage' => $lastPage,
             'route' => 'admin_logs',
             'routeParams' => ['itemsPerPage' => $itemsPerPage],
             'count' => $count,
             'logs' => $logs
-        ];
-        $page->setParameters(array_merge($pageParameters, $parameters));
+        ]);
         return new Response($page->render());
     }
 
@@ -150,16 +138,14 @@ class LogsController extends \RoxControllerBase
             $count = 0;
         }
         $lastPage = ceil($count / $itemsPerPage);
-            $page->addParameters(
-        $pageParameters = [
+        $page->addParameters([
             'currentPage' => $currentPage,
             'lastPage' => $lastPage,
             'route' => 'admin_logs',
             'routeParams' => ['itemsPerPage' => $itemsPerPage],
             'count' => $count,
             'logs' => $logs
-        ];
-        $page->setParameters(array_merge($pageParameters, $parameters));
+        ]);
         return new Response($page->render());
     }
 
@@ -180,15 +166,14 @@ class LogsController extends \RoxControllerBase
         $count = $query->count();
         $logs = $query->skip($first)->take($itemsPerPage)->get();
         $lastPage = ceil($count / $itemsPerPage);
-        $page->addParameters(
+        $page->addParameters([
             'currentPage' => $currentPage,
             'lastPage' => $lastPage,
             'route' => 'admin_logs',
             'routeParams' => ['itemsPerPage' => $itemsPerPage],
             'count' => $count,
             'logs' => $logs
-        ];
-        $page->setParameters(array_merge($pageParameters, $parameters));
+        ]);
         return new Response($page->render());
     }
 }

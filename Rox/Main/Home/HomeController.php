@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 */
 class HomeController extends \RoxControllerBase
 {
-
     /**
      * @RoxModelBase Rox
      */

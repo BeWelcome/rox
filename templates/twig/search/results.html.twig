@@ -1,0 +1,65 @@
+<table id="memberresults">
+    <thead>
+    <tr>
+        <th colspan="2">{{ 'SearchHeaderMember' | trans }}</th>
+        <th>{{ 'ProfileSummary' | trans }}</th>
+        <th>{{ 'SearchHeaderDetails' | trans }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for member in results.members %}
+    {% set accommodationIcon %}<img src="members/avatar/{{ member.Username }}">{% endset %}
+     {# $accommodationIcon = ShowAccommodation($member->Accomodation);
+    // replace line breaks '\r\n' by html line break element '<br/>'
+    $profileSummary = $this->purifier->purify($member->ProfileSummary);
+    $occupation = $this->purifier->purify($member->Occupation);#}
+    <tr class="{% if loop.index is odd %}blank{% else %}highlight{% endif %}">
+        <td class="memberleft"> 
+            <div class="picture"><div>{{ member.Username }}</div> 
+                <div><a href="/members/{{ member.Username }}" target="_blank">{{ member.Username }}</a></div> 
+                </div> 
+            </td><td class="memberright"> 
+            <div class="left"> 
+                <strong><a href="/members/ {{ member.Username }}" target="_blank">' . {% if member.Name is empty %}{{ member.Username }}{% else %}{{ member.Name }}{% endif %}</a></strong>
+{#                if ($member->MessageCount) {
+                <a href="messages/with/ {{ member.Username }}"><img src="images/icons/comments.png" alt="'
+                        . $words->getSilent('messages_allmessageswith',  {{ member.Username }})
+                        }}" title="{{words->getSilent('messages_allmessageswith',  {{ member.Username }}) }}" /></a> 
+                }
+                <br /> 
+                $prefix = "";
+                if (!empty($member->Age)) {
+                echo $words->get('SearchYearsOld', $member->Age);
+                $prefix = ", ";
+                }
+                $gender = $layoutbits->getGenderTranslated($member->Gender, $member->HideGender, false);
+                if (!empty($gender)) {
+                echo $prefix . $gender;
+                }
+                <br /> 
+                echo $member->CityName . ", " . $member->CountryName }}<br /> 
+                <br /> 
+                echo $member->Occupation }}
+                #}
+            </div>
+            </td> 
+        <td class="summary">{{ member.profileSummary }}</td>
+        <td class="details"><div class="red">
+                <div class="left">{{ accommodationIcon }}</div>
+                <div>{{ 'SearchMaxGuestInfo' | trans }}
+                    <strong>{{ member.MaxGuest }}</strong><br />
+                    {{ 'SearchCommentsInfo' | trans }}
+                    <strong>{{ member.CommentCount }}</strong>
+                </div>
+            </div>
+            <div class="clearfix"></div> 
+                {{ 'SearchMemberSinceInfo' | trans}}
+                <strong>{{ member.created }}</strong><br />
+                {{  member.LastLogin }}
+                {{ 'SearchMemberLastLoginInfo' | trans }}
+                <span class="{{class }}">{{lastlogin }}</span>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>

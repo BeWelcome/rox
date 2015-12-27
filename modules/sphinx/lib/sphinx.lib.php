@@ -58,12 +58,12 @@ class MOD_sphinx
 
     private function _getSphinxClient()
     {
-        require_once(SCRIPT_BASE . 'lib/sphinx-2.1.9/sphinxapi.php');
+        require_once(SCRIPT_BASE . 'lib/sphinx-2.2.10/sphinxapi.php');
         $sphinxClient = new SphinxClient();
         $sphinxClient->SetServer ( '127.0.0.1', 9312 );
         $sphinxClient->SetConnectTimeout ( 20 );
         $sphinxClient->SetArrayResult ( true );
-        $sphinxClient->SetWeights ( array ( 1000, 1 ) );
+        $sphinxClient->SetIndexWeights ( array ( 'geonames' => 1000 ) );
         $sphinxClient->SetMatchMode ( SPH_MATCH_EXTENDED );
         return $sphinxClient;
     }

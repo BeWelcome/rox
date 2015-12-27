@@ -115,6 +115,16 @@ body > footer {
   a:focus { color:#fff; }
 }
 
+// standard framed box with slight shadow
+.framed {
+  background-color: #EEEEEE;
+  border: 3px solid #FFFFFF;
+}
+
+.shadowed {
+  box-shadow: 0 0 1px #888888;
+}
+
 // include navbar styles
 @import "navbar";
 
@@ -128,6 +138,7 @@ body > footer {
 // Set yaml classes to keep old style alive and constistent
 @import "_yaml";
 @import "_navs";
+@import "_search";
 
 @include media-breakpoint-up(md){
   .verticalalign{

@@ -178,7 +178,7 @@
 {# Rows #}
 
 {% block form_row -%}
-    <div class="form-group row{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
+    <div class="form-group row{% if (not compound or force_error|default(false)) and not valid %} has-danger{% endif %}">
         {{- form_label(form) -}}
         <div class="col-sm-10">{{- form_widget(form) -}}</div>
         {{- form_errors(form) -}}
@@ -212,14 +212,14 @@
 {%- endblock datetime_row %}
 
 {% block checkbox_row -%}
-    <div class="form-group{% if not valid %} has-error{% endif %}">
+    <div class="form-group{% if not valid %} has-danger{% endif %}">
         {{- form_widget(form) -}}
         {{- form_errors(form) -}}
     </div>
 {%- endblock checkbox_row %}
 
 {% block radio_row -%}
-    <div class="form-group{% if not valid %} has-error{% endif %}">
+    <div class="form-group{% if not valid %} has-danger{% endif %}">
         {{- form_widget(form) -}}
         {{- form_errors(form) -}}
     </div>

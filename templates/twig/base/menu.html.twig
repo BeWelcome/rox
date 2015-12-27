@@ -2,35 +2,33 @@
 <nav class="navbar navbar-sticky-top navbar-dark bg-primary">
         <div class="container">
 
-            <button class="navbar-toggler hidden-lg-up" data-toggle="collapse" data-target="#exCollapsingNavbar2">
+            <a class="navbar-brand" href="/home"><img src="/images/logo_index_top.png" alt="{{ 'BeWelcome' | trans }}"/></a>
+
+            <button class="navbar-toggler hidden-lg-up pull-xs-right" data-toggle="collapse" data-target="#exCollapsingNavbar2">
                 &#9776;
             </button>
 
-            <button class="navbar-toggler hidden-lg-up pull-xs-right">
-                <a class="btn-primary" href="home"><i class="fa fa-home"></i></a>
-            </button>
-
             <div class="collapse navbar-toggleable-md" id="exCollapsingNavbar2">
-                <a class="navbar-brand" href="/home"><img src="/images/logo_index_top.png" alt="{{ 'BeWelcome' | trans }}"/></a>
+
                     <ul class="nav navbar-nav">
-                        <li class="navbar-divider"></li>
+                        <li class="navbar-divider hidden-md-down"></li>
                         <li class="nav-item">
                             <a href="/search" class="nav-link">{{ 'FindMembers' | trans }}</a>
                         </li>
-                        <li class="navbar-divider"></li>
+                        <li class="navbar-divider hidden-md-down"></li>
                         <li class="nav-item">
                             <a href="/community" class="nav-link">{{ 'CommunityMenu' | trans }}</a>
                         </li>
-                        <li class="navbar-divider"></li>
+                        <li class="navbar-divider hidden-md-down"></li>
                         <li class="nav-item">
                             <a href="/safety" class="nav-link">{{ 'Safety' | trans}}</a>
                         </li>
-                        <li class="navbar-divider"></li>
+                        <li class="navbar-divider hidden-md-down"></li>
                         <li class="nav-item">
                             <a href="/safety" class="nav-link">{{ 'Volunteer' | trans}}</a>
                         </li>
-                        <li class="navbar-divider"></li>
-                        <li class="nav-item dropdown">
+                        <li class="navbar-divider hidden-md-down"></li>
+                        <li class="nav-item dropdown hidden-md-down">
                             <a href="#" class="nav-link" id="dLabel" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 &#9776;
                             </a>

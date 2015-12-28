@@ -11,7 +11,7 @@ class GroupImagesCreator extends ImagesCreator
     protected function getImageRecords($limit, $startId = null)
     {
         $sSql = '
-SELECT id,Picture name
+SELECT id picid,Picture name
 FROM groups
 WHERE NOT Picture=""
 ORDER BY id ' . $this->getLimitText($limit);

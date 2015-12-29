@@ -65,7 +65,7 @@
 
                     <!-- messages tabs -->
                     <ul class="nav nav-tabs">
-                        <li class="nav-item"><a href="#messages" class="nav-link active" aria-controls="messages" role="tab" data-toggle="tab">Messages received <span class="label label-primary label-pill">3</span></a></li>
+                        <li class="nav-item"><a href="#messages" class="nav-link active" aria-controls="messages" role="tab" data-toggle="tab">Messages received <span class="label label-primary">3</span></a></li>
                         <li class="nav-item"><a href="#notifications" class="nav-link" aria-controls="sent" role="tab" data-toggle="tab">Notifications</a></li>
                     </ul>
 
@@ -112,7 +112,7 @@
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
                                             <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-105?50_50" alt="Profile" /></a>
+                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-130?50_50" alt="Profile" /></a>
                                             </div>
                                             <div class="dashentry">
                                                 <p class="text-truncate">
@@ -129,7 +129,7 @@
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
                                             <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-105?50_50" alt="Profile" /></a>
+                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-131?50_50" alt="Profile" /></a>
                                             </div>
                                             <div class="dashentry">
                                                 <p class="text-truncate">
@@ -146,7 +146,7 @@
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
                                             <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-105?50_50" alt="Profile" /></a>
+                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-132?50_50" alt="Profile" /></a>
                                             </div>
                                             <div class="dashentry">
                                                 <p class="text-truncate">
@@ -166,8 +166,47 @@
 
                             {# load system notifications #}
                             <div role="tabpanel" class="tab-pane" id="notifications">
-                                system notifications
+
+                                <div class="scrollcontent">
+                                    {# 5x system notification per row #}
+                                    <div class="row p-l-1 p-r-1">
+                                        <div class="col-xs-12 fullheight">
+                                            <div class="hidden-xs-down pull-xs-left avatarpadding">
+                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-210?50_50" alt="Profile" /></a>
+                                            </div>
+                                            <div class="dashentry">
+                                                <p class="text-truncate">
+                                                    <a href="#">This is a system notification.</a><br>
+                                                    <small>Sent 10 minutes ago</small>
+                                                </p>
+                                            </div>
+                                            <div class="pull-xs-right chevplace">
+                                                <a href="#"><i class="fa fa-chevron-right"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row p-l-1 p-r-1">
+                                        <div class="col-xs-12 fullheight">
+                                            <div class="hidden-xs-down pull-xs-left avatarpadding">
+                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-211?50_50" alt="Profile" /></a>
+                                            </div>
+                                            <div class="dashentry">
+                                                <p class="text-truncate">
+                                                    <a href="#">Member-101 wanted to become friends with you</a><br>
+                                                    <small>Sent 10 minutes ago</small>
+                                                </p>
+                                            </div>
+                                            <div class="pull-xs-right chevplace">
+                                                <a href="#"><i class="fa fa-chevron-right"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
                             </div>
+
                         </div>
 
                         <!-- message buttons -->
@@ -180,10 +219,8 @@
                 {# community updates box #}
                 <div class="col-md-12 col-lg-7">
                     <ul class="nav nav-tabs">
-                        <li class="nav-item"><a href="#forum" class="nav-link active" aria-controls="forum" role="tab" data-toggle="tab">Forum <span class="label label-primary label-pill">2</span></a></li>
+                        <li class="nav-item"><a href="#forum" class="nav-link active" aria-controls="forum" role="tab" data-toggle="tab">Forum <span class="label label-primary">2</span></a></li>
                         <li class="nav-item"><a href="#activities" class="nav-link" aria-controls="activities" role="tab" data-toggle="tab">Activities</a></li>
-                        <li class="nav-item"><a href="#news" class="nav-link" aria-controls="news" role="tab" data-toggle="tab">News <span class="label label-primary">1</span></a></li>
-                        <li class="nav-item"><a href="#suggestions" class="nav-link" aria-controls="suggestions" role="tab" data-toggle="tab">Suggestions <span class="label label-primary label-pill">4</span></a></li>
                     </ul>
 
                     {# bordered box #}
@@ -214,12 +251,12 @@
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
                                             <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-105?50_50" alt="Profile" /></a>
+                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-167?50_50" alt="Profile" /></a>
                                             </div>
                                             <div class="dashentry">
                                                 <p class="text-truncate">
                                                     <strong><a href="#">Will this be the first couple of words of the last added forum message?</a></strong><br>
-                                                    <small>from <a href="#user">Membername</a> 10 minutes ago</small>
+                                                    <small>by <a href="#user">Membername</a> 10 minutes ago</small>
                                                 </p>
                                             </div>
                                             <div class="pull-xs-right chevplace">
@@ -231,12 +268,12 @@
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
                                             <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-105?50_50" alt="Profile" /></a>
+                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-168?50_50" alt="Profile" /></a>
                                             </div>
                                             <div class="dashentry">
                                                 <p class="text-truncate">
                                                     <a href="#">Or will it be the title?</a><br>
-                                                    <small>from <a href="#user">Membername</a> 11 minutes ago</small>
+                                                    <small>by <a href="#user">Membername</a> 11 minutes ago</small>
                                                 </p>
                                             </div>
                                             <div class="pull-xs-right chevplace">
@@ -248,12 +285,12 @@
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
                                             <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-105?50_50" alt="Profile" /></a>
+                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-169?50_50" alt="Profile" /></a>
                                             </div>
                                             <div class="dashentry">
                                                 <p class="text-truncate">
                                                     <strong><a href="#">And will it be possible to make it strong when new after last login?</a></strong><br>
-                                                    <small>from <a href="#user">Membername</a> 10 minutes ago</small>
+                                                    <small>by <a href="#user">Membername</a> 10 minutes ago</small>
                                                 </p>
                                             </div>
                                             <div class="pull-xs-right chevplace">
@@ -265,12 +302,12 @@
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
                                             <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-105?50_50" alt="Profile" /></a>
+                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-170?50_50" alt="Profile" /></a>
                                             </div>
                                             <div class="dashentry">
                                                 <p class="text-truncate">
                                                     <a href="#">Or will all messages be without extra attributes?</a><br>
-                                                    <small>from <a href="#user">Membername</a> 10 minutes ago</small>
+                                                    <small>by <a href="#user">Membername</a> 10 minutes ago</small>
                                                 </p>
                                             </div>
                                             <div class="pull-xs-right chevplace">
@@ -296,45 +333,70 @@
                             {# load activities #}
                             <div role="tabpanel" class="tab-pane" id="activities">
 
-                                <div class="row p-l-1 p-r-1">
-                                    <div class="col-xs-12 fullheight">
-                                        <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                            <a href="#user"><img class="float_left framed" src="members/avatar/member-105?50_50" alt="Profile" /></a>
+                                <div class="row text-xs-center p-a-1">
+                                        <div class="btn-group" role="group">
+                                            <a href="forums" class="btn btn-primary-outline"><i class="fa fa-map-o"></i> All activities</a>
+                                            <a href="groups/mygroups" class="btn btn-primary-outline"><i class="fa fa-calendar"></i> My activities</a>
+                                            <a href="forums/subscriptions" class="btn btn-primary-outline"><i class="fa fa-calendar-plus-o"></i> Create activity</a>
                                         </div>
-                                        <div class="pull-xs-left">
-                                            <div class="calendar calendar-icon-12">
-                                                <div class="calendar-day">24</div>
-                                                <div class="calendar-year">2015</div>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            Location
-                                        </div>
-                                        <div class="dashentry">
-                                            <p class="text-truncate">
-                                                <strong><a href="#">Title of the activity</a></strong><br>
-                                                <small>from <a href="#user">Membername</a> 10 minutes ago</small>
-                                            </p>
-                                        </div>
-                                        <div>
-                                            Attendees
-                                        </div>
-                                        <div class="pull-xs-right chevplace">
-                                            <a href="#"><i class="fa fa-chevron-right"></i></a>
-                                        </div>
-                                    </div>
                                 </div>
 
-                            </div>
+                                <div class="col-xs-12">
+                                    <table class="table">
+                                        <tbody>
 
-                            {# load news #}
-                            <div role="tabpanel" class="tab-pane" id="news">
-                                NEWS and Notifications
-                            </div>
+                                            <tr>
+                                                <td class="p-l-0 p-r-0" style="vertical-align: middle;">
+                                                    <div class="calendar calendar-icon-1">
+                                                        <div class="calendar-day">3</div>
+                                                    </div>
+                                                </td>
+                                                <td class="p-l-0" style="width: 55%; min-width: 55%; max-width: 60%; position: relative;">
+                                                            <small class="calendar-year">03-01-2016</small><br>
+                                                            <span class="text-truncate" style="position: absolute; width: 100%;"><strong><a href="#">This is a very long title for just a simple activity like playing board games</a></strong></span>
+                                                </td>
+                                                <td class="p-a-0" style="vertical-align: middle;">
+                                                    <span class="h4"><i class="fa fa-map-marker"></i></span>
+                                                </td>
+                                                <td class="compacttext" style="vertical-align: middle; padding-left: .25rem; min-width: 15%;">
+                                                    <small>Berlin<br>Federal Republic of Germany</small>
+                                                </td>
+                                                <td class="p-a-0" style="vertical-align: middle;">
+                                                <span class="h4"><i class="fa fa-users"></i></span>
+                                                </td>
+                                                <td class="compacttext p-r-0" style="min-width: 10%; vertical-align: middle; padding-left: .25rem;">
+                                                    <small>1 yes<br>300 maybe</small>
+                                                </td>
+                                            </tr>
 
-                            {# load suggestions #}
-                            <div role="tabpanel" class="tab-pane" id="suggestions">
-                                Suggestions
+                                            <tr>
+                                                <td class="p-l-0 p-r-0" style="vertical-align: middle;">
+                                                    <div class="calendar calendar-icon-1">
+                                                        <div class="calendar-day">3</div>
+                                                    </div>
+                                                </td>
+                                                <td class="p-l-0" style="width: 55%; min-width: 55%; max-width: 60%; position: relative;">
+                                                    <small class="calendar-year">03-01-2016</small><br>
+                                                    <span class="text-truncate" style="position: absolute; width: 100%;"><strong><a href="#">Small desc</a></strong></span>
+                                                </td>
+                                                <td class="p-a-0" style="vertical-align: middle;">
+                                                    <span class="h4"><i class="fa fa-map-marker"></i></span>
+                                                </td>
+                                                <td class="compacttext" style="vertical-align: middle; padding-left: .25rem; width: 15%; min-width: 15%;">
+                                                    <small>Paris<br>France</small>
+                                                </td>
+                                                <td class="p-a-0" style="vertical-align: middle;">
+                                                    <span class="h4"><i class="fa fa-users"></i></span>
+                                                </td>
+                                                <td class="compacttext p-r-0" style="width: 10%; min-width: 10%; vertical-align: middle; padding-left: .25rem;">
+                                                    <small>100 yes<br>30 maybe</small>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
                             </div>
 
                         </div>
@@ -350,13 +412,12 @@
                     <div class="card card-4">
                         <div class="card-block">
                             <h4 class="card-title">Be Involved<br /><small>help the community</small></h4>
-                            <p class="card-text">BeWelcome is run by volunteers - free of charge and open source. Volunteering for the project is a great opportunity for you to get to know enthusiastic people who really believe in promoting hospitality and respect for each other. And it's fun, too!</p>
-                            <div class="smallmargin btn-group" role="group">
-                                <a href="about/getactive" class="btn btn-primary-outline btn-block" role="button"><i class="fa fa-wrench"></i> Help BeWelcome</a>
-                                <a href="donate" class="btn btn-primary-outline btn-block" role="button"><i class="fa fa-euro"></i> Please donate</a>
-                            </div>
-                            <progress class="progress progress-primary" value="60" max="100">60%</progress>
-                            <p class="card-text">€600.00 of €1000.00 received</p>
+                            <p class="card-text text-justify">BeWelcome is run by volunteers - free of charge and open source. Volunteering for the project is a great opportunity for you to get to know enthusiastic people who really believe in promoting hospitality and respect for each other. And it's fun, too!</p>
+                            <a href="about/getactive" class="btn btn-primary-outline btn-block m-b-1"><i class="fa fa-wrench"></i> Help BeWelcome</a>
+                            <a href="donate" class="btn btn-primary-outline btn-block m-b-1"><i class="fa fa-euro"></i> Please donate</a>
+                            <p class="card-text text-xs-center m-b-0">Goal for 2016-2017: <strong>€1000,-</strong></p>
+                            <progress class="progress progress-primary m-a-0" value="60" max="100"></progress>
+                            <p class="card-text text-xs-center"><strong>€600.00</strong> received</p>
                         </div>
                     </div>
 
@@ -365,59 +426,51 @@
                         <div class="card-block">
                             <h4 class="card-title">Potential guests<br /><small>travelers in your area</small></h4>
 
-                            <div class="smallmargin">
-                                <div class="media">
-                                    <div class="text-xs-center"><h5 class="media-heading">Username</h5></div>
-                                    <div class="media-left">
+                                <div class="media m-t-1">
+                                    <div class="h6 m-a-0"><a href="#">Member-150</a></div>
+                                    <div class="media-left p-a-0 pull-xs-left">
                                         <a href="#">
                                             <img class="float_left framed" src="members/avatar/member-150?50_50" alt="Profile" />
                                         </a>
                                     </div>
-                                    <div class="media-body">
+                                    <div class="media-body p-a-0">
                                         <p class="m-a-0 p-a-0"><i class="fa fa-calendar"></i> <small>01-10-2015</small></p>
                                         <p class="m-a-0 p-a-0"><i class="fa fa-rocket"></i> <small>04-10-2015</small></p>
                                         <p class="m-a-0 p-a-0"><i class="fa fa-home"></i> <small>Berlin, Germany</small></p>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="smallmargin">
-                                <div class="media">
-                                    <div class="text-xs-center"><h5 class="media-heading">Username</h5></div>
-                                    <div class="media-left">
+                            <div class="media m-t-1">
+                                    <div class="h6 m-a-0"><a href="#">Member-161</a></div>
+                                    <div class="media-left p-a-0 pull-xs-left">
                                         <a href="#">
                                             <img class="float_left framed" src="members/avatar/member-161?50_50" alt="Profile" />
                                         </a>
                                     </div>
-                                    <div class="media-body">
+                                    <div class="media-body p-a-0">
                                         <p class="m-a-0 p-a-0"><i class="fa fa-calendar"></i> <small>20-10-2015</small></p>
                                         <p class="m-a-0 p-a-0"><i class="fa fa-rocket"></i> <small>25-10-2015</small></p>
                                         <p class="m-a-0 p-a-0"><i class="fa fa-home"></i> <small>Paris, France</small></p>
                                     </div>
                                 </div>
-                            </div>
 
-                           <div class="smallmargin btn-group" role="group">
+                           <div class="btn-group m-t-1" role="group">
                                 <a href="trips" class="btn btn-primary-outline btn-block"><i class="fa fa-plus-circle"></i> View more</a>
                                 <a href="trips/create" class="btn btn-primary-outline btn-block"><i class="fa fa-map-marker"></i> Plan your trip</a>
                             </div>
                         </div>
                     </div>
 
-                    {# Settings #}
+                    {# Community News #}
                     <div class="card card-3 hidden-md-down">
                         <div class="card-block">
-                            <h4 class="card-title">Community news<br /><small>and updates</small></h4>
+                            <h4 class="card-title">Community News<br /><small>and other updates</small></h4>
 
-                            <div class="list-group">
-                                <a href="#" class="list-group-item">
-                                    <h5 class="list-group-item-heading">Outcomes GA2015</h5>
-                                    <p class="list-group-item-text">Just the first line. Maybe the second. Let's say about twenty-five words, so someone can read something. Then ...</p>
-                                    <p>Read more...</p>
-                                </a>
-                            </div>
+                            <h5><a href="#">Outcomes GA2015</a></h5>
+                            <p class="card-text text-justify">Just the first line. Maybe the second. Let's say about fourty words, so someone can read something. I have to fill up this text to get to approximately 40 words, else you won't see the effect. Then ... <a href="#" class="btn-primary-outline">Read more</a></p>
+                            <div><small>01-01-2016</small><small class="pull-xs-right">3 comments</small></div>
 
-                            <a href="mypreferences" class="btn btn-primary-outline btn-block"><i class="fa fa-newspaper-o"></i> Older news</a>
+                            <a href="mypreferences" class="btn btn-primary-outline btn-block m-t-2"><i class="fa fa-newspaper-o"></i> Older news</a>
                         </div>
                     </div>
 
@@ -425,11 +478,15 @@
                     <div class="card card-2">
                         <div class="card-block">
                             <h4 class="card-title">Be Informed<br /><small>Transparency</small></h4>
+                            <a href="faq" class="btn btn-primary-outline btn-sm btn-block"><i class="fa fa-question"></i> About</a>
                             <a href="faq" class="btn btn-primary-outline btn-sm btn-block"><i class="fa fa-question"></i> FAQ</a>
-                            <a href="safety" class="btn btn-primary-outline btn-sm btn-block"><i class="fa fa-shield"></i> Safety</a>
+                            <a href="wiki" class="btn btn-primary-outline btn-sm btn-block"><i class="fa fa-book"></i> Wiki</a>
+                            <a href="safety" class="btn btn-primary-outline btn-sm btn-block m-b-1"><i class="fa fa-shield"></i> Contact</a>
                             <a href="wiki/BeVolunteer" class="btn btn-primary-outline btn-sm btn-block"><i class="fa fa-bullseye"></i> BeVolunteer</a>
-                            <a href="wiki/Finances" class="btn btn-primary-outline btn-sm btn-block"><i class="fa fa-money"></i> Finances</a>
                             <a href="wiki/Annual_Report" class="btn btn-primary-outline btn-sm btn-block"><i class="fa fa-book"></i> Annual report</a>
+                            <a href="wiki/Finances" class="btn btn-primary-outline btn-sm btn-block m-b-1"><i class="fa fa-money"></i> Finances</a>
+                            <a href="wiki/Annual_Report" class="btn btn-primary-outline btn-sm btn-block"><i class="fa fa-book"></i> Terms of Use</a>
+                            <a href="wiki/Annual_Report" class="btn btn-primary-outline btn-sm btn-block"><i class="fa fa-book"></i> Privacy Policy</a>
                         </div>
                     </div>
 

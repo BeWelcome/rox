@@ -48,6 +48,10 @@
   */
 }
 
+.nav-tabs .nav-link:focus, .nav-tabs .nav-link:hover {
+  border-color: #ddd #ddd transparent;
+}
+
 .nav-tabs {
   .nav-item > .active {
     border: 1px solid #888;

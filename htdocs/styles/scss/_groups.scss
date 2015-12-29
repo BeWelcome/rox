@@ -1,0 +1,85 @@
+#groups {
+  padding-left: ($grid-gutter-width /2);
+  padding-right: ($grid-gutter-width /2);
+}
+#groups {
+  .groupbox {
+    margin-top: 0.8em;
+    margin-bottom: 0.8em;
+    margin-right: 2em;
+    width: 260px;
+  }
+  .groupboxright {
+    margin-top: 0.8em;
+    margin-bottom: 0.8em;
+    width: 260px;
+  }
+  .group_float_left {
+    float: left;
+  }
+  .groupinfo {
+    margin-left: 100px;
+  }
+  .groupinfo h4 {
+    font-size: $font-size-base;
+  }
+
+  .groupinfo ul {
+    padding: 0;
+  }
+  .groupinfo li {
+    font-size: $font-size-sm;
+    list-style-type: none;
+    color: #888;
+  }
+  .groupinfo p {
+    clear: both;
+  }
+
+  .groupmembers {
+    padding-right: 25px;
+    width: 60px;
+    overflow: hidden;
+  }
+
+  .groupsettinginfo {
+    margin-bottom: 1.5em;
+  }
+
+  #search_result {
+    padding: 3px;
+    margin-bottom: 1em;
+  }
+
+  #search_result a {
+    margin: 0.4em;
+    display: block;
+  }
+
+  .page {
+    padding: $pagination-padding-y $pagination-padding-x;
+    margin-left: -1px;
+    line-height: $line-height;
+  }
+}
+
+/* Special classes for relatedgrouplogs*/
+#main {
+  li.picbox_relatedgroup {
+    padding: 7px;
+    width: 230px;
+    padding-left: 0px;
+  }
+  img.framed_relatedgroup {
+    background: none repeat scroll 0 0 #F3F3F3;
+    border: 1px solid #DDDDDD;
+    padding: 1px;
+    margin-bottom: 1.5em;
+    width: 60px;
+    height: 60px;
+  }
+  .relatedgroupinfo {
+    float: left;
+    width: 48%;
+  }
+}

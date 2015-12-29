@@ -1,0 +1,186 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  /* Margin bottom by footer height */
+  text-rendering: optimizeLegibility;
+  margin-bottom: 8em;
+  background: url("../../images/bggrey.png") repeat-x scroll left top #F7F7F7;
+}
+
+body > footer {
+  font-size: 80%;
+  line-height: 1.1;
+  font-weight: normal;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: .5rem 0;
+
+  /* Set the fixed height of the footer here */
+  height: 8em;
+  background-color: #555;
+  color: #999;
+
+  a {color:#aaa; white-space: nowrap; }
+  a:hover { color:#fff; }
+  a:focus { color:#fff; }
+}
+
+// standard framed box with slight shadow
+.framed {
+  background-color: #EEEEEE;
+  border: 3px solid #FFFFFF;
+}
+
+.shadowed {
+  box-shadow: 0 0 1px #888888;
+}
+
+@include media-breakpoint-up(md){
+  .verticalalign{
+    @include vertical-align();
+  }
+
+  .fullheight{
+    height: 100%;
+  }
+
+}
+
+// Styles for auto complete box
+.ui-menu-item-highlight {
+  font-weight: bold;
+}
+.ui-autocomplete-loading {
+  background: white url("images/ui-anim_basic_16x16.gif") right center no-repeat;
+}
+
+.button {
+  display: inline-block;
+  font-weight: $btn-font-weight;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: $input-btn-border-width solid transparent;
+  @include button-size($btn-padding-y, $btn-padding-x, $font-size-base, $line-height, $btn-border-radius);
+  @include transition(all .2s ease-in-out);
+
+  &,
+  &:active,
+  &.active {
+    &:focus,
+    &.focus {
+      @include tab-focus();
+    }
+  }
+
+  @include hover-focus {
+    text-decoration: none;
+  }
+  &.focus {
+    text-decoration: none;
+  }
+
+  &:active,
+  &.active {
+    background-image: none;
+    outline: 0;
+    @include box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
+  }
+
+  &.disabled,
+  &:disabled {
+    cursor: $cursor-disabled;
+    opacity: .65;
+    @include box-shadow(none);
+  }
+
+  @include button-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border);
+}
+
+// Flash notice styles
+.flash {
+  border: 1px solid;
+  border-radius: 5px;
+  clear: both;
+  margin-bottom: 1em;
+  padding: 1.25em;
+
+  &.error {
+    background: #ffebe8;
+    border: 2px #ff0000;
+  }
+
+  &.notice {
+    background: #fff8c3;
+    border-color: #888;
+  }
+}
+
+#teaser {
+  padding-left: ($grid-gutter-width /2);
+  padding-right: ($grid-gutter-width /2);
+  padding-bottom: .5rem;
+  border-bottom: 2px solid #eee;
+  margin-bottom: 1rem;
+}
+
+.float_left {
+  float: left !important;
+}
+
+.pull-left {
+  float: left !important;
+}
+
+.float_right {
+  float: right !important;
+}
+
+.pull-right {
+  float: right !important;
+}
+
+#col1 {
+  ul {
+    padding-left: 0;
+
+    li {
+      list-style-type: none;
+    }
+  }
+
+  .tag_largest {
+    font-size: $font-size-lg;
+  }
+  .tag_large {
+    font-size: $font-size-base;
+  }
+  .tag_small {
+    font-size: $font-size-sm;
+  }
+  .tag_smallest {
+    font-size: $font-size-xs;
+  }
+}
+
+#col3 li {
+  list-style-type: none;
+}
+
+.submenu {
+  padding-left: ($grid-gutter-width /2);
+  padding-right: ($grid-gutter-width /2);
+}
+
+.fullpager {
+  width: 100%;
+  @include clearfix();
+}

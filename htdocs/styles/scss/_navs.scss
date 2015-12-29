@@ -47,3 +47,10 @@
   }
   */
 }
+
+.nav-tabs {
+  .nav-item > .active {
+    border: 1px solid #888;
+    border-bottom: 1px solid transparent;
+  }
+}

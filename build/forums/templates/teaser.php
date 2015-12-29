@@ -7,8 +7,8 @@ if (isset($this->keyword)) {
 ?>
 
 <div id="teaser" class="page-teaser clearfix">
-    <div id="title" class="pull-left">
-        <h1>
+    <div id="title" class="fullheight">
+        <h1 class="pull-xs-left">
             <a href="forums"><?php echo $this->_model->words->getFormatted('CommunityLanding'); ?></a>
 
 <?php if ($this->_model->getTopMode() == Forums::CV_TOPMODE_FORUM) {
@@ -16,25 +16,21 @@ if (isset($this->keyword)) {
       }
 ?>
         </h1>
-
-        <!-- CategoryTitle in teaser -->
-        <div class="forumtitle">
-            <?php $title = $boards->getBoardName();
-            if (($title != 'Forums')and(!(empty($title)))) {
+        <div class="pull-xs-right fullheight">
+            <!-- Google froum search bar -->
+            <form action="/forums/search" class="verticalalign" method="POST" id="search-box"><div>
+                    <input type="hidden" name="<?= $this->searchCallbackId ?>" value="1" />
+                    <input type="text" name="fs-keyword" size="15" placeholder="<?= $this->_model->words->getFormatted('ForumSearch') ?>" value="<?= $keyword ?>"/>
+                    <input type="submit" name="fss" value="<?php echo $this->_model->words->getSilent('Search')?>" /> <?php echo $this->_model->words->flushBuffer(); ?></div>
+            </form>
+        </div> <!-- float_right -->
+    </div>
+    <!-- CategoryTitle in teaser -->
+    <div class="forumtitle">
+        <?php $title = $boards->getBoardName();
+        if (($title != 'Forums') and (!(empty($title)))) {
             //  echo '<a href="forums/', $title ,'">', $title,'</a>';
-            }
-            ?>
-        </div> <!-- forumtitle -->
-    </div> <!-- title -->
-
-
-    <div class="pull-right">
-        <!-- Google froum search bar -->
-        <p><?php echo $this->_model->words->getFormatted('ForumSearch'); ?></p>
-        <form action="/forums/search" method="POST" id="search-box"><div>
-            <input type="hidden" name="<?= $this->searchCallbackId ?>" value="1" />
-            <input type="text" name="fs-keyword" size="15" placeholder="<?php echo $this->_model->words->getSilent('ForumsSearchInfo')?>" value="<?=$keyword?>"/>
-            <input type="submit" name="fss" value="<?php echo $this->_model->words->getSilent('Search')?>" /> <?php echo $this->_model->words->flushBuffer(); ?></div>
-        </form>
-    </div> <!-- float_right -->
+        }
+        ?>
+    </div> <!-- forumtitle -->
 </div> <!-- teaser -->

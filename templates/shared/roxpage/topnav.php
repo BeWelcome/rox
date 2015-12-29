@@ -35,7 +35,7 @@ $R = MOD_right::get();
 if ($logged_in) {
     $roxModel = new RoxModelBase();
     if ($R->hasRight('Comments') || ($R->hasRight('Checker'))) {
-        echo '<div class="row"><ul class="nav nav-inline pull-xs-right m-a-1">';
+        echo '<div class="container"><div class="row"><ul class="nav nav-inline pull-xs-right m-t-1 m-b-1">';
     }
     if ($R->hasRight('Comments')) {
         echo '<li class="nav-item"><a class="nav-link" href="bw/admin/admincomments.php" title="Review negative comments">Negative comments <span class="label label-primary">' . $numberReportedComments . '</span></a></li>';
@@ -44,6 +44,6 @@ if ($logged_in) {
         echo '<li class="nav-item"><a class="nav-link" href="bw/admin/adminchecker.php?action=viewSpamSayMember" title="Review messages reported by users as spam">Reported messages <span class="label label-primary">' . $numberSpamToBeChecked . '</span></a></li>';
     }
     if ($R->hasRight('Comments') || ($R->hasRight('Checker'))) {
-        echo '</ul></div>';
+        echo '</ul></div></div></div>';
     }
 }

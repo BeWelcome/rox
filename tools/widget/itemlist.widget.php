@@ -29,7 +29,7 @@ class ItemlistWidget extends RoxWidget
     protected function showItems_table()
     {
         echo '
-        <table class="full">';
+        <table class="table table-striped">';
         // table headline
         if (!$this->hideColumnTitles()) {
             echo '

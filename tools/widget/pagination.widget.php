@@ -53,10 +53,10 @@ class ItemlistWithPagination extends ItemlistWidget
         
         echo '
         <div class="pages clearfix">
-        <ul class="pagination pagination-nomargin pull-right">';
+        <ul class="pagination m-t-0 m-b-0 pull-right">';
         if ($active_page > 1) {
             echo '
-            <li class="page-item"><a class="page-link">href="'.$this->hrefPage($active_page-1).'">&laquo;</a></li>';
+            <li class="page-item"><a class="page-link" href="'.$this->hrefPage($active_page-1).'">&laquo;</a></li>';
         } else {
             echo '
             <li class="page-item"><a class="page-link disabled">&laquo;</a></li>';

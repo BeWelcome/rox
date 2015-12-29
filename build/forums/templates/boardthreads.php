@@ -25,9 +25,9 @@ Boston, MA  02111-1307, USA.
     $words = new MOD_words();
     $layoutbits = new MOD_layoutbits();
     if (empty($TIGHT_THREADLIST)) {
-        $threadliststyle = "forumsboardthreads";
+        $threadliststyle = "forumsboardthreads table table-striped";
     } else {
-        $threadliststyle = "forumsboardthreadstight";
+        $threadliststyle = "forumsboardthreadstight table table-striped";
     }
     
 ?>

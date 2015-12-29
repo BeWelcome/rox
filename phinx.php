@@ -36,6 +36,7 @@ if (!empty($inifile)) {
         }
     }
     $config = array(
+        "migration_base_class" => "Rox\\Tools\\RoxMigration",
         "paths" => array(
             "migrations" => "%%PHINX_CONFIG_DIR%%/migrations",
         ),

@@ -58,7 +58,7 @@
                                 &#9776;
                             </a>
 
-                            <div class="dropdown-menu subnav" aria-labelledby="dLabel" style="">
+                            <div class="dropdown-menu subnav" aria-labelledby="dLabel">
                                <div class="container">
                                         <div class="p-t-1 p-b-1">
                                             <div class="row">
@@ -137,9 +137,12 @@
                                     </div>
                             </div>
                         </li>
-                        <li class="nav-item dropdown pull-xs-right">
-                            <a href="/logout" class="nav-link dropdown-toggle" data-toggle="dropdown"><noscript>{{ 'Logout' | trans }}</noscript>&nbsp;<i class="fa fa-lg fa-gear" style="vertical-align: middle"></i> <span class="caret"></span></a>
+
+                        {# normal member dropdown #}
+                        <li class="nav-item dropdown pull-xs-right hidden-md-down">
+                            <a href="/members/{{ username }}" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ username }} <span class="caret"></span></a>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                <li class="text-xs-right"><a href="/members/{{ username }}" class="dropdown-item"><img src="members/avatar/{{ username }}?30_30"> {{ 'MyProfile' | trans }}</a></li>
                                 <li class="text-xs-right"><a href="/editmyprofile" class="dropdown-item">{{ 'EditMyProfile' | trans }}</a></li>
                                 <li class="text-xs-right"><a href="/mypreferences" class="dropdown-item">{{ 'MyPreferences' | trans }}</a></li>
                                 <li class="text-xs-right"><a href="/mynotes" class="dropdown-item">{{ 'ProfileMyNotes' | trans }}</a></li>
@@ -148,14 +151,42 @@
                                 <li class="text-xs-right"><a href="/logout" class="dropdown-item">{{ 'Logout' | trans }}</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item  pull-xs-right">
+
+                        {# logout on smaller screens #}
+                        <li class="nav-item pull-xs-right hidden-lg-up"><a href="/logout" class="nav-link"><i class="fa fa-sign-out"></i></a></li>
+
+                        {# messages #}
+                        <li class="nav-item pull-xs-right">
                             <a href="/messages" class="nav-link"><i class="fa fa-lg fa-inbox"></i><noscript>{{ 'MyInbox' | trans }}</noscript> <span class="label label-warning">{{ messages }}</span></a>
                         </li>
-                        <li class="hidden-sm-down nav-item pull-xs-right p-t-0 p-b-0">
-                            <a class="nav-link" href="/members/{{ username }}"><img src="members/avatar/{{ username }}?30_30"></a>
+
+                        {# profile link on smaller screens #}
+                        <li class="nav-item pull-xs-right hidden-lg-up">
+                            <a href="/members/{{ username }}" class="nav-link"><i class="fa fa-user"></i><span class="hidden-md-down"> {{ username }} </span></a>
                         </li>
+
                     </ul>
             </div>
+
+            {# Always have something for noscripters #}
+            <noscript>
+                <div class="hidden-lg-up">
+                    <ul class="nav navbar-nav">
+                        <li class="nav-item"><a href="/search" class="nav-link">{{ 'FindMembers' | trans }}</a></li>
+                        <li class="nav-item"><a href="/community" class="nav-link">{{ 'CommunityMenu' | trans }}</a></li>
+                        <li class="nav-item"><a href="/safety" class="nav-link">{{ 'Safety' | trans}}</a></li>
+                        <li class="nav-item"><a href="wiki/importantlinks" class="nav-link">All important links</a></li>
+                        <li class="nav-item"><a href="/messages" class="nav-link">{{ 'MyMessages' | trans }}</a></li>
+                        <li class="nav-item"><a href="/members/{{ username }}" class="nav-link">{{ username }}</a></li>
+                    </ul>
+                </div>
+
+                {# always show a noscript logout #}
+                <ul class="nav navbar-nav">
+                    <li class="nav-item pull-xs-right"><a href="/logout" class="nav-link">{{ 'Logout' | trans }}</a></li>
+                </ul>
+            </noscript>
+
         </div>
 
     </nav>

@@ -135,6 +135,7 @@ class TwigView extends AbstractBasePage {
         $roxModel = new RoxModelBase();
         $member = $roxModel->getLoggedInMember();
         $loggedIn = ($member !== false);
+        $teams = [];
         $messageCount = 0;
         if ($loggedIn) {
             $messageCount =
@@ -142,14 +143,78 @@ class TwigView extends AbstractBasePage {
                     ->where('WhenFirstRead', '0000-00-00 00:00')
                     ->where('Status', 'Sent')
                     ->count();
+            // Check if member is part of volunteer teams
+            $R = \MOD_right::get();
+            $allTeams = [
+                [
+                    'Words',
+                    'AdminWord',
+                    'admin/word'
+                ],
+                [
+                    'Flags',
+                    'AdminFlags',
+                    'admin/flags'
+                ],
+                [
+                    'Rights',
+                    'AdminRights',
+                    'admin/rights'
+                ],
+                [
+                    'Logs',
+                    'AdminLogs',
+                    'bw/admin/adminlogs.php'
+                ],
+                [
+                    'Comments',
+                    'AdminComments',
+                    'bw/admin/admincomments.php'
+                ],
+                [
+                    'NewMembersBeWelcome',
+                    'AdminNewMembers',
+                    'admin/newmembers',
+                ],
+                [
+                    'MassMail',
+                    'AdminMassMail',
+                    'admin/massmail'
+                ],
+                [
+                    'Treasurer',
+                    'AdminTreasurer',
+                    'admin/treasurer'
+                ],
+                [
+                    'FAQ',
+                    'AdminFAQ',
+                    'bw/faq.php'
+                ],
+                [
+                    'SqlForVolunteers',
+                    'AdminSqlForVolunteers',
+                    'bw/admin/adminquery.php'
+                ],
+            ];
+            foreach($allTeams as $team) {
+                if ($R->hasRight($team[0])) {
+                    $cls = new \stdClass();
+                    $cls->link = $team[2];
+                    $cls->trans = $team[1];
+                    $teams[] = $cls;
+                }
+            }
         }
+
         return array(
             'container' => $this->_container,
             'logged_in' => $loggedIn,
             'messages' => $messageCount,
             'username' => ($loggedIn ? $member->Username : ''),
             'meta.robots' => 'ALL',
-            'title' => 'BeWelcome'
+            'title' => 'BeWelcome',
+            'teams' => $teams
         );
     }
 

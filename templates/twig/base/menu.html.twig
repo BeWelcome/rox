@@ -49,7 +49,7 @@
                         </li>
                         <li class="navbar-divider hidden-md-down"></li>
                         <li class="nav-item">
-                            <a href="/safety" class="nav-link">{{ 'Volunteer' | trans}}</a>
+                            <a href="/volunteer" class="nav-link">{{ 'Volunteer' | trans}}</a>
                         </li>
                         <li class="navbar-divider hidden-md-down"></li>
                         <noscript><li class="nav-item"><a href="wiki/importantlinks" class="nav-link">All important links</a></li></noscript>
@@ -105,14 +105,10 @@
                                                     <dl>
                                                         <a href="/about/getactive"><dd>{{ 'About_GetActive' | trans}}</dd></a>
                                                         <a href="/donate"><dd>{{ 'DonateLink'  | trans}}</dd></a>
+                                                        {% for team in teams if teams %}
+                                                            <a href="/{{ team.link }}"><dd class="m-b-0">{{ team.trans | trans}}</dd></a>
+                                                        {% endfor %}
                                                     </dl>
-                                                    {% if not (teams is empty) %}
-                                                        <dl>
-                                                            {% for team in teams %}
-                                                                <a href="{{ team }}"><dd class="m-b-0">{{ team | trans}}</dd></a>
-                                                            {% endfor %}
-                                                        </dl>
-                                                    {% endif %}
                                                 </div>
 
                                                 <div class="col-xs-4">

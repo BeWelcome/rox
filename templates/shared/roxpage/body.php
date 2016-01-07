@@ -1,4 +1,4 @@
-
+<div class="navandcontent">
     <!-- #main: content begins here -->
     <div id="main">
         <?php $this->topnav() ?>
@@ -14,6 +14,7 @@
 
         <?php $this->columnsArea() ?>
     </div> <!-- main -->
+</div>
 <div>
     <?php $this->debugInfo() ?>
     <?php $this->leftoverTranslationLinks() ?>

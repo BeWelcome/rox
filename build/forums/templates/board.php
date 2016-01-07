@@ -77,7 +77,7 @@ if ($boardName != 'no tags') {
 ?>
 <?php echo $words->flushBuffer(); ?>
 
-<h3><?php
+<!-- <h3><?php
 
 	$number = $boards->getTotalThreads(); 
 	if ($number == 0) {
@@ -90,6 +90,7 @@ if ($boardName != 'no tags') {
 	}
 
 ?></h3>
+-->
 
 <?php
 if ($User && empty($noForumNewTopicButton)) {

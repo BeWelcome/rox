@@ -893,11 +893,11 @@ WHERE `iso_alpha2` = '%s'
 
 
             if (count($this->tags)>0 && $this->tags[0]) {
-               $title =$gtitle." ".$taginfo[$this->tags[count($this->tags) -1]];
+               $title = $taginfo[$this->tags[count($this->tags) -1]];
                $href = $url.'/t'.$this->tags[count($this->tags) -1].'-'.$title;
             }
             else {
-               $title =  $gtitle." "."no tags";
+               $title =  "no tags";
                $href = $url.'/t'.'-'.$title;
             }
 
@@ -905,7 +905,7 @@ WHERE `iso_alpha2` = '%s'
             $this->board = new Board($this->dao, $title, $href, $subboards, $this->tags, $this->continent,false,false,false,false,$this->IdGroup);
             $this->board->initThreads($this->getPage(), $showsticky);
         } else {
-            $this->board = new Board($this->dao, $gtitle, ".", $subboards, $this->tags, $this->continent,false,false,false,false,$this->IdGroup);
+            $this->board = new Board($this->dao, "", ".", $subboards, $this->tags, $this->continent,false,false,false,false,$this->IdGroup);
 //            foreach (Forums::$continents as $code => $name) {
 //                $this->board->add(new Board($this->dao, $name, 'k'.$code.'-'.$name));
 //            }

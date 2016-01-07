@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 require_once "footer.helper.php";
 ?>
 
-<footer class="footer">
+<div class="stickyfooter">
     <div class="container">
 <form style="display: inline;" action="a" method="post">
 <div class="float_left"><?= $words->get('FooterSiteDisplayed', _languageFooterSelectorDropDown()) ?>
@@ -48,4 +48,4 @@ require_once "footer.helper.php";
      <?=$words->get('RunningOn') ?> <a style="display:inline" href="http://trac.bewelcome.org/">BW Rox</a> rev. <a href="http://github.com/BeWelcome/rox/commit/<?php echo $versionInfo; ?>"><?php echo $versionInfo; ?></a>
      (<span title="<?php echo $deploymentDateTime; ?>"><?php echo $deploymentDate; ?></span>)</em></p>
     </div>
-</footer>
+</div>

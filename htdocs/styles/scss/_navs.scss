@@ -8,13 +8,22 @@
 
 .nav-pills {
 
-  .nav-item {
-    background-color: #ddd;
+  a {
     color: $brand-primary;
+  }
+
+  .nav-item {
+    background-color: #e5e5e5;
+    color: white;
     border-radius: 5px;
-    font-family: Signika-Bold, LatoWeb, sans-serif;
+    font-family: LatoWeb, sans-serif;
     font-weight: normal;
-    margin-right: 1rem;
+    margin-right: ($spacer-x /2);
+  }
+
+  .nav-item > .active  a {
+    color: white;
+
   }
 
   .nav-item > .active  {

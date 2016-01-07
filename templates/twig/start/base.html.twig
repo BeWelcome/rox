@@ -23,14 +23,25 @@
     <![endif]-->
 </head>
 <body>
-    <div class="navandcontent">
+<div class="nonfooter">
+    {% if logged_in %}
         {% include '@base/menu.html.twig' %}
-        <noscript><h1>Please activate Javascript for bewelcome.org<small>Without it some function won't work.</small></h1></noscript>
+    {% else %}
+        {% include '@base/loginbar.html.twig' %}
+    {% endif %}
+    <noscript><h1>Please activate Javascript for bewelcome.org<small>Without it some function won't work.</small></h1></noscript>
+    {% if container %}
+        {# Add container div only if needed #}
         <div class="container">
-        {% block content %}{% endblock %}
-            </div>
-    </div>
-    {% include '@base/footer.html.twig' %}
+    {% endif %}
+    {% block content %}{% endblock %}
+    {% if container %}
+        </div>
+    {% endif %}
+</div>
+    {% if logged_in %}
+        {% include '@base/footer.html.twig' %}
+    {% endif %}
     {% include '@base/scriptfiles.html.twig' with {scriptFiles : lateScriptFiles} %}
 </body>
 </html>

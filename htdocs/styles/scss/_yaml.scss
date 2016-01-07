@@ -1,9 +1,5 @@
-.bw-row {
-  @include make-row();
-}
-
 .subcolumns {
-  @include make-row();
+/*  @include make-row(); */
 }
 
 @include media-breakpoint-up(xs) {

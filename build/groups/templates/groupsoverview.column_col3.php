@@ -1,23 +1,19 @@
 <div id="groups">
-    <div class="subcolumns">
+    <div class="subcolumns m-b-1">
         <div class="c62l">
             <div class="subcl">
-                <div class="bw-row">
                     <h3><?= $words->get('GroupsSearchHeading'); ?></h3>
                     <p><?= $words->get('GroupsSearchDescription'); ?></p>
                     <form action="groups/search" method="get">
                     <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" class="button" value="<?= $words->get('Search'); ?>" />
                     </form>
-                </div>
             </div> <!-- subcl -->
         </div> <!-- c62l -->
         <div class="c38r">
             <div class="subcr">
-                <div class="bw-row">
                     <h3><?= $words->get('GroupsCreateHeading'); ?></h3>
                     <p><?= $words->get('GroupsCreateDescription'); ?></p>
                     <a class="button" role="button" href="groups/new"><span><?= $words->get('GroupsCreateNew'); ?></span></a>
-                </div>
             </div> <!-- subcr -->
         </div> <!-- c38r -->
     </div> <!-- subcolums -->

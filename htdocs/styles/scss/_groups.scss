@@ -40,6 +40,7 @@
     padding-right: 25px;
     width: 60px;
     overflow: hidden;
+    font-size: $font-size-sm;
   }
 
   .groupsettinginfo {
@@ -61,14 +62,17 @@
     margin-left: -1px;
     line-height: $line-height;
   }
-}
 
-/* Special classes for relatedgrouplogs*/
-#main {
+  /* Special classes for relatedgrouplogs*/
   li.picbox_relatedgroup {
     padding: 7px;
     width: 230px;
     padding-left: 0px;
+    list-style-type: none;
+    font-size: $font-size-sm;
+  }
+  li.picbox_relatedgroup h4 {
+    font-size: $font-size-base;
   }
   img.framed_relatedgroup {
     background: none repeat scroll 0 0 #F3F3F3;
@@ -78,6 +82,7 @@
     width: 60px;
     height: 60px;
   }
+
   .relatedgroupinfo {
     float: left;
     width: 48%;

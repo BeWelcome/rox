@@ -190,7 +190,7 @@ class GroupsController extends RoxControllerBase
             $order = ((!empty($this->args_vars->get['order'])) ? $this->args_vars->get['order'] : 'nameasc');
         }
         $params = new stdClass();
-        $params->strategy = new HalfPagePager('left');
+        $params->strategy = new FullPagePager('left');
         $params->items = $this->_model->countGroupsBySearchterms($terms);
         $params->items_per_page = 30;
         $pager = new PagerWidget($params);

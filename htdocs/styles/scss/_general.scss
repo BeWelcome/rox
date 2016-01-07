@@ -1,34 +1,43 @@
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  position: relative;
-  min-height: 100%;
+  height: 100%;
+  margin:0;
+  padding:0;
 }
 
 body {
   /* Margin bottom by footer height */
   text-rendering: optimizeLegibility;
-  margin-bottom: 8em;
   background: url("../../images/bggrey.png") repeat-x scroll left top #F7F7F7;
+  display: table;
+  height: 100%;
+  width: 100%;
 }
 
-body > footer {
-  font-size: 80%;
-  line-height: 1.1;
-  font-weight: normal;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  padding: .5rem 0;
+.navandcontent {
+  height: 100%;
+}
 
-  /* Set the fixed height of the footer here */
-  height: 8em;
+.stickyfooter {
+  display: table-row;
+  height: 1px;
+  font-size: $font-size-sm;
+  line-height: 1.1;
+  width: 100%;
+  padding: $spacer-y $spacer-x;
+
   background-color: #555;
   color: #999;
 
   a {color:#aaa; white-space: nowrap; }
   a:hover { color:#fff; }
   a:focus { color:#fff; }
+
+  & > .container {
+    padding: 1rem $spacer-x;
+  }
+
 }
 
 // standard framed box with slight shadow
@@ -49,7 +58,6 @@ body > footer {
   .fullheight{
     height: 100%;
   }
-
 }
 
 // Styles for auto complete box
@@ -178,9 +186,54 @@ body > footer {
 .submenu {
   padding-left: ($grid-gutter-width /2);
   padding-right: ($grid-gutter-width /2);
+  margin-bottom: $spacer-y;
 }
 
 .fullpager {
   width: 100%;
   @include clearfix();
+}
+
+a {
+  /* basic class for translation link */
+  &.tr_link {
+    background:#ddeeff none !important;
+    border:1px solid #888 !important;
+    font-weight:normal !important;
+    display:inline !important;
+    color: #333 !important;
+    padding-left:4px !important;
+    padding-right:4px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    /* "Hotpink" for missing words + translations */
+    &.missing_word {
+      background-color: #FF69B4 !important;
+      color: #000 !important;
+    }
+    &.missing_translation {
+      background-color:#FF69B4 !important;
+      color: #000 !important;
+    }
+
+    /* "Aquamarine" for missing words + translations */
+    &.obsolete {
+      background-color:#7FFFD4 !important;
+    }
+
+    /* "GreenYellow" for editing existing translation */
+    &.successful_translation {
+      background-color:#ADFF2F !important;
+    }
+
+    /* "LemonChiffon" for hovering */
+    &:hover {
+      background: #FFFACD !important;
+      color: #333 !important;
+      border:1px solid #888 !important;
+      font-weight: normal !important;
+      text-decoration: none !important;
+    }
+  }
+
 }

@@ -37,11 +37,11 @@ Boston, MA  02111-1307, USA.
                     <a href="groups/<?php echo $group_data->getPKValue() ?>">
                         <img class="framed_relatedgroup float_left" alt="Group" src="<?php echo $img_link; ?>"/>
                     </a>
-                    <div class="userinfo"><span class="small">
-                    <h4><a href="groups/<?php echo $group_data->getPKValue() ?>"><?php echo htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a></h4>
+                    <div class="userinfo">
+                    <a href="groups/<?php echo $group_data->getPKValue() ?>"><?php echo htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a>
                         <?php echo $words->get('GroupsMemberCount');?>: <?php echo $group_data->getMemberCount(); ?><br />
                         <?php echo $words->get('GroupsNewMembers');?>: <?php echo count($group_data->getNewMembers()) ; ?><br />
-                    </span></div> <!-- userinfo -->
+                    </div> <!-- userinfo -->
                 </li> <!-- userpicbox_relatedgroup -->
             <?php endforeach; ?>
         </ul>   
@@ -85,7 +85,6 @@ Boston, MA  02111-1307, USA.
                     <li class="picbox_relatedgroup float_left">
                         <img class="framed_relatedgroup float_left" src="members/avatar/<?php echo $value->member->Username; ?>?xs"/>
                         <div class="userinfo">
-                            <span class="small">
                                 <?php
                                 $layoutbits->ago(strtotime($value->ts));
                                 ?>
@@ -94,7 +93,6 @@ Boston, MA  02111-1307, USA.
                                 $grouplink =  '<a href="groups/' . $value->relatedgroup->getPKValue() . '">' . htmlspecialchars($value->relatedgroup->Name, ENT_QUOTES) . '</a>'; 
                                 $logentry = $words->get($value->RelatedGroupAction, $memberlink, $grouplink);
                                 echo $logentry; ?><br />
-                            </span>
                         </div>
                     </li>
                 <?php endforeach; ?>

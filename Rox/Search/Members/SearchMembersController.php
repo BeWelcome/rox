@@ -130,7 +130,7 @@ class SearchMembersController extends Controller
                 $page->addParameters(['results' => $result]);
             }
         }
-        $page->setFormStyle(true);
+        $page->initializeFormComponent(true);
         $page->addForm($form);
         return new Response($page->render());
     }

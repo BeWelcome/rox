@@ -18,5 +18,6 @@ class AdminQueriesOverviewPage extends \Rox\Framework\TwigView
     public function __construct(Router $router) {
         parent::__construct($router);
         $this->setTemplate('queries/queries.html.twig', 'admin');
+        $this->addLateJavascriptFile('admin/queries.js');
     }
 }

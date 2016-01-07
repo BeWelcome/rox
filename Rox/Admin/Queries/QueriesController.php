@@ -2,9 +2,11 @@
 
 namespace Rox\Admin\Queries;
 
-use Rox\Models\Queries;
+use Rox\Framework\Controller;
+use Rox\Models\Query;
 use Rox\Models\Member;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,52 +21,17 @@ use Symfony\Component\Validator\Constraints\Type;
  * @package Admin
  * @author shevek
  */
-class QueriesController extends \RoxControllerBase
+class QueriesController extends Controller
 {
-
-    /**
-     * @var \RoxModelBase
-     */
-    private $_model;
-
-    /**
-     * QueriesController constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->_model = new \RoxModelBase();
-    }
-
-    public function __destruct()
-    {
-        unset($this->_model);
-    }
 
     /**
      * @return Response
      */
     public function showOverview(Request $request) {
-        $form = $this->formFactory->createBuilder()
-            ->add('choice', TextType::class, array(
-                'required' => false,
-                'constraints' => new NotBlank(),
-            ))
-            ->add('task', TextType::class, array(
-                'constraints' => array(
-                    new NotBlank(),
-                    new Length(array( 'min' => 3, 'max' => 10))
-            )))
-            ->add('dueDate', DateType::class, array(
-                'constraints' => array(
-                    new NotBlank(),
-                    new Type('\DateTime'),
-                )
-            ))
-            ->getForm();
-
+        $form = $this->createForm(AdminQueryType::class);
         $form->handleRequest($request);
-        $page = new AdminQueriesOverviewPage($this->routing);
+        $page = new AdminQueriesOverviewPage($this->getRouting());
+        $page->initializeFormComponent(false);
         $page->addForm($form);
 
         if ($form->isSubmitted() && $form->isValid()) {

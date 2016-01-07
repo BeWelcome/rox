@@ -2,9 +2,14 @@
 
 {% block content %}
     {{ form_start(form) }}
-        {{ form_widget(form) }}
-
-        <input type="submit" class="pull-xs-right btn btn-primary" value="{{ 'Submitted' | trans }}">
+        {{ form_row(form.query) }}
+    <div id="parameters">
+        {# render parameter inputs and submit button only after
+           the user selected a query #}
+        {% if form.param1 %}{{ form_row(form.param1) }}{% endif %}
+        {% if form.param2 %}{{ form_row(form.param2) }}{% endif %}
+        {% if form.submit %}{{ form_row(form.submit) }}{% endif %}
+    </div>
     {{ form_end(form) }}
 
     {{ dump( results ) }}

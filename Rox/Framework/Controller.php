@@ -2,6 +2,7 @@
 
 namespace Rox\Framework;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class Controller
@@ -88,4 +89,12 @@ class Controller
         return new RedirectResponse($url, $status);
     }
 
+    /**
+     * @param AbstractType $
+     */
+    protected function createForm($formType)
+    {
+        $form = $this->_formFactory->create($formType, null, []);
+        return $form;
+    }
 }

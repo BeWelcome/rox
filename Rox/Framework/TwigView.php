@@ -7,6 +7,7 @@ use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\Translator;
@@ -99,8 +100,8 @@ class TwigView extends AbstractBasePage {
         $this->_loader->addPath($path, $namespace);
     }
 
-    public function setFormStyle($inlineForm = false) {
-        $formTemplate = ($inlineForm) ? 'inline' : '';
+    public function initializeFormComponent($inlineForms = false) {
+        $formTemplate = ($inlineForms) ? 'inline' : '';
         // Setting up the form template
         $defaultFormTheme = 'form_div_layout.html.twig';
 
@@ -123,7 +124,7 @@ class TwigView extends AbstractBasePage {
 
     }
     /**
-     * @param Form $form
+     * @param Form|FormInterface $form
      * @param string $name
      */
     public function addForm(Form $form, $name = 'form') {

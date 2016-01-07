@@ -55,6 +55,12 @@ admin_queries:
         currentPage: 1
         itemsPerPage: 20
 
+admin_queries_fetch_parameters:
+    path:     /admin/queries/fetchparameters
+    methods: [GET]
+    defaults:
+        _controller: "\\Rox\\Admin\\Queries\\QueriesController::fetchParameterElements"
+
 mockups:
     path: /mockups/{mockup}
     defaults:

@@ -120,6 +120,19 @@
     transform: translateY(0%) !important;
   }
 
+  .dashentry{
+    float: none;
+    padding: 1rem 0 0 0 !important;
+  }
+
+  .text-truncate{
+    line-height: 1;
+  }
+
+  .avatarpadding{
+    padding: 5px 0;
+  }
+
 }
 
 /* Occurs when viewed on very small screens only */

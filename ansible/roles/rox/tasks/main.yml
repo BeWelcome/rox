@@ -31,4 +31,8 @@
 
 - name: Create ini file
   sudo: yes
-  template: src=rox_local.ini.tpl dest={{ rox.root_folder }}/rox_local.ini owner=vagrant group=www-data
+  copy: src=rox_local.ini.tpl dest=/tmp/rox_local.ini owner=vagrant group=www-data
+
+- name: moving ini file in the root folder
+  sudo: yes
+  command: mv /tmp/rox_local.ini {{ rox.root_folder }}/

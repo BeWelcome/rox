@@ -13,8 +13,12 @@
  */
 class AboutGenericPage extends AboutBasePage
 {
-    public function __construct($pagename) {
+    private $_pagename;
+    private $_lang;
+
+    public function __construct($pagename, $lang) {
         $this->_pagename = $pagename;
+        $this->_lang = $lang;
     }
 
     protected function getPageTitle() {

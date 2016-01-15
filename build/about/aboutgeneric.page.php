@@ -41,7 +41,16 @@ class AboutGenericPage extends AboutBasePage
     protected function getCurrentSubpage() {
         return $this->_pagename;
     }
-    
+
+    protected function getStylesheets()
+    {
+        $styleSheets = parent::getStylesheets();
+        if ($this->_pagename == "terms") {
+            $styleSheets[] = "styles/css/minimal/screen/custom/terms.css";
+        }
+        return $styleSheets;
+    }
+
     protected function column_col3() {
         if (!($model = $this->getModel()) || !($member = $model->getLoggedInMember()))
         {

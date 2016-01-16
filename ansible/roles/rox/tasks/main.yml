@@ -15,10 +15,25 @@
 - name: Install Rox dependencies | Composer
   composer: command=install working_dir={{ rox.root_folder }}
 
-
 - name: Install Rox dependencies | Npm
   sudo: yes
   npm: path={{ rox.root_folder }}
+
+- name: Check if Sphinx deb is present in the system
+  sudo: yes
+  command: dpkg-query -W sphinxsearch
+  register: sphinx_check_deb
+  failed_when: sphinx_check_deb.rc > 1
+  changed_when: sphinx_check_deb.rc == 1
+
+- name: Get Sphinx deb package
+  sudo: yes
+  get_url: url=http://sphinxsearch.com/files/sphinxsearch_2.2.10-release-1~jessie_amd64.deb dest=/tmp
+  when: sphinx_check_deb.rc == 1
+
+- name: Install Sphinx
+  sudo: yes
+  apt: deb=/tmp/sphinxsearch_2.2.10-release-1~jessie_amd64.deb
 
 # - name: Migrate database
 #   shell: vendor/bin/phinx migrate -c phinx.php

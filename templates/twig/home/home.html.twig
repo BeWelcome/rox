@@ -2,6 +2,20 @@
 
 {% block content %}
 
+    {% set message = {
+    '1': 'Message title #1',
+    'user1': 'Member-102',
+    'time1': '10 minutes ago',
+    '2': 'Message title\'s #2',
+    'user2': 'Member-103',
+    'time2': '10 minutes ago',
+    '3': 'Message title #3',
+    'user3': 'Member-104',
+    'time3': '10 minutes ago',
+    '4': 'Message title #4',
+    'user4': 'Member-105',
+    'time4': '10 minutes ago' } %}
+
         {# main: content begins here #}
         <div id="main">
 
@@ -20,7 +34,7 @@
                             <div class="col-xs-12 col-md-12 col-lg-7 fullheight">
                                 <div class="verticalalign">
                                     <span class="h1">Welcome back, {{ macros.memberlink('member-101') }}</span><br />
-                                    <span class="h4 hidden-xs-down">You're hosting status is
+                                    <span class="h4 hidden-xs-down">Your hosting status is
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 hosting
@@ -95,12 +109,12 @@
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
                                             <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-105?50_50" alt="Profile" /></a>
+                                                <a href="#user"><img class="float_left framed" src="members/avatar/{{ message.user1 }}?50_50" alt="Profile" /></a>
                                             </div>
                                             <div class="dashentry">
                                                 <p class="text-truncate">
-                                                    <strong><a href="#">Here's the text of message #1</a></strong><br>
-                                                    <small>from <a href="#user">Membername</a> 10 minutes ago</small>
+                                                    <strong><a href="#">{{ message.1 }}</a></strong><br>
+                                                    <small>from <a href="members/{{ message.user1 }}">{{ message.user1 }}</a> {{ message.time1 }}</small>
                                                 </p>
                                             </div>
                                             <div class="pull-xs-right hidden-md-down chevplace">
@@ -112,12 +126,12 @@
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
                                             <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-130?50_50" alt="Profile" /></a>
+                                                <a href="#user"><img class="float_left framed" src="members/avatar/{{ message.user2 }}?50_50" alt="Profile" /></a>
                                             </div>
                                             <div class="dashentry">
                                                 <p class="text-truncate">
-                                                    <strong><a href="#">Here's the text of message #1</a></strong><br>
-                                                    <small>from <a href="#user">Membername</a> 10 minutes ago</small>
+                                                    <strong><a href="#">{{ message.2 }}</a></strong><br>
+                                                    <small>from <a href="members/{{ message.user2 }}">{{ message.user2 }}</a> {{ message.time2 }}</small>
                                                 </p>
                                             </div>
                                             <div class="pull-xs-right hidden-md-down chevplace">
@@ -129,12 +143,12 @@
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
                                             <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-131?50_50" alt="Profile" /></a>
+                                                <a href="#user"><img class="float_left framed" src="members/avatar/{{ message.user3 }}?50_50" alt="Profile" /></a>
                                             </div>
                                             <div class="dashentry">
                                                 <p class="text-truncate">
-                                                    <strong><a href="#">Here's the text of message #1</a></strong><br>
-                                                    <small>from <a href="#user">Membername</a> 10 minutes ago</small>
+                                                    <strong><a href="#">{{ message.3 }}</a></strong><br>
+                                                    <small>from <a href="members/{{ message.user3 }}">{{ message.user3 }}</a> {{ message.time3 }}</small>
                                                 </p>
                                             </div>
                                             <div class="pull-xs-right hidden-md-down chevplace">
@@ -146,12 +160,12 @@
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
                                             <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-132?50_50" alt="Profile" /></a>
+                                                <a href="#user"><img class="float_left framed" src="members/avatar/{{ message.user4 }}?50_50" alt="Profile" /></a>
                                             </div>
                                             <div class="dashentry">
                                                 <p class="text-truncate">
-                                                    <strong><a href="#">Here's the text of message #1</a></strong><br>
-                                                    <small>from <a href="#user">Membername</a> 10 minutes ago</small>
+                                                    <strong><a href="#">{{ message.4 }}</a></strong><br>
+                                                    <small>from <a href="members/{{ message.user4 }}">{{ message.user4 }}</a> {{ message.time4 }}</small>
                                                 </p>
                                             </div>
                                             <div class="pull-xs-right hidden-md-down chevplace">
@@ -211,7 +225,7 @@
 
                         <!-- message buttons -->
                         <div class="text-xs-center">
-                                <a href="messages" class="btn btn-primary-outline"><i class="fa fa-envelope"></i> My inbox <span class="label label-primary label-pill">3</span></a>
+                                <a href="messages" class="btn btn-outline-primary"><i class="fa fa-envelope"></i> My inbox <span class="label label-primary label-pill">3</span></a>
                         </div>
                     </div>
                 </div>
@@ -322,9 +336,9 @@
 
                                 <div class="text-xs-center">
                                     <div class="btn-group" role="group" aria-label="...">
-                                        <a href="forums" class="btn btn-primary-outline"><i class="fa fa-comments"></i> View forums</a>
-                                        <a href="groups/mygroups" class="btn btn-primary-outline"><i class="fa fa-users"></i> My groups</a>
-                                        <a href="forums/subscriptions" class="btn btn-primary-outline"><i class="fa fa-check-square-o"></i> My subscriptions</a>
+                                        <a href="forums" class="btn btn-outline-primary"><i class="fa fa-comments"></i> View forums</a>
+                                        <a href="groups/mygroups" class="btn btn-outline-primary"><i class="fa fa-users"></i> My groups</a>
+                                        <a href="forums/subscriptions" class="btn btn-outline-primary"><i class="fa fa-check-square-o"></i> My subscriptions</a>
                                     </div>
                                 </div>
 
@@ -335,9 +349,9 @@
 
                                 <div class="row text-xs-center p-a-1">
                                         <div class="btn-group" role="group">
-                                            <a href="forums" class="btn btn-primary-outline"><i class="fa fa-map-o"></i> All activities</a>
-                                            <a href="groups/mygroups" class="btn btn-primary-outline"><i class="fa fa-calendar"></i> My activities</a>
-                                            <a href="forums/subscriptions" class="btn btn-primary-outline"><i class="fa fa-calendar-plus-o"></i> Create activity</a>
+                                            <a href="forums" class="btn btn-outline-primary"><i class="fa fa-map-o"></i> All activities</a>
+                                            <a href="groups/mygroups" class="btn btn-outline-primary"><i class="fa fa-calendar"></i> My activities</a>
+                                            <a href="forums/subscriptions" class="btn btn-outline-primary"><i class="fa fa-calendar-plus-o"></i> Create activity</a>
                                         </div>
                                 </div>
 
@@ -413,8 +427,8 @@
                         <div class="card-block">
                             <h4 class="card-title">Be Involved<br /><small>help the community</small></h4>
                             <p class="card-text text-justify">BeWelcome is run by volunteers - free of charge and open source. Volunteering for the project is a great opportunity for you to get to know enthusiastic people who really believe in promoting hospitality and respect for each other. And it's fun, too!</p>
-                            <a href="about/getactive" class="btn btn-primary-outline btn-block m-b-1"><i class="fa fa-wrench"></i> Help BeWelcome</a>
-                            <a href="donate" class="btn btn-primary-outline btn-block m-b-1"><i class="fa fa-euro"></i> Please donate</a>
+                            <a href="about/getactive" class="btn btn-outline-primary btn-block m-b-1"><i class="fa fa-wrench"></i> Help BeWelcome</a>
+                            <a href="donate" class="btn btn-outline-primary btn-block m-b-1"><i class="fa fa-euro"></i> Please donate</a>
                             <p class="card-text text-xs-center m-b-0">Goal for 2016-2017: <strong>€1000,-</strong></p>
                             <progress class="progress progress-primary m-a-0" value="60" max="100"></progress>
                             <p class="card-text text-xs-center"><strong>€600.00</strong> received</p>
@@ -455,8 +469,8 @@
                                 </div>
 
                            <div class="btn-group m-t-1" role="group">
-                                <a href="trips" class="btn btn-primary-outline btn-block"><i class="fa fa-plus-circle"></i> View more</a>
-                                <a href="trips/create" class="btn btn-primary-outline btn-block"><i class="fa fa-map-marker"></i> Plan your trip</a>
+                                <a href="trips" class="btn btn-outline-primary btn-block"><i class="fa fa-plus-circle"></i> View more</a>
+                                <a href="trips/create" class="btn btn-outline-primary btn-block"><i class="fa fa-map-marker"></i> Plan your trip</a>
                             </div>
                         </div>
                     </div>
@@ -467,10 +481,10 @@
                             <h4 class="card-title">Community News<br /><small>and other updates</small></h4>
 
                             <h5><a href="#">Outcomes GA2015</a></h5>
-                            <p class="card-text text-justify">Just the first line. Maybe the second. Let's say about fourty words, so someone can read something. I have to fill up this text to get to approximately 40 words, else you won't see the effect. Then ... <a href="#" class="btn-primary-outline">Read more</a></p>
+                            <p class="card-text text-justify">Just the first line. Maybe the second. Let's say about fourty words, so someone can read something. I have to fill up this text to get to approximately 40 words, else you won't see the effect. Then ... <a href="#" class="btn-outline-primary">Read more</a></p>
                             <div><small>01-01-2016</small><small class="pull-xs-right">3 comments</small></div>
 
-                            <a href="mypreferences" class="btn btn-primary-outline btn-block m-t-2"><i class="fa fa-newspaper-o"></i> Older news</a>
+                            <a href="mypreferences" class="btn btn-outline-primary btn-block m-t-2"><i class="fa fa-newspaper-o"></i> Older news</a>
                         </div>
                     </div>
 
@@ -478,15 +492,15 @@
                     <div class="card card-2">
                         <div class="card-block">
                             <h4 class="card-title">Be Informed<br /><small>Transparency</small></h4>
-                            <a href="faq" class="btn btn-primary-outline btn-sm btn-block"><i class="fa fa-question"></i> About</a>
-                            <a href="faq" class="btn btn-primary-outline btn-sm btn-block"><i class="fa fa-question"></i> FAQ</a>
-                            <a href="wiki" class="btn btn-primary-outline btn-sm btn-block"><i class="fa fa-book"></i> Wiki</a>
-                            <a href="safety" class="btn btn-primary-outline btn-sm btn-block m-b-1"><i class="fa fa-shield"></i> Contact</a>
-                            <a href="wiki/BeVolunteer" class="btn btn-primary-outline btn-sm btn-block"><i class="fa fa-bullseye"></i> BeVolunteer</a>
-                            <a href="wiki/Annual_Report" class="btn btn-primary-outline btn-sm btn-block"><i class="fa fa-book"></i> Annual report</a>
-                            <a href="wiki/Finances" class="btn btn-primary-outline btn-sm btn-block m-b-1"><i class="fa fa-money"></i> Finances</a>
-                            <a href="wiki/Annual_Report" class="btn btn-primary-outline btn-sm btn-block"><i class="fa fa-book"></i> Terms of Use</a>
-                            <a href="wiki/Annual_Report" class="btn btn-primary-outline btn-sm btn-block"><i class="fa fa-book"></i> Privacy Policy</a>
+                            <a href="faq" class="btn btn-outline-primary btn-sm btn-block"><i class="fa fa-question"></i> About</a>
+                            <a href="faq" class="btn btn-outline-primary btn-sm btn-block"><i class="fa fa-question"></i> FAQ</a>
+                            <a href="wiki" class="btn btn-outline-primary btn-sm btn-block"><i class="fa fa-book"></i> Wiki</a>
+                            <a href="safety" class="btn btn-outline-primary btn-sm btn-block m-b-1"><i class="fa fa-shield"></i> Contact</a>
+                            <a href="wiki/BeVolunteer" class="btn btn-outline-primary btn-sm btn-block"><i class="fa fa-bullseye"></i> BeVolunteer</a>
+                            <a href="wiki/Annual_Report" class="btn btn-outline-primary btn-sm btn-block"><i class="fa fa-book"></i> Annual report</a>
+                            <a href="wiki/Finances" class="btn btn-outline-primary btn-sm btn-block m-b-1"><i class="fa fa-money"></i> Finances</a>
+                            <a href="wiki/Annual_Report" class="btn btn-outline-primary btn-sm btn-block"><i class="fa fa-book"></i> Terms of Use</a>
+                            <a href="wiki/Annual_Report" class="btn btn-outline-primary btn-sm btn-block"><i class="fa fa-book"></i> Privacy Policy</a>
                         </div>
                     </div>
 

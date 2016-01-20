@@ -86,7 +86,6 @@
 
 #nav_main li ul a {
     display: block;
-    float:left;
     clear: both;
     padding: 1em 1.6em;
 }

@@ -2,19 +2,156 @@
 
 {% block content %}
 
-    {% set message = {
-    '1': 'Message title #1',
-    'user1': 'Member-102',
-    'time1': '10 minutes ago',
-    '2': 'Message title\'s #2',
-    'user2': 'Member-103',
-    'time2': '10 minutes ago',
-    '3': 'Message title #3',
-    'user3': 'Member-104',
-    'time3': '10 minutes ago',
-    '4': 'Message title #4',
-    'user4': 'Member-105',
-    'time4': '10 minutes ago' } %}
+    {% set messages = [
+    {
+    'title': "Message title #1",
+    'id': 12345,
+    'user': 'Member-102',
+    'time': '10 minutes ago',
+    'read': true
+    },
+    {
+    'title': "Message title #2",
+    'id': 23456,
+    'user': 'Member-103',
+    'time': '1 hour ago',
+    'read': false
+    },
+    {
+    'title': "Message title #3",
+    'id': 34567,
+    'user': 'Member-110',
+    'time': '10 days ago',
+    'read': false
+    },
+    {
+    'title': "Message title #4",
+    'id': 45678,
+    'user': 'Member-112',
+    'time': '2 years ago',
+    'read': true
+    }
+    ]
+    %}
+
+    {% set notifications = [
+    {
+    'title': "This is a system notification",
+    'user': 'Member-110',
+    'time': '10 minutes ago',
+    'read': true
+    },
+    {
+    'title': "Another system notification",
+    'user': 'Member-111',
+    'time': '1 hour ago',
+    'read': true
+    },
+    {
+    'title': "And another one",
+    'user': 'Member-112',
+    'time': '10 days ago',
+    'read': true
+    },
+    {
+    'title': "The fourth one",
+    'user': 'Member-113',
+    'time': '2 years ago',
+    'read': true
+    },
+    {
+    'title': "And the last to be shown",
+    'user': 'Member-114',
+    'time': '7 years ago',
+    'read': true
+    }
+    ]
+    %}
+
+    {% set forum = [
+    {
+    'title': "This could well be the title of the forum thread",
+    'href': 'groups/353/forum/s12345-this-is-just-a-test-link',
+    'lastuser': 'Member-120',
+    'time': '10 minutes ago',
+    'read': true ,
+    'forum': true ,
+    'group': false ,
+    'following': false ,
+    },
+    {
+    'title': "The donation campaign has started!",
+    'href': 'forums/s15476-Donation_campaign_for_Bewelcome_has_started_',
+    'lastuser': 'Member-121',
+    'time': '14 minutes ago',
+    'read': true ,
+    'forum': true ,
+    'group': false ,
+    'following': false ,
+    },
+    {
+    'title': "The third ever to be published fake thread",
+    'href': 'groups/123/forum/s12345-whatever',
+    'lastuser': 'Member-122',
+    'time': '20 minutes ago',
+    'read': true ,
+    'forum': false ,
+    'group': true ,
+    'following': false ,
+    },
+    {
+    'title': "What happened if I'd make this a real, real long title, so that it would most definitely not fit",
+    'href': 'groups/353/forum/s12345-this-is-just-a-test-link',
+    'lastuser': 'Member-123',
+    'time': '45 minutes ago',
+    'read': false ,
+    'forum': true ,
+    'group': false ,
+    'following': true ,
+    }
+    ]
+    %}
+
+    {% set activities = [
+    {
+    'title': "This is an activity near you!",
+    'id': 1,
+    'place': 'Berlin',
+    'country': 'Germany',
+    'year': 2016,
+    'month': 02,
+    'day': 01,
+    'yes': 2,
+    'maybe': 25,
+    'read': true
+    },
+    {
+    'title': "Eating peanuts with people I don't know",
+    'id': 2,
+    'place': 'Amsterdam',
+    'country': 'Netherlands',
+    'year': 2016,
+    'month': 03,
+    'day': 15,
+    'yes': 20,
+    'maybe': 400,
+    'read': false
+    },
+    {
+    'title': "What happens if the activity title is way longer than the place reserved for it?",
+    'id': 3,
+    'place': 'Paris',
+    'country': 'France',
+    'year': 2017,
+    'month': 10,
+    'day': 30,
+    'yes': 0,
+    'maybe': 1,
+    'read': true
+    },
+
+    ]
+    %}
 
         {# main: content begins here #}
         <div id="main">
@@ -48,7 +185,7 @@
                                          in <a href="#">Lyon</a></span>
                                 </div>
                             </div>
-                            {# where do you want to go?#}
+                            {# where do you want to go? #}
                             <div class="col-xs-12 col-md-12 col-lg-4 fullheight">
                                 <div class="input-group verticalalign">
                                     <input type="text" class="form-control" placeholder="Where do you want to go?">
@@ -106,73 +243,28 @@
                                 <div class="scrollcontent">
 
                                     {# 4x messages data per row #}
-                                    <div class="row p-l-1 p-r-1">
-                                        <div class="col-xs-12 fullheight">
-                                            <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="#user"><img class="float_left framed" src="members/avatar/{{ message.user1 }}?50_50" alt="Profile" /></a>
-                                            </div>
-                                            <div class="dashentry">
-                                                <p class="text-truncate">
-                                                    <strong><a href="#">{{ message.1 }}</a></strong><br>
-                                                    <small>from <a href="members/{{ message.user1 }}">{{ message.user1 }}</a> {{ message.time1 }}</small>
-                                                </p>
-                                            </div>
-                                            <div class="pull-xs-right hidden-md-down chevplace">
-                                                <a href="#"><i class="fa fa-chevron-right"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row p-l-1 p-r-1">
-                                        <div class="col-xs-12 fullheight">
-                                            <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="#user"><img class="float_left framed" src="members/avatar/{{ message.user2 }}?50_50" alt="Profile" /></a>
-                                            </div>
-                                            <div class="dashentry">
-                                                <p class="text-truncate">
-                                                    <strong><a href="#">{{ message.2 }}</a></strong><br>
-                                                    <small>from <a href="members/{{ message.user2 }}">{{ message.user2 }}</a> {{ message.time2 }}</small>
-                                                </p>
-                                            </div>
-                                            <div class="pull-xs-right hidden-md-down chevplace">
-                                                <a href="#"><i class="fa fa-chevron-right"></i></a>
+                                    {% for message in messages %}
+                                        <div class="row p-l-1 p-r-1">
+                                            <div class="col-xs-12 fullheight">
+                                                <div class="hidden-xs-down pull-xs-left avatarpadding">
+                                                    <a href="members/{{ message.user }}"><img class="float_left framed" src="members/avatar/{{ message.user }}?50_50" alt="Profile" /></a>
+                                                </div>
+                                                <div class="dashentry">
+                                                    <p class="text-truncate">
+                                                        {% if not message.read %}<strong>{% endif %}
+                                                            <a href="messages/{{ message.id }}">{{ message.title }}</a>
+                                                            {% if not message.read %}</strong>{% endif %}<br>
+                                                        <small>from <a href="members/{{ message.user }}">{{ message.user }}</a> {{ message.time }}</small>
+                                                    </p>
+                                                </div>
+                                                <div class="pull-xs-right hidden-md-down chevplace">
+                                                    <a href="messages/{{ message.id }}"><i class="fa fa-chevron-right"></i></a>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="row p-l-1 p-r-1">
-                                        <div class="col-xs-12 fullheight">
-                                            <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="#user"><img class="float_left framed" src="members/avatar/{{ message.user3 }}?50_50" alt="Profile" /></a>
-                                            </div>
-                                            <div class="dashentry">
-                                                <p class="text-truncate">
-                                                    <strong><a href="#">{{ message.3 }}</a></strong><br>
-                                                    <small>from <a href="members/{{ message.user3 }}">{{ message.user3 }}</a> {{ message.time3 }}</small>
-                                                </p>
-                                            </div>
-                                            <div class="pull-xs-right hidden-md-down chevplace">
-                                                <a href="#"><i class="fa fa-chevron-right"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row p-l-1 p-r-1">
-                                        <div class="col-xs-12 fullheight">
-                                            <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="#user"><img class="float_left framed" src="members/avatar/{{ message.user4 }}?50_50" alt="Profile" /></a>
-                                            </div>
-                                            <div class="dashentry">
-                                                <p class="text-truncate">
-                                                    <strong><a href="#">{{ message.4 }}</a></strong><br>
-                                                    <small>from <a href="members/{{ message.user4 }}">{{ message.user4 }}</a> {{ message.time4 }}</small>
-                                                </p>
-                                            </div>
-                                            <div class="pull-xs-right hidden-md-down chevplace">
-                                                <a href="#"><i class="fa fa-chevron-right"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {% else %}
+                                        <em>no messages</em>
+                                    {% endfor %}
 
                                 </div>
 
@@ -183,32 +275,20 @@
 
                                 <div class="scrollcontent">
                                     {# 5x system notification per row #}
-                                    <div class="row p-l-1 p-r-1">
-                                        <div class="col-xs-12 fullheight">
-                                            <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-210?50_50" alt="Profile" /></a>
-                                            </div>
-                                            <div class="dashentry">
-                                                <p class="text-truncate">
-                                                    <a href="#">This is a system notification.</a><br>
-                                                    <small>Sent 10 minutes ago</small>
-                                                </p>
-                                            </div>
-                                            <div class="pull-xs-right hidden-md-down chevplace">
-                                                <a href="#"><i class="fa fa-chevron-right"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
+
+                                    {% for notification in notifications %}
 
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
                                             <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-211?50_50" alt="Profile" /></a>
+                                                <a href="members/{{ notification.user }}"><img class="float_left framed" src="members/avatar/{{ notification.user }}?50_50" alt="{{ notification.user }}" /></a>
                                             </div>
                                             <div class="dashentry">
                                                 <p class="text-truncate">
-                                                    <a href="#">Member-101 wanted to become friends with you</a><br>
-                                                    <small>Sent 10 minutes ago</small>
+                                                    {% if not notification.read %}<strong>{% endif %}
+                                                    <a href="#">{{ notification.title }}</a>
+                                                        {% if not notification.read %}</strong>{% endif %}<br>
+                                                    <small>Sent {{ notification.time }}</small>
                                                 </p>
                                             </div>
                                             <div class="pull-xs-right hidden-md-down chevplace">
@@ -216,6 +296,9 @@
                                             </div>
                                         </div>
                                     </div>
+                                    {% else %}
+                                        <em>no notifications</em>
+                                    {% endfor %}
 
                                 </div>
 
@@ -262,73 +345,28 @@
                                 <div class="scrollcontent">
 
                                     {# 4 most recent forum messages #}
-                                    <div class="row p-l-1 p-r-1">
-                                        <div class="col-xs-12 fullheight">
-                                            <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-167?50_50" alt="Profile" /></a>
-                                            </div>
-                                            <div class="dashentry">
-                                                <p class="text-truncate">
-                                                    <strong><a href="#">Will this be the first couple of words of the last added forum message?</a></strong><br>
-                                                    <small>by <a href="#user">Membername</a> 10 minutes ago</small>
-                                                </p>
-                                            </div>
-                                            <div class="pull-xs-right hidden-md-down chevplace">
-                                                <a href="#"><i class="fa fa-chevron-right"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {% for thread in forum %}
 
                                     <div class="row p-l-1 p-r-1">
                                         <div class="col-xs-12 fullheight">
                                             <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-168?50_50" alt="Profile" /></a>
+                                                <a href="members/{{ thread.lastuser }}"><img class="float_left framed" src="members/avatar/{{ thread.lastuser }}?50_50" alt="{{ thread.lastuser }}" /></a>
                                             </div>
                                             <div class="dashentry">
                                                 <p class="text-truncate">
-                                                    <a href="#">Or will it be the title?</a><br>
-                                                    <small>by <a href="#user">Membername</a> 11 minutes ago</small>
+                                                {% if not thread.read %}<strong>{% endif %}
+                                                        <a href="{{ thread.href }}">{{ thread.title|e }}</a>
+                                                {% if not thread.read %}</strong>{% endif %}<br>
+                                                    <small>by <a href="members/{{ thread.lastuser }}">{{ thread.lastuser }}</a> {{ thread.time }}</small>
                                                 </p>
                                             </div>
                                             <div class="pull-xs-right hidden-md-down chevplace">
-                                                <a href="#"><i class="fa fa-chevron-right"></i></a>
+                                                <a href="{{ thread.href }}"><i class="fa fa-chevron-right"></i></a>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="row p-l-1 p-r-1">
-                                        <div class="col-xs-12 fullheight">
-                                            <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-169?50_50" alt="Profile" /></a>
-                                            </div>
-                                            <div class="dashentry">
-                                                <p class="text-truncate">
-                                                    <strong><a href="#">And will it be possible to make it strong when new after last login?</a></strong><br>
-                                                    <small>by <a href="#user">Membername</a> 10 minutes ago</small>
-                                                </p>
-                                            </div>
-                                            <div class="pull-xs-right hidden-md-down chevplace">
-                                                <a href="#"><i class="fa fa-chevron-right"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row p-l-1 p-r-1">
-                                        <div class="col-xs-12 fullheight">
-                                            <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="#user"><img class="float_left framed" src="members/avatar/member-170?50_50" alt="Profile" /></a>
-                                            </div>
-                                            <div class="dashentry">
-                                                <p class="text-truncate">
-                                                    <a href="#">Or will all messages be without extra attributes?</a><br>
-                                                    <small>by <a href="#user">Membername</a> 10 minutes ago</small>
-                                                </p>
-                                            </div>
-                                            <div class="pull-xs-right hidden-md-down chevplace">
-                                                <a href="#"><i class="fa fa-chevron-right"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
+                                        {% endfor %}
 
                                     {# infinite scroll??? #}
 
@@ -359,60 +397,42 @@
                                     <table class="table">
                                         <tbody>
 
+                                        {% for activity in activities %}
                                             <tr>
-                                                <td class="p-l-0 p-r-0" style="vertical-align: middle;">
-                                                    <div class="calendar calendar-icon-1">
-                                                        <div class="calendar-day">3</div>
+                                                <td class="p-l-0 p-r-0 verticalmiddle">
+                                                    <div class="calendar calendar-icon-{{ activity.month }}">
+                                                        <div class="calendar-day">{{ activity.day }}</div>
                                                     </div>
                                                 </td>
-                                                <td class="p-l-0" style="width: 55%; min-width: 55%; max-width: 60%; position: relative;">
-                                                            <small class="calendar-year">03-01-2016</small><br>
-                                                            <span class="text-truncate" style="position: absolute; width: 100%;"><strong><a href="#">This is a very long title for just a simple activity like playing board games</a></strong></span>
+                                                <td class="p-l-0 dateandtitle">
+                                                            <small class="calendar-year">{{ activity.day }}-{{ activity.month }}-{{ activity.year }}</small><br>
+                                                            <span class="text-truncate activitytitle"><strong><a href="activities/{{ activity.id }}">{{ activity.title }}</a></strong></span>
                                                 </td>
-                                                <td class="p-a-0" style="vertical-align: middle;">
+                                                <td class="p-a-0 verticalmiddle">
                                                     <span class="h4"><i class="fa fa-map-marker"></i></span>
                                                 </td>
-                                                <td class="compacttext" style="vertical-align: middle; padding-left: .25rem; min-width: 15%;">
-                                                    <small>Berlin<br>Federal Republic of Germany</small>
+                                                <td class="compacttext verticalmiddle activityinfo">
+                                                    <small>{{ activity.place }}<br>{{ activity.country }}</small>
                                                 </td>
-                                                <td class="p-a-0" style="vertical-align: middle;">
+                                                <td class="p-a-0 verticalmiddle">
                                                 <span class="h4"><i class="fa fa-users"></i></span>
                                                 </td>
-                                                <td class="compacttext p-r-0" style="min-width: 10%; vertical-align: middle; padding-left: .25rem;">
-                                                    <small>1 yes<br>300 maybe</small>
+                                                <td class="compacttext p-r-0 verticalmiddle activityinfo">
+                                                    <small>{{ activity.yes }} yes<br>{{ activity.maybe }} maybe</small>
                                                 </td>
                                             </tr>
-
-                                            <tr>
-                                                <td class="p-l-0 p-r-0" style="vertical-align: middle;">
-                                                    <div class="calendar calendar-icon-1">
-                                                        <div class="calendar-day">3</div>
-                                                    </div>
-                                                </td>
-                                                <td class="p-l-0" style="width: 55%; min-width: 55%; max-width: 60%; position: relative;">
-                                                    <small class="calendar-year">03-01-2016</small><br>
-                                                    <span class="text-truncate" style="position: absolute; width: 100%;"><strong><a href="#">Small desc</a></strong></span>
-                                                </td>
-                                                <td class="p-a-0" style="vertical-align: middle;">
-                                                    <span class="h4"><i class="fa fa-map-marker"></i></span>
-                                                </td>
-                                                <td class="compacttext" style="vertical-align: middle; padding-left: .25rem; width: 15%; min-width: 15%;">
-                                                    <small>Paris<br>France</small>
-                                                </td>
-                                                <td class="p-a-0" style="vertical-align: middle;">
-                                                    <span class="h4"><i class="fa fa-users"></i></span>
-                                                </td>
-                                                <td class="compacttext p-r-0" style="width: 10%; min-width: 10%; vertical-align: middle; padding-left: .25rem;">
-                                                    <small>100 yes<br>30 maybe</small>
-                                                </td>
-                                            </tr>
+                                            {% else %}
+                                                <tr>
+                                                    <td>
+                                                        <p>No activites near you</p>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
 
                                         </tbody>
                                     </table>
                                 </div>
-
                             </div>
-
                         </div>
                     </div>
                 </div>

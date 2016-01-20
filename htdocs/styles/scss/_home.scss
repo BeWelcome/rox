@@ -26,9 +26,9 @@
   text-align: center;
 }
 .scrollcontent{
-  position:relative;
-  height: 18em;
-  overflow:hidden;
+//  position:relative;
+//  height: 18em;
+//  overflow:hidden;
 }
 
 .chevplace{
@@ -52,6 +52,27 @@
 .alert-info {
   border: 1px solid #8A8A8A;
   border-radius: 0.15rem;
+}
+
+.verticalmiddle{
+  vertical-align: middle !important;
+}
+
+.activityinfo{
+  padding-left: .25rem;
+  min-width: 15;
+}
+
+.dateandtitle{
+  width: 55%; // fix for Chrome
+  min-width: 55%;
+  max-width: 60%;
+  position: relative;
+}
+
+.activitytitle{
+  position: absolute;
+  width: 100%;
 }
 
 .card-4 {

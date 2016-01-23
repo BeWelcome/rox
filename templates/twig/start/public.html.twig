@@ -26,7 +26,9 @@
 {% include '@base/loginbar.html.twig' %}
 <!-- Section #1 -->
     <!-- first section - Home -->
-    <div id="home">
+    <div id="home"
+         data-start="background-position: 0px 0px;"
+         data-end="background-position: 0px -300px;">
         <div class="container">
         <div class="row" style="width: 100%">
                     <a href="#about" class="chevron_down"><i class="chevron_icon fa fa-3x fa-chevron-down"></i></a>
@@ -69,7 +71,9 @@
     </div>
     <!-- /second section -->
     <!-- third section - Services -->
-    <div id="about_trailing" class="pad-section">
+    <div id="about_trailing" class="pad-section"
+         data-start="background-position: 0px 0px;"
+         data-end="background-position: 0px -300px;">
     </div>
     <div id="statistics" class="pad-section">
         <div class="container">
@@ -87,7 +91,9 @@
             </div>
         </div>
     </div>
-    <div id="statistics_trailing" class="pad-section">
+    <div id="statistics_trailing" class="pad-section"
+         data-start="background-position: 0px 0px;"
+         data-end="background-position: 0px -300px;">
     </div>
     <!-- /third section -->
     <!-- fourth section - Information -->
@@ -134,3 +140,12 @@
 </div>
 </body>
 </html>
+
+<script type="text/javascript">
+    if(!(/Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i).test(navigator.userAgent || navigator.vendor || window.opera)){
+    skrollr.init({
+        forceHeight: false
+    });
+    var s = skrollr.init(); 
+}
+</script> 

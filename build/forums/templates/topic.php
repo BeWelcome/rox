@@ -31,7 +31,7 @@ This File display a topic and the messages which are inside it
 
 // This means no thread was fetch or that it was outside visibility
   if ( (!isset($topic->topicinfo->IdTitle)) and (!isset($topic->topicinfo->ThreadDeleted))) {
-    echo "<h2 class=\"forumstopic\">",$topic->topicinfo->title,"</h2>" ;
+    echo "<h3 class=\"forumstopic\">",$topic->topicinfo->title,"</h3>" ;
   }
   else  {
     //$i18n = new MOD_i18n('apps/forums/board.php');
@@ -47,7 +47,7 @@ This File display a topic and the messages which are inside it
     if (!isset($topic->topicinfo->IsClosed)) {
       $topic->topicinfo->IsClosed=false ;
     }
-    echo "<h2 class=\"forumstopic\">" ;
+    echo "<h3 class=\"forumstopic\">" ;
 
     if ($topic->topicinfo->ThreadDeleted=='Deleted') {
         echo "[Deleted]" ;
@@ -65,23 +65,32 @@ This File display a topic and the messages which are inside it
       echo ' <a href="' .$url. '" title="' . $words->getSilent('ReverseOrder') . '" ><img src="images/icons/reverse_order.png" alt="'
         . $words->getSilent('ReverseOrder') . '" /></a> ' . $words->flushBuffer();
     }
-    echo "</h2>";
+    echo "</h3>";
 
     ?>
+
+    <div id="forumsthreadreplytop" class="pull-xs-right">
+      <a class="button" href="
+      <?php
+
+      if (isset($topic->IdSubscribe)) {
+        echo ForumsView::getURI()."/subscriptions/unsubscribe/thread/",$topic->IdSubscribe,"/",$topic->IdKey,"\">",$words->getBuffered('ForumUnsubscribe'),"</a>",$words->flushBuffer();
+      }
+      else {
+        echo ForumsView::getURI()."/subscribe/thread/",$topic->IdThread,"\">",$words->getBuffered('ForumSubscribe'),"</a>",$words->flushBuffer();
+      }
+      if ((!$topic->topicinfo->IsClosed)and($topic->topicinfo->CanReply)) {
+      ?>
+        <a class="button" href="<?php echo $replyuri; ?>"><?php echo $words->getBuffered('ForumReply'); ?></a><?php echo $words->flushBuffer() ?>
+
+      <?php
+      }
+      ?>
+    </div>
+    <div class="clearfix"></div>
 
     <div class="forumthreadinfo">
     <div class="float_left">
-    <?php
-    if ($topic->topicinfo->IdGroup>0) {
-      ?>
-      <p class="forumsthreadtags"><strong><?php echo $words->get("group");?>:</strong>
-        <a href="groups/<?php echo $this->_model->getGroupName($topic->topicinfo->IdGroup);?>">
-          <?php echo $this->_model->getGroupName($topic->topicinfo->GroupName);?>
-        </a>
-      </p>
-      <?php
-    }
-    ?>
 
     <?php
 
@@ -150,24 +159,7 @@ This File display a topic and the messages which are inside it
   if ($User) {
   ?>
 
-    <div id="forumsthreadreplytop" >
-      <a class="button" role="button" href="
-      <?php
 
-      if (isset($topic->IdSubscribe)) {
-        echo ForumsView::getURI()."/subscriptions/unsubscribe/thread/",$topic->IdSubscribe,"/",$topic->IdKey,"\">",$words->getBuffered('ForumUnsubscribe'),"</a>",$words->flushBuffer();
-      }
-      else {
-        echo ForumsView::getURI()."/subscribe/thread/",$topic->IdThread,"\">",$words->getBuffered('ForumSubscribe'),"</a>",$words->flushBuffer();
-      }
-      if ((!$topic->topicinfo->IsClosed)and($topic->topicinfo->CanReply)) {
-        ?>
-        <a class="button" role="button" href="<?php echo $replyuri; ?>"><?php echo $words->getBuffered('ForumReply'); ?></a><?php echo $words->flushBuffer() ?>
-
-      <?php
-      }
-      ?>
-    </div>
 
   <?php
 

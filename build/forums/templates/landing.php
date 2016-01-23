@@ -42,7 +42,7 @@ if (!$User) {
 } // end if not User
 ?> 
 <!-- Now displays the recent groups post list -->
-<div id="groups">
+<div>
 <?php
     echo $this->words->flushBuffer();
 ?>
@@ -52,8 +52,7 @@ if (!$User) {
             <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" class="button" value="<?= $this->words->getSilent('GroupsSearchSubmit'); ?>" /><br />
         </form><?php echo $this->words->flushBuffer(); ?>
     </span> -->
-    <h2><a href="groups/forums"><?php echo $this->words->getFormatted('Groups'); ?></a> <span class="small">&ndash; <?php echo $this->words->get('GroupsTagLine'); ?></span></h2>
-
+    <h3><a href="groups/forums"><?php echo $this->words->getFormatted('Groups'); ?></a> <span class="small">&ndash; <?php echo $this->words->get('GroupsTagLine'); ?></span></h3>
 
 <?php
     $uri = 'forums/';

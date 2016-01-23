@@ -32,7 +32,7 @@ $layoutbits = new MOD_layoutbits();
     if ($threads = $boards->getThreads()) {
 ?>
 
-<table class="forumsboardthreads clearfix">
+<table class="forumsboardthreads">
 
 <?php 
 $threadsliced = array_slice($threads, 0, 5);

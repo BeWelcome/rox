@@ -6,7 +6,7 @@ if (isset($this->keyword)) {
 }
 ?>
 
-<div id="teaser" class="page-teaser clearfix">
+<div class="p-a-1 clearfix">
     <div id="title" class="fullheight">
         <h1 class="pull-xs-left">
             <a href="forums"><?php echo $this->_model->words->getFormatted('CommunityLanding'); ?></a>
@@ -16,12 +16,16 @@ if (isset($this->keyword)) {
       }
 ?>
         </h1>
-        <div class="pull-xs-right fullheight">
+        <div class="pull-xs-right fullheight p-t-1">
             <!-- Google froum search bar -->
-            <form action="/forums/search" class="verticalalign" method="POST" id="search-box"><div>
+            <form action="/forums/search" class="verticalalign" method="POST" id="search-box">
+                <div class="input-group verticalalign m-t-1">
                     <input type="hidden" name="<?= $this->searchCallbackId ?>" value="1" />
-                    <input type="text" name="fs-keyword" size="15" placeholder="<?= $this->_model->words->getFormatted('ForumSearch') ?>" value="<?= $keyword ?>"/>
-                    <input type="submit" name="fss" value="<?php echo $this->_model->words->getSilent('Search')?>" /> <?php echo $this->_model->words->flushBuffer(); ?></div>
+                    <input type="text" name="fs-keyword" class="form-control" placeholder="<?= $this->_model->words->getFormatted('ForumSearch') ?>" value="<?= $keyword ?>"/>
+                    <span class="input-group-btn">
+                    <button type="submit" name="fss" class="btn btn-primary"><i class="fa fa-search"></i> <?php echo $this->_model->words->getSilent('Search')?></button> <?php echo $this->_model->words->flushBuffer(); ?>
+                    </span>
+                </div>
             </form>
         </div> <!-- float_right -->
     </div>

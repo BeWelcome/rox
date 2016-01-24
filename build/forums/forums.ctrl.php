@@ -161,7 +161,7 @@ class ForumsController extends PAppController
             }
             $callbackId = $this->ModeratorEditPostProcess();
 
-            $DataPost=$this->_model->prepareModeratorEditPost($IdPost);
+            $DataPost=$this->_model->prepareModeratorEditPost($IdPost, $this->BW_Right->HasRight('ForumModerator'));
             $this->_view->showModeratorEditPost($callbackId,$DataPost);
             PPostHandler::clearVars($callbackId);
          }

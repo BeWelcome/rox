@@ -107,11 +107,7 @@ class Mailbot
     }
 
     /**
-     * log all mailbot(s) activities
-     *
-     * @param string $msg the text to log
-     *
-     * @return nothing
+     * @param $msg
      */
     protected function log($msg)
     {
@@ -126,10 +122,9 @@ class Mailbot
      * @param string $from      the email address of the sender
      * @param string $to        the email address of the recipient
      * @param string $body      the plaintext body of the message
-     * @param string $title     an optional title to show in the message (HTML H1 tag) (default: false)
-     * @param string $body_html the html version of the body (default: false)
-     * @param array  $attach    an array of attachments (default: array())
-     * @param string $language  the language code used in the message (default: 'en')
+     * @param string $title     an optional title to show in the message (HTML H1 tag)
+     * @param string $language  the language code used in the message
+     * @param bool $html        HTML preference: false -> text-only, true -> multi part (text, html)
      *
      * @return object the result from the MOD_mail::sendEmail call
      */
@@ -303,6 +298,9 @@ class MassMailbot extends Mailbot
                         break;
                     case "SuggestionReminder":
                         $sender_mail="suggestions@bewelcome.org" ;
+                        break;
+                    case "TermsOfUse":
+                        $sender_mail="tou@bewelcome.org";
                         break;
                     default:
                         $sender_mail="newsletter@bewelcome.org" ;
@@ -571,9 +569,9 @@ class ForumNotificationMailbot extends Mailbot
             $msg = $this->_buildMessage($notification, $post, $author, $MemberIdLanguage);
 
             if ($post->groupId) {
-                $from = array('group@bewelcome.org' => '"BW ' . $author->Username . '"');
+                $from = array('group@bewelcome.org' => '"BeWelcome - ' . $author->Username . '"');
             } else {
-                $from = array('forum@bewelcome.org' => '"BW ' . $author->Username . '"');
+                $from = array('forum@bewelcome.org' => '"BeWelcome - ' . $author->Username . '"');
             }
 
             $to = $this->getEmailAddress($recipient);
@@ -713,7 +711,7 @@ class MemberToMemberMailbot extends Mailbot
                 $this->log("Message ".$msg->id." from ". $this->Sender->Username." is rejected ("
                     .$this->Sender->Status.")");
             } else {
-                $from = array($this->_calculateReplyAddress() => '"BW ' . $msg->senderUsername . '"' );
+                $from = array($this->_calculateReplyAddress() => '"BeWelcome - ' . $msg->senderUsername . '"' );
                 $to = $this->getEmailAddress($this->Receiver);
                 if (empty($to)) {
                     $this->_updateMessageStatus($msg->id, 'Failed');

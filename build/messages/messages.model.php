@@ -527,7 +527,7 @@ WHERE id = ".$input['receiver_id']."
             ";
             $row = $this->singleLookup($query);
             $count = $row->cnt;
-            if ($count <> 0) {
+            if ($count >= 0) {
                 // Let's check some details
                 $member = new Member($input['sender_id']);
                 $trads_for_member = $this->bulkLookup(

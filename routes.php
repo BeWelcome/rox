@@ -294,3 +294,7 @@
 
     $this->addRoute('admin_subscriptions', 'admin/subscriptions', 'AdminSubscriptionsController', 'manage');
     $this->addRoute('login_message_close', 'close/:id:', 'LoginController', 'close');
+
+    // Terms of use
+    $this->addRoute('terms_french', 'terms', 'AboutController', 'termsOfUse');
+    $this->addRoute('terms_language', 'terms/:language:', 'AboutController', 'termsOfUse');

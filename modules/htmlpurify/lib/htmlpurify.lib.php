@@ -115,7 +115,7 @@ class MOD_htmlpure
     public function getMailHtmlPurifier() {
         // allow tables in forum posts to be able to format the suggestion results nicely
         // don't offer tables in TinyMCE for now
-        return self::getSophisticatedHtmlPurifier(array('table[id]', 'tr[class]', 'td[class|rowspan]', 'th[class]', 'span[class]', 'hr'));
+        return self::getSophisticatedHtmlPurifier(array('table[id]', 'tr[class]', 'td[class|rowspan]', 'th[class]', 'span[class]', 'hr', 'h3'));
     }
 
     private function getSophisticatedHtmlPurifier($additionalTags = false)

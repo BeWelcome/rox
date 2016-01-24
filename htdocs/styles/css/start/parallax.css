@@ -144,7 +144,7 @@ html, body {
     background: url(/images/homepicture-1200px_3.jpg) no-repeat center center fixed;
     display: table;
     height: 100%;
-    min-height:150vh;
+    min-height:200vh;
     max-height:100%;
     position: relative;
     width: 100%;
@@ -157,7 +157,7 @@ html, body {
     background: url(http://i67.tinypic.com/2zjeskk.jpg) no-repeat center center fixed;
     display: table;
     height: 100%;
-    min-height:150vh;
+    min-height:200vh;
     max-height:100%;
     position: relative;
     margin-top:-100%;

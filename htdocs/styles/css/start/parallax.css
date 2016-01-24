@@ -141,10 +141,10 @@ html, body {
 }
 
 #statistics_trailing {
-    background: url(/images/homepicture-1200px_4.jpg) no-repeat center center fixed;
+    background: url(/images/homepicture-1200px_3.jpg) no-repeat center center fixed;
     display: table;
-    height: 50%;
-    min-height:100vh;
+    height: 100%;
+    min-height:150vh;
     max-height:100%;
     position: relative;
     width: 100%;
@@ -153,10 +153,28 @@ html, body {
     -o-background-size: cover;
     background-size: cover;
 }
-
+#statistics_trailing_blur {
+    background: url(http://i67.tinypic.com/2zjeskk.jpg) no-repeat center center fixed;
+    display: table;
+    height: 100%;
+    min-height:150vh;
+    max-height:100%;
+    position: relative;
+    margin-top:-100%;
+    width: 100%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    opacity:1;}
 #search {
-    background-color: #afaaa4;
-    color: white;
+    color: #FFF;
+    bottom: 0px;
+    position: fixed;
+    width: 100%;
+    height:100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    visibility:hidden;
 }
 
 #search_trailing {
@@ -172,7 +190,30 @@ html, body {
     -o-background-size: cover;
     background-size: cover;
 }
-
+#search .input-group-addon {
+    border: 1px solid #ECEEEF;
+}
+#search .form-control {
+    border: 1px solid rgb(255, 255, 255);
+}
+#search.pad-section {
+    padding-top: 110px;
+}
+#search h1 {
+    line-height:1.5;
+}
+#search .form-control {
+    line-height: 1.75;
+}
+#search .col-sm-4.col-sm-offset-1 {
+    padding-top:52px;
+}
+#search .container {
+    padding:0px;
+}
+#search .form-group {
+    text-align:center;
+}
 h1 {
     font-size: 4.25em;
     font-weight: bolder;

@@ -69,20 +69,20 @@
                 <div class="col-xs-12" 
                     data-bottom="opacity:0"
                     data--100-bottom="opacity:1"><h1>What is BeWelcome?</h1>
-                <p style="text-align: center">BeWelcome is a culture crossing network that lets you share a place to sleep, meet up and help others on their way. Let is show you how!</p>
+                <p style="text-align: center">BeWelcome is a culture crossing network that lets you share a place to sleep, meet up and help others on their way. Let us show you how!</p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-2 col-md-offset-1"
-                    data-260-top="opacity:0"
-                    data-250-top="opacity:0.2"
-                    data-240-top="transform:translateX(-120px)"
-                    data-220-top="transform:translateX(-20px)"
-                    data-215-top="opacity:1"
-                    data-210-top="transform:translateX(0px);transform:rotate(0deg)"
-                    data-200-top="transform:translateX(-30px);transform:rotate(-5deg)"
-                    data-195-top="transform:translateX(-15px);transform:rotate(5deg)"
-                    data-190-top="transform:translateX(0px);transform:rotate(0deg)"><img src="images/icons/share.png"><h2>Share</h2><p>At BeWelcome we believe sharing creates a better world. We share experiences, moments, knowledge and we welcome guests in our homes, if we can...</p></div>
+                    data-275-top="opacity:0"
+                    data-265-top="opacity:0.2"
+                    data-255-top="transform:translateX(-110px)"
+                    data-235-top="transform:translateX(-20px)"
+                    data-230-top="opacity:1"
+                    data-225-top="transform:translateX(0px);transform:rotate(0deg)"
+                    data-215-top="transform:translateX(-30px);transform:rotate(-5deg)"
+                    data-210-top="transform:translateX(-15px);transform:rotate(5deg)"
+                    data-205-top="transform:translateX(0px);transform:rotate(0deg)"><img src="images/icons/share.png"><h2>Share</h2><p>At BeWelcome we believe sharing creates a better world. We share experiences, moments, knowledge and we welcome guests in our homes, if we can...</p></div>
                 <div class="col-xs-12 col-sm-6 col-md-2"
                     data-300-top="opacity:0"
                     data-250-top="opacity:1"><img src="images/icons/meet.png"><h2>Meet</h2><p>BeWelcome is about meeting others. You can get to know people online through the website or meet them in real life...</p></div>
@@ -93,15 +93,15 @@
                     data-300-top="opacity:0"
                     data-250-top="opacity:1"><img src="images/icons/inform.png"><h2>Information</h2><p>We want to make sharing and meeting not only fun but also easy. Our tools and features help with that...</p></div>
                 <div class="col-xs-12 col-sm-6 col-md-2"
-                    data-260-top="opacity:0"
-                    data-250-top="opacity:0.2"
-                    data-240-top="transform:translateX(120px)"
-                    data-220-top="transform:translateX(20px)"
-                    data-215-top="opacity:1"
-                    data-210-top="transform:translateX(0px);transform:rotate(0deg)"
-                    data-200-top="transform:translateX(30px);transform:rotate(5deg)"
-                    data-195-top="transform:translateX(15px);transform:rotate(-5deg)"
-                    data-190-top="transform:translateX(0px);transform:rotate(0deg)"><img src="images/icons/decide.png"><h2>Open and fair</h2><p>We are an open community. We work democratically and share our opinions, ideas and ambitions...</p></div>
+                    data-275-top="opacity:0"
+                    data-265-top="opacity:0.2"
+                    data-255-top="transform:translateX(110px)"
+                    data-235-top="transform:translateX(20px)"
+                    data-230-top="opacity:1"
+                    data-225-top="transform:translateX(0px);transform:rotate(0deg)"
+                    data-215-top="transform:translateX(30px);transform:rotate(5deg)"
+                    data-210-top="transform:translateX(15px);transform:rotate(-5deg)"
+                    data-205-top="transform:translateX(0px);transform:rotate(0deg)"><img src="images/icons/decide.png"><h2>Open and fair</h2><p>We are an open community. We work democratically and share our opinions, ideas and ambitions...</p></div>
             </div>
         </div>
     </div>
@@ -124,7 +124,7 @@
                 <div class="col-xs-4 col-sm-3 col-md-2 col-md-offset-1"
                     data-260-top="opacity:0"
                     data-250-top="opacity:0.2"
-                    data-240-top="transform:translateX(-120px)"
+                    data-240-top="transform:translateX(-110px)"
                     data-220-top="transform:translateX(-20px)"
                     data-215-top="opacity:1"
                     data-210-top="transform:translateX(0px);transform:rotate(0deg)"
@@ -143,7 +143,7 @@
                 <div class="col-xs-4 col-sm-3 col-md-2"
                     data-260-top="opacity:0"
                     data-250-top="opacity:0.2"
-                    data-240-top="transform:translateX(120px)"
+                    data-240-top="transform:translateX(110px)"
                     data-220-top="transform:translateX(20px)"
                     data-215-top="opacity:1"
                     data-210-top="transform:translateX(0px);transform:rotate(0deg)"
@@ -206,8 +206,10 @@
 <script type="text/javascript">
     if(!(/Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i).test(navigator.userAgent || navigator.vendor || window.opera)){
     skrollr.init({
-        forceHeight: false
+        forceHeight: false,
+        smoothScrolling: true
     });
-    var s = skrollr.init(); 
+    var s = skrollr.init();
+    skrollr.menu.init(s, {animate: true,easing: 'sqrt',}) 
 }
 </script> 

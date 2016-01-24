@@ -59,7 +59,7 @@ if (IsLoggedIn()) {
     }
     $stylesheet = "minimal"; // force YAML also for logged member (for now, todo several layout)
 }
-echo '  <link href="/styles/css/' . $stylesheet. '/minimal.css" rel="stylesheet" type="text/css" media="screen" />';
+echo '  <link href="/styles/css/' . $stylesheet. '/minimal.css?3" rel="stylesheet" type="text/css" media="screen" />';
 echo '<!--[if lte IE 7]>';
 echo '  <link href="/styles/css/' . $stylesheet. '/patches/iehacks_3col_vlines.css" rel="stylesheet" type="text/css" media="screen" />';
 echo '<![endif]-->';

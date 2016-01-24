@@ -315,10 +315,10 @@ class Places extends RoxModelBase {
                 members m
             WHERE
                 m.Status = 'Active'
-                AND m.IdCity = g.geonameid
-                AND g.country = c.country
-                AND g.fclass = 'P'
                 AND m.MaxGuest >= 1
+                AND m.IdCity = g.geonameid
+                AND g.fclass = 'P'
+                AND g.country = c.country
             GROUP BY
                 c.country";
 
@@ -454,7 +454,9 @@ class Places extends RoxModelBase {
             return false;
         }
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-            $regions[$row->admin1]['number'] = $row->number;
+            if (array_key_exists($row->admin1, $regions)){
+                $regions[$row->admin1]['number'] = $row->number;
+            }
         }
         
         // remove regions without members

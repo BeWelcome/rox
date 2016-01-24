@@ -41,8 +41,19 @@ class RoxLauncher
             else
             {
                 echo <<<HTML
-<h1>Sorry :(</h1>
-<p>BeWelcome has just suffered an error of some magnitude (i.e. we cannot show you the page you were looking for and something went wrong as we looked for it), which is why you are looking at this error message. We apologise for the inconvenience many times, and humbly request that you send the address of this page to us through the feedback (and hopefully that is not the page that brings up this error ...).</p>
+                <html>
+                <head><title>BeWelcome</title></head>
+                <body style="width:100%; margin: 0; padding: 0; background: #f7f7f7 url(../images/bggrey.png) top left ">
+                <div style="background: #f37000; border-bottom: 1px solid white; height: 49px">
+                <div style="margin:0 auto; width:960px;">
+                <div style="margin:0 auto;"><img style="padding: 7px;" src="../images/logo_index_top.png" /></div>
+</div>
+</div>
+                <div style="margin:0 auto; width:960px;"><h1>Well,</h1>
+                <p>this is awkward. We couldn't serve your page.</p>
+                <p>You might have found a bug or our server is currently updating some really important stuff to keep it secure.</p>
+                <p>Please try again in a minute or two.</p></div></div>
+</html>
 HTML;
             }
         }
@@ -59,7 +70,6 @@ HTML;
         // $router->classes = $env_explore->classes;
         $router->env = $env_explore;
         $router->session_memory = new SessionMemory('SessionMemory');
-        
         $router->route();
     }
     

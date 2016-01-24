@@ -146,16 +146,41 @@ Boston, MA  02111-1307, USA.
 <div class="card-block">
     <!-- panel-body: Personal information -->
         <?php
-        if (in_array('SignupErrorSomethingWentWrong', $vars['errors'])) :
-            echo '<span class="help-block alert alert-danger">'.$words->get('SignupErrorSomethingWentWrong').'</span>';
           ?>
+  </fieldset>
+
+  <!-- Personal Information -->
+  <fieldset>
+    <legend><?php echo $words->get('SignupName'); ?></legend>
+      <?php
+      if (in_array('SignupErrorSomethingWentWrong', $vars['errors'])) :
+        echo '<div class="error">'.$words->get('SignupErrorSomethingWentWrong').'</div>';
+      ?>
+      <div class="signup-row-thin sweet">
+          <label for="sweet"><?php echo $words->get('SignupSweet'); ?></label>
+          <input type="text" id="sweet" name="sweet" value="" title="Leave free of content"/>
+      </div>
+      </div>
+
+  </fieldset>
+
+  <!-- Personal Information -->
+  <fieldset>
+    <legend><?php echo $words->get('SignupName'); ?></legend>
+      <?php
+      if (in_array('SignupErrorSomethingWentWrong', $vars['errors'])) :
+        echo '<div class="error">'.$words->get('SignupErrorSomethingWentWrong').'</div>';
+      ?>
+      <div class="signup-row-thin sweet">
+          <label for="sweet"><?php echo $words->get('SignupSweet'); ?></label>
+          <input type="text" id="sweet" name="sweet" value="" title="Leave free of content"/>
+      </div>
         <!-- Sweet -->
         <div class="form-group sweet">
             <label for="sweet" class="control-label sr-only"><?php echo $words->get('SignupSweet'); ?></label>
             <input type="text" id="sweet" name="sweet" value="" title="Leave free of content"/>
           </div>
        <?php endif;
-
         if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
         ?>
         

@@ -174,7 +174,8 @@ class GroupMembership extends RoxEntityBase
     /**
      * return the groups for a member
      *
-     * @param object $member - member entity to find groups for
+     * @param Member $member - member entity to find groups for
+     * @param string $status - member status enum('In','WantToBeIn','Kicked','Invited')
      * @access public
      * @return array
      */
@@ -304,8 +305,8 @@ class GroupMembership extends RoxEntityBase
                 $this->Comment = $comment_id;
             }
         }
-
         $this->IacceptMassMailFromThisGroup = $acceptgroupmail;
+        $this->notificationsEnabled = ($acceptgroupmail == 'yes' ? 1 : 0);
         $this->updated = date('Y-m-d H:i:s');
         return $this->update();
     }

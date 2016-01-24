@@ -643,6 +643,12 @@ VALUES
             $errors[] = 'SignupErrorPasswordCheck';
         }
 
+        // accommodation
+        if (empty($vars['accommodation']) || ($vars['accommodation']!='anytime' && $vars['accommodation']!='dependonrequest'
+                && $vars['accommodation']!='neverask')) {
+            $errors[] = 'SignupErrorProvideAccommodation';
+        }
+
         if (!empty($vars['sweet'])) {
             $errors[] = 'SignupErrorSomethingWentWrong';
         }

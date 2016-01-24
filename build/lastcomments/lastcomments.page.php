@@ -96,7 +96,7 @@ class LastCommentsPage extends PageWithActiveSkin {
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/groups.css?3';
-       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css?9';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css?10';
        return $stylesheets;
     }
 

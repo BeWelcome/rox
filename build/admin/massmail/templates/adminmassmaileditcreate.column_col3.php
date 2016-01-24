@@ -55,6 +55,9 @@ if ($this->suggestionsReminder) {
 if ($this->termsOfUse) {
     $options["TermsOfUse"] = $this->words->getSilent('AdminMassMailEditTypeTermsOfUse');
 }
+if ($this->mailToConfirmReminder) {
+    $options["MailToConfirmReminder"] = $this->words->getSilent('AdminMassMailEditTypeMailToConfirmReminder');
+}
 ?>
 Type: <select id="Type" name="Type" <?php if ((!$this->canChangeType) && ((count($options) == 1) || ($id != 0))) { echo 'disabled="disabled"'; }?> >
 <?php

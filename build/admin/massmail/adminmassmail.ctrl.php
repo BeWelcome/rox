@@ -198,6 +198,7 @@ class AdminMassmailController extends AdminBaseController
         $massmail = $this->model->getMassmail($id);
         $page = new AdminMassmailEnqueuePage($this->model, $massmail);
         $page->votersCount = $this->model->getSuggestionsReminderCount();
+        $page->mailToConfirmCount = $this->model->getMailToConfirmCount();
         return $page;
     }
 

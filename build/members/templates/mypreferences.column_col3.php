@@ -107,6 +107,7 @@
 
         <h3><?=$words->get('PreferencesPassword')?></h3>
         <p><?=$words->get('PreferencesPasswordDescription')?></p>
+            <a name="password"></a>
         <dl>
             <dt><?=$words->get('PreferencesPasswordOld')?></dt>
             <dd><input type="password" name="passwordold" /></dd>

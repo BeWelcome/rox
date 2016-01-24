@@ -61,10 +61,6 @@ class MOD_htmlpure
         return self::$_instance;
     }
 
-    private function getDefaultConfig() {
-        return $config;
-    }
-
     /**
      * wrapper for lazy loading and instantiating an HTMLPurifier object
      *
@@ -73,7 +69,6 @@ class MOD_htmlpure
      */
     public function getPurifier()
     {
-        require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.6.0-standalone/HTMLPurifier.standalone.php');
         $config = HTMLPurifier_Config::createDefault();
         $config->set('Cache.SerializerPath', SCRIPT_BASE . '/data');
         return new HTMLPurifier($config);
@@ -81,7 +76,6 @@ class MOD_htmlpure
 
     public function getBasicHtmlPurifier()
     {
-        require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.6.0-standalone/HTMLPurifier.standalone.php');
         $config = HTMLPurifier_Config::createDefault();
         $config->set('Cache.SerializerPath', SCRIPT_BASE . '/data');
         $config->set('HTML.Allowed', 'p,b,a[href],br,i,strong,em,ol,ul,li,dl,dt,dd,blockquote');
@@ -91,7 +85,6 @@ class MOD_htmlpure
 
     public function getAdvancedHtmlPurifier()
     {
-        require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.6.0-standalone/HTMLPurifier.standalone.php');
         $config = HTMLPurifier_Config::createDefault();
         $config->set('Cache.SerializerPath', SCRIPT_BASE . '/data');
         $config->set('HTML.Allowed', 'p,b,a[href|target],br,i,strong,em,ol,ul,li,dl,dt,dd,blockquote');
@@ -119,9 +112,14 @@ class MOD_htmlpure
         return self::getSophisticatedHtmlPurifier(array('table[id]', 'tr[class]', 'td[class|rowspan]', 'th[class]', 'span[style]'));
     }
 
+    public function getMailHtmlPurifier() {
+        // allow tables in forum posts to be able to format the suggestion results nicely
+        // don't offer tables in TinyMCE for now
+        return self::getSophisticatedHtmlPurifier(array('table[id]', 'tr[class]', 'td[class|rowspan]', 'th[class]', 'span[class]', 'hr', 'h3'));
+    }
+
     private function getSophisticatedHtmlPurifier($additionalTags = false)
     {
-        require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.6.0-standalone/HTMLPurifier.standalone.php');
         $config = HTMLPurifier_Config::createDefault();
         $config->set('Cache.SerializerPath', SCRIPT_BASE . '/data');
         $allowedHtml = self::ALLOWED_HTML;
@@ -137,6 +135,8 @@ class MOD_htmlpure
         $config->set('CSS.AllowedProperties', array('text-decoration'));
         $config->set('AutoFormat.AutoParagraph', true); // automatically turn double newlines into paragraphs
         $config->set('AutoFormat.Linkify', true); // automatically turn stuff like http://domain.com into links
+        $config->set('AutoFormat.RemoveSpansWithoutAttributes', true);
+        $config->set('CSS.AllowTricky','true');
         return new HTMLPurifier($config);
     }
 }

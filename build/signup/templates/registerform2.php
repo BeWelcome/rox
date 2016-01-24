@@ -60,6 +60,9 @@ Boston, MA  02111-1307, USA.
         <small class="text-muted"></small>
             <?php
             if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
+                echo '<div class="error">'.$words->get('SignupErrorFullNameRequired').'</div>';
+            }
+            ?>
                 echo '<span class="help-block alert alert-danger">'.$words->get('SignupErrorFullNameRequired').'</span>';
             }
             ?>

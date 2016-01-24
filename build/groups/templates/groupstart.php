@@ -31,7 +31,7 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                         if ($group_id == $suggestionsGroupId) {
                             $showNewTopicButton = false;
                         }
-                    echo $Forums->showExternalGroupThreads($group_id, false, $showNewTopicButton); ?>
+                    echo $Forums->showExternalGroupThreads($group_id, $this->isGroupMember(), false, $showNewTopicButton); ?>
                 </div> <!-- clearfix -->
             </div> <!-- subcl -->
         </div> <!-- c62l -->

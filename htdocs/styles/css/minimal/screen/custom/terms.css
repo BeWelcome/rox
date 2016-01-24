@@ -1,0 +1,6 @@
+ol {
+    list-style-type: lower-alpha;
+}
+ol > li {
+    list-style-type: lower-alpha;
+}

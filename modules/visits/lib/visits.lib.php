@@ -174,7 +174,7 @@ SELECT SQL_CACHE
 FROM
     members, membersphotos, addresses, geonames_cache AS g1, geonames_cache AS g2  
 WHERE
-    membersphotos.IdMember = members.id AND members.Status='Active' AND members.id = addresses.IdMember AND addresses.IdCity = g1.geonameid AND g2.geonameid = g1.parentCountryId 
+    members.Status='Active' AND ABS(HOURS(TIMEDIFF(members.created, now())) > 24 AND membersphotos.IdMember = members.id AND members.id = addresses.IdMember AND addresses.IdCity = g1.geonameid AND g2.geonameid = g1.parentCountryId
 GROUP BY
     members.id, members.Username
 ORDER BY

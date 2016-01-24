@@ -40,7 +40,8 @@ class SearchMembersTextPage extends SearchMembersBasePage
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery.ui.all.css';
-       $stylesheets[] = 'styles/css/minimal/screen/custom/search.css?1';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/search.css?2';
        return $stylesheets;
     }
 }
+

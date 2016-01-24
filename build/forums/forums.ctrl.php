@@ -91,7 +91,7 @@ class ForumsController extends PAppController
         } // end of test "if feature is closed"
 
 
-        if (APP_User::isBWLoggedIn()) {
+        if ( APP_User::isBWLoggedIn()) {
             $User = APP_User::login();
         }
         else {
@@ -118,22 +118,26 @@ class ForumsController extends PAppController
         $page->newBar .= $view->getAsString('userBar');
 
         // we can't replace this ob_start()
+        if ($this->action == self::ACTION_NOT_LOGGED_IN) {
+            $this->_redirectNotLoggedIn();
+        }
+
         ob_start();
         if ($this->action == self::ACTION_VOTE_POST) {
             if (!isset($request[2])) {
-                 die("Need to have a IdPost") ;
+                die("Need to have a IdPost") ;
             }
             $IdPost=$request[2] ;
             if (!isset($request[3])) {
-                 die("Need to have a vote value") ;
+                die("Need to have a vote value") ;
             }
             $Value=$request[3] ;
-			$this->_model->VoteForPost($IdPost,$Value);
+            $this->_model->VoteForPost($IdPost,$Value);
             $this->_model->setThreadId($this->_model->GetIdThread($IdPost));
             $this->isTopLevel = false;
             $this->_model->prepareTopic(true);
             $this->_view->showTopic();
-         }
+        }
         elseif ($this->action == self::ACTION_DELETEVOTE_POST) {
             if (!isset($request[2])) {
                  die("Need to have a IdPost") ;
@@ -157,7 +161,7 @@ class ForumsController extends PAppController
             }
             $callbackId = $this->ModeratorEditPostProcess();
 
-            $DataPost=$this->_model->prepareModeratorEditPost($IdPost);
+            $DataPost=$this->_model->prepareModeratorEditPost($IdPost, $this->BW_Right->HasRight('ForumModerator'));
             $this->_view->showModeratorEditPost($callbackId,$DataPost);
             PPostHandler::clearVars($callbackId);
          }
@@ -382,10 +386,8 @@ class ForumsController extends PAppController
             $this->_view->ModeditPost($callbackId);
             PPostHandler::clearVars($callbackId);
         } else if ($this->action == self::ACTION_SEARCH_FORUMS) {
-            if (count($request) == 3) {
-                $this->_view->keyword = $request[2];
-                $this->_view->showSearchResultPage($request[2]);
-            }
+            $this->_view->keyword = $request[2];
+            $this->_view->showSearchResultPage($request[2]);
             PPostHandler::clearVars($searchCallbackId);
         } else if ($this->action == self::ACTION_SEARCH_USERPOSTS) {
             if (!isset($request[2])) {
@@ -418,22 +420,60 @@ class ForumsController extends PAppController
                 $operation=$request[2] ;
             }
             switch($operation) {
-                case "member" ;
-                    $this->searchSubscriptions($request[3]);
-                    break ;
-                case "thread" ;
-                    $this->searchSubscriptions(0,$request[3]);
-                    break ;
-                case "unsubscribe" ;
-                    if (isset($request[3]) and ($request[3]=='thread')) {
-                        $this->UnsubscribeThread($request[4],$request[5]);
+                case "enable":
+                    if (isset($request[3])) {
+                        switch($request[3]) {
+                            case 'thread':
+                                $this->EnableThread($request[4]);
+                                break;
+                            case 'tag':
+                                $this->EnableTag($request[4]);
+                                break;
+                            case 'group':
+                                $this->EnableGroup($request[4]);
+                                break;
+                        }
+                    } else {
+                        $this->enableSubscriptions();
                     }
-                    if (isset($request[3]) and ($request[3]=='tag')) {
-                        $this->UnsubscribeTag($request[4],$request[5]);
+                    break;
+                case "disable":
+                    if (isset($request[3])) {
+                        switch($request[3]) {
+                            case 'tag':
+                                $this->DisableTag($request[4]);
+                                break;
+                            case 'thread':
+                                $this->DisableThread($request[4]);
+                                break;
+                            case 'group':
+                                $this->DisableGroup($request[4]);
+                                break;
+                        }
+                    } else {
+                        $this->disableSubscriptions();
                     }
-                    break ;
+                    break;
+                case "subscribe":
+                    if (isset($request[3]) and ($request[3]=='group')) {
+                        $this->SubscribeGroup($request[4]);
+                    }
+                    break;
+                case "unsubscribe":
+                    switch ($request[3]) {
+                        case 'thread' :
+                            $this->UnsubscribeThread($request[4],$request[5]);
+                            break;
+                        case 'tag':
+                            $this->UnsubscribeTag($request[4],$request[5]);
+                            break;
+                        case 'group':
+                            $this->UnsubscribeGroup($request[4]);
+                            break;
+                    }
+                    break;
                 default :
-                $this->searchSubscriptions(0);
+                    $this->searchSubscriptions();
             }
         } else {
             if (PVars::get()->debug) {
@@ -450,37 +490,96 @@ class ForumsController extends PAppController
         $page->render();
     } // end of index
 
-    private function searchSubscriptions($cid=0,$IdThread=0,$IdTag=0) {
-        $TResults = $this->_model->searchSubscriptions($cid,$IdThread,$IdTag);
+    private function _redirectNotLoggedIn() {
+        $request = PVars::getObj('env')->baseuri . 'login/' . implode('/', $this->request) . '#login-widget';
+        header('Location: ' . $request);
+        PPHP::PExit();
+    }
+
+    private function redirectSubscriptions() {
+        if (!isset($_SERVER['HTTP_REFERER'])) {
+            $redirect = PVars::getObj('env')->baseuri . 'forums/subscriptions';
+        } else {
+            $referrer = $_SERVER['HTTP_REFERER'];
+            $referrer = str_replace('/login/', '/', $referrer);
+            $pos = strpos($referrer, 'forums/subscriptions/');
+            if ($pos !== false) {
+                // make sure no infinite redirect happens
+                $redirect = substr($referrer, 0, $pos) . 'forums/subscriptions';
+            } else {
+                $redirect = $referrer;
+            }
+        }
+        header('Location: ' . $redirect);
+        exit;
+    }
+
+    private function EnableGroup($IdGroup) {
+        $this->_model->enableGroup($IdGroup);
+        $this->redirectSubscriptions();
+    }
+    private function DisableGroup($IdGroup) {
+        $this->_model->disableGroup($IdGroup);
+        $this->redirectSubscriptions();
+    }
+    private function SubscribeGroup($IdGroup) {
+        $this->_model->subscribeGroup($IdGroup);
+        $this->redirectSubscriptions();
+    }
+    private function UnsubscribeGroup($IdGroup) {
+        $this->_model->unsubscribeGroup($IdGroup);
+        $this->redirectSubscriptions();
+    }
+    private function enableSubscriptions() {
+        $this->_model->enableSubscriptions();
+        $this->redirectSubscriptions();
+    }
+    private function disableSubscriptions() {
+        $this->_model->disableSubscriptions();
+        $this->redirectSubscriptions();
+    }
+    private function searchSubscriptions() {
+        $TResults = $this->_model->searchSubscriptions();
         $this->_view->displaySearchResultSubscriptions($TResults);
     }
     private function SubscribeThread($IdThread) {
         $res = $this->_model->SubscribeThread($IdThread);
-        $this->_view->SubscribeThread($res);
-        $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
-        $this->_view->displaySearchResultSubscriptions($TResults);
+        $this->redirectSubscriptions();
     }
     private function UnsubscribeThread($IdSubscribe=0,$Key="") {
-        $res = $this->_model->UnsubscribeThread($IdSubscribe,$Key);
-        $this->_view->Unsubscribe($res);
+        $this->_model->UnsubscribeThread($IdSubscribe,$Key);
+        $this->redirectSubscriptions();
     }
 
     private function SubscribeTag($IdTag) {
         $res = $this->_model->SubscribeTag($IdTag);
-        $this->_view->SubscribeTag($res);
-        $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
-        $this->_view->displaySearchResultSubscriptions($TResults);
+        $this->redirectSubscriptions();
     }
     private function UnsubscribeTag($IdSubscribe=0,$Key="") {
         $res = $this->_model->UnsubscribeTag($IdSubscribe,$Key);
-        $this->_view->Unsubscribe($res);
+        $this->redirectSubscriptions();
+    }
+    private function EnableThread($IdThread) {
+        $this->_model->EnableThread($IdThread);
+        $this->redirectSubscriptions();
+    }
+    private function EnableTag($IdTag) {
+        $this->_model->EnableTag($IdTag);
+        $this->redirectSubscriptions();
+    }
+    private function DisableThread($IdThread) {
+        $this->_model->DisableThread($IdThread);
+        $this->redirectSubscriptions();
+    }
+    private function DisableTag($IdThread) {
+        $this->_model->DisableTag($IdThread);
+        $this->redirectSubscriptions();
     }
 
     private function searchUserposts($user) {
         // Data will be displayed only if the current user is Logged
-        if (APP_User::isBWLoggedIn()) {
-            $roxModel = new RoxModelBase;
-            $profileVisitor = $roxModel->getLoggedInMember();
+        $profileVisitor = $this->_model->getLoggedInMember();
+        if ($profileVisitor) {
             $userId = APP_User::memberId($user);
             $membersForumPostsPagePublic = $this->_model->isMembersForumPostsPagePublic($userId);
             if ($membersForumPostsPagePublic || ($profileVisitor->getPKValue() == $userId) || $this->BW_Right->HasRight("Admin") || $this->BW_Right->HasRight("ForumModerator") || $this->BW_Right->HasRight("SafetyTeam") ) {
@@ -499,7 +598,7 @@ class ForumsController extends PAppController
     * show latest threads belonging to a group
     *
     **/
-    public function showExternalGroupThreads($groupId, $showsticky = true, $showNewTopicButton = true) {
+    public function showExternalGroupThreads($groupId, $isGroupMember = true, $showsticky = true, $showNewTopicButton = true) {
 
         $request = $this->request;
         $this->parseRequest();
@@ -507,7 +606,7 @@ class ForumsController extends PAppController
         $this->isTopLevel = false;
         $this->_model->prepareForum($showsticky);
         $this->_view->uri = 'groups/'.$request[1].'/forum/';
-        $this->_view->showExternal(true, $showsticky, $showNewTopicButton);
+        $this->_view->showExternal(true, $showsticky, $showNewTopicButton, $isGroupMember);
     }
 
     /**
@@ -709,6 +808,7 @@ class ForumsController extends PAppController
     const ACTION_VIEW_LANDING = 20;
     const ACTION_VIEW_FORUM = 21;
     const ACTION_VIEW_GROUPS = 22;
+    const ACTION_NOT_LOGGED_IN = 24;
 
 
     /**
@@ -740,13 +840,19 @@ class ForumsController extends PAppController
                 }
             }
         }
-        if (!isset($request[1])) {
+        if (!APP_User::isBWLoggedIn()) {
+            $this->action = self::ACTION_NOT_LOGGED_IN;
+        } else if (!isset($request[1])) {
             $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);
             $this->action = self::ACTION_VIEW;
         } else if (isset($request[1]) && $request[1] == 'suggestTags') {
             $this->action = self::ACTION_SUGGEST;
         } else if (isset($request[1]) && $request[1] == 'search') {
             $this->action = self::ACTION_SEARCH_FORUMS;
+            if (isset($request[3]) && preg_match_all('/page([0-9]+)/i', $request[3], $regs)) {
+                $this->_model->setPage($regs[1][0]);
+                $this->_model->pushToPageArray($regs[1][0]);
+            }
         } else if (isset($request[1]) && $request[1] == 'member') {
             $this->action = self::ACTION_SEARCH_USERPOSTS;
         } else if (isset($request[1]) && $request[1] == 'modfulleditpost') {

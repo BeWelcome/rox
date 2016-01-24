@@ -111,7 +111,7 @@ class SuggestionsBasePage extends PageWithActiveSkin
 
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css?8';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css?10';
        $stylesheets[] = 'styles/css/minimal/screen/custom/suggestions.css?5';
        $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome.min.css';
        $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome-ie7.min.css';

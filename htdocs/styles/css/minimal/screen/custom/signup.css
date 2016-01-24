@@ -6,8 +6,8 @@
 #main td.info {padding-left: 30px}
 #teaser { margin-bottom: 0;}
 #signuprox {width: 100%;}
-#signuprox fieldset {margin-bottom: 0.5em; }
-/* #signuprox legend { color: #ff8800 } */
+#signuprox fieldset {margin-bottom: 0.5em; padding: .5em 1em;}
+#signuprox legend { margin-left:0 !important; }
 #signuprox label {width: 10em; clear: left; float: left; padding-left: 0.3em; }
 #signuprox input {margin-bottom: 0.5em; margin-right: 0.5em;}
 #signuprox textarea {width: 30em; height: 10em; margin-bottom: 0.8em;}
@@ -27,7 +27,7 @@
 #signuprox .input_float li.number  { width: 6em; float:left; }
 #signuprox .input_float .number input { padding: 2px; width: 3em; float:left; margin-right: 0.3em;}
 #signuprox .small { font-size: 0.9em; color: #888;}
-#signuprox .error {font-size: 11px; clear:both; width: 30em; }
+#signuprox .error {font-size: 11px; clear:both; width: 95%; }
 #signuprox2 .statbtn {padding: 5px; float:left;}
 #signuprox2 a.back {color: #888}
 #signuprox2 .sweet { width:0; height: 0; display: inline; }

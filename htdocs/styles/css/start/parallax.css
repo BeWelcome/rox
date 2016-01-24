@@ -91,6 +91,8 @@ html, body {
     background: url(/images/homepicture-1200px_1.jpg) no-repeat center center fixed;
     display: table;
     height: 100%;
+    min-height:100vh;
+    max-height:100%;
     position: relative;
     width: 100%;
     -webkit-background-size: cover;
@@ -102,12 +104,23 @@ html, body {
 #about {
     background-color: #ff8800;
     color: white;
+    border-top: 6px solid #EFEFEF;
+    border-bottom: 6px solid #EFEFEF;
+}
+#about .col-xs-12.col-sm-6.col-md-2 {
+    margin-left:1rem;
+    margin-right:1rem;
+}
+#about p {
+    text-align:center;
 }
 
 #about_trailing {
     background: url(/images/homepicture-1200px_2.jpg) no-repeat center center fixed;
     display: table;
     height: 50%;
+    min-height:100vh;
+    max-height:100%;
     position: relative;
     width: 100%;
     -webkit-background-size: cover;
@@ -119,12 +132,20 @@ html, body {
 #statistics {
     background-color: #f3a806;
     color: white;
+    border-top: 6px solid #EFEFEF;
+    border-bottom: 6px solid #EFEFEF;
+}
+#statistics .col-xs-4.col-sm-3.col-md-2{
+    margin-left:1rem;
+    margin-right:1rem;
 }
 
 #statistics_trailing {
     background: url(/images/homepicture-1200px_4.jpg) no-repeat center center fixed;
     display: table;
     height: 50%;
+    min-height:100vh;
+    max-height:100%;
     position: relative;
     width: 100%;
     -webkit-background-size: cover;
@@ -142,6 +163,8 @@ html, body {
     background: url(/images/homepicture-1200px_3.jpg) no-repeat center center fixed;
     display: table;
     height: 70%;
+    min-height:100vh;
+    max-height:100%;
     position: relative;
     width: 100%;
     -webkit-background-size: cover;
@@ -151,9 +174,10 @@ html, body {
 }
 
 h1 {
-    font-size: 2em;
+    font-size: 4.25em;
     font-weight: bolder;
     text-align: center;
+    line-height:1.4;
 }
 
 h2 {
@@ -167,4 +191,7 @@ h3 {
     font-size: 1.2em;
     font-weight: bold;
     text-align: center;
+}
+p {
+    line-height: 1.62;
 }

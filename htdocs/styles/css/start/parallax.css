@@ -51,18 +51,25 @@ html, body {
 }
 
 .chevron_down{
-    bottom: 100px;
+    top: 130px;
     display: block;
     font-size: 20px;
     left: 0;
     position: absolute;
     right: 0;
-    width: 50px;
+    width: 100px;
     margin: 0 auto;
     outline: none;
     text-decoration: none;
     color: #fff;
     z-index: 200;
+}
+.chevron_down_img{
+    top: 118px;
+    position: absolute;
+    right: 0px;
+    left: 0px;
+    margin: 0px auto;
 }
 
 .chevron_icon {
@@ -72,6 +79,11 @@ html, body {
     vertical-align: middle;
     color: white;
     background: rgba(0, 0, 0, 0.3);
+    transition:background 0.3s ease, box-shadow 0.3s ease;;
+}
+.chevron_down:hover .chevron_icon{
+    background: rgba(140, 140, 140, 0.3);
+    box-shadow: 0 0 5px 0px #DADADA;
 }
 
 /* additional sections */

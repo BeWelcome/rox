@@ -168,7 +168,7 @@ html, body {
     width: 100%;
     height:100%;
     background-color: rgba(0, 0, 0, 0.3);
-    visibility:hidden;
+    visibility:visible;
     z-index:1000;
 }
 
@@ -204,9 +204,6 @@ html, body {
 #search .col-sm-4.col-sm-offset-1 {
     padding-top:52px;
 }
-#search .container {
-    padding:0px;
-}
 #search .form-group {
     text-align:center;
 }
@@ -215,6 +212,8 @@ html, body {
     bottom: 0px;
     left: 0px;
     right: 0px;
+    padding:0px;
+    bottom: 234px;
 }
 h1 {
     font-size: 4.25em;

@@ -1,3 +1,20 @@
 .summary{
   line-height: 1.1;
 }
+.card-header{
+	font-size:1.25em;
+	text-transform: uppercase;
+	border:2px solid white;
+	border-radius:0.25rem;
+	background-color: #F79F54;
+	color:white;
+	letter-spacing: 0.03em;
+}
+.row.welcomeback img {
+	border-radius:2px;
+}
+.card {
+	box-shadow: 0px 3px 8px -2px #999696;
+	border:none;
+	border-radius: 0.25rem;
+}

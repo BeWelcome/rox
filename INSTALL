@@ -23,6 +23,8 @@ Requirements
   * Composer (getcomposer.org)
   * Node.js (https://nodejs.org/)
   * Grunt (http://gruntjs.com/)
+  * Ruby (http://www.ruby-lang.org/en/downloads/)
+  * Sass (http://www.ruby-lang.org/en/downloads/)
   * Sphinxsearch (http://sphinxsearch.com/)
   * wget (if you want to follow the instructions word to word)
 
@@ -31,7 +33,7 @@ Download
 
   1. Clone via Git:
 
-      $ git clone git://gitorious.org/bewelcome/rox.git
+      $ git clone https://github.com/BeWelcome/rox.git
 
   2. Done. For a first look a simple read-only clone will do. See
      http://trac.bewelcome.org/wiki/Download for more details on branches and
@@ -77,6 +79,10 @@ Create files and set permissions
           build/alias.cache.ini \
           htdocs/exception.log
 
+   5. Create rox_local.ini file
+
+      $ cp rox_local_example rox_local.ini
+
 Database installation
 ---------------------
 
@@ -88,16 +94,15 @@ Database installation
       mysql> FLUSH PRIVILEGES;
       mysql> exit
 
-  2. Download development database dumps:
+  2. Download development database dump:
 
       $ wget http://downloads.bewelcome.org/for_developers/rox_test_db/bewelcome.sql.bz2
 
-  3. Uncompress dumps:
+  3. Uncompress dump:
 
       $ bunzip2 bewelcome.sql.bz2
-      $ bunzip2 languages.sql.bz2 words.sql.bz2
 
-  4. Import dumps into database (first line needs root because of routines):
+  4. Import dump into database (first line needs root because of routines):
 
       $ mysql bewelcome -u root -p < bewelcome.sql
 
@@ -133,16 +138,17 @@ Database installation
 
       git checkout develop
   
-      vendor/bin/phinx migrate -c phinx.php
+      php vendor/bin/phinx migrate -c phinx.php
 
     (Note this is most useful if you switch to the development branch beforehand
-
+	
        git checkout origin develop)
 
-  10. Update words table to match the current translation on the site
+  10. Update words and language tables to match the current translation on the site
 
        $ wget http://downloads.bewelcome.org/for_developers/rox_test_db/languages.sql.bz2
        $ wget http://downloads.bewelcome.org/for_developers/rox_test_db/words.sql.bz2
+       $ bunzip2 languages.sql.bz2 words.sql.bz2
        $ mysql bewelcome -u bewelcome -pbewelcome < languages.sql
        $ mysql bewelcome -u bewelcome -pbewelcome < words.sql
 
@@ -158,7 +164,7 @@ Configure Apache
 
   1. Create a new virtual host file:
 
-      $ sudo touch /etc/apache2/sites-available/bewelcome
+      $ sudo touch /etc/apache2/sites-available/bewelcome.conf
 
     1a. Create self-signed certificate
 
@@ -194,7 +200,7 @@ Configure Apache
 
   4. Enable virtual host:
 
-      $ sudo a2ensite bewelcome
+      $ sudo a2ensite bewelcome.conf
       $ sudo service apache2 reload
 
 
@@ -220,9 +226,13 @@ Configure BW-Rox
 Test and log in
 ---------------
 
-  1. Point your browser to your BW-Rox installation (i.e. http://bewelcome/)
+  1. Compile the Sass files into CSS
+	
+	 $ grunt sass
 
-  2. Log in as user "henri" with no password. See "Useful hints" section below
+  2. Point your browser to your BW-Rox installation (i.e. http://bewelcome/)
+
+  3. Log in as user "member-101" and password "password". See "Useful hints" section below
      on password usage.
 
   3. Click around the site a bit and check if all CSS and images are loaded.

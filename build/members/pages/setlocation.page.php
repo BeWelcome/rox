@@ -1,7 +1,7 @@
 <?php
 
 
-class SetLocationPage extends RoxPageView
+class SetLocationPage extends PageWithRoxLayout
 {
     public function __construct() {
         parent::__construct();

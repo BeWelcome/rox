@@ -77,7 +77,7 @@
     $this->addRoute('members_profile_set_active', 'setprofileactive', 'MembersController', 'setactive');
     $this->addRoute('members_profile_set_inactive', 'setprofileinactive', 'MembersController', 'setinactive');
     $this->addRoute('members_reset_password', 'resetpassword' , 'MembersController', 'resetPassword');
-    $this->addRoute('members_reset_password_finish', 'resetpassword/finish' , 'MembersController', 'resetPasswordFinish');
+    $this->addRoute('members_reset_password_finish', 'login/mypreferences%23password#login-widget' , 'MembersController', 'resetPasswordFinish');
 
     $this->addRoute('members_show_all_notes', 'mynotes', 'MembersController', 'myNotes');
     $this->addRoute('members_add_note', 'members/:username:/note/add', 'MembersController', 'addNote');
@@ -321,5 +321,11 @@
     // Data retention (#1885)
     $this->addRoute('dataretention', 'members/dataretention', 'MembersController', 'dataRetention');
 
+    $this->addRoute('admin_subscriptions', 'admin/subscriptions', 'AdminSubscriptionsController', 'manage');
+    $this->addRoute('login_message_close', 'close/:id:', 'LoginController', 'close');
+
+    // Terms of use
+    $this->addRoute('terms_french', 'terms', 'AboutController', 'termsOfUse');
+    $this->addRoute('terms_language', 'terms/:language:', 'AboutController', 'termsOfUse');
 $this->addRoute('m_dashboard', 'mockups/dashboard', 'MockupsController', 'dashboard');
 $this->addRoute('m_select2', 'mockups/select2', 'MockupsController', 'select2');

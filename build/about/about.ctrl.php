@@ -39,7 +39,6 @@ class AboutController extends RoxControllerBase
             case 'missions':
             case 'bod':
             case 'help':
-            case 'terms':
             case 'commentguidelines':
             case 'impressum':
             case 'affiliations':
@@ -146,5 +145,16 @@ class AboutController extends RoxControllerBase
         ob_end_clean();
         echo "success";
         exit(0);
+    }
+
+    public function termsOfUse() {
+        $lang = null;
+        if (isset($this->route_vars['language'])) {
+            $lang = $this->route_vars['language'];
+        }
+        $page = new AboutGenericPage('terms', $lang);
+        $page->lang = $lang;
+        $page->setModel(new AboutModel());
+        return $page;
     }
 }

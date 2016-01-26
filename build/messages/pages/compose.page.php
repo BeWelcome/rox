@@ -93,6 +93,7 @@ class ComposeMessagePage extends MessagesBasePage
     {
         $scripts = parent::getLateLoadScriptfiles();
         if ($this->sender && $this->sender->getPreference("PreferenceDisableTinyMCE", $default = "No") == 'No') {
+            $scripts[] = 'tinymce-4.0.28/tinymce.min.js';
             $scripts[] = 'tinymceconfig_noimages.js?1';
         }
         return $scripts;

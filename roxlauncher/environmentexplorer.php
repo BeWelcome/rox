@@ -121,6 +121,7 @@ class EnvironmentExplorer
     {
         //BW Rox needs the GD plugin
         if (!PPHP::assertExtension('gd')) {
+            phpinfo();
             die('GD lib required!');
         }
     }

@@ -114,6 +114,7 @@ function GetPostVote($IdPost) {
 		return ;
 	}
 	$IdMember=$_SESSION["IdMember"] ;
+    $Res = new stdClass;
 	$Res->PossibleAction='none' ;
     $member = $this->getLoggedInMember();
     $post = $this->createEntity('Post',$IdPost);
@@ -535,10 +536,15 @@ WHERE
     } // end of boardTopLevelGroups
 
     private function boardTopLevelLanding($showsticky = true) {
+        if (!($User = APP_User::login())) {
+            // Show informal message that the forums are limited to members only
+            return false;
+        }
+
         $MAX_THREADS = 1000; //An upper limit of threads th show just in case the preference goes silly
         if ($this->tags) {
             $this->boardTopLevelLastPosts() ;
-            return ;
+            return true;
         }
 
         $layoutbits = new MOD_layoutbits();
@@ -577,7 +583,7 @@ WHERE
 
         $this->board->add($forum);
         $this->board->add($groups);
-
+        return true;
     } // end of boardTopLevelLanding
 
     private function boardTopLevelLastPosts($showsticky = true) {
@@ -668,7 +674,7 @@ WHERE
 
     private function boardContinent()  {
         if (!isset(Forums::$continents[$this->continent]) || !Forums::$continents[$this->continent]) {
-            throw new PException('Invalid Continent');
+            return;
         }
 
         $subboards = array('forums/' => 'Forums');
@@ -1756,12 +1762,35 @@ WHERE `threadid` = '%d' ",
 	   $IdPost=(int)$vars['IdPost'] ;
 
 		if (isset($vars["submit"]) and ($vars["submit"]=="update post")) { // if an effective update was chosen for a forum trads
+            $IdThread=(int)$vars["IdThread"] ;
 		 	$OwnerCanStillEdit=$vars["OwnerCanStillEdit"]  ;
 		 	$PostVisibility=$vars["PostVisibility"]  ;
 		 	$PostDeleted=$vars["PostDeleted"]  ;
 
         	MOD_log::get()->write("Updating Post=#".$IdPost." Setting OwnerCanStillEdit=[".$OwnerCanStillEdit."] PostVisibility=[".$PostVisibility."] PostDeleted=[".$PostDeleted."] ","ForumModerator");
 			$this->dao->query("update forums_posts set OwnerCanStillEdit='".$OwnerCanStillEdit."',PostVisibility='".$PostVisibility."',PostDeleted='".$PostDeleted."' where id=".$IdPost);
+                // Update last post id
+                $query = "
+                    SELECT
+                        id
+                    FROM
+                       forums_posts
+                    WHERE
+                        threadid = " . $IdThread . "
+                        AND PostDeleted = 'NotDeleted'
+                    ORDER BY create_time DESC
+                    LIMIT 1";
+                $s = $this->dao->query($query);
+                $row = $s->fetch(PDB::FETCH_OBJ);
+                $id = $row->id;
+                $update = "
+                    UPDATE
+                        forums_threads
+                    SET
+                        last_postid = " . $id . "
+                    WHERE
+                        id = " . $IdThread;
+                $this->dao->query($update);
 		}
 
 		if (isset($vars["submit"]) and ($vars["submit"]=="delete Tag")) { // if an effective update was chosen for a forum trads
@@ -2350,6 +2379,10 @@ and ($this->ThreadGroupsRestriction)
         }
 
         $topicinfo = $s->fetch(PDB::FETCH_OBJ);
+		// Check if any result was found
+		if (!$topicinfo) {
+			$topicinfo = new stdClass;
+		}
 		if (isset($topicinfo->WhoCanReply)) {
 			if ($topicinfo->WhoCanReply=="MembersOnly") {
 				$topicinfo->CanReply=true ;
@@ -2469,71 +2502,41 @@ LIMIT %d, %d",$this->threadid,$from,$this->POSTS_PER_PAGE);
 			$this->topic->posts[] = $row;
         } // end  // Now retrieve all the Posts of this thread
 
-
         // Check if the current user has subscribe to this thread or not (to display the proper option, subscribe or unsubscribe)
         if (isset($_SESSION["IdMember"])) {
-            $query = sprintf( "
+			$memberId = $_SESSION["IdMember"];
+			$query = "
 SELECT
     `members_threads_subscribed`.`id` AS IdSubscribe,
-    `members_threads_subscribed`.`UnSubscribeKey` AS IdKey
+    `members_threads_subscribed`.`UnSubscribeKey` AS IdKey,
+    `members_threads_subscribed`.`notificationsEnabled` AS notificationsEnabled
 FROM members_threads_subscribed
-WHERE IdThread=%d
-AND IdSubscriber=%d
-                ",
-                $this->threadid,
-                $_SESSION["IdMember"]
-            );
+WHERE IdThread = {$this->threadid}
+AND IdSubscriber = {$memberId}";
             $s = $this->dao->query($query);
             if (!$s) {
                 throw new PException('Could if has subscribed to Thread=#".$this->threadid." !');
             }
             $row = $s->fetch(PDB::FETCH_OBJ) ;
             if (isset($row->IdSubscribe)) {
+				$this->topic->notificationsEnabled = $row->notificationsEnabled;
                 $this->topic->IdSubscribe= $row->IdSubscribe ;
                 $this->topic->IdKey= $row->IdKey ;
             }
-        }
+            if ($this->topic->topicinfo->IdGroup > 0) {
+                // Check if member has enabled group mails
+                $group = $this->createEntity('Group', $this->topic->topicinfo->IdGroup);
+                $member = $this->createEntity('Member', $_SESSION["IdMember"]);
+                $membership = $this->createEntity('GroupMembership')->getMembership($group, $member);
+                if ($membership) {
+					$this->topic->isGroupSubscribed = ($membership->IacceptMassMailFromThisGroup == 'yes');
+					if (!isset($row->IdSubscribe)) {
+						$this->topic->notificationsEnabled = ($membership->notificationsEnabled);
+					}
+                }
+			}
+		}
 
-/*
-        $query = sprintf(  "
-SELECT
-    `forums_threads`.`title`,
-    `forums_threads`.`IdTitle`,
-    `ThreadVisibility`,
-    `ThreadDeleted`,
-    `forums_threads`.`replies`,
-    `forums_threads`.`views`,
-    `forums_threads`.`first_postid`,
-    `forums_threads`.`IdGroup`,
-    `forums_threads`.`continent`,
-    `forums_threads`.`geonameid`, `geonames_cache`.`name` AS `geonames_name`,
-    `forums_threads`.`admincode`, `geonames_admincodes`.`name` AS `adminname`,
-    `forums_threads`.`countrycode`, `geonames_countries`.`name` AS `countryname`,
-    `forums_threads`.`tag1` AS `tag1id`, `tags1`.`tag` AS `tag1`,
-    `forums_threads`.`tag2` AS `tag2id`, `tags2`.`tag` AS `tag2`,
-    `forums_threads`.`tag3` AS `tag3id`, `tags3`.`tag` AS `tag3`,
-    `forums_threads`.`tag4` AS `tag4id`, `tags4`.`tag` AS `tag4`,
-    `forums_threads`.`tag5` AS `tag5id`, `tags5`.`tag` AS `tag5`,
-    `groups`.`Name` AS `GroupName`
-FROM `forums_threads`
-LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)
-LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)
-LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)
-LEFT JOIN `forums_tags` AS `tags1` ON (`forums_threads`.`tag1` = `tags1`.`tagid`)
-LEFT JOIN `forums_tags` AS `tags2` ON (`forums_threads`.`tag2` = `tags2`.`tagid`)
-LEFT JOIN `forums_tags` AS `tags3` ON (`forums_threads`.`tag3` = `tags3`.`tagid`)
-LEFT JOIN `forums_tags` AS `tags4` ON (`forums_threads`.`tag4` = `tags4`.`tagid`)
-LEFT JOIN `forums_tags` AS `tags5` ON (`forums_threads`.`tag5` = `tags5`.`tagid`)
-LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
-WHERE `threadid` = '%d'
-            ",
-            $this->threadid
-        );
-        $s = $this->dao->query($query);
-        if (!$s) {
-            throw new PException('Could not retrieve Thread=#".$this->threadid." !');
-        }
-*/
         // Increase the number of views
         $query = "
 UPDATE `forums_threads`
@@ -2571,6 +2574,8 @@ AND addresses.IdMember = members.id AND addresses.rank = 0
 	and ({$this->PublicPostVisibility})
 	and ({$this->PublicThreadVisibility})
 	and ({$this->PostGroupsRestriction})
+	and ThreadDeleted <> 'Deleted'
+	And PostDeleted <> 'Deleted'
 ORDER BY `posttime` DESC
 LIMIT %d
             ",
@@ -2592,84 +2597,129 @@ LIMIT %d
         }
     } // end of initLastPosts
 
-    /**
+    private function updateSubscriptions($memberId, $enable) {
+        // update subscription (keep old assignments through negating if disabling)
+        // members_tags_subscribed
+        // members_threads_subscribed
+        $query = "
+            UPDATE
+                members_tags_subscribed
+            SET
+                notificationsEnabled = '" . ($enable ? 1 : 0) . "'
+            WHERE
+                IdSubscriber = " . $memberId;
+        $this->dao->query($query);
+        $query ="
+            UPDATE
+                members_threads_subscribed
+            SET
+                notificationsEnabled = '" . ($enable ? 1 : 0) . "'
+            WHERE
+                IdSubscriber = " . $memberId;
+        $this->dao->query($query);
+		$this->updateGroupNotifications($memberId, $enable);
+        $this->dao->query($query);
+    }
+
+	private function updateGroupNotifications($memberId, $enable) {
+		$query = "
+            UPDATE
+                membersgroups
+            SET
+                notificationsEnabled = '" . ($enable ? 1 : 0) . "'
+            WHERE
+                IdMember = " . $memberId . "
+                AND IacceptMassMailFromThisGroup = 'Yes'
+        ";
+		$this->dao->query($query);
+	}
+
+	private function updateGroupNotification($groupId, $memberId, $enable) {
+		$query = "
+            UPDATE
+                membersgroups
+            SET
+                notificationsEnabled = '" . ($enable ? 1 : 0) . "'
+            WHERE
+            	IdGroup = " . $groupId . "
+                AND IdMember = " . $memberId . "
+                AND IacceptMassMailFromThisGroup = 'Yes'
+        ";
+		$this->dao->query($query);
+	}
+
+	public function disableSubscriptions() {
+		$member = $this->getLoggedInMember();
+		if ($member) {
+			$this->updateSubscriptions($member->id, false);
+		}
+	}
+
+	public function enableSubscriptions() {
+		$member = $this->getLoggedInMember();
+		if ($member) {
+			$this->updateSubscriptions($member->id, true);
+		}
+	}
+
+	public function disableGroup($IdGroup) {
+		$member = $this->getLoggedInMember();
+		if ($member) {
+			$this->updateGroupNotification($IdGroup, $member->id, false);
+		}
+	}
+
+	public function enableGroup($IdGroup) {
+		$member = $this->getLoggedInMember();
+		if ($member) {
+			$this->updateGroupNotification($IdGroup, $member->id, true);
+		}
+	}
+
+	public function subscribeGroup($IdGroup) {
+		$member = $this->getLoggedInMember();
+		if ($member) {
+			$group = $this->createEntity('Group', $IdGroup);
+			if (!($membership = $this->createEntity('GroupMembership')->getMembership($group, $member)))
+			{
+				return false;
+			}
+
+			$membership->updateMembership('yes', $membership->Comment);
+		}
+	}
+
+	public function unsubscribeGroup($IdGroup) {
+		$member = $this->getLoggedInMember();
+		if ($member) {
+			$group = $this->createEntity('Group', $IdGroup);
+			if (!($membership = $this->createEntity('GroupMembership')->getMembership($group, $member)))
+			{
+				return false;
+			}
+
+			$membership->updateMembership('no', $membership->Comment);
+		}
+	}
+
+	/**
      * This function retrieve the subscriptions for the member $cid and/or the the thread IdThread and/or theIdTag
      * @$cid : either the IdMember or the username of the member we are searching the subscription
      * this $cid and $IdThread and $IdTag parameters are only used if the current member has moderator rights
      * It returns a $TResults structure
      * Very important  : member who are not moderators cannot see other people subscriptions
+     * @param bool $IdThread
+     * @param bool $IdTag
+     * @return StdClass
+     * @throws PException
      */
-    public function searchSubscriptions($cid=0,$IdThread=0,$IdTag=0) {
-        $IdMember=0 ;
-
+    public function searchSubscriptions() {
+        $member= $this->getLoggedInMember();
+        if (!$member) {
+            return array();
+        }
         $TResults = new StdClass();
-        $TResults->Username="" ;
-        $TResults->ThreadTitle="" ;
-        $TResults->IdThread=0 ;
-
-        if (!empty($_SESSION["IdMember"])) { // By default current members
-            $IdMember=$_SESSION["IdMember"];
-        }
-        if (($cid!=0) and ($this->BW_Right->HasRight("ForumModerator","SeeSubscriptions"))) {
-            // Moderators can see the subscriptions of other members
-            if (is_numeric($cid)) {
-                $IdMember=$cid ;
-                $query = sprintf("select id,Username from members where id%d=",$IdMember) ;
-                $s = $this->dao->query($query);
-                if (!$s) {
-                    throw new PException('Could not retrieve members username via id!');
-                }
-                $row = $s->fetch(PDB::FETCH_OBJ) ;
-                if (isset($row->Username)) {
-                    $TResults->Username=$row->Username ;
-                }
-            } else {
-                $query = sprintf(
-                    "
-SELECT id
-FROM members
-WHERE username='%s'
-                    ",
-                    $this->dao->escape($cid)
-                );
-                $s = $this->dao->query($query);
-                if (!$s) {
-                    throw new PException('Could not retrieve members id via username !');
-                }
-                $row = $s->fetch(PDB::FETCH_OBJ) ;
-                if (isset($row->id)) {
-                    $IdMember=$row->id ;
-                }
-            }
-        }
-
-        if (!empty($IdThread) and ($this->BW_Right->HasRight("ForumModerator","SeeSubscriptions"))) {
-            // In this case we will browse all the threads
-            $query = sprintf(
-                "
-SELECT
-    `members_threads_subscribed`.`id` as IdSubscribe,
-    `members_threads_subscribed`.`created` AS `subscribedtime`,
-    `forums_threads`.`threadid` as IdThread,
-    `ThreadVisibility`,
-    `ThreadDeleted`,
-    `forums_threads`.`title`,
-    `forums_threads`.`IdTitle`,
-    `forums_threads`.`IdGroup`,
-    `members_threads_subscribed`.`ActionToWatch`,
-    `members_threads_subscribed`.`UnSubscribeKey`,
-    `members`.`Username`
-FROM `forums_threads`,`members`,`members_threads_subscribed`
-WHERE `forums_threads`.`threadid` = `members_threads_subscribed`.`IdThread`
-AND `members_threads_subscribed`.`IdThread`=%d
-AND `members`.`id`=`members_threads_subscribed`.`IdSubscriber`
-ORDER BY `subscribedtime` DESC
-                ",
-                $IdThread
-            );
-        } else {
-            $query = sprintf(
-                "
+        $query = "
 SELECT
     `members_threads_subscribed`.`id` as IdSubscribe,
     `members_threads_subscribed`.`created` AS `subscribedtime`,
@@ -2680,39 +2730,25 @@ SELECT
     `forums_threads`.`IdTitle`,
     `members_threads_subscribed`.`ActionToWatch`,
     `members_threads_subscribed`.`UnSubscribeKey`,
-    `members`.`Username`
-FROM `forums_threads`,`members`,`members_threads_subscribed`
+    `members_threads_subscribed`.`notificationsEnabled`
+FROM `forums_threads`,`members_threads_subscribed`
 WHERE `forums_threads`.`threadid` = `members_threads_subscribed`.`IdThread`
-and `members_threads_subscribed`.`IdSubscriber`=%d
-and `members`.`id`=`members_threads_subscribed`.`IdSubscriber`
+AND `members_threads_subscribed`.`IdSubscriber`= {$member->id}
 ORDER BY `subscribedtime` DESC
-                ",
-                $IdMember
-            );
-        }
+                ";
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve members_threads_subscribed sts via searchSubscription !');
         }
 
-        if ($IdThread!=0) {
-            $TResults->ThreadTitle="Not Yet found Id Thread=#".$IdThread ; // Initialize the title in case there is a selected thread
-            $TResults->IdThread=$IdThread ;
-        }
-
         $TResults->TData = array();
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-            if ($IdThread!=0) { // Initialize the title in case there is a selected thread
-                $TResults->ThreadTitle=$row->title ;
-            }
             $TResults->TData[] = $row;
         }
 
 // now the Tags
 
-        if (!empty($IdTag) and ($this->BW_Right->HasRight("ForumModerator","SeeSubscriptions"))) {
-            // In this case we will browse all the tags
-            $query = sprintf(
+            $query =
                 "
 SELECT
     `members_tags_subscribed`.`id` as IdSubscribe,
@@ -2723,37 +2759,12 @@ SELECT
     `forums_tags`.`IdName`,
     `members_tags_subscribed`.`ActionToWatch`,
     `members_tags_subscribed`.`UnSubscribeKey`,
-    `members`.`Username`
-FROM `forums_tags`,`members`,`members_tags_subscribed`
+    `members_tags_subscribed`.`notificationsEnabled`
+FROM `forums_tags`,`members_tags_subscribed`
 WHERE `forums_tags`.`id` = `members_tags_subscribed`.`IdTag`
-AND `members_tags_subscribed`.`IdThread`=%d
-AND `members`.`id`=`members_tags_subscribed`.`IdSubscriber`
+AND `members_tags_subscribed`.`IdSubscriber` = {$member->id}
 ORDER BY `subscribedtime` DESC
-                ",
-                $IdThread
-            );
-        } else {
-            $query = sprintf(
-                "
-SELECT
-    `members_tags_subscribed`.`id` as IdSubscribe,
-    `members_tags_subscribed`.`created` AS `subscribedtime`,
-    `forums_tags`.`id` as IdTag,
-    `forums_tags`.`IdName`,
-    `forums_tags`.`tag` as title,
-    `forums_tags`.`IdName`,
-    `members_tags_subscribed`.`ActionToWatch`,
-    `members_tags_subscribed`.`UnSubscribeKey`,
-    `members`.`Username`
-FROM `forums_tags`,`members`,`members_tags_subscribed`
-WHERE `forums_tags`.`id` = `members_tags_subscribed`.`IdTag`
-and `members_tags_subscribed`.`IdSubscriber`=%d
-and `members`.`id`=`members_tags_subscribed`.`IdSubscriber`
-ORDER BY `subscribedtime` DESC
-                ",
-                $IdMember
-            );
-        }
+                ";
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve members_tags_subscribed sts via searchSubscription !');
@@ -2761,12 +2772,29 @@ ORDER BY `subscribedtime` DESC
 
         $TResults->TDataTag = array();
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-            if ($IdTag!=0) { // Initialize the title in case there is a selected thread
-                $TResults->TagTitle=$row->title ;
-            }
             $TResults->TDataTag[] = $row;
         }
 
+            $query = "
+                SELECT
+                    Name, IdGroup, IdMember, IacceptMassMailFromThisGroup As AcceptMails, notificationsEnabled
+                FROM
+                    `membersgroups` mg,
+                    `groups` g
+                WHERE
+                    g.id = mg.IdGroup
+                    AND IdMember = '{$member->id}'
+                    AND Status = 'In'
+                ORDER BY
+                	Name";
+            $s = $this->dao->query($query);
+            if (!$s) {
+                throw new PException('Could load group memberships');
+            }
+            $TResults->Groups = array();
+            while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+                $TResults->Groups[] = $row;
+            }
         return $TResults;
     } // end of searchSubscriptions
 
@@ -2871,30 +2899,138 @@ AND IdThread=%d
      * It also check that member is not yet subscribing to thread
      */
     public function SubscribeThread($IdThread,$ParamIdMember=0) {
-       $IdMember=$ParamIdMember ;
-       if (isset($_SESSION["IdMember"]) and $IdMember==0) {
-                 $IdMember=$_SESSION["IdMember"] ;
-       }
+        $IdMember=$ParamIdMember ;
+        if (isset($_SESSION["IdMember"]) and $IdMember==0) {
+            $IdMember=$_SESSION["IdMember"] ;
+        }
 
-       // Check if there is a previous Subscription
-       if ($this->IsThreadSubscribed($IdThread,$_SESSION["IdMember"])) {
-             MOD_log::get()->write("Allready subscribed to Thread=#".$IdThread, "Forum");
-          return(false) ;
-       }
-       $key=MD5(rand(100000,900000)) ;
-       $query = "insert into members_threads_subscribed(IdThread,IdSubscriber,UnSubscribeKey)  values(".$IdThread.",".$_SESSION["IdMember"].",'".$this->dao->escape($key)."')" ;
-       $s = $this->dao->query($query);
-       if (!$s) {
-              throw new PException('Forum->SubscribeThread failed !');
-       }
-       $IdSubscribe=mysql_insert_id() ;
-         MOD_log::get()->write("Subscribing to Thread=#".$IdThread." IdSubscribe=#".$IdSubscribe, "Forum");
+        // Check if there is a previous Subscription
+        if ($this->IsThreadSubscribed($IdThread,$_SESSION["IdMember"])) {
+            MOD_log::get()->write("Allready subscribed to Thread=#".$IdThread, "Forum");
+            return(false) ;
+        }
+        $key=MD5(rand(100000,900000)) ;
+        $query = "insert into members_threads_subscribed(IdThread,IdSubscriber,UnSubscribeKey)  values(".$IdThread.",".$_SESSION["IdMember"].",'".$this->dao->escape($key)."')" ;
+        $s = $this->dao->query($query);
+        if (!$s) {
+            throw new PException('Forum->SubscribeThread failed !');
+        }
+        $IdSubscribe=mysql_insert_id() ;
+        MOD_log::get()->write("Subscribing to Thread=#".$IdThread." IdSubscribe=#".$IdSubscribe, "Forum");
     } // end of UnsubscribeThread
 
-
-
-
     /**
+     * This function allows to enable a thread that has been disabled
+     *
+     * @$IdThread : The thread we want the user to subscribe to
+     * @$ParamIdMember optional IdMember, by default set to 0 in this case current logged member will be used
+     * It also check that member is not yet subscribing to thread
+     */
+    public function EnableThread($IdThread) {
+        $member = $this->getLoggedInMember();
+        if (!$member) {
+            return;
+        }
+
+        // Check if there is a previous Subscription
+        if ($this->IsThreadSubscribed($IdThread,$member->id)) {
+            $query = "
+                UPDATE
+                    members_threads_subscribed
+                SET
+                    notificationsEnabled = '1'
+                WHERE
+                    IdThread = " . $IdThread . "
+                    AND IdSubscriber = " . $member->id;
+            $this->dao->query($query);
+        }
+    } // end of EnableThread
+
+	/**
+	 * This function allows to disable notifications for a thread if the group has been subscribed
+	 *
+	 * @$IdThread : The thread we want the user to disable
+	 */
+	public function DisableThread($IdThread) {
+		$member = $this->getLoggedInMember();
+		if (!$member) {
+			return;
+		}
+
+		// Make sure there is something to disable
+		if (!$this->IsThreadSubscribed($IdThread,$member->id)) {
+			$this->SubscribeThread($IdThread);
+		}
+
+		// if there was already a disable notification this won't change it.
+		$query = "
+            UPDATE
+                members_threads_subscribed
+            SET
+                notificationsEnabled = '0'
+            WHERE
+                IdThread = " . $IdThread . "
+                AND IdSubscriber = " . $member->id;
+		$this->dao->query($query);
+	} // end of DisableThread
+
+
+	/**
+	 * This function allows to disable notifications for a thread if the group has been subscribed
+	 *
+	 * @$IdTag integer The tag we want the user to disable
+	 */
+	public function DisableTag($IdTag) {
+		$member = $this->getLoggedInMember();
+		if (!$member) {
+			return;
+		}
+
+		// Make sure there is something to disable
+		if (!$this->IsTagSubscribed($IdTag,$member->id)) {
+			$this->SubscribeTag($IdTag);
+		}
+
+		// if there was already a disable notification this won't change it.
+		$query = "
+            UPDATE
+                members_tags_subscribed
+            SET
+                notificationsEnabled = '0'
+            WHERE
+                IdTag = " . $IdTag . "
+                AND IdSubscriber = " . $member->id;
+		$this->dao->query($query);
+	} // end of DisableThread
+
+
+	/**
+	 * This function allows to enable a tag that has been disabled
+	 *
+	 * @$IdTag integer The thread we want the user to subscribe to
+	 * It also checks that member is currently subscribed to tag
+	 */
+	public function EnableTag($IdTag) {
+		$member = $this->getLoggedInMember();
+		if (!$member) {
+			return;
+		}
+
+		// Check if there is a previous Subscription
+		if ($this->IsTagSubscribed($IdTag,$member->id)) {
+			$query = "
+                UPDATE
+                    members_tags_subscribed
+                SET
+                    notificationsEnabled = '1'
+                WHERE
+                    IdTag = " . $IdTag . "
+                    AND IdSubscriber = " . $member->id;
+			$this->dao->query($query);
+		}
+	} // end of EnableTag
+
+	/**
      * This function remove the subscription marked by IdSubscribe
      * @IdSubscribe is the primary key of the members_tags_subscribed area to remove
      * @Key is  the key to check to be sure it is not an abuse of url
@@ -3609,6 +3745,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
         }
 
         // get group members in case of a group post to limit subscriptions to tags and threads
+		$group = false;
         $groupMembers = array();
         if ($post->groupId != 0) {
             $group = $this->createEntity('Group')->findById($post->groupId);
@@ -3618,112 +3755,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
             }
         }
 
-        // Set notifications for subscribed tags
-        $query = "
-            SELECT
-                mts.IdSubscriber as subscriber,
-                mts.id as subscriptionId
-            FROM
-                members_tags_subscribed mts,
-                tags_threads tt
-            WHERE
-                tt.IdTag = mts.IdTag
-                AND tt.IdThread = '" . $this->dao->escape($post->threadId) . "'";
-        $res = $this->dao->query($query);
-        if (!$res) {
-            // just don't write notifications
-            return;
-        }
-
-        $membersTemp = array(); // members that will receive a notification because of tags
-        while ($row = $res->fetch(PDB::FETCH_OBJ)) {
-            // Unfortunately the DB has a lot of faulty entries
-            $subscriber = $row->subscriber;
-            if ($subscriber != 0) {
-                // Add only if the member doesn't already get a notification
-                if (array_search($subscriber, $members, true) === false) {
-                    $membersTemp[$subscriber] = $row->subscriptionId;
-                }
-            }
-        }
-        if (!empty($membersTemp)) {
-            $count = 0;
-            $query = "
-                INSERT INTO
-                    posts_notificationqueue (
-                        `IdMember`,
-                        `IdPost`,
-                        `created`,
-                        `Type`,
-                        `TableSubscription`,
-                        `IdSubscription`
-                    )
-                VALUES ";
-            foreach($membersTemp as $member => $subscriptionId ) {
-                if ($member == 0) continue;
-                if (($post->groupId == 0) || ($post->PostVisibility != 'GroupOnly' && $post->ThreadVisibility != 'GroupOnly')
-                    || (array_search($member, $groupMembers) !== false)) {
-                    $query .= "(" . $member . ", " . $postId . ", now(), '" . $type . "', 'members_tags_subscribed', '" . $subscriptionId . "'), ";
-                    $members[] = $member;
-                    $count++;
-                }
-            }
-            if ($count > 0) {
-                $query = substr($query, 0, -2);
-                $this->dao->query($query);
-            }
-        }
-
-        // Set notifications for subscribed threads
-        $query = "
-            SELECT
-                IdSubscriber as subscriber,
-                members_threads_subscribed.id as subscriptionId
-            FROM
-                members_threads_subscribed
-            WHERE IdThread = '" . $this->dao->escape($post->threadId) . "'";
-        $res = $this->dao->query($query);
-        if (!$res) {
-            // just don't write notifications
-            return;
-        }
-        $membersTemp = array();
-        while ($row = $res->fetch(PDB::FETCH_OBJ)) {
-            if ($row->subscriber != 0) {
-                if (array_search($row->subscriber, $members, true) === false) {
-                    $membersTemp[$row->subscriber] = $row->subscriptionId;
-                }
-            }
-        }
-
-        if (!empty($membersTemp)) {
-            $count = 0;
-            $query = "
-                INSERT INTO
-                    posts_notificationqueue (
-                        `IdMember`,
-                        `IdPost`,
-                        `created`,
-                        `Type`,
-                        `TableSubscription`,
-                        `IdSubscription`
-                    )
-                VALUES ";
-            foreach($membersTemp as $member => $subscriptionId) {
-                if (($post->groupId == 0) || ($post->PostVisibility != 'GroupOnly' && $post->ThreadVisibility != 'GroupOnly')
-                    || (array_search($member, $groupMembers) !== false)) {
-                    $query .= "(" . $member . ", " . $postId . ", now(), '" . $type . "', 'members_tags_subscribed', '" . $this->dao->escape($subscriptionId) . "'), ";
-                    $members[] = $member;
-                    $count++;
-                }
-            }
-            if ($count > 0) {
-                $query = substr($query, 0, -2);
-                $this->dao->query($query);
-            }
-        }
-
-        if ($post->groupId != 0) {
+        if ($group != false) {
             // We reuse the $group entity from above
             $subscriberEntities = $group->getEmailAcceptingMembers();
 
@@ -3731,7 +3763,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
             foreach($subscriberEntities as $subscriber) {
                 $memberId = $subscriber->getPKValue();
                 if ($memberId == 0) continue;
-                if (array_search($memberId, $members, true) === false) {
+                if (array_search($memberId, $members) === false) {
                     $membersTemp[] = $memberId;
                 }
             }
@@ -3758,7 +3790,120 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
                 }
             }
         }
-    }
+
+		// Set notifications for subscribed threads
+		$query = "
+            SELECT
+            	IdSubscriber as subscriber,
+                notificationsEnabled,
+                members_threads_subscribed.id as subscriptionId
+            FROM
+                members_threads_subscribed
+            WHERE IdThread = '" . $this->dao->escape($post->threadId) . "'";
+		$res = $this->dao->query($query);
+		if (!$res) {
+			// just don't write notifications
+			return;
+		}
+		$membersTemp = array();
+		while ($row = $res->fetch(PDB::FETCH_OBJ)) {
+			if ($row->subscriber > 0 && $row->notificationsEnabled) {
+				// if member already gets notification don't add one
+				if (array_search($row->subscriber, $members) === false) {
+					$membersTemp[$row->subscriber] = $row->subscriptionId;
+				}
+			} else {
+				// did member disable notifications for this thread?
+				if (array_search($row->subscriber, $members) !== false) {
+					unset($membersTemp[$row->subscriber]);
+				}
+			}
+		}
+
+		if (!empty($membersTemp)) {
+			$count = 0;
+			$query = "
+                INSERT INTO
+                    posts_notificationqueue (
+                        `IdMember`,
+                        `IdPost`,
+                        `created`,
+                        `Type`,
+                        `TableSubscription`,
+                        `IdSubscription`
+                    )
+                VALUES ";
+			foreach($membersTemp as $member => $subscriptionId) {
+				if (($post->groupId == 0) || ($post->PostVisibility != 'GroupOnly' && $post->ThreadVisibility != 'GroupOnly')
+					|| (array_search($member, $groupMembers) !== false)) {
+					$query .= "(" . $member . ", " . $postId . ", now(), '" . $type . "', 'members_threads_subscribed', '" . $this->dao->escape($subscriptionId) . "'), ";
+					$members[] = $member;
+					$count++;
+				}
+			}
+			if ($count > 0) {
+				$query = substr($query, 0, -2);
+				$this->dao->query($query);
+			}
+		}
+
+		// Set notifications for subscribed tags
+		$query = "
+            SELECT
+                mts.IdSubscriber as subscriber,
+                mts.notificationsEnabled AS notificationsEnabled,
+                mts.id as subscriptionId
+            FROM
+                members_tags_subscribed mts,
+                tags_threads tt
+            WHERE
+                tt.IdTag = mts.IdTag
+                AND tt.IdThread = '" . $this->dao->escape($post->threadId) . "'";
+		$res = $this->dao->query($query);
+		if (!$res) {
+			// just don't write notifications
+			return;
+		}
+
+		$membersTemp = array(); // members that will receive a notification because of tags
+		while ($row = $res->fetch(PDB::FETCH_OBJ)) {
+			// Unfortunately the DB has a lot of faulty entries
+			$subscriber = $row->subscriber;
+			if ($subscriber > 0 && $row->notificationsEnabled) {
+				// Add only if the member doesn't already get a notification
+				if (array_search($subscriber, $members) === false) {
+					$membersTemp[$subscriber] = $row->subscriptionId;
+				}
+			}
+		}
+		if (!empty($membersTemp)) {
+			$count = 0;
+			$query = "
+                INSERT INTO
+                    posts_notificationqueue (
+                        `IdMember`,
+                        `IdPost`,
+                        `created`,
+                        `Type`,
+                        `TableSubscription`,
+                        `IdSubscription`
+                    )
+                VALUES ";
+			foreach($membersTemp as $member => $subscriptionId ) {
+				if ($member == 0) continue;
+				if (($post->groupId == 0) || ($post->PostVisibility != 'GroupOnly' && $post->ThreadVisibility != 'GroupOnly')
+					|| (array_search($member, $groupMembers) !== false)) {
+					$query .= "(" . $member . ", " . $postId . ", now(), '" . $type . "', 'members_tags_subscribed', '" . $subscriptionId . "'), ";
+					$members[] = $member;
+					$count++;
+				}
+			}
+			if ($count > 0) {
+				$query = substr($query, 0, -2);
+				$this->dao->query($query);
+			}
+		}
+	}
 
 	/**
     // This will compute the needed notifications and will prepare enqueing
@@ -4025,7 +4170,7 @@ SQL;
 		$results = array( 'count' => 0);
 		$member = $this->getLoggedInMember();
 		if (!$member) {
-			$result['error'] = array( 'ForumSearchNotLoggedIn' );
+			$results['errors'][] = 'ForumSearchNotLoggedIn';
 		} else {
 			$groupEntities = $member->getGroups();
 			$groups = array( 0 );
@@ -4033,20 +4178,24 @@ SQL;
 				$groups[] = $group->id;
 			}
 
-			$sphinxClient = $sphinx->getSphinxForums();
+            $sphinxClient = $sphinx->getSphinxForums();
 			$sphinxClient->SetFilter('IdGroup', $groups);
-			$sphinxClient->SetSortMode(SPH_SORT_ATTR_DESC, 'created' );;
+            $sphinxClient->SetSortMode(SPH_SORT_ATTR_DESC, 'created' );;
 			$resultsThreads = $sphinxClient->Query($sphinxClient->EscapeString($keywords), 'forums');
 
-			$results['count'] = $resultsThreads['total'];
-			if ($resultsThreads['total'] <> 0) {
-				$threadIds = array();
-				foreach ($resultsThreads['matches'] as $match) {
-					$threadIds[] = $match['id'];
+			if ($resultsThreads) {
+				$results['count'] = $resultsThreads['total'];
+				if ($resultsThreads['total'] <> 0) {
+					$threadIds = array();
+					foreach ($resultsThreads['matches'] as $match) {
+						$threadIds[] = $match['id'];
+					}
+					$this->board->initThreads($this->getPage(), false, $threadIds);
+				} else {
+					$results['errors'][] = 'ForumSearchNoResults';
 				}
-				$this->board->initThreads(1, false, $threadIds);
 			} else {
-				$this->board->initThreads(1, false, array("error"));
+				$results['errors'][] = 'ForumSearchNoSphinx';
 			}
 		}
 		return $results;

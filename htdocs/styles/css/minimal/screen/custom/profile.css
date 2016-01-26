@@ -281,4 +281,6 @@ span.profile-edit-link a {
 /* additional styles for member note form */
 
 .yform label {padding-bottom: 0.12em;}
+
+#sweet {border: 0; padding: 0; margin: 0; width:0; height: 0; display: inline}
 }

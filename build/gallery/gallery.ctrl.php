@@ -180,13 +180,24 @@ class GalleryController extends RoxControllerBase {
 
                     case 'user':
                         $subTab = 'user';
-                        if (isset($request[3]) && preg_match(User::HANDLE_PREGEXP, $request[3]) && ($member = $membersmodel->getMemberWithUsername($request[3])) && $userId = $member->get_userid()) {
-                            $this->member = $member;
-                            if (!$loggedInMember && !$member->publicProfile) {
-                                $this->redirectToLogin(implode('/', $request));
-                            }
-                            if (isset($request[4]) && (substr($request[4], 0, 5) != '=page')) {
-                                switch ($request[4]) {
+                        if (isset($request[3])) {
+                            $member = $membersmodel->getMemberWithUsername($request[3]);
+                            if ($member) {
+                                $userId = $member->get_userid();
+                                $this->member = $member;
+                                if (!$loggedInMember
+                                    && !$member->publicProfile
+                                ) {
+                                    $this->redirectToLogin(
+                                        implode('/', $request)
+                                    );
+                                }
+                                if (isset($request[4])
+                                    && (substr(
+                                            $request[4], 0, 5
+                                        ) != '=page')
+                                ) {
+                                    switch ($request[4]) {
                                     case 'galleries':
                                     case 'sets':
                                         return $this->user($userId);
@@ -194,9 +205,10 @@ class GalleryController extends RoxControllerBase {
                                     case 'images':
                                     default:
                                         return $this->userimages($userId);
+                                    }
                                 }
+                                return $this->user($userId);
                             }
-                            return $this->user($userId);
                         }
                         
                     default:

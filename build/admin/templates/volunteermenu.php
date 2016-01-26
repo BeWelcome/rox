@@ -96,6 +96,11 @@ Boston, MA  02111-1307, USA.
                 'AdminSqlForVolunteers',
                 'bw/admin/adminquery.php'
             ),
+            array(
+                'ManageSubscriptions',
+                'AdminManageSubscriptions',
+                'admin/subscriptions'
+            ),
         )
     ;
 

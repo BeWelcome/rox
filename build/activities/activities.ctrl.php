@@ -29,7 +29,7 @@ class ActivitiesController extends RoxControllerBase
      */
     public function activities() {
         if ($this->_model->getLoggedInMember()) {
-            $this->redirectAbsolute($this->router->url('activities_my_activities'));
+            $this->redirectAbsolute($this->router->url('activities_near_me'));
         } else {
             $this->redirectAbsolute($this->router->url('activities_upcoming_activities'));
         }

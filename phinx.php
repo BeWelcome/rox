@@ -1,5 +1,5 @@
 <?php
-include_once 'vendor/autloload.php';
+include_once 'vendor/autoload.php';
 include_once 'tools/roxmigration/roxmigration.php';
 
 function parseDSN($dsn)
@@ -36,6 +36,7 @@ if (!empty($inifile)) {
         }
     }
     $config = array(
+        "migration_base_class" => "Rox\\Tools\\RoxMigration",
         "paths" => array(
             "migrations" => "%%PHINX_CONFIG_DIR%%/migrations",
         ),

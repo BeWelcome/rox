@@ -40,6 +40,8 @@ class AdminMassmailModel extends RoxModelBase
      * including information about the current state
      * (number of enqueued, triggered and sent messages)
      *
+     * @param bool $specific
+     * @param bool $general
      * @return array of broadcast messages
      */
     public function getMassMailings($specific = false, $general = false) {
@@ -56,7 +58,7 @@ class AdminMassmailModel extends RoxModelBase
                 SELECT
                     COUNT(*) total, IdBroadcast
                 FROM
-                    broadcastmessages
+                    `broadcastmessages`
                 WHERE
                     Status = 'ToApprove'
                 GROUP BY
@@ -419,6 +421,8 @@ class AdminMassmailModel extends RoxModelBase
             $action = 'enqueueReminder';
         } elseif (array_key_exists('enqueuesuggestionsreminder', $vars)) {
             $action = 'enqueueSuggestionsReminder';
+        } elseif (array_key_exists('enqueuemailtoconfirmreminder', $vars)) {
+            $action = 'enqueueMailToConfirmReminder';
         } elseif (array_key_exists('enqueuetermsofuse', $vars)) {
             $action = 'enqueueTermsOfUse';
         }
@@ -461,6 +465,8 @@ class AdminMassmailModel extends RoxModelBase
             case 'enqueueReminder':
                 break;
             case 'enqueueSuggestionsReminder':
+                break;
+            case 'enqueueMailToConfirmReminder':
                 break;
             case 'enqueueTermsOfUse':
                 break;
@@ -627,6 +633,23 @@ class AdminMassmailModel extends RoxModelBase
         return $count;
     }
 
+    private function enqueueMassmailMailToConfirmReminder($id) {
+        $IdEnqueuer = $this->getLoggedInMember()->id;
+        $query = "
+            REPLACE
+                broadcastmessages (IdBroadcast, IdReceiver, IdEnqueuer, Status, updated)
+            SELECT
+                " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
+            FROM
+                members AS m
+            WHERE
+                m.Status = 'MailToConfirm'
+                AND created BETWEEN '2015-01-01' AND (NOW() - INTERVAL 1 WEEK)";
+        $r = $this->dao->query($query);
+        $count = $r->affectedRows();
+        return $count;
+    }
+
     private function enqueueMassmailTermsOfUse($id) {
         $pref_id = $this->getPreferenceIdForMassmail($id);
         $IdEnqueuer = $this->getLoggedInMember()->id;
@@ -683,6 +706,9 @@ class AdminMassmailModel extends RoxModelBase
                 break;
             case 'enqueueSuggestionsReminder':
                 $count = $this->enqueueMassmailSuggestionsReminder($id);
+                break;
+            case 'enqueueMailToConfirmReminder':
+                $count = $this->enqueueMassmailMailToConfirmReminder($id);
                 break;
             case 'enqueueTermsOfUse':
                 $count = $this->enqueueMassmailTermsOfUse($id);
@@ -775,5 +801,29 @@ class AdminMassmailModel extends RoxModelBase
             return $votersCount;
         }
         return $row->votersCount * 3;
+    }
+
+    /**
+     * Get the count of members with status MailToConfirm between January, 1st 2015 and now - 1 week
+     */
+    public function getMailToConfirmCount() {
+        $query = "
+            SELECT
+                count(*) as mailToConfirmCount
+            FROM
+                members
+            WHERE
+                status = 'MailToConfirm'
+                AND created BETWEEN '2015-01-01' AND (NOW() - INTERVAL 1 WEEK)
+                 ";
+        $r = $this->dao->query($query);
+        if (!$r) {
+            return 0;
+        }
+        $row = $r->fetch(PDB::FETCH_OBJ);
+        if (!isset($row->mailToConfirmCount)) {
+            return 0;
+        }
+        return $row->mailToConfirmCount;
     }
 }

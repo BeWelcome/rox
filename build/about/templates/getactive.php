@@ -26,28 +26,28 @@ $words = new MOD_words();
 	<div class="floatbox rounded">
 		<img class="float_left" src="images/icons/tango/32x32/application-x-php.png" alt="development" />
 		<h3><?php echo $words->get('GetActiveDevTitle')?></h3>
-		<p class="smallinfo"><?php echo $words->get('GetActiveDevInfo')?></p>
+		<p class="smallinfo"><?php echo $words->get('HelpBeWelcomeDevTags') . " &#124; " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveDevContact')?></p>
 		<p><?php echo $words->get('GetActiveDevText')?></p>
-	</div> <!-- floatbox -->
-	
-	<div class="floatbox rounded">
-		<img class="float_left" src="images/icons/tango/32x32/applications-graphics.png" alt="design" />
-		<h3><?php echo $words->get('GetActiveDesignTitle')?></h3>
-		<p class="smallinfo"><?php echo $words->get('GetActiveDesignInfo')?></p>
-		<p><?php echo $words->get('GetActiveDesignText')?></p>
 	</div> <!-- floatbox -->
 
 	<div class="floatbox rounded">
 		<img class="float_left" src="images/icons/tango/32x32/applications-science.png" alt="testing" />
 		<h3><?php echo $words->get('GetActiveTestingTitle')?></h3>
-		<p class="smallinfo"><?php echo $words->get('GetActiveTestingInfo')?></p>
+		<p class="smallinfo"><?php echo $words->get('HelpBeWelcomeTestingTags') . " &#124; " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveTestingContact')?></p>
 		<p><?php echo $words->get('GetActiveTestingText')?></p>
+	</div> <!-- floatbox -->
+
+	<div class="floatbox rounded">
+		<img class="float_left" src="images/icons/tango/32x32/help-browser.png" alt="support" />
+		<h3><?php echo $words->get('GetActiveSupportTitle')?></h3>
+		<p class="smallinfo"><?php echo $words->get('HelpBeWelcomeSupportTags') . " &#124; " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveSupportContact')?></p>
+		<p><?php echo $words->get('GetActiveSupportText')?></p>
 	</div> <!-- floatbox -->
 	
 	<div class="floatbox rounded">
 		<img class="float_left" src="images/icons/tango/32x32/system-users.png" alt="local volunteering" />
 		<h3><?php echo $words->get('GetActiveLocalTitle')?></h3>
-		<p class="smallinfo"><?php echo $words->get('GetActiveLocalInfo')?></p>
+		<p class="smallinfo"><?php echo $words->get('HelpBeWelcomeLocalTags') . " &#124; " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveLocalContact')?></p>
 		<p><?php echo $words->get('GetActiveLocalText')?></p>
 	</div> <!-- floatbox -->
 
@@ -55,48 +55,55 @@ $words = new MOD_words();
 		<img class="float_left" src="images/icons/tango/32x32/donatek.png" alt="donation" />
 		<h3><?php echo $words->get('GetActiveDonationTitle')?></h3>
 		<p><?php echo $words->get('GetActiveDonationText')?></p>
-		<p class="smallinfo"><?php echo $words->get('GetActiveDonationInfo')?></p>
+		<p class="smallinfo"><?php echo $words->get('HelpBeWelcomeDonationTags') . " &#124; " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveDonationContact')?></p>
 	</div> <!-- floatbox -->
 
 	<div class="floatbox rounded">
 		<img class="float_left" src="images/icons/tango/32x32/system-users.png" alt="bevolunteer" />
 		<h3><?php echo $words->get('GetActiveBVTitle')?></h3>
 		<p><?php echo $words->get('GetActiveBVText')?></p>
-		<p class="smallinfo"><?php echo $words->get('GetActiveBVInfo')?></p>
+		<p class="smallinfo"><?php echo $words->get('HelpBeWelcomeBVTags') . " &#124; " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveBVContact')?></p>
+	</div> <!-- floatbox -->
+
+	<div class="floatbox rounded">
+		<img class="float_left" src="images/icons/tango/32x32/applications-graphics.png" alt="design" />
+		<h3><?php echo $words->get('GetActiveDesignTitle')?></h3>
+		<p class="smallinfo"><?php echo $words->get('HelpBeWelcomeDesignTags') . " &#124; " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveDesignContact')?></p>
+		<p><?php echo $words->get('GetActiveDesignText')?></p>
 	</div> <!-- floatbox -->
 
 	<div class="floatbox rounded">
 		<img class="float_left" src="images/icons/tango/32x32/system-users.png" alt="new member bewelcome" />
 		<h3><?php echo $words->get('GetActiveNMBWTitle')?></h3>
-		<p class="smallinfo"><?php echo $words->get('GetActiveNMBWInfo')?></p>    
+		<p class="smallinfo"><?php echo $words->get('HelpBeWelcomeNMBWTags') . " &#124; " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveNMBWContact')?></p>
 		<p><?php echo $words->get('GetActiveNMBWText')?></p>
 	</div> <!-- floatbox -->
 	
 	<div class="floatbox rounded">
 		<img class="float_left" src="images/icons/tango/32x32/languages.png" alt="translate" />
 		<h3><?php echo $words->get('GetActiveTranslateTitle')?></h3>
-		<p class="smallinfo"><?php echo $words->get('GetActiveTranslateInfo')?></p>
+		<p class="smallinfo"><?php echo $words->get('HelpBeWelcomeTranslateTags') . " &#124; " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveTranslateContact')?></p>
 		<p><?php echo $words->get('GetActiveTranslateText')?></p>
 	</div> <!-- floatbox -->
 
 	<div class="floatbox rounded">
 		<img class="float_left" src="images/icons/tango/32x32/help-browser.png" alt="suggestions" />
 		<h3><?php echo $words->get('GetActiveSuggestionsTitle')?></h3>
-		<p class="smallinfo"><?php echo $words->get('GetActiveSuggestionsInfo')?></p>
+		<p class="smallinfo"><?php echo $words->get('HelpBeWelcomeSuggestionsTags') . " &#124; " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveSuggestionsContact')?></p>
 		<p><?php echo $words->get('GetActiveSuggestionsText')?></p>
 	</div> <!-- floatbox -->
 
 	<div class="floatbox rounded">
 		<img class="float_left" src="images/icons/tango/32x32/megaphone.png" alt="communication and pr" />
 		<h3><?php echo $words->get('GetActivePRTitle')?></h3>
-		<p class="smallinfo"><?php echo $words->get('GetActivePRInfo')?></p>
+		<p class="smallinfo"><?php echo $words->get('HelpBeWelcomePRTags') . " &#124; " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActivePRContact')?></p>
 		<p><?php echo $words->get('GetActivePRText')?></p>
 	</div> <!-- floatbox -->
 
 	<div class="floatbox rounded">
 		<img class="float_left" src="images/icons/tango/32x32/system-users.png" alt="forum moderation" />
 		<h3><?php echo $words->get('GetActiveModTitle')?></h3>
-		<p class="smallinfo"><?php echo $words->get('GetActiveModInfo')?></p>
+		<p class="smallinfo"><?php echo $words->get('HelpBeWelcomeModTags') . " &#124; " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveModContact')?></p>
 		<p><?php echo $words->get('GetActiveModText')?></p>
 	</div> <!-- floatbox -->
 

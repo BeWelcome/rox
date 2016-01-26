@@ -36,25 +36,28 @@ class GroupForumPage extends GroupsBasePage
     protected function column_col3()
     {
         $words = $this->getWords();
-        
-        if (!$this->isGroupMember() && $this->group->Type == 'NeedInvitation')
-        {
-            echo $words->get('GroupsNotPublic');
-        }
-        else
-        {
-            $group_id = $this->group->id;
+        if (!$this->member) {
+            $loginWidget = $this->layoutkit->createWidget('LoginFormWidget');
+            $loginWidget->render();
+        } else {
 
-            $memberlist_widget = new GroupMemberlistWidget();
-            $memberlist_widget->setGroup($this->group);
+            if (!$this->isGroupMember() && $this->group->Type == 'NeedInvitation') {
+                echo $words->get('GroupsNotPublic');
+            } else {
+                $group_id = $this->group->id;
 
-            $Forums = new ForumsController;
-            $Forums->index('groups');
-            //$forums_widget->setGroup($this->getGroup());
+                $memberlist_widget = new GroupMemberlistWidget();
+                $memberlist_widget->setGroup($this->group);
 
-            //include "templates/groupforum.column_col3.php";
+                $Forums = new ForumsController;
+                $Forums->index('groups');
+                //$forums_widget->setGroup($this->getGroup());
+
+                //include "templates/groupforum.column_col3.php";
+            }
         }
     }
+
     protected function getSubmenuActiveItem() {
         return 'forum';
     }

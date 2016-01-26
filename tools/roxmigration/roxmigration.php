@@ -41,11 +41,11 @@ class RoxMigration extends AbstractMigration
         }
 
         if ($add) {
-            $query = "INSERT ";
+            $query = "INSERT";
         } else {
-            $query = "REPLACE ";
+            $query = "REPLACE";
         }
-        $query .= "INTO
+        $query .= " INTO
                 words
             SET
                 code = " . $code . ",
@@ -66,7 +66,14 @@ class RoxMigration extends AbstractMigration
         if ($majorUpdate) {
             $query .= ", majorupdate = NOW()";
         }
-        $this->execute($query);
+        try {
+            $this->execute($query);
+        }
+        catch(\Exception $e) {
+            echo "Couldn't add/update wordcode " . $code . PHP_EOL;
+            echo $e->getMessage() . PHP_EOL;
+            echo PHP_EOL;
+        }
     }
 
     /*****

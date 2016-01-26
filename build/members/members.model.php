@@ -446,12 +446,63 @@ WHERE
     }
 
 
+    public function _checkSimilarity($comments, $weight = 95) {
+        $similar = 0;
+        $count = count($comments);
+        for($i = 0;$i < $count - 1; $i++) {
+            for ($j = $i + 1; $j < $count; $j++) {
+                similar_text(
+                    $comments[$i]->TextFree, $comments[$j]->TextFree, $percent
+                );
+                if ($percent > $weight) {
+                    $similar++;
+                }
+            }
+        }
+        $result = ($similar == $count * ($count -1));
+        return $result;
+    }
 
-    // checkCommentForm - NOT FINISHED YET !
-    public function checkCommentForm(&$vars)
+    private function _checkCommentQuality($memberId, $duration, $count) {
+        $result = false;
+        // Check number of comments written in the last two minutes
+        $query = "
+            SELECT
+                COUNT(*) as cnt
+            FROM
+                comments c
+            WHERE
+                c.IdFromMember = " . $memberId . "
+                AND TIMEDIFF(NOW(), created) < '" . $duration . "'
+            ";
+        $s = $this->dao->query($query);
+        $row = $s->fetch(PDB::FETCH_OBJ);
+        $cnt = $row->cnt;
+        if ($cnt >= $count) {
+            // Okay limit was hit, check for comment quality
+            // Get all comments written during the given duration
+            $query = "
+                SELECT
+                    c.TextFree,
+                    c.TextWhere
+                FROM
+                    comments c
+                WHERE
+                    c.IdFromMember = " . $memberId . "
+                    AND TIMEDIFF(NOW(), created) < '" . $duration . "'
+                ";
+            $comments = $this->bulkLookup($query);
+
+            $result = $this->_checkSimilarity($comments);
+        }
+        return $result;
+    }
+
+    // checkCommentForm
+    public function checkCommentForm(&$vars, $random)
     {
         $errors = array();
-
+        $member = $this->getLoggedInMember();
         $syshcvol = PVars::getObj('syshcvol');
         $max = count($syshcvol->LenghtComments);
         $tt = $syshcvol->LenghtComments;
@@ -473,7 +524,15 @@ WHERE
         if (!isset ($vars["CommentGuidelines"])) {
             $errors[] = 'CommentMustAcceptGuidelines';
         }
-        return $errors;       
+
+        $check1 = $this->_checkCommentQuality($member->id, '00:02:00', 1);
+        $check2 = $this->_checkCommentQuality($member->id, '00:20:00', 5);
+        $check3 = $this->_checkCommentQuality($member->id, '06:00:00', 25);
+
+        if ($check1 || $check2 || $check3) {
+            $errors[] = 'CommentSomethingWentWrong';
+        }
+        return $errors;
     }
 
     public function addComment($TCom,&$vars)
@@ -1390,8 +1449,8 @@ ORDER BY
         }
 
         $member = $this->createEntity('Member', $memberId);
-
-        if (!$this->hasAvatar($memberId, $suffix) || (!$member->publicProfile && !$this->getLoggedInMember())) {
+        $browseable = $member->isBrowsable();
+        if ((!$browseable) || !$this->hasAvatar($memberId, $suffix) || (!$member->publicProfile && !$this->getLoggedInMember())) {
             header('Content-type: image/png');
             header ("cache-control: must-revalidate");
             $offset = 48 * 60 * 60;
@@ -1799,6 +1858,23 @@ VALUES
     }
 
     /**
+     * Helper function for removeMembers
+     *
+     * Deletes the profile picture files
+     */
+    private function _removeProfilePictures(Member $member)
+    {
+        $memberPath = $this->avatarDir->dirName() . '/' . $member->id;
+        $suffixes = array("_xs", "_30_30", "_150", "_200", "_500", "_original", "");
+        foreach($suffixes as $suffix) {
+            $filename =  $memberPath . $suffix;
+            if (file_exists($filename)) {
+                unlink($filename);
+            }
+        }
+    }
+
+    /**
      * This functions is called daily by a cron job to ensure that data of members that asked to leave a year ago
      * are removed from the database.
      *
@@ -1850,6 +1926,7 @@ VALUES
                 $member = $this->_cleanupMembersTable($member, $remainingColumns, $tableDescription);
                 $member = $this->_cleanupMemberLanguages($member);
                 $member = $this->_updateUserTable($member, $newUsername);
+                $this->_removeProfilePictures($member);
                 $member->update();
                 MOD_log::get()->write("Removed private data for " . $username, "Data Retention");
             }

@@ -81,7 +81,10 @@ $mem_redirect = $this->layoutkit->formkit->getMemFromRedirect();
 $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
 
 $formkit = $this->layoutkit->formkit;
-$callback_tag = $formkit->setPostCallback('MembersController', 'commentCallback');
+$random =  rand(1, 3);
+$callbackFunction = "commentCallback";
+$callbackFunction .= $random;
+$callback_tag = $formkit->setPostCallback('MembersController', $callbackFunction);
 
 ?>
 
@@ -106,6 +109,9 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
 <?=$words->flushBuffer();?>
 <form method="post" name="addcomment" OnSubmit="return DoVerifySubmit('addcomment');">
 <?=$callback_tag ?>
+    <?php if ($random == 2) { ?>
+    <input type="text" id="sweet" name="sweet" value="" title="Leave free of content"/>
+    <?php } ?>
 <fieldset>
 <legend><?=(!$edit_mode) ? $words->get("AddComments") : $words->get("EditComments")?></legend>
 <input name="IdMember" value="<?=$member->id?>" type="hidden" />

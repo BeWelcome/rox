@@ -1,4 +1,4 @@
-<div class="submenu"><ul class="nav nav-pills">
+<div class="p-l-0 m-b-1"><ul class="nav nav-pills">
 <?php
 $active_menu_item = $this->getSubmenuActiveItem();
 foreach ($this->getSubmenuItems() as $index => $item) {

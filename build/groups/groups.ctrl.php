@@ -61,8 +61,10 @@ class GroupsController extends RoxControllerBase
         $this->_model->setGroupVisit($group->getPKValue());
         $page = new GroupStartPage();
         $page->group = $group;
-        $page->member = $this->_model->getLoggedInMember();
-        $page->model = $this->_model;
+        $this->_fillObject($page);
+        if (!$page->member) {
+            $this->setFlashNotice($this->_model->getWords()->get('GroupsFullFunctionalityLoggedIn'));
+        }
         return $page;
     }
 
@@ -238,7 +240,7 @@ class GroupsController extends RoxControllerBase
         $params = new stdClass;
         $params->strategy = new HalfPagePager('left');
         $params->items = $this->_model->countMyGroups();
-        $params->items_per_page = 20;
+        $params->items_per_page = 30;
         $pager = new PagerWidget($params);
         $page->search_result = $this->_model->getMyGroups();
         $page->pager = $pager;
@@ -854,6 +856,9 @@ class GroupsController extends RoxControllerBase
         $page = new GroupForumPage();
         $page->group = $this->_getGroupFromRequest();
         $this->_fillObject($page);
+        if (!$page->member) {
+            $this->setFlashNotice($this->_model->getWords()->get('GroupsFullFunctionalityLoggedIn'));
+        }
         return $page;
     }
 
@@ -878,7 +883,7 @@ class GroupsController extends RoxControllerBase
         $pager_params->strategy = new HalfPagePager;
         $pager_params->page_method = 'url';
         $pager_params->items = count($page->group->getMembers());
-        $pager_params->items_per_page = 10;
+        $pager_params->items_per_page = 20;
         $page->pager_widget = new PagerWidget($pager_params);
         return $page;
     }

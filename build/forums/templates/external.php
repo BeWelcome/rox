@@ -32,7 +32,7 @@ $layoutbits = new MOD_layoutbits();
     if ($threads = $boards->getThreads()) {
 ?>
 
-<table class="forumsboardthreads clearfix">
+<table class="forumsboardthreads">
 
 <?php 
 $threadsliced = array_slice($threads, 0, 5);
@@ -86,7 +86,13 @@ $threadsliced = array_slice($threads, 0, 5);
 }
     else
     {
-        echo $words->getBuffered('GroupsNoForumPosts');
+        if ($User) {
+            if ($isGroupMember) {
+                echo $words->getBuffered('GroupsNoForumPosts');
+            } else {
+                echo $words->getBuffered('GroupsNoPublicPosts');
+            }
+        }
     }
 
     if ($showNewTopicButton && $User && $uri != 'forums/') {

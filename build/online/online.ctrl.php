@@ -14,21 +14,19 @@ class OnlineController extends RoxControllerBase
 
     public function index()
     {
-        $request = PRequest::get()->request;
         $model = new OnlineModel();
-        
-        if (!isset($request[1])) {
-            // normal chat page
-            $page = new OnlinePage();
-        } else switch($request[1]) {
-            case 'online':
-            // nothing yet
-            default:
-                $page = new OnlinePage();
+
+        $loggedInMember = $model->getLoggedInMember();
+        if (!$loggedInMember) {
+            return $this->redirectAbsolute(PVars::getObj('env')->baseuri);
         }
-        $page->model = $model;
-        PVars::getObj('page')->output_done = true;
-        return $page;
+        $rights = $loggedInMember->getOldRights();
+        if (array_key_exists('SafetyTeam', $rights)) {
+            $page = new OnlinePage();
+            $page->model = $model;
+            return $page;
+        }
+        return $this->redirectAbsolute(PVars::getObj('env')->baseuri);
     }
     
     protected function createOnlineOtherPage($args)

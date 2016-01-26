@@ -51,6 +51,7 @@ WHERE
     $where_string
 ORDER BY
     $sort_string
+LIMIT 7500
             ";
         return $this->bulkLookup($query);
     }
@@ -492,9 +493,13 @@ WHERE id = ".$input['receiver_id']."
             $input['sender_id'] = $_SESSION['IdMember'];
             // $problems['sender_id'] = 'no sender was specified.';
         } else if ($input['sender_id'] != $_SESSION['IdMember']) {
-            // sender is not the person who is logged in.
+            // sender is not the person who is logged in. Log the problem and exit.
             $problems['sender_id'] = 'you are not the sender.';
             MOD_log::get()->write("Trying to send a message with IdMember #".$input['sender_id']." (MessagesModel::sendOrComplain)", "hacking");
+            return array(
+                'problems' => $problems,
+                'message_id' => false
+            );
         }
 
         if (empty($input['text'])) {
@@ -507,6 +512,37 @@ WHERE id = ".$input['receiver_id']."
         $replyToId = intval($input['reply_to_id']);
         if ($limitResult !== false && $replyToId == 0) {
             $problems['Message Limit Exceeded'] = $limitResult;
+        }
+
+        $irregular = false;
+        if ($replyToId == 0) {
+            // Get number of messages sent in the last minute
+            $query = "SELECT
+                COUNT(*) as cnt
+            FROM
+                messages m
+            WHERE
+                m.IdSender = " . $input['sender_id'] . "
+                AND TIMEDIFF(NOW(), created) < '01:00:00'
+            ";
+            $row = $this->singleLookup($query);
+            $count = $row->cnt;
+            if ($count >= 0) {
+                // Let's check some details
+                $member = new Member($input['sender_id']);
+                $trads_for_member = $this->bulkLookup(
+                    "
+              SELECT
+                  SQL_CACHE Sentence from memberstrads,languages
+                  where languages.id=memberstrads.IdLanguage and IdOwner = $member->id and IdTrad=$member->ProfileSummary") ;
+            if (count($trads_for_member)) {
+                $irregular = false;
+                foreach($trads_for_member as $trad) {
+                    $found = preg_match('#^<a href="(.*)">(.*)</a>#', $trad->Sentence);
+                    $irregular |= ($found > 0);
+                }
+            }
+            }
         }
 
         $input['status'] = 'ToSend';
@@ -529,11 +565,11 @@ WHERE id = ".$input['receiver_id']."
 
             if (!isset($input['draft_id'])) {
                 // this was a new message
-                if ($message_id = $this->_createMessage($input)) {
+                if ($message_id = $this->_createMessage($input, $irregular)) {
                     MOD_log::get()->write("Has sent message #" . $message_id." to ".$rReceiver->Username." (MessagesModel::sendOrComplain new message)", "contactmember");
                 }
                 else { // SOmething has failed
-                    $problems['sender_id'] = MOD_words::getFormatted("MustProvideTheRightCaptcha");
+                    $problems['sender_id'] = $this->getWords()->getFormatted("MustProvideTheRightCaptcha");
                 }
             } else {
                 if (!$this->getMessage($draft_id = $input['message_id'] = $input['draft_id'])) {
@@ -595,29 +631,38 @@ WHERE id = ".$input['receiver_id']."
         return(true) ;
     } // end of Check for Captcha
 
-    private function _createMessage($fields)    {
+    private function _createMessage($fields, $irregular = false)    {
         //if (!$this->CheckForCaptcha($fields)) return false ;
         $attach_picture = (isset($fields['attach_picture']) ? ($fields['attach_picture'] ? 'yes' : 'no') : 'no');
-        $status = $this->dao->escape($fields['status']);
+        if ($irregular) {
+            $status = 'Freeze';
+        } else {
+            $status = $this->dao->escape($fields['status']);
+        }
         $sender = intval($fields['sender_id']);
         $receiver = intval($fields['receiver_id']);
         $text = $this->dao->escape($fields['text']);
         $parent = !empty($fields['reply_to_id']) ? intval($fields['reply_to_id']) : 0;
-        $iMes= $this->dao->query(
-            <<<SQL
-INSERT INTO messages
-SET
-    created = NOW(),
-    Message = '{$text}',
-    IdReceiver = {$receiver},
-    IdSender = {$sender},
-    InFolder = 'Normal',
-    Status = '{$status}',
-    JoinMemberPict = '{$attach_picture}',
-    IdParent = {$parent}
-SQL
-        )->insertId();
+        $query ="
+            INSERT INTO
+                messages
+            SET
+                created = NOW(),
+                Message = '{$text}',
+                IdReceiver = {$receiver},
+                IdSender = {$sender},
+                InFolder = 'Normal',
+                Status = '{$status}',
+                JoinMemberPict = '{$attach_picture}',
+                IdParent = {$parent}";
+        if ($irregular) {
+            $query .= ", SpamInfo = 'SpamSayMember'";
+        }
+        $iMes= $this->dao->query($query)->insertId();
 
+        if ($irregular) {
+            $iMes = 0;
+        }
         return ($iMes) ;
     }
 

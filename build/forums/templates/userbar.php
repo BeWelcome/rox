@@ -27,47 +27,20 @@ Boston, MA  02111-1307, USA.
     $uri = rtrim($uri, '/').'/';
 ?>
     <h3><?php echo $this->words->getFormatted('Actions'); ?></h3>
-    <ul class="linklist">
 
-<?php 
-      /*
-    <li class="icon fam_commentadd">
-        <a href="<?php echo $uri,'new'; ?>"><?php echo $this->words->get('ForumNewTopic'); ?></a>
-    </li>
-      */
-?>
+<div class="btn-group-vertical btn-block m-b-1">
 
-    <li>
-        <a href="groups/search"><?php echo $this->words->get('GroupsSearchHeading'); ?></a>
-    </li>
-    <?php
-//	if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_CATEGORY) {
-//		echo '<li><a href="forums/landing">' . $this->words->get('ForumLanding') . '</a></li>' ;
-//		echo '<li><a href="forums/lastposts">' . $this->words->get('ForumLastPost') . '</a></li>' ;
-//	}
-//	if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_LASTPOSTS) {
-//		echo '<li><a href="forums/landing">' . $this->words->get('ForumLanding') . '</a></li>' ;
-//		echo '<li><a href="forums/category">' . $this->words->get('ForumByCategory') . '</a></li>' ;
-//	}
-//	if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_FORUM) {
-//		echo '<li><a href="forums/landing">' . $this->words->get('ForumLanding') . '</a></li>' ;
-//		echo '<li><a href="forums/category">' . $this->words->get('ForumByCategory') . '</a></li>' ;
-//	}
-//	if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_LANDING) {
-//		echo '<li><a href="forums/lastposts">' . $this->words->get('ForumLastPost') . '</a></li>' ;
-//		echo '<li><a href="forums/category">' . $this->words->get('ForumByCategory') . '</a></li>' ;
-//	}
-	?>
-
-    <li><a href="forums/rules"><?php echo $this->words->get('ForumRulesShort'); ?></a></li>
-    <li><a href="http://www.bewelcome.org/wiki/Howto_Forum"><?php echo $this->words->get('ForumLinkToDoc'); ?></a></li>
-<?php  if (isset($_SESSION["IdMember"])) {
-			echo "<li><a href=\"forums/subscriptions\">",$this->words->get('forum_YourSubscription'),"</a></li>"; 
-			if ($this->BW_Right->HasRight("ForumModerator")) {
-				echo '<li><a href="forums/reporttomod/AllMyReport">All reports for me</a></li>' ;
-				echo '<li><a href="forums/reporttomod/MyReportActive">Pending reports for me ('.$this->_model->countReportList($_SESSION["IdMember"],"('Open','OnDiscussion')").')</a></li>' ;
-				echo '<li><a href="forums/reporttomod/AllActiveReports">All pending reports ('.$this->_model->countReportList(0,"('Open','OnDiscussion')").')</a></li>' ;
-			}
-		}
-		?>
-</ul>
+    <a href="groups/search" class="btn btn-secondary text-xs-left"><?php echo $this->words->get('GroupsSearchHeading'); ?></a>
+    <a href="forums/rules" class="btn btn-secondary text-xs-left"><?php echo $this->words->get('ForumRulesShort'); ?></a>
+    <a href="http://www.bewelcome.org/wiki/Howto_Forum" class="btn btn-secondary text-xs-left"><?php echo $this->words->get('ForumLinkToDoc'); ?></a>
+    <?php  if (isset($_SESSION["IdMember"])) {
+        echo "<a href=\"forums/subscriptions\" class=\"btn btn-secondary text-xs-left\">",$this->words->get('forum_YourSubscription'),"</a>";
+        if ($this->BW_Right->HasRight("ForumModerator")) {
+            echo '</div><h3>Moderation actions</h3><div class=\"btn-group-vertical btn-block m-b-1\">' ;
+            echo '<a href="forums/reporttomod/AllMyReport" class="btn btn-secondary text-xs-left">All reports for me</a>' ;
+            echo '<a href="forums/reporttomod/MyReportActive" class="btn btn-secondary text-xs-left">Pending reports for me <span class="label label-primary label-pill">'.$this->_model->countReportList($_SESSION["IdMember"],"('Open','OnDiscussion')").'</span></a>' ;
+            echo '<a href="forums/reporttomod/AllActiveReports" class="btn btn-secondary text-xs-left">All pending reports <span class="label label-primary label-pill">'.$this->_model->countReportList(0,"('Open','OnDiscussion')").'</span></a>' ;
+        }
+    }
+    ?>
+</div>

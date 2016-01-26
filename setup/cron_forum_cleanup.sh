@@ -9,11 +9,7 @@ update  forums_posts , forums_threads
 set OwnerCanStillEdit='No'
 WHERE forums_threads.id = forums_posts.threadid
 AND last_postid != forums_posts.id
-AND OwnerCanStillEdit = 'Yes' and forums_posts.create_time<date_sub(now(),interval 30 minute)
-  and  forums_posts.create_time>date_sub(now(),interval 90 minute)
-
-/* proceed only post in the last hour */
-;
+AND OwnerCanStillEdit = 'Yes' and forums_posts.create_time<date_sub(now(),interval 30 minute);
 
 set @result=concat('Updated rows=',row_count()) ;
 insert into BW_ARCH.logs(IdMember,Str,Type,created,IpAddress) values(1,concat('Disabling Edit for forums post older than 30 minutes which have been replied, ',@result),'cron_task',now(),2130706433) ;

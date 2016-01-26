@@ -31,7 +31,7 @@ Boston, MA  02111-1307, USA.
 
     <div style="padding-top: 30px">
     <?php
-    require_once SCRIPT_BASE . 'build/tour/phpFlickr/phpFlickr.php';
+/*    require_once SCRIPT_BASE . 'build/tour/phpFlickr/phpFlickr.php';
     // Get our phpflickr config
     $phpflickr_conf = PVars::getObj('phpflickr');
     // Create new phpFlickr object
@@ -74,7 +74,7 @@ Boston, MA  02111-1307, USA.
             $i++;
         }
         echo $photosFlat;
-        ?>
+*/        ?>
     </div>
 
     <div class="clearfix" style="padding-top: 30px">

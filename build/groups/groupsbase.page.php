@@ -125,8 +125,8 @@ class GroupsBasePage extends PageWithActiveSkin
         // &gt; or &raquo; ?
         $words = $this->getWords();
         ?>
-        <div id="teaser" class="page-teaser">
-        <h1><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; <a href="groups/forums"><?= $words->get('Groups');?></a> &raquo; <a href="groups/<?=$this->group->id ?>"><?= htmlspecialchars($this->group->Name, ENT_QUOTES) ?></a></h1>
+        <div class="p-t-1 p-b-1">
+        <h3><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; <a href="groups/forums"><?= $words->get('Groups');?></a> &raquo; <a href="groups/<?=$this->group->id ?>"><?= htmlspecialchars($this->group->Name, ENT_QUOTES) ?></a></h3>
         </div>
         <?php
     }
@@ -166,8 +166,8 @@ class GroupsBasePage extends PageWithActiveSkin
 
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-//       $stylesheets[] = 'styles/css/minimal/screen/custom/groups.css?3';
-//       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css?8';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/groups.css?3';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css?10';
        return $stylesheets;
     }
 

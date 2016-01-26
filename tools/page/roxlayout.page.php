@@ -421,12 +421,6 @@ class PageWithRoxLayout extends PageWithHTML
      */
     public function getFlashNotice($remove = false) {
         $flash = $this->getFlash('notice', $remove);
-        if (file_exists(SCRIPT_BASE . 'flash.txt')) {
-            if (!empty($flash)) {
-                $flash .= "<br /><br />";
-            }
-            $flash .= file_get_contents(SCRIPT_BASE . 'flash.txt');
-        }
         return $flash;
     }
 
@@ -444,4 +438,14 @@ class PageWithRoxLayout extends PageWithHTML
         return $this->getFlash('error', $remove);
     }
 
+    protected function _getLoginMessages() {
+        $model = new RoxModelBase();
+        $member = $model->getLoggedInMember();
+        if ($member) {
+            $loginMessage = new LoginMessage();
+            return $loginMessage->getLatestLoginMessages($member);
+        } else {
+            return false;
+        }
+    }
 }

@@ -138,8 +138,8 @@ class MOD_mail
             //Set the To addresses with an associative array
             ->setTo($to);
 
-        // Purify HTML. Only allow tags that are allowed in forum posts (biggest set anyway).
-        $purifier = MOD_htmlpure::get()->getForumsHtmlPurifier();
+        // Purify HTML. All tags for forum posts + <hr> for the footer separation
+        $purifier = MOD_htmlpure::get()->getMailHtmlPurifier();
         $body = $purifier->purify($body);
 
         $html2text = new Html2Text\Html2Text($body, false, array('do_links' => 'table', 'width' => 75));

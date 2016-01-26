@@ -5,5 +5,5 @@
         if ($this->isGroupMember()) {
             $showNewTopicButton = true;
         }
-        echo $Forums->showExternalGroupThreads($group_id, false, $showNewTopicButton); ?>
+        echo $Forums->showExternalGroupThreads($group_id, $this->isGroupMember(), false, $showNewTopicButton); ?>
 </div>

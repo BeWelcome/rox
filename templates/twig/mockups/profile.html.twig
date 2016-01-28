@@ -12,11 +12,17 @@
                 <div class="container">
                     <div class="row welcomeback p-t-1" style="height: auto;">
 
-                        <div class="col-xs-12 m-b-1">
+                        <div class="col-xs-12 col-lg-2">
+
+                            {# 'editmyprofile' or 'editavatar' when own profile ; gallery/show/user/xxxxx/pictures when on other profile #}
+                            <a href="#" title="See profile member-101" ><img src="/members/avatar/member-101?100_100"></a>
+
+                        </div>
+                        <div class="col-xs-10 m-b-1">
                             <span class="pull-right"><small><a href="#"><i class="fa fa-flag"></i> report</a></small></span>
                             {# if on own profile #}
                             <a href="editmyprofile"><span class="h3"><i class="fa fa-edit"></i></span></a>
-                            <span class="h1" style="font-size:2.625em">Member-101 <small><i class="fa fa-mars" alt="male" title="male"></i> 99 years old</small></span><br>
+                            <span class="h1" style="font-size: 2.625em; color: white; text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.8);">Member-101 <small><i class="fa fa-mars" alt="male" title="male"></i> 99 years old</small></span><br>
 
                             <button id="MemberMenu" type="button" class="btn btn-secondary btn-sm dropdown-toggle text-xs-left" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> </button>
                                     <div class="dropdown-menu" aria-labelledby="MemberMenu">
@@ -30,99 +36,53 @@
                                         <a class="dropdown-item text-xs-left" href="#friends">Friends, etc.</a>
                                     </div>
 
-                            <span class="text-muted text-truncate">My occupation is sitting and looking at the screen</span>
+                            <span class="text-truncate" style="color: white; text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.8);">My occupation is sitting and looking at the screen</span>
 
                         </div>
+                        <div class="col-xs-12 col-lg-12">
+                            <div class="col-xs-12 col-lg-4 m-y-1 p-y-1 languages">
 
-                        <div class="col-xs-12 col-lg-2">
-
-                            {# 'editmyprofile' or 'editavatar' when own profile ; gallery/show/user/xxxxx/pictures when on other profile #}
-                            <a href="#" title="See profile member-101" ><img src="/members/avatar/member-101?100_100"></a>
-
-                        </div>
-                        <div class="col-xs-12 col-lg-7">
-
-                            <div class="col-xs-12 col-lg-7">
-                                <div class="media">
-                                    <div class="media-left">
-                                        <span class="h2"><i class="fa fa-home"></i></span>
-                                    </div>
-                                    <div class="media-body summary">
-                                        <small><strong><a href="#">Berlin</a></strong><br>
-                                        <a href="#">Europe</a> > <a href="#">Germany</a> > <a href="#">Berlin</a></small>
-                                    </div>
-                                </div>
-
-                                <div class="media m-t-1">
-                                    <div class="media-left">
-                                        {# AHREF and DIV if on own profile #}
-                                        <a href="#" id="SetStatus" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="/images/icons/nosorry.png"></a>
-                                            <div class="dropdown-menu" aria-labelledby="SetStatus" style="top: 0;">
-                                                <a href="#" class="dropdown-item"><img src="/images/icons/yesicanhost.png"> Yes</a>
-                                                <a href="#" class="dropdown-item"><img src="/images/icons/maybe.png"> Maybe</a>
-                                                <a href="#" class="dropdown-item"><img src="/images/icons/nosorry.png"> No</a>
-                                            </div>
-                                    </div>
-                                    <div class="media-body summary">
-                                        <small>Host status: <strong>No</strong><br>
-                                        Max. guests: <strong>4</strong></small>
-                                    </div>
-                                </div>
-
-                                <div class="media m-t-1">
-                                    <div class="media-left">
-                                        <span class="h1"><i class="fa fa-clock-o"></i></span>
-                                    </div>
-                                    <div class="media-body summary">
-                                        <small>Last login: <i>3 days ago</i><br>
-                                        Member since: <i>2010</i></small>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12 col-lg-5">
-
-                                <h4>{# if on own profile #}<a href="editmyprofile"><i class="fa fa-edit"></i></a>Languages</h4>
+                                <h4 class="text-uppercase">{# if on own profile #}<a href="editmyprofile"><i class="fa fa-edit"></i></a>Languages</h4>
                                 <p class="m-b-0">English<span class="label label-default pull-xs-right">Mother tongue</span></p>
-                                <p class="m-b-0">French<span class="label label-default pull-xs-right">Fluent</span></p>
+                                <p class="m-b-0">Galician<span class="label label-default pull-xs-right">Fluent</span></p>
                                 <p class="m-b-0">German<span class="label label-default pull-xs-right">Advanced</span></p>
-                                <p class="m-b-0">Dutch<span class="label label-default pull-xs-right">Basic</span></p>
-                                <p class="m-b-0">Spanish<span class="label label-default pull-xs-right">Couple of words</span></p>
+                                <p class="m-b-0">Bask<span class="label label-default pull-xs-right">Basic</span></p>
                                 <p class="m-b-0"><a href="#languages">and 8 more languages</a></p>
 
                             </div>
-                        </div>
-                        <div class="col-xs-12 col-lg-3">
-                            <div class="btn-group-vertical btn-block m-b-1">
-                            {# if on own profile
-                                <a href="editmyprofile" class="btn btn-primary text-xs-left"><i class="fa fa-edit"></i> Edit profile</a>
-                                <a href="#" class="btn btn-secondary text-xs-left">My preferences</a>
-                                <a href="#" class="btn btn-secondary text-xs-left">My notes</a>
-                                <a href="#" class="btn btn-secondary text-xs-left">Set inactive</a>
-                                <a href="#" class="btn btn-secondary text-xs-left">Delete profile</a>
-                            #}
+                            <div class="col-xs-12 col-lg-6">
+                            </div>
+                            <div class="col-xs-12 col-lg-2">
+                                <div class="btn-group-vertical btn-block m-b-1">
+                                {# if on own profile
+                                    <a href="editmyprofile" class="btn btn-primary text-xs-left"><i class="fa fa-edit"></i> Edit profile</a>
+                                    <a href="#" class="btn btn-secondary text-xs-left">My preferences</a>
+                                    <a href="#" class="btn btn-secondary text-xs-left">My notes</a>
+                                    <a href="#" class="btn btn-secondary text-xs-left">Set inactive</a>
+                                    <a href="#" class="btn btn-secondary text-xs-left">Delete profile</a>
+                                #}
 
-                            {# else #}
-                                <a href="#" class="btn btn-primary text-xs-left">Send message</a>
-                                <a href="#" class="btn btn-secondary text-xs-left">Friend</a>
-                                <a href="#" class="btn btn-secondary text-xs-left">Write comment</a>
+                                {# else #}
+                                    <a href="#" class="btn btn-primary text-xs-left">Send message</a>
+                                    <a href="#" class="btn btn-secondary text-xs-left">Friend</a>
+                                    <a href="#" class="btn btn-secondary text-xs-left">Write comment</a>
 
-                                <div class="btn-group" role="group">
-                                    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle text-xs-left" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Add to...
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                        <a class="dropdown-item text-xs-left" href="#">...new list</a>
-                                        <a class="dropdown-item text-xs-left" href="#">People in Berlin</a>
-                                        <a class="dropdown-item text-xs-left" href="#">Holidays in France</a>
+                                    <div class="btn-group" role="group">
+                                        <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle text-xs-left" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Add to...
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                            <a class="dropdown-item text-xs-left" href="#">...new list</a>
+                                            <a class="dropdown-item text-xs-left" href="#">People in Berlin</a>
+                                            <a class="dropdown-item text-xs-left" href="#">Holidays in France</a>
+                                        </div>
                                     </div>
-                                </div>
-                            {# #}
+                                {# #}
 
+                                </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -148,6 +108,45 @@
 
         <div class="row">
             <div class="col-xs-12 col-md-4">
+            <div class="card p-x-2 p-y-1">
+                <a name="info"></a>
+                <div class="media">
+                    <div class="media-left">
+                        <span class="h2"><i class="fa fa-home"></i></span>
+                    </div>
+                    <div class="media-body summary">
+                        <small><strong><a href="#">Berlin</a></strong><br>
+                        <a href="#">Europe</a> > <a href="#">Germany</a> > <a href="#">Berlin</a></small>
+                    </div>
+                </div>
+
+                <div class="media m-t-1">
+                    <div class="media-left">
+                        {# AHREF and DIV if on own profile #}
+                        <a href="#" id="SetStatus" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="/images/icons/nosorry.png"></a>
+                            <div class="dropdown-menu" aria-labelledby="SetStatus" style="top: 0;">
+                                <a href="#" class="dropdown-item"><img src="/images/icons/yesicanhost.png"> Yes</a>
+                                <a href="#" class="dropdown-item"><img src="/images/icons/maybe.png"> Maybe</a>
+                                <a href="#" class="dropdown-item"><img src="/images/icons/nosorry.png"> No</a>
+                            </div>
+                    </div>
+                    <div class="media-body summary">
+                        <small>Host status: <strong>No</strong><br>
+                        Max. guests: <strong>4</strong></small>
+                    </div>
+                </div>
+
+                <div class="media m-t-1">
+                    <div class="media-left">
+                        <span class="h1"><i class="fa fa-clock-o"></i></span>
+                    </div>
+                    <div class="media-body summary">
+                        <small>Last login: <i>3 days ago</i><br>
+                        Member since: <i>2010</i></small>
+                    </div>
+                </div>
+            </div>
+
 
             <div class="card">
             <a name="aboutme"></a>

@@ -1,3 +1,27 @@
+/* td widths */
+
+#activitylist .date{
+  width: 5%;
+  min-width: 60px;
+}
+#activitylist .title{
+  width: 50%;
+}
+#activitylist .icon{
+  width: 2%;
+}
+#activitylist .location{
+  width: 20%;
+}
+#activitylist .attendees{
+  width: 10%;
+}
+#activitylist .organiser{
+  width: 5%;
+  min-width: 60px;
+}
+
+
 /*
 *  custom styles for activities
 *

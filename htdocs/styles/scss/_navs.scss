@@ -19,6 +19,15 @@
     font-family: LatoWeb, sans-serif;
     font-weight: normal;
     margin-right: ($spacer-x /2);
+    border: 1px solid $nav-tabs-border-color;
+  }
+
+  .nav-item:hover {
+    background-color: $brand-primary;
+    a {
+      color: #fff;
+    }
+
   }
 
   .nav-item > .active  a {

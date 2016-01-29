@@ -22,7 +22,7 @@
 
 - name: mysql | Create db_dumps directory
   sudo: yes
-  file: path={{ rox.root_folder }}/db_dumps state=directory group="www-data" mode="g+rw"
+  file: path={{ rox.root_folder }}/db_dumps state=directory group="www-data" mode="664"
 
 - name: mysql | Fetch dump files
   sudo: yes

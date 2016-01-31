@@ -22,7 +22,7 @@
   "dependencies": {
     "jquery": "^2.1.4",
     "leaflet": "git+https://github.com/Leaflet/Leaflet.git#master",
-    "leaflet.markercluster": "git+https://github.com/Leaflet/Leaflet.markercluster.git#leaflet-master"
+    "leaflet.markercluster": "git+https://github.com/Leaflet/Leaflet.markercluster.git#master"
   },
   "scripts": {
     "postinstall": "grunt copyfiles"

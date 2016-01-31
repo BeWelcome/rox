@@ -71,5 +71,5 @@ admin_logs:
 mockups:
     path: /mockups/{mockup}
     defaults:
-      _controller: "\\Rox\Mockups\MockupsController::showMockup"
+      _controller: "\\Rox\\Mockups\\MockupsController::showMockup"
 

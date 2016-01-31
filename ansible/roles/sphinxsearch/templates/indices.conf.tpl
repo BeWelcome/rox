@@ -1,0 +1,155 @@
+#
+# Sphinx search configuration
+#
+
+source suggestions
+{
+    type            = mysql
+
+    sql_host        = localhost
+    sql_user        = {{ mysql.user }}
+    sql_pass        = {{ mysql.password }}
+    sql_db          = {{ mysql.database }}
+
+    sql_query_range = SELECT MIN(id),MAX(id) FROM suggestions
+    sql_range_step = 1000
+    sql_query = \
+        SELECT id, summary, description \
+        FROM suggestions WHERE id>=$start AND id<=$end
+    sql_joined_field = id from query; \
+        SELECT suggestionId, summary FROM suggestions_options  ORDER BY suggestionID ASC
+    sql_joined_field = id from query; \
+        SELECT suggestionId, description FROM suggestions_options ORDER BY suggestionID ASC
+
+    sql_attr_string = summary
+    sql_attr_string = description
+    sql_query_info      = SELECT * FROM suggestions WHERE id=$id
+}
+
+
+index suggestions
+{
+    source          = suggestions
+    path            = /var/lib/sphinxsearch/data/suggestions
+    docinfo         = extern
+    charset_type    = utf-8
+}
+
+#
+# Forum search configuration
+#
+source forums
+{
+    type            = mysql
+
+    sql_host        = localhost
+    sql_user        = {{ mysql.user }}
+    sql_pass        = {{ mysql.password }}
+    sql_db          = {{ mysql.database }}
+
+    sql_query = \
+        SELECT ft.threadid AS threadid, sentence as text, IdGroup, \
+            IdWriter, UNIX_TIMESTAMP(create_time) as created FROM forums_threads ft, forums_posts fp, forum_trads ftr \
+        WHERE fp.postid = ft.first_postid AND ft.IdTitle = ftr.IdTrad AND ftr.IdLanguage = 0 AND ThreadDeleted = 'NotDeleted'
+
+    sql_joined_field = text from query; SELECT threadId, message FROM forums_posts fp WHERE PostDeleted = 'NotDeleted' ORDER BY threadId ASC
+    sql_joined_field = text from query; SELECT threadId, Sentence FROM forums_threads ft, forum_trads ftr WHERE ft.ThreadDeleted = "NotDeleted" AND ft.IdTitle = ftr.IdTrad AND IDLanguage <> 0 ORDER BY threadId ASC
+
+    sql_attr_uint = IdGroup
+    sql_attr_timestamp = created
+}
+
+index forums
+{
+    source          = forums
+
+    path            = /var/lib/sphinxsearch/data/forums
+    docinfo         = extern
+}
+
+#
+# geonames search configuration
+#
+source geonames
+{
+    type            = mysql
+
+    sql_host        = localhost
+    sql_user        = root
+    sql_pass        =
+    sql_db          = bw_test
+
+    sql_query_range = SELECT MIN(geonameid),MAX(geonameid) FROM geonames
+    sql_range_step = 1000
+    sql_query = \
+        SELECT \
+                g.geonameid, \
+                name, \
+                country, \
+                admin1, \
+                (fClass = 'A') AS isadmin, (fClass = 'P') AS isplace,  \
+                IFNULL(member.total, 0) AS membercount \
+            FROM \
+                geonames g \
+                            LEFT JOIN ( \
+                SELECT \
+                    COUNT(*) total, m.IdCity \
+                FROM \
+                    members m \
+                WHERE \
+                    m.Status in ('Active', 'OutOfRemind') \
+                GROUP BY \
+                    m.IdCity \
+                ) member \
+            ON \
+                (member.IdCity = g.geonameid) \
+        WHERE geonameid>=$start AND geonameid<=$end
+
+    sql_joined_field    = alternateNames from query; SELECT geonameId, alternateName FROM geonamesalternatenames ORDER BY geonameId ASC
+    sql_joined_field    = country from query; SELECT geonameId, name FROM  geonamescountries ORDER BY geonameId ASC
+    # sql_joined_field  = country_alternate from query; SELECT g.geonameId, alt.alternateName FROM WEGeoName g LEFT JOIN WEGeoName country ON country.geonameId != g.geonameId AND country.countryCode = g.countryCode AND country.featureCode = 'PCLI' LEFT JOIN WEGeoNameAlternate alt ON alt.geoNameId = country.geoNameId ORDER BY g.geonameId ASC
+    # sql_joined_field  = adm1 from query; SELECT g.geonameId, adm1.name FROM WEGeoName g LEFT JOIN WEGeoName adm1 ON adm1.geonameId != g.geonameId AND adm1.countryCode = g.countryCode AND adm1.featureCode = 'ADM1' AND adm1.admin1Code = g.admin1Code ORDER BY g.geonameId ASC
+    # sql_joined_field  = adm1_alternate from query; SELECT g.geonameId, alt.alternateName FROM WEGeoName g LEFT JOIN WEGeoName adm1 ON adm1.geonameId != g.geonameId AND adm1.countryCode = g.countryCode AND adm1.featureCode = 'ADM1' AND adm1.admin1Code = g.admin1Code LEFT JOIN WEGeoNameAlternate alt ON alt.geoNameId = adm1.geoNameId ORDER BY g.geonameId ASC
+
+    sql_attr_string = admin1
+    sql_attr_string = country
+    sql_attr_bool = isplace
+    sql_attr_bool = isadmin
+    sql_attr_uint = membercount
+}
+
+index geonames
+{
+    source          = geonames
+
+    path            = /var/lib/sphinxsearch/data/geonames
+    docinfo         = extern
+    min_prefix_len      = 2
+    enable_star = 1
+}
+
+#
+# indexer settings
+#
+indexer
+{
+    mem_limit       = 32M
+}
+
+#
+# searchd settings
+#
+searchd
+{
+    listen          = 9312
+    listen          = 9306:mysql41
+    log             = /var/lib/sphinxsearch/data/searchd.log
+    query_log       = /var/lib/sphinxsearch/data/query.log
+    read_timeout    = 5
+    max_children    = 30
+    pid_file        = /var/run/sphinxsearch/searchd.pid
+    seamless_rotate = 1
+    preopen_indexes = 1
+    unlink_old      = 1
+    workers         = threads # for RT to work
+    binlog_path     = /var/lib/sphinxsearch/data

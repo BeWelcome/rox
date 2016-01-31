@@ -11,4 +11,5 @@
     - composer
     - js_packages
     - mysql
+    - sphinxsearch
     - rox

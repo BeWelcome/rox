@@ -26,11 +26,13 @@ body{
 .card-header{
 	line-height: inherit !important;
 	padding: 0.5rem 1.25rem;
+	text-shadow: 0 0 3px #ce8140;
+	box-shadow: inset 0 0 13px -2px #ce8140;
 }
 .welcomeback {
 	background-image: url("http://oi67.tinypic.com/2r43dl2.jpg");
 	background-size: cover;
-	box-shadow: 0px 3px 8px -2px #999696;
+	box-shadow: 0px 3px 8px -3px #999696;
 }
 .media small {
 	line-height: 2;
@@ -64,7 +66,7 @@ body{
 }
 .profilestatusbox {
 	background-color: rgba(255, 255, 255, 0.9);
-	box-shadow: 0px 3px 8px -2px #999696,inset 0 0 70px 10px white;
+	box-shadow: 0px 3px 8px -1px #999696,inset 0 0 70px 10px white;
 }
 .mappreview {
 	border-radius: 3%;
@@ -84,6 +86,8 @@ body{
 .fa {
 	margin-right:0.6rem;
 }
+a.request:link, a.request:visited {color:white !important;}
+a.request:focus, a.request:hover {color:white !important; text-decoration: underline}
 
 @media only screen 
 	and (min-width: 1288px) {

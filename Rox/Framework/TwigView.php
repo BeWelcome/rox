@@ -49,7 +49,9 @@ class TwigView extends AbstractBasePage {
     public function __construct(Router $router) {
         $this->_loader = new Twig_Loader_Filesystem();
         $this->addNamespace('base');
+        $this->addNamespace('start');
         $this->addNamespace('macros');
+
 
         $this->_environment = new Twig_Environment(
             $this->_loader ,

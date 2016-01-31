@@ -1,11 +1,11 @@
 ---
 - name: Create data dir
   sudo: yes
-  file: path={{ rox.root_folder }}/data state=directory group="www-data" mode="g+rw"
+  file: path={{ rox.root_folder }}/data state=directory group="www-data" mode="664"
 
 - name: Create working files
   sudo: yes
-  file: path={{ rox.root_folder }}/{{ item }} state=touch group="www-data" mode="g+rw"
+  file: path={{ rox.root_folder }}/{{ item }} state=touch group="www-data" mode="664"
   with_items: rox.working_files
 
 - name: Force https for Composer
@@ -13,7 +13,9 @@
   shell: composer config --global github-protocols https
 
 - name: Install Rox dependencies | Composer
-  composer: command=install working_dir={{ rox.root_folder }}
+  # ansible 1.7.2 (latest version with apt-get) doesn't accept this syntax below
+  # composer: command=install working_dir={{ rox.root_folder }}
+  command: composer install --working-dir {{ rox.root_folder }}
 
 - name: Install Rox dependencies | Npm
   sudo: yes

@@ -44,49 +44,82 @@ if (!empty($errors)) {
     echo $errStr;
 }
 ?>
-    <div class="bw-row">
-        <label class="float_left"for="activity-title"><?php echo $words->get('ActivityTitle'); ?>*</label><span class="small float_right" style="margin-right: 0.3em;">* <?php echo $words->get('ActivityMandatoryFields'); ?></span><br />
-        <input type="text" id="activity-title" name="activity-title" maxlength="80" class="long" style="width:99%" value="<?php echo $vars['activity-title']; ?>" />
+
+    <div class="form-group row">
+        <small class="pull-xs-right">* <?php echo $words->get('ActivityMandatoryFields'); ?></small>
     </div>
-    <div class="bw-row">
-        <label for="activity-location"><?php echo $words->get('ActivityLocation'); ?>*</label><br/>
-        <input type="text" id="activity-location" name="activity-location" class="long" value="<?php echo $vars['activity-location']; ?>" style="width:70%" />
-        <input class="button" type="submit" id="activity-location-button" name="activity-location-button" value="<?php echo $words->getBuffered('ActivitiesLocationSearch'); ?>" /><?php echo $words->flushBuffer(); ?>
+
+    <div class="form-group row">
+        <div class="col-xs-12 col-md-2">
+            <label for="activity-title" class="h4 form-control-label pull-xs-right"><?php echo $words->get('ActivityTitle'); ?>*</label>
+        </div>
+        <div class="col-xs-12 col-md-10">
+            <input type="text" id="activity-title" name="activity-title" maxlength="80" class="form-control" value="<?php echo $vars['activity-title']; ?>" placeholder="Give your activity a catching title">
+        </div>
     </div>
-    <div id="activity-location-suggestion" style="display: none;">
-        <ol id="locations" class="plain"></ol>
+
+    <div class="form-group row">
+        <div class="col-xs-12 col-md-2">
+            <label for="activity-location" class="h4 form-control-label pull-xs-right"><?php echo $words->get('ActivityLocation'); ?>*</label>
+        </div>
+        <div class="col-xs-12 col-md-7">
+                <div class="input-group">
+                    <input type="text" id="activity-location" name="activity-location" class="form-control" value="<?php echo $vars['activity-location']; ?>">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="submit" id="activity-location-button" name="activity-location-button"><?php echo $words->getBuffered('ActivitiesLocationSearch'); ?></button><?php echo $words->flushBuffer(); ?>
+                    </span>
+                </div>
+                <div id="activity-location-suggestion" style="display: none;">
+                    <ol id="locations" class="plain"></ol>
+                </div>
+                <div class="p-t-1">
+                    <textarea id="activity-address" name="activity-address" class="form-control" rows="3" cols="60" placeholder="<?php echo $words->get('ActivityAddress'); ?>*"><?php echo $vars['activity-address']; ?></textarea>
+                </div>
+        </div>
+        <div class="col-xs-12 col-md-3">
+            <fieldset>
+                <label for="activity-start-date" class="h4 form-control-label"><?php echo $words->get('ActivityStart'); ?>*</label>
+                <input type="text" id="activity-start-date" name="activity-start-date" class="form-control" maxlength="16" value="<?php echo $vars['activity-start-date'];?>" placeholder="0000-00-00 00:00" />
+            </fieldset>
+
+            <fieldset>
+                <label for="activity-end-date" class="h4 form-control-label"><?php echo $words->get('ActivityEnd'); ?>*</label>
+                <input type="text" id="activity-end-date" name="activity-end-date" class="form-control" maxlength="16" value="<?php echo $vars['activity-end-date'];?>" placeholder="0000-00-00 00:00" />
+            </fieldset>
+
+        </div>
     </div>
-    <div class="bw-row">
-        <label for="activity-address"><?php echo $words->get('ActivityAddress'); ?>*</label><br/>
-        <textarea id="activity-address" name="activity-address" class="nomce" rows="3" cols="80" class="long" style="width:99%" ><?php echo $vars['activity-address']; ?></textarea>
+
+    <div class="form-group row">
+        <div class="col-xs-12 col-md-2">
+            <label for="activity-description" class="h4 form-control-label pull-xs-right"><?php echo $words->get('ActivityDescription'); ?>*</label>
+        </div>
+        <div class="col-xs-12 col-md-10">
+            <textarea id="activity-description" name="activity-description" class="mce form-control" rows="10" cols="80"><?php echo $vars['activity-description']; ?></textarea>
+        </div>
     </div>
-    <div class="subcolumns bw_row">
-    <div class="c50l"><div class="subcl">
-        <label for="activity-start-date"><?php echo $words->get('ActivityStart'); ?>*</label><br />
-        <input type="text" id="activity-start-date" name="activity-start-date" class="date" maxlength="16" style="width:90%" value="<?php echo $vars['activity-start-date'];?>" />
-        </div></div>
-        <div class="c50r"><div class="subcr">
-        <label for="activity-end-date"><?php echo $words->get('ActivityEnd'); ?>*</label><br />
-        <input type="text" id="activity-end-date" name="activity-end-date" class="time" maxlength="16" style="width:98%" value="<?php echo $vars['activity-end-date']; ?>" />
-        </div></div>
+
+    <div class="form-group row m-b-0">
+        <div class="col-xs-12 col-md-2"></div>
+        <div class="col-xs-12 col-md-10">
+                <input type="checkbox" id="activity-public" name="activity-public" checked="checked">&nbsp;<label for="activity-public"><?php echo $words->get('ActivityPublic'); ?></label>
+        </div>
     </div>
-    <div class="subcolumns bw_row">
-        <label for="activity-description"><?php echo $words->get('ActivityDescription'); ?>*</label><br/>
-        <textarea id="activity-description" name="activity-description" class="mce" rows="10" cols="80" style="width:99%"><?php echo $vars['activity-description']; ?></textarea>
+
+    <div class="form-group row">
+        <div class="col-xs-12 col-md-2"></div>
+        <div class="col-xs-12 col-md-10">
+            <?php
+            if ($vars['activity-id'] != 0) {
+                $activitieseditcreatebutton = $words->getSilent('ActivitiesEditCreateUpdate');
+            } else {
+                $activitieseditcreatebutton = $words->getSilent('ActivitiesSubmit');
+            }
+            ?>
+            <button type="submit" class="btn btn-primary" id="activity-submit" name="activity-submit"><?php echo $activitieseditcreatebutton; ?></button><?php echo $words->flushBuffer(); ?>
+        </div>
     </div>
-    <div class="subcolumns bw_row">
-        <input type="checkbox" id="activity-public" name="activity-public" <?php if (isset($vars['activity-public'])) { echo 'checked="checked"'; } ?>/>&nbsp;<label for="activity-public"><?php echo $words->get('ActivityPublic'); ?></label>
-    </div>
-    <div class="subcolumns bw_row">
-        <?php
-        if ($vars['activity-id'] != 0) {
-             $activitieseditcreatebutton = $words->getSilent('ActivitiesEditCreateUpdate');
-        } else {
-             $activitieseditcreatebutton = $words->getSilent('ActivitiesSubmit');
-        }
-        ?>
-        <input type="submit" class="button" id="activity-submit" name="activity-submit" value="<?php echo $activitieseditcreatebutton; ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
-    </div>
+
 </form>
 <form method="post" id="activity-show-form">
     <div class="bw-row">

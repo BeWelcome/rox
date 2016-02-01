@@ -15,7 +15,7 @@
 - name: Install Rox dependencies | Composer
   # ansible 1.7.2 (latest version with apt-get) doesn't accept this syntax below
   # composer: command=install working_dir={{ rox.root_folder }}
-  command: composer install --working-dir {{ rox.root_folder }}
+  command: composer install --no-dev --working-dir {{ rox.root_folder }}
 
 - name: Install Rox dependencies | Npm
   sudo: yes

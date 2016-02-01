@@ -75,9 +75,9 @@ source geonames
     type            = mysql
 
     sql_host        = localhost
-    sql_user        = root
-    sql_pass        =
-    sql_db          = bw_test
+    sql_user        = {{ mysql.user }}
+    sql_pass        = {{ mysql.password }}
+    sql_db          = {{ mysql.database }}
 
     sql_query_range = SELECT MIN(geonameid),MAX(geonameid) FROM geonames
     sql_range_step = 1000

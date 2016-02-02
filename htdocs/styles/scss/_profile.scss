@@ -16,7 +16,7 @@ body{
 .profileimg {
 	border-radius: 3px;
 	border: 3px solid white;
-	box-shadow: 0px 3px 8px -2px #4E4E4E;
+	box-shadow: 0px 3px 8px -2px #000;
 }
 .card {
 	box-shadow: 0px 3px 8px -2px #999696;
@@ -32,7 +32,8 @@ body{
 .welcomeback {
 	background-image: url("http://oi67.tinypic.com/2r43dl2.jpg");
 	background-size: cover;
-	box-shadow: 0px 3px 8px -1px #999696, 0 0 69px 5px #848484 inset;
+	background-color: #f79f54;
+	box-shadow: 0px 3px 8px -1px #999696, 0 0 69px 3px #000 inset;
 }
 .media small {
 	line-height: 2;
@@ -66,7 +67,7 @@ body{
 }
 .profilestatusbox {
 	background-color: rgba(255, 255, 255, 0.9);
-	box-shadow: 0px 3px 8px -1px #999696,inset 0 0 70px 10px white;
+	box-shadow: 0px 3px 8px -1px #000,inset 0 0 70px 10px white;
 }
 .mappreview {
 	border-radius: 3%;
@@ -83,14 +84,30 @@ body{
 .btn-profile {
 	margin-bottom: 0.3rem;
 	border-radius: 0.25rem !important;
-	border: 1px solid rgba(0, 0, 0, 0.2) !important;
-	box-shadow: 0px 0px 6px -2px #d7d7d7 inset,0px 3px 8px -2px #BABABA;
+	border: 1px solid rgba(0, 0, 0, 0.28) !important;
+	box-shadow: 0px 0px 6px -2px #d7d7d7 inset,0px 5px 8px -6px #000;
 }
 .fa {
 	margin-right:0.6rem;
 }
 .gray {
 	color:#838383;
+}
+.langmother{
+	font-family:Signika-bold;
+	font-size:0.9rem;
+	text-transform:uppercase;
+	letter-spacing: 0.02rem;
+}
+.langfluent{
+	font-family:Signika-bold;
+	font-size:0.9rem;
+	text-transform:capitalize;
+}
+.langbasic {
+	font-family:Signika-regular;
+	font-size:0.9rem;
+	text-transform:capitalize;
 }
 a.request:link, a.request:visited {font-family: Signika-Bold; color:white !important;}
 a.request:focus, a.request:hover {font-family: Signika-Bold; color:white !important; text-decoration: underline;}

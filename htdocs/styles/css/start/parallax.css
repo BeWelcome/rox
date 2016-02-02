@@ -126,6 +126,12 @@ html, body {
     background-size: cover;
     background-attachment:fixed;
 }
+#about_trailing > .container > .row {
+    width: 100%;
+    position: relative;
+    top: 204px;
+    left: 0px;
+}
 
 #statistics {
     background-color: #f3a806;

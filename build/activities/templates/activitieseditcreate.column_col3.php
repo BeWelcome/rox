@@ -30,7 +30,7 @@ if (empty($vars)) {
 <input type="hidden" id="activity-location-id" name="activity-location-id" value="<?php echo $vars['activity-location-id']; ?>" />
 <?php echo $callbackTags;
 if (!empty($errors)) {
-    $errStr = '<div class="error">';
+    $errStr = '<div class="alert alert-warning" role="alert"><strong>';
     foreach ($errors as $error) {
         $parts = explode("###", $error);
         if (count($parts) > 1) {
@@ -40,7 +40,7 @@ if (!empty($errors)) {
         }
         $errStr .=  "<br />";
     }
-    $errStr = substr($errStr, 0, -6) . '</div>';
+    $errStr = substr($errStr, 0, -6) . '</strong></div>';
     echo $errStr;
 }
 ?>
@@ -73,7 +73,7 @@ if (!empty($errors)) {
                     <ol id="locations" class="plain"></ol>
                 </div>
                 <div class="p-t-1">
-                    <textarea id="activity-address" name="activity-address" class="form-control" rows="3" cols="60" placeholder="<?php echo $words->get('ActivityAddress'); ?>*"><?php echo $vars['activity-address']; ?></textarea>
+                    <textarea id="activity-address" name="activity-address" class="form-control" rows="3" cols="60" placeholder="<?php echo $words->get('ActivityAddress'); ?>"><?php echo $vars['activity-address']; ?></textarea>
                 </div>
         </div>
         <div class="col-xs-12 col-md-3">

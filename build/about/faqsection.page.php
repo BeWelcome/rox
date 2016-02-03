@@ -42,38 +42,21 @@ class AboutFaqsectionPage extends AboutFaqPage
         else {
             $IdLanguage=0 ;
         }
-        echo '<h2>'.$words->get($this->faq_section->Description).'</h2>
-        <dl id="faqs">';
+        echo '<h2>'.$words->get($this->faq_section->Description).'</h2>';
+
         foreach ($this->faq_section->faqs as $faq_key => &$faq) {
+
             echo '
-            <dt>'.$words->get("FaqQ_".$faq->QandA).'</dt>
-            <dd id="question'.$faq_key.'">'.$words->get("FaqA_".$faq->QandA).'</dd>';
+            <p class="h5 p-l-1">
+                <i class="fa fa-plus-circle"></i> <a class="question" data-toggle="collapse" href="#question' . $faq_key . '" aria-expanded="false" aria-controls="question' . $faq_key . '">';
+                echo $words->get("FaqQ_".$faq->QandA) . '</a></p>';
+            echo '
+            <div class="collapse" id="question' . $faq_key . '">
+                <div class="card card-block">';
+                    echo $words->get("FaqA_".$faq->QandA) . '</div></div>';
         }
 ?>
-        </dl>
-        <script type="text/javascript"><!--
-    jQuery("#faqs dd").hide();
-    jQuery("#faqs dt").click(function (e) {
-        e.preventDefault();
-        jQuery(this).next("#faqs dd").slideToggle(500);
-        jQuery(this).toggleClass("expanded");
 
-});
-jQuery(function(){
-
-  // Bind the event.
-  jQuery(window).hashchange( function(){
-    // Alerts every time the hash changes!
-    hash = location.hash;
-      jQuery( hash ).show();
-      jQuery(document).scrollTop( jQuery( hash ).offset().top );
-  })
-
-  // Trigger the event (useful on page load).
-  jQuery(window).hashchange();
-
-});
-        --></script>
 <?php
     }
 }

@@ -30,3 +30,8 @@ revision.txt
 composer.lock
 composer.phar
 auth.json
+/.vagrant/*
+/db_dumps/*
+
+/ansible/cert.crt
+/ansible/key.pem

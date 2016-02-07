@@ -59,8 +59,10 @@ class TwigView extends AbstractBasePage {
         $this->_container = $container;
         $this->_loader = new Twig_Loader_Filesystem();
         $this->addNamespace('base');
+        $this->addNamespace('start');
         $this->addNamespace('macros');
         $this->addNamespace('forms');
+
 
         $this->_environment = new Twig_Environment(
             $this->_loader ,

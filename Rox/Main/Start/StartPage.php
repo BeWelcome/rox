@@ -9,6 +9,7 @@ class StartPage extends \Rox\Framework\TwigView
     public function __construct(Router $router) {
         parent::__construct($router, false, false);
         $this->addStylesheet('start/parallax.css');
+        $this->addEarlyJavascriptFile('bootstrap/bootstrap.js');
         $this->addEarlyJavascriptFile('start/skrollr.js');
         $this->addEarlyJavascriptFile('start/skrollr.menu.js');
         $this->addEarlyJavascriptFile('start/start.js');

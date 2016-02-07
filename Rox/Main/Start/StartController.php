@@ -41,7 +41,8 @@ class StartController extends Controller
      */
     public function showAction() {
         $page = new StartPage($this->getRouting());
-        $page->addParameters([ 'stats' => $this->_model->getStatistics()]);
+        $stats = $this->_model->getStatistics();
+        $page->addParameters([ 'stats' => $stats ]);
         return new Response($page->render());
     }
 }

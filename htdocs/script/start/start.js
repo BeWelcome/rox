@@ -1,4 +1,5 @@
 
+$(document).ready(function() {
 if(!(/Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i).test(navigator.userAgent || navigator.vendor || window.opera)){
    skrollr.init({
         forceHeight: false,
@@ -9,3 +10,4 @@ if(!(/Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i).test(navigator.userAg
         return Math.abs(currentTop - targetTop) * 0.3;},
     })
 }
+});

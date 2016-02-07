@@ -30,9 +30,9 @@ class AvatarDummyImage extends DummyImage
             throw new Exception();
         }
 
-         list($backclr,$puppet) = $this->getColor(14,12,11,1,2);
-         imagefill($this->blueprint,75,75,$puppet);
-        imagefill($this->blueprint,1,1,$backclr);
+//        list($backclr,$puppet) = $this->getColor(14,12,11,1,2);
+//         imagefill($this->blueprint,75,75,$puppet);
+//        imagefill($this->blueprint,1,1,$backclr);
     }
 
     /**

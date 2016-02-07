@@ -68,7 +68,7 @@ class LogsController extends Controller
      */
     public function showOverview(Request $request, $currentPage, $itemsPerPage) {
         $first = ($currentPage - 1) * $itemsPerPage;
-        $page = new AdminLogsPage($this->routing);
+        $page = new AdminLogsPage($this->getRouting());
 
         $parameters = $this->_getParameters($request);
         $query = $this->_getQuery($parameters);
@@ -96,7 +96,7 @@ class LogsController extends Controller
      */
     public function showIpOverview(Request $request, $ipAddress, $currentPage, $itemsPerPage) {
         $first = ($currentPage - 1) * $itemsPerPage;
-        $page = new AdminLogsPage($this->routing);
+        $page = new AdminLogsPage($this->getRouting());
 
         $parameters = $this->_getParameters($request);
         $parameters['ipaddress'] = $ipAddress;
@@ -124,7 +124,7 @@ class LogsController extends Controller
      * @internal param Request $request
      */
     public function showUsernameOverview(Request $request, $membername, $currentPage, $itemsPerPage) {
-        $page = new AdminLogsPage($this->routing);
+        $page = new AdminLogsPage($this->getRouting());
         $first = ($currentPage - 1) * $itemsPerPage;
         $parameters = $this->_getParameters($request);
         $parameters['membername'] = $membername;
@@ -158,7 +158,7 @@ class LogsController extends Controller
      */
     public function showTypeOverview(Request $request, $type, $currentPage, $itemsPerPage) {
         $first = ($currentPage - 1) * $itemsPerPage;
-        $page = new AdminLogsPage($this->routing);
+        $page = new AdminLogsPage($this->getRouting());
 
         $parameters = $this->_getParameters($request);
         $parameters['logtype'] = $type;

@@ -38,19 +38,18 @@ class SearchMembersController extends Controller
             ])
             ->add('search_can_host', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', [
                     'choices' => [
-                        '0' => 0,
-                        '1' => 1,
-                        '2' => 2,
-                        '3' => 3,
-                        '4' => 4,
-                        '5' => 5,
-                        '10' => 10,
-                        '20' => 20
+                        0 => '0',
+                        1 => '1',
+                        2 => '2',
+                        3 => '3',
+                        4 => '4',
+                        5 => '5',
+                        10 => '10',
+                        20 => '20'
                     ],
                     'attr' => [
                         'class' => 'form-control-label'
                     ],
-                    'choices_as_values' => false,
                     'data' => '1',
                     'label' => 'hosts at least'
                 ]

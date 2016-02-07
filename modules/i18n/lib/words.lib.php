@@ -61,7 +61,7 @@ class MOD_words
      */
     public function __construct($category=null)
     {
-        $this->_lang = PVars::get()->lang;
+        $this->_lang = \PVars::get()->lang;
 
 		$this->WordMemcache=new MOD_bw_memcache("words","Sentence","code") ;
 
@@ -72,7 +72,7 @@ class MOD_words
             $this->_langWrite = $_SESSION['IdLanguage'];
         else $this->_langWrite = 0;
 
-        $db_vars = PVars::getObj('config_rdbms');
+        $db_vars = \PVars::getObj('config_rdbms');
         if (!$db_vars) {
             throw new PException('DB config error!');
         }

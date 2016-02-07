@@ -64,6 +64,7 @@ admin_queries_fetch_parameters:
 mockups:
     path: /mockups/{mockup}
     defaults:
+      _controller: "\\Rox\\Mockups\\MockupsController::showMockup"
 
 
 textsearch:
@@ -71,3 +72,9 @@ textsearch:
     defaults:
       _controller: "\\Rox\\Search\\Members\\SearchMembersController::searchAction"
 
+avatar:
+    path:     /members/avatar/{username}/{size}
+    requirements:
+        username: "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"
+    defaults:
+        _controller: "\\MembersController::avatar"

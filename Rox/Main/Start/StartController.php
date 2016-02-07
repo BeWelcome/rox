@@ -2,9 +2,7 @@
 
 namespace Rox\Main\Start;
 
-use Rox\Main\Start\StartModel;
-use Rox\Main\Start\StartPage;
-use Symfony\Component\Routing\Router;
+use Rox\Framework\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -13,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 * @package Dashboard
 * @author Amnesiac84
 */
-class StartController extends \RoxControllerBase
+class StartController extends Controller
 {
 
     /**
@@ -28,7 +26,6 @@ class StartController extends \RoxControllerBase
 
     public function __construct()
     {
-        parent::__construct();
         $this->_model = new StartModel();
     }
 
@@ -43,7 +40,8 @@ class StartController extends \RoxControllerBase
      * @return StartPage
      */
     public function showAction() {
-        $page = new StartPage($this->routing);
+        $page = new StartPage($this->getRouting());
+        $page->addParameters([ 'stats' => $this->_model->getStatistics()]);
         return new Response($page->render());
     }
 }

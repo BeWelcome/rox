@@ -38,7 +38,7 @@ class TwigView extends AbstractBasePage {
     );
 
     private $_lateScriptFiles = array(
-        'thether-1.1.1/js/tether.js',
+        'tether-1.1.1/js/tether.js',
         'bootstrap/bootstrap.min.js',
         'bootstrap-autohidingnavbar/jquery.bootstrap-autohidingnavbar.js',
         'common/initialize.js',

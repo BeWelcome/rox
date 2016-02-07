@@ -18,4 +18,14 @@ class StartModel extends \RoxModelBase
     public function __destruct()
     {
     }
+
+    public function getStatistics() {
+        return array(
+            'members' => '101101',
+            'countries' => '102',
+            'languages' => '103',
+            'comments' => '10400',
+            'activities' => '4096'
+        );
+    }
 }

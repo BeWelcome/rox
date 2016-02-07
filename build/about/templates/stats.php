@@ -24,7 +24,9 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 /* Include all the classes */
 ?>
-<h2><?php echo $words->get("StatsHead") ?></h2>
+<div class="alert alert-info" role="alert">
+    <span class="h5"><?php echo $words->get("StatsHead") ?></span>
+</div>
 <?php
 /*
  * Puts a set of divs onto the page that contain the generated images
@@ -32,29 +34,20 @@ $words = new MOD_words();
 function drawCharts($filename, $headlineCode, $words)
 {
 ?>
-    <h3><?php echo $words->get($headlineCode) ?></h3>
-    <div class="subcolumns bw_row">
-        <div class="c50l">
-            <div class="subcl">
-                <h4><?php echo $words->get('StatsHeadCol1') ?></h4>
-            </div>
-        </div>
-        <div class="c50r">
-            <div class="subcr">
-                <h4><?php echo $words->get("StatsHeadCol2") ?></h4>
-            </div>
-        </div>
-            <div class="c50l">
-            <div class="subcl">
-                <div><?php echo '<img class="statimage" src="/stats/' . $filename . '-alltime.png" alt="' . $words->getSilent($headlineCode . "AllTimeInfo") . '" />';?></div>
-            </div>
-        </div>
-        <div class="c50r">
-            <div class="subcr">
-                <div><?php echo '<img class="statimage" src="/stats/' . $filename . '-last2month.png" alt="' . $words->getSilent($headlineCode . "Last2MonthInfo") . '" />';?></div>
-            </div>
-        </div>
-        </div>
+    <div class="col-xs-12 m-b-1">
+        <span class="h3"><?php echo $words->get($headlineCode) ?></span>
+    </div>
+
+    <div class="col-xs-12 col-lg-6">
+        <h4><?php echo $words->get('StatsHeadCol1') ?></h4>
+        <div><?php echo '<img class="statimage" src="/stats/' . $filename . '-alltime.png">';?></div>
+    </div>
+
+    <div class="col-xs-12 col-lg-6">
+        <h4><?php echo $words->get("StatsHeadCol2") ?></h4>
+        <div><?php echo '<img class="statimage" src="/stats/' . $filename . '-last2month.png">';?></div>
+    </div>
+
 <?php
  echo $words->flushBuffer();
 }
@@ -68,49 +61,22 @@ drawCharts('trust', 'StatsTrustAlltime', $words);
 drawCharts('messages', 'StatsMessagesAlltime', $words);
 ?>
 
-<div class="subcolumns bw_row">
-    <div class="c50l">
-        <div class="subcl">
-            <h3><?php echo $words->get("StatsLastLogin") ?></h3>
-        </div>
-    </div>
-    <div class="c50r">
-        <div class="subcr">
-            <h3><?php echo $words->get("StatsMemberCountry") ?></h3>
-        </div>
-    </div>
+<div class="col-xs-12 col-lg-6">
+    <h4><?php echo $words->get("StatsLastLogin") ?></h4>
+    <div><img class="statimage" src="/stats/loginpie.png" /></div>
 </div>
-<div class="subcolumns bw_row">
-    <div class="c50l">
-        <div class="subcl">
-            <div><img class="statimage" src="/stats/loginpie.png" /></div>
-        </div>
-    </div>
-    <div class="c50r">
-        <div class="subcr">
-            <div><img class="statimage" src="/stats/countrypie.png" /></div>
-        </div>
-    </div>
+
+<div class="col-xs-12 col-lg-6">
+    <h4><?php echo $words->get("StatsMemberCountry") ?></h4>
+    <div><img class="statimage" src="/stats/countrypie.png" /></div>
 </div>
-<div class="subcolumns bw_row">
-    <div class="c50l">
-        <div class="subcl">
-            <h3><?php echo $words->get("StatsLanguages") ?></h3>
-        </div>
-    </div>
-    <div class="c50r">
-        <div class="subcr">
-            <h3><?php echo $words->get("StatsPreferredLanguages") ?></h3>
-        </div>
-    </div>
-    <div class="c50l">
-        <div class="subcl">
-            <div><img class="statimage" src="/stats/languagepie.png" /></div>
-        </div>
-    </div>
-    <div class="c50r">
-        <div class="subcr">
-            <div><img class="statimage" src="/stats/preferredlanguagepie.png" /></div>
-        </div>
-    </div>
+
+<div class="col-xs-12 col-lg-6">
+    <h4><?php echo $words->get("StatsLanguages") ?></h4>
+    <div><img class="statimage" src="/stats/languagepie.png" /></div>
+</div>
+
+<div class="col-xs-12 col-lg-6">
+    <h4><?php echo $words->get("StatsPreferredLanguages") ?></h4>
+    <div><img class="statimage" src="/stats/preferredlanguagepie.png" /></div>
 </div>

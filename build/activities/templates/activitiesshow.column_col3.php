@@ -14,19 +14,19 @@ if (isset($_SESSION['ActivityStatus'])) {
     unset($_SESSION['ActivityStatus']);
 }
 if (!empty($status)) {
-    echo '<div class="success">' . $words->get($status[0], $status[1]) . '</div>';
+    echo '<div class="alert alert-success" role="alert"><strong>' . $words->get($status[0], $status[1]) . '</strong></div>';
 }
 if ($this->activity->status == 1) {
     // the activity has been cancelled
-    echo '<div class="note">' . $words->get('ActivityHasBeenCancelled') . '</div>';
+    echo '<div class="alert alert-warning" role="alert"><strong>' . $words->get('ActivityHasBeenCancelled') . '</strong></div>';
 }
 $errors = $this->getRedirectedMem('errors');
 if (!empty($errors)) {
-    $errStr = '<div class="error">';
+    $errStr = '<div class="alert alert-danger" role="alert"><strong>';
     foreach ($errors as $error) {
         $errStr .= $words->get($error) . "<br />";
     }
-    $errStr = substr($errStr, 0, -6) . '</div>';
+    $errStr = substr($errStr, 0, -6) . '</strong></div>';
     echo $errStr;
 }
 $vars = $this->getRedirectedMem('vars');
@@ -38,161 +38,224 @@ if (empty($vars)) {
     }
 }
 ?>
-<div id="activity">
-    <div class="clearfix">
-        <h2><?php echo $this->activity->title; ?></h2>
-    </div>
-    <div class="subcolumns">
-        <div class="c62l">
-            <div class="subcl">
-                <div class="bw-row">
-                    <h3><?= $words->get('ActivityDescription'); ?></h3>
-                    <?php echo $purifier->purify($this->activity->description); ?>
-                </div>
-                <?php if ($this->member) { ?>
-                <div><h3><?php echo $words->get('ActivityAttendees');?></h3>
-                <?php echo $this->attendeesPager->render(); ?>
-                <ul class="clearfix">
-                <?php
-                    foreach ($this->attendeesPager->getActiveSubset($this->activity->attendees) as $attendee) 
-                    {
-                        $image = new MOD_images_Image('',$attendee->Username);
-                        echo '<li class="picbox_activities float_left">';
-                        echo MOD_layoutbits::PIC_50_50($attendee->Username,'',$style='framed float_left');
-                        echo '<div class="userinfo">';
-                        echo '  <a class="username" href="members/'.$attendee->Username.'">'.$attendee->Username.'</a><br />';
-                        echo '  <span class="small"><b>';
-                        switch($attendee->status) {
-                            case 1: 
-                                echo $words->get('ActivityYesIAttend');
-                                break;
-                            case 2:
-                                echo $words->get('ActivityIMightAttend');
-                                break;
-                            case 3:
-                                echo $words->get('ActivitySorryCantJoinYou');
-                                break;
-                        }
-                        echo '</b></span><br />';
-                        echo '<span class="small">' . htmlspecialchars($attendee->comment) . '</span>';
-                        echo '</div>';
-                        echo '</li>';
-                        }
-                    echo '</ul>';
-                    echo $this->attendeesPager->render();
-                    ?>
-                </div>
-                <?php
-                } else {
-                        echo '<div class="bw-row"><h3>' .  $words->get('ActivityAttendees') . '</h3>';
-                        echo '<p>'.$words->getBuffered('ActivitiesLogInWhoIsComing', '<a href="' . $login_url . '">', '</a>').'</p>';
-                        echo '</div>';
-                }?>
-            </div> <!-- subcl -->
-        </div> <!-- c62l -->
-        <div class="c38r">
-            <div class="subcr">
-                <?php if ($activityInTheFuture) {
-                        if ($this->member) {
-                            if ($this->activity->status == 0) { ?>
-                    <form method="post" id="activity-show-form" class="yform full abitlower">
-                    <?php echo $callbackTagsJoinEdit; ?>
-                    <input type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
-                    <div class="type-text">
-                        <label for="activity-comment"><?php echo $words->get('ActivityYourComment'); ?>:</label>
-                        <input type="text" maxlength="80" id="activity-comment" name="activity-comment" value="<?php echo htmlspecialchars($vars['activity-comment'], ENT_QUOTES); ?>" />
-                    </div>
-                    <div class="type-check">
-                        <div class="abitlower"><input type="radio" value="activity-yes" id="activity-yes" name="activity-status" <?php if ($this->member->status == 1) { echo 'checked="checked"'; }?> >&nbsp;<label for="activity-yes"><?php echo $words->getSilent('ActivityYes'); ?></label></div>
-                        <?php if (!$this->member->organizer) { ?>
-                        <div class="abitlower"><input type="radio" value="activity-maybe" id="activity-maybe" name="activity-status" <?php if ($this->member->status == 2) { echo 'checked="checked"'; }?> >&nbsp;<label for="activity-maybe"><?php echo $words->getSilent('ActivityMaybe'); ?></label></div>
-                        <div class="abitlower"><input type="radio" value="activity-no" id="activity-no" name="activity-status" <?php if ($this->member->status == 3) { echo 'checked="checked"'; }?> >&nbsp;<label for="activity-no"><?php echo $words->getSilent('ActivityNo'); ?></label></div>
-                    <?php } ?>
-                    </div>
-                    <div class="type-button">
-                    <?php
-                        $enabled = 'class="button"';
-                        if ($this->member->status == 0) {
-                            echo '<button type="submit" id="activity-join" name="activity-join" class="button" title="' . $words->getSilent('ActivityJoinTheFun') . '" >' . $words->getSilent('ActivityJoinTheFun') . '</button>';
+<div class="col-xs-12 p-a-0">
+    <h2><?php echo $this->activity->title; ?></h2>
+</div>
+
+<div class="col-xs-12 col-md-9 p-l-0">
+    <div class="card-deck-wrapper">
+        <div class="card-deck">
+
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title"><?= $words->get('ActivityDateTime'); ?></h4>
+
+                        <i class="fa fa-calendar"></i> <?php echo $this->activity->dateStart; ?><br>
+                        <i class="fa fa-clock-o"></i> <?php echo $this->activity->timeStart; ?>
+
+                        <?
+                        if ($this->activity->dateStart == $this->activity->dateEnd){
+                        echo ' - ' . $this->activity->timeEnd;
                         } else {
-                            echo '<button type="submit" id="activity-update" name="activity-edit" class="button" title="' . $words->getSilent('ActivityUpdate') . '" >' . $words->getSilent('ActivityUpdate') . '</button>';
-                            if (!$this->member->organizer) {
-                                echo '&nbsp;&nbsp;<button type="submit" id="activity-leave" name="activity-leave" class="button back" title="' . $words->getSilent('ActivityLeave') . '" >' . $words->getSilent('ActivityLeave') . '</button>';
-                            }
-                        }
-                    ?>
-                    </div>
-                    </form>
-                    <?php
-                        }
-                    } else {
-                        echo '<div class="row abitright">';
-                        echo '<p>'.$words->getBuffered('ActivitiesPleaseLogInToJoinActivity', '<a href="' . $login_url . '">', '</a>').'</p>';
-                        echo '</div>';
-                    }
-                    }?>
-                <div class="row abitright">
-                    <h3><?= $words->get('ActivityDateTime'); ?></h3>
-                    <p><?php echo $this->activity->dateStart; ?><?php 
-                    if ($this->activity->dateStart != $this->activity->dateEnd){
-                        echo ' - ' . $this->activity->dateEnd;
-                    }?><br />
-                    <?php echo $this->activity->timeStart; ?> - <?php echo $this->activity->timeEnd; ?></p>
+                            echo '<br><i class="fa fa-calendar-times-o"></i> ' . $this->activity->dateEnd . '<br>';
+                            echo '<i class="fa fa-clock-o"></i> ' . $this->activity->timeEnd;
+                        } ?>
                 </div>
-                <div class="row abitright">
-                    <h3><?= $words->get('ActivityLocationAddress'); ?></h3>
-                    <p><?php echo $this->activity->address ?><br />
-                    <?php  echo $this->activity->location->name ?>, <?php echo $this->activity->location->getCountry()->name ?></p>
+            </div>
+
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title"><?= $words->get('ActivityLocationAddress'); ?></h4>
+                    <?php echo $this->activity->address ?><br>
+                    <?php echo '<strong>' . $this->activity->location->name . '<br>' . $this->activity->location->getCountry()->name . '</strong>'; ?>
                 </div>
-                <div class="row abitright">
-                    <h3><?= $words->get('ActivityAttendeesNumbersTitle'); ?></h3>
-                    <p><?php if ($this->activity->attendeesYes != 0){ echo $words->get('ActivityAttendeesYes', $this->activity->attendeesYes);} ?><br />
-                     <?php if ($this->activity->attendeesMaybe != 0){ echo $words->get('ActivityAttendeesMaybe', $this->activity->attendeesMaybe);} ?><br />
-                     <?php if ($this->activity->attendeesNo != 0){ echo $words->get('ActivityAttendeesNo', $this->activity->attendeesNo);} ?></p>
+            </div>
+
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title"><?= $words->get('ActivityAttendeesNumbersTitle'); ?></h4>
+                        <?php if ($this->activity->attendeesYes != 0){ echo $words->get('ActivityAttendeesYes', $this->activity->attendeesYes) . '<br>';} ?>
+                        <?php if ($this->activity->attendeesMaybe != 0){ echo $words->get('ActivityAttendeesMaybe', $this->activity->attendeesMaybe) . '<br>';} ?>
+                        <?php if ($this->activity->attendeesNo != 0){ echo $words->get('ActivityAttendeesNo', $this->activity->attendeesNo);} ?>
                 </div>
-                <?php if ($this->member) {
-                    if ($this->member->organizer == true) { ?>
-                    <form method="post" id="activity-show-form" class="yform full abitlower">
-                    <div class="type-button">
-                        <h3><?php echo $words->get('ActivityOrgaStatusHeadline');?></h3>
-                        <?php echo $callbackTagsCancelUncancel; ?>
-                        <input class="bw-row" type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
-                        <?php
-                            if ($activityInTheFuture) {
-                                if ($this->activity->status == 1) { 
-                                    echo '<input type="submit" class="button" class="button" id="activity-uncancel" name="activity-uncancel" value="' . $words->getSilent('ActivityUnCancel') . '"/>';
+            </div>
+
+        </div>
+    </div>
+
+    <div class="m-t-1">
+        <span class="h4"><?= $words->get('ActivityDescription'); ?></span>
+        <?php echo $purifier->purify($this->activity->description); ?>
+        <p>
+            <?php echo $this->activity->address ?>
+        </p>
+
+
+            <span class="h4"><?php echo $words->get('ActivityOrganizers');?></span>
+
+            <div class="media">
+
+                <?php
+                foreach ($this->activity->organizers as $organizer) {
+                    $image = new MOD_images_Image('',$organizer->Username); ?>
+                <div class="h6 m-a-0">
+                    <a href="members/<? echo $organizer->Username; ?>"><? echo $organizer->Username; ?></a>
+                </div>
+                <div class="media-left p-a-0 pull-xs-left">
+                    <a href="members/<? echo $organizer->Username; ?>">
+                        <? echo MOD_layoutbits::PIC_50_50($organizer->Username,'',$style='framed float_left'); ?>
+                    </a>
+                </div>
+                <div class="media-body p-a-0">
+                    <? echo '  <span class="small">' . htmlspecialchars($organizer->comment) . '</span>'; ?>
+                </div>
+                <? } ?>
+            </div>
+
+    </div>
+
+</div>
+
+<div class="col-md-3 p-r-0">
+
+    <div class="card">
+        <div class="card-block">
+            <h4 class="card-title">Join<br></h4>
+            <?php
+                if ($this->member) {
+                    if ($this->activity->status == 0) { ?>
+                        <form method="post" id="activity-show-form" class="yform full abitlower">
+                            <?php echo $callbackTagsJoinEdit; ?>
+                            <input type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
+
+                            <div>
+
+                                <div class="radio">
+                                    <label>
+                                        <input value="activity-yes" id="activity-yes" name="activity-status" type="radio" <?php if ($this->member->status <= 1) { echo 'checked="checked"'; } if (!$activityInTheFuture) { echo ' disabled'; } ?>>
+                                        <small><?php echo $words->getSilent('ActivityYes'); ?></small>
+                                    </label>
+                                </div>
+
+                                <div class="radio">
+                                    <label>
+                                        <input value="activity-maybe" id="activity-maybe" name="activity-status" type="radio" <?php if ($this->member->status == 2) { echo 'checked="checked"'; } if (!$activityInTheFuture) { echo ' disabled'; } ?>>
+                                        <small><?php echo $words->getSilent('ActivityMaybe'); ?></small>
+                                    </label>
+                                </div>
+
+                                <div class="radio">
+                                    <label>
+                                        <input value="activity-no" id="activity-no" name="activity-status" type="radio" <?php if ($this->member->status == 3) { echo 'checked="checked"'; }?> <?php if ($this->member->organizer) { echo ' disabled'; } if (!$activityInTheFuture) { echo ' disabled'; } ?>>
+                                        <small><?php echo $words->getSilent('ActivityNo'); ?></small>
+                                    </label>
+                                </div>
+
+                            </div>
+
+                           <input class="form-control m-b-1" type="text" maxlength="80" id="activity-comment" name="activity-comment" value="<?php echo htmlspecialchars($vars['activity-comment'], ENT_QUOTES); ?>" placeholder="<?php echo $words->get('ActivityYourComment'); ?>" />
+
+                                <?php
+                                $enabled = 'class="btn btn-primary btn-block"';
+                                if ($this->member->status == 0) {
+                                    echo '<button type="submit" id="activity-join" name="activity-join" class="btn btn-primary btn-block" title="' . $words->getSilent('ActivityJoinTheFun') . '"';
+                                    if (!$activityInTheFuture) { echo ' disabled'; };
+                                    echo '>' . $words->getSilent('ActivityJoinTheFun') . '</button>';
                                 } else {
-                                    echo '<a href="activities/' . $this->activity->id .'/edit" class="button" style="padding-bottom: 2.5px; padding-top: 4.5px;">' . $words->getSilent('ActivityEdit') . '</a>&nbsp;&nbsp;';
-                                    echo '<input type="submit" class="button" class="button" id="activity-cancel" name="activity-cancel" value="' . $words->getSilent('ActivityCancel') . '"/>';
+                                    echo '<button type="submit" id="activity-update" name="activity-edit" class="btn btn-primary btn-block" title="' . $words->getSilent('ActivityUpdate') . '"';
+                                    if (!$activityInTheFuture) { echo ' disabled'; };
+                                    echo '>' . $words->getSilent('ActivityUpdate') . '</button>';
+
+                                    if ((!$this->member->organizer)&&($activityInTheFuture)) {
+                                        echo '<button type="submit" id="activity-leave" name="activity-leave" class="btn btn-primary btn-block" title="' . $words->getSilent('ActivityLeave') . '" >' . $words->getSilent('ActivityLeave') . '</button>';
+                                    }
                                 }
-                            } else {
-                                echo $words->getSilent('ActivitityInThePastOrganizer');
-                            }
-                            echo $words->flushBuffer();
-                        ?>
-                    </div>
-                    </form>
-                    <?php 
+                                ?>
+
+                        </form>
+                        <?php
                     }
-                }?>
-                <div class="row abitright">
-                    <h3><?php echo $words->get('ActivityOrganizers');?></h3>
-                    <ul class="clearfix">
-                    <?php
-                        foreach ($this->activity->organizers as $organizer) {
-                            $image = new MOD_images_Image('',$organizer->Username);
-                            echo '<li class="picbox_activities float_left">';
-                            echo MOD_layoutbits::PIC_50_50($organizer->Username,'',$style='framed float_left');
-                            echo '<div class="userinfo">';
-                            echo '<a class="username" href="members/'.$organizer->Username.'">'.$organizer->Username.'</a><br />';
-                            echo '  <span class="small">' . htmlspecialchars($organizer->comment) . '</span>';
-                            echo '</div>';
-                            echo '</li>';
-                        }
-                    ?>
-                    </ul>
-                </div>
-            </div> <!-- subcr -->
-        </div> <!-- c38r -->
-    </div> <!-- subcolums -->
+                } else {
+                    echo '<p>'.$words->getBuffered('ActivitiesPleaseLogInToJoinActivity', '<a href="' . $login_url . '">', '</a>').'</p>';
+                }
+            ?>
+
+        </div>
+    </div>
+
+    <?php if ($this->member) {
+        if ($this->member->organizer == true) { ?>
+            <form method="post" id="activity-show-form">
+            <div class="form-group row p-a-1">
+            <span class="h4"><?php echo $words->get('ActivityOrgaStatusHeadline');?></span>
+            <?php echo $callbackTagsCancelUncancel; ?>
+            <input type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
+            <?php
+            if (($this->activity->status == 1)&&($activityInTheFuture)) {
+                echo '<button type="submit" class="btn btn-primary btn-block" id="activity-uncancel" name="activity-uncancel">' . $words->getSilent('ActivityUnCancel') . '</button>';
+            } else {
+                if ($activityInTheFuture) {
+                    echo '<a href="activities/' . $this->activity->id . '/edit" role="button" class="btn btn-primary btn-block">' . $words->getSilent('ActivityEdit') . '</a>';
+                }
+                echo '<button type="submit" class="btn btn-primary btn-block" id="activity-cancel" name="activity-cancel"';
+                if (!$activityInTheFuture) { echo ' disabled'; }
+                echo '>' . $words->getSilent('ActivityCancel') . '</button>';
+            }
+        }
+        echo $words->flushBuffer();
+        ?>
+        </div>
+        </form>
+        <?php
+    } ?>
+
+    <div>
+        <span class="h4">Attendees</span>
+
+        <?php if ($this->member) { ?>
+
+            <?php echo $this->attendeesPager->render(); ?>
+
+            <?php
+            foreach ($this->attendeesPager->getActiveSubset($this->activity->attendees) as $attendee) {
+                $image = new MOD_images_Image('', $attendee->Username);
+                echo '<div class="media">';
+                echo '<div class="h6 m-a-0">';
+                echo '<a href="members/' . $attendee->Username . '">' . $attendee->Username . '</a>';
+                echo '</div>';
+                echo '<div class="media-left p-a-0 pull-xs-left">';
+                echo '<a href="members/' . $attendee->Username . '">';
+                echo MOD_layoutbits::PIC_50_50($attendee->Username, '', $style = 'framed');
+                echo '</a>';
+                echo '</div>';
+                echo '<div class="media-body p-a-0">';
+                echo '<span class="small"><strong>';
+                switch ($attendee->status) {
+                    case 1:
+                        echo $words->get('ActivityYesIAttend');
+                        break;
+                    case 2:
+                        echo $words->get('ActivityIMightAttend');
+                        break;
+                    case 3:
+                        echo $words->get('ActivitySorryCantJoinYou');
+                        break;
+                }
+                echo '</strong></span><br>';
+                echo '<span class="small">' . htmlspecialchars($attendee->comment) . '</span>';
+                echo ' </div></div>';
+            }
+            echo $this->attendeesPager->render();
+            ?>
+
+            <?php
+        } else {
+            echo '<div class="bw-row"><h3>' .  $words->get('ActivityAttendees') . '</h3>';
+            echo '<p>'.$words->getBuffered('ActivitiesLogInWhoIsComing', '<a href="' . $login_url . '">', '</a>').'</p>';
+            echo '</div>';
+        }?>
+
+
+    </div>
+
 </div>

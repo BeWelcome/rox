@@ -64,7 +64,6 @@ admin_queries_fetch_parameters:
 mockups:
     path: /mockups/{mockup}
     defaults:
-      _controller: "\\Rox\\Mockups\\MockupsController::showMockup"
 
 
 textsearch:

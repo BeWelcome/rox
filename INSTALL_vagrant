@@ -1,0 +1,23 @@
+# Installation (with Vagrant)
+
+### Requirements
+* Vagrant
+* Virtualbox
+
+### Installation
+* clone the repo
+* run `vagrant up`
+* get yourself a coffee or something, 'cause it will take a while
+* once it's done, point your browser at http://192.168.33.10/ and you're ready to go
+
+### Vagrant handful commands
+* `vagrant up` for starting the VM. The first time, it will take a while before it gets ready, since it needs to provision it.
+* `vagrant halt`: stop the VM but preserving the state
+* `vagrant destroy`: stop the machine without preserving the state. Next time you'll run `vagrant up` it will reinstall the machine from scratch
+* `vagrant ssh` for ssh into the VM. Project folder is located at `/vagrant`
+* `vagrant provision` for running provision script again
+
+### What doesn't work (yet)
+* cron
+* mail
+* optional database dumps

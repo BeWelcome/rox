@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
     "repositories":[
         {
@@ -6,7 +7,7 @@
                 "name": "twbs/bootstrap4",
                 "version": "4.0",
                 "source": {
-                    "url": "git@github.com:twbs/bootstrap.git",
+                    "url": "https://github.com/twbs/bootstrap.git",
                     "type": "git",
                     "reference": "v4-dev"
                 }

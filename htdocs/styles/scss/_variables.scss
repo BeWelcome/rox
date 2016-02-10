@@ -50,6 +50,7 @@ $enable-gradients:          false !default;
 $enable-transitions:        false !default;
 $enable-hover-media-query:  false !default;
 $enable-grid-classes:       true !default;
+$enable-print-styles:       true !default;
 
 
 // Spacing
@@ -246,6 +247,8 @@ $table-border-color:            $gray-lighter !default;
 
 $btn-padding-x:                  1rem !default;
 $btn-padding-y:                  .375rem !default;
+$btn-line-height:                1.25 !default;
+
 $btn-font-weight:                normal !default;
 $btn-box-shadow:                 inset 0 1px 0 rgba(255,255,255,.15), 0 1px 1px rgba(0,0,0,.075) !default;
 $btn-active-box-shadow:          inset 0 3px 5px rgba(0,0,0,.125) !default;
@@ -298,6 +301,7 @@ $btn-border-radius-sm:           $border-radius-sm !default;
 
 $input-padding-x:                .75rem !default;
 $input-padding-y:                .375rem !default;
+$input-line-height:              1.25 !default;
 
 $input-bg:                       #fff !default;
 $input-bg-disabled:              $gray-lighter !default;
@@ -399,6 +403,15 @@ $custom-file-placeholder:   "Choose file..." !default;
 $custom-file-button-label:  "Browse" !default;
 $custom-file-button-color:  $custom-file-color !default;
 $custom-file-button-bg:     #eee !default;
+
+$custom-file-text: (
+        placeholder: (
+                en: "Choose file..."
+        ),
+        button-label: (
+                en: "Browse"
+        )
+) !default;
 
 
 // Form validation icons
@@ -582,7 +595,7 @@ $tooltip-padding-x:           8px !default;
 $tooltip-margin:              3px !default;
 
 $tooltip-arrow-width:         5px !default;
-$tooltip-arrow-color:         $tooltip-color !default;
+$tooltip-arrow-color:         $tooltip-bg !default;
 
 
 // Popovers
@@ -771,5 +784,3 @@ $pre-scrollable-max-height:   340px !default;
 $custom-form-bg-color:                    #ddd !default;
 $custom-form-bg-color-disabled:           #eee !default;
 $custom-form-description-color-disabled:  #767676 !default;
-
-

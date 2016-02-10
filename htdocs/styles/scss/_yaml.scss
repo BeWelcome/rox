@@ -4,145 +4,129 @@
 
 @include media-breakpoint-up(xs) {
   .c50l {
-    @include make-col();
-    @include make-col-span(12);
+    @include make-col(12);
   }
   .c50r {
-    @include make-col();
-    @include make-col-span(12);
+    @include make-col(12);
   }
 
   .c66l {
-    @include make-col();
-    @include make-col-span(8);
+    @include make-col(8);
   }
   .c33r {
-    @include make-col();
-    @include make-col-span(4);
+    @include make-col(4);
   }
 
   .c33l {
-    @include make-col();
-    @include make-col-span(4);
+    @include make-col(4);
   }
   .c66r {
-    @include make-col();
-    @include make-col-span(8);
+    @include make-col(8);
   }
   .c75l {
-    @include make-col();
-    @include make-col-span(9);
+    @include make-col(9);
   }
   .c25r {
-    @include make-col();
-    @include make-col-span(3);
+    @include make-col(3);
   }
 
   .c25l {
-    @include make-col();
-    @include make-col-span(3);
+    @include make-col(3);
   }
   .c75r {
-    @include make-col();
-    @include make-col-span(9);
+    @include make-col(9);
   }
   .c62l {
-    @include make-col();
-    @include make-col-span(7);
+    @include make-col(7);
   }
   .c38r {
-    @include make-col();
-    @include make-col-span(5);
+    @include make-col(5);
   }
 
   .c38l {
-    @include make-col();
-    @include make-col-span(5);
+    @include make-col(5);
   }
   .c62r {
-    @include make-col();
-    @include make-col-span(7);
+    @include make-col(7);
   }
 
   #col1{
-    @include make-col();
-    @include make-col-span(12);
+    @include make-col(12);
   }
 
   #col2{
     display:none;
   }
   #col3{
-    @include make-col();
-    @include make-col-span(12);
+    @include make-col(12);
   }
 }
 
 @include media-breakpoint-up(md) {
   .c50l {
-    @include make-col();
-    @include make-col-span(6);
+    
+    @include make-col(6);
   }
   .c50r {
-    @include make-col();
-    @include make-col-span(6);
+    
+    @include make-col(6);
   }
 
   .c66l {
-    @include make-col();
-    @include make-col-span(8);
+    
+    @include make-col(8);
   }
   .c33r {
-    @include make-col();
-    @include make-col-span(4);
+    
+    @include make-col(4);
   }
 
   .c33l {
-    @include make-col();
-    @include make-col-span(4);
+    
+    @include make-col(4);
   }
   .c66r {
-    @include make-col();
-    @include make-col-span(8);
+    
+    @include make-col(8);
   }
   .c75l {
-    @include make-col();
-    @include make-col-span(9);
+    
+    @include make-col(9);
   }
   .c25r {
-    @include make-col();
-    @include make-col-span(3);
+    
+    @include make-col(3);
   }
 
   .c25l {
-    @include make-col();
-    @include make-col-span(3);
+    
+    @include make-col(3);
   }
   .c75r {
-    @include make-col();
-    @include make-col-span(9);
+    
+    @include make-col(9);
   }
   .c62l {
-    @include make-col();
-    @include make-col-span(7);
+    
+    @include make-col(7);
   }
   .c38r {
-    @include make-col();
-    @include make-col-span(5);
+    
+    @include make-col(5);
   }
 
   .c38l {
-    @include make-col();
-    @include make-col-span(5);
+    
+    @include make-col(5);
   }
   .c62r {
-    @include make-col();
-    @include make-col-span(7);
+    
+    @include make-col(7);
   }
 
   #col1{
-    @include make-col();
-    @include make-col-span(3);
+    
+    @include make-col(3);
     @include make-col-push(9);
   }
 
@@ -151,19 +135,19 @@
   }
 
   #col3{
-    @include make-col();
-    @include make-col-span(9);
+    
+    @include make-col(9);
     @include make-col-pull(3);
   }
 
   #col1_left{
-    @include make-col();
-    @include make-col-span(3);
+    
+    @include make-col(3);
   }
 
   #col3_right{
-    @include make-col();
-    @include make-col-span(9);
+    
+    @include make-col(9);
   }
 }
 

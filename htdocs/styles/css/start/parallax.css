@@ -51,7 +51,7 @@ html, body {
 }
 
 .chevron_down{
-    top: 260px;
+    top: 50px;
     display: block;
     font-size: 20px;
     left: 0;
@@ -65,7 +65,7 @@ html, body {
     z-index: 200;
 }
 .chevron_down_img{
-    top: 248px;
+    top: 38px;
     position: absolute;
     right: 0px;
     left: 0px;
@@ -91,7 +91,7 @@ html, body {
     background: url(/images/homepicture-1200px_1.jpg) no-repeat center center fixed;
     background-color:#000;
     display: table;
-    height: 1400px;
+    height: 700px;
     position: relative;
     width: 100%;
     -webkit-background-size: cover;
@@ -117,7 +117,7 @@ html, body {
 #about_trailing {
     background: url(/images/homepicture-1200px_2.jpg) no-repeat center center fixed;
     display: table;
-    height: 1400px;
+    height: 600px;
     position: relative;
     width: 100%;
     -webkit-background-size: cover;
@@ -147,7 +147,7 @@ html, body {
 #statistics_trailing {
     background: url(/images/homepicture-1200px_3.jpg) no-repeat center center fixed;
     display: table;
-    height: 1400px;
+    height: 600px;
     position: relative;
     width: 100%;
     -webkit-background-size: cover;
@@ -158,7 +158,7 @@ html, body {
 #statistics_trailing_blur {
     background: url(http://i66.tinypic.com/21djua0.jpg) no-repeat center center fixed;
     display: table;
-    height: 1400px;
+    height: 600px;
     position: relative;
     margin-top:-1400px;
     width: 100%;

@@ -6,7 +6,7 @@
                 "name": "twbs/bootstrap4",
                 "version": "4.0",
                 "source": {
-                    "url": "git@github.com:twbs/bootstrap.git",
+                    "url": "https://github.com/twbs/bootstrap.git",
                     "type": "git",
                     "reference": "v4-dev"
                 }
@@ -31,29 +31,28 @@
         "components/font-awesome": "4.*",
         "Twig/Twig": "1.*",
         "select2/select2": "4.*",
-        "symfony/twig-bridge": "~2.8",
-        "symfony/translation": "~2.8",
-        "symfony/routing": "~2.8",
-        "symfony/http-kernel" : "~2.8",
-        "symfony/http-foundation" : "~2.8",
-        "symfony/debug": "~2.8",
-        "symfony/form": "~2.8",
-        "symfony/security": "~2.8",
-        "symfony/security-guard": "~2.8",
+        "symfony/twig-bridge": "~3.0",
+        "symfony/translation": "~3.0",
+        "symfony/routing": "~3.0",
+        "symfony/http-kernel" : "~3.0",
+        "symfony/http-foundation" : "~3.0",
+        "symfony/debug": "~3.0",
+        "symfony/form": "~3.0",
+        "symfony/security": "~3.0",
+        "symfony/security-guard": "~3.0",
         "psr/log": "*",
         "ezyang/htmlpurifier": "4.*",
         "illuminate/database": "5.*",
         "illuminate/support": "5.*",
         "illuminate/events": "5.*",
         "components/jquery": "^2.1",
-        "symfony/dependency-injection": "~2.8",
-        "symfony/validator": "~2.8",
+        "symfony/dependency-injection": "~3.0",
+        "symfony/validator": "3.0 as 2.8",
         "foolz/sphinxql-query-builder": "^1.0",
-        "anthonymartin/geo-location": "^1.0",
-		"ezyang/htmlpurifier": "*"
+        "anthonymartin/geo-location": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.8",
+        "phpunit/phpunit": "~5.0",
         "phpdocumentor/phpdocumentor": "2.*"
     },
     "autoload": {

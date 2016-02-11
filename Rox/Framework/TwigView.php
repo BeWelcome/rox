@@ -59,8 +59,10 @@ class TwigView extends AbstractBasePage {
         $this->_container = $container;
         $this->_loader = new Twig_Loader_Filesystem();
         $this->addNamespace('base');
+        $this->addNamespace('start');
         $this->addNamespace('macros');
         $this->addNamespace('forms');
+
 
         $this->_environment = new Twig_Environment(
             $this->_loader ,
@@ -70,6 +72,7 @@ class TwigView extends AbstractBasePage {
                 'debug' => true,
             )
         );
+        \PVars::get()->lang = $_SESSION['lang'];
         $this->_words = $this->getWords();
         if (!isset($_SESSION['lang'])) {
             $_SESSION['lang'] = 'en';
@@ -95,7 +98,7 @@ class TwigView extends AbstractBasePage {
      * @param $namespace
      * @throws \Twig_Error_Loader
      */
-    public function addNameSpace($namespace) {
+    public function addNamespace($namespace) {
         $path = realpath(SCRIPT_BASE . 'templates/twig/' . $namespace);
         $this->_loader->addPath($path, $namespace);
     }
@@ -233,7 +236,7 @@ class TwigView extends AbstractBasePage {
             if ($a->TranslatedName == $b->TranslatedName) {
                 return 0;
             }
-            return (strtolower($a->TranslatedName) < strToLower($b->TranslatedName)) ? -1 : 1;
+            return (strtolower($a->TranslatedName) < strtolower($b->TranslatedName)) ? -1 : 1;
         });
 
         return array(

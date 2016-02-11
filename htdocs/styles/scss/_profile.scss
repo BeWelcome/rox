@@ -1,49 +1,68 @@
 body{
-	line-height:auto;
+	line-height: inherit;
 }
+
 .summary{
   line-height: 1.1;
 }
+
 .card-header{
 	font-size:1.25em;
 	text-transform: uppercase;
 	border:2px solid white;
 	border-radius:0.25rem;
-	background-color: #F79F54;
+	background-color: rgba(243,112,0,0.8);
 	color:white;
 	letter-spacing: 0.03em;
 }
+
 .profileimg {
 	border-radius: 3px;
 	border: 3px solid white;
 	box-shadow: 0px 3px 8px -2px #000;
 }
+
 .card {
 	box-shadow: 0px 3px 8px -2px #999696;
 	border:none;
 	border-radius: 0.25rem;
 }
+
 .card-header{
 	line-height: inherit !important;
 	padding: 0.5rem 1.25rem;
 	text-shadow: 0 0 3px #ce8140;
 	box-shadow: inset 0 0 13px -2px #ce8140;
 }
-.welcomeback {
+
+.headerimg {
 	background-image: url("http://oi67.tinypic.com/2r43dl2.jpg");
 	background-size: cover;
 	background-color: #f79f54;
-	box-shadow:0px 3px 8px -1px #999696, 0 50px 150px -50px #000 inset;
+  	box-shadow:0px 3px 8px -1px #999696, 0 50px 150px -50px #000 inset;
+  	height: auto;
 }
+
 .media small {
 	line-height: 2;
 }
+
 .languages {
 	color: #FFF;
 	text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.8);
 	background-color: rgba(0, 0, 0, 0.4);
 	border-radius: 0.25em;
 }
+
+.regularfont{
+  font-family: Signika-regular;
+}
+
+.whiteshadow{
+  color: white;
+  text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.8);
+}
+
 .profilebig{
 	font-family:"Signika-Regular", LatoWeb, sans-serif;
 	font-size:2.625em;
@@ -52,6 +71,7 @@ body{
 	overflow: hidden;
 	width: 75%;
 }
+
 .profilemedium{
 	font-family:"Signika-Bold", LatoWeb, sans-serif;
 	font-size:1.625em;
@@ -60,57 +80,92 @@ body{
 	overflow: hidden;
 	width: 75%;
 }
+
+.top0 {
+  top: 0;
+}
+
 .profilebreadcrumb{
 	font-size:0.8em;
 	text-transform: uppercase;
 	font-family:"Signika-Light", LatoWeb, sans-serif;
 }
+
 .profilestatusbox {
 	background-color: rgba(255, 255, 255, 0.9);
 	box-shadow: 0px 3px 8px -1px #000,inset 0 0 70px 10px white;
 }
+
 .mappreview {
 	border-radius: 3%;
 	border: 1px solid white;
 }
+
 .btn, .btn-group {
 	font-size: 0.9rem;
 }
+
 .btn-secondary {
     color: #5d5d5d;
     background-color: rgba(255, 255, 255, 0.89);
     border-color:#e9e9e9;
 }
+
 .btn-profile {
 	margin-bottom: 0.3rem;
 	border-radius: 0.25rem !important;
 	border: 1px solid rgba(0, 0, 0, 0.28) !important;
 	box-shadow: 0px 0px 6px -2px #d7d7d7 inset,0px 5px 8px -6px #000;
 }
+
 .fa {
 	margin-right:0.6rem;
 }
+
 .gray {
-	color:#838383;
+	color:$gray-light;
 }
+
 .langmother{
 	font-family:Signika-bold;
 	font-size:0.9rem;
 	text-transform:uppercase;
 	letter-spacing: 0.02rem;
 }
+
 .langfluent{
 	font-family:Signika-bold;
 	font-size:0.9rem;
 	text-transform:capitalize;
 }
+
 .langbasic {
 	font-family:Signika-regular;
 	font-size:0.9rem;
 	text-transform:capitalize;
 }
-a.request:link, a.request:visited {font-family: Signika-Bold; color:white !important;}
-a.request:focus, a.request:hover {font-family: Signika-Bold; color:white !important; text-decoration: underline;}
+
+a.request:link, a.request:visited {
+  font-family: Signika-Bold;
+  color:white !important;
+}
+
+a.request:focus, a.request:hover {
+  font-family: Signika-Bold;
+  color:white !important;
+  text-decoration: underline;
+}
+
+.acc-info, a.acc-info{
+  font-weight: 700;
+  color: $brand-primary;
+}
+
+.profilelist{
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  border-top: 0;
+}
 
 .commentavatar {
   max-width: 90px;
@@ -119,9 +174,10 @@ a.request:focus, a.request:hover {font-family: Signika-Bold; color:white !import
 @media only screen 
 	and (min-width: 1288px) {
 		.col-md-4 {
-	width: 38.333%;
+//	width: 38.333%;
 }
+
 .col-md-8 {
-	width: 61.667%;
+//	width: 61.667%;
 }
 	}

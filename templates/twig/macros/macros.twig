@@ -93,41 +93,41 @@
             <nav>
                 <ul class="pagination">
                 {% if currentPage > 1 %}
-                    <li><a href="{{ path(route, routeParams|merge({currentPage: currentPage - 1})) }}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                    <li class="page-item"><a class="page-link" href="{{ path(route, routeParams|merge({currentPage: currentPage - 1})) }}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
 
                     {% for i in range(1, extremePagesLimit) if ( i < currentPage - nearbyPagesLimit ) %}
-                        <li><a href="{{ path(route, routeParams|merge({page: i})) }}">{{ i }}</a></li>
+                        <li class="page-item"><a class="page-link" href="{{ path(route, routeParams|merge({page: i})) }}">{{ i }}</a></li>
                     {% endfor %}
 
                     {% if extremePagesLimit + 1 < currentPage - nearbyPagesLimit %}
-                        <li class="disabled"><a href="#">...</a></li>
+                        <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
                     {% endif %}
 
                     {% for i in range(currentPage-nearbyPagesLimit, currentPage-1) if ( i > 0 ) %}
-                        <li><a href="{{ path(route, routeParams|merge({currentPage: i})) }}">{{ i }}</a></li>
+                        <li class="page-item"><a class="page-link" href="{{ path(route, routeParams|merge({currentPage: i})) }}">{{ i }}</a></li>
                     {% endfor %}
                 {% elseif showAlwaysFirstAndLast %}
-                    <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                    <li class="page-item disabled"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
                 {% endif %}
 
-                <li class="active"><a href="{{ path(route, routeParams|merge({ currentPage: currentPage })) }}">{{ currentPage }}</a></li>
+                <li class="page-item active"><a class="page-link" href="{{ path(route, routeParams|merge({ currentPage: currentPage })) }}">{{ currentPage }}</a></li>
 
                 {% if currentPage < lastPage %}
                     {% for i in range(currentPage+1, currentPage + nearbyPagesLimit) if ( i <= lastPage ) %}
-                        <li><a href="{{ path(route, routeParams|merge({currentPage: i})) }}">{{ i }}</a></li>
+                        <li class="page-item"><a class="page-link" href="{{ path(route, routeParams|merge({currentPage: i})) }}">{{ i }}</a></li>
                     {% endfor %}
 
                     {% if  (lastPage - extremePagesLimit) > (currentPage + nearbyPagesLimit) %}
-                        <li class="disabled"><a href="#">...</a></li>
+                        <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
                     {% endif %}
 
                     {% for i in range(lastPage - extremePagesLimit+1, lastPage) if ( i > currentPage + nearbyPagesLimit ) %}
-                        <li><a href="{{ path(route, routeParams|merge({currentPage: i})) }}">{{ i }}</a></li>
+                        <li class="page-item"><a class="page-link" href="{{ path(route, routeParams|merge({currentPage: i})) }}">{{ i }}</a></li>
                     {% endfor %}
 
-                    <li><a href="{{ path(route, routeParams|merge({currentPage: currentPage+1})) }}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                    <li class="page-item"><a class="page-link" href="{{ path(route, routeParams|merge({currentPage: currentPage+1})) }}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
                 {% elseif showAlwaysFirstAndLast %}
-                    <li class="disabled"><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                    <li class="page-item disabled"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
                 {% endif %}
                 </ul>
             </nav>

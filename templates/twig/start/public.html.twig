@@ -27,22 +27,38 @@
 <!-- Section #1 -->
     <!-- first section - Home -->
     <div id="home"
-         data-start="background-position: 0px 0px;"
+         data-start="background-position: 0px -200px;"
          data-end="background-position: 0px -300px;">
         <div class="container">
-            <div class="row" style="width: 100%; position:relative; top:260px;">
-                <h1 style="color:white" data--50-bottom="opacity:0;" data--150-bottom="text-shadow: 0px 0px 6px rgba(255, 255, 255, 1);" data--200-bottom="opacity:1;" data--300-bottom="text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.6);">{{ 'Find hosts and guests everywhere in the world' | trans }}</h1>
+            <div class="row m-t-3">
+                <div class="col-xs-0 col-md-3"></div>
+                <div class="col-xs-12 col-md-6 card p-a-1 text-xs-center">
+                    <h5 style="color: #f37000">BeWelcome is a cultural crossing network</h5>
+                    <p>which lets you share a place to stay, connect with travellers, meet up and find accommodation on your journey</p>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Your e-mail">
+                          <span class="input-group-btn">
+                            <button class="btn btn-primary" type="button"><strong>Join!</strong></button>
+                          </span>
+                    </div>
+
+                    <p><small class="smaller text-muted">BeWelcome is and <a href="#">will always be</a> a free, open source, non for profit, democratic community</small></p>
+                </div>
+                <div class="col-xs-0 col-md-3"></div>
             </div>
-            <div class="row" style="width: 100%; position:relative; top:78px;">
-                <a href="#bottom" class="chevron_down"
-                   data-250-start="opacity:0"
-                   data-280-start="opacity:1">
-                    <i class="chevron_icon fa fa-3x fa-chevron-down"></i>
-                </a>
-                <img class="chevron_down_img" src="http://i64.tinypic.com/978twn.png"
-                     data-220-start="opacity:0"
-                     data-250-start="opacity:1"
-                     data-280-start="opacity:0">
+            <div class="row" style="width: 100%; position:relative; top:50px;">
+                        <h1 style="color:white" data--50-bottom="opacity:0.6; text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2);"  data--200-bottom="opacity:1;" data--300-bottom="text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.6);">{{ 'Find hosts and guests everywhere in the world' | trans }}</h1>
+            </div>
+            <div class="row" style="width: 100%; position:relative;">
+                        <a href="#bottom" class="chevron_down"
+                           data-50-start="opacity:0.4"
+                           data-100-start="opacity:1">
+                           <i class="chevron_icon fa fa-3x fa-chevron-down"></i>
+                       </a>
+                       <img class="chevron_down_img" src="http://i64.tinypic.com/978twn.png"
+                            data-30-start="opacity:0.4"
+                            data-50-start="opacity:1"
+                            data-80-start="opacity:0.4">
             </div>
         </div>
     </div>
@@ -112,16 +128,16 @@
     <!-- third section - Services -->
     <div id="about_trailing" class="pad-section"
          data-start="background-position: 0px 0px;background-blend-mode:normal;"
-         data-400-start="background-blend-mode:hard-light"
+         data-100-start="background-blend-mode:hard-light"
          data-end="background-position: 0px -300px;">
         <div class="container">
             <div class="row" style="color:white"
                 data-start="position:fixed">
-                <h1 data-bottom="opacity:0;" 
-                    data--350-bottom="text-shadow: 0px 0px 6px rgba(255, 255, 255, 1);" 
-                    data--400-bottom="opacity:1;" 
-                    data--500-bottom="text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.6);"
-                    data--950-bottom="opacity:0">{{ 'We are 100% volunteers, Non-Profit and Open Source' | trans }}</h1>
+                <h1 data-bottom="opacity:0;"
+                    data--50-bottom="text-shadow: 0px 0px 6px rgba(255, 255, 255, 1);"
+                    data--150-bottom="opacity:1;"
+                    data--200-bottom="text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.6);"
+                    data--400-bottom="opacity:0">{{ 'We are 100% volunteers, Non-Profit and Open Source' | trans }}</h1>
             </div>
         </div>
     </div>

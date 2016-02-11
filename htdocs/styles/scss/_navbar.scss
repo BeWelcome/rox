@@ -38,7 +38,7 @@
   width: 100%;
   position: fixed;
   left: 0;
-  top: 46px;
+  top: 42px;
   background-color: rgba($brand-primary,0.95);
   border-top: 1px solid #fff;
   border-radius: 0;
@@ -58,7 +58,7 @@
 
 .subnav dd{
   margin-bottom: 0 !important;
-  padding-left: 0.2em;
+  padding: 0.2em;
 }
 
 .subnav dd:hover{
@@ -68,4 +68,8 @@
 
 .subnav .h4{
   color: #fff !important;
+}
+
+a.subnavtitle:hover {
+  color: #000 !important;
 }

@@ -101,6 +101,11 @@ legend {
 @import "groups";
 @import "forums";
 
+.label-warning {
+  @include label-variant(white);
+  color: $brand-primary;
+}
+
 .map {
 
 }

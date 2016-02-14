@@ -2,71 +2,6 @@
 
 {% block content %}
 
-    {% set messages = [
-    {
-    'title': "Message title #1",
-    'id': 12345,
-    'user': 'Member-102',
-    'time': '10 minutes ago',
-    'read': true
-    },
-    {
-    'title': "Message title #2",
-    'id': 23456,
-    'user': 'Member-103',
-    'time': '1 hour ago',
-    'read': false
-    },
-    {
-    'title': "Message title #3",
-    'id': 34567,
-    'user': 'Member-110',
-    'time': '10 days ago',
-    'read': false
-    },
-    {
-    'title': "Message title #4",
-    'id': 45678,
-    'user': 'Member-112',
-    'time': '2 years ago',
-    'read': true
-    }
-    ]
-    %}
-
-    {% set notifications = [
-    {
-    'title': "This is a system notification",
-    'user': 'Member-110',
-    'time': '10 minutes ago',
-    'read': true
-    },
-    {
-    'title': "Another system notification",
-    'user': 'Member-111',
-    'time': '1 hour ago',
-    'read': true
-    },
-    {
-    'title': "And another one",
-    'user': 'Member-112',
-    'time': '10 days ago',
-    'read': true
-    },
-    {
-    'title': "The fourth one",
-    'user': 'Member-113',
-    'time': '2 years ago',
-    'read': true
-    },
-    {
-    'title': "And the last to be shown",
-    'user': 'Member-114',
-    'time': '7 years ago',
-    'read': true
-    }
-    ]
-    %}
 
     {% set forum = [
     {
@@ -216,8 +151,8 @@
 
                     <!-- messages tabs -->
                     <ul class="nav nav-tabs">
-                        <li class="nav-item"><a href="#messages" class="nav-link active" aria-controls="messages" role="tab" data-toggle="tab">Messages received <span class="label label-primary">3</span></a></li>
-                        <li class="nav-item"><a href="#notifications" class="nav-link" aria-controls="sent" role="tab" data-toggle="tab">Notifications</a></li>
+                        <li class="nav-item"><a href="#messages" class="nav-link active" aria-controls="messages" role="tab" data-toggle="tab">Messages received {% if messagecount %}<span class="label label-primary">{{ messagecount }}</span>{% endif %}</a></li>
+                        <li class="nav-item"><a href="#notifications" class="nav-link" aria-controls="notifications" role="tab" data-toggle="tab">Notifications</a></li>
                     </ul>
 
                     <!-- bordered box around content -->
@@ -239,33 +174,16 @@
                                         </label>
                                     </div>
                                 </div>
+
                                 {# received messages #}
-                                <div class="scrollcontent">
+                                <div id="messagesdisplay" class="scrollcontent">
+                                    <i class="fa fa-4x fa-spin fa-spinner"></i>
+                                    {{ 'Please wait while we load the messages' | trans }}
+                                </div>
 
-                                    {# 4x messages data per row #}
-                                    {% for message in messages %}
-                                        <div class="row p-l-1 p-r-1">
-                                            <div class="col-xs-12 fullheight">
-                                                <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                    <a href="members/{{ message.user }}"><img class="float_left framed" src="members/avatar/{{ message.user }}?50_50" alt="Profile" /></a>
-                                                </div>
-                                                <div class="dashentry">
-                                                    <p class="text-truncate">
-                                                        {% if not message.read %}<strong>{% endif %}
-                                                            <a href="messages/{{ message.id }}">{{ message.title }}</a>
-                                                            {% if not message.read %}</strong>{% endif %}<br>
-                                                        <small>from <a href="members/{{ message.user }}">{{ message.user }}</a> {{ message.time }}</small>
-                                                    </p>
-                                                </div>
-                                                <div class="pull-xs-right hidden-md-down chevplace">
-                                                    <a href="messages/{{ message.id }}"><i class="fa fa-chevron-right"></i></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    {% else %}
-                                        <em>no messages</em>
-                                    {% endfor %}
-
+                                <!-- message buttons -->
+                                <div class="text-xs-center">
+                                    <a href="messages" class="btn btn-outline-primary"><i class="fa fa-envelope"></i> My inbox {% if messagecount %}<span class="label label-primary label-pill">{{ messagecount }}</span>{% endif %}</a>
                                 </div>
 
                             </div>
@@ -273,43 +191,15 @@
                             {# load system notifications #}
                             <div role="tabpanel" class="tab-pane" id="notifications">
 
-                                <div class="scrollcontent">
-                                    {# 5x system notification per row #}
-
-                                    {% for notification in notifications %}
-
-                                    <div class="row p-l-1 p-r-1">
-                                        <div class="col-xs-12 fullheight">
-                                            <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="members/{{ notification.user }}"><img class="float_left framed" src="members/avatar/{{ notification.user }}?50_50" alt="{{ notification.user }}" /></a>
-                                            </div>
-                                            <div class="dashentry">
-                                                <p class="text-truncate">
-                                                    {% if not notification.read %}<strong>{% endif %}
-                                                    <a href="#">{{ notification.title }}</a>
-                                                        {% if not notification.read %}</strong>{% endif %}<br>
-                                                    <small>Sent {{ notification.time }}</small>
-                                                </p>
-                                            </div>
-                                            <div class="pull-xs-right hidden-md-down chevplace">
-                                                <a href="#"><i class="fa fa-chevron-right"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {% else %}
-                                        <em>no notifications</em>
-                                    {% endfor %}
-
+                                <div id="notificationsdisplay" class="scrollcontent">
+                                    <i class="fa fa-4x fa-spin fa-spinner"></i>
+                                    {{ 'Please wait while we load the notifications' | trans }}
                                 </div>
 
                             </div>
 
                         </div>
 
-                        <!-- message buttons -->
-                        <div class="text-xs-center">
-                                <a href="messages" class="btn btn-outline-primary"><i class="fa fa-envelope"></i> My inbox <span class="label label-primary label-pill">3</span></a>
-                        </div>
                     </div>
                 </div>
 

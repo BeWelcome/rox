@@ -1,0 +1,26 @@
+<div id="notificationsdisplay" class="scrollcontent">
+    {# 5x system notification per row #}
+
+    {% for notification in notifications %}
+
+        <div class="row p-l-1 p-r-1">
+            <div class="col-xs-12 fullheight">
+                <div class="hidden-xs-down pull-xs-left avatarpadding">
+                    <a href="members/{{ notification.user }}"><img class="float_left framed" src="members/avatar/{{ notification.user }}?50_50" alt="{{ notification.user }}" /></a>
+                </div>
+                <div class="dashentry">
+                    <p class="text-truncate">
+                        <a href="{{ notification.link }}" title="{{ notification.title }}">{{ notification.title }}</a><br>
+                        <small>{{ ago(notification.time) }}</small>
+                    </p>
+                </div>
+                <div class="pull-xs-right hidden-md-down chevplace">
+                    <a class="notify" id="notify-{{ notification.id }}" href="#"><i class="fa fa-remove"></i></a>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <em>{{ 'No notifications' | trans }}</em>
+    {% endfor %}
+
+</div>

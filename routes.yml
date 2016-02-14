@@ -78,3 +78,23 @@ avatar:
         username: "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"
     defaults:
         _controller: "\\MembersController::avatar"
+
+messages_widget:
+    path:     /widget/messages
+    defaults:
+        _controller: "\\Rox\\Main\\Home\\HomeController::showMessagesAction"
+
+notifications_widget:
+    path:     /widget/notifications
+    defaults:
+        _controller: "\\Rox\\Main\\Home\\HomeController::showNotificationsAction"
+
+posts_widget:
+    path:     /widget/posts
+    defaults:
+        _controller: "\\Rox\\Main\\Home\\HomeController::showPostsAction"
+
+activities_widget:
+    path:     /widget/activities
+    defaults:
+        _controller: "\\Rox\\Main\\Home\\HomeController::showActivitiesAction"

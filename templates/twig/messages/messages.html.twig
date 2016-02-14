@@ -1,0 +1,24 @@
+<div id="messagedisplay" class="scrollcontent">
+    {% for message in messages %}
+    <div class="row p-l-1 p-r-1">
+        <div class="col-xs-12 fullheight">
+            <div class="hidden-xs-down pull-xs-left avatarpadding">
+                <a href="members/{{ message.user }}"><img class="float_left framed" src="members/avatar/{{ message.user }}?50_50" alt="Profile" /></a>
+            </div>
+            <div class="dashentry">
+                <p class="text-truncate">
+                    {% if not message.read %}<strong>{% endif %}
+                        <a href="messages/{{ message.id }}">{{ message.title|raw }}</a>
+                        {% if not message.read %}</strong>{% endif %}<br>
+                    <small>from <a href="members/{{ message.user }}">{{ message.user }}</a> {{ ago(message.time) }}</small>
+                </p>
+            </div>
+            <div class="pull-xs-right hidden-md-down chevplace">
+                <a href="messages/{{ message.id }}"><i class="fa fa-chevron-right"></i></a>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <em>{{ 'No messages' | trans }}</em>
+{% endfor %}
+</div>

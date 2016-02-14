@@ -4,6 +4,14 @@ namespace Rox\Framework;
 
 class RoxTwigExtension extends \Twig_Extension
 {
+    /** @var null|\MOD_layoutbits  */
+    private $_layoutBits = null;
+
+    public function __construct()
+    {
+        $this->_layoutBits = \MOD_layoutbits::get();
+    }
+
     /**
      * Returns a list of filters.
      *
@@ -13,6 +21,7 @@ class RoxTwigExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFunction('callback', array($this, 'callback')),
+            new \Twig_SimpleFunction('ago', array($this, 'ago')),
         );
     }
 
@@ -23,7 +32,11 @@ class RoxTwigExtension extends \Twig_Extension
     }
 
     public function avatar($username) {
-        return \MOD_layoutbits::PIC_50_50($username);
+        return $this->_layoutBits->PIC_50_50($username);
+    }
+
+    public function ago($timestamp) {
+        return $this->_layoutBits->ago(strtotime($timestamp));
     }
 
     /**

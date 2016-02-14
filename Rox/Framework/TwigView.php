@@ -45,7 +45,7 @@ class TwigView extends AbstractBasePage {
     );
 
     private $_earlyScriptFiles = array(
-        'jquery/jquery-2.1.4.min.js',
+        'jquery/jquery-2.1.4.js',
         'select2/select2.js',
         'common/common.js?1',
     );
@@ -213,7 +213,7 @@ class TwigView extends AbstractBasePage {
         return array(
             'container' => $this->_container,
             'logged_in' => $loggedIn,
-            'messages' => $messageCount,
+            'messagecount' => $messageCount,
             'username' => ($loggedIn ? $member->Username : ''),
             'meta.robots' => 'ALL',
             'title' => 'BeWelcome',
@@ -289,6 +289,9 @@ class TwigView extends AbstractBasePage {
             $this->_template = '@' . $namespace . '/' . $template;
         } else {
             $this->_template = $template;
+        }
+        if (empty($parameters)) {
+            $parameters = ['title' => 'BeWelcome'];
         }
         $this->addParameters($parameters);
     }

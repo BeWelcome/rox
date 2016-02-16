@@ -424,6 +424,7 @@ $form-icon-danger: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My
 //
 // Dropdown menu container and contents.
 
+$dropdown-min-width:             160px !default; 
 $dropdown-bg:                    transparentize(#000, 0.3);
 $dropdown-border-color:          rgba(255,255,255,.15) !default;
 $dropdown-border-width:          $border-width !default;
@@ -633,24 +634,34 @@ $label-color:                 #fff !default;
 $label-link-hover-color:      #fff !default;
 $label-font-weight:           bold !default;
 
+$label-padding-x:             .4em !default; 
+$label-padding-y:             .25em !default; 
+ 
+$label-pill-padding-x:        .6em !default; 
 
 // Modals
 
 // Padding applied to the modal body
 $modal-inner-padding:         15px !default;
 
+$modal-dialog-margin:         10px !default;
+$modal-dialog-sm-up-margin-y: 30px !default;
+
 $modal-title-padding:         15px !default;
 $modal-title-line-height:     $line-height !default;
 
 $modal-content-bg:               #fff !default;
 $modal-content-border-color:     rgba(0,0,0,.2) !default;
+$modal-content-border-width:     $border-width !default;
 $modal-content-xs-box-shadow:    0 3px 9px rgba(0,0,0,.5) !default;
 $modal-content-sm-up-box-shadow: 0 5px 15px rgba(0,0,0,.5) !default;
 
 $modal-backdrop-bg:           #000 !default;
 $modal-backdrop-opacity:      .5 !default;
 $modal-header-border-color:   #e5e5e5 !default;
+$modal-header-border-width:   $modal-content-border-width !default;
 $modal-footer-border-color:   $modal-header-border-color !default;
+$modal-footer-border-width:   $modal-header-border-width !default;
 
 $modal-lg:                    900px !default;
 $modal-md:                    600px !default;

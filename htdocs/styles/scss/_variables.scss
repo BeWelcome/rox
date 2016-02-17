@@ -187,6 +187,8 @@ $headings-color:             inherit !default;
 $lead-font-size:             1.25rem !default;
 $lead-font-weight:           300 !default;
 
+$small-font-size: 80% !default;
+
 $text-muted:                  $gray-light !default;
 
 $abbr-border-color:           $gray-light !default;
@@ -198,6 +200,8 @@ $blockquote-border-width: .25rem !default;
 
 $hr-border-color:             rgba(0,0,0,.1) !default;
 $hr-border-width:             $border-width !default;
+
+$mark-padding: .2em !default;
 
 $dt-font-weight:              bold !default;
 
@@ -424,7 +428,8 @@ $form-icon-danger: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My
 //
 // Dropdown menu container and contents.
 
-$dropdown-min-width:             160px !default; 
+$dropdown-min-width:             160px !default;
+$dropdown-margin-top:            2px !default;
 $dropdown-bg:                    transparentize(#000, 0.3);
 $dropdown-border-color:          rgba(255,255,255,.15) !default;
 $dropdown-border-width:          $border-width !default;
@@ -439,6 +444,8 @@ $dropdown-link-active-color:     $component-active-color !default;
 $dropdown-link-active-bg:        $component-active-bg !default;
 
 $dropdown-link-disabled-color:   $gray-light !default;
+
+$dropdown-item-padding-x:        20px !default;
 
 $dropdown-header-color:          $gray-light !default;
 
@@ -464,6 +471,7 @@ $zindex-modal:             1050 !default;
 $navbar-border-radius:              0 !default;
 $navbar-padding-x:                  0 !default;
 $navbar-padding-y:                  0 !default;
+$navbar-brand-padding-y:            .25rem !default;
 
 $navbar-dark-color:                white !default;
 $navbar-dark-hover-color:          rgba(0,0,0,.7) !default;
@@ -563,6 +571,7 @@ $state-info-border:              darken($state-info-bg, 7%) !default;
 
 $state-warning-text:             #8a6d3b !default;
 $state-warning-bg:               #fcf8e3 !default;
+$mark-bg:                        $state-warning-bg !default;
 $state-warning-border:           darken($state-warning-bg, 5%) !default;
 
 $state-danger-text:              #a94442 !default;
@@ -583,6 +592,8 @@ $card-bg:                  #fff !default;
 $card-link-hover-color:    #fff !default;
 
 $card-deck-margin:         .625rem !default;
+
+$card-columns-sm-up-column-gap: 1.25rem !default;
 
 
 // Tooltips
@@ -623,21 +634,25 @@ $popover-arrow-outer-color:           fade-in($popover-border-color, 0.05) !defa
 
 // Labels
 
-$label-default-bg:            $gray-light !default;
-$label-primary-bg:            $brand-primary !default;
-$label-success-bg:            $brand-success !default;
-$label-info-bg:               $brand-info !default;
-$label-warning-bg:            $brand-warning !default;
-$label-danger-bg:             $brand-danger !default;
+$tag-default-bg:            $gray-light !default;
+$tag-primary-bg:            $brand-primary !default;
+$tag-success-bg:            $brand-success !default;
+$tag-info-bg:               $brand-info !default;
+$tag-warning-bg:            $brand-warning !default;
+$tag-danger-bg:             $brand-danger !default;
 
-$label-color:                 #fff !default;
-$label-link-hover-color:      #fff !default;
-$label-font-weight:           bold !default;
+$tag-color:                 #fff !default;
+$tag-link-hover-color:      #fff !default;
+$tag-font-size:             75% !default;
+$tag-font-weight:           bold !default;
 
-$label-padding-x:             .4em !default; 
-$label-padding-y:             .25em !default; 
+$tag-padding-x:             .4em !default; 
+$tag-padding-y:             .25em !default; 
  
-$label-pill-padding-x:        .6em !default; 
+$tag-pill-padding-x:        .6em !default;
+// Use a higher than normal value to ensure completely rounded edges when
+// customizing padding or font-size on labels.
+$tag-pill-border-radius:    10rem !default;
 
 // Modals
 
@@ -727,6 +742,9 @@ $list-group-link-color:         #555 !default;
 $list-group-link-hover-color:   #fff !default;
 $list-group-link-heading-color: #333 !default;
 
+$list-group-item-padding-x:     1.25rem !default;
+$list-group-item-padding-y:     .75rem !default;
+
 
 // Image thumbnails
 
@@ -737,6 +755,9 @@ $thumbnail-border-color:      #ddd !default;
 $thumbnail-border-radius:     $border-radius !default;
 $thumbnail-box-shadow:        0 1px 2px rgba(0,0,0,.075) !default;
 
+// Figures
+
+$figure-caption-font-size: 90% !default;
 
 // Breadcrumbs
 
@@ -763,12 +784,17 @@ $carousel-text-shadow:                        0 1px 2px rgba(0,0,0,.6) !default;
 
 $carousel-control-color:                      #fff !default;
 $carousel-control-width:                      15% !default;
+$carousel-control-sm-up-size:                 30px !default;
 $carousel-control-opacity:                    .5 !default;
 $carousel-control-font-size:                  20px !default;
 
+$carousel-indicator-size:                     10px !default;
+$carousel-indicator-active-size:              12px !default;
 $carousel-indicator-active-bg:                #fff !default;
 $carousel-indicator-border-color:             #fff !default;
 
+$carousel-caption-width:                      70% !default;
+$carousel-caption-sm-up-width:                60% !default;
 $carousel-caption-color:                      #fff !default;
 
 
@@ -781,6 +807,9 @@ $close-text-shadow:           0 1px 0 #fff !default;
 
 // Code
 
+$code-font-size:              90% !default;
+$code-padding-x:              .4rem !default;
+$code-padding-y:              .2rem !default;
 $code-color:                  #bd4147 !default;
 $code-bg:                     #f7f7f9 !default;
 

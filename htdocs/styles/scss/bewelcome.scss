@@ -63,7 +63,7 @@ legend {
 @import "../../../vendor/twbs/bootstrap4/scss/card";
 @import "../../../vendor/twbs/bootstrap4/scss/breadcrumb";
 @import "../../../vendor/twbs/bootstrap4/scss/pagination";
-@import "../../../vendor/twbs/bootstrap4/scss/labels";
+@import "../../../vendor/twbs/bootstrap4/scss/tags";
 @import "../../../vendor/twbs/bootstrap4/scss/jumbotron";
 @import "../../../vendor/twbs/bootstrap4/scss/alert";
 @import "../../../vendor/twbs/bootstrap4/scss/progress";
@@ -101,8 +101,8 @@ legend {
 @import "groups";
 @import "forums";
 
-.label-warning {
-  @include label-variant(white);
+.tag-warning {
+  @include tag-variant(white);
   color: $brand-primary;
 }
 

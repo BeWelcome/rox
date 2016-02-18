@@ -160,15 +160,6 @@
   color:gray;
 }
 
-.nav-tabs .nav-item > .active {
-    box-shadow: 0px -2px 4px -2px #CFCFCF;
-    border-radius: 0.25rem 0.25rem 0 0 !important;
-    border: 1px solid #e1e1e1 !important;
-    border-bottom: 2px solid white !important;
-}
-.nav-tabs .nav-link {
-  font-family: Signika-regular;
-}
 @include media-breakpoint-up(md){
 
   .welcomeback {

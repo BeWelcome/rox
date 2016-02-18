@@ -108,6 +108,51 @@
 .welcomeavatar{
   height: 50px;
 }
+.btn-home {
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+  background-color:  rgb(231, 139, 60);
+  border: 1px solid white !important;
+  font-family: Signika-regular;
+  text-transform: capitalize;
+  box-shadow: 0 0 3px 1px #d47a2e inset;
+}
+.btn-home:hover {
+  border: 1px solid white !important;
+  background-color: #cf772c;
+  box-shadow: 0 0 3px 1px #cc5e00 inset;
+}
+.btn-home.active {
+  box-shadow: 0 0 3px 1px #b95500 inset;
+}
+
+.btn-homewhite {font-size: 1.65rem;
+text-transform: uppercase;
+letter-spacing: 0.02rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+  margin-left:0.4rem;
+  margin-right:0.4rem;
+  border-radius: 0.25rem !important;
+  border: 1px solid rgba(0, 0, 0, 0.28) !important;
+  box-shadow: 0px 0px 6px -1px #cecece inset,0px 5px 8px -8px #000;
+  transition:background-color 0.3 ease-in, box-shadow 0.3 ease-in;
+}
+.btn-homewhite:hover {
+  box-shadow: 0px 0px 6px -1px #d76401 inset,0px 5px 8px -8px #000;
+  }
+
+.homehfour{
+  font-size: 1.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02rem;
+}
+.homesubt{
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02rem;
+  color:gray;
+}
 
 @include media-breakpoint-up(md){
 

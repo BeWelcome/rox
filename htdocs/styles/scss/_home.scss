@@ -2,7 +2,8 @@
   background-color: #eee;
   border: 3px solid #fff;
   border-top: 0;
-  box-shadow: 0 0 1px #888;
+  border-radius: 0.15rem;
+  box-shadow: 0px 3px 8px -2px RGBA(153, 150, 150, 0.67);
 }
 
 .hoststatus{
@@ -16,9 +17,11 @@
   box-shadow: 0 -1px 0 #888;
   height: 26em;
   background: #fff;
-  border: 1px solid #888;
-  border-top: 1px solid transparent;
-  border-radius: 0 .25rem .25rem .25rem;}
+  box-shadow: 0px 3px 8px -2px #999696;
+  border-radius: 0 0.25rem 0.25rem 0.25rem;
+  border: 1px solid #e1e1e1;
+  border-top: none;  
+}
 
 .readunread{
   background-color: #FFF;
@@ -50,8 +53,9 @@
 }
 
 .alert-info {
-  border: 1px solid #8A8A8A;
+  border: 1px solid RGBA(138, 138, 138, 0.33);
   border-radius: 0.15rem;
+  box-shadow: 0px 3px 8px -2px RGBA(153, 150, 150, 0.67);
 }
 
 .verticalmiddle{
@@ -126,17 +130,18 @@
   box-shadow: 0 0 3px 1px #b95500 inset;
 }
 
-.btn-homewhite {font-size: 1.65rem;
-text-transform: uppercase;
-letter-spacing: 0.02rem;
+.btn-homewhite {
+  font-size: 1.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02rem;
   font-size: 0.9rem;
   margin-bottom: 0.3rem;
   margin-left:0.4rem;
   margin-right:0.4rem;
   border-radius: 0.25rem !important;
-  border: 1px solid rgba(0, 0, 0, 0.28) !important;
-  box-shadow: 0px 0px 6px -1px #cecece inset,0px 5px 8px -8px #000;
-  transition:background-color 0.3 ease-in, box-shadow 0.3 ease-in;
+  border: 1px solid rgba(243, 112, 0, 0.44) !important;
+  box-shadow: 0px 0px 6px 3px rgba(243, 112, 0, 0.14) inset,0px 5px 8px -8px #8C8C8C;
+  transition: background-color 0.2s, box-shadow 0.2s, color 0.2s;
 }
 .btn-homewhite:hover {
   box-shadow: 0px 0px 6px -1px #d76401 inset,0px 5px 8px -8px #000;
@@ -154,6 +159,12 @@ letter-spacing: 0.02rem;
   color:gray;
 }
 
+.nav-tabs .nav-item > .active {
+    box-shadow: 0px -2px 4px -2px #CFCFCF;
+    border-radius: 0.25rem 0.25rem 0 0 !important;
+    border: 1px solid #e1e1e1 !important;
+    border-bottom: 2px solid white !important;
+}
 @include media-breakpoint-up(md){
 
   .welcomeback {

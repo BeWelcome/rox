@@ -165,6 +165,9 @@
     border: 1px solid #e1e1e1 !important;
     border-bottom: 2px solid white !important;
 }
+.nav-tabs .nav-link {
+  font-family: Signika-regular;
+}
 @include media-breakpoint-up(md){
 
   .welcomeback {

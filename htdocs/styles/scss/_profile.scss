@@ -129,9 +129,13 @@ margin-bottom:0;
   box-shadow: 0 0 3px 1px #d47a2e inset;
   margin-bottom:0;
   border:none !important;
+  border-style:solid !important;
+  border-width:0 1px !important;
 }
 .btn-home:hover {
-  border:none !important;
+  border-color:white !important;
+  border-style:solid !important;
+  border-width:0 1px !important;
   background-color: #cf772c;
   box-shadow: 0 0 3px 1px #cc5e00 inset;
 }

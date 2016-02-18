@@ -114,12 +114,12 @@
 }
 .btn-home {
   font-size: 1rem;
-  margin-bottom: 0.3rem;
   background-color:  rgb(231, 139, 60);
   border: 1px solid white !important;
   font-family: Signika-regular;
   text-transform: capitalize;
   box-shadow: 0 0 3px 1px #d47a2e inset;
+  margin:0;
 }
 .btn-home:hover {
   border: 1px solid white !important;
@@ -132,7 +132,6 @@
 
 .btn-homewhite {
   font-size: 1.65rem;
-  text-transform: uppercase;
   letter-spacing: 0.02rem;
   font-size: 0.9rem;
   margin-bottom: 0.3rem;

@@ -89,12 +89,27 @@ notifications_widget:
     defaults:
         _controller: "\\Rox\\Main\\Home\\HomeController::showNotificationsAction"
 
-posts_widget:
-    path:     /widget/posts
+threads_widget:
+    path:     /widget/threads
+    methods: [GET]
+    requirements:
+        groups:     "(0|1)"
+        forum:      "(0|1)"
+        following:  "(0|1)"
     defaults:
-        _controller: "\\Rox\\Main\\Home\\HomeController::showPostsAction"
+        groups:     0
+        forum:      1
+        following:  0
+        _controller: "\\Rox\\Main\\Home\\HomeController::showThreadsAction"
 
 activities_widget:
     path:     /widget/activities
     defaults:
         _controller: "\\Rox\\Main\\Home\\HomeController::showActivitiesAction"
+
+forum_thread:
+    path: /forums/s{threadId}/
+    requirements:
+        threadId: "(?<![-.])\\b[0-9]+\\b(?!\\.[0-9])"
+    defaults:
+        _controller: "\\ForumsController::index"

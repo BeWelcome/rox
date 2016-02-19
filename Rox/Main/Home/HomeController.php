@@ -56,11 +56,11 @@ class HomeController extends Controller
         return new Response($widget->render());
     }
 
-    public function showPostsAction() {
+    public function showThreadsAction($groups, $forum, $following) {
         $widget = new TwigView($this->getRouting(), false);
-        $messages = $this->_model->getMessages(4);
-        $widget->setTemplate('messages.html.twig', 'messages', [
-            'messages' => $messages,
+        $threads = $this->_model->getThreads($groups, $forum, $following, 4);
+        $widget->setTemplate('forums.html.twig', 'forums', [
+            'threads' => $threads,
         ]);
         return new Response($widget->render());
     }

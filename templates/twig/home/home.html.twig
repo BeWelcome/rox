@@ -215,51 +215,27 @@
                         {# tabs content #}
                         <div class="tab-content">
                             {# forum discussions #}
-                            <div role="tabpanel" class="tab-pane active" id="forum">
+                            <div role="tabpanel" class="tab-pane active" id="threads">
 
                                 {# display settings#}
                                 <div class="row text-xs-center p-a-1">
                                     <div class="btn-group" data-toggle="buttons">
                                         <label class="btn btn-primary btn-home active">
-                                            <input type="checkbox" autocomplete="off" checked> groups
+                                            <input id="groups" type="checkbox" autocomplete="off" checked> groups
                                         </label>
                                         <label class="btn btn-primary btn-home">
-                                            <input type="checkbox" autocomplete="off"> forum
+                                            <input id="forum" type="checkbox" autocomplete="off" checked> forum
                                         </label>
                                         <label class="btn btn-primary btn-home">
-                                            <input type="checkbox" autocomplete="off"> threads I'm following
+                                            <input id="following" type="checkbox" autocomplete="off"> threads I'm following
                                         </label>
                                     </div>
                                 </div>
 
-                                <div class="scrollcontent">
-
-                                    {# 4 most recent forum messages #}
-                                    {% for thread in forum %}
-
-                                    <div class="row p-l-1 p-r-1">
-                                        <div class="col-xs-12 fullheight">
-                                            <div class="hidden-xs-down pull-xs-left avatarpadding">
-                                                <a href="members/{{ thread.lastuser }}"><img class="float_left framed" src="members/avatar/{{ thread.lastuser }}?50_50" alt="{{ thread.lastuser }}" /></a>
-                                            </div>
-                                            <div class="dashentry">
-                                                <p class="text-truncate">
-                                                {% if not thread.read %}<strong>{% endif %}
-                                                        <a href="{{ thread.href }}">{{ thread.title|e }}</a>
-                                                {% if not thread.read %}</strong>{% endif %}<br>
-                                                    <small>by <a href="members/{{ thread.lastuser }}">{{ thread.lastuser }}</a> {{ thread.time }}</small>
-                                                </p>
-                                            </div>
-                                            <div class="pull-xs-right hidden-md-down chevplace">
-                                                <a href="{{ thread.href }}"><i class="fa fa-chevron-right"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                        {% endfor %}
-
-                                    {# infinite scroll??? #}
-
+                                {# received messages #}
+                                <div id="threadsdisplay" class="scrollcontent">
+                                    <i class="fa fa-4x fa-spin fa-spinner"></i>
+                                    {{ 'Please wait while we load the forum threads' | trans }}
                                 </div>
 
                                 <div class="text-xs-center">

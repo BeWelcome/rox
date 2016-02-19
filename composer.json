@@ -29,7 +29,7 @@
         "swiftmailer/swiftmailer": "5.*",
         "twbs/bootstrap4": "@dev",
         "components/font-awesome": "4.*",
-        "Twig/Twig": "1.*",
+        "Twig/Twig": "master@dev",
         "select2/select2": "4.*",
         "symfony/twig-bridge": "~3.0",
         "symfony/translation": "~3.0",
@@ -52,8 +52,8 @@
         "anthonymartin/geo-location": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~5.0",
-        "phpdocumentor/phpdocumentor": "2.*"
+        "phpunit/phpunit": "5.2",
+        "sami/sami": "3.*"
     },
     "autoload": {
         "psr-4": {

@@ -4,6 +4,8 @@ namespace Rox\Main\Home;
 
 use Rox\Models\Message;
 use Rox\Models\Note;
+use Rox\Models\Post;
+use Rox\Models\Thread;
 
 class HomeModel extends \RoxModelBase {
 
@@ -86,58 +88,56 @@ class HomeModel extends \RoxModelBase {
         return $mappedNotes;
     }
 
-
     /**
-     * Get array of notes
+     * Generates notifications for display on home page
+     * Format: 'title': "Message title #1",
+     *   'text': Depending on type of notification,
+     *   'link': Depending on type of notification,
+     *   'user': 'Member-102',
+     *   'time': '10 minutes ago',
      *
-     * @access public
-     * @return mixed Returns an array of Note entity objects or false if you're not logged in
-     */
-    public function getNotes($order = false, $where = false)
-    {
-        $sql = '
-SELECT *
-FROM
-    notes
-';
-        if (isset($where) && $where != '') $sql .= $where;
-        if (isset($order) && $order != false) $sql .= '
-ORDER BY '.$order.' ASC,IdMember ASC
-';
-        else $sql .= '
-ORDER BY created DESC,IdMember ASC
-';
-        return $this->bulkLookup($sql);
-
-    }
-
-    /**
-     * Find all notes I am member of
+     * @param bool     $groups
+     * @param bool     $forum
+     * @param bool     $following
+     * @param int|bool $limit
      *
-     * @access public
-     * @return mixed Returns an array of Note entity objects or false if you're not logged in
+     * @return array
      */
-    public function getMyNotes()
+    public function getThreads($groups, $forum, $following, $limit = false)
     {
-        if (!isset($_SESSION['IdMember']))
-        {
-            return array();
-        }
-        else
-        {
-            return $this->getNotesForMember($_SESSION['IdMember']);
-        }
-    }
-
-    public function getMemberNotes()
-    {
-        if (!isset($_SESSION['IdMember'])) {
-            // not logged in - no messages
-            return array();
+        $query = Thread::orderBy('created_at', 'desc')
+            ->where('ThreadDeleted', 'NotDeleted');
+        if ($groups && $forum) {
+            $query = $query->where(function ($query) {
+                $query->whereIn('IdGroup', [70])
+                    ->orWhere('IdGroup', 0);
+            });
         } else {
-            $member_id = $_SESSION['IdMember'];
-            return $this->getNotes(false,'WHERE notes.IdMember = '.$member_id.' AND notes.Checked = 0');
+            if ($groups) {
+                $query = $query->whereIn('IdGroup', [70]);
+            }
+            if ($forum) {
+                $query = $query->where('IdGroup', 0);
+            }
         }
-    }
+        if ($following) {
+            $query = $query->orWhereIn('id', [1, 2]);
+        }
+        if ($limit) {
+            $query=$query->take($limit);
+        }
+        $posts = $query->get()->all();
 
+        $mappedPosts = array_map(
+            function($a) {
+                $result = new \stdClass();
+                $result->title = $a->title;
+                $result->id = $a->id;
+                $result->lastuser = $a->lastPost->author->Username;
+                $result->time = $a->created_at;
+                return $result;
+            }, $posts
+        );
+        return $mappedPosts;
+    }
 }

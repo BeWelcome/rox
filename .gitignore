@@ -16,6 +16,7 @@ htdocs/js/*
 htdocs/images/*
 htdocs/css/*
 htdocs/images/*
+cache/*
 
 revision.txt
 .buildpath

@@ -20,7 +20,7 @@ $versions = GitVersionCollection::create('./')
 ;
 
 return new Sami($iterator, array(
-    'theme'                => 'symfony',
+    'theme'                => 'Rox',
     'versions'             => $versions,
     'title'                => 'Rox',
     'build_dir'            => 'doc/build/bs4/%version%',

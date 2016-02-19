@@ -10,6 +10,7 @@ $iterator = Finder::create()
     ->exclude('data')
     ->exclude('Tests')
     ->exclude('htdocs')
+    ->exclude('vendor/sami')
     ->in('./')
 ;
 

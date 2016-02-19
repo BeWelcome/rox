@@ -47,7 +47,7 @@
         "illuminate/events": "5.*",
         "components/jquery": "^2.1",
         "symfony/dependency-injection": "~3.0",
-        "symfony/validator": "3.0 as 2.8",
+        "symfony/validator": "~3.0",
         "foolz/sphinxql-query-builder": "^1.0",
         "anthonymartin/geo-location": "^1.0"
     },

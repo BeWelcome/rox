@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdocumentor>
+    <parser>
+        <default-package-name>Rox</default-package-name>
+        <encoding>utf-8</encoding>
+        <target>doc/cache</target>
+        <markers>
+            <item>TODO</item>
+            <item>FIXME</item>
+        </markers>
+        <extensions>
+            <extension>php</extension>
+            <extension>php3</extension>
+            <extension>phtml</extension>
+        </extensions>
+        <visibility></visibility>
+    </parser>
+    <files>
+        <directory>Rox</directory>
+        <ignore-hidden>true</ignore-hidden>
+        <ignore-symlinks>true</ignore-symlinks>
+    </files>
+    <transformer>
+        <target>doc/</target>
+    </transformer>
+    <logging>
+        <level>error</level>
+    </logging>
+    <transformations>
+        <template name="responsive-twig"/>
+    </transformations>
+    <translator>
+        <locale>en</locale>
+    </translator>
+</phpdocumentor>

@@ -262,11 +262,12 @@ Useful hints
 Create documentation
 --------------------
 
-Documentation can be generated using sami which is added as a dev dependency executing
+Documentation can be generated using phpDocumentor. As phpDocumentor conflicts with Symfony3 to generate the documentation
+use phpDocumentor.phar like this
 
-vendor/bin/sami.php(.bat) update sami.cfg.php
+<path to phpDocumentor>/phpDcumentor.phar
 
-Note: The repository needs to be clean (meaning no uncommitted changes exists)
+Only the new framework in Rox is documented.
 
 Further help
 ------------

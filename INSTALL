@@ -259,6 +259,15 @@ Useful hints
     "skip_password_check = false" in rox_local.ini.
 
 
+Create documentation
+--------------------
+
+Documentation can be generated using sami which is added as a dev dependency executing
+
+vendor/bin/sami.php(.bat) update sami.cfg.php
+
+Note: The repository needs to be clean (meaning no uncommitted changes exists)
+
 Further help
 ------------
 

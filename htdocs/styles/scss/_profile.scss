@@ -2,6 +2,10 @@ body{
 	line-height: inherit;
 }
 
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+	line-height:1.6rem;
+}
+
 .summary{
   line-height: 1.1;
 }
@@ -15,9 +19,13 @@ body{
 	color:white;
 	letter-spacing: 0.03em;
 	line-height: inherit !important;
-	padding: 0.5rem 1.25rem;
+	padding: 0.5rem 1rem;
 	text-shadow: 0 0 3px #ce8140;
 	box-shadow: inset 0 0 13px -2px #ce8140;
+	margin:0;
+}
+.card-block {
+	padding:1rem 1.6rem;
 }
 
 .profileimg {

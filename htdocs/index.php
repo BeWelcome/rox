@@ -130,7 +130,6 @@ try {
     echo "\n{$e->getFile()} ({$e->getLine()})";
     exit();
 } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
-    error_log($e->getMessage());
     $pathInfo = $request->getPathInfo();
     if (strstr($pathInfo, '.php') !== false) {
         if (strstr($pathInfo, 'admin/') === false) {

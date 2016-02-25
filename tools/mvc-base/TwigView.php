@@ -24,7 +24,7 @@ class TwigViewOld extends AbstractBasePage {
           'minimal/screen/custom/font-awesome-ie7.min.css',
 */    );
     private $_lateScriptFiles = array(
-        'bootstrap' => 'bootstrap/bootstrap.min.js',
+        'bootstrap' => 'bootstrap/bootstrap.js',
         'initialize' => 'common/initialize.js'
     );
     private $_earlyScriptFiles = array(

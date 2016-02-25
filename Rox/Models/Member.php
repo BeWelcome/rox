@@ -9,4 +9,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class Member extends Model {
     public $timestamps = false;
+
+    public function groups() {
+        return $this->belongsToMany('Rox\Models\Group', 'membersgroups', 'IdMember', 'IdGroup');
+    }
 }

@@ -16,20 +16,30 @@ $(document).ready(function() {
             case 'activities':
                 updateActivities();
                 break;
-
         }
-    })
-    $('#groups,#forum,#following').click( function() {
-       updateThreads();
+    });
+
+    $("#all, #unread").change( function() {
+        setTimeout(updateMessages, 500);
+    });
+
+    $("#groups, #forum, #following").change( function() {
+        setTimeout(updateThreads, 500);
     });
 });
 
 function updateMessages() {
+    var all = $('#all').hasClass('active') ? 1 : 0;
+    var unread = $('#unread').hasClass('active') ? 1 : 0;
     $.ajax({
         type: "GET",
         url: '/widget/messages',
+        data: {
+            all: all,
+            unread: unread
+        },
         success: function(messages) {
-            $("#messagesdisplay").html(messages);
+            $("#messagesdisplay").replaceWith(messages);
         }
     });
 }
@@ -39,7 +49,7 @@ function updateNotifications() {
         type: "GET",
         url: '/widget/notifications',
         success: function(notifications){
-            $("#notificationsdisplay").html(notifications);
+            $("#notificationsdisplay").replaceWith(notifications);
             // Set click event
             $('.notify').click(function () {
                 var that = $(this);
@@ -59,9 +69,9 @@ function updateNotifications() {
 
 function updateThreads() {
     // Get parameters
-    var groups = $('#groups').prop('checked');
-    var forum = $('#forum').prop('checked');
-    var following = $('#following').prop('checked');
+    var groups = $('#groups').hasClass('active') ? 1 : 0;
+    var forum = $('#forum').hasClass('active') ? 1 : 0;
+    var following = $('#following').hasClass('active') ? 1 : 0;
     $.ajax({
         type: "GET",
         url: '/widget/threads',
@@ -71,7 +81,7 @@ function updateThreads() {
             following: following
         },
         success: function(threads){
-            $("#threadsdisplay").html(threads);
+            $("#threadsdisplay").replaceWith(threads);
         }
     });
 }
@@ -83,7 +93,7 @@ function updateActivities() {
         url: '/widget/activities',
         data: {},
         success: function(activities){
-            $("#activitiesdisplay").html(threads);
+            $("#activitiesdisplay").replaceWith(activities);
         }
     });
 }

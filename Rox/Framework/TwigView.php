@@ -39,7 +39,7 @@ class TwigView extends AbstractBasePage {
 
     private $_lateScriptFiles = array(
         'tether-1.1.1/js/tether.js',
-        'bootstrap/bootstrap.min.js',
+        'bootstrap/bootstrap.js',
         'bootstrap-autohidingnavbar/jquery.bootstrap-autohidingnavbar.js',
         'common/initialize.js',
     );
@@ -90,6 +90,7 @@ class TwigView extends AbstractBasePage {
             $this->_environment->addExtension(new RoutingExtension($router->getGenerator()));
         }
         $this->_environment->addExtension(new \Twig_Extension_Debug());
+        $this->_environment->getExtension('core')->setTimezone('Europe/Paris');
     }
 
     /**

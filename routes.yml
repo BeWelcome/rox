@@ -81,6 +81,7 @@ avatar:
 
 messages_widget:
     path:     /widget/messages
+    methods: [GET]
     defaults:
         _controller: "\\Rox\\Main\\Home\\HomeController::showMessagesAction"
 
@@ -92,14 +93,7 @@ notifications_widget:
 threads_widget:
     path:     /widget/threads
     methods: [GET]
-    requirements:
-        groups:     "(0|1)"
-        forum:      "(0|1)"
-        following:  "(0|1)"
     defaults:
-        groups:     0
-        forum:      1
-        following:  0
         _controller: "\\Rox\\Main\\Home\\HomeController::showThreadsAction"
 
 activities_widget:

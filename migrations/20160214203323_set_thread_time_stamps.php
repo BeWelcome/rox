@@ -16,7 +16,7 @@ class SetThreadTimeStamps extends RoxMigration
                 forums_threads t
             INNER JOIN forums_posts p ON p.id = t.first_postid
             SET
-                created_at = forums_posts.create_time
+                created_at = p.create_time
         ');
     }
 

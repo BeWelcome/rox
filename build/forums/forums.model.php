@@ -3760,34 +3760,11 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
             // We reuse the $group entity from above
             $subscriberEntities = $group->getEmailAcceptingMembers();
 
-            $membersTemp = array();
             foreach($subscriberEntities as $subscriber) {
                 $memberId = $subscriber->getPKValue();
                 if ($memberId == 0) continue;
                 if (array_search($memberId, $members) === false) {
-                    $membersTemp[] = $memberId;
-                }
-            }
-            if (!empty($membersTemp)) {
-                $count = 0;
-                $query = "
-                    INSERT INTO
-                        posts_notificationqueue (
-                            `IdMember`,
-                            `IdPost`,
-                            `created`,
-                            `Type`,
-                            `TableSubscription`,
-                            `IdSubscription`
-                        )
-                    VALUES ";
-                foreach($membersTemp as $member) {
-                    $query .= "(" . $member . ", " . $postId . ", now(), '" . $type . "', 'membersgroups', 0), ";
-                    $count++;
-                }
-                if ($count > 0) {
-                    $query = substr($query, 0, -2);
-                    $this->dao->query($query);
+                    $members[$memberId] = $memberId;
                 }
             }
         }
@@ -3806,45 +3783,17 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 			// just don't write notifications
 			return;
 		}
-		$membersTemp = array();
 		while ($row = $res->fetch(PDB::FETCH_OBJ)) {
 			if ($row->subscriber > 0 && $row->notificationsEnabled) {
 				// if member already gets notification don't add one
 				if (array_search($row->subscriber, $members) === false) {
-					$membersTemp[$row->subscriber] = $row->subscriptionId;
+					$members[$row->subscriber] = $row->subscriptionId;
 				}
 			} else {
 				// did member disable notifications for this thread?
 				if (array_search($row->subscriber, $members) !== false) {
-					unset($membersTemp[$row->subscriber]);
+					unset($members[$row->subscriber]);
 				}
-			}
-		}
-
-		if (!empty($membersTemp)) {
-			$count = 0;
-			$query = "
-                INSERT INTO
-                    posts_notificationqueue (
-                        `IdMember`,
-                        `IdPost`,
-                        `created`,
-                        `Type`,
-                        `TableSubscription`,
-                        `IdSubscription`
-                    )
-                VALUES ";
-			foreach($membersTemp as $member => $subscriptionId) {
-				if (($post->groupId == 0) || ($post->PostVisibility != 'GroupOnly' && $post->ThreadVisibility != 'GroupOnly')
-					|| (array_search($member, $groupMembers) !== false)) {
-					$query .= "(" . $member . ", " . $postId . ", now(), '" . $type . "', 'members_threads_subscribed', '" . $this->dao->escape($subscriptionId) . "'), ";
-					$members[] = $member;
-					$count++;
-				}
-			}
-			if ($count > 0) {
-				$query = substr($query, 0, -2);
-				$this->dao->query($query);
 			}
 		}
 
@@ -3866,18 +3815,18 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 			return;
 		}
 
-		$membersTemp = array(); // members that will receive a notification because of tags
 		while ($row = $res->fetch(PDB::FETCH_OBJ)) {
 			// Unfortunately the DB has a lot of faulty entries
 			$subscriber = $row->subscriber;
 			if ($subscriber > 0 && $row->notificationsEnabled) {
 				// Add only if the member doesn't already get a notification
 				if (array_search($subscriber, $members) === false) {
-					$membersTemp[$subscriber] = $row->subscriptionId;
+					$members[$subscriber] = $row->subscriptionId;
 				}
 			}
 		}
-		if (!empty($membersTemp)) {
+
+		if (!empty($members)) {
 			$count = 0;
 			$query = "
                 INSERT INTO
@@ -3890,7 +3839,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
                         `IdSubscription`
                     )
                 VALUES ";
-			foreach($membersTemp as $member => $subscriptionId ) {
+			foreach($members as $member => $subscriptionId ) {
 				if ($member == 0) continue;
 				if (($post->groupId == 0) || ($post->PostVisibility != 'GroupOnly' && $post->ThreadVisibility != 'GroupOnly')
 					|| (array_search($member, $groupMembers) !== false)) {

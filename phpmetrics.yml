@@ -1,0 +1,13 @@
+default:
+    rules:
+        cyclomaticComplexity: [ 10, 6, 2 ]
+
+    failure: average.maintainabilityIndex < 60
+
+    path:
+        directory: Rox
+        extensions: php
+
+    logging:
+        report:
+            html: ./phpmetrics.html

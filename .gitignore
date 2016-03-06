@@ -36,3 +36,6 @@ auth.json
 
 /ansible/cert.crt
 /ansible/key.pem
+coverage/
+phpmd.html
+phpmetrics.html

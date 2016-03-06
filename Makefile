@@ -13,7 +13,7 @@ phpci: phpcpd phploc phpmetrics
 
 build:
 	npm install
-	./node_modules/.bin/grunt copyfiles
+	./node_modules/.bin/grunt sass
 
 phpcpd:
 	php -d memory_limit=256M ./vendor/bin/phpcpd $(SRC_DIR) --progress --no-interaction

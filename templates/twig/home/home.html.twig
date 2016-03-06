@@ -23,7 +23,7 @@
                                     <span class="h1">Welcome back, {{ macros.memberlink(username) }}</span><br />
                                     <span class="h4 hidden-xs-down">Your hosting status is
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <button type="button" class="btn btn-dropdown dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 {%  if member.hosting == 'anytime' %}hosting{% endif %}
                                                 {%  if member.hosting == 'dependonrequest' %}maybe hosting{% endif %}
                                                 {%  if member.hosting == 'dontask' %}not hosting{% endif %}
@@ -83,10 +83,10 @@
                                 <div class="row text-xs-center p-a-1">
 
                                     <div class="btn-group" data-toggle="buttons">
-                                        <label class="btn btn-primary btn-home active" id="all">
+                                        <label class="btn btn-primary btn-radio active" id="all">
                                             <input type="radio" name="options" autocomplete="off" onclick="updateMessages()" checked>All
                                         </label>
-                                        <label for="unread" class="btn btn-primary btn-home" id="unread">
+                                        <label for="unread" class="btn btn-primary btn-radio" id="unread">
                                             <input type="radio" name="options" autocomplete="off" onclick="updateMessages()">Unread
                                         </label>
                                     </div>
@@ -139,10 +139,10 @@
                                 {# display settings#}
                                 <div class="row text-xs-center p-a-1">
                                     <div class="btn-group" data-toggle="buttons">
-                                        <label class="btn btn-primary btn-home active" id="groups">
+                                        <label class="btn btn-primary btn-radio active" id="groups">
                                             <input type="checkbox" autocomplete="off" checked> groups
                                         </label>
-                                        <label class="btn btn-primary btn-home" id="forum">
+                                        <label class="btn btn-primary btn-radio" id="forum">
                                             <input type="checkbox" autocomplete="off" checked> forum
                                         </label>
                                     </div>
@@ -195,7 +195,7 @@
                         <div class="card-block">
                             <h4 class="homehfour">Be Involved<br /><span class="homesubt">help the community</span></h4>
                             <p class="card-text">BeWelcome is run by volunteers - free of charge and open source. Volunteering for the project is a great opportunity for you to get to know enthusiastic people who really believe in promoting hospitality and respect for each other. And it's fun, too!</p>
-                            <a href="about/getactive" class="btn btn-outline-primary btn-homewhite btn-block m-b-1"><i class="fa fa-wrench"></i> Help BeWelcome</a>
+                            <a href="about/getactive" class="btn btn-outline-primary btn-homewhite btn-block"><i class="fa fa-wrench"></i> Help BeWelcome</a>
                             <a href="donate" class="btn btn-outline-primary btn-homewhite btn-block m-b-1"><i class="fa fa-euro"></i> Please donate</a>
                             <p class="card-text text-xs-center m-b-0">Goal for 2016-2017: <strong>€1000,-</strong></p>
                             <progress class="progress progress-primary m-a-0" value="60" max="100"></progress>
@@ -208,7 +208,7 @@
                         <div class="card-block">
                             <h4 class="homehfour">Potential guests<br /><span class="homesubt">travelers in your area</span></h4>
 
-                                <div class="media m-t-1">
+                                <div class="media m-t-1 potentialguestinfo">
                                     <div class="h6 m-a-0"><a href="#">Member-150</a></div>
                                     <div class="media-left p-a-0 pull-xs-left">
                                         <a href="#">
@@ -222,7 +222,7 @@
                                     </div>
                                 </div>
 
-                            <div class="media m-t-1">
+                            <div class="media m-t-1 potentialguestinfo">
                                     <div class="h6 m-a-0"><a href="#">Member-161</a></div>
                                     <div class="media-left p-a-0 pull-xs-left">
                                         <a href="#">
@@ -236,10 +236,8 @@
                                     </div>
                                 </div>
 
-                           <div class="btn-group m-t-1" role="group">
-                                <a href="trips" class="btn btn-outline-primary btn-homewhite btn-block"><i class="fa fa-plus-circle"></i> View more</a>
+                                <a href="trips" class="btn btn-outline-primary btn-homewhite btn-block m-t-1"><i class="fa fa-plus-circle"></i> View more</a>
                                 <a href="trips/create" class="btn btn-outline-primary btn-homewhite btn-block"><i class="fa fa-map-marker"></i> Plan your trip</a>
-                            </div>
                         </div>
                     </div>
 

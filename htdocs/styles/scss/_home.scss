@@ -112,51 +112,38 @@
 .welcomeavatar{
   height: 50px;
 }
-.btn-home {
-  font-size: 1rem;
-  background-color:  rgb(231, 139, 60);
-  border: 1px solid white !important;
-  font-family: Signika-regular;
+
+.btn-dropdown {
+  background-color:  white;
   text-transform: capitalize;
-  box-shadow: 0 0 3px 1px #d47a2e inset;
-  margin:0;
-}
-.btn-home:hover {
-  border: 1px solid white !important;
-  background-color: #cf772c;
-  box-shadow: 0 0 3px 1px #cc5e00 inset;
-}
-.btn-home.active {
-  box-shadow: 0 0 3px 1px #b95500 inset;
+  box-shadow: 0 0 1px 1px rgb(231, 231, 231) inset;
+  border:1px solid white !important;
 }
 
 .btn-homewhite {
-  font-size: 1.65rem;
   letter-spacing: 0.02rem;
   font-size: 0.9rem;
-  margin-bottom: 0.3rem;
-  margin-left:0.4rem;
-  margin-right:0.4rem;
-  border-radius: 0.25rem !important;
-  border: 2px solid rgb(235, 132, 45) !important;
-  box-shadow: 0px 0px 16px 3px rgba(246, 113, 0, 0.15) inset;
-  transition: background-color 0.2s, box-shadow 0.2s, color 0.2s;
+  border: 2px solid $btn-primary-bg !important;
+  transition: background-color 0.2s, color 0.2s;
 }
+
 .btn-homewhite:hover {
   box-shadow: 0px 0px 6px -1px #d76401 inset,0px 5px 8px -8px #000;
-  }
+}
 
 .homehfour{
-  font-size: 1.65rem;
+  font-size: 1.3rem;
   text-transform: uppercase;
   letter-spacing: 0.02rem;
   border-bottom: 1px solid #c3c3c3;
 }
 .homesubt{
   font-size: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.02rem;
   color:gray;
+}
+
+.potentialguestinfo{
+  border-spacing: 0.5rem 0;
 }
 
 @include media-breakpoint-up(md){

@@ -1,4 +1,4 @@
-.PHONY: all build phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpmetrics phpunit
+.PHONY: all build phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpmetrics phpunit version
 
 SRC_DIR=Rox/
 
@@ -35,3 +35,6 @@ phpunit:
 
 phpmetrics:
 	php -d memory_limit=512M ./vendor/bin/phpmetrics --config=phpmetrics.yml
+
+version:
+	git rev-parse HEAD | cut -b 1-7 > VERSION

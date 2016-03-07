@@ -38,3 +38,4 @@ auth.json
 coverage/
 phpmd.html
 phpmetrics.html
+VERSION

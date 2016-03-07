@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<ruleset name="Rox">
+    <file>Rox/</file>
+
+    <arg value="p"/>
+
+    <rule ref="PSR1"/>
+    <rule ref="PSR2"/>
+
+</ruleset>

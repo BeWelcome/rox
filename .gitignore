@@ -28,7 +28,6 @@ revision.txt
 /vendor/*
 /node_modules/*
 /components/*
-composer.lock
 composer.phar
 auth.json
 /.vagrant/*
@@ -36,3 +35,7 @@ auth.json
 
 /ansible/cert.crt
 /ansible/key.pem
+coverage/
+phpmd.html
+phpmetrics.html
+VERSION

@@ -1,0 +1,57 @@
+<?php
+$finder = Symfony\CS\Finder\DefaultFinder::create()
+    ->in('Rox/');
+$config = Symfony\CS\Config\Config::create();
+$config->level(null);
+$config->fixers(
+    array(
+        'braces',
+        'concat_with_spaces',
+        'duplicate_semicolon',
+        'elseif',
+        'empty_return',
+        'encoding',
+        'eof_ending',
+        'extra_empty_lines',
+        'function_call_space',
+        'function_declaration',
+        'indentation',
+        'join_function',
+        'line_after_namespace',
+        'linefeed',
+        'list_commas',
+        'lowercase_keywords',
+        'parenthesis',
+        'multiple_use',
+        'method_argument_space',
+        'multiline_array_trailing_comma',
+        'no_blank_lines_after_class_opening',
+        'object_operator',
+        'ordered_use',
+        'php_closing_tag',
+        'parenthesis',
+        'pre_increment',
+        'remove_leading_slash_use',
+        'remove_lines_between_uses',
+        'self_accessor',
+        'short_array_syntax',
+        'short_tag',
+        'single_array_no_trailing_comma',
+        'single_line_after_imports',
+        'single_quote',
+        'spaces_before_semicolon',
+        'spaces_cast',
+        'standardize_not_equal',
+        'strict',
+        'strict_param',
+        'ternary_spaces',
+        'trailing_spaces',
+        'trim_array_spaces',
+        'unary_operators_spaces',
+        'unused_use',
+        'visibility',
+        'whitespacy_lines',
+    )
+);
+$config->finder($finder);
+return $config;

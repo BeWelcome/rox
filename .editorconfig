@@ -1,0 +1,19 @@
+# editorconfig.org
+root = true
+
+# PHP should follow the PSR-2 standard (https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
+
+[*]
+indent_style = space
+indent_size = 4
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[Makefile]
+indent_style = tab
+
+[*.json]
+indent_style = space
+indent_size = 4

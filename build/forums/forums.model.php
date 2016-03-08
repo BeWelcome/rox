@@ -3805,6 +3805,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 			// just don't write notifications
 			return;
 		}
+        
 		$membersTemp = array();
 		while ($row = $res->fetch(PDB::FETCH_OBJ)) {
 			if ($row->subscriber > 0 && $row->notificationsEnabled) {

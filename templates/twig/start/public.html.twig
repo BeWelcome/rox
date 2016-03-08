@@ -35,12 +35,11 @@
                 <div class="col-xs-12 col-md-6 card p-a-1 text-xs-center">
                     <h5 style="color: #f37000">BeWelcome is a cultural crossing network</h5>
                     <p>which lets you share a place to stay, connect with travellers, meet up and find accommodation on your journey</p>
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Your e-mail">
-                          <span class="input-group-btn">
-                            <button class="btn btn-primary" type="button"><strong>Join!</strong></button>
-                          </span>
-                    </div>
+
+                        <form method="post" novalidate action="signup/1" name="signup" id="user-register-form" class="form" role="form">
+                        <input type="email" class="form-control" placeholder="Your e-mail">
+                              <input type="submit" class="form-control btn btn-primary" value="Join BeWelcome!">
+                        </form>
 
                     <p><small class="smaller text-muted">BeWelcome is and <a href="#">will always be</a> a free, open source, non for profit, democratic community</small></p>
                 </div>

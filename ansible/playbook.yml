@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: "{{hostname}}"
   sudo: true
   vars_files:
     - vars/all.yml

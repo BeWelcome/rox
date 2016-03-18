@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
     config.ssh.forward_agent = true
     # config.vm.hostname = "bewelcome"
 
-    config.vm.provision :shell, path: "ansible/windows.sh", args: ["bewelcome"]
+    config.vm.provision :shell, path: "ansible/windows.sh", args: ["dev"]
 
     config.vm.synced_folder "./", "/vagrant", :group=>"www-data", :mount_options=>["dmode=775","fmode=665"]
 end

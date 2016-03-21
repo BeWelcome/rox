@@ -4,23 +4,6 @@ server:
     packages: [nodejs, git]
     timezone: Europe/Paris
     locale: en_US.UTF-8
-vagrant_local:
-    install: '1'
-    vm: { base_box: jessie64, hostname: bewelcome, ip: 192.168.33.99, memory: '1024', sharedfolder: ./, useVagrantCloud: '1', syncType: nfs }
-apache:
-    install: '1'
-    docroot: /vagrant/htdocs
-    servername: bewelcome
-mysql:
-    install: '1'
-    database: bewelcome
-    user: bewelcome
-    password: bewelcome
-    dump_root: [bewelcome.sql.bz2]
-    dump: [
-        languages.sql.bz2,
-        words.sql.bz2
-    ]
 php:
     install: '1'
     packages: [
@@ -41,7 +24,6 @@ composer:
 js_packages:
     install: '1'
 rox:
-    root_folder: /vagrant
     working_files: [
         build/alias.cache.ini,
         build/autoload.cache.ini,

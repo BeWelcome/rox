@@ -1,0 +1,15 @@
+---
+# Uncomment and fill the section below
+
+# apache:
+#     install: '1'
+#     docroot:
+#     servername:
+# mysql:
+#     install: '1'
+#     database:
+#     user:
+#     password:
+#     dump_root: []
+#     dump: []
+# root_folder:

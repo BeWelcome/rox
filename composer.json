@@ -1,5 +1,5 @@
 {
-    "repositories":[
+    "repositories": [
         {
             "type": "package",
             "package": {
@@ -22,7 +22,7 @@
     ],
     "license": "GPL",
     "require": {
-        "php" : ">=5.4.0",
+        "php": ">=5.4.0",
         "anthonymartin/geo-location": "^1.0",
         "components/font-awesome": "4.*",
         "components/jquery": "^2.1",
@@ -65,6 +65,13 @@
         "psr-4": {
             "Rox\\": "Rox/"
         },
-        "classmap": [ "modules/", "lib/", "tools/", "pthacks/", "roxlauncher/", "build/" ]
+        "classmap": [
+            "modules/",
+            "lib/",
+            "tools/",
+            "pthacks/",
+            "roxlauncher/",
+            "build/"
+        ]
     }
 }

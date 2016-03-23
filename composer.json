@@ -1,31 +1,8 @@
 {
-    "repositories": [
-        {
-            "type": "package",
-            "package": {
-                "name": "twbs/bootstrap4",
-                "version": "4.0",
-                "source": {
-                    "url": "https://github.com/twbs/bootstrap.git",
-                    "type": "git",
-                    "reference": "v4-dev"
-                }
-            }
-        },
-        {
-            "packagist": false
-        },
-        {
-            "type": "composer",
-            "url": "https://packagist.org/"
-        }
-    ],
     "license": "GPL",
     "require": {
         "php": ">=5.4.0",
         "anthonymartin/geo-location": "^1.0",
-        "components/font-awesome": "4.*",
-        "components/jquery": "^2.1",
         "ezyang/htmlpurifier": "4.*",
         "foolz/sphinxql-query-builder": "^1.0",
         "html2text/html2text": "3.*",
@@ -35,7 +12,6 @@
         "michelf/php-markdown": "*",
         "psr/log": "*",
         "robmorgan/phinx": "*",
-        "select2/select2": "4.*",
         "swiftmailer/swiftmailer": "5.*",
         "symfony/asset": "~3.1",
         "symfony/debug": "~3.1",
@@ -63,7 +39,10 @@
     },
     "autoload": {
         "psr-4": {
-            "Rox\\": "Rox/"
+            "Rox\\": "Rox/",
+            "Rox\\Core\\": "bundle/Core/src",
+            "Rox\\I18n\\": "bundle/I18n/src",
+            "Rox\\Start\\": "bundle/Start/src"
         },
         "classmap": [
             "modules/",
@@ -73,5 +52,8 @@
             "roxlauncher/",
             "build/"
         ]
+    },
+    "scripts": {
+        "serve": "php -S 0:8000 -t htdocs/ htdocs/index.php"
     }
 }

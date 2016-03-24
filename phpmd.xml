@@ -7,7 +7,20 @@
          xsi:noNamespaceSchemaLocation="
                      http://pmd.sf.net/ruleset_xml_schema.xsd">
 
-    <rule ref="rulesets/cleancode.xml" />
+    <rule ref="rulesets/cleancode.xml">
+        <exclude name="StaticAccess" />
+    </rule>
+
+    <rule name="StaticAccess"
+          since="1.4.0"
+          message="Avoid using static access to class '{0}' in method '{1}'."
+          class="PHPMD\Rule\CleanCode\StaticAccess"
+          externalInfoUrl="http://phpmd.org/rules/cleancode.html#staticaccess">
+        <priority>3</priority>
+        <properties>
+            <property name="exceptions" value="\Locale" />
+        </properties>
+    </rule>
 
     <rule ref="rulesets/codesize.xml" />
 

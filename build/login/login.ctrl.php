@@ -42,9 +42,6 @@ class LoginController extends RoxControllerBase
 
     public function loginCallback($args, $action, $mem_for_redirect)
     {
-        $count = $action->count;
-        $redirect_req = $action->redirect_req;
-
         $post = $args->post;
         $request = $args->request;
 

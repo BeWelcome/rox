@@ -32,20 +32,22 @@ $map_conf = PVars::getObj('map');
 <input type="hidden" id="osm-tiles-provider-api-key"
        value="<?php echo($map_conf->osm_tiles_provider_api_key); ?>"/>
 
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title"><?php echo $words->get('Location'); ?>
-            <small class="pull-right">Bitte fülle alle Felder aus.</small>
-        </h3>
-        <progress class="progress progress-success" value="75" max="100">
-            <div class="progress">
-                <span class="progress-bar" style="width: 75%;">75%</span>
+
+
+    <div class="card card-block">
+        <div class="row">
+            <div class="card-header">
+                <h4 class="card-title"><?php echo $words->get('Location'); ?><small class="pull-right">Step 3/4</small></h4>
+                <progress class="progress progress-striped progress-success" value="75" max="100">
+                    <div class="progress">
+                        <span class="progress-bar" style="width: 75%;">75%</span>
+                    </div>
+                </progress>
+                <h4><small>Please fill out all fields</small></h4>
             </div>
-        </progress>
-    </div>
-    <div class="card-block">
-        <form method="post" action="<?php echo $baseuri.'signup/4' ?>"
-              class="form" name="geo-form-js" id="geo-form-js">
+        </div>
+
+        <form method="post" action="<?php echo $baseuri.'signup/4' ?>" class="form" name="geo-form-js" id="geo-form-js">
             <?= $callback_tag ?>
             <div class="row">
                 <div class="col-xs-12">
@@ -85,7 +87,11 @@ $map_conf = PVars::getObj('map');
                 <div id="map" class="m-b-1" style="width: 100%; height: 440px; border: 1px solid #aaa;"></div>
             </div>
         </div><!-- subcolumns -->
-        <input type="submit" class="form-control btn btn-primary" value="<?php echo $words->getSilent('NextStep'); ?>" /><?php echo $words->flushBuffer(); ?>
+
+            <div class="form-group row">
+                <div class="col-xs-12">
+                <input type="submit" value="<?php echo $words->getSilent('NextStep'); ?>" class="form-control btn btn-primary" ><?php echo $words->flushBuffer(); ?>
+                </div>
+            </div>
     </form>
 </div>
-    </div>

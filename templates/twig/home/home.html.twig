@@ -38,14 +38,16 @@
                                 </div>
                             </div>
                             {# where do you want to go? #}
-                            <div class="col-xs-12 col-md-12 col-lg-4 fullheight">
-                                <div class="input-group verticalalign">
-                                    <input type="text" class="form-control" placeholder="Where do you want to go?">
-                                      <span class="input-group-btn">
-                                        <button class="btn btn-primary" type="button"><i class="fa fa-globe"></i> Go</button>
-                                      </span>
+                            <form method="post" action="search/members" name="searchlocation" class="fullheight">
+                                <div class="col-xs-12 col-md-12 col-lg-4 fullheight">
+                                    <div class="input-group verticalalign">
+                                            <input type="text" class="form-control" placeholder="Where do you want to go?">
+                                              <span class="input-group-btn">
+                                                <button class="btn btn-primary" type="submit"><i class="fa fa-globe"></i> Go</button>
+                                              </span>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>

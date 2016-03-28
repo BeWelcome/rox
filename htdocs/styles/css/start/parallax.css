@@ -91,7 +91,7 @@ html, body {
     background: url(/images/homepicture-1200px_1.jpg) no-repeat center center fixed;
     background-color:#000;
     display: table;
-    height: 700px;
+    height: 1300px;
     position: relative;
     width: 100%;
     -webkit-background-size: cover;
@@ -105,6 +105,7 @@ html, body {
     color: white;
     border-top: 6px solid #EFEFEF;
     border-bottom: 6px solid #EFEFEF;
+    height:730px;
 }
 #about .col-xs-12.col-sm-6.col-md-2 {
     margin-left:1rem;
@@ -117,7 +118,7 @@ html, body {
 #about_trailing {
     background: url(/images/homepicture-1200px_2.jpg) no-repeat center center fixed;
     display: table;
-    height: 600px;
+    height: 1300px;
     position: relative;
     width: 100%;
     -webkit-background-size: cover;
@@ -147,7 +148,7 @@ html, body {
 #statistics_trailing {
     background: url(/images/homepicture-1200px_3.jpg) no-repeat center center fixed;
     display: table;
-    height: 600px;
+    height: 1300px;
     position: relative;
     width: 100%;
     -webkit-background-size: cover;
@@ -158,9 +159,9 @@ html, body {
 #statistics_trailing_blur {
     background: url(http://i66.tinypic.com/21djua0.jpg) no-repeat center center fixed;
     display: table;
-    height: 600px;
+    height: 1300px;
     position: relative;
-    margin-top:-1400px;
+    margin-top: -1300px;
     width: 100%;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -220,6 +221,45 @@ html, body {
     right: 0px;
     padding:0px;
     bottom: 234px;
+}
+#landingcontainer.container {
+    top: 0px;
+    position: absolute;
+    width: 100% !important;
+    height: 100%;
+    background-color:rgba(0, 0, 0, 0.4);
+    padding: 0;
+    max-width: 100%;
+    padding: 0px;
+}
+#landingcontainer .row {
+    margin:0 !important;
+}
+#landingcontainerdiv {
+    background-color: rgba(0, 0, 0, 0);
+    padding-top: 32px !important;
+    box-shadow: none;
+}
+#landingcontainerdiv p{
+    font-family: Signika;
+    font-weight: 300;
+    margin-bottom: 1.2rem;
+    color:white;
+}
+#landingcontainerdiv h1 {
+    margin-bottom:0.1rem;
+    color:white;
+}
+#landingcontainerdiv form input {
+    margin:0px auto;
+    margin-bottom: 26px;
+    width: 61.8%;
+}
+#landingcontainerdiv form input.btn-primary {
+    width: 38.2%;
+    height: 52px;
+    font-size:1.25rem;
+    border: 1px solid transparent;
 }
 h1 {
     font-size: 4.25em;

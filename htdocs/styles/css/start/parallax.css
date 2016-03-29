@@ -246,6 +246,10 @@ html, body {
     margin-bottom: 1.2rem;
     color:white;
 }
+#landingcontainerdiv p small{
+    font-family: Lato;
+    color:white;
+}
 #landingcontainerdiv h1 {
     margin-bottom:0.1rem;
     color:white;
@@ -254,12 +258,18 @@ html, body {
     margin:0px auto;
     margin-bottom: 26px;
     width: 61.8%;
+    border: 1px solid white;
+    border-radius: 0.1rem;
 }
 #landingcontainerdiv form input.btn-primary {
     width: 38.2%;
     height: 52px;
     font-size:1.25rem;
     border: 1px solid transparent;
+    border-radius:3px;
+    font-family:Signika;
+    box-shadow: 0 0 5px 1px #d76200 inset;
+    border: 2px solid white;
 }
 h1 {
     font-size: 4.25em;

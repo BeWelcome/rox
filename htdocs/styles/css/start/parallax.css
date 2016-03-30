@@ -305,7 +305,7 @@ html, body {
     box-shadow: none;
 }
 #landingcontainerdiv p{
-    font-family: Signika;
+    font-family: Signika-Regular, sans-serif;
     font-weight: 300;
     margin-bottom: 3.2rem;
     color:white;

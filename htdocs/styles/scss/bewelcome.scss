@@ -26,7 +26,7 @@ $font-path: '../fonts/';
 
 // Core variables and mixins
 @import "custom";
-@import "../../../vendor/twbs/bootstrap4/scss/bootstrap";
+@import "../../../node_modules/bootstrap/scss/bootstrap";
 
 @import "general";
 
@@ -39,7 +39,7 @@ $font-path: '../fonts/';
 @import "edit";
 
 // select2
-@import "../../../vendor/select2/select2/src/scss/core";
+@import "../../../node_modules/select2/src/scss/core";
 @import "select2-bootstrap4";
 
 // Set yaml classes to keep old style alive and constistent

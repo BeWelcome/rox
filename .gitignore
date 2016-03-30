@@ -40,3 +40,4 @@ phpmd.html
 phpmetrics.html
 VERSION
 htdocs/assets/
+config/*.local.yml

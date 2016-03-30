@@ -21,7 +21,7 @@ Boston, MA  02111-1307, USA.
 
 */
 
-use Foolz\SphinxQL\Drivers\Mysqli\Connection;
+use Foolz\SphinxQL\Drivers\Pdo\Connection;
 use Foolz\SphinxQL\SphinxQL;
 use AnthonyMartin\GeoLocation\GeoLocation as GeoLocation;
 

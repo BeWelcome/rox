@@ -1,5 +1,6 @@
 <?php
-use Symfony\Component\Routing\Router;
+
+use Symfony\Component\Templating\EngineInterface;
 
 /**
    *
@@ -13,7 +14,19 @@ class PageWithRoxLayout extends PageWithHTML
     protected $locator = null;
     protected $yamlFileLocator = null;
     protected $router = null;
-    
+
+    /**
+     * @var EngineInterface
+     */
+    protected $engine;
+
+    public function setEngine(EngineInterface $engine)
+    {
+        $this->engine = $engine;
+
+        return $this;
+    }
+
     /*
      * Return a list of stylesheets to be included.
      */
@@ -215,13 +228,14 @@ class PageWithRoxLayout extends PageWithHTML
             SCRIPT_BASE.'routes.yml'
         );
 
-        $twigView = new \Rox\Framework\TwigView($this->router);
         if ($logged_in) {
-            $twigView->setTemplate('menu.html.twig', 'base');
+            $template = '@core/menu.html.twig';
         } else {
-            $twigView->setTemplate('loginbar.html.twig', 'base');
+            $template = '@core/loginbar.html.twig';
         }
-        $topmenu =  $twigView->render();
+
+        $topmenu = $this->engine->render($template);
+
         echo $topmenu;
     }
 
@@ -298,10 +312,7 @@ class PageWithRoxLayout extends PageWithHTML
      */
     protected function footer()
     {
-        $twigView = new \Rox\Framework\TwigView($this->router);
-        $twigView->setTemplate('footer.html.twig', 'base');
-        $footer = $twigView->render();
-        echo $footer;
+        echo $this->engine->render('@core/footer.html.twig');
         // require SCRIPT_BASE . "build/rox/templates/footer.php";
     }
 

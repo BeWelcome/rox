@@ -1,16 +1,22 @@
 <?php
 
+use Symfony\Component\Templating\EngineInterface;
 
 class RoxFrontRouter
 {
     use \Rox\RoxTraits\SessionTrait;
 
+    protected $engine;
+
     private $args;
     private $router;
 
-    public function __construct()
+    public function __construct(EngineInterface $engine)
     {
         $this->setSession();
+
+        $this->engine = $engine;
+
         $this->router = new RequestRouter();
         $this->args = $this->router->getRequestAndArgs();
     }

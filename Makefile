@@ -37,4 +37,4 @@ phpmetrics:
 	php -d memory_limit=512M ./vendor/bin/phpmetrics --config=phpmetrics.yml
 
 version:
-	git rev-parse HEAD | cut -b 1-7 > VERSION
+	git rev-parse --short HEAD > VERSION

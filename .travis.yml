@@ -18,7 +18,3 @@ install:
 
 script:
   - make && make build
-  - make -i phpmd
-  - make -i php-cs-fixer
-  - make -i php-code-sniffer
-  - make -i phpunit

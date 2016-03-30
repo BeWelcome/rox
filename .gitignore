@@ -39,3 +39,4 @@ coverage/
 phpmd.html
 phpmetrics.html
 VERSION
+htdocs/assets/

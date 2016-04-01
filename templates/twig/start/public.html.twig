@@ -29,22 +29,35 @@
     <div id="home"
          data-start="background-position: 0px 0px;"
          data-end="background-position: 0px -100px;">
-        <div class="container" id="landingcontainer" data-start="background-color:rgba(0, 0, 0, 0.4)"
-                                                     data-600-start="background-color:rgba(0, 0, 0, 0.0)">
+        <div class="container" id="landingcontainer" data-start="background-color:rgba(0, 0, 0, 0.4); box-shadow: 0px 0px 100px 25px rgba(0, 0, 0, 0.4) inset;"
+                                                     data-600-start="background-color:rgba(0, 0, 0, 0.0); box-shadow: 0px 0px 100px -100px rgba(0, 0, 0, 0.4) inset;">
             <div class="row m-t-3">
                 <div class="col-xs-0 col-md-3"></div>
                 <div class="col-xs-12 col-md-6 card p-a-1 text-xs-center" id="landingcontainerdiv" 
-                     data-start="opacity:1; position:fixed; right: 50%; transform: translateX(50%);"
-                     data-300-start="opacity:0">
-                    <h1>BeWelcome is a cultural crossing network</h1>
-                    <p style="text-align: center; font-size:1.25em;">which lets you share a place to stay, connect with travellers, meet up and find accommodation on your journey</p>
+                                                                          data-start="position:fixed; right: 50%; transform: translateX(50%);"
+                                                                          >
+                    <h1 data-start="color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0), 0px 0px 3px rgba(255,255,255,0)"
+                        data-200-start= "color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0.5), 0px 0px 3px rgba(255,255,255,0.5)"
+                        data-250-start="color:rgba(255,255,255,0); text-shadow:3px 0px 3px rgba(255,255,255,0.25), -3px 0px 3px rgba(255,255,255,0.25)"
+                        data-300-start="color:rgba(255,255,255,0); text-shadow: 6px 0px 6px rgba(255,255,255,0), -6px 0px 6px rgba(255,255,255,0)">BeWelcome is a cultural crossing network</h1>
+                    <p data-start="color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0)"
+                        data-200-start= "color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0)"
+                        data-250-start="color:rgba(255,255,255,0); text-shadow:0px 0px 3px rgba(255,255,255,0.3)"
+                        data-300-start="color:rgba(255,255,255,0); text-shadow:0px 0px 3px rgba(255,255,255,0)">which lets you share a place to stay, connect with travellers, meet up and find accommodation on your journey</p>
 
-                        <form method="post" novalidate action="signup/1" name="signup" id="user-register-form" class="form" role="form">
-                        <input type="email" autocomplete="email" class="form-control" placeholder="Your e-mail">
+                        <form data-start="opacity:1"
+                              data-200-start="opacity:1"
+                              data-300-start="opacity:0" 
+                              method="post" novalidate action="signup/1" name="signup" id="user-register-form" class="form" role="form">
+                        <input data-start="opacity:1"
+                               data-200-start
+                               data-300-start="opacity:0" 
+                               type="email" autocomplete="email" class="form-control" placeholder="Your e-mail">
                               <input type="submit" class="form-control btn btn-primary" value="Join BeWelcome!">
                         </form>
 
-                    <p><small class="smaller">BeWelcome is and <a href="#">will always be</a> a free, open source, non for profit, democratic community</small></p>
+                    <p data-start="opacity:1"
+                       data-320-start="opacity:0"><small class="smaller">BeWelcome is and <a href="#">will always be</a> a free, open source, non for profit, democratic community</small></p>
                 </div>
                 <div class="col-xs-0 col-md-3"></div>
             </div>
@@ -59,19 +72,19 @@
             </div>
             <div class="row" style="width: 100%; position:absolute; top: 912px;">
                         <a href="#bottom" class="chevron_down"
-                           data--50-bottom="opacity:0.4"
-                           data--100-bottom="opacity:1"
-                           data--250-bottom="opacity:1"
-                           data--350-bottom="opacity:0">
+                           data--150-bottom="opacity:0"
+                           data--200-bottom="opacity:1"
+                           data--350-bottom="opacity:1"
+                           data--450-bottom="opacity:0">
                            <i class="chevron_icon fa fa-3x fa-chevron-down"></i>
                        </a>
                        <img class="chevron_down_img" src="http://i64.tinypic.com/978twn.png"
-                            data--30-bottom="opacity:0.4"
-                            data--50-bottom="opacity:1"
-                            data--100-bottom="opacity:0.4"
-                            data--300-bottom="opacity:0.4"
-                            data--330-bottom="opacity:1"
-                            data--350-bottom="opacity:0">
+                            data--130-bottom="opacity:0"
+                            data--150-bottom="opacity:1"
+                            data--200-bottom="opacity:0.4"
+                            data--400-bottom="opacity:0.4"
+                            data--430-bottom="opacity:1"
+                            data--450-bottom="opacity:0">
             </div>
         </div>
     </div>
@@ -100,8 +113,8 @@
             <div class="row">
                 <div class="col-xs-12" 
                     data-bottom="opacity:0;"
-                    data--100-bottom="opacity:1"><h1 data-bottom="letter-spacing: 0.35em;" data--200-bottom="letter-spacing: 0.1em;">{{ 'tourpage' | trans }}</h1>
-                <p style="text-align: center; font-size:1.25em;">{{ 'tourpage_title1' | trans }}</p>
+                    data--100-bottom="opacity:1"><h1 data-bottom="letter-spacing: 0.35em; text-shadow:0 0 30px rgba(0,0,0,0.8)" data--200-bottom="letter-spacing: 0.1em; text-shadow: 0 0 60px rgba(0,0,0,0.2)">{{ 'tourpage' | trans }}</h1>
+                <p style="text-align: center; font-size:1.25em;"></p>
                 </div>
             </div>
             <div class="row">
@@ -147,12 +160,12 @@
         <div class="container">
             <div class="row" style="color:white"
                 data-2000-start="position:fixed">
-                <h1 data-2000-start="opacity:0;"
-                    data-2050-start="text-shadow: 0px 0px 6px rgba(255, 255, 255, 1);"
-                    data-2150-start="opacity:1;"
-                    data-2200-start="text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.6);"
-                    data-2400-start="opacity:1"
-                    data-2600-start="opacity:0">{{ 'We are 100% volunteers, Non-Profit and Open Source' | trans }}</h1>
+                <h1 data-2000-start="color:rgba(255,255,255,0); text-shadow: 6px 0px 3px rgba(255,255,255,0), -6px 0px 3px rgba(255,255,255,0);"
+                    data-2050-start="color:rgba(255,255,255,0); text-shadow:3px 0px 3px rgba(255,255,255,0.25), -3px 0px 3px rgba(255,255,255,0.25);"
+                    data-2150-start="color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0.5), 0px 0px 3px rgba(255,255,255,0.5)"
+                    data-2400-start="color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0.5), 0px 0px 3px rgba(255,255,255,0.5)"
+                    data-2600-start="color:rgba(255,255,255,0); text-shadow:3px 0px 3px rgba(255,255,255,0.25), -3px 0px 3px rgba(255,255,255,0.25)"
+                    data-2800-start="color:rgba(255,255,255,0); text-shadow: 6px 0px 3px rgba(255,255,255,0), -6px 0px 3px rgba(255,255,255,0);">{{ 'We are 100% volunteers, Non-Profit and Open Source' | trans }}</h1>
             </div>
         </div>
     </div>
@@ -164,7 +177,6 @@
                 <div class="col-xs-12"
                     data-bottom="opacity:0"
                     data--100-bottom="opacity:1"><h1 style="text-align: center" data-bottom="letter-spacing: 0.35em;" data--200-bottom="letter-spacing: 0.1em;">Some statistics</h1>
-                <p style="text-align: center; font-size:1.25em;">BeWelcome is about real life activity and travel experiences. Don't take the information on this page too serious...</p>
                 </div>
             </div>
             <div class="row">
@@ -212,13 +224,19 @@
             data-end="position:fixed">
             <div class="container" data-start="position:relative; bottom:0px" data-end="position:relative">
                 <div class="row">
-                    <div class="col-sm-12"><h1 style="letter-spacing:0px" data-400-end="opacity:0;" data-200-end="opacity:1; text-shadow: 0px 0px 10px rgba(185, 185, 185, 1);" data-end="text-shadow: 0px 0px 3px rgba(185, 185, 185, 0.5);">{{ 'The world is just one step from here' | trans }}</h1>
-                    <p style="text-align: center; font-size:1.25em;" data-350-end="opacity:0;" data-150-end="opacity:1">{{ 'We believe that sharing creates a better world. You can let people stay over or show them around. It\'s easy and it\'s called hospitality.' | trans }}</p>
+                    <div class="col-sm-12"><h1 style="letter-spacing:0px" 
+                                                data-500-end="color:rgba(255,255,255,0); text-shadow: 6px 0px 10px rgba(255,255,255,0),-6px 0px 10px rgba(255,255,255,0)"
+                                                data-300-end="color:rgba(255,255,255,0); text-shadow: 3px 0px 5px rgba(255,255,255,0.4),-3px 0px 5px rgba(255,255,255,0.4)"  
+                                                data-100-end="color:rgba(255,255,255,1); text-shadow: 0px 0px 0px rgba(255,255,255,0), 0px 0px 0px rgba(255,255,255,0)" 
+                                                >{{ 'The world is just one step from here' | trans }}</h1>
+                    <p data-400-end="color:rgba(255,255,255,0); text-shadow: 0px 0px 6px rgba(255,255,255,0)"
+                       data-200-end="color:rgba(255,255,255,0.2); text-shadow: 0px 0px 2px rgba(255,255,255,0.4)"data-end="color:rgba(255,255,255,1); text-shadow: 0px 0px 0px rgba(255,255,255,0)">{{ 'We believe that sharing creates a better world. You can let people stay over or show them around. It\'s easy and it\'s called hospitality.' | trans }}</p>
                     </div>
                     </div>
+                <div class="col-sm-1 col-sm-offset-1"></div>
                 <form method="post" class="col-sm-4 col-sm-offset-1">
                 <div class="form-group" data-250-end="opacity:0;" data-50-end="opacity:1">
-                    <span style="font-size: 1.625em; text-transform:uppercase; display: block; letter-spacing: 0.03em;font-weight:700;text-shadow: 0px 0px 3px rgba(0, 0, 0, 1);">{{ 'IndexPageWord_share' | trans }}</span>
+                    <span>{{ 'IndexPageWord_share' | trans }}</span>
                     <span style="display: block;">{{ 'and start meeting people from everywhere.' | trans }}</span>
                 </div>
                 <div class="input-group" data-200-end="opacity:0;" data-0-end="opacity:1">
@@ -229,9 +247,10 @@
                     <span class="input-group-addon"><i class="fa fa-lg fa-chevron-right"></i></span>
                 </div>
                 </form>
+                <div class="col-sm-2 col-sm-offset-1"></div>
                 <form method="post" class="col-sm-4 col-sm-offset-1">
                 <div class="form-group" data-250-end="opacity:0;" data-50-end="opacity:1">
-                    <span style="font-size: 1.625em; text-transform:uppercase; display: block; letter-spacing: 0.03em;font-weight:700;text-shadow: 0px 0px 3px rgba(0, 0, 0, 1);">{{ 'Find a place to stay' | trans }}</span>
+                    <span>{{ 'Find a place to stay' | trans }}</span>
                     <span style="display: block;">{{ 'and meet locals when traveling worldwide.' | trans }}</span>
                 </div>
                 <div class="input-group" data-200-end="opacity:0;" data-0-end="opacity:1">
@@ -239,9 +258,10 @@
                     <input type="text" class="form-control" name="go"
                            placeholder="{{ 'Where do you want to go?' | trans }}"
                            value=""/>
-                    <span class="input-group-addon"><i class="fa fa-chevron-right"></i></span>
+                    <span class="input-group-addon"><i class="fa fa-lg fa-chevron-right"></i></span>
                 </div>
                 </form>
+                <div class="col-sm-1 col-sm-offset-1"></div>
             </div>
         </div>
     </div>

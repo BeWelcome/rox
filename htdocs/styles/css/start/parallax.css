@@ -156,6 +156,14 @@ html, body {
     -o-background-size: cover;
     background-size: cover;
 }
+#statistics_trailing p {
+    font-family: Signika;
+    font-weight: 300;
+    margin-bottom: 1.2rem;
+    color:white;
+    text-align: center;
+    font-size: 1.25rem;
+}
 #statistics_trailing_blur {
     background: url(http://i66.tinypic.com/21djua0.jpg) no-repeat center center fixed;
     display: table;
@@ -192,8 +200,41 @@ html, body {
     -o-background-size: cover;
     background-size: cover;
 }
-#search .input-group-addon {
-    border: 1px solid #ECEEEF;
+#search .form-group span {
+    font-size: 1.625rem;
+    text-transform: uppercase;
+    display: block;
+    letter-spacing: 0.03em;
+    font-weight: 700;
+    text-shadow: 0px 0px 3px rgb(0, 0, 0);
+    font-family:Signika;
+}
+#search .form-group span + span {
+    font-size: 1rem;
+    text-transform: none;
+    display: block;
+    letter-spacing:0rem;
+    font-weight: 300;
+    text-shadow: 0px 0px 3px rgb(0, 0, 0);
+    font-family:Signika;
+}
+#search .input-group span.input-group-addon:first-child{
+    background-color: white;
+    border: medium none;
+    color: rgb(194, 194, 194);
+    border-radius: 2px 0 0 2px;
+    cursor:none;
+}
+#search .input-group span.input-group-addon:nth-child(3){
+    background-color: #f37000;
+    box-shadow: 0 0 5px 1px #d76200 inset;
+    color: white;
+    border: 2px solid white;
+    border-radius: 0 2px 2px 0;
+    cursor:pointer;
+}
+#search .input-group span.input-group-addon:nth-child(3):hover{
+    background-color: #c05800;
 }
 #search .form-control {
     border: 1px solid rgb(255, 255, 255);
@@ -245,6 +286,8 @@ html, body {
     font-weight: 300;
     margin-bottom: 1.2rem;
     color:white;
+    text-align: center;
+    font-size: 1.25rem;
 }
 #landingcontainerdiv p small{
     font-family: Lato;

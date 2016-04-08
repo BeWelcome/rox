@@ -1,0 +1,20 @@
+.editimg{
+  float:left;
+  position:relative;
+}
+
+.overlay{
+  position:absolute;
+  bottom:0px;
+  left:0px;
+  width:100%;
+  background-color: #fff;
+  color: #000;
+  opacity:0.6;
+  filter:alpha(opacity=60);
+}
+
+.transparentinput{
+  background-color: transparent !important;
+  border: 0px;
+}

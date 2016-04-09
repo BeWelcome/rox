@@ -1,0 +1,88 @@
+{
+  "name": "bewelcome-rox",
+  "version": "3.0.0",
+  "dependencies": {
+    "bootstrap": {
+      "version": "4.0.0-alpha.2",
+      "from": "twbs/bootstrap#064fda0e802679e56e88db2910fdf5369dde6e4c",
+      "resolved": "git://github.com/twbs/bootstrap.git#064fda0e802679e56e88db2910fdf5369dde6e4c"
+    },
+    "bootstrap-autohidingnavbar": {
+      "version": "1.0.5",
+      "from": "istvan-ujjmeszaros/bootstrap-autohidingnavbar",
+      "resolved": "git://github.com/istvan-ujjmeszaros/bootstrap-autohidingnavbar.git#52eb7784e55715fcc99f59e954be15e22f082ad1"
+    },
+    "font-awesome": {
+      "version": "4.5.0",
+      "from": "font-awesome@>=4.5.0 <5.0.0",
+      "resolved": "https://registry.npmjs.org/font-awesome/-/font-awesome-4.5.0.tgz"
+    },
+    "html5shiv": {
+      "version": "3.7.3",
+      "from": "html5shiv@>=3.7.3 <4.0.0",
+      "resolved": "https://registry.npmjs.org/html5shiv/-/html5shiv-3.7.3.tgz"
+    },
+    "jquery": {
+      "version": "2.2.2",
+      "from": "jquery@>=2.1.4 <3.0.0",
+      "resolved": "https://registry.npmjs.org/jquery/-/jquery-2.2.2.tgz"
+    },
+    "jquery-ui": {
+      "version": "1.11.4",
+      "from": "jquery/jquery-ui#1.11.4",
+      "resolved": "git://github.com/jquery/jquery-ui.git#d6713024e16de90ea71dc0544ba34e1df01b4d8a"
+    },
+    "lato-font": {
+      "version": "1.1.1",
+      "from": "lato-font@>=1.1.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/lato-font/-/lato-font-1.1.1.tgz"
+    },
+    "leaflet": {
+      "version": "0.7.7",
+      "from": "leaflet@>=0.7.7 <0.8.0",
+      "resolved": "https://registry.npmjs.org/leaflet/-/leaflet-0.7.7.tgz"
+    },
+    "leaflet.markercluster": {
+      "version": "0.4.0",
+      "from": "leaflet.markercluster@>=0.4.0 <0.5.0",
+      "resolved": "https://registry.npmjs.org/leaflet.markercluster/-/leaflet.markercluster-0.4.0.tgz"
+    },
+    "respond.js": {
+      "version": "1.4.2",
+      "from": "respond.js@>=1.4.2 <2.0.0",
+      "resolved": "https://registry.npmjs.org/respond.js/-/respond.js-1.4.2.tgz"
+    },
+    "select2": {
+      "version": "4.0.2",
+      "from": "select2@>=4.0.2 <5.0.0",
+      "resolved": "https://registry.npmjs.org/select2/-/select2-4.0.2.tgz",
+      "dependencies": {
+        "almond": {
+          "version": "0.3.1",
+          "from": "almond@>=0.3.1 <0.4.0",
+          "resolved": "https://registry.npmjs.org/almond/-/almond-0.3.1.tgz"
+        },
+        "jquery-mousewheel": {
+          "version": "3.1.13",
+          "from": "jquery-mousewheel@>=3.1.13 <3.2.0",
+          "resolved": "https://registry.npmjs.org/jquery-mousewheel/-/jquery-mousewheel-3.1.13.tgz"
+        }
+      }
+    },
+    "skrollr": {
+      "version": "0.6.26",
+      "from": "skrollr@>=0.6.26 <0.7.0",
+      "resolved": "https://registry.npmjs.org/skrollr/-/skrollr-0.6.26.tgz"
+    },
+    "skrollr-menu": {
+      "version": "1.0.3",
+      "from": "prinzhorn/skrollr-menu",
+      "resolved": "git://github.com/prinzhorn/skrollr-menu.git#8d3f086f1ced9e14d975f3b7a96e75ce8b4fc5d5"
+    },
+    "tether": {
+      "version": "1.2.0",
+      "from": "tether@>=1.2.0 <1.3.0",
+      "resolved": "https://registry.npmjs.org/tether/-/tether-1.2.0.tgz"
+    }
+  }
+}

@@ -4,6 +4,10 @@
     margin: 0;
   }
 
+  .nav-item:hover{
+    text-shadow: 2px 2px 2px #fff, -2px -2px -2px #fff;
+  }
+
   .nav-link {
     display: block;
     padding-top:    .425rem;
@@ -38,7 +42,7 @@
   width: 100%;
   position: fixed;
   left: 0;
-  top: 42px;
+  top: 41px;
   background-color: rgba($brand-primary,0.95);
   border-top: 1px solid #fff;
   border-radius: 0;
@@ -72,4 +76,8 @@
 
 a.subnavtitle:hover {
   color: #000 !important;
+}
+
+.usermenu{
+  border-left: 1px solid #fff;
 }

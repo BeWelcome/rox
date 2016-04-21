@@ -36,3 +36,5 @@ auth.json
 
 /ansible/cert.crt
 /ansible/key.pem
+/ansible/group_vars/production.yml
+

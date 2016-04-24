@@ -4,14 +4,14 @@
 
             <a class="navbar-brand" href="/home"><img src="/images/logo_index_top.png" alt="{{ 'BeWelcome' | trans }}"/></a>
 
-            <button class="navbar-toggler hidden-md-up pull-xs-right" data-toggle="collapse" data-target="#exCollapsingNavbar1">
+            <button class="navbar-toggler hidden-md-up pull-xs-right" data-toggle="collapse" data-target="#mainNavBar">
                 &#9776;
             </button>
 
-            <div class="collapse navbar-toggleable-md hidden-md-up" id="exCollapsingNavbar1">
+            <div class="collapse navbar-toggleable-md hidden-md-up" id="mainNavBar">
                 <ul class="nav navbar-nav">
                     <li class="nav-item col-xs-12">
-                        <a href="/search" class="nav-link">{{ 'FindMembers' | trans }}</a>
+                        <a href="/search/members" class="nav-link">{{ 'FindMembers' | trans }}</a>
                     </li>
                     <li class="nav-item col-xs-12">
                         <a href="/trips" class="nav-link">{{ 'Trips' | trans }}</a>
@@ -28,16 +28,16 @@
                 </ul>
             </div>
 
-            <button class="navbar-toggler hidden-lg-up hidden-sm-down pull-xs-right" data-toggle="collapse" data-target="#exCollapsingNavbar2">
+            <button class="navbar-toggler hidden-lg-up hidden-sm-down pull-xs-right" data-toggle="collapse" data-target="#mainNavBar2">
                 &#9776;
             </button>
 
-            <div class="collapse navbar-toggleable-md" id="exCollapsingNavbar2">
+            <div class="collapse navbar-toggleable-md" id="mainNavBar2">
 
                     <ul class="nav navbar-nav">
                         <li class="navbar-divider hidden-md-down"></li>
                         <li class="nav-item">
-                            <a href="/search" class="nav-link">{{ 'FindMembers' | trans }}</a>
+                            <a href="/search/members" class="nav-link">{{ 'FindMembers' | trans }}</a>
                         </li>
                         <li class="navbar-divider hidden-md-down"></li>
                         <li class="nav-item">
@@ -54,37 +54,25 @@
                         <li class="navbar-divider hidden-md-down"></li>
                         <noscript><li class="nav-item"><a href="wiki/importantlinks" class="nav-link">All important links</a></li></noscript>
                         <li class="nav-item dropdown hidden-md-down">
-                            <a href="#" class="nav-link" id="dLabel" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a href="#" class="nav-link" id="subNavBar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 &#9776;
                             </a>
 
-                            <div class="dropdown-menu subnav" aria-labelledby="dLabel">
+                            <div class="dropdown-menu subnav" aria-labelledby="subNavBar">
                                <div class="container">
                                         <div class="p-t-1 p-b-1">
                                             <div class="row">
                                                 <div class="col-xs-12">
-                                                    <button type="button" class="close pull-xs-right" aria-label="Close" data-toggle="collapse" data-target="#exCollapsingNavbar1">
+                                                    <button type="button" class="close pull-xs-right" aria-label="Close" data-toggle="collapse" data-target="#mainNavBar2">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-xs-2">
-                                                    <a href="/about" class="h4 subnavtitle">{{ 'GetAnswers' | trans}}</a>
-                                                    <dl>
-                                                        <a href="/faq"><dd>{{ 'Faq' | trans}}</dd></a>
-                                                        <a href="/feedback"><dd>{{ 'ContactUs' | trans}}</dd></a>
-                                                        <a href="/wiki"><dd>{{ 'Wiki' | trans}}</dd></a>
-                                                        <a href="/stats"><dd>Statistics</dd></a>
-                                                        <a href="/terms"><dd>{{ 'TermsOfUse'  | trans}}</dd></a>
-                                                    </dl>
-                                                </div>
-
-                                                <div class="col-xs-2">
                                                     <a href="/search" class="h4 subnavtitle">{{ 'FindMembers' | trans }}</a>
                                                     <dl>
-                                                        <a href="/searchmembers"><dd>{{ 'MapSearch' | trans }}</dd></a>
-                                                        <a href="/search"><dd>{{ 'TextSearch' | trans }}</dd></a>
+                                                        <a href="/search/members"><dd>{{ 'MapSearch' | trans }}</dd></a>
                                                         <a href="/places"><dd>{{ 'BrowseCountries' | trans}}</dd></a>
                                                     </dl>
                                                 </div>
@@ -101,6 +89,17 @@
                                                 </div>
 
                                                 <div class="col-xs-2">
+                                                    <a href="/about" class="h4 subnavtitle">{{ 'GetAnswers' | trans}}</a>
+                                                    <dl>
+                                                        <a href="/faq"><dd>{{ 'Faq' | trans}}</dd></a>
+                                                        <a href="/feedback"><dd>{{ 'ContactUs' | trans}}</dd></a>
+                                                        <a href="/wiki"><dd>{{ 'Wiki' | trans}}</dd></a>
+                                                        <a href="/stats"><dd>Statistics</dd></a>
+                                                        <a href="/terms"><dd>{{ 'TermsOfUse'  | trans}}</dd></a>
+                                                    </dl>
+                                                </div>
+
+                                                <div class="col-xs-2">
                                                     <a href="/volunteer" class="h4 subnavtitle">{{ 'Volunteer' | trans}}</a>
                                                     <dl>
                                                         <a href="/about/getactive"><dd>{{ 'About_GetActive' | trans}}</dd></a>
@@ -111,7 +110,7 @@
                                                     </dl>
                                                 </div>
 
-                                                <div class="col-xs-4">
+                                                <div class="col-xs-4 usermenu">
                                                     <div class="col-xs-12 p-l-2 m-b-2">
                                                         <a href="/members/{{ username }}" class="h4"><img src="/members/avatar/{{ username }}?30_30"> {{ username }}</a>
                                                     </div>
@@ -138,12 +137,12 @@
                         <li class="nav-item dropdown pull-xs-right hidden-md-down">
                             <a href="/members/{{ username }}" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ username }} <span class="caret"></span></a>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                <li class="text-xs-right"><a href="/members/{{ username }}" class="dropdown-item"><img src="members/avatar/{{ username }}?30_30"> {{ 'MyProfile' | trans }}</a></li>
+                                <li class="text-xs-right"><a href="/members/{{ username }}" class="dropdown-item"><img src="members/avatar/{{ username }}?30_30"> {{ 'Profile' | trans }}</a></li>
                                 <li class="text-xs-right"><a href="/editmyprofile" class="dropdown-item">{{ 'EditMyProfile' | trans }}</a></li>
                                 <li class="text-xs-right"><a href="/mypreferences" class="dropdown-item">{{ 'MyPreferences' | trans }}</a></li>
                                 <li class="text-xs-right"><a href="/mynotes" class="dropdown-item">{{ 'ProfileMyNotes' | trans }}</a></li>
                                 <li class="text-xs-right"><a href="/groups/mygroups" class="dropdown-item">{{ 'MyGroups' | trans }}</a></li>
-                                <li class="text-xs-right"><a href="/trips" class="dropdown-item">{{ 'MyTrips' | trans }}</a></li>
+                                <li class="text-xs-right"><a href="/trips" class="dropdown-item">{{ 'TripsShowMy' | trans }}</a></li>
                                 <li class="text-xs-right"><a href="/logout" class="dropdown-item">{{ 'Logout' | trans }}</a></li>
                             </ul>
                         </li>

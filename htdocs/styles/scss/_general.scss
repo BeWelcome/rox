@@ -116,6 +116,27 @@ body {
   @include button-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border);
 }
 
+// radio buttons
+.btn-radio {
+  background-color: rgba($btn-primary-bg,.8);
+  border: 0px;
+  font-family: Signika-regular;
+  text-transform: capitalize;
+  box-shadow: 0 0 1px 1px #d47a2e inset;
+  margin:0;
+}
+
+.btn-radio:hover {
+  background-color: rgba($btn-primary-bg,1);
+  box-shadow: 0 0 1px 1px #cc5e00 inset;
+}
+
+.btn-radio.active, .btn-radio.active:focus {
+  background-color: rgba($btn-primary-bg,1) !important;
+  outline: none;
+  box-shadow: 0 0 1px 1px #b95500 inset;
+}
+
 // Flash notice styles
 .flash {
   border: 1px solid;
@@ -243,4 +264,12 @@ a {
 
 .smaller{
   font-size: 65%;
+}
+
+.icontext{
+  padding-left: 0.4rem;
+}
+
+.fullwidth{
+  width: 100%;
 }

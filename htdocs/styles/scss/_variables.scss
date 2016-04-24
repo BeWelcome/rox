@@ -431,15 +431,15 @@ $form-icon-danger: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My
 $dropdown-min-width:             160px !default;
 $dropdown-padding-y:             5px !default;
 $dropdown-margin-top:            2px !default;
-$dropdown-bg:                    transparentize(#000, 0.3);
+$dropdown-bg:                    transparentize(#000, 0.2);
 $dropdown-border-color:          rgba(255,255,255,.15) !default;
 $dropdown-border-width:          $border-width !default;
 $dropdown-divider-bg:            #e5e5e5 !default;
 $dropdown-box-shadow:            0 6px 12px rgba(0,0,0,.175) !default;
 
 $dropdown-link-color:            #fff !default;
-$dropdown-link-hover-color:      $brand-primary !default;
-$dropdown-link-hover-bg:         #000 !default;
+$dropdown-link-hover-color:      #fff !default;
+$dropdown-link-hover-bg:         $brand-primary !default;
 
 $dropdown-link-active-color:     $component-active-color !default;
 $dropdown-link-active-bg:        $component-active-bg !default;

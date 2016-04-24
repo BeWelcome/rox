@@ -91,7 +91,7 @@ html, body {
     background: url(/images/homepicture-1200px_1.jpg) no-repeat center center fixed;
     background-color:#000;
     display: table;
-    height: 700px;
+    height: 1300px;
     position: relative;
     width: 100%;
     -webkit-background-size: cover;
@@ -105,6 +105,7 @@ html, body {
     color: white;
     border-top: 6px solid #EFEFEF;
     border-bottom: 6px solid #EFEFEF;
+    height:730px;
 }
 #about .col-xs-12.col-sm-6.col-md-2 {
     margin-left:1rem;
@@ -117,7 +118,7 @@ html, body {
 #about_trailing {
     background: url(/images/homepicture-1200px_2.jpg) no-repeat center center fixed;
     display: table;
-    height: 600px;
+    height: 1300px;
     position: relative;
     width: 100%;
     -webkit-background-size: cover;
@@ -147,7 +148,7 @@ html, body {
 #statistics_trailing {
     background: url(/images/homepicture-1200px_3.jpg) no-repeat center center fixed;
     display: table;
-    height: 600px;
+    height: 1300px;
     position: relative;
     width: 100%;
     -webkit-background-size: cover;
@@ -155,12 +156,20 @@ html, body {
     -o-background-size: cover;
     background-size: cover;
 }
+#statistics_trailing p {
+    font-family: Signika;
+    font-weight: 300;
+    margin-bottom: 1.2rem;
+    color:white;
+    text-align: center;
+    font-size: 1.25rem;
+}
 #statistics_trailing_blur {
     background: url(http://i66.tinypic.com/21djua0.jpg) no-repeat center center fixed;
     display: table;
-    height: 600px;
+    height: 1300px;
     position: relative;
-    margin-top:-1400px;
+    margin-top: -1300px;
     width: 100%;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -191,8 +200,41 @@ html, body {
     -o-background-size: cover;
     background-size: cover;
 }
-#search .input-group-addon {
-    border: 1px solid #ECEEEF;
+#search .form-group span {
+    font-size: 1.625rem;
+    text-transform: uppercase;
+    display: block;
+    letter-spacing: 0.03em;
+    font-weight: 700;
+    text-shadow: 0px 0px 3px rgb(0, 0, 0);
+    font-family:Signika;
+}
+#search .form-group span + span {
+    font-size: 1rem;
+    text-transform: none;
+    display: block;
+    letter-spacing:0rem;
+    font-weight: 300;
+    text-shadow: 0px 0px 3px rgb(0, 0, 0);
+    font-family:Signika;
+}
+#search .input-group span.input-group-addon:first-child{
+    background-color: white;
+    border: medium none;
+    color: rgb(194, 194, 194);
+    border-radius: 2px 0 0 2px;
+    cursor:none;
+}
+#search .input-group span.input-group-addon:nth-child(3){
+    background-color: #f37000;
+    box-shadow: 0 0 5px 1px #d76200 inset;
+    color: white;
+    border: 2px solid white;
+    border-radius: 0 2px 2px 0;
+    cursor:pointer;
+}
+#search .input-group span.input-group-addon:nth-child(3):hover{
+    background-color: #c05800;
 }
 #search .form-control {
     border: 1px solid rgb(255, 255, 255);
@@ -220,6 +262,57 @@ html, body {
     right: 0px;
     padding:0px;
     bottom: 234px;
+}
+#landingcontainer.container {
+    top: 0px;
+    position: absolute;
+    width: 100% !important;
+    height: 100%;
+    background-color:rgba(0, 0, 0, 0.4);
+    padding: 0;
+    max-width: 100%;
+    padding: 0px;
+}
+#landingcontainer .row {
+    margin:0 !important;
+}
+#landingcontainerdiv {
+    background-color: rgba(0, 0, 0, 0);
+    padding-top: 32px !important;
+    box-shadow: none;
+}
+#landingcontainerdiv p{
+    font-family: Signika;
+    font-weight: 300;
+    margin-bottom: 1.2rem;
+    color:white;
+    text-align: center;
+    font-size: 1.25rem;
+}
+#landingcontainerdiv p small{
+    font-family: Lato;
+    color:white;
+}
+#landingcontainerdiv h1 {
+    margin-bottom:0.1rem;
+    color:white;
+}
+#landingcontainerdiv form input {
+    margin:0px auto;
+    margin-bottom: 26px;
+    width: 61.8%;
+    border: 1px solid white;
+    border-radius: 0.1rem;
+}
+#landingcontainerdiv form input.btn-primary {
+    width: 38.2%;
+    height: 52px;
+    font-size:1.25rem;
+    border: 1px solid transparent;
+    border-radius:3px;
+    font-family:Signika;
+    box-shadow: 0 0 5px 1px #d76200 inset;
+    border: 2px solid white;
 }
 h1 {
     font-size: 4.25em;

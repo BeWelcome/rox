@@ -51,8 +51,8 @@ Boston, MA  02111-1307, USA.
     ?>
 
     <div class="row invisible">
-        <div class="col-md-2"></div>
-        <div class="col-xs-12 col-md-5">
+        <div class="col-md-3"></div>
+        <div class="col-xs-12 col-md-4">
             <label for="sweet"><?php echo $words->get('SignupSweet'); ?></label>
             <input type="text" class="form-control" id="sweet" name="sweet" placeholder="<?php echo $words->get('SignupSweet'); ?>" value="" title="Leave free of content"/>
         </div>
@@ -61,8 +61,8 @@ Boston, MA  02111-1307, USA.
 
     <!-- Name -->
     <div class="form-group row">
-        <div class="col-md-2"></div>
-        <div class="col-xs-12 col-md-5">
+        <div class="col-md-3"></div>
+        <div class="col-xs-12 col-md-4">
 
             <!-- First name -->
             <fieldset class="form-group">
@@ -113,8 +113,8 @@ Boston, MA  02111-1307, USA.
     }
 ?>
     <div class="form-group row">
-        <div class="col-md-2"></div>
-        <div class="col-xs-12 col-md-5">
+        <div class="col-md-3"></div>
+        <div class="col-xs-12 col-md-4">
             <label for="mothertongue" class="control-label sr-only"><?php echo $words->get('LanguageLevel_MotherLanguage'); ?></label>
             <select required class="select2 form-control" name="mothertongue" id="mothertongue" data-placeholder="<?= $words->getBuffered('SignupSelectMotherTongue')?>">
                 <option></option>
@@ -134,8 +134,8 @@ Boston, MA  02111-1307, USA.
 
     <!-- Birth date -->
     <div class="form-group row">
-        <div class="col-md-2"></div>
-        <div class="col-xs-12 col-md-5">
+        <div class="col-md-3"></div>
+        <div class="col-xs-12 col-md-4">
             <h4><?php echo $words->get('SignupBirthDate'); ?></h4>
             <div class="form-inline">
                 <select required id="BirthDate" name="birthyear" class="form-control">
@@ -182,8 +182,8 @@ Boston, MA  02111-1307, USA.
 
     <!-- Gender -->
     <div class="form-group row">
-        <div class="col-md-2"></div>
-        <div class="col-xs-12 col-md-5">
+        <div class="col-md-3"></div>
+        <div class="col-xs-12 col-md-4">
             <div class="btn-group" data-toggle="buttons">
 
                 <label class="btn btn-primary <?php
@@ -231,8 +231,8 @@ Boston, MA  02111-1307, USA.
     </div>
 
     <div class="form-group row">
-        <div class="col-md-2"></div>
-        <div class="col-xs-12 col-md-5">
+        <div class="col-md-3"></div>
+        <div class="col-xs-12 col-md-4">
             <input type="submit" value="<?php echo $words->getSilent('NextStep'); ?>" class="form-control btn btn-primary" >
             <?php echo $words->flushBuffer(); ?>
         </div>

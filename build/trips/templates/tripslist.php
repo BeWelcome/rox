@@ -1,4 +1,3 @@
-<div>
 <?php
 if (!isset($geoname)) {
     $geoname = "";
@@ -16,4 +15,4 @@ if ($this->trips) {
 } else {
     echo $this->getWords()->getFormatted('TripsNoTripsFound');
 }
-?></div>
+?>

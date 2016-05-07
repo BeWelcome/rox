@@ -13,9 +13,8 @@
         <?php
             endforeach;
             endif; ?>
-        <div id="teaser_bg">
+
             <?php $this->teaser() ?>
-        </div>
 
         <?php if ($this->getFlashError()): ?>
             <div class="flash error"><?php echo $this->getFlashError(true); ?></div>

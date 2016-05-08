@@ -85,10 +85,9 @@ if ($this->allActivities != null && sizeof ($this->allActivities) > 0){
 }
 $this->pager->render(); ?>
 
-
-
-<div>
-    <table class="table" id="activitylist">
+<div class="row">
+    <div class="col-xs-12">
+    <table class="table" id="activitylist" style="table-layout: fixed;">
         <tbody>
 
         <?php
@@ -98,15 +97,18 @@ $this->pager->render(); ?>
         echo '<td class="p-t-0 date verticalmiddle">
             <div class="calendar calendar-icon-' . date("m", strtotime($activity->dateStart)) . '">
               <div class="calendar-day">' . date("j", strtotime($activity->dateStart)) . '</div>
-              <div class="calendar-year">' . date("Y", strtotime($activity->dateStart)) . '</div></div></td>';
+              <div class="calendar-year m-t-1">' . date("Y", strtotime($activity->dateStart)) . '</div></div></td>';
 
 
-        echo '<td class="p-b-0 title verticalmiddle"><small>' . $activity->dateStart;
-        if ($activity->dateStart != $activity->dateEnd){
-            echo ' - ' . $activity->dateEnd;
-        }
-        echo '</small><br><p class="text-truncate"><strong><a href="activities/' . $activity->id . '">' . htmlspecialchars($activity->title) . '</a></strong></p></td>';
-        echo '<td class="verticalmiddle icon"><p class="h3"><i class="fa fa-map-marker"></i></p></td>';
+        echo '<td class="verticalmiddle title text-truncate p-t-0">
+                <p class="h4 m-a-0 text-truncate"><a href="activities/' . $activity->id . '">' . htmlspecialchars($activity->title) . '</a></p>
+                <small>' . $activity->dateStart;
+                if ($activity->dateStart != $activity->dateEnd){
+                    echo ' - ' . $activity->dateEnd;
+                }
+                echo '</small></td>';
+
+        echo '<td class="verticalmiddle"><p class="h3"><i class="fa fa-map-marker"></i></p></td>';
 
         if ($activity->location != null){
             $locationName = htmlspecialchars($activity->location->name);
@@ -121,7 +123,7 @@ $this->pager->render(); ?>
         }
         echo '<td class="verticalmiddle activityinfo location"><p>'
             . $locationName . '<br> ' . $countryName . '</p></td>';
-        echo '<td class="verticalmiddle icon"><p class="h3"><i class="fa fa-users"></i></p></td>';
+        echo '<td class="verticalmiddle"><p class="h3"><i class="fa fa-users"></i></p></td>';
         echo '<td class="verticalmiddle activityinfo attendees"><small>';
             if ($activity->attendeesYes != 0){ echo $activity->attendeesYes . '&nbsp;' . $words->get('ActivitiesNumbAttendeesYes') . '<br>';}
             if ($activity->attendeesMaybe != 0){ echo $activity->attendeesMaybe . '&nbsp;' . $words->get('ActivitiesNumbAttendeesMaybe');}
@@ -150,6 +152,7 @@ $this->pager->render(); ?>
 
         </tbody>
     </table>
+    </div>
 </div>
 
 

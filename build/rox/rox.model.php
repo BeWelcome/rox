@@ -215,7 +215,7 @@ AND messages.WhenFirstRead=\'0000-00-00 00:00:00\'';
 	{
 
         $query= <<<SQL
-            SELECT members.latitude,members.longitude
+            SELECT geonames_cache.latitude,geonames_cache.longitude
             FROM members, geonames_cache, addresses
             WHERE geonames_cache.geonameid=addresses.IdCity AND members.Status='Active'
             AND addresses.IdMember = members.id AND addresses.rank = 0

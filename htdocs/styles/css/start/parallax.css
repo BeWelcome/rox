@@ -105,7 +105,7 @@ html, body {
     color: white;
     border-top: 6px solid #EFEFEF;
     border-bottom: 6px solid #EFEFEF;
-    height:730px;
+    height: 730px;
 }
 #about .col-xs-12.col-sm-6.col-md-2 {
     margin-left:1rem;
@@ -352,4 +352,47 @@ h3 {
 }
 p {
     line-height: 1.62;
+}
+
+.contrastbg{
+    background-color: rgba(0,0,0, .2);
+}
+
+.orangelink{
+a {color: $brand-primary;}
+}
+
+.secondblock{
+    width: 100%;
+    position:absolute;
+    top:730px;
+}
+
+.thirdblock{
+    width: 100%;
+    position:absolute;
+    top: 912px;
+}
+
+.whitetext{
+    color:white;
+}
+
+.centertext{
+    text-align: center;
+}
+
+.nospacing{
+    text-align: center;
+}
+
+.disblock{
+    display: block;
+}
+
+.noborder{
+    border-color: rgba(255,255,255,0);
+}
+.noborder:hover{
+    border-color: rgba(255,255,255,0);
 }

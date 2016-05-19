@@ -48,8 +48,8 @@ Boston, MA  02111-1307, USA.
     ?>
         <!-- Login information -->
         <div class="form-group row">
-            <div class="col-md-2"></div>
-            <div class="col-xs-12 col-md-5">
+            <div class="col-md-3"></div>
+            <div class="col-xs-12 col-md-4">
                 <h4><strong>Login info</strong></h4>
                 <div class="card card-block">
                     <!-- username -->
@@ -151,8 +151,8 @@ Boston, MA  02111-1307, USA.
         </div>
 
         <div class="form-group row">
-            <div class="col-md-2"></div>
-            <div class="col-xs-12 col-md-5">
+            <div class="col-md-3"></div>
+            <div class="col-xs-12 col-md-4">
                 <h4><?php echo $words->get('SignupName'); ?></h4>
                 <!-- Personal Information -->
                 <fieldset>
@@ -391,8 +391,8 @@ Boston, MA  02111-1307, USA.
         </div>
 
         <div class="form-group row">
-            <div class="col-md-2"></div>
-            <div class="col-xs-12 col-md-5">
+            <div class="col-md-3"></div>
+            <div class="col-xs-12 col-md-4">
                 <div class="card">
                     <div class="card-header"><b><?php echo $words->get('Location'); ?></b></div>
                     <div class="card-block">
@@ -424,8 +424,8 @@ Boston, MA  02111-1307, USA.
         </div>
 
         <div class="form-group row">
-            <div class="col-md-2"></div>
-            <div class="col-xs-12 col-md-5"><h4><?php echo $words->get('SignupFeedback'); ?></h4></div>
+            <div class="col-md-3"></div>
+            <div class="col-xs-12 col-md-4"><h4><?php echo $words->get('SignupFeedback'); ?></h4></div>
                     <div class="card-block">
                         <!-- Feedback -->
                         <div class="form-group">
@@ -440,8 +440,8 @@ Boston, MA  02111-1307, USA.
         </div>
 
         <div class="form-group row">
-            <div class="col-md-2"></div>
-            <div class="col-xs-12 col-md-5">
+            <div class="col-md-3"></div>
+            <div class="col-xs-12 col-md-4">
                 <!-- terms -->
                 <div class="checkbox">
                     <label>

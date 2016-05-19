@@ -46,13 +46,10 @@ Boston, MA  02111-1307, USA.
         echo '<span class="alert alert-danger">'.$errors['inserror'].'</span>';
     }
 ?>
-
     <div class="form-group row m-t-2">
-        <div class="col-md-2"></div>
-        <div class="col-xs-12 col-md-5">
-
+        <div class="col-md-3">
             <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#SignupIntroduction">
-                <?php // echo $words->get('SignupIntroductionTitle'); ?>What data will be public?
+                <?php // echo $words->get('SignupIntroductionTitle'); ?>Data visibility
             </button>
 
             <div class="modal fade" id="SignupIntroduction" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -73,14 +70,8 @@ Boston, MA  02111-1307, USA.
                     </div>
                 </div>
             </div>
-
         </div>
-        <div class="col-md-5"></div>
-    </div>
-
-    <div class="form-group row m-t-2">
-        <div class="col-md-2"></div>
-        <div class="col-xs-12 col-md-5">
+        <div class="col-xs-12 col-md-4">
             <!-- username -->
             <div class="form-group has-feedback">
                 <label for="register-username" class="sr-only"><?php echo $words->get('SignupUsername'); ?></label>
@@ -100,8 +91,8 @@ Boston, MA  02111-1307, USA.
     </div>
 
     <div class="form-group row">
-        <div class="col-md-2"></div>
-        <div class="col-xs-12 col-md-5">
+        <div class="col-md-3"></div>
+        <div class="col-xs-12 col-md-4">
             <!-- password -->
             <div class="form-group has-feedback">
                 <label for="register-password" class="sr-only"><?php echo $words->get('SignupPassword'); ?></label>
@@ -133,8 +124,8 @@ Boston, MA  02111-1307, USA.
     </div>
 
     <div class="form-group row m-t-1">
-        <div class="col-md-2"></div>
-        <div class="col-xs-12 col-md-5">
+        <div class="col-md-3"></div>
+        <div class="col-xs-12 col-md-4">
             <!-- email -->
             <div class="form-group has-feedback">
                 <label for="register-email" class="sr-only"><?php echo $words->get('SignupEmail'); ?></label>
@@ -165,8 +156,8 @@ Boston, MA  02111-1307, USA.
     </div>
 
     <div class="form-group row m-t-1">
-        <div class="col-md-2"></div>
-        <div class="col-xs-12 col-md-5">
+        <div class="col-md-3"></div>
+        <div class="col-xs-12 col-md-4">
             <!-- Accommodation -->
 
             <label for="accommodation"><h4><?php echo $words->get('Accommodation'); ?></h4></label>
@@ -209,8 +200,8 @@ Boston, MA  02111-1307, USA.
     </div>
 
     <div class="form-group row">
-        <div class="col-md-2"></div>
-        <div class="col-xs-12 col-md-5">
+        <div class="col-md-3"></div>
+        <div class="col-xs-12 col-md-4">
             <input type="submit" class="form-control btn btn-primary" value="<?php echo $words->getSilent('NextStep'); ?>" /><?php echo $words->flushBuffer(); ?>
         </div>
         <div class="col-md-5"></div>

@@ -45,11 +45,11 @@ if ($this->_editing == true) {
             <div class="row">
                 <div class="col-md-2">
                     <?php if (in_array('TripErrorNameEmpty', $errors)) : ?>
-                        <span class="help-block alert alert-danger"><?= $words->get('TripErrorNameEmpty') ?></span>
+                        <span class="alert alert-danger p-x-1 p-y-0"><small><?= $words->get('TripErrorNameEmpty') ?></small></span>
                     <?php endif; ?>
                 </div>
                 <div class="col-md-7">
-                    <div class="form-group has-feedback">
+                    <div class="form-group">
                         <label for="trip-title"
                                class="control-label sr-only"><?php echo $words->get('TripNameLabel'); ?></label>
                         <input type="text" class="form-control" name="trip-title"
@@ -58,20 +58,20 @@ if ($this->_editing == true) {
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <button type="button" class="btn btn-sm btn-outline-primary" data-container="body" data-toggle="popover" data-placement="right" data-content="Help on Title">
+                    <button type="button" class="btn btn-outline-primary" data-container="body" data-toggle="popover" data-placement="right" data-content="Help on Title">
                         ?
                     </button>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-md-2 has-feedback">
+                <div class="col-md-2">
                     <?php if (in_array('TripErrorDescriptionEmpty', $errors)) : ?>
-                        <span class="help-block alert alert-danger"><?= $words->get('TripErrorDescriptionEmpty') ?></span>
+                        <span class="alert alert-danger p-x-1 p-y-0"><small><?= $words->get('TripErrorDescriptionEmpty') ?></small></span>
                     <?php endif; ?>
                 </div>
                 <div class="col-md-7">
-                    <div class="form-group has-feedback">
+                    <div class="form-group">
                         <label for="trip-description" class="control-label sr-only"><?= $words->get('TripDescriptionLabel'); ?></label>
                     <textarea class="form-control" name="trip-description" cols="48" rows="7"
                               placeholder="<?= $words->getBuffered('TripDescriptionPlaceholder') ?>"><?php
@@ -81,19 +81,19 @@ if ($this->_editing == true) {
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <button type="button" class="btn btn-sm btn-outline-primary" data-container="body" data-toggle="popover" data-placement="right" data-content="Help on Description">
+                    <button type="button" class="btn btn-outline-primary" data-container="body" data-toggle="popover" data-placement="right" data-content="Help on Description">
                         ?
                     </button>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-md-2 has-feedback">
+                <div class="col-md-2">
                     <?php if (in_array('TripErrorNumberOfPartyMissing', $errors)) : ?>
-                        <span class="help-block alert alert-danger"><?= $words->get('TripErrorNumberOfPartyMissing') ?></span>
+                        <span class="alert alert-danger p-x-1 p-y-0"><small><?= $words->get('TripErrorNumberOfPartyMissing') ?></small></span>
                     <?php endif; ?>
                     <?php if (in_array('TripErrorCountAdditionalMismatch', $errors)) : ?>
-                        <span class="help-block alert alert-danger"><?= $words->get('TripErrorCountAdditionalMismatch') ?></span>
+                        <span class="alert alert-danger p-x-1 p-y-0"><small><?= $words->get('TripErrorCountAdditionalMismatch') ?></small></span>
                     <?php endif; ?>
                 </div>
                 <div class="col-md-3 form-group">
@@ -103,7 +103,7 @@ if ($this->_editing == true) {
                     <?= _getCountDropdown($tripInfo['trip-count'], $words->getBuffered('TripCountPlaceholder')) ?>
                 </div>
                 <div class="col-md-1">
-                    <button type="button" class="btn btn-sm btn-outline-primary" data-container="body" data-toggle="popover" data-placement="right" data-content="Help on Extras">
+                    <button type="button" class="btn btn-outline-primary" data-container="body" data-toggle="popover" data-placement="right" data-content="Help on Extras">
                         ?
                     </button>
                 </div>
@@ -114,22 +114,22 @@ if ($this->_editing == true) {
                     <?= _getAdditionalInfoDropdown($tripInfo['trip-additional-info'], $words) ?>
                 </div>
                 <div class="col-md-3">
-                    <button type="button" class="btn btn-sm btn-outline-primary" data-container="body" data-toggle="popover" data-placement="right" data-content="Help on Extras">
+                    <button type="button" class="btn btn-outline-primary" data-container="body" data-toggle="popover" data-placement="right" data-content="Help on Extras">
                         ?
                     </button>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-md-2 has-feedback">
+                <div class="col-md-2">
                     <?php
                     if (in_array('TripErrorOverlappingDates', $errors)) {
-                        echo '<span class="help-block alert alert-danger">' . $words->get('TripErrorOverlappingDates') . '</span>';
+                        echo '<span class="alert alert-danger p-x-1 p-y-0"><small>' . $words->get('TripErrorOverlappingDates') . '</small></span>';
                     }
                     ?>
                     <?php
                     if (in_array('TripErrorNoLocationSpecified', $errors)) {
-                        echo '<span class="help-block alert alert-danger">' . $words->get('TripErrorNoLocationSpecified') . '</span>';
+                        echo '<span class="alert alert-danger p-x-1 p-y-0"><small>' . $words->get('TripErrorNoLocationSpecified') . '</small></span>';
                     }
                     ?>
 
@@ -150,10 +150,14 @@ if ($this->_editing == true) {
                     <?php $map_conf = PVars::getObj('map'); ?>
                     <input type="hidden" id="osm-tiles-provider-base-url" value="<?php echo ($map_conf->osm_tiles_provider_base_url); ?>"/>
                     <input type="hidden" id="osm-tiles-provider-api-key" value="<?php echo ($map_conf->osm_tiles_provider_api_key); ?>"/>
-                    <div class="bw_row"><div class="col-md-12"><div id="trips-map" class="map"></div></div></div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="trips-map" class="map"></div>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-3">
-                    <button type="button" class="btn btn-sm btn-outline-primary" data-container="body" data-toggle="popover" data-placement="right" data-content="Help on Locations">
+                    <button type="button" class="btn btn-outline-primary" data-container="body" data-toggle="popover" data-placement="right" data-content="Help on Locations">
                         ?
                     </button></div>
             </div>
@@ -167,7 +171,6 @@ if ($this->_editing == true) {
                 <div class="col-md-3"></div>
             </div>
             </form>
-
 
             <div class="panel panel-default">
                 <div class="panel-heading"><?= $words->get("TripsLocations") ?></div>

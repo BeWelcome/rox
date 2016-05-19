@@ -25,7 +25,8 @@ $font-path: '../fonts/';
 @import "../../../vendor/components/font-awesome/scss/font-awesome";
 
 // Core variables and mixins
-@import "variables";
+@import "../../../vendor/twbs/bootstrap4/scss/variables";
+@import "custom";
 
 $enable-flex: false;
 

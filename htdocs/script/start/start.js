@@ -14,4 +14,10 @@ $(document).ready(function() {
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
     })
+
+    // AnySlider
+    $('.slider').anyslider({
+                interval: 2000,
+                speed:700,
+    })
 });

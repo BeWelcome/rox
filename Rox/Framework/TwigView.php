@@ -72,7 +72,8 @@ class TwigView extends AbstractBasePage {
                 'debug' => true,
             )
         );
-        \PVars::get()->lang = $_SESSION['lang'];
+        $lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en';
+        \PVars::get()->lang = $lang;
         $this->_words = $this->getWords();
         if (!isset($_SESSION['lang'])) {
             $_SESSION['lang'] = 'en';

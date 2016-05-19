@@ -13,6 +13,7 @@ class StartPage extends \Rox\Framework\TwigView
         $this->addEarlyJavascriptFile('bootstrap/bootstrap.js');
         $this->addEarlyJavascriptFile('start/skrollr.js');
         $this->addEarlyJavascriptFile('start/skrollr.menu.js');
+        $this->addEarlyJavascriptFile('start/jquery.anyslider.js');
         $this->addEarlyJavascriptFile('start/start.js');
         $this->setTemplate('public.html.twig', 'start', array('title' => 'BeWelcome'));
     }

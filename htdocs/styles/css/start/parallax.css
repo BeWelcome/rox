@@ -153,7 +153,6 @@ html, body {
     margin-left:1rem;
     margin-right:1rem;
 }
-
 #statistics_trailing {
     background: url(/images/homepicture-1200px_3.jpg) no-repeat center center fixed;
     display: table;
@@ -527,6 +526,14 @@ h1 {
         }
     }
 h2 {
+    font-size: 2.75rem;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+    text-shadow: 0px 0px 3px rgba(185, 185, 185, 0.5);
+    letter-spacing: 0.1rem;
+}
+h3 {
     font-size: 1.7rem;
     font-weight: bold;
     text-align: center;
@@ -534,9 +541,9 @@ h2 {
     text-shadow: 0px 0px 3px rgba(185, 185, 185, 0.5);
 }
 
-h3 {
+h4 {
     font-size: 1.2rem;
-    font-weight: bold;
+    font-weight: normal;
     text-align: center;
 }
 p {

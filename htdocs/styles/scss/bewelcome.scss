@@ -25,62 +25,8 @@ $font-path: '../fonts/';
 @import "../../../vendor/components/font-awesome/scss/font-awesome";
 
 // Core variables and mixins
-@import "../../../vendor/twbs/bootstrap4/scss/variables";
 @import "custom";
-
-$enable-flex: false;
-
-@import "../../../vendor/twbs/bootstrap4/scss/mixins";
-
-// // Reset and dependencies
-@import "../../../vendor/twbs/bootstrap4/scss/normalize";
-@import "../../../vendor/twbs/bootstrap4/scss/print";
-
-// Core CSS
-@import "../../../vendor/twbs/bootstrap4/scss/reboot";
-
-// Override the legend width to auto
-legend {
-  width: auto;
-}
-
-@import "../../../vendor/twbs/bootstrap4/scss/type";
-@import "../../../vendor/twbs/bootstrap4/scss/images";
-@import "../../../vendor/twbs/bootstrap4/scss/code";
-@import "../../../vendor/twbs/bootstrap4/scss/grid";
-@import "../../../vendor/twbs/bootstrap4/scss/tables";
-@import "../../../vendor/twbs/bootstrap4/scss/forms";
-@import "../../../vendor/twbs/bootstrap4/scss/buttons";
-
-// // Components
-@import "../../../vendor/twbs/bootstrap4/scss/animation";
-@import "../../../vendor/twbs/bootstrap4/scss/dropdown";
-@import "../../../vendor/twbs/bootstrap4/scss/button-group";
-@import "../../../vendor/twbs/bootstrap4/scss/input-group";
-@import "../../../vendor/twbs/bootstrap4/scss/custom-forms";
-
-@import "../../../vendor/twbs/bootstrap4/scss/nav";
-@import "../../../vendor/twbs/bootstrap4/scss/navbar";
-@import "../../../vendor/twbs/bootstrap4/scss/card";
-@import "../../../vendor/twbs/bootstrap4/scss/breadcrumb";
-@import "../../../vendor/twbs/bootstrap4/scss/pagination";
-@import "../../../vendor/twbs/bootstrap4/scss/tags";
-@import "../../../vendor/twbs/bootstrap4/scss/jumbotron";
-@import "../../../vendor/twbs/bootstrap4/scss/alert";
-@import "../../../vendor/twbs/bootstrap4/scss/progress";
-@import "../../../vendor/twbs/bootstrap4/scss/media";
-@import "../../../vendor/twbs/bootstrap4/scss/list-group";
-@import "../../../vendor/twbs/bootstrap4/scss/responsive-embed";
-@import "../../../vendor/twbs/bootstrap4/scss/close";
-
-// Components w/ JavaScript
-@import "../../../vendor/twbs/bootstrap4/scss/modal";
-@import "../../../vendor/twbs/bootstrap4/scss/tooltip";
-@import "../../../vendor/twbs/bootstrap4/scss/popover";
-@import "../../../vendor/twbs/bootstrap4/scss/carousel";
-
-// Utility classes
-@import "../../../vendor/twbs/bootstrap4/scss/utilities";
+@import "../../../vendor/twbs/bootstrap4/scss/bootstrap";
 
 @import "general";
 

@@ -152,6 +152,9 @@ class AboutController extends RoxControllerBase
         if (isset($this->route_vars['language'])) {
             $lang = $this->route_vars['language'];
         }
+        if ($lang === null) {
+            $lang = $_SESSION['lang'];
+        }
         $page = new AboutGenericPage('terms', $lang);
         $page->lang = $lang;
         $page->setModel(new AboutModel());

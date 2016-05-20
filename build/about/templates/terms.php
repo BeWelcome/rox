@@ -24,9 +24,8 @@ Boston, MA  02111-1307, USA.
 
 $words = new MOD_words();
 ?>
+<?php if ($this->_lang != 'fr') { ?>
 <p><?= $words->getFormatted('TermsOfUseWarning') ?></p>
-<?php if ($this->_lang === null) { ?>
-    <p><?= $words->getFormatted('TermsOfUseTranslation', $_SESSION['lang']) ?></p>
 <?php }?>
 
-<?= $words->getInLang('TermsOfUseFullText', $this->_lang === null ? 'fr' : $this->_lang); ?>
+<?= $words->getInLang('TermsOfUseFullText', $this->_lang); ?>

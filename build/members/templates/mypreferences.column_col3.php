@@ -22,8 +22,12 @@
           </div> <!-- c50r -->
 
         </div> <!-- subcolumns -->
-        
-        <h3><?=$words->get('PreferencePublicProfile')?></h3>
+            <?php
+            $isPublic = $this->member->get_publicProfile();
+            if ($isPublic) {
+                // Only show if profile is currently public. Effectively disable new public profiles.
+                ?>
+            <h3><?=$words->get('PreferencePublicProfile')?></h3>
         <div class="subcolumns">
 
           <div class="c33l" >
@@ -41,8 +45,9 @@
           </div> <!-- c50r -->
 
         </div> <!-- subcolumns -->
+            <?php } ?>
 
-<?php
+            <?php
         $doNotShow = array('PreferenceLanguage');
 	foreach ($p as $rr) {
 		if (!in_array($rr->codeName, $doNotShow)) {

@@ -113,6 +113,8 @@ html, body {
 }
 #about p {
     text-align:center;
+    max-height:182px;
+    overflow:hidden;
 }
 
 #about_trailing {
@@ -278,16 +280,20 @@ html, body {
 }
 #landingcontainerdiv {
     background-color: rgba(0, 0, 0, 0);
-    padding-top: 32px !important;
+    padding-top: 42px !important;
     box-shadow: none;
 }
 #landingcontainerdiv p{
     font-family: Signika;
     font-weight: 300;
-    margin-bottom: 1.2rem;
+    margin-bottom: 3.2rem;
     color:white;
     text-align: center;
     font-size: 1.25rem;
+    line-height: 1.6rem;
+    margin-top: 1rem;
+    width: 61.8%;
+    margin-left: 19.1%;
 }
 #landingcontainerdiv p small{
     font-family: Lato;
@@ -300,12 +306,12 @@ html, body {
 #landingcontainerdiv form input {
     margin:0px auto;
     margin-bottom: 26px;
-    width: 61.8%;
+    width: 38.2%;
     border: 1px solid white;
     border-radius: 0.1rem;
 }
 #landingcontainerdiv form input.btn-primary {
-    width: 38.2%;
+    width: 23.6%;
     height: 52px;
     font-size:1.25rem;
     border: 1px solid transparent;
@@ -315,30 +321,90 @@ html, body {
     border: 2px solid white;
 }
 
+/* slider classes */
 .slider {
     overflow: auto;
     position: relative;
     -ms-touch-action: pan-y;
     touch-action: pan-y;
 }
+.as-nav {
+  width:130px;
+  margin:0px auto;
+  position: relative;
+}
+.as-nav a {
+  background-color: rgb(242, 205, 163);
+  color: rgba(255, 255, 255, 0);
+  width: 10px;
+  height: 10px;
+  padding: 1px;
+  display: inline-block;
+  border-radius: 50%;
+  margin-left:16px;
+  font-size: 0px;
+}
+.as-nav a:hover {
+  box-shadow: 0px 0px 3px 1px rgb(206, 110, 0);
+  background-color:white;
+  border:2px solid transparent;
+  height:10px;
+  width:10px;
+  transition: 0.2s ease-in;
+}
+.as-active {
+  background-color: white !important;
+}
+.as-prev-arrow {
+  background-image:url("../img/icons/ic_flecha_izq_black_24px.svg");
+  background-size: cover;
+  width: 42px;
+  height: 42px;
+  display: inline-block;
+  font-size: 0px;
+  opacity: 0.4;
+  position: absolute;
+  left: 12px;
+  top: 44px;
+  z-index: 2;
+  cursor:pointer;
+}
+.as-next-arrow {
+  background-image:url("../img/icons/ic_flecha_dcha_black_24px.svg");
+  background-size: cover;
+  width: 42px;
+  height: 42px;
+  display: inline-block;
+  font-size: 0px;
+  opacity: 0.4;
+  position:absolute;
+  left: 380px;
+  top: 44px;
+  z-index: 2;
+  cursor:pointer;
+}
+.as-prev-arrow:hover, .as-next-arrow:hover {
+  opacity:0.2;
+}
 
 
 h1 {
-    font-size: 4.25em;
+    font-size: 4.25rem;
     font-weight: bolder;
     text-align: center;
-    line-height:1.4;
+    line-height:4.92rem;
     text-shadow: 0px 0px 3px rgba(185, 185, 185, 0.5);
     letter-spacing: 0.15rem;
 }
 @media only screen 
-    and (orientation:portrait) {
+    and (max-width: 992px) {
         h1 {
-        font-size: 2.625em;
+        font-size: 2.625rem;
+        line-height:3.04rem;
         }
     }
 h2 {
-    font-size: 1.7em;
+    font-size: 1.7rem;
     font-weight: bold;
     text-align: center;
     text-transform: uppercase;
@@ -346,7 +412,7 @@ h2 {
 }
 
 h3 {
-    font-size: 1.2em;
+    font-size: 1.2rem;
     font-weight: bold;
     text-align: center;
 }
@@ -395,4 +461,16 @@ a {color: $brand-primary;}
 }
 .noborder:hover{
     border-color: rgba(255,255,255,0);
+}
+.nopadding {
+   padding: 0 !important;
+   margin: 0 !important;
+}
+.horizontalcentering {
+    left:-50%;
+    transform:translateX(50%);
+}
+.fullwidth {
+    width:100%; 
+    max-width: 100%;
 }

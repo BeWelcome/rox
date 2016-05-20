@@ -20,4 +20,15 @@ $(document).ready(function() {
                 interval: 2000,
                 speed:700,
     })
+
+    //UnSlider
+            $('.my-slider').unslider({
+                autoplay: true,
+                infinite: true,
+                arrows: {   
+                    prev: '<a class="unslider-arrow prev">&#60;</a>',
+                    next: '<a class="unslider-arrow next">&#62;</a>',
+                }
+    });
+
 });

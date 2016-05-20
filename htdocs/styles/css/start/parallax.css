@@ -129,10 +129,16 @@ html, body {
     background-size: cover;
     background-attachment:fixed;
 }
+@media only screen 
+    and (max-width: 994px) {
+        #about_trailing {
+        background-size:auto;
+        }
+    }
 #about_trailing > .container > .row {
     width: 100%;
     position: relative;
-    top: 204px;
+    top: 130px;
     left: 0px;
 }
 
@@ -166,7 +172,23 @@ html, body {
     color:white;
     text-align: center;
     font-size: 1.25rem;
+    line-height: 1.6rem;
+    width: 61.8%;
+    margin-left: 19.1%;
 }
+@media only screen 
+    and (max-width: 992px) {
+        #statistics_trailing p {
+        font-size: 0.875rem;
+        }
+    }
+@media only screen 
+    and (max-width: 544px) {
+        #statistics_trailing p {
+        width:100%;
+        margin-left:0;
+        }
+    }
 #statistics_trailing_blur {
     background: url(http://i66.tinypic.com/21djua0.jpg) no-repeat center center fixed;
     display: table;
@@ -229,8 +251,8 @@ html, body {
     cursor:none;
 }
 #search .input-group span.input-group-addon:nth-child(3){
-    background-color: #f37000;
-    box-shadow: 0 0 5px 1px #d76200 inset;
+    background-color: #eb7109;
+    box-shadow: 0 0 5px 1px #d86400 inset;
     color: white;
     border: 2px solid white;
     border-radius: 0 2px 2px 0;
@@ -246,7 +268,6 @@ html, body {
     padding-top: 110px;
 }
 #search h1 {
-    line-height:1.5;
     text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.5);
 }
 #search .form-control {
@@ -302,6 +323,14 @@ html, body {
         font-size: 0.875rem;
         }
     }
+@media only screen 
+    and (max-width: 544px) {
+        #landingcontainerdiv p {
+        width:100%;
+        margin-left:0;
+        }
+    }
+
 #landingcontainerdiv p small{
     font-family: Lato;
     color:white;
@@ -324,7 +353,7 @@ html, body {
     border: 1px solid transparent;
     border-radius:3px;
     font-family:Signika;
-    box-shadow: 0 0 5px 1px #d76200 inset;
+    box-shadow: 0 0 5px 1px  #d86400 inset;
     border: 2px solid white;
 }
 @media only screen 
@@ -565,6 +594,6 @@ a {color: $brand-primary;}
     transform:translateX(50%);
 }
 .fullwidth {
-    width:100vw; 
-    max-width: 100vw;
+    width:99vw; 
+    max-width: 99vw;
 }

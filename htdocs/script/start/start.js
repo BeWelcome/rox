@@ -15,12 +15,6 @@ $(document).ready(function() {
         $('[data-toggle="tooltip"]').tooltip()
     })
 
-    // AnySlider
-    $('.slider').anyslider({
-                interval: 2000,
-                speed:700,
-    })
-
     //UnSlider
             $('.my-slider').unslider({
                 autoplay: true,

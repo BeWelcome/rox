@@ -28,7 +28,12 @@ class LoginController extends Controller
             'p' => $request->request->get('p')
         );
         $args->request = $request->getPathInfo();
-        $result = $loginController->loginCallback($args, null, null);
+        $action = new \stdClass;
+        $action->count = 0;
+        $action->redirect_req = '';
+        $memredirect = new \stdClass;
+
+        $result = $loginController->loginCallback($args, $action, $memredirect);
         if ($result) {
             return $this->redirect('/home');
         } else {

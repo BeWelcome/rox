@@ -39,7 +39,6 @@ class HomeController extends Controller
         unset($this->_model);
     }
 
-
     /**
      * @param int $all
      * @param int $unread

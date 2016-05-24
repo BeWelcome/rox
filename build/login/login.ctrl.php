@@ -69,7 +69,7 @@ class LoginController extends RoxControllerBase
                 $errmsg = $this->getWords()->get("LoginErrorWrongCredentials");
             }
         }
-
+        
         if ($errmsg != '') {
 			$mem_for_redirect->errmsg = $errmsg;
 			// error message on top disabled. We're using a div inside the login-form instead!

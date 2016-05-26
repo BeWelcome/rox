@@ -1374,29 +1374,35 @@ LIMIT 1
         $conn = new Connection();
         $conn->setParams(array('host' => 'localhost', 'port' => 9306));
 
-        $query = SphinxQL::create($conn)
-            ->select('*')
-            ->from('geonames')
-            ->match('', "*" . $location . "*");
+        try
+        {
+            $query = SphinxQL::create($conn)
+                ->select('*')
+                ->from('geonames')
+                ->match('', "*" . $location . "*");
 
-        switch($type) {
-            case self::SPHINX_PLACES:
-                $query->where('isplace', '=', 1);
-                $query->limit(0, 5);
-                $query->orderBy('membercount', 'desc');
-                break;
-            case self::SPHINX_ADMINUNITS:
-                $query->where('isadmin', '=', 1);
-                $query->limit(0, 3);
-                break;
-            case self::SPHINX_COUNTRIES:
-                $query->where('iscountry', '=', 1);
-                $query->limit(0, 2);
-                break;
+            switch ($type) {
+                case self::SPHINX_PLACES:
+                    $query->where('isplace', '=', 1);
+                    $query->limit(0, 5);
+                    $query->orderBy('membercount', 'desc');
+                    break;
+                case self::SPHINX_ADMINUNITS:
+                    $query->where('isadmin', '=', 1);
+                    $query->limit(0, 3);
+                    break;
+                case self::SPHINX_COUNTRIES:
+                    $query->where('iscountry', '=', 1);
+                    $query->limit(0, 2);
+                    break;
+            }
+
+            // Now, you have an array of results stored.
+            $result = $query->execute();
         }
-
-        // Now, you have an array of results stored.
-        $result = $query->execute();
+        catch(Exception $e) {
+            $result = [];
+        }
         return $result;
     }
 

@@ -52,7 +52,7 @@
                             <a href="/volunteer" class="nav-link">{{ 'Volunteer' | trans}}</a>
                         </li>
                         <li class="navbar-divider hidden-md-down"></li>
-                        <noscript><li class="nav-item"><a href="wiki/importantlinks" class="nav-link">All important links</a></li></noscript>
+                        <li class="nav-item"><a href="wiki/importantlinks" class="nav-link">All important links</a></li>
                         <li class="nav-item dropdown hidden-md-down">
                             <a href="#" class="nav-link" id="subNavBar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 &#9776;
@@ -71,43 +71,43 @@
                                             <div class="row">
                                                 <div class="col-xs-2">
                                                     <a href="/search" class="h4 subnavtitle">{{ 'FindMembers' | trans }}</a>
-                                                    <dl>
-                                                        <a href="/search/members"><dd>{{ 'MapSearch' | trans }}</dd></a>
-                                                        <a href="/places"><dd>{{ 'BrowseCountries' | trans}}</dd></a>
-                                                    </dl>
+                                                    <ul>
+                                                        <li><a href="/search/members">{{ 'MapSearch' | trans }}</a></li>
+                                                        <li><a href="/places">{{ 'BrowseCountries' | trans}}</a></li>
+                                                    </ul>
                                                 </div>
 
                                                 <div class="col-xs-2">
                                                     <a href="/community" class="h4 subnavtitle">{{ 'CommunityMenu' | trans }}</a>
-                                                    <dl>
-                                                        <a href="/forums" title="{{ 'AgoraTagLine' | trans }}"><dd>{{ 'CommunityDiscussions' | trans }}</dd></a>
-                                                        <a href="/groups/search" title="{{ 'GroupTagLine' | trans }}"><dd>{{ 'Groups' | trans }}</dd></a>
-                                                        <a href="/activities"><dd>{{ 'Activities' | trans}}</dd></a>
-                                                        <a href="/suggestions"><dd>{{ 'Suggestions' | trans}}</dd></a>
-                                                        <a href="/trip"><dd>{{ 'Trips' | trans}}</dd></a>
-                                                    </dl>
+                                                    <ul>
+                                                        <li><a href="/forums" title="{{ 'AgoraTagLine' | trans }}">{{ 'CommunityDiscussions' | trans }}</a></li>
+                                                        <li><a href="/groups/search" title="{{ 'GroupTagLine' | trans }}">{{ 'Groups' | trans }}</a></li>
+                                                        <li><a href="/activities">{{ 'Activities' | trans}}</a></li>
+                                                        <li><a href="/suggestions">{{ 'Suggestions' | trans}}</a></li>
+                                                        <li><a href="/trip">{{ 'Trips' | trans}}</a></li>
+                                                    </ul>
                                                 </div>
 
                                                 <div class="col-xs-2">
                                                     <a href="/about" class="h4 subnavtitle">{{ 'GetAnswers' | trans}}</a>
-                                                    <dl>
-                                                        <a href="/faq"><dd>{{ 'Faq' | trans}}</dd></a>
-                                                        <a href="/feedback"><dd>{{ 'ContactUs' | trans}}</dd></a>
-                                                        <a href="/wiki"><dd>{{ 'Wiki' | trans}}</dd></a>
-                                                        <a href="/stats"><dd>Statistics</dd></a>
-                                                        <a href="/terms"><dd>{{ 'TermsOfUse'  | trans}}</dd></a>
-                                                    </dl>
+                                                    <ul>
+                                                        <li><a href="/faq">{{ 'Faq' | trans}}</a></li>
+                                                        <li><a href="/feedback">{{ 'ContactUs' | trans}}</a></li>
+                                                        <li><a href="/wiki">{{ 'Wiki' | trans}}</a></li>
+                                                        <li><a href="/stats">Statistics</a></li>
+                                                        <li><a href="/terms">{{ 'TermsOfUse'  | trans}}</a></li>
+                                                    </ul>
                                                 </div>
 
                                                 <div class="col-xs-2">
                                                     <a href="/volunteer" class="h4 subnavtitle">{{ 'Volunteer' | trans}}</a>
-                                                    <dl>
-                                                        <a href="/about/getactive"><dd>{{ 'About_GetActive' | trans}}</dd></a>
-                                                        <a href="/donate"><dd>{{ 'DonateLink'  | trans}}</dd></a>
+                                                    <ul>
+                                                        <li><a href="/about/getactive">{{ 'About_GetActive' | trans}}</a></li>
+                                                        <li><a href="/donate">{{ 'DonateLink'  | trans}}</a></li>
                                                         {% for team in teams if teams %}
-                                                            <a href="/{{ team.link }}"><dd class="m-b-0">{{ team.trans | trans}}</dd></a>
+                                                            <li class="m-b-0"><a href="/{{ team.link }}">{{ team.trans | trans}}</a></li>
                                                         {% endfor %}
-                                                    </dl>
+                                                    </ul>
                                                 </div>
 
                                                 <div class="col-xs-4 usermenu">

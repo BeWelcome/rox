@@ -1401,7 +1401,7 @@ LIMIT 1
             $result = $query->execute();
         }
         catch(Exception $e) {
-            $result = [];
+            $result = false;
         }
         return $result;
     }

@@ -2,7 +2,7 @@ $(document).ready(function(){
     $(".select2-location-picker").select2({
 //        theme: 'bootstrap4',
         ajax: {
-            url: "http://bootstrap/search/locations/all",
+            url: "/search/locations/all",
             dataType: 'json',
             delay: 250,
             data: function (params) {

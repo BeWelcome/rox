@@ -43,9 +43,8 @@ function addMarkers(map){
         var latitude = $(cols[2]).html();
         var longitude = $(cols[3]).html();
 
-        var icon = new L.DivIcon({ html: '<div><img src="/images/icons/' + accommodation + '.png" width="17" height="17"></div>', className: '"leaflet-marker-icon marker-cluster marker-cluster-unique', iconSize: new L.Point(17, 17) });
-
-        var marker = new L.Marker([latitude, longitude], {icon: icon});
+        var icon = new L.DivIcon({ html: '<div><img src="/images/icons/' + accommodation + '.png" width="17" height="17"></div>', className: 'marker-cluster marker-cluster-unique', iconSize: new L.Point(17, 17) });
+        var marker = new L.marker([latitude, longitude], {icon: icon});
 
         var popupContent = '<h4><img src="/members/avatar/' + username + '?xs"> <a href="/members/' + username + '">' + username+ '</a></h4>';
         popupContent += '<p>' + accommodation + '</p>';
@@ -62,10 +61,13 @@ function addMarkers(map){
     }
     catch(err) {}
 
-    var bounds =  new L.LatLngBounds(markers);
-    return bounds;
+    return markers.getBounds();
 }
 
 var bounds = addMarkers(map);
+
+if (bounds.isValid()) {
+    console.debug(bounds.toBBoxString());
+}
 
 map.fitBounds(bounds);

@@ -119,6 +119,7 @@ $dispatcher->addSubscriber(
 $dispatcher->addSubscriber(
     new ControllerResolverListener($router, $formFactory)
 );
+
 $framework = new Rox\Framework($dispatcher, $resolver);
 
 try {
@@ -138,7 +139,6 @@ try {
             );
             $response->send();
         } else {
-            chdir(HTDOCS_BASE . '/bw/admin');
             require_once HTDOCS_BASE . 'bw/' . $pathInfo;
         }
     } else {

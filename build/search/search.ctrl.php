@@ -164,7 +164,7 @@ class SearchController extends RoxControllerBase
     /**
      *
      */
-    public function searchSuggestionsCallback(StdClass $args, ReadOnlyObject $action,
+    public function searchSuggestionsCallback(stdClass $args, ReadOnlyObject $action,
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) {
 
         $vars = $args->post;

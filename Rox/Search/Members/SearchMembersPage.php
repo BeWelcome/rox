@@ -12,13 +12,13 @@ class SearchMembersPage extends TwigView
         parent::__construct($router);
         $this->setTemplate('searchmembers.html.twig', 'search');
         $this->addLateJavascriptFile('/jquery-ui-1.11.2/jquery-ui.js');
-        $this->addLateJavascriptFile('leaflet/0.7.2/leaflet.js');
-        $this->addLateJavascriptFile('leaflet/plugins/Leaflet.markercluster/0.4.0/leaflet.markercluster.js');
+        $this->addLateJavascriptFile('leaflet/1.0.0-master/leaflet.js');
+        $this->addLateJavascriptFile('leaflet.markercluster/leaflet.markercluster.js');
         $this->addLateJavascriptFile('search/createmap.js');
         $this->addLateJavascriptFile('search/searchpicker.js');
-        $this->addStylesheet('/script/leaflet/0.7.2/leaflet.css');
-        $this->addStylesheet('/script/leaflet/plugins/Leaflet.markercluster/0.4.0/MarkerCluster.css');
-        $this->addStylesheet('/script/leaflet/plugins/Leaflet.markercluster/0.4.0/MarkerCluster.Default.css');
+        $this->addStylesheet('/script/leaflet/1.0.0-master/leaflet.css');
+        $this->addStylesheet('/script/leaflet.markercluster/MarkerCluster.css');
+        $this->addStylesheet('/script/leaflet.markercluster/MarkerCluster.Default.css');
         $this->addStylesheet('/script/jquery-ui-1.11.2/jquery-ui.css');
 
         $this->addParameters([

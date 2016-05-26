@@ -135,7 +135,7 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "leaflet/0.7.3/leaflet.js",
+        file: "leaflet/1.0.0-master/leaflet.js",
         pages: [
             "searchmembers",
             "blog",
@@ -143,14 +143,10 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "leaflet/plugins/Leaflet.markercluster/0.4.0/leaflet.markercluster.js",
+        file: "leaflet.markercluster/leaflet.markercluster.js",
         pages: [
             "activities"
         ]
-    },
-    {
-        file: "leaflet/plugins/Leaflet.markercluster/0.4.0/leaflet.markercluster.include-css.js",
-        pages: ["activities"]
     },
     {
         file: "//maps.googleapis.com/maps/api/js?sensor=false",

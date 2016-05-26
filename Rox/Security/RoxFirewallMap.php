@@ -13,6 +13,7 @@ namespace Rox\Security;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager;
@@ -58,7 +59,6 @@ class RoxFirewallMap extends FirewallMap
             new RoxAuthenticationProvider(new RoxUserProvider(), '')
         ]);
 
-        $matcher =
         $matcher = new UrlMatcher($router->getRouteCollection(), $context);
         $adminHttpUtils = new HttpUtils($router->getGenerator(), $matcher);
         $adminAuthenticationListener = new AdminAuthenticationListener(

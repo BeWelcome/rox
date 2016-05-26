@@ -37,6 +37,7 @@
         "robmorgan/phinx": "*",
         "select2/select2": "4.*",
         "swiftmailer/swiftmailer": "5.*",
+        "symfony/asset": "~3.0",
         "symfony/debug": "~3.0",
         "symfony/dependency-injection": "~3.0",
         "symfony/form": "~3.0",

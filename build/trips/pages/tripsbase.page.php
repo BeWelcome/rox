@@ -130,16 +130,16 @@ class TripsBasePage extends PageWithActiveSkin
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'script/leaflet/0.7.3/leaflet.css?1';
-        $stylesheets[] = 'script/leaflet/plugins/Leaflet.markercluster/0.4.0/MarkerCluster.Default.css';
-        $stylesheets[] = 'script/leaflet/plugins/Leaflet.markercluster/0.4.0/MarkerCluster.css';
+        $stylesheets[] = 'script/leaflet/1.0.0-master/leaflet.css?1';
+        $stylesheets[] = 'script/leaflet.markercluster/MarkerCluster.css';
+        $stylesheets[] = 'script/leaflet.markercluster/MarkerCluster.Default.css';
         return $stylesheets;
     }
 
     public function getLateLoadScriptfiles() {
         $scriptFiles = parent::getLateLoadScriptfiles();
         $scriptFiles[] = 'jquery-ui-1.11.2/jquery-ui.min.js';
-        $scriptFiles[] = 'leaflet/0.7.3/leaflet.js';
+        $scriptFiles[] = 'leaflet/1.0.0-master/leaflet.js';
         $scriptFiles[] = 'leaflet/plugins/shramov-leaflet-plugins/1.1.0/layer/tile/Google.js';
         $scriptFiles[] = 'map/leaflet/LeafletFlagIcon.js?1';
         $scriptFiles[] = 'map/initMap.js';

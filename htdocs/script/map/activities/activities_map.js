@@ -30,7 +30,7 @@ function initMap(){
 	
 	if (osmTilesProviderBaseUrl != null){
 	
-		bwrox.debug('Initialize activities map with OSM tiles provider \'%s\' and API key \'%s\' on map id \'%s\'.', osmTilesProviderBaseUrl, osmTilesProviderApiKey, mapHtmlId);
+		console.debug('Initialize activities map with OSM tiles provider \'%s\' and API key \'%s\' on map id \'%s\'.', osmTilesProviderBaseUrl, osmTilesProviderApiKey, mapHtmlId);
 		
 		var map = L.map(mapHtmlId);
 		
@@ -49,7 +49,7 @@ function initMap(){
 		return map;
 		
 	}else{
-		bwrox.debug('Unable to initialize OSM layer: please set "osm_tiles_provider_base_url" property in [map] section of rox_local.ini file.');
+		console.debug('Unable to initialize OSM layer: please set "osm_tiles_provider_base_url" property in [map] section of rox_local.ini file.');
 		return null;
 	}
 }
@@ -108,7 +108,7 @@ function addMarkers(map){
 	map.addLayer(markers);
 	
 	
-	bwrox.debug('%s markers added to activities map.', i);
+	console.debug('%s markers added to activities map.', i);
 	
 	return markers;
 }

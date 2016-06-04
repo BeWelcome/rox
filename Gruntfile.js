@@ -62,7 +62,7 @@ module.exports = function (grunt) {
                     style: 'expanded'
                 },
                 files: {
-                    'htdocs/assets/build/sass/bewelcome.css': 'htdocs/styles/scss/bewelcome.scss'
+                    'htdocs/assets/sass/bewelcome.css': 'htdocs/styles/scss/bewelcome.scss'
                 }
             }
         },
@@ -86,9 +86,9 @@ module.exports = function (grunt) {
                 src: [
                     'node_modules/font-awesome/css/font-awesome.css',
                     'node_modules/lato-font/css/lato-font.css',
-                    'htdocs/assets/build/sass/*.css'
+                    'htdocs/assets/sass/*.css'
                 ],
-                dest: 'htdocs/assets/build/css/styles.css',
+                dest: 'htdocs/assets/css/styles.css',
                 nonull: true
             }
         },
@@ -98,7 +98,7 @@ module.exports = function (grunt) {
                     expand: true,
                     src: '**/*.css',
                     dest: 'htdocs/assets/css/',
-                    cwd: 'htdocs/assets/build/css'
+                    cwd: 'htdocs/assets/css'
                 }]
             }
         },
@@ -132,7 +132,7 @@ module.exports = function (grunt) {
 
                     'module/*/assets/js/**/*.js'
                 ],
-                dest: 'htdocs/assets/build/js/built.js',
+                dest: 'htdocs/assets/js/built.js',
                 nonull: true
             },
             backwards: {
@@ -140,7 +140,7 @@ module.exports = function (grunt) {
                     'node_modules/html5shiv/dist/html5shiv.js',
                     'node_modules/respond.js/dest/respond.min.js',
                 ],
-                dest: 'htdocs/assets/build/js/backwards.js',
+                dest: 'htdocs/assets/js/backwards.js',
                 nonull: true
             },
             // Leaflet is about 150KB minified, so it is a separate file.
@@ -149,7 +149,7 @@ module.exports = function (grunt) {
                     'node_modules/leaflet/dist/leaflet-src.js',
                     'node_modules/leaflet.markercluster/dist/leaflet.markercluster-src.js',
                 ],
-                dest: 'htdocs/assets/build/js/leaflet.js',
+                dest: 'htdocs/assets/js/leaflet.js',
                 nonull: true
             }
         },
@@ -162,7 +162,7 @@ module.exports = function (grunt) {
                     expand: true,
                     src: '**/*.js',
                     dest: 'htdocs/assets/js',
-                    cwd: 'htdocs/assets/build/js'
+                    cwd: 'htdocs/assets/js'
                 }]
             }
         },
@@ -181,18 +181,17 @@ module.exports = function (grunt) {
             }
         },
         watch: {
-            dev: {
-                files: "htdocs/styles/scss/*",
-                tasks: ['sass:compileBeWelcome', 'cssmin:bewelcome']
+            sass: {
+                files: 'htdocs/styles/scss/*',
+                tasks: ['sass:compileBeWelcome', 'concat_css:bw']
             },
-            dist: {
-                files: "htdocs/styles/scss/*",
-                tasks: ['sass:compileBeWelcome', 'autoprefixer:bewelcome', 'csscomb:bewelcome', 'cssmin:bewelcome' // , 'csslint:bewelcome'
-                ]
+            css: {
+                files: 'module/*/assets/css/**/*.css',
+                tasks: ['csscomb:bewelcome', 'csslint:bewelcome', 'concat_css:bw']
             },
             js: {
                 files: ['module/*/assets/js/**/*.js'],
-                tasks: ['concat', 'uglify', 'assets_versioning'],
+                tasks: ['jshint', 'concat:dist'],
                 options: {
                     reload: true
                 }
@@ -215,8 +214,15 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-csscomb');
     grunt.loadNpmTasks('grunt-recess');
 
-    // Default task for development (simply turn scss to css )
-    grunt.registerTask('default', ['clean', 'copy', 'buildcss', 'buildjs']);
+    // Default task for development
+    grunt.registerTask('default', ['check', 'build']);
+
+    // Task for production - adds asset versioning
+    grunt.registerTask('build-production', ['build', 'assets_versioning']);
+
+    // Aggregate tasks
+    grunt.registerTask('check', ['checkcss', 'checkjs']);
+    grunt.registerTask('build', ['clean', 'copy', 'buildcss', 'buildjs']);
 
     // CSS
     grunt.registerTask('checkcss', ['csslint', 'csscomb']);
@@ -226,7 +232,4 @@ module.exports = function (grunt) {
     grunt.registerTask('checkjs', ['jshint']);
     grunt.registerTask('buildjs', ['concat', 'uglify']);
 
-    // Distribution task
-    grunt.registerTask('dist', ['watch:dist']);
-    grunt.registerTask('copyfiles', ['copy:jQuery', 'copy:leafletjs', 'copy:leafletimages', 'copy:leafletcss', 'copy:markerclusterjs', 'copy:markerclustercss']);
 };

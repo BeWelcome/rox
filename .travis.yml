@@ -15,6 +15,7 @@ before_install:
 
 install:
   - composer install --dev --no-interaction --ignore-platform-reqs
+  - npm install
 
 script:
-  - make && make build && make checkjs
+  - make && make build

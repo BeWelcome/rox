@@ -12,7 +12,6 @@ all: phpci
 phpci: phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpmetrics phpunit
 
 build:
-	npm install
 	./node_modules/.bin/grunt
 
 phpcpd:

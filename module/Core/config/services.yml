@@ -1,0 +1,54 @@
+services:
+    Rox\Core\Factory\DatabaseFactory:
+        class: Rox\Core\Factory\DatabaseFactory
+
+    Illuminate\Database\Connection:
+        class: Illuminate\Database\Connection
+        factory: ['@Rox\Core\Factory\DatabaseFactory', __invoke]
+
+    Rox\Core\Kernel\LegacyHttpKernel:
+        class: Rox\Core\Kernel\LegacyHttpKernel
+        arguments: ['@templating.engine.twig', '@event_dispatcher', '@controller_resolver', '@request_stack']
+
+    templating.engine.twig:
+        class: Symfony\Bundle\TwigBundle\TwigEngine
+        autowiring_types: Symfony\Component\Templating\EngineInterface
+        arguments: ['@twig', '@templating.name_parser', '@templating.locator']
+
+    Rox\Core\Extension\RoxTwigExtension:
+        class: Rox\Core\Extension\RoxTwigExtension
+        autowire: true
+        public: false
+        tags:
+            - { name: twig.extension }
+
+    twig.extension.assets:
+        class: Rox\Core\Extension\AssetExtension
+        public: false
+        tags:
+            - { name: twig.extension }
+
+    twig.extension.form:
+        class: Symfony\Bridge\Twig\Extension\FormExtension
+        arguments: ['@twig.form.renderer']
+        public: false
+        tags:
+            - { name: twig.extension }
+
+    twig.extension.translation:
+        class: Symfony\Bridge\Twig\Extension\TranslationExtension
+        arguments: ['@translator']
+        public: false
+        tags:
+            - { name: twig.extension }
+
+    form.factory:
+        class: Symfony\Component\Form\FormFactory
+        autowiring_types: Symfony\Component\Form\FormFactoryInterface
+        arguments: ['@form.registry', '@form.resolved_type_factory']
+
+    controller_resolver:
+        class: Rox\Core\Controller\ControllerResolver
+        arguments: ['@service_container', '@controller_name_converter', '@?logger']
+        tags:
+            - { name: monolog.logger, channel: request }

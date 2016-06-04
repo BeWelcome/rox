@@ -1,0 +1,29 @@
+<div id="threadsdisplay" class="scrollcontent">
+
+    {# 4 most recent forum messages #}
+    {% for thread in threads %}
+
+        <div class="row p-l-1 p-r-1">
+            <div class="col-xs-12 fullheight">
+                <div class="hidden-xs-down pull-xs-left avatarpadding">
+                    <a href="members/{{ thread.lastuser }}"><img class="float_left framed" style="width: 50px; height: 50px;" src="/members/avatar/{{ thread.lastuser }}?150" alt="{{ thread.lastuser }}" /></a>
+                </div>
+                <div class="dashentry">
+                    <p class="text-truncate">
+                        {#{% if not thread.read %}<strong>{% endif %}#}
+                            <a href="{{ url('forum_thread', {'threadId': thread.id}) }}">{{ thread.title }}</a>
+                            {#{% if not thread.read %}</strong>{% endif %}<br>#}
+                        <small>by <a href="members/{{ thread.lastuser }}">{{ thread.lastuser }}</a> {{ ago(thread.time) }}</small>
+                    </p>
+                </div>
+                <div class="pull-xs-right hidden-md-down chevplace">
+                    <a href="{{ url('forum_thread', {'threadId': thread.id}) }}"><i class="fa fa-chevron-right"></i></a>
+                </div>
+            </div>
+        </div>
+
+    {% endfor %}
+
+    {# infinite scroll??? #}
+
+</div>

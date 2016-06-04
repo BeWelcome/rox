@@ -3,7 +3,7 @@
 namespace Rox\Mockups;
 
 use Rox\Models\Log;
-use Rox\Models\Member;
+use Rox\Member\Model\Member;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

@@ -1,0 +1,4 @@
+services:
+    Rox\Start\Service\StartService:
+        class: Rox\Start\Service\StartService
+        autowire: true

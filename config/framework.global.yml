@@ -1,0 +1,22 @@
+# @see http://symfony.com/doc/current/reference/configuration/framework.html
+
+framework:
+    secret: todo
+    templating:
+        engines:
+            - twig
+
+    router:
+        resource: %kernel.root_dir%/config/routes.global.yml
+
+    default_locale: en
+
+    form:
+        enabled: true
+
+    session:
+      name: sidTB
+      # Set the save path to null so NativeFileSessionHandler will use the PHP
+      # default. The default is %kernel.cache_dir%/sessions and FPM on vagrant
+      # dev could not write to the file.
+      save_path: null

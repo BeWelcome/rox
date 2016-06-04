@@ -16,7 +16,7 @@ class Activity extends Model
      */
     public function creator()
     {
-        return $this->hasOne('Rox\Models\Member', 'creator', 'id');
+        return $this->hasOne('Rox\Member\Model\Member', 'creator', 'id');
     }
 
     /**
@@ -24,7 +24,7 @@ class Activity extends Model
      */
     public function attendees()
     {
-        return $this->hasManyThrough('Rox\Models\Member', 'Rox\Models\ActivityAttendee', 'activityId', 'id');
+        return $this->hasManyThrough('Rox\Member\Model\Member', 'Rox\Models\ActivityAttendee', 'activityId', 'id');
     }
 
     public function location()

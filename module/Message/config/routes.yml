@@ -1,0 +1,5 @@
+message/view:
+    path: /messages/{id}
+    methods: [GET]
+    defaults:
+        _controller: Rox\Message\Controller\MessageController:view

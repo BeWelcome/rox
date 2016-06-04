@@ -4,7 +4,7 @@ namespace Rox\Admin\Queries;
 
 use Rox\Framework\Controller;
 use Rox\Models\Query;
-use Rox\Models\Member;
+use Rox\Member\Model\Member;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;

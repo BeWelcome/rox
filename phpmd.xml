@@ -18,7 +18,7 @@
           externalInfoUrl="http://phpmd.org/rules/cleancode.html#staticaccess">
         <priority>3</priority>
         <properties>
-            <property name="exceptions" value="\Locale" />
+            <property name="exceptions" value="\Locale,\Carbon\Carbon,\Illuminate\Database\Eloquent\Relations\HasMany,\Faker\Factory,\Symfony\Component\Debug\Debug" />
         </properties>
     </rule>
 

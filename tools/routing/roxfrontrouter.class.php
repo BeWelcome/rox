@@ -397,6 +397,11 @@ A TERRIBLE EXCEPTION
         
         if (method_exists($classname, $method)) {
             $controller = new $classname();
+
+            if ($controller instanceof PAppController) {
+                $controller->setEngine($this->engine);
+            }
+
             $controller->route_vars = $route_vars;
             $controller->request_vars = $request;
             $controller->args_vars = $this->args;
@@ -411,7 +416,7 @@ A TERRIBLE EXCEPTION
         } else {
             $page = false;
         }
-        
+
         $this->renderPage($page);
         
         //---------------------------

@@ -1,0 +1,8 @@
+services:
+    Rox\Start\Controller\StartController:
+        class: Rox\Start\Controller\StartController
+        autowire: true
+
+    Rox\Start\Controller\HomeController:
+        class: Rox\Start\Controller\HomeController
+        autowire: true

@@ -41,3 +41,4 @@ phpmetrics.html
 VERSION
 htdocs/assets/
 config/*.local.yml
+.env

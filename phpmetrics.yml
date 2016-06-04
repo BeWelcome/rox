@@ -5,7 +5,7 @@ default:
     failure: average.maintainabilityIndex < 60
 
     path:
-        directory: Rox
+        directory: module
         extensions: php
 
     logging:

@@ -1,6 +1,8 @@
 <?php
 $finder = Symfony\CS\Finder\DefaultFinder::create()
-    ->in('Rox/');
+    ->notName('*.twig')
+    ->notName('*.yml')
+    ->in('module');
 $config = Symfony\CS\Config\Config::create();
 $config->level(null);
 $config->fixers(

@@ -1,170 +1,46 @@
 <?php
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-use Rox\Framework\ControllerResolverListener;
-use Rox\Framework\SessionSingleton;
-use Symfony\Component\Debug\Debug;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
-use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
-use Symfony\Component\Form\Forms;
+/**
+ * This makes our life easier when dealing with paths. Everything is relative
+ * to the application root now.
+ */
+use Dotenv\Dotenv;
+use Rox\Core\Kernel\Application;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpKernel\EventListener\RouterListener;
-use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Http\Firewall;
-use Rox\Framework;
-use Symfony\Component\Validator\Validation;
 
-/**
- * Setup some stuff to be used by old Rox components
- */
+chdir(dirname(__DIR__));
 
-$script_base = dirname(__FILE__)."/../";
-define('SCRIPT_BASE', $script_base);
-define('HTDOCS_BASE', dirname(__FILE__).'/');
+// Decline static file requests back to the PHP built-in webserver
+if (php_sapi_name() === 'cli-server'
+    && is_file(__DIR__ . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))) {
+    return false;
+}
 
-/**
- * Configure PHP
- */
-ini_set('allow_url_fopen', 1);
-ini_set( 'display_errors', 1 );
-ini_set('error_log', SCRIPT_BASE.'errors.log');
-ini_set('error_reporting', E_ALL);
+// Setup autoloading
+require 'vendor/autoload.php';
 
-/**
- * Setup autoloader for Composer, Rox namespace, and old Rox autoloading loading
- */
+$cached = 'vendor/bootstrap.php';
 
-require SCRIPT_BASE.'vendor/autoload.php';
+if (file_exists($cached)) {
+    require_once $cached;
+}
 
-Debug::enable();
+$dotEnv = new Dotenv('.');
 
-$session = SessionSingleton::getSession();
-$session->setName('sidTB');
-$session->start();
-
-$environmentExplorer = new EnvironmentExplorer();
-$environmentExplorer->initializeGlobalState();
-
-$locator = new Symfony\Component\Config\FileLocator(array(SCRIPT_BASE));
-$yamlFileLocator = new Symfony\Component\Routing\Loader\YamlFileLoader(
-    $locator
-);
-
-$params = parse_ini_file('../rox_local.ini');
-
-$validator = Validation::createValidator();
-
-$formFactory = Forms::createFormFactoryBuilder()
-    ->addExtension(new HttpFoundationExtension())
-    ->addExtension(new ValidatorExtension($validator))
-    ->getFormFactory();
+$dotEnv->load();
 
 $request = Request::createFromGlobals();
-$request->setSession($session);
-$requestContext = new Symfony\Component\Routing\RequestContext();
-$hostname = $params['baseuri'];
-$hostname = str_replace('http://', '', $hostname);
-$hostname = str_replace('/', '', $hostname);
-$requestContext->setHost($hostname);
 
-$router = new Symfony\Component\Routing\Router(
-    $yamlFileLocator,
-    SCRIPT_BASE . 'routes.yml',
-    [],
-    $requestContext
-);
+// TODO review Symfony best practices for setting language, also when it comes from a user setting
+// http://symfony.com/doc/current/cookbook/session/locale_sticky_session.html
+$lang = Locale::getPrimaryLanguage($request->getPreferredLanguage());
 
-$routesCollection =
+$request->setLocale($lang);
 
-$matcher = new Symfony\Component\Routing\Matcher\UrlMatcher(
-    $router->getRouteCollection(), $requestContext
-);
+$app = new Application(getenv('APP_ENV'), (getenv('APP_DEBUG') === 'true'));
 
-$tokenStorage = new \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage();
+$response = $app->handle($request);
 
-$parts = explode('=', $params['dsn']);
-$host = substr($parts[1], 0, strpos($parts[1], ';'));
-$db = $parts[2];
-$user = $params['user'];
-$password = $params['password'];
+$response->send();
 
-// Setup database connection with Eloquent
-$capsule = new Capsule();
-$capsule->addConnection([
-    'driver' => 'mysql',
-    'host' => $host,
-    'database' => $db,
-    'username' => $user,
-    'password' => $password,
-    'charset' => 'utf8',
-    'collation' => 'utf8_unicode_ci',
-    'prefix' => '',
-]);
-
-$capsule->setAsGlobal();
-$capsule->bootEloquent();
-
-$requestStack = new RequestStack();
-
-$resolver = new Symfony\Component\HttpKernel\Controller\ControllerResolver();
-
-$dispatcher = new EventDispatcher();
-
-$dispatcher->addSubscriber(
-    new RouterListener($matcher, $requestStack)
-);
-
-$dispatcher->addSubscriber(
-    new ControllerResolverListener($router, $formFactory)
-);
-
-$dispatcher->addSubscriber(
-    new Framework\InteractiveLoginListener($session)
-);
-
-$framework = new Rox\Framework($dispatcher, $resolver, $requestStack);
-
-$firewall = new Rox\Framework\Firewall\RoxFirewall($router, $dispatcher, $tokenStorage);
-
-try {
-    $response = $framework->handle($request);
-    $response->send();
-    $framework->terminate($request, $response);
-} catch (Twig_Error $e) {
-    echo 'Exception: '.$e->getMessage();
-    echo "\n{$e->getFile()} ({$e->getLine()})";
-    exit();
-} catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
-    $pathInfo = $request->getPathInfo();
-    if (strstr($pathInfo, '.php') !== false) {
-        if (strstr($pathInfo, 'admin/') === false) {
-            $response = new Symfony\Component\HttpFoundation\Response(
-                'Nope nothing here', 404
-            );
-            $response->send();
-        } else {
-            require_once HTDOCS_BASE . 'bw/' . $pathInfo;
-        }
-    } else {
-        require_once SCRIPT_BASE . 'roxlauncher/roxlauncher.php';
-        $launcher = new RoxLauncher();
-        try {
-            $launcher->launch($environmentExplorer);
-        } catch (PException $e) {
-            // XML header is a bad idea in this case,
-            // because most likely the application already started with XHTML
-            // header('Content-type: application/xml; charset=utf-8');
-            echo '<pre>';
-            print_r($e);
-            echo '</pre>';
-            exit();
-        } catch (Exception $e) {
-            echo 'Exception: ' . $e->getMessage();
-            echo "\n{$e->getFile()} ({$e->getLine()})";
-            exit();
-        }
-    }
-}
+$app->terminate($request, $response);

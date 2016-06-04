@@ -1,6 +1,6 @@
 .PHONY: all build phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpmetrics phpunit version
 
-SRC_DIR=Rox/
+SRC_DIR=module/
 
 null  :=
 SPACE := $(null) $(null)
@@ -13,7 +13,7 @@ phpci: phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpmetrics phpunit
 
 build:
 	npm install
-	./node_modules/.bin/grunt sass
+	./node_modules/.bin/grunt
 
 phpcpd:
 	php -d memory_limit=256M ./vendor/bin/phpcpd $(SRC_DIR) --progress --no-interaction
@@ -38,3 +38,6 @@ phpmetrics:
 
 version:
 	git rev-parse --short HEAD > VERSION
+
+checkjs:
+	./node_modules/.bin/grunt checkjs

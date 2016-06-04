@@ -1,0 +1,35 @@
+avatar:
+    path:     /members/avatar/{username}
+    requirements:
+        username: "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"
+    defaults:
+        _controller: Rox\Member\Controller\AvatarController:__invoke
+
+textsearch:
+    path: /search/members
+    defaults:
+        _controller: Rox\Member\Controller\SearchController:searchAction
+
+member:
+    path: /members/{username}
+    methods: [GET]
+    defaults:
+        _controller: Rox\Member\Controller\MemberController:view
+
+member/edit:
+    path: /member/edit
+    methods: [GET]
+    defaults:
+        _controller: Rox\Member\Controller\MemberController:edit
+
+member/comment:
+    path: /members/{username}/comment
+    methods: [GET]
+    defaults:
+        _controller: Rox\Member\Controller\CommentController:index
+
+https_check:
+    path: /https_check
+    methods: [GET]
+    defaults:
+        _controller: Rox\Member\Controller\HttpsCheckController:__invoke

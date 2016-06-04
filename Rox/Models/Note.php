@@ -2,16 +2,17 @@
 
 namespace Rox\Models;
 
-
 use Illuminate\Database\Eloquent\Model;
+use Rox\Member\Model\Member;
 
 class Note extends Model
 {
+    const CREATED_AT = 'created';
+
     public $table = 'notes';
 
-    public $timestamps = false;
-
-    public function notifier() {
-        return $this->hasOne('Rox\Models\Member', 'id', 'IdRelMember');
+    public function notifier()
+    {
+        return $this->hasOne(Member::class, 'id', 'IdRelMember');
     }
 }

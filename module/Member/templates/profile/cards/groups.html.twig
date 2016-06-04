@@ -1,0 +1,13 @@
+<div class="card">
+    <a name="groups"></a>
+    <h3 class="card-header m-b-0"><i class="fa fa-users"></i><span class="icontext">Groups membership</span></h3>
+    <div class="card-block p-a-0">
+        <div class="list-group">
+            {% for group in member.groups %}
+                <a href="#" class="list-group-item grouplist{{ loop.index == 1 ? ' profilelist' : '' }}">{#<img src="/members/avatar/member-106?30_30">#}<i class="fa fa-group"></i> <span class="icontext">{{ group.Name }}</span></a>
+            {% endfor %}
+
+            <a href="#" class="list-group-item grouplist"><i class="fa fa-group"></i> <span class="icontext"><strong>View all subscribed public groups</strong></span></a>
+        </div>
+    </div>
+</div>

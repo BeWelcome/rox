@@ -1,0 +1,6 @@
+forum_thread:
+    path: /forums/s{threadId}/
+    requirements:
+        threadId: "(?<![-.])\\b[0-9]+\\b(?!\\.[0-9])"
+    defaults:
+        _controller: "\\ForumsController::index"

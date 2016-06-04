@@ -15,6 +15,7 @@ class PageWithHTML extends AbstractBasePage
     );
 
     private $_late_scriptfiles = array(
+        'tether-1.1.1/js/tether.js',
         '/bootstrap/bootstrap.js',
         '/common/initialize.js?1',
     );
@@ -260,7 +261,7 @@ class PageWithHTML extends AbstractBasePage
         if (!$scriptfiles = $this->getScriptfiles()) {
             // no stylesheets
         } else foreach($scriptfiles as $url) {
-            ?><script type="text/javascript" src="script/<?=$url ?>"></script>
+            ?><script type="text/javascript" src="script/<?=ltrim($url, '/')?>"></script>
             <?php
         }
     }
@@ -278,14 +279,14 @@ class PageWithHTML extends AbstractBasePage
         {
             foreach($scriptfiles as $url)
             {
-                echo "<script type='text/javascript' src='script/{$url}'></script>" . PHP_EOL;
+                echo "<script type='text/javascript' src='script/" . ltrim($url, '/') . "'></script>" . PHP_EOL;
             }
         }
     }
 
     protected function head()
     {
-        $baseuri = PVars::getObj('env')->baseuri;
+        $baseuri = PVars::getObj('env')->baseuri ?: '/';
         ?>
         <title><?= htmlspecialchars($this->getPageTitle(), ENT_QUOTES) ?></title>
         <base id="baseuri" href='<?=$baseuri ?>' />

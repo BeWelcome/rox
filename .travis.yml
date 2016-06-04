@@ -17,4 +17,4 @@ install:
   - composer install --dev --no-interaction --ignore-platform-reqs
 
 script:
-  - make && make build
+  - make && make build && make checkjs

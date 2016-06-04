@@ -7,13 +7,13 @@
          verbose="true">
     <testsuites>
         <testsuite name="Rox">
-            <directory>tests/</directory>
+            <directory>module/*/tests/</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./Rox</directory>
+            <directory suffix=".php">./module/*/src</directory>
         </whitelist>
     </filter>
 

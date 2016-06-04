@@ -229,9 +229,9 @@ class PageWithRoxLayout extends PageWithHTML
         );
 
         if ($logged_in) {
-            $template = '@core/menu.html.twig';
+            $template = '@base/menu.html.twig';
         } else {
-            $template = '@core/loginbar.html.twig';
+            $template = '@base/loginbar.html.twig';
         }
 
         $topmenu = $this->engine->render($template);
@@ -312,7 +312,7 @@ class PageWithRoxLayout extends PageWithHTML
      */
     protected function footer()
     {
-        echo $this->engine->render('@core/footer.html.twig');
+        echo $this->engine->render('@base/footer.html.twig');
         // require SCRIPT_BASE . "build/rox/templates/footer.php";
     }
 

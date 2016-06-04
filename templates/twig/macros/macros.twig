@@ -64,8 +64,8 @@
     {% endif %}
 {% endmacro %}
 
-{% macro memberlink(username) %}
-<a href="members/{{ username }}">{{ username }}</a>
+{% macro memberlink(member) %}
+<a href="members/{{ member.Username }}">{{ member.Username }}</a>
 {% endmacro %}
 
 {% macro pagination(currentPage, lastPage, route, routeParams) %}

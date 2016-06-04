@@ -1,0 +1,4 @@
+services:
+    Rox\Admin\Controller\LogsController:
+        class: Rox\Admin\Controller\LogsController
+        autowire: true

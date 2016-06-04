@@ -7,6 +7,8 @@ use Twig_SimpleFunction;
 
 class AssetExtension extends Twig_Extension
 {
+    const MANIFEST = 'cache/assets_versioning.json';
+
     public function getFunctions()
     {
         return [
@@ -21,10 +23,14 @@ class AssetExtension extends Twig_Extension
      */
     public function getAssetUrl($path)
     {
-        $path = 'assets/' . $path;
-        //$path = 'assets/build/' . $path;
+        // If the manifest file doesn't exist, then return the unversioned file.
+        if (!is_readable(self::MANIFEST)) {
+            return 'assets/build/' . $path;
+        }
 
-        $data = file_get_contents('cache/assets_versioning.json');
+        $path = 'assets/' . $path;
+
+        $data = file_get_contents(self::MANIFEST);
 
         $manifest = json_decode($data, JSON_OBJECT_AS_ARRAY);
 

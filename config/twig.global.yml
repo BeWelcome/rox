@@ -3,7 +3,7 @@
 twig:
     debug: true
     strict_variables: true
-    cache: 'cache/'
+    cache: 'cache/%kernel.environment%/twig/'
     exception_controller:  twig.controller.exception:showAction
     paths:
         '%kernel.root_dir%/templates/twig/macros': macros

@@ -130,6 +130,8 @@ module.exports = function (grunt) {
                     'node_modules/skrollr/dist/skrollr.min.js',
                     'node_modules/skrollr-menu/dist/skrollr.menu.min.js',
 
+                    'node_modules/unslider/src/js/unslider.js',
+
                     'module/*/assets/js/**/*.js'
                 ],
                 dest: 'htdocs/assets/js/built.js',

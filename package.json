@@ -26,19 +26,20 @@
         "select2-bootstrap-theme": "~0.1.0-beta.4"
     },
     "dependencies": {
-        "bootstrap": "twbs/bootstrap#064fda0e802679e56e88db2910fdf5369dde6e4c",
-        "bootstrap-autohidingnavbar": "istvan-ujjmeszaros/bootstrap-autohidingnavbar",
+        "bootstrap": "github:twbs/bootstrap#064fda0e802679e56e88db2910fdf5369dde6e4c",
+        "bootstrap-autohidingnavbar": "github:istvan-ujjmeszaros/bootstrap-autohidingnavbar",
         "font-awesome": "^4.5.0",
         "html5shiv": "^3.7.3",
         "jquery": "^2.1.4",
-        "jquery-ui": "jquery/jquery-ui#1.11.4",
+        "jquery-ui": "github:jquery/jquery-ui#1.11.4",
         "lato-font": "^1.1.1",
         "leaflet": "^0.7.7",
         "leaflet.markercluster": "^0.4.0",
         "respond.js": "^1.4.2",
         "select2": "^4.0.2",
         "skrollr": "^0.6.26",
-        "skrollr-menu": "Prinzhorn/skrollr-menu",
-        "tether": "~1.2.0"
+        "skrollr-menu": "github:Prinzhorn/skrollr-menu",
+        "tether": "~1.2.0",
+        "unslider": "github:idiot/unslider"
     }
 }

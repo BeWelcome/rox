@@ -17,8 +17,3 @@ message:
 
 start:
     resource: ../module/Start/config/routes.yml
-
-mockups:
-    path: /mockups/{mockup}
-    defaults:
-      _controller: "\\Rox\\Mockups\\MockupsController::showMockup"

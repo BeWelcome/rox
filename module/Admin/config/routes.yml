@@ -1,6 +1,11 @@
 # TODO change route names to use slashes
 # TODO use unquoted class names
 
+mockups:
+    path: /mockups/{mockup}
+    defaults:
+      _controller: Rox\Admin\Controller\MockupsController:showMockup
+
 admin_logs_type:
     path:     /admin/logs/type/{type}/{currentPage}/{itemsPerPage}
     defaults:

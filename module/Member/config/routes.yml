@@ -23,7 +23,7 @@ member/edit:
         _controller: Rox\Member\Controller\MemberController:edit
 
 member/comment:
-    path: /members/{username}/comment
+    path: /members/{username}/comments
     methods: [GET]
     defaults:
         _controller: Rox\Member\Controller\CommentController:index

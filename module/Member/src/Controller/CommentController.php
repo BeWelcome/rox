@@ -31,7 +31,7 @@ class CommentController
 
         $member = $this->memberRepository->getByUsername($username);
 
-        $content = $this->engine->render('@member/profile/view.html.twig', [
+        $content = $this->engine->render('@member/comments.html.twig', [
             'member' => $member,
         ]);
 

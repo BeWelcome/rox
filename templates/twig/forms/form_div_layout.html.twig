@@ -10,7 +10,7 @@
 
 {%- block form_widget_simple -%}
     {%- set type = type|default('text') -%}
-        <input class="form-control" type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
 {%- endblock form_widget_simple -%}
 
 {%- block form_widget_compound -%}
@@ -44,15 +44,15 @@
 
 {%- block choice_widget_expanded -%}
     <div {{ block('widget_container_attributes') }}>
-    {%- for child in form %}
-        {{- form_widget(child) -}}
-        {{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}
-    {% endfor -%}
+        {%- for child in form %}
+            {{- form_widget(child) -}}
+            {{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}
+        {% endfor -%}
     </div>
 {%- endblock choice_widget_expanded -%}
 
 {%- block choice_widget_collapsed -%}
-    {%- if required and placeholder is none and not placeholder_in_choices and not multiple -%}
+    {%- if required and placeholder is none and not placeholder_in_choices and not multiple and (attr.size is not defined or attr.size <= 1) -%}
         {% set required = false %}
     {%- endif -%}
     <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
@@ -185,8 +185,8 @@
     {%- if label is empty -%}
         {%- if label_format is not empty -%}
             {% set label = label_format|replace({
-                '%name%': name,
-                '%id%': id,
+            '%name%': name,
+            '%id%': id,
             }) %}
         {%- else -%}
             {% set label = name|humanize %}
@@ -209,7 +209,6 @@
 
 {%- block form_label -%}
     {% if label is not same as(false) -%}
-        {% set label_attr = label_attr|merge({'class': 'col-sm-2'}) %}
         {% if not compound -%}
             {% set label_attr = label_attr|merge({'for': id}) %}
         {%- endif -%}
@@ -219,8 +218,8 @@
         {% if label is empty -%}
             {%- if label_format is not empty -%}
                 {% set label = label_format|replace({
-                    '%name%': name,
-                    '%id%': id,
+                '%name%': name,
+                '%id%': id,
                 }) %}
             {%- else -%}
                 {% set label = name|humanize %}
@@ -264,7 +263,7 @@
 
 {%- block form -%}
     {{ form_start(form) }}
-        {{- form_widget(form) -}}
+    {{- form_widget(form) -}}
     {{ form_end(form) }}
 {%- endblock form -%}
 
@@ -275,7 +274,7 @@
     {%- else -%}
         {% set form_method = "POST" %}
     {%- endif -%}
-    <form class="form" name="{{ name }}" method="{{ form_method|lower }}"{% if action != '' %} action="{{ action }}"{% endif %}{% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}{% if multipart %} enctype="multipart/form-data"{% endif %}>
+    <form name="{{ name }}" method="{{ form_method|lower }}"{% if action != '' %} action="{{ action }}"{% endif %}{% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}{% if multipart %} enctype="multipart/form-data"{% endif %}>
     {%- if form_method != method -%}
         <input type="hidden" name="_method" value="{{ method }}" />
     {%- endif -%}
@@ -290,11 +289,11 @@
 
 {%- block form_errors -%}
     {%- if errors|length > 0 -%}
-    <ul>
-        {%- for error in errors -%}
-            <li>{{ error.message }}</li>
-        {%- endfor -%}
-    </ul>
+        <ul>
+            {%- for error in errors -%}
+                <li>{{ error.message }}</li>
+            {%- endfor -%}
+        </ul>
     {%- endif -%}
 {%- endblock form_errors -%}
 
@@ -315,7 +314,6 @@
 {%- endblock form_rows -%}
 
 {%- block widget_attributes -%}
-    class="form-control"
     id="{{ id }}" name="{{ full_name }}"
     {%- if disabled %} disabled="disabled"{% endif -%}
     {%- if required %} required="required"{% endif -%}

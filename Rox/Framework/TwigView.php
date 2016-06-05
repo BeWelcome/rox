@@ -106,9 +106,7 @@ class TwigView extends AbstractBasePage {
     }
 
     public function initializeFormComponent($inlineForms = false) {
-        $formTemplate = ($inlineForms) ? 'inline' : '';
-        // Setting up the form template
-        $defaultFormTheme = 'form_div_layout.html.twig';
+        $formTheme = '@forms/bs4' . (($inlineForms) ? '.inline' : '') . '.html.twig';
 
         $appVariableReflection = new \ReflectionClass(
             '\Symfony\Bridge\Twig\AppVariable'
@@ -120,7 +118,7 @@ class TwigView extends AbstractBasePage {
             $vendorTwigBridgeDir.'/Resources/views/Form'
         );
 
-        $formEngine = new TwigRendererEngine(array($defaultFormTheme));
+        $formEngine = new TwigRendererEngine(array($formTheme));
         $formEngine->setEnvironment($this->_environment);
         // add the FormExtension to Twig
         $this->_environment->addExtension(

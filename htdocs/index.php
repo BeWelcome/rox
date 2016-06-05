@@ -3,18 +3,19 @@
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Rox\Framework\ControllerResolverListener;
 use Symfony\Component\Debug\Debug;
-use Symfony\Component\Debug\ErrorHandler;
-use Symfony\Component\Debug\ExceptionHandler;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\Forms;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Http\Firewall;
-use Symfony\Component\Validator\Validation;
 use Rox\Framework;
+use Symfony\Component\Validator\Validation;
+
 /**
  * Setup some stuff to be used by old Rox components
  */
@@ -29,6 +30,7 @@ define('HTDOCS_BASE', dirname(__FILE__).'/');
 ini_set('allow_url_fopen', 1);
 ini_set( 'display_errors', 1 );
 ini_set('error_log', SCRIPT_BASE.'errors.log');
+ini_set('error_reporting', E_ALL);
 
 /**
  * Setup autoloader for Composer, Rox namespace, and old Rox autoloading loading
@@ -38,10 +40,12 @@ require SCRIPT_BASE.'vendor/autoload.php';
 
 Debug::enable();
 
-ini_set('error_reporting', -1);
+$session = new Session();
+$session->start();
 
 $environmentExplorer = new EnvironmentExplorer;
 $environmentExplorer->initializeGlobalState();
+$environmentExplorer->setSession($session);
 
 $locator = new Symfony\Component\Config\FileLocator(array(SCRIPT_BASE));
 $yamlFileLocator = new Symfony\Component\Routing\Loader\YamlFileLoader(
@@ -50,12 +54,6 @@ $yamlFileLocator = new Symfony\Component\Routing\Loader\YamlFileLoader(
 
 $params = parse_ini_file('../rox_local.ini');
 
-$context = new Symfony\Component\Routing\RequestContext();
-$hostname = $params['baseuri'];
-$hostname = str_replace('http://', '', $hostname);
-$hostname = str_replace('/', '', $hostname);
-$context->setHost($hostname);
-
 $validator = Validation::createValidator();
 
 $formFactory = Forms::createFormFactoryBuilder()
@@ -63,22 +61,29 @@ $formFactory = Forms::createFormFactoryBuilder()
     ->addExtension(new ValidatorExtension($validator))
     ->getFormFactory();
 
+$request = Request::createFromGlobals();
+$request->setSession($session);
+$requestContext = new Symfony\Component\Routing\RequestContext();
+$hostname = $params['baseuri'];
+$hostname = str_replace('http://', '', $hostname);
+$hostname = str_replace('/', '', $hostname);
+$requestContext->setHost($hostname);
+
 $router = new Symfony\Component\Routing\Router(
     $yamlFileLocator,
     SCRIPT_BASE.'routes.yml',
     [],
-    $context
+    $requestContext
 );
 
-// Create global router object
-$request = Symfony\Component\HttpFoundation\Request::createFromGlobals();
-$requestContext = new RequestContext($request);
+
 $matcher = new Symfony\Component\Routing\Matcher\UrlMatcher(
     $router->getRouteCollection(), $requestContext
 );
 
-$parts = explode('=', $params['dsn']);
+$tokenStorage = new \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage();
 
+$parts = explode('=', $params['dsn']);
 $host = substr($parts[1], 0, strpos($parts[1], ';'));
 $db = $parts[2];
 $user = $params['user'];
@@ -101,13 +106,6 @@ $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
 $requestStack = new RequestStack();
-$requestStack->push($request);
-// Create global router object
-$request = Symfony\Component\HttpFoundation\Request::createFromGlobals();
-$requestContext = new RequestContext($request);
-
-$requestStack = new RequestStack();
-$requestStack->push($request);
 
 $resolver = new Symfony\Component\HttpKernel\Controller\ControllerResolver();
 
@@ -116,11 +114,18 @@ $dispatcher = new EventDispatcher();
 $dispatcher->addSubscriber(
     new RouterListener($matcher, $requestStack)
 );
+
 $dispatcher->addSubscriber(
     new ControllerResolverListener($router, $formFactory)
 );
 
-$framework = new Rox\Framework($dispatcher, $resolver);
+$dispatcher->addSubscriber(
+    new Framework\InteractiveLoginListener($session)
+);
+
+$framework = new Rox\Framework($dispatcher, $resolver, $requestStack);
+
+$firewall = new Rox\Framework\Firewall\RoxFirewall($router, $dispatcher, $tokenStorage);
 
 try {
     $response = $framework->handle($request);
@@ -142,7 +147,7 @@ try {
             require_once HTDOCS_BASE . 'bw/' . $pathInfo;
         }
     } else {
-        require_once SCRIPT_BASE.'roxlauncher/roxlauncher.php';
+        require_once SCRIPT_BASE . 'roxlauncher/roxlauncher.php';
         $launcher = new RoxLauncher();
         try {
             $launcher->launch($environmentExplorer);
@@ -155,11 +160,9 @@ try {
             echo '</pre>';
             exit();
         } catch (Exception $e) {
-            echo 'Exception: '.$e->getMessage();
+            echo 'Exception: ' . $e->getMessage();
             echo "\n{$e->getFile()} ({$e->getLine()})";
             exit();
         }
     }
 }
-
-session_write_close();

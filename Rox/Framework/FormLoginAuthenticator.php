@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 
-class FormLoginAuthenticator extends AbstractFormLoginAuthenticator {
+class OldFormLoginAuthenticator extends AbstractFormLoginAuthenticator {
 
     /**
      * Return the URL to the login page.

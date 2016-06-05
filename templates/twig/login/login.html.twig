@@ -1,21 +1,16 @@
-{% extends '@base/base.html.twig' %}
+{% extends '@login/loginbase.html.twig' %}
 
 {% block content %}
-    <form action="{{ path('login_guard') }}" method="post">
-        {% if error %}
-            <div class="alert alert-danger">
-                {{ error.messageKey|trans(error.messageData) }}
+    <div class="row">
+        <div class="col-xs-12 col-md-6 push-md-3">
+            <div class="info" id="login-widget">
+                {% if error %}
+                    <div class="alert alert-danger">
+                        {{ error.messageKey|trans(error.messageData) }}
+                    </div>
+                {% endif %}
+                {{ form(form) }}
             </div>
-        {% endif %}
-        <div>
-            <label for="username">Username</label>
-            <input type="text" id="username" name="_username" value="{{ last_username }}" />
         </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="_password" />
-        </div>
-        <br/>
-        <button type="submit">Login</button>
-    </form>
+    </div>
 {% endblock %}

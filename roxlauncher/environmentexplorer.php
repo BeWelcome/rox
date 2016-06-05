@@ -6,7 +6,20 @@
  */
 class EnvironmentExplorer
 {
-    function initializeGlobalState()
+    private $session = null;
+
+    public function setSession(\Symfony\Component\HttpFoundation\Session\SessionInterface $session) {
+        $this->session = $session;
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Session\SessionInterface
+     */
+    public function getSession() {
+        return $this->session;
+    }
+
+    public function initializeGlobalState()
     {
         // load data in base.xml
         $base_xml_xpath = $this->loadBaseXML();
@@ -36,7 +49,7 @@ class EnvironmentExplorer
     }
 
 
-    function loadBaseXML()
+    public function loadBaseXML()
     {
         // load base.xml document
         $dom = new DOMDocument();

@@ -64,11 +64,14 @@ HTML;
      * choose a controller and call the index() function.
      * If necessary, flush the buffered output.
      */
-    protected function chooseAndRunApplication($env_explore)
+    protected function chooseAndRunApplication(EnvironmentExplorer $env_explore)
     {
         $router = new \RoxFrontRouter();
         // $router->classes = $env_explore->classes;
         $router->env = $env_explore;
+        $session = $env_explore->getSession();
+        $_SESSION['IdMember'] = $session->get('id');
+        $_SESSION['Username'] = $session->get('Username');
         $router->session_memory = new SessionMemory('SessionMemory');
         $router->route();
     }

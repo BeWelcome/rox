@@ -9,6 +9,11 @@ home:
     defaults:
         _controller: "Rox\\Main\\Home\\HomeController::showAction"
 
+login:
+    path:     /login
+    defaults:
+        _controller: "\\Rox\\Login\\LoginController::loginAction"
+
 login_symfony:
     path:     /login_symfony
     defaults:

@@ -332,7 +332,7 @@ COUNT(*) cnt
 FROM `gallery_items`
 WHERE `gallery_items`.`user_id_foreign` = ' . (int) $userId;
         $s = $this->dao->query($query);
-        $result = $s->fetchColumn();
+        $result = $s->fetch(PDB::FETCH_OBJ);
         $count = (int) $result->cnt;
         return $count;
     }

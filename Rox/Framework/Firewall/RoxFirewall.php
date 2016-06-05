@@ -1,21 +1,14 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Rox\Security;
+namespace Rox\Framework\Firewall;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Http\Firewall;
 
 /**
@@ -32,13 +25,20 @@ class RoxFirewall extends Firewall
      * @param RequestContext           $context
      * @param EventDispatcherInterface $dispatcher An EventDispatcherInterface instance
      */
-    public function __construct(HttpKernel $httpKernel, Router $router, RequestContext $context, EventDispatcherInterface $dispatcher)
+    public function __construct(Router $router, EventDispatcherInterface $dispatcher, TokenStorage $tokenStorage)
     {
-        parent::__construct(new RoxFirewallMap($httpKernel, $router, $context), $dispatcher);
+        $firewallMap = new RoxFirewallMap($router, $dispatcher, $tokenStorage);
+
+        parent::__construct($firewallMap, $dispatcher);
+        $dispatcher->addListener(KernelEvents::REQUEST, array($this, 'onKernelRequest'));
     }
 }
 
 /*
+
+
+
+
  * $httpUtils = new HttpUtils();
 $tokenStorage = new TokenStorage();
 $trustResolver = new AuthenticationTrustResolver(

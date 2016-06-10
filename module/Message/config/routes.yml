@@ -3,3 +3,4 @@ message/view:
     methods: [GET]
     defaults:
         _controller: Rox\Message\Controller\MessageController:view
+        auth_state: auth

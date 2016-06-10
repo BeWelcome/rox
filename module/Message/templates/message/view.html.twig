@@ -5,6 +5,8 @@
 {% set directionIn = my_member.id == message.receiver.id %}
 {% set otherMember = directionIn ? message.sender : message.receiver %}
 
+<div id="main">
+
 <div id="message" class="clearfix">
     <div id="shade_top"></div>
     <div id="buttonstop">
@@ -125,5 +127,5 @@
     <!-- messagefooter -->
     <div id="shade"></div>
 </div> <!-- message -->
-
+</div>
 {% endblock content %}

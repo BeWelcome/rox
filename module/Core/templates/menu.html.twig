@@ -147,18 +147,20 @@
                             </ul>
                         </li>
 
-                        {# logout on smaller screens #}
-                        <li class="nav-item pull-xs-right hidden-lg-up"><a href="/logout" class="nav-link"><i class="fa fa-sign-out"></i></a></li>
+                        {% if my_member %}
+                            {# logout on smaller screens #}
+                            <li class="nav-item pull-xs-right hidden-lg-up"><a href="/logout" class="nav-link"><i class="fa fa-sign-out"></i></a></li>
 
-                        {# messages #}
-                        <li class="nav-item pull-xs-right">
-                            {#<a href="/messages" class="nav-link"><i class="fa fa-lg fa-inbox"></i><noscript>{{ 'MyInbox' | trans }}</noscript> <span class="tag tag-warning">{{ messagecount }}</span></a>#}
-                        </li>
+                            {# messages #}
+                            <li class="nav-item pull-xs-right">
+                                <a href="/messages" class="nav-link"><i class="fa fa-lg fa-inbox"></i><noscript>{{ 'MyInbox' | trans }}</noscript> <span class="tag tag-warning">{{ messageCount }}</span></a>
+                            </li>
 
-                        {# profile link on smaller screens #}
-                        <li class="nav-item pull-xs-right hidden-lg-up">
-                            {#<a href="/members/{{ username }}" class="nav-link"><i class="fa fa-user"></i><span class="hidden-md-down"> {{ username }} </span></a>#}
-                        </li>
+                            {# profile link on smaller screens #}
+                            <li class="nav-item pull-xs-right hidden-lg-up">
+                                <a href="{{ path('member', { username: my_member.Username }) }}" class="nav-link"><i class="fa fa-user"></i><span class="hidden-md-down"> {{ my_member.Username }} </span></a>
+                            </li>
+                        {% endif %}
 
                     </ul>
             </div>

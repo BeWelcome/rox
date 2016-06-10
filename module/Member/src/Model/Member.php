@@ -51,6 +51,16 @@ class Member extends Model implements MemberRepositoryInterface, UserInterface
         'Longitude' => 'float',
     ];
 
+    protected $_relationships = [
+        'city',
+        'comments',
+        'cryptedFields',
+        'groups',
+        'languages',
+        'relationships',
+        'trads',
+    ];
+
     /**
      * @var array
      */
@@ -183,14 +193,7 @@ class Member extends Model implements MemberRepositoryInterface, UserInterface
     {
         $key = $this->normalizeKey($key);
 
-        return parent::__isset($key) || in_array($key, [
-            'city',
-            'comments',
-            'cryptedFields',
-            'groups',
-            'languages',
-            'relationships',
-        ], true);
+        return parent::__isset($key) || in_array($key, $this->_relationships, true);
     }
 
     public function __get($key)

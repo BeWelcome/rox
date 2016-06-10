@@ -85,7 +85,7 @@
                                             <a href="#" class="btn btn-secondary text-xs-left btn-profile">Set inactive</a>
                                             <a href="#" class="btn btn-secondary text-xs-left btn-profile">Delete profile</a>
                                         {%  else %}
-                                            <a href="#" class="btn btn-primary text-xs-left btn-profile"><i class="fa fa-envelope"></i><span class="icontext">Message</span></a>
+                                            <a href="{{ path('message/compose', { username: member.Username }) }}" class="btn btn-primary text-xs-left btn-profile"><i class="fa fa-envelope"></i><span class="icontext">Message</span></a>
                                             <a href="#" class="btn btn-secondary text-xs-left btn-profile"><i class="fa fa-user-plus"></i><span class="icontext">Friend</a></span>
                                             <a href="#" class="btn btn-secondary text-xs-left btn-profile"><i class="fa fa-pencil"></i><span class="icontext">Add comment</a></span>
                                         {% endif %}

@@ -1,0 +1,127 @@
+{% import '@macros/macros.twig' as macros %}
+{% extends '@base/base.html.twig' %}
+
+{% block content %}
+
+<div id="main">
+    <h2>{{ 'UserMessages' | trans | format(my_member.Username) }}</h2>
+
+    <ul class="nav nav-pills">
+        <li class="nav-item">
+            <a class="nav-link{% if folder == 'inbox' %} active{% endif %}" href="{{ path('message') }}">{{ 'MyMessagesReceived' | trans }}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link{% if folder == 'sent' %} active{% endif %}" href="{{ path('message', { filter: 'sent' }) }}">{{ 'MyMessagesSent' | trans }}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link{% if folder == 'spam' %} active{% endif %}" href="{{ path('message', { filter: 'spam' }) }}">{{ 'MyMessagesSpam' | trans }}</a>
+        </li>
+    </ul>
+
+    {% if messages | length == 0 %}
+        <p>{{ 'No messages in this folder.' | trans }}</p>
+    {% else %}
+
+    <form method="POST">
+
+    <div class="pull-left">
+        <p>
+            <button type="submit" name="modify" value="delete" class="btn" onclick="return confirm ('{{ 'MessagesWarningConfirmDelete' | trans }}')">{{ 'delmessage' | trans }}</button>
+
+            {% if folder == 'spam' %}
+                <button type="submit" name="modify" value="nospam" class="btn">{{ 'marknospam' | trans }}</button>
+            {% elseif folder == 'inbox' %}
+                <button type="submit" name="modify" value="markasspam" class="btn">{{ 'markspam' | trans }}</button>
+            {% endif %}
+        </p>
+
+    </div>
+    <div class="pull-right">
+        {% include '@base/pagination.html.twig' with {
+            currentFilters: filter,
+            currentPage: page,
+            paginationPath: "message",
+            lastPage: pages,
+            showAlwaysFirstAndLast: false
+        } only %}
+    </div>
+
+    <table class="table table-striped">
+
+        <tr class="title">
+            <th></th>
+            <th class="from">
+                {% if filter.dir is defined and filter.dir == 'asc' %}
+                    {% set filter = filter | merge({ dir: 'desc' }) %}
+                {% else %}
+                    {% set filter = filter | merge({ dir: 'asc' }) %}
+                {% endif %}
+
+                <a href="{{ path('message', filter | merge({ sort: 'sender' })) }}">{{ 'From' | trans }}</a>
+                /
+                <a href="{{ path('message', filter | merge({ sort: 'date' })) }}">{{ 'Date' | trans }}</a>
+            </th>
+            <th class="message">{{ 'MessagesText' | trans }}</th>
+        </tr>
+
+        {% for message in messages %}
+            {% set directionIn = my_member.id == message.receiver.id %}
+            {% set otherMember = directionIn ? message.sender : message.receiver %}
+
+                <tr class="
+                    {%- if loop.index0 % 2 -%}
+                        highlight
+                    {%- else -%}
+                        blank
+                    {%- endif -%}
+                ">
+
+                <td class="select">
+                    <input type="checkbox" name="message_id[]" class="msganchor" value="{{ message.id }}">
+                </td>
+                <td class="from">
+                    <div style="width:75px; padding: 5px; box-sizing: content-box;">
+                        <div class="pull-xs-left">
+                            {{ macros.avatar(otherMember.Username, 50) }}
+                        </div>
+                        <div class="pull-xs-left" style="word-wrap: break-word;">
+                            <small style="line-height: 1.1;">
+                                <a class="username" href="{{ path('member', { username: otherMember.Username}) }}"><strong>{{ otherMember.Username }}</strong></a>
+                                <br/>
+                                <span class="small" title="{{ message.DateSent }}">{{ message.DateSent.diffForHumans }}</span>
+                            </small>
+                        </div>
+                    </div>
+
+                </td>
+                <td class="message">
+                    {# DevTip: Replace message.Message with faker.Text(2000) to create random message text #}
+                    {% set messageText = message.Message | replace({'\n': ' ', '<br />': ' '}) | striptags %}
+
+                    {% spaceless %}
+                    <p>
+                        <a href="{{ path('message/view', { id: message.id}) }}"
+                            {%- if not message.WhenFirstRead -%}
+                            {{- ' class="unread"' -}}
+                            {%- endif -%}
+                        >
+                            {%- if messageText | length >= 250 -%}
+                                {{- messageText | slice(0, 250) -}} ...
+                            {%- else -%}
+                                {{- messageText -}}
+                            {%- endif -%}
+                        </a>
+                    </p>
+                    {% endspaceless %}
+
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    </form>
+
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,86 @@
+{% import '@macros/macros.twig' as macros %}
+{% extends '@base/base.html.twig' %}
+
+{% block content %}
+
+<div id="main">
+<div id="message" class="clearfix">
+    <div id="shade_top"></div>
+    <div id="messageheader" class="clearfix">
+        <div id="messageside" class="float_right">
+            <p class="small grey">
+                {{ 'LivesIn' | trans }} <strong>{{ receiver.city.name }}, {{ receiver.city.country.name }}</strong><br />
+
+                {{ 'Speaks' | trans }}
+
+                {% if receiver.languages.count > 0 %}
+
+                {% for language in receiver.languages %}
+                    {% spaceless %}
+                        <strong>
+                            <span title="{{ ('LanguageLevel_' ~ language.pivot.Level) | trans }}">
+                                {{- language.WordCode | trans -}}
+                            </span>
+                        </strong>
+                        {%- if not loop.last -%}
+                            ,
+                        {%- endif -%}
+                    {% endspaceless %}
+
+                {% endfor %}
+
+                {% endif %}
+            </p>
+            <p class="small grey">
+                <a href="messages/with/{{ receiver.Username }}">
+                    <img src="images/icons/comments.png" alt="{{ 'messages_allmessageswith' | trans | format(receiver.Username) }}"> {{ 'messages_allmessageswith' | trans | format(receiver.Username) }}
+                </a>
+            </p>
+        </div> <!-- messageside -->
+
+        <div class="float_left">
+            {{ macros.avatar(receiver.Username, 50) }}
+        </div>
+        <div class="float_left">
+            {% if not message is defined or message is null %}
+                <h3>{{ 'MessageCompose' | trans }}</h3>
+            {% endif %}
+
+            {% if message is defined %}
+            {#<?if (isset($message->DateSent) && isset($this->edit)) { ?>#}
+                <h3>{{ 'MessageEdit' | trans }}</h3>
+            {% endif %}
+            <p class="">
+                <span class="grey">{{ ('MessageTo' | trans | format('<a href="' ~ path('member', { username: receiver.Username }) ~ '">' ~ receiver.Username ~ '</a>') | raw )}}</span>
+            </p>
+            {#<?if (isset($message->DateSent) && !isset($this->edit)) { ?>#}
+            {#<p class="">#}
+                {#<span class="grey">{{ 'MessagesDate' | trans }} : </span> <?=date($words->getSilent('DateFormatShort'),strtotime($message->DateSent)) ?>#}
+            {#</p>#}
+            {#<?php } ?>#}
+        </div>
+    </div> <!-- messageheader -->
+    <form method="post" action="">
+        <div id="messagecontent">
+            {% if not receiver is null %}
+                <input type="hidden" name="receiver_id" value="{{ receiver.id }}">
+            {% else %}
+                <p><label for="message_to">To:</label>
+                    <input id="message_to" name="receiver_username"></p>
+            {% endif %}
+
+            <p>
+                <textarea name="text" rows="15" cols="60" autofocus="autofocus" class="mce" title=""><?=$text ?></textarea>
+            </p>
+
+        </div> <!-- messageconent -->
+        <div id="messagefooter">
+            <p class="clearfix">
+                <input type="submit" class="button" value="{{ 'ComposeSend' | trans }}">
+            </p>
+        </div> <!-- messagefooter -->
+    </form>
+    <div id="shade"> </div>
+</div> <!-- message -->
+</div>
+{% endblock %}

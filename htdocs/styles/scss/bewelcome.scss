@@ -42,3 +42,8 @@ $font-path: '../fonts/';
   line-height: 1.1;
   word-wrap: break-word;
 }
+
+/* This is actually defined in content_minimal but that file is not imported */
+.unread {
+    font-weight: bold;
+}

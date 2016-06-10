@@ -21,6 +21,7 @@ use Traversable;
  * @property Traversable|Countable $comments
  * @property Traversable|Countable $groups
  * @property Collection $trads
+ * @property integer $id
  * @method Builder|HasMany hasMany($a, $b, $c)
  */
 class Member extends Model implements MemberRepositoryInterface, UserInterface

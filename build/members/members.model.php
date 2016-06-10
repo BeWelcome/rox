@@ -28,8 +28,9 @@ Boston, MA  02111-1307, USA.
      * @author shevek
 	 * @Fix jeanyves (2011-09-19)
      */
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-    /**
+/**
      * members app model
      *
      * @package Apps
@@ -45,9 +46,9 @@ class MembersModel extends RoxModelBase
      *
      * @param void
      */
-    public function __construct()
+    public function __construct(SessionInterface $session)
     {
-        parent::__construct();
+        parent::__construct($session);
         $this->bootstrap();
     }
 
@@ -75,8 +76,8 @@ class MembersModel extends RoxModelBase
 
     /**
      *
-     * @param unknown $email
-     * @return boolean|Ambigous <object, mixed>
+     * @param string unknown $email
+     * @return boolean|Ambiguous <object, mixed>
      */
     public function getMemberFromEmail($email)
     {
@@ -297,7 +298,7 @@ WHERE
         } else {
             // check if current session language is a profile language
             $found = false;
-            if (isset($_SESSION['IdMember'])) {
+            if ($this->_session->has( 'IdMember' )) {
                 $memberId = intval($_SESSION['IdMember']);
                 $member = $this->createEntity('Member', $memberId);
                 $member->set_profile_languages();
@@ -323,7 +324,7 @@ WHERE
      */
     public function delete_translation_multiple($trad_ids = array(),$IdOwner, $lang_id)
     {
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
         $count=0 ;
         foreach ($trad_ids as $trad_id){
             $words->deleteMTrad($trad_id, $IdOwner, $lang_id);
@@ -436,13 +437,13 @@ WHERE
             return false;
         }
 
-        $membersModel = new MembersModel();
+        $membersModel = new MembersModel($this->_session);
         $membersModel->set_preference($this->getLoggedInMember()->id, $readCommentGuidlinesPref->id, 1);
     }
     
     public function getCommentGuidelinesRead() {
         $layoutbits = new MOD_layoutbits();
-        return intval($layoutbits->getPreference("ReadCommentGuidelines"));
+        return intval($layoutbits->GetPreference("ReadCommentGuidelines"));
     }
 
 
@@ -499,7 +500,7 @@ WHERE
     }
 
     // checkCommentForm
-    public function checkCommentForm(&$vars, $random)
+    public function checkCommentForm(&$vars)
     {
         $errors = array();
         $member = $this->getLoggedInMember();
@@ -658,7 +659,7 @@ WHERE
     public function addRelation(&$vars)
     {
         $return = true;
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
         $mReceiver=
         $TData= $this->singleLookup("select * from specialrelations where IdRelation=".$vars["IdRelation"]." and IdOwner=".$_SESSION["IdMember"]);
         $mReceiver=$this->getMemberWithId($vars["IdRelation"]) ;
@@ -698,7 +699,7 @@ INSERT INTO
     public function updateRelation(&$vars)
     {
         $return = true;
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
         $TData= $this->singleLookup("select * from specialrelations where IdRelation=".$vars["IdRelation"]." and IdOwner=".$_SESSION["IdMember"]);
         $mReceiver=$this->getMemberWithId($vars["IdRelation"]) ;
         if (isset ($TData->id)) {
@@ -729,7 +730,7 @@ WHERE
     public function confirmRelation(&$vars)
     {
         $return = true;
-        $words = new MOD_words();
+        $words = $this->getWords();
         $TData = array();
         $TData[1]= $this->singleLookup("select * from specialrelations where IdOwner=".$vars['IdOwner']." AND IdRelation=".$vars['IdRelation']);
         $TData[2]= $this->singleLookup("select * from specialrelations where IdOwner=".$vars['IdRelation']." AND IdRelation=".$vars['IdOwner']);
@@ -1064,7 +1065,7 @@ ORDER BY
      */
     public function updateProfile(&$vars)     {
         $IdMember = (int)$vars['memberid'];
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
         $rights = new MOD_right();
         $m = $vars['member'];
 
@@ -1148,50 +1149,50 @@ ORDER BY
                                                                                                // this might be discussed, but if the member fills a bad email,
                                                                                                // there is no more way to retrieve him
                                                                                                // Todo : get rid with this, but implement a confimmation mail
-				$m->Email = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['Email']),"members.Email",$IdMember, $m->Email, $IdMember, $this->ShallICrypt($vars,"Email"));
+				$m->Email = $this->_crypt->NewReplaceInCrypted(strip_tags($vars['Email']),"members.Email",$IdMember, $m->Email, $IdMember, $this->ShallICrypt($vars,"Email"));
 			}
 		}
 		if ($vars["HomePhoneNumber"]!="cryptedhidden") {
-			$m->HomePhoneNumber = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['HomePhoneNumber'])),"members.HomePhoneNumber",$IdMember, $m->HomePhoneNumber, $IdMember, $this->ShallICrypt($vars,"HomePhoneNumber"));
+			$m->HomePhoneNumber = $this->_crypt->NewReplaceInCrypted(addslashes(strip_tags($vars['HomePhoneNumber'])),"members.HomePhoneNumber",$IdMember, $m->HomePhoneNumber, $IdMember, $this->ShallICrypt($vars,"HomePhoneNumber"));
 		}
 		if ($vars["CellPhoneNumber"]!="cryptedhidden") {
-			$m->CellPhoneNumber = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['CellPhoneNumber'])),"members.CellPhoneNumber",$IdMember, $m->CellPhoneNumber, $IdMember, $this->ShallICrypt($vars,"CellPhoneNumber"));
+			$m->CellPhoneNumber = $this->_crypt->NewReplaceInCrypted(addslashes(strip_tags($vars['CellPhoneNumber'])),"members.CellPhoneNumber",$IdMember, $m->CellPhoneNumber, $IdMember, $this->ShallICrypt($vars,"CellPhoneNumber"));
 		}
 		if ($vars["WorkPhoneNumber"]!="cryptedhidden") {
-			$m->WorkPhoneNumber = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['WorkPhoneNumber'])),"members.WorkPhoneNumber",$IdMember, $m->WorkPhoneNumber, $IdMember, $this->ShallICrypt($vars,"WorkPhoneNumber"));
+			$m->WorkPhoneNumber = $this->_crypt->NewReplaceInCrypted(addslashes(strip_tags($vars['WorkPhoneNumber'])),"members.WorkPhoneNumber",$IdMember, $m->WorkPhoneNumber, $IdMember, $this->ShallICrypt($vars,"WorkPhoneNumber"));
 		}
 		if ($vars["chat_SKYPE"]!="cryptedhidden") {
-			$m->chat_SKYPE = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_SKYPE'])),"members.chat_SKYPE",$IdMember, $m->chat_SKYPE, $IdMember, $this->ShallICrypt($vars,"chat_SKYPE"));
+			$m->chat_SKYPE = $this->_crypt->NewReplaceInCrypted(addslashes(strip_tags($vars['chat_SKYPE'])),"members.chat_SKYPE",$IdMember, $m->chat_SKYPE, $IdMember, $this->ShallICrypt($vars,"chat_SKYPE"));
 		}
 		if ($vars["chat_AOL"]!="cryptedhidden") {
-			$m->chat_AOL = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_AOL'])),"members.chat_AOL",$IdMember, $m->chat_AOL, $IdMember, $this->ShallICrypt($vars,"chat_AOL"));
+			$m->chat_AOL = $this->_crypt->NewReplaceInCrypted(addslashes(strip_tags($vars['chat_AOL'])),"members.chat_AOL",$IdMember, $m->chat_AOL, $IdMember, $this->ShallICrypt($vars,"chat_AOL"));
 		}
 		if ($vars["chat_YAHOO"]!="cryptedhidden") {
-			$m->chat_YAHOO = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_YAHOO'])),"members.chat_YAHOO",$IdMember, $m->chat_YAHOO, $IdMember, $this->ShallICrypt($vars,"chat_YAHOO"));
+			$m->chat_YAHOO = $this->_crypt->NewReplaceInCrypted(addslashes(strip_tags($vars['chat_YAHOO'])),"members.chat_YAHOO",$IdMember, $m->chat_YAHOO, $IdMember, $this->ShallICrypt($vars,"chat_YAHOO"));
 		}
 		if ($vars["chat_ICQ"]!="cryptedhidden") {
-			$m->chat_ICQ = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_ICQ'])),"members.chat_ICQ",$IdMember, $m->chat_ICQ, $IdMember, $this->ShallICrypt($vars,"chat_ICQ"));
+			$m->chat_ICQ = $this->_crypt->NewReplaceInCrypted(addslashes(strip_tags($vars['chat_ICQ'])),"members.chat_ICQ",$IdMember, $m->chat_ICQ, $IdMember, $this->ShallICrypt($vars,"chat_ICQ"));
 		}
 		if ($vars["chat_Others"]!="cryptedhidden") {
-			$m->chat_Others = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_Others'])),"members.chat_Others",$IdMember, $m->chat_Others, $IdMember, $this->ShallICrypt($vars,"chat_Others"));
+			$m->chat_Others = $this->_crypt->NewReplaceInCrypted(addslashes(strip_tags($vars['chat_Others'])),"members.chat_Others",$IdMember, $m->chat_Others, $IdMember, $this->ShallICrypt($vars,"chat_Others"));
 		}
 		if ($vars["chat_GOOGLE"]!="cryptedhidden") {
-			$m->chat_GOOGLE = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_GOOGLE'])),"members.chat_GOOGLE",$IdMember,$m->chat_GOOGLE, $IdMember, $this->ShallICrypt($vars,"chat_GOOGLE"));
+			$m->chat_GOOGLE = $this->_crypt->NewReplaceInCrypted(addslashes(strip_tags($vars['chat_GOOGLE'])),"members.chat_GOOGLE",$IdMember,$m->chat_GOOGLE, $IdMember, $this->ShallICrypt($vars,"chat_GOOGLE"));
 		}
 
-        $firstname = MOD_crypt::AdminReadCrypted($m->FirstName);
-        $secondname = MOD_crypt::AdminReadCrypted($m->SecondName);
-        $lastname = MOD_crypt::AdminReadCrypted($m->LastName);
+        $firstname = $this->_crypt->AdminReadCrypted($m->FirstName);
+        $secondname = $this->_crypt->AdminReadCrypted($m->SecondName);
+        $lastname = $this->_crypt->AdminReadCrypted($m->LastName);
         if ($firstname != strip_tags($vars['FirstName']) || $secondname != strip_tags($vars['SecondName']) || $lastname != strip_tags($vars['LastName']))
         {
             $this->logWrite("{$m->Username} changed name. Firstname: {$firstname} -> " . strip_tags($vars['FirstName']) . ", second name: {$secondname} -> " . strip_tags($vars['SecondName']) . ", second name: {$lastname} -> " . strip_tags($vars['LastName']), 'Profile update');
         }
 
 		if ($vars["FirstName"]!="cryptedhidden") {
-			MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['FirstName'])),"members.FirstName",$IdMember, $m->FirstName, $IdMember, $this->ShallICrypt($vars, "FirstName"));
+			$this->_crypt->NewReplaceInCrypted($this->dao->escape(strip_tags($vars['FirstName'])),"members.FirstName",$IdMember, $m->FirstName, $IdMember, $this->ShallICrypt($vars, "FirstName"));
 		}
         if ($vars["SecondName"] != "cryptedhidden") {
-            $cryptId = MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['SecondName'])),"members.SecondName",$IdMember, $m->SecondName, $IdMember, $this->ShallICrypt($vars, "SecondName"));
+            $cryptId = $this->_crypt->NewReplaceInCrypted($this->dao->escape(strip_tags($vars['SecondName'])),"members.SecondName",$IdMember, $m->SecondName, $IdMember, $this->ShallICrypt($vars, "SecondName"));
 
             // Update member if a new crypted SecondName value was added
             if ($cryptId != $m->SecondName) {
@@ -1199,11 +1200,11 @@ ORDER BY
             }
         }
 		if ($vars["LastName"]!="cryptedhidden") {
-			MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['LastName'])),"members.LastName",$IdMember, $m->LastName, $IdMember, $this->ShallICrypt($vars, "LastName"));
+			$this->_crypt->NewReplaceInCrypted($this->dao->escape(strip_tags($vars['LastName'])),"members.LastName",$IdMember, $m->LastName, $IdMember, $this->ShallICrypt($vars, "LastName"));
 		}
         if ($vars["Zip"] != "cryptedhidden") {
             $this->logWrite("in members.model updateprofile() Before Zip update addresss.Zip=" . $m->address->Zip, "Debug");
-            $cryptId = MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Zip'])), "addresses.Zip", $m->IdAddress, $m->address->Zip, $IdMember, $this->ShallICrypt($vars, "Zip"));
+            $cryptId = $this->_crypt->NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Zip'])), "addresses.Zip", $m->IdAddress, $m->address->Zip, $IdMember, $this->ShallICrypt($vars, "Zip"));
 
             // Update addresses table if a new crypted zip value was added
             if ($cryptId != $m->address->Zip) {
@@ -1213,7 +1214,7 @@ ORDER BY
             $this->logWrite("in members.model updateprofile() After Zip update addresss.Zip=". $m->address->Zip . " \$cryptId=" . $cryptId, "Debug");
         }
         if ($vars["HouseNumber"] != "cryptedhidden") {
-            $cryptId = MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['HouseNumber'])), "addresses.HouseNumber", $m->IdAddress, $m->address->HouseNumber, $IdMember, $this->ShallICrypt($vars, "Address"));
+            $cryptId = $this->_crypt->NewReplaceInCrypted($this->dao->escape(strip_tags($vars['HouseNumber'])), "addresses.HouseNumber", $m->IdAddress, $m->address->HouseNumber, $IdMember, $this->ShallICrypt($vars, "Address"));
 
             // Update addresses table if a new crypted HouseNumber value was added
             if ($cryptId != $m->address->HouseNumber) {
@@ -1221,7 +1222,7 @@ ORDER BY
             }
         }
 		if ($vars["Street"]!="cryptedhidden") {
-			$cryptId = MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Street'])),"addresses.StreetName",$m->IdAddress,$m->address->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
+			$cryptId = $this->_crypt->NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Street'])),"addresses.StreetName",$m->IdAddress,$m->address->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
             // Update addresses table if a new crypted StreetName value was added
             if ($cryptId != $m->address->StreetName) {
                 $m->setCryptedStreetName($cryptId);
@@ -1313,7 +1314,7 @@ ORDER BY
         $lang_used = array();
         foreach($vars['memberslanguages'] as $lang) {
             if (ctype_digit($lang) and !in_array($lang,$lang_used)) { // check $lang is numeric, hence a legal IdLanguage
-                $vars['languages_selected'][$ii] = new StdClass;
+                $vars['languages_selected'][$ii] = new \stdClass;
                 $vars['languages_selected'][$ii]->IdLanguage = $lang;
                 $vars['languages_selected'][$ii]->Level = $vars['memberslanguageslevel'][$ii2];
                 array_push($lang_used, $vars['languages_selected'][$ii]->IdLanguage);
@@ -1391,7 +1392,7 @@ ORDER BY
         $toMember = $this->createEntity('Member', $note['IdMember']);
 
         if ($fromMember && $toMember) {
-            $words = new MOD_words();
+            $words = new MOD_words($this->getSession());
             $commentsUrl = PVars::getObj('env')->baseuri . $note['Link'];
             $replyUrl = PVars::getObj('env')->baseuri . $note['replyLink'];
             $reportUrl = PVars::getObj('env')->baseuri . $note['reportLink'];
@@ -1576,7 +1577,7 @@ VALUES
     {
         if (!empty($feedback))
         {
-            $feedback_model = new FeedbackModel;
+            $feedback_model = new FeedbackModel($this->_session);
             $feedback_model->sendFeedback(array(
                 "IdCategory"       => FeedbackModel::DELETE_PROFILE,
                 "FeedbackQuestion" => $feedback,
@@ -1626,9 +1627,11 @@ VALUES
     }
 
     /**
-     * Deletes the note for a member
+     * Sets the members status
      *
-     * @param string memberId Id of the member for which the note was written
+     * @param int Id of the member for which the status shall be updated
+     * @param string new status
+     * @return bool
      */
     public function setStatus($memberId, $newStatus)
     {

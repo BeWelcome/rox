@@ -18,7 +18,7 @@ class AdminNewMembersModel extends RoxModelBase {
         if ($IdTrad == "")
             return ("");
 
-        if (isset($_SESSION['IdLanguage'])) {
+        if ($this->_session->has( 'IdLanguage' )) {
             $IdLanguage=$_SESSION['IdLanguage'] ;
         }
         else {
@@ -93,9 +93,9 @@ LIMIT 1
         if ($namePartId == 0) {
             return $namePart;
         }
-        if (MOD_crypt::IsCrypted($namePartId) == 1) {
+        if ($this->_crypt->IsCrypted($namePartId) == 1) {
         } else {
-            $namePart = MOD_crypt::get_crypted($namePartId, "");
+            $namePart = $this->_crypt->get_crypted($namePartId, "");
         }
         return $namePart;
     }

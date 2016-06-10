@@ -22,7 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
 require_once 'simplepie/autoloader.php';
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 $id = 0;
 ?>
 <script type="text/javascript">

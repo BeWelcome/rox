@@ -32,7 +32,7 @@ if (!isset($vars['errors']) || !is_array($vars['errors'])) {
 
 $list=$DataPost ; // Retrieve the data to display (set by the controller)
 
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 $styles = array( 'highlight', 'blank' ); // alternating background for table rows
 $iiMax = count($list) ; // This retrieve the number of polls
 ?>

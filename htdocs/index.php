@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Rox\Framework\ControllerResolverListener;
+use Rox\Framework\SessionSingleton;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
@@ -40,12 +41,12 @@ require SCRIPT_BASE.'vendor/autoload.php';
 
 Debug::enable();
 
-$session = new Session();
+$session = SessionSingleton::getSession();
 $session->start();
+$session->setName('sidTB');
 
-$environmentExplorer = new EnvironmentExplorer;
+$environmentExplorer = new EnvironmentExplorer($session);
 $environmentExplorer->initializeGlobalState();
-$environmentExplorer->setSession($session);
 
 $locator = new Symfony\Component\Config\FileLocator(array(SCRIPT_BASE));
 $yamlFileLocator = new Symfony\Component\Routing\Loader\YamlFileLoader(
@@ -71,11 +72,12 @@ $requestContext->setHost($hostname);
 
 $router = new Symfony\Component\Routing\Router(
     $yamlFileLocator,
-    SCRIPT_BASE.'routes.yml',
+    SCRIPT_BASE . 'routes.yml',
     [],
     $requestContext
 );
 
+$routesCollection =
 
 $matcher = new Symfony\Component\Routing\Matcher\UrlMatcher(
     $router->getRouteCollection(), $requestContext

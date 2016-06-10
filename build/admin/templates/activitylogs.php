@@ -25,7 +25,7 @@ Boston, MA  02111-1307, USA.
  * @author Felix van Hove <fvanhove@gmx.de>
  */
 
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 $title = "Admin logs";
 
     $infoStyles = array(0 => "              <tr class=\"blank\" align=\"left\" valign=\"center\">\n",

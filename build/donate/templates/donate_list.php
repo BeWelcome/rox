@@ -21,7 +21,7 @@ write to the Free Software Foundation, Inc., 59 Temple PlaceSuite 330,
 Boston, MA  02111-1307, USA.
 
 */
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 $R = MOD_right::get();
 $hasRight = $R->hasRight('Treasurer');
 $i18n = new MOD_i18n('date.php');
@@ -37,7 +37,7 @@ $i18n = new MOD_i18n('date.php');
         static $iii = 0;
         $T=$TDonationArray[$ii] ;
         $string = $info_styles[($iii++%2)]; // this displays the <tr>
-    if (isset($_SESSION["IdMember"]) and ($T->IdMember==$_SESSION["IdMember"])) {
+    if ($this->_session->has( "IdMember" ) and ($T->IdMember==$this->_session->get("IdMember"))) {
         $string .= "bgcolor=\"yellow\""; 
     }
         echo "<tr ",$string," align=left><td>",date("y/m/d",strtotime($T->created)),"</td>" ;

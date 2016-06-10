@@ -176,12 +176,12 @@ class RoxController extends RoxControllerBase
         // check if language is in DB
         $language_lookup_model = new LanguageLookupModel();
         if ($row = $language_lookup_model->findLanguageWithCode($langcode)) {
-            $_SESSION['lang'] = $langcode;
-            $_SESSION['IdLanguage'] = $row->id;
+            $this->getSession->set( 'lang', $langcode )
+            $this->getSession->set( 'IdLanguage', $row->id )
         } else {
             // catch invalid language codes!
-            $_SESSION['lang'] = 'en';
-            $_SESSION['IdLanguage'] = 0;
+            $this->getSession->set( 'lang', 'en' )
+            $this->getSession->set( 'IdLanguage', 0 )
         }
     }
     
@@ -195,14 +195,14 @@ class RoxController extends RoxControllerBase
     private function _switchTrMode($tr_mode)
     {
         if(!MOD_right::get()->hasRight('Words')) {
-            $_SESSION['tr_mode'] = 'browse';
+            $this->getSession->set( 'tr_mode', 'browse' )
             return;
         }
         switch ($tr_mode) {
             case 'browse':
             case 'translate':
             case 'edit':
-                $_SESSION['tr_mode'] = $tr_mode;
+                $this->getSession->set( 'tr_mode', $tr_mode )
                 break;
             default:
                 // don't change tr mode

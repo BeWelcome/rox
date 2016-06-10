@@ -1,23 +1,35 @@
 <?php
 
 
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 abstract class RoxControllerBase extends RoxComponentBase
 {
     /** @var \Symfony\Component\Routing\Router */
-    protected $routing;
+    protected $router;
 
     /** @var  \Symfony\Component\Form\FormFactoryInterface */
     protected $formFactory;
 
+    /** @var  \Symfony\Component\HttpFoundation\Session\SessionInterface */
+    protected $_session;
+
     /**
-     * @param \Symfony\Component\Routing\Router $routing
+     * @param \Symfony\Component\Routing\Router $router
      *
      * @return RoxControllerBase
      */
-    public function setRouting($routing)
+    public function setRouter($router)
     {
-        $this->routing = $routing;
+        $this->router = $router;
         return $this;
+    }
+
+    /**
+     * @return \Symfony\Component\Routing\Router
+     */
+    protected function getRouter() {
+        return $this->router;
     }
 
     /**
@@ -28,6 +40,20 @@ abstract class RoxControllerBase extends RoxComponentBase
     {
         $this->formFactory = $formFactory;
         return $this;
+    }
+
+    /**
+     * @param SessionInterface $session
+     */
+    public function setSession(SessionInterface $session) {
+        $this->_session = $session;
+    }
+
+    /**
+     * @return SessionInterface
+     */
+    public function getSession() {
+        return $this->_session;
     }
 
     protected function redirect($request, $get_args = '') {
@@ -108,7 +134,7 @@ abstract class RoxControllerBase extends RoxComponentBase
      */
     private function setFlash($message, $type) {
         $flashName = 'flash_' . $type;
-        $_SESSION[$flashName] = $message;
+        $this->_session->set( $flashName, $message );
     }
 
     /**

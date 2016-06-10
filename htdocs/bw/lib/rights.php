@@ -86,7 +86,7 @@ function IsAdmin() {
 * @return boolean
 */
 function IsVol() {
-	if (isset($_SESSION["IsVol"])) {
+	if ($this->_session->has( "IsVol" )) {
 	    return($_SESSION["IsVol"]) ;
 	}
 	if (IsLoggedIn()) {
@@ -145,7 +145,7 @@ function IsLoggedIn($ExtraAllowedStatus="") {
 	}
 	
 	if (!empty($ExtraAllowedStatus)) { // are there allowed exception ?
-		if (!isset($_SESSION["MemberStatus"])) {
+		if (!$this->_session->has( "MemberStatus" )) {
 			$ret=print_r($_SESSION,true) ;
 			die("no \$_SESSION[\"MemberStatus\"] in IsLoggedIn() "."<br />\n".$ret) ;
 		}
@@ -199,8 +199,8 @@ function HasRight($RightName, $_Scope = "", $OptionalIdMember = 0)
 		$rlevel = $right->Level;
 		$rscope = $right->Scope;
 		if ($OptionalIdMember == 0) { // if its current member cache for next research 
-			$_SESSION['RightLevel_' . $RightName] = $rlevel;
-			$_SESSION['RightScope_' . $RightName] = $rscope;
+			$this->getSession->set( 'RightLevel_' . $RightName, $rlevel )
+			$this->getSession->set( 'RightScope_' . $RightName, $rscope )
 		}
 	}
 	if ($Scope != "") { // if a specific scope is asked
@@ -240,8 +240,8 @@ function RightScope($RightName, $Scope = "") {
 		if (!isset ($right->Level)) {
 			return (""); // Return false if the Right does'nt exist for this member in the DB
 		}
-		$_SESSION['RightLevel_' . $RightName] = $right->Level;
-		$_SESSION['RightScope_' . $RightName] = $right->Scope;
+		$this->getSession->set( 'RightLevel_' . $RightName, $right->Level )
+		$this->getSession->set( 'RightScope_' . $RightName, $right->Scope )
 	}
 	return ($_SESSION['RightScope_' . $RightName]);
 } // enf of Scope

@@ -76,11 +76,11 @@ class AdminMassmailController extends AdminBaseController
         if ($args->post['Id'] == 0) {
             $this->model->createMassmail($args->post['Name'], $args->post['Type'],
                 $args->post['Subject'], $args->post['Body'], $args->post['Description']);
-            $_SESSION['AdminMassMailStatus'] = array( 'Create', $args->post['Name']);
+            $this->getSession->set( 'AdminMassMailStatus', array( 'Create', $args->post['Name']) );
         } else {
             $this->model->updateMassmail($args->post['Id'], $args->post['Name'],
                 $args->post['Type'], $args->post['Subject'], $args->post['Body']);
-            $_SESSION['AdminMassMailStatus'] = array( 'Edit', $args->post['Name']);
+            $this->getSession->set(  'AdminMassMailStatus', array( 'Edit', $args->post['Name']) );
         }
         return $this->router->url('admin_massmail', array(), false);
     }
@@ -184,7 +184,7 @@ class AdminMassmailController extends AdminBaseController
         }
         $count = $this->model->enqueueMassMail($args->post);
         $massmail = $this->model->getMassMail($args->post['id']);
-        $_SESSION['AdminMassMailStatus'] = array( 'Enqueue', $massmail->Name, $count);
+        $this->getSession->set( 'AdminMassMailStatus', array( 'Enqueue', $massmail->Name, $count) );
         return $this->router->url('admin_massmail', array(), false);
     }
 
@@ -211,7 +211,7 @@ class AdminMassmailController extends AdminBaseController
         $id = $this->route_vars['id'];
         $count = $this->model->unqueueMassMail($id);
         $massmail = $this->model->getMassMail($id);
-        $_SESSION['AdminMassMailStatus'] = array( 'Unqueue', $massmail->Name, $count);
+        $this->getSession->set( 'AdminMassMailStatus', array( 'Unqueue', $massmail->Name, $count) );
         $this->redirectAbsolute($this->router->url('admin_massmail'));
     }
 
@@ -224,7 +224,7 @@ class AdminMassmailController extends AdminBaseController
         $id = $this->route_vars['id'];
         $count = $this->model->triggerMassMail($id);
         $massmail = $this->model->getMassMail($id);
-        $_SESSION['AdminMassMailStatus'] = array( 'Trigger', $massmail->Name, $count);
+        $this->getSession->set( 'AdminMassMailStatus', array( 'Trigger', $massmail->Name, $count) );
         $this->redirectAbsolute($this->router->url('admin_massmail'));
     }
 
@@ -237,7 +237,7 @@ class AdminMassmailController extends AdminBaseController
         $id = $this->route_vars['id'];
         $count = $this->model->untriggerMassMail($id);
         $massmail = $this->model->getMassMail($id);
-        $_SESSION['AdminMassMailStatus'] = array( 'Untrigger', $massmail->Name, $count);
+        $this->getSession->set( 'AdminMassMailStatus', array( 'Untrigger', $massmail->Name, $count) );
         $this->redirectAbsolute($this->router->url('admin_massmail'));
     }
 }

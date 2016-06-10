@@ -1,4 +1,5 @@
 <?php
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * methods in here get called by other methods in PTLauncher.
@@ -6,6 +7,8 @@
  */
 class RoxLauncher
 {
+    use \Rox\RoxTraits\SessionTrait;
+
     /**
      * central starting point.
      * to be called in htdocs/index.php
@@ -16,7 +19,7 @@ class RoxLauncher
             // find an app and run it.
             $this->chooseAndRunApplication($env_explore);
         } catch (Exception $e) {
-            ExceptionLogger::logException($e);
+            ExceptionLogger::logException($env_explore->getSession(), $e);
             $debug = true;
             if (class_exists('PVars') && !($debug = PVars::get()->debug))
             {
@@ -67,12 +70,10 @@ HTML;
     protected function chooseAndRunApplication(EnvironmentExplorer $env_explore)
     {
         $router = new \RoxFrontRouter();
+        $router->setSession($env_explore->getSession());
         // $router->classes = $env_explore->classes;
         $router->env = $env_explore;
-        $session = $env_explore->getSession();
-        $_SESSION['IdMember'] = $session->get('id');
-        $_SESSION['Username'] = $session->get('Username');
-        $router->session_memory = new SessionMemory('SessionMemory');
+        $router->session_memory = new SessionMemory($this->_session, 'SessionMemory');
         $router->route();
     }
     
@@ -83,7 +84,7 @@ HTML;
      */
     function initBW()
     {
-        $this->initializeGlobalState();
+        // $this->initializeGlobalState();
     }
     
     
@@ -97,19 +98,19 @@ HTML;
 
 class ExceptionLogger
 {
-    public static function logException($e)
+    public static function logException(SessionInterface $session, Exception $e)
     {
         if ($handle = fopen('exception.log', 'at'))
         {
             $string = "Exception occurred at " . date('Y-m-d H:i:s') . ". Here are the details:". PHP_EOL;
 
-			if (isset($_SESSION["IdMember"])) {
-				$string .= "Session data: IdMember=" . $_SESSION["IdMember"] ;
-				if (isset($_SESSION["Username"])) {
-					$string .= " Username=" . $_SESSION["Username"] ;
+			if ($session->has( "IdMember" )) {
+				$string .= "Session data: IdMember=" . $session->get("IdMember");
+				if ($session->has( "Username" )) {
+					$string .= " Username=" . $session->get("Username");
 				}
-				if (isset($_SESSION["MemberStatus"])) {
-					$string .= " MemberStatus=" . $_SESSION["MemberStatus"] ;
+				if ($session->has( "MemberStatus" )) {
+					$string .= " MemberStatus=" . $session->get("MemberStatus") ;
 				}
 				$string .=	PHP_EOL;
 			}

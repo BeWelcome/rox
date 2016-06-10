@@ -13,7 +13,7 @@
  * @version $Id$
  */
 
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 $format = array(
     'short'=>$words->getSilent('DateFormatShort')
 );

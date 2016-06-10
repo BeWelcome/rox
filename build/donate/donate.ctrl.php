@@ -40,7 +40,7 @@ class DonateController extends PAppController
                 $TDonationArray = $this->_model->getDonations();
                 break;
             case 'cancel':
-                if (isset($_SESSION["PaypalBW_key"])) {
+                if ($this->_session->has( "PaypalBW_key" )) {
                     // Log to track wrong donation
                     MOD_log::get()->write("Donation cancelled  [\$_SESSION[\"PaypalBW_key\"]=".$_SESSION["PaypalBW_key"]."]","Donation");
                 break;

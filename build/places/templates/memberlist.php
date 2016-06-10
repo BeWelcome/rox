@@ -1,7 +1,7 @@
 <?php
 echo '<h2 class="paddingtop">' . $words->get('members') . '</h2>';
 $User = new APP_User;
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 $layoutbits = new MOD_layoutbits;
 $url = '/places/' . htmlspecialchars($this->countryName) . '/' . $this->countryCode . '/';
 if ($this->regionCode) {

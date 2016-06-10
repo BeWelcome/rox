@@ -1,6 +1,6 @@
 <?php
 $userbarText = array();
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 ?>
 
         <h3><?php echo $words->get('About_AtAGlance') ?></h3>

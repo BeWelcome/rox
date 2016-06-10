@@ -42,8 +42,8 @@ class InviteController extends RoxControllerBase
     public function index($args = false)
     {
         $request = $args->request;
-
-        $logged = APP_User::isBWLoggedIn('NeedMore,Pending');
+        $a = new App_user();
+        $logged = $a->isBWLoggedIn('NeedMore,Pending');
         
         switch (isset($request[1])) {
             case 'sent':

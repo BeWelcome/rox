@@ -29,7 +29,7 @@ class MessagesController extends RoxControllerBase
         $model = new MessagesModel();
 
         // look if the user is logged in.
-        if (!isset($_SESSION['IdMember'])) {
+        if (!$this->_session->has( 'IdMember' )) {
             $page = new MessagesMustloginPage();
             $page->setRedirectURL(implode('/',$request));
         } else {
@@ -274,7 +274,7 @@ class MessagesController extends RoxControllerBase
         }
 
         // now finally try to send it.
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
         $model = new MessagesModel();
         $post = $args->post;
         if (isset($post['message-mark']) && count($post['message-mark']) > 0 && isset($post['submit_multi']))

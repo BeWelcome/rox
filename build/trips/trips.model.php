@@ -25,7 +25,7 @@ class TripsModel extends RoxModelBase
 	const TRIPS_OPTIONS_LIKE_TO_MEETUP = 2;
 
 	public static function getAdditonalInfoOptions() {
-		$words = new MOD_words(); // self::getWords();
+		$words = new MOD_words($this->getSession()); // self::getWords();
 		$options = array(
 			self::TRIPS_ADDITIONAL_INFO_SINGLE => $words->getBuffered('TripsAdditionalInfoSingle'),
 			self::TRIPS_ADDITIONAL_INFO_COUPLE => $words->getBuffered('TripsAdditionalInfoCouple'),
@@ -37,7 +37,7 @@ class TripsModel extends RoxModelBase
 	}
 
 	public static function getLocationOptions() {
-		$words = new MOD_words(); // self::getWords();
+		$words = new MOD_words($this->getSession()); // self::getWords();
 		$options = array(
 			self::TRIPS_OPTIONS_LOOKING_FOR_A_HOST => $words->getBuffered('TripsLocationOptionLookingForAHost'),
 			self::TRIPS_OPTIONS_LIKE_TO_MEETUP => $words->getBuffered('TripsLocationOptionLikeToMeetup'),

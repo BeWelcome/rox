@@ -21,7 +21,7 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-	$words = new MOD_words();
+	$words = new MOD_words($this->getSession());
 //	$i18n = new MOD_i18n('apps/forums/board.php');
 //	$boardText = $i18n->getText('boardText');
 	

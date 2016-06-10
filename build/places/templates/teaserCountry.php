@@ -21,7 +21,7 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 $countrycode = htmlspecialchars($countrycode);
 $region = htmlspecialchars($region);
 if (isset($country->name)){$country->name = htmlspecialchars($country->name);}

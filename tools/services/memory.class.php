@@ -1,20 +1,31 @@
 <?php
 
 
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 class SessionMemory
 {
     private $_store = array();
     private $_session_key = false;
     
-    public function __construct($session_key)
+    public function __construct(SessionInterface $session, $session_key)
     {
         $this->_session_key = $session_key;
-        if (isset($_SESSION[$session_key])) {
+        $this->session = $session;
+        if ($this->session->has($session_key)) {
+            $this->_store = unserialize($this->session->get($session_key));
+            if (!is_array($this->_store)) {
+                $this->_store = array();
+            }
+        }
+/*
+         if ($this->_session->has( $session_key ) {
             $this->_store = unserialize($_SESSION[$session_key]);
             if (!is_array($this->_store)) {
                 $this->_store = array();
             }
         }
+*/
     }
     
     public function __get($key)
@@ -34,7 +45,7 @@ class SessionMemory
     
     private function _save()
     {
-        $_SESSION[$this->_session_key] = serialize($this->_store);
+        $this->session->set($this->_session_key, serialize($this->_store));
     }
 }
 

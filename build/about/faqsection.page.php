@@ -36,7 +36,7 @@ class AboutFaqsectionPage extends AboutFaqPage
     {
         $words = $this->getWords();
         $req = $_SERVER['REQUEST_URI'];
-        if (isset($_SESSION["IdLanguage"])) {
+        if ($this->_session->has( "IdLanguage" )) {
             $IdLanguage=$_SESSION["IdLanguage"] ;
         }
         else {

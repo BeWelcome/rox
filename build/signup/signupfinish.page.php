@@ -17,7 +17,7 @@ class SignupFinishPage extends SignupBasePage
     protected function column_col3()
     {
         $email = '(hidden e-mail address)';
-        if (isset($_SESSION['SignupBWVars'])) {
+        if ($this->_session->has( 'SignupBWVars' )) {
             // we have vars still stored, delete them
             $email = $_SESSION['SignupBWVars']['email'];
             unset($_SESSION['SignupBWVars']);

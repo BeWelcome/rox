@@ -26,8 +26,8 @@ require_once "lib/init.php";
 require_once "layout/header.php";
 
 $lang = $_SESSION['lang']; // save session language
-$_SESSION['lang'] = CV_def_lang;
-$_SESSION['IdLanguage'] = 0; // force English for menu
+$this->getSession->set( 'lang', CV_def_lang )
+$this->getSession->set( 'IdLanguage', 0 ) // force English for menu
 
 $Schema="BW_MAIN" ;
 $Schema="bewelcome" ;

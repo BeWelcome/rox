@@ -20,7 +20,7 @@ class LoginController extends Controller
 {
 
     public function loginAction(Request $request) {
-        $page = new LoginPage($this->getRouting());
+        $page = new LoginPage($this->getRouter(), $request);
 
         // Setup the form used inside the template
         // \todo move to a separate form class

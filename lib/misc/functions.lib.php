@@ -303,7 +303,7 @@ function ServerToLocalDateTime($EntryTimeStamp) {
 		return($EntryTimeStamp) ;
 	}
 	else {
-		if (isset($_SESSION['PreferenceDayLight']) and ($_SESSION['PreferenceDayLight']=='Yes')) {
+		if ($this->_session->has( 'PreferenceDayLight' ) and ($_SESSION['PreferenceDayLight']=='Yes')) {
 			return($EntryTimeStamp+$_SESSION["TimeOffset"]+$_SESSION["Param"]->DayLightOffset) ;
 		}
 		else {

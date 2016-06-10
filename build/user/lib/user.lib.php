@@ -18,6 +18,8 @@
  */
 class APP_User extends MOD_bw_user_Auth 
 {
+    use \Rox\RoxTraits\SessionTrait;
+
     /**
      * single instance
      * 
@@ -59,8 +61,9 @@ class APP_User extends MOD_bw_user_Auth
     public function __construct() 
     {
         parent::__construct('APP_User_id', 'user');
+        $this->setSession();
         // if an Id is set, then the user is logged in, simple and smooth
-        if( isset($_SESSION['APP_User_id'])) {
+        if( $this->_session->has( 'APP_User_id' )) {
             $this->_getUser($_SESSION['APP_User_id']);
         }
     }
@@ -100,7 +103,7 @@ class APP_User extends MOD_bw_user_Auth
             $this->removeCookie();
             return false;
         }
-        $_SESSION['APP_User_id'] = $_COOKIE[$env->cookie_prefix.'userid'];
+        $this->_session->set( 'APP_User_id', $_COOKIE[$env->cookie_prefix.'userid'] );
         $this->loggedIn = true;
         $this->setCookie();
         return true;

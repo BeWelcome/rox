@@ -325,8 +325,8 @@ class MembersController extends RoxControllerBase
                                         $redirect = $_GET['redirect'];
                                     } else {
                                         // Redirect to relations page or homepage
-                                        if (isset($_SESSION['Username'])) {
-                                            $redirect = 'members/' . $_SESSION['Username'] . '/relations/';
+                                        if ($this->_session->has( 'Username' )) {
+                                            $redirect = 'members/' . $this->_session->get('Username') . '/relations/';
                                         } else {
                                             $redirect = '';
                                         }
@@ -441,7 +441,7 @@ class MembersController extends RoxControllerBase
 
     protected function redirect_myprofile()
     {
-        if (isset($_SESSION['Username'])) {
+        if ($this->_session->has( 'Username' )) {
             $username = $_SESSION['Username'];
         } else {
             $username = 'henri';
@@ -764,7 +764,8 @@ class MembersController extends RoxControllerBase
         // Update database
         $member->inactivateProfile();
         // Update session
-        $_SESSION["MemberStatus"] = $_SESSION["Status"] = 'ChoiceInactive';
+        $this->_session->set( "Status", 'ChoiceInactive'); 
+        $this->_session->set( "MemberStatus",  'ChoiceInactive');
         $this->setFlashNotice($this->model->getWords()->get('ProfileSetInactiveSuccess'));
         return 'editmyprofile';
     }
@@ -806,7 +807,8 @@ class MembersController extends RoxControllerBase
         // Update database
         $member->activateProfile();
         // Update session
-        $_SESSION["MemberStatus"] = $_SESSION["Status"] = 'Active';
+        $this->_session->set("Status", 'Active');
+        $this->_session->set( "MemberStatus", 'Active');
         $this->setFlashNotice($this->model->getWords()->get('ProfileSetActiveSuccess'));
         return 'editmyprofile';
     }
@@ -1060,7 +1062,7 @@ class MembersController extends RoxControllerBase
             $this->model->removeMembers();
         }
         catch(Exception $e) {
-            ExceptionLogger::logException($e);
+            ExceptionLogger::logException($this->_session, $e);
             header("Location: " . PVars::getObj('env')->baseuri);
             exit(0);
         }

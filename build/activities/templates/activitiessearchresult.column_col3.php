@@ -5,9 +5,9 @@ $callbackTags = $formkit->setPostCallback('ActivitiesController', 'searchActivit
 require_once('../build/geo/geo.entity.php');
 
 $errors = array();
-if (isset($_SESSION['errors'])) {
-    $errors = $_SESSION['errors'];
-    unset($_SESSION['errors']);
+if ($this->_session->has( 'errors' )) {
+    $errors = $this->_session->get('errors');
+    $this->_session->remove('errors');
 }
 if (!empty($errors)) {
     echo '<div class="subcolumns error">';

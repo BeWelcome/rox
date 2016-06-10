@@ -29,13 +29,13 @@ require_once("layouttools.php");
 
 // This menu is the top menu
 function Menu1($link = "", $tt = "") {
-	$_SESSION['Menu1_link'] = $link;
-	$_SESSION['Menu1_tt'] = $tt;
+	$this->getSession->set( 'Menu1_link', $link )
+	$this->getSession->set( 'Menu1_tt', $tt )
 }
 
 function Menu1_old($link = "", $tt = "") {
 	
-	if (isset($_SESSION['IdMember']))
+	if ($this->_session->has( 'IdMember' ))
 		$IdMember = $_SESSION['IdMember'];
 	else
 		$IdMember = "";	
@@ -75,12 +75,12 @@ function Menu2($link = "", $tt = "") {
 
 function Menu2_old($link = "", $tt = "") {
 	
-	if (isset($_SESSION['IdMember']))
+	if ($this->_session->has( 'IdMember' ))
 		$IdMember = $_SESSION['IdMember'];
 	else
 		$IdMember = "";
 		
-	if (isset($_SESSION['Username']))
+	if ($this->_session->has( 'Username' ))
 		$Username = $_SESSION['Username'];
 	else
 		$Username = "";

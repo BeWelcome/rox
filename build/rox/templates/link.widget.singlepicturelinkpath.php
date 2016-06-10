@@ -27,7 +27,7 @@ Boston, MA  02111-1307, USA.
  *
  */
 
-  $words = new MOD_words();
+  $words = new MOD_words($this->getSession());
   $ii = 0;
 ?>
   <div id="<?php echo $cssID ?>" class="box">
@@ -52,7 +52,7 @@ Boston, MA  02111-1307, USA.
             <div class="profile float_left" >
                 <p class="center">
                 <?php
-        if (isset($_SESSION['Username']) && $e['memberdata']->Username == $_SESSION['Username']) {
+        if ($this->_session->has( 'Username' ) && $e['memberdata']->Username == $_SESSION['Username']) {
           $username = $words->get('me');
           $myself = true;
         } else {

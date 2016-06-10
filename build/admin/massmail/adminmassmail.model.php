@@ -367,7 +367,7 @@ class AdminMassmailModel extends RoxModelBase
 
         // if $id = 0 check if a word code for $name already exists
         if ($id == 0) {
-            $words = new MOD_words();
+            $words = new MOD_words($this->getSession());
             $subject = 'BroadCast_Title_' . $name;
             $body = 'BroadCast_Body_' . $name;
             $subjectCode = $words->getAsIs($subject);

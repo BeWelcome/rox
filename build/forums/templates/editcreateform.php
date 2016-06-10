@@ -27,7 +27,7 @@ and by the edit post
 
 */
 
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 
 $request = PRequest::get()->request;
 $uri = implode('/', $request);

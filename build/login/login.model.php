@@ -313,7 +313,7 @@ WHERE   handle = '$esc_handle'
 					die ("Alarm : in setBWMemberAsLoggedIn with empty \$m->Status") ;
 				}
 				else {
-        	$_SESSION['MemberStatus'] = $_SESSION['Status'] = $m->Status ;
+        	$this->getSession->set( 'MemberStatus', $_SESSION['Status'] = $m->Status  )
 				}
         switch ($m->Status) {
             case "OutOfRemind" :  // in case an inactive member comes back
@@ -326,8 +326,8 @@ WHERE   members.id = $member_id and Status='OutOfRemind'
                 );
                 // the following is needed for MOD_log::get,
                 // because otherwise it would not link the log with the right member
-                $_SESSION['IdMember'] = $m->id ;
-                $_SESSION['MemberStatus'] = $_SESSION['Status'] = $m->Status='Active' ;
+                $this->getSession->set( 'IdMember', $m->id  )
+                $this->getSession->set( 'MemberStatus', $_SESSION['Status'] = $m->Status='Active'  )
                 MOD_log::get()->write("Successful login, becoming active again (was OutOfRemind), with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
                 break ;
             case "Active" :
@@ -335,7 +335,7 @@ WHERE   members.id = $member_id and Status='OutOfRemind'
             case "ChoiceInactive" :
                 // the following is needed for MOD_log::get,
                 // because otherwise it would not link the log with the right member
-                $_SESSION['IdMember'] = $m->id ;
+                $this->getSession->set( 'IdMember', $m->id  )
                 MOD_log::get()->write("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b> (".$m->Username.")", "Login");
                 break ;
 
@@ -353,7 +353,7 @@ WHERE   members.id = $member_id and Status='OutOfRemind'
                 break;
 
             case "NeedMore" :
-                $_SESSION['IdMember'] = $m->id ;
+                $this->getSession->set( 'IdMember', $m->id  )
                 MOD_log::get()->write("Login with (needmore)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
                 $this->_immediateRedirect = PVars::getObj('env')->baseuri . "bw/updatemandatory.php";
                 break;
@@ -367,7 +367,7 @@ WHERE   members.id = $member_id and Status='OutOfRemind'
                 break ;
 
             case "Pending" :
-                $_SESSION['IdMember'] = $m->id ;
+                $this->getSession->set( 'IdMember', $m->id  )
                 MOD_log::get()->write("Successful login (Pending State)with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b> (".$m->Username.")", "Login");
                 break ;
             default:
@@ -383,9 +383,9 @@ WHERE   members.id = $member_id and Status='OutOfRemind'
         $member_id = (int)$m->id;
 
         // Set the session identifier
-        $_SESSION['IdMember'] = $m->id;
-        $_SESSION['Username'] = $m->Username;
-        $_SESSION['MemberStatus'] = $_SESSION['Status'] = $m->Status ;
+        $this->getSession->set( 'IdMember', $m->id )
+        $this->getSession->set( 'Username', $m->Username )
+        $this->getSession->set( 'MemberStatus', $_SESSION['Status'] = $m->Status  )
 
         if ($_SESSION['IdMember'] != $m->id)
         { // Check is session work of
@@ -393,8 +393,8 @@ WHERE   members.id = $member_id and Status='OutOfRemind'
             throw new PException('Login sanity check failed miserably!');
         }; // end Check is session work of
 
-        $_SESSION['MemberCryptKey'] = crypt($m->PassWord, "rt"); // Set the key which will be used for member personal cryptation
-        $_SESSION['LogCheck'] = Crc32($_SESSION['MemberCryptKey'] . $m->id); // Set the key for checking id and LohCheck (will be restricted in future)
+        $this->getSession->set( 'MemberCryptKey', crypt($m->PassWord, "rt") ) // Set the key which will be used for member personal cryptation
+        $this->getSession->set( 'LogCheck', Crc32($_SESSION['MemberCryptKey'] . $m->id) ) // Set the key for checking id and LohCheck (will be restricted in future)
 
 
 				if ($m->NbRemindWithoutLogingIn>0) {
@@ -434,7 +434,7 @@ WHERE
     IdPreference=preferences.id and preferences.CodeName='PreferenceLanguage'
             "
         )) {
-            $_SESSION['IdLanguage'] = $preference_language->language_id;
+            $this->getSession->set( 'IdLanguage', $preference_language->language_id )
             $_SESSION['lang']       = $preference_language->language_code;
         }
 
@@ -450,7 +450,7 @@ WHERE
     IdPreference=preferences.id and preferences.CodeName='PreferenceDayLight'
             "
         )) {
-            $_SESSION['PreferenceDayLight'] = $preference_PreferenceDayLight->Value;
+            $this->getSession->set( 'PreferenceDayLight', $preference_PreferenceDayLight->Value )
         }
 
         if ($preference_PreferenceLocalTime = $this->singleLookup(
@@ -465,7 +465,7 @@ WHERE
     IdPreference=preferences.id and preferences.CodeName='PreferenceLocalTime'
             "
         )) {
-            $_SESSION["TimeOffset"] = $preference_PreferenceLocalTime->Value;
+            $this->getSession->set( "TimeOffset", $preference_PreferenceLocalTime->Value )
         }
 
         // Process the login of the member according to his status
@@ -476,7 +476,7 @@ WHERE
             case "NeedMore" :
             case "Pending" :
                 //if (HasRight("Words"))
-                //  $_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator
+                //  $this->getSession->set( 'switchtrans', "on" ) // Activate switchtrans oprion if its a translator
                 break;
 
             default:
@@ -489,9 +489,10 @@ WHERE
 
     function setTBUserAsLoggedIn($tb_user)
     {
-        session_regenerate_id();
-
-        $_SESSION[self::KEY_IN_SESSION] = $tb_user_id = (int)$tb_user->id;
+        $session = $this->getSession();
+        $session->migrate();
+        $tb_user_id = (int)$tb_user->id;
+        $session->set('self::KEY_IN_SESSION', $tb_user_id);
 
         $this->dao->query(
             "
@@ -504,7 +505,7 @@ WHERE   id = $tb_user_id
 
     public function setPreferredLanguage( Member $member ) {
         // Check if language is set (in case we used a Symfony route to get here)
-        if (!isset($_SESSION['IdLanguage'])) {
+        if (!$this->_session->has( 'IdLanguage' )) {
             $frontRouter = new \RoxFrontRouter();
             $frontRouter->setLanguage();
         }

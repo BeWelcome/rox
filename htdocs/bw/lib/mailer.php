@@ -65,7 +65,7 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
         $mail_subject = "[via " . $_SERVER['SERVER_NAME'] . "]" . $_mail_subject;
     }
 
-    if (isset($_SESSION['verbose'])) {
+    if ($this->_session->has( 'verbose' )) {
         $verbose = $_SESSION['verbose'];
     }
     else {

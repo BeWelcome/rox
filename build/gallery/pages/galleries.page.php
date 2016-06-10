@@ -29,7 +29,7 @@ class GalleryGalleriesPage extends GalleryBasePage
     protected function column_col3() {
         $statement = $this->statement;
         $galleries = $this->galleries;
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
         ?>
         <h3><?php echo $words->getFormatted('Photosets'); ?></h3>
         <?php

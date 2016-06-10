@@ -40,8 +40,8 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
             <div class="subcr">
             
             <?php
-                
-                if (!APP_user::isBWLoggedIn('NeedMore,Pending')) {
+                $a = new APP_User();
+                if (!$a->isBWLoggedIn('NeedMore,Pending')) {
                     // not logged in users cannot join groups
                     echo $words->get('GroupsJoinLoginFirst');
                 } else {

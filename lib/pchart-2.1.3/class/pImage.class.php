@@ -305,7 +305,7 @@
      if ( $this->ImageMapStorageMode == IMAGE_MAP_STORAGE_SESSION )
       {
        if(!isset($_SESSION)) { $this->initialiseImageMap(); }
-       $_SESSION[$this->ImageMapIndex][] = array($Type,$Plots,$Color,$Title,$Message);
+       $this->getSession->set( $this->ImageMapIndex][, array($Type,$Plots,$Color,$Title,$Message) )
       }
      elseif($this->ImageMapStorageMode == IMAGE_MAP_STORAGE_FILE)
       {
@@ -337,9 +337,9 @@
       {
        if(!isset($_SESSION)) { return(-1); }
        if ( is_array($NewTitle) )
-        { $ID = 0; foreach($_SESSION[$this->ImageMapIndex] as $Key => $Settings) { if ( $Settings[3] == $OldTitle && isset($NewTitle[$ID])) { $_SESSION[$this->ImageMapIndex][$Key][3] = $NewTitle[$ID]; $ID++; } } }
+        { $ID = 0; foreach($this->getSession->set( $this->ImageMapIndex] as $Key => $Settings) { if ( $Settings[3] == $OldTitle && isset($NewTitle[$ID])) { $_SESSION[$this->ImageMapIndex][$Key][3, $NewTitle[$ID] ) $ID++; } } }
        else
-        { foreach($_SESSION[$this->ImageMapIndex] as $Key => $Settings) { if ( $Settings[3] == $OldTitle ) { $_SESSION[$this->ImageMapIndex][$Key][3] = $NewTitle; } } }
+        { foreach($this->getSession->set( $this->ImageMapIndex] as $Key => $Settings) { if ( $Settings[3] == $OldTitle ) { $_SESSION[$this->ImageMapIndex][$Key][3, $NewTitle ) } } }
       }
      elseif( $this->ImageMapStorageMode == IMAGE_MAP_STORAGE_FILE )
       {
@@ -377,7 +377,7 @@
      if ( $this->ImageMapStorageMode == IMAGE_MAP_STORAGE_SESSION )
       {
        if(!isset($_SESSION)) { return(-1); }
-       foreach($_SESSION[$this->ImageMapIndex] as $Key => $Settings) { if ( $Settings[3] == $Title ) { if ( isset($Values[$ID]) ) { $_SESSION[$this->ImageMapIndex][$Key][4] = $Values[$ID]; } $ID++; } }
+       foreach($this->getSession->set( $this->ImageMapIndex] as $Key => $Settings) { if ( $Settings[3] == $Title ) { if ( isset($Values[$ID]) ) { $_SESSION[$this->ImageMapIndex][$Key][4, $Values[$ID] ) } $ID++; } }
       }
      elseif( $this->ImageMapStorageMode == IMAGE_MAP_STORAGE_FILE )
       {

@@ -30,7 +30,7 @@ class PollsController extends RoxControllerBase
         $model = new PollsModel;
 
         
-        if (!isset($_SESSION['IdMember'])) {
+        if (!$this->_session->has( 'IdMember' )) {
             $page = new MessagesMustloginPage();
             $page->setRedirectURL(implode('/',$request));
         		return $page;

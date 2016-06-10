@@ -305,7 +305,7 @@ class PageWithHTML extends AbstractBasePage
 
     protected function statusMessage()
     {
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
         // messages about the member's status preceed the info messages
         $user = new APP_User();
         $logged_in = $user->IsBWLoggedIn("NeedMore,Pending");
@@ -321,7 +321,7 @@ class PageWithHTML extends AbstractBasePage
         ?><div id="translator" class="float_right"><?php
         $request_string = implode('/',PVars::get()->request);
         $rox_tr = PVars::getObj("env")->baseuri . "rox/tr_mode";
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
 
         switch ($words->getTrMode()) {
             case 'translate':

@@ -35,7 +35,7 @@ class MailboxWidget_Sent extends MailboxWidget
         // This would lgo in the a-tag: '.(($sort_current == 'date') ? 'class="sort_selected"' : '').'
         $request_str = implode('/',PRequest::get()->request);
         $dir_str = (isset($_GET['dir']) && $_GET['dir'] != 'ASC') ? 'ASC' : 'DESC';
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
         $columns['from'] = '<a href="'.$request_str.'?sort=receiver&amp;dir='.$dir_str.'">'.$words->getSilent('To').'</a> / <a href="'.$request_str.'?sort=date&amp;dir='.(isset($_GET['dir']) ? $dir_str : 'ASC').'">'.$words->getSilent('Date').'</a>'.$words->flushBuffer();
         return $columns;
     }

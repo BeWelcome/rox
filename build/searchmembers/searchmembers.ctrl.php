@@ -44,7 +44,7 @@ class SearchmembersController extends PAppController {
         $request = PRequest::get()->request;
         if (isset($request[0]) && $request[0] == 'styles') {
             $req = implode('/', $request);
-            if (isset($_SESSION['lastRequest']))
+            if ($this->_session->has( 'lastRequest' ))
                 PRequest::ignoreCurrentRequest();
             $this->_view->passthroughCSS($req);
         } 
@@ -127,12 +127,12 @@ class SearchmembersController extends PAppController {
             switch ($request[1]) {
                 case 'mapoff': {
                     $mapstyle = "mapoff"; 
-                    $_SESSION['SearchMembersTList'] = array();
+                    $this->getSession->set( 'SearchMembersTList', array() )
                     break;
                 }
                 case 'mapon': {
                     $mapstyle = "mapon";
-                    $_SESSION['SearchMembersTList'] = array();
+                    $this->getSession->set( 'SearchMembersTList', array() )
                     break;
                 }
                 case 'queries': {
@@ -146,7 +146,7 @@ class SearchmembersController extends PAppController {
                     break;
                 }
                 default:
-                    if ((isset($_SESSION['SearchMapStyle'])) and $_SESSION['SearchMapStyle']) {
+                    if (($this->_session->has( 'SearchMapStyle' ) and $_SESSION['SearchMapStyle'])) {
                         $mapstyle = $_SESSION['SearchMapStyle'];
                     }
                     break;
@@ -154,10 +154,10 @@ class SearchmembersController extends PAppController {
         }
         
         // Store the MapStyle in session
-        $_SESSION['SearchMapStyle'] = $mapstyle;
+        $this->getSession->set( 'SearchMapStyle', $mapstyle )
         
         // Check wether there are latest search results and variables from the session
-        if (!$queries && isset($_SESSION['SearchMembersTList'])) {
+        if (!$queries && $this->_session->has( 'SearchMembersTList' )) {
             if (($_SESSION['SearchMembersTList']) && ($_SESSION['SearchMembersVars'])) $varsOnLoad = $_SESSION['SearchMembersVars'];
         }
 
@@ -183,8 +183,8 @@ class SearchmembersController extends PAppController {
                 }
                 $this->_view->searchmembers_ajax($TList, $vars, $mapstyle);
                 // Store latest search results and variables in session
-                $_SESSION['SearchMembersTList'] = $TList;
-                $_SESSION['SearchMembersVars'] = $vars;
+                $this->getSession->set( 'SearchMembersTList', $TList )
+                $this->getSession->set( 'SearchMembersVars', $vars )
                 PPHP::PExit();
                 break;
 /* quicksearch shouldn't go through this route
@@ -253,7 +253,7 @@ class SearchmembersController extends PAppController {
                 break;
 */
             default:    
-                $words = new MOD_words();
+                $words = new MOD_words($this->getSession());
                 
                 $P->addStyles = $this->_view->customStyles($mapstyle);
                 $google_conf = PVars::getObj('config_google');

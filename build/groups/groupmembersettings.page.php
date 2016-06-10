@@ -47,7 +47,8 @@ class GroupMemberSettingsPage extends GroupsBasePage
             $problemmsg = (($redirected->problems) ? "<p class=\"error\">{$words->get('GroupMemberSettingsProblems')}</p>" : '');
         }
 
-        if (!APP_user::isBWLoggedIn('NeedMore,Pending'))
+        $a = new APP_User();
+        if (!$a->isBWLoggedIn('NeedMore,Pending'))
         {
             $widg = $this->createWidget('LoginFormWidget');
             $widg->render();

@@ -26,6 +26,8 @@ require "auth.lib.php";
 
 class MOD_bw_user_Auth extends MOD_user_Auth
 {
+	use \Rox\RoxTraits\SessionTrait;
+
     private $_immediateRedirect = '';
 
     /**
@@ -37,6 +39,7 @@ class MOD_bw_user_Auth extends MOD_user_Auth
     {
         parent::__construct($sessionName, $tableName);
         $this->authId = $authId;
+		$this->setSession();
     }
 
 	protected function doLogin( $handle, $password )
@@ -149,7 +152,7 @@ check the logs for "In doBWLogin, jy believe its obsolete"
 		}
 
 		// Write the member's status to the session
-		$_SESSION['Status'] = $_SESSION['MemberStatus'] = $m->Status;
+		$this->_session->set( 'Status', $_SESSION['MemberStatus'] = $m->Status );
 
 		// Process the login of the member according to his status
 		switch ($m->Status) {
@@ -157,7 +160,7 @@ check the logs for "In doBWLogin, jy believe its obsolete"
 			case "OutOfRemind" :  // in case an inactive member comes back
 				MOD_log::get()->write("Successful login, becoming active again (Was OutOfRemind), with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
 				$this->dao->query("UPDATE members SET Status='Active' WHERE members.id=".$m->id." AND Status='OutOfRemind'") ;
-				$_SESSION['Status'] = $_SESSION['MemberStatus'] = $m->Status='Active' ;
+				$this->_session->set( 'Status', $_SESSION['MemberStatus'] = $m->Status='Active'  );
 				break ;
 			case "Active" :
 			case "ActiveHidden" :
@@ -180,7 +183,7 @@ check the logs for "In doBWLogin, jy believe its obsolete"
 
 			case "NeedMore" :
                 $_SESSION['IdMember']=$m->id ;
-                $_SESSION['Status'] = $_SESSION['MemberStatus'] = $m->Status='NeedMore' ;
+                $this->_session->set( 'Status', $_SESSION['MemberStatus'] = $m->Status='NeedMore'  );
 				MOD_log::get()->write("Login with (needmore)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
 			    $this->_immediateRedirect = PVars::getObj('env')->baseuri . "bw/updatemandatory.php";
 				// exit(0);
@@ -218,9 +221,9 @@ check the logs for "In doBWLogin, jy believe its obsolete"
 			throw new PException('Weird stuff!');
 
 		// Set the session identifier
-		$_SESSION['IdMember'] = $m->id;
-		$_SESSION['Username'] = $m->Username;
-		$_SESSION['Status'] = $_SESSION['MemberStatus'] = $m->Status;
+		$this->_session->set( 'IdMember', $m->id );
+		$this->_session->set( 'Username', $m->Username );
+		$this->_session->set( 'Status', $_SESSION['MemberStatus'] = $m->Status );
 
 		if ($_SESSION['IdMember'] != $m->id)
 		{ // Check is session work of
@@ -228,8 +231,8 @@ check the logs for "In doBWLogin, jy believe its obsolete"
 			throw new PException('Login sanity check failed miserably!');
 		}; // end Check is session work of
 
-		$_SESSION['MemberCryptKey'] = crypt($m->PassWord, "rt"); // Set the key which will be used for member personal cryptation
-		$_SESSION['LogCheck'] = Crc32($_SESSION['MemberCryptKey'] . $_SESSION['IdMember']); // Set the key for checking id and LogCheck (will be restricted in future)
+		$this->_session->set( 'MemberCryptKey', crypt($m->PassWord, "rt") ); // Set the key which will be used for member personal cryptation
+		$this->_session->set( 'LogCheck', Crc32($_SESSION['MemberCryptKey'] . $_SESSION['IdMember']) ); // Set the key for checking id and LogCheck (will be restricted in future)
 
 		$this->dao->query("UPDATE members SET LogCount=LogCount+1,LastLogin=now(),NbRemindWithoutLogingIn=0 WHERE id=" . $_SESSION['IdMember']); // update the LastLogin date
 				 MOD_log::get()->write("Is this dead code ? We are in bwauth.lib.php setupBWSession, if so it is redudant somewhere ...", "Debug");
@@ -245,8 +248,8 @@ check the logs for "In doBWLogin, jy believe its obsolete"
 
 		if (isset ($langprefs->Value))
 		{ // If there is a member selected preference set it
-			$_SESSION["IdLanguage"] = $langprefs->Value;
-			$_SESSION["lang"] = 	  $langprefs->ShortCode;
+			$this->_session->set( "IdLanguage", $langprefs->Value );
+			$this->_session->set( "lang", 	  $langprefs->ShortCode );
 		}
 
     	// Process the login of the member according to his status
@@ -257,7 +260,7 @@ check the logs for "In doBWLogin, jy believe its obsolete"
 			case "Pending" :
             case "ChoiceInactive" :
             	//if (HasRight("Words"))
-				//	$_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator
+				//	$this->_session->set( 'switchtrans', "on" ) // Activate switchtrans oprion if its a translator
 				break;
 
 			default:
@@ -311,8 +314,8 @@ VALUES
 *
 * @return boolean
 */
-	static function isBWLoggedIn($ExtraAllowedStatus="") {
-		if (empty($_SESSION['IdMember'])) {
+	public function isBWLoggedIn($ExtraAllowedStatus="") {
+		if (!empty($_SESSION['IdMember'])) {
 			return false;
 		}
 
@@ -346,7 +349,7 @@ VALUES
 		}
 
 		if (!empty($ExtraAllowedStatus)) { // are there allowed exception ?
-			if (!isset($_SESSION["MemberStatus"])) {
+			if ($this->_session->has( "MemberStatus" )) {
 				$ret=print_r($_SESSION,true) ;
 				die("no \$_SESSION[\"MemberStatus\"] in IsLoggedIn() "."<br />\n".$ret) ;
 			}
@@ -362,7 +365,7 @@ VALUES
 
 	function logout()
 	{
-		if (isset($_SESSION['IdMember'])) {
+		if ($this->_session->has( 'IdMember' )) {
 			MOD_log::get()->write("Logout in bwauth.lib.php", "Login");
 
 
@@ -378,15 +381,15 @@ VALUES
 		unset($_SESSION['MemberStatus']);
 		unset($_SESSION['Status']);
 		unset($_SESSION["stylesheet"]) ;
-		if (isset($_SESSION['Param']))
+		if ($this->_session->has( 'Param' ))
 			unset($_SESSION["Param"]) ;
-		if (isset($_SESSION['TimeOffset']))
+		if ($this->_session->has( 'TimeOffset' ))
 			unset($_SESSION["TimeOffset"]) ;
-		if (isset($_SESSION['PreferenceDayLight']))
+		if ($this->_session->has( 'PreferenceDayLight' ))
 			unset($_SESSION["PreferenceDayLight"]) ;
-		if (isset($_SESSION['MemberCryptKey']))
+		if ($this->_session->has( 'MemberCryptKey' ))
 			unset($_SESSION['MemberCryptKey']);
-		if (isset($_SESSION['LogCheck']))
+		if ($this->_session->has( 'LogCheck' ))
 			unset($_SESSION['LogCheck']);
 
 		foreach ($_SESSION as $key => $name) {
@@ -399,7 +402,7 @@ VALUES
 			if (strpos($key,"FlagLevel")!==false) {
 				unset($_SESSION[$key]) ;
 			}
-//			if (isset($_SESSION[$key])) print_r( $key ); echo " "; print_r( $name ); echo "<br />\n" ;
+//			if ($this->_session->has( $key ) print_r( $key ); echo " "; print_r( $name ); echo "<br />\n" ;
 		}
 //		die(0) ;
 

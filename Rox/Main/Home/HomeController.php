@@ -45,7 +45,7 @@ class HomeController extends Controller
      * @return Response
      */
     public function showMessagesAction(Request $request) {
-        $widget = new TwigView($this->getRouting(), false);
+        $widget = new TwigView($this->getRouter(), false);
         $all = $request->query->get('all');
         $unread = $request->query->get('unread');
         $messages = $this->_model->getMessages($all, $unread, 4);
@@ -56,7 +56,7 @@ class HomeController extends Controller
     }
 
     public function showNotificationsAction() {
-        $widget = new TwigView($this->getRouting(), false);
+        $widget = new TwigView($this->getRouter(), false);
         $notifications = $this->_model->getNotifications(5);
         $widget->setTemplate('notifications.html.twig', 'home', [
             'notifications' => $notifications,
@@ -71,7 +71,7 @@ class HomeController extends Controller
      * @return Response
      */
     public function showThreadsAction(Request $request) {
-        $widget = new TwigView($this->getRouting(), false);
+        $widget = new TwigView($this->getRouter(), false);
         $groups = $request->query->get('groups');
         $forum = $request->query->get('forum');
         $following = $request->query->get('following');
@@ -83,7 +83,7 @@ class HomeController extends Controller
     }
 
     public function showActivitiesAction() {
-        $widget = new TwigView($this->getRouting(), false);
+        $widget = new TwigView($this->getRouter(), false);
         $activities = $this->_model->getActivities(4);
         $widget->setTemplate('activities.html.twig', 'activities', [
             'activities' => $activities,
@@ -96,8 +96,8 @@ class HomeController extends Controller
      *
      * @return Response
      */
-    public function showAction() {
-        $page = new HomePage($this->getRouting());
+    public function showAction(Request $request) {
+        $page = new HomePage($this->getRouter(), $request);
         $memberDetails = $this->_model->getMemberDetails();
         $page->addParameters($memberDetails);
         return new Response($page->render());

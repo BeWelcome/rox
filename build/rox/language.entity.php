@@ -27,8 +27,8 @@ class Language extends RoxEntityBase
         {
             return false;
         }
-        $_SESSION['lang'] = $this->ShortCode;
-        $_SESSION['IdLanguage'] = $this->id;
+        $this->getSession->set( 'lang', $this->ShortCode )
+        $this->getSession->set( 'IdLanguage', $this->id )
         PVars::register('lang', $_SESSION['lang']);
         return true;
     }

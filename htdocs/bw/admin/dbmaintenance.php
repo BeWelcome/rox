@@ -69,8 +69,8 @@ MustLogIn(); // Need to be logged
 require_once "layout/header.php";
 
 // It is always to consider that dbmaintenance works in english
-$_SESSION['lang'] = CV_def_lang;
-$_SESSION['IdLanguage'] = 0; // force English for menu
+$this->getSession->set( 'lang', CV_def_lang )
+$this->getSession->set( 'IdLanguage', 0 ) // force English for menu
 
 
 

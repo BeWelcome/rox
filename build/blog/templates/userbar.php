@@ -1,6 +1,6 @@
 <?php
 
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 ?>
       <h3><?=$words->get('Actions')?></h3>
       <ul class="linklist">

@@ -1,4 +1,4 @@
-<?php $words = new MOD_words(); ?>
+<?php $words = new MOD_words($this->getSession()); ?>
 <div id="blog-userbar" class="vert-infobar box">
     <h2><?=$words->get('linkAdminbar')?></h2>
     <p>

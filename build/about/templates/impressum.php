@@ -21,7 +21,7 @@ write to the Free Software Foundation, Inc., 59 Temple PlaceSuite 330,
 Boston, MA  02111-1307, USA.
 
 */
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 ?>
     
 <h3><?=$words->get('LegalNote'); ?></h3>

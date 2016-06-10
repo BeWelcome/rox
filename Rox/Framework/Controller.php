@@ -4,11 +4,12 @@ namespace Rox\Framework;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class Controller
 {
     /** @var \Symfony\Component\Routing\Router */
-    private $_routing = null;
+    private $_router = null;
 
     /** @var  \Symfony\Component\Form\FormFactoryInterface */
     private $_formFactory = null;
@@ -17,6 +18,9 @@ class Controller
      * @RoxModelBase Rox
      */
     private $_model;
+
+    /** @var  SessionInterface */
+    private $_session;
 
     public function __destruct()
     {
@@ -28,9 +32,9 @@ class Controller
      *
      * @return Controller
      */
-    public function setRouting($routing)
+    public function setRouter($router)
     {
-        $this->_routing = $routing;
+        $this->_router = $router;
 
         return $this;
     }
@@ -39,9 +43,9 @@ class Controller
      * Gets the associated Router object
      * @return \Symfony\Component\Routing\Router
      */
-    protected function getRouting()
+    protected function getRouter()
     {
-        return $this->_routing;
+        return $this->_router;
     }
 
     /**
@@ -82,6 +86,20 @@ class Controller
     public function getModel()
     {
         return $this->_model;
+    }
+
+    /**
+     * @param SessionInterface $session
+     */
+    public function setSession(SessionInterface $session) {
+        $this->_session = $session;
+    }
+
+    /**
+     * @return SessionInterface
+     */
+    protected function getSession() {
+        return $this->_session;
     }
 
     public function redirect($url, $status = 302)

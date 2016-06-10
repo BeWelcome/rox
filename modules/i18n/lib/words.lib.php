@@ -28,6 +28,8 @@ Boston, MA  02111-1307, USA.
  * - class MOD_words: One global object of this type, to handle all the translation requests.
  * -
  */
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
 /**
@@ -44,6 +46,7 @@ Boston, MA  02111-1307, USA.
 
 class MOD_words
 {
+    private $_session;
     private $_lang;  // the active language
     private $_trMode;  // the translation mode - can be browse, translate, or edit
     private $_whereCategory = '';
@@ -55,12 +58,15 @@ class MOD_words
 
 
     /**
-     * @param string $category optional value to set the page of the texts
-     * 				 we're looking for (this needs an additional column in the
-     * 				 words table)
+     * MOD_words constructor.
+     * @param SessionInterface $session
+     * @param null $category
+     * @throws Exception
+     * @throws PException
      */
     public function __construct($category=null)
     {
+        $this->_session = \Rox\Framework\SessionSingleton::getSession();
         $this->_lang = \PVars::get()->lang;
 
 		$this->WordMemcache=new MOD_bw_memcache("words","Sentence","code") ;
@@ -68,7 +74,7 @@ class MOD_words
         if (!empty($category)) {
             $this->_whereCategory = ' `category`=\'' . $category . '\'';
         }
-        if (isset($_SESSION['IdLanguage']))
+        if ($this->_session->has( 'IdLanguage' ))
             $this->_langWrite = $_SESSION['IdLanguage'];
         else $this->_langWrite = 0;
 
@@ -787,8 +793,8 @@ WHERE
      * @return string translated according to the best language find
      */
     public function mTrad($IdTrad,$ReplaceWithBr=false) {
-		if (isset($_SESSION['IdLanguage'])) {
-	 	   	$IdLanguage=$_SESSION['IdLanguage'] ;
+		if ($this->_session->has( 'IdLanguage' )) {
+	 	   	$IdLanguage= $this->_session( 'IdLanguage');
 		}
 		else {
 	 		$IdLanguage=0 ; // by default language 0
@@ -819,8 +825,8 @@ WHERE
 			}
 
 			if ($IdForceLanguage<=0) {
-				if (isset($_SESSION['IdLanguage'])) {
-					$IdLanguage=$_SESSION['IdLanguage'] ;
+				if ($this->_session->has( 'IdLanguage' )) {
+					$IdLanguage= $this->_session->get( 'IdLanguage' );
 				}
 				else {
 					$IdLanguage=0 ; // by default language 0
@@ -1182,8 +1188,8 @@ WHERE
     */
     function GetLanguageChoosen() {
         $DefLanguage=0 ;
-       if (isset($_SESSION['IdLanguage'])) {
-           $DefLanguage=$_SESSION['IdLanguage'] ;
+       if ($this->_session->has( 'IdLanguage' )) {
+           $DefLanguage= $this->_session->get( 'IdLanguage' );
         }
         if (isset($_POST['IdLanguage'])) { // This will allow to consider a Language specified in the form
            $DefLanguage=$_POST['IdLanguage'] ;

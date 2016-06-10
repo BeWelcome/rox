@@ -51,19 +51,19 @@ function LanguageChangeTest()
 	// test if member use the switchtrans switch to record use of words on its page
 	if ((isset ($_GET['switchtrans'])) and ($_GET['switchtrans'] != "")) {
 		if (!isset ($_SESSION['switchtrans'])) {
-			$_SESSION['switchtrans'] = "on";
+			$this->getSession->set( 'switchtrans', "on" )
 		} else {
 			if ($_SESSION['switchtrans'] == "on") {
-				$_SESSION['switchtrans'] = "off";
+				$this->getSession->set( 'switchtrans', "off" )
 			} else {
-				$_SESSION['switchtrans'] = "on";
+				$this->getSession->set( 'switchtrans', "on" )
 			}
 		}
 	} // end of switchtrans
 
 	if (isset ($_GET['forcewordcodelink'])) { // use to force a linj to each word
 		//code on display
-		$_SESSION['forcewordcodelink'] = $_GET['forcewordcodelink'];
+		$this->getSession->set( 'forcewordcodelink', $_GET['forcewordcodelink'] )
 	}
 }
 
@@ -96,25 +96,25 @@ function SwitchToNewLang($para_newlang="") {
 		}
 	}
 
-	if (!isset($_SESSION['lang']) ||
+	if (!$this->_session->has( 'lang' ) ||
 		$_SESSION['lang'] != $newlang ||
-		!isset($_SESSION['IdLanguage']))
+		!$this->_session->has( 'IdLanguage' )
 	{
 		// Update lang if url lang has changed
 		$RowLanguage = LoadRow("SELECT SQL_CACHE id,ShortCode FROM languages WHERE ShortCode='" . $newlang . "'");
 
 		if (isset($RowLanguage->id))
 		{
-			if (isset($_SESSION['IdMember']))
+			if ($this->_session->has( 'IdMember' ))
 				LogStr("change to language from [" . $_SESSION['lang'] . "] to [" . $newlang . "]", "SwitchLanguage");
-			$_SESSION['lang'] = $RowLanguage->ShortCode;
-			$_SESSION['IdLanguage'] = $RowLanguage->id;
+			$this->getSession->set( 'lang', $RowLanguage->ShortCode );
+			$this->getSession->set( 'IdLanguage', $RowLanguage->id );
 		}
 		else
 		{
 			LogStr("problem : " . $newlang . " not found after SwitchLanguage", "Bug");
-			$_SESSION['lang'] = CV_def_lang;
-			$_SESSION['IdLanguage'] = 0;
+			$this->getSession->set( 'lang', CV_def_lang );
+			$this->getSession->set( 'IdLanguage', 0 );
 		}
 		setcookie('LastLang',$_SESSION['lang'],time()+3600*24*300); // store it as a cookie for 300 days
 	}
@@ -133,7 +133,7 @@ function SwitchToNewLang($para_newlang="") {
 		sql_query($str) ;
 	} // end if Is Logged in
 
-	if (!isset($_SESSION['IdLanguage']))
+	if (!$this->_session->has( 'IdLanguage' ))
 	{
 		bw_error("SwitchToNewLang internal failure. IdLanguage still not set.");
 	}
@@ -146,12 +146,12 @@ function ww($code, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p4 = NULL, $p5 = NULL, $
 	global $Params;
 
 	// If no language set default language
-	if (!isset($_SESSION['IdLanguage']))
+	if (!$this->_session->has( 'IdLanguage' ))
 	{
 	   SwitchToNewLang();
 	}
 
-	if (!isset($_SESSION['IdLanguage']))
+	if (!$this->_session->has( 'IdLanguage' ))
 	{
 		bw_error("Lang select internal failure");
 	}
@@ -164,7 +164,7 @@ function ww($code, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p4 = NULL, $p5 = NULL, $
 function wwinlang($code, $IdLanguage = 0, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p4 = NULL, $p5 = NULL, $p6 = NULL, $p7 = NULL, $p8 = NULL, $p9 = NULL, $pp10 = NULL, $pp11 = NULL, $pp12 = NULL, $pp13 = NULL) {
 	if ((isset ($_SESSION['switchtrans'])) and ($_SESSION['switchtrans'] == "on")) { // if user as choosen to build a translation list to use in AdminWords
 		if (!isset ($_SESSION['TranslationArray'])) {
-			$_SESSION['TranslationArray'] = array (); // initialize $_SESSION['TranslationArray'] if it wasent existing yet
+			$this->getSession->set( 'TranslationArray', array () ) // initialize $_SESSION['TranslationArray'] if it wasent existing yet
 		}
 		if (!in_array($code, $_SESSION['TranslationArray'])) {
 			array_push($_SESSION['TranslationArray'], $code);

@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 // get current request
 $request = PRequest::get()->request;
 
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 
 if (!isset($vars['errors']) || !is_array($vars['errors'])) {
     $vars['errors'] = array();

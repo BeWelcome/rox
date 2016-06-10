@@ -22,7 +22,7 @@ class SearchMembersController extends Controller
 
     public function searchAction(Request $request) {
         // We need a new page
-        $page = new SearchMembersPage($this->getRouting());
+        $page = new SearchMembersPage($this->getRouter());
 
         // Setup the form used inside the template
         // \todo move to a separate form class

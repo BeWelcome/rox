@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
      * @package Apps
      * @subpackage Admin
      */
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 $massmail = $this->massmail;;
 ?>
 <div id="adminmassmail">

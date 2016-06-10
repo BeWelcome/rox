@@ -1,5 +1,5 @@
 <?php
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 $request = PRequest::get()->request;
 $login_url = 'login/' . htmlspecialchars(implode('/', $request), ENT_QUOTES);
 $Gallery = new GalleryModel;

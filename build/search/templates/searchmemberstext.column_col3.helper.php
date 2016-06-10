@@ -11,7 +11,7 @@ include 'advancedoptions_helper.php';
 
 function ShowAccommodation($accommodation)
 {
-    $words = new MOD_words();
+    $words = new MOD_words($this->getSession());
     switch($accommodation) {
         case 'anytime':
             $imgSrc = 'images/icons/yesicanhost.png';

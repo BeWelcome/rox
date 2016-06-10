@@ -4,7 +4,7 @@ class ReadMessagePage extends MessagesBasePage
 {
     protected function column_col3()
     {
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
         $message = $this->message;
         $purifier = new MOD_htmlpure();
         $purifier = $purifier->getMessagesHtmlPurifier();

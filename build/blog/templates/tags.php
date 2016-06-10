@@ -20,7 +20,7 @@ $errors = array();
 $tagsText = array();
 $i18n = new MOD_i18n('apps/blog/tags.php');
 $tagsText = $i18n->getText('tagsText');
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 ?>
 <div id="blog-tags">
     <h2><?=$words->get('TagsTitle')?></h2>

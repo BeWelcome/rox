@@ -20,7 +20,7 @@ class MessagesBasePage extends RoxPageView
     protected function teaserContent() {
         $words = $this->getWords();
         // &gt; or &raquo; ?
-        $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : 'Nobody';
+        $username = $this->_session->has( 'Username' ) ? $_SESSION['Username'] : 'Nobody';
         ?><div id="teaser" class="page-teaser clearfix">
         <div id="teaser_l1"> 
         <h1><a href="messages"><?php echo $words->get('UserMessages', $username); ?></a></h1>

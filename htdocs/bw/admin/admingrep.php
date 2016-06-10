@@ -70,7 +70,7 @@ switch ($action) {
 				$previousres .= analyse($filename, stripslashes($s1), $nbligne, stripslashes($s2), stripslashes($stringnot));
 			}
 		}
-		$_SESSION[directory] = $repertoire;
+		$this->getSession->set( directory, $repertoire )
 		break;
 }
 

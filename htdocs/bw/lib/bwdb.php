@@ -106,23 +106,23 @@ function sql_get_enum($table, $column) {
 // sql query execute a mysql_query but logs errors if any, and 
 // dump on screen if member has right Debug
 function sql_query($ss_sql) {
-	if (isset($_SESSION['sql_query'])&&
+	if ($this->_session->has( 'sql_query' )&&
 		$_SESSION['sql_query'] == "AlreadyIn") {
 		//	  die ("<br>recursive sql_query<br>".$ss_sql);
 	}
-	$_SESSION['sql_query'] = "AlreadyIn";
+	$this->getSession->set( 'sql_query', "AlreadyIn" )
 	
 	$qry = mysql_query($ss_sql." /* ".$_SERVER["PHP_SELF"]." */");
 	
 	if ($qry) // No failure
 	{
-		$_SESSION['sql_query'] = "";
+		$this->getSession->set( 'sql_query', "" )
 		return ($qry);
 	}
 	$error =  mysql_error();
 	
 	if ((HasRight("Debug")) or ($_SERVER['SERVER_NAME'] == 'localhost') ) {
-		$_SESSION['sql_query'] = "";
+		$this->getSession->set( 'sql_query', "" );
 		bw_error(debug("<br>query problem with<br><font color=red> $ss_sql mysql_error: ". $error. "</font><br>"));
 	}
 	else {

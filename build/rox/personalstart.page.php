@@ -31,8 +31,8 @@ class PersonalStartpage extends PageWithRoxLayout
     }
 
     protected function getPageTitle() {
-        $words = new MOD_words();
-        if (isset($_SESSION['Username'])) {
+        $words = new MOD_words($this->getSession());
+        if ($this->_session->has( 'Username' )) {
             return $words->getSilent('HelloUsername',$_SESSION['Username']) . ' | BeWelcome';
         } else {
             // this should not happen actually!
@@ -51,7 +51,7 @@ class MailboxWidget_Personalstart extends MailboxWidget_Received
 {
     protected function getMessages()
     {
-        if (!isset($_SESSION['IdMember'])) {
+        if (!$this->_session->has( 'IdMember' )) {
             // not logged in - no messages
             return array();
         } else {
@@ -69,7 +69,7 @@ class MailboxWidget_Personalstart extends MailboxWidget_Received
 
     protected function showListItem($message, $i_row)
     {
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
         extract(get_object_vars($message));
         $readstyle = '';
         if ($message->unixtime_WhenFirstRead == false) $readstyle = 'message unread';

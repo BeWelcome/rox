@@ -143,7 +143,7 @@ if (!isset($vars['trip_id_foreign']) && isset($trip->trip_id)) $vars['trip_id_fo
                 		/*<[CDATA[*/
                 		var datepicker	= new DatePicker({
                 		relative	: 'create-date',
-                		language	: '<?=isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en'?>',
+                		language	: '<?=$this->_session->has( 'lang' ) ? $_SESSION['lang'] : 'en'?>',
                 		current_date : '', 
                 		topOffset   : '25',
                 		relativeAppend : true

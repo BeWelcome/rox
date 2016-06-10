@@ -116,7 +116,7 @@ class SearchModel extends RoxModelBase
             return ("");
         }
 
-        if (isset($_SESSION['IdLanguage'])) {
+        if ($this->_session->has( 'IdLanguage' )) {
             $IdLanguage = $_SESSION['IdLanguage'];
         } else {
             $IdLanguage = 0; // by default laguange 0

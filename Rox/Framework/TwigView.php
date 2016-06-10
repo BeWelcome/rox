@@ -3,12 +3,14 @@
 namespace Rox\Framework;
 
 use Rox\Models\Message;
+use Rox\Security\RoxUserProvider;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\MessageSelector;
@@ -18,15 +20,18 @@ use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use \AbstractBasePage;
 use \Twig_Loader_Filesystem;
 use \Twig_Environment;
-use \RoxModelBase;
 use \FlaglistModel;
-use \Illuminate\Database\Capsule\Manager as Capsule;
 
 class TwigView extends AbstractBasePage {
 
     protected $_loader;
     private $_forms = array();
     private $_container;
+    private $_request;
+
+    /** @var Session */
+    private $_session;
+
     private $_environment;
     private $_template;
     private $_parameters = array();
@@ -53,16 +58,18 @@ class TwigView extends AbstractBasePage {
     /**
      * TwigView constructor.
      * @param Router $router
+     * @param Request $request
      * @param bool $container
      */
-    public function __construct(Router $router, $container = true) {
+    public function __construct(Router $router, $container = true, Request $request = null) {
         $this->_container = $container;
+        $this->_request = $request;
+        $this->_session = SessionSingleton::getSession();
         $this->_loader = new Twig_Loader_Filesystem();
         $this->addNamespace('base');
         $this->addNamespace('start');
         $this->addNamespace('macros');
         $this->addNamespace('forms');
-
 
         $this->_environment = new Twig_Environment(
             $this->_loader ,
@@ -72,14 +79,14 @@ class TwigView extends AbstractBasePage {
                 'debug' => true,
             )
         );
-        $lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en';
+        $lang = $this->_session->get( 'lang', 'en' );
         \PVars::get()->lang = $lang;
         $this->_words = $this->getWords();
-        if (!isset($_SESSION['lang'])) {
-            $_SESSION['lang'] = 'en';
+        if (!$this->_session->has( 'lang' )) {
+            $this->_session->set( 'lang', 'en' );
         }
-        $this->_translator = new Translator($_SESSION['lang'], new MessageSelector());
-        if ($_SESSION['lang'] <> 'en') {
+        $this->_translator = new Translator($this->_session->get('lang'), new MessageSelector());
+        if ($this->_session->get('lang') <> 'en') {
             $this->_translator->setFallbackLocales(array('en'));
         }
         $this->_translator->addLoader('database', new DatabaseLoader());
@@ -135,77 +142,84 @@ class TwigView extends AbstractBasePage {
     }
 
     private function _getDefaults() {
-        $roxModel = new RoxModelBase();
-        $member = $roxModel->getLoggedInMember();
-        $loggedIn = ($member !== false);
         $teams = [];
+        $loggedIn = false;
         $messageCount = 0;
-        if ($loggedIn) {
-            $messageCount =
-                Message::where('IdReceiver', (int)$member->id)
-                    ->where('WhenFirstRead', '0000-00-00 00:00')
-                    ->where('Status', 'Sent')
-                    ->count();
-            // Check if member is part of volunteer teams
-            $R = \MOD_right::get();
-            $allTeams = [
-                [
-                    'Words',
-                    'AdminWord',
-                    'admin/word'
-                ],
-                [
-                    'Flags',
-                    'AdminFlags',
-                    'admin/flags'
-                ],
-                [
-                    'Rights',
-                    'AdminRights',
-                    'admin/rights'
-                ],
-                [
-                    'Logs',
-                    'AdminLogs',
-                    'bw/admin/adminlogs.php'
-                ],
-                [
-                    'Comments',
-                    'AdminComments',
-                    'bw/admin/admincomments.php'
-                ],
-                [
-                    'NewMembersBeWelcome',
-                    'AdminNewMembers',
-                    'admin/newmembers',
-                ],
-                [
-                    'MassMail',
-                    'AdminMassMail',
-                    'admin/massmail'
-                ],
-                [
-                    'Treasurer',
-                    'AdminTreasurer',
-                    'admin/treasurer'
-                ],
-                [
-                    'FAQ',
-                    'AdminFAQ',
-                    'bw/faq.php'
-                ],
-                [
-                    'SqlForVolunteers',
-                    'AdminSqlForVolunteers',
-                    'bw/admin/adminquery.php'
-                ],
-            ];
-            foreach($allTeams as $team) {
-                if ($R->hasRight($team[0])) {
-                    $cls = new \stdClass();
-                    $cls->link = $team[2];
-                    $cls->trans = $team[1];
-                    $teams[] = $cls;
+        if ($this->_session) {
+            $user = null;
+            $username = $this->_session->get('username');
+            if (!empty($username)) {
+                $userProvider = new RoxUserProvider();
+                $user = $userProvider->loadUserByUsername($username);
+            }
+            if ($user) {
+                $loggedIn = true;
+                $messageCount =
+                    Message::where('IdReceiver', (int)$user->id)
+                        ->where('WhenFirstRead', '0000-00-00 00:00')
+                        ->where('Status', 'Sent')
+                        ->count();
+                // Check if member is part of volunteer teams
+                $R = \MOD_right::get();
+                $allTeams = [
+                    [
+                        'Words',
+                        'AdminWord',
+                        'admin/word'
+                    ],
+                    [
+                        'Flags',
+                        'AdminFlags',
+                        'admin/flags'
+                    ],
+                    [
+                        'Rights',
+                        'AdminRights',
+                        'admin/rights'
+                    ],
+                    [
+                        'Logs',
+                        'AdminLogs',
+                        'bw/admin/adminlogs.php'
+                    ],
+                    [
+                        'Comments',
+                        'AdminComments',
+                        'bw/admin/admincomments.php'
+                    ],
+                    [
+                        'NewMembersBeWelcome',
+                        'AdminNewMembers',
+                        'admin/newmembers',
+                    ],
+                    [
+                        'MassMail',
+                        'AdminMassMail',
+                        'admin/massmail'
+                    ],
+                    [
+                        'Treasurer',
+                        'AdminTreasurer',
+                        'admin/treasurer'
+                    ],
+                    [
+                        'FAQ',
+                        'AdminFAQ',
+                        'bw/faq.php'
+                    ],
+                    [
+                        'SqlForVolunteers',
+                        'AdminSqlForVolunteers',
+                        'bw/admin/adminquery.php'
+                    ],
+                ];
+                foreach ($allTeams as $team) {
+                    if ($R->hasRight($team[0], "", $this->_session->get('id'))) {
+                        $cls = new \stdClass();
+                        $cls->link = $team[2];
+                        $cls->trans = $team[1];
+                        $teams[] = $cls;
+                    }
                 }
             }
         }
@@ -214,7 +228,7 @@ class TwigView extends AbstractBasePage {
             'container' => $this->_container,
             'logged_in' => $loggedIn,
             'messagecount' => $messageCount,
-            'username' => ($loggedIn ? $member->Username : ''),
+            'username' => ($loggedIn ? $user->Username : ''),
             'meta.robots' => 'ALL',
             'title' => 'BeWelcome',
             'teams' => $teams
@@ -231,7 +245,7 @@ class TwigView extends AbstractBasePage {
             $lang->ShortCode = $language->ShortCode;
             $langarr[$language->ShortCode] = $lang;
         }
-        $defaultLanguage = $langarr[isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en'];
+        $defaultLanguage = $langarr[$this->_session->get( 'lang' , 'en')];
         usort($langarr, function($a, $b) {
             if ($a->TranslatedName == $b->TranslatedName) {
                 return 0;
@@ -285,7 +299,7 @@ class TwigView extends AbstractBasePage {
 
     public function setTemplate($template, $namespace = false, $parameters = array()) {
         if ($namespace) {
-            $this->addNameSpace($namespace);
+            $this->addNamespace($namespace);
             $this->_template = '@' . $namespace . '/' . $template;
         } else {
             $this->_template = $template;

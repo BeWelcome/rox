@@ -15,7 +15,7 @@
     }
 
 
-if (isset($_SESSION['trData'])){
+if ($this->_session->has( 'trData' )){
     $data = $_SESSION['trData'];
     unset($_SESSION['trData']);
 }

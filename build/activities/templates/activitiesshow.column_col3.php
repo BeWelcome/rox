@@ -9,7 +9,7 @@ $request = PRequest::get()->request;
 $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
 $purifier = MOD_htmlpure::getActivitiesHtmlPurifier();
 $status = array();
-if (isset($_SESSION['ActivityStatus'])) {
+if ($this->_session->has( 'ActivityStatus' )) {
     $status = $_SESSION['ActivityStatus'];
     unset($_SESSION['ActivityStatus']);
 }

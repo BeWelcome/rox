@@ -31,23 +31,17 @@ Boston, MA  02111-1307, USA.
  */
 class MOD_right_flag {
 
-    /**
-     * @var MOD_right_flag
-     * @access private
-     */
+	use \Rox\RoxTraits\SessionTrait;
 
-    
-
-		 
     private $tableName;
 		
-		// These variables are uesed to save the context
-		public $nomtable ;
-		private $nomtablevolunteer ;
-		private $tablescope ;
-		private $tablelevel ;
-		private $IdSession ;
-		private $IdName ;
+	// These variables are uesed to save the context
+	public $nomtable ;
+	private $nomtablevolunteer ;
+	private $tablescope ;
+	private $tablelevel ;
+	private $IdSession ;
+	private $IdName ;
 
     protected $dao;
     
@@ -55,14 +49,14 @@ class MOD_right_flag {
 *  By default it will be considerated that we are building a "rights"
 *
 */
-    function __construct()     {		 		
+    function __construct()     {
         $db = PVars::getObj('config_rdbms');
         if (!$db) {
             throw new PException('DB config error!');
         }
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $this->dao =& $dao;
-        
+		$this->setSession();        
     }
 
     protected function initialize($nomdetable="") {
@@ -169,8 +163,8 @@ WHERE IdMember=' . $IdMember . ' AND '.$this->nomtable.'.id='.$this->nomtablevol
 		$rscope = ltrim(rtrim($row->Scope)); // remove extra space
 		if ($OptionalIdMember == 0) { // if its current member cache for next research 
 //			$_SESSION[$this->IdSession . $Name]="set" ;  // Caching is not enable if this line is commented (but test are needed before uncomenting it)
-			$_SESSION[$this->tablelevel . $Name] = $rlevel;
-			$_SESSION[$this->tablescope . $Name] = $rscope;
+			$this->_session->set( $this->tablelevel . $Name, $rlevel );
+			$this->_session->set( $this->tablescope . $Name, $rscope );
 		}
 	}
 	if ($Scope != "") { // if a specific scope is asked
@@ -207,9 +201,9 @@ public function hasRightAny()
 	global $_SYSHCVOL;
 	
 	// Test if in the session cache it is allready said that the member has no right
-	if ((isset($_SESSION['Param'])) and ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') and 
-	     (isset($_SESSION['hasRightAny'])) and 
-		 ($_SESSION['hasRightAny']=='no') ){
+	if (($this->_session->has( 'Param' ) and ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') and
+	     ($this->_session->has( 'hasRightAny' ) and
+		 ($_SESSION['hasRightAny']=='no'))) ){
 		 
 		 return(false) ;		 
 	} 
@@ -280,8 +274,8 @@ AND '.$this->nomtable.'.id='.$this->nomtablevolunteer.'.'.$this->IdName.' AND '.
 		if (!isset ($row->Level)) {
 			return false;
 		}
-		$_SESSION[$this->tablelevel . $Name] = $row->Level;
-		$_SESSION[$this->tablescope . $Name] = $row->Scope;
+		$this->_session->set( $this->tablelevel . $Name, $row->Level );
+		$this->_session->set( $this->tablescope . $Name, $row->Scope );
 	}
 	return ($_SESSION[$this->tablescope . $Name]);
 } // end of TheScope

@@ -1078,11 +1078,11 @@ SET
 
         // Which word is the person changing?
         $number_words = count($words);
-        if ($number_words && isset($_SESSION['prev_tag_content']) && $_SESSION['prev_tag_content']) {
+        if ($number_words && $this->_session->has( 'prev_tag_content' ) && $_SESSION['prev_tag_content']) {
             $search_for = false;
             $pos = false;
             for ($i = 0; $i < $number_words; $i++) {
-                if (isset($words[$i]) && (!isset($_SESSION['prev_tag_content'][$i]) || $words[$i] != $_SESSION['prev_tag_content'][$i])) {
+                if (isset($words[$i]) && (!$this->_session->has( 'prev_tag_content[' . $i . ']') || $words[$i] != $_SESSION['prev_tag_content'][$i])) {
                     $search_for = $words[$i];
                     $pos = $i;
                 }
@@ -1099,7 +1099,7 @@ SET
 
         if ($search_for) {
 
-            $_SESSION['prev_tag_content'] = $words;
+            $this->getSession->set( 'prev_tag_content', $words )
 
             // look for possible matches (from ALL tags)
 // TODO:

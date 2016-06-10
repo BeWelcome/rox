@@ -112,7 +112,8 @@ class Places extends RoxModelBase {
      */
     private function getMembersFiltered($query) {
         // this condition makes sure that unlogged people won't see non-public profiles
-        if (!(APP_User::isBWLoggedIn('NeedMore,Pending')))
+        $a = new APP_User();
+        if (!($a->isBWLoggedIn('NeedMore,Pending')))
         {
             $query = str_ireplace("FROM","FROM memberspublicprofiles mpp,",$query);
             $query = str_ireplace("WHERE","WHERE m.id = mpp.IdMember AND",$query);
@@ -287,7 +288,7 @@ class Places extends RoxModelBase {
     }
 
     public function getContinents() {
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
         $continents = array(
             "AM" => array($words->getSilent('PlacesAmerica'), $words->getSilent("PlacesAmericaCont")),
             "EA" => array($words->getSilent('PlacesEurAsia'), $words->getSilent("PlacesEurAsiaCont")),

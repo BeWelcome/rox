@@ -7,7 +7,7 @@ $request = PRequest::get()->request;
 $loginText = array();
 $i18n = new MOD_i18n('apps/user/login.php');
 $loginText = $i18n->getText('loginText');
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 
 if(!isset($redirect_url)) $redirect_url = 'main';
 
@@ -78,7 +78,7 @@ $c = $User->logoutProcess();
 $currUser = APP_User::get();
 $navText = $i18n->getText('navText');
 $countrycode = APP_User::countryCode($currUser->getHandle());
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 ?>
 <div class="clearfix">
 <p><?php echo $words->getFormatted('UserLoggedInAs'); ?> <br />

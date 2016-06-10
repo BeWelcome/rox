@@ -28,7 +28,7 @@ require_once("layouttools.php");
 
 echo "<!DOCTYPE html>\n";
 echo "<html " ;
-if (isset($_SESSION["lang"])) echo " lang=\"".($_SESSION["lang"])."\"" ;
+if ($this->_session->has( "lang" )) echo " lang=\"".($_SESSION["lang"])."\"" ;
 echo ">\n";
 global $_SYSHCVOL;
 echo "<head>\n";
@@ -51,7 +51,7 @@ $stylesheet = "minimal"; // this is the default style sheet
 
 // If is logged try to load appropriated style sheet
 if (IsLoggedIn()) {
-    if (!isset($_SESSION["stylesheet"]))  { // cache in session to avoid a reload at each new page
+    if (!$this->_session->has( "stylesheet" ))  { // cache in session to avoid a reload at each new page
          $rrstylesheet = LoadRow("select Value from memberspreferences where IdMember=" . $_SESSION['IdMember'] . " and IdPreference=6");
          if (isset ($rrstylesheet->Value)) {
                 $_SESSION["stylesheet"]=$stylesheet = $rrstylesheet->Value;

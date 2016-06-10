@@ -18,7 +18,7 @@ class CommunityPage extends RoxPageView
     }
 
     protected function getPageTitle() {
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
         echo $words->getBuffered('CommunityTitle');
     }
 

@@ -59,7 +59,7 @@ class VerifymembersController extends RoxControllerBase
                 }
                 break ;
             default :
-                $member_self = $this->getMember(isset($_SESSION['IdMember']) ? $_SESSION['IdMember'] : false);
+                $member_self = $this->getMember($this->_session->has( 'IdMember' ) ? $_SESSION['IdMember'] : false);
                 if (!isset($member_self)) {
                     // no member specified
                     $page = new VerifyNoMemberSpecifiedPage();

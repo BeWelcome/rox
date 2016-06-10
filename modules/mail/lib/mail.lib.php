@@ -152,7 +152,7 @@ class MOD_mail
         // Add the html-body only if the member wants HTML mails
         if ($html) {
             // Translate footer text (used in HTML template)
-            $words = new MOD_words();
+            $words = new MOD_words($this->getSession());
             $footer_message = $words->getPurified('MailFooterMessage', array(date('Y')), $language);
 
             // Using a html-template

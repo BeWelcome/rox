@@ -47,7 +47,7 @@ class ActivitiesController extends RoxControllerBase
         $result = $this->_model->joinLeaveActivity($args->post);
         if ($result) {
             $activity = new Activity($args->post['activity-id']);
-            $_SESSION['ActivityStatus'] = array('ActivityUpdateStatusSuccess', $activity->title);
+            $this->getSession->set( 'ActivityStatus', array('ActivityUpdateStatusSuccess', $activity->title) );
             return true;
         } else {
             return false;
@@ -65,7 +65,7 @@ class ActivitiesController extends RoxControllerBase
         }
         $activity = new Activity($args->post['activity-id']);
         if (!$activity->status == 1){
-            $_SESSION['ActivityStatus'] = array('ActivityUnCancelSuccess', $activity->title);
+            $this->getSession->set( 'ActivityStatus', array('ActivityUnCancelSuccess', $activity->title) );
         } else {
             return $this->router->url('activities_show', array('id' => $activity->id), false);
         }
@@ -135,10 +135,10 @@ class ActivitiesController extends RoxControllerBase
         } else {
             if ($args->post['activity-id'] == 0) {
                 $activity = $this->_model->createActivity($args);
-                $_SESSION['ActivityStatus'] = array('ActivityCreateSuccess', $args->post['activity-title']);
+                $this->getSession->set( 'ActivityStatus', array('ActivityCreateSuccess', $args->post['activity-title']) );
             } else {
                 $activity = $this->_model->updateActivity($args);
-                $_SESSION['ActivityStatus'] = array('ActivityUpdateSuccess', $args->post['activity-title']);
+                $this->getSession->set( 'ActivityStatus', array('ActivityUpdateSuccess', $args->post['activity-title']) );
             }
             return $this->router->url('activities_show', array('id' => $activity->id), false);
         }
@@ -273,7 +273,7 @@ class ActivitiesController extends RoxControllerBase
     {
         $errors = $this->_model->checkSearchActivitiesVarsOk($args);
         if (count($errors) > 0) {
-            $_SESSION['errors'] = $errors;
+            $this->getSession->set( 'errors', $errors );
             return $this->router->url('activities_search', array(), false);
         } else {
             return $this->router->url('activities_search_results', array( "keyword" => $args->post['activity-keyword']), false);

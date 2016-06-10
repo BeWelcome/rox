@@ -21,6 +21,8 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 /**
  * Collection of functions that create elements for a page.
  *
@@ -32,11 +34,12 @@ Boston, MA  02111-1307, USA.
  */
 class MOD_params
 {
+    use \Rox\RoxTraits\SessionTrait;
 
     /**
      * Singleton instance
      *
-     * @var MOD_layoutbits
+     * @var MOD_params
      * @access private
      */
     private static $_instance;
@@ -50,19 +53,20 @@ class MOD_params
         }
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         self::$dao =& $dao;
+        $this->setSession();
     }
 
     /**
      * singleton getter
      *
      * @param void
-     * @return PApps
+     * @return MOD_params
      */
     public static function get()
     {
         if (!isset(self::$_instance)) {
             $c = __CLASS__;
-            self::$_instance = new $c;
+            self::$_instance = new $c();
         }
         return self::$_instance;
     }
@@ -86,7 +90,7 @@ class MOD_params
             if (!$result) {
                     throw new Exception('Failed to retrieve $_SESSION["Param"]!');
             }
-            $_SESSION["Param"] = $result->fetch(PDB::FETCH_OBJ);
+            self::$_instance->_session->set( "Param", $result->fetch(PDB::FETCH_OBJ) );
         }
     }
 

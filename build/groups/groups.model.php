@@ -248,7 +248,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
      */
     public function getMyGroups()
     {
-        if (!isset($_SESSION['IdMember']))
+        if (!$this->_session->has( 'IdMember' ))
         {
             return array();
         }
@@ -285,7 +285,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
     public function setGroupVisit($groupId)
     {
         if (
-            (!isset($_SESSION['my_group_visits'])) ||
+            (!$this->_session->has( 'my_group_visits' ) ||
             (!$group_visits = unserialize($_SESSION['my_group_visits'])) ||
             (!is_array($group_visits))
         ) {
@@ -295,14 +295,14 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
 
         // sort by value, while preserving the keys
         asort($group_visits);
-        $_SESSION['my_group_visits'] = serialize(array_slice($group_visits, 0, 5));
+        $this->getSession->set( 'my_group_visits', serialize(array_slice($group_visits, 0, 5)) )
         // unset($_SESSION['my_group_visits']);
     }
 
     public function getLastVisited()
     {
         if (
-            (!isset($_SESSION['my_group_visits'])) ||
+            (!$this->_session->has( 'my_group_visits' ) ||
             (!$group_visits = unserialize($_SESSION['my_group_visits'])) ||
             (!is_array($group_visits))
         ) {

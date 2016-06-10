@@ -44,8 +44,9 @@ class ControllerResolverListener implements EventSubscriberInterface
 
             if (($controller[0] instanceof \RoxControllerBase) ||
             ($controller[0] instanceof Controller)) {
-                $controller[0]->setRouting($this->_router);
+                $controller[0]->setRouter($this->_router);
                 $controller[0]->setFormFactory($this->_formFactory);
+                $controller[0]->setSession($event->getRequest()->getSession());
             }
             $event->setController($controller);
         }

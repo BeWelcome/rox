@@ -27,7 +27,7 @@ This file displays the list of threads under a given tag/category
 */
 $User = APP_User::login();
 
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 
 // Build board navigation path
 $navigationPath = '';

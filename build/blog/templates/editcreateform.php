@@ -20,7 +20,7 @@ if (!$member) {
     echo '<p class="error">'.$words->get('BlogErrors_not_logged_in').'</p>';
     return false;
 }
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 ?>
 <?php
 if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
@@ -182,7 +182,7 @@ if (isset($vars['id']) && $vars['id']) {
         <script type="text/javascript">
         var datepicker  = new DatePicker({
         relative    : 'create-date',
-        language    : '<?=isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en'?>',
+        language    : '<?=$this->_session->get( 'lang' , 'en') ?>',
         current_date: '', 
         topOffset   : '25',
         relativeAppend : true

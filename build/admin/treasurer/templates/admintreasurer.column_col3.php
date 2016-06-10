@@ -29,11 +29,11 @@ Boston, MA  02111-1307, USA.
      * @package Apps
      * @subpackage Admin
      */
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 $R = MOD_right::get();
 $hasRight = $R->hasRight('Treasurer');
 
-if (isset($_SESSION['AdminTreasurerStatus'])) {
+if ($this->_session->has( 'AdminTreasurerStatus' )) {
     $status = $_SESSION['AdminTreasurerStatus'];
     switch($status[0]) {
         case 'StartSuccess':

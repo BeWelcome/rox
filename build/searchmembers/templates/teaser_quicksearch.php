@@ -1,7 +1,7 @@
 <?php
 $User = APP_User::login();
 
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 ?>
 
 <div id="teaser" class="page-teaser clearfix">

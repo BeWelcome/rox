@@ -30,7 +30,7 @@ class QueriesController extends Controller
     public function showOverview(Request $request) {
         $form = $this->createForm(AdminQueryType::class);
         $form->handleRequest($request);
-        $page = new AdminQueriesOverviewPage($this->getRouting());
+        $page = new AdminQueriesOverviewPage($this->getRouter());
         $page->initializeFormComponent(false);
         $page->addForm($form);
 

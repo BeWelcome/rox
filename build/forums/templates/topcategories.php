@@ -59,7 +59,7 @@ $User = APP_User::login();
                     $list->IdTagCategory="NoCategory" ;
                     echo '<a  title="'.$tag_description.'">',$TagName,'</a>';
                 }
-                if (isset($_SESSION["IdMember"])) { // Not needed for not logged in member (like google)
+                if ($this->_session->has( "IdMember" )){ // Not needed for not logged in member (like google)
                     echo ' <a href="javascript:void();" id="HideUnhide_',$list->IdTagCategory,'">+/-</a> ' ;
                     ?>
                     <script language="Javascript" type="text/javascript">

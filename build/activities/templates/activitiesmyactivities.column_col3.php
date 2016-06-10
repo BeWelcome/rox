@@ -1,5 +1,5 @@
 <?php 
-if (isset($_SESSION['ActivityStatus'])) {
+if ($this->_session->has( 'ActivityStatus' )) {
     echo '<div class="success">';
     $status = $_SESSION['ActivityStatus'];
     switch($status[0]) {

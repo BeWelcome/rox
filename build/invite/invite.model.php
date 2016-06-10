@@ -38,7 +38,7 @@ class InviteModel extends RoxModelBase
         
         $problems = array();
         // Maximum 50 emails can be send using the Invitation-Form
-        if (isset($_SESSION['InviteCount']) && $_SESSION['InviteCount'] > 50) {
+        if ($this->_session->has( 'InviteCount' ) && $_SESSION['InviteCount'] > 50) {
             $problems['email'] = 'You already sent more than 50 invitations. Maybe that is enough for now?';
         } elseif (!isset($input['email'])) {
             // $problems['receiver'] = 'no receiver was specified.';
@@ -80,7 +80,7 @@ class InviteModel extends RoxModelBase
             // FIXME: Read & Uncrypt member's email address from the DB and make it the sender-address
             //$sender_uncrypted = new MOD_member()->getFromMembersTable('email');
             $member = $this->createEntity('Member')->findById($_SESSION['IdMember']);
-            $sender = MOD_crypt::MemberReadCrypted($member->Email);
+            $sender = $this->_crypt->MemberReadCrypted($member->Email);
             //$sender = PVars::getObj('syshcvol')->MessageSenderMail;
 
             $result = MOD_mail::sendEmail($input['subject'],$sender,$email_array, false, $input['text']);
@@ -88,7 +88,7 @@ class InviteModel extends RoxModelBase
         	//Now check if Swift actually sends it
         	if ($result) {
                 $status = true;
-                $_SESSION['InviteCount'] = isset($_SESSION['InviteCount']) ? ($_SESSION['InviteCount'] + count($email_array)) : count($email_array);
+                $this->getSession->set( 'InviteCount', $this->_session->has( 'InviteCount' ) ? ($_SESSION['InviteCount'] + count($email_array)) : count($email_array) );
         	} else {
         		MOD_log::write("MOD_mail: Failed to send a mail to ".implode(',',$email_array), "MOD_mail");
                 $problems['notsend'] = 'InviteNotSent';

@@ -57,7 +57,7 @@ class Member extends RoxEntityBase
             $this->findById($member_id);
         }
         $this->words=new MOD_words;
-        if (isset($_SESSION['lang'])) {
+        if ($this->_session->has( 'lang' )) {
         $langarr = explode('-', $_SESSION['lang']);
         $this->lang = $langarr[0];
         } else {
@@ -1368,14 +1368,14 @@ ORDER BY
         // check for Admin
         $right = new MOD_right();
         if ($right->hasRight('Admin') || $right->hasRight('SafetyTeam')) {
-            return urldecode(strip_tags(MOD_crypt::AdminReadCrypted($crypted_id)));
+            return urldecode(strip_tags($this->_crypt->AdminReadCrypted($crypted_id)));
         }
         // check for Member's own data
         if ($this->edit_mode) {
-            if (($mCrypt = MOD_crypt::MemberReadCrypted($crypted_id)) != "cryptedhidden")
+            if (($mCrypt = $this->_crypt->MemberReadCrypted($crypted_id)) != "cryptedhidden")
                 return urldecode(strip_tags($mCrypt));
         }
-        return urldecode(MOD_crypt::get_crypted($crypted_id, $return_value));
+        return urldecode($this->_crypt->get_crypted($crypted_id, $return_value));
     }
 
 
@@ -1731,7 +1731,8 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
      */
     public function logOut()
     {
-        if (!isset($_SESSION) || !$this->isLoaded())
+        $session = $this->getSession();
+        if (!$this->isLoaded())
         {
             return false;
         }
@@ -1759,17 +1760,18 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
             );
         foreach ($keys_to_delete as $key)
         {
-            if (isset($_SESSION[$key]))
-            {
-                unset($_SESSION[$key]);
-            }
+            $session->remove($key);
+            // if ($this->_session->has( $key )
+            // {
+            //    unset($_SESSION[$key]);
+            // }
         }
 
         /**
          old stuff from TB - we don't rely on this
         if (!isset($this->sessionName))
             return false;
-        if (!isset($_SESSION[$this->sessionName]))
+        if (!$this->_session->has( $this->sessionName )
             return false;
         $this->loggedIn = false;
         unset($_SESSION[$this->sessionName]);
@@ -1796,10 +1798,12 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         // todo: remove this when app_user is finally removed
         APP_User::get()->setLogout();
 
-        session_unset() ;
-        session_destroy() ;
+        // session_unset() ;
+        $session->invalidate();
+        // session_destroy() ;
         $this->wipeEntity();
-        session_regenerate_id();
+        $session->migrate();
+        // session_regenerate_id();
 
         return true;
     }

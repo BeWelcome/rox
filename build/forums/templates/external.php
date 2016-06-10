@@ -22,7 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
 $User = APP_User::login();
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 $layoutbits = new MOD_layoutbits();
 ?>
 

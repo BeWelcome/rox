@@ -1,6 +1,6 @@
 <?php
 
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 
 ?>
 <table style="padding: 0;"><tr><td style="padding: 0;">

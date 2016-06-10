@@ -22,7 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
 
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 ?>
 <p><?= $words->getFormatted('TermsOfUseWarning') ?></p>
 <?php if ($this->_lang === null) { ?>

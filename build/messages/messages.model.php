@@ -78,7 +78,7 @@ LIMIT 7500
 
     public function receivedMailbox($sort_element=false)
     {
-        if (!isset($_SESSION['IdMember'])) {
+        if (!$this->_session->has( 'IdMember' )) {
             // not logged in - no messages
             return array();
         } else {
@@ -91,7 +91,7 @@ LIMIT 7500
 
     public function sentMailbox($sort_element=false)
     {
-        if (!isset($_SESSION['IdMember'])) {
+        if (!$this->_session->has( 'IdMember' )) {
             // not logged in - no messages
             return array();
         } else {
@@ -104,7 +104,7 @@ LIMIT 7500
 
     public function spamMailbox($sort_element=false)
     {
-        if (!isset($_SESSION['IdMember'])) {
+        if (!$this->_session->has( 'IdMember' )) {
             // not logged in - no messages
             return array();
         } else {
@@ -383,7 +383,7 @@ AND DeleteRequest != 'receiverdeleted'
             $lastHour >= $config->new_members_messages_per_hour ||
             $lastDay >= $config->new_members_messages_per_day)) {
 
-            $words = new MOD_words();
+            $words = new MOD_words($this->getSession());
             return $words->getFormatted("YouSentToManyMessages");
         } else {
             return false;

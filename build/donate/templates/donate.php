@@ -1,5 +1,5 @@
 <?php
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 ?>
 
 <?php if ($sub == 'done') {
@@ -78,7 +78,7 @@ if ($error) {?>
 						<input type="hidden" name="page_style" value="Primary" />
 						<input type="hidden" name="no_shipping" value="1" />
 						<input type="hidden" name="lc" value="<?php
-						if (isset($_SESSION["lang"]) ) {
+						if ($this->_session->has( "lang" ) ) {
 							switch ($_SESSION["lang"]){
 								case 'fr' :
 									echo "FR" ;

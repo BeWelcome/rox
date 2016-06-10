@@ -1,5 +1,5 @@
 <?php
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 $thumbPathMember = MOD_layoutbits::PIC_50_50($_SESSION['Username'], '',$style='float_left framed');
 
 

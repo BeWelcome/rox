@@ -36,7 +36,7 @@ class PollsModel extends RoxModelBase {
 
 // If it is a memberonly poll check that the member is logged in  
 			if ($rPoll->ForMembersOnly=="Yes") {
-				if ((!isset($_SESSION["IdMember"])) or ($_SESSION["MemberStatus"]!="Active")) {
+				if ((!$this->_session->has( "IdMember" ) or ($_SESSION["MemberStatus"]!="Active"))) {
 					MOD_log::get()->write("trying to vote in an member only post and not logged in","polls") ; 				
 					return (false) ;
 				}
@@ -106,7 +106,7 @@ class PollsModel extends RoxModelBase {
 		 * according to $post['IdPoll'] the poll will be inserted or updated
      **/
     function UpdatePoll($post) {
-			$words = new MOD_words();
+			$words = new MOD_words($this->getSession());
 		  if (empty($post['IdPoll'])) {
 				$IdPoll=0 ;
 			}
@@ -150,7 +150,7 @@ class PollsModel extends RoxModelBase {
 			} // end if it is a new poll
 			else {
 				$rPoll=$this->singleLookup("select * from polls where id=".$IdPoll) ;
-			if (!( (isset($_SESSION["IdMember"]) and ($rPoll->IdCreator==$_SESSION["IdMember"]) and ($rPoll->Status=="Projet")) or (MOD_right::get()->HasRight("Poll","update")) )) {
+			if (!( ($this->_session->has( "IdMember" ) and ($rPoll->IdCreator==$_SESSION["IdMember"]) and ($rPoll->Status=="Projet")) or (MOD_right::get()->HasRight("Poll","update")) )) {
 			MOD_log::get()->write("Forbidden to update  poll #".$IdPoll ,"polls") ; 
 					die ("Sorry forbidden for you") ;
 			}
@@ -210,12 +210,12 @@ class PollsModel extends RoxModelBase {
 		 * returns true if choice was added with success
      **/
     function AddChoice($post) {
-			$words = new MOD_words();
+			$words = new MOD_words($this->getSession());
 
 			$IdPoll=$post['IdPoll'] ;
 			$rPoll=$this->singleLookup("select * from polls where id=".$IdPoll." /* Add Choice */") ;
 			
-			if (!( (isset($_SESSION["IdMember"]) and ($rPoll->IdCreator==$_SESSION["IdMember"]) and ($rPoll->Status=="Projet")) or (MOD_right::get()->HasRight("Poll","update")) )) {
+			if (!( ($this->_session->has( "IdMember" ) and ($rPoll->IdCreator==$_SESSION["IdMember"]) and ($rPoll->Status=="Projet")) or (MOD_right::get()->HasRight("Poll","update")) )) {
 			MOD_log::get()->write("Forbidden to add poll choice for poll #".$IdPoll ,"polls") ; 
 					die ("Sorry forbidden for you") ;
 			}
@@ -248,7 +248,7 @@ class PollsModel extends RoxModelBase {
 		 * returns true if choice was added with success
      **/
     function UpdateChoice($post) {
-			$words = new MOD_words();
+			$words = new MOD_words($this->getSession());
 
 			$IdPoll=$post['IdPoll'] ;
 			$IdPollChoice=$post['IdPollChoice'] ;
@@ -259,7 +259,7 @@ class PollsModel extends RoxModelBase {
    			   		MOD_log::get()->write($sLog,"polls") ;
 			}
 			
-			if (!( (isset($_SESSION["IdMember"]) and ($rPoll->IdCreator==$_SESSION["IdMember"]) and ($rPoll->Status=="Projet")) or (MOD_right::get()->HasRight("Poll","update")) )) {
+			if (!( ($this->_session->has( "IdMember" ) and ($rPoll->IdCreator==$_SESSION["IdMember"]) and ($rPoll->Status=="Projet")) or (MOD_right::get()->HasRight("Poll","update")) )) {
 			MOD_log::get()->write("Forbidden to update poll choice for poll #".$IdPoll ,"polls") ; 
 					die ("Sorry forbidden for you") ;
 			}
@@ -511,7 +511,7 @@ class PollsModel extends RoxModelBase {
 		 * @PollStatus is the statuis which allow to filter for the status of some poll
      **/
     function LoadList($PollStatus="") {
-				$words = new MOD_words();
+				$words = new MOD_words($this->getSession());
 				if (empty($PollStatus)) {
 					$where="" ;
 				} 
@@ -530,7 +530,7 @@ class PollsModel extends RoxModelBase {
             throw new PException('polls::LLoadList Could not retrieve the polls!');
       	}
 
-		if (isset($_SESSION["IdMember"])) {
+		if ($this->_session->has( "IdMember" )) {
 			$IdMember=$_SESSION["IdMember"] ;
 		}
 		else {
@@ -557,7 +557,7 @@ class PollsModel extends RoxModelBase {
 					$rr->PossibleActions="<ul>" ;
 					
 					// Only owner of admin with proper right can update the poll
-					if ( (isset($_SESSION["IdMember"]) and ($rr->IdCreator==$_SESSION["IdMember"]) and ($rr->Status=="Projet")) or (MOD_right::get()->HasRight("Poll","update")) ) {
+					if ( ($this->_session->has( "IdMember" ) and ($rr->IdCreator==$_SESSION["IdMember"]) and ($rr->Status=="Projet")) or (MOD_right::get()->HasRight("Poll","update")) ) {
 						$rr->PossibleActions=$rr->PossibleActions."<li><a href=\"polls/update/".$rr->id."\">".$words->getFormatted("polls_adminlink")."</a></li>" ;
 					}
 

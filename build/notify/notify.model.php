@@ -146,7 +146,7 @@ ORDER BY created DESC,IdMember ASC
      */
     public function getMyNotes()
     {
-        if (!isset($_SESSION['IdMember']))
+        if (!$this->_session->has( 'IdMember' ))
         {
             return array();
         }
@@ -158,7 +158,7 @@ ORDER BY created DESC,IdMember ASC
     
     public function getMemberNotes()
     {
-        if (!isset($_SESSION['IdMember'])) {
+        if (!$this->_session->has( 'IdMember' )) {
             // not logged in - no messages
             return array();
         } else {

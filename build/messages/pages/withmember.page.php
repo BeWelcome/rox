@@ -7,7 +7,7 @@ class MessagesContactboxPage extends MessagesPageWithMailbox
 {
     protected function mailboxDescription()
     {
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
         $contactUsername = $this->contact_member->Username;
         $myselfUsername = $_SESSION['Username'];
         ?>
@@ -47,7 +47,7 @@ class MailboxWidget_WithMember extends MailboxWidget
     {
         $request_str = implode('/',PRequest::get()->request);
         $dir_str = (isset($_GET['dir']) && $_GET['dir'] != 'ASC') ? 'ASC' : 'DESC';
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
         return array(
             'select' => '',
             'from' => '<a href="'.$request_str.'?sort=sender&amp;dir='.$dir_str.'">'.$words->getSilent('From').'</a> / <a href="'.$request_str.'?sort=date&amp;dir='.(isset($_GET['dir']) ? $dir_str : 'ASC').'">'.$words->getSilent('Date').'</a>'.$words->flushBuffer(),

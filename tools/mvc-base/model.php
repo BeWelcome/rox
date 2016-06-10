@@ -1,6 +1,7 @@
 <?php
+use Symfony\Component\HttpFoundation\Session\Session;
 
-    /**
+/**
      * Acts as the base for all MVC-models and entities
      * implements various database calls and makes sure the model and entities
      * will always have a dao object (accessed using $this->dao)
@@ -10,6 +11,8 @@
 
 class RoxModelBase extends RoxComponentBase
 {
+    use \Rox\RoxTraits\CryptTrait;
+    use \Rox\RoxTraits\SessionTrait;
 
     /**
      * stores the currently logged in member
@@ -35,7 +38,10 @@ class RoxModelBase extends RoxComponentBase
      */
     public function __construct()
     {
-        MOD_params::get()->loadParams();
+        $session = \Rox\Framework\SessionSingleton::getSession();
+        MOD_params::get($session)->loadParams();
+        $this->_crypt = new MOD_crypt($session);
+        $this->_session = $session;
         $this->_entity_factory = new RoxEntityFactory;
         parent::__construct();
     }
@@ -57,7 +63,7 @@ class RoxModelBase extends RoxComponentBase
             return $this->logged_in_member;
         }
 
-        if (!isset($_SESSION['IdMember']))
+        if (!$this->_session->has( 'IdMember' ))
         {
             return false;
         }
@@ -108,7 +114,7 @@ class RoxModelBase extends RoxComponentBase
             return unserialize($_COOKIE['bwRemember']);
         } elseif (!empty($_COOKIE['bwRemember'])
         && $_COOKIE['bwRemember'] == 'hijacked') {
-            $_SESSION['flash_error'] = 'Your last session seems to have been hijacked and was cancelled.';
+            $this->_session->set( 'flash_error', 'Your last session seems to have been hijacked and was cancelled.' );
             $this->setMemoryCookie(false);
         }
         return false;
@@ -234,7 +240,7 @@ class RoxModelBase extends RoxComponentBase
             $query = null;
         }
         catch (PDOException $e) {
-            ExceptionLogger::logException($e);
+            ExceptionLogger::logException($this->_session, $e);
         }
         return $result;
     }
@@ -248,7 +254,7 @@ class RoxModelBase extends RoxComponentBase
             $query = null;
         }
         catch (PDOException $e) {
-            ExceptionLogger::logException($e);
+            ExceptionLogger::logException($this->_session, $e);
         }
         return $result;
     }
@@ -264,7 +270,7 @@ class RoxModelBase extends RoxComponentBase
             }
             $query = null;
         } catch (PDOException $e) {
-            ExceptionLogger::logException($e);
+            ExceptionLogger::logException($this->_session, $e);
         }
         return $result;
     }
@@ -302,7 +308,7 @@ class RoxModelBase extends RoxComponentBase
                 );
             }
             catch(PDOException $e) {
-                ExceptionLogger::logException($e);
+                ExceptionLogger::logException($this->_session, $e);
                 $this->pdo = null;
             }
         }

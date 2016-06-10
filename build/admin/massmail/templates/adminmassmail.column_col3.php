@@ -29,14 +29,14 @@ Boston, MA  02111-1307, USA.
      * @package Apps
      * @subpackage Admin
      */
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 ?>
 <div id="adminmassmail">
 <h3><?php echo $words->get('AdminMassMailListHeader'); ?></h3>
 <?php
 $ii = 0; 
 $this->pager->render();
-if (isset($_SESSION['AdminMassMailStatus'])) {
+if ($this->_session->has( 'AdminMassMailStatus' )) {
     echo '<div class="success">';
     $status = $_SESSION['AdminMassMailStatus'];
     switch($status[0]) {

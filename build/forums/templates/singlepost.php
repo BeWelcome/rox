@@ -26,7 +26,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
 
 */
 
-    $words = new MOD_words();
+    $words = new MOD_words($this->getSession());
     $styles = array( 'highlight', 'blank' );
 
     $hideGroupOnlyPost = false;
@@ -41,7 +41,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
 
     <?php
     //reports - permanlink - flag
-    if (isset($_SESSION["IdMember"])) {
+    if ($this->_session->has( "IdMember" )) {
         if ($this->BW_Right->HasRight("ForumModerator")) {
             $TheReports=$this->_model->GetReports($post->IdPost) ;
             $max=count($TheReports) ;
@@ -72,7 +72,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
         <img class="media-object" src="/members/avatar/<?php echo ($post->OwnerUsername); ?>?75_75">
         <small class="username"><a href="members/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a></small><br>
         <?php
-        if (isset($_SESSION["IdMember"])) {
+        if ($this->_session->has( "IdMember" )) {
             if (isset($post->city) && isset($post->country)) { ?>
 
                     <?php

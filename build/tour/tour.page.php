@@ -62,7 +62,7 @@ class TourPage extends PageWithActiveSkin
 
     protected function column_col3()
     {
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
         // needs $this->page_number declared in the controller to work
          require 'templates/tourpage'.$this->page_number.'.php';
     }

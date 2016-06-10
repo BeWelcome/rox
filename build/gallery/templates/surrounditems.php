@@ -1,6 +1,6 @@
 <?php
 
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 ?>
 
 <h3><?php echo $words->getFormatted('gallerySetOthers')?></h3>

@@ -1,6 +1,6 @@
 <?php
 $userbarText = array();
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 ?>
 <?php
 // display the donation bar if the parameters are set

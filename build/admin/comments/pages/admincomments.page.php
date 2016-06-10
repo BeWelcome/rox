@@ -54,7 +54,7 @@ class AdminCommentsPage extends AdminBasePage
     public function __construct($model)
     {
         parent::__construct($model);
-        $this->words = new MOD_words();
+        $this->words = new MOD_words($this->getSession());
         $this->scope = $this->rights['Comments']['Scope'];
     }
     

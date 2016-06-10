@@ -11,7 +11,7 @@ function _languageSelector()
         $abbr = $language->ShortCode;
         $title = $language->Name;
         $png = $abbr.'.png';
-        if (!isset($_SESSION['lang'])) {
+        if (!$this->_session->has( 'lang' )) {
             // hmm
         } else { // if ($_SESSION['lang'] == $abbr) {
             $langsel .=
@@ -52,7 +52,7 @@ function _languageOptions($words) {
     foreach($langarr as $language) {
         $abbr = $language->ShortCode;
         $png = $abbr.'.png';
-        if (!isset($_SESSION['lang'])) {
+        if (!$this->_session->has( 'lang' )) {
             // hmm
         } else {
             $langOptions .=
@@ -65,7 +65,7 @@ function _languageOptions($words) {
 
 function _languageSelectorDropDown()
 {
-    $words = new MOD_words();
+    $words = new MOD_words($this->getSession());
     $langsel = '';
     $request_string = htmlspecialchars(implode('/',PVars::get()->request), ENT_QUOTES);
     $langsel.= '<select id="language" name="language" class="combo" onchange="window.location.href=this.value; return false">';
@@ -75,7 +75,7 @@ function _languageSelectorDropDown()
 
 function _languageFooterSelectorDropDown()
 {
-    $words = new MOD_words();
+    $words = new MOD_words($this->getSession());
     $langsel = '';
     $request_string = htmlspecialchars(implode('/',PVars::get()->request), ENT_QUOTES);
     $langsel = '

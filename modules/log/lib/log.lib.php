@@ -92,7 +92,7 @@ class MOD_log {
 		 */
     public function writeIdMember($IdMember,$message = "", $type  = "Log")
     {
-			if (isset($_SESSION["IdMember"])) {
+			if ($this->_session->has( "IdMember" )) {
 				$IdMemberBefore=$_SESSION["IdMember"] ;
 				$_SESSION["IdMember"]=$IdMember ;
 				$this->write($message, $type) ;
@@ -127,7 +127,7 @@ class MOD_log {
 		}
         
         $idMember = 0;
-        if (isset($_SESSION['IdMember'])) {
+        if ($this->_session->has( 'IdMember' )) {
             $idMember = $_SESSION['IdMember'];
         }
         

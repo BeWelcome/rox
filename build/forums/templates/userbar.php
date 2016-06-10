@@ -33,7 +33,7 @@ Boston, MA  02111-1307, USA.
     <a href="groups/search" class="btn btn-secondary text-xs-left"><?php echo $this->words->get('GroupsSearchHeading'); ?></a>
     <a href="forums/rules" class="btn btn-secondary text-xs-left"><?php echo $this->words->get('ForumRulesShort'); ?></a>
     <a href="http://www.bewelcome.org/wiki/Howto_Forum" class="btn btn-secondary text-xs-left"><?php echo $this->words->get('ForumLinkToDoc'); ?></a>
-    <?php  if (isset($_SESSION["IdMember"])) {
+    <?php  if ($this->_session->has( "IdMember" )) {
         echo "<a href=\"forums/subscriptions\" class=\"btn btn-secondary text-xs-left\">",$this->words->get('forum_YourSubscription'),"</a>";
         if ($this->BW_Right->HasRight("ForumModerator")) {
             echo '</div><h3>Moderation actions</h3><div class=\"btn-group-vertical btn-block m-b-1\">' ;

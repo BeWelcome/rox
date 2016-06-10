@@ -13,15 +13,6 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 
 class StartModel extends \RoxModelBase
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    public function __destruct()
-    {
-    }
-
     public function getStatistics() {
         $members = Capsule::select("
             SELECT

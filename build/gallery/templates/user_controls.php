@@ -2,7 +2,7 @@
 /*
 /* user controls for use with a list of pictures
 /* */
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 $username = $this->Username;
 $loggedInMember = $this->loggedInMember;
 $R = MOD_right::get();

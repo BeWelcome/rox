@@ -57,8 +57,8 @@ class SignupController extends RoxControllerBase {
         $request = $args->request;
         $model = new SignupModel();
 
-        if (isset($_SESSION['IdMember']) && !MOD_right::get()->hasRight('words')) {
-            if (!isset($_SESSION['Username'])) {
+        if ($this->_session->has( 'IdMember' ) && !MOD_right::get()->hasRight('words')) {
+            if (!$this->_session->has( 'Username' )) {
                 unset($_SESSION['IdMember']);
                 $page = new SignupProblemPage();
             } else {
@@ -187,7 +187,7 @@ class SignupController extends RoxControllerBase {
 
         //$mem_redirect->post = $vars;
         foreach ($args->post as $key => $value) {
-            $_SESSION['SignupBWVars'][$key] = $value;
+            $this->getSession->set( 'SignupBWVars'][$key, $value )
         }
 
 		$StrLog="Entering signupFormCallback " ;
@@ -219,7 +219,7 @@ class SignupController extends RoxControllerBase {
 
             if (count($errors) > 0) {
                 // show form again
-                $_SESSION['SignupBWVars']['errors'] = $errors;
+                $this->getSession->set( 'SignupBWVars']['errors', $errors )
                 $mem_redirect->post = $vars;
                 return false;
             }
@@ -230,7 +230,7 @@ class SignupController extends RoxControllerBase {
             } else {
                 // signup on MyTB successful, yeah.
                 $id = $model->registerBWMember($vars);
-                $_SESSION['IdMember'] = $id;
+                $this->getSession->set( 'IdMember', $id )
 
                 $vars['feedback'] .=
                     $model->takeCareForNonUniqueEmailAddress($vars['email']);

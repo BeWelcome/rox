@@ -26,7 +26,7 @@
         $sRet= "Normal" ;
         if ($member_id > 0) {
             // everything is cool
-        } else if (isset($_SESSION["IdMember"])) {
+        } else if ($this->_session->has( "IdMember" )) {
             // use the member who is currently logged in.
             $member_id=$_SESSION["IdMember"] ;
         } else {

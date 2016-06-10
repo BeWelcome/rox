@@ -3,6 +3,7 @@
 
 class RoxFrontRouter
 {
+    use \Rox\RoxTraits\SessionTrait;
 
     private $args;
     private $router;
@@ -72,27 +73,15 @@ class RoxFrontRouter
     protected function initUser()
     {
         $this->setLanguage();
-        PVars::register('lang', $_SESSION['lang']);
+        PVars::register('lang', $this->_session->get('lang'));
 
-        $roxModelBase = new RoxModelBase();
+        $roxModelBase = new RoxModelBase($this->_session);
         $member = $roxModelBase->getLoggedInMember();
 
         // try restoring session from memory cookie
         if (!$member) {
-            $member = $roxModelBase->restoreLoggedInMember();
+            $roxModelBase->restoreLoggedInMember();
         }
-
-        $memberId = false;
-        if ($member) {
-            if ($member->isBanned()) {
-              $member->logOut();
-            } else {
-              $memberId = $member->id;
-            }
-        }
-
-        $ipAsInt = intval(ip2long($_SERVER['REMOTE_ADDR']));
-        MOD_online::get()->iAmOnline($ipAsInt, $memberId);
     }
 
 
@@ -124,16 +113,16 @@ class RoxFrontRouter
             }
             if ($urlheader!='www' and $urlheader!='alpha') {
                 if ($trylang = $Model->getPossibleUrlLanguage($urlheader) ) {
-                    $_SESSION['lang'] = $trylang->ShortCode;
-                    $_SESSION['IdLanguage'] = $trylang->id;
+                    $this->_session->set( 'lang', $trylang->ShortCode );
+                    $this->_session->set( 'IdLanguage', $trylang->id );
                     return ;
                 }
             }
 
             if (!empty($_COOKIE['LastLang']) and $trylang = $Model->getLanguage($_COOKIE['LastLang'])) { // If there is already a cookie ide set, we are going try it as language
                 $langcode = $_COOKIE['LastLang'];
-                $_SESSION['lang'] = $trylang->ShortCode;
-                $_SESSION['IdLanguage'] = $trylang->id;
+                $this->_session->set( 'lang', $trylang->ShortCode );
+                $this->_session->set( 'IdLanguage', $trylang->id );
                 return ;
             }
 
@@ -142,9 +131,9 @@ class RoxFrontRouter
             }
         }
 
-        if (!isset ($_SESSION['lang'])) {
-            $_SESSION['lang'] = 'en';
-            $_SESSION['IdLanguage'] = 0;
+        if (!$this->_session->has('lang')) {
+            $this->_session->set('lang', 'en');
+            $this->_session->set('IdLanguage', 0);
         }
        
         return;
@@ -155,7 +144,7 @@ class RoxFrontRouter
         if (!isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) {
             return false;
         }
-        $Model = new RoxFrontRouterModel;
+        $Model = new RoxFrontRouterModel($this->_session);
         $browser_lang_str = trim($_SERVER["HTTP_ACCEPT_LANGUAGE"]);
         $best_q = 0;
         $result_lang = false;
@@ -180,8 +169,8 @@ class RoxFrontRouter
             }
         }
         if ($result_lang){
-            $_SESSION['lang'] = $result_lang->ShortCode;
-            $_SESSION['IdLanguage'] = $result_lang->id;
+            $this->_session->set( 'lang', $result_lang->ShortCode );
+            $this->_session->set( 'IdLanguage', $result_lang->id );
             return true;
         }
         return false; 
@@ -305,7 +294,7 @@ class RoxFrontRouter
     
     protected function traditionalPostHandling()
     {
-        if (!isset($_SESSION['PostHandler'])) {
+        if (!$this->_session->has( 'PostHandler' )) {
             // do nothing
         } else if (!is_a($this->try_unserialize($_SESSION['PostHandler']), 'PPostHandler')) {
             // the $_SESSION['PostHandler'] got damaged.
@@ -454,33 +443,14 @@ A TERRIBLE EXCEPTION
         
         if (!method_exists($page, 'render')) {
             // ok, don't render it.
-        } else if (!class_exists('PageRenderer')) {
+        } else  {
             // do the rendering here
             // (this case is for backwards compatibility)
             $page->render();
-        } else {
-            // PageRenderer can do some parsing magic with the page!
-            $pageRenderer = new PageRenderer();
-            $pageRenderer->renderPage($page);
         }
     }
-        
-    
-    /**
-     * create a controller and inject some data
-     *
-     * @param unknown_type $classname
-     */
-    protected function createController($classname)
-    {
-        $controller = new $classname();
-        if (is_a($controller, 'RoxControllerBase')) {
-        }
-        return $controller;
-    }
-    
-    
-    
+
+
     protected function createLayoutkit()
     {
         $formkit = new Formkit();
@@ -490,54 +460,8 @@ A TERRIBLE EXCEPTION
         $layoutkit = new Layoutkit();
         $layoutkit->formkit = $formkit;
         $layoutkit->mem_from_redirect = $this->memory_from_redirect;
-        $layoutkit->words = new MOD_words();
+        $layoutkit->words = new MOD_words($this->getSession());
         
         return $layoutkit;
-    }
-}
-
-class RoxFrontRouterModel extends RoxModelBase {
-
-    function getPossibleUrlLanguage($urlheadercode = false) {
-	
-		// Uncomment briefly this line in case you have problem with it, save, log in BeWelcome, and add again the comment in this line
-		// return false ; 
-		
-		return $this->singleLookup("select languages.id,ShortCode from urlheader_languages,languages
-		 where urlheader='".$this->dao->escape($urlheadercode)."' and languages.id=urlheader_languages.IdLanguage") ;
-	} // end of getPossibleUrlLanguage
-	
-	
-    function getLanguage($langcode = false) {
-        if (!$langcode){ 
-            return false;
-        } else {
-			if (is_numeric($langcode)) {
-				return $this->singleLookup('
-SELECT
-    languages.id AS id,
-    languages.ShortCode AS ShortCode
-FROM
-    languages,
-    words
-WHERE
-    languages.id = "'.$this->dao->escape($langcode).'" AND
-    languages.id = words.Idlanguage AND
-    words.code = "WelcomeToSignup"');
-			}
-			else {
-				return $this->singleLookup('
-SELECT
-    languages.id AS id,
-    languages.ShortCode AS ShortCode
-FROM
-    languages,
-    words
-WHERE
-    languages.ShortCode = "'.$this->dao->escape($langcode).'" AND
-    languages.id = words.Idlanguage AND
-    words.code = "WelcomeToSignup"');
-			}
-        }
     }
 }

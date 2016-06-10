@@ -20,7 +20,7 @@ function getAgeDropDown($vars, $name) {
 }
 
 function getGenderDropDown($vars) {
-    $words = new MOD_words();
+    $words = new MOD_words($this->getSession());
     $select = '<strong class="small">' . $words->getFormatted('Gender') . '</strong><br/>';
     $select .= '<select name="search-gender">';
     $select .= '<option value="0"></option>
@@ -45,7 +45,7 @@ function getGenderDropDown($vars) {
 
 function getGroupOptionsDropDown($vars) {
     $groups = array();
-    $words = new MOD_words();
+    $words = new MOD_words($this->getSession());
     $model = new RoxModelBase();
     $member = $model->getLoggedInMember();
     if ($member) {
@@ -69,7 +69,7 @@ function getGroupOptionsDropDown($vars) {
 }
 
 function getLanguagesOptionsDropDown($vars) {
-    $words = new MOD_words();
+    $words = new MOD_words($this->getSession());
     $languages = array();
     $model = new RoxModelBase();
     $member = $model->getLoggedInMember();
@@ -94,7 +94,7 @@ function getLanguagesOptionsDropDown($vars) {
 }
 
 function getAccommodationOptions($vars) {
-    $words = new MOD_words();
+    $words = new MOD_words($this->getSession());
     $accommodation = array();
     if (isset($vars['search-accommodation']) && is_array($vars['search-accommodation'])) {
         $accommodation = $vars['search-accommodation'];
@@ -121,7 +121,7 @@ function getAccommodationOptions($vars) {
 }
 
 function getTypicalOfferOptions($vars) {
-    $words = new MOD_words();
+    $words = new MOD_words($this->getSession());
     $typicalOffers = array();
     if (isset($vars['search-typical-offer']) && is_array($vars['search-typical-offer'])) {
         $typicalOffers = $vars['search-typical-offer'];
@@ -148,7 +148,7 @@ function getTypicalOfferOptions($vars) {
 }
 
 function getMembershipCheckbox($vars) {
-    $words = new MOD_words();
+    $words = new MOD_words($this->getSession());
     $memberCheckbox = '<strong class="small">' . $words->getFormatted('FindPeopleMemberStatus') . '</strong><br/>';
     $memberCheckbox .= '<input type="checkbox" id="search-membership" name="search-membership" value="1"';
     if (isset($vars['search-membership']) && ($vars['search-membership'] == 1)) {

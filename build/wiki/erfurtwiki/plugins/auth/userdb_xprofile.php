@@ -28,8 +28,8 @@ function ewiki_auth_userdb_xprofile($username, $password) {
       if ($xpro->login() ) {
       
          #-- save data
-         $_SESSION["ewiki_author"] = $ewiki_author = $xpro->info["nickname"];
-         $_SESSION["xprofile"] = $xpro->url;
+         $this->getSession->set( "ewiki_author", $ewiki_author = $xpro->info["nickname"] )
+         $this->getSession->set( "xprofile", $xpro->url )
       
          return(true);
       }

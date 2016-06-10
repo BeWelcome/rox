@@ -27,7 +27,7 @@ This file displays errors to the user in case a search in the forum doesn't work
 */
 $User = APP_User::login();
 
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 
 if (isset($result['errors'])) {
 	foreach($result['errors'] as $error) {

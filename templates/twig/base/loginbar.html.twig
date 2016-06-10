@@ -9,9 +9,9 @@
             <a class="navbar-brand" href="main"><img src="/images/logo_index_top.png"
                                                      alt="{{ 'BeWelcome' | trans }}"/></a>
             <ul class="nav navbar-nav">
-            <form class="form-inline nav-item" method="post" action="{{ path('login_symfony') }}">
-                {{ macros.input('u', 'Username') }}
-                {{ macros.input('p', 'Password', '', 'password') }}
+            <form class="form-inline nav-item" method="post" action="{{ path('login') }}">
+                {{ macros.input('form[username]', 'Username') }}
+                {{ macros.input('form[password]', 'Password', '', 'password') }}
                 {{ macros.submit('Login') }}
             </form>
                 <li class="nav-item dropdown  pull-xs-right">

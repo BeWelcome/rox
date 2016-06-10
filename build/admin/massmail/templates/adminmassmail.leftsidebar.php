@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 /** 
  * @author shevek
  */
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 ?>
 <h3><?php echo $words->get('MassMailActions'); ?></h3>
 <ul class="linklist">

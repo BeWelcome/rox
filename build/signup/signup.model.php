@@ -132,7 +132,7 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
             SELECT `Username`, members.`Status`, members.`id` AS `idMember`
             FROM " . PVars::getObj('syshcvol')->Crypted . "`cryptedfields`
             RIGHT JOIN `members` ON members.`id` = cryptedfields.`IdMember`";
-        if (isset($_SESSION['IdMember'])) {
+        if ($this->_session->has( 'IdMember' )) {
             $query .= ' AND members.`id`!=' . $_SESSION['IdMember'];
         }
         $query .= " WHERE (`AdminCryptedValue` = '" . $email . "'";
@@ -298,7 +298,7 @@ FROM `user` WHERE
             }
 
             $id = $this->registerBWMember($vars);
-            $_SESSION['IdMember'] = $id;
+            $this->getSession->set( 'IdMember', $id )
 
             $vars['feedback'] .= $this->takeCareForNonUniqueEmailAddress($vars['email']);
             $vars['feedback'] .= $this->takeCareForComputerUsedByBWMember();

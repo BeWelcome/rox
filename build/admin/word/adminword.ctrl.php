@@ -25,8 +25,10 @@ Boston, MA  02111-1307, USA.
     /**
      * @author Tsjoek
      */
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-    /**
+/**
      * adminwords controller
      * deals with actions that are available exclusively for translators
      *
@@ -38,10 +40,10 @@ class AdminWordController extends RoxControllerBase
     private $model;
     private $words;
 
-    public function __construct() {
+    public function __construct(Session $session) {
         parent::__construct();
-        $this->model = new AdminWordModel();
-        $this->words = new MOD_words();
+        $this->model = new AdminWordModel($session);
+        $this->words = new MOD_words($this->getSession());
     }
 
     public function __destruct() {
@@ -173,7 +175,7 @@ class AdminWordController extends RoxControllerBase
             $this->$type($msg);
             break;
         case 'Back' :
-            $_SESSION['form']['Sentence'] = $args->post['Sentence'];
+            $this->getSession->set( 'form[Sentence]', $args->post['Sentence'] );
             break;
         }
         return $this->router->url('admin_word_editlang',
@@ -215,7 +217,7 @@ class AdminWordController extends RoxControllerBase
                 }
             }
         }
-        $_SESSION['trData'] = $this->model->getFindData($searchparams);
+        $this->getSession->set( 'trData', $this->model->getFindData($searchparams) );
         foreach($_SESSION['trData'] as $key => $item){
             if ($this->checkScope($this->wordrights['Words']['Scope'],$item->TrShortcode)){
                 $_SESSION['trData'][$key]->inScope = true;
@@ -397,7 +399,7 @@ class AdminWordController extends RoxControllerBase
         foreach ($fields as $field) {
             if (isset($vars[$field])){
                 $formdata[$field] = $vars[$field];
-            } elseif (isset($_SESSION['form'][$field])){
+            } elseif ($this->_session->has( 'form[' . $field . ']')){
                 $formdata[$field] = $_SESSION['form'][$field];
             } elseif (isset($this->data->$field)) {
                 $formdata[$field] = $this->data->$field;
@@ -519,7 +521,7 @@ class AdminWordController extends RoxControllerBase
         if (empty($args->post)) {return false;}
         // set posted variables in the session
         foreach ($args->post as $key => $postvar){
-            $_SESSION['form'][$key] = $postvar;
+            $this->getSession->set( 'form[' . $key . ']', $postvar );
         }
         $errors = $this->model->{$type.'FormCheck'}($args->post);
         if (!empty($errors)) {

@@ -19,7 +19,7 @@ if (empty($vars)) {
 }
 
 $member = $this->member;
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 $panelTitle = $words->get('TripDelete_title', $vars['trip-title']);
 ?>
 <div class="panel panel-default disabled">

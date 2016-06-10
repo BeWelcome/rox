@@ -36,7 +36,8 @@ class GroupLeavePage extends GroupsBasePage
     protected function column_col3()
     {
         $words = $this->getWords();
-        if (!APP_user::isBWLoggedIn('NeedMore,Pending'))
+        $a = new APP_User();
+        if (!$a->isBWLoggedIn('NeedMore,Pending'))
         {
             $widg = $this->createWidget('LoginFormWidget');
             $widg->render();

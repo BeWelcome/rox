@@ -232,7 +232,7 @@ http://www.bewelcome.org/donate/?action=done&tx=0ME24142PE152304A&st=Completed&a
                 }
                 
                 $IdMember=0 ; $IdCountry=0 ; // This values will remain if the user was not logged
-                if (isset($_SESSION["IdMember"])) {
+                if ($this->_session->has( "IdMember" )) {
                     $IdMember=$_SESSION["IdMember"] ;
                     $query = "
                         SELECT

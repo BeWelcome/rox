@@ -1,5 +1,5 @@
 <?php
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 $Gallery = new GalleryModel;
 
 // Show the galleries/photosets

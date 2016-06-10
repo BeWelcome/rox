@@ -13,6 +13,8 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id: requesthandler.lib.php 235 2007-03-01 17:26:10Z marco $
  */
+use Symfony\Component\HttpFoundation\Session\Session;
+
 /**
  * Request handling class
  * 
@@ -21,8 +23,11 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  */
 class PRequest {
+
     private static $_instance;
-    
+    /** @var  \Symfony\Component\HttpFoundation\Session\SessionInterface */
+    private static $_session;
+
     private $_cliArgs;
     private $_request;
     
@@ -37,17 +42,18 @@ class PRequest {
             PVars::register('request', $request);
             $this->_request = $request;
             
-            if (isset($_SESSION['thisRequest'])) {
-                $_SESSION['lastRequest'] = $_SESSION['thisRequest'];
+            if (self::$_session->has( 'thisRequest' )) {
+                self::$_session->set( 'lastRequest', $_SESSION['thisRequest'] );
             }
-            $_SESSION['thisRequest'] = $request;
+            self::$_session->set( 'thisRequest', $request );
         }
     }
     
-    public static function get() {
+    public static function get(Session $session) {
+        self::$_session = $session;
         if (!isset(self::$_instance)) {
             $c = __CLASS__;
-            self::$_instance = new $c;
+            self::$_instance = new $c();
         }
         return self::$_instance;
     }
@@ -66,21 +72,6 @@ class PRequest {
         $this->$name = $value;
     }
     
-    public static function back() {
-        $loc = self::backURL();
-        header('Location: '.$loc);
-        PPHP::PExit();
-    }
-    
-    public static function backURL() {
-        $env = PVars::getObj('env');
-        $loc = $env->baseuri;
-        if (isset($_SESSION['lastRequest']) && serialize($_SESSION['thisRequest']) != serialize($_SESSION['lastRequest'])) {
-            $loc.=implode('/', $_SESSION['lastRequest']);
-        }
-        return $loc;        
-    }
-    
     public static function home() {
         $base = PVars::getObj('env')->baseuri;
         header('Location: '.$base);
@@ -88,7 +79,7 @@ class PRequest {
     }
     
     public static function ignoreCurrentRequest() {
-        $_SESSION['thisRequest'] = (isset($_SESSION['lastRequest'])) ? $_SESSION['thisRequest'] : '';
+        self::$_session->set( 'thisRequest', (self::$_session->has( 'lastRequest' ) ? $_SESSION['thisRequest'] : '' ));
     }
     
     public function isCli() {

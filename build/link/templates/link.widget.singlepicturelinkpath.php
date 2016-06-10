@@ -39,7 +39,7 @@ Boston, MA  02111-1307, USA.
   * reversetype: type of connection from the right to the left member
   **/
  
-    $words = new MOD_words();
+    $words = new MOD_words($this->getSession());
 ?>
     <div class="float_right">
       <div class="info">

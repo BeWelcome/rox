@@ -24,7 +24,8 @@
             <div class="subcr">
             
                 <?php
-                    if (!APP_user::isBWLoggedIn('NeedMore,Pending')) : ?>
+                    $a = new APP_User();
+                    if (!$a->isBWLoggedIn('NeedMore,Pending')) : ?>
                 <h3><?= $words->get('GroupsJoinNamedGroup', $this->getGroupTitle()); ?></h3>
                     <?= $words->get('GroupsJoinLoginFirst'); ?>
                 <?php else : ?>

@@ -2,7 +2,7 @@
 
 $member = $this->_model->getLoggedInMember();
 
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 $map_conf = PVars::getObj('map');
 
 ?>

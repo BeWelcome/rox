@@ -34,7 +34,7 @@ if(isset($vars['queries']) and $vars['queries']) {
     return;
 }
 
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 $Accomodation = array();
 $Accomodation['anytime'] = $words->getBuffered('Accomodation_anytime');
 $Accomodation['dependonrequest'] = $words->getBuffered('Accomodation_dependonrequest');
@@ -150,9 +150,9 @@ echo "</content>
 
 
 // Set session variables for use at another time.
-$_SESSION['SearchMapStyle'] = $mapstyle;
-$_SESSION['SearchMembersVars'] = $vars;
-$_SESSION['SearchMembersTList'] = $TList;
+$this->getSession->set( 'SearchMapStyle', $mapstyle )
+$this->getSession->set( 'SearchMembersVars', $vars )
+$this->getSession->set( 'SearchMembersTList', $TList )
 
 function ShowMembersAjax($TM,$maxpos, $Accomodation) {
     static $ii = 0;
@@ -193,7 +193,7 @@ function ShowMembersAjax($TM,$maxpos, $Accomodation) {
 }
 function ShowMembersAjaxShort($TM,$maxpos, $Accomodation,$Nr) {
     static $ii = 0;
-    $words = new MOD_words();
+    $words = new MOD_words($this->getSession());
     $layoutbits = new MOD_layoutbits();
     $memberProfileLink = "members/".$TM->Username;
 

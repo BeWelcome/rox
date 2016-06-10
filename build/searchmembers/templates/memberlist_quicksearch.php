@@ -1,5 +1,5 @@
 <?php
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 ?>
 <div id="nextmap">
 <p class="clearfix">

@@ -24,7 +24,7 @@ Refactoried by JeanYvea after the first move to Rox
 
 */
 
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 $styles = array( 'highlight', 'blank' ); // alternating background for table rows
 
 

@@ -14,7 +14,7 @@ class Layoutkit extends ReadWriteObject
     public function getWords()
     {
         if (!$this->_words) {
-            $this->_words = new MOD_words();
+            $this->_words = new MOD_words($this->getSession());
         }
         return $this->_words; 
     }

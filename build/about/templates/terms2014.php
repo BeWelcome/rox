@@ -22,7 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
 
-$words = new MOD_words(); ?>
+$words = new MOD_words($this->getSession()); ?>
 
 <h2>BeWelcome Terms of Use (ToU)</h2>
 <p><strong>Effective date: 11 January 2014 </strong></p>

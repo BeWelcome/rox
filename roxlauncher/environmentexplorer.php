@@ -4,19 +4,22 @@
  * Processes PHP and server environement variables and sets up PHP
  * autoload.  A lot of this is taken from PT, inc/
  */
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 class EnvironmentExplorer
 {
-    private $session = null;
+    /** @var \Symfony\Component\HttpFoundation\Session\Session */
+    private $_session = null;
 
-    public function setSession(\Symfony\Component\HttpFoundation\Session\SessionInterface $session) {
-        $this->session = $session;
+    public function __construct(SessionInterface $session) {
+        $this->_session = $session;
     }
 
     /**
      * @return \Symfony\Component\HttpFoundation\Session\SessionInterface
      */
     public function getSession() {
-        return $this->session;
+        return $this->_session;
     }
 
     public function initializeGlobalState()
@@ -30,7 +33,8 @@ class EnvironmentExplorer
             die('STOP');
         }
 
-        $this->initSession($settings);
+        // No longer needed; session already started from Symfony code
+        // $this->initSession($settings);
 
         PSurveillance::get();
 
@@ -334,8 +338,9 @@ class EnvironmentExplorer
             }
         }
 
-
-        if (empty ($_COOKIE[session_name ()]) ) {
+        // if (empty ($_COOKIE[session_name ()]) ) {
+        if (empty ($_COOKIE[$this->_session->getName()]) ) {
+            
             PVars::register('cookiesAccepted', false);
         } else {
             PVars::register('cookiesAccepted', true);
@@ -444,10 +449,10 @@ class EnvironmentExplorer
     {
 //         // TODO: This is maybe not the best place to do this,
 //         // but so far I don't know a better one.
-//         if (!isset($_SESSION['lang']) || !isset($_SESSION['IdLanguage'])) {
+//         if (!$this->_session->has( 'lang' ) || !$this->_session->has( 'IdLanguage' ) {
 //             // normally either none or both of them are set.
-//             $_SESSION['lang'] = 'en';
-//             $_SESSION['IdLanguage'] = 0;
+//             $this->getSession->set( 'lang', 'en' )
+//             $this->getSession->set( 'IdLanguage', 0 )
 //         }
 //         PVars::register('lang', $_SESSION['lang']);
     }
@@ -478,38 +483,14 @@ class EnvironmentExplorer
     }
 
 
-    /**
-     * do some things which are necessary to start
-     * using the $_SESSION
-     *
-     */
-    protected function initSession($settings)
-    {
-        if (!isset($settings['env']['session_name'])) {
-            die('session name not set');
-        } else {
-            $session_name = $settings['env']['session_name'];
-            try {
-                ini_set ('session.name', $session_name);
-                ini_set ('session.use_trans_sid', 0);
-                ini_set ('url_rewrite.tags', '');
-                ini_set ('session.hash_bits_per_character', 6);
-                ini_set ('session.hash_function', 1);
-                session_start();
-            } catch (Exception $e) {
-                // echo $e;
-            }
-        }
-    }
-
     protected function loadRoxClasses($class_loader)
     {
         // extensions mechanism
 
         $autoload_folders = array();
-        if (!isset($_SESSION['extension_folders'])) {
+        if (!$this->_session->has($_SESSION['extension_folders'])) {
             // nothing
-        } else if (!is_string($ext_dirs_encoded = $_SESSION['extension_folders'])) {
+        } else if (!is_string($ext_dirs_encoded = $this->_session->get('extension_folders'))) {
             // nothing
         } else {
             $ext_folders = preg_split("/[,\n\r\t ]+/", $ext_dirs_encoded);

@@ -931,7 +931,7 @@ WHERE
         if ($IdTrad == "")
             return ("");
 
-        if (isset($_SESSION['IdLanguage'])) {
+        if ($this->_session->has( 'IdLanguage' )) {
              $IdLanguage=$_SESSION['IdLanguage'] ;
         }
         else {
@@ -1041,7 +1041,7 @@ LIMIT 1
     // optional parameter status can be used to alter the link
     private function LinkWithPicture($Username, $ParamPhoto="", $Status = "")
     {
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
         $Photo=$ParamPhoto ;
 
         if ($Photo=="") {

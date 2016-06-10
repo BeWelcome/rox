@@ -29,7 +29,7 @@ if (!empty($errormessage)) {
     <p class="error"><?=$errormessage; ?></p>
     <?
 }
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 $Data=$this->_data  ;
 if (isset($Data->rPoll->id)) { // Form for update
     $rr=$Data->rPoll ;

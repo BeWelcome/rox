@@ -94,7 +94,7 @@ class GalleryUserPage extends GalleryBasePage
 
     protected function column_col3() {
         $statement = $this->statement;
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
         $username = $this->member->Username;
         $galleries = $this->galleries;
         $itemsPerPage = 6;

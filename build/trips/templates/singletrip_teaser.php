@@ -1,5 +1,5 @@
 <?php
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 $layoutbits = new MOD_layoutbits();
 $search = '';
 if (isset($_GET['s']) && $_GET['s'])

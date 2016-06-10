@@ -68,7 +68,7 @@ class Mailbot
 
         $this->IdTriggerer = 0;   //TODO: set this to bot id
 
-        $this->words = new MOD_words();
+        $this->words = new MOD_words($this->getSession());
 
         $this->messages_model = new MessagesModel;
         $this->members_model = new MembersModel;

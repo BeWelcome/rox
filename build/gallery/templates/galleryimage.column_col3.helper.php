@@ -1,5 +1,5 @@
 <?php
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 $request = PRequest::get()->request;
 $gallery_ctrl = new GalleryController;
 $image = $this->image;

@@ -54,11 +54,11 @@ class MOD_online
     {
         $time = time();
         $update_interval = $this->online_interval * 60 / 8;
-        if (!isset($_SESSION['last_online_counter_update_time'])) {
+        if (!$this->_session->has( 'last_online_counter_update_time' )) {
             // new session, so need an update
         } else if ($_SESSION['last_online_counter_update_time'] + $update_interval < $time) {
             // last update is more than one minute ago, so need a new one
-        } else if (!isset($_SESSION['last_online_counter_update_member_id']) && $member_id) {
+        } else if (!$this->_session->has( 'last_online_counter_update_member_id' ) && $member_id) {
             // just logged in, so needs update
         } else if ($_SESSION['last_online_counter_update_member_id'] != $member_id) {
             // logged in as someone else? or already logged out?
@@ -68,8 +68,8 @@ class MOD_online
             return;
         }
         
-        $_SESSION['last_online_counter_update_member_id'] = $member_id;
-        $_SESSION['last_online_counter_update_time'] = $time;
+        $this->getSession->set( 'last_online_counter_update_member_id', $member_id );
+        $this->getSession->set( 'last_online_counter_update_time', $time );
         if (!$member_id) {
             // not logged in
             $this->_guestIsOnline($ip);

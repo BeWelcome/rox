@@ -10,7 +10,7 @@
                             <div class="hidden-md-down col-lg-1 fullheight">
                                 <div class="verticalalign">
                                     <div class="welcomeavatar">
-                                        <a href="members/{{ username }}" title="See profile member-101" ><img src="members/avatar/{{ username }}?50_50" style="width:50px; height:50px"></a>
+                                        <a href="members/{{ username }}" title="See profile {{ username }}" ><img src="members/avatar/{{ username }}?50_50" style="width:50px; height:50px"></a>
                                         {%  if member.hosting == 'anytime' %}{% set image = 'yesicanhost' %}{% endif %}
                                         {%  if member.hosting == 'dependonrequest' %}{% set image = 'maybe' %}{% endif %}
                                         {%  if member.hosting == 'dontask' %}{% set image = 'nosorry' %}{% endif %}

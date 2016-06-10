@@ -4,6 +4,8 @@
  * @version v2.0.0 Pre-Alpha
  */
 abstract class MOD_user {
+    use \Rox\RoxTraits\SessionTrait;
+
     protected $authId;
     protected $sessionName;
     protected $tableName;
@@ -93,7 +95,7 @@ WHERE
         }
         $this->setAuth($d->auth_id);
         session_regenerate_id();
-        $_SESSION[$this->sessionName] = (int)$d->id;
+        $this->_session->set( $this->sessionName, (int)$d->id );
         $this->loggedIn = true;
         
         $s = $this->dao->prepare(
@@ -138,7 +140,7 @@ WHERE
           
         $this->setAuth($d->auth_id);
         session_regenerate_id();
-        $_SESSION[$this->sessionName] = (int)$d->id;
+        $this->_session->set( $this->sessionName, (int)$d->id );
         $this->loggedIn = true;
 
         $s = $this->dao->prepare('UPDATE `'.$this->tableName.'` SET `lastlogin` = NOW() WHERE `id` = ?');
@@ -176,7 +178,7 @@ WHERE
     public function logout() {
         if (!isset($this->sessionName))
             return false;
-        if (!isset($_SESSION[$this->sessionName]))
+        if (!$this->_session->has( $this->sessionName ))
             return false;
         $this->loggedIn = false;
         unset($_SESSION[$this->sessionName]);

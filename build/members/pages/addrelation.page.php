@@ -10,7 +10,7 @@ class AddRelationPage extends RelationsPage
 
     protected function column_col3()
     {
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
         $member = $this->member;
         $layoutkit = $this->layoutkit;
         $formkit = $layoutkit->formkit;

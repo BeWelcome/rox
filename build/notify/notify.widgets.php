@@ -26,7 +26,7 @@ class NotifyMemberWidget extends ItemlistWithPagination
     
     protected function showItems()
     {
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
         // don't need a table - a simple list is enough.
         $this->showItems_list();
         echo $words->flushBuffer();
@@ -74,7 +74,7 @@ class NotifyMemberWidget extends ItemlistWithPagination
     
     protected function showListItem($item, $i_row)
     {
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
         $member = $this->createEntity('Member')->findById($item->IdRelMember);
         if ($item->WordCode == '' && ($text_params = unserialize($item->TranslationParams)) !== false) {
            $text = call_user_func_array(array($words, 'getSilent'), $text_params);

@@ -18,7 +18,7 @@ class WikiView extends PAppView {
         /* This displays the custom teaser */
     public function teaser()
     {
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
 ?>
         <div id="teaser" class="page-teaser clearfix">
             <h1><a href="wiki"><?php echo $words->getFormatted('WikiTitle'); ?></a></h1>
@@ -43,7 +43,7 @@ class WikiView extends PAppView {
 
     public function userbar()
     {
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
 ?>
     <div class="bw-row">
     </div>

@@ -32,6 +32,7 @@ Boston, MA  02111-1307, USA.
  */
 class MOD_layoutbits
 {
+    use \Rox\RoxTraits\SessionTrait;
 
     /**
      * Quasi-constant functions for userthumbnails
@@ -72,6 +73,7 @@ class MOD_layoutbits
         }
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $this->dao =& $dao;
+        $this->setSession();
     }
 
     /**
@@ -112,46 +114,20 @@ class MOD_layoutbits
      */
     public static function linkWithPicture($username, $picfile="", $mode="")
     {
-        $words = new MOD_words();
-/* disabling references to memberphotos
-        if(!is_file(getcwd().'/bw'.$picfile)) {
-            // get a picture by username */
-            $thumburl = self::smallUserPic_username($username);
-/*
-        } else {
-            $thumburl = self::_getThumb($picfile, 100, 100);
-            if ($thumburl === null) $thumburl = "bw/";
-        }
-        */
-        if ($mode == 'map_style') {
-            // TODO: why return a window with "$username" ??
-            return
-                '<a '.
-                    'href="javascript:newWindow('."'".$username."'".')" '.
-                    'title="' . $words->getBuffered('SeeProfileOf', $username).'"'.
-                '><img '.
-                    'class="framed" '.
-                    'style="float: left; margin: 4px" '.
-                    'src="'.$thumburl.'" '.
-                    'height="50px" '.
-                    'width="50px" '.
-                    'alt="Profile" '.
-                '/></a>'
-            ;
-        } else {
-            return
-                '<a '.
-                    'href="/members/'.$username.'" '.
-                    'title="'.$words->getBuffered('SeeProfileOf', $username).'" '.
-                '><img '.
-                    'class="framed" '.
-                    'src="'.$thumburl.'" '.
-                    'height="50px" '.
-                    'width="50px" '.
-                    'alt="Profile" '.
-                '/></a>'
-            ;
-        }
+        $words = new MOD_words(self::$_instance->_session);
+        $thumburl = self::smallUserPic_username($username);
+        return
+            '<a '.
+                'href="/members/'.$username.'" '.
+                'title="'.$words->getBuffered('SeeProfileOf', $username).'" '.
+            '><img '.
+                'class="framed" '.
+                'src="'.$thumburl.'" '.
+                'height="50px" '.
+                'width="50px" '.
+                'alt="Profile" '.
+            '/></a>'
+        ;
     }
 
     /**
@@ -174,48 +150,20 @@ class MOD_layoutbits
      */
     public static function linkWithPictureVar($username,$height,$width,$quality,$picfile,$style)
     {
-        $words = new MOD_words();
+        $words = new MOD_words(self::$_instance->getSession());
         $thumburl = self::member_pic_url().$username.'?'.$height.'_'.$width;
-        /*
-        if(!is_file(getcwd().'/bw'.$picfile)) {
-            // get a picture by username
-            $thumburl = self::smallUserPic_usernameVar($username,$height,$width,$quality) ;
-        } else {
-            $thumburl = self::_getThumb($picfile,$height,$width,$quality);
-            if ($thumburl === null) $thumburl = "bw/";
-        }
-        */
-            return
-                '<a '.
-                    'href="/members/'.$username.'" '.
-                    'title="'.$words->getBuffered('SeeProfileOf', $username).'" '.
-                '><img height="'.$height.'" width="'.$width.'" '.
-                    'class="'.$style.'" '.
-                    'src="'.$thumburl.'" '.
-                    'alt="Profile" '.
-                '/></a>'
-            ;
+
+        return
+            '<a '.
+                'href="/members/'.$username.'" '.
+                'title="'.$words->getBuffered('SeeProfileOf', $username).'" '.
+            '><img height="'.$height.'" width="'.$width.'" '.
+                'class="'.$style.'" '.
+                'src="'.$thumburl.'" '.
+                'alt="Profile" '.
+            '/></a>'
+        ;
     }
-
-    /**
-     * 100x100 avatar picture for forums etc
-     *
-     * @param string $username
-     *
-     */
-    public static function smallUserPic_userId($userId)
-    {
-        //first of all, check if a pic in the new data folder is available
-        $avatarDir = new PDataDir('user/avatars');
-        if($avatarDir->fileExists((int)$userId.'_xs'))
-            return '/members/avatar/'.$userId.'/?xs';
-
-        $picfile = self::userPic_userId($userId);
-        $thumbfile = self::_getThumb($picfile, 100, 100, 100);
-        return $thumbfile;
-    }
-
-
 
     /**
      * 100x100 avatar picture for forums etc
@@ -226,8 +174,6 @@ class MOD_layoutbits
     public static function smallUserPic_username($username)
     {
         $picfile = self::userPic_username($username);
-        //$thumbfile = self::_getThumb($picfile, 100, 100, 100);
-        //return $thumbfile;
         return $picfile;
     }
 
@@ -255,124 +201,6 @@ class MOD_layoutbits
     {
         return self::member_pic_url().$username;
     }
-
-
-
-    /**
-     *
-     * Thumbnail creator. (by markus5, Markus Hutzler 25.02.2007)
-     * tested with GD Version: bundled (2.0.28 compatible)
-     * with GIF Read Support: Enabled
-     * with JPG Support: Enabled
-     * with PNG Support: Enabled
-     *
-     * this function creates a thumbnail of a JPEG, GIF or PNG image
-     * file: path (with /)!!!
-     * max_x / max_y delimit the maximal size. default = 100 (it keeps the ratio)
-     * the quality can be set. default = 85
-     * this function returns the thumb filename or null
-     *
-     * modified by Fake51
-     * $mode specifies if the new image is based on a cropped and resized version of the old, or just a resized
-     * $mode = "square" means a cropped version
-     * $mode = "ratio" means merely resized
-     */
-    private static function _getThumb(
-                                    $file,
-                                    $max_x, $max_y,
-                                    $quality = 85,
-                                    $thumbdir = 'thumbs',
-                                    $mode = 'square'
-                                )
-    {
-        // TODO: analyze MIME-TYPE of the input file (not try / catch)
-        // TODO: error analysis of wrong paths
-        // TODO: dynamic prefix (now: /th/)
-
-        // method appears to work in old memberphotos folder, so I'm disabling it for now
-        /* if($file == "") */ return null;
-
-        $filename = basename($file);
-        $filename_noext = substr($filename, 0, strrpos($filename, '.'));
-        $filepath = getcwd()."/bw/memberphotos";
-        $wwwpath = PVars::getObj('env')->baseuri."bw/memberphotos";
-    	$avatarDir = new PDataDir('user/avatars');
-
-        $thumbfile = $filename_noext.'.'.$mode.'.'.$max_x.'x'.$max_y.'.jpg';
-
-        if(is_file("$filepath/$thumbdir/$thumbfile")) return "$wwwpath/$thumbdir/$thumbfile";
-
-        // look if original file exists
-        if (!is_file($filepath.'/'.$filename)) return 'bw/';
-
-        // TODO: bw_error("get_thumb: no file found");
-
-        // look if thumbnail directory exists
-        if(!is_dir("$filepath/$thumbdir")) return 'bw/';
-
-        // TODO: bw_error("get_thumb: no directory found");
-
-        ini_set("memory_limit",'64M'); //jeanyves increasing the memory these functions need a lot
-
-        // read image - try different image types
-        $image = false;
-        if (!$image) $image = @imagecreatefromjpeg("$filepath/$filename");
-        if (!$image) $image = @imagecreatefrompng("$filepath/$filename");
-        if (!$image) $image = @imagecreatefromgif("$filepath/$filename");
-
-        // look if reading the image was successful
-        if($image == false) return null;
-
-        // calculate ratio
-        $size_x = imagesx($image);
-        $size_y = imagesy($image);
-
-        if($size_x == 0 or $size_y == 0){
-            bw_error("bad image size (0)");
-        }
-
-        switch($mode){
-            case "ratio":
-                if (($max_x / $size_x) >= ($max_y / $size_y)){
-                    $ratio = $max_y / $size_y;
-                } else {
-                    $ratio = $max_x / $size_x;
-                }
-                $startx = 0;
-                $starty = 0;
-                break;
-            default:
-                if ($size_x >= $size_y){
-                    $startx = ($size_x - $size_y) / 2;
-                    $starty = 0;
-                    $size_x = $size_y;
-                } else {
-                    $starty = ($size_y - $size_x) / 2;
-                    $startx = 0;
-                    $size_y = $size_x;
-                }
-
-                if ($max_x >= $max_y){
-                    $ratio = $max_y / $size_y;
-                } else {
-                    $ratio = $max_x / $size_x;
-                }
-                break;
-        }
-
-        $th_size_x = $size_x * $ratio;
-        $th_size_y = $size_y * $ratio;
-
-        // creating thumb
-        $thumb = imagecreatetruecolor($th_size_x,$th_size_y);
-        imagecopyresampled($thumb,$image,0,0,$startx,$starty,$th_size_x,$th_size_y,$size_x,$size_y);
-
-        // try to write the new image
-        imagejpeg($thumb, "$filepath/$thumbdir/$thumbfile", $quality);
-
-        return "$wwwpath/$thumbdir/$thumbfile";
-    }
-
 
     /**
      * This function return a picture according to member gender if (any).
@@ -426,7 +254,7 @@ class MOD_layoutbits
         $timestamp = ((is_string($timestamp) && intval($timestamp) == $timestamp) ? intval($timestamp) : $timestamp);
         if (!is_int($timestamp)) $timestamp = strtotime($timestamp);
 
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
         $difference = time() - $timestamp;
 
         $periods = array('second','minute','hour','day','week','month','year','decade');
@@ -486,100 +314,10 @@ class MOD_layoutbits
         return $qualified;
     }
 
-
-    // COPIED FROM OLD BW - to improve
-    // the trad corresponding to the current language of the user, or english,
-    // or the one the member has set
-    function FindTrad($IdTrad,$ReplaceWithBr=false) {
-
-      $AllowedTags = "<b><i><br>";
-      if ($IdTrad == "")
-        return ("");
-
-      if (isset($_SESSION['IdLanguage'])) {
-         $IdLanguage=$_SESSION['IdLanguage'] ;
-      }
-      else {
-         $IdLanguage=0 ; // by default laguange 0
-      }
-      // Try default language
-        $row = self::get()->dao->query("select SQL_CACHE Sentence from memberstrads where IdTrad=" . $IdTrad . " and IdLanguage=" . $IdLanguage)->fetch(PDB::FETCH_OBJ);
-      if (isset ($row->Sentence)) {
-        if (isset ($row->Sentence) == "") {
-          LogStr("Blank Sentence for language " . $IdLanguage . " with MembersTrads.IdTrad=" . $IdTrad, "Bug");
-        } else {
-           return (strip_tags($row->Sentence, $AllowedTags));
-        }
-      }
-      // Try default eng
-        $row = self::get()->dao->query("select SQL_CACHE Sentence from memberstrads where IdTrad=" . $IdTrad . " and IdLanguage=0")->fetch(PDB::FETCH_OBJ);
-      if (isset ($row->Sentence)) {
-        if (isset ($row->Sentence) == "") {
-          LogStr("Blank Sentence for language 1 (eng) with memberstrads.IdTrad=" . $IdTrad, "Bug");
-        } else {
-           return (strip_tags($row->Sentence, $AllowedTags));
-        }
-      }
-      // Try first language available
-        $row = self::get()->dao->query("select  SQL_CACHE Sentence from memberstrads where IdTrad=" . $IdTrad . " order by id asc limit 1")->fetch(PDB::FETCH_OBJ);
-      if (isset ($row->Sentence)) {
-        if (isset ($row->Sentence) == "") {
-          LogStr("Blank Sentence (any language) memberstrads.IdTrad=" . $IdTrad, "Bug");
-        } else {
-           return (strip_tags($row->Sentence, $AllowedTags));
-        }
-      }
-      return ("");
-    } // end of FindTrad
-
-    // COPIED FROM OLD BW
-    function GetPreference($namepref,$idm=0) {
-      $IdMember=$idm;
-       if ($idm==0) {
-         if (isset($_SESSION['IdMember'])) $IdMember=$_SESSION['IdMember'];
-
-      }
-      if ($IdMember==0) {
-           $row = self::get()->dao->query("select SQL_CACHE DefaultValue  from preferences where codeName='".$namepref."'")->fetch(PDB::FETCH_OBJ);
-         if (!empty($row))
-         return($row->DefaultValue);
-      }
-      else {
-           $row = self::get()->dao->query("select SQL_CACHE Value from memberspreferences,preferences where preferences.codeName='$namepref' and memberspreferences.IdPreference=preferences.id and IdMember=" . $IdMember)->fetch(PDB::FETCH_OBJ);
-         if (isset ($row->Value))
-          $def = $row->Value;
-        else {
-           $row = self::get()->dao->query("select SQL_CACHE DefaultValue  from preferences where codeName='".$namepref."'")->fetch(PDB::FETCH_OBJ);
-            if (isset($row->DefaultValue))
-              return($row->DefaultValue);
-            else
-              return NULL;
-        }
-         return ($def);
-      }
-
-    } // end of GetPreference
-
     // COPIED FROM OLD BW
     function getParams($Param) {
 
-//		echo "$Param=".$_SESSION["Param"]->$Param ;
-//		die(0) ;
-		return($_SESSION["Param"]->$Param) ;
-	/*
-
-	// Removed by JeanYves Params are to be retrieve in $_SESSION["Param"]
-	// which is only to be fetched from database only once but at EACH page refresh
-
-
-        // get the user id
-        $row = self::get()->dao->query(
-            "SELECT *".
-            'FROM params '
-        )->fetch(PDB::FETCH_OBJ);
-        return $row->$Param;
-	*/
-
+		return(self::$_instance->_session->get('Param[' . $Param . ']'));
     }
 
     // COPIED FROM OLD BW
@@ -649,7 +387,7 @@ class MOD_layoutbits
      * @return string 'Gender: male/female/other/ translated or empty string
      */
     public static function getGenderTranslated($gender, $hideGender, $addGenderText = true) {
-        $words = new MOD_words();
+        $words = new MOD_words(self::$_instance->_session);
         $string = '';
         if (($hideGender == 'No') && ($gender != 'IDontTell')) {
             if ($addGenderText) {

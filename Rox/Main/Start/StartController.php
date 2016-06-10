@@ -24,6 +24,9 @@ class StartController extends Controller
      */
     public $routing;
 
+    /**
+     * StartController constructor.
+     */
     public function __construct()
     {
         $this->_model = new StartModel();
@@ -40,7 +43,7 @@ class StartController extends Controller
      * @return StartPage
      */
     public function showAction() {
-        $page = new StartPage($this->getRouting());
+        $page = new StartPage($this->getRouter());
         $stats = $this->_model->getStatistics();
         $page->addParameters([ 'stats' => $stats ]);
         return new Response($page->render());

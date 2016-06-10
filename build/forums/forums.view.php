@@ -158,7 +158,7 @@ class ForumsView extends RoxAppView {
         if (!$translate) { // In case this is a edit, by default force the original post language
             $IdContent=$this->_model->getIdContent();
             global $fTradIdLastUsedLanguage ; $fTradIdLastUsedLanguage=1 ; // willbe change by ftrad
-            $word = new MOD_words();
+            $word = new MOD_words($this->getSession());
             // This function is just called for finding the language in which one the post will be displayed
             $void_string=$word->ftrad($IdContent) ;
             $AppropriatedLanguage=$fTradIdLastUsedLanguage ;
@@ -199,7 +199,7 @@ class ForumsView extends RoxAppView {
         $topic = $this->_model->getTopic();
         $request = PRequest::get()->request;
 
-        if (isset($topic->topicinfo->IdGroup) && ($topic->topicinfo->IdGroup > 0) && isset($_SESSION["IdMember"])) {
+        if (isset($topic->topicinfo->IdGroup) && ($topic->topicinfo->IdGroup > 0) && $this->_session->has( "IdMember" )) {
              $group_id = $topic->topicinfo->IdGroup;
              $memberIsGroupMember = $this->_model->checkGroupMembership($group_id);
         }
@@ -306,7 +306,7 @@ class ForumsView extends RoxAppView {
         require 'templates/teaser.php';
     }
     public function userBar() {
-        if (isset($_SESSION["IdMember"])) {
+        if ($this->_session->has( "IdMember" )) {
             $topboards = $this->_model->getTopCategoryLevelTags();
             require 'templates/userbar.php';
         }
@@ -564,7 +564,7 @@ class ForumsView extends RoxAppView {
             $word = 'ForumVisibilityGroupOnlyThread';
         }
 
-        $words = new MOD_words();
+        $words = new MOD_words($this->getSession());
 
         $out = '<input type="checkbox" name="' . $name . '" id="' . $name . '" value="GroupOnly"';
         if ($visibility == 'GroupOnly') {

@@ -1,5 +1,5 @@
 <?php
-$words = new MOD_words();
+$words = new MOD_words($this->getSession());
 $request = PRequest::get()->request;
 $layoutbits = new MOD_layoutbits();
 $d = $image = $this->image;

@@ -405,6 +405,11 @@ A TERRIBLE EXCEPTION
             $controller->route_vars = $route_vars;
             $controller->request_vars = $request;
             $controller->args_vars = $this->args;
+
+            if ($controller instanceof RoxControllerBase) {
+                $controller->setRouter($this->router);
+            }
+
             $controller->router = $this->router;
             $controller->mem_redirect = $this->memory_from_redirect;
             $page = call_user_func(array($controller, $method),$this->args);
@@ -412,6 +417,7 @@ A TERRIBLE EXCEPTION
                 // used for a html comment
                 $page->controller_classname = $classname;
                 $page->router = $this->router;
+                $page->setEngine($this->engine);
             }
         } else {
             $page = false;

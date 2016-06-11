@@ -26,8 +26,6 @@ require "auth.lib.php";
 
 class MOD_bw_user_Auth extends MOD_user_Auth
 {
-	use \Rox\RoxTraits\SessionTrait;
-
     private $_immediateRedirect = '';
 
     /**

@@ -1,11 +1,24 @@
 <?php
 
+use Symfony\Component\Templating\EngineInterface;
 
 abstract class AbstractBasePage extends VisualComponent
 {
     private $_words = 0;
     private $_model = 0;
-    
+
+    /**
+     * @var EngineInterface
+     */
+    protected $engine;
+
+    public function setEngine(EngineInterface $engine)
+    {
+        $this->engine = $engine;
+
+        return $this;
+    }
+
     /**
      * some view classes need to store a model object.
      */

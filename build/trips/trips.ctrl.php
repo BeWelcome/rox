@@ -350,7 +350,7 @@ class TripsController extends RoxControllerBase {
     {
         $errors = $this->_model->checkSearchTripsVarsOk($args);
         if (count($errors) > 0) {
-            $this->_session->set( 'errors', $errors )
+            $this->_session->set( 'errors', $errors );
             return $this->router->url('trips_search', array(), false);
         } else {
             return $this->router->url('trips_search_results', array( "keyword" => $args->post['activity-keyword']), false);

@@ -25,6 +25,9 @@ use Traversable;
  * @method Builder|HasMany hasMany($a, $b, $c)
  *
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ *
+ * @todo Maybe use a decorated to implement UserInterface?
  */
 class Member extends Model implements MemberRepositoryInterface, UserInterface
 {
@@ -324,7 +327,7 @@ class Member extends Model implements MemberRepositoryInterface, UserInterface
      */
     public function getSalt()
     {
-        return null;
+        return;
     }
 
     /**

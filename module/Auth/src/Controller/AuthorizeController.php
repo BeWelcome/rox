@@ -32,7 +32,7 @@ class AuthorizeController
 
     /**
      * @param Request $request
-     * @SuppressWarnings(PHPMD.Superglobals)
+     *
      * @return RedirectResponse
      */
     public function __invoke(Request $request)
@@ -65,9 +65,6 @@ class AuthorizeController
 
             return new RedirectResponse($this->urlGenerator->generate('auth/login'));
         }
-
-        // Take the resulting IdMember session value and put it in the native Symfony session.
-        $this->session->set('IdMember', (int) $_SESSION['IdMember']);
 
         return new RedirectResponse($this->urlGenerator->generate('home'));
     }

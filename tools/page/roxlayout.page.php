@@ -1,7 +1,5 @@
 <?php
 
-use Symfony\Component\Templating\EngineInterface;
-
 /**
    *
    */
@@ -14,18 +12,6 @@ class PageWithRoxLayout extends PageWithHTML
     protected $locator = null;
     protected $yamlFileLocator = null;
     protected $router = null;
-
-    /**
-     * @var EngineInterface
-     */
-    protected $engine;
-
-    public function setEngine(EngineInterface $engine)
-    {
-        $this->engine = $engine;
-
-        return $this;
-    }
 
     /*
      * Return a list of stylesheets to be included.

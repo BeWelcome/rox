@@ -24,7 +24,7 @@ revision.txt
 .idea
 .sass-cache
 
-/doc/*
+doc/html/
 /vendor/*
 /node_modules/*
 /components/*

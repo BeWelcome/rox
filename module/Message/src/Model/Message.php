@@ -3,8 +3,8 @@
 namespace Rox\Message\Model;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 use Rox\Core\Exception\NotFoundException;
 use Rox\Core\Model\NullableDateFixTrait;
 use Rox\Member\Model\Member;

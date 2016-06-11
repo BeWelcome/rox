@@ -49,6 +49,8 @@ class MessageService implements MessageServiceInterface
      *
      * @param Message $message
      * @param Member $deletingMember
+     *
+     * @throws \InvalidArgumentException
      */
     public function deleteMessage(Message $message, Member $deletingMember)
     {

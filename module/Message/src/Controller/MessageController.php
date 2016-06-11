@@ -155,7 +155,7 @@ class MessageController
         $sortDir = $request->query->get('dir', 'desc');
         $filter = $request->attributes->get('filter', 'inbox');
 
-        if (!in_array($sortDir, ['asc', 'desc'])) {
+        if (!in_array($sortDir, ['asc', 'desc'], true)) {
             throw new \InvalidArgumentException();
         }
 

@@ -92,7 +92,7 @@ class MessageService implements MessageServiceInterface
     {
         $folders = [Message::FOLDER_INBOX, Message::FOLDER_SPAM];
 
-        if (!is_string($destinationFolder) || !in_array($destinationFolder, $folders)) {
+        if (!is_string($destinationFolder) || !in_array($destinationFolder, $folders, true)) {
             throw new \InvalidArgumentException('$destinationFolder is invalid.');
         }
 

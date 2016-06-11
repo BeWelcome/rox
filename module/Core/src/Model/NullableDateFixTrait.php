@@ -10,8 +10,8 @@ trait NullableDateFixTrait
     {
         $value = parent::getAttributeFromArray($key);
 
-        if (in_array($key, $this->getDates()) && $value === '0000-00-00 00:00:00') {
-            return null;
+        if (in_array($key, $this->getDates(), true) && $value === '0000-00-00 00:00:00') {
+            return;
         }
 
         return $value;

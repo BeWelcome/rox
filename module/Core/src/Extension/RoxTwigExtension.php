@@ -5,7 +5,6 @@ namespace Rox\Core\Extension;
 use Carbon\Carbon;
 use Faker\Factory;
 use Illuminate\Database\Query\Expression;
-use Illuminate\Support\Facades\DB;
 use Rox\Member\Model\Member;
 use Rox\Message\Model\Message;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;

@@ -15,18 +15,22 @@ class MessageService implements MessageServiceInterface
 
         if ($filter === 'sent') {
             $q->where('IdSender', $member->id);
-        } else {
+        } elseif ($filter === 'inbox') {
             $q->where('IdReceiver', $member->id);
         }
 
         if ($filter === 'spam') {
             $q->where('InFolder', 'Spam');
-        } else {
+        } elseif (in_array($filter, ['inbox', 'sent'], true)) {
             $q->where('InFolder', 'Normal');
             $q->where('messages.Status', 'Sent');
         }
 
         $q->where('DeleteRequest', 'NOT LIKE', '%receiverdeleted%');
+
+        if (!in_array($sort, ['date', 'sender'], true)) {
+            throw new \InvalidArgumentException();
+        }
 
         if ($sort === 'date') {
             $q->orderByRaw('IF(messages.created > messages.DateSent, messages.created, messages.DateSent) ' . $sortDir);
@@ -34,8 +38,6 @@ class MessageService implements MessageServiceInterface
             $q->join('members', 'messages.IdSender', '=', 'members.id');
 
             $q->orderBy('members.Username', $sortDir);
-        } else {
-            throw new \InvalidArgumentException();
         }
 
         return $q;
@@ -57,18 +59,18 @@ class MessageService implements MessageServiceInterface
         $deleteRequest = $message->DeleteRequest;
 
         if ($message->sender->id === $deletingMember->id) {
+            $deleteRequest = 'senderdeleted';
+
             if ($deleteRequest === 'receiverdeleted') {
                 $deleteRequest = 'senderdeleted,receiverdeleted';
-            } else {
-                $deleteRequest = 'senderdeleted';
             }
         }
 
         if ($message->receiver->id === $deletingMember->id) {
+            $deleteRequest = 'receiverdeleted';
+
             if ($deleteRequest === 'senderdeleted') {
                 $deleteRequest = 'senderdeleted,receiverdeleted';
-            } else {
-                $deleteRequest = 'receiverdeleted';
             }
         }
 
@@ -101,12 +103,14 @@ class MessageService implements MessageServiceInterface
 
     public function markMessage(Message $message, $state)
     {
+        if (!in_array($state, [Message::STATE_READ, Message::STATE_UNREAD], true)) {
+            throw new \InvalidArgumentException('$state is invalid.');
+        }
+
         if ($state === Message::STATE_READ) {
             $message->WhenFirstRead = $message->freshTimestamp();
         } elseif ($state === Message::STATE_UNREAD) {
             $message->WhenFirstRead = '0000-00-00 00:00:00';
-        } else {
-            throw new \InvalidArgumentException('$state is invalid.');
         }
 
         $message->save();

@@ -28,7 +28,7 @@ class TranslatorFactory
             ],
         ], [
             'debug' => true,
-            'cache_dir' => 'cache',
+            'cache_dir' => $container->getParameter('kernel.cache_dir'),
         ]);
 
         $translator->addResource('database', null, $lang);

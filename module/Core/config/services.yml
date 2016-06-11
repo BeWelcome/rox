@@ -52,3 +52,9 @@ services:
         arguments: ['@service_container', '@controller_name_converter', '@?logger']
         tags:
             - { name: monolog.logger, channel: request }
+
+    Rox\Core\Listener\LegacyDispatchListener:
+        class: Rox\Core\Listener\LegacyDispatchListener
+        autowire: true
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }

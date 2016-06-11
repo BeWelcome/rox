@@ -3,32 +3,20 @@
 namespace Rox\Core\Kernel;
 
 use EnvironmentExplorer;
-use Illuminate\Database\Connection;
 use Rox\Core\Loader\ConfigLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
  * Class Application
- *
- * @todo
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Application extends Kernel
 {
     public function boot()
     {
-        if (true === $this->booted) {
-            return;
-        }
-
         if ($this->isDebug()) {
             $this->disableHoaAutoload();
 
@@ -55,42 +43,6 @@ class Application extends Kernel
         $loader->load(function (ContainerBuilder $container) {
             call_user_func(new ConfigLoader(), $container);
         });
-    }
-
-    /**
-     * @param Request $request
-     * @param int     $type
-     * @param bool    $catch
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @throws NotFoundHttpException
-     *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
-     */
-    public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
-    {
-        $this->boot();
-
-        // TODO just need to bootstrap the connection. should find better solution
-        $this->getContainer()->get(Connection::class);
-
-        try {
-            return parent::handle($request, $type, false);
-        } catch (NotFoundHttpException $e) {
-            if (!$e->getPrevious() instanceof ResourceNotFoundException) {
-                throw $e;
-            }
-
-            // Load the Symfony session
-
-            /** @var SessionInterface $session */
-            $session = $this->getContainer()->get('session');
-
-            $session->start();
-
-            return $this->getLegacyHttpKernel()->handle($request, $type, $catch);
-        }
     }
 
     public function getRootDir()

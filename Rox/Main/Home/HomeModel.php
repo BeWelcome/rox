@@ -30,13 +30,8 @@ class HomeModel extends \RoxModelBase {
      *
      * @return array
      */
-    public function getMessages($all, $unread, $limit = false)
+    public function getMessages(Member $member, $all, $unread, $limit = false)
     {
-        $memberModel = new Member();
-
-        // TODO create a service for getting the current user
-        $member = $memberModel->getById($_SESSION['IdMember']);
-
         $query = Message::orderBy('created', 'desc')->with('sender')->where('IdReceiver', $member->id);
         if ($unread) {
             $query= $query->where('WhenFirstRead', '0000-00-00 00:00:00');

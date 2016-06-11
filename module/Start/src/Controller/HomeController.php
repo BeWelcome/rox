@@ -3,6 +3,7 @@
 namespace Rox\Start\Controller;
 
 use Rox\Main\Home\HomeModel;
+use Rox\Member\Repository\MemberRepositoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,6 +19,11 @@ use Symfony\Component\Templating\EngineInterface;
 class HomeController
 {
     /**
+     * @var MemberRepositoryInterface
+     */
+    protected $memberRepository;
+
+    /**
      * @var EngineInterface
      */
     protected $engine;
@@ -27,8 +33,12 @@ class HomeController
      */
     protected $session;
 
-    public function __construct(EngineInterface $engine, SessionInterface $session)
-    {
+    public function __construct(
+        MemberRepositoryInterface $memberRepository,
+        EngineInterface $engine,
+        SessionInterface $session
+    ) {
+        $this->memberRepository = $memberRepository;
         $this->engine = $engine;
         $this->session = $session;
     }
@@ -52,7 +62,9 @@ class HomeController
         $all = $request->query->get('all');
         $unread = $request->query->get('unread');
 
-        $messages = $model->getMessages($all, $unread, 4);
+        $member = $this->memberRepository->getById($this->session->get('IdMember'));
+
+        $messages = $model->getMessages($member, $all, $unread, 4);
 
         $content = $this->engine->render('@start/widget/messages.html.twig', [
             'messages' => $messages,

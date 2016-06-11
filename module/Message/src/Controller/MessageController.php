@@ -13,6 +13,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Templating\EngineInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class MessageController
 {
     /**
@@ -72,8 +75,8 @@ class MessageController
                 $this->messageService->moveMessage($message, Message::FOLDER_SPAM);
             } elseif ($modifyAction === 'nospam') {
                 $this->messageService->moveMessage($message, Message::FOLDER_INBOX);
-            } else {
-                throw new \InvalidArgumentException('Invalid message state.');
+            //} else {
+                //throw new \InvalidArgumentException('Invalid message state.');
             }
         }
 
@@ -84,8 +87,8 @@ class MessageController
     {
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
-        $sort = $request->query->get('sort', 'date');
-        $dir = $request->query->get('dir', 'DESC');
+        //$sort = $request->query->get('sort', 'date');
+        //$dir = $request->query->get('dir', 'DESC');
         $otherUsername = $request->attributes->get('username');
 
         $otherMember = $this->memberRepository->getByUsername($otherUsername);

@@ -23,6 +23,8 @@ use Traversable;
  * @property Collection $trads
  * @property integer $id
  * @method Builder|HasMany hasMany($a, $b, $c)
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class Member extends Model implements MemberRepositoryInterface, UserInterface
 {

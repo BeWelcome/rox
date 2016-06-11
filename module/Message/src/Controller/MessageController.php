@@ -127,7 +127,8 @@ class MessageController
 
         $content = $this->engine->render('@message/message/index.html.twig', [
             'messages' => $messages,
-            'filter' => '',
+            'folder' => '',
+            'filter' => $request->query->all(),
             'page' => $page,
             'pages' => ceil($count / $limit),
         ]);

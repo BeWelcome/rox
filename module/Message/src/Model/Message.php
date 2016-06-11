@@ -45,6 +45,9 @@ class Message extends Model implements MessageRepositoryInterface
         'receiver',
     ];
 
+    /**
+     * @var array
+     */
     protected $dates = [
         'DateSent',
         'WhenFirstRead',

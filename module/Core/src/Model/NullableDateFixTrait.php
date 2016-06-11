@@ -4,7 +4,7 @@ namespace Rox\Core\Model;
 
 trait NullableDateFixTrait
 {
-    abstract function getDates();
+    abstract public function getDates();
 
     public function getAttributeFromArray($key)
     {

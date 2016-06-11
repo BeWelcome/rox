@@ -2,7 +2,7 @@
 <input type="hidden" id="osm-tiles-provider-base-url" value="<?php echo ($map_conf->osm_tiles_provider_base_url); ?>"/>
 <input type="hidden" id="osm-tiles-provider-api-key" value="<?php echo ($map_conf->osm_tiles_provider_api_key); ?>"/>
 <?php
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 $request = PRequest::get()->request;
 $sub = '';
 if (isset($request[1]) && $request[1] == 'show' && isset($request[2])) {

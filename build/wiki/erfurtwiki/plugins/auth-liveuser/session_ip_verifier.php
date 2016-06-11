@@ -13,7 +13,7 @@ function ewiki_session_ip_verify(){
   
   $logindata=ewiki_liveuser_get_login_data();
 
-  if($_SESSION['loginInfo']['ip_address']!==$logindata['ip_address'] || $_SESSION['loginInfo']['ssl_session_id']!==$logindata['ssl_session_id']){
+  if($this->_session->get('loginInfo']['ip_address']!==$logindata['ip_address'] || $_SESSION['loginInfo']['ssl_session_id']!==$logindata['ssl_session_id')){
     //they've changed...this is weird...log em out
     $liveuser->logout();
   }

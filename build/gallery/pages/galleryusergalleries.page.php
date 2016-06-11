@@ -37,7 +37,7 @@ class GalleryUserGalleriesPage extends GalleryUserPage
     protected function column_col3() {
         $statement = $this->statement;
         $galleries = $this->galleries;
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         ?>
         <h2><?php echo $words->getFormatted('GalleryTitleSets'); ?></h2>
         <?php

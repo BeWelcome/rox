@@ -61,7 +61,7 @@ class BlogView extends RoxAppView
         
         $errors = array();
         $lang = array();
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         $i18n = new MOD_i18n('apps/blog/editcreate.php');
         $errors = $i18n->getText('errors');
         $lang = $i18n->getText('lang');
@@ -102,7 +102,7 @@ class BlogView extends RoxAppView
         $errors = array();
         $lang = array();
         $i18n = new MOD_i18n('apps/blog/editcreate.php');
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         $errors = $i18n->getText('errors');
         $lang = $i18n->getText('lang');
         $monthNames = array();
@@ -291,7 +291,7 @@ class BlogView extends RoxAppView
     */
     public function generateLocationOverview($locations)
     {
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
     	$i18n = new MOD_i18n('apps/blog/editcreate.php');
 		$lang = $i18n->getText('lang');
         if ($locations) {

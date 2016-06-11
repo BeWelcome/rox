@@ -16,8 +16,8 @@
 
 
 if ($this->_session->has( 'trData' )){
-    $data = $_SESSION['trData'];
-    unset($_SESSION['trData']);
+    $data = $this->_session->get('trData');
+    $this->_session->remove('trData');
 }
 ?>
 <form method="post" name="TrEdit">

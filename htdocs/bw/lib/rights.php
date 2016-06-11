@@ -87,12 +87,12 @@ function IsAdmin() {
 */
 function IsVol() {
 	if ($this->_session->has( "IsVol" )) {
-	    return($_SESSION["IsVol"]) ;
+	    return($this->_session->get("IsVol")) ;
 	}
 	if (IsLoggedIn()) {
-		$rr=LoadRow("SELECT COUNT(*) AS cnt FROM rightsvolunteers WHERE IdMember=".$_SESSION["IdMember"]." AND rightsvolunteers.Level>0");
-		$_SESSION["IsVol"]=$rr->cnt ;
-	    return($_SESSION["IsVol"]) ;
+		$rr=LoadRow("SELECT COUNT(*) AS cnt FROM rightsvolunteers WHERE IdMember=".$this->_session->get("IdMember")." AND rightsvolunteers.Level>0");
+		$this->_session->get("IsVol")=$rr->cnt ;
+	    return($this->_session->get("IsVol")) ;
 	}
 	else return(false) ;
 } // end of IsVol()
@@ -113,44 +113,44 @@ function IsVol() {
 */
 function IsLoggedIn($ExtraAllowedStatus="") {
 
-	if (empty($_SESSION['IdMember'])) {
+	if (empty($this->_session->get('IdMember'))) {
 		return (false);
 	}
 
-	if (empty($_SESSION['MemberCryptKey'])) {
+	if (empty($this->_session->get('MemberCryptKey'))) {
 		//	  LogStr("IsLoggedIn() : Anomaly with MemberCryptKey","Bug");
 		return (false);
 	}
 
-	if ($_SESSION['LogCheck'] != Crc32($_SESSION['MemberCryptKey'] . $_SESSION['IdMember'])) {
+	if ($this->_session->get('LogCheck'] != Crc32($_SESSION['MemberCryptKey'] . $_SESSION['IdMember'))) {
 		LogStr("Anomaly with Log Check", "Hacking");
 		APP_User::get()->logout();
 		header("Location: " . PVars::getObj('env')->baseuri);
 		exit (0);
 	}
 	
-	if (empty($_SESSION["MemberStatus"])) {
-		$strerror="Members with IdMember=".$_SESSION["IdMember"]. " has no \$_SESSION[\"MemberStatus\"]" ;
+	if (empty($this->_session->get("MemberStatus"))) {
+		$strerror="Members with IdMember=".$this->_session->get("IdMember"]. " has no \$_SESSION[\"MemberStatus\")" ;
 		error_log($strerror) ;
 		LogStr($strerror,"Debug") ;
 		die ($strerror) ;
 	}
 	
-	if ($_SESSION["MemberStatus"]=='Active') {
+	if ($this->_session->get("MemberStatus")=='Active') {
 		return (true) ;
 	}
 
-	if ($_SESSION["MemberStatus"]=='ActiveHidden') {
+	if ($this->_session->get("MemberStatus")=='ActiveHidden') {
 		return (true) ;
 	}
 	
 	if (!empty($ExtraAllowedStatus)) { // are there allowed exception ?
 		if (!$this->_session->has( "MemberStatus" )) {
 			$ret=print_r($_SESSION,true) ;
-			die("no \$_SESSION[\"MemberStatus\"] in IsLoggedIn() "."<br />\n".$ret) ;
+			die("no \$this->_session->get(\"MemberStatus\") in IsLoggedIn() "."<br />\n".$ret) ;
 		}
 		$tt=explode(",",str_replace(";",",",$ExtraAllowedStatus)) ;
-		if ((count($tt)>0) and in_array($_SESSION["MemberStatus"],$tt)) {
+		if ((count($tt)>0) and in_array($this->_session->get("MemberStatus"),$tt)) {
 			return(true) ;
 		}
 	}
@@ -164,7 +164,7 @@ function IsLoggedIn($ExtraAllowedStatus="") {
 // optional Scope value can be send if the RightScope is set to All then Scope
 // will always match if not, the sentence in Scope must be find in RightScope
 // The function will use a cache in session
-// ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') is used to force RightsReloading
+// ($this->_session->get('Param')->ReloadRightsAndFlags == 'Yes') is used to force RightsReloading
 // from scope beware to the "" which must exist in the mysal table but NOT in 
 // the $Scope parameter 
 // $OptionalIdMember  allow to specify another member than the current one, in this case the cache is not used
@@ -177,7 +177,7 @@ function HasRight($RightName, $_Scope = "", $OptionalIdMember = 0)
 	if ($OptionalIdMember != 0) {
 		$IdMember = $OptionalIdMember;
 	} else {
-		$IdMember = $_SESSION['IdMember'];
+		$IdMember = $this->_session->get('IdMember');
 	}
 
 	$Scope = $_Scope;
@@ -188,8 +188,8 @@ function HasRight($RightName, $_Scope = "", $OptionalIdMember = 0)
 		$Scope = "\"" . $Scope . "\""; // add the " " if they are missing 
 	}
 
-	if ((!isset ($_SESSION['Right_' . $RightName])) or 
-		($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') or 
+	if ((!isset ($this->_session->get('Right_' . $RightName))) or 
+		($this->_session->get('Param')->ReloadRightsAndFlags == 'Yes') or 
 		($OptionalIdMember != 0)) {
 		$str = "SELECT SQL_CACHE Scope,Level FROM rightsvolunteers,rights WHERE IdMember=$IdMember AND rights.id=rightsvolunteers.IdRight AND rights.Name='$RightName'";
 		$qry = mysql_query($str) or bw_error("function HasRight");
@@ -199,13 +199,13 @@ function HasRight($RightName, $_Scope = "", $OptionalIdMember = 0)
 		$rlevel = $right->Level;
 		$rscope = $right->Scope;
 		if ($OptionalIdMember == 0) { // if its current member cache for next research 
-			$this->getSession->set( 'RightLevel_' . $RightName, $rlevel )
-			$this->getSession->set( 'RightScope_' . $RightName, $rscope )
+			$this->_session->set( 'RightLevel_' . $RightName, $rlevel )
+			$this->_session->set( 'RightScope_' . $RightName, $rscope )
 		}
 	}
 	if ($Scope != "") { // if a specific scope is asked
 		if ($rscope == "\"All\"") {
-			if (($_SESSION["IdMember"]) == 1)
+			if (($this->_session->get("IdMember")) == 1)
 				return (10); // Admin has all rights at level 10
 			return ($rlevel);
 		} else {
@@ -215,7 +215,7 @@ function HasRight($RightName, $_Scope = "", $OptionalIdMember = 0)
 				return (0);
 		}
 	} else {
-		if (($_SESSION["IdMember"]) == 1)
+		if (($this->_session->get("IdMember")) == 1)
 			return (10); // Admin has all rights at level 10
 		return ($rlevel);
 	}
@@ -224,7 +224,7 @@ function HasRight($RightName, $_Scope = "", $OptionalIdMember = 0)
 // -----------------------------------------------------------------------------
 // return the Scope in the specific right 
 // The funsction will use a cache in session
-//   or ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') is used to force RightsReloading
+//   or ($this->_session->get('Param')->ReloadRightsAndFlags == 'Yes') is used to force RightsReloading
 //  from scope beware to the "" which must exist in the mysal table but NOT in 
 // the $Scope parameter 
 function RightScope($RightName, $Scope = "") {
@@ -232,26 +232,26 @@ function RightScope($RightName, $Scope = "") {
 
 	if (!IsLoggedIn())
 		return (0); // No need to search for right if no member logged
-	$IdMember = $_SESSION['IdMember'];
-	if ((!isset ($_SESSION['Right_' . $RightName])) or ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes')) {
+	$IdMember = $this->_session->get('IdMember');
+	if ((!isset ($this->_session->get('Right_' . $RightName])) or ($_SESSION['Param')->ReloadRightsAndFlags == 'Yes')) {
 		$str = "SELECT SQL_CACHE Scope,Level FROM rightsvolunteers,rights WHERE IdMember=$IdMember AND rights.id=rightsvolunteers.IdRight AND rights.Name='$RightName'";
 		$qry = mysql_query($str) or die("function RightScope");
 		$right = mysql_fetch_object(mysql_query($str)); // LoadRow not possible because of recusivity
 		if (!isset ($right->Level)) {
 			return (""); // Return false if the Right does'nt exist for this member in the DB
 		}
-		$this->getSession->set( 'RightLevel_' . $RightName, $right->Level )
-		$this->getSession->set( 'RightScope_' . $RightName, $right->Scope )
+		$this->_session->set( 'RightLevel_' . $RightName, $right->Level )
+		$this->_session->set( 'RightScope_' . $RightName, $right->Scope )
 	}
-	return ($_SESSION['RightScope_' . $RightName]);
+	return ($this->_session->get('RightScope_' . $RightName));
 } // enf of Scope
 
 //------------------------------------------------------------------------------
 // check if the current user has some translation rights on IdMember
 function CanTranslate($IdMember) {
-    if (empty($_SESSION["IdMember"])) return(false);
-	$IdTranslator = $_SESSION["IdMember"];
-	$IdLanguage = $_SESSION["IdLanguage"];
+    if (empty($this->_session->get("IdMember"))) return(false);
+	$IdTranslator = $this->_session->get("IdMember");
+	$IdLanguage = $this->_session->get("IdLanguage");
 	
 	$rr = LoadRow("select SQL_CACHE id from intermembertranslations where IdMember=" . $IdMember . " and IdTranslator=" . $IdTranslator . " and IdLanguage=" . $IdLanguage);
 	if (!isset ($rr->id))

@@ -53,7 +53,7 @@
         }
     }
 
-    $words = new MOD_words($this->getSession());
+    $words = new MOD_words();
 ?>
 <div id="adminmassmailenqueue">
 <form method="post" name="mass-mail-enqueue-form" id="mass-mail-enqueue-form" class="fieldset-menu-form" enctype="multipart/form-data">

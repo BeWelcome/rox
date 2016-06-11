@@ -57,7 +57,7 @@ class PollsController extends RoxControllerBase
             case 'cancelvote':
 								$IdPoll=(isset($request[2]) ? $request[2]: false) ;
       					MOD_log::get()->write("Prepare to contribute cancel vote #".$IdPoll,"polls") ; 				
-								if ($model->CancelVote($IdPoll,"",$_SESSION["IdMember"])) {
+								if ($model->CancelVote($IdPoll,"",$this->_session->get("IdMember"))) {
                 	$page = new PollsPage("","cancelvote");
 								}
 								else {
@@ -92,7 +92,7 @@ class PollsController extends RoxControllerBase
 								$IdPoll=$post_IdPoll ;
 								if ($model->CanUserContribute($IdPoll)) {
       						MOD_log::get()->write("Tryin to vote for poll #".$IdPoll,"polls") ; 				
-									$Data=$model->AddVote($args->post,"",$_SESSION["IdMember"]) ;
+									$Data=$model->AddVote($args->post,"",$this->_session->get("IdMember")) ;
                 	$page = new PollsPage("","votedone",$Data);
 								}
 								else {

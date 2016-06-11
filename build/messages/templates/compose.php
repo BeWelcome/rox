@@ -21,7 +21,7 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 $model = new MembersModel();
 $member = $model->getMemberWithUsername($receiver_username);
 ?>
@@ -91,10 +91,10 @@ $member = $model->getMemberWithUsername($receiver_username);
                   * (on reenabling also uncomment the Captcha line in
                   *  the model's _createMessage function)
 
-          if ($this->_model->CaptchaNeeded($_SESSION["IdMember"])) {
+          if ($this->_model->CaptchaNeeded($this->_session->get("IdMember"))) {
             $CaptchaValue=rand(100000,999999) ;
             echo "<p>" ;
-            $_SESSION["ExpectedCaptchaValue"]=$CaptchaValue ; // Store the CaptCha for comparison
+            $this->_session->get("ExpectedCaptchaValue")=$CaptchaValue ; // Store the CaptCha for comparison
             echo $words->getFormatted("ContactCaptchaRequest",$this->_model->DisplayCaptcha($CaptchaValue))," <input type=\"text\" name=\"c_verification\" value=\"\">" ;
         //    echo $words->get("ContactCaptchaRequest"," "),$this->_model->DisplayCaptcha($CaptchaValue)," <input type=\"text\" name=\"c_verification\" value=\"\">" ;
             echo "</p>" ;

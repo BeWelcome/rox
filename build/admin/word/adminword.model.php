@@ -326,7 +326,7 @@ WHERE code="' . $this->dao->escape($code) . '"
      */    
     public function updateSingleTranslation($form){ 
         $eng_ins = '';
-        $eng_upd = 'IdMember = '.(int)$_SESSION["IdMember"].', updated = now(),';
+        $eng_upd = 'IdMember = '.(int)$this->_session->get("IdMember").', updated = now(),';
         $desc = '';
         $changeInAll = '';
         if ($form['lang']=='en'){
@@ -335,13 +335,13 @@ WHERE code="' . $this->dao->escape($code) . '"
             if (isset($form['changetype'])){
                 switch ($form['changetype']){
                     case 'major':
-                    $eng_upd = 'majorupdate = now(), IdMember = '.(int)$_SESSION["IdMember"].',';
+                    $eng_upd = 'majorupdate = now(), IdMember = '.(int)$this->_session->get("IdMember").',';
                     break;
                     case 'none':
                     $eng_upd = 'updated = updated,';
                     break;
                     default:
-                    $eng_upd = 'IdMember = '.(int)$_SESSION["IdMember"].',';
+                    $eng_upd = 'IdMember = '.(int)$this->_session->get("IdMember").',';
             }}
             if (isset($form['EngDesc'])){
                 $desc = 'description = "'.$this->dao->escape($form['EngDesc']).'", ';
@@ -365,7 +365,7 @@ INSERT INTO words SET
     Sentence = "'.$this->dao->escape($form["Sentence"]).'",
     updated = now(),
     '.$eng_ins.$desc.'
-    IdMember = '.(int)$_SESSION["IdMember"].',
+    IdMember = '.(int)$this->_session->get("IdMember").',
     created = now()
 ON DUPLICATE KEY UPDATE
     '.$eng_upd.$desc.'

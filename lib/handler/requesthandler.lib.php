@@ -23,15 +23,15 @@ use Symfony\Component\HttpFoundation\Session\Session;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  */
 class PRequest {
+    use Rox\RoxTraits\SessionTrait;
 
     private static $_instance;
-    /** @var  \Symfony\Component\HttpFoundation\Session\SessionInterface */
-    private static $_session;
 
     private $_cliArgs;
     private $_request;
     
     private function __construct() {
+        $this->setSession();
         if (isset($_SERVER['argc']) && isset($_SERVER['argv']) && is_array($_SERVER['argv']) && $_SERVER['argc'] != 0) {
             $args = $_SERVER['argv'];
             unset($args[0]);
@@ -42,15 +42,14 @@ class PRequest {
             PVars::register('request', $request);
             $this->_request = $request;
             
-            if (self::$_session->has( 'thisRequest' )) {
-                self::$_session->set( 'lastRequest', $_SESSION['thisRequest'] );
+            if ($this->_session->has( 'thisRequest' )) {
+                $this->_session->set( 'lastRequest', $this->_session->get('thisRequest') );
             }
-            self::$_session->set( 'thisRequest', $request );
+            $this->_session->set( 'thisRequest', $request );
         }
     }
     
-    public static function get(Session $session) {
-        self::$_session = $session;
+    public static function get() {
         if (!isset(self::$_instance)) {
             $c = __CLASS__;
             self::$_instance = new $c();
@@ -79,7 +78,7 @@ class PRequest {
     }
     
     public static function ignoreCurrentRequest() {
-        self::$_session->set( 'thisRequest', (self::$_session->has( 'lastRequest' ) ? $_SESSION['thisRequest'] : '' ));
+        self::$_instance->_session->set( 'thisRequest', (self::$_instance->_session->has( 'lastRequest' ) ? self::$_instance->_session->get('thisRequest') : '' ));
     }
     
     public function isCli() {

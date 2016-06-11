@@ -2,6 +2,7 @@
 
 namespace Rox\Framework\Firewall;
 
+use Rox\Framework\SessionSingleton;
 use Rox\Security\RoxUserProvider;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -85,6 +86,15 @@ class FormLoginAuthenticator extends AbstractGuardAuthenticator
                 )
             );
         if ($userPassword === $credentialsPassword) {
+            $session = SessionSingleton::getSession();
+            $session->set('username', $user->Username);
+            $session->set('id', $user->id);
+            $session->set('IdMember', $user->id);
+            $cryptKey = crypt($credentials['password'], 'rt');
+            $session->set('cryptkey', $cryptKey);
+            $session->set('logcheck', crc32($cryptKey . $user->id));
+            $session->set('status', $user->Status);
+
             return true;
         }
         throw new CustomUserMessageAuthenticationException($this->failMessage);

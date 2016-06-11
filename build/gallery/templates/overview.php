@@ -1,6 +1,6 @@
 <?php
 
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 $layoutbits = new MOD_layoutbits();
 $thumbsize = $this->thumbsize;
 if ($statement) {

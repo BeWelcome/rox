@@ -78,7 +78,7 @@ class MOD_visits {
         $idMember = $pIdMember;
 				if ($pIdMember==0) { // if no pIdMember specified then trt with current member
         	 if ($this->_session->has( 'IdMember' )) {
-            	$idMember = $_SESSION['IdMember'];
+            	$idMember = $this->_session->get('IdMember');
         	 }
 				}
 

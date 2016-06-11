@@ -43,7 +43,7 @@ if (!class_exists("ewiki_database_mysql")) { include_once("plugins/db/mysql.php"
 #    define("EWIKI_SCRIPT_URL", "http://../?id=");    # absolute URL
 
 # now let's make use our $words-function for it
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         #-- change to your needs (site lang)
     define("EWIKI_NAME", $words->getFormatted("WikiUnnamedWiki"));        # Wiki title
     define("EWIKI_PAGE_INDEX", "WikiFrontPage");    # default page

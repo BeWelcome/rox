@@ -233,7 +233,7 @@ http://www.bewelcome.org/donate/?action=done&tx=0ME24142PE152304A&st=Completed&a
                 
                 $IdMember=0 ; $IdCountry=0 ; // This values will remain if the user was not logged
                 if ($this->_session->has( "IdMember" )) {
-                    $IdMember=$_SESSION["IdMember"] ;
+                    $IdMember=$this->_session->get("IdMember") ;
                     $query = "
                         SELECT
                             geonames_cache.parentCountryId AS IdCountry

@@ -46,9 +46,9 @@ class MembersModel extends RoxModelBase
      *
      * @param void
      */
-    public function __construct(SessionInterface $session)
+    public function __construct()
     {
-        parent::__construct($session);
+        parent::__construct();
         $this->bootstrap();
     }
 
@@ -162,7 +162,7 @@ SQL
 
       public function get_relation_between_members($IdMember_rel)
       {
-          $myself = $this->getMemberWithId($_SESSION['IdMember']);
+          $myself = $this->getMemberWithId($this->_session->get('IdMember'));
           $member = $this->getMemberWithId($IdMember_rel);
           $words = $this->getWords();
           $all_relations = $member->all_relations();
@@ -299,17 +299,17 @@ WHERE
             // check if current session language is a profile language
             $found = false;
             if ($this->_session->has( 'IdMember' )) {
-                $memberId = intval($_SESSION['IdMember']);
+                $memberId = intval($this->_session->get('IdMember'));
                 $member = $this->createEntity('Member', $memberId);
                 $member->set_profile_languages();
                 $langs = $member->profile_languages;
                 foreach($langs as $lang) {
-                    $found = ($lang->ShortCode == $_SESSION['lang']);
+                    $found = ($lang->ShortCode == $this->_session->get('lang'));
                     if ($found) break;
                 }
             }
             if ($found) {
-                $this->set_profile_language($_SESSION['lang']);
+                $this->set_profile_language($this->_session->get('lang'));
             } else {
                 // if no language is set use English
                 $this->set_profile_language("en");
@@ -324,7 +324,7 @@ WHERE
      */
     public function delete_translation_multiple($trad_ids = array(),$IdOwner, $lang_id)
     {
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         $count=0 ;
         foreach ($trad_ids as $trad_id){
             $words->deleteMTrad($trad_id, $IdOwner, $lang_id);
@@ -540,7 +540,7 @@ WHERE
     {
         $return = true;
         $commentRecipient = $this->createEntity('Member', $vars['IdMember']);
-        $commentSender = $this->createEntity('Member', $_SESSION['IdMember']);
+        $commentSender = $this->createEntity('Member', $this->_session->get('IdMember'));
         // Mark if an admin's check is needed for this comment (in case it is "bad")
         $AdminAction = "NothingNeeded";
         if ($vars['Quality'] == "Bad") {
@@ -585,7 +585,7 @@ INSERT INTO
     )
     values (
         " . $vars['IdMember'] . ",
-        " . $_SESSION['IdMember'] . ",
+        " . $this->_session->get('IdMember') . ",
         '" . $LenghtComments . "','" . $vars['Quality'] . "',
         '" . $this->dao->escape($vars['TextWhere']) . "',
         '" . $this->dao->escape($vars['TextFree']) . "',
@@ -611,7 +611,7 @@ UPDATE
 SET
     AdminAction='" . $AdminAction . "',
     IdToMember=" . $vars['IdMember'] . ",
-    IdFromMember=" . $_SESSION['IdMember'] . ",
+    IdFromMember=" . $this->_session->get('IdMember') . ",
     Lenght='" . $LenghtComments . "',
     Quality='" . $vars['Quality'] . "',
     TextWhere='" . $this->dao->escape($vars['TextWhere']) . "',
@@ -635,7 +635,7 @@ WHERE
             $c_add = ($vars['Quality'] == "Bad") ? '_bad' : '';
             $note = array(
                 'IdMember' => $vars['IdMember'],
-                'IdRelMember' => $_SESSION['IdMember'],
+                'IdRelMember' => $this->_session->get('IdMember'),
                 'Type' => 'profile_comment' . $c_add,
                 'Quality' => $vars['Quality'],
                 'commentText' => $vars['TextFree'],
@@ -659,9 +659,9 @@ WHERE
     public function addRelation(&$vars)
     {
         $return = true;
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         $mReceiver=
-        $TData= $this->singleLookup("select * from specialrelations where IdRelation=".$vars["IdRelation"]." and IdOwner=".$_SESSION["IdMember"]);
+        $TData= $this->singleLookup("select * from specialrelations where IdRelation=".$vars["IdRelation"]." and IdOwner=".$this->_session->get("IdMember"));
         $mReceiver=$this->getMemberWithId($vars["IdRelation"]) ;
 
         if (!isset ($TData->id) ) {
@@ -675,7 +675,7 @@ INSERT INTO
         created
     )
     values (
-        ".$_SESSION["IdMember"].",
+        ".$this->_session->get("IdMember").",
         ".$vars['IdRelation'].",
         '".stripslashes($vars['stype'])."',
         ".$words->InsertInMTrad($this->dao->escape($vars['Comment']),"specialrelations.Comment",0).",
@@ -688,7 +688,7 @@ INSERT INTO
         } else $return = false;
         if ($return != false) {
             // Create a note (member-notification) for this action
-            $note = array('IdMember' => $vars['IdRelation'], 'IdRelMember' => $_SESSION['IdMember'], 'Type' => 'relation', 'Link' => 'members/'.$vars['IdOwner'].'/relations/add','WordCode' => 'Notify_relation_new');
+            $note = array('IdMember' => $vars['IdRelation'], 'IdRelMember' => $this->_session->get('IdMember'), 'Type' => 'relation', 'Link' => 'members/'.$vars['IdOwner'].'/relations/add','WordCode' => 'Notify_relation_new');
             $noteEntity = $this->createEntity('Note');
             $noteEntity->createNote($note);
         }
@@ -699,8 +699,8 @@ INSERT INTO
     public function updateRelation(&$vars)
     {
         $return = true;
-        $words = new MOD_words($this->getSession());
-        $TData= $this->singleLookup("select * from specialrelations where IdRelation=".$vars["IdRelation"]." and IdOwner=".$_SESSION["IdMember"]);
+        $words = new MOD_words();
+        $TData= $this->singleLookup("select * from specialrelations where IdRelation=".$vars["IdRelation"]." and IdOwner=".$this->_session->get("IdMember"));
         $mReceiver=$this->getMemberWithId($vars["IdRelation"]) ;
         if (isset ($TData->id)) {
             $str = "
@@ -710,7 +710,7 @@ SET
     Type = '".stripslashes($vars['stype'])."',
     Comment = ".$words->InsertInMTrad($this->dao->escape($vars['Comment']),"specialrelations.Comment",0)."
 WHERE
-    IdOwner = ".$_SESSION["IdMember"]." AND
+    IdOwner = ".$this->_session->get("IdMember")." AND
     IdRelation = ".$vars['IdRelation']."
             ";
             $qry = $this->dao->query($str);
@@ -719,7 +719,7 @@ WHERE
         } else $return = false;
         if ($return != false) {
             // Create a note (member-notification) for this action
-            $note = array('IdMember' => $vars['IdRelation'], 'IdRelMember' => $_SESSION['IdMember'], 'Type' => 'relation', 'Link' => 'members/'.$vars['IdOwner'].'/relations/add','WordCode' => 'Notify_relation_update');
+            $note = array('IdMember' => $vars['IdRelation'], 'IdRelMember' => $this->_session->get('IdMember'), 'Type' => 'relation', 'Link' => 'members/'.$vars['IdOwner'].'/relations/add','WordCode' => 'Notify_relation_update');
             $noteEntity = $this->createEntity('Note');
             $noteEntity->createNote($note);
         }
@@ -854,11 +854,12 @@ WHERE
     public function checkMyPreferences(&$vars)
     {
         $errors = array();
-        $member = $this->createEntity('Member', $_SESSION['IdMember']);
+        $member = $this->createEntity('Member', $this->_session->get('IdMember'));
 
         // Password Check
         if (isset($vars['passwordnew']) && $vars['passwordnew'] != '') {
-        $query = "select id from members where id=" . $_SESSION['IdMember'] . " and PassWord=PASSWORD('" . $member->preparePassword($vars['passwordold']) . "')";            $qry = $this->dao->query($query);
+        $query = "select id from members where id=" . $this->_session->get('IdMember') . " and PassWord=PASSWORD('" . $member->preparePassword($vars['passwordold']) . "')";
+            $qry = $this->dao->query($query);
             $rr = $qry->fetch(PDB::FETCH_OBJ);
             if (!$rr || !array_key_exists('id', $rr))
                 $errors[] = 'ChangePasswordInvalidPasswordError';
@@ -1065,13 +1066,13 @@ ORDER BY
      */
     public function updateProfile(&$vars)     {
         $IdMember = (int)$vars['memberid'];
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         $rights = new MOD_right();
         $m = $vars['member'];
 
         // fantastic ... love the implementation. Fake
         $CanTranslate = false;
-        // $CanTranslate = CanTranslate($vars["memberid"], $_SESSION['IdMember']);
+        // $CanTranslate = CanTranslate($vars["memberid"], $this->_session->get('IdMember'));
         $ReadCrypted = "MemberReadCrypted"; // This might be changed in the future
         if ($rights->hasRight('Admin') || $rights->hasRight('SafetyTeam') /* or $CanTranslate */) { // admin or CanTranslate can alter other profiles
             $ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
@@ -1275,7 +1276,7 @@ ORDER BY
                 $this->avatarMake($vars['memberid'],$_FILES['profile_picture']['tmp_name']);
         }
 
-        if ($IdMember == $_SESSION['IdMember'])
+        if ($IdMember == $this->_session->get('IdMember'))
         {
             $this->logWrite("Profile update by member himself [Status={$m->Status}]", "Profile update");
         }
@@ -1392,7 +1393,7 @@ ORDER BY
         $toMember = $this->createEntity('Member', $note['IdMember']);
 
         if ($fromMember && $toMember) {
-            $words = new MOD_words($this->getSession());
+            $words = new MOD_words();
             $commentsUrl = PVars::getObj('env')->baseuri . $note['Link'];
             $replyUrl = PVars::getObj('env')->baseuri . $note['replyLink'];
             $reportUrl = PVars::getObj('env')->baseuri . $note['reportLink'];

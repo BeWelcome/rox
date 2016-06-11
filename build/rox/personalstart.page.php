@@ -31,9 +31,9 @@ class PersonalStartpage extends PageWithRoxLayout
     }
 
     protected function getPageTitle() {
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         if ($this->_session->has( 'Username' )) {
-            return $words->getSilent('HelloUsername',$_SESSION['Username']) . ' | BeWelcome';
+            return $words->getSilent('HelloUsername',$this->_session->get('Username')) . ' | BeWelcome';
         } else {
             // this should not happen actually!
             return $words->getSilent('WelcomeGuest');
@@ -55,7 +55,7 @@ class MailboxWidget_Personalstart extends MailboxWidget_Received
             // not logged in - no messages
             return array();
         } else {
-            $member_id = $_SESSION['IdMember'];
+            $member_id = $this->_session->get('IdMember');
             $sort_string = '(case when unixtime_whenfirstread = 0 then 1 else 0 end) desc, unixtime_datesent desc, senderusername desc';
             return $this->model->filteredMailbox('messages.IdReceiver = '.$member_id.' AND messages.Status = "Sent" AND messages.InFolder = "Normal" AND NOT DeleteRequest LIKE "receiverdeleted"',$sort_string);
         }
@@ -69,7 +69,7 @@ class MailboxWidget_Personalstart extends MailboxWidget_Received
 
     protected function showListItem($message, $i_row)
     {
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         extract(get_object_vars($message));
         $readstyle = '';
         if ($message->unixtime_WhenFirstRead == false) $readstyle = 'message unread';

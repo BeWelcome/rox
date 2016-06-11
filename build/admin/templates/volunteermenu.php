@@ -39,7 +39,7 @@ Boston, MA  02111-1307, USA.
     if (count($request) > 1) {
         $link = $request[0] . '/' . $request[1];
     }
-    $words = new MOD_words($this->getSession());
+    $words = new MOD_words();
 
     echo '<ul class="dropdown-menu">';
     echo '<li><a href="volunteer">'. $words->get("VolunteerpageLink") . '</a></li>';

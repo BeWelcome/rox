@@ -20,7 +20,7 @@ class GalleryImageNotFoundPage extends GalleryImagePage
     }
     
     protected function column_col3() {
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         ?>
         <p class=" error"><?php echo $words->getFormatted('GalleryImageNotFoundText'); ?></p>
         <?php

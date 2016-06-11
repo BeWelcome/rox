@@ -7,13 +7,13 @@ require_once "layout/menus.php";
 
 function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
 	if ($_IdMember == 0) { // by default it is current member
-		$IdMember = $_SESSION['IdMember'];
+		$IdMember = $this->_session->get('IdMember');
 	} else {
 		$IdMember = $_IdMember;
 	}
 
 	if ($_IdLanguage == -1)
-		$IdLanguage = $_SESSION['IdLanguage'];
+		$IdLanguage = $this->_session->get('IdLanguage');
 	else
 		$IdLanguage = $_IdLanguage;
 
@@ -28,7 +28,7 @@ function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage 
 	}
 
 	$IdOwner = $IdMember;
-	$IdTranslator = $_SESSION['IdMember']; // the recorded translator will always be the current logged member
+	$IdTranslator = $this->_session->get('IdMember'); // the recorded translator will always be the current logged member
 	$Sentence = str_replace("\\","",$ss);
 	$str = "insert into forum_trads(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
 	$str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . addslashes($Sentence) . "\",now())";
@@ -38,16 +38,16 @@ function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage 
 
 function ReplaceInFTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
 	if ($IdOwner == 0) {
-		$IdMember = $_SESSION['IdMember'];
+		$IdMember = $this->_session->get('IdMember');
 	} else {
 		$IdMember = $IdOwner;
 	}
 	//  echo "in ReplaceInMTrad \$ss=[".$ss."] \$IdTrad=",$IdTrad," \$IdOwner=",$IdMember,"<br />";
-	$IdLanguage = $_SESSION['IdLanguage'];
+	$IdLanguage = $this->_session->get('IdLanguage');
 	if ($IdTrad == 0) {
 		return (InsertInFTrad($ss,$TableColumn,$IdRecord, $IdMember)); // Create a full new translation
 	}
-	$IdTranslator = $_SESSION['IdMember']; // the recorded translator will always be the current logged member
+	$IdTranslator = $this->_session->get('IdMember'); // the recorded translator will always be the current logged member
 	$str = "select * from forum_trads where IdTrad=" . $IdTrad . " and IdLanguage=" . $IdLanguage;
 	$rr = LoadRow($str);
 	if (!isset ($rr->id)) {
@@ -69,8 +69,8 @@ MustLogIn(); // Need to be logged
 require_once "layout/header.php";
 
 // It is always to consider that dbmaintenance works in english
-$this->getSession->set( 'lang', CV_def_lang )
-$this->getSession->set( 'IdLanguage', 0 ) // force English for menu
+$this->_session->set( 'lang', CV_def_lang )
+$this->_session->set( 'IdLanguage', 0 ) // force English for menu
 
 
 

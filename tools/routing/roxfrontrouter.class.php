@@ -10,6 +10,7 @@ class RoxFrontRouter
 
     public function __construct()
     {
+        $this->setSession();
         $this->router = new RequestRouter();
         $this->args = $this->router->getRequestAndArgs();
     }
@@ -102,7 +103,7 @@ class RoxFrontRouter
 	*/
     public function setLanguage()
     {
-        if (!isset ($_SESSION['lang']) ) {
+        if (!($this->_session->has('lang')) ) {
             $Model = new RoxFrontRouterModel;
             
             $tt=explode(".",$_SERVER['HTTP_HOST']) ;
@@ -296,10 +297,10 @@ class RoxFrontRouter
     {
         if (!$this->_session->has( 'PostHandler' )) {
             // do nothing
-        } else if (!is_a($this->try_unserialize($_SESSION['PostHandler']), 'PPostHandler')) {
-            // the $_SESSION['PostHandler'] got damaged.
+        } else if (!is_a($this->try_unserialize($this->_session->get('PostHandler')), 'PPostHandler')) {
+            // the $this->_session->get('PostHandler') got damaged.
             // a reset can repair it.
-            unset($_SESSION['PostHandler']);
+            $this->_session->remove('PostHandler');
         }
         // traditional posthandler
         PPostHandler::get();
@@ -460,7 +461,7 @@ A TERRIBLE EXCEPTION
         $layoutkit = new Layoutkit();
         $layoutkit->formkit = $formkit;
         $layoutkit->mem_from_redirect = $this->memory_from_redirect;
-        $layoutkit->words = new MOD_words($this->getSession());
+        $layoutkit->words = new MOD_words();
         
         return $layoutkit;
     }

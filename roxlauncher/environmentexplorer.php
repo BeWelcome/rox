@@ -8,18 +8,10 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class EnvironmentExplorer
 {
-    /** @var \Symfony\Component\HttpFoundation\Session\Session */
-    private $_session = null;
+    use \Rox\RoxTraits\SessionTrait;
 
-    public function __construct(SessionInterface $session) {
-        $this->_session = $session;
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Session\SessionInterface
-     */
-    public function getSession() {
-        return $this->_session;
+    public function __construct() {
+        $this->setSession();
     }
 
     public function initializeGlobalState()
@@ -376,7 +368,7 @@ class EnvironmentExplorer
         // This parameter if set to True will force each call to HasRight to look in
         // the database, this is usefull when a right is update to force it to be used
         // immediately, of course in the long run it slow the server
-        $_SYSHCVOL['ReloadRight'] = 'False'; // Deprecated use ($_SESSION['Param']->ReloadRightsAndFlags instead
+        $_SYSHCVOL['ReloadRight'] = 'False'; // Deprecated use ($this->_session->get('Param')->ReloadRightsAndFlags instead
 
         // This parameter if the name of the database with (a dot) where are stored crypted data, there is no cryptation it it is left blank
         $_SYSHCVOL['Crypted'] = $_SYSHCVOL['CRYPT_DB'].'.';
@@ -451,10 +443,10 @@ class EnvironmentExplorer
 //         // but so far I don't know a better one.
 //         if (!$this->_session->has( 'lang' ) || !$this->_session->has( 'IdLanguage' ) {
 //             // normally either none or both of them are set.
-//             $this->getSession->set( 'lang', 'en' )
-//             $this->getSession->set( 'IdLanguage', 0 )
+//             $this->_session->set( 'lang', 'en' )
+//             $this->_session->set( 'IdLanguage', 0 )
 //         }
-//         PVars::register('lang', $_SESSION['lang']);
+//         PVars::register('lang', $this->_session->get('lang'));
     }
 
 
@@ -488,7 +480,7 @@ class EnvironmentExplorer
         // extensions mechanism
 
         $autoload_folders = array();
-        if (!$this->_session->has($_SESSION['extension_folders'])) {
+        if (!$this->_session->has($this->_session->get('extension_folders'))) {
             // nothing
         } else if (!is_string($ext_dirs_encoded = $this->_session->get('extension_folders'))) {
             // nothing

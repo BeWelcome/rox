@@ -41,11 +41,11 @@ if (isset($argv[1])) {
 }
 
 if (isset($argv[2])) {
-   $_SESSION["lang"]=$argv[2] ;
+   $this->_session->get("lang"]=$argv[2) ;
 }
 
 if (isset($argv[3])) {
-   $_SESSION["IdLanguage"]=$argv[3] ;
+   $this->_session->get("IdLanguage"]=$argv[3) ;
 }
 
 switch (GetParam("action")) {
@@ -105,10 +105,10 @@ switch (GetParam("action")) {
 		while ($rWhile = mysql_fetch_object($qry)) {
 			$qrylang=sql_query($strlang) ;
 			while ($rlang = mysql_fetch_object($qrylang)) {
-						$_SESSION["lang"]=$rlang->lang ;
-						$_SESSION["IdLanguage"]=$rlang->IdLanguage ;
+						$this->_session->get("lang")=$rlang->lang ;
+						$this->_session->get("IdLanguage")=$rlang->IdLanguage ;
 
-			 			$ss = "SELECT code FROM words WHERE code=\"FaqA_" . $rWhile->QandA."\" AND IdLanguage=".$_SESSION["IdLanguage"] ;
+			 			$ss = "SELECT code FROM words WHERE code=\"FaqA_" . $rWhile->QandA."\" AND IdLanguage=".$this->_session->get("IdLanguage") ;
 			 			$rFak=LoadRow($ss) ;
 						if (empty($rFak->code)) continue ;
 
@@ -118,7 +118,7 @@ switch (GetParam("action")) {
 			   			 die("Can't create $fname\n") ;
 						}
 						fwrite($fp,"<?php\n") ;
-						fwrite($fp,"\$IdFaq=".$rWhile->id.";\$lang=\"".$_SESSION['lang']."\";require_once \"publicfaq.php\";\n") ;
+						fwrite($fp,"\$IdFaq=".$rWhile->id.";\$lang=\"".$this->_session->get('lang')."\";require_once \"publicfaq.php\";\n") ;
 						fwrite($fp,"?>\n") ;
 						fclose($fp) ;
 						echo "done for $fname<br />" ;
@@ -162,7 +162,7 @@ switch (GetParam("action")) {
                                     ('FaqQ_" . GetStrParam("QandA") . "',
                                      'This is the questiontext for a Frequently Asked Question.',
                                      0,
-                                     '".$_SESSION['lang']."',
+                                     '".$this->_session->get('lang')."',
                                      NOW())";
 			sql_query($str);
 		}
@@ -177,7 +177,7 @@ switch (GetParam("action")) {
                                     ('FaqA_" . GetStrParam("QandA") . "',
                                      'This is the answertext for a Frequently Asked Question.',
                                      0,
-                                     '".$_SESSION['lang']."',
+                                     '".$this->_session->get('lang')."',
                                      NOW())";
 			sql_query($str);
 		}

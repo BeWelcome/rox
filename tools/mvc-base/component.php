@@ -1,12 +1,12 @@
 <?php
 
 
-use Symfony\Component\HttpFoundation\Session\Session;
-
 class RoxComponentBase
 {
+    use Rox\RoxTraits\SessionTrait;
+
     function __construct() {
-        // nothing..
+        $this->setSession();
     }
     
     
@@ -19,9 +19,6 @@ class RoxComponentBase
     // Anyway, PHP doc says that __get and __set are always public.
     private $_parameters = array();  // injected parameters
     private $_cache = array();  // cache for __get methods
-    
-    /** @var \Symfony\Component\HttpFoundation\Session\Session  */
-    private $_session = null;
     
     function __call($key, $args)
     {
@@ -142,15 +139,6 @@ class RoxComponentBase
             $version = "0000000";
         }
         return $version;
-    }
-    
-    public function setSession(Session $session) {
-        $this->_session = $session;
-    }
-    
-    protected function getSession()
-    {
-        return $this->_session;
     }
 }
 

@@ -18,16 +18,6 @@ class InteractiveLoginListener implements EventSubscriberInterface
 {
     public function onInteractiveLogin(InteractiveLoginEvent $event)
     {
-        $token = $event->getAuthenticationToken();
-        $user = $token->getUser();
-        $credentials = $token->getCredentials();
-        $session = $event->getRequest()->getSession();
-        $session->set('username', $user->getUsername());
-        $session->set('id', $user->id);
-        $cryptKey = crypt($credentials['password'], 'rt');
-        $session->set('cryptkey', $cryptKey);
-        $session->set('logcheck', Crc32($cryptKey . $user->id));
-        $session->set('status', $user->Status);
     }
 
     public static function getSubscribedEvents()

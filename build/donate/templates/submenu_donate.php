@@ -22,7 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
 
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 ?>
           <ul class="nav nav-pills nav-justifiedmedia submenu"> 
             <li id="sub1" class="<?php echo ($sub!=='list' ? 'active-bw' : 'disabled');?>">

@@ -56,11 +56,11 @@ class MOD_online
         $update_interval = $this->online_interval * 60 / 8;
         if (!$this->_session->has( 'last_online_counter_update_time' )) {
             // new session, so need an update
-        } else if ($_SESSION['last_online_counter_update_time'] + $update_interval < $time) {
+        } else if ($this->_session->get('last_online_counter_update_time') + $update_interval < $time) {
             // last update is more than one minute ago, so need a new one
         } else if (!$this->_session->has( 'last_online_counter_update_member_id' ) && $member_id) {
             // just logged in, so needs update
-        } else if ($_SESSION['last_online_counter_update_member_id'] != $member_id) {
+        } else if ($this->_session->get('last_online_counter_update_member_id') != $member_id) {
             // logged in as someone else? or already logged out?
             // need an update!
         } else {
@@ -68,8 +68,8 @@ class MOD_online
             return;
         }
         
-        $this->getSession->set( 'last_online_counter_update_member_id', $member_id );
-        $this->getSession->set( 'last_online_counter_update_time', $time );
+        $this->_session->set( 'last_online_counter_update_member_id', $member_id );
+        $this->_session->set( 'last_online_counter_update_time', $time );
         if (!$member_id) {
             // not logged in
             $this->_guestIsOnline($ip);
@@ -111,9 +111,9 @@ WHERE IpGuest = $ip
             "
         );
         
-        $IdMember = $_SESSION['IdMember'];
-        $appearance = $this->dao->escape($_SESSION['Username']);
-        $Status = $_SESSION['Status'];
+        $IdMember = $this->_session->get('IdMember');
+        $appearance = $this->dao->escape($this->_session->get('Username'));
+        $Status = $this->_session->get('Status');
         
         $this->dao->query(
             "
@@ -145,10 +145,10 @@ FROM params
             if ($this->howManyMembersOnline() > $row->recordonline) {
                 // more members than ever before are online!!
                 MOD_log::get()->write(
-                   'New record established, '.$_SESSION['WhoIsOnlineCount'].' members online!',
+                   'New record established, '.$this->_session->get('WhoIsOnlineCount').' members online!',
                    'Record'
                 );
-                $recordonline = $_SESSION['WhoIsOnlineCount'];
+                $recordonline = $this->_session->get('WhoIsOnlineCount');
                 $this->dao->query(
                     "
 UPDATE params

@@ -43,7 +43,7 @@ if (empty($vars)) {
     $vars['donate-country'] = $this->countrycode;
 }
 
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 ?>
 <form method="post" class="yform full">
 <?php echo $callback_tag; 
@@ -80,7 +80,7 @@ if (!empty($errors))
             /*<[CDATA[*/
             var datepicker	= new DatePicker({
             relative	: 'donate-date',
-            language	: '<?=$this->_session->has( 'lang' ) ? $_SESSION['lang'] : 'en'?>',
+            language	: '<?=$this->_session->has( 'lang' ) ? $this->_session->get('lang') : 'en'?>',
             current_date : '', 
             topOffset   : '25',
             relativeAppend : false

@@ -14,7 +14,7 @@ class RssController extends RoxControllerBase
     public function index($args = false)
     {
         // First check if the feature is closed
-        if ($_SESSION["Param"]->RssFeedIsClosed!='No') {
+        if ($this->_session->get("Param")->RssFeedIsClosed!='No') {
             PPHP::PExit(); // To do find a better exit
             break ;
         } // end of test "if feature is closed" 

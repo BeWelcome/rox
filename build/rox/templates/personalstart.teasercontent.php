@@ -26,7 +26,7 @@ Boston, MA  02111-1307, USA.
 <div id="teaser" class="page-teaser clearfix">
     <div class="bw-row">
         <?echo $thumbPathMember;?>
-        <div><h1>&nbsp&nbsp<?=$words->getSilent('HelloUsername',$_SESSION['Username'])?></h1></div>
+        <div><h1>&nbsp&nbsp<?=$words->getSilent('HelloUsername',$this->_session->get('Username'))?></h1></div>
     </div>
     <div class="subcolumns" style="margin-bottom: 2em">
         <div class="c33l">
@@ -48,7 +48,7 @@ Boston, MA  02111-1307, USA.
         <div class="c66r">
             <div class="tab-content">
 
-                <div class="tab-pane <?php echo ($this->_session->has( 'Param' ) && ($_SESSION['Param']->ToggleDonateBar)) ? '' : ' active' ?>" id="tab1">
+                <div class="tab-pane <?php echo ($this->_session->has( 'Param' ) && ($this->_session->get('Param')->ToggleDonateBar)) ? '' : ' active' ?>" id="tab1">
                     <?php
                     $notify_widget->render();
                     ?>
@@ -92,7 +92,7 @@ Boston, MA  02111-1307, USA.
                     </div> <!-- subclumns -->
                 </div> <!-- tab2 -->
 
-                <div class="tab-pane <?php echo ($this->_session->has( 'Param' ) && ($_SESSION['Param']->ToggleDonateBar)) ? ' active ' : '' ?>" id="tab3">
+                <div class="tab-pane <?php echo ($this->_session->has( 'Param' ) && ($this->_session->get('Param')->ToggleDonateBar)) ? ' active ' : '' ?>" id="tab3">
 
                     <div class="subcolumns">
                         <div class="c50l">

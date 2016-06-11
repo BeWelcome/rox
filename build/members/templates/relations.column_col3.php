@@ -1,5 +1,5 @@
 <?php
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 $member = $this->member;
 $relations = $member->relations;

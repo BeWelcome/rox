@@ -25,9 +25,9 @@ chdir("..") ;
 require_once "lib/init.php";
 require_once "layout/header.php";
 
-$lang = $_SESSION['lang']; // save session language
-$this->getSession->set( 'lang', CV_def_lang )
-$this->getSession->set( 'IdLanguage', 0 ) // force English for menu
+$lang = $this->_session->get('lang'); // save session language
+$this->_session->set( 'lang', CV_def_lang )
+$this->_session->set( 'IdLanguage', 0 ) // force English for menu
 
 $Schema="BW_MAIN" ;
 $Schema="bewelcome" ;

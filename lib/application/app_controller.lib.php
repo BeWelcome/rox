@@ -24,6 +24,8 @@
  */
 abstract class PAppController implements PApplication 
 {
+    use \Rox\RoxTraits\SessionTrait;
+
     /**
      * The database access object
      * 
@@ -45,6 +47,7 @@ abstract class PAppController implements PApplication
         }
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $this->dao =& $dao;
+        $this->setSession();
     }
     
     /**

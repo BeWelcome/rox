@@ -33,7 +33,7 @@ Boston, MA  02111-1307, USA.
 $layoutbits = new MOD_layoutbits;
 $formkit = $this->layoutkit->formkit;
 $callback_tag = $formkit->setPostCallback('AdminWordController', 'showListCallback');
-$this->words = new MOD_words($this->getSession());
+$this->words = new MOD_words();
 
 
 if ($this->noScope){

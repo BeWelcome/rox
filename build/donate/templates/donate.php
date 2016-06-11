@@ -1,5 +1,5 @@
 <?php
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 ?>
 
 <?php if ($sub == 'done') {
@@ -79,7 +79,7 @@ if ($error) {?>
 						<input type="hidden" name="no_shipping" value="1" />
 						<input type="hidden" name="lc" value="<?php
 						if ($this->_session->has( "lang" ) ) {
-							switch ($_SESSION["lang"]){
+							switch ($this->_session->get("lang")){
 								case 'fr' :
 									echo "FR" ;
 									break ;

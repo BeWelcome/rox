@@ -10,7 +10,7 @@ class AddRelationPage extends RelationsPage
 
     protected function column_col3()
     {
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         $member = $this->member;
         $layoutkit = $this->layoutkit;
         $formkit = $layoutkit->formkit;
@@ -33,7 +33,7 @@ class AddRelationPage extends RelationsPage
         <form method="post" action="<?=$page_url?>" name="relation" id="relation" enctype="multipart/form-data">
         <fieldset>
             <input type="hidden"  name="IdRelation"  value="<?=$member->id?>" />
-            <input type="hidden"  name="IdOwner"  value="<?=$_SESSION['IdMember']?>" />
+            <input type="hidden"  name="IdOwner"  value="<?=$this->_session->get('IdMember')?>" />
             <?=$callback_tag?>
             <legend><?=$words->get($action.'Relation')?></legend>
             <p><?=$words->get('MyRelationListExplanation',$member->Username,$member->Username)?></p>

@@ -31,17 +31,12 @@ class AboutFaqsectionPage extends AboutFaqPage
     {
         echo $this->ww->AboutFAQ;
     }
-    
+
     protected function column_col3()
     {
         $words = $this->getWords();
         $req = $_SERVER['REQUEST_URI'];
-        if ($this->_session->has( "IdLanguage" )) {
-            $IdLanguage=$_SESSION["IdLanguage"] ;
-        }
-        else {
-            $IdLanguage=0 ;
-        }
+        $IdLanguage = $this->_session->get( "IdLanguage", 0 );
         echo '<h2>'.$words->get($this->faq_section->Description).'</h2>
         <dl id="faqs">';
         foreach ($this->faq_section->faqs as $faq_key => &$faq) {
@@ -52,8 +47,9 @@ class AboutFaqsectionPage extends AboutFaqPage
 ?>
         </dl>
         <script type="text/javascript"><!--
-    jQuery("#faqs dd").hide();
-    jQuery("#faqs dt").click(function (e) {
+            var faqs = jQuery('#faqs');
+    faqs.find("dd").hide();
+    faqs.find("dt").click(function (e) {
         e.preventDefault();
         jQuery(this).next("#faqs dd").slideToggle(500);
         jQuery(this).toggleClass("expanded");

@@ -23,14 +23,10 @@ use \Twig_Environment;
 use \FlaglistModel;
 
 class TwigView extends AbstractBasePage {
-
     protected $_loader;
     private $_forms = array();
     private $_container;
     private $_request;
-
-    /** @var Session */
-    private $_session;
 
     private $_environment;
     private $_template;
@@ -62,9 +58,9 @@ class TwigView extends AbstractBasePage {
      * @param bool $container
      */
     public function __construct(Router $router, $container = true, Request $request = null) {
+        parent::__construct();
         $this->_container = $container;
         $this->_request = $request;
-        $this->_session = SessionSingleton::getSession();
         $this->_loader = new Twig_Loader_Filesystem();
         $this->addNamespace('base');
         $this->addNamespace('start');
@@ -90,7 +86,7 @@ class TwigView extends AbstractBasePage {
             $this->_translator->setFallbackLocales(array('en'));
         }
         $this->_translator->addLoader('database', new DatabaseLoader());
-        $this->_translator->addResource('database', null, $_SESSION['lang']);
+        $this->_translator->addResource('database', null, $this->_session->get('lang', 'en'));
         $this->_environment->addExtension(new TranslationExtension($this->_translator));
         $this->_environment->addExtension(new RoxTwigExtension());
 

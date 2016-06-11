@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 
 $words = $this->getWords();
 
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 $styles = array( 'highlight', 'blank' ); // alternating background for table rows
 $iiMax = count($list) ; // This retrieve the list of the verifierd
 $purifier = MOD_htmlpure::getBasicHtmlPurifier();

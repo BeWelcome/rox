@@ -43,7 +43,7 @@ class AdminWordController extends RoxControllerBase
     public function __construct(Session $session) {
         parent::__construct();
         $this->model = new AdminWordModel($session);
-        $this->words = new MOD_words($this->getSession());
+        $this->words = new MOD_words();
     }
 
     public function __destruct() {
@@ -127,7 +127,7 @@ class AdminWordController extends RoxControllerBase
         // get the flash notice/error
         list($type,$msg) = $this->getResultMsg($res,$args->post['EngCode'],$args->post['lang']);
         $this->$type($msg);
-        unset($_SESSION['form']);
+        $this->_session->remove('form');
         return $this->router->url('admin_word_create', array(), false);
     }
 
@@ -141,11 +141,11 @@ class AdminWordController extends RoxControllerBase
     public function editCode(){
         $page = new AdminWordEditCodePage();
         $page->nav = $this->getNavigationData();
-        $page->data = $this->model->getTranslationData('edit',$page->nav['shortcode'],$_SESSION['form']['EngCode']);
-        $wcexist = $this->model->wordcodeExist($_SESSION['form']['EngCode'],'en');
+        $page->data = $this->model->getTranslationData('edit',$page->nav['shortcode'],$this->_session->get('form']['EngCode'));
+        $wcexist = $this->model->wordcodeExist($this->_session->get('form']['EngCode'),'en');
         $page->status = ($wcexist->cnt == 0?'AdminWordCreateCodeMsg':'AdminWordUpdateCodeMsg');
         
-        if ($this->model->getEngSentByCode($_SESSION['form']['EngCode']) == $_SESSION['form']['Sentence']){
+        if ($this->model->getEngSentByCode($this->_session->get('form']['EngCode']) == $_SESSION['form']['Sentence')){
             $page->status = 'AdminWordUpdateCodeParsMsg';
         }
         
@@ -175,7 +175,7 @@ class AdminWordController extends RoxControllerBase
             $this->$type($msg);
             break;
         case 'Back' :
-            $this->getSession->set( 'form[Sentence]', $args->post['Sentence'] );
+            $this->_session->set( 'form[Sentence]', $args->post['Sentence'] );
             break;
         }
         return $this->router->url('admin_word_editlang',
@@ -217,12 +217,12 @@ class AdminWordController extends RoxControllerBase
                 }
             }
         }
-        $this->getSession->set( 'trData', $this->model->getFindData($searchparams) );
-        foreach($_SESSION['trData'] as $key => $item){
+        $this->_session->set( 'trData', $this->model->getFindData($searchparams) );
+        foreach($this->_session->get('trData') as $key => $item){
             if ($this->checkScope($this->wordrights['Words']['Scope'],$item->TrShortcode)){
-                $_SESSION['trData'][$key]->inScope = true;
+                $this->_session->get('trData'][$key)->inScope = true;
             } else {
-                $_SESSION['trData'][$key]->inScope = false;
+                $this->_session->get('trData'][$key)->inScope = false;
             }
         }
         return false;
@@ -280,7 +280,7 @@ class AdminWordController extends RoxControllerBase
         if (!$nav = $this->baseCallback($args,$mem_redirect,'editTranslation')){return false;}
         if (isset($args->post['submitBtn'])){
             if ($args->post['lang']=='en'
-                    && !($this->model->getEngSentByCode($_SESSION['form']['EngCode']) == $_SESSION['form']['Sentence']
+                    && !($this->model->getEngSentByCode($this->_session->get('form']['EngCode']) == $_SESSION['form']['Sentence')
                             && $nav['level']<10)
                 ){
                 // dont do this if translation is equal to db and no admin rights
@@ -304,7 +304,7 @@ class AdminWordController extends RoxControllerBase
             $this->$type($msg);
         }
         if (isset($args->post['findBtn'])){
-            unset($_SESSION['form']);
+            $this->_session->remove('form');
             return $this->router->url('admin_word_editlang',
                 array('wordcode'=>$args->post['EngCode'],
                       'shortcode'=>$args->post['lang']), false);
@@ -400,13 +400,13 @@ class AdminWordController extends RoxControllerBase
             if (isset($vars[$field])){
                 $formdata[$field] = $vars[$field];
             } elseif ($this->_session->has( 'form[' . $field . ']')){
-                $formdata[$field] = $_SESSION['form'][$field];
+                $formdata[$field] = $this->_session->get('form'][$field);
             } elseif (isset($this->data->$field)) {
                 $formdata[$field] = $this->data->$field;
             } else {
                 $formdata[$field] = '';
             }
-            unset ($_SESSION['form'][$field]);
+            unset ($this->_session->get('form'][$field));
         }
         if ($formdata['lang']==''){
             if (isset($vars['shortcode'])){
@@ -486,8 +486,8 @@ class AdminWordController extends RoxControllerBase
         $rights = MOD_right::get();
         $nav = array();
         // get the base language from the session
-        $nav['idLanguage'] = (int)$_SESSION['IdLanguage'];
-        $nav['shortcode'] = $_SESSION['lang'];
+        $nav['idLanguage'] = (int)$this->_session->get('IdLanguage');
+        $nav['shortcode'] = $this->_session->get('lang');
         // translated full text of user language
         $nav['currentLanguage'] = $this->words->get('lang_'.$nav['shortcode']);
         // array of objects with scope languages
@@ -521,7 +521,7 @@ class AdminWordController extends RoxControllerBase
         if (empty($args->post)) {return false;}
         // set posted variables in the session
         foreach ($args->post as $key => $postvar){
-            $this->getSession->set( 'form[' . $key . ']', $postvar );
+            $this->_session->set( 'form[' . $key . ']', $postvar );
         }
         $errors = $this->model->{$type.'FormCheck'}($args->post);
         if (!empty($errors)) {

@@ -77,7 +77,7 @@ class GeoView extends PAppView {
     */
     public function GeoDisplayLocation($name)
     {
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
 		$data=$this->_model->loadLocation($name) ;
         require 'templates/displaylocation.php';
         return '';
@@ -90,7 +90,7 @@ class GeoView extends PAppView {
     */
     public function generateLocationOverview($locations, $activities = false)
     {
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         $out = '';
         $add_out = '';
         if ($locations) {
@@ -185,7 +185,7 @@ class GeoView extends PAppView {
     */
     public function generateLocationOverviewNoJs($locations, $callbacktag)
     {
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
         $out = '';
         $add_out = '';
@@ -244,7 +244,7 @@ class GeoView extends PAppView {
     }
     
     public function admin() {
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         require 'templates/geoadmin.php';
         $out = '';
         return $out;

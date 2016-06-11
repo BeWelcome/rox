@@ -88,10 +88,10 @@ class SignupPage extends SignupBasePage
 
         // Overwrite Signup-Geo-Info with GeoVars-Session (used for non-js users), afterwards unset it again.
         if ($this->_session->has( 'GeoVars' )) {
-            foreach ($_SESSION['GeoVars'] as $key => $value) {
-            $this->getSession->set( 'SignupBWVars[' . $key . ']', $value );
+            foreach ($this->_session->get('GeoVars') as $key => $value) {
+            $this->_session->set( 'SignupBWVars[' . $key . ']', $value );
             }
-            unset($_SESSION['GeoVars']);
+            $this->_session->remove('GeoVars');
         }
 
         // values from previous form submit
@@ -100,7 +100,7 @@ class SignupPage extends SignupBasePage
         } else {
             if ($this->_session->has( 'SignupBWVars' )) {
                 // we have vars stored already
-                $vars = $_SESSION['SignupBWVars'];
+                $vars = $this->_session->get('SignupBWVars');
             } else {
                 $vars = $mem_redirect->post;
             }

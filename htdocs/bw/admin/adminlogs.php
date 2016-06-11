@@ -40,7 +40,7 @@ if ($cid != 0) {
 }
 
 if (HasRight('Logs','OwnLogsRestriction') and !(HasRight('Logs','"All"'))) {
-	$cid = $_SESSION["IdMember"]; // Member with scope OwnLogsRestriction can only see his own rights
+	$cid = $this->_session->get("IdMember"); // Member with scope OwnLogsRestriction can only see his own rights
 	$username=fUsername($cid) ;
 }
 
@@ -82,7 +82,7 @@ if ($type != "") {
 if (!HasRight('Logs', "\"All\"")) {
 	$scope = RightScope("Logs");
 	str_replace($scope, "\"", "'");
-	$where .= " AND (Type IN (" . $scope . ") OR IdMember=" . $_SESSION["IdMember"] . ") ";
+	$where .= " AND (Type IN (" . $scope . ") OR IdMember=" . $this->_session->get("IdMember") . ") ";
 }
 
 switch (GetParam("action")) {

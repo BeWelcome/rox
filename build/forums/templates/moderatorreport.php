@@ -25,7 +25,7 @@ Boston, MA  02111-1307, USA.
 JeanYves notes : This is what is used to manage the report to moderators
 
 */
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 
 ?>
 <h3>Report to moderator</h3>

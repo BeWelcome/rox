@@ -15,8 +15,8 @@ function ewiki_auth_userdb_xprofile($username, $password) {
    global $ewiki_author;
    
    #-- already logged in
-   if ($_SESSION["xprofile"]) {
-      $ewiki_author = $_SESSION["ewiki_author"];
+   if ($this->_session->get("xprofile")) {
+      $ewiki_author = $this->_session->get("ewiki_author");
       return($true);
    }
 
@@ -28,8 +28,8 @@ function ewiki_auth_userdb_xprofile($username, $password) {
       if ($xpro->login() ) {
       
          #-- save data
-         $this->getSession->set( "ewiki_author", $ewiki_author = $xpro->info["nickname"] )
-         $this->getSession->set( "xprofile", $xpro->url )
+         $this->_session->set( "ewiki_author", $ewiki_author = $xpro->info["nickname"] )
+         $this->_session->set( "xprofile", $xpro->url )
       
          return(true);
       }

@@ -7,7 +7,7 @@ class ReplyMessagePage extends ComposeMessagePage
         $message = $this->message;
         // Sender becomes Receiver
         $message->receiverUsername = $message->senderUsername;
-        $message->senderUsername = $_SESSION['Username'];
+        $message->senderUsername = $this->_session->get('Username');
         $disabledTinyMce = $this->sender->getPreference("PreferenceDisableTinyMCE", $default = "No") == 'Yes';
         if ($disabledTinyMce) {
             $html2text = new Html2Text\Html2Text($message->Message, false, array('do_links' => 'inline',
@@ -22,7 +22,7 @@ class ReplyMessagePage extends ComposeMessagePage
         }
         $contact_username = $message->senderUsername;
         $direction_in = true;
-        if ($contact_username == $_SESSION['Username']) {
+        if ($contact_username == $this->_session->get('Username')) {
             $contact_username = $message->receiverUsername;
             $direction_in = false;
         }

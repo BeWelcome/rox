@@ -290,7 +290,7 @@ class PFunctions {
 /*
 * The ServerToLocalDateTime() function allow to convert server time (whic is GMT) to local time
 * localtime will be computed according to preferences
-* it use $_SESSION["TimeOffset"] which is initialized according to current member preferences
+* it use $this->_session->get("TimeOffset") which is initialized according to current member preferences
 * @$EntryTimeStamp is the date (it must be a GMT time, taken for the database)to be converted in localtime
 * it returns a TimeStamp adjusted according to member local time
 *
@@ -298,16 +298,16 @@ class PFunctions {
 *
 */
 function ServerToLocalDateTime($EntryTimeStamp) {
-//	$_SESSION["TimeOffset"]=60*60*2 ; // only used for test at developemnt phase
-	if (empty($_SESSION["TimeOffset"])) {
+//	$this->_session->get("TimeOffset")=60*60*2 ; // only used for test at developemnt phase
+	if (empty($this->_session->get("TimeOffset"))) {
 		return($EntryTimeStamp) ;
 	}
 	else {
-		if ($this->_session->has( 'PreferenceDayLight' ) and ($_SESSION['PreferenceDayLight']=='Yes')) {
-			return($EntryTimeStamp+$_SESSION["TimeOffset"]+$_SESSION["Param"]->DayLightOffset) ;
+		if ($this->_session->has( 'PreferenceDayLight' ) and ($this->_session->get('PreferenceDayLight')=='Yes')) {
+			return($EntryTimeStamp+$this->_session->get("TimeOffset") + $this->_session->get("Param")->DayLightOffset) ;
 		}
 		else {
-			return($EntryTimeStamp+$_SESSION["TimeOffset"]) ;
+			return($EntryTimeStamp+$this->_session->get("TimeOffset")) ;
 		}
 	}
 } // end of LocaldateTime

@@ -35,7 +35,7 @@ function DisplayFlag($ShortLang,$png,$title)
 		}
 	}
 	
-	if ($_SESSION['lang'] == $ShortLang)
+	if ($this->_session->get('lang') == $ShortLang)
 		echo "      <span><a href=\"", $langurl, "lang=",$ShortLang,"\"><img src=\"".bwlink("images/flags/".$png)."\" alt=\"",$title,"\" title=\"",$title,"\"/></a></span>\n";
 	else
 		echo "      <a href=\"", $langurl, "lang=",$ShortLang,"\"><img src=\"".bwlink("images/flags/".$png)."\" alt=\"",$title,"\" title=\"",$title,"\"/></a>\n";

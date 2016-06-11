@@ -26,7 +26,7 @@ class OnlineView extends PAppView {
     public function ShowOnline()      {
         global $_SYSHCVOL ;
 
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         PVars::getObj('page')->title = $words->getBuffered('WhoIsOnLinePage');
         $TMembers=$this->_model->GetMembers() ;
         $TGuests=$this->_model->GetGuests() ;

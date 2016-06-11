@@ -34,7 +34,7 @@ class AdminNoRightsPage extends AdminBasePage
 {
     protected function column_col3() 
     {
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         echo "<div class=\"info\">\n";
 		echo "<h3>", $words->get("Volunteer_Join"),"</h3>";
 		echo "<p>",$words->get("Volunteer_JoinText"),"</p>";

@@ -67,7 +67,7 @@ class RoxModelBase extends RoxComponentBase
         {
             return false;
         }
-        $this->logged_in_member = $this->createEntity('Member')->findById($_SESSION['IdMember']);
+        $this->logged_in_member = $this->createEntity('Member')->findById($this->_session->get('IdMember'));
 
         return $this->logged_in_member;
     }

@@ -4,7 +4,7 @@ require_once "_languageselector.helper.php";
 
 
 
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 
 /**
  * remove and use $versionInfo = $this->getVersionInfo(); instead
@@ -52,7 +52,7 @@ function translator_block() {
         ?><div id="translator" class="bw-row"><?php
         $request_string = implode('/',PVars::get()->request);
         $rox_tr = PVars::getObj("env")->baseuri . "rox/tr_mode";
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
     
         switch ($words->getTrMode()) {
         case 'translate':

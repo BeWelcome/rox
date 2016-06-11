@@ -1,7 +1,7 @@
 <?php 
 if ($this->_session->has( 'ActivityStatus' )) {
     echo '<div class="success">';
-    $status = $_SESSION['ActivityStatus'];
+    $status = $this->_session->get('ActivityStatus');
     switch($status[0]) {
         case 'ActivityCreateSuccess':
             echo $words->get('ActivitiesSuccessCreate', $status[1]);
@@ -11,7 +11,7 @@ if ($this->_session->has( 'ActivityStatus' )) {
             break;  
     }
     echo '</div>';
-    unset($_SESSION['ActivityStatus']);
+    $this->_session->remove('ActivityStatus');
 }
  
 if (count($this->activities) == 0) {

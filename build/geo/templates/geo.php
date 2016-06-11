@@ -42,7 +42,7 @@ $request = PRequest::get()->request;
  * Get texts from table "words" to speak to the user.
  * @see /modules/i18n/lib/words.lib.php
  */
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 ?>
 
 

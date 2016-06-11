@@ -19,7 +19,7 @@ class GalleryUserOverviewPage extends GalleryUserPage
     protected function column_col3() {
         $statement = $this->statement;
         $galleries = $this->galleries;
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         $username = $this->member->Username;
         require SCRIPT_BASE . 'build/gallery/templates/user_galleryoverview.php';
     }

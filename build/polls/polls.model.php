@@ -36,7 +36,7 @@ class PollsModel extends RoxModelBase {
 
 // If it is a memberonly poll check that the member is logged in  
 			if ($rPoll->ForMembersOnly=="Yes") {
-				if ((!$this->_session->has( "IdMember" ) or ($_SESSION["MemberStatus"]!="Active"))) {
+				if ((!$this->_session->has( "IdMember" ) or ($this->_session->get("MemberStatus")!="Active"))) {
 					MOD_log::get()->write("trying to vote in an member only post and not logged in","polls") ; 				
 					return (false) ;
 				}
@@ -51,7 +51,7 @@ class PollsModel extends RoxModelBase {
 					return(false) ;
 				}
 			}
-			if (($rPoll->CanChangeVote=='No') and ($this->HasAlreadyContributed($IdPoll,"",$_SESSION["IdMember"]))) {
+			if (($rPoll->CanChangeVote=='No') and ($this->HasAlreadyContributed($IdPoll,"",$this->_session->get("IdMember")))) {
 		      	  MOD_log::get()->write("CanUserContribute in an already contributed post ","polls") ; 				
 					return(false) ;
 			}
@@ -106,7 +106,7 @@ class PollsModel extends RoxModelBase {
 		 * according to $post['IdPoll'] the poll will be inserted or updated
      **/
     function UpdatePoll($post) {
-			$words = new MOD_words($this->getSession());
+			$words = new MOD_words();
 		  if (empty($post['IdPoll'])) {
 				$IdPoll=0 ;
 			}
@@ -118,7 +118,7 @@ class PollsModel extends RoxModelBase {
 				
 
 				$ss="insert into polls(IdCreator,IdGroupCreator,created,Title,Description,Status,AllowComment,ResultsVisibility,Started) " ;
-				$ss=$ss."values(".$_SESSION["IdMember"].",0,now(),0,0," ;
+				$ss=$ss."values(".$this->_session->get("IdMember").",0,now(),0,0," ;
 				$ss=$ss."'Project','No','Not Visible',now())" ;
  				$result = $this->dao->query($ss);
 				if (!$result) {
@@ -127,10 +127,10 @@ class PollsModel extends RoxModelBase {
 				$IdPoll=$result->insertId();
 
 				$ss=$this->dao->escape($post['Title']) ;
-				$IdTitle=$words->InsertInFTrad($ss,"polls.Title",$IdPoll, $_SESSION["IdMember"], 0) ;
+				$IdTitle=$words->InsertInFTrad($ss,"polls.Title",$IdPoll, $this->_session->get("IdMember"), 0) ;
 
 				$ss=$this->dao->escape($post['Description']) ;
-				$IdDescription=$words->InsertInFTrad($ss,"polls.Description",$IdPoll, $_SESSION["IdMember"], 0) ;
+				$IdDescription=$words->InsertInFTrad($ss,"polls.Description",$IdPoll, $this->_session->get("IdMember"), 0) ;
 				
 				$ss="update polls set Title=$IdTitle,Description=$IdDescription where id=$IdPoll" ;
  				$result = $this->dao->query($ss);
@@ -150,7 +150,7 @@ class PollsModel extends RoxModelBase {
 			} // end if it is a new poll
 			else {
 				$rPoll=$this->singleLookup("select * from polls where id=".$IdPoll) ;
-			if (!( ($this->_session->has( "IdMember" ) and ($rPoll->IdCreator==$_SESSION["IdMember"]) and ($rPoll->Status=="Projet")) or (MOD_right::get()->HasRight("Poll","update")) )) {
+			if (!( ($this->_session->has( "IdMember" ) and ($rPoll->IdCreator==$this->_session->get("IdMember")) and ($rPoll->Status=="Projet")) or (MOD_right::get()->HasRight("Poll","update")) )) {
 			MOD_log::get()->write("Forbidden to update  poll #".$IdPoll ,"polls") ; 
 					die ("Sorry forbidden for you") ;
 			}
@@ -210,12 +210,12 @@ class PollsModel extends RoxModelBase {
 		 * returns true if choice was added with success
      **/
     function AddChoice($post) {
-			$words = new MOD_words($this->getSession());
+			$words = new MOD_words();
 
 			$IdPoll=$post['IdPoll'] ;
 			$rPoll=$this->singleLookup("select * from polls where id=".$IdPoll." /* Add Choice */") ;
 			
-			if (!( ($this->_session->has( "IdMember" ) and ($rPoll->IdCreator==$_SESSION["IdMember"]) and ($rPoll->Status=="Projet")) or (MOD_right::get()->HasRight("Poll","update")) )) {
+			if (!( ($this->_session->has( "IdMember" ) and ($rPoll->IdCreator==$this->_session->get("IdMember")) and ($rPoll->Status=="Projet")) or (MOD_right::get()->HasRight("Poll","update")) )) {
 			MOD_log::get()->write("Forbidden to add poll choice for poll #".$IdPoll ,"polls") ; 
 					die ("Sorry forbidden for you") ;
 			}
@@ -229,7 +229,7 @@ class PollsModel extends RoxModelBase {
 			$IdChoice=$result->insertId();
 
 			$ss=$this->dao->escape($post['ChoiceText']) ;
-			$IdChoiceText=$words->InsertInFTrad($ss,"polls_choices.IdChoiceText",$IdChoice, $_SESSION["IdMember"], 0) ;
+			$IdChoiceText=$words->InsertInFTrad($ss,"polls_choices.IdChoiceText",$IdChoice, $this->_session->get("IdMember"), 0) ;
 			
 			$ss="update polls_choices set IdChoiceText=$IdChoiceText where id=$IdChoice" ;
  			$result = $this->dao->query($ss);
@@ -248,7 +248,7 @@ class PollsModel extends RoxModelBase {
 		 * returns true if choice was added with success
      **/
     function UpdateChoice($post) {
-			$words = new MOD_words($this->getSession());
+			$words = new MOD_words();
 
 			$IdPoll=$post['IdPoll'] ;
 			$IdPollChoice=$post['IdPollChoice'] ;
@@ -259,7 +259,7 @@ class PollsModel extends RoxModelBase {
    			   		MOD_log::get()->write($sLog,"polls") ;
 			}
 			
-			if (!( ($this->_session->has( "IdMember" ) and ($rPoll->IdCreator==$_SESSION["IdMember"]) and ($rPoll->Status=="Projet")) or (MOD_right::get()->HasRight("Poll","update")) )) {
+			if (!( ($this->_session->has( "IdMember" ) and ($rPoll->IdCreator==$this->_session->get("IdMember")) and ($rPoll->Status=="Projet")) or (MOD_right::get()->HasRight("Poll","update")) )) {
 			MOD_log::get()->write("Forbidden to update poll choice for poll #".$IdPoll ,"polls") ; 
 					die ("Sorry forbidden for you") ;
 			}
@@ -482,7 +482,7 @@ class PollsModel extends RoxModelBase {
 			$choices_alreadydone=array() ;
 			if ($this->HasAlreadyContributed($IdPoll)) {
 				if ($Data->rPoll->Anonym=="No") {
-					$ss="select * from polls_record_of_choices where IdMember=".$_SESSION["IdMember"]." and IdPoll=".$IdPoll ;
+					$ss="select * from polls_record_of_choices where IdMember=".$this->_session->get("IdMember")." and IdPoll=".$IdPoll ;
 					$choices_alreadydone=$this->bulkLookup($ss) ;
 				}
 			}
@@ -511,7 +511,7 @@ class PollsModel extends RoxModelBase {
 		 * @PollStatus is the statuis which allow to filter for the status of some poll
      **/
     function LoadList($PollStatus="") {
-				$words = new MOD_words($this->getSession());
+				$words = new MOD_words();
 				if (empty($PollStatus)) {
 					$where="" ;
 				} 
@@ -531,7 +531,7 @@ class PollsModel extends RoxModelBase {
       	}
 
 		if ($this->_session->has( "IdMember" )) {
-			$IdMember=$_SESSION["IdMember"] ;
+			$IdMember=$this->_session->get("IdMember") ;
 		}
 		else {
 			$IdMember=0 ;
@@ -557,12 +557,12 @@ class PollsModel extends RoxModelBase {
 					$rr->PossibleActions="<ul>" ;
 					
 					// Only owner of admin with proper right can update the poll
-					if ( ($this->_session->has( "IdMember" ) and ($rr->IdCreator==$_SESSION["IdMember"]) and ($rr->Status=="Projet")) or (MOD_right::get()->HasRight("Poll","update")) ) {
+					if ( ($this->_session->has( "IdMember" ) and ($rr->IdCreator==$this->_session->get("IdMember")) and ($rr->Status=="Projet")) or (MOD_right::get()->HasRight("Poll","update")) ) {
 						$rr->PossibleActions=$rr->PossibleActions."<li><a href=\"polls/update/".$rr->id."\">".$words->getFormatted("polls_adminlink")."</a></li>" ;
 					}
 
 
-					if ($this->HasAlreadyContributed($rr->id,"",$_SESSION["IdMember"])) {
+					if ($this->HasAlreadyContributed($rr->id,"",$this->_session->get("IdMember"))) {
 						$rr->PossibleActions=$words->getFormatted("polls_youhavealreadyvoted") ;
 						if (($rr->CanChangeVote=="Yes") and ($rr->Status=="Open") ) {
 						  $rr->PossibleActions.="<li<a href=\"polls/cancelvote/".$rr->id."\">".$words->getFormatted("polls_remove_vote")."</a></li>" ;
@@ -571,7 +571,7 @@ class PollsModel extends RoxModelBase {
 						  $rr->PossibleActions=$rr->PossibleActions."<li><a href=\"polls/seeresults/".$rr->id."\">".$words->getFormatted("polls_seeresults")."</li>" ;
 						}
 					}
-					if ($this->CanUserContribute($rr->id,"",$_SESSION["IdMember"])) {
+					if ($this->CanUserContribute($rr->id,"",$this->_session->get("IdMember"))) {
 						$rr->PossibleActions=$rr->PossibleActions."<li><a href=\"polls/contribute/".$rr->id."\">".$words->getFormatted("polls_contribute")."</li>" ;
 					} 
 					if ($rr->Status=="Closed") {
@@ -595,8 +595,8 @@ class PollsModel extends RoxModelBase {
     function IsMemberAllowed($rPoll,$_IdMember=0) {
 		if  (empty($_IdMember)) {
 			$IdMember=0 ;
-			if (!empty($_SESSION["IdMember"])) {
-				$IdMember=$_SESSION["IdMember"] ;
+			if (!empty($this->_session->get("IdMember"))) {
+				$IdMember=$this->_session->get("IdMember") ;
 				if ($rPoll->IdCreator==$IdMember) {
 					return(true) ; // It makes sense that the creator of the poll can always access it
 				}

@@ -42,7 +42,7 @@ $commentsText = $i18n->getText('commentsText');
 $commentsError = $i18n->getText('commentsError');
 
 $i18n = new MOD_i18n('date.php');
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 $format = array(
     'short'=>$words->getSilent('DateFormatShort')
 );
@@ -59,7 +59,7 @@ if (!isset($vars['errors'])) {
 $comments = $Shouts->getShouts($table,$table_id);
 if (!$comments) 
 {
-    if ($this->_session->has( 'IdMember' ) && $_SESSION['IdMember'])
+    if ($this->_session->has( 'IdMember' ) && $this->_session->get('IdMember'))
         {
         echo '<p><a href="#" id="commentadd">'.$words->get('CommentsAdd').'</a></p>';
         }
@@ -78,7 +78,7 @@ else
         ++$count;
         $lastHandle = $comment->username;
     }
-    if ($this->_session->has( 'IdMember' ) && $_SESSION['IdMember'])
+    if ($this->_session->has( 'IdMember' ) && $this->_session->get('IdMember'))
         {
         echo '<p><a href="#" id="commentadd">'.$words->get('CommentsAdd').'</a></p>';
         }
@@ -88,7 +88,7 @@ else
         }
 }
 
-if ($this->_session->has( 'IdMember' ) && $_SESSION['IdMember']) {
+if ($this->_session->has( 'IdMember' ) && $this->_session->get('IdMember')) {
 ?>
 <div id="comment-form">
 <form method="post" action="" class="def-form" id="blog-comment-form">

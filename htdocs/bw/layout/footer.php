@@ -81,8 +81,8 @@ DisplayFlag("he","il.png","Hebrew");
 DisplayFlag("basque","basque.png","Basque");
 */
 
-//if ($_SESSION['switchtrans']!='on') echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"switch to translation mode\" width=16></a>&nbsp;";
-if (array_key_exists('switchtrans', $_SESSION) and $_SESSION['switchtrans'] == 'on') {
+//if ($this->_session->get('switchtrans')!='on') echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"switch to translation mode\" width=16></a>&nbsp;";
+if (array_key_exists('switchtrans', $_SESSION) and $this->_session->get('switchtrans') == 'on') {
 	//  echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"remove translation mode\" width=16></a>&nbsp;";
 	$pagetotranslate = $_SERVER['PHP_SELF'];
 	if ($pagetotranslate { 0 }	== "/")

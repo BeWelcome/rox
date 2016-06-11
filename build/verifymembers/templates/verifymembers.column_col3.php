@@ -75,7 +75,7 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
 }
 ?>
 <p>
-<?=$words->getFormatted("verifymembers_explanation",$_SESSION["Username"]) ?>
+<?=$words->getFormatted("verifymembers_explanation",$this->_session->get("Username")) ?>
 </p>
 
 <form name="entermembertoverify" action="<?=$action_url?>" id="prepareverifymember" method="post">

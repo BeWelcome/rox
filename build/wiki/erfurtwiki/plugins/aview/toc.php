@@ -110,7 +110,7 @@ function ewiki_toc_format_source(&$src) {
 function ewiki_toc_view_prepend(&$html) {
 
     global $ewiki_page_toc;
-    $words = new MOD_words($this->getSession());
+    $words = new MOD_words();
 
     if (count($ewiki_page_toc) >= 3) {
        $html = '<table summary="Table of Contents" class="toc" id="toc">

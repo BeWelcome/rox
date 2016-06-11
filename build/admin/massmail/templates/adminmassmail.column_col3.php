@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
      * @package Apps
      * @subpackage Admin
      */
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 ?>
 <div id="adminmassmail">
 <h3><?php echo $words->get('AdminMassMailListHeader'); ?></h3>
@@ -38,7 +38,7 @@ $ii = 0;
 $this->pager->render();
 if ($this->_session->has( 'AdminMassMailStatus' )) {
     echo '<div class="success">';
-    $status = $_SESSION['AdminMassMailStatus'];
+    $status = $this->_session->get('AdminMassMailStatus');
     switch($status[0]) {
         case 'Edit':
             echo $words->get('AdminMassMailSuccessEdit', $status[1]);
@@ -60,7 +60,7 @@ if ($this->_session->has( 'AdminMassMailStatus' )) {
             break;
     }
     echo '</div>';
-    unset($_SESSION['AdminMassMailStatus']);
+    $this->_session->remove('AdminMassMailStatus');
 }
 echo '<table>';
 echo '<tr><th class="left" style="width:50%;">' . $words->getBuffered('AdminMassMailName') . '</th>';

@@ -22,7 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
 
-$words = new MOD_words($this->getSession()); 
+$words = new MOD_words();
 
 echo $words->getFormatted('PrivacyPolicy') ;
 

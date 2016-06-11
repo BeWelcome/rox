@@ -29,7 +29,7 @@ if (!empty($errormessage)) {
     <p class="error"><?=$errormessage; ?></p>
     <?
 }
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 $Data=$this->_data  ;
 if (isset($Data->rPoll->id)) { // Form for update
     $rr=$Data->rPoll ;
@@ -107,7 +107,7 @@ Use English language for now only
             <?
             $ii=0 ;
             if (empty($rr->CreatorUsername)) {
-                $rr->CreatorUsername=$_SESSION['Username'] ; // By default a poll is owned by the current member
+                $rr->CreatorUsername=$this->_session->get('Username') ; // By default a poll is owned by the current member
             }
             echo "<input id=\"CreatorUsername\" name=\"CreatorUsername\" Value=\"" .$rr->CreatorUsername."\" type=\"text\" />" ;
             ?>
@@ -205,7 +205,7 @@ for ($ii=0;$ii<count($Data->Choices);$ii++) {
     <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
 
     <input type="hidden" name="<?=$callbackId ?>"  value="1"/>
-	<input name="IdLanguage"  value="<?php echo $_SESSION["IdLanguage"] ; ?>" type="hidden"/>
+	<input name="IdLanguage"  value="<?php echo $this->_session->get("IdLanguage") ; ?>" type="hidden"/>
     <input type="hidden" name="IdPoll"  value="<?=$Data->rPoll->id?>"/>
     <input type="hidden" name="IdPollChoice" value="<?=$cc->id?>"/>
     <input type="hidden" name="IdChoiceText" value="
@@ -229,7 +229,7 @@ for ($ii=0;$ii<count($Data->Choices);$ii++) {
     <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
 
     <input type="hidden" name="<?=$callbackId ?>"  value="1"/>
-    <input type="hidden" name="IdLanguage"  value="<?$_SESSION["IdLanguage"]?>"/>
+    <input type="hidden" name="IdLanguage"  value="<?$this->_session->get("IdLanguage")?>"/>
     <input type="hidden" name="IdPoll"  value="<?=$Data->rPoll->id?>"/>
         <tr>
             <td><label for="NewOption">New option:</label></td>
@@ -258,7 +258,7 @@ Use English language for now only
 <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
 
 <input type="hidden" name="<?=$callbackId ?>"  value="1"/>
-<input name="IdLanguage"  value="<?php echo $_SESSION["IdLanguage"] ; ?>" type="hidden"/>
+<input name="IdLanguage"  value="<?php echo $this->_session->get("IdLanguage") ; ?>" type="hidden"/>
 
 <table>
     <tr>

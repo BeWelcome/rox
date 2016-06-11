@@ -21,11 +21,11 @@ write to the Free Software Foundation, Inc., 59 Temple PlaceSuite 330,
 Boston, MA  02111-1307, USA.
 
 */
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 
 $A = new APP_User();
 if ($a->isBWLoggedIn('NeedMore,Pending')) {
-    $Username = $_SESSION["Username"];
+    $Username = $this->_session->get("Username");
 }
 else { 
     $Username = "guest";

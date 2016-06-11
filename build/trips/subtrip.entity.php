@@ -62,7 +62,7 @@ class SubTrip extends RoxEntityBase
 
 
     private function _getLocationName(Geo $location) {
-        $lang = $_SESSION['lang'];
+        $lang = $this->_session->get('lang');
         $admin1 = $location->getParent();
         $country = $location->getCountry();
         $locationName = $location->getName($lang);
@@ -92,7 +92,7 @@ class SubTrip extends RoxEntityBase
         $vars->subTripId = $this->getPKValue();
         $vars->geonameId = $this->geonameId;
         $location = $this->_entity_factory->create('Geo')->FindById($this->geonameId);
-        $vars->shortName = $location->getName($_SESSION['lang']);
+        $vars->shortName = $location->getName($this->_session->get('lang'));
         $name = $this->_getLocationName($location);
         if (!$name) {
             return false;

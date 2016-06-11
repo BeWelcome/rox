@@ -29,12 +29,12 @@ Boston, MA  02111-1307, USA.
      * @package Apps
      * @subpackage Admin
      */
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 $R = MOD_right::get();
 $hasRight = $R->hasRight('Treasurer');
 
 if ($this->_session->has( 'AdminTreasurerStatus' )) {
-    $status = $_SESSION['AdminTreasurerStatus'];
+    $status = $this->_session->get('AdminTreasurerStatus');
     switch($status[0]) {
         case 'StartSuccess':
             $class = 'success';
@@ -54,7 +54,7 @@ if ($this->_session->has( 'AdminTreasurerStatus' )) {
             break;  
     }
     echo '<div class="' . $class . '">' . $word . '</div>';
-    unset($_SESSION['AdminTreasurerStatus']);
+    $this->_session->remove('AdminTreasurerStatus');
 }
 if($this->campaign) {
     echo '<h3>' . $words->get("AdminTreasurerCurrentCampaign") . '</h3>';

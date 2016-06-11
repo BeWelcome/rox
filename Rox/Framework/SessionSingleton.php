@@ -35,7 +35,7 @@ class SessionSingleton
      */
     protected function __construct()
     {
-        $this->_session = new Session(new \Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage());
+        $this->_session = new Session();
     }
 
     public static function getSession() {

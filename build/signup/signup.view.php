@@ -55,7 +55,7 @@ class SignupView extends PAppView
         $member = $MembersModel->getMemberWithId($IdMember);
         if (!$member)
             return false;
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
 
         // KEY-GENERATION the TB Way
         $key    = APP_User::getSetting($idTB, 'regkey');
@@ -94,7 +94,7 @@ class SignupView extends PAppView
     {
         if (!$member)
             return false;
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
 
         $body = $words->get("SignupBodyActivationMail", $member->Firstname, $member->Secondname, $member->Lastname,
                     PVars::getObj('env')->sitename, $member->Username);

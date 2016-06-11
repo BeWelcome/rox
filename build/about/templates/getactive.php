@@ -15,7 +15,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/> or
 write to the Free Software Foundation, Inc., 59 Temple PlaceSuite 330,
 Boston, MA 02111-1307, USA.
 */
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 ?>
 
 <h2><?php echo $words->get('GetActive') ?></h2>

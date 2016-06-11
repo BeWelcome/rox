@@ -552,7 +552,7 @@ http://www.bewelcome.org/bw/donations2.php?action=done&tx=0ME24142PE152304A&st=C
                 
                 $IdMember=0 ; $IdCountry=0 ; // This values will remain if the user was not logged
                 if ($this->_session->has( "IdMember" )) {
-                    $IdMember=$_SESSION["IdMember"] ;
+                    $IdMember=$this->_session->get("IdMember") ;
                     $query = <<<SQL
 SELECT geonames_cache.parentCountryId AS IdCountry
 FROM  members, addresses, geonames_cache
@@ -589,7 +589,7 @@ AND referencepaypal LIKE "%'.$referencepaypal.'%"';
         		$rr = $result->fetch(PDB::FETCH_OBJ);
         
                 if (isset($rr->id)) { // If a previous version was already existing, it means a double signup
-                    MOD_log::get()->write("Same Donation Submited several times for ".$keyarray['mc_gross'].$payment_currency." by ".$keyarray['first_name']." ".$keyarray['last_name']."/".$receiver_email." status=".$payment_status." [expected".$_SESSION["PaypalBW_key"]." received=".$tx."]","Donation") ;
+                    MOD_log::get()->write("Same Donation Submited several times for ".$keyarray['mc_gross'].$payment_currency." by ".$keyarray['first_name']." ".$keyarray['last_name']."/".$receiver_email." status=".$payment_status." [expected".$this->_session->get("PaypalBW_key"]." received=".$tx.")","Donation") ;
                     $error = "Your donation is registrated only once , not need to submit twice ;-)";
                     return $error;
                 }

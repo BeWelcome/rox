@@ -1,7 +1,7 @@
 <?php
-$ranks = SuggestionsModel::getRanksAsArray($_SESSION['lang']);
+$ranks = SuggestionsModel::getRanksAsArray($this->_session->get('lang'));
 $states = SuggestionsModel::getStatesAsArray();
-$optionStates = SuggestionOption::getStatesAsArray($_SESSION['lang']);
+$optionStates = SuggestionOption::getStatesAsArray($this->_session->get('lang'));
 ?><table id="results">
     <tr>
         <td><h2><?php echo htmlspecialchars($this->suggestion->summary, ENT_COMPAT, 'utf-8'); ?></h2></td>

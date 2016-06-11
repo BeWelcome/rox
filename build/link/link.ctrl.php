@@ -53,7 +53,7 @@ class LinkController extends RoxControllerBase
 				        case 'myself':
 
 								  $result->strerror="" ;
-									$result->from= $_SESSION['Username'];
+									$result->from= $this->_session->get('Username');
 									$result->to = $request[2] ;	
 									$IdGuy=$this->_model->getMemberID($result->to);
 									if ($IdGuy<=0)  {
@@ -150,7 +150,7 @@ class LinkController extends RoxControllerBase
     $limit = $post_args['limit'];
 		//$link = $this->_model->getSingleLink($fromID,$toID);
 		if (empty($from)) {
-			$from=$_SESSION["Username"] ;
+			$from=$this->_session->get("Username") ;
 		}
 		if (empty($limit)) {
 			$limit=10 ; // give a default value to limit

@@ -35,7 +35,7 @@ class ActivitiesController extends RoxControllerBase
         }
     }
     
-    public function joinLeaveActivityCallback(StdClass $args, ReadOnlyObject $action, 
+    public function joinLeaveActivityCallback(\stdClass $args, ReadOnlyObject $action, 
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) 
     {
         $errors = $this->_model->checkJoinLeaveActivityVarsOk($args);
@@ -47,14 +47,14 @@ class ActivitiesController extends RoxControllerBase
         $result = $this->_model->joinLeaveActivity($args->post);
         if ($result) {
             $activity = new Activity($args->post['activity-id']);
-            $this->getSession->set( 'ActivityStatus', array('ActivityUpdateStatusSuccess', $activity->title) );
+            $this->_session->set( 'ActivityStatus', array('ActivityUpdateStatusSuccess', $activity->title) );
             return true;
         } else {
             return false;
         }
     }
 
-    public function cancelUncancelActivityCallback(StdClass $args, ReadOnlyObject $action, 
+    public function cancelUncancelActivityCallback(\stdClass $args, ReadOnlyObject $action, 
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) 
     {
         $result = $this->_model->cancelUncancelActivity($args->post);
@@ -65,7 +65,7 @@ class ActivitiesController extends RoxControllerBase
         }
         $activity = new Activity($args->post['activity-id']);
         if (!$activity->status == 1){
-            $this->getSession->set( 'ActivityStatus', array('ActivityUnCancelSuccess', $activity->title) );
+            $this->_session->set( 'ActivityStatus', array('ActivityUnCancelSuccess', $activity->title) );
         } else {
             return $this->router->url('activities_show', array('id' => $activity->id), false);
         }
@@ -73,7 +73,7 @@ class ActivitiesController extends RoxControllerBase
     }
 
     protected function getPager($url, $count, $pageno, $itemsPerPage = self::ACTIVITIES_PER_PAGE) {
-        $params = new StdClass;
+        $params = new \stdClass;
         $params->strategy = new HalfPagePager('right');
         $params->page_url = 'activities/' . $url . '/';
         $params->page_url_marker = 'page';
@@ -112,7 +112,7 @@ class ActivitiesController extends RoxControllerBase
         if (isset($this->route_vars['pageno'])) {
             $pageno = $this->route_vars['pageno'] - 1;
         }
-        $params = new StdClass;
+        $params = new \stdClass;
         $params->strategy = new HalfPagePager('right');
         $params->page_url = 'activities/' . $activity->id . '/attendees/';
         $params->page_url_marker = 'page';
@@ -124,7 +124,7 @@ class ActivitiesController extends RoxControllerBase
         return $page;
     }
 
-    public function editCreateActivityCallback(StdClass $args, ReadOnlyObject $action, 
+    public function editCreateActivityCallback(\stdClass $args, ReadOnlyObject $action, 
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) 
     {
         $errors = $this->_model->checkEditCreateActivityVarsOk($args);
@@ -135,10 +135,10 @@ class ActivitiesController extends RoxControllerBase
         } else {
             if ($args->post['activity-id'] == 0) {
                 $activity = $this->_model->createActivity($args);
-                $this->getSession->set( 'ActivityStatus', array('ActivityCreateSuccess', $args->post['activity-title']) );
+                $this->_session->set( 'ActivityStatus', array('ActivityCreateSuccess', $args->post['activity-title']) );
             } else {
                 $activity = $this->_model->updateActivity($args);
-                $this->getSession->set( 'ActivityStatus', array('ActivityUpdateSuccess', $args->post['activity-title']) );
+                $this->_session->set( 'ActivityStatus', array('ActivityUpdateSuccess', $args->post['activity-title']) );
             }
             return $this->router->url('activities_show', array('id' => $activity->id), false);
         }
@@ -239,7 +239,7 @@ class ActivitiesController extends RoxControllerBase
         return $page;
     }
 
-    public function setRadiusCallback(StdClass $args, ReadOnlyObject $action, 
+    public function setRadiusCallback(\stdClass $args, ReadOnlyObject $action, 
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) 
     {
         $this->_model->setRadius($args);
@@ -268,12 +268,12 @@ class ActivitiesController extends RoxControllerBase
         return $page;
     }
 
-    public function searchActivitiesCallback(StdClass $args, ReadOnlyObject $action, 
+    public function searchActivitiesCallback(\stdClass $args, ReadOnlyObject $action, 
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) 
     {
         $errors = $this->_model->checkSearchActivitiesVarsOk($args);
         if (count($errors) > 0) {
-            $this->getSession->set( 'errors', $errors );
+            $this->_session->set( 'errors', $errors );
             return $this->router->url('activities_search', array(), false);
         } else {
             return $this->router->url('activities_search_results', array( "keyword" => $args->post['activity-keyword']), false);

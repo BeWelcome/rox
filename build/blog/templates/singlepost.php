@@ -28,7 +28,7 @@ $commentsText = $i18n->getText('commentsText');
 $commentsError = $i18n->getText('commentsError');
 
 $i18n = new MOD_i18n('date.php');
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 $format = array(
     'short'=>$words->getSilent('DateFormatShort')
 );

@@ -13,7 +13,7 @@ function _languageSelector()
         $png = $abbr.'.png';
         if (!$this->_session->has( 'lang' )) {
             // hmm
-        } else { // if ($_SESSION['lang'] == $abbr) {
+        } else { // if ($this->_session->get('lang') == $abbr) {
             $langsel .=
                 "<a href=\"".PVars::getObj("env")->baseuri."rox/in/".$abbr.'/'.$request_string.
                 "\">"
@@ -56,7 +56,7 @@ function _languageOptions($words) {
             // hmm
         } else {
             $langOptions .=
-                '<option value="' . PVars::getObj("env")->baseuri. 'rox/in/'.$abbr.'/'.$request_string.'" '.(($_SESSION['lang'] == $abbr) ? 'selected="selected"' : '');
+                '<option value="' . PVars::getObj("env")->baseuri. 'rox/in/'.$abbr.'/'.$request_string.'" '.(($this->_session->get('lang') == $abbr) ? 'selected="selected"' : '');
             $langOptions .= '>' . $language->TranslatedName . ' (' . trim($language->Name) . ')</option>';
         }
     }
@@ -65,7 +65,7 @@ function _languageOptions($words) {
 
 function _languageSelectorDropDown()
 {
-    $words = new MOD_words($this->getSession());
+    $words = new MOD_words();
     $langsel = '';
     $request_string = htmlspecialchars(implode('/',PVars::get()->request), ENT_QUOTES);
     $langsel.= '<select id="language" name="language" class="combo" onchange="window.location.href=this.value; return false">';
@@ -75,7 +75,7 @@ function _languageSelectorDropDown()
 
 function _languageFooterSelectorDropDown()
 {
-    $words = new MOD_words($this->getSession());
+    $words = new MOD_words();
     $langsel = '';
     $request_string = htmlspecialchars(implode('/',PVars::get()->request), ENT_QUOTES);
     $langsel = '

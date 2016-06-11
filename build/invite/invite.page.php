@@ -41,16 +41,16 @@ class InvitePage extends RoxPageView
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
         $model = $this->getModel();
-        $member = $model->getMember($_SESSION['IdMember']);
+        $member = $model->getMember($this->_session->get('IdMember'));
         $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
         $formkit = $layoutkit->formkit;
         $callback_tag = $formkit->setPostCallback('InviteController', 'InviteCallback');
         
         // defaults
         $email = '';
-        $subject = $words->get("MailInviteAFriendSubject", $member->name(),$_SESSION['Username']);
+        $subject = $words->get("MailInviteAFriendSubject", $member->name(),$this->_session->get('Username'));
         $urltosignup = PVars::getObj('env')->baseuri.'signup';
-        $text = str_replace('<br />','',$words->getFormatted('InviteAFriendStandardText','<a href="'.PVars::getObj('env')->baseuri.'members/'.$_SESSION["Username"].'">'.$_SESSION["Username"].'</a>',$urltosignup));
+        $text = str_replace('<br />','',$words->getFormatted('InviteAFriendStandardText','<a href="'.PVars::getObj('env')->baseuri.'members/'.$this->_session->get("Username"].'">'.$_SESSION["Username").'</a>',$urltosignup));
 
         if (!$memory = $formkit->getMemFromRedirect()) {
             // no memory

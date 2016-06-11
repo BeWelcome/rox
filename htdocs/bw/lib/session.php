@@ -26,7 +26,7 @@ function SetupSession()
 {
 	if (!isset ($_GET['showtransarray'])) 
 	{
-		$this->getSession->set( 'TranslationArray', array () ) // initialize $_SESSION['TranslationArray'] if not currently switching to adminwords
+		$this->_session->set( 'TranslationArray', array () ) // initialize $this->_session->get('TranslationArray') if not currently switching to adminwords
 	}
 }
 

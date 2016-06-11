@@ -181,7 +181,7 @@ WHERE
         if (!$this->_session->has( $this->sessionName ))
             return false;
         $this->loggedIn = false;
-        unset($_SESSION[$this->sessionName]);
+        $this->_session->remove($this->sessionName);
         session_regenerate_id();
         return true;
     }
@@ -241,7 +241,7 @@ WHERE
     public static function getImage($paramIdMember=0)
     {
         if ($paramIdMember==0) {
-            $IdMember=$_SESSION['IdMember'];
+            $IdMember=$this->_session->get('IdMember');
         } else {
             $IdMember=$paramIdMember ;
         }

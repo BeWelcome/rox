@@ -25,7 +25,7 @@ Boston, MA  02111-1307, USA.
  * @author Felix van Hove <fvanhove@gmx.de>
  */
 
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 
 ?>
 <h3><?php echo $words->getBuffered("WordsDownload_Title"); ?></h3>

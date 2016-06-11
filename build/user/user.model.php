@@ -361,7 +361,7 @@ VALUES
             $errors = array();
             $messages = array();
 
-            $query = "select id from members where id=" . $_SESSION["IdMember"] . " and PassWord=PASSWORD('" . trim($vars['OldPassword']) . "')";
+            $query = "select id from members where id=" . $this->_session->get("IdMember"] . " and PassWord=PASSWORD('" . trim($vars['OldPassword')) . "')";
             $qry = $this->dao->query($query);
             $rr = $qry->fetch(PDB::FETCH_OBJ);
             if (!$rr || !array_key_exists('id', $rr))
@@ -385,7 +385,7 @@ VALUES
             if( isset($vars['NewPassword']) && strlen($vars['NewPassword']) > 0) {
 //            	$pwenc = MOD_user::passwordEncrypt($vars['NewPassword']);
 //              $query = 'UPDATE `user` SET `pw` = \''.$pwenc.'\' WHERE `id` = '.(int)$User->getId();
-                $query = 'UPDATE `members` SET `PassWord` = PASSWORD(\''.trim($vars['NewPassword']).'\') WHERE `id` = '.$_SESSION['IdMember'];
+                $query = 'UPDATE `members` SET `PassWord` = PASSWORD(\''.trim($vars['NewPassword']).'\') WHERE `id` = '.$this->_session->get('IdMember');
                 if( $this->dao->exec($query)) {
                     $messages[] = 'ChangePasswordUpdated';
                     $L = MOD_log::get();

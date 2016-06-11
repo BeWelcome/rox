@@ -28,7 +28,7 @@
             // everything is cool
         } else if ($this->_session->has( "IdMember" )) {
             // use the member who is currently logged in.
-            $member_id=$_SESSION["IdMember"] ;
+            $member_id=$this->_session->get("IdMember") ;
         } else {
             // can't help it, so we return false.
             return false;

@@ -2,8 +2,8 @@
 $formkit = $this->layoutkit->formkit;
 $callbackTags = $formkit->setPostCallback('SuggestionsController', 'editCreateSuggestionCallback');
 if ($this->_session->has( 'SuggestionStatus' )) {
-    $status = $_SESSION['SuggestionStatus'];
-    unset($_SESSION['SuggestionStatus']);
+    $status = $this->_session->get('SuggestionStatus');
+    $this->_session->remove('SuggestionStatus');
 }
 $errors = $this->getRedirectedMem('errors');
 $vars = $this->getRedirectedMem('vars');

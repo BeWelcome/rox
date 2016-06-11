@@ -11,7 +11,7 @@
  */
 
 $Blog = new Blog;
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 
 ?>
 <div id="blog-category">

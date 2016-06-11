@@ -120,7 +120,7 @@ class GeoModel extends RoxModelBase {
         $spaf->setConfig('geonames_url', $google_conf->geonames_webservice_custom);
         // $spaf->setConfig('google_api_key', $google_conf->maps_api_key);
         $spaf->setConfig('style','FULL');
-        $spaf->setConfig('lang',$_SESSION['lang']);
+        $spaf->setConfig('lang',$this->_session->get('lang'));
         $spaf->setConfig('fcode',$fcode);
         
         // If the request wants more than 10 members

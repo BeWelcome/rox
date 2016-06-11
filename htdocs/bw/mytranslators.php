@@ -29,9 +29,9 @@ require_once "layout/mytranslators.php";
 MustLogIn();
 
 // Find parameters
-$IdMember = $_SESSION['IdMember'];
+$IdMember = $this->_session->get('IdMember');
 if (IsAdmin()) { // admin can alter other profiles
-	$IdMember = GetParam("cid", $_SESSION['IdMember']);
+	$IdMember = GetParam("cid", $this->_session->get('IdMember'));
 }
 
 $m = prepareProfileHeader($IdMember,"",0); // This is the profile of the contact which is going to be used

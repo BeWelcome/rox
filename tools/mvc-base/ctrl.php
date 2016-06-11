@@ -1,8 +1,6 @@
 <?php
 
 
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-
 abstract class RoxControllerBase extends RoxComponentBase
 {
     /** @var \Symfony\Component\Routing\Router */
@@ -10,9 +8,6 @@ abstract class RoxControllerBase extends RoxComponentBase
 
     /** @var  \Symfony\Component\Form\FormFactoryInterface */
     protected $formFactory;
-
-    /** @var  \Symfony\Component\HttpFoundation\Session\SessionInterface */
-    protected $_session;
 
     /**
      * @param \Symfony\Component\Routing\Router $router
@@ -40,20 +35,6 @@ abstract class RoxControllerBase extends RoxComponentBase
     {
         $this->formFactory = $formFactory;
         return $this;
-    }
-
-    /**
-     * @param SessionInterface $session
-     */
-    public function setSession(SessionInterface $session) {
-        $this->_session = $session;
-    }
-
-    /**
-     * @return SessionInterface
-     */
-    public function getSession() {
-        return $this->_session;
     }
 
     protected function redirect($request, $get_args = '') {

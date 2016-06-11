@@ -182,7 +182,7 @@ class Note extends RoxEntityBase
      */
     public function getText()
     {
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         if (!$this->isLoaded() || !$this->WordCode)
         {
             return '';

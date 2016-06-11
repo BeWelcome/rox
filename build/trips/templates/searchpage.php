@@ -1,5 +1,5 @@
 <?
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 $search = $_GET['s'];
 
 if (!$search) {}

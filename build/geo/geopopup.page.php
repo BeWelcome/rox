@@ -35,13 +35,13 @@ class GeoPopupPage extends RoxPageView
             $locations_print = $Geo->GeoSearch(' ',40,false, $callbacktag);
 		}
 		// Just for testing:
-		// if ($this->_session->has( 'GeoVars' ) var_dump($_SESSION['GeoVars']);
-		// if ($this->_session->has( 'GeoVars']['geonamename' ) var_dump($_SESSION['GeoVars']['geonamename']);
+		// if ($this->_session->has( 'GeoVars' ) var_dump($this->_session->get('GeoVars'));
+		// if ($this->_session->has( 'GeoVars']['geonamename' ) var_dump($this->_session->get('GeoVars']['geonamename'));
 		// if (isset($request[2]) && $request[2] == 'save' && $mem_redirect->geolocation) {
 			// $geolocation = $mem_redirect->geolocation;
 			// list($geonameid, $geonamename) = preg_split('/[//]/', $geolocation);
-			// $this->getSession->set( 'SignupBWVars']['geonameid', $geonameid )
-			// $this->getSession->set( 'SignupBWVars']['geonamename', $geonamename )
+			// $this->_session->set( 'SignupBWVars']['geonameid', $geonameid )
+			// $this->_session->set( 'SignupBWVars']['geonamename', $geonamename )
 			// print 'GEO SET';
 		// } else {
 			// print 'GEO NOT SET';

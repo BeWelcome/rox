@@ -19,7 +19,7 @@ class AdminNewMembersModel extends RoxModelBase {
             return ("");
 
         if ($this->_session->has( 'IdLanguage' )) {
-            $IdLanguage=$_SESSION['IdLanguage'] ;
+            $IdLanguage=$this->_session->get('IdLanguage') ;
         }
         else {
             $IdLanguage=0 ; // by default laguange 0
@@ -131,7 +131,7 @@ LIMIT 1
      * @return multitype:unknown
      */
     public function getMembers($first, $count, $safetyTeamOrAdmin) {
-        $langarr = explode('-', $_SESSION['lang']);
+        $langarr = explode('-', $this->_session->get('lang'));
         $lang = $langarr[0];
         // First get current page and limits
 

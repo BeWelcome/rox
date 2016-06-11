@@ -19,7 +19,7 @@ class Places extends RoxModelBase {
 
     public function __construct() {
         parent::__construct();
-        $langarr = explode('-', $_SESSION['lang']);
+        $langarr = explode('-', $this->_session->get('lang'));
         $this->lang = $langarr[0];
     }
 
@@ -288,7 +288,7 @@ class Places extends RoxModelBase {
     }
 
     public function getContinents() {
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         $continents = array(
             "AM" => array($words->getSilent('PlacesAmerica'), $words->getSilent("PlacesAmericaCont")),
             "EA" => array($words->getSilent('PlacesEurAsia'), $words->getSilent("PlacesEurAsiaCont")),

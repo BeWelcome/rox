@@ -26,7 +26,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
 
 */
 
-    $words = new MOD_words($this->getSession());
+    $words = new MOD_words();
     $styles = array( 'highlight', 'blank' );
 
     $hideGroupOnlyPost = false;
@@ -61,7 +61,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
         echo '</span>';
 
         echo '<span class="pull-xs-right p-r-1"><small><a href="forums/s' . $post->threadid . '/#post' . $post->IdPost . '"><i class="fa fa-link"></i> ' . $words->get('ForumPermalink') . '</a></small></span>';
-        $TheReports=$this->_model->GetReports($post->IdPost,$_SESSION["IdMember"]) ; // Check if there is a pending report for this member
+        $TheReports=$this->_model->GetReports($post->IdPost,$this->_session->get("IdMember")) ; // Check if there is a pending report for this member
         echo '</div>';
 
     }
@@ -109,7 +109,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
                 }
                 for ($jj=0;(($jj<$max) and ($topic->WithDetail) );$jj++) { // Not optimized, it is a bit stupid to look in all the trads here
                     if (($post->Trad[$jj]->trad_created!=$post->Trad[$jj]->trad_updated) ) { // If one of the trads have been updated
-                        if ($post->Trad[$jj]->IdLanguage==$_SESSION["IdLanguage"]) {
+                        if ($post->Trad[$jj]->IdLanguage==$this->_session->get("IdLanguage")) {
                             echo "<br /><em>last edited on ",date($words->getFormatted('DateHHMMShortFormat'),ServerToLocalDateTime($post->Trad[$jj]->trad_updated))," by ",$post->Trad[$jj]->TranslatorUsername, "</em>";
                         }
                     }
@@ -120,7 +120,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
         <span class="forumsedit">
             <?php
 
-            if ($can_edit_own && $post->OwnerCanStillEdit=="Yes" && $User && $post->IdWriter == $_SESSION["IdMember"] ) {
+            if ($can_edit_own && $post->OwnerCanStillEdit=="Yes" && $User && $post->IdWriter == $this->_session->get("IdMember") ) {
                 echo '<a href="forums/edit/m'.$post->postid.'"><img src="images/icons/comment_edit.png" alt="edit" />'.$words->getFormatted('forum_EditUser').'</a>&nbsp;&nbsp;<a href="forums/translate/m'.$post->postid.'"><img src="images/icons/world_edit.png" alt="translate" />'.$words->getFormatted('forum_TranslateUser').'</a>&nbsp;&nbsp;';
             }
             if (($this->BW_Right->HasRight("ForumModerator","Edit")) ||($this->BW_Right->HasRight("ForumModerator","All")) ) {

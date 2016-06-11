@@ -1,9 +1,9 @@
 <?php
-$words = new MOD_words($this->getSession());
-$thumbPathMember = MOD_layoutbits::PIC_50_50($_SESSION['Username'], '',$style='float_left framed');
+$words = new MOD_words();
+$thumbPathMember = MOD_layoutbits::PIC_50_50($this->_session->get('Username'), '',$style='float_left framed');
 
 
-$_newMessagesNumber = $this->model->getNewMessagesNumber($_SESSION['IdMember']);
+$_newMessagesNumber = $this->model->getNewMessagesNumber($this->_session->get('IdMember'));
 
 if ($_newMessagesNumber > 0) {
     $_mainPageNewMessagesMessage = $words->getFormatted('MainPageNewMessages', $_newMessagesNumber);

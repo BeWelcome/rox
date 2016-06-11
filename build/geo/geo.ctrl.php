@@ -213,13 +213,13 @@ class GeoController extends PAppController {
             $locations_print = $Geo->GeoSearch(' ',40, true, $callbacktag);
         }
         // Just for testing:
-        // if ($this->_session->has( 'GeoVars' ) var_dump($_SESSION['GeoVars']);
-        // if ($this->_session->has( 'GeoVars']['geonamename' ) var_dump($_SESSION['GeoVars']['geonamename']);
+        // if ($this->_session->has( 'GeoVars' ) var_dump($this->_session->get('GeoVars'));
+        // if ($this->_session->has( 'GeoVars']['geonamename' ) var_dump($this->_session->get('GeoVars']['geonamename'));
         // if (isset($request[2]) && $request[2] == 'save' && $mem_redirect->geolocation) {
             // $geolocation = $mem_redirect->geolocation;
             // list($geonameid, $geonamename) = preg_split('/[\/\/]/', $geolocation);
-            // $this->getSession->set( 'SignupBWVars']['geonameid', $geonameid )
-            // $this->getSession->set( 'SignupBWVars']['geonamename', $geonamename )
+            // $this->_session->set( 'SignupBWVars']['geonameid', $geonameid )
+            // $this->_session->set( 'SignupBWVars']['geonamename', $geonamename )
             // print 'GEO SET';
         // } else {
             // print 'GEO NOT SET';
@@ -233,7 +233,7 @@ class GeoController extends PAppController {
         $post_args = $args->post;
         foreach ($args->post as $key => $value) {
             if ($key != 'geo-search')
-                $this->getSession->set( 'GeoVars'][$key, $value )
+                $this->_session->set( 'GeoVars'][$key, $value )
         }
         if (isset($post_args['geo-search'])) 
             $mem_redirect->location = $post_args['geo-search'];

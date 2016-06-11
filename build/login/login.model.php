@@ -180,7 +180,7 @@ SET
     {
         $esc_handle = $this->dao->escape($handle);
         $esc_pwenc = $this->dao->escape($this->encryptPasswordTB($password));
-        $member_id = $_SESSION['IdMember'];
+        $member_id = $this->_session->get('IdMember');
         $int_authId = (int)($this->checkAuth('defaultUser'));
 
         if (!$this->singleLookup(
@@ -306,14 +306,15 @@ WHERE   handle = '$esc_handle'
     {
         // Process the login of the member according to his status
         $member_id = (int)$m->id;
-				unset($_SESSION['MemberStatus']) ; // For the case where it is set to empty
-				unset($_SESSION['Status']) ;  // For the case where it is set to empty
+				$this->_session->remove('MemberStatus') ; // For the case where it is set to empty
+				$this->_session->remove('Status') ;  // For the case where it is set to empty
 				if (!$m->Status)
                 {
 					die ("Alarm : in setBWMemberAsLoggedIn with empty \$m->Status") ;
 				}
 				else {
-        	$this->getSession->set( 'MemberStatus', $_SESSION['Status'] = $m->Status  )
+        	$this->_session->set( 'MemberStatus', $m->Status);
+            $this->_session->set('Status', $m->Status  );
 				}
         switch ($m->Status) {
             case "OutOfRemind" :  // in case an inactive member comes back
@@ -326,8 +327,10 @@ WHERE   members.id = $member_id and Status='OutOfRemind'
                 );
                 // the following is needed for MOD_log::get,
                 // because otherwise it would not link the log with the right member
-                $this->getSession->set( 'IdMember', $m->id  )
-                $this->getSession->set( 'MemberStatus', $_SESSION['Status'] = $m->Status='Active'  )
+                $this->_session->set( 'IdMember', $m->id  );
+                $m->Status='Active';
+                $this->_session->set( 'MemberStatus', $m->Status);
+                $this->_session->set('Status', $m->Status='Active' );
                 MOD_log::get()->write("Successful login, becoming active again (was OutOfRemind), with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
                 break ;
             case "Active" :
@@ -335,7 +338,7 @@ WHERE   members.id = $member_id and Status='OutOfRemind'
             case "ChoiceInactive" :
                 // the following is needed for MOD_log::get,
                 // because otherwise it would not link the log with the right member
-                $this->getSession->set( 'IdMember', $m->id  )
+                $this->_session->set( 'IdMember', $m->id  );
                 MOD_log::get()->write("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b> (".$m->Username.")", "Login");
                 break ;
 
@@ -353,7 +356,7 @@ WHERE   members.id = $member_id and Status='OutOfRemind'
                 break;
 
             case "NeedMore" :
-                $this->getSession->set( 'IdMember', $m->id  )
+                $this->_session->set( 'IdMember', $m->id  );
                 MOD_log::get()->write("Login with (needmore)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
                 $this->_immediateRedirect = PVars::getObj('env')->baseuri . "bw/updatemandatory.php";
                 break;
@@ -367,7 +370,7 @@ WHERE   members.id = $member_id and Status='OutOfRemind'
                 break ;
 
             case "Pending" :
-                $this->getSession->set( 'IdMember', $m->id  )
+                $this->_session->set( 'IdMember', $m->id  );
                 MOD_log::get()->write("Successful login (Pending State)with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b> (".$m->Username.")", "Login");
                 break ;
             default:
@@ -383,18 +386,19 @@ WHERE   members.id = $member_id and Status='OutOfRemind'
         $member_id = (int)$m->id;
 
         // Set the session identifier
-        $this->getSession->set( 'IdMember', $m->id )
-        $this->getSession->set( 'Username', $m->Username )
-        $this->getSession->set( 'MemberStatus', $_SESSION['Status'] = $m->Status  )
+        $this->_session->set( 'IdMember', $m->id );
+        $this->_session->set( 'Username', $m->Username );
+        $this->_session->set( 'MemberStatus', $m->Status);
+        $this->_session->set('Status', $m->Status );
 
-        if ($_SESSION['IdMember'] != $m->id)
+        if ($this->_session->get('IdMember') != $m->id)
         { // Check is session work of
             $this->logout();
             throw new PException('Login sanity check failed miserably!');
         }; // end Check is session work of
 
-        $this->getSession->set( 'MemberCryptKey', crypt($m->PassWord, "rt") ) // Set the key which will be used for member personal cryptation
-        $this->getSession->set( 'LogCheck', Crc32($_SESSION['MemberCryptKey'] . $m->id) ) // Set the key for checking id and LohCheck (will be restricted in future)
+        $this->_session->set( 'MemberCryptKey', crypt($m->PassWord, "rt") ); // Set the key which will be used for member personal cryptation
+        $this->_session->set( 'LogCheck', crc32($this->_session->get('MemberCryptKey') . $m->id) ); // Set the key for checking id and LohCheck (will be restricted in future)
 
 
 				if ($m->NbRemindWithoutLogingIn>0) {
@@ -434,8 +438,8 @@ WHERE
     IdPreference=preferences.id and preferences.CodeName='PreferenceLanguage'
             "
         )) {
-            $this->getSession->set( 'IdLanguage', $preference_language->language_id )
-            $_SESSION['lang']       = $preference_language->language_code;
+            $this->_session->set( 'IdLanguage', $preference_language->language_id );
+            $this->_session->set('lang', $preference_language->language_code);
         }
 
         if ($preference_PreferenceDayLight = $this->singleLookup(
@@ -450,7 +454,7 @@ WHERE
     IdPreference=preferences.id and preferences.CodeName='PreferenceDayLight'
             "
         )) {
-            $this->getSession->set( 'PreferenceDayLight', $preference_PreferenceDayLight->Value )
+            $this->_session->set( 'PreferenceDayLight', $preference_PreferenceDayLight->Value );
         }
 
         if ($preference_PreferenceLocalTime = $this->singleLookup(
@@ -465,7 +469,7 @@ WHERE
     IdPreference=preferences.id and preferences.CodeName='PreferenceLocalTime'
             "
         )) {
-            $this->getSession->set( "TimeOffset", $preference_PreferenceLocalTime->Value )
+            $this->_session->set( "TimeOffset", $preference_PreferenceLocalTime->Value );
         }
 
         // Process the login of the member according to his status
@@ -476,7 +480,7 @@ WHERE
             case "NeedMore" :
             case "Pending" :
                 //if (HasRight("Words"))
-                //  $this->getSession->set( 'switchtrans', "on" ) // Activate switchtrans oprion if its a translator
+                //  $this->_session->set( 'switchtrans', "on" ) // Activate switchtrans oprion if its a translator
                 break;
 
             default:
@@ -519,7 +523,7 @@ WHERE   id = $tb_user_id
                 SET
                     IdMember = " . $member->id . ",
                     IdPreference = 1,
-                    Value = " . $_SESSION['IdLanguage'];
+                    Value = " . $this->_session->get('IdLanguage');
             $this->dao->query($update);
             return true;
         }

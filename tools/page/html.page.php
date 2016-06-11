@@ -305,11 +305,11 @@ class PageWithHTML extends AbstractBasePage
 
     protected function statusMessage()
     {
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         // messages about the member's status preceed the info messages
         $user = new APP_User();
         $logged_in = $user->IsBWLoggedIn("NeedMore,Pending");
-        if ($logged_in && $_SESSION['Status'] != 'Active') echo '<p class="status note big">'.$words->get('StatusMessage_'.$_SESSION['Status']).'</p>';
+        if ($logged_in && $this->_session->get('Status') != 'Active') echo '<p class="status note big">'.$words->get('StatusMessage_'. $this->_session->get('Status')).'</p>';
 
         // infoMessage should be used by other Pages to show post-form-messages and other status-messages to the member
         $class = (isset($this->infoMessageClass) && $this->infoMessageClass != '') ? $this->infoMessageClass : '';
@@ -321,7 +321,7 @@ class PageWithHTML extends AbstractBasePage
         ?><div id="translator" class="float_right"><?php
         $request_string = implode('/',PVars::get()->request);
         $rox_tr = PVars::getObj("env")->baseuri . "rox/tr_mode";
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
 
         switch ($words->getTrMode()) {
             case 'translate':

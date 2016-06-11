@@ -58,7 +58,7 @@ class Member extends RoxEntityBase
         }
         $this->words=new MOD_words;
         if ($this->_session->has( 'lang' )) {
-        $langarr = explode('-', $_SESSION['lang']);
+        $langarr = explode('-', $this->_session->get('lang'));
         $this->lang = $langarr[0];
         } else {
             $this->lang = 'en';
@@ -715,11 +715,11 @@ WHERE
     */
     public function count_mynotes()
     {
-        if  (empty($_SESSION['IdMember'])) return (0) ;
-        $str = "select SQL_CACHE count(*) as cnt from mycontacts where IdMember=".$_SESSION["IdMember"];
+        if  (empty($this->_session->get('IdMember'))) return (0) ;
+        $str = "select SQL_CACHE count(*) as cnt from mycontacts where IdMember=".$this->_session->get("IdMember");
 
         $rr=$this->singleLookup($str);
-        // $rr=$this->singleLookup("select SQL_CACHE count(*) as cnt from mycontacts where IdMember=".$_SESSION["IdMember"]." and IdContact=".$this->id);
+        // $rr=$this->singleLookup("select SQL_CACHE count(*) as cnt from mycontacts where IdMember=".$this->_session->get("IdMember")." and IdContact=".$this->id);
         return($rr->cnt) ;
     } // end of count_mynotes
 
@@ -1151,6 +1151,7 @@ ORDER BY preferences.position asc
      * @return mixed Preference value, null or default if preference not set.
      */
     public function getPreference($name, $default = false) {
+        $value = $default;
         $preferences = $this->get_preferences();
         foreach ($preferences as $preference) {
             if ($preference->codeName == $name) {
@@ -1158,11 +1159,7 @@ ORDER BY preferences.position asc
                 break;
             }
         }
-        if ((!isset($value) || $value == null) && $default !== false) {
-            return $default;
-        } else {
-            return $value;
-        }
+        return $value;
     }
 
     /**
@@ -1763,7 +1760,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
             $session->remove($key);
             // if ($this->_session->has( $key )
             // {
-            //    unset($_SESSION[$key]);
+            //    $this->_session->remove($key);
             // }
         }
 
@@ -1774,7 +1771,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         if (!$this->_session->has( $this->sessionName )
             return false;
         $this->loggedIn = false;
-        unset($_SESSION[$this->sessionName]);
+        $this->_session->remove($this->sessionName);
         */
 
         $query = "delete from online where IdMember={$this->getPKValue()}";

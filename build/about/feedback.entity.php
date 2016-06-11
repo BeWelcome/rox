@@ -140,7 +140,7 @@ SQL
         $this->Status = $status;
         $this->IdVolunteer = $category->IdVolunteer;
         $this->IdMember = $member ? $member->id : 0;
-        $this->IdLanguage = $_SESSION['IdLanguage'];
+        $this->IdLanguage = $this->_session->get('IdLanguage');
         $this->created = date('Y-m-d H:i:s');
         return !!$this->insert();
     }

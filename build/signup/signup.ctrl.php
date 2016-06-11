@@ -41,7 +41,7 @@ class SignupController extends RoxControllerBase {
     public function index($args = false)
     {
         // In case Signup is closed
-        if (isset($_SESSION['Param']->FeatureSignupClose) && $_SESSION['Param']->FeatureSignupClose=="Yes") {
+        if (isset($this->_session->get('Param']->FeatureSignupClose) && $_SESSION['Param')->FeatureSignupClose=="Yes") {
             return new SignupClosedPage();
         }
 
@@ -59,10 +59,10 @@ class SignupController extends RoxControllerBase {
 
         if ($this->_session->has( 'IdMember' ) && !MOD_right::get()->hasRight('words')) {
             if (!$this->_session->has( 'Username' )) {
-                unset($_SESSION['IdMember']);
+                $this->_session->remove('IdMember');
                 $page = new SignupProblemPage();
             } else {
-                $this->redirect('members/'.$_SESSION['Username']);
+                $this->redirect('members/'.$this->_session->get('Username'));
             }
         } else switch (isset($request[1]) ? $request[1] : '') {
 
@@ -187,7 +187,7 @@ class SignupController extends RoxControllerBase {
 
         //$mem_redirect->post = $vars;
         foreach ($args->post as $key => $value) {
-            $this->getSession->set( 'SignupBWVars'][$key, $value )
+            $this->_session->set( 'SignupBWVars'][$key, $value )
         }
 
 		$StrLog="Entering signupFormCallback " ;
@@ -209,7 +209,7 @@ class SignupController extends RoxControllerBase {
 
 		MOD_log::get()->write($StrLog,"Signup") ;
 
-        $vars = $_SESSION['SignupBWVars'];
+        $vars = $this->_session->get('SignupBWVars');
         $request = $args->request;
 
         if (isset($request[1]) && $request[1] == '4') {
@@ -219,7 +219,7 @@ class SignupController extends RoxControllerBase {
 
             if (count($errors) > 0) {
                 // show form again
-                $this->getSession->set( 'SignupBWVars']['errors', $errors )
+                $this->_session->set( 'SignupBWVars']['errors', $errors )
                 $mem_redirect->post = $vars;
                 return false;
             }
@@ -230,7 +230,7 @@ class SignupController extends RoxControllerBase {
             } else {
                 // signup on MyTB successful, yeah.
                 $id = $model->registerBWMember($vars);
-                $this->getSession->set( 'IdMember', $id )
+                $this->_session->set( 'IdMember', $id )
 
                 $vars['feedback'] .=
                     $model->takeCareForNonUniqueEmailAddress($vars['email']);
@@ -247,7 +247,7 @@ class SignupController extends RoxControllerBase {
 
                 define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
                 $View->registerMail($vars, $id, $idTB);
-                unset($_SESSION['IdMember']);
+                $this->_session->remove('IdMember');
                 return 'signup/finish';
             }
         }

@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
      * @package Apps
      * @subpackage Admin
      */
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 $massmail = $this->massmail;;
 ?>
 <div id="adminmassmail">
@@ -49,7 +49,7 @@ echo '<td><a href="admin/massmail/details/' . $this->id . '/sent">' . $massmail-
 echo '<td><a href="admin/massmail/details/' . $this->id . '/failed">' . $massmail->Failed . '</a></td></tr>';
 if (!$this->detail) {
     echo '<tr class="highlight"><td class="left" colspan="5"><strong>' . $words->get('AdminMassMailAvailableLanguages') . '</strong>:';
-    $lang = $_SESSION['lang'];
+    $lang = $this->_session->get('lang');
     foreach($massmail->Languages as $language) {
         if ($language->ShortCode == $lang) {
             echo '<strong>';

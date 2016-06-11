@@ -9,6 +9,11 @@ class RoxLauncher
 {
     use \Rox\RoxTraits\SessionTrait;
 
+    public function __construct()
+    {
+        $this->setSession();
+    }
+
     /**
      * central starting point.
      * to be called in htdocs/index.php
@@ -19,7 +24,7 @@ class RoxLauncher
             // find an app and run it.
             $this->chooseAndRunApplication($env_explore);
         } catch (Exception $e) {
-            ExceptionLogger::logException($env_explore->getSession(), $e);
+            ExceptionLogger::logException($e);
             $debug = true;
             if (class_exists('PVars') && !($debug = PVars::get()->debug))
             {
@@ -70,10 +75,9 @@ HTML;
     protected function chooseAndRunApplication(EnvironmentExplorer $env_explore)
     {
         $router = new \RoxFrontRouter();
-        $router->setSession($env_explore->getSession());
         // $router->classes = $env_explore->classes;
         $router->env = $env_explore;
-        $router->session_memory = new SessionMemory($this->_session, 'SessionMemory');
+        $router->session_memory = new SessionMemory('SessionMemory');
         $router->route();
     }
     
@@ -84,13 +88,13 @@ HTML;
      */
     function initBW()
     {
-        // $this->initializeGlobalState();
+        $this->initializeGlobalState();
     }
     
     
     protected function initializeGlobalState()
     {
-        $env_explore = new EnvironmentExplorer;
+        $env_explore = new EnvironmentExplorer();
         $env_explore->initializeGlobalState();
         return $env_explore;
     }
@@ -98,8 +102,10 @@ HTML;
 
 class ExceptionLogger
 {
-    public static function logException(SessionInterface $session, Exception $e)
+
+    public static function logException(Exception $e)
     {
+        $session = \Rox\Framework\SessionSingleton::getSession();
         if ($handle = fopen('exception.log', 'at'))
         {
             $string = "Exception occurred at " . date('Y-m-d H:i:s') . ". Here are the details:". PHP_EOL;

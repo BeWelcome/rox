@@ -84,7 +84,7 @@ LIMIT 7500
         } else {
             if ($sort_element != false) $sort_string = $this->sortFilters($sort_element);
             else $sort_string = false;
-            $member_id = $_SESSION['IdMember'];
+            $member_id = $this->_session->get('IdMember');
             return $this->filteredMailbox('messages.IdReceiver = '.$member_id.' AND messages.Status = "Sent" AND messages.InFolder = "Normal" AND NOT DeleteRequest LIKE "%receiverdeleted%"');
         }
     }
@@ -97,7 +97,7 @@ LIMIT 7500
         } else {
             if ($sort_element != false) $sort_string = $this->sortFilters($sort_element);
             else $sort_string = false;
-            $member_id = $_SESSION['IdMember'];
+            $member_id = $this->_session->get('IdMember');
             return $this->filteredMailbox('messages.IdSender = '.$member_id.' AND messages.Status = "Sent" AND messages.InFolder = "Normal" AND NOT DeleteRequest LIKE "%senderdeleted%"');
         }
     }
@@ -110,7 +110,7 @@ LIMIT 7500
         } else {
             if ($sort_element != false) $sort_string = $this->sortFilters($sort_element);
             else $sort_string = false;
-            $member_id = $_SESSION['IdMember'];
+            $member_id = $this->_session->get('IdMember');
             return $this->filteredMailbox('messages.IdReceiver ='.$member_id.' AND messages.InFolder = "Spam" AND NOT DeleteRequest LIKE "%receiverdeleted%"');
         }
     }
@@ -138,7 +138,7 @@ WHERE
         if (!$message) {
             return false;
         }
-        $user_id = $_SESSION['IdMember'];
+        $user_id = $this->_session->get('IdMember');
         // look if the member is allowed to see the message
         if ($message->IdSender == $user_id) {
             return $message;
@@ -158,14 +158,14 @@ WHERE
         $oldmsg = $this->singleLookup("SELECT DeleteRequest, IdSender, IdReceiver FROM messages WHERE id = '$message_id'");
         $DeleteRequest=$oldmsg->DeleteRequest ;
 
-        if ($oldmsg->IdSender==$_SESSION["IdMember"]) {
+        if ($oldmsg->IdSender==$this->_session->get("IdMember")) {
             if ($DeleteRequest=="receiverdeleted") {
                 $DeleteRequest = "senderdeleted,receiverdeleted";
             } else {
                 $DeleteRequest="senderdeleted";
             }
         }
-        if ($oldmsg->IdReceiver==$_SESSION["IdMember"]) {
+        if ($oldmsg->IdReceiver==$this->_session->get("IdMember")) {
             if ($DeleteRequest=="senderdeleted") {
                 $DeleteRequest = "senderdeleted,receiverdeleted";
             } else {
@@ -307,7 +307,7 @@ WHERE Username = '$username'
 
     public function getMessagesWith($contact_id)
     {
-        $user_id = $_SESSION['IdMember'];
+        $user_id = $this->_session->get('IdMember');
         return $this->filteredMailbox(
             "
 ((messages.IdSender = $contact_id AND messages.IdReceiver = $user_id AND messages.Status = \"Sent\")
@@ -383,7 +383,7 @@ AND DeleteRequest != 'receiverdeleted'
             $lastHour >= $config->new_members_messages_per_hour ||
             $lastDay >= $config->new_members_messages_per_day)) {
 
-            $words = new MOD_words($this->getSession());
+            $words = new MOD_words();
             return $words->getFormatted("YouSentToManyMessages");
         } else {
             return false;
@@ -490,9 +490,9 @@ WHERE id = ".$input['receiver_id']."
 
         if (!isset($input['sender_id'])) {
             // sender is not set.
-            $input['sender_id'] = $_SESSION['IdMember'];
+            $input['sender_id'] = $this->_session->get('IdMember');
             // $problems['sender_id'] = 'no sender was specified.';
-        } else if ($input['sender_id'] != $_SESSION['IdMember']) {
+        } else if ($input['sender_id'] != $this->_session->get('IdMember')) {
             // sender is not the person who is logged in. Log the problem and exit.
             $problems['sender_id'] = 'you are not the sender.';
             MOD_log::get()->write("Trying to send a message with IdMember #".$input['sender_id']." (MessagesModel::sendOrComplain)", "hacking");
@@ -601,10 +601,10 @@ WHERE id = ".$input['receiver_id']."
     * It look a bit weird to have it in the model, but some day it might require additional data from database
     */
     public function DisplayCaptcha($value) {
-        $_SESSION['TheCaptcha']=$value ;
+        $this->_session->get('TheCaptcha')=$value ;
         $ss='<img src="bw/captcha.php?PHPSESSID='.session_id().'" alt="copy this captcha"/>';
 //      $ss='<img src="http://www.bewelcome.org/bw/captcha.php" alt="copy this captcha"/>';
-//      $ss=$_SESSION['TheCaptcha'] ;
+//      $ss=$this->_session->get('TheCaptcha') ;
         return($ss) ;
     } // end of DisplayCaptcha
 
@@ -620,8 +620,8 @@ WHERE id = ".$input['receiver_id']."
     private function CheckForCaptcha($fields) {
         if ($this->CaptchaNeeded($fields['sender_id'])) {
 //      if (($m->NbTrust<=0)or(HasFlag("RequireCaptchaForContact"))) {
-            if ($fields["c_verification"]!=$_SESSION['ExpectedCaptchaValue']) {
-                MOD_log::get()->write("Captcha failed ".$fields["c_verification"]." entered for ".$_SESSION['ExpectedCaptchaValue']." expected (MessagesModel::CheckForCaptcha)", "contactmember") ;
+            if ($fields["c_verification"]!=$this->_session->get('ExpectedCaptchaValue')) {
+                MOD_log::get()->write("Captcha failed ".$fields["c_verification"]." entered for ".$this->_session->get('ExpectedCaptchaValue')." expected (MessagesModel::CheckForCaptcha)", "contactmember") ;
                 return(false) ;
             }
         }

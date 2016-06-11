@@ -263,7 +263,7 @@ class AdminMassmailModel extends RoxModelBase
                 Name = '" . $name . "',
                 created = NOW(),
                 Status = 'Created',
-                IdCreator = ". $_SESSION["IdMember"];
+                IdCreator = ". $this->_session->get("IdMember");
         $this->dao->query($query);
 
         $query = "
@@ -307,7 +307,7 @@ class AdminMassmailModel extends RoxModelBase
                 broadcast
             SET
                 created = NOW(),
-                IdCreator = ". $_SESSION["IdMember"] . ",
+                IdCreator = ". $this->_session->get("IdMember") . ",
                 Type = '" . $type . "'
             WHERE
                 id = " . $id;
@@ -367,7 +367,7 @@ class AdminMassmailModel extends RoxModelBase
 
         // if $id = 0 check if a word code for $name already exists
         if ($id == 0) {
-            $words = new MOD_words($this->getSession());
+            $words = new MOD_words();
             $subject = 'BroadCast_Title_' . $name;
             $body = 'BroadCast_Body_' . $name;
             $subjectCode = $words->getAsIs($subject);

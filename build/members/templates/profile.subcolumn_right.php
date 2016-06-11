@@ -150,9 +150,9 @@ if (!$this->passedAway){ ?>
 // Linkpath widget 
 
     // display linkpath, only if not the members own profile
-    if ($this->_session->has( "IdMember" ) && strcmp($member->id,$_SESSION["IdMember"]) != 0) {
+    if ($this->_session->has( "IdMember" ) && strcmp($member->id,$this->_session->get("IdMember")) != 0) {
         $linkwidget = new LinkSinglePictureLinkpathWidget();
-        $linkwidget->render($_SESSION["IdMember"],$member->id,'linkpath');
+        $linkwidget->render($this->_session->get("IdMember"),$member->id,'linkpath');
     }
 /**********************
 ** Profile Relations **

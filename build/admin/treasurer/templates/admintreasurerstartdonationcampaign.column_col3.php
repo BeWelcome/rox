@@ -39,7 +39,7 @@ if (empty($vars)) {
     $vars['donate-start-date'] = $this->date;
 }
 
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 ?>
 <form method="post">
 <fieldset><legend><?php echo $words->get('AdminTreasurerStartDonationCampaign');?></legend>
@@ -66,7 +66,7 @@ echo isset($vars['donate-start-date']) ? 'value="'.htmlentities($vars['donate-st
     /*<[CDATA[*/
     var datepicker	= new DatePicker({
     relative	: 'donate-start-date',
-    language	: '<?=$this->_session->has( 'lang' ) ? $_SESSION['lang'] : 'en'?>',
+    language	: '<?=$this->_session->has( 'lang' ) ? $this->_session->get('lang') : 'en'?>',
     current_date : '', 
     topOffset   : '25',
     relativeAppend : true

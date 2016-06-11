@@ -7,7 +7,7 @@
 if (!isset($headingLevel)) {
   $headingLevel = 4;
 }
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 ?>
 <div class="comment" id="c<?=$comment->comment_id?>">
 <table>

@@ -133,7 +133,7 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
             FROM " . PVars::getObj('syshcvol')->Crypted . "`cryptedfields`
             RIGHT JOIN `members` ON members.`id` = cryptedfields.`IdMember`";
         if ($this->_session->has( 'IdMember' )) {
-            $query .= ' AND members.`id`!=' . $_SESSION['IdMember'];
+            $query .= ' AND members.`id`!=' . $this->_session->get('IdMember');
         }
         $query .= " WHERE (`AdminCryptedValue` = '" . $email . "'";
         $query .= " OR `AdminCryptedValue` = '<admincrypted>" . $email . "</admincrypted>'";
@@ -298,14 +298,14 @@ FROM `user` WHERE
             }
 
             $id = $this->registerBWMember($vars);
-            $this->getSession->set( 'IdMember', $id )
+            $this->_session->set( 'IdMember', $id )
 
             $vars['feedback'] .= $this->takeCareForNonUniqueEmailAddress($vars['email']);
             $vars['feedback'] .= $this->takeCareForComputerUsedByBWMember();
 
             $this->writeFeedback($vars['feedback']);
 			if (!empty($vars['feedback'])) {
-				MOD_log::get()->write("feedback[<b>".stripslashes($vars['feedback'])."</b>] IdMember=#".$_SESSION['IdMember']." (With New Signup !)","Signup");
+				MOD_log::get()->write("feedback[<b>".stripslashes($vars['feedback'])."</b>] IdMember=#".$this->_session->get('IdMember')." (With New Signup !)","Signup");
 			}
 
             $View = new SignupView($this);
@@ -347,7 +347,7 @@ VALUES(
 	0,
 	\'closed by member\',
 	' . $lang . ',
-	' . $_SESSION['IdMember'] . '
+	' . $this->_session->get('IdMember') . '
 )';
             $s = $this->dao->query($query);
         }
@@ -358,7 +358,7 @@ VALUES(
         $query = '
 SELECT `id`
 FROM `languages`
-WHERE `ShortCode` = \'' . $_SESSION['lang'] . '\'';
+WHERE `ShortCode` = \'' . $this->_session->get('lang') . '\'';
         $q = $this->dao->query($query);
         $result = $q->fetch(PDB::FETCH_OBJ);
         return $result->id;
@@ -518,7 +518,7 @@ VALUES
     			MOD_log::get()->write("Signup bug [".$sqry."]"." (With New Signup !)","Signup");
     		}
     	}
-		MOD_log::get()->writeIdMember($memberID,"member  <b>".$vars['username']."</b> is signuping with success in city [".$CityName."]  using language (".$_SESSION["lang"]." IdMember=#".$memberID." (With New Signup !)","Signup");
+		MOD_log::get()->writeIdMember($memberID,"member  <b>".$vars['username']."</b> is signuping with success in city [".$CityName."]  using language (".$this->_session->get("lang")." IdMember=#".$memberID." (With New Signup !)","Signup");
 
         return $memberID;
 

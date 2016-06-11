@@ -38,7 +38,7 @@ class LastCommentsPage extends PageWithActiveSkin {
     protected function column_col3() {
 		$data=$this->Data ;
 		$styles = array( 'highlight', 'blank' ); // alternating background for table rows
-		$words = new MOD_words($this->getSession());
+		$words = new MOD_words();
 
 		$iiMax = count($data) ; // This retrieve the number of comments
 

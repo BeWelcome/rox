@@ -21,13 +21,16 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  */
 class PPostHandler {
+    use \Rox\RoxTraits\SessionTrait;
+
     private static $_instance;
     private $_vars = array();
-    private $_callback = FALSE;
+    private $_callback = array();
     private $_postHandling = FALSE;
     private $_activeKey = FALSE;
     
     private function __construct() {
+        $this->setSession();
     }
     
     public function __sleep() {
@@ -35,10 +38,12 @@ class PPostHandler {
     }
     
     public static function get () {
+        $session = \Rox\Framework\SessionSingleton::getSession();
         if (!isset(self::$_instance) || get_class(self::$_instance) != __CLASS__) {
-            if (isset ($_SESSION) && is_array ($_SESSION) && array_key_exists ('PostHandler', $_SESSION) && !empty ($_SESSION['PostHandler'])) {
-                self::$_instance = unserialize($_SESSION['PostHandler']);
-                unset($_SESSION['PostHandler']);
+            if ($session->has('PostHandler') && !empty ($session->get('PostHandler'))) {
+                self::$_instance = unserialize($session->get('PostHandler'));
+                self::$_instance->setSession();
+                $session->remove('PostHandler');
             } else {
                 $c = __CLASS__;
                 self::$_instance = new $c();
@@ -49,7 +54,7 @@ class PPostHandler {
         if (is_array ($_POST) && count ($_POST) > 0) {
             self::$_instance->_postHandling = true;
             self::$_instance->save();
-            $this->getSession->set( 'PostHandler', serialize(self::$_instance) );
+            self::$_instance->_session->set( 'PostHandler', serialize(self::$_instance) );
             $req = $_SERVER['REQUEST_URI'];
             if (!PVars::get()->cookiesAccepted) {
                 $req = parse_url($req);
@@ -70,7 +75,7 @@ class PPostHandler {
             header('Location: '.$req);
             PPHP::PExit();
         } else {
-            $this->getSession->set( 'PostHandler', serialize(self::$_instance) );
+            self::$_instance->_session->set( 'PostHandler', serialize(self::$_instance) );
             self::$_instance->_postHandling = false;
         }
         return self::$_instance;
@@ -101,7 +106,7 @@ class PPostHandler {
             $cbRet = call_user_func(array(&$c, $callback[1]));
             if ($cbRet)
                 $ret = $cbRet;
-            $this->getSession->set( 'PostHandler', serialize($this) )
+            self::$_instance->_session->set( 'PostHandler', serialize($this) );
             if ($ret) {
                 $ret = parse_url($ret);
                 $query = array();
@@ -109,7 +114,7 @@ class PPostHandler {
                     parse_str($ret['query'], $query);
                 }
                 if (is_array($query) && array_key_exists(session_name(), $query))
-                    continue;
+                    return;
                 $query[session_name()] = session_id();
                 $queries = array ();
                 foreach ($query as $k=>$q)
@@ -155,7 +160,7 @@ class PPostHandler {
             self::$_instance->_vars[self::$_instance->_activeKey] = array();
         if ($key && array_key_exists($key, self::$_instance->_vars))
             self::$_instance->_vars[$key] = array();
-        $this->getSession->set( 'PostHandler', serialize (self::$_instance) )
+        self::$_instance->_session->set( 'PostHandler', serialize (self::$_instance) );
     }
     
     public static function setCallback($key, $class, $action) {
@@ -164,7 +169,7 @@ class PPostHandler {
         if (get_parent_class($class) != 'PAppModel' && $class != 'PAppModel' && get_parent_class($class) != 'PAppController')
             return false;
         self::$_instance->_callback[$key] = array ($class, $action);
-        $this->getSession->set( 'PostHandler', serialize(self::$_instance) )
+        self::$_instance->_session->set( 'PostHandler', serialize(self::$_instance) );
         return true;
     }
 

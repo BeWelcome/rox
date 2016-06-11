@@ -21,7 +21,7 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 ?>
 <ul id="steps">
     <li class="<?php if ($step== 'tour') echo 'active' ?>"><div class="number">1</div><div class="desc"><a href="tour"><?php echo $words->getFormatted('tour_link')?></a></div></li>

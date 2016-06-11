@@ -1,7 +1,7 @@
 <?php
 
 $User = new APP_User;
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 
 // This was quicly duplicated from the memberslist.php template, this imply om redudancies
 

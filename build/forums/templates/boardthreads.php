@@ -22,7 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
     $styles = array( 'highlight', 'blank' );
-    $words = new MOD_words($this->getSession());
+    $words = new MOD_words();
     $layoutbits = new MOD_layoutbits();
     if (empty($TIGHT_THREADLIST)) {
         $threadliststyle = "forumsboardthreads table table-striped";

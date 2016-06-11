@@ -95,7 +95,7 @@ class PageWithRoxLayout extends PageWithHTML
 
         $user = new APP_User();
         if ($user->isBWLoggedIn()) {
-            $username = $this->_session->has( 'Username' ) ? $_SESSION['Username'] : '';
+            $username = $this->_session->has( 'Username' ) ? $this->_session->get('Username') : '';
             $items[] = array('profile', 'members/'.$username, $username, true);
         }
         $items[] = array('getanswers', 'about', 'GetAnswers');
@@ -151,7 +151,7 @@ class PageWithRoxLayout extends PageWithHTML
         } else {
             // echo 'MOD_online not active';
             if ($this->_session->has( 'WhoIsOnlineCount' ) {
-                $who_is_online_count = $_SESSION['WhoIsOnlineCount']; // MOD_whoisonline::get()->whoIsOnlineCount();
+                $who_is_online_count = $this->_session->get('WhoIsOnlineCount'); // MOD_whoisonline::get()->whoIsOnlineCount();
             } else {
                 $who_is_online_count = 0;
             }
@@ -181,17 +181,17 @@ class PageWithRoxLayout extends PageWithHTML
                     $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
             }
         } else {
-            $username = $this->_session->has( 'Username' ) ? $_SESSION['Username'] : '';
+            $username = $this->_session->has( 'Username' ) ? $this->_session->get('Username') : '';
         }
 
         $rights = new MOD_right();
         $volunteer = $rights->hasRightAny();
         if ($logged_in) 
         {
-        $username = $this->_session->has( 'Username' ) ? $_SESSION['Username'] : '';
+        $username = $this->_session->has( 'Username' ) ? $this->_session->get('Username') : '';
             if ($this->_session->has( "IdMember" ))
             {
-                $IdMember = intval($_SESSION["IdMember"]);
+                $IdMember = intval($this->_session->get("IdMember"));
                 $roxmodel = new Rox();
                 $numberOfNewMessagees = $roxmodel->getNewMessagesNumber($IdMember);
                 if ($numberOfNewMessagees > 0) 
@@ -247,7 +247,7 @@ class PageWithRoxLayout extends PageWithHTML
                     $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
             }
         } else {
-            $username = $this->_session->has( 'Username' ) ? $_SESSION['Username'] : '';
+            $username = $this->_session->has( 'Username' ) ? $this->_session->get('Username') : '';
         }
 
         if (class_exists('MOD_online')) {
@@ -255,7 +255,7 @@ class PageWithRoxLayout extends PageWithHTML
         } else {
             // echo 'MOD_online not active';
             if ($this->_session->has( 'WhoIsOnlineCount' )) {
-                $who_is_online_count = $_SESSION['WhoIsOnlineCount']; // MOD_whoisonline::get()->whoIsOnlineCount();
+                $who_is_online_count = $this->_session->get('WhoIsOnlineCount'); // MOD_whoisonline::get()->whoIsOnlineCount();
             } else {
                 $who_is_online_count = 0;
             }
@@ -399,12 +399,12 @@ class PageWithRoxLayout extends PageWithHTML
     private function getFlash($type, $remove = false) {
         $flashName = 'flash_' . $type;
         if ($this->_session->has( $flashName )) {
-            $flashMessage = $_SESSION[$flashName];
+            $flashMessage = $this->_session->get($flashName);
         } else {
             $flashMessage = false;
         }
         if ($remove) {
-            unset($_SESSION[$flashName]);
+            $this->_session->remove($flashName);
         }
         return $flashMessage;
     }

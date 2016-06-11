@@ -274,7 +274,7 @@ class MessagesController extends RoxControllerBase
         }
 
         // now finally try to send it.
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         $model = new MessagesModel();
         $post = $args->post;
         if (isset($post['message-mark']) && count($post['message-mark']) > 0 && isset($post['submit_multi']))

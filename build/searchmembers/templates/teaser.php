@@ -1,5 +1,5 @@
 <?php
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 $address = (isset($vars) && $vars && isset($vars['CityName'])) ? $vars['CityName'] : $words->getBuffered('searchmembersAllOver');
 if (isset($_GET['vars'])) $address = $_GET['vars'];
 

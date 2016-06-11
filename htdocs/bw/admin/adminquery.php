@@ -45,7 +45,7 @@ $RightLevel = HasRight('SqlForVolunteers'); // Check the rights
 $IdQueryScope = RightScope('SqlForVolunteers');
 
 $membergrouplist="" ; // receive the list of groups the member belongs to
-$qry=sql_query("select IdGroup from membersgroups where Status='In' and IdMember=".$_SESSION["IdMember"]) ;
+$qry=sql_query("select IdGroup from membersgroups where Status='In' and IdMember=".$this->_session->get("IdMember")) ;
 while ($rr=mysql_fetch_object($qry)) {
 	if ($membergrouplist!="") {
 		$membergrouplist.="," ;
@@ -277,8 +277,8 @@ switch (GetParam("action")) {
 			$sQuery=str_ireplace( "\$P3",$Param3,$sQuery) ;
 			$sQuery=str_ireplace( "\$P4",$Param4,$sQuery) ;
 			$sQuery=str_ireplace( "\$P5",$Param5,$sQuery) ;
-			$sQuery=str_ireplace( "\$IdMember",$_SESSION["IdMember"],$sQuery) ;
-			$sQuery=str_ireplace( "\$Username",$_SESSION["Username"],$sQuery) ;
+			$sQuery=str_ireplace( "\$IdMember",$this->_session->get("IdMember"),$sQuery) ;
+			$sQuery=str_ireplace( "\$Username",$this->_session->get("Username"),$sQuery) ;
 	
 			if ($rrQuery->LogMe=="True") {
 				LogStr("Doing query [".$sQuery."]","adminquery") ;

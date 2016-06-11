@@ -22,7 +22,7 @@ class MailboxWidget_Drafts extends MailboxWidget
 {
     protected function getMessages()
     {
-        $myself_id = $_SESSION['IdMember'];
+        $myself_id = $this->_session->get('IdMember');
         return $this->model->filteredMailbox(array(
             'messages.IdSender = '.$myself_id,
             'messages.Status = "Draft"'

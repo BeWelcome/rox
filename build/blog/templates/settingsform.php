@@ -9,7 +9,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 $errors = array();
 $i18n = new MOD_i18n('apps/blog/settings.php');
 $errors = $i18n->getText('i18n');

@@ -42,7 +42,7 @@ $scope = RightScope('Grep');
 if ($nbligne == "")
 	$nbligne = "3";
 if (isset ($_POST['repertoire']))
-	$repertoire = $_SESSION['repertoire'];
+	$repertoire = $this->_session->get('repertoire');
 if ($RightLevel >= 5) { // rigcht level 5 allow to overwrite scope
 	if (GetParam("scope") != "")
 		$scope = GetParam("scope");
@@ -70,7 +70,7 @@ switch ($action) {
 				$previousres .= analyse($filename, stripslashes($s1), $nbligne, stripslashes($s2), stripslashes($stringnot));
 			}
 		}
-		$this->getSession->set( directory, $repertoire )
+		$this->_session->set( directory, $repertoire )
 		break;
 }
 

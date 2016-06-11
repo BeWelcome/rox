@@ -29,14 +29,14 @@ require_once("layouttools.php");
 
 // This menu is the top menu
 function Menu1($link = "", $tt = "") {
-	$this->getSession->set( 'Menu1_link', $link )
-	$this->getSession->set( 'Menu1_tt', $tt )
+	$this->_session->set( 'Menu1_link', $link )
+	$this->_session->set( 'Menu1_tt', $tt )
 }
 
 function Menu1_old($link = "", $tt = "") {
 	
 	if ($this->_session->has( 'IdMember' ))
-		$IdMember = $_SESSION['IdMember'];
+		$IdMember = $this->_session->get('IdMember');
 	else
 		$IdMember = "";	
 	
@@ -70,18 +70,18 @@ function Menu1_old($link = "", $tt = "") {
 
 function Menu2($link = "", $tt = "") {
 	Menu2_old($link, $tt);
-	Menu1_old($_SESSION['Menu1_link'],$_SESSION['Menu1_tt']);
+	Menu1_old($this->_session->get('Menu1_link'],$_SESSION['Menu1_tt'));
 }
 
 function Menu2_old($link = "", $tt = "") {
 	
 	if ($this->_session->has( 'IdMember' ))
-		$IdMember = $_SESSION['IdMember'];
+		$IdMember = $this->_session->get('IdMember');
 	else
 		$IdMember = "";
 		
 	if ($this->_session->has( 'Username' ))
-		$Username = $_SESSION['Username'];
+		$Username = $this->_session->get('Username');
 	else
 		$Username = "";
 	?>
@@ -172,7 +172,7 @@ function Menu2_old($link = "", $tt = "") {
 <?php } // end of Menu2
 
 function factive($link, $value,$IdLanguage=-1) {
-	if ((strpos($link, $value) === 0) and (($IdLanguage==-1) or ($IdLanguage==$_SESSION["IdLanguage"]))) {
+	if ((strpos($link, $value) === 0) and (($IdLanguage==-1) or ($IdLanguage==$this->_session->get("IdLanguage")))) {
 		return (" class=\"active\"");
 	} else
 		return ("");
@@ -532,7 +532,7 @@ function DisplayHeaderMainPage($TitleTopContent = "", $MessageBeforeColumnLow = 
 	echo "    <div id=\"main\">\n"; 
 	echo "      <div id=\"teaser_bg\">\n"; 
 	echo "      <div id=\"teaser\" class=\"clearfix teaser_main\">\n";
-	if (IsLoggedIn()) echo "        <h2>", ww("HelloUsername",LinkWithUsername($_SESSION["Username"])),"</h2>\n";
+	if (IsLoggedIn()) echo "        <h2>", ww("HelloUsername",LinkWithUsername($this->_session->get("Username"))),"</h2>\n";
 	else 	 echo "        <h2>", ww("YourAreNotLogged"),"</h2>\n";
 	
 	echo "        <div id=\"teaser_l\">\n"; 

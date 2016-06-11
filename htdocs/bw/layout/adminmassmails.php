@@ -298,7 +298,7 @@ function DisplayAdminMassMails($TData) {
   echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
   echo "        <div class=\"info clearfix\">\n";
 
-  echo "<table><tr><td align='right'>Please write here in </td><td bgcolor=yellow align=left>".LanguageName($_SESSION['IdLanguage'])."</td></table>";
+  echo "<table><tr><td align='right'>Please write here in </td><td bgcolor=yellow align=left>".LanguageName($this->_session->get('IdLanguage'))."</td></table>";
   echo "<br />" ;
   // echo "<hr />\n";
   echo "<table>\n";
@@ -351,7 +351,7 @@ function DisplayFormCreateBroadcast($IdBroadCast=0, $Name = "",$BroadCast_Title_
 
   echo "<form method=\"post\" action=\"adminmassmails.php\" class=\"yform full\">\n";
   echo "<input type=\"hidden\" name=\"IdBroadCast\" value=\"$IdBroadCast\">";
-  echo "<p class=\"note center\">Please write here in <strong>".LanguageName($_SESSION['IdLanguage'])."</strong></p>";
+  echo "<p class=\"note center\">Please write here in <strong>".LanguageName($this->_session->get('IdLanguage'))."</strong></p>";
   echo "<div class=\"type-text\">";
   echo "<p>Give the code name of the broadcast as a word entry (must not exist in words table previously) like <b>NewsJuly2007</b> or <b>NewsAugust2007</b> without spaces!</p>";
   echo "<label for=\"Name\">WordCode for the newsletter</label>";

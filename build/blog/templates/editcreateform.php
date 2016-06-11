@@ -20,7 +20,7 @@ if (!$member) {
     echo '<p class="error">'.$words->get('BlogErrors_not_logged_in').'</p>';
     return false;
 }
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 ?>
 <?php
 if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {

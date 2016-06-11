@@ -40,7 +40,7 @@ class SetLocationPage extends PageWithRoxLayout
     
     protected function teaserHeadline()
     {
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         return $words->get('SetLocation');
     }
 
@@ -51,7 +51,7 @@ class SetLocationPage extends PageWithRoxLayout
 
     protected function getPageTitle() {
         if ($this->_session->has( 'Username' )) {
-            return 'Welcome, '.$_SESSION['Username'];
+            return 'Welcome, '.$this->_session->get('Username');
         } else {
             // this should not happen actually!
             return 'Welcome, Guest!';

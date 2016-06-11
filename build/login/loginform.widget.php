@@ -65,7 +65,7 @@ class LoginFormWidget extends RoxWidget
             // already logged in
             ?>
             <div>
-              <p><?=$ww->LoginformAlreadyLogged($_SESSION['Username']) ?></p>
+              <p><?=$ww->LoginformAlreadyLogged($this->_session->get('Username')) ?></p>
               <p><a href="user/logout"><?=$ww->Logout ?></a></p>
             </div>
             <?php

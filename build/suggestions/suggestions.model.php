@@ -41,7 +41,7 @@ class SuggestionsModel extends RoxModelBase
     }
 
     public static function getRanksAsArray($lang = 'en') {
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         return array(
             4 => $words->getBufferedInLang('SuggestionsExcellent', $lang),
             3 => $words->getBufferedInLang('SuggestionsGood', $lang),

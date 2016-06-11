@@ -14,6 +14,6 @@
     //change this to the permissions you will need
     $f->auth("read");
     
-    echo "Copy this token into your code: " . $_SESSION['phpFlickr_auth_token'];
+    echo "Copy this token into your code: " . $this->_session->get('phpFlickr_auth_token');
     
 ?>

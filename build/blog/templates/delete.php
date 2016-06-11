@@ -1,5 +1,5 @@
 <?php
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 $callback = $this->getCallbackOutput('BlogController','deleteProcess');
 echo <<<HTML
 <h2>{$words->get('BlogDeleteTitle')}</h2>

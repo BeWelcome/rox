@@ -1,5 +1,5 @@
 <?php
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 $member = $this->member;
 if ($member)
 {
@@ -12,7 +12,7 @@ if ($member)
 
             <?php
                 // ###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###
-                $next_trips = MOD_trips::get()->RetrieveVisitorsInCityWithAPicture($_SESSION['IdMember']);
+                $next_trips = MOD_trips::get()->RetrieveVisitorsInCityWithAPicture($this->_session->get('IdMember'));
                 echo $next_trips ? '<h3>'.$words->getFormatted('RecentMemberCity').'</h3>' : '';
                 for ($ii = 0; $ii < count($next_trips); $ii++) {
                     $m = $next_trips[$ii];

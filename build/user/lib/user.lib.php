@@ -64,7 +64,7 @@ class APP_User extends MOD_bw_user_Auth
         $this->setSession();
         // if an Id is set, then the user is logged in, simple and smooth
         if( $this->_session->has( 'APP_User_id' )) {
-            $this->_getUser($_SESSION['APP_User_id']);
+            $this->_getUser($this->_session->get('APP_User_id'));
         }
     }
     
@@ -375,7 +375,7 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
     {
         if( !$this->loggedIn)
             return false;
-        return( int)$_SESSION['APP_User_id'];
+        return( int)$this->_session->get('APP_User_id');
     }
     
     /**

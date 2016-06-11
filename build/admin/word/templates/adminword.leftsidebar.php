@@ -28,7 +28,7 @@ Boston, MA  02111-1307, USA.
  * @package Apps
  * @subpackage Admin
  */
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 ?>
 <h3>Action</h3>
 <ul class="linklist">

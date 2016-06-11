@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 /** 
  * @author Manuel <crumbking>
  */
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 ?>
 <h3><a href="admin" title="$words->get('BackToVolunteerToolsBarTitle')">&laquo; <?php echo $words->get('VolunteerToolsBarTitle') ?></a></h3>
 <ul class="linklist">

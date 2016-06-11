@@ -427,8 +427,8 @@ function liveuser_loglogin(){
     $requestInfo= ewiki_liveuser_get_login_data();
   
     //store ip and sslid in session variables so we can check them later.
-    $_SESSION['loginInfo']['ip_address']=$requestInfo['ip_address'];
-    $_SESSION['loginInfo']['ssl_session_id']=$requestInfo['ssl_session_id'];
+    $this->_session->get('loginInfo']['ip_address']=$requestInfo['ip_address');
+    $this->_session->get('loginInfo']['ssl_session_id']=$requestInfo['ssl_session_id');
     
     //var_dump($requestInfo);
     

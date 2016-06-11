@@ -16,7 +16,7 @@ class LinkShowFriendsPage extends LinkPage
     {
         $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
         
-		$from=$_SESSION['Username'] ;
+		$from=$this->_session->get('Username') ;
 		$degree=1 ;
 		$limit=50 ;
 		if ($mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {

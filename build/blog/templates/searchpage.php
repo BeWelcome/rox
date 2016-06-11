@@ -14,7 +14,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 
 if (!$search) {}
 else {

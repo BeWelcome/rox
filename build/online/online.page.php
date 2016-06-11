@@ -27,7 +27,7 @@ class OnlinePage extends PageWithActiveSkin
     public function column_col3()
     {
         $model = new OnlineModel();
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         PVars::getObj('page')->title = $words->getBuffered('WhoIsOnLinePage');
         $TMembers=$model->GetMembers() ;
         $TGuests=$model->GetGuests() ;
@@ -38,7 +38,7 @@ class OnlinePage extends PageWithActiveSkin
     
     public function leftSidebar()
     {
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
     }
 }
 

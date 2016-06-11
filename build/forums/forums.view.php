@@ -10,6 +10,8 @@
 */
 
 class ForumsView extends RoxAppView {
+    use \Rox\RoxTraits\SessionTrait;
+
     private $_model;
     public $page;
     private $words ;
@@ -18,6 +20,7 @@ class ForumsView extends RoxAppView {
     public $BW_Right;
 
     public function __construct(Forums &$model) {
+        $this->setSession();
         $this->_model =& $model;
         $this->words=$this->_model->words ;
         $this->BW_Right=$this->_model->BW_Right ;
@@ -100,7 +103,7 @@ class ForumsView extends RoxAppView {
         $allow_title = false;
         $edit = false;
         $notifymecheck = "";
-        if ($this->_model->IsThreadSubscribed($topic->IdThread,$_SESSION["IdMember"])) {
+        if ($this->_model->IsThreadSubscribed($topic->IdThread,$this->_session->get("IdMember"))) {
             $notifymecheck = 'checked="checked"' ; // This is to tell that the notifyme cell is preticked
         }
 
@@ -145,7 +148,7 @@ class ForumsView extends RoxAppView {
         $edit = true;
         $messageid = $this->_model->getMessageId();
         $notifymecheck = "" ;
-        if ($this->_model->IsThreadSubscribed($this->_model->getThreadId(),$_SESSION["IdMember"])) {
+        if ($this->_model->IsThreadSubscribed($this->_model->getThreadId(),$this->_session->get("IdMember"))) {
             $notifymecheck = 'checked="checked"' ; // This is to tell that the notifyme cell is preticked
         }
         $IdGroup = $this->_model->IdGroup;
@@ -158,7 +161,7 @@ class ForumsView extends RoxAppView {
         if (!$translate) { // In case this is a edit, by default force the original post language
             $IdContent=$this->_model->getIdContent();
             global $fTradIdLastUsedLanguage ; $fTradIdLastUsedLanguage=1 ; // willbe change by ftrad
-            $word = new MOD_words($this->getSession());
+            $word = new MOD_words();
             // This function is just called for finding the language in which one the post will be displayed
             $void_string=$word->ftrad($IdContent) ;
             $AppropriatedLanguage=$fTradIdLastUsedLanguage ;
@@ -183,7 +186,7 @@ class ForumsView extends RoxAppView {
         $edit = true;
         $messageid = $this->_model->getMessageId();
         $notifymecheck="";
-        if ($this->_model->IsThreadSubscribed($this->_model->getThreadId(),$_SESSION["IdMember"])) {
+        if ($this->_model->IsThreadSubscribed($this->_model->getThreadId(),$this->_session->get("IdMember"))) {
             $notifymecheck = 'checked="checked"'; // This is to tell that the notifyme cell is preticked
         }
         $AppropriatedLanguage=$this->_model->FindAppropriatedLanguage($vars['first_postid']) ;
@@ -210,7 +213,7 @@ class ForumsView extends RoxAppView {
         else {
             $this->SetPageTitle($topic->topicinfo->title. ' - BeWelcome '.$this->words->getBuffered('Forum'));
         }
-        if (empty($_SESSION['IdMember']))  {
+        if (empty($this->_session->get('IdMember')))  {
             if (isset($topic->posts[0])) {
                 $this->page->SetMetaDescription(strip_tags($this->_model->words->fTrad(($topic->posts[0]->IdContent)))) ; ;
             }
@@ -564,7 +567,7 @@ class ForumsView extends RoxAppView {
             $word = 'ForumVisibilityGroupOnlyThread';
         }
 
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
 
         $out = '<input type="checkbox" name="' . $name . '" id="' . $name . '" value="GroupOnly"';
         if ($visibility == 'GroupOnly') {

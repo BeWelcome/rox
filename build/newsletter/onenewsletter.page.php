@@ -29,16 +29,16 @@ class OneNewsLetterPage extends RoxPageView  /* HelloUniversePage doesn't work! 
      */
     protected function column_col3()
     {
-		if (empty($_SESSION['Username'])) {
+		if (empty($this->_session->get('Username'))) {
 			echo '<p>',$this->getWords()->getInLang('BroadCast_Body_'.$this->Data->LetterName,$this->Data->Lang,'member'),'</p>' ;
 		}
 		else {
 			if ($this->Data->CountSent > 10) {
 				echo '<p>Sent to '.$this->Data->CountSent,' members</p>' ;
-				echo '<p>',$this->getWords()->getFormattedInLang('BroadCast_Body_'.$this->Data->LetterName,$this->Data->Lang,$_SESSION['Username']),'</p>' ;
+				echo '<p>',$this->getWords()->getFormattedInLang('BroadCast_Body_'.$this->Data->LetterName,$this->Data->Lang,$this->_session->get('Username')),'</p>' ;
 			}
 			else {
-				echo '<p>',$this->getWords()->getBuffered('BroadCast_Body_'.$this->Data->LetterName,$_SESSION['Username']),'</p>' ;
+				echo '<p>',$this->getWords()->getBuffered('BroadCast_Body_'.$this->Data->LetterName,$this->_session->get('Username')),'</p>' ;
 			}
 				
 			if ($this->Data->CountToSend > 0) 

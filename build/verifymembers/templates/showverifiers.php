@@ -28,7 +28,7 @@ if (!isset($vars['errors']) || !is_array($vars['errors'])) {
     $vars['errors'] = array();
 }
 
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 $styles = array( 'highlight', 'blank' ); // alternating background for table rows
 $iiMax = count($list) ; // This retrieve the list of the verifiers
 ?>

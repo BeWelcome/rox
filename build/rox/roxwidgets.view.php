@@ -11,7 +11,7 @@ class VolunteerLinksWidget
         $this->_init();
         $this->_model = new VolunteerbarModel();
 
-		if (empty($_SESSION['IdMember'])) {
+		if (empty($this->_session->get('IdMember'))) {
 			return ; // Do nothing if user is not identified (thi cannot be a volunteer)
 		}
 

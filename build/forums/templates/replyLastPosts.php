@@ -23,7 +23,7 @@ Boston, MA  02111-1307, USA.
 */
 	//$i18n = new MOD_i18n('apps/forums/board.php');
 	//$boardText = $i18n->getText('boardText');
-	$words = new MOD_words($this->getSession());
+	$words = new MOD_words();
 
 	$can_del = false;
 	$can_edit_own = false;

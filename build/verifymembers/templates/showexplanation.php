@@ -31,7 +31,7 @@ if (!empty($errormessage)) {
 
 ?>
 <p>
-<?=$words->getFormatted("verifymembers_explanation",$_SESSION["Username"]) ?>
+<?=$words->getFormatted("verifymembers_explanation",$this->_session->get("Username")) ?>
 </p>
 <p>
 <form name="entermembertoverify" action="verifymembers/prepareverifymember"  id="prepareverifymember" method="post">

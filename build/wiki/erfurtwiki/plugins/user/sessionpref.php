@@ -4,6 +4,6 @@
    line to get user/pref support.
 */
 
-$_EWIKI = & $_SESSION["_EWIKI"];   // simple, eh?!
+$_EWIKI = & $this->_session->get("_EWIKI");   // simple, eh?!
 
 ?>

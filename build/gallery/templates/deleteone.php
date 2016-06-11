@@ -5,7 +5,7 @@ if ($this->model->getLoggedInMember())
     $callbackId = $Gallery->editProcess();
     $vars =& PPostHandler::getVars($callbackId);
 }
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 
 $d = $image;
 

@@ -7,7 +7,7 @@
 if (!isset($headingLevel)) {
   $headingLevel = 4;
 }
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 $shouts = new ShoutsController();
 
 ?>

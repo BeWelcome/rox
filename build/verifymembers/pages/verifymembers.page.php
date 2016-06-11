@@ -55,8 +55,8 @@ class VerifyMembersPage extends RoxPageView
         $words = $this->getWords();
         echo '<h3>',$words->getFormatted("MyVerifyTools"),'</h3>';
         echo '<ul class="linklist">' ;
-        echo '<li><a href="verifymembers/verifiersof/'.$_SESSION["Username"],'">',$words->getFormatted("MyVerifier"),'</a></li>';
-        echo '<li><a href="verifymembers/verifiersby/'.$_SESSION["Username"],'">',$words->getFormatted("MyVerified"),'</a></li>';
+        echo '<li><a href="verifymembers/verifiersof/'.$this->_session->get("Username"),'">',$words->getFormatted("MyVerifier"),'</a></li>';
+        echo '<li><a href="verifymembers/verifiersby/'.$this->_session->get("Username"),'">',$words->getFormatted("MyVerified"),'</a></li>';
         echo '</ul>' ;
         echo '<h3>',$words->getFormatted("MoreInfo"),'</h3>';
         echo '<ul class="linklist">' ;

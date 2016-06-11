@@ -254,7 +254,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
         }
         else
         {
-            return $this->getGroupsForMember($_SESSION['IdMember']);
+            return $this->getGroupsForMember($this->_session->get('IdMember'));
         }
     }
 
@@ -286,7 +286,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
     {
         if (
             (!$this->_session->has( 'my_group_visits' ) ||
-            (!$group_visits = unserialize($_SESSION['my_group_visits'])) ||
+            (!$group_visits = unserialize($this->_session->get('my_group_visits'))) ||
             (!is_array($group_visits))
         ) {
             $group_visits = array();
@@ -295,15 +295,15 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
 
         // sort by value, while preserving the keys
         asort($group_visits);
-        $this->getSession->set( 'my_group_visits', serialize(array_slice($group_visits, 0, 5)) )
-        // unset($_SESSION['my_group_visits']);
+        $this->_session->set( 'my_group_visits', serialize(array_slice($group_visits, 0, 5)) )
+        // $this->_session->remove('my_group_visits');
     }
 
     public function getLastVisited()
     {
         if (
             (!$this->_session->has( 'my_group_visits' ) ||
-            (!$group_visits = unserialize($_SESSION['my_group_visits'])) ||
+            (!$group_visits = unserialize($this->_session->get('my_group_visits'))) ||
             (!is_array($group_visits))
         ) {
             return array();

@@ -23,7 +23,7 @@ Boston, MA  02111-1307, USA.
 This page show the result of the SHowLink tab
 
 */
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 ?>
 
   <div class="index_row2">

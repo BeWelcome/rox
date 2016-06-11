@@ -140,7 +140,7 @@ HTML;
                 }
 
 // TODO: move to controller
-$next_trips = MOD_trips::get()->RetrieveVisitorsInCityWithAPicture($_SESSION['IdMember'], 4);
+$next_trips = MOD_trips::get()->RetrieveVisitorsInCityWithAPicture($this->_session->get('IdMember'), 4);
 $next_trips_count = count($next_trips);
 ?>
                 <?php if ($next_trips_count > 0): ?>

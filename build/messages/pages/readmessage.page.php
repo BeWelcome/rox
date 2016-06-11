@@ -4,14 +4,14 @@ class ReadMessagePage extends MessagesBasePage
 {
     protected function column_col3()
     {
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         $message = $this->message;
         $purifier = new MOD_htmlpure();
         $purifier = $purifier->getMessagesHtmlPurifier();
         $contact_username = $message->senderUsername;
         $model = new MembersModel();
         $direction_in = true;
-        if ($contact_username == $_SESSION['Username']) {
+        if ($contact_username == $this->_session->get('Username')) {
             $contact_username = $message->receiverUsername;
             $direction_in = false;
         }
@@ -123,7 +123,7 @@ class ReadMessagePage extends MessagesBasePage
     {
         $active_item = 'received';
         $contact_username = $this->message->senderUsername;
-        if ($contact_username == $_SESSION['Username']) {
+        if ($contact_username == $this->_session->get('Username')) {
             $active_item = 'sent';
         }
         return $active_item;

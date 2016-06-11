@@ -5,7 +5,7 @@ $member = $this->member;
 //just to showcase the language selection method below while the
 //profile language switch isn't ready for action 
 //not sure if non-english profile should be shown as default in production
-//$profile_language = $_SESSION['IdLanguage'];
+//$profile_language = $this->_session->get('IdLanguage');
 $lang = $this->model->get_profile_language();
 $profile_language = $lang->id;
 $profile_language_code = $lang->ShortCode;

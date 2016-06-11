@@ -254,7 +254,7 @@ class MOD_layoutbits
         $timestamp = ((is_string($timestamp) && intval($timestamp) == $timestamp) ? intval($timestamp) : $timestamp);
         if (!is_int($timestamp)) $timestamp = strtotime($timestamp);
 
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         $difference = time() - $timestamp;
 
         $periods = array('second','minute','hour','day','week','month','year','decade');

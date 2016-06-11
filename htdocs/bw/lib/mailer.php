@@ -66,7 +66,7 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
     }
 
     if ($this->_session->has( 'verbose' )) {
-        $verbose = $_SESSION['verbose'];
+        $verbose = $this->_session->get('verbose');
     }
     else {
         $verbose = false;

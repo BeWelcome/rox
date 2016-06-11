@@ -45,7 +45,7 @@ class BlogEditPage extends BlogBasePage
         $errors = array();
         $lang = array();
         $i18n = new MOD_i18n('apps/blog/editcreate.php');
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         $errors = $i18n->getText('errors');
         $lang = $i18n->getText('lang');
         $monthNames = array();

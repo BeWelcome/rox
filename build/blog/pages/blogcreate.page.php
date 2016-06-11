@@ -47,7 +47,7 @@ class BlogCreatePage extends BlogBasePage
 
         $errors = array();
         $lang = array();
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         $i18n = new MOD_i18n('apps/blog/editcreate.php');
         $errors = $i18n->getText('errors');
         $lang = $i18n->getText('lang');

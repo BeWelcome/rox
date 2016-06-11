@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2013-2014
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  */
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 ?>
 <div>
     <h3><?=$words->get('TripYourOwnTripHeadline')?></h3>

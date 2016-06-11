@@ -29,7 +29,7 @@ class VerifyMembersFinishPage extends VerifyMembersPage
      * @return string the page title
      */
     protected function getPageTitle() {
-         $words = new MOD_words($this->getSession());
+         $words = new MOD_words();
          if (MOD_right::get()->hasRight("Verifier","ApprovedVerifier")) {
             echo $words->getFormatted("verifymembers_approvedverifier") ;
          }

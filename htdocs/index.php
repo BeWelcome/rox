@@ -42,10 +42,10 @@ require SCRIPT_BASE.'vendor/autoload.php';
 Debug::enable();
 
 $session = SessionSingleton::getSession();
-$session->start();
 $session->setName('sidTB');
+$session->start();
 
-$environmentExplorer = new EnvironmentExplorer($session);
+$environmentExplorer = new EnvironmentExplorer();
 $environmentExplorer->initializeGlobalState();
 
 $locator = new Symfony\Component\Config\FileLocator(array(SCRIPT_BASE));

@@ -270,8 +270,8 @@ if ( !class_exists('phpFlickr') ) {
 			$args = array_merge(array("method" => $command, "format" => "php_serial", "api_key" => $this->api_key), $args);
 			if (!empty($this->token)) {
 				$args = array_merge($args, array("auth_token" => $this->token));
-			} elseif (!empty($_SESSION['phpFlickr_auth_token'])) {
-				$args = array_merge($args, array("auth_token" => $_SESSION['phpFlickr_auth_token']));
+			} elseif (!empty($this->_session->get('phpFlickr_auth_token'))) {
+				$args = array_merge($args, array("auth_token" => $this->_session->get('phpFlickr_auth_token')));
 			}
 			ksort($args);
 			$auth_sig = "";
@@ -395,8 +395,8 @@ if ( !class_exists('phpFlickr') ) {
 				$args = array("api_key" => $this->api_key, "title" => $title, "description" => $description, "tags" => $tags, "is_public" => $is_public, "is_friend" => $is_friend, "is_family" => $is_family);
 				if (!empty($this->token)) {
 					$args = array_merge($args, array("auth_token" => $this->token));
-				} elseif (!empty($_SESSION['phpFlickr_auth_token'])) {
-					$args = array_merge($args, array("auth_token" => $_SESSION['phpFlickr_auth_token']));
+				} elseif (!empty($this->_session->get('phpFlickr_auth_token'))) {
+					$args = array_merge($args, array("auth_token" => $this->_session->get('phpFlickr_auth_token')));
 				}
 
 				ksort($args);
@@ -457,8 +457,8 @@ if ( !class_exists('phpFlickr') ) {
 				$args = array("async" => 1, "api_key" => $this->api_key, "title" => $title, "description" => $description, "tags" => $tags, "is_public" => $is_public, "is_friend" => $is_friend, "is_family" => $is_family);
 				if (!empty($this->token)) {
 					$args = array_merge($args, array("auth_token" => $this->token));
-				} elseif (!empty($_SESSION['phpFlickr_auth_token'])) {
-					$args = array_merge($args, array("auth_token" => $_SESSION['phpFlickr_auth_token']));
+				} elseif (!empty($this->_session->get('phpFlickr_auth_token'))) {
+					$args = array_merge($args, array("auth_token" => $this->_session->get('phpFlickr_auth_token')));
 				}
 
 				ksort($args);
@@ -518,8 +518,8 @@ if ( !class_exists('phpFlickr') ) {
 				$args = array("api_key" => $this->api_key, "photo_id" => $photo_id, "async" => $async);
 				if (!empty($this->token)) {
 					$args = array_merge($args, array("auth_token" => $this->token));
-				} elseif (!empty($_SESSION['phpFlickr_auth_token'])) {
-					$args = array_merge($args, array("auth_token" => $_SESSION['phpFlickr_auth_token']));
+				} elseif (!empty($this->_session->get('phpFlickr_auth_token'))) {
+					$args = array_merge($args, array("auth_token" => $this->_session->get('phpFlickr_auth_token')));
 				}
 
 				ksort($args);
@@ -580,11 +580,11 @@ if ( !class_exists('phpFlickr') ) {
 			// If remember_uri is set to false, the callback script (included) will
 			// redirect to its default page.
 
-			if (empty($_SESSION['phpFlickr_auth_token']) && empty($this->token)) {
+			if (empty($this->_session->get('phpFlickr_auth_token')) && empty($this->token)) {
 				if ( $remember_uri === true ) {
-					$this->getSession->set( 'phpFlickr_auth_redirect', $_SERVER['REQUEST_URI'] )
+					$this->_session->set( 'phpFlickr_auth_redirect', $_SERVER['REQUEST_URI'] )
 				} elseif ( $remember_uri !== false ) {
-					$this->getSession->set( 'phpFlickr_auth_redirect', $remember_uri )
+					$this->_session->set( 'phpFlickr_auth_redirect', $remember_uri )
 				}
 				$api_sig = md5($this->secret . "api_key" . $this->api_key . "perms" . $perms);
 				
@@ -599,7 +599,7 @@ if ( !class_exists('phpFlickr') ) {
 				$this->die_on_error = false;
 				$rsp = $this->auth_checkToken();
 				if ($this->error_code !== false) {
-					unset($_SESSION['phpFlickr_auth_token']);
+					$this->_session->remove('phpFlickr_auth_token');
 					$this->auth($perms, $remember_uri);
 				}
 				$this->die_on_error = $tmp;
@@ -666,7 +666,7 @@ if ( !class_exists('phpFlickr') ) {
 		function auth_getToken ($frob) {
 			/* http://www.flickr.com/services/api/flickr.auth.getToken.html */
 			$this->request('flickr.auth.getToken', array('frob'=>$frob));
-			$this->getSession->set( 'phpFlickr_auth_token', $this->parsed_response['auth']['token'] )
+			$this->_session->set( 'phpFlickr_auth_token', $this->parsed_response['auth']['token'] )
 			return $this->parsed_response ? $this->parsed_response['auth'] : false;
 		}
 

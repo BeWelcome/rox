@@ -28,7 +28,7 @@ require_once("layouttools.php");
 
 echo "<!DOCTYPE html>\n";
 echo "<html " ;
-if ($this->_session->has( "lang" )) echo " lang=\"".($_SESSION["lang"])."\"" ;
+if ($this->_session->has( "lang" )) echo " lang=\"".($this->_session->get("lang"))."\"" ;
 echo ">\n";
 global $_SYSHCVOL;
 echo "<head>\n";
@@ -52,9 +52,9 @@ $stylesheet = "minimal"; // this is the default style sheet
 // If is logged try to load appropriated style sheet
 if (IsLoggedIn()) {
     if (!$this->_session->has( "stylesheet" ))  { // cache in session to avoid a reload at each new page
-         $rrstylesheet = LoadRow("select Value from memberspreferences where IdMember=" . $_SESSION['IdMember'] . " and IdPreference=6");
+         $rrstylesheet = LoadRow("select Value from memberspreferences where IdMember=" . $this->_session->get('IdMember') . " and IdPreference=6");
          if (isset ($rrstylesheet->Value)) {
-                $_SESSION["stylesheet"]=$stylesheet = $rrstylesheet->Value;
+                $this->_session->get("stylesheet")=$stylesheet = $rrstylesheet->Value;
          }
     }
     $stylesheet = "minimal"; // force YAML also for logged member (for now, todo several layout)

@@ -39,7 +39,7 @@ class MailboxWidget extends ItemlistWithPagination
         // This would lgo in the a-tag: '.(($sort_current == 'date') ? 'class="sort_selected"' : '').'
         $request_str = implode('/',PRequest::get()->request);
         $dir_str = (isset($_GET['dir']) && $_GET['dir'] != 'ASC') ? 'ASC' : 'DESC';
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         return array(
             'select' => '',
             'from' => '<a href="'.$request_str.'?sort=sender&amp;dir='.$dir_str.'">'.$words->getSilent('From').'</a> / <a href="'.$request_str.'?sort=date&amp;dir='.(isset($_GET['dir']) ? $dir_str : 'ASC').'">'.$words->getSilent('Date').'</a>'.$words->flushBuffer(),
@@ -63,7 +63,7 @@ class MailboxWidget extends ItemlistWithPagination
 
     protected function tableCell_from($message)
     {
-        $direction_in = ($message->IdReceiver == $_SESSION['IdMember']);
+        $direction_in = ($message->IdReceiver == $this->_session->get('IdMember'));
         $contact_username = $direction_in ? $message->senderUsername : $message->receiverUsername;
         $date_sent = $message->DateSent;
         $date_created = $message->created;
@@ -96,7 +96,7 @@ HTML;
 
     protected function tableCell_status($message)
     {
-        $direction_in = ($message->IdReceiver == $_SESSION['IdMember']);
+        $direction_in = ($message->IdReceiver == $this->_session->get('IdMember'));
         $contact_username = $direction_in ? $message->senderUsername : $message->receiverUsername;
         $contact_id = $direction_in ? $message->IdSender : $message->IdReceiver;
         ?>

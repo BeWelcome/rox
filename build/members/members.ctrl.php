@@ -135,7 +135,7 @@ class MembersController extends RoxControllerBase
                 $geo = new Geo($member_self->IdCity);
                 $vars = [];
                 if ($geo) {
-                    $vars['location'] = $geo->getFullName($_SESSION['lang']);
+                    $vars['location'] = $geo->getFullName($this->_session->get('lang'));
                 } else {
                     $vars['location'] = '';
                 }
@@ -442,7 +442,7 @@ class MembersController extends RoxControllerBase
     protected function redirect_myprofile()
     {
         if ($this->_session->has( 'Username' )) {
-            $username = $_SESSION['Username'];
+            $username = $this->_session->get('Username');
         } else {
             $username = 'henri';
         }
@@ -507,7 +507,7 @@ class MembersController extends RoxControllerBase
 
         $this->model->editPreferences($vars);
 
-        if (isset($vars['PreferenceLanguage']) && $_SESSION['IdLanguage'] != $vars['PreferenceLanguage'])
+        if (isset($vars['PreferenceLanguage']) && $this->_session->get('IdLanguage') != $vars['PreferenceLanguage'])
         {
             $this->model->setSessionLanguage($vars['PreferenceLanguage']);
         }
@@ -665,7 +665,7 @@ class MembersController extends RoxControllerBase
             $vars = $args->post;
             $request = $args->request;
 
-            if (isset($vars['IdOwner']) && $vars['IdOwner'] == $_SESSION['IdMember'] && isset($vars['IdRelation'])) {
+            if (isset($vars['IdOwner']) && $vars['IdOwner'] == $this->_session->get('IdMember') && isset($vars['IdRelation'])) {
                 if (isset($vars['action'])) {
                     $member = $this->getMember($vars['IdRelation']);
                     if (isset($vars['Type'])) $vars['stype'] = $vars['Type'];

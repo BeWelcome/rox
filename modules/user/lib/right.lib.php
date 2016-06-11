@@ -99,7 +99,7 @@ class MOD_right_flag {
 * optional Scope value can be send if the Scope is set to All then Scope
 * will always match if not, the sentence in Scope must be find in RScope
 * The function will use a cache in session
-*  ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') is used to force Rights / Flags Reloading
+*  ($this->_session->get('Param')->ReloadRightsAndFlags == 'Yes') is used to force Rights / Flags Reloading
 * from scope beware to the "" which must exist in the mysal table but NOT in 
 * the $Scope parameter 
 * $OptionalIdMember  allow to specify another member than the current one, in this case the cache is not used
@@ -113,7 +113,7 @@ public function hasFlag($Name, $_Scope = "", $OptionalIdMember = 0) {
 * optional Scope value can be send if the Scope is set to All then Scope
 * will always match if not, the sentence in Scope must be find in RScope
 * The function will use a cache in session
-* ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') is used to force Rights / Flags Reloading
+* ($this->_session->get('Param')->ReloadRightsAndFlags == 'Yes') is used to force Rights / Flags Reloading
 * from scope beware to the "" which must exist in the mysal table but NOT in 
 * the $Scope parameter 
 * $OptionalIdMember  allow to specify another member than the current one, in this case the cache is not used
@@ -130,7 +130,7 @@ public function hasRight($Name, $_Scope = "", $OptionalIdMember = 0)
 	if ($OptionalIdMember != 0) { // In case we want to test for the rigt of a specific member, who is not the logged
 		$IdMember = $OptionalIdMember;
 	} else {
-		$IdMember = $_SESSION['IdMember'];
+		$IdMember = $this->_session->get('IdMember');
 	}
 
 	$Scope = rtrim(ltrim($_Scope)); // ensure they are no extra spaces 
@@ -140,8 +140,8 @@ public function hasRight($Name, $_Scope = "", $OptionalIdMember = 0)
 	}
 
 	// First test if this is the logged in member, and if by luck his right is allready cached in his session variable
-	if ((!isset ($_SESSION[$this->IdSession . $Name])) or 
-		($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') or 
+	if ((!$this->_session->has($this->IdSession . $Name)) or
+		($this->_session->get('Param')->ReloadRightsAndFlags == 'Yes') or 
 		($OptionalIdMember != 0)) {
 		    
 		    $str = '
@@ -162,14 +162,14 @@ WHERE IdMember=' . $IdMember . ' AND '.$this->nomtable.'.id='.$this->nomtablevol
         }
 		$rscope = ltrim(rtrim($row->Scope)); // remove extra space
 		if ($OptionalIdMember == 0) { // if its current member cache for next research 
-//			$_SESSION[$this->IdSession . $Name]="set" ;  // Caching is not enable if this line is commented (but test are needed before uncomenting it)
+//			$this->_session->get($this->IdSession . $Name)="set" ;  // Caching is not enable if this line is commented (but test are needed before uncomenting it)
 			$this->_session->set( $this->tablelevel . $Name, $rlevel );
 			$this->_session->set( $this->tablescope . $Name, $rscope );
 		}
 	}
 	if ($Scope != "") { // if a specific scope is asked
 		if ($rscope == "\"All\"") {
-			if (($_SESSION["IdMember"]) == 1)
+			if (($this->_session->get("IdMember")) == 1)
 				return (10); // Admin has all rights at level 10
 			return ($rlevel);
 		} else {
@@ -179,7 +179,7 @@ WHERE IdMember=' . $IdMember . ' AND '.$this->nomtable.'.id='.$this->nomtablevol
 				return (0);
 		}
 	} else {
-		if (($_SESSION["IdMember"]) == 1)
+		if (($this->_session->get("IdMember")) == 1)
 			return (10); // Admin has all rights at level 10
 		return ($rlevel);
 	}
@@ -193,7 +193,7 @@ WHERE IdMember=' . $IdMember . ' AND '.$this->nomtable.'.id='.$this->nomtablevol
  * @return true, if the current user is logged on and
  * exists in table $table.volunteers
  * Improvment by JeanYves : if the member has not any right, 
- *  a $_SESSION["hasRightAny"]="no" is set, this will allow 
+ *  a $this->_session->get("hasRightAny")="no" is set, this will allow 
  *  for a faster test at next attempt
  */
 public function hasRightAny()
@@ -201,9 +201,9 @@ public function hasRightAny()
 	global $_SYSHCVOL;
 	
 	// Test if in the session cache it is allready said that the member has no right
-	if (($this->_session->has( 'Param' ) and ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') and
+	if (($this->_session->has( 'Param' ) and ($this->_session->get('Param')->ReloadRightsAndFlags == 'Yes') and
 	     ($this->_session->has( 'hasRightAny' ) and
-		 ($_SESSION['hasRightAny']=='no'))) ){
+		 ($this->_session->get('hasRightAny')=='no'))) ){
 		 
 		 return(false) ;		 
 	} 
@@ -216,11 +216,11 @@ public function hasRightAny()
     $query = '
 SELECT SQL_CACHE Level
 FROM '.$this->nomtablevolunteer.'
-WHERE IdMember=' . $_SESSION['IdMember'];
+WHERE IdMember=' . $this->_session->get('IdMember');
     $qry = $this->dao->query($query);
     $row = $qry->fetch(PDB::FETCH_OBJ);
     if (!isset ($row->Level)) {
-	 	 $_SESSION["hasRightAny"]="no" ; // Put is session the info that the member has no right
+	 	 $this->_session->set("hasRightAny" , "no"); // Put is session the info that the member has no right
         return false;
     }
     
@@ -247,7 +247,7 @@ public function flagScope($Name, $Scope = "") {
 // -----------------------------------------------------------------------------
 // return the Scope in the specific right 
 // The funsction will use a cache in session
-//   ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') is used to force Rights and Flags Reloading
+//   ($this->_session->get('Param')->ReloadRightsAndFlags == 'Yes') is used to force Rights and Flags Reloading
 //  from scope beware to the "" which must exist in the mysal table but NOT in 
 // the $Scope parameter
 public function TheScope($Name, $Scope = "")
@@ -260,13 +260,20 @@ public function TheScope($Name, $Scope = "")
 		return false;
 	}
 	
-	$IdMember = $_SESSION['IdMember'];
-	if ((!isset ($_SESSION[$this->IdSession . $Name])) or ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes')) {
+	$IdMember = $this->_session->get('IdMember');
+	if ((!$this->_session->has($this->IdSession . $Name) or ($this->_session->get('Param')->ReloadRightsAndFlags == 'Yes'))) {
 		$str = '
-SELECT SQL_CACHE Scope, Level
-FROM '.$this->nomtablevolunteer.','.$this->nomtable.'
-WHERE IdMember=' . $IdMember . '
-AND '.$this->nomtable.'.id='.$this->nomtablevolunteer.'.'.$this->IdName.' AND '.$this->nomtable.'.Name=\'' . $Name . '\'';
+SELECT 
+	SQL_CACHE 
+	Scope, 
+	Level
+FROM 
+	'.$this->nomtablevolunteer.',
+	'.$this->nomtable.'
+WHERE 
+	IdMember=' . $IdMember . '
+	AND '.$this->nomtable.'.id='.$this->nomtablevolunteer.'.'.$this->IdName.'
+	AND '.$this->nomtable.'.Name=\'' . $Name . '\'';
 		
 		$qry = $this->dao->query($str);
 		$row = $qry->fetch(PDB::FETCH_OBJ);
@@ -277,7 +284,7 @@ AND '.$this->nomtable.'.id='.$this->nomtablevolunteer.'.'.$this->IdName.' AND '.
 		$this->_session->set( $this->tablelevel . $Name, $row->Level );
 		$this->_session->set( $this->tablescope . $Name, $row->Scope );
 	}
-	return ($_SESSION[$this->tablescope . $Name]);
+	return ($this->_session->get($this->tablescope . $Name));
 } // end of TheScope
 
     

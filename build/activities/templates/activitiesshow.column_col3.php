@@ -10,8 +10,8 @@ $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
 $purifier = MOD_htmlpure::getActivitiesHtmlPurifier();
 $status = array();
 if ($this->_session->has( 'ActivityStatus' )) {
-    $status = $_SESSION['ActivityStatus'];
-    unset($_SESSION['ActivityStatus']);
+    $status = $this->_session->get('ActivityStatus');
+    $this->_session->remove('ActivityStatus');
 }
 if (!empty($status)) {
     echo '<div class="alert alert-success" role="alert"><strong>' . $words->get($status[0], $status[1]) . '</strong></div>';

@@ -38,7 +38,7 @@ class InviteModel extends RoxModelBase
         
         $problems = array();
         // Maximum 50 emails can be send using the Invitation-Form
-        if ($this->_session->has( 'InviteCount' ) && $_SESSION['InviteCount'] > 50) {
+        if ($this->_session->has( 'InviteCount' ) && $this->_session->get('InviteCount') > 50) {
             $problems['email'] = 'You already sent more than 50 invitations. Maybe that is enough for now?';
         } elseif (!isset($input['email'])) {
             // $problems['receiver'] = 'no receiver was specified.';
@@ -59,9 +59,9 @@ class InviteModel extends RoxModelBase
         
         if (!isset($input['sender_id'])) {
             // sender is not set.
-            $input['sender_id'] = $_SESSION['IdMember'];
+            $input['sender_id'] = $this->_session->get('IdMember');
             // $problems['sender_id'] = 'no sender was specified.';
-        } else if (!$input['sender_id'] != $_SESSION['IdMember']) {
+        } else if (!$input['sender_id'] != $this->_session->get('IdMember')) {
             // sender is not the person who is logged in.
             $problems['sender_id'] = 'you are not the sender.';
         }
@@ -79,7 +79,7 @@ class InviteModel extends RoxModelBase
             // set the sender
             // FIXME: Read & Uncrypt member's email address from the DB and make it the sender-address
             //$sender_uncrypted = new MOD_member()->getFromMembersTable('email');
-            $member = $this->createEntity('Member')->findById($_SESSION['IdMember']);
+            $member = $this->createEntity('Member')->findById($this->_session->get('IdMember'));
             $sender = $this->_crypt->MemberReadCrypted($member->Email);
             //$sender = PVars::getObj('syshcvol')->MessageSenderMail;
 
@@ -88,7 +88,7 @@ class InviteModel extends RoxModelBase
         	//Now check if Swift actually sends it
         	if ($result) {
                 $status = true;
-                $this->getSession->set( 'InviteCount', $this->_session->has( 'InviteCount' ) ? ($_SESSION['InviteCount'] + count($email_array)) : count($email_array) );
+                $this->_session->set( 'InviteCount', $this->_session->has( 'InviteCount' ) ? ($this->_session->get('InviteCount') + count($email_array)) : count($email_array) );
         	} else {
         		MOD_log::write("MOD_mail: Failed to send a mail to ".implode(',',$email_array), "MOD_mail");
                 $problems['notsend'] = 'InviteNotSent';
@@ -109,8 +109,8 @@ class InviteModel extends RoxModelBase
     public function style($text,$photo) {
         $html = '<p style="font-family: Arial; font-size: 12px; line-height: 1.5em">';
         if ($photo) {
-            $src = MOD_layoutbits::smallUserPic_username($_SESSION['Username']);
-            $html .= '<img alt="picture of '.$_SESSION['Username'].'" src="'.PVars::getObj('env')->baseuri.$src.'" style="border: 1px solid #ccc; padding: 6px; margin: 15px; float:left">';
+            $src = MOD_layoutbits::smallUserPic_username($this->_session->get('Username'));
+            $html .= '<img alt="picture of '.$this->_session->get('Username').'" src="'.PVars::getObj('env')->baseuri.$src.'" style="border: 1px solid #ccc; padding: 6px; margin: 15px; float:left">';
         }
         $html .= $text.'</p>';
         $html .= '<h3 style="font-family: Arial; font-size: 12px; line-height: 1.5em"><a href="http://www.bewelcome.org" style="color: #333">www.bewelcome.org</a></h3>';

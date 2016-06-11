@@ -37,18 +37,20 @@ Boston, MA  02111-1307, USA.
  * It needs the memcache extension to be activated in PHP and the $param->memcache entry to be set to true
  */
 
-	class trad { // This class will be used for a future advanced use
-		public $id ; // will receive the id primary key for the record, this will be used as key
-		public $IdLanguage ; // Will receive the language value
-		public $Code ; // Will receive the code for the value (for words it is words.code for forum_trads it is forumtrads.IdTrad) ;
-		public $StrValue ; // Will receive the value for corresponding $Code in the corresponding IdLanguage
-		public $Status ; // 0 means the content is to be refreshed from the database; 
-						 // 1 means the content is to be considerated as up to date;
-						 // 2 means the content is to be search in english
-		public $HitCount ; // Used for start to count the hit of cache
-	}
+class trad { // This class will be used for a future advanced use
+	public $id ; // will receive the id primary key for the record, this will be used as key
+	public $IdLanguage ; // Will receive the language value
+	public $Code ; // Will receive the code for the value (for words it is words.code for forum_trads it is forumtrads.IdTrad) ;
+	public $StrValue ; // Will receive the value for corresponding $Code in the corresponding IdLanguage
+	public $Status ; // 0 means the content is to be refreshed from the database;
+					 // 1 means the content is to be considerated as up to date;
+					 // 2 means the content is to be search in english
+	public $HitCount ; // Used for start to count the hit of cache
+}
 
 class MOD_bw_memcache {
+	use \Rox\RoxTraits\SessionTrait;
+
 	private $_tablename;  // the name of the table the memcache module is going to refer
 	private $_sentencecolumn;  // the name of the column in the table which is suppose to keep the value
 	private $_idtradcolumn;  // the name of the column IdTrad (or code for words ...)
@@ -61,6 +63,7 @@ class MOD_bw_memcache {
      * @Column is the name of the column which is supposed to have the value in the table
      */
     public function __construct($tablename="words",$Column="Sentence",$Code="code")   {
+		$this->setSession();
 		$this->_tablename=$tablename ;
 		$this->_sentencecolumn=$Column ;
 		$this->_idtradcolumn=$Code ;
@@ -69,7 +72,7 @@ class MOD_bw_memcache {
 		
 			if (!extension_loaded('memcache')) { // Check if the module is active ...
 			
-				$_SESSION["Param"]->memcache='False' ; // Set to false the memcache toggle to avoid to fail
+				$this->_session->get("Param")->memcache='False' ; // Set to false the memcache toggle to avoid to fail
 				die(" extension_loaded('memcache')=".extension_loaded('memcache')." MOD_bw_memcache : memcache extension is not available on this server !") ;
 			}
 
@@ -82,10 +85,10 @@ class MOD_bw_memcache {
      * IsToggle returns true if memcache is active, it returns false elsewher
      */
 	private function IsToggle() {
-        if (empty($_SESSION["Param"]->memcache)) {
+        if (empty($this->_session->get("Param")->memcache)) {
 			return(false) ;
 		}
-        if ($_SESSION["Param"]->memcache!='True') {
+        if ($this->_session->get("Param")->memcache!='True') {
 			return(false) ;
 		}
 		return(true) ;
@@ -106,7 +109,6 @@ class MOD_bw_memcache {
         if ($this->IsToggle()) { // Is the memcache active ?
 			$value=$this->memcache->get($Code."_".$IdLanguage) ;
 			if ($value) {
-//			echo " Value ".$Code." found " ;
 				return($value) ;
 			}
 			else {
@@ -123,36 +125,6 @@ class MOD_bw_memcache {
 		else {
 			return (false) ;
 		}
-/*
-	$struct = $this->memcache->get($Code."_".$IdLanguage) ;
-
-		if ($struct==false) { // If nothing was in memcache
-			$value=$this->LookUp($Code,$IdLanguage) ;
-			if ($value) {
-				$this->AddValue($Code,$IdLanguage,$value) ;
-				return($value)
-			}
-			else {
-				$this->DisableValue($Code,$IdLanguage) ;
-				return(false) ;
-			}
-		}
-		else {
-			if ($struct->Status==1) { // IF the status is valid
-				$struct->HitCount++ ;
-				return($struct->StrValue) ;
-			}
-			if ($struct->Status==2) { // In this case it means that the value has been marked has not in cache
-				return(false) ;
-			}
-			if ($struct->Status==0) { // In this case it means that the value has been marked has not in cache
-				$struct->HitCount=0 ;
-				$value=$this->LookUp($Code,$IdLanguage) ;
-				$this->UpdateValue($Code,$IdLanguage,$value) ;
-				return($value) ;
-			}
-		}
-*/		
 	} // end of GetValue
 	
     /**
@@ -208,9 +180,3 @@ class MOD_bw_memcache {
 		return(false) ;
 	}
 } // end of MOD_bw_memcache
-
-
-
-
-
-?>

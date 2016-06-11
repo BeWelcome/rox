@@ -21,7 +21,7 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-$words = new MOD_words($this->getSession());
+$words = new MOD_words();
 ?>
 
 <div id="teaser" class="page-teaser clearfix">

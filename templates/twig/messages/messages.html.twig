@@ -10,7 +10,9 @@
                     {% if not message.read %}<strong>{% endif %}
                         <a href="messages/{{ message.id }}">{{ message.title|raw }}</a>
                         {% if not message.read %}</strong>{% endif %}<br>
-                    <small>from <a href="members/{{ message.user }}">{{ message.user }}</a> {{ ago(message.time) }}</small>
+                    <small>from <a href="members/{{ message.user }}">
+                            {{ message.user }}</a>
+                        {{ ago(message.time) }}</small>
                 </p>
             </div>
             <div class="pull-xs-right hidden-md-down chevplace">

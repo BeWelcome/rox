@@ -85,7 +85,7 @@ class ForumsController extends PAppController
         }
 
         // First check if the feature is closed
-        if (($_SESSION["Param"]->FeatureForumClosed!='No')and(!$this->BW_Right->HasRight("Admin"))) {
+        if (($this->_session->get("Param")->FeatureForumClosed!='No')and(!$this->BW_Right->HasRight("Admin"))) {
             $this->_view->showFeatureIsClosed();
             PPHP::PExit();
         } // end of test "if feature is closed"
@@ -238,7 +238,7 @@ class ForumsController extends PAppController
         else if ($this->action == self::ACTION_NEW) {
             if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if the user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowedToPostInForum","FlagEvent") ;
-                $words = new MOD_words($this->getSession());
+                $words = new MOD_words();
                 die($words->get('NotAllowedToPostInForum'));
             }
             if (!$User) {
@@ -260,7 +260,7 @@ class ForumsController extends PAppController
         else if ($this->action == self::ACTION_REPORT_TO_MOD) {
             if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if the user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowedToPostInForum","FlagEvent") ;
-                $words = new MOD_words($this->getSession());
+                $words = new MOD_words();
                 die($words->get('NotAllowedToPostInForum'));
             }
             if (!$User) {
@@ -270,11 +270,11 @@ class ForumsController extends PAppController
 
 			if (isset($request[2])) {
 				if ($request[2]=='AllMyReport') {
-					$DataPost=$this->_model->prepareReportList($_SESSION["IdMember"],""); // This retrieve all the reports for the current member
+					$DataPost=$this->_model->prepareReportList($this->_session->get("IdMember"),""); // This retrieve all the reports for the current member
 					$this->_view->showReportList($callbackId,$DataPost);
 				}
 				elseif ($request[2]=='MyReportActive') {
-					$DataPost=$this->_model->prepareReportList($_SESSION["IdMember"],"('Open','OnDiscussion')"); // This retrieve the Active current pending report for the current member
+					$DataPost=$this->_model->prepareReportList($this->_session->get("IdMember"),"('Open','OnDiscussion')"); // This retrieve the Active current pending report for the current member
 					$this->_view->showReportList($callbackId,$DataPost);
 				}
 				elseif ($request[2]=='AllActiveReports') {
@@ -287,7 +287,7 @@ class ForumsController extends PAppController
 				}
 				else {
 					$IdPost=$request[2] ;
-					$IdWriter=$_SESSION["IdMember"] ;
+					$IdWriter=$this->_session->get("IdMember") ;
 					if ((!empty($request[3])) and ($this->BW_Right->HasRight("ForumModerator"))) {
 						$IdWriter=$request[3] ;
 					}
@@ -308,7 +308,7 @@ class ForumsController extends PAppController
         else if ($this->action == self::ACTION_REPLY) {
             if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if teh user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowedToPostInForum","FlagEvent") ;
-                $words = new MOD_words($this->getSession());
+                $words = new MOD_words();
                 die($words->get('NotAllowedToPostInForum'));
             }
             if (!$User) {
@@ -342,7 +342,7 @@ class ForumsController extends PAppController
         } else if ($this->action == self::ACTION_DELETE) {
             if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if the user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowedToPostInForum","FlagEvent") ;
-                $words = new MOD_words($this->getSession());
+                $words = new MOD_words();
                 die($words->get('NotAllowedToPostInForum'));
             }
             if (!$User || !$this->BW_Right->HasRight("ForumModerator","Delete")) {
@@ -352,7 +352,7 @@ class ForumsController extends PAppController
         } else if ($this->action == self::ACTION_EDIT) {
             if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if the user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowedToPostInForum","FlagEvent") ;
-                $words = new MOD_words($this->getSession());
+                $words = new MOD_words();
                 die($words->get('NotAllowedToPostInForum'));
             }
             if (!$User) {
@@ -366,7 +366,7 @@ class ForumsController extends PAppController
         } else if ($this->action == self::ACTION_TRANSLATE) {
             if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if the user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowedToPostInForum","FlagEvent") ;
-                $words = new MOD_words($this->getSession());
+                $words = new MOD_words();
                 die($words->get('NotAllowedToPostInForum'));
             }
             if (!$User) {

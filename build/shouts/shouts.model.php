@@ -96,7 +96,7 @@ AND `table_id` = '.(int)$table_id.'
     public function shoutProcess($table = false,$table_id = false) {
     	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
         if (PPostHandler::isHandling()) {
-            if (!$_SESSION['IdMember'])
+            if (!$this->_session->get('IdMember'))
                 return false;
             $vars =& PPostHandler::getVars();
             $request = PRequest::get()->request;
@@ -117,7 +117,7 @@ SET
     `id`='.$shoutId.',
     `table`=\''.$table.'\',
     `table_id`=\''.$table_id.'\',
-    `member_id_foreign`='.$_SESSION['IdMember'].',
+    `member_id_foreign`='.$this->_session->get('IdMember').',
     `title`=\''.(isset($vars['ctit'])?$this->dao->escape($vars['ctit']):'').'\',
     `text`=\''.$this->dao->escape($vars['ctxt']).'\',
     `created`=NOW()';

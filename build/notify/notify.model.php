@@ -152,7 +152,7 @@ ORDER BY created DESC,IdMember ASC
         }
         else
         {
-            return $this->getNotesForMember($_SESSION['IdMember']);
+            return $this->getNotesForMember($this->_session->get('IdMember'));
         }
     }
     
@@ -162,7 +162,7 @@ ORDER BY created DESC,IdMember ASC
             // not logged in - no messages
             return array();
         } else {
-            $member_id = $_SESSION['IdMember'];
+            $member_id = $this->_session->get('IdMember');
             return $this->getNotes(false,'WHERE notes.IdMember = '.$member_id.' AND notes.Checked = 0');
         }
     }

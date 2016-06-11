@@ -24,7 +24,7 @@ class LinkShowPage extends LinkPage
     {
         $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
         
-		$from=$_SESSION['Username'] ;
+		$from=$this->_session->get('Username') ;
 		$to="" ;
 		$limit=50 ;
 		

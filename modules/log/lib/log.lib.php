@@ -27,6 +27,7 @@ Boston, MA  02111-1307, USA.
  * @author Felix van Hove, <fvanhove@gmx.de>
  */
 class MOD_log {
+    use \Rox\RoxTraits\SessionTrait;
     
     /**
      * if LOG2FILE is true, stuff gets additionally loged
@@ -50,7 +51,7 @@ class MOD_log {
     
     private function __construct()
     {
-    
+        $this->setSession();
         $db = PVars::getObj('config_rdbms');
         if (!$db) {
             throw new PException('DB config error!');
@@ -63,7 +64,7 @@ class MOD_log {
      * singleton getter
      * 
      * @param void
-     * @return PApps
+     * @return MOD_log
      */
     public static function get()
     {
@@ -86,22 +87,22 @@ class MOD_log {
      * @param string $type the event, which causes the log
      * 				 method to be called
 		 *
-		 * BeWare this function does a nasty parameter change with the $_SESSION["IdMember"]
+		 * BeWare this function does a nasty parameter change with the $this->_session->get("IdMember")
 		 * but it restores it as it was before in any cases
 		 *
 		 */
     public function writeIdMember($IdMember,$message = "", $type  = "Log")
     {
 			if ($this->_session->has( "IdMember" )) {
-				$IdMemberBefore=$_SESSION["IdMember"] ;
-				$_SESSION["IdMember"]=$IdMember ;
+				$IdMemberBefore=$this->_session->get("IdMember") ;
+				$this->_session->set("IdMember", $IdMember);
 				$this->write($message, $type) ;
-				$_SESSION["IdMember"]=$IdMemberBefore ;
+				$this->_session->set("IdMember", $IdMemberBefore) ;
 			}
 			else {
-				$_SESSION["IdMember"]=$IdMember ;
+				$this->_session->set("IdMember", $IdMember);
 				$this->write($message, $type) ;
-				unset($_SESSION["IdMember"]) ;
+				$this->_session->remove("IdMember") ;
 			}
 		} // end writeIdMember
 
@@ -128,7 +129,7 @@ class MOD_log {
         
         $idMember = 0;
         if ($this->_session->has( 'IdMember' )) {
-            $idMember = $_SESSION['IdMember'];
+            $idMember = $this->_session->get('IdMember');
         }
         
         $ip = "127.0.0.1";

@@ -7,9 +7,9 @@ class MessagesContactboxPage extends MessagesPageWithMailbox
 {
     protected function mailboxDescription()
     {
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         $contactUsername = $this->contact_member->Username;
-        $myselfUsername = $_SESSION['Username'];
+        $myselfUsername = $this->_session->get('Username');
         ?>
         <div class="clearfix">
             <div class="float_left framed">
@@ -47,7 +47,7 @@ class MailboxWidget_WithMember extends MailboxWidget
     {
         $request_str = implode('/',PRequest::get()->request);
         $dir_str = (isset($_GET['dir']) && $_GET['dir'] != 'ASC') ? 'ASC' : 'DESC';
-        $words = new MOD_words($this->getSession());
+        $words = new MOD_words();
         return array(
             'select' => '',
             'from' => '<a href="'.$request_str.'?sort=sender&amp;dir='.$dir_str.'">'.$words->getSilent('From').'</a> / <a href="'.$request_str.'?sort=date&amp;dir='.(isset($_GET['dir']) ? $dir_str : 'ASC').'">'.$words->getSilent('Date').'</a>'.$words->flushBuffer(),
@@ -64,7 +64,7 @@ class MailboxWidget_WithMember extends MailboxWidget
     }    
     protected function tableCell_status($message)
     {
-        $direction_in = ($message->IdReceiver == $_SESSION['IdMember']);
+        $direction_in = ($message->IdReceiver == $this->_session->get('IdMember'));
         $contact_username = $direction_in ? $message->senderUsername : $message->receiverUsername;
         $contact_id = $direction_in ? $message->IdSender : $message->IdReceiver;
         ?>
@@ -75,7 +75,7 @@ class MailboxWidget_WithMember extends MailboxWidget
     
     protected function tableCell_from($message)
     {
-        $direction_in = ($message->IdReceiver == $_SESSION['IdMember']);
+        $direction_in = ($message->IdReceiver == $this->_session->get('IdMember'));
         $contact_username = $direction_in ? $message->senderUsername : $message->receiverUsername;
         $link_username = $message->senderUsername;
         $date_sent = $message->DateSent;

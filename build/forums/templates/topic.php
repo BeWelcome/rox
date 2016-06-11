@@ -35,7 +35,7 @@ if ((!isset($topic->topicinfo->IdTitle)) and (!isset($topic->topicinfo->ThreadDe
 } else {
     //$i18n = new MOD_i18n('apps/forums/board.php');
     //$boardText = $i18n->getText('boardText');
-    $words = new MOD_words($this->getSession());
+    $words = new MOD_words();
 
     $User = APP_User::login();
     $can_del = $User && $User->hasRight('delete@forums'); // Not to use anymore (JeanYves)

@@ -42,3 +42,4 @@ VERSION
 htdocs/assets/
 config/*.local.yml
 .env
+phploc.xml

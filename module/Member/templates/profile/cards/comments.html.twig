@@ -1,0 +1,22 @@
+<div class="card">
+    <a name="comments"></a>
+
+    <h3 class="card-header"><i class="fa fa-comment"></i><span class="icontext">Latest Comments</span><a href="#" class="btn btn-primary-outline btn-sm pull-xs-right request p-a-0"><i class="fa fa-angle-double-right"></i> All comments ({{ member.comments.count }})</a></h3>
+
+    {% for comment in member.comments %}
+        <div class="media p-a-1">
+            <a class="media-left commentavatar" href="#">
+                <img class="media-object" src="{{ path('avatar', {'username': comment.fromMember.username }) }}?50_50">
+                <small class="username">{{ comment.fromMember.username }}</small>
+            </a>
+            <div class="media-body">
+                <span class="media-heading"><strong>Positive</strong><small class="pull-xs-right">{{ comment.created.diffForHumans }}</small></span>
+                <p>{{ comment.TextFree }}</p>
+            </div>
+        </div>
+
+    {% endfor %}
+
+    <a class="btn btn-secondary btn-block"><i class="fa fa-comment"></i>See all {{ member.comments.count }} comments for this member</a>
+
+</div>

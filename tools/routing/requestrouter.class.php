@@ -215,7 +215,8 @@ class RequestRouter implements \Symfony\Component\Routing\Generator\UrlGenerator
                 return array($classname, 'index', null);
             }
         }
-        return array($this->defaultControllerClassname(), 'index', null);
+
+        throw new \Symfony\Component\Routing\Exception\ResourceNotFoundException(sprintf('No routes found for "%s".', $name));
     }
 
 

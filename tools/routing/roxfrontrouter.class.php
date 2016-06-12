@@ -1,16 +1,22 @@
 <?php
 
+use Symfony\Component\Templating\EngineInterface;
 
 class RoxFrontRouter
 {
     use \Rox\RoxTraits\SessionTrait;
 
+    protected $engine;
+
     private $args;
     private $router;
 
-    public function __construct()
+    public function __construct(EngineInterface $engine)
     {
         $this->setSession();
+
+        $this->engine = $engine;
+
         $this->router = new RequestRouter();
         $this->args = $this->router->getRequestAndArgs();
     }
@@ -391,9 +397,19 @@ A TERRIBLE EXCEPTION
         
         if (method_exists($classname, $method)) {
             $controller = new $classname();
+
+            if ($controller instanceof PAppController) {
+                $controller->setEngine($this->engine);
+            }
+
             $controller->route_vars = $route_vars;
             $controller->request_vars = $request;
             $controller->args_vars = $this->args;
+
+            if ($controller instanceof RoxControllerBase) {
+                $controller->setRouter($this->router);
+            }
+
             $controller->router = $this->router;
             $controller->mem_redirect = $this->memory_from_redirect;
             $page = call_user_func(array($controller, $method),$this->args);
@@ -401,11 +417,13 @@ A TERRIBLE EXCEPTION
                 // used for a html comment
                 $page->controller_classname = $classname;
                 $page->router = $this->router;
+                $page->setEngine($this->engine);
+                $page->setSession();
             }
         } else {
             $page = false;
         }
-        
+
         $this->renderPage($page);
         
         //---------------------------

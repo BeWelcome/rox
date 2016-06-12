@@ -12,7 +12,7 @@ class Log extends Model {
      */
     public function member()
     {
-        return $this->hasOne('Rox\Models\Member', 'id', 'IdMember');
+        return $this->hasOne('Rox\Member\Model\Member', 'id', 'IdMember');
     }
 
     public function IpAddressString()

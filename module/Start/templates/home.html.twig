@@ -1,0 +1,280 @@
+{% extends '@base/base.html.twig' %}
+
+{% block content %}
+        {# main: content begins here #}
+        <div id="main">
+            <div class="row m-b-2">
+                <div class="col-xs-12">
+                    <div class="container">
+                        <div class="row welcomeback">
+                            <div class="hidden-md-down col-lg-1 fullheight">
+                                <div class="verticalalign">
+                                    <div class="welcomeavatar">
+                                        <a href="members/{{ my_member.username }}" title="See profile {{ my_member.username }}" ><img src="/members/avatar/{{ my_member.username }}?150" style="width:50px; height:50px"></a>
+                                        {%  if my_member.accomodation == 'anytime' %}{% set image = 'yesicanhost' %}{% endif %}
+                                        {%  if my_member.accomodation == 'dependonrequest' %}{% set image = 'maybe' %}{% endif %}
+                                        {%  if my_member.accomodation == 'dontask' %}{% set image = 'nosorry' %}{% endif %}
+                                        <a href="#"><img src="/images/icons/{{ image }}.png" class="hoststatus"></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-12 col-lg-7 fullheight">
+                                <div class="verticalalign">
+                                    <span class="h1">Welcome back, {{ macros.memberlink(my_member) }}</span><br />
+                                    <span class="h4 hidden-xs-down">Your hosting status is
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                {%  if my_member.accomodation == 'anytime' %}hosting{% endif %}
+                                                {%  if my_member.accomodation == 'dependonrequest' %}maybe hosting{% endif %}
+                                                {%  if my_member.accomodation == 'dontask' %}not hosting{% endif %}
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#">hosting</a>
+                                                <a class="dropdown-item" href="#">maybe hosting</a>
+                                                <a class="dropdown-item" href="#">not hosting</a>
+                                            </div>
+                                        </div>
+                                         in <a href="#">{{ my_member.city.name }}</a></span>
+                                </div>
+                            </div>
+                            {# where do you want to go? #}
+                            <form method="post" action="search/members" name="searchlocation" class="fullheight">
+                                <div class="col-xs-12 col-md-12 col-lg-4 fullheight">
+                                    <div class="input-group verticalalign">
+                                            <input type="text" class="form-control" placeholder="Where do you want to go?">
+                                              <span class="input-group-btn">
+                                                <button class="btn btn-primary" type="submit"><i class="fa fa-globe"></i> Go</button>
+                                              </span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Alert: only triggers at some events #}
+            <div class="alert alert-info alert-dismissible fade in hidden-sm-down" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                Please <a href="#" class="alert-link">upload a profile picture</a>
+            </div>
+
+            {# two boxes: messages and community activity #}
+            <div class="row m-b-2">
+
+                <!-- entire messages box -->
+                <div class="col-md-12 col-lg-5">
+
+                    <!-- messages tabs -->
+                    <ul class="nav nav-tabs">
+                        {#<li class="nav-item"><a href="#messages" class="nav-link active" aria-controls="messages" role="tab" data-toggle="tab">Messages received {% if messagecount %}<span class="tag tag-primary">{{ messagecount }}</span>{% endif %}</a></li>#}
+                        <li class="nav-item"><a href="#notifications" class="nav-link" aria-controls="notifications" role="tab" data-toggle="tab">Notifications</a></li>
+                    </ul>
+
+                    <!-- bordered box around content -->
+                    <div class="dashbox m-b-1">
+
+                        <div class="tab-content">
+
+                            <!-- messages content div -->
+                            <div role="tabpanel" class="tab-pane active" id="messages">
+                                <!-- all / unread messages toggle -->
+                                <div class="row text-xs-center p-a-1">
+
+                                    <div class="btn-group" data-toggle="buttons">
+                                        <label class="btn btn-primary btn-radio active" id="all">
+                                            <input type="radio" name="options" autocomplete="off" onclick="updateMessages()" checked>All
+                                        </label>
+                                        <label for="unread" class="btn btn-primary btn-radio" id="unread">
+                                            <input type="radio" name="options" autocomplete="off" onclick="updateMessages()">Unread
+                                        </label>
+                                    </div>
+                                </div>
+
+                                {# received messages #}
+                                <div id="messagesdisplay" class="scrollcontent">
+                                    <p class="text-xs-center m-y-3">
+                                    <i class="fa fa-4x fa-spin fa-spinner m-y-3"></i><br>
+                                    {{ 'Please wait while we load the messages' | trans }}</p>
+                                </div>
+
+                                <!-- message buttons -->
+                                <div class="text-xs-center">
+                                    {#<a href="messages" class="btn btn-outline-primary btn-homewhite"><i class="fa fa-envelope"></i> My inbox {% if messagecount %}<span class="tag tag-primary tag-pill">{{ messagecount }}</span>{% endif %}</a>#}
+                                </div>
+
+                            </div>
+
+                            {# load system notifications #}
+                            <div role="tabpanel" class="tab-pane" id="notifications">
+
+                                <div id="notificationsdisplay" class="scrollcontent">
+                                    <p class="text-xs-center m-y-3">
+                                    <i class="fa fa-4x fa-spin fa-spinner m-y-3"></i><br />
+                                    {{ 'Please wait while we load the notifications' | trans }}</p>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                {# community updates box #}
+                <div class="col-md-12 col-lg-7">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item"><a href="#threads" class="nav-link active" aria-controls="threads" role="tab" data-toggle="tab">Forum</a></li>
+                        <li class="nav-item"><a href="#activities" class="nav-link" aria-controls="activities" role="tab" data-toggle="tab">Activities</a></li>
+                    </ul>
+
+                    {# bordered box #}
+                    <div class="dashbox">
+                        {# tabs content #}
+                        <div class="tab-content">
+                            {# forum discussions #}
+                            <div role="tabpanel" class="tab-pane active" id="threads">
+
+                                {# display settings#}
+                                <div class="row text-xs-center p-a-1">
+                                    <div class="btn-group" data-toggle="buttons">
+                                        <label class="btn btn-primary btn-radio active" id="groups">
+                                            <input type="checkbox" autocomplete="off" checked> groups
+                                        </label>
+                                        <label class="btn btn-primary btn-radio" id="forum">
+                                            <input type="checkbox" autocomplete="off" checked> forum
+                                        </label>
+                                    </div>
+                                </div>
+
+                                {# received messages #}
+                                <div id="threadsdisplay" class="scrollcontent">
+                                    <p class="text-xs-center m-y-3">
+                                    <i class="fa fa-4x fa-spin fa-spinner m-y-3"></i><br />
+                                    {{ 'Please wait while we load the forum threads' | trans }}</p>
+                                </div>
+
+                                <div class="text-xs-center">
+                                    <div class="btn-group" role="group" aria-label="...">
+                                        <a href="forums" class="btn btn-outline-primary btn-homewhite"><i class="fa fa-comments"></i> View forums</a>
+                                        <a href="groups/mygroups" class="btn btn-outline-primary btn-homewhite"><i class="fa fa-users"></i> My groups</a>
+                                        <a href="forums/subscriptions" class="btn btn-outline-primary btn-homewhite"><i class="fa fa-check-square-o"></i> My subscriptions</a>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            {# load activities #}
+                            <div role="tabpanel" class="tab-pane" id="activities">
+
+                                <div class="row text-xs-center p-a-1">
+                                        <div class="btn-group" role="group">
+                                            <a href="/activities" class="btn btn-outline-primary btn-homewhite"><i class="fa fa-map-o"></i> All activities</a>
+                                            <a href="/activities/myactivities" class="btn btn-outline-primary btn-homewhite"><i class="fa fa-calendar"></i> My activities</a>
+                                            <a href="/activities/create" class="btn btn-outline-primary btn-homewhite"><i class="fa fa-calendar-plus-o"></i> Create activity</a>
+                                        </div>
+                                </div>
+                                    <div id="activitiesdisplay" class="col-xs-12">
+                                        <p class="text-xs-center m-y-3">
+                                            <i class="fa fa-4x fa-spin fa-spinner m-y-3"></i><br />
+                                            {{ 'Please wait while we load the activities near you' | trans }}</p>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# 4 widgets#}
+            <div class="card-deck-wrapper m-b-2">
+                <div class="card-deck">
+
+                    {# Be Involved #}
+                    <div class="card card-4">
+                        <div class="card-block">
+                            <h4 class="homehfour">Be Involved<br /><span class="homesubt">help the community</span></h4>
+                            <p class="card-text">BeWelcome is run by volunteers - free of charge and open source. Volunteering for the project is a great opportunity for you to get to know enthusiastic people who really believe in promoting hospitality and respect for each other. And it's fun, too!</p>
+                            <a href="about/getactive" class="btn btn-outline-primary btn-homewhite btn-block"><i class="fa fa-wrench"></i> Help BeWelcome</a>
+                            <a href="donate" class="btn btn-outline-primary btn-homewhite btn-block m-b-1"><i class="fa fa-euro"></i> Please donate</a>
+                            <p class="card-text text-xs-center m-b-0">Goal for 2016-2017: <strong>€1000,-</strong></p>
+                            <progress class="progress progress-primary m-a-0" value="60" max="100"></progress>
+                            <p class="card-text text-xs-center"><strong>€600.00</strong> received</p>
+                        </div>
+                    </div>
+
+                    {# Potential guests #}
+                    <div class="card card-3 hidden-md-down">
+                        <div class="card-block">
+                            <h4 class="homehfour">Potential guests<br /><span class="homesubt">travelers in your area</span></h4>
+
+                                <div class="media m-t-1 potentialguestinfo">
+                                    <div class="h6 m-a-0"><a href="#">Member-150</a></div>
+                                    <div class="media-left p-a-0 pull-xs-left">
+                                        <a href="#">
+                                            <img class="float_left framed" src="members/avatar/member-150?50_50" alt="Profile" />
+                                        </a>
+                                    </div>
+                                    <div class="media-body p-a-0">
+                                        <p class="m-a-0 p-a-0"><i class="fa fa-calendar"></i> <small>01-10-2015</small></p>
+                                        <p class="m-a-0 p-a-0"><i class="fa fa-rocket"></i> <small>04-10-2015</small></p>
+                                        <p class="m-a-0 p-a-0"><i class="fa fa-home"></i> <small>Berlin, Germany</small></p>
+                                    </div>
+                                </div>
+
+                            <div class="media m-t-1 potentialguestinfo">
+                                    <div class="h6 m-a-0"><a href="#">Member-161</a></div>
+                                    <div class="media-left p-a-0 pull-xs-left">
+                                        <a href="#">
+                                            <img class="float_left framed" src="members/avatar/member-161?50_50" alt="Profile" />
+                                        </a>
+                                    </div>
+                                    <div class="media-body p-a-0">
+                                        <p class="m-a-0 p-a-0"><i class="fa fa-calendar"></i> <small>20-10-2015</small></p>
+                                        <p class="m-a-0 p-a-0"><i class="fa fa-rocket"></i> <small>25-10-2015</small></p>
+                                        <p class="m-a-0 p-a-0"><i class="fa fa-home"></i> <small>Paris, France</small></p>
+                                    </div>
+                                </div>
+
+                                <a href="trips" class="btn btn-outline-primary btn-homewhite btn-block m-t-1"><i class="fa fa-plus-circle"></i> View more</a>
+                                <a href="trips/create" class="btn btn-outline-primary btn-homewhite btn-block"><i class="fa fa-map-marker"></i> Plan your trip</a>
+                        </div>
+                    </div>
+
+                    {# Community News #}
+                    <div class="card card-3 hidden-md-down">
+                        <div class="card-block">
+                            <h4 class="homehfour">Community News<br /><span class="homesubt">and other updates</span></h4>
+
+                            <h5><a href="#">Outcomes GA2015</a></h5>
+                            <p class="card-text">Just the first line. Maybe the second. Let's say about fourty words, so someone can read something. I have to fill up this text to get to approximately 40 words, else you won't see the effect. Then ... <a href="#" class="btn-outline-primary">Read more</a></p>
+                            <div><small>01-01-2016</small><small class="pull-xs-right">3 comments</small></div>
+
+                            <a href="mypreferences" class="btn btn-outline-primary btn-homewhite btn-block m-t-2"><i class="fa fa-newspaper-o"></i> Older news</a>
+                        </div>
+                    </div>
+
+                    {# Be Informed #}
+                    <div class="card card-2">
+                        <div class="card-block">
+                            <h4 class="homehfour">Be Informed<br /><span class="homesubt">Transparency</span></h4>
+                            <a href="faq" class="btn btn-outline-primary btn-homewhite btn-sm btn-block"><i class="fa fa-question"></i> About</a>
+                            <a href="faq" class="btn btn-outline-primary btn-homewhite btn-sm btn-block"><i class="fa fa-question"></i> FAQ</a>
+                            <a href="wiki" class="btn btn-outline-primary btn-homewhite btn-sm btn-block"><i class="fa fa-book"></i> Wiki</a>
+                            <a href="safety" class="btn btn-outline-primary btn-homewhite btn-sm btn-block m-b-1"><i class="fa fa-shield"></i> Contact</a>
+                            <a href="wiki/BeVolunteer" class="btn btn-outline-primary btn-homewhite btn-sm btn-block"><i class="fa fa-bullseye"></i> BeVolunteer</a>
+                            <a href="wiki/Annual_Report" class="btn btn-outline-primary btn-homewhite btn-sm btn-block"><i class="fa fa-book"></i> Annual report</a>
+                            <a href="wiki/Finances" class="btn btn-outline-primary btn-homewhite btn-sm btn-block m-b-1"><i class="fa fa-money"></i> Finances</a>
+                            <a href="wiki/Annual_Report" class="btn btn-outline-primary btn-homewhite btn-sm btn-block"><i class="fa fa-book"></i> Terms of Use</a>
+                            <a href="wiki/Annual_Report" class="btn btn-outline-primary btn-homewhite btn-sm btn-block"><i class="fa fa-book"></i> Privacy Policy</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            {# end of widgets #}
+        </div>{# end of main #}
+
+{% endblock content %}

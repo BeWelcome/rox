@@ -9,7 +9,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="main"><img src="images/logo_index_top.png" alt="Be Welcome" /></a>
+      <a class="navbar-brand" href="/"><img src="images/logo_index_top.png" alt="Be Welcome" /></a>
       <?php if ($logged_in) { ?>
       <div class="navbar-brand navbar-username visible-xs-block">
           <p>
@@ -68,7 +68,7 @@
         <ul class="nav navbar-nav navbar-right">
         <?php if ($logged_in) { ?>
             <li>
-                <a style="font-weight: normal" href="main"><?= $username ?></a>
+                <a style="font-weight: normal" href="/"><?= $username ?></a>
             </li>
             <li>
                 <a href="/messages"><i class="fa  fa-lg fa-inbox" style="vertical-align: middle;"></i> <span style="font-weight: normal" >[<?= $numberOfNewMessagees ?>]</span></a>

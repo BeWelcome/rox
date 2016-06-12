@@ -17,6 +17,10 @@ body {
   width: 100%;
 }
 
+#main {
+  margin-top: 25px;
+}
+
 .navandcontent {
   height: 100%;
 }
@@ -67,7 +71,7 @@ body {
   font-weight: bold;
 }
 .ui-autocomplete-loading {
-  background: white url("images/ui-anim_basic_16x16.gif") right center no-repeat;
+  background: white url("../img/ui-anim_basic_16x16.gif") right center no-repeat;
 }
 
 .button {

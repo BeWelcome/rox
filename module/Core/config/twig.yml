@@ -1,0 +1,4 @@
+twig:
+    paths:
+        "%kernel.root_dir%/module/Core/templates": base
+        "%kernel.root_dir%/module/Core/templates/twig": Twig

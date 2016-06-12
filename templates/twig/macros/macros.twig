@@ -56,7 +56,7 @@
     {% elseif size == 200  %}
         {% set suffix = '_200' %}
     {% endif %}
-    {% set img %}<img src="{{ path('avatar', { 'username': username , 'size': suffix }) }}" >{% endset %}
+    {% set img %}<img width="{{ size }}" height="{{ size }}" src="{{ path('avatar', { 'username': username , 'size': suffix }) }}" >{% endset %}
     {% if linked %}
         {{ macro.memberlink(username, img) }}
     {% else %}
@@ -64,8 +64,8 @@
     {% endif %}
 {% endmacro %}
 
-{% macro memberlink(username) %}
-<a href="members/{{ username }}">{{ username }}</a>
+{% macro memberlink(member) %}
+<a href="members/{{ member.Username }}">{{ member.Username }}</a>
 {% endmacro %}
 
 {% macro pagination(currentPage, lastPage, route, routeParams) %}

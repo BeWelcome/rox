@@ -1,0 +1,19 @@
+# routes.yml
+
+admin:
+    resource: ../module/Admin/config/routes.yml
+
+auth:
+    resource: ../module/Auth/config/routes.yml
+
+forum:
+    resource: ../module/Forum/config/routes.yml
+
+member:
+    resource: ../module/Member/config/routes.yml
+
+message:
+    resource: ../module/Message/config/routes.yml
+
+start:
+    resource: ../module/Start/config/routes.yml

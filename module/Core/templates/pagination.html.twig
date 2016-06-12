@@ -1,0 +1,65 @@
+{#
+  https://gist.github.com/SimonSimCity/4594748
+
+  Source: http://dev.dbl-a.com/symfony-2-0/symfony2-and-twig-pagination/
+  Updated by: Simon Schick <simonsimcity@gmail.com>
+  Parameters:
+    * currentFilters (array) : associative array that contains the current route-arguments
+    * currentPage (int) : the current page you are in
+    * paginationPath (string) : the route name to use for links
+    * showAlwaysFirstAndLast (bool) : Always show first and last link (just disabled)
+    * lastPage (int) : represents the total number of existing pages
+#}
+{% spaceless %}
+    {% if lastPage > 1 %}
+
+        {# the number of first and last pages to be displayed #}
+        {% set extremePagesLimit = 1 %}
+
+        {# the number of pages that are displayed around the active page #}
+        {% set nearbyPagesLimit = 2 %}
+
+        <ul class="pagination">
+            {% if currentPage > 1 %}
+
+                <li class="page-item"><a class="page-link" href="{{ path(paginationPath, currentFilters|merge({page: currentPage-1})) }}">&laquo;</a></li>
+
+                {% for i in range(1, extremePagesLimit) if ( i < currentPage - nearbyPagesLimit ) %}
+                    <li class="page-item"><a class="page-link" href="{{ path(paginationPath, currentFilters|merge({page: i})) }}">{{ i }}</a></li>
+                {% endfor %}
+
+                {% if extremePagesLimit + 1 < currentPage - nearbyPagesLimit %}
+                    <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                {% endif %}
+
+                {% for i in range(currentPage-nearbyPagesLimit, currentPage-1) if ( i > 0 ) %}
+                    <li class="page-item"><a class="page-link" href="{{ path(paginationPath, currentFilters|merge({page: i})) }}">{{ i }}</a></li>
+                {% endfor %}
+            {% elseif showAlwaysFirstAndLast %}
+                <li class="page-item"><a class="page-link disabled">&laquo;</a></li>
+            {% endif %}
+
+            <li class="page-item active"><a class="page-link">{{ currentPage }}</a></li>
+
+            {% if currentPage < lastPage %}
+                {% for i in range(currentPage+1, currentPage + nearbyPagesLimit) if ( i <= lastPage ) %}
+                    <li class="page-item"><a class="page-link" href="{{ path(paginationPath, currentFilters|merge({page: i})) }}">{{ i }}</a></li>
+                {% endfor %}
+
+                {% if  (lastPage - extremePagesLimit) > (currentPage + nearbyPagesLimit) %}
+                    <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                {% endif %}
+
+                {% for i in range(lastPage - extremePagesLimit+1, lastPage) if ( i > currentPage + nearbyPagesLimit ) %}
+                    <li class="page-item"><a class="page-link" href="{{ path(paginationPath, currentFilters|merge({page: i})) }}">{{ i }}</a></li>
+                {% endfor %}
+
+                <li class="page-item"><a class="page-link" href="{{ path(paginationPath, currentFilters|merge({page: currentPage+1})) }}">&raquo;</a></li>
+
+            {% elseif showAlwaysFirstAndLast %}
+                <li class="page-item"><a class="page-link disabled">&raquo;</a></li>
+            {% endif %}
+        </ul>
+
+    {% endif %}
+{% endspaceless %}

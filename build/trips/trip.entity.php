@@ -46,7 +46,7 @@ class Trip extends RoxEntityBase
         return $this->FindByWhereMany('idMember = ' . $member->id, $offset, $limit);
     }
 
-    protected function loadEntity($data)
+    protected function loadEntity(array $data)
     {
         if ($status = parent::loadEntity($data))
         {

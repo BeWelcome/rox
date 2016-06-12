@@ -18,8 +18,6 @@
  */
 class APP_User extends MOD_bw_user_Auth 
 {
-    use \Rox\RoxTraits\SessionTrait;
-
     /**
      * single instance
      * 

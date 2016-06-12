@@ -1,0 +1,8 @@
+services:
+    Rox\Message\Model\Message:
+        class: Rox\Message\Model\Message
+        autowiring_types: Rox\Message\Repository\MessageRepositoryInterface
+
+    Rox\Message\Service\MessageService:
+        class: Rox\Message\Service\MessageService
+        autowiring_types: Rox\Message\Service\MessageServiceInterface

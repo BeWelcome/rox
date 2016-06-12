@@ -13,6 +13,9 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id: app_controller.lib.php 68 2006-06-23 12:10:27Z kang $
  */
+
+use Symfony\Component\Templating\EngineInterface;
+
 /**
  * The controller base class
  *
@@ -32,7 +35,12 @@ abstract class PAppController implements PApplication
      * @var object
      */
     protected $dao;
-    
+
+    /**
+     * @var EngineInterface
+     */
+    protected $engine;
+
     /**
      * The constructor
      * 
@@ -58,5 +66,12 @@ abstract class PAppController implements PApplication
     public function __destruct() 
     {
         unset($this->dao);
+    }
+
+    public function setEngine(EngineInterface $engine)
+    {
+        $this->engine = $engine;
+
+        return $this;
     }
 } 

@@ -1,0 +1,19 @@
+services:
+    Rox\Member\Controller\AvatarController:
+        class: Rox\Member\Controller\AvatarController
+        autowire: true
+
+    Rox\Member\Controller\SearchController:
+        class: Rox\Member\Controller\SearchController
+        autowire: true
+
+    Rox\Member\Controller\MemberController:
+        class: Rox\Member\Controller\MemberController
+        autowire: true
+
+    Rox\Member\Controller\CommentController:
+        class: Rox\Member\Controller\CommentController
+        autowire: true
+
+    Rox\Member\Controller\HttpsCheckController:
+        class: Rox\Member\Controller\HttpsCheckController

@@ -1,31 +1,12 @@
 {
-    "repositories":[
-        {
-            "type": "package",
-            "package": {
-                "name": "twbs/bootstrap4",
-                "version": "4.0",
-                "source": {
-                    "url": "https://github.com/twbs/bootstrap.git",
-                    "type": "git",
-                    "reference": "v4-dev"
-                }
-            }
-        },
-        {
-            "packagist": false
-        },
-        {
-            "type": "composer",
-            "url": "https://packagist.org/"
-        }
-    ],
+    "name": "bewelcome/rox",
+    "description": "The source code that drives bewelcome.org",
+    "homepage": "https://www.bewelcome.org/",
+    "type": "project",
     "license": "GPL",
     "require": {
-        "php" : ">=5.4.0",
+        "php": ">=5.4.0",
         "anthonymartin/geo-location": "^1.0",
-        "components/font-awesome": "4.*",
-        "components/jquery": "^2.1",
         "ezyang/htmlpurifier": "4.*",
         "foolz/sphinxql-query-builder": "^1.0",
         "html2text/html2text": "3.*",
@@ -33,14 +14,15 @@
         "illuminate/events": "5.*",
         "illuminate/support": "5.*",
         "michelf/php-markdown": "*",
+        "nesbot/carbon": "^1.21",
         "psr/log": "*",
         "robmorgan/phinx": "*",
-        "select2/select2": "4.*",
         "swiftmailer/swiftmailer": "5.*",
         "symfony/asset": "~3.1",
         "symfony/debug": "~3.1",
         "symfony/dependency-injection": "~3.1",
         "symfony/form": "~3.1",
+        "symfony/framework-bundle": "~3.1",
         "symfony/http-foundation" : "~3.1",
         "symfony/http-kernel" : "~3.1",
         "symfony/routing": "~3.1",
@@ -48,12 +30,15 @@
         "symfony/security-guard": "~3.1",
         "symfony/translation": "~3.1",
         "symfony/twig-bridge": "~3.1",
+        "symfony/twig-bundle": "~3.1",
         "symfony/validator": "3.1 as 2.8",
-        "twbs/bootstrap4": "@dev",
-        "Twig/Twig": "1.*"
+        "Twig/Twig": "1.*",
+        "vlucas/phpdotenv": "~2.2",
+        "zendframework/zend-uri": "2.4.*"
     },
     "require-dev": {
         "fabpot/php-cs-fixer": "~1.11",
+        "fzaninotto/faker": "^1.6",
         "halleck45/phpmetrics": "~1.8",
         "phploc/phploc": "~2.1",
         "phpmd/phpmd": "~2.3",
@@ -63,8 +48,27 @@
     },
     "autoload": {
         "psr-4": {
-            "Rox\\": "Rox/"
+            "Rox\\": "Rox/",
+            "Rox\\Admin\\": "module/Admin/src",
+            "Rox\\Auth\\": "module/Auth/src",
+            "Rox\\Core\\": "module/Core/src",
+            "Rox\\Forum\\": "module/Forum/src",
+            "Rox\\Geo\\": "module/Geo/src",
+            "Rox\\I18n\\": "module/I18n/src",
+            "Rox\\Member\\": "module/Member/src",
+            "Rox\\Message\\": "module/Message/src",
+            "Rox\\Start\\": "module/Start/src"
         },
-        "classmap": [ "modules/", "lib/", "tools/", "pthacks/", "roxlauncher/", "build/" ]
+        "classmap": [
+            "modules/",
+            "lib/",
+            "tools/",
+            "pthacks/",
+            "roxlauncher/",
+            "build/"
+        ]
+    },
+    "scripts": {
+        "serve": "php -S 0:8000 -t htdocs/ htdocs/index.php"
     }
 }

@@ -1,0 +1,9 @@
+site_name: Rox
+docs_dir: doc/book
+site_dir: doc/html
+pages:
+    - index.md
+    - Reference:
+      - 'Project Structure': structure.md
+      - Twig: twig.md
+    - Deprecated: deprecated.md

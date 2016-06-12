@@ -68,6 +68,8 @@ class ForumsController extends PAppController
 
         $page = $view->page = new RoxGenericPage();
 
+        $page->setEngine($this->engine);
+
         $request = $this->request;
         if (isset($request[0]) && $request[0] != 'forums') {
             // if this is a ./groups url get the group number if any

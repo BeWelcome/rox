@@ -669,7 +669,7 @@ SQL;
      * @access protected
      * @return bool
      */
-    protected function loadEntity($data)
+    protected function loadEntity(array $data)
     {
         if (!is_array($data))
         {

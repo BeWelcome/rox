@@ -1,0 +1,9 @@
+# @see http://symfony.com/doc/current/reference/configuration/twig.html
+
+twig:
+    debug: true
+    strict_variables: true
+    cache: 'cache/%kernel.environment%/twig/'
+    exception_controller:  twig.controller.exception:showAction
+    paths:
+        '%kernel.root_dir%/templates/twig/macros': macros

@@ -1,0 +1,10 @@
+<div class="card">
+    <a name="travels"></a>
+    <h3 class="card-header"><i class="fa fa-globe"></i><span class="icontext">Travelled to</span></h3>
+    <div class="card-block">
+        {{ member.PastTrips | nl2br }}
+
+        {# New design expects structured list of countries. Old system just stores text input. #}
+        {#<p class="m-b-0"><img src="http://www.clickfire.com/images/flags/germany.gif"><span class="icontext">Germany</span></p>#}
+    </div>
+</div>

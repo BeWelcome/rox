@@ -1,0 +1,113 @@
+<div class="card">
+    <a name="accommodation"></a>
+
+    <h3 class="card-header">
+        <i class="fa fa-home"></i><span class="icontext">Accommodation</span>
+        <a href="#" class="btn btn-primary-outline btn-sm pull-xs-right request p-a-0"><i class="fa fa-angle-double-right"></i> Send a request</a>
+    </h3>
+
+    <div class="card-block">
+        <p class="card-text m-b-0"><strong>Max. number of guests:</strong> {{ member.maxguest }}</p>
+        <p class="card-text m-b-0"><strong>Max. length of stay:</strong> {{ member.maxlenghtofstay }}</p>
+
+        <div id="accordion" role="tablist" aria-multiselectable="true">
+
+            {% if member.ilivewith %}
+                <div class="panel panel-default">
+                    <div class="panel-heading m-b-0" role="tab" id="headingZero">
+                        <p class="panel-title m-b-0">
+                            <a class="acc-info collapsed btn text-xs-left p-l-0" data-toggle="collapse" data-parent="#accordion" href="#collapseZero" aria-expanded="false" aria-controls="collapseZero">
+                                I live with
+                            </a>
+                        </p>
+                    </div>
+                    <div id="collapseZero" class="panel-collapse collapse m-b-1" role="tabpanel" aria-labelledby="headingZero">
+                        {{ member.ilivewith }}
+                    </div>
+                    <noscript>{{ member.ilivewith }}</noscript>
+                </div>
+            {% endif %}
+
+            {% if member.pleasebring %}
+                <div class="panel panel-default">
+                    <div class="panel-heading m-b-0" role="tab" id="headingOne">
+                        <p class="panel-title m-b-0">
+                            <a class="acc-info collapsed btn text-xs-left p-l-0" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                Please bring
+                            </a>
+                        </p>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse m-b-1" role="tabpanel" aria-labelledby="headingOne">
+                        {{ member.pleasebring }}
+                    </div>
+                    <noscript>{{ member.pleasebring }}</noscript>
+                </div>
+            {%  endif %}
+
+            {% if member.otherrestrictions %}
+                <div class="panel panel-default">
+                    <div class="panel-heading m-b-0" role="tab" id="headingTwo">
+                        <p class="panel-title m-b-0">
+                            <a class="acc-info collapsed btn text-xs-left p-l-0" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                House rules
+                            </a>
+                        </p>
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse m-b-1" role="tabpanel" aria-labelledby="headingTwo">
+                        {{ member.otherrestrictions }}
+                    </div>
+                    <noscript>{{ member.otherrestrictions }}</noscript>
+                </div>
+            {% endif %}
+
+            {% if member.offerguests %}
+                <div class="panel panel-default">
+                    <div class="panel-heading m-b-0" role="tab" id="headingThree">
+                        <p class="panel-title m-b-0">
+                            <a class="acc-info collapsed btn text-xs-left p-l-0" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                I can offer my guests
+                            </a>
+                        </p>
+                    </div>
+                    <div id="collapseThree" class="panel-collapse collapse m-b-1" role="tabpanel" aria-labelledby="headingThree">
+                        {{ member.offerguests }}
+                    </div>
+                    <noscript>{{ member.offerguests }}</noscript>
+                </div>
+            {% endif %}
+
+            {% if member.additionalaccomodationinfo %}
+                <div class="panel panel-default">
+                    <div class="panel-heading m-b-0" role="tab" id="headingFour">
+                        <p class="panel-title m-b-0">
+                            <a class="acc-info collapsed btn text-xs-left p-l-0" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                About my accommodation
+                            </a>
+                        </p>
+                    </div>
+                    <div id="collapseFour" class="panel-collapse collapse m-b-1" role="tabpanel" aria-labelledby="headingFour">
+                        {{ member.additionalaccomodationinfo }}
+                    </div>
+                    <noscript>{{ member.additionalaccomodationinfo }}</noscript>
+                </div>
+            {% endif %}
+
+            {% if member.publictransport %}
+                <div class="panel panel-default">
+                    <div class="panel-heading m-b-0" role="tab" id="headingFive">
+                        <p class="panel-title m-b-0">
+                            <a class="acc-info collapsed btn text-xs-left p-l-0" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                How to get there
+                            </a>
+                        </p>
+                    </div>
+                    <div id="collapseFive" class="panel-collapse collapse m-b-1" role="tabpanel" aria-labelledby="headingFive">
+                        {{ member.publictransport }}
+                    </div>
+                    <noscript>{{ member.publictransport }}</noscript>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>

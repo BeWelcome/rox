@@ -3,9 +3,10 @@
 namespace Rox\Main\Home;
 
 use AnthonyMartin\GeoLocation\GeoLocation;
+use Illuminate\Database\Eloquent\Builder;
 use Rox\Models\Activity;
-use Rox\Models\Member;
-use Rox\Models\Message;
+use Rox\Member\Model\Member;
+use Rox\Message\Model\Message;
 use Rox\Models\Note;
 use Rox\Models\Post;
 use Rox\Models\Thread;
@@ -29,9 +30,8 @@ class HomeModel extends \RoxModelBase {
      *
      * @return array
      */
-    public function getMessages($all, $unread, $limit = false)
+    public function getMessages(Member $member, $all, $unread, $limit = false)
     {
-        $member = $this->getLoggedInMember();
         $query = Message::orderBy('created', 'desc')->with('sender')->where('IdReceiver', $member->id);
         if ($unread) {
             $query= $query->where('WhenFirstRead', '0000-00-00 00:00:00');
@@ -117,9 +117,21 @@ class HomeModel extends \RoxModelBase {
             // Member decided not to show anything
             return [];
         }
-        Capsule::enableQueryLog();
-        $query = Thread::orderBy('created_at', 'desc')
-            ->where('ThreadDeleted', 'NotDeleted');
+
+        // There seems to be an issue with some threads/posts missing their author.
+        // To get around that, this task is split it two parts: first do the search
+        // query we want using inner join on all required dependent tables, then second,
+        // use the IDs from that result set to do a findMany using the ORM.
+
+        $query = Capsule::connection()->query();
+
+        $query
+            ->select(['forums_threads.id'])
+            ->from('forums_threads')
+            ->where('ThreadDeleted', 'NotDeleted')
+            ->orderBy('created_at', 'desc')
+        ;
+
         $groupIds = [];
         if ($groups) {
             $loggedInMember = $this->getLoggedInMember();
@@ -138,19 +150,27 @@ class HomeModel extends \RoxModelBase {
 
         }
         if (!empty($groupIds)) {
-            $query = $query->whereIn('IdGroup', $groupIds);
+            $query->whereIn('IdGroup', $groupIds);
             if ($following) {
-                $query = $query->orWhereIn('id', [1, 2]);
+                $query->orWhereIn('id', [1, 2]);
             }
         } else {
-            $query = $query->whereIn('id', [1, 2]);
+            $query->whereIn('id', [1, 2]);
         }
-        if ($limit) {
-            $query=$query->take($limit);
-        }
-        $posts = $query->get()->all();
 
-        error_log(print_r(Capsule::getQueryLog(), true));
+        // Need to use inner join here so it also acts like an eager fetch, ie.
+        // no threads will be returned if they have a missing author etc.
+        $query->join('forums_posts', 'forums_posts.id', '=', 'forums_threads.last_postid');
+        $query->join('members', 'members.id', '=', 'forums_posts.authorid');
+
+        if ($limit) {
+            $query->take($limit);
+        }
+
+        $threadIds = $query->pluck('id');
+
+        $posts = Thread::query()->findMany($threadIds)->all();
+
         $mappedPosts = array_map(
             function($a) {
                 $result = new \stdClass();
@@ -207,7 +227,8 @@ class HomeModel extends \RoxModelBase {
             $query->where('dateTimeStart', '>=', Capsule::raw('NOW()'))
                 ->orWhere('dateTimeEnd', '>=', Capsule::raw('NOW()'));
         })
-        ->where('status', 0);
+        ->where('status', 0)
+        ->take($limit);
 
         $activityIds = $query->get(['id']);
 

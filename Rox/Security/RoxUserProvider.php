@@ -2,7 +2,7 @@
 
 namespace Rox\Security;
 
-use Rox\Models\Member;
+use Rox\Member\Model\Member;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -38,6 +38,6 @@ class RoxUserProvider implements UserProviderInterface
 
     public function supportsClass($class)
     {
-        return $class === 'Rox\Models\Member';
+        return $class === 'Rox\Member\Model\Member';
     }
 }

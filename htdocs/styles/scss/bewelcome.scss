@@ -4,29 +4,10 @@
 $font-path: '../fonts/';
 @include font-face('Signika-Bold', $font-path + 'signika-bold-webfont', normal, normal);
 @include font-face('Signika-Regular', $font-path + 'signika-regular-webfont', normal, normal);
-@include font-face('LatoWebBlack', $font-path + 'Lato-Black', normal, normal);
-@include font-face('LatoWebBlack', $font-path + 'Lato-BlackItalic', normal, italic);
-@include font-face('LatoWebBold', $font-path + 'Lato-Bold', normal, normal);
-@include font-face('LatoWebBold', $font-path + 'Lato-BoldItalic', normal, italic);
-@include font-face('LatoWebSemiBold', $font-path + 'Lato-Semibold', normal, normal);
-@include font-face('LatoWebSemiBold', $font-path + 'Lato-SemiboldItalic', normal, italic);
-@include font-face('LatoWebHairline', $font-path + 'Lato-Hairline', normal, normal);
-@include font-face('LatoWebHairline', $font-path + 'Lato-HairlineItalic', normal, italic);
-@include font-face('LatoWeb', $font-path + 'Lato-Regular', normal, normal);
-@include font-face('LatoWeb', $font-path + 'Lato-Italic', normal, italic);
-@include font-face('LatoWebThin',  $font-path + 'Lato-Thin', normal, normal);
-@include font-face('LatoWebThin', $font-path + 'Lato-ThinItalic', normal, italic);
-@include font-face('LatoWebLight', $font-path + 'Lato-Light', normal, normal);
-@include font-face('LatoWebLight', $font-path + 'Lato-LightItalic', normal, italic);
-@include font-face('LatoWebMedium', $font-path + 'Lato-Medium', normal, normal);
-@include font-face('LatoWebMedium', $font-path + 'Lato-MediumItalic', normal, italic);
-
-//Font-awesome
-@import "../../../vendor/components/font-awesome/scss/font-awesome";
 
 // Core variables and mixins
 @import "custom";
-@import "../../../vendor/twbs/bootstrap4/scss/bootstrap";
+@import "../../../node_modules/bootstrap/scss/bootstrap";
 
 @import "general";
 
@@ -39,7 +20,7 @@ $font-path: '../fonts/';
 @import "edit";
 
 // select2
-@import "../../../vendor/select2/select2/src/scss/core";
+@import "../../../node_modules/select2/src/scss/core";
 @import "select2-bootstrap4";
 
 // Set yaml classes to keep old style alive and constistent
@@ -60,4 +41,9 @@ $font-path: '../fonts/';
 .username{
   line-height: 1.1;
   word-wrap: break-word;
+}
+
+/* This is actually defined in content_minimal but that file is not imported */
+.unread {
+    font-weight: bold;
 }

@@ -2,8 +2,9 @@
 
 namespace Rox\Models;
 
-
 use Illuminate\Database\Eloquent\Model;
+use Rox\Forum\Model\Translation;
+use Rox\Member\Model\Member;
 
 class Post extends Model
 {
@@ -12,14 +13,14 @@ class Post extends Model
     public $timestamps = false;
 
     public function author() {
-        return $this->hasOne('Rox\Models\Member', 'id', 'authorid');
+        return $this->hasOne(Member::class, 'id', 'authorid');
     }
 
     public function thread() {
-        return $this->hasOne('Rox\Models\Thread', 'id', 'threadid');
+        return $this->hasOne(Thread::class, 'id', 'threadid');
     }
 
     public function content() {
-        return $this->hasMany('Rox\Models\Translation', 'IdTrad', 'IdContent');
+        return $this->hasMany(Translation::class, 'IdTrad', 'IdContent');
     }
 }

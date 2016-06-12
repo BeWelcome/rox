@@ -1,0 +1,12 @@
+services:
+    Rox\I18n\Factory\TranslatorFactory:
+        class: Rox\I18n\Factory\TranslatorFactory
+
+    translator:
+        factory: ['@Rox\I18n\Factory\TranslatorFactory', __invoke]
+        arguments: ['@service_container']
+        class: Symfony\Component\Translation\TranslatorInterface
+
+    Rox\I18n\Loader\DatabaseLoader:
+        class: Rox\I18n\Loader\DatabaseLoader
+        autowire: true

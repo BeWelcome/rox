@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class RoxModelBase extends RoxComponentBase
 {
     use \Rox\RoxTraits\CryptTrait;
-    use \Rox\RoxTraits\SessionTrait;
 
     /**
      * stores the currently logged in member

@@ -1,0 +1,18 @@
+auth/authorize:
+    path:     /login
+    methods: [POST]
+    defaults:
+        _controller: Rox\Auth\Controller\AuthorizeController:__invoke
+
+auth/login:
+    path:     /login
+    methods: [GET]
+    defaults:
+        _controller: Rox\Auth\Controller\LoginController:__invoke
+
+auth/logout:
+    path:     /logout
+    methods: [GET]
+    defaults:
+        _controller: Rox\Auth\Controller\LoginController:logout
+

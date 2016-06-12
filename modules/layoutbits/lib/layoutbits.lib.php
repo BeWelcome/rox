@@ -92,7 +92,7 @@ class MOD_layoutbits
     }
 
 
-    protected function member_pic_url() {
+    protected static function member_pic_url() {
         return '/members/avatar/';
     }
 

@@ -418,6 +418,7 @@ A TERRIBLE EXCEPTION
                 $page->controller_classname = $classname;
                 $page->router = $this->router;
                 $page->setEngine($this->engine);
+                $page->setSession();
             }
         } else {
             $page = false;

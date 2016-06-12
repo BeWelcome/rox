@@ -3,6 +3,12 @@
 
 class VisualComponent extends RoxComponentBase
 {
+    public function setSession()
+    {
+        // Fix for __call hijacking the method call
+        parent::setSession();
+    }
+
     /**
      * called by the framework, to inject some essential values..
      *

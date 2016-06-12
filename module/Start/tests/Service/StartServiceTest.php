@@ -12,7 +12,7 @@ class StartServiceTest extends PHPUnit_Framework_TestCase
     public function test()
     {
         /** @var ConnectionInterface|PHPUnit_Framework_MockObject_MockObject $connection */
-        $connection = $this->getMock(ConnectionInterface::class);
+        $connection = $this->createMock(ConnectionInterface::class);
 
         $connection->method('select')->with($this->isType('string'))->willReturn([
             new ArrayObject([

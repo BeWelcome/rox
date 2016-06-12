@@ -37,9 +37,9 @@ class StartControllerTest extends PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->cache = $this->getMock(Cache::class);
+        $this->cache = $this->createMock(Cache::class);
 
-        $this->engine = $this->getMock(EngineInterface::class);
+        $this->engine = $this->createMock(EngineInterface::class);
 
         $this->controller = new StartController($this->startService, $this->cache, $this->engine);
     }

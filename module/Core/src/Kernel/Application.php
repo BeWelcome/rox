@@ -3,6 +3,7 @@
 namespace Rox\Core\Kernel;
 
 use EnvironmentExplorer;
+use Illuminate\Database\Connection;
 use Rox\Core\Loader\ConfigLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Debug\Debug;
@@ -28,6 +29,9 @@ class Application extends Kernel
         $environmentExplorer->initializeGlobalState();
 
         parent::boot();
+
+        // Initialise the Eloquent 'capsule'
+        $this->getContainer()->get(Connection::class);
     }
 
     public function registerBundles()

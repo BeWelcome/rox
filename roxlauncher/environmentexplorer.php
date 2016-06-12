@@ -5,6 +5,7 @@
  * autoload.  A lot of this is taken from PT, inc/
  */
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Zend\Uri\Http;
 
 class EnvironmentExplorer
 {
@@ -16,8 +17,12 @@ class EnvironmentExplorer
 
     public function initializeGlobalState()
     {
-        // load data in base.xml
-        $base_xml_xpath = $this->loadBaseXML();
+        define('SCRIPT_BASE', getcwd() . '/');
+        define('HTDOCS_BASE', SCRIPT_BASE . 'htdocs/');
+        define('LIB_DIR', SCRIPT_BASE . 'lib/');
+        define('BUILD_DIR', SCRIPT_BASE . 'build/');
+        define('TEMPLATE_DIR', SCRIPT_BASE . 'templates/');
+        define('DATA_DIR', SCRIPT_BASE . 'data/');
 
         if (!$settings = $this->loadConfiguration()) {
             // ini files are not set..
@@ -25,14 +30,12 @@ class EnvironmentExplorer
             die('STOP');
         }
 
+        $settings = $this->mergeNewConfig($settings);
+
         // No longer needed; session already started from Symfony code
         // $this->initSession($settings);
 
         PSurveillance::get();
-
-        // these two may actually kill the process
-        $this->loadDefaults($base_xml_xpath, $settings);
-        $this->checkEnvironment();
 
         // initialize global vars and global registry
         $this->_initPVars($settings);
@@ -44,97 +47,29 @@ class EnvironmentExplorer
         // print_r($class_loader);
     }
 
-
-    public function loadBaseXML()
+    protected function mergeNewConfig(array $settings)
     {
-        // load base.xml document
-        $dom = new DOMDocument();
-        if (!$B = $dom->load(SCRIPT_BASE.'base.xml')) {
-            die('base.xml error!');
-        }
-        // $B->x = new DOMXPath($B);
-        $xpath = new DOMXPath($dom);
+        $dsn = sprintf('mysqli:host=%s;dbname=%s', getenv('DB_HOST'), getenv('DB_NAME'));
 
-        // is platform PT?
-        $is = $xpath->query('/basedata/is');
-        if ($is->length != 1) {
-            die('base is?');
-        }
-        if ($is->item(0)->nodeValue != 'respice platform PT') {
-            die('no, it\'s not');
-        }
+        $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
 
-        // version
-        $version = $xpath->query('/basedata/version');
-        if ($version->length != 1) {
-            die('version?');
-        }
-        $version = $version->item(0)->nodeValue;
+        $uri = (new Http($request->getUri()))
+            ->setScheme('http')
+            ->setPath('');
 
-        // lib dir
-        $libdir = SCRIPT_BASE.'lib'.$version;
-        if (!file_exists($libdir) || !is_dir($libdir))
-            $libdir = SCRIPT_BASE.'lib';
-        if (!file_exists($libdir) || !is_dir($libdir))
-            die('libdir...');
-        define('LIB_DIR', $libdir.'/');
-
-        // build dir
-        $buildDir = 'build';
-        $build = $xpath->query('/basedata/build');
-        if ($build->length == 1) {
-            $buildDir = $build->item(0)->nodeValue;
-        }
-        if (!file_exists(SCRIPT_BASE.$buildDir)) {
-            $buildDir = 'build';
-        }
-        if (!file_exists(SCRIPT_BASE.$buildDir))
-            die('builddir error!');
-        define('BUILD_DIR', SCRIPT_BASE.$buildDir.'/');
-
-        // template dir (EEEE Embedded Easter Egg Engine)
-        // TODO: what is this easter egg thing about???
-        $template = $xpath->query('/basedata/template');
-        $templateDir = SCRIPT_BASE.'templates';
-        if ($template->length == 1) {
-            $templateDir = SCRIPT_BASE.'templates_'.$template->item(0)->nodeValue;
-            if (!file_exists($templateDir) || !is_dir($templateDir) || !is_readable($templateDir)) {
-                $templateDir = SCRIPT_BASE.'templates';
-            }
-        }
-        if (!is_dir($templateDir)) {
-            die("Template dir '$templateDir' is not a directory!");
-        } else if (!is_readable($templateDir)) {
-            die("Template dir '$templateDir' is not readable. Check your file permissions!");
-        }
-        define('TEMPLATE_DIR', $templateDir.'/');
-
-        $datadir = SCRIPT_BASE.'data';
-        if (!is_dir($datadir)) {
-            die("Data dir '$datadir' does not exist!");
-        } else if (!is_writable($datadir)) {
-            die("Cannot write to '$datadir' is not writable. Check your file permissions!");
-        }
-        define('DATA_DIR', $datadir.'/');
-        // Do the same for $memberphotosdir = SCRIPT_BASE.'htdocs/memberphotos';
-
-        return $xpath;
+        return array_replace_recursive($settings, [
+            'db' => [
+                'dsn' => $dsn,
+                'user' => getenv('DB_USER'),
+                'password' => getenv('DB_PASS'),
+            ],
+            'env' => [
+                'baseuri' => $uri->toString(),
+                'baseuri_http' => $uri->toString(),
+                'baseuri_https' => $uri->setScheme('https')->toString(),
+            ],
+        ]);
     }
-
-
-    /**
-     * this is called at some point to check some environment stuff.
-     *
-     */
-    protected function checkEnvironment()
-    {
-        //BW Rox needs the GD plugin
-        if (!PPHP::assertExtension('gd')) {
-            phpinfo();
-            die('GD lib required!');
-        }
-    }
-
 
     protected function loadSettings()
     {
@@ -214,37 +149,6 @@ class EnvironmentExplorer
             </pre>';
 
             return false;
-        }
-    }
-
-    /**
-     * again, PT needs it.
-     *
-     */
-    protected function loadDefaults($xpath, $settings)
-    {
-        // copied from defaults.inc.php
-
-        // we don't need PPckup() and translate($request) anymore,
-        // we have chooseControllerClassname() instead.
-
-        // suspended
-        $susp = $xpath->query('/basedata/suspended');
-        if ($susp->length > 0) {
-            if (isset($settings['env']['suspend_url'])) {
-                header('Location: '.$settings['env']['suspend_url']);
-            } else {
-                header('HTTP/1.1 403 Forbidden');
-            }
-            PPHP::PExit();
-        }
-
-        // debug?
-        $debug = $xpath->query('/basedata/debug');
-        if ($debug->length > 0) {
-            PVars::register('debug', true);
-            $build = str_replace(SCRIPT_BASE, '', BUILD_DIR);
-            PVars::register('build', substr($build, 0, strlen($build) - 1));
         }
     }
 

@@ -35,9 +35,6 @@ class Application extends Kernel
             Debug::enable();
         }
 
-        define('SCRIPT_BASE', $this->getRootDir() . '/');
-        define('HTDOCS_BASE', $this->getRootDir() . '/htdocs/');
-
         $environmentExplorer = new EnvironmentExplorer();
 
         $environmentExplorer->initializeGlobalState();

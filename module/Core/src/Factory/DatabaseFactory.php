@@ -9,24 +9,15 @@ class DatabaseFactory
 {
     public function __invoke()
     {
-        $params = parse_ini_file(getcwd() . '/rox_local.ini');
-
-        $parts = explode('=', $params['dsn']);
-
-        $host     = substr($parts[1], 0, strpos($parts[1], ';'));
-        $database = $parts[2];
-        $user     = $params['user'];
-        $password = $params['password'];
-
         // Setup database connection with Eloquent
         $capsule = new Manager();
 
         $capsule->addConnection([
             'driver'    => 'mysql',
-            'host'      => $host,
-            'database'  => $database,
-            'username'  => $user,
-            'password'  => $password,
+            'host'      => getenv('DB_HOST'),
+            'database'  => getenv('DB_NAME'),
+            'username'  => getenv('DB_USER'),
+            'password'  => getenv('DB_PASS'),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',

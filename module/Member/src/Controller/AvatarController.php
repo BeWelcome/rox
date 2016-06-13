@@ -11,9 +11,6 @@ class AvatarController
 {
     public function __invoke(Request $request, $username)
     {
-        // tmp
-        return new RedirectResponse('https://www.fillmurray.com/50/50');
-
         $size = $request->getQueryString();
 
         if ($size === '50_50') {

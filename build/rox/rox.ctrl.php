@@ -176,12 +176,12 @@ class RoxController extends RoxControllerBase
         // check if language is in DB
         $language_lookup_model = new LanguageLookupModel();
         if ($row = $language_lookup_model->findLanguageWithCode($langcode)) {
-            $this->_session->set( 'lang', $langcode )
-            $this->_session->set( 'IdLanguage', $row->id )
+            $this->_session->set( 'lang', $langcode );
+            $this->_session->set( 'IdLanguage', $row->id );
         } else {
             // catch invalid language codes!
-            $this->_session->set( 'lang', 'en' )
-            $this->_session->set( 'IdLanguage', 0 )
+            $this->_session->set( 'lang', 'en' );
+            $this->_session->set( 'IdLanguage', 0 );
         }
     }
     
@@ -195,14 +195,14 @@ class RoxController extends RoxControllerBase
     private function _switchTrMode($tr_mode)
     {
         if(!MOD_right::get()->hasRight('Words')) {
-            $this->_session->set( 'tr_mode', 'browse' )
+            $this->_session->set( 'tr_mode', 'browse' );
             return;
         }
         switch ($tr_mode) {
             case 'browse':
             case 'translate':
             case 'edit':
-                $this->_session->set( 'tr_mode', $tr_mode )
+                $this->_session->set( 'tr_mode', $tr_mode );
                 break;
             default:
                 // don't change tr mode
@@ -269,7 +269,7 @@ class LanguageLookupModel extends RoxModelBase
             "
 SELECT id
 FROM languages
-WHERE ShortCode = '". mysql_real_escape_string($langcode) ."'
+WHERE ShortCode = '". $this->dao->escape($langcode) ."'
             "
         );
     }

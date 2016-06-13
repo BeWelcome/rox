@@ -53,6 +53,24 @@ class RoxTwigExtension extends Twig_Extension implements Twig_Extension_GlobalsI
 
     public function getGlobals()
     {
+        $words = new \MOD_words();
+        $model = new \FlaglistModel();
+        $langarr = array();
+        foreach($model->getLanguages() as $language) {
+            $lang = new \stdClass;
+            $lang->NativeName = $language->Name;
+            $lang->TranslatedName = $words->getSilent($language->WordCode);
+            $lang->ShortCode = $language->ShortCode;
+            $langarr[$language->ShortCode] = $lang;
+        }
+        $defaultLanguage = $langarr[$this->session->get( 'lang' , 'en')];
+        usort($langarr, function($a, $b) {
+            if ($a->TranslatedName == $b->TranslatedName) {
+                return 0;
+            }
+            return (strtolower($a->TranslatedName) < strtolower($b->TranslatedName)) ? -1 : 1;
+        });
+
         $member = $this->getMember();
 
         return [
@@ -62,22 +80,8 @@ class RoxTwigExtension extends Twig_Extension implements Twig_Extension_GlobalsI
             'my_member' => $member,
             'messageCount' => $member ? $this->getMessageCount($member) : null,
             'faker' => class_exists(Factory::class) ? Factory::create() : null,
-            'language'  => [
-                'NativeName' => 'English',
-                'ShortCode'  => 'en',
-            ],
-            'languages' => [
-                [
-                    'NativeName' => 'English',
-                    'ShortCode' => 'en',
-                    'TranslatedName' => 'English',
-                ],
-                [
-                    'NativeName' => 'French',
-                    'ShortCode' => 'fr',
-                    'TranslatedName' => 'Francais',
-                ],
-            ],
+            'language'  => $defaultLanguage,
+            'languages' => $langarr,
         ];
     }
 

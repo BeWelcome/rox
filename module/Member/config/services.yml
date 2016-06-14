@@ -14,3 +14,10 @@ services:
         autowire: true
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    Rox\Member\Extension\MemberTwigExtension:
+        class: Rox\Member\Extension\MemberTwigExtension
+        autowire: true
+        public: false
+        tags:
+            - { name: twig.extension }

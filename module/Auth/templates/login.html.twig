@@ -4,11 +4,11 @@
 
     <div id="main" style="margin-top: 30px;">
 
-        {% for error in flash.get('errors') %}
+        {% if error %}
             <div class="alert alert-danger">
                 {{ error | trans }}
             </div>
-        {% endfor %}
+        {% endif %}
 
         <form id="main-login-form" role="form" class="form-signin" method="post" action="{{ path('auth/authorize') }}">
             <h2><span class="hidden-xs">{{ 'Login' | trans }}</span></h2>
@@ -19,7 +19,7 @@
             </h3>
 
             <label class="sr-only" for="login-u">{{ 'Username' | trans }}</label>
-            <input type="text" id="login-u" name="username" autofocus required value="{{ flash.get('username') | first }}" placeholder="{{ 'Username' | trans }}" class="form-control">
+            <input type="text" id="login-u" name="username" autofocus required value="{{ username }}" placeholder="{{ 'Username' | trans }}" class="form-control">
 
             <label class="sr-only" for="login-p">{{ 'Password' | trans }}</label>
             <input type="password" id="login-p" name="password" placeholder="{{ 'Password' | trans }}" class="form-control">

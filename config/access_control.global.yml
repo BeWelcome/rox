@@ -1,0 +1,10 @@
+# SecurityBundle does not allow access_control to be merged from different
+# files, so this file contains all the ACL from all modules.
+security:
+    access_control:
+        # The bottom one matches all routes, ensuring the default behaviour is
+        # that users must be logged in. Other rules above are then able to
+        # whitelist anonymous accessible pages.
+        - { path: ^/$, allow_if: "not has_role('ROLE_USER')" }
+        - { path: ^/login$, allow_if: "not has_role('ROLE_USER')" }
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

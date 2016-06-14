@@ -302,7 +302,7 @@ class Member extends Model implements MemberRepositoryInterface, UserInterface
     public function getRoles()
     {
         // TODO: Implement getRoles() method.
-        return [];
+        return ['ROLE_USER'];
     }
 
     /**

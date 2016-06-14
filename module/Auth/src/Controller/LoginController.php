@@ -2,9 +2,8 @@
 
 namespace Rox\Auth\Controller;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
@@ -13,19 +12,19 @@ use Symfony\Component\Templating\EngineInterface;
 class LoginController
 {
     /**
-     * @var Session
-     */
-    protected $session;
-
-    /**
      * @var EngineInterface
      */
     protected $engine;
 
-    public function __construct(Session $session, EngineInterface $engine)
+    /**
+     * @var AuthenticationUtils
+     */
+    protected $authenticationUtils;
+
+    public function __construct(EngineInterface $engine, AuthenticationUtils $authenticationUtils)
     {
-        $this->session = $session;
         $this->engine = $engine;
+        $this->authenticationUtils = $authenticationUtils;
     }
 
     /**
@@ -33,19 +32,13 @@ class LoginController
      */
     public function __invoke()
     {
+        $lastError = $this->authenticationUtils->getLastAuthenticationError();
+
         $content = $this->engine->render('@auth/login.html.twig', [
-            'flash' => $this->session->getFlashBag(),
+            'username' => $this->authenticationUtils->getLastUsername(),
+            'error' => $lastError ? $lastError->getMessage() : null,
         ]);
 
         return new Response($content);
-    }
-
-    public function logout()
-    {
-        $loginModel = new \LoginModel();
-
-        $loginModel->logout();
-
-        return new RedirectResponse('/');
     }
 }

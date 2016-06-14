@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
@@ -43,18 +44,25 @@ class MessageController
      */
     protected $session;
 
+    /**
+     * @var TokenStorageInterface
+     */
+    protected $tokenStorage;
+
     public function __construct(
         MessageRepositoryInterface $messageRepository,
         MessageServiceInterface $messageService,
         MemberRepositoryInterface $memberRepository,
         EngineInterface $engine,
-        SessionInterface $session
+        SessionInterface $session,
+        TokenStorageInterface $tokenStorage
     ) {
         $this->messageRepository = $messageRepository;
         $this->messageService = $messageService;
         $this->memberRepository = $memberRepository;
         $this->engine = $engine;
         $this->session = $session;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function update(Request $request)
@@ -160,8 +168,7 @@ class MessageController
             throw new \InvalidArgumentException();
         }
 
-        $memberId = $this->session->get('IdMember');
-        $member = $this->memberRepository->getById($memberId);
+        $member = $this->tokenStorage->getToken()->getUser();
 
         $q = $this->messageService->getFilteredMessages($member, $filter, $sort, $sortDir);
 

@@ -2,12 +2,10 @@
 
 namespace Rox\Start\Controller;
 
-use Rox\Main\Home\HomeModel;
-use Rox\Member\Repository\MemberRepositoryInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Rox\Main\Home\HomeModel as HomeService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
@@ -19,35 +17,28 @@ use Symfony\Component\Templating\EngineInterface;
 class HomeController
 {
     /**
-     * @var MemberRepositoryInterface
-     */
-    protected $memberRepository;
-
-    /**
      * @var EngineInterface
      */
     protected $engine;
 
     /**
-     * @var SessionInterface
+     * @var TokenStorageInterface
      */
-    protected $session;
-
-    public function __construct(
-        MemberRepositoryInterface $memberRepository,
-        EngineInterface $engine,
-        SessionInterface $session
-    ) {
-        $this->memberRepository = $memberRepository;
-        $this->engine = $engine;
-        $this->session = $session;
-    }
+    protected $tokenStorage;
 
     /**
-     * @todo
+     * @var HomeService
      */
-    public function avatar()
-    {
+    protected $homeService;
+
+    public function __construct(
+        EngineInterface $engine,
+        TokenStorageInterface $tokenStorage
+    ) {
+        $this->engine = $engine;
+        $this->tokenStorage = $tokenStorage;
+
+        $this->homeService = new HomeService();
     }
 
     /**
@@ -57,14 +48,12 @@ class HomeController
      */
     public function showMessagesAction(Request $request)
     {
-        $model = new HomeModel();
-
         $all = $request->query->get('all');
         $unread = $request->query->get('unread');
 
-        $member = $this->memberRepository->getById($this->session->get('IdMember'));
+        $member = $this->tokenStorage->getToken()->getUser();
 
-        $messages = $model->getMessages($member, $all, $unread, 4);
+        $messages = $this->homeService->getMessages($member, $all, $unread, 4);
 
         $content = $this->engine->render('@start/widget/messages.html.twig', [
             'messages' => $messages,
@@ -75,9 +64,7 @@ class HomeController
 
     public function showNotificationsAction()
     {
-        $model = new HomeModel();
-
-        $notifications = $model->getNotifications(5);
+        $notifications = $this->homeService->getNotifications(5);
 
         $content = $this->engine->render('@start/widget/notifications.html.twig', [
             'notifications' => $notifications,
@@ -97,9 +84,7 @@ class HomeController
         $forum = $request->query->get('forum');
         $following = $request->query->get('following');
 
-        $model = new HomeModel();
-
-        $threads = $model->getThreads($groups, $forum, $following, 4);
+        $threads = $this->homeService->getThreads($groups, $forum, $following, 4);
 
         $content = $this->engine->render('@start/widget/forums.html.twig', [
             'threads' => $threads,
@@ -110,9 +95,7 @@ class HomeController
 
     public function showActivitiesAction()
     {
-        $model = new HomeModel();
-
-        $activities = $model->getActivities(4);
+        $activities = $this->homeService->getActivities(4);
 
         $content = $this->engine->render('@start/widget/activities.html.twig', [
             'activities' => $activities,
@@ -128,10 +111,6 @@ class HomeController
      */
     public function showAction()
     {
-        if (!$this->session->get('IdMember')) {
-            return new RedirectResponse('/');
-        }
-
         $content = $this->engine->render('@start/home.html.twig');
 
         return new Response($content);

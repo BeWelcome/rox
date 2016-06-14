@@ -52,17 +52,17 @@ class RoxTwigExtension extends Twig_Extension implements Twig_Extension_GlobalsI
     {
         $words = new \MOD_words();
         $model = new \FlaglistModel();
-        $langarr = array();
-        foreach($model->getLanguages() as $language) {
+        $langarr = [];
+        foreach ($model->getLanguages() as $language) {
             $lang = new \stdClass;
             $lang->NativeName = $language->Name;
             $lang->TranslatedName = $words->getSilent($language->WordCode);
             $lang->ShortCode = $language->ShortCode;
             $langarr[$language->ShortCode] = $lang;
         }
-        $defaultLanguage = $langarr[$this->session->get( 'lang' , 'en')];
-        usort($langarr, function($a, $b) {
-            if ($a->TranslatedName == $b->TranslatedName) {
+        $defaultLanguage = $langarr[$this->session->get('lang', 'en')];
+        usort($langarr, function ($a, $b) {
+            if ($a->TranslatedName === $b->TranslatedName) {
                 return 0;
             }
             return (strtolower($a->TranslatedName) < strtolower($b->TranslatedName)) ? -1 : 1;

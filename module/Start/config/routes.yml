@@ -1,40 +1,34 @@
 start:
     path:     /
     defaults:
-        auth_state: guest
-        auth_state_redirect: home
+        access_denied_redirect: home
         _controller: Rox\Start\Controller\StartController
 
 home:
     path:     /home
     defaults:
-        auth_state: auth
         _controller: Rox\Start\Controller\HomeController:showAction
 
 widget/messages:
     path:     /widget/messages
     methods: [GET]
     defaults:
-        auth_state: auth
         _controller: Rox\Start\Controller\HomeController:showMessagesAction
 
 widget/notifications:
     path:     /widget/notifications
     methods: [GET]
     defaults:
-        auth_state: auth
         _controller: Rox\Start\Controller\HomeController:showNotificationsAction
 
 widget/threads:
     path:     /widget/threads
     methods: [GET]
     defaults:
-        auth_state: auth
         _controller: Rox\Start\Controller\HomeController:showThreadsAction
 
 widget/activities:
     path:     /widget/activities
     methods: [GET]
     defaults:
-        auth_state: auth
         _controller: Rox\Start\Controller\HomeController:showActivitiesAction

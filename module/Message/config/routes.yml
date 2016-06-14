@@ -4,7 +4,6 @@ message:
     defaults:
         _controller: Rox\Message\Controller\MessageController:index
         filter: inbox
-        auth_state: auth
     requirements:
         filter: inbox|sent|spam
 
@@ -14,7 +13,6 @@ message/update:
     defaults:
         _controller: Rox\Message\Controller\MessageController:update
         filter: inbox
-        auth_state: auth
     requirements:
         filter: inbox|sent|spam
 
@@ -23,18 +21,15 @@ message/with:
     methods: [GET]
     defaults:
         _controller: Rox\Message\Controller\MessageController:with
-        auth_state: auth
 
 message/compose:
     path: /messages/compose/{username}
     methods: [GET]
     defaults:
         _controller: Rox\Message\Controller\MessageController:compose
-        auth_state: auth
 
 message/view:
     path: /messages/{id}
     methods: [GET]
     defaults:
         _controller: Rox\Message\Controller\MessageController:view
-        auth_state: auth

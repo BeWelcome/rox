@@ -3,12 +3,6 @@ services:
         class: Rox\Member\Model\Member
         autowiring_types: Rox\Member\Repository\MemberRepositoryInterface
 
-    Rox\Member\Listener\RestoreRememberListener:
-        class: Rox\Member\Listener\RestoreRememberListener
-        autowire: true
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
     Rox\Member\Listener\HttpsCheckListener:
         class: Rox\Member\Listener\HttpsCheckListener
         autowire: true
@@ -17,12 +11,6 @@ services:
 
     Rox\Member\Listener\UserListener:
         class: Rox\Member\Listener\UserListener
-        autowire: true
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
-    Rox\Member\Listener\RequireAuthListener:
-        class: Rox\Member\Listener\RequireAuthListener
         autowire: true
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }

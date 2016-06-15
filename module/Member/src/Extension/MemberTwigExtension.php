@@ -47,11 +47,13 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
      */
     protected function getMember()
     {
-        if ($this->tokenStorage->getToken() instanceof AnonymousToken) {
+        $token = $this->tokenStorage->getToken();
+
+        if (!$token || $token instanceof AnonymousToken) {
             return;
         }
 
-        return $this->tokenStorage->getToken()->getUser();
+        return $token->getUser();
     }
 
     protected function getMessageCount(Member $member)

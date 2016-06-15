@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AvatarController
 {
-    public function __invoke(Request $request, $username)
+    public function showAvatarAction(Request $request, $username)
     {
         $size = $request->getQueryString();
 

@@ -30,7 +30,7 @@ class LoginController
     /**
      * @return Response
      */
-    public function __invoke()
+    public function loginFormAction()
     {
         $lastError = $this->authenticationUtils->getLastAuthenticationError();
 

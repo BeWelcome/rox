@@ -7,7 +7,7 @@ auth/login:
     methods: [GET]
     defaults:
         access_denied_redirect: home
-        _controller: Rox\Auth\Controller\LoginController:__invoke
+        _controller: Rox\Auth\Controller\LoginController:loginFormAction
 
 auth/logout:
     path:     /logout

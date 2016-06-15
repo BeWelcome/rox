@@ -2,42 +2,20 @@
 
 namespace Rox\Start\Controller;
 
+use Rox\Core\Controller\AbstractController;
 use Rox\Main\Home\HomeModel as HomeService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Templating\EngineInterface;
 
-/**
- * dashboard controller
- *
- * @package Dashboard
- * @author Amnesiac84
- */
-class HomeController
+class HomeController extends AbstractController
 {
-    /**
-     * @var EngineInterface
-     */
-    protected $engine;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    protected $tokenStorage;
-
     /**
      * @var HomeService
      */
     protected $homeService;
 
-    public function __construct(
-        EngineInterface $engine,
-        TokenStorageInterface $tokenStorage
-    ) {
-        $this->engine = $engine;
-        $this->tokenStorage = $tokenStorage;
-
+    public function __construct()
+    {
         $this->homeService = new HomeService();
     }
 
@@ -51,11 +29,11 @@ class HomeController
         $all = $request->query->get('all');
         $unread = $request->query->get('unread');
 
-        $member = $this->tokenStorage->getToken()->getUser();
+        $member = $this->getMember();
 
         $messages = $this->homeService->getMessages($member, $all, $unread, 4);
 
-        $content = $this->engine->render('@start/widget/messages.html.twig', [
+        $content = $this->render('@start/widget/messages.html.twig', [
             'messages' => $messages,
         ]);
 
@@ -66,7 +44,7 @@ class HomeController
     {
         $notifications = $this->homeService->getNotifications(5);
 
-        $content = $this->engine->render('@start/widget/notifications.html.twig', [
+        $content = $this->render('@start/widget/notifications.html.twig', [
             'notifications' => $notifications,
         ]);
 
@@ -84,9 +62,9 @@ class HomeController
         $forum = $request->query->get('forum');
         $following = $request->query->get('following');
 
-        $threads = $this->homeService->getThreads($groups, $forum, $following, 4);
+        $threads = $this->homeService->getThreads($this->getMember(), $groups, $forum, $following, 4);
 
-        $content = $this->engine->render('@start/widget/forums.html.twig', [
+        $content = $this->render('@start/widget/forums.html.twig', [
             'threads' => $threads,
         ]);
 
@@ -95,9 +73,9 @@ class HomeController
 
     public function showActivitiesAction()
     {
-        $activities = $this->homeService->getActivities(4);
+        $activities = $this->homeService->getActivities($this->getMember(), 4);
 
-        $content = $this->engine->render('@start/widget/activities.html.twig', [
+        $content = $this->render('@start/widget/activities.html.twig', [
             'activities' => $activities,
         ]);
 
@@ -111,7 +89,7 @@ class HomeController
      */
     public function showAction()
     {
-        $content = $this->engine->render('@start/home.html.twig');
+        $content = $this->render('@start/home.html.twig');
 
         return new Response($content);
     }

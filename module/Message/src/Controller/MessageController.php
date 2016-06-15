@@ -3,6 +3,7 @@
 namespace Rox\Message\Controller;
 
 use Illuminate\Database\Eloquent\Builder;
+use Rox\Core\Controller\AbstractController;
 use Rox\Member\Repository\MemberRepositoryInterface;
 use Rox\Message\Model\Message;
 use Rox\Message\Repository\MessageRepositoryInterface;
@@ -10,14 +11,8 @@ use Rox\Message\Service\MessageServiceInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Templating\EngineInterface;
 
-/**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- */
-class MessageController
+class MessageController extends AbstractController
 {
     /**
      * @var MessageRepositoryInterface
@@ -34,35 +29,14 @@ class MessageController
      */
     protected $memberRepository;
 
-    /**
-     * @var EngineInterface
-     */
-    protected $engine;
-
-    /**
-     * @var SessionInterface
-     */
-    protected $session;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    protected $tokenStorage;
-
     public function __construct(
         MessageRepositoryInterface $messageRepository,
         MessageServiceInterface $messageService,
-        MemberRepositoryInterface $memberRepository,
-        EngineInterface $engine,
-        SessionInterface $session,
-        TokenStorageInterface $tokenStorage
+        MemberRepositoryInterface $memberRepository
     ) {
         $this->messageRepository = $messageRepository;
         $this->messageService = $messageService;
         $this->memberRepository = $memberRepository;
-        $this->engine = $engine;
-        $this->session = $session;
-        $this->tokenStorage = $tokenStorage;
     }
 
     public function update(Request $request)
@@ -70,7 +44,7 @@ class MessageController
         $modifyAction = $request->request->get('modify');
         $messageIds = $request->request->get('message_id');
 
-        $member = $this->memberRepository->getById($this->session->get('IdMember'));
+        $member = $this->getMember();
 
         $message = new Message();
 
@@ -101,7 +75,7 @@ class MessageController
 
         $otherMember = $this->memberRepository->getByUsername($otherUsername);
 
-        $member = $this->memberRepository->getById($this->session->get('IdMember'));
+        $member = $this->getMember();
 
         $message = new Message();
 
@@ -133,7 +107,7 @@ class MessageController
 
         $messages = $q->get();
 
-        $content = $this->engine->render('@message/message/index.html.twig', [
+        $content = $this->render('@message/message/index.html.twig', [
             'messages' => $messages,
             'folder' => '',
             'filter' => $request->query->all(),
@@ -149,7 +123,7 @@ class MessageController
 
         $receiver = $this->memberRepository->getByUsername($receiverUsername);
 
-        $content = $this->engine->render('@message/message/compose.html.twig', [
+        $content = $this->render('@message/message/compose.html.twig', [
             'receiver' => $receiver,
         ]);
 
@@ -168,7 +142,7 @@ class MessageController
             throw new \InvalidArgumentException();
         }
 
-        $member = $this->tokenStorage->getToken()->getUser();
+        $member = $this->getMember();
 
         $q = $this->messageService->getFilteredMessages($member, $filter, $sort, $sortDir);
 
@@ -181,7 +155,7 @@ class MessageController
 
         $messages = $q->get();
 
-        $content = $this->engine->render('@message/message/index.html.twig', [
+        $content = $this->render('@message/message/index.html.twig', [
             'messages' => $messages,
             'folder' => $filter,
             'filter' => $request->query->all(),
@@ -196,7 +170,7 @@ class MessageController
     {
         $messageId = $request->attributes->get('id');
 
-        $member = $this->memberRepository->getById($this->session->get('IdMember'));
+        $member = $this->getMember();
 
         $message = $this->messageRepository->getById($messageId);
 
@@ -206,7 +180,7 @@ class MessageController
             $this->messageService->markMessage($message, Message::STATE_READ);
         }
 
-        $content = $this->engine->render('@message/message/view.html.twig', [
+        $content = $this->render('@message/message/view.html.twig', [
             'message' => $message,
         ]);
 

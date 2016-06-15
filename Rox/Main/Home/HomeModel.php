@@ -17,9 +17,9 @@ class HomeModel extends \RoxModelBase {
 
     /**
      * Generates messages for display on home page
-     * 
+     *
      * Returns either all messages or only unread ones depending on checkbox state
-     * 
+     *
      * Format: 'title': "Message title #1",
      *   'id': 12345,
      *   'user': 'Member-102',
@@ -63,13 +63,13 @@ class HomeModel extends \RoxModelBase {
      *   'user': 'Member-102',
      *   'time': '10 minutes ago',
      *
+     * @param Member $member
      * @param int|bool $limit
      *
      * @return array
      */
-    public function getNotifications($limit = false)
+    public function getNotifications(Member $member, $limit = false)
     {
-        $member = $this->getLoggedInMember();
         $query = Note::orderBy('created', 'desc')
             ->with('notifier')
             ->where('IdMember', $member->id)
@@ -101,9 +101,10 @@ class HomeModel extends \RoxModelBase {
 
     /**
      * Generates threads for display on home page
-     * 
+     *
      * Depends on checkboxes shown above the display
      *
+     * @param Member   $member
      * @param bool     $groups
      * @param bool     $forum
      * @param bool     $following
@@ -111,7 +112,7 @@ class HomeModel extends \RoxModelBase {
      *
      * @return array
      */
-    public function getThreads($groups, $forum, $following, $limit = false)
+    public function getThreads(Member $member, $groups, $forum, $following, $limit = false)
     {
         if ($groups + $forum + $following == 0) {
             // Member decided not to show anything
@@ -134,9 +135,8 @@ class HomeModel extends \RoxModelBase {
 
         $groupIds = [];
         if ($groups) {
-            $loggedInMember = $this->getLoggedInMember();
-            $member = Member::where('id', $loggedInMember->id)->first();;
             $groups = $member->groups()->get(['groups.id']);
+
             $groupIds = $groups->map(
                 function($item, $key) {
                     return $item->id;
@@ -196,15 +196,15 @@ class HomeModel extends \RoxModelBase {
      *   'yes': 12,
      *   'no': 3
      *
+     * @param Member $member
      * @param int|bool $limit
      *
      * @return array
      */
-    public function getActivities($limit = false)
+    public function getActivities(Member $member, $limit = false)
     {
-        $loggedInMember = $this->getLoggedInMember();
         // Fetch latitude and longitude of member's location
-        $latAndLong = Capsule::table('geonames')->where('geonameid', $loggedInMember->IdCity)->first(['latitude', 'longitude']);
+        $latAndLong = Capsule::table('geonames')->where('geonameid', $member->city->id)->first(['latitude', 'longitude']);
 
         $distance = 200; // Fetch from preferences
         $edison = GeoLocation::fromDegrees($latAndLong->latitude, $latAndLong->longitude);

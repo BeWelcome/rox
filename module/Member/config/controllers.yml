@@ -10,6 +10,7 @@ services:
     Rox\Member\Controller\MemberController:
         class: Rox\Member\Controller\MemberController
         autowire: true
+        parent: Rox\Core\Controller\AbstractController
 
     Rox\Member\Controller\CommentController:
         class: Rox\Member\Controller\CommentController

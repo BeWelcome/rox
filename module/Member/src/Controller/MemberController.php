@@ -30,7 +30,7 @@ class MemberController extends AbstractController
 
         $member = $this->memberRepository->getByUsername($username);
 
-        $content = $this->engine->render('@member/profile/view.html.twig', [
+        $content = $this->render('@member/profile/view.html.twig', [
             'member' => $member,
         ]);
 
@@ -39,7 +39,7 @@ class MemberController extends AbstractController
 
     public function edit()
     {
-        $content = $this->engine->render('@member/profile/edit.html.twig', [
+        $content = $this->render('@member/profile/edit.html.twig', [
 
         ]);
 

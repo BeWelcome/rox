@@ -2,29 +2,26 @@
 
 namespace Rox\Member\Model;
 
-use Countable;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
 use Rox\Core\Exception\NotFoundException;
 use Rox\Geo\Model\Location;
 use Rox\I18n\Model\Language;
 use Rox\Member\Repository\MemberRepositoryInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Traversable;
 
 /**
  * Class Member
  *
- * @property Traversable|Countable $comments
- * @property Traversable|Countable $groups
+ * @property Collection $comments
+ * @property Collection $groups
  * @property Collection $trads
  * @property integer $id
  * @method Builder|HasMany hasMany($a, $b, $c)
  *
- * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  *
  * @todo Maybe use a decorated to implement UserInterface?

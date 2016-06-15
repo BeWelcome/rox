@@ -12,5 +12,3 @@ auth/login:
 auth/logout:
     path:     /logout
     methods: [GET]
-    defaults:
-        _controller: Rox\Auth\Controller\LoginController:logout

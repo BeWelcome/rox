@@ -117,6 +117,8 @@ class Message extends Model implements MessageRepositoryInterface
 
     public function __isset($key)
     {
-        return parent::__isset($key) || in_array($key, $this->relationships, true);
+        return parent::__isset($key)
+            || in_array($key, $this->dates, true)
+            || in_array($key, $this->relationships, true);
     }
 }

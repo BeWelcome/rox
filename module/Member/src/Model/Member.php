@@ -3,11 +3,11 @@
 namespace Rox\Member\Model;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Rox\Core\Exception\NotFoundException;
+use Rox\Core\Model\AbstractModel;
 use Rox\Geo\Model\Location;
 use Rox\I18n\Model\Language;
 use Rox\Member\Repository\MemberRepositoryInterface;
@@ -26,7 +26,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @todo Maybe use a decorated to implement UserInterface?
  */
-class Member extends Model implements MemberRepositoryInterface, UserInterface
+class Member extends AbstractModel implements MemberRepositoryInterface, UserInterface
 {
     /**
      * @var string
@@ -57,7 +57,7 @@ class Member extends Model implements MemberRepositoryInterface, UserInterface
     /**
      * @var array
      */
-    protected $modelRelationships = [
+    protected $ormRelationships = [
         'city',
         'comments',
         'cryptedFields',
@@ -195,13 +195,6 @@ class Member extends Model implements MemberRepositoryInterface, UserInterface
         return $member;
     }
 
-    public function __isset($key)
-    {
-        $key = $this->normalizeKey($key);
-
-        return parent::__isset($key) || in_array($key, $this->modelRelationships, true);
-    }
-
     public function __get($key)
     {
         $key = $this->normalizeKey($key);
@@ -215,21 +208,6 @@ class Member extends Model implements MemberRepositoryInterface, UserInterface
         }
 
         return $value;
-    }
-
-    protected function normalizeKey($key)
-    {
-        $keys = array_keys($this->attributes);
-
-        $lcKeys = array_map('strtolower', $keys);
-
-        $position = array_search(strtolower($key), $lcKeys, true);
-
-        if (!$position) {
-            return $key;
-        }
-
-        return $keys[$position];
     }
 
     /**

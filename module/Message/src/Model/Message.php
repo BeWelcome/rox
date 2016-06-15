@@ -3,10 +3,9 @@
 namespace Rox\Message\Model;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Rox\Core\Exception\NotFoundException;
-use Rox\Core\Model\NullableDateFixTrait;
+use Rox\Core\Model\AbstractModel;
 use Rox\Member\Model\Member;
 use Rox\Message\Repository\MessageRepositoryInterface;
 
@@ -14,10 +13,8 @@ use Rox\Message\Repository\MessageRepositoryInterface;
  * @property integer $id
  * @property-read Member $receiver
  */
-class Message extends Model implements MessageRepositoryInterface
+class Message extends AbstractModel implements MessageRepositoryInterface
 {
-    use NullableDateFixTrait;
-
     const FOLDER_INBOX = 'Normal';
     const FOLDER_SPAM = 'Spam';
 
@@ -40,7 +37,7 @@ class Message extends Model implements MessageRepositoryInterface
     /**
      * @var array
      */
-    protected $relationships = [
+    protected $ormRelationships = [
         'sender',
         'receiver',
     ];
@@ -99,26 +96,5 @@ class Message extends Model implements MessageRepositoryInterface
         $q = parent::newQuery();
 
         return $q;
-    }
-
-    public function getAttribute($key)
-    {
-        // The Eloquent implementation of getAttribute will first return the
-        // attribute of $key before checking if it has a relationship.
-        // We want the opposite of this because we want to define the 'country'
-        // key as a relationship to the geoname entity, even though the location
-        // table defines a 'country' column.
-        if (in_array($key, $this->relationships, true)) {
-            return $this->getRelationValue($key);
-        }
-
-        return parent::getAttribute($key);
-    }
-
-    public function __isset($key)
-    {
-        return parent::__isset($key)
-            || in_array($key, $this->dates, true)
-            || in_array($key, $this->relationships, true);
     }
 }

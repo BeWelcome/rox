@@ -2,16 +2,16 @@
 
 namespace Rox\Member\Model;
 
-use Illuminate\Database\Eloquent\Model;
+use Rox\Core\Model\AbstractModel;
 
-class Comment extends Model
+class Comment extends AbstractModel
 {
     const CREATED_AT = 'created';
 
     /**
      * @var array
      */
-    protected $relationships = [
+    protected $ormRelationships = [
         'fromMember',
         'toMember',
     ];
@@ -24,10 +24,5 @@ class Comment extends Model
     public function toMember()
     {
         return $this->hasOne(Member::class, 'id', 'IdToMember');
-    }
-
-    public function __isset($key)
-    {
-        return parent::__isset($key) || in_array($key, $this->relationships, true);
     }
 }

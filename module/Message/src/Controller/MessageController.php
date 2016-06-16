@@ -4,6 +4,7 @@ namespace Rox\Message\Controller;
 
 use Illuminate\Database\Eloquent\Builder;
 use Rox\Core\Controller\AbstractController;
+use Rox\Core\Exception\NotFoundException;
 use Rox\Member\Repository\MemberRepositoryInterface;
 use Rox\Message\Model\Message;
 use Rox\Message\Repository\MessageRepositoryInterface;
@@ -11,6 +12,8 @@ use Rox\Message\Service\MessageServiceInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class MessageController extends AbstractController
 {
@@ -172,7 +175,16 @@ class MessageController extends AbstractController
 
         $member = $this->getMember();
 
-        $message = $this->messageRepository->getById($messageId);
+        try {
+            $message = $this->messageRepository->getById($messageId);
+        } catch (NotFoundException $e) {
+            throw new NotFoundHttpException('Message not found.', $e);
+        }
+
+        if ($member->Id !== $message->receiver->Id
+            && $member->Id !== $message->sender->Id) {
+            throw new AccessDeniedException();
+        }
 
         if ($message->isUnread() && $member->id === $message->receiver->id) {
             // Only mark as read when the receiver reads the message, not when

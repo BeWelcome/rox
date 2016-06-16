@@ -32,3 +32,9 @@ widget/activities:
     methods: [GET]
     defaults:
         _controller: Rox\Start\Controller\HomeController:showActivitiesAction
+
+tour:
+    path: /tour/{page}
+    defaults:
+        _controller: Rox\Start\Controller\TourController:indexAction
+        page: index

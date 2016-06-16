@@ -1,0 +1,18 @@
+<h3>{{ 'tour_share' | trans }}</h3>
+
+<h4>{{ 'tour_share_title1' | trans }}</h4>
+<div class="clearfix" style="margin-top: 20px">
+    <img src="images/tour/share4_small.jpg" class="framed float_left" style="margin-bottom: 20px; margin-right: 20px;"
+         alt="share">
+
+    <p>{{ 'tour_share_text1' | trans }}</p>
+
+    <h4>{{ 'tour_share_title2' | trans }}</h4>
+    <p>{{ 'tour_share_text2' | trans }}</p>
+
+    <h4>{{ 'tour_share_title3' | trans }}</h4>
+    <p>{{ 'tour_share_text3' | trans }}</p>
+
+    <a class="button" href="{{ path('tour', { page: 'meet' }) }}" onclick="this.blur();"
+       style="margin-bottom: 20px"><span>{{ 'tour_goNext' | trans }} &raquo; {{ 'tour_link_meet' | trans }}</span></a>
+</div>

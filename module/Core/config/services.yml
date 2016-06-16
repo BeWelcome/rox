@@ -61,3 +61,4 @@ services:
             - [setSession, ['@session']]
             - [setRouter, ['@router']]
             - [setFormFactory, ['@form.factory']]
+            - [setAuthChecker, ['@security.authorization_checker']]

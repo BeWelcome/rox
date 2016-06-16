@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
@@ -49,7 +50,12 @@ abstract class AbstractController
     private $tokenStorage;
 
     /**
-     * @param Router $route
+     * @var AuthorizationChecker
+     */
+    private $authChecker;
+
+    /**
+     * @param Router $router
      *
      * @return $this
      */
@@ -196,5 +202,25 @@ abstract class AbstractController
         }
 
         return $token->getUser();
+    }
+
+    /**
+     * @return AuthorizationChecker
+     */
+    public function getAuthChecker()
+    {
+        return $this->authChecker;
+    }
+
+    /**
+     * @param AuthorizationChecker $authChecker
+     *
+     * @return $this
+     */
+    public function setAuthChecker($authChecker)
+    {
+        $this->authChecker = $authChecker;
+
+        return $this;
     }
 }

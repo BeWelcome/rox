@@ -53,7 +53,7 @@ abstract class AbstractModel extends BaseModel
 
         $position = array_search(strtolower($key), $lcKeys, true);
 
-        if (!$position) {
+        if ($position === false) {
             return $key;
         }
 

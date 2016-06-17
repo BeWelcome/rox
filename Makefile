@@ -14,11 +14,14 @@ phpci: phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpmetrics phpunit
 build:
 	./node_modules/.bin/grunt
 
+phpdox: phploc phpmd php-code-sniffer phpunit
+	./vendor/bin/phpdox
+
 phpcpd:
 	php -d memory_limit=256M ./vendor/bin/phpcpd $(SRC_DIR) --progress --no-interaction
 
 phploc:
-	./vendor/bin/phploc $(SRC_DIR)
+	./vendor/bin/phploc --log-xml=phploc.xml $(SRC_DIR)
 
 phpmd:
 	./vendor/bin/phpmd $(SRC_DIR_COMMA) html phpmd.xml --reportfile phpmd.html

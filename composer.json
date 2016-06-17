@@ -46,7 +46,8 @@
         "phpmd/phpmd": "~2.3",
         "phpunit/phpunit": "~5.2",
         "sebastian/phpcpd": "~2.0",
-        "squizlabs/php_codesniffer": "~2.5"
+        "squizlabs/php_codesniffer": "~2.5",
+        "theseer/phpdox": "0.8.1.1"
     },
     "autoload": {
         "psr-4": {

@@ -6,4 +6,5 @@ pages:
     - Reference:
       - 'Project Structure': structure.md
       - Twig: twig.md
+      - 'Error Handling': error_handling.md
     - Deprecated: deprecated.md

@@ -1,0 +1,9 @@
+{% extends '@base/base.html.twig' %}
+
+{% block title %}{{ exception.message }} ({{ status_code }} {{ status_text }}){% endblock %}
+
+{% block content %}
+    <div id="main">
+        {% include '@Twig/Exception/exception.html.twig' %}
+    </div>
+{% endblock %}

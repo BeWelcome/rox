@@ -3,7 +3,7 @@ avatar:
     requirements:
         username: "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"
     defaults:
-        _controller: Rox\Member\Controller\AvatarController:__invoke
+        _controller: Rox\Member\Controller\AvatarController:showAvatarAction
 
 textsearch:
     path: /search/members

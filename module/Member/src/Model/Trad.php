@@ -2,9 +2,9 @@
 
 namespace Rox\Member\Model;
 
-use Illuminate\Database\Eloquent\Model;
+use Rox\Core\Model\AbstractModel;
 
-class Trad extends Model
+class Trad extends AbstractModel
 {
     const CREATED_AT = 'created';
     const UPDATED_AT = 'updated';
@@ -14,13 +14,15 @@ class Trad extends Model
      */
     protected $table = 'memberstrads';
 
+    /**
+     * @var array
+     */
+    protected $ormRelationships = [
+        'fromMember',
+    ];
+
     public function member()
     {
         return $this->hasOne(Member::class, 'id', 'IdOwner');
-    }
-
-    public function __isset($key)
-    {
-        return parent::__isset($key) || in_array($key, ['fromMember'], true);
     }
 }

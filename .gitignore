@@ -25,6 +25,7 @@ revision.txt
 .sass-cache
 
 doc/html/
+doc/phpdox/
 /vendor/*
 /node_modules/*
 /components/*
@@ -42,3 +43,5 @@ VERSION
 htdocs/assets/
 config/*.local.yml
 .env
+phploc.xml
+tmp/

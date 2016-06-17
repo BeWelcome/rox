@@ -1,18 +1,14 @@
 auth/authorize:
     path:     /login
     methods: [POST]
-    defaults:
-        _controller: Rox\Auth\Controller\AuthorizeController:__invoke
 
 auth/login:
     path:     /login
     methods: [GET]
     defaults:
-        _controller: Rox\Auth\Controller\LoginController:__invoke
+        access_denied_redirect: home
+        _controller: Rox\Auth\Controller\LoginController:loginFormAction
 
 auth/logout:
     path:     /logout
     methods: [GET]
-    defaults:
-        _controller: Rox\Auth\Controller\LoginController:logout
-

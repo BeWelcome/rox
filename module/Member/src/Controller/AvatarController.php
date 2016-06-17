@@ -3,15 +3,18 @@
 namespace Rox\Member\Controller;
 
 use Rox\Member\Model\Member;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class AvatarController
 {
-    public function __invoke(Request $request, $username)
+    public function showAvatarAction(Request $request, $username)
     {
-        $size = $request->getQueryString();
+        $size = $request->query->get('size');
+
+        if (!$size) {
+            $size = $request->getQueryString();
+        }
 
         if ($size === '50_50') {
             $size = 'xs';

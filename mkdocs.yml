@@ -1,9 +1,11 @@
 site_name: Rox
 docs_dir: doc/book
 site_dir: doc/html
+theme: readthedocs
 pages:
     - index.md
     - Reference:
       - 'Project Structure': structure.md
       - Twig: twig.md
+      - 'Error Handling': error_handling.md
     - Deprecated: deprecated.md

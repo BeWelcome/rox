@@ -47,14 +47,18 @@ services:
         autowiring_types: Symfony\Component\Form\FormFactoryInterface
         arguments: ['@form.registry', '@form.resolved_type_factory']
 
-    controller_resolver:
-        class: Rox\Core\Controller\ControllerResolver
-        arguments: ['@service_container', '@controller_name_converter', '@?logger']
-        tags:
-            - { name: monolog.logger, channel: request }
-
     Rox\Core\Listener\LegacyDispatchListener:
         class: Rox\Core\Listener\LegacyDispatchListener
         autowire: true
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
+    Rox\Core\Controller\AbstractController:
+        abstract: true
+        calls:
+            - [setEngine, ['@templating']]
+            - [setTokenStorage, ['@security.token_storage']]
+            - [setSession, ['@session']]
+            - [setRouter, ['@router']]
+            - [setFormFactory, ['@form.factory']]
+            - [setAuthChecker, ['@security.authorization_checker']]

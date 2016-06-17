@@ -2,49 +2,35 @@
 
 namespace Rox\Member\Controller;
 
-use Rox\Member\Model\Member;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Rox\Core\Controller\AbstractController;
+use Rox\Member\Repository\MemberRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Templating\EngineInterface;
 
-class MemberController
+class MemberController extends AbstractController
 {
     /**
-     * @var EngineInterface
+     * @var MemberRepositoryInterface
      */
-    protected $engine;
+    protected $memberRepository;
 
-    /**
-     * @var SessionInterface
-     */
-    protected $session;
-
-    public function __construct(EngineInterface $engine, SessionInterface $session)
+    public function __construct(MemberRepositoryInterface $memberRepository)
     {
-        $this->engine = $engine;
-        $this->session = $session;
+        $this->memberRepository = $memberRepository;
     }
 
     public function view(Request $request)
     {
-        if (!$this->session->get('IdMember')) {
-            return new RedirectResponse('/');
-        }
-
         $username = $request->attributes->get('username');
 
         if (!$username) {
             throw new NotFoundHttpException();
         }
 
-        $model = new Member();
+        $member = $this->memberRepository->getByUsername($username);
 
-        $member = $model->getByUsername($username);
-
-        $content = $this->engine->render('@member/profile/view.html.twig', [
+        $content = $this->render('@member/profile/view.html.twig', [
             'member' => $member,
         ]);
 
@@ -53,7 +39,7 @@ class MemberController
 
     public function edit()
     {
-        $content = $this->engine->render('@member/profile/edit.html.twig', [
+        $content = $this->render('@member/profile/edit.html.twig', [
 
         ]);
 

@@ -1,0 +1,21 @@
+services:
+    security.token_storage:
+        class: Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage
+        autowiring_types: Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface
+
+    security.authentication_utils:
+        class: Symfony\Component\Security\Http\Authentication\AuthenticationUtils
+        arguments: ['@request_stack']
+
+    Rox\Auth\Provider\UserProvider:
+        class: Rox\Auth\Provider\UserProvider
+        autowire: true
+
+    Rox\Auth\Encoder\LegacyPasswordEncoder:
+        class: Rox\Auth\Encoder\LegacyPasswordEncoder
+
+    Rox\Auth\Listener\AccessDeniedRedirectListener:
+        class: Rox\Auth\Listener\AccessDeniedRedirectListener
+        autowire: true
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }

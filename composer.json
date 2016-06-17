@@ -21,12 +21,14 @@
         "symfony/asset": "~3.1",
         "symfony/debug": "~3.1",
         "symfony/dependency-injection": "~3.1",
+        "symfony/expression-language": "~3.1",
         "symfony/form": "~3.1",
         "symfony/framework-bundle": "~3.1",
         "symfony/http-foundation" : "~3.1",
         "symfony/http-kernel" : "~3.1",
         "symfony/routing": "~3.1",
         "symfony/security": "~3.1",
+        "symfony/security-bundle": "~3.1",
         "symfony/security-guard": "~3.1",
         "symfony/translation": "~3.1",
         "symfony/twig-bridge": "~3.1",
@@ -44,7 +46,8 @@
         "phpmd/phpmd": "~2.3",
         "phpunit/phpunit": "~5.2",
         "sebastian/phpcpd": "~2.0",
-        "squizlabs/php_codesniffer": "~2.5"
+        "squizlabs/php_codesniffer": "~2.5",
+        "theseer/phpdox": "0.8.1.1"
     },
     "autoload": {
         "psr-4": {

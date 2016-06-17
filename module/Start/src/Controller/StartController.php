@@ -3,17 +3,11 @@
 namespace Rox\Start\Controller;
 
 use Doctrine\Common\Cache\Cache;
+use Rox\Core\Controller\AbstractController;
 use Rox\Start\Service\StartService;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Templating\EngineInterface;
 
-/**
-* dashboard controller
-*
-* @package Dashboard
-* @author Amnesiac84
-*/
-class StartController
+class StartController extends AbstractController
 {
     /**
      * @var StartService
@@ -25,22 +19,13 @@ class StartController
      */
     protected $cache;
 
-    /**
-     * @var EngineInterface
-     */
-    protected $engine;
-
-    public function __construct(
-        StartService $startService,
-        Cache $cache,
-        EngineInterface $engine
-    ) {
+    public function __construct(StartService $startService, Cache $cache)
+    {
         $this->startService = $startService;
-        $this->cache        = $cache;
-        $this->engine       = $engine;
+        $this->cache = $cache;
     }
 
-    public function __invoke()
+    public function startPageAction()
     {
         $key = __METHOD__;
 
@@ -50,7 +35,7 @@ class StartController
             $this->cache->save($key, $stats, 60*60);
         }
 
-        return new Response($this->engine->render('@start/public.html.twig', [
+        return new Response($this->render('@start/public.html.twig', [
             'stats' => $stats,
         ]));
     }

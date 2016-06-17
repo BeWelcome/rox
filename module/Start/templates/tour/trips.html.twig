@@ -1,0 +1,14 @@
+<h3>{{ 'tour_trips' | trans }}</h3>
+
+<h4>{{ 'tour_trips_title1' | trans }}</h4>
+<div class="clearfix">
+    <img src="images/tour/trips-example.png" class="float_left" alt="trips">
+    <p>{{ 'tour_trips_text1' | trans | raw }}</p>
+</div>
+
+<h4>{{ 'tour_trips_title2' | trans }}</h4>
+<p>{{ 'tour_trips_text2' | trans | raw }}</p>
+<h4>{{ 'tour_trips_title3' | trans }}</h4>
+<p>{{ 'tour_trips_text3' | trans }}</p>
+<a class="button" href="{{ path('tour', { page: 'maps' }) }}" onclick="this.blur();"
+   style="margin-bottom: 20px"><span>{{ 'tour_goNext' | trans }} &raquo; {{ 'tour_link_maps' | trans }}</span></a>

@@ -41,7 +41,9 @@ class StartControllerTest extends PHPUnit_Framework_TestCase
 
         $this->engine = $this->createMock(EngineInterface::class);
 
-        $this->controller = new StartController($this->startService, $this->cache, $this->engine);
+        $this->controller = new StartController($this->startService, $this->cache);
+
+        $this->controller->setEngine($this->engine);
     }
 
     public function testInvoke()
@@ -54,7 +56,7 @@ class StartControllerTest extends PHPUnit_Framework_TestCase
 
         $this->engine->expects($this->once())->method('render');
 
-        $result = $this->controller->__invoke();
+        $result = $this->controller->startPageAction();
 
         $this->assertInstanceOf(Response::class, $result);
     }

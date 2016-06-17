@@ -34,6 +34,13 @@ class LegacyDispatchListener
             return;
         }
 
+        // If the Symfony router matched the request but we have a 404, it means
+        // the controller probably threw the 404 error, so don't try legacy
+        // dispatch.
+        if ($event->getRequest()->attributes->get('_route')) {
+            return;
+        }
+
         // Kick-start the Symfony session. This replaces session_start() in the
         // old code, which is now turned off.
         $this->session->start();

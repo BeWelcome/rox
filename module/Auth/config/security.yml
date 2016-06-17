@@ -1,0 +1,22 @@
+security:
+    providers:
+        Rox\Auth\Provider\UserProvider:
+            id: Rox\Auth\Provider\UserProvider
+
+    encoders:
+        Rox\Member\Model\Member:
+            id: Rox\Auth\Encoder\LegacyPasswordEncoder
+
+    firewalls:
+        default:
+            anonymous: ~
+            form_login:
+                login_path: auth/login
+                check_path: auth/authorize
+                username_parameter: username
+                password_parameter: password
+                default_target_path: /home
+
+            logout:
+                path:   /logout
+                target: /

@@ -18,8 +18,8 @@ module, and use the `@base` module namespace with Twig.
 Due to the way Eloquent uses magic methods, Twig is unable to read
 object relationships. Twig will end up using the function of the
 relationship name (which returns a call to 'hasOne', for example)
-instead of fetching the relationship via the __get function in the
+instead of fetching the relationship via the `__get` function in the
 underlying model. To get around this issue, each model must override the
-__isset function to return true if a requested property is a known
+`__isset` function to return true if a requested property is a known
 relationship. See this [Stack Overflow answer](http://stackoverflow.com/a/35908957)
 for more information.

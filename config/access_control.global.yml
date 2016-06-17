@@ -7,4 +7,5 @@ security:
         # whitelist anonymous accessible pages.
         - { path: ^/$, allow_if: "not has_role('ROLE_USER')" }
         - { path: ^/login$, allow_if: "not has_role('ROLE_USER')" }
+        - { path: ^/about, allow_if: "not has_role('ROLE_USER')" }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

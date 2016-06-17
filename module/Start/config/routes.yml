@@ -38,3 +38,9 @@ tour:
     defaults:
         _controller: Rox\Start\Controller\TourController:indexAction
         page: index
+
+about:
+    path: /about/{page}
+    defaults:
+        _controller: Rox\Start\Controller\AboutController:indexAction
+        page: index

@@ -1,6 +1,7 @@
 site_name: Rox
 docs_dir: doc/book
 site_dir: doc/html
+theme: readthedocs
 pages:
     - index.md
     - Reference:

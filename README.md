@@ -2,31 +2,41 @@
 
 [![Build Status](https://travis-ci.org/BeWelcome/rox.svg?branch=bootstrap3)](https://travis-ci.org/BeWelcome/rox)
 
-Check INSTALL for installation instructions.
+Check [INSTALL](INSTALL.md) for installation instructions.
 
-You probably want to get started by checking out the different applications
-in build/.  htdocs/bw/ is deprecated and the code needs to be rewritten in
-build/.
+You probably want to get started by checking out the code in `module/`.
+
+`htdocs/bw/` and `build/` are deprecated and the code needs to be rewritten in
+`module`.
+
+## Documentation
+
+Documentation is [in the doc tree](doc/book/) and can be compiled using
+[mkdocs](http://www.mkdocs.org):
+
+```bash
+$ mkdocs build
+```
+
+The result can then be accessed via `doc/html/` in your cloned repository.
+
+PHP API documentation can also be generated using
+[phpDox.](https://github.com/theseer/phpdox) phpDox integrates with numerous
+continuous integration tools, so we recommend using the following `make` task to
+get the full output:
+
+```bash
+make phpdox
+```
+
+The result can then be accessed via `doc/phpdox/` in your cloned repository.
+
+## Useful links
+* [Legacy developer space on Trac](http://trac.bewelcome.org/)
+* [Writing great Git commit messages](http://chris.beams.io/posts/git-commit/)
+* [Git crash course](http://git.or.cz/course/svn.html)
 
 
-Useful links:
-* Developer space on Trac: http://trac.bewelcome.org/
-* Git crash course: http://git.or.cz/course/svn.html
-
-
-Standards we try to follow:
-* PEAR coding standard: http://pear.php.net/manual/en/standards.php
-* W3C strict XHTML 1.0: http://www.w3.org/TR/xhtml1/
-
-
-Documentation for the code is available. Check
-
-http://trac.bewelcome.org/wiki/RoxDocumentation
-
-You can also generate an up-to-date version using PhpDocumentor (http://www.phpdoc.org)
-
-Use the following command to generate the documentation (starting in the root of the code)
-
-phpdoc -p -d build,modules,htdocs,roxlauncher,tools -title="Rox Documentation" -t doc --parseprivate --validate
-
-(This will take a while.)
+## Coding standards
+* [PSR-1](http://www.php-fig.org/psr/psr-1/)
+* [PSR-2](http://www.php-fig.org/psr/psr-2/)

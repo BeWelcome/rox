@@ -10,7 +10,11 @@ class AvatarController
 {
     public function showAvatarAction(Request $request, $username)
     {
-        $size = $request->getQueryString();
+        $size = $request->query->get('size');
+
+        if (!$size) {
+            $size = $request->getQueryString();
+        }
 
         if ($size === '50_50') {
             $size = 'xs';

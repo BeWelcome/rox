@@ -17,6 +17,9 @@ build:
 phpdox: phploc phpmd php-code-sniffer phpunit
 	./vendor/bin/phpdox
 
+mkdocs:
+	mkdocs build
+
 phpcpd:
 	php -d memory_limit=256M ./vendor/bin/phpcpd $(SRC_DIR) --progress --no-interaction
 

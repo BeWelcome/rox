@@ -17,12 +17,11 @@ body {
   width: 100%;
 }
 
-#main {
-  margin-top: 25px;
-}
+/* Wrapper for the main content, below the menu */
+.container-content {
+    @extend .container;
 
-.navandcontent {
-  height: 100%;
+    margin-top: 25px;
 }
 
 .stickyfooter {

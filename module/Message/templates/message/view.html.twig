@@ -1,14 +1,14 @@
 {% extends '@base/base.html.twig' %}
 
-{% block content %}
-
 {% set directionIn = my_member.id == message.receiver.id %}
 {% set otherMember = directionIn ? message.sender : message.receiver %}
 
-<div id="main">
+{% block title %}
+    {{ 'Messages with %s' | trans | format(otherMember.Username) }}
+{% endblock %}
 
-<div id="message" class="clearfix">
-    <div id="shade_top"></div>
+{% block content %}
+
     <div id="buttonstop">
         <p class="clearfix">
             {% if directionIn %}
@@ -125,7 +125,5 @@
         </p>
     </div>
     <!-- messagefooter -->
-    <div id="shade"></div>
-</div> <!-- message -->
-</div>
+
 {% endblock content %}

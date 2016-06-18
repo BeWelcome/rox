@@ -75,6 +75,7 @@ class RoxTwigExtension extends Twig_Extension implements Twig_Extension_GlobalsI
             'faker' => class_exists(Factory::class) ? Factory::create() : null,
             'language'  => $defaultLanguage,
             'languages' => $langarr,
+            'robots' => 'ALL',
         ];
     }
 }

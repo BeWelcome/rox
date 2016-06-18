@@ -1,9 +1,12 @@
 {% import '@macros/macros.twig' as macros %}
 {% extends '@base/base.html.twig' %}
 
+{% block title %}
+    {{ 'Messages' | trans }}
+{% endblock %}
+
 {% block content %}
 
-<div id="main">
     <h2>{{ 'UserMessages' | trans | format(my_member.Username) }}</h2>
 
     <ul class="nav nav-pills">
@@ -122,6 +125,5 @@
     </form>
 
     {% endif %}
-</div>
 
 {% endblock %}

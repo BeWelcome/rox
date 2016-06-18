@@ -27,7 +27,7 @@ phploc:
 	./vendor/bin/phploc --log-xml=phploc.xml $(SRC_DIR)
 
 phpmd:
-	./vendor/bin/phpmd $(SRC_DIR_COMMA) html phpmd.xml --reportfile phpmd.html
+	./vendor/bin/phpmd $(SRC_DIR_COMMA) text phpmd.xml
 
 php-cs-fixer:
 	./vendor/bin/php-cs-fixer fix -v --diff --dry-run

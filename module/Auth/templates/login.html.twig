@@ -2,52 +2,50 @@
 
 {% block content %}
 
-    <div id="main" style="margin-top: 30px;">
+    {% if error %}
+        <div class="alert alert-danger">
+            {{ error | trans }}
+        </div>
+    {% endif %}
 
-        {% if error %}
-            <div class="alert alert-danger">
-                {{ error | trans }}
-            </div>
-        {% endif %}
+    <form id="main-login-form" role="form" class="form-signin" method="post" action="{{ path('auth/authorize') }}">
+        <h2><span class="hidden-xs">{{ 'Login' | trans }}</span></h2>
 
-        <form id="main-login-form" role="form" class="form-signin" method="post" action="{{ path('auth/authorize') }}">
-            <h2><span class="hidden-xs">{{ 'Login' | trans }}</span></h2>
+        <h3>
+            <span id="BeWelcome" class="visible-xs center">BeWelcome</span>
+            <span id="opendoor" class="visible-xs center"> - {{ 'IndexPageTeaserOpenDoor' | trans }}</span>
+        </h3>
 
-            <h3>
-                <span id="BeWelcome" class="visible-xs center">BeWelcome</span>
-                <span id="opendoor" class="visible-xs center"> - {{ 'IndexPageTeaserOpenDoor' | trans }}</span>
-            </h3>
+        <label class="sr-only" for="login-u">{{ 'Username' | trans }}</label>
+        <input type="text" id="login-u" name="username" autofocus required value="{{ username }}" placeholder="{{ 'Username' | trans }}" class="form-control">
 
-            <label class="sr-only" for="login-u">{{ 'Username' | trans }}</label>
-            <input type="text" id="login-u" name="username" autofocus required value="{{ username }}" placeholder="{{ 'Username' | trans }}" class="form-control">
+        <label class="sr-only" for="login-p">{{ 'Password' | trans }}</label>
+        <input type="password" id="login-p" name="password" placeholder="{{ 'Password' | trans }}" class="form-control">
 
-            <label class="sr-only" for="login-p">{{ 'Password' | trans }}</label>
-            <input type="password" id="login-p" name="password" placeholder="{{ 'Password' | trans }}" class="form-control">
+        <label for="login-r">
+            <input type="checkbox" id="login-r" value="{{ 'StayLoggedIn' | trans }}" name="remember">&nbsp;{{ 'StayLoggedIn' | trans }}
+        </label>
 
-            <label for="login-r">
-                <input type="checkbox" id="login-r" value="{{ 'StayLoggedIn' | trans }}" name="remember">&nbsp;{{ 'StayLoggedIn' | trans }}
-            </label>
+        <button type="submit" class="button btn-block">{{ 'IndexPageLoginSubmit' | trans }}</button>
 
-            <button type="submit" class="button btn-block">{{ 'IndexPageLoginSubmit' | trans }}</button>
+        <p class="dividerbox center">
+            {{ 'LoginformForgetPassword' | trans | format('<a href="">', '</a>') | raw }}
 
-            <p class="dividerbox center">
-                {{ 'LoginformForgetPassword' | trans | format('<a href="">', '</a>') | raw }}
+            <span class="ordivider"></span>
+        </p>
 
-                <span class="ordivider"></span>
+        <div class="center">
+            <h3>{{ 'SignupNow' | trans }}</h3>
+
+            {# The translated text for english contains <p> tags but not at the start and end #}
+            <p>{{ 'IndexPageWord17' | trans | format('<a class="button btn-block" role="button" href="">', '</a>') | raw }}</p>
+
+            <p class="visible-xs bw-row">
+                <a class="btn btn-primary btn-block" role="button" href="">{{ 'tour_take' | trans }}</a>
             </p>
 
-            <div class="center">
-                <h3>{{ 'SignupNow' | trans }}</h3>
+        </div>
+    </form>
 
-                {# The translated text for english contains <p> tags but not at the start and end #}
-                <p>{{ 'IndexPageWord17' | trans | format('<a class="button btn-block" role="button" href="">', '</a>') | raw }}</p>
-
-                <p class="visible-xs bw-row">
-                    <a class="btn btn-primary btn-block" role="button" href="">{{ 'tour_take' | trans }}</a>
-                </p>
-
-            </div>
-        </form>
-    </div>
 
 {% endblock %}

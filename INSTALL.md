@@ -16,6 +16,7 @@ using a browser or use curl _url_ > _filename_.
 * PHP GD lib enabled
 * PHP short opening tags enabled
 * PHP magic quotes gpc disabled
+* PHP extensions: mbstring, dom, fileinfo, intl, xsl
 * MySQL server >= 5.1
 * SMTP server for email features
 * [Composer](https://www.getcomposer.org)

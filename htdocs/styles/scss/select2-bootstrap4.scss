@@ -1,4 +1,4 @@
-/*! Select2 Bootstrap Theme v0.1.0-beta.4 | MIT License | github.com/select2/select2-bootstrap4-theme */
+/*! Select2 Bootstrap Theme v0.1.0-beta.7 | MIT License | github.com/select2/select2-bootstrap-theme */
 
 //
 // Variables
@@ -22,6 +22,10 @@ $form-control-transition: border-color ease-in-out .15s, box-shadow ease-in-out 
 $dropdown-arrow-color: $input-color-placeholder !default;
 $dropdown-box-shadow: 0 6px 12px rgba(0,0,0,.175) !default;
 $clear-selection-color: $dropdown-arrow-color !default;
+
+
+
+
 
 //
 // Mixins
@@ -81,9 +85,8 @@ $clear-selection-color: $dropdown-arrow-color !default;
 
 
 
-.select2-container--bootstrap4 {
+.select2-container--bootstrap {
   display: block;
-
 
 
 
@@ -95,7 +98,12 @@ $clear-selection-color: $dropdown-arrow-color !default;
   .select2-selection {
     @include bootstrap-input-defaults;
     outline: 0;
+    &.form-control {
+      border-radius: $border-radius;
+    }
   }
+
+
 
   /**
    * Search field in the Select2 dropdown.
@@ -182,31 +190,31 @@ $clear-selection-color: $dropdown-arrow-color !default;
     }
 
     .select2-results__option {
-      padding: $btn-padding-x $btn-padding-y;
+      padding: $input-padding-x $input-padding-y;
 
       .select2-results__group {
         padding-left: 0;
       }
 
       .select2-results__option {
-        margin-left: -$btn-padding-x;
-        padding-left: $btn-padding-x*2;
+        margin-left: -$input-padding-x;
+        padding-left: $input-padding-x*2;
 
         .select2-results__option {
-          margin-left: -$btn-padding-x*2;
-          padding-left: $btn-padding-x*3;
+          margin-left: -$input-padding-x*2;
+          padding-left: $input-padding-x*3;
 
           .select2-results__option {
-            margin-left: -$btn-padding-x*3;
-            padding-left: $btn-padding-x*4;
+            margin-left: -$input-padding-x*3;
+            padding-left: $input-padding-x*4;
 
             .select2-results__option {
-              margin-left: -$btn-padding-x*4;
-              padding-left: $btn-padding-x*5;
+              margin-left: -$input-padding-x*4;
+              padding-left: $input-padding-x*5;
 
               .select2-results__option {
-                margin-left: -$btn-padding-x*5;
-                padding-left: $btn-padding-x*6;
+                margin-left: -$input-padding-x*5;
+                padding-left: $input-padding-x*6;
               }
             }
           }
@@ -218,9 +226,9 @@ $clear-selection-color: $dropdown-arrow-color !default;
   .select2-results__group {
     color: $dropdown-header-color;
     display: block;
-    padding: $btn-padding-y $btn-padding-x;
+    padding: $input-padding-x $input-padding-y;
     font-size: $font-size-sm;
-    line-height: $line-height-sm;
+    line-height: $line-height-base;
     white-space: nowrap;
   }
 
@@ -349,8 +357,8 @@ $clear-selection-color: $dropdown-arrow-color !default;
 
   .select2-selection--single {
     height: $input-height;
-    line-height: $line-height;
-    padding: $btn-padding-y $btn-padding-x  $btn-padding-y $btn-padding-x;
+    line-height: $line-height-base;
+    padding: $input-padding-y ($input-padding-x + $caret-width*3) $input-padding-y $input-padding-x;
 
     /**
      * Adjust the single Select2's dropdown arrow button appearance.
@@ -359,7 +367,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
     .select2-selection__arrow {
       position: absolute;
       bottom: 0;
-      right: $btn-padding-x;
+      right: $input-padding-x;
       top: 0;
       width: $caret-width;
 
@@ -397,11 +405,13 @@ $clear-selection-color: $dropdown-arrow-color !default;
 
   .select2-selection--multiple {
     min-height: $input-height;
+    padding: 0;
+    height: auto;
 
     .select2-selection__rendered {
       box-sizing: border-box;
       display: block;
-      line-height: $line-height;
+      line-height: $line-height-base;
       list-style: none;
       margin: 0;
       overflow: hidden;
@@ -428,8 +438,8 @@ $clear-selection-color: $dropdown-arrow-color !default;
       border-radius: 4px;
       cursor: default;
       float: left;
-      margin: ($btn-padding-y - 1) 0 0 $btn-padding-x/2;
-      padding: 0 $btn-padding-y;
+      margin: ($input-padding-y - 1) 0 0 $input-padding-x/2;
+      padding: 0 $input-padding-y;
     }
 
     /**
@@ -439,11 +449,11 @@ $clear-selection-color: $dropdown-arrow-color !default;
     .select2-search--inline {
       .select2-search__field {
         background: transparent;
-        padding: 0 $btn-padding-x;
+        padding: 0 $input-padding-x;
         height: $input-height - 2;
-        line-height: $line-height;
+        line-height: $line-height-base;
         margin-top: 0;
-        min-width: 5em;
+        min-width: 5rem;
       }
     }
 
@@ -452,7 +462,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
       cursor: pointer;
       display: inline-block;
       font-weight: bold;
-      margin-right: $btn-padding-y / 2;
+      margin-right: $input-padding-y / 2;
 
       &:hover {
         color: #333;
@@ -464,7 +474,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
      */
 
     .select2-selection__clear {
-      margin-top: $btn-padding-y;
+      margin-top: $input-padding-y;
     }
   }
 
@@ -482,106 +492,101 @@ $clear-selection-color: $dropdown-arrow-color !default;
    */
 
   /* 1 */
-  &.input-sm,
-  &.input-lg {
-    border-radius: 0;
-    font-size: 12px;
-    height: auto;
-    line-height: 1;
-    padding: 0;
+
+
+  .select2-selection--single.input-sm,
+  .input-group-sm & .select2-selection--single,
+  .form-group-sm & .select2-selection--single {
+    border-radius: $input-border-radius-sm;
+    font-size: $font-size-sm;
+    height: $input-height-sm;
+    line-height: $line-height-sm;
+    padding: -$input-padding-x-sm $input-padding-x-sm + $caret-width*3 -$input-padding-x-sm $input-padding-x-sm;
+
+    /* 2 */
+    .select2-selection__arrow b {
+      margin-left: --$input-padding-x-sm;
+    }
   }
 
-  &.input-sm,
-  .input-group-sm &,
-  .form-group-sm & {
-    .select2-selection--single {
-      border-radius: $border-radius-sm;
+  .select2-selection--multiple.input-sm,
+  .input-group-sm & .select2-selection--multiple,
+  .form-group-sm & .select2-selection--multiple {
+    min-height: $input-height-sm;
+    border-radius: $border-radius-sm;
+
+    .select2-selection__choice {
       font-size: $font-size-sm;
-      height: $input-height-sm;
       line-height: $line-height-sm;
-      padding: $btn-padding-y-sm $btn-padding-x-sm  $btn-padding-y-sm $btn-padding-x-sm;
-
-      /* 2 */
-      .select2-selection__arrow b {
-        margin-left: -$btn-padding-y-sm;
-      }
+      margin: (-$input-padding-x-sm - 1) 0 0 $input-padding-x-sm/2;
+      padding: 0 -$input-padding-x-sm;
     }
 
-    .select2-selection--multiple {
-      min-height: $input-height-sm;
+    .select2-search--inline .select2-search__field {
+      padding: 0 $input-padding-x-sm;
+      font-size: $font-size-sm;
+      height: $input-height-sm - 2;
+      line-height: $line-height-sm;
+    }
 
-      .select2-selection__choice {
-        font-size: $font-size-sm;
-        line-height: $line-height-sm;
-        margin: ($btn-padding-y-sm - 1) 0 0 $btn-padding-x-sm/2;
-        padding: 0 $btn-padding-y-sm;
-      }
+    .select2-selection__clear {
+      margin-top: -$input-padding-x-sm;
+    }
+  }
 
-      .select2-search--inline .select2-search__field {
-        padding: 0 $btn-padding-x-sm;
-        font-size: $font-size-sm;
-        height: $input-height-sm - 2;
-        line-height: $line-height-sm;
-      }
+  .select2-selection--single.input-lg,
+  .input-group-lg & .select2-selection--single,
+  .form-group-lg & .select2-selection--single {
+    border-radius: $border-radius-lg;
+    font-size: $font-size-lg;
+    height: $input-height-lg;
+    line-height: $line-height-lg;
+    padding: -$input-padding-y-lg -$input-padding-x-lg + $caret-width-lg*3 -$input-padding-x-lg -$input-padding-x-lg;
 
-      .select2-selection__clear {
-        margin-top: $btn-padding-y-sm;
+    /* 1 */
+    .select2-selection__arrow {
+      width: $caret-width-lg;
+
+      b {
+        border-width: $caret-width-lg $caret-width-lg 0 $caret-width-lg;
+        margin-left: -$caret-width-lg;
+        margin-left: --$input-padding-x-lg;
+        margin-top: -$caret-width-lg/2;
       }
     }
   }
 
-  &.input-lg,
-  .input-group-lg &,
-  .form-group-lg & {
-    .select2-selection--single {
-      border-radius: $border-radius-lg;
+  .select2-selection--multiple.input-lg,
+  .input-group-lg & .select2-selection--multiple,
+  .form-group-lg & .select2-selection--multiple {
+    min-height: $input-height-lg;
+    border-radius: $border-radius-lg;
+
+    .select2-selection__choice {
       font-size: $font-size-lg;
-      height: $input-height-lg;
       line-height: $line-height-lg;
-      padding: $btn-padding-y-lg $btn-padding-x-lg  $btn-padding-y-lg $btn-padding-x-lg;
-
-      /* 1 */
-      .select2-selection__arrow {
-        width: $caret-width-lg;
-
-        b {
-          border-width: $caret-width-lg $caret-width-lg 0 $caret-width-lg;
-          margin-left: -$caret-width-lg;
-          margin-left: -$btn-padding-y-lg;
-          margin-top: -$caret-width-lg/2;
-        }
-      }
+      border-radius: 4px;
+      margin: (-$input-padding-x-lg - 1) 0 0 -$input-padding-x-lg/2;
+      padding: 0 -$input-padding-x-lg;
     }
 
-    .select2-selection--multiple {
-      min-height: $input-height-lg;
+    .select2-search--inline .select2-search__field {
+      padding: 0 -$input-padding-x-lg;
+      font-size: $font-size-lg;
+      height: $input-height-lg - 2;
+      line-height: $line-height-lg;
+    }
 
-      .select2-selection__choice {
-        font-size: $font-size-lg;
-        line-height: $line-height-lg;
-        border-radius: 4px;
-        margin: ($btn-padding-y-lg - 1) 0 0 $btn-padding-x-lg/2;
-        padding: 0 $btn-padding-y-lg;
-      }
-
-      .select2-search--inline .select2-search__field {
-        padding: 0 $btn-padding-x-lg;
-        font-size: $font-size-lg;
-        height: $input-height-lg - 2;
-        line-height: $line-height-lg;
-      }
-
-      .select2-selection__clear {
-        margin-top: $btn-padding-y-lg;
-      }
+    .select2-selection__clear {
+      margin-top: -$input-padding-x-lg;
     }
   }
 
-  &.input-lg.select2-container--open {
+  .select2-selection.input-lg.select2-container--open {
     @include dropdown-arrow;
   }
 
-  .input-group-lg & {
+  .input-group-lg & .select2-selection {
     &.select2-container--open {
       @include dropdown-arrow;
     }
@@ -605,8 +610,8 @@ $clear-selection-color: $dropdown-arrow-color !default;
      */
 
     .select2-selection--single {
-      padding-left: $btn-padding-x;
-      padding-right: $btn-padding-x;
+      padding-left: $input-padding-x + $caret-width*3;
+      padding-right: $input-padding-x;
       .select2-selection__rendered {
         padding-right: 0;
         padding-left: 0;
@@ -618,7 +623,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
       }
 
       .select2-selection__arrow {
-        left: $btn-padding-x;
+        left: $input-padding-x;
         right: auto;
 
         b {
@@ -639,7 +644,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
 
       .select2-selection__choice {
         margin-left: 0;
-        margin-right: $btn-padding-x/2;
+        margin-right: $input-padding-x/2;
       }
 
       .select2-selection__choice__remove {
@@ -688,7 +693,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
  * "Input Group" component, we don't want specific edges of the Select2
  * container to have a border-radius.
  *
- * Use .select2-bootstrap4-prepend and .select2-bootstrap4-append on
+ * Use .select2-bootstrap-prepend and .select2-bootstrap-append on
  * a Bootstrap 3 .input-group to let the contained Select2 widget know which
  * edges should not be rounded as they are directly followed by another element.
  *
@@ -701,7 +706,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
  * @see https://github.com/twbs/bootstrap/blob/master/less/input-groups.less
  */
 
-.input-group .select2-container--bootstrap4 {
+.input-group .select2-container--bootstrap {
   display: table;
   table-layout: fixed;
   position: relative;
@@ -709,15 +714,25 @@ $clear-selection-color: $dropdown-arrow-color !default;
   float: left;
   width: 100%;
   margin-bottom: 0;
+
+  /**
+   * Adjust z-index like Bootstrap does to show the focus-box-shadow
+   * above appended buttons in .input-group and .form-group.
+   */
+
+  &.select2-container--open, /* .form-group */
+  &.select2-container--focus /* .input-group */ {
+    z-index: 3;
+  }
 }
 
-.input-group.select2-bootstrap4-prepend .select2-container--bootstrap4 {
+.input-group.select2-bootstrap-prepend .select2-container--bootstrap {
   .select2-selection {
     @include border-left-radius(0);
   }
 }
 
-.input-group.select2-bootstrap4-append .select2-container--bootstrap4 {
+.input-group.select2-bootstrap-append .select2-container--bootstrap {
   .select2-selection {
     @include border-right-radius(0);
   }
@@ -731,9 +746,9 @@ $clear-selection-color: $dropdown-arrow-color !default;
  * @see http://getbootstrap.com/components/#input-groups
  */
 
-.select2-bootstrap4-append,
-.select2-bootstrap4-prepend {
-  .select2-container--bootstrap4,
+.select2-bootstrap-append,
+.select2-bootstrap-prepend {
+  .select2-container--bootstrap,
   .input-group-btn,
   .input-group-btn .btn {
     vertical-align: top;
@@ -741,7 +756,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
 }
 
 /**
- * Temporary fix for https://github.com/select2/select2-bootstrap4-theme/issues/9
+ * Temporary fix for https://github.com/select2/select2-bootstrap-theme/issues/9
  *
  * Provides `!important` for certain properties of the class applied to the
  * original `<select>` element to hide it.
@@ -759,6 +774,6 @@ $clear-selection-color: $dropdown-arrow-color !default;
  * Display override for inline forms
 */
 
-.form-inline .select2-container--bootstrap4 {
+.form-inline .select2-container--bootstrap {
   display: inline-block;
 }

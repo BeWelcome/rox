@@ -19,12 +19,6 @@ if (php_sapi_name() === 'cli-server'
 // Setup autoloading
 require 'vendor/autoload.php';
 
-$cached = 'vendor/bootstrap.php';
-
-if (file_exists($cached)) {
-    require_once $cached;
-}
-
 $dotEnv = new Dotenv('.');
 
 $dotEnv->load();

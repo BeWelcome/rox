@@ -2,8 +2,13 @@
 
 namespace Rox\Core\Model;
 
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model as BaseModel;
+use Illuminate\Database\Query\Builder;
 
+/**
+ * @method Builder|EloquentBuilder newQuery()
+ */
 abstract class AbstractModel extends BaseModel
 {
     /**

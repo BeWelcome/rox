@@ -1,9 +1,13 @@
 {% extends '@base/base.html.twig' %}
 
-{% block content %}
-
 {% set directionIn = my_member.id == message.receiver.id %}
 {% set otherMember = directionIn ? message.sender : message.receiver %}
+
+{% block title %}
+    {{ 'Messages with %s' | trans | format(otherMember.Username) }}
+{% endblock %}
+
+{% block content %}
 
 <div id="main">
 

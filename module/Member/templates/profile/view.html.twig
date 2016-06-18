@@ -1,5 +1,9 @@
 {% extends '@base/base.html.twig' %}
 
+{% block title %}
+    {{ member.Username }}
+{% endblock %}
+
 {% block content %}
 
     {% set FirstName, LastName = member.getCryptedField('FirstName'), member.getCryptedField('LastName') %}

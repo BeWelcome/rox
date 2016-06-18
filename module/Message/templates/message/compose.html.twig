@@ -1,6 +1,10 @@
 {% import '@macros/macros.twig' as macros %}
 {% extends '@base/base.html.twig' %}
 
+{% block title %}
+    {{ 'Send message to %s' | trans | format(receiver.Username) }}
+{% endblock %}
+
 {% block content %}
 
 <div id="main">

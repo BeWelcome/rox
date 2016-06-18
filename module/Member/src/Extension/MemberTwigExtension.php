@@ -34,6 +34,7 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
         return [
             'my_member' => $member,
             'messageCount' => $member ? $this->getMessageCount($member) : null,
+            'teams' => $member ? $this->getTeams($member) : [],
         ];
     }
 
@@ -70,5 +71,87 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
             ->where('Status', 'Sent');
 
         return (int) $messageCount->value('cnt');
+    }
+
+    /**
+     * @todo The rights checking needs to be rewritten because it doesn't work
+     *       with the Symfony login system.
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     *
+     * @param Member $member
+     *
+     * @return array
+     */
+    protected function getTeams(Member $member)
+    {
+        $teams = [];
+
+        // Check if member is part of volunteer teams
+        $rightsChecker = \MOD_right::get();
+
+        $allTeams = [
+            [
+                'Words',
+                'AdminWord',
+                'admin/word',
+            ],
+            [
+                'Flags',
+                'AdminFlags',
+                'admin/flags',
+            ],
+            [
+                'Rights',
+                'AdminRights',
+                'admin/rights',
+            ],
+            [
+                'Logs',
+                'AdminLogs',
+                'bw/admin/adminlogs.php',
+            ],
+            [
+                'Comments',
+                'AdminComments',
+                'bw/admin/admincomments.php',
+            ],
+            [
+                'NewMembersBeWelcome',
+                'AdminNewMembers',
+                'admin/newmembers',
+            ],
+            [
+                'MassMail',
+                'AdminMassMail',
+                'admin/massmail',
+            ],
+            [
+                'Treasurer',
+                'AdminTreasurer',
+                'admin/treasurer',
+            ],
+            [
+                'FAQ',
+                'AdminFAQ',
+                'bw/faq.php',
+            ],
+            [
+                'SqlForVolunteers',
+                'AdminSqlForVolunteers',
+                'bw/admin/adminquery.php',
+            ],
+        ];
+
+        foreach ($allTeams as $team) {
+            if ($rightsChecker->hasRight($team[0], '', $member->id)) {
+                $teams[] = [
+                    'trans' => $team[1],
+                    'link' => $team[2],
+                ];
+            }
+        }
+
+        return $teams;
     }
 }

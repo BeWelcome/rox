@@ -15,5 +15,6 @@ security:
 
         - { path: ^/about, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/tour, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/rox/in, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

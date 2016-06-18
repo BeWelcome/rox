@@ -4,6 +4,7 @@ namespace Rox\Core\Extension;
 
 use Carbon\Carbon;
 use Faker\Factory;
+use Rox\I18n\Service\LanguageService;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Twig_Extension;
 use Twig_Extension_GlobalsInterface;
@@ -16,9 +17,17 @@ class RoxTwigExtension extends Twig_Extension implements Twig_Extension_GlobalsI
      */
     protected $session;
 
-    public function __construct(SessionInterface $session)
-    {
+    /**
+     * @var LanguageService
+     */
+    protected $languageService;
+
+    public function __construct(
+        SessionInterface $session,
+        LanguageService $languageService
+    ) {
         $this->session = $session;
+        $this->languageService = $languageService;
     }
 
     /**
@@ -51,9 +60,9 @@ class RoxTwigExtension extends Twig_Extension implements Twig_Extension_GlobalsI
     public function getGlobals()
     {
         $words = new \MOD_words();
-        $model = new \FlaglistModel();
+        $languages = $this->languageService->getAvailableLanguages();
         $langarr = [];
-        foreach ($model->getLanguages() as $language) {
+        foreach ($languages as $language) {
             $lang = new \stdClass;
             $lang->NativeName = $language->Name;
             $lang->TranslatedName = $words->getSilent($language->WordCode);

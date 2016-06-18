@@ -2,9 +2,12 @@
 
 namespace Rox\I18n\Model;
 
-use Illuminate\Database\Eloquent\Model;
+use Rox\Core\Model\AbstractModel;
 
-class Language extends Model
+/**
+ * @property string $ShortCode
+ */
+class Language extends AbstractModel
 {
     /**
      * @var string

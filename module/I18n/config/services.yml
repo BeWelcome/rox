@@ -10,3 +10,15 @@ services:
     Rox\I18n\Loader\DatabaseLoader:
         class: Rox\I18n\Loader\DatabaseLoader
         autowire: true
+
+    Rox\I18n\Listener\LocaleListener:
+        class: Rox\I18n\Listener\LocaleListener
+        arguments: ['%kernel.default_locale%']
+        tags:
+            # Priority is 127 because SessionListener is 128. This listener
+            # should only run after the session is injected into the request.
+            - { name: kernel.event_listener, event: kernel.request, priority: 127 }
+
+    Rox\I18n\Service\LanguageService:
+        class: Rox\I18n\Service\LanguageService
+        autowire: true

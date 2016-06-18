@@ -25,12 +25,6 @@ $dotEnv->load();
 
 $request = Request::createFromGlobals();
 
-// TODO review Symfony best practices for setting language, also when it comes from a user setting
-// http://symfony.com/doc/current/cookbook/session/locale_sticky_session.html
-$lang = Locale::getPrimaryLanguage($request->getPreferredLanguage());
-
-$request->setLocale($lang);
-
 $app = new Application(getenv('APP_ENV'), (getenv('APP_DEBUG') === 'true'));
 
 $response = $app->handle($request);

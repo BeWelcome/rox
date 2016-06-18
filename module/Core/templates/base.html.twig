@@ -14,7 +14,7 @@
             {% set _block = block('title') %}
 
             {% if _block is not empty %}
-                {{ _block }} |
+                {{ _block | trim }} |
             {%- endif %} BeWelcome
         {%- endspaceless -%}
     </title>

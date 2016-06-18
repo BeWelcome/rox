@@ -133,35 +133,32 @@
                     </div>
                 </li>
 
-                {% if my_member %}
-                    {# normal member dropdown #}
-                    <li class="nav-item dropdown pull-xs-right hidden-md-down">
-                        <a href="/members/{{ my_member.Username }}" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ my_member.Username }} <span class="caret"></span></a>
-                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                            {#<li class="text-xs-right"><a href="/members/{{ username }}" class="dropdown-item"><img src="/members/avatar/{{ username }}?30_30"> {{ 'Profile' | trans }}</a></li>#}
-                            <li class="text-xs-right"><a href="/editmyprofile" class="dropdown-item">{{ 'EditMyProfile' | trans }}</a></li>
-                            <li class="text-xs-right"><a href="/mypreferences" class="dropdown-item">{{ 'MyPreferences' | trans }}</a></li>
-                            <li class="text-xs-right"><a href="/mynotes" class="dropdown-item">{{ 'ProfileMyNotes' | trans }}</a></li>
-                            <li class="text-xs-right"><a href="/groups/mygroups" class="dropdown-item">{{ 'MyGroups' | trans }}</a></li>
-                            <li class="text-xs-right"><a href="/trips" class="dropdown-item">{{ 'TripsShowMy' | trans }}</a></li>
-                            <li class="text-xs-right"><a href="/logout" class="dropdown-item">{{ 'Logout' | trans }}</a></li>
-                        </ul>
-                    </li>
+                {# normal member dropdown #}
+                <li class="nav-item dropdown pull-xs-right hidden-md-down">
+                    <a href="/members/{{ my_member.Username }}" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ my_member.Username }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                        {#<li class="text-xs-right"><a href="/members/{{ username }}" class="dropdown-item"><img src="/members/avatar/{{ username }}?30_30"> {{ 'Profile' | trans }}</a></li>#}
+                        <li class="text-xs-right"><a href="/editmyprofile" class="dropdown-item">{{ 'EditMyProfile' | trans }}</a></li>
+                        <li class="text-xs-right"><a href="/mypreferences" class="dropdown-item">{{ 'MyPreferences' | trans }}</a></li>
+                        <li class="text-xs-right"><a href="/mynotes" class="dropdown-item">{{ 'ProfileMyNotes' | trans }}</a></li>
+                        <li class="text-xs-right"><a href="/groups/mygroups" class="dropdown-item">{{ 'MyGroups' | trans }}</a></li>
+                        <li class="text-xs-right"><a href="/trips" class="dropdown-item">{{ 'TripsShowMy' | trans }}</a></li>
+                        <li class="text-xs-right"><a href="/logout" class="dropdown-item">{{ 'Logout' | trans }}</a></li>
+                    </ul>
+                </li>
 
-                    {# logout on smaller screens #}
-                    <li class="nav-item pull-xs-right hidden-lg-up"><a href="/logout" class="nav-link"><i class="fa fa-sign-out"></i></a></li>
+                {# logout on smaller screens #}
+                <li class="nav-item pull-xs-right hidden-lg-up"><a href="/logout" class="nav-link"><i class="fa fa-sign-out"></i></a></li>
 
-                    {# messages #}
-                    <li class="nav-item pull-xs-right">
-                        <a href="/messages" class="nav-link"><i class="fa fa-lg fa-inbox"></i><noscript>{{ 'MyInbox' | trans }}</noscript> <span class="tag tag-warning">{{ messageCount }}</span></a>
-                    </li>
+                {# messages #}
+                <li class="nav-item pull-xs-right">
+                    <a href="/messages" class="nav-link"><i class="fa fa-lg fa-inbox"></i><noscript>{{ 'MyInbox' | trans }}</noscript> <span class="tag tag-warning">{{ messageCount }}</span></a>
+                </li>
 
-                    {# profile link on smaller screens #}
-                    <li class="nav-item pull-xs-right hidden-lg-up">
-                        <a href="{{ path('member', { username: my_member.Username }) }}" class="nav-link"><i class="fa fa-user"></i><span class="hidden-md-down"> {{ my_member.Username }} </span></a>
-                    </li>
-                {% endif %}
-
+                {# profile link on smaller screens #}
+                <li class="nav-item pull-xs-right hidden-lg-up">
+                    <a href="{{ path('member', { username: my_member.Username }) }}" class="nav-link"><i class="fa fa-user"></i><span class="hidden-md-down"> {{ my_member.Username }} </span></a>
+                </li>
             </ul>
         </div>
 

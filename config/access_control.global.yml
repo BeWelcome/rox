@@ -5,8 +5,15 @@ security:
         # The bottom one matches all routes, ensuring the default behaviour is
         # that users must be logged in. Other rules above are then able to
         # whitelist anonymous accessible pages.
+        #
+        # Note: logged in members inherit the 'anonymous' role, so to allow
+        # access to both members and guests, use IS_AUTHENTICATED_ANONYMOUSLY
+        #
+        # To disallow logged in members, use the "not has_role('ROLE_USER')"
         - { path: ^/$, allow_if: "not has_role('ROLE_USER')" }
         - { path: ^/login$, allow_if: "not has_role('ROLE_USER')" }
-        - { path: ^/about, allow_if: "not has_role('ROLE_USER')" }
-        - { path: ^/tour, allow_if: "not has_role('ROLE_USER')" }
+
+        - { path: ^/about, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/tour, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

@@ -76,7 +76,9 @@ $clear-selection-color: $dropdown-arrow-color !default;
 
     .select2-selection__arrow b {
       border-color: transparent transparent $dropdown-arrow-color transparent;
-      border-width: 0 $caret-width-lg $caret-width-lg $caret-width-lg;
+      border-top: $caret-width solid;
+      border-right: $caret-width solid transparent;
+      border-left: $caret-width solid transparent;
     }
   }
 }
@@ -248,7 +250,9 @@ $clear-selection-color: $dropdown-arrow-color !default;
 
     .select2-selection .select2-selection__arrow b {
       border-color: transparent transparent $dropdown-arrow-color transparent;
-      border-width: 0 $caret-width $caret-width $caret-width;
+      border-top: $caret-width solid;
+      border-right: $caret-width solid transparent;
+      border-left: $caret-width solid transparent;
     }
 
     /**
@@ -358,7 +362,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
   .select2-selection--single {
     height: $input-height;
     line-height: $line-height-base;
-    padding: $input-padding-y ($input-padding-x + $caret-width*3) $input-padding-y $input-padding-x;
+    padding: $input-padding-y ($input-padding-x) $input-padding-y $input-padding-x;
 
     /**
      * Adjust the single Select2's dropdown arrow button appearance.
@@ -501,7 +505,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
     font-size: $font-size-sm;
     height: $input-height-sm;
     line-height: $line-height-sm;
-    padding: -$input-padding-x-sm $input-padding-x-sm + $caret-width*3 -$input-padding-x-sm $input-padding-x-sm;
+    padding: -$input-padding-x-sm $input-padding-x-sm  -$input-padding-x-sm $input-padding-x-sm;
 
     /* 2 */
     .select2-selection__arrow b {
@@ -541,7 +545,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
     font-size: $font-size-lg;
     height: $input-height-lg;
     line-height: $line-height-lg;
-    padding: -$input-padding-y-lg -$input-padding-x-lg + $caret-width-lg*3 -$input-padding-x-lg -$input-padding-x-lg;
+    padding: -$input-padding-y-lg -$input-padding-x-lg -$input-padding-x-lg -$input-padding-x-lg;
 
     /* 1 */
     .select2-selection__arrow {
@@ -610,7 +614,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
      */
 
     .select2-selection--single {
-      padding-left: $input-padding-x + $caret-width*3;
+      padding-left: $input-padding-x;
       padding-right: $input-padding-x;
       .select2-selection__rendered {
         padding-right: 0;

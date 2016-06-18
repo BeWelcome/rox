@@ -29,7 +29,7 @@
         "bootstrap-autohidingnavbar": "github:istvan-ujjmeszaros/bootstrap-autohidingnavbar",
         "font-awesome": "^4.5.0",
         "html5shiv": "^3.7.3",
-        "jquery": "^3.0.0",
+        "jquery": "~2.2.4",
         "jquery-ui": "github:jquery/jquery-ui#1.11.4",
         "lato-font": "^1.1.1",
         "leaflet": "Leaflet/leaflet#v1.0.0-rc.1",

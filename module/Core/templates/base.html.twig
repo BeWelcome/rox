@@ -36,7 +36,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/styles.css') }}">
 </head>
 <body>
-    <div class="navandcontent">
+
     {% if my_member %}
         {% include '@base/menu.html.twig' %}
     {% else %}
@@ -45,11 +45,12 @@
 
     <noscript><h1>Please activate Javascript for bewelcome.org<small>Without it some function won't work.</small></h1></noscript>
 
-    <div class="container" id="main">
+    <div class="container-content">
         {% block content %}{% endblock %}
-            </div>
     </div>
+
     {% include '@base/footer.html.twig' %}
+
     {#{% include '@base/scriptfiles.html.twig' with {scriptFiles : lateScriptFiles} %}#}
 
 </body>

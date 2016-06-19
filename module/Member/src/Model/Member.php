@@ -325,4 +325,11 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
     {
         // TODO: Implement eraseCredentials() method.
     }
+
+    public function getPotentialGuests() {
+        $tripModel = new \TripsModel();
+        $potentialGuests = $tripModel->getTripsNearMe($this, 1, 2);
+
+        return $potentialGuests;
+    }
 }

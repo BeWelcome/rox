@@ -1,4 +1,6 @@
 <?php
+use AnthonyMartin\GeoLocation\GeoLocation;
+
 /**
  * trip model
  *
@@ -211,6 +213,26 @@ class TripsModel extends RoxModelBase
         return $this->_getTrips($type, $offset, TripsController::TRIPS_PER_PAGE);
     }
 
+	/**
+	 * @param $latitude
+	 * @param $longitude
+	 * @param $distance
+	 *
+	 * @return stdClass
+	 */
+	private function _getRectangle($latitude, $longitude, $distance) {
+
+		$edison = GeoLocation::fromDegrees($latitude, $longitude);
+		$coordinates = $edison->boundingCoordinates($distance, 'km');
+
+		$result = new stdClass;
+		$result->latne = $coordinates[0]->getLatitudeInDegrees();
+		$result->longne = $coordinates[0]->getLongitudeInDegrees();
+		$result->latsw = $coordinates[1]->getLatitudeInDegrees();
+		$result->longsw = $coordinates[1]->getLongitudeInDegrees();
+		return $result;
+	}
+
 	public function getTripsNearMe($member, $pageNumber, $itemsPerPage)
 	{
 		// Reuse activities nearme or add new preference
@@ -225,53 +247,35 @@ class TripsModel extends RoxModelBase
 		}
 		$row = $sql->fetch(PDB::FETCH_OBJ);
 
-		// calculate rectangle around place with given distance
-		$lat = deg2rad(doubleval($row->latitude));
-		$long = deg2rad(doubleval($row->longitude));
+		$rectangle = $this->_getRectangle($row->latitude, $row->longitude, $distance);
 
-		$longne = rad2deg(($distance + 6378 * $long) / 6378);
-		$longsw = rad2deg((6378 * $long - $distance) / 6378);
-
-		$radiusAtLatitude = 6378 * cos($lat);
-		$latne = rad2deg(($distance + $radiusAtLatitude * $lat) / $radiusAtLatitude);
-		$latsw = rad2deg(($radiusAtLatitude * $lat - $distance) / $radiusAtLatitude);
-		if ($latne < $latsw) {
-			$tmp = $latne;
-			$latne = $latsw;
-			$latsw = $tmp;
-		}
-		if ($longne < $longsw) {
-			$tmp = $longne;
-			$longne = $longsw;
-			$longsw = $tmp;
-		}
-
-		$rectangle = 'geonames.latitude < ' . $latne . '
-            AND geonames.latitude > ' . $latsw . '
-            AND geonames.longitude < ' . $longne . '
-            AND geonames.longitude > ' . $longsw;
+		$rectangleQuery = 'geonames.latitude < ' . $rectangle->latsw . '
+            AND geonames.latitude > ' . $rectangle->latne . '
+            AND geonames.longitude < ' . $rectangle->longsw . '
+            AND geonames.longitude > ' . $rectangle->longne;
 
 		// retrieve the visiting members handle and trip data
 		$query = "
             SELECT
-            	t.trip_id
+            	t.id, t.memberId, t.countOfTravellers, st.geonameId, st.arrival, st.departure, st.options
             FROM
-            	trip AS t
-			LEFT JOIN blog b ON b.trip_id_foreign = t.trip_id
-			LEFT JOIN blog_data bd ON bd.blog_id = b.blog_id
-            LEFT JOIN geonames ON bd.blog_geonameid = geonames.geonameid
+            	trips AS t
+			LEFT JOIN subtrips st ON st.tripId = t.id AND st.arrival >= CURDATE() AND st.arrival <= DATE_ADD(CURDATE(), INTERVAL 3 MONTH)
+            LEFT JOIN geonames ON st.geonameid = geonames.geonameid
             WHERE " .
-			$rectangle . "
+			$rectangleQuery . "
             ORDER BY
-                t.trip_id, bd.blog_start ASC
+                t.id, st.arrival ASC
             LIMIT " . $limit . "," . $itemsPerPage;
-//                 AND bd.blog_start >= CURDATE() AND bd.blog_start <= DATE_ADD(CURDATE(), INTERVAL 3 MONTH)
+
 		$result = $this->dao->query($query);
 		if (!$result) {
 			throw new PException('Could not retrieve trips');
 		}
 
-		return $this->_getTripData($result);
+		$trips = $this->_getTripDetails($result);
+
+		return $trips;
 	}
 
 	public function getTripsForMemberCount($member) {
@@ -578,5 +582,26 @@ SQL;
 		}
 		$trip->update();
 		return $trip;
+	}
+
+	/**
+	 * @param PDBStatement_mysqli $result
+	 * @return array
+     */
+	private function _getTripDetails($result)
+	{
+		$trips = [];
+		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+			$trip = new stdClass();
+			$member = new Member($row->memberId);
+			$trip->username = $member->Username;
+			$location = new Geo($row->geonameId);
+			$trip->location = $location->getName();
+			$trip->country = $location->getCountry()->getName();
+			$trip->arrival = $row->arrival;
+			$trip->departure = $row->departure ? $row->departure : $row->arrival;
+			$trips[] = $trip;
+		}
+		return $trips;
 	}
 }

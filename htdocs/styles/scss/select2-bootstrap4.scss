@@ -87,7 +87,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
 
 
 
-.select2-container--bootstrap {
+.select2-container--bootstrap4 {
   display: block;
 
 
@@ -710,7 +710,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
  * @see https://github.com/twbs/bootstrap/blob/master/less/input-groups.less
  */
 
-.input-group .select2-container--bootstrap {
+.input-group .select2-container--bootstrap4 {
   display: table;
   table-layout: fixed;
   position: relative;
@@ -730,13 +730,13 @@ $clear-selection-color: $dropdown-arrow-color !default;
   }
 }
 
-.input-group.select2-bootstrap-prepend .select2-container--bootstrap {
+.input-group.select2-bootstrap-prepend .select2-container--bootstrap4 {
   .select2-selection {
     @include border-left-radius(0);
   }
 }
 
-.input-group.select2-bootstrap-append .select2-container--bootstrap {
+.input-group.select2-bootstrap-append .select2-container--bootstrap4 {
   .select2-selection {
     @include border-right-radius(0);
   }
@@ -752,7 +752,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
 
 .select2-bootstrap-append,
 .select2-bootstrap-prepend {
-  .select2-container--bootstrap,
+  .select2-container--bootstrap4,
   .input-group-btn,
   .input-group-btn .btn {
     vertical-align: top;
@@ -778,6 +778,6 @@ $clear-selection-color: $dropdown-arrow-color !default;
  * Display override for inline forms
 */
 
-.form-inline .select2-container--bootstrap {
+.form-inline .select2-container--bootstrap4 {
   display: inline-block;
 }

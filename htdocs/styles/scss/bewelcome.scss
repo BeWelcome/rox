@@ -7,6 +7,8 @@ $font-path: '../fonts/';
 
 // Core variables and mixins
 @import "custom";
+$font-family-bold: Signika-bold, Arial;
+
 @import "../../../node_modules/bootstrap/scss/bootstrap";
 
 @import "general";

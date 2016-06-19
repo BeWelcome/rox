@@ -1,0 +1,16 @@
+communitynews:
+    path: /communitynews/{page}
+    methods: [GET]
+    defaults:
+        _controller: Rox\CommunityNews\Controller\CommunityNewsController::listAction
+        page: 1
+    requirements:
+        page: \d+
+
+communitynews_show:
+    path: /communitynews/show/{id}
+    methods: [GET]
+    defaults:
+        _controller: Rox\CommunityNews\Controller\CommunityNewsController::showAction
+        requirements:
+            id: \d+

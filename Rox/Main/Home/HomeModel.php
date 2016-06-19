@@ -262,4 +262,15 @@ class HomeModel extends \RoxModelBase {
             ]
         ];
     }
+
+    public function getDonationCampaignDetails() {
+        $donationModel = new \DonateModel();
+        $details = $donationModel->getStatForDonations();
+
+        return [
+            'year' => $details->year,
+            'yearNeeded' => $details->YearNeededAmount,
+            'yearDonated' => $details->YearDonation
+        ];
+    }
 }

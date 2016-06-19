@@ -115,15 +115,15 @@ module.exports = function (grunt) {
             dist: {
                 src: [
                     'node_modules/jquery/dist/jquery.js',
+                    'node_modules/jquery-ui/ui/core.js',
+                    'node_modules/jquery-ui/ui/widget.js',
+                    'node_modules/jquery-ui/ui/position.js',
+                    'node_modules/jquery-ui/ui/menu.js',
                     'node_modules/tether/dist/js/tether.js',
                     'node_modules/bootstrap/dist/js/bootstrap.js',
                     'node_modules/bootstrap-autohidingnavbar/dist/jquery.bootstrap-autohidingnavbar.js',
                     'node_modules/select2/dist/js/select2.js',
 
-                    'node_modules/jquery-ui/ui/core.js',
-                    'node_modules/jquery-ui/ui/widget.js',
-                    'node_modules/jquery-ui/ui/position.js',
-                    'node_modules/jquery-ui/ui/menu.js',
                     // Auto complete used by map search for drop down search box
                     'node_modules/jquery-ui/ui/autocomplete.js',
 

@@ -7,3 +7,9 @@ twig:
     exception_controller:  twig.controller.exception:showAction
     paths:
         '%kernel.root_dir%/templates/twig/macros': macros
+
+services:
+    Twig_Extensions_Extension_Text:
+       class: Twig_Extensions_Extension_Text
+       tags:
+           - { name: twig.extension }

@@ -1,0 +1,16 @@
+{% extends '@base/base.html.twig' %}
+
+{% block title %}
+    {{ 'Community News' | trans }}
+{% endblock %}
+
+{% block content %}
+    {% for news in communityNews %}
+        {{ news.title }}<br>
+        {{ news.text }}<br>
+        {{ news.creator.Username }}<br>
+        {{ news.created_at }}<br>
+        {{ news.updater.Username }}<br>
+        {{ news.updated_at }}<br>
+    {%  endfor %}
+{% endblock content %}

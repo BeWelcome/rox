@@ -17,3 +17,6 @@ message:
 
 start:
     resource: ../module/Start/config/routes.yml
+
+communitynews:
+    resource: ../module/CommunityNews/config/routes.yml

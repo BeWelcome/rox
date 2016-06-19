@@ -2,6 +2,8 @@
 
 namespace Rox\Start\Controller;
 
+use Rox\CommunityNews\Model\CommunityNews;
+use Rox\CommunityNews\Service\CommunityNewsService;
 use Rox\Core\Controller\AbstractController;
 use Rox\Main\Home\HomeModel as HomeService;
 use Symfony\Component\HttpFoundation\Request;
@@ -89,7 +91,19 @@ class HomeController extends AbstractController
      */
     public function showAction()
     {
-        $content = $this->render('@start/home.html.twig');
+        $donationCampaign = $this->homeService->getDonationCampaignDetails();
+        $member = $this->getMember();
+        $potentialGuests = $member->getPotentialGuests();
+        $communityNews = new CommunityNews();
+        $latestNews = $communityNews->getLatest();
+
+        $content = $this->render('@start/home.html.twig',
+            [
+                'campaign' => $donationCampaign,
+                'travellers' => $potentialGuests,
+                'communityNews' => $latestNews
+            ]
+        );
 
         return new Response($content);
     }

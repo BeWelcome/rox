@@ -42,36 +42,41 @@
   width: 100%;
   position: fixed;
   left: 0;
-  top: 41px;
+  top: 42px;
   background-color: rgba($brand-primary,0.95);
   border-top: 1px solid #fff;
   border-radius: 0;
   border: none;
   border-bottom: 1px solid $navbar-dark-color;
   box-shadow: 0px 3px 5px #333;
-}
 
-.subnav a{
-  color: #fda;
-}
+  a{
+    color: #fda;
+  }
 
-.subnav a:hover{
-  color: #fff;
-  text-decoration: none;
-}
+  a:hover{
+    color: #fff;
+    text-decoration: none;
+    background-color: rgba($navbar-dark-color,.2);
+    padding: 0.3rem;
+    padding-left: 0;
+  }
 
-.subnav dd{
-  margin-bottom: 0 !important;
-  padding: 0.2em;
-}
+  ul{
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+    list-style: none;
+    padding-left: 0;
+  }
 
-.subnav dd:hover{
-  background-color: rgba(0,0,0,.15);
-  padding-left: 0.3em;
-}
+  li{
+    margin-bottom: .5rem;
+    margin-left: 0;
+  }
 
-.subnav .h4{
-  color: #fff !important;
+  .h4{
+    color: #fff !important;
+  }
 }
 
 a.subnavtitle:hover {

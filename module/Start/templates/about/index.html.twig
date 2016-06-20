@@ -15,30 +15,40 @@
         <h3>{{ 'AboutUs_HowOrganized' | trans }}</h3>
         <p>{{ 'AboutUs_HowOrganizedText' | trans | raw }}</p>
 
-        <h3><a href="blog/tags/Community News for the frontpage">{{ 'CommunityNews' | trans }}</a></h3>
+        <h3><a href="{{ path('communitynews') }}">{{ 'CommunityNews' | trans }}</a></h3>
 
         {#<a href="rss/blog/tags/Community%20News%20for%20the%20frontpage"><img src="images/icons/feed.png" alt="{{ 'GetRSSFeed' | trans }}"></a>#}
 
         {# Two latest blog posts #}
-        {% for blog in [1, 2] %}
+        {% for blog in communityNews %}
+            {#
+            We strip tags because truncating it may mean an opening <p> tag at
+            the start but not a closing one at the end. The text will be
+            wrapped in our own <p> tags anyway.
+            #}
+            {% set blogBody = blog.text | striptags %}
+
             <h4 class="news">
-                <a href="">{{ faker.realText(40) }}</a>
+                <a href="{{ path('communitynews_show', { id: blog.id }) }}">{{ blog.title }}</a>
             </h4>
 
             <span class="small grey">
                 {{ 'written_by' | trans }}
-                <a href="">{{ faker.name }}</a>
-                - {{ faker.dateTimeThisYear | date }}
+                <a href="{{ path('member', { username: blog.creator.Username }) }}">{{ blog.creator.Username }}</a>
+                - {{ blog.created_at | date }}
             </span>
 
             <p>
-                {{ faker.realText(600) }}
+                {{ blogBody | truncate(600) }}
             </p>
 
-            {# Show this link if length is greater than 600 #}
-            <p><a href="">{{ 'BlogItemContinued' | trans }}</a></p>
+            {# Show a read more link if length is greater than 600 #}
+            {% if blogBody | length > 600 %}
+                <p><a href="">{{ 'BlogItemContinued' | trans }}</a></p>
+            {% endif %}
+
         {% endfor %}
 
-        <a href="blog/tags/Community News for the frontpage">{{ 'ReadMore' | trans }}</a>
+        <a href="{{ path('communitynews') }}">{{ 'ReadMore' | trans }}</a>
     </div>
 </div>

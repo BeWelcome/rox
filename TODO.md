@@ -12,3 +12,4 @@ log.
  recognises logins.
 * Logging out clears the session and therefore resets the language to back to
 English
+* Update phinx config to use new env config

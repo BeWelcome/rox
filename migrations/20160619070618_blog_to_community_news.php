@@ -10,12 +10,11 @@ class BlogToCommunityNews extends RoxMigration
             ->addColumn('title', 'string',
                 [
                     'comment' => 'Stores the title of the community news',
-                    'limit' => 40
+                    'limit' => 255
                 ])
-            ->addColumn('text', 'string',
+            ->addColumn('text', 'text',
                 [
-                    'comment' => 'Stores the text of the community news',
-                    'limit' => 4000
+                    'comment' => 'Stores the text of the community news'
                 ])
             ->addColumn('public', 'boolean',
                 [

@@ -3,7 +3,6 @@
 namespace Rox\Start\Controller;
 
 use Rox\CommunityNews\Model\CommunityNews;
-use Rox\CommunityNews\Service\CommunityNewsService;
 use Rox\Core\Controller\AbstractController;
 use Rox\Main\Home\HomeModel as HomeService;
 use Symfony\Component\HttpFoundation\Request;

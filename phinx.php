@@ -37,10 +37,11 @@ if (!empty($inifile)) {
     }
     $config = array(
         "migration_base_class" => "Rox\\Tools\\RoxMigration",
+        "seeds_base_class" => "Rox\\Tools\\RoxSeed",
         "paths" => array(
             "migrations" => "%%PHINX_CONFIG_DIR%%/migrations",
+            "seeds" => "%%PHINX_CONFIG_DIR%%/seeds",
         ),
-        "migration_base_class" => "Rox\\Tools\\RoxMigration",
         "environments" => array(
             "default_migration_table" => "phinxlog",
             "default_database" => "testing",

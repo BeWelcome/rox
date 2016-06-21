@@ -28,15 +28,13 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class Member extends AbstractModel implements MemberRepositoryInterface, UserInterface
 {
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'updated';
+
     /**
      * @var string
      */
     protected $table = 'members';
-
-    /**
-     * @var boolean
-     */
-    public $timestamps = false;
 
     /**
      * @var array

@@ -3,6 +3,7 @@
 namespace Rox\CommunityNews\Model;
 
 use PHPUnit_Framework_TestCase;
+use Rox\Core\Exception\NotFoundException;
 use Rox\Core\Kernel\Application;
 
 class CommunityNewsRepositoryInterfaceTest extends PHPUnit_Framework_TestCase
@@ -40,6 +41,15 @@ class CommunityNewsRepositoryInterfaceTest extends PHPUnit_Framework_TestCase
     {
         $model = new CommunityNews();
         $communityNews = $model->getById(1);
+
+        $this->assertTrue(is_object($communityNews));
+    }
+
+    public function testGetByNonExistingId()
+    {
+        $this->expectException(NotFoundException::class);
+        $model = new CommunityNews();
+        $communityNews = $model->getById(-1);
 
         $this->assertTrue(is_object($communityNews));
     }

@@ -3,6 +3,7 @@
 namespace Rox\Member\Model;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
@@ -19,10 +20,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @property Collection $comments
  * @property Collection $groups
  * @property Collection $trads
+ * @property Collection $preferences
  * @property integer $id
  * @method Builder|HasMany hasMany($a, $b, $c)
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  *
  * @todo Maybe use a decorated to implement UserInterface?
  */
@@ -63,6 +66,7 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
         'languages',
         'relationships',
         'trads',
+        'preferences',
     ];
 
     /**
@@ -143,6 +147,25 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
 
             return new HasMany($query->whereIn('IdTrad', $ids), $this, $instance->getTable() . '.' . 'IdOwner', 'id');
         });
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function preferences()
+    {
+        $pivot = $this->belongsToMany(
+            Preference::class,
+            'memberspreferences',
+            'IdMember',
+            'IdPreference'
+        )->withPivot([
+            'Value',
+        ]);
+
+        $pivot->withTimestamps('created', 'updated');
+
+        return $pivot;
     }
 
     /**

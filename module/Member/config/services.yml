@@ -21,3 +21,7 @@ services:
         public: false
         tags:
             - { name: twig.extension }
+
+    Rox\Member\Service\PreferenceService:
+        class: Rox\Member\Service\PreferenceService
+        autowire: true

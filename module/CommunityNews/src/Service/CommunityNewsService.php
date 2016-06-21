@@ -10,10 +10,6 @@ class CommunityNewsService implements CommunityNewsServiceInterface
     {
         $communityNews = new CommunityNews();
 
-        $q = $communityNews->newQuery();
-
-        $q->with([ 'creator', 'updater', 'deleter']);
-
-        return $q;
+        return $communityNews->getAll();
     }
 }

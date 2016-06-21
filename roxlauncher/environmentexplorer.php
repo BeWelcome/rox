@@ -17,12 +17,14 @@ class EnvironmentExplorer
 
     public function initializeGlobalState()
     {
-        define('SCRIPT_BASE', getcwd() . '/');
-        define('HTDOCS_BASE', SCRIPT_BASE . 'htdocs/');
-        define('LIB_DIR', SCRIPT_BASE . 'lib/');
-        define('BUILD_DIR', SCRIPT_BASE . 'build/');
-        define('TEMPLATE_DIR', SCRIPT_BASE . 'templates/');
-        define('DATA_DIR', SCRIPT_BASE . 'data/');
+        if (!defined('SCRIPT_BASE')) {
+            define('SCRIPT_BASE', getcwd() . '/');
+            define('HTDOCS_BASE', SCRIPT_BASE . 'htdocs/');
+            define('LIB_DIR', SCRIPT_BASE . 'lib/');
+            define('BUILD_DIR', SCRIPT_BASE . 'build/');
+            define('TEMPLATE_DIR', SCRIPT_BASE . 'templates/');
+            define('DATA_DIR', SCRIPT_BASE . 'data/');
+        }
 
         if (!$settings = $this->loadConfiguration()) {
             // ini files are not set..

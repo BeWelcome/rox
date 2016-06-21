@@ -39,6 +39,7 @@ class CommunityNewsController extends AbstractController
 
     public function listAction(Request $request)
     {
+        $request;
         $communityNews = $this->communityNewsRepository->getAll();
 
         $content = $this->render('@communitynews/communitynews/list.html.twig', [
@@ -48,7 +49,7 @@ class CommunityNewsController extends AbstractController
         return new Response($content);
     }
 
-    public function showAction(Request $request, $id)
+    public function showAction($id)
     {
         $communityNews = $this->communityNewsRepository->getById($id);
 

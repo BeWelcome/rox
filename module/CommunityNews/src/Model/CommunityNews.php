@@ -56,13 +56,9 @@ class CommunityNews extends AbstractModel implements CommunityNewsRepositoryInte
 
     public function getById($id)
     {
-        $q = $this->newQuery();
-
-        $q->where([
-            'Id' => $id,
-        ]);
-
-        $communityNews = $q->get()->first();
+        $communityNews = $this->newQuery()
+            ->with([ 'creator', 'updater', 'deleter'])
+            ->where('Id', $id)->first();
 
         if (!$communityNews) {
             throw new NotFoundException();
@@ -72,12 +68,19 @@ class CommunityNews extends AbstractModel implements CommunityNewsRepositoryInte
     }
 
     public function getAll() {
-        return $this->newQuery()->get()->all();
+        return $this->newQuery()
+            ->with([ 'creator', 'updater', 'deleter'])
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->all();
     }
 
     public function getLatest() {
-        $q = $this->newQuery();
 
-        return $q->get()->sortBy('created_at', SORT_REGULAR, true)->first();
+
+        return $this->newQuery()
+            ->with([ 'creator', 'updater', 'deleter'])
+            ->orderBy('created_at', 'desc')
+            ->first();
     }
 }

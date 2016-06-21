@@ -35,6 +35,7 @@
         "symfony/twig-bundle": "~3.1",
         "symfony/validator": "3.1 as 2.8",
         "symfony/browser-kit": "~3.1",
+        "symfony/css-selector": "~3.1",
         "Twig/Twig": "1.*",
         "twig/extensions": "1.*",
         "vlucas/phpdotenv": "~2.2",
@@ -50,7 +51,9 @@
         "sebastian/phpcpd": "~2.0",
         "squizlabs/php_codesniffer": "~2.5",
         "theseer/phpdox": "0.8.1.1",
-        "symfony/phpunit-bridge": "~3.1"
+        "symfony/phpunit-bridge": "~3.1",
+        "symfony/debug-bundle": "^3.1",
+        "symfony/web-profiler-bundle": "^3.1"
     },
     "autoload": {
         "psr-4": {

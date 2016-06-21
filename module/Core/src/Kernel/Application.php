@@ -36,11 +36,18 @@ class Application extends Kernel
 
     public function registerBundles()
     {
-        return [
+        $bundles = [
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new \Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new \Symfony\Bundle\TwigBundle\TwigBundle(),
         ];
+
+        if (in_array($this->getEnvironment(), ['development', 'test'], true)) {
+            $bundles[] = new \Symfony\Bundle\DebugBundle\DebugBundle();
+            $bundles[] = new \Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
+        }
+
+        return $bundles;
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader)

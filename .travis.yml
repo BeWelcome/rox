@@ -4,6 +4,9 @@ php:
   - '5.6'
   - '7.0'
 
+before_script:
+  - phpenv config-rm xdebug.ini
+
 cache:
   directories:
     - $HOME/.composer/cache
@@ -17,7 +20,7 @@ before_install:
   - phpenv config-rm xdebug.ini
 
 install:
-  - composer install --dev --no-interaction --ignore-platform-reqs
+  - composer install --no-interaction --ignore-platform-reqs
   - npm install
 
 script:

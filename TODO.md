@@ -5,7 +5,6 @@ log.
 * Get 'user rights' working again - integrate with Symfony permissions system?
 * Restore the scriptfiles.html.twig / stylesheets.html.twig method of including
  additional assets.
-* Seed language preference from user's saved option when they login.
 * Set default language from Request::getPreferredLanguage() ?
 * Keep setting IdMember value in session upon login so the old application still
  recognises logins.

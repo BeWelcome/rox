@@ -2,27 +2,16 @@
 
 namespace Rox\Admin\Controller;
 
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Rox\Admin\Service\LogService;
+use Rox\Core\Controller\AbstractController;
 use Rox\Member\Repository\MemberRepositoryInterface;
 use Rox\Models\Log;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Templating\EngineInterface;
 
-/**
- * dashboard controller
- *
- * @package Dashboard
- * @author Amnesiac84
- */
-class LogsController
+class LogsController extends AbstractController
 {
-    /**
-     * @var EngineInterface
-     */
-    protected $engine;
-
     /**
      * @var LogService
      */
@@ -34,156 +23,46 @@ class LogsController
     protected $memberRepository;
 
     public function __construct(
-        EngineInterface $engine,
         LogService $logService,
         MemberRepositoryInterface $memberRepository
     ) {
-        $this->engine = $engine;
         $this->logService = $logService;
         $this->memberRepository = $memberRepository;
     }
 
     /**
-     * @param $currentPage
-     * @param $itemsPerPage
+     * @param Request $request
      *
      * @return Response
      */
-    public function showOverview(Request $request, $currentPage, $itemsPerPage)
+    public function showOverview(Request $request)
     {
-        $first = ($currentPage - 1) * $itemsPerPage;
+        $page = $request->query->get('page', 1);
+        $limit = $request->query->get('limit', 20);
 
         $parameters = $this->getParameters($request);
 
         $query = $this->getQuery($parameters);
 
-        $count = $query->count();
+        $query->forPage($page, $limit);
 
-        $logs = $query->skip($first)->take($itemsPerPage)->get();
+        /** @var \Illuminate\Database\Query\Builder $q */
+        $q = $query->getQuery();
 
-        $lastPage = ceil($count / $itemsPerPage);
+        $count = $q->getCountForPagination();
 
-        $params = $parameters + [
-            'currentPage' => $currentPage,
-            'lastPage' => $lastPage,
-            'route' => 'admin_logs',
-            'routeParams' => ['itemsPerPage' => $itemsPerPage],
-            'count' => $count,
-            'logs' => $logs,
-        ];
-
-        $content = $this->engine->render('@admin/logs/logs.html.twig', $params);
-
-        return new Response($content);
-    }
-
-    /**
-     * @param $ipAddress
-     * @param $currentPage
-     * @param $itemsPerPage
-     *
-     * @return Response
-     * @internal param Request $request
-     */
-    public function showIpOverview(Request $request, $ipAddress, $currentPage, $itemsPerPage)
-    {
-        $first = ($currentPage - 1) * $itemsPerPage;
-        $page = new AdminLogsPage($this->getRouter());
-
-        $parameters = $this->getParameters($request);
-        $parameters['ipaddress'] = $ipAddress;
-        $query = $this->getQuery($parameters);
-        $count = $query->count();
-        $logs = $query->skip($first)->take($itemsPerPage)->get();
-        $lastPage = ceil($count / $itemsPerPage);
-        $page->addParameters([
-            'currentPage' => $currentPage,
-            'lastPage' => $lastPage,
-            'route' => 'admin_logs',
-            'routeParams' => ['itemsPerPage' => $itemsPerPage],
-            'count' => $count,
-            'logs' => $logs,
-        ]);
-        return new Response($page->render());
-    }
-
-    /**
-     * @param Request $request
-     * @param $membername
-     * @param $currentPage
-     * @param $itemsPerPage
-     *
-     * @return Response
-     */
-    public function showUsernameOverview(Request $request, $membername, $currentPage, $itemsPerPage)
-    {
-        $first = ($currentPage - 1) * $itemsPerPage;
-
-        $parameters = $this->getParameters($request);
-
-        $parameters['membername'] = $membername;
-
-        $member = $this->memberRepository->getByUsername($membername);
-
-        $logs = [];
-        $count = 0;
-
-        if ($member) {
-            $query = $this->getQuery($parameters);
-            $count = $query->count();
-            $logs = $query->skip($first)->take($itemsPerPage)->get();
-        }
-
-        $lastPage = ceil($count / $itemsPerPage);
+        $logs = $query->get();
 
         $params = $parameters + [
-            'currentPage' => $currentPage,
-            'lastPage' => $lastPage,
-            'route' => 'admin_logs',
-            'routeParams' => ['itemsPerPage' => $itemsPerPage],
+            'currentPage' => $page,
+            'lastPage' => ceil($count / $limit),
+            'route' => 'admin/logs',
+            'routeParams' => ['limit' => $limit],
             'count' => $count,
             'logs' => $logs,
         ];
 
-        $content = $this->engine->render('@admin/logs/logs.html.twig', $params);
-
-        return new Response($content);
-    }
-
-    /**
-     * @param Request $request
-     * @param $type
-     * @param $currentPage
-     * @param $itemsPerPage
-     *
-     * @return Response
-     */
-    public function showTypeOverview(Request $request, $type, $currentPage, $itemsPerPage)
-    {
-        $first = ($currentPage - 1) * $itemsPerPage;
-
-        $searchParams = $this->getParameters($request);
-
-        $searchParams['logtype'] = $type;
-
-        $query = $this->getQuery($searchParams);
-
-        $count = $query->count();
-
-        $logs = $query->skip($first)->take($itemsPerPage)->get();
-
-        $lastPage = ceil($count / $itemsPerPage);
-
-        $params = $searchParams + [
-            'currentPage' => $currentPage,
-            'lastPage' => $lastPage,
-            'route' => 'admin_logs',
-            'routeParams' => ['itemsPerPage' => $itemsPerPage],
-            'count' => $count,
-            'logs' => $logs,
-        ];
-
-        $content = $this->engine->render('@admin/logs/logs.html.twig', $params);
+        $content = $this->render('@admin/logs/logs.html.twig', $params);
 
         return new Response($content);
     }
@@ -193,7 +72,7 @@ class LogsController
         $types = $this->logService->getLogTypes();
 
         $memberName = $request->query->get('membername');
-        $logType = $request->query->get('logtype', -1);
+        $logType = $request->query->get('logtype');
         $ipAddress = $request->query->get('ipaddress');
 
         return [
@@ -204,27 +83,31 @@ class LogsController
         ];
     }
 
-    private function getQuery($parameters)
+    /**
+     * @param array $parameters
+     * @return Builder|\Illuminate\Database\Query\Builder
+     */
+    private function getQuery(array $parameters)
     {
         $log = new Log();
 
-        /** @var Builder $query */
-        $query = $log->with('member');
+        $query = $log->newQuery();
+
+        $query->with('member');
+
+        $query->where('IdMember', '!=', 0);
 
         if ($parameters['membername']) {
             $member = $this->memberRepository
                 ->getByUsername($parameters['membername']);
 
-            if ($member) {
-                $query->where('IdMember', $member->id);
-            }
+            $query->where('IdMember', $member->id);
         }
 
-        if ($parameters['logtype'] > -1 && $parameters['logtype'] < count($parameters['types'])) {
-            //$types = $parameters['types'];
+        if ($parameters['logtype']) {
+            $types = $parameters['types'];
 
-            //$query->where('Type', $types[$parameters['logtype']]);
-            $query->where('Type', $parameters['logtype']);
+            $query->where('Type', $types[$parameters['logtype']]);
         }
 
         if ($parameters['ipaddress']) {

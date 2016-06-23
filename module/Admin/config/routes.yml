@@ -6,38 +6,11 @@ mockups:
     defaults:
       _controller: Rox\Admin\Controller\MockupsController:showMockup
 
-admin_logs_type:
-    path:     /admin/logs/type/{type}/{currentPage}/{itemsPerPage}
-    defaults:
-        _controller: Rox\Admin\Controller\LogsController:showTypeOverview
-        currentPage: 1
-        itemsPerPage: 20
-
-admin_logs_username:
-    path:     /admin/logs/username/{membername}/{currentPage}/{itemsPerPage}
-    requirements:
-        membername: "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"
-    defaults:
-        _controller: Rox\Admin\Controller\LogsController:showUsernameOverview
-        currentPage: 1
-        itemsPerPage: 20
-
-admin_logs_ip:
-    path:     /admin/logs/ip/{ipAddress}/{currentPage}/{itemsPerPage}
-    requirements:
-        ipAddress: "(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"
-    defaults:
-        _controller: "\\Rox\\Admin\\Logs\\LogsController::showIPOverview"
-        currentPage: 1
-        itemsPerPage: 20
-
-admin_logs:
-    path:     /admin/logs/{currentPage}/{itemsPerPage}
+admin/logs:
+    path:     /admin/logs
     methods: [GET]
     defaults:
         _controller: Rox\Admin\Controller\LogsController:showOverview
-        currentPage: 1
-        itemsPerPage: 20
 
 admin_queries:
     path:     /admin/queries

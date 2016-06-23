@@ -1,6 +1,7 @@
 services:
     Rox\Admin\Controller\LogsController:
         class: Rox\Admin\Controller\LogsController
+        parent: Rox\Core\Controller\AbstractController
         autowire: true
 
     Rox\Admin\Controller\MockupsController:

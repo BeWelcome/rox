@@ -10,6 +10,12 @@ security:
         # access to both members and guests, use IS_AUTHENTICATED_ANONYMOUSLY
         #
         # To disallow logged in members, use the "not has_role('ROLE_USER')"
+        #
+        # Beware using IS_AUTHENTICATED_FULLY - this excludes members whose
+        # session has been started from a remember me cookie. We may want to use
+        # this role in future for pages such as change email/password to require
+        # reentering password before making changes.
+        # See https://symfony.com/doc/current/cookbook/security/remember_me.html
         - { path: ^/$, allow_if: "not has_role('ROLE_USER')" }
         - { path: ^/login$, allow_if: "not has_role('ROLE_USER')" }
 
@@ -17,4 +23,4 @@ security:
         - { path: ^/tour, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/rox/in, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
-        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/, roles: ROLE_USER }

@@ -1,5 +1,9 @@
 {% extends '@base/base.html.twig' %}
 
+{% set scriptFiles = ['js/leaflet.js'] %}
+
+{% set cssFiles = ['css/leaflet.css', 'css/jquery-ui.css'] %}
+
 {% block content %}
 
     <div class="container">
@@ -49,56 +53,6 @@
         {{ form_end(form) }}
     </div>
 
-    {##}
-    {#<!--         <div class="container">#}
-    {#<form method="get" class="form-inline p-a-1 m-b-2 framed shadowed">#}
-    {#<input type="hidden" name="search-geoname-id" id="search-geoname-id"#}
-    {#value="{{ location.geonameid }}"/>#}
-    {#<input type="hidden" name="search-latitude" id="search-latitude"#}
-    {#value="{{ location.latitude }}"/>#}
-    {#<input type="hidden" name="search-longitude" id="search-longitude"#}
-    {#value="{{ location.longitude }}"/>#}
-    {#<div class="row">#}
-    {#<div class="col-xs-12">#}
-    {#<div class="form-group">#}
-    {#<div class="input-group">#}
-    {#<span class="input-group-addon"><i class="fa fa-lg fa-bed"></i></span>#}
-    {#<input type="text" class="form-control search-picker" id="search" name="search-location"#}
-    {#placeholder="Where do you want to go?"#}
-    {#value="{{ location.name }}"/>#}
-    {#</div>#}
-    {#</div>#}
-    {#<div class="form-group">#}
-    {#<div class="hostcheckimg"><img src="/images/icons/yesicanhost.png"/>#}
-    {#<div class="hostcheckbox"><input name="search-accommodation[]" id="search-accommodation-anytime" type="checkbox"{% if accommodation.yes %} checked="checked"{% endif %}></div>#}
-    {#</div>#}
-    {#<div class="hostcheckimg"><img src="/images/icons/maybe.png"/>#}
-    {#<div class="hostcheckbox"><input name="search-accommodation[]" id="search-accommodation-dependonrequest" type="checkbox"{% if accommodation.maybe %} checked="checked"{% endif %}></div>#}
-    {#</div>#}
-    {#<div class="hostcheckimg"><img src="/images/icons/nosorry.png"/>#}
-    {#<div class="hostcheckbox"><input name="search-accommodation[]" id="search-accommodation-dontask" type="checkbox"{% if accommodation.no %} checked="checked"{% endif %}></div>#}
-    {#</div>#}
-    {#</div>#}
-    {#<div class="form-group">#}
-    {#<label for="search-can-host" class="form-control-label">Can host at least</label>#}
-    {#{{ macros.select2('search-can-host', false, false, canhost.values, canhost.value, false, true, 4 ) }}#}
-    {#</div>#}
-    {#<div class="form-group">#}
-    {#<label for="search-distance" class="form-control-label">in a radius of </label>#}
-    {#{{ macros.select2('search-distance', false, false, radius.values, radius.value, false, true, 9 ) }}#}
-    {#</div>#}
-    {#<button type="submit" class="btn btn-primary pull-xs-right">Update map</button>#}
-    {#</div>#}
-    {#</div>#}
-    {#<div class="row">#}
-    {#<div class="col-xs-12 m-t-1">#}
-    {#<button type="submit" class="btn btn-sm btn-primary pull-xs-right">Advanced options#}
-    {#</button>#}
-    {#</div>#}
-    {#</div>#}
-    {#</form>#}
-    {#-->#}
-
     <div class="container">
         <div class="row">
             <div class="col-xs-12">
@@ -106,22 +60,14 @@
             </div>
         </div>
     </div>
-    {% if results %}
-        {# Add results for the map #}
-        <table id="mapresults" style="display:none;">
-            {% for row in results.map %}
-                <tr>
-                    <td class="accommodation">{{ row.Accommodation }}</td>
-                    <td class="username">{{ row.Username }}</td>
-                    <td class="latitude">{{ row.latitude }}</td>
-                    <td class="longitude">{{ row.longitude }}</td>
-                </tr>
-            {% endfor %}
-        </table>
-        {# include '@search/results.html.twig' #}
-    {% endif %}
 
-    <script type="text/javascript" src="{{ asset('js/mapsearch.js') }}"></script>
-    <link rel="stylesheet" type="text/css" href="css/leaflet/leaflet.css">
-    <link rel="stylesheet" type="text/css" href="script/jquery-ui-1.11.2/jquery-ui.css">
+    <script>
+        var mapMembers = {{ results.map | json_encode | raw }};
+    </script>
+
+    {# TODO for showing a paginated table of members under map #}
+    {#{% if results %}#}
+        {#{% include '@member/results.html.twig' %}#}
+    {#{% endif %}#}
+
 {% endblock content %}

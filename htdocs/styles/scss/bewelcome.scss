@@ -49,3 +49,8 @@ $font-family-bold: Signika-bold, Arial;
 .unread {
     font-weight: bold;
 }
+
+/* Fix for location input appearing behind map on search member page */
+.ui-front {
+    z-index: 2000!important;
+}

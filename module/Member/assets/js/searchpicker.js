@@ -51,7 +51,8 @@ function enableAutoComplete(addMarker) {
                 },
                 success: function (data) {
                     if (data.status !== "success") {
-                        data.locations = [{name: noMatchesFound, category: "Information", cnt: 0}];
+                        // TODO i18n for name property
+                        data.locations = [{name: 'No matches found.', category: "Information", cnt: 0}];
                     }
                     response(
                         jQuery.map(data.locations, function (item) {

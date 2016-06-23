@@ -54,6 +54,26 @@ module.exports = function (grunt) {
                         filter: 'isFile'
                     }
                 ]
+            },
+            leaflet_css: {
+                files: [
+                    {
+                        expand: true,
+                        src: 'leaflet.css',
+                        cwd: 'node_modules/leaflet/dist',
+                        dest: 'htdocs/assets/css/'
+                    }
+                ]
+            },
+            jqueryui_images: {
+                files: [
+                    {
+                        expand: true,
+                        src: '*',
+                        cwd: 'node_modules/jquery-ui/themes/base/images/',
+                        dest: 'htdocs/assets/css/images/'
+                    }
+                ]
             }
         },
         sass: {
@@ -145,6 +165,16 @@ module.exports = function (grunt) {
                 ],
                 dest: 'htdocs/assets/css/styles.css',
                 nonull: true
+            },
+            jqueryui: {
+                src: [
+                    'node_modules/jquery-ui/themes/base/core.css',
+                    'node_modules/jquery-ui/themes/base/theme.css',
+                    'node_modules/jquery-ui/themes/base/autocomplete.css',
+                    'node_modules/jquery-ui/themes/base/menu.css'
+                ],
+                dest: 'htdocs/assets/css/jquery-ui.css',
+                nonull: true
             }
         },
         uglify: {
@@ -218,7 +248,7 @@ module.exports = function (grunt) {
 
     // CSS
     grunt.registerTask('checkcss', ['csslint']);
-    grunt.registerTask('buildcss', ['sass', 'concat:css', 'cssmin']);
+    grunt.registerTask('buildcss', ['sass', 'concat:css', 'concat:jqueryui', 'cssmin']);
 
     // JS
     grunt.registerTask('checkjs', ['jshint']);

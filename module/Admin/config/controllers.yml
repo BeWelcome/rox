@@ -5,4 +5,5 @@ services:
 
     Rox\Admin\Controller\MockupsController:
         class: Rox\Admin\Controller\MockupsController
+        parent: Rox\Core\Controller\AbstractController
         autowire: true

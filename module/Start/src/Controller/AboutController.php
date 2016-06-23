@@ -2,6 +2,7 @@
 
 namespace Rox\Start\Controller;
 
+use Rox\CommunityNews\Model\CommunityNews;
 use Rox\CommunityNews\Service\CommunityNewsService;
 use Rox\Core\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +31,9 @@ class AboutController extends AbstractController
             throw new NotFoundHttpException();
         }
 
-        $communityNews = $this->communityNewsService->getAllCommunityNews()
+        $communityNews = new CommunityNews();
+
+        $communityNews = $communityNews->newQuery()
             ->limit(2)->orderBy('created_at', 'desc')->get();
 
         return new Response($this->render('@start/about.html.twig', [

@@ -85,11 +85,6 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
      */
     protected function getTeams(Member $member)
     {
-        $teams = [];
-
-        // Check if member is part of volunteer teams
-        $rightsChecker = \MOD_right::get();
-
         $allTeams = [
             [
                 'Words',
@@ -143,8 +138,10 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
             ],
         ];
 
+        $teams = [];
+
         foreach ($allTeams as $team) {
-            if ($rightsChecker->hasRight($team[0], '', $member->id)) {
+            if ($member->getRightLevel($team[0])) {
                 $teams[] = [
                     'trans' => $team[1],
                     'link' => $team[2],

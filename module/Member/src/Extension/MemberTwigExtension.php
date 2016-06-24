@@ -109,7 +109,7 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
             [
                 'Logs',
                 'AdminLogs',
-                'bw/admin/adminlogs.php',
+                'admin/logs',
             ],
             [
                 'Comments',

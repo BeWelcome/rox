@@ -68,6 +68,7 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
         'relationships',
         'trads',
         'preferences',
+        'rights',
     ];
 
     /**

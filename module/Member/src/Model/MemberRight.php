@@ -15,6 +15,10 @@ class MemberRight extends AbstractModel
      */
     protected $table = 'rightsvolunteers';
 
+    protected $ormRelationships = [
+        'right',
+    ];
+
     public function right()
     {
         return $this->hasOne(Right::class, 'id', 'IdRight');

@@ -9,7 +9,7 @@ class MockupsController extends AbstractController
 {
     public function showMockup($mockup)
     {
-        $content = $this->render('@admin/mockups/'.$mockup.'.html.twig');
+        $content = $this->render('@admin/mockups/' . $mockup . '.html.twig');
 
         return new Response($content);
     }

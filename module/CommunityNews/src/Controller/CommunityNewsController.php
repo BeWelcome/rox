@@ -2,9 +2,9 @@
 
 namespace Rox\CommunityNews\Controller;
 
-use Rox\Core\Controller\AbstractController;
 use Rox\CommunityNews\Repository\CommunityNewsRepositoryInterface;
 use Rox\CommunityNews\Service\CommunityNewsServiceInterface;
+use Rox\Core\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

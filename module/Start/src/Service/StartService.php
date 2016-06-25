@@ -27,7 +27,7 @@ class StartService
             FROM
                 members m
             WHERE
-                m.status IN ('.\Member::ACTIVE_ALL.')
+                m.status IN (' . \Member::ACTIVE_ALL . ')
         ');
 
         $countries = $this->connection->select('
@@ -40,7 +40,7 @@ class StartService
             WHERE
                 gc.country = g.country
                 AND g.geonameId = m.IdCity
-                AND m.Status IN ('.\Member::ACTIVE_ALL.')
+                AND m.Status IN (' . \Member::ACTIVE_ALL . ')
         ');
 
         $languages = $this->connection->select('
@@ -53,7 +53,7 @@ class StartService
             WHERE
                 l.id = mll.idLanguage
                 AND mll.IdMember = m.Id
-                AND m.Status IN ('.\Member::ACTIVE_ALL.')
+                AND m.Status IN (' . \Member::ACTIVE_ALL . ')
         ');
 
         $positiveComments = $this->connection->select('
@@ -65,7 +65,7 @@ class StartService
             WHERE
                 c.Quality = \'Good\'
                 AND IdFromMember = m.Id
-                AND m.Status IN ('.\Member::ACTIVE_ALL.')
+                AND m.Status IN (' . \Member::ACTIVE_ALL . ')
         ');
 
         $activities = $this->connection->select('

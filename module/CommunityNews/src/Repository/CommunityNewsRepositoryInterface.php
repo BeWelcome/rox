@@ -2,8 +2,8 @@
 
 namespace Rox\CommunityNews\Repository;
 
-use Rox\Core\Exception\NotFoundException;
 use Rox\CommunityNews\Model\CommunityNews;
+use Rox\Core\Exception\NotFoundException;
 
 interface CommunityNewsRepositoryInterface
 {

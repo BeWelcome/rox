@@ -148,7 +148,7 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
             /** @var Builder|\Illuminate\Database\Eloquent\Builder $query */
             $query = $instance->newQuery();
 
-            return new HasMany($query->whereIn('IdTrad', $ids), $this, $instance->getTable().'.'.'IdOwner', 'id');
+            return new HasMany($query->whereIn('IdTrad', $ids), $this, $instance->getTable() . '.' . 'IdOwner', 'id');
         });
     }
 
@@ -273,7 +273,7 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
      */
     public function getCryptedField($fieldName)
     {
-        return $this->cryptedFields->keyBy('TableColumn')->get('members.'.$fieldName);
+        return $this->cryptedFields->keyBy('TableColumn')->get('members.' . $fieldName);
     }
 
     public function getTradByLanguage($language, $tradId)

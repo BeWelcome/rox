@@ -25,7 +25,7 @@ class AssetExtension extends Twig_Extension
      */
     public function getAssetUrl($path)
     {
-        $path = 'assets/'.$path;
+        $path = 'assets/' . $path;
 
         // If the manifest file doesn't exist, then return the unversioned file.
         if (!is_readable(self::MANIFEST)) {

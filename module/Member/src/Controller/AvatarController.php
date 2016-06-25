@@ -21,7 +21,7 @@ class AvatarController
         }
 
         if ($size[0] !== '_') {
-            $size = '_'.$size;
+            $size = '_' . $size;
         }
 
         $memberModel = new Member();

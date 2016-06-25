@@ -33,7 +33,7 @@ class MessageService implements MessageServiceInterface
         }
 
         if ($sort === 'date') {
-            $q->orderByRaw('IF(messages.created > messages.DateSent, messages.created, messages.DateSent) '.$sortDir);
+            $q->orderByRaw('IF(messages.created > messages.DateSent, messages.created, messages.DateSent) ' . $sortDir);
         } elseif ($sort === 'sender') {
             $q->join('members', 'messages.IdSender', '=', 'members.id');
 
@@ -80,7 +80,7 @@ class MessageService implements MessageServiceInterface
 
         if ($message->DeleteRequest !== '') {
             // TODO Isn't this duplicating?
-            $deleteRequest .= ','.$message->DeleteRequest;
+            $deleteRequest .= ',' . $message->DeleteRequest;
         }
 
         $message->DeleteRequest = $deleteRequest;

@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Listens for access denied exceptions and redirects if the route has
@@ -26,7 +27,8 @@ class AccessDeniedRedirectListener
 
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        if (!$event->getException() instanceof AccessDeniedHttpException) {
+        if (!$event->getException() instanceof AccessDeniedHttpException
+            && !$event->getException() instanceof AccessDeniedException) {
             return;
         }
 

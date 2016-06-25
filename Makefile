@@ -11,6 +11,10 @@ all: phpci
 
 phpci: phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpmetrics phpunit
 
+phpcsfix:
+	./vendor/bin/phpcbf module/
+	./vendor/bin/php-cs-fixer fix -v
+
 build:
 	./node_modules/.bin/grunt
 

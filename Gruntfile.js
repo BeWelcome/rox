@@ -54,6 +54,26 @@ module.exports = function (grunt) {
                         filter: 'isFile'
                     }
                 ]
+            },
+            leaflet_css: {
+                files: [
+                    {
+                        expand: true,
+                        src: 'leaflet.css',
+                        cwd: 'node_modules/leaflet/dist',
+                        dest: 'htdocs/assets/css/'
+                    }
+                ]
+            },
+            jqueryui_images: {
+                files: [
+                    {
+                        expand: true,
+                        src: '*',
+                        cwd: 'node_modules/jquery-ui/themes/base/images/',
+                        dest: 'htdocs/assets/css/images/'
+                    }
+                ]
             }
         },
         sass: {
@@ -73,23 +93,6 @@ module.exports = function (grunt) {
             bewelcome: {
                 expand: true,
                 src: 'module/*/assets/css/*.css'
-            }
-        },
-        csscomb: {
-            bewelcome: {
-                expand: true,
-                src: 'module/*/assets/css/*.css'
-            }
-        },
-        concat_css: {
-            bw: {
-                src: [
-                    'node_modules/font-awesome/css/font-awesome.css',
-                    'node_modules/lato-font/css/lato-font.css',
-                    'htdocs/assets/sass/*.css'
-                ],
-                dest: 'htdocs/assets/css/styles.css',
-                nonull: true
             }
         },
         cssmin: {
@@ -153,6 +156,25 @@ module.exports = function (grunt) {
                 ],
                 dest: 'htdocs/assets/js/leaflet.js',
                 nonull: true
+            },
+            css: {
+                src: [
+                    'node_modules/font-awesome/css/font-awesome.css',
+                    'node_modules/lato-font/css/lato-font.css',
+                    'htdocs/assets/sass/*.css'
+                ],
+                dest: 'htdocs/assets/css/styles.css',
+                nonull: true
+            },
+            jqueryui: {
+                src: [
+                    'node_modules/jquery-ui/themes/base/core.css',
+                    'node_modules/jquery-ui/themes/base/theme.css',
+                    'node_modules/jquery-ui/themes/base/autocomplete.css',
+                    'node_modules/jquery-ui/themes/base/menu.css'
+                ],
+                dest: 'htdocs/assets/css/jquery-ui.css',
+                nonull: true
             }
         },
         uglify: {
@@ -185,11 +207,11 @@ module.exports = function (grunt) {
         watch: {
             sass: {
                 files: 'htdocs/styles/scss/*',
-                tasks: ['sass:compileBeWelcome', 'concat_css:bw']
+                tasks: ['sass:compileBeWelcome', 'concat:css']
             },
             css: {
                 files: 'module/*/assets/css/**/*.css',
-                tasks: ['csscomb:bewelcome', 'csslint:bewelcome', 'concat_css:bw']
+                tasks: ['csslint:bewelcome', 'concat:css']
             },
             js: {
                 files: ['module/*/assets/js/**/*.js'],
@@ -203,7 +225,6 @@ module.exports = function (grunt) {
 
     // Load the plugin that provides the ('grunt-*') task.
     grunt.loadNpmTasks('grunt-assets-versioning');
-    grunt.loadNpmTasks('grunt-concat-css');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-copy');
@@ -213,7 +234,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-csscomb');
     grunt.loadNpmTasks('grunt-recess');
 
     // Default task for development
@@ -227,11 +247,11 @@ module.exports = function (grunt) {
     grunt.registerTask('build', ['clean', 'copy', 'buildcss', 'buildjs']);
 
     // CSS
-    grunt.registerTask('checkcss', ['csslint', 'csscomb']);
-    grunt.registerTask('buildcss', ['sass', 'concat_css', 'cssmin']);
+    grunt.registerTask('checkcss', ['csslint']);
+    grunt.registerTask('buildcss', ['sass', 'concat:css', 'concat:jqueryui', 'cssmin']);
 
     // JS
     grunt.registerTask('checkjs', ['jshint']);
-    grunt.registerTask('buildjs', ['concat', 'uglify']);
+    grunt.registerTask('buildjs', ['concat:dist', 'concat:backwards', 'concat:leaflet', 'uglify']);
 
 };

@@ -17,6 +17,11 @@ class Location extends AbstractModel
     public $table = 'geonames';
 
     /**
+     * @var string
+     */
+    protected $primaryKey = 'geonameid';
+
+    /**
      * @var array
      */
     protected $ormRelationships = [

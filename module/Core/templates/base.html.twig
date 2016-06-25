@@ -23,9 +23,6 @@
     <meta name="keywords" content="{{ 'default_meta_keyword' | trans }}">
     <meta name="robots" content="{{ robots }}">
 
-    {#{% include '@base/stylesheets.html.twig' %}#}
-    {#{% include '@base/scriptfiles.html.twig' with {scriptFiles : earlyScriptFiles} %}#}
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script type="text/javascript" src="{{ asset('js/backwards.js') }}"></script>
@@ -34,6 +31,19 @@
     <script type="text/javascript" src="{{ asset('js/built.js') }}"></script>
 
     <link rel="stylesheet" type="text/css" href="{{ asset('css/styles.css') }}">
+
+    {% if cssFiles is defined %}
+        {% for cssFile in cssFiles %}
+            <link rel="stylesheet" type="text/css" href="{{ asset(cssFile) }}">
+        {% endfor %}
+    {% endif %}
+
+    {% if scriptFiles is defined %}
+        {% for scriptFile in scriptFiles %}
+            <script type="text/javascript" src="{{ asset(scriptFile) }}"></script>
+        {% endfor %}
+    {% endif %}
+
 </head>
 <body>
 

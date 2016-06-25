@@ -43,7 +43,10 @@ class SearchController
 
         $form->handleRequest($request);
 
-        $results = [];
+        $results = [
+            'members' => [],
+            'map' => [],
+        ];
 
         if ($form->isSubmitted() && $form->isValid()) {
             // form was submitted and all inputs are valid now search for members and return return results to the page

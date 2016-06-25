@@ -9,6 +9,12 @@ security:
 
     firewalls:
         default:
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 31536000 # 1 year in seconds
+                path: /
+                remember_me_parameter: remember
+
             anonymous: ~
             form_login:
                 login_path: auth/login

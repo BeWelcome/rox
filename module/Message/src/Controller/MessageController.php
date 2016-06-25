@@ -150,7 +150,7 @@ class MessageController extends AbstractController
         $q = $this->messageService->getFilteredMessages($member, $filter, $sort, $sortDir);
 
         // Eager load each sender for each message
-        $q->with('sender');
+        $q->with('sender', 'receiver');
 
         $q->getQuery()->forPage($page, $limit);
 

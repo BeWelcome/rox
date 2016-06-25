@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * Class Application
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Application extends Kernel
 {

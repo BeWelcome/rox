@@ -1,3 +1,4 @@
+$(function () {
 if ($('#map').length) {
     var map = L.map('map', {
         center: [15, 0],
@@ -17,6 +18,7 @@ if ($('#map').length) {
         map.fitBounds(markerClusterGroup.getBounds());
     }
 }
+});
 
 /* function makeGroup(accommodation, color) {
     return new L.MarkerClusterGroup({
@@ -37,8 +39,6 @@ function addMarkers(map){
         dontask: makeGroup('dontask', '#666')
     }; */
 
-    var i = 0;
-
     var markers = new L.markerClusterGroup({
         iconCreateFunction: function(cluster) {
             return new L.DivIcon({
@@ -49,29 +49,26 @@ function addMarkers(map){
         }
     });
 
-    $('#mapresults tr').each(function(index, value) {
-        // for each row of data
-        var cols = $(this).children('td');
-
-        // cols: activity title, location name, location latitude, location longitude, activity details link URL
-        var accommodation = $(cols[0]).html();
-        var username = $(cols[1]).html();
-        var latitude = $(cols[2]).html();
-        var longitude = $(cols[3]).html();
+    /**
+     * @param value.Accommodation Accommodation status enum
+     * @param value.Username
+     * @param value.latitude
+     * @param value.longitude
+     */
+    $.each(mapMembers, function(index, value) {
 
         // TODO the icons might be easier to see on the map if they had a drop shadow.
         // Add a class to the img tag and css eg. box-shadow: 10px 10px 5px #888888;
-        var icon = new L.DivIcon({ html: '<div><img src="/images/icons/' + accommodation + '.png" width="17" height="17"></div>', className: 'marker-cluster marker-cluster-unique', iconSize: new L.Point(17, 17) });
-        var marker = new L.marker([latitude, longitude], {icon: icon});
+        var icon = new L.DivIcon({ html: '<div><img src="/images/icons/' + value.Accommodation + '.gif" width="17" height="17"></div>', className: 'marker-cluster marker-cluster-unique', iconSize: new L.Point(17, 17) });
+        var marker = new L.marker([value.latitude, value.longitude], {icon: icon});
 
-        var popupContent = '<h4><img src="/members/avatar/' + username + '?xs"> <a href="/members/' + username + '">' + username+ '</a></h4>';
-        popupContent += '<p>' + accommodation + '</p>';
+        var popupContent = '<h4><img src="/members/avatar/' + value.Username + '?xs"> <a href="/members/' + value.Username + '">' + value.Username + '</a></h4>';
+        popupContent += '<p>' + value.Accommodation + '</p>';
 
         marker.bindPopup(popupContent).openPopup();
 
         // groups[accommodation].addLayer(marker);
         markers.addLayer(marker);
-        i++;
     });
 
     try {

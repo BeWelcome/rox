@@ -19,7 +19,6 @@ jQuery.widget( "custom.catcomplete", jQuery.ui.autocomplete, {
         var that = this,
             currentCategory = "";
         jQuery.each( items, function( index, item ) {
-            alert(item.category + currentCategory);
             if ( item.category !== currentCategory ) {
                 var uiItem = {
                     value: ''
@@ -52,11 +51,11 @@ function enableAutoComplete(addMarker) {
                 },
                 success: function (data) {
                     if (data.status !== "success") {
-                        data.locations = [{name: noMatchesFound, category: "Information", cnt: 0}];
+                        // TODO i18n for name property
+                        data.locations = [{name: 'No matches found.', category: "Information", cnt: 0}];
                     }
                     response(
                         jQuery.map(data.locations, function (item) {
-                            alert(item.cnt);
                             return {
                                 label: (item.name ? item.name : "") + (item.admin1 ? (item.name ? ", " : "") + item.admin1 : "") + (item.country ? ", " + item.country : "") + (item.cnt !== 0 ? " (" + item.cnt + ")" : ""),
                                 labelnocount: (item.name ? item.name : "") + (item.admin1 ? (item.name ? ", " : "") + item.admin1 : "") + (item.country ? ", " + item.country : ""),

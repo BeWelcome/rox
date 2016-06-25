@@ -23,7 +23,7 @@
                     <div class="dropdown-menu dropdown-menu-right" style="width: 40rem">
                         <h6 class="dropdown-header">Choose a language</h6>
                         {% for lang in languages %}
-                            <a href="/rox/in/{{ lang.ShortCode }}" class="btn {% if lang.ShortCode == language.ShortCode %}btn-primary{% else %}btn-secondary{% endif %} m-l-1 m-b-1" data-toggle="tooltip" data-placement="top" title="{{ lang.TranslatedName }}" style="width: 12rem">{{ lang.NativeName|raw }}</a>
+                            <a href="{{ path('language', { locale: lang.ShortCode }) }}" class="btn {% if lang.ShortCode == language.ShortCode %}btn-primary{% else %}btn-secondary{% endif %} m-l-1 m-b-1" data-toggle="tooltip" data-placement="top" title="{{ lang.TranslatedName }}" style="width: 12rem">{{ lang.NativeName|raw }}</a>
                         {% endfor %}
                     </div>
                 </li>

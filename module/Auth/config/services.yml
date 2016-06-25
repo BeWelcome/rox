@@ -18,4 +18,4 @@ services:
         class: Rox\Auth\Listener\AccessDeniedRedirectListener
         autowire: true
         tags:
-            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 255 }

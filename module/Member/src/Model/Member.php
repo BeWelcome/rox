@@ -3,6 +3,7 @@
 namespace Rox\Member\Model;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
@@ -19,24 +20,25 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @property Collection $comments
  * @property Collection $groups
  * @property Collection $trads
+ * @property Collection $preferences
+ * @property Collection|MemberRight[] $rights
  * @property integer $id
- * @method Builder|HasMany hasMany($a, $b, $c)
+ * @method Builder|HasMany hasMany($related, $foreignKey = null, $localKey = null)
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  *
  * @todo Maybe use a decorated to implement UserInterface?
  */
 class Member extends AbstractModel implements MemberRepositoryInterface, UserInterface
 {
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'updated';
+
     /**
      * @var string
      */
     protected $table = 'members';
-
-    /**
-     * @var boolean
-     */
-    public $timestamps = false;
 
     /**
      * @var array
@@ -65,6 +67,8 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
         'languages',
         'relationships',
         'trads',
+        'preferences',
+        'rights',
     ];
 
     /**
@@ -145,6 +149,44 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
 
             return new HasMany($query->whereIn('IdTrad', $ids), $this, $instance->getTable() . '.' . 'IdOwner', 'id');
         });
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function preferences()
+    {
+        $pivot = $this->belongsToMany(
+            Preference::class,
+            'memberspreferences',
+            'IdMember',
+            'IdPreference'
+        )->withPivot([
+            'Value',
+        ]);
+
+        $pivot->withTimestamps('created', 'updated');
+
+        return $pivot;
+    }
+
+    /**
+     * Sets eager loading for the Right definition of the MemberRight, because
+     * a MemberRight by itself doesn't tell us what the right actually is.
+     *
+     * Alternative way to do this is like preferences, which a Member would
+     * belong to many Rights, and the Level, Scope, Comment, etc would become
+     * pivot values.
+     *
+     * @return HasMany
+     */
+    public function rights()
+    {
+        $relation = $this->hasMany(MemberRight::class, 'IdMember', 'id');
+
+        $relation->getQuery()->with('right');
+
+        return $relation;
     }
 
     /**
@@ -261,23 +303,27 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
     /**
      * Returns the roles granted to the user.
      *
-     * <code>
-     * public function getRoles()
-     * {
-     *     return array('ROLE_USER');
-     * }
-     * </code>
+     * Symfony only calls this once when logging in. The results are stored
+     * in the session. So the queries behind checking the admin role are not
+     * repeating for each request.
      *
-     * Alternatively, the roles might be stored on a ``roles`` property,
-     * and populated in any number of different ways when the user object
-     * is created.
+     * @todo There are a few rows for admin rights where level = 0
      *
-     * @return (Role|string)[] The user roles
+     * @return string[]
      */
     public function getRoles()
     {
-        // TODO: Implement getRoles() method.
-        return ['ROLE_USER'];
+        // Grant user role to everyone
+        $roles = [
+            'ROLE_USER',
+        ];
+
+        // Grant admin role if member has admin rights
+        if ($this->getRightLevel('Admin')) {
+            $roles[] = 'ROLE_ADMIN';
+        }
+
+        return $roles;
     }
 
     /**
@@ -331,5 +377,60 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
         $potentialGuests = $tripModel->getTripsNearMe($this, 1, 2);
 
         return $potentialGuests;
+    }
+
+    /**
+     * $rightName is case sensitive
+     *
+     * Port of MOD_right_flag::hasRight
+     *
+     * @param $rightName
+     * @param $scope
+     *
+     * @return int
+     */
+    public function getRightLevel($rightName, $scope = null)
+    {
+        $rights = $this->rights;
+
+        $right = $rights->where('right.Name', $rightName)->first();
+
+        // Right doesn't exist
+        if (!$right) {
+            return 0;
+        }
+
+        // If the right level is 0, no need to check the scope.
+        if ((int) $right->Level === 0) {
+            return 0;
+        }
+
+        // If no scope was requested, just return the level
+        if (!$scope) {
+            return (int) $right->Level;
+        }
+
+        // Break the available scopes into an array and clean them
+        $scopes = explode(',', $right->Scope);
+
+        // Trim quotes and spaces (\x20)
+        $scopes = array_map(function ($value) {
+            return trim($value, "\"\x20");
+        }, $scopes);
+
+        $scopes = array_map('strtolower', $scopes);
+
+        // If one of the available scopes is 'all', then allow any requested
+        // scope.
+        if (in_array('all', $scopes, true)) {
+            return (int) $right->Level;
+        }
+
+        // Requested scope isn't available
+        if (!in_array(strtolower($scope), $scopes, true)) {
+            return 0;
+        }
+
+        return (int) $right->Level;
     }
 }

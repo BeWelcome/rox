@@ -1,0 +1,6 @@
+language:
+    path: /rox/in/{locale}
+    defaults:
+        _controller: Rox\I18n\Controller\LocaleController:selectLocaleAction
+    requirements:
+        locale: "[a-z]{2}(-[A-Za-z]{2,})?"

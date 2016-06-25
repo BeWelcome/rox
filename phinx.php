@@ -35,6 +35,13 @@ if (!empty($inifile)) {
             $production = true;
         }
     }
+} else {
+    $provider = 'mysql';
+    $host = 'localhost';
+    $user = 'bewelcome';
+    $password = 'bewelcome';
+    $dbname = 'bewelcome';
+}
     $config = array(
         "migration_base_class" => "Rox\\Tools\\RoxMigration",
         "seeds_base_class" => "Rox\\Tools\\RoxSeed",
@@ -79,6 +86,5 @@ if (!empty($inifile)) {
     );
     $config['environments']['development'] = $devarray;
     $config['environments']['testing'] = $testarray;
-}
 
 return $config;

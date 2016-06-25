@@ -15,6 +15,9 @@ class MemberRight extends AbstractModel
      */
     protected $table = 'rightsvolunteers';
 
+    /**
+     * @var array
+     */
     protected $ormRelationships = [
         'right',
     ];

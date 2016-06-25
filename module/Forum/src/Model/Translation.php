@@ -5,7 +5,7 @@ namespace Rox\Forum\Model;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Translation
+ * Class Translation.
  */
 class Translation extends Model
 {
@@ -15,7 +15,7 @@ class Translation extends Model
     public $table = 'forum_trads';
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $timestamps = false;
 }

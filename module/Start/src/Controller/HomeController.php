@@ -84,7 +84,7 @@ class HomeController extends AbstractController
     }
 
     /**
-     * Shows the home page
+     * Shows the home page.
      *
      * @return Response
      */
@@ -96,11 +96,12 @@ class HomeController extends AbstractController
         $communityNews = new CommunityNews();
         $latestNews = $communityNews->getLatest();
 
-        $content = $this->render('@start/home.html.twig',
+        $content = $this->render(
+            '@start/home.html.twig',
             [
                 'campaign' => $donationCampaign,
                 'travellers' => $potentialGuests,
-                'communityNews' => $latestNews
+                'communityNews' => $latestNews,
             ]
         );
 

@@ -63,7 +63,7 @@ class RoxTwigExtension extends Twig_Extension implements Twig_Extension_GlobalsI
         $languages = $this->languageService->getAvailableLanguages();
         $langarr = [];
         foreach ($languages as $language) {
-            $lang = new \stdClass;
+            $lang = new \stdClass();
             $lang->NativeName = $language->Name;
             $lang->TranslatedName = $words->getSilent($language->WordCode);
             $lang->ShortCode = $language->ShortCode;
@@ -74,15 +74,16 @@ class RoxTwigExtension extends Twig_Extension implements Twig_Extension_GlobalsI
             if ($a->TranslatedName === $b->TranslatedName) {
                 return 0;
             }
+
             return (strtolower($a->TranslatedName) < strtolower($b->TranslatedName)) ? -1 : 1;
         });
 
         return [
-            'version'   => trim(file_get_contents('VERSION')),
+            'version' => trim(file_get_contents('VERSION')),
             'version_dt' => Carbon::createFromTimestamp(filemtime('VERSION')),
-            'title'     => 'BeWelcome',
+            'title' => 'BeWelcome',
             'faker' => class_exists(Factory::class) ? Factory::create() : null,
-            'language'  => $defaultLanguage,
+            'language' => $defaultLanguage,
             'languages' => $langarr,
             'robots' => 'ALL',
         ];

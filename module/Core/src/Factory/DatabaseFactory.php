@@ -13,17 +13,16 @@ class DatabaseFactory
         $capsule = new Manager();
 
         $capsule->addConnection([
-            'driver'    => 'mysql',
-            'host'      => getenv('DB_HOST'),
-            'database'  => getenv('DB_NAME'),
-            'username'  => getenv('DB_USER'),
-            'password'  => getenv('DB_PASS'),
-            'charset'   => 'utf8',
+            'driver' => 'mysql',
+            'host' => getenv('DB_HOST'),
+            'database' => getenv('DB_NAME'),
+            'username' => getenv('DB_USER'),
+            'password' => getenv('DB_PASS'),
+            'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
-            'prefix'    => '',
-            'options'   => [
-                PDO::MYSQL_ATTR_INIT_COMMAND
-                    => "SET NAMES 'UTF8', time_zone = '+00:00', sql_mode='NO_ENGINE_SUBSTITUTION';",
+            'prefix' => '',
+            'options' => [
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8', time_zone = '+00:00', sql_mode='NO_ENGINE_SUBSTITUTION';",
             ],
         ]);
 

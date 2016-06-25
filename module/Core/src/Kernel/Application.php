@@ -12,7 +12,8 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
 /**
- * Class Application
+ * Class Application.
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Application extends Kernel

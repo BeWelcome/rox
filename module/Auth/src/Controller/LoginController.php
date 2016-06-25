@@ -7,7 +7,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
- * Class LoginController
+ * Class LoginController.
  */
 class LoginController
 {

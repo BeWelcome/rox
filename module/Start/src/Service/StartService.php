@@ -5,7 +5,7 @@ namespace Rox\Start\Service;
 use Illuminate\Database\ConnectionInterface;
 
 /**
- * Class StartService
+ * Class StartService.
  */
 class StartService
 {
@@ -27,7 +27,7 @@ class StartService
             FROM
                 members m
             WHERE
-                m.status IN (' . \Member::ACTIVE_ALL . ')
+                m.status IN ('.\Member::ACTIVE_ALL.')
         ');
 
         $countries = $this->connection->select('
@@ -40,7 +40,7 @@ class StartService
             WHERE
                 gc.country = g.country
                 AND g.geonameId = m.IdCity
-                AND m.Status IN (' . \Member::ACTIVE_ALL . ')
+                AND m.Status IN ('.\Member::ACTIVE_ALL.')
         ');
 
         $languages = $this->connection->select('
@@ -53,7 +53,7 @@ class StartService
             WHERE
                 l.id = mll.idLanguage
                 AND mll.IdMember = m.Id
-                AND m.Status IN (' . \Member::ACTIVE_ALL . ')
+                AND m.Status IN ('.\Member::ACTIVE_ALL.')
         ');
 
         $positiveComments = $this->connection->select('
@@ -65,7 +65,7 @@ class StartService
             WHERE
                 c.Quality = \'Good\'
                 AND IdFromMember = m.Id
-                AND m.Status IN (' . \Member::ACTIVE_ALL . ')
+                AND m.Status IN ('.\Member::ACTIVE_ALL.')
         ');
 
         $activities = $this->connection->select('
@@ -78,10 +78,10 @@ class StartService
         ');
 
         $stats = [
-            'members'    => $members[0]->cnt,
-            'countries'  => $countries[0]->cnt,
-            'languages'  => $languages[0]->cnt,
-            'comments'   => $positiveComments[0]->cnt,
+            'members' => $members[0]->cnt,
+            'countries' => $countries[0]->cnt,
+            'languages' => $languages[0]->cnt,
+            'comments' => $positiveComments[0]->cnt,
             'activities' => $activities[0]->cnt,
         ];
 

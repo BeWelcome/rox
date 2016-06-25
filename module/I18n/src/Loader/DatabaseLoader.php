@@ -8,11 +8,10 @@ use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
-* DatabaseLoader loads translations from the words table (into the SQL cache).
-*
-* @author shevek <bla@blafaselblubb.abcde.biz>
-*
-*/
+ * DatabaseLoader loads translations from the words table (into the SQL cache).
+ *
+ * @author shevek <bla@blafaselblubb.abcde.biz>
+ */
 class DatabaseLoader implements LoaderInterface
 {
     /**
@@ -26,10 +25,10 @@ class DatabaseLoader implements LoaderInterface
     }
 
     /**
-    * {@inheritdoc}
-    *
-    * @api
-    */
+     * {@inheritdoc}
+     *
+     * @api
+     */
     public function load($resource, $locale, $domain = 'messages')
     {
         // ignore $resource just load content of the table words for the $locale into the catalogue

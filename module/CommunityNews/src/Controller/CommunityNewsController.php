@@ -3,14 +3,10 @@
 namespace Rox\CommunityNews\Controller;
 
 use Rox\Core\Controller\AbstractController;
-use Rox\Member\Repository\MemberRepositoryInterface;
 use Rox\CommunityNews\Repository\CommunityNewsRepositoryInterface;
 use Rox\CommunityNews\Service\CommunityNewsServiceInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class CommunityNewsController extends AbstractController
 {
@@ -26,8 +22,9 @@ class CommunityNewsController extends AbstractController
 
     /**
      * CommunityNewsController constructor.
+     *
      * @param CommunityNewsRepositoryInterface $communityNewsRepository
-     * @param CommunityNewsServiceInterface $communityNewsService
+     * @param CommunityNewsServiceInterface    $communityNewsService
      */
     public function __construct(
         CommunityNewsRepositoryInterface $communityNewsRepository,

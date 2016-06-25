@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Country extends Model
 {
     /**
-     * @var boolean
+     * @var bool
      */
     public $timestamps = false;
 

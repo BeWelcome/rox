@@ -25,7 +25,7 @@ class AboutController extends AbstractController
     {
         $page = $request->attributes->get('page');
 
-        $pageTemplate = '@start/about/' . $page . '.html.twig';
+        $pageTemplate = '@start/about/'.$page.'.html.twig';
 
         if (!$this->getEngine()->exists($pageTemplate)) {
             throw new NotFoundHttpException();

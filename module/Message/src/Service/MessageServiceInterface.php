@@ -13,23 +13,20 @@ interface MessageServiceInterface
      * @param $filter
      * @param $sort
      * @param $sortDir
+     *
      * @return Builder|\Illuminate\Database\Query\Builder
      */
     public function getFilteredMessages(Member $member, $filter, $sort, $sortDir);
 
     /**
      * @param Message $message
-     * @param Member $deletingMember
-     *
-     * @return void
+     * @param Member  $deletingMember
      */
     public function deleteMessage(Message $message, Member $deletingMember);
 
     /**
      * @param Message $message
      * @param $destinationFolder
-     *
-     * @return void
      */
     public function moveMessage(Message $message, $destinationFolder);
 

@@ -28,7 +28,7 @@ class SearchFormFactory
         $this->addButtons($form);
 
         $form->add('search', TextType::class, [
-                    'attr'  => [
+                    'attr' => [
                         'placeholder' => 'Where are you going?',
                     ],
                     'label' => false,
@@ -65,17 +65,17 @@ class SearchFormFactory
     {
         $form
             ->add('search_accommodation_anytime', CheckboxType::class, [
-                    'label'    => false,
+                    'label' => false,
                     'required' => false,
-                    'data'     => true,
+                    'data' => true,
                 ])
             ->add('search_accommodation_dependonrequest', CheckboxType::class, [
-                    'label'    => false,
+                    'label' => false,
                     'required' => false,
-                    'data'     => true,
+                    'data' => true,
                 ])
             ->add('search_accommodation_dontask', CheckboxType::class, [
-                    'label'    => false,
+                    'label' => false,
                     'required' => false,
                 ])
         ;
@@ -86,37 +86,37 @@ class SearchFormFactory
         $form
             ->add('search_can_host', ChoiceType::class, [
                     'choices' => [
-                        0  => '0',
-                        1  => '1',
-                        2  => '2',
-                        3  => '3',
-                        4  => '4',
-                        5  => '5',
+                        0 => '0',
+                        1 => '1',
+                        2 => '2',
+                        3 => '3',
+                        4 => '4',
+                        5 => '5',
                         10 => '10',
                         20 => '20',
                     ],
-                    'attr'    => [
+                    'attr' => [
                         'class' => 'form-control-label',
                     ],
-                    'data'    => '1',
-                    'label'   => 'hosts at least',
+                    'data' => '1',
+                    'label' => 'hosts at least',
                 ])
             ->add('search_distance', ChoiceType::class, [
-                    'choices'           => [
-                        'exact'         => 0,
-                        '5km / 3mi'     => 5,
-                        '10km / 6mi'    => 10,
-                        '20km / 15mi'   => 20,
-                        '50km / 31mi'   => 50,
-                        '100km / 63mi'  => 100,
+                    'choices' => [
+                        'exact' => 0,
+                        '5km / 3mi' => 5,
+                        '10km / 6mi' => 10,
+                        '20km / 15mi' => 20,
+                        '50km / 31mi' => 50,
+                        '100km / 63mi' => 100,
                         '200km / 128mi' => 200,
                     ],
-                    'attr'              => [
+                    'attr' => [
                         'class' => 'form-control-label',
                     ],
                     'choices_as_values' => true,
-                    'data'              => '20',
-                    'label'             => 'in a radius of',
+                    'data' => '20',
+                    'label' => 'in a radius of',
                 ])
         ;
     }

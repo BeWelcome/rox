@@ -2,15 +2,13 @@
 
 namespace Rox\CommunityNews\Model;
 
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Query\Builder;
 use Rox\CommunityNews\Repository\CommunityNewsRepositoryInterface;
 use Rox\Core\Exception\NotFoundException;
 use Rox\Core\Model\AbstractModel;
 use Rox\Member\Model\Member;
 
 /**
- * @property integer $id
+ * @property int $id
  * @property-read Member $receiver
  */
 class CommunityNews extends AbstractModel implements CommunityNewsRepositoryInterface
@@ -27,7 +25,7 @@ class CommunityNews extends AbstractModel implements CommunityNewsRepositoryInte
         'creator',
         'updater',
         'deleter',
-        'comments'
+        'comments',
     ];
 
     /**
@@ -36,7 +34,7 @@ class CommunityNews extends AbstractModel implements CommunityNewsRepositoryInte
     protected $dates = [
         'created_at',
         'updated_at',
-        'deleted_at'
+        'deleted_at',
     ];
 
     public function creator()
@@ -57,7 +55,7 @@ class CommunityNews extends AbstractModel implements CommunityNewsRepositoryInte
     public function getById($id)
     {
         $communityNews = $this->newQuery()
-            ->with([ 'creator', 'updater', 'deleter'])
+            ->with(['creator', 'updater', 'deleter'])
             ->where('Id', $id)->first();
 
         if (!$communityNews) {
@@ -67,19 +65,19 @@ class CommunityNews extends AbstractModel implements CommunityNewsRepositoryInte
         return $communityNews;
     }
 
-    public function getAll() {
+    public function getAll()
+    {
         return $this->newQuery()
-            ->with([ 'creator', 'updater', 'deleter'])
+            ->with(['creator', 'updater', 'deleter'])
             ->orderBy('created_at', 'desc')
             ->get()
             ->all();
     }
 
-    public function getLatest() {
-
-
+    public function getLatest()
+    {
         return $this->newQuery()
-            ->with([ 'creator', 'updater', 'deleter'])
+            ->with(['creator', 'updater', 'deleter'])
             ->orderBy('created_at', 'desc')
             ->first();
     }

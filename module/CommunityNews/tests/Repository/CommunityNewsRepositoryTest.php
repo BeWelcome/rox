@@ -6,16 +6,18 @@ use PHPUnit_Framework_TestCase;
 use Rox\Core\Exception\NotFoundException;
 use Rox\Core\Kernel\Application;
 
-class CommunityNewsRepositoryInterfaceTest extends PHPUnit_Framework_TestCase
+class CommunityNewsRepositoryTest extends PHPUnit_Framework_TestCase
 {
     private $application = null;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->application = new Application('testing', false);
         $this->application->boot();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         $this->application = null;
     }
 

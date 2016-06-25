@@ -14,22 +14,27 @@ class StartServiceTest extends PHPUnit_Framework_TestCase
         /** @var ConnectionInterface|PHPUnit_Framework_MockObject_MockObject $connection */
         $connection = $this->createMock(ConnectionInterface::class);
 
-        $connection->method('select')->with($this->isType('string'))->will($this->onConsecutiveCalls([
+        $connection->method('select')->with($this->isType('string'))->will($this->onConsecutiveCalls(
+            [
             new ArrayObject([
                 'cnt' => 1,
-            ], ArrayObject::ARRAY_AS_PROPS)],
-            [ new ArrayObject([
+            ], ArrayObject::ARRAY_AS_PROPS), ],
+            [new ArrayObject([
                 'cnt' => 2,
             ], ArrayObject::ARRAY_AS_PROPS)],
-            [ new ArrayObject([
+            [new ArrayObject([
                 'cnt' => 3,
             ], ArrayObject::ARRAY_AS_PROPS)],
-            [ new ArrayObject([
+            [new ArrayObject([
                 'cnt' => 4,
             ], ArrayObject::ARRAY_AS_PROPS)],
-            [ new ArrayObject([
+            [new ArrayObject(
+                [
                 'cnt' => 5,
-            ], ArrayObject::ARRAY_AS_PROPS)]));
+                ],
+                ArrayObject::ARRAY_AS_PROPS
+            )]
+        ));
 
         $service = new StartService($connection);
 

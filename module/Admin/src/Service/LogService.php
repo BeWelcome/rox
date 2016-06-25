@@ -5,7 +5,7 @@ namespace Rox\Admin\Service;
 use Illuminate\Database\ConnectionInterface;
 
 /**
- * Class LogService
+ * Class LogService.
  */
 class LogService
 {

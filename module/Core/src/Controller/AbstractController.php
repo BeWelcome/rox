@@ -67,7 +67,7 @@ abstract class AbstractController
     }
 
     /**
-     * Gets the associated Router object
+     * Gets the associated Router object.
      *
      * @return Router
      */
@@ -118,7 +118,7 @@ abstract class AbstractController
 
     /**
      * @param string $url
-     * @param int $status
+     * @param int    $status
      *
      * @return RedirectResponse
      */

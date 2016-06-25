@@ -5,7 +5,7 @@ namespace Rox\Forum\Model;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Thread
+ * Class Thread.
  */
 class Thread extends Model
 {

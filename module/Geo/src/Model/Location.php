@@ -7,7 +7,7 @@ use Rox\Core\Model\AbstractModel;
 class Location extends AbstractModel
 {
     /**
-     * @var boolean
+     * @var bool
      */
     public $timestamps = false;
 

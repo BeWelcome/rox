@@ -85,6 +85,7 @@ class LogsController extends AbstractController
 
     /**
      * @param array $parameters
+     *
      * @return Builder|\Illuminate\Database\Query\Builder
      */
     private function getQuery(array $parameters)

@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
- * Class HttpsCheckListener
+ * Class HttpsCheckListener.
  */
 class HttpsCheckListener
 {

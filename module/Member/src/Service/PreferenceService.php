@@ -52,7 +52,7 @@ class PreferenceService
     }
 
     /**
-     * @param Member $member
+     * @param Member               $member
      * @param PreferenceRepository $preferenceDefinition
      *
      * @throws NotFoundException
@@ -106,9 +106,9 @@ class PreferenceService
      * If a Preference definition is already associated to a member, the value
      * will be updated, otherwise it is created for that user.
      *
-     * @param Member $member
+     * @param Member               $member
      * @param PreferenceRepository $preferenceDefinition
-     * @param string $value
+     * @param string               $value
      */
     public function setMemberPreference(Member $member, Preference $preferenceDefinition, $value)
     {

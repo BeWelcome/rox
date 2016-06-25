@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Rox\Member\Model\Member;
 
 /**
- * Class Post
+ * Class Post.
  */
 class Post extends Model
 {
@@ -16,7 +16,7 @@ class Post extends Model
     public $table = 'forums_posts';
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $timestamps = false;
 

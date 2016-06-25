@@ -10,7 +10,7 @@ use Rox\Member\Model\Member;
 use Rox\Message\Repository\MessageRepositoryInterface;
 
 /**
- * @property integer $id
+ * @property int $id
  * @property-read Member $receiver
  */
 class Message extends AbstractModel implements MessageRepositoryInterface
@@ -23,7 +23,7 @@ class Message extends AbstractModel implements MessageRepositoryInterface
 
     /**
      * Hint to the ORM the name of the created at field, so it will convert it
-     * to a carbon object
+     * to a carbon object.
      */
     const CREATED_AT = 'created';
 

@@ -18,12 +18,14 @@ class AssetExtension extends Twig_Extension
 
     /**
      * @todo provide a simple way to use the non-versioned assets in dev env.
+     *
      * @param string $path
+     *
      * @return string
      */
     public function getAssetUrl($path)
     {
-        $path = 'assets/' . $path;
+        $path = 'assets/'.$path;
 
         // If the manifest file doesn't exist, then return the unversioned file.
         if (!is_readable(self::MANIFEST)) {

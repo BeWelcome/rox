@@ -32,7 +32,7 @@ class StartController extends AbstractController
         if (!$stats = $this->cache->fetch($key)) {
             $stats = $this->startService->getStatistics();
 
-            $this->cache->save($key, $stats, 60*60);
+            $this->cache->save($key, $stats, 60 * 60);
         }
 
         return new Response($this->render('@start/public.html.twig', [

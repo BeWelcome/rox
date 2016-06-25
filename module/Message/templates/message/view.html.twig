@@ -44,7 +44,7 @@
                 {# TODO this isn't exactly replicating the result of Member::get_languages_spoken #}
                 {% for language in otherMember.languages.sortByDesc('pivot.Level') %}
                     <strong>
-                        {#<span title="<?= $words->getSilent('LanguageLevel_' . $language->Level) ?>"><?= $language->Name ?><?= $space ?></span>#}
+                        {#<span title="<?= $words->getSilent('LanguageLevel_'.$language->Level) ?>"><?= $language->Name ?><?= $space ?></span>#}
 
                         <span title="{{ language.pivot.Level | trans }}">
                             {{ language.Name | raw }}

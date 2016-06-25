@@ -14,7 +14,7 @@ class TourController extends AbstractController
     {
         $page = $request->attributes->get('page');
 
-        $stepTemplate = '@start/tour/' . $page . '.html.twig';
+        $stepTemplate = '@start/tour/'.$page.'.html.twig';
 
         if (!$this->getEngine()->exists($stepTemplate)) {
             throw new NotFoundHttpException();

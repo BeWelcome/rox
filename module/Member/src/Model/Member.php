@@ -15,14 +15,15 @@ use Rox\Member\Repository\MemberRepositoryInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Class Member
+ * Class Member.
  *
  * @property Collection $comments
  * @property Collection $groups
  * @property Collection $trads
  * @property Collection $preferences
  * @property Collection|MemberRight[] $rights
- * @property integer $id
+ * @property int $id
+ *
  * @method Builder|HasMany hasMany($related, $foreignKey = null, $localKey = null)
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
@@ -147,7 +148,7 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
             /** @var Builder|\Illuminate\Database\Eloquent\Builder $query */
             $query = $instance->newQuery();
 
-            return new HasMany($query->whereIn('IdTrad', $ids), $this, $instance->getTable() . '.' . 'IdOwner', 'id');
+            return new HasMany($query->whereIn('IdTrad', $ids), $this, $instance->getTable().'.'.'IdOwner', 'id');
         });
     }
 
@@ -266,13 +267,13 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
     }
 
     /**
-     * Convenience method to fetch a crypted row by its respective Member field name
+     * Convenience method to fetch a crypted row by its respective Member field name.
      *
      * @param $fieldName
      */
     public function getCryptedField($fieldName)
     {
-        return $this->cryptedFields->keyBy('TableColumn')->get('members.' . $fieldName);
+        return $this->cryptedFields->keyBy('TableColumn')->get('members.'.$fieldName);
     }
 
     public function getTradByLanguage($language, $tradId)
@@ -372,7 +373,8 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
         // TODO: Implement eraseCredentials() method.
     }
 
-    public function getPotentialGuests() {
+    public function getPotentialGuests()
+    {
         $tripModel = new \TripsModel();
         $potentialGuests = $tripModel->getTripsNearMe($this, 1, 2);
 
@@ -380,7 +382,7 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
     }
 
     /**
-     * $rightName is case sensitive
+     * $rightName is case sensitive.
      *
      * Port of MOD_right_flag::hasRight
      *

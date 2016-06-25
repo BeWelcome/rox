@@ -117,6 +117,7 @@ class MessageController extends AbstractController
             'page' => $page,
             'pages' => ceil($count / $limit),
         ]);
+
         return new Response($content);
     }
 

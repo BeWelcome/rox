@@ -16,7 +16,7 @@ class Post extends Model
     public $table = 'forums_posts';
 
     /**
-     * @var bool
+     * @var boolean
      */
     public $timestamps = false;
 

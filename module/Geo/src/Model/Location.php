@@ -7,14 +7,14 @@ use Rox\Core\Model\AbstractModel;
 class Location extends AbstractModel
 {
     /**
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * @var string
      */
     public $table = 'geonames';
+
+    /**
+     * @var boolean
+     */
+    public $timestamps = false;
 
     /**
      * @var string

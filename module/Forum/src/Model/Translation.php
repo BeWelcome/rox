@@ -15,7 +15,7 @@ class Translation extends Model
     public $table = 'forum_trads';
 
     /**
-     * @var bool
+     * @var boolean
      */
     public $timestamps = false;
 }

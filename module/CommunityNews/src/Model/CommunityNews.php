@@ -92,7 +92,7 @@ class CommunityNews extends AbstractModel implements CommunityNewsRepositoryInte
             ->with(['creator', 'updater', 'deleter'])
             ->limit($count)->orderBy('created_at', 'desc');
 
-        if ($count == 1) {
+        if ($count === 1) {
             return $communityNews->first();
         }
 

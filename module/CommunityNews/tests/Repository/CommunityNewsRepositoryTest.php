@@ -7,7 +7,6 @@ use PHPUnit_Framework_TestCase;
 use Rox\Core\Exception\InvalidArgumentException;
 use Rox\Core\Exception\NotFoundException;
 use Rox\Core\Factory\DatabaseFactory;
-use Rox\Core\Kernel\Application;
 
 class CommunityNewsRepositoryTest extends PHPUnit_Framework_TestCase
 {
@@ -50,7 +49,7 @@ class CommunityNewsRepositoryTest extends PHPUnit_Framework_TestCase
         $model = new CommunityNews();
         $communityNews = $model->getLatest(2);
 
-        $this->assertEquals(Collection::class, get_class($communityNews));;
+        $this->assertEquals(Collection::class, get_class($communityNews));
     }
 
     public function testGetAll()

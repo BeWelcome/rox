@@ -3,6 +3,7 @@
 namespace Rox\CommunityNews\Model;
 
 use Rox\CommunityNews\Repository\CommunityNewsRepositoryInterface;
+use Rox\Core\Exception\InvalidArgumentException;
 use Rox\Core\Exception\NotFoundException;
 use Rox\Core\Model\AbstractModel;
 use Rox\Member\Model\Member;
@@ -65,6 +66,9 @@ class CommunityNews extends AbstractModel implements CommunityNewsRepositoryInte
         return $communityNews;
     }
 
+    /**
+     * @return array of CommunityModel
+     */
     public function getAll()
     {
         return $this->newQuery()
@@ -74,11 +78,24 @@ class CommunityNews extends AbstractModel implements CommunityNewsRepositoryInte
             ->all();
     }
 
-    public function getLatest()
+    /**
+     * @param int $count Determines how many community news shall be returned
+     * @return mixed
+     */
+    public function getLatest($count = 1)
     {
-        return $this->newQuery()
+        if ($count < 1) {
+            throw new InvalidArgumentException('Count must be at least 1');
+        }
+
+        $communityNews = $this->newQuery()
             ->with(['creator', 'updater', 'deleter'])
-            ->orderBy('created_at', 'desc')
-            ->first();
+            ->limit($count)->orderBy('created_at', 'desc');
+
+        if ($count == 1) {
+            return $communityNews->first();
+        }
+
+        return $communityNews->get();
     }
 }

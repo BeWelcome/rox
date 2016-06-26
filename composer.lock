@@ -917,16 +917,16 @@
         },
         {
             "name": "robmorgan/phinx",
-            "version": "v0.6.1",
+            "version": "v0.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/robmorgan/phinx.git",
-                "reference": "977d88bcbb017f602740c8feb18ab546f9c03ad9"
+                "reference": "35c4fdc26857d02d78080f68d4973993d77bd7a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/robmorgan/phinx/zipball/977d88bcbb017f602740c8feb18ab546f9c03ad9",
-                "reference": "977d88bcbb017f602740c8feb18ab546f9c03ad9",
+                "url": "https://api.github.com/repos/robmorgan/phinx/zipball/35c4fdc26857d02d78080f68d4973993d77bd7a8",
+                "reference": "35c4fdc26857d02d78080f68d4973993d77bd7a8",
                 "shasum": ""
             },
             "require": {
@@ -936,7 +936,7 @@
                 "symfony/yaml": "~2.8|~3.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^3.7|^4.0|^5.0"
+                "phpunit/phpunit": "^4.0|^5.0"
             },
             "bin": [
                 "bin/phinx"
@@ -979,7 +979,7 @@
                 "migrations",
                 "phinx"
             ],
-            "time": "2016-06-21 12:36:58"
+            "time": "2016-06-23 15:27:01"
         },
         {
             "name": "swiftmailer/swiftmailer",

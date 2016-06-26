@@ -23,10 +23,11 @@ install:
   - npm install
 
 before_script:
-  - mysql -u root -e 'create database bewelcome;'
-  - mysql -u root -e "GRANT ALL PRIVILEGES ON bewelcome.* TO 'bewelcome'@'localhost' IDENTIFIED BY 'bewelcome';"
+  - mysql -u root -e 'create database bewelcome_test;'
+  - mysql -u root -e "GRANT ALL PRIVILEGES ON bewelcome_test.* TO 'bewelcome'@'localhost' IDENTIFIED BY 'bewelcome';"
   - mysql -u root -e 'FLUSH PRIVILEGES;'
 
 script:
+  - ./vendor/bin/phinx migrate --configuration phinx_test.php -v
   - ./vendor/bin/phinx seed:run
   - make && make build

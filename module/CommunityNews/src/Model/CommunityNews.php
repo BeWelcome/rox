@@ -81,6 +81,7 @@ class CommunityNews extends AbstractModel implements CommunityNewsRepositoryInte
     /**
      * @param int $count Determines how many community news shall be returned
      * @return mixed
+     * @throws InvalidArgumentException
      */
     public function getLatest($count = 1)
     {

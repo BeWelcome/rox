@@ -29,5 +29,5 @@ before_script:
 
 script:
   - ./vendor/bin/phinx migrate --configuration phinx_test.php -v
-  - ./vendor/bin/phinx seed:run
+  - ./vendor/bin/phinx seed:run --configuration phinx_test.php -v
   - make && make build

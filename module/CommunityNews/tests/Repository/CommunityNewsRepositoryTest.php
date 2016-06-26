@@ -50,6 +50,7 @@ class CommunityNewsRepositoryTest extends PHPUnit_Framework_TestCase
         $communityNews = $model->getLatest(2);
 
         $this->assertEquals(Collection::class, get_class($communityNews));
+        $this->assertEquals(2, $communityNews->count());
     }
 
     public function testGetAll()
@@ -59,7 +60,7 @@ class CommunityNewsRepositoryTest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue(is_array($communityNews));
         $this->assertNotEmpty($communityNews);
-        $this->assertGreaterThan(0, count($communityNews));
+        $this->assertGreaterThan(2, count($communityNews));
     }
 
     public function testGetById()

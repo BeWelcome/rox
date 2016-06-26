@@ -16,20 +16,26 @@ class CommunityNews extends RoxSeed
     {
         $faker = Faker\Factory::create();
 
-        $data = array(
-            array(
+        $data = [
+            [
                 'title'    => $faker->realText(40),
                 'text'    => $faker->realText(rand(200, 4000)),
                 'created_by' => rand(1, 1000),
                 'updated_by' => rand(1, 1000),
-            ),
-            array(
+            ],
+            [
                 'title'    => $faker->realText(40),
                 'text'    => $faker->realText(rand(200, 4000)),
                 'created_by' => rand(1, 1000),
                 'updated_by' => rand(1, 1000),
-            )
-        );
+            ],
+            [
+                'title'    => $faker->realText(40),
+                'text'    => $faker->realText(rand(200, 4000)),
+                'created_by' => rand(1, 1000),
+                'updated_by' => rand(1, 1000),
+            ],
+        ];
 
         $communityNews = $this->table('community_news');
         $communityNews->insert($data)

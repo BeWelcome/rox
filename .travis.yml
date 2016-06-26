@@ -28,6 +28,6 @@ before_script:
   - mysql -u root -e 'FLUSH PRIVILEGES;'
 
 script:
-  - ./vendor/bin/phinx migrate --configuration phinx_test.php -v
-  - ./vendor/bin/phinx seed:run --configuration phinx_test.php -v
+  - ./vendor/bin/phinx migrate --configuration tests/phinx_test.php -v
+  - ./vendor/bin/phinx seed:run --configuration tests/phinx_test.php -v
   - make && make build

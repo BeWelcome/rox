@@ -6,7 +6,7 @@ $config = [
     "migration_base_class" => "Rox\\Tools\\RoxMigration",
     "seeds_base_class" => "Rox\\Tools\\RoxSeed",
     "paths" => [
-        "migrations" => "%%PHINX_CONFIG_DIR%%/migrations/tests",
+        "migrations" => "%%PHINX_CONFIG_DIR%%/migrations",
         "seeds" => "%%PHINX_CONFIG_DIR%%/seeds",
     ],
     "environments" => [

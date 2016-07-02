@@ -6,8 +6,8 @@ git:
 php:
   - '7.0'
 
-services:
-  - mysql
+addons:
+  mariadb: '10.1'
 
 cache:
   directories:

@@ -49,9 +49,9 @@ class CommunityNewsRepositoryTest extends PHPUnit_Framework_TestCase
         $model = new CommunityNews();
         $communityNews = $model->getLatest();
 
-        var_dump($communityNews);
-        var_dump($communityNews->creator);
-        var_dump($communityNews->updater);
+        echo(print_r($communityNews, true));
+        echo(print_r($communityNews->creator, true));
+        echo(print_r($communityNews->updater, true));
 
         $this->assertEquals('member-3', $communityNews->creator->Username);
         $this->assertEquals('member-3', $communityNews->updater->Username);

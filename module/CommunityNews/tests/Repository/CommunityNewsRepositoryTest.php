@@ -17,7 +17,7 @@ class CommunityNewsRepositoryTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        foreach($_ENV as $env) {
+        foreach ($_ENV as $env) {
             echo $env . PHP_EOL;
         }
         $databaseFactory = new DatabaseFactory();

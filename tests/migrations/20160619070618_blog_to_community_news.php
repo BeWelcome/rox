@@ -41,6 +41,8 @@ class BlogToCommunityNews extends RoxMigration
                 ])
             ->addColumn('deleted_at', 'timestamp',
                 [
+                    'null' => true,
+                    'default' => null,
                     'comment' => 'Eloquent standard column',
                 ])
             ->addColumn('deleted_by', 'biginteger',

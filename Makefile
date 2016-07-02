@@ -40,8 +40,8 @@ php-code-sniffer:
 	./vendor/bin/phpcs
 
 phpunit:
-	./vendor/bin/phpunit --stderr -v
-
+	./vendor/bin/phpunit
+	
 phpmetrics:
 	php -d memory_limit=512M ./vendor/bin/phpmetrics --config=phpmetrics.yml
 

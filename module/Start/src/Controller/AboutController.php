@@ -33,8 +33,7 @@ class AboutController extends AbstractController
 
         $communityNews = new CommunityNews();
 
-        $communityNews = $communityNews->newQuery()
-            ->limit(2)->orderBy('created_at', 'desc')->get();
+        $communityNews = $communityNews->getLatest(2);
 
         return new Response($this->render('@start/about.html.twig', [
             'pageTemplate' => $pageTemplate,

@@ -105,7 +105,7 @@
                                             <li><a href="{{ path('about', { page: 'getactive'}) }}">{{ 'About_GetActive' | trans}}</a></li>
                                             <li><a href="/donate">{{ 'DonateLink'  | trans}}</a></li>
                                             {% for team in teams if teams %}
-                                                <li class="m-b-0"><a href="/{{ team.link }}">{{ team.trans | trans}}</a></li>
+                                                <li><a href="/{{ team.link }}">{{ team.trans | trans}}</a></li>
                                             {% endfor %}
                                         </ul>
                                     </div>

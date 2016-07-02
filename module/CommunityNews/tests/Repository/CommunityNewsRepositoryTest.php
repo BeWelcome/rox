@@ -10,16 +10,8 @@ use Rox\Core\Factory\DatabaseFactory;
 
 class CommunityNewsRepositoryTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     *
-     * @SuppressWarnings(PHPMD)
-     */
-
     public function setUp()
     {
-        foreach ($_ENV as $env) {
-            echo $env . PHP_EOL;
-        }
         $databaseFactory = new DatabaseFactory();
         $databaseFactory->__invoke();
     }

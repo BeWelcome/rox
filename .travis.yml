@@ -34,8 +34,6 @@ before_script:
 script:
   - ./vendor/bin/phinx migrate --configuration tests/phinx_test.php
   - ./vendor/bin/phinx seed:run --configuration tests/phinx_test.php -vvv
-  - mysql -u root bewelcome_test -e "select * from members;"
-  - mysql -u root bewelcome_test -e "select title, Username from community_news join members on community_news.created_by = members.id;"
   - make version
   - make
   - make build

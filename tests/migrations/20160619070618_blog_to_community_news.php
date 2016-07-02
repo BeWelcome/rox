@@ -47,6 +47,8 @@ class BlogToCommunityNews extends RoxMigration
                 ])
             ->addColumn('deleted_by', 'biginteger',
                 [
+                    'null' => true,
+                    'default' => null,
                     'comment' => 'Stores the member who deleted the news'
                 ])
             ->create();

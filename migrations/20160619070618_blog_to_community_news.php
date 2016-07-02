@@ -23,6 +23,7 @@ class BlogToCommunityNews extends RoxMigration
                 ])
             ->addColumn('created_at', 'timestamp',
                 [
+                    'null' => true,
                     'comment' => 'Eloquent standard column',
                     'default' => 'CURRENT_TIMESTAMP'
                 ])
@@ -32,6 +33,7 @@ class BlogToCommunityNews extends RoxMigration
                 ])
             ->addColumn('updated_at', 'timestamp',
                 [
+                    'null' => true,
                     'comment' => 'Eloquent standard column',
                     'default' => 'CURRENT_TIMESTAMP'
                 ])
@@ -41,10 +43,14 @@ class BlogToCommunityNews extends RoxMigration
                 ])
             ->addColumn('deleted_at', 'timestamp',
                 [
+                    'null' => true,
+                    'default' => null,
                     'comment' => 'Eloquent standard column',
                 ])
             ->addColumn('deleted_by', 'biginteger',
                 [
+                    'null' => true,
+                    'default' => null,
                     'comment' => 'Stores the member who deleted the news'
                 ])
             ->create();

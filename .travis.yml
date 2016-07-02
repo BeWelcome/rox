@@ -6,9 +6,9 @@ git:
 php:
   - '7.0'
 
-addons:
-  mariadb: '10.1'
-
+services:
+  - mysql
+  
 cache:
   directories:
     - $HOME/.composer/cache

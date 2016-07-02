@@ -2,6 +2,7 @@
 
 namespace Rox\CommunityNews\Model;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Rox\CommunityNews\Repository\CommunityNewsRepositoryInterface;
 use Rox\Core\Exception\InvalidArgumentException;
 use Rox\Core\Exception\NotFoundException;
@@ -14,6 +15,10 @@ use Rox\Member\Model\Member;
  */
 class CommunityNews extends AbstractModel implements CommunityNewsRepositoryInterface
 {
+    use SoftDeletes;
+
+    const DELETED_AT = 'deleted_at';
+
     /**
      * @var string
      */
@@ -55,9 +60,9 @@ class CommunityNews extends AbstractModel implements CommunityNewsRepositoryInte
 
     public function getById($id)
     {
-        $communityNews = $this->newQuery()
-            ->with(['creator', 'updater', 'deleter'])
-            ->where('Id', $id)->first();
+        $communityNews = $this->with(['creator', 'updater', 'deleter'])
+            ->where('Id', $id)
+            ->first();
 
         if (!$communityNews) {
             throw new NotFoundException();
@@ -71,7 +76,20 @@ class CommunityNews extends AbstractModel implements CommunityNewsRepositoryInte
      */
     public function getAll()
     {
-        return $this->newQuery()
+        return $this
+            ->with(['creator', 'updater', 'deleter'])
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->all();
+    }
+
+    /**
+     * @return array of CommunityModel
+     */
+    public function getAllIncludingDeleted()
+    {
+        return $this
+            ->withTrashed()
             ->with(['creator', 'updater', 'deleter'])
             ->orderBy('created_at', 'desc')
             ->get()
@@ -89,9 +107,10 @@ class CommunityNews extends AbstractModel implements CommunityNewsRepositoryInte
             throw new InvalidArgumentException('Count must be at least 1');
         }
 
-        $communityNews = $this->newQuery()
+        $communityNews = $this
             ->with(['creator', 'updater', 'deleter'])
-            ->limit($count)->orderBy('created_at', 'desc');
+            ->limit($count)
+            ->orderBy('created_at', 'desc');
 
         if ($count === 1) {
             return $communityNews->first();

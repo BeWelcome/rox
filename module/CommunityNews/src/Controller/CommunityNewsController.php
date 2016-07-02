@@ -36,7 +36,7 @@ class CommunityNewsController extends AbstractController
 
     public function listAction(Request $request)
     {
-        $request;
+        $a = $request;
         $communityNews = $this->communityNewsRepository->getAll();
 
         $content = $this->render('@communitynews/communitynews/list.html.twig', [

@@ -5,12 +5,25 @@
 {% endblock %}
 
 {% block content %}
-    {% for news in communityNews %}
-        {{ news.title }}<br>
-        {{ news.text }}<br>
-        {{ news.creator.Username }}<br>
-        {{ news.created_at }}<br>
-        {{ news.updater.Username }}<br>
-        {{ news.updated_at }}<br>
-    {%  endfor %}
+    {% if communityNews %}
+        <table class="table table-striped table-bordered">
+            <thead class="thead-default">
+            <tr>
+                <th>{{ 'Title' | trans }}</th>
+                <th colspan="3">{{ 'Actions' | trans }}</th>
+            </tr>
+            </thead>
+            {% for news in communityNews %}
+                <tr>
+                    <td>
+                        <h3>{{ news.title }}</h3><br>
+                        {{- news.text | truncate(500, true) | raw -}}
+                    </td>
+                    <td><a href="{{ path('admin/communitynews/edit', { id: news.id }) }}">Edit</a></td>
+                    <td><a href="{{ path('admin/communitynews/delete', { id: news.id }) }}">Delete</a></td>
+                    <td><a href="{{ path('admin/communitynews/tooglepublic', { id: news.id }) }}">Hide/Show</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
 {% endblock content %}

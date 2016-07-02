@@ -41,6 +41,9 @@ class CommunityNewsRepositoryTest extends PHPUnit_Framework_TestCase
         $model = new CommunityNews();
         $communityNews = $model->getLatest();
 
+        $this->assertEquals('member-3', $communityNews->creator->Username);
+        $this->assertEquals('member-3', $communityNews->updater->Username);
+        $this->assertEquals(null, $communityNews->deleter);
         $this->assertEquals(CommunityNews::class, get_class($communityNews));
     }
 
@@ -60,7 +63,17 @@ class CommunityNewsRepositoryTest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue(is_array($communityNews));
         $this->assertNotEmpty($communityNews);
-        $this->assertGreaterThan(2, count($communityNews));
+        $this->assertEquals(3, count($communityNews));
+    }
+
+    public function testGetAllIncludingDeleted()
+    {
+        $model = new CommunityNews();
+        $communityNews = $model->getAllIncludingDeleted();
+
+        $this->assertTrue(is_array($communityNews));
+        $this->assertNotEmpty($communityNews);
+        $this->assertEquals(4, count($communityNews));
     }
 
     public function testGetById()

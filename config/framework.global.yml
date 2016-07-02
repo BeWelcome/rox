@@ -17,6 +17,7 @@ framework:
     test: ~
 
     session:
+      storage_id: session.storage.mock_file
       name: sidTB
       # Set the save path to null so NativeFileSessionHandler will use the PHP
       # default. The default is %kernel.cache_dir%/sessions and FPM on vagrant

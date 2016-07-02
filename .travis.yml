@@ -30,4 +30,7 @@ before_script:
 script:
   - ./vendor/bin/phinx migrate --configuration tests/phinx_test.php -v
   - ./vendor/bin/phinx seed:run --configuration tests/phinx_test.php -v
-  - make && make build
+  - make
+  - make version
+  - make build
+

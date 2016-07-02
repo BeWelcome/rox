@@ -29,8 +29,9 @@ before_script:
   - cp tests/rox_local.ini.tests rox_local.ini
 
 script:
-  - ./vendor/bin/phinx migrate --configuration tests/phinx_test.php -v
-  - ./vendor/bin/phinx seed:run --configuration tests/phinx_test.php -v
+  - ./vendor/bin/phinx migrate --configuration tests/phinx_test.php
+  - ./vendor/bin/phinx seed:run --configuration tests/phinx_test.php
+  - mysql -u root bewelcome_test -e "select * from community_news;"
   - make version
   - make
   - make build

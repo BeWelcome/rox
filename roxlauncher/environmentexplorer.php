@@ -137,8 +137,7 @@ class EnvironmentExplorer
             // load nothing, show a warning.
             // TODO: A warning page, or even a setup form!
 
-            echo '
-            <pre>
+            throw new Exception('
             "'.SCRIPT_BASE.'rox_local.ini" not found.
             This file is needed for bw-rox to run.
 
@@ -148,9 +147,7 @@ class EnvironmentExplorer
             Please copy the "'.SCRIPT_BASE.'rox_local.example.ini"
             to "'.SCRIPT_BASE.'rox_local.ini",
             and fill it with your local settings (database and baseuri).
-            </pre>';
-
-            return false;
+            ');
         }
     }
 

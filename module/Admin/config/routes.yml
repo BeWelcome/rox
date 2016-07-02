@@ -25,3 +25,33 @@ admin_queries_fetch_parameters:
     methods: [GET]
     defaults:
         _controller: "\\Rox\\Admin\\Queries\\QueriesController::fetchParameterElements"
+
+admin/communitynews:
+    path:     /admin/communitynews
+    methods: [GET]
+    defaults:
+        _controller: Rox\Admin\Controller\CommunityNewsController:showOverview
+
+admin/communitynews/edit:
+    path:     /admin/communitynews/{id}/edit
+    methods: [GET]
+    defaults:
+        _controller: Rox\Admin\Controller\CommunityNewsController:showOverview
+    requirements:
+        id:         \d+
+
+admin/communitynews/delete:
+    path:     /admin/communitynews/{id}/delete
+    methods: [GET]
+    defaults:
+        _controller: Rox\Admin\Controller\CommunityNewsController:showOverview
+    requirements:
+        id:         \d+
+
+admin/communitynews/tooglepublic:
+    path:     /admin/communitynews/{id}/tooglepublic
+    methods: [GET]
+    defaults:
+        _controller: Rox\Admin\Controller\CommunityNewsController:showOverview
+    requirements:
+        id:         \d+

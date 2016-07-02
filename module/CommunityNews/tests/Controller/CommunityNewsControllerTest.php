@@ -36,13 +36,12 @@ class CommunityNewsControllerTest extends WebTestCase
         $memberRepository = new Member();
         $user = $memberRepository->getByUsername('member-1');
         $token = new UsernamePasswordToken($user, null, $firewall, ['ROLE_USER']);
-        $session->set('_security_'.$firewall, serialize($token));
+        $session->set('_security_' . $firewall, serialize($token));
         $session->set('IdMember', 1);
         $session->set('Status', 'Active');
         $session->set('MemberStatus', 'Active');
         $session->set('lang', 'en');
         $session->save();
-
 
         $cookie = new Cookie($session->getName(), $session->getId());
         $this->client->getCookieJar()->set($cookie);

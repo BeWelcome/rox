@@ -8,3 +8,8 @@ services:
         class: Rox\Admin\Controller\MockupsController
         parent: Rox\Core\Controller\AbstractController
         autowire: true
+
+    Rox\Admin\Controller\CommunityNewsController:
+        class: Rox\Admin\Controller\CommunityNewsController
+        parent: Rox\Core\Controller\AbstractController
+        autowire: true

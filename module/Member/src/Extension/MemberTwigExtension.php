@@ -140,8 +140,9 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
 
         $teams = [];
 
+        $rights = $member->getRights();
         foreach ($allTeams as $team) {
-            if ($member->getRightLevel($team[0])) {
+            if (array_search($team[0], $rights, true)) {
                 $teams[] = [
                     'trans' => $team[1],
                     'link' => $team[2],

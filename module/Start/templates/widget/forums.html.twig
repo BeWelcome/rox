@@ -12,8 +12,8 @@
                     <p class="text-truncate">
                         {#{% if not thread.read %}<strong>{% endif %}#}
                             <a href="{{ url('forum_thread', {'threadId': thread.id}) }}">{{ thread.title }}</a>
-                            {#{% if not thread.read %}</strong>{% endif %}<br>#}
-                        <small>by <a href="members/{{ thread.lastuser }}">{{ thread.lastuser }}</a> {{ ago(thread.time) }}</small>
+                            {#{% if not thread.read %}</strong>{% endif %}#}
+                        <br><small>by <a href="members/{{ thread.lastuser }}">{{ thread.lastuser }}</a> {{ ago(thread.time) }}</small>
                     </p>
                 </div>
                 <div class="pull-xs-right hidden-md-down chevplace">

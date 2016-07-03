@@ -57,9 +57,9 @@
   a:hover{
     color: #fff;
     text-decoration: none;
-    background-color: rgba($navbar-dark-color,.2);
-    padding: 0.3rem;
-    padding-left: 0;
+    background-color: #ce5409;
+    padding: 0.2rem;
+    margin-left: 0;
   }
 
   ul{
@@ -71,7 +71,7 @@
 
   li{
     margin-bottom: .5rem;
-    margin-left: 0;
+    margin-left: 0.2rem;
   }
 
   .h4{
@@ -80,7 +80,7 @@
 }
 
 a.subnavtitle:hover {
-  color: #000 !important;
+  color: #fff !important;
 }
 
 .usermenu{

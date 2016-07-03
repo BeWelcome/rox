@@ -8,8 +8,12 @@
             &#9776;
         </button>
 
+        {# navigation on small screens #}
         <div class="collapse navbar-toggleable-md hidden-md-up" id="mainNavBar">
             <ul class="nav navbar-nav">
+                <li class="nav-item col-xs-12">
+                <a href="{{ path('member', { username: my_member.Username }) }}" class="nav-link">{{ my_member.Username }}</a>
+                </li>
                 <li class="nav-item col-xs-12">
                     <a href="/search/members" class="nav-link">{{ 'FindMembers' | trans }}</a>
                 </li>
@@ -52,7 +56,6 @@
                     <a href="/volunteer" class="nav-link">{{ 'Volunteer' | trans}}</a>
                 </li>
                 <li class="navbar-divider hidden-md-down"></li>
-                <li class="nav-item"><a href="wiki/importantlinks" class="nav-link">All important links</a></li>
                 <li class="nav-item dropdown hidden-md-down">
                     <a href="#" class="nav-link" id="subNavBar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         &#9776;
@@ -133,7 +136,15 @@
                     </div>
                 </li>
 
-                {# normal member dropdown #}
+                {# logout #}
+                <li class="nav-item pull-xs-right"><a href="{{ path('auth/logout') }}" class="nav-link"><i class="fa fa-sign-out"></i></a></li>
+
+                {# profile link on smaller screens #}
+                <li class="nav-item pull-xs-right hidden-lg-up">
+                    <a href="{{ path('member', { username: my_member.Username }) }}" class="nav-link"><i class="fa fa-user"></i><span class="hidden-md-down"> {{ my_member.Username }} </span></a>
+                </li>
+
+                {# member dropdown on bigger screens #}
                 <li class="nav-item dropdown pull-xs-right hidden-md-down">
                     <a href="/members/{{ my_member.Username }}" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ my_member.Username }} <span class="caret"></span></a>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -147,18 +158,11 @@
                     </ul>
                 </li>
 
-                {# logout on smaller screens #}
-                <li class="nav-item pull-xs-right hidden-lg-up"><a href="{{ path('auth/logout') }}" class="nav-link"><i class="fa fa-sign-out"></i></a></li>
-
                 {# messages #}
                 <li class="nav-item pull-xs-right">
                     <a href="{{ path('message') }}" class="nav-link"><i class="fa fa-lg fa-inbox"></i><noscript>{{ 'MyInbox' | trans }}</noscript> <span class="tag tag-warning">{{ messageCount }}</span></a>
                 </li>
 
-                {# profile link on smaller screens #}
-                <li class="nav-item pull-xs-right hidden-lg-up">
-                    <a href="{{ path('member', { username: my_member.Username }) }}" class="nav-link"><i class="fa fa-user"></i><span class="hidden-md-down"> {{ my_member.Username }} </span></a>
-                </li>
             </ul>
         </div>
 

@@ -4,8 +4,8 @@
 sudo apt-get update
 
 # Install Ansible
-sudo apt-get install -y python-software-properties
-sudo apt-get install -y ansible
+sudo apt-get install -y python-pip
+sudo pip install ansible==2.1.0.0
 ansible --version
 
 # Setup Ansible for Local Use and Run

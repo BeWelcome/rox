@@ -19,10 +19,6 @@
 
     <php>
         <server name="KERNEL_DIR" value="module/Core/src/Kernel/" />
-        <env name="DB_HOST" value="localhost" />
-        <env name="DB_NAME" value="bewelcome_test" />
-        <env name="DB_USER" value="bewelcome" />
-        <env name="DB_PASS" value="bewelcome" />
     </php>
 
     <logging>

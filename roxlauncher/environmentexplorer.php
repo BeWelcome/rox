@@ -26,11 +26,7 @@ class EnvironmentExplorer
             define('DATA_DIR', SCRIPT_BASE . 'data/');
         }
 
-        if (!$settings = $this->loadConfiguration()) {
-            // ini files are not set..
-            // launch repair program!!
-            die('STOP');
-        }
+        $settings = $this->loadConfiguration();
 
         $settings = $this->mergeNewConfig($settings);
 
@@ -105,50 +101,23 @@ class EnvironmentExplorer
      */
     protected function loadConfiguration()
     {
+        global $rox_baseuri;
+
         // loads from an ini file, instead of a php file
         $loader = new RoxLoader();
-        if (is_file(SCRIPT_BASE.'rox_local.ini')) {
-            // load everything, and continue as normal
-            $settings = $loader->load(array(
-                SCRIPT_BASE.'rox_default.ini',
-                SCRIPT_BASE.(isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'cronjob').'.ini',
-                SCRIPT_BASE.'rox_local.ini',
-                SCRIPT_BASE.'rox_secret.ini'
-            ));
-            global $rox_baseuri;
-            if (isset($rox_baseuri)) {
-                $settings['env']['baseuri'] = $rox_baseuri;
-            }
-            return $settings;
-        } else if (is_file(SCRIPT_BASE.'inc/config.inc.php')) {
-            // load only defaults, and give them to the importer
-            $default_settings = $loader->load(array(
-                SCRIPT_BASE.'rox_default.ini',
-                SCRIPT_BASE.$_SERVER['SERVER_NAME'].'.ini',
-            ));
-			// needed to get access to PVars and (probably) other classes
-            require_once SCRIPT_BASE.'lib/libs.php';
-            require_once SCRIPT_BASE.'roxlauncher/roxlocalsettingsimporter.php';
-            $importer = new RoxLocalSettingsImporter();
-            // the importer gets settings from the inc/config.inc.php
-            $importer->importConfigPHP($default_settings);
-            return false;
-        } else {
-            // load nothing, show a warning.
-            // TODO: A warning page, or even a setup form!
 
-            throw new Exception('
-            "'.SCRIPT_BASE.'rox_local.ini" not found.
-            This file is needed for bw-rox to run.
+        // load everything, and continue as normal
+        $settings = $loader->load(array(
+            SCRIPT_BASE.'rox_default.ini',
+            SCRIPT_BASE.(isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'cronjob').'.ini',
+            SCRIPT_BASE.'rox_secret.ini'
+        ));
 
-            Trying to get read the old config file instead.
-            "'.SCRIPT_BASE.'inc/config.inc.php" not found.
-
-            Please copy the "'.SCRIPT_BASE.'rox_local.example.ini"
-            to "'.SCRIPT_BASE.'rox_local.ini",
-            and fill it with your local settings (database and baseuri).
-            ');
+        if (isset($rox_baseuri)) {
+            $settings['env']['baseuri'] = $rox_baseuri;
         }
+
+        return $settings;
     }
 
     protected function loadPTClasses($Classes)

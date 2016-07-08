@@ -1,8 +1,12 @@
 ---
 - name: Install npm
   sudo: yes
-  apt: pkg=npm state=latest
+  apt:
+    pkg: npm
+    state: latest
 
 - name: Install Grunt
   sudo: yes
-  npm: name=grunt-cli global=yes
+  npm:
+    name: grunt-cli
+    global: yes

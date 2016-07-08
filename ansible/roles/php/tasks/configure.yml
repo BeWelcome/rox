@@ -1,17 +1,21 @@
 ---
-- stat: path=/etc/php5/apache2/php.ini
+- stat:
+    path: /etc/php5/apache2/php.ini
   register: modphp
 
-- stat: path=/etc/php5/fpm/php.ini
+- stat:
+    path: /etc/php5/fpm/php.ini
   register: phpfpm
 
-- stat: path=/etc/php5/cli/php.ini
+- stat:
+    path: /etc/php5/cli/php.ini
   register: phpcli
 
 - name: enabling short open tag
-  lineinfile: dest=/etc/php5/apache2/php.ini
-              regexp='^short_open_tag = Off$'
-              line='short_open_tag = On'
+  lineinfile:
+    dest: /etc/php5/apache2/php.ini
+    regexp: '^short_open_tag = Off$'
+    line: 'short_open_tag = On'
 
 - include: php-fpm.yml
   when: phpfpm.stat.exists

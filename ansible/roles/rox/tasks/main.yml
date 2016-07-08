@@ -1,11 +1,19 @@
 ---
 - name: Create data dir
   sudo: yes
-  file: path={{ rox.root_folder }}/data state=directory group="www-data" mode="664"
+  file:
+    path: "{{ rox.root_folder }}/data"
+    state: directory
+    group: "www-data"
+    mode: "664"
 
 - name: Create working files
   sudo: yes
-  file: path={{ rox.root_folder }}/{{ item }} state=touch group="www-data" mode="664"
+  file:
+    path: "{{ rox.root_folder }}/{{ item }}"
+    state: touch
+    group: "www-data"
+    mode: "664"
   with_items: rox.working_files
 
 - name: Force https for Composer
@@ -14,12 +22,15 @@
 
 - name: Install Rox dependencies | Composer
   # ansible 1.7.2 (latest version with apt-get) doesn't accept this syntax below
-  # composer: command=install working_dir={{ rox.root_folder }}
-  command: composer install --no-dev --working-dir {{ rox.root_folder }}
+  composer:
+    command: install
+    working_dir: "{{ rox.root_folder }}"
+  # command: composer install --no-dev --working-dir {{ rox.root_folder }}
 
 - name: Install Rox dependencies | Npm
   sudo: yes
-  npm: path={{ rox.root_folder }}
+  npm:
+    path: "{{ rox.root_folder }}"
 
 # - name: Migrate database
 #   shell: vendor/bin/phinx migrate -c phinx.php
@@ -28,11 +39,18 @@
   shell: openssl req -nodes -x509 -newkey rsa:2048 -keyout key.pem -out cert.crt -subj '//CN=bewelcome' -days 2000
 
 - name: Restart Apache
-  service: name=apache2 enabled=yes state=restarted
+  service:
+    name: apache2
+    enabled: yes
+    state: restarted
 
 - name: Create ini file
   sudo: yes
-  copy: src=rox_local.ini.tpl dest=/tmp/rox_local.ini owner=vagrant group=www-data
+  copy:
+    src: rox_local.ini.tpl
+    dest: /tmp/rox_local.ini
+    owner: vagrant
+    group: www-data
 
 - name: moving ini file in the root folder
   sudo: yes

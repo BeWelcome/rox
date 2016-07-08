@@ -5,7 +5,9 @@
 
 - name: mysql | Install MySQL Packages
   sudo: yes
-  apt: pkg={{ item }} state=latest
+  apt:
+    pkg: "{{ item }}"
+    state: latest
   with_items:
     - mysql-server
     - mysql-client
@@ -13,28 +15,48 @@
 
 - name: mysql | Create databases
   sudo: yes
-  mysql_db: name={{ mysql.database }} state=present
+  mysql_db:
+    name: "{{ mysql.database }}"
+    state: present
 
 - name: mysql | Set privileges
   sudo: yes
-  mysql_user: name={{ mysql.user }} password={{ mysql.password }} priv={{ mysql.database }}.*:ALL state=present
+  mysql_user:
+    name: "{{ mysql.user }}"
+    password: "{{ mysql.password }}"
+    priv: "{{ mysql.database }}.*:ALL"
+    state: present
   notify: restart mysql
 
 - name: mysql | Create db_dumps directory
   sudo: yes
-  file: path={{ rox.root_folder }}/db_dumps state=directory group="www-data" mode="664"
+  file:
+    path: "{{ rox.root_folder }}/db_dumps"
+    state: directory
+    group: "www-data"
+    mode: "664"
 
 - name: mysql | Fetch dump files
   sudo: yes
-  get_url: url=http://downloads.bewelcome.org/for_developers/rox_test_db/{{ item }} dest={{ rox.root_folder }}/db_dumps
+  get_url:
+    url: http://downloads.bewelcome.org/for_developers/rox_test_db/{{ item }}
+    dest: "{{ rox.root_folder }}/db_dumps"
   with_flattened:
     - mysql.dump_root
     - mysql.dump
 
 - name: mysql | Import root dump
-  mysql_db: name={{ mysql.database }} state=import target={{ rox.root_folder }}/db_dumps/{{ item }}
+  mysql_db:
+    name: "{{ mysql.database }}"
+    state: import
+    target: "{{ rox.root_folder }}/db_dumps/{{ item }}"
   with_flattened: mysql.dump_root
 
 - name: mysql | Import normal dumps
-  mysql_db: name={{ mysql.database }} state=import login_user={{ mysql.user }} login_password={{ mysql.password }} target={{ rox.root_folder }}/db_dumps/{{ item }}
+  mysql_db:
+    name: "{{ mysql.database }}"
+    state: import
+    login_user: "{{ mysql.user }}"
+    login_password: "{{ mysql.password }}"
+    target: "{{ rox.root_folder }}/db_dumps/{{ item }}"
   with_flattened: mysql.dump

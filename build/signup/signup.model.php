@@ -298,7 +298,7 @@ FROM `user` WHERE
             }
 
             $id = $this->registerBWMember($vars);
-            $this->_session->set( 'IdMember', $id )
+            $this->_session->set( 'IdMember', $id );
 
             $vars['feedback'] .= $this->takeCareForNonUniqueEmailAddress($vars['email']);
             $vars['feedback'] .= $this->takeCareForComputerUsedByBWMember();

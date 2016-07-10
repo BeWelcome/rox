@@ -41,7 +41,7 @@ class SignupController extends RoxControllerBase {
     public function index($args = false)
     {
         // In case Signup is closed
-        if (isset($this->_session->get('Param']->FeatureSignupClose) && $_SESSION['Param')->FeatureSignupClose=="Yes") {
+        if (isset($this->_session->get('Param')->FeatureSignupClose) && $this->_session->get('Param')->FeatureSignupClose=="Yes") {
             return new SignupClosedPage();
         }
 
@@ -187,7 +187,7 @@ class SignupController extends RoxControllerBase {
 
         //$mem_redirect->post = $vars;
         foreach ($args->post as $key => $value) {
-            $this->_session->set( 'SignupBWVars'][$key, $value )
+            $this->_session->set( 'SignupBWVars[' . $key . ']', $value );
         }
 
 		$StrLog="Entering signupFormCallback " ;
@@ -219,7 +219,7 @@ class SignupController extends RoxControllerBase {
 
             if (count($errors) > 0) {
                 // show form again
-                $this->_session->set( 'SignupBWVars']['errors', $errors )
+                $this->_session->set( 'SignupBWVars[errors]', $errors );
                 $mem_redirect->post = $vars;
                 return false;
             }
@@ -230,7 +230,7 @@ class SignupController extends RoxControllerBase {
             } else {
                 // signup on MyTB successful, yeah.
                 $id = $model->registerBWMember($vars);
-                $this->_session->set( 'IdMember', $id )
+                $this->_session->set( 'IdMember', $id );
 
                 $vars['feedback'] .=
                     $model->takeCareForNonUniqueEmailAddress($vars['email']);

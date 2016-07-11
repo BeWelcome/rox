@@ -19,6 +19,7 @@ sudo pip install -U ansible==2.1.0.0
 ansible --version
 
 # Setup Ansible for Local Use and Run
+mkdir /etc/ansible
 cp /vagrant/ansible/inventories/dev /etc/ansible/hosts -f
 chmod 666 /etc/ansible/hosts
 cat /vagrant/ansible/files/authorized_keys >> /home/vagrant/.ssh/authorized_keys

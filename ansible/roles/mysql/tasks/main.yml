@@ -18,6 +18,7 @@
   mysql_db:
     name: "{{ mysql.database }}"
     state: present
+  register: db_created
 
 - name: mysql | Set privileges
   sudo: yes
@@ -44,6 +45,7 @@
   with_flattened:
     - mysql.dump_root
     - mysql.dump
+  when: db_created.changed
 
 - name: mysql | Import root dump
   mysql_db:
@@ -51,6 +53,7 @@
     state: import
     target: "{{ rox.root_folder }}/db_dumps/{{ item }}"
   with_flattened: mysql.dump_root
+  when: db_created.changed
 
 - name: mysql | Import normal dumps
   mysql_db:
@@ -60,3 +63,4 @@
     login_password: "{{ mysql.password }}"
     target: "{{ rox.root_folder }}/db_dumps/{{ item }}"
   with_flattened: mysql.dump
+  when: db_created.changed

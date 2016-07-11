@@ -3,9 +3,19 @@
 # Update Repositories
 sudo apt-get update
 
+# Install Python dependecies
+sudo apt-get install -y python-dev
+sudo apt-get install -y build-essential
+sudo apt-get install -y libssl-dev
+sudo apt-get install -y libffi-dev
+
+# Remove outdated dependencies
+sudo apt-get --purge remove python-cffi
+
+
 # Install Ansible
 sudo apt-get install -y python-pip
-sudo pip install ansible==2.1.0.0
+sudo pip install -U ansible==2.1.0.0
 ansible --version
 
 # Setup Ansible for Local Use and Run

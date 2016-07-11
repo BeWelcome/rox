@@ -3,6 +3,24 @@
 - shell: hostname
   register: current_hostname
 
+- name: Add mysql key
+  sudo: yes
+  apt_key:
+    id: 8C718D3B5072E1F5
+    keyserver: pgp.mit.edu
+    state: present
+
+- name: mysql | Add MySQL 5.7 deb package
+  sudo: yes
+  apt_repository:
+    repo: 'deb http://repo.mysql.com/apt/debian/ jessie mysql-5.7'
+    state: present
+
+- name: Update apt
+  sudo: yes
+  apt:
+    update_cache: yes
+
 - name: mysql | Install MySQL Packages
   sudo: yes
   apt:

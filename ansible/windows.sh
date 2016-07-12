@@ -15,7 +15,7 @@ sudo apt-get --purge remove python-cffi
 
 # Install Ansible
 sudo apt-get install -y python-pip
-sudo pip install -U ansible==2.1.0.0
+sudo pip install -U ansible==2.0.2.0
 ansible --version
 
 # Setup Ansible for Local Use and Run

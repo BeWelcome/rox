@@ -61,8 +61,8 @@
     url: http://downloads.bewelcome.org/for_developers/rox_test_db/{{ item }}
     dest: "{{ rox.root_folder }}/db_dumps"
   with_flattened:
-    - mysql.dump_root
-    - mysql.dump
+    - "{{ mysql.dump_root }}"
+    - "{{ mysql.dump }}"
   when: db_created.changed
 
 - name: mysql | Import root dump
@@ -70,7 +70,7 @@
     name: "{{ mysql.database }}"
     state: import
     target: "{{ rox.root_folder }}/db_dumps/{{ item }}"
-  with_flattened: mysql.dump_root
+  with_flattened: "{{ mysql.dump_root }}"
   when: db_created.changed
 
 - name: mysql | Import normal dumps
@@ -80,5 +80,5 @@
     login_user: "{{ mysql.user }}"
     login_password: "{{ mysql.password }}"
     target: "{{ rox.root_folder }}/db_dumps/{{ item }}"
-  with_flattened: mysql.dump
+  with_flattened: "{{ mysql.dump }}"
   when: db_created.changed

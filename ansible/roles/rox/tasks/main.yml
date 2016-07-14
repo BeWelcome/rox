@@ -14,7 +14,7 @@
     state: touch
     group: "www-data"
     mode: "664"
-  with_items: rox.working_files
+  with_items: "{{ rox.working_files }}"
 
 - name: Force https for Composer
   sudo: yes

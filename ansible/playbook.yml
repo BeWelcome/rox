@@ -4,12 +4,12 @@
   vars_files:
     - vars/all.yml
   roles:
-    - server
-    - vagrant_local
-    - apache
-    - php
-    - composer
-    - js_packages
-    - mysql
-    - sphinxsearch
-    - rox
+    - { server, tags: ['core'] }
+    - { vagrant_local, tags: ['vagrant'] }
+    - { apache, tags: ['apache'] }
+    - { php, tags: ['php'] }
+    - { composer, tags: ['php'] }
+    - { js_packages, tags: ['js'] }
+    - { mysql, tags: ['mysql'] }
+    - { sphinxsearch, tags: ['sphinx'] }
+    - { rox, tags: ['rox'] }

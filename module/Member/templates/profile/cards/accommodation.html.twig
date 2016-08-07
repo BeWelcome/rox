@@ -7,6 +7,78 @@
     </h3>
 
     <div class="card-block">
+
+        {% if member.id == my_member.id %}
+        <div class="form-group row">
+            <label for="maxguests" class="col-xs-12 col-md-4">Max. number of guests:</label>
+            <div class="col-xs-12 col-md-8"><input class="form-control"type="number" min="0" max="20" value="{{ member.maxguest }}" id="maxguests"></div>
+            <label for="maxlengthofstay" class="col-xs-12 col-md-4">Max. length of stay:</label>
+            <div class="col-xs-12 col-md-8"><input class="form-control" type="text" value="{{ member.maxlenghtofstay }}" id="maxlengthofstay"></div>
+            <div class="col-xs-12"><button class="btn btn-primary">Save</button></div>
+        </div>
+
+            <div class="form-group">
+                <textarea class="form-control" id="ilivewith"
+                        {% if not member.ilivewith  %}
+                          placeholder="I live with..."></textarea>
+                {% else %}
+                    >{{ member.ilivewith }}</textarea>
+                {% endif %}
+                <button class="btn btn-primary">Save</button>
+            </div>
+
+            <div class="form-group">
+                <textarea class="form-control" id="pleasebring"
+                        {% if not member.pleasebring  %}
+                          placeholder="I live with..."></textarea>
+                {% else %}
+                    >{{ member.pleasebring }}</textarea>
+                {% endif %}
+                <button class="btn btn-primary">Save</button>
+            </div>
+
+            <div class="form-group">
+                <textarea class="form-control" id="otherrestrictions"
+                        {% if not member.otherrestrictions  %}
+                          placeholder="I live with..."></textarea>
+                {% else %}
+                    >{{ member.otherrestrictions }}</textarea>
+                {% endif %}
+                <button class="btn btn-primary">Save</button>
+            </div>
+
+            <div class="form-group">
+                <textarea class="form-control" id="offerguests"
+                        {% if not member.offerguests  %}
+                          placeholder="I live with..."></textarea>
+                {% else %}
+                    >{{ member.offerguests }}</textarea>
+                {% endif %}
+                <button class="btn btn-primary">Save</button>
+            </div>
+
+            <div class="form-group">
+                <textarea class="form-control" id="additionalaccomodationinfo"
+                        {% if not member.additionalaccomodationinfo  %}
+                          placeholder="I live with..."></textarea>
+                {% else %}
+                    >{{ member.additionalaccomodationinfo }}</textarea>
+                {% endif %}
+                <button class="btn btn-primary">Save</button>
+            </div>
+
+            <div class="form-group">
+                <textarea class="form-control" id="publictransport"
+                        {% if not member.publictransport  %}
+                          placeholder="I live with..."></textarea>
+                {% else %}
+                    >{{ member.publictransport }}</textarea>
+                {% endif %}
+                <button class="btn btn-primary">Save</button>
+            </div>
+
+        {% else %}
+
         <p class="card-text m-b-0"><strong>Max. number of guests:</strong> {{ member.maxguest }}</p>
         <p class="card-text m-b-0"><strong>Max. length of stay:</strong> {{ member.maxlenghtofstay }}</p>
 
@@ -16,9 +88,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading m-b-0" role="tab" id="headingZero">
                         <p class="panel-title m-b-0">
-                            <a class="acc-info collapsed btn text-xs-left p-l-0" data-toggle="collapse" data-parent="#accordion" href="#collapseZero" aria-expanded="false" aria-controls="collapseZero">
-                                I live with
-                            </a>
+                            <button class="btn btn-secondary btn-block" type="button" data-toggle="collapse" data-target="#collapseZero" aria-expanded="false" aria-controls="collapseZero">I live with</button>
                         </p>
                     </div>
                     <div id="collapseZero" class="panel-collapse collapse m-b-1" role="tabpanel" aria-labelledby="headingZero">
@@ -32,9 +102,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading m-b-0" role="tab" id="headingOne">
                         <p class="panel-title m-b-0">
-                            <a class="acc-info collapsed btn text-xs-left p-l-0" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                Please bring
-                            </a>
+                            <button class="btn btn-secondary btn-block" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">Please bring</button>
                         </p>
                     </div>
                     <div id="collapseOne" class="panel-collapse collapse m-b-1" role="tabpanel" aria-labelledby="headingOne">
@@ -48,9 +116,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading m-b-0" role="tab" id="headingTwo">
                         <p class="panel-title m-b-0">
-                            <a class="acc-info collapsed btn text-xs-left p-l-0" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                House rules
-                            </a>
+                            <button class="btn btn-secondary btn-block" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">House rules</button>
                         </p>
                     </div>
                     <div id="collapseTwo" class="panel-collapse collapse m-b-1" role="tabpanel" aria-labelledby="headingTwo">
@@ -64,9 +130,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading m-b-0" role="tab" id="headingThree">
                         <p class="panel-title m-b-0">
-                            <a class="acc-info collapsed btn text-xs-left p-l-0" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                I can offer my guests
-                            </a>
+                            <button class="btn btn-secondary btn-block" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">I can offer my guests</button>
                         </p>
                     </div>
                     <div id="collapseThree" class="panel-collapse collapse m-b-1" role="tabpanel" aria-labelledby="headingThree">
@@ -80,9 +144,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading m-b-0" role="tab" id="headingFour">
                         <p class="panel-title m-b-0">
-                            <a class="acc-info collapsed btn text-xs-left p-l-0" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                About my accommodation
-                            </a>
+                            <button class="btn btn-secondary btn-block" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">About my accommodation</button>
                         </p>
                     </div>
                     <div id="collapseFour" class="panel-collapse collapse m-b-1" role="tabpanel" aria-labelledby="headingFour">
@@ -96,9 +158,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading m-b-0" role="tab" id="headingFive">
                         <p class="panel-title m-b-0">
-                            <a class="acc-info collapsed btn text-xs-left p-l-0" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                                How to get there
-                            </a>
+                            <button class="btn btn-secondary btn-block" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">How to get there</button>
                         </p>
                     </div>
                     <div id="collapseFive" class="panel-collapse collapse m-b-1" role="tabpanel" aria-labelledby="headingFive">
@@ -108,6 +168,7 @@
                 </div>
             {% endif %}
         </div>
+            {% endif %}
 
     </div>
 </div>

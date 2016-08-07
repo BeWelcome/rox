@@ -150,27 +150,47 @@
 
     </div>
 
+{% if member.id == my_member.id %}
+    <form>
+{% endif %}
+
     <div class="row">
         <div class="col-xs-12 col-md-5">
             <div class="card">
                 <a name="aboutme"></a>
                 <h3 class="card-header"><i class="fa fa-info-circle"></i><span class="icontext">About me</span></h3>
-                <div class="card-block">
-                    <p class="card-text">{{ member.profilesummary }}</p>
+
+                    {% if member.id == my_member.id %}
+                        <div class="form-group">
+                            {% if not member.profilesummary %}
+                            <textarea class="form-control" id="aboutme" placeholder="What should others know about you?"></textarea>
+                            {% else %}
+                            <textarea class="form-control" id="aboutme">{{ member.profilesummary }}</textarea>
+                            {% endif %}
+                            <button class="btn btn-primary">Save</button>
+                    {% else %}
+                        <div class="card-block"><p class="card-text">{{ member.profilesummary }}</p>
+                    {% endif %}
+
                 </div>
             </div>
 
             <div class="card">
                 <a name="interests"></a>
                 <h3 class="card-header"><i class="fa fa-bicycle"></i><span class="icontext">Interests</span></h3>
-                <div class="card-block">
-                    <p class="h5">Media</p>
-                    <p class="card-text">Some books, movies, music</p>
-                    <p class="h5">Hobbies</p>
-                    <p class="card-text">{{ member.hobbies }}</p>
-                    <p class="h5">Other interests</p>
-                    <p class="card-text">Philosophy, Arts, etc</p>
-                </div>
+
+                {% if member.id == my_member.id %}
+                    <div class="form-group">
+                        {% if not member.hobbies %}
+                        <textarea class="form-control" id="hobbies" placeholder="What are your interests?">{{ member.hobbies }}</textarea>
+                        {% else %}
+                        <textarea class="form-control" id="hobbies">{{ member.hobbies }}</textarea>
+                        {% endif %}
+                    <button class="btn btn-primary">Save</button>
+                    </div>
+                {% else %}
+                    <div class="card-block"><p class="card-text">{{ member.hobbies }}</p></div>
+                {% endif %}
             </div>
 
             {% if member.PastTrips %}
@@ -197,5 +217,8 @@
         </div>
 
     </div>
+            {% if member.id == my_member.id %}
+            </form>
+            {% endif %}
 
 {% endblock content %}

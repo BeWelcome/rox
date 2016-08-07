@@ -42,9 +42,14 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 
 .headerimg {
-	background-image: url(/images/profilepicture.jpg);
-	background-size: cover;
-	background-color: #f79f54;
+	// background-image: url(/images/profilepicture.jpg);
+	// background-size: cover;
+	background: $brand-primary;
+	background: linear-gradient(to bottom, rgba(254,182,69,1) 16%,rgba(243,112,0,1) 51%);
+	border-top-right-radius: .25rem !important;
+	border-top-left-radius: .25rem !important;
+	border-top: 1px solid rgba(0,0,0,.28) !important;
+  	border-bottom:  1px solid #999999;
 	box-shadow:0 3px 8px -1px #999696, 0 50 150 -50 #000 inset;
 	height: auto;
 }
@@ -201,7 +206,7 @@ and (min-width: 1288px) {
 }
 
 a.grouplist {
-	color: $brand-primary !important;
+	color: #2e2e2e !important;
 }
 
 a.grouplist:hover {

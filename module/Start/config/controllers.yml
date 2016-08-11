@@ -1,8 +1,8 @@
 services:
-#    Rox\Start\Controller\StartController:
-#        class: Rox\Start\Controller\StartController
-#        autowire: true
-#        parent: Rox\Core\Controller\AbstractController
+    Rox\Start\Controller\StartController:
+        class: Rox\Start\Controller\StartController
+        autowire: true
+        parent: Rox\Core\Controller\AbstractController
 
     Rox\Start\Controller\HomeController:
         class: Rox\Start\Controller\HomeController

@@ -1,0 +1,13 @@
+{% extends '@base/base.html.twig' %}
+
+{% set scriptFiles = ['js/tinymce.min.js'] %}
+
+{% block title %}
+    {{ 'Community News' | trans }}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {{ news.title }}
+    </div>
+{% endblock content %}

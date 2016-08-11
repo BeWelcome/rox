@@ -59,11 +59,12 @@ class CommunityNewsRepositoryTest extends PHPUnit_Framework_TestCase
     public function testGetAll()
     {
         $model = new CommunityNews();
-        $communityNews = $model->getAll();
+        list($communityNews, $count) = $model->getAll();
 
         $this->assertTrue(is_array($communityNews));
         $this->assertNotEmpty($communityNews);
         $this->assertEquals(3, count($communityNews));
+        $this->assertEquals(4, $count);
     }
 
     public function testGetAllIncludingDeleted()

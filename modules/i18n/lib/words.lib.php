@@ -93,9 +93,7 @@ class MOD_words
         }
 
         // read translation mode from $this->_session->get('tr_mode')
-        if (array_key_exists("tr_mode", $_SESSION)) {
-            $this->_trMode = $this->_session->get('tr_mode');
-        } else if ($this->_session->has("tr_mode")) {
+        if ($this->_session->has("tr_mode")) {
             $this->_trMode = $this->_session->get('tr_mode');
         } else if ($this->_offerTranslationLink) {
             $this->_trMode = 'translate';

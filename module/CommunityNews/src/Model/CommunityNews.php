@@ -31,7 +31,6 @@ class CommunityNews extends AbstractModel implements CommunityNewsRepositoryInte
         'creator',
         'updater',
         'deleter',
-        'comments',
     ];
 
     /**
@@ -60,7 +59,8 @@ class CommunityNews extends AbstractModel implements CommunityNewsRepositoryInte
 
     public function getById($id)
     {
-        $communityNews = $this->with(['creator', 'updater', 'deleter'])
+        $communityNews = $this
+            ->with(['creator', 'updater', 'deleter'])
             ->where('Id', $id)
             ->first();
 
@@ -70,17 +70,28 @@ class CommunityNews extends AbstractModel implements CommunityNewsRepositoryInte
 
         return $communityNews;
     }
-
     /**
-     * @return array of CommunityModel
+     * @param int $page
+     * @param int $limit
+     * @return array Containing the found community news and the overall count
      */
-    public function getAll()
+    public function getAll($page = 1, $limit = 20)
+    {
+        $communityNews = $this->newQuery();
+        $communityNews->with('creator', 'updater', 'deleter');
+        $communityNews->orderBy('updated_at', 'desc');
+        $communityNews->getQuery()->forPage($page, $limit);
+
+        $count = $communityNews->getQuery()->getCountForPagination();
+
+        return [$communityNews->get()->all(), $count];
+    }
+
+    public function getAllCount($page, $limit)
     {
         return $this
-            ->with(['creator', 'updater', 'deleter'])
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->all();
+            ->getAllQuery($page, $limit)
+            ->getCountForPagination();
     }
 
     /**

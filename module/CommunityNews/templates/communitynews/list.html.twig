@@ -5,25 +5,28 @@
 {% endblock %}
 
 {% block content %}
-    {% if communityNews %}
-        <table class="table table-striped table-bordered">
-            <thead class="thead-default">
-            <tr>
-                <th>{{ 'Title' | trans }}</th>
-                <th colspan="3">{{ 'Actions' | trans }}</th>
-            </tr>
-            </thead>
-            {% for news in communityNews %}
-                <tr>
-                    <td>
-                        <h3>{{ news.title }}</h3><br>
-                        {{- news.text | truncate(500, true) | raw -}}
-                    </td>
-                    <td><a href="{{ path('admin/communitynews/edit', { id: news.id }) }}">Edit</a></td>
-                    <td><a href="{{ path('admin/communitynews/delete', { id: news.id }) }}">Delete</a></td>
-                    <td><a href="{{ path('admin/communitynews/tooglepublic', { id: news.id }) }}">Hide/Show</a></td>
-                </tr>
-            {% endfor %}
-        </table>
-    {% endif %}
+    <div class="pull-right">
+        {% include '@base/pagination.html.twig' with {
+        currentFilters: filter,
+        currentPage: page,
+        paginationPath: "communitynews",
+        lastPage: pages,
+        showAlwaysFirstAndLast: false
+        } only %}
+    </div>
+    {% for news in communityNews %}
+        <h1>{{ news.title }}</h1>
+        <p class="small text-muted">{{ 'Written by' | trans }} {{ news.creator.Username }} ({{ news.created_at.diffForHumans }}) {% if news.updater %}{{ 'and updated by' | trans }} {{ news.updater.Username }} ({{ news.updated_at.diffForHumans }}){% endif %}</p>
+        <p>{{ news.text| truncate(600) }}
+        {% if news.text|length > 600 %}<br/><span style="float: right"><a href="{{ path('communitynews_show', { id: news.id, title: news.title }) }}">{{ 'more' | trans }}</a></span>{% endif %}</p>
+    {%  endfor %}
+    <div class="pull-right">
+        {% include '@base/pagination.html.twig' with {
+        currentFilters: filter,
+        currentPage: page,
+        paginationPath: "communitynews",
+        lastPage: pages,
+        showAlwaysFirstAndLast: false
+        } only %}
+    </div>
 {% endblock content %}

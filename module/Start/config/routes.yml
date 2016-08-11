@@ -2,7 +2,7 @@ start:
     path:     /
     defaults:
         access_denied_redirect: home
-        _controller: Rox\Start\Controller\StartController:startPageAction
+        _controller: Rox\Start\Controller\StartController::startPageAction
 
 home:
     path:     /home

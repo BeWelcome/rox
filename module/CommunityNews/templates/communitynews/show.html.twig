@@ -5,12 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    {% for news in communityNews %}
-        {{ news.title }}<br>
-        {{ news.text }}<br>
-        {{ news.creator.Username }}<br>
-        {{ news.created_at }}<br>
-        {{ news.updater.Username }}<br>
-        {{ news.updated_at }}<br>
-    {%  endfor %}
+    <h1>{{ communityNews.title }}</h1>
+    {{ communityNews.creator.Username }}, {{ communityNews.created_at.diffForHumans }} {% if communityNews.updater %}{{ communityNews.updater.Username }}, {{ communityNews.updated_at.diffForHumans }}{% endif %}<br>
+    {{ communityNews.text| raw }}<br>
 {% endblock content %}

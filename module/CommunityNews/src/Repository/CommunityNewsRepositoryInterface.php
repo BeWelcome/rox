@@ -17,9 +17,18 @@ interface CommunityNewsRepositoryInterface
     public function getById($id);
 
     /**
+     * @param int $page
+     * @param int $limit
      * @return array CommunityNews
      */
-    public function getAll();
+    public function getAll($page = 1, $limit = 20);
+
+    /**
+     * @param $page
+     * @param $limit
+     * @return int count of CommunityNews
+     */
+    public function getAllCount($page, $limit);
 
     /**
      * @return CommunityNews

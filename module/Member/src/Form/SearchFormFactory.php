@@ -10,13 +10,14 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 
 class SearchFormFactory
 {
     /**
      * @param FormFactoryInterface $formFactory
      *
-     * @return Form
+     * @return FormInterface
      */
     public function __invoke(FormFactoryInterface $formFactory)
     {

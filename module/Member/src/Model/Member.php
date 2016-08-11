@@ -323,7 +323,7 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
         $volunteerRights = $this->volunteerRights()->with('right')->get()->all();
         foreach ($volunteerRights as $volunteerRight) {
             if ($volunteerRight->Level !== 0) {
-                $roles[] = 'ROLE_ADMIN' . strtoupper($volunteerRight->right->Name);
+                $roles[] = 'ROLE_ADMIN_' . strtoupper($volunteerRight->right->Name);
             }
         }
 
@@ -331,6 +331,7 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
         if (count($roles) > 1) {
             $roles[] = 'ROLE_ADMIN';
         }
+
         return $roles;
     }
 

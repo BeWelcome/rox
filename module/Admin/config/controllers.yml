@@ -9,7 +9,7 @@ services:
         parent: Rox\Core\Controller\AbstractController
         autowire: true
 
-    Rox\Admin\Controller\CommunityNewsController:
-        class: Rox\Admin\Controller\CommunityNewsController
-        parent: Rox\Core\Controller\AbstractController
-        autowire: true
+#    Rox\Admin\Controller\CommunityNewsController:
+#        class: Rox\Admin\Controller\CommunityNewsController
+#        parent: Symfony\Bundle\FrameworkBundle\Controller\Controller;
+#        autowire: true

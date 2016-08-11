@@ -39,4 +39,8 @@ class QueriesController extends Controller
         }
         return new Response($page->render());
     }
+
+    public function fetchParameterElementsAction()
+    {
+    }
 }

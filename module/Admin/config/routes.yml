@@ -16,7 +16,7 @@ admin_queries:
     path:     /admin/queries
     methods: [GET, POST]
     defaults:
-        _controller: "\\Rox\\Admin\\Queries\\QueriesController::showOverview"
+        _controller: Rox\Admin\Queries\QueriesController::showOverview
         currentPage: 1
         itemsPerPage: 20
 
@@ -24,4 +24,39 @@ admin_queries_fetch_parameters:
     path:     /admin/queries/fetchparameters
     methods: [GET]
     defaults:
-        _controller: "\\Rox\\Admin\\Queries\\QueriesController::fetchParameterElements"
+        _controller: Rox\Admin\Queries\QueriesController::fetchParameterElements
+
+admin/communitynews:
+    path:     /admin/communitynews
+    methods: [GET]
+    defaults:
+        _controller: Rox\Admin\Controller\CommunityNewsController:showList
+
+admin/communitynews/create:
+    path:     /admin/communitynews/create
+    defaults:
+        _controller: Rox\Admin\Controller\CommunityNewsController::createAction
+
+admin/communitynews/edit:
+    path:     /admin/communitynews/{id}/edit
+    methods: [GET]
+    defaults:
+        _controller: Rox\Admin\Controller\CommunityNewsController::editAction
+    requirements:
+        id:         \d+
+
+admin/communitynews/delete:
+    path:     /admin/communitynews/{id}/delete
+    methods: [GET]
+    defaults:
+        _controller: Rox\Admin\Controller\CommunityNewsController:deleteAction
+    requirements:
+        id:         \d+
+
+admin/communitynews/tooglepublic:
+    path:     /admin/communitynews/{id}/tooglepublic
+    methods: [GET]
+    defaults:
+        _controller: Rox\Admin\Controller\CommunityNewsController:toogleAction
+    requirements:
+        id:         \d+

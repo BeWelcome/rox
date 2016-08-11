@@ -87,6 +87,11 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
     {
         $allTeams = [
             [
+                'CommunityNews',
+                'AdminCommunityNews',
+                'admin/communitynews',
+            ],
+            [
                 'Words',
                 'AdminWord',
                 'admin/word',
@@ -140,8 +145,9 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
 
         $teams = [];
 
+        $roles = $member->getRoles();
         foreach ($allTeams as $team) {
-            if ($member->getRightLevel($team[0])) {
+            if (array_search('ROLE_ADMIN_' . strtoupper($team[0]), $roles, true)) {
                 $teams[] = [
                     'trans' => $team[1],
                     'link' => $team[2],

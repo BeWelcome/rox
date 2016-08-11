@@ -2,41 +2,79 @@
 
 namespace Rox\CommunityNews\Model;
 
+use Illuminate\Database\Eloquent\Collection;
 use PHPUnit_Framework_TestCase;
+use Rox\Core\Exception\InvalidArgumentException;
 use Rox\Core\Exception\NotFoundException;
-use Rox\Core\Kernel\Application;
+use Rox\Core\Factory\DatabaseFactory;
 
 class CommunityNewsRepositoryTest extends PHPUnit_Framework_TestCase
 {
-    private $application = null;
-
     public function setUp()
     {
-        $this->application = new Application('testing', false);
-        $this->application->boot();
+        $databaseFactory = new DatabaseFactory();
+        $databaseFactory->__invoke();
     }
 
     public function tearDown()
     {
-        $this->application = null;
     }
 
-    public function testGetLatest()
+    public function testGetLatestZero()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $model = new CommunityNews();
+        $model->getLatest(0);
+    }
+
+    public function testGetLatestNegative()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $model = new CommunityNews();
+        $model->getLatest(-1);
+    }
+
+    public function testGetLatestSingle()
     {
         $model = new CommunityNews();
         $communityNews = $model->getLatest();
 
-        $this->assertTrue(is_object($communityNews));
+        $this->assertEquals('member-3', $communityNews->creator->Username);
+        $this->assertEquals('member-3', $communityNews->updater->Username);
+        $this->assertEquals(null, $communityNews->deleter);
+        $this->assertEquals(CommunityNews::class, get_class($communityNews));
+    }
+
+    public function testGetLatestMultiple()
+    {
+        $model = new CommunityNews();
+        $communityNews = $model->getLatest(2);
+
+        $this->assertEquals(Collection::class, get_class($communityNews));
+        $this->assertEquals(2, $communityNews->count());
     }
 
     public function testGetAll()
     {
         $model = new CommunityNews();
-        $communityNews = $model->getAll();
+        list($communityNews, $count) = $model->getAll();
 
         $this->assertTrue(is_array($communityNews));
         $this->assertNotEmpty($communityNews);
-        $this->assertGreaterThan(0, count($communityNews));
+        $this->assertEquals(3, count($communityNews));
+        $this->assertEquals(4, $count);
+    }
+
+    public function testGetAllIncludingDeleted()
+    {
+        $model = new CommunityNews();
+        $communityNews = $model->getAllIncludingDeleted();
+
+        $this->assertTrue(is_array($communityNews));
+        $this->assertNotEmpty($communityNews);
+        $this->assertEquals(4, count($communityNews));
     }
 
     public function testGetById()
@@ -51,8 +89,6 @@ class CommunityNewsRepositoryTest extends PHPUnit_Framework_TestCase
     {
         $this->expectException(NotFoundException::class);
         $model = new CommunityNews();
-        $communityNews = $model->getById(-1);
-
-        $this->assertTrue(is_object($communityNews));
+        $model->getById(-1);
     }
 }

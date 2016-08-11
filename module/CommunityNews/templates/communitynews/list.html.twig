@@ -5,12 +5,28 @@
 {% endblock %}
 
 {% block content %}
+    <div class="pull-right">
+        {% include '@base/pagination.html.twig' with {
+        currentFilters: filter,
+        currentPage: page,
+        paginationPath: "communitynews",
+        lastPage: pages,
+        showAlwaysFirstAndLast: false
+        } only %}
+    </div>
     {% for news in communityNews %}
-        {{ news.title }}<br>
-        {{ news.text }}<br>
-        {{ news.creator.Username }}<br>
-        {{ news.created_at }}<br>
-        {{ news.updater.Username }}<br>
-        {{ news.updated_at }}<br>
+        <h1>{{ news.title }}</h1>
+        <p class="small text-muted">{{ 'Written by' | trans }} {{ news.creator.Username }} ({{ news.created_at.diffForHumans }}) {% if news.updater %}{{ 'and updated by' | trans }} {{ news.updater.Username }} ({{ news.updated_at.diffForHumans }}){% endif %}</p>
+        <p>{{ news.text| truncate(600) }}
+        {% if news.text|length > 600 %}<br/><span style="float: right"><a href="{{ path('communitynews_show', { id: news.id, title: news.title }) }}">{{ 'more' | trans }}</a></span>{% endif %}</p>
     {%  endfor %}
+    <div class="pull-right">
+        {% include '@base/pagination.html.twig' with {
+        currentFilters: filter,
+        currentPage: page,
+        paginationPath: "communitynews",
+        lastPage: pages,
+        showAlwaysFirstAndLast: false
+        } only %}
+    </div>
 {% endblock content %}

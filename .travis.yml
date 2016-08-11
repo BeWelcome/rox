@@ -1,8 +1,13 @@
 language: php
 
+git:
+  depth: 3
+
 php:
-  - '5.6'
   - '7.0'
+
+addons:
+  mariadb: '10.1'
 
 cache:
   directories:
@@ -20,5 +25,16 @@ install:
   - composer install --no-interaction --ignore-platform-reqs
   - npm install
 
+before_script:
+  - mysql -u root -e 'create database bewelcome_test;'
+  - mysql -u root -e "GRANT ALL PRIVILEGES ON bewelcome_test.* TO 'bewelcome'@'localhost' IDENTIFIED BY 'bewelcome';"
+  - mysql -u root -e 'FLUSH PRIVILEGES;'
+  - cp tests/rox_local.ini.tests rox_local.ini
+
 script:
-  - make && make build
+  - ./vendor/bin/phinx migrate --configuration tests/phinx_test.php
+  - ./vendor/bin/phinx seed:run --configuration tests/phinx_test.php
+  - make version
+  - make
+  - make build
+

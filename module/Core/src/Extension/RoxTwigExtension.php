@@ -4,10 +4,12 @@ namespace Rox\Core\Extension;
 
 use Carbon\Carbon;
 use Faker\Factory;
+use HtmlTruncator\Truncator;
 use Rox\I18n\Service\LanguageService;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Twig_Extension;
 use Twig_Extension_GlobalsInterface;
+use Twig_SimpleFilter;
 use Twig_SimpleFunction;
 
 class RoxTwigExtension extends Twig_Extension implements Twig_Extension_GlobalsInterface
@@ -47,6 +49,37 @@ class RoxTwigExtension extends Twig_Extension implements Twig_Extension_GlobalsI
         return $carbon->diffForHumans();
     }
 
+    public function getFilters()
+    {
+        return [
+            new Twig_SimpleFilter(
+                'truncate',
+                [$this, 'truncate'],
+                [
+                    'is_safe' => ['html'],
+                ]
+            ),
+        ];
+    }
+
+    /**
+     * Truncates a string up to a number of characters while preserving whole words and HTML tags
+     *
+     * @param string  $text         String to truncate.
+     * @param integer $length       Length of returned string, including ellipsis.
+     * @param string  $ending       Ending to be appended to the trimmed string.
+     *
+     * @return string Truncated string.
+     */
+    public function truncate($text, $length = 100, $ellipsis = '&#8230;')
+    {
+        $truncator = new Truncator();
+        $truncated = $truncator->truncate($text, $length, [
+            'length_in_chars' => true,
+            'ellipsis' => $ellipsis,
+        ]);
+        return $truncated;
+    }
     /**
      * Name of this extension.
      *

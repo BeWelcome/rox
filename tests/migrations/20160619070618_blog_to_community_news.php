@@ -23,7 +23,6 @@ class BlogToCommunityNews extends RoxMigration
                 ])
             ->addColumn('created_at', 'timestamp',
                 [
-                    'null' => true,
                     'comment' => 'Eloquent standard column',
                     'default' => 'CURRENT_TIMESTAMP'
                 ])
@@ -33,7 +32,6 @@ class BlogToCommunityNews extends RoxMigration
                 ])
             ->addColumn('updated_at', 'timestamp',
                 [
-                    'null' => true,
                     'comment' => 'Eloquent standard column',
                     'default' => 'CURRENT_TIMESTAMP'
                 ])

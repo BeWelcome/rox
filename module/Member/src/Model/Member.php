@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
+use Rox\Auth\Model\VolunteerRight;
 use Rox\Core\Exception\NotFoundException;
 use Rox\Core\Model\AbstractModel;
 use Rox\Geo\Model\Location;
@@ -181,13 +182,13 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
      *
      * @return HasMany
      */
-    public function rights()
+    public function volunteerRights()
     {
-        $relation = $this->hasMany(MemberRight::class, 'IdMember', 'id');
+        return $this->hasMany(VolunteerRight::class, 'IdMember');
 
-        $relation->getQuery()->with('right');
+//         $relation->getQuery()->with('right');
 
-        return $relation;
+//        return $relation;
     }
 
     /**
@@ -319,8 +320,15 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
             'ROLE_USER',
         ];
 
-        // Grant admin role if member has admin rights
-        if ($this->getRightLevel('Admin')) {
+        $volunteerRights = $this->volunteerRights()->with('right')->get()->all();
+        foreach ($volunteerRights as $volunteerRight) {
+            if ($volunteerRight->Level !== 0) {
+                $roles[] = 'ROLE_ADMIN_' . strtoupper($volunteerRight->right->Name);
+            }
+        }
+
+        // If additional roles are found add ROLE_ADMIN as well to get past the /admin firewall
+        if (count($roles) > 1) {
             $roles[] = 'ROLE_ADMIN';
         }
 
@@ -379,6 +387,24 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
         $potentialGuests = $tripModel->getTripsNearMe($this, 1, 2);
 
         return $potentialGuests;
+    }
+
+    /**
+     * Returns an array with all rights assigned to the user
+     * (Level at least 1)
+     *
+     * return array string
+     */
+    public function getRights()
+    {
+        $rights = [];
+        $volunteerRights = $this->volunteerRights()->get();
+        foreach ($volunteerRights as $volunteerRight) {
+            if ($volunteerRight->Level > 0) {
+                $rights[] = $volunteerRight->right->Name;
+            }
+        }
+        return $rights;
     }
 
     /**

@@ -14,8 +14,6 @@ framework:
     form:
         enabled: true
 
-    test: ~
-
     session:
       name: sidTB
       # Set the save path to null so NativeFileSessionHandler will use the PHP

@@ -39,7 +39,10 @@
         "Twig/Twig": "1.*",
         "twig/extensions": "1.*",
         "vlucas/phpdotenv": "~2.2",
-        "zendframework/zend-uri": "2.4.*"
+        "zendframework/zend-uri": "2.4.*",
+        "dzango/twig-truncate-extension": "~1.0",
+        "judev/php-htmltruncator": "^1.1",
+        "illuminate/pagination": "^5.2"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "~1.11",

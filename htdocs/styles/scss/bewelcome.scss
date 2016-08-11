@@ -54,3 +54,13 @@ $font-family-bold: Signika-bold, Arial;
 .ui-front {
     z-index: 2000!important;
 }
+
+/* Use own blockquote style */
+blockquote {
+  color: #444;
+  background: #f8f8f8;
+  border: 1px #ddd solid;
+  border-left: 8px #ddd solid;
+  padding: 1rem;
+  margin: 1rem;
+}

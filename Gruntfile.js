@@ -5,6 +5,20 @@ module.exports = function (grunt) {
             'htdocs/assets',
             'cache/assets_versioning.json'
         ],
+        source: {
+            source_node: 'node_modules',
+            source_js: 'htdocs/script',
+            source_tinymce: '<%= sources.js %>/tinymce-4.4.0'
+        },
+        assets: {
+            assets_main: 'htdocs/assets',
+            assets_module: 'module/*/assets',
+            js: '<%= assets_main %>/js',
+            module_js: '<%= assets_module %>/js',
+            img: '<%= dir.assets_main %>/img',
+            module_img: '<%= dir.assets_module %>/img',
+            fonts: '<%= assets_main %>/fonts'
+        },
         copy: {
             images: {
                 files: [
@@ -134,7 +148,7 @@ module.exports = function (grunt) {
                     'node_modules/skrollr-menu/dist/skrollr.menu.min.js',
 
                     'node_modules/unslider/src/js/unslider.js',
-
+                    'node_modules/tinymce/tinymce.js',
                     'module/*/assets/js/**/*.js'
                 ],
                 dest: 'htdocs/assets/js/built.js',

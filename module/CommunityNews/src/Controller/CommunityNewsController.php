@@ -2,45 +2,27 @@
 
 namespace Rox\CommunityNews\Controller;
 
-use Rox\CommunityNews\Repository\CommunityNewsRepositoryInterface;
-use Rox\CommunityNews\Service\CommunityNewsServiceInterface;
-use Rox\Core\Controller\AbstractController;
+use Rox\CommunityNews\Model\CommunityNews;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CommunityNewsController extends AbstractController
+class CommunityNewsController extends Controller
 {
-    /**
-     * @var CommunityNewsRepositoryInterface
-     */
-    protected $communityNewsRepository;
-
-    /**
-     * @var CommunityNewsServiceInterface
-     */
-    protected $communityNewsService;
-
-    /**
-     * CommunityNewsController constructor.
-     *
-     * @param CommunityNewsRepositoryInterface $communityNewsRepository
-     * @param CommunityNewsServiceInterface    $communityNewsService
-     */
-    public function __construct(
-        CommunityNewsRepositoryInterface $communityNewsRepository,
-        CommunityNewsServiceInterface $communityNewsService
-    ) {
-        $this->communityNewsRepository = $communityNewsRepository;
-        $this->communityNewsService = $communityNewsService;
-    }
-
     public function listAction(Request $request)
     {
-        $request;
-        $communityNews = $this->communityNewsRepository->getAll();
+        $page = $request->query->get('page', 1);
+        $limit = $request->query->get('limit', 15);
+
+        $communityNewsRepository = new CommunityNews();
+
+        list($communityNews, $count) = $communityNewsRepository->getAll($page, $limit);
 
         $content = $this->render('@communitynews/communitynews/list.html.twig', [
             'communityNews' => $communityNews,
+            'filter' => $request->query->all(),
+            'page' => $page,
+            'pages' => ceil($count/$limit),
         ]);
 
         return new Response($content);
@@ -48,7 +30,8 @@ class CommunityNewsController extends AbstractController
 
     public function showAction($id)
     {
-        $communityNews = $this->communityNewsRepository->getById($id);
+        $communityNewsRepository = new CommunityNews();
+        $communityNews = $communityNewsRepository->getById($id);
 
         $content = $this->render('@communitynews/communitynews/show.html.twig', [
             'communityNews' => $communityNews,

@@ -65,10 +65,7 @@
 
                 <span class="pull-right">
                     <a class="btn btn-sm btn-secondary allmessages" href="messages/with/{{ otherMember.Username }}">
-                    <img src="images/icons/comments.png"
-                         alt="{{ 'All messages with' | trans }} {{ otherMember.Username }}"
-                         title="{{ 'All messages with' | trans }} {{ otherMember.Username }}"
-                    >
+                    <i class="fa fa-envelope-o"></i>
                         {#<?= $words->getSilent('messages_allmessageswith', $contact_username) ?>#}
                         {# TODO i18n place holders #}
                         {{ 'All messages with' | trans }} {{ otherMember.Username }}

@@ -1,4 +1,4 @@
-{% import '@macros/macros.twig' as macros %}
+{# import '@macros/macros.twig' as macros // already included in base.html.twig? #}
 {% extends '@base/base.html.twig' %}
 
 {% block title %}
@@ -9,7 +9,7 @@
 
     <h2>{{ 'UserMessages' | trans | format(my_member.Username) }}</h2>
 
-    <ul class="nav nav-pills">
+    <ul class="nav nav-pills m-t-1">
         <li class="nav-item">
             <a class="nav-link{% if folder == 'inbox' %} active{% endif %}" href="{{ path('message') }}">{{ 'MyMessagesReceived' | trans }}</a>
         </li>
@@ -27,27 +27,27 @@
 
     <form method="POST">
 
-    <div class="pull-left">
-        <p>
-            <button type="submit" name="modify" value="delete" class="btn" onclick="return confirm ('{{ 'MessagesWarningConfirmDelete' | trans }}')">{{ 'delmessage' | trans }}</button>
-
-            {% if folder == 'spam' %}
-                <button type="submit" name="modify" value="nospam" class="btn">{{ 'marknospam' | trans }}</button>
-            {% elseif folder == 'inbox' %}
-                <button type="submit" name="modify" value="markasspam" class="btn">{{ 'markspam' | trans }}</button>
-            {% endif %}
-        </p>
-
-    </div>
-    <div class="pull-right">
-        {% include '@base/pagination.html.twig' with {
+        <div class="pull-right">
+            {% include '@base/pagination.html.twig' with {
             currentFilters: filter,
             currentPage: page,
             paginationPath: "message",
             lastPage: pages,
             showAlwaysFirstAndLast: false
-        } only %}
-    </div>
+            } only %}
+        </div>
+
+        <div class="pull-left btn-group m-y-1" role="group" aria-label="Delete or spam">
+
+            <button type="submit" name="modify" value="delete" class="btn btn-secondary" onclick="return confirm ('{{ 'MessagesWarningConfirmDelete' | trans }}')">{{ 'delmessage' | trans }}</button>
+
+            {% if folder == 'spam' %}
+                <button type="submit" name="modify" value="nospam" class="btn btn-secondary">{{ 'marknospam' | trans }}</button>
+            {% elseif folder == 'inbox' %}
+                <button type="submit" name="modify" value="markasspam" class="btn btn-secondary">{{ 'markspam' | trans }}</button>
+            {% endif %}
+
+        </div>
 
     <table class="table table-striped">
 
@@ -79,25 +79,23 @@
                     {%- endif -%}
                 ">
 
-                <td class="select">
+                <td class="select verticalalignmiddle" style="width: 25px; max-width: 25px;">
                     <input type="checkbox" name="message_id[]" class="msganchor" value="{{ message.id }}">
                 </td>
-                <td class="from">
-                    <div style="width:75px; padding: 5px; box-sizing: content-box;">
-                        <div class="pull-xs-left">
+                <td class="from" style="width: 20%; max-width: 20%;">
+                    <div>
+                        <div class="pull-xs-left p-x-1">
                             {{ macros.avatar(otherMember.Username, 50) }}
                         </div>
-                        <div class="pull-xs-left" style="word-wrap: break-word;">
-                            <small style="line-height: 1.1;">
-                                <a class="username" href="{{ path('member', { username: otherMember.Username}) }}"><strong>{{ otherMember.Username }}</strong></a>
-                                <br/>
-                                <span class="small" title="{{ message.DateSent }}">{{ message.DateSent.diffForHumans }}</span>
+                        <div class="pull-xs-left username">
+                            <small>
+                                <a href="{{ path('member', { username: otherMember.Username}) }}"><strong>{{ otherMember.Username }}</strong></a>
                             </small>
                         </div>
                     </div>
 
                 </td>
-                <td class="message">
+                <td class="message verticalalignmiddle">
                     {# DevTip: Replace message.Message with faker.Text(2000) to create random message text #}
                     {% set messageText = message.Message | replace({'\n': ' ', '<br />': ' '}) | striptags %}
 
@@ -116,11 +114,23 @@
                         </a>
                     </p>
                     {% endspaceless %}
-
+                    <span class="small" title="{{ message.DateSent }}">{{ message.DateSent.diffForHumans }}</span>
                 </td>
             </tr>
         {% endfor %}
     </table>
+
+        <div class="pull-left btn-group" role="group" aria-label="Delete or spam">
+
+            <button type="submit" name="modify" value="delete" class="btn btn-secondary" onclick="return confirm ('{{ 'MessagesWarningConfirmDelete' | trans }}')">{{ 'delmessage' | trans }}</button>
+
+            {% if folder == 'spam' %}
+                <button type="submit" name="modify" value="nospam" class="btn btn-secondary">{{ 'marknospam' | trans }}</button>
+            {% elseif folder == 'inbox' %}
+                <button type="submit" name="modify" value="markasspam" class="btn btn-secondary">{{ 'markspam' | trans }}</button>
+            {% endif %}
+
+        </div>
 
     </form>
 

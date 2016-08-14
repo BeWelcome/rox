@@ -13,65 +13,118 @@
         <p class="clearfix">
             {% if directionIn %}
                 {#<a class="button float_left" href="messages/{{ message.id }}/reply"><?= $words->get('replymessage') ?></a>#}
-                <a class="button float_left" href="messages/{{ message.id }}/reply">{{ 'Reply' | trans }}</a>
+                <a class="btn btn-primary pull-left" href="messages/{{ message.id }}/reply">{{ 'Reply' | trans }}</a>
 
                 {% if message.InFolder == 'Spam' %}
-                    <a class="button float_right" href="messages/{{ message.id }}/nospam">{{ 'Remove spam mark' | trans }}</a>
+                    <a class="btn btn-sm btn-primary pull-right" href="messages/{{ message.id }}/nospam">{{ 'Remove spam mark' | trans }}</a>
                 {% else %}
                     {#<a class="button float_right" href="messages/<?= $message->id ?>/spam"><?= $words->get('markspam') ?></a>#}
-                    <a class="button float_right" href="messages/{{ message.id }}/spam">{{ 'Report as abuse' | trans }}</a>
+                    <a class="btn btn-sm btn-primary pull-right" href="messages/{{ message.id }}/spam">{{ 'Report as abuse' | trans }}</a>
                 {% endif %}
 
             {% else %}
                 {#<a class="button float_left" href="messages/<?= $message->id ?>/edit"><?= $words->get('editmessage') ?></a>#}
-                <a class="button float_left" href="messages/{{ message.id }}/edit">{{ 'Edit' | trans }}</a>
+                <a class="btn-primary pull-left" href="messages/{{ message.id }}/edit">{{ 'Edit' | trans }}</a>
             {% endif %}
 
-            <a class="button float_right" href="messages/{{ message.id }}/delete" onclick="return confirm ('{{ 'Are you sure that you want to permanently delete the selected messages?' | trans }}')">{{ 'Delete' | trans }}</a>
+            <a class="btn btn-sm btn-primary pull-right" href="messages/{{ message.id }}/delete" onclick="return confirm ('{{ 'Are you sure that you want to permanently delete the selected messages?' | trans }}')">{{ 'Delete' | trans }}</a>
             {#<a class="button float_right" href="messages/<?= $message->id ?>/delete" onclick="return confirm ('<?php echo $words->getBuffered('MessagesWarningConfirmDelete'); ?>')"><?= $words->get('delmessage') ?></a>#}
         </p>
     </div>
     <!-- buttonstop -->
-    <div id="messageheader" class="clearfix">
-        <div id="messageside" class="float_right">
-            <p class="small grey">
-                {#<?= $words->get('LivesIn') ?>#}
-                {{ 'Lives in' | trans }} <strong>{{ message.sender.city.name }}, {{ message.sender.city.country.name }}</strong>
-                <br/>
-                {#<?= $words->get('Speaks') ?>#}
-                Speaks
 
-                {# TODO this isn't exactly replicating the result of Member::get_languages_spoken #}
-                {% for language in otherMember.languages.sortByDesc('pivot.Level') %}
-                    <strong>
+    <div class="row">
+        <div class="col-xs-1 text-xs-right p-r-0">
+            {{ macros.avatar(otherMember.Username, 50) }}
+        </div>
+        <div class="col-xs-11">
+            <div class="username p-b-1">
+                <span class="pull-left">
+                    <a href="{{ path('member', { username: otherMember.Username}) }}"><strong>{{ otherMember.Username }}</strong></a>
+                </span>
+                <span class="pull-right p-a-1 small text-xs-right locandlang">
+                    {#<?= $words->get('LivesIn') ?>#}
+                    {# {{ 'Lives in' | trans }} #}
+                    <i class="fa fa-2x fa-map-marker"></i> <strong>{{ message.sender.city.name }}, {{ message.sender.city.country.name }}</strong>
+                    <br />
+                    {#<?= $words->get('Speaks') ?>#}
+                    <i class="m-l-1 fa fa-2x fa-comments-o"></i>
+
+                    {# TODO this isn't exactly replicating the result of Member::get_languages_spoken #}
+                    {% for language in otherMember.languages.sortByDesc('pivot.Level') %}
+                        <strong>
                         {#<span title="<?= $words->getSilent('LanguageLevel_'.$language->Level) ?>"><?= $language->Name ?><?= $space ?></span>#}
 
-                        <span title="{{ language.pivot.Level | trans }}">
+                            <span title="{{ language.pivot.Level | trans }}">
                             {{ language.Name | raw }}
-                            {% if not loop.last %}, {% endif %}
+                                {% if not loop.last %}, {% endif %}
                         </span>
                     </strong>
-                {% endfor %}
-            </p>
+                    {% endfor %}
+                </span>
 
-            <p class="small grey">
-                <a href="messages/with/{{ otherMember.Username }}">
+                <span class="pull-right">
+                    <a class="btn btn-sm btn-secondary allmessages" href="messages/with/{{ otherMember.Username }}">
                     <img src="images/icons/comments.png"
                          alt="{{ 'All messages with' | trans }} {{ otherMember.Username }}"
                          title="{{ 'All messages with' | trans }} {{ otherMember.Username }}"
                     >
-                    {#<?= $words->getSilent('messages_allmessageswith', $contact_username) ?>#}
-                    {# TODO i18n place holders #}
-                    {{ 'All messages with' | trans }} {{ otherMember.Username }}
+                        {#<?= $words->getSilent('messages_allmessageswith', $contact_username) ?>#}
+                        {# TODO i18n place holders #}
+                        {{ 'All messages with' | trans }} {{ otherMember.Username }}
                 </a>
-            </p>
-        </div>
-        <!-- messageside -->
-        <p class="float_left">
-            {# TODO user image? #}
-            {#<?= MOD_layoutbits::PIC_50_50($contact_username) ?>#}
-        </p>
+                </span>
 
+            </div>
+            <div class="m-y-1 p-a-1 p-b-3 messagebox">
+                <div class="smaller pull-right m-r-1">
+                    {{ 'Date' | trans }}:
+                    {#<?= $words->get('MessagesDate') ?>:#}
+
+                    {#<?= date($words->getSilent('DateFormatShort'), strtotime($message->created)) ?>#}
+                    {# TODO format to short date, like above?#}
+                    {{ message.created.diffForHumans }}
+                </div>
+                <div>
+                    {{ message.Message }}
+                </div>
+
+                {#{{ faker.paragraphs(random(10), true) | nl2br }}#}
+
+                <div class="smaller m-t-1">
+                    {{ 'Date' | trans }}:
+                    {#<?= $words->get('MessagesDate') ?>:#}
+
+                    {#<?= date($words->getSilent('DateFormatShort'), strtotime($message->created)) ?>#}
+                    {# TODO format to short date, like above?#}
+                    {{ message.created.diffForHumans }}
+                </div>
+
+                {# footer buttons #}
+                <div>
+                    {% if directionIn %}
+                        <a class="btn btn-primary pull-left" href="messages/{{ message.id }}/reply">{{ 'Reply' | trans }}</a>
+
+                        {% if message.InFolder == 'Spam' %}
+                            <a class="btn btn-sm btn-primary pull-right" href="messages/{{ message.id }}/nospam">{{ 'Remove spam mark' | trans }}</a>
+                        {% else %}
+                            <a class="btn btn-sm btn-primary pull-right" href="messages/{{ message.id }}/spam">{{ 'Report as abuse' | trans }}</a>
+                        {% endif %}
+
+                    {% else %}
+                        <a class="btn btn-primary pull-left" href="messages/{{ message.id }}/edit">{{ 'Edit' | trans }}</a>
+                    {% endif %}
+
+                    {# TODO this one is missing the JS confirm dialog #}
+                    <a class="btn btn-sm btn-primary pull-right" href="messages/{{ message.id }}/delete">{{ 'Delete' | trans }}</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    {# Obsolete? #}
+    <div id="messageheader" class="invisible">
         <p class="">
             <span class="grey">
                 {% if directionIn %}
@@ -83,47 +136,6 @@
                 {% endif %}
             </span>
         </p>
-
-        <p class="">
-            <span class="grey">
-                {{ 'Date' | trans }}:
-                {#<?= $words->get('MessagesDate') ?>:#}
-            </span>
-
-            {#<?= date($words->getSilent('DateFormatShort'), strtotime($message->created)) ?>#}
-            {# TODO format to short date, like above?#}
-            {{ message.created.diffForHumans }}
-        </p>
     </div>
-
-    <div id="messagecontent">
-        <p class="text">
-            {{ message.Message }}
-
-            {#{{ faker.paragraphs(random(10), true) | nl2br }}#}
-        </p>
-    </div>
-
-    <!-- messagecontent -->
-    <div id="messagefooter">
-        <p class="clearfix">
-            {% if directionIn %}
-                <a class="button float_left" href="messages/{{ message.id }}/reply">{{ 'Reply' | trans }}</a>
-
-                {% if message.InFolder == 'Spam' %}
-                    <a class="button float_right" href="messages/{{ message.id }}/nospam">{{ 'Remove spam mark' | trans }}</a>
-                {% else %}
-                    <a class="button float_right" href="messages/{{ message.id }}/spam">{{ 'Report as abuse' | trans }}</a>
-                {% endif %}
-
-            {% else %}
-                <a class="button float_left" href="messages/{{ message.id }}/edit">{{ 'Edit' | trans }}</a>
-            {% endif %}
-
-            {# TODO this one is missing the JS confirm dialog #}
-            <a class="button float_right" href="messages/{{ message.id }}/delete">{{ 'Delete' | trans }}</a>
-        </p>
-    </div>
-    <!-- messagefooter -->
 
 {% endblock content %}

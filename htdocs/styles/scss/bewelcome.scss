@@ -20,6 +20,7 @@ $font-family-bold: Signika-bold, Arial;
 @import "activities";
 @import "forumgroups";
 @import "edit";
+@import "messages";
 
 // select2
 @import "../../../node_modules/select2/src/scss/core";
@@ -63,4 +64,8 @@ blockquote {
   border-left: 8px #ddd solid;
   padding: 1rem;
   margin: 1rem;
+}
+
+.verticalalignmiddle{
+  vertical-align: middle !important;
 }

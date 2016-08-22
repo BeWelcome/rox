@@ -17,7 +17,7 @@ using a browser or use curl _url_ > _filename_.
 * PHP short opening tags enabled
 * PHP magic quotes gpc disabled
 * PHP extensions: mbstring, dom, fileinfo, intl, xsl
-* MySQL server >= 5.1
+* MariaDB >=10.1 or MySQL server >= 5.6 (not in strict mode) 
 * SMTP server for email features
 * [Composer](https://www.getcomposer.org)
 * [Node.js](https://nodejs.org/)
@@ -85,12 +85,6 @@ using a browser or use curl _url_ > _filename_.
       pthacks/autoload.cache.ini \
       build/alias.cache.ini \
       htdocs/exception.log
-    ```
-
-5. Create rox_local.ini file
-
-    ```bash
-    $ cp rox_local.example.ini rox_local.ini
     ```
 
 ### Database installation
@@ -167,12 +161,8 @@ using a browser or use curl _url_ > _filename_.
 9. Migrate the DB to the latest version
 
     ```bash
-    git checkout origin/develop
-
     php vendor/bin/phinx migrate -c phinx.php
     ```
-
-    (Note this is most useful if you switch to the develop branch beforehand)
 
 10. Update words and language tables to match the current translation on the site
 
@@ -190,7 +180,7 @@ using a browser or use curl _url_ > _filename_.
     $ rm bewelcome.sql.bz2 bewelcome.sql languages.sql.bz2 languages.sql words.sql.bz2 words.sql
     ```
 
-12. Configure Sphinxsearch
+12. Configure Sphinxsearch (can be skipped)
 
 
 ### Configure Apache
@@ -255,29 +245,28 @@ using a browser or use curl _url_ > _filename_.
     $ cd /path/to/rox
     ```
 
-2. Create rox_local.ini based on [rox_local.example.ini](rox_local.example.ini):
+2. Create rox_local.ini file and .env file
 
     ```bash
     $ cp rox_local.example.ini rox_local.ini
+    $ cp .env.dist .env
     ```
 
-3. (You only need to edit the rox_local.ini if you didn't follow the instructions above)
-
-    Modify at least these sections to your needs:
-
-        [db]
-        [env]
-
+3.  Modify to your needs (set DB name etc).
+       
 
 ### Test and log in
 
-1. Compile the Sass files into CSS
-
+1. Run 
     ```bash
-    $ grunt sass
-    ```
+    $ make
+   ```
 
-2. Point your browser to your BW-Rox installation (i.e. http://bewelcome/)
+2. Run 
+    ```bash
+    $ make build
+   ```
+3. Point your browser to your BW-Rox installation (i.e. http://bewelcome/)
 
 3. Log in as user `member-101` and password `password`. See [Useful hints](#useful-hints) section below
      on password usage.
@@ -285,7 +274,6 @@ using a browser or use curl _url_ > _filename_.
 3. Click around the site a bit and check if all CSS and images are loaded.
     Refer to /path/to/rox/htdocs/exception.log if errors appear or something
     looks broken.
-
 
 ## Useful hints
 
@@ -306,23 +294,10 @@ using a browser or use curl _url_ > _filename_.
     mysql> exit
     ```
 
-    Note: Entering a password when logging in is only needed if
-    "skip_password_check = false" in rox_local.ini.
-
-
 ## Create documentation
 
-Documentation can be generated using phpDocumentor. As phpDocumentor conflicts with Symfony3 to generate the documentation
-use phpDocumentor.phar like this
-
-```bash
-$ php <path to phpDocumentor>/phpDocumentor.phar
-```
-
-Only the new framework in Rox is documented.
+If you need documentation check out mkdoc.
 
 ## Further help
 
-* [Wiki](http://trac.bewelcome.org/wiki)
 * [Mailing list](http://lists.bewelcome.org/mailman/listinfo/bw-dev-discussion)
-* Chat: #bewelcome on irc.freenode.net

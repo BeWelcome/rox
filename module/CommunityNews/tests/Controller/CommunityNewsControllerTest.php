@@ -35,7 +35,7 @@ class CommunityNewsControllerTest extends WebTestCase
 
         $firewall = 'default';
         $memberRepository = new Member();
-        $user = $memberRepository->getByUsername('member-1');
+        $user = $memberRepository->getByUsername('member-101');
         $token = new UsernamePasswordToken($user, null, $firewall, ['ROLE_USER']);
         $session->set('_security_' . $firewall, serialize($token));
         $session->set('IdMember', 1);

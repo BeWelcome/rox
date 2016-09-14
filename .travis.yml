@@ -11,6 +11,8 @@ addons:
 
 env:
   global:
+    - APP_ENV=testing
+    - APP_DEBUG=true
     - DB_HOST=localhost
     - DB_NAME=bewelcome_test
     - DB_USER=travis
@@ -39,8 +41,8 @@ before_script:
   - cp tests/rox_local.ini.tests rox_local.ini
 
 script:
-  - ./vendor/bin/phinx migrate --configuration tests/phinx_test.php
-  - ./vendor/bin/phinx seed:run --configuration tests/phinx_test.php
+  - ./vendor/bin/phinx migrate
+  - ./vendor/bin/phinx seed:run
   - make version
   - make
   - make build

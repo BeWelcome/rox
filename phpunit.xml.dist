@@ -6,8 +6,11 @@
          convertWarningsToExceptions="true"
          verbose="true">
     <testsuites>
-        <testsuite name="Rox">
-            <directory>module/*/tests/</directory>
+        <testsuite name="IntegrationTests">
+            <directory>module/*/tests/Integration/</directory>
+        </testsuite>
+        <testsuite name="UnitTests">
+            <directory>module/*/tests/Unit/</directory>
         </testsuite>
     </testsuites>
 

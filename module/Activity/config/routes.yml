@@ -1,0 +1,24 @@
+activity:
+    path: /activity
+    methods: [GET]
+    defaults:
+        _controller: Rox\Activity\Controller\ActivityController::listAction
+        page: 1
+    requirements:
+        page: \d+
+
+activity_show:
+    path: /activity/{id}
+    methods: [GET]
+    defaults:
+        _controller: Rox\Activity\Controller\ActivityController::showAction
+    requirements:
+        id: \d+
+
+activity_show_title:
+    path: /activity/{id}/{title}
+    methods: [GET]
+    defaults:
+        _controller: Rox\Activity\Controller\ActivityController::showAction
+    requirements:
+        id: \d+

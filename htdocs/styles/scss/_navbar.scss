@@ -24,10 +24,14 @@
   }
 
   .navbar-divider {
-    padding-top: .675rem;
-    padding-bottom: .675rem;
+    padding-top: .7rem;
+    padding-bottom: .8rem;
     margin: 0 .5rem;
     background-color: $navbar-dark-color;
+  }
+
+  .border{
+    border-top: 1px solid #fff;
   }
 
 }
@@ -42,7 +46,7 @@
   width: 100%;
   position: fixed;
   left: 0;
-  top: 42px;
+  top: 41px;
   background-color: rgba($brand-primary,0.95);
   border-top: 1px solid #fff;
   border-radius: 0;
@@ -58,12 +62,12 @@
     color: #fff;
     text-decoration: none;
     background-color: #ce5409;
-    padding: 0.1rem;
+    // padding: 0.1rem;
     margin-left: 0;
   }
 
   .btn:hover{
-    padding: 0.25rem 0.85rem;
+    padding: .375rem 1rem;
   }
 
   ul{
@@ -83,9 +87,12 @@
   }
 
   .h4:hover{
-    padding: 0 !important;
     background: none !important;
   }
+}
+
+a.subnavtitle{
+  padding-left: 0.3rem;
 }
 
 a.subnavtitle:hover {

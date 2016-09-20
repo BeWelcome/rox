@@ -135,11 +135,12 @@ class HomeModel extends \RoxModelBase {
 
         $groupIds = [];
         if ($groups) {
-            $groups = $member->groups()->get(['groups.id']);
+            $groups = $member->groups()->get(['IdGroup']);
+            // ->get(['id']);
 
             $groupIds = $groups->map(
                 function($item, $key) {
-                    return $item->id;
+                    return $item->IdGroup;
                 }
             )->all();
         }
@@ -152,10 +153,10 @@ class HomeModel extends \RoxModelBase {
         if (!empty($groupIds)) {
             $query->whereIn('IdGroup', $groupIds);
             if ($following) {
-                $query->orWhereIn('id', [1, 2]);
+                $query->orWhereIn('IdGroup', [1, 2]);
             }
         } else {
-            $query->whereIn('id', [1, 2]);
+            $query->whereIn('IdGroup', [1, 2]);
         }
 
         // Need to use inner join here so it also acts like an eager fetch, ie.

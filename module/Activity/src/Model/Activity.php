@@ -2,7 +2,6 @@
 
 namespace Rox\Activity\Model;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Rox\Activity\Repository\ActivityRepositoryInterface;
 use Rox\Core\Exception\InvalidArgumentException;
 use Rox\Core\Exception\NotFoundException;
@@ -27,7 +26,7 @@ class Activity extends AbstractModel implements ActivityRepositoryInterface
         'creator',
     ];
 
-    public function created_by()
+    public function createdBy()
     {
         return $this->hasOne(Member::class, 'id', 'creator');
     }
@@ -35,7 +34,7 @@ class Activity extends AbstractModel implements ActivityRepositoryInterface
     public function getById($id)
     {
         $communityNews = $this
-            ->with(['created_by'])
+            ->with(['createdBy'])
             ->where('id', $id)
             ->first();
 
@@ -45,6 +44,7 @@ class Activity extends AbstractModel implements ActivityRepositoryInterface
 
         return $communityNews;
     }
+
     /**
      * @param int $page
      * @param int $limit
@@ -53,7 +53,7 @@ class Activity extends AbstractModel implements ActivityRepositoryInterface
     public function getAll($page = 1, $limit = 20)
     {
         $communityNews = $this->newQuery();
-        $communityNews->with('created_by');
+        $communityNews->with('createdBy');
         $communityNews->getQuery()->forPage($page, $limit);
 
         $count = $communityNews->getQuery()->getCountForPagination();
@@ -75,7 +75,7 @@ class Activity extends AbstractModel implements ActivityRepositoryInterface
     {
         return $this
             ->withTrashed()
-            ->with(['creator'])
+            ->with(['createdBy'])
             ->get()
             ->all();
     }
@@ -92,7 +92,7 @@ class Activity extends AbstractModel implements ActivityRepositoryInterface
         }
 
         $activity = $this
-            ->with(['creator'])
+            ->with(['createdBy'])
             ->limit($count)
             ->orderBy('id', 'desc');
 

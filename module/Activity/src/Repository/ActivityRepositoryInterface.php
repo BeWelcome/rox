@@ -10,7 +10,7 @@ interface ActivityRepositoryInterface
     /**
      * @param $id
      *
-     * @return CommunityNews
+     * @return Activity
      *
      * @throws NotFoundException
      */
@@ -19,7 +19,7 @@ interface ActivityRepositoryInterface
     /**
      * @param int $page
      * @param int $limit
-     * @return array CommunityNews
+     * @return array Activity
      */
     public function getAll($page = 1, $limit = 20);
 
@@ -31,7 +31,7 @@ interface ActivityRepositoryInterface
     public function getAllCount($page, $limit);
 
     /**
-     * @return CommunityNews
+     * @return Activity
      */
     public function getLatest();
 }

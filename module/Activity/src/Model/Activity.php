@@ -15,10 +15,6 @@ use Rox\Member\Model\Member;
  */
 class Activity extends AbstractModel implements ActivityRepositoryInterface
 {
-    use SoftDeletes;
-
-    const DELETED_AT = 'deleted_at';
-
     /**
      * @var string
      */
@@ -29,39 +25,18 @@ class Activity extends AbstractModel implements ActivityRepositoryInterface
      */
     protected $ormRelationships = [
         'creator',
-        'updater',
-        'deleter',
     ];
 
-    /**
-     * @var array
-     */
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
-
-    public function creator()
+    public function created_by()
     {
-        return $this->hasOne(Member::class, 'id', 'created_by');
-    }
-
-    public function updater()
-    {
-        return $this->hasOne(Member::class, 'id', 'updated_by');
-    }
-
-    public function deleter()
-    {
-        return $this->hasOne(Member::class, 'id', 'deleted_by');
+        return $this->hasOne(Member::class, 'id', 'creator');
     }
 
     public function getById($id)
     {
         $communityNews = $this
-            ->with(['creator', 'updater', 'deleter'])
-            ->where('Id', $id)
+            ->with(['created_by'])
+            ->where('id', $id)
             ->first();
 
         if (!$communityNews) {
@@ -78,8 +53,7 @@ class Activity extends AbstractModel implements ActivityRepositoryInterface
     public function getAll($page = 1, $limit = 20)
     {
         $communityNews = $this->newQuery();
-        $communityNews->with('creator', 'updater', 'deleter');
-        $communityNews->orderBy('updated_at', 'desc');
+        $communityNews->with('created_by');
         $communityNews->getQuery()->forPage($page, $limit);
 
         $count = $communityNews->getQuery()->getCountForPagination();
@@ -101,8 +75,7 @@ class Activity extends AbstractModel implements ActivityRepositoryInterface
     {
         return $this
             ->withTrashed()
-            ->with(['creator', 'updater', 'deleter'])
-            ->orderBy('created_at', 'desc')
+            ->with(['creator'])
             ->get()
             ->all();
     }
@@ -119,9 +92,9 @@ class Activity extends AbstractModel implements ActivityRepositoryInterface
         }
 
         $activity = $this
-            ->with(['creator', 'updater', 'deleter'])
+            ->with(['creator'])
             ->limit($count)
-            ->orderBy('created_at', 'desc');
+            ->orderBy('id', 'desc');
 
         if ($count === 1) {
             return $activity->first();

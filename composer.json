@@ -61,6 +61,7 @@
     "autoload": {
         "psr-4": {
             "Rox\\": "Rox/",
+            "Rox\\Activity\\": "module/Activity/src",
             "Rox\\Admin\\": "module/Admin/src",
             "Rox\\Auth\\": "module/Auth/src",
             "Rox\\Core\\": "module/Core/src",

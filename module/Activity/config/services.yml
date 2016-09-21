@@ -1,8 +1,8 @@
 services:
-    Rox\CommunityNews\Model\Activity:
-        class: Rox\Acivity\Model\CommunityNews
+    Rox\Activity\Model\Activity:
+        class: Rox\Activity\Model\Activity
         autowiring_types: Rox\CommunityNews\Repository\ActivityRepositoryInterface
 
     Rox\CommunityNews\Service\ActivityService:
-        class: Rox\Activity\Service\CommunityNewsService
-        autowiring_types: Rox\CommunityNews\Service\ActivityServiceInterface
+        class: Rox\Activity\Service\ActivityService
+        autowiring_types: Rox\Activity\Service\ActivityServiceInterface

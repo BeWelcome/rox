@@ -9,5 +9,5 @@ interface ActivityServiceInterface
     /**
      * @return Builder|\Illuminate\Database\Query\Builder
      */
-    public function getAllActivity();
+    public function getAllActivities();
 }

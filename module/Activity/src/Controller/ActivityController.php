@@ -2,7 +2,7 @@
 
 namespace Rox\Activity\Controller;
 
-use Rox\CommunityNews\Model\CommunityNews;
+use Rox\Activity\Model\Activity;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,11 +30,11 @@ class ActivityController extends Controller
 
     public function showAction($id)
     {
-        $activityRepository = new CommunityNews();
+        $activityRepository = new Activity();
         $activity = $activityRepository->getById($id);
 
         $content = $this->render('@activity/activity/show.html.twig', [
-            'activity' => $communityNews,
+            'activity' => $activity,
         ]);
 
         return new Response($content);

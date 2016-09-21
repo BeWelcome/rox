@@ -6,7 +6,7 @@ use Rox\Activity\Model\Activity;
 
 class ActivityService implements ActivityServiceInterface
 {
-    public function getAllActivity()
+    public function getAllActivities()
     {
         $activity = new Activity();
 

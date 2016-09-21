@@ -1,5 +1,8 @@
 # routes.yml
 
+activity:
+    resource: ../module/Activity/config/routes.yml
+
 admin:
     resource: ../module/Admin/config/routes.yml
 

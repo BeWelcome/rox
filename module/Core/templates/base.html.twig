@@ -54,8 +54,13 @@
     {% endif %}
 
     <noscript><h1>Please activate Javascript for bewelcome.org<small>Without it some function won't work.</small></h1></noscript>
-
     <div class="container-content">
+
+        {% for flash_message in app.session.flashBag.get('notice') %}
+        <div class="flash notice">
+            {{ flash_message }}
+        </div>
+        {% endfor %}
         {% block content %}{% endblock %}
     </div>
 

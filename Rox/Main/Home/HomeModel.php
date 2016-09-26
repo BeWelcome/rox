@@ -207,6 +207,10 @@ class HomeModel extends \RoxModelBase {
         // Fetch latitude and longitude of member's location
         $latAndLong = Capsule::table('geonames')->where('geonameid', $member->city->id)->first(['latitude', 'longitude']);
 
+        if ($latAndLong == null) {
+            return [];
+        }
+
         $distance = 200; // Fetch from preferences
         $edison = GeoLocation::fromDegrees($latAndLong->latitude, $latAndLong->longitude);
         $coordinates = $edison->boundingCoordinates($distance, 'km');

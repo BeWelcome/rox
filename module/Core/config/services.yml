@@ -49,7 +49,7 @@ services:
 
     Rox\Core\Listener\LegacyDispatchListener:
         class: Rox\Core\Listener\LegacyDispatchListener
-        autowire: true
+        arguments: ['@Rox\Core\Kernel\LegacyHttpKernel', '@session', '@security.token_storage' ]
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
 

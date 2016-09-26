@@ -5,5 +5,8 @@ twig:
     strict_variables: true
     cache: 'cache/%kernel.environment%/twig/'
     exception_controller:  twig.controller.exception:showAction
+    form_themes:
+      - '@forms/bs4.html.twig'
     paths:
         '%kernel.root_dir%/templates/twig/macros': macros
+        '%kernel.root_dir%/templates/twig/forms': forms

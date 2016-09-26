@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 class LegacyDispatchListener
 {
@@ -20,10 +21,16 @@ class LegacyDispatchListener
      */
     protected $session;
 
-    public function __construct(LegacyHttpKernel $kernel, SessionInterface $session)
+    /**
+     * @var TokenStorage
+     */
+    protected $tokenStorage;
+
+    public function __construct(LegacyHttpKernel $kernel, SessionInterface $session, TokenStorage $tokenStorage)
     {
         $this->kernel = $kernel;
         $this->session = $session;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function onKernelException(GetResponseForExceptionEvent $event)
@@ -44,7 +51,13 @@ class LegacyDispatchListener
         // Kick-start the Symfony session. This replaces session_start() in the
         // old code, which is now turned off.
         $this->session->start();
-
+        if (!$this->session->has('IdMember')) {
+            $rememberMeToken = unserialize($this->session->get('_security_default'));
+            $user = $rememberMeToken->getUser();
+            if ($user != null) {
+                $this->session->set('IdMember', $user->id);
+            }
+        }
         try {
             $response = $this->kernel->handle($event->getRequest(), $event->getRequestType());
         } catch (ResourceNotFoundException $e) {

@@ -28,7 +28,7 @@ interface CommunityNewsRepositoryInterface
      * @param $limit
      * @return int count of CommunityNews
      */
-    public function getAllCount($page, $limit);
+    public function getAllCount();
 
     /**
      * @return CommunityNews

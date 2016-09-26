@@ -6,6 +6,6 @@
 
 {% block content %}
     <h1>{{ communityNews.title }}</h1>
-    {{ communityNews.creator.Username }}, {{ communityNews.created_at.diffForHumans }} {% if communityNews.updater %}{{ communityNews.updater.Username }}, {{ communityNews.updated_at.diffForHumans }}{% endif %}<br>
-    {{ communityNews.text| raw }}<br>
+    <p class="small text_muted">{{ communityNews.creator.Username }}, {{ communityNews.created_at.diffForHumans }} {% if communityNews.updater %}{{ communityNews.updater.Username }}, {{ communityNews.updated_at.diffForHumans }}{% endif %}</p>
+    <p>{{ communityNews.text| raw }}</p>
 {% endblock content %}

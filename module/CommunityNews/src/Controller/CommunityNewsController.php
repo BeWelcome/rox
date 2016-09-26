@@ -16,7 +16,8 @@ class CommunityNewsController extends Controller
 
         $communityNewsRepository = new CommunityNews();
 
-        list($communityNews, $count) = $communityNewsRepository->getAll($page, $limit);
+        $communityNews = $communityNewsRepository->getAll($page, $limit);
+        $count = $communityNewsRepository->getAllCount();
 
         $content = $this->render('@communitynews/communitynews/list.html.twig', [
             'communityNews' => $communityNews,

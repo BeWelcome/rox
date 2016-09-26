@@ -276,3 +276,13 @@ a {
 .fullwidth{
   width: 100%;
 }
+
+.flash {
+  width: 100%;
+  .notice {
+    background-color: $brand-info;
+  }
+  .error {
+    background-color: $brand-danger;
+  }
+}

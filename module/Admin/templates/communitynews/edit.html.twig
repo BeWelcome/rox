@@ -1,6 +1,6 @@
 {% extends '@base/base.html.twig' %}
 
-{% set scriptFiles = ['js/tinymce.min.js'] %}
+{% set scriptFiles = ['js/tinymce.min.js', 'js/communitynews.js'] %}
 
 {% block title %}
     {{ 'Community News' | trans }}
@@ -8,6 +8,8 @@
 
 {% block content %}
     <div class="container">
-        {{ news.title }}
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
     </div>
 {% endblock content %}

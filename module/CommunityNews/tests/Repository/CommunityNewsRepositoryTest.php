@@ -59,12 +59,33 @@ class CommunityNewsRepositoryTest extends PHPUnit_Framework_TestCase
     public function testGetAll()
     {
         $model = new CommunityNews();
-        list($communityNews, $count) = $model->getAll();
+        $communityNews = $model->getAll();
+        $count = $model->getAllCount();
 
         $this->assertTrue(is_array($communityNews));
         $this->assertNotEmpty($communityNews);
         $this->assertEquals(3, count($communityNews));
-        $this->assertEquals(4, $count);
+        $this->assertEquals(3, $count);
+    }
+
+    public function testGetAllPaginated()
+    {
+        $model = new CommunityNews();
+        $communityNews = $model->getAll(1, 2);
+        $count = $model->getAllCount();
+        $this->assertEquals(3, $count);
+
+        $this->assertTrue(is_array($communityNews));
+        $this->assertNotEmpty($communityNews);
+        $this->assertEquals(2, count($communityNews));
+
+        $communityNews = $model->getAll(2, 2);
+        $count = $model->getAllCount();
+        $this->assertEquals(3, $count);
+
+        $this->assertTrue(is_array($communityNews));
+        $this->assertNotEmpty($communityNews);
+        $this->assertEquals(1, count($communityNews));
     }
 
     public function testGetAllIncludingDeleted()

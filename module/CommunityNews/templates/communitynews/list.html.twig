@@ -5,7 +5,8 @@
 {% endblock %}
 
 {% block content %}
-    <div class="pull-right">
+    <div class="row">
+        <div class="col-xs-push-8 col-xs-4">
         {% include '@base/pagination.html.twig' with {
         currentFilters: filter,
         currentPage: page,
@@ -13,20 +14,27 @@
         lastPage: pages,
         showAlwaysFirstAndLast: false
         } only %}
+        </div>
     </div>
-    {% for news in communityNews %}
-        <h1>{{ news.title }}</h1>
-        <p class="small text-muted">{{ 'Written by' | trans }} {{ news.creator.Username }} ({{ news.created_at.diffForHumans }}) {% if news.updater %}{{ 'and updated by' | trans }} {{ news.updater.Username }} ({{ news.updated_at.diffForHumans }}){% endif %}</p>
-        <p>{{ news.text| truncate(600) }}
-        {% if news.text|length > 600 %}<br/><span style="float: right"><a href="{{ path('communitynews_show', { id: news.id, title: news.title }) }}">{{ 'more' | trans }}</a></span>{% endif %}</p>
-    {%  endfor %}
-    <div class="pull-right">
-        {% include '@base/pagination.html.twig' with {
-        currentFilters: filter,
-        currentPage: page,
-        paginationPath: "communitynews",
-        lastPage: pages,
-        showAlwaysFirstAndLast: false
-        } only %}
+    <div class="row">
+        <div class="col-xs-12">
+        {% for news in communityNews %}
+            <h1><a href="{{ url('communitynews_show_title', { id: news.id, title: news.title }) }}">{{ news.title }}</a></h1>
+            <p class="small text-muted">{{ 'Written by' | trans }} {{ news.creator.Username }} ({{ news.created_at.diffForHumans }}) {% if news.updater %}{{ 'and updated by' | trans }} {{ news.updater.Username }} ({{ news.updated_at.diffForHumans }}){% endif %}</p>
+            <p>{{ news.text| truncate(600) }}
+            {% if news.text|length > 600 %}<br/><span style="float: right"><a href="{{ path('communitynews_show_title', { id: news.id, title: news.title }) }}">{{ 'more' | trans }}</a></span>{% endif %}</p>
+        {%  endfor %}
+            </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6 col-xs-push-8">
+            {% include '@base/pagination.html.twig' with {
+            currentFilters: filter,
+            currentPage: page,
+            paginationPath: "communitynews",
+            lastPage: pages,
+            showAlwaysFirstAndLast: false
+            } only %}
+        </div>
     </div>
 {% endblock content %}

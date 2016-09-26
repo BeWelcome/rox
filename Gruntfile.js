@@ -88,6 +88,25 @@ module.exports = function (grunt) {
                         dest: 'htdocs/assets/css/images/'
                     }
                 ]
+            },
+            js: {
+                files: [
+                    {
+                        expand: true,
+                        src: [
+                            '**/*.js',
+                            '**/*.css'
+                        ],
+                        cwd: 'node_modules/tinymce',
+                        dest: 'htdocs/assets/js'
+                    },
+                    {
+                        expand: true,
+                        src: 'communitynews.js',
+                        cwd: 'module/Admin/assets/js',
+                        dest: 'htdocs/assets/js'
+                    }
+                ]
             }
         },
         sass: {

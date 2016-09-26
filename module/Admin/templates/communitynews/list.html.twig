@@ -19,7 +19,7 @@
             <thead class="thead-default">
             <tr>
                 <th>{{ 'Title' | trans }}</th>
-                <th colspan="3" style="text-align: center;"><a class="btn btn-primary" href="{{ path('admin/communitynews/create') }}">{{ 'Create' | trans }}</a></th>
+                <th colspan="2"><a class="btn btn-primary pull-xs-right" href="{{ path('admin/communitynews/create') }}">{{ 'Create' | trans }}</a></th>
             </tr>
             </thead>
             {% for news in communityNews %}
@@ -27,9 +27,14 @@
                     <td>
                         {{ news.title }}
                     </td>
-                    <td><a class="btn btn-primary" href="{{ path('admin/communitynews/edit', { id: news.id }) }}"><i class="fa fa-pencil" title="{{ 'Edit' | trans }}"></i></a></td>
-                    <td><a class="btn btn-primary" href="{{ path('admin/communitynews/delete', { id: news.id }) }}"><i class="fa fa-remove" title="{{ 'Delete' | trans }}"></i></a></td>
-                    <td><a class="btn {% if news.public %}btn-secondary{% else %}btn-primary{% endif %}" href="{{ path('admin/communitynews/tooglepublic', { id: news.id }) }}">{% if news.public %}<i class="fa fa-ban" title="{{ 'Hide' | trans }}"></i>{% else %}<i class="fa fa-ban" title="{{ 'Show' | trans }}"></i>{% endif %}</a></td>
+                    <td style="width: 10%"><a class="btn btn-primary" href="{{ path('admin/communitynews/edit', { id: news.id }) }}"><i class="fa fa-pencil" title="{{ 'Edit' | trans }}"></i></a></td>
+                    <td style="width: 10%">
+                    {%- if news.public == true -%}
+                        <a class="btn btn-primary" href="{{ path('admin/communitynews/hide', { id: news.id }) }}"><i class="fa fa-ban" title="{{ 'Hide' | trans }}"></i></a>
+                    {%- else -%}
+                        <a class="btn btn-outline-secondary" href="{{ path('admin/communitynews/show', { id: news.id }) }}"><i class="fa fa-ban" title="{{ 'Show' | trans }}"></i></a>
+                    {%- endif -%}
+                    </td>
                 </tr>
             {% endfor %}
         </table>

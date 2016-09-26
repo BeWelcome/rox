@@ -30,7 +30,7 @@ admin/communitynews:
     path:     /admin/communitynews
     methods: [GET]
     defaults:
-        _controller: Rox\Admin\Controller\CommunityNewsController:showList
+        _controller: Rox\Admin\Controller\CommunityNewsController::showList
 
 admin/communitynews/create:
     path:     /admin/communitynews/create
@@ -39,7 +39,6 @@ admin/communitynews/create:
 
 admin/communitynews/edit:
     path:     /admin/communitynews/{id}/edit
-    methods: [GET]
     defaults:
         _controller: Rox\Admin\Controller\CommunityNewsController::editAction
     requirements:
@@ -49,14 +48,22 @@ admin/communitynews/delete:
     path:     /admin/communitynews/{id}/delete
     methods: [GET]
     defaults:
-        _controller: Rox\Admin\Controller\CommunityNewsController:deleteAction
+        _controller: Rox\Admin\Controller\CommunityNewsController::deleteAction
     requirements:
         id:         \d+
 
-admin/communitynews/tooglepublic:
-    path:     /admin/communitynews/{id}/tooglepublic
+admin/communitynews/show:
+    path:     /admin/communitynews/{id}/show
     methods: [GET]
     defaults:
-        _controller: Rox\Admin\Controller\CommunityNewsController:toogleAction
+        _controller: Rox\Admin\Controller\CommunityNewsController::showAction
+    requirements:
+        id:         \d+
+
+admin/communitynews/hide:
+    path:     /admin/communitynews/{id}/hide
+    methods: [GET]
+    defaults:
+        _controller: Rox\Admin\Controller\CommunityNewsController::hideAction
     requirements:
         id:         \d+

@@ -27,16 +27,18 @@ class CommunityNewsType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Please enter the title',
                 ],
-                'label' => false,
+                'label' => 'Enter the title of the community news',
             ])
             ->add('text', TextareaType::class, [
                 'attr' => [
                     'placeholder' => 'Please enter the description',
                 ],
-                'label' => false,
+                'label' => 'This will be the body of the news. You can use all formatting options that TinyMCE offers.',
+                'required' => false,
             ])
             ->add('public', CheckboxType::class, [
                 'label' => 'Shall the community be visible to regular members yet?',
+                'required' => false,
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'submit',

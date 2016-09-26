@@ -42,6 +42,8 @@ class CommunityNews extends AbstractModel implements CommunityNewsRepositoryInte
         'deleted_at',
     ];
 
+    protected $casts = ['public' => 'boolean'];
+
     public function creator()
     {
         return $this->hasOne(Member::class, 'id', 'created_by');
@@ -82,16 +84,14 @@ class CommunityNews extends AbstractModel implements CommunityNewsRepositoryInte
         $communityNews->orderBy('updated_at', 'desc');
         $communityNews->getQuery()->forPage($page, $limit);
 
-        $count = $communityNews->getQuery()->getCountForPagination();
-
-        return [$communityNews->get()->all(), $count];
+        return $communityNews->get()->all();
     }
 
-    public function getAllCount($page, $limit)
+    public function getAllCount()
     {
-        return $this
-            ->getAllQuery($page, $limit)
-            ->getCountForPagination();
+        return
+            $this->newQuery()
+            ->count();
     }
 
     /**
@@ -120,6 +120,7 @@ class CommunityNews extends AbstractModel implements CommunityNewsRepositoryInte
 
         $communityNews = $this
             ->with(['creator', 'updater', 'deleter'])
+            ->where('public', 1)
             ->limit($count)
             ->orderBy('created_at', 'desc');
 

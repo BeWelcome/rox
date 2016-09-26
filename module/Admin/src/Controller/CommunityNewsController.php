@@ -9,10 +9,56 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class CommunityNewsController
+ * @package Rox\Admin\Controller
+ */
 class CommunityNewsController extends Controller
 {
-    public function deleteAction()
+    /**
+     * @param $create
+     */
+    private function handleEditCreateAction($request, $id = 0)
     {
+
+        try {
+            if ($id == 0) {
+                $communityNews = new CommunityNews();
+                $flashText = 'Community news created.';
+            } else {
+                $flashText = 'Community news updated.';
+                $communityNewsRepository = new CommunityNews();
+                $communityNews = $communityNewsRepository->getById($id);
+            }
+        } catch (NotFoundException $e) {
+            throw $e;
+        }
+
+        $form = $this->createForm(CommunityNewsType::class, $communityNews);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $user = $this->getUser();
+            if ($id == 0) {
+                $data->created_by = $user->id;
+            } else {
+                $data->updated_by = $user->id;
+            }
+
+            $data->save();
+
+            $this->addFlash('notice', $flashText);
+
+            return $this->redirectToRoute('admin/communitynews');
+        }
+
+        return new Response(
+            $this->render('@admin/communitynews/edit.html.twig', [
+                'form' => $form->createView(),
+            ])
+        );
     }
 
     /***
@@ -23,28 +69,7 @@ class CommunityNewsController extends Controller
      */
     public function createAction(Request $request)
     {
-        $communityNews = new CommunityNews();
-        $form = $this->createForm(CommunityNewsType::class, $communityNews);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            // form was submitted and all inputs are valid
-            $data = $form->getData();
-            $user = $this->getUser();
-            $data->created_by = $user->id;
-            $data->save();
-
-            $this->addFlash('notify', 'New community news created.');
-
-            $this->redirectToRoute('admin/communitynews');
-        }
-
-        return new Response(
-            $this->render('@admin/communitynews/create.html.twig', [
-                'form' => $form->createView(),
-            ])
-        );
+        return $this->handleEditCreateAction($request);
     }
 
     /***
@@ -54,28 +79,7 @@ class CommunityNewsController extends Controller
      */
     public function editAction(Request $request, $id)
     {
-        try {
-            $communityNewsRepository = new CommunityNews();
-            $communityNews = $communityNewsRepository->getById($id);
-        } catch (NotFoundException $e) {
-            throw $e;
-        }
-
-        $form = $this->createForm(CommunityNewsType::class, $communityNews);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $user = $this->getUser();
-            // form was submitted and all inputs
-            return new Response('Succcesss: ' . $user->Username);
-        }
-
-        return new Response(
-            $this->render('@admin/communitynews/edit.html.twig', [
-                'form' => $form->createView(),
-            ])
-        );
+        return $this->handleEditCreateAction($request, $id);
     }
 
     /**
@@ -87,11 +91,13 @@ class CommunityNewsController extends Controller
     {
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 15);
+        $communityNewsRepository = new CommunityNews();
 
-        list($communityNews, $count) = $this->communityNewsRepository->getAll($page, $limit);
+        $communityNews = $communityNewsRepository->getAll($page, $limit);
+        $count = $communityNewsRepository->getAllCount();
 
         return new Response(
-            $this->getEngine()->render('@admin/communitynews/list.html.twig', [
+            $this->render('@admin/communitynews/list.html.twig', [
                 'communityNews' => $communityNews,
                 'filter' => $request->query->all(),
                 'page' => $page,
@@ -100,7 +106,50 @@ class CommunityNewsController extends Controller
         );
     }
 
-    public function toogleAction()
+    /**
+     * @param $id
+     * @param $visible
+     * @return mixed|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    private function setPublic($id, $visible)
     {
+        try {
+            $communityNewsRepository = new CommunityNews();
+            $communityNews = $communityNewsRepository->getById($id);
+        } catch (NotFoundException $e) {
+            $this->addFlash('notice', 'Community news with id ' . $id . ' doesn\'t exist.');
+
+            return $this->redirectToRoute('admin/communitynews');
+        }
+        $communityNews->public = $visible;
+        $communityNews->save();
+
+        return $communityNews->title;
+    }
+
+    /**
+     * Sets the public flag so that the news becomes visible for all members.
+     *
+     * @param integer $id
+     */
+    public function showAction($id)
+    {
+        $title = $this->setPublic($id, true);
+        $this->addFlash('notice', 'Community news \'' . $title . '\' is now visible for all members.');
+
+        return $this->redirectToRoute('admin/communitynews');
+    }
+
+    /**
+     * Sets the public flag so that the news becomes invisible for all members.
+     *
+     * @param integer $id
+     */
+    public function hideAction($id)
+    {
+        $title = $this->setPublic($id, false);
+        $this->addFlash('notice', 'Community news \'' . $title . '\' is now invisible for all members.');
+
+        return $this->redirectToRoute('admin/communitynews');
     }
 }

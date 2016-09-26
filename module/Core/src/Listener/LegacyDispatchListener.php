@@ -54,7 +54,7 @@ class LegacyDispatchListener
         if (!$this->session->has('IdMember')) {
             $rememberMeToken = unserialize($this->session->get('_security_default'));
             $user = $rememberMeToken->getUser();
-            if ($user != null) {
+            if ($user !== null) {
                 $this->session->set('IdMember', $user->id);
             }
         }

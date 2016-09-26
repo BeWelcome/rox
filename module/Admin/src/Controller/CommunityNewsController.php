@@ -17,15 +17,15 @@ class CommunityNewsController extends Controller
 {
     /**
      * @param $create
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @throws NotFoundException
      */
     private function handleEditCreateAction($request, $id = 0)
     {
-
         try {
-            if ($id == 0) {
-                $communityNews = new CommunityNews();
-                $flashText = 'Community news created.';
-            } else {
+            $communityNews = new CommunityNews();
+            $flashText = 'Community news created.';
+            if ($id !== 0) {
                 $flashText = 'Community news updated.';
                 $communityNewsRepository = new CommunityNews();
                 $communityNews = $communityNewsRepository->getById($id);
@@ -41,9 +41,10 @@ class CommunityNewsController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $user = $this->getUser();
-            if ($id == 0) {
+            if ($id === 0) {
                 $data->created_by = $user->id;
-            } else {
+            }
+            if ($id !== 0) {
                 $data->updated_by = $user->id;
             }
 

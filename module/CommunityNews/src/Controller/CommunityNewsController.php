@@ -9,6 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CommunityNewsController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return Response
+     */
     public function listAction(Request $request)
     {
         $page = $request->query->get('page', 1);
@@ -29,6 +33,10 @@ class CommunityNewsController extends Controller
         return new Response($content);
     }
 
+    /**
+     * @param $id
+     * @return Response
+     */
     public function showAction($id)
     {
         $communityNewsRepository = new CommunityNews();

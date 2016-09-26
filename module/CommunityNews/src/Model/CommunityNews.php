@@ -42,6 +42,9 @@ class CommunityNews extends AbstractModel implements CommunityNewsRepositoryInte
         'deleted_at',
     ];
 
+    /**
+     * @var array
+     */
     protected $casts = ['public' => 'boolean'];
 
     public function creator()

@@ -15,7 +15,7 @@
 {%- endblock textarea_widget %}
 
 {% block button_widget -%}
-    {% set attr = attr|merge({class: (attr.class|default('btn-default') ~ ' btn')|trim}) %}
+    {% set attr = attr|merge({class: (attr.class|default('btn-primary') ~ ' btn')|trim}) %}
     {{- parent() -}}
 {%- endblock %}
 
@@ -179,8 +179,8 @@
 
 {% block form_row -%}
     <div class="form-group row{% if (not compound or force_error|default(false)) and not valid %} has-danger{% endif %}">
-        {{- form_label(form) -}}
         <div class="col-sm-10">{{- form_widget(form) -}}</div>
+        {{- form_label(form) -}}
         {{- form_errors(form) -}}
     </div>
 {%- endblock form_row %}

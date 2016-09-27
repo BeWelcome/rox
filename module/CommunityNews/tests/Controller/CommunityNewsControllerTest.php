@@ -72,7 +72,7 @@ class CommunityNewsControllerTest extends WebTestCase
     {
         $this->logInUser();
 
-        $crawler = $this->client->request('GET', '/communitynews/1/Created by member-1');
+        $crawler = $this->client->request('GET', '/communitynews/1/Created by member-1/');
 
         $response = $this->client->getResponse();
         $this->assertTrue($response->isSuccessful());

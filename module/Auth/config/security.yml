@@ -4,8 +4,14 @@ security:
             id: Rox\Auth\Provider\UserProvider
 
     encoders:
-        Rox\Member\Model\Member:
+        # For the legacy MySQL PASSWORD()
+        Rox\Auth\Encoder\LegacyPasswordEncoder:
             id: Rox\Auth\Encoder\LegacyPasswordEncoder
+
+        # Default for all members
+        Rox\Member\Model\Member:
+            algorithm: bcrypt
+            cost: 12
 
     firewalls:
         default:

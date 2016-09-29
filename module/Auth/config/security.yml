@@ -1,3 +1,12 @@
+# The remember_me parameters below are extracted so they can be used to
+# configure the remember_me feature of the firewall (below), and also be
+# fetched by the ChangePasswordController to check for remember_me cookie.
+parameters:
+    # Checkbox name in form
+    remember_me.form_parameter: remember
+    # Cookie name
+    remember_me.cookie_name: remember_me
+
 security:
     providers:
         Rox\Auth\Provider\UserProvider:
@@ -25,7 +34,8 @@ security:
                 secret: '%kernel.secret%'
                 lifetime: 31536000 # 1 year in seconds
                 path: /
-                remember_me_parameter: remember
+                remember_me_parameter: %remember_me.form_parameter%
+                name: %remember_me.cookie_name%
 
             anonymous: ~
             form_login:

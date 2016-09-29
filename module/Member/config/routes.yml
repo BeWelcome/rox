@@ -33,3 +33,9 @@ https_check:
     methods: [GET]
     defaults:
         _controller: Rox\Member\Controller\HttpsCheckController:__invoke
+
+member/change_password:
+    path: /member/password
+    methods: [POST]
+    defaults:
+        _controller: Rox\Member\Controller\ChangePasswordController:changePassword

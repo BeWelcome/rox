@@ -27,6 +27,10 @@ class Members extends RoxSeed
                 'id'    => 3,
                 'Username' => 'member-3',
             ],
+            [
+                'id'    => 101,
+                'Username' => 'member-101',
+            ],
         ];
 
         $members = $this->table('members');

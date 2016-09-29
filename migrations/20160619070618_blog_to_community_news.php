@@ -21,7 +21,7 @@ class BlogToCommunityNews extends RoxMigration
                     'comment' => 'Controls if the community news is shown to all users yet',
                     'default' => 0
                 ])
-            ->addColumn('created_at', 'timestamp',
+            ->addColumn('created_at', 'datetime',
                 [
                     'null' => true,
                     'comment' => 'Eloquent standard column',
@@ -31,7 +31,7 @@ class BlogToCommunityNews extends RoxMigration
                 [
                     'comment' => 'Stores the member who created the news'
                 ])
-            ->addColumn('updated_at', 'timestamp',
+            ->addColumn('updated_at', 'datetime',
                 [
                     'null' => true,
                     'comment' => 'Eloquent standard column',
@@ -41,7 +41,7 @@ class BlogToCommunityNews extends RoxMigration
                 [
                     'comment' => 'Stores the member who updated the news'
                 ])
-            ->addColumn('deleted_at', 'timestamp',
+            ->addColumn('deleted_at', 'datetime',
                 [
                     'null' => true,
                     'default' => null,

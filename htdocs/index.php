@@ -1,6 +1,5 @@
 <?php
 
-use Dotenv\Dotenv;
 use Rox\Core\Kernel\Application;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,11 +16,7 @@ if (php_sapi_name() === 'cli-server'
 }
 
 // Setup autoloading
-require 'vendor/autoload.php';
-
-$dotEnv = new Dotenv('.');
-
-$dotEnv->load();
+require 'bootstrap/autoload.php';
 
 $request = Request::createFromGlobals();
 

@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit colors="true"
-         bootstrap="vendor/autoload.php"
+         stderr="true"
+         bootstrap="bootstrap/autoload.php"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          verbose="true">
     <testsuites>
-        <testsuite name="Rox">
-            <directory>module/*/tests/</directory>
+        <testsuite name="IntegrationTests">
+            <directory>module/*/tests/Integration/</directory>
+        </testsuite>
+        <testsuite name="UnitTests">
+            <directory>module/*/tests/Unit/</directory>
         </testsuite>
     </testsuites>
 
@@ -19,10 +23,6 @@
 
     <php>
         <server name="KERNEL_DIR" value="module/Core/src/Kernel/" />
-        <env name="DB_HOST" value="localhost" />
-        <env name="DB_NAME" value="bewelcome_test" />
-        <env name="DB_USER" value="bewelcome" />
-        <env name="DB_PASS" value="bewelcome" />
     </php>
 
     <logging>

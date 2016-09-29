@@ -13,6 +13,12 @@ security:
             algorithm: bcrypt
             cost: 12
 
+        # Stronger password cost for privileged members. See
+        # Rox\Auth\Factory\EncoderFactory
+        harsh:
+            algorithm: bcrypt
+            cost: 13
+
     firewalls:
         default:
             remember_me:

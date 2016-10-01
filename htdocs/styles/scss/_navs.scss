@@ -66,6 +66,13 @@
   */
 }
 
+.nav-stacked {
+  .nav-item > .active:after, .nav-item > .active:before {
+    // Don't show the little downwards pointer arrow when the nav is stacked.
+    display: none;
+  }
+}
+
 .nav-tabs .nav-link:focus, .nav-tabs .nav-link:hover {
   border-color: #ddd #ddd transparent;
 }

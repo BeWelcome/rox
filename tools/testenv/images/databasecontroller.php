@@ -3,8 +3,8 @@ class DatabaseController
 {
 private $conn; // Instance of PDO
 
-public function __construct($dsn,$user,$pw){
-    $dsn = str_replace('mysqli', 'mysql', $dsn);
+public function __construct($host, $database, $user, $pw){
+    $dsn = 'mysql:dbname=' . $database . ';host=' . $database;
     $this->conn = new PDO ($dsn,$user,$pw);
 }
 

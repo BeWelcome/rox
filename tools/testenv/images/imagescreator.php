@@ -158,8 +158,12 @@ class ImagesCreator
      **/    
     protected function getDB()
     {
-        $params = parse_ini_file('../../../rox_local.ini');
-        $this->db = new DatabaseController($params['dsn'],$params['user'],$params['password']);
+        $host = getenv('DB_HOST');
+        $database = getenv('DB_NAME');
+        $username = getenv('DB_USER');
+        $password = getenv('DB_PASS');
+
+        $this->db = new DatabaseController($host, $database, $username, $password);
     }
     
     /**

@@ -125,7 +125,7 @@ class DummyImage
         echo "Processing image";
         foreach ($thumbData as $thname => $th){
             echo "... " . $thname;
-            $newImage = ImageCreateTrueColor($th[4], $th[5]);
+            $newImage = imagecreatetruecolor($th[4], $th[5]);
             $newFile = $this->imgDir . '/' . $this->getFileName($thname);
             imagecopyresized($newImage, $this->blueprint,$th[0], $th[1],
                              $th[2], $th[3], $th[4], $th[5], $th[6], $th[7]);

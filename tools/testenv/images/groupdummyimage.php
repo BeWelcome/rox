@@ -12,7 +12,7 @@ class GroupDummyImage extends DummyImage
      **/
     public function __construct($data)
     {
-        $this->id = $data['id'];
+        $this->id = $data['picid'];
         $this->name = $data['name'];
         $this->setImageDir();
         $this->size = getimagesize(STATIC::BASEIMAGE);
@@ -42,7 +42,7 @@ class GroupDummyImage extends DummyImage
         $original_y = min($this->size[1],1024);
  
         $thumbData = array();
-        $thumbData[''] = $this->getThumbSize(300,300, 'ratio', $this->size);
+        $thumbData[$this->getFileName('')] = $this->getThumbSize(300,300, 'ratio', $this->size);
         $thumbData['thumb'] = $this->getThumbSize(100,100, 'ratio', $this->size);
  
         return $this->createFiles($thumbData);

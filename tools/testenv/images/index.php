@@ -18,8 +18,15 @@
 set_time_limit(0);
 ini_set('memory_limit', '256M');
 
-require 'autoload.php';
-spl_autoload_register('main');
+/* Make sure we start in the subdirectory */
+
+require 'bootstrap/autoload.php';
+
+$cwd = getcwd();
+$parts = $chars = preg_split('^/^', $cwd, -1, PREG_SPLIT_NO_EMPTY);
+if ($parts[count($parts) - 1] != 'images') {
+    chdir('tools/testenv/images');
+}
 
 $group = new GroupImagesCreator();
 $group->getImages();

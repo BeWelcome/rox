@@ -464,8 +464,18 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
 
     public function isBrowseable()
     {
-        if (in_array($this->Status, array('TakenOut', 'SuspendedBeta', 'AskToLeave', 'Buggy', 'Banned', 'Rejected', 'DuplicateSigned')))
-        {
+        if (in_array(
+            $this->Status,
+            [
+            'TakenOut',
+            'SuspendedBeta',
+            'AskToLeave',
+            'Buggy',
+            'Banned',
+            'Rejected',
+            'DuplicateSigned', ],
+            true
+        )) {
             return false;
         }
         return true;

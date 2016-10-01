@@ -5,7 +5,6 @@ namespace Rox\Member\Controller;
 use Rox\Member\Model\Member;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class AvatarController
 {
@@ -15,8 +14,7 @@ class AvatarController
     {
         $size = $request->query->get('size');
 
-        switch($size)
-        {
+        switch ($size) {
             case '30':
                 $suffix = '_30_30';
                 break;
@@ -39,13 +37,12 @@ class AvatarController
                 $suffix = '_original';
         }
 
-
         $memberModel = new Member();
         $member = $memberModel->getByUsername($username);
-        $isNotBrowseable = !$member->isBrowseable();
+        $isBrowseable = $member->isBrowseable();
 
         $filename = 'htdocs/images/misc/empty_avatar' . $suffix . '.png';
-        if (file_exists('data/user/avatars/' . $member->id . $suffix)){
+        if ($isBrowseable && file_exists('data/user/avatars/' . $member->id . $suffix)) {
             $filename = 'data/user/avatars/' . $member->id . $suffix;
         }
 

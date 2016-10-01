@@ -23,19 +23,19 @@
     "lodash": "^3.10.1"
   },
   "dependencies": {
-    "bootstrap": "twbs/bootstrap#v4-dev",
+    "bootstrap": "github:twbs/bootstrap#v4-dev",
     "bootstrap-autohidingnavbar": "github:istvan-ujjmeszaros/bootstrap-autohidingnavbar",
     "font-awesome": "^4.5.0",
     "html5shiv": "^3.7.3",
     "jquery": "~2.2.4",
     "jquery-ui": "github:jquery/jquery-ui#1.11.4",
     "lato-font": "^1.1.1",
-    "leaflet": "Leaflet/leaflet#v1.0.0-rc.1",
-    "leaflet.markercluster": "Leaflet/leaflet.markercluster#v1.0.0-rc.1",
+    "leaflet": "github:leaflet/leaflet#v1.0.0-rc.1",
+    "leaflet.markercluster": "github:leaflet/leaflet.markercluster#v1.0.0-rc.1",
     "respond.js": "^1.4.2",
     "select2": "^4.0.2",
     "skrollr": "^0.6.26",
-    "skrollr-menu": "github:Prinzhorn/skrollr-menu",
+    "skrollr-menu": "github:prinzhorn/skrollr-menu",
     "tether": "~1.2.0",
     "tinymce": "^4.4.1",
     "unslider": "github:idiot/unslider"

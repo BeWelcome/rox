@@ -9,7 +9,7 @@
                     <div class="hidden-md-down col-lg-1 fullheight">
                         <div class="verticalalign">
                             <div class="welcomeavatar">
-                                <a href="members/{{ my_member.username }}" title="See profile {{ my_member.username }}" ><img src="/members/avatar/{{ my_member.username }}?150" style="width:50px; height:50px"></a>
+                                {{ macros.avatar( my_member.Username, 50, true) }}
                                 {%  if my_member.accomodation == 'anytime' %}{% set image = 'yesicanhost' %}{% endif %}
                                 {%  if my_member.accomodation == 'dependonrequest' %}{% set image = 'maybe' %}{% endif %}
                                 {%  if my_member.accomodation == 'dontask' %}{% set image = 'nosorry' %}{% endif %}
@@ -19,7 +19,7 @@
                     </div>
                     <div class="col-xs-12 col-md-12 col-lg-7 fullheight">
                         <div class="verticalalign">
-                            <span class="h1">Welcome back, {{ macros.memberlink(my_member) }}</span><br />
+                            <span class="h1">Welcome back, {{ macros.profilelink(my_member.Username) }}</span><br />
                             <span class="h4 hidden-xs-down">Your hosting status is
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

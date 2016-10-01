@@ -43,7 +43,8 @@ class HomeController extends AbstractController
 
     public function showNotificationsAction()
     {
-        $notifications = $this->homeService->getNotifications(5);
+        $member = $this->getMember();
+        $notifications = $this->homeService->getNotifications($member, 5);
 
         $content = $this->render('@start/widget/notifications.html.twig', [
             'notifications' => $notifications,

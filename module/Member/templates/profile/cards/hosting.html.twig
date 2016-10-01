@@ -48,7 +48,9 @@
 
     <div class="media m-t-0">
         <div class="media-body summary">
-            <small><i><span class="gray">Last login: {{ member.LastLogin.diffForHumans }}</span></i><br></small>
+            <small><i><span class="gray">
+                {{ 'Last login:' | trans }} {{ member.LastLogin ? member.LastLogin.diffForHumans : 'never' | trans }}
+            </span></i><br></small>
         </div>
     </div>
 </div>

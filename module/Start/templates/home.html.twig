@@ -9,7 +9,7 @@
                     <div class="hidden-md-down col-lg-1 fullheight">
                         <div class="verticalalign">
                             <div class="welcomeavatar">
-                                {{ macros.avatar( my_member.Username, 50, true) }}
+                                {{ macros.avatar( my_member.Username, 75, true) }}
                                 {%  if my_member.accomodation == 'anytime' %}{% set image = 'yesicanhost' %}{% endif %}
                                 {%  if my_member.accomodation == 'dependonrequest' %}{% set image = 'maybe' %}{% endif %}
                                 {%  if my_member.accomodation == 'dontask' %}{% set image = 'nosorry' %}{% endif %}
@@ -37,7 +37,7 @@
                         </div>
                     </div>
                     {# where do you want to go? #}
-                    <form method="post" action="search/members" name="searchlocation" class="fullheight">
+                    <form method="post" action="{{ url('membersearch') }}" name="searchlocation" class="fullheight">
                         <div class="col-xs-12 col-md-12 col-lg-4 fullheight">
                             <div class="input-group verticalalign">
                                     <input type="text" class="form-control" placeholder="Where do you want to go?">
@@ -70,8 +70,8 @@
 
             <!-- messages tabs -->
             <ul class="nav nav-tabs">
-                <li class="nav-item"><a href="#messages" class="nav-link active" aria-controls="messages" role="tab" data-toggle="tab">Messages received {% if messageCount %}<span class="tag tag-primary">{{ messageCount }}</span>{% endif %}</a></li>
-                <li class="nav-item"><a href="#notifications" class="nav-link" aria-controls="notifications" role="tab" data-toggle="tab">Notifications</a></li>
+                <li class="nav-item"><a class="nav-link active" aria-controls="messages" href="#messages" role="tab" data-toggle="tab">Messages received {% if messageCount %}<span class="tag tag-primary">{{ messageCount }}</span>{% endif %}</a></li>
+                <li class="nav-item"><a class="nav-link" aria-controls="notifications" href="#notifications" role="tab" data-toggle="tab">Notifications</a></li>
             </ul>
 
             <!-- bordered box around content -->
@@ -103,7 +103,7 @@
 
                         <!-- message buttons -->
                         <div class="text-xs-center">
-                            <a href="messages" class="btn btn-outline-primary btn-homewhite"><i class="fa fa-envelope"></i> My inbox {% if messageCount %}<span class="tag tag-primary tag-pill">{{ messageCount }}</span>{% endif %}</a>
+                            <a href="{{ url('message') }}" class="btn btn-outline-primary btn-homewhite"><i class="fa fa-envelope"></i> My inbox {% if messageCount %}<span class="tag tag-primary tag-pill">{{ messageCount }}</span>{% endif %}</a>
                         </div>
 
                     </div>
@@ -159,9 +159,9 @@
 
                         <div class="text-xs-center">
                             <div class="btn-group" role="group" aria-label="...">
-                                <a href="forums" class="btn btn-outline-primary btn-homewhite"><i class="fa fa-comments"></i> View forums</a>
-                                <a href="groups/mygroups" class="btn btn-outline-primary btn-homewhite"><i class="fa fa-users"></i> My groups</a>
-                                <a href="forums/subscriptions" class="btn btn-outline-primary btn-homewhite"><i class="fa fa-check-square-o"></i> My subscriptions</a>
+                                <a href="/forums" class="btn btn-outline-primary btn-homewhite"><i class="fa fa-comments"></i> View forums</a>
+                                <a href="/groups/mygroups" class="btn btn-outline-primary btn-homewhite"><i class="fa fa-users"></i> My groups</a>
+                                <a href="/forums/subscriptions" class="btn btn-outline-primary btn-homewhite"><i class="fa fa-check-square-o"></i> My subscriptions</a>
                             </div>
                         </div>
 

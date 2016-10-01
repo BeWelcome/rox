@@ -35,12 +35,12 @@
 
     <div class="row">
         <div class="col-xs-1 text-xs-right p-r-0">
-            {{ macros.avatar(otherMember.Username, 50) }}
+            {{ macros.avatar(otherMember.Username, 75) }}
         </div>
         <div class="col-xs-11">
             <div class="username p-b-1">
                 <span class="pull-left">
-                    <a href="{{ path('member', { username: otherMember.Username}) }}"><strong>{{ otherMember.Username }}</strong></a>
+                <strong>{{ macros.profilelink( otherMember.Username ) }}</strong></a>
                 </span>
                 <span class="pull-right p-a-1 small text-xs-right locandlang">
                     {#<?= $words->get('LivesIn') ?>#}
@@ -83,10 +83,8 @@
                     {{ message.created.diffForHumans }}
                 </div>
                 <div>
-                    {{ message.Message }}
+                    {{ message.Message | raw }}
                 </div>
-
-                {#{{ faker.paragraphs(random(10), true) | nl2br }}#}
 
                 <div class="smaller m-t-1">
                     {{ 'Date' | trans }}:
@@ -125,7 +123,7 @@
         <p class="">
             <span class="grey">
                 {% if directionIn %}
-                    {{ 'Message from' | trans }} <a href="{{ path('member', { username: message.sender.Username }) }}">{{ message.sender.Username }}</a>
+                    {{ 'Message from' | trans }} {{ macros.profilelink( message.sender.Username ) }}
                     {#$words->get('MessageFrom', '<a href="members/' . $contact_username . '">' . $contact_username . '</a>')#}
                 {% else %}
                     {{ 'Messaget to' | trans }} {{ message.receiver.Username }}

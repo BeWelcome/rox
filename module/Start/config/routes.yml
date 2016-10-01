@@ -5,7 +5,7 @@ start:
         _controller: Rox\Start\Controller\StartController::startPageAction
 
 home:
-    path:     /home
+    path:     /home/
     defaults:
         _controller: Rox\Start\Controller\HomeController:showAction
 

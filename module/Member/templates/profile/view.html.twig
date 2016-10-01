@@ -15,7 +15,7 @@
                     <div class="col-xs-12 col-lg-12">
                         <div class="col-xs-12 col-lg-2 p-x-0">
                             {# 'editmyprofile' or 'editavatar' when own profile ; gallery/show/user/xxxxx/pictures when on other profile #}
-                            <a href="#" title="See the profile of {{ member.username }}" ><img class="profileimg" src="{{ path('avatar', { 'username': member.username }) }}?150"></a>
+                            {{ macros.avatar( member.username, 150, true) }}
                         </div>
                         <div class="col-xs-12 col-lg-8 m-b-1 p-x-0">
                             {# if member admin #}
@@ -88,8 +88,8 @@
                                     <a href="#" class="btn btn-secondary text-xs-left btn-profile">Delete profile</a>
                                 {%  else %}
                                     <a href="{{ path('message/compose', { username: member.Username }) }}" class="btn btn-primary text-xs-left btn-profile"><i class="fa fa-envelope"></i><span class="icontext">Message</span></a>
-                                    <a href="#" class="btn btn-secondary text-xs-left btn-profile"><i class="fa fa-user-plus"></i><span class="icontext">Add as friend</a></span>
-                                    <a href="#" class="btn btn-secondary text-xs-left btn-profile"><i class="fa fa-pencil"></i><span class="icontext">Write comment</a></span>
+                                    <a href="#" class="btn btn-secondary text-xs-left btn-profile"><i class="fa fa-user-plus"></i><span class="icontext">Add as friend</span></a>
+                                    <a href="#" class="btn btn-secondary text-xs-left btn-profile"><i class="fa fa-pencil"></i><span class="icontext">Write comment</span></a>
                                 {% endif %}
 
                                 <div class="btn-group" role="group">

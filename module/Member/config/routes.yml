@@ -5,7 +5,7 @@ avatar:
     defaults:
         _controller: Rox\Member\Controller\AvatarController::showAvatarAction
 
-textsearch:
+membersearch:
     path: /search/members
     defaults:
         _controller: Rox\Member\Controller\SearchController:searchAction

@@ -8,8 +8,8 @@
 
 .hoststatus{
   position:relative;
-  top: -16px;
-  right: -32px;
+  top: -24px;
+  right: -53px; /* 75px - 24px */
 }
 
 .hoststatusdropdown{
@@ -114,7 +114,7 @@
 }
 
 .welcomeavatar{
-  height: 50px;
+  height: 75px;
 }
 
 .btn-dropdown {

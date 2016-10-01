@@ -41,10 +41,12 @@
     </select>
 {% endmacro %}
 
-{% macro avatar(username, size, linked = false) %}
-    {% set img %}<img class="img-rounded" width="{{ size }}" height="{{ size }}" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'Profile' | trans }}">{% endset %}
+{% macro avatar(username, size, linked = false, addimage = false, addlink = false) %}
+    {% set imgclasses %}img-rounded{% if addimage %} {{ addimage }}{% endif %}{% endset %}
+    {% set linkclasses %}{% if addlink %} {{ addlink }}{% endif %}{% endset %}
+    {% set img %}<img class="{{ imgclasses }}" width="{{ size }}" height="{{ size }}" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'Profile' | trans }}">{% endset %}
     {% if linked %}
-        <a href="members/{{ username }}">{{ img }}</a>
+        <a {% if linkclasses %}class="{{ linkclasses }}"{% endif %} href="members/{{ username }}">{{ img }}</a>
     {% else %}
         {{ img }}
     {% endif %}

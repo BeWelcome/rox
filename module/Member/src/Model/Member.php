@@ -461,4 +461,13 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
 
         return (int) $right->Level;
     }
+
+    public function isBrowseable()
+    {
+        if (in_array($this->Status, array('TakenOut', 'SuspendedBeta', 'AskToLeave', 'Buggy', 'Banned', 'Rejected', 'DuplicateSigned')))
+        {
+            return false;
+        }
+        return true;
+    }
 }

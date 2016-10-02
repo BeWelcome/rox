@@ -16,9 +16,11 @@ use Symfony\Component\HttpFoundation\Response;
 class CommunityNewsController extends Controller
 {
     /**
-     * @param $create
+     * @param $request
+     * @param int $id Switch between create (id = 0) and edit.
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      * @throws NotFoundException
+     * @internal param $create
      */
     private function handleEditCreateAction($request, $id = 0)
     {

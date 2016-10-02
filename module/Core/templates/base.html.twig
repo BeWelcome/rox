@@ -34,13 +34,13 @@
 
     {% if cssFiles is defined %}
         {% for cssFile in cssFiles %}
-            <link rel="stylesheet" type="text/css" href="{{ asset(cssFile) }}">
+            <link rel="stylesheet" type="text/css" href="{{ asset('css/' ~ cssFile) }}">
         {% endfor %}
     {% endif %}
 
     {% if scriptFiles is defined %}
         {% for scriptFile in scriptFiles %}
-            <script type="text/javascript" src="{{ asset(scriptFile) }}"></script>
+            <script type="text/javascript" src="{{ asset('js/' ~ scriptFile) }}"></script>
         {% endfor %}
     {% endif %}
 

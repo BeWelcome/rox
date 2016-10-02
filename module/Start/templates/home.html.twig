@@ -1,39 +1,27 @@
 {% extends '@base/base.html.twig' %}
 
-{% block content %}
+{% set scriptFiles = ['start/home.js'] %}
 
+{% block content %}
     <div class="row m-b-2" style="margin-top: -25px;">
         <div class="col-xs-12">
             <div class="container">
                 <div class="row welcomeback">
                     <div class="hidden-md-down col-lg-1 fullheight">
                         <div class="verticalalign">
-                            <div class="welcomeavatar">
-                                {{ macros.avatar( my_member.Username, 75, true) }}
-                                {%  if my_member.accomodation == 'anytime' %}{% set image = 'yesicanhost' %}{% endif %}
-                                {%  if my_member.accomodation == 'dependonrequest' %}{% set image = 'maybe' %}{% endif %}
-                                {%  if my_member.accomodation == 'dontask' %}{% set image = 'nosorry' %}{% endif %}
-                                <img src="/images/icons/{{ image }}.png" class="hoststatus">
-                            </div>
+                            {% include '@start/widget/profilepicturewithaccommodation.html.twig' with {
+                                member: my_member
+                            } only %}
                         </div>
                     </div>
                     <div class="col-xs-12 col-md-12 col-lg-7 fullheight">
                         <div class="verticalalign">
                             <span class="h1">Welcome back, {{ macros.profilelink(my_member.Username) }}</span><br />
                             <span class="h4 hidden-xs-down">Your hosting status is
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        {%  if my_member.accomodation == 'anytime' %}hosting{% endif %}
-                                        {%  if my_member.accomodation == 'dependonrequest' %}maybe hosting{% endif %}
-                                        {%  if my_member.accomodation == 'dontask' %}not hosting{% endif %}
-                                    </button>
-                                    <div class="dropdown-menu hoststatusdropdown">
-                                        <a class="dropdown-item" href="#">hosting</a>
-                                        <a class="dropdown-item" href="#">maybe hosting</a>
-                                        <a class="dropdown-item" href="#">not hosting</a>
-                                    </div>
-                                </div>
-                                 in <a href="#">{{ my_member.city.name }}</a></span>
+                                {% include '@start/widget/accommodation.html.twig' with {
+                                    member: my_member
+                                } only %}
+                                in <a href="#">{{ my_member.city.name }}</a></span>
                         </div>
                     </div>
                     {# where do you want to go? #}

@@ -1,0 +1,12 @@
+<div class="btn-group">
+    <button id="accommodation" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {%  if member.accomodation == 'anytime' %}hosting{% endif %}
+        {%  if member.accomodation == 'dependonrequest' %}maybe hosting{% endif %}
+        {%  if member.accomodation == 'dontask' %}not hosting{% endif %}
+    </button>
+    <div class="dropdown-menu hoststatusdropdown">
+        <a id="anytime" class="hosting dropdown-item" href="#">hosting</a>
+        <a id="dependonrequest" class="hosting dropdown-item" href="#">maybe hosting</a>
+        <a id="dontask" class="hosting dropdown-item" href="#">not hosting</a>
+    </div>
+</div>

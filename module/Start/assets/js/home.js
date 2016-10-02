@@ -15,6 +15,8 @@ $(document).ready(function() {
     $('#groups, #forum, #following').change(function() {
         setTimeout(Home.updateThreads, 500);
     });
+
+    $('.hosting').click(Home.setHostingStatus);
 });
 
 var Home = {
@@ -100,6 +102,23 @@ var Home = {
             data: {},
             success: function (activities) {
                 $('#activitiesdisplay').replaceWith(activities);
+            }
+        });
+    },
+    setHostingStatus: function (e) {
+        e.preventDefault();
+        // Get parameters
+        var accommodation = this.id;
+        $.ajax({
+            type: 'POST',
+            url: '/widget/accommodation',
+            data: {
+                accommodation: accommodation
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('.welcomeavatar').replaceWith(data.profilePictureWithAccommodation);
+                $('#accommodation').replaceWith(data.accommodationHtml);
             }
         });
     }

@@ -5,6 +5,7 @@ namespace Rox\Start\Controller;
 use Rox\CommunityNews\Model\CommunityNews;
 use Rox\Core\Controller\AbstractController;
 use Rox\Main\Home\HomeModel as HomeService;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -82,6 +83,41 @@ class HomeController extends AbstractController
         ]);
 
         return new Response($content);
+    }
+
+    public function setAccommodationAction(Request $request)
+    {
+        $accommodation = $request->request->get('accommodation');
+
+        switch($accommodation){
+            case 'dontask':
+            case 'dependonrequest':
+            case 'anytime':
+                $valid = true;
+                break;
+            default:
+                $valid = false;
+        }
+
+        $member = $this->getMember();
+        if ($valid) {
+            $member->Accomodation = $accommodation;
+            $member->save();
+        }
+
+        $profilePictureWithAccommodation = $this->render('@start/widget/profilepicturewithaccommodation.html.twig', [
+            'member' => $member
+        ]);
+
+        $accommodationHtml = $this->render('@start/widget/accommodation.html.twig', [
+            'member' => $member
+        ]);
+
+        return new JsonResponse([
+            'profilePictureWithAccommodation' => $profilePictureWithAccommodation,
+            'accommodationHtml' => $accommodationHtml
+
+        ]);
     }
 
     /**

@@ -98,13 +98,15 @@ module.exports = function (grunt) {
                             '**/*.css'
                         ],
                         cwd: 'node_modules/tinymce',
-                        dest: 'htdocs/assets/js'
+                        dest: 'htdocs/assets/js/tinymce'
                     },
                     {
                         expand: true,
-                        src: 'communitynews.js',
-                        cwd: 'module/Admin/assets/js',
-                        dest: 'htdocs/assets/js'
+                        src: ['module/**/*.js', '!module/Core/assets/js/*.js'],
+                        dest: 'htdocs/assets/js',
+                        rename: function (dest, src) {          // The `dest` and `src` values can be passed into the function
+                            return dest + '/' + src.replace('module/', '').replace('/assets/js', '').toLowerCase(); // The `src` is being renamed; the `dest` remains the same
+                        }
                     }
                 ]
             }
@@ -168,7 +170,7 @@ module.exports = function (grunt) {
 
                     'node_modules/unslider/src/js/unslider.js',
                     'node_modules/tinymce/tinymce.js',
-                    'module/*/assets/js/**/*.js'
+                    'module/Core/assets/js/**/*.js'
                 ],
                 dest: 'htdocs/assets/js/built.js',
                 nonull: true

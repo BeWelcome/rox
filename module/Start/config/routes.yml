@@ -7,31 +7,37 @@ start:
 home:
     path:     /home/
     defaults:
-        _controller: Rox\Start\Controller\HomeController:showAction
+        _controller: Rox\Start\Controller\HomeController::showAction
 
 widget/messages:
     path:     /widget/messages
     methods: [GET]
     defaults:
-        _controller: Rox\Start\Controller\HomeController:showMessagesAction
+        _controller: Rox\Start\Controller\HomeController::showMessagesAction
 
 widget/notifications:
     path:     /widget/notifications
     methods: [GET]
     defaults:
-        _controller: Rox\Start\Controller\HomeController:showNotificationsAction
+        _controller: Rox\Start\Controller\HomeController::showNotificationsAction
 
 widget/threads:
     path:     /widget/threads
     methods: [GET]
     defaults:
-        _controller: Rox\Start\Controller\HomeController:showThreadsAction
+        _controller: Rox\Start\Controller\HomeController::showThreadsAction
 
 widget/activities:
     path:     /widget/activities
     methods: [GET]
     defaults:
-        _controller: Rox\Start\Controller\HomeController:showActivitiesAction
+        _controller: Rox\Start\Controller\HomeController::showActivitiesAction
+
+widget/accommodation:
+    path:     /widget/accommodation
+    methods: [POST]
+    defaults:
+        _controller: Rox\Start\Controller\HomeController::setAccommodationAction
 
 tour:
     path: /tour/{page}

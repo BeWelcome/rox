@@ -1,8 +1,8 @@
 {% extends '@base/base.html.twig' %}
 
-{% set scriptFiles = ['js/tinymce.js'] %}
+{% set scriptFiles = ['leaflet.js', 'member/createmap.js', 'member/searchpicker.js'] %}
 
-{% set cssFiles = ['css/leaflet.css', 'css/jquery-ui.css'] %}
+{% set cssFiles = ['leaflet.css', 'jquery-ui.css'] %}
 
 {% block content %}
 
@@ -45,11 +45,11 @@
                 {{ form_widget(form.update_map) }}
             </div>
         </div>
-        <div class="row">
+{#        <div class="row">
             <div class="col-xs-12 m-t-1">
                 {{ form_widget(form.advanced_options) }}
             </div>
-        </div>
+        </div> #}
         {{ form_end(form) }}
     </div>
 
@@ -62,12 +62,15 @@
     </div>
 
     <script>
-        var mapMembers = {{ results.map | json_encode | raw }};
+        var mapMembers = {% if results %}
+            {{ results.map | json_encode | raw }};
+        {% else %}
+            { };
+        {% endif %}
     </script>
-
-    {# TODO for showing a paginated table of members under map #}
-    {#{% if results %}#}
-        {#{% include '@member/results.html.twig' %}#}
-    {#{% endif %}#}
-
+    {# TODO for showing a paginated table of members under map
+        {% if results %}
+            {% include '@member/results.html.twig' %}
+        {% endif %}
+    #}
 {% endblock content %}

@@ -3,10 +3,6 @@ services:
         class: Rox\Member\Controller\AvatarController
         autowire: true
 
-    Rox\Member\Controller\SearchController:
-        class: Rox\Member\Controller\SearchController
-        autowire: true
-
     Rox\Member\Controller\MemberController:
         class: Rox\Member\Controller\MemberController
         autowire: true

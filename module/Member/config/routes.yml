@@ -8,25 +8,25 @@ avatar:
 membersearch:
     path: /search/members
     defaults:
-        _controller: Rox\Member\Controller\SearchController:searchAction
+        _controller: Rox\Member\Controller\SearchController::searchAction
 
 member:
     path: /members/{username}
     methods: [GET]
     defaults:
-        _controller: Rox\Member\Controller\MemberController:view
+        _controller: Rox\Member\Controller\MemberController::view
 
 member/edit:
     path: /member/edit
     methods: [GET]
     defaults:
-        _controller: Rox\Member\Controller\MemberController:edit
+        _controller: Rox\Member\Controller\MemberController::edit
 
 member/comment:
     path: /members/{username}/comments
     methods: [GET]
     defaults:
-        _controller: Rox\Member\Controller\CommentController:index
+        _controller: Rox\Member\Controller\CommentController::index
 
 https_check:
     path: /https_check

@@ -6,9 +6,9 @@ if ($('#map').length) {
         zoom: 2
     });
 
-    L.tileLayer('https://otile3-s.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright" title="OpenStreetMap" target="_blank">OpenStreetMap</a> contributors | Tiles Courtesy of <a href="http://www.mapquest.com/" title="MapQuest" target="_blank">MapQuest</a> <img src="https://developer.mapquest.com/content/osm/mq_logo.png" width="16" height="16">',
-        subdomains: ['otile1', 'otile2', 'otile3', 'otile4']
+        subdomains: ['a', 'b', 'c']
     }).addTo(map);
 
 

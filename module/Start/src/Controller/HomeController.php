@@ -89,7 +89,7 @@ class HomeController extends AbstractController
     {
         $accommodation = $request->request->get('accommodation');
 
-        switch($accommodation){
+        switch ($accommodation) {
             case 'dontask':
             case 'dependonrequest':
             case 'anytime':
@@ -106,16 +106,16 @@ class HomeController extends AbstractController
         }
 
         $profilePictureWithAccommodation = $this->render('@start/widget/profilepicturewithaccommodation.html.twig', [
-            'member' => $member
+            'member' => $member,
         ]);
 
         $accommodationHtml = $this->render('@start/widget/accommodation.html.twig', [
-            'member' => $member
+            'member' => $member,
         ]);
 
         return new JsonResponse([
             'profilePictureWithAccommodation' => $profilePictureWithAccommodation,
-            'accommodationHtml' => $accommodationHtml
+            'accommodationHtml' => $accommodationHtml,
 
         ]);
     }

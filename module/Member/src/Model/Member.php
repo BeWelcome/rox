@@ -7,12 +7,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
+use Rox\Auth\Encoder\LegacyPasswordEncoder;
 use Rox\Auth\Model\VolunteerRight;
 use Rox\Core\Exception\NotFoundException;
+use Rox\Core\Exception\RuntimeException;
 use Rox\Core\Model\AbstractModel;
 use Rox\Geo\Model\Location;
 use Rox\I18n\Model\Language;
 use Rox\Member\Repository\MemberRepositoryInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -32,7 +35,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @todo Maybe use a decorated to implement UserInterface?
  */
-class Member extends AbstractModel implements MemberRepositoryInterface, UserInterface
+class Member extends AbstractModel implements MemberRepositoryInterface, UserInterface, EncoderAwareInterface
 {
     const CREATED_AT = 'created';
     const UPDATED_AT = 'updated';
@@ -479,5 +482,26 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
             return false;
         }
         return true;
+    }
+
+    /**
+     * Gets the name of the encoder used to encode the password.
+     *
+     * If the method returns null, the standard way to retrieve the encoder
+     * will be used instead.
+     *
+     * @return string|null
+     *
+     * @throws RuntimeException Password not supported.
+     */
+    public function getEncoderName()
+    {
+        if (preg_match('/^\*[0-9A-F]{40}$/', $this->PassWord)) {
+            return LegacyPasswordEncoder::class;
+        }
+
+        if (!preg_match('/^\$2y\$[0-9]{2}\$.{53}$/', $this->PassWord)) {
+            throw new RuntimeException('Password is neither bcrypt or legacy sha1.');
+        }
     }
 }

@@ -14,3 +14,11 @@ services:
 
     Rox\Member\Controller\HttpsCheckController:
         class: Rox\Member\Controller\HttpsCheckController
+
+    Rox\Member\Controller\ChangePasswordController:
+        class: Rox\Member\Controller\ChangePasswordController
+        parent: Rox\Core\Controller\AbstractController
+        arguments: ['@Rox\Member\Service\MemberService', '@security.encoder_factory', '@security.authentication.rememberme.services.simplehash.default']
+        calls:
+            - [setRememberMeFormParameter, ['%remember_me.form_parameter%']]
+            - [setRememberMeCookieName, ['%remember_me.cookie_name%']]

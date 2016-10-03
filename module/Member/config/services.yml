@@ -25,3 +25,7 @@ services:
     Rox\Member\Service\PreferenceService:
         class: Rox\Member\Service\PreferenceService
         autowire: true
+
+    Rox\Member\Service\MemberService:
+        class: Rox\Member\Service\MemberService
+        arguments: ['@Rox\Auth\Factory\EncoderFactory']

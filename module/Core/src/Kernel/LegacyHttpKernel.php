@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -28,11 +29,12 @@ class LegacyHttpKernel extends HttpKernel
         EngineInterface $engine,
         EventDispatcherInterface $dispatcher,
         ControllerResolverInterface $resolver,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        ArgumentResolverInterface $argumentResolver
     ) {
         $this->engine = $engine;
 
-        parent::__construct($dispatcher, $resolver, $requestStack);
+        parent::__construct($dispatcher, $resolver, $requestStack, $argumentResolver);
     }
 
     /**

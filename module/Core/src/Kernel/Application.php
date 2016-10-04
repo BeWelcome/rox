@@ -23,7 +23,9 @@ class Application extends Kernel
         if ($this->isDebug()) {
             $this->disableHoaAutoload();
 
-            Debug::enable();
+            if ($this->getEnvironment() === 'development') {
+                Debug::enable();
+            }
         }
 
         $environmentExplorer = new EnvironmentExplorer();

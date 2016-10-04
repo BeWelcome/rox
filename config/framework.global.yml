@@ -7,7 +7,7 @@ framework:
             - twig
 
     router:
-        resource: %kernel.root_dir%/config/routes.global.yml
+        resource: '%kernel.root_dir%/config/routes.global.yml'
 
     default_locale: en
 

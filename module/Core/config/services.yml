@@ -35,7 +35,7 @@ services:
         tags:
             - { name: twig.extension }
 
-    twig.extension.translation:
+    twig.extension.trans:
         class: Symfony\Bridge\Twig\Extension\TranslationExtension
         arguments: ['@translator']
         public: false

@@ -8,7 +8,7 @@ services:
 
     Rox\Core\Kernel\LegacyHttpKernel:
         class: Rox\Core\Kernel\LegacyHttpKernel
-        arguments: ['@templating.engine.twig', '@event_dispatcher', '@controller_resolver', '@request_stack']
+        arguments: ['@templating.engine.twig', '@event_dispatcher', '@controller_resolver', '@request_stack', '@argument_resolver']
 
     templating.engine.twig:
         class: Symfony\Bundle\TwigBundle\TwigEngine

@@ -17,7 +17,7 @@ class CommunityNewsControllerTest extends WebTestCase
 
     protected static function getKernelClass()
     {
-        return new Application('testing', true);
+        return Application::class;
     }
 
     public function setUp()

@@ -25,10 +25,6 @@ class CommunityNewsControllerTest extends WebTestCase
         $this->client = static::createClient();
     }
 
-    public function tearDown()
-    {
-    }
-
     private function logInUser()
     {
         $session = $this->client->getContainer()->get('session');

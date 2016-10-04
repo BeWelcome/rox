@@ -29,3 +29,9 @@ services:
     Rox\Member\Service\MemberService:
         class: Rox\Member\Service\MemberService
         arguments: ['@Rox\Auth\Factory\EncoderFactory']
+
+    Rox\Member\Listener\LastLoginListener:
+        class: Rox\Member\Listener\LastLoginListener
+        autowire: true
+        tags:
+            - { name: kernel.event_listener, event: security.authentication.success, method: onAuthSuccess }

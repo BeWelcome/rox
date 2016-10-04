@@ -34,8 +34,8 @@ security:
                 secret: '%kernel.secret%'
                 lifetime: 31536000 # 1 year in seconds
                 path: /
-                remember_me_parameter: %remember_me.form_parameter%
-                name: %remember_me.cookie_name%
+                remember_me_parameter: '%remember_me.form_parameter%'
+                name: '%remember_me.cookie_name%'
 
             anonymous: ~
             form_login:

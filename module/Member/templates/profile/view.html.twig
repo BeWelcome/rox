@@ -8,125 +8,143 @@
 
     {% set FirstName, LastName = member.getCryptedField('FirstName'), member.getCryptedField('LastName') %}
 
+    {# if member admin #}
+    <div>
+        Set status, add comment as admin<br>
+        <select>
+            <option value="Active" selected="selected">Active</option>
+            <option value="MailToConfirm">Not confirmed yet</option>
+            <option value="OutOfRemind">Out of remind</option>
+            <option value="SuspendedBeta">Suspended</option>
+            <option value="Banned">Banned</option>
+            <option value="ChoiceInactive">Inactive (own choice)</option>
+            <option value="DuplicateSigned">Duplicate</option>
+            <option value="ActiveHidden">Admin profile</option>
+            <option value="AskToLeave">Retired</option>
+            <option value="PassedAway">Passed away</option>
+        </select>
+        <button class="btn btn-primary">Set</button>
+    </div>
+
     <div class="row">
         <div class="col-xs-12">
-            <div class="container">
-                <div class="row headerimg p-t-1">
-                    <div class="col-xs-12 col-lg-12">
-                        <div class="col-xs-12 col-lg-2 p-x-0">
-                            {# 'editmyprofile' or 'editavatar' when own profile ; gallery/show/user/xxxxx/pictures when on other profile #}
-                            {{ macros.avatar( member.username, 150, true) }}
-                        </div>
-                        <div class="col-xs-12 col-lg-8 m-b-1 p-x-0">
-                            {# if member admin #}
-                            <div class="pull-xs-right m-r-1">
-                                Set status, add comment as admin<br>
-                                <select>
-                                    <option value="Active" selected="selected">Active</option>
-                                    <option value="MailToConfirm">Not confirmed yet</option>
-                                    <option value="OutOfRemind">Out of remind</option>
-                                    <option value="SuspendedBeta">Suspended</option>
-                                    <option value="Banned">Banned</option>
-                                    <option value="ChoiceInactive">Inactive (own choice)</option>
-                                    <option value="DuplicateSigned">Duplicate</option>
-                                    <option value="ActiveHidden">Admin profile</option>
-                                    <option value="AskToLeave">Retired</option>
-                                    <option value="PassedAway">Passed away</option>
-                                </select>
-                                <button class="btn btn-primary">Set</button>
-                            </div>
 
-                            <div class="pull-xs-left">
-                                {% if 'not crypted' not in [FirstName.IsCrypted, LastName.IsCrypted] %}
-                                    <span class="h1 profilebig whiteshadow">{{ member.username }}</span><br>
-                                {% else %}
-                                    <span class="h1 profilebig whiteshadow">
+            <div class="row headerimg p-t-1">
+                <div class="col-xs-12 col-lg-12">
+                    <div class="col-xs-12 col-lg-2 p-x-0">
+                        {# 'editmyprofile' or 'editavatar' when own profile ; gallery/show/user/xxxxx/pictures when on other profile #}
+                        {{ macros.avatar( member.username, 150, true) }}
+                    </div>
+                    <div class="col-xs-12 col-lg-5 m-b-1 p-x-0">
+
+
+                        <div class="pull-xs-left">
+                            {% if 'not crypted' not in [FirstName.IsCrypted, LastName.IsCrypted] %}
+                                <span class="h1 profilebig whiteshadow">{{ member.username }}</span><br>
+                            {% else %}
+                                <span class="h1 profilebig whiteshadow">
                                         {% if FirstName.IsCrypted == 'not crypted' %}
                                             {{ FirstName.MemberCryptedValue }}
                                         {% endif %}
 
-                                        {% if LastName.IsCrypted == 'not crypted' %}
-                                            {{ LastName.MemberCryptedValue }}
-                                        {% endif %}
+                                    {% if LastName.IsCrypted == 'not crypted' %}
+                                        {{ LastName.MemberCryptedValue }}
+                                    {% endif %}
 
                                     </span><br>
-                                {% endif %}
+                            {% endif %}
 
-                                <span class="profilemedium regularfont whiteshadow">
+                            <span class="profilemedium regularfont whiteshadow">
                                     {{ member.birthdate.diffInYears() }} {{ 'years old' | trans }}
 
-                                    {% if member.gender == 'male' %}
-                                        <i class="fa fa-mars" title="male"></i>
+                                {% if member.gender == 'male' %}
+                                    <i class="fa fa-mars" title="male"></i>
                                     {% elseif member.gender == 'female' %}
-                                        <i class="fa fa-venus" title="female"></i>
-                                    {% else %}
-                                        <i class="fa fa-intersex" title="other"></i>
-                                    {% endif %}
+                                    <i class="fa fa-venus" title="female"></i>
+                                {% else %}
+                                    <i class="fa fa-intersex" title="other"></i>
+                                {% endif %}
 
                                 </span>
 
-                                <br>
+                            <br>
 
-                                {% if member.occupation %}
-                                    {# TODO guessing this tag was for occupation #}
-                                    <span class="text-truncate whiteshadow">{{ member.occupation }}</span>
-                                {% endif %}
+                            {% if member.occupation %}
+                                {# TODO guessing this tag was for occupation #}
+                                <span class="text-truncate whiteshadow">{{ member.occupation }}</span>
+                            {% endif %}
 
-                                {% if member.id == my_member.id %}
-                                    {# TODO the span tag was empty, assuming edit #}
-                                    <a href="{{ path('member/edit') }}"><span class="h4">edit</span></a>
-                                {% endif %}
-                            </div>
+                            {% if member.id == my_member.id %}
+                                {# TODO the span tag was empty, assuming edit #}
+                                <a href="{{ path('member/edit') }}"><span class="h4">edit</span></a>
+                            {% endif %}
                         </div>
-                        <div class="col-xs-12 col-lg-2 p-x-0">
-                            <div class="btn-group-vertical btn-block m-b-1">
-                                {% if member.id == my_member.id %}
-                                    <a href="{{ path('member/edit') }}" class="btn btn-primary text-xs-left btn-profile">Edit profile</a>
-                                    <a href="#" class="btn btn-secondary text-xs-left btn-profile">My preferences</a>
-                                    <a href="#" class="btn btn-secondary text-xs-left btn-profile">My notes</a>
-                                    <a href="#" class="btn btn-secondary text-xs-left btn-profile">Set inactive</a>
-                                    <a href="#" class="btn btn-secondary text-xs-left btn-profile">Delete profile</a>
-                                {%  else %}
-                                    <a href="{{ path('message/compose', { username: member.Username }) }}" class="btn btn-primary text-xs-left btn-profile"><i class="fa fa-envelope"></i><span class="icontext">Message</span></a>
-                                    <a href="#" class="btn btn-secondary text-xs-left btn-profile"><i class="fa fa-user-plus"></i><span class="icontext">Add as friend</span></a>
-                                    <a href="#" class="btn btn-secondary text-xs-left btn-profile"><i class="fa fa-pencil"></i><span class="icontext">Write comment</span></a>
-                                {% endif %}
+                    </div>
+                    <div class="col-xs-12 col-lg-5 profilestatusbox">
+                        {% include('@member/profile/cards/hosting.html.twig') %}
+                    </div>
+                </div>
+                <div class="col-xs-12 col-lg-12">
 
-                                <div class="btn-group" role="group">
-                                    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle text-xs-left btn-profile m-b-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fa fa-plus"></i><span class="icontext">Add to...</span>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                        <a class="dropdown-item text-xs-left" href="#">...new list</a>
-                                        <a class="dropdown-item text-xs-left" href="#">People in Berlin</a>
-                                        <a class="dropdown-item text-xs-left" href="#">Holidays in France</a>
-                                    </div>
+                    <div class="col-xs-12 col-lg-2 p-x-0 ">
+
+                        <div class="btn-group-vertical btn-block m-b-1">
+                            {% if member.id == my_member.id %}
+                                <a href="{{ path('member/edit') }}" class="btn btn-primary text-xs-left btn-profile">Edit
+                                    profile</a>
+                                <a href="#" class="btn btn-secondary text-xs-left btn-profile">My preferences</a>
+                                <a href="#" class="btn btn-secondary text-xs-left btn-profile">My notes</a>
+                                <a href="#" class="btn btn-secondary text-xs-left btn-profile">Set inactive</a>
+                                <a href="#" class="btn btn-secondary text-xs-left btn-profile">Delete profile</a>
+                            {% else %}
+                                <a href="{{ path('message/compose', { username: member.Username }) }}"
+                                   class="btn btn-primary text-xs-left btn-profile"><i class="fa fa-envelope"></i><span
+                                            class="icontext">Message</span></a>
+                                <a href="#" class="btn btn-secondary text-xs-left btn-profile"><i
+                                            class="fa fa-user-plus"></i><span class="icontext">Add as friend</span></a>
+                                <a href="#" class="btn btn-secondary text-xs-left btn-profile"><i
+                                            class="fa fa-pencil"></i><span class="icontext">Write comment</span></a>
+                            {% endif %}
+
+                            <div class="btn-group" role="group">
+                                <button id="btnGroupDrop1" type="button"
+                                        class="btn btn-secondary dropdown-toggle text-xs-left btn-profile m-b-0"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-plus"></i><span class="icontext">Add to...</span>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                    <a class="dropdown-item text-xs-left" href="#">...new list</a>
+                                    <a class="dropdown-item text-xs-left" href="#">People in Berlin</a>
+                                    <a class="dropdown-item text-xs-left" href="#">Holidays in France</a>
                                 </div>
-                                {# #}
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-lg-12">
-
-                        <div class="card col-xs-12 col-lg-5 m-y-1 p-x-0 profilestatusbox">
-                            {% include('@member/profile/cards/hosting.html.twig') %}
+                            {# #}
                         </div>
 
-                        <div class="col-xs-12 col-lg-4 p-x-0"></div>
 
-                        <div class="card col-xs-12 col-lg-3 m-t-1 p-x-0 profilestatusbox">
-                            <div class="col-xs-12 col-lg-12 m-b-0 p-a-1">
-                                <h4 class="text-uppercase"><small><strong><i class="fa fa-language"></i><span class="icontext">Speaks</span></small></strong>{# if on own profile #}<a href="editmyprofile"></a></h4>
-                                <p><span class="langmother">Galician <span class="smaller gray">[Mother tongue],</span></span><br>
-                                    <span class="langfluent">English <span class="smaller gray">[Fluent],</span></span><br>
-                                    <span class="langfluent">Basque <span class="smaller gray">[Fluent],</span></span><br>
-                                    <small><a href="#languages"> ...and 8 more</a></small></p>
-                            </div>
-                        </div>
-
-                        <span class="pull-right"><small><a href="#" class="report"><i class="fa fa-flag"></i><span class="icontext">report</span></a></small></span>
 
                     </div>
+
+                    <div class="col-xs-12 col-lg-5 p-x-0"></div>
+
+                    <div class="card col-xs-12 col-lg-5 m-t-1 p-x-0 profilestatusbox">
+                        <div class="col-xs-12 m-b-0 p-a-1">
+                            <h4 class="text-uppercase">
+                                <small><strong><i class="fa fa-language"></i><span class="icontext">Speaks</span>
+                                </small>
+                                </strong>{# if on own profile #}<a href="editmyprofile"></a></h4>
+                            <p><span class="langmother">Galician <span
+                                            class="smaller gray">[Mother tongue],</span></span>
+                                <span class="langfluent">English <span class="smaller gray">[Fluent],</span></span>
+                                <span class="langfluent">Basque <span class="smaller gray">[Fluent],</span></span>
+                                <small><a href="#languages"> ...and 8 more</a></small>
+                            </p>
+                        </div>
+                    </div>
+
+                    <span class="pull-right"><small><a href="#" class="report"><i class="fa fa-flag"></i><span
+                                        class="icontext">report</span></a></small></span>
+
                 </div>
             </div>
         </div>
@@ -150,26 +168,27 @@
 
     </div>
 
-{% if member.id == my_member.id %}
-    <form>
-{% endif %}
+    {% if member.id == my_member.id %}
+        <form>
+    {% endif %}
 
     <div class="row">
-        <div class="col-xs-12 col-md-5">
-            <div class="card">
-                <a name="aboutme"></a>
-                <h3 class="card-header"><i class="fa fa-info-circle"></i><span class="icontext">About me</span></h3>
+    <div class="col-xs-12 col-md-5">
+        <div class="card">
+            <a name="aboutme"></a>
+            <h3 class="card-header"><i class="fa fa-info-circle"></i><span class="icontext">About me</span></h3>
 
-                    {% if member.id == my_member.id %}
-                        <div class="form-group">
-                            {% if not member.profilesummary %}
-                            <textarea class="form-control" id="aboutme" placeholder="What should others know about you?"></textarea>
-                            {% else %}
-                            <textarea class="form-control" id="aboutme">{{ member.profilesummary }}</textarea>
-                            {% endif %}
-                            <button class="btn btn-primary">Save</button>
-                    {% else %}
-                        <div class="card-block"><p class="card-text">{{ member.profilesummary }}</p>
+            {% if member.id == my_member.id %}
+            <div class="form-group">
+                {% if not member.profilesummary %}
+                    <textarea class="form-control" id="aboutme"
+                              placeholder="What should others know about you?"></textarea>
+                {% else %}
+                    <textarea class="form-control" id="aboutme">{{ member.profilesummary }}</textarea>
+                {% endif %}
+                <button class="btn btn-primary">Save</button>
+                {% else %}
+                <div class="card-block"><p class="card-text">{{ member.profilesummary }}</p>
                     {% endif %}
 
                 </div>
@@ -182,11 +201,12 @@
                 {% if member.id == my_member.id %}
                     <div class="form-group">
                         {% if not member.hobbies %}
-                        <textarea class="form-control" id="hobbies" placeholder="What are your interests?">{{ member.hobbies }}</textarea>
+                            <textarea class="form-control" id="hobbies"
+                                      placeholder="What are your interests?">{{ member.hobbies }}</textarea>
                         {% else %}
-                        <textarea class="form-control" id="hobbies">{{ member.hobbies }}</textarea>
+                            <textarea class="form-control" id="hobbies">{{ member.hobbies }}</textarea>
                         {% endif %}
-                    <button class="btn btn-primary">Save</button>
+                        <button class="btn btn-primary">Save</button>
                     </div>
                 {% else %}
                     <div class="card-block"><p class="card-text">{{ member.hobbies }}</p></div>
@@ -217,8 +237,8 @@
         </div>
 
     </div>
-            {% if member.id == my_member.id %}
-            </form>
-            {% endif %}
+    {% if member.id == my_member.id %}
+        </form>
+    {% endif %}
 
 {% endblock content %}

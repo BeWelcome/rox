@@ -1,15 +1,10 @@
-<div class="col-xs-12 m-b-0 p-t-1 p-l-1">
+<div class="col-xs-8 m-b-0 p-t-1 p-l-1">
     <div class="media">
         <div class="media-body summary">
-            <h1 class="profilemedium m-b-0">{{ member.city.name }}<small><i class="fa fa-map-marker icontext"></i></small></h1>
+            <h1 class="profilemedium m-b-0"><small><i class="fa fa-map-marker icontext"></i></small> {{ member.city.name }}, {{ member.city.country.name }}</h1>
         </div>
     </div>
-</div>
 
-<div class="col-xs-8 m-b-0 p-t-0 p-l-1 p-b-1">
-    <div class="media">
-        <span class="profilebreadcrumb"><a href="#">{{ member.city.country.name }}</a> > <a href="#">{{ member.city.name }}</a></span>
-    </div>
     <div class="media m-t-0">
         <div class="media-left">
             {# AHREF and DIV if on own profile #}
@@ -53,9 +48,10 @@
             </span></i><br></small>
         </div>
     </div>
+
 </div>
 
-<div class="col-xs-4 col-lg-4 m-b-0 p-t-0 p-r-1 text-xs-right">
+<div class="col-xs-4 col-lg-4 p-t-1 text-xs-right">
     <img class="mappreview" src="https://maps.googleapis.com/maps/api/staticmap?center={{ member.Latitude }},{{ member.Longitude }}&zoom=10&size=117x117&key=AIzaSyAiF_lG8CdC-hCIXbGs9jilOFJRoXteM3k">
 </div>
 

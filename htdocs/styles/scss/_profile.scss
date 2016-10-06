@@ -66,31 +66,31 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 	border-radius: 0.25em;
 }
 
-.regularfont{
+.regularfont {
 	font-family: $font-family-base;
 }
 
-.whiteshadow{
+.whiteshadow {
 	color: white;
 	text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
 }
 
-.profilebig{
+.profilebig {
 	font-family:"Signika-Regular", LatoWeb, sans-serif;
 	font-size:2.625em;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow: hidden;
-	width: 75%;
+	width: 90%;
 }
 
-.profilemedium{
-	font-family:"Signika-Bold", LatoWeb, sans-serif;
-	font-size:1.625em;
+.profilemedium {
+	font-family: "Signika-Bold", LatoWeb, sans-serif;
+	font-size: 1.4em;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow: hidden;
-	width: 75%;
+	width: 100%;
 }
 
 .top0 {
@@ -152,23 +152,15 @@ a.report:hover {
 	color: rgba(#fff,0.8);
 }
 
-.langmother{
+.lang{
 	font-family: $font-family-bold;
-	font-size:0.9rem;
+	font-size: 0.9rem;
+	text-transform:capitalize;
+}
+
+.mother{
 	text-transform:uppercase;
 	letter-spacing: 0.02rem;
-}
-
-.langfluent{
-	font-family:$font-family-bold;
-	font-size:0.9rem;
-	text-transform:capitalize;
-}
-
-.langbasic {
-	font-family: $font-family-bold;
-	font-size:0.9rem;
-	text-transform:capitalize;
 }
 
 a.request:link, a.request:visited {

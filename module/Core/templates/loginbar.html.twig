@@ -8,7 +8,7 @@
         <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">
             <a class="navbar-brand" href="{{ path('start') }}"><img src="/images/logo_index_top.png"
                                                      alt="{{ 'BeWelcome' | trans }}"/></a>
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav loginform">
 
             <form class="form-inline nav-item" method="post" action="{{ path('auth/authorize') }}">
                 {{ macros.input('username', 'Username') }}

@@ -129,9 +129,8 @@
                     <div class="card col-xs-12 col-lg-5 m-t-1 p-x-0 profilestatusbox">
                         <div class="col-xs-12 m-b-0 p-a-1">
                             <h4 class="text-uppercase">
-                                <small><strong><i class="fa fa-language"></i><span class="icontext">Speaks</span>
-                                </small>
-                                </strong>{# if on own profile #}<a href="editmyprofile"></a></h4>
+                                <small><strong><i class="fa fa-language"></i><span class="icontext">Speaks</span></strong></small>
+                                {# if on own profile #}<a href="editmyprofile"></a></h4>
                                 <p>
                                     <span class="lang mother">Galician</span> <span class="lang mother smaller gray">[Mother tongue],</span>
                                     <span class="lang">English</span> <span class="lang smaller gray">[Fluent],</span>
@@ -153,43 +152,27 @@
         <div class="btn-group btn-group-profile" role="group">
             <a href="#" class="btn btn-sm btn-primary btn-primary-profile">Overview</a>
             <a href="{{ path('member/comment', { 'username': member.username }) }}" class="btn btn-sm btn-secondary">Comments</a>
-            <a href="/members/xxxxx/gallery" class="btn btn-sm btn-secondary">Gallery</a>
-            <a href="/members/xxxxx/groups" class="btn btn-sm btn-secondary">Groups</a>
-            <a href="/members/xxxxx/trips" class="btn btn-sm btn-secondary">Trips</a>
+            <a href="/members/{{ member.username }}/gallery" class="btn btn-sm btn-secondary">Gallery</a>
+            <a href="/members/{{ member.username }}/groups" class="btn btn-sm btn-secondary">Groups</a>
+            <a href="/members/{{ member.username }}/trips" class="btn btn-sm btn-secondary">Trips</a>
             <a href="#" class="btn btn-sm btn-secondary">Show on map</a>
         </div>
 
         <div class="btn-group btn-group-profile pull-xs-right" role="group">
-            <a href="/members/xxxxx/en" class="btn btn-sm btn-primary btn-primary-profile">English</a>
-            <a href="/members/xxxxx/fr" class="btn btn-sm btn-secondary">French</a>
-            <a href="/members/xxxxx/de" class="btn btn-sm btn-secondary">German</a>
+            <a href="/members/{{ member.username }}/en" class="btn btn-sm btn-primary btn-primary-profile">English</a>
+            <a href="/members/{{ member.username }}/fr" class="btn btn-sm btn-secondary">French</a>
+            <a href="/members/{{ member.username }}/de" class="btn btn-sm btn-secondary">German</a>
         </div>
 
     </div>
-
-    {% if member.id == my_member.id %}
-        <form>
-    {% endif %}
 
     <div class="row">
     <div class="col-xs-12 col-md-5">
         <div class="card">
             <a name="aboutme"></a>
             <h3 class="card-header"><i class="fa fa-info-circle"></i><span class="icontext">About me</span></h3>
-
-            {% if member.id == my_member.id %}
-            <div class="form-group">
-                {% if not member.profilesummary %}
-                    <textarea class="form-control" id="aboutme"
-                              placeholder="What should others know about you?"></textarea>
-                {% else %}
-                    <textarea class="form-control" id="aboutme">{{ member.profilesummary }}</textarea>
-                {% endif %}
-                <button class="btn btn-primary">Save</button>
-                {% else %}
-                <div class="card-block"><p class="card-text">{{ member.profilesummary }}</p>
-                    {% endif %}
-
+                <div class="card-block">
+                    <p class="card-text">{{ member.profilesummary }}</p>
                 </div>
             </div>
 
@@ -197,20 +180,17 @@
                 <a name="interests"></a>
                 <h3 class="card-header"><i class="fa fa-bicycle"></i><span class="icontext">Interests</span></h3>
 
-                {% if member.id == my_member.id %}
-                    <div class="form-group">
-                        {% if not member.hobbies %}
-                            <textarea class="form-control" id="hobbies"
-                                      placeholder="What are your interests?">{{ member.hobbies }}</textarea>
-                        {% else %}
-                            <textarea class="form-control" id="hobbies">{{ member.hobbies }}</textarea>
-                        {% endif %}
-                        <button class="btn btn-primary">Save</button>
+                    <div class="card-block">
+                        <p class="card-text">{{ member.hobbies }}</p>
+                        <p class="card-text">{# member.music #}</p>
+                        <p class="card-text">{# member.films #}</p>
+                        <p class="card-text">{# member.books #}</p>
+                        <p class="card-text">{# member.organisations #}</p>
                     </div>
-                {% else %}
-                    <div class="card-block"><p class="card-text">{{ member.hobbies }}</p></div>
-                {% endif %}
+
             </div>
+
+            {% include('@member/profile/cards/gallery.html.twig') %}
 
             {% if member.PastTrips %}
                 {% include('@member/profile/cards/travels.html.twig') %}
@@ -228,6 +208,8 @@
         <div class="col-xs-12 col-md-7">
 
             {% include('@member/profile/cards/accommodation.html.twig') %}
+
+            {% include('@member/profile/cards/contact.html.twig') %}
 
             {% include('@member/profile/cards/comments.html.twig') %}
 

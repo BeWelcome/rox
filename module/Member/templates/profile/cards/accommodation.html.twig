@@ -8,77 +8,6 @@
 
     <div class="card-block">
 
-        {% if member.id == my_member.id %}
-        <div class="form-group row">
-            <label for="maxguests" class="col-xs-12 col-md-4">Max. number of guests:</label>
-            <div class="col-xs-12 col-md-8"><input class="form-control"type="number" min="0" max="20" value="{{ member.maxguest }}" id="maxguests"></div>
-            <label for="maxlengthofstay" class="col-xs-12 col-md-4">Max. length of stay:</label>
-            <div class="col-xs-12 col-md-8"><input class="form-control" type="text" value="{{ member.maxlenghtofstay }}" id="maxlengthofstay"></div>
-            <div class="col-xs-12"><button class="btn btn-primary">Save</button></div>
-        </div>
-
-            <div class="form-group">
-                <textarea class="form-control" id="ilivewith"
-                        {% if not member.ilivewith  %}
-                          placeholder="I live with..."></textarea>
-                {% else %}
-                    >{{ member.ilivewith }}</textarea>
-                {% endif %}
-                <button class="btn btn-primary">Save</button>
-            </div>
-
-            <div class="form-group">
-                <textarea class="form-control" id="pleasebring"
-                        {% if not member.pleasebring  %}
-                          placeholder="I live with..."></textarea>
-                {% else %}
-                    >{{ member.pleasebring }}</textarea>
-                {% endif %}
-                <button class="btn btn-primary">Save</button>
-            </div>
-
-            <div class="form-group">
-                <textarea class="form-control" id="otherrestrictions"
-                        {% if not member.otherrestrictions  %}
-                          placeholder="I live with..."></textarea>
-                {% else %}
-                    >{{ member.otherrestrictions }}</textarea>
-                {% endif %}
-                <button class="btn btn-primary">Save</button>
-            </div>
-
-            <div class="form-group">
-                <textarea class="form-control" id="offerguests"
-                        {% if not member.offerguests  %}
-                          placeholder="I live with..."></textarea>
-                {% else %}
-                    >{{ member.offerguests }}</textarea>
-                {% endif %}
-                <button class="btn btn-primary">Save</button>
-            </div>
-
-            <div class="form-group">
-                <textarea class="form-control" id="additionalaccomodationinfo"
-                        {% if not member.additionalaccomodationinfo  %}
-                          placeholder="I live with..."></textarea>
-                {% else %}
-                    >{{ member.additionalaccomodationinfo }}</textarea>
-                {% endif %}
-                <button class="btn btn-primary">Save</button>
-            </div>
-
-            <div class="form-group">
-                <textarea class="form-control" id="publictransport"
-                        {% if not member.publictransport  %}
-                          placeholder="I live with..."></textarea>
-                {% else %}
-                    >{{ member.publictransport }}</textarea>
-                {% endif %}
-                <button class="btn btn-primary">Save</button>
-            </div>
-
-        {% else %}
-
         <p class="card-text m-b-0"><strong>Max. number of guests:</strong> {{ member.maxguest }}</p>
         <p class="card-text m-b-0"><strong>Max. length of stay:</strong> {{ member.maxlenghtofstay }}</p>
 
@@ -168,7 +97,6 @@
                 </div>
             {% endif %}
         </div>
-            {% endif %}
 
     </div>
 </div>

@@ -2,20 +2,16 @@
     <a name="comments"></a>
 
     <h3 class="card-header"><i class="fa fa-comment"></i><span class="icontext">Latest Comments</span><a href="#" class="btn btn-primary-outline btn-sm pull-xs-right request p-a-0"><i class="fa fa-angle-double-right"></i> All comments ({{ member.comments.count }})</a></h3>
-        <div class="container">
-            {% for comment in member.comments %}
-                <div class="row">
-                    <div class="col-xs-6">
-                        {{ macros.avatar(comment.fromMember.username, 30, true) }} <small class="username">{{ macros.profilelink(comment.fromMember.username) }}</small>
-                    </div>
-                    <div class="col-xs-6 text-xs-right"><strong>Positive</strong><br><small class="text-muted">{{ comment.created.diffForHumans }}</small></div>
-                    <div class="col-xs-12">
-                        <p>{{ comment.TextFree }}</p>
-                    </div>
-                </div>
 
-            {% endfor %}
+        {% for comment in member.comments %}
+            <div class="card-block p-x-1 p-b-0">
+                <div class="pull-xs-left m-b-0">{{ macros.avatar(comment.fromMember.username, 50, true) }} <small class="username">{{ macros.profilelink(comment.fromMember.username) }}</small></div>
+                <div class="text-xs-right pull-xs-right"><span class="comment positive">Positive</span><br><span class="text-muted ">{{ comment.created.diffForHumans }}</span></div>
+            </div>
+            <div class="card-block p-x-1 p-t-0">
+                <p class="card-text">{{ comment.TextFree }}</p>
+            </div>
+        {% endfor %}
 
-            <a class="btn btn-secondary btn-block"><i class="fa fa-comment"></i> See all {{ member.comments.count }} comment(s) for this member</a>
-        </div>
+        <a class="btn btn-secondary btn-block"><i class="fa fa-comment"></i> See all {{ member.comments.count }} comment(s) for this member</a>
 </div>

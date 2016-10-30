@@ -32,7 +32,7 @@ before_install:
 
 install:
   - composer install --no-interaction --ignore-platform-reqs
-  - npm install
+  - npm update
 
 before_script:
   - mysql -u root -e 'create database bewelcome_test;'

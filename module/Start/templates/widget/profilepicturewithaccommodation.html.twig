@@ -1,9 +1,8 @@
 {% import '@macros/macros.twig' as macros %}
 <div class="welcomeavatar">
     {{ macros.avatar( member.Username, 75, true) }}
-    {% set image = '' %}
     {%  if member.accomodation == 'anytime' %}{% set image = 'yesicanhost' %}{% endif %}
     {%  if member.accomodation == 'dependonrequest' %}{% set image = 'maybe' %}{% endif %}
-    {%  if member.accomodation == 'dontask' %}{% set image = 'nosorry' %}{% endif %}
+    {%  if member.accomodation == 'neverask' %}{% set image = 'nosorry' %}{% endif %}
     <img src="/images/icons/{{ image }}.png" class="hoststatus">
 </div>

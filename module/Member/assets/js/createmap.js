@@ -62,7 +62,7 @@ function addMarkers(map){
         var icon = new L.DivIcon({ html: '<div><img src="/images/icons/' + value.Accommodation + '.gif" width="17" height="17"></div>', className: 'marker-cluster marker-cluster-unique', iconSize: new L.Point(17, 17) });
         var marker = new L.marker([value.latitude, value.longitude], {icon: icon});
 
-        var popupContent = '<h4><img src="/members/avatar/' + value.Username + '?xs"> <a href="/members/' + value.Username + '">' + value.Username + '</a></h4>';
+        var popupContent = '<h4><img src="/members/avatar/' + value.Username + '?size=50"> <a href="/members/' + value.Username + '">' + value.Username + '</a></h4>';
         popupContent += '<p>' + value.Accommodation + '</p>';
 
         marker.bindPopup(popupContent).openPopup();

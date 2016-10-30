@@ -1,52 +1,49 @@
 {% extends '@base/base.html.twig' %}
 
-{% set scriptFiles = ['leaflet.js', 'member/createmap.js', 'member/searchpicker.js'] %}
+{% set scriptFiles = ['autocomplete.js', 'leaflet.js', 'member/createmap.js', 'member/searchpicker.js'] %}
 
 {% set cssFiles = ['leaflet.css', 'jquery-ui.css'] %}
 
 {% block content %}
 
     <div class="container">
-        {{ form_start(form, {'attr': {'class': 'form-inline p-a-1 m-b-2 framed shadowed'}}) }}
+        {{ form_start(form, {'attr': {'class': 'form-inline p-1 mb-2 framed shadowed'}}) }}
+        {{ form_errors(form) }}
         <div class="row">
-            <div class="col-xs-12">
-                {{ form_row(form.search_geoname_id) }}
-                {{ form_row(form.search_latitude) }}
-                {{ form_row(form.search_longitude) }}
-                <div class="form-group">
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-lg fa-bed"></i></span>
-                        {{ form_row(form.search, {'attr': {'class': 'search-picker form-control'}}) }}
-                    </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-lg fa-bed"></i></span>
+                    {{ form_row(form.search, {'attr': {'class': 'search-picker form-control'}}) }}
                 </div>
-                <div class="form-group">
-                    <div class="hostcheckimg"><img src="/images/icons/yesicanhost.png"/>
-                        <div class="hostcheckbox">{{ form_widget(form.search_accommodation_anytime) }}</div>
-                    </div>
-                    <div class="hostcheckimg"><img src="/images/icons/maybe.png"/>
-                        <div class="hostcheckbox">
-                            {{ form_widget(form.search_accommodation_dependonrequest) }}</div>
-                    </div>
-                    <div class="hostcheckimg"><img src="/images/icons/nosorry.png"/>
-                        <div class="hostcheckbox">
-                            {{ form_widget(form.search_accommodation_dontask) }}</div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    {{ form_label(form.search_can_host) }}
-                    {{ form_widget(form.search_can_host, {'attr': {'class' : 'form-control select2',
-                        'data-minimum-results-for-search': '-1'} }) }}
-                </div>
-                <div class="form-group">
-                    {{ form_label(form.search_distance) }}
-                    {{ form_widget(form.search_distance, {'attr': {'class' : 'form-control select2',
-                        'data-minimum-results-for-search': '-1'} }) }}
-                </div>
-                {{ form_widget(form.update_map) }}
             </div>
+            <div class="form-group">
+                <div class="hostcheckimg"><img src="/images/icons/yesicanhost.png"/>
+                    <div class="hostcheckbox">{{ form_widget(form.search_accommodation_anytime) }}</div>
+                </div>
+                <div class="hostcheckimg"><img src="/images/icons/maybe.png"/>
+                    <div class="hostcheckbox">
+                        {{ form_widget(form.search_accommodation_dependonrequest) }}</div>
+                </div>
+                <div class="hostcheckimg"><img src="/images/icons/nosorry.png"/>
+                    <div class="hostcheckbox">
+                        {{ form_widget(form.search_accommodation_neverask) }}</div>
+                </div>
+            </div>
+            <div class="form-group">
+                {{ form_label(form.search_can_host) }}
+                {{ form_widget(form.search_can_host, {'attr': {'class' : 'form-control select2',
+                    'data-minimum-results-for-search': '-1'} }) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.search_distance) }}
+                {{ form_widget(form.search_distance, {'attr': {'class' : 'form-control select2',
+                    'data-minimum-results-for-search': '-1'} }) }}
+            </div>
+            {{ form_rest(form) }}
+            {{ form_widget(form.update_map) }}
         </div>
 {#        <div class="row">
-            <div class="col-xs-12 m-t-1">
+            <div class="col-xs-12 mt-1">
                 {{ form_widget(form.advanced_options) }}
             </div>
         </div> #}

@@ -22,17 +22,17 @@ class SearchFormType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $formBuilder, array $options)
     {
-        $this->addHiddenFields($formBuilder);
-        $this->addCheckboxes($formBuilder);
-        $this->addSelects($formBuilder);
-        $this->addButtons($formBuilder);
-
         $formBuilder->add('search', TextType::class, [
             'attr' => [
                 'placeholder' => 'Where are you going?',
             ],
             'label' => false,
         ]);
+
+        $this->addHiddenFields($formBuilder);
+        $this->addCheckboxes($formBuilder);
+        $this->addSelects($formBuilder);
+        $this->addButtons($formBuilder);
     }
 
     private function addHiddenFields(FormBuilderInterface $formBuilder)
@@ -46,14 +46,15 @@ class SearchFormType extends AbstractType
 
     private function addButtons(FormBuilderInterface $formBuilder)
     {
-        $formBuilder->add('update_map', SubmitType::class, [
+        $attr = [
             'attr' => [
-                'class' => 'btn btn-primary pull-xs-right',
+                'class' => 'btn btn-primary float-xs-right',
             ],
-        ])
+        ];
+        $formBuilder->add('update_map', SubmitType::class, $attr)
 /*            ->add('advanced_options', SubmitType::class, [
                 'attr' => [
-                    'class' => 'btn btn-sm btn-primary pull-xs-right',
+                    'class' => 'btn btn-sm btn-primary float-xs-right',
                 ],
             ])
 */        ;
@@ -72,9 +73,10 @@ class SearchFormType extends AbstractType
                 'required' => false,
                 'data' => true,
             ])
-            ->add('search_accommodation_dontask', CheckboxType::class, [
+            ->add('search_accommodation_neverask', CheckboxType::class, [
                 'label' => false,
                 'required' => false,
+                'data' => false,
             ])
         ;
     }

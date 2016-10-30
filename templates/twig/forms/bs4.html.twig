@@ -16,7 +16,17 @@
 
 {% block button_widget -%}
     {% set attr = attr|merge({class: (attr.class|default('btn-primary') ~ ' btn')|trim}) %}
-    {{- parent() -}}
+    {%- if label is empty -%}
+        {%- if label_format is not empty -%}
+            {% set label = label_format|replace({
+            '%name%': name,
+            '%id%': id,
+            }) %}
+        {%- else -%}
+            {% set label = name|humanize %}
+        {%- endif -%}
+    {%- endif -%}
+    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ translation_domain is same as(false) ? label |raw : label|trans({}, translation_domain) | raw }}</button>
 {%- endblock %}
 
 {% block money_widget -%}

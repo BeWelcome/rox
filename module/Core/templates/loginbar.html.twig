@@ -15,7 +15,7 @@
                 {{ macros.input('password', 'Password', '', 'password') }}
                 {{ macros.submit('Login') }}
             </form>
-                <li class="nav-item dropdown  pull-xs-right">
+                <li class="nav-item dropdown  float-xs-right">
                     <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-lg fa-globe m-r-1"></i>
                         {{ language.NativeName|raw }}
@@ -23,7 +23,7 @@
                     <div class="dropdown-menu dropdown-menu-right" style="width: 40rem">
                         <h6 class="dropdown-header">Choose a language</h6>
                         {% for lang in languages %}
-                            <a href="{{ path('language', { locale: lang.ShortCode }) }}" class="btn {% if lang.ShortCode == language.ShortCode %}btn-primary{% else %}btn-secondary{% endif %} m-l-1 m-b-1" data-toggle="tooltip" data-placement="top" title="{{ lang.TranslatedName }}" style="width: 12rem">{{ lang.NativeName|raw }}</a>
+                            <a href="{{ path('language', { locale: lang.ShortCode }) }}" class="btn {% if lang.ShortCode == language.ShortCode %}btn-primary{% else %}btn-secondary{% endif %} m-l-1 mb-1" data-toggle="tooltip" data-placement="top" title="{{ lang.TranslatedName }}" style="width: 12rem">{{ lang.NativeName|raw }}</a>
                         {% endfor %}
                     </div>
                 </li>

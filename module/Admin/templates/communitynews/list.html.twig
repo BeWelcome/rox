@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="pull-right">
+    <div class="float-xs-right">
         {% include '@base/pagination.html.twig' with {
         currentFilters: filter,
         currentPage: page,
@@ -19,7 +19,7 @@
             <thead class="thead-default">
             <tr>
                 <th>{{ 'Title' | trans }}</th>
-                <th colspan="2"><a class="btn btn-primary pull-xs-right" href="{{ path('admin/communitynews/create') }}">{{ 'Create' | trans }}</a></th>
+                <th colspan="2"><a class="btn btn-primary float-xs-right" href="{{ path('admin/communitynews/create') }}">{{ 'Create' | trans }}</a></th>
             </tr>
             </thead>
             {% for news in communityNews %}
@@ -39,7 +39,7 @@
             {% endfor %}
         </table>
     </div>
-    <div class="pull-right">
+    <div class="float-xs-right">
         {% include '@base/pagination.html.twig' with {
         currentFilters: filter,
         currentPage: page,

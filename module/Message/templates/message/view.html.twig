@@ -13,36 +13,36 @@
         <p class="clearfix">
             {% if directionIn %}
                 {#<a class="button float_left" href="messages/{{ message.id }}/reply"><?= $words->get('replymessage') ?></a>#}
-                <a class="btn btn-primary pull-left" href="messages/{{ message.id }}/reply">{{ 'Reply' | trans }}</a>
+                <a class="btn btn-primary float-xs-left" href="messages/{{ message.id }}/reply">{{ 'Reply' | trans }}</a>
 
                 {% if message.InFolder == 'Spam' %}
-                    <a class="btn btn-sm btn-primary pull-right" href="messages/{{ message.id }}/nospam">{{ 'Remove spam mark' | trans }}</a>
+                    <a class="btn btn-sm btn-primary float-xs-right" href="messages/{{ message.id }}/nospam">{{ 'Remove spam mark' | trans }}</a>
                 {% else %}
                     {#<a class="button float_right" href="messages/<?= $message->id ?>/spam"><?= $words->get('markspam') ?></a>#}
-                    <a class="btn btn-sm btn-primary pull-right" href="messages/{{ message.id }}/spam">{{ 'Report as abuse' | trans }}</a>
+                    <a class="btn btn-sm btn-primary float-xs-right" href="messages/{{ message.id }}/spam">{{ 'Report as abuse' | trans }}</a>
                 {% endif %}
 
             {% else %}
                 {#<a class="button float_left" href="messages/<?= $message->id ?>/edit"><?= $words->get('editmessage') ?></a>#}
-                <a class="btn-primary pull-left" href="messages/{{ message.id }}/edit">{{ 'Edit' | trans }}</a>
+                <a class="btn-primary float-xs-left" href="messages/{{ message.id }}/edit">{{ 'Edit' | trans }}</a>
             {% endif %}
 
-            <a class="btn btn-sm btn-primary pull-right" href="messages/{{ message.id }}/delete" onclick="return confirm ('{{ 'Are you sure that you want to permanently delete the selected messages?' | trans }}')">{{ 'Delete' | trans }}</a>
+            <a class="btn btn-sm btn-primary float-xs-right" href="messages/{{ message.id }}/delete" onclick="return confirm ('{{ 'Are you sure that you want to permanently delete the selected messages?' | trans }}')">{{ 'Delete' | trans }}</a>
             {#<a class="button float_right" href="messages/<?= $message->id ?>/delete" onclick="return confirm ('<?php echo $words->getBuffered('MessagesWarningConfirmDelete'); ?>')"><?= $words->get('delmessage') ?></a>#}
         </p>
     </div>
     <!-- buttonstop -->
 
     <div class="row">
-        <div class="col-xs-1 text-xs-right p-r-0">
+        <div class="col-xs-1 text-xs-right pr-0">
             {{ macros.avatar(otherMember.Username, 75) }}
         </div>
         <div class="col-xs-11">
-            <div class="username p-b-1">
-                <span class="pull-left">
+            <div class="username pb-1">
+                <span class="float-xs-left">
                 <strong>{{ macros.profilelink( otherMember.Username ) }}</strong></a>
                 </span>
-                <span class="pull-right p-a-1 small text-xs-right locandlang">
+                <span class="float-xs-right p-1 small text-xs-right locandlang">
                     {#<?= $words->get('LivesIn') ?>#}
                     {# {{ 'Lives in' | trans }} #}
                     <i class="fa fa-2x fa-map-marker"></i> <strong>{{ message.sender.city.name }}, {{ message.sender.city.country.name }}</strong>
@@ -63,7 +63,7 @@
                     {% endfor %}
                 </span>
 
-                <span class="pull-right">
+                <span class="float-xs-right">
                     <a class="btn btn-sm btn-secondary allmessages" href="messages/with/{{ otherMember.Username }}">
                     <i class="fa fa-envelope-o"></i>
                         {#<?= $words->getSilent('messages_allmessageswith', $contact_username) ?>#}
@@ -73,8 +73,8 @@
                 </span>
 
             </div>
-            <div class="m-y-1 p-a-1 p-b-3 messagebox">
-                <div class="smaller pull-right m-r-1">
+            <div class="my-1 p-1 pb-3 messagebox">
+                <div class="smaller float-xs-right mr-1">
                     {{ 'Date' | trans }}:
                     {#<?= $words->get('MessagesDate') ?>:#}
 
@@ -86,7 +86,7 @@
                     {{ message.Message | raw }}
                 </div>
 
-                <div class="smaller m-t-1">
+                <div class="smaller mt-1">
                     {{ 'Date' | trans }}:
                     {#<?= $words->get('MessagesDate') ?>:#}
 
@@ -98,20 +98,20 @@
                 {# footer buttons #}
                 <div>
                     {% if directionIn %}
-                        <a class="btn btn-primary pull-left" href="messages/{{ message.id }}/reply">{{ 'Reply' | trans }}</a>
+                        <a class="btn btn-primary float-xs-left" href="messages/{{ message.id }}/reply">{{ 'Reply' | trans }}</a>
 
                         {% if message.InFolder == 'Spam' %}
-                            <a class="btn btn-sm btn-primary pull-right" href="messages/{{ message.id }}/nospam">{{ 'Remove spam mark' | trans }}</a>
+                            <a class="btn btn-sm btn-primary float-xs-right" href="messages/{{ message.id }}/nospam">{{ 'Remove spam mark' | trans }}</a>
                         {% else %}
-                            <a class="btn btn-sm btn-primary pull-right" href="messages/{{ message.id }}/spam">{{ 'Report as abuse' | trans }}</a>
+                            <a class="btn btn-sm btn-primary float-xs-right" href="messages/{{ message.id }}/spam">{{ 'Report as abuse' | trans }}</a>
                         {% endif %}
 
                     {% else %}
-                        <a class="btn btn-primary pull-left" href="messages/{{ message.id }}/edit">{{ 'Edit' | trans }}</a>
+                        <a class="btn btn-primary float-xs-left" href="messages/{{ message.id }}/edit">{{ 'Edit' | trans }}</a>
                     {% endif %}
 
                     {# TODO this one is missing the JS confirm dialog #}
-                    <a class="btn btn-sm btn-primary pull-right" href="messages/{{ message.id }}/delete">{{ 'Delete' | trans }}</a>
+                    <a class="btn btn-sm btn-primary float-xs-right" href="messages/{{ message.id }}/delete">{{ 'Delete' | trans }}</a>
                 </div>
 
             </div>

@@ -119,6 +119,7 @@ var Home = {
             success: function (data) {
                 $('.welcomeavatar').replaceWith(data.profilePictureWithAccommodation);
                 $('#accommodation').replaceWith(data.accommodationHtml);
+                $('.hosting').click(Home.setHostingStatus);
             }
         });
     }

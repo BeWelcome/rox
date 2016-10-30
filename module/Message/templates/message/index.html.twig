@@ -9,7 +9,7 @@
 
     <h2>{{ 'UserMessages' | trans | format(my_member.Username) }}</h2>
 
-    <ul class="nav nav-pills m-t-1">
+    <ul class="nav nav-pills mt-1">
         <li class="nav-item">
             <a class="nav-link{% if folder == 'inbox' %} active{% endif %}" href="{{ path('message') }}">{{ 'MyMessagesReceived' | trans }}</a>
         </li>
@@ -27,7 +27,7 @@
 
     <form method="POST">
 
-        <div class="pull-right">
+        <div class="float-xs-right">
             {% include '@base/pagination.html.twig' with {
             currentFilters: filter,
             currentPage: page,
@@ -37,7 +37,7 @@
             } only %}
         </div>
 
-        <div class="pull-left btn-group m-y-1" role="group" aria-label="Delete or spam">
+        <div class="float-xs-left btn-group m-y-1" role="group" aria-label="Delete or spam">
 
             <button type="submit" name="modify" value="delete" class="btn btn-secondary" onclick="return confirm ('{{ 'MessagesWarningConfirmDelete' | trans }}')">{{ 'delmessage' | trans }}</button>
 
@@ -84,10 +84,10 @@
                 </td>
                 <td class="from" style="width: 20%; max-width: 20%;">
                     <div>
-                        <div class="pull-xs-left p-x-1">
+                        <div class="float-xs-left p-x-1">
                             {{ macros.avatar(otherMember.Username, 50) }}
                         </div>
-                        <div class="pull-xs-left username">
+                        <div class="float-xs-left username">
                             <small>
                                 <a href="{{ path('member', { username: otherMember.Username}) }}"><strong>{{ otherMember.Username }}</strong></a>
                             </small>
@@ -120,7 +120,7 @@
         {% endfor %}
     </table>
 
-        <div class="pull-left btn-group" role="group" aria-label="Delete or spam">
+        <div class="float-xs-left btn-group" role="group" aria-label="Delete or spam">
 
             <button type="submit" name="modify" value="delete" class="btn btn-secondary" onclick="return confirm ('{{ 'MessagesWarningConfirmDelete' | trans }}')">{{ 'delmessage' | trans }}</button>
 

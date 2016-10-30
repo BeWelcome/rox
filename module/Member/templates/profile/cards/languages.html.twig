@@ -4,7 +4,7 @@
     <div class="card-block">
         {% for language in member.languages %}
             {# TODO translate Level enum to: Mother tongue / Fluent / Advanced / Basic / Couple of words #}
-            <p class="m-b-0">{{ language.EnglishName }} <span class="tag tag-default pull-xs-right">{{ language.pivot.Level | trans }}</span></p>
+            <p class="m-b-0">{{ language.EnglishName }} <span class="badge badge-default float-xs-right">{{ language.pivot.Level | trans }}</span></p>
         {% endfor %}
     </div>
 </div>

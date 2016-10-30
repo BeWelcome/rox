@@ -107,6 +107,11 @@ module.exports = function (grunt) {
                         rename: function (dest, src) {          // The `dest` and `src` values can be passed into the function
                             return dest + '/' + src.replace('module/', '').replace('/assets/js', '').toLowerCase(); // The `src` is being renamed; the `dest` remains the same
                         }
+                    },
+                    {
+                        expand: true,
+                        src: ['node_modules/jquery-ui/ui/widgets/autocomplete.js'],
+                        dest: 'htdocs/assets/js'
                     }
                 ]
             }
@@ -151,19 +156,17 @@ module.exports = function (grunt) {
         },
         concat: {
             dist: {
+                notnull: true,
                 src: [
                     'node_modules/jquery/dist/jquery.js',
-                    'node_modules/jquery-ui/ui/core.js',
-                    'node_modules/jquery-ui/ui/widget.js',
-                    'node_modules/jquery-ui/ui/position.js',
-                    'node_modules/jquery-ui/ui/menu.js',
+                    'bower_components/jquery-ui/jquery-ui.js',
                     'node_modules/tether/dist/js/tether.js',
                     'node_modules/bootstrap/dist/js/bootstrap.js',
                     'node_modules/bootstrap-autohidingnavbar/dist/jquery.bootstrap-autohidingnavbar.js',
                     'node_modules/select2/dist/js/select2.js',
 
                     // Auto complete used by map search for drop down search box
-                    'node_modules/jquery-ui/ui/autocomplete.js',
+                    'node_modules/jquery-ui/dist/jquery-ui',
 
                     'node_modules/skrollr/dist/skrollr.min.js',
                     'node_modules/skrollr-menu/dist/skrollr.menu.min.js',
@@ -204,9 +207,9 @@ module.exports = function (grunt) {
             jqueryui: {
                 src: [
                     'node_modules/jquery-ui/themes/base/core.css',
-                    'node_modules/jquery-ui/themes/base/theme.css',
                     'node_modules/jquery-ui/themes/base/autocomplete.css',
-                    'node_modules/jquery-ui/themes/base/menu.css'
+                    'node_modules/jquery-ui/themes/base/menu.css',
+                    'node_modules/jquery-ui/themes/base/theme.css'
                 ],
                 dest: 'htdocs/assets/css/jquery-ui.css',
                 nonull: true
@@ -269,7 +272,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-recess');
 
     // Default task for development
     grunt.registerTask('default', ['check', 'build']);
@@ -287,6 +289,8 @@ module.exports = function (grunt) {
 
     // JS
     grunt.registerTask('checkjs', ['jshint']);
-    grunt.registerTask('buildjs', ['concat:dist', 'concat:backwards', 'concat:leaflet', 'uglify']);
+    grunt.registerTask('buildjs', ['concat:dist', 'concat:backwards', 'concat:leaflet'
+        // , 'uglify'
+    ]);
 
 };

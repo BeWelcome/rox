@@ -35,8 +35,8 @@ $font-family-bold: Signika-bold, Arial;
 @import "groups";
 @import "forums";
 
-.tag-warning {
-  @include tag-variant(white);
+.badge-warning {
+  @include badge-variant(white);
   color: $brand-primary;
 }
 

@@ -37,6 +37,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class Member extends AbstractModel implements MemberRepositoryInterface, UserInterface, EncoderAwareInterface
 {
+    const ACC_YES = 'anytime';
+    const ACC_MAYBE = 'dependonrequest';
+    const ACC_NO = 'neverask';
+
     const CREATED_AT = 'created';
     const UPDATED_AT = 'updated';
 

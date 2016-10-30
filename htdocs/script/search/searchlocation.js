@@ -1,19 +1,3 @@
-function monkeyPatchAutocomplete() {
-    jQuery.ui.autocomplete.prototype._renderItem = function (ul, item) {
-
-        var keywords = jQuery.trim(this.term).split(' ').join('|');
-        var output = item.label.replace(new RegExp("(" + keywords + ")", "gi"), '<span class="ui-menu-item-highlight">$1</span>');
-
-        return jQuery("<li>")
-            .append(jQuery("<a>").html(output))
-            .appendTo(ul);
-    };
-}
-
-jQuery(function () {
-    monkeyPatchAutocomplete();
-});
-
 jQuery.widget( "custom.catcomplete", jQuery.ui.autocomplete, {
     _renderMenu: function( ul, items ) {
         var that = this,
@@ -96,7 +80,15 @@ function enableAutoComplete(addMarker) {
         },
         minLength: 1,
         delay: 500
-    });
+    }).data('uiAutocomplete')._renderItem = function (ul, item) {
+
+        var keywords = jQuery.trim(this.term).split(' ').join('|');
+        var output = item.label.replace(new RegExp("(" + keywords + ")", "gi"), '<span class="ui-menu-item-highlight">$1</span>');
+
+        return jQuery("<li>")
+            .append(jQuery("<a>").html(output))
+            .appendTo(ul);
+    };
 }
 
 jQuery(function() {

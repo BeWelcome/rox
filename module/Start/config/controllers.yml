@@ -4,11 +4,6 @@ services:
         autowire: true
         parent: Rox\Core\Controller\AbstractController
 
-    Rox\Start\Controller\HomeController:
-        class: Rox\Start\Controller\HomeController
-        autowire: true
-        parent: Rox\Core\Controller\AbstractController
-
     Rox\Start\Controller\TourController:
         class: Rox\Start\Controller\TourController
         autowire: true

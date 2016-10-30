@@ -4,8 +4,7 @@ function monkeyPatchAutocomplete() {
         var keywords = jQuery.trim(this.term).split(' ').join('|');
         var output = item.label.replace(new RegExp("(" + keywords + ")", "gi"), '<span class="ui-menu-item-highlight">$1</span>');
 
-        return jQuery("<li>")
-            .append(jQuery("<a>").html(output))
+        return jQuery("<li>").html("<div><a>" + output + "</a></div>")
             .appendTo(ul);
     };
 }
@@ -24,7 +23,7 @@ jQuery.widget( "custom.catcomplete", jQuery.ui.autocomplete, {
                     value: ''
                 };
 
-                var el = $("<li class='ui-autocomplete-category' aria-label=''>" + item.category + "</li>");
+                var el = $("<li class='ui-autocomplete-category' aria-label=''><div>" + item.category + "</div></li>");
 
                 el.data("ui-autocomplete-item", uiItem);
 

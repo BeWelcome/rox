@@ -3,24 +3,17 @@
 namespace Rox\Start\Controller;
 
 use Rox\CommunityNews\Model\CommunityNews;
-use Rox\Core\Controller\AbstractController;
 use Rox\Main\Home\HomeModel as HomeService;
+use Rox\Member\Model\Member;
+use Rox\Start\Form\SearchGotoLocationFormType;
+use Rox\Start\Form\SearchHomeLocationFormType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class HomeController extends AbstractController
+class HomeController extends Controller
 {
-    /**
-     * @var HomeService
-     */
-    protected $homeService;
-
-    public function __construct()
-    {
-        $this->homeService = new HomeService();
-    }
-
     /**
      * @param Request $request
      *
@@ -31,9 +24,10 @@ class HomeController extends AbstractController
         $all = $request->query->get('all');
         $unread = $request->query->get('unread');
 
-        $member = $this->getMember();
+        $member = $this->getUser();
 
-        $messages = $this->homeService->getMessages($member, $all, $unread, 4);
+        $homeService = new HomeService();
+        $messages = $homeService->getMessages($member, $all, $unread, 4);
 
         $content = $this->render('@start/widget/messages.html.twig', [
             'messages' => $messages,
@@ -44,8 +38,10 @@ class HomeController extends AbstractController
 
     public function showNotificationsAction()
     {
-        $member = $this->getMember();
-        $notifications = $this->homeService->getNotifications($member, 5);
+        $member = $this->getUser();
+
+        $homeService = new HomeService();
+        $notifications = $homeService->getNotifications($member, 5);
 
         $content = $this->render('@start/widget/notifications.html.twig', [
             'notifications' => $notifications,
@@ -65,7 +61,9 @@ class HomeController extends AbstractController
         $forum = $request->query->get('forum');
         $following = $request->query->get('following');
 
-        $threads = $this->homeService->getThreads($this->getMember(), $groups, $forum, $following, 4);
+        $member = $this->getUser();
+        $homeService = new HomeService();
+        $threads = $homeService->getThreads($member, $groups, $forum, $following, 4);
 
         $content = $this->render('@start/widget/forums.html.twig', [
             'threads' => $threads,
@@ -76,7 +74,9 @@ class HomeController extends AbstractController
 
     public function showActivitiesAction()
     {
-        $activities = $this->homeService->getActivities($this->getMember(), 4);
+        $member = $this->getUser();
+        $homeService = new HomeService();
+        $activities = $homeService->getActivities($member, 4);
 
         $content = $this->render('@start/widget/activities.html.twig', [
             'activities' => $activities,
@@ -90,16 +90,16 @@ class HomeController extends AbstractController
         $accommodation = $request->request->get('accommodation');
 
         switch ($accommodation) {
-            case 'dontask':
-            case 'dependonrequest':
-            case 'anytime':
+            case Member::ACC_YES:
+            case Member::ACC_MAYBE:
+            case Member::ACC_NO:
                 $valid = true;
                 break;
             default:
                 $valid = false;
         }
 
-        $member = $this->getMember();
+        $member = $this->getUser();
         if ($valid) {
             $member->Accomodation = $accommodation;
             $member->save();
@@ -121,21 +121,45 @@ class HomeController extends AbstractController
     }
 
     /**
+     * @param Member $member
+     * @return array
+     */
+    private function getSearchHomeLocationData(Member $member)
+    {
+        $data['search_geoname_id'] = $member->IdCity;
+        $geo = new \Geo($member->IdCity);
+        $data['search'] = $geo->getName();
+        $data['search_latitude'] = $member->latitude;
+        $data['search_longitude'] = $member->longitude;
+        return $data;
+    }
+
+    /**
      * Shows the home page.
      *
      * @return Response
      */
     public function showAction()
     {
-        $donationCampaign = $this->homeService->getDonationCampaignDetails();
-        $member = $this->getMember();
+        $homeService = new HomeService();
+        $donationCampaign = $homeService->getDonationCampaignDetails();
+        $member = $this->getUser();
         $potentialGuests = $member->getPotentialGuests();
         $communityNews = new CommunityNews();
         $latestNews = $communityNews->getLatest();
 
+        // Prepare search form for home location link
+        $data = $this->getSearchHomeLocationData($member);
+        $searchHomeLocation = $this->createForm(SearchHomeLocationFormType::class, $data);
+
+        // Prepare small search form
+        $searchGotoLocation = $this->createForm(SearchGotoLocationFormType::class);
+
         $content = $this->render(
             '@start/home.html.twig',
             [
+                'searchLocation' => $searchHomeLocation->createView(),
+                'tinySearch' => $searchGotoLocation->createView(),
                 'campaign' => $donationCampaign,
                 'travellers' => $potentialGuests,
                 'communityNews' => $latestNews,

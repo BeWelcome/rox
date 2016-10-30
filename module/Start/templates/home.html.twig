@@ -1,9 +1,10 @@
 {% extends '@base/base.html.twig' %}
 
-{% set scriptFiles = ['start/home.js'] %}
+{% set cssFiles = ['jquery-ui.css'] %}
+{% set scriptFiles = ['start/home.js', 'member/searchpicker.js'] %}
 
 {% block content %}
-    <div class="row m-b-2" style="margin-top: -25px;">
+    <div class="row mb-2" style="margin-top: -25px;">
         <div class="col-xs-12">
             <div class="container">
                 <div class="row welcomeback">
@@ -21,20 +22,30 @@
                                 {% include '@start/widget/accommodation.html.twig' with {
                                     member: my_member
                                 } only %}
-                                in <a href="#">{{ my_member.city.name }}</a></span>
+                                in
+                                {# Provide a way to search in your location #}
+                                {{ form_start( searchLocation, {'attr' : {'style' : 'display: inline;'}} ) }}
+                                {{ form_widget(searchLocation.update_map, {'attr' : {'class' : 'searchsubmit'},
+                                    'label': searchLocation.vars.value.search } )  }}
+                                {{ form_rest(searchLocation) }}
+                                {{ form_end(searchLocation) }}
+
+                            </span>
                         </div>
                     </div>
                     {# where do you want to go? #}
-                    <form method="post" action="{{ url('membersearch') }}" name="searchlocation" class="fullheight">
-                        <div class="col-xs-12 col-md-12 col-lg-4 fullheight">
-                            <div class="input-group verticalalign">
-                                    <input type="text" class="form-control" placeholder="Where do you want to go?">
-                                      <span class="input-group-btn">
-                                        <button class="btn btn-primary" type="submit"><i class="fa fa-globe"></i> Go</button>
-                                      </span>
-                            </div>
+                    {{ form_start( tinySearch, { 'attr' : { 'class' : 'fullheight' } } ) }}
+                    <div class="col-xs-12 col-md-12 col-lg-4 fullheight">
+                        <div class="input-group verticalalign">
+                            {{ form_widget( tinySearch.search, { 'attr' : { 'class' : 'search-picker' } } ) }}
+                            <span class="input-group-btn">
+                                {{ form_widget( tinySearch.update_map, { 'attr' : { 'class' : 'btn-primary' },
+                                    'label': '<i class="fa fa-globe"></i> Go' } ) }}
+                            </span>
                         </div>
-                    </form>
+                    </div>
+                    <div style="display: none">{{ form_rest( tinySearch ) }}</div>
+                    {{ form_end( tinySearch ) }}
                 </div>
             </div>
         </div>
@@ -51,26 +62,26 @@
     #}
 
     {# two boxes: messages and community activity #}
-    <div class="row m-b-2">
+    <div class="row mb-2">
 
         <!-- entire messages box -->
         <div class="col-md-12 col-lg-5">
 
             <!-- messages tabs -->
             <ul class="nav nav-tabs">
-                <li class="nav-item"><a class="nav-link active" aria-controls="messages" href="#messages" role="tab" data-toggle="tab">Messages received {% if messageCount %}<span class="tag tag-primary">{{ messageCount }}</span>{% endif %}</a></li>
+                <li class="nav-item"><a class="nav-link active" aria-controls="messages" href="#messages" role="tab" data-toggle="tab">Messages received {% if messageCount %}<span class="badge badge-primary">{{ messageCount }}</span>{% endif %}</a></li>
                 <li class="nav-item"><a class="nav-link" aria-controls="notifications" href="#notifications" role="tab" data-toggle="tab">Notifications</a></li>
             </ul>
 
             <!-- bordered box around content -->
-            <div class="dashbox m-b-1">
+            <div class="dashbox mb-1">
 
                 <div class="tab-content">
 
                     {# messages #}
                     <div role="tabpanel" class="tab-pane active" id="messages">
                         <!-- all / unread messages toggle -->
-                        <div class="row text-xs-center p-a-1">
+                        <div class="row text-xs-center p-1">
 
                             <div class="btn-group" data-toggle="buttons">
                                 <label class="btn btn-primary btn-radio active" id="all">
@@ -84,14 +95,14 @@
 
                         {# received messages #}
                         <div id="messagesdisplay" class="scrollcontent">
-                            <p class="text-xs-center m-y-3">
-                            <i class="fa fa-4x fa-spin fa-spinner m-y-3"></i><br>
+                            <p class="text-xs-center my-3">
+                            <i class="fa fa-4x fa-spin fa-spinner my-3"></i><br>
                             {{ 'Please wait while we load the messages' | trans }}</p>
                         </div>
 
                         <!-- message buttons -->
                         <div class="text-xs-center">
-                            <a href="{{ url('message') }}" class="btn btn-outline-primary btn-homewhite"><i class="fa fa-envelope"></i> My inbox {% if messageCount %}<span class="tag tag-primary tag-pill">{{ messageCount }}</span>{% endif %}</a>
+                            <a href="{{ url('message') }}" class="btn btn-outline-primary btn-homewhite"><i class="fa fa-envelope"></i> My inbox {% if messageCount %}<span class="badge badge-primary badge-pill">{{ messageCount }}</span>{% endif %}</a>
                         </div>
 
                     </div>
@@ -100,8 +111,8 @@
                     <div role="tabpanel" class="tab-pane" id="notifications">
 
                         <div id="notificationsdisplay" class="scrollcontent">
-                            <p class="text-xs-center m-y-3">
-                            <i class="fa fa-4x fa-spin fa-spinner m-y-3"></i><br />
+                            <p class="text-xs-center my-3">
+                            <i class="fa fa-4x fa-spin fa-spinner my-3"></i><br />
                             {{ 'Please wait while we load the notifications' | trans }}</p>
                         </div>
 
@@ -127,7 +138,7 @@
                     <div role="tabpanel" class="tab-pane active" id="threads">
 
                         {# display settings#}
-                        <div class="row text-xs-center p-a-1">
+                        <div class="row text-xs-center p-1">
                             <div class="btn-group" data-toggle="buttons">
                                 <label class="btn btn-primary btn-radio active" id="groups">
                                     <input type="checkbox" autocomplete="off" checked> groups
@@ -140,8 +151,8 @@
 
                         {# received messages #}
                         <div id="threadsdisplay" class="scrollcontent">
-                            <p class="text-xs-center m-y-3">
-                            <i class="fa fa-4x fa-spin fa-spinner m-y-3"></i><br />
+                            <p class="text-xs-center my-3">
+                            <i class="fa fa-4x fa-spin fa-spinner my-3"></i><br />
                             {{ 'Please wait while we load the forum threads' | trans }}</p>
                         </div>
 
@@ -158,7 +169,7 @@
                     {# load activities #}
                     <div role="tabpanel" class="tab-pane" id="activities">
 
-                        <div class="row text-xs-center p-a-1">
+                        <div class="row text-xs-center p-1">
                                 <div class="btn-group" role="group">
                                     <a href="/activities" class="btn btn-outline-primary btn-homewhite"><i class="fa fa-map-o"></i> All activities</a>
                                     <a href="/activities/myactivities" class="btn btn-outline-primary btn-homewhite"><i class="fa fa-calendar"></i> My activities</a>
@@ -166,8 +177,8 @@
                                 </div>
                         </div>
                             <div id="activitiesdisplay" class="col-xs-12">
-                                <p class="text-xs-center m-y-3">
-                                    <i class="fa fa-4x fa-spin fa-spinner m-y-3"></i><br />
+                                <p class="text-xs-center my-3">
+                                    <i class="fa fa-4x fa-spin fa-spinner my-3"></i><br />
                                     {{ 'Please wait while we load the activities near you' | trans }}</p>
                             </div>
                     </div>
@@ -177,7 +188,7 @@
     </div>
 
     {# 4 widgets#}
-    <div class="card-deck-wrapper m-b-2">
+    <div class="card-deck-wrapper mb-2">
         <div class="card-deck">
 
             {# Be Involved #}
@@ -186,10 +197,10 @@
                     <h4 class="homehfour">Be Involved<br /><span class="homesubt">help the community</span></h4>
                     <p class="card-text">BeWelcome is run by volunteers - free of charge and open source. Volunteering for the project is a great opportunity for you to get to know enthusiastic people who really believe in promoting hospitality and respect for each other. And it's fun, too!</p>
                     <a href="about/getactive" class="btn btn-outline-primary btn-homewhite btn-block"><i class="fa fa-wrench"></i> Help BeWelcome</a>
-                    <a href="donate" class="btn btn-outline-primary btn-homewhite btn-block m-b-1"><i class="fa fa-euro"></i> Please donate</a>
+                    <a href="donate" class="btn btn-outline-primary btn-homewhite btn-block mb-1"><i class="fa fa-euro"></i> Please donate</a>
                     {% if campaign.yearDonated < campaign.yearNeeded %}
-                    <p class="card-text text-xs-center m-b-0">Goal for {{ campaign.year }} - {{ campaign.year + 1  }}: <strong>€{{ campaign.yearNeeded }}</strong></p>
-                    <progress class="progress progress-primary m-a-0" value="{{ campaign.yearDonated }}" max="{{ campaign.yearNeeded }}"></progress>
+                    <p class="card-text text-xs-center mb-0">Goal for {{ campaign.year }} - {{ campaign.year + 1  }}: <strong>€{{ campaign.yearNeeded }}</strong></p>
+                    <progress class="progress progress-primary ma-0" value="{{ campaign.yearDonated }}" max="{{ campaign.yearNeeded }}"></progress>
                     <p class="card-text text-xs-center"><strong>€{{ campaign.yearDonated }}</strong> received</p>
                     {% endif %}
                 </div>
@@ -201,21 +212,21 @@
                     <h4 class="homehfour">Potential guests<br /><span class="homesubt">travelers in your area</span></h4>
                         {%  if travellers %}
                             {%  for traveller in travellers %}
-                                <div class="media m-t-1 potentialguestinfo">
-                                    <div class="h6 m-a-0"><a href="members/{{ traveller.username }}">{{ traveller.username }}</a></div>
-                                    <div class="media-left p-a-0 pull-xs-left">
+                                <div class="media mt-1 potentialguestinfo">
+                                    <div class="h6 ma-0"><a href="members/{{ traveller.username }}">{{ traveller.username }}</a></div>
+                                    <div class="media-left p-0 float-xs-left">
                                         <a href="members/{{ traveller.username }}">
                                             <img class="float_left framed" src="members/avatar/{{ traveller.username }}?50_50" alt="Profile" />
                                         </a>
                                     </div>
-                                    <div class="media-body p-a-0">
-                                        <p class="m-a-0 p-a-0"><i class="fa fa-calendar"></i> <small>{{ traveller.arrival }}</small></p>
-                                        <p class="m-a-0 p-a-0"><i class="fa fa-rocket"></i> <small>{{ traveller.departure }}</small></p>
-                                        <p class="m-a-0 p-a-0"><i class="fa fa-home"></i> <small>{{ traveller.location }}, {{ traveller.country }}</small></p>
+                                    <div class="media-body p-0">
+                                        <p class="m-0 p-0"><i class="fa fa-calendar"></i> <small>{{ traveller.arrival }}</small></p>
+                                        <p class="m-0 p-0"><i class="fa fa-rocket"></i> <small>{{ traveller.departure }}</small></p>
+                                        <p class="m-0 p-0"><i class="fa fa-home"></i> <small>{{ traveller.location }}, {{ traveller.country }}</small></p>
                                     </div>
                                 </div>
                             {% endfor %}
-                            <a href="trips" class="btn btn-outline-primary btn-homewhite btn-block m-t-1"><i class="fa fa-plus-circle"></i> View more</a>
+                            <a href="trips" class="btn btn-outline-primary btn-homewhite btn-block mt-1"><i class="fa fa-plus-circle"></i> View more</a>
                         {% else %}
                             {{ 'There are no trips planned to your area in the next three months.' | trans }}<br>
                             {{ 'But you can go ahead and plan a trip of your own.' | trans }}<br>
@@ -231,8 +242,8 @@
 
                     <h5><a href="{{ url('communitynews_show', { id: communityNews.id} ) }}">{{ communityNews.title }}</a></h5>
                     <p class="card-text">{{ communityNews.text | truncate(200) | raw }}<a href="{{ url('communitynews_show', { id: communityNews.id} ) }}" class="btn-outline-primary">{{ 'Read more' | trans }}</a></p>
-                    <div><small>{{ communityNews.created_at.diffForHumans }}</small><small class="pull-xs-right">3 comments</small></div>
-                    <a href="{{ url('communitynews') }}" class="btn btn-outline-primary btn-homewhite btn-block m-t-2"><i class="fa fa-newspaper-o"></i> All news</a>
+                    <div><small>{{ communityNews.created_at.diffForHumans }}</small><small class="float-xs-right">3 comments</small></div>
+                    <a href="{{ url('communitynews') }}" class="btn btn-outline-primary btn-homewhite btn-block mt-2"><i class="fa fa-newspaper-o"></i> All news</a>
                 </div>
             </div>
 
@@ -243,10 +254,10 @@
                     <a href="faq" class="btn btn-outline-primary btn-homewhite btn-sm btn-block"><i class="fa fa-question"></i> About</a>
                     <a href="faq" class="btn btn-outline-primary btn-homewhite btn-sm btn-block"><i class="fa fa-question"></i> FAQ</a>
                     <a href="wiki" class="btn btn-outline-primary btn-homewhite btn-sm btn-block"><i class="fa fa-book"></i> Wiki</a>
-                    <a href="safety" class="btn btn-outline-primary btn-homewhite btn-sm btn-block m-b-1"><i class="fa fa-shield"></i> Contact</a>
+                    <a href="safety" class="btn btn-outline-primary btn-homewhite btn-sm btn-block mb-1"><i class="fa fa-shield"></i> Contact</a>
                     <a href="wiki/BeVolunteer" class="btn btn-outline-primary btn-homewhite btn-sm btn-block"><i class="fa fa-bullseye"></i> BeVolunteer</a>
                     <a href="wiki/Annual_Report" class="btn btn-outline-primary btn-homewhite btn-sm btn-block"><i class="fa fa-book"></i> Annual report</a>
-                    <a href="wiki/Finances" class="btn btn-outline-primary btn-homewhite btn-sm btn-block m-b-1"><i class="fa fa-money"></i> Finances</a>
+                    <a href="wiki/Finances" class="btn btn-outline-primary btn-homewhite btn-sm btn-block mb-1"><i class="fa fa-money"></i> Finances</a>
                     <a href="wiki/Annual_Report" class="btn btn-outline-primary btn-homewhite btn-sm btn-block"><i class="fa fa-book"></i> Terms of Use</a>
                     <a href="wiki/Annual_Report" class="btn btn-outline-primary btn-homewhite btn-sm btn-block"><i class="fa fa-book"></i> Privacy Policy</a>
                 </div>

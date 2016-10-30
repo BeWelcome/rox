@@ -1,48 +1,33 @@
-function monkeyPatchAutocomplete() {
-    jQuery.ui.autocomplete.prototype._renderItem = function (ul, item) {
+$( function() {
+    $.widget("custom.catcomplete", $.ui.autocomplete, {
+        _create: function() {
+            this._super();
+            this.widget().menu( "option", "items", "> :not(.ui-autocomplete-category)" );
+        },
+        _renderMenu: function( ul, items ) {
+            var that = this,
+                currentCategory = "";
+            $.each( items, function( index, item ) {
+                var li;
+                if ( item.category !== currentCategory ) {
+                    ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+                    currentCategory = item.category;
+                }
+                li = that._renderItemData( ul, item );
+                if ( item.category ) {
+                    li.attr( "aria-label", item.category + " : " + item.label );
+                }
+            });
+        }
+    });
 
-        var keywords = jQuery.trim(this.term).split(' ').join('|');
-        var output = item.label.replace(new RegExp("(" + keywords + ")", "gi"), '<span class="ui-menu-item-highlight">$1</span>');
-
-        return jQuery("<li>").html("<div><a>" + output + "</a></div>")
-            .appendTo(ul);
-    };
-}
-
-jQuery(function () {
-    monkeyPatchAutocomplete();
-});
-
-jQuery.widget( "custom.catcomplete", jQuery.ui.autocomplete, {
-    _renderMenu: function( ul, items ) {
-        var that = this,
-            currentCategory = "";
-        jQuery.each( items, function( index, item ) {
-            if ( item.category !== currentCategory ) {
-                var uiItem = {
-                    value: ''
-                };
-
-                var el = $("<li class='ui-autocomplete-category' aria-label=''><div>" + item.category + "</div></li>");
-
-                el.data("ui-autocomplete-item", uiItem);
-
-                ul.append( el );
-                currentCategory = item.category;
-            }
-            that._renderItemData( ul, item );
-        });
-    }
-});
-
-function enableAutoComplete(addMarker) {
-    jQuery( ".search-picker" ).on( "keydown", function( event ) {
-        jQuery( "#" + this.id + "_geoname_id" ).val( "" );
-        jQuery( "#" + this.id + "_latitude" ).val( "" );
-        jQuery( "#" + this.id + "_longitude" ).val( "" );
+    $(".search-picker").on("keydown", function (event) {
+        $("#" + this.id + "_geoname_id").val("");
+        $("#" + this.id + "_latitude").val("");
+        $("#" + this.id + "_longitude").val("");
     }).catcomplete({
         source: function (request, response) {
-            jQuery.ajax({
+            $.ajax({
                 url: "/search/locations/all",
                 dataType: "jsonp",
                 data: {
@@ -54,7 +39,7 @@ function enableAutoComplete(addMarker) {
                         data.locations = [{name: 'No matches found.', category: "Information", cnt: 0}];
                     }
                     response(
-                        jQuery.map(data.locations, function (item) {
+                        $.map(data.locations, function (item) {
                             return {
                                 label: (item.name ? item.name : "") + (item.admin1 ? (item.name ? ", " : "") + item.admin1 : "") + (item.country ? ", " + item.country : "") + (item.cnt !== 0 ? " (" + item.cnt + ")" : ""),
                                 labelnocount: (item.name ? item.name : "") + (item.admin1 ? (item.name ? ", " : "") + item.admin1 : "") + (item.country ? ", " + item.country : ""),
@@ -65,29 +50,29 @@ function enableAutoComplete(addMarker) {
                 }
             });
         },
-        focus: function( event, ui ) {
+        focus: function (event, ui) {
             if (typeof ui.item === 'undefined' || ui.item === null) {
-                jQuery("#" + this.id + "_geoname_id").val("");
-                jQuery( "#" + this.id + "_latitude" ).val( "" );
-                jQuery( "#" + this.id + "_longitude" ).val( "" );
+                $("#" + this.id + "_geoname_id").val("");
+                $("#" + this.id + "_latitude").val("");
+                $("#" + this.id + "_longitude").val("");
             } else {
-                jQuery(this).val(ui.item.labelnocount);
-                jQuery("#" + this.id + "_geoname_id").val(ui.item.value);
-                jQuery("#" + this.id + "_latitude").val(ui.item.latitude);
-                jQuery("#" + this.id + "_longitude").val(ui.item.longitude);
+                $(this).val(ui.item.labelnocount);
+                $("#" + this.id + "_geoname_id").val(ui.item.value);
+                $("#" + this.id + "_latitude").val(ui.item.latitude);
+                $("#" + this.id + "_longitude").val(ui.item.longitude);
             }
             return false;
         },
         change: function (event, ui) {
             if (typeof ui.item === 'undefined' || ui.item === null) {
-                jQuery("#" + this.id + "_geoname_id").val("");
-                jQuery( "#" + this.id + "_latitude" ).val( "" );
-                jQuery( "#" + this.id + "_longitude" ).val( "" );
+                $("#" + this.id + "_geoname_id").val("");
+                $("#" + this.id + "_latitude").val("");
+                $("#" + this.id + "_longitude").val("");
             } else {
-                jQuery(this).val(ui.item.labelnocount);
-                jQuery("#" + this.id + "_geoname_id").val( ui.item.value );
-                jQuery("#" + this.id + "_latitude").val(ui.item.latitude);
-                jQuery("#" + this.id + "_longitude").val(ui.item.longitude);
+                $(this).val(ui.item.labelnocount);
+                $("#" + this.id + "_geoname_id").val(ui.item.value);
+                $("#" + this.id + "_latitude").val(ui.item.latitude);
+                $("#" + this.id + "_longitude").val(ui.item.longitude);
             }
         },
         select: function (event, ui) {
@@ -95,23 +80,15 @@ function enableAutoComplete(addMarker) {
                 return false;
             }
 
-            jQuery("#" + this.id + "_geoname_id").val(ui.item.value);
-            jQuery("#" + this.id + "_latitude").val(ui.item.latitude);
-            jQuery("#" + this.id + "_longitude").val(ui.item.longitude);
-            jQuery(this).val(ui.item.labelnocount);
+            $("#" + this.id + "_geoname_id").val(ui.item.value);
+            $("#" + this.id + "_latitude").val(ui.item.latitude);
+            $("#" + this.id + "_longitude").val(ui.item.longitude);
 
-            addMarker(this.id, ui.item.labelnocount, ui.item.value, ui.item.latitude, ui.item.longitude);
+            $(this).val(ui.item.labelnocount);
 
             return false;
         },
         minLength: 1,
         delay: 500
     });
-}
-
-jQuery(function() {
-    if (typeof addMarker === 'undefined') {
-        addMarker = function() {};
-    }
-    enableAutoComplete(addMarker);
 });

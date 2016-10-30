@@ -158,15 +158,13 @@ module.exports = function (grunt) {
             dist: {
                 notnull: true,
                 src: [
+                    /* jQuery */
                     'node_modules/jquery/dist/jquery.js',
-                    'bower_components/jquery-ui/jquery-ui.js',
+                    /* jQuery UI with autocomplete and date picker */
                     'node_modules/tether/dist/js/tether.js',
                     'node_modules/bootstrap/dist/js/bootstrap.js',
                     'node_modules/bootstrap-autohidingnavbar/dist/jquery.bootstrap-autohidingnavbar.js',
                     'node_modules/select2/dist/js/select2.js',
-
-                    // Auto complete used by map search for drop down search box
-                    'node_modules/jquery-ui/dist/jquery-ui',
 
                     'node_modules/skrollr/dist/skrollr.min.js',
                     'node_modules/skrollr-menu/dist/skrollr.menu.min.js',
@@ -176,6 +174,21 @@ module.exports = function (grunt) {
                     'module/Core/assets/js/**/*.js'
                 ],
                 dest: 'htdocs/assets/js/built.js',
+                nonull: true
+            },
+            jqueryuijs: {
+                src: [
+                    'node_modules/jquery-ui/ui/version.js',
+                    'node_modules/jquery-ui/ui/widget.js',
+                    'node_modules/jquery-ui/ui/position.js',
+                    'node_modules/jquery-ui/ui/keycode.js',
+                    'node_modules/jquery-ui/ui/unique-id.js',
+                    'node_modules/jquery-ui/ui/safe-active-element.js',
+                    'node_modules/jquery-ui/ui/widgets/menu.js',
+                    'node_modules/jquery-ui/ui/widgets/autocomplete.js',
+                    'node_modules/jquery-ui/ui/widgets/datepicker.js'
+                ],
+                dest: 'htdocs/assets/js/jqueryui.js',
                 nonull: true
             },
             backwards: {
@@ -289,7 +302,7 @@ module.exports = function (grunt) {
 
     // JS
     grunt.registerTask('checkjs', ['jshint']);
-    grunt.registerTask('buildjs', ['concat:dist', 'concat:backwards', 'concat:leaflet'
+    grunt.registerTask('buildjs', ['concat:dist', 'concat:backwards', 'concat:leaflet', 'concat:jqueryuijs',
         // , 'uglify'
     ]);
 

@@ -4,6 +4,7 @@ twig:
     debug: true
     strict_variables: true
     cache: 'cache/%kernel.environment%/twig/'
+    base_template_class: 'Rox\Core\Template\RoxTemplate'
     exception_controller:  twig.controller.exception:showAction
     form_themes:
       - '@forms/bs4.html.twig'

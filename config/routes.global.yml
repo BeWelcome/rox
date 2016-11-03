@@ -26,3 +26,6 @@ start:
 
 communitynews:
     resource: ../module/CommunityNews/config/routes.yml
+
+trip:
+    resource: ../module/Trip/config/routes.yml

@@ -16,7 +16,7 @@ abstract class AbstractModel extends BaseModel
      */
     protected $ormRelationships = [];
 
-    public function __isset($key)
+    /* public function __isset($key)
     {
         $key = $this->normalizeKey($key);
 
@@ -25,7 +25,7 @@ abstract class AbstractModel extends BaseModel
             || in_array($key, $this->ormRelationships, true);
     }
 
-    public function getAttribute($key)
+   public function getAttribute($key)
     {
         // The Eloquent implementation of getAttribute will first return the
         // attribute of $key before checking if it has a relationship.
@@ -39,17 +39,17 @@ abstract class AbstractModel extends BaseModel
         return parent::getAttribute($key);
     }
 
-    public function getAttributeFromArray($key)
-    {
-        $value = parent::getAttributeFromArray($key);
+         public function getAttributeFromArray($key)
+        {
+            $value = parent::getAttributeFromArray($key);
 
-        if (in_array($key, $this->dates, true) && $value === '0000-00-00 00:00:00') {
-            return;
+            if (in_array($key, $this->dates, true) && $value === '0000-00-00 00:00:00') {
+                return;
+            }
+
+            return $value;
         }
-
-        return $value;
-    }
-
+    */
     protected function normalizeKey($key)
     {
         $keys = array_keys($this->attributes);

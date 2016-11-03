@@ -1,0 +1,23 @@
+{% extends '@base/base.html.twig' %}
+
+{% block title %}
+    {{ 'All trips' | trans }}
+{% endblock %}
+
+{% block content %}
+
+    {% for trip in trips %}
+        <article class="trip">
+            <h1>{{ trip.summary }}</h1>
+            <a href="{{  path('trip_edit', { id: trip.id} ) }}">Edit!</a>
+            {{ trip.createdBy.Username }}
+        </article>
+    {% else %}
+        <div class="well">{{ 'trip.no_trips_found'|trans }}</div>
+    {% endfor %}
+
+    <div class="navigation text-center">
+        {{ pagerfanta(trips, 'twitter_bootstrap3_translated', { routeName: 'trip_index_paginated' }) }}
+    </div>
+
+{% endblock content %}

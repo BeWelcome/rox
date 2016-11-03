@@ -44,7 +44,9 @@ class Application extends Kernel
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new \Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new \Symfony\Bundle\TwigBundle\TwigBundle(),
-        ];
+            new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
+            new \WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
+            new \Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),        ];
 
         if (in_array($this->getEnvironment(), ['development', 'test'], true)) {
             $bundles[] = new \Symfony\Bundle\DebugBundle\DebugBundle();

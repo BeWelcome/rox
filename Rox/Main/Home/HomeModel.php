@@ -11,6 +11,7 @@ use Rox\Models\Note;
 use Rox\Models\Post;
 use Rox\Models\Thread;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Rox\Trip\Model\Trip;
 use stdClass;
 
 class HomeModel extends \RoxModelBase {
@@ -277,5 +278,27 @@ class HomeModel extends \RoxModelBase {
             'yearNeeded' => $details->YearNeededAmount,
             'yearDonated' => $details->YearDonation
         ];
+    }
+
+    /**
+     * @param Member $member
+     * @return array|bool
+     */
+    public function getTravellersInAreaOfMember( Member $member)
+    {
+        $travellers = false;
+        $trip = new Trip();
+        $trips = $trip->findInMemberAreaNextThreeMonths( $member );
+        if($trips) {
+            foreach($trips as $t) {
+                $traveller = new \stdClass;
+                $traveller->Username = $t->createdBy->Username;
+                $traveller->arrives = $t->subtrips[0]->arrival;
+                $traveller->leaves = $t->subtrips[0]->departure ? $t->subtrips[0]->departure : $t->subtrips[0]->arrival;
+                $traveller->livesIn = $t->createdBy->city;
+                $travellers[] = $traveller;
+            }
+        }
+        return $travellers;
     }
 }

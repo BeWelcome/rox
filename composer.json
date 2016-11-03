@@ -43,7 +43,11 @@
         "vlucas/phpdotenv": "^2.2",
         "zendframework/zend-uri": "^2.4",
         "dzango/twig-truncate-extension": "^1.0",
-        "judev/php-htmltruncator": "^1.1"
+        "judev/php-htmltruncator": "^1.1",
+        "doctrine/orm": "dev-master",
+        "doctrine/doctrine-bundle": "^1.6",
+        "white-october/pagerfanta-bundle": "^1.0",
+        "sensio/framework-extra-bundle": "^3.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^1.11",
@@ -72,6 +76,7 @@
             "Rox\\Member\\": "module/Member/src",
             "Rox\\Message\\": "module/Message/src",
             "Rox\\Start\\": "module/Start/src",
+            "Rox\\Trip\\": "module/Trip/src",
             "Rox\\CommunityNews\\": "module/CommunityNews/src"
         },
         "classmap": [

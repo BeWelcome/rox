@@ -213,25 +213,23 @@
                         {%  if travellers %}
                             {%  for traveller in travellers %}
                                 <div class="media mt-1 potentialguestinfo">
-                                    <div class="h6 ma-0"><a href="members/{{ traveller.username }}">{{ traveller.username }}</a></div>
+                                    <div class="h6 ma-0">{{ macros.profilelink(traveller.Username) }}</div>
                                     <div class="media-left p-0 float-xs-left">
-                                        <a href="members/{{ traveller.username }}">
-                                            <img class="float_left framed" src="members/avatar/{{ traveller.username }}?50_50" alt="Profile" />
-                                        </a>
+                                        {{ macros.avatar( traveller.Username, 50, true) }}
                                     </div>
-                                    <div class="media-body p-0">
-                                        <p class="m-0 p-0"><i class="fa fa-calendar"></i> <small>{{ traveller.arrival }}</small></p>
-                                        <p class="m-0 p-0"><i class="fa fa-rocket"></i> <small>{{ traveller.departure }}</small></p>
-                                        <p class="m-0 p-0"><i class="fa fa-home"></i> <small>{{ traveller.location }}, {{ traveller.country }}</small></p>
-                                    </div>
+                                     <div class="media-body p-0">
+                                         <p class="m-0 p-0"><i class="fa fa-calendar"></i> <small>{{ traveller.arrives }}</small></p>
+                                         <p class="m-0 p-0"><i class="fa fa-rocket"></i> <small>{{ traveller.leaves }}</small></p>
+                                         <p class="m-0 p-0"><i class="fa fa-home"></i> <small>{{ traveller.livesIn.name }}, {{ traveller.livesIn.Country.name }}</small></p>
+                                     </div>
                                 </div>
                             {% endfor %}
-                            <a href="trips" class="btn btn-outline-primary btn-homewhite btn-block mt-1"><i class="fa fa-plus-circle"></i> View more</a>
+                            <a href="{{ path('trip') }}" class="btn btn-outline-primary btn-homewhite btn-block mt-1"><i class="fa fa-plus-circle"></i> View more</a>
                         {% else %}
                             {{ 'There are no trips planned to your area in the next three months.' | trans }}<br>
                             {{ 'But you can go ahead and plan a trip of your own.' | trans }}<br>
                         {% endif %}
-                        <a href="trips/create" class="btn btn-outline-primary btn-homewhite btn-block"><i class="fa fa-map-marker"></i> Plan your trip</a>
+                        <a href="{{ path('trip_create') }}" class="btn btn-outline-primary btn-homewhite btn-block"><i class="fa fa-map-marker"></i> Plan your trip</a>
                 </div>
             </div>
 
@@ -265,5 +263,4 @@
 
         </div>
     </div>
-
 {% endblock content %}

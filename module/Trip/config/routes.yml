@@ -1,0 +1,62 @@
+trip_index_paginated:
+    path: /trip
+    methods: [GET]
+    defaults:
+        _controller: Rox\Trip\Controller\TripController::listAction
+        page: 1
+    requirements:
+        page: \d+
+
+#trip_index_paginated:
+#    path: /trip/{page}
+#    defaults:
+#        _controller: Rox\Trip\Controller\TripController::listAction
+#    requirements:
+#        page: [1-9]\d*
+
+# trip_show:
+#    path: /trip/{id}/show
+#    methods: [GET]
+#    defaults:
+#        _controller: Rox\Trip\Controller\TripController::showAction
+#    requirements:
+#        id: \d+
+
+# trip_show_title:
+#    path: /trip/{id}/{title}
+#    methods: [GET]
+#    defaults:
+#        _controller: Rox\Trip\Controller\TripController::showAction
+#    requirements:
+#        id: \d+
+
+#trip:
+#    path: /trip
+#    methods: [GET]
+#    defaults:
+#        _controller: Rox\Trip\Controller\TripController::listAction
+#        page: 1
+#    requirements:
+#        page: \d+
+
+#my_trips:
+#    path: /trip/my
+#    methods: [GET]
+#    defaults:
+#        _controller: Rox\Trip\Controller\TripController::listMyAction
+#        page: 1
+#    requirements:
+#        page: \d+
+
+#trip_create:
+#    path:     /trip/create
+#    defaults:
+#        _controller: Rox\Trip\Controller\TripController::createAction
+
+trip_edit:
+    path:     /trip/{id}/edit
+    defaults:
+        _controller: Rox\Trip\Controller\TripController::editAction
+    requirements:
+        id:         \d+
+

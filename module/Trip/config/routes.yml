@@ -48,10 +48,10 @@ trip_index_paginated:
 #    requirements:
 #        page: \d+
 
-#trip_create:
-#    path:     /trip/create
-#    defaults:
-#        _controller: Rox\Trip\Controller\TripController::createAction
+trip_create:
+    path:     /trip/create
+    defaults:
+        _controller: Rox\Trip\Controller\TripController::createAction
 
 trip_edit:
     path:     /trip/{id}/edit

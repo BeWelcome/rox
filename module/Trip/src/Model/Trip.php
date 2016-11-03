@@ -15,7 +15,7 @@ use Rox\Member\Model\Member;
  * @property int $id
  * @property-read Member $receiver
  */
-class Trip extends AbstractModel implements TripRepositoryInterface
+class Trip extends AbstractModel
 {
     use SoftDeletes;
 
@@ -37,7 +37,7 @@ class Trip extends AbstractModel implements TripRepositoryInterface
      */
     public function subtrips()
     {
-        return $this->hasManyArrayAccess('Rox\Trip\Model\SubTrip');
+        return $this->hasMany('Rox\Trip\Model\SubTrip');
     }
 
     public function getById($id)

@@ -48,13 +48,13 @@ class SearchFormType extends AbstractType
     {
         $attr = [
             'attr' => [
-                'class' => 'btn btn-primary float-xs-right',
+                'class' => 'btn btn-primary float-right',
             ],
         ];
         $formBuilder->add('update_map', SubmitType::class, $attr)
 /*            ->add('advanced_options', SubmitType::class, [
                 'attr' => [
-                    'class' => 'btn btn-sm btn-primary float-xs-right',
+                    'class' => 'btn btn-sm btn-primary float-right',
                 ],
             ])
 */        ;

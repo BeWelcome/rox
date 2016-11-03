@@ -214,7 +214,7 @@
                             {%  for traveller in travellers %}
                                 <div class="media mt-1 potentialguestinfo">
                                     <div class="h6 ma-0">{{ macros.profilelink(traveller.Username) }}</div>
-                                    <div class="media-left p-0 float-xs-left">
+                                    <div class="media-left p-0 float-left">
                                         {{ macros.avatar( traveller.Username, 50, true) }}
                                     </div>
                                      <div class="media-body p-0">
@@ -240,7 +240,7 @@
 
                     <h5><a href="{{ url('communitynews_show', { id: communityNews.id} ) }}">{{ communityNews.title }}</a></h5>
                     <p class="card-text">{{ communityNews.text | truncate(200) | raw }}<a href="{{ url('communitynews_show', { id: communityNews.id} ) }}" class="btn-outline-primary">{{ 'Read more' | trans }}</a></p>
-                    <div><small>{{ communityNews.created_at.diffForHumans }}</small><small class="float-xs-right">3 comments</small></div>
+                    <div><small>{{ communityNews.created_at.diffForHumans }}</small><small class="float-right">3 comments</small></div>
                     <a href="{{ url('communitynews') }}" class="btn btn-outline-primary btn-homewhite btn-block mt-2"><i class="fa fa-newspaper-o"></i> All news</a>
                 </div>
             </div>

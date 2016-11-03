@@ -13,21 +13,21 @@
         <p class="clearfix">
             {% if directionIn %}
                 {#<a class="button float_left" href="messages/{{ message.id }}/reply"><?= $words->get('replymessage') ?></a>#}
-                <a class="btn btn-primary float-xs-left" href="messages/{{ message.id }}/reply">{{ 'Reply' | trans }}</a>
+                <a class="btn btn-primary float-left" href="messages/{{ message.id }}/reply">{{ 'Reply' | trans }}</a>
 
                 {% if message.InFolder == 'Spam' %}
-                    <a class="btn btn-sm btn-primary float-xs-right" href="messages/{{ message.id }}/nospam">{{ 'Remove spam mark' | trans }}</a>
+                    <a class="btn btn-sm btn-primary float-right" href="messages/{{ message.id }}/nospam">{{ 'Remove spam mark' | trans }}</a>
                 {% else %}
                     {#<a class="button float_right" href="messages/<?= $message->id ?>/spam"><?= $words->get('markspam') ?></a>#}
-                    <a class="btn btn-sm btn-primary float-xs-right" href="messages/{{ message.id }}/spam">{{ 'Report as abuse' | trans }}</a>
+                    <a class="btn btn-sm btn-primary float-right" href="messages/{{ message.id }}/spam">{{ 'Report as abuse' | trans }}</a>
                 {% endif %}
 
             {% else %}
                 {#<a class="button float_left" href="messages/<?= $message->id ?>/edit"><?= $words->get('editmessage') ?></a>#}
-                <a class="btn-primary float-xs-left" href="messages/{{ message.id }}/edit">{{ 'Edit' | trans }}</a>
+                <a class="btn-primary float-left" href="messages/{{ message.id }}/edit">{{ 'Edit' | trans }}</a>
             {% endif %}
 
-            <a class="btn btn-sm btn-primary float-xs-right" href="messages/{{ message.id }}/delete" onclick="return confirm ('{{ 'Are you sure that you want to permanently delete the selected messages?' | trans }}')">{{ 'Delete' | trans }}</a>
+            <a class="btn btn-sm btn-primary float-right" href="messages/{{ message.id }}/delete" onclick="return confirm ('{{ 'Are you sure that you want to permanently delete the selected messages?' | trans }}')">{{ 'Delete' | trans }}</a>
             {#<a class="button float_right" href="messages/<?= $message->id ?>/delete" onclick="return confirm ('<?php echo $words->getBuffered('MessagesWarningConfirmDelete'); ?>')"><?= $words->get('delmessage') ?></a>#}
         </p>
     </div>
@@ -39,10 +39,10 @@
         </div>
         <div class="col-xs-11">
             <div class="username pb-1">
-                <span class="float-xs-left">
+                <span class="float-left">
                 <strong>{{ macros.profilelink( otherMember.Username ) }}</strong></a>
                 </span>
-                <span class="float-xs-right p-1 small text-xs-right locandlang">
+                <span class="float-right p-1 small text-xs-right locandlang">
                     {#<?= $words->get('LivesIn') ?>#}
                     {# {{ 'Lives in' | trans }} #}
                     <i class="fa fa-2x fa-map-marker"></i> <strong>{{ message.sender.city.name }}, {{ message.sender.city.country.name }}</strong>
@@ -63,7 +63,7 @@
                     {% endfor %}
                 </span>
 
-                <span class="float-xs-right">
+                <span class="float-right">
                     <a class="btn btn-sm btn-secondary allmessages" href="messages/with/{{ otherMember.Username }}">
                     <i class="fa fa-envelope-o"></i>
                         {#<?= $words->getSilent('messages_allmessageswith', $contact_username) ?>#}
@@ -74,7 +74,7 @@
 
             </div>
             <div class="my-1 p-1 pb-3 messagebox">
-                <div class="smaller float-xs-right mr-1">
+                <div class="smaller float-right mr-1">
                     {{ 'Date' | trans }}:
                     {#<?= $words->get('MessagesDate') ?>:#}
 
@@ -98,20 +98,20 @@
                 {# footer buttons #}
                 <div>
                     {% if directionIn %}
-                        <a class="btn btn-primary float-xs-left" href="messages/{{ message.id }}/reply">{{ 'Reply' | trans }}</a>
+                        <a class="btn btn-primary float-left" href="messages/{{ message.id }}/reply">{{ 'Reply' | trans }}</a>
 
                         {% if message.InFolder == 'Spam' %}
-                            <a class="btn btn-sm btn-primary float-xs-right" href="messages/{{ message.id }}/nospam">{{ 'Remove spam mark' | trans }}</a>
+                            <a class="btn btn-sm btn-primary float-right" href="messages/{{ message.id }}/nospam">{{ 'Remove spam mark' | trans }}</a>
                         {% else %}
-                            <a class="btn btn-sm btn-primary float-xs-right" href="messages/{{ message.id }}/spam">{{ 'Report as abuse' | trans }}</a>
+                            <a class="btn btn-sm btn-primary float-right" href="messages/{{ message.id }}/spam">{{ 'Report as abuse' | trans }}</a>
                         {% endif %}
 
                     {% else %}
-                        <a class="btn btn-primary float-xs-left" href="messages/{{ message.id }}/edit">{{ 'Edit' | trans }}</a>
+                        <a class="btn btn-primary float-left" href="messages/{{ message.id }}/edit">{{ 'Edit' | trans }}</a>
                     {% endif %}
 
                     {# TODO this one is missing the JS confirm dialog #}
-                    <a class="btn btn-sm btn-primary float-xs-right" href="messages/{{ message.id }}/delete">{{ 'Delete' | trans }}</a>
+                    <a class="btn btn-sm btn-primary float-right" href="messages/{{ message.id }}/delete">{{ 'Delete' | trans }}</a>
                 </div>
 
             </div>

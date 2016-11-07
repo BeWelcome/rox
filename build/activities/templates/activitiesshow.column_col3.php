@@ -39,7 +39,7 @@ if (empty($vars)) {
 }
 ?>
 
-<div class="row m-b-1">
+<div class="row mb-1">
     <div class="col-xs-12 col-md-3">
 
         <?
@@ -68,12 +68,12 @@ if (empty($vars)) {
         <div>
             <img class="mappreview" src="https://maps.googleapis.com/maps/api/staticmap?center={{ member.Latitude }},{{ member.Longitude }}&zoom=10&size=117x117&key=AIzaSyAiF_lG8CdC-hCIXbGs9jilOFJRoXteM3k">
         </div>
-        <div class="m-t-1">
+        <div class="mt-1">
             <h4><?= $words->get('ActivityLocationAddress'); ?></h4>
             <?php echo $this->activity->address ?><br>
             <?php echo '<strong>' . $this->activity->location->name . '<br>' . $this->activity->location->getCountry()->name . '</strong>'; ?>
         </div>
-        <div class="m-t-1">
+        <div class="mt-1">
             <h4><?php echo $words->get('ActivityOrganizers');?></h4>
 
             <?php
@@ -81,7 +81,7 @@ if (empty($vars)) {
                 <div>
                     <a href="members/<? echo $organizer->Username; ?>"><? echo $organizer->Username; ?></a>
                 </div>
-                <div class="media-body p-a-0">
+                <div class="media-body pa-0">
                     <? echo '  <span class="small">' . htmlspecialchars($organizer->comment) . '</span>'; ?>
                 </div>
             <? } ?>
@@ -96,7 +96,7 @@ if (empty($vars)) {
         <?php
         if ($this->member) {
             if ($this->activity->status == 0) { ?>
-                <form method="post" id="activity-show-form" class="yform full abitlower">
+                <form method="post" id="activity-show-form" class="form full abitlower">
                     <?php echo $callbackTagsJoinEdit; ?>
                     <input type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
 
@@ -125,7 +125,7 @@ if (empty($vars)) {
 
                     </div>
 
-                    <input class="form-control m-b-1" type="text" maxlength="80" id="activity-comment" name="activity-comment" value="<?php echo htmlspecialchars($vars['activity-comment'], ENT_QUOTES); ?>" placeholder="<?php echo $words->get('ActivityYourComment'); ?>" />
+                    <input class="form-control mb-1" type="text" maxlength="80" id="activity-comment" name="activity-comment" value="<?php echo htmlspecialchars($vars['activity-comment'], ENT_QUOTES); ?>" placeholder="<?php echo $words->get('ActivityYourComment'); ?>" />
 
                     <?php
                     if ($activityInTheFuture){
@@ -155,7 +155,7 @@ if (empty($vars)) {
         <?php if ($this->member) {
             if ($this->member->organizer == true) { ?>
                 <form method="post" id="activity-show-form">
-                <div class="form-group row p-a-1">
+                <div class="form-group row pa-1">
                 <span class="h4"><?php echo $words->get('ActivityOrgaStatusHeadline');?></span>
                 <?php echo $callbackTagsCancelUncancel; ?>
                 <input type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />

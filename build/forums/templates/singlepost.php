@@ -98,7 +98,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
 
     <div>
         <a name="post<?php echo $post->postid; ?>"></a>
-        <small class="pull-xs-right text-xs-right p-l-1 p-b-1">
+        <small class="pull-xs-right text-xs-right pl-1 p-b-1">
                 <?php
                 //echo "[",$post->posttime,"]",$words->getFormatted('DateHHMMShortFormat') ;
                 echo $words->getFormatted('posted'); ?> <?php echo date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($post->posttime));

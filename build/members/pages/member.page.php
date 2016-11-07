@@ -209,7 +209,7 @@ class MemberPage extends PageWithActiveSkin
                 </script>
         </div> <!-- profile_pic -->
 
-            <div class="list-group m-t-1">
+            <div class="list-group mt-1">
               <?php
 
         $active_menu_item = $this->getSubmenuActiveItem();

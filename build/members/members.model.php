@@ -1451,8 +1451,9 @@ ORDER BY
         }
 
         $member = $this->createEntity('Member', $memberId);
+        $loggedInMember = $this->getLoggedInMember();
         $browseable = $member->isBrowsable();
-        if ((!$browseable) || !$this->hasAvatar($memberId, $suffix) || (!$member->publicProfile && !$this->getLoggedInMember())) {
+        if ((!$browseable) || !$this->hasAvatar($memberId, $suffix) || (!$member->publicProfile && !$loggedInMember)) {
             header('Content-type: image/png');
             header ("cache-control: must-revalidate");
             $offset = 48 * 60 * 60;

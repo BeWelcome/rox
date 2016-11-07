@@ -58,7 +58,7 @@ Boston, MA  02111-1307, USA.
             </progress>
 
 
-            <div class="h4 text-xs-center hidden-md-down m-t-1">
+            <div class="h4 text-xs-center hidden-md-down mt-1">
                 <div><i class="fa fa-user"></i><br><?php echo $words->get('LoginInformation'); ?> <i class="text-success fa fa-check-square"></i></div>
                 <div class="text-muted m-y-2"><i class="fa fa-angle-down"></i></div>
                 <div><i class="fa fa-tag"></i><br><?php echo $words->get('SignupName'); ?></div>
@@ -154,7 +154,7 @@ Boston, MA  02111-1307, USA.
             </div>
 
             <!-- Mother tongue(s)-->
-            <div class="row m-t-1">
+            <div class="row mt-1">
                 <div class="col-xs-6">
                     <?php
                     $motherTongue = -1;
@@ -287,7 +287,7 @@ Boston, MA  02111-1307, USA.
 
 
             <!-- Next button -->
-            <div class="row m-t-1">
+            <div class="row mt-1">
                 <div class="col-xs-6">
                     <button type="submit" class="form-control btn btn-primary"><?php echo $words->getSilent('NextStep'); ?> <i class="fa fa-angle-double-right"></i></button>
                     <?php echo $words->flushBuffer(); ?>

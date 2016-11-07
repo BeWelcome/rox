@@ -41,7 +41,7 @@ if (empty($vars)) {
     }
     ?>
 
-    <div class="row m-t-2 m-b-1">
+    <div class="row m-t-2 mb-1">
         <div class="col-md-2"></div>
         <div class="col-xs-12 col-md-7">
             <small class="pull-xs-right">* <?php echo $words->get('ActivityMandatoryFields'); ?></small>

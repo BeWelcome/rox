@@ -46,7 +46,7 @@ Boston, MA  02111-1307, USA.
                     </div>
                 </progress>
 
-                <div class="h4 text-xs-center hidden-md-down m-t-1">
+                <div class="h4 text-xs-center hidden-md-down mt-1">
                     <div><i class="fa fa-user"></i><br><?php echo $words->get('LoginInformation'); ?> <i
                             class="text-success fa fa-check-square"></i></div>
                     <div class="text-muted m-y-2"><i class="fa fa-angle-down"></i></div>
@@ -181,7 +181,7 @@ Boston, MA  02111-1307, USA.
                     <div class="col-xs-12 col-md-6"></div>
                 </div>
 
-                <div class="row m-t-1">
+                <div class="row mt-1">
                     <div class="col-xs-12 col-md-6">
                         <h4><?php echo $words->get('SignupName'); ?></h4>
                         <!-- Personal Information -->
@@ -281,7 +281,7 @@ Boston, MA  02111-1307, USA.
                     <div class="col-md-6 hidden-md-down"></div>
                 </div>
 
-                <div class="row m-t-1">
+                <div class="row mt-1">
                     <div class="col-xs-12 col-md-6">
                         <!-- Mother tongue(s)-->
                         <?php
@@ -311,7 +311,7 @@ Boston, MA  02111-1307, USA.
                     <div class="col-md-6 hidden-md-down"></div>
                 </div>
 
-                <div class="row m-t-1">
+                <div class="row mt-1">
                     <div class="col-xs-12 col-md-6">
                         <!-- Birthdate -->
                         <label for="BirthDate"
@@ -388,7 +388,7 @@ Boston, MA  02111-1307, USA.
                     <div class="col-md-6 hidden-md-down"></div>
                 </div>
 
-                <div class="row m-t-1">
+                <div class="row mt-1">
                     <div class="col-xs-12 col-md-6">
                         <!-- Gender -->
                         <?php if (in_array('SignupErrorProvideGender', $vars['errors'])) { ?>
@@ -442,7 +442,7 @@ Boston, MA  02111-1307, USA.
                     <div class="col-md-6 hidden-md-down"></div>
                 </div>
 
-                <div class="row m-t-1">
+                <div class="row mt-1">
                     <div class="col-xs-12 col-md-6">
                         <h4><?php echo $words->get('Location'); ?></h4>
                         <div class="form-group">
@@ -473,7 +473,7 @@ Boston, MA  02111-1307, USA.
                     <div class="col-md-6 hidden-md-down"></div>
                 </div>
 
-                <div class="row m-t-1">
+                <div class="row mt-1">
                     <div class="col-xs-12 col-md-6">
                         <!-- Feedback -->
                         <h4><?php echo $words->get('SignupFeedback'); ?></h4>
@@ -489,7 +489,7 @@ Boston, MA  02111-1307, USA.
                     <div class="col-md-6 hidden-md-down"></div>
                 </div>
 
-                <div class="row m-t-1">
+                <div class="row mt-1">
                     <div class="col-xs-12 col-md-6">
                         <!-- terms -->
                         <div class="checkbox">
@@ -512,7 +512,7 @@ Boston, MA  02111-1307, USA.
                     <div class="col-md-6 hidden-md-down"></div>
                 </div>
 
-                <div class="row m-t-1">
+                <div class="row mt-1">
                     <div class="col-xs-12 col-md-6">
                         <button type="submit"
                                 class="form-control btn btn-primary"><?php echo $words->getSilent('SubmitForm'); ?> <i

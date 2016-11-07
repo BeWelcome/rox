@@ -18,7 +18,7 @@ if ($error) {?>
 	<div class="col-xs-12">
 		<div class="card">
 			<p class="h5 card-text text-xs-center m-b-0">Goal for 2016-2017: <strong>€1000,-</strong></p>
-			<progress class="progress progress-primary m-a-0" value="60" max="100"></progress>
+			<progress class="progress progress-primary ma-0" value="60" max="100"></progress>
 			<p class="h5 card-text text-xs-center"><strong>€600.00</strong> received</p>
 		</div>
 	</div>

@@ -36,7 +36,7 @@ Boston, MA  02111-1307, USA.
 
 <tr>
     <th><?php echo $words->getFormatted('Author'); ?></th>
-    <th class="p-l-0">
+    <th class="pl-0">
         <?php if (empty($TIGHT_THREADLIST)) {
                   echo $words->getFormatted('Thread');
               } 
@@ -69,8 +69,8 @@ Boston, MA  02111-1307, USA.
         
         ?>
             <tr class="<?php echo $styles[$cnt%2]; ?>">
-                <td class="forumsboardthreadauthor p-a-0"><a href="members/<?php echo $thread->first_author; ?>"><img src="members/avatar/<?php echo $thread->first_author; ?>?50_50" alt="<?php echo $thread->first_author; ?>" title="<?php echo $thread->first_author; ?>" /></a></td>
-                <td class="forumsboardthreadtitle p-l-0">
+                <td class="forumsboardthreadauthor pa-0"><a href="members/<?php echo $thread->first_author; ?>"><img src="members/avatar/<?php echo $thread->first_author; ?>?50_50" alt="<?php echo $thread->first_author; ?>" title="<?php echo $thread->first_author; ?>" /></a></td>
+                <td class="forumsboardthreadtitle pl-0">
                     <?php
                     if ($thread->stickyvalue < 0) {
                         echo '<img src="styles/css/minimal/images/icons16/pin_blue.png" alt="'. $words->getSilent('PinnedPost') .'" title="'. $words->getSilent('PinnedPost') .'" class="forum_icon" />' . $words->flushBuffer();

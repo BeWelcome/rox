@@ -1,5 +1,5 @@
 <div id="groups">
-    <div class="subcolumns m-b-1">
+    <div class="subcolumns mb-1">
         <div class="c62l">
             <div class="subcl">
                     <h3><?= $words->get('GroupsSearchHeading'); ?></h3>

@@ -34,7 +34,7 @@ $words = new MOD_words();
 function drawCharts($filename, $headlineCode, $words)
 {
 ?>
-    <div class="col-xs-12 m-b-1">
+    <div class="col-xs-12 mb-1">
         <span class="h3"><?php echo $words->get($headlineCode) ?></span>
     </div>
 

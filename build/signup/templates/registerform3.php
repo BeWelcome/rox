@@ -46,7 +46,7 @@ $map_conf = PVars::getObj('map');
                         </div>
                     </progress>
 
-                    <div class="h4 text-xs-center hidden-md-down m-t-1">
+                    <div class="h4 text-xs-center hidden-md-down mt-1">
                         <div><i class="fa fa-user"></i><br><?php echo $words->get('LoginInformation'); ?> <i class="text-success fa fa-check-square"></i></div>
                         <div class="text-muted m-y-2"><i class="fa fa-angle-down"></i></div>
                         <div><i class="fa fa-tag"></i><br><?php echo $words->get('SignupName'); ?> <i class="text-success fa fa-check-square"></i></div>
@@ -74,13 +74,13 @@ $map_conf = PVars::getObj('map');
                         </div>
                     </div>
 
-                    <div class="col-xs-12 m-t-1">
+                    <div class="col-xs-12 mt-1">
                         <div class="form-group">
-                            <div id="map" class="m-b-1" style="width: 100%; height: 440px; border: 1px solid #aaa;"></div>
+                            <div id="map" class="mb-1" style="width: 100%; height: 440px; border: 1px solid #aaa;"></div>
                         </div>
                     </div>
 
-                    <div class="col-xs-12 m-t-1">
+                    <div class="col-xs-12 mt-1">
                             <button type="submit" class="form-control btn btn-primary"><?php echo $words->getSilent('NextStep'); ?> <i class="fa fa-angle-double-right"></i></button>
                             <?php echo $words->flushBuffer(); ?>
                     </div>

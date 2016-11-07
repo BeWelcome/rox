@@ -2,7 +2,7 @@
     <h1 class="pull-xs-left"><a href="activities"><?php echo $words->get('Activities'); ?></a></h1>
 
     <?php if (!($this->hideSearch)) { ?>
-        <div class="pull-xs-right fullheight m-t-1">
+        <div class="pull-xs-right fullheight mt-1">
             <form id="activities-search-box" method="post">
                 <div class="input-group verticalalign">
                     <?php echo $callbackTags; ?>

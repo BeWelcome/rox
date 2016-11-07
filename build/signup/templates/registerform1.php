@@ -45,7 +45,7 @@ Boston, MA  02111-1307, USA.
             </progress>
 
 
-            <div class="h4 text-xs-center hidden-md-down m-t-1">
+            <div class="h4 text-xs-center hidden-md-down mt-1">
                 <div><i class="fa fa-user"></i><br><?php echo $words->get('LoginInformation'); ?></div>
                 <div class="text-muted m-y-2"><i class="fa fa-angle-down"></i></div>
                 <div class="text-muted"><i class="fa fa-tag"></i><br><?php echo $words->get('SignupName'); ?></div>
@@ -109,7 +109,7 @@ Boston, MA  02111-1307, USA.
             </div>
 
             <!-- Password -->
-            <div class="row m-t-1">
+            <div class="row mt-1">
                 <div class="col-xs-6">
                     <div class="form-group has-feedback">
                         <label for="register-password" class="sr-only"><?php echo $words->get('SignupPassword'); ?></label>
@@ -150,7 +150,7 @@ Boston, MA  02111-1307, USA.
             </div>
 
             <!-- E-mail -->
-            <div class="row m-t-1">
+            <div class="row mt-1">
                 <div class="col-xs-6">
                     <div class="form-group has-feedback">
                         <label for="register-email" class="sr-only"><?php echo $words->get('SignupEmail'); ?></label>
@@ -190,7 +190,7 @@ Boston, MA  02111-1307, USA.
             </div>
 
             <!-- Accommodation -->
-            <div class="row m-t-1">
+            <div class="row mt-1">
                 <div class="col-xs-6">
                     <label for="accommodation"><h4><?php echo $words->get('Accommodation'); ?></h4></label>
 
@@ -234,7 +234,7 @@ Boston, MA  02111-1307, USA.
             </div>
 
             <!-- Next button -->
-            <div class="row m-t-1">
+            <div class="row mt-1">
                 <div class="col-xs-6">
                     <button type="submit" class="form-control btn btn-primary"><?php echo $words->getSilent('NextStep'); ?> <i class="fa fa-angle-double-right"></i></button>
                     <?php echo $words->flushBuffer(); ?>

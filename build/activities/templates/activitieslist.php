@@ -97,11 +97,11 @@ $this->pager->render(); ?>
         echo '<td class="p-t-0 date verticalmiddle">
             <div class="calendar calendar-icon-' . date("m", strtotime($activity->dateStart)) . '">
               <div class="calendar-day">' . date("j", strtotime($activity->dateStart)) . '</div>
-              <div class="calendar-year m-t-1">' . date("Y", strtotime($activity->dateStart)) . '</div></div></td>';
+              <div class="calendar-year mt-1">' . date("Y", strtotime($activity->dateStart)) . '</div></div></td>';
 
 
         echo '<td class="verticalmiddle title text-truncate p-t-0">
-                <p class="h4 m-a-0 text-truncate"><a href="activities/' . $activity->id . '">' . htmlspecialchars($activity->title) . '</a></p>
+                <p class="h4 ma-0 text-truncate"><a href="activities/' . $activity->id . '">' . htmlspecialchars($activity->title) . '</a></p>
                 <small>' . $activity->dateStart;
                 if ($activity->dateStart != $activity->dateEnd){
                     echo ' - ' . $activity->dateEnd;

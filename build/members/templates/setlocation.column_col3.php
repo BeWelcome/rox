@@ -71,7 +71,7 @@ $map_conf = PVars::getObj('map');
             </div>
             <div class="row">
                 <div class="col-xs-12">
-                    <div id="map" class="m-b-1" style="width: 100%; height: 440px; border: 1px solid #aaa;"></div>
+                    <div id="map" class="mb-1" style="width: 100%; height: 440px; border: 1px solid #aaa;"></div>
                 </div>
             </div><!-- subcolumns -->
             <input type="submit" class="form-control btn btn-primary" value="<?php echo $words->getSilent('Save Location'); ?>" /><?php echo $words->flushBuffer(); ?>

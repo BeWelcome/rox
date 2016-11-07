@@ -44,7 +44,7 @@ class SearchmembersController extends PAppController {
         $request = PRequest::get()->request;
         if (isset($request[0]) && $request[0] == 'styles') {
             $req = implode('/', $request);
-            if ($this->_session->has( 'lastRequest' ))
+            if (isset($_SESSION['lastRequest']))
                 PRequest::ignoreCurrentRequest();
             $this->_view->passthroughCSS($req);
         } 
@@ -63,7 +63,7 @@ class SearchmembersController extends PAppController {
         $P = PVars::getObj('page');
 
         // First check if the feature is closed
-        if ($this->_session->get("Param")->FeatureSearchPageIsClosed!='No') {
+        if ($_SESSION["Param"]->FeatureSearchPageIsClosed!='No') {
             $P->content = $this->_view->showFeatureIsClosed();
             return;
         } // end of test "if feature is closed" 
@@ -127,12 +127,12 @@ class SearchmembersController extends PAppController {
             switch ($request[1]) {
                 case 'mapoff': {
                     $mapstyle = "mapoff"; 
-                    $this->_session->set( 'SearchMembersTList', array() )
+                    $_SESSION['SearchMembersTList'] = array();
                     break;
                 }
                 case 'mapon': {
                     $mapstyle = "mapon";
-                    $this->_session->set( 'SearchMembersTList', array() )
+                    $_SESSION['SearchMembersTList'] = array();
                     break;
                 }
                 case 'queries': {
@@ -146,19 +146,19 @@ class SearchmembersController extends PAppController {
                     break;
                 }
                 default:
-                    if (($this->_session->has( 'SearchMapStyle' ) and $this->_session->get('SearchMapStyle'))) {
-                        $mapstyle = $this->_session->get('SearchMapStyle');
+                    if ((isset($_SESSION['SearchMapStyle'])) and $_SESSION['SearchMapStyle']) {
+                        $mapstyle = $_SESSION['SearchMapStyle'];
                     }
                     break;
             }
         }
         
         // Store the MapStyle in session
-        $this->_session->set( 'SearchMapStyle', $mapstyle )
+        $_SESSION['SearchMapStyle'] = $mapstyle;
         
         // Check wether there are latest search results and variables from the session
-        if (!$queries && $this->_session->has( 'SearchMembersTList' )) {
-            if (($this->_session->get('SearchMembersTList']) && ($_SESSION['SearchMembersVars'])) $varsOnLoad = $_SESSION['SearchMembersVars');
+        if (!$queries && isset($_SESSION['SearchMembersTList'])) {
+            if (($_SESSION['SearchMembersTList']) && ($_SESSION['SearchMembersVars'])) $varsOnLoad = $_SESSION['SearchMembersVars'];
         }
 
         switch ($request[1])
@@ -168,8 +168,8 @@ class SearchmembersController extends PAppController {
                 {
                     $vars['varsOnLoad'] = true;
                     // Read the latest search results and variables from the session
-                    if (!empty($this->_session->get('SearchMembersTList'])) $TList = $_SESSION['SearchMembersTList');
-                    if (!empty($this->_session->get('SearchMembersVars'])) $vars = $_SESSION['SearchMembersVars');
+                    if (!empty($_SESSION['SearchMembersTList'])) $TList = $_SESSION['SearchMembersTList'];
+                    if (!empty($_SESSION['SearchMembersVars'])) $vars = $_SESSION['SearchMembersVars'];
                     if (isset($request[3])) {
                         $vars['OrderBy'] = $request[3];
                         $TList = $this->_model->search($vars);
@@ -183,15 +183,15 @@ class SearchmembersController extends PAppController {
                 }
                 $this->_view->searchmembers_ajax($TList, $vars, $mapstyle);
                 // Store latest search results and variables in session
-                $this->_session->set( 'SearchMembersTList', $TList )
-                $this->_session->set( 'SearchMembersVars', $vars )
+                $_SESSION['SearchMembersTList'] = $TList;
+                $_SESSION['SearchMembersVars'] = $vars;
                 PPHP::PExit();
                 break;
 /* quicksearch shouldn't go through this route
             case 'quicksearch':
                 $mapstyle = "mapoff"; 
                 // First check if the QuickSearch feature is closed
-                if ($this->_session->get("Param")->FeatureQuickSearchIsClosed!='No') {
+                if ($_SESSION["Param"]->FeatureQuickSearchIsClosed!='No') {
                     $this->_view->showFeatureIsClosed();
                     PPHP::PExit();
                     break ;

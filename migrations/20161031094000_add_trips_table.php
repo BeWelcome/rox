@@ -70,6 +70,7 @@ class AddTripsTable extends AbstractMigration
 
         require_once 'bootstrap/autoload.php';
 
+
         $capsule = new Manager();
 
         $capsule->addConnection([

@@ -11,7 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SubTripFormType extends AbstractType
+class SubTripType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $formBuilder
@@ -22,7 +22,16 @@ class SubTripFormType extends AbstractType
     public function buildForm(FormBuilderInterface $formBuilder, array $options)
     {
         $formBuilder
+            ->add('search', TextType::class, [
+                'mapped' => false
+            ])
             ->add('geonameid', HiddenType::class)
+            ->add('latitude', HiddenType::class, [
+                'mapped' => false
+            ])
+            ->add('longitude', HiddenType::class, [
+                'mapped' => false
+            ])
             ->add('arrival', DateType::class)
             ->add('departure', DateType::class)
             ->add('options', ChoiceType::class, [

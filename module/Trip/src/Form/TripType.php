@@ -5,15 +5,12 @@ namespace Rox\Trip\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class TripFormType extends AbstractType
+class TripType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $formBuilder
@@ -60,7 +57,7 @@ class TripFormType extends AbstractType
                 'label' => 'Additional Info',
             ])
             ->add('subtrips', CollectionType::class, array(
-                'entry_type' => SubTripFormType::class,
+                'entry_type' => SubTripType::class,
                 'allow_add'    => true,
                 'allow_delete' => true,
             ))

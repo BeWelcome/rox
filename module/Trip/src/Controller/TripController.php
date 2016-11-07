@@ -2,9 +2,11 @@
 
 namespace Rox\Trip\Controller;
 
+use Rox\Core\Entity\SubTrip;
 use Rox\Core\Entity\Trip;
 use Rox\Core\Exception\NotFoundException;
 use Rox\Trip\Form\TripFormType;
+use Rox\Trip\Form\TripType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -59,7 +61,7 @@ class TripController extends Controller
             throw $e;
         }
 
-        $form = $this->createForm(TripFormType::class, $trip);
+        $form = $this->createForm(TripType::class, $trip);
 
         $form->handleRequest($request);
 
@@ -95,23 +97,17 @@ class TripController extends Controller
      */
     public function createAction(Request $request)
     {
-        return $this->handleEditCreateAction($request);
-    }
+        $trip = new Trip();
+        $subtrips = $trip->getSubtrips();
+        $subtrips->add(new SubTrip());
 
-    /***
-     * @param Request $request
-     * @param Trip $trip The trip to edit
-     * @return Response
-     */
-    public function editAction(Request $request, Trip $trip, $id)
-    {
-        $entityManager = $this->getDoctrine()->getManager();
-
-        $editForm = $this->createForm(TripFormType::class, $trip);
+        $editForm = $this->createForm(TripType::class, $trip);
 
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+
             $entityManager->flush();
 
             $this->addFlash('success', 'trip.updated_successfully');
@@ -122,7 +118,32 @@ class TripController extends Controller
         return $this->render('@trip/edit.html.twig', [
             'form' => $editForm->createView(),
         ]);
+    }
 
+    /***
+     * @param Request $request
+     * @param Trip $trip The trip to edit
+     * @return Response
+     */
+    public function editAction(Request $request, Trip $trip, $id)
+    {
+        $editForm = $this->createForm(TripType::class, $trip);
+
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $entityManager->flush();
+
+            $this->addFlash('success', 'trip.updated_successfully');
+
+            return $this->redirectToRoute('trip', ['id' => $trip->getId()]);
+        }
+
+        return $this->render('@trip/edit.html.twig', [
+            'form' => $editForm->createView(),
+        ]);
     }
 
 }

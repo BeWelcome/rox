@@ -5,7 +5,6 @@ namespace Rox\Trip\Controller;
 use Rox\Core\Entity\SubTrip;
 use Rox\Core\Entity\Trip;
 use Rox\Core\Exception\NotFoundException;
-use Rox\Trip\Form\TripFormType;
 use Rox\Trip\Form\TripType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,7 +45,6 @@ class TripController extends Controller
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      * @throws NotFoundException
      * @internal param $create
-     */
     private function handleEditCreateAction($request, $id = 0)
     {
         try {
@@ -88,6 +86,7 @@ class TripController extends Controller
             ])
         );
     }
+     */
 
     /***
      * Create a new community news
@@ -125,7 +124,7 @@ class TripController extends Controller
      * @param Trip $trip The trip to edit
      * @return Response
      */
-    public function editAction(Request $request, Trip $trip, $id)
+    public function editAction(Request $request, Trip $trip)
     {
         $editForm = $this->createForm(TripType::class, $trip);
 
@@ -145,5 +144,4 @@ class TripController extends Controller
             'form' => $editForm->createView(),
         ]);
     }
-
 }

@@ -1,13 +1,20 @@
 <?php
 
+/*
+ * @codingStandardsIgnoreFile
+ *
+ * Auto generated file ignore for Code Sniffer
+ */
 namespace Rox\Core\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Trip
  *
- * @ORM\Table(name="trips", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})}, indexes={@ORM\Index(name="memberId_idx", columns={"created_by"})})
+ * @ORM\Table(name="trips", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})},
+ *     indexes={@ORM\Index(name="memberId_idx", columns={"created_by"})})
  * @ORM\Entity(repositoryClass="Rox\Trip\Repository\TripRepository")
  */
 class Trip
@@ -77,7 +84,8 @@ class Trip
      */
     private $subtrips;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->subtrips= new ArrayCollection();
     }
 

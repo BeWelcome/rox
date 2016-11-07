@@ -2,13 +2,11 @@
 
 namespace Rox\Start\Controller;
 
-use Illuminate\Database\Capsule\Manager;
 use Rox\CommunityNews\Model\CommunityNews;
 use Rox\Main\Home\HomeModel as HomeService;
 use Rox\Member\Model\Member;
 use Rox\Start\Form\SearchGotoLocationFormType;
 use Rox\Start\Form\SearchHomeLocationFormType;
-use Rox\Trip\Model\Trip;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -147,9 +145,7 @@ class HomeController extends Controller
         $donationCampaign = $homeService->getDonationCampaignDetails();
         $member = $this->getUser();
 
-        $travellersInArea = $homeService->getTravellersInAreaOfMember( $member );
-
-        $queries = Manager::getQueryLog();
+        $travellersInArea = $homeService->getTravellersInAreaOfMember($member);
 
         $communityNews = new CommunityNews();
         $latestNews = $communityNews->getLatest();

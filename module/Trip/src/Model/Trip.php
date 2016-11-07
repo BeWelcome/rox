@@ -4,11 +4,10 @@ namespace Rox\Trip\Model;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Rox\Geo\Model\Location;
-use Rox\Trip\Repository\TripRepositoryInterface;
 use Rox\Core\Exception\InvalidArgumentException;
 use Rox\Core\Exception\NotFoundException;
 use Rox\Core\Model\AbstractModel;
+use Rox\Geo\Model\Location;
 use Rox\Member\Model\Member;
 
 /**
@@ -117,12 +116,14 @@ class Trip extends AbstractModel
      * @param int $count
      * @param int $distance
      * @return array Trip
+     *
+     * @SuppressWarnings(PHPMD)
      */
-    public function findInMemberAreaNextThreeMonths( Member $member, $count = 2, $distance = 25)
+    public function findInMemberAreaNextThreeMonths(Member $member, $count = 2, $distance = 25)
     {
         $location = new Location();
         $locationIds = $location->getLocationIdsAroundLocation($member->latitude, $member->longitude, $distance);
-        $subtripsFilter = function($q) use($locationIds) {
+        $subtripsFilter = function ($q) use ($locationIds) {
             $q->where('arrival', '>=', Capsule::raw('CURDATE()'))
 //                ->where('arrival', '<=', Capsule::raw('DATE_ADD(CURDATE, INTERVAL 3 MONTH'))
                 ->whereIn('geonameId', $locationIds);
@@ -130,7 +131,7 @@ class Trip extends AbstractModel
 
         $trips = $this->where('created_by', '<>', $member->id)
             ->join('members', 'members.id', '=', 'trips.created_by')
-            ->whereHas('subtrips' , $subtripsFilter )
+            ->whereHas('subtrips', $subtripsFilter)
 //            ->with(['createdBy', 'subtrips'])
             ->with(['subtrips' => $subtripsFilter])
             ->whereIn('members.status', ['Active', 'OutOfRemind'])

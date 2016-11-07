@@ -1,14 +1,22 @@
 <?php
+/*
+ * @codingStandardsIgnoreFile
+ *
+ * Auto generated file ignore for Code Sniffer
+ */
 
 namespace Rox\Core\Entity;
 
-use \Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Member
  *
  * @ORM\Table(name="members", uniqueConstraints={@ORM\UniqueConstraint(name="i_Username", columns={"Username"})}, indexes={@ORM\Index(name="index_by_created", columns={"created"}), @ORM\Index(name="Id2City", columns={"IdCity"}), @ORM\Index(name="ex_user_id", columns={"ex_user_id"}), @ORM\Index(name="Status", columns={"Status"})})
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class Member
 {
@@ -531,8 +539,6 @@ class Member
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
-
 
     /**
      * Set exUserId

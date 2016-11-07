@@ -2,10 +2,10 @@
 
 namespace Rox\Trip\Repository;
 
-use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Pagerfanta\Pagerfanta;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
 
 /**
  * This custom Doctrine repository contains some methods which are useful when

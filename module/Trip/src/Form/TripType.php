@@ -41,9 +41,9 @@ class TripType extends AbstractType
                     '3' => 3,
                     '4' => 4,
                     '5' => 5,
-                    '> 5' => 10
-                ],
-                'label' => 'Travellers',
+                    '> 5' => 10,
+                 ],
+                 'label' => 'Travellers',
             ])
             ->add('additionalinfo', ChoiceType::class, [
                 'choices' => [
@@ -56,11 +56,11 @@ class TripType extends AbstractType
                 ],
                 'label' => 'Additional Info',
             ])
-            ->add('subtrips', CollectionType::class, array(
+            ->add('subtrips', CollectionType::class, [
                 'entry_type' => SubTripType::class,
                 'allow_add'    => true,
                 'allow_delete' => true,
-            ))
+            ])
             ->add('create', SubmitType::class);
     }
 }

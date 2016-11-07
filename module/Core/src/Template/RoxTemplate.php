@@ -2,13 +2,14 @@
 
 namespace Rox\Core\Template;
 
-
 use Exception;
 use Twig_Template;
 
 abstract class RoxTemplate extends Twig_Template
 {
-    protected function getAttribute($object, $item, array $arguments = array(), $type = self::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
+    /*
+    protected function getAttribute($object, $item, array $arguments = array(), $type = self::ANY_CALL,
+        $isDefinedTest = false, $ignoreStrictCheck = false)
     {
         if (is_object($object) && (get_parent_class($object) == 'Rox\Core\Model\AbstractModel')) {
             if (isset($object->$item)) {
@@ -25,4 +26,6 @@ abstract class RoxTemplate extends Twig_Template
                 $e->getMessage();
         }
     }
+
+ */
 }

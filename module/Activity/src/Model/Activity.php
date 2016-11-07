@@ -33,16 +33,16 @@ class Activity extends AbstractModel implements ActivityRepositoryInterface
 
     public function getById($id)
     {
-        $communityNews = $this
+        $activity = $this
             ->with(['createdBy'])
             ->where('id', $id)
             ->first();
 
-        if (!$communityNews) {
+        if (!$activity) {
             throw new NotFoundException();
         }
 
-        return $communityNews;
+        return $activity;
     }
 
     /**
@@ -52,13 +52,13 @@ class Activity extends AbstractModel implements ActivityRepositoryInterface
      */
     public function getAll($page = 1, $limit = 20)
     {
-        $communityNews = $this->newQuery();
-        $communityNews->with('createdBy');
-        $communityNews->getQuery()->forPage($page, $limit);
+        $activity = $this->newQuery();
+        $activity->with('createdBy');
+        $activity->getQuery()->forPage($page, $limit);
 
-        $count = $communityNews->getQuery()->getCountForPagination();
+        $count = $activity->getQuery()->getCountForPagination();
 
-        return [$communityNews->get()->all(), $count];
+        return [$activity->get()->all(), $count];
     }
 
     public function getAllCount($page, $limit)

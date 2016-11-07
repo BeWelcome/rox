@@ -8,11 +8,15 @@ use Rox\Geo\Model\Location;
 class SubTrip extends AbstractModel
 {
     /**
+     * @var array
+     *
      * No guarded properties
      */
     protected $guarded = [];
 
     /**
+     * @var boolean
+     *
      * No timestamps necessary for subtrips
      */
     public $timestamps = false;

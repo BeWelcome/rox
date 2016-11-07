@@ -31,6 +31,9 @@ class Location extends AbstractModel implements LocationRepositoryInterface
         'country',
     ];
 
+    /**
+     * @SuppressWarnings(PHPMD)
+     * /
     public function Country()
     {
         return $this->hasOne(Country::class, 'country', 'countryCode');
@@ -61,7 +64,8 @@ class Location extends AbstractModel implements LocationRepositoryInterface
             ->get(['geonameId'])->map(
                 function ($location) {
                     return $location->geonameId;
-                })
+                }
+            )
             ->all();
     }
 }

@@ -23,14 +23,14 @@ class SubTripType extends AbstractType
     {
         $formBuilder
             ->add('search', TextType::class, [
-                'mapped' => false
+                'mapped' => false,
             ])
             ->add('geonameid', HiddenType::class)
             ->add('latitude', HiddenType::class, [
-                'mapped' => false
+                'mapped' => false,
             ])
             ->add('longitude', HiddenType::class, [
-                'mapped' => false
+                'mapped' => false,
             ])
             ->add('arrival', DateType::class)
             ->add('departure', DateType::class)
@@ -47,8 +47,8 @@ class SubTripType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => SubTrip::class,
-        ));
+        ]);
     }
 }

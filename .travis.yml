@@ -35,8 +35,8 @@ install:
   - npm update
 
 before_script:
-  - mysql -u root -e 'create database bewelcome;'
-  - mysql -u root -e "GRANT ALL PRIVILEGES ON bewelcome.* TO 'bewelcome'@'localhost' IDENTIFIED BY 'bewelcome';"
+  - mysql -u root -e 'create database bewelcome_test;'
+  - mysql -u root -e "GRANT ALL PRIVILEGES ON bewelcome_test.* TO 'bewelcome'@'localhost' IDENTIFIED BY 'bewelcome';"
   - mysql -u root -e 'FLUSH PRIVILEGES;'
   - cp tests/rox_local.ini.tests rox_local.ini
 

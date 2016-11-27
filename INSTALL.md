@@ -155,7 +155,7 @@ using a browser or use curl _url_ > _filename_.
 
     ```bash
     $ php composer.phar install
-    $ npm install
+    $ npm update
     ```
 
 9. Migrate the DB to the latest version
@@ -182,98 +182,47 @@ using a browser or use curl _url_ > _filename_.
 
 12. Configure Sphinxsearch (can be skipped)
 
-
-### Configure Apache
-
-1. Create a new virtual host file:
-
-    ```bash
-    $ sudo touch /etc/apache2/sites-available/bewelcome.conf
-    ```
-
-    1. Create self-signed certificate
-
-        ```bash
-        $ openssl req -nodes -x509 -newkey rsa:2048 -keyout key.pem -out cert.crt -subj '//CN=bewelcome' -days 2000
-        ```
-
-    2. Edit virtual host file, add basic settings and rewrites:
-
-        ```
-        <VirtualHost *:80>
-          ServerName bewelcome
-          DocumentRoot /path/to/rox/htdocs
-          ErrorLog /var/log/apache2/bewelcome-error.log
-          CustomLog /var/log/apache2/bewelcome-access.log combined
-          php_admin_value error_reporting "E_ALL"
-          <Directory /path/to/rox/htdocs>
-              RewriteEngine On
-              RewriteBase /
-              RewriteCond %{REQUEST_FILENAME} !-f
-              RewriteCond %{REQUEST_FILENAME} !-d
-              RewriteRule ^/*([^/]*)\.php /bw/$1.php [L,R,QSA]
-              RewriteCond %{REQUEST_FILENAME} !-f
-              RewriteCond %{REQUEST_FILENAME} !-d
-              RewriteRule ^.* index.php [L,QSA,PT]
-          </Directory>
-        </VirtualHost>
-        ```
-
-    Note: Running BW-Rox in a sub directory (e.g. http:/localhost/bewelcome/)
-    instead of the server root works, but is not recommended, because it
-    complicates the setup and might cause unexpected behaviour.
-
-2. Add ServerName to your /etc/hosts file:
-
-    ```
-    127.0.0.1 bewelcome
-    ```
-
-3. Enable virtual host:
-
-    ```bash
-    $ sudo a2ensite bewelcome.conf
-    $ sudo service apache2 reload
-    ```
-
-
 ### Configure BW-Rox
 
-1. Change to BW-Rox directory:
-
+1. Execute
+ 
     ```bash
-    $ cd /path/to/rox
+    $ cp app/config/parameters.yml.dist app/config/parameters.yml
     ```
 
-2. Create rox_local.ini file and .env file
-
-    ```bash
-    $ cp rox_local.example.ini rox_local.ini
-    $ cp .env.dist .env
-    ```
-
-3.  Modify to your needs (set DB name etc).
-       
+2. Make sure that the database parameters in there match with your database credentials (should be fine if you followed 
+above instructions).       
 
 ### Test and log in
 
-1. Run 
+1. Execute 
+ 
     ```bash
     $ make
    ```
 
 2. Run 
+
     ```bash
     $ make build
    ```
-3. Point your browser to your BW-Rox installation (i.e. http://bewelcome/)
 
-3. Log in as user `member-101` and password `password`. See [Useful hints](#useful-hints) section below
+3. Start the server 
+
+   ```bash
+    $ php bin/console server:start
+   ```
+
+   (On Windows use php bin/console server:run)
+
+   Access the site using http://localhost:8000/
+
+
+4. Log in as user `member-101` and password `password`. See [Useful hints](#useful-hints) section below
      on password usage.
 
-3. Click around the site a bit and check if all CSS and images are loaded.
-    Refer to /path/to/rox/htdocs/exception.log if errors appear or something
-    looks broken.
+5. Click around the site a bit and check if all CSS and images are loaded.
+   Refer to var/logs/dev.log if errors appear or something looks broken. Also make use of the Symfony3 debug toolbar.
 
 ## Useful hints
 

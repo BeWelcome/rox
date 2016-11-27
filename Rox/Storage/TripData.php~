@@ -1,0 +1,54 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * TripData
+ *
+ * @ORM\Table(name="trip_data", indexes={@ORM\Index(name="trip_name", columns={"trip_name"}), @ORM\Index(name="trip_text", columns={"trip_text"}), @ORM\Index(name="trip_descr", columns={"trip_descr"})})
+ * @ORM\Entity
+ */
+class TripData
+{
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="edited", type="datetime", nullable=false)
+     */
+    private $edited = '0000-00-00 00:00:00';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="trip_name", type="string", length=255, nullable=false)
+     */
+    private $tripName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="trip_text", type="text", length=16777215, nullable=false)
+     */
+    private $tripText;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="trip_descr", type="text", nullable=false)
+     */
+    private $tripDescr;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="trip_id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $tripId;
+
+
+}
+

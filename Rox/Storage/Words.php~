@@ -1,0 +1,110 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Words
+ *
+ * @ORM\Table(name="words", uniqueConstraints={@ORM\UniqueConstraint(name="code", columns={"code", "IdLanguage"}), @ORM\UniqueConstraint(name="code_2", columns={"code", "ShortCode"})})
+ * @ORM\Entity
+ */
+class Words
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="code", type="string", length=256, nullable=false)
+     */
+    private $code;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ShortCode", type="string", length=16, nullable=false)
+     */
+    private $shortcode = 'en';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Sentence", type="text", length=65535, nullable=false)
+     */
+    private $sentence;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="donottranslate", type="string", nullable=false)
+     */
+    private $donottranslate = 'no';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdLanguage", type="integer", nullable=false)
+     */
+    private $idlanguage = '0';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Description", type="text", length=65535, nullable=false)
+     */
+    private $description;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     */
+    private $idmember = '0';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = '0000-00-00 00:00:00';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="TranslationPriority", type="integer", nullable=false)
+     */
+    private $translationpriority = '5';
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isarchived", type="boolean", nullable=true)
+     */
+    private $isarchived;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="majorupdate", type="datetime", nullable=false)
+     */
+    private $majorupdate = '0000-00-00 00:00:00';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

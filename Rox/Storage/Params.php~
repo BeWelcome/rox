@@ -1,0 +1,194 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Params
+ *
+ * @ORM\Table(name="params")
+ * @ORM\Entity
+ */
+class Params
+{
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="IsRealProductionDatabase", type="string", nullable=false)
+     */
+    private $isrealproductiondatabase = 'No';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="recordonline", type="integer", nullable=false)
+     */
+    private $recordonline = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ToggleDonateBar", type="integer", nullable=false)
+     */
+    private $toggledonatebar = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="neededperyear", type="integer", nullable=false)
+     */
+    private $neededperyear = '1260';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="campaignstartdate", type="date", nullable=false)
+     */
+    private $campaignstartdate = '2012-10-11';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="MailToNotifyWhenNewMemberSignup", type="text", length=65535, nullable=false)
+     */
+    private $mailtonotifywhennewmembersignup;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="FeatureForumClosed", type="string", nullable=false)
+     */
+    private $featureforumclosed = 'No';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="FeatureAjaxChatClosed", type="string", nullable=false)
+     */
+    private $featureajaxchatclosed = 'No';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="FeatureSignupClose", type="string", nullable=false)
+     */
+    private $featuresignupclose = 'No';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="FeatureSearchPageIsClosed", type="string", nullable=false)
+     */
+    private $featuresearchpageisclosed = 'No';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="FeatureQuickSearchIsClosed", type="string", nullable=false)
+     */
+    private $featurequicksearchisclosed = 'No';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="RssFeedIsClosed", type="string", nullable=false)
+     */
+    private $rssfeedisclosed = 'No';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="AjaxChatSpecialAllowedList", type="text", length=65535, nullable=false)
+     */
+    private $ajaxchatspecialallowedlist;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="AjaxChatDebuLevel", type="integer", nullable=false)
+     */
+    private $ajaxchatdebulevel = '0';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ReloadRightsAndFlags", type="string", nullable=false)
+     */
+    private $reloadrightsandflags = 'No';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="logs_id_midnight", type="integer", nullable=false)
+     */
+    private $logsIdMidnight;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="previous_logs_id_midnight", type="integer", nullable=false)
+     */
+    private $previousLogsIdMidnight;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="memcache", type="string", nullable=false)
+     */
+    private $memcache = 'False';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="DayLightOffset", type="integer", nullable=false)
+     */
+    private $daylightoffset = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="NbCommentsInLastComments", type="integer", nullable=false)
+     */
+    private $nbcommentsinlastcomments = '20';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdCommentOfTheMoment", type="integer", nullable=false)
+     */
+    private $idcommentofthemoment = '0';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="MailBotMode", type="string", nullable=false)
+     */
+    private $mailbotmode = 'Manual';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ToggleStatsForWordsUsage", type="string", nullable=false)
+     */
+    private $togglestatsforwordsusage = 'No';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

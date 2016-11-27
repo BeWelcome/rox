@@ -1,0 +1,40 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/book/service_container.html
+parameters:
+#    parameter_name: value
+
+services:
+#    service_name:
+#        class: AppBundle\Directory\ClassName
+#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+
+    translation.loader.db:
+        class: AppBundle\TranslationLoader\DatabaseLoader
+        arguments: ['@doctrine.orm.entity_manager']
+        tags:
+            - { name: translation.loader, alias: db}
+
+    app.locale_listener:
+        class: AppBundle\EventListener\LocaleListener
+        arguments: ['%kernel.default_locale%']
+        tags:
+           - { name: kernel.event_subscriber }
+
+    app.user_locale_listener:
+        class: AppBundle\EventListener\UserLocaleListener
+        arguments: ['@session']
+        tags:
+            - { name: kernel.event_listener, event: security.interactive_login, method: onInteractiveLogin }
+
+    app.userprovider:
+        class: AppBundle\Provider\UserProvider
+        arguments: ['@doctrine.orm.entity_manager']
+
+    rox.legacy_password_encoder:
+        class: AppBundle\Encoder\LegacyPasswordEncoder
+
+    rox.twig_extension:
+        class: AppBundle\Twig\Extension
+        arguments: ['@session', '@doctrine.orm.entity_manager']
+        tags:
+             - { name: 'twig.extension' }

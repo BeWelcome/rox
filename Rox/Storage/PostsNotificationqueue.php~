@@ -1,0 +1,82 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * PostsNotificationqueue
+ *
+ * @ORM\Table(name="posts_notificationqueue", indexes={@ORM\Index(name="IdxStatus", columns={"Status"})})
+ * @ORM\Entity
+ */
+class PostsNotificationqueue
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Status", type="string", nullable=false)
+     */
+    private $status = 'ToSend';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     */
+    private $idmember;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdPost", type="integer", nullable=false)
+     */
+    private $idpost;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = '0000-00-00 00:00:00';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = '0000-00-00 00:00:00';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Type", type="string", nullable=false)
+     */
+    private $type = 'buggy';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdSubscription", type="integer", nullable=false)
+     */
+    private $idsubscription = '0';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="TableSubscription", type="string", length=64, nullable=false)
+     */
+    private $tablesubscription = 'NotSet';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

@@ -1,0 +1,54 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * ModUserRights
+ *
+ * @ORM\Table(name="mod_user_rights", indexes={@ORM\Index(name="app_id", columns={"app_id"}), @ORM\Index(name="name", columns={"name"})})
+ * @ORM\Entity
+ */
+class ModUserRights
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="app_id", type="integer", nullable=true)
+     */
+    private $appId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=75, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="has_implied", type="integer", nullable=false)
+     */
+    private $hasImplied = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="level", type="integer", nullable=false)
+     */
+    private $level = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

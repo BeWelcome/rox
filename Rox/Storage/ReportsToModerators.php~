@@ -1,0 +1,103 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * ReportsToModerators
+ *
+ * @ORM\Table(name="reports_to_moderators", indexes={@ORM\Index(name="IdReporter", columns={"IdReporter", "IdPost", "IdThread"})})
+ * @ORM\Entity
+ */
+class ReportsToModerators
+{
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = '0000-00-00 00:00:00';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="PostComment", type="text", length=65535, nullable=false)
+     */
+    private $postcomment;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdReporter", type="integer", nullable=false)
+     */
+    private $idreporter;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ModeratorComment", type="text", length=65535, nullable=false)
+     */
+    private $moderatorcomment;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdModerator", type="integer", nullable=false)
+     */
+    private $idmoderator;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Status", type="string", nullable=false)
+     */
+    private $status = 'Open';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdPost", type="integer", nullable=false)
+     */
+    private $idpost;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdThread", type="integer", nullable=false)
+     */
+    private $idthread;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Type", type="string", nullable=false)
+     */
+    private $type;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="LastWhoSpoke", type="string", nullable=false)
+     */
+    private $lastwhospoke = 'Member';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

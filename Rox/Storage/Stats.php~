@@ -1,0 +1,68 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Stats
+ *
+ * @ORM\Table(name="stats", indexes={@ORM\Index(name="created", columns={"created"})})
+ * @ORM\Entity
+ */
+class Stats
+{
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="NbActiveMembers", type="integer", nullable=false)
+     */
+    private $nbactivemembers;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="NbMessageSent", type="integer", nullable=false)
+     */
+    private $nbmessagesent;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="NbMessageRead", type="integer", nullable=false)
+     */
+    private $nbmessageread;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="NbMemberWithOneTrust", type="integer", nullable=false)
+     */
+    private $nbmemberwithonetrust;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="NbMemberWhoLoggedToday", type="integer", nullable=false)
+     */
+    private $nbmemberwhologgedtoday;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

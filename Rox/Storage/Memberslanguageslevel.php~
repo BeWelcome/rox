@@ -1,0 +1,61 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Memberslanguageslevel
+ *
+ * @ORM\Table(name="memberslanguageslevel", indexes={@ORM\Index(name="IdMember", columns={"IdMember", "IdLanguage"})})
+ * @ORM\Entity
+ */
+class Memberslanguageslevel
+{
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = '0000-00-00 00:00:00';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     */
+    private $idmember;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdLanguage", type="integer", nullable=false)
+     */
+    private $idlanguage;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Level", type="string", nullable=false)
+     */
+    private $level = 'Beginner';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

@@ -1,0 +1,47 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Recentvisits
+ *
+ * @ORM\Table(name="recentvisits", indexes={@ORM\Index(name="IdMember", columns={"IdMember"}), @ORM\Index(name="IdVisitor", columns={"IdVisitor"})})
+ * @ORM\Entity
+ */
+class Recentvisits
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     */
+    private $idmember;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdVisitor", type="integer", nullable=false)
+     */
+    private $idvisitor;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

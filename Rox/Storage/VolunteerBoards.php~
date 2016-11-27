@@ -1,0 +1,61 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * VolunteerBoards
+ *
+ * @ORM\Table(name="volunteer_boards", uniqueConstraints={@ORM\UniqueConstraint(name="Name", columns={"Name"})})
+ * @ORM\Entity
+ */
+class VolunteerBoards
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Name", type="string", length=64, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="PurposeComment", type="text", length=16777215, nullable=false)
+     */
+    private $purposecomment;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="TextContent", type="text", length=16777215, nullable=false)
+     */
+    private $textcontent;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = '0000-00-00 00:00:00';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

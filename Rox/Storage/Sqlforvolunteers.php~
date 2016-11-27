@@ -1,0 +1,159 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Sqlforvolunteers
+ *
+ * @ORM\Table(name="sqlforvolunteers")
+ * @ORM\Entity
+ */
+class Sqlforvolunteers
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Name", type="text", length=65535, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Query", type="text", length=65535, nullable=false)
+     */
+    private $query;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="param1", type="text", length=65535, nullable=true)
+     */
+    private $param1;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="param2", type="text", length=65535, nullable=true)
+     */
+    private $param2;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="LogMe", type="string", nullable=false)
+     */
+    private $logme = 'False';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="DefValueParam1", type="text", length=65535, nullable=false)
+     */
+    private $defvalueparam1;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="DefValueParam2", type="text", length=65535, nullable=false)
+     */
+    private $defvalueparam2;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Param1Type", type="string", nullable=false)
+     */
+    private $param1type = 'inputtext';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Param2Type", type="string", nullable=false)
+     */
+    private $param2type = 'inputtext';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="param3", type="text", length=65535, nullable=false)
+     */
+    private $param3;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="DefValueParam3", type="text", length=65535, nullable=false)
+     */
+    private $defvalueparam3;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Param3Type", type="string", nullable=false)
+     */
+    private $param3type = 'inputtext';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="param4", type="text", length=65535, nullable=false)
+     */
+    private $param4;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="DefValueParam4", type="text", length=65535, nullable=false)
+     */
+    private $defvalueparam4;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Param4Type", type="string", nullable=false)
+     */
+    private $param4type = 'inputtext';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="param5", type="text", length=65535, nullable=false)
+     */
+    private $param5;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="DefValueParam5", type="text", length=65535, nullable=false)
+     */
+    private $defvalueparam5;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Param5Type", type="string", nullable=false)
+     */
+    private $param5type = 'inputtext';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

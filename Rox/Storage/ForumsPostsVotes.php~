@@ -1,0 +1,63 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * ForumsPostsVotes
+ *
+ * @ORM\Table(name="forums_posts_votes")
+ * @ORM\Entity
+ */
+class ForumsPostsVotes
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Choice", type="string", nullable=true)
+     */
+    private $choice;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = '0000-00-00 00:00:00';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="NbUpdates", type="integer", nullable=false)
+     */
+    private $nbupdates = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdPost", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $idpost;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdContributor", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $idcontributor;
+
+
+}
+

@@ -1,0 +1,103 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Donations
+ *
+ * @ORM\Table(name="donations", indexes={@ORM\Index(name="IdMember", columns={"IdMember"})})
+ * @ORM\Entity
+ */
+class Donations
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     */
+    private $idmember = '0';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Email", type="text", length=255, nullable=false)
+     */
+    private $email;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="StatusPrivate", type="string", nullable=false)
+     */
+    private $statusprivate = 'showamountonly';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Amount", type="decimal", precision=10, scale=2, nullable=false)
+     */
+    private $amount;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Money", type="string", length=10, nullable=false)
+     */
+    private $money;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdCountry", type="integer", nullable=false)
+     */
+    private $idcountry;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="namegiven", type="text", length=65535, nullable=false)
+     */
+    private $namegiven;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="referencepaypal", type="text", length=65535, nullable=false)
+     */
+    private $referencepaypal;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="membercomment", type="text", length=65535, nullable=false)
+     */
+    private $membercomment;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="SystemComment", type="text", length=65535, nullable=false)
+     */
+    private $systemcomment;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

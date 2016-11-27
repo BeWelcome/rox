@@ -1,0 +1,47 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * MembersSessions
+ *
+ * @ORM\Table(name="members_sessions")
+ * @ORM\Entity
+ */
+class MembersSessions
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="SeriesToken", type="string", length=32, nullable=true)
+     */
+    private $seriestoken;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="AuthToken", type="string", length=32, nullable=true)
+     */
+    private $authtoken;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="modified", type="datetime", nullable=false)
+     */
+    private $modified = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdMember", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idmember;
+
+
+}
+

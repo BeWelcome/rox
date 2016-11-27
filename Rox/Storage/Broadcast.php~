@@ -1,0 +1,68 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Broadcast
+ *
+ * @ORM\Table(name="broadcast")
+ * @ORM\Entity
+ */
+class Broadcast
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdCreator", type="integer", nullable=false)
+     */
+    private $idcreator;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Name", type="text", length=65535, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Status", type="string", nullable=false)
+     */
+    private $status = 'Created';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Type", type="string", nullable=true)
+     */
+    private $type;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="EmailFrom", type="text", length=65535, nullable=true)
+     */
+    private $emailfrom;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

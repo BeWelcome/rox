@@ -24,8 +24,7 @@ revision.txt
 .idea
 .sass-cache
 
-doc/html/
-doc/phpdox/
+doc/
 /vendor/*
 /node_modules/*
 /components/*
@@ -44,3 +43,4 @@ config/*.local.yml
 .env
 phploc.xml
 tmp/
+var/

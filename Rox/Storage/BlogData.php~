@@ -1,0 +1,89 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * BlogData
+ *
+ * @ORM\Table(name="blog_data", indexes={@ORM\Index(name="blog_title", columns={"blog_title"}), @ORM\Index(name="blog_text", columns={"blog_text"})})
+ * @ORM\Entity
+ */
+class BlogData
+{
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="edited", type="datetime", nullable=true)
+     */
+    private $edited;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="blog_title", type="string", length=255, nullable=false)
+     */
+    private $blogTitle = '';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="blog_text", type="text", nullable=false)
+     */
+    private $blogText;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="blog_start", type="datetime", nullable=true)
+     */
+    private $blogStart;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="blog_end", type="datetime", nullable=true)
+     */
+    private $blogEnd;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="blog_latitude", type="float", precision=10, scale=0, nullable=false)
+     */
+    private $blogLatitude = '0';
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="blog_longitude", type="float", precision=10, scale=0, nullable=false)
+     */
+    private $blogLongitude = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="blog_geonameid", type="integer", nullable=true)
+     */
+    private $blogGeonameid;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="blog_display_order", type="integer", nullable=false)
+     */
+    private $blogDisplayOrder = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="blog_id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $blogId;
+
+
+}
+

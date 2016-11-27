@@ -1,0 +1,82 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Languages
+ *
+ * @ORM\Table(name="languages", uniqueConstraints={@ORM\UniqueConstraint(name="ShortCode", columns={"ShortCode"})})
+ * @ORM\Entity
+ */
+class Languages
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="EnglishName", type="text", length=255, nullable=false)
+     */
+    private $englishname;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Name", type="text", length=255, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ShortCode", type="string", length=16, nullable=false)
+     */
+    private $shortcode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="WordCode", type="text", length=255, nullable=false)
+     */
+    private $wordcode;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="FlagSortCriteria", type="integer", nullable=false)
+     */
+    private $flagsortcriteria = '0';
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="IsWrittenLanguage", type="boolean", nullable=false)
+     */
+    private $iswrittenlanguage = '0';
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="IsSpokenLanguage", type="boolean", nullable=false)
+     */
+    private $isspokenlanguage = '0';
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="IsSignLanguage", type="boolean", nullable=false)
+     */
+    private $issignlanguage = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

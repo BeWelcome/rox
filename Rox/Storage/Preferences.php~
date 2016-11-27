@@ -1,0 +1,89 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Preferences
+ *
+ * @ORM\Table(name="preferences", uniqueConstraints={@ORM\UniqueConstraint(name="codeName", columns={"codeName"})})
+ * @ORM\Entity
+ */
+class Preferences
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="position", type="integer", nullable=false)
+     */
+    private $position;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="codeName", type="string", length=30, nullable=false)
+     */
+    private $codename;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="codeDescription", type="string", length=30, nullable=false)
+     */
+    private $codedescription;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Description", type="text", length=65535, nullable=false)
+     */
+    private $description;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="DefaultValue", type="text", length=255, nullable=false)
+     */
+    private $defaultvalue;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="PossibleValues", type="text", length=255, nullable=false)
+     */
+    private $possiblevalues;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="EvalString", type="text", length=65535, nullable=false)
+     */
+    private $evalstring;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Status", type="string", nullable=false)
+     */
+    private $status = 'Inactive';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

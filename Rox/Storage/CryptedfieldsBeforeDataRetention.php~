@@ -1,0 +1,82 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * CryptedfieldsBeforeDataRetention
+ *
+ * @ORM\Table(name="cryptedfields_before_data_retention", indexes={@ORM\Index(name="IdMember", columns={"IdMember"})})
+ * @ORM\Entity
+ */
+class CryptedfieldsBeforeDataRetention
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="AdminCryptedValue", type="text", length=65535, nullable=false)
+     */
+    private $admincryptedvalue;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="MemberCryptedValue", type="text", length=65535, nullable=false)
+     */
+    private $membercryptedvalue;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="IsCrypted", type="string", nullable=false)
+     */
+    private $iscrypted = 'crypted';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     */
+    private $idmember;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ToDo", type="string", nullable=false)
+     */
+    private $todo = 'nothing';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="temporary_uncrypted_buffer", type="text", length=65535, nullable=true)
+     */
+    private $temporaryUncryptedBuffer;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdRecord", type="integer", nullable=false)
+     */
+    private $idrecord = '0';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="TableColumn", type="string", length=200, nullable=false)
+     */
+    private $tablecolumn = 'NotSet';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

@@ -1,0 +1,176 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Polls
+ *
+ * @ORM\Table(name="polls", indexes={@ORM\Index(name="IdCreator", columns={"IdCreator"})})
+ * @ORM\Entity
+ */
+class Polls
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdGroupCreator", type="integer", nullable=false)
+     */
+    private $idgroupcreator = '0';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Status", type="string", nullable=false)
+     */
+    private $status = 'Project';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ResultsVisibility", type="string", nullable=false)
+     */
+    private $resultsvisibility = 'VisibleAfterVisit';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Type", type="string", nullable=false)
+     */
+    private $type = 'MemberPoll';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="Started", type="datetime", nullable=false)
+     */
+    private $started = '0000-00-00 00:00:00';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="Ended", type="datetime", nullable=false)
+     */
+    private $ended = '0000-00-00 00:00:00';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = '0000-00-00 00:00:00';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Title", type="integer", nullable=false)
+     */
+    private $title;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ForMembersOnly", type="string", nullable=false)
+     */
+    private $formembersonly = 'Yes';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdLocationsList", type="integer", nullable=false)
+     */
+    private $idlocationslist = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdGroupsList", type="integer", nullable=false)
+     */
+    private $idgroupslist = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdCountriesList", type="integer", nullable=false)
+     */
+    private $idcountrieslist = '0';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="OpenToSubGroups", type="string", nullable=false)
+     */
+    private $opentosubgroups = 'Yes';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="TypeOfChoice", type="string", nullable=false)
+     */
+    private $typeofchoice;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="CanChangeVote", type="string", nullable=false)
+     */
+    private $canchangevote = 'No';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="AllowComment", type="string", nullable=false)
+     */
+    private $allowcomment = 'No';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Description", type="integer", nullable=false)
+     */
+    private $description;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="WhereToRestrictMember", type="text", length=65535, nullable=false)
+     */
+    private $wheretorestrictmember;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Anonym", type="string", nullable=false)
+     */
+    private $anonym = 'Yes';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \AppBundle\Entity\Members
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Members")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdCreator", referencedColumnName="id")
+     * })
+     */
+    private $idcreator;
+
+
+}
+

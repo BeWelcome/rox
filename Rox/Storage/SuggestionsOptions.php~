@@ -1,0 +1,117 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * SuggestionsOptions
+ *
+ * @ORM\Table(name="suggestions_options")
+ * @ORM\Entity
+ */
+class SuggestionsOptions
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="suggestionId", type="integer", nullable=false)
+     */
+    private $suggestionid;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="state", type="integer", nullable=false)
+     */
+    private $state = '0';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="summary", type="string", length=160, nullable=false)
+     */
+    private $summary;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text", length=16777215, nullable=false)
+     */
+    private $description;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="date", nullable=false)
+     */
+    private $created;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="createdBy", type="integer", nullable=false)
+     */
+    private $createdby;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="modified", type="date", nullable=true)
+     */
+    private $modified;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="modifiedBy", type="integer", nullable=true)
+     */
+    private $modifiedby;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="deleted", type="date", nullable=true)
+     */
+    private $deleted;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="deletedBy", type="integer", nullable=true)
+     */
+    private $deletedby;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="mutuallyExclusiveWith", type="text", length=16777215, nullable=true)
+     */
+    private $mutuallyexclusivewith;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="rank", type="boolean", nullable=true)
+     */
+    private $rank;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="orderHint", type="integer", nullable=true)
+     */
+    private $orderhint;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

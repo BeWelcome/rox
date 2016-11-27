@@ -1,0 +1,75 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Feedbackcategories
+ *
+ * @ORM\Table(name="feedbackcategories")
+ * @ORM\Entity
+ */
+class Feedbackcategories
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Name", type="text", length=255, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="CategoryDescription", type="text", length=255, nullable=false)
+     */
+    private $categorydescription;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="EmailToNotify", type="text", length=65535, nullable=false)
+     */
+    private $emailtonotify;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdVolunteer", type="integer", nullable=false)
+     */
+    private $idvolunteer = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="sortOrder", type="integer", nullable=false)
+     */
+    private $sortorder = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="visible", type="integer", nullable=false)
+     */
+    private $visible = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

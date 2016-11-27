@@ -1,0 +1,61 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Memberspreferences
+ *
+ * @ORM\Table(name="memberspreferences", indexes={@ORM\Index(name="IdMember", columns={"IdMember", "IdPreference"}), @ORM\Index(name="IdPreference", columns={"IdPreference"})})
+ * @ORM\Entity
+ */
+class Memberspreferences
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     */
+    private $idmember;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdPreference", type="integer", nullable=false)
+     */
+    private $idpreference;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Value", type="text", length=65535, nullable=false)
+     */
+    private $value;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = '0000-00-00 00:00:00';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

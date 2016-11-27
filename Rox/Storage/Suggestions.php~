@@ -1,0 +1,110 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Suggestions
+ *
+ * @ORM\Table(name="suggestions")
+ * @ORM\Entity
+ */
+class Suggestions
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="summary", type="string", length=80, nullable=false)
+     */
+    private $summary;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text", length=16777215, nullable=false)
+     */
+    private $description;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="salt", type="string", length=64, nullable=false)
+     */
+    private $salt;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="state", type="smallint", nullable=false)
+     */
+    private $state;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="flags", type="integer", nullable=true)
+     */
+    private $flags = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="threadId", type="integer", nullable=true)
+     */
+    private $threadid;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="date", nullable=false)
+     */
+    private $created;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="createdby", type="integer", nullable=false)
+     */
+    private $createdby;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="modified", type="date", nullable=true)
+     */
+    private $modified;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="modifiedby", type="integer", nullable=true)
+     */
+    private $modifiedby;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="laststatechanged", type="date", nullable=true)
+     */
+    private $laststatechanged;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="votingend", type="date", nullable=true)
+     */
+    private $votingend;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

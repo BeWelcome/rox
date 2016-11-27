@@ -1,0 +1,89 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Membersgroups
+ *
+ * @ORM\Table(name="membersgroups", uniqueConstraints={@ORM\UniqueConstraint(name="UniqueIdMemberIdGroup", columns={"IdMember", "IdGroup"})}, indexes={@ORM\Index(name="IdGroup", columns={"IdGroup"}), @ORM\Index(name="IdMember", columns={"IdMember"})})
+ * @ORM\Entity
+ */
+class Membersgroups
+{
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = '0000-00-00 00:00:00';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Comment", type="integer", nullable=false)
+     */
+    private $comment;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     */
+    private $idmember;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdGroup", type="integer", nullable=false)
+     */
+    private $idgroup;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Status", type="string", nullable=false)
+     */
+    private $status = 'WantToBeIn';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="IacceptMassMailFromThisGroup", type="string", nullable=false)
+     */
+    private $iacceptmassmailfromthisgroup = 'no';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="CanSendGroupMessage", type="string", nullable=false)
+     */
+    private $cansendgroupmessage = 'yes';
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="notificationsEnabled", type="boolean", nullable=false)
+     */
+    private $notificationsenabled = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

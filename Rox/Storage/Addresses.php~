@@ -1,0 +1,96 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Addresses
+ *
+ * @ORM\Table(name="addresses", indexes={@ORM\Index(name="IdMember", columns={"IdMember"}), @ORM\Index(name="IdCity", columns={"IdCity"}), @ORM\Index(name="CityAndRank", columns={"IdCity", "Rank"})})
+ * @ORM\Entity
+ */
+class Addresses
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     */
+    private $idmember;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="HouseNumber", type="integer", nullable=false)
+     */
+    private $housenumber;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="StreetName", type="integer", nullable=false)
+     */
+    private $streetname;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Zip", type="integer", nullable=false)
+     */
+    private $zip;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdCity", type="integer", nullable=false)
+     */
+    private $idcity;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Explanation", type="integer", nullable=false)
+     */
+    private $explanation;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="Rank", type="boolean", nullable=false)
+     */
+    private $rank = '0';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = '0000-00-00 00:00:00';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = '0000-00-00 00:00:00';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdGettingThere", type="integer", nullable=false)
+     */
+    private $idgettingthere = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

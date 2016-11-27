@@ -1,0 +1,89 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Notes
+ *
+ * @ORM\Table(name="notes")
+ * @ORM\Entity
+ */
+class Notes
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     */
+    private $idmember;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdRelMember", type="integer", nullable=false)
+     */
+    private $idrelmember;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Type", type="string", nullable=false)
+     */
+    private $type;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Link", type="string", length=300, nullable=false)
+     */
+    private $link;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="WordCode", type="string", length=300, nullable=false)
+     */
+    private $wordcode;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="Checked", type="boolean", nullable=false)
+     */
+    private $checked = '0';
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="SendMail", type="boolean", nullable=false)
+     */
+    private $sendmail = '0';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="TranslationParams", type="text", length=65535, nullable=true)
+     */
+    private $translationparams;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

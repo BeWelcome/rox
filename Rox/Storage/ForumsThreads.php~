@@ -1,0 +1,208 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * ForumsThreads
+ *
+ * @ORM\Table(name="forums_threads", indexes={@ORM\Index(name="first_postid", columns={"first_postid"}), @ORM\Index(name="last_postid", columns={"last_postid"}), @ORM\Index(name="geonameid", columns={"geonameid"}), @ORM\Index(name="admincode", columns={"admincode"}), @ORM\Index(name="countrycode", columns={"countrycode"}), @ORM\Index(name="continent", columns={"continent"}), @ORM\Index(name="IdGroup", columns={"IdGroup"}), @ORM\Index(name="ThreadVisibility", columns={"ThreadVisibility"}), @ORM\Index(name="ThreadDeleted", columns={"ThreadDeleted"})})
+ * @ORM\Entity
+ */
+class ForumsThreads
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="expiredate", type="datetime", nullable=true)
+     */
+    private $expiredate = '0000-00-00 00:00:00';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdTitle", type="integer", nullable=false)
+     */
+    private $idtitle = '0';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=255, nullable=false)
+     */
+    private $title;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="first_postid", type="integer", nullable=true)
+     */
+    private $firstPostid;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="last_postid", type="integer", nullable=true)
+     */
+    private $lastPostid;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="replies", type="smallint", nullable=false)
+     */
+    private $replies = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="views", type="integer", nullable=false)
+     */
+    private $views = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="geonameid", type="integer", nullable=true)
+     */
+    private $geonameid;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="admincode", type="string", length=2, nullable=true)
+     */
+    private $admincode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="countrycode", type="string", length=2, nullable=true)
+     */
+    private $countrycode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="continent", type="string", nullable=true)
+     */
+    private $continent;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="tag1", type="integer", nullable=true)
+     */
+    private $tag1;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="tag2", type="integer", nullable=true)
+     */
+    private $tag2;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="tag3", type="integer", nullable=true)
+     */
+    private $tag3;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="tag4", type="integer", nullable=true)
+     */
+    private $tag4;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="tag5", type="integer", nullable=true)
+     */
+    private $tag5;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="stickyvalue", type="integer", nullable=false)
+     */
+    private $stickyvalue = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdFirstLanguageUsed", type="integer", nullable=false)
+     */
+    private $idfirstlanguageused = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdGroup", type="integer", nullable=false)
+     */
+    private $idgroup = '0';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ThreadVisibility", type="string", nullable=false)
+     */
+    private $threadvisibility = 'NoRestriction';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="WhoCanReply", type="string", nullable=false)
+     */
+    private $whocanreply = 'MembersOnly';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ThreadDeleted", type="string", nullable=false)
+     */
+    private $threaddeleted = 'NotDeleted';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=false)
+     */
+    private $createdAt = '0000-00-00 00:00:00';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=false)
+     */
+    private $updatedAt = '0000-00-00 00:00:00';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="deleted_at", type="datetime", nullable=false)
+     */
+    private $deletedAt = '0000-00-00 00:00:00';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="threadid", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $threadid;
+
+
+}
+

@@ -1,0 +1,47 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * TripOld
+ *
+ * @ORM\Table(name="trip_old", indexes={@ORM\Index(name="IdMember", columns={"IdMember"})})
+ * @ORM\Entity
+ */
+class TripOld
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="trip_options", type="blob", length=65535, nullable=false)
+     */
+    private $tripOptions;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="trip_touched", type="datetime", nullable=false)
+     */
+    private $tripTouched = '0000-00-00 00:00:00';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdMember", type="integer", nullable=true)
+     */
+    private $idmember;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="trip_id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $tripId;
+
+
+}
+

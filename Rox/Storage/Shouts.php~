@@ -1,0 +1,68 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Shouts
+ *
+ * @ORM\Table(name="shouts")
+ * @ORM\Entity
+ */
+class Shouts
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="member_id_foreign", type="integer", nullable=false)
+     */
+    private $memberIdForeign = '0';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="table", type="string", length=75, nullable=false)
+     */
+    private $table;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="table_id", type="integer", nullable=false)
+     */
+    private $tableId = '0';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=75, nullable=false)
+     */
+    private $title;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="text", type="text", length=16777215, nullable=false)
+     */
+    private $text;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

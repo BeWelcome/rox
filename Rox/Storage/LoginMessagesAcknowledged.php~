@@ -1,0 +1,42 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * LoginMessagesAcknowledged
+ *
+ * @ORM\Table(name="login_messages_acknowledged")
+ * @ORM\Entity
+ */
+class LoginMessagesAcknowledged
+{
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="acknowledged", type="boolean", nullable=false)
+     */
+    private $acknowledged;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="messageId", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $messageid;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="memberId", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $memberid;
+
+
+}
+

@@ -1,0 +1,40 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * GeonamesTimezones
+ *
+ * @ORM\Table(name="geonames_timezones")
+ * @ORM\Entity
+ */
+class GeonamesTimezones
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="OffsetJanuary", type="decimal", precision=10, scale=0, nullable=false)
+     */
+    private $offsetjanuary;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="OffsetJuly", type="decimal", precision=10, scale=0, nullable=false)
+     */
+    private $offsetjuly;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="TimeZoneId", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $timezoneid;
+
+
+}
+

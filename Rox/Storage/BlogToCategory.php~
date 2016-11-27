@@ -1,0 +1,47 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * BlogToCategory
+ *
+ * @ORM\Table(name="blog_to_category", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})}, indexes={@ORM\Index(name="blog_category_id_foreign", columns={"blog_category_id_foreign"}), @ORM\Index(name="blog_id_foreign", columns={"blog_id_foreign"})})
+ * @ORM\Entity
+ */
+class BlogToCategory
+{
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="blog_category_id_foreign", type="integer", nullable=false)
+     */
+    private $blogCategoryIdForeign = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="blog_id_foreign", type="integer", nullable=false)
+     */
+    private $blogIdForeign = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

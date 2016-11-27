@@ -1,0 +1,61 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Blog
+ *
+ * @ORM\Table(name="blog", indexes={@ORM\Index(name="country_id_foreign", columns={"country_id_foreign"}), @ORM\Index(name="trip_id_foreign", columns={"trip_id_foreign"}), @ORM\Index(name="IdMember", columns={"IdMember"})})
+ * @ORM\Entity
+ */
+class Blog
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="flags", type="blob", length=65535, nullable=false)
+     */
+    private $flags;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="blog_created", type="datetime", nullable=false)
+     */
+    private $blogCreated;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="country_id_foreign", type="integer", nullable=true)
+     */
+    private $countryIdForeign;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="trip_id_foreign", type="integer", nullable=true)
+     */
+    private $tripIdForeign;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdMember", type="integer", nullable=true)
+     */
+    private $idmember;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="blog_id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $blogId;
+
+
+}
+

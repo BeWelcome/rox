@@ -1,0 +1,54 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Online
+ *
+ * @ORM\Table(name="online")
+ * @ORM\Entity
+ */
+class Online
+{
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="appearance", type="string", length=256, nullable=false)
+     */
+    private $appearance;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="lastactivity", type="string", length=256, nullable=false)
+     */
+    private $lastactivity;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Status", type="string", length=32, nullable=false)
+     */
+    private $status = 'Active';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdMember", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idmember;
+
+
+}
+

@@ -1,0 +1,42 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * SuggestionsOptionRanks
+ *
+ * @ORM\Table(name="suggestions_option_ranks")
+ * @ORM\Entity
+ */
+class SuggestionsOptionRanks
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="vote", type="integer", nullable=false)
+     */
+    private $vote;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="optionid", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $optionid;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="memberhash", type="string", length=64)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $memberhash;
+
+
+}
+

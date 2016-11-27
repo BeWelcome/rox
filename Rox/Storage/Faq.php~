@@ -1,0 +1,75 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Faq
+ *
+ * @ORM\Table(name="faq", indexes={@ORM\Index(name="IdCategory", columns={"IdCategory"})})
+ * @ORM\Entity
+ */
+class Faq
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="QandA", type="string", length=40, nullable=false)
+     */
+    private $qanda;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = '0000-00-00 00:00:00';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Active", type="string", nullable=false)
+     */
+    private $active = 'Active';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="SortOrder", type="integer", nullable=false)
+     */
+    private $sortorder = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdCategory", type="integer", nullable=false)
+     */
+    private $idcategory = '0';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="PageTitle", type="string", length=100, nullable=false)
+     */
+    private $pagetitle;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

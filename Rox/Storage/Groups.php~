@@ -1,0 +1,103 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Groups
+ *
+ * @ORM\Table(name="groups")
+ * @ORM\Entity
+ */
+class Groups
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="HasMembers", type="string", nullable=false)
+     */
+    private $hasmembers = 'HasMember';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Name", type="string", length=40, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Type", type="string", nullable=false)
+     */
+    private $type = 'Public';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="NbChilds", type="integer", nullable=false)
+     */
+    private $nbchilds = '0';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Picture", type="text", length=65535, nullable=false)
+     */
+    private $picture;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="MoreInfo", type="text", length=65535, nullable=false)
+     */
+    private $moreinfo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="DisplayedOnProfile", type="string", nullable=false)
+     */
+    private $displayedonprofile = 'Yes';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdDescription", type="integer", nullable=true)
+     */
+    private $iddescription;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="VisiblePosts", type="string", nullable=false)
+     */
+    private $visibleposts = 'yes';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="VisibleComments", type="string", nullable=false)
+     */
+    private $visiblecomments = 'no';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

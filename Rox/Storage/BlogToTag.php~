@@ -1,0 +1,40 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * BlogToTag
+ *
+ * @ORM\Table(name="blog_to_tag", indexes={@ORM\Index(name="blog_tag_id_foreign", columns={"blog_tag_id_foreign"}), @ORM\Index(name="blog_id_foreign", columns={"blog_id_foreign"})})
+ * @ORM\Entity
+ */
+class BlogToTag
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="blog_id_foreign", type="integer", nullable=false)
+     */
+    private $blogIdForeign = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="blog_tag_id_foreign", type="integer", nullable=false)
+     */
+    private $blogTagIdForeign = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

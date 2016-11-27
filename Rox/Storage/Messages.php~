@@ -1,0 +1,166 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Messages
+ *
+ * @ORM\Table(name="messages", indexes={@ORM\Index(name="IdParent", columns={"IdParent", "IdReceiver", "IdSender"}), @ORM\Index(name="IdReceiver", columns={"IdReceiver"}), @ORM\Index(name="IdSender", columns={"IdSender"}), @ORM\Index(name="messages_by_spaminfo", columns={"SpamInfo"}), @ORM\Index(name="IdxStatus", columns={"Status"}), @ORM\Index(name="DeleteRequest", columns={"DeleteRequest"}), @ORM\Index(name="WhenFirstRead", columns={"WhenFirstRead"})})
+ * @ORM\Entity
+ */
+class Messages
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="MessageType", type="string", nullable=false)
+     */
+    private $messagetype = 'MemberToMember';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdMessageFromLocalVol", type="integer", nullable=false)
+     */
+    private $idmessagefromlocalvol = '0';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = '0000-00-00 00:00:00';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="DateSent", type="datetime", nullable=false)
+     */
+    private $datesent = '0000-00-00 00:00:00';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="DeleteRequest", type="string", nullable=false)
+     */
+    private $deleterequest;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdParent", type="integer", nullable=false)
+     */
+    private $idparent = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdReceiver", type="integer", nullable=false)
+     */
+    private $idreceiver;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdSender", type="integer", nullable=false)
+     */
+    private $idsender;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="IdentityInformation", type="text", length=65535, nullable=false)
+     */
+    private $identityinformation;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="SendConfirmation", type="string", nullable=false)
+     */
+    private $sendconfirmation;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="SpamInfo", type="string", nullable=false)
+     */
+    private $spaminfo = 'NotSpam';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Status", type="string", nullable=false)
+     */
+    private $status = 'ToCheck';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Message", type="text", length=65535, nullable=false)
+     */
+    private $message;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="InFolder", type="string", nullable=false)
+     */
+    private $infolder = 'Normal';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="WhenFirstRead", type="datetime", nullable=false)
+     */
+    private $whenfirstread = '0000-00-00 00:00:00';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdChecker", type="integer", nullable=false)
+     */
+    private $idchecker = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdTriggerer", type="integer", nullable=false)
+     */
+    private $idtriggerer = '0';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="JoinMemberPict", type="string", nullable=false)
+     */
+    private $joinmemberpict = 'no';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="CheckerComment", type="text", length=65535, nullable=false)
+     */
+    private $checkercomment;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

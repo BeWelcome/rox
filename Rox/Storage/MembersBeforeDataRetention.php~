@@ -1,0 +1,523 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * MembersBeforeDataRetention
+ *
+ * @ORM\Table(name="members_before_data_retention", uniqueConstraints={@ORM\UniqueConstraint(name="i_Username", columns={"Username"})}, indexes={@ORM\Index(name="index_by_created", columns={"created"}), @ORM\Index(name="Id2City", columns={"IdCity"}), @ORM\Index(name="ex_user_id", columns={"ex_user_id"}), @ORM\Index(name="Status", columns={"Status"})})
+ * @ORM\Entity
+ */
+class MembersBeforeDataRetention
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ex_user_id", type="integer", nullable=false)
+     */
+    private $exUserId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Username", type="string", length=32, nullable=false)
+     */
+    private $username;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Status", type="string", nullable=false)
+     */
+    private $status = 'MailToConfirm';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ChangedId", type="integer", nullable=false)
+     */
+    private $changedid = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Email", type="integer", nullable=false)
+     */
+    private $email;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdCity", type="integer", nullable=false)
+     */
+    private $idcity;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="NbRemindWithoutLogingIn", type="integer", nullable=false)
+     */
+    private $nbremindwithoutlogingin;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="HomePhoneNumber", type="integer", nullable=false)
+     */
+    private $homephonenumber;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="CellPhoneNumber", type="integer", nullable=false)
+     */
+    private $cellphonenumber;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="WorkPhoneNumber", type="integer", nullable=false)
+     */
+    private $workphonenumber;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="SecEmail", type="integer", nullable=false)
+     */
+    private $secemail;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="FirstName", type="integer", nullable=false)
+     */
+    private $firstname = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="SecondName", type="integer", nullable=false)
+     */
+    private $secondname = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="LastName", type="integer", nullable=false)
+     */
+    private $lastname = '0';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Accomodation", type="string", nullable=false)
+     */
+    private $accomodation = 'dependonrequest';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="AdditionalAccomodationInfo", type="integer", nullable=false)
+     */
+    private $additionalaccomodationinfo;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ILiveWith", type="integer", nullable=false)
+     */
+    private $ilivewith;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="IdentityCheckLevel", type="boolean", nullable=false)
+     */
+    private $identitychecklevel = '000';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="InformationToGuest", type="integer", nullable=false)
+     */
+    private $informationtoguest;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="TypicOffer", type="string", nullable=false)
+     */
+    private $typicoffer;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Offer", type="integer", nullable=false)
+     */
+    private $offer;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="MaxGuest", type="integer", nullable=false)
+     */
+    private $maxguest = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="MaxLenghtOfStay", type="integer", nullable=false)
+     */
+    private $maxlenghtofstay = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Organizations", type="integer", nullable=false)
+     */
+    private $organizations;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Restrictions", type="string", nullable=false)
+     */
+    private $restrictions;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="OtherRestrictions", type="integer", nullable=false)
+     */
+    private $otherrestrictions;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="bday", type="integer", nullable=false)
+     */
+    private $bday;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="bmonth", type="integer", nullable=false)
+     */
+    private $bmonth;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="byear", type="integer", nullable=false)
+     */
+    private $byear;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = '0000-00-00 00:00:00';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="LastLogin", type="datetime", nullable=false)
+     */
+    private $lastlogin = '0000-00-00 00:00:00';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="SecurityFlag", type="integer", nullable=false)
+     */
+    private $securityflag = '0';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Quality", type="string", nullable=false)
+     */
+    private $quality = 'NeverLog';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ProfileSummary", type="integer", nullable=false)
+     */
+    private $profilesummary;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Occupation", type="integer", nullable=false)
+     */
+    private $occupation;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="CounterGuests", type="integer", nullable=false)
+     */
+    private $counterguests = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="CounterHosts", type="integer", nullable=false)
+     */
+    private $counterhosts = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="CounterTrusts", type="integer", nullable=false)
+     */
+    private $countertrusts = '0';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="PassWord", type="string", length=100, nullable=true)
+     */
+    private $password = 'ENCRYPT(\'password\')';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Gender", type="string", nullable=false)
+     */
+    private $gender = 'IDontTell';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="HideGender", type="string", nullable=false)
+     */
+    private $hidegender = 'No';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="GenderOfGuest", type="string", nullable=false)
+     */
+    private $genderofguest = 'any';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="MotivationForHospitality", type="integer", nullable=true)
+     */
+    private $motivationforhospitality;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="HideBirthDate", type="string", nullable=false)
+     */
+    private $hidebirthdate = 'No';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="BirthDate", type="date", nullable=true)
+     */
+    private $birthdate;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="AdressHidden", type="string", nullable=false)
+     */
+    private $adresshidden = 'Yes';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="WebSite", type="text", length=255, nullable=true)
+     */
+    private $website;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="chat_SKYPE", type="text", length=255, nullable=true)
+     */
+    private $chatSkype;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="chat_ICQ", type="text", length=255, nullable=true)
+     */
+    private $chatIcq;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="chat_AOL", type="text", length=255, nullable=true)
+     */
+    private $chatAol;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="chat_MSN", type="text", length=255, nullable=true)
+     */
+    private $chatMsn;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="chat_YAHOO", type="text", length=255, nullable=true)
+     */
+    private $chatYahoo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="chat_Others", type="text", length=255, nullable=true)
+     */
+    private $chatOthers;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Id4City", type="integer", nullable=false)
+     */
+    private $id4city;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="FutureTrips", type="integer", nullable=false)
+     */
+    private $futuretrips = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="OldTrips", type="integer", nullable=false)
+     */
+    private $oldtrips = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="LogCount", type="integer", nullable=false)
+     */
+    private $logcount = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Hobbies", type="integer", nullable=false)
+     */
+    private $hobbies;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Books", type="integer", nullable=false)
+     */
+    private $books;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Music", type="integer", nullable=false)
+     */
+    private $music;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="PastTrips", type="integer", nullable=false)
+     */
+    private $pasttrips;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="PlannedTrips", type="integer", nullable=false)
+     */
+    private $plannedtrips;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="PleaseBring", type="integer", nullable=false)
+     */
+    private $pleasebring;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="OfferGuests", type="integer", nullable=false)
+     */
+    private $offerguests;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="OfferHosts", type="integer", nullable=false)
+     */
+    private $offerhosts;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="PublicTransport", type="integer", nullable=false)
+     */
+    private $publictransport;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Movies", type="integer", nullable=false)
+     */
+    private $movies;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="chat_GOOGLE", type="integer", nullable=false)
+     */
+    private $chatGoogle;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="LastSwitchToActive", type="datetime", nullable=true)
+     */
+    private $lastswitchtoactive;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="bewelcomed", type="integer", nullable=false)
+     */
+    private $bewelcomed;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

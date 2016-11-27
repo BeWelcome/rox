@@ -1,0 +1,56 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Broadcastmessages
+ *
+ * @ORM\Table(name="broadcastmessages")
+ * @ORM\Entity
+ */
+class Broadcastmessages
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdEnqueuer", type="integer", nullable=false)
+     */
+    private $idenqueuer;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Status", type="string", nullable=false)
+     */
+    private $status = 'ToApprove';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdBroadcast", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $idbroadcast;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdReceiver", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $idreceiver;
+
+
+}
+

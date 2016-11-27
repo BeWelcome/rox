@@ -1,0 +1,56 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * PollsChoicesHierachy
+ *
+ * @ORM\Table(name="polls_choices_hierachy", indexes={@ORM\Index(name="IdPollChoice", columns={"IdPollChoice"})})
+ * @ORM\Entity
+ */
+class PollsChoicesHierachy
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Counter", type="integer", nullable=false)
+     */
+    private $counter = '0';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = '0000-00-00 00:00:00';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdPollChoice", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $idpollchoice;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="HierarchyValue", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $hierarchyvalue;
+
+
+}
+

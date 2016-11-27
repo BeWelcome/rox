@@ -1,0 +1,68 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Logs
+ *
+ * @ORM\Table(name="logs")
+ * @ORM\Entity
+ */
+class Logs
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     */
+    private $idmember;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Str", type="text", length=65535, nullable=false)
+     */
+    private $str;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Type", type="text", length=255, nullable=false)
+     */
+    private $type;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IpAddress", type="integer", nullable=false)
+     */
+    private $ipaddress;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="DebugTracking", type="string", nullable=false)
+     */
+    private $debugtracking;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

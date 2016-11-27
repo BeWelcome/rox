@@ -1,0 +1,68 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Linklist
+ *
+ * @ORM\Table(name="linklist", indexes={@ORM\Index(name="kkey", columns={"fromID", "toID"})})
+ * @ORM\Entity
+ */
+class Linklist
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="fromID", type="integer", nullable=false)
+     */
+    private $fromid;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="toID", type="integer", nullable=false)
+     */
+    private $toid;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="degree", type="boolean", nullable=false)
+     */
+    private $degree;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="rank", type="boolean", nullable=false)
+     */
+    private $rank;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="path", type="string", length=10000, nullable=false)
+     */
+    private $path;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

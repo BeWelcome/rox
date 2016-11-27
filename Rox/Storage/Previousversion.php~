@@ -1,0 +1,68 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Previousversion
+ *
+ * @ORM\Table(name="previousversion", indexes={@ORM\Index(name="IdMember", columns={"IdMember"})})
+ * @ORM\Entity
+ */
+class Previousversion
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     */
+    private $idmember;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="TableName", type="text", length=255, nullable=false)
+     */
+    private $tablename;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdInTable", type="integer", nullable=false)
+     */
+    private $idintable;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Type", type="string", nullable=false)
+     */
+    private $type = 'DoneByMember';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="XmlOldVersion", type="text", length=65535, nullable=false)
+     */
+    private $xmloldversion;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

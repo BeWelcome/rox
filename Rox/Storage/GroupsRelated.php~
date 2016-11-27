@@ -1,0 +1,61 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * GroupsRelated
+ *
+ * @ORM\Table(name="groups_related")
+ * @ORM\Entity
+ */
+class GroupsRelated
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="group_id", type="integer", nullable=true)
+     */
+    private $groupId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="related_id", type="integer", nullable=true)
+     */
+    private $relatedId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="addedby", type="integer", nullable=true)
+     */
+    private $addedby;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="deletedby", type="integer", nullable=true)
+     */
+    private $deletedby;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="ts", type="datetime", nullable=false)
+     */
+    private $ts = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

@@ -1,0 +1,61 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Groupsmessages
+ *
+ * @ORM\Table(name="groupsmessages")
+ * @ORM\Entity
+ */
+class Groupsmessages
+{
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Title", type="text", length=65535, nullable=false)
+     */
+    private $title;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Message", type="text", length=65535, nullable=false)
+     */
+    private $message;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdSender", type="integer", nullable=false)
+     */
+    private $idsender;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdGroup", type="integer", nullable=false)
+     */
+    private $idgroup;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

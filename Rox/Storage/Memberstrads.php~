@@ -1,0 +1,99 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Memberstrads
+ *
+ * @ORM\Table(name="memberstrads", uniqueConstraints={@ORM\UniqueConstraint(name="Unique_entry", columns={"IdTrad", "IdOwner", "IdLanguage"})}, indexes={@ORM\Index(name="IdTrad", columns={"IdTrad"}), @ORM\Index(name="IdLanguage", columns={"IdLanguage"})})
+ * @ORM\Entity
+ */
+class Memberstrads
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdOwner", type="integer", nullable=false)
+     */
+    private $idowner;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdTrad", type="integer", nullable=false)
+     */
+    private $idtrad;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdTranslator", type="integer", nullable=false)
+     */
+    private $idtranslator;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = '0000-00-00 00:00:00';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Type", type="string", nullable=false)
+     */
+    private $type = 'member';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Sentence", type="text", length=65535, nullable=false)
+     */
+    private $sentence;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdRecord", type="integer", nullable=false)
+     */
+    private $idrecord = '-1';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="TableColumn", type="string", length=200, nullable=false)
+     */
+    private $tablecolumn = 'NotSet';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \AppBundle\Entity\Languages
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Languages")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdLanguage", referencedColumnName="id")
+     * })
+     */
+    private $idlanguage;
+
+
+}
+

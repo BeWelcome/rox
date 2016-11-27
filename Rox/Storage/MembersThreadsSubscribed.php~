@@ -1,0 +1,68 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * MembersThreadsSubscribed
+ *
+ * @ORM\Table(name="members_threads_subscribed", indexes={@ORM\Index(name="IdSubscriber", columns={"IdSubscriber", "IdThread"})})
+ * @ORM\Entity
+ */
+class MembersThreadsSubscribed
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdSubscriber", type="integer", nullable=false)
+     */
+    private $idsubscriber;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdThread", type="integer", nullable=false)
+     */
+    private $idthread;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ActionToWatch", type="string", nullable=false)
+     */
+    private $actiontowatch = 'replies';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="UnSubscribeKey", type="string", length=20, nullable=false)
+     */
+    private $unsubscribekey;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="notificationsEnabled", type="boolean", nullable=false)
+     */
+    private $notificationsenabled = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

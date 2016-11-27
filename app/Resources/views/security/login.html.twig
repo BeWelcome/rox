@@ -1,0 +1,62 @@
+{% extends 'base-lite.html.twig' %}
+
+{% block title %}
+    {{ 'Login' | trans }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-4 offset-lg-4 col-md-8 offset-md-2 col-sm-8 offset-sm-2 col-xs-12">
+
+            {% if error %}
+                <div class="alert alert-danger">
+                    {{ error | trans }}
+                </div>
+            {% endif %}
+
+            <form id="main-login-form" role="form" class="form-signin" method="post" action="{{ path('security_check') }}">
+                <h2><span class="hidden-xs">{{ 'Login' | trans }}</span></h2>
+
+                <h3>
+                    <span id="BeWelcome" class="visible-xs center">BeWelcome</span>
+                    <span id="opendoor" class="visible-xs center"> - {{ 'IndexPageTeaserOpenDoor' | trans }}</span>
+                </h3>
+
+                <label class="sr-only" for="login-u">{{ 'Username' | trans }}</label>
+                <input type="text" id="login-u" name="username" autofocus required value="{{ last_username }}" placeholder="{{ 'Username' | trans }}" class="form-control">
+
+                <label class="sr-only" for="login-p">{{ 'Password' | trans }}</label>
+                <input type="password" id="login-p" name="password" placeholder="{{ 'Password' | trans }}" class="form-control">
+
+                <label for="login-r">
+                    <input type="checkbox" id="login-r" value="1" name="remember">&nbsp;{{ 'StayLoggedIn' | trans }}
+                </label>
+
+                <input type="hidden" name="_csrf_token"
+                       value="{{ csrf_token('authenticate') }}"
+                >
+
+                <button type="submit" class="button btn-block">{{ 'IndexPageLoginSubmit' | trans }}</button>
+
+                <p class="dividerbox center">
+                    {{ 'LoginformForgetPassword' | trans | format('<a href="">', '</a>') | raw }}
+
+                    <span class="ordivider"></span>
+                </p>
+
+                <div class="center">
+                    <h3>{{ 'SignupNow' | trans }}</h3>
+
+                    <p>{{ 'IndexPageWord17' | trans | format('<a class="button btn-block" role="button" href="">', '</a>') | raw }}</p>
+
+                    <p class="visible-xs bw-row">
+                        <a class="btn btn-primary btn-block" role="button" href="">{{ 'tour_take' | trans }}</a>
+                    </p>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,61 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Activitiesattendees
+ *
+ * @ORM\Table(name="activitiesattendees", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})})
+ * @ORM\Entity
+ */
+class Activitiesattendees
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="activityId", type="bigint", nullable=false)
+     */
+    private $activityid;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="attendeeId", type="bigint", nullable=false)
+     */
+    private $attendeeid;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="organizer", type="smallint", nullable=false)
+     */
+    private $organizer;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="status", type="smallint", nullable=false)
+     */
+    private $status;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="comment", type="string", length=80, nullable=false)
+     */
+    private $comment;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="bigint")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

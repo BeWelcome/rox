@@ -1,0 +1,54 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Gallery
+ *
+ * @ORM\Table(name="gallery", indexes={@ORM\Index(name="user_id_foreign", columns={"user_id_foreign"})})
+ * @ORM\Entity
+ */
+class Gallery
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="user_id_foreign", type="integer", nullable=false)
+     */
+    private $userIdForeign;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="flags", type="blob", length=65535, nullable=false)
+     */
+    private $flags;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=255, nullable=false)
+     */
+    private $title;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="text", type="text", length=16777215, nullable=false)
+     */
+    private $text;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

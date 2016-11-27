@@ -1,0 +1,81 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * PollsContributions
+ *
+ * @ORM\Table(name="polls_contributions", uniqueConstraints={@ORM\UniqueConstraint(name="IdMember", columns={"IdMember", "IdPoll"})}, indexes={@ORM\Index(name="idEmail", columns={"Email"}), @ORM\Index(name="IdPoll", columns={"IdPoll"}), @ORM\Index(name="IDX_D41FF2B3EA8330B4", columns={"IdMember"})})
+ * @ORM\Entity
+ */
+class PollsContributions
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Email", type="text", length=255, nullable=false)
+     */
+    private $email;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="EmailIsConfirmed", type="string", nullable=false)
+     */
+    private $emailisconfirmed = 'No';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = '0000-00-00 00:00:00';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="comment", type="text", length=65535, nullable=false)
+     */
+    private $comment;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \AppBundle\Entity\Polls
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Polls")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdPoll", referencedColumnName="id")
+     * })
+     */
+    private $idpoll;
+
+    /**
+     * @var \AppBundle\Entity\Members
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Members")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
+     * })
+     */
+    private $idmember;
+
+
+}
+

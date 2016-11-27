@@ -1,0 +1,61 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * BlogComments
+ *
+ * @ORM\Table(name="blog_comments", indexes={@ORM\Index(name="id", columns={"id"}), @ORM\Index(name="blog_id_foreign", columns={"blog_id_foreign"}), @ORM\Index(name="IdMember", columns={"IdMember"})})
+ * @ORM\Entity
+ */
+class BlogComments
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="blog_id_foreign", type="integer", nullable=false)
+     */
+    private $blogIdForeign = '0';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=75, nullable=false)
+     */
+    private $title = '';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="text", type="text", length=16777215, nullable=false)
+     */
+    private $text;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdMember", type="integer", nullable=true)
+     */
+    private $idmember;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

@@ -1,0 +1,54 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Guestsonline
+ *
+ * @ORM\Table(name="guestsonline", indexes={@ORM\Index(name="updated", columns={"updated"})})
+ * @ORM\Entity
+ */
+class Guestsonline
+{
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="appearance", type="string", length=32, nullable=false)
+     */
+    private $appearance;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="lastactivity", type="string", length=255, nullable=false)
+     */
+    private $lastactivity;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Status", type="string", length=32, nullable=false)
+     */
+    private $status = 'Active';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IpGuest", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $ipguest;
+
+
+}
+

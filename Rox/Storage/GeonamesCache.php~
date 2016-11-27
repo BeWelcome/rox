@@ -1,0 +1,103 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * GeonamesCache
+ *
+ * @ORM\Table(name="geonames_cache", indexes={@ORM\Index(name="fk_countrycode", columns={"fk_countrycode"}), @ORM\Index(name="fk_admincode", columns={"fk_admincode"}), @ORM\Index(name="parentAdm1Id", columns={"parentAdm1Id"}), @ORM\Index(name="parentCountryId", columns={"parentCountryId"}), @ORM\Index(name="name", columns={"name"}), @ORM\Index(name="fcode", columns={"fcode"})})
+ * @ORM\Entity
+ */
+class GeonamesCache
+{
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="latitude", type="float", precision=10, scale=0, nullable=false)
+     */
+    private $latitude;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="longitude", type="float", precision=10, scale=0, nullable=false)
+     */
+    private $longitude;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=200, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="population", type="integer", nullable=false)
+     */
+    private $population;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="fk_countrycode", type="string", length=2, nullable=false)
+     */
+    private $fkCountrycode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="fk_admincode", type="string", length=2, nullable=true)
+     */
+    private $fkAdmincode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="fclass", type="string", length=1, nullable=true)
+     */
+    private $fclass;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="fcode", type="string", length=10, nullable=true)
+     */
+    private $fcode;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="timezone", type="integer", nullable=true)
+     */
+    private $timezone;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="parentAdm1Id", type="integer", nullable=false)
+     */
+    private $parentadm1id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="parentCountryId", type="integer", nullable=false)
+     */
+    private $parentcountryid;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="geonameid", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $geonameid;
+
+
+}
+

@@ -1,0 +1,110 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Pendingmandatory
+ *
+ * @ORM\Table(name="pendingmandatory", indexes={@ORM\Index(name="IdMember", columns={"IdMember"})})
+ * @ORM\Entity
+ */
+class Pendingmandatory
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     */
+    private $idmember;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="FirstName", type="text", length=65535, nullable=false)
+     */
+    private $firstname;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="SecondName", type="text", length=65535, nullable=false)
+     */
+    private $secondname;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="LastName", type="text", length=65535, nullable=false)
+     */
+    private $lastname;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="HouseNumber", type="text", length=65535, nullable=false)
+     */
+    private $housenumber;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="StreetName", type="text", length=65535, nullable=false)
+     */
+    private $streetname;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Zip", type="text", length=65535, nullable=false)
+     */
+    private $zip;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdCity", type="integer", nullable=false)
+     */
+    private $idcity;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Comment", type="text", length=65535, nullable=false)
+     */
+    private $comment;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Status", type="string", nullable=false)
+     */
+    private $status = 'Pending';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdAddress", type="integer", nullable=false)
+     */
+    private $idaddress;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

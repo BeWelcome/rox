@@ -1,0 +1,47 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * GeonamesCountries
+ *
+ * @ORM\Table(name="geonamescountries")
+ * @ORM\Entity
+ */
+class GeonamesCountries
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="geonameId", type="integer", nullable=true)
+     */
+    private $geonameid;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=200, nullable=true)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="continent", type="string", length=2, nullable=true)
+     */
+    private $continent;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="country", type="string", length=2)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $country;
+
+
+}
+

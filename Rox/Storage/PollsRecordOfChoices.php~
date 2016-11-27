@@ -1,0 +1,81 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * PollsRecordOfChoices
+ *
+ * @ORM\Table(name="polls_record_of_choices", indexes={@ORM\Index(name="IdMember", columns={"IdMember"}), @ORM\Index(name="idEmail", columns={"Email"}), @ORM\Index(name="IdPoll", columns={"IdPoll"}), @ORM\Index(name="IdPollChoice", columns={"IdPollChoice"})})
+ * @ORM\Entity
+ */
+class PollsRecordOfChoices
+{
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = '0000-00-00 00:00:00';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdPollChoice", type="integer", nullable=false)
+     */
+    private $idpollchoice;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="HierarchyValue", type="integer", nullable=false)
+     */
+    private $hierarchyvalue;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Email", type="text", length=255, nullable=false)
+     */
+    private $email;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \AppBundle\Entity\Polls
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Polls")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdPoll", referencedColumnName="id")
+     * })
+     */
+    private $idpoll;
+
+    /**
+     * @var \AppBundle\Entity\Members
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Members")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
+     * })
+     */
+    private $idmember;
+
+
+}
+

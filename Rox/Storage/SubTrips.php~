@@ -1,0 +1,64 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * SubTrips
+ *
+ * @ORM\Table(name="sub_trips", indexes={@ORM\Index(name="trip_id_idx", columns={"trip_id"})})
+ * @ORM\Entity
+ */
+class SubTrips
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="geonameId", type="integer", nullable=true)
+     */
+    private $geonameid;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="arrival", type="date", nullable=true)
+     */
+    private $arrival;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="departure", type="date", nullable=true)
+     */
+    private $departure;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="options", type="integer", nullable=true)
+     */
+    private $options;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \AppBundle\Entity\Trips
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Trips")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="trip_id", referencedColumnName="id")
+     * })
+     */
+    private $trip;
+
+
+}
+

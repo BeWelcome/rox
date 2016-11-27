@@ -1,0 +1,96 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * GalleryItems
+ *
+ * @ORM\Table(name="gallery_items", indexes={@ORM\Index(name="file", columns={"file"}), @ORM\Index(name="user_id_foreign", columns={"user_id_foreign"})})
+ * @ORM\Entity
+ */
+class GalleryItems
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="user_id_foreign", type="integer", nullable=false)
+     */
+    private $userIdForeign;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="file", type="string", length=40, nullable=false)
+     */
+    private $file;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="original", type="string", length=255, nullable=false)
+     */
+    private $original;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="flags", type="blob", length=65535, nullable=false)
+     */
+    private $flags;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="mimetype", type="string", length=75, nullable=false)
+     */
+    private $mimetype;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="width", type="integer", nullable=false)
+     */
+    private $width;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="height", type="integer", nullable=false)
+     */
+    private $height;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=255, nullable=false)
+     */
+    private $title;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text", length=65535, nullable=false)
+     */
+    private $description;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

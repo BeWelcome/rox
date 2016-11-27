@@ -1,0 +1,594 @@
+{% import 'macros.twig' as macros %}
+<!DOCTYPE html>
+<html lang="{{ locale }}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/favicon.ico"/>
+
+    <title>{{ title }} - BeWelcome</title>
+    <meta name="description" content="{{ 'default_meta_description'|trans }}"/>
+    <meta name="keywords" content="{{ 'default_meta_keyword'|trans }}"/>
+    {#<meta name="robots" content="{{ meta.robots }}"/>#}
+    {#{% include '@base/stylesheets.html.twig' %}#}
+    {#{% include '@base/scriptfiles.html.twig' with {scriptFiles : earlyScriptFiles} %}#}
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    {% javascripts
+        '@jquery_js'
+        '@tether_js'
+        '@bootstrap_js'
+        '@skrollr_js'
+        'bundles/app/js/start/start.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {%  endjavascripts %}
+
+    {% stylesheets filter="cssrewrite"
+        'bundles/app/css/bewelcome.css'
+        '@tether_css'
+        'bundles/app/css/start/parallax.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+</head>
+<body>
+{% include 'loginbar.html.twig' %}
+<!-- Section #1 -->
+    <!-- first section - Home -->
+    <div id="home"
+         data-start="background-position: 0px 0px;"
+         data-end="background-position: 0px -100px;">
+        <div class="container" id="landingcontainer"
+             data-start="background-color:rgba(0, 0, 0, 0.4); box-shadow: 0px 0px 100px 25px rgba(0, 0, 0, 0.4) inset;"
+             data-600-start="background-color:rgba(0, 0, 0, 0.0); box-shadow: 0px 0px 100px -100px rgba(0, 0, 0, 0.4) inset;">
+            <div class="row">
+                <div class="hidden-md-down col-lg-2"></div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8 text-sm-center text-xs-center" id="landingcontainerdiv"
+                     data-start="display:block; position:fixed; right: 50%; transform: translateX(50%);"
+                     data-300-start="display:none">
+                    <h1 data-start="color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0), 0px 0px 3px rgba(255,255,255,0);letter-spacing:0.0rem;"
+                        data-50-start= "color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0.5), 0px 0px 3px rgba(255,255,255,0.5);letter-spacing:0rem;"
+                        data-250-start="color:rgba(255,255,255,0); text-shadow:3px 0px 3px rgba(255,255,255,0.25), -3px 0px 3px rgba(255,255,255,0.25);letter-spacing:0rem;"
+                        data-300-start="color:rgba(255,255,255,0); text-shadow: 6px 0px 6px rgba(255,255,255,0), -6px 0px 6px rgba(255,255,255,0);letter-spacing:0.15rem;">
+                        BeWelcome is a cultural crossing network
+                    </h1>
+                    <p data-start="color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0)"
+                        data-50-start= "color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0)"
+                        data-250-start="color:rgba(255,255,255,0); text-shadow:0px 0px 3px rgba(255,255,255,0.3)"
+                        data-300-start="color:rgba(255,255,255,0); text-shadow:0px 0px 3px rgba(255,255,255,0)">
+                        which lets you share a place to stay, connect with travellers, meet up and find accommodation on your journey
+                    </p>
+                    <form data-start="opacity:1"
+                          data-50-start="opacity:1"
+                          data-300-start="opacity:0"
+                          method="post" novalidate action="signup/1" name="signup" id="user-register-form" class="form" role="form">
+                        <input data-start="opacity:1"
+                           data-50-start="opacity:1"
+                           data-300-start="opacity:0"
+                           type="email" autocomplete="email" class="form-control" placeholder="Your e-mail">
+                        <input type="submit" class="form-control btn btn-primary" value="Join BeWelcome!">
+                    </form>
+                    <p class="contrastbg orangelink"
+                       data-start="opacity:1"
+                       data-300-start="opacity:0"><small class="smaller">BeWelcome is and <a href="#">will always be</a> a free, open source, non for profit, democratic community</small></p>
+                </div>
+                <div class="hidden-md-down col-lg-2"></div>
+            </div>
+            <div class="row secondblock">
+                <div class="hidden-md-down col-lg-2"></div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8 text-sm-center">
+                    <h1 class="whitetext"
+                        data--50-bottom="color:rgba(255,255,255,0); text-shadow: 0px 0px 3px rgba(255,255,255,0), 0px -20px 3px rgba(0, 0, 0, 0); letter-spacing:0.15rem"
+                        data--100-bottom="color:rgba(255,255,255,0); text-shadow:0px 0px 3px rgba(255,255,255,0.25), 0px -10px 3px rgba(0, 0, 0, 0.2); letter-spacing:0.05rem"
+                        data--200-bottom="color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0.5), 0px -10px 3px rgba(0, 0, 0, 0.4); letter-spacing:0.05rem"
+                        data--400-bottom="color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0), 0px 30px 3px rgba(0, 0, 0, 0.4); letter-spacing:0.15rem"
+                        data--450-bottom="color:rgba(255,255,255,0); text-shadow:0px 0px 3px rgba(255,255,255,0.3), 0px 30px 3px rgba(0, 0, 0, 0.2); letter-spacing:0.15rem"
+                        data--500-bottom="color:rgba(255,255,255,0); text-shadow:0px 0px 3px rgba(255,255,255,0), 0px 60px 15px rgba(0, 0, 0, 0); letter-spacing:0.20rem">{{ 'Find hosts and guests everywhere in the world' | trans }}</h1>
+                </div>
+                <div class="hidden-md-down col-lg-2"></div>
+            </div>
+            <div class="row thirdblock">
+{#                        <a href="#bottom" class="chevron_down"
+                           data--150-bottom="opacity:0"
+                           data--200-bottom="opacity:1"
+                           data--350-bottom="opacity:1"
+                           data--450-bottom="opacity:0">
+                           <i class="chevron_icon fa fa-3x fa-chevron-down"></i>
+                       </a> #}
+                {% image '@AppBundle/Resources/public/images/arrow_blur.png' %}
+                    <img class="chevron_down_img" src="{{ asset_url }}"
+                            data--130-bottom="opacity:0"
+                            data--150-bottom="opacity:1"
+                            data--200-bottom="opacity:0.4"
+                            data--400-bottom="opacity:0.4"
+                            data--430-bottom="opacity:1"
+                            data--450-bottom="opacity:0">
+                {% endimage %}
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 text-left">
+                    <a href="about"><strong>{{ 'AboutUsPage' | trans }}</strong></a> •
+                    <a href="terms" target="new">{{ 'TermsOfUse' | trans }}</a> •
+                    <a href="privacy" target="new">{{ 'Privacy' | trans }}</a> •
+                    <a href="impressum">{{ 'Impressum' | trans }}</a> •
+                    <a href="faq">{{  'faq' | trans }}</a> •
+                    <a href="about/feedback">{{ 'Contact us' | trans }}</a> •
+                    <a href="about/feedback?IdCategory=1&RequestURI={{ url('homepage') }}">{{ 'Reportbug' | trans }}</a><br>
+                    {{ 'CopyrightByBV' | trans }} - {{ 'RunningOn' | trans }} BW Rox rev. ca44ccc (27 Jun 2015)
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /first section -->
+    <!-- second section - About -->
+    <div id="about" class="pad-section"
+         data-450-top="background-color:rgb(127, 68, 0)"
+         data-400-top="background-color:rgb(255, 136, 0)">
+        <div class="container fullwidth nopadding">
+            <div class="row nopadding">
+                <div class="hidden-md-down col-lg-1"></div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-10 mb-1"
+                    data-bottom="opacity:0;"
+                    data--100-bottom="opacity:1"><h1 data-bottom="letter-spacing: 0.35em; text-shadow:0 0 30px rgba(0,0,0,0.8)" data--200-bottom="letter-spacing: 0.1em; text-shadow: 0 0 60px rgba(0,0,0,0.2)">{{ 'tourpage' | trans }}</h1>
+                </div>
+                <div class="hidden-md-down col-lg-1"></div>
+            </div>
+            <div class="row nopadding">
+                <!-- Visible in md and larger - hidden on sm and smaller -->
+                <div class="hidden-sm-down col-md-1"></div>
+                <div class="hidden-sm-down col-md-2 ml-2"
+                    data-335-top="opacity:0"
+                    data-325-top="opacity:0.2"
+                    data-315-top="transform:translateX(-110px)"
+                    data-305-top="transform:translateX(-20px)"
+                    data-290-top="opacity:1"
+                    data-285-top="transform:translateX(0px);transform:rotate(0deg)"
+                    data-275-top="transform:translateX(-30px);transform:rotate(-5deg)"
+                    data-270-top="transform:translateX(-15px);transform:rotate(5deg)"
+                    data-265-top="transform:translateX(0px);transform:rotate(0deg)">
+                    {% image '@AppBundle/Resources/public/images/meet.png' %}
+                        <img src="{{ asset_url }}" alt="Tour meet" />
+                    {% endimage %}<h3>{{ 'tour_link_meet' | trans }}</h3><p>{{ 'tourpage_text3' | trans }}</p>
+                </div>
+                <div class="hidden-sm-down col-md-2 ml-3"
+                    data-350-top="opacity:0"
+                    data-300-top="opacity:1">
+                    {% image '@AppBundle/Resources/public/images/travel.png' %}
+                        <img src="{{ asset_url}}" />
+                    {% endimage %}
+                    <h3>{{ 'tour_link_travel' | trans }}</h3>
+                    <p>{{ 'tourpage_text4' | trans }}</p>
+                </div>
+                <div class="hidden-sm-down col-md-2 ml-3"
+                    data-350-top="opacity:0"
+                    data-300-top="opacity:1">
+                    {% image '@AppBundle/Resources/public/images/inform.png' %}
+                    <img src="{{ asset_url}}" />
+                    {% endimage %}
+                    <h3>{{ 'tour_link_info' | trans }}</h3><p>{{ 'tourpage_text5' | trans }}</p>
+                </div>
+                <div class="hidden-sm-down col-md-2 ml-3"
+                    data-335-top="opacity:0"
+                    data-325-top="opacity:0.2"
+                    data-315-top="transform:translateX(110px)"
+                    data-305-top="transform:translateX(20px)"
+                    data-290-top="opacity:1"
+                    data-285-top="transform:translateX(0px);transform:rotate(0deg)"
+                    data-275-top="transform:translateX(30px);transform:rotate(5deg)"
+                    data-270-top="transform:translateX(15px);transform:rotate(-5deg)"
+                    data-265-top="transform:translateX(0px);transform:rotate(0deg)"
+                    data-265-top="transform:translateX(0px);transform:rotate(0deg)">
+                    {% image '@AppBundle/Resources/public/images/share.png' %}
+                    <img src="{{ asset_url}}" />
+                    {% endimage %}
+                    <h3>{{ 'tour_link_share' | trans }}</h3><p>{{ 'tourpage_text2' | trans }}</p></div>
+                <div class="hidden-sm-down col-md-1"></div>
+            </div>
+        </div>
+        <!-- Slider for sm screen - hidden on md and larger, hidden on xs-->
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 hidden-xs-down hidden-md-up">
+                    <div class="my-slider">
+                        <ul>
+                            <li>
+                                <div class="col-sm-3">
+                                </div>
+                                <div class="col-sm-6">
+                                    {% image '@AppBundle/Resources/public/images/meet.png' %}
+                                    <img src="{{ asset_url}}" />
+                                    {% endimage %}
+                                    <h3>{{ 'tour_link_meet' | trans }}</h3><p>{{ 'tourpage_text3' | trans }}</p>
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                            </li>
+                            <li>
+                                 <div class="col-sm-3">
+                                </div>
+                                <div class="col-sm-6">
+                                    {% image '@AppBundle/Resources/public/images/inform.png' %}
+                                    <img src="{{ asset_url}}" />
+                                    {% endimage %}
+                                    <h3>{{ 'tour_link_info' | trans }}</h3><p>{{ 'tourpage_text5' | trans }}</p>
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                            </li>
+                            <li>
+                                 <div class="col-sm-3">
+                                </div>
+                                <div class="col-sm-6">
+                                    {% image '@AppBundle/Resources/public/images/travel.png' %}
+                                    <img src="{{ asset_url}}" />
+                                    {% endimage %}
+                                    <h3>{{ 'tour_link_travel' | trans }}</h3><p>{{ 'tourpage_text4' | trans }}</p>
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                            </li>
+                            <li>
+                                 <div class="col-sm-3">
+                                </div>
+                                <div class="col-sm-6">
+                                    {% image '@AppBundle/Resources/public/images/decide.png' %}
+                                    <img src="{{ asset_url}}" />
+                                    {% endimage %}
+                                    <h3>{{ 'tour_link_openness' | trans }}</h3><p>{{ 'tourpage_text6' | trans }}</p>
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Slider for xs screen - hidden on sm and larger-->
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 hidden-sm-up">
+                    <div class="my-slider">
+                        <ul>
+                            <li>
+                                <div class="col-xs-3">
+                                </div>
+                                <div class="col-xs-6">
+                                    {% image '@AppBundle/Resources/public/images/meet.png' %}
+                                    <img src="{{ asset_url}}" />
+                                    {% endimage %}
+                                    <h3>{{ 'tour_link_meet' | trans }}</h3>
+                                    <p>{{ 'tourpage_text3' | trans }}</p>
+                                </div>
+                                <div class="col-xs-3">
+                                </div>
+                            </li>
+                            <li>
+                                 <div class="col-xs-3">
+                                </div>
+                                <div class="col-xs-6">
+                                    {% image '@AppBundle/Resources/public/images/inform.png' %}
+                                    <img src="{{ asset_url}}" />
+                                    {% endimage %}
+                                    <h3>{{ 'tour_link_info' | trans }}</h3>
+                                    <p>{{ 'tourpage_text5' | trans }}</p>
+                                </div>
+                                <div class="col-xs-3">
+                                </div>
+                            </li>
+                            <li>
+                                 <div class="col-xs-3">
+                                </div>
+                                <div class="col-xs-6">
+                                    {% image '@AppBundle/Resources/public/images/travel.png' %}
+                                    <img src="{{ asset_url}}" />
+                                    {% endimage %}
+                                    <h3>{{ 'tour_link_travel' | trans }}</h3>
+                                    <p>{{ 'tourpage_text4' | trans }}</p>
+                                </div>
+                                <div class="col-xs-3">
+                                </div>
+                            </li>
+                            <li>
+                                 <div class="col-xs-3">
+                                </div>
+                                <div class="col-xs-6">
+                                    {% image '@AppBundle/Resources/public/images/decide.png' %}
+                                    <img src="{{ asset_url}}" />
+                                    {% endimage %}
+                                    <h3>{{ 'tour_link_openness' | trans }}</h3>
+                                    <p>{{ 'tourpage_text6' | trans }}</p>
+                                </div>
+                                <div class="col-xs-3">
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /second section -->
+    <!-- third section - Services -->
+    <div id="about_trailing" class="pad-section"
+         data-bottom-top="background-position: 0px 0px"
+         data-top-bottom="background-position: 0px -100px;">
+        <div class="container">
+            <div class="row whitetext nopadding"
+                data-2000-start="position:fixed">
+                <h1 data-start="display:none"
+                    data-2000-start="display:block; color:rgba(255,255,255,0); text-shadow: 6px 0px 3px rgba(255,255,255,0), -6px 0px 3px rgba(255,255,255,0);letter-spacing:0.05rem;"
+                    data-2050-start="color:rgba(255,255,255,0); text-shadow:3px 0px 3px rgba(255,255,255,0.25), -3px 0px 3px rgba(255,255,255,0.25);letter-spacing:0.02rem;"
+                    data-2150-start="color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0.5), 0px 0px 3px rgba(255,255,255,0.5);letter-spacing:0.0rem;"
+                    data-2400-start="color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0.5), 0px 0px 3px rgba(255,255,255,0.5);letter-spacing:0.0rem;"
+                    data-2600-start="color:rgba(255,255,255,0); text-shadow:3px 0px 3px rgba(255,255,255,0.25), -3px 0px 3px rgba(255,255,255,0.25);letter-spacing:0.02rem"
+                    data-2800-start="display:none; color:rgba(255,255,255,0); text-shadow: 6px 0px 3px rgba(255,255,255,0), -6px 0px 3px rgba(255,255,255,0);letter-spacing:0.05rem;">{{ 'We are 100% run by volunteers, non-profit and open source' | trans }}</h1>
+            </div>
+        </div>
+    </div>
+    <div id="statistics" class="pad-section"
+        data-450-top="background-color:rgb(121,84,3)"
+        data-400-top="background-color:rgb(243,168,6)">
+        <div class="container fullwidth nopadding">
+            <div class="row nopadding">
+                <div class="col-xs-12"
+                    data-bottom="opacity:0"
+                    data--100-bottom="opacity:1"><h1 class="centertext" data-bottom="letter-spacing: 0.35em;" data--200-bottom="letter-spacing: 0.1em;">{{ 'Some statistics' | trans }}</h1>
+                </div>
+            </div>
+            <div class="row nopadding">
+                <div class="hidden-sm-down col-md-1"></div>
+                <div class="hidden-sm-down col-md-2"
+                    data-385-top="opacity:0"
+                    data-375-top="opacity:0.2"
+                    data-365-top="transform:translateX(-110px)"
+                    data-345-top="transform:translateX(-20px)"
+                    data-340-top="opacity:1"
+                    data-335-top="transform:translateX(0px);transform:rotate(0deg)"
+                    data-325-top="transform:translateX(-30px);transform:rotate(-5deg)"
+                    data-320-top="transform:translateX(-15px);transform:rotate(5deg)"
+                    data-315-top="transform:translateX(0px);transform:rotate(0deg)">{% image '@AppBundle/Resources/public/images/stats_members.png' %}
+                    <img src="{{ asset_url}}" />
+                    {% endimage %}
+                    <h2>{{ stats.members }}</h2>
+                    <h4>{{ 'members' | trans }}</h4></div>
+                <div class="hidden-sm-down col-md-2"
+                    data-400-top="opacity:0"
+                    data-350-top="opacity:1">{% image '@AppBundle/Resources/public/images/stats_countries.png' %}
+                    <img src="{{ asset_url}}" />
+                    {% endimage %}
+                    <h2>{{ stats.countries }}</h2>
+                    <h4>{{ 'countries' | trans }}</h4></div>
+                <div class="hidden-sm-down col-md-2"
+                    data-600-top="opacity:0"
+                    data-450-top="opacity:1">{% image '@AppBundle/Resources/public/images/stats_languages.png' %}
+                    <img src="{{ asset_url}}" />
+                    {% endimage %}
+                    <h2>{{ stats.languages }}</h2>
+                    <h4>{{ 'languages' | trans }}</h4></div>
+                <div class="hidden-sm-down col-md-2"
+                    data-400-top="opacity:0"
+                    data-350-top="opacity:1">{% image '@AppBundle/Resources/public/images/stats_positives.png' %}
+                    <img src="{{ asset_url}}" />
+                    {% endimage %}
+                    <h2>{{ stats.comments }}</h2>
+                    <h4>{{ 'positive comments' | trans }}</h4></div>
+                <div class="hidden-sm-down col-md-2"
+                    data-385-top="opacity:0"
+                    data-375-top="opacity:0.2"
+                    data-365-top="transform:translateX(110px)"
+                    data-345-top="transform:translateX(20px)"
+                    data-340-top="opacity:1"
+                    data-335-top="transform:translateX(0px);transform:rotate(0deg)"
+                    data-325-top="transform:translateX(30px);transform:rotate(5deg)"
+                    data-320-top="transform:translateX(15px);transform:rotate(-5deg)"
+                    data-315-top="transform:translateX(0px);transform:rotate(0deg)">
+                    {% image '@AppBundle/Resources/public/images/stats_activities.png' %}
+                    <img src="{{ asset_url}}" />
+                    {% endimage %}
+                    <h2>{{ stats.activities }}</h2>
+                    <h4>{{ 'Activities' | trans  }}</h4></div>
+                <div class="hidden-sm-down col-md-1"></div>
+            </div>
+        </div>
+        <!-- Slider for sm screen - hidden on md and larger, hidden on xs-->
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 hidden-xs-down hidden-md-up">
+                    <div class="my-slider">
+                        <ul>
+                            <li>
+                                <div class="col-sm-3">
+                                </div>
+                                <div class="col-sm-6">
+                                    <img src="images/icons/stats_members.png"><h2>{{ stats.members }}</h2><h4>{{ 'members' | trans }}</h4>
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                            </li>
+                            <li>
+                                 <div class="col-sm-3">
+                                </div>
+                                <div class="col-sm-6">
+                                    <img src="images/icons/inform.png"><h2>{{ stats.countries }}</h2><h4>{{ 'countries' | trans }}</h4>
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                            </li>
+                            <li>
+                                 <div class="col-sm-3">
+                                </div>
+                                <div class="col-sm-6">
+                                    <img src="images/icons/travel.png"><h2>{{ stats.languages }}</h2><h4>{{ 'languages' | trans }}</h4>
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                            </li>
+                            <li>
+                                 <div class="col-sm-3">
+                                </div>
+                                <div class="col-sm-6">
+                                    <img src="images/icons/decide.png"><h2>{{ stats.comments }}</h2><h4>{{ 'positive comments' | trans }}</h4>
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                            </li>
+                            <li>
+                                 <div class="col-sm-3">
+                                </div>
+                                <div class="col-sm-6">
+                                    <img src="images/icons/decide.png"><h2>{{ stats.activities }}</h2><h4>{{ 'Activities' | trans  }}</h4>
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Slider for xs screen - hidden on sm and larger-->
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 hidden-sm-up">
+                    <div class="my-slider">
+                        <ul>
+                            <li>
+                                <div class="col-xs-3">
+                                </div>
+                                <div class="col-xs-6">
+                                    <img src="images/icons/stats_members.png"><h2>{{ stats.members }}</h2><h4>{{ 'members' | trans }}</h4>
+                                </div>
+                                <div class="col-xs-3">
+                                </div>
+                            </li>
+                            <li>
+                                 <div class="col-xs-3">
+                                </div>
+                                <div class="col-xs-6">
+                                    <img src="images/icons/inform.png"><h2>{{ stats.countries }}</h2><h4>{{ 'countries' | trans }}</h4>
+                                </div>
+                                <div class="col-xs-3">
+                                </div>
+                            </li>
+                            <li>
+                                 <div class="col-xs-3">
+                                </div>
+                                <div class="col-xs-6">
+                                    <img src="images/icons/travel.png"><h2>{{ stats.languages }}</h2><h4>{{ 'languages' | trans }}</h4>
+                                </div>
+                                <div class="col-xs-3">
+                                </div>
+                            </li>
+                            <li>
+                                 <div class="col-xs-3">
+                                </div>
+                                <div class="col-xs-6">
+                                    <img src="images/icons/decide.png"><h2>{{ stats.comments }}</h2><h4>{{ 'positive comments' | trans }}</h4>
+                                </div>
+                                <div class="col-xs-3">
+                                </div>
+                            </li>
+                            <li>
+                                 <div class="col-xs-3">
+                                </div>
+                                <div class="col-xs-6">
+                                    <img src="images/icons/decide.png"><h2>{{ stats.activities }}</h2><h4>{{ 'Activities' | trans  }}</h4>
+                                </div>
+                                <div class="col-xs-3">
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="statistics_trailing" class="pad-section">
+         <div id="search" class="pad-section"
+            data-start="position:fixed; visibility:hidden;"
+            data-600-end="visibility:hidden;"
+            data-550-end="visibility:visible;"
+            data-540-end="opacity:0;"
+            data-400-end="opacity:1;"
+            data-end="position:fixed">
+            <div class="container" data-start="position:relative; bottom:0px" data-end="position:relative">
+                <div class="row nopadding">
+                    <div class="hidden-md-down col-lg-1"></div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-10">
+                        <h1 class="nospacing"
+                            data-500-end="color:rgba(255,255,255,0); text-shadow: 6px 0px 10px rgba(255,255,255,0),-6px 0px 10px rgba(255,255,255,0);letter-spacing:0.05rem"
+                            data-300-end="color:rgba(255,255,255,0); text-shadow: 3px 0px 5px rgba(255,255,255,0.4),-3px 0px 5px rgba(255,255,255,0.4);letter-spacing:0.02rem"
+                            data-100-end="color:rgba(255,255,255,1); text-shadow: 0px 0px 0px rgba(255,255,255,0), 0px 0px 0px rgba(255,255,255,0);letter-spacing:0.00rem"
+                            >{{ 'The world is just one step from here' | trans }}</h1>
+                        <p data-400-end="color:rgba(255,255,255,0); text-shadow: 0px 0px 6px rgba(255,255,255,0);letter-spacing:0.005rem"
+                        data-200-end="color:rgba(255,255,255,0.2); text-shadow: 0px 0px 2px rgba(255,255,255,0.4);letter-spacing:0rem"
+                        data-end="color:rgba(255,255,255,1); text-shadow: 0px 0px 0px rgba(255,255,255,0);letter-spacing:0.0rem">{{ 'We believe that sharing creates a better world. You can let people stay over or show them around. It\'s easy and it\'s called hospitality.' | trans }}</p>
+                    </div>
+                    <div class="hidden-md-down col-lg-1"></div>
+                </div>
+                <div class="col-sm-1 col-sm-offset-1"></div>
+                <form method="post" action="signup/1" class="col-sm-4 col-sm-offset-1">
+                <div class="form-group" data-250-end="opacity:0;" data-50-end="opacity:1">
+                    <span>{{ 'IndexPageWord_share' | trans }}</span>
+                    <span class="disblock">{{ 'and start meeting people from everywhere.' | trans }}</span>
+                </div>
+                <div class="input-group" data-200-end="opacity:0;" data-0-end="opacity:1">
+                    <span class="input-group-addon"><i class="fa fa-lg fa-user"></i></span>
+                    <input type="text" class="form-control" name="live"
+                           placeholder="{{ 'Choose your username!' | trans }}"
+                           value=""/>
+                    <span class="input-group-addon p-0">
+                        <button class="btn btn-primary noborder" type="submit">
+                            <i class="fa fa-lg fa-chevron-right"></i>
+                        </button>
+                    </span>
+                </div>
+                </form>
+                <div class="col-sm-2 col-sm-offset-1"></div>
+                <form method="post" action="search/map" class="col-sm-4 col-sm-offset-1">
+                <div class="form-group" data-250-end="opacity:0;" data-50-end="opacity:1">
+                    <span>{{ 'Find a place to stay' | trans }}</span>
+                    <span class="disblock">{{ 'and meet locals when traveling worldwide.' | trans }}</span>
+                </div>
+                <div class="input-group" data-200-end="opacity:0;" data-0-end="opacity:1">
+                    <span class="input-group-addon"><i class="fa fa-lg fa-bed"></i></span>
+                    <input type="text" class="form-control" name="go"
+                           placeholder="{{ 'Where do you want to go?' | trans }}"
+                           value=""/>
+                    <span class="input-group-addon pa-0">
+                        <button class="btn btn-primary noborder" type="submit">
+                            <i class="fa fa-lg fa-chevron-right"></i>
+                        </button>
+                    </span>
+                </div>
+                </form>
+                <div class="col-sm-1 col-sm-offset-1"></div>
+            </div>
+        </div>
+    </div>
+    <div id="statistics_trailing_blur"
+            data-540-end="opacity:0;"
+            data-200-end="opacity:1;"
+            >
+    </div>
+    <div id="bottom"></div>
+    <!-- /third section -->
+    <!-- fourth section - Information -->
+
+    <!-- /fourth section -->
+    <!-- fourth section - Information -->
+    <!-- /fifth section -->
+</div>
+
+</body>
+</html>

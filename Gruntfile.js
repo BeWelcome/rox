@@ -39,7 +39,7 @@ module.exports = function (grunt) {
                         src: [
                             '**/*'
                         ],
-                        dest: 'htdocs/assets/fonts/',
+                        dest: 'src/AppBundle/Resources/public/fonts/',
                         cwd: 'node_modules/font-awesome/fonts/',
                         filter: 'isFile'
                     }
@@ -52,7 +52,7 @@ module.exports = function (grunt) {
                         src: [
                             '**/*'
                         ],
-                        dest: 'htdocs/assets/fonts/',
+                        dest: 'src/AppBundle/Resources/public/fonts/',
                         cwd: 'node_modules/lato-font/fonts/',
                         filter: 'isFile'
                     }
@@ -63,7 +63,7 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         src: '**/*',
-                        dest: 'htdocs/assets/fonts/',
+                        dest: 'src/AppBundle/Resources/public/fonts/',
                         cwd: 'module/Core/assets/fonts',
                         filter: 'isFile'
                     }
@@ -122,7 +122,7 @@ module.exports = function (grunt) {
                     style: 'expanded'
                 },
                 files: {
-                    'htdocs/assets/sass/bewelcome.css': 'htdocs/styles/scss/bewelcome.scss'
+                    'src/AppBundle/Resources/public/css/bewelcome.css': 'src/AppBundle/Resources/scss/bewelcome.scss'
                 }
             }
         },

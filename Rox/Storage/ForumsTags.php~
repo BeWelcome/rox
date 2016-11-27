@@ -1,0 +1,82 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * ForumsTags
+ *
+ * @ORM\Table(name="forums_tags", indexes={@ORM\Index(name="id", columns={"id"}), @ORM\Index(name="tag", columns={"tag"})})
+ * @ORM\Entity
+ */
+class ForumsTags
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tag", type="string", length=64, nullable=false)
+     */
+    private $tag;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tag_description", type="string", length=255, nullable=true)
+     */
+    private $tagDescription;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="tag_position", type="boolean", nullable=false)
+     */
+    private $tagPosition = '250';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="counter", type="integer", nullable=false)
+     */
+    private $counter = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdName", type="integer", nullable=false)
+     */
+    private $idname = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdDescription", type="integer", nullable=false)
+     */
+    private $iddescription = '0';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Type", type="string", nullable=false)
+     */
+    private $type = 'Member';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="tagid", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $tagid;
+
+
+}
+

@@ -1,0 +1,54 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Intermembertranslations
+ *
+ * @ORM\Table(name="intermembertranslations")
+ * @ORM\Entity
+ */
+class Intermembertranslations
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdTranslator", type="integer", nullable=false)
+     */
+    private $idtranslator;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     */
+    private $idmember;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IdLanguage", type="integer", nullable=false)
+     */
+    private $idlanguage;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

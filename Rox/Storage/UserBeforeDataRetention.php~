@@ -1,0 +1,75 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * UserBeforeDataRetention
+ *
+ * @ORM\Table(name="user_before_data_retention", indexes={@ORM\Index(name="user_id", columns={"auth_id"}), @ORM\Index(name="handle", columns={"handle"}), @ORM\Index(name="email", columns={"email"}), @ORM\Index(name="location", columns={"location"})})
+ * @ORM\Entity
+ */
+class UserBeforeDataRetention
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="auth_id", type="integer", nullable=true)
+     */
+    private $authId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="handle", type="string", length=255, nullable=false)
+     */
+    private $handle = '';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=75, nullable=false)
+     */
+    private $email;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="pw", type="text", length=65535, nullable=false)
+     */
+    private $pw;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="active", type="integer", nullable=false)
+     */
+    private $active = '0';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="lastlogin", type="datetime", nullable=true)
+     */
+    private $lastlogin;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="location", type="integer", nullable=true)
+     */
+    private $location;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

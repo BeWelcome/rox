@@ -9,14 +9,14 @@ php:
 addons:
   mariadb: '10.1'
 
-env:
-  global:
-    - APP_ENV=testing
-    - APP_DEBUG=true
-    - DB_HOST=localhost
-    - DB_NAME=bewelcome_test
-    - DB_USER=travis
-    - DB_PASS=
+#env:
+#  global:
+#    - APP_ENV=testing
+#    - APP_DEBUG=true
+#    - DB_HOST=localhost
+#    - DB_NAME=bewelcome_test
+#    - DB_USER=travis
+#    - DB_PASS=
 
 cache:
   directories:
@@ -29,16 +29,13 @@ before_install:
   - nvm use v5.5
   - gem install sass
   - phpenv config-rm xdebug.ini
+  - mysql -u root -e 'create database bewelcome;'
+  - mysql -u root -e "GRANT ALL PRIVILEGES ON bewelcome.* TO 'bewelcome'@'localhost' IDENTIFIED BY 'bewelcome';"
+  - mysql -u root -e 'FLUSH PRIVILEGES;'
 
 install:
   - composer install --no-interaction --ignore-platform-reqs
   - npm update
-
-before_script:
-  - mysql -u root -e 'create database bewelcome_test;'
-  - mysql -u root -e "GRANT ALL PRIVILEGES ON bewelcome_test.* TO 'bewelcome'@'localhost' IDENTIFIED BY 'bewelcome';"
-  - mysql -u root -e 'FLUSH PRIVILEGES;'
-  - cp tests/rox_local.ini.tests rox_local.ini
 
 script:
   - ./vendor/bin/phinx migrate

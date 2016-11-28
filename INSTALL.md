@@ -93,9 +93,6 @@ using a browser or use curl _url_ > _filename_.
 
     ```bash
     $ mysql -u root -p
-    ```
-
-    ```sql
     mysql> CREATE DATABASE bewelcome;
     mysql> GRANT ALL PRIVILEGES ON bewelcome.* TO 'bewelcome'@'localhost' IDENTIFIED BY 'bewelcome';
     mysql> FLUSH PRIVILEGES;

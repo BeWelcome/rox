@@ -39,13 +39,8 @@ php-cs-fixer:
 php-code-sniffer:
 	php -n ./vendor/bin/phpcs
 
-phpunit: unittests inttests
-
-unittests:
-	./vendor/bin/phpunit --testsuite=UnitTests
-
-inttests:
-	./vendor/bin/phpunit --testsuite=IntegrationTests
+phpunit:
+	./vendor/bin/phpunit --testsuite="Project Test Suite"
 
 phpmetrics:
 	php -n -d memory_limit=512M ./vendor/bin/phpmetrics --config=phpmetrics.yml

@@ -18,7 +18,7 @@ class SecurityController extends Controller
      * @Route("/login", name="security_login", defaults={"access_denied_redirect" = "/"}))
      * @Route("/login_check", name="security_check", defaults={"access_denied_redirect" = "/"}))
      */
-    public function loginAction(Request $request)
+    public function loginAction()
     {
         $helper = $this->get('security.authentication_utils');
 

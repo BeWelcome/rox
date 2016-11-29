@@ -41,6 +41,8 @@ class LocaleController extends Controller
 
     protected function setLanguageForMember(Member $member, $locale)
     {
+        $member;
+        $locale;
 /*
          $language = $this->languageRepository->getByShortCode($locale);
 

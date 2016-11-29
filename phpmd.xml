@@ -41,7 +41,7 @@
         <priority>3</priority>
         <properties>
             <property name="minimum" description="Minimum length for a variable, property or parameter name" value="3"/>
-            <property name="exceptions" value="a,b,id,i,e,q,dt" />
+            <property name="exceptions" value="a,b,id,i,e,q,dt,em" />
         </properties>
     </rule>
 

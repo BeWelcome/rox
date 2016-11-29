@@ -15,20 +15,6 @@ class ActivityAttendee
     /**
      * @var integer
      *
-     * @ORM\Column(name="activityId", type="integer", nullable=false)
-     */
-    private $activityid;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="attendeeId", type="integer", nullable=false)
-     */
-    private $attendeeId;
-
-    /**
-     * @var integer
-     *
      * @ORM\Column(name="organizer", type="smallint", nullable=false)
      */
     private $organizer;

@@ -21,38 +21,34 @@ class AvatarController extends Controller
 
         switch ($size) {
             case '30':
-                $suffix = '_30_30';
+            case '75':
+                $suffix = '_' . $size . '_' . $size;
                 break;
             case '50':
                 $suffix = '_xs';
                 break;
-            case '75':
-                $suffix = '_75_75';
-                break;
             case '150':
-                $suffix = '_150';
-                break;
             case '200':
-                $suffix = '_200';
-                break;
             case '500':
-                $suffix = '_500';
-                break;
+                $suffix = '_' . $size;
             default:
                 $suffix = '_original';
         }
 
         $member = $this->getDoctrine()->getRepository(Member::class)->findBy('username', $username);
         $isBrowseable = false;
-        if ($member) {
-            $isBrowseable = $member->isBrowseable();
+        if (!$member) {
+            $filename = 'htdocs/images/misc/empty_avatar' . $suffix . '.png';
+            return new BinaryFileResponse($filename);
         }
 
-        $filename = 'htdocs/images/misc/empty_avatar' . $suffix . '.png';
-        if ($isBrowseable && file_exists('data/user/avatars/' . $member->id . $suffix)) {
-            $filename = 'data/user/avatars/' . $member->id . $suffix;
+        $isBrowseable = $member->isBrowseable();
+        if (!$isBrowseable) {
+            $filename = 'htdocs/images/misc/empty_avatar' . $suffix . '.png';
+            return new BinaryFileResponse($filename);
         }
 
+        $filename = 'data/user/avatars/' . $member->id . $suffix;
         return new BinaryFileResponse($filename);
     }
 }

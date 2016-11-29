@@ -1,4 +1,9 @@
 <?php
+/*
+ * @codingStandardsIgnoreFile
+ *
+ * Auto generated file ignore for Code Sniffer
+ */
 
 namespace AppBundle\Entity;
 
@@ -9,6 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="languages", uniqueConstraints={@ORM\UniqueConstraint(name="ShortCode", columns={"ShortCode"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\LanguageRepository")
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class Language
 {
@@ -206,7 +214,7 @@ class Language
      *
      * @return Language
      */
-    public function setIswrittenlanguage($iswrittenlanguage)
+    public function setIsWrittenlanguage($iswrittenlanguage)
     {
         $this->iswrittenlanguage = $iswrittenlanguage;
 
@@ -218,7 +226,7 @@ class Language
      *
      * @return boolean
      */
-    public function getIswrittenlanguage()
+    public function getIsWrittenlanguage()
     {
         return $this->iswrittenlanguage;
     }
@@ -230,7 +238,7 @@ class Language
      *
      * @return Language
      */
-    public function setIsspokenlanguage($isspokenlanguage)
+    public function setIsSpokenlanguage($isspokenlanguage)
     {
         $this->isspokenlanguage = $isspokenlanguage;
 
@@ -242,7 +250,7 @@ class Language
      *
      * @return boolean
      */
-    public function getIsspokenlanguage()
+    public function getIsSpokenlanguage()
     {
         return $this->isspokenlanguage;
     }
@@ -254,7 +262,7 @@ class Language
      *
      * @return Language
      */
-    public function setIssignlanguage($issignlanguage)
+    public function setIsSignlanguage($issignlanguage)
     {
         $this->issignlanguage = $issignlanguage;
 
@@ -266,7 +274,7 @@ class Language
      *
      * @return boolean
      */
-    public function getIssignlanguage()
+    public function getIsSignlanguage()
     {
         return $this->issignlanguage;
     }

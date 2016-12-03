@@ -10,21 +10,60 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="rightsvolunteers", uniqueConstraints={@ORM\UniqueConstraint(name="IdMember", columns={"IdMember", "IdRight"})})
  * @ORM\Entity
  */
-class Rightsvolunteers
+class RightVolunteer
 {
     /**
      * @var integer
      *
-     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(type="integer")
      */
-    private $idmember;
+    private $id;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="IdRight", type="integer", nullable=false)
+     * @return mixed
      */
-    private $idright;
+    public function getMember()
+    {
+        return $this->member;
+    }
+
+    /**
+     * @param mixed $member
+     */
+    public function setMember($member)
+    {
+        $this->member = $member;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRight()
+    {
+        return $this->right;
+    }
+
+    /**
+     * @param mixed $right
+     */
+    public function setRight($right)
+    {
+        $this->right = $right;
+    }
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Member", inversedBy="rightVolunteers")
+     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
+     */
+    private $member;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Right", inversedBy="volunteerRights")
+     * @ORM\JoinColumn(name="IdRight", referencedColumnName="id")
+     */
+    private $right;
 
     /**
      * @var integer
@@ -62,70 +101,11 @@ class Rightsvolunteers
     private $created = '0000-00-00 00:00:00';
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
-
-
-
-    /**
-     * Set idmember
-     *
-     * @param integer $idmember
-     *
-     * @return Rightsvolunteers
-     */
-    public function setIdmember($idmember)
-    {
-        $this->idmember = $idmember;
-
-        return $this;
-    }
-
-    /**
-     * Get idmember
-     *
-     * @return integer
-     */
-    public function getIdmember()
-    {
-        return $this->idmember;
-    }
-
-    /**
-     * Set idright
-     *
-     * @param integer $idright
-     *
-     * @return Rightsvolunteers
-     */
-    public function setIdright($idright)
-    {
-        $this->idright = $idright;
-
-        return $this;
-    }
-
-    /**
-     * Get idright
-     *
-     * @return integer
-     */
-    public function getIdright()
-    {
-        return $this->idright;
-    }
-
-    /**
      * Set level
      *
      * @param integer $level
      *
-     * @return Rightsvolunteers
+     * @return RightVolunteer
      */
     public function setLevel($level)
     {
@@ -149,7 +129,7 @@ class Rightsvolunteers
      *
      * @param string $scope
      *
-     * @return Rightsvolunteers
+     * @return RightVolunteer
      */
     public function setScope($scope)
     {
@@ -173,7 +153,7 @@ class Rightsvolunteers
      *
      * @param string $comment
      *
-     * @return Rightsvolunteers
+     * @return RightVolunteer
      */
     public function setComment($comment)
     {
@@ -197,7 +177,7 @@ class Rightsvolunteers
      *
      * @param \DateTime $updated
      *
-     * @return Rightsvolunteers
+     * @return RightVolunteer
      */
     public function setUpdated($updated)
     {
@@ -221,7 +201,7 @@ class Rightsvolunteers
      *
      * @param \DateTime $created
      *
-     * @return Rightsvolunteers
+     * @return RightVolunteer
      */
     public function setCreated($created)
     {

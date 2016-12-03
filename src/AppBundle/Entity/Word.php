@@ -23,7 +23,7 @@ class Word
     /**
      * @var string
      *
-     * @ORM\Column(name="code", type="string", length=256, nullable=false)
+     * @ORM\Column(name="code", type="string", length=128, nullable=false)
      */
     private $code;
 

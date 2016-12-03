@@ -11,7 +11,7 @@ security:
             id: rox.legacy_password_encoder
 
         # Default for all members
-        AppBundle\Entity\Member:
+        default:
             algorithm: bcrypt
             cost: 12
 

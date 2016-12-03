@@ -28,7 +28,7 @@ class LocaleController extends Controller
 
         $locale = $request->attributes->get('locale');
 
-        $this->get('session')->set('lang', $locale);
+        $this->get('session')->set('locale', $locale);
 
         $member = $this->getUser();
 

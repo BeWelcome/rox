@@ -32,11 +32,10 @@ class AvatarController extends Controller
             case '500':
                 $suffix = '_' . $size;
             default:
-                $suffix = '_original';
+                $suffix = '';
         }
 
-        $member = $this->getDoctrine()->getRepository(Member::class)->findBy('username', $username);
-        $isBrowseable = false;
+        $member = $this->getDoctrine()->getRepository(Member::class)->findOneBy(['username' => $username]);
         if (!$member) {
             $filename = 'htdocs/images/misc/empty_avatar' . $suffix . '.png';
             return new BinaryFileResponse($filename);
@@ -48,7 +47,12 @@ class AvatarController extends Controller
             return new BinaryFileResponse($filename);
         }
 
-        $filename = 'data/user/avatars/' . $member->id . $suffix;
+        $filename = 'data/user/avatars/' . $member->getId() . $suffix;
+        if (file_exists($filename)) {
+            return new BinaryFileResponse($filename);
+        }
+
+        $filename = 'htdocs/images/misc/empty_avatar' . $suffix . '.png';
         return new BinaryFileResponse($filename);
     }
 }

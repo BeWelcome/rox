@@ -1,8 +1,8 @@
-{% import '@macros/macros.twig' as macros %}
+{% import 'macros.twig' as macros %}
 <nav class="navbar navbar-sticky-top navbar-dark bg-primary">
     <div class="container">
 
-        <a class="navbar-brand" href="{{ path('home') }}"><img src="/images/logo_index_top.png" alt="{{ 'BeWelcome' | trans }}"/></a>
+        <a class="navbar-brand" href="{{ url('homepage') }}">{% image 'bundles/app/images/logo_index_top.png' %}<img src="{{ asset_url }}" alt="{{ 'BeWelcome' | trans }}"/>{% endimage %}</a>
 
         <button class="navbar-toggler hidden-md-up float-right" data-toggle="collapse" data-target="#mainNavBar">
             &#9776;
@@ -13,10 +13,11 @@
 
             <ul class="nav navbar-nav">
                 <li class="nav-item col-xs-12 border">
-                <a href="{{ path('member', { username: my_member.Username }) }}" class="nav-link">{{ 'Profile' | trans }}</a>
+                    Member...
+{##}                <a href="{{ url('member', { username: my_member.Username }) }}" class="nav-link">{{ 'Profile' | trans }}</a> #}
                 </li>
                 <li class="nav-item col-xs-12 border">
-                    <a href="/search/members" class="nav-link">{{ 'MapSearch' | trans }}</a>
+                    <a href="{{ url( 'homepage' ) }}" class="nav-link">{{ 'MapSearch' | trans }}</a>
                 </li>
                 <li class="nav-item col-xs-12 border">
                     <a href="/trips" class="nav-link">{{ 'Trips' | trans }}</a>
@@ -25,10 +26,10 @@
                     <a href="/mynotes" class="nav-link">{{ 'MyNotes' | trans }}</a>
                 </li>
                 <li class="nav-item col-xs-12 border">
-                    <a href="{{ path('message') }}" class="nav-link">{{ 'MyMessages' | trans }}</a>
+                    <a href="message" class="nav-link">{{ 'MyMessages' | trans }}</a>
                 </li>
                 <li class="nav-item col-xs-12 border">
-                    <a href="{{ path('auth/logout') }}" class="nav-link">{{ 'Logout' | trans }}</a>
+                    <a href="/logout" class="nav-link">{{ 'Logout' | trans }}</a>
                 </li>
             </ul>
         </div>
@@ -89,7 +90,7 @@
                                     </div>
 
                                     <div class="col-xs-2">
-                                        <a href="{{ path('about') }}" class="h4 subnavtitle">{{ 'GetAnswers' | trans}}</a>
+                                        <a href="about" class="h4 subnavtitle">{{ 'GetAnswers' | trans}}</a>
 
                                         <a href="/faq" class="btn btn-block btn-primary-outline p-y-0 text-xs-left mt-1">{{ 'FAQ' | trans }}</a>
                                         <a href="/feedback" class="btn btn-block btn-primary-outline p-y-0 text-xs-left">{{ 'ContactUs' | trans}}</a>
@@ -101,7 +102,7 @@
                                     <div class="col-xs-2">
                                         <a href="/volunteer" class="h4 subnavtitle">{{ 'Volunteer' | trans}}</a>
 
-                                        <a href="{{ path('about', { page: 'getactive'}) }}" class="btn btn-block btn-primary-outline p-y-0 text-xs-left mt-1">{{ 'About_GetActive' | trans}}</a>
+                                        <a href="about/getactive" class="btn btn-block btn-primary-outline p-y-0 text-xs-left mt-1">{{ 'About_GetActive' | trans}}</a>
                                         <a href="/donate" class="btn btn-block btn-primary-outline p-y-0 text-xs-left">{{ 'DonateLink'  | trans}}</a>
                                         {% for team in teams if teams %}
                                         <a href="/{{ team.link }}" class="btn btn-block btn-primary-outline p-y-0 text-xs-left">{{ team.trans | trans}}</a>
@@ -110,7 +111,7 @@
 
                                     <div class="col-xs-4 usermenu">
                                         <div class="col-xs-12 pl-2 mb-2">
-                                            <a href="{{ path('member', { username: my_member.Username }) }}" class="h4">{{ macros.avatar( my_member.Username, 50, true) }} {{ my_member.Username }}</a>
+                                            <a href="/member/{{ my_member.Username }}" class="h4">{{ macros.avatar( my_member.Username, 50, true) }} {{ my_member.Username }}</a>
                                         </div>
 
                                         <div class="col-xs-6 float-left">
@@ -120,9 +121,9 @@
                                         </div>
 
                                         <div class="col-xs-6 float-left">
-                                            <a href="{{ path('message') }}" class="btn btn-sm btn-block btn-primary-outline text-xs-left"><i class="fa fa-envelope-o"></i> {{ 'MyMessages' | trans }}</a>
+                                            <a href="message" class="btn btn-sm btn-block btn-primary-outline text-xs-left"><i class="fa fa-envelope-o"></i> {{ 'MyMessages' | trans }}</a>
                                             <a href="/mynotes" class="btn btn-sm btn-block btn-primary-outline text-xs-left m-t-0"><i class="fa fa-list"></i> {{ 'ProfileMyNotes' | trans }}</a>
-                                            <a href="{{ path('auth/logout') }}" class="btn btn-sm btn-block btn-primary-outline text-xs-left m-t-0"><i class="fa fa-power-off"></i> {{ 'Logout' | trans }}</a>
+                                            <a href="/logout" class="btn btn-sm btn-block btn-primary-outline text-xs-left m-t-0"><i class="fa fa-power-off"></i> {{ 'Logout' | trans }}</a>
                                         </div>
                                     </div>
                                 </div>
@@ -131,30 +132,30 @@
                 </li>
 
                 {# logout #}
-                <li class="nav-item float-right"><a href="{{ path('auth/logout') }}" class="nav-link"><i class="fa fa-sign-out"></i></a></li>
+                <li class="nav-item float-right"><a href="/logout" class="nav-link"><i class="fa fa-sign-out"></i></a></li>
 
                 {# profile link on smaller screens #}
                 <li class="nav-item float-right hidden-lg-up">
-                    <a href="{{ path('member', { username: my_member.Username }) }}" class="nav-link"><i class="fa fa-user"></i><span class="hidden-md-down"> {{ my_member.Username }} </span></a>
+                    <a href="/members/{{ my_member.Username }}" class="nav-link"><i class="fa fa-user"></i><span class="hidden-md-down"> {{ my_member.Username }} </span></a>
                 </li>
 
                 {# member dropdown on bigger screens #}
                 <li class="nav-item dropdown float-right hidden-md-down">
                     <a href="/members/{{ my_member.Username }}" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ my_member.Username }} <span class="caret"></span></a>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                        <li class="text-xs-right"><a href="{{ path('member', { username: my_member.Username }) }}" class="dropdown-item">{{ 'Profile' | trans }}</a></li>
+                        <li class="text-xs-right"><a href="/member/{{ my_member.Username }}" class="dropdown-item">{{ 'Profile' | trans }}</a></li>
                         <li class="text-xs-right"><a href="/editmyprofile" class="dropdown-item">{{ 'EditMyProfile' | trans }}</a></li>
                         <li class="text-xs-right"><a href="/mypreferences" class="dropdown-item">{{ 'MyPreferences' | trans }}</a></li>
                         <li class="text-xs-right"><a href="/mynotes" class="dropdown-item">{{ 'ProfileMyNotes' | trans }}</a></li>
                         <li class="text-xs-right"><a href="/groups/mygroups" class="dropdown-item">{{ 'MyGroups' | trans }}</a></li>
                         <li class="text-xs-right"><a href="/trips" class="dropdown-item">{{ 'TripsShowMy' | trans }}</a></li>
-                        <li class="text-xs-right"><a href="{{ path('auth/logout') }}" class="dropdown-item">{{ 'Logout' | trans }}</a></li>
+                        <li class="text-xs-right"><a href="/logout" class="dropdown-item">{{ 'Logout' | trans }}</a></li>
                     </ul>
                 </li>
 
                 {# messages #}
                 <li class="nav-item float-right">
-                    <a href="{{ path('message') }}" class="nav-link"><i class="fa fa-lg fa-inbox"></i><noscript>{{ 'MyInbox' | trans }}</noscript> <span class="badge badge-warning">{{ messageCount }}</span></a>
+                    <a href="/messages" class="nav-link"><i class="fa fa-lg fa-inbox"></i><noscript>{{ 'MyInbox' | trans }}</noscript> <span class="badge badge-warning">10</span></a>
                 </li>
 
             </ul>
@@ -168,14 +169,14 @@
                     <li class="nav-item"><a href="/community" class="nav-link">{{ 'CommunityMenu' | trans }}</a></li>
                     <li class="nav-item"><a href="/safety" class="nav-link">{{ 'Safety' | trans}}</a></li>
                     <li class="nav-item"><a href="wiki/importantlinks" class="nav-link">All important links</a></li>
-                    <li class="nav-item"><a href="{{ path('message') }}" class="nav-link">{{ 'MyMessages' | trans }}</a></li>
-                    <li class="nav-item"><a href="{{ path('member', { username: my_member.Username }) }}" class="nav-link">{{ my_member.Username }}</a></li>
+                    <li class="nav-item"><a href="/message') }}" class="nav-link">{{ 'MyMessages' | trans }}</a></li>
+                    <li class="nav-item"><a href="/member/{{ my_member.Username }}" class="nav-link">{{ my_member.Username }}</a></li>
                 </ul>
             </div>
 
             {# always show a noscript logout #}
             <ul class="nav navbar-nav">
-                <li class="nav-item float-right"><a href="{{ path('auth/logout') }}" class="nav-link">{{ 'Logout' | trans }}</a></li>
+                <li class="nav-item float-right"><a href="/logout" class="nav-link">{{ 'Logout' | trans }}</a></li>
             </ul>
         </noscript>
 

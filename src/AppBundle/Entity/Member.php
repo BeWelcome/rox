@@ -9,6 +9,9 @@ namespace AppBundle\Entity;
 
 use AppBundle\Encoder\LegacyPasswordEncoder;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\JoinTable;
+use Doctrine\ORM\Mapping\ManyToMany;
 use Rox\Core\Exception\RuntimeException;
 use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
 use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
@@ -2342,6 +2345,16 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     }
 
     /**
+     * @ORM\OneToMany(targetEntity="RightVolunteer", mappedBy="member", fetch="EXTRA_LAZY")
+     */
+    private $volunteerRights;
+
+    public function __construct()
+    {
+        $this->volunteerRights = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
      * Returns the roles granted to the user.
      *
      * <code>
@@ -2359,20 +2372,36 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
      */
     public function getRoles()
     {
-        // TODO: Implement getRoles() method.
-        return ['ROLE_USER'];
+        // Grant user role to everyone
+        $roles = [
+            'ROLE_USER',
+        ];
+
+        $volunteerRights = $this->getVolunteerRights();
+        foreach ($volunteerRights as $volunteerRight) {
+            if ($volunteerRight->getLevel() !== 0) {
+                $roles[] = 'ROLE_ADMIN_' . strtoupper($volunteerRight->getRight()->getName());
+            }
+        }
+
+        // If additional roles are found add ROLE_ADMIN as well to get past the /admin firewall
+        if (count($roles) > 1) {
+            $roles[] = 'ROLE_ADMIN';
+        }
+
+        return $roles;
     }
 
     /**
      * Returns the salt that was originally used to encode the password.
      *
-     * This can return null if the password was not encoded using a salt.
+     * Return null as we use BCrypt for password hashing
      *
-     * @return string|null The salt
+     * @return null
      */
     public function getSalt()
     {
-        // TODO: Implement getSalt() method.
+        return null;
     }
 
     /**
@@ -2389,9 +2418,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     /**
      * Gets the name of the encoder used to encode the password.
      *
-     * If the method returns null, the standard way to retrieve the encoder
-     * will be used instead.
-     *
      * @return string
      *
      * @throws RuntimeException Password not supported.
@@ -2406,7 +2432,22 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
             throw new RuntimeException('Password is neither bcrypt or legacy sha1.');
         }
 
-        return BCryptPasswordEncoder::class;
+        if ($this->isPrivileged()) {
+            return 'harsh';
+        }
+
+        return 'default';
+    }
+
+    public function isPrivileged()
+    {
+        foreach ($this->getRoles() as $role) {
+            if (preg_match('/ROLE_ADMIN.*/', $role)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function getLocale()
@@ -2433,4 +2474,8 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
         return true;
     }
 
+    public function getVolunteerRights()
+    {
+        return $this->volunteerRights;
+    }
 }

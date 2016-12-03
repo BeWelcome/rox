@@ -3,14 +3,17 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\JoinTable;
+use Doctrine\ORM\Mapping\ManyToMany;
 
 /**
- * Rights
+ * Right
  *
- * @ORM\Table(name="rights", indexes={@ORM\Index(name="Name", columns={"Name"})})
+ * @ORM\Table(name="rights")
  * @ORM\Entity
  */
-class Rights
+class Right
 {
     /**
      * @var \DateTime
@@ -42,6 +45,31 @@ class Rights
      */
     private $id;
 
+    /**
+     * @ORM\OneToMany(targetEntity="RightVolunteer", mappedBy="right")
+     */
+    private $rightVolunteers;
+
+    /**
+     * @return mixed
+     */
+    public function getRightVolunteers()
+    {
+        return $this->rightVolunteers;
+    }
+
+    /**
+     * @param mixed $rightVolunteers
+     */
+    public function setRightVolunteers($rightVolunteers)
+    {
+        $this->rightVolunteers = $rightVolunteers;
+    }
+
+    public function __construct()
+    {
+        $this->rightVolunteers = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
 
     /**
@@ -49,7 +77,7 @@ class Rights
      *
      * @param \DateTime $created
      *
-     * @return Rights
+     * @return Right
      */
     public function setCreated($created)
     {
@@ -73,7 +101,7 @@ class Rights
      *
      * @param string $name
      *
-     * @return Rights
+     * @return Right
      */
     public function setName($name)
     {
@@ -97,7 +125,7 @@ class Rights
      *
      * @param string $description
      *
-     * @return Rights
+     * @return Right
      */
     public function setDescription($description)
     {

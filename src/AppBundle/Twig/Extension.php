@@ -3,7 +3,9 @@
 namespace AppBundle\Twig;
 
 use AppBundle\Entity\Language;
+use AppBundle\Entity\Member;
 use AppBundle\Repository\LanguageRepository;
+use AppBundle\Repository\MemberRepository;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Entity;
@@ -117,6 +119,8 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
             return (strtolower($a->TranslatedName) < strtolower($b->TranslatedName)) ? -1 : 1;
         });
 
+        $member = $this->entityManager->getRepository(Member::class)->find(1223);
+
         return [
             'version' => trim(file_get_contents('../VERSION')),
             'version_dt' => Carbon::createFromTimestamp(filemtime('../VERSION')),
@@ -125,6 +129,8 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
             'language' => $defaultLanguage,
             'languages' => $langarr,
             'robots' => 'ALL',
+            'my_member' => $member,
+            'teams' => false
         ];
     }
 }

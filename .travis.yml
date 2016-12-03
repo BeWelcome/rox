@@ -32,13 +32,15 @@ before_install:
   - mysql -u root -e 'create database bewelcome;'
   - mysql -u root -e "GRANT ALL PRIVILEGES ON bewelcome.* TO 'bewelcome'@'localhost' IDENTIFIED BY 'bewelcome';"
   - mysql -u root -e 'FLUSH PRIVILEGES;'
-  - php bin/console doctrine:fixtures:load
 
 install:
   - composer install --no-interaction --ignore-platform-reqs
   - npm update
 
 script:
+  - php bin/console doctrine:database:create
+  - php bin/console doctrine:schema:create
+  - php bin/console doctrine:fixtures:load
   - make version
   - make
   - make build

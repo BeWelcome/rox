@@ -9,15 +9,6 @@ php:
 addons:
   mariadb: '10.1'
 
-#env:
-#  global:
-#    - APP_ENV=testing
-#    - APP_DEBUG=true
-#    - DB_HOST=localhost
-#    - DB_NAME=bewelcome_test
-#    - DB_USER=travis
-#    - DB_PASS=
-
 cache:
   directories:
     - $HOME/.composer/cache

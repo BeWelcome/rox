@@ -2,8 +2,8 @@
 
 namespace AppBundle\TranslationLoader;
 
+use AppBundle\Entity\Word;
 use Doctrine\ORM\EntityManager;
-use PDO;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -29,14 +29,7 @@ class DatabaseLoader implements LoaderInterface
      */
     public function load($resource, $locale, $domain = 'messages')
     {
-        $connection = $this->em->getConnection();
-
-        $sql = 'SELECT SQL_CACHE `code`, `Sentence` FROM `words` WHERE ShortCode = ? ORDER BY code';
-        $stmt = $connection->prepare($sql);
-        $stmt->bindValue(1, $locale);
-        $stmt->execute();
-
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = $this->em->getRepository(Word::class)->findBy([ 'ShortCode' => $locale ]);
 
         $messages = array_column($result, 'Sentence', 'code');
 

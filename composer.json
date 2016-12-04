@@ -53,7 +53,8 @@
         "sensio/generator-bundle": "^3.0",
         "symfony/debug-bundle": "^3.1",
         "symfony/web-profiler-bundle": "^3.1",
-        "doctrine/doctrine-fixtures-bundle": "^2.3"
+        "doctrine/doctrine-fixtures-bundle": "^2.3",
+        "mockery/mockery": "^0.9.6"
     },
     "autoload": {
         "psr-4": {

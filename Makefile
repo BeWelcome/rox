@@ -25,25 +25,25 @@ mkdocs:
 	mkdocs build
 
 phpcpd:
-	php -n -d memory_limit=256M ./vendor/bin/phpcpd $(SRC_DIR) --progress --no-interaction
+	./vendor/bin/phpcpd $(SRC_DIR) --progress --no-interaction
 
 phploc:
-	php -n ./vendor/bin/phploc --log-xml=phploc.xml $(SRC_DIR)
+	./vendor/bin/phploc --log-xml=phploc.xml $(SRC_DIR)
 
 phpmd:
-	php -n ./vendor/bin/phpmd $(SRC_DIR_COMMA) text phpmd.xml
+	./vendor/bin/phpmd $(SRC_DIR_COMMA) text phpmd.xml
 
 php-cs-fixer:
-	php -n ./vendor/bin/php-cs-fixer fix -v --diff --dry-run
+	./vendor/bin/php-cs-fixer fix -v --diff --dry-run
 
 php-code-sniffer:
-	php -n ./vendor/bin/phpcs
+	./vendor/bin/phpcs
 
 phpunit:
-	./vendor/bin/phpunit --testsuite="Project Test Suite"
+	./vendor/bin/phpunit
 
 phpmetrics:
-	php -n -d memory_limit=512M ./vendor/bin/phpmetrics --config=phpmetrics.yml
+	./vendor/bin/phpmetrics --config=phpmetrics.yml
 
 version:
 	git rev-parse --short HEAD > VERSION

@@ -18,7 +18,7 @@ class ActivityController extends Controller
     public function listAction(Request $request)
     {
         $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', 15);
+//         $limit = $request->query->get('limit', 15);
 
         $activities = $this->getDoctrine()->getRepository(Activity::class)->findLatest($page);
 

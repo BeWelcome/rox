@@ -1,6 +1,6 @@
 .PHONY: all build phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpmetrics phpunit version
 
-SRC_DIR=module/
+SRC_DIR=module/ src/ tests/TranslationLoader
 
 null  :=
 SPACE := $(null) $(null)

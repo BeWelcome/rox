@@ -8,9 +8,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class AvatarController
+ * @package AppBundle\Controller
+ *
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ */
 class AvatarController extends Controller
 {
-    const OFFSET = 48 * 60 * 60;
+    const OFFSET = 172800;
 
     /**
      * @Route("/members/avatar/{username}", name="avatar", requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))

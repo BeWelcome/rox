@@ -6,6 +6,9 @@ use AppBundle\Entity\Word;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\Translation\MessageCatalogue;
 
+/**
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ */
 class DatabaseLoaderTest extends PHPUnit_Framework_TestCase
 {
     protected function getEmMock()

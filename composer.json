@@ -54,7 +54,8 @@
         "symfony/debug-bundle": "^3.1",
         "symfony/web-profiler-bundle": "^3.1",
         "doctrine/doctrine-fixtures-bundle": "^2.3",
-        "mockery/mockery": "^0.9.6"
+        "mockery/mockery": "^0.9.6",
+        "nelmio/alice": "^2.2"
     },
     "autoload": {
         "psr-4": {

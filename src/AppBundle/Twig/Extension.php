@@ -110,7 +110,7 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
             $lang->ShortCode = $language->getShortcode();
             $langarr[$lang->ShortCode] = $lang;
         }
-        $defaultLanguage = $langarr[$this->session->get('lang', 'en')];
+        $defaultLanguage = $langarr[$this->session->get('locale', 'en')];
         uasort($langarr, function ($a, $b) {
             if ($a->TranslatedName === $b->TranslatedName) {
                 return 0;

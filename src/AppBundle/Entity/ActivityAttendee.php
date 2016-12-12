@@ -15,6 +15,15 @@ class ActivityAttendee
     /**
      * @var integer
      *
+     * @ORM\Id
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
      * @ORM\Column(name="organizer", type="smallint", nullable=false)
      */
     private $organizer;

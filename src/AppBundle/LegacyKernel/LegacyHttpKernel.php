@@ -18,6 +18,8 @@ use Symfony\Component\Templating\EngineInterface;
 
 /**
  * Fallback dispatcher for requests that Symfony couldn't match.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class LegacyHttpKernel extends HttpKernel
 {

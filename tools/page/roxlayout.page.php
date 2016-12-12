@@ -19,7 +19,7 @@ class PageWithRoxLayout extends PageWithHTML
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'styles/css/bewelcome.css';
+        $stylesheets[] = 'css/app.css';
         if (PVars::getObj('development')->uncompress_css != 1) {
             $stylesheets = str_replace(".css", ".min.css", $stylesheets);
             return $stylesheets;
@@ -161,64 +161,7 @@ class PageWithRoxLayout extends PageWithHTML
 
     protected function topmenu()
     {
-        $words = $this->getWords();
-        $menu_items = $this->getTopmenuItems();
-        $active_menu_item = $this->getTopmenuActiveItem();
-        $user = new APP_User();
-        $logged_in = $user->isBWLoggedIn('NeedMore,Pending');
-        if (!$logged_in) {
-            $request = PRequest::get()->request;
-            if (!isset($request[0])) {
-                $login_url = 'login';
-            } else switch ($request[0]) {
-                case 'login':
-                case 'main':
-                case 'start':
-                    $login_url = 'login';
-                    break;
-                default:
-                    $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
-            }
-        } else {
-            $username = $this->_session->has( 'Username' ) ? $this->_session->get('Username') : '';
-        }
-
-        $rights = new MOD_right();
-        $volunteer = $rights->hasRightAny();
-        if ($logged_in) 
-        {
-        $username = $this->_session->has( 'Username' ) ? $this->_session->get('Username') : '';
-            if ($this->_session->has( "IdMember" ))
-            {
-                $IdMember = intval($this->_session->get("IdMember"));
-                $roxmodel = new Rox();
-                $numberOfNewMessagees = $roxmodel->getNewMessagesNumber($IdMember);
-                if ($numberOfNewMessagees > 0) 
-                {
-                    $badgestyle = "badge"; 
-                    $nbOfNewMessagees = intval($numberOfNewMessagees);
-                    echo $words->flushBuffer();
-                } else {
-                    $badgestyle = "badge hidden";
-                    $nbOfNewMessagees = '';
-                }
-            }
-        }
-        // require TEMPLATE_DIR . 'shared/roxpage/topmenu.php';
-        $this->locator = new Symfony\Component\Config\FileLocator(array(SCRIPT_BASE));
-        $this->yamlFileLocator = new Symfony\Component\Routing\Loader\YamlFileLoader(
-            $this->locator
-        );
-        $this->router = new Symfony\Component\Routing\Router(
-            $this->yamlFileLocator,
-            SCRIPT_BASE.'routes.yml'
-        );
-
-        if ($logged_in) {
-            $template = '@base/menu.html.twig';
-        } else {
-            $template = '@base/loginbar.html.twig';
-        }
+        $template = 'menu.html.twig';
 
         $topmenu = $this->engine->render($template);
 
@@ -298,7 +241,7 @@ class PageWithRoxLayout extends PageWithHTML
      */
     protected function footer()
     {
-        echo $this->engine->render('@base/footer.html.twig');
+        echo $this->engine->render('footer.html.twig');
         // require SCRIPT_BASE . "build/rox/templates/footer.php";
     }
 

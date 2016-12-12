@@ -43,13 +43,13 @@ class AvatarController extends Controller
 
         $member = $this->getDoctrine()->getRepository(Member::class)->findOneBy(['username' => $username]);
         if (!$member) {
-            $filename = 'htdocs/images/misc/empty_avatar' . $suffix . '.png';
+            $filename = 'bundles/app/images/empty_avatar' . $suffix . '.png';
             return new BinaryFileResponse($filename);
         }
 
         $isBrowseable = $member->isBrowseable();
         if (!$isBrowseable) {
-            $filename = 'htdocs/images/misc/empty_avatar' . $suffix . '.png';
+            $filename = 'bundles/app/images/empty_avatar' . $suffix . '.png';
             return new BinaryFileResponse($filename);
         }
 
@@ -58,7 +58,7 @@ class AvatarController extends Controller
             return new BinaryFileResponse($filename);
         }
 
-        $filename = 'htdocs/images/misc/empty_avatar' . $suffix . '.png';
+        $filename = 'bundles/app/images/empty_avatar' . $suffix . '.png';
         return new BinaryFileResponse($filename);
     }
 }

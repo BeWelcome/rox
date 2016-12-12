@@ -34,18 +34,10 @@ class ActivityAttendee
     private $comment;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
-
-    /**
      * @var \AppBundle\Entity\Activity
      *
-     * @ORM\ManyToOne(targetEntity="Activity", inversedBy="attendees")
+     * @ORM\Id()
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Activity", inversedBy="attendees")
      * @ORM\JoinColumn(name="activityId", referencedColumnName="id")
      */
     private $activity;
@@ -53,10 +45,9 @@ class ActivityAttendee
     /**
      * @var \AppBundle\Entity\Member
      *
-     * @ORM\OneToOne(targetEntity="\AppBundle\Entity\Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="attendeeId", referencedColumnName="id")
-     * })
+     * @ORM\Id()
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Member", inversedBy="attendees")
+     * @ORM\JoinColumn(name="attendeeId", referencedColumnName="id")
      */
     private $attendee;
 
@@ -178,15 +169,5 @@ class ActivityAttendee
     public function getComment()
     {
         return $this->comment;
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 }

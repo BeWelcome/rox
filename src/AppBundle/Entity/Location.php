@@ -5,12 +5,15 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Geonames
+ * Location
  *
  * @ORM\Table(name="geonames", indexes={@ORM\Index(name="idx_name", columns={"name"}), @ORM\Index(name="idx_latitude", columns={"latitude"}), @ORM\Index(name="idx_longitude", columns={"longitude"}), @ORM\Index(name="idx_fclass", columns={"fclass"}), @ORM\Index(name="idx_fcode", columns={"fcode"}), @ORM\Index(name="idx_country", columns={"country"}), @ORM\Index(name="idx_admin1", columns={"admin1"})})
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
-class Geonames
+class Location
 {
     /**
      * @var string
@@ -20,14 +23,14 @@ class Geonames
     private $name;
 
     /**
-     * @var string
+     * @var float
      *
      * @ORM\Column(name="latitude", type="decimal", precision=10, scale=7, nullable=true)
      */
     private $latitude;
 
     /**
-     * @var string
+     * @var float
      *
      * @ORM\Column(name="longitude", type="decimal", precision=10, scale=7, nullable=true)
      */
@@ -50,7 +53,10 @@ class Geonames
     /**
      * @var string
      *
-     * @ORM\Column(name="country", type="string", length=2, nullable=true)
+     * @ORM\OneToOne(targetEntity="Country")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="country", referencedColumnName="country")
+     * })
      */
     private $country;
 
@@ -84,14 +90,12 @@ class Geonames
      */
     private $geonameid;
 
-
-
     /**
      * Set name
      *
      * @param string $name
      *
-     * @return Geonames
+     * @return Location
      */
     public function setName($name)
     {
@@ -115,7 +119,7 @@ class Geonames
      *
      * @param string $latitude
      *
-     * @return Geonames
+     * @return Location
      */
     public function setLatitude($latitude)
     {
@@ -137,9 +141,9 @@ class Geonames
     /**
      * Set longitude
      *
-     * @param string $longitude
+     * @param float $longitude
      *
-     * @return Geonames
+     * @return Location
      */
     public function setLongitude($longitude)
     {
@@ -151,7 +155,7 @@ class Geonames
     /**
      * Get longitude
      *
-     * @return string
+     * @return float
      */
     public function getLongitude()
     {
@@ -163,7 +167,7 @@ class Geonames
      *
      * @param string $fclass
      *
-     * @return Geonames
+     * @return Location
      */
     public function setFclass($fclass)
     {
@@ -187,7 +191,7 @@ class Geonames
      *
      * @param string $fcode
      *
-     * @return Geonames
+     * @return Location
      */
     public function setFcode($fcode)
     {
@@ -211,7 +215,7 @@ class Geonames
      *
      * @param string $country
      *
-     * @return Geonames
+     * @return Location
      */
     public function setCountry($country)
     {
@@ -235,7 +239,7 @@ class Geonames
      *
      * @param string $admin1
      *
-     * @return Geonames
+     * @return Location
      */
     public function setAdmin1($admin1)
     {
@@ -259,7 +263,7 @@ class Geonames
      *
      * @param integer $population
      *
-     * @return Geonames
+     * @return Location
      */
     public function setPopulation($population)
     {
@@ -283,7 +287,7 @@ class Geonames
      *
      * @param \DateTime $moddate
      *
-     * @return Geonames
+     * @return Location
      */
     public function setModdate($moddate)
     {

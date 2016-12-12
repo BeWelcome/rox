@@ -37,8 +37,8 @@
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {%  endjavascripts %}
 
-        {% stylesheets filter="cssrewrite"
-        'bundles/app/css/bewelcome.css'
+        {% stylesheets filter="scssphp,cssrewrite" output="css/app.css"
+        'bundles/app/scss/bewelcome.scss'
         '@tether_css' %}
             <link rel="stylesheet" href="{{ asset_url }}" />
         {% endstylesheets %}
@@ -54,8 +54,9 @@
                 {{ flash_message }}
             </div>
         {% endfor %}
+        <div id="subnav" class="container">{% block subnav %}{% endblock %}</div>
         <div class="container-content">
-        {% block content %}{% endblock %}
+            {% block content %}{% endblock %}
         </div>
         {% include 'footer.html.twig' %}
         {% block javascripts %}{% endblock %}

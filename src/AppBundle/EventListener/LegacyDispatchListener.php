@@ -1,8 +1,9 @@
 <?php
 
-namespace Rox\Core\Listener;
+namespace AppBundle\EventListener;
 
-use Rox\Core\Kernel\LegacyHttpKernel;
+use AppBundle\LegacyKernel\LegacyHttpKernel;
+use EnvironmentExplorer;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -48,6 +49,15 @@ class LegacyDispatchListener
             return;
         }
 
+        $container = $this->kernel->getContainer();
+        $environmentExplorer = new EnvironmentExplorer();
+        $environmentExplorer->initializeGlobalState(
+            $container->getParameter('database_host'),
+            $container->getParameter('database_name'),
+            $container->getParameter('database_user'),
+            $container->getParameter('database_password')
+        );
+
         // Kick-start the Symfony session. This replaces session_start() in the
         // old code, which is now turned off.
         $this->session->start();
@@ -55,7 +65,7 @@ class LegacyDispatchListener
             $rememberMeToken = unserialize($this->session->get('_security_default'));
             $user = $rememberMeToken->getUser();
             if ($user !== null) {
-                $this->session->set('IdMember', $user->id);
+                $this->session->set('IdMember', $user->getId());
             }
         }
         try {

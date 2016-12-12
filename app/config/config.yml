@@ -121,3 +121,8 @@ assetic:
             inputs:
                 - "%kernel.root_dir%/../node_modules/skrollr/dist/skrollr.min.js"
                 - "%kernel.root_dir%/../node_modules/skrollr-menu/dist/skrollr.menu.min.js"
+
+        bewelcome_css:
+            inputs:
+                - "%kernel.root_dir%/../src/AppBundle/Resources/public/css/bewelcome.css"
+

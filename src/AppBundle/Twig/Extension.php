@@ -99,7 +99,6 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
 
     public function getGlobals()
     {
-
         $languages = $this->entityManager->getRepository(Language::class)->getLanguagesWithTranslations();
         $langarr = [];
         /** @var Language $language */

@@ -30,6 +30,16 @@ services:
         class: AppBundle\Provider\UserProvider
         arguments: ['@doctrine.orm.entity_manager']
 
+    rox.legacy_dispatch_listener:
+        class: AppBundle\EventListener\LegacyDispatchListener
+        arguments: ['@rox.legacy_kernel', '@session', '@security.token_storage' ]
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
+    rox.legacy_kernel:
+        class: AppBundle\LegacyKernel\LegacyHttpKernel
+        arguments: ['@templating.engine.twig', '@event_dispatcher', '@controller_resolver', '@request_stack', '@argument_resolver', '@service_container']
+
     rox.legacy_password_encoder:
         class: AppBundle\Encoder\LegacyPasswordEncoder
 

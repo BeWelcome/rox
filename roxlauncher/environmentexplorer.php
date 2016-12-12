@@ -15,10 +15,10 @@ class EnvironmentExplorer
         $this->setSession();
     }
 
-    public function initializeGlobalState()
+    public function initializeGlobalState($db_host, $db_name, $db_user, $db_password)
     {
         if (!defined('SCRIPT_BASE')) {
-            define('SCRIPT_BASE', getcwd() . '/');
+            define('SCRIPT_BASE', getcwd() . '/../');
             define('HTDOCS_BASE', SCRIPT_BASE . 'htdocs/');
             define('LIB_DIR', SCRIPT_BASE . 'lib/');
             define('BUILD_DIR', SCRIPT_BASE . 'build/');
@@ -26,9 +26,11 @@ class EnvironmentExplorer
             define('DATA_DIR', SCRIPT_BASE . 'data/');
         }
 
+        $dsn = sprintf('mysqli:host=%s;dbname=%s', $db_host, $db_name);
+
         $settings = $this->loadConfiguration();
 
-        $settings = $this->mergeNewConfig($settings);
+        $settings = $this->mergeNewConfig($settings, $dsn, $db_user, $db_password);
 
         // No longer needed; session already started from Symfony code
         // $this->initSession($settings);
@@ -45,10 +47,8 @@ class EnvironmentExplorer
         // print_r($class_loader);
     }
 
-    protected function mergeNewConfig(array $settings)
+    protected function mergeNewConfig(array $settings, $dsn, $db_user, $db_password)
     {
-        $dsn = sprintf('mysqli:host=%s;dbname=%s', getenv('DB_HOST'), getenv('DB_NAME'));
-
         $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
 
         $uri = (new Http($request->getUri()))
@@ -58,8 +58,8 @@ class EnvironmentExplorer
         return array_replace_recursive($settings, [
             'db' => [
                 'dsn' => $dsn,
-                'user' => getenv('DB_USER'),
-                'password' => getenv('DB_PASS'),
+                'user' => $db_user,
+                'password' => $db_password,
             ],
             'env' => [
                 'baseuri' => $uri->toString(),
@@ -176,7 +176,7 @@ class EnvironmentExplorer
     /**
      * globals are said to be evil, but we need them, at least for legacy reasons.
      *
-     * @param unknown_type $settings
+     * @param array $settings
      */
     private function _initPVars($settings)
     {

@@ -9,6 +9,7 @@ namespace AppBundle\Entity;
 
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -30,25 +31,28 @@ class Activity
     private $createdBy;
 
     /**
-     * @var Carbon
+     * @var \DateTime
      *
      * @ORM\Column(name="dateTimeStart", type="datetime", nullable=false)
      */
-    private $datetimestart;
+    private $starts;
 
     /**
-     * @var Carbon
+     * @var \DateTime
      *
      * @ORM\Column(name="dateTimeEnd", type="datetime", nullable=true)
      */
-    private $datetimeend;
+    private $ends;
 
     /**
-     * @var integer
+     * @var Location
      *
-     * @ORM\Column(name="locationId", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="\AppBundle\Entity\Location")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="locationId", referencedColumnName="geonameid")
+     * })
      */
-    private $locationid;
+    private $location;
 
     /**
      * @var string
@@ -97,7 +101,7 @@ class Activity
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="ActivityAttendee", mappedBy="trip")
+     * @ORM\OneToMany(targetEntity="ActivityAttendee", mappedBy="activity")
      */
     private $attendees;
 
@@ -131,75 +135,75 @@ class Activity
     }
 
     /**
-     * Set datetimestart
+     * Set starts
      *
-     * @param \DateTime $datetimestart
+     * @param \DateTime $starts
      *
      * @return Activity
      */
-    public function setDatetimestart($datetimestart)
+    public function setStarts($starts)
     {
-        $this->datetimestart = $datetimestart;
+        $this->starts = $starts;
 
         return $this;
     }
 
     /**
-     * Get datetimestart
+     * Get starts
      *
-     * @return \DateTime
+     * @return Carbon
      */
-    public function getDatetimestart()
+    public function getStarts()
     {
-        return $this->datetimestart;
+        return Carbon::instance($this->starts);
     }
 
     /**
-     * Set datetimeend
+     * Set ends
      *
-     * @param \DateTime $datetimeend
+     * @param \DateTime $ends
      *
      * @return Activity
      */
-    public function setDatetimeend($datetimeend)
+    public function setEnds($ends)
     {
-        $this->datetimeend = $datetimeend;
+        $this->ends = $ends;
 
         return $this;
     }
 
     /**
-     * Get datetimeend
+     * Get ends
      *
-     * @return \DateTime
+     * @return Carbon
      */
-    public function getDatetimeend()
+    public function getEnds()
     {
-        return $this->datetimeend;
+        return Carbon::instance($this->ends);
     }
 
     /**
      * Set locationid
      *
-     * @param integer $locationid
+     * @param Location $location
      *
      * @return Activity
      */
-    public function setLocationid($locationid)
+    public function setLocation($location)
     {
-        $this->locationid = $locationid;
+        $this->location = $location;
 
         return $this;
     }
 
     /**
-     * Get locationid
+     * Get location
      *
-     * @return integer
+     * @return Location
      */
-    public function getLocationid()
+    public function getLocation()
     {
-        return $this->locationid;
+        return $this->location;
     }
 
     /**
@@ -338,5 +342,68 @@ class Activity
     public function getAttendees()
     {
         return $this->attendees;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getAttendeesYes()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("status", "1"))
+        ;
+
+        $attendeesYes = $this->attendees->matching($criteria);
+        return $attendeesYes;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getAttendeesNo()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("status", "0"))
+        ;
+
+        $attendeesNo = $this->attendees->matching($criteria);
+        return $attendeesNo;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getAttendeesMaybe()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("status", "2"))
+        ;
+
+        $attendeesMaybe = $this->attendees->matching($criteria);
+        return $attendeesMaybe;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getOrganizers()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("organizer", "1"))
+        ;
+
+        $organizers = $this->attendees->matching($criteria);
+
+        return $organizers;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getOrganizerIds()
+    {
+        $ids = $this->getOrganizers()->map( function(ActivityAttendee $a) { return $a->getAttendee()->getId(); } );
+
+        return $ids;
     }
 }

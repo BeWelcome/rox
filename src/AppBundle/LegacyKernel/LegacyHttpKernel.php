@@ -1,9 +1,10 @@
 <?php
 
-namespace Rox\Core\Kernel;
+namespace AppBundle\LegacyKernel;
 
 use RoxFrontRouter;
 use SessionMemory;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,16 +26,27 @@ class LegacyHttpKernel extends HttpKernel
      */
     protected $engine;
 
+    /**
+     * @var Container
+     */
+    private $container;
+
     public function __construct(
         EngineInterface $engine,
         EventDispatcherInterface $dispatcher,
         ControllerResolverInterface $resolver,
         RequestStack $requestStack,
-        ArgumentResolverInterface $argumentResolver
+        ArgumentResolverInterface $argumentResolver,
+        Container $container
     ) {
         $this->engine = $engine;
+        $this->container = $container;
 
         parent::__construct($dispatcher, $resolver, $requestStack, $argumentResolver);
+    }
+
+    public function getContainer() {
+        return $this->container;
     }
 
     /**

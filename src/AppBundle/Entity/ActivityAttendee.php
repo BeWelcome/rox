@@ -15,7 +15,6 @@ class ActivityAttendee
     /**
      * @var integer
      *
-     * @ORM\Id
      * @ORM\Column(name="id", type="integer")
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */

@@ -1,4 +1,9 @@
 <?php
+/*
+ * @codingStandardsIgnoreFile
+ *
+ * Auto generated file ignore for Code Sniffer
+ */
 
 namespace AppBundle\Entity;
 
@@ -9,6 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="activitiesattendees")
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class ActivityAttendee
 {
@@ -60,10 +68,13 @@ class ActivityAttendee
      * @param $comment
      * @param bool $organizer
      */
-    public function __construct(Activity $activity, Member $attendee, $status, $comment, $organizer = false)
+    public function __construct(Activity $activity, Member $attendee, $status, $comment, $isOrganizer = false)
     {
         $this->setActivity($activity);
         $this->setAttendee($attendee);
+        $this->setStatus($status);
+        $this->setComment($comment);
+        $this->setOrganizer($isOrganizer);
     }
 
     /**

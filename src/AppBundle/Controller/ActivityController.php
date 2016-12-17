@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Activity;
+use AppBundle\Model\ActivityModel;
 use AppBundle\Repository\ActivityRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -21,9 +22,8 @@ class ActivityController extends Controller
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 15);
 
-        /** @var ActivityRepository $repository */
-        $repository = $this->getDoctrine()->getRepository(Activity::class);
-        $activities = $repository->findLatest($page, $limit);
+        $activityModel = new ActivityModel( $this->getDoctrine());
+        $activities = $activityModel->getLatest($page, $limit);
 
         $content = $this->render(':activity:list.html.twig', [
             'active' => 'ActivitiesNearMe',

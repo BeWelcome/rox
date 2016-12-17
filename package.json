@@ -19,7 +19,9 @@
     "grunt-contrib-sass": "^1.0.0",
     "grunt-contrib-uglify": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
-    "lodash": "^3.10.1"
+    "lodash": "^3.10.1",
+    "uglify-js": "^2.7.5",
+    "uglifycss": "*"
   },
   "dependencies": {
     "bootstrap": "github:twbs/bootstrap#v4-dev",

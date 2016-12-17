@@ -10,6 +10,7 @@ parameters:
     # locales should be determined from the DB in the future
     app_locales: en|fr|de|es|cs|nl|ru|uk|ro|pt_BR|pl|it|ja|id|ca|sl
     app.notifications.email_sender: message@bewelcome.org
+    node_modules: "%kernel.root_dir%/../node_modules"
 
 framework:
     #esi:             ~
@@ -50,6 +51,8 @@ doctrine:
         dbname:   "%database_name%"
         user:     "%database_user%"
         password: "%database_password%"
+        server_version: 5.6
+
         charset:  UTF8
         # if using pdo_sqlite as your database driver:
         #   1. add the path in parameters.yml
@@ -80,49 +83,62 @@ assetic:
 
     filters:
         cssrewrite: ~
-        scssphp:
-            formatter: 'Leafo\ScssPhp\Formatter\Compressed'
+        uglifyjs2:
+            bin: "%node_modules%/.bin/uglifyjs"
+        uglifycss:
+            bin: "%node_modules%/.bin/uglifycss"
 
     assets:
+        backwards_js:
+            inputs:
+                - "%node_modules%/html5shiv/dist/html5shiv.min.js"
+                - "%node_modules%/respond.js/dest/respond.min.js"
+
         jquery_js:
             inputs:
-                - "%kernel.root_dir%/../node_modules/jquery/dist/jquery.js"
+                - "%node_modules%/jquery/dist/jquery.js"
 
         jquery_ui_js:
             inputs:
-                - "%kernel.root_dir%/../node_modules/jquery-ui/ui/version.js"
-                - "%kernel.root_dir%/../node_modules/jquery-ui/ui/widget.js"
-                - "%kernel.root_dir%/../node_modules/jquery-ui/ui/position.js"
-                - "%kernel.root_dir%/../node_modules/jquery-ui/ui/keycode.js"
-                - "%kernel.root_dir%/../node_modules/jquery-ui/ui/unique-id.js"
-                - "%kernel.root_dir%/../node_modules/jquery-ui/ui/safe-active-element.js"
-                - "%kernel.root_dir%/../node_modules/jquery-ui/ui/widgets/menu.js"
-                - "%kernel.root_dir%/../node_modules/jquery-ui/ui/widgets/autocomplete.js"
-                - "%kernel.root_dir%/../node_modules/jquery-ui/ui/widgets/datepicker.js"
+                - "%node_modules%/jquery-ui/ui/version.js"
+                - "%node_modules%/jquery-ui/ui/widget.js"
+                - "%node_modules%/jquery-ui/ui/position.js"
+                - "%node_modules%/jquery-ui/ui/keycode.js"
+                - "%node_modules%/jquery-ui/ui/unique-id.js"
+                - "%node_modules%/jquery-ui/ui/safe-active-element.js"
+                - "%node_modules%/jquery-ui/ui/widgets/menu.js"
+                - "%node_modules%/jquery-ui/ui/widgets/autocomplete.js"
+                - "%node_modules%/jquery-ui/ui/widgets/datepicker.js"
 
         tether_js:
             inputs:
-                - "%kernel.root_dir%/../node_modules/tether/dist/js/tether.js"
+                - "%node_modules%/tether/dist/js/tether.js"
 
         tether_css:
             inputs:
-                - "%kernel.root_dir%/../node_modules/tether/dist/css/tether.css"
+                - "%node_modules%/tether/dist/css/tether.css"
+
+        leaflet_js:
+            inputs:
+                - "%node_modules%/leaflet/dist/leaflet.js"
+                - "%node_modules%/leaflet.markercluster/dist/leaflet.markercluster.js"
+
+        leaflet_css:
+            inputs:
+                - "%node_modules%/leaflet/dist/leaflet.css"
+                - "%node_modules%/leaflet.markercluster/dist/MarkerCluster.Default.css"
+                - "%node_modules%/leaflet.markercluster/dist/MarkerCluster.css"
 
         bootstrap_js:
             inputs:
-                - "%kernel.root_dir%/../node_modules/bootstrap/dist/js/bootstrap.js"
-                - "%kernel.root_dir%/../node_modules/bootstrap-autohidingnavbar/dist/jquery.bootstrap-autohidingnavbar.js"
+                - "%node_modules%/bootstrap/dist/js/bootstrap.js"
 
         select2_js:
             inputs:
-                - "%kernel.root_dir%/../node_modules/select2/dist/js/select2.js"
+                - "%node_modules%/select2/dist/js/select2.js"
 
         skrollr_js:
             inputs:
-                - "%kernel.root_dir%/../node_modules/skrollr/dist/skrollr.min.js"
-                - "%kernel.root_dir%/../node_modules/skrollr-menu/dist/skrollr.menu.min.js"
-
-        bewelcome_css:
-            inputs:
-                - "%kernel.root_dir%/../src/AppBundle/Resources/public/css/bewelcome.css"
-
+                - "%node_modules%/skrollr/dist/skrollr.min.js"
+                - "%node_modules%/skrollr-menu/dist/skrollr.menu.min.js"
+                - "%node_modules%/unslider/dist/js/unslider-min.js"

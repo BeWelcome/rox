@@ -1,13 +1,13 @@
 // Include fonts
 @import "mixins";
 
-$font-path: '../public/fonts/';
+$font-path: '../fonts/';
 @include font-face('Signika-Bold', $font-path + 'signika-bold-webfont', normal, normal);
 @include font-face('Signika-Regular', $font-path + 'signika-regular-webfont', normal, normal);
 
 @import '../../../../node_modules/lato-font/scss/public-api';
 
-$lato-font-path: '../public/fonts';
+$lato-font-path: '../fonts';
 
 @include lato-include-font('black');
 @include lato-include-font('medium');

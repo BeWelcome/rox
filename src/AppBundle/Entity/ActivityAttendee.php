@@ -7,21 +7,31 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ActivityAttendee
  *
- * @ORM\Table(name="activitiesattendees", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})})
+ * @ORM\Table(name="activitiesattendees")
  * @ORM\Entity
  */
 class ActivityAttendee
 {
     /**
-     * @var integer
+     * @var \AppBundle\Entity\Activity
      *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Activity")
+     * @ORM\JoinColumn(name="activityId", referencedColumnName="id")
      */
-    private $id;
+    private $activity;
 
     /**
-     * @var integer
+     * @var \AppBundle\Entity\Member
+     *
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Member")
+     * @ORM\JoinColumn(name="attendeeId", referencedColumnName="id")
+     */
+    private $attendee;
+
+    /**
+     * @var boolean
      *
      * @ORM\Column(name="organizer", type="smallint", nullable=false)
      */
@@ -42,22 +52,19 @@ class ActivityAttendee
     private $comment;
 
     /**
-     * @var \AppBundle\Entity\Activity
+     * ActivityAttendee constructor.
      *
-     * @ORM\Id()
-     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Activity", inversedBy="attendees")
-     * @ORM\JoinColumn(name="activityId", referencedColumnName="id")
+     * @param Activity $activity
+     * @param Member $attendee
+     * @param $status
+     * @param $comment
+     * @param bool $organizer
      */
-    private $activity;
-
-    /**
-     * @var \AppBundle\Entity\Member
-     *
-     * @ORM\Id()
-     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Member", inversedBy="attendees")
-     * @ORM\JoinColumn(name="attendeeId", referencedColumnName="id")
-     */
-    private $attendee;
+    public function __construct(Activity $activity, Member $attendee, $status, $comment, $organizer = false)
+    {
+        $this->setActivity($activity);
+        $this->setAttendee($attendee);
+    }
 
     /**
      * Set attendee

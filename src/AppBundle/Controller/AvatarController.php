@@ -8,9 +8,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class AvatarController
+ * @package AppBundle\Controller
+ *
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ */
 class AvatarController extends Controller
 {
-    const OFFSET = 48 * 60 * 60;
+    const OFFSET = 172800;
 
     /**
      * @Route("/members/avatar/{username}", name="avatar", requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))
@@ -37,13 +43,13 @@ class AvatarController extends Controller
 
         $member = $this->getDoctrine()->getRepository(Member::class)->findOneBy(['username' => $username]);
         if (!$member) {
-            $filename = 'htdocs/images/misc/empty_avatar' . $suffix . '.png';
+            $filename = 'bundles/app/images/empty_avatar' . $suffix . '.png';
             return new BinaryFileResponse($filename);
         }
 
         $isBrowseable = $member->isBrowseable();
         if (!$isBrowseable) {
-            $filename = 'htdocs/images/misc/empty_avatar' . $suffix . '.png';
+            $filename = 'bundles/app/images/empty_avatar' . $suffix . '.png';
             return new BinaryFileResponse($filename);
         }
 
@@ -52,7 +58,7 @@ class AvatarController extends Controller
             return new BinaryFileResponse($filename);
         }
 
-        $filename = 'htdocs/images/misc/empty_avatar' . $suffix . '.png';
+        $filename = 'bundles/app/images/empty_avatar' . $suffix . '.png';
         return new BinaryFileResponse($filename);
     }
 }

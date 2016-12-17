@@ -1,4 +1,9 @@
 <?php
+/*
+ * @codingStandardsIgnoreFile
+ *
+ * Auto generated file ignore for Code Sniffer
+ */
 
 namespace AppBundle\Entity;
 
@@ -7,13 +12,34 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ActivityAttendee
  *
- * @ORM\Table(name="activitiesattendees", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})})
+ * @ORM\Table(name="activitiesattendees")
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class ActivityAttendee
 {
     /**
-     * @var integer
+     * @var \AppBundle\Entity\Activity
+     *
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Activity")
+     * @ORM\JoinColumn(name="activityId", referencedColumnName="id")
+     */
+    private $activity;
+
+    /**
+     * @var \AppBundle\Entity\Member
+     *
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Member")
+     * @ORM\JoinColumn(name="attendeeId", referencedColumnName="id")
+     */
+    private $attendee;
+
+    /**
+     * @var boolean
      *
      * @ORM\Column(name="organizer", type="smallint", nullable=false)
      */
@@ -34,31 +60,22 @@ class ActivityAttendee
     private $comment;
 
     /**
-     * @var integer
+     * ActivityAttendee constructor.
      *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @param Activity $activity
+     * @param Member $attendee
+     * @param $status
+     * @param $comment
+     * @param bool $organizer
      */
-    private $id;
-
-    /**
-     * @var \AppBundle\Entity\Activity
-     *
-     * @ORM\ManyToOne(targetEntity="Activity", inversedBy="attendees")
-     * @ORM\JoinColumn(name="activityId", referencedColumnName="id")
-     */
-    private $activity;
-
-    /**
-     * @var \AppBundle\Entity\Member
-     *
-     * @ORM\OneToOne(targetEntity="\AppBundle\Entity\Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="attendeeId", referencedColumnName="id")
-     * })
-     */
-    private $attendee;
+    public function __construct(Activity $activity, Member $attendee, $status, $comment, $isOrganizer = false)
+    {
+        $this->setActivity($activity);
+        $this->setAttendee($attendee);
+        $this->setStatus($status);
+        $this->setComment($comment);
+        $this->setOrganizer($isOrganizer);
+    }
 
     /**
      * Set attendee
@@ -178,15 +195,5 @@ class ActivityAttendee
     public function getComment()
     {
         return $this->comment;
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 }

@@ -39,7 +39,7 @@ module.exports = function (grunt) {
                         src: [
                             '**/*'
                         ],
-                        dest: 'src/AppBundle/Resources/public/fonts/',
+                        dest: 'web/fonts/',
                         cwd: 'node_modules/font-awesome/fonts/',
                         filter: 'isFile'
                     }
@@ -52,30 +52,9 @@ module.exports = function (grunt) {
                         src: [
                             '**/*'
                         ],
-                        dest: 'src/AppBundle/Resources/public/fonts/',
+                        dest: 'web/fonts/',
                         cwd: 'node_modules/lato-font/fonts/',
                         filter: 'isFile'
-                    }
-                ]
-            },
-            signika: {
-                files: [
-                    {
-                        expand: true,
-                        src: '**/*',
-                        dest: 'src/AppBundle/Resources/public/fonts/',
-                        cwd: 'module/Core/assets/fonts',
-                        filter: 'isFile'
-                    }
-                ]
-            },
-            leaflet_css: {
-                files: [
-                    {
-                        expand: true,
-                        src: 'leaflet.css',
-                        cwd: 'node_modules/leaflet/dist',
-                        dest: 'htdocs/assets/css/'
                     }
                 ]
             },
@@ -85,7 +64,7 @@ module.exports = function (grunt) {
                         expand: true,
                         src: '*',
                         cwd: 'node_modules/jquery-ui/themes/base/images/',
-                        dest: 'htdocs/assets/css/images/'
+                        dest: 'web/css/images/'
                     }
                 ]
             },
@@ -122,7 +101,7 @@ module.exports = function (grunt) {
                     style: 'expanded'
                 },
                 files: {
-                    'src/AppBundle/Resources/public/css/bewelcome.css': 'src/AppBundle/Resources/scss/bewelcome.scss'
+                    'web/css/app.css': 'src/AppBundle/Resources/scss/bewelcome.scss'
                 }
             }
         },
@@ -135,16 +114,6 @@ module.exports = function (grunt) {
                 src: 'module/*/assets/css/*.css'
             }
         },
-        cssmin: {
-            css: {
-                files: [{
-                    expand: true,
-                    src: '**/*.css',
-                    dest: 'htdocs/assets/css/',
-                    cwd: 'htdocs/assets/css'
-                }]
-            }
-        },
         jshint: {
             all: [
                 'Gruntfile.js',
@@ -153,126 +122,30 @@ module.exports = function (grunt) {
             options: {
                 jshintrc: '.jshintrc'
             }
-        },
-        concat: {
-            dist: {
-                notnull: true,
-                src: [
-                    /* jQuery */
-                    'node_modules/jquery/dist/jquery.js',
-                    /* jQuery UI with autocomplete and date picker */
-                    'node_modules/tether/dist/js/tether.js',
-                    'node_modules/bootstrap/dist/js/bootstrap.js',
-                    'node_modules/bootstrap-autohidingnavbar/dist/jquery.bootstrap-autohidingnavbar.js',
-                    'node_modules/select2/dist/js/select2.js',
-
-                    'node_modules/skrollr/dist/skrollr.min.js',
-                    'node_modules/skrollr-menu/dist/skrollr.menu.min.js',
-
-                    'node_modules/unslider/src/js/unslider.js',
-                    'node_modules/tinymce/tinymce.js',
-                    'module/Core/assets/js/**/*.js'
-                ],
-                dest: 'htdocs/assets/js/built.js',
-                nonull: true
-            },
-            jqueryuijs: {
-                src: [
-                    'node_modules/jquery-ui/ui/version.js',
-                    'node_modules/jquery-ui/ui/widget.js',
-                    'node_modules/jquery-ui/ui/position.js',
-                    'node_modules/jquery-ui/ui/keycode.js',
-                    'node_modules/jquery-ui/ui/unique-id.js',
-                    'node_modules/jquery-ui/ui/safe-active-element.js',
-                    'node_modules/jquery-ui/ui/widgets/menu.js',
-                    'node_modules/jquery-ui/ui/widgets/autocomplete.js',
-                    'node_modules/jquery-ui/ui/widgets/datepicker.js'
-                ],
-                dest: 'htdocs/assets/js/jqueryui.js',
-                nonull: true
-            },
-            backwards: {
-                src: [
-                    'node_modules/html5shiv/dist/html5shiv.js',
-                    'node_modules/respond.js/dest/respond.min.js',
-                ],
-                dest: 'htdocs/assets/js/backwards.js',
-                nonull: true
-            },
-            // Leaflet is about 150KB minified, so it is a separate file.
-            leaflet: {
-                src: [
-                    'node_modules/leaflet/dist/leaflet-src.js',
-                    'node_modules/leaflet.markercluster/dist/leaflet.markercluster-src.js',
-                ],
-                dest: 'htdocs/assets/js/leaflet.js',
-                nonull: true
-            },
-            css: {
-                src: [
-                    'node_modules/font-awesome/css/font-awesome.css',
-                    'node_modules/lato-font/css/lato-font.css',
-                    'htdocs/assets/sass/*.css'
-                ],
-                dest: 'htdocs/assets/css/styles.css',
-                nonull: true
-            },
-            jqueryui: {
-                src: [
-                    'node_modules/jquery-ui/themes/base/core.css',
-                    'node_modules/jquery-ui/themes/base/autocomplete.css',
-                    'node_modules/jquery-ui/themes/base/menu.css',
-                    'node_modules/jquery-ui/themes/base/theme.css'
-                ],
-                dest: 'htdocs/assets/css/jquery-ui.css',
-                nonull: true
-            }
-        },
-        uglify: {
-            options: {
-                sourceMap: true
-            },
-            js: {
-                files: [{
-                    expand: true,
-                    src: '*.js',
-                    dest: 'htdocs/assets/js',
-                    cwd: 'htdocs/assets/js'
-                }]
-            }
-        },
-        assets_versioning: {
-            options: {
-                versionsMapFile: 'cache/assets_versioning.json',
-                versionsMapTrimPath: 'htdocs/'
-            },
-            assets: {
-                options: {
-                    tasks: [
-                        'uglify:js',
-                        'cssmin:css'
-                    ]
-                }
-            }
-        },
-        watch: {
-            sass: {
-                files: 'htdocs/styles/scss/*',
-                tasks: ['sass:compileBeWelcome', 'concat:css']
-            },
-            css: {
-                files: 'module/*/assets/css/**/*.css',
-                tasks: ['csslint:bewelcome', 'concat:css']
-            },
-            js: {
-                files: ['module/*/assets/js/**/*.js'],
-                tasks: ['jshint', 'concat:dist'],
-                options: {
-                    reload: true
-                }
-            }
         }
+/*
+        css: {
+            src: [
+                'node_modules/font-awesome/css/font-awesome.css',
+                'node_modules/lato-font/css/lato-font.css',
+                'htdocs/assets/sass/*.css'
+            ],
+            dest: 'htdocs/assets/css/styles.css',
+            nonull: true
+        },
+        jqueryui: {
+            src: [
+                'node_modules/jquery-ui/themes/base/core.css',
+                'node_modules/jquery-ui/themes/base/autocomplete.css',
+                'node_modules/jquery-ui/themes/base/menu.css',
+                'node_modules/jquery-ui/themes/base/theme.css'
+            ],
+            dest: 'htdocs/assets/css/jquery-ui.css',
+            nonull: true
+        }
+*/
     });
+
 
     // Load the plugin that provides the ('grunt-*') task.
     grunt.loadNpmTasks('grunt-assets-versioning');
@@ -287,23 +160,23 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     // Default task for development
-    grunt.registerTask('default', ['check', 'build']);
+    grunt.registerTask('default', ['sass']);
 
     // Task for production - adds asset versioning
     grunt.registerTask('build-production', ['build', 'assets_versioning']);
 
     // Aggregate tasks
-    grunt.registerTask('check', ['checkcss', 'checkjs']);
-    grunt.registerTask('build', ['clean', 'copy', 'buildcss', 'buildjs']);
+//    grunt.registerTask('check', ['checkcss', 'checkjs']);
+//    grunt.registerTask('build', ['clean', 'copy', 'buildcss', 'buildjs']);
 
     // CSS
-    grunt.registerTask('checkcss', ['csslint']);
-    grunt.registerTask('buildcss', ['sass', 'concat:css', 'concat:jqueryui', 'cssmin']);
+//    grunt.registerTask('checkcss', ['csslint']);
+//    grunt.registerTask('buildcss', ['sass', 'concat:css', 'concat:jqueryui', 'cssmin']);
 
     // JS
     grunt.registerTask('checkjs', ['jshint']);
-    grunt.registerTask('buildjs', ['concat:dist', 'concat:backwards', 'concat:leaflet', 'concat:jqueryuijs',
-        // , 'uglify'
-    ]);
+//    grunt.registerTask('buildjs', ['concat:dist', 'concat:backwards', 'concat:leaflet', 'concat:jqueryuijs',
+//        , 'uglify'
+//    ]);
 
 };

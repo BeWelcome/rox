@@ -28,19 +28,22 @@
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    {%  javascripts
+        '@backwards_js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
     <![endif]-->
 
     {% javascripts
         '@jquery_js'
         '@tether_js'
-        '@bootstrap_js' %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {%  endjavascripts %}
+        '@bootstrap_js'
+        '@skrollr_js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 
     {% stylesheets filter="cssrewrite"
-    'bundles/app/css/bewelcome.css'
+    'bundles/css/app.css'
     '@tether_css' %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -52,13 +55,13 @@
             <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
                 &#9776;
             </button>
-            <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">
+            <div class="collapse navbar-toggleable" id="exCollapsingNavbar2">
                 <a class="navbar-brand" href="/">{% image 'bundles/app/images/logo_index_top.png' %}<img src="{{ asset_url }}" alt="{{ 'BeWelcome' | trans }}"/>{% endimage %}</a>
             </div>
         </div>
     </nav>
 
-    <noscript><h1>Please activate Javascript for bewelcome.org<small>Without it some function won't work.</small></h1></noscript>
+    <noscript><h1>Please activate Javascript for bewelcome.org</h1><p><small>Without it some function won't work.</small></p></noscript>
 
     <div class="container-content">
         {% block content %}{% endblock %}

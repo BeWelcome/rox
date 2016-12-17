@@ -24,7 +24,10 @@ class ActivityRepository extends EntityRepository
     }
 
     /**
+     * Returns a Pagerfanta object encapsulating the matching paginated activities
+     *
      * @param int $page
+     * @param int $items
      *
      * @return Pagerfanta
      */

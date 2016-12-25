@@ -5,6 +5,7 @@ namespace AppBundle\LegacyKernel;
 use RoxFrontRouter;
 use SessionMemory;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,7 +40,7 @@ class LegacyHttpKernel extends HttpKernel
         ControllerResolverInterface $resolver,
         RequestStack $requestStack,
         ArgumentResolverInterface $argumentResolver,
-        Container $container
+        ContainerInterface $container
     ) {
         $this->engine = $engine;
         $this->container = $container;

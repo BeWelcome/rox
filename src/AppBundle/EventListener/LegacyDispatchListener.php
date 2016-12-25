@@ -9,6 +9,8 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class LegacyDispatchListener
 {
@@ -63,6 +65,10 @@ class LegacyDispatchListener
         $this->session->start();
         if (!$this->session->has('IdMember')) {
             $rememberMeToken = unserialize($this->session->get('_security_default'));
+            if ($rememberMeToken == null) {
+                throw new AccessDeniedException();
+            }
+
             $user = $rememberMeToken->getUser();
             if ($user !== null) {
                 $this->session->set('IdMember', $user->getId());

@@ -9,15 +9,15 @@
 
     <title>{{ title }} - BeWelcome</title>
     <meta name="description" content="{{ 'default_meta_description' }}"/>
-    <meta name="keywords" content="{{ 'default_meta_keyword'|trans }}"/>
-    {#<meta name="robots" content="{{ meta.robots }}"/>#}
-    {#{% include '@base/stylesheets.html.twig' %}#}
-    {#{% include '@base/scriptfiles.html.twig' with {scriptFiles : earlyScriptFiles} %}#}
+    <meta name="keywords" content="{{ 'default_meta_keyword' | trans }}"/>
+    <meta name="robots" content="{{ 'default_meta_robots' | trans  }}"/>
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    {%  javascripts
+        '@backwards_js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
     <![endif]-->
 
     {% javascripts
@@ -30,8 +30,7 @@
     {%  endjavascripts %}
 
     {% stylesheets filter="cssrewrite"
-        'css/app.css'
-        '@tether_css'
+        '@app_css'
         'bundles/app/css/start/parallax.css' %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -48,7 +47,7 @@
              data-600-start="background-color:rgba(0, 0, 0, 0.0); box-shadow: 0px 0px 100px -100px rgba(0, 0, 0, 0.4) inset;">
             <div class="row">
                 <div class="hidden-md-down col-lg-2"></div>
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8 text-sm-center text-xs-center" id="landingcontainerdiv"
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8 offset-lg-2 text-center" id="landingcontainerdiv"
                      data-start="display:block; position:fixed; right: 50%; transform: translateX(50%);"
                      data-300-start="display:none">
                     <h1 data-start="color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0), 0px 0px 3px rgba(255,255,255,0);letter-spacing:0.0rem;"
@@ -133,19 +132,16 @@
     <div id="about" class="pad-section"
          data-450-top="background-color:rgb(127, 68, 0)"
          data-400-top="background-color:rgb(255, 136, 0)">
-        <div class="container fullwidth nopadding">
-            <div class="row nopadding">
-                <div class="hidden-md-down col-lg-1"></div>
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-10 mb-1"
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-10 offset-lg-1 mb-1"
                     data-bottom="opacity:0;"
                     data--100-bottom="opacity:1"><h1 data-bottom="letter-spacing: 0.35em; text-shadow:0 0 30px rgba(0,0,0,0.8)" data--200-bottom="letter-spacing: 0.1em; text-shadow: 0 0 60px rgba(0,0,0,0.2)">{{ 'tourpage' | trans }}</h1>
                 </div>
-                <div class="hidden-md-down col-lg-1"></div>
             </div>
-            <div class="row nopadding">
+            <div class="row">
                 <!-- Visible in md and larger - hidden on sm and smaller -->
-                <div class="hidden-sm-down col-md-1"></div>
-                <div class="hidden-sm-down col-md-2 ml-2"
+                <div class="hidden-sm-down col-md-2 offset-md-2"
                     data-335-top="opacity:0"
                     data-325-top="opacity:0.2"
                     data-315-top="transform:translateX(-110px)"
@@ -159,7 +155,7 @@
                         <img src="{{ asset_url }}" alt="Tour meet" />
                     {% endimage %}<h3>{{ 'tour_link_meet' | trans }}</h3><p>{{ 'tourpage_text3' | trans }}</p>
                 </div>
-                <div class="hidden-sm-down col-md-2 ml-3"
+                <div class="hidden-sm-down col-md-2"
                     data-350-top="opacity:0"
                     data-300-top="opacity:1">
                     {% image '@AppBundle/Resources/public/images/travel.png' %}
@@ -168,7 +164,7 @@
                     <h3>{{ 'tour_link_travel' | trans }}</h3>
                     <p>{{ 'tourpage_text4' | trans }}</p>
                 </div>
-                <div class="hidden-sm-down col-md-2 ml-3"
+                <div class="hidden-sm-down col-md-2"
                     data-350-top="opacity:0"
                     data-300-top="opacity:1">
                     {% image '@AppBundle/Resources/public/images/inform.png' %}
@@ -176,7 +172,7 @@
                     {% endimage %}
                     <h3>{{ 'tour_link_info' | trans }}</h3><p>{{ 'tourpage_text5' | trans }}</p>
                 </div>
-                <div class="hidden-sm-down col-md-2 ml-3"
+                <div class="hidden-sm-down col-md-2"
                     data-335-top="opacity:0"
                     data-325-top="opacity:0.2"
                     data-315-top="transform:translateX(110px)"
@@ -201,51 +197,35 @@
                     <div class="my-slider">
                         <ul>
                             <li>
-                                <div class="col-sm-3">
-                                </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 offset-sm-3">
                                     {% image '@AppBundle/Resources/public/images/meet.png' %}
                                     <img src="{{ asset_url}}" />
                                     {% endimage %}
                                     <h3>{{ 'tour_link_meet' | trans }}</h3><p>{{ 'tourpage_text3' | trans }}</p>
                                 </div>
-                                <div class="col-sm-3">
-                                </div>
                             </li>
                             <li>
-                                 <div class="col-sm-3">
-                                </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 offset-sm-3">
                                     {% image '@AppBundle/Resources/public/images/inform.png' %}
                                     <img src="{{ asset_url}}" />
                                     {% endimage %}
                                     <h3>{{ 'tour_link_info' | trans }}</h3><p>{{ 'tourpage_text5' | trans }}</p>
                                 </div>
-                                <div class="col-sm-3">
-                                </div>
                             </li>
                             <li>
-                                 <div class="col-sm-3">
-                                </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 offset-sm-3">
                                     {% image '@AppBundle/Resources/public/images/travel.png' %}
                                     <img src="{{ asset_url}}" />
                                     {% endimage %}
                                     <h3>{{ 'tour_link_travel' | trans }}</h3><p>{{ 'tourpage_text4' | trans }}</p>
                                 </div>
-                                <div class="col-sm-3">
-                                </div>
                             </li>
                             <li>
-                                 <div class="col-sm-3">
-                                </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 offset-sm-3">
                                     {% image '@AppBundle/Resources/public/images/decide.png' %}
                                     <img src="{{ asset_url}}" />
                                     {% endimage %}
                                     <h3>{{ 'tour_link_openness' | trans }}</h3><p>{{ 'tourpage_text6' | trans }}</p>
-                                </div>
-                                <div class="col-sm-3">
                                 </div>
                             </li>
                         </ul>
@@ -260,22 +240,16 @@
                     <div class="my-slider">
                         <ul>
                             <li>
-                                <div class="col-xs-3">
-                                </div>
-                                <div class="col-xs-6">
+                                <div class="col-xs-6 offset-xs-3">
                                     {% image '@AppBundle/Resources/public/images/meet.png' %}
                                     <img src="{{ asset_url}}" />
                                     {% endimage %}
                                     <h3>{{ 'tour_link_meet' | trans }}</h3>
                                     <p>{{ 'tourpage_text3' | trans }}</p>
                                 </div>
-                                <div class="col-xs-3">
-                                </div>
                             </li>
                             <li>
-                                 <div class="col-xs-3">
-                                </div>
-                                <div class="col-xs-6">
+                                <div class="col-xs-6 offset-xs-3">
                                     {% image '@AppBundle/Resources/public/images/inform.png' %}
                                     <img src="{{ asset_url}}" />
                                     {% endimage %}
@@ -286,29 +260,21 @@
                                 </div>
                             </li>
                             <li>
-                                 <div class="col-xs-3">
-                                </div>
-                                <div class="col-xs-6">
+                                <div class="col-xs-6 offset-xs-3">
                                     {% image '@AppBundle/Resources/public/images/travel.png' %}
                                     <img src="{{ asset_url}}" />
                                     {% endimage %}
                                     <h3>{{ 'tour_link_travel' | trans }}</h3>
                                     <p>{{ 'tourpage_text4' | trans }}</p>
                                 </div>
-                                <div class="col-xs-3">
-                                </div>
                             </li>
                             <li>
-                                 <div class="col-xs-3">
-                                </div>
-                                <div class="col-xs-6">
+                                <div class="col-xs-6 offset-xs-3">
                                     {% image '@AppBundle/Resources/public/images/decide.png' %}
                                     <img src="{{ asset_url}}" />
                                     {% endimage %}
                                     <h3>{{ 'tour_link_openness' | trans }}</h3>
                                     <p>{{ 'tourpage_text6' | trans }}</p>
-                                </div>
-                                <div class="col-xs-3">
                                 </div>
                             </li>
                         </ul>
@@ -338,16 +304,15 @@
     <div id="statistics" class="pad-section"
         data-450-top="background-color:rgb(121,84,3)"
         data-400-top="background-color:rgb(243,168,6)">
-        <div class="container fullwidth nopadding">
-            <div class="row nopadding">
+        <div class="container-fluid">
+            <div class="row">
                 <div class="col-xs-12"
                     data-bottom="opacity:0"
                     data--100-bottom="opacity:1"><h1 class="centertext" data-bottom="letter-spacing: 0.35em;" data--200-bottom="letter-spacing: 0.1em;">{{ 'Some statistics' | trans }}</h1>
                 </div>
             </div>
-            <div class="row nopadding">
-                <div class="hidden-sm-down col-md-1"></div>
-                <div class="hidden-sm-down col-md-2"
+            <div class="row">
+                <div class="hidden-sm-down col-md-2 offset-md-1"
                     data-385-top="opacity:0"
                     data-375-top="opacity:0.2"
                     data-365-top="transform:translateX(-110px)"
@@ -397,7 +362,6 @@
                     {% endimage %}
                     <h2>{{ stats.activities }}</h2>
                     <h4>{{ 'Activities' | trans  }}</h4></div>
-                <div class="hidden-sm-down col-md-1"></div>
             </div>
         </div>
         <!-- Slider for sm screen - hidden on md and larger, hidden on xs-->
@@ -407,48 +371,43 @@
                     <div class="my-slider">
                         <ul>
                             <li>
-                                <div class="col-sm-3">
-                                </div>
-                                <div class="col-sm-6">
-                                    <img src="images/icons/stats_members.png"><h2>{{ stats.members }}</h2><h4>{{ 'members' | trans }}</h4>
-                                </div>
-                                <div class="col-sm-3">
-                                </div>
-                            </li>
-                            <li>
-                                 <div class="col-sm-3">
-                                </div>
-                                <div class="col-sm-6">
-                                    <img src="images/icons/inform.png"><h2>{{ stats.countries }}</h2><h4>{{ 'countries' | trans }}</h4>
-                                </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-6 offset-sm-3">
+                                    {% image '@AppBundle/Resources/public/images/stats_members.png' %}
+                                        <img src="{{ asset_url }}" />
+                                    {% endimage %}
+                                    <h2>{{ stats.members }}</h2><h4>{{ 'members' | trans }}</h4>
                                 </div>
                             </li>
                             <li>
-                                 <div class="col-sm-3">
-                                </div>
-                                <div class="col-sm-6">
-                                    <img src="images/icons/travel.png"><h2>{{ stats.languages }}</h2><h4>{{ 'languages' | trans }}</h4>
-                                </div>
-                                <div class="col-sm-3">
-                                </div>
-                            </li>
-                            <li>
-                                 <div class="col-sm-3">
-                                </div>
-                                <div class="col-sm-6">
-                                    <img src="images/icons/decide.png"><h2>{{ stats.comments }}</h2><h4>{{ 'positive comments' | trans }}</h4>
-                                </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-6 offset-sm-3">
+                                    {% image '@AppBundle/Resources/public/images/inform.png' %}
+                                        <img src="{{ asset_url }}" />
+                                    {% endimage %}
+                                    <h2>{{ stats.countries }}</h2><h4>{{ 'countries' | trans }}</h4>
                                 </div>
                             </li>
                             <li>
-                                 <div class="col-sm-3">
+                                <div class="col-sm-6 offset-sm-3">
+                                    {% image '@AppBundle/Resources/public/images/travel.png' %}
+                                        <img src="{{ asset_url }}" />
+                                    {% endimage %}
+                                    <h2>{{ stats.languages }}</h2><h4>{{ 'languages' | trans }}</h4>
                                 </div>
-                                <div class="col-sm-6">
-                                    <img src="images/icons/decide.png"><h2>{{ stats.activities }}</h2><h4>{{ 'Activities' | trans  }}</h4>
+                            </li>
+                            <li>
+                                <div class="col-sm-6 offset-sm-3">
+                                    {% image '@AppBundle/Resources/public/images/decide.png' %}
+                                        <img src="{{ asset_url }}" />
+                                    {% endimage %}
+                                    <h2>{{ stats.comments }}</h2><h4>{{ 'positive comments' | trans }}</h4>
                                 </div>
-                                <div class="col-sm-3">
+                            </li>
+                            <li>
+                                <div class="col-sm-6 col-offset-3">
+                                    {% image '@AppBundle/Resources/public/images/decide.png' %}
+                                        <img src="{{ asset_url }}" />
+                                    {% endimage %}
+                                    <h2>{{ stats.activities }}</h2><h4>{{ 'Activities' | trans  }}</h4>
                                 </div>
                             </li>
                         </ul>
@@ -463,46 +422,45 @@
                     <div class="my-slider">
                         <ul>
                             <li>
-                                <div class="col-xs-3">
+                                <div class="col-xs-6 offset-xs-3">
+                                    {% image '@AppBundle/Resources/public/images/stats_members.png' %}
+                                    <img src="{{ asset_url }}" />
+                                    {% endimage %}
+                                    <h2>{{ stats.members }}</h2><h4>{{ 'members' | trans }}</h4>
                                 </div>
-                                <div class="col-xs-6">
-                                    <img src="images/icons/stats_members.png"><h2>{{ stats.members }}</h2><h4>{{ 'members' | trans }}</h4>
+                            </li>
+                            <li>
+                                <div class="col-xs-6 offset-xs-3">
+                                    {% image '@AppBundle/Resources/public/images/inform.png' %}
+                                    <img src="{{ asset_url }}" />
+                                    {% endimage %}
+                                    <h2>{{ stats.countries }}</h2><h4>{{ 'countries' | trans }}</h4>
                                 </div>
                                 <div class="col-xs-3">
                                 </div>
                             </li>
                             <li>
-                                 <div class="col-xs-3">
-                                </div>
-                                <div class="col-xs-6">
-                                    <img src="images/icons/inform.png"><h2>{{ stats.countries }}</h2><h4>{{ 'countries' | trans }}</h4>
-                                </div>
-                                <div class="col-xs-3">
-                                </div>
-                            </li>
-                            <li>
-                                 <div class="col-xs-3">
-                                </div>
-                                <div class="col-xs-6">
-                                    <img src="images/icons/travel.png"><h2>{{ stats.languages }}</h2><h4>{{ 'languages' | trans }}</h4>
-                                </div>
-                                <div class="col-xs-3">
+                                <div class="col-xs-6 offset-xs-3">
+                                    {% image '@AppBundle/Resources/public/images/travel.png' %}
+                                        <img src="{{ asset_url }}" />
+                                    {% endimage %}
+                                    <h2>{{ stats.languages }}</h2><h4>{{ 'languages' | trans }}</h4>
                                 </div>
                             </li>
                             <li>
-                                 <div class="col-xs-3">
-                                </div>
-                                <div class="col-xs-6">
-                                    <img src="images/icons/decide.png"><h2>{{ stats.comments }}</h2><h4>{{ 'positive comments' | trans }}</h4>
-                                </div>
-                                <div class="col-xs-3">
+                                <div class="col-xs-6 offset-xs-3">
+                                    {% image '@AppBundle/Resources/public/images/decide.png' %}
+                                        <img src="{{ asset_url }}" />
+                                    {% endimage %}
+                                    <h2>{{ stats.comments }}</h2><h4>{{ 'positive comments' | trans }}</h4>
                                 </div>
                             </li>
                             <li>
-                                 <div class="col-xs-3">
-                                </div>
-                                <div class="col-xs-6">
-                                    <img src="images/icons/decide.png"><h2>{{ stats.activities }}</h2><h4>{{ 'Activities' | trans  }}</h4>
+                                <div class="col-xs-6 offset-xs-3">
+                                    {% image '@AppBundle/Resources/public/images/decide.png' %}
+                                        <img src="{{ asset_url }}" />
+                                    {% endimage %}
+                                    <h2>{{ stats.activities }}</h2><h4>{{ 'Activities' | trans  }}</h4>
                                 </div>
                                 <div class="col-xs-3">
                                 </div>

@@ -38,9 +38,8 @@
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {%  endjavascripts %}
 
-        {% stylesheets filter="cssrewrite" output="css/app.css"
-        'css/app.css'
-        '@tether_css' %}
+        {% stylesheets filter="cssrewrite"
+            '@app_css' %}
             <link rel="stylesheet" href="{{ asset_url }}" />
         {% endstylesheets %}
 

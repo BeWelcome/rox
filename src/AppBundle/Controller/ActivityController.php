@@ -4,7 +4,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Activity;
 use AppBundle\Model\ActivityModel;
-use AppBundle\Repository\ActivityRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +21,7 @@ class ActivityController extends Controller
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 15);
 
-        $activityModel = new ActivityModel( $this->getDoctrine());
+        $activityModel = new ActivityModel( $this->getDoctrine() );
         $activities = $activityModel->getLatest($page, $limit);
 
         $content = $this->render(':activity:list.html.twig', [

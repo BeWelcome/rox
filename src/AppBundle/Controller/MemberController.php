@@ -12,16 +12,11 @@ class MemberController extends Controller
 {
     /**
      * @Route("/members/{username}", name="member", requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))
-     * @param Request $request
      * @return Response
      */
-    public function view(Request $request)
+    public function viewAction(Member $member)
     {
-        $username = $request->attributes->get('username');
-
-        $member = $this->getDoctrine()->getRepository(Member::class)->findBy('username', $username);
-
-        $content = $this->render(':profile/view.html.twig', [
+        $content = $this->render(':profile:view.html.twig', [
             'member' => $member,
         ]);
 
@@ -36,7 +31,7 @@ class MemberController extends Controller
     {
         $member = $this->getUser();
 
-        $content = $this->render(':profile/edit.html.twig', [
+        $content = $this->render(':profile:edit.html.twig', [
             'member' => $member
         ]);
 

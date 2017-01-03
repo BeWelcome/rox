@@ -86,15 +86,6 @@ body {
   @include button-size($btn-padding-y, $btn-padding-x, $font-size-base, $btn-border-radius);
   @include transition(all .2s ease-in-out);
 
-  &,
-  &:active,
-  &.active {
-    &:focus,
-    &.focus {
-      @include tab-focus();
-    }
-  }
-
   @include hover-focus {
     text-decoration: none;
   }

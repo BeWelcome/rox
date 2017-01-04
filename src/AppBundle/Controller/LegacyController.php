@@ -36,6 +36,7 @@ class LegacyController extends Controller
             $user = $rememberMeToken->getUser();
             if ($user !== null) {
                 $session->set('IdMember', $user->getId());
+                $session->set('MemberStatus', $user->getStatus());
                 $session->set('APP_User_id', $user->getId());
             }
         }

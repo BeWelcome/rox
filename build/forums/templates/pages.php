@@ -46,7 +46,7 @@ if (is_array($pages) && count($pages) > 0) {
 ?>
 
 <div class="pages clearfix">
-	<ul class="pagination m-t-0 m-b-0 pull-xs-right">
+	<ul class="pagination m-t-0 m-b-0 pull-right">
 		
 
 <?php

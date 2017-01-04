@@ -11,7 +11,10 @@
  * inject the parameters using functionality defined in ObjectWithInjection
  */
 class RoxGenericPage extends PageWithParameterizedRoxLayout
-{   
+{
+    protected function getColumnNames() {
+        return array('col3', 'col1');
+    }
 }
 
 class RoxGenericPage_OLD
@@ -45,8 +48,12 @@ class RoxGenericPage_OLD
         if (!array_key_exists($key, $this->_attributes)) return false;
         else return $this->_attributes[$key];
     }
-    
-    
+
+
+    protected function getColumnNames() {
+        return array('col3', 'col1');
+    }
+
     /**
      * show the page.php template, using the attributes in $_attributes
      */

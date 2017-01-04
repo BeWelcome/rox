@@ -288,14 +288,14 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             (!$this->_session->has( 'my_group_visits' ) ||
             (!$group_visits = unserialize($this->_session->get('my_group_visits'))) ||
             (!is_array($group_visits))
-        ) {
+        )) {
             $group_visits = array();
         }
         $group_visits[$groupId] = microtime(true);
 
         // sort by value, while preserving the keys
         asort($group_visits);
-        $this->_session->set( 'my_group_visits', serialize(array_slice($group_visits, 0, 5)) )
+        $this->_session->set( 'my_group_visits', serialize(array_slice($group_visits, 0, 5)) );
         // $this->_session->remove('my_group_visits');
     }
 
@@ -305,7 +305,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             (!$this->_session->has( 'my_group_visits' ) ||
             (!$group_visits = unserialize($this->_session->get('my_group_visits'))) ||
             (!is_array($group_visits))
-        ) {
+        )) {
             return array();
         } else {
             $groups = array();
@@ -360,6 +360,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
                     switch ($_FILES['group_image']['error']){
                         case 1:
                             $problems['ImageUploadTooBig'] = true;
+                            break;
                         default:
                             $problems['ImageUpload'] = true;
                     }

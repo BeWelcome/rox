@@ -55,7 +55,7 @@ if (empty($vars)) {
     <div class="col-xs-12 col-md-8">
         <h2><?php echo $this->activity->title; ?></h2>
     </div>
-    <div class="col-xs-12 col-md-1 text-xs-right">
+    <div class="col-xs-12 col-md-1 text-right">
         <h4><?php $words->get('ActivityAttendeesNumbersTitle'); ?></h4>
         <?php if ($this->activity->attendeesYes != 0){ echo $words->get('ActivityAttendeesYes', $this->activity->attendeesYes) . '<br>';} ?>
         <?php if ($this->activity->attendeesMaybe != 0){ echo $words->get('ActivityAttendeesMaybe', $this->activity->attendeesMaybe) . '<br>';} ?>

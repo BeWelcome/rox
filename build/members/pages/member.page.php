@@ -66,7 +66,7 @@ class MemberPage extends PageWithActiveSkin
 
         $galleryItemsCount = $member->getGalleryItemsCount();
 
-        $viewForumPosts = $words->get("ViewForumPosts",'<span class="tag tag-primary pull-xs-right">' . $member->forums_posts_count() . '</span>');
+        $viewForumPosts = $words->get("ViewForumPosts",'<span class="tag tag-primary pull-right">' . $member->forums_posts_count() . '</span>');
         $membersForumPostsPagePublic = $member->getPreference("MyForumPostsPagePublic", $default = "No");
         $linkMembersForumPosts = false;
         if ($membersForumPostsPagePublic == "Yes") {
@@ -84,7 +84,7 @@ class MemberPage extends PageWithActiveSkin
             $tt=array(
                 array('editmyprofile', 'editmyprofile/' . $profile_language_code, $ww->EditMyProfile, 'editmyprofile'),
                 array('mypreferences', 'mypreferences', $ww->MyPreferences, 'mypreferences'),
-                array('mynotes', 'mynotes', $words->get('MyNotes', '<span class="tag tag-primary pull-xs-right">' . $mynotes_count . '</span>'), 'mynotes')
+                array('mynotes', 'mynotes', $words->get('MyNotes', '<span class="tag tag-primary pull-right">' . $mynotes_count . '</span>'), 'mynotes')
                 );
 
             if ($this instanceof EditMyProfilePage)
@@ -105,8 +105,8 @@ class MemberPage extends PageWithActiveSkin
             $tt[] = array('space', '', '', 'space');
 
             $tt[] = array('profile', "members/$username", $ww->MemberPage);
-            $tt[] = array('comments', "members/$username/comments", $ww->ViewComments.' <span class="tag tag-primary pull-xs-right">'.$comments_count['all'].'</span>');
-            $tt[] = array('gallery', "gallery/show/user/$username/pictures", $ww->Gallery . ' <span class="tag tag-primary pull-xs-right">' . $galleryItemsCount . '</span>');
+            $tt[] = array('comments', "members/$username/comments", $ww->ViewComments.' <span class="tag tag-primary pull-right">'.$comments_count['all'].'</span>');
+            $tt[] = array('gallery', "gallery/show/user/$username/pictures", $ww->Gallery . ' <span class="tag tag-primary pull-right">' . $galleryItemsCount . '</span>');
             $tt[] = array('blogs', "blog/$username", $ww->Blog);
             $tt[] = array('trips', "trip/show/$username", $ww->Trips);
             $tt[] = array('forum', "forums/member/$username", $viewForumPosts);
@@ -128,8 +128,8 @@ class MemberPage extends PageWithActiveSkin
                 /**array('verificationadd', "verification/$username", $ww->addVerification, 'verificationadd'),*/
                 array('space', '', '', 'space'),
                 array('profile', "members/$username", $ww->MemberPage),
-                array('comments', "members/$username/comments", $ww->ViewComments.' <span class="tag tag-primary pull-xs-right">'.$comments_count['all'].'</span>'),
-                array('gallery', "gallery/show/user/$username/pictures", $ww->Gallery . ' <span class="tag tag-primary pull-xs-right">' . $galleryItemsCount . '</span>'),
+                array('comments', "members/$username/comments", $ww->ViewComments.' <span class="tag tag-primary pull-right">'.$comments_count['all'].'</span>'),
+                array('gallery', "gallery/show/user/$username/pictures", $ww->Gallery . ' <span class="tag tag-primary pull-right">' . $galleryItemsCount . '</span>'),
                 array('blogs', "blog/$username", $ww->Blog),
                 array('trips', "trip/show/$username", $ww->Trips)
             );
@@ -160,7 +160,7 @@ class MemberPage extends PageWithActiveSkin
     protected function columnsArea()
     {
         ?>
-        <div class="bw_row">
+        <div class="row">
           <div id="col1_left">
             <div id="col1_content">
               <? $name = 'column_col1';?>

@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'All trips' | trans }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="pull-right">{{ pagerfanta( trips, 'twitter_bootstrap4_translated', { routeName: 'activity' }) }}</div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+        {% for trip in trips %}
+            <article class="trip">
+                <h1>{{ trip.summary }}</h1>
+                <a href="{{  path('trip_edit', { id: trip.id} ) }}">Edit!</a>
+                {{ trip.createdBy.Username }}
+            </article>
+        {% else %}
+            <div class="well">{{ 'trip.no_trips_found'|trans }}</div>
+        {% endfor %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="pull-right">{{ pagerfanta( trips, 'twitter_bootstrap4_translated', { routeName: 'activity' }) }}</div>
+        </div>
+    </div>
+
+{% endblock content %}

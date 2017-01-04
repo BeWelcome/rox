@@ -202,6 +202,9 @@ above instructions).
 
     ```bash
     $ make build
+    $ make version
+    $ php bin/console assets:install
+    $ php bin/console assetic:dump
    ```
 
 3. Start the server 

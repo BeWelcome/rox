@@ -1,8 +1,8 @@
 <?php
 
-namespace Rox\Trip\Form;
+namespace AppBundle\Form;
 
-use Rox\Core\Entity\SubTrip;
+use AppBundle\Entity\SubTrip;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;

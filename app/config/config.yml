@@ -114,8 +114,9 @@ assetic:
             inputs:
                 - "%node_modules%/tether/dist/js/tether.js"
 
-        tether_css:
+        app_css:
             inputs:
+                - "css/app.css"
                 - "%node_modules%/tether/dist/css/tether.css"
 
         leaflet_js:

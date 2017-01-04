@@ -1,6 +1,6 @@
 <?php
 
-namespace Rox\Trip\Repository;
+namespace AppBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
@@ -22,28 +22,10 @@ class TripRepository extends EntityRepository
      */
     public function queryLatest()
     {
-        return $this->getEntityManager()
-            ->createQuery('
-                SELECT t
-                FROM Rox\\Core\\Entity\\Trip t
-                WHERE t.createdAt <= :now
-                ORDER BY t.createdAt DESC
-            ')
+        return $this->createQueryBuilder('t')
+            ->where('t.createdAt <= :now')
             ->setParameter('now', new \DateTime())
-            ;
-    }
-
-    /**
-     * @param int $page
-     *
-     * @return Pagerfanta
-     */
-    public function findLatest($page = 1, $items = 10)
-    {
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatest(), false));
-        $paginator->setMaxPerPage($items);
-        $paginator->setCurrentPage($page);
-
-        return $paginator;
+            ->orderBy('t.createdAt', 'DESC')
+            ->getQuery();
     }
 }

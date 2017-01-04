@@ -1,8 +1,8 @@
 <div class="m-t-2 clearfix">
-    <h1 class="pull-xs-left"><a href="trips"><?php echo $words->get('Trips'); ?></a></h1>
+    <h1 class="pull-left"><a href="trips"><?php echo $words->get('Trips'); ?></a></h1>
 
     <?php if (!($this->hideSearch)) { ?>
-        <div class="pull-xs-right fullheight mt-1">
+        <div class="pull-right fullheight mt-1">
             <form id="trips-search-box" method="post">
                 <div class="input-group verticalalign">
                     <?php echo $callbackTags; ?>

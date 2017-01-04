@@ -1,6 +1,6 @@
 /*!
  * Bootstrap v4.0.0-alpha.5 (https://getbootstrap.com)
- * Copyright 2011-2016 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
+ * Copyright 2011-2017 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 
@@ -214,7 +214,7 @@ var Alert = function ($) {
   var ClassName = {
     ALERT: 'alert',
     FADE: 'fade',
-    ACTIVE: 'active'
+    SHOW: 'show'
   };
 
   /**
@@ -279,7 +279,7 @@ var Alert = function ($) {
     Alert.prototype._removeElement = function _removeElement(element) {
       var _this2 = this;
 
-      $(element).removeClass(ClassName.ACTIVE);
+      $(element).removeClass(ClassName.SHOW);
 
       if (!Util.supportsTransitionEnd() || !$(element).hasClass(ClassName.FADE)) {
         this._destroyElement(element);
@@ -750,13 +750,14 @@ var Carousel = function ($) {
       if (/input|textarea/i.test(event.target.tagName)) {
         return;
       }
-      event.preventDefault();
 
       switch (event.which) {
         case ARROW_LEFT_KEYCODE:
+          event.preventDefault();
           this.prev();
           break;
         case ARROW_RIGHT_KEYCODE:
+          event.preventDefault();
           this.next();
           break;
         default:
@@ -1041,7 +1042,7 @@ var Collapse = function ($) {
   };
 
   var ClassName = {
-    ACTIVE: 'active',
+    SHOW: 'show',
     COLLAPSE: 'collapse',
     COLLAPSING: 'collapsing',
     COLLAPSED: 'collapsed'
@@ -1053,7 +1054,7 @@ var Collapse = function ($) {
   };
 
   var Selector = {
-    ACTIVES: '.card > .active, .card > .collapsing',
+    ACTIVES: '.card > .show, .card > .collapsing',
     DATA_TOGGLE: '[data-toggle="collapse"]'
   };
 
@@ -1088,7 +1089,7 @@ var Collapse = function ($) {
     // public
 
     Collapse.prototype.toggle = function toggle() {
-      if ($(this._element).hasClass(ClassName.ACTIVE)) {
+      if ($(this._element).hasClass(ClassName.SHOW)) {
         this.hide();
       } else {
         this.show();
@@ -1102,7 +1103,7 @@ var Collapse = function ($) {
         throw new Error('Collapse is transitioning');
       }
 
-      if ($(this._element).hasClass(ClassName.ACTIVE)) {
+      if ($(this._element).hasClass(ClassName.SHOW)) {
         return;
       }
 
@@ -1150,7 +1151,7 @@ var Collapse = function ($) {
       this.setTransitioning(true);
 
       var complete = function complete() {
-        $(_this6._element).removeClass(ClassName.COLLAPSING).addClass(ClassName.COLLAPSE).addClass(ClassName.ACTIVE);
+        $(_this6._element).removeClass(ClassName.COLLAPSING).addClass(ClassName.COLLAPSE).addClass(ClassName.SHOW);
 
         _this6._element.style[dimension] = '';
 
@@ -1179,7 +1180,7 @@ var Collapse = function ($) {
         throw new Error('Collapse is transitioning');
       }
 
-      if (!$(this._element).hasClass(ClassName.ACTIVE)) {
+      if (!$(this._element).hasClass(ClassName.SHOW)) {
         return;
       }
 
@@ -1196,7 +1197,7 @@ var Collapse = function ($) {
 
       Util.reflow(this._element);
 
-      $(this._element).addClass(ClassName.COLLAPSING).removeClass(ClassName.COLLAPSE).removeClass(ClassName.ACTIVE);
+      $(this._element).addClass(ClassName.COLLAPSING).removeClass(ClassName.COLLAPSE).removeClass(ClassName.SHOW);
 
       this._element.setAttribute('aria-expanded', false);
 
@@ -1264,7 +1265,7 @@ var Collapse = function ($) {
 
     Collapse.prototype._addAriaAndCollapsedClass = function _addAriaAndCollapsedClass(element, triggerArray) {
       if (element) {
-        var isOpen = $(element).hasClass(ClassName.ACTIVE);
+        var isOpen = $(element).hasClass(ClassName.SHOW);
         element.setAttribute('aria-expanded', isOpen);
 
         if (triggerArray.length) {
@@ -1390,7 +1391,7 @@ var Dropdown = function ($) {
   var ClassName = {
     BACKDROP: 'dropdown-backdrop',
     DISABLED: 'disabled',
-    ACTIVE: 'active'
+    SHOW: 'show'
   };
 
   var Selector = {
@@ -1428,7 +1429,7 @@ var Dropdown = function ($) {
       }
 
       var parent = Dropdown._getParentFromElement(this);
-      var isActive = $(parent).hasClass(ClassName.ACTIVE);
+      var isActive = $(parent).hasClass(ClassName.SHOW);
 
       Dropdown._clearMenus();
 
@@ -1459,7 +1460,7 @@ var Dropdown = function ($) {
       this.focus();
       this.setAttribute('aria-expanded', true);
 
-      $(parent).toggleClass(ClassName.ACTIVE);
+      $(parent).toggleClass(ClassName.SHOW);
       $(parent).trigger($.Event(Event.SHOWN, relatedTarget));
 
       return false;
@@ -1515,7 +1516,7 @@ var Dropdown = function ($) {
           relatedTarget: toggles[i]
         };
 
-        if (!$(parent).hasClass(ClassName.ACTIVE)) {
+        if (!$(parent).hasClass(ClassName.SHOW)) {
           continue;
         }
 
@@ -1531,7 +1532,7 @@ var Dropdown = function ($) {
 
         toggles[i].setAttribute('aria-expanded', 'false');
 
-        $(parent).removeClass(ClassName.ACTIVE).trigger($.Event(Event.HIDDEN, relatedTarget));
+        $(parent).removeClass(ClassName.SHOW).trigger($.Event(Event.HIDDEN, relatedTarget));
       }
     };
 
@@ -1559,7 +1560,7 @@ var Dropdown = function ($) {
       }
 
       var parent = Dropdown._getParentFromElement(this);
-      var isActive = $(parent).hasClass(ClassName.ACTIVE);
+      var isActive = $(parent).hasClass(ClassName.SHOW);
 
       if (!isActive && event.which !== ESCAPE_KEYCODE || isActive && event.which === ESCAPE_KEYCODE) {
 
@@ -1691,14 +1692,14 @@ var Modal = function ($) {
     BACKDROP: 'modal-backdrop',
     OPEN: 'modal-open',
     FADE: 'fade',
-    ACTIVE: 'active'
+    SHOW: 'show'
   };
 
   var Selector = {
     DIALOG: '.modal-dialog',
     DATA_TOGGLE: '[data-toggle="modal"]',
     DATA_DISMISS: '[data-dismiss="modal"]',
-    FIXED_CONTENT: '.navbar-fixed-top, .navbar-fixed-bottom, .is-fixed'
+    FIXED_CONTENT: '.fixed-top, .fixed-bottom, .is-fixed, .sticky-top'
   };
 
   /**
@@ -1808,7 +1809,7 @@ var Modal = function ($) {
 
       $(document).off(Event.FOCUSIN);
 
-      $(this._element).removeClass(ClassName.ACTIVE);
+      $(this._element).removeClass(ClassName.SHOW);
 
       $(this._element).off(Event.CLICK_DISMISS);
       $(this._dialog).off(Event.MOUSEDOWN_DISMISS);
@@ -1864,7 +1865,7 @@ var Modal = function ($) {
         Util.reflow(this._element);
       }
 
-      $(this._element).addClass(ClassName.ACTIVE);
+      $(this._element).addClass(ClassName.SHOW);
 
       if (this._config.focus) {
         this._enforceFocus();
@@ -1983,7 +1984,7 @@ var Modal = function ($) {
           Util.reflow(this._backdrop);
         }
 
-        $(this._backdrop).addClass(ClassName.ACTIVE);
+        $(this._backdrop).addClass(ClassName.SHOW);
 
         if (!callback) {
           return;
@@ -1996,7 +1997,7 @@ var Modal = function ($) {
 
         $(this._backdrop).one(Util.TRANSITION_END, callback).emulateTransitionEnd(BACKDROP_TRANSITION_DURATION);
       } else if (!this._isShown && this._backdrop) {
-        $(this._backdrop).removeClass(ClassName.ACTIVE);
+        $(this._backdrop).removeClass(ClassName.SHOW);
 
         var callbackRemove = function callbackRemove() {
           _this16._removeBackdrop();
@@ -2395,7 +2396,7 @@ var ScrollSpy = function ($) {
       } else {
         // todo (fat) this is kinda sus...
         // recursively add actives to tested nav-links
-        $link.parents(Selector.LI).find(Selector.NAV_LINKS).addClass(ClassName.ACTIVE);
+        $link.parents(Selector.LI).find('> ' + Selector.NAV_LINKS).addClass(ClassName.ACTIVE);
       }
 
       $(this._scrollElement).trigger(Event.ACTIVATE, {
@@ -2508,15 +2509,16 @@ var Tab = function ($) {
   var ClassName = {
     DROPDOWN_MENU: 'dropdown-menu',
     ACTIVE: 'active',
+    DISABLED: 'disabled',
     FADE: 'fade',
-    IN: 'in'
+    SHOW: 'show'
   };
 
   var Selector = {
     A: 'a',
     LI: 'li',
     DROPDOWN: '.dropdown',
-    LIST: 'ul:not(.dropdown-menu), ol:not(.dropdown-menu)',
+    LIST: 'ul:not(.dropdown-menu), ol:not(.dropdown-menu), nav:not(.dropdown-menu)',
     FADE_CHILD: '> .nav-item .fade, > .fade',
     ACTIVE: '.active',
     ACTIVE_CHILD: '> .nav-item > .active, > .active',
@@ -2545,7 +2547,7 @@ var Tab = function ($) {
     Tab.prototype.show = function show() {
       var _this20 = this;
 
-      if (this._element.parentNode && this._element.parentNode.nodeType === Node.ELEMENT_NODE && $(this._element).hasClass(ClassName.ACTIVE)) {
+      if (this._element.parentNode && this._element.parentNode.nodeType === Node.ELEMENT_NODE && $(this._element).hasClass(ClassName.ACTIVE) || $(this._element).hasClass(ClassName.DISABLED)) {
         return;
       }
 
@@ -2627,7 +2629,7 @@ var Tab = function ($) {
       }
 
       if (active) {
-        $(active).removeClass(ClassName.IN);
+        $(active).removeClass(ClassName.SHOW);
       }
     };
 
@@ -2649,7 +2651,7 @@ var Tab = function ($) {
 
       if (isTransitioning) {
         Util.reflow(element);
-        $(element).addClass(ClassName.IN);
+        $(element).addClass(ClassName.SHOW);
       } else {
         $(element).removeClass(ClassName.FADE);
       }
@@ -2742,7 +2744,7 @@ var Tooltip = function ($) {
    * Check for Tether dependency
    * Tether - http://tether.io/
    */
-  if (window.Tether === undefined) {
+  if (typeof Tether === 'undefined') {
     throw new Error('Bootstrap tooltips require Tether (http://tether.io/)');
   }
 
@@ -2796,7 +2798,7 @@ var Tooltip = function ($) {
   };
 
   var HoverState = {
-    ACTIVE: 'active',
+    SHOW: 'show',
     OUT: 'out'
   };
 
@@ -2815,7 +2817,7 @@ var Tooltip = function ($) {
 
   var ClassName = {
     FADE: 'fade',
-    ACTIVE: 'active'
+    SHOW: 'show'
   };
 
   var Selector = {
@@ -2896,7 +2898,7 @@ var Tooltip = function ($) {
         }
       } else {
 
-        if ($(this.getTipElement()).hasClass(ClassName.ACTIVE)) {
+        if ($(this.getTipElement()).hasClass(ClassName.SHOW)) {
           this._leave(null, this);
           return;
         }
@@ -2986,7 +2988,7 @@ var Tooltip = function ($) {
         Util.reflow(tip);
         this._tether.position();
 
-        $(tip).addClass(ClassName.ACTIVE);
+        $(tip).addClass(ClassName.SHOW);
 
         var complete = function complete() {
           var prevHoverState = _this22._hoverState;
@@ -3019,7 +3021,7 @@ var Tooltip = function ($) {
         throw new Error('Tooltip is transitioning');
       }
       var complete = function complete() {
-        if (_this23._hoverState !== HoverState.ACTIVE && tip.parentNode) {
+        if (_this23._hoverState !== HoverState.SHOW && tip.parentNode) {
           tip.parentNode.removeChild(tip);
         }
 
@@ -3039,7 +3041,11 @@ var Tooltip = function ($) {
         return;
       }
 
-      $(tip).removeClass(ClassName.ACTIVE);
+      $(tip).removeClass(ClassName.SHOW);
+
+      this._activeTrigger[Trigger.CLICK] = false;
+      this._activeTrigger[Trigger.FOCUS] = false;
+      this._activeTrigger[Trigger.HOVER] = false;
 
       if (Util.supportsTransitionEnd() && $(this.tip).hasClass(ClassName.FADE)) {
         this._isTransitioning = true;
@@ -3066,7 +3072,7 @@ var Tooltip = function ($) {
 
       this.setElementContent($tip.find(Selector.TOOLTIP_INNER), this.getTitle());
 
-      $tip.removeClass(ClassName.FADE + ' ' + ClassName.ACTIVE);
+      $tip.removeClass(ClassName.FADE + ' ' + ClassName.SHOW);
 
       this.cleanupTether();
     };
@@ -3167,14 +3173,14 @@ var Tooltip = function ($) {
         context._activeTrigger[event.type === 'focusin' ? Trigger.FOCUS : Trigger.HOVER] = true;
       }
 
-      if ($(context.getTipElement()).hasClass(ClassName.ACTIVE) || context._hoverState === HoverState.ACTIVE) {
-        context._hoverState = HoverState.ACTIVE;
+      if ($(context.getTipElement()).hasClass(ClassName.SHOW) || context._hoverState === HoverState.SHOW) {
+        context._hoverState = HoverState.SHOW;
         return;
       }
 
       clearTimeout(context._timeout);
 
-      context._hoverState = HoverState.ACTIVE;
+      context._hoverState = HoverState.SHOW;
 
       if (!context.config.delay || !context.config.delay.show) {
         context.show();
@@ -3182,7 +3188,7 @@ var Tooltip = function ($) {
       }
 
       context._timeout = setTimeout(function () {
-        if (context._hoverState === HoverState.ACTIVE) {
+        if (context._hoverState === HoverState.SHOW) {
           context.show();
         }
       }, context.config.delay.show);
@@ -3376,7 +3382,7 @@ var Popover = function ($) {
 
   var ClassName = {
     FADE: 'fade',
-    ACTIVE: 'active'
+    SHOW: 'show'
   };
 
   var Selector = {
@@ -3429,7 +3435,7 @@ var Popover = function ($) {
       this.setElementContent($tip.find(Selector.TITLE), this.getTitle());
       this.setElementContent($tip.find(Selector.CONTENT), this._getContent());
 
-      $tip.removeClass(ClassName.FADE + ' ' + ClassName.ACTIVE);
+      $tip.removeClass(ClassName.FADE + ' ' + ClassName.SHOW);
 
       this.cleanupTether();
     };
@@ -3526,222 +3532,3 @@ var Popover = function ($) {
 }(jQuery);
 
 }();
-
-/*
- *  Bootstrap Auto-Hiding Navbar - v1.0.5
- *  An extension for Bootstrap's fixed navbar which hides the navbar while the page is scrolling downwards and shows it the other way. The plugin is able to show/hide the navbar programmatically as well.
- *  http://www.virtuosoft.eu/code/bootstrap-autohidingnavbar/
- *
- *  Made by István Ujj-Mészáros
- *  Under Apache License v2.0 License
- */
-;(function($, window, document, undefined) {
-  var pluginName = 'autoHidingNavbar',
-      $window = $(window),
-      $document = $(document),
-      _scrollThrottleTimer = null,
-      _resizeThrottleTimer = null,
-      _throttleDelay = 70,
-      _lastScrollHandlerRun = 0,
-      _previousScrollTop = null,
-      _windowHeight = $window.height(),
-      _visible = true,
-      _hideOffset,
-      defaults = {
-        disableAutohide: false,
-        showOnUpscroll: true,
-        showOnBottom: true,
-        hideOffset: 'auto', // "auto" means the navbar height
-        animationDuration: 200,
-        navbarOffset: 0
-      };
-
-  function AutoHidingNavbar(element, options) {
-    this.element = $(element);
-    this.settings = $.extend({}, defaults, options);
-    this._defaults = defaults;
-    this._name = pluginName;
-    this.init();
-  }
-
-  function hide(autoHidingNavbar) {
-    if (!_visible) {
-      return;
-    }
-
-    autoHidingNavbar.element.addClass('navbar-hidden').animate({
-      top: -1 * parseInt(autoHidingNavbar.element.css('height'), 10) + autoHidingNavbar.settings.navbarOffset
-    }, {
-      queue: false,
-      duration: autoHidingNavbar.settings.animationDuration
-    });
-
-    $('.dropdown.open .dropdown-toggle', autoHidingNavbar.element).dropdown('toggle');
-
-    _visible = false;
-
-    autoHidingNavbar.element.trigger('hide.autoHidingNavbar');
-  }
-
-  function show(autoHidingNavbar) {
-    if (_visible) {
-      return;
-    }
-
-    autoHidingNavbar.element.removeClass('navbar-hidden').animate({
-      top: 0
-    }, {
-      queue: false,
-      duration: autoHidingNavbar.settings.animationDuration
-    });
-    _visible = true;
-
-    autoHidingNavbar.element.trigger('show.autoHidingNavbar');
-  }
-
-  function detectState(autoHidingNavbar) {
-    var scrollTop = $window.scrollTop(),
-        scrollDelta = scrollTop - _previousScrollTop;
-
-    _previousScrollTop = scrollTop;
-
-    if (scrollDelta < 0) {
-      if (_visible) {
-        return;
-      }
-
-      if (autoHidingNavbar.settings.showOnUpscroll || scrollTop <= _hideOffset) {
-        show(autoHidingNavbar);
-      }
-    }
-    else if (scrollDelta > 0) {
-      if (!_visible) {
-        if (autoHidingNavbar.settings.showOnBottom && scrollTop + _windowHeight === $document.height()) {
-          show(autoHidingNavbar);
-        }
-        return;
-      }
-
-      if (scrollTop >= _hideOffset) {
-        hide(autoHidingNavbar);
-      }
-    }
-
-  }
-
-  function scrollHandler(autoHidingNavbar) {
-    if (autoHidingNavbar.settings.disableAutohide) {
-      return;
-    }
-
-    _lastScrollHandlerRun = new Date().getTime();
-
-    detectState(autoHidingNavbar);
-  }
-
-  function bindEvents(autoHidingNavbar) {
-    $document.on('scroll.' + pluginName, function() {
-      if (new Date().getTime() - _lastScrollHandlerRun > _throttleDelay) {
-        scrollHandler(autoHidingNavbar);
-      }
-      else {
-        clearTimeout(_scrollThrottleTimer);
-        _scrollThrottleTimer = setTimeout(function() {
-          scrollHandler(autoHidingNavbar);
-        }, _throttleDelay);
-      }
-    });
-
-    $window.on('resize.' + pluginName, function() {
-      clearTimeout(_resizeThrottleTimer);
-      _resizeThrottleTimer = setTimeout(function() {
-        _windowHeight = $window.height();
-      }, _throttleDelay);
-    });
-  }
-
-  function unbindEvents() {
-    $document.off('.' + pluginName);
-
-    $window.off('.' + pluginName);
-  }
-
-  AutoHidingNavbar.prototype = {
-    init: function() {
-      this.elements = {
-        navbar: this.element
-      };
-
-      this.setDisableAutohide(this.settings.disableAutohide);
-      this.setShowOnUpscroll(this.settings.showOnUpscroll);
-      this.setShowOnBottom(this.settings.showOnBottom);
-      this.setHideOffset(this.settings.hideOffset);
-      this.setAnimationDuration(this.settings.animationDuration);
-
-      _hideOffset = this.settings.hideOffset === 'auto' ? parseInt(this.element.css('height'), 10) : this.settings.hideOffset;
-      bindEvents(this);
-
-      return this.element;
-    },
-    setDisableAutohide: function(value) {
-      this.settings.disableAutohide = value;
-      return this.element;
-    },
-    setShowOnUpscroll: function(value) {
-      this.settings.showOnUpscroll = value;
-      return this.element;
-    },
-    setShowOnBottom: function(value) {
-      this.settings.showOnBottom = value;
-      return this.element;
-    },
-    setHideOffset: function(value) {
-      this.settings.hideOffset = value;
-      return this.element;
-    },
-    setAnimationDuration: function(value) {
-      this.settings.animationDuration = value;
-      return this.element;
-    },
-    show: function() {
-      show(this);
-      return this.element;
-    },
-    hide: function() {
-      hide(this);
-      return this.element;
-    },
-    destroy: function() {
-      unbindEvents(this);
-      show(this);
-      $.data(this, 'plugin_' + pluginName, null);
-      return this.element;
-    }
-  };
-
-  $.fn[pluginName] = function(options) {
-    var args = arguments;
-
-    if (options === undefined || typeof options === 'object') {
-      return this.each(function() {
-        if (!$.data(this, 'plugin_' + pluginName)) {
-          $.data(this, 'plugin_' + pluginName, new AutoHidingNavbar(this, options));
-        }
-      });
-    } else if (typeof options === 'string' && options[0] !== '_' && options !== 'init') {
-      var returns;
-
-      this.each(function() {
-        var instance = $.data(this, 'plugin_' + pluginName);
-
-        if (instance instanceof AutoHidingNavbar && typeof instance[options] === 'function') {
-          returns = instance[options].apply(instance, Array.prototype.slice.call(args, 1));
-        }
-      });
-
-      return returns !== undefined ? returns : this;
-    }
-
-  };
-
-})(jQuery, window, document);

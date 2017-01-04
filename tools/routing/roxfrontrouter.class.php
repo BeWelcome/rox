@@ -109,6 +109,9 @@ class RoxFrontRouter
 	*/
     public function setLanguage()
     {
+        if ($this->_session->has('locale')) {
+            $this->_session->set('lang', $this->_session->get('locale'));
+        }
         if (!($this->_session->has('lang')) ) {
             $Model = new RoxFrontRouterModel;
             
@@ -408,6 +411,7 @@ A TERRIBLE EXCEPTION
 
             if ($controller instanceof RoxControllerBase) {
                 $controller->setRouter($this->router);
+                $controller->setEngine($this->engine);
             }
 
             $controller->router = $this->router;

@@ -46,7 +46,7 @@
                             <?php if ($group_data !== 0) {?>
                             <li><?php
                                 if ($group_data->latestPost) {
-                                    echo $words->get('GroupsLastPost') . ": " . date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($group_data->latestPost));
+                                    echo $words->get('GroupsLastPost') . ": " . date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($group_data->latestPost, $this->getSession()));
                                 } else {
                                     echo $words->get('GroupsNoPostYet');
                                 }
@@ -78,7 +78,7 @@
                                 <li><?= $words->get('GroupsMemberCount');?>: <?=$my_groups[$i]->getMemberCount(); ?> </li>
                                 <li><?= $words->get('GroupsNewMembers');?>: <?=count($my_groups[$i]->getNewMembers()); ?> </li>
                                 <?php if ($group_data !== 0) {?>
-                                <li><?= $words->get('GroupsLastPost');?>: <?=date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($my_groups[$i]->latestPost)); ?></li>
+                                <li><?= $words->get('GroupsLastPost');?>: <?=date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($my_groups[$i]->latestPost, $this->getSession())); ?></li>
                                 <?php } ?>
                             </ul>
                             </div>  <!-- groupinfo -->

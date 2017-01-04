@@ -44,8 +44,8 @@ if (empty($vars)) {
     <div class="row m-t-2 mb-1">
         <div class="col-md-2"></div>
         <div class="col-xs-12 col-md-7">
-            <small class="pull-xs-right">* <?php echo $words->get('ActivityMandatoryFields'); ?></small>
-            <h2 id="activity-create pull-xs-left">
+            <small class="pull-right">* <?php echo $words->get('ActivityMandatoryFields'); ?></small>
+            <h2 id="activity-create pull-left">
                 <?php if ($vars['activity-id'] != 0) {
                         echo $words->get('ActivitiesEdit');
                     } else {

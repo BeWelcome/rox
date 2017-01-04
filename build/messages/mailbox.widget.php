@@ -71,10 +71,10 @@ class MailboxWidget extends ItemlistWithPagination
         $date_string = date("M d, Y - H:i",strtotime($date_created));
         ?>
         <div style="width:75px; padding: 5px; box-sizing: content-box;">
-            <div class="pull-xs-left">
+            <div class="pull-left">
         <?=MOD_layoutbits::PIC_75_75($contact_username,'')?>
             </div>
-            <div class="pull-xs-left" style="word-wrap: break-word;">
+            <div class="pull-left" style="word-wrap: break-word;">
         <small style="line-height: 1.1;"><a class="username" href="members/<?=$contact_username ?>"><strong><?=$contact_username ?></strong></a>
         <br />
         <span class="small" title="<?=$date_created?>"><?=$layoutbits->ago(strtotime($date_created)) ?></span></small>

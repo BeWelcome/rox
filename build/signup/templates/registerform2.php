@@ -49,7 +49,7 @@ Boston, MA  02111-1307, USA.
     <div class="row m-y-1">
         <div class="col-md-4">
 
-            <h4 class="text-xs-center">Step 2/4</h4>
+            <h4 class="text-center">Step 2/4</h4>
 
             <progress class="progress progress-striped progress-success" value="50" max="100">
                 <div class="progress">
@@ -58,7 +58,7 @@ Boston, MA  02111-1307, USA.
             </progress>
 
 
-            <div class="h4 text-xs-center hidden-md-down mt-1">
+            <div class="h4 text-center hidden-md-down mt-1">
                 <div><i class="fa fa-user"></i><br><?php echo $words->get('LoginInformation'); ?> <i class="text-success fa fa-check-square"></i></div>
                 <div class="text-muted m-y-2"><i class="fa fa-angle-down"></i></div>
                 <div><i class="fa fa-tag"></i><br><?php echo $words->get('SignupName'); ?></div>
@@ -73,7 +73,7 @@ Boston, MA  02111-1307, USA.
         <div class="col-md-8">
 
             <!-- Information on data use -->
-            <button type="button" class="btn btn-sm btn-primary pull-xs-right" data-toggle="modal" data-target="#SignupIntroduction">
+            <button type="button" class="btn btn-sm btn-primary pull-right" data-toggle="modal" data-target="#SignupIntroduction">
                 <i class="fa fa-exclamation-circle"></i> <?php // echo $words->get('SignupIntroductionTitle'); ?>Data visibility
             </button>
 

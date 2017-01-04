@@ -127,7 +127,7 @@ $this->pager->render(); ?>
         echo '<td class="verticalmiddle activityinfo attendees"><small>';
             if ($activity->attendeesYes != 0){ echo $activity->attendeesYes . '&nbsp;' . $words->get('ActivitiesNumbAttendeesYes') . '<br>';}
             if ($activity->attendeesMaybe != 0){ echo $activity->attendeesMaybe . '&nbsp;' . $words->get('ActivitiesNumbAttendeesMaybe');}
-        echo '</small></td><td class="organiser"><div class="pull-xs-right text-xs-center">';
+        echo '</small></td><td class="organiser"><div class="pull-right text-center">';
             $organizers = '';
             foreach($activity->organizers as $organizer) {
                 echo '<a href="members/'.$organizer->Username.'"><img class="framed" src="members/avatar/'.$organizer->Username.'?50_50" alt="Profile" /><br><small class="username">'.$organizer->Username.'</small></a>';

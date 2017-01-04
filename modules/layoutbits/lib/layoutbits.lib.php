@@ -401,6 +401,32 @@ class MOD_layoutbits
         }
         return $string;
     }
-}
 
-?>
+    public static function GetPreference($namepref,$idm=0) {
+        $IdMember=$idm;
+        if ($idm==0) {
+            if (isset($_SESSION['IdMember'])) $IdMember=$_SESSION['IdMember'];
+
+        }
+        if ($IdMember==0) {
+            $row = self::get()->dao->query("select SQL_CACHE DefaultValue  from preferences where codeName='".$namepref."'")->fetch(PDB::FETCH_OBJ);
+            if (!empty($row))
+                return($row->DefaultValue);
+        }
+        else {
+            $row = self::get()->dao->query("select SQL_CACHE Value from memberspreferences,preferences where preferences.codeName='$namepref' and memberspreferences.IdPreference=preferences.id and IdMember=" . $IdMember)->fetch(PDB::FETCH_OBJ);
+            if (isset ($row->Value))
+                $def = $row->Value;
+            else {
+                $row = self::get()->dao->query("select SQL_CACHE DefaultValue  from preferences where codeName='".$namepref."'")->fetch(PDB::FETCH_OBJ);
+                if (isset($row->DefaultValue))
+                    return($row->DefaultValue);
+                else
+                    return NULL;
+            }
+            return ($def);
+        }
+
+    } // end of GetPreference
+
+}

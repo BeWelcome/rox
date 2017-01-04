@@ -320,7 +320,9 @@ VALUES
 * @return boolean
 */
 	public function isBWLoggedIn($ExtraAllowedStatus="") {
-		if (!empty($this->_session->get('IdMember'))) {
+		return true;
+
+		if (empty($this->_session->get('IdMember'))) {
 			return false;
 		}
 

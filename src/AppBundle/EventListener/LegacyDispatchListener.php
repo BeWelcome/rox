@@ -69,7 +69,7 @@ class LegacyDispatchListener
                 throw new AccessDeniedException();
             }
 
-            $user = $rememberMeToken->getUser();
+          $user = $rememberMeToken->getUser();
             if ($user !== null) {
                 $this->session->set('IdMember', $user->getId());
             }

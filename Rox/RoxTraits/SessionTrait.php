@@ -8,11 +8,8 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 trait SessionTrait {
     /** @var  Session */
-    protected $_session;
+    public $_session;
 
-    /**
-     * @param SessionInterface $session
-     */
     protected function setSession() {
         $this->_session = SessionSingleton::getSession();
     }

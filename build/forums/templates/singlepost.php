@@ -51,7 +51,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
             }
         }
 
-        echo '<div class="clearfix"><hr /><span class="pull-xs-right">';
+        echo '<div class="clearfix"><hr /><span class="pull-right">';
         if (isset($TheReports[0]->IdReporter)) {
             echo "<a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumViewMyReportToMod'),"</a>" ;
         }
@@ -60,7 +60,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
         }
         echo '</span>';
 
-        echo '<span class="pull-xs-right p-r-1"><small><a href="forums/s' . $post->threadid . '/#post' . $post->IdPost . '"><i class="fa fa-link"></i> ' . $words->get('ForumPermalink') . '</a></small></span>';
+        echo '<span class="pull-right p-r-1"><small><a href="forums/s' . $post->threadid . '/#post' . $post->IdPost . '"><i class="fa fa-link"></i> ' . $words->get('ForumPermalink') . '</a></small></span>';
         $TheReports=$this->_model->GetReports($post->IdPost,$this->_session->get("IdMember")) ; // Check if there is a pending report for this member
         echo '</div>';
 
@@ -68,8 +68,8 @@ JeanYves notes : every display of a forum post content  goes trhu this template
     // end of reports
     ?>
 
-    <div class="pull-xs-left p-r-2 p-b-1">
-        <img class="media-object" src="/members/avatar/<?php echo ($post->OwnerUsername); ?>?75_75">
+    <div class="pull-left p-r-2 p-b-1">
+        <img class="media-object" src="/members/avatar/<?php echo ($post->OwnerUsername); ?>?size=75">
         <small class="username"><a href="members/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a></small><br>
         <?php
         if ($this->_session->has( "IdMember" )) {
@@ -98,10 +98,10 @@ JeanYves notes : every display of a forum post content  goes trhu this template
 
     <div>
         <a name="post<?php echo $post->postid; ?>"></a>
-        <small class="pull-xs-right text-xs-right pl-1 p-b-1">
+        <small class="pull-right text-right pl-1 p-b-1">
                 <?php
                 //echo "[",$post->posttime,"]",$words->getFormatted('DateHHMMShortFormat') ;
-                echo $words->getFormatted('posted'); ?> <?php echo date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($post->posttime));
+                echo $words->getFormatted('posted'); ?> <?php echo date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($post->posttime, $this->getSession()));
                 echo $words->flushBuffer() . "  &nbsp;&nbsp; " . $words->getFormatted("forum_label_visibility") . ": " . $words->getFormatted("forum_edit_vis_" . $post->PostVisibility);
                 $max = 0;
                 if (!empty($post->Trad)) {
@@ -110,7 +110,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
                 for ($jj=0;(($jj<$max) and ($topic->WithDetail) );$jj++) { // Not optimized, it is a bit stupid to look in all the trads here
                     if (($post->Trad[$jj]->trad_created!=$post->Trad[$jj]->trad_updated) ) { // If one of the trads have been updated
                         if ($post->Trad[$jj]->IdLanguage==$this->_session->get("IdLanguage")) {
-                            echo "<br /><em>last edited on ",date($words->getFormatted('DateHHMMShortFormat'),ServerToLocalDateTime($post->Trad[$jj]->trad_updated))," by ",$post->Trad[$jj]->TranslatorUsername, "</em>";
+                            echo "<br /><em>last edited on ",date($words->getFormatted('DateHHMMShortFormat'),ServerToLocalDateTime($post->Trad[$jj]->trad_updated, $this->getSession()))," by ",$post->Trad[$jj]->TranslatorUsername, "</em>";
                         }
                     }
                 }

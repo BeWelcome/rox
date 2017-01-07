@@ -14,7 +14,7 @@
 
 <testsuites>
     <testsuite name="Project Test Suite">
-        <directory>tests</directory>
+        <directory>tests/TranslationLoader</directory>
     </testsuite>
 </testsuites>
 

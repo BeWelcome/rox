@@ -38,7 +38,7 @@ HTML;
                             <?php if ($group_data !== 0) {?>
                             <li><?php
                                 if ($group_data->latestPost) {
-                                    echo $words->get('GroupsLastPost') . ": " . date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($group_data->latestPost));
+                                    echo $words->get('GroupsLastPost') . ": " . date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($group_data->latestPost, $this->getSession()));
                                 } else {
                                     echo $words->get('GroupsNoPostYet');
                                 }

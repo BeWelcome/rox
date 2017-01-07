@@ -327,5 +327,3 @@
     // Terms of use
     $this->addRoute('terms_french', 'terms', 'AboutController', 'termsOfUse');
     $this->addRoute('terms_language', 'terms/:language:', 'AboutController', 'termsOfUse');
-$this->addRoute('m_dashboard', 'mockups/dashboard', 'MockupsController', 'dashboard');
-$this->addRoute('m_select2', 'mockups/select2', 'MockupsController', 'select2');

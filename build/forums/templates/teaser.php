@@ -8,7 +8,7 @@ if (isset($this->keyword)) {
 
 <div class="pa-1 clearfix">
     <div id="title" class="fullheight">
-        <h1 class="pull-xs-left">
+        <h1 class="pull-left">
             <a href="forums"><?php echo $this->_model->words->getFormatted('CommunityLanding'); ?></a>
 
 <?php if ($this->_model->getTopMode() == Forums::CV_TOPMODE_FORUM) {
@@ -16,7 +16,7 @@ if (isset($this->keyword)) {
       }
 ?>
         </h1>
-        <div class="pull-xs-right fullheight p-t-1">
+        <div class="pull-right fullheight p-t-1">
             <!-- Google froum search bar -->
             <form action="/forums/search" class="verticalalign" method="POST" id="search-box">
                 <div class="input-group verticalalign mt-1">

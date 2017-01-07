@@ -17,7 +17,7 @@ use Symfony\Bundle\SecurityBundle\Tests\Functional\Bundle\AclBundle\Entity\Car;
  *
  * @ORM\Table(name="trips", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})},
  *     indexes={@ORM\Index(name="memberId_idx", columns={"created_by"})})
- * @ORM\Entity(repositoryClass="Rox\Trip\Repository\TripRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\TripRepository")
  */
 class Trip
 {

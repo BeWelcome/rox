@@ -58,3 +58,5 @@ tmp/
 !var/SymfonyRequirements.php
 /vendor/
 /web/bundles/
+/web/css/app.css
+/web/css/app.css.map

@@ -34,6 +34,7 @@ class ForumsView extends RoxAppView {
             $this->page->title=$Title ;
         }
 
+
     /**
     * Create a new topic in the current forum
     */

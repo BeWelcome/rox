@@ -69,7 +69,7 @@ Boston, MA  02111-1307, USA.
         
         ?>
             <tr class="<?php echo $styles[$cnt%2]; ?>">
-                <td class="forumsboardthreadauthor pa-0"><a href="members/<?php echo $thread->first_author; ?>"><img src="members/avatar/<?php echo $thread->first_author; ?>?50_50" alt="<?php echo $thread->first_author; ?>" title="<?php echo $thread->first_author; ?>" /></a></td>
+                <td class="forumsboardthreadauthor pa-0"><a href="members/<?php echo $thread->first_author; ?>"><img src="members/avatar/<?php echo $thread->first_author; ?>?size=50" alt="<?php echo $thread->first_author; ?>" title="<?php echo $thread->first_author; ?>" /></a></td>
                 <td class="forumsboardthreadtitle pl-0">
                     <?php
                     if ($thread->stickyvalue < 0) {
@@ -192,7 +192,7 @@ Boston, MA  02111-1307, USA.
                         <?php echo $words->getFormatted('by'); ?>
                         <a href="members/<?php echo $thread->last_author; ?>"><img src="members/avatar/<?php echo $thread->last_author; ?>?30_30" alt="<?php echo $thread->last_author; ?>" title="<?php echo $thread->last_author; ?>" /> <?php echo $thread->last_author; ?></a>
                         <br />
-                        <span class="forumsboardthreadtags" title="<?php echo date($words->getSilent('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time)); ?>"><a href="<?php echo $last_url; ?>"><?php echo $layoutbits->ago($thread->last_create_time); ?></a></span>
+                        <span class="forumsboardthreadtags" title="<?php echo date($words->getSilent('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time, $this->getSession())); ?>"><a href="<?php echo $last_url; ?>"><?php echo $layoutbits->ago($thread->last_create_time); ?></a></span>
                         <a href="<?php echo $last_url; ?>"><img src="styles/css/minimal/images/iconsfam/bullet_go.png" align="absmiddle" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>" /></a><?php echo $words->flushBuffer(); ?>
                     </span>
                 </td>

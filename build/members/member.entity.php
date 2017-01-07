@@ -1436,7 +1436,8 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
             return false;
         }
 
-        return $this->createEntity('MemberRole')->getMemberRoles($this);
+        $roleEntity = $this->createEntity('MemberRole');
+        return $roleEntity->getMemberRoles($this);
     }
 
     /**

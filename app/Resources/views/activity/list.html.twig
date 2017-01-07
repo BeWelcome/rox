@@ -1,12 +1,81 @@
+{% import 'macros.twig' as macros %}
 {% extends 'base.html.twig' %}
 
 {% block title %}
     {{ 'All activities' | trans }}
 {% endblock %}
 
-{% block content %}
-    This is fun.
+{% block subnav %}
+    <div class="pl-0 m-b-1"><ul class="nav nav-pills">
+        {% for label, subitem in subitems %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path( subitem.route ) }}">{{ label | trans }}</a>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
 
-    {{ pagerfanta( activities, 'twitter_bootstrap4_translated', { routeName: 'activity' }) }}
+{% block content %}
+<h1>{{ 'Activities' | trans }}</h1>
+    <div class="pull-right">{{ pagerfanta( activities, 'twitter_bootstrap4_translated', { routeName: 'activity' }) }}</div>
+    <div class="row">
+        <div class="col-xs-12">
+            <table class="table" id="activitylist" style="table-layout: fixed;">
+                <tbody>
+                {% for activity in activities %}
+                    <tr>
+                        <td class="p-t-0 date verticalmiddle">
+                            <div class="calendar calendar-icon-{{ activity.starts.month }}">
+                                <div class="calendar-day">{{ activity.starts.day }}</div>
+                                <div class="calendar-year mt-1">{{ activity.starts.year }}</div>
+                            </div>
+                        </td>
+                        <td class="verticalmiddle title text-truncate p-t-0">
+                            <p class="h4 ma-0 text-truncate"><a href="{{ path('activity_show', {id: activity.id }) }}">{{ activity.title }}</a></p>
+                            <small>{{ activity.starts.toDateString }}{% if activity.starts != activity.ends %}
+                                 - {{ activity.ends.toDateString }}{% endif %}</small></td>
+
+                        <td class="verticalmiddle">
+                            <div class="d-inline-block"><i class="fa fa-3x fa-map-marker"></i></div>
+                            <div class="pl-1 d-inline-block">{{ activity.location.name }}<br>{{ activity.location.country.name }}</div>
+                        </td>
+
+                        <td class="verticalmiddle">
+                            <div class="d-inline-block"><i class="fa fa-3x fa-users"></i></div>
+                            <div class="ll-1 d-inline-block">
+                                <small>
+                                    {% if activity.attendeesYes.count != 0 %}{{ activity.attendeesYes.count }}&nbsp;{{ 'ActivitiesNumbAttendeesYes' | trans }}{% endif %} <br>
+                                    {% if activity.attendeesMaybe.count != 0 %}{{ activity.attendeesMaybe.count }}&nbsp;{{ 'ActivitiesNumbAttendeesMaybe' | trans }}{% endif %}<br>
+                                </small>
+                            </div>
+                        </td>
+                        <td class="organiser">
+                            <div class="pull-xs-right text-xs-center">
+                                {{ macros.avatar( activity.organizers[0].attendee.Username, 50, true) }}
+                            </div>
+                        </td>
+                        <td class="verticalmiddle">
+                            {%  if activity.status == 0 %}
+                                {% set future = (date() < activity.ends) %}
+                                {% if app.user.id in activity.organizerIds %}
+                                <a href="{{ path( 'activity_edit', { id: activity.id } ) }}">
+                                    <i class="fa fa-3x fa-edit"></i>
+                                {% endif %}
+                            {% else %}
+                                <i class="fa fa-close"></i>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td>
+                    {{ 'No activities found' | trans }}
+                        </td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="pull-right">{{ pagerfanta( activities, 'twitter_bootstrap4_translated', { routeName: 'activity' }) }}</div>
 
 {% endblock content %}

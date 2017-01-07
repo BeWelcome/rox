@@ -6,6 +6,9 @@ use Pagerfanta\View\Template\Template;
 
 /**
  * TwitterBootstrap4Template
+
+ * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TwitterBootstrap4Template extends Template
 {

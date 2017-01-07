@@ -1,11 +1,11 @@
 {% import 'macros.twig' as macros %}
-<!DOCTYPE html lang="{{ app.request.locale }}">
-<html>
+<!DOCTYPE html>
+<html lang="{{ app.request.locale }}">
     <head>
-        <base href="/">
+        <!-- Required meta tags -->
         <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <base href="/">
         <link rel="shortcut icon" href="favicon.ico">
 
         <title>
@@ -25,10 +25,11 @@
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
-        <script type="text/javascript" src="{{ asset('js/backwards.js') }}"></script>
+        {%  javascripts
+            '@backwards_js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
         <![endif]-->
-
-        <script type="text/javascript" src="{{ asset('js/built.js') }}"></script>
 
         {% javascripts
         '@jquery_js'
@@ -38,8 +39,7 @@
         {%  endjavascripts %}
 
         {% stylesheets filter="cssrewrite"
-        'bundles/app/css/bewelcome.css'
-        '@tether_css' %}
+            '@app_css' %}
             <link rel="stylesheet" href="{{ asset_url }}" />
         {% endstylesheets %}
 
@@ -48,14 +48,20 @@
     </head>
     <body>
         {% include 'menu.html.twig' %}
-        <noscript><h1>Please activate Javascript for bewelcome.org<small>Without it some function won't work.</small></h1></noscript>
+        <noscript><h1>Please activate Javascript for bewelcome.org</h1><p><small>Without it some function won't work.</small></p></noscript>
+        {% for flash_message in app.session.flashBag.get('error') %}
+            <div class="flash error">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
         {% for flash_message in app.session.flashBag.get('notice') %}
             <div class="flash notice">
                 {{ flash_message }}
             </div>
         {% endfor %}
+        <div id="subnav" class="container">{% block subnav %}{% endblock %}</div>
         <div class="container-content">
-        {% block content %}{% endblock %}
+            {% block content %}{% endblock %}
         </div>
         {% include 'footer.html.twig' %}
         {% block javascripts %}{% endblock %}

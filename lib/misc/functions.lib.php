@@ -13,6 +13,8 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id: functions.lib.php 144 2006-07-16 15:46:25Z kang $
  */
+use Symfony\Component\HttpFoundation\Session\Session;
+
 /**
  * Collection of useful functions
  * 
@@ -297,18 +299,18 @@ class PFunctions {
 * WARNING: This function is only to be used in displays !
 *
 */
-function ServerToLocalDateTime($EntryTimeStamp) {
+function ServerToLocalDateTime($EntryTimeStamp, Session $session) {
 //	$this->_session->get("TimeOffset")=60*60*2 ; // only used for test at developemnt phase
-	if (empty($this->_session->get("TimeOffset"))) {
+	if (empty($session->get("TimeOffset"))) {
 		return($EntryTimeStamp) ;
 	}
 	else {
-		if ($this->_session->has( 'PreferenceDayLight' ) and ($this->_session->get('PreferenceDayLight')=='Yes')) {
-			return($EntryTimeStamp+$this->_session->get("TimeOffset") + $this->_session->get("Param")->DayLightOffset) ;
+		if ($session->has( 'PreferenceDayLight' ) && ($session->get('PreferenceDayLight')=='Yes')) {
+			return($EntryTimeStamp+$session->get("TimeOffset") + $session->get("Param")->DayLightOffset) ;
 		}
 		else {
-			return($EntryTimeStamp+$this->_session->get("TimeOffset")) ;
+			return($EntryTimeStamp+$session->get("TimeOffset")) ;
 		}
 	}
 } // end of LocaldateTime
-?>
+

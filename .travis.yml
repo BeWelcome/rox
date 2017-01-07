@@ -9,15 +9,6 @@ php:
 addons:
   mariadb: '10.1'
 
-#env:
-#  global:
-#    - APP_ENV=testing
-#    - APP_DEBUG=true
-#    - DB_HOST=localhost
-#    - DB_NAME=bewelcome_test
-#    - DB_USER=travis
-#    - DB_PASS=
-
 cache:
   directories:
     - $HOME/.composer/cache
@@ -38,9 +29,8 @@ install:
   - npm update
 
 script:
-  - php bin/console doctrine:database:create
   - php bin/console doctrine:schema:create
-  - php bin/console doctrine:fixtures:load
+  - php bin/console doctrine:fixtures:load --no-interaction
   - make version
   - make
   - make build

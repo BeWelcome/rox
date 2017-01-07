@@ -4,14 +4,15 @@
     <div class="row pl-1 pr-1">
         <div class="col-xs-12 fullheight">
             <div class="hidden-xs-down float-left avatarpadding">
-                {{ macros.avatar( message.user, 50, true) }}
+                {{ macros.avatar( message.sender.username, 50, true) }}
             </div>
             <div class="dashentry">
                 <p class="text-truncate">
-                    {% if not message.read %}<strong>{% endif %}
-                        <a href="messages/{{ message.id }}">{{ message.title|raw }}</a>
-                        {% if not message.read %}</strong>{% endif %}<br>
-                    <small>from <a href="members/{{ message.user }}">{{ message.user }}</a> {{ ago(message.time) }}</small>
+                    {% set unread = (message.whenfirstread == '0000-00-00 00:00.00') %}
+                    {% if (unread) %}<strong>{% endif %}
+                        <a href="messages/{{ message.id }}">{{ message.message|raw }}</a>
+                        {% if unread %}</strong>{% endif %}<br>
+                    <small>from {{ macros.profilelink(message.sender.username) }} {# {{ message.created.DiffForHumans) }}#}</small>
                 </p>
             </div>
             <div class="float-right hidden-md-down chevplace">

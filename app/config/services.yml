@@ -30,14 +30,41 @@ services:
         class: AppBundle\Provider\UserProvider
         arguments: ['@doctrine.orm.entity_manager']
 
+#    rox.legacy_dispatch_listener:
+#        class: AppBundle\EventListener\LegacyDispatchListener
+#        arguments: ['@rox.legacy_kernel', '@session', '@security.token_storage' ]
+#        tags:
+#            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 200000 }
+
+    rox.legacy_kernel:
+        class: AppBundle\LegacyKernel\LegacyHttpKernel
+        arguments: ['@templating.engine.twig', '@event_dispatcher', '@controller_resolver', '@request_stack', '@argument_resolver', '@service_container']
+
     rox.legacy_password_encoder:
         class: AppBundle\Encoder\LegacyPasswordEncoder
+
+    rox.legacy_loader:
+        class: AppBundle\Routing\LegacyLoader
+        tags:
+            - { name: routing.loader }
+
+    rox.legacy_controller:
+        class: AppBundle\Controller\LegacyController
+        calls:
+            - [setContainer, ['@service_container']]
 
     rox.twig_extension:
         class: AppBundle\Twig\Extension
         arguments: ['@session', '@doctrine.orm.entity_manager']
         tags:
              - { name: 'twig.extension' }
+
+    rox.member_twig_extension:
+        class: AppBundle\Twig\MemberTwigExtension
+        public: false
+        arguments: ['@security.token_storage']
+        tags:
+            - { name: twig.extension }
 
     pagerfanta.bootstrap4.template:
         class: AppBundle\Pagerfanta\TwitterBootstrap4Template

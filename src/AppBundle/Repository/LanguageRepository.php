@@ -22,7 +22,7 @@ class LanguageRepository extends EntityRepository
         $rsm = new ResultSetMappingBuilder($entityManager);
         $rsm->addRootEntityFromClassMetadata(Language::class, 'l');
 
-        $query = $entityManager->createNativeQuery("SELECT * from languages JOIN words on languages.id = words.IdLanguage where code='WelcomeToSignup' ORDER BY name ASC", $rsm);
+        $query = $entityManager->createNativeQuery("SELECT languages.* from languages JOIN words on languages.id = words.IdLanguage where code='WelcomeToSignup' ORDER BY name ASC", $rsm);
         return $query->getResult();
     }
 }

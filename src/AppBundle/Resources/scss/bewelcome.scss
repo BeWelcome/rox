@@ -12,6 +12,8 @@ $lato-font-path: '../fonts';
 @include lato-include-font('black');
 @include lato-include-font('medium');
 
+@import '../../../../node_modules/font-awesome/scss/font-awesome';
+
 // Core variables and mixins
 @import "custom";
 $font-family-bold: Signika-bold, Arial;

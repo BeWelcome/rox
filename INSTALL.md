@@ -202,6 +202,9 @@ above instructions).
 
     ```bash
     $ make build
+    $ make version
+    $ php bin/console assets:install
+    $ php bin/console assetic:dump
    ```
 
 3. Start the server 
@@ -240,6 +243,12 @@ above instructions).
     mysql> exit
     ```
 
+* When doing bigger updates clear the cache from time to time with
+
+    ```bash
+    $ php bin/console cache:clear
+    ```
+    
 ## Create documentation
 
 If you need documentation check out mkdoc.

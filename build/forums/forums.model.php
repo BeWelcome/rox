@@ -19,7 +19,6 @@ function cmpForumLang($a, $b)
 }
 
 class Forums extends RoxModelBase {
-    use \Rox\RoxTraits\SessionTrait;
 
     const CV_THREADS_PER_PAGE = 15;
     const CV_POSTS_PER_PAGE = 200;
@@ -497,7 +496,7 @@ WHERE
             $this->boardTopLevelLastPosts() ;
             return ;
         }
-        $this->board = new Board($this->dao, 'Forum', '.', false, false, false, false, false, false, false, 0);
+        $this->board = new Board($this->dao, 'Forum', '.', $this->getSession(), false, false, false, false, false, false, false, 0);
         $this->board->initThreads($this->getPage(), $showsticky);
 
     } // end of boardTopLevelForum
@@ -507,7 +506,7 @@ WHERE
             $this->boardTopLevelLastPosts() ;
             return ;
         }
-        $this->board = new Board($this->dao, 'Groups', '.', false, false, false, false, false, false, false, false, true);
+        $this->board = new Board($this->dao, 'Groups', '.', $this->getSession(), false, false, false, false, false, false, false, false, true);
         $this->board->initThreads($this->getPage(), $showsticky);
 
     } // end of boardTopLevelGroups
@@ -540,9 +539,9 @@ WHERE
         }
 
 
-        $this->board = new Board($this->dao, 'Forums and Groups', '.');
+        $this->board = new Board($this->dao, 'Forums and Groups', '.', $this->getSession());
 
-        $forum = new Board($this->dao, 'Forum', '.', false, false, false, false, false, false, false, 0);
+        $forum = new Board($this->dao, 'Forum', '.', $this->getSession(), false, false, false, false, false, false, false, 0);
         $forum->THREADS_PER_PAGE = max(1, min($forumthreads, $MAX_THREADS));
         $forum->initThreads($forumpage, $showsticky);
         $forumMaxPage = max(ceil($forum->getNumberOfThreads() / $forum->THREADS_PER_PAGE), 1);
@@ -550,7 +549,7 @@ WHERE
             $forum->initThreads($forumMaxPage, $showsticky);
         }
 
-        $groups = new Board($this->dao, 'Groups', '.', false, false, false, false, false, false, false, false, true);
+        $groups = new Board($this->dao, 'Groups', '.', $this->getSession(), false, false, false, false, false, false, false, false, true);
         $groups->THREADS_PER_PAGE = max(1, min($groupsthreads, $MAX_THREADS));
         $groups->initThreads($groupspage, $showsticky);
         $groupsMaxPage = ceil($groups->getNumberOfThreads() / $groups->THREADS_PER_PAGE);
@@ -589,11 +588,11 @@ WHERE
             }
 
 
-            $this->board = new Board($this->dao, $title, $href, $subboards, $this->tags, $this->continent);
+            $this->board = new Board($this->dao, $title, $href, $this->getSession(), $subboards, $this->tags, $this->continent);
         } else {
-            $this->board = new Board($this->dao, 'Forums', '.');
+            $this->board = new Board($this->dao, 'Forums', '.', $this->getSession());
             foreach (Forums::$continents as $code => $name) {
-                $this->board->add(new Board($this->dao, $name, 'k'.$code.'-'.$name));
+                $this->board->add(new Board($this->dao, $name, 'k'.$code.'-'.$name, $this->getSession()));
             }
         }
         $this->board->initThreads($this->getPage(), $showsticky);
@@ -610,7 +609,7 @@ WHERE
 			$this->boardTopLevelLastPosts() ;
 			return ;
         }
-		$this->board=new Board($this->dao, 'Forums', '.');
+		$this->board=new Board($this->dao, 'Forums', '.', $this->getSession());
 
  		$query="select id as IdTagCategory,IdName,IdDescription from forums_tags where Type='Category' order by tag_position asc " ;
 		$scat = $this->dao->query($query);
@@ -631,7 +630,7 @@ WHERE
 		// We are going to seek for the X last post which have this tag
 			$tt=array() ;
 			array_push($tt,$rowcat) ;
-			$board=new Board($this->dao, 'Forums', '.',null,$tt);
+			$board=new Board($this->dao, 'Forums', '.', $this->getSession(),null,$tt);
 			$rowcat->board=$board ;
 
 
@@ -676,11 +675,11 @@ WHERE
             $title = Forums::$continents[$this->continent];
         }
 
-        $this->board = new Board($this->dao, $title, $href, $subboards, $this->tags, $this->continent);
+        $this->board = new Board($this->dao, $title, $href, $this->getSession(), $this->tags, $this->continent);
 
         $countries = $this->getAllCountries($this->continent);
         foreach ($countries as $code => $country) {
-            $this->board->add(new Board($this->dao, $country, 'c'.$code.'-'.$country));
+            $this->board->add(new Board($this->dao, $country, 'c'.$code.'-'.$country, $this->getSession()));
         }
         $this->board->initThreads($this->getPage());
     } // end of boardContinent
@@ -764,11 +763,11 @@ WHERE `country_code` = '%s' AND `admin_code` = '%s'
             $title = $admincode->name;
         }
 
-        $this->board = new Board($this->dao, $title, $href, $navichain, $this->tags, $this->continent, $this->countrycode, $this->admincode);
+        $this->board = new Board($this->dao, $title, $href, $this->getSession(), $navichain, $this->tags, $this->continent, $this->countrycode, $this->admincode);
 
         $locations = $this->getAllLocations($this->countrycode, $this->admincode);
         foreach ($locations as $geonameid => $name) {
-            $this->board->add(new Board($this->dao, $name, 'g'.$geonameid.'-'.$name));
+            $this->board->add(new Board($this->dao, $name, 'g'.$geonameid.'-'.$name, $this->getSession()));
         }
         $this->board->initThreads($this->getPage());
     } // end of boardAdminCode
@@ -839,11 +838,11 @@ WHERE `iso_alpha2` = '%s'
         }
 
 
-        $this->board = new Board($this->dao, $title, $href, $navichain, $this->tags, $this->continent, $this->countrycode);
+        $this->board = new Board($this->dao, $title, $href, $this->getSession(), $this->tags, $this->continent, $this->countrycode);
 
         $admincodes = $this->getAllAdmincodes($this->countrycode);
         foreach ($admincodes as $code => $name) {
-            $this->board->add(new Board($this->dao, $name, 'a'.$code.'-'.$name));
+            $this->board->add(new Board($this->dao, $name, 'a'.$code.'-'.$name, $this->getSession()));
         }
 
         $this->board->initThreads($this->getPage());
@@ -885,10 +884,10 @@ WHERE `iso_alpha2` = '%s'
             }
 
 
-            $this->board = new Board($this->dao, $title, $href, $subboards, $this->tags, $this->continent,false,false,false,false,$this->IdGroup);
+            $this->board = new Board($this->dao, $title, $href, $this->getSession(), $subboards, $this->tags, $this->continent,false,false,false,false,$this->IdGroup);
             $this->board->initThreads($this->getPage(), $showsticky);
         } else {
-            $this->board = new Board($this->dao, "", ".", $subboards, $this->tags, $this->continent,false,false,false,false,$this->IdGroup);
+            $this->board = new Board($this->dao, "", ".", $this->getSession(), $subboards, $this->tags, $this->continent,false,false,false,false,$this->IdGroup);
 //            foreach (Forums::$continents as $code => $name) {
 //                $this->board->add(new Board($this->dao, $name, 'k'.$code.'-'.$name));
 //            }
@@ -999,7 +998,7 @@ WHERE `geonameid` = '%d'
             $title = $geonameid->name;
         }
 
-        $this->board = new Board($this->dao, $title, $href, $navichain, $this->tags, $this->continent, $this->countrycode, $this->admincode, $this->geonameid);
+        $this->board = new Board($this->dao, $title, $href, $this->getSession(), $navichain, $this->tags, $this->continent, $this->countrycode, $this->admincode, $this->geonameid);
         $this->board->initThreads($this->getPage());
     } // end of boardLocation
 
@@ -4140,11 +4139,12 @@ class Board implements Iterator {
 	public $THREADS_PER_PAGE ; //Variable because it can change wether the user is logged or no
 	public $POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
 
-    public function __construct(&$dao, $boardname, $link, $navichain=false, $tags=false, $continent=false, $countrycode=false, $admincode=false, $geonameid=false, $board_description=false,$IdGroup=false, $no_forumsgroup=false) {
+    public function __construct(&$dao, $boardname, $link, $session, $navichain=false, $tags=false, $continent=false, $countrycode=false, $admincode=false, $geonameid=false, $board_description=false,$IdGroup=false, $no_forumsgroup=false) {
 		$this->THREADS_PER_PAGE=Forums::CV_THREADS_PER_PAGE  ; //Variable because it can change wether the user is logged or no
 		$this->POSTS_PER_PAGE=Forums::CV_POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
 
 		$this->BW_Right = MOD_right::get();
+		$this->_session = $session;
 
 		if (!$this->_session->has( 'IdMember' )) {
 			$this->THREADS_PER_PAGE=100  ; // Variable because it can change wether the user is logged or no
@@ -4341,7 +4341,11 @@ class Board implements Iterator {
 		$row = $s->fetch(PDB::FETCH_OBJ);
 		$this->numberOfThreads = $row->number;
 
-		$from = ($this->THREADS_PER_PAGE * ($page - 1));
+		if ($page == 0) {
+		    $from = 0;
+        } else {
+		    $from = $this->THREADS_PER_PAGE * ($page - 1);
+        }
 
 		$query = "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
 		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`,

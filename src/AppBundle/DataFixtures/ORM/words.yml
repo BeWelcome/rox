@@ -1,0 +1,28 @@
+AppBundle\Entity\Word:
+    WelcomeToSignup_en:
+        code: WelcomeToSignup
+        ShortCode: en
+        Sentence: 'Welcome to the sign-up page'
+        updated: <dateTime()>
+        donottranslate : no
+        IdLanguage: '@language_en->id'
+        IdMember: 1
+        created: <dateTime()>
+        TranslationPriority: 1
+        Description: 'Description'
+        isarchived: no
+        majorupdate: <dateTime()>
+    WelcomeToSignup_fr:
+        code: WelcomeToSignup
+        ShortCode: fr
+        Sentence: 'Bienvenue sur la page d’inscription'
+        updated: <dateTime()>
+        donottranslate : no
+        IdLanguage: '@language_fr->id'
+        IdMember: 1
+        created: <dateTime()>
+        TranslationPriority: 1
+        Description: 'Description'
+        isarchived: no
+        majorupdate: <dateTime()>
+

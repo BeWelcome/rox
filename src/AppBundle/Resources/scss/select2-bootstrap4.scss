@@ -549,13 +549,13 @@ $clear-selection-color: $dropdown-arrow-color !default;
 
     /* 1 */
     .select2-selection__arrow {
-      width: $caret-width-lg;
+      width: $caret-width;
 
       b {
-        border-width: $caret-width-lg $caret-width-lg 0 $caret-width-lg;
-        margin-left: -$caret-width-lg;
+        border-width: $caret-width $caret-width 0 $caret-width;
+        margin-left: -$caret-width;
         margin-left: --$input-padding-x-lg;
-        margin-top: -$caret-width-lg/2;
+        margin-top: -$caret-width/2;
       }
     }
   }

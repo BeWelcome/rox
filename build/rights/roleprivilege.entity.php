@@ -123,7 +123,7 @@ class RolePrivilege extends RoxEntityBase
      * @access public
      * @return mixed - the loaded entity or false
      */
-    public function findById($role, $privilege)
+    public function find($role, $privilege)
     {
         if (!is_object($role) || !is_object($privilege) || !$role->isPKSet() || !$privilege->isPKSet())
         {

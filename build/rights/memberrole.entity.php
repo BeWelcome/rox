@@ -89,7 +89,7 @@ class MemberRole extends RoxEntityBase
      * @access public
      * @return mixed - the loaded entity or false
      */
-    public function findById($member, $role)
+    public function find($member, $role)
     {
         if (!is_object($role) || !$role->isPKSet() || !is_object($member) || !$member->isPKSet())
         {

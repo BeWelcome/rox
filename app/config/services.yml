@@ -59,6 +59,13 @@ services:
         tags:
              - { name: 'twig.extension' }
 
+    rox.member_twig_extension:
+        class: AppBundle\Twig\MemberTwigExtension
+        public: false
+        arguments: ['@security.token_storage']
+        tags:
+            - { name: twig.extension }
+
     pagerfanta.bootstrap4.template:
         class: AppBundle\Pagerfanta\TwitterBootstrap4Template
 

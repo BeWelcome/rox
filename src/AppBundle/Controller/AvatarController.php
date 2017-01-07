@@ -53,7 +53,7 @@ class AvatarController extends Controller
             return new BinaryFileResponse($filename);
         }
 
-        $filename = 'data/user/avatars/' . $member->getId() . $suffix;
+        $filename = '../data/user/avatars/' . $member->getId() . $suffix;
         if (file_exists($filename)) {
             return new BinaryFileResponse($filename);
         }

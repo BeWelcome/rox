@@ -8,15 +8,15 @@ class PageWithHTML extends AbstractBasePage
     // Add or increment query string if a JS file changes to make sure browsers
     // reload the file (e.g. "?1" -> "?2")
     private $_early_scriptfiles = array(
-        '/jquery/jquery-2.1.4.js',
+        '/assetic/jquery_js.js',
         '/main.js?9',
         '/common/common.js?1',
-        '/select2/select2.min.js'
+        '/assetic/select2_js.js',
     );
 
     private $_late_scriptfiles = array(
-        'tether-1.1.1/js/tether.js',
-        '/bootstrap/bootstrap.js',
+        '/assetic/tether_js.js',
+        '/assetic/bootstrap_js.js',
         '/common/initialize.js?1',
     );
 
@@ -171,8 +171,7 @@ class PageWithHTML extends AbstractBasePage
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <script src="/assetic/backwards_js.js"></script>
         <![endif]-->
         </head>
         <body>
@@ -261,7 +260,7 @@ class PageWithHTML extends AbstractBasePage
         if (!$scriptfiles = $this->getScriptfiles()) {
             // no stylesheets
         } else foreach($scriptfiles as $url) {
-            ?><script type="text/javascript" src="script/<?=ltrim($url, '/')?>"></script>
+            ?><script type="text/javascript" src="<?=ltrim($url, '/')?>"></script>
             <?php
         }
     }
@@ -279,7 +278,7 @@ class PageWithHTML extends AbstractBasePage
         {
             foreach($scriptfiles as $url)
             {
-                echo "<script type='text/javascript' src='script/" . ltrim($url, '/') . "'></script>" . PHP_EOL;
+                echo "<script type='text/javascript' src='". ltrim($url, '/') . "'></script>" . PHP_EOL;
             }
         }
     }

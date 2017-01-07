@@ -1,20 +1,14 @@
 <?php
 
-namespace Rox\Main\Home;
+namespace AppBundle\Model;
 
-use AnthonyMartin\GeoLocation\GeoLocation;
-use Illuminate\Database\Eloquent\Builder;
-use Rox\Models\Activity;
-use Rox\Member\Model\Member;
-use Rox\Message\Model\Message;
-use Rox\Models\Note;
-use Rox\Models\Post;
-use Rox\Models\Thread;
-use Illuminate\Database\Capsule\Manager as Capsule;
-use Rox\Trip\Model\Trip;
-use stdClass;
+use AppBundle\Entity\Member;
+use AppBundle\Entity\Message;
+use Doctrine\DBAL\Query\QueryBuilder;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 
-class HomeModel extends \RoxModelBase {
+class HomeModel extends BaseModel {
 
     /**
      * Generates messages for display on home page
@@ -27,33 +21,33 @@ class HomeModel extends \RoxModelBase {
      *   'time': '10 minutes ago',
      *   'read': true
      *
+     * @param Member $member
+     * @param $all
+     * @param $unread
      * @param int|bool $limit
-     *
      * @return array
      */
-    public function getMessages(Member $member, $all, $unread, $limit = false)
+    public function getMessages(Member $member, $unread, $limit = 0)
     {
-        $query = Message::orderBy('created', 'desc')->with('sender')->where('IdReceiver', $member->id);
+        $queryBuilder = $this->em->createQueryBuilder();
+        $queryBuilder
+            ->select('m')
+            ->from('AppBundle\Entity\Message', 'm')
+            ->where('m.receiver = :member')
+            ->setParameter('member', $member);
         if ($unread) {
-            $query= $query->where('WhenFirstRead', '0000-00-00 00:00:00');
+            $queryBuilder
+                ->andWhere("whenfirstread = '0000-00-00 00:00.00");
         }
-        if ($limit) {
-            $query=$query->take($limit);
-        }
-        $messages = $query->get()->all();
 
-        $mappedMessages = array_map(
-            function($a) {
-                $result = new \stdClass();
-                $result->title = strip_tags($a->Message);
-                $result->id = $a->id;
-                $result->user = $a->sender->Username;
-                $result->time = $a->created;
-                $result->read = ($a->WhenFirstRead != '0000-00-00 00:00:00');
-                return $result;
-            }, $messages
-        );
-        return $mappedMessages;
+        if($limit <> 0) {
+            $queryBuilder->setMaxResults($limit);
+        }
+
+        return $queryBuilder
+            ->orderBy('m.created', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 
     /**
@@ -69,11 +63,13 @@ class HomeModel extends \RoxModelBase {
      *
      * @return array
      */
-    public function getNotifications(Member $member, $limit = false)
+    public function getNotifications(Member $member, $limit = 0)
     {
-        $query = Note::orderBy('created', 'desc')
+        $member;
+        $limit;
+/*        $query = Note::orderBy('created', 'desc')
             ->with('notifier')
-            ->where('IdMember', $member->id)
+            ->where('IdMember', $member->getId())
             ->where('checked', 0)->get();
         if ($limit) {
             $query=$query->take($limit);
@@ -98,6 +94,7 @@ class HomeModel extends \RoxModelBase {
             }, $notes
         );
         return $mappedNotes;
+*/
     }
 
     /**
@@ -113,9 +110,10 @@ class HomeModel extends \RoxModelBase {
      *
      * @return array
      */
-    public function getThreads(Member $member, $groups, $forum, $following, $limit = false)
+    public function getThreads(Member $member, $groups, $forum, $following, $limit = 0)
     {
-        if ($groups + $forum + $following == 0) {
+        $member;$groups;$forum;$following;$limit;
+/*        if ($groups + $forum + $following == 0) {
             // Member decided not to show anything
             return [];
         }
@@ -184,6 +182,7 @@ class HomeModel extends \RoxModelBase {
             }, $posts
         );
         return $mappedPosts;
+  */
     }
 
     /**
@@ -203,9 +202,10 @@ class HomeModel extends \RoxModelBase {
      *
      * @return array
      */
-    public function getActivities(Member $member, $limit = false)
+    public function getActivities(Member $member, $limit = 0)
     {
-        // Fetch latitude and longitude of member's location
+        $member; $limit;
+/*        // Fetch latitude and longitude of member's location
         $latAndLong = Capsule::table('geonames')->where('geonameid', $member->city->id)->first(['latitude', 'longitude']);
 
         if ($latAndLong == null) {
@@ -256,10 +256,10 @@ class HomeModel extends \RoxModelBase {
             $mappedActivities[] = $mappedActivity;
         }
         return $mappedActivities;
-    }
+ */   }
 
     public function getMemberDetails() {
-        $loggedInMember = $this->getLoggedInMember();
+/*        $loggedInMember = $this->getLoggedInMember();
         $location = Capsule::table('geonames')->where('geonameId', $loggedInMember->IdCity)->first(['name']);
         return ['member' =>
             [
@@ -267,17 +267,9 @@ class HomeModel extends \RoxModelBase {
                 'hosting' => $loggedInMember->Accomodation
             ]
         ];
-    }
+*/    }
 
     public function getDonationCampaignDetails() {
-        $donationModel = new \DonateModel();
-        $details = $donationModel->getStatForDonations();
-
-        return [
-            'year' => $details->year,
-            'yearNeeded' => $details->YearNeededAmount,
-            'yearDonated' => $details->YearDonation
-        ];
     }
 
     /**
@@ -286,7 +278,8 @@ class HomeModel extends \RoxModelBase {
      */
     public function getTravellersInAreaOfMember( Member $member)
     {
-        $travellers = false;
+        $member;
+/*        $travellers = false;
         $trip = new Trip();
         $trips = $trip->findInMemberAreaNextThreeMonths( $member );
         if($trips) {
@@ -300,5 +293,5 @@ class HomeModel extends \RoxModelBase {
             }
         }
         return $travellers;
-    }
+*/    }
 }

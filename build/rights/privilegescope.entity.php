@@ -19,7 +19,7 @@ class PrivilegeScope extends RoxEntityBase
      * @access public
      * @return mixed - the loaded entity or false
      */
-    public function findById($member, $role, $privilege)
+    public function find($member, $role, $privilege)
     {
         if (!is_object($role) || !is_object($privilege) || !is_object($member) || !$role->isPKSet() || !$privilege->isPKSet() || !$member->isPKSet())
         {

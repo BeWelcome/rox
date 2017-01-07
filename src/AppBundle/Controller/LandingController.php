@@ -2,33 +2,39 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Member;
+use AppBundle\Entity\Location;
+use AppBundle\Model\CommunityModel;
+use AppBundle\Model\DonateModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Rox\CommunityNews\Model\CommunityNews;
-use Rox\Main\Home\HomeModel as HomeService;
-use Rox\Start\Form\SearchGotoLocationFormType;
-use Rox\Start\Form\SearchHomeLocationFormType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Entity\Member;
+use AppBundle\Model\HomeModel;
+use AppBundle\Form\SearchGotoLocationFormType;
+use AppBundle\Form\SearchHomeLocationFormType;
 
 class LandingController extends Controller
 {
     /**
      * @param Request $request
      *
+     * @Route( "/widget/messages", name="/widget/messages")
+     *
      * @return Response
      */
     public function showMessagesAction(Request $request)
     {
-        $all = $request->query->get('all');
-        $unread = $request->query->get('unread');
+        $unread = $request->query->get('unread', false);
+        /* Ignore query parameter all as $unread is set accordingly
+        $all = $request->query->get('all', false);
+        */
 
         $member = $this->getUser();
 
-        $homeService = new HomeService();
-        $messages = $homeService->getMessages($member, $all, $unread, 4);
+        $homeModel = new HomeModel($this->getDoctrine());
+        $messages = $homeModel->getMessages($member, $unread, 4);
 
         $content = $this->render(':landing/widget:messages.html.twig', [
             'messages' => $messages,
@@ -39,15 +45,16 @@ class LandingController extends Controller
 
     public function showNotificationsAction()
     {
-        $member = $this->getUser();
+/*        $member = $this->getUser();
 
-        $homeService = new HomeService();
-        $notifications = $homeService->getNotifications($member, 5);
+        $homeModel = new HomeModel($this->getDoctrine());
+        $notifications = $homeModel->getNotifications($member, 5);
 
         $content = $this->render(':landing/widget:notifications.html.twig', [
             'notifications' => $notifications,
         ]);
-
+*/
+        $content = '';
         return new Response($content);
     }
 
@@ -58,31 +65,34 @@ class LandingController extends Controller
      */
     public function showThreadsAction(Request $request)
     {
-        $groups = $request->query->get('groups');
+        $request;
+/*        $groups = $request->query->get('groups');
         $forum = $request->query->get('forum');
         $following = $request->query->get('following');
 
         $member = $this->getUser();
-        $homeService = new HomeService();
-        $threads = $homeService->getThreads($member, $groups, $forum, $following, 4);
+        $homeModel = new HomeModel($this->getDoctrine());
+        $threads = $homeModel->getThreads($member, $groups, $forum, $following, 4);
 
-        $content = $this->render(':landing/widget:forums.html.twig', [
+        $content = $this->render(':landing:widget:forums.html.twig', [
             'threads' => $threads,
         ]);
-
+*/
+        $content = '';
         return new Response($content);
     }
 
     public function showActivitiesAction()
     {
-        $member = $this->getUser();
-        $homeService = new HomeService();
-        $activities = $homeService->getActivities($member, 4);
+/*        $member = $this->getUser();
+        $homeModel = new HomeModel($this->getDoctrine());
+        $activities = $homeModel->getActivities($member, 4);
 
-        $content = $this->render(':landing/widget:activities.html.twig', [
+        $content = $this->render(':landing:widget:activities.html.twig', [
             'activities' => $activities,
         ]);
-
+*/
+        $content = '';
         return new Response($content);
     }
 
@@ -106,11 +116,11 @@ class LandingController extends Controller
             $member->save();
         }
 
-        $profilePictureWithAccommodation = $this->render('@start/widget/profilepicturewithaccommodation.html.twig', [
+        $profilePictureWithAccommodation = $this->render(':landing:widget:profilepicturewithaccommodation.html.twig', [
             'member' => $member,
         ]);
 
-        $accommodationHtml = $this->render('@start/widget/accommodation.html.twig', [
+        $accommodationHtml = $this->render(':landing:widget:accommodation.html.twig', [
             'member' => $member,
         ]);
 
@@ -128,7 +138,7 @@ class LandingController extends Controller
     private function getSearchHomeLocationData(Member $member)
     {
         $data['search_geoname_id'] = $member->getIdcity();
-        $geo = new \Geo($member->getIdcity());
+        $geo = new Location($member->getIdcity());
         $data['search'] = $geo->getName();
         $data['search_latitude'] = $member->getLatitude();
         $data['search_longitude'] = $member->getLongitude();
@@ -138,7 +148,11 @@ class LandingController extends Controller
     /**
      * Shows the landing page
      *
+     * \todo create controller and add routes there
+     * @Route("/message", name="message")
      * @Route("/home", name="landingpage")
+     * @Route("/communitynews/{id}", name="communitynews_show")
+     * @Route("/communitynews", name="communitynews")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -148,13 +162,14 @@ class LandingController extends Controller
             throw $this->createAccessDeniedException();
         }
 
-        $homeService = new HomeService();
-        $donationCampaign = $homeService->getDonationCampaignDetails();
         $member = $this->getUser();
+        $donationModel = new DonateModel($this->getDoctrine());
+        $campaignDetails = $donationModel->getStatForDonations();
 
-        $travellersInArea = $homeService->getTravellersInAreaOfMember($member);
+        $homeModel = new HomeModel($this->getDoctrine());
+        $travellersInArea = $homeModel->getTravellersInAreaOfMember($member);
 
-        $communityNews = new CommunityNews();
+        $communityNews = new CommunityModel($this->getDoctrine());
         $latestNews = $communityNews->getLatest();
 
         // Prepare search form for home location link
@@ -165,12 +180,14 @@ class LandingController extends Controller
         $searchGotoLocation = $this->createForm(SearchGotoLocationFormType::class);
 
         $content = $this->render(':landing:landing.html.twig', [
-                'language' => $this->getParameter('locale'),
                 'title' => 'BeWelcome',
-                'my_member' => $this->getUser(),
                 'searchLocation' => $searchHomeLocation->createView(),
                 'tinySearch' => $searchGotoLocation->createView(),
-                'campaign' => $donationCampaign,
+                'campaign' => [
+                    'year' => $campaignDetails->year,
+                    'yearNeeded' => $campaignDetails->YearNeededAmount,
+                    'yearDonated' => $campaignDetails->YearDonation
+                ],
                 'travellers' => $travellersInArea,
                 'communityNews' => $latestNews,
         ]);

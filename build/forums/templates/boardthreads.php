@@ -69,7 +69,7 @@ Boston, MA  02111-1307, USA.
         
         ?>
             <tr class="<?php echo $styles[$cnt%2]; ?>">
-                <td class="forumsboardthreadauthor pa-0"><a href="members/<?php echo $thread->first_author; ?>"><img src="members/avatar/<?php echo $thread->first_author; ?>?50_50" alt="<?php echo $thread->first_author; ?>" title="<?php echo $thread->first_author; ?>" /></a></td>
+                <td class="forumsboardthreadauthor pa-0"><a href="members/<?php echo $thread->first_author; ?>"><img src="members/avatar/<?php echo $thread->first_author; ?>?size=50" alt="<?php echo $thread->first_author; ?>" title="<?php echo $thread->first_author; ?>" /></a></td>
                 <td class="forumsboardthreadtitle pl-0">
                     <?php
                     if ($thread->stickyvalue < 0) {

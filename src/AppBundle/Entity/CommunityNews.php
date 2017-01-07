@@ -1,7 +1,13 @@
 <?php
+/*
+ * @codingStandardsIgnoreFile
+ *
+ * Auto generated file ignore for Code Sniffer
+ */
 
 namespace AppBundle\Entity;
 
+use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -9,6 +15,9 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="community_news")
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class CommunityNews
 {
@@ -175,11 +184,11 @@ class CommunityNews
     /**
      * Get createdAt
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getCreatedAt()
     {
-        return $this->createdAt;
+        return Carbon::instance($this->createdAt);
     }
 
     /**
@@ -223,11 +232,11 @@ class CommunityNews
     /**
      * Get updatedAt
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getUpdatedAt()
     {
-        return $this->updatedAt;
+        return Carbon::instance($this->updatedAt);
     }
 
     /**
@@ -271,11 +280,11 @@ class CommunityNews
     /**
      * Get deletedAt
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getDeletedAt()
     {
-        return $this->deletedAt;
+        return Carbon::instance($this->deletedAt);
     }
 
     /**

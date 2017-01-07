@@ -82,7 +82,7 @@
                     {# messages #}
                     <div role="tabpanel" class="tab-pane active" id="messages">
                         <!-- all / unread messages toggle -->
-                        <div class="row text-xs-center p-1">
+                        <div class="flex-row justify-content-center p-1">
 
                             <div class="btn-group" data-toggle="buttons">
                                 <label class="btn btn-primary btn-radio active" id="all">
@@ -241,7 +241,7 @@
 
                     <h5><a href="{{ url('communitynews_show', { id: communityNews.id} ) }}">{{ communityNews.title }}</a></h5>
                     <p class="card-text">{{ communityNews.text | truncate(200) | raw }}<a href="{{ url('communitynews_show', { id: communityNews.id} ) }}" class="btn-outline-primary">{{ 'Read more' | trans }}</a></p>
-                    <div><small>{{ communityNews.created_at.diffForHumans }}</small><small class="float-right">3 comments</small></div>
+                    <div><small>{{ communityNews.createdAt.diffForHumans }}</small><small class="float-right">3 comments</small></div>
                     <a href="{{ url('communitynews') }}" class="btn btn-outline-primary btn-homewhite btn-block mt-2"><i class="fa fa-newspaper-o"></i> All news</a>
                 </div>
             </div>
@@ -265,3 +265,10 @@
         </div>
     </div>
 {% endblock content %}
+
+{% block javascripts %}
+    {%  javascripts
+        'bundles/app/js/home.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock javascripts %}

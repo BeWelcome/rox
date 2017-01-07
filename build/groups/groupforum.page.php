@@ -50,6 +50,7 @@ class GroupForumPage extends GroupsBasePage
                 $memberlist_widget->setGroup($this->group);
 
                 $Forums = new ForumsController;
+                $Forums->setEngine($this->engine);
                 $Forums->index('groups');
                 //$forums_widget->setGroup($this->getGroup());
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace Rox\Member\Extension;
+namespace AppBundle\Twig;
 
 use Illuminate\Database\Query\Expression;
-use Rox\Member\Model\Member;
-use Rox\Message\Model\Message;
+use AppBundle\Entity\Member;
+use AppBundle\Entity\Message;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig_Extension;
@@ -59,7 +59,8 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
 
     protected function getMessageCount(Member $member)
     {
-        $message = new Message();
+        $member;
+/*        $message = new Message();
 
         $messageCount = $message->getConnection()->query()
             ->select([
@@ -71,6 +72,8 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
             ->where('Status', 'Sent');
 
         return (int) $messageCount->value('cnt');
+  */
+        return 10;
     }
 
     /**

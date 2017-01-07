@@ -1,6 +1,0 @@
-## The current apache configuration on bull doesn't allow
-## us to turn on indexes through .htaccess ... but ...
-## Why do we need this anyway?
-## I'll turn if off and see if anyone complains ;-)
-## -- Tobias Brox, 2008-01-05
-#Options +Indexes

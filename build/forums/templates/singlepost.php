@@ -69,7 +69,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
     ?>
 
     <div class="pull-left p-r-2 p-b-1">
-        <img class="media-object" src="/members/avatar/<?php echo ($post->OwnerUsername); ?>?75_75">
+        <img class="media-object" src="/members/avatar/<?php echo ($post->OwnerUsername); ?>?size=75">
         <small class="username"><a href="members/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a></small><br>
         <?php
         if ($this->_session->has( "IdMember" )) {

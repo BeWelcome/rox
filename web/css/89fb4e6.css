@@ -3391,11 +3391,6 @@ template {
     display: none;
   }
 
-  .btn > .caret,
-  .dropup > .btn > .caret {
-    border-top-color: #000 !important;
-  }
-
   .badge {
     border: 1px solid #000;
   }
@@ -3427,7 +3422,6 @@ html {
   width: device-width;
 }
 html {
-  font-size: 16px;
   -ms-overflow-style: scrollbar;
   -webkit-tap-highlight-color: transparent;
 }
@@ -5264,39 +5258,6 @@ pre code {
   border: 0;
 }
 
-.table-reflow thead {
-  float: left;
-}
-.table-reflow tbody {
-  display: block;
-  white-space: nowrap;
-}
-.table-reflow th,
-.table-reflow td {
-  border-top: 1px solid #eceeef;
-  border-left: 1px solid #eceeef;
-}
-.table-reflow th:last-child,
-.table-reflow td:last-child {
-  border-right: 1px solid #eceeef;
-}
-.table-reflow thead:last-child tr:last-child th,
-.table-reflow thead:last-child tr:last-child td,
-.table-reflow tbody:last-child tr:last-child th,
-.table-reflow tbody:last-child tr:last-child td,
-.table-reflow tfoot:last-child tr:last-child th,
-.table-reflow tfoot:last-child tr:last-child td {
-  border-bottom: 1px solid #eceeef;
-}
-.table-reflow tr {
-  float: left;
-}
-.table-reflow tr th,
-.table-reflow tr td {
-  display: block !important;
-  border: 1px solid #eceeef;
-}
-
 .form-control {
   display: block;
   width: 100%;
@@ -6121,11 +6082,6 @@ tbody.collapse.show {
   z-index: 990;
 }
 
-.dropup .caret {
-  content: "";
-  border-top: 0;
-  border-bottom: 0.3em solid;
-}
 .dropup .dropdown-menu {
   top: auto;
   bottom: 100%;
@@ -6135,7 +6091,7 @@ tbody.collapse.show {
 .btn-group,
 .btn-group-vertical {
   position: relative;
-  display: flex;
+  display: inline-flex;
   vertical-align: middle;
 }
 .btn-group > .btn,
@@ -6230,19 +6186,6 @@ tbody.collapse.show {
 .btn-lg + .dropdown-toggle-split, .btn-group-lg > .btn + .dropdown-toggle-split {
   padding-right: 0.9375rem;
   padding-left: 0.9375rem;
-}
-
-.btn .caret {
-  margin-left: 0;
-}
-
-.btn-lg .caret, .btn-group-lg > .btn .caret {
-  border-width: 0.3em 0.3em 0;
-  border-bottom-width: 0;
-}
-
-.dropup .btn-lg .caret, .dropup .btn-group-lg > .btn .caret {
-  border-width: 0 0.3em 0.3em;
 }
 
 .btn-group-vertical {
@@ -6554,6 +6497,7 @@ tbody.collapse.show {
 .custom-file-input {
   min-width: 14rem;
   max-width: 100%;
+  height: 2.5rem;
   margin: 0;
   filter: alpha(opacity=0);
   opacity: 0;
@@ -6569,6 +6513,7 @@ tbody.collapse.show {
   padding: 0.5rem 1rem;
   line-height: 1.5;
   color: #464a4c;
+  pointer-events: none;
   user-select: none;
   background-color: #fff;
   border: 1px solid #ccc;
@@ -8146,11 +8091,12 @@ button.close {
 
 .popover-title {
   padding: 8px 14px;
-  margin: 0;
+  margin-bottom: 0;
   font-size: 1rem;
   background-color: #f7f7f7;
   border-bottom: 1px solid #ebebeb;
-  border-radius: 0.2375rem 0.2375rem 0 0;
+  border-top-right-radius: calc(0.3rem - 1px);
+  border-top-left-radius: calc(0.3rem - 1px);
 }
 .popover-title:empty {
   display: none;
@@ -14047,6 +13993,7 @@ li.picbox_activities {
   #col1 {
     flex: 0 0 25%;
     max-width: 25%;
+    left: 75%;
   }
 
   #col2 {
@@ -14056,6 +14003,7 @@ li.picbox_activities {
   #col3 {
     flex: 0 0 75%;
     max-width: 75%;
+    right: 25%;
   }
 
   #col1_left {

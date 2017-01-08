@@ -1,0 +1,30 @@
+{#
+
+For old code, see:
+    build/members/member.entity.php::get_comments()
+    build/members/templates/comments_col3.helper.php
+    build/members/templates/comment_template.php
+
+Note that Member.comments currently only returns comments to that member
+
+#}
+
+{% extends '@base/base.html.twig' %}
+
+{% block content %}
+
+{% for comment in member.comments %}
+
+    {#{{ dump(comment) }}#}
+
+    {{ dump(comment.Lenght) }}
+
+    {{ dump(comment.TextFree) }}
+    {{ dump(comment.TextWhere) }}
+
+    {{ dump(comment.fromMember.Username) }}
+    {{ dump(comment.toMember.Username) }}
+
+{% endfor %}
+
+{% endblock %}

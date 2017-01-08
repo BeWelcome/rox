@@ -1,7 +1,7 @@
 <div class="card">
     <a name="comments"></a>
 
-    <h3 class="card-header"><i class="fa fa-comment"></i><span class="icontext">Latest Comments</span><a href="#" class="btn btn-primary-outline btn-sm float-right request p-0"><i class="fa fa-angle-double-right"></i> All comments ({{ member.comments.count }})</a></h3>
+    <h3 class="card-header"><i class="fa fa-comment"></i><span class="icontext">Latest Comments</span><a href="#" class="btn btn-primary-outline btn-sm float-right request p-0"><i class="fa fa-angle-double-right"></i> All comments ({{ member.comments|length }})</a></h3>
 
         {% for comment in member.comments %}
             <div class="card-block px-1 pb-0">
@@ -13,5 +13,5 @@
             </div>
         {% endfor %}
 
-        <a class="btn btn-secondary btn-block"><i class="fa fa-comment"></i> See all {{ member.comments.count }} comment(s) for this member</a>
+        <a class="btn btn-secondary btn-block"><i class="fa fa-comment"></i> See all {{ member.comments|length }} comment(s) for this member</a>
 </div>

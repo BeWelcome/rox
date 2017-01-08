@@ -1,30 +1,37 @@
 <?php
-
+/*
+ * @codingStandardsIgnoreFile
+ *
+ * Auto generated file ignore for Code Sniffer
+*/
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Cryptedfields
+ * Cryptedfield
  *
  * @ORM\Table(name="cryptedfields", indexes={@ORM\Index(name="IdMember", columns={"IdMember"})})
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
-class Cryptedfields
+class CryptedField
 {
     /**
      * @var string
      *
      * @ORM\Column(name="AdminCryptedValue", type="text", length=65535, nullable=false)
      */
-    private $admincryptedvalue;
+    private $adminCryptedValue;
 
     /**
      * @var string
      *
      * @ORM\Column(name="MemberCryptedValue", type="text", length=65535, nullable=false)
      */
-    private $membercryptedvalue;
+    private $memberCryptedValue;
 
     /**
      * @var string
@@ -34,11 +41,12 @@ class Cryptedfields
     private $iscrypted = 'crypted';
 
     /**
-     * @var integer
+     * @var Member
      *
-     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     * @Orm\ManyToOne(targetEntity="Member", inversedBy="cryptedFields")
+     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      */
-    private $idmember;
+    private $member;
 
     /**
      * @var string
@@ -84,11 +92,11 @@ class Cryptedfields
      *
      * @param string $admincryptedvalue
      *
-     * @return Cryptedfields
+     * @return Cryptedfield
      */
-    public function setAdmincryptedvalue($admincryptedvalue)
+    public function setAdminCryptedValue($adminCryptedValue)
     {
-        $this->admincryptedvalue = $admincryptedvalue;
+        $this->admincryptedvalue = $adminCryptedValue;
 
         return $this;
     }
@@ -98,9 +106,9 @@ class Cryptedfields
      *
      * @return string
      */
-    public function getAdmincryptedvalue()
+    public function getAdminCryptedValue()
     {
-        return $this->admincryptedvalue;
+        return $this->adminCryptedValue;
     }
 
     /**
@@ -108,11 +116,11 @@ class Cryptedfields
      *
      * @param string $membercryptedvalue
      *
-     * @return Cryptedfields
+     * @return Cryptedfield
      */
-    public function setMembercryptedvalue($membercryptedvalue)
+    public function setMemberCryptedValue($memberCryptedValue)
     {
-        $this->membercryptedvalue = $membercryptedvalue;
+        $this->membercryptedvalue = $memberCryptedValue;
 
         return $this;
     }
@@ -122,9 +130,9 @@ class Cryptedfields
      *
      * @return string
      */
-    public function getMembercryptedvalue()
+    public function getMemberCryptedValue()
     {
-        return $this->membercryptedvalue;
+        return $this->memberCryptedValue;
     }
 
     /**
@@ -132,9 +140,9 @@ class Cryptedfields
      *
      * @param string $iscrypted
      *
-     * @return Cryptedfields
+     * @return Cryptedfield
      */
-    public function setIscrypted($iscrypted)
+    public function setIsCrypted($iscrypted)
     {
         $this->iscrypted = $iscrypted;
 
@@ -146,33 +154,9 @@ class Cryptedfields
      *
      * @return string
      */
-    public function getIscrypted()
+    public function getIsCrypted()
     {
         return $this->iscrypted;
-    }
-
-    /**
-     * Set idmember
-     *
-     * @param integer $idmember
-     *
-     * @return Cryptedfields
-     */
-    public function setIdmember($idmember)
-    {
-        $this->idmember = $idmember;
-
-        return $this;
-    }
-
-    /**
-     * Get idmember
-     *
-     * @return integer
-     */
-    public function getIdmember()
-    {
-        return $this->idmember;
     }
 
     /**
@@ -180,7 +164,7 @@ class Cryptedfields
      *
      * @param string $todo
      *
-     * @return Cryptedfields
+     * @return Cryptedfield
      */
     public function setTodo($todo)
     {
@@ -204,7 +188,7 @@ class Cryptedfields
      *
      * @param string $temporaryUncryptedBuffer
      *
-     * @return Cryptedfields
+     * @return Cryptedfield
      */
     public function setTemporaryUncryptedBuffer($temporaryUncryptedBuffer)
     {
@@ -228,7 +212,7 @@ class Cryptedfields
      *
      * @param integer $idrecord
      *
-     * @return Cryptedfields
+     * @return Cryptedfield
      */
     public function setIdrecord($idrecord)
     {
@@ -252,7 +236,7 @@ class Cryptedfields
      *
      * @param string $tablecolumn
      *
-     * @return Cryptedfields
+     * @return Cryptedfield
      */
     public function setTablecolumn($tablecolumn)
     {
@@ -279,5 +263,29 @@ class Cryptedfields
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get member
+     *
+     * @return Member
+     */
+    public function getMember()
+    {
+        return $this->member;
+    }
+
+    /**
+     * Set member
+     *
+     * @param Member $member
+     *
+     * @return Cryptedfield
+     */
+    public function setMember(Member $member)
+    {
+        $this->member = $member;
+
+        return $this;
     }
 }

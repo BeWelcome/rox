@@ -8,10 +8,14 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Encoder\LegacyPasswordEncoder;
+use Carbon\Carbon;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\JoinTable;
 use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\ORM\Mapping\OneToOne;
 use Rox\Core\Exception\RuntimeException;
 use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
 use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
@@ -68,11 +72,12 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     protected $email;
 
     /**
-     * @var integer
+     * @var Location
      *
-     * @ORM\Column(name="IdCity", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Location")
+     * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameid")
      */
-    private $idcity;
+    private $city;
 
     /**
      * @var string
@@ -126,7 +131,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     /**
      * @var integer
      *
-     * @ORM\Column(name="FirstName", type="integer", nullable=false)
+     * @ORM\Column(name="firstname", type="integer", nullable=false)
      */
     private $firstname = '0';
 
@@ -666,27 +671,27 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     }
 
     /**
-     * Set idcity
+     * Set city
      *
-     * @param integer $idcity
+     * @param Location $city
      *
      * @return Member
      */
-    public function setIdcity($idcity)
+    public function setCity(Location $city)
     {
-        $this->idcity = $idcity;
+        $this->city = $city;
 
         return $this;
     }
 
     /**
-     * Get idcity
+     * Get city
      *
-     * @return integer
+     * @return Location
      */
-    public function getIdcity()
+    public function getCity()
     {
-        return $this->idcity;
+        return $this->city;
     }
 
     /**
@@ -876,9 +881,9 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
      *
      * @return integer
      */
-    public function getFirstname()
+    public function getFirstName()
     {
-        return $this->firstname;
+        return $this->getCryptedField('FirstName');
     }
 
     /**
@@ -900,9 +905,9 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
      *
      * @return integer
      */
-    public function getSecondname()
+    public function getSecondName()
     {
-        return $this->secondname;
+        return $this->getCryptedField('SecondName');
     }
 
     /**
@@ -912,7 +917,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
      *
      * @return Member
      */
-    public function setLastname($lastname)
+    public function setLastName($lastname)
     {
         $this->lastname = $lastname;
 
@@ -924,10 +929,9 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
      *
      * @return integer
      */
-    public function getLastname()
+    public function getLastName()
     {
-        return $this->lastname;
-    }
+        return $this->getCryptedField('LastName');    }
 
     /**
      * Set accomodation
@@ -1338,27 +1342,27 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     }
 
     /**
-     * Set lastlogin
+     * Set last login
      *
-     * @param \DateTime $lastlogin
+     * @param \DateTime $lastLogin
      *
      * @return Member
      */
-    public function setLastlogin(\DateTime $lastlogin = null)
+    public function setLastlogin(\DateTime $lastLogin = null)
     {
-        $this->lastlogin = $lastlogin;
+        $this->lastlogin = $lastLogin;
 
         return $this;
     }
 
     /**
-     * Get lastlogin
+     * Get last login
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getLastlogin()
     {
-        return $this->lastlogin;
+        return Carbon::instance($this->lastlogin);
     }
 
     /**
@@ -1690,11 +1694,11 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     /**
      * Get birthdate
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getBirthdate()
     {
-        return $this->birthdate;
+        return Carbon::instance($this->birthdate);
     }
 
     /**
@@ -2345,13 +2349,31 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     }
 
     /**
+     * @ORM\OneToMany(targetEntity="CryptedField", mappedBy="member", fetch="EAGER")
+     */
+    private $cryptedFields;
+
+    /**
      * @ORM\OneToMany(targetEntity="RightVolunteer", mappedBy="member", fetch="EXTRA_LAZY")
      */
     private $volunteerRights;
 
+    private $groups;
+
+    private $languages;
+
+    private $comments;
+
+    private $relationships;
+
     public function __construct()
     {
-        $this->volunteerRights = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->volunteerRights = new ArrayCollection();
+        $this->cryptedFields = new ArrayCollection();
+        $this->groups = new ArrayCollection();
+        $this->languages = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->relationships = new ArrayCollection();
     }
 
     /**
@@ -2477,5 +2499,36 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     public function getVolunteerRights()
     {
         return $this->volunteerRights;
+    }
+
+    private function getCryptedField($fieldName)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("TableColumn", "members." . $fieldName));
+        $cryptedField = $this->cryptedFields->matching( $criteria )->first();
+        $value = $cryptedField->getMemberCryptedValue();
+        $stripped = strip_tags($value);
+
+        return $stripped;
+    }
+
+    public function getGroups()
+    {
+        return $this->groups;
+    }
+
+    public function getLanguages()
+    {
+        return $this->languages;
+    }
+
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    public function getRelationships()
+    {
+        return $this->comments;
     }
 }

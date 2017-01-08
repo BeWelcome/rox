@@ -37,4 +37,17 @@ class MemberController extends Controller
 
         return new Response($content);
     }
+
+    /**
+     * @Route("/search/members", name="search/members")
+     * @Route("/member/edit", name="member/edit")
+     * @Route("/member/comment", name="member/comment")
+     * @Route("/member/change_password", name="member/change_password")
+     * @Route("/message/compose", name="message/compose")
+     *
+     */
+    public function dummyAction()
+    {
+        return new Response();
+    }
 }

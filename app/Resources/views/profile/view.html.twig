@@ -5,8 +5,7 @@
 {% endblock %}
 
 {% block content %}
-
-    {% set FirstName, LastName = member.getCryptedField('FirstName'), member.getCryptedField('LastName') %}
+    {% set FirstName, LastName = member.FirstName, member.LastName %}
 
     {# if member admin #}
     <div>
@@ -25,7 +24,6 @@
         </select>
         <button class="btn btn-primary">Set</button>
     </div>
-
     <div class="row">
         <div class="col-xs-12">
 
@@ -39,23 +37,16 @@
 
 
                         <div class="float-left">
-                            {% if 'not crypted' not in [FirstName.IsCrypted, LastName.IsCrypted] %}
-                                <span class="h1 profilebig whiteshadow">{{ member.username }}</span><br>
+                            <span class="h1 profilebig whiteshadow">
+                            {% if FirstName|length == 0 and LastName|length == 0 %}
+                                {{ member.username }}
                             {% else %}
-                                <span class="h1 profilebig whiteshadow">
-                                        {% if FirstName.IsCrypted == 'not crypted' %}
-                                            {{ FirstName.MemberCryptedValue }}
-                                        {% endif %}
-
-                                    {% if LastName.IsCrypted == 'not crypted' %}
-                                        {{ LastName.MemberCryptedValue }}
-                                    {% endif %}
-
-                                    </span><br>
+                                     {{ FirstName }} {{ LastName }}
                             {% endif %}
+                            </span><br>
 
                             <span class="profilemedium regularfont whiteshadow">
-                                    {{ member.birthdate.diffInYears() }} {{ 'years old' | trans }}
+                                    {{ member.birthdate.DiffInYears() }} {{ 'years old' | trans }}
 
                                 {% if member.gender == 'male' %}
                                     <i class="fa fa-mars" title="male"></i>
@@ -81,7 +72,7 @@
                         </div>
                     </div>
                     <div class="col-xs-12 col-lg-5 profilestatusbox card">
-                        {% include('@member/profile/cards/hosting.html.twig') %}
+                        {% include(':profile:cards/hosting.html.twig') %}
                     </div>
                 </div>
                 <div class="col-xs-12 col-lg-12">
@@ -190,30 +181,30 @@
 
             </div>
 
-            {% include('@member/profile/cards/gallery.html.twig') %}
+            {% include(':profile:cards/gallery.html.twig') %}
 
             {% if member.PastTrips %}
-                {% include('@member/profile/cards/travels.html.twig') %}
+                {% include(':profile:cards/travels.html.twig') %}
             {% endif %}
 
-            {% if member.groups.count %}
-                {% include('@member/profile/cards/groups.html.twig') %}
+            {% if member.groups %}
+                {% include(':profile:cards/groups.html.twig') %}
             {% endif %}
 
-            {% if member.languages.count %}
-                {% include('@member/profile/cards/languages.html.twig') %}
+            {% if member.languages %}
+                {% include(':profile:cards/languages.html.twig') %}
             {% endif %}
         </div>
 
         <div class="col-xs-12 col-md-7">
 
-            {% include('@member/profile/cards/accommodation.html.twig') %}
+            {% include(':profile:cards/accommodation.html.twig') %}
 
-            {% include('@member/profile/cards/contact.html.twig') %}
+            {% include(':profile:cards/contact.html.twig') %}
 
-            {% include('@member/profile/cards/comments.html.twig') %}
+            {% include(':profile:cards/comments.html.twig') %}
 
-            {% include('@member/profile/cards/relationships.html.twig') %}
+            {% include(':profile:cards/relationships.html.twig') %}
 
         </div>
 
@@ -221,5 +212,4 @@
     {% if member.id == my_member.id %}
         </form>
     {% endif %}
-
 {% endblock content %}

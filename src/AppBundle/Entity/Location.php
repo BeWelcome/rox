@@ -54,9 +54,7 @@ class Location
      * @var string
      *
      * @ORM\OneToOne(targetEntity="Country")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="country", referencedColumnName="country")
-     * })
+     * @ORM\JoinColumn(name="country", referencedColumnName="country")
      */
     private $country;
 

@@ -22,7 +22,7 @@ class RightVolunteer
     private $id;
 
     /**
-     * @return mixed
+     * @return Member
      */
     public function getMember()
     {
@@ -30,7 +30,7 @@ class RightVolunteer
     }
 
     /**
-     * @param mixed $member
+     * @param Member $member
      */
     public function setMember($member)
     {
@@ -54,13 +54,13 @@ class RightVolunteer
     }
 
     /**
-     * @ORM\ManyToOne(targetEntity="Member", inversedBy="rightVolunteers")
+     * @ORM\ManyToOne(targetEntity="Member", inversedBy="volunteerRights")
      * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      */
     private $member;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Right", inversedBy="volunteerRights")
+     * @ORM\ManyToOne(targetEntity="Right", inversedBy="rightVolunteers")
      * @ORM\JoinColumn(name="IdRight", referencedColumnName="id")
      */
     private $right;

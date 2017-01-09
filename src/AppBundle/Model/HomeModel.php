@@ -112,77 +112,65 @@ class HomeModel extends BaseModel {
      */
     public function getThreads(Member $member, $groups, $forum, $following, $limit = 0)
     {
-        $member;$groups;$forum;$following;$limit;
-/*        if ($groups + $forum + $following == 0) {
+        if ($groups + $forum + $following == 0) {
             // Member decided not to show anything
             return [];
         }
+
+        $em = $this->em;
 
         // There seems to be an issue with some threads/posts missing their author.
         // To get around that, this task is split it two parts: first do the search
         // query we want using inner join on all required dependent tables, then second,
         // use the IDs from that result set to do a findMany using the ORM.
 
-        $query = Capsule::connection()->query();
+        $queryBuilder = $em->createQueryBuilder();
 
-        $query
-            ->select(['forums_threads.id'])
-            ->from('forums_threads')
-            ->where('ThreadDeleted', 'NotDeleted')
+        $queryBuilder
+            ->select('ft.id')
+            ->from('forums_threads', 'ft')
+            ->where("ThreadDeleted = 'NotDeleted'")
             ->orderBy('created_at', 'desc')
         ;
 
         $groupIds = [];
         if ($groups) {
-            $groups = $member->groups()->get(['IdGroup']);
+            $groups = $member->getGroups();
             // ->get(['id']);
 
             $groupIds = $groups->map(
-                function($item, $key) {
-                    return $item->IdGroup;
+                function($item) {
+                    return $item->getId();
                 }
-            )->all();
+            );
         }
         if ($forum) {
-            $groupIds = array_merge($groupIds , [0]);
+            $groupIds = array_merge($groupIds->getValues() , [0]);
         }
         if ($following) {
 
         }
         if (!empty($groupIds)) {
-            $query->whereIn('IdGroup', $groupIds);
-            if ($following) {
-                $query->orWhereIn('IdGroup', [1, 2]);
-            }
-        } else {
-            $query->whereIn('IdGroup', [1, 2]);
+            $queryBuilder
+                ->andWhere('IdGroup IN (:groupIds)')
+                ->setParameter('groupIds', $groupIds);
         }
 
         // Need to use inner join here so it also acts like an eager fetch, ie.
         // no threads will be returned if they have a missing author etc.
-        $query->join('forums_posts', 'forums_posts.id', '=', 'forums_threads.last_postid');
-        $query->join('members', 'members.id', '=', 'forums_posts.authorid');
+        $queryBuilder
+            ->join('forums_posts', 'forums_posts.id', '=', 'forums_threads.last_postid')
+            ->join('members', 'members.id', '=', 'forums_posts.authorid');
 
         if ($limit) {
-            $query->take($limit);
+            $queryBuilder->setMaxResults($limit);
         }
 
-        $threadIds = $query->pluck('id');
+        $query = $queryBuilder->getQuery();
 
-        $posts = Thread::query()->findMany($threadIds)->all();
+        $posts = $query->getResult();
 
-        $mappedPosts = array_map(
-            function($a) {
-                $result = new \stdClass();
-                $result->title = $a->title;
-                $result->id = $a->id;
-                $result->lastuser = $a->lastPost->author->Username;
-                $result->time = $a->created_at;
-                return $result;
-            }, $posts
-        );
-        return $mappedPosts;
-  */
+        return $posts;
     }
 
     /**

@@ -61,12 +61,13 @@ class LandingController extends Controller
     /**
      * @param Request $request
      *
+     * @Route( "/widget/threads", name="/widget/threads")
+     *
      * @return Response
      */
     public function showThreadsAction(Request $request)
     {
-        $request;
-/*        $groups = $request->query->get('groups');
+        $groups = $request->query->get('groups');
         $forum = $request->query->get('forum');
         $following = $request->query->get('following');
 
@@ -77,8 +78,7 @@ class LandingController extends Controller
         $content = $this->render(':landing:widget:forums.html.twig', [
             'threads' => $threads,
         ]);
-*/
-        $content = '';
+
         return new Response($content);
     }
 
@@ -137,8 +137,8 @@ class LandingController extends Controller
      */
     private function getSearchHomeLocationData(Member $member)
     {
-        $data['search_geoname_id'] = $member->getIdcity();
-        $geo = new Location($member->getIdcity());
+        $geo = $member->getCity();
+        $data['search_geoname_id'] = $geo->getGeonameid();
         $data['search'] = $geo->getName();
         $data['search_latitude'] = $member->getLatitude();
         $data['search_longitude'] = $member->getLongitude();

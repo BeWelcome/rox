@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <phpdox xmlns="http://xml.phpdox.net/config" silent="false">
-    <project name="Rox" source="${basedir}/module"
+    <project name="Rox" source="${basedir}/src"
              workdir="${basedir}/tmp/phpdox/xml">
         <collector publiconly="false" backend="parser" encoding="auto">
             <include mask="*.php" />

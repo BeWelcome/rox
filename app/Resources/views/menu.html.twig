@@ -1,15 +1,15 @@
 {% import 'macros.twig' as macros %}
 <nav class="navbar navbar-nav navbar-sticky-top navbar-toggleable-md navbar-dark bg-primary">
     <div class="container">
-        <button class="nav-link navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#mainNavBar" aria-controls="mainNavBar" aria-expanded="false" aria-label="Toggle navigation">
-            &#9776;
+        <button class="nav-link navbar-toggler navbar-toggler-right hidden-lg-up" type="button" data-toggle="collapse" data-target="#smallNavBar" aria-controls="mainNavBar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon">&#9776;</span>
         </button>
 
-        <a class="navbar-brand" href="{{ url('homepage') }}">{% image 'bundles/app/images/logo_index_top.png' %}<img src="{{ asset_url }}" alt="{{ 'BeWelcome' | trans }}"/>{% endimage %}</a>
+        <a class="navbar-brand mr-1" href="{{ url('homepage') }}">{% image 'bundles/app/images/logo_index_top.png' %}<img src="{{ asset_url }}" alt="{{ 'BeWelcome' | trans }}"/>{% endimage %}</a>
 
         {# Navbar small screens #}
-        {#
-        <div class="hidden-md-up collapse navbar-collapse" id="mainNavBar">
+
+        <div class="collapse hidden-lg-up" id="smallNavBar">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <li class="nav-item col-xs-12 border">
                     Member...
@@ -32,7 +32,7 @@
                 </li>
             </ul>
         </div>
-        #}
+
 
         {# Navbar big screens #}
         <div class="collapse navbar-collapse" id="mainNavBar">
@@ -62,64 +62,64 @@
                     <div class="dropdown-menu subnav" aria-labelledby="subNavBar">
                         <div class="container">
                             <div class="row">
-                                <div class="col-xs-12">
-                                    <button type="button" class="close float-right" aria-label="Close" data-toggle="collapse" data-target="#mainNavBar2">
+                                <div class="col-sm">
+                                    <button type="button" class="close pull-right float-right float-md-right" aria-label="Close" data-toggle="collapse" data-target="#mainNavBar2">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                             </div>
-                            <div class="row p-b-1">
-                                <div class="col-xs-2">
+                            <div class="d-flex row p-b-1">
+                                <div class="col-2">
                                     <a href="/search" class="h4 subnavtitle">{{ 'FindMembers' | trans }}</a>
 
-                                    <a href="/search/members" class="btn btn-block btn-primary-outline p-y-0 text-xs-left mt-1">{{ 'MapSearch' | trans }}</a>
-                                    <a href="/places" class="btn btn-block btn-primary-outline p-y-0 text-xs-left">{{ 'BrowseCountries' | trans}}</a>
-                                    <a href="/trips" class="btn btn-block btn-primary-outline p-y-0 text-xs-left">{{ 'Trips' | trans}}</a>
+                                    <a href="/search/members" class="btn btn-block btn-primary-outline p-y-0 text-left mt-1 ">{{ 'MapSearch' | trans }}</a>
+                                    <a href="/places" class="btn btn-block btn-primary-outline p-y-0 text-left">{{ 'BrowseCountries' | trans}}</a>
+                                    <a href="/trips" class="btn btn-block btn-primary-outline p-y-0 text-left">{{ 'Trips' | trans}}</a>
                                 </div>
 
-                                <div class="col-xs-2">
+                                <div class="col-2">
                                     <a href="/community" class="h4 subnavtitle">{{ 'CommunityMenu' | trans }}</a>
 
-                                    <a href="/forums" class="btn btn-block btn-primary-outline p-y-0 text-xs-left mt-1">{{ 'CommunityDiscussions' | trans }}</a>
-                                    <a href="/groups/search" class="btn btn-block btn-primary-outline p-y-0 text-xs-left">{{ 'Groups' | trans }}</a>
-                                    <a href="/activities" class="btn btn-block btn-primary-outline p-y-0 text-xs-left">{{ 'Activities' | trans}}</a>
+                                    <a href="/forums" class="btn btn-block btn-primary-outline p-y-0 text-left mt-1">{{ 'CommunityDiscussions' | trans }}</a>
+                                    <a href="/groups/search" class="btn btn-block btn-primary-outline p-y-0 text-left">{{ 'Groups' | trans }}</a>
+                                    <a href="/activities" class="btn btn-block btn-primary-outline p-y-0 text-left">{{ 'Activities' | trans}}</a>
                                 </div>
 
-                                <div class="col-xs-2">
+                                <div class="col-2">
                                     <a href="about" class="h4 subnavtitle">{{ 'GetAnswers' | trans}}</a>
 
-                                    <a href="/faq" class="btn btn-block btn-primary-outline p-y-0 text-xs-left mt-1">{{ 'FAQ' | trans }}</a>
-                                    <a href="/feedback" class="btn btn-block btn-primary-outline p-y-0 text-xs-left">{{ 'ContactUs' | trans}}</a>
-                                    <a href="/wiki" class="btn btn-block btn-primary-outline p-y-0 text-xs-left">{{ 'Wiki' | trans}}</a>
-                                    <a href="/stats" class="btn btn-block btn-primary-outline p-y-0 text-xs-left">{{ 'StatsPage' | trans}}</a>
-                                    <a href="/terms" class="btn btn-block btn-primary-outline p-y-0 text-xs-left">{{ 'TermsOfUse'  | trans}}</a>
+                                    <a href="/faq" class="btn btn-block btn-primary-outline p-y-0 text-left mt-1">{{ 'FAQ' | trans }}</a>
+                                    <a href="/feedback" class="btn btn-block btn-primary-outline p-y-0 text-left">{{ 'ContactUs' | trans}}</a>
+                                    <a href="/wiki" class="btn btn-block btn-primary-outline p-y-0 text-left">{{ 'Wiki' | trans}}</a>
+                                    <a href="/stats" class="btn btn-block btn-primary-outline p-y-0 text-left">{{ 'StatsPage' | trans}}</a>
+                                    <a href="/terms" class="btn btn-block btn-primary-outline p-y-0 text-left">{{ 'TermsOfUse'  | trans}}</a>
                                 </div>
 
-                                <div class="col-xs-2">
+                                <div class="col-2">
                                     <a href="/volunteer" class="h4 subnavtitle">{{ 'Volunteer' | trans}}</a>
 
-                                    <a href="about/getactive" class="btn btn-block btn-primary-outline p-y-0 text-xs-left mt-1">{{ 'About_GetActive' | trans}}</a>
-                                    <a href="/donate" class="btn btn-block btn-primary-outline p-y-0 text-xs-left">{{ 'DonateLink'  | trans}}</a>
+                                    <a href="about/getactive" class="btn btn-block btn-primary-outline p-y-0 text-left mt-1">{{ 'About_GetActive' | trans}}</a>
+                                    <a href="/donate" class="btn btn-block btn-primary-outline p-y-0 text-left">{{ 'DonateLink'  | trans}}</a>
                                     {% for team in teams if teams %}
-                                        <a href="/{{ team.link }}" class="btn btn-block btn-primary-outline p-y-0 text-xs-left">{{ team.trans | trans}}</a>
+                                        <a href="/{{ team.link }}" class="btn btn-block btn-primary-outline p-y-0 text-left">{{ team.trans | trans}}</a>
                                     {% endfor %}
                                 </div>
 
-                                <div class="col-xs-4 usermenu">
-                                    <div class="col-xs-12 pl-2 mb-2">
+                                <div class="col-4 usermenu">
+                                    <div class="col-12 pl-2 mb-2">
                                         <a href="/member/{{ my_member.Username }}" class="h4">{{ macros.avatar( my_member.Username, 50, true) }} {{ my_member.Username }}</a>
                                     </div>
 
-                                    <div class="col-xs-6 float-left">
-                                        <a href="/editmyprofile" class="btn btn-sm btn-block btn-primary-outline text-xs-left"><i class="fa fa-edit"></i> {{ 'EditMyProfile' | trans }}</a>
-                                        <a href="/mypreferences" class="btn btn-sm btn-block btn-primary-outline text-xs-left m-t-0"><i class="fa fa-sliders"></i> {{ 'MyPreferences' | trans }}</a>
-                                        <a href="/groups/mygroups" class="btn btn-sm btn-block btn-primary-outline text-xs-left m-t-0"><i class="fa fa-users"></i> {{ 'MyGroups' | trans }}</a>
+                                    <div class="col-6 float-left">
+                                        <a href="/editmyprofile" class="btn btn-block btn-primary-outline text-left"><i class="fa fa-edit"></i> {{ 'EditMyProfile' | trans }}</a>
+                                        <a href="/mypreferences" class="btn btn-block btn-primary-outline text-left m-t-0"><i class="fa fa-sliders"></i> {{ 'MyPreferences' | trans }}</a>
+                                        <a href="/groups/mygroups" class="btn btn-block btn-primary-outline text-left m-t-0"><i class="fa fa-users"></i> {{ 'MyGroups' | trans }}</a>
                                     </div>
 
-                                    <div class="col-xs-6 float-left">
-                                        <a href="message" class="btn btn-sm btn-block btn-primary-outline text-xs-left"><i class="fa fa-envelope-o"></i> {{ 'MyMessages' | trans }}</a>
-                                        <a href="/mynotes" class="btn btn-sm btn-block btn-primary-outline text-xs-left m-t-0"><i class="fa fa-list"></i> {{ 'ProfileMyNotes' | trans }}</a>
-                                        <a href="/logout" class="btn btn-sm btn-block btn-primary-outline text-xs-left m-t-0"><i class="fa fa-power-off"></i> {{ 'Logout' | trans }}</a>
+                                    <div class="col-6 float-left">
+                                        <a href="message" class="btn btn-block btn-primary-outline text-left"><i class="fa fa-envelope-o"></i> {{ 'MyMessages' | trans }}</a>
+                                        <a href="/mynotes" class="btn btn-block btn-primary-outline text-left m-t-0"><i class="fa fa-list"></i> {{ 'ProfileMyNotes' | trans }}</a>
+                                        <a href="/logout" class="btn btn-block btn-primary-outline text-left m-t-0"><i class="fa fa-power-off"></i> {{ 'Logout' | trans }}</a>
                                     </div>
                                 </div>
                             </div>
@@ -160,6 +160,8 @@
                 {# logout #}
                 <li class="nav-item float-right"><a href="/logout" class="nav-link"><i class="fa fa-sign-out"></i></a></li>
             </ul>
+
+
         </div>
     </div>
 </nav>

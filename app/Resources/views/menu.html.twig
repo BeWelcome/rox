@@ -1,5 +1,5 @@
 {% import 'macros.twig' as macros %}
-<nav class="navbar navbar-nav navbar-sticky-top navbar-toggleable-md navbar-dark bg-primary">
+<nav class="navbar-nav navbar-sticky-top navbar-toggleable-md navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
     <div class="container">
         <button class="nav-link navbar-toggler navbar-toggler-right hidden-lg-up" type="button" data-toggle="collapse" data-target="#smallNavBar" aria-controls="mainNavBar" aria-expanded="false" aria-label="Toggle navigation">
            &#9776;
@@ -10,25 +10,25 @@
         {# Navbar small screens #}
         <div class="collapse hidden-lg-up px-0" id="smallNavBar">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class="nav-item col-12 border px-0">
+                <li class="nav-item col-12 bordert-1 px-0">
                     <a href="{{ url('member', { username: my_member.Username }) }}" class="nav-link">{{ my_member.Username }}</a>
                 </li>
-                <li class="nav-item col-12 border px-0">
+                <li class="nav-item col-12 bordert-1 px-0">
                     <a href="{{ url( 'homepage' ) }}" class="nav-link">{{ 'MapSearch' | trans }}</a>
                 </li>
-                <li class="nav-item col-12 border px-0">
+                <li class="nav-item col-12 bordert-1 px-0">
                     <a href="/trips" class="nav-link">{{ 'Trips' | trans }}</a>
                 </li>
-                <li class="nav-item col-12 border px-0">
+                <li class="nav-item col-12 bordert-1 px-0">
                     <a href="/mynotes" class="nav-link">{{ 'MyNotes' | trans }}</a>
                 </li>
-                <li class="nav-item col-12 border px-0">
+                <li class="nav-item col-12 bordert-1 px-0">
                     <a href="/message" class="nav-link">{{ 'MyMessages' | trans }}</a>
                 </li>
-                <li class="nav-item col-12 border px-0">
+                <li class="nav-item col-12 bordert-1 px-0">
                     <a href="/mypreferences" class="nav-link">{{ 'MyPreferences' | trans }}</a>
                 </li>
-                <li class="nav-item col-12 border px-0">
+                <li class="nav-item col-12 bordert-1 px-0">
                     <a href="/logout" class="nav-link">{{ 'Logout' | trans }}</a>
                 </li>
             </ul>
@@ -39,28 +39,24 @@
         <div class="collapse navbar-collapse" id="mainNavBar">
 
             <ul class="navbar-nav mr-auto">
-                <li class="navbar-divider"></li>
-                <li class="nav-item">
-                    <a href="/search/members" class="nav-link">{{ 'FindMembers' | trans }}</a>
+                <li class="menuborder">
+                    <a href="/search/members" class="nav-link px-3">{{ 'FindMembers' | trans }}</a>
                 </li>
-                <li class="navbar-divider"></li>
-                <li class="nav-item">
-                    <a href="/community" class="nav-link">{{ 'CommunityMenu' | trans }}</a>
+                <li class="menuborder">
+                    <a href="/community" class="nav-link px-3">{{ 'CommunityMenu' | trans }}</a>
                 </li>
-                <li class="navbar-divider"></li>
-                <li class="nav-item">
-                    <a href="/safety" class="nav-link">{{ 'Safety' | trans}}</a>
+                <li class="menuborder">
+                    <a href="/safety" class="nav-link px-3">{{ 'Safety' | trans}}</a>
                 </li>
-                <li class="navbar-divider"></li>
-                <li class="nav-item">
-                    <a href="/volunteer" class="nav-link">{{ 'Volunteer' | trans}}</a>
+                <li class="menuborder">
+                    <a href="/volunteer" class="nav-link px-3">{{ 'Volunteer' | trans}}</a>
                 </li>
-                <li class="nav-item dropdown hidden-md-down">
-                    <a href="#" class="nav-link" id="subNavBar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <li class="menuborder dropdown hidden-md-down">
+                    <a href="#" class="nav-link px-3" id="subNavBar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         &#9776;
                     </a>
 
-                    <div class="dropdown-menu subnav py-0" aria-labelledby="subNavBar">
+                    <div class="dropdown-menu subnav py-0 bordert-1 borderb-1" aria-labelledby="subNavBar">
 
                         <div class="container">
 
@@ -98,7 +94,7 @@
                                     {% endfor %}
 
                                 </div>
-                                <div class="usermenu py-5">
+                                <div class="menuborder py-5">
                                     <div class="pl-5 pr-0">
                                         <a href="/member/{{ my_member.Username }}" class="h4">{{ macros.avatar( my_member.Username, 50, true) }} {{ my_member.Username }}</a>
                                     </div>

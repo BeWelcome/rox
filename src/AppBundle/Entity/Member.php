@@ -2358,6 +2358,15 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
      */
     private $volunteerRights;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Group", inversedBy="members")
+     * @ORM\JoinTable(name="membersgroups",
+     *      joinColumns={@ORM\JoinColumn(name="IdMember", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="IdGroup", referencedColumnName="id")}
+     *      )
+     */
     private $groups;
 
     private $languages;

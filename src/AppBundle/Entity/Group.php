@@ -2,15 +2,16 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Groups
+ * Group
  *
  * @ORM\Table(name="groups")
  * @ORM\Entity
  */
-class Groups
+class Group
 {
     /**
      * @var string
@@ -98,14 +99,27 @@ class Groups
      */
     private $id;
 
+    /**
+     * Many Groups have Many Users.
+     * @ORM\ManyToMany(targetEntity="Member", mappedBy="groups")
+     * @ORM\JoinTable(name="membersgroups",
+     *      joinColumns={@ORM\JoinColumn(name="IdMember", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="IdGroup", referencedColumnName="id")}
+     *      )
+     */
+    private $members;
 
+    public function __construct()
+    {
+        $this->members = new ArrayCollection();
+    }
 
     /**
      * Set hasmembers
      *
      * @param string $hasmembers
      *
-     * @return Groups
+     * @return Group
      */
     public function setHasmembers($hasmembers)
     {
@@ -129,7 +143,7 @@ class Groups
      *
      * @param string $name
      *
-     * @return Groups
+     * @return Group
      */
     public function setName($name)
     {
@@ -153,7 +167,7 @@ class Groups
      *
      * @param string $type
      *
-     * @return Groups
+     * @return Group
      */
     public function setType($type)
     {
@@ -177,7 +191,7 @@ class Groups
      *
      * @param \DateTime $created
      *
-     * @return Groups
+     * @return Group
      */
     public function setCreated($created)
     {
@@ -201,7 +215,7 @@ class Groups
      *
      * @param integer $nbchilds
      *
-     * @return Groups
+     * @return Group
      */
     public function setNbchilds($nbchilds)
     {
@@ -225,7 +239,7 @@ class Groups
      *
      * @param string $picture
      *
-     * @return Groups
+     * @return Group
      */
     public function setPicture($picture)
     {
@@ -249,7 +263,7 @@ class Groups
      *
      * @param string $moreinfo
      *
-     * @return Groups
+     * @return Group
      */
     public function setMoreinfo($moreinfo)
     {
@@ -273,7 +287,7 @@ class Groups
      *
      * @param string $displayedonprofile
      *
-     * @return Groups
+     * @return Group
      */
     public function setDisplayedonprofile($displayedonprofile)
     {
@@ -297,7 +311,7 @@ class Groups
      *
      * @param integer $iddescription
      *
-     * @return Groups
+     * @return Group
      */
     public function setIddescription($iddescription)
     {
@@ -321,7 +335,7 @@ class Groups
      *
      * @param string $visibleposts
      *
-     * @return Groups
+     * @return Group
      */
     public function setVisibleposts($visibleposts)
     {
@@ -345,7 +359,7 @@ class Groups
      *
      * @param string $visiblecomments
      *
-     * @return Groups
+     * @return Group
      */
     public function setVisiblecomments($visiblecomments)
     {

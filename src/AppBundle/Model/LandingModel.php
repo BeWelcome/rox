@@ -131,7 +131,6 @@ class LandingModel extends BaseModel {
                 ->setParameter('groups', $groups);
         }
 
-            ->join('members', 'members.id', '=', 'forums_posts.authorid');
         if ($limit) {
             $queryBuilder->setMaxResults($limit);
         }

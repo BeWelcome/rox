@@ -29,6 +29,7 @@ class ForumThread
      * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
      */
     private $id;
 
@@ -224,15 +225,6 @@ class ForumThread
      * @ORM\Column(name="deleted_at", type="datetime", nullable=false)
      */
     private $deletedAt = '0000-00-00 00:00:00';
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="threadid", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $threadid;
 
     /**
      * @ORM\OneToMany(targetEntity="ForumPost", mappedBy="threadId")

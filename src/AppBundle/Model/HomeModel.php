@@ -137,10 +137,6 @@ class HomeModel extends BaseModel {
         $groupIds = [];
         if ($groups) {
             $groups = $member->getGroups();
-
-        }
-        if ($forum) {
-//            $groupIds = array_merge($groupIds->getValues() , [0]);
         }
         if ($following) {
 

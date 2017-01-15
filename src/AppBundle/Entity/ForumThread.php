@@ -231,11 +231,6 @@ class ForumThread
      */
     private $posts;
 
-    /**
-     * @ORM\OneToMany(targetEntity="ForumPost", mappedBy="threadId")
-     */
-    private $posts;
-
 
     public function __construct()
     {

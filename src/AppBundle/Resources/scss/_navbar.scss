@@ -1,16 +1,10 @@
 .navbar-nav {
-  .nav-item {
-    margin: 0;
-  }
 
   .nav-link {
     display: block;
     padding: .7rem;
     color: $navbar-dark-color;
-
-    + .nav-link {
-      margin-left: 0;
-    }
+    font-weight: bold;
 
   }
 
@@ -18,42 +12,23 @@
     background-color: rgba($navbar-dark-color, 0.2);
   }
 
-  .nav-item + .nav-item {
-    margin-left: 0;
-  }
-
-  .navbar-divider {
-    padding-top: .7rem;
-    padding-bottom: .8rem;
-    background-color: $navbar-dark-color;
-  }
-
-  .border{
-    border-top: 1px solid $navbar-dark-color;
-  }
-
 }
 
-.navbar{
-  border-top: 1px solid $navbar-dark-color;
-  border-bottom: 1px solid $navbar-dark-color;
+.navbar-shadow{
   box-shadow: 0px 3px 10px #333;
 }
 
 .subnav{
   width: 100%;
   position: fixed;
-  left: 0;
-  top: 43px;
+  top: 41px;
   background-color: rgba($brand-primary,0.95);
-  border-top: 1px solid $navbar-dark-color;
-  border-radius: 0;
   border: none;
-  border-bottom: 1px solid $navbar-dark-color;
+  border-radius: 0;
   box-shadow: 0px 3px 5px #333;
 
   a{
-    color: #fff0da;
+    color: rgba($navbar-dark-color,0.8);
   }
 
   a:hover{
@@ -61,18 +36,6 @@
     text-decoration: none;
     background-color: #ce5409;
     margin-left: 0;
-  }
-
-  ul{
-    margin-top: 0.5rem;
-    margin-bottom: 0;
-    list-style: none;
-    padding-left: 0;
-  }
-
-  li{
-    margin-bottom: .5rem;
-    margin-left: 0.2rem;
   }
 
   .h4{
@@ -84,16 +47,16 @@
   }
 }
 
-a.subnavtitle{
-  padding-left: 0.3rem;
+.bordert-1 {
+  border-top: 1px solid $navbar-dark-color;
 }
 
-a.subnavtitle:hover {
-  color: $navbar-dark-color !important;
+.borderb-1 {
+  border-bottom: 1px solid $navbar-dark-color;
 }
 
-.usermenu{
-  border-left: 1px solid $navbar-dark-color;
+.menuborder{
+  border-left: 1px solid rgba($navbar-dark-color,0.7);
 }
 
 .loginform{

@@ -2540,4 +2540,86 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     {
         return $this->comments;
     }
+
+    /**
+     * Add cryptedField
+     *
+     * @param \AppBundle\Entity\CryptedField $cryptedField
+     *
+     * @return Member
+     */
+    public function addCryptedField(\AppBundle\Entity\CryptedField $cryptedField)
+    {
+        $this->cryptedFields[] = $cryptedField;
+
+        return $this;
+    }
+
+    /**
+     * Remove cryptedField
+     *
+     * @param \AppBundle\Entity\CryptedField $cryptedField
+     */
+    public function removeCryptedField(\AppBundle\Entity\CryptedField $cryptedField)
+    {
+        $this->cryptedFields->removeElement($cryptedField);
+    }
+
+    /**
+     * Get cryptedFields
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCryptedFields()
+    {
+        return $this->cryptedFields;
+    }
+
+    /**
+     * Add volunteerRight
+     *
+     * @param \AppBundle\Entity\RightVolunteer $volunteerRight
+     *
+     * @return Member
+     */
+    public function addVolunteerRight(\AppBundle\Entity\RightVolunteer $volunteerRight)
+    {
+        $this->volunteerRights[] = $volunteerRight;
+
+        return $this;
+    }
+
+    /**
+     * Remove volunteerRight
+     *
+     * @param \AppBundle\Entity\RightVolunteer $volunteerRight
+     */
+    public function removeVolunteerRight(\AppBundle\Entity\RightVolunteer $volunteerRight)
+    {
+        $this->volunteerRights->removeElement($volunteerRight);
+    }
+
+    /**
+     * Add group
+     *
+     * @param \AppBundle\Entity\Group $group
+     *
+     * @return Member
+     */
+    public function addGroup(\AppBundle\Entity\Group $group)
+    {
+        $this->groups[] = $group;
+
+        return $this;
+    }
+
+    /**
+     * Remove group
+     *
+     * @param \AppBundle\Entity\Group $group
+     */
+    public function removeGroup(\AppBundle\Entity\Group $group)
+    {
+        $this->groups->removeElement($group);
+    }
 }

@@ -1,21 +1,31 @@
 <?php
+/*
+ * @codingStandardsIgnoreFile
+ *
+ * Auto generated file ignore for Code Sniffer
+ */
 
 namespace AppBundle\Entity;
 
+use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ForumsPosts
+ * ForumsPost
  *
  * @ORM\Table(name="forums_posts", indexes={@ORM\Index(name="authorid", columns={"authorid"}), @ORM\Index(name="last_editorid", columns={"last_editorid"}), @ORM\Index(name="threadid", columns={"threadid"}), @ORM\Index(name="IdWriter", columns={"IdWriter"}), @ORM\Index(name="id", columns={"id"}), @ORM\Index(name="IdLocalEvent", columns={"IdLocalEvent"}), @ORM\Index(name="IdPoll", columns={"IdPoll"}), @ORM\Index(name="IdLocalVolMessage", columns={"IdLocalVolMessage"}), @ORM\Index(name="PostVisibility", columns={"PostVisibility"}), @ORM\Index(name="PostDeleted", columns={"PostDeleted"}), @ORM\Index(name="create_time", columns={"create_time"})})
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
-class ForumsPosts
+class ForumPost
 {
     /**
      * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
      */
     private $id;
 
@@ -27,11 +37,27 @@ class ForumsPosts
     private $threadid;
 
     /**
+     * @var ForumThread
+     *
+     * @ORM\OneToOne(targetEntity="ForumThread")
+     * @ORM\JoinColumn(name="threadid", referencedColumnName="id")
+     */
+    private $thread;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="PostVisibility", type="string", nullable=false)
      */
     private $postvisibility = 'NoRestriction';
+
+    /**
+     * @var Member
+     *
+     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\JoinColumn(name="authorid", referencedColumnName="id")
+     */
+    private $author;
 
     /**
      * @var integer
@@ -52,7 +78,7 @@ class ForumsPosts
      *
      * @ORM\Column(name="create_time", type="datetime", nullable=false)
      */
-    private $createTime;
+    private $created;
 
     /**
      * @var string
@@ -80,7 +106,7 @@ class ForumsPosts
      *
      * @ORM\Column(name="last_edittime", type="datetime", nullable=true)
      */
-    private $lastEdittime;
+    private $updated;
 
     /**
      * @var integer
@@ -139,22 +165,11 @@ class ForumsPosts
     private $postdeleted = 'NotDeleted';
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="postid", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $postid;
-
-
-
-    /**
      * Set id
      *
      * @param integer $id
      *
-     * @return ForumsPosts
+     * @return ForumPost
      */
     public function setId($id)
     {
@@ -178,7 +193,7 @@ class ForumsPosts
      *
      * @param integer $threadid
      *
-     * @return ForumsPosts
+     * @return ForumPost
      */
     public function setThreadid($threadid)
     {
@@ -202,7 +217,7 @@ class ForumsPosts
      *
      * @param string $postvisibility
      *
-     * @return ForumsPosts
+     * @return ForumPost
      */
     public function setPostvisibility($postvisibility)
     {
@@ -226,7 +241,7 @@ class ForumsPosts
      *
      * @param integer $authorid
      *
-     * @return ForumsPosts
+     * @return ForumPost
      */
     public function setAuthorid($authorid)
     {
@@ -250,7 +265,7 @@ class ForumsPosts
      *
      * @param integer $idwriter
      *
-     * @return ForumsPosts
+     * @return ForumPost
      */
     public function setIdwriter($idwriter)
     {
@@ -274,7 +289,7 @@ class ForumsPosts
      *
      * @param \DateTime $createTime
      *
-     * @return ForumsPosts
+     * @return ForumPost
      */
     public function setCreateTime($createTime)
     {
@@ -298,7 +313,7 @@ class ForumsPosts
      *
      * @param string $message
      *
-     * @return ForumsPosts
+     * @return ForumPost
      */
     public function setMessage($message)
     {
@@ -322,7 +337,7 @@ class ForumsPosts
      *
      * @param integer $idcontent
      *
-     * @return ForumsPosts
+     * @return ForumPost
      */
     public function setIdcontent($idcontent)
     {
@@ -346,7 +361,7 @@ class ForumsPosts
      *
      * @param string $ownercanstilledit
      *
-     * @return ForumsPosts
+     * @return ForumPost
      */
     public function setOwnercanstilledit($ownercanstilledit)
     {
@@ -370,7 +385,7 @@ class ForumsPosts
      *
      * @param \DateTime $lastEdittime
      *
-     * @return ForumsPosts
+     * @return ForumPost
      */
     public function setLastEdittime($lastEdittime)
     {
@@ -394,7 +409,7 @@ class ForumsPosts
      *
      * @param integer $lastEditorid
      *
-     * @return ForumsPosts
+     * @return ForumPost
      */
     public function setLastEditorid($lastEditorid)
     {
@@ -418,7 +433,7 @@ class ForumsPosts
      *
      * @param boolean $editCount
      *
-     * @return ForumsPosts
+     * @return ForumPost
      */
     public function setEditCount($editCount)
     {
@@ -442,7 +457,7 @@ class ForumsPosts
      *
      * @param integer $idfirstlanguageused
      *
-     * @return ForumsPosts
+     * @return ForumPost
      */
     public function setIdfirstlanguageused($idfirstlanguageused)
     {
@@ -466,7 +481,7 @@ class ForumsPosts
      *
      * @param string $hasvotes
      *
-     * @return ForumsPosts
+     * @return ForumPost
      */
     public function setHasvotes($hasvotes)
     {
@@ -490,7 +505,7 @@ class ForumsPosts
      *
      * @param integer $idlocalvolmessage
      *
-     * @return ForumsPosts
+     * @return ForumPost
      */
     public function setIdlocalvolmessage($idlocalvolmessage)
     {
@@ -514,7 +529,7 @@ class ForumsPosts
      *
      * @param integer $idlocalevent
      *
-     * @return ForumsPosts
+     * @return ForumPost
      */
     public function setIdlocalevent($idlocalevent)
     {
@@ -538,7 +553,7 @@ class ForumsPosts
      *
      * @param integer $idpoll
      *
-     * @return ForumsPosts
+     * @return ForumPost
      */
     public function setIdpoll($idpoll)
     {
@@ -562,7 +577,7 @@ class ForumsPosts
      *
      * @param string $postdeleted
      *
-     * @return ForumsPosts
+     * @return ForumPost
      */
     public function setPostdeleted($postdeleted)
     {
@@ -589,5 +604,104 @@ class ForumsPosts
     public function getPostid()
     {
         return $this->postid;
+    }
+
+    /**
+     * Set thread
+     *
+     * @param ForumThread $thread
+     *
+     * @return ForumPost
+     */
+    public function setThread(ForumThread $thread = null)
+    {
+        $this->thread = $thread;
+
+        return $this;
+    }
+
+    /**
+     * Get thread
+     *
+     * @return ForumThread
+     */
+    public function getThread()
+    {
+        return $this->thread;
+    }
+
+    /**
+     * Set author
+     *
+     * @param Member $author
+     *
+     * @return ForumPost
+     */
+    public function setAuthor(Member $author = null)
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get author
+     *
+     * @return \AppBundle\Entity\Member
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * Set created
+     *
+     * @param \DateTime $created
+     *
+     * @return ForumPost
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return Carbon
+     */
+    public function getCreated()
+    {
+        return Carbon::instance($this->created);
+    }
+
+    /**
+     * Set updated
+     *
+     * @param \DateTime $updated
+     *
+     * @return ForumPost
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return Carbon
+     */
+    public function getUpdated()
+    {
+        if ($this->updated){
+            return Carbon::instance($this->updated);
+        }
+        return Carbon::instance($this->created);
     }
 }

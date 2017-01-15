@@ -153,4 +153,28 @@ class Right
     {
         return $this->id;
     }
+
+    /**
+     * Add rightVolunteer
+     *
+     * @param \AppBundle\Entity\RightVolunteer $rightVolunteer
+     *
+     * @return Right
+     */
+    public function addRightVolunteer(\AppBundle\Entity\RightVolunteer $rightVolunteer)
+    {
+        $this->rightVolunteers[] = $rightVolunteer;
+
+        return $this;
+    }
+
+    /**
+     * Remove rightVolunteer
+     *
+     * @param \AppBundle\Entity\RightVolunteer $rightVolunteer
+     */
+    public function removeRightVolunteer(\AppBundle\Entity\RightVolunteer $rightVolunteer)
+    {
+        $this->rightVolunteers->removeElement($rightVolunteer);
+    }
 }

@@ -387,4 +387,38 @@ class Group
     {
         return $this->id;
     }
+
+    /**
+     * Add member
+     *
+     * @param \AppBundle\Entity\Member $member
+     *
+     * @return Group
+     */
+    public function addMember(\AppBundle\Entity\Member $member)
+    {
+        $this->members[] = $member;
+
+        return $this;
+    }
+
+    /**
+     * Remove member
+     *
+     * @param \AppBundle\Entity\Member $member
+     */
+    public function removeMember(\AppBundle\Entity\Member $member)
+    {
+        $this->members->removeElement($member);
+    }
+
+    /**
+     * Get members
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMembers()
+    {
+        return $this->members;
+    }
 }

@@ -75,7 +75,7 @@ class LandingController extends Controller
         $homeModel = new HomeModel($this->getDoctrine());
         $threads = $homeModel->getThreads($member, $groups, $forum, $following, 4);
 
-        $content = $this->render(':landing:widget:forums.html.twig', [
+        $content = $this->render(':landing:widget/forums.html.twig', [
             'threads' => $threads,
         ]);
 
@@ -153,6 +153,7 @@ class LandingController extends Controller
      * @Route("/home", name="landingpage")
      * @Route("/communitynews/{id}", name="communitynews_show")
      * @Route("/communitynews", name="communitynews")
+     * @Route("/forums/s{threadId}", name="forum_thread")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

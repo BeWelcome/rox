@@ -3,18 +3,15 @@
 
     {# 4 most recent forum messages #}
     {% for thread in threads %}
-
         <div class="row pl-1 pr-1">
-            <div class="col-xs-12 fullheight">
+            <div class="col-12">
                 <div class="hidden-xs-down float-left avatarpadding">
-                    {{ macros.avatar(thread.lastuser, 50, true) }}
+                    {{ macros.avatar(thread.lastpost.author.Username, 50, true) }}
                 </div>
                 <div class="dashentry">
                     <p class="text-truncate">
-                        {#{% if not thread.read %}<strong>{% endif %}#}
-                            <a href="{{ url('forum_thread', {'threadId': thread.id}) }}">{{ thread.title }}</a>
-                            {#{% if not thread.read %}</strong>{% endif %}#}
-                        <br><small>by {{ macros.profilelink(thread.lastuser) }} {{ thread.time.diffForHumans }}</small>
+                         <a href="{{ url('forum_thread', {'threadId': thread.id}) }}">{{ thread.title }}</a>
+                        <br><small>in {%  if thread.group.id != 0 %}{{ thread.group.name }}{% else %}{{ 'BWForum' | trans }}{% endif %} by {{ macros.profilelink(thread.lastpost.author.Username) }} <span title="{{ thread.lastpost.updated.toDateTimeString }}">{{ thread.lastpost.updated.diffForHumans }}</span> </small>
                     </p>
                 </div>
                 <div class="float-right hidden-md-down chevplace">
@@ -22,7 +19,6 @@
                 </div>
             </div>
         </div>
-
     {% endfor %}
 
     {# infinite scroll??? #}

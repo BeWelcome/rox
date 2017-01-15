@@ -1,16 +1,29 @@
 <?php
+/*
+ * @codingStandardsIgnoreFile
+ *
+ * Auto generated file ignore for Code Sniffer
+ */
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\JoinTable;
+use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ForumsThreads
+ * ForumThread
  *
  * @ORM\Table(name="forums_threads", indexes={@ORM\Index(name="first_postid", columns={"first_postid"}), @ORM\Index(name="last_postid", columns={"last_postid"}), @ORM\Index(name="geonameid", columns={"geonameid"}), @ORM\Index(name="admincode", columns={"admincode"}), @ORM\Index(name="countrycode", columns={"countrycode"}), @ORM\Index(name="continent", columns={"continent"}), @ORM\Index(name="IdGroup", columns={"IdGroup"}), @ORM\Index(name="ThreadVisibility", columns={"ThreadVisibility"}), @ORM\Index(name="ThreadDeleted", columns={"ThreadDeleted"})})
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
-class ForumsThreads
+class ForumThread
 {
     /**
      * @var integer
@@ -41,6 +54,14 @@ class ForumsThreads
     private $title;
 
     /**
+     * @var ForumPost
+     *
+     * @ORM\OneToOne(targetEntity="ForumPost")
+     * @ORM\JoinColumn(name="first_postid", referencedColumnName="id")
+     */
+    private $firstPost;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="first_postid", type="integer", nullable=true)
@@ -48,11 +69,20 @@ class ForumsThreads
     private $firstPostid;
 
     /**
+     * @var ForumPost
+     *
+     * @ORM\OneToOne(targetEntity="ForumPost")
+     * @ORM\JoinColumn(name="last_postid", referencedColumnName="id")
+     */
+    private $lastPost;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="last_postid", type="integer", nullable=true)
      */
     private $lastPostid;
+
 
     /**
      * @var integer
@@ -146,11 +176,12 @@ class ForumsThreads
     private $idfirstlanguageused = '0';
 
     /**
-     * @var integer
+     * @var Group
      *
-     * @ORM\Column(name="IdGroup", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Group")
+     * @ORM\JoinColumn(name="IdGroup", referencedColumnName="id")
      */
-    private $idgroup = '0';
+    private $group;
 
     /**
      * @var string
@@ -171,7 +202,7 @@ class ForumsThreads
      *
      * @ORM\Column(name="ThreadDeleted", type="string", nullable=false)
      */
-    private $threaddeleted = 'NotDeleted';
+    private $threadDeleted = 'NotDeleted';
 
     /**
      * @var \DateTime
@@ -203,14 +234,23 @@ class ForumsThreads
      */
     private $threadid;
 
+    /**
+     * @ORM\OneToMany(targetEntity="ForumPost", mappedBy="threadId")
+     */
+    private $posts;
 
+
+    public function __construct()
+    {
+        $this->posts = new ArrayCollection();
+    }
 
     /**
      * Set id
      *
      * @param integer $id
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setId($id)
     {
@@ -234,7 +274,7 @@ class ForumsThreads
      *
      * @param \DateTime $expiredate
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setExpiredate($expiredate)
     {
@@ -258,7 +298,7 @@ class ForumsThreads
      *
      * @param integer $idtitle
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setIdtitle($idtitle)
     {
@@ -282,7 +322,7 @@ class ForumsThreads
      *
      * @param string $title
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setTitle($title)
     {
@@ -306,7 +346,7 @@ class ForumsThreads
      *
      * @param integer $firstPostid
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setFirstPostid($firstPostid)
     {
@@ -330,7 +370,7 @@ class ForumsThreads
      *
      * @param integer $lastPostid
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setLastPostid($lastPostid)
     {
@@ -354,7 +394,7 @@ class ForumsThreads
      *
      * @param integer $replies
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setReplies($replies)
     {
@@ -378,7 +418,7 @@ class ForumsThreads
      *
      * @param integer $views
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setViews($views)
     {
@@ -402,7 +442,7 @@ class ForumsThreads
      *
      * @param integer $geonameid
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setGeonameid($geonameid)
     {
@@ -426,7 +466,7 @@ class ForumsThreads
      *
      * @param string $admincode
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setAdmincode($admincode)
     {
@@ -450,7 +490,7 @@ class ForumsThreads
      *
      * @param string $countrycode
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setCountrycode($countrycode)
     {
@@ -474,7 +514,7 @@ class ForumsThreads
      *
      * @param string $continent
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setContinent($continent)
     {
@@ -498,7 +538,7 @@ class ForumsThreads
      *
      * @param integer $tag1
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setTag1($tag1)
     {
@@ -522,7 +562,7 @@ class ForumsThreads
      *
      * @param integer $tag2
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setTag2($tag2)
     {
@@ -546,7 +586,7 @@ class ForumsThreads
      *
      * @param integer $tag3
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setTag3($tag3)
     {
@@ -570,7 +610,7 @@ class ForumsThreads
      *
      * @param integer $tag4
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setTag4($tag4)
     {
@@ -594,7 +634,7 @@ class ForumsThreads
      *
      * @param integer $tag5
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setTag5($tag5)
     {
@@ -618,7 +658,7 @@ class ForumsThreads
      *
      * @param integer $stickyvalue
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setStickyvalue($stickyvalue)
     {
@@ -642,7 +682,7 @@ class ForumsThreads
      *
      * @param integer $idfirstlanguageused
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setIdfirstlanguageused($idfirstlanguageused)
     {
@@ -666,7 +706,7 @@ class ForumsThreads
      *
      * @param integer $idgroup
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setIdgroup($idgroup)
     {
@@ -690,7 +730,7 @@ class ForumsThreads
      *
      * @param string $threadvisibility
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setThreadvisibility($threadvisibility)
     {
@@ -714,7 +754,7 @@ class ForumsThreads
      *
      * @param string $whocanreply
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setWhocanreply($whocanreply)
     {
@@ -736,13 +776,13 @@ class ForumsThreads
     /**
      * Set threaddeleted
      *
-     * @param string $threaddeleted
+     * @param string $threadDeleted
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
-    public function setThreaddeleted($threaddeleted)
+    public function setThreadDeleted($threadDeleted)
     {
-        $this->threaddeleted = $threaddeleted;
+        $this->threadDeleted = $threadDeleted;
 
         return $this;
     }
@@ -752,9 +792,9 @@ class ForumsThreads
      *
      * @return string
      */
-    public function getThreaddeleted()
+    public function getThreadDeleted()
     {
-        return $this->threaddeleted;
+        return $this->threadDeleted;
     }
 
     /**
@@ -762,7 +802,7 @@ class ForumsThreads
      *
      * @param \DateTime $createdAt
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setCreatedAt($createdAt)
     {
@@ -786,7 +826,7 @@ class ForumsThreads
      *
      * @param \DateTime $updatedAt
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setUpdatedAt($updatedAt)
     {
@@ -810,7 +850,7 @@ class ForumsThreads
      *
      * @param \DateTime $deletedAt
      *
-     * @return ForumsThreads
+     * @return ForumThread
      */
     public function setDeletedAt($deletedAt)
     {
@@ -837,5 +877,111 @@ class ForumsThreads
     public function getThreadid()
     {
         return $this->threadid;
+    }
+
+    /**
+     * Set group
+     *
+     * @param \AppBundle\Entity\Group $group
+     *
+     * @return ForumThread
+     */
+    public function setGroup(\AppBundle\Entity\Group $group = null)
+    {
+        $this->group = $group;
+
+        return $this;
+    }
+
+    /**
+     * Get group
+     *
+     * @return \AppBundle\Entity\Group
+     */
+    public function getGroup()
+    {
+        return $this->group;
+    }
+
+    /**
+     * Add post
+     *
+     * @param \AppBundle\Entity\ForumPost $post
+     *
+     * @return ForumThread
+     */
+    public function addPost(\AppBundle\Entity\ForumPost $post)
+    {
+        $this->posts[] = $post;
+
+        return $this;
+    }
+
+    /**
+     * Remove post
+     *
+     * @param \AppBundle\Entity\ForumPost $post
+     */
+    public function removePost(\AppBundle\Entity\ForumPost $post)
+    {
+        $this->posts->removeElement($post);
+    }
+
+    /**
+     * Get posts
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPosts()
+    {
+        return $this->posts;
+    }
+
+    /**
+     * Set firstPost
+     *
+     * @param \AppBundle\Entity\ForumPost $firstPost
+     *
+     * @return ForumThread
+     */
+    public function setFirstPost(\AppBundle\Entity\ForumPost $firstPost = null)
+    {
+        $this->firstPost = $firstPost;
+
+        return $this;
+    }
+
+    /**
+     * Get firstPost
+     *
+     * @return \AppBundle\Entity\ForumPost
+     */
+    public function getFirstPost()
+    {
+        return $this->firstPost;
+    }
+
+    /**
+     * Set lastPost
+     *
+     * @param \AppBundle\Entity\ForumPost $lastPost
+     *
+     * @return ForumThread
+     */
+    public function setLastPost(\AppBundle\Entity\ForumPost $lastPost = null)
+    {
+        $this->lastPost = $lastPost;
+
+        return $this;
+    }
+
+    /**
+     * Get lastPost
+     *
+     * @return \AppBundle\Entity\ForumPost
+     */
+    public function getLastPost()
+    {
+        return $this->lastPost;
     }
 }

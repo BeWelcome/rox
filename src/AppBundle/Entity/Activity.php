@@ -406,4 +406,28 @@ class Activity
 
         return $ids;
     }
+
+    /**
+     * Add attendee
+     *
+     * @param \AppBundle\Entity\ActivityAttendee $attendee
+     *
+     * @return Activity
+     */
+    public function addAttendee(\AppBundle\Entity\ActivityAttendee $attendee)
+    {
+        $this->attendees[] = $attendee;
+
+        return $this;
+    }
+
+    /**
+     * Remove attendee
+     *
+     * @param \AppBundle\Entity\ActivityAttendee $attendee
+     */
+    public function removeAttendee(\AppBundle\Entity\ActivityAttendee $attendee)
+    {
+        $this->attendees->removeElement($attendee);
+    }
 }

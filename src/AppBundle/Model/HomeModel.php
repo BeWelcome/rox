@@ -4,6 +4,7 @@ namespace AppBundle\Model;
 
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
+use AppBundle\Entity\ForumThread;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
@@ -127,40 +128,28 @@ class HomeModel extends BaseModel {
         $queryBuilder = $em->createQueryBuilder();
 
         $queryBuilder
-            ->select('ft.id')
-            ->from('forums_threads', 'ft')
-            ->where("ThreadDeleted = 'NotDeleted'")
-            ->orderBy('created_at', 'desc')
+            ->select('ft')
+            ->from('AppBundle\Entity\ForumThread', 'ft')
+            ->where("ft.threadDeleted = 'NotDeleted'")
+            ->orderBy('ft.createdAt', 'desc')
         ;
 
         $groupIds = [];
         if ($groups) {
             $groups = $member->getGroups();
-            // ->get(['id']);
 
-            $groupIds = $groups->map(
-                function($item) {
-                    return $item->getId();
-                }
-            );
         }
         if ($forum) {
-            $groupIds = array_merge($groupIds->getValues() , [0]);
+//            $groupIds = array_merge($groupIds->getValues() , [0]);
         }
         if ($following) {
 
         }
         if (!empty($groupIds)) {
             $queryBuilder
-                ->andWhere('IdGroup IN (:groupIds)')
-                ->setParameter('groupIds', $groupIds);
+                ->andWhere('ft.group IN (:groups)')
+                ->setParameter('groups', $groups);
         }
-
-        // Need to use inner join here so it also acts like an eager fetch, ie.
-        // no threads will be returned if they have a missing author etc.
-        $queryBuilder
-            ->join('forums_posts', 'forums_posts.id', '=', 'forums_threads.last_postid')
-            ->join('members', 'members.id', '=', 'forums_posts.authorid');
 
         if ($limit) {
             $queryBuilder->setMaxResults($limit);

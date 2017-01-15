@@ -307,4 +307,28 @@ class Trip
     {
         return $this->subtrips;
     }
+
+    /**
+     * Add subtrip
+     *
+     * @param \AppBundle\Entity\SubTrip $subtrip
+     *
+     * @return Trip
+     */
+    public function addSubtrip(\AppBundle\Entity\SubTrip $subtrip)
+    {
+        $this->subtrips[] = $subtrip;
+
+        return $this;
+    }
+
+    /**
+     * Remove subtrip
+     *
+     * @param \AppBundle\Entity\SubTrip $subtrip
+     */
+    public function removeSubtrip(\AppBundle\Entity\SubTrip $subtrip)
+    {
+        $this->subtrips->removeElement($subtrip);
+    }
 }

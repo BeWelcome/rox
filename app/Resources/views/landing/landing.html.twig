@@ -8,16 +8,16 @@
     <div class="d-flex flex-row justify-content-start align-items-center welcomeback mb-4 p-2"
          style="margin-top: -23px;">
 
-            {% include ':landing:widget/profilepicturewithaccommodation.html.twig' with {
-            member: my_member
-            } only %}
+        {% include ':landing:widget/profilepicturewithaccommodation.html.twig' with {
+        member: my_member
+        } only %}
 
         <div class="ml-3">
             <div class="d-flex flex-column">
                 <div class="d-inline-flex h2 my-2">
-                    Welcome back, {{ macros.profilelink(my_member.Username) }}
+                    <span class="hidden-md-down">Welcome back, </span>{{ macros.profilelink(my_member.Username) }}
                 </div>
-                <div class="d-inline-flex hidden-xs-down align-items-center h4">
+                <div class="d-inline-flex hidden-md-down align-items-center h4">
                     Your hosting status is
                     {% include ':landing:widget/accommodation.html.twig' with {
                     member: my_member
@@ -62,254 +62,263 @@
     </div>
     #}
 
-    {# two boxes: messages and community activity #}
-    <div class="row mb-2">
 
-        <!-- entire messages box -->
-        <div class="col-md-12 col-lg-5">
-
-            <!-- messages tabs -->
-            <ul class="nav nav-tabs">
-                <li class="nav-item"><a class="nav-link active" aria-controls="messages" href="#messages" role="tab"
-                                        data-toggle="tab">Messages received {% if messageCount %}<span
-                                class="badge badge-primary">{{ messageCount }}</span>{% endif %}</a></li>
+    <div class="row">
+        {# messages tabs big screens #}
+        <div class="col-12 col-lg-5 hidden-md-down tab-content">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-controls="messages" href="#messages" role="tab" data-toggle="tab">Messages
+                        received {% if messageCount %}<span
+                                class="badge badge-primary">{{ messageCount }}</span>{% endif %}</a>
+                </li>
                 <li class="nav-item"><a class="nav-link" aria-controls="notifications" href="#notifications" role="tab"
                                         data-toggle="tab">Notifications</a></li>
             </ul>
-
-            <!-- bordered box around content -->
-            <div class="dashbox mb-1">
-
-                <div class="tab-content">
-
-                    {# messages #}
-                    <div role="tabpanel" class="tab-pane active" id="messages">
-                        <!-- all / unread messages toggle -->
-                        <div class="flex-row justify-content-center p-1">
-
-                            <div class="btn-group" data-toggle="buttons">
-                                <label class="btn btn-primary btn-radio active" id="all">
-                                    <input type="radio" name="options" autocomplete="off" onclick="updateMessages()"
-                                           checked>All
-                                </label>
-                                <label for="unread" class="btn btn-primary btn-radio" id="unread">
-                                    <input type="radio" name="options" autocomplete="off" onclick="updateMessages()">Unread
-                                </label>
-                            </div>
-                        </div>
-
-                        {# received messages #}
-                        <div id="messagesdisplay" class="scrollcontent">
-                            <p class="text-xs-center my-3">
-                                <i class="fa fa-4x fa-spin fa-spinner my-3"></i><br>
-                                {{ 'Please wait while we load the messages' | trans }}</p>
-                        </div>
-
-                        <!-- message buttons -->
-                        <div class="text-xs-center">
-                            <a href="{{ url('message') }}" class="btn btn-outline-primary btn-homewhite"><i
-                                        class="fa fa-envelope"></i> My inbox {% if messageCount %}<span
-                                        class="badge badge-primary badge-pill">{{ messageCount }}</span>{% endif %}</a>
-                        </div>
-
-                    </div>
-
-                    {# load system notifications #}
-                    <div role="tabpanel" class="tab-pane" id="notifications">
-
-                        <div id="notificationsdisplay" class="scrollcontent">
-                            <p class="text-xs-center my-3">
-                                <i class="fa fa-4x fa-spin fa-spinner my-3"></i><br/>
-                                {{ 'Please wait while we load the notifications' | trans }}</p>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
         </div>
 
-        {# community updates box #}
-        <div class="col-md-12 col-lg-7">
-            <ul class="nav nav-tabs">
-                <li class="nav-item"><a href="#threads" class="nav-link active" aria-controls="threads" role="tab"
-                                        data-toggle="tab">Forum</a></li>
-                <li class="nav-item"><a href="#activities" class="nav-link" aria-controls="activities" role="tab"
-                                        data-toggle="tab">Activities</a></li>
+        {# community tabs big screens #}
+        <div class="col-12 col-lg-7 hidden-md-down tab-content">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a href="#threads" class="nav-link active" aria-controls="threads" role="tab" data-toggle="tab">Forum</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#activities" class="nav-link" aria-controls="activities" role="tab" data-toggle="tab">Activities</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="d-flex row align-items-stretch flex-wrap pb-3">
+
+        {# messages box #}
+        <div class="col-12 col-lg-5 align-items-stretch">
+
+            <ul class="nav nav-tabs hidden-lg-up" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-controls="messages" href="#messages" role="tab" data-toggle="tab">Messages
+                        received {% if messageCount %}<span
+                                class="badge badge-primary">{{ messageCount }}</span>{% endif %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" aria-controls="notifications" href="#notifications" role="tab"
+                       data-toggle="tab">Notifications</a>
+                </li>
             </ul>
 
-            {# bordered box #}
-            <div class="dashbox">
-                {# tabs content #}
-                <div class="tab-content">
-                    {# forum discussions #}
-                    <div role="tabpanel" class="tab-pane active" id="threads">
+            <div class="dashbox fullheight tab-content p-1">
 
-                        {# display settings#}
-                        <div class="row text-xs-center p-1">
-                            <div class="btn-group" data-toggle="buttons">
-                                <label class="btn btn-primary btn-radio active" id="groups">
-                                    <input type="checkbox" autocomplete="off" checked> groups
-                                </label>
-                                <label class="btn btn-primary btn-radio" id="forum">
-                                    <input type="checkbox" autocomplete="off" checked> forum
-                                </label>
-                            </div>
-                        </div>
-
-                        {# received messages #}
-                        <div id="threadsdisplay" class="scrollcontent">
-                            <p class="text-xs-center my-3">
-                                <i class="fa fa-4x fa-spin fa-spinner my-3"></i><br/>
-                                {{ 'Please wait while we load the forum threads' | trans }}</p>
-                        </div>
-
-                        <div class="text-xs-center">
-                            <div class="btn-group" role="group" aria-label="...">
-                                <a href="/forums" class="btn btn-outline-primary btn-homewhite"><i
-                                            class="fa fa-comments"></i> View forums</a>
-                                <a href="/groups/mygroups" class="btn btn-outline-primary btn-homewhite"><i
-                                            class="fa fa-users"></i> My groups</a>
-                                <a href="/forums/subscriptions" class="btn btn-outline-primary btn-homewhite"><i
-                                            class="fa fa-check-square-o"></i> My subscriptions</a>
-                            </div>
-                        </div>
-
+                {# messages #}
+                <div role="tabpanel" class="tab-pane fullheight active" id="messages">
+                    <!-- all / unread messages toggle -->
+                    <div class="d-flex btn-group justify-content-center" data-toggle="buttons">
+                        <label class="btn btn-primary btn-radio active" id="all">
+                            <input type="radio" name="options" autocomplete="off" onclick="updateMessages()"
+                                   checked>All
+                        </label>
+                        <label for="unread" class="btn btn-primary btn-radio" id="unread">
+                            <input type="radio" name="options" autocomplete="off" onclick="updateMessages()">Unread
+                        </label>
                     </div>
 
-                    {# load activities #}
-                    <div role="tabpanel" class="tab-pane" id="activities">
+                    {# received messages #}
+                    <div id="messagesdisplay" class="scrollcontent">
+                        <p class="text-center my-3">
+                            <i class="fa fa-4x fa-spin fa-spinner my-3"></i><br>
+                            {{ 'Please wait while we load the messages' | trans }}</p>
+                    </div>
 
-                        <div class="row text-xs-center p-1">
-                            <div class="btn-group" role="group">
-                                <a href="/activities" class="btn btn-outline-primary btn-homewhite"><i
-                                            class="fa fa-map-o"></i> All activities</a>
-                                <a href="/activities/myactivities" class="btn btn-outline-primary btn-homewhite"><i
-                                            class="fa fa-calendar"></i> My activities</a>
-                                <a href="/activities/create" class="btn btn-outline-primary btn-homewhite"><i
-                                            class="fa fa-calendar-plus-o"></i> Create activity</a>
-                            </div>
+                    {# message buttons #}
+                    <div class="text-center">
+                        <a href="{{ url('message') }}" class="btn btn-outline-primary btn-homewhite"><i
+                                    class="fa fa-envelope"></i> My inbox {% if messageCount %}<span
+                                    class="badge badge-primary badge-pill">{{ messageCount }}</span>{% endif %}</a>
+                    </div>
+                </div>
+
+                {# notifications #}
+                <div role="tabpanel" class="tab-pane fullheight p-2" id="notifications">
+
+                    <div id="notificationsdisplay">
+                        <p class="text-center my-3">
+                            <i class="fa fa-4x fa-spin fa-spinner my-3"></i><br/>
+                            {{ 'Please wait while we load the notifications' | trans }}</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        {# community box #}
+        <div class="col-12 col-lg-7 align-items-stretch">
+
+            <ul class="nav nav-tabs hidden-lg-up mt-3" role="tablist">
+                <li class="nav-item">
+                    <a href="#threads" class="nav-link active" aria-controls="threads" role="tab" data-toggle="tab">Forum</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#activities" class="nav-link" aria-controls="activities" role="tab" data-toggle="tab">Activities</a>
+                </li>
+            </ul>
+
+            <div class="dashbox fullheight tab-content">
+                {# forum discussions #}
+                <div role="tabpanel" class="tab-pane fullheight active p-1" id="threads">
+
+                    {# display settings#}
+                    <div class="d-flex btn-group justify-content-center" data-toggle="buttons">
+                        <label class="btn btn-primary btn-radio active" id="groups">
+                            <input type="checkbox" autocomplete="off" checked> groups
+                        </label>
+                        <label class="btn btn-primary btn-radio" id="forum">
+                            <input type="checkbox" autocomplete="off" checked> forum
+                        </label>
+                    </div>
+
+                    {# received messages #}
+                    <div id="threadsdisplay">
+                        <p class="text-center">
+                            <i class="fa fa-4x fa-spin fa-spinner my-5 align-middle"></i><br/>
+                            {{ 'Please wait while we load the forum threads' | trans }}</p>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="btn-group" role="group" aria-label="...">
+                            <a href="/forums" class="btn btn-outline-primary btn-homewhite"><i
+                                        class="fa fa-comments"></i> View forums</a>
+                            <a href="/groups/mygroups" class="btn btn-outline-primary btn-homewhite"><i
+                                        class="fa fa-users"></i> My groups</a>
+                            <a href="/forums/subscriptions" class="btn btn-outline-primary btn-homewhite"><i
+                                        class="fa fa-check-square-o"></i> My subscriptions</a>
                         </div>
-                        <div id="activitiesdisplay" class="col-xs-12">
-                            <p class="text-xs-center my-3">
-                                <i class="fa fa-4x fa-spin fa-spinner my-3"></i><br/>
-                                {{ 'Please wait while we load the activities near you' | trans }}</p>
-                        </div>
+                    </div>
+
+                </div>
+
+                {# load activities #}
+                <div role="tabpanel" class="tab-pane fullheight p-2" id="activities">
+                    <div class="d-flex btn-group justify-content-center" role="group">
+                        <a href="/activities" class="btn btn-outline-primary btn-homewhite"><i
+                                    class="fa fa-map-o"></i> All activities</a>
+                        <a href="/activities/myactivities" class="btn btn-outline-primary btn-homewhite"><i
+                                    class="fa fa-calendar"></i> My activities</a>
+                        <a href="/activities/create" class="btn btn-outline-primary btn-homewhite"><i
+                                    class="fa fa-calendar-plus-o"></i> Create activity</a>
+                    </div>
+                    <div id="activitiesdisplay" class="col-12">
+                        <p class="text-center my-3">
+                            <i class="fa fa-4x fa-spin fa-spinner my-3"></i><br/>
+                            {{ 'Please wait while we load the activities near you' | trans }}</p>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 
     {# 4 widgets#}
-    <div class="card-deck-wrapper mb-2">
-        <div class="card-deck">
+    <div class="d-flex row flex-wrap">
 
-            {# Be Involved #}
-            <div class="card card-4">
-                <div class="card-block">
-                    <h4 class="homehfour">Be Involved<br/><span class="homesubt">help the community</span></h4>
-                    <p class="card-text">BeWelcome is run by volunteers - free of charge and open source. Volunteering
-                        for the project is a great opportunity for you to get to know enthusiastic people who really
-                        believe in promoting hospitality and respect for each other. And it's fun, too!</p>
-                    <a href="about/getactive" class="btn btn-outline-primary btn-homewhite btn-block"><i
-                                class="fa fa-wrench"></i> Help BeWelcome</a>
-                    <a href="donate" class="btn btn-outline-primary btn-homewhite btn-block mb-1"><i
-                                class="fa fa-euro"></i> Please donate</a>
-                    {% if campaign.yearDonated < campaign.yearNeeded %}
-                        <p class="card-text text-xs-center mb-0">Goal for {{ campaign.year }} - {{ campaign.year + 1 }}:
-                            <strong>€{{ campaign.yearNeeded }}</strong></p>
-                        <progress class="progress progress-primary ma-0" value="{{ campaign.yearDonated }}"
-                                  max="{{ campaign.yearNeeded }}"></progress>
-                        <p class="card-text text-xs-center"><strong>€{{ campaign.yearDonated }}</strong> received</p>
-                    {% endif %}
-                </div>
+        <div class="col-12 col-md-6 col-lg-4 mb-3">
+            <div class="card p-2 fullheight">
+                <h4 class="homehfour">Be Involved<br/><span class="homesubt">help the community</span></h4>
+                <p class="card-text">BeWelcome is run by volunteers - free of charge and open source. Volunteering
+                    for the project is a great opportunity for you to get to know enthusiastic people who really
+                    believe in promoting hospitality and respect for each other. And it's fun, too!</p>
+                <a href="about/getactive" class="btn btn-outline-primary btn-homewhite btn-block"><i
+                            class="fa fa-wrench"></i> Help BeWelcome</a>
+                <a href="donate" class="btn btn-outline-primary btn-homewhite btn-block mb-1"><i
+                            class="fa fa-euro"></i> Please donate</a>
+                {% if campaign.yearDonated < campaign.yearNeeded %}
+                    <p class="card-text text-center mb-0">Goal for {{ campaign.year }} - {{ campaign.year + 1 }}:
+                        <strong>€{{ campaign.yearNeeded }}</strong></p>
+                    <progress class="progress progress-primary ma-0" value="{{ campaign.yearDonated }}"
+                              max="{{ campaign.yearNeeded }}"></progress>
+                    <p class="card-text text-center"><strong>€{{ campaign.yearDonated }}</strong> received</p>
+                {% endif %}
             </div>
+        </div>
 
-            {# Potential guests #}
-            <div class="card card-3 hidden-md-down">
-                <div class="card-block">
-                    <h4 class="homehfour">Potential guests<br/><span class="homesubt">travelers in your area</span></h4>
-                    {% if travellers %}
-                        {% for traveller in travellers %}
-                            <div class="media mt-1 potentialguestinfo">
-                                <div class="h6 ma-0">{{ macros.profilelink(traveller.Username) }}</div>
-                                <div class="media-left p-0 float-left">
-                                    {{ macros.avatar( traveller.Username, 50, true) }}
-                                </div>
-                                <div class="media-body p-0">
-                                    <p class="m-0 p-0"><i class="fa fa-calendar"></i>
-                                        <small>{{ traveller.arrives }}</small>
-                                    </p>
-                                    <p class="m-0 p-0"><i class="fa fa-rocket"></i>
-                                        <small>{{ traveller.leaves }}</small>
-                                    </p>
-                                    <p class="m-0 p-0"><i class="fa fa-home"></i>
-                                        <small>{{ traveller.livesIn.name }}
-                                            , {{ traveller.livesIn.Country.name }}</small>
-                                    </p>
-                                </div>
+        <div class="col-12 col-md-6 col-lg-3 mb-3">
+            <div class="card p-2 fullheight">
+                <h4 class="homehfour">Potential guests<br/><span class="homesubt">travelers in your area</span></h4>
+                {% if travellers %}
+                    {% for traveller in travellers %}
+                        <div class="media mt-1 potentialguestinfo">
+                            <div class="h6 ma-0">{{ macros.profilelink(traveller.Username) }}</div>
+                            <div class="media-left p-0 float-left">
+                                {{ macros.avatar( traveller.Username, 50, true) }}
                             </div>
-                        {% endfor %}
-                        <a href="{{ path('trip') }}" class="btn btn-outline-primary btn-homewhite btn-block mt-1"><i
-                                    class="fa fa-plus-circle"></i> View more</a>
-                    {% else %}
-                        {{ 'There are no trips planned to your area in the next three months.' | trans }}<br>
-                        {{ 'But you can go ahead and plan a trip of your own.' | trans }}<br>
-                    {% endif %}
-                    <a href="{{ path('trip_create') }}" class="btn btn-outline-primary btn-homewhite btn-block"><i
-                                class="fa fa-map-marker"></i> Plan your trip</a>
-                </div>
+                            <div class="media-body p-0">
+                                <p class="m-0 p-0"><i class="fa fa-calendar"></i>
+                                    <small>{{ traveller.arrives }}</small>
+                                </p>
+                                <p class="m-0 p-0"><i class="fa fa-rocket"></i>
+                                    <small>{{ traveller.leaves }}</small>
+                                </p>
+                                <p class="m-0 p-0"><i class="fa fa-home"></i>
+                                    <small>{{ traveller.livesIn.name }}
+                                        , {{ traveller.livesIn.Country.name }}</small>
+                                </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <a href="{{ path('trip') }}" class="btn btn-outline-primary btn-homewhite btn-block mt-1"><i
+                                class="fa fa-plus-circle"></i> View more</a>
+                {% else %}
+                    {{ 'There are no trips planned to your area in the next three months.' | trans }}<br>
+                    {{ 'But you can go ahead and plan a trip of your own.' | trans }}<br>
+                {% endif %}
+                <a href="{{ path('trip_create') }}" class="btn btn-outline-primary btn-homewhite btn-block"><i
+                            class="fa fa-map-marker"></i> Plan your trip</a>
             </div>
+        </div>
 
-            {# Community News #}
-            <div class="card card-3 hidden-md-down">
-                <div class="card-block">
-                    <h4 class="homehfour">Community News<br/><span class="homesubt">and other updates</span></h4>
+        <div class="col-12 col-md-6 col-lg-3 mb-3">
+            <div class="card p-2 fullheight">
+                <h4 class="homehfour">Community News<br/><span class="homesubt">and other updates</span></h4>
 
-                    <h5>
-                        <a href="{{ url('communitynews_show', { id: communityNews.id} ) }}">{{ communityNews.title }}</a>
-                    </h5>
-                    <p class="card-text">{{ communityNews.text | truncate(200) | raw }}<a
-                                href="{{ url('communitynews_show', { id: communityNews.id} ) }}"
-                                class="btn-outline-primary">{{ 'Read more' | trans }}</a></p>
-                    <div>
-                        <small>{{ communityNews.createdAt.diffForHumans }}</small>
-                        <small class="float-right">3 comments</small>
-                    </div>
-                    <a href="{{ url('communitynews') }}" class="btn btn-outline-primary btn-homewhite btn-block mt-2"><i
-                                class="fa fa-newspaper-o"></i> All news</a>
+                <h5>
+                    <a href="{{ url('communitynews_show', { id: communityNews.id} ) }}">{{ communityNews.title }}</a>
+                </h5>
+                <p class="card-text">{{ communityNews.text | truncate(200) | raw }}<a
+                            href="{{ url('communitynews_show', { id: communityNews.id} ) }}"
+                            class="btn-outline-primary">{{ 'Read more' | trans }}</a></p>
+                <div>
+                    <small>{{ communityNews.createdAt.diffForHumans }}</small>
+                    <small class="float-right">3 comments</small>
                 </div>
+                <a href="{{ url('communitynews') }}" class="btn btn-outline-primary btn-homewhite btn-block mt-2"><i
+                            class="fa fa-newspaper-o"></i> All news</a>
             </div>
+        </div>
 
-            {# Be Informed #}
-            <div class="card card-2">
-                <div class="card-block">
-                    <h4 class="homehfour">Be Informed<br/><span class="homesubt">Transparency</span></h4>
-                    <a href="faq" class="btn btn-outline-primary btn-homewhite btn-sm btn-block"><i
-                                class="fa fa-question"></i> About</a>
-                    <a href="faq" class="btn btn-outline-primary btn-homewhite btn-sm btn-block"><i
-                                class="fa fa-question"></i> FAQ</a>
-                    <a href="wiki" class="btn btn-outline-primary btn-homewhite btn-sm btn-block"><i
-                                class="fa fa-book"></i> Wiki</a>
-                    <a href="safety" class="btn btn-outline-primary btn-homewhite btn-sm btn-block mb-1"><i
-                                class="fa fa-shield"></i> Contact</a>
-                    <a href="wiki/BeVolunteer" class="btn btn-outline-primary btn-homewhite btn-sm btn-block"><i
-                                class="fa fa-bullseye"></i> BeVolunteer</a>
-                    <a href="wiki/Annual_Report" class="btn btn-outline-primary btn-homewhite btn-sm btn-block"><i
-                                class="fa fa-book"></i> Annual report</a>
-                    <a href="wiki/Finances" class="btn btn-outline-primary btn-homewhite btn-sm btn-block mb-1"><i
-                                class="fa fa-money"></i> Finances</a>
-                    <a href="wiki/Annual_Report" class="btn btn-outline-primary btn-homewhite btn-sm btn-block"><i
-                                class="fa fa-book"></i> Terms of Use</a>
-                    <a href="wiki/Annual_Report" class="btn btn-outline-primary btn-homewhite btn-sm btn-block"><i
-                                class="fa fa-book"></i> Privacy Policy</a>
-                </div>
+        <div class="col-12 col-md-6 col-lg-2 mb-3">
+            <div class="card p-2 fullheight">
+                <h4 class="homehfour">Be Informed<br/><span class="homesubt">Transparency</span></h4>
+                <a href="faq" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
+                            class="fa fa-question"></i> About</a>
+                <a href="faq" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
+                            class="fa fa-question"></i> FAQ</a>
+                <a href="wiki" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
+                            class="fa fa-book"></i> Wiki</a>
+                <a href="safety" class="btn btn-outline-primary btn-homewhite btn-sm btn-block mb-1 text-truncate"><i
+                            class="fa fa-shield"></i> Contact</a>
+                <a href="wiki/BeVolunteer" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
+                            class="fa fa-bullseye"></i> BeVolunteer</a>
+                <a href="wiki/Annual_Report" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
+                            class="fa fa-book"></i> Annual report</a>
+                <a href="wiki/Finances" class="btn btn-outline-primary btn-homewhite btn-sm btn-block mb-1 text-truncate"><i
+                            class="fa fa-money"></i> Finances</a>
+                <a href="wiki/Annual_Report" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
+                            class="fa fa-book"></i> Terms of Use</a>
+                <a href="wiki/Annual_Report" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
+                            class="fa fa-book"></i> Privacy Policy</a>
             </div>
-
         </div>
     </div>
+
 {% endblock content %}
 
 {% block javascripts %}

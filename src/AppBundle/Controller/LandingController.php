@@ -43,9 +43,14 @@ class LandingController extends Controller
         return new Response($content);
     }
 
+    /**
+     * @Route( "/widget/notifications", name="/widget/notifications")
+     *
+     * @return Response
+     */
     public function showNotificationsAction()
     {
-/*        $member = $this->getUser();
+        $member = $this->getUser();
 
         $homeModel = new HomeModel($this->getDoctrine());
         $notifications = $homeModel->getNotifications($member, 5);
@@ -53,8 +58,6 @@ class LandingController extends Controller
         $content = $this->render(':landing/widget:notifications.html.twig', [
             'notifications' => $notifications,
         ]);
-*/
-        $content = '';
         return new Response($content);
     }
 

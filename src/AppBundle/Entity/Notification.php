@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,21 +11,27 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="notes")
  * @ORM\Entity
  */
-class Notes
+class Notification
 {
     /**
-     * @var integer
+     * @var \AppBundle\Entity\Member
      *
-     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="\AppBundle\Entity\Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
+     * })
      */
-    private $idmember;
+    private $member;
 
     /**
-     * @var integer
+     * @var \AppBundle\Entity\Member
      *
-     * @ORM\Column(name="IdRelMember", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="\AppBundle\Entity\Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdRelMember", referencedColumnName="id")
+     * })
      */
-    private $idrelmember;
+    private $relMember;
 
     /**
      * @var string
@@ -87,39 +94,39 @@ class Notes
 
 
     /**
-     * Set idmember
+     * Set member
      *
-     * @param integer $idmember
+     * @param Member $member
      *
-     * @return Notes
+     * @return Notification
      */
-    public function setIdmember($idmember)
+    public function setMember(Member $member)
     {
-        $this->idmember = $idmember;
+        $this->member = $member;
 
         return $this;
     }
 
     /**
-     * Get idmember
+     * Get member
      *
-     * @return integer
+     * @return Member
      */
-    public function getIdmember()
+    public function getMember()
     {
-        return $this->idmember;
+        return $this->member;
     }
 
     /**
-     * Set idrelmember
+     * Set relMember
      *
-     * @param integer $idrelmember
+     * @param Member $relMember
      *
-     * @return Notes
+     * @return Notification
      */
-    public function setIdrelmember($idrelmember)
+    public function setRelMember(Member $relMember)
     {
-        $this->idrelmember = $idrelmember;
+        $this->relMember = $relMember;
 
         return $this;
     }
@@ -127,11 +134,11 @@ class Notes
     /**
      * Get idrelmember
      *
-     * @return integer
+     * @return Member
      */
-    public function getIdrelmember()
+    public function getRelMember()
     {
-        return $this->idrelmember;
+        return $this->relMember;
     }
 
     /**
@@ -139,7 +146,7 @@ class Notes
      *
      * @param string $type
      *
-     * @return Notes
+     * @return Notification
      */
     public function setType($type)
     {
@@ -163,7 +170,7 @@ class Notes
      *
      * @param string $link
      *
-     * @return Notes
+     * @return Notification
      */
     public function setLink($link)
     {
@@ -187,7 +194,7 @@ class Notes
      *
      * @param string $wordcode
      *
-     * @return Notes
+     * @return Notification
      */
     public function setWordcode($wordcode)
     {
@@ -211,7 +218,7 @@ class Notes
      *
      * @param boolean $checked
      *
-     * @return Notes
+     * @return Notification
      */
     public function setChecked($checked)
     {
@@ -235,7 +242,7 @@ class Notes
      *
      * @param boolean $sendmail
      *
-     * @return Notes
+     * @return Notification
      */
     public function setSendmail($sendmail)
     {
@@ -259,7 +266,7 @@ class Notes
      *
      * @param \DateTime $created
      *
-     * @return Notes
+     * @return Notification
      */
     public function setCreated($created)
     {
@@ -271,11 +278,11 @@ class Notes
     /**
      * Get created
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getCreated()
     {
-        return $this->created;
+        return Carbon::instance($this->created);
     }
 
     /**
@@ -283,7 +290,7 @@ class Notes
      *
      * @param string $translationparams
      *
-     * @return Notes
+     * @return Notification
      */
     public function setTranslationparams($translationparams)
     {

@@ -33,7 +33,7 @@ class HomeModel extends BaseModel {
         $queryBuilder = $this->em->createQueryBuilder();
         $queryBuilder
             ->select('m')
-            ->from('AppBundle:Message', 'm')
+            ->from('AppBundle\Entity\Message', 'm')
             ->where('m.receiver = :member')
             ->setParameter('member', $member);
         if ($unread) {
@@ -66,18 +66,36 @@ class HomeModel extends BaseModel {
      */
     public function getNotifications(Member $member, $limit = 0)
     {
-        $queryBuilder = $this->em->createQueryBuilder();
-        $queryBuilder
-            ->select('n')
-            ->from('AppBundle:Notification', 'n')
-            ->where('n.member = :member')
-            ->setParameter('member', $member)
-            ->setMaxResults($limit);
+        $member;
+        $limit;
+/*        $query = Note::orderBy('created', 'desc')
+            ->with('notifier')
+            ->where('IdMember', $member->getId())
+            ->where('checked', 0)->get();
+        if ($limit) {
+            $query=$query->take($limit);
+        }
+        $notes = $query->all();
+        $words = $this->getWords();
 
-        return $queryBuilder
-            ->orderBy('n.created', 'DESC')
-            ->getQuery()
-            ->getResult();
+        $mappedNotes = array_map(
+            function($a) use($words, $member) {
+                $result = new \stdClass();
+                if ($a->WordCode == '' && ($text_params = unserialize($a->TranslationParams)) !== false) {
+                    $text = call_user_func_array(array($words, 'getSilent'), $text_params);
+                } else {
+                    $text = $words->getSilent($a->WordCode,$a->notifier->Username);
+                }
+                $result->title = $text;
+                $result->id = $a->id;
+                $result->link = $a->Link;
+                $result->user = $a->notifier->Username;
+                $result->time = $a->created;
+                return $result;
+            }, $notes
+        );
+        return $mappedNotes;
+*/
     }
 
     /**
@@ -111,7 +129,7 @@ class HomeModel extends BaseModel {
 
         $queryBuilder
             ->select('ft')
-            ->from('AppBundle:ForumThread', 'ft')
+            ->from('AppBundle\Entity\ForumThread', 'ft')
             ->where("ft.threadDeleted = 'NotDeleted'")
             ->orderBy('ft.createdAt', 'desc')
         ;
@@ -119,6 +137,13 @@ class HomeModel extends BaseModel {
         $groupIds = [];
         if ($groups) {
             $groups = $member->getGroups();
+<<<<<<< HEAD
+
+        }
+        if ($forum) {
+//            $groupIds = array_merge($groupIds->getValues() , [0]);
+=======
+>>>>>>> 87cc30253becb096df192e53c572535c2465bbbd
         }
         if ($following) {
 

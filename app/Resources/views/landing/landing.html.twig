@@ -194,7 +194,7 @@
         <div class="col-12 col-md-6 col-lg-4 mb-3">
             <div class="card p-2 fullheight">
                 <h4 class="homehfour">Be Involved<br/><span class="homesubt">help the community</span></h4>
-                <p class="card-text">BeWelcome is run by volunteers - free of charge and open source. Volunteering
+                <p>BeWelcome is run by volunteers - free of charge and open source. Volunteering
                     for the project is a great opportunity for you to get to know enthusiastic people who really
                     believe in promoting hospitality and respect for each other. And it's fun, too!</p>
                 <a href="about/getactive" class="btn btn-outline-primary btn-homewhite btn-block"><i
@@ -202,11 +202,11 @@
                 <a href="donate" class="btn btn-outline-primary btn-homewhite btn-block mb-1"><i
                             class="fa fa-euro"></i> Please donate</a>
                 {% if campaign.yearDonated < campaign.yearNeeded %}
-                    <p class="card-text text-center mb-0">Goal for {{ campaign.year }} - {{ campaign.year + 1 }}:
+                    <p class="text-center mb-0">Goal for {{ campaign.year }} - {{ campaign.year + 1 }}:
                         <strong>€{{ campaign.yearNeeded }}</strong></p>
                     <progress class="progress progress-primary ma-0" value="{{ campaign.yearDonated }}"
                               max="{{ campaign.yearNeeded }}"></progress>
-                    <p class="card-text text-center"><strong>€{{ campaign.yearDonated }}</strong> received</p>
+                    <p class="text-center"><strong>€{{ campaign.yearDonated }}</strong> received</p>
                 {% endif %}
             </div>
         </div>
@@ -238,8 +238,10 @@
                     <a href="{{ path('trip') }}" class="btn btn-outline-primary btn-homewhite btn-block mt-1"><i
                                 class="fa fa-plus-circle"></i> View more</a>
                 {% else %}
+                    <p class="text-justify">
                     {{ 'There are no trips planned to your area in the next three months.' | trans }}<br>
                     {{ 'But you can go ahead and plan a trip of your own.' | trans }}<br>
+                    </p>
                 {% endif %}
                 <a href="{{ path('trip_create') }}" class="btn btn-outline-primary btn-homewhite btn-block"><i
                             class="fa fa-map-marker"></i> Plan your trip</a>
@@ -247,15 +249,15 @@
         </div>
 
         <div class="col-12 col-md-6 col-lg-3 mb-3">
-            <div class="card p-2 fullheight">
+            <div class="card p-2 fullheight text-justify">
                 <h4 class="homehfour">Community News<br/><span class="homesubt">and other updates</span></h4>
 
                 <h5>
                     <a href="{{ url('communitynews_show', { id: communityNews.id} ) }}">{{ communityNews.title }}</a>
                 </h5>
-                <p class="card-text">{{ communityNews.text | truncate(200) | raw }}<a
+                {{ communityNews.text | truncate(200) | raw }}<a
                             href="{{ url('communitynews_show', { id: communityNews.id} ) }}"
-                            class="btn-outline-primary">{{ 'Read more' | trans }}</a></p>
+                            class="btn btn-sm btn-outline-primary">{{ 'Read more' | trans }}</a>
                 <div>
                     <small>{{ communityNews.createdAt.diffForHumans }}</small>
                     <small class="float-right">3 comments</small>

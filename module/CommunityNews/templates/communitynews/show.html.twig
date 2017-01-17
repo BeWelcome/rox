@@ -8,5 +8,5 @@
     <h1>{{ communityNews.title }}</h1>
     <p class="small text-muted">{{ 'Written by' | trans }}{{ macros.avatar( communityNews.creator.Username, 30, true) }} {{ communityNews.created_at.diffForHumans }}
         {% if communityNews.updater and communityNews.creator.Username != communityNews.updater.Username %} {{ 'and last updated by' | trans}}{{ macros.avatar( communityNews.updater.Username, 30, true) }} {{ communityNews.updated_at.diffForHumans }}{% endif %}</p>
-    <p>{{ communityNews.text| raw }}</p>
+    <p class="my-0">{{ communityNews.text| raw }}</p>
 {% endblock content %}

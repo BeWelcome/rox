@@ -5,12 +5,13 @@
     <div class="d-flex flex-row justify-content-start align-items-center p-2">
         <div class="pr-2">{{ macros.avatar( message.sender.username, 50, true) }}</div>
         <div class="text-truncate">
-            <p class="text-truncate m-0">{% set unread = (message.whenfirstread == '0000-00-00 00:00.00') %}
+            <p class="text-truncate m-0 p-0 dashentry">{% set unread = (message.whenfirstread == '0000-00-00 00:00.00') %}
                 {% if (unread) %}<strong>{% endif %}
                     <a href="messages/{{ message.id }}">{{ message.message|raw }}</a>
-                    {% if unread %}</strong>{% endif %}<br>
-                <small>from {{ macros.profilelink(message.sender.username) }} {# {{ message.created.DiffForHumans) }}#}</small>
+                    {% if unread %}</strong>{% endif %}
             </p>
+            <p class="p-0 m-0"><small>from {{ macros.profilelink(message.sender.username) }} {# {{ message.created.DiffForHumans) }}#}</small></p>
+
         </div>
         <div class="ml-auto"><a href="messages/{{ message.id }}"><i class="fa fa-chevron-right"></i></a></div>
     </div>

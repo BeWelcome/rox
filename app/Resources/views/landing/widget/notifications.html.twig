@@ -6,7 +6,7 @@
             <div class="pr-2">{{ macros.avatar( notification.user, 50, true ) }}</div>
             <div class="text-truncate">
                 <p class="text-truncate m-0 p-0 dashentry">
-                    <a href="{{ notification.link }}" title="{{ notification.title }}">{{ notification.title | raw }}</a><br>
+                    <a href="{{ notification.link }}" title="{{ notification.translationcode|trans }}">{{ notification.translationcode|trans| raw }}</a><br>
                 </p>
                 <p class="p-0 m-0"><small><abbr title="{{ notification.time.format('r') }}">{{ ago(notification.time) }}</abbr></small></p>
             </div>

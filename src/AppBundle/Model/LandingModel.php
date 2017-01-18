@@ -9,7 +9,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 
-class HomeModel extends BaseModel {
+class LandingModel extends BaseModel {
 
     /**
      * Generates messages for display on home page

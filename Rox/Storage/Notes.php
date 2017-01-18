@@ -1,4 +1,9 @@
 <?php
+/*
+ * @codingStandardsIgnoreFile
+ *
+ * Auto generated file ignore for Code Sniffer
+ */
 
 namespace AppBundle\Entity;
 
@@ -9,6 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="notes")
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class Notes
 {
@@ -297,9 +305,13 @@ class Notes
      *
      * @return string
      */
-    public function getTranslationparams()
+    public function getTranslationCode()
     {
-        return $this->translationparams;
+        if ($this->translationparams) {
+            $a = unserialize($this->translationparams);
+            return $a[0];
+        }
+        return $this->wordcode;
     }
 
     /**

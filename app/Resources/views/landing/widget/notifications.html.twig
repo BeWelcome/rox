@@ -5,7 +5,7 @@
             <div class="pr-2">{{ macros.avatar( notification.member.Username, 50, true ) }}</div>
             <div class="text-truncate">
                 <p class="text-truncate m-0 p-0 dashentry">
-                    <a href="{{ notification.link }}" title="{{ notification.wordcode|trans }}">{{ notification.wordcode|trans| raw }}</a><br>
+                    <a href="{{ notification.link }}" title="{{ notification.translationcode|trans }}">{{ notification.translationcode|trans| raw }}</a><br>
                 </p>
                 <p class="p-0 m-0"><small><abbr title="{{ notification.created }}">{{ notification.created.DiffForHumans }}</abbr></small></p>
             </div>

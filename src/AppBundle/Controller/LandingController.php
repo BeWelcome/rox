@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\Member;
-use AppBundle\Model\HomeModel;
+use AppBundle\Model\LandingModel;
 use AppBundle\Form\SearchGotoLocationFormType;
 use AppBundle\Form\SearchHomeLocationFormType;
 
@@ -33,7 +33,7 @@ class LandingController extends Controller
 
         $member = $this->getUser();
 
-        $homeModel = new HomeModel($this->getDoctrine());
+        $homeModel = new LandingModel($this->getDoctrine());
         $messages = $homeModel->getMessages($member, $unread, 4);
 
         $content = $this->render(':landing/widget:messages.html.twig', [
@@ -52,7 +52,7 @@ class LandingController extends Controller
     {
         $member = $this->getUser();
 
-        $homeModel = new HomeModel($this->getDoctrine());
+        $homeModel = new LandingModel($this->getDoctrine());
         $notifications = $homeModel->getNotifications($member, 5);
 
         $content = $this->render(':landing/widget:notifications.html.twig', [
@@ -75,7 +75,7 @@ class LandingController extends Controller
         $following = $request->query->get('following');
 
         $member = $this->getUser();
-        $homeModel = new HomeModel($this->getDoctrine());
+        $homeModel = new LandingModel($this->getDoctrine());
         $threads = $homeModel->getThreads($member, $groups, $forum, $following, 4);
 
         $content = $this->render(':landing:widget/forums.html.twig', [
@@ -170,7 +170,7 @@ class LandingController extends Controller
         $donationModel = new DonateModel($this->getDoctrine());
         $campaignDetails = $donationModel->getStatForDonations();
 
-        $homeModel = new HomeModel($this->getDoctrine());
+        $homeModel = new LandingModel($this->getDoctrine());
         $travellersInArea = $homeModel->getTravellersInAreaOfMember($member);
 
         $communityNews = new CommunityModel($this->getDoctrine());

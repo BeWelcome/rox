@@ -2,12 +2,14 @@
 
 namespace AppBundle\Model;
 
+use AnthonyMartin\GeoLocation\GeoLocation;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
 use AppBundle\Entity\ForumThread;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
+use stdClass;
 
 class LandingModel extends BaseModel {
 
@@ -142,76 +144,18 @@ class LandingModel extends BaseModel {
 
     /**
      * Generates activities (near you) for display on home page
-     * Format: 'title': "Activity near you #1",
-     *   'id': 12345,
-     *   'day': '12',
-     *   'month': '02',
-     *   'year': 2016,
-     *   'place': 'Lourdes',
-     *   'country': 'France',
-     *   'yes': 12,
-     *   'no': 3
      *
      * @param Member $member
-     * @param int|bool $limit
      *
      * @return array
      */
-    public function getActivities(Member $member, $limit = 0)
+    public function getActivities(Member $member)
     {
-        $member; $limit;
-/*        // Fetch latitude and longitude of member's location
-        $latAndLong = Capsule::table('geonames')->where('geonameid', $member->city->id)->first(['latitude', 'longitude']);
+        $repository = $this->em->getRepository('AppBundle:Activity');
+        $activities = $repository->findUpcomingAroundLocation($member->getCity());
 
-        if ($latAndLong == null) {
-            return [];
-        }
-
-        $distance = 200; // Fetch from preferences
-        $edison = GeoLocation::fromDegrees($latAndLong->latitude, $latAndLong->longitude);
-        $coordinates = $edison->boundingCoordinates($distance, 'km');
-
-        $result = new stdClass;
-        $result->latne = $coordinates[0]->getLatitudeInDegrees();
-        $result->longne = $coordinates[0]->getLongitudeInDegrees();
-        $result->latsw = $coordinates[1]->getLatitudeInDegrees();
-        $result->longsw = $coordinates[1]->getLongitudeInDegrees();
-
-        $query = Capsule::table('activities')->join('geonames', function($join) use($result) {
-            $join->on('activities.locationId', '=', 'geonames.geonameId')
-                ->where('latitude', '<=', $result->latsw)
-                ->where('latitude', '>=', $result->latne)
-                ->where('longitude', '<=', $result->longsw)
-                ->where('longitude', '>=', $result->longne);
-        })
-        ->where(function ($query) {
-            $query->where('dateTimeStart', '>=', Capsule::raw('NOW()'))
-                ->orWhere('dateTimeEnd', '>=', Capsule::raw('NOW()'));
-        })
-        ->where('status', 0)
-        ->take($limit);
-
-        $activityIds = $query->get(['id']);
-
-        $ids = array_map(function($a) { return $a->id; }, $activityIds);
-
-        $activities = Activity::with(['location', 'attendees'])->whereIn('id', $ids)->get();
-
-        $mappedActivities = [];
-        foreach($activities as $activity) {
-            $mappedActivity = new stdClass;
-            $mappedActivity->id = $activity->id;
-            $mappedActivity->title = $activity->title;
-            $mappedActivity->start = $activity->dateTimeStart;
-            $location = $activity->location;
-            $mappedActivity->place = $location->name;
-            $mappedActivity->country = $location->Country->name;
-            $mappedActivity->yes = $activity->attendees()->where('activitiesattendees.status', 1)->count();
-            $mappedActivity->maybe = $activity->attendees()->where('activitiesattendees.status', 2)->count();
-            $mappedActivities[] = $mappedActivity;
-        }
-        return $mappedActivities;
- */   }
+        return $activities;
+    }
 
     public function getMemberDetails() {
 /*        $loggedInMember = $this->getLoggedInMember();

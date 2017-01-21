@@ -85,17 +85,21 @@ class LandingController extends Controller
         return new Response($content);
     }
 
+    /**
+     * @Route( "/widget/activities", name="/widget/activities")
+     *
+     * @return Response
+     */
     public function showActivitiesAction()
     {
-/*        $member = $this->getUser();
-        $homeModel = new HomeModel($this->getDoctrine());
+        $member = $this->getUser();
+        $homeModel = new LandingModel($this->getDoctrine());
         $activities = $homeModel->getActivities($member, 4);
 
-        $content = $this->render(':landing:widget:activities.html.twig', [
+        $content = $this->render(':landing:widget/activities.html.twig', [
             'activities' => $activities,
         ]);
-*/
-        $content = '';
+
         return new Response($content);
     }
 

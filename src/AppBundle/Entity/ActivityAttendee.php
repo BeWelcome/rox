@@ -66,7 +66,7 @@ class ActivityAttendee
      * @param Member $attendee
      * @param $status
      * @param $comment
-     * @param bool $organizer
+     * @param bool $isOrganizer
      */
     public function __construct(Activity $activity, Member $attendee, $status, $comment, $isOrganizer = false)
     {

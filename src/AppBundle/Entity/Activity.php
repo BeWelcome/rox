@@ -398,16 +398,6 @@ class Activity
     }
 
     /**
-     * @return ArrayCollection
-     */
-    public function getOrganizerIds()
-    {
-        $ids = $this->getOrganizers()->map( function(ActivityAttendee $a) { return $a->getAttendee()->getId(); } );
-
-        return $ids;
-    }
-
-    /**
      * Add attendee
      *
      * @param \AppBundle\Entity\ActivityAttendee $attendee

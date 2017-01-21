@@ -4,25 +4,26 @@
         {% for activity in activities %}
             <tr>
                 <td class="pl-0 pr-0 verticalmiddle">
-                    <div class="calendar calendar-icon-{{ activity.start | date("m") }}">
-                        <div class="calendar-day">{{ activity.start  | date("d") }}</div>
+                    <div class="calendar calendar-icon-{{ activity.starts | date("m") }}">
+                        <div class="calendar-day">{{ activity.starts  | date("d") }}</div>
                     </div>
                 </td>
                 <td class="pl-0 dateandtitle">
-                    <small class="calendar-year">{{ activity.start | date("Y") }}-{{ activity.start | date("m") }}-{{ activity.start | date("d") }}</small><br>
+                    <small class="calendar-year">{{ activity.starts | date("Y-m-d") }}</small><br>
                     <span class="text-truncate activitytitle"><strong><a href="activities/{{ activity.id }}">{{ activity.title }}</a></strong></span>
                 </td>
                 <td class="pa-0 verticalmiddle">
                     <span class="h4"><i class="fa fa-map-marker"></i></span>
                 </td>
                 <td class="compacttext verticalmiddle activityinfo">
-                    <small>{{ activity.place }}<br>{{ activity.country }}</small>
+                    <small>{{ activity.location.name }}<br>{{ activity.location.country.name }}</small>
                 </td>
                 <td class="pa-0 verticalmiddle">
                     <span class="h4"><i class="fa fa-users"></i></span>
                 </td>
                 <td class="compacttext pr-0 verticalmiddle activityinfo">
-                    <small>{{ activity.yes }} yes<br>{{ activity.maybe }} maybe</small>
+                    <small>{{ activity.attendeesyes.count }} yes
+                        {% if  activity.attendeesmaybe.count%}<br>{{ activity.attendeesmaybe.count }} maybe{% endif %}</small>
                 </td>
             </tr>
         {% else %}

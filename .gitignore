@@ -44,6 +44,7 @@ phploc.xml
 tmp/
 
 /app/config/parameters.yml
+/src/AppBundle/Resources/css/bewelcome.css
 /phpunit.xml
 /var/*
 !/var/cache

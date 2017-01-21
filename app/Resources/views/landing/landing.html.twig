@@ -5,8 +5,7 @@
 {% set scriptFiles = ['jqueryui.js', 'start/home.js', 'member/searchpicker.js'] %}
 
 {% block content %}
-    <div class="d-flex flex-row justify-content-start align-items-center welcomeback mb-4 p-2"
-         style="margin-top: -23px;">
+    <div class="d-flex flex-row justify-content-start align-items-center welcomeback mb-4 p-2">
 
         {% include ':landing:widget/profilepicturewithaccommodation.html.twig' with {
         member: my_member
@@ -51,51 +50,12 @@
         </div>
     </div>
 
-
-    {# Show only if an alert is necessary
-    <div class="alert alert-info alert-dismissible fade in hidden-sm-down" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            <span class="sr-only">Close</span>
-        </button>
-        Please <a href="#" class="alert-link">upload a profile picture</a>
-    </div>
-    #}
-
-
-    <div class="row">
-        {# messages tabs big screens #}
-        <div class="col-12 col-lg-5 hidden-md-down tab-content">
-            <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-controls="messages" href="#messages" role="tab" data-toggle="tab">Messages
-                        received {% if messageCount %}<span
-                                class="badge badge-primary">{{ messageCount }}</span>{% endif %}</a>
-                </li>
-                <li class="nav-item"><a class="nav-link" aria-controls="notifications" href="#notifications" role="tab"
-                                        data-toggle="tab">Notifications</a></li>
-            </ul>
-        </div>
-
-        {# community tabs big screens #}
-        <div class="col-12 col-lg-7 hidden-md-down tab-content">
-            <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item">
-                    <a href="#threads" class="nav-link active" aria-controls="threads" role="tab" data-toggle="tab">Forum</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#activities" class="nav-link" aria-controls="activities" role="tab" data-toggle="tab">Activities</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-
     <div class="d-flex row align-items-stretch flex-wrap pb-3">
-
+        
         {# messages box #}
         <div class="col-12 col-lg-5 align-items-stretch">
 
-            <ul class="nav nav-tabs hidden-lg-up" role="tablist">
+            <ul class="nav nav-tabs {# hidden-lg-up #}" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" aria-controls="messages" href="#messages" role="tab" data-toggle="tab">Messages
                         received {% if messageCount %}<span
@@ -150,10 +110,17 @@
             </div>
         </div>
 
+        <div class="hidden-sm-down hidden-lg-up pt-5">
+            &nbsp; {# rendering fix for md-sized resolutions #}
+        </div>
+        <div class="hidden-md-up pt-3">
+            &nbsp; {# rendering fix for md-sized resolutions #}
+        </div>
+
         {# community box #}
         <div class="col-12 col-lg-7 align-items-stretch">
 
-            <ul class="nav nav-tabs hidden-lg-up mt-3" role="tablist">
+            <ul class="nav nav-tabs {# hidden-lg-up mt-3 #}" role="tablist">
                 <li class="nav-item">
                     <a href="#threads" class="nav-link active" aria-controls="threads" role="tab" data-toggle="tab">Forum</a>
                 </li>
@@ -215,6 +182,10 @@
             </div>
         </div>
 
+    </div>
+
+    <div class="pt-4">
+        &nbsp; {# rendering fix #}
     </div>
 
     {# 4 widgets#}

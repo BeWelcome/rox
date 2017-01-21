@@ -137,6 +137,13 @@ class HomeModel extends BaseModel {
         $groupIds = [];
         if ($groups) {
             $groups = $member->getGroups();
+<<<<<<< HEAD
+
+        }
+        if ($forum) {
+//            $groupIds = array_merge($groupIds->getValues() , [0]);
+=======
+>>>>>>> 87cc30253becb096df192e53c572535c2465bbbd
         }
         if ($following) {
 

@@ -96,7 +96,7 @@
                                 </div>
                                 <div class="menuborder py-5">
                                     <div class="pl-5 pr-0">
-                                        <a href="/member/{{ my_member.Username }}" class="h4">{{ macros.avatar( my_member.Username, 50, true) }} {{ my_member.Username }}</a>
+                                        <a href="/members/{{ my_member.Username }}" class="h4">{{ macros.avatar( my_member.Username, 50, true) }} {{ my_member.Username }}</a>
                                     </div>
                                     <div class="d-flex flex-row justify-content-between pl-5 pr-0">
                                         <div>
@@ -133,7 +133,7 @@
                 <li class="nav-item dropdown float-right hidden-md-down">
                     <a href="/members/{{ my_member.Username }}" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ my_member.Username }} <span class="caret"></span></a>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                        <li class="text-right"><a href="/member/{{ my_member.Username }}" class="dropdown-item">{{ 'Profile' | trans }}</a></li>
+                        <li class="text-right"><a href="/members/{{ my_member.Username }}" class="dropdown-item">{{ 'Profile' | trans }}</a></li>
                         <li class="text-right"><a href="/editmyprofile" class="dropdown-item">{{ 'EditMyProfile' | trans }}</a></li>
                         <li class="text-right"><a href="/mypreferences" class="dropdown-item">{{ 'MyPreferences' | trans }}</a></li>
                         <li class="text-right"><a href="/mynotes" class="dropdown-item">{{ 'ProfileMyNotes' | trans }}</a></li>

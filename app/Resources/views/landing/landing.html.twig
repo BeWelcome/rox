@@ -72,7 +72,7 @@
                 {# messages #}
                 <div role="tabpanel" class="tab-pane fullheight active" id="messages">
                     <!-- all / unread messages toggle -->
-                    <div class="d-flex btn-group justify-content-center" data-toggle="buttons">
+                    <div class="d-flex btn-group justify-content-center m-1" data-toggle="buttons">
                         <label class="btn btn-primary btn-radio active" id="all">
                             <input type="radio" name="options" autocomplete="off" onclick="updateMessages()"
                                    checked>All
@@ -129,12 +129,12 @@
                 </li>
             </ul>
 
-            <div class="dashbox fullheight tab-content">
+            <div class="dashbox fullheight tab-content p-1">
                 {# forum discussions #}
-                <div role="tabpanel" class="tab-pane fullheight active p-1" id="threads">
+                <div role="tabpanel" class="tab-pane fullheight active" id="threads">
 
                     {# display settings#}
-                    <div class="d-flex btn-group justify-content-center" data-toggle="buttons">
+                    <div class="d-flex btn-group justify-content-center m-1" data-toggle="buttons">
                         <label class="btn btn-primary btn-radio active" id="groups">
                             <input type="checkbox" autocomplete="off" checked> groups
                         </label>
@@ -164,8 +164,8 @@
                 </div>
 
                 {# load activities #}
-                <div role="tabpanel" class="tab-pane fullheight p-2" id="activities">
-                    <div class="d-flex btn-group justify-content-center" role="group">
+                <div role="tabpanel" class="tab-pane fullheight" id="activities">
+                    <div class="d-flex btn-group justify-content-center m-1" role="group">
                         <a href="/activities" class="btn btn-outline-primary btn-homewhite"><i
                                     class="fa fa-map-o"></i> All activities</a>
                         <a href="/activities/myactivities" class="btn btn-outline-primary btn-homewhite"><i

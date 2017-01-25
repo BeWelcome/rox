@@ -35,7 +35,7 @@ class LandingModel extends BaseModel {
         $queryBuilder = $this->em->createQueryBuilder();
         $queryBuilder
             ->select('m')
-            ->from('AppBundle\Entity\Message', 'm')
+            ->from('AppBundle:Message', 'm')
             ->where('m.receiver = :member')
             ->setParameter('member', $member);
         if ($unread) {
@@ -68,36 +68,18 @@ class LandingModel extends BaseModel {
      */
     public function getNotifications(Member $member, $limit = 0)
     {
-        $member;
-        $limit;
-/*        $query = Note::orderBy('created', 'desc')
-            ->with('notifier')
-            ->where('IdMember', $member->getId())
-            ->where('checked', 0)->get();
-        if ($limit) {
-            $query=$query->take($limit);
-        }
-        $notes = $query->all();
-        $words = $this->getWords();
+        $queryBuilder = $this->em->createQueryBuilder();
+        $queryBuilder
+            ->select('n')
+            ->from('AppBundle:Notification', 'n')
+            ->where('n.member = :member')
+            ->setParameter('member', $member)
+            ->setMaxResults($limit);
 
-        $mappedNotes = array_map(
-            function($a) use($words, $member) {
-                $result = new \stdClass();
-                if ($a->WordCode == '' && ($text_params = unserialize($a->TranslationParams)) !== false) {
-                    $text = call_user_func_array(array($words, 'getSilent'), $text_params);
-                } else {
-                    $text = $words->getSilent($a->WordCode,$a->notifier->Username);
-                }
-                $result->title = $text;
-                $result->id = $a->id;
-                $result->link = $a->Link;
-                $result->user = $a->notifier->Username;
-                $result->time = $a->created;
-                return $result;
-            }, $notes
-        );
-        return $mappedNotes;
-*/
+        return $queryBuilder
+            ->orderBy('n.created', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 
     /**
@@ -131,7 +113,7 @@ class LandingModel extends BaseModel {
 
         $queryBuilder
             ->select('ft')
-            ->from('AppBundle\Entity\ForumThread', 'ft')
+            ->from('AppBundle:ForumThread', 'ft')
             ->where("ft.threadDeleted = 'NotDeleted'")
             ->orderBy('ft.createdAt', 'desc')
         ;
@@ -194,6 +176,24 @@ class LandingModel extends BaseModel {
      * @return array|bool
      */
     public function getTravellersInAreaOfMember( Member $member)
+    {
+        $member;
+/*        $travellers = false;
+        $trip = new Trip();
+        $trips = $trip->findInMemberAreaNextThreeMonths( $member );
+        if($trips) {
+            foreach($trips as $t) {
+                $traveller = new \stdClass;
+                $traveller->Username = $t->createdBy->Username;
+                $traveller->arrives = $t->subtrips[0]->arrival;
+                $traveller->leaves = $t->subtrips[0]->departure ? $t->subtrips[0]->departure : $t->subtrips[0]->arrival;
+                $traveller->livesIn = $t->createdBy->city;
+                $travellers[] = $traveller;
+            }
+        }
+        return $travellers;
+*/    }
+}
     {
         $member;
 /*        $travellers = false;

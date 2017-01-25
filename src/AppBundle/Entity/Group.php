@@ -388,7 +388,7 @@ class Group
         return $this->id;
     }
 
-   /**
+    /**
      * Add member
      *
      * @param \AppBundle\Entity\Member $member

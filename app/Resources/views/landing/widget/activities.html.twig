@@ -1,39 +1,28 @@
-<div id="activitiesdisplay" class="col-xs-12">
-    <table class="table">
-        <tbody>
-        {% for activity in activities %}
-            <tr>
-                <td class="pl-0 pr-0 verticalmiddle">
-                    <div class="calendar calendar-icon-{{ activity.starts | date("m") }}">
-                        <div class="calendar-day">{{ activity.starts  | date("d") }}</div>
-                    </div>
-                </td>
-                <td class="pl-0 dateandtitle">
-                    <small class="calendar-year">{{ activity.starts | date("Y-m-d") }}</small><br>
-                    <span class="text-truncate activitytitle"><strong><a href="activities/{{ activity.id }}">{{ activity.title }}</a></strong></span>
-                </td>
-                <td class="pa-0 verticalmiddle">
-                    <span class="h4"><i class="fa fa-map-marker"></i></span>
-                </td>
-                <td class="compacttext verticalmiddle activityinfo">
-                    <small>{{ activity.location.name }}<br>{{ activity.location.country.name }}</small>
-                </td>
-                <td class="pa-0 verticalmiddle">
-                    <span class="h4"><i class="fa fa-users"></i></span>
-                </td>
-                <td class="compacttext pr-0 verticalmiddle activityinfo">
+<div id="activitiesdisplay" class="scrollcontent">
+
+    {% for activity in activities %}
+        <div class="d-flex flex-row justify-content-between align-items-center p-2">
+
+            <div class="relative pr-2">
+                    <div><i class="fa fa-3x fa-calendar-o"></i></div>
+                    <div class="absolute day"><strong>{{ activity.starts | date("d") }}</strong></div>
+                    <div class="absolute monthyear">{{ activity.starts | date("m") }} {{ activity.starts | date("Y") }}</div>
+            </div>
+
+            <div class="text-truncate">
+                <p class="text-truncate m-0 p-0 dashentry"><strong><a href="activities/{{ activity.id }}">{{ activity.title }}</a></strong></p>
+                <p class="p-0 m-0"><small><i class="fa fa-map-marker"></i> {{ activity.location.name }}, {{ activity.location.country.name }}</small></p>
+            </div>
+
+            <div class="ml-auto relative">
+                <div class="mr-5rem"><i class="fa fa-2x fa  fa-user-circle-o"></i></div>
+                <div class="absolute attendees">
                     <small>{{ activity.attendeesyes.count }} yes
                         {% if  activity.attendeesmaybe.count%}<br>{{ activity.attendeesmaybe.count }} maybe{% endif %}</small>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td>
-                    <p>{{ 'No activities near you' | trans }}</p>
-                </td>
-            </tr>
-        {% endfor %}
-
-        </tbody>
-    </table>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p>{{ 'No activities near you' | trans }}</p>
+    {% endfor %}
 </div>

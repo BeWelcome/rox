@@ -194,21 +194,3 @@ class LandingModel extends BaseModel {
         return $travellers;
 */    }
 }
-    {
-        $member;
-/*        $travellers = false;
-        $trip = new Trip();
-        $trips = $trip->findInMemberAreaNextThreeMonths( $member );
-        if($trips) {
-            foreach($trips as $t) {
-                $traveller = new \stdClass;
-                $traveller->Username = $t->createdBy->Username;
-                $traveller->arrives = $t->subtrips[0]->arrival;
-                $traveller->leaves = $t->subtrips[0]->departure ? $t->subtrips[0]->departure : $t->subtrips[0]->arrival;
-                $traveller->livesIn = $t->createdBy->city;
-                $travellers[] = $traveller;
-            }
-        }
-        return $travellers;
-*/    }
-}

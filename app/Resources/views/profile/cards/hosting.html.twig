@@ -1,60 +1,54 @@
-<div class="col-xs-8 m-b-0 p-t-1">
-    <div class="media">
-        <div class="media-body summary">
-            <h1 class="profilemedium m-b-0"><small><i class="fa fa-map-marker icontext"></i></small> {{ member.city.name }}, {{ member.city.country.name }}</h1>
-        </div>
-    </div>
+<div class="d-flex flex-row">
+    <h1 class="profilemedium mb-0"><small><i class="fa fa-map-marker icontext"></i></small> {{ member.city.name }}, {{ member.city.country.name }}</h1>
+</div>
+<div class="d-flex">
+    <div>
+        {%  if member.Accomodation == 'anytime' %}{% set image = 'yesicanhost' %}{% set hosttext = 'Hosting' %}{% endif %}
+        {%  if member.Accomodation == 'dependonrequest' %}{% set image = 'maybe' %}{% set hosttext = 'Maybe Hosting' %}{% endif %}
+        {%  if member.Accomodation == 'neverask' %}{% set image = 'nosorry' %}{% set hosttext = 'Not hosting' %}{% endif %}
 
-    <div class="media m-t-0">
-        <div class="media-left">
-            {# AHREF and DIV if on own profile #}
+        {% if member.id == my_member.id %}
 
-            {% if member.id == my_member.id %}
-                <a href="#" id="SetStatus" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img src="http://i66.tinypic.com/2elcei9.png">
-                </a>
+            {# TODO: display right status #}
+            <a href="#" id="SetStatus" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <img src="/images/icons/{{ image }}.png">
+            </a>
+            {# TODO: make a working form chaning status #}
+            <div class="dropdown-menu top0" aria-labelledby="SetStatus">
+                <a href="#" class="dropdown-item"><img src="/images/icons/yesicanhost.png"><span class="icontext">Yes</span></a>
+                <a href="#" class="dropdown-item"><img src="/images/icons/maybe.png"><span class="icontext">Maybe</span></a>
+                <a href="#" class="dropdown-item"><img src="/images/icons/nosorry.png"><span class="icontext">No</span></a>
+            </div>
+        {% else %}
+            <img src="/images/icons/{{ image }}.png">
+        {% endif %}
 
-                <div class="dropdown-menu top0" aria-labelledby="SetStatus">
-                    <a href="#" class="dropdown-item"><img src="/images/icons/yesicanhost.png"><span class="icontext">Yes</span></a>
-                    <a href="#" class="dropdown-item"><img src="/images/icons/maybe.png"><span class="icontext">Maybe</span></a>
-                    <a href="#" class="dropdown-item"><img src="/images/icons/nosorry.png"><span class="icontext">No</span></a>
-                </div>
-            {% else %}
-                <img src="http://i66.tinypic.com/2elcei9.png">
-            {% endif %}
+        <span class="text-uppercase"><small><strong>{{ hosttext }}</strong></small></span>
+        <br>
+        <span><small><i>(Max. guests: <strong>{{ member.MaxGuest }}</strong>)</i></small></span>
+        <br>
+        <span class="gray"><small><i>
+                {{ 'Last login:' | trans }} {{ member.LastLogin ? member.LastLogin.diffForHumans : 'never' | trans }}
+            </i></small></span>
 
-        </div>
         <div class="media-body summary">
             <small>
-                <strong><span class="text-uppercase">
-                    {% if member.Accomodation == 'anytime' %}
-                        Hosting
-                    {% elseif member.Accomodation == 'dependonrequest' %}
-                        Maybe hosting
-                    {% else %}
-                        Not hosting
-                    {% endif %}
-                </span></strong>
+
                 <br>
-                <i>(Max. guests: <strong>{{ member.MaxGuest }}</strong>)</i>
+
             </small>
         </div>
-    </div>
 
-    <div class="media m-t-0">
         <div class="media-body summary">
-            <small><i><span class="gray">
-                {{ 'Last login:' | trans }} {{ member.LastLogin ? member.LastLogin.diffForHumans : 'never' | trans }}
-            </span></i><br></small>
+
         </div>
+
     </div>
 
+    <div class="ml-3">
+        <img class="mappreview" src="https://maps.googleapis.com/maps/api/staticmap?center={{ member.Latitude }},{{ member.Longitude }}&zoom=10&size=117x117&key=AIzaSyAiF_lG8CdC-hCIXbGs9jilOFJRoXteM3k">
+    </div>
 </div>
-
-<div class="col-xs-4 col-lg-4 p-t-1 text-xs-right">
-    <img class="mappreview" src="https://maps.googleapis.com/maps/api/staticmap?center={{ member.Latitude }},{{ member.Longitude }}&zoom=10&size=117x117&key=AIzaSyAiF_lG8CdC-hCIXbGs9jilOFJRoXteM3k">
-</div>
-
-<div class="col-xs-12">
-    <a href="{{ path('message/compose', { username: member.Username }) }}" class="btn btn-sm btn-primary text-xs-left btn-profile"><i class="fa fa-envelope"></i><span class="icontext">Send request</span></a>
+<div class="d-flex flex-row">
+    <a href="{{ path('message/compose', { username: member.Username }) }}" class="btn btn-sm btn-primary btn-block text-xs-left btn-profile"><i class="fa fa-envelope"></i><span class="icontext">Send request</span></a>
 </div>

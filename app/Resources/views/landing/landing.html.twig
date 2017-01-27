@@ -194,20 +194,30 @@
         <div class="col-12 col-md-6 col-lg-4 mb-3">
             <div class="card p-2 fullheight">
                 <h4 class="homehfour">Be Involved<br/><span class="homesubt">help the community</span></h4>
+
+                {% if campaign.yearDonated < campaign.yearNeeded %}
+                    <p class="text-center mb-0">Goal for {{ campaign.year }} - {{ campaign.year + 1 }}:
+                        <strong>€{{ campaign.yearNeeded }}</strong></p>
+
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuenow="{{ campaign.yearDonated }}" aria-valuemin="0" aria-valuemax="{{ campaign.yearNeeded }}"><span style="color: #fff;">€ {{ campaign.yearDonated }} received</span></div>
+                    </div>
+
+                    <a href="donate" class="btn btn-outline-primary btn-homewhite btn-block mb-1"><i
+                                class="fa fa-euro"></i> Please donate</a>
+                {% endif %}
+
                 <p>BeWelcome is run by volunteers - free of charge and open source. Volunteering
                     for the project is a great opportunity for you to get to know enthusiastic people who really
                     believe in promoting hospitality and respect for each other. And it's fun, too!</p>
                 <a href="about/getactive" class="btn btn-outline-primary btn-homewhite btn-block"><i
                             class="fa fa-wrench"></i> Help BeWelcome</a>
-                <a href="donate" class="btn btn-outline-primary btn-homewhite btn-block mb-1"><i
-                            class="fa fa-euro"></i> Please donate</a>
-                {% if campaign.yearDonated < campaign.yearNeeded %}
-                    <p class="text-center mb-0">Goal for {{ campaign.year }} - {{ campaign.year + 1 }}:
-                        <strong>€{{ campaign.yearNeeded }}</strong></p>
-                    <progress class="progress progress-primary ma-0" value="{{ campaign.yearDonated }}"
-                              max="{{ campaign.yearNeeded }}"></progress>
-                    <p class="text-center"><strong>€{{ campaign.yearDonated }}</strong> received</p>
+
+                {% if campaign.yearDonated > campaign.yearNeeded %}
+                    <a href="donate" class="btn btn-outline-primary btn-homewhite btn-block mb-1"><i
+                                class="fa fa-euro"></i> Please donate</a>
                 {% endif %}
+
             </div>
         </div>
 

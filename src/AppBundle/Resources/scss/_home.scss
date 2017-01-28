@@ -46,7 +46,21 @@
 }
 
 .dashentry{
-  max-height: 2.1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  line-height: 1rem;
+  max-height: 3rem;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  .text {
+    max-height: 2rem;
+  }
+
+  p {
+    margin: 0;
+  }
 }
 
 .scrollcontent .flex-row:nth-of-type(odd){

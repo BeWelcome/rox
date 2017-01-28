@@ -1,8 +1,10 @@
 <div class="d-flex flex-row">
-    <h1 class="profilemedium mb-0"><small><i class="fa fa-map-marker icontext"></i></small> {{ member.city.name }}, {{ member.city.country.name }}</h1>
+
 </div>
 <div class="d-flex">
-    <div>
+    <div class="mr-3">
+        <h1 class="profilemedium mb-0"><small><i class="fa fa-map-marker icontext"></i></small> {{ member.city.name }}, {{ member.city.country.name }}</h1>
+
         {%  if member.Accomodation == 'anytime' %}{% set image = 'yesicanhost' %}{% set hosttext = 'Hosting' %}{% endif %}
         {%  if member.Accomodation == 'dependonrequest' %}{% set image = 'maybe' %}{% set hosttext = 'Maybe Hosting' %}{% endif %}
         {%  if member.Accomodation == 'neverask' %}{% set image = 'nosorry' %}{% set hosttext = 'Not hosting' %}{% endif %}
@@ -45,7 +47,7 @@
 
     </div>
 
-    <div class="ml-3">
+    <div class="ml-auto">
         <img class="mappreview" src="https://maps.googleapis.com/maps/api/staticmap?center={{ member.Latitude }},{{ member.Longitude }}&zoom=10&size=117x117&key=AIzaSyAiF_lG8CdC-hCIXbGs9jilOFJRoXteM3k">
     </div>
 </div>

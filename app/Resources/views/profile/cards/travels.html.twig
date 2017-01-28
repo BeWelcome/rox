@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card mb-3">
     <a name="travels"></a>
     <h3 class="card-header"><i class="fa fa-globe"></i><span class="icontext">Travelled to</span></h3>
     <div class="card-block">
@@ -7,14 +7,17 @@
         {# New design expects structured list of countries. Old system just stores text input. #}
         {#<p class="m-b-0"><img src="http://www.clickfire.com/images/flags/germany.gif"><span class="icontext">Germany</span></p>#}
     </div>
+</div>
+
+<div class="card mb-3">
 
     <h3 class="card-header"><i class="fa fa-globe"></i><span class="icontext">Planned trips</span></h3>
-    <div class="card-block">
+    <div class="card-block mb-3">
         {{ member.PlannedTrips | nl2br }}
         {# Link with trips-feature, if trips are available #}
 
         {% if member.id == my_member.id %}
             <a href="trips/create" class="btn btn-primary btn-block"><i class="fa fa-map-marker"></i> Plan your trip</a>
         {% endif %}
-</div>
+    </div>
 </div>

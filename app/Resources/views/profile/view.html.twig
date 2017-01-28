@@ -11,10 +11,9 @@
 
         <div class="btn-group btn-group-profile" role="group">
             {% if member.id == my_member.id %}
-                <a href="{{ path('member/edit') }}" class="btn btn-primary btn-norad-bl">Edit
-                    profile</a>
-                <a href="#" class="btn btn-secondary">My preferences</a>
-                <a href="#" class="btn btn-secondary">My notes</a>
+                <a href="{{ path('member/edit') }}" class="btn btn-primary btn-norad-bl">{{ 'EditMyProfile' | trans  }}</a>
+                <a href="#" class="btn btn-secondary">{{ 'MyPreferences' | trans  }}</a>
+                <a href="#" class="btn btn-secondary">{{ 'MyNotes' | trans  }}</a>
                 <a href="#" class="btn btn-secondary">Set inactive</a>
                 <a href="#" class="btn btn-secondary btn-norad-br">Delete profile</a>
             {% else %}
@@ -82,8 +81,7 @@
             {% endif %}
 
             {% if member.id == my_member.id %}
-                {# TODO the span tag was empty, assuming edit #}
-                <br><a href="{{ path('member/edit') }}"><span class="btn btn-sm btn-primary">edit</span></a>
+                <br><a href="{{ path('member/edit') }}" class="btn btn-sm btn-primary">{{ 'EditMyProfile' | trans  }}</a>
             {% endif %}
         </div>
         <div class="ml-auto profilestatusbox card m-2 py-2 px-3">
@@ -118,7 +116,14 @@
 
             <div class="card mb-3">
                 <a name="aboutme"></a>
-                <h3 class="card-header"><i class="fa fa-info-circle"></i><span class="icontext">About me</span></h3>
+                <h3 class="card-header">
+                    <i class="fa fa-info-circle"></i><span class="icontext">About me</span>
+                    {% if member.id == my_member.id %}
+                        {# TODO the span tag was empty, assuming edit #}
+                        <a href="{{ path('member/edit') }}" class="btn btn-sm btn-primary float-right">edit</a>
+                    {% endif %}
+                </h3>
+
                 <div class="card-block">
                     <p class="card-text">{{ member.profilesummary }}</p>
                 </div>
@@ -126,7 +131,12 @@
 
             <div class="card mb-3">
                 <a name="interests"></a>
-                <h3 class="card-header"><i class="fa fa-bicycle"></i><span class="icontext">Interests</span></h3>
+                <h3 class="card-header">
+                    <i class="fa fa-bicycle"></i><span class="icontext">Interests</span>
+                    {% if member.id == my_member.id %}
+                        <a href="{{ path('member/edit') }}" class="btn btn-sm btn-primary float-right">edit</a>
+                    {% endif %}
+                </h3>
 
                 <div class="card-block">
                     <p class="card-text">{{ member.hobbies }}</p>

@@ -14,14 +14,12 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 	font-size:1.25em;
 	text-transform: uppercase;
 	border:2px solid white;
-	border-radius:0.25rem;
+	border-top-left-radius:0.25rem;
+	border-top-right-radius:0.25rem;
 	background-color: rgba(243,112,0,1);
 	color:white;
 	letter-spacing: 0.03em;
-	line-height: inherit !important;
 	padding: 0.5rem 1rem;
-	text-shadow: 0 0 3px #ce8140;
-	box-shadow: inset 0 0 13px -2px #ce8140;
 	margin:0;
 }
 .card-block {
@@ -48,7 +46,6 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 	background: linear-gradient(to bottom, rgba(254,182,69,1) 16%,rgba(243,112,0,1) 51%);
 	border-bottom-right-radius: .25rem !important;
 	border-bottom-left-radius: .25rem !important;
-  	// border-bottom:  1px solid rgba(233,102,0,1);
 	box-shadow:0 3px 8px -1px #999696, 0 50 150 -50 #000 inset;
 	height: auto;
 	margin: 0;
@@ -113,6 +110,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 	text-transform: capitalize;
 	border:2px solid white !important;
 }
+
 .btn-primary-profile {
 	font-size: 1rem;
 	border: 2px solid white !important;
@@ -179,10 +177,9 @@ a.request:focus, a.request:hover {
 }
 
 .profilelist{
-	border-top-right-radius: 0;
-	border-top-left-radius: 0;
-	border-top: 0;
+	border-radius: 0 !important;
 }
+
 
 .commentavatar {
 	max-width: 90px;
@@ -201,6 +198,8 @@ and (min-width: 1288px) {
 
 a.grouplist {
 	color: #2e2e2e !important;
+	border: 0 !important;
+	margin: 2px;
 }
 
 a.grouplist:hover {

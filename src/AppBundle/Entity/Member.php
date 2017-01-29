@@ -154,14 +154,14 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
      *
      * @ORM\Column(name="Accomodation", type="string", nullable=false)
      */
-    private $accomodation = 'dependonrequest';
+    private $accommodation = 'dependonrequest';
 
     /**
      * @var integer
      *
      * @ORM\Column(name="AdditionalAccomodationInfo", type="integer", nullable=false)
      */
-    private $additionalaccomodationinfo;
+    private $additionalAccommodationInfo;
 
     /**
      * @var integer
@@ -934,39 +934,39 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
         return $this->getCryptedField('LastName');    }
 
     /**
-     * Set accomodation
+     * Set accommodation
      *
-     * @param string $accomodation
+     * @param string $accommodation
      *
      * @return Member
      */
-    public function setAccomodation($accomodation)
+    public function setAccommodation($accommodation)
     {
-        $this->accomodation = $accomodation;
+        $this->accommodation = $accommodation;
 
         return $this;
     }
 
     /**
-     * Get accomodation
+     * Get accommodation
      *
      * @return string
      */
-    public function getAccomodation()
+    public function getAccommodation()
     {
-        return $this->accomodation;
+        return $this->accommodation;
     }
 
     /**
-     * Set additionalaccomodationinfo
+     * Set additionalaccommodationinfo
      *
-     * @param integer $additionalaccomodationinfo
+     * @param integer $additionalAccommodationInfo
      *
      * @return Member
      */
-    public function setAdditionalaccomodationinfo($additionalaccomodationinfo)
+    public function setAdditionalAccommodationinfo($additionalAccommodationInfo)
     {
-        $this->additionalaccomodationinfo = $additionalaccomodationinfo;
+        $this->additionalAccommodationInfo = $additionalAccommodationInfo;
 
         return $this;
     }
@@ -976,9 +976,9 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
      *
      * @return integer
      */
-    public function getAdditionalaccomodationinfo()
+    public function getAdditionalAccommodationinfo()
     {
-        return $this->additionalaccomodationinfo;
+        return $this->additionalAccommodationInfo;
     }
 
     /**

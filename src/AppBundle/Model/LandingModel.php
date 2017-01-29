@@ -193,4 +193,16 @@ class LandingModel extends BaseModel {
         }
         return $travellers;
 */    }
+    /**
+     * @param Member $member
+     * @param $accommodation
+     * @return Member
+     */
+    public function updateMemberAccommodation(Member $member, $accommodation)
+    {
+        $member->setAccommodation($accommodation);
+        $this->em->persist($member);
+        $this->em->flush($member);
+        return $member;
+    }
 }

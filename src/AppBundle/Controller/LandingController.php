@@ -103,6 +103,11 @@ class LandingController extends Controller
         return new Response($content);
     }
 
+    /**
+     * @Route( "/widget/accommodation", name="/widget/accommodation")
+     *
+     * @return Response
+     */
     public function setAccommodationAction(Request $request)
     {
         $accommodation = $request->request->get('accommodation');
@@ -119,15 +124,16 @@ class LandingController extends Controller
 
         $member = $this->getUser();
         if ($valid) {
-            $member->Accomodation = $accommodation;
-            $member->save();
+            $landingModel = new LandingModel($this->getDoctrine());
+            $member = $landingModel->updateMemberAccommodation($member, $accommodation);
         }
 
-        $profilePictureWithAccommodation = $this->render(':landing:widget:profilepicturewithaccommodation.html.twig', [
+        // we need raw HTML and no response therefore we do not use the render method of the controller
+        $profilePictureWithAccommodation = $this->container->get('twig')->render(':landing:widget/profilepicturewithaccommodation.html.twig', [
             'member' => $member,
         ]);
 
-        $accommodationHtml = $this->render(':landing:widget:accommodation.html.twig', [
+        $accommodationHtml = $this->container->get('twig')->render(':landing:widget/accommodation.html.twig', [
             'member' => $member,
         ]);
 

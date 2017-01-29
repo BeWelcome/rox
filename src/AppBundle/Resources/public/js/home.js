@@ -117,7 +117,7 @@ var Home = {
             },
             dataType: 'json',
             success: function (data) {
-                $('.welcomeavatar').replaceWith(data.profilePictureWithAccommodation);
+                $('#welcomeavatar').replaceWith(data.profilePictureWithAccommodation);
                 $('#accommodation').replaceWith(data.accommodationHtml);
                 $('.hosting').click(Home.setHostingStatus);
             }

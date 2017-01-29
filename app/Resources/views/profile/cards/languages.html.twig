@@ -1,6 +1,11 @@
-<div class="card">
+<div class="card mb-3">
     <a name="languages"></a>
-    <h3 class="card-header"><i class="fa fa-language"></i><span class="icontext">Languages</span></h3>
+    <h3 class="card-header">
+        <i class="fa fa-language"></i><span class="icontext">Languages</span>
+        {% if member.id == my_member.id %}
+            <a href="{{ path('member/edit') }}" class="btn btn-sm btn-primary float-right">edit</a>
+        {% endif %}
+    </h3>
     <div class="card-block">
         {% for language in member.languages %}
             {# TODO translate Level enum to: Mother tongue / Fluent / Advanced / Basic / Couple of words #}

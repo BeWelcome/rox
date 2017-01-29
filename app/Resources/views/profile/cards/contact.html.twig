@@ -1,6 +1,11 @@
-<div class="card">
+<div class="card mb-3">
     <a name="gallery"></a>
-    <h3 class="card-header"><i class="fa fa-street-view"></i><span class="icontext">Contact info</span></h3>
+    <h3 class="card-header">
+        <i class="fa fa-street-view"></i><span class="icontext">Contact info</span>
+        {% if member.id == my_member.id %}
+            <a href="{{ path('member/edit') }}" class="btn btn-sm btn-primary float-right">edit</a>
+        {% endif %}
+    </h3>
     <div class="card-block">
         Contact info
     </div>

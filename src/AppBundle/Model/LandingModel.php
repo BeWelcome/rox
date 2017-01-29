@@ -193,7 +193,6 @@ class LandingModel extends BaseModel {
         }
         return $travellers;
 */    }
-
     /**
      * @param Member $member
      * @param $accommodation

@@ -1,8 +1,8 @@
-<div class="btn-group mx-1">
-    <button id="accommodation" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        {%  if member.Accomodation == 'anytime' %}{{ 'hosting' | trans }}{% endif %}
-        {%  if member.Accomodation == 'dependonrequest' %}{{ 'maybe hosting' | trans }}{% endif %}
-        {%  if member.Accomodation == 'neverask' %}{{ 'not hosting' | trans }}{% endif %}
+<div id="accommodation" class="btn-group mx-1">
+    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {%  if member.Accommodation == 'anytime' %}{{ 'hosting' | trans }}{% endif %}
+        {%  if member.Accommodation == 'dependonrequest' %}{{ 'maybe hosting' | trans }}{% endif %}
+        {%  if member.Accommodation == 'neverask' %}{{ 'not hosting' | trans }}{% endif %}
     </button>
     <div class="dropdown-menu hoststatusdropdown">
         <a id="anytime" class="hosting dropdown-item" href="#">{{ 'hosting' | trans }}</a>

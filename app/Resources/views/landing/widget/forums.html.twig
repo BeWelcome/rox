@@ -3,24 +3,19 @@
 
     {# 4 most recent forum messages #}
     {% for thread in threads %}
-        <div class="row pl-1 pr-1">
-            <div class="col-12">
-                <div class="hidden-xs-down float-left avatarpadding">
-                    {{ macros.avatar(thread.lastpost.author.Username, 50, true) }}
+        <div class="d-flex flex-row justify-content-start align-items-center p-2">
+            <div class="pr-2">{{ macros.avatar(thread.lastpost.author.Username, 50, true) }}</div>
+            <div class="dashentry">
+                <div class="text-truncate text">
+                    <a href="{{ url('forum_thread', {'threadId': thread.id}) }}">{{ thread.title }}</a>
                 </div>
-                <div class="dashentry">
-                    <p class="text-truncate">
-                         <a href="{{ url('forum_thread', {'threadId': thread.id}) }}">{{ thread.title }}</a>
-                        <br><small>in {%  if thread.group.id != 0 %}{{ thread.group.name }}{% else %}{{ 'BWForum' | trans }}{% endif %} by {{ macros.profilelink(thread.lastpost.author.Username) }} <span title="{{ thread.lastpost.updated.toDateTimeString }}">{{ thread.lastpost.updated.diffForHumans }}</span> </small>
-                    </p>
+                <div>
+                    <small>in <a href={%  if thread.group.id != 0 %}"groups/{{ thread.group.id }}">{{ thread.group.name }}{% else %}"/forums/bwforum">{{ 'BWForum' | trans }}{% endif %}</a> by {{ macros.profilelink(thread.lastpost.author.Username) }} <span title="{{ thread.lastpost.updated.toDateTimeString }}">{{ thread.lastpost.updated.diffForHumans }}</span> </small>
                 </div>
-                <div class="float-right hidden-md-down chevplace">
-                    <a href="{{ url('forum_thread', {'threadId': thread.id}) }}"><i class="fa fa-chevron-right"></i></a>
-                </div>
+
             </div>
+            <div class="ml-auto"><a href="{{ url('forum_thread', {'threadId': thread.id}) }}"><i class="fa fa-chevron-right"></i></a></div>
         </div>
     {% endfor %}
-
     {# infinite scroll??? #}
-
 </div>

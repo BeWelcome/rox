@@ -193,6 +193,7 @@ class LandingModel extends BaseModel {
         }
         return $travellers;
 */    }
+
     /**
      * @param Member $member
      * @param $accommodation
@@ -205,4 +206,4 @@ class LandingModel extends BaseModel {
         $this->em->flush($member);
         return $member;
     }
-}
+    }

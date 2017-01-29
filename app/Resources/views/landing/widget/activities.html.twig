@@ -22,6 +22,7 @@
                 </div>
             </div>
         </div>
+                        {% if  activity.attendeesmaybe.count%}<br>{{ activity.attendeesmaybe.count }} maybe{% endif %}</small>
     {% else %}
         <p>{{ 'No activities near you' | trans }}</p>
     {% endfor %}

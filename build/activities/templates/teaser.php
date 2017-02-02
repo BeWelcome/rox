@@ -1,10 +1,10 @@
-<div class="m-t-2 clearfix">
-    <h1 class="pull-left"><a href="activities"><?php echo $words->get('Activities'); ?></a></h1>
+<div class="d-flex lex-row mb-2">
+    <h1><a href="activities"><?php echo $words->get('Activities'); ?></a></h1>
 
     <?php if (!($this->hideSearch)) { ?>
-        <div class="pull-right fullheight mt-1">
+        <div class="ml-auto">
             <form id="activities-search-box" method="post">
-                <div class="input-group verticalalign">
+                <div class="input-group">
                     <?php echo $callbackTags; ?>
                     <input class="form-control" type="text" name="activity-keyword" id="activity-keyword" />
                     <span class="input-group-btn">

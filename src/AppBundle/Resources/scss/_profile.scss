@@ -26,6 +26,10 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 	padding:1rem 1.6rem;
 }
 
+.profile-bg2 {
+	background-color: rgba(127, 157, 202, 1);
+}
+
 .profileimg {
 	border-radius: 3px;
 	border: 3px solid white;
@@ -115,7 +119,6 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 	font-size: 1rem;
 	border: 2px solid white !important;
 	text-transform: capitalize;
-	box-shadow: 0 0 3px 1px #d47a2e inset;
 	margin: 0;
 }
 

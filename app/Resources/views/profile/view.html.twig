@@ -101,7 +101,7 @@
         </div>
 
         <div class="btn-group btn-group-profile d-flex align-items-end ml-auto" role="group">
-            <a href="#" class="btn btn-sm btn-primary btn-primary-profile btn-norad-bl hidden-md-down">Overview</a>
+            <a href="#" class="btn btn-sm btn-primary btn-primary-profile btn-norad-bl hidden-md-down profile-bg2">Overview</a>
             <a href="{{ path('member/comment', { 'username': member.username }) }}" class="btn btn-sm btn-secondary">Comments</a>
             <a href="/members/{{ member.username }}/gallery" class="btn btn-sm btn-secondary hidden-md-down">Gallery</a>
             <a href="/members/{{ member.username }}/groups" class="btn btn-sm btn-secondary hidden-md-down">Groups</a>
@@ -116,7 +116,7 @@
 
             <div class="card mb-3">
                 <a name="aboutme"></a>
-                <h3 class="card-header">
+                <h3 class="card-header profile-bg2">
                     <i class="fa fa-info-circle"></i><span class="icontext">About me</span>
                     {% if member.id == my_member.id %}
                         {# TODO the span tag was empty, assuming edit #}
@@ -131,7 +131,7 @@
 
             <div class="card mb-3">
                 <a name="interests"></a>
-                <h3 class="card-header">
+                <h3 class="card-header profile-bg2">
                     <i class="fa fa-bicycle"></i><span class="icontext">Interests</span>
                     {% if member.id == my_member.id %}
                         <a href="{{ path('member/edit') }}" class="btn btn-sm btn-primary float-right">edit</a>

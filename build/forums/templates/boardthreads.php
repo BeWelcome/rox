@@ -1,4 +1,5 @@
 <?php
+
 /*
 
 Copyright (c) 2007 BeVolunteer
@@ -31,6 +32,39 @@ Boston, MA  02111-1307, USA.
     }
     
 ?>
+
+<!-- new table structure -->
+<table class="table table-striped table-hover">
+    <!-- beginning of table head -->
+    <thead style="background-color: #fff;">
+    <tr>
+        <th>Author</th>
+        <th>Thread</th>
+        <th>Replies</th>
+        <th>Views</th>
+        <th class="text-nowrap">Last post</th>
+        <th> </th>
+    </tr>
+    </thead>
+    <!-- end of table head -->
+    <tbody>
+    <!-- beginning of row structure -->
+    <tr>
+        <th class="text-center p-0 px-2" style="vertical-align: middle;">
+            <img src="members/avatar/member-101?size=50"><br>
+            <small><a href="#">member-101</a></small>
+        </th>
+        <td class="p-0 pl-2"><a href="#"><strong>Text - what if this was really  lot of text. So much it wouldn't even fit on one line</strong></a><br><small><strong>Group: </strong><a href="#">Some Group Name</a></small></td>
+        <td class="text-center p-0">3</td>
+        <td class="text-center p-0">100</td>
+        <td class="text-center p-0 text-nowrap" style="vertical-align: middle;"><a href="#"><img src="members/avatar/member-102?size=50"><small><br>member-102</a><br>2 years ago</small></td>
+        <td class="p-0 pr-1"><a href="#"><i class="fa fa-chevron-right"></i></a></td>
+    </tr>
+    <!-- end of row structure -->
+    <!-- above was only to test -->
+    </tbody>
+</table>
+<!-- end of new table structure -->
 
 <table class="<?php echo $threadliststyle; ?>">
 

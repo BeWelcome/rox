@@ -83,6 +83,27 @@
             {% if member.id == my_member.id %}
                 <br><a href="{{ path('member/edit') }}" class="btn btn-sm btn-primary">{{ 'EditMyProfile' | trans  }}</a>
             {% endif %}
+
+            {# if member admin
+             <div>
+                Set status and add comment as admin<br>
+                <select>
+                    <option value="Active" selected="selected">Active</option>
+                    <option value="MailToConfirm">Not confirmed yet</option>
+                    <option value="OutOfRemind">Out of remind</option>
+                    <option value="SuspendedBeta">Suspended</option>
+                    <option value="Banned">Banned</option>
+                    <option value="ChoiceInactive">Inactive (own choice)</option>
+                    <option value="DuplicateSigned">Duplicate</option>
+                    <option value="ActiveHidden">Admin profile</option>
+                    <option value="AskToLeave">Retired</option>
+                    <option value="PassedAway">Passed away</option>
+                </select>
+                   <br>
+                 <input type="text" name="admincomment" placeholder="-">
+                <button class="btn btn-primary">Set</button>
+            </div>
+            #}
         </div>
         <div class="ml-auto profilestatusbox card m-2 py-2 px-3">
             {% include(':profile:cards/hosting.html.twig') %}

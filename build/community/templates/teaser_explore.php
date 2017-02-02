@@ -24,6 +24,6 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
 
-<div class="m-t-2 clearfix">
+<div class="d-flex flex-row mb-2">
     <h1><?php echo $words->get('CommunityPage'); ?></h1>
 </div>

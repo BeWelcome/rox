@@ -1,4 +1,4 @@
-<div class="d-flex lex-row mb-2">
+<div class="d-flex flex-row mb-2">
     <h1><a href="activities"><?php echo $words->get('Activities'); ?></a></h1>
 
     <?php if (!($this->hideSearch)) { ?>

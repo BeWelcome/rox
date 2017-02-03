@@ -3,7 +3,6 @@
 	This file display the list of categories, the list of contienent and the tagcloud
 */
 ?>
-<br/>
 <?php
 /*
 <!-- Now displays the by continent -->
@@ -38,12 +37,10 @@
 */
 ?>
 
-
-
 <!-- Now displays the New Tag Cloud -->
-      
-    <div class="tags">
-          <h4 class="clearfix"><?php echo '<img src="styles/css/minimal/images/iconsfam/tag_blue.png" alt="'. $this->words->getBuffered('tags') .'" title="'. $this->words->getBuffered('tags') .'" class="forum_icon" />';?>&nbsp;<?php echo $this->words->flushBuffer(); ?><?php echo $this->words->getFormatted('ForumByTag'); ?></h4>
+<h4><?php echo $this->words->flushBuffer(); ?><?php echo $this->words->getFormatted('ForumByTag'); ?><?php echo '<i class="fa fa-tags" alt="'. $this->words->getBuffered('tags') .'" title="'. $this->words->getBuffered('tags') .'" class="forum_icon ml-2" />';?></h4>
+    <div class="d-flex align-content-start justify-content-between flex-wrap mb-3">
+
 	<?php
     if($all_tags_maximum == 0)
         $all_tags_maximum = 1;
@@ -68,12 +65,9 @@
 	    $TagName=$this->words->fTrad($tag->IdName) ;
 	    $TagDescription=$this->words->fTrad($tag->IdDescription) ;
 		
-        $tagcloudlist .=  '<a href="forums/t'.$tag->tagid.'-'.rawurlencode($TagName).'" title="'.$TagDescription.'" class="'.$class.'">'.$TagName.'</a>&nbsp;:: ';
+        $tagcloudlist .=  '<div class="p-1"><a href="forums/t'.$tag->tagid.'-'.rawurlencode($TagName).'" title="'.$TagDescription.'" class="'.$class.'">'.$TagName.'</a></div>';
 
     }
    	$tagcloudlist = rtrim($tagcloudlist, ': ');
     echo $tagcloudlist;
-?>       </div> <!-- subcl -->
-      
-
-
+?>       </div>

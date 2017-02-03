@@ -1,7 +1,7 @@
 .subcolumns {
 /*  @include make-row(); */
 }
-@include media-breakpoint-up(xs) {
+@include media-breakpoint-up(sm) {
   .c50l {
     @include make-col(12);
   }
@@ -50,14 +50,14 @@
   }
 
   #col1{
-    @include make-col(12);
+
   }
 
   #col2{
     display:none;
   }
   #col3{
-    @include make-col(12);
+
   }
 }
 
@@ -124,8 +124,7 @@
   }
 
   #col1{
-    @include make-col(3);
-    @include make-col-push(9);
+
   }
 
   #col2{
@@ -134,8 +133,6 @@
 
   #col3{
 
-    @include make-col(9);
-    @include make-col-pull(3);
   }
 
   #col1_left{

@@ -28,7 +28,7 @@ Boston, MA  02111-1307, USA.
 ?>
     <h3><?php echo $this->words->getFormatted('Actions'); ?></h3>
 
-<div class="btn-group-vertical btn-block mb-1">
+<div class="btn-group-vertical btn-block mb-3">
 
     <a href="groups/search" class="btn btn-secondary text-left"><?php echo $this->words->get('GroupsSearchHeading'); ?></a>
     <a href="forums/rules" class="btn btn-secondary text-left"><?php echo $this->words->get('ForumRulesShort'); ?></a>

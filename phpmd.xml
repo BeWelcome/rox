@@ -9,6 +9,7 @@
 
     <rule ref="rulesets/cleancode.xml">
         <exclude name="StaticAccess" />
+        <exclude name="ElseExpression" />
     </rule>
 
     <rule name="StaticAccess"
@@ -41,7 +42,7 @@
         <priority>3</priority>
         <properties>
             <property name="minimum" description="Minimum length for a variable, property or parameter name" value="3"/>
-            <property name="exceptions" value="a,b,id,i,e,q,dt,em" />
+            <property name="exceptions" value="a,b,id,i,e,q,qb,dt,em" />
         </properties>
     </rule>
 

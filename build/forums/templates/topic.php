@@ -29,51 +29,51 @@ This File display a topic and the messages which are inside it
 * @updated    JeanYves
 */
 
-// This means no thread was fetch or that it was outside visibility
-if ((!isset($topic->topicinfo->IdTitle)) and (!isset($topic->topicinfo->ThreadDeleted))) {
-    echo "<h2 class=\"forumstopic\">", $topic->topicinfo->title, "</h2>";
-} else {
-    //$i18n = new MOD_i18n('apps/forums/board.php');
-    //$boardText = $i18n->getText('boardText');
-    $words = new MOD_words();
+?>
+<div class="d-flex flex-row mt-3">
+    <div>
+        <?php
+        // This means no thread was fetch or that it was outside visibility
+        if ((!isset($topic->topicinfo->IdTitle)) and (!isset($topic->topicinfo->ThreadDeleted))) {
+            echo "<h2>", $topic->topicinfo->title, "</h2>";
+        } else {
+        //$i18n = new MOD_i18n('apps/forums/board.php');
+        //$boardText = $i18n->getText('boardText');
+        $words = new MOD_words();
 
-    $User = APP_User::login();
-    $can_del = $User && $User->hasRight('delete@forums'); // Not to use anymore (JeanYves)
-    $can_edit_own = $User;
-//    $can_edit_own = $User && $User->hasRight('edit_own@forums');
-    $can_edit_foreign = $User && $User->hasRight('edit_foreign@forums');
+        $User = APP_User::login();
+        $can_del = $User && $User->hasRight('delete@forums'); // Not to use anymore (JeanYves)
+        $can_edit_own = $User;
+        //    $can_edit_own = $User && $User->hasRight('edit_own@forums');
+        $can_edit_foreign = $User && $User->hasRight('edit_foreign@forums');
 
-    if (!isset($topic->topicinfo->IsClosed)) {
-        $topic->topicinfo->IsClosed = false;
-    }
-    echo "<h2 class=\"forumstopic\">";
-
-    if ($topic->topicinfo->ThreadDeleted == 'Deleted') {
-        echo "[Deleted]";
-    }
-    if ($topic->topicinfo->ThreadVisibility == 'ModeratorOnly') {
-        echo "[ModOnly]";
-    }
-
-    echo $words->fTrad($topic->topicinfo->IdTitle);
-    if ($User) {
-        $url = $_SERVER['REQUEST_URI'];
-        if (strpos($url, "/reverse") === false) { // THis in order to avoid to concatenate /reverse twice
-            $url .= "/reverse";
+        if (!isset($topic->topicinfo->IsClosed)) {
+            $topic->topicinfo->IsClosed = false;
         }
-        echo ' <a href="' . $url . '" title="' . $words->getSilent('ReverseOrder') . '" ><img src="images/icons/reverse_order.png" alt="'
-            . $words->getSilent('ReverseOrder') . '" /></a> ' . $words->flushBuffer();
-    }
-    echo "</h2>";
+        echo "<h2>";
 
-    ?>
+        if ($topic->topicinfo->ThreadDeleted == 'Deleted') {
+            echo "[Deleted]";
+        }
+        if ($topic->topicinfo->ThreadVisibility == 'ModeratorOnly') {
+            echo "[ModOnly]";
+        }
 
-    <div class="forumthreadinfo">
-        <div class="float_left">
+        echo $words->fTrad($topic->topicinfo->IdTitle);
+        if ($User) {
+            $url = $_SERVER['REQUEST_URI'];
+            if (strpos($url, "/reverse") === false) { // THis in order to avoid to concatenate /reverse twice
+                $url .= "/reverse";
+            }
+            echo ' <a href="' . $url . '" title="' . $words->getSilent('ReverseOrder') . '" ><i class="fa fa-sort" alt="'
+                . $words->getSilent('ReverseOrder') . '" /></i></a> ' . $words->flushBuffer();
+        }
+        echo "</h2>";
+        ?>
             <?php
             if ($topic->topicinfo->IdGroup > 0) {
                 ?>
-                <p class="forumsthreadtags"><strong><?php echo $words->get("group"); ?>:</strong>
+                <p class="small gray"><strong><?php echo $words->get("group"); ?>:</strong>
                     <a href="groups/<?php echo $this->_model->getGroupName($topic->topicinfo->IdGroup); ?>">
                         <?php echo $this->_model->getGroupName($topic->topicinfo->GroupName); ?>
                     </a>
@@ -133,103 +133,105 @@ if ((!isset($topic->topicinfo->IdTitle)) and (!isset($topic->topicinfo->ThreadDe
                     <?php echo $breadcrumb; ?>
                 </p>
             <?php endif; ?>
-        </div>
-        <?php
-        $topic->topicinfo->IsClosed = false;
-        if ($topic->topicinfo->expiredate != "0000-00-00 00:00:00") {
-            echo "&nbsp;&nbsp;&nbsp;<span class=\"forumsthreadtags\"><strong> expiration date :", ServerToLocalDateTime($topic->topicinfo->expiredate, $this->getSession()), "</strong>";
-            $topic->topicinfo->IsClosed = (strtotime($topic->topicinfo->expiredate) <= time());
-        }
+            <?php
+            $topic->topicinfo->IsClosed = false;
+            if ($topic->topicinfo->expiredate != "0000-00-00 00:00:00") {
+                echo "&nbsp;&nbsp;&nbsp;<span class=\"forumsthreadtags\"><strong> expiration date :", ServerToLocalDateTime($topic->topicinfo->expiredate, $this->getSession()), "</strong>";
+                $topic->topicinfo->IsClosed = (strtotime($topic->topicinfo->expiredate) <= time());
+            }
 
-        if ($topic->topicinfo->IsClosed) {
-            echo " &nbsp;&nbsp;&nbsp;<span class=\"forumsthreadtags\"><strong> this thread is closed</strong>";
-        }
-        ?>
-        <?php
-        if ($User) {
+            if ($topic->topicinfo->IsClosed) {
+                echo " &nbsp;&nbsp;&nbsp;<span class=\"forumsthreadtags\"><strong> this thread is closed</strong>";
+            }
+            ?>
+            <?php
+            if ($User) {
             ?>
 
-            <div id="forumsthreadreplytop">
-                <?php
-                if (isset($topic->isGroupSubscribed) && ($topic->isGroupSubscribed)) {
-                    if (isset($topic->IdSubscribe)) {
-                        if ($topic->notificationsEnabled > 0) {
-                            echo '<a class="button" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
-                                . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
-                        } else {
-                            echo '<a class="button" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
-                                . '">' . $words->getBuffered('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
-                        }
-                    } else {
-                        if ($topic->notificationsEnabled) {
-                            echo '<a class="button" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
-                                . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
-                        } else {
-                            echo '<a class="button" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
-                                . '">' . $words->getBuffered('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
-                        }
-                    }
+    </div>
+    <div class="ml-auto">
+        <?php
+        if (isset($topic->isGroupSubscribed) && ($topic->isGroupSubscribed)) {
+            if (isset($topic->IdSubscribe)) {
+                if ($topic->notificationsEnabled > 0) {
+                    echo '<a class="button" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
+                        . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                 } else {
-                    if (isset($topic->IdSubscribe)) {
-                        if ($topic->notificationsEnabled > 0) {
-                            echo '<a class="button" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
-                                . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
-                        } else {
-                            echo '<a class="button" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
-                                . '">' . $words->getBuffered('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
-                        }
-                        echo '<a class="button" href="' . $this->getURI() . '/subscriptions/unsubscribe/thread/' . $topic->IdSubscribe
-                            . '/' . $topic->IdKey . '">' . $words->getBuffered('ForumUnsubscribe') . '</a>' . $words->flushBuffer() . PHP_EOL;
-                    } else {
-                        echo '<a class="button" href="' . $this->getURI() . '/subscribe/thread/' . $topic->IdThread . '">'
-                            . $words->getBuffered('ForumSubscribe') . '</a>' . $words->flushBuffer() . PHP_EOL;
-                    }
+                    echo '<a class="button" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
+                        . '">' . $words->getBuffered('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                 }
-
-                if ((!$topic->topicinfo->IsClosed) and ($topic->topicinfo->CanReply)) {
-                    ?>
-                    <a class="button"
-                       href="<?= $replyuri ?>"><?= $words->getBuffered('ForumReply') ?></a><?= $words->flushBuffer() ?>
-                    <?php
+            } else {
+                if ($topic->notificationsEnabled) {
+                    echo '<a class="button" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
+                        . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
+                } else {
+                    echo '<a class="button" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
+                        . '">' . $words->getBuffered('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                 }
-                ?>
-            </div>
+            }
+        } else {
+            if (isset($topic->IdSubscribe)) {
+                if ($topic->notificationsEnabled > 0) {
+                    echo '<a class="button" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
+                        . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
+                } else {
+                    echo '<a class="button" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
+                        . '">' . $words->getBuffered('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
+                }
+                echo '<a class="button" href="' . $this->getURI() . '/subscriptions/unsubscribe/thread/' . $topic->IdSubscribe
+                    . '/' . $topic->IdKey . '">' . $words->getBuffered('ForumUnsubscribe') . '</a>' . $words->flushBuffer() . PHP_EOL;
+            } else {
+                echo '<a class="button" href="' . $this->getURI() . '/subscribe/thread/' . $topic->IdThread . '">'
+                    . $words->getBuffered('ForumSubscribe') . '</a>' . $words->flushBuffer() . PHP_EOL;
+            }
+        }
 
+        if ((!$topic->topicinfo->IsClosed) and ($topic->topicinfo->CanReply)) {
+            ?>
+            <a class="button"
+               href="<?= $replyuri ?>"><?= $words->getBuffered('ForumReply') ?></a><?= $words->flushBuffer() ?>
             <?php
-
-        } // end if ($User)
+        }
         ?>
     </div>
-    <?php
-    // counting for background switch trick
-    $cntx = '1';
 
-    if ($this->_model->ForumOrderList == "No") {
-        for ($ii = count($topic->posts) - 1; $ii >= 0; $ii--) {
-            $post = $topic->posts[$ii];
-            $cnt = $ii + 1;
-            require 'singlepost.php';
-            $cntx = $cnt;
-        }
-    } else { // Not logged member will always see the forum in ascending order
-        for ($ii = 0; $ii < count($topic->posts); $ii++) {
-            $post = $topic->posts[$ii];
-            $cnt = $ii + 1;
-            require 'singlepost.php';
-            $cntx = $cnt;
-        }
+</div>
+
+<?php
+
+} // end if ($User)
+?>
+
+<?php
+// counting for background switch trick
+$cntx = '1';
+
+if ($this->_model->ForumOrderList == "No") {
+    for ($ii = count($topic->posts) - 1; $ii >= 0; $ii--) {
+        $post = $topic->posts[$ii];
+        $cnt = $ii + 1;
+        require 'singlepost.php';
+        $cntx = $cnt;
     }
+} else { // Not logged member will always see the forum in ascending order
+    for ($ii = 0; $ii < count($topic->posts); $ii++) {
+        $post = $topic->posts[$ii];
+        $cnt = $ii + 1;
+        require 'singlepost.php';
+        $cntx = $cnt;
+    }
+}
 
-    if ($User) {
+if ($User) {
 
-        if (!$topic->topicinfo->IsClosed) {
-            ?>
-            <div id="forumsthreadreplybottom"><span class="button"><a
+    if (!$topic->topicinfo->IsClosed) {
+        ?>
+        <div id="forumsthreadreplybottom"><span class="button"><a
                         href="<?php echo $replyuri; ?>"><?php echo $words->getBuffered('ForumReply');; ?></a></span><?php echo $words->flushBuffer() ?>
-            </div>
-            <?php
-        }
-
+        </div>
+        <?php
     }
+
+}
 }
 ?>

@@ -9,8 +9,8 @@
                     <div class="absolute monthyear">{{ activity.starts | date("m") }} {{ activity.starts | date("Y") }}</div>
             </div>
 
-            <div class="text-truncate">
-                <p class="text-truncate m-0 p-0 dashentry"><strong><a href="activities/{{ activity.id }}">{{ activity.title }}</a></strong></p>
+            <div class="text-truncate mr-2" style="white-space: normal;">
+                <p class="m-0 p-0 dashentry"><strong><a href="activities/{{ activity.id }}">{{ activity.title }}</a></strong></p>
                 <p class="p-0 m-0"><small><i class="fa fa-map-marker"></i> {{ activity.location.name }}, {{ activity.location.country.name }}</small></p>
             </div>
 
@@ -18,7 +18,7 @@
                 <div class="mr-5rem"><i class="fa fa-2x fa  fa-user-circle-o"></i></div>
                 <div class="absolute attendees">
                     <small>{{ activity.attendeesyes.count }} yes
-                        {% if  activity.attendeesmaybe.count%}<br>{{ activity.attendeesmaybe.count }} maybe{% endif %}</small>
+                        <br><span{% if activity.attendeesmaybe.count==0 %} class="hidden-sm-up"{% endif %}>{{ activity.attendeesmaybe.count }} maybe</span></small>
                 </div>
             </div>
         </div>

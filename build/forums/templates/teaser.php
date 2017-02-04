@@ -6,8 +6,7 @@ if (isset($this->keyword)) {
 }
 ?>
 
-<div class="pa-1 clearfix">
-    <div id="title" class="fullheight">
+<div class="d-flex flex-row mb-2">
         <h1 class="pull-left">
             <a href="forums"><?php echo $this->_model->words->getFormatted('CommunityLanding'); ?></a>
 
@@ -16,10 +15,10 @@ if (isset($this->keyword)) {
       }
 ?>
         </h1>
-        <div class="pull-right fullheight p-t-1">
+        <div class="ml-auto">
             <!-- Google froum search bar -->
-            <form action="/forums/search" class="verticalalign" method="POST" id="search-box">
-                <div class="input-group verticalalign mt-1">
+            <form action="/forums/search" method="POST" id="search-box">
+                <div class="input-group">
                     <input type="hidden" name="<?= $this->searchCallbackId ?>" value="1" />
                     <input type="text" name="fs-keyword" class="form-control" placeholder="<?= $this->_model->words->getFormatted('ForumSearch') ?>" value="<?= $keyword ?>"/>
                     <span class="input-group-btn">

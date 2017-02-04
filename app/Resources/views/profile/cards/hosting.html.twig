@@ -5,9 +5,9 @@
     <div class="mr-3">
         <h1 class="profilemedium mb-0"><small><i class="fa fa-map-marker icontext"></i></small> {{ member.city.name }}, {{ member.city.country.name }}</h1>
 
-        {%  if member.Accomodation == 'anytime' %}{% set image = 'yesicanhost' %}{% set hosttext = 'Hosting' %}{% endif %}
-        {%  if member.Accomodation == 'dependonrequest' %}{% set image = 'maybe' %}{% set hosttext = 'Maybe Hosting' %}{% endif %}
-        {%  if member.Accomodation == 'neverask' %}{% set image = 'nosorry' %}{% set hosttext = 'Not hosting' %}{% endif %}
+        {%  if member.Accommodation == 'anytime' %}{% set image = 'yesicanhost' %}{% set hosttext = 'Hosting' %}{% endif %}
+        {%  if member.Accommodation == 'dependonrequest' %}{% set image = 'maybe' %}{% set hosttext = 'Maybe Hosting' %}{% endif %}
+        {%  if member.Accommodation == 'neverask' %}{% set image = 'nosorry' %}{% set hosttext = 'Not hosting' %}{% endif %}
 
         {% if member.id == my_member.id %}
 
@@ -32,18 +32,6 @@
         <span class="gray"><small><i>
                 {{ 'Last login:' | trans }} {{ member.LastLogin ? member.LastLogin.diffForHumans : 'never' | trans }}
             </i></small></span>
-
-        <div class="media-body summary">
-            <small>
-
-                <br>
-
-            </small>
-        </div>
-
-        <div class="media-body summary">
-
-        </div>
 
     </div>
 

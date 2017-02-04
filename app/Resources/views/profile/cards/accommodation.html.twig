@@ -1,7 +1,7 @@
 <div class="card mb-3">
     <a name="accommodation"></a>
 
-    <h3 class="card-header">
+    <h3 class="card-header profile-bg2">
         <i class="fa fa-home"></i><span class="icontext">Accommodation</span>
         {% if member.id == my_member.id %}
             <a href="{{ path('member/edit') }}" class="btn btn-sm btn-primary float-right">edit</a>
@@ -85,7 +85,7 @@
             </div>
             {% endif %}
 
-            {% if member.additionalaccomodationinfo %}
+            {% if member.additionalaccommodationinfo %}
             <div role="tab" id="headingFive">
                 <h5 class="mb-0">
                     <a class="collapsed btn btn-secondary btn-block text-left" data-toggle="collapse"
@@ -96,7 +96,7 @@
             </div>
             <div id="collapseFive" class="collapse" role="tabpanel" aria-labelledby="headingFive">
                 <div class="card-block pt-0">
-                    {{ member.additionalaccomodationinfo }}
+                    {{ member.additionalaccommodationinfo }}
                 </div>
             </div>
             {% endif %}

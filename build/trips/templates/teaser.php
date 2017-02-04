@@ -1,10 +1,10 @@
-<div class="m-t-2 clearfix">
+<div class="d-flex flex-row mb-2">
     <h1 class="pull-left"><a href="trips"><?php echo $words->get('Trips'); ?></a></h1>
 
     <?php if (!($this->hideSearch)) { ?>
-        <div class="pull-right fullheight mt-1">
+        <div class="ml-auto">
             <form id="trips-search-box" method="post">
-                <div class="input-group verticalalign">
+                <div class="input-group">
                     <?php echo $callbackTags; ?>
                     <input class="form-control" type="text" name="trips-keyword" id="trips-keyword" />
                     <span class="input-group-btn">

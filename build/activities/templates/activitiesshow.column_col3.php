@@ -40,7 +40,7 @@ if (empty($vars)) {
 ?>
 
 <div class="row mb-1">
-    <div class="col-xs-12 col-md-3">
+    <div class="col-12 col-md-2">
 
         <?
         if ($this->activity->dateStart == $this->activity->dateEnd){
@@ -52,10 +52,10 @@ if (empty($vars)) {
         } ?>
 
     </div>
-    <div class="col-xs-12 col-md-8">
+    <div class="col-12 col-md-8">
         <h2><?php echo $this->activity->title; ?></h2>
     </div>
-    <div class="col-xs-12 col-md-1 text-right">
+    <div class="col-12 col-md-2">
         <h4><?php $words->get('ActivityAttendeesNumbersTitle'); ?></h4>
         <?php if ($this->activity->attendeesYes != 0){ echo $words->get('ActivityAttendeesYes', $this->activity->attendeesYes) . '<br>';} ?>
         <?php if ($this->activity->attendeesMaybe != 0){ echo $words->get('ActivityAttendeesMaybe', $this->activity->attendeesMaybe) . '<br>';} ?>
@@ -64,7 +64,7 @@ if (empty($vars)) {
 </div>
 
 <div class="row">
-    <div class="col-xs-12 col-md-3">
+    <div class="col-12 col-md-3">
         <div>
             <img class="mappreview" src="https://maps.googleapis.com/maps/api/staticmap?center={{ member.Latitude }},{{ member.Longitude }}&zoom=10&size=117x117&key=AIzaSyAiF_lG8CdC-hCIXbGs9jilOFJRoXteM3k">
         </div>
@@ -88,10 +88,10 @@ if (empty($vars)) {
 
         </div>
     </div>
-    <div class="col-xs-12 col-md-6">
+    <div class="col-12 col-md-6">
         <?php echo $purifier->purify($this->activity->description); ?>
     </div>
-    <div class="col-xs-12 col-md-3">
+    <div class="col-12 col-md-3">
         <h4 class="card-title">Join<br></h4>
         <?php
         if ($this->member) {

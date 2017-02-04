@@ -1,5 +1,5 @@
 .welcomeback{
-  margin-top: -23px;
+  margin-top: -24px;
   background-color: #eee;
   border: 3px solid #fff;
   border-top: none;
@@ -7,9 +7,15 @@
   box-shadow: 0px 3px 8px -2px RGBA(153, 150, 150, 0.67);
 }
 
+.landingavatar {
+  position: relative;
+  top: 17px;
+}
+
 .hoststatus{
   position:relative;
-  right: 15px;
+  left: 75px;
+  bottom: 10px;
 }
 
 .hoststatusdropdown{
@@ -55,7 +61,7 @@
   -webkit-box-orient: vertical;
 
   .text {
-    max-height: 2rem;
+    max-height: 2.1rem;
   }
 
   p {

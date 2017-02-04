@@ -1,3 +1,21 @@
+.gray {
+    color: #888;
+    a {
+        color: #888;
+    }
+    a:hover {
+        color: #555;
+    }
+}
+
+.blank {
+    background-color: #fff;
+}
+
+.highlight {
+    background-color: #ddd;
+}
+
 #col3 { /*Forum categories */
     .forumcategory {
         clear: both;
@@ -9,11 +27,6 @@
     .forumcategory h2 {
         padding: 0;
         margin: 0;
-    }
-
-    .forumsboardthreadstight > td, .forumsboardthreads > td {
-        line-height: 1.1;
-        vertical-align: middle;
     }
 
     /* Thread view */

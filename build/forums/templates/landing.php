@@ -35,14 +35,13 @@ $ToogleTagCloud=true ;
 if ($User) $TagCloud=true ;
 if (!$User) {
 ?>
-    <div class="bw-row">
+    <div class="row">
         <?=$this->words->getFormatted('ForumOnlyForBeWelcomeMember'); ?>
     </div>
 <?php
 } // end if not User
 ?> 
 <!-- Now displays the recent groups post list -->
-<div>
 <?php
     echo $this->words->flushBuffer();
 ?>
@@ -74,13 +73,13 @@ if ($threads = $groups->getThreads()) {
         <form class="float_left" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
             <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
             <input type="hidden" name="agoragroupsthreadscountmoreless" value="moregroups">
-            <input type="submit" class="button" name="submit" value="<?php echo $this->words->getSilent('ShowMore'); ?>">
+            <input type="submit" class="btn btn-primary" name="submit" value="<?php echo $this->words->getSilent('ShowMore'); ?>">
         </form>
 
         <form class="float_left" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
             <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
             <input type="hidden" name="agoragroupsthreadscountmoreless" value="lessgroups">
-            <input type="submit" class="button" name="submit" value="<?php echo $this->words->getSilent('ShowLess'); ?>">
+            <input type="submit" class="btn btn-primary" name="submit" value="<?php echo $this->words->getSilent('ShowLess'); ?>">
         </form>
 <?php
     }
@@ -94,7 +93,7 @@ if ($threads = $groups->getThreads()) {
 ?>
         <form class="float_left" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
             <input type="hidden" name="<?php echo $ownGroupsButtonCallbackId; ?>"  value="1">
-            <input type="submit" class="button" name="submit" value="<?php echo $buttonText; ?>">
+            <input type="submit" class="btn btn-primary" name="submit" value="<?php echo $buttonText; ?>">
         </form>
 <?php
     echo $words->flushBuffer();
@@ -109,15 +108,12 @@ if ($threads = $groups->getThreads()) {
     require 'pages.php';
 
 ?>
-</div> <!-- Groups-->
-
-<br /><br />
 
 <?php
 }
 ?>
 
-<div id="forum">
+<div id="forum" class="mt-3">
 <!-- Now displays the recent forum post list -->
 <?php
 if ($User) {
@@ -147,13 +143,13 @@ if ($threads = $forum->getThreads()) {
         <form class="float_left" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
             <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
             <input type="hidden" name="agoragroupsthreadscountmoreless" value="moreagora">
-            <input type="submit" class="button" name="submit" value="<?php echo $this->words->getSilent('ShowMore'); ?>">
+            <input type="submit" class="btn btn-primary" name="submit" value="<?php echo $this->words->getSilent('ShowMore'); ?>">
         </form>
 
         <form class="float_left" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
             <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
             <input type="hidden" name="agoragroupsthreadscountmoreless" value="lessagora">
-            <input type="submit" class="button" name="submit" value="<?php echo $this->words->getSilent('ShowLess'); ?>">
+            <input type="submit" class="btn btn-primary" name="submit" value="<?php echo $this->words->getSilent('ShowLess'); ?>">
         </form>
 <?php
     echo $words->flushBuffer();
@@ -172,6 +168,4 @@ if ($threads = $forum->getThreads()) {
 }
 ?>
 
-<br /><br />
 <a href="rss/forumthreads"><img src="images/icons/feed.png" alt="RSS feed" /></a>
-

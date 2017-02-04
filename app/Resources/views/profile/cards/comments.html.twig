@@ -1,7 +1,7 @@
 <div class="card mb-3">
     <a name="comments"></a>
 
-    <h3 class="card-header"><i class="fa fa-comment"></i><span class="icontext">Latest Comments</span><a href="#" class="btn btn-primary-outline btn-sm float-right request p-0"><i class="fa fa-angle-double-right"></i> All comments ({{ member.comments|length }})</a></h3>
+    <h3 class="card-header profile-bg2"><i class="fa fa-comment"></i><span class="icontext">Latest Comments</span><a href="#" class="btn btn-primary-outline btn-sm float-right request p-0"><i class="fa fa-angle-double-right"></i> All comments ({{ member.comments|length }})</a></h3>
 
         {% for comment in member.comments %}
             <div class="card-block px-1 pb-0">

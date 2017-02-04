@@ -1,12 +1,23 @@
 <div class="card mb-3">
     <a name="gallery"></a>
-    <h3 class="card-header">
+    <h3 class="card-header profile-bg2">
         <i class="fa fa-camera"></i><span class="icontext">Gallery</span>
         {% if member.id == my_member.id %}
             <a href="{{ path('member/edit') }}" class="btn btn-sm btn-primary float-right">edit</a>
         {% endif %}
     </h3>
     <div class="card-block">
-        Gallery
+        <div class="d-flex justify-content-around flex-wrap">
+            <div class="m-1">{{ macros.avatar( member.username, 100, true) }}</div>
+            <div class="m-1">{{ macros.avatar( member.username, 100, true) }}</div>
+            <div class="m-1">{{ macros.avatar( member.username, 100, true) }}</div>
+            <div class="m-1">{{ macros.avatar( member.username, 100, true) }}</div>
+            <div class="m-1">{{ macros.avatar( member.username, 100, true) }}</div>
+            <div class="m-1">{{ macros.avatar( member.username, 100, true) }}</div>
+            <div class="m-1">{{ macros.avatar( member.username, 100, true) }}</div>
+            <div class="m-1">{{ macros.avatar( member.username, 100, true) }}</div>
+            <div class="m-1">{{ macros.avatar( member.username, 100, true) }}</div>
+        </div>
+        <a href="#" class="btn btn-secondary btn-block"><i class="fa fa-camera"></i> <span class="icontext"><strong>View gallery</strong></span></a>
     </div>
 </div>

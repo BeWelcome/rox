@@ -272,7 +272,7 @@
         </div>
 
         <div class="col-12 col-md-6 col-lg-3 mb-3">
-            <div class="card p-2 fullheight text-justify">
+            <div class="card p-2 fullheight">
                 <h4 class="homehfour">Community News<br/><span class="homesubt">and other updates</span></h4>
 
                 <h5>
@@ -280,7 +280,7 @@
                 </h5>
                 {{ communityNews.text | truncate(200) | raw }}<a
                             href="{{ url('communitynews_show', { id: communityNews.id} ) }}"
-                            class="btn btn-sm btn-outline-primary">{{ 'Read more' | trans }}</a>
+                            class="btn btn-sm btn-primary">{{ 'Read more' | trans }}</a>
                 <div>
                     <small>{{ communityNews.createdAt.diffForHumans }}</small>
                     <small class="float-right">3 comments</small>
@@ -293,23 +293,23 @@
         <div class="col-12 col-md-6 col-lg-2 mb-3">
             <div class="card p-2 fullheight">
                 <h4 class="homehfour">Be Informed<br/><span class="homesubt">Transparency</span></h4>
-                <a href="faq" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
+                <a href="about/" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
                             class="fa fa-question"></i> About</a>
-                <a href="faq" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
+                <a href="/faq" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
                             class="fa fa-question"></i> FAQ</a>
-                <a href="wiki" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
+                <a href="/wiki" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
                             class="fa fa-book"></i> Wiki</a>
-                <a href="safety" class="btn btn-outline-primary btn-homewhite btn-sm btn-block mb-1 text-truncate"><i
+                <a href="/safety" class="btn btn-outline-primary btn-homewhite btn-sm btn-block mb-1 text-truncate"><i
                             class="fa fa-shield"></i> Contact</a>
-                <a href="wiki/BeVolunteer" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
+                <a href="/wiki/BeVolunteer" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
                             class="fa fa-bullseye"></i> BeVolunteer</a>
-                <a href="wiki/Annual_Report" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
+                <a href="/wiki/Annual_Report" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
                             class="fa fa-book"></i> Annual report</a>
-                <a href="wiki/Finances" class="btn btn-outline-primary btn-homewhite btn-sm btn-block mb-1 text-truncate"><i
+                <a href="/wiki/Finances" class="btn btn-outline-primary btn-homewhite btn-sm btn-block mb-1 text-truncate"><i
                             class="fa fa-money"></i> Finances</a>
-                <a href="wiki/Annual_Report" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
+                <a href="/wiki/Annual_Report" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
                             class="fa fa-book"></i> Terms of Use</a>
-                <a href="wiki/Annual_Report" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
+                <a href="/wiki/Annual_Report" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
                             class="fa fa-book"></i> Privacy Policy</a>
             </div>
         </div>

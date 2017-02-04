@@ -17,6 +17,11 @@ class HomeController extends Controller
      */
     public function indexAction()
     {
+        $member = $this->getUser();
+        if ($member) {
+            return $this->redirectToRoute('landingpage');
+        }
+
         $form = $this->createForm(LoginFormType::class, null, [
             'action' => $this->generateUrl('security_check'),
             'method' => 'POST'

@@ -1,8 +1,21 @@
 {% extends 'base.html.twig' %}
 {% import 'macros.twig' as macros %}
 
-{% set cssFiles = ['jquery-ui.css'] %}
-{% set scriptFiles = ['jqueryui.js', 'start/home.js', 'member/searchpicker.js'] %}
+{% block stylesheets %}
+    {% stylesheets filter="cssrewrite"
+    '@jquery_ui_css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock stylesheets %}
+
+{% block javascripts %}
+    {% javascripts
+        '@jquery_ui_js'
+        '@AppBundle/Resources/public/js/landing/landing.js'
+        '@AppBundle/Resources/public/js/search/searchpicker.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock javascripts %}
 
 {% block content %}
     <div class="d-flex flex-row justify-content-start align-items-center welcomeback mb-4 p-2">
@@ -19,7 +32,7 @@
                 <div class="d-inline-flex hidden-md-down align-items-center h4">
                     Your hosting status is
                     {% include ':landing:widget/accommodation.html.twig' with {
-                    member: my_member
+                        member: my_member
                     } only %}
                     in
                     {# Provide a way to search in your location #}
@@ -91,7 +104,7 @@
 
                     {# message buttons #}
                     <div class="text-center">
-                        <a href="{{ url('message') }}" class="btn btn-outline-primary btn-homewhite"><i
+                        <a href="{{ url( 'messages' )}}" class="btn btn-outline-primary btn-homewhite"><i
                                     class="fa fa-envelope"></i> My inbox {% if messageCount %}<span
                                     class="badge badge-primary badge-pill">{{ messageCount }}</span>{% endif %}</a>
                     </div>
@@ -304,9 +317,3 @@
 
 {% endblock content %}
 
-{% block javascripts %}
-    {% javascripts
-    'bundles/app/js/home.js' %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-{% endblock javascripts %}

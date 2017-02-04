@@ -31,13 +31,6 @@
         {% endjavascripts %}
         <![endif]-->
 
-        {% javascripts
-        '@jquery_js'
-        '@tether_js'
-        '@bootstrap_js' %}
-            <script type="text/javascript" src="{{ asset_url }}"></script>
-        {%  endjavascripts %}
-
         {% stylesheets filter="cssrewrite"
             '@app_css' %}
             <link rel="stylesheet" href="{{ asset_url }}" />
@@ -59,11 +52,21 @@
                 {{ flash_message }}
             </div>
         {% endfor %}
-        <div id="subnav" class="container">{% block subnav %}{% endblock %}</div>
+        {% if subitems is defined %}
+            <div id="subnav" class="container">
+            {% block subnav %}{% endblock %}
+            </div>
+        {% endif %}
         <div class="container-content">
             {% block content %}{% endblock %}
         </div>
         {% include 'footer.html.twig' %}
-        {% block javascripts %}{% endblock %}
+        {% javascripts
+        '@jquery_js'
+        '@tether_js'
+        '@bootstrap_js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {%  endjavascripts %}
+        {% block javascripts %}{% endblock javascripts %}
     </body>
 </html>

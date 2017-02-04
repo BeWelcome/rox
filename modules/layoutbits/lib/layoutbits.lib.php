@@ -387,6 +387,8 @@ class MOD_layoutbits
      * @return string 'Gender: male/female/other/ translated or empty string
      */
     public static function getGenderTranslated($gender, $hideGender, $addGenderText = true) {
+        return $gender;
+
         $words = new MOD_words(self::$_instance->_session);
         $string = '';
         if (($hideGender == 'No') && ($gender != 'IDontTell')) {

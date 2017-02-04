@@ -7,7 +7,7 @@ if ($('#map').length) {
     });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://osm.org/copyright" title="OpenStreetMap" target="_blank">OpenStreetMap</a> contributors | Tiles Courtesy of <a href="http://www.mapquest.com/" title="MapQuest" target="_blank">MapQuest</a> <img src="https://developer.mapquest.com/content/osm/mq_logo.png" width="16" height="16">',
+        attribution: '&copy; <a href="/copyright">OpenStreetMap contributors</a>',
         subdomains: ['a', 'b', 'c']
     }).addTo(map);
 
@@ -42,9 +42,11 @@ function addMarkers(map){
     var markers = new L.markerClusterGroup({
         iconCreateFunction: function(cluster) {
             return new L.DivIcon({
-                iconSize: [40, 30],
+                iconSize: [40, 40],
                 className: '',
-                html: '<div class="cluster_count" style="border-radius: 10px;box-shadow: 10px 10px 5px #888888;text-align:center;color:#fff;background-color:#69bb11;">' + cluster.getChildCount() + '</div>'
+                html: '<div class="cluster_count" style="text-align:center;' +
+                'color:#fff;' +
+                'background-color:#69bb11;">' + cluster.getChildCount() + '</div>'
             });
         }
     });
@@ -59,8 +61,20 @@ function addMarkers(map){
 
         // TODO the icons might be easier to see on the map if they had a drop shadow.
         // Add a class to the img tag and css eg. box-shadow: 10px 10px 5px #888888;
-        var icon = new L.DivIcon({ html: '<div><img src="/images/icons/' + value.Accommodation + '.gif" width="17" height="17"></div>', className: 'marker-cluster marker-cluster-unique', iconSize: new L.Point(17, 17) });
-        var marker = new L.marker([value.latitude, value.longitude], {icon: icon});
+        var iconFile;
+        switch(value.Accommodation) {
+            case 'anytime':
+                iconFile = 'yesicanhost';
+                break;
+            case 'dependonrequest':
+                iconFile = 'maybe';
+                break;
+            case 'dontask':
+                iconFile = 'nosorry';
+                break;
+        }
+        var icon = new L.DivIcon({ html: '<div><img src="/images/icons/' + iconFile + '.png" width="17" height="17"></div>', className: '', iconSize: new L.Point(17, 17) });
+        var marker = new L.marker([value.latitude, value.longitude], {icon: icon, className: 'marker-cluster marker-cluster-unique'});
 
         var popupContent = '<h4><img src="/members/avatar/' + value.Username + '?size=50"> <a href="/members/' + value.Username + '">' + value.Username + '</a></h4>';
         popupContent += '<p>' + value.Accommodation + '</p>';

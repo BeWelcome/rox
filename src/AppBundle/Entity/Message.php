@@ -7,6 +7,7 @@
 
 namespace AppBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Carbon\Carbon;
 
@@ -14,7 +15,7 @@ use Carbon\Carbon;
  * Message
  *
  * @ORM\Table(name="messages", indexes={@ORM\Index(name="IdParent", columns={"IdParent", "IdReceiver", "IdSender"}), @ORM\Index(name="IdReceiver", columns={"IdReceiver"}), @ORM\Index(name="IdSender", columns={"IdSender"}), @ORM\Index(name="messages_by_spaminfo", columns={"SpamInfo"}), @ORM\Index(name="IdxStatus", columns={"Status"}), @ORM\Index(name="DeleteRequest", columns={"DeleteRequest"}), @ORM\Index(name="WhenFirstRead", columns={"WhenFirstRead"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\MessageRepository")
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
@@ -29,21 +30,21 @@ class Message
     private $messagetype = 'MemberToMember';
 
     /**
-     * @var Carbon
+     * @var DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
     private $updated = 'CURRENT_TIMESTAMP';
 
     /**
-     * @var Carbon
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
     private $created = '0000-00-00 00:00:00';
 
     /**
-     * @var Carbon
+     * @var DateTime
      *
      * @ORM\Column(name="DateSent", type="datetime", nullable=false)
      */
@@ -154,7 +155,7 @@ class Message
     /**
      * Set updated
      *
-     * @param Carbon $updated
+     * @param DateTime $updated
      *
      * @return Message
      */
@@ -172,13 +173,13 @@ class Message
      */
     public function getUpdated()
     {
-        return $this->updated;
+        return Carbon::instance($this->updated);
     }
 
     /**
      * Set created
      *
-     * @param Carbon $created
+     * @param DateTime $created
      *
      * @return Message
      */
@@ -196,19 +197,19 @@ class Message
      */
     public function getCreated()
     {
-        return $this->created;
+        return Carbon::instance($this->created);
     }
 
     /**
      * Set datesent
      *
-     * @param Carbon $datesent
+     * @param DateTime $datesent
      *
      * @return Message
      */
-    public function setDatesent($datesent)
+    public function setDateSent($dateSent)
     {
-        $this->datesent = $datesent;
+        $this->datesent = $dateSent;
 
         return $this;
     }
@@ -218,9 +219,9 @@ class Message
      *
      * @return Carbon
      */
-    public function getDatesent()
+    public function getDateSent()
     {
-        return $this->datesent;
+        return Carbon::instance($this->datesent);
     }
 
     /**
@@ -274,11 +275,11 @@ class Message
     /**
      * Set Receiver
      *
-     * @param \AppBundle\Entity\Member $createdBy
-     *
+     * @param Member $receiver
      * @return Message
+     *
      */
-    public function setReceiver(\AppBundle\Entity\Member $receiver = null)
+    public function setReceiver(Member $receiver)
     {
         $this->receiver = $receiver;
 
@@ -288,7 +289,7 @@ class Message
     /**
      * Get Receiver
      *
-     * @return \AppBundle\Entity\Member
+     * @return Member
      */
     public function getReceiver()
     {
@@ -298,11 +299,11 @@ class Message
     /**
      * Set Sender
      *
-     * @param \AppBundle\Entity\Member $createdBy
+     * @param Member $sender
      *
      * @return Message
      */
-    public function setSender(\AppBundle\Entity\Member $sender = null)
+    public function setSender(Member $sender)
     {
         $this->sender = $sender;
 
@@ -312,7 +313,7 @@ class Message
     /**
      * Get Sender
      *
-     * @return \AppBundle\Entity\Member
+     * @return Member
      */
     public function getSender()
     {
@@ -418,25 +419,25 @@ class Message
     /**
      * Set whenfirstread
      *
-     * @param Carbon $whenfirstread
+     * @param DateTime $whenFirstRead
      *
      * @return Message
      */
-    public function setWhenfirstread($whenfirstread)
+    public function setWhenFirstRead($whenFirstRead)
     {
-        $this->whenfirstread = $whenfirstread;
+        $this->whenfirstread = $whenFirstRead;
 
         return $this;
     }
 
     /**
-     * Get whenfirstread
+     * Get whenFirstRead
      *
      * @return Carbon
      */
-    public function getWhenfirstread()
+    public function getwhenFirstRead()
     {
-        return $this->whenfirstread;
+        return Carbon::instance($this->whenfirstread);
     }
 
     /**
@@ -447,5 +448,10 @@ class Message
     public function getId()
     {
         return $this->id;
+    }
+
+    public function isUnread()
+    {
+        return ($this->whenfirstread == null);
     }
 }

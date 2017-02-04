@@ -1,30 +1,44 @@
-{% extends '@base/base.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% set scriptFiles = ['jqueryui.js', 'leaflet.js', 'member/createmap.js', 'member/searchpicker.js'] %}
+{% block javascripts %}
+    {% javascripts
+        '@jquery_ui_js'
+        '@leaflet_js'
+        '@AppBundle/Resources/public/js/search/createmap.js'
+        '@AppBundle/Resources/public/js/search/searchpicker.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {%  endjavascripts %}
+{% endblock javascripts %}
 
-{% set cssFiles = ['leaflet.css', 'jquery-ui.css'] %}
+{% block stylesheets %}
+    {% stylesheets filter="cssrewrite"
+        '@leaflet_css'
+        '@jquery_ui_css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock stylesheets %}
 
 {% block content %}
 
     <div class="container">
-        {{ form_start(form, {'attr': {'class': 'form-inline p-1 mb-2 framed shadowed'}}) }}
-        {{ form_errors(form) }}
+            {{ form_start(form, {'attr': {'class': 'form-inline p-1 mb-2 framed shadowed'}}) }}
+            {{ form_errors(form) }}
         <div class="row">
             <div class="form-group">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-lg fa-bed"></i></span>
-                    {{ form_row(form.search, {'attr': {'class': 'search-picker form-control'}}) }}
+                    {{ form_widget(form.search, {'attr': {'class': 'search-picker form-control'}}) }}
                 </div>
             </div>
             <div class="form-group">
-                <div class="hostcheckimg"><img src="/images/icons/yesicanhost.png"/>
+                <div class="hostcheckimg">{% image 'images/icons/yesicanhost.png' %}<img src="{{ asset_url }}" alt="{{ 'I like to host' | trans }}"/>{% endimage %}
                     <div class="hostcheckbox">{{ form_widget(form.search_accommodation_anytime) }}</div>
                 </div>
-                <div class="hostcheckimg"><img src="/images/icons/maybe.png"/>
+                <div class="hostcheckimg">{% image 'images/icons/maybe.png' %}<img src="{{ asset_url }}" alt="{{ 'I might host you' | trans }}"/>{% endimage %}
                     <div class="hostcheckbox">
                         {{ form_widget(form.search_accommodation_dependonrequest) }}</div>
                 </div>
-                <div class="hostcheckimg"><img src="/images/icons/nosorry.png"/>
+                <div class="hostcheckimg">{% image 'images/icons/nosorry.png' %}<img src="{{ asset_url }}" alt="{{ 'I can\'t host' | trans }}"/>{% endimage %}
                     <div class="hostcheckbox">
                         {{ form_widget(form.search_accommodation_neverask) }}</div>
                 </div>
@@ -52,7 +66,7 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-12">
                 <div id="map" class=" framed" style="width: 100%; height: 480px;"></div>
             </div>
         </div>

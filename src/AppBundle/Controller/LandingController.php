@@ -2,8 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Location;
-use AppBundle\Model\CommunityModel;
+use AppBundle\Model\CommunityNewsModel;
 use AppBundle\Model\DonateModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -162,11 +161,7 @@ class LandingController extends Controller
      * Shows the landing page
      *
      * \todo create controller and add routes there
-     * @Route("/message", name="message")
-     * @Route("/home", name="landingpage")
-     * @Route("/communitynews/{id}", name="communitynews_show")
-     * @Route("/communitynews", name="communitynews")
-     * @Route("/forums/s{threadId}", name="forum_thread")
+     * @Route("/landing", name="landingpage")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -183,7 +178,7 @@ class LandingController extends Controller
         $homeModel = new LandingModel($this->getDoctrine());
         $travellersInArea = $homeModel->getTravellersInAreaOfMember($member);
 
-        $communityNews = new CommunityModel($this->getDoctrine());
+        $communityNews = new CommunityNewsModel($this->getDoctrine());
         $latestNews = $communityNews->getLatest();
 
         // Prepare search form for home location link

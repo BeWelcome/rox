@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * CommunityNews
  *
  * @ORM\Table(name="community_news")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CommunityNewsRepository")
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
@@ -50,9 +50,12 @@ class CommunityNews
     private $createdAt = 'CURRENT_TIMESTAMP';
 
     /**
-     * @var integer
+     * @var \AppBundle\Entity\Member
      *
-     * @ORM\Column(name="created_by", type="bigint", nullable=false)
+     * @ORM\OneToOne(targetEntity="\AppBundle\Entity\Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="created_by", referencedColumnName="id")
+     * })
      */
     private $createdBy;
 
@@ -64,25 +67,14 @@ class CommunityNews
     private $updatedAt = 'CURRENT_TIMESTAMP';
 
     /**
-     * @var integer
+     * @var \AppBundle\Entity\Member
      *
-     * @ORM\Column(name="updated_by", type="bigint", nullable=false)
+     * @ORM\OneToOne(targetEntity="\AppBundle\Entity\Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="updated_by", referencedColumnName="id")
+     * })
      */
     private $updatedBy;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
-     */
-    private $deletedAt;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="deleted_by", type="bigint", nullable=true)
-     */
-    private $deletedBy;
 
     /**
      * @var integer
@@ -92,8 +84,6 @@ class CommunityNews
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
-
 
     /**
      * Set title
@@ -194,11 +184,11 @@ class CommunityNews
     /**
      * Set createdBy
      *
-     * @param integer $createdBy
+     * @param Member $createdBy
      *
      * @return CommunityNews
      */
-    public function setCreatedBy($createdBy)
+    public function setCreatedBy(Member $createdBy)
     {
         $this->createdBy = $createdBy;
 
@@ -208,7 +198,7 @@ class CommunityNews
     /**
      * Get createdBy
      *
-     * @return integer
+     * @return Member
      */
     public function getCreatedBy()
     {
@@ -242,11 +232,11 @@ class CommunityNews
     /**
      * Set updatedBy
      *
-     * @param integer $updatedBy
+     * @param Member $updatedBy
      *
      * @return CommunityNews
      */
-    public function setUpdatedBy($updatedBy)
+    public function setUpdatedBy(Member $updatedBy)
     {
         $this->updatedBy = $updatedBy;
 
@@ -256,59 +246,11 @@ class CommunityNews
     /**
      * Get updatedBy
      *
-     * @return integer
+     * @return Member
      */
     public function getUpdatedBy()
     {
         return $this->updatedBy;
-    }
-
-    /**
-     * Set deletedAt
-     *
-     * @param \DateTime $deletedAt
-     *
-     * @return CommunityNews
-     */
-    public function setDeletedAt($deletedAt)
-    {
-        $this->deletedAt = $deletedAt;
-
-        return $this;
-    }
-
-    /**
-     * Get deletedAt
-     *
-     * @return Carbon
-     */
-    public function getDeletedAt()
-    {
-        return Carbon::instance($this->deletedAt);
-    }
-
-    /**
-     * Set deletedBy
-     *
-     * @param integer $deletedBy
-     *
-     * @return CommunityNews
-     */
-    public function setDeletedBy($deletedBy)
-    {
-        $this->deletedBy = $deletedBy;
-
-        return $this;
-    }
-
-    /**
-     * Get deletedBy
-     *
-     * @return integer
-     */
-    public function getDeletedBy()
-    {
-        return $this->deletedBy;
     }
 
     /**

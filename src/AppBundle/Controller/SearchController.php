@@ -1,16 +1,22 @@
 <?php
 
-namespace Rox\Member\Controller;
+namespace AppBundle\Controller;
 
-use Rox\Member\Form\SearchFormType;
+use AppBundle\Form\SearchFormType;
+use EnvironmentExplorer;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-// use Symfony\Component\Form\SubmitButton;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class SearchController extends Controller
 {
+    /**
+     * @Route("/search/members", name="search_members")
+     *
+     * @param Request $request
+     * @return Response
+     */
     public function searchAction(Request $request)
     {
         $results = false;
@@ -31,7 +37,7 @@ class SearchController extends Controller
             $results = $this->getResults($form->getData());
         }
 
-        $content = $this->render('@member/searchmembers.html.twig', [
+        $content = $this->render(':search:searchmembers.html.twig', [
             'form' => $form->createView(),
             'results' => $results,
             'location' => [
@@ -94,6 +100,16 @@ class SearchController extends Controller
         $vars['search-can-host'] = $data['search_can_host'];
         $vars['search-number-items'] = 10;
         $vars['search-sort-order'] = 6;
+
+        // make sure everything's setup for the old code used below
+        $container = $this->get('service_container');
+        $environmentExplorer = new EnvironmentExplorer();
+        $environmentExplorer->initializeGlobalState(
+            $container->getParameter('database_host'),
+            $container->getParameter('database_name'),
+            $container->getParameter('database_user'),
+            $container->getParameter('database_password')
+        );
 
         $model = new \SearchModel();
 

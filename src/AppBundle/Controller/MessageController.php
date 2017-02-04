@@ -1,53 +1,24 @@
 <?php
 
-namespace Rox\Message\Controller;
+namespace AppBundle\Controller;
 
-use Illuminate\Database\Eloquent\Builder;
-use Rox\Core\Controller\AbstractController;
-use Rox\Core\Exception\NotFoundException;
-use Rox\Member\Repository\MemberRepositoryInterface;
-use Rox\Message\Model\Message;
-use Rox\Message\Repository\MessageRepositoryInterface;
-use Rox\Message\Service\MessageServiceInterface;
+use AppBundle\Model\MessageModel;
+use AppBundle\Entity\Message;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class MessageController extends AbstractController
+class MessageController extends Controller
 {
-    /**
-     * @var MessageRepositoryInterface
-     */
-    protected $messageRepository;
-
-    /**
-     * @var MessageServiceInterface
-     */
-    protected $messageService;
-
-    /**
-     * @var MemberRepositoryInterface
-     */
-    protected $memberRepository;
-
-    public function __construct(
-        MessageRepositoryInterface $messageRepository,
-        MessageServiceInterface $messageService,
-        MemberRepositoryInterface $memberRepository
-    ) {
-        $this->messageRepository = $messageRepository;
-        $this->messageService = $messageService;
-        $this->memberRepository = $memberRepository;
-    }
-
     public function update(Request $request)
     {
         $modifyAction = $request->request->get('modify');
         $messageIds = $request->request->get('message_id');
 
-        $member = $this->getMember();
+        $member = $this->getUser();
 
         $message = new Message();
 
@@ -78,7 +49,7 @@ class MessageController extends AbstractController
 
         $otherMember = $this->memberRepository->getByUsername($otherUsername);
 
-        $member = $this->getMember();
+        $member = $this->getUser();
 
         $message = new Message();
 
@@ -134,69 +105,67 @@ class MessageController extends AbstractController
         return new Response($content);
     }
 
-    public function index(Request $request)
+    /**
+     * @Route("/messages/{filter}", name="messages",
+     *     requirements={ "filter": "inbox|sent|spam|deleted" },
+     *     defaults={"filter": "inbox"})
+     *
+     * @param Request $request
+     * @param string $filter
+     * @return Response
+     */
+    public function index(Request $request, $filter)
     {
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
-        $sort = $request->query->get('sort', 'date');
+        $sort = $request->query->get('sort', 'datesent');
         $sortDir = $request->query->get('dir', 'desc');
-        $filter = $request->attributes->get('filter', 'inbox');
 
         if (!in_array($sortDir, ['asc', 'desc'], true)) {
             throw new \InvalidArgumentException();
         }
 
-        $member = $this->getMember();
+        $member = $this->getUser();
 
-        $q = $this->messageService->getFilteredMessages($member, $filter, $sort, $sortDir);
+        $messageModel = new MessageModel($this->getDoctrine());
+        $messages = $messageModel->getFilteredMessages($member, $filter, $sort, $sortDir, $page, $limit);
 
-        // Eager load each sender for each message
-        $q->with('sender', 'receiver');
-
-        $q->getQuery()->forPage($page, $limit);
-
-        $count = $q->getQuery()->getCountForPagination();
-
-        $messages = $q->get();
-
-        $content = $this->render('@message/message/index.html.twig', [
+        return $this->render(':message:index.html.twig', [
             'messages' => $messages,
-            'folder' => $filter,
-            'filter' => $request->query->all(),
-            'page' => $page,
-            'pages' => ceil($count / $limit),
+            'subitems' => [
+                'MessagesReceived' => [ 'route' => [ 'name' => 'messages', 'filter' => 'inbox' ] ],
+                'MessagesSent' => [ 'route' => [ 'name' => 'messages', 'filter' => 'sent' ] ],
+                'MessagesSpam' => [ 'route' => [ 'name' => 'messages', 'filter' => 'spam' ] ],
+                'MessagesDeleted' => [ 'route' => [ 'name' => 'messages', 'filter' => 'deleted' ] ],
+            ],
         ]);
-
-        return new Response($content);
     }
 
-    public function view(Request $request)
+    /**
+     * @Route("/message/{id}/reply", name="message_reply",
+     *     requirements={"id": "\d+"})
+     * @Route("/message/{id}", name="message_show",
+     *     requirements={"id": "\d+"})
+     *
+     * @param Message $message
+     * @return Response
+     * @internal param Request $request
+     */
+    public function show(Message $message)
     {
-        $messageId = $request->attributes->get('id');
-
-        $member = $this->getMember();
-
-        try {
-            $message = $this->messageRepository->getById($messageId);
-        } catch (NotFoundException $e) {
-            throw new NotFoundHttpException('Message not found.', $e);
-        }
-
-        if ($member->Id !== $message->receiver->Id
-            && $member->Id !== $message->sender->Id) {
+        $member = $this->getUser();
+        if (($message->getReceiver() <> $member) && ($message->getSender() <> $member)) {
             throw new AccessDeniedException();
         }
 
-        if ($message->isUnread() && $member->id === $message->receiver->id) {
+        if ($message->isUnread() && $member === $message->getReceiver()) {
             // Only mark as read when the receiver reads the message, not when
             // the message is presented to the Sender with url /messages/77/sent
-            $this->messageService->markMessage($message, Message::STATE_READ);
+            $message->setWhenfirstread(date());
         }
 
-        $content = $this->render('@message/message/view.html.twig', [
+        return $this->render(':message:view.html.twig', [
             'message' => $message,
         ]);
-
-        return new Response($content);
     }
 }

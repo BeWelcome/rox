@@ -39,7 +39,6 @@ class MemberController extends Controller
     }
 
     /**
-     * @Route("/search/members", name="search/members")
      * @Route("/member/edit", name="member/edit")
      * @Route("/member/comment", name="member/comment")
      * @Route("/member/change_password", name="member/change_password")

@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% set directionIn = my_member.id == message.receiver.id %}
+{% set otherMember = directionIn ? message.sender : message.receiver %}
+
+{% block title %}
+    {{ 'Messages with %s' | trans | format(otherMember.Username) }}
+{% endblock %}
+
+{% block content %}
+
+    <div id="buttonstop">
+        <p class="clearfix">
+            <a class="btn btn-primary float-left" href="{{ path( 'message_reply', { id: message.id } ) }}">{{ 'Reply' | trans }}</a>
+        </p>
+    </div>
+
+    <div class="row">
+        <div class="col-1 text-right pr-0">
+            {{ macros.avatar(otherMember.Username, 75) }}
+        </div>
+        <div class="col-11">
+            <div class="username pb-1">
+                <span class="float-left">
+                <strong>{{ macros.profilelink( otherMember.Username ) }}</strong>
+                </span>
+                <span class="float-right p-1 small text-right locandlang">
+                    {{ 'Lives in' | trans }}
+                    <i class="fa fa-2x fa-map-marker"></i> <strong>{{ message.sender.city.name }}, {{ message.sender.city.country.name }}</strong>
+                    <br />
+                    {{ 'Speaks' | trans }}
+                    <i class="m-l-1 fa fa-2x fa-comments-o"></i>
+
+                    {# TODO spoken languages #}
+                </span>
+
+                <span class="float-right">
+                    <a class="btn btn-sm btn-secondary allmessages" href="messages/with/{{ otherMember.Username }}">
+                    <i class="fa fa-envelope-o"></i>
+                        {{ 'All messages with' | trans }} {{ otherMember.Username }}
+                    </a>
+                </span>
+
+            </div>
+            <div class="my-1 p-1 pb-3 messagebox">
+                <div class="smaller float-right mr-1">
+                    {{ 'Date' | trans }}:
+                    {{ message.created.diffForHumans }}
+                </div>
+                <div>
+                    {{ message.Message | raw }}
+                </div>
+
+                <div class="smaller mt-1">
+                    {{ 'Date' | trans }}:
+                    {{ message.created.diffForHumans }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock content %}

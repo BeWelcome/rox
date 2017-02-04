@@ -42,6 +42,7 @@ class LegacyLoader extends Loader
         // Forum urls
         $this->addRoute('forums', 'forums', '', '');
         $this->addRoute('bwforum', 'forums/bwforum', '', '');
+        $this->addRoute('forum_thread', '/forums/s{threadId}', '', '');
 
 //        $this->routes->add('activities', new Route( '/activities/100/edit', [
 //            '_controller' => 'rox.legacy_controller:showAction'

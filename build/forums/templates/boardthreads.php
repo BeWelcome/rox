@@ -175,7 +175,7 @@ $layoutbits = new MOD_layoutbits();
                         echo '<img src="styles/css/minimal/images/iconsfam/world.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
                     }
                     else {
-                        echo '<img src="styles/css/minimal/images/iconsfam/tag_blue.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
+                        echo '<i class="fa fa-tag" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'"/></i>' . $words->flushBuffer();
                     }
                     echo $breadcrumb;
                 }

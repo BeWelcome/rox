@@ -35,12 +35,14 @@ Boston, MA  02111-1307, USA.
     <a href="http://www.bewelcome.org/wiki/Howto_Forum" class="btn btn-secondary text-left"><?php echo $this->words->get('ForumLinkToDoc'); ?></a>
     <?php  if ($this->_session->has( "IdMember" )) {
         echo "<a href=\"forums/subscriptions\" class=\"btn btn-secondary text-left\">",$this->words->get('forum_YourSubscription'),"</a>";
-        if ($this->BW_Right->HasRight("ForumModerator")) {
-            echo '</div><h3>Moderation actions</h3><div class=\"btn-group-vertical btn-block mb-1\">' ;
-            echo '<a href="forums/reporttomod/AllMyReport" class="btn btn-secondary text-left">All reports for me</a>' ;
-            echo '<a href="forums/reporttomod/MyReportActive" class="btn btn-secondary text-left">Pending reports for me <span class="tag tag-primary tag-pill">'.$this->_model->countReportList($this->_session->get("IdMember"),"('Open','OnDiscussion')").'</span></a>' ;
-            echo '<a href="forums/reporttomod/AllActiveReports" class="btn btn-secondary text-left">All pending reports <span class="tag tag-primary tag-pill">'.$this->_model->countReportList(0,"('Open','OnDiscussion')").'</span></a>' ;
-        }
+        if ($this->BW_Right->HasRight("ForumModerator")) { ?>
+            </div>
+            <h3>Moderation actions</h3>
+                <div class="btn-group-vertical btn-block mb-3">
+                <a href="forums/reporttomod/AllMyReport" class="btn btn-secondary text-left">All reports for me</a>
+                <a href="forums/reporttomod/MyReportActive" class="btn btn-secondary text-left">Pending reports for me <span class="badge badge-default"><?php echo $this->_model->countReportList($this->_session->get("IdMember"),"('Open','OnDiscussion')"); ?></span></a>
+                <a href="forums/reporttomod/AllActiveReports" class="btn btn-secondary text-left">All pending reports <span class="badge badge-default"><?php echo $this->_model->countReportList(0,"('Open','OnDiscussion')"); ?></span></a>
+       <?php }
     }
     ?>
 </div>

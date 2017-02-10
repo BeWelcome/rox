@@ -38,7 +38,7 @@
 ?>
 
 <!-- Now displays the New Tag Cloud -->
-<h4><?php echo $this->words->flushBuffer(); ?><?php echo $this->words->getFormatted('ForumByTag'); ?><?php echo '<i class="fa fa-tags" alt="'. $this->words->getBuffered('tags') .'" title="'. $this->words->getBuffered('tags') .'" class="forum_icon ml-2" />';?></h4>
+<h4><?php echo $this->words->flushBuffer(); ?><?php echo $this->words->getFormatted('ForumByTag'); ?><?php echo '<i class="fa fa-tags ml-2" alt="'. $this->words->getBuffered('tags') .'" title="'. $this->words->getBuffered('tags') .'" /></i>'; ?></h4>
     <div class="d-flex align-content-start justify-content-between flex-wrap mb-3">
 
 	<?php
@@ -65,7 +65,7 @@
 	    $TagName=$this->words->fTrad($tag->IdName) ;
 	    $TagDescription=$this->words->fTrad($tag->IdDescription) ;
 		
-        $tagcloudlist .=  '<div class="p-1"><a href="forums/t'.$tag->tagid.'-'.rawurlencode($TagName).'" title="'.$TagDescription.'" class="'.$class.'">'.$TagName.'</a></div>';
+        $tagcloudlist .=  '<div class="p-1"><a href="forums/t'.$tag->tagid.'-'.rawurlencode($TagName).'" title="'.$TagDescription.'" class="'.$class.'"><i class="fa fa-tag"></i> '.$TagName.'</a></div>';
 
     }
    	$tagcloudlist = rtrim($tagcloudlist, ': ');

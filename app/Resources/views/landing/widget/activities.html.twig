@@ -18,11 +18,11 @@
                 <div class="mr-5rem"><i class="fa fa-2x fa  fa-user-circle-o"></i></div>
                 <div class="absolute attendees">
                     <small>{{ activity.attendeesyes.count }} yes
-                        <br><span{% if activity.attendeesmaybe.count==0 %} class="hidden-sm-up"{% endif %}>{{ activity.attendeesmaybe.count }} maybe</span></small>
+                        <br><span{% if activity.attendeesmaybe.count==0 %} class="invisible"{% endif %}>{{ activity.attendeesmaybe.count }} maybe</span></small>
                 </div>
             </div>
         </div>
-                        {% if  activity.attendeesmaybe.count%}<br>{{ activity.attendeesmaybe.count }} maybe{% endif %}</small>
+
     {% else %}
         <p>{{ 'No activities near you' | trans }}</p>
     {% endfor %}

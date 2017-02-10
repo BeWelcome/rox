@@ -85,7 +85,62 @@ if ($this->allActivities != null && sizeof ($this->allActivities) > 0){
 }
 $this->pager->render(); ?>
 
+<?php
+$count= 0;
+foreach($this->activities as $activity) {
+    ?>
+    <div class="d-flex flex-row justify-content-start align-items-center p-2">
+
+        <div class="relative pr-2">
+            <div><i class="fa fa-3x fa-calendar-o"></i></div>
+            <div class="absolute day"><strong><?php echo date("j", strtotime($activity->dateStart)); ?></strong></div>
+            <div class="absolute monthyear"><?php echo date("m", strtotime($activity->dateStart)) . " " . date("Y", strtotime($activity->dateStart)); ?></div>
+        </div>
+
+        <div class="text-truncate" style="white-space: normal;">
+            <h4 class="m-0 p-0"><?php echo '<a href="activities/' . $activity->id . '">' . htmlspecialchars($activity->title) . '</a>'; ?></h4>
+            <?php echo '<p class="p-0 m-0"><small>' . $activity->dateStart;
+            if ($activity->dateStart != $activity->dateEnd){
+                echo ' - ' . $activity->dateEnd;
+            }
+            echo '</small></p>'; ?>
+            <!-- <p class="p-0 m-0"><small><i class="fa fa-map-marker"></i> {{ activity.location.name }}, {{ activity.location.country.name }}</small></p> -->
+        </div>
+
+        <div class="ml-auto d-flex flex-row hidden-md-down">
+            <div class="text-right text-nowrap">
+                <?php if ($activity->location != null){
+                    $locationName = htmlspecialchars($activity->location->name);
+                    if ($activity->location->getCountry() != null){
+                        $countryName = htmlspecialchars($activity->location->getCountry()->name);
+                    } else {
+                        $countryName = '';
+                    }
+                } else {
+                    $locationName = '';
+                    $countryName = '';
+                }
+                echo $locationName . '<br>' . $countryName; ?>
+            </div>
+            <div class="px-2"><i class="fa fa-3x fa-map-marker"></i></div>
+
+            <div><i class="fa fa-3x fa fa-user-circle-o"></i></div>
+            <div class="attendees">
+                        <?php
+                        echo '<p class="p-0 m-0 pl-2';
+                        if ($activity->attendeesYes == 0){ echo ' invisible'; }
+                        echo '">' . $activity->attendeesYes . '&nbsp;' . $words->get('ActivitiesNumbAttendeesYes') . '</p>';
+                        echo '<p class="p-0 m-0 pl-2';
+                        if ($activity->attendeesMaybe == 0){ echo ' invisible'; }
+                        echo '">' . $activity->attendeesMaybe . '&nbsp;' . $words->get('ActivitiesNumbAttendeesMaybe'); ?>
+                    </p>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+
 <div class="row">
+
     <div class="col-xs-12">
     <table class="table" id="activitylist" style="table-layout: fixed;">
         <tbody>

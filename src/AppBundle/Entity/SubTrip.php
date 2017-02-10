@@ -14,6 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="sub_trips", indexes={@ORM\Index(name="trip_id_idx", columns={"trip_id"})})
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class SubTrip
 {
@@ -55,7 +58,7 @@ class SubTrip
     private $id;
 
     /**
-     * @var \AppBundle\Entity\Trip
+     * @var Trip
      *
      * @ORM\ManyToOne(targetEntity="Trip", inversedBy="subtrips")
      * @ORM\JoinColumn(name="trip_id", referencedColumnName="id")
@@ -69,7 +72,7 @@ class SubTrip
      *
      * @return SubTrip
      */
-    public function setGeonameid($geonameid)
+    public function setSearchGeonameId($geonameid)
     {
         $this->geonameid = $geonameid;
 
@@ -81,7 +84,7 @@ class SubTrip
      *
      * @return integer
      */
-    public function getGeonameid()
+    public function getSearchGeonameId()
     {
         return $this->geonameid;
     }
@@ -137,13 +140,17 @@ class SubTrip
     /**
      * Set options
      *
-     * @param integer $options
+     * @param array $options
      *
      * @return SubTrip
      */
     public function setOptions($options)
     {
-        $this->options = $options;
+        $optionsValue = 0;
+        foreach($options as $key => $value) {
+            $optionsValue += $value;
+    }
+        $this->options = $optionsValue;
 
         return $this;
     }
@@ -171,11 +178,11 @@ class SubTrip
     /**
      * Set trip
      *
-     * @param \AppBundle\Entity\Trip $trip
+     * @param Trip $trip
      *
      * @return SubTrip
      */
-    public function setTrip(\AppBundle\Entity\Trip $trip = null)
+    public function setTrip(Trip $trip = null)
     {
         $this->trip = $trip;
 
@@ -185,7 +192,7 @@ class SubTrip
     /**
      * Get trip
      *
-     * @return \AppBundle\Entity\Trip
+     * @return Trip
      */
     public function getTrip()
     {

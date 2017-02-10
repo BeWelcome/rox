@@ -14,10 +14,6 @@
      *                                              if the method to call is a post callback
      */
 
-    // Start page only used after logout
-    $this->addRoute('start', '', 'Rox\Main\StartController', 'showAction');
-    $this->addRoute('main_page', 'home', 'Rox\Main\HomeController', 'showAction');
-
     // login routes
     $this->addRoute('login_helper','login/:url:#login-widget', 'LoginController', 'login_helper', true);
     $this->addRoute('logout', 'logout', 'LoginController', 'logOut');

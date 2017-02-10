@@ -17,6 +17,9 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="activities")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ActivityRepository")
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class Activity
 {

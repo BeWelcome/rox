@@ -58,9 +58,17 @@ class TripType extends AbstractType
             ])
             ->add('subtrips', CollectionType::class, [
                 'entry_type' => SubTripType::class,
+                'entry_options' => [
+                    'label' => false
+                ],
                 'allow_add'    => true,
                 'allow_delete' => true,
-            ])
-            ->add('create', SubmitType::class);
+                'by_reference' => false,
+                'prototype' => true,
+                'label' => false,
+                'attr' => array(
+                    'class' => 'form-collection',
+                ),
+            ]);
     }
 }

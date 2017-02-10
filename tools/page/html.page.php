@@ -305,15 +305,6 @@ class PageWithHTML extends AbstractBasePage
 
     protected function statusMessage()
     {
-        $words = new MOD_words();
-        // messages about the member's status preceed the info messages
-        $user = new APP_User();
-        $logged_in = $user->IsBWLoggedIn("NeedMore,Pending");
-        if ($logged_in && $this->_session->get('Status') != 'Active') echo '<p class="status note big">'.$words->get('StatusMessage_'. $this->_session->get('Status')).'</p>';
-
-        // infoMessage should be used by other Pages to show post-form-messages and other status-messages to the member
-        $class = (isset($this->infoMessageClass) && $this->infoMessageClass != '') ? $this->infoMessageClass : '';
-        if (isset($this->infoMessage) && $this->infoMessage != '') echo '<p class="note big '.$class.'">'.$this->infoMessage.'</p>';
     }
 
     protected function translator_block() {

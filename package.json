@@ -21,7 +21,8 @@
     "grunt-contrib-watch": "^1.0.0",
     "lodash": "^3.10.1",
     "uglify-js": "^2.7.5",
-    "uglifycss": "*"
+    "uglifycss": "*",
+    "symfony-collection": "*"
   },
   "dependencies": {
     "bootstrap": "github:twbs/bootstrap#v4-dev",

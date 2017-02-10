@@ -4,6 +4,7 @@ namespace AppBundle\Form;
 
 use AppBundle\Entity\SubTrip;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -23,27 +24,58 @@ class SubTripType extends AbstractType
     {
         $formBuilder
             ->add('search', TextType::class, [
+                'attr' => [
+                    'class' => 'search-picker'
+                ],
                 'mapped' => false,
             ])
-            ->add('geonameid', HiddenType::class)
-            ->add('latitude', HiddenType::class, [
+            ->add('search_geoname_id', HiddenType::class)
+            ->add('search_latitude', HiddenType::class, [
                 'mapped' => false,
             ])
-            ->add('longitude', HiddenType::class, [
+            ->add('search_longitude', HiddenType::class, [
                 'mapped' => false,
             ])
             ->add('arrival', DateType::class)
             ->add('departure', DateType::class)
             ->add('options', ChoiceType::class, [
                 'choices' => [
-                    '' => 0,
                     'TripsLocationOptionLookingForAHost' => 1,
                     'TripsLocationOptionLikeToMeetUp' => 2,
                 ],
                 'multiple' => true,
+                'expanded' => true,
                 'label' => 'Additional Info',
             ]);
+
+        $formBuilder->get('options')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($optionsAsNumber) {
+                    // transform the number back to an array
+                    $optionsAsArray = [];
+                    if (($optionsAsNumber & 1) == 1) {
+                        $optionsAsArray['TripsLocationOptionLookingForAHost'] = 1;
+                    }
+                    if (($optionsAsNumber & 2) == 2) {
+                        $optionsAsArray['TripsLocationOptionLikeToMeetUp'] = 2;
+                    }
+                    return $optionsAsArray;
+                },
+                function ($optionsAsArray) {
+                    // transform the array to a number
+                    if (is_null($optionsAsArray)) {
+                        return 0;
+                    }
+                    $optionsAsNumber = 0;
+                    foreach($optionsAsArray as $item => $value) {
+                        $optionsAsNumber += $value;
+                    }
+                    return $optionsAsNumber;
+                }
+            ))
+        ;
     }
+
 
     public function configureOptions(OptionsResolver $resolver)
     {

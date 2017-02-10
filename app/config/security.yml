@@ -47,7 +47,7 @@ security:
                 check_path: /login_check
                 username_parameter: username
                 password_parameter: password
-                default_target_path: /home
+                default_target_path: /landing
                 csrf_token_generator: security.csrf.token_manager
 
             logout:

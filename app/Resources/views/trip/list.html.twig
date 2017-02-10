@@ -15,11 +15,9 @@
     <div class="row">
         <div class="col-xs-12">
         {% for trip in trips %}
-            <article class="trip">
-                <h1>{{ trip.summary }}</h1>
-                <a href="{{  path('trip_edit', { id: trip.id} ) }}">Edit!</a>
-                {{ trip.createdBy.Username }}
-            </article>
+            <h1><a href="{{ path('trip_show_details', { id: trip.id } ) }}">{{ trip.summary }}</a></h1>
+            <p class="small">{{ trip.createdBy.Username }}{% if trip.createdBy == my_member %}<a href="{{  path('trip_update', { id: trip.id} ) }}">Update</a>{% endif %}</p>
+            <p>{{ trip.description | truncate(200) }}</p>
         {% else %}
             <div class="well">{{ 'trip.no_trips_found'|trans }}</div>
         {% endfor %}

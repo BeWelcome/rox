@@ -10,7 +10,7 @@ namespace AppBundle\Entity;
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bundle\SecurityBundle\Tests\Functional\Bundle\AclBundle\Entity\Car;
+use Doctrine\ORM\Mapping\PrePersist;
 
 /**
  * Trip
@@ -46,20 +46,23 @@ class Trip
      * @var Carbon
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=false)
+     * @ORM\Version
      */
-    private $createdAt = 'CURRENT_TIMESTAMP';
+    private $createdAt;
 
     /**
      * @var Carbon
      *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=false)
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     * @ORM\Version
      */
-    private $updatedAt = 'CURRENT_TIMESTAMP';
+    private $updatedAt;
 
     /**
      * @var Carbon
      *
      * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
+     *
      */
     private $deletedAt;
 
@@ -82,13 +85,13 @@ class Trip
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="SubTrip", mappedBy="trip")
+     * @ORM\OneToMany(targetEntity="SubTrip", mappedBy="trip",cascade={"persist"})
      */
     private $subtrips;
 
     public function __construct()
     {
-        $this->subtrips= new ArrayCollection();
+        $this->subtrips = new ArrayCollection();
     }
 
     /**
@@ -311,13 +314,15 @@ class Trip
     /**
      * Add subtrip
      *
-     * @param \AppBundle\Entity\SubTrip $subtrip
+     * @param SubTrip $subtrip
      *
      * @return Trip
      */
-    public function addSubtrip(\AppBundle\Entity\SubTrip $subtrip)
+    public function addSubtrip(SubTrip $subtrip)
     {
-        $this->subtrips[] = $subtrip;
+        $subtrip->setTrip($this);
+
+        $this->subtrips->add($subtrip);
 
         return $this;
     }
@@ -325,10 +330,10 @@ class Trip
     /**
      * Remove subtrip
      *
-     * @param \AppBundle\Entity\SubTrip $subtrip
+     * @param SubTrip $subtrip
      */
-    public function removeSubtrip(\AppBundle\Entity\SubTrip $subtrip)
+    public function removeSubtrip(SubTrip $subtrip)
     {
-        $this->subtrips->removeElement($subtrip);
+        $this->subtrips->remove($subtrip);
     }
 }

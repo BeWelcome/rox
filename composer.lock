@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a242cee8cb43bb15967c5c08dba02953",
-    "content-hash": "e1177b0f7650545aeb8709a2a9bb1124",
+    "hash": "29a228dc8faeb016798db58b8f44bc3e",
+    "content-hash": "929fb5f814bfa3bb1ff05b275aaef0d2",
     "packages": [
         {
             "name": "anthonymartin/geo-location",
@@ -1048,6 +1048,69 @@
                 "sql"
             ],
             "time": "2016-12-15 13:51:59"
+        },
+        {
+            "name": "genemu/form-bundle",
+            "version": "dev-master",
+            "target-dir": "Genemu/Bundle/FormBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/genemu/GenemuFormBundle.git",
+                "reference": "582b03b46df54c6a1a30e28e7bccc80860d41d48"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/genemu/GenemuFormBundle/zipball/582b03b46df54c6a1a30e28e7bccc80860d41d48",
+                "reference": "582b03b46df54c6a1a30e28e7bccc80860d41d48",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "symfony/form": "~2.8 || ^3.0",
+                "symfony/framework-bundle": "~2.8 || ^3.0",
+                "twig/twig": "~1.14"
+            },
+            "suggest": {
+                "doctrine/doctrine-bundle": "In order to use some form types with Doctrine",
+                "doctrine/mongodb-odm-bundle": "For MongoDB integration",
+                "symfony/finder": "For an image type",
+                "symfony/twig-bridge": "For integration into Twig templates"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Genemu\\Bundle\\FormBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Olivier Chauvel",
+                    "email": "olivier@generation-multiple.com"
+                },
+                {
+                    "name": "Community contributions",
+                    "homepage": "https://github.com/genemu/GenemuFormBundle/contributors"
+                },
+                {
+                    "name": "Bilal Amarni",
+                    "email": "bilal.amarni@gmail.com"
+                }
+            ],
+            "description": "Extra form types for your Symfony2 projects",
+            "keywords": [
+                "extra form",
+                "form"
+            ],
+            "time": "2016-09-12 20:12:53"
         },
         {
             "name": "html2text/html2text",
@@ -6098,6 +6161,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "genemu/form-bundle": 20,
         "sebastian/phpcpd": 20
     },
     "prefer-stable": false,

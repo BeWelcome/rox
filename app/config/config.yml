@@ -37,10 +37,22 @@ framework:
     assets: ~
     translator: { fallbacks: [en] }
 
+# Use genemu forms
+genemu_form:
+    autocomplete: ~
+
 # Twig Configuration
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    base_template_class: 'Rox\Core\Template\RoxTemplate'
+    exception_controller:  twig.controller.exception:showAction
+    form_themes:
+      - '@forms/bs4.html.twig'
+      - '@collections/jquery.collection.html.twig'
+    paths:
+        '%kernel.root_dir%/../templates/twig/forms': forms
+        '%node_modules%/symfony-collection': collections
 
 # Doctrine Configuration
 doctrine:
@@ -166,3 +178,7 @@ assetic:
                 - "%node_modules%/skrollr/dist/skrollr.min.js"
                 - "%node_modules%/skrollr-menu/dist/skrollr.menu.min.js"
                 - "%node_modules%/unslider/dist/js/unslider-min.js"
+
+        symfony_collection_js:
+            inputs:
+                - "%node_modules%/symfony-collection/jquery.collection.js"

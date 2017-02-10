@@ -27,11 +27,11 @@ $words = new MOD_words();
 <div class="row m-y-1">
     <div class="col-xs-12 col-md-6">
         <div class="list-group">
-            <a href="forums" class="list-group-item list-group-item-action">
+            <a href="/forums" class="list-group-item list-group-item-action">
                 <h5 class="list-group-item-heading"><?php echo $words->get('CommunityDiscussions') ?></h5>
                 <p class="list-group-item-text"><?php echo $words->get('ExploreForumDescription') ?></p>
             </a>
-            <a href="groups/forums" class="list-group-item list-group-item-action">
+            <a href="/groups/forums" class="list-group-item list-group-item-action">
                 <h5 class="list-group-item-heading"><?php echo $words->get('Groups') ?></h5>
                 <p class="list-group-item-text"><?php echo $words->get('ExploreGroupsDescription') ?></p>
             </a>
@@ -40,11 +40,11 @@ $words = new MOD_words();
 
     <div class="col-xs-12 col-md-6">
         <div class="list-group">
-            <a href="activities" class="list-group-item list-group-item-action">
+            <a href="/activities" class="list-group-item list-group-item-action">
                 <h5 class="list-group-item-heading"><?php echo $words->get('Activities') ?></h5>
                 <p class="list-group-item-text"><?php echo $words->get('ExploreActivitiesDescription') ?></p>
             </a>
-            <a href="trips" class="list-group-item list-group-item-action">
+            <a href="/trips" class="list-group-item list-group-item-action">
                 <h5 class="list-group-item-heading"><?php echo $words->get('Trips') ?></h5>
                 <p class="list-group-item-text"><?php echo $words->get('ExploreTripsDescription') ?></p>
             </a>

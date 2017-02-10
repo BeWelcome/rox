@@ -10,15 +10,19 @@ use AppBundle\Form\TripType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class TripController extends Controller
 {
     /**
      * @Route("/trip", name="trip")
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     * @param int $items
+     * @return Response
+     * @internal param int $page
      */
-    public function listAction(Request $request, $page = 1, $items = 10)
+    public function listAction(Request $request, $items = 10)
     {
         $page = $request->query->get('page', 1);
         $tripModel = new TripModel($this->getDoctrine());
@@ -35,8 +39,9 @@ class TripController extends Controller
         return new Response($content);
     }
 
-    /***
-     * @Route("/trip/{id}", name="trip_show")
+    /**
+     * @Route("/trip/{id}", name="trip_show_details",
+     *     requirements={"id": "\d+"})
      *
      * @param Trip $trip The trip to show
      * @return Response
@@ -61,52 +66,66 @@ class TripController extends Controller
     public function createAction(Request $request)
     {
         $trip = new Trip();
-        $subtrips = $trip->getSubtrips();
-        $subtrips->add(new SubTrip());
+        $trip->addSubtrip(new SubTrip);
 
-        $editForm = $this->createForm(TripType::class, $trip);
+        $createForm = $this->createForm(TripType::class, $trip);
+        $createForm->handleRequest($request);
 
-        $editForm->handleRequest($request);
+        if ($createForm->isSubmitted() && $createForm->isValid()) {
+            $trip
+                ->setCreatedAt(new \DateTime)
+                ->setCreatedBy($this->getUser());
 
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-
+            $entityManager->persist($trip);
             $entityManager->flush();
 
             $this->addFlash('success', 'trip.updated_successfully');
 
-            return $this->redirectToRoute('trip', ['id' => $trip->getId()]);
+            return $this->redirectToRoute('trip');
         }
 
-        return $this->render(':trip:edit.html.twig', [
-            'form' => $editForm->createView(),
+        return $this->render(':trip:createOrUpdate.html.twig', [
+            'create' => true,
+            'form' => $createForm->createView(),
         ]);
     }
 
     /**
-     * @Route("/trip/{id}/edit", name="trip_edit")
+     * @Route("/trip/{id}/update", name="trip_update",
+     *     requirements={"id": "\d+"})
+     *
      * @param Request $request
-     * @param Trip $trip The trip to edit
+     * @param Trip $trip The trip to update
      * @return Response
      */
-    public function editAction(Request $request, Trip $trip)
+    public function updateAction(Request $request, Trip $trip)
     {
-        $editForm = $this->createForm(TripType::class, $trip);
+        $member = $this->getUser();
+        if ($trip->getCreatedBy() <> $member) {
+            throw new AccessDeniedException();
+        }
 
-        $editForm->handleRequest($request);
+        $updateForm = $this->createForm(TripType::class, $trip);
 
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
+        $updateForm->handleRequest($request);
+
+        if ($updateForm->isSubmitted() && $updateForm->isValid()) {
+            $trip
+                ->setUpdatedAt(new \DateTime);
+
             $entityManager = $this->getDoctrine()->getManager();
-
+            $entityManager->persist($trip);
             $entityManager->flush();
 
             $this->addFlash('success', 'trip.updated_successfully');
 
-            return $this->redirectToRoute('trip', ['id' => $trip->getId()]);
+            return $this->redirectToRoute('trip');
         }
 
-        return $this->render(':trip:edit.html.twig', [
-            'form' => $editForm->createView(),
+        return $this->render(':trip:createOrUpdate.html.twig', [
+            'create' => false,
+            'form' => $updateForm->createView(),
         ]);
     }
 }

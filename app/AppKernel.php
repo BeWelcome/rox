@@ -17,7 +17,6 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new \Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new \WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
-            new Genemu\Bundle\FormBundle\GenemuFormBundle(),
             new AppBundle\AppBundle(),
         ];
 

@@ -37,10 +37,6 @@ framework:
     assets: ~
     translator: { fallbacks: [en] }
 
-# Use genemu forms
-genemu_form:
-    autocomplete: ~
-
 # Twig Configuration
 twig:
     debug:            "%kernel.debug%"

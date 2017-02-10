@@ -67,7 +67,7 @@ class SubTripType extends AbstractType
                         return 0;
                     }
                     $optionsAsNumber = 0;
-                    foreach($optionsAsArray as $item => $value) {
+                    foreach($optionsAsArray as $value) {
                         $optionsAsNumber += $value;
                     }
                     return $optionsAsNumber;

@@ -1,10 +1,10 @@
 <?php
-
 /*
  * @codingStandardsIgnoreFile
  *
  * Auto generated file ignore for Code Sniffer
  */
+
 namespace AppBundle\Entity;
 
 use Carbon\Carbon;
@@ -18,6 +18,9 @@ use Doctrine\ORM\Mapping\PrePersist;
  * @ORM\Table(name="trips", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})},
  *     indexes={@ORM\Index(name="memberId_idx", columns={"created_by"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TripRepository")
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class Trip
 {

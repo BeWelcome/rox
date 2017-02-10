@@ -25,8 +25,8 @@ before_install:
   - mysql -u root -e 'FLUSH PRIVILEGES;'
 
 install:
-  - composer install --no-interaction --ignore-platform-reqs
   - npm update
+  - composer install --no-interaction --ignore-platform-reqs
 
 script:
   - php bin/console doctrine:schema:create

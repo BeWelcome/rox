@@ -27,7 +27,7 @@ before_install:
 install:
   - npm update
   - composer update --no-interaction --ignore-platform-reqs
-AppKernel
+
 script:
   - php bin/console doctrine:schema:create
   - php bin/console doctrine:fixtures:load --no-interaction

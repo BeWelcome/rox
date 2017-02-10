@@ -178,7 +178,3 @@ assetic:
                 - "%node_modules%/skrollr/dist/skrollr.min.js"
                 - "%node_modules%/skrollr-menu/dist/skrollr.menu.min.js"
                 - "%node_modules%/unslider/dist/js/unslider-min.js"
-
-        symfony_collection_js:
-            inputs:
-                - "%node_modules%/symfony-collection/jquery.collection.js"

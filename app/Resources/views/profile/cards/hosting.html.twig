@@ -40,5 +40,9 @@
     </div>
 </div>
 <div class="d-flex flex-row">
-    <a href="{{ path('message/compose', { username: member.Username }) }}" class="btn btn-sm btn-primary btn-block text-xs-left btn-profile"><i class="fa fa-envelope"></i><span class="icontext">Send request</span></a>
+    {% if member.id == my_member.id %}
+        <a href="#" class="btn btn-sm btn-primary btn-block btn-profile"><i class="fa fa-street-view"></i><span class="icontext">Change location</span></a>
+    {% else %}
+        <a href="{{ path('message/compose', { username: member.Username }) }}" class="btn btn-sm btn-primary btn-block btn-profile"><i class="fa fa-envelope"></i><span class="icontext">Send request</span></a>
+    {% endif %}
 </div>

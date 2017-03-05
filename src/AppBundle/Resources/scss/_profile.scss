@@ -33,7 +33,6 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 .profileimg {
 	border-radius: 3px;
 	border: 3px solid white;
-	box-shadow: 0 3px 8px -2px #000;
 }
 
 .card {
@@ -44,15 +43,16 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 
 .headerimg {
-	// background-image: url(/images/profilepicture.jpg);
-	// background-size: cover;
 	background: $brand-primary;
 	background: linear-gradient(to bottom, rgba(254,182,69,1) 16%,rgba(243,112,0,1) 51%);
 	border-bottom-right-radius: .25rem !important;
 	border-bottom-left-radius: .25rem !important;
-	box-shadow:0 3px 8px -1px #999696, 0 50 150 -50 #000 inset;
+	box-shadow: 0 50px 150px -50px rgba(8,8,8,0.1) inset;
 	height: auto;
 	margin: 0;
+	background-image: url("/images/bw-wallpaper-xs.png");
+	background-size: 33%;
+	border: 2px solid white;
 }
 
 .media small {
@@ -77,16 +77,20 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 
 .profilebig {
 	font-family:"Signika-Regular", LatoWeb, sans-serif;
-	font-size:2.625em;
+	font-size:2.625rem;
 	white-space: nowrap;
 }
 
 .profilemedium {
 	font-family: "Signika-Regular", LatoWeb, sans-serif;
-	font-size: 1.4em;
+	font-size: 1.4rem;
 	white-space: nowrap;
 }
-
+.profilecity {
+	font-family: "Signika-Regular", LatoWeb, sans-serif;
+	font-size: 1.6rem;
+	white-space: nowrap;
+}
 .top0 {
 	top: 0;
 }
@@ -123,11 +127,16 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 
 .btn-profile {
-	font-size: 0.9rem;
-	margin-bottom: 0.6rem;
-	border-radius: 0.25rem !important;
-	border: 1px solid rgba(0, 0, 0, 0.28) !important;
-	box-shadow: 0 5px 8px -6px #000;
+    font-size: 1rem;
+    border-radius: 0.25rem !important;
+    border: 2px solid rgb(243, 112, 0) !important;
+    color: rgb(243, 112, 0);
+    background-color:transparent;
+}
+.btn-profile:hover {
+    color: #fff;
+    background-color: rgb(243, 112, 0);
+    border-color: rgb(243, 112, 0);
 }
 
 .btn-norad-bl {

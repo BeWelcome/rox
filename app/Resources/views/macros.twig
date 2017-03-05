@@ -42,7 +42,7 @@
 {% endmacro %}
 
 {% macro avatar(username, size, linked = false, addimage = false, addlink = false) %}
-    {% set imgclasses %}img-rounded{% if addimage %} {{ addimage }}{% endif %}{% endset %}
+    {% set imgclasses %}profileimg{% if addimage %} {{ addimage }}{% endif %}{% endset %}
     {% set linkclasses %}{% if addlink %} {{ addlink }}{% endif %}{% endset %}
     {% set img %}<img class="{{ imgclasses }}" width="{{ size }}" height="{{ size }}" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'Profile' | trans }}">{% endset %}
     {% if linked %}

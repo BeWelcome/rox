@@ -11,18 +11,14 @@
 
         <div class="btn-group btn-group-profile" role="group">
             {% if member.id == my_member.id %}
-                <a href="{{ path('member/edit') }}" class="btn btn-primary btn-norad-bl">{{ 'EditMyProfile' | trans  }}</a>
-                <a href="#" class="btn btn-secondary">{{ 'MyPreferences' | trans  }}</a>
-                <a href="#" class="btn btn-secondary">{{ 'MyNotes' | trans  }}</a>
-                <a href="#" class="btn btn-secondary">Set inactive</a>
-                <a href="#" class="btn btn-secondary btn-norad-br">Delete profile</a>
+                <a href="#" class="btn btn-edit"><span class="fa fa-pencil btn-edit-animation small pr-2"></span>{{ 'MyPreferences' | trans  }}</a>
             {% else %}
                 <a href="{{ path('message/compose', { username: member.Username }) }}"
-                   class="btn btn-primary"><i class="fa fa-envelope"></i> Message</a>
+                   class="btn btn-edit"><i class="fa fa-envelope"></i> Message</a>
                 <a href="#" class="btn btn-secondary hidden-md-down"><i
                             class="fa fa-user-plus"></i> Add as friend</a>
                 <a href="#" class="btn btn-secondary hidden-md-down"><i
-                            class="fa fa-pencil"></i> Write comment</a>
+                            class="fa fa-pencil btn-edit-animation"></i> Write comment</a>
 
                 <div class="btn-group" role="group">
                     <button id="btnGroupDrop1" type="button"
@@ -44,11 +40,6 @@
             <small><a href="#" class="report"><i class="fa fa-flag"></i><span
                             class="icontext">report</span></a></small>
         </div>
-
-        <div class="btn-group btn-group-profile ml-auto float-right" role="group">
-            <a href="/members/{{ member.username }}/de" class="btn btn-secondary">German</a>
-        </div>
-
     </div>
 
     <div class="d-flex flex-wrap justify-content-start headerimg mb-3">
@@ -81,7 +72,7 @@
             {% endif %}
 
             {% if member.id == my_member.id %}
-                <br><a href="{{ path('member/edit') }}" class="btn btn-sm btn-primary">{{ 'EditMyProfile' | trans  }}</a>
+                <br><a href="{{ path('member/edit') }}" class="btn btn-sm btn-edit"><span class="fa fa-pencil btn-edit-animation small pr-2"></span>{{ 'EditMyProfile' | trans  }}</a>
             {% endif %}
 
             {# if member admin
@@ -101,7 +92,7 @@
                 </select>
                    <br>
                  <input type="text" name="admincomment" placeholder="-">
-                <button class="btn btn-primary">Set</button>
+                <button class="btn btn-edit"><span class="fa fa-pencil btn-edit-animation small pr-2"></span>Set</button>
             </div>
             #}
         </div>
@@ -111,25 +102,12 @@
 
         <div class="card profilestatusbox m-3 p-3">
             <h4 class="text-uppercase">
-                <small><strong><i class="fa fa-language"></i><span class="icontext">Speaks</span></strong></small>
+                <small><strong><i class="fa fa-commenting"></i><span class="icontext">Speaks</span></strong></small>
                 {# if on own profile #}<a href="editmyprofile"></a></h4>
             <p class="mb-0">
-                <span class="lang mother">Galician</span> <span class="lang mother smaller gray">[Mother tongue],</span>
-                <span class="lang">English</span> <span class="lang smaller gray">[Fluent],</span>
-                <span class="lang">Basque</span> <span class="lang smaller gray">[Fluent],</span>
-                <small><a href="#languages"> ...and 8 more</a></small>
+                <span class="lang mother" title="Mother tongue">Galician</span>, <span class="lang" title="Fluent">English</span>, <span class="lang" title="Fluent">Basque</span>,<small><a href="#languages"> ...and 8 more</a></small>
             </p>
         </div>
-
-        <div class="btn-group btn-group-profile d-flex align-items-end ml-auto" role="group">
-            <a href="#" class="btn btn-sm btn-primary btn-primary-profile btn-norad-bl hidden-md-down profile-bg2">Overview</a>
-            <a href="{{ path('member/comment', { 'username': member.username }) }}" class="btn btn-sm btn-secondary">Comments</a>
-            <a href="/members/{{ member.username }}/gallery" class="btn btn-sm btn-secondary hidden-md-down">Gallery</a>
-            <a href="/members/{{ member.username }}/groups" class="btn btn-sm btn-secondary hidden-md-down">Groups</a>
-            <a href="/members/{{ member.username }}/trips" class="btn btn-sm btn-secondary hidden-md-down">Trips</a>
-            <a href="#" class="btn btn-sm btn-secondary btn-norad-tr">Show on map</a>
-        </div>
-
     </div>
 
     <div class="row">
@@ -141,7 +119,7 @@
                     <i class="fa fa-info-circle"></i><span class="icontext">About me</span>
                     {% if member.id == my_member.id %}
                         {# TODO the span tag was empty, assuming edit #}
-                        <a href="{{ path('member/edit') }}" class="btn btn-sm btn-primary float-right">edit</a>
+                        <a href="{{ path('member/edit') }}" class="btn btn-sm btn-edit float-right"><span class="fa fa-pencil btn-edit-animation small pr-2"></span>edit</a>
                     {% endif %}
                 </h3>
 
@@ -155,7 +133,7 @@
                 <h3 class="card-header profile-bg2">
                     <i class="fa fa-bicycle"></i><span class="icontext">Interests</span>
                     {% if member.id == my_member.id %}
-                        <a href="{{ path('member/edit') }}" class="btn btn-sm btn-primary float-right">edit</a>
+                        <a href="{{ path('member/edit') }}" class="btn btn-sm btn-edit float-right"><span class="fa fa-pencil btn-edit-animation small pr-2"></span>edit</a>
                     {% endif %}
                 </h3>
 

@@ -126,19 +126,26 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 	margin: 0;
 }
 
-.btn-profile {
-    font-size: 1rem;
-    border-radius: 0.25rem !important;
-    border: 2px solid rgb(243, 112, 0) !important;
-    color: rgb(243, 112, 0);
-    background-color:transparent;
-}
-.btn-profile:hover {
+.btn-edit {
     color: #fff;
-    background-color: rgb(243, 112, 0);
-    border-color: rgb(243, 112, 0);
+    background-color: #7f9dca;
+    border-color: #7f9dca;
 }
-
+.btn-edit:hover {
+    text-decoration:underline;
+    color: #fff;
+}
+.btn-edit:focus {
+    box-shadow:none;
+}
+.btn-edit .fa-pencil.btn-edit-animation{
+	display: inline-block;
+	transition: transform 0.3s;
+}
+.btn-edit:hover .fa-pencil.btn-edit-animation{
+	transform: rotate(-90deg)translateX(5px);
+	transition: transform 0.3s;
+}
 .btn-norad-bl {
 	border-bottom-left-radius: 0;
 }
@@ -168,7 +175,9 @@ a.report:hover {
 	font-size: 0.9rem;
 	text-transform:capitalize;
 }
-
+.lang:hover {
+	text-decoration: underline;
+}
 .mother{
 	text-transform:uppercase;
 	letter-spacing: 0.02rem;

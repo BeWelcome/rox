@@ -1,0 +1,9 @@
+# General Plugin Info do not edit
+
+base   nodetailsxhtml
+author i-net software
+email  tools@inetsoftware.de
+date   2016-09-15
+name   No Details XHTML
+desc   XHTML renderer without details link for internal images.
+url    http://www.inetsoftware.de/other-products/dowuwiki-plugins/no-details-xhtml

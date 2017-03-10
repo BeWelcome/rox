@@ -1,0 +1,10 @@
+Do DokuWiki byl nahrán nový dokument. Tady jsou detaily:
+
+Soubor : @MEDIA@
+Datum : @DATE@
+Prohlážeč : @BROWSER@
+IP adresa : @IPADDRESS@
+Hostitel : @HOSTNAME@
+Velikost : @SIZE@
+MIME typ : @MIME@
+Uživatel : @USER@

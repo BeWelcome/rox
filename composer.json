@@ -34,7 +34,8 @@
         "sensio/framework-extra-bundle": "^3.0",
         "white-october/pagerfanta-bundle": "^1.0",
         "symfony/assetic-bundle": "^2.8",
-        "leafo/scssphp": "^0.6.6"
+        "leafo/scssphp": "^0.6.6",
+        "egeloen/ckeditor-bundle": "^4.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^1.11",

@@ -1,0 +1,16 @@
+Salutare, @FULLNAME@!
+
+Pagina @PAGE@ în @TITLE@ wiki a fost modificată.
+Acestea sunt modificările:
+
+--------------------------------------------------------
+@DIFF@
+--------------------------------------------------------
+
+Versiune anterioară: @OLDPAGE@
+Versiune curentă: @NEWPAGE@
+
+Pentru a anula notificarea paginii, autentifică-te pe wiki la
+@DOKUWIKIURL@ apoi accesează
+@SUBSCRIBE@
+și dezabonează-te de la pagină și/sau modificările spațiului de nume.

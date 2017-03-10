@@ -1,0 +1,4 @@
+====== Diferencias ======
+
+Muestra las diferencias entre dos versiones de la página.
+

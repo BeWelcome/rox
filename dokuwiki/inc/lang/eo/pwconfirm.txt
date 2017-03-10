@@ -1,0 +1,10 @@
+Saluton, @FULLNAME@!
+
+Iu petis novan pasvorton por via @TITLE@
+ensalutnomo ĉe @DOKUWIKIURL@
+
+Se ne vi petis tion, ignoru tiun ĉi mesaĝon.
+
+Por konfirmi, ke la peto estis vere via, bonvolu musklaki jenan ligilon:
+
+@CONFIRM@

@@ -4,6 +4,7 @@ namespace AppBundle\EventListener;
 
 use AppBundle\Factory\EncoderFactory;
 use ReflectionObject;
+use RemoteAPICore;
 use Rox\Core\Exception\RuntimeException;
 use Rox\Member\Model\Member;
 use Rox\Member\Service\MemberService;
@@ -21,20 +22,9 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
  */
 class AuthListener
 {
-    /**
-     * @var MemberService
-     */
-    protected $memberService;
-
-    /**
-     * @var EncoderFactoryInterface
-     */
-    protected $encoderFactory;
-
-    public function __construct(EncoderFactory $encoderFactory, MemberService $memberService)
+    public function __construct($dokuwikiDirectory)
     {
-        $this->memberService = $memberService;
-        $this->encoderFactory = $encoderFactory;
+        $this->dokuwikiDirectory = $dokuwikiDirectory;
     }
 
     public function onAuthenticationSuccess(InteractiveLoginEvent $e)
@@ -44,30 +34,17 @@ class AuthListener
         /** @var Member $user */
         $user = $token->getUser();
 
-        $encoder = $this->encoderFactory->getEncoder($user);
-
-        // Get the cost from the encoder
-        $cost = $this->getCost($encoder);
-
-        $isRehashRequired = password_needs_rehash(
-            $user->getPassword(),
-            PASSWORD_DEFAULT,
-            [
-                'cost' => $cost,
-            ]
-        );
-
-        if (!$isRehashRequired) {
-            return;
-        }
-
         $password = $e->getRequest()->request->get('password');
-
         if (!$password) {
             throw new RuntimeException('Could not extract password from interactive login request.');
         }
 
-        $this->memberService->changePassword($user, $password);
+        echo "*" . $this->dokuwikiDirectory . "*";
+
+        require_once $this->dokuwikiDirectory. '/inc/init.php';
+
+        $remoteApiCore = new RemoteApiCore(new \RemoteAPI());
+        $remoteApiCore->login($user->getUsername(), $password);
     }
 
     /**

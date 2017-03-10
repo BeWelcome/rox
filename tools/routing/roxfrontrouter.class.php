@@ -440,6 +440,7 @@ A TERRIBLE EXCEPTION
             // assemble the strings buffered in PVars::getObj('page')
             $pvars_page = PVars::getObj('page');
             $aftermath_page = new PageWithParameterizedRoxLayout();
+            $aftermath_page->setEngine($this->engine);
             
             foreach (array(
                 'teaserBar',

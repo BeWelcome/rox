@@ -1,0 +1,3 @@
+====== Pošiljanje novega gesla ======
+
+Za pridobitev novega gesla, vnesite vaše uporabniško ime ustrezno polje spodnjega obrazca. Na naveden elektronski naslov bo poslano sporočilo v katerem bo navedena povezava do strani za overjanje istovetnosti uporabnika.

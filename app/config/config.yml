@@ -11,6 +11,7 @@ parameters:
     app_locales: en|fr|de|es|cs|nl|ru|uk|ro|pt_BR|pl|it|ja|id|ca|sl
     app.notifications.email_sender: message@bewelcome.org
     node_modules: "%kernel.root_dir%/../node_modules"
+    dokuwiki_directory: "%kernel.root_dir%/../dokuwiki"
 
 framework:
     #esi:             ~
@@ -174,3 +175,8 @@ assetic:
                 - "%node_modules%/skrollr/dist/skrollr.min.js"
                 - "%node_modules%/skrollr-menu/dist/skrollr.menu.min.js"
                 - "%node_modules%/unslider/dist/js/unslider-min.js"
+
+ivory_ck_editor:
+    configs:
+        roxconfig:
+            toolbar: standard

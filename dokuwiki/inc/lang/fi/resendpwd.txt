@@ -1,0 +1,3 @@
+====== Lähetä uusi salasana ======
+
+Täytä käyttäjätunnuksesi kaavakkeeseen pyytääksesi uutta salasanaa wikin käyttäjätilillesi. Vahvistuslinkki lähetetään kirjautumisen yhteydessä antamaan sähköpostiosoitteeseen.

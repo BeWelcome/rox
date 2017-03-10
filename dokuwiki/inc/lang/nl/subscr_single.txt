@@ -1,0 +1,16 @@
+Halllo!
+
+De pagina @PAGE@ in de @TITLE@ wiki is veranderd.
+Hier zijn de wijzigingen:
+
+--------------------------------------------------------
+@DIFF@
+--------------------------------------------------------
+
+Datum: @DATE@
+Gebruiker: @USER@
+Wijzigingssamenvatting: @SUMMARY@
+Vorige revisie: @OLDPAGE@
+Nieuwe revisie: @NEWPAGE@
+
+Om het verzenden van deze wijzigingsberichten te stoppen, logt u in op het wiki op @DOKUWIKIURL@ en navigeert u naar @NEWPAGE@. Vervolgens kunt u "Inschrijvingen wijzigen" gebruiken om inschrijvingen te stoppen.

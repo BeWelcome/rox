@@ -25,7 +25,7 @@ $words = new MOD_words();
 ?>
 
 <div class="row m-y-1">
-    <div class="col-xs-12 col-md-6">
+    <div class="col-sm-12 col-md-6">
         <div class="list-group">
             <a href="/forums" class="list-group-item list-group-item-action">
                 <h5 class="list-group-item-heading"><?php echo $words->get('CommunityDiscussions') ?></h5>
@@ -38,7 +38,7 @@ $words = new MOD_words();
         </div>
     </div>
 
-    <div class="col-xs-12 col-md-6">
+    <div class="col-sm-12 col-md-6">
         <div class="list-group">
             <a href="/activities" class="list-group-item list-group-item-action">
                 <h5 class="list-group-item-heading"><?php echo $words->get('Activities') ?></h5>

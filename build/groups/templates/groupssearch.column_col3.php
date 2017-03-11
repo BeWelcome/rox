@@ -52,26 +52,33 @@ HTML;
                 ?>
 
             <div class="d-flex flex-row m-2">
-                <div>
+                <div style="width: 80px; height: 80px;">
                     <!-- group image -->
                     <a href="groups/<?=$group_data->getPKValue() ?>">
-                        <img class="framed"  width="80px" height='80px' alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
-                    </a>
+                        <img class="framed" alt="<?=htmlspecialchars($group_data->Name, ENT_QUOTES) ?>" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>" style="width: 80px; height: 80px;" />
+                    </a><br>
                 </div>
-                <div>
+                <div class="ml-2">
                     <!-- group name -->
                     <h4><a href="groups/<?=$group_data->getPKValue() ?>"><?=htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a></h4>
                     <!-- group details -->
-                    <ul>
-                        <li><?= $words->get('GroupsMemberCount');?>: <?=$group_data->getMemberCount(); ?></li>
-                        <li><?= $words->get('GroupsDateCreation');?>: <?=date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime(strtotime($group_data->created), $this->getSession())); ?></li>
+                    <ul class="groupul mt-1">
+                        <li><i class="fa fa-group"></i> <?=$group_data->getMemberCount(); ?></li>
+                        <li><?= $words->get('GroupsDateCreation');?>: <?=date('d F Y', ServerToLocalDateTime(strtotime($group_data->created), $this->getSession())); ?></li>
                         <?php if ($group_data !== 0) {?>
                             <li><?php
                                 if ($group_data->latestPost) {
-                                    echo $words->get('GroupsLastPost') . ": " . date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($group_data->latestPost, $this->getSession()));
+
+                                    $date_now = date_create(date('d F Y'));
+                                    $date_lastpost = date_create(date('d F Y', ServerToLocalDateTime($group_data->latestPost, $this->getSession())));
+                                    $interval = date_diff($date_now, $date_lastpost);
+                                    echo $words->get('GroupsLastPost') . ": " . $interval->format('%a') . " " . $words->get('days_ago');
+
                                 } else {
                                     echo $words->get('GroupsNoPostYet');
                                 }
+
+
                                 ?></li>
                         <?php } ?>
                     </ul>

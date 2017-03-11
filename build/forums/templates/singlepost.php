@@ -36,12 +36,12 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 }
 ?>
 
-<div class="d-flex flex-row <?php echo $styles[$cnt % 2]; ?> p-3 mb-2">
+<div class="d-flex flex-row <?php echo $styles[$cnt % 2]; ?> mb-2" style="border: 1px solid #fff;">
 
-    <div class="d-flex flex-column">
+    <div class="d-flex flex-column col-2 mr-2 p-0" style="background-color: #ddd;">
 
-        <div class="d-flex flex-row align-self-start pull-left p-2 mr-2"
-             style="border: 1px solid #ddd; background-color: #eee;">
+        <div class="d-flex flex-row align-self-start pull-left p-2 fullwidth"
+             style="background-color: #ccc;">
             <div class="p-1"><img class="media-object"
                                   src="/members/avatar/<?php echo($post->OwnerUsername); ?>?size=50"></div>
             <div>
@@ -76,7 +76,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
         </div>
 
         <!-- permanlink, bans, reports -->
-        <div class="text-nowrap">
+        <div class="text-nowrap m-2">
             <?php
 
             if ($this->_session->has("IdMember")) {
@@ -106,8 +106,8 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
         <!-- end permalink -->
     </div>
     <!-- message -->
-    <div>
-        <div class="float-left">
+    <div class="p-2">
+        <div class="float-left fullwidth">
         <a name="post<?php echo $post->postid; ?>"></a>
         <p class="small gray">
             <?php

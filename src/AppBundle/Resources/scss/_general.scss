@@ -30,7 +30,7 @@ body {
   font-size: $font-size-sm;
   line-height: 1.1;
   width: 100%;
-  padding: $spacer-y $spacer-x;
+//  padding: $spacer-y $spacer-x;
 
   background-color: #555;
   color: #999;
@@ -40,7 +40,7 @@ body {
   a:focus { color:#fff; }
 
   & > .container {
-    padding: 1rem $spacer-x;
+//    padding: 1rem $spacer-x;
   }
 
 }
@@ -204,7 +204,7 @@ body {
 .submenu {
   padding-left: ($grid-gutter-width /2);
   padding-right: ($grid-gutter-width /2);
-  margin-bottom: $spacer-y;
+//  margin-bottom: $spacer-y;
 }
 
 .fullpager {
@@ -276,4 +276,12 @@ a {
   .error {
     background-color: $brand-danger;
   }
+}
+
+.list-group-item-action:focus, .list-group-item-action:hover {
+  color: #000 !important;
+}
+
+.list-group-item-heading {
+  color: $link-color;
 }

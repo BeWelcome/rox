@@ -1,5 +1,5 @@
 <div id="groups">
-        <h3><?= $words->get('GroupsMyGroups'); ?></h3>
+        <h3 class="mt-2"><?= $words->get('GroupsMyGroups'); ?></h3>
 
     <div class="d-flex align-content-stretch flex-wrap">
 
@@ -14,21 +14,21 @@
                ?>
 
         <div class="d-flex flex-row m-2">
-            <div>
+            <div style="width: 80px; height: 80px;">
                 <!-- group image -->
                 <a href="groups/<?=$group_data->getPKValue() ?>">
-                    <img class="framed"  width="80px" height="80px" alt="Group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ;?>"/>
+                    <img class="framed" width="80px" height="80px" alt="Group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ;?>"/>
                 </a>
             </div>
-            <div>
+            <div class="ml-2">
                 <!-- group name -->
                 <h4><a href="groups/<?= $group_data->getPKValue() ?>"><?= htmlspecialchars($group_data->Name, ENT_QUOTES); ?></a></h4>
                 <!-- group details -->
-                <ul>
-                    <li><?= $words->get('GroupsMemberCount');?>: <?=$group_data->getMemberCount(); ?></li>
+                <ul class="groupul">
+                    <li> <li><i class="fa fa-group"></i> <?=$group_data->getMemberCount(); ?></li>
                     <li><?= $words->get('GroupsNewMembers');?>: <?=count($group_data->getNewMembers()) ; ?></li>
                     <?php if ($group_data !== 0) {?>
-                        <li><?= $words->get('GroupsLastPost');?>: <?=date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($group_data->latestPost, $this->getSession())); ?></li>
+                        <li><?= $words->get('GroupsLastPost');?>: <?=date($words->getBuffered('d F Y'), ServerToLocalDateTime($group_data->latestPost, $this->getSession())); ?></li>
                     <?php } ?>
                 </ul>
             </div>

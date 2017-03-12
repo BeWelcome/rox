@@ -114,9 +114,9 @@ foreach($this->activities as $activity) {
             </h4>
 
             <?php
-            echo '<p class="p-0 m-0"><small>' . $activity->dateStart;
+            echo '<p class="p-0 m-0"><small>' . date("d M Y", strtotime($activity->dateStart));
             if ($activity->dateStart != $activity->dateEnd){
-                echo ' - ' . $activity->dateEnd;
+                echo ' - ' . date("d M Y", strtotime($activity->dateEnd));
             }
             echo '</small></p>'; ?>
         </div>

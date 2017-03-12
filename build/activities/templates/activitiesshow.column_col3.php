@@ -40,7 +40,7 @@ if (empty($vars)) {
 ?>
 
 <div class="row mb-1">
-    <div class="col-12 col-md-2">
+    <div class="col-sm-12 col-md-2">
 
         <?
         if ($this->activity->dateStart == $this->activity->dateEnd) {
@@ -52,10 +52,10 @@ if (empty($vars)) {
         } ?>
 
     </div>
-    <div class="col-12 col-md-7">
+    <div class="col-sm-12 col-md-7">
         <h2><?php echo $this->activity->title; ?></h2>
     </div>
-    <div class="col-12 col-md-3">
+    <div class="col-sm-12 col-md-3">
         <h4><?php $words->get('ActivityAttendeesNumbersTitle'); ?></h4>
         <div class="d-flex flex-row hidden-md-down">
             <div class="d-flex align-items-center pr-2"><i class="fa fa-3x fa fa-user-circle-o"></i></div>
@@ -87,10 +87,22 @@ if (empty($vars)) {
             <?php echo $this->activity->address ?><br>
             <?php echo '<strong>' . $this->activity->location->name . '<br>' . $this->activity->location->getCountry()->name . '</strong>'; ?>
         </div>
+
+        <div class="w-100 mt-3"><h4 class="mb-0"><?php echo $words->get('ActivityOrganizers'); ?></h4></div>
+
+        <?php
+        foreach ($this->activity->organizers as $organizer) { ?>
+            <div class="w-100 d-flex flex-row" style="border: 1px dashed #ccc;">
+                <div class="mr-2"><a href="members/<?php $organizer->Username; ?>"><img
+                                src="members/avatar/<?php echo $organizer->Username; ?>?size=50"></a></div>
+                <div><a href="members/<?php echo $organizer->Username; ?>"><?php echo $organizer->Username; ?></a></div>
+            </div>
+        <? } ?>
+
     </div>
     <div class="col-12 col-md-7">
 
-            <?php echo $purifier->purify($this->activity->description); ?>
+        <?php echo $purifier->purify($this->activity->description); ?>
 
     </div>
     <div class="col-12 col-md-3">
@@ -134,8 +146,10 @@ if (empty($vars)) {
                             <div class="radio">
                                 <label>
                                     <input value="activity-no" id="activity-no" name="activity-status"
-                                           type="radio" <?php if ($this->member->status == 3) { echo 'checked="checked"'; }
-                                    if (($this->member->organizer)||(!$activityInTheFuture)) {
+                                           type="radio" <?php if ($this->member->status == 3) {
+                                        echo 'checked="checked"';
+                                    }
+                                    if (($this->member->organizer) || (!$activityInTheFuture)) {
                                         echo ' disabled';
                                     }
                                     ?>
@@ -178,7 +192,7 @@ if (empty($vars)) {
             <?php if ($this->member) {
             if ($this->member->organizer == true) { ?>
             <form method="post" id="activity-show-form">
-                <div class="form-group row pa-1">
+                <div class="form-group mt-3">
                     <span class="h4"><?php echo $words->get('ActivityOrgaStatusHeadline'); ?></span>
                     <?php echo $callbackTagsCancelUncancel; ?>
                     <input type="hidden" id="activity-id" name="activity-id"
@@ -202,22 +216,10 @@ if (empty($vars)) {
                 </div>
         </div>
     </div>
-</div>
-<div class="row mt-3">
 
+    <div class="row mt-3">
 
-        <div class="col-12"><h4 class="mb-0"><?php echo $words->get('ActivityOrganizers'); ?></h4></div>
-
-        <?php
-        foreach ($this->activity->organizers as $organizer) { ?>
-            <div class="d-flex flex-row m-2 p-2" style="border: 1px dashed #ccc;">
-                <div class="mr-2"><a href="members/<?php $organizer->Username; ?>"><img src="members/avatar/<?php echo $organizer->Username; ?>?size=50"></a></div>
-                <div><a href="members/<?php $organizer->Username; ?>"><?php echo $organizer->Username; ?></a></div>
-            </div>
-        <? } ?>
-
-
-    <div class="col-12"><h4><?php echo $words->get('ActivityAttendees'); ?></h4></div>
+        <div class="col-12"><h4><?php echo $words->get('ActivityAttendees'); ?></h4></div>
 
         <?php if ($this->member) { ?>
 
@@ -243,27 +245,28 @@ if (empty($vars)) {
                 ?>
 ">
                     <div class="d-flex flex-row">
-                        <div class="mr-2"><a href="members/<?php $attendee->Username; ?>"><img src="members/avatar/<?php echo $attendee->Username; ?>?size=50"></a></div>
-                        <div><a href="members/<?php $attendee->Username; ?>"><?php echo $attendee->Username; ?></a><br>
+                        <div class="mr-2"><a href="members/<?php echo $attendee->Username; ?>"><img
+                                        src="members/avatar/<?php echo $attendee->Username; ?>?size=50"></a></div>
+                        <div><a href="members/<?php echo $attendee->Username; ?>"><?php echo $attendee->Username; ?></a><br>
                             <small>
                                 <?
                                 switch ($attendee->status) {
-                                case 1:
-                                echo $words->get('ActivityYesIAttend');
-                                break;
-                                case 2:
-                                echo $words->get('ActivityIMightAttend');
-                                break;
-                                case 3:
-                                echo $words->get('ActivitySorryCantJoinYou');
-                                break;
+                                    case 1:
+                                        echo $words->get('ActivityYesIAttend');
+                                        break;
+                                    case 2:
+                                        echo $words->get('ActivityIMightAttend');
+                                        break;
+                                    case 3:
+                                        echo $words->get('ActivitySorryCantJoinYou');
+                                        break;
                                 }
                                 ?>
                             </small>
                         </div>
                     </div>
-                    <? if ($attendee->comment){ ?>
-                    <div class="small gray"><i><?php echo htmlspecialchars($attendee->comment); ?></i></div>
+                    <? if ($attendee->comment) { ?>
+                        <div class="small gray"><i><?php echo htmlspecialchars($attendee->comment); ?></i></div>
                     <? } ?>
                 </div>
                 <?php
@@ -274,5 +277,6 @@ if (empty($vars)) {
             echo '<p>' . $words->getBuffered('ActivitiesLogInWhoIsComing', '<a href="' . $login_url . '">', '</a>') . '</p></div>';
         } ?>
 
+    </div>
 </div>
 <?php echo $words->flushBuffer(); ?>

@@ -26,7 +26,7 @@ if (empty($vars)) {
 
     <?php echo $callbackTags;
     if (!empty($errors)) {
-        $errStr = '<div class="row"><div class="alert alert-danger col-xs-12" role="alert"><strong>';
+        $errStr = '<div class="row"><div class="alert alert-danger col-sm-12" role="alert"><strong>';
         foreach ($errors as $error) {
             $parts = explode("###", $error);
             if (count($parts) > 1) {
@@ -41,7 +41,7 @@ if (empty($vars)) {
     }
     ?>
 
-    <div class="row mt-2 mb-1 justify-content-center">
+    <div class="row mt-3 mb-1 justify-content-center">
         <div class="col-sm-12 col-md-8">
             <small class="pull-right">* <?php echo $words->get('ActivityMandatoryFields'); ?></small>
             <h2 id="activity-create">
@@ -53,7 +53,7 @@ if (empty($vars)) {
             </h2>
         </div>
 
-        <div class="w-100"></div>
+        <div class="w-100 mt-3"></div>
 
         <div class="col-sm-12 col-md-4">
             <label for="activity-start-date"
@@ -79,15 +79,11 @@ if (empty($vars)) {
             </div>
         </div>
 
-        <div class="w-100 mb-3"></div>
-
-        <div class="col-xs-12 col-md-8">
+        <div class="col-xs-12 col-md-8 mt-3">
             <input type="text" id="activity-title" name="activity-title" maxlength="80" class="form-control" value="<?php echo $vars['activity-title']; ?>" placeholder="<?php echo $words->get('ActivityTitle'); ?>*">
         </div>
 
-        <div class="w-100 mb-3"></div>
-
-        <div class="col-xs-12 col-md-8">
+        <div class="col-sm-12 col-md-8 mt-3">
             <div class="input-group">
                 <input type="text" id="activity-location" name="activity-location" class="form-control" value="<?php echo $vars['activity-location']; ?>" placeholder="<?php echo $words->get('ActivityLocation'); ?>*">
                 <span class="input-group-btn">
@@ -97,14 +93,12 @@ if (empty($vars)) {
             <div id="activity-location-suggestion" style="display: none;">
                 <ol id="locations" class="plain"></ol>
             </div>
-            <div class="p-t-1">
+            <div class="mt-1">
                 <textarea id="activity-address" name="activity-address" class="form-control" rows="3" cols="60" placeholder="<?php echo $words->get('ActivityAddress'); ?>"><?php echo $vars['activity-address']; ?></textarea>
             </div>
         </div>
 
-        <div class="w-100 mb-3"></div>
-
-        <div class="col-xs-12 col-md-8">
+        <div class="col-sm-12 col-md-8 mt-3">
             <textarea id="activity-description" name="activity-description" class="mce form-control" rows="10" cols="80">
                 <?php
                 if (!empty($vars['activity-description'])){
@@ -115,13 +109,9 @@ if (empty($vars)) {
             </textarea>
         </div>
 
-        <div class="w-100 mb-3"></div>
-
-        <div class="col-xs-12 col-md-8">
+        <div class="col-xs-12 col-md-8 mt-3">
             <input type="checkbox" id="activity-public" name="activity-public" checked="checked">&nbsp;<label for="activity-public"><?php echo $words->get('ActivityPublic'); ?></label>
         </div>
-
-        <div class="w-100 mb-3"></div>
 
         <div class="col-xs-12 col-md-8">
             <?php

@@ -1,9 +1,8 @@
 <div class="d-flex flex-row">
-
+    <h1 class="profilecity mb-3"><small><i class="fa fa-map-marker"></i></small> {{ member.city.name }}, {{ member.city.country.name }}</h1>
 </div>
 <div class="d-flex">
     <div class="mr-3">
-        <h1 class="profilemedium mb-0"><small><i class="fa fa-map-marker icontext"></i></small> {{ member.city.name }}, {{ member.city.country.name }}</h1>
 
         {%  if member.Accommodation == 'anytime' %}{% set image = 'yesicanhost' %}{% set hosttext = 'Hosting' %}{% endif %}
         {%  if member.Accommodation == 'dependonrequest' %}{% set image = 'maybe' %}{% set hosttext = 'Maybe Hosting' %}{% endif %}
@@ -27,8 +26,8 @@
 
         <span class="text-uppercase"><small><strong>{{ hosttext }}</strong></small></span>
         <br>
-        <span><small><i>(Max. guests: <strong>{{ member.MaxGuest }}</strong>)</i></small></span>
-        <br>
+        <span><small>(Max. guests: <strong>{{ member.MaxGuest }}</strong>)</small></span>
+        <br><br>
         <span class="gray"><small><i>
                 {{ 'Last login:' | trans }} {{ member.LastLogin ? member.LastLogin.diffForHumans : 'never' | trans }}
             </i></small></span>
@@ -39,6 +38,10 @@
         <img class="mappreview" src="https://maps.googleapis.com/maps/api/staticmap?center={{ member.Latitude }},{{ member.Longitude }}&zoom=10&size=117x117&key=AIzaSyAiF_lG8CdC-hCIXbGs9jilOFJRoXteM3k">
     </div>
 </div>
-<div class="d-flex flex-row">
-    <a href="{{ path('message/compose', { username: member.Username }) }}" class="btn btn-sm btn-primary btn-block text-xs-left btn-profile"><i class="fa fa-envelope"></i><span class="icontext">Send request</span></a>
+<div class="d-flex flex-row pt-3">
+    {% if member.id == my_member.id %}
+        <a href="#" class="btn btn-sm btn-primary btn-block btn-edit"><i class="fa fa-street-view"></i><span class="icontext">Change location</span></a>
+    {% else %}
+        <a href="{{ path('message/compose', { username: member.Username }) }}" class="btn btn-sm btn-primary btn-block btn-profile"><i class="fa fa-envelope"></i><span class="icontext">Send request</span></a>
+    {% endif %}
 </div>

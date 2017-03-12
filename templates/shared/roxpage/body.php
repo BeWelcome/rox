@@ -1,6 +1,6 @@
-<div class="navandcontent">
+
     <!-- #main: content begins here -->
-    <div id="main">
+    <div id="main" class="mt-4">
         <?php $this->topnav() ?>
         <?php $this->statusMessage() ?>
         <?php $loginMessages = $this->_getLoginMessages();
@@ -25,7 +25,7 @@
 
         <?php $this->columnsArea() ?>
     </div> <!-- main -->
-</div>
+
 <div>
     <?php $this->debugInfo() ?>
     <?php $this->leftoverTranslationLinks() ?>

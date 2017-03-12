@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block subnav %}
-    <div class="pl-0 m-b-1"><ul class="nav nav-pills">
+    <div><ul class="nav nav-pills">
         {% for label, subitem in subitems %}
             <li class="nav-item">
                 <a class="nav-link" href="{{ path( subitem.route ) }}">{{ label | trans }}</a>

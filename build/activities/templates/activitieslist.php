@@ -86,7 +86,7 @@ if ($this->allActivities != null && sizeof ($this->allActivities) > 0){
 $this->pager->render(); ?>
 
 <?php
-$count= 0;
+
 foreach($this->activities as $activity) {
     ?>
     <div class="d-flex flex-row justify-content-start align-items-center p-2">
@@ -97,14 +97,28 @@ foreach($this->activities as $activity) {
             <div class="absolute monthyear"><?php echo date("m", strtotime($activity->dateStart)) . " " . date("Y", strtotime($activity->dateStart)); ?></div>
         </div>
 
-        <div class="text-truncate" style="white-space: normal;">
-            <h4 class="m-0 p-0"><?php echo '<a href="activities/' . $activity->id . '">' . htmlspecialchars($activity->title) . '</a>'; ?></h4>
-            <?php echo '<p class="p-0 m-0"><small>' . $activity->dateStart;
+        <div class="text-truncate">
+            <h4 class="m-0 p-0"><?php echo '<a href="activities/' . $activity->id . '">' . htmlspecialchars($activity->title) . '</a>'; ?>
+                <?php
+                if ($activity->status == 0) {
+
+                    $activityInTheFuture = (time()-24*60*60 < strtotime($activity->dateTimeEnd));
+                    if ($this->member && in_array($this->member->id, array_keys($activity->organizers))
+                        && $activityInTheFuture ) {
+                        echo '<a href="activities/' . $activity->id . '/edit" class="btn btn-sm btn-primary">' . $words->getBuffered('ActivityEdit') . '</a>' . $words->flushBuffer();
+                    }
+                } else {
+                    echo '<span class="badge badge-danger"><small>' . $words->getBuffered('ActivityCancelled') . '</small></span>' . $words->flushBuffer();
+                }
+                ?>
+            </h4>
+
+            <?php
+            echo '<p class="p-0 m-0"><small>' . date("d M Y", strtotime($activity->dateStart));
             if ($activity->dateStart != $activity->dateEnd){
-                echo ' - ' . $activity->dateEnd;
+                echo ' - ' . date("d M Y", strtotime($activity->dateEnd));
             }
             echo '</small></p>'; ?>
-            <!-- <p class="p-0 m-0"><small><i class="fa fa-map-marker"></i> {{ activity.location.name }}, {{ activity.location.country.name }}</small></p> -->
         </div>
 
         <div class="ml-auto d-flex flex-row hidden-md-down">
@@ -122,9 +136,9 @@ foreach($this->activities as $activity) {
                 }
                 echo $locationName . '<br>' . $countryName; ?>
             </div>
-            <div class="px-2"><i class="fa fa-3x fa-map-marker"></i></div>
+            <div class="px-2"><i class="fa fa-25 fa-map-marker"></i></div>
 
-            <div><i class="fa fa-3x fa fa-user-circle-o"></i></div>
+            <div><i class="fa fa-25 fa fa-user-circle-o"></i></div>
             <div class="attendees">
                         <?php
                         echo '<p class="p-0 m-0 pl-2';
@@ -138,79 +152,5 @@ foreach($this->activities as $activity) {
         </div>
     </div>
 <?php } ?>
-
-<div class="row">
-
-    <div class="col-xs-12">
-    <table class="table" id="activitylist" style="table-layout: fixed;">
-        <tbody>
-
-        <?php
-        $count= 0;
-        foreach($this->activities as $activity) {
-        echo '<tr class="' . $background = (($count % 2) ? 'highlight' : 'blank') . '">';
-        echo '<td class="p-t-0 date verticalmiddle">
-            <div class="calendar calendar-icon-' . date("m", strtotime($activity->dateStart)) . '">
-              <div class="calendar-day">' . date("j", strtotime($activity->dateStart)) . '</div>
-              <div class="calendar-year mt-1">' . date("Y", strtotime($activity->dateStart)) . '</div></div></td>';
-
-
-        echo '<td class="verticalmiddle title text-truncate p-t-0">
-                <p class="h4 ma-0 text-truncate"><a href="activities/' . $activity->id . '">' . htmlspecialchars($activity->title) . '</a></p>
-                <small>' . $activity->dateStart;
-                if ($activity->dateStart != $activity->dateEnd){
-                    echo ' - ' . $activity->dateEnd;
-                }
-                echo '</small></td>';
-
-        echo '<td class="verticalmiddle"><p class="h3"><i class="fa fa-map-marker"></i></p></td>';
-
-        if ($activity->location != null){
-            $locationName = htmlspecialchars($activity->location->name);
-            if ($activity->location->getCountry() != null){
-                $countryName = htmlspecialchars($activity->location->getCountry()->name);
-            }else{
-                $countryName = '';
-            }
-        }else{
-            $locationName = '';
-            $countryName = '';
-        }
-        echo '<td class="verticalmiddle activityinfo location"><p>'
-            . $locationName . '<br> ' . $countryName . '</p></td>';
-        echo '<td class="verticalmiddle"><p class="h3"><i class="fa fa-users"></i></p></td>';
-        echo '<td class="verticalmiddle activityinfo attendees"><small>';
-            if ($activity->attendeesYes != 0){ echo $activity->attendeesYes . '&nbsp;' . $words->get('ActivitiesNumbAttendeesYes') . '<br>';}
-            if ($activity->attendeesMaybe != 0){ echo $activity->attendeesMaybe . '&nbsp;' . $words->get('ActivitiesNumbAttendeesMaybe');}
-        echo '</small></td><td class="organiser"><div class="pull-right text-center">';
-            $organizers = '';
-            foreach($activity->organizers as $organizer) {
-                echo '<a href="members/'.$organizer->Username.'"><img class="framed" src="members/avatar/'.$organizer->Username.'?50_50" alt="Profile" /><br><small class="username">'.$organizer->Username.'</small></a>';
-            }
-        echo '</div>';
-
-            if ($activity->status == 0) {
-                echo '<td>';
-                $activityInTheFuture = (time()-24*60*60 < strtotime($activity->dateTimeEnd));
-                if ($this->member && in_array($this->member->id, array_keys($activity->organizers))
-                    && $activityInTheFuture ) {
-                    echo '<a href="activities/' . $activity->id . '/edit">'
-                        . '<img src="images/icons/comment_edit.png" title="' . $words->getBuffered('ActivityEdit') . '" alt="' . $words->getBuffered('ActivityEdit') . '" />' . $words->flushBuffer() . '</a>';
-                }
-            } else {
-                echo '<img src="images/icons/cancel.png" title="' . $words->getBuffered('ActivityCancelled') . '" alt="' . $words->getBuffered('ActivityCancelled') . '" />' . $words->flushBuffer();
-            }
-            echo '</td></tr>';
-            $count++;
-        }
-        ?>
-
-        </tbody>
-    </table>
-    </div>
-</div>
-
-
-
 
 <?php $this->pager->render(); ?>

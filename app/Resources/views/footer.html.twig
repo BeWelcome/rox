@@ -24,11 +24,11 @@
             <a href="impressum">{{ 'Impressum' | trans }}</a> •
             <a href="faq">{{  'faq' | trans }}</a> •
             <a href="about/feedback">{{ 'Contact us' | trans }}</a> •
-            <a href="about/feedback?IdCategory=1&RequestURI={{ url('homepage') }}">{{ 'Reportbug' | trans }}</a>
+            <a href="about/feedback?IdCategory=1&amp;RequestURI={{ url('homepage') }}">{{ 'Reportbug' | trans }}</a>
         </div>
 
         <div class="mt-1" >
-            &copy; 2007-2016 <a href="http://www.bevolunteer.org/" target="_blank">BeVolunteer</a> and contributors
+            &copy; 2007 &mdash; {{ "now" | date("Y") }} <a href="http://www.bevolunteer.org/" target="_blank">BeVolunteer</a> and contributors
 {#
             - <em> Running on open source <a style="display:inline" href="https://github.com/bewelcome/rox">BW Rox</a> rev. <a href="https://github.com/BeWelcome/rox/commit/{{ version }}">{{ version }}</a> ({{ version_dt }})</em>
 #}

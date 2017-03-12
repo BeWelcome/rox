@@ -17,13 +17,11 @@
 
     <div class="row">
         <div class="col-1 text-right pr-0">
-            {{ macros.avatar(otherMember.Username, 75) }}
+            {{ macros.avatar(otherMember.Username, 75, true) }}
+            {{ macros.profilelink(otherMember.Username) }}
         </div>
         <div class="col-11">
             <div class="username pb-1">
-                <span class="float-left">
-                <strong>{{ macros.profilelink( otherMember.Username ) }}</strong>
-                </span>
                 <span class="float-right p-1 small text-right locandlang">
                     {{ 'Lives in' | trans }}
                     <i class="fa fa-2x fa-map-marker"></i> <strong>{{ message.sender.city.name }}, {{ message.sender.city.country.name }}</strong>

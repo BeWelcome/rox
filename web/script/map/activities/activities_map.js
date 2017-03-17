@@ -39,7 +39,7 @@ function initMap(){
         var osmLayerUrl = osmTilesProviderBaseUrl;
 		
 		// OSM map attribution
-		var mapAttribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a>';
+		var mapAttribution = '&copy; <a href="/copyright">OpenStreetMap contributors</a>';
 	
 		L.tileLayer(osmLayerUrl, {
 		    attribution: mapAttribution,

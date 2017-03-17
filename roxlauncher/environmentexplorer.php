@@ -62,9 +62,9 @@ class EnvironmentExplorer
                 'password' => $db_password,
             ],
             'env' => [
-                'baseuri' => $uri->toString(),
-                'baseuri_http' => $uri->toString(),
-                'baseuri_https' => $uri->setScheme('https')->toString(),
+                'baseuri' => $uri->toString() . '/',
+                'baseuri_http' => $uri->toString() . '/',
+                'baseuri_https' => $uri->setScheme('https')->toString() . '/',
             ],
         ]);
     }

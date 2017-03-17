@@ -45,6 +45,8 @@ class LegacyLoader extends Loader
         $this->addRoute('forum_thread', '/forums/s{threadId}', '', '');
         $this->addRoute('community', '/community', '', '');
         $this->addRoute('faq', '/faq', '', '');
+        $this->addRoute('faq_category', '/faq/{category}', '', '');
+        $this->addRoute('about_faq_category', '/aboutaactivi/faq/{category}', '', '');
         $this->addRoute('about', '/about', '', '');
         $this->addRoute('getactive', '/about/getactive', '', '');
 

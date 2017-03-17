@@ -55,7 +55,7 @@ services:
 
     rox.twig_extension:
         class: AppBundle\Twig\Extension
-        arguments: ['@session', '@doctrine.orm.entity_manager']
+        arguments: ['@session', '@doctrine']
         tags:
             - { name: 'twig.extension' }
 

@@ -36,6 +36,11 @@ class Language
 
     /**
      * @var string
+     */
+    private $translatedName;
+
+    /**
+     * @var string
      *
      * @ORM\Column(name="ShortCode", type="string", length=16, nullable=false)
      */
@@ -133,6 +138,30 @@ class Language
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return Language
+     */
+    public function setTranslatedName($name)
+    {
+        $this->translatedName = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getTranslatedName()
+    {
+        return $this->translatedName;
     }
 
     /**

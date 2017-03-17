@@ -27,9 +27,9 @@
         <div class="ml-3">
             <div class="d-flex flex-column">
                 <div class="d-inline-flex h2 my-2">
-                    <span class="hidden-md-down">Welcome back, </span>{{ macros.profilelink(my_member.Username) }}
+                    <span class="d-none d-md-block">Welcome back, </span>{{ macros.profilelink(my_member.Username) }}
                 </div>
-                <div class="d-inline-flex hidden-md-down align-items-center h4">
+                <div class="d-inline-flex d-none d-md-block align-items-center h4">
                     Your hosting status is
                     {% include ':landing:widget/accommodation.html.twig' with {
                         member: my_member
@@ -68,7 +68,7 @@
         {# messages box #}
         <div class="col-12 col-lg-5 align-items-stretch">
 
-            <ul class="nav nav-tabs {# hidden-lg-up #}" role="tablist">
+            <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" aria-controls="messages" href="#messages" role="tab" data-toggle="tab">Messages
                         received {% if messageCount %}<span
@@ -123,17 +123,10 @@
             </div>
         </div>
 
-        <div class="hidden-sm-down hidden-lg-up pt-5">
-            &nbsp; {# rendering fix for md-sized resolutions #}
-        </div>
-        <div class="hidden-md-up pt-3">
-            &nbsp; {# rendering fix for md-sized resolutions #}
-        </div>
-
         {# community box #}
         <div class="col-12 col-lg-7 align-items-stretch">
 
-            <ul class="nav nav-tabs {# hidden-lg-up mt-3 #}" role="tablist">
+            <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
                     <a href="#threads" class="nav-link active" aria-controls="threads" role="tab" data-toggle="tab">Forum</a>
                 </li>

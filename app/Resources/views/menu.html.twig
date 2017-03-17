@@ -1,14 +1,14 @@
 {% import 'macros.twig' as macros %}
 <nav class="navbar-nav navbar-sticky-top navbar-toggleable-md navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
     <div class="container">
-        <button class="nav-link navbar-toggler navbar-toggler-right hidden-lg-up" type="button" data-toggle="collapse" data-target="#smallNavBar" aria-controls="mainNavBar" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="nav-link navbar-toggler navbar-toggler-right d-lg-none" type="button" data-toggle="collapse" data-target="#smallNavBar" aria-controls="mainNavBar" aria-expanded="false" aria-label="Toggle navigation">
            &#9776;
         </button>
 
         <a class="navbar-brand mr-3" href="{{ url('homepage') }}">{% image 'bundles/app/images/logo_index_top.png' %}<img src="{{ asset_url }}" alt="{{ 'BeWelcome' | trans }}"/>{% endimage %}</a>
 
         {# Navbar small screens #}
-        <div class="collapse hidden-lg-up px-0" id="smallNavBar">
+        <div class="collapse d-xl-none px-0" id="smallNavBar">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <li class="nav-item col-12 bordert-1 px-0">
                     <a href="{{ url('member', { username: my_member.Username }) }}" class="nav-link">{{ my_member.Username }}</a>
@@ -23,7 +23,7 @@
                     <a href="/mynotes" class="nav-link">{{ 'MyNotes' | trans }}</a>
                 </li>
                 <li class="nav-item col-12 bordert-1 px-0">
-                    <a href="/message" class="nav-link">{{ 'MyMessages' | trans }}</a>
+                    <a href="{{ path( 'messages' ) }}" class="nav-link">{{ 'MyMessages' | trans }}</a>
                 </li>
                 <li class="nav-item col-12 bordert-1 px-0">
                     <a href="/mypreferences" class="nav-link">{{ 'MyPreferences' | trans }}</a>
@@ -51,7 +51,7 @@
                 <li class="menuborder">
                     <a href="/volunteer" class="nav-link px-3">{{ 'Volunteer' | trans}}</a>
                 </li>
-                <li class="menuborder dropdown hidden-md-down">
+                <li class="menuborder dropdown d-none d-xl-block">
                     <a href="#" class="nav-link px-3" id="subNavBar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         &#9776;
                     </a>
@@ -125,12 +125,12 @@
             <ul class="navbar-nav mr-0">
 
                 {# profile link on smaller screens #}
-                <li class="nav-item float-right hidden-lg-up">
-                    <a href="/members/{{ my_member.Username }}" class="nav-link"><i class="fa fa-user"></i><span class="hidden-md-down"> {{ my_member.Username }} </span></a>
+                <li class="nav-item float-right d-xl-none">
+                    <a href="/members/{{ my_member.Username }}" class="nav-link"><i class="fa fa-user"></i><span class="d-none d-md-block "> {{ my_member.Username }} </span></a>
                 </li>
 
                 {# member dropdown on bigger screens #}
-                <li class="nav-item dropdown float-right hidden-md-down">
+                <li class="nav-item dropdown float-right d-none d-md-block">
                     <a href="/members/{{ my_member.Username }}" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ my_member.Username }} <span class="caret"></span></a>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
                         <li class="text-right"><a href="/members/{{ my_member.Username }}" class="dropdown-item">{{ 'Profile' | trans }}</a></li>

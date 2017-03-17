@@ -1,15 +1,13 @@
 <?php
 
-namespace AppBundle\Repository;
+namespace AppBundle\Model;
 
 use AppBundle\Entity\Language;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query\ResultSetMapping;
+use AppBundle\Repository\LanguageRepository;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
+use Pagerfanta\Pagerfanta;
 
-/**
- */
-class LanguageRepository extends EntityRepository
+class LanguageModel extends BaseModel
 {
     /**
      * Returns all languages for which translations exist
@@ -18,12 +16,14 @@ class LanguageRepository extends EntityRepository
      */
     public function getLanguagesWithTranslations( $locale )
     {
-        $entityManager = $this->getEntityManager();
+        $entityManager = $this->em;
+
         $rsm = new ResultSetMappingBuilder($entityManager);
         $rsm->addRootEntityFromClassMetadata(Language::class, 'l');
+//         $rsm->addFieldResult('l', 'Sentence', 'translatedname');
 
         $query = $entityManager->createNativeQuery("SELECT 
-    l.*, w2.Sentence 'TranslatedName'
+    l.*, w2.Sentence 
 FROM
     languages l
 LEFT JOIN
@@ -33,6 +33,8 @@ left JOIN
 WHERE
     w1.code = 'WelcomeToSignup'
 ORDER BY name ASC", $rsm);
-        return $query->getResult();
+
+        $languages = $query->getResult();
+        return $languages;
     }
 }

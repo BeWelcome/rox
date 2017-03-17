@@ -23,7 +23,7 @@ class AvatarController extends Controller
      *     requirements={"username" : "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])",
      *          "size" : "\d+" }))
      */
-    public function showAvatarAction(Request $request, $username, $size = 50)
+    public function showAvatarAction($username, $size = 50)
     {
         switch ($size) {
             case '30':

@@ -1,0 +1,5 @@
+====== Postoji novija inačica ======
+
+Već postoji novija inačica dokumenta kojeg ste mijenjali. To se događa jer je neki drugi korisnik snimio dokument za vrijeme dok ste ga Vi mijenjali.
+
+Proučite promjene koje slijede i odaberite koje želite preuzeti. Odaberite ''Pohrani'' da biste snimili Vašu inačicu ili ''Poništi'' da ostavite sačuvanu trenutnu inačicu dokumenta.

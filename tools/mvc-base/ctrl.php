@@ -3,9 +3,6 @@
 
 abstract class RoxControllerBase extends RoxComponentBase
 {
-    /** @var \Symfony\Component\Routing\Router */
-    protected $router;
-
     /** @var  \Symfony\Component\Form\FormFactoryInterface */
     protected $formFactory;
 

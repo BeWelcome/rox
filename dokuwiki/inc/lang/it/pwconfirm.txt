@@ -1,0 +1,11 @@
+Ciao @FULLNAME@!
+
+Qualcuno ha richiesto una nuova password per il tuo accesso
+@TITLE@ a @DOKUWIKIURL@
+
+Se non hai richiesto tu la nuova password ignora questa email.
+
+Per confermare che la richiesta è stata realmente inviata da te usa il
+seguente collegamento.
+
+@CONFIRM@

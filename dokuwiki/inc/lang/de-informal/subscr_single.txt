@@ -1,0 +1,19 @@
+Hallo!
+
+Die Seite @PAGE@ im @TITLE@ Wiki wurde bearbeitet.
+Übersicht der Änderungen:
+
+--------------------------------------------------------
+@DIFF@
+--------------------------------------------------------
+
+Datum: @DATE@
+Benutzer: @USER@
+Zusammenfassung: @SUMMARY@
+Alte Revision: @OLDPAGE@
+Neue Revision: @NEWPAGE@
+
+Um das Abonnement für diese Seite aufzulösen, melde dich im Wiki an
+@DOKUWIKIURL@, besuche dann
+@SUBSCRIBE@
+und klicke auf den Link 'Aboverwaltung'.

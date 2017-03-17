@@ -27,9 +27,9 @@
         <div class="ml-3">
             <div class="d-flex flex-column">
                 <div class="d-inline-flex h2 my-2">
-                    <span class="hidden-md-down">Welcome back, </span>{{ macros.profilelink(my_member.Username) }}
+                    <span class="d-none d-md-block">Welcome back, </span>{{ macros.profilelink(my_member.Username) }}
                 </div>
-                <div class="d-inline-flex hidden-md-down align-items-center h4">
+                <div class="d-inline-flex d-none d-md-block align-items-center h4">
                     Your hosting status is
                     {% include ':landing:widget/accommodation.html.twig' with {
                         member: my_member
@@ -68,7 +68,7 @@
         {# messages box #}
         <div class="col-12 col-lg-5 align-items-stretch">
 
-            <ul class="nav nav-tabs {# hidden-lg-up #}" role="tablist">
+            <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" aria-controls="messages" href="#messages" role="tab" data-toggle="tab">Messages
                         received {% if messageCount %}<span
@@ -123,17 +123,10 @@
             </div>
         </div>
 
-        <div class="hidden-sm-down hidden-lg-up pt-5">
-            &nbsp; {# rendering fix for md-sized resolutions #}
-        </div>
-        <div class="hidden-md-up pt-3">
-            &nbsp; {# rendering fix for md-sized resolutions #}
-        </div>
-
         {# community box #}
         <div class="col-12 col-lg-7 align-items-stretch">
 
-            <ul class="nav nav-tabs {# hidden-lg-up mt-3 #}" role="tablist">
+            <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
                     <a href="#threads" class="nav-link active" aria-controls="threads" role="tab" data-toggle="tab">Forum</a>
                 </li>
@@ -213,21 +206,23 @@
                         <strong>€{{ campaign.yearNeeded }}</strong></p>
 
                     <div class="progress">
-                        <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuenow="{{ campaign.yearDonated }}" aria-valuemin="0" aria-valuemax="{{ campaign.yearNeeded }}"><span style="color: #fff;">€ {{ campaign.yearDonated }} received</span></div>
+                        <div class="progress-bar" role="progressbar" style="width: {{ (campaign.yearDonated / campaign.yearNeeded) * 100 }}%;" aria-valuenow="{{ campaign.yearDonated }}" aria-valuemin="0" aria-valuemax="{{ campaign.yearNeeded }}"></div>
                     </div>
+                    <p class="text-center">
+                    {{ '€ ' ~ campaign.yearDonated ~ ' received' | trans }}</p>
 
-                    <a href="donate" class="btn btn-outline-primary btn-homewhite btn-block mb-1"><i
-                                class="fa fa-euro"></i> Please donate</a>
+                    <p><a href="/donate" class="btn btn-outline-primary btn-homewhite btn-block mb-1"><i
+                                    class="fa fa-euro"></i> Please donate</a></p>
                 {% endif %}
 
                 <p>BeWelcome is run by volunteers - free of charge and open source. Volunteering
                     for the project is a great opportunity for you to get to know enthusiastic people who really
                     believe in promoting hospitality and respect for each other. And it's fun, too!</p>
-                <a href="about/getactive" class="btn btn-outline-primary btn-homewhite btn-block"><i
+                <a href="/about/getactive" class="btn btn-outline-primary btn-homewhite btn-block"><i
                             class="fa fa-wrench"></i> Help BeWelcome</a>
 
                 {% if campaign.yearDonated > campaign.yearNeeded %}
-                    <a href="donate" class="btn btn-outline-primary btn-homewhite btn-block mb-1"><i
+                    <a href="/donate" class="btn btn-outline-primary btn-homewhite btn-block mb-1"><i
                                 class="fa fa-euro"></i> Please donate</a>
                 {% endif %}
 

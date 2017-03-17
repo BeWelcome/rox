@@ -4,9 +4,11 @@ namespace AppBundle\Twig;
 
 use AppBundle\Entity\Language;
 use AppBundle\Entity\Member;
+use AppBundle\Model\LanguageModel;
 use AppBundle\Repository\LanguageRepository;
 use AppBundle\Repository\MemberRepository;
 use Carbon\Carbon;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Entity;
 use Faker\Factory;
@@ -26,16 +28,16 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
     protected $session;
 
     /**
-     * @var EntityManager
+     * @var Registry
      */
-    protected  $entityManager;
+    protected  $registry;
 
     public function __construct(
         SessionInterface $session,
-        EntityManager $entityManager
+        Registry $registry
     ) {
         $this->session = $session;
-        $this->entityManager = $entityManager;
+        $this->registry = $registry;
     }
 
     /**
@@ -99,17 +101,19 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
 
     public function getGlobals()
     {
-        $languages = $this->entityManager->getRepository(Language::class)->getLanguagesWithTranslations();
+        $locale = $this->session->get('locale', 'en');
+        $languageModel = new LanguageModel($this->registry);
+        $languages = $languageModel->getLanguagesWithTranslations($locale);
         $langarr = [];
         /** @var Language $language */
         foreach ($languages as $language) {
             $lang = new \stdClass();
             $lang->NativeName = $language->getName();
-            $lang->TranslatedName = $language->getName();
+            $lang->TranslatedName = $language->getTranslatedName();
             $lang->ShortCode = $language->getShortcode();
             $langarr[$lang->ShortCode] = $lang;
         }
-        $defaultLanguage = $langarr[$this->session->get('locale', 'en')];
+        $defaultLanguage = $langarr[ $locale ];
         uasort($langarr, function ($a, $b) {
             if ($a->TranslatedName === $b->TranslatedName) {
                 return 0;
@@ -118,7 +122,7 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
             return (strtolower($a->TranslatedName) < strtolower($b->TranslatedName)) ? -1 : 1;
         });
 
-        $member = $this->entityManager->getRepository(Member::class)->find(1223);
+        $member = $this->registry->getEntityManager()->getRepository(Member::class)->find(1223);
 
         return [
             'version' => trim(file_get_contents('../VERSION')),

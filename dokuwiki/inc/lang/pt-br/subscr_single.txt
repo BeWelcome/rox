@@ -1,0 +1,19 @@
+Olá!
+
+A página @PAGE@ na wiki @TITLE@ foi alterada.
+Estas foram as mudanças:
+
+--------------------------------------------------------
+@DIFF@
+--------------------------------------------------------
+
+Data : @DATE@
+Usuário : @USER@
+Sumário : @SUMMARY@
+Revisão antiga:@OLDPAGE@
+Nova Revisão:@NEWPAGE@
+
+Para cancelar as notificações de mudanças, entre em
+@DOKUWIKIURL@, vá até @NEWPAGE@
+e cancele o monitoramento da página e/ou do espaço de
+nomes.

@@ -1,0 +1,1 @@
+Redaktu paĝon kaj poste premu butonon titolitan '"Konservi'". Bonvolu tralegi la [[wiki:syntax|vikian sintakson]] pri la formatigo. Bonvolu redakti **nur**, se vi povas **plibonigi** la enhavon de la paĝo. Se vi volas nur testi ion, bonvolu uzi specialan paĝon: [[playground:playground|sablokesto]].

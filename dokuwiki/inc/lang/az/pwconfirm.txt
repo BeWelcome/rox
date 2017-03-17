@@ -1,0 +1,9 @@
+Salam @FULLNAME@!
+
+Kimsə @DOKUWIKIURL@ adresində yerləşən @TITLE@ adlı wiki-yə giriş üçün yeni şifrə tələb eləyib.
+
+Əgər o şəxs siz deyildinizsə, bu məktuba fikir verməyin.
+
+Tələbi təsdiq etmək üçün, aşağıdakı link-ə keçin.
+
+@CONFIRM@

@@ -1,0 +1,5 @@
+====== Sök ======
+
+Nedan ser du resultatet av sökningen. @CREATEPAGEINFO@
+
+===== Resultat =====

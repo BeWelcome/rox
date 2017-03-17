@@ -55,9 +55,9 @@ services:
 
     rox.twig_extension:
         class: AppBundle\Twig\Extension
-        arguments: ['@session', '@doctrine.orm.entity_manager']
+        arguments: ['@session', '@doctrine']
         tags:
-             - { name: 'twig.extension' }
+            - { name: 'twig.extension' }
 
     rox.member_twig_extension:
         class: AppBundle\Twig\MemberTwigExtension
@@ -76,3 +76,9 @@ services:
             - "@pagerfanta.bootstrap4.template"
             - "@translator"
         tags: [{ name: pagerfanta.view, alias: twitter_bootstrap4_translated }]
+
+    rox.authentication_listener:
+        class: AppBundle\EventListener\AuthListener
+        arguments: ['%dokuwiki_directory%']
+        tags:
+            - { name: kernel.event_listener, event: security.interactive_login, method: onAuthenticationSuccess }

@@ -1,0 +1,6 @@
+====== Administrēšana ======
+
+DokuWiki pieejamas šādas administrēšanas iespējas:
+
+
+

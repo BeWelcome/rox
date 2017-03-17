@@ -1,0 +1,1 @@
+Ovdje možete potražiti i druge dostupne dodatke i predloške za DokuWiki. Molimo budite svjesni da postavljanje koda razvijenog od treće strane može biti **sigurnosni rizik**, možda želite prvo pročitati o [[doku>security#plugin_security|sigurnosti dodataka]].

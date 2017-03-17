@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'Wiki' | trans }}
+{% endblock %}
+
+{% block content %}
+
+{{ wikipage | raw }}
+
+{% endblock content %}

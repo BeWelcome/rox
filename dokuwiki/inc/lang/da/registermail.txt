@@ -1,0 +1,10 @@
+En ny bruger har registreret. Her er detaljerne:
+
+Brugernavn : @NEWUSER@
+Navn       : @NEWNAME@
+E-mail     : @NEWEMAIL@
+
+Dato       : @DATE@
+Browser    : @BROWSER@
+IP-adresse : @IPADDRESS@
+Værtsnavn  : @HOSTNAME@

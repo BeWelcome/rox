@@ -25,7 +25,7 @@ class DonateModel extends BaseModel
             FROM
                 donations
             WHERE
-                created > '" . $campaignValue['neededperyear'] . "'
+                created > '" . $campaignValue['campaignstartdate']->format('Y-m-d H:i:s') . "'
             ";
         $rowYear = $this->execQuery($sql)->fetch();
         switch ($rowYear['quarter']) {

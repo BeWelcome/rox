@@ -9,15 +9,15 @@ class PageWithHTML extends AbstractBasePage
     // reload the file (e.g. "?1" -> "?2")
     private $_early_scriptfiles = array(
         '/assetic/jquery_js.js',
-        '/main.js?9',
-        '/common/common.js?1',
+        '/script/main.js?9',
+        '/script/common/common.js?1',
         '/assetic/select2_js.js',
     );
 
     private $_late_scriptfiles = array(
         '/assetic/tether_js.js',
         '/assetic/bootstrap_js.js',
-        '/common/initialize.js?1',
+        '/script/common/initialize.js?1',
     );
 
     public function render() {

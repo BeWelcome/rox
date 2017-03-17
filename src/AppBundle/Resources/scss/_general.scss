@@ -30,7 +30,7 @@ body {
   font-size: $font-size-sm;
   line-height: 1.1;
   width: 100%;
-//  padding: $spacer-y $spacer-x;
+  padding: $spacer $spacer;
 
   background-color: #555;
   color: #999;
@@ -40,7 +40,7 @@ body {
   a:focus { color:#fff; }
 
   & > .container {
-//    padding: 1rem $spacer-x;
+    padding: 1rem $spacer;
   }
 
 }
@@ -204,7 +204,7 @@ body {
 .submenu {
   padding-left: ($grid-gutter-width /2);
   padding-right: ($grid-gutter-width /2);
-//  margin-bottom: $spacer-y;
+  margin-bottom: $spacer;
 }
 
 .fullpager {

@@ -19,12 +19,12 @@ class AvatarController extends Controller
     const OFFSET = 172800;
 
     /**
-     * @Route("/members/avatar/{username}", name="avatar", requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))
+     * @Route("/members/avatar/{username}/{size}", name="avatar",
+     *     requirements={"username" : "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])",
+     *          "size" : "\d+" }))
      */
-    public function showAvatarAction(Request $request, $username)
+    public function showAvatarAction($username, $size = 50)
     {
-        $size = $request->query->get('size');
-
         switch ($size) {
             case '30':
             case '75':

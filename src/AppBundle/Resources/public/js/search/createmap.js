@@ -64,13 +64,13 @@ function addMarkers(map){
         var iconFile;
         switch(value.Accommodation) {
             case 'anytime':
-                iconFile = 'yesicanhost';
+                iconFile = 'anytime';
                 break;
             case 'dependonrequest':
-                iconFile = 'maybe';
+                iconFile = 'dependonrequest';
                 break;
             case 'dontask':
-                iconFile = 'nosorry';
+                iconFile = 'neverask';
                 break;
         }
         var icon = new L.DivIcon({ html: '<div><img src="/images/icons/' + iconFile + '.png" width="17" height="17"></div>', className: '', iconSize: new L.Point(17, 17) });

@@ -18,13 +18,13 @@
 {% endblock javascripts %}
 
 {% block content %}
-    <div class="d-flex flex-row justify-content-start align-items-center welcomeback mb-4 p-2">
+    <div class="row welcomeback mx-0 mb-4 p-2">
 
         {% include ':landing:widget/profilepicturewithaccommodation.html.twig' with {
         member: my_member
         } only %}
 
-        <div class="ml-3">
+        <div class="col-12 col-lg-6">
             <div class="d-flex flex-column">
                 <div class="d-inline-flex h2 my-2">
                     <span class="d-none d-md-block">Welcome back, </span>{{ macros.profilelink(my_member.Username) }}
@@ -47,7 +47,7 @@
 
         </div>
         {# where do you want to go? #}
-        <div class="ml-auto">
+        <div class="col-12 col-lg-4 ml-auto">
             {{ form_start( tinySearch ) }}
 
             <div class="input-group">

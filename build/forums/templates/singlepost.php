@@ -36,42 +36,27 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 }
 ?>
 
-<div class="d-flex flex-row <?php echo $styles[$cnt % 2]; ?> mb-2" style="border: 1px solid #fff;">
+<div class="d-flex flex-row <?php echo $styles[$cnt % 2]; ?> mb-2 postbox">
 
-    <div class="d-flex flex-column col-2 mr-2 p-0" style="background-color: #ddd;">
+    <div class="d-flex flex-column col-3 col-lg-2 mr-2 p-0 postleftcolumn">
 
-        <div class="d-flex flex-row align-self-start pull-left p-2 fullwidth"
-             style="background-color: #ccc;">
+        <div class="d-flex flex-row align-self-start pull-left p-2 fullwidth credentials">
             <div class="p-1"><img class="media-object"
                                   src="/members/avatar/<?php echo($post->OwnerUsername); ?>?size=50"></div>
             <div>
                 <small class="username"><a
                             href="members/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
-                </small>
                 <br>
                 <?php
                 if ($this->_session->has("IdMember")) {
-                    if (isset($post->city) && isset($post->country)) { ?>
+                    if (isset($post->city) && isset($post->country)) {
 
-                        <?php
-                        $maxlen = 13;
-                        if (strlen($post->city) > $maxlen) {
-                            echo '<span><small>' . MOD_layoutbits::truncate_words($post->city, $maxlen) . '</small></span>';
-                        } else {
-                            echo '<span><small>' . $post->city;
-                        }
-                        echo "<br>";
-                        if (strlen($post->country) > $maxlen) {
-                            echo '<span><small>' . MOD_layoutbits::truncate_words($post->country, $maxlen) . '</small></span>';
-                        } else {
-                            echo $post->country . '</small></span>';
-                        }
-                        ?>
+                        echo $post->city . '<br>' .$post->country;
 
-                        <?php
                     }
                 }
                 ?>
+                </small>
             </div>
         </div>
 
@@ -84,7 +69,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                     $TheReports = $this->_model->GetReports($post->IdPost);
                     $max = count($TheReports);
                     foreach ($TheReports as $report) {
-                        echo "<br />report from ", $report->Username, " [" . $report->Status . "] ";
+                        echo "<br>report from ", $report->Username, " [" . $report->Status . "] ";
                         echo "<a href='forums/reporttomod/", $report->IdPost, "/" . $report->IdReporter . "'>view report</a>";
                     }
                 }
@@ -106,7 +91,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
         <!-- end permalink -->
     </div>
     <!-- message -->
-    <div class="p-2">
+    <div class="col-9 col-lg-10 p-2">
         <div class="float-left fullwidth">
         <a name="post<?php echo $post->postid; ?>"></a>
         <p class="small gray">

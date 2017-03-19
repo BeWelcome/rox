@@ -14,13 +14,13 @@ function ShowAccommodation($accommodation)
     $words = new MOD_words();
     switch($accommodation) {
         case 'anytime':
-            $imgSrc = 'images/icons/yesicanhost.png';
+            $imgSrc = 'images/icons/anytime.png';
             break;
         case 'dependonrequest':
-            $imgSrc = 'images/icons/maybe.png';
+            $imgSrc = 'images/icons/dependonrequest.png';
             break;
         case 'neverask':
-            $imgSrc = 'images/icons/nosorry.png';
+            $imgSrc = 'images/icons/neverask.png';
             break;
     }
 

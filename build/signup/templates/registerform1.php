@@ -198,7 +198,7 @@ Boston, MA  02111-1307, USA.
                             <label>
                                 <input type="radio" name="gridRadios" id="accommodation" value="anytime" <?php
                                 if (isset($vars['accommodation']) && $vars['accommodation'] == 'anytime') { echo ' checked="checked"'; } ?>>
-                                <img src="/images/icons/yesicanhost.png">
+                                <img src="/images/icons/anytime.png">
                                 <?php echo $words->get('Accomodation_anytime'); ?>
                             </label>
                         </div>
@@ -207,7 +207,7 @@ Boston, MA  02111-1307, USA.
                             <label>
                                 <input type="radio" name="gridRadios" id="accommodation" value="dependonrequest" <?php
                                 if (isset($vars['accommodation']) && $vars['accommodation'] == 'dependonrequest') { echo ' checked="checked"'; } ?>>
-                                <img src="/images/icons/maybe.png">
+                                <img src="/images/icons/dependonrequest.png">
                                 <?php echo $words->get('Accomodation_dependonrequest'); ?>
                             </label>
                         </div>
@@ -216,7 +216,7 @@ Boston, MA  02111-1307, USA.
                             <label>
                                 <input type="radio" name="gridRadios" id="accommodation" value="neverask" <?php
                                 if (isset($vars['accommodation']) && $vars['accommodation'] == 'neverask') { echo ' checked="checked"'; } ?>>
-                                <img src="/images/icons/nosorry.png">
+                                <img src="/images/icons/neverask.png">
                                 <?php echo $words->get('Accomodation_neverask'); ?>
                             </label>
                         </div>

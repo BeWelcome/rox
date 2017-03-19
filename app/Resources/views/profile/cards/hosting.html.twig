@@ -4,9 +4,9 @@
 <div class="d-flex">
     <div class="mr-3">
 
-        {%  if member.Accommodation == 'anytime' %}{% set image = 'yesicanhost' %}{% set hosttext = 'Hosting' %}{% endif %}
-        {%  if member.Accommodation == 'dependonrequest' %}{% set image = 'maybe' %}{% set hosttext = 'Maybe Hosting' %}{% endif %}
-        {%  if member.Accommodation == 'neverask' %}{% set image = 'nosorry' %}{% set hosttext = 'Not hosting' %}{% endif %}
+        {%  if member.Accommodation == 'anytime' %}{% set hosttext = 'Hosting' %}{% endif %}
+        {%  if member.Accommodation == 'dependonrequest' %}{% set hosttext = 'Maybe Hosting' %}{% endif %}
+        {%  if member.Accommodation == 'neverask' %}{% set hosttext = 'Not hosting' %}{% endif %}
 
         {% if member.id == my_member.id %}
 
@@ -16,12 +16,12 @@
             </a>
             {# TODO: make a working form chaning status #}
             <div class="dropdown-menu top0" aria-labelledby="SetStatus">
-                <a href="#" class="dropdown-item"><img src="/images/icons/yesicanhost.png"><span class="icontext">Yes</span></a>
-                <a href="#" class="dropdown-item"><img src="/images/icons/maybe.png"><span class="icontext">Maybe</span></a>
-                <a href="#" class="dropdown-item"><img src="/images/icons/nosorry.png"><span class="icontext">No</span></a>
+                <a href="#" class="dropdown-item"><img src="/images/icons/anytime.png"><span class="icontext">Yes</span></a>
+                <a href="#" class="dropdown-item"><img src="/images/icons/dependonrequest.png"><span class="icontext">Maybe</span></a>
+                <a href="#" class="dropdown-item"><img src="/images/icons/neverask.png"><span class="icontext">No</span></a>
             </div>
         {% else %}
-            <img src="/images/icons/{{ image }}.png">
+            <img src="/images/icons/{{ member.Accommodation }}.png">
         {% endif %}
 
         <span class="text-uppercase"><small><strong>{{ hosttext }}</strong></small></span>

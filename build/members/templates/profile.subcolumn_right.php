@@ -25,17 +25,17 @@ if (!$this->passedAway){ ?>
     switch($member->Accomodation)
     {
         case 'anytime':
-            $icons[] = '<img src="images/icons/yesicanhost.png"' .
-                           ' alt="' . $words->getSilent('yesicanhost') .'"' .
+            $icons[] = '<img src="images/icons/anytime.png"' .
+                           ' alt="' . $words->getSilent('anytime') .'"' .
                            ' title="' . $words->getSilent('CanOfferAccomodation') . '" />';
             break;
         case 'dependonrequest':
-            $icons[] = '<img src="images/icons/maybe.png"' .
+            $icons[] = '<img src="images/icons/dependonrequest.png"' .
                            ' alt="' . $words->getSilent('dependonrequest') .'"' .
                            ' title="' . $words->getSilent('CanOfferdependonrequest') . '" />';
             break;
         case 'neverask':
-            $icons[] = '<img src="images/icons/nosorry.png"' .
+            $icons[] = '<img src="images/icons/neverask.png"' .
                            ' alt="' . $words->getSilent('neverask') .'"' .
                            ' title="' . $words->getSilent('CannotOfferneverask') . '" />';
             break;

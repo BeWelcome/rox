@@ -31,14 +31,14 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="hostcheckimg">{% image 'images/icons/yesicanhost.png' %}<img src="{{ asset_url }}" alt="{{ 'I like to host' | trans }}"/>{% endimage %}
+                <div class="hostcheckimg">{% image 'images/icons/anytime.png' %}<img src="{{ asset_url }}" alt="{{ 'I like to host' | trans }}"/>{% endimage %}
                     <div class="hostcheckbox">{{ form_widget(form.search_accommodation_anytime) }}</div>
                 </div>
-                <div class="hostcheckimg">{% image 'images/icons/maybe.png' %}<img src="{{ asset_url }}" alt="{{ 'I might host you' | trans }}"/>{% endimage %}
+                <div class="hostcheckimg">{% image 'images/icons/dependonrequest.png' %}<img src="{{ asset_url }}" alt="{{ 'I might host you' | trans }}"/>{% endimage %}
                     <div class="hostcheckbox">
                         {{ form_widget(form.search_accommodation_dependonrequest) }}</div>
                 </div>
-                <div class="hostcheckimg">{% image 'images/icons/nosorry.png' %}<img src="{{ asset_url }}" alt="{{ 'I can\'t host' | trans }}"/>{% endimage %}
+                <div class="hostcheckimg">{% image 'images/icons/neverask.png' %}<img src="{{ asset_url }}" alt="{{ 'I can\'t host' | trans }}"/>{% endimage %}
                     <div class="hostcheckbox">
                         {{ form_widget(form.search_accommodation_neverask) }}</div>
                 </div>

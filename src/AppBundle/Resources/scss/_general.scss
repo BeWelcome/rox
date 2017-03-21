@@ -12,7 +12,6 @@ body {
   // background: url("../../images/bggrey.png") repeat-x scroll left top #F7F7F7;
   background: #f7f7f7; /* For browsers that do not support gradients */
   background: linear-gradient(#afafaf, #f0f0f0 10em) repeat-x scroll left top #f0f0f0;
-  display: table;
   height: 100%;
   width: 100%;
 }
@@ -25,7 +24,6 @@ body {
 }
 
 .stickyfooter {
-  display: table-row;
   height: 1px;
   font-size: $font-size-sm;
   line-height: 1.1;

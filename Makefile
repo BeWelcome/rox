@@ -17,6 +17,8 @@ phpcsfix:
 
 build:
 	./node_modules/.bin/grunt
+	php bin/console assets:install
+	php bin/console assetic:dump
 
 phpdox: phploc phpmd php-code-sniffer phpunit
 	./vendor/bin/phpdox

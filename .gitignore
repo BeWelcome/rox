@@ -1,7 +1,37 @@
 errors.log
 rox_local.ini
 *.cache.ini
-data
+/data/
+!/dokuwiki/data/cache
+/dokuwiki/data/cache/*
+!/dokuwiki/data/cache/.gitkeep
+!/dokuwiki/data/index
+/dokuwiki/data/index/*
+!/dokuwiki/data/index/.gitkeep
+!/dokuwiki/data/pages
+/dokuwiki/data/pages/*
+!/dokuwiki/data/pages/.gitkeep
+!/dokuwiki/data/meta
+/dokuwiki/data/meta/*
+!/dokuwiki/data/meta/.gitkeep
+!/dokuwiki/data/attic
+/dokuwiki/data/attic/*
+!/dokuwiki/data/attic/.gitkeep
+!/dokuwiki/data/media
+/dokuwiki/data/media/*
+!/dokuwiki/data/media/.gitkeep
+!/dokuwiki/data/media_attic
+/dokuwiki/data/media_attic/*
+!/dokuwiki/data/media_attic/.gitkeep
+!/dokuwiki/data/media_meta
+/dokuwiki/data/media_meta/*
+!/dokuwiki/data/media_meta/.gitkeep
+!/dokuwiki/data/locks
+/dokuwiki/data/locks/*
+!/dokuwiki/data/locks/.gitkeep
+!/dokuwiki/data/tmp
+/dokuwiki/data/tmp/*
+!/dokuwiki/data/tmp/.gitkeep
 htdocs/exception.log
 google*.html
 htdocs/bw/cache/
@@ -15,7 +45,6 @@ components/*
 htdocs/js/*
 htdocs/images/*
 htdocs/css/*
-htdocs/images/*
 cache/*
 
 revision.txt
@@ -26,7 +55,6 @@ revision.txt
 
 doc/
 /node_modules/*
-/components/*
 composer.phar
 auth.json
 /.vagrant/*
@@ -41,7 +69,6 @@ htdocs/assets/
 config/*.local.yml
 .env
 phploc.xml
-tmp/
 
 /app/config/parameters.yml
 /src/AppBundle/Resources/css/bewelcome.css

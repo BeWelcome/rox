@@ -1,42 +1,50 @@
 {% import 'macros.twig' as macros %}
 <nav class="navbar-nav navbar-sticky-top navbar-expand-md navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
     <div class="container">
-        <button class="nav-link navbar-toggler float-right d-lg-none" type="button" data-toggle="collapse" data-target="#smallNavBar" aria-controls="mainNavBar" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="nav-link navbar-toggler float-right d-md-none" type="button" data-toggle="collapse" data-target="#smallNavBar" aria-controls="mainNavBar" aria-expanded="false" aria-label="Toggle navigation">
            &#9776;
         </button>
 
-        <a class="navbar-brand mr-3" href="{{ url('homepage') }}">{% image 'bundles/app/images/logo_index_top.png' %}<img src="{{ asset_url }}" alt="{{ 'BeWelcome' | trans }}"/>{% endimage %}</a>
+        <a class="navbar-brand mr-3 float-left" href="{{ url('homepage') }}">{% image 'bundles/app/images/logo_index_top.png' %}<img src="{{ asset_url }}" alt="{{ 'BeWelcome' | trans }}"/>{% endimage %}</a>
 
         {# Navbar small screens #}
-        <div class="collapse d-lg-none px-0" id="smallNavBar">
-            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class="nav-item col-12 bordert-1 px-0">
+        <div class="collapse d-xl-none px-0" id="smallNavBar">
+            <ul class="navbar-nav w-100 mr-auto mt-2">
+                <li class="nav-item bordert-1">
                     <a href="{{ url('member', { username: my_member.Username }) }}" class="nav-link">{{ my_member.Username }}</a>
                 </li>
-                <li class="nav-item col-12 bordert-1 px-0">
+                <li class="nav-item bordert-1">
+                    <a href="{{ path( 'messages' ) }}" class="nav-link pl-4">{{ 'MyMessages' | trans }}</a>
+                </li>
+                <li class="nav-item bordert-1">
+                    <a href="/mypreferences" class="nav-link pl-4">{{ 'MyPreferences' | trans }}</a>
+                </li>
+                <li class="nav-item bordert-1">
+                    <a href="/mynotes" class="nav-link pl-4">{{ 'MyNotes' | trans }}</a>
+                </li>
+                <li class="nav-item bordert-1">
                     <a href="{{ url( 'homepage' ) }}" class="nav-link">{{ 'MapSearch' | trans }}</a>
                 </li>
-                <li class="nav-item col-12 bordert-1 px-0">
+                <li class="nav-item bordert-1">
                     <a href="/trips" class="nav-link">{{ 'Trips' | trans }}</a>
                 </li>
-                <li class="nav-item col-12 bordert-1 px-0">
-                    <a href="/mynotes" class="nav-link">{{ 'MyNotes' | trans }}</a>
+                <li class="nav-item bordert-1">
+                    <a href="/community" class="nav-link">{{ 'CommunityMenu' | trans }}</a>
                 </li>
-                <li class="nav-item col-12 bordert-1 px-0">
-                    <a href="{{ path( 'messages' ) }}" class="nav-link">{{ 'MyMessages' | trans }}</a>
+                <li class="nav-item bordert-1">
+                    <a href="/safety" class="nav-link px-3">{{ 'Safety' | trans}}</a>
                 </li>
-                <li class="nav-item col-12 bordert-1 px-0">
-                    <a href="/mypreferences" class="nav-link">{{ 'MyPreferences' | trans }}</a>
+                <li class="nav-item bordert-1">
+                    <a href="/about" class="nav-link px-3">{{ 'GetAnswers' | trans}}</a>
                 </li>
-                <li class="nav-item col-12 bordert-1 px-0">
+                <li class="nav-item bordert-1">
                     <a href="/logout" class="nav-link">{{ 'Logout' | trans }}</a>
                 </li>
             </ul>
         </div>
 
-
         {# Navbar big screens #}
-        <div class="collapse navbar-collapse" id="mainNavBar">
+        <div class="collapse navbar-collapse d-none d-md-block" id="mainNavBar">
 
             <ul class="navbar-nav mr-auto">
                 <li class="menuborder">
@@ -51,7 +59,7 @@
                 <li class="menuborder">
                     <a href="/volunteer" class="nav-link px-3">{{ 'Volunteer' | trans}}</a>
                 </li>
-                <li class="menuborder dropdown d-none d-lg-block">
+                <li class="menuborder dropdown d-none d-md-flex">
                     <a href="#" class="nav-link px-3" id="subNavBar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         &#9776;
                     </a>
@@ -125,12 +133,12 @@
             <ul class="navbar-nav mr-0">
 
                 {# profile link on smaller screens #}
-                <li class="nav-item float-right d-lg-none">
-                    <a href="/members/{{ my_member.Username }}" class="nav-link"><i class="fa fa-user"></i><span class="d-none d-md-block "> {{ my_member.Username }} </span></a>
+                <li class="nav-item float-right d-block d-lg-none">
+                    <a href="/members/{{ my_member.Username }}" class="nav-link"><i class="fa fa-lg fa-user"></i></a>
                 </li>
 
                 {# member dropdown on bigger screens #}
-                <li class="nav-item dropdown float-right d-none d-md-block">
+                <li class="nav-item dropdown float-right d-none d-lg-block">
                     <a href="/members/{{ my_member.Username }}" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ my_member.Username }} <span class="caret"></span></a>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
                         <li class="text-right"><a href="/members/{{ my_member.Username }}" class="dropdown-item">{{ 'Profile' | trans }}</a></li>
@@ -145,13 +153,12 @@
 
                 {# messages #}
                 <li class="nav-item float-right">
-                    <a href="/messages" class="nav-link"><i class="fa fa-lg fa-inbox"></i><noscript>{{ 'MyInbox' | trans }}</noscript> <span class="badge badge-warning">10</span></a>
+                    {# {{ 'MyInbox' | trans }} #} <a href="/messages" class="nav-link"><i class="fa fa-lg fa-inbox"></i> <span class="badge badge-warning d-md-none d-lg-inline-block">10</span></a>
                 </li>
 
                 {# logout #}
-                <li class="nav-item float-right"><a href="/logout" class="nav-link"><i class="fa fa-sign-out"></i></a></li>
+                <li class="nav-item float-right"><a href="/logout" class="nav-link"><i class="fa fa-lg fa-sign-out"></i></a></li>
             </ul>
-
 
         </div>
     </div>

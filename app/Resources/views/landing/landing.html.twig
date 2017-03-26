@@ -27,12 +27,12 @@
         <div class="col-12 col-lg-6">
             <div class="d-flex flex-column">
                 <div class="d-inline-flex h2 my-2">
-                    <span class="d-none d-md-block">Welcome back, </span>{{ macros.profilelink(my_member.Username) }}
+                    <span class="d-none d-md-flex">Welcome back, </span>{{ macros.profilelink(my_member.Username) }}
                 </div>
-                <div class="d-inline-flex d-none d-md-block align-items-center h4">
-                    Your hosting status is
+                <div class="d-inline-flex align-items-center h4">
+                    <span class="d-none d-md-flex">Your hosting status is</span>
                     {% include ':landing:widget/accommodation.html.twig' with {
-                        member: my_member
+                    member: my_member
                     } only %}
                     in
                     {# Provide a way to search in your location #}

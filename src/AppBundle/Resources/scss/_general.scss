@@ -2,14 +2,13 @@
 -------------------------------------------------- */
 html {
   height: 100%;
-  margin:0;
-  padding:0;
+  margin: 0;
+  padding: 0;
 }
 
 body {
   /* Margin bottom by footer height */
   text-rendering: optimizeLegibility;
-  // background: url("../../images/bggrey.png") repeat-x scroll left top #F7F7F7;
   background: #f7f7f7; /* For browsers that do not support gradients */
   background: linear-gradient(#afafaf, #f0f0f0 10em) repeat-x scroll left top #f0f0f0;
   height: 100%;
@@ -18,9 +17,9 @@ body {
 
 /* Wrapper for the main content, below the menu */
 .container-content {
-    @extend .container;
+  @extend .container;
 
-    margin-top: 25px;
+  margin-top: 25px;
 }
 
 .stickyfooter {
@@ -33,9 +32,16 @@ body {
   background-color: #555;
   color: #999;
 
-  a {color:#aaa; white-space: nowrap; }
-  a:hover { color:#fff; }
-  a:focus { color:#fff; }
+  a {
+    color: #aaa;
+    white-space: nowrap;
+  }
+  a:hover {
+    color: #fff;
+  }
+  a:focus {
+    color: #fff;
+  }
 
   & > .container {
     padding: 1rem $spacer;
@@ -53,20 +59,15 @@ body {
   box-shadow: 0 0 1px #888888;
 }
 
-@include media-breakpoint-up(md){
-  .verticalalign{
-    @include vertical-align();
-  }
-
-  .fullheight{
-    height: 100%;
-  }
+.fullheight {
+  height: 100%;
 }
 
 // Styles for auto complete box
 .ui-menu-item-highlight {
   font-weight: bold;
 }
+
 .ui-autocomplete-loading {
   background: white url("../img/ui-anim_basic_16x16.gif") right center no-repeat;
 }
@@ -95,7 +96,7 @@ body {
   &.active {
     background-image: none;
     outline: 0;
-    @include box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
+    @include box-shadow(inset 0 3px 5px rgba(0, 0, 0, .125));
   }
 
   &.disabled,
@@ -110,41 +111,40 @@ body {
 
 // radio buttons
 .btn-radio {
-  background-color: rgba($btn-primary-bg,.8);
+  background-color: rgba($btn-primary-bg, .8);
   border: 0px;
   font-family: Signika-regular;
   text-transform: capitalize;
   box-shadow: 0 0 1px 1px #d47a2e inset;
-  margin:0;
+  margin: 0;
 }
 
 .btn-radio:hover {
-  background-color: rgba($btn-primary-bg,1);
+  background-color: rgba($btn-primary-bg, 1);
   box-shadow: 0 0 1px 1px #cc5e00 inset;
 }
 
 .btn-radio.active, .btn-radio.active:focus {
-  background-color: rgba($btn-primary-bg,1) !important;
+  background-color: rgba($btn-primary-bg, 1) !important;
   outline: none;
   box-shadow: 0 0 1px 1px #b95500 inset;
 }
 
 // Flash notice styles
 .flash {
+
+  width: 100%;
   border: 1px solid;
   border-radius: 5px;
   clear: both;
   margin-bottom: 1em;
   padding: 1.25em;
 
-  &.error {
-    background: #ffebe8;
-    border: 2px #ff0000;
+  .notice {
+    background-color: $brand-info;
   }
-
-  &.notice {
-    background: #fff8c3;
-    border-color: #888;
+  .error {
+    background-color: $brand-danger;
   }
 }
 
@@ -172,7 +172,25 @@ body {
   float: right !important;
 }
 
-#col1 {
+@include media-breakpoint-down(md) {
+  .col1, .col3 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .col1 {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+  .col3 {
+    flex: 0 0 75%;
+    max-width: 75%;
+  }
+}
+
+.col1 {
   ul {
     padding-left: 0;
 
@@ -195,7 +213,7 @@ body {
   }
 }
 
-#col3 li {
+.col3 li {
   list-style-type: none;
 }
 
@@ -213,13 +231,13 @@ body {
 a {
   /* basic class for translation link */
   &.tr_link {
-    background:#ddeeff none !important;
-    border:1px solid #888 !important;
-    font-weight:normal !important;
-    display:inline !important;
+    background: #ddeeff none !important;
+    border: 1px solid #888 !important;
+    font-weight: normal !important;
+    display: inline !important;
     color: #333 !important;
-    padding-left:4px !important;
-    padding-right:4px !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
     /* "Hotpink" for missing words + translations */
@@ -228,25 +246,25 @@ a {
       color: #000 !important;
     }
     &.missing_translation {
-      background-color:#FF69B4 !important;
+      background-color: #FF69B4 !important;
       color: #000 !important;
     }
 
     /* "Aquamarine" for missing words + translations */
     &.obsolete {
-      background-color:#7FFFD4 !important;
+      background-color: #7FFFD4 !important;
     }
 
     /* "GreenYellow" for editing existing translation */
     &.successful_translation {
-      background-color:#ADFF2F !important;
+      background-color: #ADFF2F !important;
     }
 
     /* "LemonChiffon" for hovering */
     &:hover {
       background: #FFFACD !important;
       color: #333 !important;
-      border:1px solid #888 !important;
+      border: 1px solid #888 !important;
       font-weight: normal !important;
       text-decoration: none !important;
     }
@@ -254,26 +272,12 @@ a {
 
 }
 
-.smaller{
+.smaller {
   font-size: 65%;
 }
 
-.icontext{
+.icontext {
   padding-left: 0.4rem;
-}
-
-.fullwidth{
-  width: 100%;
-}
-
-.flash {
-  width: 100%;
-  .notice {
-    background-color: $brand-info;
-  }
-  .error {
-    background-color: $brand-danger;
-  }
 }
 
 .list-group-item-action:focus, .list-group-item-action:hover {

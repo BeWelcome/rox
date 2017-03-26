@@ -1,9 +1,9 @@
 {% import 'macros.twig' as macros %}
-<div class="col-12 col-lg-2 d-none d-md-block" id="welcomeavatar">
+<div class="col-12 col-lg-2 align-self-center d-none d-md-block" id="welcomeavatar">
     <div>
         {{ macros.avatar( my_member.Username, 100, true) }}
-    </div>
-    <div class="align-self-start hoststatus">
-        <img src="/images/icons/{{ member.Accommodation }}.png">
+        <div class="hoststatus">
+            <img src="/images/icons/{{ member.Accommodation }}.png">
+        </div>
     </div>
 </div>

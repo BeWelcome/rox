@@ -8,9 +8,9 @@
 }
 
 .hoststatus{
-  position:relative;
-  left: 75px;
-  bottom: 30px;
+  position:absolute;
+  left: 90px;
+  top: 70px;
 }
 
 .hoststatusdropdown{
@@ -24,12 +24,6 @@
   border-radius: 0 0.25rem 0.25rem 0.25rem;
   border: 1px solid #e1e1e1;
   border-top: none;  
-}
-
-.readunread{
-  background-color: #FFF;
-  padding: 0.2em;
-  text-align: center;
 }
 
 .shadow{
@@ -132,26 +126,13 @@
   border-spacing: 0.5rem 0;
 }
 
-@include media-breakpoint-up(md){
-
-  .welcomeback {
-    height: 7em;
-  }
-
-}
-
 /* Occurs when viewed on medium to very small screens only */
 
 @include media-breakpoint-down(md) {
 
-  .welcomeback {
-    height: auto;
-  }
-
   .text-truncate{
     line-height: 1;
   }
-
 }
 
 .searchsubmit {

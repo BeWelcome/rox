@@ -40,7 +40,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 
     <div class="d-flex flex-column col-3 col-lg-2 mr-2 p-0 postleftcolumn">
 
-        <div class="d-flex flex-row align-self-start pull-left p-2 fullwidth credentials">
+        <div class="d-flex flex-row align-self-start pull-left p-2 w-100 credentials">
             <div class="p-1"><img class="media-object"
                                   src="/members/avatar/<?php echo($post->OwnerUsername); ?>?size=50"></div>
             <div>
@@ -92,7 +92,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
     </div>
     <!-- message -->
     <div class="col-9 col-lg-10 p-2">
-        <div class="float-left fullwidth">
+        <div class="float-left w-100">
         <a name="post<?php echo $post->postid; ?>"></a>
         <p class="small gray">
             <?php

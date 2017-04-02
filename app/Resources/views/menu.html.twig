@@ -1,12 +1,11 @@
 {% import 'macros.twig' as macros %}
-<nav class="navbar-nav navbar-sticky-top navbar-expand-md navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
+<nav class="navbar navbar-sticky-top navbar-expand-md navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
     <div class="container">
-        <button class="nav-link navbar-toggler float-right d-md-none" type="button" data-toggle="collapse" data-target="#smallNavBar" aria-controls="mainNavBar" aria-expanded="false" aria-label="Toggle navigation">
-           &#9776;
-        </button>
-
         <a class="navbar-brand mr-3 float-left" href="{{ url('homepage') }}">{% image 'bundles/app/images/logo_index_top.png' %}<img src="{{ asset_url }}" alt="{{ 'BeWelcome' | trans }}"/>{% endimage %}</a>
 
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#smallNavBar" aria-controls="smallNavBar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         {# Navbar small screens #}
         <div class="collapse d-xl-none px-0" id="smallNavBar">
             <ul class="navbar-nav w-100 mr-auto mt-2">

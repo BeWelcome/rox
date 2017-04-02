@@ -1,11 +1,11 @@
-.navbar-nav {
+nav .navbar {
 
+  .navbar-brand {
+    padding-right: $spacer;
+  }
   .nav-link {
-    display: block;
-    padding: .7rem;
     color: $navbar-dark-color;
     font-weight: bold;
-
   }
 
   .nav-link:hover {
@@ -21,7 +21,6 @@
 .subnav{
   width: 100%;
   position: fixed;
-  top: 41px;
   background-color: rgba($brand-primary,0.95);
   border: none;
   border-radius: 0;
@@ -61,4 +60,9 @@
 
 .loginform{
   padding-top: .2rem;
+}
+
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0, 0, 0, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }

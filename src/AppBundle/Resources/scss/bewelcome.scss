@@ -1,4 +1,5 @@
 // Include fonts
+
 @import "mixins";
 
 $font-path: '../fonts/';
@@ -17,6 +18,7 @@ $lato-font-path: '../fonts';
 // Core variables and mixins
 @import "custom";
 $font-family-bold: Signika-bold, Arial;
+
 
 @import "../../../../node_modules/bootstrap/scss/bootstrap";
 
@@ -41,6 +43,7 @@ $font-family-bold: Signika-bold, Arial;
 @import "search";
 @import "groups";
 @import "forums";
+@import "offcanvas";
 
 .badge-warning {
   @include badge-variant(white);
@@ -55,17 +58,17 @@ $font-family-bold: Signika-bold, Arial;
   word-wrap: break-word;
 }
 
-/* This is actually defined in content_minimal but that file is not imported */
+// This is actually defined in content_minimal but that file is not imported
 .unread {
     font-weight: bold;
 }
 
-/* Fix for location input appearing behind map on search member page */
+// Fix for location input appearing behind map on search member page
 .ui-front {
     z-index: 2000!important;
 }
 
-/* Use own blockquote style */
+// Use own blockquote style
 blockquote {
   color: #444;
   background: #f8f8f8;

@@ -192,31 +192,31 @@ $clear-selection-color: $dropdown-arrow-color !default;
     }
 
     .select2-results__option {
-      padding: $input-padding-x $input-padding-y;
+      padding: $input-btn-padding-x $input-btn-padding-y;
 
       .select2-results__group {
         padding-left: 0;
       }
 
       .select2-results__option {
-        margin-left: -$input-padding-x;
-        padding-left: $input-padding-x*2;
+        margin-left: -$input-btn-padding-x;
+        padding-left: $input-btn-padding-x*2;
 
         .select2-results__option {
-          margin-left: -$input-padding-x*2;
-          padding-left: $input-padding-x*3;
+          margin-left: -$input-btn-padding-x*2;
+          padding-left: $input-btn-padding-x*3;
 
           .select2-results__option {
-            margin-left: -$input-padding-x*3;
-            padding-left: $input-padding-x*4;
+            margin-left: -$input-btn-padding-x*3;
+            padding-left: $input-btn-padding-x*4;
 
             .select2-results__option {
-              margin-left: -$input-padding-x*4;
-              padding-left: $input-padding-x*5;
+              margin-left: -$input-btn-padding-x*4;
+              padding-left: $input-btn-padding-x*5;
 
               .select2-results__option {
-                margin-left: -$input-padding-x*5;
-                padding-left: $input-padding-x*6;
+                margin-left: -$input-btn-padding-x*5;
+                padding-left: $input-btn-padding-x*6;
               }
             }
           }
@@ -228,7 +228,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
   .select2-results__group {
     color: $dropdown-header-color;
     display: block;
-    padding: $input-padding-x $input-padding-y;
+    padding: $input-btn-padding-x $input-btn-padding-y;
     font-size: $font-size-sm;
     line-height: $line-height-base;
     white-space: nowrap;
@@ -362,7 +362,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
   .select2-selection--single {
     height: $input-height;
     line-height: $line-height-base;
-    padding: $input-padding-y ($input-padding-x) $input-padding-y $input-padding-x;
+    padding: $input-btn-padding-y ($input-btn-padding-x) $input-btn-padding-y $input-btn-padding-x;
 
     /**
      * Adjust the single Select2's dropdown arrow button appearance.
@@ -371,7 +371,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
     .select2-selection__arrow {
       position: absolute;
       bottom: 0;
-      right: $input-padding-x;
+      right: $input-btn-padding-x;
       top: 0;
       width: $caret-width;
 
@@ -442,8 +442,8 @@ $clear-selection-color: $dropdown-arrow-color !default;
       border-radius: 4px;
       cursor: default;
       float: left;
-      margin: ($input-padding-y - 1) 0 0 $input-padding-x/2;
-      padding: 0 $input-padding-y;
+      margin: ($input-btn-padding-y - 1) 0 0 $input-btn-padding-x/2;
+      padding: 0 $input-btn-padding-y;
     }
 
     /**
@@ -453,7 +453,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
     .select2-search--inline {
       .select2-search__field {
         background: transparent;
-        padding: 0 $input-padding-x;
+        padding: 0 $input-btn-padding-x;
         height: $input-height - 2;
         line-height: $line-height-base;
         margin-top: 0;
@@ -466,7 +466,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
       cursor: pointer;
       display: inline-block;
       font-weight: bold;
-      margin-right: $input-padding-y / 2;
+      margin-right: $input-btn-padding-y / 2;
 
       &:hover {
         color: #333;
@@ -478,7 +478,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
      */
 
     .select2-selection__clear {
-      margin-top: $input-padding-y;
+      margin-top: $input-btn-padding-y;
     }
   }
 
@@ -505,11 +505,11 @@ $clear-selection-color: $dropdown-arrow-color !default;
     font-size: $font-size-sm;
     height: $input-height-sm;
     line-height: $line-height-sm;
-    padding: -$input-padding-x-sm $input-padding-x-sm  -$input-padding-x-sm $input-padding-x-sm;
+    padding: -$input-btn-padding-x-sm $input-btn-padding-x-sm  -$input-btn-padding-x-sm $input-btn-padding-x-sm;
 
     /* 2 */
     .select2-selection__arrow b {
-      margin-left: --$input-padding-x-sm;
+      margin-left: --$input-btn-padding-x-sm;
     }
   }
 
@@ -522,19 +522,19 @@ $clear-selection-color: $dropdown-arrow-color !default;
     .select2-selection__choice {
       font-size: $font-size-sm;
       line-height: $line-height-sm;
-      margin: (-$input-padding-x-sm - 1) 0 0 $input-padding-x-sm/2;
-      padding: 0 -$input-padding-x-sm;
+      margin: (-$input-btn-padding-x-sm - 1) 0 0 $input-btn-padding-x-sm/2;
+      padding: 0 -$input-btn-padding-x-sm;
     }
 
     .select2-search--inline .select2-search__field {
-      padding: 0 $input-padding-x-sm;
+      padding: 0 $input-btn-padding-x-sm;
       font-size: $font-size-sm;
       height: $input-height-sm - 2;
       line-height: $line-height-sm;
     }
 
     .select2-selection__clear {
-      margin-top: -$input-padding-x-sm;
+      margin-top: -$input-btn-padding-x-sm;
     }
   }
 
@@ -545,7 +545,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
     font-size: $font-size-lg;
     height: $input-height-lg;
     line-height: $line-height-lg;
-    padding: -$input-padding-y-lg -$input-padding-x-lg -$input-padding-x-lg -$input-padding-x-lg;
+    padding: -$input-btn-padding-y-lg -$input-btn-padding-x-lg -$input-btn-padding-x-lg -$input-btn-padding-x-lg;
 
     /* 1 */
     .select2-selection__arrow {
@@ -554,7 +554,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
       b {
         border-width: $caret-width $caret-width 0 $caret-width;
         margin-left: -$caret-width;
-        margin-left: --$input-padding-x-lg;
+        margin-left: --$input-btn-padding-x-lg;
         margin-top: -$caret-width/2;
       }
     }
@@ -570,19 +570,19 @@ $clear-selection-color: $dropdown-arrow-color !default;
       font-size: $font-size-lg;
       line-height: $line-height-lg;
       border-radius: 4px;
-      margin: (-$input-padding-x-lg - 1) 0 0 -$input-padding-x-lg/2;
-      padding: 0 -$input-padding-x-lg;
+      margin: (-$input-btn-padding-x-lg - 1) 0 0 -$input-btn-padding-x-lg/2;
+      padding: 0 -$input-btn-padding-x-lg;
     }
 
     .select2-search--inline .select2-search__field {
-      padding: 0 -$input-padding-x-lg;
+      padding: 0 -$input-btn-padding-x-lg;
       font-size: $font-size-lg;
       height: $input-height-lg - 2;
       line-height: $line-height-lg;
     }
 
     .select2-selection__clear {
-      margin-top: -$input-padding-x-lg;
+      margin-top: -$input-btn-padding-x-lg;
     }
   }
 
@@ -614,8 +614,8 @@ $clear-selection-color: $dropdown-arrow-color !default;
      */
 
     .select2-selection--single {
-      padding-left: $input-padding-x;
-      padding-right: $input-padding-x;
+      padding-left: $input-btn-padding-x;
+      padding-right: $input-btn-padding-x;
       .select2-selection__rendered {
         padding-right: 0;
         padding-left: 0;
@@ -627,7 +627,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
       }
 
       .select2-selection__arrow {
-        left: $input-padding-x;
+        left: $input-btn-padding-x;
         right: auto;
 
         b {
@@ -648,7 +648,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
 
       .select2-selection__choice {
         margin-left: 0;
-        margin-right: $input-padding-x/2;
+        margin-right: $input-btn-padding-x/2;
       }
 
       .select2-selection__choice__remove {

@@ -60,6 +60,7 @@ security:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
         - { path: ^/about, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/safety, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/tour, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/rox/in, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 

@@ -12,7 +12,7 @@ services:
         autowire: true
 
     Rox\Auth\Encoder\LegacyPasswordEncoder:
-        class: Rox\Auth\Encoder\LegacyPasswordEncoder
+        class: AppBundle\Encoder\LegacyPasswordEncoder
 
     Rox\Auth\Listener\AccessDeniedRedirectListener:
         class: Rox\Auth\Listener\AccessDeniedRedirectListener

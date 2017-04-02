@@ -14,18 +14,38 @@
             endforeach;
             endif; ?>
 
-            <?php $this->teaser() ?>
-
         <?php if ($this->getFlashError()): ?>
             <div class="flash error"><?php echo $this->getFlashError(true); ?></div>
         <?php endif; ?>
         <?php if ($this->getFlashNotice()): ?>
-        <div class="flash notice"><?php echo $this->getFlashNotice(true); ?></div>
+            <div class="flash notice"><?php echo $this->getFlashNotice(true); ?></div>
         <?php endif; ?>
 
-        <?php $this->columnsArea() ?>
-    </div> <!-- main -->
+        <div class="row row-offcanvas row-offcanvas-right">
 
+            <div class="col-12 col-md-9">
+                <?php
+                if ($this->getSubmenuItems()) { ?>
+                <p class="float-right d-md-none">
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="offcanvas">Toggle nav</button>
+                </p>
+                <?php
+                 }
+                ?>
+                <div class="jumbotron">
+            <?php $this->teaser() ?>
+                </div>
+                <?php
+                $this->columnsArea(); ?>
+            </div>
+            <?php
+                if ($this->getSubmenuItems()) {
+                    $this->submenu();
+                }
+                ?>
+            </div>
+    </div> <!-- main -->
+    <script src="js/offcanvas.js"></script>
 <div>
     <?php $this->debugInfo() ?>
     <?php $this->leftoverTranslationLinks() ?>

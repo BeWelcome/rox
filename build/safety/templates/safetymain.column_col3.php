@@ -1,5 +1,4 @@
-<div class="row mt-3">
-    <div class="col-12 col-lg-6">
+    <div class="col-12 col-md-6">
         <h3><?php echo $words->get('Safety_How');?></h3>
         <p><?php echo $words->get('Safety_HowText');?></p>
         <a name="trustworthy"></a>
@@ -12,7 +11,7 @@
         <h3><?php echo $words->get('Safety_Emergency');?></h3>
         <p><?php echo $words->get('Safety_EmergencyIntro');?></p>
     </div>
-    <div class="col-12 col-lg-6">
+    <div class="col-12 col-md-6">
         <div class="card p-2 mb-3">
             <a name="contact"></a>
             <h3><?php echo $words->get('Safety_Contact');?></h3>
@@ -29,4 +28,3 @@
             <p><?php echo $words->get('Safety_KeepItSafeText');?></p>
         </div>
     </div>
-</div>

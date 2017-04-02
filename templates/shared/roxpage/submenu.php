@@ -1,4 +1,6 @@
-<div class="pl-0 m-b-1"><ul class="nav nav-pills">
+<div class="col-6 col-md-3 sidebar-offcanvas" id="sidebar">
+    <div class="list-group">
+
 <?php
 $active_menu_item = $this->getSubmenuActiveItem();
 foreach ($this->getSubmenuItems() as $index => $item) {
@@ -11,12 +13,11 @@ foreach ($this->getSubmenuItems() as $index => $item) {
         $classes = 'nav-link';
     }
     
-    ?><li class="nav-item">
-      <a class="<?=$classes ?>" href="<?=$url ?>"><?=$label ?></a>
+    ?>
+      <a class="list-group-item <?=$classes ?>" href="<?=$url ?>"><?=$label ?></a>
       <?=$words->flushBuffer(); ?>
-    </li>
     <?php
     
 }?>
-</ul>
+</div>
 </div>

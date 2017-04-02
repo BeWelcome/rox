@@ -329,7 +329,7 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
 
         $volunteerRights = $this->volunteerRights()->with('right')->get()->all();
         foreach ($volunteerRights as $volunteerRight) {
-            if ($volunteerRight->Level !== 0) {
+            if ($volunteerRight->getLevel() !== 0) {
                 $roles[] = 'ROLE_ADMIN_' . strtoupper($volunteerRight->right->Name);
             }
         }
@@ -507,5 +507,10 @@ class Member extends AbstractModel implements MemberRepositoryInterface, UserInt
         if (!preg_match('/^\$2y\$[0-9]{2}\$.{53}$/', $this->PassWord)) {
             throw new RuntimeException('Password is neither bcrypt or legacy sha1.');
         }
+    }
+
+    public function getLocale()
+    {
+        return 'en';
     }
 }

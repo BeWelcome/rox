@@ -17,7 +17,7 @@ member:
         _controller: Rox\Member\Controller\MemberController::view
 
 member/edit:
-    path: /member/edit
+    path: /editmyprofile
     methods: [GET]
     defaults:
         _controller: Rox\Member\Controller\MemberController::edit

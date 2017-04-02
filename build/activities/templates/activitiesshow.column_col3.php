@@ -58,9 +58,9 @@ if (empty($vars)) {
     <div class="col-sm-12 col-md-3">
         <h4><?php $words->get('ActivityAttendeesNumbersTitle'); ?></h4>
         <div class="d-flex flex-row hidden-md-down">
-            <div class="d-flex align-items-center pr-2"><i class="fa fa-3x fa fa-user-circle-o"></i></div>
+            <div class="d-flex align-items-start pr-2"><i class="fa fa-4x fa-user-circle-o"></i></div>
             <div>
-                <small>
+                <p style="font-size: 1.2rem;">
                     <?php if ($this->activity->attendeesYes != 0) {
                         echo $words->get('ActivityAttendeesYes', $this->activity->attendeesYes) . '<br>';
                     } ?>
@@ -70,7 +70,7 @@ if (empty($vars)) {
                     <?php if ($this->activity->attendeesNo != 0) {
                         echo $words->get('ActivityAttendeesNo', $this->activity->attendeesNo);
                     } ?>
-                </small>
+                </p>
             </div>
         </div>
     </div>
@@ -92,7 +92,7 @@ if (empty($vars)) {
 
         <?php
         foreach ($this->activity->organizers as $organizer) { ?>
-            <div class="w-100 d-flex flex-row" style="border: 1px dashed #ccc;">
+            <div class="w-100 d-flex flex-row">
                 <div class="mr-2"><a href="members/<?php $organizer->Username; ?>"><img
                                 src="members/avatar/<?php echo $organizer->Username; ?>?size=50"></a></div>
                 <div><a href="members/<?php echo $organizer->Username; ?>"><?php echo $organizer->Username; ?></a></div>
@@ -229,17 +229,17 @@ if (empty($vars)) {
             foreach ($this->attendeesPager->getActiveSubset($this->activity->attendees) as $attendee) {
 
                 ?>
-                <div class="col-auto m-1 p-2
+                <div class="col-auto m-1 p-2 mw-25
 <?
                 switch ($attendee->status) {
                     case 1:
-                        echo "attendyes";
+                        echo " attendyes";
                         break;
                     case 2:
-                        echo "attendmaybe";
+                        echo " attendmaybe";
                         break;
                     case 3:
-                        echo "attendno";
+                        echo " attendno";
                         break;
                 }
                 ?>

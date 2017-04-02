@@ -1,8 +1,9 @@
-nav .navbar {
+.navbar {
 
   .navbar-brand {
     padding-right: $spacer;
   }
+
   .nav-link {
     color: $navbar-dark-color;
     font-weight: bold;
@@ -19,12 +20,15 @@ nav .navbar {
 }
 
 .subnav{
-  width: 100%;
   position: fixed;
+  top: 43px;
+  left: 0;
+  right: 0;
+
   background-color: rgba($brand-primary,0.95);
   border: none;
   border-radius: 0;
-  box-shadow: 0px 3px 5px #333;
+  box-shadow: 0 3px 5px #333;
 
   a{
     color: rgba($navbar-dark-color,0.8);

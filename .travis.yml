@@ -25,7 +25,7 @@ before_install:
   - mysql -u root -e 'FLUSH PRIVILEGES;'
 
 install:
-  - npm install
+  - npm update
   - composer update --no-interaction --ignore-platform-reqs
 
 script:

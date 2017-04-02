@@ -45,7 +45,7 @@
                 ?>
             </div>
     </div> <!-- main -->
-    <script src="js/offcanvas.js"></script>
+    <script src="bundles/app/js/offcanvas.js"></script>
 <div>
     <?php $this->debugInfo() ?>
     <?php $this->leftoverTranslationLinks() ?>

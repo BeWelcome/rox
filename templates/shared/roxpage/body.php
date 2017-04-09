@@ -26,13 +26,13 @@
             <div class="col-12 col-md-9">
                 <?php
                 if ($this->getSubmenuItems()) { ?>
-                <p class="float-right d-md-none">
+                <p class="float-right d-md-none pl-3">
                     <button type="button" class="btn btn-primary btn-sm" data-toggle="offcanvas">Toggle nav</button>
                 </p>
                 <?php
                  }
                 ?>
-                <div class="jumbotron">
+                <div>
             <?php $this->teaser() ?>
                 </div>
                 <?php

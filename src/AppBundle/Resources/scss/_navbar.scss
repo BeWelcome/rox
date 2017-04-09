@@ -7,6 +7,8 @@
   .nav-link {
     color: $navbar-dark-color;
     font-weight: bold;
+    padding-top: 0.7rem;
+    height: 100% !important;
   }
 
   .nav-link:hover {
@@ -20,11 +22,10 @@
 }
 
 .subnav{
-  position: fixed;
-  top: 43px;
+  position: fixed !important;
+  top: 42px;
   left: 0;
   right: 0;
-
   background-color: rgba($brand-primary,0.95);
   border: none;
   border-radius: 0;
@@ -60,6 +61,12 @@
 
 .menuborder{
   border-left: 1px solid rgba($navbar-dark-color,0.7);
+  height: 2.7rem;
+}
+
+.subnavborder{
+  border-left: 1px solid rgba($navbar-dark-color,0.7);
+  height: 100%;
 }
 
 .loginform{

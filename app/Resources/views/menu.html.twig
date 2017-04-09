@@ -101,7 +101,7 @@
                                     {% endfor %}
 
                                 </div>
-                                <div class="menuborder py-5">
+                                <div class="subnavborder py-5">
                                     <div class="pl-5 pr-0">
                                         <a href="/members/{{ my_member.Username }}">{{ macros.avatar( my_member.Username, 50, true) }} <span class="h4">{{ my_member.Username }}</span></a>
                                     </div>
@@ -162,3 +162,17 @@
         </div>
     </div>
 </nav>
+
+<script language="JavaScript">
+    $(window).scroll(function() {
+
+        if ($(this).scrollTop()>0)
+        {
+            $('.subnav').fadeOut();
+        }
+        else
+        {
+            $('.subnav').fadeIn();
+        }
+    });
+</script>

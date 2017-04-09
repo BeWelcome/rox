@@ -7,10 +7,10 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         {# Navbar small screens #}
-        <div class="collapse d-xl-none px-0" id="smallNavBar">
-            <ul class="navbar-nav w-100 mr-auto mt-2">
+        <div class="collapse d-xl-none px-0 w-100" id="smallNavBar">
+            <ul class="navbar-nav mr-auto mt-2">
                 <li class="nav-item bordert-1">
-                    <a href="{{ url('member', { username: my_member.Username }) }}" class="nav-link">{{ my_member.Username }}</a>
+                    <a href="{{ url('member', { username: my_member.Username }) }}" class="nav-link pl-1">{{ my_member.Username }}</a>
                 </li>
                 <li class="nav-item bordert-1">
                     <a href="{{ path( 'messages' ) }}" class="nav-link pl-4">{{ 'MyMessages' | trans }}</a>
@@ -22,13 +22,13 @@
                     <a href="/mynotes" class="nav-link pl-4">{{ 'MyNotes' | trans }}</a>
                 </li>
                 <li class="nav-item bordert-1">
-                    <a href="{{ url( 'homepage' ) }}" class="nav-link">{{ 'MapSearch' | trans }}</a>
+                    <a href="{{ url( 'homepage' ) }}" class="nav-link pl-1">{{ 'MapSearch' | trans }}</a>
                 </li>
                 <li class="nav-item bordert-1">
-                    <a href="/trips" class="nav-link">{{ 'Trips' | trans }}</a>
+                    <a href="/trips" class="nav-link pl-1">{{ 'Trips' | trans }}</a>
                 </li>
                 <li class="nav-item bordert-1">
-                    <a href="/community" class="nav-link">{{ 'CommunityMenu' | trans }}</a>
+                    <a href="/community" class="nav-link pl-1">{{ 'CommunityMenu' | trans }}</a>
                 </li>
                 <li class="nav-item bordert-1">
                     <a href="/safety" class="nav-link px-3">{{ 'Safety' | trans}}</a>
@@ -37,7 +37,7 @@
                     <a href="/about" class="nav-link px-3">{{ 'GetAnswers' | trans}}</a>
                 </li>
                 <li class="nav-item bordert-1">
-                    <a href="/logout" class="nav-link">{{ 'Logout' | trans }}</a>
+                    <a href="/logout" class="nav-link pl-1">{{ 'Logout' | trans }}</a>
                 </li>
             </ul>
         </div>

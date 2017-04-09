@@ -23,12 +23,11 @@ body {
 }
 
 .stickyfooter {
-  height: 1px;
+  height: auto;
   font-size: $font-size-sm;
   line-height: 1.1;
   width: 100%;
   padding: $spacer $spacer;
-
   background-color: #555;
   color: #999;
 

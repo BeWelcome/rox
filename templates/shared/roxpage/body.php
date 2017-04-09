@@ -21,9 +21,7 @@
             <div class="flash notice"><?php echo $this->getFlashNotice(true); ?></div>
         <?php endif; ?>
 
-        <div class="row row-offcanvas row-offcanvas-right">
-
-            <div class="col-12 col-md-9">
+            <div class="row row-offcanvas row-offcanvas-right">
                 <?php
                 if ($this->getSubmenuItems()) { ?>
                 <p class="float-right d-md-none pl-3">
@@ -43,8 +41,7 @@
                     $this->submenu();
                 }
                 ?>
-            </div>
-    </div> <!-- main -->
+            </div><!-- main -->
     <script src="bundles/app/js/offcanvas.js"></script>
 <div>
     <?php $this->debugInfo() ?>

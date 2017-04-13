@@ -62,7 +62,7 @@ services:
     rox.member_twig_extension:
         class: AppBundle\Twig\MemberTwigExtension
         public: false
-        arguments: ['@security.token_storage']
+        arguments: ['@session']
         tags:
             - { name: twig.extension }
 

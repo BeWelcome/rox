@@ -130,7 +130,7 @@ public function hasRight($Name, $_Scope = "", $OptionalIdMember = 0)
 	if ($OptionalIdMember != 0) { // In case we want to test for the rigt of a specific member, who is not the logged
 		$IdMember = $OptionalIdMember;
 	} else {
-		$IdMember = $this->_session->get('IdMember');
+		$IdMember = $this->_session->get('IdMember', 0);
 	}
 
 	$Scope = rtrim(ltrim($_Scope)); // ensure they are no extra spaces 
@@ -179,7 +179,7 @@ WHERE IdMember=' . $IdMember . ' AND '.$this->nomtable.'.id='.$this->nomtablevol
 				return (0);
 		}
 	} else {
-		if (($this->_session->get("IdMember")) == 1)
+		if (($this->_session->get("IdMember", 0)) == 1)
 			return (10); // Admin has all rights at level 10
 		return ($rlevel);
 	}
@@ -260,7 +260,7 @@ public function TheScope($Name, $Scope = "")
 		return false;
 	}
 	
-	$IdMember = $this->_session->get('IdMember');
+	$IdMember = $this->_session->get('IdMember', 0);
 	if ((!$this->_session->has($this->IdSession . $Name) or ($this->_session->get('Param')->ReloadRightsAndFlags == 'Yes'))) {
 		$str = '
 SELECT 

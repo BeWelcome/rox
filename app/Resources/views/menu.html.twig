@@ -1,4 +1,5 @@
 {% import 'macros.twig' as macros %}
+{% if my_member %}
 <nav class="navbar navbar-sticky-top navbar-expand-md navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
     <div class="container">
         <a class="navbar-brand mr-3 float-left" href="{{ url('homepage') }}">{% image 'bundles/app/images/logo_index_top.png' %}<img src="{{ asset_url }}" alt="{{ 'BeWelcome' | trans }}"/>{% endimage %}</a>
@@ -158,7 +159,41 @@
                 {# logout #}
                 <li class="nav-item float-right"><a href="/logout" class="nav-link"><i class="fa fa-lg fa-sign-out"></i></a></li>
             </ul>
-
         </div>
     </div>
 </nav>
+{% else %}
+    <nav class="navbar navbar-sticky-top navbar-expand-md navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
+        <a class="navbar-brand mr-3 float-left" href="{{ url('homepage') }}">{% image 'bundles/app/images/logo_index_top.png' %}<img src="{{ asset_url }}" alt="{{ 'BeWelcome' | trans }}"/>{% endimage %}</a>
+
+        <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-collapse collapse" id="navbarsExample04" aria-expanded="false">
+            <ul class="navbar-nav mr-auto">
+                <li class="about">
+                    <a href="/about" class="nav-link px-3">{{ 'About' | trans }}</a>
+                </li>
+                <li class="menuborder">
+                    <a href="/safety" class="nav-link px-3">{{ 'Safety' | trans }}</a>
+                </li>
+                <li class="menuborder">
+                    <a href="/volunteer" class="nav-link px-3">{{ 'Volunteer' | trans }}</a>
+                </li>
+            </ul>
+
+            <form id="main-login-form" role="form" class="form-inline" method="post" action="{{ path('security_check') }}">
+                <label class="sr-only" for="login-u">{{ 'Username' | trans }}</label>
+                <input type="text" id="login-u" name="username" autofocus required placeholder="{{ 'Username' | trans }}" class="form-control">
+
+                <label class="sr-only" for="login-p">{{ 'Password' | trans }}</label>
+                <input type="password" id="login-p" name="password" placeholder="{{ 'Password' | trans }}" class="form-control">
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" >
+
+                <button type="submit" class="btn btn-outline-secondary my-2 my-sm-0">{{ 'IndexPageLoginSubmit' | trans }}</button>
+            </form>
+        </div>
+    </nav>
+{% endif %}

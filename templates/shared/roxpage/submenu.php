@@ -17,7 +17,15 @@ foreach ($this->getSubmenuItems() as $index => $item) {
       <a class="list-group-item <?=$classes ?>" href="<?=$url ?>"><?=$label ?></a>
       <?=$words->flushBuffer(); ?>
     <?php
-    
-}?>
-</div>
+}
+
+
+if ($side_column_names) {
+    foreach ($side_column_names as $column_name) { ?>
+            <?php $this->_column($column_name) ?>
+    <?php }
+}
+
+?>
+    </div>
 </div>

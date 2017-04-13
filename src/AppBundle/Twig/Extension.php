@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Faker\Factory;
 use HtmlTruncator\Truncator;
 use Rox\I18n\Service\LanguageService;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Twig_Extension;
 use Twig_Extension_GlobalsInterface;
@@ -122,7 +123,11 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
             return (strtolower($a->TranslatedName) < strtolower($b->TranslatedName)) ? -1 : 1;
         });
 
-        $member = $this->registry->getEntityManager()->getRepository(Member::class)->find(1223);
+        $member = null;
+        $rememberMeToken = unserialize($this->session->get('_security_default'));
+        if ($rememberMeToken != null) {
+            $member = $rememberMeToken->getUser();
+        }
 
         return [
             'version' => trim(file_get_contents('../VERSION')),

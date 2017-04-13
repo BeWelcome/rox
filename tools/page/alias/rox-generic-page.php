@@ -13,7 +13,7 @@
 class RoxGenericPage extends PageWithParameterizedRoxLayout
 {
     protected function getColumnNames() {
-        return array('col3', 'col1');
+        return array('col1', 'col3');
     }
 }
 
@@ -51,7 +51,7 @@ class RoxGenericPage_OLD
 
 
     protected function getColumnNames() {
-        return array('col3', 'col1');
+        return array('col1', 'col3');
     }
 
     /**

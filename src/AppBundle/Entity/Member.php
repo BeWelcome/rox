@@ -2409,9 +2409,11 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
         ];
 
         $volunteerRights = $this->getVolunteerRights();
-        foreach ($volunteerRights as $volunteerRight) {
-            if ($volunteerRight->getLevel() !== 0) {
-                $roles[] = 'ROLE_ADMIN_' . strtoupper($volunteerRight->getRight()->getName());
+        if (is_array($volunteerRights)) {
+            foreach ($volunteerRights as $volunteerRight) {
+                if ($volunteerRight->getLevel() !== 0) {
+                    $roles[] = 'ROLE_ADMIN_' . strtoupper($volunteerRight->getRight()->getName());
+                }
             }
         }
 

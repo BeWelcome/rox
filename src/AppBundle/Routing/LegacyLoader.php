@@ -49,6 +49,12 @@ class LegacyLoader extends Loader
         $this->addRoute('about_faq_category', '/aboutaactivi/faq/{category}', '', '');
         $this->addRoute('about', '/about', '', '');
         $this->addRoute('getactive', '/about/getactive', '', '');
+        $this->addRoute('signup', '/signup/', '', '');
+        $this->addRoute('signup_1', '/signup/1', '', '');
+        $this->addRoute('signup_2', '/signup/2', '', '');
+        $this->addRoute('signup_3', '/signup/3', '', '');
+        $this->addRoute('signup_4', '/signup/4', '', '');
+        $this->addRoute('signup_finish', '/signup/finish', '', '');
 
 //        $this->routes->add('activities', new Route( '/activities/100/edit', [
 //            '_controller' => 'rox.legacy_controller:showAction'

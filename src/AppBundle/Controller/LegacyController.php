@@ -27,17 +27,25 @@ class LegacyController extends Controller
         // old code, which is now turned off.
         $session = $this->get('session');
         $session->start();
+
+        $pathInfo = $request->getPathInfo();
+        $public = (strpos($pathInfo, '/safety') === false) ||
+            (strpos($pathInfo, '/about') === false) ||
+            (strpos($pathInfo, '/signup') === false);
         if (!$session->has('IdMember')) {
             $rememberMeToken = unserialize($session->get('_security_default'));
-            if ($rememberMeToken == null) {
+            if ($rememberMeToken == null && !$public)
+            {
                 throw new AccessDeniedException();
             }
-            /** @var Member $user */
-            $user = $rememberMeToken->getUser();
-            if ($user !== null) {
-                $session->set('IdMember', $user->getId());
-                $session->set('MemberStatus', $user->getStatus());
-                $session->set('APP_User_id', $user->getId());
+            if ($rememberMeToken != null) {
+                /** @var Member $user */
+                $user = $rememberMeToken->getUser();
+                if ($user !== null) {
+                    $session->set('IdMember', $user->getId());
+                    $session->set('MemberStatus', $user->getStatus());
+                    $session->set('APP_User_id', $user->getId());
+                }
             }
         }
         try {

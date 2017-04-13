@@ -48,42 +48,7 @@ $words = new MOD_words();
 <?php
     echo "<h3>", $words->get("AboutUs_HowOrganized"),"</h3>";
     echo "<p>",$words->get("AboutUs_HowOrganizedText"),"</p>";
-    
-//Blog model to fetch the Community News
-$Blog = new Blog();
-$postIt      = $Blog->getTaggedPostsIt('Community News for the frontpage', true);
-$format = array('short'=>$words->getSilent('DateFormatShort'));
-
-    ?><h3 class="first" ><a href="blog/tags/Community News for the frontpage"><?php echo $words->getFormatted('CommunityNews') ?></a> <a href="rss/blog/tags/Community%20News%20for%20the%20frontpage"><img src="images/icons/feed.png" alt="<?=$words->getSilent('GetRSSFeed')?>"></a><?php echo $words->flushBuffer(); ?></h3>
-                <div class="clearfix">
-                    <?php
-                    $i=1;
-                    foreach ($postIt as $blog) {
-                    $i++;
-                    if ($i <=3) {
-                        $Blog = new Blog();
-                        $View = new BlogView($Blog);
-                        $txt = $View->blogText($blog->blog_text);
-                    ?>
-                        <h4 class="news"><a href="blog/<?=$blog->user_handle?>/<?=$blog->blog_id?>"><?=htmlentities($blog->blog_title, ENT_COMPAT, 'utf-8')?></a></h4>
-                        <span class="small grey"><?=$words->get('written_by')?> <a href="user/<?=$blog->user_handle?>"><?=$blog->user_handle?></a> - <?=date($format['short'], $blog->unix_created)?></span>
-                        <p>
-                        <?php
-                            $snippet = ((strlen($txt[0]) > 600) ? substr($txt[0], 0, 600) . '...': $txt[0]);
-                            $purifier = MOD_htmlpure::get()->getPurifier();
-                            echo $purifier->purify($snippet);
-                            if ($txt[1]) {
-                              echo '<p> <a href="blog/'.$blog->user_handle.'/'.$blog->blog_id.'">'.$words->get('BlogItemContinued').'</a></p>';
-                            }
-                        ?>
-                        </p>
-                    <?php
-                    }
-                    }
-                    ?>
-
-                    <a href="blog/tags/Community News for the frontpage"><?echo $words->get('ReadMore');?></a>
+?>
     </div>
   </div>
-</div>
 </div>

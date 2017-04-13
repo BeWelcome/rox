@@ -25,7 +25,7 @@
 
             <div class="col-12 col-md-9">
                 <?php
-                if ($this->getSubmenuItems()) { ?>
+                if ($this->getSubmenuItems() || ($side_column_names)) { ?>
                 <p class="float-right d-md-none">
                     <button type="button" class="btn btn-primary btn-sm" data-toggle="offcanvas">Toggle nav</button>
                 </p>
@@ -39,7 +39,7 @@
                 $this->columnsArea(); ?>
             </div>
             <?php
-                if ($this->getSubmenuItems()) {
+                if ($this->getSubmenuItems() || ($side_column_names)) {
                     $this->submenu();
                 }
                 ?>

@@ -53,6 +53,7 @@ $font-family-bold: Signika-bold, Arial;
 .map {
 
 }
+
 .username{
   line-height: 1.1;
   word-wrap: break-word;
@@ -76,6 +77,12 @@ blockquote {
   border-left: 8px #ddd solid;
   padding: 1rem;
   margin: 1rem;
+}
+
+.jumbotron {
+  a {
+    color: $brand-primary;
+  }
 }
 
 .verticalalignmiddle{

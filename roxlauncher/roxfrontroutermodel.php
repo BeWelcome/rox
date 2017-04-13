@@ -9,15 +9,7 @@ class RoxFrontRouterModel extends RoxModelBase
 // Uncomment briefly this line in case you have problem with it, save, log in BeWelcome, and add again the comment in this line
 // return false ;
 
-        return $this->singleLookup(
-            "SELECT 
-                languages.id,
-                ShortCode 
-            FROM 
-                urlheader_languages,languages
-            WHERE 
-                urlheader='" . $this->dao->escape($urlheadercode) . "' 
-                AND languages.id=urlheader_languages.IdLanguage");
+        return false;
     } // end of getPossibleUrlLanguage
 
 

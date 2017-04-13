@@ -5,6 +5,7 @@ namespace AppBundle\Twig;
 use Illuminate\Database\Query\Expression;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig_Extension;
@@ -13,13 +14,13 @@ use Twig_Extension_GlobalsInterface;
 class MemberTwigExtension extends Twig_Extension implements Twig_Extension_GlobalsInterface
 {
     /**
-     * @var TokenStorageInterface
+     * @var Session
      */
-    protected $tokenStorage;
+    protected $session;
 
-    public function __construct(TokenStorageInterface $tokenStorage)
+    public function __construct(Session $session)
     {
-        $this->tokenStorage = $tokenStorage;
+        $this->session = $session;
     }
 
     /**
@@ -29,11 +30,14 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
      */
     public function getGlobals()
     {
-        $member = $this->getMember();
+        $member = null;
+        $rememberMeToken = unserialize($this->session->get('_security_default'));
+        if ($rememberMeToken != null) {
+            $member = $rememberMeToken->getUser();
+        }
 
         return [
-            'my_member' => $member,
-            'messageCount' => $member ? $this->getMessageCount($member) : null,
+            'messageCount' => $member ? $this->getMessageCount($member) : 0,
             'teams' => $member ? $this->getTeams($member) : [],
         ];
     }
@@ -41,20 +45,6 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
     public function getName()
     {
         return self::class;
-    }
-
-    /**
-     * @return Member|null
-     */
-    protected function getMember()
-    {
-        $token = $this->tokenStorage->getToken();
-
-        if (!$token || $token instanceof AnonymousToken) {
-            return;
-        }
-
-        return $token->getUser();
     }
 
     protected function getMessageCount(Member $member)

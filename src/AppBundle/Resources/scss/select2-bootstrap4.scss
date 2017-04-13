@@ -170,7 +170,6 @@ $clear-selection-color: $dropdown-arrow-color !default;
 
     &[aria-disabled=true] {
       color: $dropdown-link-disabled-color;
-      cursor: $cursor-disabled;
     }
 
     /**
@@ -306,7 +305,6 @@ $clear-selection-color: $dropdown-arrow-color !default;
 
     .select2-selection,
     .select2-search__field {
-      cursor: $cursor-disabled;
     }
 
     .select2-selection,

@@ -22,19 +22,22 @@
 
     <div class="row row-offcanvas row-offcanvas-right">
 
-        <div class="col-12 col-md-9">
             <?php
             if (!isset($side_column_names)) {
                 $side_column_names = false;
             }
             if ($this->getSubmenuItems() || ($side_column_names)) { ?>
+            <div class="col-12 col-md-9">
                 <p class="float-right d-md-none">
-                    <button type="button" class="btn btn-primary btn-sm" data-toggle="offcanvas">Toggle nav</button>
+                    <button type="button" class="btn btn-primary btn-sm ml-3" data-toggle="offcanvas">Toggle nav</button>
                 </p>
                 <?php
-            }
+            } else {
+                ?>
+                <div class="col-12">
+                <?php }
             ?>
-            <div class="jumbotron">
+            <div>
                 <?php $this->teaser() ?>
             </div>
             <?php

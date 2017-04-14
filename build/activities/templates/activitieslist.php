@@ -89,7 +89,7 @@ $this->pager->render(); ?>
 
 foreach($this->activities as $activity) {
     ?>
-    <div class="d-flex flex-row justify-content-start align-items-center p-2">
+    <div class="d-flex flex-row justify-content-start align-items-center p-2 w-100">
 
         <div class="relative pr-2">
             <div><i class="fa fa-3x fa-calendar-o"></i></div>

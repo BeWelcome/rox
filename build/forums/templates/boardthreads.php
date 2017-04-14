@@ -27,9 +27,9 @@ $layoutbits = new MOD_layoutbits();
 ?>
 
 <!-- table structure -->
-<table class="table table-striped table-hover">
+<table class="table table-responsive table-striped table-hover">
     <!-- beginning of table head -->
-    <thead style="background-color: #fff;">
+    <thead class="blank">
     <tr>
         <th><?php echo $words->getFormatted('Author'); ?></th>
         <th>
@@ -70,7 +70,7 @@ $layoutbits = new MOD_layoutbits();
                 <small><?php echo $thread->first_author; ?></small>
             </a>
         </th>
-        <td class="p-0 pl-2">
+        <td class="p-2">
             <?php
             if ($thread->stickyvalue < 0) {
                 echo '<i class="fa fa-exclamation-circle" alt="'. $words->getSilent('PinnedPost') .'" title="'. $words->getSilent('PinnedPost') .'" /></i> ' . $words->flushBuffer();
@@ -185,9 +185,9 @@ $layoutbits = new MOD_layoutbits();
             <!-- <a href="#"><strong>Text - what if this was really  lot of text. So much it wouldn't even fit on one line</strong></a><br><small><strong>Group: </strong><a href="#">Some Group Name</a></small> -->
 
         </td>
-        <td class="text-center p-0"><?php echo $thread->replies; ?></td>
-        <td class="text-center p-0"><?php echo number_format($thread->views); ?></td>
-        <td class="p-0 align-self-center text-nowrap">
+        <td class="text-center p-2"><?php echo $thread->replies; ?></td>
+        <td class="text-center p-2"><?php echo number_format($thread->views); ?></td>
+        <td class="p-2 align-self-center text-nowrap">
             <div class="d-flex flex-row mr-2">
                 <div class="align-self-center"><a href="members/<?php echo $thread->last_author; ?>"><img src="members/avatar/<?php echo $thread->last_author; ?>?size=30" alt="<?php echo $thread->last_author; ?>" title="<?php echo $thread->last_author; ?>" /></a></div>
                 <div class="pl-2 align-self-center">
@@ -196,7 +196,7 @@ $layoutbits = new MOD_layoutbits();
                 </div>
             </div>
         </td>
-        <td class="p-0 pr-1">
+        <td class="p-2">
             <a href="<?php echo $last_url; ?>"><i class="fa fa-chevron-right" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>"></i></a><?php echo $words->flushBuffer(); ?>
         </td>
     </tr>

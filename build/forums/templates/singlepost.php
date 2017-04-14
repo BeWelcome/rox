@@ -36,13 +36,21 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 }
 ?>
 
-<div class="d-flex flex-row <?php echo $styles[$cnt % 2]; ?> mb-2 postbox">
+<!-- entire row -->
+<div class="d-flex flex-row <?php echo $styles[$cnt % 2]; ?> mb-2 postbox w-100">
 
+    <!-- left column -->
     <div class="d-flex flex-column col-3 col-lg-2 mr-2 p-0 postleftcolumn">
 
+        <!-- member info block -->
         <div class="d-flex flex-row align-self-start pull-left p-2 w-100 credentials">
-            <div class="p-1"><img class="media-object"
-                                  src="/members/avatar/<?php echo($post->OwnerUsername); ?>?size=50"></div>
+
+            <!-- member avatar -->
+            <div class="p-1">
+                <img class="media-object" src="/members/avatar/<?php echo($post->OwnerUsername); ?>?size=50">
+            </div>
+
+            <!-- member name/location -->
             <div>
                 <small class="username"><a
                             href="members/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
@@ -181,6 +189,8 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                 } // end if not deleted
             } // end If the details of trads are available, we will display them
             // If current user has a moderator right, he can see the post
+
+// Todo: something in the following lines is causing a markup error, adding <b></b> and </div>
             if (($post->PostDeleted != "Deleted") or ($this->BW_Right->HasRight("ForumModerator"))) {
                 ?>
 
@@ -203,6 +213,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                     }
                     ?>
                 </div>
+
                 <?php
 
                 // Here add additional data from votes if any
@@ -239,9 +250,9 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                     }
 
 
-                    echo "</div>";
+                   echo "</div>";
                 }  // End of add additional data from local volunteers messages if any
-            } // end if not deleted
+             } // end if not deleted
 
             ?>
 

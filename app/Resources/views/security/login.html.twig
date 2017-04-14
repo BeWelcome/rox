@@ -7,21 +7,24 @@
 {% block content %}
 
     <div class="row">
-        <div class="col-lg-4 offset-lg-4 col-md-8 offset-md-2 col-sm-8 offset-sm-2 col-xs-12">
+        <div class="col-12 col-lg-8 offset-lg-2 mb-3">
+            <h1 class="d-none d-md-block">BeWelcome - {{ 'IndexPageTeaserOpenDoor' | trans }}</h1>
+        </div>
+    </div>
 
-            {% if error %}
-                <div class="alert alert-danger">
-                    {{ error | trans }}
-                </div>
-            {% endif %}
+    <div class="row justify-content-md-center">
+
+        {% if error %}
+            <div class="col-12 col-lg-8 offset-lg-2 mb-3 alert alert-danger mb-3">
+                {{ error | trans }}
+            </div>
+        {% endif %}
+
+        <div class="col-12 col-md-6 col-lg-4 card p-3 mb-3">
+
 
             <form id="main-login-form" role="form" class="form-signin" method="post" action="{{ path('security_check') }}">
-                <h2><span class="hidden-xs">{{ 'Login' | trans }}</span></h2>
-
-                <h3>
-                    <span id="BeWelcome" class="visible-xs center">BeWelcome</span>
-                    <span id="opendoor" class="visible-xs center"> - {{ 'IndexPageTeaserOpenDoor' | trans }}</span>
-                </h3>
+                <h2 class="d-none d-md-block">{{ 'Login' | trans }}</h2>
 
                 <label class="sr-only" for="login-u">{{ 'Username' | trans }}</label>
                 <input type="text" id="login-u" name="username" autofocus required value="{{ last_username }}" placeholder="{{ 'Username' | trans }}" class="form-control">
@@ -37,25 +40,17 @@
                        value="{{ csrf_token('authenticate') }}"
                 >
 
-                <button type="submit" class="button btn-block">{{ 'IndexPageLoginSubmit' | trans }}</button>
+                <button type="submit" class="btn btn-primary btn-block">{{ 'IndexPageLoginSubmit' | trans }}</button>
 
-                <p class="dividerbox center">
+                <p class="mt-3">
                     {{ 'LoginformForgetPassword' | trans | format('<a href="">', '</a>') | raw }}
-
-                    <span class="ordivider"></span>
                 </p>
-
-                <div class="center">
-                    <h3>{{ 'SignupNow' | trans }}</h3>
-
-                    <p>{{ 'IndexPageWord17' | trans | format('<a class="button btn-block" role="button" href="">', '</a>') | raw }}</p>
-
-                    <p class="visible-xs bw-row">
-                        <a class="btn btn-primary btn-block" role="button" href="">{{ 'tour_take' | trans }}</a>
-                    </p>
-
-                </div>
             </form>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4">
+            <h2 class="mb-3">{{ 'SignupNow' | trans }}</h2>
+            <p>{{ 'IndexPageWord17' | trans | format('<a class="btn btn-primary btn-block" role="button" href="">', '</a>') | raw }}</p>
+            <a class="btn btn-primary btn-block" role="button" href="">{{ 'tour_take' | trans }}</a>
         </div>
     </div>
 

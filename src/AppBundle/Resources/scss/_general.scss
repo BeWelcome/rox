@@ -11,15 +11,19 @@ body {
   text-rendering: optimizeLegibility;
   background: #f7f7f7; /* For browsers that do not support gradients */
   background: linear-gradient(#afafaf, #f0f0f0 10em) repeat-x scroll left top #f0f0f0;
-  height: 100%;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
   width: 100%;
 }
 
+main {
+  flex: 1;
+}
 /* Wrapper for the main content, below the menu */
 .container-content {
   @extend .container;
-
-  margin-top: 25px;
+  margin-top: 1rem;
 }
 
 .stickyfooter {

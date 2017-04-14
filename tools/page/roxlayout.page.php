@@ -208,11 +208,8 @@ class PageWithRoxLayout extends PageWithHTML
         require TEMPLATE_DIR . 'shared/roxpage/quicksearch.php';
     }
 
-    protected function columnsArea()
+    protected function columnsArea($mid_column_name)
     {
-        $side_column_names = $this->getColumnNames();
-        $mid_column_name = array_pop($side_column_names);
-
         require TEMPLATE_DIR . 'shared/roxpage/columnsarea.php';
     }
 
@@ -269,7 +266,7 @@ class PageWithRoxLayout extends PageWithHTML
     }
 
     protected function getColumnNames() {
-        return array('col1', 'col2', 'col3');
+        return ['col1', 'col3'];
     }
 
     private function _column($column_name)

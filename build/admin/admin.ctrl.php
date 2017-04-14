@@ -52,7 +52,7 @@ class AdminGeneralController extends AdminBaseController
      * @access public
      * @return object
      */
-    public function index()
+    public function index($args = false)
     {
         list($member, $rights) = $this->checkRights();
         $page = new AdminOverviewPage;

@@ -176,14 +176,14 @@ class PageWithHTML extends AbstractBasePage
         </head>
         <body>
         <?php $this->topmenu() ?>
-        <div class="container">
+        <main class="container">
         <?php
 
         echo (is_object($this->layoutkit) && (is_object($this->layoutkit->mem_from_redirect))) ? $this->layoutkit->mem_from_redirect->buffered_text : '';
 
         $this->body();
         ?>
-        </div>
+        </main>
         <?php
             $this->footer();
             $this->includeLateScriptfiles();

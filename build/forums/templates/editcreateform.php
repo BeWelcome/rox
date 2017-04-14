@@ -53,7 +53,7 @@ if (isset($vars['tags']) && $vars['tags']) {
 <?php
 if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
     $textarea = 'topic_text';
-    require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig_php.js';
+    require_once SCRIPT_BASE . 'web/script/tinymceconfig_php.js';
 }
 ?>
 <h2>
@@ -161,7 +161,7 @@ if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
     </div></div>
     </fieldset> <!-- row -->
 
-<?php } // End if $allow_title 
+<?php } // End if $allow_title
 
     if ($groupsforum) {
         echo '<input type="hidden" name="IdGroup" value="' . $groupsforum . '">';

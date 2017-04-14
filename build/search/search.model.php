@@ -72,6 +72,15 @@ class SearchModel extends RoxModelBase
         self::ORDER_COMMENTS => array('WordCode' => 'SearchOrderComments', 'Column' => 'CommentCount')
     );
 
+    /**
+     * SearchModel constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->modcrypt = new MOD_crypt($this->getSession());
+    }
+
     public static function getOrderByArray()
     {
         return self::$ORDERBY;
@@ -192,9 +201,9 @@ LIMIT 1
         if ($namePartId == 0) {
             return $namePart;
         }
-        if (MOD_crypt::IsCrypted($namePartId) == 1) {
+        if ($this->modcrypt->IsCrypted($namePartId) == 1) {
         } else {
-            $namePart = MOD_crypt::get_crypted($namePartId, "");
+            $namePart = $this->modcrypt->get_crypted($namePartId, "");
         }
 
         return $namePart;

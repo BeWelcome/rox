@@ -23,7 +23,7 @@ class LegacyLoader extends Loader
     public function load($resource, $type = null)
     {
         if (true === $this->loaded) {
-            throw new \RuntimeException('Do not add the "extra" loader twice');
+            throw new \RuntimeException('Do not add the "legacy" loader twice');
         }
 
         $this->routes = new RouteCollection();
@@ -40,15 +40,18 @@ class LegacyLoader extends Loader
         require_once $dirfix . 'routes.php';
 
         // Forum urls
-        $this->addRoute('forums', 'forums', '', '');
+        $this->addRoute('forums', '/forums', '', '');
+        $this->addRoute('forums_new', '/forums/new', '', '');
         $this->addRoute('bwforum', 'forums/bwforum', '', '');
         $this->addRoute('forum_thread', '/forums/s{threadId}', '', '');
         $this->addRoute('community', '/community', '', '');
         $this->addRoute('faq', '/faq', '', '');
+        $this->addRoute('about_faq', '/about/faq', '', '');
         $this->addRoute('faq_category', '/faq/{category}', '', '');
-        $this->addRoute('about_faq_category', '/aboutaactivi/faq/{category}', '', '');
+        $this->addRoute('about_faq_category', '/about/faq/{category}', '', '');
         $this->addRoute('about', '/about', '', '');
         $this->addRoute('getactive', '/about/getactive', '', '');
+        $this->addRoute( 'contactus', '/about/feedback', '', '');
         $this->addRoute('signup', '/signup/', '', '');
         $this->addRoute('signup_1', '/signup/1', '', '');
         $this->addRoute('signup_2', '/signup/2', '', '');
@@ -56,9 +59,6 @@ class LegacyLoader extends Loader
         $this->addRoute('signup_4', '/signup/4', '', '');
         $this->addRoute('signup_finish', '/signup/finish', '', '');
 
-//        $this->routes->add('activities', new Route( '/activities/100/edit', [
-//            '_controller' => 'rox.legacy_controller:showAction'
-//        ]));
 
         return $this->routes;
     }

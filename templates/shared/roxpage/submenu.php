@@ -1,5 +1,5 @@
 <div class="col-6 col-md-3 sidebar-offcanvas" id="sidebar">
-    <div class="list-group">
+    <div class="list-group mb-2">
 
 <?php
 $active_menu_item = $this->getSubmenuActiveItem();
@@ -20,4 +20,12 @@ foreach ($this->getSubmenuItems() as $index => $item) {
 }
 ?>
     </div>
+
+<?php if (method_exists($this, 'leftSidebar')) { ?>
+        <div class="list-group">
+            <?php
+$this->leftSidebar();
+?>
+        </div>
+    <?php } ?>
 </div>

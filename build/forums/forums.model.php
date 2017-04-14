@@ -80,7 +80,7 @@ function GetLanguageChoosen() {
 *
 */
 function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
-    $this->words = new MOD_words($this->_session);
+    $this->words = new MOD_words(null);
 	return ($this->words->InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember, $_IdLanguage, $IdTrad)) ;
 } // end of InsertInFTrad
 

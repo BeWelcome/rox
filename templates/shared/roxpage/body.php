@@ -18,15 +18,20 @@
     <?php endif; ?>
     <?php if ($this->getFlashNotice()): ?>
         <div class="flash notice"><?php echo $this->getFlashNotice(true); ?></div>
-    <?php endif; ?>
+    <?php endif;
 
-    <div class="row row-offcanvas row-offcanvas-right">
+        $side_column_names = $this->getColumnNames();
+        $mid_column_name = array_pop($side_column_names);
 
-        <div class="col-12 col-md-9">
+        if ($this->getSubmenuItems() || ($side_column_names)) { ?>
+        <div class="row row-offcanvas row-offcanvas-right">
+            <div class="col-12 col-md-9">
+    <?php } else { ?>
+        <div class="row">
+            <div class="col-12">
+    <?php } ?>
+
             <?php
-            if (!isset($side_column_names)) {
-                $side_column_names = false;
-            }
             if ($this->getSubmenuItems() || ($side_column_names)) { ?>
                 <p class="float-right d-md-none">
                     <button type="button" class="btn btn-primary btn-sm" data-toggle="offcanvas">Toggle nav</button>
@@ -38,14 +43,14 @@
                 <?php $this->teaser() ?>
             </div>
             <?php
-            $this->columnsArea(); ?>
-        </div>
+            $this->columnsArea($mid_column_name); ?>
+        </div> <!-- col-12 -->
         <?php
         if ($this->getSubmenuItems() || ($side_column_names)) {
             $this->submenu();
         }
         ?>
-    </div>
+    </div> <!-- row -->
 </div> <!-- main -->
 <script src="bundles/app/js/offcanvas.js"></script>
 <div>

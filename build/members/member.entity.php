@@ -63,6 +63,7 @@ class Member extends RoxEntityBase
         } else {
             $this->lang = 'en';
         }
+        $this->_crypt = new MOD_crypt($this->getSession());
     }
 
     public function init($values, $dao)

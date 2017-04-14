@@ -118,7 +118,7 @@ class ForumsController extends PAppController
         $page->addStyles .= $view->customStyles();
         $page->currentTab = 'forums';
         // then the userBar
-        $page->newBar .= $view->getAsString('userBar');
+        $page->newBar .= $view->getAsString('leftSidebar');
 
         // we can't replace this ob_start()
         if ($this->action == self::ACTION_NOT_LOGGED_IN) {

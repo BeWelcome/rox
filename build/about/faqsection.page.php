@@ -3,7 +3,7 @@
 
 class AboutFaqsectionPage extends AboutFaqPage
 {
-    protected function leftSidebar()
+    protected function column_col3()
     {
         $words = $this->getWords();
         $req = $_SERVER['REQUEST_URI'];
@@ -49,7 +49,7 @@ class AboutFaqsectionPage extends AboutFaqPage
         echo $this->ww->AboutFAQ;
     }
 
-    protected function column_col3()
+    protected function column_col1()
     {
         $words = $this->getWords();
         $req = $_SERVER['REQUEST_URI'];

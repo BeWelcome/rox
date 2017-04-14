@@ -15,14 +15,13 @@ class AboutFaqPage extends AboutBasePage
     protected function leftSidebar()
     {
         $words = $this->getWords();
-        
+
         $j = 0;
         foreach ($this->faq_categories as $key => $category) {
             echo '
-            <div class="'.($j%2 ? 'odd' : 'even').'"><a href="about/faq/'.$key.'">
+            <div class="list-group-item nav-link"><a href="about/faq/'.$key.'">
             '.$words->getBuffered($category->Description).'
-            </a>' . $words->flushBuffer() . '</div>
-            <hr />';
+            </a>' . $words->flushBuffer() . '</div>';
             ++ $j;
         }
     }

@@ -309,7 +309,7 @@ class ForumsView extends RoxAppView {
         $request = PRequest::get()->request;
         require 'templates/teaser.php';
     }
-    public function userBar() {
+    public function leftSidebar() {
         if ($this->_session->has( "IdMember" )) {
             $topboards = $this->_model->getTopCategoryLevelTags();
             require 'templates/userbar.php';

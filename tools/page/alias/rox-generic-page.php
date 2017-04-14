@@ -13,7 +13,14 @@
 class RoxGenericPage extends PageWithParameterizedRoxLayout
 {
     protected function getColumnNames() {
-        return array('col1', 'col3');
+        return array('col3', 'col1');
+    }
+
+    protected function submenu()
+    {
+        echo '<div class="col-6 col-md-3">';
+        echo $this->get('newBar');
+        echo '</div>';
     }
 }
 

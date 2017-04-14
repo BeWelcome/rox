@@ -42,6 +42,7 @@
     <body>
         {% include 'menu.html.twig' %}
         <noscript><h1>Please activate Javascript for bewelcome.org</h1><p><small>Without it some function won't work.</small></p></noscript>
+        <main>
         {% for flash_message in app.session.flashBag.get('error') %}
             <div class="flash error">
                 {{ flash_message }}
@@ -52,14 +53,10 @@
                 {{ flash_message }}
             </div>
         {% endfor %}
-        {% if subitems is defined %}
-            <div id="subnav" class="container">
-            {% block subnav %}{% endblock %}
-            </div>
-        {% endif %}
         <div class="container-content p-0">
             {% block content %}{% endblock %}
         </div>
+        </main>
         {% include 'footer.html.twig' %}
         {% javascripts
         '@jquery_js'

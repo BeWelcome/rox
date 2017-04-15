@@ -81,6 +81,7 @@ class GroupForumsOverviewPage extends GroupsBasePage
         </div>             
     <?php 
         $Forums = new ForumsController;
+        $Forums->setEngine($this->engine);
         $Forums->index();
     }
     protected function teaserContent()

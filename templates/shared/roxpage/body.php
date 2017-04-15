@@ -33,17 +33,13 @@
 
             <?php
             if ($this->getSubmenuItems() || ($side_column_names)) { ?>
-            <div class="col-12 col-md-9">
                 <p class="float-right d-md-none">
                     <button type="button" class="btn btn-primary btn-sm ml-3" data-toggle="offcanvas">Toggle nav</button>
                 </p>
                 <?php
-            } else {
-                ?>
-                <div class="col-12">
-                <?php }
+            }
             ?>
-            <div>
+            <div class="jumbotron">
                 <?php $this->teaser() ?>
             </div>
             <?php

@@ -170,7 +170,6 @@ if ($threads = $forum->getThreads()) {
     require 'pages.php';
 
 ?>
-</div>
 </div> <!-- Forum-->
 
 <?php

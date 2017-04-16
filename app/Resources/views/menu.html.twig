@@ -115,7 +115,7 @@
                                             <div>
                                                 <a href="/message" class="btn btn-block btn-primary-outline py-0 pl-1 text-left mt-1"><i class="fa fa-envelope-o"></i> {{ 'MyMessages' | trans }}</a>
                                                 <a href="/mynotes" class="btn btn-block btn-primary-outline py-0 pl-1 text-left"><i class="fa fa-list"></i> {{ 'ProfileMyNotes' | trans }}</a>
-                                                <a href="/logout" class="btn btn-block btn-primary-outline py-0 pl-1 text-left"><i class="fa fa-power-off"></i> {{ 'Logout' | trans }}</a>
+                                                <a href="{{ url( 'security_logout' ) }}" class="btn btn-block btn-primary-outline py-0 pl-1 text-left"><i class="fa fa-power-off"></i> {{ 'Logout' | trans }}</a>
                                             </div>
                                         </div>
                                     </div>
@@ -147,7 +147,7 @@
                             <li class="text-right"><a href="/mynotes" class="dropdown-item">{{ 'ProfileMyNotes' | trans }}</a></li>
                             <li class="text-right"><a href="/groups/mygroups" class="dropdown-item">{{ 'MyGroups' | trans }}</a></li>
                             <li class="text-right"><a href="/trips" class="dropdown-item">{{ 'TripsShowMy' | trans }}</a></li>
-                            <li class="text-right"><a href="{{ url( 'security_login' ) }}" class="dropdown-item">{{ 'Logout' | trans }}</a></li>
+                            <li class="text-right"><a href="{{ url( 'security_logout' ) }}" class="dropdown-item">{{ 'Logout' | trans }}</a></li>
                         </ul>
                     </li>
 
@@ -157,7 +157,7 @@
                     </li>
 
                     {# logout #}
-                    <li class="nav-item float-right"><a href="{{ url( 'security_login' ) }}" class="nav-link"><i class="fa fa-lg fa-sign-out"></i></a></li>
+                    <li class="nav-item float-right"><a href="{{ url( 'security_logout' ) }}" class="nav-link"><i class="fa fa-lg fa-sign-out"></i></a></li>
                 </ul>
             </div>
         </div>

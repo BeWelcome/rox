@@ -1,4 +1,4 @@
-<div class="col-6 col-md-3 sidebar-offcanvas" id="sidebar">
+<div class="col-6 col-md-3 col-lg-2 sidebar-offcanvas" id="sidebar">
     <div class="list-group mb-2">
 
 <?php

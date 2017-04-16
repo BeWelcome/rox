@@ -1,6 +1,6 @@
 <div id="groups">
-    <div class="subcolumns mb-1">
-        <div class="c62l">
+    <div class="row mb-1">
+        <div class="col-12 col-md-8">
             <div class="subcl">
                     <h3><?= $words->get('GroupsSearchHeading'); ?></h3>
                     <p><?= $words->get('GroupsSearchDescription'); ?></p>
@@ -9,7 +9,7 @@
                     </form>
             </div> <!-- subcl -->
         </div> <!-- c62l -->
-        <div class="c38r">
+        <div class="col-12 col-md-4">
             <div class="subcr">
                     <h3><?= $words->get('GroupsCreateHeading'); ?></h3>
                     <p><?= $words->get('GroupsCreateDescription'); ?></p>
@@ -19,8 +19,8 @@
     </div> <!-- subcolums -->
 
 
-    <div class="subcolumns">
-        <div class="c62l">
+    <div class="row">
+        <div class="col-12 col-md-8">
             <div class="subcl">
 
                 <h3><?= $words->get('GroupsList'); ?></h3>
@@ -61,7 +61,7 @@
             </div> <!-- subcl -->
         </div> <!-- c62l -->
 
-        <div class="c38r">
+        <div class="col-12 col-md-4">
             <div class="subcr">
                 <?php // display my groups, if there are any
                 $my_groups = $this->my_groups;

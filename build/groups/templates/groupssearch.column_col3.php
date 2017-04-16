@@ -50,7 +50,6 @@ HTML;
             foreach ($search_result as $group_data) :
 
                 ?>
-
             <div class="d-flex flex-row m-2">
                 <div style="width: 80px; height: 80px;">
                     <!-- group image -->
@@ -100,4 +99,5 @@ HTML;
 HTML;
     endif;
     ?>
+</div>
 </div> <!-- groups -->

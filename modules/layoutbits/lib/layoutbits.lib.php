@@ -150,7 +150,7 @@ class MOD_layoutbits
      */
     public static function linkWithPictureVar($username,$height,$width,$quality,$picfile,$style)
     {
-        $words = new MOD_words(self::$_instance->getSession());
+        $words = new MOD_words();
         $thumburl = self::member_pic_url().$username.'?size='.$height;
 
         return

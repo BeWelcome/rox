@@ -50,6 +50,8 @@ class LegacyLoader extends Loader
         $this->addRoute('faq_category', '/faq/{category}', '', '');
         $this->addRoute('about_faq_category', '/about/faq/{category}', '', '');
         $this->addRoute('about', '/about', '', '');
+        $this->addRoute('stats', '/stats', '', '');
+        $this->addRoute('stats_images', '/stats/{image}.png', '', '');
         $this->addRoute('getactive', '/about/getactive', '', '');
         $this->addRoute( 'contactus', '/about/feedback', '', '');
         $this->addRoute('signup', '/signup/', '', '');
@@ -68,8 +70,10 @@ class LegacyLoader extends Loader
         $ignore;
         $path = preg_replace( '^:(.*?):^', '{\1}', $path);
         $this->routes->add($name, new Route( $path, [
-            '_controller' => 'rox.legacy_controller:showAction'
-        ]));
+                '_controller' => 'rox.legacy_controller:showAction'
+            ], [], [], '', [], ['get', 'post']
+            )
+        );
     }
 
     public function supports($resource, $type = null)

@@ -7,7 +7,8 @@ $callbackTagsCancelUncancel = $formkit->setPostCallback('ActivitiesController', 
 $layoutbits = new Mod_layoutbits();
 $request = PRequest::get()->request;
 $login_url = 'login/' . htmlspecialchars(implode('/', $request), ENT_QUOTES);
-$purifier = MOD_htmlpure::getActivitiesHtmlPurifier();
+$purifierModule = new MOD_htmlpure();
+$purifier = $purifierModule->getActivitiesHtmlPurifier();
 $status = array();
 if ($this->_session->has('ActivityStatus')) {
     $status = $this->_session->get('ActivityStatus');
@@ -45,7 +46,7 @@ if (empty($vars)) {
         <?
         if ($this->activity->dateStart == $this->activity->dateEnd) {
             echo '<i class="fa fa-calendar"></i> ' . $this->activity->dateStart . '<br>';
-            echo '<i class="fa fa-clock-o"></i> <span class="compacttext back">' . $this->activity->timeStart . ' - ' . $this->activity->timeEnd . '<br>';
+            echo '<i class="fa fa-clock-o"></i> <span class="compacttext back">' . $this->activity->timeStart . ' - ' . $this->activity->timeEnd . '</span><br>';
         } else {
             echo '<i class="fa fa-calendar"></i> ' . $this->activity->dateStart . ' - <span class="compacttext back">' . $this->activity->timeStart . '</span><br>';
             echo '<i class="fa fa-calendar"></i> ' . $this->activity->dateEnd . ' - <span class="compacttext back">' . $this->activity->timeEnd . '</span>';
@@ -191,11 +192,11 @@ if (empty($vars)) {
 
             <?php if ($this->member) {
             if ($this->member->organizer == true) { ?>
-            <form method="post" id="activity-show-form">
+            <form method="post" id="activity-show-form-admin">
                 <div class="form-group mt-3">
                     <span class="h4"><?php echo $words->get('ActivityOrgaStatusHeadline'); ?></span>
                     <?php echo $callbackTagsCancelUncancel; ?>
-                    <input type="hidden" id="activity-id" name="activity-id"
+                    <input type="hidden" name="activity-id"
                            value="<?php echo $this->activity->id; ?>"/>
                     <?php
                     if (($this->activity->status == 1) && ($activityInTheFuture)) {
@@ -278,5 +279,4 @@ if (empty($vars)) {
         } ?>
 
     </div>
-</div>
 <?php echo $words->flushBuffer(); ?>

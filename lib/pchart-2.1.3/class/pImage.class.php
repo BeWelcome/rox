@@ -2,9 +2,9 @@
  /*
      pDraw - pChart core class
 
-     Version     : 2.1.3
+     Version     : 2.1.4
      Made by     : Jean-Damien POGOLOTTI
-     Last Update : 09/09/11
+     Last Update : 19/01/2014
 
      This file can be distributed under the license you can find at :
 
@@ -276,7 +276,7 @@
      if ($StorageMode == IMAGE_MAP_STORAGE_SESSION)
       {
        if(!isset($_SESSION)) { session_start(); }
-       $this->_session->get($this->ImageMapIndex)    = NULL;
+       $_SESSION[$this->ImageMapIndex]    = NULL;
       }
      elseif($StorageMode == IMAGE_MAP_STORAGE_FILE)
       {
@@ -305,7 +305,7 @@
      if ( $this->ImageMapStorageMode == IMAGE_MAP_STORAGE_SESSION )
       {
        if(!isset($_SESSION)) { $this->initialiseImageMap(); }
-       $this->_session->set( $this->ImageMapIndex][, array($Type,$Plots,$Color,$Title,$Message) )
+       $_SESSION[$this->ImageMapIndex][] = array($Type,$Plots,$Color,$Title,$Message);
       }
      elseif($this->ImageMapStorageMode == IMAGE_MAP_STORAGE_FILE)
       {
@@ -337,9 +337,9 @@
       {
        if(!isset($_SESSION)) { return(-1); }
        if ( is_array($NewTitle) )
-        { $ID = 0; foreach($this->_session->set( $this->ImageMapIndex] as $Key => $Settings) { if ( $Settings[3] == $OldTitle && isset($NewTitle[$ID])) { $this->_session->get($this->ImageMapIndex][$Key][3, $NewTitle[$ID) ) $ID++; } } }
+        { $ID = 0; foreach($_SESSION[$this->ImageMapIndex] as $Key => $Settings) { if ( $Settings[3] == $OldTitle && isset($NewTitle[$ID])) { $_SESSION[$this->ImageMapIndex][$Key][3] = $NewTitle[$ID]; $ID++; } } }
        else
-        { foreach($this->_session->set( $this->ImageMapIndex] as $Key => $Settings) { if ( $Settings[3] == $OldTitle ) { $this->_session->get($this->ImageMapIndex][$Key)[3, $NewTitle ) } } }
+        { foreach($_SESSION[$this->ImageMapIndex] as $Key => $Settings) { if ( $Settings[3] == $OldTitle ) { $_SESSION[$this->ImageMapIndex][$Key][3] = $NewTitle; } } }
       }
      elseif( $this->ImageMapStorageMode == IMAGE_MAP_STORAGE_FILE )
       {
@@ -349,7 +349,7 @@
         {
          while (($Buffer = fgets($Handle, 4096)) !== false)
           {
-           $Fields      = split(IMAGE_MAP_DELIMITER,str_replace(array(chr(10),chr(13)),"",$Buffer));
+           $Fields      = preg_split("/".IMAGE_MAP_DELIMITER."/",str_replace(array(chr(10),chr(13)),"",$Buffer));
            $TempArray[] = array($Fields[0],$Fields[1],$Fields[2],$Fields[3],$Fields[4]);
           }
          fclose($Handle);
@@ -377,7 +377,7 @@
      if ( $this->ImageMapStorageMode == IMAGE_MAP_STORAGE_SESSION )
       {
        if(!isset($_SESSION)) { return(-1); }
-       foreach($this->_session->set( $this->ImageMapIndex] as $Key => $Settings) { if ( $Settings[3] == $Title ) { if ( isset($Values[$ID]) ) { $this->_session->get($this->ImageMapIndex][$Key][4, $Values[$ID) ) } $ID++; } }
+       foreach($_SESSION[$this->ImageMapIndex] as $Key => $Settings) { if ( $Settings[3] == $Title ) { if ( isset($Values[$ID]) ) { $_SESSION[$this->ImageMapIndex][$Key][4] = $Values[$ID]; } $ID++; } }
       }
      elseif( $this->ImageMapStorageMode == IMAGE_MAP_STORAGE_FILE )
       {
@@ -387,7 +387,7 @@
         {
          while (($Buffer = fgets($Handle, 4096)) !== false)
           {
-           $Fields      = split(IMAGE_MAP_DELIMITER,str_replace(array(chr(10),chr(13)),"",$Buffer));
+           $Fields      = preg_split("/".IMAGE_MAP_DELIMITER."/",str_replace(array(chr(10),chr(13)),"",$Buffer));
            $TempArray[] = array($Fields[0],$Fields[1],$Fields[2],$Fields[3],$Fields[4]);
           }
          fclose($Handle);
@@ -411,9 +411,9 @@
      if ( $this->ImageMapStorageMode == IMAGE_MAP_STORAGE_SESSION )
       {
        if(!isset($_SESSION)) { session_start(); }
-       if ( $this->_session->get($Name) != NULL )
+       if ( $_SESSION[$Name] != NULL )
         {
-         foreach($this->_session->get($Name) as $Key => $Params)
+         foreach($_SESSION[$Name] as $Key => $Params)
           { echo $Params[0].IMAGE_MAP_DELIMITER.$Params[1].IMAGE_MAP_DELIMITER.$Params[2].IMAGE_MAP_DELIMITER.$Params[3].IMAGE_MAP_DELIMITER.$Params[4]."\r\n"; }
         }
       }

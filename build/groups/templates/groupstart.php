@@ -2,13 +2,14 @@
 <p><?= $words->get($message); ?>
 <?php endforeach; ?>
 <?php
-$group_name_html = htmlspecialchars($this->getGroupTitle(), ENT_QUOTES); 
-$purifier = MOD_htmlpure::getBasicHtmlPurifier();
+$group_name_html = htmlspecialchars($this->getGroupTitle(), ENT_QUOTES);
+$purifierModule = new MOD_htmlpure();
+$purifier = $purifierModule->getBasicHtmlPurifier();
 ?>
 
 <div id="groups">
-    <div class="subcolumns">
-        <div class="c62l">
+    <div class="row">
+        <div class="col-12 col-md-8">
             <div class="subcl">
                 <div class="bw-row clearfix">
                     <?= ((strlen($this->group->Picture) > 0) ? "<img class=\"float_left framed\" src='groups/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$group_name_html}' />" : ''); ?>
@@ -36,7 +37,7 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
             </div> <!-- subcl -->
         </div> <!-- c62l -->
         
-        <div class="c38r">
+        <div class="col-12 col-md-4">
             <div class="subcr">
             
             <?php

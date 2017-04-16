@@ -34,16 +34,16 @@ $words = new MOD_words();
 function drawCharts($filename, $headlineCode, $words)
 {
 ?>
-    <div class="col-xs-12 mb-1">
+    <div class="col-12 mb-1">
         <span class="h3"><?php echo $words->get($headlineCode) ?></span>
     </div>
 
-    <div class="col-xs-12 col-lg-6">
+    <div class="col-12 col-lg-6">
         <h4><?php echo $words->get('StatsHeadCol1') ?></h4>
         <div><?php echo '<img class="statimage" src="/stats/' . $filename . '-alltime.png">';?></div>
     </div>
 
-    <div class="col-xs-12 col-lg-6">
+    <div class="col-12 col-lg-6">
         <h4><?php echo $words->get("StatsHeadCol2") ?></h4>
         <div><?php echo '<img class="statimage" src="/stats/' . $filename . '-last2month.png">';?></div>
     </div>
@@ -51,7 +51,9 @@ function drawCharts($filename, $headlineCode, $words)
 <?php
  echo $words->flushBuffer();
 }
-
+?>
+<div class="row">
+<?php
 drawCharts('allmembers', 'StatsMembersAlltime', $words);
 drawCharts('newmembers', 'StatsNewMembersAlltime', $words);
 drawCharts('percentmembers', 'StatsPercentNewMembersLast', $words);
@@ -60,23 +62,23 @@ drawCharts('percentlogin', 'StatsPercentLoginAlltime', $words);
 drawCharts('trust', 'StatsTrustAlltime', $words);
 drawCharts('messages', 'StatsMessagesAlltime', $words);
 ?>
-
-<div class="col-xs-12 col-lg-6">
+<div class="col-12 col-lg-6">
     <h4><?php echo $words->get("StatsLastLogin") ?></h4>
     <div><img class="statimage" src="/stats/loginpie.png" /></div>
 </div>
 
-<div class="col-xs-12 col-lg-6">
+<div class="col-12 col-lg-6">
     <h4><?php echo $words->get("StatsMemberCountry") ?></h4>
     <div><img class="statimage" src="/stats/countrypie.png" /></div>
 </div>
 
-<div class="col-xs-12 col-lg-6">
+<div class="col-12 col-lg-6">
     <h4><?php echo $words->get("StatsLanguages") ?></h4>
     <div><img class="statimage" src="/stats/languagepie.png" /></div>
 </div>
 
-<div class="col-xs-12 col-lg-6">
+<div class="col-12 col-lg-6">
     <h4><?php echo $words->get("StatsPreferredLanguages") ?></h4>
     <div><img class="statimage" src="/stats/preferredlanguagepie.png" /></div>
+</div>
 </div>

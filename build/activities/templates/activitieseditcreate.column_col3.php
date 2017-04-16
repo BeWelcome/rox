@@ -71,7 +71,7 @@ if (empty($vars)) {
             <label for="activity-end-date"
                    class="control-label sr-only"><?php echo $words->get('ActivityEnd'); ?>*</label>
             <div class="input-group">
-                <input type="text" class="form-control date-picker-start validate" name="activity-start-date"
+                <input type="text" class="form-control date-picker-start validate" name="activity-end-date"
                        placeholder="<?php echo $words->get('ActivityEnd'); ?>*" id="activity-end-date"
                        value="<?php echo $vars['activity-end-date'];?>"/>
                 <label for="activity-end-date" class="control-label input-group-addon btn"><span

@@ -108,13 +108,13 @@ main {
     @include box-shadow(none);
   }
 
-  @include button-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border);
+  @include button-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border-color);
 }
 
 // radio buttons
 .btn-radio {
   background-color: rgba($btn-primary-bg, .8);
-  border: 0px;
+  border: 0;
   font-family: Signika-regular;
   text-transform: capitalize;
   box-shadow: 0 0 1px 1px #d47a2e inset;

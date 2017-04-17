@@ -20,10 +20,10 @@ class LanguageModel extends BaseModel
 
         $rsm = new ResultSetMappingBuilder($entityManager);
         $rsm->addRootEntityFromClassMetadata(Language::class, 'l');
-//         $rsm->addFieldResult('l', 'Sentence', 'translatedname');
+//         $rsm->addFieldResult('l', 'TranslatedName', 'translatedname');
 
         $query = $entityManager->createNativeQuery("SELECT 
-    l.*, w2.Sentence 
+    l.*, IFNULL(w2.Sentence, l.EnglishName) as TranslatedName 
 FROM
     languages l
 LEFT JOIN
@@ -32,9 +32,11 @@ left JOIN
 	words w2 ON w2.ShortCode = '{$locale}' and w2.Code = l.WordCode 
 WHERE
     w1.code = 'WelcomeToSignup'
-ORDER BY name ASC", $rsm);
+ORDER BY Name ASC", $rsm);
 
         $languages = $query->getResult();
-        return $languages;
+        $locales = array_map(function($n) { return $n->getShortCode(); }, $languages);
+        $merged = array_combine($locales, $languages);
+        return $merged;
     }
 }

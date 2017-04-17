@@ -38,15 +38,15 @@
         "egeloen/ckeditor-bundle": "^4.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^1.11",
+        "friendsofphp/php-cs-fixer": "^2.0",
         "fzaninotto/faker": "^1.6",
-        "phpmetrics/phpmetrics": "^1.8",
+        "phpmetrics/phpmetrics": "^2.0",
         "phploc/phploc": "^3.0",
         "phpmd/phpmd": "^2.4",
         "phpunit/phpunit": "^5.0",
         "sebastian/phpcpd": "dev-master",
         "squizlabs/php_codesniffer": "^2.5",
-        "theseer/phpdox": "^0.8",
+        "theseer/phpdox": "^0.9",
         "symfony/phpunit-bridge": "^3.0",
         "sensio/generator-bundle": "^3.0",
         "symfony/debug-bundle": "^3.1",

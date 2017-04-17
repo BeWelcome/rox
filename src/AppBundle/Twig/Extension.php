@@ -107,7 +107,7 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
         $languages = $languageModel->getLanguagesWithTranslations($locale);
         $langarr = [];
         /** @var Language $language */
-        foreach ($languages as $language) {
+/*        foreach ($languages as $language) {
             $lang = new \stdClass();
             $lang->NativeName = $language->getName();
             $lang->TranslatedName = $language->getTranslatedName();
@@ -123,7 +123,7 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
             return (strtolower($a->TranslatedName) < strtolower($b->TranslatedName)) ? -1 : 1;
         });
 
-        $member = null;
+*/        $member = null;
         $rememberMeToken = unserialize($this->session->get('_security_default'));
         if ($rememberMeToken != null) {
             $member = $rememberMeToken->getUser();
@@ -134,8 +134,8 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
             'version_dt' => Carbon::createFromTimestamp(filemtime('../VERSION')),
             'title' => 'BeWelcome',
             'faker' => class_exists(Factory::class) ? Factory::create() : null,
-            'language' => $defaultLanguage,
-            'languages' => $langarr,
+//            'language' => $defaultLanguage,
+            'languages' => $languages,
             'robots' => 'ALL',
             'my_member' => $member,
             'teams' => false

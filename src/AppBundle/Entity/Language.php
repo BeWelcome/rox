@@ -36,8 +36,10 @@ class Language
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="TranslatedName", type="text", length=255, nullable=false)
      */
-    private $translatedName;
+    private $translatedname;
 
     /**
      * @var string
@@ -149,7 +151,7 @@ class Language
      */
     public function setTranslatedName($name)
     {
-        $this->translatedName = $name;
+        $this->translatedname = $name;
 
         return $this;
     }
@@ -161,7 +163,7 @@ class Language
      */
     public function getTranslatedName()
     {
-        return $this->translatedName;
+        return $this->translatedname;
     }
 
     /**

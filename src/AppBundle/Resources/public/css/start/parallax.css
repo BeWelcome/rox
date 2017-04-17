@@ -600,3 +600,13 @@ p {
     width:99vw; 
     max-width: 99vw;
 }
+
+.columns {
+    -moz-column-count:2; /* Firefox */
+    -webkit-column-count:2; /* Safari and Chrome */
+    column-count:2;
+    width: 600px;
+    height:300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}

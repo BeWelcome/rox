@@ -11,7 +11,7 @@
 $form-control-default-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
 
 // @see https://github.com/twbs/bootstrap-sass/blob/master/assets/stylesheets/bootstrap/mixins/_forms.scss#L43
-$form-control-focus-box-shadow: $form-control-default-box-shadow, 0 0 8px rgba($input-border-focus, 0.6);
+$form-control-focus-box-shadow: $form-control-default-box-shadow, 0 0 8px rgba($input-border-color-focus, 0.6);
 
 // @see https://github.com/twbs/bootstrap-sass/blob/master/assets/stylesheets/bootstrap/_forms.scss#L128
 $form-control-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
@@ -238,7 +238,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
     .select2-selection {
       @include box-shadow($form-control-focus-box-shadow);
       @include transition($form-control-transition);
-      border-color: $input-border-focus;
+      border-color: $input-border-color-focus;
     }
   }
 
@@ -299,7 +299,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
   &.select2-container--disabled {
 
     .select2-selection {
-      border-color: $input-border-color;
+      border-color: $input-border-color-focus;
       @include box-shadow(none);
     }
 
@@ -332,7 +332,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
 
   .select2-dropdown {
     @include box-shadow($dropdown-box-shadow);
-    border-color: $input-border-focus;
+    border-color: $input-border-color-focus;
     overflow-x: hidden;
     margin-top: -1px;
     &--above {
@@ -436,7 +436,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
     .select2-selection__choice {
       color: $input-color;
       background: $btn-primary-bg;
-      border: 1px solid $btn-primary-border;
+      border: 1px solid $btn-primary-border-color;
       border-radius: 4px;
       cursor: default;
       float: left;
@@ -552,7 +552,6 @@ $clear-selection-color: $dropdown-arrow-color !default;
       b {
         border-width: $caret-width $caret-width 0 $caret-width;
         margin-left: -$caret-width;
-        margin-left: --$input-btn-padding-x-lg;
         margin-top: -$caret-width/2;
       }
     }

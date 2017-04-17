@@ -22,14 +22,14 @@
                 <li class="nav-item dropdown float-right">
                     <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-lg fa-globe m-r-1"></i>
-                        {{ languages[locale].NativeName|raw }}
+                        {{ languages[locale].Name|raw }}
                     </button>
-                    <div class="dropdown-menu dropdown-menu-right" style="width: 40rem">
-                        <h6 class="dropdown-header">Choose a language</h6>
+                    <ul class="dropdown-menu dropdown-menu-right columns" style="width: 400px">
                         {% for lang in languages %}
-                            <a href="{{ path('language', { locale: lang.ShortCode }) }}" class="btn {% if lang.ShortCode == locale %}btn-primary{% else %}btn-secondary{% endif %} m-l-1 mb-1" data-toggle="tooltip" data-placement="top" title="{{ lang.TranslatedName }}" style="width: 12rem">{{ lang.NativeName|raw }}</a>
+                            <li class=""><a href="{{ path('language', { locale: lang.ShortCode }) }}" class="btn {% if lang.ShortCode == locale %}btn-primary{% else %}btn-secondary{% endif %}" data-toggle="tooltip" data-placement="top" title="{{ lang.TranslatedName|raw }}" style="width: 9rem">{{ lang.Name|raw }}</a></li>
                         {% endfor %}
-                    </div>
+                        </ul>
+                    </ul>
                 </li>
             </ul>
         </div>

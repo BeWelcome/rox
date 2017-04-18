@@ -37,7 +37,7 @@ class Language
     /**
      * @var string
      *
-     * @ORM\Column(name="TranslatedName", type="text", length=255, nullable=false)
+     * @ORM\Column(name="TranslatedName", type="text", length=255, nullable=true)
      */
     private $translatedname;
 

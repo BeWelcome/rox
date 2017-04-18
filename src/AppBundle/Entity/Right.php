@@ -8,12 +8,9 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\JoinTable;
-use Doctrine\ORM\Mapping\ManyToMany;
 
 /**
- * Right
+ * Right.
  *
  * @ORM\Table(name="rights")
  * @ORM\Entity
@@ -45,7 +42,7 @@ class Right
     private $description;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -57,6 +54,11 @@ class Right
      * @ORM\OneToMany(targetEntity="RightVolunteer", mappedBy="right")
      */
     private $rightVolunteers;
+
+    public function __construct()
+    {
+        $this->rightVolunteers = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * @return mixed
@@ -74,14 +76,8 @@ class Right
         $this->rightVolunteers = $rightVolunteers;
     }
 
-    public function __construct()
-    {
-        $this->rightVolunteers = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
      *
@@ -95,7 +91,7 @@ class Right
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -105,7 +101,7 @@ class Right
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -119,7 +115,7 @@ class Right
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -129,7 +125,7 @@ class Right
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
      *
@@ -143,7 +139,7 @@ class Right
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -153,9 +149,9 @@ class Right
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -163,7 +159,7 @@ class Right
     }
 
     /**
-     * Add rightVolunteer
+     * Add rightVolunteer.
      *
      * @param \AppBundle\Entity\RightVolunteer $rightVolunteer
      *
@@ -177,7 +173,7 @@ class Right
     }
 
     /**
-     * Remove rightVolunteer
+     * Remove rightVolunteer.
      *
      * @param \AppBundle\Entity\RightVolunteer $rightVolunteer
      */

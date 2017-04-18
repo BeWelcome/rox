@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Country
+ * Country.
  *
  * @ORM\Table(name="geonamescountries")
  * @ORM\Entity
@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Country
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="geonameId", type="integer", nullable=true)
      */
@@ -46,9 +46,9 @@ class Country
     private $country;
 
     /**
-     * Set geonameid
+     * Set geonameid.
      *
-     * @param integer $geonameid
+     * @param int $geonameid
      *
      * @return Country
      */
@@ -60,9 +60,9 @@ class Country
     }
 
     /**
-     * Get geonameid
+     * Get geonameid.
      *
-     * @return integer
+     * @return int
      */
     public function getGeonameid()
     {
@@ -70,7 +70,7 @@ class Country
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -84,7 +84,7 @@ class Country
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -94,7 +94,7 @@ class Country
     }
 
     /**
-     * Set continent
+     * Set continent.
      *
      * @param string $continent
      *
@@ -108,7 +108,7 @@ class Country
     }
 
     /**
-     * Get continent
+     * Get continent.
      *
      * @return string
      */
@@ -118,7 +118,7 @@ class Country
     }
 
     /**
-     * Get country
+     * Get country.
      *
      * @return string
      */

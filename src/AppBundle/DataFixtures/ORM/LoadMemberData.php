@@ -2,10 +2,9 @@
 
 namespace AppBundle\DataFixtures\ORM;
 
-use Nelmio\Alice\Fixtures;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-
+use Nelmio\Alice\Fixtures;
 
 class LoadMemberData implements FixtureInterface
 {

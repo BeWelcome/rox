@@ -10,7 +10,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Language
+ * Language.
  *
  * @ORM\Table(name="languages", uniqueConstraints={@ORM\UniqueConstraint(name="ShortCode", columns={"ShortCode"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\LanguageRepository")
@@ -56,35 +56,35 @@ class Language
     private $wordcode;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="FlagSortCriteria", type="integer", nullable=false)
      */
     private $flagsortcriteria = '0';
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="IsWrittenLanguage", type="boolean", nullable=false)
      */
     private $iswrittenlanguage = '0';
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="IsSpokenLanguage", type="boolean", nullable=false)
      */
     private $isspokenlanguage = '0';
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="IsSignLanguage", type="boolean", nullable=false)
      */
     private $issignlanguage = '0';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -92,10 +92,8 @@ class Language
      */
     private $id;
 
-
-
     /**
-     * Set englishname
+     * Set englishname.
      *
      * @param string $englishname
      *
@@ -109,7 +107,7 @@ class Language
     }
 
     /**
-     * Get englishname
+     * Get englishname.
      *
      * @return string
      */
@@ -119,7 +117,7 @@ class Language
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -133,7 +131,7 @@ class Language
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -143,7 +141,7 @@ class Language
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -157,7 +155,7 @@ class Language
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -167,7 +165,7 @@ class Language
     }
 
     /**
-     * Set shortcode
+     * Set shortcode.
      *
      * @param string $shortcode
      *
@@ -181,7 +179,7 @@ class Language
     }
 
     /**
-     * Get shortcode
+     * Get shortcode.
      *
      * @return string
      */
@@ -191,7 +189,7 @@ class Language
     }
 
     /**
-     * Set wordcode
+     * Set wordcode.
      *
      * @param string $wordcode
      *
@@ -205,7 +203,7 @@ class Language
     }
 
     /**
-     * Get wordcode
+     * Get wordcode.
      *
      * @return string
      */
@@ -215,9 +213,9 @@ class Language
     }
 
     /**
-     * Set flagsortcriteria
+     * Set flagsortcriteria.
      *
-     * @param integer $flagsortcriteria
+     * @param int $flagsortcriteria
      *
      * @return Language
      */
@@ -229,9 +227,9 @@ class Language
     }
 
     /**
-     * Get flagsortcriteria
+     * Get flagsortcriteria.
      *
-     * @return integer
+     * @return int
      */
     public function getFlagsortcriteria()
     {
@@ -239,9 +237,9 @@ class Language
     }
 
     /**
-     * Set iswrittenlanguage
+     * Set iswrittenlanguage.
      *
-     * @param boolean $iswrittenlanguage
+     * @param bool $iswrittenlanguage
      *
      * @return Language
      */
@@ -253,9 +251,9 @@ class Language
     }
 
     /**
-     * Get iswrittenlanguage
+     * Get iswrittenlanguage.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsWrittenlanguage()
     {
@@ -263,9 +261,9 @@ class Language
     }
 
     /**
-     * Set isspokenlanguage
+     * Set isspokenlanguage.
      *
-     * @param boolean $isspokenlanguage
+     * @param bool $isspokenlanguage
      *
      * @return Language
      */
@@ -277,9 +275,9 @@ class Language
     }
 
     /**
-     * Get isspokenlanguage
+     * Get isspokenlanguage.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsSpokenlanguage()
     {
@@ -287,9 +285,9 @@ class Language
     }
 
     /**
-     * Set issignlanguage
+     * Set issignlanguage.
      *
-     * @param boolean $issignlanguage
+     * @param bool $issignlanguage
      *
      * @return Language
      */
@@ -301,9 +299,9 @@ class Language
     }
 
     /**
-     * Get issignlanguage
+     * Get issignlanguage.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsSignlanguage()
     {
@@ -311,9 +309,9 @@ class Language
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

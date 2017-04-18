@@ -2,12 +2,8 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Form\LoginFormType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * Controller used to manage the application security.
@@ -28,10 +24,11 @@ class SecurityController extends Controller
         // last username entered by the user
         $lastUsername = $helper->getLastUsername();
 
-        return $this->render('security/login.html.twig', array(
+        return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
-            'error'         => $error,
-        ));    }
+            'error' => $error,
+        ]);
+    }
 
     /**
      * This is the route the user can use to logout.

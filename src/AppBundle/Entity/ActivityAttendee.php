@@ -10,7 +10,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ActivityAttendee
+ * ActivityAttendee.
  *
  * @ORM\Table(name="activitiesattendees")
  * @ORM\Entity
@@ -39,14 +39,14 @@ class ActivityAttendee
     private $attendee;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="organizer", type="smallint", nullable=false)
      */
     private $organizer;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="status", type="smallint", nullable=false)
      */
@@ -63,7 +63,7 @@ class ActivityAttendee
      * ActivityAttendee constructor.
      *
      * @param Activity $activity
-     * @param Member $attendee
+     * @param Member   $attendee
      * @param $status
      * @param $comment
      * @param bool $isOrganizer
@@ -78,7 +78,7 @@ class ActivityAttendee
     }
 
     /**
-     * Set attendee
+     * Set attendee.
      *
      * @param \AppBundle\Entity\Member $attendee
      *
@@ -92,7 +92,7 @@ class ActivityAttendee
     }
 
     /**
-     * Get attendee
+     * Get attendee.
      *
      * @return \AppBundle\Entity\Member
      */
@@ -102,7 +102,7 @@ class ActivityAttendee
     }
 
     /**
-     * Set activity
+     * Set activity.
      *
      * @param \AppBundle\Entity\Activity $activity
      *
@@ -116,7 +116,7 @@ class ActivityAttendee
     }
 
     /**
-     * Get activity
+     * Get activity.
      *
      * @return \AppBundle\Entity\Activity
      */
@@ -126,9 +126,9 @@ class ActivityAttendee
     }
 
     /**
-     * Set organizer
+     * Set organizer.
      *
-     * @param integer $organizer
+     * @param int $organizer
      *
      * @return ActivityAttendee
      */
@@ -140,9 +140,9 @@ class ActivityAttendee
     }
 
     /**
-     * Get organizer
+     * Get organizer.
      *
-     * @return integer
+     * @return int
      */
     public function getOrganizer()
     {
@@ -150,9 +150,9 @@ class ActivityAttendee
     }
 
     /**
-     * Set status
+     * Set status.
      *
-     * @param integer $status
+     * @param int $status
      *
      * @return ActivityAttendee
      */
@@ -164,9 +164,9 @@ class ActivityAttendee
     }
 
     /**
-     * Get status
+     * Get status.
      *
-     * @return integer
+     * @return int
      */
     public function getStatus()
     {
@@ -174,7 +174,7 @@ class ActivityAttendee
     }
 
     /**
-     * Set comment
+     * Set comment.
      *
      * @param string $comment
      *
@@ -188,7 +188,7 @@ class ActivityAttendee
     }
 
     /**
-     * Get comment
+     * Get comment.
      *
      * @return string
      */

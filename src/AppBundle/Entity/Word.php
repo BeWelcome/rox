@@ -10,7 +10,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Word
+ * Word.
  *
  * @ORM\Table(name="words", uniqueConstraints={@ORM\UniqueConstraint(name="code", columns={"code", "IdLanguage"}), @ORM\UniqueConstraint(name="code_2", columns={"code", "ShortCode"})})
  * @ORM\Entity
@@ -56,7 +56,7 @@ class Word
     private $donottranslate = 'no';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdLanguage", type="integer", nullable=false)
      */
@@ -70,7 +70,7 @@ class Word
     private $description;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdMember", type="integer", nullable=false)
      */
@@ -84,14 +84,14 @@ class Word
     private $created = '0000-00-00 00:00:00';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="TranslationPriority", type="integer", nullable=false)
      */
     private $translationPriority = '5';
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="isarchived", type="boolean", nullable=true)
      */
@@ -105,7 +105,7 @@ class Word
     private $majorUpdate = '0000-00-00 00:00:00';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -113,10 +113,8 @@ class Word
      */
     private $id;
 
-
-
     /**
-     * Set code
+     * Set code.
      *
      * @param string $code
      *
@@ -130,7 +128,7 @@ class Word
     }
 
     /**
-     * Get code
+     * Get code.
      *
      * @return string
      */
@@ -140,7 +138,7 @@ class Word
     }
 
     /**
-     * Set shortcode
+     * Set shortcode.
      *
      * @param string $shortcode
      *
@@ -154,7 +152,7 @@ class Word
     }
 
     /**
-     * Get shortcode
+     * Get shortcode.
      *
      * @return string
      */
@@ -164,7 +162,7 @@ class Word
     }
 
     /**
-     * Set sentence
+     * Set sentence.
      *
      * @param string $sentence
      *
@@ -178,7 +176,7 @@ class Word
     }
 
     /**
-     * Get sentence
+     * Get sentence.
      *
      * @return string
      */
@@ -188,7 +186,7 @@ class Word
     }
 
     /**
-     * Set updated
+     * Set updated.
      *
      * @param \DateTime $updated
      *
@@ -202,7 +200,7 @@ class Word
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return \DateTime
      */
@@ -212,7 +210,7 @@ class Word
     }
 
     /**
-     * Set donottranslate
+     * Set donottranslate.
      *
      * @param string $donottranslate
      *
@@ -226,7 +224,7 @@ class Word
     }
 
     /**
-     * Get donottranslate
+     * Get donottranslate.
      *
      * @return string
      */
@@ -236,9 +234,9 @@ class Word
     }
 
     /**
-     * Set idlanguage
+     * Set idlanguage.
      *
-     * @param integer $idlanguage
+     * @param int $idlanguage
      *
      * @return Word
      */
@@ -250,9 +248,9 @@ class Word
     }
 
     /**
-     * Get idlanguage
+     * Get idlanguage.
      *
-     * @return integer
+     * @return int
      */
     public function getIdlanguage()
     {
@@ -260,7 +258,7 @@ class Word
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
      *
@@ -274,7 +272,7 @@ class Word
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -284,9 +282,9 @@ class Word
     }
 
     /**
-     * Set idmember
+     * Set idmember.
      *
-     * @param integer $idmember
+     * @param int $idmember
      *
      * @return Word
      */
@@ -298,9 +296,9 @@ class Word
     }
 
     /**
-     * Get idmember
+     * Get idmember.
      *
-     * @return integer
+     * @return int
      */
     public function getIdmember()
     {
@@ -308,7 +306,7 @@ class Word
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
      *
@@ -322,7 +320,7 @@ class Word
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -332,9 +330,10 @@ class Word
     }
 
     /**
-     * Set translationpriority
+     * Set translationpriority.
      *
-     * @param integer $translationpriority
+     * @param int   $translationpriority
+     * @param mixed $translationPriority
      *
      * @return Word
      */
@@ -346,9 +345,9 @@ class Word
     }
 
     /**
-     * Get translationpriority
+     * Get translationpriority.
      *
-     * @return integer
+     * @return int
      */
     public function getTranslationPriority()
     {
@@ -356,9 +355,9 @@ class Word
     }
 
     /**
-     * Set isarchived
+     * Set isarchived.
      *
-     * @param boolean $isarchived
+     * @param bool $isarchived
      *
      * @return Word
      */
@@ -370,9 +369,9 @@ class Word
     }
 
     /**
-     * Get isarchived
+     * Get isarchived.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsarchived()
     {
@@ -380,7 +379,7 @@ class Word
     }
 
     /**
-     * Set majorupdate
+     * Set majorupdate.
      *
      * @param \DateTime $majorUpdate
      *
@@ -394,7 +393,7 @@ class Word
     }
 
     /**
-     * Get majorUpdate
+     * Get majorUpdate.
      *
      * @return \DateTime
      */
@@ -404,9 +403,9 @@ class Word
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

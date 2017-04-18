@@ -40,7 +40,7 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.0",
         "fzaninotto/faker": "^1.6",
-        "phpmetrics/phpmetrics": "^2.0",
+        "phpmetrics/phpmetrics": "^1.8",
         "phploc/phploc": "^3.0",
         "phpmd/phpmd": "^2.4",
         "phpunit/phpunit": "^5.0",

@@ -10,7 +10,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * DonationEntity
+ * DonationEntity.
  *
  * @ORM\Table(name="donation")
  * @ORM\Entity
@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Donation
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdMember", type="integer", nullable=false)
      */
@@ -58,7 +58,7 @@ class Donation
      */
     private $money;
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdCountry", type="integer", nullable=false)
      */
@@ -88,36 +88,40 @@ class Donation
      */
     private $systemcomment;
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
     /**
-     * Set idmember
+     * Set idmember.
      *
-     * @param integer $idmember
+     * @param int $idmember
      *
      * @return Donation
      */
     public function setIdmember($idmember)
     {
         $this->idmember = $idmember;
+
         return $this;
     }
+
     /**
-     * Get idmember
+     * Get idmember.
      *
-     * @return integer
+     * @return int
      */
     public function getIdmember()
     {
         return $this->idmember;
     }
+
     /**
-     * Set email
+     * Set email.
      *
      * @param string $email
      *
@@ -126,10 +130,12 @@ class Donation
     public function setEmail($email)
     {
         $this->email = $email;
+
         return $this;
     }
+
     /**
-     * Get email
+     * Get email.
      *
      * @return string
      */
@@ -137,8 +143,9 @@ class Donation
     {
         return $this->email;
     }
+
     /**
-     * Set statusprivate
+     * Set statusprivate.
      *
      * @param string $statusprivate
      *
@@ -147,10 +154,12 @@ class Donation
     public function setStatusprivate($statusprivate)
     {
         $this->statusprivate = $statusprivate;
+
         return $this;
     }
+
     /**
-     * Get statusprivate
+     * Get statusprivate.
      *
      * @return string
      */
@@ -158,8 +167,9 @@ class Donation
     {
         return $this->statusprivate;
     }
+
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
      *
@@ -168,10 +178,12 @@ class Donation
     public function setCreated($created)
     {
         $this->created = $created;
+
         return $this;
     }
+
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -179,8 +191,9 @@ class Donation
     {
         return $this->created;
     }
+
     /**
-     * Set amount
+     * Set amount.
      *
      * @param string $amount
      *
@@ -189,10 +202,12 @@ class Donation
     public function setAmount($amount)
     {
         $this->amount = $amount;
+
         return $this;
     }
+
     /**
-     * Get amount
+     * Get amount.
      *
      * @return string
      */
@@ -200,8 +215,9 @@ class Donation
     {
         return $this->amount;
     }
+
     /**
-     * Set money
+     * Set money.
      *
      * @param string $money
      *
@@ -210,10 +226,12 @@ class Donation
     public function setMoney($money)
     {
         $this->money = $money;
+
         return $this;
     }
+
     /**
-     * Get money
+     * Get money.
      *
      * @return string
      */
@@ -221,29 +239,33 @@ class Donation
     {
         return $this->money;
     }
+
     /**
-     * Set idcountry
+     * Set idcountry.
      *
-     * @param integer $idcountry
+     * @param int $idcountry
      *
      * @return Donation
      */
     public function setIdcountry($idcountry)
     {
         $this->idcountry = $idcountry;
+
         return $this;
     }
+
     /**
-     * Get idcountry
+     * Get idcountry.
      *
-     * @return integer
+     * @return int
      */
     public function getIdcountry()
     {
         return $this->idcountry;
     }
+
     /**
-     * Set namegiven
+     * Set namegiven.
      *
      * @param string $namegiven
      *
@@ -252,10 +274,12 @@ class Donation
     public function setNamegiven($namegiven)
     {
         $this->namegiven = $namegiven;
+
         return $this;
     }
+
     /**
-     * Get namegiven
+     * Get namegiven.
      *
      * @return string
      */
@@ -263,8 +287,9 @@ class Donation
     {
         return $this->namegiven;
     }
+
     /**
-     * Set referencepaypal
+     * Set referencepaypal.
      *
      * @param string $referencepaypal
      *
@@ -273,10 +298,12 @@ class Donation
     public function setReferencepaypal($referencepaypal)
     {
         $this->referencepaypal = $referencepaypal;
+
         return $this;
     }
+
     /**
-     * Get referencepaypal
+     * Get referencepaypal.
      *
      * @return string
      */
@@ -284,8 +311,9 @@ class Donation
     {
         return $this->referencepaypal;
     }
+
     /**
-     * Set membercomment
+     * Set membercomment.
      *
      * @param string $membercomment
      *
@@ -294,10 +322,12 @@ class Donation
     public function setMembercomment($membercomment)
     {
         $this->membercomment = $membercomment;
+
         return $this;
     }
+
     /**
-     * Get membercomment
+     * Get membercomment.
      *
      * @return string
      */
@@ -305,8 +335,9 @@ class Donation
     {
         return $this->membercomment;
     }
+
     /**
-     * Set systemcomment
+     * Set systemcomment.
      *
      * @param string $systemcomment
      *
@@ -315,10 +346,12 @@ class Donation
     public function setSystemcomment($systemcomment)
     {
         $this->systemcomment = $systemcomment;
+
         return $this;
     }
+
     /**
-     * Get systemcomment
+     * Get systemcomment.
      *
      * @return string
      */
@@ -326,10 +359,11 @@ class Donation
     {
         return $this->systemcomment;
     }
+
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

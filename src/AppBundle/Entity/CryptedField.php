@@ -4,12 +4,13 @@
  *
  * Auto generated file ignore for Code Sniffer
 */
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Cryptedfield
+ * Cryptedfield.
  *
  * @ORM\Table(name="cryptedfields", indexes={@ORM\Index(name="IdMember", columns={"IdMember"})})
  * @ORM\Entity
@@ -63,7 +64,7 @@ class CryptedField
     private $temporaryUncryptedBuffer;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdRecord", type="integer", nullable=false)
      */
@@ -77,7 +78,7 @@ class CryptedField
     private $tablecolumn = 'NotSet';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -85,12 +86,11 @@ class CryptedField
      */
     private $id;
 
-
-
     /**
-     * Set admincryptedvalue
+     * Set admincryptedvalue.
      *
      * @param string $admincryptedvalue
+     * @param mixed  $adminCryptedValue
      *
      * @return Cryptedfield
      */
@@ -102,7 +102,7 @@ class CryptedField
     }
 
     /**
-     * Get admincryptedvalue
+     * Get admincryptedvalue.
      *
      * @return string
      */
@@ -112,9 +112,10 @@ class CryptedField
     }
 
     /**
-     * Set membercryptedvalue
+     * Set membercryptedvalue.
      *
      * @param string $membercryptedvalue
+     * @param mixed  $memberCryptedValue
      *
      * @return Cryptedfield
      */
@@ -126,7 +127,7 @@ class CryptedField
     }
 
     /**
-     * Get membercryptedvalue
+     * Get membercryptedvalue.
      *
      * @return string
      */
@@ -136,7 +137,7 @@ class CryptedField
     }
 
     /**
-     * Set iscrypted
+     * Set iscrypted.
      *
      * @param string $iscrypted
      *
@@ -150,7 +151,7 @@ class CryptedField
     }
 
     /**
-     * Get iscrypted
+     * Get iscrypted.
      *
      * @return string
      */
@@ -160,7 +161,7 @@ class CryptedField
     }
 
     /**
-     * Set todo
+     * Set todo.
      *
      * @param string $todo
      *
@@ -174,7 +175,7 @@ class CryptedField
     }
 
     /**
-     * Get todo
+     * Get todo.
      *
      * @return string
      */
@@ -184,7 +185,7 @@ class CryptedField
     }
 
     /**
-     * Set temporaryUncryptedBuffer
+     * Set temporaryUncryptedBuffer.
      *
      * @param string $temporaryUncryptedBuffer
      *
@@ -198,7 +199,7 @@ class CryptedField
     }
 
     /**
-     * Get temporaryUncryptedBuffer
+     * Get temporaryUncryptedBuffer.
      *
      * @return string
      */
@@ -208,9 +209,9 @@ class CryptedField
     }
 
     /**
-     * Set idrecord
+     * Set idrecord.
      *
-     * @param integer $idrecord
+     * @param int $idrecord
      *
      * @return Cryptedfield
      */
@@ -222,9 +223,9 @@ class CryptedField
     }
 
     /**
-     * Get idrecord
+     * Get idrecord.
      *
-     * @return integer
+     * @return int
      */
     public function getIdrecord()
     {
@@ -232,7 +233,7 @@ class CryptedField
     }
 
     /**
-     * Set tablecolumn
+     * Set tablecolumn.
      *
      * @param string $tablecolumn
      *
@@ -246,7 +247,7 @@ class CryptedField
     }
 
     /**
-     * Get tablecolumn
+     * Get tablecolumn.
      *
      * @return string
      */
@@ -256,9 +257,9 @@ class CryptedField
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -266,7 +267,7 @@ class CryptedField
     }
 
     /**
-     * Get member
+     * Get member.
      *
      * @return Member
      */
@@ -276,7 +277,7 @@ class CryptedField
     }
 
     /**
-     * Set member
+     * Set member.
      *
      * @param Member $member
      *

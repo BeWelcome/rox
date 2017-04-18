@@ -30,10 +30,10 @@ class DatabaseLoader implements LoaderInterface
     public function load($resource, $locale, $domain = 'messages')
     {
         /** @var Word $translations */
-        $translations = $this->em->getRepository(Word::class)->findBy([ 'shortcode' => $locale ]);
+        $translations = $this->em->getRepository(Word::class)->findBy(['shortcode' => $locale]);
 
         $messages = [];
-        foreach($translations as $translation) {
+        foreach ($translations as $translation) {
             $messages[$translation->getCode()] = $translation->getSentence();
         }
 

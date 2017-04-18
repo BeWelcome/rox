@@ -15,7 +15,8 @@ class SearchFormType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $formBuilder
-     * @param array $options
+     * @param array                $options
+     *
      * @return FormInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -33,6 +34,46 @@ class SearchFormType extends AbstractType
         $this->addCheckboxes($formBuilder);
         $this->addSelects($formBuilder);
         $this->addButtons($formBuilder);
+    }
+
+    protected function addSelects(FormBuilderInterface $formBuilder)
+    {
+        $formBuilder
+            ->add('search_can_host', ChoiceType::class, [
+                'choices' => [
+                    0 => '0',
+                    1 => '1',
+                    2 => '2',
+                    3 => '3',
+                    4 => '4',
+                    5 => '5',
+                    10 => '10',
+                    20 => '20',
+                ],
+                'attr' => [
+                    'class' => 'form-control-label',
+                ],
+                'data' => '1',
+                'label' => 'hosts at least',
+            ])
+            ->add('search_distance', ChoiceType::class, [
+                'choices' => [
+                    'exact' => 0,
+                    '5km / 3mi' => 5,
+                    '10km / 6mi' => 10,
+                    '20km / 15mi' => 20,
+                    '50km / 31mi' => 50,
+                    '100km / 63mi' => 100,
+                    '200km / 128mi' => 200,
+                ],
+                'attr' => [
+                    'class' => 'form-control-label',
+                ],
+                'choices_as_values' => true,
+                'data' => '20',
+                'label' => 'in a radius of',
+            ])
+        ;
     }
 
     private function addHiddenFields(FormBuilderInterface $formBuilder)
@@ -77,46 +118,6 @@ class SearchFormType extends AbstractType
                 'label' => false,
                 'required' => false,
                 'data' => false,
-            ])
-        ;
-    }
-
-    protected function addSelects(FormBuilderInterface $formBuilder)
-    {
-        $formBuilder
-            ->add('search_can_host', ChoiceType::class, [
-                'choices' => [
-                    0 => '0',
-                    1 => '1',
-                    2 => '2',
-                    3 => '3',
-                    4 => '4',
-                    5 => '5',
-                    10 => '10',
-                    20 => '20',
-                ],
-                'attr' => [
-                    'class' => 'form-control-label',
-                ],
-                'data' => '1',
-                'label' => 'hosts at least',
-            ])
-            ->add('search_distance', ChoiceType::class, [
-                'choices' => [
-                    'exact' => 0,
-                    '5km / 3mi' => 5,
-                    '10km / 6mi' => 10,
-                    '20km / 15mi' => 20,
-                    '50km / 31mi' => 50,
-                    '100km / 63mi' => 100,
-                    '200km / 128mi' => 200,
-                ],
-                'attr' => [
-                    'class' => 'form-control-label',
-                ],
-                'choices_as_values' => true,
-                'data' => '20',
-                'label' => 'in a radius of',
             ])
         ;
     }

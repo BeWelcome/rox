@@ -48,7 +48,8 @@ class LegacyHttpKernel extends HttpKernel
         parent::__construct($dispatcher, $resolver, $requestStack, $argumentResolver);
     }
 
-    public function getContainer() {
+    public function getContainer()
+    {
         return $this->container;
     }
 

@@ -12,7 +12,7 @@ all: phpci
 phpci: phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpmetrics phpunit
 
 phpcsfix:
-	./vendor/bin/phpcbf module/
+	./vendor/bin/phpcbf src/
 	./vendor/bin/php-cs-fixer fix -v
 
 build:

@@ -4,9 +4,9 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\SubTrip;
 use AppBundle\Entity\Trip;
+use AppBundle\Form\TripType;
 use AppBundle\Model\TripModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use AppBundle\Form\TripType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,8 +18,10 @@ class TripController extends Controller
      * @Route("/trip", name="trip")
      *
      * @param Request $request
-     * @param int $items
+     * @param int     $items
+     *
      * @return Response
+     *
      * @internal param int $page
      */
     public function listAction(Request $request, $items = 10)
@@ -44,6 +46,7 @@ class TripController extends Controller
      *     requirements={"id": "\d+"})
      *
      * @param Trip $trip The trip to show
+     *
      * @return Response
      */
     public function showAction(Trip $trip)
@@ -56,24 +59,25 @@ class TripController extends Controller
     }
 
     /**
-     * Create a new trip
+     * Create a new trip.
      *
      * @Route("/trip/create", name="trip_create")
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function createAction(Request $request)
     {
         $trip = new Trip();
-        $trip->addSubtrip(new SubTrip);
+        $trip->addSubtrip(new SubTrip());
 
         $createForm = $this->createForm(TripType::class, $trip);
         $createForm->handleRequest($request);
 
         if ($createForm->isSubmitted() && $createForm->isValid()) {
             $trip
-                ->setCreatedAt(new \DateTime)
+                ->setCreatedAt(new \DateTime())
                 ->setCreatedBy($this->getUser());
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -96,13 +100,14 @@ class TripController extends Controller
      *     requirements={"id": "\d+"})
      *
      * @param Request $request
-     * @param Trip $trip The trip to update
+     * @param Trip    $trip    The trip to update
+     *
      * @return Response
      */
     public function updateAction(Request $request, Trip $trip)
     {
         $member = $this->getUser();
-        if ($trip->getCreatedBy() <> $member) {
+        if ($trip->getCreatedBy() !== $member) {
             throw new AccessDeniedException();
         }
 
@@ -112,7 +117,7 @@ class TripController extends Controller
 
         if ($updateForm->isSubmitted() && $updateForm->isValid()) {
             $trip
-                ->setUpdatedAt(new \DateTime);
+                ->setUpdatedAt(new \DateTime());
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($trip);

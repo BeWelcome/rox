@@ -2,19 +2,11 @@
 
 namespace AppBundle\Twig;
 
-use AppBundle\Entity\Language;
-use AppBundle\Entity\Member;
 use AppBundle\Model\LanguageModel;
-use AppBundle\Repository\LanguageRepository;
-use AppBundle\Repository\MemberRepository;
 use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\Entity;
 use Faker\Factory;
 use HtmlTruncator\Truncator;
-use Rox\I18n\Service\LanguageService;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Twig_Extension;
 use Twig_Extension_GlobalsInterface;
@@ -31,7 +23,7 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
     /**
      * @var Registry
      */
-    protected  $registry;
+    protected $registry;
 
     public function __construct(
         SessionInterface $session,
@@ -72,13 +64,14 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
     }
 
     /**
-     * Truncates a string up to a number of characters while preserving whole words and HTML tags
+     * Truncates a string up to a number of characters while preserving whole words and HTML tags.
      *
-     * @param string  $text         String to truncate.
-     * @param integer $length       Length of returned string, including ellipsis.
-     * @param string  $ending       Ending to be appended to the trimmed string.
+     * @param string $text     string to truncate
+     * @param int    $length   length of returned string, including ellipsis
+     * @param string $ending   ending to be appended to the trimmed string
+     * @param mixed  $ellipsis
      *
-     * @return string Truncated string.
+     * @return string truncated string
      */
     public function truncate($text, $length = 100, $ellipsis = '&#8230;')
     {
@@ -87,6 +80,7 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
             'length_in_chars' => true,
             'ellipsis' => $ellipsis,
         ]);
+
         return $truncated;
     }
 
@@ -105,27 +99,9 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
         $locale = $this->session->get('locale', 'en');
         $languageModel = new LanguageModel($this->registry);
         $languages = $languageModel->getLanguagesWithTranslations($locale);
-        $langarr = [];
-        /** @var Language $language */
-/*        foreach ($languages as $language) {
-            $lang = new \stdClass();
-            $lang->NativeName = $language->getName();
-            $lang->TranslatedName = $language->getTranslatedName();
-            $lang->ShortCode = $language->getShortcode();
-            $langarr[$lang->ShortCode] = $lang;
-        }
-        $defaultLanguage = $langarr[ $locale ];
-        uasort($langarr, function ($a, $b) {
-            if ($a->TranslatedName === $b->TranslatedName) {
-                return 0;
-            }
-
-            return (strtolower($a->TranslatedName) < strtolower($b->TranslatedName)) ? -1 : 1;
-        });
-
-*/        $member = null;
+        $member = null;
         $rememberMeToken = unserialize($this->session->get('_security_default'));
-        if ($rememberMeToken != null) {
+        if ($rememberMeToken !== null) {
             $member = $rememberMeToken->getUser();
         }
 
@@ -134,11 +110,10 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
             'version_dt' => Carbon::createFromTimestamp(filemtime('../VERSION')),
             'title' => 'BeWelcome',
             'faker' => class_exists(Factory::class) ? Factory::create() : null,
-//            'language' => $defaultLanguage,
             'languages' => $languages,
             'robots' => 'ALL',
             'my_member' => $member,
-            'teams' => false
+            'teams' => false,
         ];
     }
 }

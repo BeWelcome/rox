@@ -10,7 +10,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * SubTrip
+ * SubTrip.
  *
  * @ORM\Table(name="sub_trips", indexes={@ORM\Index(name="trip_id_idx", columns={"trip_id"})})
  * @ORM\Entity
@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 class SubTrip
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="geonameId", type="integer", nullable=true)
      */
@@ -42,14 +42,14 @@ class SubTrip
     private $departure;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="options", type="integer", nullable=true)
      */
     private $options;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -66,9 +66,9 @@ class SubTrip
     private $trip;
 
     /**
-     * Set geonameid
+     * Set geonameid.
      *
-     * @param integer $geonameid
+     * @param int $geonameid
      *
      * @return SubTrip
      */
@@ -80,9 +80,9 @@ class SubTrip
     }
 
     /**
-     * Get geonameid
+     * Get geonameid.
      *
-     * @return integer
+     * @return int
      */
     public function getSearchGeonameId()
     {
@@ -90,7 +90,7 @@ class SubTrip
     }
 
     /**
-     * Set arrival
+     * Set arrival.
      *
      * @param \DateTime $arrival
      *
@@ -104,7 +104,7 @@ class SubTrip
     }
 
     /**
-     * Get arrival
+     * Get arrival.
      *
      * @return \DateTime
      */
@@ -114,7 +114,7 @@ class SubTrip
     }
 
     /**
-     * Set departure
+     * Set departure.
      *
      * @param \DateTime $departure
      *
@@ -128,7 +128,7 @@ class SubTrip
     }
 
     /**
-     * Get departure
+     * Get departure.
      *
      * @return \DateTime
      */
@@ -138,7 +138,7 @@ class SubTrip
     }
 
     /**
-     * Set options
+     * Set options.
      *
      * @param array $options
      *
@@ -147,18 +147,18 @@ class SubTrip
     public function setOptions($options)
     {
         $optionsValue = 0;
-        foreach($options as $key => $value) {
+        foreach ($options as $key => $value) {
             $optionsValue += $value;
-    }
+        }
         $this->options = $optionsValue;
 
         return $this;
     }
 
     /**
-     * Get options
+     * Get options.
      *
-     * @return integer
+     * @return int
      */
     public function getOptions()
     {
@@ -166,9 +166,9 @@ class SubTrip
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -176,7 +176,7 @@ class SubTrip
     }
 
     /**
-     * Set trip
+     * Set trip.
      *
      * @param Trip $trip
      *
@@ -190,7 +190,7 @@ class SubTrip
     }
 
     /**
-     * Get trip
+     * Get trip.
      *
      * @return Trip
      */

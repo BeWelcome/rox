@@ -15,6 +15,7 @@ class SearchController extends Controller
      * @Route("/search/members", name="search_members")
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function searchAction(Request $request)
@@ -54,6 +55,7 @@ class SearchController extends Controller
     /**
      * @param Request $request
      * @param $formName
+     *
      * @return Request
      */
     private function updateRequestSearchFormData(Request $request, $formName)
@@ -73,6 +75,7 @@ class SearchController extends Controller
 
     /**
      * @param array $data
+     *
      * @return array|string
      */
     private function getResults($data)

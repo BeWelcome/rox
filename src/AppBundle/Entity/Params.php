@@ -10,7 +10,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Params
+ * Params.
  *
  * @ORM\Table(name="params")
  * @ORM\Entity
@@ -35,21 +35,21 @@ class Params
     private $isrealproductiondatabase = 'No';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="recordonline", type="integer", nullable=false)
      */
     private $recordonline = '0';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="ToggleDonateBar", type="integer", nullable=false)
      */
     private $toggledonatebar = '0';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="neededperyear", type="integer", nullable=false)
      */
@@ -119,7 +119,7 @@ class Params
     private $ajaxchatspecialallowedlist;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="AjaxChatDebuLevel", type="integer", nullable=false)
      */
@@ -133,14 +133,14 @@ class Params
     private $reloadrightsandflags = 'No';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="logs_id_midnight", type="integer", nullable=false)
      */
     private $logsIdMidnight;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="previous_logs_id_midnight", type="integer", nullable=false)
      */
@@ -154,21 +154,21 @@ class Params
     private $memcache = 'False';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="DayLightOffset", type="integer", nullable=false)
      */
     private $daylightoffset = '0';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="NbCommentsInLastComments", type="integer", nullable=false)
      */
     private $nbcommentsinlastcomments = '20';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdCommentOfTheMoment", type="integer", nullable=false)
      */
@@ -189,7 +189,7 @@ class Params
     private $togglestatsforwordsusage = 'No';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -197,10 +197,8 @@ class Params
      */
     private $id;
 
-
-
     /**
-     * Set updated
+     * Set updated.
      *
      * @param \DateTime $updated
      *
@@ -214,7 +212,7 @@ class Params
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return \DateTime
      */
@@ -224,7 +222,7 @@ class Params
     }
 
     /**
-     * Set isrealproductiondatabase
+     * Set isrealproductiondatabase.
      *
      * @param string $isrealproductiondatabase
      *
@@ -238,7 +236,7 @@ class Params
     }
 
     /**
-     * Get isrealproductiondatabase
+     * Get isrealproductiondatabase.
      *
      * @return string
      */
@@ -248,9 +246,9 @@ class Params
     }
 
     /**
-     * Set recordonline
+     * Set recordonline.
      *
-     * @param integer $recordonline
+     * @param int $recordonline
      *
      * @return Params
      */
@@ -262,9 +260,9 @@ class Params
     }
 
     /**
-     * Get recordonline
+     * Get recordonline.
      *
-     * @return integer
+     * @return int
      */
     public function getRecordonline()
     {
@@ -272,9 +270,9 @@ class Params
     }
 
     /**
-     * Set toggledonatebar
+     * Set toggledonatebar.
      *
-     * @param integer $toggledonatebar
+     * @param int $toggledonatebar
      *
      * @return Params
      */
@@ -286,9 +284,9 @@ class Params
     }
 
     /**
-     * Get toggledonatebar
+     * Get toggledonatebar.
      *
-     * @return integer
+     * @return int
      */
     public function getToggledonatebar()
     {
@@ -296,9 +294,9 @@ class Params
     }
 
     /**
-     * Set neededperyear
+     * Set neededperyear.
      *
-     * @param integer $neededperyear
+     * @param int $neededperyear
      *
      * @return Params
      */
@@ -310,9 +308,9 @@ class Params
     }
 
     /**
-     * Get neededperyear
+     * Get neededperyear.
      *
-     * @return integer
+     * @return int
      */
     public function getNeededperyear()
     {
@@ -320,7 +318,7 @@ class Params
     }
 
     /**
-     * Set campaignstartdate
+     * Set campaignstartdate.
      *
      * @param \DateTime $campaignstartdate
      *
@@ -334,7 +332,7 @@ class Params
     }
 
     /**
-     * Get campaignstartdate
+     * Get campaignstartdate.
      *
      * @return \DateTime
      */
@@ -344,7 +342,7 @@ class Params
     }
 
     /**
-     * Set mailtonotifywhennewmembersignup
+     * Set mailtonotifywhennewmembersignup.
      *
      * @param string $mailtonotifywhennewmembersignup
      *
@@ -358,7 +356,7 @@ class Params
     }
 
     /**
-     * Get mailtonotifywhennewmembersignup
+     * Get mailtonotifywhennewmembersignup.
      *
      * @return string
      */
@@ -368,7 +366,7 @@ class Params
     }
 
     /**
-     * Set featureforumclosed
+     * Set featureforumclosed.
      *
      * @param string $featureforumclosed
      *
@@ -382,7 +380,7 @@ class Params
     }
 
     /**
-     * Get featureforumclosed
+     * Get featureforumclosed.
      *
      * @return string
      */
@@ -392,7 +390,7 @@ class Params
     }
 
     /**
-     * Set featureajaxchatclosed
+     * Set featureajaxchatclosed.
      *
      * @param string $featureajaxchatclosed
      *
@@ -406,7 +404,7 @@ class Params
     }
 
     /**
-     * Get featureajaxchatclosed
+     * Get featureajaxchatclosed.
      *
      * @return string
      */
@@ -416,7 +414,7 @@ class Params
     }
 
     /**
-     * Set featuresignupclose
+     * Set featuresignupclose.
      *
      * @param string $featuresignupclose
      *
@@ -430,7 +428,7 @@ class Params
     }
 
     /**
-     * Get featuresignupclose
+     * Get featuresignupclose.
      *
      * @return string
      */
@@ -440,7 +438,7 @@ class Params
     }
 
     /**
-     * Set featuresearchpageisclosed
+     * Set featuresearchpageisclosed.
      *
      * @param string $featuresearchpageisclosed
      *
@@ -454,7 +452,7 @@ class Params
     }
 
     /**
-     * Get featuresearchpageisclosed
+     * Get featuresearchpageisclosed.
      *
      * @return string
      */
@@ -464,7 +462,7 @@ class Params
     }
 
     /**
-     * Set featurequicksearchisclosed
+     * Set featurequicksearchisclosed.
      *
      * @param string $featurequicksearchisclosed
      *
@@ -478,7 +476,7 @@ class Params
     }
 
     /**
-     * Get featurequicksearchisclosed
+     * Get featurequicksearchisclosed.
      *
      * @return string
      */
@@ -488,7 +486,7 @@ class Params
     }
 
     /**
-     * Set rssfeedisclosed
+     * Set rssfeedisclosed.
      *
      * @param string $rssfeedisclosed
      *
@@ -502,7 +500,7 @@ class Params
     }
 
     /**
-     * Get rssfeedisclosed
+     * Get rssfeedisclosed.
      *
      * @return string
      */
@@ -512,7 +510,7 @@ class Params
     }
 
     /**
-     * Set ajaxchatspecialallowedlist
+     * Set ajaxchatspecialallowedlist.
      *
      * @param string $ajaxchatspecialallowedlist
      *
@@ -526,7 +524,7 @@ class Params
     }
 
     /**
-     * Get ajaxchatspecialallowedlist
+     * Get ajaxchatspecialallowedlist.
      *
      * @return string
      */
@@ -536,9 +534,9 @@ class Params
     }
 
     /**
-     * Set ajaxchatdebulevel
+     * Set ajaxchatdebulevel.
      *
-     * @param integer $ajaxchatdebulevel
+     * @param int $ajaxchatdebulevel
      *
      * @return Params
      */
@@ -550,9 +548,9 @@ class Params
     }
 
     /**
-     * Get ajaxchatdebulevel
+     * Get ajaxchatdebulevel.
      *
-     * @return integer
+     * @return int
      */
     public function getAjaxchatdebulevel()
     {
@@ -560,7 +558,7 @@ class Params
     }
 
     /**
-     * Set reloadrightsandflags
+     * Set reloadrightsandflags.
      *
      * @param string $reloadrightsandflags
      *
@@ -574,7 +572,7 @@ class Params
     }
 
     /**
-     * Get reloadrightsandflags
+     * Get reloadrightsandflags.
      *
      * @return string
      */
@@ -584,9 +582,9 @@ class Params
     }
 
     /**
-     * Set logsIdMidnight
+     * Set logsIdMidnight.
      *
-     * @param integer $logsIdMidnight
+     * @param int $logsIdMidnight
      *
      * @return Params
      */
@@ -598,9 +596,9 @@ class Params
     }
 
     /**
-     * Get logsIdMidnight
+     * Get logsIdMidnight.
      *
-     * @return integer
+     * @return int
      */
     public function getLogsIdMidnight()
     {
@@ -608,9 +606,9 @@ class Params
     }
 
     /**
-     * Set previousLogsIdMidnight
+     * Set previousLogsIdMidnight.
      *
-     * @param integer $previousLogsIdMidnight
+     * @param int $previousLogsIdMidnight
      *
      * @return Params
      */
@@ -622,9 +620,9 @@ class Params
     }
 
     /**
-     * Get previousLogsIdMidnight
+     * Get previousLogsIdMidnight.
      *
-     * @return integer
+     * @return int
      */
     public function getPreviousLogsIdMidnight()
     {
@@ -632,7 +630,7 @@ class Params
     }
 
     /**
-     * Set memcache
+     * Set memcache.
      *
      * @param string $memcache
      *
@@ -646,7 +644,7 @@ class Params
     }
 
     /**
-     * Get memcache
+     * Get memcache.
      *
      * @return string
      */
@@ -656,9 +654,9 @@ class Params
     }
 
     /**
-     * Set daylightoffset
+     * Set daylightoffset.
      *
-     * @param integer $daylightoffset
+     * @param int $daylightoffset
      *
      * @return Params
      */
@@ -670,9 +668,9 @@ class Params
     }
 
     /**
-     * Get daylightoffset
+     * Get daylightoffset.
      *
-     * @return integer
+     * @return int
      */
     public function getDaylightoffset()
     {
@@ -680,9 +678,9 @@ class Params
     }
 
     /**
-     * Set nbcommentsinlastcomments
+     * Set nbcommentsinlastcomments.
      *
-     * @param integer $nbcommentsinlastcomments
+     * @param int $nbcommentsinlastcomments
      *
      * @return Params
      */
@@ -694,9 +692,9 @@ class Params
     }
 
     /**
-     * Get nbcommentsinlastcomments
+     * Get nbcommentsinlastcomments.
      *
-     * @return integer
+     * @return int
      */
     public function getNbcommentsinlastcomments()
     {
@@ -704,9 +702,9 @@ class Params
     }
 
     /**
-     * Set idcommentofthemoment
+     * Set idcommentofthemoment.
      *
-     * @param integer $idcommentofthemoment
+     * @param int $idcommentofthemoment
      *
      * @return Params
      */
@@ -718,9 +716,9 @@ class Params
     }
 
     /**
-     * Get idcommentofthemoment
+     * Get idcommentofthemoment.
      *
-     * @return integer
+     * @return int
      */
     public function getIdcommentofthemoment()
     {
@@ -728,7 +726,7 @@ class Params
     }
 
     /**
-     * Set mailbotmode
+     * Set mailbotmode.
      *
      * @param string $mailbotmode
      *
@@ -742,7 +740,7 @@ class Params
     }
 
     /**
-     * Get mailbotmode
+     * Get mailbotmode.
      *
      * @return string
      */
@@ -752,7 +750,7 @@ class Params
     }
 
     /**
-     * Set togglestatsforwordsusage
+     * Set togglestatsforwordsusage.
      *
      * @param string $togglestatsforwordsusage
      *
@@ -766,7 +764,7 @@ class Params
     }
 
     /**
-     * Get togglestatsforwordsusage
+     * Get togglestatsforwordsusage.
      *
      * @return string
      */
@@ -776,9 +774,9 @@ class Params
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

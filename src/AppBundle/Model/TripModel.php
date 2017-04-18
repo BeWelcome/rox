@@ -48,6 +48,7 @@ class TripModel extends BaseModel
               LIMIT $count
         ";
         $trips = $this->execQuery($sql)->fetchAll(\PDO::FETCH_OBJ);
+
         return $trips;
     }
 }

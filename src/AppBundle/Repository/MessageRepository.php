@@ -3,7 +3,6 @@
 namespace AppBundle\Repository;
 
 use AppBundle\Entity\Member;
-use AppBundle\Entity\Message;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -16,18 +15,19 @@ class MessageRepository extends EntityRepository
      * @param $filter
      * @param $sort
      * @param $sortDirection
+     *
      * @return Query
      */
     public function queryLatest(Member $member, $filter, $sort, $sortDirection)
     {
         $qb = $this->createQueryBuilder('m');
-        if ($filter == 'sent') {
+        if ($filter === 'sent') {
             $qb->where('m.sender = :member');
         } else {
-            $qb->where( 'm.receiver = :member');
+            $qb->where('m.receiver = :member');
         }
         $qb->setParameter('member', $member);
-        switch($filter) {
+        switch ($filter) {
             case 'inbox':
                 $filter = 'normal';
                 $qb->andWhere('m.infolder = :filter')
@@ -35,17 +35,17 @@ class MessageRepository extends EntityRepository
                 break;
             case 'sent':
             case 'spam':
-            $qb->andWhere('m.infolder = :filter')
+                $qb->andWhere('m.infolder = :filter')
                 ->setParameter('filter', $filter);
                 break;
         }
-        $qb->orderBy('m.' . $sort, $sortDirection);
+        $qb->orderBy('m.'.$sort, $sortDirection);
 
         return $qb->getQuery();
     }
 
     /**
-     * Returns a Pagerfanta object encapsulating the matching paginated activities
+     * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
      * @param Member $member
      * @param $filter
@@ -53,6 +53,7 @@ class MessageRepository extends EntityRepository
      * @param $sortDirection
      * @param int $page
      * @param int $items
+     *
      * @return Pagerfanta
      */
     public function findLatest(Member $member, $filter, $sort, $sortDirection, $page = 1, $items = 10)

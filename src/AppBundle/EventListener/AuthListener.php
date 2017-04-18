@@ -2,14 +2,12 @@
 
 namespace AppBundle\EventListener;
 
-use AppBundle\Factory\EncoderFactory;
 use ReflectionObject;
 use RemoteAPICore;
 use Rox\Core\Exception\RuntimeException;
 use Rox\Member\Model\Member;
 use Rox\Member\Service\MemberService;
 use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
@@ -39,9 +37,9 @@ class AuthListener
             throw new RuntimeException('Could not extract password from interactive login request.');
         }
 
-        echo "*" . $this->dokuwikiDirectory . "*";
+        echo '*'.$this->dokuwikiDirectory.'*';
 
-        require_once $this->dokuwikiDirectory. '/inc/init.php';
+        require_once $this->dokuwikiDirectory.'/inc/init.php';
 
         $remoteApiCore = new RemoteApiCore(new \RemoteAPI());
         $remoteApiCore->login($user->getUsername(), $password);
@@ -54,9 +52,9 @@ class AuthListener
      *
      * @param PasswordEncoderInterface $encoder
      *
-     * @return integer
-     *
      * @throws RuntimeException
+     *
+     * @return int
      */
     protected function getCost(PasswordEncoderInterface $encoder)
     {

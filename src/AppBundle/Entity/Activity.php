@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Activity
+ * Activity.
  *
  * @ORM\Table(name="activities")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ActivityRepository")
@@ -79,21 +79,21 @@ class Activity
     private $description;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="status", type="smallint", nullable=false)
      */
     private $status;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="public", type="smallint", nullable=true)
      */
     private $public;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -114,7 +114,7 @@ class Activity
     }
 
     /**
-     * Set createdBy
+     * Set createdBy.
      *
      * @param \AppBundle\Entity\Member $createdBy
      *
@@ -128,7 +128,7 @@ class Activity
     }
 
     /**
-     * Get createdBy
+     * Get createdBy.
      *
      * @return \AppBundle\Entity\Member
      */
@@ -138,7 +138,7 @@ class Activity
     }
 
     /**
-     * Set starts
+     * Set starts.
      *
      * @param \DateTime $starts
      *
@@ -152,7 +152,7 @@ class Activity
     }
 
     /**
-     * Get starts
+     * Get starts.
      *
      * @return Carbon
      */
@@ -162,7 +162,7 @@ class Activity
     }
 
     /**
-     * Set ends
+     * Set ends.
      *
      * @param \DateTime $ends
      *
@@ -176,7 +176,7 @@ class Activity
     }
 
     /**
-     * Get ends
+     * Get ends.
      *
      * @return Carbon
      */
@@ -186,7 +186,7 @@ class Activity
     }
 
     /**
-     * Set locationid
+     * Set locationid.
      *
      * @param Location $location
      *
@@ -200,7 +200,7 @@ class Activity
     }
 
     /**
-     * Get location
+     * Get location.
      *
      * @return Location
      */
@@ -210,7 +210,7 @@ class Activity
     }
 
     /**
-     * Set address
+     * Set address.
      *
      * @param string $address
      *
@@ -224,7 +224,7 @@ class Activity
     }
 
     /**
-     * Get address
+     * Get address.
      *
      * @return string
      */
@@ -234,7 +234,7 @@ class Activity
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
      *
@@ -248,7 +248,7 @@ class Activity
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -258,7 +258,7 @@ class Activity
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
      *
@@ -272,7 +272,7 @@ class Activity
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -282,9 +282,9 @@ class Activity
     }
 
     /**
-     * Set status
+     * Set status.
      *
-     * @param integer $status
+     * @param int $status
      *
      * @return Activity
      */
@@ -296,9 +296,9 @@ class Activity
     }
 
     /**
-     * Get status
+     * Get status.
      *
-     * @return integer
+     * @return int
      */
     public function getStatus()
     {
@@ -306,9 +306,9 @@ class Activity
     }
 
     /**
-     * Set public
+     * Set public.
      *
-     * @param integer $public
+     * @param int $public
      *
      * @return Activity
      */
@@ -320,9 +320,9 @@ class Activity
     }
 
     /**
-     * Get public
+     * Get public.
      *
-     * @return integer
+     * @return int
      */
     public function getPublic()
     {
@@ -330,9 +330,9 @@ class Activity
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -353,10 +353,11 @@ class Activity
     public function getAttendeesYes()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq("status", "1"))
+            ->where(Criteria::expr()->eq('status', '1'))
         ;
 
         $attendeesYes = $this->attendees->matching($criteria);
+
         return $attendeesYes;
     }
 
@@ -366,10 +367,11 @@ class Activity
     public function getAttendeesNo()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq("status", "0"))
+            ->where(Criteria::expr()->eq('status', '0'))
         ;
 
         $attendeesNo = $this->attendees->matching($criteria);
+
         return $attendeesNo;
     }
 
@@ -379,10 +381,11 @@ class Activity
     public function getAttendeesMaybe()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq("status", "2"))
+            ->where(Criteria::expr()->eq('status', '2'))
         ;
 
         $attendeesMaybe = $this->attendees->matching($criteria);
+
         return $attendeesMaybe;
     }
 
@@ -392,7 +395,7 @@ class Activity
     public function getOrganizers()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq("organizer", "1"))
+            ->where(Criteria::expr()->eq('organizer', '1'))
         ;
 
         $organizers = $this->attendees->matching($criteria);
@@ -401,7 +404,7 @@ class Activity
     }
 
     /**
-     * Add attendee
+     * Add attendee.
      *
      * @param \AppBundle\Entity\ActivityAttendee $attendee
      *
@@ -415,7 +418,7 @@ class Activity
     }
 
     /**
-     * Remove attendee
+     * Remove attendee.
      *
      * @param \AppBundle\Entity\ActivityAttendee $attendee
      */

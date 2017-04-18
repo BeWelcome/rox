@@ -2,19 +2,15 @@
 
 namespace AppBundle\Model;
 
-use AnthonyMartin\GeoLocation\GeoLocation;
+use AppBundle\Entity\ForumThread;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
-use AppBundle\Entity\ForumThread;
-use Doctrine\DBAL\Query\QueryBuilder;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
-use stdClass;
 
-class LandingModel extends BaseModel {
-
+class LandingModel extends BaseModel
+{
     /**
-     * Generates messages for display on home page
+     * Generates messages for display on home page.
      *
      * Returns either all messages or only unread ones depending on checkbox state
      *
@@ -28,6 +24,7 @@ class LandingModel extends BaseModel {
      * @param $all
      * @param $unread
      * @param int|bool $limit
+     *
      * @return array
      */
     public function getMessages(Member $member, $unread, $limit = 0)
@@ -43,7 +40,7 @@ class LandingModel extends BaseModel {
                 ->andWhere("whenfirstread = '0000-00-00 00:00.00");
         }
 
-        if($limit <> 0) {
+        if ($limit !== 0) {
             $queryBuilder->setMaxResults($limit);
         }
 
@@ -59,9 +56,9 @@ class LandingModel extends BaseModel {
      *   'text': Depending on type of notification,
      *   'link': Depending on type of notification,
      *   'user': 'Member-102',
-     *   'time': '10 minutes ago',
+     *   'time': '10 minutes ago',.
      *
-     * @param Member $member
+     * @param Member   $member
      * @param int|bool $limit
      *
      * @return array
@@ -83,7 +80,7 @@ class LandingModel extends BaseModel {
     }
 
     /**
-     * Generates threads for display on home page
+     * Generates threads for display on home page.
      *
      * Depends on checkboxes shown above the display
      *
@@ -97,7 +94,7 @@ class LandingModel extends BaseModel {
      */
     public function getThreads(Member $member, $groups, $forum, $following, $limit = 0)
     {
-        if ($groups + $forum + $following == 0) {
+        if ($groups + $forum + $following === 0) {
             // Member decided not to show anything
             return [];
         }
@@ -123,7 +120,6 @@ class LandingModel extends BaseModel {
             $groups = $member->getGroups();
         }
         if ($following) {
-
         }
         if (!empty($groupIds)) {
             $queryBuilder
@@ -143,7 +139,7 @@ class LandingModel extends BaseModel {
     }
 
     /**
-     * Generates activities (near you) for display on home page
+     * Generates activities (near you) for display on home page.
      *
      * @param Member $member
      *
@@ -157,8 +153,9 @@ class LandingModel extends BaseModel {
         return $activities;
     }
 
-    public function getMemberDetails() {
-/*        $loggedInMember = $this->getLoggedInMember();
+    public function getMemberDetails()
+    {
+        /*        $loggedInMember = $this->getLoggedInMember();
         $location = Capsule::table('geonames')->where('geonameId', $loggedInMember->IdCity)->first(['name']);
         return ['member' =>
             [
@@ -166,16 +163,19 @@ class LandingModel extends BaseModel {
                 'hosting' => $loggedInMember->Accomodation
             ]
         ];
-*/    }
+*/
+    }
 
-    public function getDonationCampaignDetails() {
+    public function getDonationCampaignDetails()
+    {
     }
 
     /**
      * @param Member $member
+     *
      * @return array|bool
      */
-    public function getTravellersInAreaOfMember( Member $member)
+    public function getTravellersInAreaOfMember(Member $member)
     {
         $member;
 /*        $travellers = false;
@@ -192,11 +192,13 @@ class LandingModel extends BaseModel {
             }
         }
         return $travellers;
-*/    }
+*/
+    }
 
     /**
      * @param Member $member
      * @param $accommodation
+     *
      * @return Member
      */
     public function updateMemberAccommodation(Member $member, $accommodation)
@@ -204,6 +206,7 @@ class LandingModel extends BaseModel {
         $member->setAccommodation($accommodation);
         $this->em->persist($member);
         $this->em->flush($member);
+
         return $member;
     }
-    }
+}

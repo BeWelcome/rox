@@ -129,7 +129,7 @@ html, body {
     background-size: cover;
     background-attachment:fixed;
 }
-@media only screen 
+@media only screen
     and (max-width: 994px) {
         #about_trailing {
         background-size:auto;
@@ -175,13 +175,13 @@ html, body {
     width: 61.8%;
     margin-left: 19.1%;
 }
-@media only screen 
+@media only screen
     and (max-width: 992px) {
         #statistics_trailing p {
         font-size: 0.875rem;
         }
     }
-@media only screen 
+@media only screen
     and (max-width: 544px) {
         #statistics_trailing p {
         width:100%;
@@ -316,13 +316,13 @@ html, body {
     width: 61.8%;
     margin-left: 19.1%;
 }
-@media only screen 
+@media only screen
     and (max-width: 992px) {
         #landingcontainerdiv p {
         font-size: 0.875rem;
         }
     }
-@media only screen 
+@media only screen
     and (max-width: 544px) {
         #landingcontainerdiv p {
         width:100%;
@@ -355,7 +355,7 @@ html, body {
     box-shadow: 0 0 5px 1px  #d86400 inset;
     border: 2px solid white;
 }
-@media only screen 
+@media only screen
     and (max-width: 544px) {
         #landingcontainerdiv form input {
         width: 100%;
@@ -364,7 +364,7 @@ html, body {
         width:61.8%;
     }
     }
-@media only screen 
+@media only screen
     and (min-width: 544px)
     and (max-width: 768px) {
         #landingcontainerdiv form input {
@@ -518,7 +518,7 @@ h1 {
     text-shadow: 0 0 3px rgba(185, 185, 185, 0.5);
     letter-spacing: 0.15rem;
 }
-@media only screen 
+@media only screen
     and (max-width: 992px) {
         h1 {
         font-size: 2.625rem;
@@ -597,7 +597,7 @@ p {
     transform:translateX(50%);
 }
 .fullwidth {
-    width:99vw; 
+    width:99vw;
     max-width: 99vw;
 }
 

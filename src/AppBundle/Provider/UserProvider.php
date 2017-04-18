@@ -2,9 +2,9 @@
 
 namespace AppBundle\Provider;
 
+use AppBundle\Entity\Member;
 use Doctrine\ORM\EntityManager;
 use Rox\Core\Exception\NotFoundException;
-use AppBundle\Entity\Member;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;

@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Group
+ * Group.
  *
  * @ORM\Table(name="groups")
  * @ORM\Entity
@@ -50,7 +50,7 @@ class Group
     private $created = 'CURRENT_TIMESTAMP';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="NbChilds", type="integer", nullable=false)
      */
@@ -78,7 +78,7 @@ class Group
     private $displayedonprofile = 'Yes';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdDescription", type="integer", nullable=true)
      */
@@ -99,7 +99,7 @@ class Group
     private $visiblecomments = 'no';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -109,6 +109,7 @@ class Group
 
     /**
      * Many Groups have Many Users.
+     *
      * @ORM\ManyToMany(targetEntity="Member", mappedBy="groups")
      * @ORM\JoinTable(name="membersgroups",
      *      joinColumns={@ORM\JoinColumn(name="IdMember", referencedColumnName="id")},
@@ -123,7 +124,7 @@ class Group
     }
 
     /**
-     * Set hasmembers
+     * Set hasmembers.
      *
      * @param string $hasmembers
      *
@@ -137,7 +138,7 @@ class Group
     }
 
     /**
-     * Get hasmembers
+     * Get hasmembers.
      *
      * @return string
      */
@@ -147,7 +148,7 @@ class Group
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -161,7 +162,7 @@ class Group
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -171,7 +172,7 @@ class Group
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param string $type
      *
@@ -185,7 +186,7 @@ class Group
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return string
      */
@@ -195,7 +196,7 @@ class Group
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
      *
@@ -209,7 +210,7 @@ class Group
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -219,9 +220,9 @@ class Group
     }
 
     /**
-     * Set nbchilds
+     * Set nbchilds.
      *
-     * @param integer $nbchilds
+     * @param int $nbchilds
      *
      * @return Group
      */
@@ -233,9 +234,9 @@ class Group
     }
 
     /**
-     * Get nbchilds
+     * Get nbchilds.
      *
-     * @return integer
+     * @return int
      */
     public function getNbchilds()
     {
@@ -243,7 +244,7 @@ class Group
     }
 
     /**
-     * Set picture
+     * Set picture.
      *
      * @param string $picture
      *
@@ -257,7 +258,7 @@ class Group
     }
 
     /**
-     * Get picture
+     * Get picture.
      *
      * @return string
      */
@@ -267,7 +268,7 @@ class Group
     }
 
     /**
-     * Set moreinfo
+     * Set moreinfo.
      *
      * @param string $moreinfo
      *
@@ -281,7 +282,7 @@ class Group
     }
 
     /**
-     * Get moreinfo
+     * Get moreinfo.
      *
      * @return string
      */
@@ -291,7 +292,7 @@ class Group
     }
 
     /**
-     * Set displayedonprofile
+     * Set displayedonprofile.
      *
      * @param string $displayedonprofile
      *
@@ -305,7 +306,7 @@ class Group
     }
 
     /**
-     * Get displayedonprofile
+     * Get displayedonprofile.
      *
      * @return string
      */
@@ -315,9 +316,9 @@ class Group
     }
 
     /**
-     * Set iddescription
+     * Set iddescription.
      *
-     * @param integer $iddescription
+     * @param int $iddescription
      *
      * @return Group
      */
@@ -329,9 +330,9 @@ class Group
     }
 
     /**
-     * Get iddescription
+     * Get iddescription.
      *
-     * @return integer
+     * @return int
      */
     public function getIddescription()
     {
@@ -339,7 +340,7 @@ class Group
     }
 
     /**
-     * Set visibleposts
+     * Set visibleposts.
      *
      * @param string $visibleposts
      *
@@ -353,7 +354,7 @@ class Group
     }
 
     /**
-     * Get visibleposts
+     * Get visibleposts.
      *
      * @return string
      */
@@ -363,7 +364,7 @@ class Group
     }
 
     /**
-     * Set visiblecomments
+     * Set visiblecomments.
      *
      * @param string $visiblecomments
      *
@@ -377,7 +378,7 @@ class Group
     }
 
     /**
-     * Get visiblecomments
+     * Get visiblecomments.
      *
      * @return string
      */
@@ -387,9 +388,9 @@ class Group
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -397,7 +398,7 @@ class Group
     }
 
     /**
-     * Add member
+     * Add member.
      *
      * @param \AppBundle\Entity\Member $member
      *
@@ -411,7 +412,7 @@ class Group
     }
 
     /**
-     * Remove member
+     * Remove member.
      *
      * @param \AppBundle\Entity\Member $member
      */
@@ -421,7 +422,7 @@ class Group
     }
 
     /**
-     * Get members
+     * Get members.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

@@ -11,7 +11,7 @@ use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CommunityNews
+ * CommunityNews.
  *
  * @ORM\Table(name="community_news")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CommunityNewsRepository")
@@ -36,7 +36,7 @@ class CommunityNews
     private $text;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="public", type="boolean", nullable=false)
      */
@@ -77,7 +77,7 @@ class CommunityNews
     private $updatedBy;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -86,7 +86,7 @@ class CommunityNews
     private $id;
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
      *
@@ -100,7 +100,7 @@ class CommunityNews
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -110,7 +110,7 @@ class CommunityNews
     }
 
     /**
-     * Set text
+     * Set text.
      *
      * @param string $text
      *
@@ -124,7 +124,7 @@ class CommunityNews
     }
 
     /**
-     * Get text
+     * Get text.
      *
      * @return string
      */
@@ -134,9 +134,9 @@ class CommunityNews
     }
 
     /**
-     * Set public
+     * Set public.
      *
-     * @param boolean $public
+     * @param bool $public
      *
      * @return CommunityNews
      */
@@ -148,9 +148,9 @@ class CommunityNews
     }
 
     /**
-     * Get public
+     * Get public.
      *
-     * @return boolean
+     * @return bool
      */
     public function getPublic()
     {
@@ -158,7 +158,7 @@ class CommunityNews
     }
 
     /**
-     * Set createdAt
+     * Set createdAt.
      *
      * @param \DateTime $createdAt
      *
@@ -172,7 +172,7 @@ class CommunityNews
     }
 
     /**
-     * Get createdAt
+     * Get createdAt.
      *
      * @return Carbon
      */
@@ -182,7 +182,7 @@ class CommunityNews
     }
 
     /**
-     * Set createdBy
+     * Set createdBy.
      *
      * @param Member $createdBy
      *
@@ -196,7 +196,7 @@ class CommunityNews
     }
 
     /**
-     * Get createdBy
+     * Get createdBy.
      *
      * @return Member
      */
@@ -206,7 +206,7 @@ class CommunityNews
     }
 
     /**
-     * Set updatedAt
+     * Set updatedAt.
      *
      * @param \DateTime $updatedAt
      *
@@ -220,7 +220,7 @@ class CommunityNews
     }
 
     /**
-     * Get updatedAt
+     * Get updatedAt.
      *
      * @return Carbon
      */
@@ -230,7 +230,7 @@ class CommunityNews
     }
 
     /**
-     * Set updatedBy
+     * Set updatedBy.
      *
      * @param Member $updatedBy
      *
@@ -244,7 +244,7 @@ class CommunityNews
     }
 
     /**
-     * Get updatedBy
+     * Get updatedBy.
      *
      * @return Member
      */
@@ -254,9 +254,9 @@ class CommunityNews
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

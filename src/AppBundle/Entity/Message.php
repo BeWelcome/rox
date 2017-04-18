@@ -7,12 +7,12 @@
 
 namespace AppBundle\Entity;
 
+use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Carbon\Carbon;
 
 /**
- * Message
+ * Message.
  *
  * @ORM\Table(name="messages", indexes={@ORM\Index(name="IdParent", columns={"IdParent", "IdReceiver", "IdSender"}), @ORM\Index(name="IdReceiver", columns={"IdReceiver"}), @ORM\Index(name="IdSender", columns={"IdSender"}), @ORM\Index(name="messages_by_spaminfo", columns={"SpamInfo"}), @ORM\Index(name="IdxStatus", columns={"Status"}), @ORM\Index(name="DeleteRequest", columns={"DeleteRequest"}), @ORM\Index(name="WhenFirstRead", columns={"WhenFirstRead"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MessageRepository")
@@ -58,7 +58,7 @@ class Message
     private $deleterequest;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdParent", type="integer", nullable=false)
      */
@@ -120,7 +120,7 @@ class Message
     private $whenfirstread = '0000-00-00 00:00:00';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -129,7 +129,7 @@ class Message
     private $id;
 
     /**
-     * Set messagetype
+     * Set messagetype.
      *
      * @param string $messagetype
      *
@@ -143,7 +143,7 @@ class Message
     }
 
     /**
-     * Get messagetype
+     * Get messagetype.
      *
      * @return string
      */
@@ -153,7 +153,7 @@ class Message
     }
 
     /**
-     * Set updated
+     * Set updated.
      *
      * @param DateTime $updated
      *
@@ -167,7 +167,7 @@ class Message
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return Carbon
      */
@@ -177,7 +177,7 @@ class Message
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param DateTime $created
      *
@@ -191,7 +191,7 @@ class Message
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return Carbon
      */
@@ -201,9 +201,10 @@ class Message
     }
 
     /**
-     * Set datesent
+     * Set datesent.
      *
      * @param DateTime $datesent
+     * @param mixed    $dateSent
      *
      * @return Message
      */
@@ -215,7 +216,7 @@ class Message
     }
 
     /**
-     * Get datesent
+     * Get datesent.
      *
      * @return Carbon
      */
@@ -225,7 +226,7 @@ class Message
     }
 
     /**
-     * Set deleterequest
+     * Set deleterequest.
      *
      * @param string $deleterequest
      *
@@ -239,7 +240,7 @@ class Message
     }
 
     /**
-     * Get deleterequest
+     * Get deleterequest.
      *
      * @return string
      */
@@ -249,9 +250,9 @@ class Message
     }
 
     /**
-     * Set idparent
+     * Set idparent.
      *
-     * @param integer $idparent
+     * @param int $idparent
      *
      * @return Message
      */
@@ -263,9 +264,9 @@ class Message
     }
 
     /**
-     * Get idparent
+     * Get idparent.
      *
-     * @return integer
+     * @return int
      */
     public function getIdparent()
     {
@@ -273,11 +274,11 @@ class Message
     }
 
     /**
-     * Set Receiver
+     * Set Receiver.
      *
      * @param Member $receiver
-     * @return Message
      *
+     * @return Message
      */
     public function setReceiver(Member $receiver)
     {
@@ -287,7 +288,7 @@ class Message
     }
 
     /**
-     * Get Receiver
+     * Get Receiver.
      *
      * @return Member
      */
@@ -297,7 +298,7 @@ class Message
     }
 
     /**
-     * Set Sender
+     * Set Sender.
      *
      * @param Member $sender
      *
@@ -311,7 +312,7 @@ class Message
     }
 
     /**
-     * Get Sender
+     * Get Sender.
      *
      * @return Member
      */
@@ -321,7 +322,7 @@ class Message
     }
 
     /**
-     * Set spaminfo
+     * Set spaminfo.
      *
      * @param string $spaminfo
      *
@@ -335,7 +336,7 @@ class Message
     }
 
     /**
-     * Get spaminfo
+     * Get spaminfo.
      *
      * @return string
      */
@@ -345,7 +346,7 @@ class Message
     }
 
     /**
-     * Set status
+     * Set status.
      *
      * @param string $status
      *
@@ -359,7 +360,7 @@ class Message
     }
 
     /**
-     * Get status
+     * Get status.
      *
      * @return string
      */
@@ -369,7 +370,7 @@ class Message
     }
 
     /**
-     * Set message
+     * Set message.
      *
      * @param string $message
      *
@@ -383,7 +384,7 @@ class Message
     }
 
     /**
-     * Get message
+     * Get message.
      *
      * @return string
      */
@@ -393,7 +394,7 @@ class Message
     }
 
     /**
-     * Set infolder
+     * Set infolder.
      *
      * @param string $infolder
      *
@@ -407,7 +408,7 @@ class Message
     }
 
     /**
-     * Get infolder
+     * Get infolder.
      *
      * @return string
      */
@@ -417,7 +418,7 @@ class Message
     }
 
     /**
-     * Set whenfirstread
+     * Set whenfirstread.
      *
      * @param DateTime $whenFirstRead
      *
@@ -431,7 +432,7 @@ class Message
     }
 
     /**
-     * Get whenFirstRead
+     * Get whenFirstRead.
      *
      * @return Carbon
      */
@@ -441,9 +442,9 @@ class Message
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -452,6 +453,6 @@ class Message
 
     public function isUnread()
     {
-        return ($this->whenfirstread == null);
+        return $this->whenfirstread === null;
     }
 }

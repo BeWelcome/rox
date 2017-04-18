@@ -1,59 +1,33 @@
 <?php
-$finder = Symfony\CS\Finder\DefaultFinder::create()
-    ->notName('*.twig')
-    ->notName('*.yml')
-    ->in('module');
-$config = Symfony\CS\Config\Config::create();
-$config->level(null);
-$config->fixers(
-    array(
-        'braces',
-        'concat_with_spaces',
-        'duplicate_semicolon',
-        'elseif',
-        'empty_return',
-        'encoding',
-        'eof_ending',
-        'extra_empty_lines',
-        'function_call_space',
-        'function_declaration',
-        'indentation',
-        'join_function',
-        'line_after_namespace',
-        'linefeed',
-        'list_commas',
-        'lowercase_keywords',
-        'parenthesis',
-        'multiple_use',
-        'method_argument_space',
-        'multiline_array_trailing_comma',
-        'no_blank_lines_after_class_opening',
-        'object_operator',
-        'ordered_use',
-        'php_closing_tag',
-        'parenthesis',
-        'pre_increment',
-        'remove_leading_slash_use',
-        'remove_lines_between_uses',
-        'self_accessor',
-        'short_array_syntax',
-        'short_tag',
-        'single_array_no_trailing_comma',
-        'single_line_after_imports',
-        'single_quote',
-        'spaces_before_semicolon',
-        'spaces_cast',
-        'standardize_not_equal',
-        'strict',
-        'strict_param',
-        'ternary_spaces',
-        'trailing_spaces',
-        'trim_array_spaces',
-        'unary_operators_spaces',
-        'unused_use',
-        'visibility',
-        'whitespacy_lines',
+return PhpCsFixer\Config::create()
+    ->setRiskyAllowed(true)
+    ->setRules(array(
+        '@Symfony' => true,
+        '@Symfony:risky' => true,
+        'array_syntax' => array('syntax' => 'short'),
+        'combine_consecutive_unsets' => true,
+        // one should use PHPUnit methods to set up expected exception instead of annotations
+        'general_phpdoc_annotation_remove' => array('expectedException', 'expectedExceptionMessage', 'expectedExceptionMessageRegExp'),
+        'heredoc_to_nowdoc' => true,
+        'no_extra_consecutive_blank_lines' => array('break', 'continue', 'extra', 'return', 'throw', 'use', 'parenthesis_brace_block', 'square_brace_block', 'curly_brace_block'),
+        'no_short_echo_tag' => true,
+        'no_unreachable_default_argument_value' => true,
+        'no_useless_else' => true,
+        'no_useless_return' => true,
+        'ordered_class_elements' => true,
+        'ordered_imports' => true,
+        'php_unit_strict' => true,
+        'phpdoc_add_missing_param_annotation' => true,
+        'phpdoc_order' => true,
+        'semicolon_after_instruction' => true,
+        'strict_comparison' => true,
+        'strict_param' => true,
+    ))
+    ->setFinder(
+        PhpCsFixer\Finder::create()
+            ->exclude('tests/Fixtures')
+            ->notName('*.twig')
+            ->notName('*.yml')
+            ->in('src')
     )
-);
-$config->finder($finder);
-return $config;
+;

@@ -11,7 +11,7 @@ use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Notes
+ * Notes.
  *
  * @ORM\Table(name="notes")
  * @ORM\Entity
@@ -63,14 +63,14 @@ class Notification
     private $wordcode;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="Checked", type="boolean", nullable=false)
      */
     private $checked = '0';
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="SendMail", type="boolean", nullable=false)
      */
@@ -91,7 +91,7 @@ class Notification
     private $translationparams;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -99,10 +99,8 @@ class Notification
      */
     private $id;
 
-
-
     /**
-     * Set member
+     * Set member.
      *
      * @param Member $member
      *
@@ -116,7 +114,7 @@ class Notification
     }
 
     /**
-     * Get member
+     * Get member.
      *
      * @return Member
      */
@@ -126,7 +124,7 @@ class Notification
     }
 
     /**
-     * Set relMember
+     * Set relMember.
      *
      * @param Member $relMember
      *
@@ -140,7 +138,7 @@ class Notification
     }
 
     /**
-     * Get idrelmember
+     * Get idrelmember.
      *
      * @return Member
      */
@@ -150,7 +148,7 @@ class Notification
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param string $type
      *
@@ -164,7 +162,7 @@ class Notification
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return string
      */
@@ -174,7 +172,7 @@ class Notification
     }
 
     /**
-     * Set link
+     * Set link.
      *
      * @param string $link
      *
@@ -188,7 +186,7 @@ class Notification
     }
 
     /**
-     * Get link
+     * Get link.
      *
      * @return string
      */
@@ -198,7 +196,7 @@ class Notification
     }
 
     /**
-     * Set wordcode
+     * Set wordcode.
      *
      * @param string $wordcode
      *
@@ -212,7 +210,7 @@ class Notification
     }
 
     /**
-     * Get wordcode
+     * Get wordcode.
      *
      * @return string
      */
@@ -222,9 +220,9 @@ class Notification
     }
 
     /**
-     * Set checked
+     * Set checked.
      *
-     * @param boolean $checked
+     * @param bool $checked
      *
      * @return Notification
      */
@@ -236,9 +234,9 @@ class Notification
     }
 
     /**
-     * Get checked
+     * Get checked.
      *
-     * @return boolean
+     * @return bool
      */
     public function getChecked()
     {
@@ -246,9 +244,9 @@ class Notification
     }
 
     /**
-     * Set sendmail
+     * Set sendmail.
      *
-     * @param boolean $sendmail
+     * @param bool $sendmail
      *
      * @return Notification
      */
@@ -260,9 +258,9 @@ class Notification
     }
 
     /**
-     * Get sendmail
+     * Get sendmail.
      *
-     * @return boolean
+     * @return bool
      */
     public function getSendmail()
     {
@@ -270,7 +268,7 @@ class Notification
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
      *
@@ -284,7 +282,7 @@ class Notification
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return Carbon
      */
@@ -294,7 +292,7 @@ class Notification
     }
 
     /**
-     * Set translationparams
+     * Set translationparams.
      *
      * @param string $translationparams
      *
@@ -308,7 +306,7 @@ class Notification
     }
 
     /**
-     * Get translationparams
+     * Get translationparams.
      *
      * @return string
      */
@@ -316,15 +314,17 @@ class Notification
     {
         if ($this->translationparams) {
             $a = unserialize($this->translationparams);
+
             return $a[0];
         }
+
         return $this->wordcode;
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

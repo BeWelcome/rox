@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-
 use AppBundle\Form\WikiCreateForm;
 use Exception;
 use RemoteAPI;
@@ -19,12 +18,13 @@ class WikiController extends Controller
      * @Route("/wiki/{page}", name="wiki_page")
      *
      * @param string $page
+     *
      * @return Response
      */
-    function wikiShowAction(Request $request, $page = 'start')
+    public function wikiShowAction(Request $request, $page = 'start')
     {
-        $dokuwikiDirectory = $this->getParameter("dokuwiki_directory");
-        require $dokuwikiDirectory . '/inc/init.php';
+        $dokuwikiDirectory = $this->getParameter('dokuwiki_directory');
+        require $dokuwikiDirectory.'/inc/init.php';
 
         $remoteApiCore = new RemoteApiCore(new RemoteAPI());
 
@@ -32,18 +32,16 @@ class WikiController extends Controller
         $notFound = false;
         try {
             $remoteApiCore->pageInfo($page);
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             $notFound = true;
         }
         if ($notFound) {
-            return $this->redirectToRoute('wiki_page_create', [ 'page' => $page ]);
+            return $this->redirectToRoute('wiki_page_create', ['page' => $page]);
         }
 
         $htmlPage = $remoteApiCore->htmlPage($page);
 
-        $createForm = $this->createForm(WikiCreateForm::class, [ 'wikipage' => $htmlPage]);
+        $createForm = $this->createForm(WikiCreateForm::class, ['wikipage' => $htmlPage]);
         $createForm->handleRequest($request);
 
         if ($createForm->isSubmitted() && $createForm->isValid()) {
@@ -61,12 +59,13 @@ class WikiController extends Controller
      *
      * @param Request $request
      * @param $page
+     *
      * @return Response
      */
-    function wikiCreateAction(Request $request, $page)
+    public function wikiCreateAction(Request $request, $page)
     {
-        $dokuwikiDirectory = $this->getParameter("dokuwiki_directory");
-        require $dokuwikiDirectory . '/inc/init.php';
+        $dokuwikiDirectory = $this->getParameter('dokuwiki_directory');
+        require $dokuwikiDirectory.'/inc/init.php';
 
         $remoteApiCore = new RemoteApiCore(new RemoteAPI());
 
@@ -74,13 +73,11 @@ class WikiController extends Controller
         $found = true;
         try {
             $remoteApiCore->pageInfo($page);
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             $found = false;
         }
         if ($found) {
-            return $this->redirectToRoute('wiki_page', [ 'page' => $page ]);
+            return $this->redirectToRoute('wiki_page', ['page' => $page]);
         }
 
         $createForm = $this->createForm(WikiCreateForm::class);
@@ -90,11 +87,11 @@ class WikiController extends Controller
             $data = $createForm->getData();
             $remoteApiCore->putPage($page, $data['wikipage'], []);
 
-            return $this->redirectToRoute('wiki_page', [ 'page' => $page ]);
+            return $this->redirectToRoute('wiki_page', ['page' => $page]);
         }
 
         return $this->render(':wiki:create.html.twig', [
-            'form' => $createForm->createView()
+            'form' => $createForm->createView(),
         ]);
     }
 }

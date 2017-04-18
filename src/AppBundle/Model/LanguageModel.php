@@ -3,18 +3,18 @@
 namespace AppBundle\Model;
 
 use AppBundle\Entity\Language;
-use AppBundle\Repository\LanguageRepository;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
-use Pagerfanta\Pagerfanta;
 
 class LanguageModel extends BaseModel
 {
     /**
-     * Returns all languages for which translations exist
+     * Returns all languages for which translations exist.
+     *
+     * @param mixed $locale
      *
      * @return array Language
      */
-    public function getLanguagesWithTranslations( $locale )
+    public function getLanguagesWithTranslations($locale)
     {
         $entityManager = $this->em;
 
@@ -35,8 +35,11 @@ WHERE
 ORDER BY Name ASC", $rsm);
 
         $languages = $query->getResult();
-        $locales = array_map(function($n) { return $n->getShortCode(); }, $languages);
+        $locales = array_map(function ($language) {
+            return $language->getShortCode();
+        }, $languages);
         $merged = array_combine($locales, $languages);
+
         return $merged;
     }
 }

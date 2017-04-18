@@ -5,7 +5,7 @@ default:
     failure: average.maintainabilityIndex < 60
 
     path:
-        directory: module
+        directory: src
         extensions: php
 
     logging:

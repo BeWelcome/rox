@@ -28,7 +28,7 @@ class ActivityRepository extends EntityRepository
     }
 
     /**
-     * Returns a Pagerfanta object encapsulating the matching paginated activities
+     * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
      * @param int $page
      * @param int $items
@@ -45,10 +45,12 @@ class ActivityRepository extends EntityRepository
     }
 
     /**
-     * Get all activities around a given location
+     * Get all activities around a given location.
+     *
      * @param Location $location
-     * @param int $limit
-     * @param int $distance
+     * @param int      $limit
+     * @param int      $distance
+     *
      * @return array
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
@@ -61,7 +63,6 @@ class ActivityRepository extends EntityRepository
 
         $edison = GeoLocation::fromDegrees($latitude, $longitude);
         $coordinates = $edison->boundingCoordinates($distance, 'km');
-
 
         $expr = Criteria::expr();
         $criteria = Criteria::create();
@@ -86,5 +87,4 @@ class ActivityRepository extends EntityRepository
             ->getQuery()
             ->getResult();
     }
-
 }

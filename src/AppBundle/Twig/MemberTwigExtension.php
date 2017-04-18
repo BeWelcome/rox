@@ -2,12 +2,10 @@
 
 namespace AppBundle\Twig;
 
-use Illuminate\Database\Query\Expression;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
+use Illuminate\Database\Query\Expression;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig_Extension;
 use Twig_Extension_GlobalsInterface;
 
@@ -32,7 +30,7 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
     {
         $member = null;
         $rememberMeToken = unserialize($this->session->get('_security_default'));
-        if ($rememberMeToken != null) {
+        if ($rememberMeToken !== null) {
             $member = $rememberMeToken->getUser();
         }
 
@@ -140,7 +138,7 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
 
         $roles = $member->getRoles();
         foreach ($allTeams as $team) {
-            if (array_search('ROLE_ADMIN_' . strtoupper($team[0]), $roles, true)) {
+            if (array_search('ROLE_ADMIN_'.strtoupper($team[0]), $roles, true)) {
                 $teams[] = [
                     'trans' => $team[1],
                     'link' => $team[2],

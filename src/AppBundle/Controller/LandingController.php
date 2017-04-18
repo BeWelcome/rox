@@ -2,17 +2,17 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Model\CommunityNewsModel;
-use AppBundle\Model\DonateModel;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\Member;
-use AppBundle\Model\LandingModel;
 use AppBundle\Form\SearchGotoLocationFormType;
 use AppBundle\Form\SearchHomeLocationFormType;
+use AppBundle\Model\CommunityNewsModel;
+use AppBundle\Model\DonateModel;
+use AppBundle\Model\LandingModel;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class LandingController extends Controller
 {
@@ -57,6 +57,7 @@ class LandingController extends Controller
         $content = $this->render(':landing/widget:notifications.html.twig', [
             'notifications' => $notifications,
         ]);
+
         return new Response($content);
     }
 
@@ -139,28 +140,14 @@ class LandingController extends Controller
         return new JsonResponse([
             'profilePictureWithAccommodation' => $profilePictureWithAccommodation,
             'accommodationHtml' => $accommodationHtml,
-
         ]);
     }
 
     /**
-     * @param Member $member
-     * @return array
-     */
-    private function getSearchHomeLocationData(Member $member)
-    {
-        $geo = $member->getCity();
-        $data['search_geoname_id'] = $geo->getGeonameid();
-        $data['search'] = $geo->getName();
-        $data['search_latitude'] = $member->getLatitude();
-        $data['search_longitude'] = $member->getLongitude();
-        return $data;
-    }
-
-    /**
-     * Shows the landing page
+     * Shows the landing page.
      *
      * \todo create controller and add routes there
+     *
      * @Route("/landing", name="landingpage")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -195,7 +182,7 @@ class LandingController extends Controller
                 'campaign' => [
                     'year' => $campaignDetails->year,
                     'yearNeeded' => $campaignDetails->YearNeededAmount,
-                    'yearDonated' => $campaignDetails->YearDonation
+                    'yearDonated' => $campaignDetails->YearDonation,
                 ],
                 'travellers' => $travellersInArea,
                 'communityNews' => $latestNews,
@@ -204,4 +191,19 @@ class LandingController extends Controller
         return new Response($content->getContent());
     }
 
+    /**
+     * @param Member $member
+     *
+     * @return array
+     */
+    private function getSearchHomeLocationData(Member $member)
+    {
+        $geo = $member->getCity();
+        $data['search_geoname_id'] = $geo->getGeonameid();
+        $data['search'] = $geo->getName();
+        $data['search_latitude'] = $member->getLatitude();
+        $data['search_longitude'] = $member->getLongitude();
+
+        return $data;
+    }
 }

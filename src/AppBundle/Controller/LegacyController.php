@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-
 use AppBundle\Entity\Member;
 use EnvironmentExplorer;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -34,11 +33,10 @@ class LegacyController extends Controller
             (strpos($pathInfo, '/signup') === false);
         if (!$session->has('IdMember')) {
             $rememberMeToken = unserialize($session->get('_security_default'));
-            if ($rememberMeToken == null && !$public)
-            {
+            if ($rememberMeToken === null && !$public) {
                 throw new AccessDeniedException();
             }
-            if ($rememberMeToken != null) {
+            if ($rememberMeToken !== null) {
                 /** @var Member $user */
                 $user = $rememberMeToken->getUser();
                 if ($user !== null) {
@@ -50,6 +48,7 @@ class LegacyController extends Controller
         }
         try {
             $kernel = $this->get('rox.legacy_kernel');
+
             return $kernel->handle($request, $request->getRealMethod());
         } catch (ResourceNotFoundException $e) {
             // If the legacy kernel also failed to route the request, let the

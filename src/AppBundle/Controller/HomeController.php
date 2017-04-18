@@ -2,11 +2,9 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Member;
 use AppBundle\Form\LoginFormType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 
 class HomeController extends Controller
 {
@@ -24,7 +22,7 @@ class HomeController extends Controller
 
         $form = $this->createForm(LoginFormType::class, null, [
             'action' => $this->generateUrl('security_check'),
-            'method' => 'POST'
+            'method' => 'POST',
         ]);
 
         return $this->render(':home:home.html.twig', [

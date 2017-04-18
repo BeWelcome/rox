@@ -7,8 +7,7 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Class LegacyLoader
- * @package AppBundle\Routing
+ * Class LegacyLoader.
  *
  * @SuppressWarnings(PHPMD)
  * Ignore warnings as class is only used as a bridge to the old code
@@ -37,7 +36,7 @@ class LegacyLoader extends Loader
         }
 
         // Include legacy routes to ensure firewall kicks in
-        require_once $dirfix . 'routes.php';
+        require_once $dirfix.'routes.php';
 
         // Forum urls
         $this->addRoute('forums', '/forums', '', '');
@@ -53,7 +52,7 @@ class LegacyLoader extends Loader
         $this->addRoute('stats', '/stats', '', '');
         $this->addRoute('stats_images', '/stats/{image}.png', '', '');
         $this->addRoute('getactive', '/about/getactive', '', '');
-        $this->addRoute( 'contactus', '/about/feedback', '', '');
+        $this->addRoute('contactus', '/about/feedback', '', '');
         $this->addRoute('signup', '/signup/', '', '');
         $this->addRoute('signup_1', '/signup/1', '', '');
         $this->addRoute('signup_2', '/signup/2', '', '');
@@ -61,23 +60,20 @@ class LegacyLoader extends Loader
         $this->addRoute('signup_4', '/signup/4', '', '');
         $this->addRoute('signup_finish', '/signup/finish', '', '');
 
-
         return $this->routes;
-    }
-
-    private function addRoute($name, $path, $controller, $action, $ignore = null)
-    {
-        $ignore;
-        $path = preg_replace( '^:(.*?):^', '{\1}', $path);
-        $this->routes->add($name, new Route( $path, [
-                '_controller' => 'rox.legacy_controller:showAction'
-            ], [], [], '', [], ['get', 'post']
-            )
-        );
     }
 
     public function supports($resource, $type = null)
     {
         return 'legacy' === $type;
+    }
+
+    private function addRoute($name, $path, $controller, $action, $ignore = null)
+    {
+        $ignore;
+        $path = preg_replace('^:(.*?):^', '{\1}', $path);
+        $this->routes->add($name, new Route($path, [
+                '_controller' => 'rox.legacy_controller:showAction',
+            ], [], [], '', [], ['get', 'post']));
     }
 }

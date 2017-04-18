@@ -6,8 +6,6 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- */
 class MemberRepository extends EntityRepository implements UserLoaderInterface
 {
     /**

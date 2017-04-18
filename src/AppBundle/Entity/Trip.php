@@ -10,10 +10,9 @@ namespace AppBundle\Entity;
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\PrePersist;
 
 /**
- * Trip
+ * Trip.
  *
  * @ORM\Table(name="trips", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})},
  *     indexes={@ORM\Index(name="memberId_idx", columns={"created_by"})})
@@ -39,7 +38,7 @@ class Trip
     private $description;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="countOfTravellers", type="integer", nullable=true)
      */
@@ -65,19 +64,18 @@ class Trip
      * @var Carbon
      *
      * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
-     *
      */
     private $deletedAt;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="additionalInfo", type="integer", nullable=true)
      */
     private $additionalinfo;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -92,11 +90,6 @@ class Trip
      */
     private $subtrips;
 
-    public function __construct()
-    {
-        $this->subtrips = new ArrayCollection();
-    }
-
     /**
      * @var \AppBundle\Entity\Member
      *
@@ -107,8 +100,13 @@ class Trip
      */
     private $createdBy;
 
+    public function __construct()
+    {
+        $this->subtrips = new ArrayCollection();
+    }
+
     /**
-     * Set summary
+     * Set summary.
      *
      * @param string $summary
      *
@@ -122,7 +120,7 @@ class Trip
     }
 
     /**
-     * Get summary
+     * Get summary.
      *
      * @return string
      */
@@ -132,7 +130,7 @@ class Trip
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
      *
@@ -146,7 +144,7 @@ class Trip
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -156,9 +154,9 @@ class Trip
     }
 
     /**
-     * Set countoftravellers
+     * Set countoftravellers.
      *
-     * @param integer $countoftravellers
+     * @param int $countoftravellers
      *
      * @return Trip
      */
@@ -170,9 +168,9 @@ class Trip
     }
 
     /**
-     * Get countoftravellers
+     * Get countoftravellers.
      *
-     * @return integer
+     * @return int
      */
     public function getCountoftravellers()
     {
@@ -180,7 +178,7 @@ class Trip
     }
 
     /**
-     * Set createdAt
+     * Set createdAt.
      *
      * @param \DateTime $createdAt
      *
@@ -194,7 +192,7 @@ class Trip
     }
 
     /**
-     * Get createdAt
+     * Get createdAt.
      *
      * @return \DateTime
      */
@@ -204,7 +202,7 @@ class Trip
     }
 
     /**
-     * Set updatedAt
+     * Set updatedAt.
      *
      * @param \DateTime $updatedAt
      *
@@ -218,7 +216,7 @@ class Trip
     }
 
     /**
-     * Get updatedAt
+     * Get updatedAt.
      *
      * @return \DateTime
      */
@@ -228,7 +226,7 @@ class Trip
     }
 
     /**
-     * Set deletedAt
+     * Set deletedAt.
      *
      * @param \DateTime $deletedAt
      *
@@ -242,7 +240,7 @@ class Trip
     }
 
     /**
-     * Get deletedAt
+     * Get deletedAt.
      *
      * @return \DateTime
      */
@@ -252,9 +250,9 @@ class Trip
     }
 
     /**
-     * Set additionalinfo
+     * Set additionalinfo.
      *
-     * @param integer $additionalinfo
+     * @param int $additionalinfo
      *
      * @return Trip
      */
@@ -266,9 +264,9 @@ class Trip
     }
 
     /**
-     * Get additionalinfo
+     * Get additionalinfo.
      *
-     * @return integer
+     * @return int
      */
     public function getAdditionalinfo()
     {
@@ -276,9 +274,9 @@ class Trip
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -286,7 +284,7 @@ class Trip
     }
 
     /**
-     * Set createdBy
+     * Set createdBy.
      *
      * @param \AppBundle\Entity\Member $createdBy
      *
@@ -300,7 +298,7 @@ class Trip
     }
 
     /**
-     * Get createdBy
+     * Get createdBy.
      *
      * @return \AppBundle\Entity\Member
      */
@@ -315,7 +313,7 @@ class Trip
     }
 
     /**
-     * Add subtrip
+     * Add subtrip.
      *
      * @param SubTrip $subtrip
      *
@@ -331,7 +329,7 @@ class Trip
     }
 
     /**
-     * Remove subtrip
+     * Remove subtrip.
      *
      * @param SubTrip $subtrip
      */

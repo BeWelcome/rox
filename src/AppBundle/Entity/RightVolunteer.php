@@ -10,7 +10,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Rightsvolunteers
+ * Rightsvolunteers.
  *
  * @ORM\Table(name="rightsvolunteers", uniqueConstraints={@ORM\UniqueConstraint(name="IdMember", columns={"IdMember", "IdRight"})})
  * @ORM\Entity
@@ -21,45 +21,13 @@ use Doctrine\ORM\Mapping as ORM;
 class RightVolunteer
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @return Member
-     */
-    public function getMember()
-    {
-        return $this->member;
-    }
-
-    /**
-     * @param Member $member
-     */
-    public function setMember($member)
-    {
-        $this->member = $member;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRight()
-    {
-        return $this->right;
-    }
-
-    /**
-     * @param mixed $right
-     */
-    public function setRight($right)
-    {
-        $this->right = $right;
-    }
 
     /**
      * @ORM\ManyToOne(targetEntity="Member", inversedBy="volunteerRights")
@@ -74,7 +42,7 @@ class RightVolunteer
     private $right;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="Level", type="integer", nullable=false)
      */
@@ -109,9 +77,41 @@ class RightVolunteer
     private $created = '0000-00-00 00:00:00';
 
     /**
-     * Set level
+     * @return Member
+     */
+    public function getMember()
+    {
+        return $this->member;
+    }
+
+    /**
+     * @param Member $member
+     */
+    public function setMember($member)
+    {
+        $this->member = $member;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRight()
+    {
+        return $this->right;
+    }
+
+    /**
+     * @param mixed $right
+     */
+    public function setRight($right)
+    {
+        $this->right = $right;
+    }
+
+    /**
+     * Set level.
      *
-     * @param integer $level
+     * @param int $level
      *
      * @return RightVolunteer
      */
@@ -123,9 +123,9 @@ class RightVolunteer
     }
 
     /**
-     * Get level
+     * Get level.
      *
-     * @return integer
+     * @return int
      */
     public function getLevel()
     {
@@ -133,7 +133,7 @@ class RightVolunteer
     }
 
     /**
-     * Set scope
+     * Set scope.
      *
      * @param string $scope
      *
@@ -147,7 +147,7 @@ class RightVolunteer
     }
 
     /**
-     * Get scope
+     * Get scope.
      *
      * @return string
      */
@@ -157,7 +157,7 @@ class RightVolunteer
     }
 
     /**
-     * Set comment
+     * Set comment.
      *
      * @param string $comment
      *
@@ -171,7 +171,7 @@ class RightVolunteer
     }
 
     /**
-     * Get comment
+     * Get comment.
      *
      * @return string
      */
@@ -181,7 +181,7 @@ class RightVolunteer
     }
 
     /**
-     * Set updated
+     * Set updated.
      *
      * @param \DateTime $updated
      *
@@ -195,7 +195,7 @@ class RightVolunteer
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return \DateTime
      */
@@ -205,7 +205,7 @@ class RightVolunteer
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
      *
@@ -219,7 +219,7 @@ class RightVolunteer
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -229,9 +229,9 @@ class RightVolunteer
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

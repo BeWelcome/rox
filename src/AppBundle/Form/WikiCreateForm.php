@@ -10,7 +10,7 @@ class WikiCreateForm extends AbstractType
 {
     /**
      * @param FormBuilderInterface $formBuilder
-     * @param array $options
+     * @param array                $options
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */

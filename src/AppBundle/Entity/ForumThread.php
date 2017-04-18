@@ -8,14 +8,10 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\JoinTable;
-use Doctrine\ORM\Mapping\OneToMany;
-use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ForumThread
+ * ForumThread.
  *
  * @ORM\Table(name="forums_threads", indexes={@ORM\Index(name="first_postid", columns={"first_postid"}), @ORM\Index(name="last_postid", columns={"last_postid"}), @ORM\Index(name="geonameid", columns={"geonameid"}), @ORM\Index(name="admincode", columns={"admincode"}), @ORM\Index(name="countrycode", columns={"countrycode"}), @ORM\Index(name="continent", columns={"continent"}), @ORM\Index(name="IdGroup", columns={"IdGroup"}), @ORM\Index(name="ThreadVisibility", columns={"ThreadVisibility"}), @ORM\Index(name="ThreadDeleted", columns={"ThreadDeleted"})})
  * @ORM\Entity
@@ -26,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 class ForumThread
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -41,7 +37,7 @@ class ForumThread
     private $expiredate = '0000-00-00 00:00:00';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdTitle", type="integer", nullable=false)
      */
@@ -63,7 +59,7 @@ class ForumThread
     private $firstPost;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="first_postid", type="integer", nullable=true)
      */
@@ -78,29 +74,28 @@ class ForumThread
     private $lastPost;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="last_postid", type="integer", nullable=true)
      */
     private $lastPostid;
 
-
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="replies", type="smallint", nullable=false)
      */
     private $replies = '0';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="views", type="integer", nullable=false)
      */
     private $views = '0';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="geonameid", type="integer", nullable=true)
      */
@@ -128,49 +123,49 @@ class ForumThread
     private $continent;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="tag1", type="integer", nullable=true)
      */
     private $tag1;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="tag2", type="integer", nullable=true)
      */
     private $tag2;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="tag3", type="integer", nullable=true)
      */
     private $tag3;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="tag4", type="integer", nullable=true)
      */
     private $tag4;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="tag5", type="integer", nullable=true)
      */
     private $tag5;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="stickyvalue", type="integer", nullable=false)
      */
     private $stickyvalue = '0';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdFirstLanguageUsed", type="integer", nullable=false)
      */
@@ -231,16 +226,15 @@ class ForumThread
      */
     private $posts;
 
-
     public function __construct()
     {
         $this->posts = new ArrayCollection();
     }
 
     /**
-     * Set id
+     * Set id.
      *
-     * @param integer $id
+     * @param int $id
      *
      * @return ForumThread
      */
@@ -252,9 +246,9 @@ class ForumThread
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -262,7 +256,7 @@ class ForumThread
     }
 
     /**
-     * Set expiredate
+     * Set expiredate.
      *
      * @param \DateTime $expiredate
      *
@@ -276,7 +270,7 @@ class ForumThread
     }
 
     /**
-     * Get expiredate
+     * Get expiredate.
      *
      * @return \DateTime
      */
@@ -286,9 +280,9 @@ class ForumThread
     }
 
     /**
-     * Set idtitle
+     * Set idtitle.
      *
-     * @param integer $idtitle
+     * @param int $idtitle
      *
      * @return ForumThread
      */
@@ -300,9 +294,9 @@ class ForumThread
     }
 
     /**
-     * Get idtitle
+     * Get idtitle.
      *
-     * @return integer
+     * @return int
      */
     public function getIdtitle()
     {
@@ -310,7 +304,7 @@ class ForumThread
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
      *
@@ -324,7 +318,7 @@ class ForumThread
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -334,9 +328,9 @@ class ForumThread
     }
 
     /**
-     * Set firstPostid
+     * Set firstPostid.
      *
-     * @param integer $firstPostid
+     * @param int $firstPostid
      *
      * @return ForumThread
      */
@@ -348,9 +342,9 @@ class ForumThread
     }
 
     /**
-     * Get firstPostid
+     * Get firstPostid.
      *
-     * @return integer
+     * @return int
      */
     public function getFirstPostid()
     {
@@ -358,9 +352,9 @@ class ForumThread
     }
 
     /**
-     * Set lastPostid
+     * Set lastPostid.
      *
-     * @param integer $lastPostid
+     * @param int $lastPostid
      *
      * @return ForumThread
      */
@@ -372,9 +366,9 @@ class ForumThread
     }
 
     /**
-     * Get lastPostid
+     * Get lastPostid.
      *
-     * @return integer
+     * @return int
      */
     public function getLastPostid()
     {
@@ -382,9 +376,9 @@ class ForumThread
     }
 
     /**
-     * Set replies
+     * Set replies.
      *
-     * @param integer $replies
+     * @param int $replies
      *
      * @return ForumThread
      */
@@ -396,9 +390,9 @@ class ForumThread
     }
 
     /**
-     * Get replies
+     * Get replies.
      *
-     * @return integer
+     * @return int
      */
     public function getReplies()
     {
@@ -406,9 +400,9 @@ class ForumThread
     }
 
     /**
-     * Set views
+     * Set views.
      *
-     * @param integer $views
+     * @param int $views
      *
      * @return ForumThread
      */
@@ -420,9 +414,9 @@ class ForumThread
     }
 
     /**
-     * Get views
+     * Get views.
      *
-     * @return integer
+     * @return int
      */
     public function getViews()
     {
@@ -430,9 +424,9 @@ class ForumThread
     }
 
     /**
-     * Set geonameid
+     * Set geonameid.
      *
-     * @param integer $geonameid
+     * @param int $geonameid
      *
      * @return ForumThread
      */
@@ -444,9 +438,9 @@ class ForumThread
     }
 
     /**
-     * Get geonameid
+     * Get geonameid.
      *
-     * @return integer
+     * @return int
      */
     public function getGeonameid()
     {
@@ -454,7 +448,7 @@ class ForumThread
     }
 
     /**
-     * Set admincode
+     * Set admincode.
      *
      * @param string $admincode
      *
@@ -468,7 +462,7 @@ class ForumThread
     }
 
     /**
-     * Get admincode
+     * Get admincode.
      *
      * @return string
      */
@@ -478,7 +472,7 @@ class ForumThread
     }
 
     /**
-     * Set countrycode
+     * Set countrycode.
      *
      * @param string $countrycode
      *
@@ -492,7 +486,7 @@ class ForumThread
     }
 
     /**
-     * Get countrycode
+     * Get countrycode.
      *
      * @return string
      */
@@ -502,7 +496,7 @@ class ForumThread
     }
 
     /**
-     * Set continent
+     * Set continent.
      *
      * @param string $continent
      *
@@ -516,7 +510,7 @@ class ForumThread
     }
 
     /**
-     * Get continent
+     * Get continent.
      *
      * @return string
      */
@@ -526,9 +520,9 @@ class ForumThread
     }
 
     /**
-     * Set tag1
+     * Set tag1.
      *
-     * @param integer $tag1
+     * @param int $tag1
      *
      * @return ForumThread
      */
@@ -540,9 +534,9 @@ class ForumThread
     }
 
     /**
-     * Get tag1
+     * Get tag1.
      *
-     * @return integer
+     * @return int
      */
     public function getTag1()
     {
@@ -550,9 +544,9 @@ class ForumThread
     }
 
     /**
-     * Set tag2
+     * Set tag2.
      *
-     * @param integer $tag2
+     * @param int $tag2
      *
      * @return ForumThread
      */
@@ -564,9 +558,9 @@ class ForumThread
     }
 
     /**
-     * Get tag2
+     * Get tag2.
      *
-     * @return integer
+     * @return int
      */
     public function getTag2()
     {
@@ -574,9 +568,9 @@ class ForumThread
     }
 
     /**
-     * Set tag3
+     * Set tag3.
      *
-     * @param integer $tag3
+     * @param int $tag3
      *
      * @return ForumThread
      */
@@ -588,9 +582,9 @@ class ForumThread
     }
 
     /**
-     * Get tag3
+     * Get tag3.
      *
-     * @return integer
+     * @return int
      */
     public function getTag3()
     {
@@ -598,9 +592,9 @@ class ForumThread
     }
 
     /**
-     * Set tag4
+     * Set tag4.
      *
-     * @param integer $tag4
+     * @param int $tag4
      *
      * @return ForumThread
      */
@@ -612,9 +606,9 @@ class ForumThread
     }
 
     /**
-     * Get tag4
+     * Get tag4.
      *
-     * @return integer
+     * @return int
      */
     public function getTag4()
     {
@@ -622,9 +616,9 @@ class ForumThread
     }
 
     /**
-     * Set tag5
+     * Set tag5.
      *
-     * @param integer $tag5
+     * @param int $tag5
      *
      * @return ForumThread
      */
@@ -636,9 +630,9 @@ class ForumThread
     }
 
     /**
-     * Get tag5
+     * Get tag5.
      *
-     * @return integer
+     * @return int
      */
     public function getTag5()
     {
@@ -646,9 +640,9 @@ class ForumThread
     }
 
     /**
-     * Set stickyvalue
+     * Set stickyvalue.
      *
-     * @param integer $stickyvalue
+     * @param int $stickyvalue
      *
      * @return ForumThread
      */
@@ -660,9 +654,9 @@ class ForumThread
     }
 
     /**
-     * Get stickyvalue
+     * Get stickyvalue.
      *
-     * @return integer
+     * @return int
      */
     public function getStickyvalue()
     {
@@ -670,9 +664,9 @@ class ForumThread
     }
 
     /**
-     * Set idfirstlanguageused
+     * Set idfirstlanguageused.
      *
-     * @param integer $idfirstlanguageused
+     * @param int $idfirstlanguageused
      *
      * @return ForumThread
      */
@@ -684,9 +678,9 @@ class ForumThread
     }
 
     /**
-     * Get idfirstlanguageused
+     * Get idfirstlanguageused.
      *
-     * @return integer
+     * @return int
      */
     public function getIdfirstlanguageused()
     {
@@ -694,9 +688,9 @@ class ForumThread
     }
 
     /**
-     * Set idgroup
+     * Set idgroup.
      *
-     * @param integer $idgroup
+     * @param int $idgroup
      *
      * @return ForumThread
      */
@@ -708,9 +702,9 @@ class ForumThread
     }
 
     /**
-     * Get idgroup
+     * Get idgroup.
      *
-     * @return integer
+     * @return int
      */
     public function getIdgroup()
     {
@@ -718,7 +712,7 @@ class ForumThread
     }
 
     /**
-     * Set threadvisibility
+     * Set threadvisibility.
      *
      * @param string $threadvisibility
      *
@@ -732,7 +726,7 @@ class ForumThread
     }
 
     /**
-     * Get threadvisibility
+     * Get threadvisibility.
      *
      * @return string
      */
@@ -742,7 +736,7 @@ class ForumThread
     }
 
     /**
-     * Set whocanreply
+     * Set whocanreply.
      *
      * @param string $whocanreply
      *
@@ -756,7 +750,7 @@ class ForumThread
     }
 
     /**
-     * Get whocanreply
+     * Get whocanreply.
      *
      * @return string
      */
@@ -766,7 +760,7 @@ class ForumThread
     }
 
     /**
-     * Set threaddeleted
+     * Set threaddeleted.
      *
      * @param string $threadDeleted
      *
@@ -780,7 +774,7 @@ class ForumThread
     }
 
     /**
-     * Get threaddeleted
+     * Get threaddeleted.
      *
      * @return string
      */
@@ -790,7 +784,7 @@ class ForumThread
     }
 
     /**
-     * Set createdAt
+     * Set createdAt.
      *
      * @param \DateTime $createdAt
      *
@@ -804,7 +798,7 @@ class ForumThread
     }
 
     /**
-     * Get createdAt
+     * Get createdAt.
      *
      * @return \DateTime
      */
@@ -814,7 +808,7 @@ class ForumThread
     }
 
     /**
-     * Set updatedAt
+     * Set updatedAt.
      *
      * @param \DateTime $updatedAt
      *
@@ -828,7 +822,7 @@ class ForumThread
     }
 
     /**
-     * Get updatedAt
+     * Get updatedAt.
      *
      * @return \DateTime
      */
@@ -838,7 +832,7 @@ class ForumThread
     }
 
     /**
-     * Set deletedAt
+     * Set deletedAt.
      *
      * @param \DateTime $deletedAt
      *
@@ -852,7 +846,7 @@ class ForumThread
     }
 
     /**
-     * Get deletedAt
+     * Get deletedAt.
      *
      * @return \DateTime
      */
@@ -862,9 +856,9 @@ class ForumThread
     }
 
     /**
-     * Get threadid
+     * Get threadid.
      *
-     * @return integer
+     * @return int
      */
     public function getThreadid()
     {
@@ -872,7 +866,7 @@ class ForumThread
     }
 
     /**
-     * Set group
+     * Set group.
      *
      * @param \AppBundle\Entity\Group $group
      *
@@ -886,7 +880,7 @@ class ForumThread
     }
 
     /**
-     * Get group
+     * Get group.
      *
      * @return \AppBundle\Entity\Group
      */
@@ -896,7 +890,7 @@ class ForumThread
     }
 
     /**
-     * Add post
+     * Add post.
      *
      * @param \AppBundle\Entity\ForumPost $post
      *
@@ -910,7 +904,7 @@ class ForumThread
     }
 
     /**
-     * Remove post
+     * Remove post.
      *
      * @param \AppBundle\Entity\ForumPost $post
      */
@@ -920,7 +914,7 @@ class ForumThread
     }
 
     /**
-     * Get posts
+     * Get posts.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -930,7 +924,7 @@ class ForumThread
     }
 
     /**
-     * Set firstPost
+     * Set firstPost.
      *
      * @param \AppBundle\Entity\ForumPost $firstPost
      *
@@ -944,7 +938,7 @@ class ForumThread
     }
 
     /**
-     * Get firstPost
+     * Get firstPost.
      *
      * @return \AppBundle\Entity\ForumPost
      */
@@ -954,7 +948,7 @@ class ForumThread
     }
 
     /**
-     * Set lastPost
+     * Set lastPost.
      *
      * @param \AppBundle\Entity\ForumPost $lastPost
      *
@@ -968,7 +962,7 @@ class ForumThread
     }
 
     /**
-     * Get lastPost
+     * Get lastPost.
      *
      * @return \AppBundle\Entity\ForumPost
      */

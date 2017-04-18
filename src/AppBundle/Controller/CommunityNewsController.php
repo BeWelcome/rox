@@ -15,6 +15,7 @@ class CommunityNewsController extends Controller
      * @param Request $request
      *
      * @Route("/communitynews", name="communitynews")
+     *
      * @return Response
      */
     public function listAction(Request $request)
@@ -22,7 +23,7 @@ class CommunityNewsController extends Controller
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
 
-        $communityNewsModel = new CommunityNewsModel( $this->getDoctrine() );
+        $communityNewsModel = new CommunityNewsModel($this->getDoctrine());
         $communityNews = $communityNewsModel->getLatestPaginator($page, $limit);
 
         return $this->render(':communitynews:list.html.twig', [
@@ -34,6 +35,7 @@ class CommunityNewsController extends Controller
      * @Route("/communitynews/{id}", name="communitynews_show")
      *
      * @param CommunityNews $communityNews
+     *
      * @return Response
      */
     public function showAction(CommunityNews $communityNews)
@@ -42,5 +44,4 @@ class CommunityNewsController extends Controller
             'communityNews' => $communityNews,
         ]);
     }
-
 }

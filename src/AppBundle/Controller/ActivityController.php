@@ -21,12 +21,12 @@ class ActivityController extends Controller
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 15);
 
-        $activityModel = new ActivityModel( $this->getDoctrine() );
+        $activityModel = new ActivityModel($this->getDoctrine());
         $activities = $activityModel->getLatest($page, $limit);
 
         return $this->render(':activity:list.html.twig', [
             'active' => 'ActivitiesNearMe',
-            'activities' => $activities
+            'activities' => $activities,
         ]);
     }
 
@@ -35,6 +35,7 @@ class ActivityController extends Controller
      *     requirements={"id": "\d+"})
      *
      * @param Activity $activity
+     *
      * @return Response
      */
     public function showAction(Activity $activity)
@@ -51,6 +52,7 @@ class ActivityController extends Controller
      *     requirements={"id": "\d+"})
      *
      * @param Activity $activity
+     *
      * @return Response
      */
     public function editAction(Activity $activity)

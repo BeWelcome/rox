@@ -3,9 +3,7 @@
 namespace AppBundle\EventListener;
 
 use Rox\Member\Model\Member;
-use Rox\Member\Service\PreferenceService;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 /**

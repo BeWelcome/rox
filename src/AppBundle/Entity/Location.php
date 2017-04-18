@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Location
+ * Location.
  *
  * @ORM\Table(name="geonames", indexes={@ORM\Index(name="idx_name", columns={"name"}), @ORM\Index(name="idx_latitude", columns={"latitude"}), @ORM\Index(name="idx_longitude", columns={"longitude"}), @ORM\Index(name="idx_fclass", columns={"fclass"}), @ORM\Index(name="idx_fcode", columns={"fcode"}), @ORM\Index(name="idx_country", columns={"country"}), @ORM\Index(name="idx_admin1", columns={"admin1"})})
  * @ORM\Entity
@@ -66,7 +66,7 @@ class Location
     private $admin1;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="population", type="integer", nullable=true)
      */
@@ -80,7 +80,7 @@ class Location
     private $moddate;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="geonameid", type="integer")
      * @ORM\Id
@@ -89,7 +89,7 @@ class Location
     private $geonameid;
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -103,7 +103,7 @@ class Location
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -113,7 +113,7 @@ class Location
     }
 
     /**
-     * Set latitude
+     * Set latitude.
      *
      * @param string $latitude
      *
@@ -127,7 +127,7 @@ class Location
     }
 
     /**
-     * Get latitude
+     * Get latitude.
      *
      * @return string
      */
@@ -137,7 +137,7 @@ class Location
     }
 
     /**
-     * Set longitude
+     * Set longitude.
      *
      * @param float $longitude
      *
@@ -151,7 +151,7 @@ class Location
     }
 
     /**
-     * Get longitude
+     * Get longitude.
      *
      * @return float
      */
@@ -161,7 +161,7 @@ class Location
     }
 
     /**
-     * Set fclass
+     * Set fclass.
      *
      * @param string $fclass
      *
@@ -175,7 +175,7 @@ class Location
     }
 
     /**
-     * Get fclass
+     * Get fclass.
      *
      * @return string
      */
@@ -185,7 +185,7 @@ class Location
     }
 
     /**
-     * Set fcode
+     * Set fcode.
      *
      * @param string $fcode
      *
@@ -199,7 +199,7 @@ class Location
     }
 
     /**
-     * Get fcode
+     * Get fcode.
      *
      * @return string
      */
@@ -209,7 +209,7 @@ class Location
     }
 
     /**
-     * Set country
+     * Set country.
      *
      * @param string $country
      *
@@ -223,7 +223,7 @@ class Location
     }
 
     /**
-     * Get country
+     * Get country.
      *
      * @return string
      */
@@ -233,7 +233,7 @@ class Location
     }
 
     /**
-     * Set admin1
+     * Set admin1.
      *
      * @param string $admin1
      *
@@ -247,7 +247,7 @@ class Location
     }
 
     /**
-     * Get admin1
+     * Get admin1.
      *
      * @return string
      */
@@ -257,9 +257,9 @@ class Location
     }
 
     /**
-     * Set population
+     * Set population.
      *
-     * @param integer $population
+     * @param int $population
      *
      * @return Location
      */
@@ -271,9 +271,9 @@ class Location
     }
 
     /**
-     * Get population
+     * Get population.
      *
-     * @return integer
+     * @return int
      */
     public function getPopulation()
     {
@@ -281,7 +281,7 @@ class Location
     }
 
     /**
-     * Set moddate
+     * Set moddate.
      *
      * @param \DateTime $moddate
      *
@@ -295,7 +295,7 @@ class Location
     }
 
     /**
-     * Get moddate
+     * Get moddate.
      *
      * @return \DateTime
      */
@@ -305,9 +305,9 @@ class Location
     }
 
     /**
-     * Get geonameid
+     * Get geonameid.
      *
-     * @return integer
+     * @return int
      */
     public function getGeonameid()
     {

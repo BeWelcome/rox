@@ -39,26 +39,44 @@ class LegacyLoader extends Loader
         require_once $dirfix.'routes.php';
 
         // Forum urls
-        $this->addRoute('forums', '/forums', '', '');
-        $this->addRoute('forums_new', '/forums/new', '', '');
-        $this->addRoute('bwforum', 'forums/bwforum', '', '');
-        $this->addRoute('forum_thread', '/forums/s{threadId}', '', '');
-        $this->addRoute('community', '/community', '', '');
-        $this->addRoute('faq', '/faq', '', '');
-        $this->addRoute('about_faq', '/about/faq', '', '');
-        $this->addRoute('faq_category', '/faq/{category}', '', '');
-        $this->addRoute('about_faq_category', '/about/faq/{category}', '', '');
-        $this->addRoute('about', '/about', '', '');
-        $this->addRoute('stats', '/stats', '', '');
-        $this->addRoute('stats_images', '/stats/{image}.png', '', '');
-        $this->addRoute('getactive', '/about/getactive', '', '');
-        $this->addRoute('contactus', '/about/feedback', '', '');
-        $this->addRoute('signup', '/signup/', '', '');
-        $this->addRoute('signup_1', '/signup/1', '', '');
-        $this->addRoute('signup_2', '/signup/2', '', '');
-        $this->addRoute('signup_3', '/signup/3', '', '');
-        $this->addRoute('signup_4', '/signup/4', '', '');
-        $this->addRoute('signup_finish', '/signup/finish', '', '');
+        $this->addRouteDirectly('forums', '/forums');
+        $this->addRouteDirectly('forums_new', '/forums/new');
+        $this->addRouteDirectly('bwforum', 'forums/bwforum');
+        $this->addRouteDirectly('forum_permalink', '/forums/s{threadId}/');
+        $this->addRouteDirectly('forum_thread', '/forums/s{threadId}');
+        $this->addRouteDirectly('forum_admin', '/forums/modfulleditpost/{threadId}');
+        $this->addRouteDirectly('forum_tag', '/forums/t{tag}');
+        $this->addRouteDirectly('forum_report', '/forums/reporttomod/{threadId}');
+        $this->addRouteDirectly('forum_rules', '/forums/rules');
+        $this->addRouteDirectly('forum_edit', '/forums/edit/m{postId}');
+        $this->addRouteDirectly('forum_reply', '/forums/s{threadId}/reply');
+        $this->addRouteDirectly('forum_translate', '/forums/translate/m{postId}');
+        $this->addRouteDirectly('forum_reverse', '/forums/s{threadId}//reverse');
+        $this->addRouteDirectly('subscriptions', '/forums/subscriptions');
+        $this->addRouteDirectly('thread_subscribe', '/forums/subscriptions/subscribe/thread/{threadId}');
+        $this->addRouteDirectly('thread_unsubscribe', '/forums/subscriptions/unsubscribe/thread/{threadId}/{subscriptionId}');
+        $this->addRouteDirectly('thread_notifications_disable', '/forums/subscriptions/disable/thread/{threadId}/{subscriptionId}');
+        $this->addRouteDirectly('thread_notifications_enable', '/forums/subscriptions/enable/thread/{threadId}/{subscriptionId}');
+        $this->addRouteDirectly('group_notifications_enable', '/forums/subscriptions/enable/group/{groupId}');
+        $this->addRouteDirectly('group_notifications_enable', '/forums/subscriptions/disable/group/{groupId}');
+        $this->addRouteDirectly('group_subscribe', '/forums/subscriptions/subscribe/group/{groupId}');
+        $this->addRouteDirectly('group_unsubscribe', '/forums/subscriptions/unsubscribe/group/{groupId}');
+        $this->addRouteDirectly('community', '/community');
+        $this->addRouteDirectly('faq', '/faq');
+        $this->addRouteDirectly('about_faq', '/about/faq');
+        $this->addRouteDirectly('faq_category', '/faq/{category}');
+        $this->addRouteDirectly('about_faq_category', '/about/faq/{category}');
+        $this->addRouteDirectly('about', '/about');
+        $this->addRouteDirectly('stats', '/stats');
+        $this->addRouteDirectly('stats_images', '/stats/{image}.png');
+        $this->addRouteDirectly('getactive', '/about/getactive');
+        $this->addRouteDirectly('contactus', '/about/feedback');
+        $this->addRouteDirectly('signup', '/signup/');
+        $this->addRouteDirectly('signup_1', '/signup/1');
+        $this->addRouteDirectly('signup_2', '/signup/2');
+        $this->addRouteDirectly('signup_3', '/signup/3');
+        $this->addRouteDirectly('signup_4', '/signup/4');
+        $this->addRouteDirectly('signup_finish', '/signup/finish');
 
         return $this->routes;
     }
@@ -68,12 +86,19 @@ class LegacyLoader extends Loader
         return 'legacy' === $type;
     }
 
-    private function addRoute($name, $path, $controller, $action, $ignore = null)
+    private function addRoute($name, $path, $controller = '', $action = '')
     {
-        $ignore;
         $path = preg_replace('^:(.*?):^', '{\1}', $path);
         $this->routes->add($name, new Route($path, [
-                '_controller' => 'rox.legacy_controller:showAction',
-            ], [], [], '', [], ['get', 'post']));
+            '_controller' => 'rox.legacy_controller:showAction',
+        ], [], [], '', [], ['get', 'post']));
+    }
+
+    private function addRouteDirectly($name, $path)
+    {
+        $path = preg_replace('^:(.*?):^', '{\1}', $path);
+        $this->routes->add($name, new Route($path, [
+            '_controller' => 'rox.legacy_controller:showAction',
+        ], [], [], '', [], ['get', 'post']));
     }
 }

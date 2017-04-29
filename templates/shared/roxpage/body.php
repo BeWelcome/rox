@@ -25,7 +25,7 @@
 
         if ($this->getSubmenuItems() || ($side_column_names)) { ?>
         <div class="row row-offcanvas row-offcanvas-right">
-            <div class="col-12 col-md-9 col-lg-10">
+            <div class="col-12 col-md-9">
     <?php } else { ?>
         <div class="row">
             <div class="col-12">

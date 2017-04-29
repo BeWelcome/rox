@@ -46,6 +46,7 @@ class LegacyController extends Controller
                 }
             }
         }
+
         try {
             $kernel = $this->get('rox.legacy_kernel');
 

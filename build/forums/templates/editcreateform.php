@@ -50,12 +50,6 @@ if (isset($vars['tags']) && $vars['tags']) {
 ?>
 <script type="text/javascript" src="script/blog_suggest.js"></script>
 <script type="text/javascript" src="script/forums_suggest.js"></script>
-<?php
-if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
-    $textarea = 'topic_text';
-    require_once SCRIPT_BASE . 'web/script/tinymceconfig_php.js';
-}
-?>
 <h2>
     <?php
     if ($navichain_items = $boards->getNaviChain()) {
@@ -381,3 +375,9 @@ if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
     document.observe("dom:loaded", forumOnload);
 
 </script>
+<?php
+if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
+    $textarea = 'topic_text';
+    require_once SCRIPT_BASE . 'web/script/tinymceconfig_php.js';
+}
+?>

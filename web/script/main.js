@@ -164,7 +164,7 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "tinymce-4.3.2/tinymce.min.js",
+        file: "../bundles/ivoryckeditor/ckeditor.js",
         pages: [
             "activities",
             "blog",

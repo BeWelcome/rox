@@ -1,3 +1,3 @@
-<div class="jumbotron m-y-2">
+<div>
     <h1><?=$this->teaserHeadline() ?></h1>
 </div>

@@ -75,6 +75,13 @@
                 <br><a href="{{ path('member/edit') }}" class="btn btn-sm btn-edit"><span class="fa fa-pencil btn-edit-animation small pr-2"></span>{{ 'EditMyProfile' | trans  }}</a>
             {% endif %}
 
+            <div class="my-2">
+                <span class="h4 whiteshadow text-uppercase">
+                    <small><strong><i class="fa fa-commenting"></i><span class="icontext">Speaks</span></strong></small>
+                    {# if on own profile #}<a href="editmyprofile"></a></span>
+                <span class="lang mother mx-1 whiteshadow" title="Mother tongue">Galician</span> <span class="lang mx-1 whiteshadow" title="Fluent">English</span> <span class="lang whiteshadow mx-1" title="Fluent">Basque</span> <span class="lang whiteshadow basic mx-1" title="Basic">Whatever</span>
+            </div>
+
             {# if member admin
              <div>
                 Set status and add comment as admin<br>
@@ -100,14 +107,6 @@
             {% include(':profile:cards/hosting.html.twig') %}
         </div>
 
-        <div class="card profilestatusbox m-3 p-3">
-            <h4 class="text-uppercase">
-                <small><strong><i class="fa fa-commenting"></i><span class="icontext">Speaks</span></strong></small>
-                {# if on own profile #}<a href="editmyprofile"></a></h4>
-            <p class="mb-0">
-                <span class="lang mother" title="Mother tongue">Galician</span>, <span class="lang" title="Fluent">English</span>, <span class="lang" title="Fluent">Basque</span>,<small><a href="#languages"> ...and 8 more</a></small>
-            </p>
-        </div>
     </div>
 
     <div class="row">

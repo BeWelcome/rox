@@ -39,7 +39,7 @@
                 <?php
             }
             ?>
-            <div class="jumbotron">
+            <div class="my-3">
                 <?php $this->teaser() ?>
             </div>
             <?php

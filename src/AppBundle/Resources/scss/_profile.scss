@@ -172,15 +172,22 @@ a.report:hover {
 
 .lang{
 	font-family: $font-family-bold;
-	font-size: 0.9rem;
+	font-size: 1rem;
 	text-transform:capitalize;
 }
+
 .lang:hover {
 	text-decoration: underline;
 }
+
 .mother{
 	text-transform:uppercase;
 	letter-spacing: 0.02rem;
+}
+
+.basic{
+	font-size: 70% !important;
+	font-weight: 100;
 }
 
 a.request:link, a.request:visited {

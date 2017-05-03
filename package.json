@@ -27,6 +27,7 @@
   "dependencies": {
     "bootstrap": "github:twbs/bootstrap#v4-dev",
     "bootstrap-autohidingnavbar": "github:istvan-ujjmeszaros/bootstrap-autohidingnavbar",
+    "bootstrap-datepicker": "github:uxsolutions/bootstrap-datepicker",
     "font-awesome": "^4.6.3",
     "html5shiv": "^3.7.3",
     "jquery": "^3.1.1",
@@ -34,10 +35,13 @@
     "lato-font": "^1.1.1",
     "leaflet": "^1.0.1",
     "leaflet.markercluster": "^1.0.0",
+    "moment": "^2.18.1",
     "respond.js": "^1.4.2",
     "select2": "^4.0.3",
     "skrollr": "^0.6.26",
     "skrollr-menu": "github:prinzhorn/skrollr-menu",
+    "tempusdominus-bootstrap-4": "github:tempusdominus/bootstrap-4",
+    "tempusdominus-core": "github:tempusdominus/core",
     "tether": "^1.2.4",
     "tinymce": "^4.4.3",
     "unslider": "github:idiot/unslider"

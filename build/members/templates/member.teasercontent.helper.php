@@ -14,9 +14,6 @@ $comments_count = $member->count_comments();
 $layoutbits = new MOD_layoutbits;
 $right = new MOD_right();
 
-$verification_status = $member->verification_status;
-if ($verification_status) $verification_text = $words->getSilent('verifymembers_'.$verification_status);
-
 $agestr = "";
 if ($member->age == "hidden") {
     $agestr .= $ww->AgeHidden;

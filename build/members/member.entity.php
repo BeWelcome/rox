@@ -789,7 +789,7 @@ WHERE
         }
 
         $tripsModel = new TripsModel();
-        $usertrips = $tripsModel->getTrips($this->Username);
+        $usertrips = $tripsModel->getTrips($this->Username, 1, 5);
         $trip_data = $tripsModel->getTripData();
         return array($usertrips,$trip_data);
     }

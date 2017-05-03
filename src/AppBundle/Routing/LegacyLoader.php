@@ -46,6 +46,8 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('forum_thread', '/forums/s{threadId}');
         $this->addRouteDirectly('forum_admin', '/forums/modfulleditpost/{threadId}');
         $this->addRouteDirectly('forum_tag', '/forums/t{tag}');
+        $this->addRouteDirectly('forum_tag_detail_1', '/forums/t{tag}/{detail1}');
+        $this->addRouteDirectly('forum_tag_detail_2', '/forums/t{tag}/{detail1}/{detail2}');
         $this->addRouteDirectly('forum_report', '/forums/reporttomod/{threadId}');
         $this->addRouteDirectly('forum_rules', '/forums/rules');
         $this->addRouteDirectly('forum_edit', '/forums/edit/m{postId}');
@@ -77,7 +79,8 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('signup_3', '/signup/3');
         $this->addRouteDirectly('signup_4', '/signup/4');
         $this->addRouteDirectly('signup_finish', '/signup/finish');
-
+        $this->addRouteDirectly('signup_email_check', '/signup/checkemail');
+        $this->addRouteDirectly('signup_confirm', '/signup/confirm/{username}/{regkey}');
         return $this->routes;
     }
 

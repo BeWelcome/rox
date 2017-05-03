@@ -330,4 +330,14 @@ class Notification
     {
         return $this->id;
     }
+
+    /**
+     * Get translationparams.
+     *
+     * @return string
+     */
+    public function getTranslationparams()
+    {
+        return $this->translationparams;
+    }
 }

@@ -37,6 +37,8 @@ class SignupController extends RoxControllerBase {
      * confirm   - confirmation redirect to signup
      *
      * @param void
+     *
+     * @return SignupBasePage
      */
     public function index($args = false)
     {
@@ -184,11 +186,10 @@ class SignupController extends RoxControllerBase {
 
     public function signupFormCallback($args, $action, $mem_redirect, $mem_resend)
     {
+        $vars =$this->_session->get('SignupBWVars');
 
-        //$mem_redirect->post = $vars;
-        foreach ($args->post as $key => $value) {
-            $this->_session->set( 'SignupBWVars[' . $key . ']', $value );
-        }
+        $vars = array_merge($vars, $args->post);
+        $this->_session->set('SignupBWVars', $vars);
 
 		$StrLog="Entering signupFormCallback " ;
 		if (!empty($args->post["Username"])) {
@@ -219,7 +220,8 @@ class SignupController extends RoxControllerBase {
 
             if (count($errors) > 0) {
                 // show form again
-                $this->_session->set( 'SignupBWVars[errors]', $errors );
+                $vars['errors'] = $errors;
+                $this->_session->set( 'SignupBWVars', $vars );
                 $mem_redirect->post = $vars;
                 return false;
             }

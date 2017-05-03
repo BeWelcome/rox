@@ -120,6 +120,7 @@ class MemberPage extends PageWithActiveSkin
                 $mynotelinkname= "members/$username/note/add" ;
             }
             $tt= array(
+                array('sendrequest', "messages/request/$username", $ww->SendRequest, 'sendrequest'),
                 array('messagesadd', "messages/compose/$username", $ww->ContactMember, 'messagesadd'),
                 (isset($TCom[0])) ? array('commmentsadd', "members/$username/comments/edit", $ww->EditComments, 'commentsadd') : array('commmentsadd', "members/$username/comments/add", $ww->AddComments, 'commentsadd'),
                 array('relationsadd', "members/$username/relations/add", $ww->addRelation, 'relationsadd'),
@@ -157,7 +158,7 @@ class MemberPage extends PageWithActiveSkin
         // we don't need the other columns
         return array('col1_left', 'col3_right');
     }
-    protected function columnsArea()
+    protected function columnsArea($mid_column_name)
     {
         ?>
         <div class="row">
@@ -197,16 +198,6 @@ class MemberPage extends PageWithActiveSkin
 
         <div id="profile_pic" >
                 <a href="<?=$picture_url?>" id="profile_image"><img src="<?=$thumbnail_url?>" alt="Picture of <?=$member->Username?>" class="framed" height="150" width="150"/></a>
-                <div id="profile_image_zoom_content" class="hidden">
-                  <img src="<?=$picture_url?>" alt="Picture of <?=$member->Username?>" />
-                </div>
-                <script type="text/javascript">
-                    // Activate FancyZoom for profile picture
-                    // (not for IE, which don't like FancyZoom)
-                    if (typeof FancyZoom == "function" && is_ie === false) {
-                      new FancyZoom('profile_image');
-                    }
-                </script>
         </div> <!-- profile_pic -->
 
             <div class="list-group mt-1">

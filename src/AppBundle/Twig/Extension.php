@@ -101,7 +101,7 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
         $languages = $languageModel->getLanguagesWithTranslations($locale);
         $member = null;
         $rememberMeToken = unserialize($this->session->get('_security_default'));
-        if ($rememberMeToken != false && $rememberMeToken != null) {
+        if ($rememberMeToken !== false && $rememberMeToken !== null) {
             $member = $rememberMeToken->getUser();
         }
 

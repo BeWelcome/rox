@@ -27,13 +27,13 @@
                 <h2 class="d-none d-md-block">{{ 'Login' | trans }}</h2>
 
                 <label class="sr-only" for="login-u">{{ 'Username' | trans }}</label>
-                <input type="text" id="login-u" name="username" autofocus required value="{{ last_username }}" placeholder="{{ 'Username' | trans }}" class="form-control">
+                <input type="text" id="login-u" name="_username" autofocus required value="{{ last_username }}" placeholder="{{ 'Username' | trans }}" class="form-control">
 
                 <label class="sr-only" for="login-p">{{ 'Password' | trans }}</label>
-                <input type="password" id="login-p" name="password" placeholder="{{ 'Password' | trans }}" class="form-control">
+                <input type="password" id="login-p" name="_password" placeholder="{{ 'Password' | trans }}" class="form-control">
 
                 <label for="login-r">
-                    <input type="checkbox" id="login-r" value="1" name="remember">&nbsp;{{ 'StayLoggedIn' | trans }}
+                    <input type="checkbox" id="login-r" value="1" name="_remember_me">&nbsp;{{ 'StayLoggedIn' | trans }}
                 </label>
 
                 <input type="hidden" name="_csrf_token"

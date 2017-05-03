@@ -2,7 +2,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
+use AppBundle\Form\HostingRequestType;
+use AppBundle\Form\MessageRequestType;
 use AppBundle\Model\MessageModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -92,6 +95,28 @@ class MessageController extends Controller
         return new Response($content);
     }
 
+    /*
+     * @Route("/message/{id}/reply", name="message_reply",
+     *     requirements={"id": "\d+"})
+     */
+    public function reply(Message $message)
+    {
+        $message;
+        $receiverUsername = 'noone';
+
+        $receiver = $this->memberRepository->getByUsername($receiverUsername);
+
+        $content = $this->render('@message/message/compose.html.twig', [
+            'receiver' => $receiver,
+        ]);
+
+        return new Response($content);
+    }
+
+    /*
+     * @Route("/members/{$username}/message/{id}/reply", name="message_reply",
+     *     requirements={"id": "\d+"})
+     */
     public function compose(Request $request)
     {
         $receiverUsername = $request->attributes->get('username');
@@ -107,7 +132,7 @@ class MessageController extends Controller
 
     /**
      * @Route("/messages/{filter}", name="messages",
-     *     requirements={ "filter": "inbox|sent|spam|deleted" },
+     *     requirements={ "filter": "requests|inbox|sent|spam|deleted" },
      *     defaults={"filter": "inbox"})
      *
      * @param Request $request
@@ -133,18 +158,31 @@ class MessageController extends Controller
 
         return $this->render(':message:index.html.twig', [
             'messages' => $messages,
-            'subitems' => [
-                'MessagesReceived' => ['route' => ['name' => 'messages', 'filter' => 'inbox']],
-                'MessagesSent' => ['route' => ['name' => 'messages', 'filter' => 'sent']],
-                'MessagesSpam' => ['route' => ['name' => 'messages', 'filter' => 'spam']],
-                'MessagesDeleted' => ['route' => ['name' => 'messages', 'filter' => 'deleted']],
+            'submenu' => [
+                'active' => $filter,
+                'route' => 'messages',
+                'items' => [
+                    'requests' => [
+                        'key' => 'MessagesRequests',
+                    ],
+                    'inbox' => [
+                        'key' => 'MessagesReceived',
+                    ],
+                    'sent' => [
+                        'key' => 'MessagesSent',
+                    ],
+                    'spam' => [
+                        'key' => 'MessagesSpam',
+                    ],
+                    'deleted' => [
+                        'key' => 'MessagesDeleted',
+                    ],
+                ],
             ],
         ]);
     }
 
     /**
-     * @Route("/message/{id}/reply", name="message_reply",
-     *     requirements={"id": "\d+"})
      * @Route("/message/{id}", name="message_show",
      *     requirements={"id": "\d+"})
      *
@@ -169,6 +207,39 @@ class MessageController extends Controller
 
         return $this->render(':message:view.html.twig', [
             'message' => $message,
+        ]);
+    }
+
+    /**
+     * @Route("/messages/request/{username}", name="hosting_request")
+     *
+     * @param Member $receiver
+     * @return Response
+     * @param Request $request
+     * @param Member $receiver
+     * @return Response
+     */
+    public function hostingRequest(Request $request, Member $receiver)
+    {
+        $requestForm = $this->createForm(MessageRequestType::class);
+        $requestForm->handleRequest($request);
+
+        if ($requestForm->isSubmitted() && $requestForm->isValid()) {
+            // Write request to database after doing some checks
+            $hostingRequest = $requestForm->getData();
+            $hostingRequest->setSender($this->getUser());
+            $hostingRequest->setCreated( new \DateTime());
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($hostingRequest);
+            $em->flush();
+            $this->addFlash('success', 'Created request to ' . $receiver->getUsername());
+            $this->redirectToRoute( 'messages', [ 'filter' => 'requests']);
+        }
+
+        return $this->render( ':message:request.html.twig', [
+            'receiver' => $receiver,
+            'form' => $requestForm->createView()
         ]);
     }
 }

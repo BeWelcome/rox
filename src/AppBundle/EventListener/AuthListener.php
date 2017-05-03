@@ -32,7 +32,7 @@ class AuthListener
         /** @var Member $user */
         $user = $token->getUser();
 
-        $password = $e->getRequest()->request->get('password');
+        $password = $e->getRequest()->request->get('_password');
         if (!$password) {
             throw new RuntimeException('Could not extract password from interactive login request.');
         }

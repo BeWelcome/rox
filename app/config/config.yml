@@ -164,6 +164,14 @@ assetic:
             inputs:
                 - "%node_modules%/bootstrap/dist/js/bootstrap.js"
 
+        bootstrap_datepicker_css:
+            inputs:
+                - "%node_modules%/bootstrap-datepicker/dist/css/bootstrap-datepicker3.standalone.css"
+
+        bootstrap_datepicker_js:
+            inputs:
+                - "%node_modules%/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"
+
         select2_js:
             inputs:
                 - "%node_modules%/select2/dist/js/select2.js"

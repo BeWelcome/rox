@@ -198,4 +198,28 @@ class SubTrip
     {
         return $this->trip;
     }
+
+    /**
+     * Set geonameid.
+     *
+     * @param int $geonameid
+     *
+     * @return SubTrip
+     */
+    public function setGeonameid($geonameid)
+    {
+        $this->geonameid = $geonameid;
+
+        return $this;
+    }
+
+    /**
+     * Get geonameid.
+     *
+     * @return int
+     */
+    public function getGeonameid()
+    {
+        return $this->geonameid;
+    }
 }

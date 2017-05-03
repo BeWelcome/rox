@@ -30,6 +30,7 @@ Boston, MA  02111-1307, USA.
 <div class="card card-block">
     <form method="post" action="<?php echo $baseuri . 'signup/4' ?>" name="signup" id="user-register-form">
         <?= $callback_tag ?>
+        <?= print_r($vars, true); ?>
         <?php
         if (in_array('inserror', $vars['errors'])) {
             echo '<small class="text-muted has-danger">' . $errors['inserror'] . '</small>';
@@ -106,6 +107,7 @@ Boston, MA  02111-1307, USA.
                             echo isset($vars['password']) ? 'value="' . $vars['password'] . '" ' : '';
                             ?>
                         >
+                        <?php } ?>
                     </div>
                     <div class="col-xs-12 col-md-6"></div>
                 </div>
@@ -195,6 +197,8 @@ Boston, MA  02111-1307, USA.
                                 <label for="sweet"><?php echo $words->get('SignupSweet'); ?></label>
                                 <input type="text" id="sweet" name="sweet" value="" title="Leave free of content"/>
                             </div>
+                            <?php endif; ?>
+
                         </fieldset>
                     </div>
                     <div class="col-xs-12 col-md-6"></div>

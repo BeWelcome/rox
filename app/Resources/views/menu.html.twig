@@ -11,7 +11,7 @@
             <div class="collapse d-xl-none px-0 w-100" id="smallNavBar">
                 <ul class="navbar-nav mr-auto mt-2">
                     <li class="nav-item bordert-1">
-                        <a href="{{ url('member', { username: my_member.Username }) }}" class="nav-link pl-1">{{ my_member.Username }}</a>
+                        <a href="{{ url('members_profile', { username: my_member.Username }) }}" class="nav-link pl-1">{{ my_member.Username }}</a>
                     </li>
                     <li class="nav-item bordert-1">
                         <a href="{{ path( 'messages' ) }}" class="nav-link pl-4">{{ 'MyMessages' | trans }}</a>
@@ -134,14 +134,14 @@
 
                     {# profile link on smaller screens #}
                     <li class="nav-item float-right d-block d-lg-none">
-                        <a href="{{ path( 'member' , { username: my_member.Username } ) }}" class="nav-link"><i class="fa fa-lg fa-user"></i></a>
+                        <a href="{{ path( 'members_profile' , { username: my_member.Username } ) }}" class="nav-link"><i class="fa fa-lg fa-user"></i></a>
                     </li>
 
                     {# member dropdown on bigger screens #}
                     <li class="nav-item dropdown float-right d-none d-lg-block">
-                        <a href="{{ path( 'member' , { username: my_member.Username } ) }}" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ my_member.Username }} <span class="caret"></span></a>
+                        <a href="{{ path( 'members_profile' , { username: my_member.Username } ) }}" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ my_member.Username }} <span class="caret"></span></a>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                            <li class="text-right"><a href="{{ path( 'member' , { username: my_member.Username } ) }}" class="dropdown-item">{{ 'Profile' | trans }}</a></li>
+                            <li class="text-right"><a href="{{ path( 'members_profile' , { username: my_member.Username } ) }}" class="dropdown-item">{{ 'Profile' | trans }}</a></li>
                             <li class="text-right"><a href="/editmyprofile" class="dropdown-item">{{ 'EditMyProfile' | trans }}</a></li>
                             <li class="text-right"><a href="/mypreferences" class="dropdown-item">{{ 'MyPreferences' | trans }}</a></li>
                             <li class="text-right"><a href="/mynotes" class="dropdown-item">{{ 'ProfileMyNotes' | trans }}</a></li>

@@ -117,9 +117,9 @@ class TripsModel extends RoxModelBase
 				t.id AS id
 			FROM
 				trips t,
-				subtrips st
+				sub_trips st
 			WHERE
-				t.id = st.tripId " . $where . "
+				t.id = st.trip_id " . $where . "
 			ORDER BY "
                 . $order . "
             " . $sqlLimit;

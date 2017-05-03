@@ -2410,17 +2410,17 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
         ];
 
         $volunteerRights = $this->getVolunteerRights();
-        if (is_array($volunteerRights)) {
-            foreach ($volunteerRights as $volunteerRight) {
+        if ($volunteerRights != null) {
+            foreach ($volunteerRights->getIterator() as $volunteerRight) {
                 if ($volunteerRight->getLevel() !== 0) {
-                    $roles[] = 'ROLE_ADMIN_'.strtoupper($volunteerRight->getRight()->getName());
+                    $roles[] = 'ROLE_ADMIN_' . strtoupper($volunteerRight->getRight()->getName());
                 }
             }
-        }
 
-        // If additional roles are found add ROLE_ADMIN as well to get past the /admin firewall
-        if (count($roles) > 1) {
-            $roles[] = 'ROLE_ADMIN';
+            // If additional roles are found add ROLE_ADMIN as well to get past the /admin firewall
+            if (count($roles) > 1) {
+                $roles[] = 'ROLE_ADMIN';
+            }
         }
 
         return $roles;

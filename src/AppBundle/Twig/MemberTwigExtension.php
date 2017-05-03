@@ -30,7 +30,7 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
     {
         $member = null;
         $rememberMeToken = unserialize($this->session->get('_security_default'));
-        if ($rememberMeToken != false && $rememberMeToken != null) {
+        if ($rememberMeToken !== false) {
             $member = $rememberMeToken->getUser();
         }
 

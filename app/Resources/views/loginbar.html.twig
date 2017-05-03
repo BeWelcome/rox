@@ -11,8 +11,8 @@
             <ul class="nav navbar-nav mr-auto ml-3">
                 <li class="nav-item float-left">
                     <form class="form-inline p-1" method="post" action="{{ url('security_check') }}">
-                        {{ macros.input('username', 'Username') }}
-                        {{ macros.input('password', 'Password', '', 'password') }}
+                        {{ macros.input('_username', 'Username') }}
+                        {{ macros.input('_password', 'Password', '', 'password') }}
                         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                         {{ macros.submit('Login') }}
                     </form>

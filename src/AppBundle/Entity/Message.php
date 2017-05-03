@@ -120,6 +120,20 @@ class Message
     private $whenfirstread = '0000-00-00 00:00:00';
 
     /**
+     * @var Subject
+     *
+     * @ORM\OneToOne(targetEntity="Subject", cascade={"persist"})
+     */
+    private $subject;
+
+    /**
+     * @var HostingRequest
+     *
+     * @ORM\OneToOne(targetEntity="HostingRequest", cascade={"persist"})
+     */
+    private $request;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="id", type="integer")
@@ -454,5 +468,53 @@ class Message
     public function isUnread()
     {
         return $this->whenfirstread === null;
+    }
+
+    /**
+     * Set subject.
+     *
+     * @param \AppBundle\Entity\Subject $subject
+     *
+     * @return Message
+     */
+    public function setSubject(\AppBundle\Entity\Subject $subject = null)
+    {
+        $this->subject = $subject;
+
+        return $this;
+    }
+
+    /**
+     * Get subject.
+     *
+     * @return \AppBundle\Entity\Subject
+     */
+    public function getSubject()
+    {
+        return $this->subject;
+    }
+
+    /**
+     * Set request.
+     *
+     * @param \AppBundle\Entity\HostingRequest $request
+     *
+     * @return Message
+     */
+    public function setRequest(\AppBundle\Entity\HostingRequest $request = null)
+    {
+        $this->request = $request;
+
+        return $this;
+    }
+
+    /**
+     * Get request.
+     *
+     * @return \AppBundle\Entity\HostingRequest
+     */
+    public function getRequest()
+    {
+        return $this->request;
     }
 }

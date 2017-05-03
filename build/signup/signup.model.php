@@ -367,15 +367,16 @@ WHERE `ShortCode` = \'' . $this->_session->get('lang') . '\'';
     /**
      *
      * FIXME: IdCity is written both to the members and the address table!
-     * 		  This is just imitating the strategy of bw/signup.php!
-		 *  JY Comment : wont fix, this redudancy is on purpose (this is so useful ...)
+     *          This is just imitating the strategy of bw/signup.php!
+     *  JY Comment : wont fix, this redudancy is on purpose (this is so useful ...)
      *
      * This has NOT been executed:
      * ALTER TABLE members
      * MODIFY COLUMN `id` int( 11 ) NOT NULL COMMENT 'IdMember'
      * As a result, we do NOT use
      * '.$this->dao->nextId('members').',
-     *
+     * @param $vars
+     * @return bool
      */
     public function registerBWMember($vars)     {
         // ********************************************************************
@@ -487,38 +488,7 @@ VALUES
             return false;
         }
 
-        // ********************************************************************
-        // location (where Philipp would put it)
-        // ********************************************************************
-		$geomodel = new GeoModel();
-		if(!$geomodel->addGeonameId($vars['location-geoname-id'],'member_primary')) {
-		    $vars['errors'] = array('geoinserterror');
-            return false;
-        }
-
-
-        // Only for bugtesting and backwards compatibility the geo-views in our DB
-        $CityName = "not found in cities view";
-        $geonameId = intval($vars['location-geoname-id']);
-        $sqry = "
-            SELECT
-                name
-            FROM
-                geonames_cache
-            WHERE
-                geonameId = $geonameId
-            ";
-    	$qry = $this->dao->query($sqry);
-    	if ($qry) {
-    		$rr = $qry->fetch(PDB::FETCH_OBJ);
-    		if (isset($rr->name)) {
-                $CityName=$rr->name;
-    		}
-    		else {
-    			MOD_log::get()->write("Signup bug [".$sqry."]"." (With New Signup !)","Signup");
-    		}
-    	}
-		MOD_log::get()->writeIdMember($memberID,"member  <b>".$vars['username']."</b> is signuping with success in city [".$CityName."]  using language (".$this->_session->get("lang")." IdMember=#".$memberID." (With New Signup !)","Signup");
+		MOD_log::get()->writeIdMember($memberID,"member  <b>".$vars['username']."</b> is signuping with success in city [".$vars['location']. "]  using language (".$this->_session->get("lang")." IdMember=#".$memberID." (With New Signup !)","Signup");
 
         return $memberID;
 

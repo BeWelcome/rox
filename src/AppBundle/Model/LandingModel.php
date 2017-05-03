@@ -37,7 +37,7 @@ class LandingModel extends BaseModel
             ->setParameter('member', $member);
         if ($unread) {
             $queryBuilder
-                ->andWhere("whenfirstread = '0000-00-00 00:00.00");
+                ->andWhere("m.whenfirstread = '0000-00-00 00:00.00'");
         }
 
         if ($limit !== 0) {

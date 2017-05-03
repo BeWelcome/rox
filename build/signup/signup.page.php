@@ -16,14 +16,14 @@ class SignupPage extends SignupBasePage
         parent::__construct();
         $this->_step = $step;
         if ($step != 3) {
-            $this->addLateLoadScriptFile('/bs4validator/bs4validator.js');
-            $this->addLateLoadScriptFile('/signup/enablevalidation.js');
+            $this->addLateLoadScriptFile('/script/bs4validator/bs4validator.js');
+            $this->addLateLoadScriptFile('/script/signup/enablevalidation.js');
         }
         if ($step == 3) {
-            $this->addLateLoadScriptFile('/jquery-ui-1.11.2/jquery-ui.js');
-            $this->addLateLoadScriptFile('leaflet/1.0.0-master/leaflet.js');
-            $this->addLateLoadScriptFile('signup/createmap.js');
-            $this->addLateLoadScriptFile('search/searchlocation.js');
+            $this->addLateLoadScriptFile('/script/jquery-ui-1.11.2/jquery-ui.js');
+            $this->addLateLoadScriptFile('/script/leaflet/1.0.0-master/leaflet.js');
+            $this->addLateLoadScriptFile('/script/signup/createmap.js');
+            $this->addLateLoadScriptFile('/script/search/searchlocation.js');
         }
     }
 

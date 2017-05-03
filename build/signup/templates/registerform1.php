@@ -94,7 +94,7 @@ Boston, MA  02111-1307, USA.
                                minlength="4"
                                maxlength="20"
                                data-validation-ajax-ajax="/signup/checkhandle"
-                               placeholder="<?php echo $words->get('SignupUsername'); ?>" id="register-username"
+                               placeholder="<?php echo htmlentities($words->get('SignupUsername')); ?>" id="register-username"
                             <?php
                             echo isset($vars['username']) ? 'value="'.htmlentities($vars['username'], ENT_COMPAT, 'utf-8').'" ' : '';
                             ?> >
@@ -102,7 +102,7 @@ Boston, MA  02111-1307, USA.
                     </div>
                 </div>
                 <div class="col-xs-6">
-                    <button type="button" class="btn btn-primary" data-trigger="focus" data-container="body" data-toggle="popover" data-placement="right" data-content="<?=$words->get('subline_username')?>">
+                    <button type="button" class="btn btn-primary" data-trigger="focus" data-container="body" data-toggle="popover" data-placement="right" data-content="<?=htmlentities($words->get('subline_username'))?>">
                         <i class="fa fa-question"></i>
                     </button>
                 </div>
@@ -196,7 +196,7 @@ Boston, MA  02111-1307, USA.
 
                         <div class="radio">
                             <label>
-                                <input type="radio" name="gridRadios" id="accommodation" value="anytime" <?php
+                                <input type="radio" name="accommodation" id="Anytime" value="anytime" <?php
                                 if (isset($vars['accommodation']) && $vars['accommodation'] == 'anytime') { echo ' checked="checked"'; } ?>>
                                 <img src="/images/icons/anytime.png">
                                 <?php echo $words->get('Accomodation_anytime'); ?>
@@ -205,7 +205,7 @@ Boston, MA  02111-1307, USA.
 
                         <div class="radio">
                             <label>
-                                <input type="radio" name="gridRadios" id="accommodation" value="dependonrequest" <?php
+                                <input type="radio" name="accommodation" id="dependonrequest" value="dependonrequest" <?php
                                 if (isset($vars['accommodation']) && $vars['accommodation'] == 'dependonrequest') { echo ' checked="checked"'; } ?>>
                                 <img src="/images/icons/dependonrequest.png">
                                 <?php echo $words->get('Accomodation_dependonrequest'); ?>
@@ -214,7 +214,7 @@ Boston, MA  02111-1307, USA.
 
                         <div class="radio">
                             <label>
-                                <input type="radio" name="gridRadios" id="accommodation" value="neverask" <?php
+                                <input type="radio" name="accommodation" id="neverask" value="neverask" <?php
                                 if (isset($vars['accommodation']) && $vars['accommodation'] == 'neverask') { echo ' checked="checked"'; } ?>>
                                 <img src="/images/icons/neverask.png">
                                 <?php echo $words->get('Accomodation_neverask'); ?>

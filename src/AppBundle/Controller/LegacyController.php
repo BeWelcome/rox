@@ -36,7 +36,7 @@ class LegacyController extends Controller
             if ($rememberMeToken === null && !$public) {
                 throw new AccessDeniedException();
             }
-            if ($rememberMeToken !=false && $rememberMeToken != null) {
+            if ($rememberMeToken !== false) {
                 /** @var Member $user */
                 $user = $rememberMeToken->getUser();
                 if ($user !== null) {

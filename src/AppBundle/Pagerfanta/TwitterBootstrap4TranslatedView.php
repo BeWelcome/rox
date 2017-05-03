@@ -2,7 +2,8 @@
 
 namespace AppBundle\Pagerfanta;
 
-use WhiteOctober\PagerfantaBundle\View\TwitterBootstrap3TranslatedView;
+use Pagerfanta\View\Template\TwitterBootstrap4Template;
+use Pagerfanta\View\TwitterBootstrapView;
 
 /**
  * TwitterBootstrap4View.
@@ -11,14 +12,14 @@ use WhiteOctober\PagerfantaBundle\View\TwitterBootstrap3TranslatedView;
  * from the Twitter Bootstrap4 CSS Toolkit
  * http://getbootstrap.com/
  */
-class TwitterBootstrap4TranslatedView extends TwitterBootstrap3TranslatedView
+class TwitterBootstrap4TranslatedView extends TwitterBootstrapView
 {
     /**
      * {@inheritdoc}
      */
     public function getName()
     {
-        return 'twitter_bootstrap4_translated';
+        return 'twitter_bootstrap4';
     }
 
     protected function createDefaultTemplate()

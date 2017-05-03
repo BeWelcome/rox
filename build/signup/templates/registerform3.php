@@ -26,6 +26,7 @@ Boston, MA  02111-1307, USA.
  * REGISTER FORM TEMPLATE
  */
 $map_conf = PVars::getObj('map');
+echo print_r($vars, true);
 ?>
 <input type="hidden" id="osm-tiles-provider-base-url"
        value="<?php echo($map_conf->osm_tiles_provider_base_url); ?>"/>
@@ -68,7 +69,7 @@ $map_conf = PVars::getObj('map');
                             <input type="hidden" name="location-longitude" id="location-longitude" value="<?= isset($vars['location-longitude']) ? $vars['location-longitude'] : '' ?>"/>
                             <input type="text" name="location" id="location" class="form-control location-picker" placeholder="<?= $words->get('label_setlocation') ?>"
                                 <?php
-                                echo isset($vars['location']) ? 'value="'. htmlentities($vars['location'],'utf-8') . '" ' : '';
+                                echo isset($vars['location']) ? 'value="'. htmlentities($vars['location'],ENT_COMPAT, 'utf-8') . '" ' : '';
                                 ?>
                             >
                         </div>

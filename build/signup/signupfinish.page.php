@@ -19,7 +19,8 @@ class SignupFinishPage extends SignupBasePage
         $email = '(hidden e-mail address)';
         if ($this->_session->has( 'SignupBWVars' )) {
             // we have vars still stored, delete them
-            $email = $this->_session->get('SignupBWVars']['email');
+            $signupVars = $this->_session->get('SignupBWVars');
+            $email = $signupVars['email'];
             $this->_session->remove('SignupBWVars');
         }
         

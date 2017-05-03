@@ -53,8 +53,20 @@
                 {{ flash_message }}
             </div>
         {% endfor %}
-        <div class="container-content p-0">
-            {% block content %}{% endblock %}
+            {% set sidebar = (submenu is defined) %}
+        <div class="container">
+            <div class="row{% if sidebar %} row-offcanvas row-offcanvas-right mt-2{% endif %}">
+                <div class="col-12{% if sidebar %} col-md-9{% endif %}">
+                {% block content %}{% endblock %}
+                </div>
+                {% if sidebar %}
+                    <div class="col-6 col-md-3 sidebar-offcanvas" id="sidebar">
+                        <div class="list-group mb-2">
+                            {% block subnav %}{% endblock %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
         </div>
         </main>
         {% include 'footer.html.twig' %}

@@ -2,27 +2,20 @@
 {% import 'macros.twig' as macros %}
 
 {% block subnav %}
-<div class="pl-0 m-b-1">
-    <ul class="nav nav-pills">
-        {% for label, subitem in subitems %}
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path( subitem.route.name, { filter: subitem.route.filter } ) }}">{{ label | trans }}</a>
-            </li>
-        {% endfor %}
-    </ul>
-</div>
-{% endblock subnav %}
+    {% for filter, menuitem in submenu.items %}
+        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}" href="{{ path( submenu.route, { filter: filter } ) }}">{{ filter | trans }}</a>
+    {% endfor %}
+{% endblock %}
 
 {% block content %}
-    <h2>{{ 'UserMessages' | trans | format(my_member.Username) }}</h2>
+    <div class="jumbotron"><h2>{{ 'UserMessages' | trans | format(my_member.Username) }}</h2></div>
 
     {% if messages | length == 0 %}
         <p>{{ 'No messages in this folder.' | trans }}</p>
     {% else %}
+        <form method="POST">
 
-<form method="POST">
-
-{#    <div class="float-left btn-group m-y-1" role="group" aria-label="Delete or spam">
+{#      <div class="float-left btn-group m-y-1" role="group" aria-label="Delete or spam">
 
         <button type="submit" name="modify" value="delete" class="btn btn-secondary" onclick="return confirm ('{{ 'MessagesWarningConfirmDelete' | trans }}')">{{ 'delmessage' | trans }}</button>
 
@@ -67,17 +60,19 @@
                 <td class="from" style="width: 20%; max-width: 20%;">
                     <div>
                         <div class="float-left p-x-1">
-                            {{ macros.avatar(otherMember.Username, 50) }}
-                        </div>
-                        <div class="float-left username">
-                            <small>
-                                <a href="{{ path('member', { username: otherMember.Username}) }}"><strong>{{ otherMember.Username }}</strong></a>
-                            </small>
+                            {{ macros.avatar(otherMember.Username, 50, true) }}
                         </div>
                     </div>
 
                 </td>
                 <td class="message verticalalignmiddle">
+                    {% if message.subject %}<p>{{ message.subject.id }} <a href="{{ path('message_show', { id: message.id}) }}"
+                                {%- if not message.WhenFirstRead -%}
+                                    {{- ' class="unread"' -}}
+                                {%- endif -%}
+                        >
+                            {{- message.subject.subject | truncate(500) -}}
+                        </a></p>{% endif %}
                     {# DevTip: Replace message.Message with faker.Text(2000) to create random message text #}
                     {% set messageText = message.Message | replace({'\n': ' ', '<br />': ' '}) | striptags %}
 
@@ -88,10 +83,13 @@
                                         {{- ' class="unread"' -}}
                                     {%- endif -%}
                             >
-                                {{- messageText | truncate(250) -}}
+                                {{- messageText | truncate(150) -}}
                             </a>
                         </p>
                     {% endspaceless %}
+                    {% if message.request %}
+                        <p>{{ 'Arrival' | trans }}: {{ message.request.arrival }}</p>
+                        {% endif %}
                     <span class="small" title="{{ message.DateSent }}">{{ message.DateSent.diffForHumans }}</span>
                 </td>
             </tr>

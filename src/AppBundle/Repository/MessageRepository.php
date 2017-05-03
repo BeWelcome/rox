@@ -29,15 +29,18 @@ class MessageRepository extends EntityRepository
         $qb->setParameter('member', $member);
         switch ($filter) {
             case 'inbox':
-                $filter = 'normal';
                 $qb->andWhere('m.infolder = :filter')
-                    ->setParameter('filter', $filter);
+                   ->setParameter('filter', 'normal');
                 break;
             case 'sent':
             case 'spam':
+            case 'requests':
                 $qb->andWhere('m.infolder = :filter')
-                ->setParameter('filter', $filter);
+                    ->setParameter('filter', $filter);
                 break;
+            case 'deleted':
+                $qb->andWhere('m.deleterequest LIKE :deleterequest ')
+                    ->setParameter( 'deleterequest', 'receiverdeleted');
         }
         $qb->orderBy('m.'.$sort, $sortDirection);
 

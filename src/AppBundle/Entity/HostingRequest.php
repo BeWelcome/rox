@@ -7,7 +7,6 @@
 
 namespace AppBundle\Entity;
 
-use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

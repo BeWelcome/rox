@@ -2410,10 +2410,10 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
         ];
 
         $volunteerRights = $this->getVolunteerRights();
-        if ($volunteerRights != null) {
+        if ($volunteerRights !== null) {
             foreach ($volunteerRights->getIterator() as $volunteerRight) {
                 if ($volunteerRight->getLevel() !== 0) {
-                    $roles[] = 'ROLE_ADMIN_' . strtoupper($volunteerRight->getRight()->getName());
+                    $roles[] = 'ROLE_ADMIN_'.strtoupper($volunteerRight->getRight()->getName());
                 }
             }
 

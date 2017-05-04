@@ -4,7 +4,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
-use AppBundle\Form\HostingRequestType;
 use AppBundle\Form\MessageRequestType;
 use AppBundle\Model\MessageModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -213,10 +212,11 @@ class MessageController extends Controller
     /**
      * @Route("/messages/request/{username}", name="hosting_request")
      *
-     * @param Member $receiver
-     * @return Response
+     * @param Member  $receiver
      * @param Request $request
-     * @param Member $receiver
+     * @param Member  $receiver
+     *
+     * @return Response
      * @return Response
      */
     public function hostingRequest(Request $request, Member $receiver)
@@ -228,18 +228,18 @@ class MessageController extends Controller
             // Write request to database after doing some checks
             $hostingRequest = $requestForm->getData();
             $hostingRequest->setSender($this->getUser());
-            $hostingRequest->setCreated( new \DateTime());
+            $hostingRequest->setCreated(new \DateTime());
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($hostingRequest);
             $em->flush();
-            $this->addFlash('success', 'Created request to ' . $receiver->getUsername());
-            $this->redirectToRoute( 'messages', [ 'filter' => 'requests']);
+            $this->addFlash('success', 'Created request to '.$receiver->getUsername());
+            $this->redirectToRoute('messages', ['filter' => 'requests']);
         }
 
-        return $this->render( ':message:request.html.twig', [
+        return $this->render(':message:request.html.twig', [
             'receiver' => $receiver,
-            'form' => $requestForm->createView()
+            'form' => $requestForm->createView(),
         ]);
     }
 }

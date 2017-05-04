@@ -80,7 +80,9 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('signup_4', '/signup/4');
         $this->addRouteDirectly('signup_finish', '/signup/finish');
         $this->addRouteDirectly('signup_email_check', '/signup/checkemail');
+        $this->addRouteDirectly('signup_handle_check', '/signup/checkhandle');
         $this->addRouteDirectly('signup_confirm', '/signup/confirm/{username}/{regkey}');
+
         return $this->routes;
     }
 

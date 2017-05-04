@@ -19,16 +19,16 @@ class HostingRequestType extends AbstractType
             ->add('arrival', DateType::class, [
                 'widget' => 'single_text',
                 'html5' => false,
-                'attr' => ['class' => 'js-datepicker']
+                'attr' => ['class' => 'js-datepicker'],
             ])
             ->add('departure', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,
                 'html5' => false,
-                'attr' => ['class' => 'js-datepicker']
+                'attr' => ['class' => 'js-datepicker'],
             ])
             ->add('estimate', CheckboxType::class, [
-                'required' => false
+                'required' => false,
             ]);
     }
 
@@ -37,9 +37,9 @@ class HostingRequestType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\HostingRequest'
-        ));
+        $resolver->setDefaults([
+            'data_class' => 'AppBundle\Entity\HostingRequest',
+        ]);
     }
 
     /**
@@ -49,6 +49,4 @@ class HostingRequestType extends AbstractType
     {
         return 'appbundle_hosting_request';
     }
-
-
 }

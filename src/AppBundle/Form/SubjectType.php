@@ -15,15 +15,15 @@ class SubjectType extends AbstractType
     {
         $builder->add('subject');
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Subject'
-        ));
+        $resolver->setDefaults([
+            'data_class' => 'AppBundle\Entity\Subject',
+        ]);
     }
 
     /**
@@ -33,6 +33,4 @@ class SubjectType extends AbstractType
     {
         return 'appbundle_subject';
     }
-
-
 }

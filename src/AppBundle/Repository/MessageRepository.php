@@ -40,7 +40,7 @@ class MessageRepository extends EntityRepository
                 break;
             case 'deleted':
                 $qb->andWhere('m.deleterequest LIKE :deleterequest ')
-                    ->setParameter( 'deleterequest', 'receiverdeleted');
+                    ->setParameter('deleterequest', 'receiverdeleted');
         }
         $qb->orderBy('m.'.$sort, $sortDirection);
 

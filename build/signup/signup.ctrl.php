@@ -187,8 +187,11 @@ class SignupController extends RoxControllerBase {
     public function signupFormCallback($args, $action, $mem_redirect, $mem_resend)
     {
         $vars =$this->_session->get('SignupBWVars');
-
-        $vars = array_merge($vars, $args->post);
+        if (is_array($vars)) {
+            $vars = array_merge($vars, $args->post);
+        } else {
+            $vars = $args->post;
+        }
         $this->_session->set('SignupBWVars', $vars);
 
 		$StrLog="Entering signupFormCallback " ;

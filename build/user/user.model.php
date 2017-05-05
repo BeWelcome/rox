@@ -361,7 +361,7 @@ VALUES
             $errors = array();
             $messages = array();
 
-            $query = "select id from members where id=" . $this->_session->get("IdMember"] . " and PassWord=PASSWORD('" . trim($vars['OldPassword')) . "')";
+            $query = "select id from members where id=" . $this->_session->get("IdMember") . " and PassWord=PASSWORD('" . trim($vars['OldPassword']) . "')";
             $qry = $this->dao->query($query);
             $rr = $qry->fetch(PDB::FETCH_OBJ);
             if (!$rr || !array_key_exists('id', $rr))

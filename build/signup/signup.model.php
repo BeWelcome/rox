@@ -442,10 +442,11 @@ WHERE `ShortCode` = \'' . $this->_session->get('lang') . '\'';
         // ********************************************************************
         // e-mail, names/members
         // ********************************************************************
-        $cryptedfieldsEmail = MOD_crypt::insertCrypted($vars['email'],"members.Email", $memberID, $memberID, "always") ;
-        $cryptedfieldsFirstname =  MOD_crypt::insertCrypted($this->dao->escape(strip_tags($vars['firstname'])),"members.FirstName", $memberID, $memberID) ;
-        $cryptedfieldsSecondname  =  MOD_crypt::insertCrypted($this->dao->escape(strip_tags($vars['secondname'])),"members.SecondName", $memberID, $memberID) ;
-        $cryptedfieldsLastname =  MOD_crypt::insertCrypted($this->dao->escape(strip_tags($vars['lastname'])),"members.LastName", $memberID, $memberID) ;
+        $crypted = new MOD_crypt($this->getSession());
+        $cryptedfieldsEmail = $crypted->insertCrypted($vars['email'],"members.Email", $memberID, $memberID, "always") ;
+        $cryptedfieldsFirstname =  $crypted->insertCrypted($this->dao->escape(strip_tags($vars['firstname'])),"members.FirstName", $memberID, $memberID) ;
+        $cryptedfieldsSecondname  =  $crypted->insertCrypted($this->dao->escape(strip_tags($vars['secondname'])),"members.SecondName", $memberID, $memberID) ;
+        $cryptedfieldsLastname =  $crypted->insertCrypted($this->dao->escape(strip_tags($vars['lastname'])),"members.LastName", $memberID, $memberID) ;
         $query = '
 UPDATE
 	`members`
@@ -754,10 +755,11 @@ WHERE id=" . $member->id; // The email is confirmed > make the status Active
         $member = $MembersModel->getMemberWithUsername($username);
         if ($member) {
             if ($member->Status == 'MailToConfirm') {
-                $vars['firstname'] = MOD_crypt::AdminReadCrypted($member->Firstname);
-                $vars['secondname'] = MOD_crypt::AdminReadCrypted($member->Secondname);
-                $vars['lastname'] = MOD_crypt::AdminReadCrypted($member->Lastname);
-                $vars['email'] = MOD_crypt::AdminReadCrypted($member->Email);
+                $crypted = new MOD_crypt($this->getSession());
+                $vars['firstname'] = $crypted->AdminReadCrypted($member->Firstname);
+                $vars['secondname'] = $crypted->AdminReadCrypted($member->Secondname);
+                $vars['lastname'] = $crypted->AdminReadCrypted($member->Lastname);
+                $vars['email'] = $crypted->AdminReadCrypted($member->Email);
                 $userId = APP_User::userId($username);
                 if( !$userId) {
                     return 'NoSuchMember';

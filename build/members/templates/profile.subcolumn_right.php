@@ -266,6 +266,7 @@ if (count($relations) > 0) { ?>
 **   Profile Trips   **
 **********************/
 
+/*
 if ($comingposts = $member->getComingPosts()) {
     ?>
             <div id="trips" class="clearfix box">
@@ -297,6 +298,7 @@ if ($comingposts = $member->getComingPosts()) {
     </div>
     <?php
 }
+*/
 
 /**********************
 ** Profile Gallery  **

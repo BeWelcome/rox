@@ -97,7 +97,9 @@ class MessageController extends Controller
     /**
      * @Route("/message/{id}/reply", name="message_reply",
      *     requirements={"id": "\d+"})
+     *
      * @param Message $message
+     *
      * @return Response
      */
     public function reply(Message $message)

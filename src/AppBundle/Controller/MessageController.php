@@ -145,7 +145,7 @@ class MessageController extends Controller
     }
 
     /**
-     * @Route("/new/message/{$sername}", name="message_new")
+     * @Route("/new/message/{username}", name="message_new")
      */
     public function compose(Request $request)
     {

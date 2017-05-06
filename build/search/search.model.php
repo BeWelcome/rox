@@ -253,6 +253,7 @@ LIMIT 1
      */
     private function getLocationCondition($vars, $admin1, $country)
     {
+        $condition = '';
         if ($country) {
             if ($admin1) {
                 // We run based on an admin unit
@@ -265,8 +266,7 @@ LIMIT 1
                 AND g.country = '" . $country . "'";
             }
         } else {
-            $condition = "AND a.IdCity = g.geonameid";
-            if (empty($vars['location'])) {
+            if (empty($vars['search-location'])) {
                 // we search around the world.
             } else {
                 // a simple place with a square rectangle around it
@@ -295,22 +295,9 @@ LIMIT 1
                         $longsw = $tmp;
                     }
                     // now fetch all location from geonames which are in that given rectangle
-                    $query = "
-                        SELECT
-                            g.geonameid AS geonameid
-                        FROM
-                            geonames g
-                        WHERE
-                            " . self::PLACES_FILTER . "
-                            AND g.latitude BETWEEN " . $latsw . " AND " . $latne . "
-                            AND g.longitude BETWEEN " . $longsw . " AND " . $longne;
                     $condition .= "
-                            AND g.geonameid IN ('";
-                    $geonameids = $this->bulkLookup($query);
-                    foreach ($geonameids as $geonameid) {
-                        $condition .= $geonameid->geonameid . "', '";
-                    }
-                    $condition = substr($condition, 0, -3) . ")";
+                            AND m.latitude BETWEEN " . $latsw . " AND " . $latne . "
+                            AND m.longitude BETWEEN " . $longsw . " AND " . $longne;
                 } else {
                     $condition .= " AND g.geonameid = " . $this->dao->escape($vars['location-geoname-id']);
                 }
@@ -475,7 +462,6 @@ LIMIT 1
         }
         $str .= "
             WHERE
-                m.id = a.IdMember
                 " . $this->maxGuestCondition . "
                 " . $this->statusCondition;
         if ($publicOnly) {
@@ -491,6 +477,7 @@ LIMIT 1
             " . $this->languagesCondition . "
             " . $this->accommodationCondition . "
             " . $this->typicalOfferCondition;
+        $str = str_replace('geonames g,', '', $str);
         $count = $this->dao->query($str);
 
         $row = $count->fetch(PDB::FETCH_OBJ);
@@ -525,7 +512,7 @@ LIMIT 1
         $start = ($pageno - 1) * $limit;
 
         $this->statusCondition = $this->getStatusCondition($vars);
-        $this->maxGuestCondition = "AND m.MaxGuest >= " . $vars['search-can-host'];
+        $this->maxGuestCondition = "m.MaxGuest >= " . $vars['search-can-host'];
         $this->locationCondition = $this->getLocationCondition($vars, $admin1, $country);
         $this->genderCondition = $this->getGenderCondition($vars);
         $this->ageCondition = $this->getAgeCondition($vars);
@@ -536,8 +523,7 @@ LIMIT 1
         $this->typicalOfferCondition = $this->getTypicalOfferCondition($vars);
         $this->accommodationCondition = $this->getAccommodationCondition($vars);
 
-        $this->tables = "addresses a,
-                geonames g";
+        $this->tables = 'geonames g';
         if (!empty($this->keywordCondition)) {
             $this->tables .= ", memberstrads mt";
         }
@@ -547,8 +533,7 @@ LIMIT 1
         if (!empty($this->languagesCondition)) {
             $this->tables .= ", memberslanguageslevel mll";
         }
-        $this->tables .= ", members m";
-
+        $this->tables .= ', members m';
         // Fetch count of members at/around the given place
         $vars['countOfMembers'] = $this->getMembersCount(false);
         $vars['countOfPublicMembers'] = $this->getMembersCount(true);
@@ -577,10 +562,10 @@ LIMIT 1
                 IF(mp.photoCount IS NULL, 0, 1) AS HasProfilePhoto,
                 g.geonameid,
                 g.country,
-                g.latitude,
-                g.longitude,
-                ((g.latitude - " . $vars['location-latitude'] . ") * (g.latitude - " . $vars['location-latitude'] . ") +
-                        (g.longitude - " . $vars['location-longitude'] . ") * (g.longitude - " . $vars['location-longitude'] . "))  AS Distance,
+                m.latitude,
+                m.longitude,
+                ((m.latitude - " . $vars['location-latitude'] . ") * (m.latitude - " . $vars['location-latitude'] . ") +
+                        (m.longitude - " . $vars['location-longitude'] . ") * (m.longitude - " . $vars['location-longitude'] . "))  AS Distance,
                 IF(c.IdToMember IS NULL, 0, c.commentCount) AS CommentCount
             *FROM*
                 " . $this->tables . "
@@ -606,7 +591,6 @@ LIMIT 1
             ON
                 mp.IdMember = m.id
             *WHERE*
-                m.id = a.idmember
                 " . $this->maxGuestCondition . "
                 " . $this->statusCondition . "
                 " . $this->locationCondition . "
@@ -618,6 +602,7 @@ LIMIT 1
                 " . $this->languagesCondition . "
                 " . $this->accommodationCondition . "
                 " . $this->typicalOfferCondition . "
+                AND m.IdCity = g.geonameId
             ORDER BY
                 " . $this->getOrderBy($vars['search-sort-order']) . "
             LIMIT

@@ -198,8 +198,12 @@ class PageWithHTML extends AbstractBasePage
         if (!$stylesheets = $this->getStylesheets()) {
             // no stylesheets
         } else foreach($stylesheets as $url) {
+            if (strpos($url, '/assetic/') === 0) {
+                echo '<link rel="stylesheet" href="' . $url . '" type="text/css" />' . PHP_EOL;
+            } else {
             ?><link rel="stylesheet" href="<?=$url ?>" type="text/css" />
             <?php
+            }
         }
         if (!$stylesheet_patches = $this->getStylesheetPatches()) {
             // no stylesheets
@@ -258,10 +262,15 @@ class PageWithHTML extends AbstractBasePage
 
         <?php
         if (!$scriptfiles = $this->getScriptfiles()) {
-            // no stylesheets
+            // no additional Javascript files
         } else foreach($scriptfiles as $url) {
-            ?><script type="text/javascript" src="<?=ltrim($url, '/')?>"></script>
-            <?php
+            if (strpos($url, '/assetic/') === 0) {
+                echo '<script type="text/javascript" src="' . ltrim($url, '/') . '"></script>' . PHP_EOL;
+            } else {
+                ?>
+                <script type="text/javascript" src="<?= ltrim($url, '/') ?>"></script>
+                <?php
+            }
         }
     }
 
@@ -278,7 +287,11 @@ class PageWithHTML extends AbstractBasePage
         {
             foreach($scriptfiles as $url)
             {
-                echo "<script type='text/javascript' src='". ltrim($url, '/') . "'></script>" . PHP_EOL;
+                if (strpos($url, '/assetic/') === 0) {
+                    echo '<script type="text/javascript" src="' . ltrim($url, '/') . '"></script>' . PHP_EOL;
+                } else {
+                    echo "<script type='text/javascript' src='" . ltrim($url, '/') . "'></script>" . PHP_EOL;
+                }
             }
         }
     }

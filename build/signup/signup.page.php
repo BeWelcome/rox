@@ -20,8 +20,8 @@ class SignupPage extends SignupBasePage
             $this->addLateLoadScriptFile('/script/signup/enablevalidation.js');
         }
         if ($step == 3) {
-            $this->addLateLoadScriptFile('/script/jquery-ui-1.11.2/jquery-ui.js');
-            $this->addLateLoadScriptFile('/script/leaflet/1.0.0-master/leaflet.js');
+            $this->addLateLoadScriptFile('/assetic/jquery_ui_js.js');
+            $this->addLateLoadScriptFile('/assetic/leaflet_js.js');
             $this->addLateLoadScriptFile('/script/signup/createmap.js');
             $this->addLateLoadScriptFile('/script/search/searchlocation.js');
         }
@@ -31,8 +31,8 @@ class SignupPage extends SignupBasePage
     {
         $stylesheets = parent::getStylesheets();
         if ($this->_step == 3) {
-            $stylesheets[] = '/script/leaflet/1.0.0-master/leaflet.css';
-            $stylesheets[] = '/script/jquery-ui-1.11.2/jquery-ui.css';
+            $stylesheets[] = '/assetic/leaflet_css.css';
+            $stylesheets[] = '/assetic/jquery_ui_css.css';
         }
         return $stylesheets;
     }

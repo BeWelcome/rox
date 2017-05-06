@@ -94,9 +94,11 @@ class MessageController extends Controller
         return new Response($content);
     }
 
-    /*
+    /**
      * @Route("/message/{id}/reply", name="message_reply",
      *     requirements={"id": "\d+"})
+     * @param Message $message
+     * @return Response
      */
     public function reply(Message $message)
     {
@@ -112,9 +114,36 @@ class MessageController extends Controller
         return new Response($content);
     }
 
-    /*
-     * @Route("/members/{$username}/message/{id}/reply", name="message_reply",
+    /**
+     * @Route("/message/{id}", name="message_show",
      *     requirements={"id": "\d+"})
+     *
+     * @param Message $message
+     *
+     * @return Response
+     *
+     * @internal param Request $request
+     */
+    public function show(Message $message)
+    {
+        $member = $this->getUser();
+        if (($message->getReceiver() !== $member) && ($message->getSender() !== $member)) {
+            throw new AccessDeniedException();
+        }
+
+        if ($message->isUnread() && $member === $message->getReceiver()) {
+            // Only mark as read when the receiver reads the message, not when
+            // the message is presented to the Sender with url /messages/77/sent
+            $message->setWhenfirstread(date());
+        }
+
+        return $this->render(':message:view.html.twig', [
+            'message' => $message,
+        ]);
+    }
+
+    /*
+     * @Route("/new/messages/{$username}", name="message_new")
      */
     public function compose(Request $request)
     {
@@ -182,35 +211,7 @@ class MessageController extends Controller
     }
 
     /**
-     * @Route("/message/{id}", name="message_show",
-     *     requirements={"id": "\d+"})
-     *
-     * @param Message $message
-     *
-     * @return Response
-     *
-     * @internal param Request $request
-     */
-    public function show(Message $message)
-    {
-        $member = $this->getUser();
-        if (($message->getReceiver() !== $member) && ($message->getSender() !== $member)) {
-            throw new AccessDeniedException();
-        }
-
-        if ($message->isUnread() && $member === $message->getReceiver()) {
-            // Only mark as read when the receiver reads the message, not when
-            // the message is presented to the Sender with url /messages/77/sent
-            $message->setWhenfirstread(date());
-        }
-
-        return $this->render(':message:view.html.twig', [
-            'message' => $message,
-        ]);
-    }
-
-    /**
-     * @Route("/messages/request/{username}", name="hosting_request")
+     * @Route("/new/request/{username}", name="hosting_request")
      *
      * @param Member  $receiver
      * @param Request $request

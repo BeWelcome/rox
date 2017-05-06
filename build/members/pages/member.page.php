@@ -120,8 +120,8 @@ class MemberPage extends PageWithActiveSkin
                 $mynotelinkname= "members/$username/note/add" ;
             }
             $tt= array(
-                array('sendrequest', "messages/request/$username", $ww->SendRequest, 'sendrequest'),
-                array('messagesadd', "messages/compose/$username", $ww->ContactMember, 'messagesadd'),
+                array('sendrequest', "new/request/$username", $ww->SendRequest, 'sendrequest'),
+                array('messagesadd', "new/message/$username", $ww->ContactMember, 'messagesadd'),
                 (isset($TCom[0])) ? array('commmentsadd', "members/$username/comments/edit", $ww->EditComments, 'commentsadd') : array('commmentsadd', "members/$username/comments/add", $ww->AddComments, 'commentsadd'),
                 array('relationsadd', "members/$username/relations/add", $ww->addRelation, 'relationsadd'),
                 array('notes', $mynotelinkname, $mynotewordsname, 'mynotes'),

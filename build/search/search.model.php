@@ -1523,8 +1523,11 @@ LIMIT 1
      *
      * Used on the map to show the results
      *
-     * @param $location
+     * @param $latitude
+     * @param $longitude
      * @param $distance
+     * @param int $canhost
+     * @return array
      */
     private function _getMembersLowDetails($latitude, $longitude, $distance, $canhost = 1) {
         $rectangle = $this->_getRectangle($latitude, $longitude, $distance);

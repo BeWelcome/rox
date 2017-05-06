@@ -393,10 +393,11 @@ WHERE `ShortCode` = \'' . $this->_session->get('lang') . '\'';
                 `HideGender`,
                 `created`,
                 `BirthDate`,
-                `HideBirthDate`
+                `HideBirthDate`,
+                `MaxGuest`
             )
             VALUES
-            ( ?, ?, ?, ?, ?, ?, NOW(), ?, ? );";
+            ( ?, ?, ?, ?, ?, ?, NOW(), ?, ?, 1 );";
         $stmt = $this->dao->prepare($query);
         $stmt->bindParam(0, $vars['username']);
         $stmt->bindParam(1, $vars['location-geoname-id']);

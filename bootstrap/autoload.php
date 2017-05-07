@@ -1,16 +1,15 @@
 <?php
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
-use Dotenv\Dotenv;
 
-require 'vendor/autoload.php';
+$rootDir = realpath( __DIR__.'/../' );
+echo $rootDir;
 
-if (class_exists(Dotenv::class) && file_exists('.env')) {
-    $dotEnv = new Dotenv('.');
-
-    $dotEnv->load();
-}
-
-$loader = require __DIR__.'/../vendor/autoload.php';
+$loader = require $rootDir . '/vendor/autoload.php';
 
 AnnotationRegistry::registerLoader([$loader, 'loadClass']);
+
+$kernel = new AppKernel('dev', true);
+$kernel->boot();
+
+$container = $kernel->getContainer();

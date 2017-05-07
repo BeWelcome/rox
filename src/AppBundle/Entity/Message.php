@@ -67,20 +67,16 @@ class Message
     /**
      * @var \AppBundle\Entity\Member
      *
-     * @ORM\OneToOne(targetEntity="\AppBundle\Entity\Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idReceiver", referencedColumnName="id")
-     * })
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Member", fetch="EAGER")
+     * @ORM\JoinColumn(name="idReceiver", referencedColumnName="id")
      */
     private $receiver;
 
     /**
      * @var \AppBundle\Entity\Member
      *
-     * @ORM\OneToOne(targetEntity="\AppBundle\Entity\Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idSender", referencedColumnName="id")
-     * })
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Member", fetch="EAGER")
+     * @ORM\JoinColumn(name="idSender", referencedColumnName="id")
      */
     private $sender;
 

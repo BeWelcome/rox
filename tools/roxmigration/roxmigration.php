@@ -2,6 +2,7 @@
 
 namespace Rox\Tools;
 
+use Phinx\Db\Adapter\PdoAdapter;
 use Phinx\Migration\AbstractMigration;
 
 /****
@@ -169,6 +170,7 @@ WHERE `code` = " . $code
      */
     protected function EscapeVariables($vars)
     {
+        /** @var PdoAdapter $adapter */
         $adapter= $this->getAdapter();
         $connection = $adapter->getConnection();
 

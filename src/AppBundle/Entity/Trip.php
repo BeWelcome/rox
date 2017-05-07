@@ -93,10 +93,8 @@ class Trip
     /**
      * @var \AppBundle\Entity\Member
      *
-     * @ORM\OneToOne(targetEntity="\AppBundle\Entity\Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="created_by", referencedColumnName="id")
-     * })
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Member")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
      */
     private $createdBy;
 

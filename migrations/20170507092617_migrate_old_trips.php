@@ -45,6 +45,9 @@ class MigrateOldTrips extends RoxMigration
         foreach ($trips as $tripRaw) {
             $curTrip = $tripRaw["trip_id"];
             if ($lastTrip <> $curTrip) {
+                if ($lastTrip <> -1 ) {
+                    $em->persist($trip);
+                }
                 $trip = new \AppBundle\Entity\Trip();
                 $trip->setSummary($tripRaw["trip_name"]);
                 $trip->setDescription($tripRaw["trip_descr"]);
@@ -53,8 +56,6 @@ class MigrateOldTrips extends RoxMigration
                 $trip->setCreatedAt( new \DateTime($tripRaw["blog_start"]));
                 $trip->setUpdatedAt( new \DateTime($tripRaw["blog_start"]));
                 $trip->setCountoftravellers(1);
-                $em->persist($trip);
-                $em->flush();
                 $lastTrip = $curTrip;
             }
             $subTrip = new \AppBundle\Entity\SubTrip();
@@ -65,9 +66,9 @@ class MigrateOldTrips extends RoxMigration
                 $subTrip->setDeparture(new \DateTime($tripRaw["blog_end"]));
             }
             $em->persist($subTrip);
-            $em->persist($trip);
-            $em->flush();
         }
+        $em->persist($trip);
+        $em->flush();
     }
 
     public function down()

@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * DonationEntity.
  *
- * @ORM\Table(name="donation")
+ * @ORM\Table(name="donations")
  * @ORM\Entity
  *
  *  (repositoryClass="AppBundle\Repository\DonationRepository")

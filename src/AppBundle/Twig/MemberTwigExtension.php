@@ -4,7 +4,7 @@ namespace AppBundle\Twig;
 
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
-use Illuminate\Database\Query\Expression;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Twig_Extension;
 use Twig_Extension_GlobalsInterface;
@@ -16,9 +16,21 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
      */
     protected $session;
 
-    public function __construct(Session $session)
+    /**
+     * @var EntityManager
+     */
+    protected $em;
+
+    /**
+     * MemberTwigExtension constructor.
+     *
+     * @param Session       $session
+     * @param EntityManager $em
+     */
+    public function __construct(Session $session, EntityManager $em)
     {
         $this->session = $session;
+        $this->em = $em;
     }
 
     /**
@@ -35,7 +47,7 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
         }
 
         return [
-            'messageCount' => $member ? $this->getMessageCount($member) : 0,
+            'messageCount' => $member ? $this->getUnreadMessagesCount($member) : 0,
             'teams' => $member ? $this->getTeams($member) : [],
         ];
     }
@@ -45,23 +57,11 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
         return self::class;
     }
 
-    protected function getMessageCount(Member $member)
+    protected function getUnreadMessagesCount(Member $member)
     {
-        $member;
-/*        $message = new Message();
+        $messageRepository = $this->em->getRepository(Message::class);
 
-        $messageCount = $message->getConnection()->query()
-            ->select([
-                new Expression('COUNT(*) as cnt'),
-            ])
-            ->from($message->getTable())
-            ->where('IdReceiver', (int) $member->id)
-            ->where('WhenFirstRead', '0000-00-00 00:00')
-            ->where('Status', 'Sent');
-
-        return (int) $messageCount->value('cnt');
-  */
-        return 10;
+        return $messageRepository->getUnreadCount($member);
     }
 
     /**

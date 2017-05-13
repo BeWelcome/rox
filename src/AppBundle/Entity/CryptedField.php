@@ -89,14 +89,14 @@ class CryptedField
     /**
      * Set admincryptedvalue.
      *
-     * @param string $admincryptedvalue
-     * @param mixed  $adminCryptedValue
+     * @param $adminCryptedValue
+     * @return CryptedField
+     * @internal param string $admincryptedvalue
      *
-     * @return Cryptedfield
      */
     public function setAdminCryptedValue($adminCryptedValue)
     {
-        $this->admincryptedvalue = $adminCryptedValue;
+        $this->adminCryptedValue = $adminCryptedValue;
 
         return $this;
     }
@@ -114,14 +114,13 @@ class CryptedField
     /**
      * Set membercryptedvalue.
      *
-     * @param string $membercryptedvalue
      * @param mixed  $memberCryptedValue
      *
      * @return Cryptedfield
      */
     public function setMemberCryptedValue($memberCryptedValue)
     {
-        $this->membercryptedvalue = $memberCryptedValue;
+        $this->memberCryptedValue = $memberCryptedValue;
 
         return $this;
     }

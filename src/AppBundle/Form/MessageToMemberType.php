@@ -8,7 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class MessageRequestType extends AbstractType
+class MessageToMemberType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -17,7 +17,6 @@ class MessageRequestType extends AbstractType
     {
         $builder
             ->add('subject', SubjectType::class)
-            ->add('request', HostingRequestType::class)
             ->add('message', CKEditorType::class)
         ;
     }
@@ -37,6 +36,6 @@ class MessageRequestType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'appbundle_request';
+        return 'appbundle_message';
     }
 }

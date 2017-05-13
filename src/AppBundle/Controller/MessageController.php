@@ -5,7 +5,9 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
 use AppBundle\Form\MessageRequestType;
+use AppBundle\Form\MessageToMemberType;
 use AppBundle\Model\MessageModel;
+use Html2Text\Html2Text;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -146,18 +148,59 @@ class MessageController extends Controller
 
     /**
      * @Route("/new/message/{username}", name="message_new")
+     * @param Request $request
+     * @param Member $receiver
+     * @return Response
      */
-    public function compose(Request $request)
+    public function newMessageAction(Request $request, Member $receiver)
     {
-        $receiverUsername = $request->attributes->get('username');
+        $messageForm = $this->createForm(MessageToMemberType::class);
+        $messageForm->handleRequest($request);
 
-        $receiver = $this->memberRepository->getByUsername($receiverUsername);
+        if ($messageForm->isSubmitted() && $messageForm->isValid()) {
+            // Write request to database after doing some checks
+            /** @var Message $hostingRequest */
+            $hostingRequest = $messageForm->getData();
+            $hostingRequest->setSender($this->getUser());
+            $hostingRequest->setReceiver($receiver);
+            $hostingRequest->setInfolder('normal');
+            $hostingRequest->setCreated(new \DateTime());
 
-        $content = $this->render('@message/message/compose.html.twig', [
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($hostingRequest);
+            $em->flush();
+            $html2Text = new Html2Text($hostingRequest->getMessage());
+            $hostingRequestText = $html2Text->getText();
+            $message = \Swift_Message::newInstance()
+                ->setSubject($hostingRequest->getSubject()->getSubject())
+                ->setFrom('message@bewelcome.org')
+                ->setTo($receiver->getCryptedField('Email'))
+                ->setBody(
+                    $this->renderView(
+                    // app/Resources/views/Emails/registration.html.twig
+                        'emails/request.html.twig',
+                        ['request_text' => $hostingRequest->getMessage()]
+                    ),
+                    'text/html'
+                )
+                ->addPart(
+                    $this->renderView(
+                        'emails/request.txt.twig',
+                        ['request_text' => $hostingRequestText]
+                    ),
+                    'text/plain'
+                )
+            ;
+            $this->get('mailer')->send($message);
+            $this->addFlash('success', 'Request has been sent.');
+            return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
+        }
+
+        return $this->render(':message:message.html.twig', [
             'receiver' => $receiver,
+            'form' => $messageForm->createView(),
         ]);
 
-        return new Response($content);
     }
 
     /**
@@ -229,15 +272,41 @@ class MessageController extends Controller
 
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
             // Write request to database after doing some checks
+            /** @var Message $hostingRequest */
             $hostingRequest = $requestForm->getData();
             $hostingRequest->setSender($this->getUser());
+            $hostingRequest->setReceiver($receiver);
+            $hostingRequest->setInfolder('requests');
             $hostingRequest->setCreated(new \DateTime());
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($hostingRequest);
             $em->flush();
-            $this->addFlash('success', 'Created request to '.$receiver->getUsername());
-            $this->redirectToRoute('messages', ['filter' => 'requests']);
+            $html2Text = new Html2Text($hostingRequest->getMessage());
+            $hostingRequestText = $html2Text->getText();
+            $message = \Swift_Message::newInstance()
+                ->setSubject($hostingRequest->getSubject()->getSubject())
+                ->setFrom('request@bewelcome.org')
+                ->setTo($receiver->getCryptedField('Email'))
+                ->setBody(
+                    $this->renderView(
+                        // app/Resources/views/Emails/registration.html.twig
+                        'emails/request.html.twig',
+                        ['request_text' => $hostingRequest->getMessage()]
+                    ),
+                    'text/html'
+                )
+                ->addPart(
+                    $this->renderView(
+                        'emails/request.txt.twig',
+                        ['request_text' => $hostingRequestText]
+                    ),
+                    'text/plain'
+                )
+            ;
+            $this->get('mailer')->send($message);
+            $this->addFlash('success', 'Request has been sent.');
+            return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
         }
 
         return $this->render(':message:request.html.twig', [

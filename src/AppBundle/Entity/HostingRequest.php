@@ -63,7 +63,7 @@ class HostingRequest
     /**
      * Set arrival.
      *
-     * @param \DateTime $arrival
+     * @param string $arrival
      *
      * @return HostingRequest
      */
@@ -87,7 +87,7 @@ class HostingRequest
     /**
      * Set departure.
      *
-     * @param \DateTime $departure
+     * @param string $departure
      *
      * @return HostingRequest
      */

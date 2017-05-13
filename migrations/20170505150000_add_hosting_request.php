@@ -27,6 +27,10 @@ class AddHostingRequest extends RoxMigration
      */
     public function change()
     {
-
+        $request = $this->table('request');
+        $request->addColumn('arrival', 'datetime')
+            ->addColumn('departure', 'datetime')
+            ->addColumn( 'estimate', 'boolean')
+            ->create();
     }
 }

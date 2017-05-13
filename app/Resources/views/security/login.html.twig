@@ -5,7 +5,16 @@
 {% endblock %}
 
 {% block content %}
-
+    {% for flash_message in app.session.flashBag.get('error') %}
+        <div class="flash error">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+    {% for flash_message in app.session.flashBag.get('notice') %}
+        <div class="flash notice">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
     <div class="row">
         <div class="col-12 col-lg-8 offset-lg-2 mb-3">
             <h1 class="d-none d-md-block">BeWelcome - {{ 'IndexPageTeaserOpenDoor' | trans }}</h1>

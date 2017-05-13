@@ -42,7 +42,7 @@
     <body>
         {% include 'menu.html.twig' %}
         <noscript><h1>Please activate Javascript for bewelcome.org</h1><p><small>Without it some function won't work.</small></p></noscript>
-        <main>
+        <main role="main">
         {% for flash_message in app.session.flashBag.get('error') %}
             <div class="flash error">
                 {{ flash_message }}

@@ -88,9 +88,9 @@
                         </p>
                     {% endspaceless %}
                     {% if message.request %}
-                        <p>{{ 'Arrival' | trans }}: {{ message.request.arrival }}</p>
+                        <p>{{ 'Arrival' | trans }}: {{ message.request.arrival | localizeddate( 'medium', 'none') }}</p>
                         {% endif %}
-                    <span class="small" title="{{ message.DateSent }}">{{ message.DateSent.diffForHumans }}</span>
+                    <span class="small" title="{{ message.DateSent  | localizeddate( 'medium', 'none')}}">{{ message.DateSent | localizeddate( 'medium', 'none') }}</span>
                 </td>
             </tr>
         {% endfor %}

@@ -150,8 +150,16 @@ class SignupController extends RoxControllerBase {
                 } else {
                     $error = $model->confirmSignup($request[2], $request[3]);
                 }
-                $page = new SignupMailConfirmPage();
-                $page->error = $error;
+                if ($error === false) {
+                    // Redirect to edit profile forcing user to login
+                    // Set flash message so that user knows what happened
+                    $this->_session->getFlashBag()->add('notice', $model->getWords()->getSilent('SignupSuccess'));
+                    return $this->redirectAbsolute('/editmyprofile');
+                } else {
+                    // Something bad happened; tell the user
+                    $page = new SignupMailConfirmPage();
+                    $page->error = $error;
+                }
                 break;
 
             case 'resendmail':  // shown when clicking on the link in the MailToConfirm error message

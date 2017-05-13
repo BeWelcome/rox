@@ -2,21 +2,28 @@
 <div id="messagesdisplay" class="scrollcontent">
     {% for message in messages %}
 
-    <div class="d-flex flex-row justify-content-start align-items-center p-2">
-        <div class="pr-2">{{ macros.avatar( message.sender.username, 50, true) }}</div>
-        <div class="dashentry">
-            <div class="text-truncate text">{% set unread = (message.whenfirstread == '0000-00-00 00:00.00') %}
-                {% if (unread) %}<strong>{% endif %}
-                    {{ message.message|raw }}
-                {% if unread %}</strong>{% endif %}
+        <div class="d-flex flex-row justify-content-start align-items-center p-2">
+            <div class="pr-2">{{ macros.avatar( message.sender.username, 50, true) }}</div>
+            <div class="dashentry">
+                {% if message.request %}
+                    <div><i class="fa fa-lg fa-bed"></i></div>
+                {% else %}
+                    <div class="text-truncate text">{% set unread = (message.whenfirstread == '0000-00-00 00:00.00') %}
+                        {% if (message.unread) %}<strong>{% endif %}
+                            {{ message.message|raw }}
+                            {% if unread %}</strong>{% endif %}
+                    </div>
+                    <div>
+                        <small>
+                            from {{ macros.profilelink(message.sender.username) }} {{ message.created.DiffForHumans }}</small>
+                    </div>
+                {% endif %}
             </div>
-            <div><small>from {{ macros.profilelink(message.sender.username) }} {{ message.created.DiffForHumans }}</small></div>
-
+            <div class="ml-auto"><a href="{{ path("message_show", { id: message.id } ) }}"><i
+                            class="fa fa-chevron-right"></i></a></div>
         </div>
-        <div class="ml-auto"><a href="{{ path("message_show", { id: message.id } ) }}"><i class="fa fa-chevron-right"></i></a></div>
-    </div>
 
-{% else %}
-    <em>{{ 'No messages' | trans }}</em>
-{% endfor %}
+    {% else %}
+        <em>{{ 'No messages' | trans }}</em>
+    {% endfor %}
 </div>

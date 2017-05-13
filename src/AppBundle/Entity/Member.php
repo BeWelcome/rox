@@ -2614,13 +2614,16 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
         $this->groups->removeElement($group);
     }
 
-    private function getCryptedField($fieldName)
+    public function getCryptedField($fieldName)
     {
+        $stripped = "";
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('TableColumn', 'members.'.$fieldName));
+            ->where(Criteria::expr()->eq('tablecolumn', 'members.' . $fieldName));
         $cryptedField = $this->cryptedFields->matching($criteria)->first();
-        $value = $cryptedField->getMemberCryptedValue();
-        $stripped = strip_tags($value);
+        if ($cryptedField !== false) {
+            $value = $cryptedField->getMemberCryptedValue();
+            $stripped = strip_tags($value);
+        }
 
         return $stripped;
     }

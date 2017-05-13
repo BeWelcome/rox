@@ -32,9 +32,12 @@ class MessageRepository extends EntityRepository
                 $qb->andWhere('m.infolder = :filter')
                    ->setParameter('filter', 'normal');
                 break;
+            case 'requests':
+                $qb->andWhere('m.infolder = :filter')
+                    ->setParameter('filter', 'request');
+                break;
             case 'sent':
             case 'spam':
-            case 'requests':
                 $qb->andWhere('m.infolder = :filter')
                     ->setParameter('filter', $filter);
                 break;
@@ -45,6 +48,21 @@ class MessageRepository extends EntityRepository
         $qb->orderBy('m.'.$sort, $sortDirection);
 
         return $qb->getQuery();
+    }
+
+    public function getUnreadCount(Member $member)
+    {
+        $qb = $this->createQueryBuilder('m');
+
+        return $qb->select('count(m.id)')
+            ->where('m.receiver = :member')
+            ->setParameter('member', $member->getId())
+            ->andWhere('NOT (m.deleterequest LIKE :receiverDeleted)')
+            ->setParameter('receiverDeleted', 'receiverdeleted')
+            ->andWhere('m.whenfirstread = :whenFirstRead')
+            ->setParameter('whenFirstRead', '0000-00-00 00:00:00')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     /**

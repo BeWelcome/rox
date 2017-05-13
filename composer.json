@@ -9,7 +9,7 @@
         "anthonymartin/geo-location": "^1.0",
         "ezyang/htmlpurifier": "^4.0",
         "foolz/sphinxql-query-builder": "^1.0",
-        "html2text/html2text": "^3.0",
+        "html2text/html2text": "^4.0",
         "michelf/php-markdown": "*",
         "nesbot/carbon": "^1.21",
         "psr/log": "*",

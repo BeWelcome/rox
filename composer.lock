@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8438268fd3e8623e00ca9b94b29fe913",
-    "content-hash": "fd2e056caba78373852efc2f7d01675b",
+    "hash": "2ca54cfebacdee7b6a843d45966944e4",
+    "content-hash": "a38ba152805c87cbedba4de9dc059110",
     "packages": [
         {
             "name": "anthonymartin/geo-location",
@@ -1232,20 +1232,24 @@
         },
         {
             "name": "html2text/html2text",
-            "version": "3.1.0",
+            "version": "4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mtibben/html2text.git",
-                "reference": "1338bc954d1e73dd98643c9859cb0bb27f324412"
+                "reference": "f55104b7c9f99b0937f0e20fe051b19f9c0ecad1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mtibben/html2text/zipball/1338bc954d1e73dd98643c9859cb0bb27f324412",
-                "reference": "1338bc954d1e73dd98643c9859cb0bb27f324412",
+                "url": "https://api.github.com/repos/mtibben/html2text/zipball/f55104b7c9f99b0937f0e20fe051b19f9c0ecad1",
+                "reference": "f55104b7c9f99b0937f0e20fe051b19f9c0ecad1",
                 "shasum": ""
             },
             "require-dev": {
                 "phpunit/phpunit": "~4"
+            },
+            "suggest": {
+                "ext-mbstring": "For best performance",
+                "symfony/polyfill-mbstring": "If you can't install ext-mbstring"
             },
             "type": "library",
             "autoload": {
@@ -1261,7 +1265,7 @@
                 "GPLv2"
             ],
             "description": "Converts HTML to formatted plain text",
-            "time": "2016-02-22 00:38:07"
+            "time": "2016-03-16 23:24:34"
         },
         {
             "name": "incenteev/composer-parameter-handler",

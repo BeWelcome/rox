@@ -67,6 +67,12 @@ doctrine:
         #   2. Uncomment database_path in parameters.yml.dist
         #   3. Uncomment next line:
         #     path:     "%database_path%"
+        types:
+            in_folder: AppBundle\Doctrine\InFolderType
+            delete_request: AppBundle\Doctrine\DeleteRequestType
+            spam_info: AppBundle\Doctrine\SpamInfoType
+            message_status: AppBundle\Doctrine\StatusType
+
         mapping_types:
             enum:       string
             set:        string
@@ -183,6 +189,10 @@ assetic:
                 - "%node_modules%/unslider/dist/js/unslider-min.js"
 
 ivory_ck_editor:
+    default_config: rox_config
     configs:
-        roxconfig:
-            toolbar: standard
+        rox_config:
+            toolbar: "rox_toolbar"
+    toolbars:
+        configs:
+            rox_toolbar: [ ["Undo", "Redo"], ["Bold", "Italic", "Underline", "Strike", "Subscript", "Superscript", "-", "RemoveFormat" ], ["Image", "Link", "Unlink", "Smileys"], ["NumberedList", "BulletedList", "Blockquote"] ]

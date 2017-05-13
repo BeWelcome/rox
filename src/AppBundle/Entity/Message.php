@@ -32,28 +32,28 @@ class Message
     /**
      * @var DateTime
      *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     * @ORM\Column(name="updated", type="datetime", nullable=true)
      */
-    private $updated = 'CURRENT_TIMESTAMP';
+    private $updated;
 
     /**
      * @var DateTime
      *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
+     * @ORM\Column(name="created", type="datetime", nullable=false, options={"default": 0})
      */
-    private $created = '0000-00-00 00:00:00';
+    private $created;
 
     /**
      * @var DateTime
      *
      * @ORM\Column(name="DateSent", type="datetime", nullable=false)
      */
-    private $datesent = '0000-00-00 00:00:00';
+    private $datesent;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="DeleteRequest", type="string", nullable=false)
+     * @ORM\Column(name="DeleteRequest", type="delete_request", nullable=true)
      */
     private $deleterequest;
 
@@ -67,7 +67,7 @@ class Message
     /**
      * @var \AppBundle\Entity\Member
      *
-     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Member", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Member", fetch="EAGER")
      * @ORM\JoinColumn(name="idReceiver", referencedColumnName="id")
      */
     private $receiver;
@@ -75,7 +75,7 @@ class Message
     /**
      * @var \AppBundle\Entity\Member
      *
-     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Member", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Member", fetch="EAGER")
      * @ORM\JoinColumn(name="idSender", referencedColumnName="id")
      */
     private $sender;
@@ -83,14 +83,14 @@ class Message
     /**
      * @var string
      *
-     * @ORM\Column(name="SpamInfo", type="string", nullable=false)
+     * @ORM\Column(name="SpamInfo", type="spam_info", nullable=false)
      */
     private $spaminfo = 'NotSpam';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Status", type="string", nullable=false)
+     * @ORM\Column(name="Status", type="message_status", nullable=false)
      */
     private $status = 'ToCheck';
 
@@ -104,16 +104,16 @@ class Message
     /**
      * @var string
      *
-     * @ORM\Column(name="InFolder", type="string", nullable=false)
+     * @ORM\Column(name="InFolder", type="in_folder", nullable=false)
      */
     private $infolder = 'Normal';
 
     /**
      * @var Carbon
      *
-     * @ORM\Column(name="WhenFirstRead", type="datetime", nullable=false)
+     * @ORM\Column(name="WhenFirstRead", type="datetime", nullable=true)
      */
-    private $whenfirstread = '0000-00-00 00:00:00';
+    private $whenfirstread;
 
     /**
      * @var Subject

@@ -30,7 +30,7 @@ This File display a topic and the messages which are inside it
 */
 
 ?>
-<div class="d-flex flex-row mt-3">
+<div class="d-flex justify-content-start w-100">
     <div>
         <?php
         // This means no thread was fetch or that it was outside visibility
@@ -65,7 +65,7 @@ This File display a topic and the messages which are inside it
             if (strpos($url, "/reverse") === false) { // THis in order to avoid to concatenate /reverse twice
                 $url .= "/reverse";
             }
-            echo ' <a href="' . $url . '" title="' . $words->getSilent('ReverseOrder') . '" ><i class="fa fa-sort" alt="'
+            echo ' <a href="' . $url . '" title="' . $words->getSilent('ReverseOrder') . '" ><i class="fa fa-refresh" alt="'
                 . $words->getSilent('ReverseOrder') . '" /></i></a> ' . $words->flushBuffer();
         }
         echo "</h2>";
@@ -154,41 +154,41 @@ This File display a topic and the messages which are inside it
         if (isset($topic->isGroupSubscribed) && ($topic->isGroupSubscribed)) {
             if (isset($topic->IdSubscribe)) {
                 if ($topic->notificationsEnabled > 0) {
-                    echo '<a class="button" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
+                    echo '<a class="btn btn-primary" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
                         . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                 } else {
-                    echo '<a class="button" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
+                    echo '<a class="btn btn-primary" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
                         . '">' . $words->getBuffered('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                 }
             } else {
                 if ($topic->notificationsEnabled) {
-                    echo '<a class="button" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
+                    echo '<a class="btn btn-primary" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
                         . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                 } else {
-                    echo '<a class="button" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
+                    echo '<a class="btn btn-primary" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
                         . '">' . $words->getBuffered('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                 }
             }
         } else {
             if (isset($topic->IdSubscribe)) {
                 if ($topic->notificationsEnabled > 0) {
-                    echo '<a class="button" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
+                    echo '<a class="btn btn-primary" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
                         . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                 } else {
-                    echo '<a class="button" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
+                    echo '<a class="btn btn-primary" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
                         . '">' . $words->getBuffered('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                 }
-                echo '<a class="button" href="' . $this->getURI() . '/subscriptions/unsubscribe/thread/' . $topic->IdSubscribe
+                echo '<a class="btn btn-primary" href="' . $this->getURI() . '/subscriptions/unsubscribe/thread/' . $topic->IdSubscribe
                     . '/' . $topic->IdKey . '">' . $words->getBuffered('ForumUnsubscribe') . '</a>' . $words->flushBuffer() . PHP_EOL;
             } else {
-                echo '<a class="button" href="' . $this->getURI() . '/subscribe/thread/' . $topic->IdThread . '">'
+                echo '<a class="btn btn-primary" href="' . $this->getURI() . '/subscribe/thread/' . $topic->IdThread . '">'
                     . $words->getBuffered('ForumSubscribe') . '</a>' . $words->flushBuffer() . PHP_EOL;
             }
         }
 
         if ((!$topic->topicinfo->IsClosed) and ($topic->topicinfo->CanReply)) {
             ?>
-            <a class="button"
+            <a class="btn btn-primary"
                href="<?= $replyuri ?>"><?= $words->getBuffered('ForumReply') ?></a><?= $words->flushBuffer() ?>
             <?php
         }
@@ -226,8 +226,9 @@ if ($User) {
 
     if (!$topic->topicinfo->IsClosed) {
         ?>
-        <div id="forumsthreadreplybottom"><span class="button"><a
-                        href="<?php echo $replyuri; ?>"><?php echo $words->getBuffered('ForumReply');; ?></a></span><?php echo $words->flushBuffer() ?>
+        <div id="forumsthreadreplybottom">
+            <a href="<?php echo $replyuri; ?>" class="btn btn-primary"><?php echo $words->getBuffered('ForumReply');; ?></a>
+            <?php echo $words->flushBuffer() ?>
         </div>
         <?php
     }

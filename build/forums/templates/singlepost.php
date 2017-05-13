@@ -40,7 +40,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 <div class="d-flex flex-row <?php echo $styles[$cnt % 2]; ?> mb-2 postbox w-100">
 
     <!-- left column -->
-    <div class="d-flex flex-column col-3 col-lg-2 mr-2 p-0 postleftcolumn">
+    <div class="d-flex flex-column col-4 col-md-3 mr-2 p-0 postleftcolumn">
 
         <!-- member info block -->
         <div class="d-flex flex-row align-self-start pull-left p-2 w-100 credentials">
@@ -99,7 +99,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
         <!-- end permalink -->
     </div>
     <!-- message -->
-    <div class="col-9 col-lg-10 p-2">
+    <div class="col-8 col-md-9 p-2">
         <div class="float-left w-100">
         <a name="post<?php echo $post->postid; ?>"></a>
         <p class="small gray">
@@ -191,20 +191,22 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
             // If current user has a moderator right, he can see the post
 
 // Todo: something in the following lines is causing a markup error, adding <b></b> and </div>
-            if (($post->PostDeleted != "Deleted") or ($this->BW_Right->HasRight("ForumModerator"))) {
-                ?>
+
+            ?>
+
+            <div id="d<?= $post->IdContent ?>" class="float-left">
 
                 <?php
                 $Sentence = $words->fTrad($post->IdContent);
-                ?>
-                <div id="d<?= $post->IdContent ?>" class="float-left">
 
-                    <?php
-                    if ($post->PostDeleted == "Deleted") {
-                        echo "<s>", $Sentence, "</s>";
-                    } else {
-                        // hide the post if the current member is not a member of this post and
-                        // not a forum moderator
+                if (($post->PostDeleted == "Deleted")&&($this->BW_Right->HasRight("ForumModerator"))) {
+                echo "<s>", $Sentence, "</s>";
+                }
+
+                if ($post->PostDeleted != "Deleted") {
+
+                // hide the post if the current member is not a member of this post and
+                // not a forum moderator
                         if ($hideGroupOnlyPost && !($this->BW_Right->HasRight("ForumModerator"))) {
                             echo $this->words->get('GroupOnlyPostHidden');
                         } else {
@@ -217,6 +219,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                 <?php
 
                 // Here add additional data from votes if any
+
                 if (isset($post->Vote)) {
                     $Vote = $post->Vote;
 
@@ -236,6 +239,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                         echo "</ul></div>";
                     }
 
+
                     if (!empty($Vote->Choice)) { // If The current user has voted
                         echo "<div>";
                         echo "<a href=\"forums/deletevotepost/", $post->IdPost, "\">", $words->getFormatted('ForumDeleteVotePost'), "</a>";
@@ -248,11 +252,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                             echo "<a href=\"forums/votepost/", $post->IdPost, "/", $cc, "\">", $words->getBuffered('ForumVoteChoice_' . $cc), "</a>&nbsp; &nbsp; &nbsp;";
                         }
                     }
-
-
-                   echo "</div>";
                 }  // End of add additional data from local volunteers messages if any
-             } // end if not deleted
 
             ?>
 
@@ -261,6 +261,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 </div>
 
 <?php
+
 if ((isset($PostMaxTrad)) and ($PostMaxTrad > 1)) { // No need to at javascript catcher function is there is no more than one translations
     ?>
     <script type="text/javascript">
@@ -280,4 +281,5 @@ if ((isset($PostMaxTrad)) and ($PostMaxTrad > 1)) { // No need to at javascript 
     </script>
     <?php
 }
+
 ?>

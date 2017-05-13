@@ -149,7 +149,7 @@
 {# Labels #}
 
 {% block form_label -%}
-    {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' col-sm-2 form-control-label')|trim}) -%}
+    {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ 'px-2 form-control-label')|trim}) -%}
     {{- parent() -}}
 {%- endblock form_label %}
 

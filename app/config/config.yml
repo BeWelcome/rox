@@ -146,9 +146,9 @@ assetic:
                 - "%node_modules%/jquery-ui/themes/base/tabs.css"
                 - "%node_modules%/jquery-ui/themes/base/tooltip.css"
 
-        tether_js:
+        popper_js:
             inputs:
-                - "%node_modules%/tether/dist/js/tether.js"
+                - "%node_modules%/popper.js/dist/popper.min.js"
 
         app_css:
             inputs:

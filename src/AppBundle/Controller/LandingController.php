@@ -39,7 +39,7 @@ class LandingController extends Controller
             'messages' => $messages,
         ]);
 
-        return new Response($content);
+        return $content;
     }
 
     /**
@@ -58,7 +58,7 @@ class LandingController extends Controller
             'notifications' => $notifications,
         ]);
 
-        return new Response($content);
+        return $content;
     }
 
     /**
@@ -82,7 +82,7 @@ class LandingController extends Controller
             'threads' => $threads,
         ]);
 
-        return new Response($content);
+        return $content;
     }
 
     /**
@@ -100,7 +100,7 @@ class LandingController extends Controller
             'activities' => $activities,
         ]);
 
-        return new Response($content);
+        return $content;
     }
 
     /**
@@ -188,7 +188,7 @@ class LandingController extends Controller
                 'communityNews' => $latestNews,
         ]);
 
-        return new Response($content->getContent());
+        return $content;
     }
 
     /**

@@ -2,10 +2,6 @@ body{
 	line-height: inherit;
 }
 
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-	line-height:1.6rem;
-}
-
 .summary{
 	line-height: 1.1;
 }
@@ -14,8 +10,8 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 	font-size:1.25em;
 	text-transform: uppercase;
 	border:2px solid white;
-	border-top-left-radius:0.25rem;
-	border-top-right-radius:0.25rem;
+	border-top-left-radius: $border-radius;
+	border-top-right-radius: $border-radius;
 	background-color: rgba(243,112,0,1);
 	color:white;
 	letter-spacing: 0.03em;

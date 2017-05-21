@@ -92,3 +92,36 @@ blockquote {
 .leaflet-popup-content-wrapper{
   border-radius: 0.2rem;
 }
+
+#message_thread {
+  a .divlink  {
+    color: black;
+  }
+
+  .message_own {
+    @include make-col(11);
+    padding: $pagination-padding-x;
+    margin-bottom: 1rem;
+    border-radius: $border-radius;
+    border-color: $border-color;
+    background-color: #91ff8e;
+  }
+
+  .message_other {
+    @include make-col(11);
+    @include make-col-offset(1);
+    padding: $pagination-padding-x;
+    margin-bottom: 1rem;
+    border-radius: $border-radius;
+    border-color: $border-color;
+    background-color: #69d4d5;
+  }
+
+  .current {
+    background-color: white;
+  }
+}
+
+main {
+  margin-top: 1rem;
+}

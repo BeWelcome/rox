@@ -3,6 +3,7 @@
 namespace AppBundle\Repository;
 
 use AppBundle\Entity\Member;
+use AppBundle\Entity\Message;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -84,5 +85,16 @@ class MessageRepository extends EntityRepository
         $paginator->setCurrentPage($page);
 
         return $paginator;
+    }
+
+    public function getThread(Message $message)
+    {
+        $qb = $this->createNativeNamedQuery('get_thread')
+            ->setHint('partial', Query::HINT_FORCE_PARTIAL_LOAD);
+        $result = $qb->execute([
+            'message_id' => $message->getId()
+            ]);
+        return $result;
+
     }
 }

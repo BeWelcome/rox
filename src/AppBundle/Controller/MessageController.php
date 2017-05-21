@@ -2,12 +2,15 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\HostingRequest;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
+use AppBundle\Entity\Subject;
 use AppBundle\Form\MessageRequestType;
 use AppBundle\Form\MessageToMemberType;
 use AppBundle\Model\MessageModel;
 use Html2Text\Html2Text;
+use Rox\Core\Exception\InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -104,18 +107,52 @@ class MessageController extends Controller
      *
      * @return Response
      */
-    public function reply(Message $message)
+    public function reply(Request $request, Message $message)
     {
-        $message;
-        $receiverUsername = 'noone';
+        $member = $this->getUser();
+        if (($message->getReceiver() !== $member) && ($message->getSender() !== $member)) {
+            throw new AccessDeniedException();
+        }
 
-        $receiver = $this->memberRepository->getByUsername($receiverUsername);
+        $messageModel = new MessageModel($this->getDoctrine());
+        $thread = $messageModel->getThreadForMessage($message);
 
-        $content = $this->render('@message/message/compose.html.twig', [
-            'receiver' => $receiver,
+        $replyMessage = new Message();
+        $replyMessage->setSubject($message->getSubject());
+
+        $messageForm = $this->createForm(MessageToMemberType::class, $replyMessage);
+        $messageForm->handleRequest($request);
+
+        if ($messageForm->isSubmitted() && $messageForm->isValid())
+        {
+            $receiver = ($message->getReceiver() === $member) ? $member : $message->getReceiver();
+            $replyMessage = $messageForm->getData();
+            $replyMessage->setParent($message);
+            $replyMessage->setSender($this->getUser());
+            $replyMessage->setReceiver($receiver);
+            $replyMessage->setInfolder('normal');
+            $replyMessage->setCreated(new \DateTime());
+
+            $subject = $message->getSubject();
+            if ($subject->getSubject() != $replyMessage->getSubject()) {
+                $subject = new Subject();
+                $subject = $replyMessage->getSubject();
+            }
+            $replyMessage->setSubject($subject);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($replyMessage);
+            $em->flush();
+
+            // $replyMessage->refresh();
+            return $this->redirectToRoute('message_show', [ 'id' => $replyMessage->getId()]);
+        }
+
+
+        return $content = $this->render(':message:reply.html.twig', [
+            'form' => $messageForm->createView(),
+            'current' => $message,
+            'thread' => $thread
         ]);
-
-        return new Response($content);
     }
 
     /**
@@ -125,8 +162,6 @@ class MessageController extends Controller
      * @param Message $message
      *
      * @return Response
-     *
-     * @internal param Request $request
      */
     public function show(Message $message)
     {
@@ -135,14 +170,21 @@ class MessageController extends Controller
             throw new AccessDeniedException();
         }
 
+        $messageModel = new MessageModel($this->getDoctrine());
+        $thread = $messageModel->getThreadForMessage($message);
+
         if ($message->isUnread() && $member === $message->getReceiver()) {
             // Only mark as read when the receiver reads the message, not when
             // the message is presented to the Sender with url /messages/77/sent
-            $message->setWhenfirstread(date());
+            $message->setWhenfirstread(new \DateTime());
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($message);
+            $em->flush();
         }
 
         return $this->render(':message:view.html.twig', [
-            'message' => $message,
+            'current' => $message,
+            'thread' => $thread
         ]);
     }
 
@@ -290,7 +332,7 @@ class MessageController extends Controller
                 ->setTo($receiver->getCryptedField('Email'))
                 ->setBody(
                     $this->renderView(
-                        // app/Resources/views/Emails/registration.html.twig
+                    // app/Resources/views/Emails/registration.html.twig
                         'emails/request.html.twig',
                         ['request_text' => $hostingRequest->getMessage()]
                     ),
@@ -311,6 +353,29 @@ class MessageController extends Controller
 
         return $this->render(':message:request.html.twig', [
             'receiver' => $receiver,
+            'form' => $requestForm->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/reply/request/{id}", name="hosting_request_reply")
+     *
+     * @param Request $request
+     * @param Message $hostingRequest
+     *
+     * @return Response
+     */
+    public function hostingRequestReplyAction(Request $request, Message $hostingRequest)
+    {
+        if ($hostingRequest->getRequest() == null) {
+            throw new InvalidArgumentException();
+        }
+
+        $requestForm = $this->createForm(MessageRequestType::class, $hostingRequest);
+        $requestForm->handleRequest($request);
+
+        return $this->render(':message:request.html.twig', [
+            'receiver' => $hostingRequest->getReceiver(),
             'form' => $requestForm->createView(),
         ]);
     }

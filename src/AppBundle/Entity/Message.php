@@ -7,6 +7,8 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\HostingRequest;
+use AppBundle\Entity\Subject;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -58,11 +60,12 @@ class Message
     private $deleterequest;
 
     /**
-     * @var int
+     * @var Message
      *
-     * @ORM\Column(name="IdParent", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Message", fetch="LAZY")
+     * @ORM\JoinColumn(name="idParent", referencedColumnName="id")
      */
-    private $idparent = '0';
+    private $parent;
 
     /**
      * @var \AppBundle\Entity\Member
@@ -118,14 +121,14 @@ class Message
     /**
      * @var Subject
      *
-     * @ORM\OneToOne(targetEntity="Subject", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Subject", cascade={"persist"}, fetch="EAGER")
      */
     private $subject;
 
     /**
      * @var HostingRequest
      *
-     * @ORM\OneToOne(targetEntity="HostingRequest", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="HostingRequest", cascade={"persist"}, fetch="EAGER")
      */
     private $request;
 
@@ -260,27 +263,52 @@ class Message
     }
 
     /**
-     * Set idparent.
+     * Set parent.
      *
-     * @param int $idparent
+     * @param Message $parent
      *
      * @return Message
      */
-    public function setIdparent($idparent)
+    public function setParent(Message $parent)
     {
-        $this->idparent = $idparent;
+        $this->parent = $parent;
 
         return $this;
     }
 
     /**
-     * Get idparent.
+     * Get parent.
      *
-     * @return int
+     * @return Message|null
      */
-    public function getIdparent()
+    public function getParent()
     {
-        return $this->idparent;
+        return $this->parent;
+    }
+
+
+    /**
+     * Set child.
+     *
+     * @param Message $child
+     *
+     * @return Message
+     */
+    public function setChild(Message $child)
+    {
+        $this->child = $child;
+
+        return $this;
+    }
+
+    /**
+     * Get child.
+     *
+     * @return Message|null
+     */
+    public function getChild()
+    {
+        return $this->child;
     }
 
     /**
@@ -446,9 +474,12 @@ class Message
      *
      * @return Carbon
      */
-    public function getwhenFirstRead()
+    public function getWhenFirstRead()
     {
-        return Carbon::instance($this->whenfirstread);
+        if ($this->whenfirstread == new DateTime('0000-00-00 00:00:00')) {
+            return null;
+        }
+        return $this->whenfirstread;
     }
 
     /**
@@ -469,11 +500,11 @@ class Message
     /**
      * Set subject.
      *
-     * @param \AppBundle\Entity\Subject $subject
+     * @param Subject $subject
      *
      * @return Message
      */
-    public function setSubject(\AppBundle\Entity\Subject $subject = null)
+    public function setSubject(Subject $subject = null)
     {
         $this->subject = $subject;
 
@@ -483,7 +514,7 @@ class Message
     /**
      * Get subject.
      *
-     * @return \AppBundle\Entity\Subject
+     * @return Subject
      */
     public function getSubject()
     {
@@ -493,11 +524,11 @@ class Message
     /**
      * Set request.
      *
-     * @param \AppBundle\Entity\HostingRequest $request
+     * @param HostingRequest $request
      *
      * @return Message
      */
-    public function setRequest(\AppBundle\Entity\HostingRequest $request = null)
+    public function setRequest(HostingRequest $request = null)
     {
         $this->request = $request;
 
@@ -507,7 +538,7 @@ class Message
     /**
      * Get request.
      *
-     * @return \AppBundle\Entity\HostingRequest
+     * @return HostingRequest
      */
     public function getRequest()
     {

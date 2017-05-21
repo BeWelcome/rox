@@ -38,7 +38,7 @@ class SearchController extends Controller
             $results = $this->getResults($form->getData());
         }
 
-        $content = $this->render(':search:searchmembers.html.twig', [
+        return $this->render(':search:searchmembers.html.twig', [
             'form' => $form->createView(),
             'results' => $results,
             'location' => [
@@ -48,8 +48,6 @@ class SearchController extends Controller
                 'longitude' => null,
             ],
         ]);
-
-        return new Response($content);
     }
 
     /**

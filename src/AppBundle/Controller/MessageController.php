@@ -109,8 +109,8 @@ class MessageController extends Controller
      */
     public function reply(Request $request, Message $message)
     {
-        $member = $this->getUser();
-        if (($message->getReceiver() !== $member) && ($message->getSender() !== $member)) {
+        $sender = $this->getUser();
+        if (($message->getReceiver() !== $sender) && ($message->getSender() !== $sender)) {
             throw new AccessDeniedException();
         }
 
@@ -125,10 +125,10 @@ class MessageController extends Controller
 
         if ($messageForm->isSubmitted() && $messageForm->isValid())
         {
-            $receiver = ($message->getReceiver() === $member) ? $member : $message->getReceiver();
+            $receiver = ($message->getReceiver() === $sender) ? $message->getSender() : $message->getReceiver();
             $replyMessage = $messageForm->getData();
             $replyMessage->setParent($message);
-            $replyMessage->setSender($this->getUser());
+            $replyMessage->setSender($sender);
             $replyMessage->setReceiver($receiver);
             $replyMessage->setInfolder('normal');
             $replyMessage->setCreated(new \DateTime());

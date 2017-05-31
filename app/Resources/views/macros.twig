@@ -1,5 +1,5 @@
 {% macro input(name, placeholder, value, type) %}
-    <input class="form-control" type="{{ type|default('text') }}" name="{{ name }}" placeholder="{{ placeholder|trans }}"
+    <input class="form-control m-1" type="{{ type|default('text') }}" name="{{ name }}" placeholder="{{ placeholder|trans }}"
            value="{{ value|e }}" />
 {% endmacro %}
 

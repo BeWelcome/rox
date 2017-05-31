@@ -1,30 +1,3 @@
-<?php
-
-/*
-Copyright (c) 2007 BeVolunteer
-
-This file is part of BW Rox.
-
-BW Rox is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-BW Rox is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA  02111-1307, USA.
-*/
-
-/*
- * REGISTER FORM TEMPLATE
- */
- ?>
 <div class="card card-block">
 <form method="post" novalidate action="<?php echo $baseuri.'signup/2'?>" name="signup" id="user-register-form" class="form" role="form">
 <?=$callback_tag ?>
@@ -33,8 +6,8 @@ Boston, MA  02111-1307, USA.
         echo '<span class="alert alert-danger">'.$errors['inserror'].'</span>';
     }
 ?>
-    <div class="d-flex flex-row justify-content-start flex-wrap">
-        <div class="mr-3 pr-3">
+    <div class="d-flex flex-row">
+        <div class="d-block mr-3 pr-3">
 
             <h4 class="text-center mb-2">Step 1/4</h4>
 
@@ -43,18 +16,15 @@ Boston, MA  02111-1307, USA.
             </div>
 
             <div class="h4 text-center d-none d-md-block mt-1">
-                <div><i class="fa fa-user"></i><br><?php echo $words->get('LoginInformation'); ?></div>
-                <div class="text-muted my-2"><i class="fa fa-angle-down"></i></div>
-                <div class="text-muted"><i class="fa fa-tag"></i><br><?php echo $words->get('SignupName'); ?></div>
-                <div class="text-muted my-2"><i class="fa fa-angle-down"></i></div>
-                <div class="text-muted"><i class="fa fa-map-marker"></i><br><?php echo $words->get('Location'); ?></div>
-                <div class="text-muted my-2"><i class="fa fa-angle-down"></i></div>
-                <div class="text-muted"><i class="fa fa-check-square"></i><br><?php echo $words->get('SignupSummary'); ?></div>
+                <div class="my-3"><i class="fa fa-user"></i><br><?php echo $words->get('LoginInformation'); ?></div>
+                <div class="my-3 text-muted"><i class="fa fa-tag"></i><br><?php echo $words->get('SignupName'); ?></div>
+                <div class="my-3 text-muted"><i class="fa fa-map-marker"></i><br><?php echo $words->get('Location'); ?></div>
+                <div class="my-3 text-muted"><i class="fa fa-check-square"></i><br><?php echo $words->get('SignupSummary'); ?></div>
             </div>
 
         </div>
 
-        <div>
+        <div class="d-block w-50">
             <div class="modal fade" id="SignupIntroduction" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -117,7 +87,8 @@ Boston, MA  02111-1307, USA.
 
             <!-- Confirm password -->
             <div class="form-group has-feedback">
-                <label for="register-passwordcheck" class="m-0"><?php echo $words->get('SignupCheckPassword'); ?></label>
+                <legend class="m-0"><?php echo $words->get('SignupCheckPassword'); ?></legend>
+                <label for="register-passwordcheck" class="sr-only"><?php echo $words->get('SignupCheckPassword'); ?></label>
                 <div class="d-flex">
                     <input type="password" class="form-control" id="register-passwordcheck" name="passwordcheck" placeholder="<?php echo $words->get('SignupCheckPassword'); ?>"
                            data-validation-matches-match="password"
@@ -148,7 +119,8 @@ Boston, MA  02111-1307, USA.
 
             <!-- confirm E-mail -->
             <div class="form-group has-feedback">
-                <label for="register-emailcheck" class="m-0"><?php echo $words->get('SignupCheckEmail'); ?></label>
+                <legend class="m-0"><?php echo $words->get('SignupCheckEmail'); ?></legend>
+                <label for="register-emailcheck" class="sr-only"><?php echo $words->get('SignupCheckEmail'); ?></label>
                 <div class="d-flex">
                     <input type="email"
                            data-validation-matches-match="email"
@@ -203,12 +175,11 @@ Boston, MA  02111-1307, USA.
             </fieldset>
 
             <!-- Next button -->
-            <div class="form-group has-feedback">
+            <div class="form-group">
                 <div class="d-flex">
                     <button type="submit" class="form-control btn btn-primary"><?php echo $words->getSilent('NextStep'); ?> <i class="fa fa-angle-double-right"></i></button>
                     <?php echo $words->flushBuffer(); ?>
                 </div>
-                <span class="text-muted small"></span>
             </div>
         </div>
 

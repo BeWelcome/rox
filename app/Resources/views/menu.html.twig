@@ -163,6 +163,7 @@
         </div>
     </nav>
 {% else %}
+    {# navbar not logged in, showing main links #}
     <nav class="navbar navbar-sticky-top navbar-expand-md navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
         <a class="navbar-brand mr-3 float-left" href="{{ url('homepage') }}">{% image 'bundles/app/images/logo_index_top.png' %}<img src="{{ asset_url }}" alt="{{ 'BeWelcome' | trans }}"/>{% endimage %}</a>
 

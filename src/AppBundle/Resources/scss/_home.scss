@@ -43,13 +43,13 @@
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  line-height: 1rem;
-  max-height: 3rem;
+  line-height: 1.2rem;
+  max-height: 3.5rem;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 
   .text {
-    max-height: 2.1rem;
+    max-height: 2.3rem;
   }
 
   p {

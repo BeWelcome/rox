@@ -40,36 +40,34 @@ if (empty($vars)) {
 }
 ?>
 
-<div class="row mb-1">
-    <div class="col-sm-12 col-md-2">
+<div class="d-flex flex-row justify-content-start w-100">
 
-        <?
-        if ($this->activity->dateStart == $this->activity->dateEnd) {
-            echo '<i class="fa fa-calendar"></i> ' . $this->activity->dateStart . '<br>';
-            echo '<i class="fa fa-clock-o"></i> <span class="compacttext back">' . $this->activity->timeStart . ' - ' . $this->activity->timeEnd . '</span><br>';
-        } else {
-            echo '<i class="fa fa-calendar"></i> ' . $this->activity->dateStart . ' - <span class="compacttext back">' . $this->activity->timeStart . '</span><br>';
-            echo '<i class="fa fa-calendar"></i> ' . $this->activity->dateEnd . ' - <span class="compacttext back">' . $this->activity->timeEnd . '</span>';
-        } ?>
+    <div>
+        <h2 class="m-0"><?php echo $this->activity->title; ?></h2>
+        <div>
+            <?
+            if ($this->activity->dateStart == $this->activity->dateEnd) {
+                echo '<i class="fa fa-calendar pr-1"></i><span class="small"> ' . $this->activity->dateStart . '</span>';
+                echo '<i class="fa fa-clock-o pl-3 pr-1"></i><span class="compacttext back">' . $this->activity->timeStart . ' - ' . $this->activity->timeEnd . '</span>';
+            } else {
+                echo '<i class="fa fa-calendar pr-1"></i><span class="small"> ' . $this->activity->dateStart . ' - ' . $this->activity->dateEnd . '</span>';
+            } ?>
 
+        </div>
     </div>
-    <div class="col-sm-12 col-md-7">
-        <h2><?php echo $this->activity->title; ?></h2>
-    </div>
-    <div class="col-sm-12 col-md-3">
-        <h4><?php $words->get('ActivityAttendeesNumbersTitle'); ?></h4>
+    <div class="ml-auto">
         <div class="d-flex flex-row hidden-md-down">
-            <div class="d-flex align-items-start pr-2"><i class="fa fa-4x fa-user-circle-o"></i></div>
+            <div class="pr-2 align-self-center"><i class="fa fa-3x fa-user-circle-o"></i></div>
             <div>
-                <p style="font-size: 1.2rem;">
+                <p class="text-nowrap">
                     <?php if ($this->activity->attendeesYes != 0) {
-                        echo $words->get('ActivityAttendeesYes', $this->activity->attendeesYes) . '<br>';
+                        echo '<span class="h4">' . $words->get('ActivityAttendeesYes', $this->activity->attendeesYes) . '</span><br>';
                     } ?>
                     <?php if ($this->activity->attendeesMaybe != 0) {
-                        echo $words->get('ActivityAttendeesMaybe', $this->activity->attendeesMaybe) . '<br>';
+                        echo '<span class="h5">' . $words->get('ActivityAttendeesMaybe', $this->activity->attendeesMaybe) . '<span></span><br>';
                     } ?>
                     <?php if ($this->activity->attendeesNo != 0) {
-                        echo $words->get('ActivityAttendeesNo', $this->activity->attendeesNo);
+                        echo '<span class="h6">' . $words->get('ActivityAttendeesNo', $this->activity->attendeesNo) . '</span>';
                     } ?>
                 </p>
             </div>
@@ -77,37 +75,34 @@ if (empty($vars)) {
     </div>
 </div>
 
-<div class="row">
-    <div class="col-12 col-md-2">
-        <div>
+<div class="d-flex flex-row w-100">
+
+    <div class="d-flex flex-wrap pr-2 ">
+        <div class="float-left postleftcolumn pl-2 pt-2" style="width: 135px;">
+
             <img class="mappreview"
                  src="https://maps.googleapis.com/maps/api/staticmap?center={{ member.Latitude }},{{ member.Longitude }}&zoom=10&size=117x117&key=AIzaSyAiF_lG8CdC-hCIXbGs9jilOFJRoXteM3k">
+
+            <h4 class="m-0 mt-1"><?= $words->get('ActivityLocationAddress'); ?></h4>
+            <p class="small">
+                <?php echo $this->activity->address ?><br>
+                <?php echo '<strong>' . $this->activity->location->name . '<br>' . $this->activity->location->getCountry()->name . '</strong></p>'; ?>
         </div>
-        <div class="mt-1">
-            <h4><?= $words->get('ActivityLocationAddress'); ?></h4>
-            <?php echo $this->activity->address ?><br>
-            <?php echo '<strong>' . $this->activity->location->name . '<br>' . $this->activity->location->getCountry()->name . '</strong>'; ?>
+        <div class="float-right pl-2">
+            <?php echo $purifier->purify($this->activity->description); ?>
+
+            <?
+            if ($this->activity->dateStart == $this->activity->dateEnd) {
+                echo '<i class="fa fa-calendar"></i> ' . $this->activity->dateStart . '><br>';
+                echo '<i class="fa fa-clock-o"></i> <span class="compacttext back">' . $this->activity->timeStart . ' - ' . $this->activity->timeEnd . '</span><br>';
+            } else {
+                echo '<i class="fa fa-calendar"></i> ' . $this->activity->dateStart . ' <i class="fa fa-clock-o px-2"></i><span class="compacttext back">' . $this->activity->timeStart . '</span><br>';
+                echo '<i class="fa fa-calendar"></i> ' . $this->activity->dateEnd . ' <i class="fa fa-clock-o px-2"></i><span class="compacttext back">' . $this->activity->timeEnd . '</span>';
+            } ?>
         </div>
-
-        <div class="w-100 mt-3"><h4 class="mb-0"><?php echo $words->get('ActivityOrganizers'); ?></h4></div>
-
-        <?php
-        foreach ($this->activity->organizers as $organizer) { ?>
-            <div class="w-100 d-flex flex-row">
-                <div class="mr-2"><a href="members/<?php $organizer->Username; ?>"><img
-                                src="members/avatar/<?php echo $organizer->Username; ?>?size=50"></a></div>
-                <div><a href="members/<?php echo $organizer->Username; ?>"><?php echo $organizer->Username; ?></a></div>
-            </div>
-        <? } ?>
-
     </div>
-    <div class="col-12 col-md-7">
-
-        <?php echo $purifier->purify($this->activity->description); ?>
-
-    </div>
-    <div class="col-12 col-md-3">
-        <div class="card p-2 mt-3">
+    <div class="ml-auto">
+        <div class="card p-2">
             <h4 class="card-title">Join<br></h4>
             <?php
             if ($this->member) {
@@ -218,6 +213,24 @@ if (empty($vars)) {
         </div>
     </div>
 
+    <div class="w-100">
+        <div class="w-100 mt-3"><h4 class="mb-0"><?php echo $words->get('ActivityOrganizers'); ?></h4></div>
+        <div class="d-flex flex-row">
+            <?php
+            foreach ($this->activity->organizers as $organizer) { ?>
+                <div class="d-flex mr-2">
+                    <div class="mr-2"><a href="members/<?php $organizer->Username; ?>"><img
+                                    src="members/avatar/<?php echo $organizer->Username; ?>?size=50"></a></div>
+                    <div><a href="members/<?php echo $organizer->Username; ?>"><?php echo $organizer->Username; ?></a></div>
+                </div>
+            <? } ?>
+        </div>
+    </div>
+
+</div>
+
+
+
     <div class="row mt-3">
 
         <div class="col-12"><h4><?php echo $words->get('ActivityAttendees'); ?></h4></div>
@@ -230,7 +243,7 @@ if (empty($vars)) {
             foreach ($this->attendeesPager->getActiveSubset($this->activity->attendees) as $attendee) {
 
                 ?>
-                <div class="col-auto m-1 p-2 mw-25
+                <div class="attend m-1 p-2
 <?
                 switch ($attendee->status) {
                     case 1:
@@ -277,6 +290,5 @@ if (empty($vars)) {
             echo '<div><h3>' . $words->get('ActivityAttendees') . '</h3>';
             echo '<p>' . $words->getBuffered('ActivitiesLogInWhoIsComing', '<a href="' . $login_url . '">', '</a>') . '</p></div>';
         } ?>
-
     </div>
 <?php echo $words->flushBuffer(); ?>

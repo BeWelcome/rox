@@ -49,10 +49,8 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         $words = $layoutkit->getWords();
         // &gt; or &raquo; ?
         ?>
-        <div id="teaser" class="page-teaser clearfix">
-        <div id="teaser_l1">
-        <h1><a href="groups"><?= $words->get('Groups');?></a> &raquo; <a href=""><?= $words->get('GroupsAdministrateMembers');?></a></h1>
-        </div>
+        <div>
+            <h1><a href="groups"><?= $words->get('Groups');?></a> &raquo; <a href=""><?= $words->get('GroupsAdministrateMembers');?></a></h1>
         </div>
         <?php
     }

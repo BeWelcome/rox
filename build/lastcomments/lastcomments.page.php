@@ -52,11 +52,11 @@ class LastCommentsPage extends PageWithActiveSkin {
         // &gt; or &raquo; ?
         $words = $this->getWords();
         ?>
-        <div id="teaser" class="page-teaser clearfix">
-        <div id="teaser_l1">
-        <h1><a href="lastcomments"><?= $words->get('LastCommentsTitlePage');?></a> </h1>
+
+        <div>
+            <h1><a href="lastcomments"><?= $words->get('LastCommentsTitlePage');?></a> </h1>
         </div>
-        </div>
+
         <?php
     }
 

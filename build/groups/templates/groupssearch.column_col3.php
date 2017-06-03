@@ -1,16 +1,23 @@
 <div id="groups">
 
     <div class="row mt-2">
+
             <div class="col-12 col-md-6">
-                    <h3><?= $words->get('GroupsSearchHeading'); ?></h3>
-                    <form action="groups/search" method="get">
-                        <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" class="button" value="<?= $words->getSilent('GroupsSearchSubmit'); ?>" /><?=$words->flushBuffer()?><br />
-                    </form>
+                <h3><?= $words->get('GroupsSearchHeading'); ?></h3>
+                <form action="groups/search" method="get">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="GroupsSearchInput" value="" id="GroupsSearchInput" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="submit"><?= $words->getSilent('GroupsSearchSubmit'); ?></button>
+                            <?=$words->flushBuffer()?>
+                        </span>
+                    </div>
+                </form>
             </div>
             <div class="col-12 col-md-6">
                     <h3><?= $words->get('GroupsCreateHeading'); ?></h3>
                     <p><?= $words->get('GroupsCreateDescription'); ?></p>
-                    <a class="button" role="button" href="groups/new"><span><?= $words->get('GroupsCreateNew'); ?></span></a>
+                    <a class="btn btn-primary" role="button" href="groups/new"><?= $words->get('GroupsCreateNew'); ?></a>
             </div>
     </div>
 

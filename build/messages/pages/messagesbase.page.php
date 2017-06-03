@@ -21,11 +21,11 @@ class MessagesBasePage extends RoxPageView
         $words = $this->getWords();
         // &gt; or &raquo; ?
         $username = $this->_session->has( 'Username' ) ? $this->_session->get('Username') : 'Nobody';
-        ?><div id="teaser" class="page-teaser clearfix">
-        <div id="teaser_l1"> 
-        <h1><a href="messages"><?php echo $words->get('UserMessages', $username); ?></a></h1>
+        ?>
+        <div>
+            <h1><a href="messages"><?php echo $words->get('UserMessages', $username); ?></a></h1>
         </div>
-        </div><?php
+        <?php
     }
     
     public function leftSidebar()

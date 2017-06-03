@@ -10,10 +10,8 @@ class GroupsCreationPage2 extends GroupsBasePage
     {
         // &gt; or &raquo; ?
         ?>
-        <div id="teaser" class="page-teaser clearfix">
-        <div id="teaser_l1"> 
+        <div>
         <h1><a href="groups">Groups</a> &raquo; <a href="groups/new">New</a></h1>
-        </div>
         </div>
         <?php
     }

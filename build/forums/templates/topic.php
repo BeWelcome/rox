@@ -50,7 +50,7 @@ This File display a topic and the messages which are inside it
         if (!isset($topic->topicinfo->IsClosed)) {
             $topic->topicinfo->IsClosed = false;
         }
-        echo "<h2>";
+        echo '<h2 class="m-0">';
 
         if ($topic->topicinfo->ThreadDeleted == 'Deleted') {
             echo "[Deleted]";
@@ -226,8 +226,8 @@ if ($User) {
 
     if (!$topic->topicinfo->IsClosed) {
         ?>
-        <div id="forumsthreadreplybottom">
-            <a href="<?php echo $replyuri; ?>" class="btn btn-primary"><?php echo $words->getBuffered('ForumReply');; ?></a>
+        <div class="w-100">
+            <a href="<?php echo $replyuri; ?>" class="btn btn-primary float-right"><?php echo $words->getBuffered('ForumReply');; ?></a>
             <?php echo $words->flushBuffer() ?>
         </div>
         <?php

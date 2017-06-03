@@ -16,112 +16,40 @@
     background-color: #eee;
 }
 
-.col3 { /*Forum categories */
-    .forumcategory {
-        clear: both;
-        padding: 0.5em;
-        background: #f5f5f5 url(../images/bg_categories.jpg) repeat-x top left;
-        border: 1px solid;
-        border-color: #e5e5e5;
-    }
-    .forumcategory h2 {
-        padding: 0;
-        margin: 0;
-    }
-
+.col3 {
     /* Thread view */
-    div.forumthreadinfo {
-        border-bottom: 1px solid #e5e5e5;
-        padding-bottom: 1em;
-        overflow: hidden;
-    }
 
-    div.forumspost {
-        border-top: 1px solid #e5e5e5;
-        border-bottom: 1px solid #f5f5f5;
-        border-right: 1px solid #e5e5e5;
-        border-left: 1px solid #e5e5e5;
-        width: 100%;
-        position: relative;
-        overflow: hidden;
-        padding: 1em 0;
-        float: right;
-    }
-    div.forumsavatar {
-        position: relative;
-        margin: .5em auto;
-    }
-    div.forumsavatar img {
-        max-width: 64px;
-        max-height: 64px;
-    }
-    div.forumsauthorname {
-        font-weight: bold;
-        font-size: 1.1em;
-        word-wrap: break-word;
-    }
-    div.forumsauthorlocation {
-        word-wrap: break-word;
-        font-weight: normal
-    }
-    div.forumsauthor {
-        padding: 0;
-        width: 13%;
-        float: left;
-        text-align: center;
-    }
     div.forumsmessage {
         padding: 0 15px 5px 0;
         float: right;
         width: 84%;
         position: relative;
     }
+
     div.forumsmessage ul, ol {
         margin: 5px 10px !important;
     }
+
     div.forumsmessage ul li {
         list-style-type: disc;
         margin-left: 0.5em;
     }
+
     div.forumsmessage ol li {
         list-style-type: decimal;
         margin-left: 1em;
         padding-bottom: 0em;
     }
+
     div.forumsmessage .text {
         line-height: 1.5em;
-    }
-    p.forumstime {
-        font-size: 11px;
-        color: #888;
-        float: left;
-        margin-bottom: 0em;
-    }
-    p.forumsedit {
-        font-size: 11px;
-        color: #888;
-        float: right;
-        margin-bottom: 0em;
-    }
-    div#forumsthreadreplytop {
-        margin-bottom: 0.5em;
-        float: right;
-    }
-    div#forumsthreadreplybottom {
-        width: 100%;
-        text-align: right;
-        margin-top: 0.5em;
-        overflow: hidden;
-        padding-top: 0.7em;
-    }
-    h2.forumstopic {
-        margin-bottom: 0.2em;
     }
 
     /* Board View */
     table.forumsboardthreads {
         width: 100%;
     }
+
     td {
         vertical-align: middle;
     }
@@ -130,32 +58,39 @@
         font-weight: bold;
         width: 60%;
     }
+
     td.forumsboardthreadreplies {
         text-align: center;
     }
+
     td.forumsboardthreadauthor {
         text-align: center;
     }
+
     td.forumsboardthreadviews {
         text-align: center;
     }
+
     td.forumsboardthreadlastpost {
         width: 20%;
         white-space: nowrap;
     }
+
     div#forumsboardselect {
         border: 1px solid #888;
         padding: 5px 5px 5px 5px;
     }
+
     .forumsboardthreadtags {
         font-size: $font-size-sm;
         font-weight: bold;
         color: #888;
     }
+
     .forumsboardnavichain {
         font-weight: normal;
-        color: #888888;
     }
+
     div#boardnewtopictop {
         width: 100%;
         text-align: right;
@@ -163,12 +98,14 @@
         margin-bottom: 10px;
         margin-top: 0px;
     }
+
     div#boardnewtopicbottom {
         width: 100%;
         text-align: right;
         margin-top: 5px;
         /*    float: right; */
     }
+
     .forumsthreadtags {
         font-size: $font-size-sm;
         font-weight: normal;
@@ -436,4 +373,10 @@
 
 .credentials{
     background-color: #ccc;
+}
+
+.middle{
+    vertical-align: middle !important;
+    align-self: center !important;
+    text-align: center;
 }

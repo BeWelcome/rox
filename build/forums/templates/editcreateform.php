@@ -50,20 +50,20 @@ if (isset($vars['tags']) && $vars['tags']) {
 ?>
 <script type="text/javascript" src="script/blog_suggest.js"></script>
 <script type="text/javascript" src="script/forums_suggest.js"></script>
-<h2>
+
     <?php
     if ($navichain_items = $boards->getNaviChain()) {
-        $navichain = '<span class="forumsboardnavichain">';
         foreach ($navichain_items as $link => $title) {
             $navichain .= '<a href="' . $link . '">' . $title . '</a> :: ';
         }
-        $navichain .= '<a href="' . $boards->getBoardLink() . '">' . $boards->getBoardName() . '</a><br /></span>';
+        $navichain .= '<a href="' . $boards->getBoardLink() . '">' . $boards->getBoardName() . '</a>';
     } else {
         $navichain = '';
     }
 
-    echo $navichain;
+    echo '<p class="h4 forumsboardnavichain gray">' . $navichain . '</p>';
 
+    echo '<h3>';
     if ($allow_title) { // New Topic
         if ($edit) {
             echo $words->getFormatted("forum_edit_topic");
@@ -74,10 +74,11 @@ if (isset($vars['tags']) && $vars['tags']) {
         if ($edit) {
             echo $words->getFormatted("forum_edit_post");
         } else {
-            echo $words->getFormatted("forum_reply_title") . ' &quot;' . $topic->topicinfo->title . '&quot;';
+            echo $words->getFormatted("forum_reply_title") . ' &quot;<i>' . $topic->topicinfo->title . '</i>&quot;';
         }
     }
-    ?></h2>
+    echo '</h3>';
+    ?>
 
 <form method="post" onsubmit="return check_SelectedLanguage();" action="<?php echo $uri; ?>" name="editform"
       class="fieldset_toggles" id="forumsform">
@@ -96,24 +97,28 @@ if (isset($vars['tags']) && $vars['tags']) {
     if (isset($allow_title) && $allow_title) {
 
         ?>
-        <div class="bw-row">
-            <label for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label><br/>
-            <?php
-            $topic_titletrad = "";
-            if (isset($vars['topic_title'])) {
-                if (isset($vars['IdTitle'])) {
-                    $topic_titletrad = $words->fTrad($vars['IdTitle']);
-                } else {
-                    $topic_titletrad = $vars['topic_title'];
-                }
-            }
-            ?>
-            <input type="text" style="width: 95%" name="topic_title" size="50" maxlength="200" id="topic_title"
-                   value="<?php echo $topic_titletrad; ?>"/>
-        </div> <!-- row -->
+        <!-- input title -->
+        <div class="row">
+            <div class="input-group">
+                <span class="input-group-addon bold" id="forumaddtitle"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></span>
+                <label for="topic_title" class="sr-only"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label>
+                    <?php
+                    $topic_titletrad = "";
+                    if (isset($vars['topic_title'])) {
+                        if (isset($vars['IdTitle'])) {
+                            $topic_titletrad = $words->fTrad($vars['IdTitle']);
+                        } else {
+                            $topic_titletrad = $vars['topic_title'];
+                        }
+                    }
+                    ?>
+                <input type="text" class="form-control w-100" name="topic_title" size="50" maxlength="200" id="topic_title"
+                       value="<?php echo $topic_titletrad; ?>" aria-describedby="forumaddtitle">
+            </div>
+        </div>
     <? } ?>
-    <div class="bw-row">
-        <label for="topic_text"><?php echo $words->getFormatted("forum_label_text"); ?></label><br/>
+    <div class="row">
+        <label for="topic_text" class="sr-only"><?php echo $words->getFormatted("forum_label_text"); ?></label><br/>
         <textarea name="topic_text" cols="70" rows="15" id="topic_text" class="long"><?php
             if (isset($void_string)) {
                 echo $void_string;
@@ -128,11 +133,11 @@ if (isset($vars['tags']) && $vars['tags']) {
 
     if (isset($allow_title) && $allow_title) {
         ?>
-    <fieldset class="bw-row" id="fpost_tags_and_location_fieldset">
+    <fieldset class="row" id="fpost_tags_and_location_fieldset">
         <legend onclick="toggleFieldsets('fpost_tags_and_location');"><?php echo $words->getFormatted("forum_label_tags_and_location"); ?></legend>
         <div id="fpost_tags_and_location"><div>
         <p class="small"><?php echo $words->getFormatted("forum_subline_tags"); ?></p>
-        <textarea id="create-tags" name="tags" cols="60" rows="2" class="long"
+        <textarea id="create-tags" name="tags" cols="60" rows="2" class="w-100"
         <?php
 // In case we are in edit mode, this field is a read only, tags cannot be edited by members
 // lupochen asks: Why?
@@ -186,8 +191,61 @@ if (isset($vars['tags']) && $vars['tags']) {
         </div>
     </fieldset>
 <?php } else { ?>
-    <fieldset class="bw-row" id="fpost_vis_fieldset">
-        <legend onclick="toggleFieldsets('fpost_vis');"><?= $words->getFormatted("forum_label_visibility") ?></legend>
+
+    <fieldset class="row mt-2" id="fpost_lang_fieldset">
+        <legend
+                onclick="toggleFieldsets('fpost_lang');" class="h4 m-0"><?php echo $words->getFormatted("forum_label_lang") ?></legend>
+        <div id="fpost_lang">
+            <?php echo $words->getFormatted("forum_ChooseYourLanguage") ?><br>
+                <select name="IdLanguage" id="IdLanguage"><?php
+                    // Here propose to choose a language, a javascript routine at the form checking must make it mandatory
+                    if (!isset($AppropriatedLanguage)) {
+                        echo "<option value=\"-1\">-</option>";
+                    }
+
+                    $closeOptGroup = false;
+                    $closeOptGroupFinal = false;
+                    foreach ($LanguageChoices as $Choices) {
+                        if (is_string($Choices)) {
+                            switch ($Choices) {
+                                case "CurrentLanguage":
+                                    echo '<optgroup label="' . $words->getSilent("ForumCurrentLanguage") . '">';
+                                    $closeOptGroup = true;
+                                    break;
+                                case "DefaultLanguage":
+                                    echo '<optgroup label="' . $words->getSilent("ForumDefaultLanguage") . '">';
+                                    $closeOptGroup = true;
+                                    break;
+                                case "UILanguage":
+                                    echo '<optgroup label="' . $words->getSilent("ForumUILanguage") . '">';
+                                    $closeOptGroup = true;
+                                    break;
+                                case "AllLanguages":
+                                    echo '<optgroup label="' . $words->getSilent("ForumAllLanguages") . '">';
+                                    $closeOptGroupFinal = true;
+                                    break;
+                            }
+                        } else {
+                            echo "<option value=\"", $Choices->IdLanguage, "\"";
+                            if ((isset($AppropriatedLanguage)) and ($AppropriatedLanguage == $Choices->IdLanguage)) {
+                                echo " selected='selected'";
+                            }
+                            echo ">", $Choices->Name, "</option>";
+                            if ($closeOptGroup) {
+                                echo "</optgroup>";
+                                $closeOptGroup = false;
+                            }
+                        }
+                    }
+                    if ($closeOptGroupFinal) {
+                        echo "</optgroup>";
+                    }
+                    ?></select><?php echo $words->flushBuffer(); ?>
+        </div>
+    </fieldset>
+
+    <fieldset class="row mt-2" id="fpost_vis_fieldset">
+        <legend onclick="toggleFieldsets('fpost_vis');" class="h4 m-0"><?= $words->getFormatted("forum_label_visibility") ?></legend>
         <div>
             <?php
             // visibility can only be set on groups with 'VisiblePosts' set to 'yes'.
@@ -217,74 +275,19 @@ if (isset($vars['tags']) && $vars['tags']) {
             <?php } ?>
         </div>
     </fieldset>
-    <fieldset class="bw-row" id="fpost_lang_fieldset">
-            <legend
-                onclick="toggleFieldsets('fpost_lang');"><?php echo $words->getFormatted("forum_label_lang") ?></legend>
-            <div id="fpost_lang">
-                <div>
-                    <select name="IdLanguage" id="IdLanguage"><?php
-                        // Here propose to choose a language, a javascript routine at the form checking must make it mandatory
-                        if (!isset($AppropriatedLanguage)) {
-                            echo "<option value=\"-1\">-</option>";
-                        }
 
-                        $closeOptGroup = false;
-                        $closeOptGroupFinal = false;
-                        foreach ($LanguageChoices as $Choices) {
-                            if (is_string($Choices)) {
-                                switch ($Choices) {
-                                    case "CurrentLanguage":
-                                        echo '<optgroup label="' . $words->getSilent("ForumCurrentLanguage") . '">';
-                                        $closeOptGroup = true;
-                                        break;
-                                    case "DefaultLanguage":
-                                        echo '<optgroup label="' . $words->getSilent("ForumDefaultLanguage") . '">';
-                                        $closeOptGroup = true;
-                                        break;
-                                    case "UILanguage":
-                                        echo '<optgroup label="' . $words->getSilent("ForumUILanguage") . '">';
-                                        $closeOptGroup = true;
-                                        break;
-                                    case "AllLanguages":
-                                        echo '<optgroup label="' . $words->getSilent("ForumAllLanguages") . '">';
-                                        $closeOptGroupFinal = true;
-                                        break;
-                                }
-                            } else {
-                                echo "<option value=\"", $Choices->IdLanguage, "\"";
-                                if ((isset($AppropriatedLanguage)) and ($AppropriatedLanguage == $Choices->IdLanguage)) {
-                                    echo " selected='selected'";
-                                }
-                                echo ">", $Choices->Name, "</option>";
-                                if ($closeOptGroup) {
-                                    echo "</optgroup>";
-                                    $closeOptGroup = false;
-                                }
-                            }
-                        }
-                        if ($closeOptGroupFinal) {
-                            echo "</optgroup>";
-                        }
-                        ?></select><?php echo $words->flushBuffer(); ?>
-                    <?php echo $words->getFormatted("forum_ChooseYourLanguage") ?>
-                </div>
-            </div>
-        </fieldset> <!-- row -->
     <?php } ?>
-    <fieldset class="bw-row" id="fpost_note_fieldset">
-        <legend onclick="toggleFieldsets('fpost_note');"><?php echo $words->getFormatted("forum_Notify") ?></legend>
+
+    <fieldset class="row mt-2" id="fpost_note_fieldset">
+        <legend onclick="toggleFieldsets('fpost_note');" class="h4 m-0"><?php echo $words->getFormatted("forum_Notify") ?></legend>
         <div id="fpost_note">
-            <div>
-                <input type="checkbox" name="NotifyMe" id="NotifyMe" <?php echo $notifymecheck ?>>
-                <label for="NotifyMe"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
-            </div>
+            <input type="checkbox" name="NotifyMe" id="NotifyMe" <?php echo $notifymecheck ?>>
+            <label for="NotifyMe"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
         </div>
     </fieldset>
-    <!-- row -->
 
-
-    <div class="bw-row">
-        <input type="submit" class="button" value="<?php
+    <div class="row">
+        <input type="submit" class="btn btn-primary" value="<?php
         if ($allow_title) { // New Topic
             if ($edit) {
                 echo $words->getFormatted("forum_label_update_topic");
@@ -301,7 +304,6 @@ if (isset($vars['tags']) && $vars['tags']) {
 
         ?>"/>
     </div>
-    <!-- row -->
 
 </form>
 

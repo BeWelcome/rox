@@ -37,11 +37,11 @@ class GroupsOverviewPage extends GroupsBasePage
     protected function teaserContent()
     {
         $words = $this->getWords();
-        ?><div id="teaser" class="page-teaser clearfix">
-        <div id="teaser_l1"> 
-        <h1><a href="groups"><?= $words->get('Groups');?></a></h1>
+        ?>
+        <div>
+            <h1><a href="groups"><?= $words->get('Groups');?></a></h1>
         </div>
-        </div><?php
+        <?php
     }
     
     

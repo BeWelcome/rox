@@ -122,7 +122,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
         </p>
         </div>
 
-        <div class="forumsedit float-right">
+        <div class="float-right">
 
             <?php
 

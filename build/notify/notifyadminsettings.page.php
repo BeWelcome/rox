@@ -10,11 +10,11 @@ class NotifyAdminSettingsPage extends NotifyBasePage
     {
         // &gt; or &raquo; ?
         ?>
-        <div id="teaser" class="page-teaser clearfix">
-        <div id="teaser_l1"> 
-        <h1><a href="groups">Groups</a> &raquo; <a href="">Admininstrate groupmembers</a></h1>
+
+        <div>
+            <h1><a href="groups">Groups</a> &raquo; <a href="">Admininstrate groupmembers</a></h1>
         </div>
-        </div>
+
         <?php
     }
 

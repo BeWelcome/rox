@@ -65,12 +65,12 @@ $layoutbits = new MOD_layoutbits();
         $last_url = $url.($maxPage != 1 ? '/page'.$maxPage : '').'/#post'.$thread->last_postid;
     ?>
     <tr>
-        <th class="text-center p-2 align-self-center">
+        <th class="middle p-2">
             <a href="members/<?php echo $thread->first_author; ?>"><img src="members/avatar/<?php echo $thread->first_author; ?>?size=50" alt="<?php echo $thread->first_author; ?>" title="<?php echo $thread->first_author; ?>" /><br>
                 <small><?php echo $thread->first_author; ?></small>
             </a>
         </th>
-        <td class="p-2">
+        <td class="middle text-left p-2">
             <?php
             if ($thread->stickyvalue < 0) {
                 echo '<i class="fa fa-exclamation-circle" alt="'. $words->getSilent('PinnedPost') .'" title="'. $words->getSilent('PinnedPost') .'" /></i> ' . $words->flushBuffer();
@@ -169,10 +169,10 @@ $layoutbits = new MOD_layoutbits();
                 if ($breadcrumb) {
                     // we will later use the 'tags' word, but don't want an edit link inside the html tag!
                     if ($ShowHelp) {
-                        echo '<img src="styles/css/minimal/images/iconsfam/help.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
+                        echo '<i class="fa fa-question-circle-o pr-1" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'></i>' . $words->flushBuffer();
                     }
                     elseif (isset($thread->continent) && $thread->continent) {
-                        echo '<img src="styles/css/minimal/images/iconsfam/world.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
+                        echo '<i class="fa fa-globe pr-1" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'></i>' . $words->flushBuffer();
                     }
                     else {
                         echo '<i class="fa fa-tag" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'"/></i>' . $words->flushBuffer();
@@ -180,23 +180,19 @@ $layoutbits = new MOD_layoutbits();
                     echo $breadcrumb;
                 }
                 ?></span>
-
-
-            <!-- <a href="#"><strong>Text - what if this was really  lot of text. So much it wouldn't even fit on one line</strong></a><br><small><strong>Group: </strong><a href="#">Some Group Name</a></small> -->
-
         </td>
-        <td class="text-center p-2"><?php echo $thread->replies; ?></td>
-        <td class="text-center p-2"><?php echo number_format($thread->views); ?></td>
-        <td class="p-2 align-self-center text-nowrap">
+        <td class="middle p-2"><?php echo $thread->replies; ?></td>
+        <td class="middle p-2"><?php echo number_format($thread->views); ?></td>
+        <td class="middle text-nowrap p-2">
             <div class="d-flex flex-row mr-2">
                 <div class="align-self-center"><a href="members/<?php echo $thread->last_author; ?>"><img src="members/avatar/<?php echo $thread->last_author; ?>?size=30" alt="<?php echo $thread->last_author; ?>" title="<?php echo $thread->last_author; ?>" /></a></div>
-                <div class="pl-2 align-self-center">
+                <div class="pl-2 align-self-center text-left">
                     <small><a href="members/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a></small><br>
                     <span class="small gray" title="<?php echo date($words->getSilent('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time, $this->getSession())); ?>"><a href="<?php echo $last_url; ?>"><?php echo $layoutbits->ago($thread->last_create_time); ?></a></span>
                 </div>
             </div>
         </td>
-        <td class="p-2">
+        <td class="middle p-2">
             <a href="<?php echo $last_url; ?>"><i class="fa fa-chevron-right" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>"></i></a><?php echo $words->flushBuffer(); ?>
         </td>
     </tr>

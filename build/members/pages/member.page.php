@@ -162,19 +162,15 @@ class MemberPage extends PageWithActiveSkin
     {
         ?>
         <div class="row">
-          <div id="col1_left">
-            <div id="col1_content">
+          <div class="col-12 col-lg-2">
               <? $name = 'column_col1';?>
               <?php $this->$name() ?>
-            </div>
           </div> 
-          <div id="col3_right">
-            <div id="col3_content">
+          <div class="col-12 col-lg-10">
               <?php $this->teaserReplacement(); ?>
               <? $name = 'column_col3';?>
                 <?php $this->$name() ?>
               <?php $this->$name ?>
-            </div> 
           </div>
         </div>
         <?php
@@ -196,35 +192,32 @@ class MemberPage extends PageWithActiveSkin
         $picture_url = 'members/avatar/'.$member->Username.'?500';
         ?>
 
-        <div id="profile_pic" >
-                <a href="<?=$picture_url?>" id="profile_image"><img src="<?=$thumbnail_url?>" alt="Picture of <?=$member->Username?>" class="framed" height="150" width="150"/></a>
+        <div class="text-center">
+                <a href="<?=$picture_url?>"><img src="<?=$thumbnail_url?>" alt="Picture of <?=$member->Username?>" class="framed" height="150" width="150"/></a>
         </div> <!-- profile_pic -->
 
-            <div class="list-group mt-1">
-              <?php
-
-        $active_menu_item = $this->getSubmenuActiveItem();
-        foreach ($this->getSubmenuItems() as $index => $item) {
-            $name = $item[0];
-            $url = $item[1];
-            $label = $item[2];
-            $class = isset($item[3]) ? $item[3] : 'leftpadding';
-            if ($name === $active_menu_item) {
-                $attributes = ' class="list-group-item active '.$class.'"';
-                $around = '';
-            } else {
-                $attributes = ' class="list-group-item '.$class.'"';
-                $around = '';
-            }
-
-            ?>
-              <?=$around?><a <?=$attributes ?> href="<?=$url ?>"><?=$label ?></a><?=$around?>
-              <?=$words->flushBuffer(); ?>
+        <div class="list-group mt-1">
             <?php
 
-        }
+            $active_menu_item = $this->getSubmenuActiveItem();
+            foreach ($this->getSubmenuItems() as $index => $item) {
+                $name = $item[0];
+                $url = $item[1];
+                $label = $item[2];
+                $attributes = '';
+                if ($name === $active_menu_item) {
+                    $attributes = ' active';
+                }
 
-            ?></div>
+                ?>
+                  <a class="list-group-item<?=$attributes ?>" href="<?=$url ?>"><?=$label ?></a>
+                  <?=$words->flushBuffer(); ?>
+                <?php
+
+            }
+
+                ?>
+        </div>
 <?php
     }
 

@@ -1,6 +1,6 @@
-<div id="profile-info">
-  <div class="subcolumns">
-    <h1 id="username"><strong>
+<div class="row">
+  <div class="col-12 col-md-8">
+    <h1 class="m-0"><strong>
       <?php if ($this->passedAway == 'PassedAway') {
            echo $words->get('ProfileInMemoriam', $member->Username);
       } else {
@@ -10,55 +10,93 @@
 
       <?$name = $member->name(); ?><?=($name == '') ? $member->Occupation : $name;?>
       <?php if (!$this->passedAway) : ?>
-      <?=($member->Accomodation == 'anytime') ? '
-        <img src="images/icons/door_open.png" alt="'.$member->Accomodation.'" title="' . $words->getSilent('CanOfferAccomodation') . '" />': ''?>
-      <?=$words->flushBuffer()?>
+
+          <?php
+          $icons = array();
+          if (strstr($member->TypicOffer, "CanHostWeelChair"))
+          {
+              $icons[] = '<img src="images/icons/wheelchairblue.png" ' .
+                  'alt="' . $words->getSilent('wheelchair') . '" ' .
+                  'title="' . $words->getSilent('CanHostWheelChairYes') . '" />';
+          }
+
+          switch($member->Accomodation)
+          {
+              case 'anytime':
+                  $icons[] = '<img src="images/icons/anytime.png"' .
+                      ' alt="' . $words->getSilent('anytime') .'"' .
+                      ' title="' . $words->getSilent('CanOfferAccomodation') . '" />';
+                  break;
+              case 'dependonrequest':
+                  $icons[] = '<img src="images/icons/dependonrequest.png"' .
+                      ' alt="' . $words->getSilent('dependonrequest') .'"' .
+                      ' title="' . $words->getSilent('CanOfferdependonrequest') . '" />';
+                  break;
+              case 'neverask':
+                  $icons[] = '<img src="images/icons/neverask.png"' .
+                      ' alt="' . $words->getSilent('neverask') .'"' .
+                      ' title="' . $words->getSilent('CannotOfferneverask') . '" />';
+                  break;
+          }
+
+          for($ii=0; $ii < count($icons); $ii++)
+          {
+              echo $icons[$ii];
+          }
+          ?>
+            <?=$words->flushBuffer()?>
       <?php endif; ?>
     </h1> <!-- username -->
-    <div class="c50l">
-      <div class="subcl">
 
-        <?php echo $this->statusForm($member); ?>
-        <div id="navigation-path" >
-          <h2>
-            <?php
-              // The "Hong Kong solution": Only display and link country.
-              if ($member->region() == '' && $member->city() == $member->country()):
-            ?>
+      <?php if($occupation != null){
+          echo '<p class="m-0 small">' . $occupation . '</p>';
+      } ?><!-- occupation -->
+
+      <h2>
+          <?php
+          // The "Hong Kong solution": Only display and link country.
+          if ($member->region() == '' && $member->city() == $member->country()):
+              ?>
               <strong><a class="" href="places/<?php echo $member->country() . "/" . $member->countrycode(); ?>"><?php echo $member->country(); ?></a></strong>
-            <?php
-              // In case of missing parent in Geonames DB: Only display city and country. Don't link city.
-              elseif ($member->region() == ''):
-            ?>
+              <?php
+          // In case of missing parent in Geonames DB: Only display city and country. Don't link city.
+          elseif ($member->region() == ''):
+              ?>
               <strong><?php echo $member->city(); ?></strong>, <a class="" href="places/<?php echo $member->country() . "/" . $member->countryCode(); ?>"><?php echo $member->country(); ?></a>
-            <?php
-              // For every other city display normal path. Don't show region if it has the same name as city.
-              else:
-            ?>
+              <?php
+          // For every other city display normal path. Don't show region if it has the same name as city.
+          else:
+              ?>
               <strong><a class="" href="places/<?php echo $member->country() . "/" . $member->countrycode() . "/" . $member->region() . "/" . $member->regioncode() . "/" . $member->city . "/" . $member->IdCity; ?>">              <?php echo $member->city(); ?></a></strong><?php if ($member->region() != $member->city()): ?>,
               <a class="" href="places/<?php echo $member->country() . "/" . $member->countryCode() . "/" . $member->region() . "/" . $member->regioncode(); ?>"><?php echo $member->region(); ?></a><?php endif; ?>,
               <a class="" href="places/<?php echo $member->country() . "/" . $member->countryCode(); ?>"><?php echo $member->country(); ?></a>
+              <?php
+          endif;
+          ?>
+      </h2><!-- location -->
+  </div>
+      <div class="col-12 col-md-4 card">
+
+        <?php echo $this->statusForm($member); ?>
+
+          <p class="m-0 p-2">
             <?php
-              endif;
-            ?>
-          </h2>
-          <p class="grey">
-            <?=$agestr ?><?php if($occupation != null) echo ", ".$occupation; ?><br />
-             <?php
+                echo $agestr;
                 $strGender = MOD_layoutbits::getGenderTranslated($member->Gender, $member->HideGender, true);
                 if (!empty($strGender)) {
-                    echo $strGender . "<br />";
+                    echo ', ' . $strGender;
                 }
+                echo '<br>';
              ?>
             <?php if ($this->loggedInMember) : ?>
-                <?php echo $words->get("MemberSince"). ': ';
+                <?php echo '<span class="bold">' . $words->get("MemberSince") . ': </span>';
                     if (strtotime($member->created) > strtotime('-1 week')){
                         echo $words->get("LastLoginPrivacy");
                     } else {
                         echo $layoutbits->ago(strtotime($member->created));
                     }
                     echo  $this->memberSinceDate($member);
-                    echo '<br>'.$words->get("LastLogin").': ';
+                    echo '<br><span class="bold">' . $words->get("LastLogin") . ': </span>';
                     if (strtotime($member->LastLogin) > strtotime('-1 week')){
                         echo $words->get("LastLoginPrivacy");
                     } else {
@@ -67,22 +105,16 @@
                     ?>
             <?php endif; ?>
           </p>
-        </div> <!-- navigation-path -->
-      </div> <!-- subcl -->
-    </div> <!-- c50l -->
-    <div class="c50r" >
-      <div class="subcr" >
+      </div>
+    </div> <!-- header content -->
 
         <?php
             if (get_class($this) == 'EditMyProfilePage' || get_class($this) == 'EditProfilePage') $urlstring = 'editmyprofile';
             if (get_class($this) == 'ProfilePage' || get_class($this) == 'MyProfilePage') $urlstring = 'members/'.$member->Username;
-            if (isset($urlstring)) {
-                require 'profileversion.php';
-            }
-        ?>
-
-      </div> <!-- subcr -->
-    </div> <!-- c50r -->
-  </div> <!-- subcolumns -->
-</div> <!-- profile-info -->
-
+            if (isset($urlstring)) { ?>
+            <div class="row" >
+                <div class="col-12" >
+                    <?php require 'profileversion.php'; ?>
+                </div>
+            </div>
+            <?php } ?>

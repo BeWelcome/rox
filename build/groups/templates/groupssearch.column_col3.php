@@ -1,4 +1,4 @@
-<div id="groups">
+<div class="col-12">
 
     <div class="row mt-2">
 
@@ -36,15 +36,12 @@
             $created_order = (($this->result_order == "createdasc") ? 'createddesc' : 'createdasc');
             $category_order = (($this->result_order == "categoryasc") ? 'categorydesc' : 'categoryasc');
             ?>
-            <p><strong><?php echo $words->get('GroupsSearchOrdered');?>:</strong> <?php echo $words->get('GroupsSearchOrdered' . $this->result_order)?>&nbsp;&nbsp;&nbsp;
-            <strong><?= $words->get('GroupsSearchOrder');?></strong>
-            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&order=<?=$act_order;?>&<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderBy' . $act_order); ?></a>
-            |
-            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&order=<?=$name_order;?>&<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderBy' . $name_order); ?></a>
-            |
-            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&order=<?=$member_order;?>&<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderBy' . $member_order); ?></a>
-            |
-            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&order=<?=$created_order;?>&<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderDate' . $created_order); ?></a></p>
+            <div class="mb-2"><span class="bold"><?php echo $words->get('GroupsSearchOrdered');?>:</span> <span class="p-2" style="border: 1px solid #888; border-radius: 0.25rem;"><?php echo $words->get('GroupsSearchOrdered' . $this->result_order)?></span>
+            <span class="bold ml-3"><?= $words->get('GroupsSearchOrder');?></span>
+            <a class="btn btn-sm btn-primary mx-1" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&order=<?=$act_order;?>&<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderBy' . $act_order); ?></a>
+            <a class="btn btn-sm btn-primary mx-1" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&order=<?=$name_order;?>&<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderBy' . $name_order); ?></a>
+            <a class="btn btn-sm btn-primary mx-1" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&order=<?=$member_order;?>&<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderBy' . $member_order); ?></a>
+            <a class="btn btn-sm btn-primary mx-1" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&order=<?=$created_order;?>&<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderDate' . $created_order); ?></a></div>
         </div>
             <?
 // Categories link disabled until we have categories
@@ -52,24 +49,25 @@
 //            <a class="grey" href="groups/search?GroupsSearchInput={$this->search_terms}&amp;Order={$category_order}&Page={$this->result_page}">Category</a>
 
             echo <<<HTML
-<div class="d-flex align-content-stretch flex-wrap">
+<div class="col-12">
+<div class="row">
 HTML;
             foreach ($search_result as $group_data) :
 
                 ?>
-            <div class="d-flex flex-row m-2">
-                <div style="width: 80px; height: 80px;">
+            <div class="col-12 col-md-6 col-lg-4 p-2">
+                <div class="float-left h-100 mr-2" style="width: 80px;">
                     <!-- group image -->
                     <a href="groups/<?=$group_data->getPKValue() ?>">
                         <img class="framed" alt="<?=htmlspecialchars($group_data->Name, ENT_QUOTES) ?>" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>" style="width: 80px; height: 80px;" />
-                    </a><br>
+                    </a>
                 </div>
-                <div class="ml-2">
+                <div>
                     <!-- group name -->
                     <h4><a href="groups/<?=$group_data->getPKValue() ?>"><?=htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a></h4>
                     <!-- group details -->
                     <ul class="groupul mt-1">
-                        <li><i class="fa fa-group"></i> <?=$group_data->getMemberCount(); ?></li>
+                        <li><i class="fa fa-group" title="Number of group members"></i> <?=$group_data->getMemberCount(); ?></li>
                         <li><?= $words->get('GroupsDateCreation');?>: <?=date('d F Y', ServerToLocalDateTime(strtotime($group_data->created), $this->getSession())); ?></li>
                         <?php if ($group_data !== 0) {?>
                             <li><?php
@@ -84,7 +82,6 @@ HTML;
                                     echo $words->get('GroupsNoPostYet');
                                 }
 
-
                                 ?></li>
                         <?php } ?>
                     </ul>
@@ -94,7 +91,8 @@ HTML;
                 <?php
             endforeach ;
  ?>
-    </div> <!-- end row -->
+    </div>
+</div><!-- end row -->
     <?php
     $this->pager->render();
     ?>

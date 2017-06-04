@@ -37,7 +37,7 @@ $User = APP_User::login();
 	if ($User) { 
 		?>
 		<div class="r">
-		<a class="button" role="button" href="forums/new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a>
+		<a class="btn btn-primary" role="button" href="forums/new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a>
 		<?php echo $this->words->flushBuffer(); ?>
 		</div> <!-- r -->
 		<?php 

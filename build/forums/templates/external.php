@@ -32,8 +32,8 @@ $layoutbits = new MOD_layoutbits();
     if ($threads = $boards->getThreads()) {
 ?>
 
-<table class="forumsboardthreads">
-
+<table class="table table-responsive table-striped table-hover">
+    <tbody>
 <?php 
 $threadsliced = array_slice($threads, 0, 5);
     foreach ($threadsliced as $cnt =>  $thread) {
@@ -50,7 +50,7 @@ $threadsliced = array_slice($threads, 0, 5);
 
         ?>
             <tr>
-                <td class="forumsboardthreadtitle"><?php echo '<img src="styles/css/minimal/images/iconsfam/comment_add.png" alt="' . $words->getBuffered('tags') . '" title="' . $words->getBuffered('tags') . '" />' . $words->flushBuffer(); ?>
+                <td><i class="fa fa-comments-o pr-1"></i>
                     <?php
                     if ($thread->ThreadDeleted=='Deleted') {
                         echo "[Deleted]" ;
@@ -59,19 +59,18 @@ $threadsliced = array_slice($threads, 0, 5);
                         echo "[ModOnly]" ;
                     }
                     ?>
-                    <a href="<?php echo $url; ?>" class="news">
+                    <a href="<?php echo $url; ?>" class="bold">
                     <?php
                     echo $words->fTrad($thread->IdTitle);
-                    ?></a><br />
+                    ?></a><br>
                     <span class="small grey"><?php echo $words->getSilent('by');?> <a href="members/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
                     <?php if ($thread->IdGroup > 0 && $showGroups)
                         {
-                            echo $words->getFormatted('in') . ' <a href="groups/' . $thread->IdGroup . '/" title="' . $words->getSilent('Group') . ": " . $thread->GroupName . '">' . MOD_layoutbits::truncate($thread->GroupName, 13);
+                            echo $words->getFormatted('in') . ' <a href="groups/' . $thread->IdGroup . '/" title="' . $words->getSilent('Group') . ": " . $thread->GroupName . '">' . MOD_layoutbits::truncate($thread->GroupName, 13) . "</a>";
                         }
                     ?>
-                    <?php echo '</a> - <span title="' . date($words->getSilent('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time, $this->getSession())) . '"><a href="' . $last_url . '" class="grey">' . $layoutbits->ago($thread->last_create_time) . '</a></span>'; ?>
-                    </span>
-                    <a href="<?php echo $last_url; ?>"><img src="styles/css/minimal/images/iconsfam/bullet_go.png" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>" align="absmiddle" /></a><?php echo $words->flushBuffer(); ?>
+                    <?php echo ' - <span title="' . date($words->getSilent('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time, $this->getSession())) . '"><a href="' . $last_url . '" class="grey">' . $layoutbits->ago($thread->last_create_time) . '<i class="fa fa-caret-right ml-1" title="' . $words->getBuffered('to_last') . '"></i></a></span>'; ?>
+                  <?php echo $words->flushBuffer(); ?>
                 </td>
             </tr>
         <?php
@@ -79,7 +78,7 @@ $threadsliced = array_slice($threads, 0, 5);
 
 
 ?>
-
+    </tbody>
 </table>
 
 <?php
@@ -97,7 +96,7 @@ $threadsliced = array_slice($threads, 0, 5);
 
     if ($showNewTopicButton && $User && $uri != 'forums/') {
     ?>
-    <div id="boardnewtopicbottom"><a class="button" role="button" href="<?php echo $this->uri; ?>new
+    <div id="boardnewtopicbottom"><a class="btn btn-primary" href="<?php echo $this->uri; ?>new
     <?php 
     if (!empty($this->_model->IdGroup)) echo "/u" . $this->_model->IdGroup ;
     echo "\">",$words->getBuffered('ForumNewTopic');

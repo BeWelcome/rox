@@ -205,7 +205,7 @@ $layoutbits = new MOD_layoutbits();
 <?php
 if ($User && empty($noForumNewTopicButton)) {
 ?>
-<div id="boardnewtopicbottom"><a class="button" role="button" href="<?php echo $uri; ?>new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a><?php echo $words->flushBuffer(); ?></div>
+<a class="btn btn-primary float-right" href="<?php echo $uri; ?>new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a><?php echo $words->flushBuffer(); ?></div>
 <?php
 }
 ?>

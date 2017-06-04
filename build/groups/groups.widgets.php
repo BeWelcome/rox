@@ -64,7 +64,7 @@ class GroupMemberlistWidget  // extends MemberlistWidget?
         foreach ($memberships as $membership)
         {
             echo <<<HTML
-            <div class="groupmembers center float_left">                
+            <div class="groupmembers center float-left">                
 HTML;
                 echo MOD_layoutbits::PIC_50_50($membership->Username);
                 echo <<<HTML

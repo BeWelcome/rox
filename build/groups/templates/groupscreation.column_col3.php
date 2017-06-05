@@ -27,46 +27,89 @@
     }
 
 ?>
-    <div id="groups">
-        <form method="post" action="" enctype='multipart/form-data'>
+
+<div class="col-12 col-lg-5">
+    <form method="post" action="" enctype='multipart/form-data'>
         <?=$callback_tag ?>
-        <fieldset>
-            <legend><?= $words->get('GroupsNewHeading'); ?></legend>
-            <?= ((!empty($problems['General'])) ? "<p class='error'>" . $words->get('GroupsCreationFailed') . "</p>" : '' ); ?>
+    <?= ((!empty($problems['General'])) ? "<p class='error'>" . $words->get('GroupsCreationFailed') . "</p>" : '' ); ?>
 
-            <p><?= ((!empty($problems['Group_'])) ? "<p class='error'>" . $words->get('GroupsNameMissing') . "</p>" : '' ); ?>
-            <h3><label for="name"><?= $words->get('Name');?>:</label></h3>
-            <input type="text" id="name" name="Group_" class="long" value='<?=$Group_?>' /></p>
+        <?php if (!empty($problems['ImageUploadTooBig']) && $problems['ImageUploadTooBig']){
+            echo "<p class='alert-danger p-2'>" . $words->get('GroupsImageUploadTooBig') . "</p>";
+        }
+        if (!empty($problems['ImageUpload']) && $problems['ImageUpload']){
+            echo "<p class='alert-danger p-2'>" . $words->get('GroupsImageUploadFailed') . "</p>";
+        }?>
+        <h3><?= $words->get('GroupsAddImage'); ?></h3>
+        <label for='group_image'><?= $words->get('GroupsImage'); ?></label><br /><input id='group_image' name='group_image' type='file' />
 
-            <p><?= ((!empty($problems['GroupDesc_'])) ? "<p class='error'>" . $words->get('GroupsDescriptionMissing') ."</p>" : '' ); ?>
-            <h3><label for="description"><?= $words->get('Description');?>:</label></h3>
-            <textarea  id="description" name="GroupDesc_" cols="60" rows="5" class="long" ><?=$GroupDesc_?></textarea></p>
+        <?= ((!empty($problems['Group_'])) ? "<p class='alert-danger p-2 mt-3'>" . $words->get('GroupsNameMissing') . "</p>" : '' ); ?>
+        <div class="input-group mt-3">
+            <span class="input-group-addon bold" id="newgroupname"><?= $words->get('Name');?></span>
+            <label for="name" class="sr-only"><?= $words->get('Name');?></label>
+            <input class="form-control w-100" maxlength="200" id="name" name="Group_" value="<?=$Group_?>" aria-describedby="newgroupname" type="text">
+        </div>
 
-            <p><?= ((!empty($problems['Type'])) ? "<p class='error'>" . $words->get('GroupsTypeMissing') . "</p>" : '' ); ?>
-            <h3><?= $words->get('GroupsJoinHeading'); ?></h3>
-            <ul>
-                <li><input type="radio" id="public" name="Type" value="Public"<?= (($Type=='Public') ? ' checked': ''); ?> /><label for="public" ><?=$words->get('GroupsJoinPublic'); ?></label></li>
-                <li><input type="radio" id="approved" name="Type" value="NeedAcceptance"<?= (($Type=='NeedAcceptance') ? ' checked': ''); ?> /><label for="approed" ><?=$words->get('GroupsJoinApproved'); ?></label></li>
-                <li><input type="radio" id="invited" name="Type" value="NeedInvitation"<?= (($Type=='NeedInvitation') ? ' checked': ''); ?> /><label for="invited" ><?=$words->get('GroupsJoinInvited'); ?></label></li>
-            </ul></p>
 
-            <p><?= ((!empty($problems['Visibility'])) ? "<p class='error'>" . $words->get('GroupsVisibilityMissing') . "</p>" : '' ); ?>
-            <h3><?= $words->get('GroupsVisiblePostsHeading'); ?></h3>
-            <ul>
-                <li><input type="radio" id="visible" name="VisiblePosts" value="yes"<?= (($VisiblePosts=='yes') ? ' checked="checked"': ''); ?> /><label for="visible" ><?=$words->get('GroupsVisiblePosts'); ?></label></li>
-                <li><input type="radio" id="invisible" name="VisiblePosts" value="no"<?= (($VisiblePosts=='no') ? ' checked="checked"': ''); ?> /><label for="invisible" ><?=$words->get('GroupsInvisiblePosts'); ?></label></li>
-            </ul></p>
+        <?= ((!empty($problems['GroupDesc_'])) ? "<p class='alert-danger p-2 mt-3'>" . $words->get('GroupsDescriptionMissing') ."</p>" : '' ); ?>
+        <div class="input-group my-3">
+            <span class="input-group-addon bold" style="white-space: normal;" id="newgroupdescription"><?= $words->get('Description');?></span>
+            <label for="description" class="sr-only"><?= $words->get('Description');?></label>
+            <textarea  id="description" name="GroupDesc_" aria-describedby="newgroupdescription" rows="5" class="w-100" ><?=$GroupDesc_?></textarea>
+        </div>
 
-                      <?php if (!empty($problems['ImageUploadTooBig']) && $problems['ImageUploadTooBig']){
-                                echo "<p class='error'>" . $words->get('GroupsImageUploadTooBig') . "</p>";
-                            }
-                            if (!empty($problems['ImageUpload']) && $problems['ImageUpload']){
-                                echo "<p class='error'>" . $words->get('GroupsImageUploadFailed') . "</p>";
-                            }?>
+</div>
 
-            <h3><?= $words->get('GroupsAddImage'); ?></h3>
-            <label for='group_image'><?= $words->get('GroupsImage'); ?></label><br /><input id='group_image' name='group_image' type='file' />
+<div class="col-12 col-lg-7">
 
-            </fieldset>
-        </form>
-    </div>
+    <?= ((!empty($problems['Type'])) ? "<p class='alert-danger p-2'>" . $words->get('GroupsTypeMissing') . "</p>" : '' ); ?>
+
+    <fieldset class="form-group">
+        <legend class="m-0">
+            <label class="m-0"><h3><?= $words->get('GroupsJoinHeading'); ?></h3></label>
+        </legend>
+
+        <div class="form-check">
+            <label>
+                <input type="radio" id="public" name="Type" value="Public"<?= (($Type=='Public') ? ' checked': ''); ?>>
+                <?=$words->get('GroupsJoinPublic'); ?>
+            </label>
+        </div>
+        <div class="form-check">
+            <label>
+                <input type="radio" id="approved" name="Type" value="NeedAcceptance"<?= (($Type=='NeedAcceptance') ? ' checked': ''); ?>>
+                <?=$words->get('GroupsJoinApproved'); ?>
+            </label>
+        </div>
+        <div class="form-check">
+            <label>
+                <input type="radio" id="invited" name="Type" value="NeedInvitation"<?= (($Type=='NeedInvitation') ? ' checked': ''); ?>>
+                <?=$words->get('GroupsJoinInvited'); ?>
+            </label>
+        </div>
+    </fieldset>
+
+    <?= ((!empty($problems['Visibility'])) ? "<p class='alert-danger p-2 mt-3'>" . $words->get('GroupsVisibilityMissing') . "</p>" : '' ); ?>
+    <fieldset class="form-group my-3">
+        <legend class="m-0">
+            <label class="m-0"><h3><?= $words->get('GroupsVisiblePostsHeading'); ?></h3></label>
+        </legend>
+
+        <div class="form-check">
+            <label>
+                <input type="radio" id="visible" name="VisiblePosts" value="yes"<?= (($VisiblePosts=='yes') ? ' checked="checked"': ''); ?>>
+                <?=$words->get('GroupsVisiblePosts'); ?>
+            </label>
+        </div>
+        <div class="form-check">
+            <label>
+                <input type="radio" id="invisible" name="VisiblePosts" value="no"<?= (($VisiblePosts=='no') ? ' checked="checked"': ''); ?>>
+                <?=$words->get('GroupsInvisiblePosts'); ?>
+            </label>
+        </div>
+    </fieldset>
+</div>
+
+<div class="col-12 text-center">
+    <input type="submit" class="btn btn-block btn-primary m-2" value="Create Group">
+    </form>
+</div>

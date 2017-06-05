@@ -25,24 +25,37 @@
     }
 
 ?>
-    <div id="groups">
+
+<form method="post" action="" enctype='multipart/form-data'>
+    <?=$callback_tag ?>
+
+    <div class="col-12">
         <h3><?= $words->get('GroupsNewHeading'); ?></h3>
-        <form method="post" action="" enctype='multipart/form-data'>
-        <?=$callback_tag ?>
-            <?= ((!empty($problems['General'])) ? "<p class='error'>" . $words->get('GroupsCreationFailed') . "</p>" : '' ); ?>
-            <label for="name">Name:</label><?= ((!empty($problems['Group_'])) ? "<span class='error'>" . $words->get('GroupsCreationNameMissing') . "</span>" : '' ); ?><br />
-            <input type="text" id="name" name="Group_" class="long" value='<?=$Group_?>' />
-            <br /><br />
-            <label for="description">Description:</label><?= ((!empty($problems['GroupDesc_'])) ? "<span class='error'>" . $words->get('GroupsCreationDescriptionMissing') ."</span>" : '' ); ?><br />
-            <textarea  id="description" name="GroupDesc_" cols="60" rows="5" class="long" ><?=$GroupDesc_?></textarea><br /><br />
-            <h3><?= $words->get('GroupsJoinHeading'); ?></h3><?= ((!empty($problems['Type'])) ? "<span class='error'>" . $words->get('GroupsCreationTypeMissing') . "</span>" : '' ); ?>
-            <ul>
-                <li><input type="radio" id="public" name="Type" value="Public"<?= (($Type=='Public') ? ' checked': ''); ?> /><label for="public" ><?=$words->get('GroupsJoinPublic'); ?></label></li>
-                <li><input type="radio" id="approved" name="Type" value="NeedAcceptance"<?= (($Type=='NeedAcceptance') ? ' checked': ''); ?> /><label for="approed" ><?=$words->get('GroupsJoinApproved'); ?></label></li>
-                <li><input type="radio" id="invited" name="Type" value="NeedInvitation"<?= (($Type=='NeedInvitation') ? ' checked': ''); ?> /><label for="invited" ><?=$words->get('GroupsJoinInvited'); ?></label></li>
-            </ul>
-            <h3><?= $words->get('GroupsAddImage'); ?></h3>
-            <label for='group_image'><?= $words->get('GroupsImage'); ?></label><br /><input id='group_image' name='group_image' type='file' />
-            <p class="center"><input type="submit" class="button" value="Create Group" /></p>
-        </form>
     </div>
+
+    <div class="col-12 col-md-7">
+        <?= ((!empty($problems['General'])) ? "<p class='error'>" . $words->get('GroupsCreationFailed') . "</p>" : '' ); ?>
+        <label for="name">Name:</label><?= ((!empty($problems['Group_'])) ? "<span class='error'>" . $words->get('GroupsCreationNameMissing') . "</span>" : '' ); ?><br />
+        <input type="text" id="name" name="Group_" class="long" value='<?=$Group_?>' />
+        <br /><br />
+        <label for="description">Description:</label><?= ((!empty($problems['GroupDesc_'])) ? "<span class='error'>" . $words->get('GroupsCreationDescriptionMissing') ."</span>" : '' ); ?><br />
+        <textarea  id="description" name="GroupDesc_" cols="60" rows="5" class="long" ><?=$GroupDesc_?></textarea><br /><br />
+    </div>
+
+    <div class="col-12 col-md-5">
+        <h3><?= $words->get('GroupsAddImage'); ?></h3>
+        <label for='group_image'><?= $words->get('GroupsImage'); ?></label><br /><input id='group_image' name='group_image' type='file' />
+
+        <h3><?= $words->get('GroupsJoinHeading'); ?></h3><?= ((!empty($problems['Type'])) ? "<span class='error'>" . $words->get('GroupsCreationTypeMissing') . "</span>" : '' ); ?>
+        <ul>
+            <li><input type="radio" id="public" name="Type" value="Public"<?= (($Type=='Public') ? ' checked': ''); ?> /><label for="public" ><?=$words->get('GroupsJoinPublic'); ?></label></li>
+            <li><input type="radio" id="approved" name="Type" value="NeedAcceptance"<?= (($Type=='NeedAcceptance') ? ' checked': ''); ?> /><label for="approed" ><?=$words->get('GroupsJoinApproved'); ?></label></li>
+            <li><input type="radio" id="invited" name="Type" value="NeedInvitation"<?= (($Type=='NeedInvitation') ? ' checked': ''); ?> /><label for="invited" ><?=$words->get('GroupsJoinInvited'); ?></label></li>
+        </ul>
+    </div>
+
+    <div class="col-12">
+        <p class="center"><input type="submit" class="button" value="Create Group" /></p>
+    </div>
+
+</form>

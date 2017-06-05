@@ -20,36 +20,36 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 ?>
-<fieldset>
-    <legend><?= $words->get('AdministrateRelatedGroupsTitle'); ?></legend>
-    <div class="subcolumns">
-    <h3><?php echo $words->getFormatted('CurrentRelatedGroupsTitle');?></h3>
-        <ul class="clearfix">
-            <?php 
-            $relatedgroups = $this->group->findRelatedGroups($groupId);
-            foreach ($relatedgroups as $group_data) :
-                if (strlen($group_data->Picture) > 0) {
-                    $img_link = "groups/thumbimg/{$group_data->getPKValue()}";
-                } else {
-                    $img_link = "images/icons/group.png";
-                } ?>
-                <li class="picbox_relatedgroup float_left">
-                    <a href="groups/<?php echo $group_data->getPKValue() ?>">
-                        <img class="framed_relatedgroup float_left" alt="Group" src="<?php echo $img_link; ?>"/>
-                    </a>
-                    <div class="userinfo">
-                    <a href="groups/<?php echo $group_data->getPKValue() ?>"><?php echo htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a>
-                        <?php echo $words->get('GroupsMemberCount');?>: <?php echo $group_data->getMemberCount(); ?><br />
-                        <?php echo $words->get('GroupsNewMembers');?>: <?php echo count($group_data->getNewMembers()) ; ?><br />
-                    </div> <!-- userinfo -->
-                </li> <!-- userpicbox_relatedgroup -->
-            <?php endforeach; ?>
-        </ul>   
-    </div><!-- subcolumns -->
-    <div class="subcolumns">   
+        <div class="col-12"><h3><?php echo $words->getFormatted('CurrentRelatedGroupsTitle');?></h3></div>
+
+        <?php
+        $relatedgroups = $this->group->findRelatedGroups($groupId);
+        foreach ($relatedgroups as $group_data) :
+        ?>
+
+        <div class="col-12 col-md-6 col-lg-4 p-2">
+            <div class="float-left h-100 mr-2" style="width: 80px;">
+                <!-- group image -->
+                <a href="groups/<?=$group_data->getPKValue() ?>">
+                    <img class="framed" alt="<?=htmlspecialchars($group_data->Name, ENT_QUOTES) ?>" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>" style="width: 80px; height: 80px;" />
+                </a>
+            </div>
+            <div>
+                <!-- group name -->
+                <a href="groups/<?=$group_data->getPKValue() ?>" class="h4"><?=htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a>
+                <!-- group details -->
+                <ul class="groupul mt-1">
+                    <li><i class="fa fa-group pr-1" title="<?php echo $words->get('GroupsMemberCount');?>"></i> <?=$group_data->getMemberCount(); ?></li>
+                    <li><?= $words->get('GroupsDateCreation');?>: <?=date('d F Y', ServerToLocalDateTime(strtotime($group_data->created), $this->getSession())); ?></li>
+                </ul>
+            </div>
+        </div>
+        <?php endforeach; ?>
+
+    <div class="col-12">
         <?php $logvar = $this->logs;?>
     </div><!-- subcolumns -->
-    <div class="subcolumns"> <?php
+    <div class="col-12"> <?php
         if ($this->isGroupMember())  {
             $add_button_link = "groups/{$this->group->id}/selectrelatedgroup";
             $add_button_word = $words->get('AddRelatedGroupButton');

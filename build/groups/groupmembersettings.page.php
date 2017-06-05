@@ -34,6 +34,8 @@ class GroupMemberSettingsPage extends GroupsBasePage
 {
     protected function column_col3()
     {
+        echo '<div class="col-12">';
+
         $formkit = $this->layoutkit->formkit;
         $callbacktag = $formkit->setPostCallback('GroupsController', 'changeMemberSettings');
         $words = $this->getWords();
@@ -43,8 +45,8 @@ class GroupMemberSettingsPage extends GroupsBasePage
         $redirected = $formkit->mem_from_redirect;
         if (is_object($redirected))
         {
-            $resultmsg = (($redirected->result) ? "<p class=\"note\">{$words->get('GroupMemberSettingsUpdated')}</p>" : "<p class=\"note\">{$words->get('GroupMemberSettingsNotUpdated')}</p>");
-            $problemmsg = (($redirected->problems) ? "<p class=\"error\">{$words->get('GroupMemberSettingsProblems')}</p>" : '');
+            $resultmsg = (($redirected->result) ? "<p class=\"alert-success p-2\">{$words->get('GroupMemberSettingsUpdated')}</p>" : "<p class=\"alert-warning p-2\">{$words->get('GroupMemberSettingsNotUpdated')}</p>");
+            $problemmsg = (($redirected->problems) ? "<p class=\"alert-danger p-2\">{$words->get('GroupMemberSettingsProblems')}</p>" : '');
         }
 
         $a = new APP_User();
@@ -65,25 +67,33 @@ class GroupMemberSettingsPage extends GroupsBasePage
             <legend><?= $words->get('GroupsMemberSettings') ;?><?= htmlspecialchars($this->group->Name, ENT_QUOTES) ?></legend>
             <input type='hidden' name='member_id' value='<?= $this->member->id ;?>' />
             <input type='hidden' name='group_id' value='<?= $membershipinfo->IdGroup ;?>' />
-            <div class="bw-row">
-                <label for="comment"><?= $words->get('GroupsMemberComments') ;?></label><br />
-                <textarea id="comment" name="membershipinfo_comment" cols="60" rows="5" class="long" ><?= (($membershipinfo->Comment != '' ) ? htmlspecialchars($words->mTrad($membershipinfo->Comment)) : '' ); ?></textarea>
-            </div> <!-- row -->
-            <div class="bw-row">
-                <label><?= $words->get('GroupsMemberAcceptMail') ;?>:  </label>
-                <input id='no_option' type="radio" value="no" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'no' || !$membershipinfo->IacceptMassMailFromThisGroup) ? 'checked="checked" ' : '' ); ?>/>
-                <label for="no_option"><?= $words->get('no') ;?></label>
-                <input id='yes_option' type="radio" value="yes" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'yes') ? 'checked="checked" ' : '' ); ?>/>
-                <label for="yes_option"><?= $words->get('yes') ;?></label>
-            </div> <!-- row -->
+            <div class="row mt-3">
+                <div class="col-auto">
+                    <label for="comment"><?= $words->get('GroupsMemberComments') ;?></label><br>
+                    <textarea class="mb-3 p-2" id="comment" name="membershipinfo_comment" cols="30" rows="3"><?= (($membershipinfo->Comment != '' ) ? htmlspecialchars($words->mTrad($membershipinfo->Comment)) : '' ); ?></textarea>
+                </div> <!-- row -->
+                <div class="col-auto">
+                    <label><?= $words->get('GroupsMemberAcceptMail') ;?>:  </label><br>
+
+                    <div class="d-flex btn-group mb-3" data-toggle="buttons">
+                        <label class="btn btn-primary btn-radio active" for="yes_option">
+                            <input id='yes_option' autocomplete="off" type="radio" value="yes" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'yes') ? 'checked="checked" ' : '' ); ?>>Yes
+                        </label>
+                        <label for="no_option" class="btn btn-primary btn-radio">
+                            <input id='no_option' autocomplete="off" type="radio" value="no" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'no' || !$membershipinfo->IacceptMassMailFromThisGroup) ? 'checked="checked" ' : '' ); ?>>No
+                        </label>
+                    </div>
+                </div>
+            </div>
             <?php if ($membershipinfo->IdMember < 0) { ?>
                 <p><?= $words->get('GroupMemberSettingsDisabledInfo') ?></p>
             <?php } ?>
-            <p style="padding-top: 2em"><input type="submit" value="<?= $words->getBuffered('GroupsUpdateMemberSettings') ;?>" /><?=$words->flushBuffer();?></p>
+            <input type="submit" class="btn btn-primary" value="<?= $words->getBuffered('GroupsUpdateMemberSettings') ;?>"><?=$words->flushBuffer();?>
             </fieldset>
         </form>
         <?php
         }
+        echo '</div>';
     }
     
     protected function getSubmenuActiveItem() {

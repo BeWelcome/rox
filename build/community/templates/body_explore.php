@@ -24,14 +24,14 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
 
-<div class="row m-y-1">
-    <div class="col-sm-12 col-md-6">
+<div class="row my-1">
+    <div class="col-12 col-md-6">
         <div class="list-group">
             <a href="/forums" class="list-group-item list-group-item-action">
                 <h5 class="list-group-item-heading"><?php echo $words->get('CommunityDiscussions') ?></h5>
                 <p class="list-group-item-text"><?php echo $words->get('ExploreForumDescription') ?></p>
             </a>
-            <a href="/groups/forums" class="list-group-item list-group-item-action">
+            <a href="/groups/search" class="list-group-item list-group-item-action">
                 <h5 class="list-group-item-heading"><?php echo $words->get('Groups') ?></h5>
                 <p class="list-group-item-text"><?php echo $words->get('ExploreGroupsDescription') ?></p>
             </a>

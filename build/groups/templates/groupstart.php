@@ -15,8 +15,8 @@ $uri = $_SERVER['REQUEST_URI'];
                     <p><?php echo $purifier->purify(nl2br($this->group->getDescription())) ?></p>
                 </div> <!--row clearfix -->
 
-<h3 class="float-left m-0 mb-2"><?php echo $words->getFormatted('ForumRecentPostsLong');?></h3><a href="<? echo $uri; ?>/new" class="btn btn-primary float-right"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a>
-                <div>
+                <div class="pt-2"><h3 class="float-left m-0 mb-2"><?php echo $words->getFormatted('ForumRecentPostsLong');?></h3><a href="<? echo $uri; ?>/new" class="btn btn-primary float-right"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a></div>
+                <div class="pt-5 w-100">
                     <?php
                         if (!$this->isGroupMember() && $this->group->latestPost) {
                             echo '<div class="small">' . $words->get('GroupInfoLastActivity', date('Y-m-d H:i', $this->group->latestPost)) . '</div>';

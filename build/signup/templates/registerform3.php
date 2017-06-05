@@ -53,26 +53,6 @@ echo print_r($vars, true);
                 </div>
 
             </div>
-
-
-            <div class="row m-y-1">
-
-
-                <div class="col-md-8 form-group">
-                    <div class="row">
-                        <div class="col-xs-12">
-
-                        </div>
-                    </div>
-
-                    <div class="col-xs-12 mt-1">
-
-                    </div>
-
-                    <div class="col-xs-12 mt-1">
-
-                    </div>
-                </div>
         </form>
     </div>
 </div>

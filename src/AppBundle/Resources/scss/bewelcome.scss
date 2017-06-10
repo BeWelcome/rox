@@ -93,11 +93,11 @@ blockquote {
   border-radius: 0.2rem;
 }
 
-#message_thread {
-  a .divlink  {
-    color: black;
-  }
+.divlink  {
+  color: black;
+}
 
+#message_thread {
   .message_own {
     @include make-col(11);
     padding: $pagination-padding-x;

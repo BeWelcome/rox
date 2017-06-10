@@ -1,37 +1,6 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<div id="message_thread">
-    {% if current.Sender.Username == my_member.Username %}{% set otherUser = current.Receiver %}{% else %}{% set otherUser = current.Sender %}{% endif %}
-    {% if current.Subject %}{% set currentSubject = current.Subject.Subject %}{% else %}{% set currentSubject = 'Discussion with %s' | trans | format(otherUser.Username)  %} {% endif %}
-    <h1>{{ currentSubject }}</h1>
-    {% for message in thread %}
-        {% set own = (my_member.Username == message.Sender.Username) %}
-    <div class="row">
-        {% if current.id != message.id %}<a class="divlink" href="{{ path('message_show', { id: message.id }) }}">{% endif %}
-        {% if message.Subject %}{% set subject = message.Subject.Subject %}{% else %}{% set subject = '' %} {% endif %}
-        {% if own %}
-            <div class="message_own {% if message.id == current.id %}current{% endif %}">
-                <small class="pull-right text-muted">{{ 'You' | trans }} {{ message.created.DiffForHumans }}</small>
-                <p class="clearfix m-0"></p>
-                {% if currentSubject != '' %}{% if subject != currentSubject %}<p>{{ subject }}</p>{% endif %}{% endif %}
-                {{ message.message | raw }}
-                <a href="/landing">Landing</a>
-            </div>
-        {% else %}
-            <div class="message_other {% if message.id == current.id %}current{% endif %}">
-                <small class="pull-left text-muted">{{ message.Sender.Username }} {{ message.created.DiffForHumans }}</small>
-                <p class="pull-right m-0">{% if not message.WhenFirstRead %}<i class="fa fa-check"></i>{% endif %} <i class="fa fa-close"></i></p>
-                <p class="clearfix m-0"></p>
-                {% if currentSubject != '' %}{% if subject != currentSubject %}<p>{{ subject }}</p>{% endif %}{% endif %}
-                <div {% if message.WhenFirstRead %}style="font-weight: normal"{% else %}style="font-weight: bold"{% endif %}>
-                {{ message.message | raw }}
-                </div>
-            </div>
-        {% endif %}
-        </a>
-    </div>
-    {% endfor %}
-    <div class="row justify-content-end"><a class="btn btn-primary" href="{{ path('message_reply', { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a></div>
-</div>
+{% include ':message:thread.html.twig' %}
+<div class="row justify-content-end"><a class="btn btn-primary" href="{{ path('message_reply', { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a></div>
 {% endblock content %}

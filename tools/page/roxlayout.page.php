@@ -335,15 +335,33 @@ class PageWithRoxLayout extends PageWithHTML
      */
     private function getFlash($type, $remove = false) {
         $flashName = 'flash_' . $type;
+        $flashMessage = "";
         if ($this->_session->has( $flashName )) {
             $flashMessage = $this->_session->get($flashName);
-        } else {
-            $flashMessage = false;
+        }
+        $symfonyFlashes = $this->_session->getFlashBag()->get($type);
+        foreach($symfonyFlashes as $flash) {
+            $flashMessage .= "<p>" . $flash . "</p>";
         }
         if ($remove) {
             $this->_session->remove($flashName);
         }
         return $flashMessage;
+    }
+
+    /**
+     * Get flash notice message and remove from session if needed
+     * @see RoxControllerBase::setFlashNotice() for counterpart
+     * @see templates/shared/roxpage/body.php
+     *
+     * @param bool $remove True if message should be removed from session,
+     *                     false by default
+     *
+     * @return string Flash notice message
+     */
+    public function getFlashSuccess($remove = false) {
+        $flash = $this->getFlash('success', $remove);
+        return $flash;
     }
 
     /**

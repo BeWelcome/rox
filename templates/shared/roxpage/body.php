@@ -18,6 +18,10 @@
     <?php endif; ?>
     <?php if ($this->getFlashNotice()): ?>
         <div class="flash notice"><?php echo $this->getFlashNotice(true); ?></div>
+    <?php endif; ?>
+    <?php $flashSuccess = $this->getFlashSuccess(true);
+        if (strlen($flashSuccess) != 0): ?>
+        <div class="flash success"><?php echo $flashSuccess; ?></div>
     <?php endif;
 
         $side_column_names = $this->getColumnNames();

@@ -72,7 +72,7 @@
     "bootstrap": {
       "version": "4.0.0-alpha.6",
       "from": "twbs/bootstrap#v4-dev",
-      "resolved": "git://github.com/twbs/bootstrap.git#b36d8ae6cb9dcd2e4183202a747d53706f1c1c8a"
+      "resolved": "git://github.com/twbs/bootstrap.git#2d8789508937c98782cba39bd74dc8f145050d97"
     },
     "bootstrap-autohidingnavbar": {
       "version": "1.0.5",
@@ -933,9 +933,9 @@
       "resolved": "https://registry.npmjs.org/pinkie-promise/-/pinkie-promise-2.0.1.tgz"
     },
     "popper.js": {
-      "version": "1.9.4",
-      "from": "popper.js@1.9.4",
-      "resolved": "https://registry.npmjs.org/popper.js/-/popper.js-1.9.4.tgz"
+      "version": "1.9.9",
+      "from": "popper.js@1.9.9",
+      "resolved": "https://registry.npmjs.org/popper.js/-/popper.js-1.9.9.tgz"
     },
     "pretty-bytes": {
       "version": "1.0.4",
@@ -1144,14 +1144,14 @@
       "resolved": "https://registry.npmjs.org/supports-color/-/supports-color-2.0.0.tgz"
     },
     "symfony-collection": {
-      "version": "2.0.4",
-      "from": "symfony-collection@*",
-      "resolved": "https://registry.npmjs.org/symfony-collection/-/symfony-collection-2.0.4.tgz"
+      "version": "2.1.0",
+      "from": "symfony-collection@2.1.0",
+      "resolved": "https://registry.npmjs.org/symfony-collection/-/symfony-collection-2.1.0.tgz"
     },
     "tempusdominus-bootstrap-4": {
       "version": "5.0.0-alpha2",
       "from": "tempusdominus/bootstrap-4",
-      "resolved": "git://github.com/tempusdominus/bootstrap-4.git#8d77d7fca851e7c4dec09207947dc12bc7bc2f88",
+      "resolved": "git://github.com/tempusdominus/bootstrap-4.git#5953bb162d6134381fe87804f6423dbabb0f0211",
       "dependencies": {
         "tempusdominus-core": {
           "version": "5.0.0-alpha2",
@@ -1190,9 +1190,9 @@
       "resolved": "https://registry.npmjs.org/tiny-lr/-/tiny-lr-0.2.1.tgz"
     },
     "tinymce": {
-      "version": "4.6.1",
-      "from": "tinymce@4.6.1",
-      "resolved": "https://registry.npmjs.org/tinymce/-/tinymce-4.6.1.tgz"
+      "version": "4.6.3",
+      "from": "tinymce@4.6.3",
+      "resolved": "https://registry.npmjs.org/tinymce/-/tinymce-4.6.3.tgz"
     },
     "trim-newlines": {
       "version": "1.0.0",
@@ -1210,9 +1210,9 @@
       "resolved": "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz"
     },
     "uglify-js": {
-      "version": "2.8.27",
-      "from": "uglify-js@2.8.27",
-      "resolved": "https://registry.npmjs.org/uglify-js/-/uglify-js-2.8.27.tgz",
+      "version": "2.8.28",
+      "from": "uglify-js@2.8.28",
+      "resolved": "https://registry.npmjs.org/uglify-js/-/uglify-js-2.8.28.tgz",
       "dependencies": {
         "camelcase": {
           "version": "1.2.1",

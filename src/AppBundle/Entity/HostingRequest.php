@@ -7,6 +7,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\DBAL\Exception\InvalidArgumentException;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,6 +21,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class HostingRequest
 {
+    CONST REQUEST_OPEN = 0;
+    CONST REQUEST_DECLINED = 1;
+    CONST REQUEST_ACCEPTED = 2;
+
     /**
      * @var int
      *
@@ -41,14 +46,28 @@ class HostingRequest
      *
      * @ORM\Column(name="departure", type="datetime", nullable=true)
      */
-    private $departure;
+    private $departure = null;
 
     /**
      * @var bool
      *
-     * @ORM\Column(name="estimate", type="boolean", nullable=true)
+     * @ORM\Column(name="flexible", type="boolean", nullable=true)
      */
-    private $estimate;
+    private $flexible = false;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="number_of_travellers", type="integer")
+     */
+    private $numberOfTravellers = 1;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="status", type="integer")
+     */
+    private $status = self::REQUEST_OPEN;
 
     /**
      * Get id.
@@ -111,13 +130,13 @@ class HostingRequest
     /**
      * Set estimate.
      *
-     * @param bool $estimate
+     * @param bool $flexible
      *
      * @return HostingRequest
      */
-    public function setEstimate($estimate)
+    public function setFlexible($flexible)
     {
-        $this->estimate = $estimate;
+        $this->flexible = $flexible;
 
         return $this;
     }
@@ -127,8 +146,62 @@ class HostingRequest
      *
      * @return bool
      */
-    public function getEstimate()
+    public function getFlexible()
     {
-        return $this->estimate;
+        return $this->flexible;
+    }
+
+    /**
+     * Set numberOfTravellers
+     *
+     * @param integer $numberOfTravellers
+     *
+     * @return HostingRequest
+     */
+    public function setNumberOfTravellers($numberOfTravellers)
+    {
+        $this->numberOfTravellers = $numberOfTravellers;
+
+        return $this;
+    }
+
+    /**
+     * Get numberOfTravellers
+     *
+     * @return integer
+     */
+    public function getNumberOfTravellers()
+    {
+        return $this->numberOfTravellers;
+    }
+
+    /**
+     * Set status
+     *
+     * @param integer $status
+     *
+     * @return HostingRequest
+     */
+    public function setStatus($status)
+    {
+        if ($status <> self::REQUEST_OPEN &&
+            $status <> self::REQUEST_DECLINED &&
+            $status <> self::REQUEST_ACCEPTED) {
+            throw new InvalidArgumentException('Request status outside of valid range. Got ' . $status . 'instead of REQUEST_OPEN (0), REQUEST_DECLINED (1) or REQUEST_ACCEPTED(2) ');
+        }
+
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

@@ -17,7 +17,9 @@ class MessageToMemberType extends AbstractType
     {
         $builder
             ->add('subject', SubjectType::class)
-            ->add('message', CKEditorType::class)
+            ->add('message', CKEditorType::class, [
+                'required' => true
+            ])
         ;
     }
 

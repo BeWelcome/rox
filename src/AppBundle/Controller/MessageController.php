@@ -134,8 +134,8 @@ class MessageController extends Controller
             $replyMessage->setCreated(new \DateTime());
 
             $subject = $message->getSubject();
-            if ($subject->getSubject() != $replyMessage->getSubject()) {
-                $subject = new Subject();
+            $replySubject = $replyMessage->getSubject()->getSubject();
+            if ($subject === null || $subject->getSubject() != $replySubject) {
                 $subject = $replyMessage->getSubject();
             }
             $replyMessage->setSubject($subject);
@@ -173,16 +173,17 @@ class MessageController extends Controller
         $messageModel = new MessageModel($this->getDoctrine());
         $thread = $messageModel->getThreadForMessage($message);
 
-        if ($message->isUnread() && $member === $message->getReceiver()) {
-            // Only mark as read when the receiver reads the message, not when
-            // the message is presented to the Sender with url /messages/77/sent
+        if ($message->getRequest() === null && $message->isUnread() && $member === $message->getReceiver()) {
+            // Only mark as read it is a message and when the receiver reads the message,
+            // not when the message is presented to the Sender with url /messages/{id}/sent
             $message->setWhenfirstread(new \DateTime());
             $em = $this->getDoctrine()->getManager();
             $em->persist($message);
             $em->flush();
         }
 
-        return $this->render(':message:view.html.twig', [
+        $view = ($message->getRequest() === null) ? ':message:view.html.twig' : ':request:view.html.twig';
+        return $this->render($view, [
             'current' => $message,
             'thread' => $thread
         ]);
@@ -234,7 +235,7 @@ class MessageController extends Controller
                 )
             ;
             $this->get('mailer')->send($message);
-            $this->addFlash('success', 'Request has been sent.');
+            $this->addFlash('success', 'Message has been sent.');
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
         }
 
@@ -358,7 +359,7 @@ class MessageController extends Controller
     }
 
     /**
-     * @Route("/reply/request/{id}", name="hosting_request_reply")
+     * @Route("/request/{id}/reply", name="hosting_request_reply")
      *
      * @param Request $request
      * @param Message $hostingRequest
@@ -368,15 +369,25 @@ class MessageController extends Controller
     public function hostingRequestReplyAction(Request $request, Message $hostingRequest)
     {
         if ($hostingRequest->getRequest() == null) {
+            // Todo redirect to message instead of throwing an exception
             throw new InvalidArgumentException();
         }
 
-        $requestForm = $this->createForm(MessageRequestType::class, $hostingRequest);
+        $requestForm = $this->createForm(MessageRequestType::class);
         $requestForm->handleRequest($request);
 
-        return $this->render(':message:request.html.twig', [
-            'receiver' => $hostingRequest->getReceiver(),
+        if ($requestForm->isSubmitted() && $requestForm->isValid())
+        {
+
+        }
+
+        $messageModel = new MessageModel($this->getDoctrine());
+        $thread = $messageModel->getThreadForMessage($hostingRequest);
+
+        return $this->render(':request:reply.html.twig', [
             'form' => $requestForm->createView(),
+            'current' => $hostingRequest,
+            'thread' => $thread
         ]);
     }
 }

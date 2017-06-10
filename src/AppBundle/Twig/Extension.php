@@ -60,6 +60,13 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
                     'is_safe' => ['html'],
                 ]
             ),
+            new Twig_SimpleFilter(
+                'purify',
+                [$this, 'purify'],
+                [
+                    'is_safe' => ['html'],
+                ]
+            ),
         ];
     }
 
@@ -82,6 +89,20 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
         ]);
 
         return $truncated;
+    }
+
+    /**
+     * Uses the HTMLPurifier to ensure safe HTML or display of messages and other user provided information.
+     *
+     * @param string $text     string to truncate
+     *
+     * @return string purified string
+     */
+    public function purify($text)
+    {
+        $purifier = new \HTMLPurifier();
+
+        return $purifier->purify($text);
     }
 
     /**

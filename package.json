@@ -36,16 +36,17 @@
     "leaflet": "^1.0.3",
     "leaflet.markercluster": "^1.0.5",
     "moment": "^2.18.1",
-    "popper.js": "^1.9.4",
+    "popper.js": "^1.9.9",
     "respond.js": "^1.4.2",
     "sass-graph": "^2.2.4",
     "select2": "^4.0.3",
     "skrollr": "^0.6.26",
     "skrollr-menu": "github:prinzhorn/skrollr-menu",
+    "symfony-collection": "^2.1.0",
     "tempusdominus-bootstrap-4": "github:tempusdominus/bootstrap-4",
     "tempusdominus-core": "github:tempusdominus/core",
-    "tinymce": "^4.6.1",
-    "uglify-js": "^2.8.27",
+    "tinymce": "^4.6.3",
+    "uglify-js": "^2.8.28",
     "unslider": "github:idiot/unslider"
   }
 }

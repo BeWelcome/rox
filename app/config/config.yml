@@ -148,7 +148,7 @@ assetic:
 
         popper_js:
             inputs:
-                - "%node_modules%/popper.js/dist/popper.min.js"
+                - "%node_modules%/popper.js/dist/umd/popper.min.js"
 
         app_css:
             inputs:
@@ -178,6 +178,23 @@ assetic:
             inputs:
                 - "%node_modules%/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"
 
+        bootstrap_datepicker_locales_js:
+            inputs:
+                - "%node_modules%/bootstrap-datepicker/js/locales/bootstrap-datepicker.de.js"
+                - "%node_modules%/bootstrap-datepicker/js/locales/bootstrap-datepicker.fr.js"
+                - "%node_modules%/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"
+                - "%node_modules%/bootstrap-datepicker/js/locales/bootstrap-datepicker.fi.js"
+                - "%node_modules%/bootstrap-datepicker/js/locales/bootstrap-datepicker.pt.js"
+
+        tempus_dominus_bootstrap4_css:
+            inputs:
+                - "%node_modules%/tempusdominus-bootstrap-4/build/css/tempusdominus-bootstrap-4.min.css"
+
+        tempus_dominus_bootstrap4_js:
+            inputs:
+                - "%node_modules%/moment/min/moment-with-locales.min.js"
+                - "%node_modules%/tempusdominus-core/build/js/tempusdominus-core.js"
+
         select2_js:
             inputs:
                 - "%node_modules%/select2/dist/js/select2.js"
@@ -195,4 +212,4 @@ ivory_ck_editor:
             toolbar: "rox_toolbar"
     toolbars:
         configs:
-            rox_toolbar: [ ["Undo", "Redo"], ["Bold", "Italic", "Underline", "Strike", "Subscript", "Superscript", "-", "RemoveFormat" ], ["Image", "Link", "Unlink", "Smileys"], ["NumberedList", "BulletedList", "Blockquote"] ]
+            rox_toolbar: [ ["Undo", "Redo"], ["Bold", "Italic", "Underline", "Strike", "Subscript", "Superscript", "-", "RemoveFormat" ], ["Image", "Link", "Unlink", "Smileys"], ["NumberedList", "BulletedList", "Blockquote", "Smiley"] ]

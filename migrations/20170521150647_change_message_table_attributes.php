@@ -10,7 +10,9 @@ class ChangeMessageTableAttributes extends RoxMigration
             ALTER TABLE
                 messages
             MODIFY
-                WhenFirstRead TIMESTAMP NULL;
+                WhenFirstRead TIMESTAMP NULL
+            CHANGE COLUMN 
+                `IdParent` `IdParent` INT(11) NULL DEFAULT NULL COMMENT 'specific for chained messages (when someone reply to a previous message)' ;
         ");
 
     }

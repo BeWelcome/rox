@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    {% set request = thread[0].Request %}
+<div id="message_thread">
+    {% if current.Sender.Username == my_member.Username %}{% set otherUser = current.Receiver %}{% else %}{% set otherUser = current.Sender %}{% endif %}
+    {% if current.Subject %}{% set currentSubject = current.Subject.Subject %}{% else %}{% set currentSubject = 'Discussion with %s' | trans | format(otherUser.Username)  %} {% endif %}
+    <h1>{{ currentSubject }}</h1>
+    <div class="row">
+        <div class="col-12 col-md-6">{{ 'Arrival' }}: {{ request.Arrival | localizeddate }}</div>
+        {% if  request.Departure -%}
+        <div class="col-12 col-md-6">{{ 'Departure' }}: {{ request.Departure | localizeddate }}</div>
+        {%- endif %}
+        {% if request.flexible %}{{ 'I\'m flexible with arrival and departure' }}{% endif %}
+        {% if request.numberOfTravellers != 1 %}{{ 'I\'m travelling in a group of %s' | format(request.numberOfTravellers) }}{% endif %}
+        {% if request.status == 0 %}{{ 'You haven\'t decided if you want to host this group/person' }}{% endif %}
+        {% if request.status == 1 %}{{ 'You\'re not going to host this group/person' }}{% endif %}
+        {% if request.status == 2 %}{{ 'You\'re going to host this group/person' }}{% endif %}
+        {# \todo constant(HostingRequest::REQUEST_OPEN) #}
+    </div>
+    {% for message in thread %}
+        {% set own = (my_member.Username == message.Sender.Username) %}
+        <div class="row">
+            <div class="message_{% if own %}own{% else %}other{% endif %} {% if message.id == current.id %}current{% endif %}">
+                {% if current.id != message.id %}<a class="divlink" href="{{ path('message_show', { id: message.id }) }}">{% endif %}
+                {% if message.Subject %}{% set subject = message.Subject.Subject %}{% else %}{% set subject = '' %} {% endif %}
+                {% if own %}
+                    <small class="pull-right text-muted">{{ 'You' | trans }} {{ message.created.DiffForHumans }}</small>
+                    <p class="clearfix m-0"></p>
+                    {% if currentSubject != '' %}{% if subject != currentSubject %}<p>{{ subject }}</p>{% endif %}{% endif %}
+                    {{ message.message | purify }}
+                {% else %}
+                    <small class="pull-left text-muted">{{ message.Sender.Username }} {{ message.created.DiffForHumans }}</small>
+                    <p class="pull-right m-0">{% if not message.WhenFirstRead %}<i class="fa fa-check"></i>{% endif %} <i class="fa fa-close"></i></p>
+                    <p class="clearfix m-0"></p>
+                    {% if currentSubject != '' %}{% if subject != currentSubject %}<p>{{ subject }}</p>{% endif %}{% endif %}
+                    <div {% if message.WhenFirstRead %}style="font-weight: normal"{% else %}style="font-weight: bold"{% endif %}>
+                    {{ message.message | purify }}
+                    </div>
+                {% endif %}
+                {% if current.id != message.id %}</a>{% endif %}
+            </div>
+        </div>
+    {% endfor %}
+    <div class="row justify-content-end"><a class="btn btn-primary" href="{{ path('hosting_request_reply', { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a></div>
+</div>
+{% endblock content %}

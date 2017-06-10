@@ -13,7 +13,11 @@ class SubjectType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('subject');
+        $builder->add('subject', null, [
+            'attr' => [
+                'placeholder' => 'Please enter a subject'
+            ],
+        ]);
     }
 
     /**

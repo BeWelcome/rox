@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form;
 
+use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -19,17 +20,20 @@ class HostingRequestType extends AbstractType
             ->add('arrival', DateType::class, [
                 'widget' => 'single_text',
                 'html5' => false,
-                'attr' => ['class' => 'js-datepicker'],
+                'format' => \IntlDateFormatter::FULL,
+                'attr' => ['class' => 'datepicker'],
             ])
             ->add('departure', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,
                 'html5' => false,
-                'attr' => ['class' => 'js-datepicker'],
+                'format' => \IntlDateFormatter::FULL,
+                'attr' => ['class' => 'datepicker'],
             ])
-            ->add('estimate', CheckboxType::class, [
+            ->add('flexible', CheckboxType::class, [
                 'required' => false,
-            ]);
+            ])
+            ->add('numberOfTravellers');
     }
 
     /**

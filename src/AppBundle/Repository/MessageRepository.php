@@ -33,12 +33,8 @@ class MessageRepository extends EntityRepository
                 $qb->andWhere('m.infolder = :filter')
                    ->setParameter('filter', 'normal');
                 break;
-            case 'requests':
-                $qb->andWhere('m.infolder = :filter')
-                    ->setParameter('filter', 'request');
-                break;
-            case 'sent':
             case 'spam':
+            case 'requests':
                 $qb->andWhere('m.infolder = :filter')
                     ->setParameter('filter', $filter);
                 break;

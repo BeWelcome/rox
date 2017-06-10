@@ -8,7 +8,7 @@ class AddMessageHierarchyFunctions extends RoxMigration
     {
         // get lineage
         $this->query(<<<SQL_BLOCK
-
+            DROP FUNCTION IF EXISTS `get_lineage`;
             CREATE FUNCTION `get_lineage`(the_id INT) RETURNS text CHARSET utf8
                 READS SQL DATA
             BEGIN
@@ -52,6 +52,7 @@ class AddMessageHierarchyFunctions extends RoxMigration
 SQL_BLOCK
         );
         $this->execute("
+            DROP FUNCTION IF EXISTS `hierarchy_connect_by_parent_eq_prior_id`;
             CREATE FUNCTION `hierarchy_connect_by_parent_eq_prior_id`(value INT) RETURNS int(11)
                 READS SQL DATA
             BEGIN
@@ -86,6 +87,7 @@ SQL_BLOCK
             END;
         ");
         $this->execute("
+            DROP FUNCTION IF EXISTS `hierarchy_connect_by_parent_eq_prior_id_with_level`;
             CREATE FUNCTION `hierarchy_connect_by_parent_eq_prior_id_with_level`(value INT, maxlevel INT) RETURNS int(11)
                 READS SQL DATA
             BEGIN
@@ -125,7 +127,8 @@ SQL_BLOCK
             END;
         ");
         $this->execute("
-            CREATE DEFINER=`root`@`localhost` FUNCTION `hierarchy_sys_connect_by_path`(delimiter TEXT, node INT) RETURNS text CHARSET latin1
+            DROP FUNCTION IF EXISTS `hierarchy_sys_connect_by_path`;
+            CREATE FUNCTION `hierarchy_sys_connect_by_path`(delimiter TEXT, node INT) RETURNS text CHARSET latin1
                 READS SQL DATA
             BEGIN
                  DECLARE _path TEXT;

@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {% javascripts
+    '@bootstrap_datepicker_js'
+    '@bootstrap_datepicker_locales_js'
+        '@tempus_dominus_bootstrap4_js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script>
+        $(document).ready(function () {
+            $('.datepicker').datetimepicker({
+                language: 'de', // '{{ app.request.locale }}',
+                clearBtn: true,
+                calendarWeeks: true,
+                autoclose: true,
+                todayHighlight: true,
+                toggleActive: true
+            });
+
+        });
+    </script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {% stylesheets filter="cssrewrite"
+    '@bootstrap_datepicker_css'
+    '@tempus_dominus_bootstrap4_css' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+{% endblock %}
+
+{% block content %}
+{% set request = thread[0].Request %}
+{% set last = thread | length -1 %}
+{% if thread[last].Sender.Username == my_member.Username %}
+    {% set requester = true  %}
+{% else %}
+    {% set requester = false %}
+{% endif %}
+{{ form_start(form) }}
+{{ form_row(form.subject.subject) }}
+    {% if requester  %}
+        {{ 'You can propose new dates by simply choosing new dates.' }}
+    {% endif %}
+    {{ form_row(form.request.arrival) }}
+    {{ form_row(form.request.departure) }}
+{% if requester %}
+    {{ form_row(form.request.flexible) }}
+
+{% endif %}
+    {{ form_row(form.request.numberOfTravellers) }}
+{{ form_rest(form) }}
+<button type="submit" class="btn btn-primary">{{ 'Reply' | trans }}</button>
+{{ form_end(form) }}
+
+{% include ':message:thread.html.twig' %}
+{% endblock content %}

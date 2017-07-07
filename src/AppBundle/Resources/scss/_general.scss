@@ -109,12 +109,12 @@ main {
     @include box-shadow(none);
   }
 
-  @include button-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border-color);
+  // @include button-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border-color);
 }
 
 // radio buttons
 .btn-radio {
-  background-color: rgba($btn-primary-bg, .6);
+  background-color: rgba($brand-primary, .6);
   border: 0;
   font-family: Signika-regular;
   text-transform: capitalize;
@@ -123,12 +123,12 @@ main {
 }
 
 .btn-radio:hover {
-  background-color: rgba($btn-primary-bg, 1);
+  background-color: rgba($brand-primary, 1);
   box-shadow: 0 0 1px 1px #cc5e00 inset;
 }
 
 .btn-radio.active, .btn-radio.active:focus {
-  background-color: rgba($btn-primary-bg, 1) !important;
+  background-color: rgba($brand-primary, 1) !important;
   outline: none;
   box-shadow: 0 0 1px 1px #b95500 inset;
 }
@@ -144,10 +144,10 @@ main {
   padding: 1.25em;
 
   .notice {
-    background-color: $brand-info;
+    background-color: #c0c000;
   }
   .error {
-    background-color: $brand-danger;
+    background-color: #cc0000;
   }
 }
 
@@ -212,7 +212,7 @@ main {
     font-size: $font-size-sm;
   }
   .tag_smallest {
-    font-size: $font-size-xs;
+    font-size: 0.6rem;
   }
 }
 

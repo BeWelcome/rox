@@ -1,4 +1,4 @@
-<div class="card card-block">
+<div class="card card-block w-100">
 <form method="post" novalidate action="<?php echo $baseuri.'signup/2'?>" name="signup" id="user-register-form" class="form" role="form">
 <?=$callback_tag ?>
 <?php

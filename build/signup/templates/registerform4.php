@@ -1,6 +1,6 @@
 <?= print_r($vars, true); ?>
 
-<div class="card card-block">
+<div class="card card-block w-100">
     <form method="post" action="<?php echo $baseuri . 'signup/4' ?>" name="signup" id="user-register-form">
         <?= $callback_tag ?>
 

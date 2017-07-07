@@ -4,6 +4,8 @@
     {{ title | trans }}
 {% endblock %}
 
+
+
 {% macro widget_prototype(widget) %}
     {% if widget.vars.prototype is defined %}
         {% set form = widget.vars.prototype %}
@@ -13,20 +15,30 @@
         {% set name = widget.vars.full_name %}
     {% endif %}
 
+
     <div data-content="{{ name }}">
-        <div class="row">
-            <div class="col-10">{{ form_widget(form.search) }}</div><div class="col-2">{{ form_label(form.search) }}</div>
+        <div class="row my-2 mt-5">
+            <div class="col-sm-12 col-md-2"></div>
+            <div class="col-sm-9 col-md-6">{{ form_widget(form.search) }}</div>
+            <div class="col-sm-3 col-md-4">
+                {{ form_label(form.search) }}
+                <button class="btn btn-primary btn-remove pull-right" data-related="{{ name }}"><i class="fa fa-minus"></i></button>
+            </div>
         </div>
-        <div class="row">
-            <div class="col-6">{{ form_widget(form.arrival) }}</div>
-            <div class="col-6">{{ form_widget(form.departure) }}</div>
+        <div class="row my-2">
+            <div class="col-sm-12 col-md-2"></div>
+            <div class="col-sm-3">{{ form_widget(form.arrival) }}</div>
+            <div class="col-sm-3">{{ form_widget(form.departure) }}</div>
+            <div class="col-sm-12 col-md-4"></div>
         </div>
-        <div class="row">
-            <div class="col-12">{{ form_widget(form.options) }}</div>
+        <div class="row my-2">
+            <div class="col-sm-12 col-md-2"></div>
+            <div class="col-sm-12 col-md-6">{{ form_widget(form.options) }}</div>
+            <div class="col-sm-12 col-md-4"></div>
         </div>
         {{ form_rest(form) }}
-        <button class="btn btn-primary btn-remove pull-right" data-related="{{ name }}"><i class="fa fa-minus"></i></button>
     </div>
+
 {% endmacro %}
 
 {% block stylesheets %}
@@ -73,27 +85,41 @@
 {% endblock javascripts %}
 
 {% block content %}
-    <div class="row">
-        <h2>{{ title | trans }}</h2>
-    </div>
 
-    {{ form_start( form ) }}
+        <h2>{{ title | trans }}</h2>
+
+    <div class="card card-block w-100">
+        {{ form_start( form ) }}
+
+
     {{ form_row( form.summary ) }}
     {{ form_row( form.description ) }}
     {{ form_row( form.countoftravellers ) }}
     {{ form_row( form.additionalinfo ) }}
     {# store the prototype on the data-prototype attribute #}
-    <div id="subtrips-list"
-        data-prototype="{{ _self.widget_prototype(form.subtrips.vars.prototype)|escape }}">
-        {% for subtrip in form.subtrips %}
-            {{ _self.widget_prototype(subtrip) }}
-        {% endfor %}
+
+            <div id="subtrips-list"
+                data-prototype="{{ _self.widget_prototype(form.subtrips.vars.prototype)|escape }}">
+                {% for subtrip in form.subtrips %}
+                    {{ _self.widget_prototype(subtrip) }}
+                {% endfor %}
+        </div>
+    <div class="row mb-3">
+        <div class="col-sm-12 col-md-2"></div>
+        <div class="col-sm-12 col-md-6">
+            <button class="btn btn-primary btn-add" data-target="subtrips-list"><i class="fa fa-plus"></i></button>
+        </div>
     </div>
-    <div><button class="btn btn-primary btn-add" data-target="subtrips-list"><i class="fa fa-plus"></i></button></div>
+        <div class="row">
+            <div class="col-sm-12 col-md-2"></div>
+            <div class="col-sm-12 col-md-6">
     {% if create %}
-        <div><input class="btn btn-primary form-control" type="submit" value="{{ 'Create' | trans }}" ></div>
+        <input class="btn btn-primary form-control" type="submit" value="{{ 'Create' | trans }}" >
     {% else %}
-        <div><input class="btn btn-primary form-control" type="submit" value="{{ 'Update' | trans }}" ></div>
+        <input class="btn btn-primary form-control" type="submit" value="{{ 'Update' | trans }}" >
     {% endif %}
+        </div>
+        </div>
     {{ form_end( form ) }}
+
 {% endblock content %}

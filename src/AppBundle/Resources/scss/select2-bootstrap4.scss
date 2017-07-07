@@ -11,7 +11,7 @@
 $form-control-default-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
 
 // @see https://github.com/twbs/bootstrap-sass/blob/master/assets/stylesheets/bootstrap/mixins/_forms.scss#L43
-$form-control-focus-box-shadow: $form-control-default-box-shadow, 0 0 8px rgba($input-border-color-focus, 0.6);
+$form-control-focus-box-shadow: $form-control-default-box-shadow, 0 0 8px rgba(0,0,0, 0.6);
 
 // @see https://github.com/twbs/bootstrap-sass/blob/master/assets/stylesheets/bootstrap/_forms.scss#L128
 $form-control-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
@@ -19,7 +19,7 @@ $form-control-transition: border-color ease-in-out .15s, box-shadow ease-in-out 
 // Custom variables
 // -------------------------
 
-$dropdown-arrow-color: $input-color-placeholder !default;
+$dropdown-arrow-color: #fff !default;
 $dropdown-box-shadow: 0 6px 12px rgba(0,0,0,.175) !default;
 $clear-selection-color: $dropdown-arrow-color !default;
 
@@ -126,12 +126,12 @@ $clear-selection-color: $dropdown-arrow-color !default;
     outline: 0;
 
     &::-webkit-input-placeholder {
-      color: $input-color-placeholder;
+      color: #fff;
     }
 
     /* Firefox 18- */
     &:-moz-placeholder {
-      color: $input-color-placeholder;
+      color: #fff;
     }
 
     /**
@@ -140,12 +140,12 @@ $clear-selection-color: $dropdown-arrow-color !default;
      * @see http://stackoverflow.com/questions/24236240/color-for-styled-placeholder-text-is-muted-in-firefox
      */
     &::-moz-placeholder {
-      color: $input-color-placeholder;
+      color: #fff;
       opacity: 1;
     }
 
     &:-ms-input-placeholder {
-      color: $input-color-placeholder;
+      color: #fff;
     }
   }
 
@@ -238,7 +238,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
     .select2-selection {
       @include box-shadow($form-control-focus-box-shadow);
       @include transition($form-control-transition);
-      border-color: $input-border-color-focus;
+      border-color: #000;
     }
   }
 
@@ -299,7 +299,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
   &.select2-container--disabled {
 
     .select2-selection {
-      border-color: $input-border-color-focus;
+      border-color: #000;
       @include box-shadow(none);
     }
 
@@ -309,7 +309,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
 
     .select2-selection,
     .select2-selection--multiple .select2-selection__choice {
-      background-color: $input-bg-disabled;
+      background-color: #ccc;
     }
 
     .select2-selection__clear,
@@ -332,7 +332,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
 
   .select2-dropdown {
     @include box-shadow($dropdown-box-shadow);
-    border-color: $input-border-color-focus;
+    border-color: #000;
     overflow-x: hidden;
     margin-top: -1px;
     &--above {
@@ -393,7 +393,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
     }
 
     .select2-selection__placeholder {
-      color: $input-color-placeholder;
+      color: #000;
     }
   }
 
@@ -424,7 +424,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
     }
 
     .select2-selection__placeholder {
-      color: $input-color-placeholder;
+      color: #000;
       float: left;
       margin-top: 5px;
     }
@@ -435,8 +435,8 @@ $clear-selection-color: $dropdown-arrow-color !default;
 
     .select2-selection__choice {
       color: $input-color;
-      background: $btn-primary-bg;
-      border: 1px solid $btn-primary-border-color;
+      background: $brand-primary;
+      border: 1px solid #fff;
       border-radius: 4px;
       cursor: default;
       float: left;
@@ -676,15 +676,15 @@ $clear-selection-color: $dropdown-arrow-color !default;
  */
 
 .has-warning {
-  @include validation-state-focus($state-warning-text);
+ // @include validation-state-focus($state-warning-text);
 }
 
 .has-error {
-  @include validation-state-focus($state-danger-text);
+ // @include validation-state-focus($state-danger-text);
 }
 
 .has-success {
-  @include validation-state-focus($state-success-text);
+ // @include validation-state-focus($state-success-text);
 }
 
 /**

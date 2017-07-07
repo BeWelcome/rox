@@ -4,6 +4,8 @@
   border-top: none;
   border-radius: 0.15rem;
   box-shadow: 0 3px 8px -2px RGBA(153, 150, 150, 0.67);
+  position: relative;
+  top: -1rem;
 }
 
 .hoststatus{
@@ -102,7 +104,7 @@
 
 .btn-homewhite {
   letter-spacing: 0.02rem;
-  border: 1px solid $btn-primary-bg !important;
+  border: 1px solid $brand-primary !important;
   transition: background-color 0.2s, color 0.2s;
 }
 

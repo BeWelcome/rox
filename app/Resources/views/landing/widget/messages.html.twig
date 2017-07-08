@@ -8,10 +8,13 @@
                 {% if message.request %}
                     <div><i class="fa fa-lg fa-bed"></i></div>
                 {% else %}
-                    <div class="text-truncate text">{% set unread = (message.whenfirstread == '0000-00-00 00:00.00') %}
+                    <div class="text-truncate text">
+                        <a href="{{ path("message_show", { id: message.id } ) }}">
+                            {% set unread = (message.whenfirstread == '0000-00-00 00:00.00') %}
                         {% if (message.unread) %}<strong>{% endif %}
                             {{ message.message|raw }}
                             {% if unread %}</strong>{% endif %}
+                        </a>
                     </div>
                     <div>
                         <small>

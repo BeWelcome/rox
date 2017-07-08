@@ -48,7 +48,8 @@
             </div>
             <?php
             $this->columnsArea($mid_column_name); ?>
-            </div> <!-- col-12 --> </div>
+            <!-- col-12 -->
+            </div>
         <?php
         if ($this->getSubmenuItems() || ($side_column_names)) {
             $this->submenu();

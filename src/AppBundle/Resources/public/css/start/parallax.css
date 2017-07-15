@@ -114,7 +114,7 @@
 #about_trailing {
     background: url(../../images/homepicture-1200px_2.jpg) no-repeat center center fixed;
     display: table;
-    height: 1300px;
+    height: 1000px;
     position: relative;
     width: 100%;
     -webkit-background-size: cover;
@@ -545,7 +545,7 @@ p {
 }
 
 .contrastbg{
-    background-color: rgba(0,0,0, .2);
+    background-color: rgba(0,0,0, .5);
 }
 
 .secondblock{
@@ -558,6 +558,10 @@ p {
     width: 100%;
     position:absolute;
     top: 912px;
+}
+
+fa-start{
+    font-size: 8rem;
 }
 
 .whitetext{

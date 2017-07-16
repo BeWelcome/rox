@@ -24,9 +24,9 @@
                         <i class="fa fa-lg fa-globe m-r-1"></i>
                         {{ languages[locale].Name|raw }}
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-right columns" style="width: 400px">
+                    <ul class="dropdown-menu dropdown-menu-right columns">
                         {% for lang in languages %}
-                            <li class=""><a href="{{ path('language', { locale: lang.ShortCode }) }}" class="btn {% if lang.ShortCode == locale %}btn-primary{% else %}btn-secondary{% endif %}" data-toggle="tooltip" data-placement="top" title="{{ lang.TranslatedName|raw }}" style="width: 9rem">{{ lang.Name|raw }}</a></li>
+                            <li class="text-center"><a href="{{ path('language', { locale: lang.ShortCode }) }}" class="btn {% if lang.ShortCode == locale %}btn-primary mb-1{% else %}btn-secondary{% endif %}" data-toggle="tooltip" data-placement="top" title="{{ lang.TranslatedName|raw }}" style="width: 9rem">{{ lang.Name|raw }}</a></li>
                         {% endfor %}
                         </ul>
                     </ul>

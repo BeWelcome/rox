@@ -290,5 +290,5 @@ if (empty($vars)) {
             echo '<div><h3>' . $words->get('ActivityAttendees') . '</h3>';
             echo '<p>' . $words->getBuffered('ActivitiesLogInWhoIsComing', '<a href="' . $login_url . '">', '</a>') . '</p></div>';
         } ?>
-    </div>
+    <!-- </div> -->
 <?php echo $words->flushBuffer(); ?>

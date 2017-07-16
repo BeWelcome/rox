@@ -51,6 +51,8 @@ if (isset($vars['tags']) && $vars['tags']) {
 <script type="text/javascript" src="script/blog_suggest.js"></script>
 <script type="text/javascript" src="script/forums_suggest.js"></script>
 
+<div class="col-12">
+
     <?php
     if ($navichain_items = $boards->getNaviChain()) {
         foreach ($navichain_items as $link => $title) {
@@ -61,7 +63,7 @@ if (isset($vars['tags']) && $vars['tags']) {
         $navichain = '';
     }
 
-    echo '<p class="h4 forumsboardnavichain gray">' . $navichain . '</p>';
+    echo '<p class="h4 gray">' . $navichain . '</p>';
 
     echo '<h3>';
     if ($allow_title) { // New Topic
@@ -80,6 +82,8 @@ if (isset($vars['tags']) && $vars['tags']) {
     echo '</h3>';
     ?>
 
+</div>
+<div class="col-12">
 <form method="post" onsubmit="return check_SelectedLanguage();" action="<?php echo $uri; ?>" name="editform"
       class="fieldset_toggles" id="forumsform">
     <input type="hidden" name="<?php echo $callbackId; ?>" value="1"/>
@@ -98,7 +102,7 @@ if (isset($vars['tags']) && $vars['tags']) {
 
         ?>
         <!-- input title -->
-        <div class="row">
+        <div class="">
             <div class="input-group">
                 <span class="input-group-addon bold" id="forumaddtitle"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></span>
                 <label for="topic_title" class="sr-only"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label>
@@ -117,7 +121,7 @@ if (isset($vars['tags']) && $vars['tags']) {
             </div>
         </div>
     <? } ?>
-    <div class="row">
+    <div class="">
         <label for="topic_text" class="sr-only"><?php echo $words->getFormatted("forum_label_text"); ?></label><br/>
         <textarea name="topic_text" cols="70" rows="15" id="topic_text" class="long"><?php
             if (isset($void_string)) {
@@ -133,7 +137,7 @@ if (isset($vars['tags']) && $vars['tags']) {
 
     if (isset($allow_title) && $allow_title) {
         ?>
-    <fieldset class="row" id="fpost_tags_and_location_fieldset">
+    <fieldset class="" id="fpost_tags_and_location_fieldset">
         <legend onclick="toggleFieldsets('fpost_tags_and_location');"><?php echo $words->getFormatted("forum_label_tags_and_location"); ?></legend>
         <div id="fpost_tags_and_location"><div>
         <p class="small"><?php echo $words->getFormatted("forum_subline_tags"); ?></p>
@@ -182,7 +186,7 @@ if (isset($vars['tags']) && $vars['tags']) {
     } ?>
 
 <?php if (isset($this->suggestionsGroupId) || ($groupsforum == SuggestionsModel::getGroupId())) { ?>
-    <fieldset class="row" id = "fpost_vis_fieldset" >
+    <fieldset class="" id = "fpost_vis_fieldset" >
         <legend onclick = "toggleFieldsets('fpost_vis');" ><?php echo $words->getFormatted("ForumSuggestionsVisibilityAndLanguage"); ?></legend>
         <div id="fpost_vis">
             <p><?= $words->get('SuggestionsGroupInfoReply') ?></p>
@@ -192,7 +196,7 @@ if (isset($vars['tags']) && $vars['tags']) {
     </fieldset>
 <?php } else { ?>
 
-    <fieldset class="row mt-2" id="fpost_lang_fieldset">
+    <fieldset class="mt-2" id="fpost_lang_fieldset">
         <legend
                 onclick="toggleFieldsets('fpost_lang');" class="h4 m-0"><?php echo $words->getFormatted("forum_label_lang") ?></legend>
         <div id="fpost_lang">
@@ -244,7 +248,7 @@ if (isset($vars['tags']) && $vars['tags']) {
         </div>
     </fieldset>
 
-    <fieldset class="row mt-2" id="fpost_vis_fieldset">
+    <fieldset class="mt-2" id="fpost_vis_fieldset">
         <legend onclick="toggleFieldsets('fpost_vis');" class="h4 m-0"><?= $words->getFormatted("forum_label_visibility") ?></legend>
         <div>
             <?php
@@ -278,7 +282,7 @@ if (isset($vars['tags']) && $vars['tags']) {
 
     <?php } ?>
 
-    <fieldset class="row mt-2" id="fpost_note_fieldset">
+    <fieldset class="mt-2" id="fpost_note_fieldset">
         <legend onclick="toggleFieldsets('fpost_note');" class="h4 m-0"><?php echo $words->getFormatted("forum_Notify") ?></legend>
         <div id="fpost_note">
             <input type="checkbox" name="NotifyMe" id="NotifyMe" <?php echo $notifymecheck ?>>
@@ -286,7 +290,7 @@ if (isset($vars['tags']) && $vars['tags']) {
         </div>
     </fieldset>
 
-    <div class="row">
+    <div class="">
         <input type="submit" class="btn btn-primary" value="<?php
         if ($allow_title) { // New Topic
             if ($edit) {
@@ -306,6 +310,7 @@ if (isset($vars['tags']) && $vars['tags']) {
     </div>
 
 </form>
+</div>
 
 <script type="text/javascript">
     function updateContinent() {

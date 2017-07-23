@@ -68,10 +68,11 @@
                       data-250-start="opacity:0"
                       method="post" novalidate action="signup/1" name="signup" id="user-register-form" class="form"
                       role="form">
+                    <label for="email" class="sr-only">Your e-mail</label>
                     <input data-start="opacity:1"
                            data-50-start="opacity:1"
                            data-250-start="opacity:0"
-                           type="email" autocomplete="email" class="form-control" placeholder="Your e-mail">
+                           type="email" autocomplete="email" name="email" class="form-control" placeholder="Your e-mail">
                     <input type="submit" class="form-control btn btn-primary" value="Join BeWelcome!">
                 </form>
                 <p class="contrastbg orangelink"
@@ -94,12 +95,12 @@
             </div>
         </div>
         <div class="row thirdblock justify-content-center">
-            <a href="#bottom"
+            <a href="#bottom" aria-label="Go directly to the bottom of the website"
                data--50-bottom="opacity:0"
                data--100-bottom="opacity:1"
                data--250-bottom="opacity:1"
                data--350-bottom="opacity:0">
-                <i class="chevron_icon fa fa-4x fa-chevron-down"></i>
+                <i class="chevron_icon fa fa-4x fa-chevron-down" aria-hidden="true"></i>
             </a>
         </div>
     </div>
@@ -141,21 +142,21 @@
                  data-315-top="transform:translateX(-110px)"
                  data-305-top="transform:translateX(-20px)"
                  data-290-top="opacity:1">
-                <p><i class="fa fa-start fa-handshake-o"></i></p>
+                <p><i class="fa fa-start fa-handshake-o" aria-hidden="true"></i></p>
                 <h3>{{ 'tour_link_meet' | trans }}</h3>
                 <p>{{ 'tourpage_text3' | trans }}</p>
             </div>
             <div class="col-md-2"
                  data-350-top="opacity:0"
                  data-300-top="opacity:1">
-                <p><i class="fa fa-start fa-map-signs"></i></p>
+                <p><i class="fa fa-start fa-map-signs" aria-hidden="true"></i></p>
                 <h3>{{ 'tour_link_travel' | trans }}</h3>
                 <p>{{ 'tourpage_text4' | trans }}</p>
             </div>
             <div class="col-md-2"
                  data-350-top="opacity:0"
                  data-300-top="opacity:1">
-                <p><i class="fa fa-start fa-magic"></i></p>
+                <p><i class="fa fa-start fa-magic" aria-hidden="true"></i></p>
                 <h3>{{ 'tour_link_info' | trans }}</h3>
                 <p>{{ 'tourpage_text5' | trans }}</p>
             </div>
@@ -165,7 +166,7 @@
                  data-315-top="transform:translateX(110px)"
                  data-305-top="transform:translateX(20px)"
                  data-290-top="opacity:1">
-                <p><i class="fa fa-start fa-heart"></i></p>
+                <p><i class="fa fa-start fa-heart" aria-hidden="true"></i></p>
                 <h3>{{ 'tour_link_share' | trans }}</h3>
                 <p>{{ 'tourpage_text2' | trans }}</p></div>
         </div>
@@ -209,25 +210,25 @@
                  data-365-top="transform:translateX(-110px)"
                  data-345-top="transform:translateX(-20px)"
                  data-330-top="opacity:1">
-                <p><i class="fa fa-start fa-user-o"></i></p>
+                <p><i class="fa fa-start fa-user-o" aria-hidden="true"></i></p>
                 <h2>{{ stats.members }}</h2>
                 <h4>{{ 'members' | trans }}</h4></div>
             <div class="col-md-2 text-center"
                  data-400-top="opacity:0"
                  data-350-top="opacity:1">
-                <p><i class="fa fa-start fa-flag-o"></i></p>
+                <p><i class="fa fa-start fa-flag-o" aria-hidden="true"></i></p>
                 <h2>{{ stats.countries }}</h2>
                 <h4>{{ 'countries' | trans }}</h4></div>
             <div class="col-md-2 text-center"
                  data-600-top="opacity:0"
                  data-450-top="opacity:1">
-                <p><i class="fa fa-start fa-language"></i></p>
+                <p><i class="fa fa-start fa-language" aria-hidden="true"></i></p>
                 <h2>{{ stats.languages }}</h2>
                 <h4>{{ 'languages' | trans }}</h4></div>
             <div class="col-md-2 text-center"
                  data-400-top="opacity:0"
                  data-350-top="opacity:1">
-                <p><i class="fa fa-start fa-smile-o"></i></p>
+                <p><i class="fa fa-start fa-smile-o" aria-hidden="true"></i></p>
                 <h2>{{ stats.comments }}</h2>
                 <h4>{{ 'positive comments' | trans }}</h4></div>
             <div class="col-md-2 text-center"
@@ -236,7 +237,7 @@
                  data-365-top="transform:translateX(110px)"
                  data-345-top="transform:translateX(20px)"
                  data-330-top="opacity:1">
-                <p><i class="fa fa-start fa-calendar-check-o"></i></p>
+                <p><i class="fa fa-start fa-calendar-check-o" aria-hidden="true"></i></p>
                 <h2>{{ stats.activities }}</h2>
                 <h4>{{ 'Activities' | trans }}</h4></div>
         </div>
@@ -271,13 +272,15 @@
                             <span class="d-block">{{ 'and start meeting people from everywhere.' | trans }}</span>
                         </div>
                         <div class="input-group" data-200-end="opacity:0;" data-0-end="opacity:1">
-                            <span class="input-group-addon"><i class="fa fa-lg fa-user"></i></span>
+                            <label for="username" class="sr-only">{{ 'Choose your username!' | trans }}</label>
+                            <span class="input-group-addon"><i class="fa fa-lg fa-user" aria-hidden="true"></i></span>
                             <input type="text" class="form-control" name="username" id="username"
                                    placeholder="{{ 'Choose your username!' | trans }}"
                                    value=""/>
-                            <span class="input-group-addon p-0">
+                            <span class="input-group-addon p-0 pr-1">
                             <button class="btn btn-primary border-0" type="submit">
-                                <i class="fa fa-lg fa-chevron-right"></i>
+                                <i class="fa fa-lg fa-chevron-right" aria-hidden="true"></i>
+                                <span class="sr-only">{{ 'Submit' | trans }}</span>
                             </button>
                         </span>
                         </div>
@@ -291,13 +294,15 @@
                             <span class="d-block">{{ 'and meet locals when traveling worldwide.' | trans }}</span>
                         </div>
                         <div class="input-group" data-200-end="opacity:0;" data-0-end="opacity:1">
-                            <span class="input-group-addon"><i class="fa fa-lg fa-bed"></i></span>
+                            <label for="location" class="sr-only">{{ 'Where do you want to go?' | trans }}</label>
+                            <span class="input-group-addon"><i class="fa fa-lg fa-bed" aria-hidden="true"></i></span>
                             <input type="text" class="form-control" name="location"
                                    placeholder="{{ 'Where do you want to go?' | trans }}"
                                    value=""/>
-                            <span class="input-group-addon p-0">
+                            <span class="input-group-addon p-0 pr-1">
                         <button class="btn btn-primary border-0" type="submit">
-                            <i class="fa fa-lg fa-chevron-right"></i>
+                            <i class="fa fa-lg fa-chevron-right" aria-hidden="true"></i>
+                            <span class="sr-only">{{ 'Search' | trans }}</span>
                         </button>
                     </span>
                         </div>

@@ -1,4 +1,5 @@
 {% macro input(name, placeholder, value, type) %}
+    <label for="{{ name }}" class="sr-only">{{ placeholder|trans }}</label>
     <input class="form-control m-1" type="{{ type|default('text') }}" name="{{ name }}" placeholder="{{ placeholder|trans }}"
            value="{{ value|e }}" />
 {% endmacro %}
@@ -44,7 +45,7 @@
 {% macro avatar(username, size, linked = false, addimage = false, addlink = false) %}
     {% set imgclasses %}profileimg{% if addimage %} {{ addimage }}{% endif %}{% endset %}
     {% set linkclasses %}{% if addlink %} {{ addlink }}{% endif %}{% endset %}
-    {% set img %}<img class="{{ imgclasses }}" width="{{ size }}" height="{{ size }}" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'Profile' | trans }}">{% endset %}
+    {% set img %}<img class="{{ imgclasses }}" width="{{ size }}" height="{{ size }}" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'Profile' | trans }}: {{ username }}">{% endset %}
     {% if linked %}
         <a {% if linkclasses %}class="{{ linkclasses }}"{% endif %} href="members/{{ username }}">{{ img }}</a>
     {% else %}

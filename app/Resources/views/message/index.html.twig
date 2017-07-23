@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="jumbotron"><h2>{{ 'UserMessages' | trans | format(my_member.Username) }}</h2></div>
+    <h2>{{ 'UserMessages' | trans | format(my_member.Username) }}</h2>
 
     {% if messages | length == 0 %}
         <p>{{ 'No messages in this folder.' | trans }}</p>
@@ -27,11 +27,11 @@
 
     </div> #}
 
-    <div class="row">
-        <div class="pull-right">{{ pagerfanta( messages, 'twitter_bootstrap4_translated', { routeName: 'messages' }) }}</div>
+    <div class="float-left">
+        {{ pagerfanta( messages, 'twitter_bootstrap4_translated', { routeName: 'messages' }) }}
     </div>
 
-    <table class="table table-striped">
+            <table class="table table-responsive table-striped table-hover">
 
 {#        <tr class="title">
             <th></th>
@@ -49,23 +49,26 @@
             <th class="message">{{ 'MessagesText' | trans }}</th>
         </tr> #}
 
+                <thead class="blank">
+                <tr>
+                    <th colspan="2">From / With</th>
+                    <th class="text-nowrap">Message</th>
+                </tr>
+                </thead>
+
         {% for message in messages %}
             {% set directionIn = my_member.id == message.receiver.id %}
             {% set otherMember = directionIn ? message.sender : message.receiver %}
 
             <tr>
-                <td class="select verticalalignmiddle" style="width: 25px; max-width: 25px;">
+                <td class="select align-middle">
                     <input type="checkbox" name="message_id[]" class="msganchor" value="{{ message.id }}">
                 </td>
-                <td class="from" style="width: 20%; max-width: 20%;">
-                    <div>
-                        <div class="float-left p-x-1">
-                            {{ macros.avatar(otherMember.Username, 50, true) }}
-                        </div>
-                    </div>
-
+                <td class="align-middle small">
+                    {{ macros.avatar(otherMember.Username, 50, true) }}
+                    {{ macros.profilelink(otherMember.Username) }}
                 </td>
-                <td class="message verticalalignmiddle">
+                <td class="align-middle">
                     {% if message.subject %}<p>{{ message.subject.id }} <a href="{{ path('message_show', { id: message.id}) }}"
                                 {%- if not message.WhenFirstRead -%}
                                     {{- ' class="unread"' -}}
@@ -108,8 +111,8 @@
 
     </div> #}
 
-    <div class="row">
-        <div class="pull-right">{{ pagerfanta( messages, 'twitter_bootstrap4_translated', { routeName: 'messages' }) }}</div>
+    <div class="float-left">
+        {{ pagerfanta( messages, 'twitter_bootstrap4_translated', { routeName: 'messages' }) }}
     </div>
 
 </form>

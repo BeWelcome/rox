@@ -3,7 +3,6 @@
         <div class="col-12 col-md-8">
             <div class="subcl">
                     <h3><?= $words->get('GroupsSearchHeading'); ?></h3>
-                    <p><?= $words->get('GroupsSearchDescription'); ?></p>
                     <form action="groups/search" method="get">
                     <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" class="button" value="<?= $words->get('Search'); ?>" />
                     </form>

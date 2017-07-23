@@ -15,7 +15,6 @@
             <div class="subcr">
                 <div class="bw-row">
                     <h3><?= $words->get('GroupsCreateHeading'); ?></h3>
-                    <p><?= $words->get('GroupsCreateDescription'); ?></p>
                     <a class="button" role="button" href="groups/new"><span><?= $words->get('GroupsCreateNew'); ?></span></a>
                 </div>
             </div> <!-- subcr -->

@@ -9,60 +9,85 @@
     ?>
 
     <div class="col-12 col-md-8">
+
         <div class="w-100">
             <?= ((strlen($this->group->Picture) > 0) ? "<img class=\"float-left framed mr-2 mb-2\" src='groups/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$group_name_html}' />" : ''); ?>
-            <h3><?php echo $words->get('GroupDescription'); ?></h3>
-<p><?php echo $purifier->purify(nl2br($this->group->getDescription())) ?></p>
-</div> <!--row clearfix -->
+            <h4><?php echo $words->get('GroupDescription'); ?></h4>
+            <?php echo $purifier->purify(nl2br($this->group->getDescription())) ?>
+        </div>
 
-<div class="pt-2"><h3 class="float-left m-0 mb-2"><?php echo $words->getFormatted('ForumRecentPostsLong'); ?></h3><a
+        <div class="pt-3"><h3 class="float-left m-0 mb-2"><?php echo $words->getFormatted('ForumRecentPostsLong'); ?></h3><a
             href="<? echo $uri; ?>/new"
             class="btn btn-primary float-right"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a></div>
-<div class="pt-5 w-100">
-    <?php
-    if (!$this->isGroupMember() && $this->group->latestPost) {
-        echo '<div class="small">' . $words->get('GroupInfoLastActivity', date('Y-m-d H:i', $this->group->latestPost)) . '</div>';
-    }
 
-    $showNewTopicButton = false;
-    if ($this->isGroupMember()) {
-        $showNewTopicButton = true;
-    }
-    $suggestionsGroupId = PVars::getObj('suggestions')->groupid;
-    if ($group_id == $suggestionsGroupId) {
-        $showNewTopicButton = false;
-    }
-    echo $Forums->showExternalGroupThreads($group_id, $this->isGroupMember(), false, $showNewTopicButton); ?>
-</div>
+        <div class="w-100 pt-5">
+            <?php
+            if (!$this->isGroupMember() && $this->group->latestPost) {
+                echo '<div class="small">' . $words->get('GroupInfoLastActivity', date('Y-m-d H:i', $this->group->latestPost)) . '</div>';
+            }
 
-<div>
+            $showNewTopicButton = false;
+            if ($this->isGroupMember()) {
+                $showNewTopicButton = true;
+            }
+            /* only relevant if Suggestion Feature ever comes back
+            $suggestionsGroupId = PVars::getObj('suggestions')->groupid;
+            if ($group_id == $suggestionsGroupId) {
+                $showNewTopicButton = false;
+            }
+            */
+            echo $Forums->showExternalGroupThreads($group_id, $this->isGroupMember(), false, $showNewTopicButton); ?>
+        </div>
+
+<div class="pt-3 row">
     <?php
     $relatedgroups = $this->group->findRelatedGroups($group_id);
     if (!empty($relatedgroups)) { ?>
-        <h3><?php echo $words->getFormatted('RelatedGroupsTitle'); ?></h3>
+        <h3 class="col-12"><?php echo $words->getFormatted('RelatedGroupsTitle'); ?></h3>
     <?php } ?>
-    <ul>
-        <?php
-        foreach ($relatedgroups as $group_data) :
-            if (strlen($group_data->Picture) > 0) {
-                $img_link = "groups/thumbimg/{$group_data->getPKValue()}";
-            } else {
-                $img_link = "images/icons/group.png";
-            } ?>
-            <li class="picbox_relatedgroup float_left">
-                <a href="groups/<?php echo $group_data->getPKValue() ?>">
-                    <img class="framed_relatedgroup float_left" alt="Group" src="<?php echo $img_link; ?>"/>
-                </a>
-                <div class="userinfo"><a
-                            href="groups/<?php echo $group_data->getPKValue() ?>"><?php echo htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a><br/>
-                    <?php echo $words->get('GroupsMemberCount'); ?>: <?php echo $group_data->getMemberCount(); ?><br/>
-                    <?php echo $words->get('GroupsNewMembers'); ?>: <?php echo count($group_data->getNewMembers()); ?>
-                    <br/>
-                    </span></div> <!-- userinfo -->
-            </li> <!-- picbox_relatedgroup -->
 
-        <?php endforeach; ?>
-    </ul>
+
+    <?php
+    foreach ($relatedgroups as $group_data) :
+    if (strlen($group_data->Picture) > 0) {
+        $img_link = "groups/thumbimg/{$group_data->getPKValue()}";
+    } else {
+        $img_link = "images/icons/group.png";
+    } ?>
+
+
+    <div class="col-12 col-md-6 p-2">
+        <div class="float-left h-100 mr-2" style="width: 80px;">
+            <!-- group image -->
+            <a href="groups/<?php echo $group_data->getPKValue() ?>">
+                <img class="groupimg framed" alt="Group" src="<?php echo $img_link; ?>"/>
+            </a>
+        </div>
+        <div>
+            <!-- group name -->
+            <h4>
+                <a href="groups/<?= $group_data->getPKValue() ?>"><?php echo htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a>
+            </h4>
+            <!-- group details -->
+            <ul class="groupul mt-1">
+                <li><i class="fa fa-group"
+                       title="<? echo $words->get('GroupsMemberCount'); ?>"></i> <?= $group_data->getMemberCount(); ?></li>
+                <li><? echo $words->get('GroupsNewMembers'); ?> <?php echo count($group_data->getNewMembers()); ?></li>
+                <li><?php
+                    if ($group_data->latestPost) {
+                        $interval = date_diff(date_create(date('d F Y')), date_create(date('d F Y', ServerToLocalDateTime($group_data->latestPost, $this->getSession()))));
+                        echo $words->get('GroupsLastPost') . ": " . $interval->format('%a') . " " . $words->get('days_ago');
+
+                    } else {
+                        echo $words->get('GroupsNoPostYet');
+                    }
+                    ?></li>
+            </ul>
+        </div>
+    </div>
+
+
+    <?php endforeach; ?>
     <?php
     if (($this->group->VisibleComments == 'yes') && ($memberCount == $visibleMemberCount)) {
         $shouts = new ShoutsController();

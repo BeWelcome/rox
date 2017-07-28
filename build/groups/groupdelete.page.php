@@ -36,10 +36,12 @@ class GroupDeletePage extends GroupsBasePage
     {
         $words = $this->getWords();
         echo <<<HTML
+        <div class="col-12">
         <h3>{$words->get('GroupsDeleteGroup')}</h3>
         <p>{$words->get('GroupsDeleteConsiderations')}</p>
-        <a class="button" role="button" href="groups/{$this->group->id}/delete/true">{$words->get('GroupsReallyDelete')}</a>
-        <a class="button" role="button" href="groups/{$this->group->id}">{$words->get('GroupsDontDelete')}</a>
+        <a class="btn btn-outline-primary" role="button" href="groups/{$this->group->id}/delete/true">{$words->get('GroupsReallyDelete')}</a>
+        <a class="btn btn-primary" role="button" href="groups/{$this->group->id}">{$words->get('GroupsDontDelete')}</a>
+        </div>
 HTML;
     }
     

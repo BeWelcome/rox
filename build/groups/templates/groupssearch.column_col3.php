@@ -83,10 +83,7 @@ HTML;
                         <?php if ($group_data !== 0) { ?>
                             <li><?php
                                 if ($group_data->latestPost) {
-
-                                    $date_now = date_create(date('d F Y'));
-                                    $date_lastpost = date_create(date('d F Y', ServerToLocalDateTime($group_data->latestPost, $this->getSession())));
-                                    $interval = date_diff($date_now, $date_lastpost);
+                                    $interval = date_diff(date_create(date('d F Y')), date_create(date('d F Y', ServerToLocalDateTime($group_data->latestPost, $this->getSession()))));
                                     echo $words->get('GroupsLastPost') . ": " . $interval->format('%a') . " " . $words->get('days_ago');
 
                                 } else {

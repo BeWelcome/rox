@@ -48,58 +48,55 @@ Boston, MA  02111-1307, USA.
 
     <div class="col-12">
         <?php $logvar = $this->logs;?>
-    </div><!-- subcolumns -->
-    <div class="col-12"> <?php
-        if ($this->isGroupMember())  {
-            $add_button_link = "groups/{$this->group->id}/selectrelatedgroup";
-            $add_button_word = $words->get('AddRelatedGroupButton');
-            $delete_button_link = "groups/{$this->group->id}/selectdeleterelatedgroup";
-            $delete_button_word = $words->get('RemoveRelatedGroupButton');
-            ?>
-            <div class="c50l">
-                <div class="subcl">
-                    <a class="button" role="button" href="<?php echo $add_button_link; ?>">
-                        <span><?php echo $add_button_word; ?></span>
+    </div>
+    <div class="col-12">
+        <?php
+            if ($this->isGroupMember())  {
+                ?>
+
+                    <a class="btn btn-primary" role="button" href="groups/<? echo $this->group->id; ?>/selectrelatedgroup">
+                        <?php echo $words->get('AddRelatedGroupButton'); ?>
                     </a>
-                </div><!-- subcl -->
-            </div><!-- c50l -->
-            <div class="c50r">
-                <div class="subcr"> <?php 
+        <?php
                     if (!empty($relatedgroups)) { ?>
-                        <a class="button" role="button" href="<?php echo $delete_button_link; ?>">
-                            <span><?php echo $delete_button_word; ?></span>
+                        <a class="btn btn-primary" role="button" href="groups/<? echo $this->group->id; ?>/selectdeleterelatedgroup">
+                            <? echo $words->get('RemoveRelatedGroupButton'); ?>
                         </a><?php
                     } ?>
-                </div><!-- subcr -->
-            </div><!-- c50r --> <?php
+               <?php
         } ?>
-    </div><!-- subcolumns -->
+    </div>
     <?php
     if ($this->isGroupAdmin) {
         ?>        
-        <div class="subcolumns">
-            <br />
-            <h4> <?php echo $words->get('NbOfLogEntries', count($logvar)); ?> </h4>
-            <ul class="clearfix"> <?php
+        <div class="col-12 mt-3">
+            <h4><?php echo $words->get('NbOfLogEntries', count($logvar)); ?></h4>
+        </div>
+            <?php
                 foreach ($logvar as &$value) : ?>
-                    <li class="picbox_relatedgroup float_left">
-                        <img class="framed_relatedgroup float_left" src="members/avatar/<?php echo $value->member->Username; ?>?xs"/>
-                        <div class="userinfo">
-                                <?php
-                                $layoutbits->ago(strtotime($value->ts));
-                                ?>
-                                <br /><?php 
-                                $memberlink = '<a href="members/' . $value->member->Username . '">' . $value->member->Username . '</a>';
-                                $grouplink =  '<a href="groups/' . $value->relatedgroup->getPKValue() . '">' . htmlspecialchars($value->relatedgroup->Name, ENT_QUOTES) . '</a>'; 
-                                $logentry = $words->get($value->RelatedGroupAction, $memberlink, $grouplink);
-                                echo $logentry; ?><br />
+
+                    <div class="col-12 col-md-6 p-2">
+                        <div class="float-left h-100 mr-2" style="width: 50px;">
+                            <a href="members/<?php echo $value->member->Username; ?>">
+                                <img class="framed float-left" src="members/avatar/<?php echo $value->member->Username; ?>?50"/>
+                            </a>
                         </div>
-                    </li>
+                        <div class="p-2">
+                            <?php
+                            $layoutbits->ago(strtotime($value->ts));
+                            ?>
+                            <?php
+                            $memberlink = '<a href="members/' . $value->member->Username . '">' . $value->member->Username . '</a>';
+                            $grouplink =  '<a href="groups/' . $value->relatedgroup->getPKValue() . '">' . htmlspecialchars($value->relatedgroup->Name, ENT_QUOTES) . '</a>';
+                            $logentry = $words->get($value->RelatedGroupAction, $memberlink, $grouplink);
+                            echo $logentry;
+                            echo "<br>" . $layoutbits->ago(strtotime($value->ts)); ?>
+                        </div>
+                    </div>
+
+
                 <?php endforeach; ?>
-            </ul>  <!-- clearfix --> 
-        </div><!-- subcolumns -->  
+
         <?php
     }
-    ?>    
-</fieldset>
-
+    ?>

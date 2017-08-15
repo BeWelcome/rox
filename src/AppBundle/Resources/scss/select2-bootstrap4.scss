@@ -11,7 +11,7 @@
 $form-control-default-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
 
 // @see https://github.com/twbs/bootstrap-sass/blob/master/assets/stylesheets/bootstrap/mixins/_forms.scss#L43
-$form-control-focus-box-shadow: $form-control-default-box-shadow, 0 0 8px rgba(0,0,0, 0.6);
+$form-control-focus-box-shadow: $form-control-default-box-shadow, 0 0 8px rgba($input-focus-border-color, 0.6);
 
 // @see https://github.com/twbs/bootstrap-sass/blob/master/assets/stylesheets/bootstrap/_forms.scss#L128
 $form-control-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
@@ -19,7 +19,7 @@ $form-control-transition: border-color ease-in-out .15s, box-shadow ease-in-out 
 // Custom variables
 // -------------------------
 
-$dropdown-arrow-color: #fff !default;
+$dropdown-arrow-color: $input-placeholder-color !default;
 $dropdown-box-shadow: 0 6px 12px rgba(0,0,0,.175) !default;
 $clear-selection-color: $dropdown-arrow-color !default;
 
@@ -126,12 +126,12 @@ $clear-selection-color: $dropdown-arrow-color !default;
     outline: 0;
 
     &::-webkit-input-placeholder {
-      color: #fff;
+      color: $input-placeholder-color;
     }
 
     /* Firefox 18- */
     &:-moz-placeholder {
-      color: #fff;
+      color: $input-placeholder-color;
     }
 
     /**
@@ -140,12 +140,12 @@ $clear-selection-color: $dropdown-arrow-color !default;
      * @see http://stackoverflow.com/questions/24236240/color-for-styled-placeholder-text-is-muted-in-firefox
      */
     &::-moz-placeholder {
-      color: #fff;
+      color: $input-placeholder-color;
       opacity: 1;
     }
 
     &:-ms-input-placeholder {
-      color: #fff;
+      color: $input-placeholder-color;
     }
   }
 
@@ -238,7 +238,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
     .select2-selection {
       @include box-shadow($form-control-focus-box-shadow);
       @include transition($form-control-transition);
-      border-color: #000;
+      border-color: $input-focus-border-color;
     }
   }
 
@@ -299,7 +299,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
   &.select2-container--disabled {
 
     .select2-selection {
-      border-color: #000;
+      border-color: $input-focus-border-color;
       @include box-shadow(none);
     }
 
@@ -309,7 +309,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
 
     .select2-selection,
     .select2-selection--multiple .select2-selection__choice {
-      background-color: #ccc;
+      background-color: $input-disabled-bg;
     }
 
     .select2-selection__clear,
@@ -332,7 +332,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
 
   .select2-dropdown {
     @include box-shadow($dropdown-box-shadow);
-    border-color: #000;
+    border-color: $input-focus-border-color;
     overflow-x: hidden;
     margin-top: -1px;
     &--above {
@@ -393,7 +393,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
     }
 
     .select2-selection__placeholder {
-      color: #000;
+      color: $input-placeholder-color;
     }
   }
 
@@ -424,7 +424,7 @@ $clear-selection-color: $dropdown-arrow-color !default;
     }
 
     .select2-selection__placeholder {
-      color: #000;
+      color: $input-placeholder-color;
       float: left;
       margin-top: 5px;
     }

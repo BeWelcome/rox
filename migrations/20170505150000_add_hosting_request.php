@@ -32,11 +32,11 @@ class AddHostingRequest extends RoxMigration
             ->addColumn('departure', 'datetime')
             ->addColumn( 'flexible', 'boolean')
             ->addColumn('number_of_travellers', 'integer', [
-                'unsigned' => true
+                'signed' => false
             ])
             ->addColumn('status', 'integer', [
                 'length' => 1,
-                'unsigned' => true,
+                'signed' => false,
                 'default' => 0
             ])
             ->create();

@@ -63,6 +63,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('group_notifications_enable', '/forums/subscriptions/disable/group/{groupId}');
         $this->addRouteDirectly('group_subscribe', '/forums/subscriptions/subscribe/group/{groupId}');
         $this->addRouteDirectly('group_unsubscribe', '/forums/subscriptions/unsubscribe/group/{groupId}');
+        $this->addRouteDirectly('group_new_topic', '/groups/{groupId}/forum/new');
         $this->addRouteDirectly('community', '/community');
         $this->addRouteDirectly('faq', '/faq');
         $this->addRouteDirectly('about_faq', '/about/faq');

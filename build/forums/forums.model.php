@@ -3625,12 +3625,14 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
         // a list of members that don't need another reminder
         $query = "
             SELECT
-                IdMember
+                DISTINCT IdMember
             FROM
                 posts_notificationqueue p
             WHERE
                 p.IdPost = $postId
                 AND Status = 'ToSend'
+            ORDER BY 
+                IdMember
             ";
         $res = $this->dao->query($query);
         if ($res) {

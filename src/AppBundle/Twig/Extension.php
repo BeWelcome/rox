@@ -5,7 +5,6 @@ namespace AppBundle\Twig;
 use AppBundle\Model\LanguageModel;
 use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Faker\Factory;
 use HtmlTruncator\Truncator;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Twig_Extension;
@@ -130,7 +129,6 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
             'version' => trim(file_get_contents('../VERSION')),
             'version_dt' => Carbon::createFromTimestamp(filemtime('../VERSION')),
             'title' => 'BeWelcome',
-            'faker' => class_exists(Factory::class) ? Factory::create() : null,
             'languages' => $languages,
             'robots' => 'ALL',
             'my_member' => $member,

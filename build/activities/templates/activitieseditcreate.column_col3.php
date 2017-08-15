@@ -20,7 +20,7 @@ if (empty($vars)) {
 }
 ?>
 
-<form method="post" id="activity-create-form">
+<form method="post" id="activity-create-form" name="activity-create-form">
     <input type="hidden" id="activity-id" name="activity-id" value="<?php echo $vars['activity-id']; ?>" />
     <input type="hidden" id="activity-location-id" name="activity-location-id" value="<?php echo $vars['activity-location-id']; ?>" />
 
@@ -42,7 +42,7 @@ if (empty($vars)) {
     ?>
 
     <div class="row mt-3 mb-1 justify-content-center">
-        <div class="col-sm-12 col-md-8">
+        <div class="col-12">
             <small class="pull-right">* <?php echo $words->get('ActivityMandatoryFields'); ?></small>
             <h2 id="activity-create">
                 <?php if ($vars['activity-id'] != 0) {
@@ -55,35 +55,35 @@ if (empty($vars)) {
 
         <div class="w-100 mt-3"></div>
 
-        <div class="col-sm-12 col-md-4">
+        <div class="col-12 col-md-6">
             <label for="activity-start-date"
                    class="control-label sr-only"><?php echo $words->get('ActivityStart'); ?>*</label>
-            <div class="input-group">
-                <input type="text" class="form-control date-picker-start validate" name="activity-start-date"
-                       placeholder="<?php echo $words->get('ActivityStart'); ?>*" id="activity-start-date"
-                       value="<?php echo $vars['activity-start-date'];?>"/>
-                <label for="activity-start-date" class="control-label input-group-addon btn"><span
-                            class="fa fa-fw fa-calendar"></span></label>
+            <div class="input-group date" id="date-time-start" data-target-input="nearest">
+                <input type="text" id="activity-start-date" name="activity-start-date" class="form-control vaidate" data-target="#date-time-start"
+                       value="<?php echo $vars['activity-start-date'];?>" placeholder="<?php echo $words->get('ActivityStart'); ?>*" />
+                <span class="input-group-addon" data-target="#date-time-start" data-toggle="datetimepicker">
+                    <span class="fa fa-calendar"></span>
+                </span>
             </div>
         </div>
 
-        <div class="col-sm-12 col-md-4">
-            <label for="activity-end-date"
-                   class="control-label sr-only"><?php echo $words->get('ActivityEnd'); ?>*</label>
-            <div class="input-group">
-                <input type="text" class="form-control date-picker-start validate" name="activity-end-date"
-                       placeholder="<?php echo $words->get('ActivityEnd'); ?>*" id="activity-end-date"
-                       value="<?php echo $vars['activity-end-date'];?>"/>
-                <label for="activity-end-date" class="control-label input-group-addon btn"><span
-                            class="fa fa-fw fa-calendar"></span></label>
+        <div class="col-12 col-md-6">
+            <label for="activity-start-end"
+                   class="control-label sr-only"><?php echo $words->get('ActivityStart'); ?>*</label>
+            <div class="input-group date" id="date-time-end" data-target-input="nearest">
+                <input type="text" id="activity-end-date" name="activity-end-date" class="form-control vaidate" data-target="#date-time-end"
+                       value="<?php echo $vars['activity-end-date'];?>" placeholder="<?php echo $words->get('ActivityEnd'); ?>*" />
+                <span class="input-group-addon" data-target="#date-time-end" data-toggle="datetimepicker">
+                    <span class="fa fa-calendar"></span>
+                </span>
             </div>
         </div>
 
-        <div class="col-xs-12 col-md-8 mt-3">
+        <div class="col-12 mt-3">
             <input type="text" id="activity-title" name="activity-title" maxlength="80" class="form-control" value="<?php echo $vars['activity-title']; ?>" placeholder="<?php echo $words->get('ActivityTitle'); ?>*">
         </div>
 
-        <div class="col-sm-12 col-md-8 mt-3">
+        <div class="col-12 mt-3">
             <div class="input-group">
                 <input type="text" id="activity-location" name="activity-location" class="form-control" value="<?php echo $vars['activity-location']; ?>" placeholder="<?php echo $words->get('ActivityLocation'); ?>*">
                 <span class="input-group-btn">
@@ -98,8 +98,8 @@ if (empty($vars)) {
             </div>
         </div>
 
-        <div class="col-sm-12 col-md-8 mt-3">
-            <textarea id="activity-description" name="activity-description" class="mce form-control" rows="10" cols="80">
+        <div class="col-12 mt-3">
+            <textarea id="activity-description" name="activity-description" class="long" rows="10" cols="80">
                 <?php
                 if (!empty($vars['activity-description'])){
                     echo $vars['activity-description'];
@@ -109,11 +109,11 @@ if (empty($vars)) {
             </textarea>
         </div>
 
-        <div class="col-xs-12 col-md-8 mt-3">
-            <input type="checkbox" id="activity-public" name="activity-public" checked="checked">&nbsp;<label for="activity-public"><?php echo $words->get('ActivityPublic'); ?></label>
+        <div class="col-12 mt-3">
+            <input type="checkbox" id="activity-public" name="activity-public">&nbsp;<label for="activity-public"><?php echo $words->get('ActivityPublic'); ?></label>
         </div>
 
-        <div class="col-xs-12 col-md-8">
+        <div class="col-12">
             <?php
             if ($vars['activity-id'] != 0) {
                 $activitieseditcreatebutton = $words->getSilent('ActivitiesEditCreateUpdate');
@@ -129,7 +129,7 @@ if (empty($vars)) {
 <form method="post" id="activity-show-form">
     <div class="form-group row justify-content-center">
 
-        <div class="col-xs-12 col-md-8">
+        <div class="col-12">
             <?php echo $callbackTagsCancelUncancel; ?>
             <input class="row" type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
             <?php
@@ -142,53 +142,9 @@ if (empty($vars)) {
     </div>
 </form>
 
-
-<script type="text/javascript">//<!--
-ActivityGeoSuggest.initialize('activity-create-form');
-
-var startDateTextBox = jQuery('#activity-start-date');
-var endDateTextBox = jQuery('#activity-end-date');
-startDateTextBox.datetimepicker({
-    onClose: function(dateText, inst) {
-        if (endDateTextBox.val() != '') {
-            var testStartDate = startDateTextBox.datetimepicker('getDate');
-            var testEndDate = endDateTextBox.datetimepicker('getDate');
-            if (testStartDate > testEndDate)
-                endDateTextBox.datetimepicker('setDate', testStartDate);
-        }
-        else {
-            var endDate = startDateTextBox.datetimepicker('getDate').getTime() + 7200000;
-            endDateTextBox.datetimepicker('setDate', new Date(endDate));
-        }
-    },
-    onSelect: function (selectedDateTime){
-        endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
-    },
-    dateFormat: 'yy-mm-dd',
-    timeFormat: 'HH:mm',
-    minDate: new Date(<?php echo time(); ?>),
-    stepMinute: 15
-});
-endDateTextBox.datetimepicker({
-    onClose: function(dateText, inst) {
-        if (startDateTextBox.val() != '') {
-            var testStartDate = startDateTextBox.datetimepicker('getDate');
-            var testEndDate = endDateTextBox.datetimepicker('getDate');
-            if (testStartDate > testEndDate)
-                startDateTextBox.datetimepicker('setDate', testEndDate);
-        }
-        else {
-            var startDate = endDateTextBox.datetimepicker('getDate').getTime() - 7200000;
-            startDateTextBox.datetimepicker('setDate', new Date(startDate));
-        }
-    },
-    onSelect: function (selectedDateTime){
-        startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
-    },
-    dateFormat: 'yy-mm-dd',
-    timeFormat: 'HH:mm',
-    minDate: new Date(<?php echo time(); ?>),
-    stepMinute: 15
-});
-//-->
-</script>
+<?php
+if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
+    $textarea = 'activity-description';
+    require_once SCRIPT_BASE . 'web/script/tinymceconfig_php.js';
+}
+?>

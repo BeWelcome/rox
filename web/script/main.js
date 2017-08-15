@@ -101,20 +101,10 @@ bwrox.selectScripts([
         // complete jquery ui with theme smoothness
         file: "jquery-ui-1.11.2/jquery-ui.min.js",
         pages: [
-            "activities",
+//            "activities",
             "search",
             "admin/rights",
             "admin/flags",
-            /*,
-             "blog",
-             "trip",
-             "admin/treasurer" */
-        ]
-    },
-    {
-        file: "jquery-ui-timepicker-addon.js?2",
-        pages: [
-            "activities"
             /*,
              "blog",
              "trip",

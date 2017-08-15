@@ -1,8 +1,9 @@
 {% extends 'base.html.twig' %}
 {% import 'macros.twig' as macros %}
 
-{% block javascripts %}        {% javascripts
-'@bootstrap_datepicker_js' %}
+{% block javascripts %}
+    {% javascripts
+    '@tempus_dominus_bootstrap4_js' %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script>
@@ -21,7 +22,7 @@
 
 {% block stylesheets %}
     {% stylesheets filter="cssrewrite"
-    '@bootstrap_datepicker_css' %}
+    '@tempus_dominus_bootstrap4_css' %}
     <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
 {% endblock %}

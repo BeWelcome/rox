@@ -21,13 +21,11 @@
     "grunt-contrib-watch": "^1.0.0",
     "lodash": "^3.10.1",
     "uglify-js": "^2.7.5",
-    "uglifycss": "*",
-    "symfony-collection": "*"
+    "uglifycss": "*"
   },
   "dependencies": {
     "bootstrap": "github:twbs/bootstrap#v4-dev",
     "bootstrap-autohidingnavbar": "github:istvan-ujjmeszaros/bootstrap-autohidingnavbar",
-    "bootstrap-datepicker": "github:uxsolutions/bootstrap-datepicker",
     "font-awesome": "^4.7.0",
     "html5shiv": "^3.7.3",
     "jquery": "^3.2.1",
@@ -44,9 +42,6 @@
     "skrollr-menu": "github:prinzhorn/skrollr-menu",
     "symfony-collection": "^2.1.0",
     "tempusdominus-bootstrap-4": "github:tempusdominus/bootstrap-4",
-    "tempusdominus-core": "github:tempusdominus/core",
-    "tinymce": "^4.6.3",
-    "uglify-js": "^2.8.28",
     "unslider": "github:idiot/unslider"
   }
 }

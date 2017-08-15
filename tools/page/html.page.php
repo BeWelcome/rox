@@ -15,7 +15,7 @@ class PageWithHTML extends AbstractBasePage
     );
 
     private $_late_scriptfiles = array(
-        '/assetic/tether_js.js',
+        '/assetic/popper_js.js',
         '/assetic/bootstrap_js.js',
         '/script/common/initialize.js?1',
     );

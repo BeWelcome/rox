@@ -2,8 +2,6 @@
     "name": "bewelcome/rox",
     "description": "The source code that drives bewelcome.org",
     "homepage": "https://www.bewelcome.org/",
-    "name": "raymund/project",
-    "license": "proprietary",
     "type": "project",
     "license": "GPL",
     "require": {

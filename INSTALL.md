@@ -12,7 +12,7 @@ using a browser or use curl _url_ > _filename_.
 ## Requirements
 
 * Apache with mod_rewrite enabled
-* PHP version >= 5.6
+* PHP version >= 7.1
 * PHP GD lib enabled
 * PHP short opening tags enabled
 * PHP magic quotes gpc disabled
@@ -35,14 +35,21 @@ using a browser or use curl _url_ > _filename_.
     $ git clone https://github.com/BeWelcome/rox.git
     ```
 
-2. Done. For a first look a simple read-only clone will do. See
- http://trac.bewelcome.org/wiki/Download for more details on branches and
- pushing code.
-
+2. For a first look around a read-only clone will do. If you want to support development please fork the repository and send pull requests.
 
 ### Create files and set permissions
 
-1. Change to BW-Rox directory:
+1.  Create database and set privileges:
+
+    ```bash
+    $ mysql -u root -p
+    mysql> CREATE DATABASE bewelcome;
+    mysql> GRANT ALL PRIVILEGES ON bewelcome.* TO 'bewelcome'@'localhost' IDENTIFIED BY 'bewelcome';
+    mysql> FLUSH PRIVILEGES;
+    mysql> exit
+    ```
+
+1.  Change to BW-Rox directory:
 
     ```
     $ cd /path/to/rox
@@ -87,81 +94,35 @@ using a browser or use curl _url_ > _filename_.
       htdocs/exception.log
     ```
 
-### Database installation
-
-1. Create database and set privileges:
-
-    ```bash
-    $ mysql -u root -p
-    mysql> CREATE DATABASE bewelcome;
-    mysql> GRANT ALL PRIVILEGES ON bewelcome.* TO 'bewelcome'@'localhost' IDENTIFIED BY 'bewelcome';
-    mysql> FLUSH PRIVILEGES;
-    mysql> exit
-    ```
-
-2. Download development database dump:
-
-    ```bash
-    $ wget http://downloads.bewelcome.org/for_developers/rox_test_db/bewelcome.sql.bz2
-    ```
-
-3. Uncompress dump:
-
-    ```bash
-    $ bunzip2 bewelcome.sql.bz2
-    ```
-
-4. Import dump into database (first line needs root because of routines):
-
-    ```bash
-    $ mysql bewelcome -u root -p < bewelcome.sql
-    ```
-
-5. Get geonames database tables, uncompress files and import into DB (can be skipped):
-
-    Change to your BW-Rox directory and download the geonames tables:
-
-    ```bash
-    $ wget http://download.geonames.org/export/dump/allCountries.zip
-    $ wget http://download.geonames.org/export/dump/alternateNames.zip
-    $ wget http://download.geonames.org/export/dump/countryInfo.txt
-    ```
-
-    Unzip the files:
-
-    ```bash
-    unzip allCountries.zip
-    unzip alternateNames.zip
-    ```
-
-    Import into the database:
-
-    ```bash
-    $ mysql --local-infile bewelcome -u bewelcome -pbewelcome < import.sql
-    ```
-
-    This will take a while as files are relatively large.
-
-    Cleanup afterwards:
-
-    ```bash
-    $ rm allCountries.txt alternateNames.txt iso-languagecodes.txt allCountries.zip alternateNames.zip countryInfo.txt
-    ```
+### Initialize installation
 
 8. Install the rox dependencies
 
     ```bash
     $ php composer.phar install
     $ npm update
+    $ ./node_modules/.bin/encore dev
     ```
 
-9. Migrate the DB to the latest version
-
+1. Execute
+ 
     ```bash
-    php vendor/bin/phinx migrate -c phinx.php
+    $ cp app/config/parameters.yml.dist app/config/parameters.yml
     ```
+    
+    Update the database parameters in ```parameters.yml``` match with your MYSQL credentials.       
 
-10. Update words and language tables to match the current translation on the site
+2.  Initialize the database.
+
+    This generates a new database named bewelcome which is accessible by a user named bewelcome which uses the password 
+    bewelcome. Update ```parameters.yml``` if you need something else.
+        
+    ```bash
+    $ php bin/console doctrine:schema:create
+    $ php bin/console doctrine:fixtures:load
+    ``` 
+   
+10. To get translated keywords update words and language tables to match the current translation on the site
 
     ```bash
     $ wget http://downloads.bewelcome.org/for_developers/rox_test_db/languages.sql.bz2
@@ -171,37 +132,11 @@ using a browser or use curl _url_ > _filename_.
     $ mysql bewelcome -u bewelcome -pbewelcome < words.sql
     ```
 
-11. Remove dumps and other files:
-
-    ```bash
-    $ rm bewelcome.sql.bz2 bewelcome.sql languages.sql.bz2 languages.sql words.sql.bz2 words.sql
-    ```
-
-12. Configure Sphinxsearch (can be skipped)
-
-### Configure BW-Rox
-
-1. Execute
- 
-    ```bash
-    $ cp app/config/parameters.yml.dist app/config/parameters.yml
-    ```
-
-2. Make sure that the database parameters in there match with your database credentials (should be fine if you followed 
-above instructions).       
-
 ### Test and log in
-
-1. Execute 
- 
-    ```bash
-    $ make
-   ```
 
 2. Run 
 
     ```bash
-    $ make build
     $ make version
     $ php bin/console assets:install
     $ php bin/console assetic:dump
@@ -218,8 +153,8 @@ above instructions).
    Access the site using http://localhost:8000/
 
 
-4. Log in as user `member-101` and password `password`. See [Useful hints](#useful-hints) section below
-     on password usage.
+4. Log in as user `member-1` and password `password`. See [Useful hints](#useful-hints) section below
+   on password usage.
 
 5. Click around the site a bit and check if all CSS and images are loaded.
    Refer to var/logs/dev.log if errors appear or something looks broken. Also make use of the Symfony3 debug toolbar.
@@ -228,9 +163,7 @@ above instructions).
 
 * Geographical data:
 
-    There are sample geographical data included in the developer database dump.
-    If you need more geographical data, import the geonames dump:
-    http://downloads.bewelcome.org/for_developers/rox_test_db/geonames.sql.bz2
+    There is exactly one city in the dump: Berlin.
 
 * Resetting all user passwords:
 

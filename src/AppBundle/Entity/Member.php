@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * Member.
  *
- * @ORM\Table(name="members", uniqueConstraints={@ORM\UniqueConstraint(name="i_Username", columns={"Username"})}, indexes={@ORM\Index(name="index_by_created", columns={"created"}), @ORM\Index(name="Id2City", columns={"IdCity"}), @ORM\Index(name="ex_user_id", columns={"ex_user_id"}), @ORM\Index(name="Status", columns={"Status"})})
+ * @ORM\Table(name="members")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MemberRepository")
  *
  * @SuppressWarnings(PHPMD)
@@ -92,7 +92,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     /**
      * @var Location
      *
-     * @ORM\OneToOne(targetEntity="Location")
+     * @ORM\ManyToOne(targetEntity="Location")
      * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameid")
      */
     private $city;
@@ -1575,7 +1575,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
      */
     public function setPassword($password)
     {
-        $this->password = $password;
+        $this->password = password_hash($password, PASSWORD_DEFAULT, [ 'cost' => 12 ]);
 
         return $this;
     }

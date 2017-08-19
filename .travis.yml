@@ -4,7 +4,6 @@ git:
   depth: 3
 
 php:
-  - '7.0'
   - '7.1'
 
 addons:
@@ -19,7 +18,6 @@ cache:
 before_install:
   - nvm install v5.5
   - nvm use v5.5
-  - gem install sass
   - phpenv config-rm xdebug.ini
   - mysql -u root -e 'create database bewelcome;'
   - mysql -u root -e "GRANT ALL PRIVILEGES ON bewelcome.* TO 'bewelcome'@'localhost' IDENTIFIED BY 'bewelcome';"

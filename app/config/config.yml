@@ -170,22 +170,6 @@ assetic:
             inputs:
                 - "%node_modules%/bootstrap/dist/js/bootstrap.js"
 
-        bootstrap_datepicker_css:
-            inputs:
-                - "%node_modules%/bootstrap-datepicker/dist/css/bootstrap-datepicker3.standalone.css"
-
-        bootstrap_datepicker_js:
-            inputs:
-                - "%node_modules%/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"
-
-        bootstrap_datepicker_locales_js:
-            inputs:
-                - "%node_modules%/bootstrap-datepicker/js/locales/bootstrap-datepicker.de.js"
-                - "%node_modules%/bootstrap-datepicker/js/locales/bootstrap-datepicker.fr.js"
-                - "%node_modules%/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"
-                - "%node_modules%/bootstrap-datepicker/js/locales/bootstrap-datepicker.fi.js"
-                - "%node_modules%/bootstrap-datepicker/js/locales/bootstrap-datepicker.pt.js"
-
         tempus_dominus_bootstrap4_css:
             inputs:
                 - "%node_modules%/tempusdominus-bootstrap-4/build/css/tempusdominus-bootstrap-4.min.css"

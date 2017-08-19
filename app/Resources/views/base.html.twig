@@ -25,16 +25,10 @@
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
-        {%  javascripts
-            '@backwards_js' %}
-            <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}
+            <script src="{{ asset('build/backwards.js') }}"></script>
         <![endif]-->
 
-        {% stylesheets filter="cssrewrite"
-            '@app_css' %}
-            <link rel="stylesheet" href="{{ asset_url }}" />
-        {% endstylesheets %}
+        <link rel="stylesheet" href="{{ asset('build/bewelcome.css') }}" />
 
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
@@ -70,12 +64,8 @@
         </div>
         </main>
         {% include 'footer.html.twig' %}
-        {% javascripts
-        '@jquery_js'
-        '@popper_js'
-        '@bootstrap_js' %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-        {%  endjavascripts %}
+        <script src="{{ asset('build/manifest.js') }}"></script>
+        <script src="{{ asset('build/bewelcome.js') }}"></script>
         {% block javascripts %}{% endblock javascripts %}
     </body>
 </html>

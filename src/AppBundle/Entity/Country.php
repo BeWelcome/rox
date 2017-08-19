@@ -46,9 +46,8 @@ class Country
      *
      * @ORM\Column(name="country", type="string", length=2)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $country;
+    private $country_iso;
 
     /**
      * Set geonameid.

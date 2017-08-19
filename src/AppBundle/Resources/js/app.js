@@ -1,4 +1,10 @@
 // assets/js/main.js
 
-// loads the jquery package from node_modules
-var $ = require('jquery');
+const $ = require('jquery');
+
+require('popper.js');
+
+require('bootstrap');
+
+require('/scss/bewelcome.scss');
+

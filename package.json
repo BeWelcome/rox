@@ -21,7 +21,8 @@
     "grunt-contrib-uglify": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "node-sass": "^4.5.3",
-    "sass-loader": "^6.0.6"
+    "sass-loader": "^6.0.6",
+    "webpack-jquery-ui": "^1.0.0"
   },
   "dependencies": {
     "bootstrap": "github:twbs/bootstrap#v4-dev",

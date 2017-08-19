@@ -13,7 +13,11 @@ class LoadMemberData implements FixtureInterface
      */
     public function load(ObjectManager $manager)
     {
-        $objects = Fixtures::load(__DIR__.'/languages.yml', $manager);
-        $objects = Fixtures::load(__DIR__.'/words.yml', $manager);
+        Fixtures::load(__DIR__.'/languages.yml', $manager);
+        Fixtures::load(__DIR__.'/words.yml', $manager);
+        Fixtures::load(__DIR__.'/countries.yml', $manager);
+        Fixtures::load(__DIR__.'/cities.yml', $manager);
+        Fixtures::load(__DIR__.'/members.yml', $manager);
+        Fixtures::load(__DIR__.'/communitynews.yml', $manager);
     }
 }

@@ -53,11 +53,11 @@ if ($errors = $this->getRedirectedMem('errors'))
 {
     foreach ($errors as $error)
     {
-        echo "<p class=\"error\">{$words->get($error)}</p>";
+        echo '<p class="error">{$words->get($error)}</p>';
     }
 }
 ?>
-
+<div class="col-12">
 <p><?php echo $words->get("FeedBackDisclaimer") ?></p>
 
 <form class="yform full" action="about/feedback" method="post">
@@ -66,9 +66,9 @@ if ($errors = $this->getRedirectedMem('errors'))
     <input type="hidden" name="redirect" value="<?php echo htmlentities($redirect); ?>">
     <input type="hidden" name="data" value="<?php echo htmlentities($data); ?>">
 
-    <div class="type-select">
+    <div class="form-group">
         <label for="IdCategory"><?php echo $words->get("FeedBackChooseYourCategory")?></label>
-        <select id="IdCategory" name="IdCategory">
+        <select class="form-control" id="IdCategory" name="IdCategory">
             <?php foreach ($categories as $cat) { ?>
                 <option value="<?php echo $cat->id ?>" <?=($cat->id == $IdCategory) ? 'selected="selected"': '' ?>>
                     <?php echo $words->getSilent("FeedBackName_" . $cat->name) ?>
@@ -90,8 +90,10 @@ if ($errors = $this->getRedirectedMem('errors'))
         }
         else echo " \">";
         ?>
+    </div>
+    <div class="form-group">
         <label for="FeedbackQuestion"><?php echo $words->get("FeedBackEnterYourQuestion")?></label>
-        <textarea id="FeedbackQuestion" name="FeedbackQuestion" class="long" cols="60" rows="9"><?php echo $FeedbackQuestion;?></textarea>
+        <textarea id="FeedbackQuestion" name="FeedbackQuestion" class="form-control w-100" rows="9"><?php echo $FeedbackQuestion;?></textarea>
     </div> <!-- type-text -->
 
     <?php if (!$this->model->getLoggedInMember()) : ?>
@@ -105,19 +107,21 @@ if ($errors = $this->getRedirectedMem('errors'))
             }
         }
         else echo " \">";
-        ?> <!-- type-text -->
+        ?>
+        </div>
+        <div class="form-group">
         <label for="FeedbackEmail"><?php echo $words->get("FeedBackEmail")?></label>
         <input type="text" id="FeedbackEmail" name="FeedbackEmail" value="<?php echo $FeedbackEmail;?>"/>
-    </div>
+        </div>
     <?php endif; ?>
 
-    <div class="type-check">
+    <div class="type-check form-group">
         <p><input type="checkbox" id="feedbackAnswernotneeded" name="answernotneeded" <?php if ($answernotneeded) echo "checked='checked'";?>/> <label for="feedbackAnswernotneeded"> <?php echo $words->get("FeedBackIDoNotWantAnAnswer")?></label></p>
     </div> <!-- type-check -->
 
-    <div class="type-button">
-        <input type="submit" class="button" id="submit" name="submit" value="<?php echo $words->getSilent("FeedbackSubmit")?>" /><?php echo $words->flushBuffer(); ?>
+    <div>
+        <input type="submit" class="btn btn-primary" id="submit" name="submit" value="<?php echo $words->getSilent("FeedbackSubmit")?>" /><?php echo $words->flushBuffer(); ?>
         <input name="action" type="hidden" value="ask" />
     </div>
 </form>
-
+</div>

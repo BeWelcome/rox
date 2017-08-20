@@ -8,15 +8,15 @@ class AboutFaqsectionPage extends AboutFaqPage
         $words = $this->getWords();
         $req = $_SERVER['REQUEST_URI'];
         $IdLanguage = $this->_session->get( "IdLanguage", 0 );
-        echo '<h2>'.$words->get($this->faq_section->Description).'</h2>
-        <dl id="faqs">';
+        echo '<div class="col-12"><h2>'.$words->get($this->faq_section->Description).'</h2></div>
+        <div class="col-12"><dl id="faqs">';
         foreach ($this->faq_section->faqs as $faq_key => &$faq) {
             echo '
-            <dt>'.$words->get("FaqQ_".$faq->QandA).'</dt>
+            <dt class="h5">'.$words->get("FaqQ_".$faq->QandA).'</dt>
             <dd id="question'.$faq_key.'">'.$words->get("FaqA_".$faq->QandA).'</dd>';
         }
         ?>
-        </dl>
+        </dl></div>
         <script type="text/javascript"><!--
             var faqs = jQuery('#faqs');
             faqs.find("dd").hide();

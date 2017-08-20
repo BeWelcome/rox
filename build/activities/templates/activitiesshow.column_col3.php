@@ -15,11 +15,11 @@ if ($this->_session->has('ActivityStatus')) {
     $this->_session->remove('ActivityStatus');
 }
 if (!empty($status)) {
-    echo '<div class="alert alert-success" role="alert"><strong>' . $words->get($status[0], $status[1]) . '</strong></div>';
+    echo '<div class="alert alert-success w-100" role="alert"><strong>' . $words->get($status[0], $status[1]) . '</strong></div>';
 }
 if ($this->activity->status == 1) {
     // the activity has been cancelled
-    echo '<div class="alert alert-warning" role="alert"><strong>' . $words->get('ActivityHasBeenCancelled') . '</strong></div>';
+    echo '<div class="alert alert-warning w-100" role="alert"><strong>' . $words->get('ActivityHasBeenCancelled') . '</strong></div>';
 }
 $errors = $this->getRedirectedMem('errors');
 if (!empty($errors)) {

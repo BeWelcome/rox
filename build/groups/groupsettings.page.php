@@ -84,11 +84,11 @@ class GroupSettingsPage extends GroupsBasePage
 
         <?php if (!empty($problems)){
             if (!empty($problems['General']) && $problems['General']){
-                echo "<div class='alert alert-danger' role='alert'>" . $words->get('GroupsChangeFailed') . "</div>";
+                echo "<div class='alert alert-danger w-100' role='alert'>" . $words->get('GroupsChangeFailed') . "</div>";
             }
         } else {
             if ($redirected) {
-                echo "<div class='alert alert-success' role='alert'>" . $words->get('GroupsChangeSucceeded') . "</div>";
+                echo "<div class='alert alert-success w-100' role='alert'>" . $words->get('GroupsChangeSucceeded') . "</div>";
             }}
         ?>
 

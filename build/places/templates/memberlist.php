@@ -1,5 +1,5 @@
 <?php
-echo '<h2 class="paddingtop">' . $words->get('members') . '</h2>';
+echo '<div class="row"><div class="col-12"><h2 class="m-0">' . $words->get('members') . '</h2></div>';
 $User = new APP_User;
 $words = new MOD_words();
 $layoutbits = new MOD_layoutbits;
@@ -33,8 +33,7 @@ if (!$this->members) {
     $params->items_per_page = Places::MEMBERS_PER_PAGE;
     $pager = new PagerWidget($params);
 
-    // show members if there are any to show
-    echo '<ul class="clearfix">';
+    echo '';
     foreach ($this->members as $member) {
         $image = new MOD_images_Image('',$member->username);
         if ($member->HideBirthDate=="No") {
@@ -42,17 +41,20 @@ if (!$this->members) {
         } else {
             $member->age = $words->get("Hidden");
         }
-        echo '<li class="userpicbox float_left">';
-        echo MOD_layoutbits::PIC_50_50($member->username,'',$style='framed float_left');
-        echo '<div class="userinfo">';
-        echo '  <a class="username" href="members/'.$member->username.'">'.
-                $member->username.'</a><br />';
-        echo '  <span class="small">'.$words->get("yearsold",$member->age).
-                '<br />'.$member->city.'</span>';
-        echo '</div>';
-        echo '</li>';
-    }
-    echo '</ul>';
-    $pager->render();
+        ?>
+        <div class="col-6 col-md-3 col-lg-2">
+            <div class="d-flex flex-row">
+                <div class="mr-2"><a href="members/<? echo $member->username; ?>"><? echo MOD_layoutbits::PIC_50_50($member->username,''); ?></a></div>
+                <div><a href="members/<? echo $member->username; ?>"><? echo $member->username; ?></a><br>
+                    <small><? echo $words->get("yearsold",$member->age) . '<br>' . $member->city; ?></small>
+                </div>
+            </div>
+        </div>
+
+        <? } ?>
+    </div>
+
+<?
 }
+$pager->render();
 ?>

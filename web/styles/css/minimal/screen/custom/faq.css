@@ -37,10 +37,8 @@
     .faq_text {
         color: #333;
     }
-
-    #faqs { margin: 0;}
-    #faqs dt, #faqs dd { padding: 0 0 0 20px }
-    #faqs dt { font-size:1.2em;  cursor: pointer; margin: 0 0 15px 25px;}
+    
+    #faqs dt {cursor: pointer; margin: 0 0 15px 25px;}
     #faqs dt:before {
         content: '\f055' /*fontawesome char code inside the ''*/;
         font-family: FontAwesome; /* or whatever */

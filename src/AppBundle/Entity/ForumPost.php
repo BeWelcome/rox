@@ -30,16 +30,9 @@ class ForumPost
     private $id;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="threadid", type="integer", nullable=true)
-     */
-    private $threadid;
-
-    /**
      * @var ForumThread
      *
-     * @ORM\OneToOne(targetEntity="ForumThread")
+     * @ORM\ManyToOne(targetEntity="ForumThread", inversedBy="posts")
      * @ORM\JoinColumn(name="threadid", referencedColumnName="id")
      */
     private $thread;
@@ -191,13 +184,13 @@ class ForumPost
     /**
      * Set threadid.
      *
-     * @param int $threadid
+     * @param int $threadId
      *
      * @return ForumPost
      */
-    public function setThreadid($threadid)
+    public function setThreadId($threadId)
     {
-        $this->threadid = $threadid;
+        $this->threadId = $threadId;
 
         return $this;
     }
@@ -207,9 +200,9 @@ class ForumPost
      *
      * @return int
      */
-    public function getThreadid()
+    public function getThreadId()
     {
-        return $this->threadid;
+        return $this->threadId;
     }
 
     /**

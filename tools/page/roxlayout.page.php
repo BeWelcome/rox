@@ -19,7 +19,7 @@ class PageWithRoxLayout extends PageWithHTML
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'css/app.css';
+        $stylesheets[] = 'build/bewelcome.css';
         if (PVars::getObj('development')->uncompress_css != 1) {
             $stylesheets = str_replace(".css", ".min.css", $stylesheets);
             return $stylesheets;

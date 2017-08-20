@@ -24,7 +24,7 @@ class ActivityAttendee
      * @var \AppBundle\Entity\Activity
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Activity")
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Activity", inversedBy="attendees")
      * @ORM\JoinColumn(name="activityId", referencedColumnName="id")
      */
     private $activity;

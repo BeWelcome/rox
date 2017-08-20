@@ -37,22 +37,23 @@
         "egeloen/ckeditor-bundle": "^5.0"
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^2.3",
         "friendsofphp/php-cs-fixer": "^2.0",
         "fzaninotto/faker": "^1.6",
-        "phpmetrics/phpmetrics": "^1.8",
+        "jupeter/doctrine-dump-fixtures-bundle": "^1.1",
+        "mockery/mockery": "^0.9.6",
+        "nelmio/alice": "^2.2",
         "phploc/phploc": "^3.0",
         "phpmd/phpmd": "^2.4",
+        "phpmetrics/phpmetrics": "^1.8",
         "phpunit/phpunit": "^5.0",
         "sebastian/phpcpd": "dev-master",
-        "squizlabs/php_codesniffer": "^2.5",
-        "theseer/phpdox": "^0.9",
-        "symfony/phpunit-bridge": "^3.0",
         "sensio/generator-bundle": "^3.0",
+        "squizlabs/php_codesniffer": "^2.5",
         "symfony/debug-bundle": "^3.1",
+        "symfony/phpunit-bridge": "^3.0",
         "symfony/web-profiler-bundle": "^3.1",
-        "doctrine/doctrine-fixtures-bundle": "^2.3",
-        "mockery/mockery": "^0.9.6",
-        "nelmio/alice": "^2.2"
+        "theseer/phpdox": "^0.9"
     },
     "autoload": {
         "psr-4": {

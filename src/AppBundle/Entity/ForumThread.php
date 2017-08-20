@@ -222,7 +222,7 @@ class ForumThread
     private $deletedAt = '0000-00-00 00:00:00';
 
     /**
-     * @ORM\OneToMany(targetEntity="ForumPost", mappedBy="threadId")
+     * @ORM\OneToMany(targetEntity="ForumPost", mappedBy="thread")
      */
     private $posts;
 

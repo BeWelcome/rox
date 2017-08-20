@@ -6,13 +6,14 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Nelmio\Alice\Fixtures;
 
-class LoadMemberData implements FixtureInterface
+class LoadData implements FixtureInterface
 {
     /**
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function load(ObjectManager $manager)
     {
+        Fixtures::load(__DIR__.'/params.yml', $manager);
         Fixtures::load(__DIR__.'/languages.yml', $manager);
         Fixtures::load(__DIR__.'/words.yml', $manager);
         Fixtures::load(__DIR__.'/countries.yml', $manager);

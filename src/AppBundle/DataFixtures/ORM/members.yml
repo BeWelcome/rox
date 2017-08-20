@@ -3,9 +3,10 @@ AppBundle\Entity\Member:
         Username: 'member-<current()>'
         BirthDate: '<DateTime()>'
         email: 0
-        created: '<DateTime()>'
-        updated: '<DateTime()>'
-        LastLogin: '<DateTime()>'
+        created: '<dateTimeBetween("-200 days", "now")>'
+        updated: '<dateTimeBetween($created, "now")>'
+        LastLogin: '<dateTimeBetween($created, "now")>'
+        LastSwitchToActive: null
         ExUserId: 0
         Status: 'Active'
         ChangedId: 0
@@ -70,6 +71,5 @@ AppBundle\Entity\Member:
         PublicTransport: 0
         Movies: 0
         ChatGoogle: 0
-        LastSwitchToActive: '<DateTime()>'
         bewelcomed: 0
 

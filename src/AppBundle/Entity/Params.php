@@ -39,21 +39,21 @@ class Params
      *
      * @ORM\Column(name="recordonline", type="integer", nullable=false)
      */
-    private $recordonline = '0';
+    private $recordonline = 0;
 
     /**
      * @var int
      *
      * @ORM\Column(name="ToggleDonateBar", type="integer", nullable=false)
      */
-    private $toggledonatebar = '0';
+    private $toggledonatebar = 0;
 
     /**
      * @var int
      *
      * @ORM\Column(name="neededperyear", type="integer", nullable=false)
      */
-    private $neededperyear = '1260';
+    private $neededperyear = 1260;
 
     /**
      * @var \DateTime
@@ -123,7 +123,7 @@ class Params
      *
      * @ORM\Column(name="AjaxChatDebuLevel", type="integer", nullable=false)
      */
-    private $ajaxchatdebulevel = '0';
+    private $ajaxchatdebulevel = 0;
 
     /**
      * @var string
@@ -158,21 +158,21 @@ class Params
      *
      * @ORM\Column(name="DayLightOffset", type="integer", nullable=false)
      */
-    private $daylightoffset = '0';
+    private $daylightoffset = 0;
 
     /**
      * @var int
      *
      * @ORM\Column(name="NbCommentsInLastComments", type="integer", nullable=false)
      */
-    private $nbcommentsinlastcomments = '20';
+    private $nbcommentsinlastcomments = 20;
 
     /**
      * @var int
      *
      * @ORM\Column(name="IdCommentOfTheMoment", type="integer", nullable=false)
      */
-    private $idcommentofthemoment = '0';
+    private $idcommentofthemoment = 0;
 
     /**
      * @var string

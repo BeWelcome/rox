@@ -8,15 +8,12 @@ class PageWithHTML extends AbstractBasePage
     // Add or increment query string if a JS file changes to make sure browsers
     // reload the file (e.g. "?1" -> "?2")
     private $_early_scriptfiles = array(
-        '/assetic/jquery_js.js',
         '/script/main.js?9',
         '/script/common/common.js?1',
-        '/assetic/select2_js.js',
     );
 
     private $_late_scriptfiles = array(
-        '/assetic/popper_js.js',
-        '/assetic/bootstrap_js.js',
+        '/build/bewelcome.js',
         '/script/common/initialize.js?1',
     );
 

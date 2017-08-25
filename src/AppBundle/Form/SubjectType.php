@@ -15,7 +15,7 @@ class SubjectType extends AbstractType
     {
         $builder->add('subject', null, [
             'attr' => [
-                'placeholder' => 'Please enter a subject'
+                'placeholder' => 'Please enter a subject',
             ],
         ]);
     }

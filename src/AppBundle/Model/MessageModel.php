@@ -17,14 +17,17 @@ class MessageModel extends BaseModel
     }
 
     /**
-     * Returns the thread that contains the given message
+     * Returns the thread that contains the given message.
+     *
      * @param Message $message
+     *
      * @return array
      */
-    public function getThreadForMessage(Message $message) {
-            /** @var MessageRepository $repository */
+    public function getThreadForMessage(Message $message)
+    {
+        /** @var MessageRepository $repository */
         $connection = $this->em->getConnection();
-        $stmt = $connection->prepare("
+        $stmt = $connection->prepare('
             SELECT 
                 id
             FROM
@@ -59,20 +62,25 @@ class MessageModel extends BaseModel
                     @id IS NOT NULL) ho
                 JOIN messages hi ON hi.id = ho.id) q) q2
             ORDER BY level
-        ");
+        ');
         $stmt->execute([':message_id' => $message->getId()]);
         $ids = $stmt->fetchAll(PDO::FETCH_NUM);
         $ids = array_map(
-            function($value) {
+            function ($value) {
                 return $value[0];
-            }, $ids);
+            },
+            $ids
+        );
 
         /** @var MessageRepository $repository */
         $repository = $this->em->getRepository(Message::class);
-        $result = $repository->findBy([
-            'id' => $ids
+        $result = $repository->findBy(
+            [
+            'id' => $ids,
             ],
-            [ 'created' => 'DESC']);
+            ['created' => 'DESC']
+        );
+
         return $result;
     }
 }

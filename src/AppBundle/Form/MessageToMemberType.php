@@ -4,7 +4,6 @@ namespace AppBundle\Form;
 
 use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -18,7 +17,7 @@ class MessageToMemberType extends AbstractType
         $builder
             ->add('subject', SubjectType::class)
             ->add('message', CKEditorType::class, [
-                'required' => true
+                'required' => true,
             ])
         ;
     }

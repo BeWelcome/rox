@@ -1,6 +1,5 @@
 var Encore = require('@symfony/webpack-encore');
 
-
 Encore
     .setOutputPath('web/build/')
     .setPublicPath('/build')
@@ -11,7 +10,9 @@ Encore
         'jquery',
         'popper.js',
         'bootstrap',
-        './src/AppBundle/Resources/scss/bewelcome.scss'
+        'select2',
+        './src/AppBundle/Resources/scss/bewelcome.scss',
+        './web/script/common/common.js'
     ])
     .addEntry('jquery_ui', './src/AppBundle/Resources/js/jquery_ui.js')
     .addEntry('backwards', './src/AppBundle/Resources/js/backwards.js')
@@ -26,6 +27,16 @@ Encore
         'window.jQuery': 'jquery',
         Popper: ['popper.js', 'default'],
     })
+    .addLoader({
+        test: require.resolve('jquery'),
+        use: [{
+            loader: 'expose-loader',
+            options: 'jQuery'
+        },{
+            loader: 'expose-loader',
+            options: '$'
+        }]
+    })
 //    .enableSourceMaps(!Encore.isProduction())
 
 // create hashed filenames (e.g. app.abc123.css)
@@ -34,3 +45,7 @@ Encore
 
 // export the final configuration
 module.exports = Encore.getWebpackConfig();
+
+global.$ = global.jQuery = require('jquery');
+
+

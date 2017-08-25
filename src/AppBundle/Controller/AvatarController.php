@@ -38,6 +38,7 @@ class AvatarController extends Controller
             case '200':
             case '500':
                 $suffix = '_'.$size;
+                // no break
             default:
                 $suffix = '';
         }

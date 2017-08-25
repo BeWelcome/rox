@@ -7,8 +7,6 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\HostingRequest;
-use AppBundle\Entity\Subject;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -286,7 +284,6 @@ class Message
         return $this->parent;
     }
 
-
     /**
      * Set child.
      *
@@ -476,9 +473,10 @@ class Message
      */
     public function getWhenFirstRead()
     {
-        if ($this->whenfirstread == new DateTime('0000-00-00 00:00:00')) {
+        if ($this->whenfirstread === new DateTime('0000-00-00 00:00:00')) {
             return null;
         }
+
         return $this->whenfirstread;
     }
 

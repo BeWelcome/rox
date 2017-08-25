@@ -35,8 +35,6 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
 
     /**
      * @return array
-     *
-     * @todo rename my_member to myMember for consistency
      */
     public function getGlobals()
     {
@@ -47,8 +45,9 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
         }
 
         return [
+            'my_member' => $member ? $member : null,
             'messageCount' => $member ? $this->getUnreadMessagesCount($member) : 0,
-            'teams' => $member ? $this->getTeams($member) : [],
+            'teams' => $member ? $this->getTeams($rememberMeToken->getRoles()) : [],
         ];
     }
 
@@ -65,83 +64,67 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
     }
 
     /**
-     * @todo The rights checking needs to be rewritten because it doesn't work
-     *       with the Symfony login system.
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
-     *
-     * @param Member $member
+     * @param array $roles
      *
      * @return array
      */
-    protected function getTeams(Member $member)
+    protected function getTeams($roles)
     {
         $allTeams = [
-            [
-                'CommunityNews',
+            'communitynews' => [
                 'AdminCommunityNews',
                 'admin/communitynews',
             ],
-            [
-                'Words',
+            'words' => [
                 'AdminWord',
                 'admin/word',
             ],
-            [
-                'Flags',
+            'flags' => [
                 'AdminFlags',
                 'admin/flags',
             ],
-            [
-                'Rights',
+            'rights' => [
                 'AdminRights',
                 'admin/rights',
             ],
-            [
-                'Logs',
+            'logs' => [
                 'AdminLogs',
                 'admin/logs',
             ],
-            [
-                'Comments',
+            'comments' => [
                 'AdminComments',
                 'bw/admin/admincomments.php',
             ],
-            [
-                'NewMembersBeWelcome',
+            'newmembersbewelcome' => [
                 'AdminNewMembers',
                 'admin/newmembers',
             ],
-            [
-                'MassMail',
+            'massmail' => [
                 'AdminMassMail',
                 'admin/massmail',
             ],
-            [
-                'Treasurer',
+            'treasurer' => [
                 'AdminTreasurer',
                 'admin/treasurer',
             ],
-            [
-                'FAQ',
+            'faq' => [
                 'AdminFAQ',
                 'bw/faq.php',
             ],
-            [
-                'SqlForVolunteers',
+            'sqlforvolunteers' => [
                 'AdminSqlForVolunteers',
                 'bw/admin/adminquery.php',
             ],
         ];
 
         $teams = [];
-
-        $roles = $member->getRoles();
-        foreach ($allTeams as $team) {
-            if (array_search('ROLE_ADMIN_'.strtoupper($team[0]), $roles, true)) {
+        $keys = array_keys($allTeams);
+        foreach ($roles as $role) {
+            $role = strtolower(str_replace('ROLE_ADMIN_', '', $role->getRole()));
+            if (in_array($role, $keys, true)) {
                 $teams[] = [
-                    'trans' => $team[1],
-                    'link' => $team[2],
+                    'trans' => $allTeams[$role][0],
+                    'link' => $allTeams[$role][1],
                 ];
             }
         }

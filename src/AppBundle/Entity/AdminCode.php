@@ -1,14 +1,22 @@
 <?php
+/*
+ * @codingStandardsIgnoreFile
+ *
+ * Auto generated file ignore for Code Sniffer
+ */
 
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * AdminCode
+ * AdminCode.
  *
  * @ORM\Table(name="geonames_admincodes", indexes={@ORM\Index(name="country_code", columns={"country_code"}), @ORM\Index(name="admin_code", columns={"admin_code"})})
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class AdminCode
 {
@@ -42,10 +50,8 @@ class AdminCode
      */
     private $code;
 
-
-
     /**
-     * Set countryCode
+     * Set countryCode.
      *
      * @param string $countryCode
      *
@@ -59,7 +65,7 @@ class AdminCode
     }
 
     /**
-     * Get countryCode
+     * Get countryCode.
      *
      * @return string
      */
@@ -69,7 +75,7 @@ class AdminCode
     }
 
     /**
-     * Set adminCode
+     * Set adminCode.
      *
      * @param string $adminCode
      *
@@ -83,7 +89,7 @@ class AdminCode
     }
 
     /**
-     * Get adminCode
+     * Get adminCode.
      *
      * @return string
      */
@@ -93,7 +99,7 @@ class AdminCode
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -107,7 +113,7 @@ class AdminCode
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -117,7 +123,7 @@ class AdminCode
     }
 
     /**
-     * Get code
+     * Get code.
      *
      * @return string
      */

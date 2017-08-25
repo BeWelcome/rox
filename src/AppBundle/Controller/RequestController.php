@@ -2,21 +2,16 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\HostingRequest;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
-use AppBundle\Entity\Subject;
 use AppBundle\Form\MessageRequestType;
-use AppBundle\Form\MessageToMemberType;
 use AppBundle\Model\MessageModel;
 use Html2Text\Html2Text;
 use Rox\Core\Exception\InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class RequestController extends Controller
 {
@@ -33,7 +28,7 @@ class RequestController extends Controller
     public function newHostingRequestAction(Request $request, Member $receiver)
     {
         $member = $this->getUser();
-        if ($member == $receiver) {
+        if ($member === $receiver) {
             throw new InvalidArgumentException('You can\'t send a request to yourself.');
         }
 
@@ -62,7 +57,7 @@ class RequestController extends Controller
                 ->setTo($receiver->getCryptedField('Email'))
                 ->setBody(
                     $this->renderView(
-                    // app/Resources/views/Emails/registration.html.twig
+                        // app/Resources/views/Emails/registration.html.twig
                         'emails/request.html.twig',
                         ['request_text' => $hostingRequest->getMessage()]
                     ),
@@ -78,6 +73,7 @@ class RequestController extends Controller
             ;
             $this->get('mailer')->send($message);
             $this->addFlash('success', 'Request has been sent.');
+
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
         }
 
@@ -97,7 +93,7 @@ class RequestController extends Controller
      */
     public function hostingRequestReplyAction(Request $request, Message $hostingRequest)
     {
-        if ($hostingRequest->getRequest() == null) {
+        if ($hostingRequest->getRequest() === null) {
             // Todo redirect to message instead of throwing an exception
             throw new InvalidArgumentException();
         }
@@ -105,9 +101,7 @@ class RequestController extends Controller
         $requestForm = $this->createForm(MessageRequestType::class);
         $requestForm->handleRequest($request);
 
-        if ($requestForm->isSubmitted() && $requestForm->isValid())
-        {
-
+        if ($requestForm->isSubmitted() && $requestForm->isValid()) {
         }
 
         $messageModel = new MessageModel($this->getDoctrine());
@@ -116,7 +110,7 @@ class RequestController extends Controller
         return $this->render(':request:reply.html.twig', [
             'form' => $requestForm->createView(),
             'current' => $hostingRequest,
-            'thread' => $thread
+            'thread' => $thread,
         ]);
     }
 }

@@ -17,6 +17,7 @@ phpcsfix:
 
 build:
 	./node_modules/.bin/grunt
+	./node_modules/.bin/encore dev
 	php bin/console assets:install
 	php bin/console assetic:dump
 
@@ -27,7 +28,7 @@ mkdocs:
 	mkdocs build
 
 phpcpd:
-	./vendor/bin/phpcpd $(SRC_DIR) --progress --no-interaction
+	./vendor/bin/phpcpd $(SRC_DIR) --progress --no-interaction --exclude=AppBundle/Entity
 
 phploc:
 	./vendor/bin/phploc --log-xml=phploc.xml $(SRC_DIR)

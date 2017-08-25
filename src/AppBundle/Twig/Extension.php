@@ -93,7 +93,7 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
     /**
      * Uses the HTMLPurifier to ensure safe HTML or display of messages and other user provided information.
      *
-     * @param string $text     string to truncate
+     * @param string $text string to truncate
      *
      * @return string purified string
      */
@@ -114,16 +114,14 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
         return 'LayoutKit';
     }
 
+    /**
+     * @return array
+     */
     public function getGlobals()
     {
         $locale = $this->session->get('locale', 'en');
         $languageModel = new LanguageModel($this->registry);
         $languages = $languageModel->getLanguagesWithTranslations($locale);
-        $member = null;
-        $rememberMeToken = unserialize($this->session->get('_security_default'));
-        if ($rememberMeToken !== false && $rememberMeToken !== null) {
-            $member = $rememberMeToken->getUser();
-        }
 
         return [
             'version' => trim(file_get_contents('../VERSION')),
@@ -131,8 +129,6 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
             'title' => 'BeWelcome',
             'languages' => $languages,
             'robots' => 'ALL',
-            'my_member' => $member,
-            'teams' => false,
         ];
     }
 }

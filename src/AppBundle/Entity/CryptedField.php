@@ -90,9 +90,10 @@ class CryptedField
      * Set admincryptedvalue.
      *
      * @param $adminCryptedValue
-     * @return CryptedField
-     * @internal param string $admincryptedvalue
      *
+     * @return CryptedField
+     *
+     * @internal param string $admincryptedvalue
      */
     public function setAdminCryptedValue($adminCryptedValue)
     {
@@ -114,7 +115,7 @@ class CryptedField
     /**
      * Set membercryptedvalue.
      *
-     * @param mixed  $memberCryptedValue
+     * @param mixed $memberCryptedValue
      *
      * @return Cryptedfield
      */

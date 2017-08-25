@@ -551,7 +551,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     private $cryptedFields;
 
     /**
-     * @ORM\OneToMany(targetEntity="RightVolunteer", mappedBy="member", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="RightVolunteer", mappedBy="member", fetch="EAGER")
      */
     private $volunteerRights;
 
@@ -1575,7 +1575,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
      */
     public function setPassword($password)
     {
-        $this->password = password_hash($password, PASSWORD_DEFAULT, [ 'cost' => 12 ]);
+        $this->password = password_hash($password, PASSWORD_DEFAULT, ['cost' => 12]);
 
         return $this;
     }
@@ -2535,11 +2535,11 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     /**
      * Add cryptedField.
      *
-     * @param \AppBundle\Entity\CryptedField $cryptedField
+     * @param CryptedField $cryptedField
      *
      * @return Member
      */
-    public function addCryptedField(\AppBundle\Entity\CryptedField $cryptedField)
+    public function addCryptedField(CryptedField $cryptedField)
     {
         $this->cryptedFields[] = $cryptedField;
 
@@ -2549,9 +2549,9 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     /**
      * Remove cryptedField.
      *
-     * @param \AppBundle\Entity\CryptedField $cryptedField
+     * @param CryptedField $cryptedField
      */
-    public function removeCryptedField(\AppBundle\Entity\CryptedField $cryptedField)
+    public function removeCryptedField(CryptedField $cryptedField)
     {
         $this->cryptedFields->removeElement($cryptedField);
     }
@@ -2569,11 +2569,11 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     /**
      * Add volunteerRight.
      *
-     * @param \AppBundle\Entity\RightVolunteer $volunteerRight
+     * @param RightVolunteer $volunteerRight
      *
      * @return Member
      */
-    public function addVolunteerRight(\AppBundle\Entity\RightVolunteer $volunteerRight)
+    public function addVolunteerRight(RightVolunteer $volunteerRight)
     {
         $this->volunteerRights[] = $volunteerRight;
 
@@ -2583,9 +2583,9 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     /**
      * Remove volunteerRight.
      *
-     * @param \AppBundle\Entity\RightVolunteer $volunteerRight
+     * @param RightVolunteer $volunteerRight
      */
-    public function removeVolunteerRight(\AppBundle\Entity\RightVolunteer $volunteerRight)
+    public function removeVolunteerRight(RightVolunteer $volunteerRight)
     {
         $this->volunteerRights->removeElement($volunteerRight);
     }
@@ -2593,11 +2593,11 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     /**
      * Add group.
      *
-     * @param \AppBundle\Entity\Group $group
+     * @param Group $group
      *
      * @return Member
      */
-    public function addGroup(\AppBundle\Entity\Group $group)
+    public function addGroup(Group $group)
     {
         $this->groups[] = $group;
 
@@ -2609,16 +2609,16 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
      *
      * @param \AppBundle\Entity\Group $group
      */
-    public function removeGroup(\AppBundle\Entity\Group $group)
+    public function removeGroup(Group $group)
     {
         $this->groups->removeElement($group);
     }
 
     public function getCryptedField($fieldName)
     {
-        $stripped = "";
+        $stripped = '';
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('tablecolumn', 'members.' . $fieldName));
+            ->where(Criteria::expr()->eq('tablecolumn', 'members.'.$fieldName));
         $cryptedField = $this->cryptedFields->matching($criteria)->first();
         if ($cryptedField !== false) {
             $value = $cryptedField->getMemberCryptedValue();

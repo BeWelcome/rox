@@ -3,13 +3,13 @@
 namespace AppBundle\TranslationLoader;
 
 use AppBundle\Entity\Word;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
  * @SuppressWarnings(PHPMD.StaticAccess)
  */
-class DatabaseLoaderTest extends PHPUnit_Framework_TestCase
+class DatabaseLoaderTest extends TestCase
 {
     protected function getEmMock()
     {

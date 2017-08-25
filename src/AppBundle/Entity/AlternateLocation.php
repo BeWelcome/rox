@@ -35,35 +35,35 @@ class AlternateLocation
     private $alternatename;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="ispreferred", type="boolean", nullable=true)
      */
     private $ispreferred;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="isshort", type="boolean", nullable=true)
      */
     private $isshort;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="iscolloquial", type="boolean", nullable=true)
      */
     private $iscolloquial;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="ishistoric", type="boolean", nullable=true)
      */
     private $ishistoric;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="alternatenameId", type="integer")
      * @ORM\Id
@@ -81,9 +81,8 @@ class AlternateLocation
      */
     private $geonameid;
 
-
     /**
-     * Set isolanguage
+     * Set isolanguage.
      *
      * @param string $isolanguage
      *
@@ -97,7 +96,7 @@ class AlternateLocation
     }
 
     /**
-     * Get isolanguage
+     * Get isolanguage.
      *
      * @return string
      */
@@ -107,7 +106,7 @@ class AlternateLocation
     }
 
     /**
-     * Set alternatename
+     * Set alternatename.
      *
      * @param string $alternatename
      *
@@ -121,7 +120,7 @@ class AlternateLocation
     }
 
     /**
-     * Get alternatename
+     * Get alternatename.
      *
      * @return string
      */
@@ -131,9 +130,9 @@ class AlternateLocation
     }
 
     /**
-     * Set ispreferred
+     * Set ispreferred.
      *
-     * @param boolean $ispreferred
+     * @param bool $ispreferred
      *
      * @return AlternateLocation
      */
@@ -145,9 +144,9 @@ class AlternateLocation
     }
 
     /**
-     * Get ispreferred
+     * Get ispreferred.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIspreferred()
     {
@@ -155,9 +154,9 @@ class AlternateLocation
     }
 
     /**
-     * Set isshort
+     * Set isshort.
      *
-     * @param boolean $isshort
+     * @param bool $isshort
      *
      * @return AlternateLocation
      */
@@ -169,9 +168,9 @@ class AlternateLocation
     }
 
     /**
-     * Get isshort
+     * Get isshort.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsshort()
     {
@@ -179,9 +178,9 @@ class AlternateLocation
     }
 
     /**
-     * Set iscolloquial
+     * Set iscolloquial.
      *
-     * @param boolean $iscolloquial
+     * @param bool $iscolloquial
      *
      * @return AlternateLocation
      */
@@ -193,9 +192,9 @@ class AlternateLocation
     }
 
     /**
-     * Get iscolloquial
+     * Get iscolloquial.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIscolloquial()
     {
@@ -203,9 +202,9 @@ class AlternateLocation
     }
 
     /**
-     * Set ishistoric
+     * Set ishistoric.
      *
-     * @param boolean $ishistoric
+     * @param bool $ishistoric
      *
      * @return AlternateLocation
      */
@@ -217,9 +216,9 @@ class AlternateLocation
     }
 
     /**
-     * Get ishistoric
+     * Get ishistoric.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIshistoric()
     {
@@ -227,9 +226,9 @@ class AlternateLocation
     }
 
     /**
-     * Get alternatenameid
+     * Get alternatenameid.
      *
-     * @return integer
+     * @return int
      */
     public function getAlternatenameid()
     {
@@ -237,7 +236,7 @@ class AlternateLocation
     }
 
     /**
-     * Set geonameid
+     * Set geonameid.
      *
      * @param Location $geonameid
      *
@@ -251,7 +250,7 @@ class AlternateLocation
     }
 
     /**
-     * Get geonameid
+     * Get geonameid.
      *
      * @return Location
      */

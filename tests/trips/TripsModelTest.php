@@ -1,6 +1,8 @@
 <?php
 
-class TripsModelTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class TripsModelTest extends TestCase
 {
     public function testEmptyVariables()
     {

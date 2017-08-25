@@ -88,9 +88,9 @@ class MessageRepository extends EntityRepository
         $qb = $this->createNativeNamedQuery('get_thread')
             ->setHint('partial', Query::HINT_FORCE_PARTIAL_LOAD);
         $result = $qb->execute([
-            'message_id' => $message->getId()
+            'message_id' => $message->getId(),
             ]);
-        return $result;
 
+        return $result;
     }
 }

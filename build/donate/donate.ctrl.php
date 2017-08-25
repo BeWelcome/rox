@@ -7,7 +7,7 @@ class DonateController extends PAppController
     {
         parent::__construct();
         $this->_model = new DonateModel();
-        $this->_view  = new DonateView($this->_model);
+        $this->_view = new DonateView($this->_model);
     }
     
     public function __destruct()
@@ -22,6 +22,7 @@ class DonateController extends PAppController
     
     public function index()
     {
+        $this->_view->_session = $this->getSession();
         $vw = new ViewWrap($this->_view);
         $P = PVars::getObj('page');
         

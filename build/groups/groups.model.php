@@ -629,7 +629,6 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
         }
 
         $dir = new PDataDir('groups');
-
         if (!$dir->fileExists('thumb' . $group->Picture) || ($dir->file_Size('thumb' . $group->Picture) == 0))
         {
             PPHP::PExit();

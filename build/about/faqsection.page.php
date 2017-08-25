@@ -32,8 +32,10 @@ class AboutFaqsectionPage extends AboutFaqPage
                 jQuery(window).hashchange( function(){
                     // Alerts every time the hash changes!
                     hash = location.hash;
-                    jQuery( hash ).show();
-                    jQuery(document).scrollTop( jQuery( hash ).offset().top );
+                    if( hash) {
+                        jQuery(hash).show();
+                        jQuery(document).scrollTop(jQuery(hash).offset().top);
+                    }
                 })
 
                 // Trigger the event (useful on page load).

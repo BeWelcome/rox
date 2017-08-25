@@ -1,14 +1,22 @@
 <?php
+/*
+ * @codingStandardsIgnoreFile
+ *
+ * Auto generated file ignore for Code Sniffer
+ */
 
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * AdminUnit
+ * AdminUnit.
  *
  * @ORM\Table(name="geonamesadminunits", indexes={@ORM\Index(name="idx_name", columns={"name"}), @ORM\Index(name="idx_fclass", columns={"fclass"}), @ORM\Index(name="idx_fcode", columns={"fcode"}), @ORM\Index(name="idx_country", columns={"country"}), @ORM\Index(name="idx_admin1", columns={"admin1"})})
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class AdminUnit
 {
@@ -55,7 +63,7 @@ class AdminUnit
     private $moddate;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="geonameid", type="integer")
      * @ORM\Id
@@ -63,10 +71,8 @@ class AdminUnit
      */
     private $geonameid;
 
-
-
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -80,7 +86,7 @@ class AdminUnit
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -90,7 +96,7 @@ class AdminUnit
     }
 
     /**
-     * Set fclass
+     * Set fclass.
      *
      * @param string $fclass
      *
@@ -104,7 +110,7 @@ class AdminUnit
     }
 
     /**
-     * Get fclass
+     * Get fclass.
      *
      * @return string
      */
@@ -114,7 +120,7 @@ class AdminUnit
     }
 
     /**
-     * Set fcode
+     * Set fcode.
      *
      * @param string $fcode
      *
@@ -128,7 +134,7 @@ class AdminUnit
     }
 
     /**
-     * Get fcode
+     * Get fcode.
      *
      * @return string
      */
@@ -138,7 +144,7 @@ class AdminUnit
     }
 
     /**
-     * Set country
+     * Set country.
      *
      * @param string $country
      *
@@ -152,7 +158,7 @@ class AdminUnit
     }
 
     /**
-     * Get country
+     * Get country.
      *
      * @return string
      */
@@ -162,7 +168,7 @@ class AdminUnit
     }
 
     /**
-     * Set admin1
+     * Set admin1.
      *
      * @param string $admin1
      *
@@ -176,7 +182,7 @@ class AdminUnit
     }
 
     /**
-     * Get admin1
+     * Get admin1.
      *
      * @return string
      */
@@ -186,7 +192,7 @@ class AdminUnit
     }
 
     /**
-     * Set moddate
+     * Set moddate.
      *
      * @param \DateTime $moddate
      *
@@ -200,7 +206,7 @@ class AdminUnit
     }
 
     /**
-     * Get moddate
+     * Get moddate.
      *
      * @return \DateTime
      */
@@ -210,9 +216,9 @@ class AdminUnit
     }
 
     /**
-     * Get geonameid
+     * Get geonameid.
      *
-     * @return integer
+     * @return int
      */
     public function getGeonameid()
     {

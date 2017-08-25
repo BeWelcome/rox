@@ -43,14 +43,14 @@ class LocaleController extends Controller
     {
         $member;
         $locale;
-/*
-         $language = $this->languageRepository->getByShortCode($locale);
-
-        $preference = $this->preferenceService
-            ->getDefinitionByCode(PreferenceService::PREF_LANG);
-
-        $this->preferenceService
-            ->setMemberPreference($member, $preference, $language->id);
-*/
+        /*
+                 $language = $this->languageRepository->getByShortCode($locale);
+        
+                $preference = $this->preferenceService
+                    ->getDefinitionByCode(PreferenceService::PREF_LANG);
+        
+                $this->preferenceService
+                    ->setMemberPreference($member, $preference, $language->id);
+        */
     }
 }

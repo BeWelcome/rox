@@ -44,7 +44,9 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('bwforum', 'forums/bwforum');
         $this->addRouteDirectly('forum_permalink', '/forums/s{threadId}/');
         $this->addRouteDirectly('forum_thread', '/forums/s{threadId}');
-        $this->addRouteDirectly('forum_admin', '/forums/modfulleditpost/{threadId}');
+        $this->addRouteDirectly('forum_admin', '/forums/modfulleditpost/{postId}');
+        $this->addRouteDirectly('forum_admin_edit', '/forums/modeditpost/{postId}');
+        $this->addRouteDirectly('forum_admin_edit_trailing', '/forums/modeditpost/{postId}/');
         $this->addRouteDirectly('forum_tag', '/forums/t{tag}');
         $this->addRouteDirectly('forum_tag_detail_1', '/forums/t{tag}/{detail1}');
         $this->addRouteDirectly('forum_tag_detail_2', '/forums/t{tag}/{detail1}/{detail2}');
@@ -84,6 +86,8 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('signup_handle_check', '/signup/checkhandle');
         $this->addRouteDirectly('signup_confirm', '/signup/confirm/{username}/{regkey}');
         $this->addRouteDirectly('editmyprofile', '/editmyprofile');
+        $this->addRouteDirectly('donate', '/donate');
+        $this->addRouteDirectly('donate_list', '/donate/list');
 
         return $this->routes;
     }

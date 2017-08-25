@@ -21,9 +21,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class HostingRequest
 {
-    CONST REQUEST_OPEN = 0;
-    CONST REQUEST_DECLINED = 1;
-    CONST REQUEST_ACCEPTED = 2;
+    const REQUEST_OPEN = 0;
+    const REQUEST_DECLINED = 1;
+    const REQUEST_ACCEPTED = 2;
 
     /**
      * @var int
@@ -152,9 +152,9 @@ class HostingRequest
     }
 
     /**
-     * Set numberOfTravellers
+     * Set numberOfTravellers.
      *
-     * @param integer $numberOfTravellers
+     * @param int $numberOfTravellers
      *
      * @return HostingRequest
      */
@@ -166,9 +166,9 @@ class HostingRequest
     }
 
     /**
-     * Get numberOfTravellers
+     * Get numberOfTravellers.
      *
-     * @return integer
+     * @return int
      */
     public function getNumberOfTravellers()
     {
@@ -176,18 +176,18 @@ class HostingRequest
     }
 
     /**
-     * Set status
+     * Set status.
      *
-     * @param integer $status
+     * @param int $status
      *
      * @return HostingRequest
      */
     public function setStatus($status)
     {
-        if ($status <> self::REQUEST_OPEN &&
-            $status <> self::REQUEST_DECLINED &&
-            $status <> self::REQUEST_ACCEPTED) {
-            throw new InvalidArgumentException('Request status outside of valid range. Got ' . $status . 'instead of REQUEST_OPEN (0), REQUEST_DECLINED (1) or REQUEST_ACCEPTED(2) ');
+        if ($status !== self::REQUEST_OPEN &&
+            $status !== self::REQUEST_DECLINED &&
+            $status !== self::REQUEST_ACCEPTED) {
+            throw new InvalidArgumentException('Request status outside of valid range. Got '.$status.'instead of REQUEST_OPEN (0), REQUEST_DECLINED (1) or REQUEST_ACCEPTED(2) ');
         }
 
         $this->status = $status;
@@ -196,9 +196,9 @@ class HostingRequest
     }
 
     /**
-     * Get status
+     * Get status.
      *
-     * @return integer
+     * @return int
      */
     public function getStatus()
     {

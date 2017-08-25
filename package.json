@@ -27,6 +27,7 @@
   "dependencies": {
     "bootstrap": "github:twbs/bootstrap#v4-dev",
     "bootstrap-autohidingnavbar": "github:istvan-ujjmeszaros/bootstrap-autohidingnavbar",
+    "expose-loader": "^0.7.3",
     "font-awesome": "^4.7.0",
     "html5shiv": "^3.7.3",
     "jquery": "^3.2.1",
@@ -35,7 +36,7 @@
     "leaflet": "^1.0.3",
     "leaflet.markercluster": "^1.0.5",
     "moment": "^2.18.1",
-    "popper.js": "^1.9.9",
+    "popper.js": "^1.12.3",
     "respond.js": "^1.4.2",
     "sass-graph": "^2.2.4",
     "select2": "^4.0.3",

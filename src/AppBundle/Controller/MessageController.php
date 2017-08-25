@@ -20,13 +20,13 @@ class MessageController extends Controller
         {
             $modifyAction = $request->request->get('modify');
             $messageIds = $request->request->get('message_id');
-    
+
             $member = $this->getUser();
-    
+
             $message = new Message();
-    
+
             $messages = $message->newQuery()->findMany($messageIds);
-    
+
             foreach ($messages as $message) {
                 if ($modifyAction === 'delete') {
                     $this->messageService->deleteMessage($message, $member);
@@ -38,10 +38,10 @@ class MessageController extends Controller
                     //throw new \InvalidArgumentException('Invalid message state.');
                 }
             }
-    
+
             return new RedirectResponse($request->getUri());
         }
-    
+
         public function with(Request $request)
         {
             $page = $request->query->get('page', 1);
@@ -49,41 +49,41 @@ class MessageController extends Controller
             //$sort = $request->query->get('sort', 'date');
             //$dir = $request->query->get('dir', 'DESC');
             $otherUsername = $request->attributes->get('username');
-    
+
             $otherMember = $this->memberRepository->getByUsername($otherUsername);
-    
+
             $member = $this->getUser();
-    
+
             $message = new Message();
-    
+
             $q = $message->newQuery();
-    
+
             // Eager load each sender for each message
             $q->with('sender');
-    
+
             $q->where(function (Builder $builder) use ($member, $otherMember) {
                 $builder->where(function (Builder $builder) use ($member, $otherMember) {
                     $builder->where('IdSender', $otherMember->id);
                     $builder->where('IdReceiver', $member->id);
                     $builder->where('Status', 'Sent');
                 });
-    
+
                 $builder->orWhere(function (Builder $builder) use ($member, $otherMember) {
                     $builder->where('IdSender', $member->id);
                     $builder->where('IdReceiver', $otherMember->id);
                 });
             });
-    
+
             $q->where('DeleteRequest', 'NOT LIKE', '%receiverdeleted%');
-    
+
             $q->orderByRaw('IF(messages.created > messages.DateSent, messages.created, messages.DateSent) DESC');
-    
+
             $q->forPage($page, $limit);
-    
+
             $count = $q->getQuery()->getCountForPagination();
-    
+
             $messages = $q->get();
-    
+
             $content = $this->render('@message/message/index.html.twig', [
                 'messages' => $messages,
                 'folder' => '',
@@ -91,7 +91,7 @@ class MessageController extends Controller
                 'page' => $page,
                 'pages' => ceil($count / $limit),
             ]);
-    
+
             return new Response($content);
         }
     */

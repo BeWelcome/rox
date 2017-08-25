@@ -1,6 +1,7 @@
 errors.log
 rox_local.ini
 *.cache.ini
+.php_cs.cache
 /data/
 !/dokuwiki/data/cache
 /dokuwiki/data/cache/*
@@ -87,6 +88,7 @@ phploc.xml
 /vendor/
 /web/assetic/
 /web/bundles/
+/web/build/
 /web/css/
 /web/js/
 

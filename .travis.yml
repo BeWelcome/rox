@@ -16,8 +16,8 @@ cache:
     - $HOME/.nvm
 
 before_install:
-  - nvm install v5.5
-  - nvm use v5.5
+  - nvm install v8.0
+  - nvm use v8.0
   - rvm install 2.2
   - gem install sass
   - phpenv config-rm xdebug.ini
@@ -26,8 +26,8 @@ before_install:
   - mysql -u root -e 'FLUSH PRIVILEGES;'
 
 install:
-  - npm update
-  - composer update --no-interaction --ignore-platform-reqs
+  - npm install
+  - composer install --no-interaction --ignore-platform-reqs
 
 script:
   - php bin/console doctrine:schema:create

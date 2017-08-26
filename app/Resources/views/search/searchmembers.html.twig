@@ -62,21 +62,23 @@
             </div>
         </div> #}
         {{ form_end(form) }}
-    </div>
 
-    <div class="row">
-            <div class="col-12">
-                <div id="map" class="framed w-100" style="height: 480px;"></div>
-            </div>
-    </div>
+        <div id="map" class="framed w-100"></div>
 
-    <script>
-        var mapMembers = {% if results %}
-            {{ results.map | json_encode | raw }};
-        {% else %}
+        <script>
+            var mapMembers = {% if results %}
+                    {{ results.map | json_encode | raw }};
+            {% else %}
             { };
-        {% endif %}
-    </script>
+            {% endif %}
+        </script>
+
+        <div class="col-12">
+            map result test
+        </div>
+
+    </div>
+
     {# TODO for showing a paginated table of members under map
         {% if results %}
             {% include '@member/results.html.twig' %}

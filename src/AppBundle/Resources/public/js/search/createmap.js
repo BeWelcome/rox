@@ -73,7 +73,7 @@ function addMarkers(map){
                 iconFile = 'neverask';
                 break;
         }
-        var icon = new L.DivIcon({ html: '<div><img src="/images/icons/' + iconFile + '.png" width="17" height="17"></div>', className: '', iconSize: new L.Point(17, 17) });
+        var icon = new L.DivIcon({ html: '<div><img src="/images/icons/' + iconFile + '.png" class="mapicon"></div>', className: '', iconSize: new L.Point(17, 17) });
         var marker = new L.marker([value.latitude, value.longitude], {icon: icon, className: 'marker-cluster marker-cluster-unique'});
 
         var popupContent = '<h4><img src="/members/avatar/' + value.Username + '?size=50"> <a href="/members/' + value.Username + '">' + value.Username + '</a></h4>';

@@ -3,13 +3,25 @@
 
 <nav class="navbar navbar-expand-md navbar-light bg-primary bordert-1 borderb-1">
     <div class="container">
-        <button class="navbar-toggler btn btn-primary" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+
+        <a class="navbar-brand ml-3" href="{{ path('homepage') }}">{% image '@AppBundle/Resources/public/images/logo_index_top.png' %}<img src="{{ asset_url }}" alt="{{ 'BeWelcome' | trans }}"/>{% endimage %}</a>
+
+        <button class="navbar-toggler btn btn-primary mr-3" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+
+        <div class="d-sm-block d-md-none">
+            <form class="form-inline p-1" method="post" action="{{ url('security_check') }}">
+                {{ macros.input('_username', 'Username') }}
+                {{ macros.input('_password', 'Password', '', 'password') }}
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                {{ macros.submit('Login') }}
+            </form>
+        </div>
+
         <div class="collapse navbar-collapse my-1" id="navbarToggler">
-            <a class="navbar-brand" href="{{ path('homepage') }}">{% image '@AppBundle/Resources/public/images/logo_index_top.png' %}<img src="{{ asset_url }}" alt="{{ 'BeWelcome' | trans }}"/>{% endimage %}</a>
             <ul class="nav navbar-nav mr-auto ml-3">
-                <li class="nav-item float-left">
+                <li class="nav-item float-left d-none d-md-block">
                     <form class="form-inline p-1" method="post" action="{{ url('security_check') }}">
                         {{ macros.input('_username', 'Username') }}
                         {{ macros.input('_password', 'Password', '', 'password') }}
@@ -17,7 +29,7 @@
                         {{ macros.submit('Login') }}
                     </form>
                 </li>
-                <li class="mt-2">or <a href="/signup" class="btn btn-primary">Sign-up</a></li>
+                <li><span class="d-none d-md-inline-block mt-3 mr-2">or</span><a href="/signup" class="btn btn-primary">Sign-up</a></li>
             </ul>
             <ul class="nav navbar-nav ml-auto">
                 <li class="nav-item dropdown float-right mt-2">

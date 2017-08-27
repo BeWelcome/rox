@@ -305,7 +305,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
      *
      * @ORM\Column(name="ProfileSummary", type="integer", nullable=false)
      */
-    private $profilesummary;
+    private $profileSummary;
 
     /**
      * @var int
@@ -1447,27 +1447,27 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     }
 
     /**
-     * Set profilesummary.
+     * Set profileSummary.
      *
-     * @param int $profilesummary
+     * @param int $profileSummary
      *
      * @return Member
      */
-    public function setProfilesummary($profilesummary)
+    public function setProfileSummary($profileSummary)
     {
-        $this->profilesummary = $profilesummary;
+        $this->profileSummary = $profileSummary;
 
         return $this;
     }
 
     /**
-     * Get profilesummary.
+     * Get profileSummary.
      *
      * @return int
      */
-    public function getProfilesummary()
+    public function getProfileSummary()
     {
-        return $this->profilesummary;
+        return $this->profileSummary;
     }
 
     /**
@@ -1924,30 +1924,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     public function getChatOthers()
     {
         return $this->chatOthers;
-    }
-
-    /**
-     * Set id4city.
-     *
-     * @param int $id4city
-     *
-     * @return Member
-     */
-    public function setId4city($id4city)
-    {
-        $this->id4city = $id4city;
-
-        return $this;
-    }
-
-    /**
-     * Get id4city.
-     *
-     * @return int
-     */
-    public function getId4city()
-    {
-        return $this->id4city;
     }
 
     /**

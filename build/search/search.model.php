@@ -477,7 +477,7 @@ LIMIT 1
             " . $this->languagesCondition . "
             " . $this->accommodationCondition . "
             " . $this->typicalOfferCondition;
-        $str = str_replace('geonames g,', '', $str);
+//        $str = str_replace('geonames g,', '', $str);
         $count = $this->dao->query($str);
 
         $row = $count->fetch(PDB::FETCH_OBJ);
@@ -543,10 +543,10 @@ LIMIT 1
             SELECT DISTINCT
                 m.id,
                 m.Username,
-                m.created,
+                Date(m.created) as 'created',
                 m.BirthDate,
                 m.HideBirthDate,
-                m.Accomodation,
+                m.Accomodation as 'Accommodation',
                 m.TypicOffer,
                 m.Restrictions,
                 m.ProfileSummary,

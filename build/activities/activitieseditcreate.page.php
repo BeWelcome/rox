@@ -52,15 +52,14 @@ class ActivitiesEditCreatePage extends ActivitiesBasePage
        $stylesheets = parent::getStylesheets();
 //       $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery-ui-1.10.4.custom.min.css';
 //       $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/datetimepicker.css';
-//       $stylesheets[] = 'assetic/tempus_dominus_bootstrap4_css.css';
+       $stylesheets[] = 'build/tempusdominus.css';
        return $stylesheets;
     }
 
     public function getLateLoadScriptFiles()
     {
         $scripts = parent::getLateLoadScriptfiles();
-        $scripts[] = 'assetic/tempus_dominus_bootstrap4_js_moment-with-locales.min_1.js';
-        $scripts[] = 'assetic/tempus_dominus_bootstrap4_js_tempusdominus-bootstrap-4_1.js';
+        $scripts[] = 'build/tempusdominus.js';
         $scripts[] = 'script/activities/edit_create.js';
         return $scripts;
     }

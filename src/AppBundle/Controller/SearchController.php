@@ -3,7 +3,9 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Form\SearchFormType;
+use AppBundle\Pagerfanta\SearchAdapter;
 use EnvironmentExplorer;
+use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +22,7 @@ class SearchController extends Controller
      */
     public function searchAction(Request $request)
     {
+        $pager = false;
         $results = false;
         // Check if request contains a standard search form or one of the specialized search form
         // if the latter turn them into a standard form (add missing default fields).
@@ -35,18 +38,16 @@ class SearchController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $results = $this->getResults($form->getData());
+            $searchAdapter = new SearchAdapter($results, $form->getData());
+            $pager = new Pagerfanta($searchAdapter);
         }
 
         return $this->render(':search:searchmembers.html.twig', [
             'form' => $form->createView(),
-            'results' => $results,
-            'location' => [
-                'name' => null,
-                'geonameid' => 0,
-                'latitude' => null,
-                'longitude' => null,
-            ],
+            'pager' => $pager,
+            'results' => $results
         ]);
     }
 

@@ -82,6 +82,7 @@ class SearchFormType extends AbstractType
             ->add('search_geoname_id', HiddenType::class)
             ->add('search_latitude', HiddenType::class)
             ->add('search_longitude', HiddenType::class)
+            ->add('page', HiddenType::class)
         ;
     }
 

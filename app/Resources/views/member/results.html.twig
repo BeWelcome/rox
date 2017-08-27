@@ -1,4 +1,8 @@
-<table id="memberresults">
+{% import 'macros.twig' as macros %}
+{% if pager.haveToPaginate %}
+    <div class="pull-right">{{ pagerfanta( pager, 'twitter_bootstrap4_translated', { routeName: 'search_members' }) }}</div>
+{% endif %}
+    <table id="memberresults" class="w-100">
     <thead>
     <tr>
         <th colspan="2">{{ 'SearchHeaderMember' | trans }}</th>
@@ -7,59 +11,47 @@
     </tr>
     </thead>
     <tbody>
-    {% for member in results.members %}
+    {% for member in pager.currentPageResults %}
     {% set accommodationIcon %}<img src="members/avatar/{{ member.Username }}">{% endset %}
-     {# $accommodationIcon = ShowAccommodation($member->Accomodation);
-    // replace line breaks '\r\n' by html line break element '<br/>'
-    $profileSummary = $this->purifier->purify($member->ProfileSummary);
-    $occupation = $this->purifier->purify($member->Occupation);#}
     <tr class="{% if loop.index is odd %}blank{% else %}highlight{% endif %}">
         <td class="memberleft"> 
-            <div class="picture"><div>{{ member.Username }}</div> 
-                <div><a href="/members/{{ member.Username }}" target="_blank">{{ member.Username }}</a></div> 
-                </div> 
-            </td><td class="memberright"> 
+            <div class="picture"><div>{{ macros.avatar(member.Username, 50, true) }}</div><div>{{ macros.profilelink( member.Username ) }}</div></div>
+            </td><td class="memberright">
             <div class="left"> 
-                <strong><a href="/members/ {{ member.Username }}" target="_blank">' . {% if member.Name is empty %}{{ member.Username }}{% else %}{{ member.Name }}{% endif %}</a></strong>
-{#                if ($member->MessageCount) {
-                <a href="messages/with/ {{ member.Username }}"><img src="images/icons/comments.png" alt="'
-                        . $words->getSilent('messages_allmessageswith',  {{ member.Username }})
-                        }}" title="{{words->getSilent('messages_allmessageswith',  {{ member.Username }}) }}" /></a> 
-                }
+                <strong><a href="/members/ {{ member.Username }}" target="_blank">{% if member.Name is empty %}{{ member.Username }}{% else %}{{ member.Name }}{% endif %}</a></strong>
+                {% if (member.MessageCount) %}
+                <a href="messages/with/ {{ member.Username }}"><img src="images/icons/comments.png" alt="{{ 'messages_allmessageswith' | trans | format( member.Username ) | raw }} | trans "
+                        title="{{ 'messages_allmessageswith' | trans | format( member.Username ) | raw }}" /></a>
+                {% endif %}
+                <br />
+                {% if (member.Age) -%}
+                    {{ 'SearchYearsOld' | trans | format( member.Age) | raw -}}
+                {% endif -%}
+                {%- if (member.HideGender == 'No') %}
+                    {%- if member.Age %}, {% endif %}
+                    {{- member.Gender }}
+                {% endif %}
+                <br />
+                {{ member.CityName }}, {{ member.CountryName }}<br />
                 <br /> 
-                $prefix = "";
-                if (!empty($member->Age)) {
-                echo $words->get('SearchYearsOld', $member->Age);
-                $prefix = ", ";
-                }
-                $gender = $layoutbits->getGenderTranslated($member->Gender, $member->HideGender, false);
-                if (!empty($gender)) {
-                echo $prefix . $gender;
-                }
-                <br /> 
-                echo $member->CityName . ", " . $member->CountryName }}<br /> 
-                <br /> 
-                echo $member->Occupation }}
-                #}
+                {{ member.Occupation | purify }}
             </div>
             </td> 
-        <td class="summary">{{ member.profileSummary }}</td>
-        <td class="details"><div class="red">
-                <div class="left">{{ accommodationIcon }}</div>
-                <div>{{ 'SearchMaxGuestInfo' | trans }}
-                    <strong>{{ member.MaxGuest }}</strong><br />
-                    {{ 'SearchCommentsInfo' | trans }}
-                    <strong>{{ member.CommentCount }}</strong>
+        <td class="summary">{{ member.ProfileSummary | purify }}</td>
+        <td class="details">
+                <div class="left"><img src="/images/icons/{{ member.Accommodation }}.png" alt="{{ member.Accommodation | trans }}"></div>
+                <div><strong>{{ 'SearchMaxGuestInfo' | trans | format( member.MaxGuest ) | raw }}</strong><br />
+                    <strong>{{ 'SearchCommentsInfo' | trans | format( member.CommentCount) | raw}}</strong>
                 </div>
-            </div>
-            <div class="clearfix"></div> 
-                {{ 'SearchMemberSinceInfo' | trans}}
-                <strong>{{ member.created }}</strong><br />
-                {{  member.LastLogin }}
-                {{ 'SearchMemberLastLoginInfo' | trans }}
-                <span class="{{class }}">{{lastlogin }}</span>
+            <div class="clearfix"></div>
+                {{ 'SearchMemberSinceInfo' | trans | format( '<strong>' ~ member.created ~ '</strong>' ) | raw }}<br />
+                {# \todo Use span to style last login info #}
+                <span>{{ 'SearchMemberLastLoginInfo' | trans | format( '<strong>' ~ member.LastLogin ~ '</strong>') | raw }}</span>
         </td>
     </tr>
     {% endfor %}
     </tbody>
 </table>
+{% if pager.haveToPaginate %}
+    <div class="pull-right">{{ pagerfanta( pager, 'twitter_bootstrap4_translated', { routeName: 'search_members' }) }}</div>
+{% endif %}

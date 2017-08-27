@@ -21,8 +21,8 @@
 {% block content %}
 
     <div>
-            {{ form_start(form, {'attr': {'class': 'form-inline p-1 m-0 framed'}}) }}
-            {{ form_errors(form) }}
+        {{ form_start(form, {'method' : 'GET', 'attr': {'class': 'form-inline p-1 m-0 framed'}}) }}
+        {{ form_errors(form) }}
         <div class="d-flex flex-wrap justify-content-between w-100">
             <div class="form-group my-3">
                 <div class="input-group">
@@ -57,7 +57,7 @@
                 {{ form_widget(form.update_map) }}
         </div>
 {#        <div class="row">
-            <div class="col-xs-12 mt-1">
+            <div class="col-xs mt-1">
                 {{ form_widget(form.advanced_options) }}
             </div>
         </div> #}
@@ -69,19 +69,14 @@
             var mapMembers = {% if results %}
                     {{ results.map | json_encode | raw }};
             {% else %}
-            { };
+                 ;
             {% endif %}
         </script>
-
-        <div class="col-12">
-            map result test
-        </div>
-
     </div>
 
-    {# TODO for showing a paginated table of members under map
+    <div class="col-12">
         {% if results %}
-            {% include '@member/results.html.twig' %}
+            {% include ':member:results.html.twig' %}
         {% endif %}
-    #}
+    </div>
 {% endblock content %}

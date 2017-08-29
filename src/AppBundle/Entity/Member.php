@@ -31,6 +31,11 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     const ACC_MAYBE = 'dependonrequest';
     const ACC_NO = 'neverask';
 
+    const ACTIVE_ALL = "'Active', 'ActiveHidden', 'ChoiceInactive', 'OutOfRemind', 'Pending'";
+    const ACTIVE_SEARCH = "'Active', 'ActiveHidden', 'OutOfRemind', 'Pending'";
+    const ACTIVE_WITH_MESSAGES = "'Active', 'OutOfRemind', 'Pending'";
+    const MEMBER_COMMENTS = "'Active', 'ActiveHidden', 'AskToLeave', 'ChoiceInactive', 'OutOfRemind', 'Pending'";
+
     /**
      * @var string
      *

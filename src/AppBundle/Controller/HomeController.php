@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Form\LoginFormType;
+use AppBundle\Model\StatisticsModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -25,17 +26,14 @@ class HomeController extends Controller
             'method' => 'POST',
         ]);
 
+        $statisticsModel = new StatisticsModel($this->getDoctrine());
+        $statistics = $statisticsModel->getStatistics();
+
         return $this->render(':home:home.html.twig', [
             'form' => $form->createView(),
             'locale' => $this->getParameter('locale'),
             'title' => 'BeWelcome',
-            'stats' => [
-                'members' => 1000,
-                'countries' => 72,
-                'languages' => 17,
-                'comments' => 1234,
-                'activities' => 10,
-            ],
+            'stats' => $statistics,
         ]);
     }
 }

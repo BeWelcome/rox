@@ -27,7 +27,7 @@ class LocationModel extends BaseModel
             ->where('l.longitude < '.$coordinates[0]->getLongitudeInDegrees())
             ->getQuery()
             ->getResult();
-//        return $this->newQuery()
+        //        return $this->newQuery()
 //            ->where('latitude', '<', $coordinates[1]->getLatitudeInDegrees())
 //            ->where('latitude', '>', $coordinates[0]->getLatitudeInDegrees())
 //            ->where('longitude', '<', $coordinates[1]->getLongitudeInDegrees())

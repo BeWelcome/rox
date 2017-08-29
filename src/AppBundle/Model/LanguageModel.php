@@ -20,7 +20,7 @@ class LanguageModel extends BaseModel
 
         $rsm = new ResultSetMappingBuilder($entityManager);
         $rsm->addRootEntityFromClassMetadata(Language::class, 'l');
-//         $rsm->addFieldResult('l', 'TranslatedName', 'translatedname');
+        //         $rsm->addFieldResult('l', 'TranslatedName', 'translatedname');
 
         $query = $entityManager->createNativeQuery("SELECT 
     l.*, IFNULL(w2.Sentence, l.EnglishName) as TranslatedName 

@@ -12,29 +12,14 @@
     <meta name="keywords" content="{{ 'default_meta_keyword' | trans }}"/>
     <meta name="robots" content="{{ 'default_meta_robots' | trans }}"/>
 
+    <script type="text/javascript" src="{{ asset('build/manifest.js') }}"></script>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-    {%  javascripts
-    '@backwards_js' %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    <script type="text/javascript" src="{{ asset('build/backwards.js') }}"></script>
     <![endif]-->
 
-    {% javascripts
-    '@jquery_js'
-    '@popper_js'
-    '@bootstrap_js'
-    '@skrollr_js'
-    'bundles/app/js/start/start.js' %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    {% stylesheets filter="cssrewrite"
-    '@app_css'
-    'bundles/app/css/start/parallax.css'
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}"/>
-    {% endstylesheets %}
+    <link rel="stylesheet" href="{{ asset('build/bewelcome.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('bundles/app/css/start/parallax.css') }}"/>
 </head>
 <body>
 {% include 'loginbar.html.twig' %}
@@ -318,6 +303,7 @@
 >
 </div>
 <div id="bottom"></div>
-</div>
+<script type="text/javascript" src="{{ asset('build/bewelcome.js') }}"></script>
+<script type="text/javascript" src="{{ asset('build/skrollr.js') }}"></script>
 </body>
 </html>

@@ -38,7 +38,6 @@ class SearchController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $results = $this->getResults($form->getData());
             $searchAdapter = new SearchAdapter($results, $form->getData());
             $pager = new Pagerfanta($searchAdapter);
@@ -47,7 +46,7 @@ class SearchController extends Controller
         return $this->render(':search:searchmembers.html.twig', [
             'form' => $form->createView(),
             'pager' => $pager,
-            'results' => $results
+            'results' => $results,
         ]);
     }
 

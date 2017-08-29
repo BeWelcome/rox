@@ -16,7 +16,9 @@ Encore
     ])
     .addEntry('jquery_ui', './src/AppBundle/Resources/js/jquery_ui.js')
     .addEntry('backwards', './src/AppBundle/Resources/js/backwards.js')
+    .addEntry('skrollr', './src/AppBundle/Resources/js/skrollr.js')
     .addEntry('landing', './src/AppBundle/Resources/public/js/landing/landing.js')
+
     .addEntry('searchpicker', './src/AppBundle/Resources/public/js/search/searchpicker.js')
     .addEntry('tempusdominus', './src/AppBundle/Resources/js/tempusdominus.js')
 

@@ -5,7 +5,7 @@
     "type": "project",
     "license": "GPL",
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=7.1.7",
         "anthonymartin/geo-location": "^1.0",
         "ezyang/htmlpurifier": "^4.0",
         "foolz/sphinxql-query-builder": "^1.0",

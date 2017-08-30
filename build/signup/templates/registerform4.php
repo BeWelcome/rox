@@ -10,14 +10,14 @@
         }
         ?>
 
-        <div class="d-flex flex-row">
-            <div class="d-block mr-3 pr-3">
+        <div class="row">
+            <div class="col-12 col-md-3">
 
-                <h4 class="text-center mb-2">Step 4/4</h4>
+                <h4 class="text-center mb-2">Step 4/5</h4>
 
                 <div class="progress mb-2">
-                    <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 100%;"
-                         aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"><span class="white">100%</span></div>
+                    <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 80%;"
+                         aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"><span class="white">80%</span></div>
                 </div>
 
                 <div class="h4 text-center d-none d-md-block mt-1">
@@ -30,7 +30,29 @@
 
             </div>
 
-            <div class="d-block w-50">
+            <div class="col-12 col-md-9">
+
+                    <!-- terms -->
+                    <div class="checkbox w-100">
+                        <label>
+                            <input type="checkbox" id="terms" name="terms" required
+                            <?php
+                            if (isset ($vars["terms"])) echo " checked"; // if user has already clicked, we will not bore him again
+                            echo " >";
+                            ?>
+                            <?php echo $words->get('IAgreeWithTerms'); ?>
+                        </label>
+                    </div>
+                    <?php
+                    if (in_array('SignupMustAcceptTerms', $vars['errors'])) {
+                        echo '<div class="w-100 text-muted alert alert-danger">' . $words->get('SignupTermsAndConditions') . '</div>';
+                    }
+                    ?>
+
+                    <button type="submit"
+                            class="form-control btn btn-primary"><?php echo $words->getSilent('SubmitForm'); ?> <i
+                                class="fa fa-check-square"></i></button>
+                    <?php echo $words->flushBuffer(); ?>
 
 
                 <table class="table">
@@ -159,55 +181,8 @@
                         </td>
                     </tr>
                     </tbody>
-                    <thead class="thead-default">
-                    <tr>
-                        <th colspan="2"><?php echo $words->get('SignupFeedback'); ?></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td colspan="2" class="border-0">
-                            <p><?php echo $words->get('SignupFeedbackDescription'); ?></p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" class="border-0">
-                            <textarea class="form-control" name="feedback" rows="10">
-                                <?php echo isset($vars['feedback']) ? htmlentities($vars['feedback'], ENT_COMPAT, 'utf-8') : ''; ?>
-                            </textarea>
-                        </td>
-                    </tr>
-                    </tbody>
-
                 </table>
 
-                <div class="d-flex">
-                    <!-- terms -->
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" id="terms" name="terms" required
-                            <?php
-                            if (isset ($vars["terms"])) echo " checked=\"checked\""; // if user has already clicked, we will not bore him again
-                            echo " >";
-                            ?>
-                            <?php echo $words->get('IAgreeWithTerms'); ?>
-                        </label>
-                    </div>
-                    <?php
-                    if (in_array('SignupMustAcceptTerms', $vars['errors'])) {
-                        echo '<span class="text-muted alert alert-danger">' . $words->get('SignupTermsAndConditions') . '</span>';
-                    }
-                    ?>
-
-                </div>
-
-                <div class="d-flex">
-                    <button type="submit"
-                            class="form-control btn btn-primary"><?php echo $words->getSilent('SubmitForm'); ?> <i
-                                class="fa fa-check-square"></i></button>
-                    <?php echo $words->flushBuffer(); ?>
-
-                </div>
             </div>
         </div>
     </form>

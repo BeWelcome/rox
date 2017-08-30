@@ -6,13 +6,13 @@
         echo '<span class="alert alert-danger">'.$errors['inserror'].'</span>';
     }
 ?>
-    <div class="d-flex flex-row">
-        <div class="d-block mr-3 pr-3">
+    <div class="row">
+        <div class="col-12 col-md-3">
 
-            <h4 class="text-center mb-2">Step 1/4</h4>
+            <h4 class="text-center mb-2">Step 1/5</h4>
 
             <div class="progress mb-2">
-                <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"><span class="white">25%</span></div>
+                <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 20%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"><span class="white">20%</span></div>
             </div>
 
             <div class="h4 text-center d-none d-md-block mt-1">
@@ -24,7 +24,7 @@
 
         </div>
 
-        <div class="d-block w-50">
+        <div class="col-12 col-md-6">
             <div class="modal fade" id="SignupIntroduction" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -59,11 +59,11 @@
                     <?php
                     echo isset($vars['username']) ? 'value="'.htmlentities($vars['username'], ENT_COMPAT, 'utf-8').'" ' : '';
                     ?> >
-                <button type="button" class="btn btn-primary ml-1" data-trigger="focus" data-container="body" data-toggle="popover" data-placement="right" data-content="<?=htmlentities($words->get('subline_username'))?>">
+                <button type="button" class="btn btn-primary ml-1" data-container="body" data-toggle="popover" data-placement="right" data-content="<?=htmlentities($words->get('subline_username'))?>">
                     <i class="fa fa-question"></i>
                 </button>
                 </div>
-                <span class="text-muted small"></span>
+                <span class="text-muted small red"></span>
             </div>
 
             <!-- Password -->
@@ -82,11 +82,11 @@
                         <i class="fa fa-question"></i>
                     </button>
                 </div>
-                <span class="text-muted small"></span>
+                <span class="text-muted small red"></span>
             </div>
 
             <!-- Confirm password -->
-            <div class="form-group has-feedback">
+            <div class="form-group has-feedback mt-1">
                 <legend class="m-0"><?php echo $words->get('SignupCheckPassword'); ?></legend>
                 <label for="register-passwordcheck" class="sr-only"><?php echo $words->get('SignupCheckPassword'); ?></label>
                 <div class="d-flex">
@@ -97,7 +97,7 @@
                         echo isset($vars['passwordcheck']) ? 'value="'.$vars['passwordcheck'].'" ' : '';
                         ?> >
                 </div>
-                <span class="text-muted small"></span>
+                <span class="text-muted small red"></span>
             </div>
 
             <!-- E-mail -->
@@ -114,11 +114,11 @@
                         <i class="fa fa-question"></i>
                     </button>
                 </div>
-                <span class="text-muted small"></span>
+                <span class="text-muted small red"></span>
             </div>
 
             <!-- confirm E-mail -->
-            <div class="form-group has-feedback">
+            <div class="form-group has-feedback mt-1">
                 <legend class="m-0"><?php echo $words->get('SignupCheckEmail'); ?></legend>
                 <label for="register-emailcheck" class="sr-only"><?php echo $words->get('SignupCheckEmail'); ?></label>
                 <div class="d-flex">
@@ -130,7 +130,7 @@
                         echo isset($vars['emailcheck']) ? 'value="'.$vars['emailcheck'].'" ' : '';
                         ?> />
                 </div>
-                <span class="text-muted small"></span>
+                <span class="text-muted small red"></span>
             </div>
 
             <!-- Accommodation -->
@@ -171,7 +171,7 @@
                     echo '<div class="error">'.$words->get('SignupErrorProvideAccommodation').'</div>';
                 }
                 ?>
-                <span class="text-muted small"></span>
+                <span class="text-muted small red"></span>
             </fieldset>
 
             <!-- Next button -->
@@ -183,7 +183,7 @@
             </div>
         </div>
 
-        <div class="ml-auto">
+        <div class="col-12 col-md-3">
             <!-- Information on data use -->
             <button type="button" class="btn btn-sm btn-primary pull-right" data-toggle="modal" data-target="#SignupIntroduction">
                 <i class="fa fa-exclamation-circle"></i> <?php // echo $words->get('SignupIntroductionTitle'); ?>Data visibility

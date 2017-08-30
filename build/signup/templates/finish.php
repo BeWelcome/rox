@@ -26,6 +26,32 @@ Boston, MA  02111-1307, USA.
  * Signup confirmation template
  */
 ?>
-<div id="signuprox2">
-<p><?php echo $words->get('SignupFinishedText', '<b>'.$email.'</b>'); ?></p>
+<div class="row">
+<div class="card card-block w-100">
+
+        <div class="row">
+            <div class="col-12 col-md-3">
+
+                <h4 class="text-center mb-2">Step 5/5</h4>
+
+                <div class="progress mb-2">
+                    <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 100%;"
+                         aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"><span class="white">100%</span></div>
+                </div>
+
+                <div class="h4 text-center d-none d-md-block mt-1">
+                    <div class="my-3"><i class="fa fa-user"></i><br><?php echo $words->get('LoginInformation'); ?></div>
+                    <div class="my-3"><i class="fa fa-tag"></i><br><?php echo $words->get('SignupName'); ?></div>
+                    <div class="my-3"><i class="fa fa-map-marker"></i><br><?php echo $words->get('Location'); ?></div>
+                    <div class="my-3"><i class="fa fa-check-square"></i><br><?php echo $words->get('SignupSummary'); ?>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-12 col-md-9">
+                <p><?php echo $words->get('SignupFinishedText', '<span class="font-weight-bold">'.$email.'</span>'); ?></p>
+            </div>
+        </div>
+</div>
 </div>

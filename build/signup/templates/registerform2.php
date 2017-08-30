@@ -16,14 +16,14 @@
                    placeholder="<?php echo $words->get('SignupSweet'); ?>" value="" title="Leave free of content"/>
         </div>
 
-        <div class="d-flex flex-row">
-            <div class="d-block mr-3 pr-3">
+        <div class="row">
+            <div class="col-12 col-md-3">
 
-                <h4 class="text-center mb-2">Step 2/4</h4>
+                <h4 class="text-center mb-2">Step 2/5</h4>
 
                 <div class="progress mb-2">
-                    <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 50%;"
-                         aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><span class="white">50%</span></div>
+                    <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 40%;"
+                         aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"><span class="white">40%</span></div>
                 </div>
 
                 <div class="h4 text-center d-none d-md-block mt-1">
@@ -37,7 +37,7 @@
 
             </div>
 
-            <div class="d-block w-50">
+            <div class="col-12 col-md-6">
                 <div class="modal fade" id="SignupIntroduction" tabindex="-1" role="dialog"
                      aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -77,7 +77,7 @@
                             <i class="fa fa-question"></i>
                         </button>
                     </div>
-                    <span class="text-muted small"></span>
+                    <span class="text-muted small red red"></span>
                     <?php
                     if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
                         echo '<span class="error">' . $words->get('SignupErrorFullNameRequired') . '</span>';
@@ -116,7 +116,7 @@
                             <i class="fa fa-question"></i>
                         </button>
                     </div>
-                    <span class="text-muted small"></span>
+                    <span class="text-muted small red"></span>
                 </div>
 
                 <!-- Mother tongues -->
@@ -148,7 +148,7 @@
                             <i class="fa fa-question"></i>
                         </button>
                     </div>
-                    <span class="text-muted small"></span>
+                    <span class="text-muted small red"></span>
                 </div>
 
 
@@ -190,7 +190,7 @@
                             <i class="fa fa-question"></i>
                         </button>
                     </div>
-                    <span class="text-muted small"></span>
+                    <span class="text-muted small red"></span>
                     <?php
                     if (in_array('SignupErrorBirthDate', $vars['errors'])) {
                         echo '<span class="alert alert-danger">' . $words->get('SignupErrorBirthDate') . '</span>';
@@ -208,7 +208,7 @@
 
                     <div class="d-flex" data-toggle="buttons">
 
-                        <label class="btn btn-primary w-100 mr-1 <?php
+                        <label class="btn btn-outline-primary w-100 mr-1 <?php
                         if (isset($vars['gender']) && $vars['gender'] == 'female') {
                             echo ' active"';
                         }
@@ -219,7 +219,7 @@
                             }
                             ?> ><?php echo $words->get('female'); ?>
                         </label>
-                        <label class="btn btn-primary w-100 mx-1 <?php
+                        <label class="btn btn-outline-primary w-100 mx-1 <?php
                         if (isset($vars['gender']) && $vars['gender'] == 'male') {
                             echo ' active"';
                         }
@@ -230,7 +230,7 @@
                             }
                             ?> ><?php echo $words->get('male'); ?>
                         </label>
-                        <label class="btn btn-primary w-100 ml-1 <?php
+                        <label class="btn btn-outline-primary w-100 ml-1 <?php
                         if (isset($vars['gender']) && $vars['gender'] == 'other') {
                             echo ' active"';
                         }
@@ -242,7 +242,7 @@
                             ?> ><?php echo $words->get('GenderOther'); ?>
                         </label>
                     </div>
-                    <span class="text-muted small"></span>
+                    <span class="text-muted small red"></span>
                     <?php if (in_array('SignupErrorProvideGender', $vars['errors'])) {
                         echo '<span class="help-block alert alert-danger">' . $words->get('SignupErrorProvideGender') . '</span>';
                     }
@@ -260,7 +260,7 @@
                 </div>
             </div>
 
-            <div class="ml-auto">
+            <div class="col-12 col-md-3">
                 <!-- Information on data use -->
                 <button type="button" class="btn btn-sm btn-primary pull-right" data-toggle="modal"
                         data-target="#SignupIntroduction">

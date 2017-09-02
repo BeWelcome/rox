@@ -36,13 +36,6 @@ class AuthListener
         if (!$password) {
             throw new RuntimeException('Could not extract password from interactive login request.');
         }
-
-        echo '*'.$this->dokuwikiDirectory.'*';
-
-        require_once $this->dokuwikiDirectory.'/inc/init.php';
-
-        $remoteApiCore = new RemoteApiCore(new \RemoteAPI());
-        $remoteApiCore->login($user->getUsername(), $password);
     }
 
     /**

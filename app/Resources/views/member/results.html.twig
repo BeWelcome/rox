@@ -1,6 +1,6 @@
 {% import 'macros.twig' as macros %}
 {% if pager.haveToPaginate %}
-    <div class="pull-right">{{ pagerfanta( pager, 'twitter_bootstrap4_translated', { routeName: 'search_members' }) }}</div>
+    <div class="pull-right">{{ pagerfanta( pager, 'twitter_bootstrap4_translated') }}</div>
 {% endif %}
     <table id="memberresults" class="w-100">
     <thead>
@@ -17,8 +17,11 @@
         <td class="memberleft"> 
             <div class="picture"><div>{{ macros.avatar(member.Username, 50, true) }}</div><div>{{ macros.profilelink( member.Username ) }}</div></div>
             </td><td class="memberright">
-            <div class="left"> 
-                <strong><a href="/members/ {{ member.Username }}" target="_blank">{% if member.Name is empty %}{{ member.Username }}{% else %}{{ member.Name }}{% endif %}</a></strong>
+            <div class="left">
+                {% set displayName %}
+                {% if member.Name is empty %}{{ member.Username }}{% else %}{{ member.Name }}{% endif %}
+                {% endset %}
+                <strong>{{ macros.profilelink( member.Username, displayName, false, true ) }}</strong>
                 {% if (member.MessageCount) %}
                 <a href="messages/with/ {{ member.Username }}"><img src="images/icons/comments.png" alt="{{ 'messages_allmessageswith' | trans | format( member.Username ) | raw }} | trans "
                         title="{{ 'messages_allmessageswith' | trans | format( member.Username ) | raw }}" /></a>
@@ -53,5 +56,5 @@
     </tbody>
 </table>
 {% if pager.haveToPaginate %}
-    <div class="pull-right">{{ pagerfanta( pager, 'twitter_bootstrap4_translated', { routeName: 'search_members' }) }}</div>
+    <div class="pull-right">{{ pagerfanta( pager, 'twitter_bootstrap4_translated' ) }}</div>
 {% endif %}

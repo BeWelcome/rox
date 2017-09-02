@@ -20,6 +20,13 @@ class SignupBasePage extends PageWithRoxLayout
         return array('col3');
     }
 
+    protected function getLateLoadScriptfiles()
+    {
+        $scripts = parent::getLateLoadScriptfiles();
+        $scripts[] = 'build/signup.js';
+        return $scripts;
+    }
+
     private function _cmpEditLang($a, $b)
     {
         if ($a == $b) {

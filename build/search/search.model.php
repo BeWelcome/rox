@@ -52,6 +52,8 @@ class SearchModel extends RoxModelBase
     // No need to find historical and destroyed places
     const PLACES_FILTER = " g.fclass = 'P' AND g.fcode <> 'PPLH' AND g.fcode <> 'PPLW' AND g.fcode <> 'PPLQ' AND g.fcode <> 'PPLCH' ";
 
+    private $statusCondition = "";
+    private $maxGuestCondition = "";
     private $keywordCondition = "";
     private $ageCondition = "";
     private $usernameCondition = "";
@@ -448,7 +450,7 @@ LIMIT 1
         return $condition;
     }
 
-    private function getMembersCount($publicOnly)
+    public function getMembersCount($publicOnly = true)
     {
         // Fetch count of public members at/around the given place
         $str = "
@@ -477,7 +479,7 @@ LIMIT 1
             " . $this->languagesCondition . "
             " . $this->accommodationCondition . "
             " . $this->typicalOfferCondition;
-//        $str = str_replace('geonames g,', '', $str);
+        $str = str_replace('geonames g,', '', $str);
         $count = $this->dao->query($str);
 
         $row = $count->fetch(PDB::FETCH_OBJ);
@@ -500,7 +502,7 @@ LIMIT 1
      * @param array $vars
      * @param string $admin1
      * @param string $country
-     * @return multitype:unknown
+     * @return mixed
      */
     private function getMemberDetails(&$vars, $admin1 = false, $country = false)
     {
@@ -511,29 +513,6 @@ LIMIT 1
         $pageno = $this->getParameter($vars, 'search-page', 1);
         $start = ($pageno - 1) * $limit;
 
-        $this->statusCondition = $this->getStatusCondition($vars);
-        $this->maxGuestCondition = "m.MaxGuest >= " . $vars['search-can-host'];
-        $this->locationCondition = $this->getLocationCondition($vars, $admin1, $country);
-        $this->genderCondition = $this->getGenderCondition($vars);
-        $this->ageCondition = $this->getAgeCondition($vars);
-        $this->usernameCondition = $this->getUsernameCondition($vars);
-        $this->keywordCondition = $this->getKeywordCondition($vars);
-        $this->groupsCondition = $this->getGroupsCondition($vars);
-        $this->languagesCondition = $this->getLanguagesCondition($vars);
-        $this->typicalOfferCondition = $this->getTypicalOfferCondition($vars);
-        $this->accommodationCondition = $this->getAccommodationCondition($vars);
-
-        $this->tables = 'geonames g';
-        if (!empty($this->keywordCondition)) {
-            $this->tables .= ", memberstrads mt";
-        }
-        if (!empty($this->groupsCondition)) {
-            $this->tables .= ", membersgroups mg";
-        }
-        if (!empty($this->languagesCondition)) {
-            $this->tables .= ", memberslanguageslevel mll";
-        }
-        $this->tables .= ', members m';
         // Fetch count of members at/around the given place
         $vars['countOfMembers'] = $this->getMembersCount(false);
         $vars['countOfPublicMembers'] = $this->getMembersCount(true);
@@ -1150,6 +1129,7 @@ LIMIT 1
         if ($geonameid == 0) {
             if (empty($vars['location'])) {
                 // Search all over the world
+                $this->prepareQuery($vars);
                 $results['type'] = 'members';
                 $results['members'] = $this->getMemberDetails($vars);
             } else {
@@ -1174,6 +1154,7 @@ LIMIT 1
             if ($location->fclass == 'A') {
                 // check if found unit is a country
                 if (strstr($location->fcode, 'PCL') === false) {
+                    $this->prepareQuery($vars, $location->admin1, $location->country);
                     $results['type'] = 'members';
                     $results['members'] = $this->getMemberDetails(
                         $vars,
@@ -1182,6 +1163,7 @@ LIMIT 1
                     );
                 } else {
                     // get all members of that country
+                    $this->prepareQuery($vars, false, $location->country);
                     $results['type'] = 'members';
                     $results['members'] = $this->getMemberDetails(
                         $vars,
@@ -1191,6 +1173,7 @@ LIMIT 1
                 }
             } else {
                 // just get all active members from that place
+                $this->prepareQuery($vars);
                 $results['type'] = 'members';
                 $results['members'] = $this->getMemberDetails($vars);
                 $results['map'] = $this->_getMembersLowDetails($vars['location-latitude'], $vars['location-longitude'], $vars['search-distance'], $vars['search-can-host']);
@@ -1547,6 +1530,33 @@ LIMIT 1
         $results = $this->bulkLookup($query);
 
         return $results;
+    }
+
+    public function prepareQuery($vars, $admin1 = false, $country = false)
+    {
+        $this->statusCondition = $this->getStatusCondition($vars);
+        $this->maxGuestCondition = "m.MaxGuest >= " . $vars['search-can-host'];
+        $this->locationCondition = $this->getLocationCondition($vars, $admin1, $country);
+        $this->genderCondition = $this->getGenderCondition($vars);
+        $this->ageCondition = $this->getAgeCondition($vars);
+        $this->usernameCondition = $this->getUsernameCondition($vars);
+        $this->keywordCondition = $this->getKeywordCondition($vars);
+        $this->groupsCondition = $this->getGroupsCondition($vars);
+        $this->languagesCondition = $this->getLanguagesCondition($vars);
+        $this->typicalOfferCondition = $this->getTypicalOfferCondition($vars);
+        $this->accommodationCondition = $this->getAccommodationCondition($vars);
+
+        $this->tables = 'geonames g';
+        if (!empty($this->keywordCondition)) {
+            $this->tables .= ", memberstrads mt";
+        }
+        if (!empty($this->groupsCondition)) {
+            $this->tables .= ", membersgroups mg";
+        }
+        if (!empty($this->languagesCondition)) {
+            $this->tables .= ", memberslanguageslevel mll";
+        }
+        $this->tables .= ', members m';
     }
 }
 

@@ -9,7 +9,7 @@ SRC_DIR_COMMA := $(subst $(SPACE),$(COMMA),$(SRC_DIR))
 
 all: phpci
 
-phpci: phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpmetrics phpunit
+phpci: phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpunit version
 
 phpcsfix:
 	./vendor/bin/phpcbf src/
@@ -46,7 +46,7 @@ phpunit:
 	./vendor/bin/phpunit
 
 phpmetrics:
-	./vendor/bin/phpmetrics --config=phpmetrics.yml
+	./vendor/bin/phpmetrics --exclude=src/AppBundle/Entity --report-violations=phpmetrics.xml $(SRC_DIR_COMMA)
 
 version:
 	git rev-parse --short HEAD > VERSION

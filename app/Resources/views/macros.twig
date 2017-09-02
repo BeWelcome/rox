@@ -43,18 +43,21 @@
 {% endmacro %}
 
 {% macro avatar(username, size, linked = false, addimage = false, addlink = false) %}
+    {% import _self as macros %}
     {% set imgclasses %}profileimg{% if addimage %} {{ addimage }}{% endif %}{% endset %}
     {% set linkclasses %}{% if addlink %} {{ addlink }}{% endif %}{% endset %}
     {% set img %}<img class="{{ imgclasses }}" width="{{ size }}" height="{{ size }}" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'Profile' | trans }}: {{ username }}">{% endset %}
     {% if linked %}
-        <a {% if linkclasses %}class="{{ linkclasses }}"{% endif %} href="members/{{ username }}">{{ img }}</a>
+        {{ macros.profilelink(username, img, linkclasses) }}
     {% else %}
         {{ img }}
     {% endif %}
 {% endmacro %}
 
-{% macro profilelink(username) %}
-<a href="{{ path( 'members_profile', { 'username': username }) }}">{{ username }}</a>
+{% macro profilelink(username, displayname = false, classes = false, newpage = false) %}
+<a href="{{ path( 'members_profile', { 'username': username }) }}"
+   {% if classes %}class="{{ classes }}" {% endif %}
+   {% if newpage %}target="_blank"{% endif %}>{% if displayname %}{{ displayname }}{% else %}{{ username }}{% endif %}</a>
 {% endmacro %}
 
 {% macro pagination(currentPage, lastPage, route, routeParams) %}

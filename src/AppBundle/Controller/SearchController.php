@@ -4,7 +4,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Form\SearchFormType;
 use AppBundle\Pagerfanta\SearchAdapter;
-use EnvironmentExplorer;
 use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -38,9 +37,11 @@ class SearchController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $results = $this->getResults($form->getData());
-            $searchAdapter = new SearchAdapter($results, $form->getData());
+            $page = $request->query->get('page', 1);
+            $searchAdapter = new SearchAdapter($this->get('service_container'), $form->getData());
+            $results = $searchAdapter->getMapResults();
             $pager = new Pagerfanta($searchAdapter);
+            $pager->setCurrentPage($page);
         }
 
         return $this->render(':search:searchmembers.html.twig', [
@@ -69,51 +70,5 @@ class SearchController extends Controller
         $request->request->add(['search_form' => $data]);
 
         return $request;
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return array|string
-     */
-    private function getResults($data)
-    {
-        $vars = [];
-        $vars['search-location'] = $data['search'];
-        $vars['location-geoname-id'] = $data['search_geoname_id'];
-        $vars['location-latitude'] = $data['search_latitude'];
-        $vars['location-longitude'] = $data['search_longitude'];
-        $vars['search-accommodation'] = [];
-
-        if ($data['search_accommodation_anytime']) {
-            $vars['search-accommodation'][] = 'anytime';
-        }
-
-        if ($data['search_accommodation_dependonrequest']) {
-            $vars['search-accommodation'][] = 'dependonrequest';
-        }
-
-        if ($data['search_accommodation_neverask']) {
-            $vars['search-accommodation'][] = 'neverask';
-        }
-
-        $vars['search-distance'] = $data['search_distance'];
-        $vars['search-can-host'] = $data['search_can_host'];
-        $vars['search-number-items'] = 10;
-        $vars['search-sort-order'] = 6;
-
-        // make sure everything's setup for the old code used below
-        $container = $this->get('service_container');
-        $environmentExplorer = new EnvironmentExplorer();
-        $environmentExplorer->initializeGlobalState(
-            $container->getParameter('database_host'),
-            $container->getParameter('database_name'),
-            $container->getParameter('database_user'),
-            $container->getParameter('database_password')
-        );
-
-        $model = new \SearchModel();
-
-        return $model->getResultsForLocation($vars);
     }
 }

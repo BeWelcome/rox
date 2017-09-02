@@ -29,6 +29,7 @@ class SearchFormType extends AbstractType
             ],
             'label' => false,
         ]);
+        $formBuilder->setMethod('GET');
 
         $this->addHiddenFields($formBuilder);
         $this->addCheckboxes($formBuilder);

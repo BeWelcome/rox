@@ -10,12 +10,9 @@
 
         <title>
             {%- spaceless -%}
-                {# @see http://stackoverflow.com/a/13806784 #}
-                {% set _block = block('title') %}
-
-                {% if _block is not empty %}
-                    {{ _block | trim }} |
-                {%- endif %} BeWelcome
+                {% if block('title') is defined %}
+                    {{ block('title') | trim }} |
+                {% endif %} BeWelcome
             {%- endspaceless -%}
         </title>
 

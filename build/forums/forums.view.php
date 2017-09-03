@@ -315,12 +315,13 @@ class ForumsView extends RoxAppView {
             require 'templates/userbar.php';
         }
     }
-    public function showCategoriesContinentsTagcloud() {
+  /*  public function showCategoriesContinentsTagcloud() {
         $top_tags = $this->_model->getTopCategoryLevelTags();
         $all_tags_maximum = $this->_model->getTagsMaximum();
         $all_tags = $this->_model->getAllTags();
         require 'templates/categories_continents_tagcloud.php';
-    }
+    } */
+
     /* This displays the forum rules and charter */
     public function rules() {
         require 'templates/rules.php';

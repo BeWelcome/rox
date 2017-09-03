@@ -27,7 +27,7 @@ Boston, MA  02111-1307, USA.
 
 
 	if ($this->BW_Right->HasRight("ForumModerator","All")) {
-	   echo '<div class="col-12 mb-3">Because of your rights you are automatically subscribed to everything in the forum.</div>>';
+	   echo '<div class="col-12 mb-3">Because of your rights you are automatically subscribed to everything in the forum.</div>';
 	}
 ?>
 
@@ -37,22 +37,44 @@ Boston, MA  02111-1307, USA.
 <div class="col-12 col-md-4"><a href="forums/subscriptions/enable" class="btn btn-primary btn-block"><?= $words->getSilent('ForumEnable') ?></a><?= $words->flushBuffer() ?></div>
 <div class="col-12 col-md-8 pt-2"><?= $words->getFormatted("ForumEnableAllNotifications") ?></div>
 
-<div class="col-12 mt-3"><h3><?= $words->get('ForumGroupSubscriptions') ?></h3></div>
-<?php
-if (count($TResults->Groups) > 0) {
-    foreach ($TResults->Groups as $group) {
-        if ($group->AcceptMails == 'yes') {
-            if ($group->notificationsEnabled) {
-                echo '<div class="col-3"><a href="forums/subscriptions/disable/group/' . $group->IdGroup . '" class="btn btn-primary btn-block mb-1">' . $words->getSilent('ForumDisable') . '</a></div>' . $words->flushBuffer() . PHP_EOL;
-            } else {
-                echo '<div class="col-3"><a href="forums/subscriptions/enable/group/' . $group->IdGroup . '" class="btn btn-primary btn-block mb-1">' . $words->getSilent('ForumEnable') . '</a></div>' . $words->flushBuffer() . PHP_EOL;
-            }
-            echo '<div class="col-3"><a href="forums/subscriptions/unsubscribe/group/' . $group->IdGroup . '" class="btn btn-primary btn-block mb-1">' . $words->getSilent('ForumUnsubscribe') . '</a></div>' . $words->flushBuffer()  . PHP_EOL;
-        } else {
-            echo '<div class="col-3"></div><div class="col-3"><a href="forums/subscriptions/subscribe/group/' . $group->IdGroup . '" class="btn btn-primary btn-block mb-1">' . $words->getSilent('ForumSubscribe') . '</a></div>' . $words->flushBuffer()  . PHP_EOL;
-        }
-        echo '<div class="col-6 pt-2"><a href="groups/' . $group->IdGroup . '/forum">'. htmlspecialchars($group->Name) . "</a></div>";
-    }
+<div class="col-12 mt-3"><h3><?= $words->get('ForumGroupSubscriptions') ?></h3></div><?= $words->flushBuffer() ?>
+
+        <?php
+        if (count($TResults->Groups) > 0) { ?>
+            <div class="col-12">
+            <table class="table table-hover">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Group Name</th>
+                <th>Subscription</th>
+            </tr>
+            </thead>
+            <tbody>
+        <?
+            foreach ($TResults->Groups as $group) {
+        ?>
+        <tr>
+            <th scope="row"><img src="groups/thumbimg/<? echo $group->IdGroup; ?>" style="width: 50px; height: 50px;"></th>
+            <td class="align-middle"><a href="groups/<? echo $group->IdGroup; ?>/forum"><? echo htmlspecialchars($group->Name); ?></a></td>
+            <td class="align-middle">
+                <div class="btn-group" role="group" aria-label="Toggle Subscription On-Off">
+                <? if ($group->AcceptMails == 'yes') { ?>
+                    <a class="btn btn-primary" style="color: #fff; cursor: default; border: 1px solid #868e96 !important;">On</a>
+                    <a href="forums/subscriptions/unsubscribe/group/<? echo $group->IdGroup; ?>" type="button" class="btn btn-secondary mb-0 border-0" style="border: 1px solid #868e96 !important;">Off</a>
+                </div></td>
+                <?
+                } else { ?>
+                <a href="forums/subscriptions/subscribe/group/<? echo $group->IdGroup; ?>" type="button" class="btn btn-secondary mb-0 border-0" style="border: 1px solid #868e96 !important;">On</a>
+                <a class="btn btn-primary" style="color: #fff; cursor: default; border: 1px solid #868e96 !important;">Off</a>
+                </div></td>';
+                <? } ?>
+        </tr>
+    <? } ?>
+    </tbody>
+    </table>
+    </div>
+<?
 } else {
     echo '<div class="col-12">' . $words->get('ForumNoGroups') . '</div>';
 }
@@ -61,47 +83,45 @@ if (count($TResults->Groups) > 0) {
 <div class="col-12 mt-3"><h3><?= $words->getFormatted("ForumThreadSubscriptions") ?></h3></div>
 
 <?
-if (count($TResults->TData) > 0) {
-    foreach ($TResults->TData as $data) {
-        echo '<div class="col-3">';
-        if ($data->notificationsEnabled > 0) {
-            echo '<a href="forums/subscriptions/disable/thread/' . $data->IdThread . '/' . $data->UnSubscribeKey
-                . '" class="btn btn-primary btn-block">' . $words->getSilent('ForumDisable') . '</a></div>' . $words->flushBuffer() . PHP_EOL;
-        } else {
-            echo '<a href="forums/subscriptions/enable/thread/' . $data->IdThread . '/' . $data->UnSubscribeKey
-                . '" class="btn btn-primary btn-block">' . $words->getSilent('ForumEnable') . '</a></div>' . $words->flushBuffer() . PHP_EOL;
-        }
-        echo '<div class="col-3"><a href="forums/subscriptions/unsubscribe/thread/'
-            . $data->IdSubscribe . '/' . $data->UnSubscribeKey . '" class="btn btn-primary btn-block">'
-            . $words->getSilent('Unsubscribe') . '</a></div>' . $words->flushBuffer() . PHP_EOL;
+if (count($TResults->TData) > 0) { ?>
 
-        echo '<div class="col-6"><a href="forums/s' . $data->IdThread . '">' . $words->fTrad($data->IdTitle) . '</a><br>';
-        echo '<span class="small">' . $data->subscribedtime . "</span></div>";
+    <div class="col-12">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Thread Name</th>
+                <th>Subscription</th>
+            </tr>
+            </thead>
+            <tbody>
+<?
+    foreach ($TResults->TData as $data) {
+
+        echo '<tr><th scope="row">';
+        echo '<a href="forums/subscriptions/unsubscribe/thread/' . $data->IdSubscribe . '/' . $data->UnSubscribeKey . '" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i></a>';
+        echo '</th>';
+        echo '<td class="align-middle"><a href="forums/s ' . $data->IdThread . ' ">' . $words->fTrad($data->IdTitle) . '</a><br>';
+        echo '<span class="small">' . $data->subscribedtime . '</span></td>';
+
+        echo '<td class="align-middle"><div class="btn-group" role="group" aria-label="Toggle Subscription On-Off">';
+
+        if ($data->notificationsEnabled > 0) {
+            // on - turn off
+            echo '<a class="btn btn-primary" style="color: #fff; cursor: default; border: 1px solid #868e96 !important;">On</a>';
+            echo '<a href="forums/subscriptions/disable/thread/' . $data->IdThread . '/' . $data->UnSubscribeKey . '" type="button" class="btn btn-secondary mb-0 border-0" style="border: 1px solid #868e96 !important;">Off</a>';
+        } else {
+            // off - turn on
+            echo '<a href="forums/subscriptions/enable/thread/' . $data->IdThread . '/' . $data->UnSubscribeKey . '"  type="button" class="btn btn-secondary mb-0 border-0" style="border: 1px solid #868e96 !important;">On</a>';
+            echo '<a class="btn btn-primary" style="color: #fff; cursor: default; border: 1px solid #868e96 !important;">Off</a>';
+        }
+
+        echo '</td></tr>';
+
+
     }
+    echo '</tbody></table></div>';
 } else {
     echo '<div class="col-12">' . $words->get('ForumNoThreadsSubscribed') . '</div>';
-}
-?>
-<div class="col-12 mt-3"><h3><?= $words->getFormatted("ForumTagSubscriptions") ?></h3></div>
-
-<?
-if (count($TResults->TDataTag) > 0) {
-    foreach ($TResults->TDataTag as $data) {
-        echo '<div class="col-3">';
-        if ($data->notificationsEnabled > 0) {
-            echo '<a href="forums/subscriptions/disable/tag/' . $data->IdTag . '/' . $data->UnSubscribeKey . '"'
-                . ' class="btn btn-primary btn-block">' . $words->getSilent('ForumDisable') . '</a></div>' . $words->flushBuffer() . PHP_EOL;
-        } else {
-            echo '<a href="forums/subscriptions/enable/tag/' . $data->IdTag . '/' . $data->UnSubscribeKey . '"'
-                . ' class="btn btn-primary btn-block">' . $words->getSilent('ForumEnable') . '</a></div>' . $words->flushBuffer() . PHP_EOL;
-        }
-        echo '<div class="col-3"><a href="forums/subscriptions/unsubscribe/tag/' . $data->IdSubscribe . '/' . $data->UnSubscribeKey . '"'
-            . ' class="btn btn-primary btn-block">' . $words->getSilent('Unsubscribe') . '</a></div>' . $words->flushBuffer() . PHP_EOL;
-
-        echo '<div class="col-6"><a href="forums/t' . $data->IdTag . '">' . $words->fTrad($data->IdName) .'</a><br />';
-        echo '<span class="small">' . $data->subscribedtime . '</span></div>';
-    }
-} else {
-    echo '<div class="col-12">' . $words->get('ForumNoTagsSubscribed') . '</div>';
 }
 ?>

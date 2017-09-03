@@ -53,41 +53,6 @@
         </div> <!-- subc -->
       </div> <!-- c33l -->
 
-<!-- Now displays the New Tag Cloud -->
-      <div class="c33r"  id="tagcloud">
-        <div class="subcr tags">
-          <h4 class="clearfix"><?php echo '<img src="styles/css/minimal/images/iconsfam/tag_blue.png" alt="'. $this->words->getBuffered('tags') .'" title="'. $this->words->getBuffered('tags') .'" class="forum_icon" />';?>&nbsp;<?php echo $this->words->flushBuffer(); ?><?php echo $this->words->getFormatted('ForumByTag'); ?></h4>
-	<?php
-    if($all_tags_maximum == 0)
-        $all_tags_maximum = 1;
-    $maximum = $all_tags_maximum;
-    $tagcloudlist = '';
-    foreach ($all_tags as $tagid => $tag) {
-
-        $percent = floor(($tag->counter / $maximum) * 100);
-    
-        if ($percent <20) {
-            $class = 'tag_smallest';
-            } elseif ($percent>= 20 and $percent <40) {
-                $class = 'tag_small';
-            } elseif ($percent>= 40 and $percent <60) {
-                $class = 'tag_medium';
-            } elseif ($percent>= 60 and $percent <80) {
-                $class = 'tag_large';
-            } else {
-            $class = 'tag_largest';
-        }
-        
-	    $TagName=$this->words->fTrad($tag->IdName) ;
-	    $TagDescription=$this->words->fTrad($tag->IdDescription) ;
-		
-        $tagcloudlist .=  '<a href="forums/t'.$tag->tagid.'-'.rawurlencode($TagName).'" title="'.$TagDescription.'" class="'.$class.'">'.$TagName.'</a>&nbsp;:: ';
-
-    }
-   	$tagcloudlist = rtrim($tagcloudlist, ': ');
-    echo $tagcloudlist;
-?>        </div> <!-- subcr -->
-      </div> <!-- c33r -->
     </div> <!-- subcolumns -->
 	<script language="Javascript" type="text/javascript">
 	<!--

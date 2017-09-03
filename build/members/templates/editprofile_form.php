@@ -52,7 +52,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td ><?=$words->get('ProfilePicture')?>:<br/><img src="members/avatar/<?=$member->Username?>?xs" title="Current picture" alt="Current picture" style="padding: 1em"/></td>
+                  <td ><?=$words->get('ProfilePicture')?>:<br/><img src="members/avatar/<?=$member->Username?>/50" title="Current picture" alt="Current picture" height="50" width="50" style="padding: 1em"/></td>
                   <td colspan="3" >
                     <label for="profile_picture"><?= $words->get('uploadselectpicture'); ?></label><br />
                     <span class="small"><?= $words->get('Profile_UploadWarning', sprintf("%.1f MB", PFunctions::returnBytes(ini_get('upload_max_filesize')) / 1048576)); ?></span><br /><br />
@@ -648,7 +648,7 @@ HTML;
                     echo $Relation->Username ;
                   }
                   ?><br />
-                    <img class="framed"  src="members/avatar/<?=$Relation->Username?>?xs"  height="50px"  width="50px"  alt="Profile" />
+                    <img class="framed"  src="members/avatar/<?=$Relation->Username?>/50"  height="50"  width="50"  alt="Profile" />
                   </td>
                   <td>
                     <?php

@@ -49,11 +49,11 @@ foreach ($this->pager->getActiveSubset($this->bad_comments) as $comment)
     <div class="clearfix">
         <div class="float_left">
             <a href="members/{$from}">
-                <img class="framed"  src="members/avatar/{$from}/?xs"  height="50px"  width="50px"  alt="Profile" />
+                <img class="framed"  src="members/avatar/{$from}/50"  height="50"  width="50"  alt="Profile" />
             </a>
             <img class="commentto" src="images/icons/tango/22x22/go-next.png" alt="comment to" />
             <a href="members/{$to}">
-                <img class="framed"  src="members/avatar/{$to}/?xs"  height="50px"  width="50px"  alt="Profile" />
+                <img class="framed"  src="members/avatar/{$to}/50"  height="50"  width="50"  alt="Profile" />
             </a>
         </div>
             <p class="{$comment->Quality}">{$comment->Quality}</p>

@@ -74,6 +74,8 @@ class SearchModel extends RoxModelBase
         self::ORDER_COMMENTS => array('WordCode' => 'SearchOrderComments', 'Column' => 'CommentCount')
     );
 
+    private $membersLowDetails = false;
+
     /**
      * SearchModel constructor.
      */
@@ -253,7 +255,7 @@ LIMIT 1
      * @param string $country
      * @return string
      */
-    private function getLocationCondition($vars, $admin1, $country)
+    private function getLocationCondition(&$vars, $admin1, $country)
     {
         $condition = '';
         if ($country) {
@@ -268,41 +270,38 @@ LIMIT 1
                 AND g.country = '" . $country . "'";
             }
         } else {
-            if (empty($vars['search-location'])) {
-                // we search around the world.
-            } else {
-                // a simple place with a square rectangle around it
-                $distance = $vars['search-distance'];
-                if ($distance != 0) {
-                    // calculate rectangle around place with given distance
-                    $lat = deg2rad(doubleval($vars['location-latitude']));
-                    $long = deg2rad(doubleval($vars['location-longitude']));
+            // a simple place with a square rectangle around it
+            $distance = $vars['search-distance'];
+            if ($distance != 0) {
+                // calculate rectangle around place with given distance
+                $lat = deg2rad(doubleval($vars['location-latitude']));
+                $long = deg2rad(doubleval($vars['location-longitude']));
 
-                    $longne = rad2deg(($distance + self::EARTH_RADIUS * $long) / self::EARTH_RADIUS);
-                    $longsw = rad2deg((self::EARTH_RADIUS * $long - $distance) / self::EARTH_RADIUS);
+                $longne = rad2deg(($distance + self::EARTH_RADIUS * $long) / self::EARTH_RADIUS);
+                $longsw = rad2deg((self::EARTH_RADIUS * $long - $distance) / self::EARTH_RADIUS);
 
-                    $radiusAtLatitude = cos($lat) * self::EARTH_RADIUS;
-                    $latne = rad2deg(($distance + $radiusAtLatitude * $lat) / $radiusAtLatitude);
-                    $latsw = rad2deg(($radiusAtLatitude * $lat - $distance) / $radiusAtLatitude);
-                    // Sanity check if $latne < $latsw or $longne < $longsw switch the two (Melbourne)
-                    // TODO: search around the date line
-                    if ($latne < $latsw) {
-                        $tmp = $latne;
-                        $latne = $latsw;
-                        $latsw = $tmp;
-                    }
-                    if ($longne < $longsw) {
-                        $tmp = $longne;
-                        $longne = $longsw;
-                        $longsw = $tmp;
-                    }
-                    // now fetch all location from geonames which are in that given rectangle
-                    $condition .= "
-                            AND m.latitude BETWEEN " . $latsw . " AND " . $latne . "
-                            AND m.longitude BETWEEN " . $longsw . " AND " . $longne;
-                } else {
-                    $condition .= " AND g.geonameid = " . $this->dao->escape($vars['location-geoname-id']);
+                $radiusAtLatitude = cos($lat) * self::EARTH_RADIUS;
+                $latne = rad2deg(($distance + $radiusAtLatitude * $lat) / $radiusAtLatitude);
+                $latsw = rad2deg(($radiusAtLatitude * $lat - $distance) / $radiusAtLatitude);
+                // Sanity check if $latne < $latsw or $longne < $longsw switch the two (Melbourne)
+                // TODO: search around the date line
+                if ($latne < $latsw) {
+                    $tmp = $latne;
+                    $latne = $latsw;
+                    $latsw = $tmp;
                 }
+                if ($longne < $longsw) {
+                    $tmp = $longne;
+                    $longne = $longsw;
+                    $longsw = $tmp;
+                }
+                // now fetch all location from geonames which are in that given rectangle
+                $condition .= "
+                        AND m.latitude BETWEEN " . $latsw . " AND " . $latne . "
+                        AND m.longitude BETWEEN " . $longsw . " AND " . $longne;
+            } else {
+                $condition .= "  AND m.latitude = " . $vars['location-latitude'] . "
+                        AND m.longitude  = " . $vars['location-longitude'];
             }
         }
 
@@ -1129,9 +1128,13 @@ LIMIT 1
         if ($geonameid == 0) {
             if (empty($vars['location'])) {
                 // Search all over the world
+                $vars['location-latitude'] = 0;
+                $vars['location-longitude'] = 0;
+                $vars['search-distance'] = 6000;
                 $this->prepareQuery($vars);
                 $results['type'] = 'members';
                 $results['members'] = $this->getMemberDetails($vars);
+                $results['map'] = $this->_getMembersLowDetails($vars['location-latitude'], $vars['location-longitude'], $vars['search-distance'], $vars['search-can-host']);
             } else {
                 // User didn't select from the suggestion list (javascript might be disabled)
                 // get suggestions directly from the database
@@ -1513,23 +1516,30 @@ LIMIT 1
      * @return array
      */
     private function _getMembersLowDetails($latitude, $longitude, $distance, $canhost = 1) {
-        $rectangle = $this->_getRectangle($latitude, $longitude, $distance);
-        $query = "
-            SELECT
-                m.Accomodation as Accommodation, m.Username, latitude, longitude
-            FROM
-                members m
-            WHERE
-                m.Status IN ('Active', 'OutOfRemind')
-                AND m.maxGuest >= {$canhost}
-                AND m.latitude BETWEEN $rectangle->latne AND $rectangle->latsw
-                AND m.longitude BETWEEN $rectangle->longne AND $rectangle->longsw
-        ";
-        $query .= $this->accommodationCondition;
-        $query .= " ORDER BY Accomodation";
-        $results = $this->bulkLookup($query);
-
-        return $results;
+        if (!$this->membersLowDetails) {
+            $rectangle = $this->_getRectangle($latitude, $longitude, $distance);
+            $query = "
+                SELECT
+                    m.Accomodation as Accommodation, m.Username, latitude, longitude
+                FROM
+                    members m
+                WHERE
+                    m.Status IN ('Active', 'OutOfRemind')
+                    AND m.maxGuest >= {$canhost}
+                    AND m.latitude BETWEEN $rectangle->latne AND $rectangle->latsw
+                    AND m.longitude BETWEEN $rectangle->longne AND $rectangle->longsw
+            ";
+            $query .= $this->accommodationCondition;
+            if ($distance == 6000) {
+                // randomize search results around the world
+                $query .= " ORDER BY RAND() LIMIT 0,1000";
+            }
+            else {
+                $query .= " ORDER BY Accomodation LIMIT 0,1000";
+            }
+            $this->membersLowDetails = $this->bulkLookup($query);
+        }
+        return $this->membersLowDetails;
     }
 
     public function prepareQuery($vars, $admin1 = false, $country = false)

@@ -23,6 +23,7 @@ class AvatarController extends Controller
      *
      * @param mixed $username
      * @param mixed $size
+     * @return BinaryFileResponse
      */
     public function showAvatarAction($username, $size = 50)
     {
@@ -38,7 +39,7 @@ class AvatarController extends Controller
             case '200':
             case '500':
                 $suffix = '_'.$size;
-                // no break
+                break;
             default:
                 $suffix = '';
         }

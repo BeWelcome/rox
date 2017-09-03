@@ -139,10 +139,12 @@ main {
   width: 100%;
   border: 1px solid;
   border-radius: 5px;
+  padding: .25em;
   clear: both;
-  margin-bottom: 1em;
-  padding: 1.25em;
 
+  .success {
+    background-color: #0099ea;
+  }
   .notice {
     background-color: #c0c000;
   }

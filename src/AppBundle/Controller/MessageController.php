@@ -212,6 +212,12 @@ class MessageController extends Controller
             $em->flush();
             $html2Text = new Html2Text($hostingRequest->getMessage());
             $hostingRequestText = $html2Text->getText();
+            $html =                     $this->renderView(
+            // app/Resources/views/Emails/registration.html.twig
+                ':emails:request.html.twig',
+                ['request_text' => $hostingRequest->getMessage()]
+            );
+
             $message = \Swift_Message::newInstance()
                 ->setSubject($hostingRequest->getSubject()->getSubject())
                 ->setFrom('message@bewelcome.org')
@@ -219,14 +225,14 @@ class MessageController extends Controller
                 ->setBody(
                     $this->renderView(
                         // app/Resources/views/Emails/registration.html.twig
-                        'emails/request.html.twig',
+                        ':emails:request.html.twig',
                         ['request_text' => $hostingRequest->getMessage()]
                     ),
                     'text/html'
                 )
                 ->addPart(
                     $this->renderView(
-                        'emails/request.txt.twig',
+                        ':emails:request.txt.twig',
                         ['request_text' => $hostingRequestText]
                     ),
                     'text/plain'

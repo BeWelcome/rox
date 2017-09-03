@@ -108,7 +108,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
       <div class="subcl" >
       <?php if ($showfrom > 1){echo '<strong>'.$words->get('CommentHiddenEdit').'</strong>';} ?>
         <a href="members/<?=$c->UsernameFromMember?>">
-           <img class="float_left framed"  src="members/avatar/<?=$c->UsernameFromMember?>/?xs"  height="50px"  width="50px"  alt="Profile" />
+           <img class="float_left framed"  src="members/avatar/<?=$c->UsernameFromMember?>/50"  height="50px"  width="50px"  alt="Profile" />
         </a>
         <div class="comment">
             <p class="clearfix">
@@ -169,7 +169,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
     <div class="c50l" >
       <div class="subcl" >
         <a href="members/<?=$cc->UsernameToMember?>">
-           <img class="float_left framed"  src="members/avatar/<?=$cc->UsernameToMember?>/?xs"  height="50px"  width="50px"  alt="Profile" />
+           <img class="float_left framed"  src="members/avatar/<?=$cc->UsernameToMember?>/50"  height="50px"  width="50px"  alt="Profile" />
         </a>
         <div class="comment">
             <p class="clearfix">
@@ -205,7 +205,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
             <?php // give an aditional message when comment is exceptionally shown
             if ($showto > 1){echo '<strong>'.$words->get('CommentHiddenEdit').'</strong>';} ?>
             <a href="members/<?= $cc->UsernameFromMember ?>">
-               <img class="float_left framed" src="members/avatar/<?= $cc->UsernameFromMember ?>/?xs" height="50px" width="50px" alt="Profile" />
+               <img class="float_left framed" src="members/avatar/<?= $cc->UsernameFromMember ?>/50" height="50px" width="50px" alt="Profile" />
             </a>
             <div class="comment">
                 <p class="clearfix">

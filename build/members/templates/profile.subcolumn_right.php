@@ -189,7 +189,7 @@ if (count($relations) > 0) { ?>
                             ?>
                             <li class="clearfix">
                                 <a href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>"  title="See profile <?=$rel->Username?>">
-                                    <img class="framed float-left"  src="members/avatar/<?=$rel->Username?>?xs"  height="50px"  width="50px"  alt="Profile" />
+                                    <img class="framed float-left"  src="members/avatar/<?=$rel->Username?>/50"  height="50"  width="50"  alt="Profile" />
                                 </a>
                                 <a class="float-left" href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>" ><?=$rel->Username?></a>
                                 <br />
@@ -249,7 +249,7 @@ if (count($relations) > 0) { ?>
 
                        <div class="w-100">
                            <a href="members/<?=$c->UsernameFromMember?>">
-                               <img class="float-left mr-2"  src="members/avatar/<?=$c->UsernameFromMember?>/?xs"  height="50px"  width="50px"  alt="<?=$c->UsernameFromMember?>" />
+                               <img class="float-left mr-2"  src="members/avatar/<?=$c->UsernameFromMember?>/50"  height="50"  width="50"  alt="<?=$c->UsernameFromMember?>" />
                            </a>
                            <div>
                                <p class="m-0 compacttext">

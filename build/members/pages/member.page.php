@@ -47,7 +47,7 @@ class MemberPage extends PageWithActiveSkin
     }
     
     
-    protected function getSubmenuItems()
+    protected function getLeftSubmenuItems()
     {
         $username = $this->member->Username;
         $member = $this->member;
@@ -200,7 +200,7 @@ class MemberPage extends PageWithActiveSkin
             <?php
 
             $active_menu_item = $this->getSubmenuActiveItem();
-            foreach ($this->getSubmenuItems() as $index => $item) {
+            foreach ($this->getLeftSubmenuItems() as $index => $item) {
                 $name = $item[0];
                 $url = $item[1];
                 $label = $item[2];

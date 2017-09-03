@@ -69,7 +69,7 @@ foreach($TList as $TL) {
 
     $string = <<<HTML
     <div class="avatar">
-        <a href="members/{$TL->Username}" target="_blank"><img width="50" height="50" src="members/avatar/{$TL->Username}?xs"/></a>
+        <a href="members/{$TL->Username}" target="_blank"><img width="50" height="50" src="members/avatar/{$TL->Username}/50"/></a>
     </div>
     <div class="username">
         <a href="members/{$TL->Username}" target="_blank"><b>{$TL->Username}</b></a>
@@ -161,7 +161,7 @@ function ShowMembersAjax($TM,$maxpos, $Accomodation) {
     $info_styles = array(0 => "<tr class=\"blank\" align=\"left\" valign=\"center\">", 1 => "<tr class=\"highlight\" align=\"left\" valign=\"center\">");
     $string = $info_styles[($ii++%2)]; // this display the <tr>
     $string .= "<td class=\"memberlist\">" ;
-    $string .= "<img src=\"members/avatar/".$TM->Username."?xs\" class=\"framed\">";
+    $string .= "<img src=\"members/avatar/".$TM->Username."/50\" class=\"framed\">";
     $string .= "</td>" ;
     $string .= "<td class=\"memberlist\" valign=\"top\">" ;
     $string .= '<a href="members/'.$TM->Username.'" target="_blank">'.$TM->Username.'</a>';
@@ -205,7 +205,7 @@ function ShowMembersAjaxShort($TM,$maxpos, $Accomodation,$Nr) {
     // highlight marker on member list mouse over: $string .= " onmouseover=\"mapBuilder.highlightMarker(".$Nr.");\" onmouseout=\"mapBuilder.unhighlightMarker(".$Nr.");\"";
     $string .= " ><tr><td valign=\"top\" class=\"memberlist\">" ;
     $string .= "<a class=\"profileLink\" href=".$memberProfileLink." target=\"_blank\">";
-    $string .= "<img src=\"members/avatar/".$TM->Username."?xs\" class=\"framed\">";
+    $string .= "<img src=\"members/avatar/".$TM->Username."/50\" class=\"framed\">";
     $string .= "</a>";
     $string .= "</td>" ;
     $string .= "<td class=\"memberlist\" valign=\"top\">" ;

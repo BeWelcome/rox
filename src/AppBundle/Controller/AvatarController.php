@@ -23,6 +23,7 @@ class AvatarController extends Controller
      *
      * @param mixed $username
      * @param mixed $size
+     *
      * @return BinaryFileResponse
      */
     public function showAvatarAction($username, $size = 50)

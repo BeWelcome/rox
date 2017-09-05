@@ -39,6 +39,7 @@ class LegacyLoader extends Loader
         require_once $dirfix.'routes.php';
 
         // Forum urls
+//        $this->addRouteDirectly('forums', '/forums/page{pageGroups}/page{pageForums}');
         $this->addRouteDirectly('forums', '/forums');
         $this->addRouteDirectly('forums_new', '/forums/new');
         $this->addRouteDirectly('bwforum', 'forums/bwforum');

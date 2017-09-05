@@ -52,7 +52,7 @@ class ActivitiesEditCreatePage extends ActivitiesBasePage
        $stylesheets = parent::getStylesheets();
 //       $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery-ui-1.10.4.custom.min.css';
 //       $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/datetimepicker.css';
-       $stylesheets[] = 'build/tempusdominus.css';
+//       $stylesheets[] = 'build/tempusdominus.css';
        return $stylesheets;
     }
 

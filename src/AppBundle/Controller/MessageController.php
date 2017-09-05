@@ -201,8 +201,9 @@ class MessageController extends Controller
         if ($messageForm->isSubmitted() && $messageForm->isValid()) {
             // Write request to database after doing some checks
             /** @var Message $hostingRequest */
+            $sender = $this->getUser();
             $hostingRequest = $messageForm->getData();
-            $hostingRequest->setSender($this->getUser());
+            $hostingRequest->setSender($sender);
             $hostingRequest->setReceiver($receiver);
             $hostingRequest->setInfolder('normal');
             $hostingRequest->setCreated(new \DateTime());
@@ -212,15 +213,11 @@ class MessageController extends Controller
             $em->flush();
             $html2Text = new Html2Text($hostingRequest->getMessage());
             $hostingRequestText = $html2Text->getText();
-            $html =                     $this->renderView(
-            // app/Resources/views/Emails/registration.html.twig
-                ':emails:request.html.twig',
-                ['request_text' => $hostingRequest->getMessage()]
-            );
-
             $message = \Swift_Message::newInstance()
                 ->setSubject($hostingRequest->getSubject()->getSubject())
-                ->setFrom('message@bewelcome.org')
+                ->setFrom([
+                    'message@bewelcome.org' => 'bewelcome - '.$sender->getUsername(),
+                ])
                 ->setTo($receiver->getCryptedField('Email'))
                 ->setBody(
                     $this->renderView(
@@ -238,7 +235,8 @@ class MessageController extends Controller
                     'text/plain'
                 )
             ;
-            $this->get('mailer')->send($message);
+            $results = $this->get('mailer')->send($message);
+            $this->get('logger')->addInfo('Message send: '.$results);
             $this->addFlash('success', 'Message has been sent.');
 
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);

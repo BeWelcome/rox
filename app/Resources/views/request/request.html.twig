@@ -2,29 +2,28 @@
 {% import 'macros.twig' as macros %}
 
 {% block javascripts %}
-    {% javascripts
-    '@tempus_dominus_bootstrap4_js' %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    <script type="text/javascript" src="{{ asset('build/tempusdominus.js') }}"></script>
     <script>
-        $(document).ready(function () {
-            $('.datepicker').datepicker({
-                language: {{ app.request.locale }},
-                clearBtn: true,
-                calendarWeeks: true,
-                autoclose: true,
-                todayHighlight: true,
-                toggleActive: true
+        $(function () {
+            $('#arrival').datetimepicker({
+                format: 'YYYY-MM-DD HH:mm'
+            });
+            $('#departure').datetimepicker({
+                useCurrent: false,
+                format: 'YYYY-MM-DD HH:mm'
+            });
+            $("#arrival").on("change.datetimepicker", function (e) {
+                $('#departure').datetimepicker('minDate', e.date);
+            });
+            $("#departure").on("change.datetimepicker", function (e) {
+                $('#arrival').datetimepicker('maxDate', e.date);
             });
         });
     </script>
 {% endblock javascripts %}
 
 {% block stylesheets %}
-    {% stylesheets filter="cssrewrite"
-    '@tempus_dominus_bootstrap4_css' %}
-    <link rel="stylesheet" href="{{ asset_url }}"/>
-    {% endstylesheets %}
+    <link rel="stylesheet" href="{{ asset('build/tempusdominus.css') }}"/>
 {% endblock %}
 
 {% block subnav %}
@@ -37,8 +36,57 @@
 {% block content %}
     <div class="jumbotron"><h2>{{ 'Write a request to %s' | trans | format(receiver.Username) }}</h2></div>
 
+    <div class="container">
     {{ form_start(form) }}
+        <div class="row mb-1">
+            <div class="col-12">
+                {{ form_label(form.subject, null, {'label_attr': {'class': 'sr-only '} }) }}
+                {{ form_errors(form.subject) }}
+                {{ form_widget(form.subject.subject) }}
+            </div>
+        </div>
+        <div class="row mb-1">
+            <div class="col-12">
+                <div class="form-group">
+                    {{ form_errors(form.request.arrival) }}
+                    <div class="input-group date" id="arrival" data-target-input="nearest">
+                        <span class="input-group-addon" data-target="#arrival" data-toggle="datetimepicker">
+                            <span class="fa fa-calendar"></span>
+                        </span>
+                        {{ form_widget(form.request.arrival, { 'attr': {'data-target': '#arrival'}}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-1">
+            <div class="col-12">
+                <div class="form-group">
+                    {{ form_errors(form.request.departure) }}
+                    <div class="input-group date" id="departure" data-target-input="nearest">
+                        <span class="input-group-addon" data-target="#departure" data-toggle="datetimepicker">
+                            <span class="fa fa-calendar"></span>
+                        </span>
+                        {{ form_widget(form.request.departure, { 'attr': {'data-target': '#departure'}}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-1">
+            <div class="col-12 col-md-6">
+                {{ form_widget(form.request.flexible) }}
+            </div>
+            <div class="col-12 col-md-6">
+                {{ form_widget(form.request.numberOfTravellers) }}
+            </div>
+        </div>
+            {{ form_widget(form.message) }}
     {{ form_rest(form) }}
+<div class="row mb-1">
+    <div class="col-12">
     <button type="submit" class="btn btn-primary">{{ 'Send' | trans }}</button>
+    </div>
+</div>
     {{ form_end(form) }}
+    </div>
 {% endblock %}

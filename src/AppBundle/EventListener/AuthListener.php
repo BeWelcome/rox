@@ -3,7 +3,6 @@
 namespace AppBundle\EventListener;
 
 use ReflectionObject;
-use RemoteAPICore;
 use Rox\Core\Exception\RuntimeException;
 use Rox\Member\Model\Member;
 use Rox\Member\Service\MemberService;
@@ -27,10 +26,10 @@ class AuthListener
 
     public function onAuthenticationSuccess(InteractiveLoginEvent $e)
     {
-        $token = $e->getAuthenticationToken();
+        // $token = $e->getAuthenticationToken();
 
         /** @var Member $user */
-        $user = $token->getUser();
+        // $user = $token->getUser();
 
         $password = $e->getRequest()->request->get('_password');
         if (!$password) {

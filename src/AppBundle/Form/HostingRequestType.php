@@ -19,14 +19,14 @@ class HostingRequestType extends AbstractType
             ->add('arrival', DateType::class, [
                 'widget' => 'single_text',
                 'html5' => false,
-                'format' => \IntlDateFormatter::FULL,
+                'format' => 'yyyy-MM-dd HH:mm',
                 'attr' => ['class' => 'datepicker'],
             ])
             ->add('departure', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,
                 'html5' => false,
-                'format' => \IntlDateFormatter::FULL,
+                'format' => 'yyyy-MM-dd HH:mm',
                 'attr' => ['class' => 'datepicker'],
             ])
             ->add('flexible', CheckboxType::class, [

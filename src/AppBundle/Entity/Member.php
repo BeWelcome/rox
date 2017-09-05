@@ -705,6 +705,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     public function getEmail()
     {
         $email = urldecode($this->getCryptedField('Email'));
+
         return $email;
     }
 

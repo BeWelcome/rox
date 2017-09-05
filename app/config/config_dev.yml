@@ -32,4 +32,4 @@ monolog:
         #    level:  info
 
 swiftmailer:
-    delivery_address: me@blafaselblubb.com
+    delivery_address: me@blafaselblubb.de

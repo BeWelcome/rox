@@ -27,7 +27,7 @@
         $side_column_names = $this->getColumnNames();
         $mid_column_name = array_pop($side_column_names);
 
-        if ($this->getSubmenuItems() || ($side_column_names)) { ?>
+        if ($this->getSubmenuItems()) { ?>
         <div class="row row-offcanvas row-offcanvas-right">
             <div class="col-12 col-md-9">
     <?php } else { ?>
@@ -36,7 +36,7 @@
     <?php } ?>
 
             <?php
-            if ($this->getSubmenuItems() || ($side_column_names)) { ?>
+            if ($this->getSubmenuItems()) { ?>
                 <p class="float-right d-md-none">
                     <button type="button" class="btn btn-primary btn-sm ml-3" data-toggle="offcanvas">Toggle nav</button>
                 </p>
@@ -51,7 +51,7 @@
             <!-- col-12 -->
             </div>
         <?php
-        if ($this->getSubmenuItems() || ($side_column_names)) {
+        if ($this->getSubmenuItems()) {
             $this->submenu();
         }
         ?>

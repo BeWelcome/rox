@@ -77,7 +77,7 @@ class RequestController extends Controller
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
         }
 
-        return $this->render(':message:request.html.twig', [
+        return $this->render(':request:request.html.twig', [
             'receiver' => $receiver,
             'form' => $requestForm->createView(),
         ]);

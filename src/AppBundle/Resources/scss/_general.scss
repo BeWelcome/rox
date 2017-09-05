@@ -142,13 +142,13 @@ main {
   padding: .25em;
   clear: both;
 
-  .success {
+  &.success {
     background-color: #0099ea;
   }
-  .notice {
+  &.notice {
     background-color: #c0c000;
   }
-  .error {
+  &.error {
     background-color: #cc0000;
   }
 }

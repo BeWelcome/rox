@@ -56,7 +56,12 @@
     color: white;
     border-top: 6px solid #EFEFEF;
     border-bottom: 6px solid #EFEFEF;
-    height: 730px;
+}
+
+@include media-breakpoint-up(lg) {
+    #about {
+        height: 730px;
+    }
 }
 
 #about p {
@@ -94,7 +99,12 @@
     color: white;
     border-top: 6px solid #EFEFEF;
     border-bottom: 6px solid #EFEFEF;
-    height: 504px;
+}
+
+@include media-breakpoint-up(lg) {
+    #about {
+        height: 504px;
+    }
 }
 
 #statistics_trailing {
@@ -167,6 +177,7 @@
     -o-background-size: cover;
     background-size: cover;
 }
+
 #search .form-group span {
     font-size: 1.625rem;
     text-transform: uppercase;
@@ -176,6 +187,7 @@
     text-shadow: 0 0 3px rgb(0, 0, 0);
     font-family:Signika;
 }
+
 #search .form-group span + span {
     font-size: 1rem;
     text-transform: none;
@@ -185,6 +197,7 @@
     text-shadow: 0 0 3px rgb(0, 0, 0);
     font-family:Signika;
 }
+
 #search .input-group span.input-group-addon:first-child{
     background-color: white;
     border: none;
@@ -192,6 +205,7 @@
     border-radius: 2px 0 0 2px;
     cursor:none;
 }
+
 #search .input-group span.input-group-addon:nth-child(3){
     background-color: #eb7109;
     box-shadow: 0 0 5px 1px #d86400 inset;
@@ -200,20 +214,21 @@
     border-radius: 0 2px 2px 0;
     cursor:pointer;
 }
+
 #search .input-group span.input-group-addon:nth-child(3):hover{
     background-color: #c05800;
 }
+
 #search .form-control {
     border: 1px solid rgb(255, 255, 255);
 }
+
 #search.pad-section {
     padding-top: 110px;
 }
+
 #search h1 {
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-}
-#search .form-control {
-    line-height: 1.75;
 }
 
 #search .form-group {
@@ -286,11 +301,9 @@
     border: 1px solid white;
     border-radius: 0.1rem;
 }
-#landingcontainerdiv form input.btn-primary {
-    width: 23.6%;
-    height: 52px;
+#landingcontainerdiv div a.btn-primary {
+    padding: 0.75rem;
     font-size:1.25rem;
-    border: 1px solid transparent;
     border-radius:3px;
     font-family:Signika;
     box-shadow: 0 0 5px 1px  #d86400 inset;

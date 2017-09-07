@@ -198,27 +198,6 @@
     font-family:Signika;
 }
 
-#search .input-group span.input-group-addon:first-child{
-    background-color: white;
-    border: none;
-    color: rgb(194, 194, 194);
-    border-radius: 2px 0 0 2px;
-    cursor:none;
-}
-
-#search .input-group span.input-group-addon:nth-child(3){
-    background-color: #eb7109;
-    box-shadow: 0 0 5px 1px #d86400 inset;
-    color: white;
-    border: 2px solid white;
-    border-radius: 0 2px 2px 0;
-    cursor:pointer;
-}
-
-#search .input-group span.input-group-addon:nth-child(3):hover{
-    background-color: #c05800;
-}
-
 #search .form-control {
     border: 1px solid rgb(255, 255, 255);
 }
@@ -234,6 +213,7 @@
 #search .form-group {
     text-align:center;
 }
+
 #search .container {
     position: absolute;
     bottom: 0;
@@ -242,6 +222,7 @@
     padding:0px;
     bottom: 234px;
 }
+
 #landingcontainer.container {
     top: 0;
     position: absolute;

@@ -89,6 +89,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('editmyprofile', '/editmyprofile');
         $this->addRouteDirectly('donate', '/donate');
         $this->addRouteDirectly('donate_list', '/donate/list');
+        $this->addRouteDirectly('gallery_show_image', '/gallery/show/image/{imageId}');
 
         return $this->routes;
     }

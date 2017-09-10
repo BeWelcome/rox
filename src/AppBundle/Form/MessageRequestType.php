@@ -17,7 +17,11 @@ class MessageRequestType extends AbstractType
         $builder
             ->add('subject', SubjectType::class)
             ->add('request', HostingRequestType::class)
-            ->add('message', CKEditorType::class)
+            ->add('message', CKEditorType::class, [
+                    'attr' => [
+                        'placeholder' => 'Give a short explanation...'
+                    ]
+                ])
         ;
     }
 

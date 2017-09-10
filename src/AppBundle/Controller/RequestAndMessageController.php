@@ -4,9 +4,12 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
+use AppBundle\Form\MessageRequestType;
 use AppBundle\Form\MessageToMemberType;
 use AppBundle\Model\MessageModel;
+use AppBundle\Model\RequestModel;
 use Html2Text\Html2Text;
+use InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -14,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class MessageController extends Controller
+class RequestAndMessageController extends Controller
 {
     /*    public function update(Request $request)
         {
@@ -100,9 +103,11 @@ class MessageController extends Controller
      * @Route("/message/{id}/reply", name="message_reply",
      *     requirements={"id": "\d+"})
      *
+     * @param Request $request
      * @param Message $message
      *
      * @return Response
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function reply(Request $request, Message $message)
     {
@@ -157,6 +162,7 @@ class MessageController extends Controller
      * @param Message $message
      *
      * @return Response
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function show(Message $message)
     {
@@ -249,16 +255,117 @@ class MessageController extends Controller
     }
 
     /**
-     * @Route("/messages/{filter}", name="messages",
-     *     requirements={ "filter": "requests|inbox|sent|spam|deleted" },
-     *     defaults={"filter": "inbox"})
+     * @Route("/new/request/{username}", name="hosting_request")
      *
      * @param Request $request
-     * @param string  $filter
+     * @param Member $receiver
      *
      * @return Response
      */
-    public function index(Request $request, $filter)
+    public function newHostingRequestAction(Request $request, Member $receiver)
+    {
+        $member = $this->getUser();
+        if ($member === $receiver) {
+            throw new InvalidArgumentException('You can\'t send a request to yourself.');
+        }
+
+        $requestForm = $this->createForm(MessageRequestType::class);
+        $requestForm->handleRequest($request);
+
+        if ($requestForm->isSubmitted() && $requestForm->isValid()) {
+            // Write request to database after doing some checks
+            /** @var Message $hostingRequest */
+            $sender = $this->getUser();
+            $hostingRequest = $requestForm->getData();
+            $hostingRequest->setSender($sender);
+            $hostingRequest->setReceiver($receiver);
+            $hostingRequest->setInfolder('requests');
+            $hostingRequest->setCreated(new \DateTime());
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($hostingRequest);
+            $em->flush();
+
+            // Send mail notification
+            $html2Text = new Html2Text($hostingRequest->getMessage());
+            $hostingRequestText = $html2Text->getText();
+            $message = \Swift_Message::newInstance()
+                ->setSubject($hostingRequest->getSubject()->getSubject())
+                ->setFrom([
+                    'request@bewelcome.org' => 'bewelcome - '. $sender->getUsername()
+                ])
+                ->setTo($receiver->getCryptedField('Email'))
+                ->setBody(
+                    $this->renderView(
+                    // app/Resources/views/Emails/registration.html.twig
+                        'emails/request.html.twig',
+                        ['request_text' => $hostingRequest->getMessage()]
+                    ),
+                    'text/html'
+                )
+                ->addPart(
+                    $this->renderView(
+                        'emails/request.txt.twig',
+                        ['request_text' => $hostingRequestText]
+                    ),
+                    'text/plain'
+                )
+            ;
+            $this->get('mailer')->send($message);
+            $this->addFlash('success', 'Request has been sent.');
+
+            return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
+        }
+
+        return $this->render(':request:request.html.twig', [
+            'receiver' => $receiver,
+            'form' => $requestForm->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/request/{id}/reply", name="hosting_request_reply")
+     *
+     * @param Request $request
+     * @param Message $hostingRequest
+     *
+     * @return Response
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function hostingRequestReplyAction(Request $request, Message $hostingRequest)
+    {
+        if ($hostingRequest->getRequest() === null) {
+            // Todo redirect to message instead of throwing an exception
+            throw new InvalidArgumentException();
+        }
+
+        $requestForm = $this->createForm(MessageRequestType::class);
+        $requestForm->handleRequest($request);
+
+        if ($requestForm->isSubmitted() && $requestForm->isValid()) {
+        }
+
+        $messageModel = new MessageModel($this->getDoctrine());
+        $thread = $messageModel->getThreadForMessage($hostingRequest);
+
+        return $this->render(':request:reply.html.twig', [
+            'form' => $requestForm->createView(),
+            'current' => $hostingRequest,
+            'thread' => $thread,
+        ]);
+    }
+
+    /**
+     * @Route("/messages/{folder}", name="messages",
+     *     requirements={ "folder": "requests|inbox|sent|spam|deleted" },
+     *     defaults={"folder": "inbox"})
+     *
+     * @param Request $request
+     * @param string  $folder
+     *
+     * @return Response
+     */
+    public function messages(Request $request, $folder)
     {
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
@@ -272,31 +379,86 @@ class MessageController extends Controller
         $member = $this->getUser();
 
         $messageModel = new MessageModel($this->getDoctrine());
-        $messages = $messageModel->getFilteredMessages($member, $filter, $sort, $sortDir, $page, $limit);
+        $messages = $messageModel->getFilteredMessages($member, $folder, $sort, $sortDir, $page, $limit);
 
         return $this->render(':message:index.html.twig', [
-            'messages' => $messages,
+            'items' => $messages,
+            'type' => 'UserMessages',
+            'folder' => $folder,
+            'filter' => $request->query->all(),
             'submenu' => [
-                'active' => $filter,
-                'route' => 'messages',
-                'items' => [
-                    'requests' => [
-                        'key' => 'MessagesRequests',
-                    ],
-                    'inbox' => [
-                        'key' => 'MessagesReceived',
-                    ],
-                    'sent' => [
-                        'key' => 'MessagesSent',
-                    ],
-                    'spam' => [
-                        'key' => 'MessagesSpam',
-                    ],
-                    'deleted' => [
-                        'key' => 'MessagesDeleted',
-                    ],
-                ],
+                'active' => 'messages_' . $folder,
+                'items' => $this->getSubMenuItems()
             ],
         ]);
+    }
+
+    /**
+     * @Route("/requests/{folder}", name="requests",
+     *     requirements={ "folder": "inbox|sent" },
+     *     defaults={"folder": "inbox"})
+     *
+     * @param Request $request
+     * @param string  $folder
+     *
+     * @return Response
+     */
+    public function requests(Request $request, $folder)
+    {
+        $page = $request->query->get('page', 1);
+        $limit = $request->query->get('limit', 10);
+        $sort = $request->query->get('sort', 'datesent');
+        $sortDir = $request->query->get('dir', 'desc');
+
+        if (!in_array($sortDir, ['asc', 'desc'], true)) {
+            throw new \InvalidArgumentException();
+        }
+
+        $member = $this->getUser();
+
+        $requestModel = new RequestModel($this->getDoctrine());
+        $requests = $requestModel->getFilteredRequests($member, $folder, $sort, $sortDir, $page, $limit);
+
+        return $this->render(':message:index.html.twig', [
+            'items' => $requests,
+            'type' => 'UserRequests',
+            'folder' => $folder,
+            'filter' => $request->query->all(),
+            'submenu' => [
+                'active' => 'requests_' . $folder,
+                'route' => 'messages',
+                'items' => $this->getSubMenuItems()
+            ],
+        ]);
+    }
+
+    private function getSubMenuItems()
+    {
+        return [
+            'requests_inbox' => [
+                'key' => 'MessagesRequestsReceived',
+                'url' => $this->generateUrl('requests', [ 'folder' => 'inbox'])
+            ],
+            'requests_sent' => [
+                'key' => 'MessagesRequestsSent',
+                'url' => $this->generateUrl('requests', [ 'folder' => 'sent'])
+            ],
+            'messages_inbox' => [
+                'key' => 'MessagesReceived',
+                'url' => $this->generateUrl('messages', [ 'folder' => 'inbox'])
+            ],
+            'messages_sent' => [
+                'key' => 'MessagesSent',
+                'url' => $this->generateUrl('messages', [ 'folder' => 'sent'])
+            ],
+            'messages_spam' => [
+                'key' => 'MessagesSpam',
+                'url' => $this->generateUrl('messages', [ 'folder' => 'spam'])
+            ],
+            'messages_deleted' => [
+                'key' => 'MessagesDeleted',
+                'url' => $this->generateUrl('messages', [ 'folder' => 'deleted'])
+            ],
+        ];
     }
 }

@@ -6,11 +6,12 @@
     <script>
         $(function () {
             $('#arrival').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm'
+                format: 'YYYY-MM-DD',
+                minDate: Date.now(),
             });
             $('#departure').datetimepicker({
                 useCurrent: false,
-                format: 'YYYY-MM-DD HH:mm'
+                format: 'YYYY-MM-DD'
             });
             $("#arrival").on("change.datetimepicker", function (e) {
                 $('#departure').datetimepicker('minDate', e.date);
@@ -37,7 +38,7 @@
     <div class="jumbotron"><h2>{{ 'Write a request to %s' | trans | format(receiver.Username) }}</h2></div>
 
     <div class="container">
-    {{ form_start(form) }}
+        {{ form_start(form) }}
         <div class="row mb-1">
             <div class="col-12">
                 {{ form_label(form.subject, null, {'label_attr': {'class': 'sr-only '} }) }}
@@ -80,13 +81,13 @@
                 {{ form_widget(form.request.numberOfTravellers) }}
             </div>
         </div>
-            {{ form_widget(form.message) }}
-    {{ form_rest(form) }}
-<div class="row mb-1">
-    <div class="col-12">
-    <button type="submit" class="btn btn-primary">{{ 'Send' | trans }}</button>
-    </div>
-</div>
-    {{ form_end(form) }}
+        {{ form_widget(form.message) }}
+        {{ form_rest(form) }}
+        <div class="row mb-1">
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">{{ 'Send' | trans }}</button>
+            </div>
+        </div>
+        {{ form_end(form) }}
     </div>
 {% endblock %}

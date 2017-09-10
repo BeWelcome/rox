@@ -11,8 +11,8 @@ Encore
         'popper.js',
         'bootstrap',
         'select2',
-        './src/AppBundle/Resources/scss/bewelcome.scss',
-        './web/script/common/common.js'
+        './web/script/common/common.js',
+        './src/AppBundle/Resources/scss/bewelcome.scss'
     ])
     .addEntry('jquery_ui', './src/AppBundle/Resources/js/jquery_ui.js')
     .addEntry('backwards', './src/AppBundle/Resources/js/backwards.js')

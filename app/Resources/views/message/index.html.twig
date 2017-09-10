@@ -2,15 +2,15 @@
 {% import 'macros.twig' as macros %}
 
 {% block subnav %}
-    {% for filter, menuitem in submenu.items %}
-        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}" href="{{ path( submenu.route, { filter: filter } ) }}">{{ filter | trans }}</a>
+    {% for filter,menuItem in submenu.items %}
+        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}" href="{{ menuItem.url }}">{{ menuItem.key | trans }}</a>
     {% endfor %}
 {% endblock %}
 
 {% block content %}
-    <h2>{{ 'UserMessages' | trans | format(my_member.Username) }}</h2>
+    <h2>{{ type | trans | format(my_member.Username) }}</h2>
 
-    {% if messages | length == 0 %}
+    {% if items.nbResults == 0 %}
         <p>{{ 'No messages in this folder.' | trans }}</p>
     {% else %}
         <form method="POST">
@@ -27,37 +27,24 @@
 
     </div> #}
 
+    {% if items.haveToPaginate %}
     <div class="float-left">
-        {{ pagerfanta( messages, 'twitter_bootstrap4_translated', { routeName: 'messages' }) }}
+        {{ pagerfanta( items, 'twitter_bootstrap4_translated') }}
     </div>
+    {% endif %}
+            {# set sorting header based on current folder. Outside of sent sort by sender #}
+            {% set correspondent %}{% if folder == 'sent' %}receiver{% else %}sender{% endif %}{% endset %}
+        <table class="table table-responsive table-striped table-hover">
 
-            <table class="table table-responsive table-striped table-hover">
-
-{#        <tr class="title">
-            <th></th>
-            <th class="from">
-                {% if filter.dir is defined and filter.dir == 'asc' %}
-                    {% set filter = filter | merge({ dir: 'desc' }) %}
-                {% else %}
-                    {% set filter = filter | merge({ dir: 'asc' }) %}
-                {% endif %}
-
-                <a href="{{ path('message', filter | merge({ sort: 'sender' })) }}">{{ 'From' | trans }}</a>
-                /
-                <a href="{{ path('message', filter | merge({ sort: 'date' })) }}">{{ 'Date' | trans }}</a>
+        <tr>
+            <th colspan="2" class="from text-center align-middle">
+                <span class="small"><a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: correspondent, dir: 'asc' }) }}">&#x25b2;</a> {{ correspondent | trans | capitalize }} <a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: correspondent, dir: 'desc' }) }}">&#x25bc;</a></span><br>
+                <span class="small"><a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: 'date', dir: 'asc' }) }}">&#x25b2;</a> {{ 'Date' | trans }} <a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: 'date', dir: 'desc' }) }}">&#x25bc;</a></span>
             </th>
-            <th class="message">{{ 'MessagesText' | trans }}</th>
-        </tr> #}
-
-                <thead class="blank">
-                <tr>
-                    <th colspan="2">From / With</th>
-                    <th class="text-nowrap">Message</th>
-                </tr>
-                </thead>
-
-        {% for message in messages %}
-            {% set directionIn = my_member.id == message.receiver.id %}
+            <th class="align-middle">{{ 'MessagesText' | trans }}</th>
+        </tr>
+        {% for message in items.currentPageResults %}
+            {% set directionIn = (my_member.id == message.receiver.id) %}
             {% set otherMember = directionIn ? message.sender : message.receiver %}
 
             <tr>
@@ -68,8 +55,8 @@
                     {{ macros.avatar(otherMember.Username, 50, true) }}
                     {{ macros.profilelink(otherMember.Username) }}
                 </td>
-                <td class="align-middle">
-                    {% if message.subject %}<p>{{ message.subject.id }} <a href="{{ path('message_show', { id: message.id}) }}"
+                <td class="align-middle w-100">
+                    {% if message.subject %}<p><a href="{{ path('message_show', { id: message.id}) }}"
                                 {%- if not message.WhenFirstRead -%}
                                     {{- ' class="unread"' -}}
                                 {%- endif -%}
@@ -91,9 +78,11 @@
                         </p>
                     {% endspaceless %}
                     {% if message.request %}
-                        <p>{{ 'Arrival' | trans }}: {{ message.request.arrival | localizeddate( 'medium', 'none') }}</p>
-                        {% endif %}
-                    <span class="small" title="{{ message.DateSent  | localizeddate( 'medium', 'none')}}">{{ message.DateSent | localizeddate( 'medium', 'none') }}</span>
+                        <p>{{ 'Arrival' | trans }}: {{ message.request.arrival | localizeddate( 'medium', 'none') }} {{ 'Departure' | trans }}: {{ message.request.departure | localizeddate( 'medium', 'none') }}</p>
+                    {% endif %}
+                    {# Handle the case where a message/request doesn't have a sent date #}
+                    {% set sentDate %}{% if message.dateSent != '-0001-11-30 00:00:00' %}{{ message.dateSent | localizeddate( 'medium', 'none') }}{% else %}{{ message.updated | localizeddate( 'medium', 'none')}}{% endif %}{% endset %}
+                    <span class="small pull-right">{% if folder == 'sent' %}{% trans %}Sent on %sentDate%{% endtrans %}{% else %}{% trans %}Received on %sentDate%{% endtrans %}{% endif %}</span>
                 </td>
             </tr>
         {% endfor %}
@@ -111,10 +100,11 @@
 
     </div> #}
 
+            {% if items.haveToPaginate %}
     <div class="float-left">
-        {{ pagerfanta( messages, 'twitter_bootstrap4_translated', { routeName: 'messages' }) }}
+        {{ pagerfanta( items, 'twitter_bootstrap4_translated') }}
     </div>
-
+{% endif %}
 </form>
         {% endif %}
 {% endblock %}

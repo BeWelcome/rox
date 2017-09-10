@@ -72,14 +72,16 @@ $font-family-bold: Signika-bold, Arial;
 }
 
 // Use own blockquote style
+/*
 blockquote {
   color: #444;
-  background: #f8f8f8;
+  background: transparent;
   border: 1px #ddd solid;
   border-left: 8px #ddd solid;
-  padding: 1rem;
-  margin: 1rem;
+  padding: 0 1rem;
+  margin: 0;
 }
+ */
 
 .jumbotron {
   a {
@@ -105,6 +107,15 @@ blockquote {
     background-color: #91ff8e;
   }
 
+  .message_own > blockquote {
+    padding: $pagination-padding-x;
+    border-radius: $border-radius;
+    border-color: $border-color;
+    background-color: #69d4d5;
+    border-left: 8px $border-color solid;
+    margin: 0;
+  }
+
   .message_other {
     @include make-col(11);
     @include make-col-offset(1);
@@ -113,6 +124,15 @@ blockquote {
     border-radius: $border-radius;
     border-color: $border-color;
     background-color: #69d4d5;
+  }
+
+  .message_other > blockquote {
+    padding: $pagination-padding-x;
+    border-radius: $border-radius;
+    border-color: $border-color;
+    background-color: #91ff8e;
+    border-left: 8px $border-color solid;
+    margin: 0;
   }
 
   .current {

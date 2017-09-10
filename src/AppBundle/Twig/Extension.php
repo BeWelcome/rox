@@ -5,6 +5,7 @@ namespace AppBundle\Twig;
 use AppBundle\Model\LanguageModel;
 use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use HTMLPurifier_Config;
 use HtmlTruncator\Truncator;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Twig_Extension;
@@ -72,12 +73,12 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
     /**
      * Truncates a string up to a number of characters while preserving whole words and HTML tags.
      *
-     * @param string $text     string to truncate
-     * @param int    $length   length of returned string, including ellipsis
-     * @param string $ending   ending to be appended to the trimmed string
-     * @param mixed  $ellipsis
+     * @param string $text string to truncate
+     * @param int $length length of returned string, including ellipsis
+     * @param string $ellipsis
      *
      * @return string truncated string
+     * @throws \HtmlTruncator\InvalidHtmlException
      */
     public function truncate($text, $length = 100, $ellipsis = '&#8230;')
     {
@@ -99,9 +100,11 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
      */
     public function purify($text)
     {
-        $purifier = new \HTMLPurifier();
+        $config = HTMLPurifier_Config::createDefault();
+        $config->set('AutoFormat.AutoParagraph', true);
+        $purifier = new \HTMLPurifier($config);
 
-        return $purifier->purify($text);
+        return $purifier->purify(trim($text));
     }
 
     /**

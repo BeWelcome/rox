@@ -46,7 +46,7 @@ Boston, MA  02111-1307, USA.
             <thead>
             <tr>
                 <th></th>
-                <th>Group Name</th>
+                <th class="w-100">Group Name</th>
                 <th>Subscription</th>
             </tr>
             </thead>
@@ -55,7 +55,7 @@ Boston, MA  02111-1307, USA.
             foreach ($TResults->Groups as $group) {
         ?>
         <tr>
-            <th scope="row"><img src="groups/thumbimg/<? echo $group->IdGroup; ?>" style="width: 50px; height: 50px;"></th>
+            <th scope="row"><img src="groups/thumbimg/<? echo $group->IdGroup; ?>" width="50" height="50"></th>
             <td class="align-middle"><a href="groups/<? echo $group->IdGroup; ?>/forum"><? echo htmlspecialchars($group->Name); ?></a></td>
             <td class="align-middle">
                 <div class="btn-group" role="group" aria-label="Toggle Subscription On-Off">
@@ -67,7 +67,7 @@ Boston, MA  02111-1307, USA.
                 } else { ?>
                 <a href="forums/subscriptions/subscribe/group/<? echo $group->IdGroup; ?>" type="button" class="btn btn-secondary mb-0 border-0" style="border: 1px solid #868e96 !important;">On</a>
                 <a class="btn btn-primary" style="color: #fff; cursor: default; border: 1px solid #868e96 !important;">Off</a>
-                </div></td>';
+                </div></td>
                 <? } ?>
         </tr>
     <? } ?>
@@ -90,7 +90,7 @@ if (count($TResults->TData) > 0) { ?>
             <thead>
             <tr>
                 <th></th>
-                <th>Thread Name</th>
+                <th class="w-100">Thread Name</th>
                 <th>Subscription</th>
             </tr>
             </thead>

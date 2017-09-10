@@ -5,7 +5,7 @@ $words = new MOD_words();
 <?php if ($sub == 'done') {
 if ($error) {?>
 
-		<p class="warning"><?php echo $words->getFormatted('Donate_NotDoneText')?>: <?=$error?></p>
+		<p class="alert alert-danger"><?php echo $words->getFormatted('Donate_NotDoneText')?>: <?=$error?></p>
 <?php } else { ?>
 		<p class="note"><?php echo $words->getFormatted('Donate_DoneText','<a href="feedback">','</a>')?></p>
 <?php }
@@ -13,19 +13,15 @@ if ($error) {?>
 		<p class="warning"><?php echo $words->getFormatted('Donate_CancelText'); ?></p>
 <?php } ?>
 
-
-<div class="row">
-	<div class="col-xs-12">
-		<div class="card">
-			<p class="h5 card-text text-center m-b-0">Goal for 2016-2017: <strong>€1000,-</strong></p>
-			<progress class="progress progress-primary ma-0" value="60" max="100"></progress>
-			<p class="h5 card-text text-center"><strong>€600.00</strong> received</p>
-		</div>
+<div class="col-12 mb-3">
+	<div class="card p-3">
+		<p class="h4 card-text text-center m-b-0">Goal for 2016-2017: <strong>€1000,-</strong></p>
+		<progress class="progress progress-primary ma-0" value="60" max="100"></progress>
+		<p class="h4 card-text text-center"><strong>€600.00</strong> received</p>
 	</div>
 </div>
 
-<div class="row">
-	<div class="col-xs-12 col-lg-6">
+	<div class="col-12 col-lg-6">
 		<ul class="nav nav-tabs" role="tablist">
 			<li class="nav-item">
 				<a class="nav-link active" data-toggle="tab" href="#bank" role="tab">Bank</a>
@@ -43,16 +39,16 @@ if ($error) {?>
 
 		<!-- Tab panes -->
 		<div class="tab-content">
-			<div class="tab-pane card active" id="bank" role="tabpanel">
+			<div class="tab-pane card active p-2" id="bank" role="tabpanel">
 				<h3><?=$words->get('Donate_Account_Legend')?></h3>
 				<p><?=$words->get('Donate_Account2')?></p>
 				<p><?=$words->get('Donate_Account')?></p>
 			</div>
-			<div class="tab-pane card" id="bitcoin" role="tabpanel">
+			<div class="tab-pane card p-2" id="bitcoin" role="tabpanel">
 				<h3><?php echo $words->get('Donate_Bitcoins');?> <img src="images/misc/bitcoin.gif" alt="bitcoin" /></h3>
 				<p><?php echo $words->get('Donate_Bitcoins_Text');?></p>
 			</div>
-			<div class="tab-pane card" id="paypal" role="tabpanel">
+			<div class="tab-pane card p-2" id="paypal" role="tabpanel">
 				<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 					<h3><?=$words->get('Donate_Paypal_Legend')?></h3>
 					<p><img src="images/misc/paymethods.gif" alt="methods of payment" /></p>
@@ -107,26 +103,24 @@ if ($error) {?>
 						<input type="hidden" name="currency_code" value="EUR" />
 						<input type="hidden" name="tax" value="0" />
 						<input type="hidden" name="bn" value="PP-DonationsBF" />
-						<input type="submit" class="button" name="submit" alt="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" onmouseover="return('<?php echo $words->getBuffered('Donate_DonateNow'); ?>')" value="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" />
+						<input type="submit" class="btn btn-primary" name="submit" alt="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" onmouseover="return('<?php echo $words->getBuffered('Donate_DonateNow'); ?>')" value="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" />
 						<img alt="Donate now" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
 					</p>
 				</form>
 				<p><?=$words->get('Donate_Process')?></p>
 			</div>
-			<div class="tab-pane card" id="time" role="tabpanel">
+			<div class="tab-pane card p-2" id="time" role="tabpanel">
 				Donate time
 			</div>
 		</div>
 
-		<div class="m-t-2">
+		<div class="mt-2">
 			<h3><?php echo $words->get('Donate_FurtherInfo'); ?></h3>
 			<p><?php echo $words->get('Donate_FurtherInfoText');?></p>
 		</div>
 	</div>
-</div>
 
-<div class="row">
-	<div class="col-xs-12 col-lg-6">
+	<div class="col-12 col-lg-6">
 		<a name="why"></a>
 		<h3><?php echo $words->get('Donate_Why');?></h3>
 		<p><?php echo $words->getFormatted('Donate_WhyText','<a href="feedback">','</a>')?></p>
@@ -141,7 +135,6 @@ if ($error) {?>
 
 		<?php echo $words->flushBuffer() ?>
 	</div>
-</div>
 
 <script type="text/javascript">
 /* update the amount-field in the donation form when an option is selected/ an amount is entered */

@@ -6,16 +6,18 @@ if (isset($this->keyword)) {
 }
 ?>
 
-<div class="d-flex flex-row mb-2">
-    <h1 class="pull-left">
-        <a href="forums"><?php echo $this->_model->words->getFormatted('CommunityLanding'); ?></a>
+<div class="row mb-2">
+    <div class="col-12 col-md-6">
+        <h1 class="pull-left">
+            <a href="forums"><?php echo $this->_model->words->getFormatted('CommunityLanding'); ?></a>
 
-        <?php if ($this->_model->getTopMode() == Forums::CV_TOPMODE_FORUM) {
-            echo '&raquo <a href="forums/bwforum">' . $this->_model->words->getFormatted('AgoraForum') . '</a>';
-        }
-        ?>
-    </h1>
-    <div class="ml-auto">
+            <?php if ($this->_model->getTopMode() == Forums::CV_TOPMODE_FORUM) {
+                echo '&raquo <a href="forums/bwforum">' . $this->_model->words->getFormatted('AgoraForum') . '</a>';
+            }
+            ?>
+        </h1>
+    </div>
+    <div class="col-12 col-md-6">
         <!-- Google froum search bar -->
         <form action="/forums/search" method="POST" id="search-box">
             <div class="input-group">

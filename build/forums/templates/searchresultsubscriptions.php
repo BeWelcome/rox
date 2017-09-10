@@ -99,7 +99,7 @@ if (count($TResults->TData) > 0) { ?>
     foreach ($TResults->TData as $data) {
 
         echo '<tr><th scope="row">';
-        echo '<a href="forums/subscriptions/unsubscribe/thread/' . $data->IdSubscribe . '/' . $data->UnSubscribeKey . '" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i></a>';
+        echo '<a href="forums/subscriptions/unsubscribe/thread/' . $data->IdSubscribe . '/' . $data->UnSubscribeKey . '" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true" title="Remove from list"></i></a>';
         echo '</th>';
         echo '<td class="align-middle"><a href="forums/s ' . $data->IdThread . ' ">' . $words->fTrad($data->IdTitle) . '</a><br>';
         echo '<span class="small">' . $data->subscribedtime . '</span></td>';

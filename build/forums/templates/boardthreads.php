@@ -32,7 +32,7 @@ $layoutbits = new MOD_layoutbits();
     <thead class="blank">
     <tr>
         <th><?php echo $words->getFormatted('Author'); ?></th>
-        <th>
+        <th class="w-100">
             <?php
             if (empty($TIGHT_THREADLIST)) {
             echo $words->getFormatted('Thread');
@@ -41,9 +41,9 @@ $layoutbits = new MOD_layoutbits();
             echo $words->getFormatted('ForumRecentPosts');
             } ?>
         </th>
-        <th><?php echo $words->getFormatted('Replies'); ?></th>
-        <th><?php echo $words->getFormatted('Views'); ?></th>
-        <th class="text-nowrap"><?php echo $words->getFormatted('LastPost'); ?></th>
+        <th><i class="fa fa-comments-o d-lg-none" title="<?php echo $words->getFormatted('Replies'); ?>"></i><span class="d-none d-lg-table-cell"><?php echo $words->getFormatted('Replies'); ?></span></th>
+        <th class="d-none d-md-table-cell"><i class="fa fa-eye d-lg-none" title="<?php echo $words->getFormatted('Views'); ?>"></i><span class="d-none d-lg-table-cell"><?php echo $words->getFormatted('Views'); ?></span></th>
+        <th class="text-nowrap d-none d-md-table-cell"><?php echo $words->getFormatted('LastPost'); ?></th>
         <th></th>
     </tr>
     </thead>
@@ -65,12 +65,12 @@ $layoutbits = new MOD_layoutbits();
         $last_url = $url.($maxPage != 1 ? '/page'.$maxPage : '').'/#post'.$thread->last_postid;
     ?>
     <tr>
-        <th class="middle p-2">
+        <th class="middle p-1">
             <a href="members/<?php echo $thread->first_author; ?>"><img src="members/avatar/<?php echo $thread->first_author; ?>?size=50" alt="<?php echo $thread->first_author; ?>" title="<?php echo $thread->first_author; ?>" /><br>
                 <small><?php echo $thread->first_author; ?></small>
             </a>
         </th>
-        <td class="middle text-left p-2">
+        <td class="middle text-left p-1">
             <?php
             if ($thread->stickyvalue < 0) {
                 echo '<i class="fa fa-exclamation-circle" alt="'. $words->getSilent('PinnedPost') .'" title="'. $words->getSilent('PinnedPost') .'" /></i> ' . $words->flushBuffer();
@@ -84,13 +84,15 @@ $layoutbits = new MOD_layoutbits();
             echo "<a href=\"",$url,"\">" ;
             echo $words->fTrad($thread->IdTitle);
             ?></a>
-            <br />
+            <br>
             <span class="small gray"><?php
                 // show tags if post is part of a group
                 if ($thread->IdGroup>0) {
                     echo "<a href=\"groups/".$thread->IdGroup."\"><strong>" . $words->getFormatted('Group'). ": </strong>",$this->_model->getGroupName($thread->GroupName),"</a>" ;
                 }
 
+
+            /* PART OF TAGS, CAN BE DELETED IN MY OPINION (amnesiac84)
                 $breadcrumb = '';
 
                 if (isset($thread->continent) && $thread->continent) {
@@ -179,11 +181,12 @@ $layoutbits = new MOD_layoutbits();
                     }
                     echo $breadcrumb;
                 }
+            */
                 ?></span>
         </td>
-        <td class="middle p-2"><?php echo $thread->replies; ?></td>
-        <td class="middle p-2"><?php echo number_format($thread->views); ?></td>
-        <td class="middle text-nowrap p-2">
+        <td class="middle p-1"><?php echo $thread->replies; ?></td>
+        <td class="middle p-1 d-none d-md-table-cell"><?php echo number_format($thread->views); ?></td>
+        <td class="middle text-nowrap p-1 d-none d-md-table-cell">
             <div class="d-flex flex-row mr-2">
                 <div class="align-self-center"><a href="members/<?php echo $thread->last_author; ?>"><img src="members/avatar/<?php echo $thread->last_author; ?>?size=30" alt="<?php echo $thread->last_author; ?>" title="<?php echo $thread->last_author; ?>" /></a></div>
                 <div class="pl-2 align-self-center text-left">
@@ -192,7 +195,7 @@ $layoutbits = new MOD_layoutbits();
                 </div>
             </div>
         </td>
-        <td class="middle p-2">
+        <td class="middle p-1">
             <a href="<?php echo $last_url; ?>"><i class="fa fa-chevron-right" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>"></i></a><?php echo $words->flushBuffer(); ?>
         </td>
     </tr>

@@ -153,60 +153,6 @@ if (!$this->passedAway){ ?>
 }
 
 
-/**********************
-** Profile Relations **
-**********************/
-
-$purifier = MOD_htmlpure::getBasicHtmlPurifier();
-$relations = $member->relations;
-if (count($relations) > 0) { ?>
-
-
-    <div id="relations" class="card mb-3">
-        <h3 class="card-header"><?php echo $words->get('MyRelations'); ?>
-            <?php if ($showEditLinks): ?>
-                <span class="float-right">
-                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!specialrelations" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
-                </span>
-            <?php endif; ?>
-        </h3>
-        <div class="card-block p-2">
-            <div class="card-text m-0">
-                <?php   if ($this->model->getLoggedInMember()){ ?>
-
-                    <ul class="linklist">
-                        <?php
-                        foreach ($relations as $rel) {
-                            $comment = $words->mInTrad($rel->IdTradComment, $profile_language, true);
-
-                            // Hack to filter out accidental '0' or '123456' comments that were saved
-                            // by users while relation comment update form was buggy (see #1580)
-                            if (is_numeric($comment)) {
-                                $comment = '';
-                            }
-
-                            $rel->Comment = $purifier->purify($comment);
-                            ?>
-                            <li class="clearfix">
-                                <a href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>"  title="See profile <?=$rel->Username?>">
-                                    <img class="framed float-left"  src="members/avatar/<?=$rel->Username?>/50"  height="50"  width="50"  alt="Profile" />
-                                </a>
-                                <a class="float-left" href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>" ><?=$rel->Username?></a>
-                                <br />
-                                <?php echo $rel->Comment; ?>
-                            </li>
-                        <?php } ?>
-                    </ul>
-                <?php } else {
-                    echo $this->getLoginLink('/members/' . $member->Username,'ProfileShowRelations');
-                }?>
-
-            </div>
-        </div>
-    </div>
-
-<?php }
-
     $comments = $this->member->comments;
     $username = $this->member->Username;
     $layoutbits = new MOD_layoutbits();
@@ -247,12 +193,12 @@ if (count($relations) > 0) { ?>
                    $quality = "bad";
                    } ?>
 
-                       <div class="w-100">
+                       <div class="w-100 mt-1">
                            <a href="members/<?=$c->UsernameFromMember?>">
                                <img class="float-left mr-2"  src="members/avatar/<?=$c->UsernameFromMember?>/50"  height="50"  width="50"  alt="<?=$c->UsernameFromMember?>" />
                            </a>
                            <div>
-                               <p class="m-0 compacttext">
+                               <p class="m-0" style="line-height: 1.1;">
                                    <?php if (!$this->passedAway) { ?>
                                        <span class="commenttitle <?=$quality?>"><?=$c->comQuality?></span><br>
                                    <?php }?>
@@ -260,8 +206,8 @@ if (count($relations) > 0) { ?>
                                </p>
                            </div>
                        </div>
-                           <div class="w-100 pt-2">
-                               <p>
+                           <div class="w-100 pt-2" style="border-bottom: 1px dotted #CCC;">
+                               <p class="mb-1">
                                    <?php
                                    $textStripped = strip_tags($c->TextFree, '<font>');
                                    echo $textStripped;
@@ -279,15 +225,64 @@ if (count($relations) > 0) { ?>
                   } ?>
 
                 </div>
+
+
+<?php }
+
+/**********************
+ ** Profile Relations **
+ **********************/
+
+$purifier = MOD_htmlpure::getBasicHtmlPurifier();
+$relations = $member->relations;
+if (count($relations) > 0) { ?>
+
+
+    <div id="relations" class="card mb-3">
+        <h3 class="card-header"><?php echo $words->get('MyRelations'); ?>
+            <?php if ($showEditLinks): ?>
+                <span class="float-right">
+                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!specialrelations" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+                </span>
+            <?php endif; ?>
+        </h3>
+        <div class="card-block p-2">
+            <div class="card-text m-0">
+                <?php   if ($this->model->getLoggedInMember()){ ?>
+
+                        <?php
+                        foreach ($relations as $rel) {
+                            $comment = $words->mInTrad($rel->IdTradComment, $profile_language, true);
+
+                            // Hack to filter out accidental '0' or '123456' comments that were saved
+                            // by users while relation comment update form was buggy (see #1580)
+                            if (is_numeric($comment)) {
+                                $comment = '';
+                            }
+
+                            $rel->Comment = $purifier->purify($comment);
+                            ?>
+                            <div class="d-flex d-column w-100">
+                                <div>
+                                    <a href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>"  title="See profile <?=$rel->Username?>">
+                                        <img class="framed float-left"  src="members/avatar/<?=$rel->Username?>/50"  height="50"  width="50"  alt="Profile" />
+                                    </a>
+                                </div>
+                                <div>
+                                    <a class="float-left" href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>" ><?=$rel->Username?></a>
+                                    <br>
+                                    <?php echo $rel->Comment; ?>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </div>
+                <?php } else {
+                    echo $this->getLoginLink('/members/' . $member->Username,'ProfileShowRelations');
+                }?>
+
             </div>
         </div>
 
-        <div id="comments" class="clearfix box"> <?php
-
-
-    ?>
-
-    </div> <!-- comments -->
 <?php }
 
 /**********************
@@ -337,18 +332,21 @@ $gallery = new GalleryModel;
 $statement = $userid ? $gallery->getLatestItems($userid) : false;
 if ($statement) {
 ?>
-          <div id="gallery" class="clearfix box">
-    <?php if ($showEditLinks): ?>
-    <span class="float_right profile-edit-link">
-        <a href="/gallery/manage"><?php echo $words->get('Edit'); ?></a>
-    </span>
-    <?php endif; ?>
-    <h3><?php echo $words->get('GalleryTitleLatest'); ?></h3>
+    <div id="gallery" class="card mb-3">
+    <h3 class="card-header"><?php echo $words->get('GalleryTitleLatest'); ?>
+        <?php if ($showEditLinks): ?>
+            <span class="float-right">
+                    <a href="/gallery/manage" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+                </span>
+        <?php endif; ?>
+    </h3>
+    <div class="card-block p-2">
+
     <?php
     // if the gallery is NOT empty, go show it
     $p = PFunctions::paginate($statement, 1, $itemsPerPage = 8);
     $statement = $p[0];
-          echo '<div class="clearfix">';
+          echo '<div class="w-100">';
     foreach ($statement as $d) {
         echo '<a href="gallery/show/image/'.$d->id.'">' .
            '<img src="gallery/thumbimg?id='.$d->id.'"' .
@@ -358,7 +356,7 @@ if ($statement) {
     }
     echo '</div>';
     ?>
-    <p class="float_right">
+    <p class="float-right">
       <a href="gallery/show/user/<?php echo $member->Username;?>/images" title="<?php echo $words->getSilent('GalleryTitleLatest');?>">
           <?php echo $words->get('GalleryShowAll');?></a>
     </p>

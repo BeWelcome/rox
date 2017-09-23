@@ -132,26 +132,28 @@
 
                     <?php
                     // display my groups, if there are any
-                    for ($i = 0; $i < count($my_groups) && $i < 3; $i++) :
+                    for ($i = 0; $i < count($my_groups) && $i < 5; $i++) :
                         $group_img = ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png');
                         $group_id = $my_groups[$i]->id;
                         $group_name = htmlspecialchars($my_groups[$i]->Name, ENT_QUOTES);
                         $comment = $purifier->purify($words->mInTrad($member->getGroupMembership($my_groups[$i])->Comment, $profile_language));
                         ?>
-                        <div class="groupbox clearfix">
-                            <a href="groups/<? echo $group_id; ?>">
-                                <img class="framed float_left" width="50px" height="50px" alt="Group"
+                        <div class="mb-3 d-flex d-column">
+                            <div>
+                                <a href="groups/<? echo $group_id; ?>">
+                                <img class="framed float-left mr-2" width="50px" height="50px" alt="Group"
                                      src="<? echo $group_img; ?>"/>
                             </a>
-                            <div class="groupinfo">
-                                <h4><a href="groups/<? echo $group_id; ?>"><? echo $group_name; ?></a></h4>
-                                <p><? echo $comment; ?></p>
+                            </div>
+                            <div>
+                                <h4 class="m-0"><a href="groups/<? echo $group_id; ?>"><? echo $group_name; ?></a></h4>
+                                <p class="m-0"><? echo $comment; ?></p>
                             </div>  <!-- groupinfo -->
-                        </div> <!-- groupbox clearfix -->
+                        </div>
                         <?php
                     endfor;
-                    if (count($my_groups) > 3) :
-                        echo '<p class="float_right"><a href="members/' . $member->Username . '/groups">' . $words->get('GroupsAllMyLink') . '</a></p>';
+                    if (count($my_groups) > 5) :
+                        echo '<p class="float-right"><a href="members/' . $member->Username . '/groups">' . $words->get('GroupsAllMyLink') . '</a></p>';
                     endif;
                     ?>
                 </div>

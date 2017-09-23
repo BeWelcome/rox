@@ -66,7 +66,7 @@ class MemberPage extends PageWithActiveSkin
 
         $galleryItemsCount = $member->getGalleryItemsCount();
 
-        $viewForumPosts = $words->get("ViewForumPosts",'<span class="tag tag-primary pull-right">' . $member->forums_posts_count() . '</span>');
+        $viewForumPosts = $words->get("ViewForumPosts",'<span class="badge badge-primary pull-right">' . $member->forums_posts_count() . '</span>');
         $membersForumPostsPagePublic = $member->getPreference("MyForumPostsPagePublic", $default = "No");
         $linkMembersForumPosts = false;
         if ($membersForumPostsPagePublic == "Yes") {
@@ -84,7 +84,7 @@ class MemberPage extends PageWithActiveSkin
             $tt=array(
                 array('editmyprofile', 'editmyprofile/' . $profile_language_code, $ww->EditMyProfile, 'editmyprofile'),
                 array('mypreferences', 'mypreferences', $ww->MyPreferences, 'mypreferences'),
-                array('mynotes', 'mynotes', $words->get('MyNotes', '<span class="tag tag-primary pull-right">' . $mynotes_count . '</span>'), 'mynotes')
+                array('mynotes', 'mynotes', $words->get('MyNotes', '<span class="badge badge-primary pull-right">' . $mynotes_count . '</span>'), 'mynotes')
                 );
 
             if ($this instanceof EditMyProfilePage)
@@ -105,8 +105,8 @@ class MemberPage extends PageWithActiveSkin
             $tt[] = array('space', '', '', 'space');
 
             $tt[] = array('profile', "members/$username", $ww->MemberPage);
-            $tt[] = array('comments', "members/$username/comments", $ww->ViewComments.' <span class="tag tag-primary pull-right">'.$comments_count['all'].'</span>');
-            $tt[] = array('gallery', "gallery/show/user/$username/pictures", $ww->Gallery . ' <span class="tag tag-primary pull-right">' . $galleryItemsCount . '</span>');
+            $tt[] = array('comments', "members/$username/comments", $ww->ViewComments.' <span class="badge badge-primary pull-right">'.$comments_count['all'].'</span>');
+            $tt[] = array('gallery', "gallery/show/user/$username/pictures", $ww->Gallery . ' <span class="badge badge-primary pull-right">' . $galleryItemsCount . '</span>');
             $tt[] = array('blogs', "blog/$username", $ww->Blog);
             $tt[] = array('trips', "trip/show/$username", $ww->Trips);
             $tt[] = array('forum', "forums/member/$username", $viewForumPosts);
@@ -129,8 +129,8 @@ class MemberPage extends PageWithActiveSkin
                 /**array('verificationadd', "verification/$username", $ww->addVerification, 'verificationadd'),*/
                 array('space', '', '', 'space'),
                 array('profile', "members/$username", $ww->MemberPage),
-                array('comments', "members/$username/comments", $ww->ViewComments.' <span class="tag tag-primary pull-right">'.$comments_count['all'].'</span>'),
-                array('gallery', "gallery/show/user/$username/pictures", $ww->Gallery . ' <span class="tag tag-primary pull-right">' . $galleryItemsCount . '</span>'),
+                array('comments', "members/$username/comments", $ww->ViewComments.' <span class="badge badge-primary pull-right">'.$comments_count['all'].'</span>'),
+                array('gallery', "gallery/show/user/$username/pictures", $ww->Gallery . ' <span class="badge badge-primary pull-right">' . $galleryItemsCount . '</span>'),
                 array('blogs', "blog/$username", $ww->Blog),
                 array('trips', "trip/show/$username", $ww->Trips)
             );
@@ -162,11 +162,11 @@ class MemberPage extends PageWithActiveSkin
     {
         ?>
         <div class="row">
-          <div class="col-12 col-lg-2">
+          <div class="col-12 col-lg-3" style="border-right: 1px dotted #ccc;">
               <? $name = 'column_col1';?>
               <?php $this->$name() ?>
           </div> 
-          <div class="col-12 col-lg-10">
+          <div class="col-12 col-lg-9">
               <?php $this->teaserReplacement(); ?>
               <? $name = 'column_col3';?>
                 <?php $this->$name() ?>
@@ -192,8 +192,8 @@ class MemberPage extends PageWithActiveSkin
         $picture_url = 'members/avatar/'.$member->Username.'?500';
         ?>
 
-        <div class="text-center">
-                <a href="<?=$picture_url?>"><img src="<?=$thumbnail_url?>" alt="Picture of <?=$member->Username?>" class="framed" height="150" width="150"/></a>
+        <div>
+                <a href="<?=$picture_url?>"><img src="<?=$picture_url?>" alt="Picture of <?=$member->Username?>" class="framed" height="100%" width="100%"/></a>
         </div> <!-- profile_pic -->
 
         <div class="list-group mt-1">

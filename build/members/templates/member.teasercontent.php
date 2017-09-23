@@ -75,10 +75,9 @@
           ?>
       </h2><!-- location -->
   </div>
-      <div class="col-12 col-md-4 card">
-
+      <div class="col-12 col-md-4">
+          <div class="card">
         <?php echo $this->statusForm($member); ?>
-
           <p class="m-0 p-2">
             <?php
                 echo $agestr;
@@ -105,6 +104,7 @@
                     ?>
             <?php endif; ?>
           </p>
+          </div>
       </div>
     </div> <!-- header content -->
 

@@ -51,7 +51,8 @@ class HostingRequestType extends AbstractType
                     'attr' => [
                         'min' => 1,
                         'max' => 10,
-                        'placeholder' => 'Number of travellers'
+                        'placeholder' => 'Number of travellers',
+                        'class' => 'ml-2'
                     ],
                     'constraints' => [
                         new LessThanOrEqual(10),

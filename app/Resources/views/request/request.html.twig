@@ -35,19 +35,13 @@
 {% endblock %}
 
 {% block content %}
-    <div class="jumbotron"><h2>{{ 'Write a request to %s' | trans | format(receiver.Username) }}</h2></div>
-
     <div class="container">
+        <div class="my-3"><h2>{{ 'Write a hosting request to %s' | trans | format(receiver.Username) }}</h2></div>
         {{ form_start(form) }}
+
         <div class="row mb-1">
-            <div class="col-12">
-                {{ form_label(form.subject, null, {'label_attr': {'class': 'sr-only '} }) }}
-                {{ form_errors(form.subject) }}
-                {{ form_widget(form.subject.subject) }}
-            </div>
-        </div>
-        <div class="row mb-1">
-            <div class="col-12">
+            <div class="col-12 col-sm-6 col-md-4">
+
                 <div class="form-group">
                     {{ form_errors(form.request.arrival) }}
                     <div class="input-group date" id="arrival" data-target-input="nearest">
@@ -57,10 +51,7 @@
                         {{ form_widget(form.request.arrival, { 'attr': {'data-target': '#arrival'}}) }}
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="row mb-1">
-            <div class="col-12">
+
                 <div class="form-group">
                     {{ form_errors(form.request.departure) }}
                     <div class="input-group date" id="departure" data-target-input="nearest">
@@ -70,19 +61,21 @@
                         {{ form_widget(form.request.departure, { 'attr': {'data-target': '#departure'}}) }}
                     </div>
                 </div>
+
+                {{ form_widget(form.request.flexible) }}
+                <div class="input-group">Number of Travellers: {{ form_widget(form.request.numberOfTravellers) }}</div>
+
             </div>
+            <div class="col-12 col-sm-6 col-md-8">
+                {{ form_label(form.subject, null, {'label_attr': {'class': 'sr-only '} }) }}
+                {{ form_errors(form.subject) }}
+                {{ form_widget(form.subject.subject) }}
+                {{ form_widget(form.message) }}
+                {{ form_rest(form) }}
+            </div>
+
         </div>
 
-        <div class="row mb-1">
-            <div class="col-12 col-md-6">
-                {{ form_widget(form.request.flexible) }}
-            </div>
-            <div class="col-12 col-md-6">
-                {{ form_widget(form.request.numberOfTravellers) }}
-            </div>
-        </div>
-        {{ form_widget(form.message) }}
-        {{ form_rest(form) }}
         <div class="row mb-1">
             <div class="col-12">
                 <button type="submit" class="btn btn-primary">{{ 'Send' | trans }}</button>

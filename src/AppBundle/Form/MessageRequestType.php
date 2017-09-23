@@ -19,7 +19,8 @@ class MessageRequestType extends AbstractType
             ->add('request', HostingRequestType::class)
             ->add('message', CKEditorType::class, [
                     'attr' => [
-                        'placeholder' => 'Give a short explanation...'
+                        'placeholder' => 'Give a short explanation...',
+                        'class' => 'w-100 p-2'
                     ]
                 ])
         ;

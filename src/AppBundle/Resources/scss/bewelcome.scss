@@ -95,6 +95,13 @@ blockquote {
 
 .divlink  {
   color: black;
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  .p{
+    margin-bottom: 0.5rem !important;
+  }
 }
 
 #message_thread {
@@ -103,15 +110,14 @@ blockquote {
     padding: $pagination-padding-x;
     margin-bottom: 1rem;
     border-radius: $border-radius;
-    border-color: $border-color;
-    background-color: #91ff8e;
+    border: 1px solid #bbb;
+    background-color: #df9;
   }
 
   .message_own > blockquote {
     padding: $pagination-padding-x;
     border-radius: $border-radius;
-    border-color: $border-color;
-    background-color: #69d4d5;
+    border: 1px solid #bbb;
     border-left: 8px $border-color solid;
     margin: 0;
   }
@@ -122,15 +128,15 @@ blockquote {
     padding: $pagination-padding-x;
     margin-bottom: 1rem;
     border-radius: $border-radius;
-    border-color: $border-color;
-    background-color: #69d4d5;
+    border: 1px solid #bbb;
+    background-color: #ddd;
   }
 
   .message_other > blockquote {
     padding: $pagination-padding-x;
     border-radius: $border-radius;
-    border-color: $border-color;
-    background-color: #91ff8e;
+    border: 1px solid #bbb;
+    background-color: #df9;
     border-left: 8px $border-color solid;
     margin: 0;
   }

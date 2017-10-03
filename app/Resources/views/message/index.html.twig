@@ -52,11 +52,11 @@
                     <input type="checkbox" name="message_id[]" class="msganchor" value="{{ message.id }}">
                 </td>
                 <td class="align-middle small">
-                    {{ macros.avatar(otherMember.Username, 50, true) }}
-                    {{ macros.profilelink(otherMember.Username) }}
+                    <p class="m-0">{{ macros.avatar(otherMember.Username, 50, true) }}</p>
+                    <p class="m-0">{{ macros.profilelink(otherMember.Username) }}</p>
                 </td>
                 <td class="align-middle w-100">
-                    {% if message.subject %}<p><a href="{{ path('message_show', { id: message.id}) }}"
+                    {% if message.subject %}<p class="h5"><a href="{{ path('message_show', { id: message.id}) }}"
                                 {%- if not message.WhenFirstRead -%}
                                     {{- ' class="unread"' -}}
                                 {%- endif -%}
@@ -67,12 +67,12 @@
                     {% set messageText = message.Message | replace({'\n': ' ', '<br />': ' '}) | striptags %}
 
                     {% spaceless %}
-                        <p>
-                            <a href="{{ path('message_show', { id: message.id}) }}"
+                        <p class="m-0">
+                            <a href="{{ path('message_show', { id: message.id}) }}" class="d-block w-100
                                     {%- if not message.WhenFirstRead -%}
-                                        {{- ' class="unread"' -}}
+                                        {{- ' unread' -}}
                                     {%- endif -%}
-                            >
+                           ">
                                 {{- messageText | truncate(150) -}}
                             </a>
                         </p>
@@ -82,7 +82,7 @@
                     {% endif %}
                     {# Handle the case where a message/request doesn't have a sent date #}
                     {% set sentDate %}{% if message.dateSent != '-0001-11-30 00:00:00' %}{{ message.dateSent | localizeddate( 'medium', 'none') }}{% else %}{{ message.updated | localizeddate( 'medium', 'none')}}{% endif %}{% endset %}
-                    <span class="small pull-right">{% if folder == 'sent' %}{% trans %}Sent on %sentDate%{% endtrans %}{% else %}{% trans %}Received on %sentDate%{% endtrans %}{% endif %}</span>
+                    <span class="text-muted small">{% if folder == 'sent' %}{% trans %}Sent on %sentDate%{% endtrans %}{% else %}{% trans %}Received on %sentDate%{% endtrans %}{% endif %}</span>
                 </td>
             </tr>
         {% endfor %}

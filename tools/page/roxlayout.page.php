@@ -341,7 +341,7 @@ class PageWithRoxLayout extends PageWithHTML
         }
         $symfonyFlashes = $this->_session->getFlashBag()->get($type);
         foreach($symfonyFlashes as $flash) {
-            $flashMessage .= "<p>" . $flash . "</p>";
+            $flashMessage .= $flash . "<br>";
         }
         if ($remove) {
             $this->_session->remove($flashName);

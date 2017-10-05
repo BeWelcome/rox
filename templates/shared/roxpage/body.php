@@ -14,14 +14,14 @@
     endif; ?>
 
     <?php if ($this->getFlashError()): ?>
-        <div class="flash error"><?php echo $this->getFlashError(true); ?></div>
+        <div class="alert alert-danger" role="alert"><?php echo $this->getFlashError(true); ?></div>
     <?php endif; ?>
     <?php if ($this->getFlashNotice()): ?>
-        <div class="flash notice"><?php echo $this->getFlashNotice(true); ?></div>
+        <div class="alert alert-warning" role="alert"><?php echo $this->getFlashNotice(true); ?></div>
     <?php endif; ?>
     <?php $flashSuccess = $this->getFlashSuccess(true);
         if (strlen($flashSuccess) != 0): ?>
-        <div class="flash success"><?php echo $flashSuccess; ?></div>
+        <div class="alert alert-success" role="alert"><?php echo $flashSuccess; ?></div>
     <?php endif;
 
         $side_column_names = $this->getColumnNames();

@@ -20,6 +20,12 @@
                   'title="' . $words->getSilent('CanHostWheelChairYes') . '" />';
           }
 
+          $icons[] = '<img src="images/icons/' . $member->Accomodation . '.png"' .
+              ' class="mb-2"' .
+              ' alt="' . $words->getSilent($member->Accomodation) .'"' .
+              ' title="' . $words->getSilent('CanOffer' . $member->Accomodation) . '" />';
+
+          /*
           switch($member->Accomodation)
           {
               case 'anytime':
@@ -38,6 +44,7 @@
                       ' title="' . $words->getSilent('CannotOfferneverask') . '" />';
                   break;
           }
+          */
 
           for($ii=0; $ii < count($icons); $ii++)
           {
@@ -49,7 +56,7 @@
     </h1> <!-- username -->
 
       <?php if($occupation != null){
-          echo '<p class="m-0 small">' . $occupation . '</p>';
+          echo '<p class="m-0 ml-1 mb-1 h5 small">' . $occupation . '</p>';
       } ?><!-- occupation -->
 
       <h2>

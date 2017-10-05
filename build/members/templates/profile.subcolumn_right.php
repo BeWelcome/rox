@@ -7,7 +7,7 @@ if (!$this->passedAway){ ?>
         <h3 class="card-header"><?php echo $words->get('ProfileAccommodation'); ?>
             <?php if ($showEditLinks): ?>
                 <span class="float-right">
-                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileaccommodation" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileaccommodation" class="btn btn-sm btn-primary p-0"><?php echo $words->get('Edit'); ?></a>
                 </span>
             <?php endif; ?>
         </h3>
@@ -24,7 +24,11 @@ if (!$this->passedAway){ ?>
                             'title="' . $words->getSilent('CanHostWheelChairYes') . '" />';
                     }
 
-                    switch($member->Accomodation)
+                    $icons[] = '<img src="images/icons/' . $member->Accomodation . '.png"' .
+                        ' alt="' . $words->getSilent($member->Accomodation) .'"' .
+                        ' title="' . $words->getSilent('CanOffer' . $member->Accomodation) . '" />';
+
+                   /* switch($member->Accomodation)
                     {
                         case 'anytime':
                             $icons[] = '<img src="images/icons/anytime.png"' .
@@ -42,6 +46,7 @@ if (!$this->passedAway){ ?>
                                 ' title="' . $words->getSilent('CannotOfferneverask') . '" />';
                             break;
                     }
+                   */
 
                     for($ii=0; $ii < count($icons); $ii++)
                     {
@@ -52,19 +57,18 @@ if (!$this->passedAway){ ?>
 
                 <dl id="accommodation" >
                     <?php if ($member->MaxGuest != 0 && $member->MaxGuest != "") { ?>
-                        <dt class="guests" ><?=$words->get('ProfileNumberOfGuests');?>:</dt>
-                        <dd><?php echo $member->MaxGuest ?></dd>
+                        <dt class="guests h5"><?=$words->get('ProfileNumberOfGuests');?>: <?php echo $member->MaxGuest ?></dt>
                     <?php }
                     if ($member->get_trad("MaxLenghtOfStay", $profile_language,true) != "") { ?>
-                        <dt class="stay" ><?=$words->get('ProfileMaxLenghtOfStay');?>:</dt>
+                        <dt class="stay h5"><?=$words->get('ProfileMaxLenghtOfStay');?>:</dt>
                         <dd><?php echo $purifier->purify($member->get_trad("MaxLenghtOfStay", $profile_language,true)); ?></dd>
                     <?php }
                     if ($member->get_trad("ILiveWith", $profile_language,true) != "") { ?>
-                        <dt><?=$words->get('ProfileILiveWith');?>:</dt>
+                        <dt class="h5"><?=$words->get('ProfileILiveWith');?>:</dt>
                         <dd><?php echo $purifier->purify($member->get_trad("ILiveWith", $profile_language,true)); ?></dd>
                     <?php }
                     if ($member->get_trad("PleaseBring", $profile_language,true) != "") { ?>
-                        <dt><?=$words->get('ProfilePleaseBring');?>:</dt>
+                        <dt class="h5"><?=$words->get('ProfilePleaseBring');?>:</dt>
                         <dd><?php echo $purifier->purify($member->get_trad("PleaseBring", $profile_language,true)); ?></dd>
                     <?php }
 
@@ -88,22 +92,22 @@ if (!$this->passedAway){ ?>
                     $offerGuests = $member->get_trad("OfferGuests", $profile_language,true);
                     if (!empty($offerGuests)) {
                         if ($comma) {
-                            $offers .= '<br /><br />';
+                            $offers .= '<br>';
                         }
                         $offers .= $purifier->purify($member->get_trad("OfferGuests", $profile_language,true));
                     }
                     if (!empty($offers)) { ?>
 
-                        <dt><?=$words->get('ProfileOfferGuests');?>:</dt>
+                        <dt class="h5"><?=$words->get('ProfileOfferGuests');?>:</dt>
                         <dd><?php echo $offers;?></dd>
                     <?php }
                     if ($member->get_trad("OfferHosts", $profile_language,true) != "") { ?>
-                        <dt><?=$words->get('ProfileOfferHosts');?>:</dt>
+                        <dt class="h5"><?=$words->get('ProfileOfferHosts');?>:</dt>
                         <dd><?php echo $purifier->purify($member->get_trad("OfferHosts", $profile_language,true)); ?></dd>
                     <?php }
                     if ($member->get_trad("AdditionalAccomodationInfo", $profile_language,true) != ""
                         or $member->get_trad("InformationToGuest", $profile_language,true) != "") { ?>
-                        <dt><?=$words->get('OtherInfosForGuest');?>:</dt>
+                        <dt class="h5"><?=$words->get('OtherInfosForGuest');?>:</dt>
                         <dd>
                             <?php echo $purifier->purify($member->get_trad("AdditionalAccomodationInfo", $profile_language,true)); ?>
                             <?php echo $purifier->purify($member->get_trad("InformationToGuest", $profile_language,true)); ?>
@@ -111,7 +115,7 @@ if (!$this->passedAway){ ?>
                     <?php }
 
                     if ($member->get_trad("PublicTransport", $profile_language,true) != "") { ?>
-                        <dt><?=$words->get('ProfilePublicTransport');?>:</dt>
+                        <dt class="h5"><?=$words->get('ProfilePublicTransport');?>:</dt>
                         <dd><?php echo $purifier->purify($member->get_trad("PublicTransport", $profile_language,true)); ?></dd>
                     <?php }
 
@@ -126,22 +130,22 @@ if (!$this->passedAway){ ?>
                         if ($restriction == '') continue;
                         if ($restriction == 'SeeOtherRestrictions') continue;
                         if ($comma) {
-                            $restrictions .= ', ';
+                            $restrictions .= ',<br>';
                         }
                         $restrictions .= $words->get("Restriction_" . $restriction);
                         $comma = true;
                     }
                     if ($comma) {
-                        $restrictions .= '.';
+                        $restrictions .= '';
                     }
                     if (!empty($otherRestrictions)) {
                         if ($comma) {
-                            $restrictions .= '<br /><br />';
+                            $restrictions .= '<br>';
                         }
                         $restrictions .= $purifier->purify($otherRestrictions);
                     }
                     if (!empty($restrictions)) { ?>
-                        <dt><?=$words->get('ProfileHouseRules');?>:</dt>
+                        <dt class="h5"><?=$words->get('ProfileHouseRules');?>:</dt>
                         <dd><?php echo $restrictions; ?></dd>
                     <?php } ?>
                 </dl>
@@ -169,7 +173,7 @@ if (!$this->passedAway){ ?>
                 }
                 if ($showEditLinks): ?>
                     <span class="float-right">
-                    <a href="members/<?php echo $member->Username; ?>/comments/" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+                    <a href="members/<?php echo $member->Username; ?>/comments/" class="btn btn-sm btn-primary p-0"><?php echo $words->get('Edit'); ?></a>
                 </span>
                 <?php endif; ?>
             </h3>
@@ -225,7 +229,7 @@ if (!$this->passedAway){ ?>
                   } ?>
 
                 </div>
-
+        </div>
 
 <?php }
 
@@ -242,7 +246,7 @@ if (count($relations) > 0) { ?>
         <h3 class="card-header"><?php echo $words->get('MyRelations'); ?>
             <?php if ($showEditLinks): ?>
                 <span class="float-right">
-                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!specialrelations" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!specialrelations" class="btn btn-sm btn-primary p-0"><?php echo $words->get('Edit'); ?></a>
                 </span>
             <?php endif; ?>
         </h3>
@@ -336,7 +340,7 @@ if ($statement) {
     <h3 class="card-header"><?php echo $words->get('GalleryTitleLatest'); ?>
         <?php if ($showEditLinks): ?>
             <span class="float-right">
-                    <a href="/gallery/manage" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+                    <a href="/gallery/manage" class="btn btn-sm btn-primary p-0"><?php echo $words->get('Edit'); ?></a>
                 </span>
         <?php endif; ?>
     </h3>

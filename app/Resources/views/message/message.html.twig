@@ -9,9 +9,9 @@
 {% endblock %}
 
 {% block content %}
-    <div class="jumbotron"><h2>{{ 'Write a message to %s' | trans | format(receiver.Username) }}</h2></div>
+    <div class="my-3"><h2>{{ 'Write a message to %s' | trans | format(receiver.Username) }}</h2></div>
 
-    <div class="container">
+    <div>
     {{ form_start(form) }}
 
     {{ form_start(form) }}
@@ -20,11 +20,11 @@
             {{ form_label(form.subject, null, {'label_attr': {'class': 'sr-only '} }) }}
             {{ form_errors(form.subject) }}
             {{ form_widget(form.subject.subject) }}
+            {{ form_widget(form.message) }}
+            {{ form_rest(form) }}
         </div>
     </div>
 
-    {{ form_widget(form.message) }}
-    {{ form_rest(form) }}
     <div class="row mb-1">
         <div class="col-12">
             <button type="submit" class="btn btn-primary">{{ 'Send' | trans }}</button>

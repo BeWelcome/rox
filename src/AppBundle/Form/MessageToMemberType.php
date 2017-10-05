@@ -18,6 +18,11 @@ class MessageToMemberType extends AbstractType
             ->add('subject', SubjectType::class)
             ->add('message', CKEditorType::class, [
                 'required' => true,
+                'attr' => [
+                    'placeholder' => '...',
+                    'class' => 'w-100 p-2',
+                    'rows' => '5'
+                ]
             ])
         ;
     }

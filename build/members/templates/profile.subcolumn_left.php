@@ -2,7 +2,7 @@
             <h3 class="card-header"><?php echo $words->get('ProfileSummary'); ?>
                 <?php if ($showEditLinks): ?>
                 <span class="float-right">
-                    <a href="editmyprofile/<?php echo $profile_language_code; ?>" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+                    <a href="editmyprofile/<?php echo $profile_language_code; ?>" class="btn btn-sm btn-primary p-0"><?php echo $words->get('Edit'); ?></a>
                 </span>
                 <?php endif; ?>
             </h3>
@@ -20,7 +20,7 @@
             <h3 class="card-header"><?php echo $words->get('ProfileLanguagesSpoken'); ?>
                 <?php if ($showEditLinks): ?>
                     <span class="float-right">
-                    <a href="editmyprofile/<?php echo $profile_language_code; ?>" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+                    <a href="editmyprofile/<?php echo $profile_language_code; ?>" class="btn btn-sm btn-primary p-0"><?php echo $words->get('Edit'); ?></a>
                 </span>
                 <?php endif; ?>
             </h3>
@@ -46,7 +46,7 @@
             <h3 class="card-header"><?php echo $words->get('ProfileInterests'); ?>
                 <?php if ($showEditLinks): ?>
                     <span class="float-right">
-                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileinterests" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileinterests" class="btn btn-sm btn-primary p-0"><?php echo $words->get('Edit'); ?></a>
                 </span>
                 <?php endif; ?>
             </h3>
@@ -55,27 +55,27 @@
                 <dl>
                     <?php
                     if ($member->get_trad("Hobbies", $profile_language, true) != "") {
-                        echo '<dt>' . $words->get('ProfileHobbies') . '</dt>';
+                        echo '<dt class="h5">' . $words->get('ProfileHobbies') . '</dt>';
                         echo '<dd>' . $purifier->purify($member->get_trad("Hobbies", $profile_language, true)) . '</dd>';
                     }
 
                     if ($member->get_trad("Books", $profile_language, true) != "") {
-                        echo '<dt>' . $words->get('ProfileBooks') . '</dt>';
+                        echo '<dt class="h5">' . $words->get('ProfileBooks') . '</dt>';
                         echo '<dd>' . $purifier->purify($member->get_trad("Books", $profile_language, true)) . '</dd>';
                     }
 
                     if ($member->get_trad("Music", $profile_language, true) != "") {
-                        echo '<dt>' . $words->get('ProfileMusic') . '</dt>';
+                        echo '<dt class="h5">' . $words->get('ProfileMusic') . '</dt>';
                         echo '<dd>' . $purifier->purify($member->get_trad("Music", $profile_language, true)) . '</dd>';
                     }
 
                     if ($member->get_trad("Movies", $profile_language, true) != "") {
-                        echo '<dt>' . $words->get('ProfileMovies') . '</dt>';
+                        echo '<dt class="h5">' . $words->get('ProfileMovies') . '</dt>';
                         echo '<dd>' . $purifier->purify($member->get_trad("Movies", $profile_language, true)) . '</dd>';
                     }
 
                     if ($member->get_trad("Organizations", $profile_language, true) != "") {
-                        echo '<dt>' . $words->get('ProfileOrganizations') . '</dt>';
+                        echo '<dt class="h5">' . $words->get('ProfileOrganizations') . '</dt>';
                         echo '<dd>' . $purifier->purify($member->get_trad("Organizations", $profile_language, true)) . '</dd>';
                     }
                     ?>
@@ -93,16 +93,16 @@
                     <h3 class="card-header"><?php echo $words->get('ProfileTravelExperience'); ?>
                         <?php if ($showEditLinks): ?>
                             <span class="float-right">
-                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileinterests" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileinterests" class="btn btn-sm btn-primary p-0"><?php echo $words->get('Edit'); ?></a>
                 </span>
                         <?php endif; ?>
                     </h3>
                     <div class="card-block p-2">
                         <div class="card-text m-0">
                             <dl>
-                                <dt><?php echo $words->get('ProfilePastTrips'); ?>:</dt>
+                                <dt class="h5"><?php echo $words->get('ProfilePastTrips'); ?>:</dt>
                                 <dd><?php echo $purifier->purify($member->get_trad("PastTrips", $profile_language, true)); ?></dd>
-                                <dt><?php echo $words->get('ProfilePlannedTrips'); ?>:</dt>
+                                <dt class="h5"><?php echo $words->get('ProfilePlannedTrips'); ?>:</dt>
                                 <dd><?php echo $purifier->purify($member->get_trad("PlannedTrips", $profile_language, true)); ?></dd>
                             </dl>
                         </div>
@@ -123,7 +123,7 @@
             <h3 class="card-header"><?php echo $words->get('ProfileGroups'); ?>
                 <?php if ($showEditLinks): ?>
                     <span class="float-right">
-                    <a href="/groups/mygroups" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+                    <a href="/groups/mygroups" class="btn btn-sm btn-primary p-0"><?php echo $words->get('Edit'); ?></a>
                 </span>
                 <?php endif; ?>
             </h3>
@@ -169,26 +169,26 @@
                 <h3 class="card-header"><?php echo $words->get('ContactInfo'); ?>
                     <?php if ($showEditLinks): ?>
                         <span class="float-right">
-                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!contactinfo" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!contactinfo" class="btn btn-sm btn-primary p-0"><?php echo $words->get('Edit'); ?></a>
                 </span>
                     <?php endif; ?>
                 </h3>
                 <div class="card-block p-2">
                     <div class="card-text m-0">
                         <dl id="address">
-                            <dt><?php echo $words->get('Name'); ?>:</dt>
+                            <dt class="h5"><?php echo $words->get('Name'); ?></dt>
                             <dd><?php echo $member->name ?></dd>
 
-                            <dt><?php echo $words->get('Address'); ?>:</dt>
-                            <dd><?php echo $member->street ?><br>
-                                <?php echo $member->zip ?>
+                            <dt class="h5"><?php echo $words->get('Address'); ?></dt>
+                            <dd><?php if ($member->street != ""){ echo $member->street; ?><br>
+                                <?php echo $member->zip; } ?>
                                 <?php echo $member->city ?><br>
                                 <?php echo $member->country ?>
                             </dd>
 
                             <?php
                             if ($phones = $member->phone) {
-                                echo '<dt>' . $words->get('ProfilePhone') .':</dt>';
+                                echo '<dt class="h5">' . $words->get('ProfilePhone') .'</dt>';
                                 foreach ($phones as $phone => $value) {
                                     echo '<dd>' . $words->get('Profile' . $phone) . ': ' . $value . '</dd>';
                                 }
@@ -196,7 +196,7 @@
 
                             if (!empty($website)) {
                                 $sites = explode(" ", str_replace(array("\r\n", "\r", "\n"), " ", $member->WebSite));
-                                echo '<dt>' . $words->get('Website') . ':</dt>';
+                                echo '<dt class="h5">' . $words->get('Website') . '</dt>';
                                 foreach ($sites as $site) {
                                     $site = str_replace(array('http://', 'https://'), '', $site);
                                     echo '<dd><a href="http://' . $site . '">' . $site . '</a></dd>';
@@ -204,7 +204,7 @@
                             }
                             if ($member->hasMessengers()) {
                                 ?>
-                                <dt><?php echo $words->get('Messenger'); ?>:</dt>
+                                <dt class="h5"><?php echo $words->get('Messenger'); ?>:</dt>
                                 <dd>
                                     <?php
                                     foreach ($messengers as $m) {

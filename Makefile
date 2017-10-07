@@ -16,7 +16,6 @@ phpcsfix:
 	./vendor/bin/php-cs-fixer fix -v
 
 build:
-	./node_modules/.bin/grunt
 	./node_modules/.bin/encore dev
 	php bin/console assets:install
 	php bin/console assetic:dump

@@ -90,6 +90,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('donate', '/donate');
         $this->addRouteDirectly('donate_list', '/donate/list');
         $this->addRouteDirectly('gallery_show_image', '/gallery/show/image/{imageId}');
+        $this->addRouteDirectly('profile_all_comments', '/members/{username}/comments/');
 
         return $this->routes;
     }

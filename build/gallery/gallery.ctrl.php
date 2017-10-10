@@ -36,6 +36,7 @@ class GalleryController extends RoxControllerBase {
 
         if (!isset($request[1])) {
             $this->redirect('main');
+            PPHP::PExit();
         }
         switch ($request[1]) {
             case 'ajax':

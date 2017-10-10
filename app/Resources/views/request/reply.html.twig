@@ -1,59 +1,94 @@
 {% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
 
 {% block javascripts %}
-    {% javascripts
-    '@bootstrap_datepicker_js'
-    '@bootstrap_datepicker_locales_js'
-        '@tempus_dominus_bootstrap4_js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    <script type="text/javascript" src="{{ asset('build/tempusdominus.js') }}"></script>
     <script>
-        $(document).ready(function () {
-            $('.datepicker').datetimepicker({
-                language: 'de', // '{{ app.request.locale }}',
-                clearBtn: true,
-                calendarWeeks: true,
-                autoclose: true,
-                todayHighlight: true,
-                toggleActive: true
+        $(function () {
+            var arrival = $('#arrival');
+            var departure = $('#departure');
+            arrival.datetimepicker({
+                format: 'YYYY-MM-DD',
+                minDate: Date.now(),
             });
-
+            departure.datetimepicker({
+                useCurrent: false,
+                format: 'YYYY-MM-DD'
+            });
+            arrival.on("change.datetimepicker", function (e) {
+                $('#departure').datetimepicker('minDate', e.date);
+            });
+            departure.on("change.datetimepicker", function (e) {
+                $('#arrival').datetimepicker('maxDate', e.date);
+            });
         });
     </script>
 {% endblock javascripts %}
 
 {% block stylesheets %}
-    {% stylesheets filter="cssrewrite"
-    '@bootstrap_datepicker_css'
-    '@tempus_dominus_bootstrap4_css' %}
-    <link rel="stylesheet" href="{{ asset_url }}"/>
-    {% endstylesheets %}
+    <link rel="stylesheet" href="{{ asset('build/tempusdominus.css') }}"/>
+{% endblock %}
+
+{% block subnav %}
+    {% for filter, menuitem in submenu.items %}
+        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}"
+           href="{{ path( submenu.route, { filter: filter } ) }}">{{ filter | trans }}</a>
+    {% endfor %}
 {% endblock %}
 
 {% block content %}
-{% set request = thread[0].Request %}
-{% set last = thread | length -1 %}
-{% if thread[last].Sender.Username == my_member.Username %}
-    {% set requester = true  %}
-{% else %}
-    {% set requester = false %}
-{% endif %}
-{{ form_start(form) }}
-{{ form_row(form.subject.subject) }}
-    {% if requester  %}
-        {{ 'You can propose new dates by simply choosing new dates.' }}
-    {% endif %}
-    {{ form_row(form.request.arrival) }}
-    {{ form_row(form.request.departure) }}
-{% if requester %}
-    {{ form_row(form.request.flexible) }}
+    {% set owner = sender.Username == my_member.Username %}
+    <div class="container">
+        {{ form_start(form) }}
+        <div class="my-3"><h2>{{ form_widget(form.subject.subject) }}</h2></div>
 
-{% endif %}
-    {{ form_row(form.request.numberOfTravellers) }}
-{{ form_rest(form) }}
-<button type="submit" class="btn btn-primary">{{ 'Reply' | trans }}</button>
-{{ form_end(form) }}
+        <div class="row mb-1">
+            <div class="col-12 col-sm-6 col-md-4">
 
-{% include ':message:thread.html.twig' %}
-{% endblock content %}
+                <div class="form-group">
+                    {{ form_errors(form.request.arrival) }}
+                    <div class="input-group date" id="arrival" data-target-input="nearest">
+                        <span class="input-group-addon" data-target="#arrival" data-toggle="datetimepicker">
+                            <span class="fa fa-calendar"></span>
+                        </span>
+                        {{ form_widget(form.request.arrival, { 'attr': {'data-target': '#arrival'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form_errors(form.request.departure) }}
+                    <div class="input-group date" id="departure" data-target-input="nearest">
+                        <span class="input-group-addon" data-target="#departure" data-toggle="datetimepicker">
+                            <span class="fa fa-calendar"></span>
+                        </span>
+                        {{ form_widget(form.request.departure, { 'attr': {'data-target': '#departure'}}) }}
+                    </div>
+                </div>
+
+                {{ form_widget(form.request.flexible) }}
+                <div class="input-group">Number of Travellers: {{ form_widget(form.request.numberOfTravellers) }}</div>
+
+            </div>
+            <div class="col-12 col-sm-6 col-md-8">
+                {{ form_widget(form.message) }}
+                <div class="hidden-row">
+                {{ form_rest(form) }}
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row mb-1">
+            <div class="col-12">
+                {% if owner %}
+                    <button type="submit" class="btn btn-primary">{{ 'Update' | trans }}</button>
+                {% else %}
+                    <button type="submit" class="btn btn-primary">{{ 'Reply' | trans }}</button>
+                {% endif %}
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+    {% include ':message:thread.html.twig' %}
+    {{ dump(data) }}
+{% endblock %}

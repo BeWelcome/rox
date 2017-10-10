@@ -41,6 +41,7 @@ class LegacyLoader extends Loader
         // Forum urls
 //        $this->addRouteDirectly('forums', '/forums/page{pageGroups}/page{pageForums}');
         $this->addRouteDirectly('forums', '/forums');
+        $this->addRouteDirectly('forums_pages', '/forums/page{groupsPage}/page{bwforumsPage}/');
         $this->addRouteDirectly('forums_new', '/forums/new');
         $this->addRouteDirectly('bwforum', 'forums/bwforum');
         $this->addRouteDirectly('forum_permalink', '/forums/s{threadId}/');
@@ -57,6 +58,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('forum_reply', '/forums/s{threadId}/reply');
         $this->addRouteDirectly('forum_translate', '/forums/translate/m{postId}');
         $this->addRouteDirectly('forum_reverse', '/forums/s{threadId}//reverse');
+        $this->addRouteDirectly('forum_posts_member', '/forums/member/{username}');
         $this->addRouteDirectly('subscriptions', '/forums/subscriptions');
         $this->addRouteDirectly('thread_subscribe', '/forums/subscriptions/subscribe/thread/{threadId}');
         $this->addRouteDirectly('thread_unsubscribe', '/forums/subscriptions/unsubscribe/thread/{threadId}/{subscriptionId}');
@@ -90,6 +92,9 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('donate', '/donate');
         $this->addRouteDirectly('donate_list', '/donate/list');
         $this->addRouteDirectly('gallery_show_image', '/gallery/show/image/{imageId}');
+        $this->addRouteDirectly('gallery_image', '/gallery/img');
+        $this->addRouteDirectly('gallery_thumbnail', '/gallery/thumbimg');
+        $this->addRouteDirectly('gallery', '/gallery');
         $this->addRouteDirectly('profile_all_comments', '/members/{username}/comments/');
 
         return $this->routes;

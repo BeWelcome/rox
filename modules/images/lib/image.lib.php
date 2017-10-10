@@ -114,7 +114,8 @@ class MOD_images_Image {
         }
         $newImage = ImageCreateTrueColor($th_size_x, $th_size_y);
         imageCopyResampled($newImage, $oldImage, 0, 0, $startx, $starty, $th_size_x, $th_size_y, $size_x, $size_y);
-        $newFile = tempnam('Lorem ipsum dolor sit amet', 'thumb');
+        $tmpDir = new PDataDir('gallery/thumbs');
+        $newFile = tempnam($tmpDir->dirName(), 'thumb');
 
         switch ($this->imageSize[2]) {
             case IMAGETYPE_GIF:

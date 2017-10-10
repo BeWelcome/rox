@@ -10,11 +10,14 @@
  */
 class ShoutsView extends PAppView 
 {
+    use \Rox\RoxTraits\SessionTrait;
+
     private $_model;
     
     public function __construct(Shouts $model) 
     {
         $this->_model = $model;
+        $this->setSession();
     }
     
     public function showShoutsList($table,$table_id) 

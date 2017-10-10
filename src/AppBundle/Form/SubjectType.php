@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form;
 
+use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,10 +14,20 @@ class SubjectType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('subject', null, [
+        $builder->add('subject', CKEditorType::class, [
+            'config' => [
+                'extraPlugins' => 'confighelper',
+            ],
+            'plugins' => [
+                'confighelper' => [
+                    'path' => '/bundles/app/js/confighelper/',
+                    'filename' => 'plugin.js',
+                ],
+            ],
+            'inline' => true,
             'attr' => [
                 'placeholder' => 'Please enter a subject',
-            ],
+            ]
         ]);
     }
 

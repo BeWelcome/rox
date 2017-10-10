@@ -36,8 +36,11 @@
 
 {% block content %}
     <div class="container">
-        <div class="my-3"><h2>{{ 'Write a hosting request to %s' | trans | format(receiver.Username) }}</h2></div>
         {{ form_start(form) }}
+        <div class="my-3"><h2>
+                {{ form_widget(form.subject.subject) }}
+            </h2>
+        </div>
 
         <div class="row mb-1">
             <div class="col-12 col-sm-6 col-md-4">
@@ -69,7 +72,6 @@
             <div class="col-12 col-sm-6 col-md-8">
                 {{ form_label(form.subject, null, {'label_attr': {'class': 'sr-only '} }) }}
                 {{ form_errors(form.subject) }}
-                {{ form_widget(form.subject.subject) }}
                 {{ form_widget(form.message) }}
                 {{ form_rest(form) }}
             </div>

@@ -116,6 +116,10 @@ class RequestAndMessageController extends Controller
             throw new AccessDeniedException();
         }
 
+        if ($message->getRequest() !== null) {
+            return $this->redirectToRoute('hosting_request_reply', ['id' => $message->getId()]);
+        }
+
         $messageModel = new MessageModel($this->getDoctrine());
         $thread = $messageModel->getThreadForMessage($message);
 
@@ -158,6 +162,8 @@ class RequestAndMessageController extends Controller
     /**
      * @Route("/message/{id}", name="message_show",
      *     requirements={"id": "\d+"})
+     * @Route("/request/{id}", name="hosting_request_show",
+     *     requirements={"id": "\d+"})
      *
      * @param Message $message
      *
@@ -174,10 +180,10 @@ class RequestAndMessageController extends Controller
         $messageModel = new MessageModel($this->getDoctrine());
         $thread = $messageModel->getThreadForMessage($message);
 
-        if ($message->getRequest() === null && $message->isUnread() && $member === $message->getReceiver()) {
-            // Only mark as read it is a message and when the receiver reads the message,
+        if ($message->isUnread() && $member === $message->getReceiver()) {
+            // Only mark as read if it is a message and when the receiver reads the message,
             // not when the message is presented to the Sender with url /messages/{id}/sent
-            $message->setWhenfirstread(new \DateTime());
+            $message->setWhenFirstRead(new \DateTime());
             $em = $this->getDoctrine()->getManager();
             $em->persist($message);
             $em->flush();
@@ -335,13 +341,15 @@ class RequestAndMessageController extends Controller
     public function hostingRequestReplyAction(Request $request, Message $hostingRequest)
     {
         if ($hostingRequest->getRequest() === null) {
-            // Todo redirect to message instead of throwing an exception
-            throw new InvalidArgumentException();
+            return $this->redirectToRoute('message_show', ['id' => $hostingRequest->getId()]);
         }
 
-        $requestForm = $this->createForm(MessageRequestType::class);
-        $requestForm->handleRequest($request);
+        $sender = $hostingRequest->getSender();
+        $receiver = $hostingRequest->getReceiver();
 
+        $requestForm = $this->createForm(MessageRequestType::class, $hostingRequest);
+        $requestForm->handleRequest($request);
+        $data=$requestForm->getNormData();
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
         }
 
@@ -350,6 +358,9 @@ class RequestAndMessageController extends Controller
 
         return $this->render(':request:reply.html.twig', [
             'form' => $requestForm->createView(),
+            'data' => $data,
+            'sender' => $sender,
+            'receiver' => $receiver,
             'current' => $hostingRequest,
             'thread' => $thread,
         ]);

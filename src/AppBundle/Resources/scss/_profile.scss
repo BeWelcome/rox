@@ -239,3 +239,15 @@ a.grouplist:hover {
 	font-size: 1rem;
 	font-weight: bold;
 }
+
+.comment-bg-good{
+	background-color: rgba(0,255,0,.3);
+}
+
+.comment-bg-neutral{
+	background-color: rgba(0,0,0,.1)
+}
+
+.comment-bg-bad{
+	background-color: rgba(255,0,0,.3)
+}

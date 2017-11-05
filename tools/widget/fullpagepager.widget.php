@@ -54,7 +54,7 @@ class FullPagePager extends RoxWidget
     {
         $pager = $this->pager;
         $return = '<div class="w-100"><div class="col-12 col-sm-6"><span class="pagination page">' . $this->getWords()->get('PagerShowing', $pager->getActiveStart() + 1,
-            $pager->getActiveStart() + $pager->getActiveLength(), $pager->getTotalCount()) . '</span></div><div class="col-xs-12 col-sm-6"><ul class="pagination pull-xs-right">';
+            $pager->getActiveStart() + $pager->getActiveLength(), $pager->getTotalCount()) . '</span></div><div class="col-12 col-sm-6"><ul class="pagination pull-xs-right">';
         if ($this->active_page > 1)
         {
             if ($this->pages > self::block_links)

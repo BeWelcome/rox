@@ -1,7 +1,7 @@
 <?php
 $words = $this->getWords(); ?>
 <div class="row">
-    <div class="col-xs-12">
+    <div class="col-12">
         <h2><a href="/trips/<?= $trip->id ?>"><?= $trip->title ?></a></h2>
         <p><?= $trip->duration ?></p>
         <p><?= $trip->description ?></p>

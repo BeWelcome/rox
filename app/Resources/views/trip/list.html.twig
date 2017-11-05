@@ -7,25 +7,35 @@
 {% block content %}
 
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-12">
             <div class="pull-right">{{ pagerfanta( trips, 'twitter_bootstrap4_translated', { routeName: 'activity' }) }}</div>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-xs-12">
+
         {% for trip in trips %}
-            <h1><a href="{{ path('trip_show_details', { id: trip.id } ) }}">{{ trip.summary }}</a></h1>
-            <p class="small">{{ trip.createdBy.Username }}{% if trip.createdBy == my_member %}<a href="{{  path('trip_update', { id: trip.id} ) }}">Update</a>{% endif %}</p>
-            <p>{{ trip.description | truncate(200) }}</p>
-        {% else %}
-            <div class="well">{{ 'trip.no_trips_found'|trans }}</div>
-        {% endfor %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="d-flex">
+                <div class="flex-column mr-2">
+                    <img src="placeholder.jpg" width="50" height="50">
+                </div>
+                <div class="flex-column">
+                <p class="h4 m-0"><a href="{{ path('trip_show_details', { id: trip.id } ) }}">{{ trip.summary }}</a></p>
+                </div>
+            </div>
+            <div>
+                <p class="small">{{ trip.createdBy.Username }}{% if trip.createdBy == my_member %}<a href="{{  path('trip_update', { id: trip.id} ) }}">Update</a>{% endif %}</p>
+                <p>{{ trip.description | truncate(200) }}</p>
+            </div>
         </div>
+        {% else %}
+            <div class="col-12 well">{{ 'trip.no_trips_found'|trans }}</div>
+        {% endfor %}
     </div>
 
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-12">
             <div class="pull-right">{{ pagerfanta( trips, 'twitter_bootstrap4_translated', { routeName: 'activity' }) }}</div>
         </div>
     </div>

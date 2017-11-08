@@ -8,11 +8,9 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
-use Mockery\Exception;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Rox\Core\Exception\InvalidArgumentException;
-use Symfony\Bundle\MonologBundle\MonologBundle;
 
 class MessageRepository extends EntityRepository
 {
@@ -26,11 +24,11 @@ class MessageRepository extends EntityRepository
      */
     public function queryLatest(Member $member, $folder, $sort, $sortDirection)
     {
-        if ($sort == 'date') {
+        if ('date' === $sort) {
             $sort = 'created';
         }
         $qb = $this->createQueryBuilder('m');
-        if ($folder === 'sent') {
+        if ('sent' === $folder) {
             $qb->where('m.sender = :member');
         } else {
             $qb->where('m.receiver = :member');
@@ -65,11 +63,11 @@ class MessageRepository extends EntityRepository
      */
     public function queryRequests(Member $member, $folder, $sort, $sortDirection)
     {
-        if ($sort == 'datesent') {
+        if ('datesent' === $sort) {
             $sort = 'created';
         }
         $qb = $this->createQueryBuilder('m');
-        switch($folder) {
+        switch ($folder) {
             case 'inbox':
                 $qb->where('m.receiver = :member');
                 break;
@@ -79,7 +77,7 @@ class MessageRepository extends EntityRepository
             default:
                 throw new InvalidArgumentException('Wrong folder type');
         }
-        $qb ->join('m.request', 'r')
+        $qb->join('m.request', 'r')
             ->setParameter('member', $member)
             ->orderBy('m.'.$sort, $sortDirection);
 
@@ -88,6 +86,7 @@ class MessageRepository extends EntityRepository
 
     /**
      * @param Member $member
+     *
      * @return mixed|null
      */
     public function getUnreadCount(Member $member)
@@ -105,14 +104,10 @@ class MessageRepository extends EntityRepository
             ->getQuery();
 
         $results = null;
-        try{
+        try {
             $results = $q->getSingleScalarResult();
-        }
-        catch(NonUniqueResultException $e)
-        {
-        }
-        catch(NoResultException $e)
-        {
+        } catch (NonUniqueResultException $e) {
+        } catch (NoResultException $e) {
         }
 
         return $results;
@@ -133,8 +128,7 @@ class MessageRepository extends EntityRepository
     public function findLatest(Member $member, $filter, $sort, $sortDirection, $page = 1, $items = 10)
     {
         list($type, $folder) = explode('_', $filter);
-        switch($type)
-        {
+        switch ($type) {
             case 'requests':
                 $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryRequests($member, $folder, $sort, $sortDirection), false));
                 break;

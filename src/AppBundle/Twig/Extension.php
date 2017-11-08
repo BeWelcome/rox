@@ -73,12 +73,13 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
     /**
      * Truncates a string up to a number of characters while preserving whole words and HTML tags.
      *
-     * @param string $text string to truncate
-     * @param int $length length of returned string, including ellipsis
+     * @param string $text     string to truncate
+     * @param int    $length   length of returned string, including ellipsis
      * @param string $ellipsis
      *
-     * @return string truncated string
      * @throws \HtmlTruncator\InvalidHtmlException
+     *
+     * @return string truncated string
      */
     public function truncate($text, $length = 100, $ellipsis = '&#8230;')
     {
@@ -97,6 +98,8 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
      * @param string $text string to truncate
      *
      * @return string purified string
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function purify($text)
     {

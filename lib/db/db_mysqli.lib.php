@@ -263,7 +263,7 @@ CREATE TABLE
      * prepares a statement
      * 
      * @param string $statement
-     * @return PDBStatement_mysql
+     * @return PDBStatement_mysqli
      */
     public function prepare($statement) 
     {
@@ -276,7 +276,7 @@ CREATE TABLE
      * performs a query
      * 
      * @param string $statement
-     * @return PDBStatement_mysql
+     * @return PDBStatement_mysqli
      */
     public function query($statement) 
     {

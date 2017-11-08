@@ -158,10 +158,10 @@ class ImagesCreator
      **/    
     protected function getDB()
     {
-        $host = getenv('DB_HOST');
-        $database = getenv('DB_NAME');
-        $username = getenv('DB_USER');
-        $password = getenv('DB_PASS');
+        $host = '127.0.0.1';
+        $database = 'alpha_main';
+        $username = 'root';
+        $password = '';
 
         $this->db = new DatabaseController($host, $database, $username, $password);
     }

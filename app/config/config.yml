@@ -150,11 +150,6 @@ assetic:
             inputs:
                 - "%node_modules%/popper.js/dist/umd/popper.min.js"
 
-        app_css:
-            inputs:
-                - "css/app.css"
-                - "%node_modules%/tether/dist/css/tether.css"
-
         leaflet_js:
             inputs:
                 - "%node_modules%/leaflet/dist/leaflet.js"

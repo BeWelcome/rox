@@ -28,18 +28,18 @@ class LegacyController extends Controller
         $session->start();
 
         $pathInfo = $request->getPathInfo();
-        $public = (strpos($pathInfo, '/safety') === false) ||
-            (strpos($pathInfo, '/about') === false) ||
-            (strpos($pathInfo, '/signup') === false);
+        $public = (false === strpos($pathInfo, '/safety')) ||
+            (false === strpos($pathInfo, '/about')) ||
+            (false === strpos($pathInfo, '/signup'));
         if (!$session->has('IdMember')) {
             $rememberMeToken = unserialize($session->get('_security_default'));
-            if ($rememberMeToken === null && !$public) {
+            if (null === $rememberMeToken && !$public) {
                 throw new AccessDeniedException();
             }
-            if ($rememberMeToken !== false) {
+            if (false !== $rememberMeToken) {
                 /** @var Member $user */
                 $user = $rememberMeToken->getUser();
-                if ($user !== null) {
+                if (null !== $user) {
                     $session->set('IdMember', $user->getId());
                     $session->set('MemberStatus', $user->getStatus());
                     $session->set('APP_User_id', $user->getId());

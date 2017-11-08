@@ -20,8 +20,8 @@ class MessageRequestType extends AbstractType
             ->add('message', CKEditorType::class, [
                     'attr' => [
                         'placeholder' => 'Give a short explanation...',
-                        'class' => 'w-100 p-2'
-                    ]
+                        'class' => 'w-100 p-2',
+                    ],
                 ])
         ;
     }

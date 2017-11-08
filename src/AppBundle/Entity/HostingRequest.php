@@ -184,9 +184,9 @@ class HostingRequest
      */
     public function setStatus($status)
     {
-        if ($status !== self::REQUEST_OPEN &&
-            $status !== self::REQUEST_DECLINED &&
-            $status !== self::REQUEST_ACCEPTED) {
+        if (self::REQUEST_OPEN !== $status &&
+            self::REQUEST_DECLINED !== $status &&
+            self::REQUEST_ACCEPTED !== $status) {
             throw new InvalidArgumentException('Request status outside of valid range. Got '.$status.'instead of REQUEST_OPEN (0), REQUEST_DECLINED (1) or REQUEST_ACCEPTED(2) ');
         }
 

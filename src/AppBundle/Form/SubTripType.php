@@ -53,10 +53,10 @@ class SubTripType extends AbstractType
                 function ($optionsAsNumber) {
                     // transform the number back to an array
                     $optionsAsArray = [];
-                    if (($optionsAsNumber & 1) === 1) {
+                    if (1 === ($optionsAsNumber & 1)) {
                         $optionsAsArray['TripsLocationOptionLookingForAHost'] = 1;
                     }
-                    if (($optionsAsNumber & 2) === 2) {
+                    if (2 === ($optionsAsNumber & 2)) {
                         $optionsAsArray['TripsLocationOptionLikeToMeetUp'] = 2;
                     }
 

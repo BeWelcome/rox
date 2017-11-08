@@ -46,6 +46,7 @@ class MigrateOldTrips extends RoxMigration
             $curTrip = $tripRaw["trip_id"];
             if ($lastTrip <> $curTrip) {
                 if ($lastTrip <> -1 ) {
+                    $em->flush();
                     $em->persist($trip);
                 }
                 $trip = new \AppBundle\Entity\Trip();

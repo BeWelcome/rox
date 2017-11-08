@@ -51,6 +51,6 @@ class UserProvider implements UserProviderInterface
 
     public function supportsClass($class)
     {
-        return $class === Member::class;
+        return Member::class === $class;
     }
 }

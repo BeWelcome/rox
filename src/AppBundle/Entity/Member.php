@@ -2393,9 +2393,9 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
         ];
 
         $volunteerRights = $this->getVolunteerRights();
-        if ($volunteerRights !== null) {
+        if (null !== $volunteerRights) {
             foreach ($volunteerRights->getIterator() as $volunteerRight) {
-                if ($volunteerRight->getLevel() !== 0) {
+                if (0 !== $volunteerRight->getLevel()) {
                     $roles[] = 'ROLE_ADMIN_'.strtoupper($volunteerRight->getRight()->getName());
                 }
             }
@@ -2603,7 +2603,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('tablecolumn', 'members.'.$fieldName));
         $cryptedField = $this->cryptedFields->matching($criteria)->first();
-        if ($cryptedField !== false) {
+        if (false !== $cryptedField) {
             $value = $cryptedField->getMemberCryptedValue();
             $stripped = strip_tags($value);
         }

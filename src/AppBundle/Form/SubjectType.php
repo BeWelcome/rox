@@ -27,7 +27,7 @@ class SubjectType extends AbstractType
             'inline' => true,
             'attr' => [
                 'placeholder' => 'Please enter a subject',
-            ]
+            ],
         ]);
     }
 

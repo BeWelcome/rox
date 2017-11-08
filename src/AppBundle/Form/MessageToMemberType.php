@@ -21,8 +21,8 @@ class MessageToMemberType extends AbstractType
                 'attr' => [
                     'placeholder' => '...',
                     'class' => 'w-100 p-2',
-                    'rows' => '5'
-                ]
+                    'rows' => '5',
+                ],
             ])
         ;
     }

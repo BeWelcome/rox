@@ -64,12 +64,12 @@ class LegacyDispatchListener
         $this->session->start();
         if (!$this->session->has('IdMember')) {
             $rememberMeToken = unserialize($this->session->get('_security_default'));
-            if ($rememberMeToken === null) {
+            if (null === $rememberMeToken) {
                 throw new AccessDeniedException();
             }
 
             $user = $rememberMeToken->getUser();
-            if ($user !== null) {
+            if (null !== $user) {
                 $this->session->set('IdMember', $user->getId());
             }
         }

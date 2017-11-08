@@ -86,7 +86,7 @@ class Trip
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="SubTrip", mappedBy="trip",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="SubTrip", mappedBy="trip", cascade={"persist", "remove"})
      */
     private $subtrips;
 

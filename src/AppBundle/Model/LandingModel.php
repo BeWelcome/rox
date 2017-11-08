@@ -40,7 +40,7 @@ class LandingModel extends BaseModel
                 ->andWhere("m.whenfirstread = '0000-00-00 00:00.00'");
         }
 
-        if ($limit !== 0) {
+        if (0 !== $limit) {
             $queryBuilder->setMaxResults($limit);
         }
 
@@ -94,7 +94,7 @@ class LandingModel extends BaseModel
      */
     public function getThreads(Member $member, $groups, $forum, $following, $limit = 0)
     {
-        if ($groups + $forum + $following === 0) {
+        if (0 === $groups + $forum + $following) {
             // Member decided not to show anything
             return [];
         }

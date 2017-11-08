@@ -4,7 +4,6 @@ namespace AppBundle\Model;
 
 use AppBundle\Entity\Message;
 use AppBundle\Repository\MessageRepository;
-use PDO;
 
 class RequestModel extends BaseModel
 {
@@ -13,6 +12,6 @@ class RequestModel extends BaseModel
         /** @var MessageRepository $repository */
         $repository = $this->em->getRepository(Message::class);
 
-        return $repository->findLatest($member, 'requests_' . $folder, $sort, $sortDir, $page, $limit);
+        return $repository->findLatest($member, 'requests_'.$folder, $sort, $sortDir, $page, $limit);
     }
 }

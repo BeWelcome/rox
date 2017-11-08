@@ -17,6 +17,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
+/**
+ * Class RequestAndMessageController.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class RequestAndMessageController extends Controller
 {
     /*    public function update(Request $request)
@@ -106,8 +111,9 @@ class RequestAndMessageController extends Controller
      * @param Request $request
      * @param Message $message
      *
-     * @return Response
      * @throws \Doctrine\DBAL\DBALException
+     *
+     * @return Response
      */
     public function reply(Request $request, Message $message)
     {
@@ -116,7 +122,7 @@ class RequestAndMessageController extends Controller
             throw new AccessDeniedException();
         }
 
-        if ($message->getRequest() !== null) {
+        if (null !== $message->getRequest()) {
             return $this->redirectToRoute('hosting_request_reply', ['id' => $message->getId()]);
         }
 
@@ -140,7 +146,7 @@ class RequestAndMessageController extends Controller
 
             $subject = $message->getSubject();
             $replySubject = $replyMessage->getSubject()->getSubject();
-            if ($subject === null || $subject->getSubject() !== $replySubject) {
+            if (null === $subject || $subject->getSubject() !== $replySubject) {
                 $subject = $replyMessage->getSubject();
             }
             $replyMessage->setSubject($subject);
@@ -167,8 +173,9 @@ class RequestAndMessageController extends Controller
      *
      * @param Message $message
      *
-     * @return Response
      * @throws \Doctrine\DBAL\DBALException
+     *
+     * @return Response
      */
     public function show(Message $message)
     {
@@ -189,7 +196,7 @@ class RequestAndMessageController extends Controller
             $em->flush();
         }
 
-        $view = ($message->getRequest() === null) ? ':message:view.html.twig' : ':request:view.html.twig';
+        $view = (null === $message->getRequest()) ? ':message:view.html.twig' : ':request:view.html.twig';
 
         return $this->render($view, [
             'current' => $message,
@@ -264,7 +271,7 @@ class RequestAndMessageController extends Controller
      * @Route("/new/request/{username}", name="hosting_request")
      *
      * @param Request $request
-     * @param Member $receiver
+     * @param Member  $receiver
      *
      * @return Response
      */
@@ -298,12 +305,12 @@ class RequestAndMessageController extends Controller
             $message = \Swift_Message::newInstance()
                 ->setSubject($hostingRequest->getSubject()->getSubject())
                 ->setFrom([
-                    'request@bewelcome.org' => 'bewelcome - '. $sender->getUsername()
+                    'request@bewelcome.org' => 'bewelcome - '.$sender->getUsername(),
                 ])
                 ->setTo($receiver->getCryptedField('Email'))
                 ->setBody(
                     $this->renderView(
-                    // app/Resources/views/Emails/registration.html.twig
+                        // app/Resources/views/Emails/registration.html.twig
                         'emails/request.html.twig',
                         ['request_text' => $hostingRequest->getMessage()]
                     ),
@@ -335,12 +342,13 @@ class RequestAndMessageController extends Controller
      * @param Request $request
      * @param Message $hostingRequest
      *
-     * @return Response
      * @throws \Doctrine\DBAL\DBALException
+     *
+     * @return Response
      */
     public function hostingRequestReplyAction(Request $request, Message $hostingRequest)
     {
-        if ($hostingRequest->getRequest() === null) {
+        if (null === $hostingRequest->getRequest()) {
             return $this->redirectToRoute('message_show', ['id' => $hostingRequest->getId()]);
         }
 
@@ -349,7 +357,7 @@ class RequestAndMessageController extends Controller
 
         $requestForm = $this->createForm(MessageRequestType::class, $hostingRequest);
         $requestForm->handleRequest($request);
-        $data=$requestForm->getNormData();
+        $data = $requestForm->getNormData();
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
         }
 
@@ -398,8 +406,8 @@ class RequestAndMessageController extends Controller
             'folder' => $folder,
             'filter' => $request->query->all(),
             'submenu' => [
-                'active' => 'messages_' . $folder,
-                'items' => $this->getSubMenuItems()
+                'active' => 'messages_'.$folder,
+                'items' => $this->getSubMenuItems(),
             ],
         ]);
     }
@@ -436,9 +444,9 @@ class RequestAndMessageController extends Controller
             'folder' => $folder,
             'filter' => $request->query->all(),
             'submenu' => [
-                'active' => 'requests_' . $folder,
+                'active' => 'requests_'.$folder,
                 'route' => 'messages',
-                'items' => $this->getSubMenuItems()
+                'items' => $this->getSubMenuItems(),
             ],
         ]);
     }
@@ -448,27 +456,27 @@ class RequestAndMessageController extends Controller
         return [
             'requests_inbox' => [
                 'key' => 'MessagesRequestsReceived',
-                'url' => $this->generateUrl('requests', [ 'folder' => 'inbox'])
+                'url' => $this->generateUrl('requests', ['folder' => 'inbox']),
             ],
             'requests_sent' => [
                 'key' => 'MessagesRequestsSent',
-                'url' => $this->generateUrl('requests', [ 'folder' => 'sent'])
+                'url' => $this->generateUrl('requests', ['folder' => 'sent']),
             ],
             'messages_inbox' => [
                 'key' => 'MessagesReceived',
-                'url' => $this->generateUrl('messages', [ 'folder' => 'inbox'])
+                'url' => $this->generateUrl('messages', ['folder' => 'inbox']),
             ],
             'messages_sent' => [
                 'key' => 'MessagesSent',
-                'url' => $this->generateUrl('messages', [ 'folder' => 'sent'])
+                'url' => $this->generateUrl('messages', ['folder' => 'sent']),
             ],
             'messages_spam' => [
                 'key' => 'MessagesSpam',
-                'url' => $this->generateUrl('messages', [ 'folder' => 'spam'])
+                'url' => $this->generateUrl('messages', ['folder' => 'spam']),
             ],
             'messages_deleted' => [
                 'key' => 'MessagesDeleted',
-                'url' => $this->generateUrl('messages', [ 'folder' => 'deleted'])
+                'url' => $this->generateUrl('messages', ['folder' => 'deleted']),
             ],
         ];
     }

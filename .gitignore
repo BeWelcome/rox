@@ -65,6 +65,7 @@ auth.json
 /ansible/key.pem
 coverage/
 phpmetrics.html
+phpmetrics.xml
 VERSION
 htdocs/assets/
 config/*.local.yml

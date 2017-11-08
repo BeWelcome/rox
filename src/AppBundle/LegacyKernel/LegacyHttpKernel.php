@@ -77,7 +77,7 @@ class LegacyHttpKernel extends HttpKernel
 
         // RoxFrontRouter::route_normal() sends a redirect without setting 301/302
         // Here we can take such redirect and do it with RedirectResponse
-        if ($content === '' && !headers_sent()) {
+        if ('' === $content && !headers_sent()) {
             foreach (headers_list() as $header) {
                 if (preg_match('/^Location: (.*)$/', $header, $matches)) {
                     return new RedirectResponse($matches[1]);

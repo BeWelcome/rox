@@ -13,7 +13,7 @@ class MessageModel extends BaseModel
         /** @var MessageRepository $repository */
         $repository = $this->em->getRepository(Message::class);
 
-        return $repository->findLatest($member, 'messages_' . $folder, $sort, $sortDir, $page, $limit);
+        return $repository->findLatest($member, 'messages_'.$folder, $sort, $sortDir, $page, $limit);
     }
 
     /**
@@ -21,8 +21,9 @@ class MessageModel extends BaseModel
      *
      * @param Message $message
      *
-     * @return array
      * @throws \Doctrine\DBAL\DBALException
+     *
+     * @return array
      */
     public function getThreadForMessage(Message $message)
     {

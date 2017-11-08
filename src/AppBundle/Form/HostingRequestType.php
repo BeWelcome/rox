@@ -8,10 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\LessThan;
 use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 
 class HostingRequestType extends AbstractType
@@ -28,7 +25,7 @@ class HostingRequestType extends AbstractType
                 'format' => 'yyyy-MM-dd',
                 'attr' => [
                     'class' => 'datepicker',
-                    'placeholder' => 'Arrival (date)'
+                    'placeholder' => 'Arrival (date)',
                 ],
             ])
             ->add('departure', DateType::class, [
@@ -38,13 +35,15 @@ class HostingRequestType extends AbstractType
                 'format' => 'yyyy-MM-dd',
                 'attr' => [
                     'class' => 'datepicker',
-                    'placeholder' => 'Departure (date)'
+                    'placeholder' => 'Departure (date)',
                 ],
             ])
             ->add('flexible', CheckboxType::class, [
                 'required' => false,
             ])
-            ->add('numberOfTravellers', IntegerType::class,
+            ->add(
+                'numberOfTravellers',
+                IntegerType::class,
                 [
                     'empty_data' => 1,
                     'label' => 'Number of travellers',
@@ -52,13 +51,14 @@ class HostingRequestType extends AbstractType
                         'min' => 1,
                         'max' => 10,
                         'placeholder' => 'Number of travellers',
-                        'class' => 'ml-2 p-2'
+                        'class' => 'ml-2 p-2',
                     ],
                     'constraints' => [
                         new LessThanOrEqual(10),
-                        new GreaterThanOrEqual(1)
+                        new GreaterThanOrEqual(1),
                     ],
-                ]);
+                ]
+            );
     }
 
     /**

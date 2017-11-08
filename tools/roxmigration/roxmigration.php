@@ -2,7 +2,9 @@
 
 namespace Rox\Tools;
 
+use Phinx\Db\Adapter\MysqlAdapter;
 use Phinx\Db\Adapter\PdoAdapter;
+use Phinx\Db\Adapter\TimedOutputAdapter;
 use Phinx\Migration\AbstractMigration;
 
 /****
@@ -170,8 +172,11 @@ WHERE `code` = " . $code
      */
     protected function EscapeVariables($vars)
     {
-        /** @var PdoAdapter $adapter */
-        $adapter= $this->getAdapter();
+        /** @var TimedOutputAdapter $timedOutputAdapter */
+        $timedOutputAdapter = $this->getAdapter();
+
+        /** @var MysqlAdapter $adapter */
+        $adapter = $timedOutputAdapter->getAdapter();
         $connection = $adapter->getConnection();
 
         // Escape everything

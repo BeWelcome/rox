@@ -4,6 +4,7 @@
     "homepage": "https://www.bewelcome.org/",
     "type": "project",
     "license": "GPL",
+    "minimum-stability": "beta",
     "require": {
         "php": ">=7.1.7",
         "anthonymartin/geo-location": "^1.0",
@@ -14,8 +15,8 @@
         "nesbot/carbon": "^1.21",
         "psr/log": "*",
         "robmorgan/phinx": "*",
-        "swiftmailer/swiftmailer": "^5.0",
-        "symfony/symfony": "^3.3",
+        "swiftmailer/swiftmailer": "^6.0",
+        "symfony/symfony": "^3.4",
         "symfony/swiftmailer-bundle": "^2.3",
         "symfony/monolog-bundle": "^2.8",
         "symfony/polyfill-apcu": "^1.0",
@@ -42,7 +43,7 @@
         "mockery/mockery": "^0.9.6",
         "nelmio/alice": "^2.2",
         "phploc/phploc": "^3.0",
-        "phpmd/phpmd": "^2.6",
+        "phpmd/phpmd": "^2.6@dev",
         "phpmetrics/phpmetrics": "^2.0",
         "phpunit/phpunit": "^6.0",
         "sebastian/phpcpd": "^3.0",
@@ -116,6 +117,7 @@
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
         },
-        "branch-alias": null
+        "branch-alias": null,
+        "ckeditor-clear": "drop"
     }
 }

@@ -29,7 +29,7 @@ class LegacyLoader extends Loader
 
         // Handle current directory (difference between cache clear and web access)
         $cwd = getcwd();
-        if (strpos($cwd, 'web') === false) {
+        if (false === strpos($cwd, 'web')) {
             $dirfix = '';
         } else {
             $dirfix = '../';
@@ -59,6 +59,8 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('forum_translate', '/forums/translate/m{postId}');
         $this->addRouteDirectly('forum_reverse', '/forums/s{threadId}//reverse');
         $this->addRouteDirectly('forum_posts_member', '/forums/member/{username}');
+        $this->addRouteDirectly('subscriptions_disable', '/forums/subscriptions/disable');
+        $this->addRouteDirectly('subscriptions_enable', '/forums/subscriptions/enable');
         $this->addRouteDirectly('subscriptions', '/forums/subscriptions');
         $this->addRouteDirectly('thread_subscribe', '/forums/subscriptions/subscribe/thread/{threadId}');
         $this->addRouteDirectly('thread_unsubscribe', '/forums/subscriptions/unsubscribe/thread/{threadId}/{subscriptionId}');
@@ -96,6 +98,8 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('gallery_thumbnail', '/gallery/thumbimg');
         $this->addRouteDirectly('gallery', '/gallery');
         $this->addRouteDirectly('profile_all_comments', '/members/{username}/comments/');
+        $this->addRouteDirectly('mypreferences', '/mypreferences');
+        $this->addRouteDirectly('myvisitors', '/myvisitors');
 
         return $this->routes;
     }

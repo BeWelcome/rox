@@ -267,7 +267,7 @@ class Message
      *
      * @return Message
      */
-    public function setParent(Message $parent)
+    public function setParent(self $parent)
     {
         $this->parent = $parent;
 
@@ -291,7 +291,7 @@ class Message
      *
      * @return Message
      */
-    public function setChild(Message $child)
+    public function setChild(self $child)
     {
         $this->child = $child;
 
@@ -492,7 +492,7 @@ class Message
 
     public function isUnread()
     {
-        return $this->whenfirstread === null;
+        return null === $this->whenfirstread;
     }
 
     /**

@@ -20,7 +20,11 @@ ini_set('memory_limit', '256M');
 
 /* Make sure we start in the subdirectory */
 
-require 'bootstrap/autoload.php';
+$loader = require 'app/autoload.php';
+
+$kernel = new AppKernel('dev', true);
+$kernel->boot();
+$container = $kernel->getContainer();
 
 $cwd = getcwd();
 $parts = $chars = preg_split('^/^', $cwd, -1, PREG_SPLIT_NO_EMPTY);
@@ -28,11 +32,18 @@ if ($parts[count($parts) - 1] != 'images') {
     chdir('tools/testenv/images');
 }
 
-$group = new GroupImagesCreator();
+$dbHost = $container->getParameter('database_host');
+$dbName = $container->getParameter('database_name');
+$dbUser = $container->getParameter('database_user');
+$dbPassword = $container->getParameter('database_password');
+
+$dbController = new DatabaseController($dbHost, $dbName, $dbUser, $dbPassword);
+
+$group = new GroupImagesCreator($dbController);
 $group->getImages();
 
-$avatar = new AvatarImagesCreator();
+$avatar = new AvatarImagesCreator($dbController);
 $avatar->getImages();
 
-$gallery = new GalleryImagesCreator();
+$gallery = new GalleryImagesCreator($dbController);
 $gallery->getImages();

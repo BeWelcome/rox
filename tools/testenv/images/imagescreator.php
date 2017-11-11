@@ -7,9 +7,9 @@ class ImagesCreator
     public $imgCount; // number of produced images
     public $lastId = array(); // start id's defined in status.csv
     
-    public function __construct()
+    public function __construct(DatabaseController $dbController)
     {
-        $this->getDB();
+        $this->db = $dbController;
         $this->imgCount = 0;
         $this->getStatus();
     }
@@ -151,21 +151,6 @@ class ImagesCreator
             '<br>'.PHP_EOL;
     }
 
-    /**
-     * Get DB parameters from ini file and instanciate database-object
-     *
-     * @access protected
-     **/    
-    protected function getDB()
-    {
-        $host = '127.0.0.1';
-        $database = 'alpha_main';
-        $username = 'root';
-        $password = '';
-
-        $this->db = new DatabaseController($host, $database, $username, $password);
-    }
-    
     /**
     * Check if limit should be used and create code for that
     *

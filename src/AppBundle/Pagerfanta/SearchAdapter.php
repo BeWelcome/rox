@@ -20,6 +20,8 @@ class SearchAdapter implements AdapterInterface
      *
      * @param ContainerInterface $container Needed for the time being to allow to use the old search model
      * @param array              $data      The query parameters for the search
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function __construct($container, $data)
     {

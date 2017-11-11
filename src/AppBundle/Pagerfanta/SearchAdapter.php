@@ -4,6 +4,7 @@ namespace AppBundle\Pagerfanta;
 
 use EnvironmentExplorer;
 use Pagerfanta\Adapter\AdapterInterface;
+use Rox\Framework\SessionSingleton;
 use SearchModel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -22,6 +23,14 @@ class SearchAdapter implements AdapterInterface
      */
     public function __construct($container, $data)
     {
+        // Kick-start the Symfony session. This replaces session_start() in the
+        // old code, which is now turned off.
+        $session = $container->get('session');
+        $session->start();
+
+        // Make sure the Rox classes find this session
+        SessionSingleton::createInstance($session);
+
         // make sure everything's setup for the old code used below
         $environmentExplorer = new EnvironmentExplorer();
         $environmentExplorer->initializeGlobalState(

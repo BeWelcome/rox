@@ -12,6 +12,13 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class LegacyController extends Controller
 {
+    /**
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response|void
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function showAction(Request $request)
     {
         // Kick-start the Symfony session. This replaces session_start() in the

@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Member;
 use EnvironmentExplorer;
+use Rox\Framework\SessionSingleton;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -13,6 +14,14 @@ class LegacyController extends Controller
 {
     public function showAction(Request $request)
     {
+        // Kick-start the Symfony session. This replaces session_start() in the
+        // old code, which is now turned off.
+        $session = $this->get('session');
+        $session->start();
+
+        // Make sure the Rox classes find this session
+        SessionSingleton::createInstance($session);
+
         $container = $this->get('service_container');
         $environmentExplorer = new EnvironmentExplorer();
         $environmentExplorer->initializeGlobalState(
@@ -21,11 +30,6 @@ class LegacyController extends Controller
             $container->getParameter('database_user'),
             $container->getParameter('database_password')
         );
-
-        // Kick-start the Symfony session. This replaces session_start() in the
-        // old code, which is now turned off.
-        $session = $this->get('session');
-        $session->start();
 
         $pathInfo = $request->getPathInfo();
         $public = (false === strpos($pathInfo, '/safety')) ||

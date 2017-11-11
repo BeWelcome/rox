@@ -3,7 +3,9 @@
 namespace Rox\Framework;
 
 
+use Rox\Core\Exception\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class SessionSingleton
 {
@@ -12,18 +14,34 @@ class SessionSingleton
      */
     private static $_instance;
 
-    /** @var Session  */
+    /** @var SessionInterface  */
     private $_session;
 
     /**
      * Returns the *SessionSingleton* instance of this class.
      *
+     * @param SessionInterface $session
      * @return SessionSingleton The *session* instance.
+     */
+    public static function createInstance(SessionInterface $session)
+    {
+        if (null === static::$_instance) {
+            static::$_instance = new SessionSingleton($session);
+        }
+
+        return static::$_instance;
+    }
+
+    /**
+     * Returns the *SessionSingleton* instance of this class.
+     *
+     * @return SessionSingleton The *session* instance.
+     * @throws InvalidArgumentException
      */
     public static function getInstance()
     {
         if (null === static::$_instance) {
-            static::$_instance = new SessionSingleton();
+            throw new InvalidArgumentException('SessionSingleton::getInstance() called without a call to createInstance()');
         }
 
         return static::$_instance;
@@ -32,10 +50,11 @@ class SessionSingleton
     /**
      * Protected constructor to prevent creating a new instance of the
      * *Singleton* via the `new` operator from outside of this class.
+     * @param SessionInterface $session
      */
-    protected function __construct()
+    protected function __construct(SessionInterface $session)
     {
-        $this->_session = new Session();
+        $this->_session = $session;
     }
 
     public static function getSession() {

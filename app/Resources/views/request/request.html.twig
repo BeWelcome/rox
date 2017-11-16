@@ -37,15 +37,12 @@
 {% block content %}
     <div class="container">
         {{ form_start(form) }}
-        <div class="my-3"><h2>
-                {{ form_widget(form.subject.subject) }}
-            </h2>
-        </div>
+
 
         <div class="row mb-1">
-            <div class="col-12 col-sm-6 col-md-4">
+            <div class="col-12 col-md-4">
 
-                <div class="form-group">
+                <div class="form-group mt-5">
                     {{ form_errors(form.request.arrival) }}
                     <div class="input-group date" id="arrival" data-target-input="nearest">
                         <span class="input-group-addon" data-target="#arrival" data-toggle="datetimepicker">
@@ -66,10 +63,13 @@
                 </div>
 
                 {{ form_widget(form.request.flexible) }}
-                <div class="input-group">Number of Travellers: {{ form_widget(form.request.numberOfTravellers) }}</div>
+                <div class="input-group align-items-center"><span>Number of Travellers:</span>{{ form_widget(form.request.numberOfTravellers) }}</div>
 
             </div>
-            <div class="col-12 col-sm-6 col-md-8">
+            <div class="col-12 col-md-8">
+                <h2>
+                    {{ form_widget(form.subject.subject) }}
+                </h2>
                 {{ form_label(form.subject, null, {'label_attr': {'class': 'sr-only '} }) }}
                 {{ form_errors(form.subject) }}
                 {{ form_widget(form.message) }}
@@ -79,7 +79,7 @@
         </div>
 
         <div class="row mb-1">
-            <div class="col-12">
+            <div class="col-12 col-md-8 offset-md-4">
                 <button type="submit" class="btn btn-primary">{{ 'Send' | trans }}</button>
             </div>
         </div>

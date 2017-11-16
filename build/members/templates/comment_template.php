@@ -70,11 +70,12 @@ foreach ($comments as $com){
     }
 }
 
-if (!$showfrom && !$showto && $this->myself != $loginuser) {
+if (!$showfrom && !$this->myself) {
     // Show "Add comment" button
-    echo '  <p class="clearfix"><a href="members/' . $username
-        . '/comments/add" class="button">' . $words->get('addcomments')
-        . '</a></p>' . "\n";
+   ?>
+        <a href="members/<?php echo $username; ?>/comments/add"
+           class="btn btn-primary"><?php echo $words->get('addcomments'); ?></a>
+    <?
 }
 
 foreach($comments as $comment) {
@@ -141,9 +142,6 @@ if ($showfrom || $editfrom || $showto || $editto) {
                     <p class="small">(<?=$words->get('CommentLastUpdated')?>: <span title="<?= $c->updated; ?>"><?php echo $layoutbits->ago($c->unix_updated); ?></span>)</p>
                 <? } ?>
                 <? echo $purifier->purify(nl2br($c->TextFree)); ?>
-                <? if ($editfrom){ ?>
-                    <a class="btn btn-sm btn-primary" href="members/<?= $this->member->Username ?>/comments/add" title="Edit"><?= $ww->edit ?></a>
-                <? } ?>
 
                         <?php
                         for ($jj = 0; $jj < count($tt); $jj++) {
@@ -151,6 +149,10 @@ if ($showfrom || $editfrom || $showto || $editto) {
                             echo '<p class="small font-italic p-0">', $words->get("Comment_" . $tt[$jj]), "</p>\n";
                         }
                         ?>
+
+                <? if ($editfrom){ ?>
+                    <a class="btn btn-sm btn-primary" href="members/<?= $this->member->Username ?>/comments/add" title="Edit"><?= $ww->edit ?></a>
+                <? } ?>
 
                 <?php if (MOD_right::get()->HasRight('Comments'))  { ?>
                     <a href="bw/admin/admincomments.php?action=editonecomment&IdComment=<?php echo $c->id; ?>"><?=$words->get('EditComment')?></a>
@@ -161,7 +163,14 @@ if ($showfrom || $editfrom || $showto || $editto) {
 
     <?php
     } else { ?>
-        <div class="col-12 col-sm-6 card comment-bg-neutral">nothing to see here</div>
+        <div class="col-12 col-sm-6 card comment-bg-neutral">
+            <? if (!$this->myself && ($c->UsernameToMember==$loginuser)){ ?>
+            <a href="members/<?php echo $username; ?>/comments/add"
+           class="btn btn-primary mt-3"><?php echo $words->get('addcomments'); ?></a>
+            <? } else { ?>
+            ...
+            <? } ?>
+        </div>
     <? }
 
      if ($showto || $editto){
@@ -227,87 +236,16 @@ if ($showfrom || $editfrom || $showto || $editto) {
                 <a href="bw/admin/admincomments.php?action=editonecomment&IdComment=<?php echo $cc->id; ?>"><?=$words->get('EditComment')?></a>
                  <? } ?>
             </div>
-
         </div>
 
-
 <?php
-   } else { ?>
+   } else {
+         ?>
         <div class="col-12 col-sm-6 card comment-bg-neutral">
-
-            <?php if ($this->loggedInMember && !$this->myself && $cc->IdToMember == $this->loggedInMember->id) { ?>
-                <a href="members/<?php echo $username; ?>/comments/add"
-                                          class="btn btn-primary"><?php echo $words->get('addcomments'); ?></a></p>
-            <?php } ?>
+            ...
         </div>
     <? } ?>
 
     </div>
 
-
-
-
     <? } // end loop ?>
-
-  <?php /*
-    if ($showto || $editto) {
-        $cc = $comment['to'];
-        $quality = strtolower($cc->comQuality);
-        $tt = explode(',', $cc->Lenght); ?> 
-  <div class="profilecomment clearfix counter">
-      <div class="subcolumns profilecomment">
-
-        <div class="c75l" >
-          <div class="subcl" >
-
-            <a href="members/<?= $cc->UsernameFromMember ?>">
-               <img class="float_left framed" src="members/avatar/<?= $cc->UsernameFromMember ?>/50" height="50px" width="50px" alt="Profile" />
-            </a>
-            <div class="comment">
-                <p class="clearfix">
-                  <strong class="<?=$cc->comQuality?>"><?=$cc->comQuality?></strong><br/>
-                  <span class="small grey">
-                    <?= $words->get('CommentFrom', '<a href="members/' . $cc->UsernameFromMember . '">' . $cc->UsernameFromMember . '</a>') ?> <?= $words->get('CommentTo') ?> <a href="members/<?= $cc->UsernameToMember ?>"><?= $cc->UsernameToMember ?></a>
-                    <br>
-
-                    <?php if ($cc->created != $cc->updated): ?>
-                      (<?=$words->get('CommentLastUpdated')?>: <span title="<?php echo $cc->updated; ?>"><?php echo $layoutbits->ago($cc->unix_updated); ?></span>)
-                    <? endif; ?>
-                  </span>
-
-                </p>
-                <p>
-                  <em><?php echo $purifier->purify(nl2br($cc->TextWhere)); ?></em>
-                </p>
-                <p>
-                  <?php echo $purifier->purify(nl2br($cc->TextFree)); ?>
-                </p>
-                <p>
-                  <? if ($editto): ?>
-                    <a class="button" role="button" href="members/<?= $cc->UsernameToMember ?>/comments/add" title="Edit"><?= $ww->edit ?></a>
-                  <? endif; ?>
-                </p>
-            </div> <!-- comment -->
-          </div> <!-- subcl -->
-        </div> <!-- c75l -->
-        <div class="c25r" >
-          <div class="subcr" >
-            <ul class="linklist" >
-                <li>
-
-                </li>
-            </ul>
-          </div> <!-- subcr -->
-        </div> <!-- c25r -->
-      </div> <!-- subcolumns -->
-  </div> <!-- profilecomment counter -->
-<?php } else {
-if ($this->myself && $showfrom) {
-    $cc = $comment['from'] ?>
-    <div class="subcolumns profilecomment">
-    <p class="float_right"><a class="button" role="button" href="members/<?= $cc->UsernameFromMember?>/comments/add"
-        title="<? echo $words->getBuffered('CommentAddComment'); ?>"><?= $words->get('CommentAddComment'); ?></a></p>
-        </div>
-<?php 
-    }
-} */ ?>

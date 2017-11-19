@@ -1,509 +1,270 @@
 <?php
 // Error shortcuts
 if (in_array('SignupErrorInvalidBirthDate', $vars['errors'])) {
-  $errorBirthDate = true;
+    $errorBirthDate = true;
 }
 if (in_array('SignupErrorInvalidFirstName', $vars['errors'])) {
-  $errorFirstName = true;
+    $errorFirstName = true;
 }
 if (in_array('SignupErrorInvalidLastName', $vars['errors'])) {
-  $errorLastName = true;
+    $errorLastName = true;
 }
 if (in_array('SignupErrorInvalidStreet', $vars['errors'])) {
-  $errorStreet = true;
+    $errorStreet = true;
 }
 if (in_array('SignupErrorInvalidHouseNumber', $vars['errors'])) {
-  $errorHouseNumber = true;
+    $errorHouseNumber = true;
 }
 if (in_array('SignupErrorInvalidZip', $vars['errors'])) {
-  $errorZip = true;
+    $errorZip = true;
 }
 if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
-  $errorEmail = true;
+    $errorEmail = true;
 }
 
-
 ?>
-          <fieldset id="profilesummary">
-            <legend><?=$words->get('ProfileSummary')?></legend>
-            <table border="0" >
-              <colgroup>
-                <col width="25%" />
-                <col width="25%" />
-                <col width="15%" />
-                <col width="35%" />
-              </colgroup>
-              <tbody>
-<?php if ($this->adminedit) : ?>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfileStatus')?>:</td>
-                  <td colspan="3" >
-                    <select id="Status" name="Status">
-                        <?php echo $statusOptions; ?>
-                    </select>
-                  </td>
-                </tr>
-<?php endif;?>
-              <tr align="left" >
-                  <td><?= $words->get('SignupUsername')?>:</td>
-                  <td colspan="3">
-                    <strong><?=$member->Username ?></strong>
-                    <div class="small"><?=$words->get('subline_username_edit')?></div>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfilePicture')?>:<br/><img src="members/avatar/<?=$member->Username?>/50" title="Current picture" alt="Current picture" height="50" width="50" style="padding: 1em"/></td>
-                  <td colspan="3" >
-                    <label for="profile_picture"><?= $words->get('uploadselectpicture'); ?></label><br />
-                    <span class="small"><?= $words->get('Profile_UploadWarning', sprintf("%.1f MB", PFunctions::returnBytes(ini_get('upload_max_filesize')) / 1048576)); ?></span><br /><br />
-                    <input id="profile_picture" name="profile_picture" type="file" />
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfileSummary')?>:</td>
-                  <td colspan="3" >
-                    <textarea name="ProfileSummary" id="ProfileSummary" class="long" cols="50"  rows="6" ><?php echo htmlentities($vars['ProfileSummary'], ENT_COMPAT, 'UTF-8'); ?></textarea>
-                  </td>
-                </tr>
+<div class="col-12">
+    <?php if ($this->adminedit) : ?>
+        <?= $words->get('ProfileStatus') ?>:
+        <select id="Status" name="Status">
+            <?php echo $statusOptions; ?>
+        </select>
+    <?php endif; ?>
+</div>
+
+<div class="col-12">
+    <div id="editProfile" data-children=".item">
+        <div class="item">
+            <a data-toggle="collapse" data-parent="#editProfile" href="#editProfile1" aria-expanded="false"
+               aria-controls="editProfile1" class="btn btn-outline-primary editbutton text-left">
+                <i class="fa fa-angle-down"></i> Basics
+            </a>
+            <div id="editProfile1" class="collapse editprofilebox editprofilebox" role="tabpanel">
+                <div class="row my-2">
+                    <div class="col-3 pt-2">
+                        <?= $words->get('SignupUsername') ?>
+                    </div>
+                    <div class="col-9 h4">
+                        <?= $member->Username ?>
+                    </div>
+                    <div class="col-12 small mb-3 alert alert-info">
+                        <?= $words->get('subline_username_edit') ?>
+                    </div>
 
 
-                <tr align="left" >
-                  <td ><strong><?=$words->get('SignupBirthDate')?></strong>: *</td>
-                  <td colspan="2" >
-                    <select id="BirthYear" name="BirthYear">
-                        <option value="0"><?php echo $words->getSilent('SignupBirthYear'); ?></option>
-                        <?php echo $birthYearOptions; ?>
-                    </select>
-                    <select name="BirthMonth">
-                        <option value="0"><?php echo $words->getSilent('SignupBirthMonth'); ?></option>
-                        <?php for ($i=1; $i<=12; $i++) { ?>
-                        <option value="<?php echo $i; ?>"<?php
-                        if (isset($vars['BirthMonth']) && $vars['BirthMonth'] == $i) {
-                            echo ' selected="selected"';
+                    <div class="col-3">
+                        <img src="members/avatar/<?= $member->Username ?>/50"
+                             title="Current picture" alt="Current picture" height="50" width="50"><br>
+                        <?= $words->get('ProfilePicture') ?>
+                    </div>
+
+                    <div class="col-9">
+                        <input id="profile_picture" name="profile_picture" type="file"/>
+                        <label for="profile_picture"><?= $words->get('uploadselectpicture'); ?></label><br/>
+                        <span class="small"><?= $words->get('Profile_UploadWarning', sprintf("%.1f MB", PFunctions::returnBytes(ini_get('upload_max_filesize')) / 1048576)); ?></span>
+                    </div>
+
+
+                    <div class="col-3">
+                        <?= $words->get('SignupBirthDate') ?><br>
+                        <span class="small"><?= $words->get('EmailIsAlwayHidden') ?></span>
+                    </div>
+                    <div class="col-5">
+                        <select id="BirthYear" name="BirthYear">
+                            <option value="0"><?php echo $words->getSilent('SignupBirthYear'); ?></option>
+                            <?php echo $birthYearOptions; ?>
+                        </select>
+                        <select name="BirthMonth">
+                            <option value="0"><?php echo $words->getSilent('SignupBirthMonth'); ?></option>
+                            <?php for ($i = 1; $i <= 12; $i++) { ?>
+                                <option value="<?php echo $i; ?>"<?php
+                                if (isset($vars['BirthMonth']) && $vars['BirthMonth'] == $i) {
+                                    echo ' selected="selected"';
+                                }
+                                ?>><?php echo $i; ?></option>
+                            <?php } ?>
+                        </select>
+                        <select name="BirthDay">
+                            <option value="0"><?php echo $words->getSilent('SignupBirthDay'); ?></option>
+                            <?php for ($i = 1; $i <= 31; $i++) { ?>
+                                <option value="<?php echo $i; ?>"<?php
+                                if (isset($vars['BirthDay']) && $vars['BirthDay'] == $i) {
+                                    echo ' selected="selected"';
+                                }
+                                ?>><?php echo $i; ?></option>
+                            <?php } ?>
+                        </select>
+
+                        <?php echo $words->flushBuffer(); ?>
+                        <?php
+                        if (in_array('SignupErrorBirthDate', $vars['errors'])) {
+                            echo '<div class="error">' . $words->get('SignupErrorBirthDate') . '</div>';
                         }
-                        ?>><?php echo $i; ?></option>
-                        <?php } ?>
-                    </select>
-                    <select name="BirthDay">
-                        <option value="0"><?php echo $words->getSilent('SignupBirthDay'); ?></option>
-                        <?php for ($i=1; $i<=31; $i++) { ?>
-                        <option value="<?php echo $i; ?>"<?php
-                        if (isset($vars['BirthDay']) && $vars['BirthDay'] == $i) {
-                            echo ' selected="selected"';
+                        if (in_array('SignupErrorBirthDateToLow', $vars['errors'])) {
+                            echo '<div class="error">' . $words->getFormatted('SignupErrorBirthDateToLow', SignupModel::YOUNGEST_MEMBER) . '</div>';
                         }
-                        ?>><?php echo $i; ?></option>
-                        <?php } ?>
-                    </select>
-                    <?php echo $words->flushBuffer(); ?>
-                    <?php
-                    if (in_array('SignupErrorBirthDate', $vars['errors'])) {
-                        echo '<div class="error">'.$words->get('SignupErrorBirthDate').'</div>';
-                    }
-                    if (in_array('SignupErrorBirthDateToLow', $vars['errors'])) {
-                        echo '<div class="error">'.$words->getFormatted('SignupErrorBirthDateToLow',SignupModel::YOUNGEST_MEMBER).'</div>';
-                    }
-                    ?>
-                  </td>
-                  <td><?=$words->get('EmailIsAlwayHidden')?></td>
-                  </tr>
-                  <tr align="left" >
-                  <td><?= $words->get('Age')?>:</td>
-                  <td colspan="3">
-                        <input name="HideBirthDate" value="Yes" type="checkbox" <?= ($vars['HideBirthDate'] == 'Yes') ? 'checked="checked"' : '' ?> /> <?= $words->get('Hidden');?>
-                        <div class="small"><?= $words->get('HiddenAgeInfo'); ?></div>
-                  </td>
-                </tr>
+                        ?>
 
-                <tr align='left'>
-                    <td><?= $words->get('Gender'); ?>:</td>
-                    <td colspan='2' >
+                    </div>
+                    <div class="col-4">
+                        <input name="HideBirthDate" value="Yes"
+                               type="checkbox" <?= ($vars['HideBirthDate'] == 'Yes') ? 'checked="checked"' : '' ?> />
+                        Hide age
+                    </div>
+                    <div class="col-3 offset-8 small">
+                        <?= $words->get('HiddenAgeInfo'); ?>
+                    </div>
+
+                    <div class="col-3 mt-3 pt-2">
+                        <?= $words->get('Gender'); ?>
+
+                    </div>
+                    <div class="col-9 mt-3">
                         <div class="btn-group" data-toggle="buttons">
-                            <label for='genderF' class="btn btn-primary <?= (isset($vars['Gender']) && $vars['Gender'] == 'female') ? 'active' : ''?>">
-                            <input type="radio" id="genderF" name="gender" value="female" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'female') ? ' checked="checked"' : ''); ?>/><?= $words->get('female'); ?></label>
-                            <label for='genderM' class="btn btn-primary <?= (isset($vars['Gender']) && $vars['Gender'] == 'male') ? 'active' : ''?>"><input type="radio" id='genderM' name="gender" value="male" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'male') ? ' checked="checked"' : '');?>/> <?= $words->get('male'); ?></label>
-                            <label for='genderX' class="btn btn-primary <?= (isset($vars['Gender']) && $vars['Gender'] == 'other') ? 'active' : ''?>"><input type="radio" id='genderX' name="gender" value="other" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'other') ? ' checked="checked"' : '');?>/> <?= $words->get('GenderOther'); ?></label>
-                    </div></td>
+                            <label for='genderF'
+                                   class="btn btn-primary <?= (isset($vars['Gender']) && $vars['Gender'] == 'female') ? 'active' : '' ?>">
+                                <input type="radio" id="genderF" name="gender"
+                                       value="female" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'female') ? ' checked="checked"' : ''); ?>/><?= $words->get('female'); ?>
+                            </label>
+                            <label for='genderM'
+                                   class="btn btn-primary <?= (isset($vars['Gender']) && $vars['Gender'] == 'male') ? 'active' : '' ?>"><input
+                                        type="radio" id='genderM' name="gender"
+                                        value="male" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'male') ? ' checked="checked"' : ''); ?>/> <?= $words->get('male'); ?>
+                            </label>
+                            <label for='genderX'
+                                   class="btn btn-primary <?= (isset($vars['Gender']) && $vars['Gender'] == 'other') ? 'active' : '' ?>"><input
+                                        type="radio" id='genderX' name="gender"
+                                        value="other" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'other') ? ' checked="checked"' : ''); ?>/> <?= $words->get('GenderOther'); ?>
+                            </label>
+                        </div>
+                        <input name="HideGender" value="Yes" type="checkbox"
+                               id='HideGender' <?= ((isset($vars['HideGender']) && $vars['HideGender'] == "Yes") ? ' checked="checked"' : ''); ?>/><label
+                                for='HideGender'> <?= $words->get("Hidden"); ?></label>
+                    </div>
 
-                     <td><input name="HideGender" value="Yes" type="checkbox" id='HideGender' <?= ((isset($vars['HideGender']) && $vars['HideGender'] == "Yes") ? ' checked="checked"' : '');?>/><label for='HideGender'> <?= $words->get("Hidden");?></label></td>
                     <?php
-                        if (in_array('SignupErrorInvalidGender', $vars['errors']))
-                        {
-                            echo '<div class="error">'.$words->get('SignupErrorInvalidGender').'</div>';
-                        }
-                    ?>
-                </tr>
-
-                <tr align="left" >
-                  <td ><?=$words->get('ProfileOccupation')?>:</td>
-                  <td colspan="2" >
-                    <input type="text"  name="Occupation" value="<?php echo htmlentities($vars['Occupation'], ENT_COMPAT, 'UTF-8'); ?>" />
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfileLanguagesSpoken')?>:</td>
-                  <td colspan="3" >
-                    <table>
-                      <tbody>
-                      <?php
-                        $lang_ids = array();
-                        for ($ii = 0; $ii < count($vars['languages_selected']); $ii++)
-                        {
-                            $lang_ids[] = $vars['languages_selected'][$ii]->IdLanguage;
-                            echo <<<HTML
-                        <tr>
-                        <td style="vertical-align: middle;">
-
-                            <input type='hidden' name='memberslanguages[]' value='{$vars['languages_selected'][$ii]->IdLanguage}'/>
-                            <input type='text' disabled='disabled' value='{$vars['languages_selected'][$ii]->Name}'/>
-                          </td>
-                          <td>
-                              <select class="mll" name="memberslanguageslevel[]" >
-HTML;
-                                for ($jj = 0; $jj < count($vars['language_levels']); $jj++)
-                                {
-                                    $selected = $vars['language_levels'][$jj] == $vars['languages_selected'][$ii]->Level? ' selected="selected"': '';
-                                    echo <<<HTML
-                                    <option value='{$vars['language_levels'][$jj]}'{$selected}>{$words->getSilent("LanguageLevel_" . $vars['language_levels'][$jj])}</option>
-HTML;
-                                }
-                            echo <<<HTML
-                            </select>
-                            {$words->flushBuffer()}
-                          </td>
-                          <td style="vertical-align: middle;"><a href='#' class='remove_lang'>{$words->get('RemoveLanguage')}</a>
-                          </td>
-                        </tr>
-HTML;
-                        }
-                      echo <<<HTML
-                        <tr id="lang1">
-                          <td><select class='lang_selector' name="memberslanguages[]">
-                          <option selected="selected">-{$words->get("ChooseNewLanguage")}-</option>
-                          <optgroup label="{$words->getSilent('SpokenLanguages')}">
-HTML;
-                                for ($jj = 0; $jj < count($vars['languages_all_spoken']); $jj++)
-                                {
-                                    if (in_array($vars['languages_all_spoken'][$jj]->id, $lang_ids))
-                                    {
-                                        continue;
-                                    }
-                                    echo <<<HTML
-                                    <option value="{$vars['languages_all_spoken'][$jj]->id}">{$vars['languages_all_spoken'][$jj]->TranslatedName} ({$vars['languages_all_spoken'][$jj]->Name})</option>
-HTML;
-                                }
-                            echo <<<HTML
-                            </optgroup>
-                          <optgroup label="{$words->getSilent('SignedLanguages')}">
-HTML;
-                                for ($jj = 0; $jj < count($vars['languages_all_signed']); $jj++)
-                                {
-                                    if (in_array($vars['languages_all_signed'][$jj]->id, $lang_ids))
-                                    {
-                                        continue;
-                                    }
-                                    echo <<<HTML
-                                    <option value="{$vars['languages_all_signed'][$jj]->id}">{$vars['languages_all_signed'][$jj]->TranslatedName}</option>
-HTML;
-                                }
-                            echo <<<HTML
-                            </optgroup>
-                          </select>
-                          </td>
-                          <td>
-                            <select class="mll" name="memberslanguageslevel[]" >
-HTML;
-                                for ($jj = 0; $jj < count($vars['language_levels']); $jj++)
-                                {
-                                    echo <<<HTML
-                                    <option value="{$vars['language_levels'][$jj]}">{$words->get("LanguageLevel_" . $vars['language_levels'][$jj])}</option>
-HTML;
-                                }
-                            echo <<<HTML
-                            </select>
-                          </td>
-                          <td>&nbsp;</td>
-                        </tr>
-                      </tbody>
-                      </table>
-                    <input type="button" id="langbutton" class="button" name="addlang" value="{$words->getSilent('AddLanguage')}" />
-{$words->flushBuffer()}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </fieldset>
-          <fieldset id="contactinfo">
-            <legend>{$words->get('ContactInfo')}</legend>
-            <table border="0" class="full" >
-              <colgroup>
-                <col width="25%" />
-                <col width="25%" />
-                <col width="25%" />
-                <col width="25%" />
-              </colgroup>
-              <tbody>
-HTML;
-    if ($this->adminedit || !$CanTranslate) { // member translator is not allowed to update crypted data
-?>
-                <tr align="left" >
-                  <td ><strong><?=$words->get('FirstName')?></strong>: *</td>
-                  <td>
-                    <input class="<?php if (isset($errorFirstName)) { ?>error-input-text<?php } ?>" type="text" name="FirstName" value="<?php echo htmlentities($vars['FirstName'], ENT_COMPAT, 'UTF-8'); ?>"/>
-                    <?php if (isset($errorFirstName)) { ?>
-                      <div class="error-caption"><?=$words->get('SignupErrorInvalidFirstName')?></div>
-                    <?php } ?>
-                  </td>
-                  <td>
-                    <input type="checkbox"  value="Yes"  name="IsHidden_FirstName"
-                    <?php if ($vars['IsHidden_FirstName'])
-                        echo 'checked="checked"';
-                    ?> />
-                    <?=$words->get('hidden')?>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('SecondName')?>:</td>
-                  <td><input type="text" name="SecondName" value="<?php echo htmlentities($vars['SecondName'], ENT_COMPAT, 'UTF-8'); ?>"/></td>
-                  <td>
-                    <input type="checkbox"  value="Yes"  name="IsHidden_SecondName"
-                    <?php if ($vars['IsHidden_SecondName'])
-                        echo 'checked="checked"';
-                    ?> />
-                    <?=$words->get('hidden')?>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><strong><?=$words->get('LastName')?></strong>: *</td>
-                  <td>
-                    <input class="<?php if (isset($errorLastName)) { ?>error-input-text<?php } ?>" type="text" name="LastName" value="<?php echo htmlentities($vars['LastName'], ENT_COMPAT, 'UTF-8'); ?>"/>
-                    <?php if (isset($errorLastName)) { ?>
-                      <div class="error-caption"><?=$words->get('SignupErrorInvalidLastName')?></div>
-                    <?php } ?>
-                  </td>
-                  <td>
-                    <input type="checkbox"  value="Yes"  name="IsHidden_LastName"
-                    <?php if ($vars['IsHidden_LastName'])
-                        echo 'checked="checked"';
-                    ?> />
-                    <?=$words->get('hidden')?>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('Street')?>:</td>
-                  <td>
-                    <input class="<?php if (isset($errorStreet)) { ?>error-input-text<?php } ?>" type="text" name="Street" id="Street" value="<?php echo htmlentities($vars['Street'], ENT_COMPAT, 'UTF-8'); ?>"/>
-                    <?php if (isset($errorStreet)) { ?>
-                      <div class="error-caption"><?=$words->get('SignupErrorInvalidStreet')?></div>
-                    <?php } ?>
-                  </td>
-                  <td>
-                    <input type="checkbox"  value="Yes"  name="IsHidden_Address"
-                    <?php if ($vars['IsHidden_Address'])
-                        echo 'checked="checked"';
-                    ?> />
-                    <?=$words->get('hidden')?>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('HouseNumber')?>:</td>
-                  <td>
-                    <input class="short<?php if (isset($errorHouseNumber)) { ?> error-input-text<?php } ?>" type="text" name="HouseNumber" id="HouseNumber" value="<?php echo htmlentities($vars['HouseNumber'], ENT_COMPAT, 'UTF-8'); ?>" size="6"/>
-                    <?php if (isset($errorHouseNumber)) { ?>
-                      <div class="error-caption"><?=$words->get('SignupErrorInvalidHouseNumber')?></div>
-                    <?php } ?>
-                  </td>
-                  <td>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('Post code')?>:</td>
-                  <td>
-                    <input class="short <?php if (isset($errorZip)) { ?> error-input-text<?php } ?>" type="text" name="Zip" value="<?php echo htmlentities($vars['Zip'], ENT_COMPAT, 'UTF-8'); ?>" size="6"/>
-                    <?php if (isset($errorZip)) { ?>
-                      <div class="error-caption"><?=$words->get('SignupErrorInvalidZip')?></div>
-                    <?php } ?>
-                  </td>
-                  <td>
-                    <input type="checkbox"  value="Yes"  name="IsHidden_Zip"
-                    <?php if ($vars['IsHidden_Zip'])
-                        echo 'checked="checked"';
-                    ?> />
-                    <?=$words->get('hidden')?>
-                  </td>
-                  <td>
-                    &nbsp;
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('Location')?>:</td>
-                  <td >
-                    <?=$member->city?>
-                    <br />
-                    <?=$member->region?>
-                    <br />
-                    <?=$member->country?>
-                    <br />
-                  </td>
-                  <td>
-                    <a href="setlocation" ><?=$words->get('UpdateMyLocation')?></a>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfileHomePhoneNumber')?>:</td>
-                  <td>
-                    <input type="text" size="25" name="HomePhoneNumber"  value="<?php echo htmlentities($vars['HomePhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>" />
-                  </td>
-                  <td>
-                    <input type="checkbox"  value="Yes"  name="IsHidden_HomePhoneNumber"
-                    <?php if ($vars['IsHidden_HomePhoneNumber'])
-                        echo 'checked="checked"';
-                    ?> />
-                    <?=$words->get('hidden')?>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfileCellPhoneNumber')?>:</td>
-                  <td>
-                    <input type="text" size="25" name="CellPhoneNumber" value="<?php echo htmlentities($vars['CellPhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>" />
-                  </td>
-                  <td>
-                    <input type="checkbox"  value="Yes"  name="IsHidden_CellPhoneNumber"
-                    <?php if ($vars['IsHidden_CellPhoneNumber'])
-                        echo 'checked="checked"';
-                    ?> />
-                    <?=$words->get('hidden')?>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfileWorkPhoneNumber')?>:</td>
-                  <td>
-                    <input type="text" size="25"  name="WorkPhoneNumber" value="<?php echo htmlentities($vars['WorkPhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>" />
-                  </td>
-                  <td>
-                    <input type="checkbox"  value="Yes"  name="IsHidden_WorkPhoneNumber"
-                    <?php if ($vars['IsHidden_WorkPhoneNumber'])
-                        echo 'checked="checked"';
-                    ?> />
-                    <?=$words->get('hidden')?>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><strong><?=$words->get('SignupEmail')?></strong>: *</td>
-                  <td>
-                    <input class="<?php if (isset($errorEmail)) { ?>error-input-text<?php } ?>" type="text" size="25" name="Email" value="<?=str_replace('%40', '@', $vars['Email'])?>" />
-                    <?php if (isset($errorEmail)) { ?>
-                      <div class="error-caption"><?=$words->get('SignupErrorInvalidEmail')?></div>
-                    <?php } ?>
-                  </td>
-                  <td><?=$words->get('EmailIsAlwayHidden')?></td>
-
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('Website')?>:</td>
-                  <td>
-                    <input type="text" size="25"  name="WebSite"  value="<?php echo htmlentities($vars['WebSite'], ENT_COMPAT, 'UTF-8'); ?>" />
-                  </td>
-                </tr>
-
-                <?php
-                if(isset($vars['messengers'])) {
-                    foreach($vars['messengers'] as $me) {
-                    $val = 'chat_' . $me['network_raw'];
-                ?>
-                <tr align="left" >
-                  <td ><?=$me["network"]?>
-                  <?="<img src='".PVars::getObj('env')->baseuri."images/icons/icons1616/".$me["image"]."' width='16' height='16' title='".$me["network"]."' alt='".$me["network"]."' />"?>
-                  </td>
-                  <td>
-                    <input type="text" size="25" name="<?=$val?>" value="<?php echo htmlentities($me["address"], ENT_COMPAT, 'UTF-8'); ?>" />
-                  </td>
-                  <td>
-                  </td>
-                </tr>
-                <?php
-                    }
-                }
-
-    }
-?>
-              </tbody>
-            </table>
-          </fieldset>
-          <fieldset id="profileaccommodation">
-            <legend><?=$words->get('ProfileAccommodation')?></legend>
-            <table border="0" >
-              <colgroup>
-                <col width="25%" />
-                <col width="75%" />
-              </colgroup>
-              <tbody>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfileAccommodation')?></td>
-                  <td>
-                    <select name="Accomodation" >
-                    <?php
-                    $syshcvol = PVars::getObj('syshcvol');
-                    $tt = $syshcvol->Accomodation;
-                    $max = count($tt);
-                    for ($ii = 0; $ii < $max; $ii++) {
-                        echo "<option value=\"" . $tt[$ii] . "\"";
-                        if ($tt[$ii] == $vars['Accomodation'])
-                            echo " selected=\"selected\"";
-                        echo ">", $words->get("Accomodation_" . $tt[$ii]), "</option>\n";
+                    if (in_array('SignupErrorInvalidGender', $vars['errors'])) {
+                        echo '<div class="error">' . $words->get('SignupErrorInvalidGender') . '</div>';
                     }
                     ?>
+
+                    <div class="col-3 mt-lg-3"><?= $words->get('Location') ?></div>
+                    <div class="col-3 mt-lg-3">
+                        <?= $member->city ?>
+                        <br>
+                        <?= $member->region ?>
+                        <br>
+                        <?= $member->country ?>
+                    </div>
+                    <div class="col-6 mt-lg-3"><a href="setlocation" class="btn btn-primary"><?= $words->get('UpdateMyLocation') ?></a></div>
+
+            </div>
+        </div>
+    </div>
+    <div class="item">
+        <a data-toggle="collapse" data-parent="#editProfile" href="#editProfile2" aria-expanded="false"
+           aria-controls="editProfile2" class="btn btn-outline-primary editbutton text-left">
+            <i class="fa fa-angle-down"></i> <?= $words->get('ProfileSummary') ?>
+        </a>
+        <div id="editProfile2" class="collapse editprofilebox" role="tabpanel">
+            <div class="row my-2">
+                <div class="col-3"><?= $words->get('ProfileOccupation') ?></div>
+                <div class="col-9"><input type="text" name="Occupation"
+                                          value="<?php echo htmlentities($vars['Occupation'], ENT_COMPAT, 'UTF-8'); ?>"/>
+                </div>
+
+                <div class="col-3"><?= $words->get('ProfileSummary') ?></div>
+                <div class="col-9"><textarea name="ProfileSummary" id="ProfileSummary" class="long" cols="50"
+                                             rows="6"><?php echo htmlentities($vars['ProfileSummary'], ENT_COMPAT, 'UTF-8'); ?></textarea>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="item">
+        <a data-toggle="collapse" data-parent="#editProfile" href="#editProfile3" aria-expanded="false"
+           aria-controls="editProfile3" class="btn btn-outline-primary editbutton text-left">
+            <i class="fa fa-angle-down"></i> <?= $words->get('ProfileAccommodation') ?>
+        </a>
+        <div id="editProfile3" class="collapse editprofilebox" role="tabpanel">
+
+            <div class="row my-2">
+                <div class="col-3">
+                    <?= $words->get('HostingStatus') ?>
+                </div>
+                <div class="col-9">
+                    <select name="Accomodation">
+                        <?php
+                        $syshcvol = PVars::getObj('syshcvol');
+                        $tt = $syshcvol->Accomodation;
+                        $max = count($tt);
+                        for ($ii = 0; $ii < $max; $ii++) {
+                            echo "<option value=\"" . $tt[$ii] . "\"";
+                            if ($tt[$ii] == $vars['Accomodation'])
+                                echo " selected=\"selected\"";
+                            echo ">", $words->get("Accomodation_" . $tt[$ii]), "</option>\n";
+                        }
+                        ?>
                     </select>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfileNumberOfGuests')?>:</td>
-                  <td>
-                  <select name="MaxGuest" >
-                  <?php
-                  for ($ii = 1; $ii < 30; $ii++) {
-                  ?>
-                    <option value="<?=$ii?>" <?=($vars['MaxGuest'] == $ii) ? 'selected="selected"':''?>><?=$ii?></option>
-                  <?php
-                  }
-                  ?>
-                  </select>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfileMaxLenghtOfStay')?>:</td>
-                  <td colspan="2" >
-                    <textarea name="MaxLenghtOfStay" class="long"  cols="50" rows="4" ><?=$vars['MaxLenghtOfStay']?></textarea>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfileILiveWith')?>:</td>
-                  <td colspan="2" >
-                    <textarea name="ILiveWith" class="long"  cols="50" rows="4" ><?=$vars['ILiveWith']?></textarea>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfilePleaseBring')?>:</td>
-                  <td colspan="2" >
-                    <textarea name="PleaseBring" class="long"  cols="50" rows="4" ><?=$vars['PleaseBring']?></textarea>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfileOfferGuests')?>:</td>
-                  <td colspan="2" >
-                    <textarea name="OfferGuests" class="long"  cols="50" rows="4" ><?=$vars['OfferGuests']?></textarea>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfileOfferHosts')?>:</td>
-                  <td colspan="2" >
-                    <textarea name="OfferHosts" class="long"  cols="50" rows="4" ><?=$vars['OfferHosts']?></textarea>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('ICanAlsoOffer')?>:</td>
-                  <td colspan="2" >
+                </div>
+
+                <div class="col-3">
+                    <? echo $words->get('ProfileNumberOfGuests'); ?>
+                </div>
+                <div class="col-9">
+                    <select name="MaxGuest">
+                        <?php
+                        for ($ii = 1; $ii < 21; $ii++) {
+                            ?>
+                            <option value="<?= $ii ?>" <?= ($vars['MaxGuest'] == $ii) ? 'selected="selected"' : '' ?>><?= $ii ?></option>
+                            <?php
+                        }
+                        ?>
+                    </select>
+                </div>
+
+                <div class="col-3">
+                    <?= $words->get('ProfileMaxLenghtOfStay') ?>
+                </div>
+                <div class="col-9">
+<textarea name="MaxLenghtOfStay" class="long" cols="50"
+          rows="2"><?= $vars['MaxLenghtOfStay'] ?></textarea>
+                </div>
+
+                <div class="col-3">
+                    <?= $words->get('ProfileILiveWith') ?>
+                </div>
+                <div class="col-9">
+                    <textarea name="ILiveWith" class="long" cols="50" rows="2"><?= $vars['ILiveWith'] ?></textarea>
+                </div>
+
+                <div class="col-3">
+                    <?= $words->get('ProfilePleaseBring') ?>
+                </div>
+                <div class="col-9">
+                    <textarea name="PleaseBring" class="long" cols="50" rows="3"><?= $vars['PleaseBring'] ?></textarea>
+                </div>
+
+                <div class="col-3">
+                    <?= $words->get('ProfileOfferGuests') ?>
+                </div>
+                <div class="col-9">
+                    <textarea name="OfferGuests" class="long" cols="50" rows="3"><?= $vars['OfferGuests'] ?></textarea>
+                </div>
+
+                <div class="col-3">
+                    <?= $words->get('ProfileOfferHosts') ?>
+                </div>
+                <div class="col-9">
+                    <textarea name="OfferHosts" class="long" cols="50" rows="3"><?= $vars['OfferHosts'] ?></textarea>
+                </div>
+
+                <div class="col-3">
+                    <?= $words->get('ICanAlsoOffer') ?>
+                </div>
+                <div class="col-9">
                     <ul>
-                    <?php
+                        <?php
                         $max = count($vars['TabTypicOffer']);
                         for ($ii = 0; $ii < $max; $ii++) {
                             echo "<li><input type=\"checkbox\" name=\"check_" . $member->TabTypicOffer[$ii] . "\" ";
@@ -512,21 +273,24 @@ HTML;
                             echo " />";
                             echo "&nbsp;&nbsp;", $words->get("TypicOffer_" . $member->TabTypicOffer[$ii]), "</li>\n";
                         }
-                    ?>
+                        ?>
                     </ul>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfilePublicTransport')?>:</td>
-                  <td colspan="2" >
-                    <textarea name="PublicTransport" class="long"  cols="50" rows="4" ><?=$vars['PublicTransport']?></textarea>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfileRestrictionForGuest')?>:</td>
-                  <td colspan="2" >
+                </div>
+
+                <div class="col-3">
+                    <?= $words->get('ProfilePublicTransport') ?>
+                </div>
+                <div class="col-9">
+<textarea name="PublicTransport" class="long" cols="50"
+          rows="3"><?= $vars['PublicTransport'] ?></textarea>
+                </div>
+
+                <div class="col-3">
+                    <?= $words->get('ProfileRestrictionForGuest') ?>
+                </div>
+                <div class="col-9">
                     <ul>
-                    <?php
+                        <?php
                         $max = count($member->TabRestrictions);
                         for ($ii = 0; $ii < $max; $ii++) {
                             echo "<li><input type=\"checkbox\" name=\"check_" . $member->TabRestrictions[$ii] . "\" ";
@@ -535,203 +299,447 @@ HTML;
                             echo " />";
                             echo "&nbsp;&nbsp;", $words->get("Restriction_" . $member->TabRestrictions[$ii]), "</li>\n";
                         }
-                    ?>
+                        ?>
                     </ul>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfileHouseRules')?>:</td>
-                  <td colspan="2" >
-                    <textarea name="OtherRestrictions" class="long" cols="50" rows="4" ><?=$vars['OtherRestrictions']?></textarea>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfileAdditionalAccomodationInfo')?>:</td>
-                  <td colspan="2" >
-                    <textarea name="AdditionalAccomodationInfo" class="long" cols="50"  rows="4" ><?=$vars['AdditionalAccomodationInfo']?></textarea>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </fieldset>
-          <fieldset id="profileinterests">
-            <legend><?=$words->get('ProfileInterests')?></legend>
-            <table border="0" class="full" >
-              <colgroup>
-                <col width="25%" />
-                <col width="75%" />
-              </colgroup>
-              <tbody>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfileHobbies')?>:</td>
-                  <td>
-                    <textarea name="Hobbies" class="long" cols="50"  rows="4" ><?=$vars['Hobbies']?></textarea>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfileBooks')?>:</td>
-                  <td>
-                    <textarea name="Books" class="long" cols="50"  rows="4" ><?=$vars['Books']?></textarea>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfileMusic')?>:</td>
-                  <td>
-                    <textarea name="Music" class="long" cols="50"  rows="4" ><?=$vars['Music']?></textarea>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfileMovies')?>:</td>
-                  <td>
-                    <textarea name="Movies" class="long" cols="50"  rows="4" ><?=$vars['Movies']?></textarea>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfileOrganizations')?>:</td>
-                  <td>
-                    <textarea name="Organizations" class="long" cols="50"  rows="4" ><?=$vars['Organizations']?></textarea>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <h3><?=$words->get('ProfileTravelExperience')?></h3>
-            <table border="0" class="full" >
-              <colgroup>
-                <col width="25%" />
-                <col width="75%" />
-              </colgroup>
-              <tbody>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfilePastTrips')?>:</td>
-                  <td>
-                    <textarea name="PastTrips" class="long" cols="50"  rows="4" ><?=$vars['PastTrips']?></textarea>
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td ><?=$words->get('ProfilePlannedTrips')?>:</td>
-                  <td>
-                    <textarea name="PlannedTrips" class="long" cols="50"  rows="4" ><?=$vars['PlannedTrips']?></textarea>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </fieldset>
+                </div>
 
-          <?php if (!empty($vars['Relations']) && 1 == 1) : // Disabled ?>
-          <fieldset id="specialrelations">
-            <legend><?=$words->get('MyRelations')?></legend>
-            <table border="0" >
-              <colgroup>
-                <col width="25%" />
-                <col width="60%" />
-                <col width="15%" />
-              </colgroup>
-              <tbody>
+                <div class="col-3">
+                    <?= $words->get('ProfileHouseRules') ?>
+                </div>
+                <div class="col-9">
+<textarea name="OtherRestrictions" class="long" cols="50"
+          rows="3"><?= $vars['OtherRestrictions'] ?></textarea>
+                </div>
+
+                <div class="col-3">
+                    <?= $words->get('ProfileAdditionalAccomodationInfo') ?>
+                </div>
+                <div class="col-9">
+<textarea name="AdditionalAccomodationInfo" class="long" cols="50"
+          rows="4"><?= $vars['AdditionalAccomodationInfo'] ?></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="item">
+        <a data-toggle="collapse" data-parent="#editProfile" href="#editProfile4" aria-expanded="false"
+           aria-controls="editProfile4" class="btn btn-outline-primary editbutton text-left">
+            <i class="fa fa-angle-down"></i> <?= $words->get('ProfileInterests') ?>
+        </a>
+        <div id="editProfile4" class="collapse editprofilebox" role="tabpanel">
+            <div class="row my-2">
+                <div class="col-3">
+                    <?= $words->get('ProfileHobbies') ?>
+                </div>
+                <div class="col-9">
+                    <textarea name="Hobbies" class="long" cols="50" rows="4"><?= $vars['Hobbies'] ?></textarea>
+                </div>
+
+                <div class="col-3">
+                    <?= $words->get('ProfileBooks') ?>
+                </div>
+                <div class="col-9">
+                    <textarea name="Books" class="long" cols="50" rows="4"><?= $vars['Books'] ?></textarea>
+                </div>
+
+                <div class="col-3">
+                    <?= $words->get('ProfileMusic') ?>
+                </div>
+                <div class="col-9">
+                    <textarea name="Music" class="long" cols="50" rows="4"><?= $vars['Music'] ?></textarea>
+                </div>
+
+                <div class="col-3">
+                    <?= $words->get('ProfileMovies') ?>
+                </div>
+                <div class="col-9">
+                    <textarea name="Movies" class="long" cols="50" rows="4"><?= $vars['Movies'] ?></textarea>
+                </div>
+
+                <div class="col-3">
+                    <?= $words->get('ProfileOrganizations') ?>
+                </div>
+                <div class="col-9">
+                    <textarea name="Organizations" class="long" cols="50" rows="4"><?= $vars['Organizations'] ?></textarea>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="item">
+        <a data-toggle="collapse" data-parent="#editProfile" href="#editProfile5" aria-expanded="false"
+           aria-controls="editProfile5" class="btn btn-outline-primary editbutton text-left">
+            <i class="fa fa-angle-down"></i> <?= $words->get('Languages') ?>
+        </a>
+        <div id="editProfile5" class="collapse editprofilebox" role="tabpanel">
+
+            <div class="row my-2">
+                <div class="col-12 my-2"><?= $words->get('ProfileLanguagesSpoken') ?></div>
                 <?php
-                $Relations=$vars['Relations'];
-                foreach($Relations as $Relation) {
-                    $comment = $words->mInTrad($Relation->Comment, $profile_language);
+                $lang_ids = array();
+                for ($ii = 0; $ii < count($vars['languages_selected']); $ii++) {
+                $lang_ids[] = $vars['languages_selected'][$ii]->IdLanguage; ?>
 
-                    // Hack to filter out accidental '0' or '123456' comments that were saved
-                    // by users while relation comment update form was buggy (see #1580)
-                    if (is_numeric($comment)) {
-                        $comment = '';
+                <div class="col-4">
+                            <input type="hidden" name="memberslanguages[]" value="<?= $vars['languages_selected'][$ii]->IdLanguage ?>">
+                            <input type="text" disabled value="<?= $vars['languages_selected'][$ii]->Name ?>" class="w-100">
+                </div>
+                <div class="col-8">
+                    <select class="mll" name="memberslanguageslevel[]">
+                    <?
+                                for ($jj = 0; $jj < count($vars['language_levels']); $jj++)
+                                {
+                                    $selected = $vars['language_levels'][$jj] == $vars['languages_selected'][$ii]->Level? ' selected="selected"': '';
+                                    ?>
+                                    <option value='<?= $vars['language_levels'][$jj] ?>'<?= $selected ?>><?= $words->getSilent("LanguageLevel_" . $vars['language_levels'][$jj]) ?></option>
+                                <? } ?>
+
+                            </select>
+                            <?= $words->flushBuffer() ?>
+                          <a href="#" class="btn btn-outline-secondary p-1 py-0 remove_lang"><?= $words->get('RemoveLanguage') ?></a>
+                </div>
+                    <?
+                } ?>
+
+                <div class="col-4" id="lang1">
+               <select class='lang_selector' name="memberslanguages[]">
+                            <option selected="selected">-<?= $words->get("ChooseNewLanguage") ?>-</option>
+                            <optgroup label="<?= $words->getSilent('SpokenLanguages') ?>">
+                                <?
+                                for ($jj = 0; $jj < count($vars['languages_all_spoken']); $jj++)
+                                {
+                                if (in_array($vars['languages_all_spoken'][$jj]->id, $lang_ids))
+                                {
+                                continue;
+                                }
+                                ?>
+                                <option value="<?= $vars['languages_all_spoken'][$jj]->id ?>"><?= $vars['languages_all_spoken'][$jj]->TranslatedName ?> (<?= $vars['languages_all_spoken'][$jj]->Name ?>)</option>
+                                <?
+                                }
+                                ?>
+                            </optgroup>
+                            <optgroup label="<?= $words->getSilent('SignedLanguages') ?>">
+                                <?
+                                for ($jj = 0; $jj < count($vars['languages_all_signed']); $jj++)
+                                {
+                                if (in_array($vars['languages_all_signed'][$jj]->id, $lang_ids))
+                                {
+                                continue;
+                                }
+                                ?>
+                                <option value="<?= $vars['languages_all_signed'][$jj]->id ?>"><?= $vars['languages_all_signed'][$jj]->TranslatedName ?></option>
+                                <?
+                                }
+                                ?>
+                            </optgroup>
+                        </select>
+                </div>
+                <div class="col-8">
+                        <select class="mll" name="memberslanguageslevel[]" >
+                            <?
+                            for ($jj = 0; $jj < count($vars['language_levels']); $jj++)
+                            {
+                            ?>
+                            <option value="<?= $vars['language_levels'][$jj] ?>"><?= $words->get("LanguageLevel_" . $vars['language_levels'][$jj]) ?></option>
+                            <?
+                            }
+                            ?>
+                        </select>
+            </div>
+
+                <div class="col-12 mb-3">
+                    <input type="button" id="langbutton" class="btn btn-primary mt-1" name="addlang" value="<?= $words->getSilent('AddLanguage') ?>"/>
+                    <?= $words->flushBuffer() ?>
+                </div>
+            </div>
+    </div>
+</div>
+<div class="item">
+    <a data-toggle="collapse" data-parent="#editProfile" href="#editProfile6" aria-expanded="false"
+       aria-controls="editProfile6" class="btn btn-outline-primary editbutton text-left">
+        <i class="fa fa-angle-down"></i> <?= $words->get('ContactInfo') ?>
+    </a>
+    <div id="editProfile6" class="collapse editprofilebox" role="tabpanel">
+        <div class="row my-2">
+            <? if ($this->adminedit || !$CanTranslate) { // member translator is not allowed to update crypted data ?>
+                <div class="col-2">
+                    <?= $words->get('FirstName') ?>
+                </div>
+                <div class="col-3">
+                    <input class="<?php if (isset($errorFirstName)) { ?>error-input-text<?php } ?>" type="text"
+                           name="FirstName"
+                           value="<?php echo htmlentities($vars['FirstName'], ENT_COMPAT, 'UTF-8'); ?>"/>
+                    <?php if (isset($errorFirstName)) { ?>
+                        <div class="alert alert-danger"><?= $words->get('SignupErrorInvalidFirstName') ?></div>
+                    <?php } ?>
+
+                </div>
+                <div class="col-7">
+                    <input type="checkbox" value="Yes" name="IsHidden_FirstName"
+                        <?php if ($vars['IsHidden_FirstName'])
+                            echo 'checked="checked"';
+                        ?> />
+                    <?= $words->get('hidden') ?>
+                </div>
+
+                <div class="col-2">
+                    <?= $words->get('SecondName') ?>
+                </div>
+                <div class="col-3">
+                    <input type="text" name="SecondName"
+                           value="<?php echo htmlentities($vars['SecondName'], ENT_COMPAT, 'UTF-8'); ?>"/></td>
+                </div>
+                <div class="col-7">
+                    <input type="checkbox" value="Yes" name="IsHidden_SecondName"
+                        <?php if ($vars['IsHidden_SecondName'])
+                            echo 'checked="checked"';
+                        ?> />
+                    <?= $words->get('hidden') ?>
+                </div>
+
+                <div class="col-2">
+                    <?= $words->get('LastName') ?>
+                </div>
+                <div class="col-3">
+                    <input class="<?php if (isset($errorLastName)) { ?>error-input-text<?php } ?>" type="text"
+                           name="LastName" value="<?php echo htmlentities($vars['LastName'], ENT_COMPAT, 'UTF-8'); ?>"/>
+                    <?php if (isset($errorLastName)) { ?>
+                        <div class="alert alert-danger"><?= $words->get('SignupErrorInvalidLastName') ?></div>
+                    <?php } ?>
+                </div>
+                <div class="col-7">
+
+                    <input type="checkbox" value="Yes" name="IsHidden_LastName"
+                        <?php if ($vars['IsHidden_LastName'])
+                            echo 'checked="checked"';
+                        ?> />
+                    <?= $words->get('hidden') ?>
+                </div>
+
+                <div class="col-2">
+                    <?= $words->get('SignupEmail') ?>
+                </div>
+                <div class="col-4">
+                    <input class="<?php if (isset($errorEmail)) { ?>error-input-text<?php } ?>" type="text" size="25"
+                           name="Email" value="<?= str_replace('%40', '@', $vars['Email']) ?>"/>
+                    <?php if (isset($errorEmail)) { ?>
+                        <div class="error-caption"><?= $words->get('SignupErrorInvalidEmail') ?></div>
+                    <?php } ?>
+                </div>
+                <div class="col-6">
+                    <?= $words->get('EmailIsAlwayHidden') ?>
+                </div>
+
+                <div class="col-2">
+                    <?= $words->get('Street') ?>
+                </div>
+                <div class="col-3">
+                    <input class="<?php if (isset($errorStreet)) { ?>error-input-text<?php } ?>" type="text"
+                           name="Street"
+                           id="Street" value="<?php echo htmlentities($vars['Street'], ENT_COMPAT, 'UTF-8'); ?>"/>
+                    <?php if (isset($errorStreet)) { ?>
+                        <div class="alert alert-danger"><?= $words->get('SignupErrorInvalidStreet') ?></div>
+                    <?php } ?>
+                </div>
+                <div class="col-7">
+                    <input type="checkbox" value="Yes" name="IsHidden_Address"
+                        <?php if ($vars['IsHidden_Address'])
+                            echo 'checked="checked"';
+                        ?> />
+                    <?= $words->get('hidden') ?>
+                </div>
+
+                <div class="col-2">
+                    <?= $words->get('HouseNumber') ?>
+                </div>
+                <div class="col-3">
+                    <input class="short<?php if (isset($errorHouseNumber)) { ?> error-input-text<?php } ?>" type="text"
+                           name="HouseNumber" id="HouseNumber"
+                           value="<?php echo htmlentities($vars['HouseNumber'], ENT_COMPAT, 'UTF-8'); ?>" size="6"/>
+                    <?php if (isset($errorHouseNumber)) { ?>
+                        <div class="alert alert-danger"><?= $words->get('SignupErrorInvalidHouseNumber') ?></div>
+                    <?php } ?>
+                </div>
+                <div class="col-7">
+                </div>
+
+                <div class="col-2">
+                    <?= $words->get('Post code') ?>
+                </div>
+                <div class="col-3">
+                    <input class="short <?php if (isset($errorZip)) { ?> error-input-text<?php } ?>" type="text"
+                           name="Zip"
+                           value="<?php echo htmlentities($vars['Zip'], ENT_COMPAT, 'UTF-8'); ?>" size="6"/>
+                    <?php if (isset($errorZip)) { ?>
+                        <div class="alert alert-danger"><?= $words->get('SignupErrorInvalidZip') ?></div>
+                    <?php } ?>
+                </div>
+                <div class="col-7">
+                    <input type="checkbox" value="Yes" name="IsHidden_Zip"
+                        <?php if ($vars['IsHidden_Zip'])
+                            echo 'checked="checked"';
+                        ?> />
+                    <?= $words->get('hidden') ?>
+                </div>
+
+                <div class="col-2">
+                    <?= $words->get('ProfileHomePhoneNumber') ?>
+                </div>
+                <div class="col-3">
+                    <input type="text" size="15" name="HomePhoneNumber"
+                           value="<?php echo htmlentities($vars['HomePhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>"/>
+                </div>
+                <div class="col-7">
+                    <input type="checkbox" value="Yes" name="IsHidden_HomePhoneNumber"
+                        <?php if ($vars['IsHidden_HomePhoneNumber'])
+                            echo 'checked="checked"';
+                        ?> />
+                    <?= $words->get('hidden') ?>
+                </div>
+
+                <div class="col-2">
+                    <?= $words->get('ProfileCellPhoneNumber') ?>
+                </div>
+                <div class="col-3">
+                    <input type="text" size="15" name="CellPhoneNumber"
+                           value="<?php echo htmlentities($vars['CellPhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>"/>
+                </div>
+                <div class="col-7">
+                    <input type="checkbox" value="Yes" name="IsHidden_CellPhoneNumber"
+                        <?php if ($vars['IsHidden_CellPhoneNumber'])
+                            echo 'checked="checked"';
+                        ?> />
+                    <?= $words->get('hidden') ?>
+                </div>
+
+                <div class="col-2">
+                    <?= $words->get('ProfileWorkPhoneNumber') ?>
+                </div>
+                <div class="col-3">
+                    <input type="text" size="15" name="WorkPhoneNumber"
+                           value="<?php echo htmlentities($vars['WorkPhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>"/>
+                </div>
+                <div class="col-7">
+                    <input type="checkbox" value="Yes" name="IsHidden_WorkPhoneNumber"
+                        <?php if ($vars['IsHidden_WorkPhoneNumber'])
+                            echo 'checked="checked"';
+                        ?> />
+                    <?= $words->get('hidden') ?>
+                </div>
+
+                <div class="col-2">
+                    <?= $words->get('Website') ?>
+                </div>
+                <div class="col-4">
+                    <input type="text" size="25" name="WebSite"
+                           value="<?php echo htmlentities($vars['WebSite'], ENT_COMPAT, 'UTF-8'); ?>"/>
+                </div>
+                <div class="col-6">
+                </div>
+
+
+                <?php
+                //TODO: Update messengers to current standard
+                if (isset($vars['messengers'])) {
+                    foreach ($vars['messengers'] as $me) {
+                        $val = 'chat_' . $me['network_raw'];
+                        ?>
+
+                        <div class="col-2">
+                            <?= $me["network"] ?>
+                            <?= "<img src='" . PVars::getObj('env')->baseuri . "images/icons/icons1616/" . $me["image"] . "' width='16' height='16' title='" . $me["network"] . "' alt='" . $me["network"] . "' />" ?>
+                        </div>
+                        <div class="col-3">
+                            <input type="text" size="15" name="<?= $val ?>"
+                                   value="<?php echo htmlentities($me["address"], ENT_COMPAT, 'UTF-8'); ?>"/>
+                        </div>
+                        <div class="col-7">
+
+                        </div>
+                        <?php
                     }
-                ?>
-                <tr align="left" >
-                  <td >
-                  <?php
-                  if ($Relation->Confirmed=='Yes') {
-                    echo "<b>",$Relation->Username,"</b>" ;
-                  }
-                  else {
-                    echo $Relation->Username ;
-                  }
-                  ?><br />
-                    <img class="framed"  src="members/avatar/<?=$Relation->Username?>/50"  height="50"  width="50"  alt="Profile" />
-                  </td>
-                  <td>
-                    <?php
-                    echo "<textarea cols=\"40\" rows=\"6\" name=\"", "RelationComment_" . $Relation->id, "\">";
-                    echo $comment;
-                    echo "</textarea>\n";
-                    ?>
-                  </td>
-                  <td>
-                    <a href="/members/<?php echo $member->Username; ?>/relations/delete/<?php echo $Relation->id; ?>?redirect=editmyprofile#!specialrelations" onclick="return confirm('<?php echo $words->getSilent('Relation_delete_confirmation'); ?>');"><?php echo $words->getFormatted("delrelation", $Relation->Username); ?><?php echo $words->flushBuffer(); ?></a>
-                  </td>
-                </tr>
-                <?php
                 }
-                ?>
-              </tbody>
-            </table>
-          </fieldset>
-          <?php endif; ?>
+            }
+            ?>
+        </div>
+    </div>
+</div>
+<div class="item">
+    <a data-toggle="collapse" data-parent="#editProfile" href="#editProfile7" aria-expanded="false"
+       aria-controls="editProfile7" class="btn btn-outline-primary editbutton text-left">
+        <i class="fa fa-angle-down"></i> <?= $words->get('ProfileTravelExperience') ?>
+    </a>
+    <div id="editProfile7" class="collapse editprofilebox" role="tabpanel">
+        <div class="row my-2">
+            <div class="col-3">
+                <?= $words->get('ProfilePastTrips') ?>
+            </div>
+            <div class="col-9">
+                <textarea name="PastTrips" class="long" cols="50" rows="2"><?= $vars['PastTrips'] ?></textarea>
+            </div>
 
-<?php if (1 == 0) : ?>
-          <? // Groups (restored by JeanYves) -- disabled ?>
+            <div class="col-3">
+                <?= $words->get('ProfilePlannedTrips') ?>
+            </div>
+            <div class="col-9">
+                <textarea name="PlannedTrips" class="long" cols="50" rows="4"><?= $vars['PlannedTrips'] ?></textarea>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<?php if (!empty($vars['Relations']) && 1 == 1) : // Disabled   ?>
+
+<div class="item">
+    <a data-toggle="collapse" data-parent="#editProfile" href="#editProfile8" aria-expanded="false"
+       aria-controls="editProfile8" class="btn btn-outline-primary editbutton text-left">
+        <i class="fa fa-angle-down"></i> <?= $words->get('MyRelations') ?>
+    </a>
+    <div id="editProfile8" class="collapse editprofilebox" role="tabpanel">
+        <div class="row my-2">
+
             <?php
-            $my_groups =$vars['Groups'];
-            // $my_groups=array() ; // uncomment this line if you don't want to have groups inside edit profile
-            if (!empty($my_groups)) {
+            $Relations = $vars['Relations'];
+            foreach ($Relations as $Relation) {
+            $comment = $words->mInTrad($Relation->Comment, $profile_language);
+            if (is_numeric($comment)) {
+                $comment = '';
+            }
             ?>
-          <fieldset>
-            <legend class="icon groups22" ><?=$words->get('MyGroups')?></legend>
-            <table border="0" >
-              <colgroup>
-                <col width="25%" />
-                <col width="75%" />
-              </colgroup>
-              <tbody>
+
+            <div class="col-2">
+                <img src="members/avatar/<?= $Relation->Username ?>/50" height="50" width="50"
+                     alt="Profile"/><br>
+                <span class="small
                 <?php
-                for ($i = 0; $i < count($my_groups) ; $i++) {
-                    $group=$my_groups[$i] ;
-                    $group_img = ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$group->getPKValue()}" : 'images/icons/group.png' );
-                    $group_id = $group->getPKValue() ;
-                    $group_name_translated = $words->get("Group_".$group->Name);
-                    $group_comment_translated = htmlspecialchars($words->mInTrad($member->getGroupMembership($group)->Comment,$profile_language), ENT_QUOTES);
+                if ($Relation->Confirmed == 'Yes') { echo ' font-weight-bold'; }
                 ?>
-                <tr align="left" >
-                  <td ><a href="groups/<?=$group_id?>" ><?php echo $group_name_translated," ",$group->Location ;?></a></td>
-                  <td colspan="2" >
-                    <input type="hidden" Name="Group_id<?=$group->id?>" value="<?=$group->id?>">
-                    <textarea cols="50"  rows="6"  name="GroupMembership_<?=$member->getGroupMembership($group)->id?>" ><?=$group_comment_translated?></textarea>
-                <?php
-                /*
-                if ($Rights->hasRight("Beta","GroupMessage")) {
-                       echo "<br /> BETA ";
-                       echo "                <input type=\"checkbox\" name=\"AcceptMessage_".$group->od."\" ";
-                       if ($group->IacceptMassMailFromThisGroup=="yes") echo "checked";
-                       echo " />\n";
-                       echo $words->get('AcceptMessageFromThisGroup');
-                    }
-                    else {
-                       echo "<input type=\"hidden\" name=\"AcceptMessage_".$group->od."\" value=\"".$group->IacceptMassMailFromThisGroup."\" />\n";
-                    }
-                */
-                ?>
-                  </td>
-                </tr>
-                <?php
-                }
-                ?>
-              </tbody>
-            </table>
-          </fieldset>
-            <?php
-            } // end if (!empty($my_groups)
-            ?>
-          <?php endif; ?>
-          <table>
-            <tbody>
-              <tr>
-                <td colspan="3"  align="center" >
-                  <input type="submit" class="button"  id="submit"  name="submit"  value="<?=$words->getSilent('Save Profile')?>" /> <?php echo $words->flushBuffer(); ?>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                "><?= $Relation->Username ?></span>
+            </div>
+            <div class="col-6">
+                <textarea cols="40" rows="2" name="RelationComment_<?= $Relation->id ?>"><?= $comment ?></textarea>
+            </div>
+            <div class="col-4">
+                <a href="/members/<?php echo $member->Username; ?>/relations/delete/<?php echo $Relation->id; ?>?redirect=editmyprofile#!specialrelations"
+                   class="btn btn-outline-secondary p-1 py-0" onclick="return confirm('<?php echo $words->getSilent('Relation_delete_confirmation'); ?>');"><?php echo $words->getFormatted("delrelation", $Relation->Username); ?><?php echo $words->flushBuffer(); ?></a>
+            </div>
+            <?php } endif; ?>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<div>
+    <input type="submit" class="btn btn-primary editbutton text-left" id="submit" name="submit"
+           value="<?= $words->getSilent('Save Profile') ?>"/> <?php echo $words->flushBuffer(); ?>
+</div>
+
+</div>
+
+
 <script type="text/javascript">//<!--
     jQuery.noConflict();
     jQuery(".lang_selector").select2({

@@ -102,6 +102,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('myvisitors', '/myvisitors');
         $this->addRouteDirectly('profilecomments', '/about/commentguidelines');
         $this->addRouteDirectly('setlocation', '/setlocation');
+        $this->addRouteDirectly('editmyprofile_finish', '/editmyprofile/finish');
 
         return $this->routes;
     }

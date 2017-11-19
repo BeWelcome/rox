@@ -40,7 +40,8 @@ if (is_array($this->statuses)) {
     }
 }
 ?>
-<div id="profile">
+<div class="row">
+<div class="col-12">
 
 <?=$words->flushBuffer()?>
 <?php
@@ -62,3 +63,5 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
     $vars['errors'] = array();
 }
 ?>
+</div>
+</div>

@@ -213,17 +213,6 @@ a.request:focus, a.request:hover {
 	max-width: 90px;
 }
 
-@media only screen
-and (min-width: 1288px) {
-	.col-md-4 {
-		//	width: 38.333%;
-	}
-
-	.col-md-8 {
-		//	width: 61.667%;
-	}
-}
-
 a.grouplist {
 	color: #2e2e2e !important;
 	border: 0 !important;
@@ -250,4 +239,22 @@ a.grouplist:hover {
 
 .comment-bg-bad{
 	background-color: rgba(255,0,0,.3)
+}
+
+.editbutton {
+	@media (min-width: 576px) {
+		width: 100% !important;
+	}
+	@media (min-width: 768px) {
+		width: 50% !important;
+	}
+	@media (min-width: 992px) {
+		width: 25% !important;
+	}
+}
+
+.editprofilebox {
+	background-color: rgba(255, 255, 255, 0.9);
+	border-radius: 0.3rem;
+	padding: 1rem !important;
 }

@@ -1150,9 +1150,12 @@ ORDER BY
                                                                                                // this might be discussed, but if the member fills a bad email,
                                                                                                // there is no more way to retrieve him
                                                                                                // Todo : get rid with this, but implement a confimmation mail
-				$m->Email = $this->_crypt->NewReplaceInCrypted(strip_tags($vars['Email']),"members.Email",$IdMember, $m->Email, $IdMember, $this->ShallICrypt($vars,"Email"));
+				// TODO: check why this gives an error while keeping the same e-mail address, something to do with encrypting it?
+                // $m->Email = $this->_crypt->NewReplaceInCrypted(strip_tags($vars['Email']),"members.Email",$IdMember, $m->Email, $IdMember, $this->ShallICrypt($vars,"Email"));
 			}
 		}
+
+        /* TODO: check why the following lines return errors
 		if ($vars["HomePhoneNumber"]!="cryptedhidden") {
 			$m->HomePhoneNumber = $this->_crypt->NewReplaceInCrypted(addslashes(strip_tags($vars['HomePhoneNumber'])),"members.HomePhoneNumber",$IdMember, $m->HomePhoneNumber, $IdMember, $this->ShallICrypt($vars,"HomePhoneNumber"));
 		}
@@ -1181,10 +1184,13 @@ ORDER BY
 			$m->chat_GOOGLE = $this->_crypt->NewReplaceInCrypted(addslashes(strip_tags($vars['chat_GOOGLE'])),"members.chat_GOOGLE",$IdMember,$m->chat_GOOGLE, $IdMember, $this->ShallICrypt($vars,"chat_GOOGLE"));
 		}
 
+
         $firstname = $this->_crypt->AdminReadCrypted($m->FirstName);
         $secondname = $this->_crypt->AdminReadCrypted($m->SecondName);
         $lastname = $this->_crypt->AdminReadCrypted($m->LastName);
-        if ($firstname != strip_tags($vars['FirstName']) || $secondname != strip_tags($vars['SecondName']) || $lastname != strip_tags($vars['LastName']))
+
+
+		if ($firstname != strip_tags($vars['FirstName']) || $secondname != strip_tags($vars['SecondName']) || $lastname != strip_tags($vars['LastName']))
         {
             $this->logWrite("{$m->Username} changed name. Firstname: {$firstname} -> " . strip_tags($vars['FirstName']) . ", second name: {$secondname} -> " . strip_tags($vars['SecondName']) . ", second name: {$lastname} -> " . strip_tags($vars['LastName']), 'Profile update');
         }
@@ -1229,6 +1235,7 @@ ORDER BY
                 $m->setCryptedStreetName($cryptId);
             }
         }
+*/
 
         // Check relations, and update them if they have changed
         $Relations=$m->get_all_relations() ;

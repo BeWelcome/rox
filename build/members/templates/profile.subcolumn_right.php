@@ -2,7 +2,6 @@
 
 if (!$this->passedAway){ ?>
 
-
     <div id="accommodationinfo" class="card mb-3">
         <h3 class="card-header"><?php echo $words->get('ProfileAccommodation'); ?>
             <?php if ($showEditLinks): ?>
@@ -27,26 +26,6 @@ if (!$this->passedAway){ ?>
                     $icons[] = '<img src="images/icons/' . $member->Accomodation . '.png"' .
                         ' alt="' . $words->getSilent($member->Accomodation) .'"' .
                         ' title="' . $words->getSilent('CanOffer' . $member->Accomodation) . '" />';
-
-                   /* switch($member->Accomodation)
-                    {
-                        case 'anytime':
-                            $icons[] = '<img src="images/icons/anytime.png"' .
-                                ' alt="' . $words->getSilent('anytime') .'"' .
-                                ' title="' . $words->getSilent('CanOfferAccomodation') . '" />';
-                            break;
-                        case 'dependonrequest':
-                            $icons[] = '<img src="images/icons/dependonrequest.png"' .
-                                ' alt="' . $words->getSilent('dependonrequest') .'"' .
-                                ' title="' . $words->getSilent('CanOfferdependonrequest') . '" />';
-                            break;
-                        case 'neverask':
-                            $icons[] = '<img src="images/icons/neverask.png"' .
-                                ' alt="' . $words->getSilent('neverask') .'"' .
-                                ' title="' . $words->getSilent('CannotOfferneverask') . '" />';
-                            break;
-                    }
-                   */
 
                     for($ii=0; $ii < count($icons); $ii++)
                     {
@@ -156,7 +135,6 @@ if (!$this->passedAway){ ?>
 <?php
 }
 
-
     $comments = $this->member->comments;
     $username = $this->member->Username;
     $layoutbits = new MOD_layoutbits();
@@ -219,7 +197,7 @@ if (!$this->passedAway){ ?>
                                </p>
                                <?php if (($commentLoopCount > (count($comments)))&&($commentLoopCount < $max)) echo '<hr />' ?>
                            </div>
-                           </div>
+                </div>
                    <?php } ?>
                       <a href="members/<?=$member->Username?>/comments/" class="btn btn-block btn-primary"><?=$words->get('ShowAllComments')?></a>
                 <?php
@@ -228,8 +206,7 @@ if (!$this->passedAway){ ?>
                       echo $this->getLoginLink('/members/' . $member->Username,'ProfileShowComments');
                   } ?>
 
-                </div>
-        </div>
+            </div>
 
 <?php }
 
@@ -290,44 +267,6 @@ if (count($relations) > 0) { ?>
 <?php }
 
 /**********************
-**   Profile Trips   **
-**********************/
-
-/*
-if ($comingposts = $member->getComingPosts()) {
-    ?>
-            <div id="trips" class="clearfix box">
-    <?php if ($showEditLinks): ?>
-    <span class="float_right profile-edit-link">
-        <a href="/trip/show/my"><?php echo $words->get('Edit'); ?></a>
-    </span>
-    <?php endif; ?>
-    <h3><?php echo $words->getSilent('TripsUpComing');?></h3>
-    <ul>
-    <?php
-    foreach ($comingposts as $blog) {
-        $date = date("d M Y", strtotime($blog->blog_start));
-        $geoname = ($blog->getGeo()) ? $blog->getGeo()->name : $blog->title;
-        ?>
-        <li><a href="trip/show/<?php echo $member->Username;?>" title="<?php echo $words->getSilent('TripsUpComing');?>">
-                <?php echo $geoname;?>
-            </a>
-            - <?php echo $date;?>
-        </li>
-    <?php
-    }
-    ?>
-    </ul>
-    <p class="float_right">
-        <a href="trip/show/<?php echo $member->Username;?>" title="<?php echo $words->getSilent('TripsUpComing');?>">
-        <?php echo $words->get('TripsShowAll');?></a>
-    </p>
-    </div>
-    <?php
-}
-*/
-
-/**********************
 ** Profile Gallery  **
 **********************/
 
@@ -355,7 +294,7 @@ if ($statement) {
         echo '<a href="gallery/show/image/'.$d->id.'">' .
            '<img src="gallery/thumbimg?id='.$d->id.'"' .
                ' alt="image"' .
-               ' style="height: 50px; width: 50px; padding:2px;"/>' .
+               ' style="height: 50px; width: 50px;"/>' .
            '</a>';
     }
     echo '</div>';

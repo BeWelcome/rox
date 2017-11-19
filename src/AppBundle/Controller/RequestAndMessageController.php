@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\HostingRequest;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
 use AppBundle\Form\MessageRequestType;
@@ -11,6 +12,7 @@ use AppBundle\Model\RequestModel;
 use Html2Text\Html2Text;
 use InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -232,7 +234,7 @@ class RequestAndMessageController extends Controller
             $em->flush();
             $html2Text = new Html2Text($hostingRequest->getMessage());
             $hostingRequestText = $html2Text->getText();
-            $message = \Swift_Message::newInstance()
+            $message = (new Swift_Message())
                 ->setSubject($hostingRequest->getSubject()->getSubject())
                 ->setFrom([
                     'message@bewelcome.org' => 'bewelcome - '.$sender->getUsername(),
@@ -299,33 +301,18 @@ class RequestAndMessageController extends Controller
             $em->persist($hostingRequest);
             $em->flush();
 
-            // Send mail notification
-            $html2Text = new Html2Text($hostingRequest->getMessage());
-            $hostingRequestText = $html2Text->getText();
-            $message = \Swift_Message::newInstance()
-                ->setSubject($hostingRequest->getSubject()->getSubject())
-                ->setFrom([
-                    'request@bewelcome.org' => 'bewelcome - '.$sender->getUsername(),
-                ])
-                ->setTo($receiver->getCryptedField('Email'))
-                ->setBody(
-                    $this->renderView(
-                        // app/Resources/views/Emails/registration.html.twig
-                        'emails/request.html.twig',
-                        ['request_text' => $hostingRequest->getMessage()]
-                    ),
-                    'text/html'
-                )
-                ->addPart(
-                    $this->renderView(
-                        'emails/request.txt.twig',
-                        ['request_text' => $hostingRequestText]
-                    ),
-                    'text/plain'
-                )
-            ;
-            $this->get('mailer')->send($message);
-            $this->addFlash('success', 'Request has been sent.');
+            $success = $this->sendMailNotification(
+                $sender,
+                $receiver,
+                $hostingRequest->getSubject()->getSubject(),
+                $hostingRequest->getMessage(),
+                'request'
+            );
+            if ($success) {
+                $this->addFlash('success', 'Request has been sent.');
+            } else {
+                $this->addFlash('info', 'Request has been stored into the database. Mail notification couldn\'t be sent, though.');
+            }
 
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
         }
@@ -352,13 +339,63 @@ class RequestAndMessageController extends Controller
             return $this->redirectToRoute('message_show', ['id' => $hostingRequest->getId()]);
         }
 
+        $user = $this->getUser();
         $sender = $hostingRequest->getSender();
         $receiver = $hostingRequest->getReceiver();
-
-        $requestForm = $this->createForm(MessageRequestType::class, $hostingRequest);
+        $owner = ($user->getId() == $sender->getId());
+        $requestForm = $this->createForm(MessageRequestType::class, $hostingRequest, [
+            'reply' => true,
+            'owner' => $owner
+        ]);
         $requestForm->handleRequest($request);
+
         $data = $requestForm->getNormData();
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
+            $clickedButton = $requestForm->getClickedButton()->getName();
+            $oldState = $hostingRequest->getRequest()->getStatus();
+            $newState = $oldState;
+            switch($clickedButton) {
+                case 'cancel':
+                    $newState = HostingRequest::REQUEST_CANCELLED;
+                    break;
+                case 'decline':
+                    $newState = HostingRequest::REQUEST_DECLINED;
+                    break;
+                case 'tentatively':
+                    $newState = HostingRequest::REQUEST_TENTATIVELY_ACCEPTED;
+                    break;
+                case 'accept':
+                    $newState = HostingRequest::REQUEST_ACCEPTED;
+                    break;
+            }
+            if ($oldState != $newState) {
+                $hostingRequest->getRequest()->setStatus($newState);
+            }
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($hostingRequest);
+            $em->flush();
+
+            if ($owner) {
+                $this->sendMailNotification(
+                    $sender,
+                    $receiver,
+                    $hostingRequest->getSubject()->getSubject(),
+                    $hostingRequest->getMessage(),
+                    'request'
+                );
+            } else
+            {
+                $this->sendMailNotification(
+                    $receiver,
+                    $sender,
+                    $hostingRequest->getSubject()->getSubject(),
+                    $hostingRequest->getMessage(),
+                    'request'
+                );
+            }
+            $this->addFlash('success', 'Notification with updated information has been sent.');
+
+            return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
         }
 
         $messageModel = new MessageModel($this->getDoctrine());
@@ -479,5 +516,44 @@ class RequestAndMessageController extends Controller
                 'url' => $this->generateUrl('messages', ['folder' => 'deleted']),
             ],
         ];
+    }
+
+    /**
+     * @param Member $sender
+     * @param Member $receiver
+     * @param string $subject
+     * @param string $body
+     * @param string $template
+     *
+     * @return bool
+     */
+    private function sendMailNotification($sender, $receiver, $subject, $body, $template)
+    {
+        // Send mail notification
+        $html2Text = new Html2Text($body);
+        $message = (new Swift_Message())
+            ->setSubject($subject)
+            ->setFrom([
+                'request@bewelcome.org' => 'bewelcome - '.$sender->getUsername(),
+            ])
+            ->setTo($receiver->getCryptedField('Email'))
+            ->setBody(
+                $this->renderView(
+                    'emails/'.$template.'.html.twig',
+                    [$template.'_text' => $body]
+                ),
+                'text/html'
+            )
+            ->addPart(
+                $this->renderView(
+                    'emails/'.$template.'.txt.twig',
+                    [$template.'_text' => $html2Text->getText()]
+                ),
+                'text/plain'
+            )
+        ;
+        $recipients = $this->get('mailer')->send($message);
+
+        return (0 === $recipients) ? false : true;
     }
 }

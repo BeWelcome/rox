@@ -1,10 +1,10 @@
-<div id="message_thread">
+<div class="container" id="message_thread">
     {% if current.Sender.Username == my_member.Username %}{% set otherUser = current.Receiver %}{% else %}{% set otherUser = current.Sender %}{% endif %}
     {% if current.Subject %}{% set currentSubject = current.Subject.Subject %}{% else %}{% set currentSubject = 'Discussion with %s' | trans | format(otherUser.Username)  %} {% endif %}
     {% for message in thread %}
         {% set own = (my_member.Username == message.Sender.Username) %}
         <div class="row">
-            <div class="message_{% if own %}own{% else %}other{% endif %} {% if message.id == current.id %}current{% endif %}">
+            <div class="col-12 message_{% if own %}own{% else %}other{% endif %} {% if message.id == current.id %}current{% endif %}">
                 {% if current.id != message.id %}<a class="divlink" href="{{ path('message_show', { id: message.id }) }}">{% endif %}
                 {% if message.Subject %}{% set subject = message.Subject.Subject %}{% else %}{% set subject = '' %} {% endif %}
                 {% if own %}

@@ -161,10 +161,7 @@ SQL
         try
         {
             //Create the message
-            $message = Swift_Message::newInstance()
-
-              //Give the message a subject
-              ->setSubject($message_subject)
+            $message = (new Swift_Message($message_subject))
 
               //Set the From address with an associative array
               ->setFrom($sender)

@@ -31,9 +31,17 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class MOD_crypt {
     use \Rox\RoxTraits\SessionTrait;
 
-    public function __construct(SessionInterface $session)
+    /** @var PDB */
+    private $dao;
+
+    /**
+     * MOD_crypt constructor.
+     * @throws Exception
+     * @throws PException
+     */
+    public function __construct()
     {
-        $this->setSession($session);
+        $this->setSession();
         $db = PVars::getObj('config_rdbms');
         if (!$db) {
             throw new PException('DB config error!');

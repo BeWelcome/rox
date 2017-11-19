@@ -22,8 +22,10 @@ use Doctrine\ORM\Mapping as ORM;
 class HostingRequest
 {
     const REQUEST_OPEN = 0;
-    const REQUEST_DECLINED = 1;
-    const REQUEST_ACCEPTED = 2;
+    const REQUEST_CANCELLED = 1;
+    const REQUEST_DECLINED = 2;
+    const REQUEST_TENTATIVELY_ACCEPTED = 4;
+    const REQUEST_ACCEPTED = 8;
 
     /**
      * @var int
@@ -180,14 +182,18 @@ class HostingRequest
      *
      * @param int $status
      *
+     * @throws InvalidArgumentException
+     *
      * @return HostingRequest
      */
     public function setStatus($status)
     {
         if (self::REQUEST_OPEN !== $status &&
+            self::REQUEST_CANCELLED !== $status &&
             self::REQUEST_DECLINED !== $status &&
+            self::REQUEST_TENTATIVELY_ACCEPTED !== $status &&
             self::REQUEST_ACCEPTED !== $status) {
-            throw new InvalidArgumentException('Request status outside of valid range. Got '.$status.'instead of REQUEST_OPEN (0), REQUEST_DECLINED (1) or REQUEST_ACCEPTED(2) ');
+            throw new InvalidArgumentException('Request status outside of valid range. Got '.$status.'instead of REQUEST_OPEN (0), REQUEST_CANCELLED (1), REQUEST_DECLINED (2), REQUEST_TENTATIVELY_ACCEPTED (4) or REQUEST_ACCEPTED (8) ');
         }
 
         $this->status = $status;

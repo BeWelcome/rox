@@ -4,7 +4,7 @@ class DatabaseController
 private $conn; // Instance of PDO
 
 public function __construct($host, $database, $user, $pw){
-    $dsn = 'mysql:dbname=' . $database . ';host=' . $database;
+    $dsn = 'mysql:dbname=' . $database . ';host=' . $host;
     $this->conn = new PDO ($dsn,$user,$pw);
 }
 

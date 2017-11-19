@@ -25,10 +25,8 @@ Encore
 
     .enableSassLoader()
     // allow legacy applications to use $/jQuery as a global variable, make popper visible for bootstrap
+    .autoProvidejQuery()
     .autoProvideVariables({
-        $: 'jquery',
-        jQuery: 'jquery',
-        'window.jQuery': 'jquery',
         Popper: ['popper.js', 'default'],
     })
     .addLoader({
@@ -49,7 +47,4 @@ Encore
 
 // export the final configuration
 module.exports = Encore.getWebpackConfig();
-
-global.$ = global.jQuery = require('jquery');
-
 

@@ -36,7 +36,7 @@
 
 {% block content %}
     <div class="container">
-        {{ form_start(form) }}
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
 
         <div class="row mb-1">
@@ -73,16 +73,15 @@
                 {{ form_label(form.subject, null, {'label_attr': {'class': 'sr-only '} }) }}
                 {{ form_errors(form.subject) }}
                 {{ form_widget(form.message) }}
-                {{ form_rest(form) }}
             </div>
 
         </div>
 
         <div class="row mb-1">
             <div class="col-12 col-md-8 offset-md-4">
-                <button type="submit" class="btn btn-primary">{{ 'Send' | trans }}</button>
             </div>
         </div>
+        {{ form_rest(form) }}
         {{ form_end(form) }}
     </div>
 {% endblock %}

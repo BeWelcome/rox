@@ -20,13 +20,15 @@
 
 $callback_tag = $this->layoutkit->formkit->setPostCallback('MembersController', 'updateMandatoryCallback');
 $member = $this->member;
-$m->firstname = MOD_crypt::MemberReadCrypted($member->FirstName,'');
-$m->secondname = MOD_crypt::MemberReadCrypted($member->SecondName,'');
-$m->lastname = MOD_crypt::MemberReadCrypted($member->LastName,'');
+$modCrypt = new MOD_crypt();
+$m = new \stdClass();
+$m->firstname = $modCrypt->MemberReadCrypted($member->FirstName,'');
+$m->secondname = $modCrypt->MemberReadCrypted($member->SecondName,'');
+$m->lastname = $modCrypt->MemberReadCrypted($member->LastName,'');
 $m->geonameid = $member->IdCity;
-$m->street = MOD_crypt::MemberReadCrypted($member->address->StreetName);
-$m->housenumber = MOD_crypt::MemberReadCrypted($member->address->HouseNumber);
-$m->zip = MOD_crypt::MemberReadCrypted($member->address->Zip);
+$m->street = $modCrypt->MemberReadCrypted($member->address->StreetName);
+$m->housenumber = $modCrypt->MemberReadCrypted($member->address->HouseNumber);
+$m->zip = $modCrypt->MemberReadCrypted($member->address->Zip);
 $m->birthday = date("d",strtotime($member->BirthDate));
 $m->birthmonth = date("m",strtotime($member->BirthDate));
 $selYear = date("Y",strtotime($member->BirthDate));

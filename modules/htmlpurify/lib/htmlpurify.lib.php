@@ -37,7 +37,7 @@ class MOD_htmlpure
     /**
      * Singleton instance
      *
-     * @var MOD_layoutbits
+     * @var MOD_htmlpure
      * @access private
      */
     private static $_instance;
@@ -49,8 +49,7 @@ class MOD_htmlpure
     /**
      * singleton getter
      *
-     * @param void
-     * @return PApps
+     * @return Mod_htmlpure
      */
     public static function get()
     {

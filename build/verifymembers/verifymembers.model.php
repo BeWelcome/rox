@@ -135,14 +135,15 @@ WHERE   IdVerified = $member_id
             return array(); // Returns empty array if no value found
         }
         // Password has been verified, load the encrypted data
+        $modCrypt = new MOD_crypt();
         foreach (array('FirstName', 'SecondName', 'LastName') as $key) {
-            $data->$key = MOD_crypt::AdminReadCrypted($m->$key);
+            $data->$key = $modCrypt->AdminReadCrypted($m->$key);
         }
         foreach (array('HouseNumber', 'StreetName', 'Zip') as $key) {
             if(!isset($m->address)) {
                 $housenumber = $m->get_housenumber();
             }
-            $data->$key = MOD_crypt::AdminReadCrypted($m->address->$key);
+            $data->$key = $modCrypt->AdminReadCrypted($m->address->$key);
         }
 
         $data->CityName = $m->get_city();

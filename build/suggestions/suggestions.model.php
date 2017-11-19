@@ -91,7 +91,8 @@ class SuggestionsModel extends RoxModelBase
         $receivers = array();
         while ($row = $res->fetch(PDB::FETCH_OBJ)) {
             $member = $this->createEntity('Member')->findByUsername($row->username);
-            $email = MOD_crypt::AdminReadCrypted($member->Email);
+            $modCrypt = new MOD_crypt();
+            $email = $modCrypt->AdminReadCrypted($member->Email);
             $receivers[$email] = "BW " . $row->username;
         }
 
@@ -100,8 +101,8 @@ class SuggestionsModel extends RoxModelBase
 
         //Create the Mailer using your created Transport
         $mailer = Swift_Mailer::newInstance($transport);
-
-        $purifier = MOD_htmlpure::getSuggestionsHtmlPurifier();
+        $modHtmlPure = new MOD_htmlpure();
+        $purifier = $modHtmlPure->getSuggestionsHtmlPurifier();
         $plain = 'Please check the suggestion and take the necessary <a href="' . PVars::getObj('env')->baseuri . 'suggestions/' . $suggestion->id . '/approve">action</a>.';
         $html = $purifier->purify($suggestion->description) . '<br/>' . $plain;
         try

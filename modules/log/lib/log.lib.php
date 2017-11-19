@@ -48,7 +48,15 @@ class MOD_log {
      * @access private
      */
     private static $_instance;
-    
+
+    /** @var PDB */
+    private $dao;
+
+    /**
+     * MOD_log constructor.
+     * @throws Exception
+     * @throws PException
+     */
     private function __construct()
     {
         $this->setSession();
@@ -74,23 +82,24 @@ class MOD_log {
         }
         return self::$_instance;
     }
-    
-    
+
+
     /**
      * Add one entry to log table. If log2file
      * is enabled write to logfile before write
      * to table. addslashes is executed on the message
      * string inside the method.
-     * 
-		 * @param int $IdMember is the id of the member the log will be applied to
+     *
+     * @param int $IdMember is the id of the member the log will be applied to
      * @param string $message the parameter to print
      * @param string $type the event, which causes the log
-     * 				 method to be called
-		 *
-		 * BeWare this function does a nasty parameter change with the $this->_session->get("IdMember")
-		 * but it restores it as it was before in any cases
-		 *
-		 */
+     *                 method to be called
+     *
+     * BeWare this function does a nasty parameter change with the $this->_session->get("IdMember")
+     * but it restores it as it was before in any cases
+     *
+     * @throws PException
+     */
     public function writeIdMember($IdMember,$message = "", $type  = "Log")
     {
 			if ($this->_session->has( "IdMember" )) {
@@ -107,16 +116,16 @@ class MOD_log {
 		} // end writeIdMember
 
 
-
     /**
      * Add one entry to log table. If log2file
      * is enabled write to logfile before write
      * to table. addslashes is executed on the message
      * string inside the method.
-     * 
+     *
      * @param string $message the parameter to print
      * @param string $type the event, which causes the log
-     * 				 method to be called
+     *                 method to be called
+     * @throws PException
      */
     public function write($message = "", $type  = "Log")
     {

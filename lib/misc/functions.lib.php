@@ -265,6 +265,9 @@ class PFunctions {
     function returnBytes($val) {
         $val = trim($val);
         $last = strtolower($val{strlen($val)-1});
+        if (!is_numeric($val)) {
+            $val = intval($val);
+        }
         switch($last) {
             case 'g':
                 $val *= 1024;

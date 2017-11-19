@@ -1,10 +1,21 @@
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
+
 $bs-datetimepicker-timepicker-font-size: 1.2em !default;
-$bs-datetimepicker-active-bg: white !default;
-$bs-datetimepicker-active-color: theme-color('primary') !default;
+$bs-datetimepicker-active-bg: $btn-primary-bg !default;
+$bs-datetimepicker-active-color: $theme-color('primary') !default;
 $bs-datetimepicker-border-radius: $border-radius !default;
-$bs-datetimepicker-btn-hover-bg: $gray-800 !default;
-$bs-datetimepicker-disabled-color: $gray-600 !default;
-$bs-datetimepicker-alternate-color: $gray-600 !default;
+$bs-datetimepicker-btn-hover-bg: $gray-lighter !default;
+$bs-datetimepicker-disabled-color: $gray-light !default;
+$bs-datetimepicker-alternate-color: $gray-light !default;
 $bs-datetimepicker-secondary-border-color: #ccc !default;
 $bs-datetimepicker-secondary-border-color-rgba: rgba(0, 0, 0, 0.2) !default;
 $bs-datetimepicker-primary-border-color: white !default;
@@ -18,7 +29,6 @@ $bs-datetimepicker-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25) !default;
     margin: 2px 0;
     padding: 4px;
     width: 12.8vw;
-    background: white;
 
     &.timepicker-sbs {
       @media (min-width: map-get($grid-breakpoints, 'sm')) {

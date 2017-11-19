@@ -100,6 +100,8 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('profile_all_comments', '/members/{username}/comments/');
         $this->addRouteDirectly('mypreferences', '/mypreferences');
         $this->addRouteDirectly('myvisitors', '/myvisitors');
+        $this->addRouteDirectly('profilecomments', '/about/commentguidelines');
+        $this->addRouteDirectly('setlocation', '/setlocation');
 
         return $this->routes;
     }

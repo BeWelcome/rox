@@ -66,11 +66,6 @@ class MOD_mail
 
     private function __clone() {}
 
-    private static function getSwift()
-    {
-        return Swift_Message::newInstance();
-    }
-
     private static function sendSwift($message)
     {
         // Read config section [smtp]
@@ -97,7 +92,7 @@ class MOD_mail
             }
 
             // Create transport
-            $transport = Swift_SmtpTransport::newInstance($host, $port, $tls);
+            $transport = new Swift_SmtpTransport($host, $port, $tls);
 
             if ($config->auth && $config->username && $config->password) {
                 $transport->setUsername($config->username);
@@ -105,7 +100,7 @@ class MOD_mail
             }
 
             // Create mailer using transport
-            $mailer = Swift_Mailer::newInstance($transport);
+            $mailer = new Swift_Mailer($transport);
 
             // Log if debug is enabled
             if ($config->debug) {
@@ -127,7 +122,7 @@ class MOD_mail
         $to = (is_array($to)) ? $to : explode(',', $to);
 
         //Create the message
-        $message = self::getSwift()
+        $message = (new Swift_Message())
 
             //Give the message a subject
             ->setSubject($subject)

@@ -35,7 +35,7 @@ class ForumPost
      * @ORM\ManyToOne(targetEntity="ForumThread", inversedBy="posts")
      * @ORM\JoinColumn(name="threadid", referencedColumnName="id")
      */
-    private $thread;
+    private $threadId;
 
     /**
      * @var string
@@ -48,23 +48,9 @@ class ForumPost
      * @var Member
      *
      * @ORM\OneToOne(targetEntity="Member")
-     * @ORM\JoinColumn(name="authorid", referencedColumnName="id")
+     * @ORM\JoinColumn(name="IdWriter", referencedColumnName="id")
      */
     private $author;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="authorid", type="integer", nullable=false)
-     */
-    private $authorid;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="IdWriter", type="integer", nullable=false)
-     */
-    private $idwriter = '0';
 
     /**
      * @var \DateTime

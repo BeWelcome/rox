@@ -45,6 +45,7 @@ twig:
     base_template_class: 'Rox\Core\Template\RoxTemplate'
     exception_controller:  twig.controller.exception:showAction
     form_themes:
+#      - 'bootstrap_4_layout.html.twig'
       - '@forms/bs4.html.twig'
     paths:
         '%kernel.root_dir%/../templates/twig/forms': forms

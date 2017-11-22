@@ -37,7 +37,7 @@ $map_conf = PVars::getObj('map');
         <form method="post" action="setlocation" class="form">
             <?= $callback_tag ?>
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-12">
                     <div class="form-group">
                         <label for="location"
                                class="form-control-label sr-only"><?= $words->getSilent(
@@ -68,13 +68,13 @@ $map_conf = PVars::getObj('map');
                             ) ?></small>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12">
+                <div class="col-12">
                     <div id="map" class="mb-1" style="width: 100%; height: 440px; border: 1px solid #aaa;"></div>
                 </div>
-            </div><!-- subcolumns -->
-            <input type="submit" class="form-control btn btn-primary" value="<?php echo $words->getSilent('Save Location'); ?>" /><?php echo $words->flushBuffer(); ?>
+                <div class="col-12">
+                    <input type="submit" class="btn btn-block btn-primary" value="<?php echo $words->getSilent('Save Location'); ?>" /><?php echo $words->flushBuffer(); ?>
+                </div>
+            </div>
         </form>
     </div>
 </div>

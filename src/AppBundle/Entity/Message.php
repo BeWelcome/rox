@@ -10,6 +10,7 @@ namespace AppBundle\Entity;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Message.
@@ -99,6 +100,8 @@ class Message
      * @var string
      *
      * @ORM\Column(name="Message", type="text", length=65535, nullable=false)
+     *
+     * @Assert\NotBlank()
      */
     private $message;
 
@@ -120,6 +123,8 @@ class Message
      * @var Subject
      *
      * @ORM\OneToOne(targetEntity="Subject", cascade={"persist"}, fetch="EAGER")
+     *
+     * @Assert\NotBlank()
      */
     private $subject;
 
@@ -127,6 +132,8 @@ class Message
      * @var HostingRequest
      *
      * @ORM\OneToOne(targetEntity="HostingRequest", cascade={"persist"}, fetch="EAGER")
+     *
+     * @Assert\NotBlank()
      */
     private $request;
 

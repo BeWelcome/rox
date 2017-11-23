@@ -6,6 +6,7 @@ use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class SubjectType extends AbstractType
 {
@@ -28,6 +29,9 @@ class SubjectType extends AbstractType
             'attr' => [
                 'placeholder' => 'Accommodation request',
                 'class' => 'subjectbg',
+            ],
+            'constraints' => [
+                new NotBlank(),
             ],
         ]);
     }

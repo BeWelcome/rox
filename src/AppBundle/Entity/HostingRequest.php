@@ -9,6 +9,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\DBAL\Exception\InvalidArgumentException;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Request.
@@ -40,6 +41,9 @@ class HostingRequest
      * @var \DateTime
      *
      * @ORM\Column(name="arrival", type="datetime")
+     *
+     * @Assert\NotBlank()
+     * @Assert\Type("\DateTime")
      */
     private $arrival;
 
@@ -47,6 +51,8 @@ class HostingRequest
      * @var \DateTime
      *
      * @ORM\Column(name="departure", type="datetime", nullable=true)
+     *
+     * @Assert\Type("\DateTime")
      */
     private $departure = null;
 
@@ -61,7 +67,13 @@ class HostingRequest
      * @var int
      *
      * @ORM\Column(name="number_of_travellers", type="integer")
-     */
+     *
+     * @Assert\Range(
+     *      min = 1,
+     *      max = 20,
+     *      minMessage = "At least one person must travel",
+     *      maxMessage = "Hosting more than 20 people is asking for too much"
+     * )     */
     private $numberOfTravellers = 1;
 
     /**

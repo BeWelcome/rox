@@ -339,11 +339,15 @@ class RequestAndMessageController extends Controller
             return $this->redirectToRoute('message_show', ['id' => $hostingRequest->getId()]);
         }
 
+        $newRequest = new Message();
+        $newRequest->setRequest($hostingRequest->getRequest());
+        $newRequest->setSubject($hostingRequest->getSubject());
+
         $user = $this->getUser();
         $sender = $hostingRequest->getSender();
         $receiver = $hostingRequest->getReceiver();
         $owner = ($user->getId() == $sender->getId());
-        $requestForm = $this->createForm(MessageRequestType::class, $hostingRequest, [
+        $requestForm = $this->createForm(MessageRequestType::class, $newRequest, [
             'reply' => true,
             'owner' => $owner
         ]);
@@ -352,7 +356,7 @@ class RequestAndMessageController extends Controller
         $data = $requestForm->getNormData();
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
             $clickedButton = $requestForm->getClickedButton()->getName();
-            $oldState = $hostingRequest->getRequest()->getStatus();
+            $oldState = $newRequest->getRequest()->getStatus();
             $newState = $oldState;
             switch($clickedButton) {
                 case 'cancel':
@@ -369,10 +373,10 @@ class RequestAndMessageController extends Controller
                     break;
             }
             if ($oldState != $newState) {
-                $hostingRequest->getRequest()->setStatus($newState);
+                $newRequest->getRequest()->setStatus($newState);
             }
             $em = $this->getDoctrine()->getManager();
-            $em->persist($hostingRequest);
+            $em->persist($newRequest);
             $em->flush();
 
             if ($owner) {
@@ -536,7 +540,7 @@ class RequestAndMessageController extends Controller
             ->setFrom([
                 'request@bewelcome.org' => 'bewelcome - '.$sender->getUsername(),
             ])
-            ->setTo($receiver->getCryptedField('Email'))
+            ->setTo($recLoeiver->getCryptedField('Email'))
             ->setBody(
                 $this->renderView(
                     'emails/'.$template.'.html.twig',

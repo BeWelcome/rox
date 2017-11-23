@@ -10,6 +10,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\LessThanOrEqual;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class HostingRequestType extends AbstractType
 {
@@ -26,6 +27,9 @@ class HostingRequestType extends AbstractType
                 'attr' => [
                     'class' => 'datepicker',
                     'placeholder' => 'Arrival (date)',
+                ],
+                'constraints' => [
+                    new NotBlank(),
                 ],
             ])
             ->add('departure', DateType::class, [
@@ -54,6 +58,7 @@ class HostingRequestType extends AbstractType
                         'class' => 'ml-2 p-2',
                     ],
                     'constraints' => [
+                        new NotBlank(),
                         new LessThanOrEqual(10),
                         new GreaterThanOrEqual(1),
                     ],

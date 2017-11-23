@@ -39,7 +39,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                aria-controls="editProfile1" class="btn btn-outline-primary editbutton text-left">
                 <i class="fa fa-angle-down"></i> Basics
             </a>
-            <div id="editProfile1" class="collapse editprofilebox editprofilebox" role="tabpanel">
+            <div id="editProfile1" class="collapse editprofilebox" role="tabpanel">
                 <div class="row my-2">
                     <div class="col-3 pt-2">
                         <?= $words->get('SignupUsername') ?>
@@ -169,12 +169,12 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
         <div id="editProfile2" class="collapse editprofilebox" role="tabpanel">
             <div class="row my-2">
                 <div class="col-3"><?= $words->get('ProfileOccupation') ?></div>
-                <div class="col-9"><input type="text" name="Occupation"
+                <div class="col-9"><input class="w-100" name="Occupation"
                                           value="<?php echo htmlentities($vars['Occupation'], ENT_COMPAT, 'UTF-8'); ?>"/>
                 </div>
 
                 <div class="col-3"><?= $words->get('ProfileSummary') ?></div>
-                <div class="col-9"><textarea name="ProfileSummary" id="ProfileSummary" class="long" cols="50"
+                <div class="col-9"><textarea name="ProfileSummary" id="ProfileSummary" class="w-100"
                                              rows="6"><?php echo htmlentities($vars['ProfileSummary'], ENT_COMPAT, 'UTF-8'); ?></textarea>
                 </div>
 

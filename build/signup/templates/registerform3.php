@@ -1,7 +1,6 @@
 <?php
 
 $map_conf = PVars::getObj('map');
-echo print_r($vars, true);
 ?>
 <input type="hidden" id="osm-tiles-provider-base-url"
        value="<?php echo($map_conf->osm_tiles_provider_base_url); ?>"/>
@@ -48,10 +47,10 @@ echo print_r($vars, true);
                         }
                     </script>
                     <div class="form-group">
-                        <div id="map" class="mb-1" style="width: 100%; height: 440px; border: 1px solid #aaa;"></div>
-                        <div id="mapoverlay" style="display: block; position: relative; top: -444px; width: 100%; height: 445px; background-color: rgba(255,255,255,1); z-index: 1000;">
+                        <div id="mapoverlay">
                             <span class="text-muted text-justify"><?= $words->get('subline_location') ?></span>
                         </div>
+                        <div id="map" class="mb-1" style="width: 100%; height: 440px; border: 1px solid #aaa;"></div>
                     </div>
 
                     <button type="submit" class="form-control btn btn-primary"><?php echo $words->getSilent('NextStep'); ?> <i class="fa fa-angle-double-right"></i></button>

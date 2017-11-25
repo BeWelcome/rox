@@ -16,6 +16,7 @@ class SetLocationPage extends PageWithRoxLayout
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
+        $stylesheets[] = 'build/leaflet.css';
         return $stylesheets;
     }
 

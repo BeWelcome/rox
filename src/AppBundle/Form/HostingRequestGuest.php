@@ -7,10 +7,7 @@ use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class MessageRequestType extends AbstractType
@@ -28,29 +25,12 @@ class MessageRequestType extends AbstractType
                         'placeholder' => 'Give a short explanation...',
                         'class' => 'w-100 p-2',
                     ],
+                'constraints' => [
+                        new NotBlank()
+                    ]
                 ])
         ;
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $messageRequest = $event->getData();
-            $form = $event->getForm();
-
-            if (!$messageRequest || null === $messageRequest->getId()) {
-                $form->add('send', SubmitType::class);
-            }
-        });
-        if (isset($options['reply'])) {
-            if ($options['owner']) {
-                $builder
-                    ->add('cancel', SubmitType::class);
-            } else {
-                $builder
-                    ->add('accept', SubmitType::class)
-                    ->add('tentatively', SubmitType::class)
-                    ->add('decline', SubmitType::class);
-            }
-            $builder
-                ->add('update', SubmitType::class);
-        }
+        $builder->add('send', SubmitType::class);
     }
 
     /**
@@ -59,7 +39,6 @@ class MessageRequestType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefined(['owner', 'reply'])
             ->setDefaults([
                 'data_class' => Message::class,
             ])

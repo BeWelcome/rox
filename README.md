@@ -1,13 +1,13 @@
 # BeWelcome Rox
 
-[![Build Status](https://travis-ci.org/BeWelcome/rox.svg?branch=bootstrap3)](https://travis-ci.org/BeWelcome/rox)
+[![Build Status](https://travis-ci.org/BeWelcome/rox.svg?branch=bootstrap4)](https://travis-ci.org/BeWelcome/rox)
 
 Check [INSTALL](INSTALL.md) for installation instructions.
 
-You probably want to get started by checking out the code in `module/`.
+You probably want to get started by checking out the code in `src/`.
 
 `htdocs/bw/` and `build/` are deprecated and the code needs to be rewritten in
-`module`.
+`src`.
 
 ## Documentation
 
@@ -31,6 +31,26 @@ make phpdox
 
 The result can then be accessed via `doc/phpdox/` in your cloned repository.
 
+## Procedure
+
+Fork a repository on Github. Work on what you like to update and send a pull request to merge it into the main repositiory.
+
+If you see an updated ```composer.json``` or ```composer.lock```` make sure to run 
+
+```bash
+composer install
+```
+
+Also run 
+
+```bash
+npm install
+```
+ 
+everytime you see a change in either ```package.json``` or ```package-lock.json```.
+
+If any ```.scss``` file or a file in ```src/AppBundle/Resources``` changed a ```make build``` is necessary.
+ 
 ## Useful links
 * [Legacy developer space on Trac](http://trac.bewelcome.org/)
 * [Writing great Git commit messages](http://chris.beams.io/posts/git-commit/)
@@ -40,3 +60,11 @@ The result can then be accessed via `doc/phpdox/` in your cloned repository.
 ## Coding standards
 * [PSR-1](http://www.php-fig.org/psr/psr-1/)
 * [PSR-2](http://www.php-fig.org/psr/psr-2/)
+
+To ensure coding standards are followed run ```make``` everytime before you commit. Fixing coding standard issues can be achieved with
+
+```bash
+make phpcsfix
+```
+
+twice in a row.

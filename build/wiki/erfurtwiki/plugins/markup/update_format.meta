@@ -1,7 +1,0 @@
-api: ewiki
-category: markup
-hooks: action, edit_form_append
-type: action
-title: update_format
-description: Converts/Fixes misused markup to correct format (meaning of ! for
-priority: rare

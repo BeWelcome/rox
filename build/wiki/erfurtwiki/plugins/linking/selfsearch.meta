@@ -1,7 +1,0 @@
-api: ewiki
-category: hypertext
-title: SelfSearch
-priority: bonus
-hooks: format_prepare_linking
-type: transform
-description: any SelfLink of a page will trigger a PowerSearch

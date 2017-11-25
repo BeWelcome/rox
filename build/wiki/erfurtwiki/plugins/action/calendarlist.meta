@@ -1,7 +1,0 @@
-api: ewiki
-category: action
-hooks: action
-type: action
-title: calendarlist
-description: lists all calendar entries for a page
-priority: bonus

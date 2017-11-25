@@ -1,8 +1,0 @@
-api: ewiki
-type: api
-category: library
-version: 0.4.0
-title: OpenSearch API
-description: implements the OpenSearch live searching API (over XML-RPC)
-url: http://opensearch.berlios.de/
-priority: bonus

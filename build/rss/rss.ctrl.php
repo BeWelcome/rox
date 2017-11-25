@@ -94,37 +94,6 @@ class RssController extends RoxControllerBase
                     $page = new PageWithTagRSS();
                 }
                 break;
-
-
-            /**
-             * blog
-             * blog/tag/tagid                
-             * blog/tag/tagname 
-             * blog/author/username
-             */
-            case 'blog':
-                if (!isset($request[2])) {
-                    $model->getBlogFeed();
-                } else {
-                    switch ($request[2]) { 
-                        case 'tags':
-                        if (!isset($request[3]) || !$model->getBlogFeedByTag($request[3])) {
-                            // only happens when getBlogFeedByTag() doesn't come up with results
-                            $model->getBlogFeed();
-                        }
-                        break;
-                        
-                        default:
-                        if (isset($request[3]) && $request[3] == 'cat' /* && $model->getBlogFeedByCategory($request[4]) */) {
-                            // in future: do nothing ;)
-                            $model->getBlogFeed();
-                        } else if (!$model->getBlogFeedByAuthor($request[2])) {
-                            $model->getBlogFeed();
-                        }
-                    }
-                }
-                $page = new PageWithBlogRSS();
-                break;
             case 'meeting':
             case 'meetings':
                 if(!$model->getTagFeed($request[1])) {

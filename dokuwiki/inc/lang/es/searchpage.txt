@@ -1,5 +1,0 @@
-====== Búsqueda ======
-
-Puedes encontrar los resultados de tu búsqueda abajo. @CREATEPAGEINFO@
-
-===== Resultados =====

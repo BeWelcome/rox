@@ -1,7 +1,0 @@
-api: PHP
-type: functions
-category: library
-title: XML parsing
-description: namespace-aware and simplified parsing of data-oriented XML
-version: 0.8.2
-priority: auto

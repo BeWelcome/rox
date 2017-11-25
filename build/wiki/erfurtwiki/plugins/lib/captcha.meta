@@ -1,8 +1,0 @@
-api: PHP
-type: functions
-priority: auto
-title: CAPTCHA
-description: provides graphical riddle to get rid of aggressive spambots/spiders
-version: 0.8
-homepage: http://freshmeat.net/p/captchaphp
-category: library

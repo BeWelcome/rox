@@ -1,4 +1,0 @@
-====== Administration ======
-
-Folgende administrative Aufgaben stehen in DokuWiki zur Verfügung:
-

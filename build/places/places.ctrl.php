@@ -39,7 +39,6 @@ class PlacesController extends RoxControllerBase {
             $page->pageNumber  = $this->route_vars['page'];
         }
         $countryCode = $this->route_vars['countrycode'];
-        $page->wikipage = $this->_model->getWikiPage($countryCode);
         $page->regions = $this->_model->getAllRegions($countryCode);
         list($memberCount, $totalMemberCount, $members) = $this->_model->getMembersOfCountry($countryCode, $page->pageNumber);
         $page->totalMemberCount = $totalMemberCount;
@@ -59,7 +58,6 @@ class PlacesController extends RoxControllerBase {
         }
         $countryCode = $this->route_vars['countrycode'];
         $regionCode = $this->route_vars['regioncode'];
-        $page->wikipage = $this->_model->getWikiPage($countryCode, $regionCode);
         $page->cities = $this->_model->getAllCities($regionCode, $countryCode);
         list($memberCount, $totalMemberCount, $members) = $this->_model->getMembersOfRegion($regionCode,$countryCode, $page->pageNumber);
         $page->totalMemberCount = $totalMemberCount;
@@ -81,7 +79,6 @@ class PlacesController extends RoxControllerBase {
         }
         $cityCode = $this->route_vars['citycode'];
         $cityName = $this->route_vars['cityname'];
-        $page->wikipage = $this->_model->getWikiPage(false, false, $cityCode);
         list($memberCount, $totalMemberCount, $members)  = $this->_model->getMembersOfCity($cityCode, $cityName, $page->pageNumber);
         $page->totalMemberCount = $totalMemberCount;
         $page->memberCount = $memberCount;

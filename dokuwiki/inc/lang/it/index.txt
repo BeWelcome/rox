@@ -1,4 +1,0 @@
-====== Indice ======
-
-Questo è un indice di tutte le pagine disponibili ordinate per [[doku>namespaces|categorie]].
-

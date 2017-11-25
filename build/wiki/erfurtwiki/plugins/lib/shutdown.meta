@@ -1,7 +1,0 @@
-api: ewiki
-type: intercept
-hook: shutdown
-title: shutdown hook
-description: adds another hook which activates plugins at shutdown
-category: library
-priority: optional

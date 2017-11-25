@@ -1,3 +1,0 @@
-===== Beállítások =====
-
-Alább találja a DokuWiki-ben elérhető beállítási lehetőségek listáját.

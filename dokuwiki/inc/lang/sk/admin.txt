@@ -1,5 +1,0 @@
-====== Administrácia ======
-
-Nižšie môžete nájsť zoznam administratívnych úloh dostupných v DokuWiki.
-
-

@@ -1,8 +1,0 @@
-hooks: edit_patch
-type: edit_patch
-funcs: ewiki_edit_patch
-api: ewiki
-title: PatchSaving
-description: tries to merge concurrent edits with the 'patch' system utility
-priority: recommended
-category: feature

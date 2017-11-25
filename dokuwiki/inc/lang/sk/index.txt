@@ -1,3 +1,0 @@
-====== Index ======
-
-Tu je k dispozícii index všetkých dostupných stránok zoradených podľa [[doku>namespaces|menných priestorov]].

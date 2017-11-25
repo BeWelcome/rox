@@ -1,7 +1,0 @@
-api: ewiki
-category: markup
-title: PhpWiki-1.2
-hooks: format_source
-type: transform
-description: converts the PhpWiki [[NoLink] to ErfurtWiki ![NoLink]
-priority: deprecated

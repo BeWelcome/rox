@@ -1,9 +1,0 @@
-api: ewiki
-category: aview
-title: TableOfContents
-description: is generated automatically from pages headlines
-priority: bonus
-hooks: format_source, format_final
-type: transform
-config: 
-  EWIKI_TOC_CAPTION=0

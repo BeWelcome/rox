@@ -1,3 +1,0 @@
-====== Yeni şifrənin göndərilməsi ======
-
-Yeni şifrə əldə etmək üçün aşağıda tələb olunan məlumatları daxil edin. Yeni şifrə sizin istifadəçi adınıza aid olan e-mail adresə göndəriləcək. Aşagıda daxil olunan ad - sizin bu wiki-də olan istifadəçi adınız olmalıdır.

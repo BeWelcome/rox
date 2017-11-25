@@ -1,7 +1,0 @@
-api: ewiki
-category: aview
-hooks: view_append
-type: mangle
-title: blog
-description: generates wiki-news style summary of the calendar entries
-priority: bonus

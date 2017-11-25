@@ -1,7 +1,0 @@
-api: ewiki
-type: action
-category: action
-title: LikePages
-description: shows up a list of similar named pages
-priority: standard
-hooks: action

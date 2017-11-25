@@ -1,9 +1,0 @@
-api: ewiki
-category: authentication
-hooks: auth_userdb
-type: auth
-config: 
-  EWIKI_USERDB_SYSTEMPASSWD="system/passwd"
-title: system/passwd
-description: user list is kept on system page (only editable by admin)
-priority: bonus

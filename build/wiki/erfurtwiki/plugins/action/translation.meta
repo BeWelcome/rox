@@ -1,7 +1,0 @@
-api: ewiki
-category: action
-title: AutomaticTranslation
-description: checks text language and provides a BabelFish or GoogleTrans link
-priority: extra
-hooks: handler
-type: intercept

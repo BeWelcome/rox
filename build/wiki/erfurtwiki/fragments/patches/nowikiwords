@@ -1,9 +1,0 @@
-If you desire to disable WikiWord linking in ewiki (which we of course
-strongly discourage), leaving your users with the square brackets linking
-feature; you will need to edit the regular expressions (called "regexs" in
-programmer lingo) that are responsible for rendering.
-
-In ewiki.php search for the "variable configuration settings" defaults,
-which later would be copyied into $ewiki_config. There you have to tweak
-the "wiki_link_regex" block and (optionally) the "wiki_pre_scan_regex".
-There just strip any line that contains 'EWIKI_CHARS'. This should be it.

@@ -1,3 +1,0 @@
-====== Login ======
-
-Du er ikke logget ind! Indtast brugernavn og adgangskode. Din browser skal have tilladt cookies for at du kan logge ind.

@@ -1,1 +1,0 @@
-Ovdje možete ručno postaviti dodatak (plugin) i predložak (template) bilo učitavanjem ili navođenjem URL adrese za direktno učitavanje.

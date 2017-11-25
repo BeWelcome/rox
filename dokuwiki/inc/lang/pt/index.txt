@@ -1,3 +1,0 @@
-====== Índice ======
-
-Este índice mostra todas as páginas disponíveis, agrupadas por [[doku>namespaces|espaço de nome]].

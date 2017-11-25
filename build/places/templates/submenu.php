@@ -46,14 +46,6 @@ $words = new MOD_words();
         </a>
         <?php echo $words->flushBuffer(); ?>
       </li>
-      <li id="sub4" <?php if ($subTab=='wiki') {echo 'class="active"';}?>>
-        <a href="places/wiki">
-          <span><?php echo $words->getBuffered('Wiki'); ?></span>
-        </a>
-        <?php echo $words->flushBuffer(); ?>
-      </li>
-
-    
     <!--<li id="sub4"><a style="cursor:pointer;" onClick="$('FindPeopleFilter').toggle(); $('sub4').addClassName('active'); $('sub4').siblings().each(Element.removeClassName('active'));"><span>another option</span></a></li> -->
     </ul>
   </div>

@@ -1,7 +1,0 @@
-api: ewiki
-category: meta
-title: core MetaData support
-description: adds a small meta data input box below the page edit/ box
-priority: extra
-hooks: edit_form_append, edit_save
-type: mangle

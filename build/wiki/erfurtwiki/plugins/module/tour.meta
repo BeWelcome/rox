@@ -1,7 +1,0 @@
-api: ewiki
-category: extension
-title: tour
-description: allows users to get a quick wiki overview, using interlinked page previews
-priority: extra
-hooks: action
-type: action

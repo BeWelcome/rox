@@ -1,6 +1,0 @@
-api: ewiki
-category: mpi
-hooks: mpi
-type: mpi
-title: FarInclude
-description: A plugin call like <?plugin FarInclude http://example.org/doc.htm ?>

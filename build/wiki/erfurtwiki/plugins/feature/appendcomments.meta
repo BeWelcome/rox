@@ -1,9 +1,0 @@
-api: ewiki
-category: extension
-hooks: edit_hook, edit_save, handler
-type: intercept
-config: 
-  EWIKI_APPENDONLY_COMMENTSPART="/Comments"
-title: appendcomments
-description: _APPENDONLY flagged pages can only be appended text as comments
-priority: rare

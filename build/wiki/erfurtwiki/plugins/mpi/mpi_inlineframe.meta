@@ -1,6 +1,0 @@
-api: ewiki
-category: mpi
-hooks: mpi
-type: mpi
-title: InlineFrame
-description: Inserts an <iframe> for a given URL (as url=, src=, href= or simply

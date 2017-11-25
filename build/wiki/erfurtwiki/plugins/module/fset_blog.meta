@@ -1,6 +1,0 @@
-api: ewiki
-type: virtual
-category: extension
-title: Blog feature set
-priority: rare
-description: loads all required blogging/weblog plugins

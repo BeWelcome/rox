@@ -1,1 +1,0 @@
-Hier können Sie Plugins und Templates von Hand installieren indem Sie sie hochladen oder eine Download-URL angeben.

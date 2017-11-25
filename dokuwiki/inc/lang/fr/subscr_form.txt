@@ -1,3 +1,0 @@
-====== Gestion des souscriptions ======
-
-Cette page vous permet de gérer vos abonnements pour suivre les modifications sur la page et sur la catégorie courante.

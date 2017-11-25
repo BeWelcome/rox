@@ -1,6 +1,0 @@
-api: ewiki
-category: library
-title: fakedba
-description: emualtes dba support if PHP supports at least the dbm interface
-type: functions
-priority: deprecated

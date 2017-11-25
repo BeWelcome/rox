@@ -19,11 +19,6 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
  */
 class AuthListener
 {
-    public function __construct($dokuwikiDirectory)
-    {
-        $this->dokuwikiDirectory = $dokuwikiDirectory;
-    }
-
     public function onAuthenticationSuccess(InteractiveLoginEvent $e)
     {
         // $token = $e->getAuthenticationToken();

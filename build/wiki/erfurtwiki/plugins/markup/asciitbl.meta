@@ -1,7 +1,0 @@
-api: ewiki
-category: markup
-title: AsciiArtTables
-description: are rarely used
-priority: rare
-hooks: format_source
-type: transform

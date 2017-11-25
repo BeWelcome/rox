@@ -1,3 +1,0 @@
-====== Administrere abonnement ======
-
-Denne siden lar deg administrere abonnementene dine for denne siden og dette navnerommet.

@@ -1,7 +1,0 @@
-api: ewiki
-category: markup
-title: BBcode
-hooks: format_source
-type: transform
-description: converts the "bulletin board code" to the easier Wiki syntax
-priority: deprecated

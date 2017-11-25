@@ -1,6 +1,0 @@
-api: ewiki
-type: intercept
-title: HTTP speed-up
-description: implements PHP-side support for conditional HTTP requests
-category: optimation
-priority: bonus

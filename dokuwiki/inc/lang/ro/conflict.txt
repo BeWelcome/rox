@@ -1,7 +1,0 @@
-====== Există o nouă versiune ======
-
-Există o versiune nouă a paginii editate. Aceasta se întâmplă atunci când
-un alt utilizator a modificat pagina în timp ce editai.
-
-Examinează diferențele indicate mai jos, apoi ia decizia care versiune o vei
-reține. Dacă alegi ''Salvează'', versiunea paginii va fi salvată. Apasă ''Renunțare'' pentru a menține versiunea curentă.

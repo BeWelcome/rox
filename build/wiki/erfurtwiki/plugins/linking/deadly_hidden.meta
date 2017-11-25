@@ -1,7 +1,0 @@
-api: ewiki
-category: hypertext
-hooks: format_prepare_linking
-type: link
-title: deadly_hidden
-description: links to _HIDDEN pages will appear as QuestionMarkLinks (fake not-existant)
-priority: rare

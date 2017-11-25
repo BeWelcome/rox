@@ -1,8 +1,0 @@
-api: ewiki
-category: admin
-hooks: page
-type: page
-page: SearchAndReplace
-title: SearchAndReplace
-description: allows text search and replacing across all pages
-priority: bonus

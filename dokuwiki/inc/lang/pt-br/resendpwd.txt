@@ -1,3 +1,0 @@
-====== Enviar nova senha ======
-
-Por favor, digite o seu nome de usuário no formulário abaixo para requisitar uma nova senha para a sua conta nesse wiki. O link de confirmação será enviado para o endereço de e-mail que você forneceu.

@@ -1,4 +1,0 @@
-====== Übersicht ======
-
-Dies ist eine Übersicht über alle vorhandenen Seiten und [[doku>namespaces|Namensräume]].
-

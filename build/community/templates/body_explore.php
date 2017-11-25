@@ -44,10 +44,6 @@ $words = new MOD_words();
                 <h5 class="list-group-item-heading"><?php echo $words->get('Activities') ?></h5>
                 <p class="list-group-item-text"><?php echo $words->get('ExploreActivitiesDescription') ?></p>
             </a>
-            <a href="/trips" class="list-group-item list-group-item-action">
-                <h5 class="list-group-item-heading"><?php echo $words->get('Trips') ?></h5>
-                <p class="list-group-item-text"><?php echo $words->get('ExploreTripsDescription') ?></p>
-            </a>
         </div>
     </div>
 </div>

@@ -1,9 +1,0 @@
-Olá @FULLNAME@!
-
-Alguém requisitou um nova senha para o seu usuário @TITLE@ em @DOKUWIKIURL@.
-
-Se não foi você quem fez essa requisição, simplesmente ignore essa mensagem.
-
-Se você realmente deseja receber uma nova senha, por favor, utilize o link abaixo, para confirmar sua requisição.
-
-@CONFIRM@

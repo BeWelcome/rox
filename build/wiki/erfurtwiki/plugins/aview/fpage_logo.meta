@@ -1,8 +1,0 @@
-api: ewiki
-category: aview
-hooks: page_final
-type: mangle
-title: fpage_logo
-description: appends an image (logo) to the page
-author: Jeffrey Engleman
-priority: bonus

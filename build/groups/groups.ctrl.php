@@ -889,22 +889,6 @@ class GroupsController extends RoxControllerBase
     }
 
     /**
-     * handles showing group wiki page
-     *
-     * @access public
-     * @return object $page
-     */
-    public function wiki()
-    {
-        $page = new GroupWikiPage();
-        $page->group = $this->_getGroupFromRequest();
-        $this->_fillObject($page);
-        return $page;
-    }
-    //}}}
-
-
-    /**
      * Callback function for createGroup page
      *
      * @param object $args         contains vars

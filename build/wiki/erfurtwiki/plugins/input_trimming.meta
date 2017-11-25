@@ -1,9 +1,0 @@
-api: ewiki
-type: intercept
-hooks: init
-funcs: ewiki_input_truncate, ewiki_check_input, ewiki_reset_key, ewiki_set_globals
-title: InputTrimming
-description: secures HTTP input by truncation and unsetting of unknown variables
-author: Jeffrey Engleman
-category: feature
-priority: recommended

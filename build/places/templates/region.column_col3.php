@@ -20,5 +20,4 @@ foreach ($this->cities as $city) {
 }
 echo '</ul></div>';
 include 'memberlist.php';
-include 'placeinfo.php';
 ?>

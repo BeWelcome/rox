@@ -1,4 +1,0 @@
-====== İdarəetmə ======
-
-Aşağıda Dokuwiki-də mümkün olan administrativ əməliyyatların siyahısı göstərilib.
-

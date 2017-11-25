@@ -1,4 +1,0 @@
-====== Administracija ======
-
-Žemiau matote veiksmų, kuriuos gali atlikti administratorius, sąrašą.
-

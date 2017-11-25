@@ -1,7 +1,0 @@
-api: ewiki
-category: action
-hooks: action
-type: action
-title: extract todo items
-description: extracts todo items (@@TODO, @@DONE, @@CANCELLED), adds CSS for it
-priority: bonus

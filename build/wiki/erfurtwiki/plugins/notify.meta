@@ -1,8 +1,0 @@
-api: ewiki
-type: transform
-hooks: edit_hook, format_source
-funcs: ewiki_notify_edit_hook, ewiki_notify_links, ewiki_format_remove_notify
-title: Notifications
-description: the invisible markup [notify:you@there.net] will trigger mails on editing
-priority: standard
-category: feature

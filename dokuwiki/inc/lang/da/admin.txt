@@ -1,4 +1,0 @@
-====== Administration ======
-
-Nedenfor kan du finde en række administrative værktøjer.
-

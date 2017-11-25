@@ -109,20 +109,6 @@ VALUES
         }
     }
 
-    public function reorderTripItems($items)
-    {
-        if (!$this->checkTripItemOwnerShip($items)) {
-            return;
-        }
-
-        $this->dao->query("START TRANSACTION");
-        foreach ($items as $position => $item) {
-            $query = sprintf("UPDATE `blog_data` SET `blog_display_order` = '%d' WHERE `blog_id` = '%d'", ($position + 1), $item);
-            $this->dao->query($query);
-        }
-        $this->dao->query("COMMIT");
-    }
-
     public function editGalleryProcess($vars)
     {
         $this->dao->exec("UPDATE `gallery` SET `title` = '".$vars['t']."' , `description` = '".$vars['txt']."' WHERE `id`= ".$vars['id']);

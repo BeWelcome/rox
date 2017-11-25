@@ -1,9 +1,0 @@
-api: ewiki
-category: page
-hooks: page
-type: page
-config: 
-  EWIKI_PAGE_EXALL="ExAllTodo"
-title: ExtractAll
-description: extracts todo items from every page in the wiki database
-priority: bonus

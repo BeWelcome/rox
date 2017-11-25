@@ -1,3 +1,0 @@
-====== Prijava ======
-
-Upišite korisničko ime i lozinku da biste se prijavili.

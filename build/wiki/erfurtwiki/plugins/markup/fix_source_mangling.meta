@@ -1,7 +1,0 @@
-api: ewiki
-category: markup
-title: fixed/faster source mangling
-description: occasionally enhances a few functions
-priority: never
-hooks: singleblock_fmt_src, format_source, block
-type: transform

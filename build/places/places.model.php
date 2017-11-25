@@ -24,58 +24,6 @@ class Places extends RoxModelBase {
     }
 
     /**
-     * getWikiPage fetches the information from the old geonames_cache DB to create the
-     * name of the wiki page. This is due to the fact that the content of th geonames_cache doesn't match
-     * with geonames for some reasons.
-     *
-     * @param string $country
-     * @param string $admin1
-     * @param string $geonameid
-     * @return boolean|mixed
-     */
-    public function getWikiPage($country = false, $admin1 = false, $geonameid = false) {
-        // Figured out the geoname id from geonames
-        $query = "
-            SELECT
-                g.geonameid geonameid
-            FROM
-                geonames g
-            WHERE ";
-        if ($country) {
-            if ($admin1) {
-                $query .= "g.fcode = 'ADM1' AND g.country = '" . $this->dao->escape($country) . "' ";
-                $query .= "AND g.admin1 = '" . $this->dao->escape($admin1) . "' ";
-            } else {
-                $query .= "g.fcode LIKE 'PCLI%' AND g.country = '" . $this->dao->escape($country) . "' ";
-            }
-            $result = $this->singleLookup($query);
-            if (!$result) {
-                return false;
-            }
-            $geonameid = $result->geonameid;
-        }
-        $query = "SELECT name FROM geonames_cache WHERE geonameid = '" . $this->dao->escape($geonameid) . "'";
-        $result = $this->singleLookup($query);
-        if (!$result) {
-            return false;
-        }
-        if (isset($result->name)) {
-            return str_replace(' ', '', ucwords($result->name));
-        } else {
-            $query = "SELECT name FROM geonames WHERE geonameid = '" . $this->dao->escape($geonameid) . "'";
-            $result = $this->singleLookup($query);
-            if (!$result) {
-                return false;
-            }
-            if (isset($result->name)) {
-                return str_replace(' ', '', ucwords($result->name));
-            } else {
-                return false;
-            }
-        }
-    }
-
-    /**
      * get (alternate) name of given city
      */
     private function getCityName($geonameid) {

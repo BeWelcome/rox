@@ -1,7 +1,0 @@
-api: ewiki
-category: appearance
-title: <ul> page lists
-hooks: list_pages
-type: listing
-description: traditional page listings use <ul> for simple unordered lists
-priority: optional

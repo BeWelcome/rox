@@ -1,4 +1,0 @@
-====== Administracja ======
-
-Czynności administracyjne DokuWiki.
-

@@ -1,3 +1,0 @@
-===== Skrbništvo =====
-
-Navedene možnosti omogočajo skrbniško prilagajanje nastavitev sistema DokuWiki.

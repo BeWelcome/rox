@@ -1,3 +1,0 @@
-====== Mục lục ======
-
-Đây là mục lục của tất cả các trang, xếp theo thứ tự [[doku>namespaces|namespaces]].

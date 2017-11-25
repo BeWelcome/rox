@@ -531,12 +531,8 @@ class GeoModel extends RoxModelBase {
     public function updateGeoCounters() {
     
         // geht the usage type ids
-        $blogTypeId = $this->getUsagetypeId('trip')->id;
         $addressTypeId = $this->getUsagetypeId('member_primary')->id;
     
-        //readd ids from blog table
-        $blogIds = $this->getIdFromBlog();    
-        
         //readd ids from address table
         $addressIds = $this->getIdFromAddresses();
         
@@ -555,10 +551,6 @@ class GeoModel extends RoxModelBase {
             ");
         
         //calculate numbers for used Id (lowest hierarchy)
-        foreach ($blogIds as $Id) {
-            if (!isset($blogCount[$Id->blog_geonameid])) $blogCount[$Id->blog_geonameid] = 0;
-        }
-            $blogCount[$Id->blog_geonameid]++;
         foreach ($addressIds as $Id) {
             if (!isset($addressCount[$Id->IdCity])) $addressCount[$Id->IdCity] = 0;        
             $addressCount[$Id->IdCity]++;
@@ -572,10 +564,6 @@ class GeoModel extends RoxModelBase {
             $harray[$value->geoId] = $value->parentId;
         }
     
-        $hblogCount = array();
-        $worldid = 6295630; //globe, top level
-        $hblogCount[$worldid] = $this->countHierarchy($harray,$blogCount,$hblogCount,$worldid);    
-        
         $haddressCount = array();
         $haddressCount[$worldid] = $this->countHierarchy($harray,$addressCount,$haddressCount,$worldid);    
         
@@ -584,21 +572,6 @@ class GeoModel extends RoxModelBase {
             "TRUNCATE TABLE `geo_usage`"
         );
         
-        //write to db
-        foreach ($hblogCount as $key=>$value) {
-            if ($value !=0) {
-                $return = $this->dao->query(
-                    "    
-                    INSERT INTO geo_usage
-                    SET
-                        id = 'NULL',
-                        geoId = ".$key.",
-                        typeId = ".$blogTypeId.",
-                        count = ".$value."
-                    "
-                    );
-                }
-        }
         foreach ($haddressCount as $key=>$value) {
             if ($value !=0) {            
                 $return = $this->dao->query(
@@ -677,16 +650,6 @@ class GeoModel extends RoxModelBase {
         }
         if (!$addaddresses) $error = 'Failed to readd address geoids';
         
-        //readd ids from blog table
-        $BlogIds = $this->getIdFromBlog();
-        $counter['blog'] = 0;
-        foreach($BlogIds as $Id) {
-            if ($Id->blog_geonameid) {
-                $addblogs = $this->addGeonameId($Id->blog_geonameid,'trip');
-                $counter['blog']++;
-            }
-        }
-        
         $result['error'] = $error;
         $result['counter'] = $counter;
         
@@ -700,14 +663,6 @@ class GeoModel extends RoxModelBase {
             "
                 SELECT `IdCity`
                 FROM `addresses`
-            ");
-    }
-    
-    private function getIdFromBlog() {
-        return $this->bulkLookup (
-            "
-                SELECT `blog_geonameid`
-                FROM `blog_data`
             ");
     }
     

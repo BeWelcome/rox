@@ -1,3 +1,0 @@
-====== Administrasjon ======
-
-Nedenfor finner du en liste over administrative oppgaver i DokuWiki.

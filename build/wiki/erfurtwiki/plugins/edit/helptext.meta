@@ -1,7 +1,0 @@
-api: ewiki
-category: edit
-hooks: edit_hook
-type: mangle
-title: helptext
-description: appends an info text to the edit/ page
-priority: bonus

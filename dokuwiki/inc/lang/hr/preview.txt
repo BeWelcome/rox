@@ -1,3 +1,0 @@
-====== Pregled ======
-
-Ovo je pregled kako će izgledati Vaš dokument nakon što se pohrani.

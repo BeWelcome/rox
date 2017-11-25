@@ -1,7 +1,0 @@
-base   rox
-author shevek
-email  shevek@blafaselblubb.abcde.biz
-date   2017-02-19
-name   Rox Renderer
-desc   Renders only the important parts of a page
-url    https://www.dokuwiki.org/plugin:rox

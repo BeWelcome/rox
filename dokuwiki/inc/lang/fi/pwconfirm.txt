@@ -1,9 +1,0 @@
-Hei @FULLNAME@!
-
-Joku pyysi uutta salasanaa login nimellesi @TITLE@ sivustolla @DOKUWIKIURL@
-
-Jos sinä ei pyytänyt uutta salasanaa, niin voit unohtaa tämän postin.
-
-Käytä alla olevaa linkkiä vahvistaaksesi, että pyynnön lähettäjä todella olet sinä.
-
-@CONFIRM@

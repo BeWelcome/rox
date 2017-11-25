@@ -1,3 +1,0 @@
-====== Povratna informacija o popularnosti ======
-
-Podatci su uspješno poslani.

@@ -1,1 +1,0 @@
-Aqui você pode instalar manualmente plugins e modelos ou enviando-os (upload) ou fornecendo uma URL de download direto.

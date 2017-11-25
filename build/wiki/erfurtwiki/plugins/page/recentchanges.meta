@@ -1,9 +1,0 @@
-api: ewiki
-category: page
-priority: recommended
-hooks: rc, page
-type: page
-config: 
-  EWIKI_PAGE_RECENTCHANGES="RecentChanges"
-title: recentchanges
-description: gives a more standard RecentChanges (besides the ewiki built-in UpdatedPages)

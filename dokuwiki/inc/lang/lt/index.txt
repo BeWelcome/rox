@@ -1,4 +1,0 @@
-====== Indeksas ======
-
-Čia matote visų šiuo metu egzistuojančių puslapių sąrašą. Jie išrūšiuoti pagal [[doku>namespaces|pavadinimą]].
-

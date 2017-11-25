@@ -1,3 +1,0 @@
-====== Aggiorna il profilo del tuo account ======
-
-E' necessario compilare solo i campi che desideri modificare. Non puoi cambiare il tuo nome utente.

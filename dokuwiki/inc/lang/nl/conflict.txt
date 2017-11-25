@@ -1,5 +1,0 @@
-====== Er bestaat een nieuwere versie ======
-
-Er bestaat een nieuwere versie van het document dat aangepast wordt. Dit komt voor als een andere gebruiker dit document tegelijk met jou wijzigt.
-
-Bekijk de verschillen die beneden weergegeven worden uitvoerig, en beslis dan welke versie de beste is en dus bewaard moet worden. Kies ''opslaan'' om de eigen versie te bewaren. Kies ''annuleren'' om de huidige versie te bewaren.

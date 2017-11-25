@@ -1,3 +1,0 @@
-====== Erot ======
-
-Tämä näyttää erot valitun ja nykyisen version kesken tästä sivusta.

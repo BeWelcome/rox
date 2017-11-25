@@ -1,3 +1,0 @@
-====== Administrare ======
-
-Poți vedea mai jos o listă cu acțiunile administrative disponibile în DokuWiki.

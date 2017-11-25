@@ -1,7 +1,0 @@
-api: ewiki
-category: extension
-hooks: delegator
-type: special
-title: collectuserdata
-description: a handler that displays a request for user data rather than the requested page
-priority: bonus

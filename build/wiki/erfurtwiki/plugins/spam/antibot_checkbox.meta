@@ -1,8 +1,0 @@
-api: ewiki
-category: spam
-hooks: edit_form_append, edit_hook
-type: intercept
-title: antibot-CheckBox
-description: most simple blog/comment spam attacks can already be prevented with this simple checkbox
-depends: captcha
-priority: rare

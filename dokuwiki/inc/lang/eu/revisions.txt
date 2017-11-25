@@ -1,3 +1,0 @@
-====== Bertsio zaharrak ======
-
-Hauek egungo dokumentua baino zaharragoak diren bertsioak dira. Hauetako bertsio batetara itzultzeko aukera ezazu behetik, pultsatu ''Sortu orri hau'' eta gorde.

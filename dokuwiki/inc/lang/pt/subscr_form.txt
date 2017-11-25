@@ -1,3 +1,0 @@
-====== Gestão de Subscrição ======
-
-Esta página permite-lhe gerir as suas subscrições para a página e espaço de nomes correntes.

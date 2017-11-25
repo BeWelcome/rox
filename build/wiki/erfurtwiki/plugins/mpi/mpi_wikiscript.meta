@@ -1,6 +1,0 @@
-api: ewiki
-category: mpi
-hooks: mpi
-type: mpi
-title: WikiScript
-description: safe server-side scripting

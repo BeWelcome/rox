@@ -1,3 +1,0 @@
-====== Índice ======
-
-Esse é um índice de todas as páginas disponíveis, ordenadas por [[doku>namespaces|domínios]].

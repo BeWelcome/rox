@@ -1,5 +1,0 @@
-====== Iskanje ======
-
-Spodaj so izpisani rezultati iskanja. @CREATEPAGEINFO@
-
-===== Rezultati =====

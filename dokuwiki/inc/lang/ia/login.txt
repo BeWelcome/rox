@@ -1,3 +1,0 @@
-====== Aperir session ======
-
-Tu non es identificate! Entra tu credentiales de authentication pro aperir un session. Tu debe haber activate le cookies pro aperir un session.

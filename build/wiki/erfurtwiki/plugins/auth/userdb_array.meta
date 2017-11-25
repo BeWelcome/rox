@@ -1,7 +1,0 @@
-api: ewiki
-category: authentication
-hooks: auth_userdb
-type: auth
-title: userdb_array
-description: user database as array, hand edit it in the plugins source
-priority: rare

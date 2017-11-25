@@ -1,1 +1,0 @@
-Itt új modulokat és sablonokat telepíthetsz feltöltéssel vagy a csomagra hivatkozó URL megadásával.

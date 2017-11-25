@@ -1,9 +1,0 @@
-api: ewiki
-type: virtual
-category: feature
-config: 
-  EWIKI_ACTION_USE_PARAM=2
-  EWIKI_ACTION_TAKE_ASIS=0
-title: fset_actionurls
-description: will default ewiki to use "?WikiPage&action=view" like URLs
-priority: never

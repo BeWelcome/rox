@@ -1,3 +1,0 @@
-====== Îndeks ======
-
-Ev îndeksa hemû rûpelên heyî ye. Rûpel li gora [[doku>namespaces|namespace]] hatin birêzkirin.

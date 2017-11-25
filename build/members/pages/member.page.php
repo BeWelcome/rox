@@ -107,8 +107,6 @@ class MemberPage extends PageWithActiveSkin
             $tt[] = array('profile', "members/$username", $ww->MemberPage);
             $tt[] = array('comments', "members/$username/comments", $ww->ViewComments.' <span class="badge badge-primary pull-right">'.$comments_count['all'].'</span>');
             $tt[] = array('gallery', "gallery/show/user/$username/pictures", $ww->Gallery . ' <span class="badge badge-primary pull-right">' . $galleryItemsCount . '</span>');
-            $tt[] = array('blogs', "blog/$username", $ww->Blog);
-            $tt[] = array('trips', "trip/show/$username", $ww->Trips);
             $tt[] = array('forum', "forums/member/$username", $viewForumPosts);
         } else {
             if (isset($note)) {
@@ -131,8 +129,6 @@ class MemberPage extends PageWithActiveSkin
                 array('profile', "members/$username", $ww->MemberPage),
                 array('comments', "members/$username/comments", $ww->ViewComments.' <span class="badge badge-primary pull-right">'.$comments_count['all'].'</span>'),
                 array('gallery', "gallery/show/user/$username/pictures", $ww->Gallery . ' <span class="badge badge-primary pull-right">' . $galleryItemsCount . '</span>'),
-                array('blogs', "blog/$username", $ww->Blog),
-                array('trips', "trip/show/$username", $ww->Trips)
             );
             if ($linkMembersForumPosts) {
                 $tt[] = array('forum', "forums/member/$username", $viewForumPosts);

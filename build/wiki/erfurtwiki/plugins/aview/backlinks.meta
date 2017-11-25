@@ -1,7 +1,0 @@
-api: ewiki
-category: aview
-title: BackLinks
-description: appends the list of pages linking back
-priority: rare
-hooks: view_append
-type: mangle

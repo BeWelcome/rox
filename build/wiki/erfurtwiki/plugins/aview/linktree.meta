@@ -1,9 +1,0 @@
-api: ewiki
-category: aview
-title: LinkTree
-description: shows the paths to the root page (slow)
-priority: rare
-hooks: view_append
-type: mangle
-config: 
-  EWIKI_LINKTREE_UL=0  // else a link::list will be printed

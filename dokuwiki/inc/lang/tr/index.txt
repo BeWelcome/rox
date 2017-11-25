@@ -1,4 +1,0 @@
-====== İndeks ======
-
-Bu mevcut tüm sayfaların [[doku>namespaces|isim alanlarına]] göre sıralı bir indeksidir.
-

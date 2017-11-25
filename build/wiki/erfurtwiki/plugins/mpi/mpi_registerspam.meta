@@ -1,6 +1,0 @@
-api: ewiki
-category: mpi
-hooks: mpi
-type: mpi
-title: RegisterSpam
-description: This MpiPlugin should be called from the BannedLinks or BlockedLinks

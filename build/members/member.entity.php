@@ -774,45 +774,6 @@ WHERE
         return $commentCounters;
     }
 
-
-    /**
-     * return an array of trip entities that the member created
-     *
-     * @access public
-     * @return array
-     */
-    public function getTripsArray()
-    {
-        if (!$this->_has_loaded)
-        {
-            return false;
-        }
-
-        $tripsModel = new TripsModel();
-        $usertrips = $tripsModel->getTrips($this->Username, 1, 5);
-        $trip_data = $tripsModel->getTripData();
-        return array($usertrips,$trip_data);
-    }
-
-    /**
-     * return an array of blog entities that the member created
-     *
-     * @access public
-     * @return array
-     */
-    public function getBlogs()
-    {
-        if (!$this->_has_loaded)
-        {
-            return false;
-        }
-
-        $tripmodel = new Blog();
-        $usertrips = $tripmodel->getTrips($this->Username);
-        $trip_data = $tripmodel->getTripData();
-        return array($usertrips,$trip_data);
-    }
-
     /**
      * Get number of gallery items
      *

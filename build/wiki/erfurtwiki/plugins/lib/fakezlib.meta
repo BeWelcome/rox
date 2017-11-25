@@ -1,6 +1,0 @@
-api: ewiki
-category: library
-title: fakezlib
-description: required for outdated PHP installations
-type: functions
-priority: deprecated

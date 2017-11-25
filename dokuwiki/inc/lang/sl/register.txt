@@ -1,3 +1,0 @@
-====== Vpis novega računa ======
-
-V spodnji obrazec je treba vnesti vse zahtevane podatke za ustvarjanje novega računa. Vnesti je treba veljaven **elektronski naslov**, na katerega bo poslano geslo. Uporabniško ime mora biti veljavno [[doku>pagename|ime strani]].

@@ -1,3 +1,0 @@
-====== Previzualizare ======
-
-Acesta este modul în care va arăta textul. Ai în vedere: **Nu** e încă **salvat**!

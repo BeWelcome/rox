@@ -1,7 +1,0 @@
-api: ewiki
-category: page
-hooks: page
-type: page
-title: README
-description: splits up the README and hyperlinks headlines
-priority: never

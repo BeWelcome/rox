@@ -1,8 +1,0 @@
-api: ewiki
-type: page
-hooks: dl, dl, view_init, page, dl
-funcs: ewiki_dynamic_plugin_loader
-title: PluginLoader-1
-description: loads action and page plugins dynamically using pre-compiled list
-priority: rare
-category: feature

@@ -1,9 +1,0 @@
-api: ewiki
-category: filter
-title: MSIE .png support
-description: instructs IE to use an ActiveX imageloader for .png images
-hooks: view_final
-type: mangle
-config: 
-  FIX_MSIE_NULL_GIF="/img/null.gif"
-priority: deprecated

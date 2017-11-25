@@ -1,4 +1,0 @@
-====== Înregistrează-te ca utilizator nou ======
-
-Pentru a crea un wiki nou completează mai jos toate informațiile. Asigură-te
-că ai introdus o adresă de e-mail **validă** unde va fi trimisă noua parolă. Numele de utilizator trebuie de asemenea să fie valid [[doku>pagename|pagename]].

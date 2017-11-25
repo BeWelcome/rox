@@ -1,4 +1,0 @@
-====== Administreerimine ======
-
-Alljärgnevalt leiate nimekirja administratiivsetest tegevustest, mida DokuWiki võimaldab.
-

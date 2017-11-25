@@ -1,7 +1,0 @@
-api: ewiki
-category: authentication
-hooks: auth_userdb
-type: auth
-title: foreign SQL userdb
-description: reuses an existing SQL database user table from foreign CMS
-priority: rare

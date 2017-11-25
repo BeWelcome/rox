@@ -1,7 +1,0 @@
-api: ewiki
-category: extension
-hooks: page
-type: page
-title: UserVars GUI
-description: interfaces to user variables
-priority: bonus

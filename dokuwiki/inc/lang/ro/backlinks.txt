@@ -1,3 +1,0 @@
-====== Legături înapoi ======
-
-Aceasta e o listă de pagini care au legături către pagina curentă.

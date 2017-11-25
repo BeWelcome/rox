@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<build>
-  <app name="Wiki"/>
-  <files>
-    <file class="WikiController">wiki.ctrl.php</file>
-    <file class="Wiki">wiki.model.php</file>
-    <file class="WikiView">wiki.view.php</file>
-  </files>
-</build>

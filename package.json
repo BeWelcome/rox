@@ -9,19 +9,7 @@
   "devDependencies": {
     "@symfony/webpack-encore": "^0.14.0",
     "babel-core": "^6.26.0",
-    "grunt": "^1.0.0",
-    "grunt-assets-versioning": "^1.0.6",
-    "grunt-cli": "^1.2.0",
-    "grunt-contrib-clean": "^1.0.0",
-    "grunt-contrib-concat": "^1.0.0",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-csslint": "^1.0.0",
-    "grunt-contrib-cssmin": "^1.0.0",
-    "grunt-contrib-jshint": "^1.0.0",
-    "grunt-contrib-sass": "^1.0.0",
-    "grunt-contrib-uglify": "^1.0.0",
-    "grunt-contrib-watch": "^1.0.0",
-    "node-sass": "^4.7.1",
+    "node-sass": "^4.7.2",
     "sass-loader": "^6.0.6",
     "webpack-jquery-ui": "^1.0.0"
   },
@@ -45,7 +33,6 @@
     "select2": "^4.0.5",
     "skrollr": "^0.6.26",
     "skrollr-menu": "github:prinzhorn/skrollr-menu",
-    "symfony-collection": "^2.1.18",
     "tempusdominus-bootstrap-4": "github:tempusdominus/bootstrap-4",
     "unslider": "github:idiot/unslider"
   }

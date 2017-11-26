@@ -948,13 +948,13 @@ class MembersController extends RoxControllerBase
         $catfree = trim($vars['ProfileNoteCategoryFree']);
         $request = $args->request;
         if (!empty($catselect) && !empty($catfree)) {
-            if ($catselect != $catfree) {
+            if (($catselect != "new")&&($catselect != $catfree)) {
                 $vars['errors'] = array('ProfileNoteCategoryUnclear');
                 $mem_redirect->post = $vars;
                 return false;
             }
         }
-        if (!empty($catselect)) {
+        if ((!empty($catselect))&&($catselect != "new")) {
             $category = $catselect;
         } else {
             $category = $catfree;

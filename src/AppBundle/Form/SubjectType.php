@@ -18,6 +18,7 @@ class SubjectType extends AbstractType
         $builder->add('subject', CKEditorType::class, [
             'config' => [
                 'extraPlugins' => 'confighelper',
+                'removePlugins' => 'clipboard,pastetext,pastefromword,tableselection,toolbar',
             ],
             'plugins' => [
                 'confighelper' => [

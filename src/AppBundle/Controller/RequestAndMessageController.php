@@ -5,7 +5,9 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\HostingRequest;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
-use AppBundle\Form\MessageRequestType;
+use AppBundle\Entity\Subject;
+use AppBundle\Form\HostingRequestGuest;
+use AppBundle\Form\HostingRequestHost;
 use AppBundle\Form\MessageToMemberType;
 use AppBundle\Model\MessageModel;
 use AppBundle\Model\RequestModel;
@@ -14,7 +16,6 @@ use InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -132,18 +133,18 @@ class RequestAndMessageController extends Controller
         $thread = $messageModel->getThreadForMessage($message);
 
         $replyMessage = new Message();
-        $replyMessage->setSubject($message->getSubject());
+        $replyMessage->getSubject()->setSubject($message->getSubject()->getSubject());
 
         $messageForm = $this->createForm(MessageToMemberType::class, $replyMessage);
         $messageForm->handleRequest($request);
 
         if ($messageForm->isSubmitted() && $messageForm->isValid()) {
-            $receiver = ($message->getReceiver() === $sender) ? $message->getSender() : $message->getReceiver();
+            $receiver = ($message->getReceiver() === $sender) ? $sender : $message->getReceiver();
             $replyMessage = $messageForm->getData();
             $replyMessage->setParent($message);
             $replyMessage->setSender($sender);
             $replyMessage->setReceiver($receiver);
-            $replyMessage->setInfolder('normal');
+            $replyMessage->setInfolder('Normal');
             $replyMessage->setCreated(new \DateTime());
 
             $subject = $message->getSubject();
@@ -226,7 +227,7 @@ class RequestAndMessageController extends Controller
             $hostingRequest = $messageForm->getData();
             $hostingRequest->setSender($sender);
             $hostingRequest->setReceiver($receiver);
-            $hostingRequest->setInfolder('normal');
+            $hostingRequest->setInfolder('Normal');
             $hostingRequest->setCreated(new \DateTime());
 
             $em = $this->getDoctrine()->getManager();
@@ -243,14 +244,14 @@ class RequestAndMessageController extends Controller
                 ->setBody(
                     $this->renderView(
                         // app/Resources/views/Emails/registration.html.twig
-                        ':emails:request.html.twig',
+                        'requests.html.twig',
                         ['request_text' => $hostingRequest->getMessage()]
                     ),
                     'text/html'
                 )
                 ->addPart(
                     $this->renderView(
-                        ':emails:request.txt.twig',
+                        'requests.txt.twig',
                         ['request_text' => $hostingRequestText]
                     ),
                     'text/plain'
@@ -284,7 +285,7 @@ class RequestAndMessageController extends Controller
             throw new InvalidArgumentException('You can\'t send a request to yourself.');
         }
 
-        $requestForm = $this->createForm(MessageRequestType::class);
+        $requestForm = $this->createForm(HostingRequestGuest::class);
         $requestForm->handleRequest($request);
 
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
@@ -324,41 +325,160 @@ class RequestAndMessageController extends Controller
     }
 
     /**
-     * @Route("/request/{id}/reply", name="hosting_request_reply")
+     * @Route("/request/{id}/reply/guest", name="hosting_request_reply_guest")
+     *
+     * @param Request $request
+     * @param Message $hostingRequest
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * Ignore as too strict in this case (function is easily readable)
+     *
+     * @throws \Doctrine\DBAL\DBALException
+     *
+     * @return Response
+     */
+    public function hostingRequestGuestReplyAction(Request $request, Message $hostingRequest)
+    {
+        if (null === $hostingRequest->getRequest()) {
+            return $this->redirectToRoute('message_show', ['id' => $hostingRequest->getId()]);
+        }
+
+        $user = $this->getUser();
+        $sender = $hostingRequest->getSender();
+        $receiver = $hostingRequest->getReceiver();
+
+        if ($user->getId() === $receiver->getId()) {
+            // This should have been /request/{id}/reply/host
+            return $this->redirectToRoute('hosting_request_reply_host', ['id' => $hostingRequest->getId()]);
+        }
+
+        if ($user->getId() !== $sender->getId()) {
+            return $this->redirectToRoute('requests', ['folder' => 'sent']);
+        }
+
+        // Make sure a new message has to be entered when changing the status of the request
+        $newRequest = $this->getNewRequestFromOriginal($hostingRequest);
+
+        $requestForm = $this->createForm(HostingRequestGuest::class, $newRequest);
+        $requestForm->handleRequest($request);
+
+        if ($requestForm->isSubmitted() && $requestForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $data = $requestForm->getData();
+            $clickedButton = $requestForm->getClickedButton()->getName();
+            $oldState = $hostingRequest->getRequest()->getStatus();
+            $newState = ('cancel' === $clickedButton) ? HostingRequest::REQUEST_CANCELLED : $oldState;
+            if ($oldState !== $newState) {
+                $hostingRequest->getRequest()->setStatus($newState);
+            }
+
+            // check if new subject was set
+            if ($data->getSubject()->getSubject() !== $hostingRequest->getSubject()->getSubject()) {
+                $newSubject = new Subject();
+                $newSubject->setSubject($data->getSubject()->getSubject());
+                $hostingRequest->setSubject($newSubject);
+                $em->persist($newSubject);
+            } else {
+                $newRequest->setSubject($hostingRequest->getSubject());
+            }
+
+            // check if request was altered
+            $newArrival = ($data->getRequest()->getArrival() !== $hostingRequest->getRequest()->getArrival());
+            $newDeparture = ($data->getRequest()->getDeparture() !== $hostingRequest->getRequest()->getDeparture());
+            $newFlexible = ($data->getRequest()->getFlexible() !== $hostingRequest->getRequest()->getFlexible());
+            $newNumberOfTravellers = ($data->getRequest()->getNumberOfTravellers() !== $hostingRequest->getRequest()->getNumberOfTravellers());
+            if ($newArrival || $newDeparture || $newFlexible || $newNumberOfTravellers) {
+                $newHostingRequest = new HostingRequest();
+                $newHostingRequest->setArrival($data->getRequest()->getArrival());
+                $newHostingRequest->setDeparture($data->getRequest()->getDeparture());
+                $newHostingRequest->setFlexible($data->getRequest()->getFlexible());
+                $newHostingRequest->setNumberOfTravellers($data->getRequest()->getNumberOfTravellers());
+                $em->persist($newHostingRequest);
+            } else {
+                $newRequest->setRequest($hostingRequest->getRequest());
+            }
+            $newRequest->setParent($hostingRequest);
+            $em->persist($newRequest);
+            $em->flush();
+
+            $subject = $newRequest->getSubject()->getSubject();
+            if ('Re:' !== substr($subject, 0, 3)) {
+                $subject = 'Re: '.$subject;
+            }
+
+            if (HostingRequest::REQUEST_CANCELLED === $newState) {
+                $subject = 'Canceled! '.$subject;
+            }
+
+            $this->sendMailNotification(
+                $sender,
+                $receiver,
+                $subject,
+                $newRequest->getMessage(),
+                'request'
+            );
+            $this->addFlash('success', 'Notification with updated information has been sent.');
+
+            return $this->redirectToRoute('message_show', ['id' => $newRequest->getId()]);
+        }
+
+        $messageModel = new MessageModel($this->getDoctrine());
+        $thread = $messageModel->getThreadForMessage($hostingRequest);
+
+        return $this->render(':request:reply_guest.html.twig', [
+            'form' => $requestForm->createView(),
+            'sender' => $sender,
+            'receiver' => $receiver,
+            'current' => $hostingRequest,
+            'thread' => $thread,
+        ]);
+    }
+
+    /**
+     * @Route("/request/{id}/reply/host", name="hosting_request_reply_host")
      *
      * @param Request $request
      * @param Message $hostingRequest
      *
      * @throws \Doctrine\DBAL\DBALException
      *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * Ignore as too strict in this case (function is easily readable)
+     *
      * @return Response
      */
-    public function hostingRequestReplyAction(Request $request, Message $hostingRequest)
+    public function hostingRequestHostReplyAction(Request $request, Message $hostingRequest)
     {
         if (null === $hostingRequest->getRequest()) {
             return $this->redirectToRoute('message_show', ['id' => $hostingRequest->getId()]);
         }
 
-        $newRequest = new Message();
-        $newRequest->setRequest($hostingRequest->getRequest());
-        $newRequest->setSubject($hostingRequest->getSubject());
-
         $user = $this->getUser();
         $sender = $hostingRequest->getSender();
         $receiver = $hostingRequest->getReceiver();
-        $owner = ($user->getId() == $sender->getId());
-        $requestForm = $this->createForm(MessageRequestType::class, $newRequest, [
-            'reply' => true,
-            'owner' => $owner
-        ]);
+
+        if ($user->getId() === $sender->getId()) {
+            // This should have been /request/{id}/reply/guest
+            return $this->redirectToRoute('hosting_request_reply_host', ['id' => $hostingRequest->getId()]);
+        }
+
+        if ($user->getId() !== $receiver->getId()) {
+            return $this->redirectToRoute('requests', ['folder' => 'inbox']);
+        }
+
+        // Make sure a new message has to be entered when changing the status of the request
+        $newRequest = $this->getNewRequestFromOriginal($hostingRequest);
+
+        $requestForm = $this->createForm(HostingRequestHost::class, $newRequest);
         $requestForm->handleRequest($request);
 
-        $data = $requestForm->getNormData();
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $data = $requestForm->getData();
             $clickedButton = $requestForm->getClickedButton()->getName();
-            $oldState = $newRequest->getRequest()->getStatus();
+            $oldState = $hostingRequest->getRequest()->getStatus();
             $newState = $oldState;
-            switch($clickedButton) {
+            switch ($clickedButton) {
                 case 'cancel':
                     $newState = HostingRequest::REQUEST_CANCELLED;
                     break;
@@ -372,42 +492,67 @@ class RequestAndMessageController extends Controller
                     $newState = HostingRequest::REQUEST_ACCEPTED;
                     break;
             }
-            if ($oldState != $newState) {
-                $newRequest->getRequest()->setStatus($newState);
+            if ($oldState !== $newState) {
+                $hostingRequest->getRequest()->setStatus($newState);
             }
-            $em = $this->getDoctrine()->getManager();
+            // check if new subject was set
+            if ($data->getSubject()->getSubject() !== $hostingRequest->getSubject()->getSubject()) {
+                $newSubject = new Subject();
+                $newSubject->setSubject($data->getSubject()->getSubject());
+                $hostingRequest->setSubject($newSubject);
+                $em->persist($newSubject);
+            } else {
+                $newRequest->setSubject($hostingRequest->getSubject());
+            }
+
+            // check if request was altered
+            $newArrival = ($data->getRequest()->getArrival() !== $hostingRequest->getRequest()->getArrival());
+            $newDeparture = ($data->getRequest()->getDeparture() !== $hostingRequest->getRequest()->getDeparture());
+            $newFlexible = ($data->getRequest()->getFlexible() !== $hostingRequest->getRequest()->getFlexible());
+            $newNumberOfTravellers = ($data->getRequest()->getNumberOfTravellers() !== $hostingRequest->getRequest()->getNumberOfTravellers());
+            if ($newArrival || $newDeparture || $newFlexible || $newNumberOfTravellers) {
+                $newHostingRequest = new HostingRequest();
+                $newHostingRequest->setArrival($data->getRequest()->getArrival());
+                $newHostingRequest->setDeparture($data->getRequest()->getDeparture());
+                $newHostingRequest->setFlexible($data->getRequest()->getFlexible());
+                $newHostingRequest->setNumberOfTravellers($data->getRequest()->getNumberOfTravellers());
+                $em->persist($newHostingRequest);
+            } else {
+                $newRequest->setRequest($hostingRequest->getRequest());
+            }
+            $newRequest->setParent($hostingRequest);
             $em->persist($newRequest);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($hostingRequest);
             $em->flush();
 
-            if ($owner) {
-                $this->sendMailNotification(
-                    $sender,
-                    $receiver,
-                    $hostingRequest->getSubject()->getSubject(),
-                    $hostingRequest->getMessage(),
-                    'request'
-                );
-            } else
-            {
-                $this->sendMailNotification(
-                    $receiver,
-                    $sender,
-                    $hostingRequest->getSubject()->getSubject(),
-                    $hostingRequest->getMessage(),
-                    'request'
-                );
+            $subject = $newRequest->getSubject()->getSubject();
+            if ('Re:' !== substr($subject, 0, 3)) {
+                $subject = 'Re: '.$subject;
             }
+
+            if (HostingRequest::REQUEST_CANCELLED === $newState) {
+                $subject = 'Canceled! '.$subject;
+            }
+
+            $this->sendMailNotification(
+                $receiver,
+                $sender,
+                $subject,
+                $newRequest->getMessage(),
+                'request'
+            );
             $this->addFlash('success', 'Notification with updated information has been sent.');
 
-            return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
+            return $this->redirectToRoute('message_show', ['id' => $newRequest->getId()]);
         }
 
         $messageModel = new MessageModel($this->getDoctrine());
         $thread = $messageModel->getThreadForMessage($hostingRequest);
 
-        return $this->render(':request:reply.html.twig', [
+        return $this->render(':request:reply_host.html.twig', [
             'form' => $requestForm->createView(),
-            'data' => $data,
             'sender' => $sender,
             'receiver' => $receiver,
             'current' => $hostingRequest,
@@ -540,7 +685,7 @@ class RequestAndMessageController extends Controller
             ->setFrom([
                 'request@bewelcome.org' => 'bewelcome - '.$sender->getUsername(),
             ])
-            ->setTo($recLoeiver->getCryptedField('Email'))
+            ->setTo($receiver->getCryptedField('Email'))
             ->setBody(
                 $this->renderView(
                     'emails/'.$template.'.html.twig',
@@ -559,5 +704,20 @@ class RequestAndMessageController extends Controller
         $recipients = $this->get('mailer')->send($message);
 
         return (0 === $recipients) ? false : true;
+    }
+
+    private function getNewRequestFromOriginal(Message $hostingRequest) {
+        $newRequest = new Message();
+        $newRequest->setSubject(new Subject());
+        $newRequest->getSubject()->setSubject($hostingRequest->getSubject()->getSubject());
+        $newRequest->setRequest(new HostingRequest());
+        $newRequest->getRequest()->setArrival($hostingRequest->getRequest()->getArrival());
+        $newRequest->getRequest()->setDeparture($hostingRequest->getRequest()->getDeparture());
+        $newRequest->getRequest()->setFlexible($hostingRequest->getRequest()->getFlexible());
+        $newRequest->getRequest()->setNumberOfTravellers($hostingRequest->getRequest()->getNumberOfTravellers());
+        $newRequest->setReceiver($hostingRequest->getReceiver());
+        $newRequest->setSender($hostingRequest->getSender());
+
+        return $newRequest;
     }
 }

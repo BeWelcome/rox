@@ -7,10 +7,12 @@ use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class MessageRequestType extends AbstractType
+class HostingRequestGuest extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -21,16 +23,34 @@ class MessageRequestType extends AbstractType
             ->add('subject', SubjectType::class)
             ->add('request', HostingRequestType::class)
             ->add('message', CKEditorType::class, [
-                    'attr' => [
-                        'placeholder' => 'Give a short explanation...',
-                        'class' => 'w-100 p-2',
+                    'config' => [
+                        'extraPlugins' => 'confighelper',
                     ],
-                'constraints' => [
-                        new NotBlank()
-                    ]
+                    'plugins' => [
+                        'confighelper' => [
+                            'path' => '/bundles/app/js/confighelper/',
+                            'filename' => 'plugin.js',
+                        ],
+                    ],
+                    'attr' => [
+                        'placeholder' => 'Please leave a message after the beep',
+                        'class' => 'mb-1',
+                    ],
+                    'constraints' => [
+                        new NotBlank(),
+                    ],
                 ])
         ;
-        $builder->add('send', SubmitType::class);
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $messageRequest = $event->getData();
+            $form = $event->getForm();
+            if (!$messageRequest || null === $messageRequest->getSubject()) {
+                $form->add('send', SubmitType::class);
+            } else {
+                $form->add('cancel', SubmitType::class);
+                $form->add('update', SubmitType::class);
+            }
+        });
     }
 
     /**

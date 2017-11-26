@@ -2,8 +2,8 @@
 
 namespace AppBundle\Doctrine;
 
-class InFolderType extends SetType
+class InFolderType extends EnumType
 {
     protected $name = 'in_folder';
-    protected $values = ['normal', 'junk', 'spam', 'draft', 'requests'];
+    protected $values = ['Normal', 'junk', 'Spam', 'Draft', 'requests'];
 }

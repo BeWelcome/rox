@@ -10,13 +10,13 @@
                 {% if own %}
                     <small class="pull-right text-muted">{{ 'You' | trans }} {{ message.created.DiffForHumans }}</small>
                     <p class="clearfix m-0"></p>
-                    {% if currentSubject != '' %}{% if subject != currentSubject %}<p>{{ subject }}</p>{% endif %}{% endif %}
+                    {% if currentSubject != '' %}{% if subject != currentSubject %}<p><strong>{{ subject | raw}}</strong></p>{% endif %}{% endif %}
                     {{ message.message | purify }}
                 {% else %}
                     <small class="pull-left text-muted">{{ message.Sender.Username }} {{ message.created.DiffForHumans }}</small>
                     <p class="pull-right m-0">{% if not message.WhenFirstRead %}<i class="fa fa-check"></i>{% endif %} <i class="fa fa-close"></i></p>
                     <p class="clearfix m-0"></p>
-                    {% if currentSubject != '' %}{% if subject != currentSubject %}<p>{{ subject }}</p>{% endif %}{% endif %}
+                    {% if currentSubject != '' %}{% if subject != currentSubject %}<div style="font-weight:bold">{{ subject | raw }}</div>{% endif %}{% endif %}
                     <div {% if message.WhenFirstRead %}style="font-weight: normal"{% else %}style="font-weight: bold"{% endif %}>
                     {{ message.message | purify }}
                     </div>

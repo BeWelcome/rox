@@ -2,25 +2,7 @@
 {% import 'macros.twig' as macros %}
 
 {% block javascripts %}
-    <script type="text/javascript" src="{{ asset('build/tempusdominus.js') }}"></script>
-    <script>
-        $(function () {
-            $('#arrival').datetimepicker({
-                format: 'YYYY-MM-DD',
-                minDate: Date.now(),
-            });
-            $('#departure').datetimepicker({
-                useCurrent: false,
-                format: 'YYYY-MM-DD'
-            });
-            $("#arrival").on("change.datetimepicker", function (e) {
-                $('#departure').datetimepicker('minDate', e.date);
-            });
-            $("#departure").on("change.datetimepicker", function (e) {
-                $('#arrival').datetimepicker('maxDate', e.date);
-            });
-        });
-    </script>
+    <script type="text/javascript" src="{{ asset('build/requests.js') }}"></script>
 {% endblock javascripts %}
 
 {% block subnav %}
@@ -58,7 +40,9 @@
                 </div>
 
                 {{ form_widget(form.request.flexible) }}
-                <div class="input-group align-items-center"><span>Number of Travellers:</span>{{ form_widget(form.request.numberOfTravellers) }}</div>
+                <div class="input-group align-items-center">
+                    <span>Number of Travellers:</span>{{ form_widget(form.request.numberOfTravellers) }}</div>
+                {{ form_errors(form.request.numberOfTravellers) }}
 
             </div>
             <div class="col-12 col-md-8">
@@ -79,7 +63,5 @@
         </div>
         {{ form_rest(form) }}
         {{ form_end(form) }}
-        {{ dump(form.request) }}
-
     </div>
 {% endblock %}

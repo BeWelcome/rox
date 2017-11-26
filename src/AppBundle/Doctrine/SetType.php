@@ -41,7 +41,7 @@ abstract class SetType extends Type
             $valueCount = count($values);
 
             if (count(array_intersect($values, $this->values)) !== $valueCount) {
-                throw new \InvalidArgumentException("Invalid '".$this->name."' value.");
+                throw new \InvalidArgumentException("Invalid '".$this->name."' value: ".$value.'.');
             }
         } else {
             $value = '';

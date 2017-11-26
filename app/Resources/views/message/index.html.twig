@@ -61,7 +61,7 @@
                                     {{- ' class="unread"' -}}
                                 {%- endif -%}
                         >
-                            {{- message.subject.subject | truncate(500) -}}
+                            {{- message.subject.subject | truncate(500) | raw -}}
                         </a></p>{% endif %}
                     {# DevTip: Replace message.Message with faker.Text(2000) to create random message text #}
                     {% set messageText = message.Message | replace({'\n': ' ', '<br />': ' '}) | striptags %}
@@ -73,7 +73,7 @@
                                         {{- ' unread' -}}
                                     {%- endif -%}
                            ">
-                                {{- messageText | truncate(150) -}}
+                                {{- messageText | truncate(150) | raw -}}
                             </a>
                         </p>
                     {% endspaceless %}

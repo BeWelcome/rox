@@ -22,6 +22,7 @@ Encore
 
     .addEntry('searchpicker', './src/AppBundle/Resources/public/js/search/searchpicker.js')
     .addEntry('tempusdominus', './src/AppBundle/Resources/js/tempusdominus.js')
+    .addEntry('requests', './src/AppBundle/Resources/js/requests.js')
     .addEntry('leaflet', './src/AppBundle/Resources/js/leaflet.js')
 
     .enableSassLoader()

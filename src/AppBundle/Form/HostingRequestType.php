@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -29,7 +30,7 @@ class HostingRequestType extends AbstractType
                     'placeholder' => 'Arrival (date)',
                 ],
                 'constraints' => [
-                    new NotBlank(),
+                    new Date(),
                 ],
             ])
             ->add('departure', DateType::class, [

@@ -1,4 +1,11 @@
-<div>
+<script>
+    $(function() {
+        $('#ProfileNoteCategory').change(function(){
+            $('.ProfileCategory').hide();
+            $('#' + $(this).val()).show();
+        });
+    });
+</script>
 <?php
     $vars = array();
     $words = $this->words;
@@ -31,11 +38,11 @@
     {
         foreach ($vars['errors'] as $error)
         {
-            echo '<div class="error">'.$words->get($error).'</div>';
+            echo '<div class="alert alert-danger">'.$words->get($error).'</div>';
         }
     }
     if (isset($vars['success'])) {
-        echo '<div class="success">' . $words->get('ProfileNoteSuccess') . '<br />';
+        echo '<div class="alert alert-success">' . $words->get('ProfileNoteSuccess');
         echo '<a href="mynotes">' . $words->get('ProfileNoteAllNotes') . '</a></div>';
         if ($note->Category == "") {
             $note->Category = $note->CategoryFree;
@@ -47,55 +54,62 @@
     $callback_tag = $formkit->setPostCallback('MembersController', 'addnoteCallback');
     ?>
     
-    <form method="post" name="addnote" class="yform full">
+    <form method="post" name="addnote">
     <?=$callback_tag ?>
-    <div class="type-text">
-    <h3><?php 
-    if (!$edit_mode) {
-        echo $words->get("ProfileNoteAddNote");
-    } else {
-        echo $words->get("ProfileNoteEditNote");
-    }
-    ?></h3>
-    </div>
-        <input name="IdMember" value="<?=$member->id?>" type="hidden" />
-        <div class="type-select">
-        <label><?=$words->get("ProfileNoteCategory")?></label>
-            <select name="ProfileNoteCategory" id="ProfileNoteCategory">
-                        <option value="">-<?php echo $words->getBuffered('ProfileNoteCategory');?>-</option>
-                        <?php foreach($categories as $category) {
-                            $catoption = '<option value="' . $category . '"';
-                            if ($category == $note->Category) {
-                                $catoption .= ' selected="selected"';
+        <div class="row">
+            <div class="col-12">
+                <h3><?php
+                if (!$edit_mode) {
+                    echo $words->get("ProfileNoteAddNote");
+                } else {
+                    echo $words->get("ProfileNoteEditNote");
+                }
+                ?></h3>
+            </div>
+
+            <input name="IdMember" value="<?=$member->id?>" type="hidden" />
+
+            <div class="col-4">
+            <?=$words->get("Category")?>
+            </div>
+            <div class="col-8">
+                <select name="ProfileNoteCategory" id="ProfileNoteCategory">
+                    <option value="">---</option>
+                            <?php foreach($categories as $category) {
+                                $catoption = '<option value="' . $category . '"';
+                                if ($category == $note->Category) {
+                                    $catoption .= ' selected="selected"';
+                                }
+                                $catoption .= '>' . $category . '</option>';
+                                echo $catoption . "\n";
                             }
-                            $catoption .= '>' . $category . '</option>';
-                            echo $catoption . "\n";
-                        } 
-                        ?>
-            </select><?php echo $words->flushBuffer(); ?>
-            
-        </div>
-        <div class="type-text">
-            <label for="ProfileNoteCategoryFree"><?=$words->get("ProfileNoteCategoryFree")?></label>
-            <?php echo '<input name="ProfileNoteCategoryFree" id="ProfileNoteCategoryFree" value="';
-                if (!in_array($note->CategoryFree, $categories)) { 
-                    echo $note->CategoryFree;
-                };
-                echo '" />';
-            ?>
-        </div>
-        <div class="type-text">
-        <label for="ProfileNoteComment"><?php echo $words->get("ProfileNoteCommentInfo") ?></label>
-        <textarea name="ProfileNoteComment" id="ProfileNoteComment" cols="40" rows="8"><?php echo $note->Comment; ?></textarea>
-        </div>
-        <div class="type-button">
-        <?php 
-        if ($edit_mode || isset($vars['success']) || isset($vars['errors'])) { ?>
-            <input type="submit" class="button" id="submit" name="submit" value="<?php echo $words->getBuffered("ProfileNoteButtonEdit") ?>" /><?=$words->flushBuffer();?>
-            <a href="/members/<?php echo $this->member->Username;?>/note/delete" class="button"><?php echo $words->getFormatted('ProfileNoteButtonDelete'); ?></a>
-  <?php } else { ?>
-            <input type="submit" class="button" id="submit" name="submit" value="<?php echo $words->getBuffered("ProfileNoteButtonAdd") ?>" /><?=$words->flushBuffer();?>
-        <?php } ?>
+                            ?>
+                    <option value="new">-- add new category --</option>
+                </select><?php echo $words->flushBuffer(); ?>
+            </div>
+            <div class="ProfileCategory col-8 offset-4" id="new" style="display: none;">
+                <label for="ProfileNoteCategoryFree"><?=$words->get("ProfileNoteCategoryFree")?></label>
+                <?php echo '<input name="ProfileNoteCategoryFree" id="ProfileNoteCategoryFree" value="';
+                    if (!in_array($note->CategoryFree, $categories)) {
+                        echo $note->CategoryFree;
+                    };
+                    echo '" />';
+                ?>
+            </div>
+            <div class="col-4">
+                <label for="ProfileNoteComment"><?php echo $words->get("ProfileNoteCommentInfo") ?></label>
+            </div>
+            <div class="col-8">
+                <textarea name="ProfileNoteComment" id="ProfileNoteComment" rows="8" class="w-100"><?php echo $note->Comment; ?></textarea>
+            </div>
+            <div class="col-8 offset-4">
+                <?php
+                if ($edit_mode || isset($vars['success']) || isset($vars['errors'])) { ?>
+                    <input type="submit" class="btn btn-primary" id="submit" name="submit" value="<?php echo $words->getBuffered("ProfileNoteButtonEdit") ?>" /><?=$words->flushBuffer();?>
+                    <a href="/members/<?php echo $this->member->Username;?>/note/delete" class="btn btn-primary"><?php echo $words->getFormatted('ProfileNoteButtonDelete'); ?></a>
+                <?php } else { ?>
+                    <input type="submit" class="btn btn-primary" id="submit" name="submit" value="<?php echo $words->getBuffered("ProfileNoteButtonAdd") ?>" /><?=$words->flushBuffer();?>
+                <?php } ?>
+            </div>
         </div>
     </form>
-</div>

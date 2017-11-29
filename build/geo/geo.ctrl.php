@@ -233,7 +233,7 @@ class GeoController extends PAppController {
         $post_args = $args->post;
         foreach ($args->post as $key => $value) {
             if ($key != 'geo-search')
-                $this->_session->set( 'GeoVars'][$key, $value )
+                $this->_session->set( 'GeoVars/' . $key, $value );
         }
         if (isset($post_args['geo-search'])) 
             $mem_redirect->location = $post_args['geo-search'];

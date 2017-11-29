@@ -11,6 +11,7 @@ use AppBundle\Form\HostingRequestHost;
 use AppBundle\Form\MessageToMemberType;
 use AppBundle\Model\MessageModel;
 use AppBundle\Model\RequestModel;
+use DateTime;
 use Html2Text\Html2Text;
 use InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -356,6 +357,12 @@ class RequestAndMessageController extends Controller
             return $this->redirectToRoute('requests', ['folder' => 'sent']);
         }
 
+        $today = (new DateTime())->setTime(0,0);
+        if ($hostingRequest->getRequest()->getArrival() >= $today ) {
+            $this->addFlash('information', 'This request can\'t be replied to anymore as the hosting period already started.');
+            return $this->redirectToRoute('message_show', ['id' => $hostingRequest->getId()]);
+        }
+
         // Make sure a new message has to be entered when changing the status of the request
         $newRequest = $this->getNewRequestFromOriginal($hostingRequest);
 
@@ -466,6 +473,12 @@ class RequestAndMessageController extends Controller
             return $this->redirectToRoute('requests', ['folder' => 'inbox']);
         }
 
+        $today = (new DateTime())->setTime(0,0);
+        if ($hostingRequest->getRequest()->getArrival() >= $today ) {
+            $this->addFlash('notice', 'This request can\'t be replied to anymore as the hosting period already started.');
+            return $this->redirectToRoute('message_show', ['id' => $hostingRequest->getId()]);
+        }
+
         // Make sure a new message has to be entered when changing the status of the request
         $newRequest = $this->getNewRequestFromOriginal($hostingRequest);
 
@@ -543,7 +556,7 @@ class RequestAndMessageController extends Controller
                 $newRequest->getMessage(),
                 'request'
             );
-            $this->addFlash('success', 'Notification with updated information has been sent.');
+            $this->addFlash('notice', 'Notification with updated information has been sent.');
 
             return $this->redirectToRoute('message_show', ['id' => $newRequest->getId()]);
         }

@@ -760,7 +760,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
 <div>The same with tabs...</div>
 
 <div class="col-12">
-    <ul class="nav nav-tabs" id="editProfileTab" role="tablist">
+    <div id="accordion" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="basics-tab" data-toggle="tab" href="#basics" role="tab" aria-controls="basics"
                aria-selected="true">Home</a>
@@ -794,7 +794,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                aria-selected="false"><?=$words->get('MyRelations')?></a>
         </li>
     </ul>
-    <div class="tab-content" id="myTabContent">
+    <div class="tab-content responsive" id="myTabContent">
         <div class="tab-pane fade show active" id="basics" role="tabpanel" aria-labelledby="home-tab">
             <div class="row my-2">
                 <div class="col-3 pt-2">
@@ -1475,5 +1475,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
         width: 'element',
         minimumResultsForSearch: -1
     });
-    //-->
+    (function($) {
+        fakewaffle.responsiveTabs();
+    })(jQuery);    //-->
 </script>

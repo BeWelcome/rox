@@ -732,8 +732,8 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
 
 </div>
 
-<div>
-    <input type="submit" class="btn btn-primary editbutton text-left" id="submit" name="submit"
+<div class="col-12">
+    <input type="submit" class="btn btn-primary editbutton text-left ml-1" id="submit" name="submit"
            value="<?= $words->getSilent('Save Profile') ?>"/> <?php echo $words->flushBuffer(); ?>
 </div>
 

@@ -197,16 +197,18 @@ if (!$this->passedAway){ ?>
                                </p>
                                <?php if (($commentLoopCount > (count($comments)))&&($commentLoopCount < $max)) echo '<hr />' ?>
                            </div>
-                </div>
+
                    <?php } ?>
+
                       <a href="members/<?=$member->Username?>/comments/" class="btn btn-block btn-primary"><?=$words->get('ShowAllComments')?></a>
                 <?php
                   } else {
                       // hide comments from others when not logged in
                       echo $this->getLoginLink('/members/' . $member->Username,'ProfileShowComments');
                   } ?>
-
+                </div>
             </div>
+        </div>
 
 <?php }
 

@@ -694,9 +694,9 @@ class RequestAndMessageController extends Controller
         // Send mail notification
         $html2Text = new Html2Text($body);
         $message = (new Swift_Message())
-            ->setSubject($subject)
+            ->setSubject('[Request] '.strip_tags($subject))
             ->setFrom([
-                'request@bewelcome.org' => 'bewelcome - '.$sender->getUsername(),
+                'request@bewelcome.org' => 'BeWelcome - '.$sender->getUsername(),
             ])
             ->setTo($receiver->getCryptedField('Email'))
             ->setBody(

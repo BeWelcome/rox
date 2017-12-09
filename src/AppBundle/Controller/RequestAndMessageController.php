@@ -12,6 +12,7 @@ use AppBundle\Form\MessageToMemberType;
 use AppBundle\Model\MessageModel;
 use AppBundle\Model\RequestModel;
 use DateTime;
+use Doctrine\Common\Persistence\ObjectManager;
 use Html2Text\Html2Text;
 use InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -24,7 +25,11 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * Class RequestAndMessageController.
  *
+ * Ignore complexity warning. \todo fix this.
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class RequestAndMessageController extends Controller
 {
@@ -357,9 +362,10 @@ class RequestAndMessageController extends Controller
             return $this->redirectToRoute('requests', ['folder' => 'sent']);
         }
 
-        $today = (new DateTime())->setTime(0,0);
-        if ($hostingRequest->getRequest()->getArrival() >= $today ) {
+        $today = (new DateTime())->setTime(0, 0);
+        if ($hostingRequest->getRequest()->getArrival() >= $today) {
             $this->addFlash('information', 'This request can\'t be replied to anymore as the hosting period already started.');
+
             return $this->redirectToRoute('message_show', ['id' => $hostingRequest->getId()]);
         }
 
@@ -373,38 +379,7 @@ class RequestAndMessageController extends Controller
             $em = $this->getDoctrine()->getManager();
             $data = $requestForm->getData();
             $clickedButton = $requestForm->getClickedButton()->getName();
-            $oldState = $hostingRequest->getRequest()->getStatus();
-            $newState = ('cancel' === $clickedButton) ? HostingRequest::REQUEST_CANCELLED : $oldState;
-            if ($oldState !== $newState) {
-                $hostingRequest->getRequest()->setStatus($newState);
-            }
-
-            // check if new subject was set
-            if ($data->getSubject()->getSubject() !== $hostingRequest->getSubject()->getSubject()) {
-                $newSubject = new Subject();
-                $newSubject->setSubject($data->getSubject()->getSubject());
-                $hostingRequest->setSubject($newSubject);
-                $em->persist($newSubject);
-            } else {
-                $newRequest->setSubject($hostingRequest->getSubject());
-            }
-
-            // check if request was altered
-            $newArrival = ($data->getRequest()->getArrival() !== $hostingRequest->getRequest()->getArrival());
-            $newDeparture = ($data->getRequest()->getDeparture() !== $hostingRequest->getRequest()->getDeparture());
-            $newFlexible = ($data->getRequest()->getFlexible() !== $hostingRequest->getRequest()->getFlexible());
-            $newNumberOfTravellers = ($data->getRequest()->getNumberOfTravellers() !== $hostingRequest->getRequest()->getNumberOfTravellers());
-            if ($newArrival || $newDeparture || $newFlexible || $newNumberOfTravellers) {
-                $newHostingRequest = new HostingRequest();
-                $newHostingRequest->setArrival($data->getRequest()->getArrival());
-                $newHostingRequest->setDeparture($data->getRequest()->getDeparture());
-                $newHostingRequest->setFlexible($data->getRequest()->getFlexible());
-                $newHostingRequest->setNumberOfTravellers($data->getRequest()->getNumberOfTravellers());
-                $em->persist($newHostingRequest);
-            } else {
-                $newRequest->setRequest($hostingRequest->getRequest());
-            }
-            $newRequest->setParent($hostingRequest);
+            $newRequest = $this->getFinalRequest($em, $newRequest, $hostingRequest, $data, $clickedButton);
             $em->persist($newRequest);
             $em->flush();
 
@@ -413,7 +388,7 @@ class RequestAndMessageController extends Controller
                 $subject = 'Re: '.$subject;
             }
 
-            if (HostingRequest::REQUEST_CANCELLED === $newState) {
+            if (HostingRequest::REQUEST_CANCELLED === $newRequest->getRequest()->getStatus()) {
                 $subject = 'Canceled! '.$subject;
             }
 
@@ -473,9 +448,10 @@ class RequestAndMessageController extends Controller
             return $this->redirectToRoute('requests', ['folder' => 'inbox']);
         }
 
-        $today = (new DateTime())->setTime(0,0);
-        if ($hostingRequest->getRequest()->getArrival() >= $today ) {
+        $today = (new DateTime())->setTime(0, 0);
+        if ($hostingRequest->getRequest()->getArrival() >= $today) {
             $this->addFlash('notice', 'This request can\'t be replied to anymore as the hosting period already started.');
+
             return $this->redirectToRoute('message_show', ['id' => $hostingRequest->getId()]);
         }
 
@@ -489,51 +465,7 @@ class RequestAndMessageController extends Controller
             $em = $this->getDoctrine()->getManager();
             $data = $requestForm->getData();
             $clickedButton = $requestForm->getClickedButton()->getName();
-            $oldState = $hostingRequest->getRequest()->getStatus();
-            $newState = $oldState;
-            switch ($clickedButton) {
-                case 'cancel':
-                    $newState = HostingRequest::REQUEST_CANCELLED;
-                    break;
-                case 'decline':
-                    $newState = HostingRequest::REQUEST_DECLINED;
-                    break;
-                case 'tentatively':
-                    $newState = HostingRequest::REQUEST_TENTATIVELY_ACCEPTED;
-                    break;
-                case 'accept':
-                    $newState = HostingRequest::REQUEST_ACCEPTED;
-                    break;
-            }
-            if ($oldState !== $newState) {
-                $hostingRequest->getRequest()->setStatus($newState);
-            }
-            // check if new subject was set
-            if ($data->getSubject()->getSubject() !== $hostingRequest->getSubject()->getSubject()) {
-                $newSubject = new Subject();
-                $newSubject->setSubject($data->getSubject()->getSubject());
-                $hostingRequest->setSubject($newSubject);
-                $em->persist($newSubject);
-            } else {
-                $newRequest->setSubject($hostingRequest->getSubject());
-            }
-
-            // check if request was altered
-            $newArrival = ($data->getRequest()->getArrival() !== $hostingRequest->getRequest()->getArrival());
-            $newDeparture = ($data->getRequest()->getDeparture() !== $hostingRequest->getRequest()->getDeparture());
-            $newFlexible = ($data->getRequest()->getFlexible() !== $hostingRequest->getRequest()->getFlexible());
-            $newNumberOfTravellers = ($data->getRequest()->getNumberOfTravellers() !== $hostingRequest->getRequest()->getNumberOfTravellers());
-            if ($newArrival || $newDeparture || $newFlexible || $newNumberOfTravellers) {
-                $newHostingRequest = new HostingRequest();
-                $newHostingRequest->setArrival($data->getRequest()->getArrival());
-                $newHostingRequest->setDeparture($data->getRequest()->getDeparture());
-                $newHostingRequest->setFlexible($data->getRequest()->getFlexible());
-                $newHostingRequest->setNumberOfTravellers($data->getRequest()->getNumberOfTravellers());
-                $em->persist($newHostingRequest);
-            } else {
-                $newRequest->setRequest($hostingRequest->getRequest());
-            }
-            $newRequest->setParent($hostingRequest);
+            $newRequest = $this->getFinalRequest($em, $newRequest, $hostingRequest, $data, $clickedButton);
             $em->persist($newRequest);
 
             $em = $this->getDoctrine()->getManager();
@@ -545,7 +477,7 @@ class RequestAndMessageController extends Controller
                 $subject = 'Re: '.$subject;
             }
 
-            if (HostingRequest::REQUEST_CANCELLED === $newState) {
+            if (HostingRequest::REQUEST_CANCELLED === $newRequest->getRequest()->getStatus()) {
                 $subject = 'Canceled! '.$subject;
             }
 
@@ -650,6 +582,68 @@ class RequestAndMessageController extends Controller
         ]);
     }
 
+    /**
+     * @param ObjectManager $em
+     * @param Message       $newRequest
+     * @param Message       $hostingRequest
+     * @param Message       $data
+     * @param $clickedButton
+     *
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     *
+     * @return Message
+     */
+    private function getFinalRequest(ObjectManager $em, Message $newRequest, Message $hostingRequest, Message $data, $clickedButton)
+    {
+        $oldState = $hostingRequest->getRequest()->getStatus();
+        $newState = $oldState;
+        switch ($clickedButton) {
+            case 'cancel':
+                $newState = HostingRequest::REQUEST_CANCELLED;
+                break;
+            case 'decline':
+                $newState = HostingRequest::REQUEST_DECLINED;
+                break;
+            case 'tentatively':
+                $newState = HostingRequest::REQUEST_TENTATIVELY_ACCEPTED;
+                break;
+            case 'accept':
+                $newState = HostingRequest::REQUEST_ACCEPTED;
+                break;
+        }
+        if ($oldState !== $newState) {
+            $hostingRequest->getRequest()->setStatus($newState);
+        }
+        // check if new subject was set
+        if ($data->getSubject()->getSubject() !== $hostingRequest->getSubject()->getSubject()) {
+            $newSubject = new Subject();
+            $newSubject->setSubject($data->getSubject()->getSubject());
+            $hostingRequest->setSubject($newSubject);
+            $em->persist($newSubject);
+        } else {
+            $newRequest->setSubject($hostingRequest->getSubject());
+        }
+
+        // check if request was altered
+        $newArrival = ($data->getRequest()->getArrival() !== $hostingRequest->getRequest()->getArrival());
+        $newDeparture = ($data->getRequest()->getDeparture() !== $hostingRequest->getRequest()->getDeparture());
+        $newFlexible = ($data->getRequest()->getFlexible() !== $hostingRequest->getRequest()->getFlexible());
+        $newNumberOfTravellers = ($data->getRequest()->getNumberOfTravellers() !== $hostingRequest->getRequest()->getNumberOfTravellers());
+        if ($newArrival || $newDeparture || $newFlexible || $newNumberOfTravellers) {
+            $newHostingRequest = new HostingRequest();
+            $newHostingRequest->setArrival($data->getRequest()->getArrival());
+            $newHostingRequest->setDeparture($data->getRequest()->getDeparture());
+            $newHostingRequest->setFlexible($data->getRequest()->getFlexible());
+            $newHostingRequest->setNumberOfTravellers($data->getRequest()->getNumberOfTravellers());
+            $em->persist($newHostingRequest);
+        } else {
+            $newRequest->setRequest($hostingRequest->getRequest());
+        }
+        $newRequest->setParent($hostingRequest);
+
+        return $newRequest;
+    }
+
     private function getSubMenuItems()
     {
         return [
@@ -719,7 +713,8 @@ class RequestAndMessageController extends Controller
         return (0 === $recipients) ? false : true;
     }
 
-    private function getNewRequestFromOriginal(Message $hostingRequest) {
+    private function getNewRequestFromOriginal(Message $hostingRequest)
+    {
         $newRequest = new Message();
         $newRequest->setSubject(new Subject());
         $newRequest->getSubject()->setSubject($hostingRequest->getSubject()->getSubject());

@@ -16,7 +16,7 @@
   "dependencies": {
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.1",
-    "bootstrap": "4.0.0-beta.2",
+    "bootstrap": "^4.0.0-beta.2",
     "bootstrap-autohidingnavbar": "github:istvan-ujjmeszaros/bootstrap-autohidingnavbar",
     "expose-loader": "^0.7.4",
     "font-awesome": "^4.7.0",
@@ -24,7 +24,7 @@
     "jquery": "^3.2.1",
     "jquery-ui": "^1.12.1",
     "lato-font": "^1.1.1",
-    "leaflet": "^1.0.3",
+    "leaflet": "^1.2.0",
     "leaflet.markercluster": "^1.2.0",
     "moment": "^2.19.3",
     "popper.js": "^1.13.0",

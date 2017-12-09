@@ -55,7 +55,7 @@ services:
 
     rox.twig_extension:
         class: AppBundle\Twig\Extension
-        arguments: ['@session', '@doctrine']
+        arguments: ['@session', '@doctrine', '@translator']
         tags:
             - { name: 'twig.extension' }
 
@@ -81,6 +81,11 @@ services:
         class: AppBundle\EventListener\AuthListener
         tags:
             - { name: kernel.event_listener, event: security.interactive_login, method: onAuthenticationSuccess }
+
+    rox.datacollector_translator:
+        class: Symfony\Component\Translation\DataCollectorTranslator
+        decorates: translator
+        arguments: ['@rox.datacollector_translator.inner']
 
     intl.twig_extension:
         class: Twig_Extensions_Extension_Intl

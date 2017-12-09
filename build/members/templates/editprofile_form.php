@@ -33,7 +33,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
 </div>
 
 <div class="col-12">
-    <ul class="nav nav-tabs" id="editProfileTab" role="tablist">
+    <ul class="nav nav-tabs flex-column flex-md-row" id="editProfileTab" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="basics-tab" data-toggle="tab" href="#basics" role="tab" aria-controls="basics"
                aria-selected="true">Home</a>

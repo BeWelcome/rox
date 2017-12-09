@@ -43,7 +43,7 @@ class AboutController extends RoxControllerBase
             case 'impressum':
             case 'affiliations':
             case 'privacy':
-                $page = new AboutGenericPage($keyword);
+                $page = new AboutGenericPage($keyword, $this->_session->get('locale', 'en'));
                 $page->setModel(new AboutModel());
                 return $page;
             case 'stats':

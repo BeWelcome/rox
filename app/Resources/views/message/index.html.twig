@@ -56,7 +56,7 @@
                     <p class="m-0">{{ macros.profilelink(otherMember.Username) }}</p>
                 </td>
                 <td class="align-middle w-100">
-                    {% if message.subject %}<p class="h5"><a href="{{ path('message_show', { id: message.id}) }}"
+                    {% if message.subject %}<p class="h5 m-0"><a href="{{ path('message_show', { id: message.id}) }}"
                                 {%- if not message.WhenFirstRead -%}
                                     {{- ' class="unread"' -}}
                                 {%- endif -%}
@@ -78,7 +78,8 @@
                         </p>
                     {% endspaceless %}
                     {% if message.request %}
-                        <p>{{ 'Arrival' | trans }}: {{ message.request.arrival | localizeddate( 'medium', 'none') }} {{ 'Departure' | trans }}: {{ message.request.departure | localizeddate( 'medium', 'none') }}</p>
+                        <p>{{ 'Arrival' | trans }}: {{ message.request.arrival | localizeddate( 'medium', 'none') }}<br>
+                            {{ 'Departure' | trans }}: {{ message.request.departure | localizeddate( 'medium', 'none') }}</p>
                     {% endif %}
                     {# Handle the case where a message/request doesn't have a sent date #}
                     {% set sentDate %}{% if message.dateSent != '-0001-11-30 00:00:00' %}{{ message.dateSent | localizeddate( 'medium', 'none') }}{% else %}{{ message.updated | localizeddate( 'medium', 'none')}}{% endif %}{% endset %}

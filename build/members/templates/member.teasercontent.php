@@ -55,10 +55,6 @@
       <?php endif; ?>
     </h1> <!-- username -->
 
-      <?php if($occupation != null){
-          echo '<p class="m-0 ml-1 mb-1 h5 small">' . $occupation . '</p>';
-      } ?><!-- occupation -->
-
       <h2>
           <?php
           // The "Hong Kong solution": Only display and link country.
@@ -85,7 +81,12 @@
       <div class="col-12 col-md-4">
           <div class="card">
         <?php echo $this->statusForm($member); ?>
-          <p class="m-0 p-2">
+
+              <?php if($occupation != null){
+                  echo '<p class="h5 pt-2 px-2">' . $occupation . '</p>';
+              } ?><!-- occupation -->
+
+              <p class="m-0 p-2">
             <?php
                 echo $agestr;
                 $strGender = MOD_layoutbits::getGenderTranslated($member->Gender, $member->HideGender, true);

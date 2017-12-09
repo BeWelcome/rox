@@ -283,7 +283,13 @@ class RequestAndMessageController extends Controller
     {
         $member = $this->getUser();
         if ($member === $receiver) {
-            throw new InvalidArgumentException('You can\'t send a request to yourself.');
+            $this->addFlash('notice', 'You can\'t send yourself a hosting request.');
+            return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
+        }
+
+        if ($receiver->getAccommodation() == Member::ACC_NO) {
+            $this->addFlash('notice', 'This person says they are not willing to host.<hr>You might send a message instead.');
+            return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
         }
 
         $requestForm = $this->createForm(HostingRequestGuest::class);
@@ -313,7 +319,7 @@ class RequestAndMessageController extends Controller
             if ($success) {
                 $this->addFlash('success', 'Request has been sent.');
             } else {
-                $this->addFlash('info', 'Request has been stored into the database. Mail notification couldn\'t be sent, though.');
+                $this->addFlash('notice', 'Request has been stored into the database. Mail notification couldn\'t be sent, though.');
             }
 
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
@@ -357,8 +363,7 @@ class RequestAndMessageController extends Controller
             return $this->redirectToRoute('requests', ['folder' => 'sent']);
         }
 
-        $today = (new DateTime())->setTime(0,0);
-        if ($hostingRequest->getRequest()->getArrival() >= $today ) {
+        if ($this->checkRequestExpired($hostingRequest->getRequest())) {
             $this->addFlash('information', 'This request can\'t be replied to anymore as the hosting period already started.');
             return $this->redirectToRoute('message_show', ['id' => $hostingRequest->getId()]);
         }
@@ -473,8 +478,7 @@ class RequestAndMessageController extends Controller
             return $this->redirectToRoute('requests', ['folder' => 'inbox']);
         }
 
-        $today = (new DateTime())->setTime(0,0);
-        if ($hostingRequest->getRequest()->getArrival() >= $today ) {
+        if ($this->checkRequestExpired($hostingRequest->getRequest())) {
             $this->addFlash('notice', 'This request can\'t be replied to anymore as the hosting period already started.');
             return $this->redirectToRoute('message_show', ['id' => $hostingRequest->getId()]);
         }
@@ -732,5 +736,11 @@ class RequestAndMessageController extends Controller
         $newRequest->setSender($hostingRequest->getSender());
 
         return $newRequest;
+    }
+
+    private function checkRequestExpired(HostingRequest $request)
+    {
+        $requestModel = new RequestModel($this->getDoctrine());
+        return $requestModel->checkRequestExpired($request);
     }
 }

@@ -28,7 +28,7 @@ class SubjectType extends AbstractType
             ],
             'inline' => true,
             'attr' => [
-                'placeholder' => 'Accommodation request',
+                'placeholder' => 'Please enter a subject (just click here)',
                 'class' => 'subjectbg',
             ],
             'constraints' => [

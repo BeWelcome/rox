@@ -8,6 +8,8 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use HTMLPurifier_Config;
 use HtmlTruncator\Truncator;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Translation\DataCollector\TranslationDataCollector;
+use Symfony\Component\Translation\DataCollectorTranslator;
 use Twig_Extension;
 use Twig_Extension_GlobalsInterface;
 use Twig_SimpleFilter;
@@ -25,12 +27,19 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
      */
     protected $registry;
 
+    /**
+     * @var DataCollectorTranslator
+     */
+    protected $translator;
+
     public function __construct(
         SessionInterface $session,
-        Registry $registry
+        Registry $registry,
+        DataCollectorTranslator $translator
     ) {
         $this->session = $session;
         $this->registry = $registry;
+        $this->translator = $translator;
     }
 
     /**
@@ -42,6 +51,7 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
     {
         return [
             new Twig_SimpleFunction('ago', [$this, 'ago']),
+            new Twig_SimpleFunction('getTranslations', [$this, 'getTranslations']),
         ];
     }
 
@@ -108,6 +118,19 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
         $purifier = new \HTMLPurifier($config);
 
         return $purifier->purify(trim($text));
+    }
+
+    public function getTranslations()
+    {
+        $collector= new TranslationDataCollector($this->translator);
+        $collector->lateCollect();
+
+        return [
+            'defined' => $collector->getCountDefines(),
+            'missing' => $collector->getCountMissings(),
+            'fallback' => $collector->getCountFallbacks(),
+            'messages' => $collector->getMessages()
+            ];
     }
 
     /**

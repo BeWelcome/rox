@@ -132,7 +132,11 @@ class RequestAndMessageController extends Controller
         }
 
         if (null !== $message->getRequest()) {
-            return $this->redirectToRoute('hosting_request_reply', ['id' => $message->getId()]);
+            if ($message->getSender() == $sender) {
+                return $this->redirectToRoute('hosting_request_reply_guest', ['id' => $message->getId()]);
+            } else {
+                return $this->redirectToRoute('hosting_request_reply_host', ['id' => $message->getId()]);
+            }
         }
 
         $messageModel = new MessageModel($this->getDoctrine());
@@ -242,7 +246,7 @@ class RequestAndMessageController extends Controller
             $html2Text = new Html2Text($hostingRequest->getMessage());
             $hostingRequestText = $html2Text->getText();
             $message = (new Swift_Message())
-                ->setSubject($hostingRequest->getSubject()->getSubject())
+                ->setSubject(strip_tags($hostingRequest->getSubject()->getSubject()))
                 ->setFrom([
                     'message@bewelcome.org' => 'bewelcome - '.$sender->getUsername(),
                 ])
@@ -250,14 +254,14 @@ class RequestAndMessageController extends Controller
                 ->setBody(
                     $this->renderView(
                         // app/Resources/views/Emails/registration.html.twig
-                        'requests.html.twig',
+                        'request.html.twig',
                         ['request_text' => $hostingRequest->getMessage()]
                     ),
                     'text/html'
                 )
                 ->addPart(
                     $this->renderView(
-                        'requests.txt.twig',
+                        'request.txt.twig',
                         ['request_text' => $hostingRequestText]
                     ),
                     'text/plain'
@@ -307,6 +311,8 @@ class RequestAndMessageController extends Controller
             $hostingRequest = $requestForm->getData();
             $hostingRequest->setSender($sender);
             $hostingRequest->setReceiver($receiver);
+            $hostingRequest->setWhenFirstRead(new DateTime('0000-00-00 00:00:00'));
+            $hostingRequest->setStatus('Sent');
             $hostingRequest->setInfolder('requests');
             $hostingRequest->setCreated(new \DateTime());
 

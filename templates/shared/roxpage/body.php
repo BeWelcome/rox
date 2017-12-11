@@ -13,15 +13,25 @@
         endforeach;
     endif; ?>
 
-    <?php if ($this->getFlashError()): ?>
-        <div class="alert alert-danger" role="alert"><?php echo $this->getFlashError(true); ?></div>
+    <div class="container">
+    <?php $flashMessages = $this->getFlashError();
+    if (strlen($flashMessages) != 0): ?>
+        <div class="row">
+            <div class="col-12 alert alert-danger" role="alert"><?= $flashMessages ?>></div>
+        </div>
     <?php endif; ?>
-    <?php if ($this->getFlashNotice()): ?>
-        <div class="alert alert-warning" role="alert"><?php echo $this->getFlashNotice(true); ?></div>
+    <?php $flashMessages = $this->getFlashNotice();
+    if (strlen($flashMessages) != 0): ?>
+    <div class="row">
+        <div class="col-12 alert alert-warning" role="alert"><?= $flashMessages ?></div>
+    </div>
     <?php endif; ?>
     <?php $flashSuccess = $this->getFlashSuccess(true);
-        if (strlen($flashSuccess) != 0): ?>
-        <div class="alert alert-success" role="alert"><?php echo $flashSuccess; ?></div>
+    if (strlen($flashSuccess) != 0): ?>
+    <div class="row">
+        <div class="col-12 alert alert-success" role="alert"><?= $flashSuccess; ?></div>
+    </div>
+    </div>
     <?php endif;
 
         $side_column_names = $this->getColumnNames();

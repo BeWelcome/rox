@@ -43,7 +43,7 @@
                     {% endfor %}
                     {% for flash_message in app.session.flashBag.get('notice') %}
                         <div class="col-12 alert alert-info" role="alert">
-                            {{ flash_message }}
+                            hallo{{ flash_message }}
                         </div>
                     {% endfor %}
                     {% for flash_message in app.session.flashBag.get('success') %}
@@ -57,7 +57,12 @@
             <div class="container">
                 <div class="row{% if sidebar %} row-offcanvas row-offcanvas-right mt-2{% endif %}">
                     <div class="col-12{% if sidebar %} col-md-9{% endif %}">
-                    {% block content %}{% endblock %}
+                        {% if sidebar %}
+                        <p class="float-right d-md-none">
+                            <button type="button" class="btn btn-primary btn-sm ml-3" data-toggle="offcanvas">Toggle nav</button>
+                        </p>
+                        {% endif %}
+                        {% block content %}{% endblock %}
                     </div>
                     {% if sidebar %}
                         <div class="col-6 col-md-3 sidebar-offcanvas mt-3" id="sidebar">
@@ -68,13 +73,20 @@
                     {% endif %}
                 </div>
             </div>
-            <div class="container-fluid">
-                {{ dump(getTranslations()) }}
-            </div>
         </main>
         {% include 'footer.html.twig' %}
         <script src="{{ asset('build/manifest.js') }}"></script>
         <script src="{{ asset('build/bewelcome.js') }}"></script>
+        <script type="application/javascript">
+            {% if sidebar %}
+            $(document).ready(function () {
+                $('[data-toggle="offcanvas"]').click(function () {
+                    $('.row-offcanvas').toggleClass('active')
+                });
+            });
+            {% endif %}
+            $(".select2").select2();
+        </script>
         {% block javascripts %}{% endblock javascripts %}
     </body>
 </html>

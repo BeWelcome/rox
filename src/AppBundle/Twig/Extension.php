@@ -52,6 +52,9 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
         return [
             new Twig_SimpleFunction('ago', [$this, 'ago']),
             new Twig_SimpleFunction('getTranslations', [$this, 'getTranslations']),
+            new Twig_SimpleFunction('dump_it', [$this, 'dumpIt'], [
+                'is_safe' => ['html'],
+            ]),
         ];
     }
 
@@ -100,6 +103,11 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
         ]);
 
         return $truncated;
+    }
+
+    public function dumpIt($variable)
+    {
+        return highlight_string(var_export($variable, true), true);
     }
 
     /**

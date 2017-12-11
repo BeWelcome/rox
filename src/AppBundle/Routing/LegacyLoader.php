@@ -81,6 +81,8 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('stats_images', '/stats/{image}.png');
         $this->addRouteDirectly('getactive', '/about/getactive');
         $this->addRouteDirectly('contactus', '/about/feedback');
+        $this->addRouteDirectly('feedback', '/feedback');
+        $this->addRouteDirectly('privacy', '/privacy');
         $this->addRouteDirectly('signup', '/signup/');
         $this->addRouteDirectly('signup_1', '/signup/1');
         $this->addRouteDirectly('signup_2', '/signup/2');

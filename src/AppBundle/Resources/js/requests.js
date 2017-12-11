@@ -3,12 +3,15 @@ require('./tempusdominus.js');
 $(function () {
     let arrival = $('#arrival');
     let departure = $('#departure');
+    let lang = document.documentElement.lang;
     arrival.datetimepicker({
+        locale: lang,
         keepInvalid: true,
         format: 'YYYY-MM-DD',
         minDate: Date.now(),
     });
     departure.datetimepicker({
+        locale: lang,
         keepInvalid: true,
         useCurrent: false,
         format: 'YYYY-MM-DD'

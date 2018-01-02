@@ -45,7 +45,7 @@ class InactiveProfilePage extends MemberPage
         $member = $this->member;
         $words = $this->getWords();
         $thumbnail_url = 'members/avatar/'.$member->Username.'?150';
-        $picture_url = 'members/avatar/'.$member->Username.'?500';
+        $picture_url = 'members/avatar/'.$member->Username.'/500';
         ?>
 
         <div id="profile_pic" >

@@ -114,7 +114,7 @@
           </p>
           </div>
       </div>
-    </div> <!-- header content -->
+    </div> <!-- profile header -->
 
         <?php
             if (get_class($this) == 'EditMyProfilePage' || get_class($this) == 'EditProfilePage') $urlstring = 'editmyprofile';

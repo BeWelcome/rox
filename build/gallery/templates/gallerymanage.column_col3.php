@@ -2,19 +2,16 @@
         echo '<form method="POST" action="">'.$callback_tag;
         echo <<<HTML
         <!-- Subtemplate: 2 rows at 66/33 percent -->
-        <div class="subcolumns">
-          <div class="c66l">
-            <div class="subcl">
-              <!-- Inhalt linker Block -->
+        <div class="row">
+          <div class="col-12 col-lg-8">
 HTML;
         require SCRIPT_BASE . 'build/gallery/templates/overview.php';
         echo <<<HTML
-            </div>
+
           </div>
 
-          <div class="c33r">
-            <div class="subcr">
-              <!-- Inhalt rechter Block -->
+          <div class="col-12 col-lg-4">
+           
 HTML;
         if ($this->myself) {
         echo <<<HTML
@@ -72,7 +69,7 @@ HTML;
         }
         echo <<<HTML
             </div>
-          </div>
+         
         </div>
 HTML;
 ?>

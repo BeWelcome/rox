@@ -184,8 +184,7 @@ class MemberPage extends PageWithActiveSkin
         // TODO: move HTML to a template
         $member = $this->member;
         $words = $this->getWords();
-        $thumbnail_url = 'members/avatar/'.$member->Username.'?150';
-        $picture_url = 'members/avatar/'.$member->Username.'?500';
+        $picture_url = 'members/avatar/'.$member->Username.'/500';
         ?>
 
         <div>

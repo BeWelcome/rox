@@ -1,4 +1,3 @@
-<div class="row mt-3">
     <div class="col-12 col-md-6">
         <a name="general"></a>
         <h3><?php echo $words->get('SafetyFaqCategoryGeneral');?></h3>
@@ -15,7 +14,7 @@
         <h5><?php echo $words->get('FaqQ_CanIEditComment');?></h5>
         <p><?php echo $words->get('FaqA_CanIEditComment');?></p>
     </div>
-    <div class="col-12 col-md-6">
+    <div class="col-12">
         <a name="spam"></a>
         <h3><?php echo $words->get('SafetyFaqCategorySpam');?></h3>
         <h5><?php echo $words->get('FaqQ_IFoundAPronLink');?></h5>
@@ -23,4 +22,3 @@
         <h5><?php echo $words->get('FaqQ_DontWantToReceiveInMyEmail');?></h5>
         <p><?php echo $words->get('FaqA_DontWantToReceiveInMyEmail');?></p>
     </div>
-</div>

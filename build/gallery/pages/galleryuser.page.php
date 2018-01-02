@@ -40,48 +40,62 @@ class GalleryUserPage extends GalleryBasePage
         $active_menu_item = $this->getSubmenuActiveItem();
         $cnt = count($this->getSubmenuItems());
         $ii = 1;
+        echo '<div class="list-group mt-1">';
         foreach ($this->getSubmenuItems() as $index => $item) {
             $name = $item[0];
             $url = $item[1];
             $label = $item[2];
-            $class = isset($item[3]) ? $item[3] : '';
+            // $class= isset($item[3]) ? $item[3] : '';
             if ($name === $active_menu_item) {
-                $attributes = ' class="active '.$class.'"';
+                $attributes = ' active';
             } else {
-                $attributes = ' class="'.$class.'"';
+                $attributes = '';
             }
-            ?><a <?=$attributes ?> style="cursor:pointer;" href="<?=$url ?>"><span><?=$label ?></span></a> <?=($ii++ != $cnt) ? '|': '' ?>
+            ?>
+            <a class="list-group-item<?= $attributes; ?>" href="<?= $url; ?>"><?= $label; ?></a>
             <?php
         }
-    }
-
-
-    protected function breadcrumbs() {
-        $words = $this->words;
-        return '<h1><a href="gallery">'.$words->get('Gallery').'</a> &raquo; <a href="gallery/show/user/'.$this->member->Username.'">'.ucfirst($this->member->Username).'</a></h1>';
-    }
-
-    protected function teaserHeadline() {
-        $words = $this->words;
-        return '<h3 class="userpage">'.MOD_layoutbits::PIC_50_50($this->member->Username,'',$style='float_left').' <a href="members/'.$this->member->Username.'">'.$this->member->Username.'</a></h3>';
-    }
-    
-    protected function teaser() {
         ?>
-        <div id="teaser">
-        <div class="breadcrumbs">
-        <?=$this->breadcrumbs()?>
-        </div>
-        <div class="clearfix">
-            <?=$this->teaserHeadline()?>
-            <div class="gallery_menu">
-            <?=$this->submenu()?>
-            </div>
-        </div>
         </div>
         <?
     }
-        
+
+
+/*    protected function breadcrumbs() {
+        $words = $this->words;
+        return '<h1><a href="gallery">'.$words->get('Gallery').'</a> &raquo; <a href="gallery/show/user/'.$this->member->Username.'">'.ucfirst($this->member->Username).'</a></h1>';
+    }
+/*
+
+/*    protected function teaserHeadline() {
+        $words = $this->words;
+        return '<h3 class="userpage">'.MOD_layoutbits::PIC_50_50($this->member->Username,'',$style='float_left').' <a href="members/'.$this->member->Username.'">'.$this->member->Username.'</a></h3>';
+    }
+*/
+    
+    protected function teaser() {
+
+        $member = $this->member;
+        $picture_url = 'members/avatar/'.$member->Username.'/500';
+        ?>
+
+        <div class="row">
+            <div class="col-12 col-md-3">
+                <div>
+                    <a href="members/<?=$member->Username?>"><img src="<?=$picture_url?>" alt="Picture of <?=$member->Username?>" class="framed" height="100%" width="100%"/></a>
+                </div>
+                <a class="btn btn-primary btn-sm btn-block" href="members/<?=$member->Username ?>">Profile</a>
+                <?= $this->submenu() ?>
+            </div>
+
+            <div class="col-12 col-md-9">
+                <?= $this->leftSidebar() ?>
+                <?= $this->column_col3() ?>
+            </div>
+        </div>
+        <?
+    }
+
     public function leftSidebar()
     {
         $words = $this->words;
@@ -101,4 +115,6 @@ class GalleryUserPage extends GalleryBasePage
         require SCRIPT_BASE . 'build/gallery/templates/galleries_overview.php';
     }
 
-}
+} ?>
+
+

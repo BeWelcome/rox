@@ -17,40 +17,43 @@
     
 ?>
 <? if ($this->loggedInMember) { ?>
+<div class="row">
+    <div class="col-12 col-md-6">
+        <h3><?=$words->get('GalleryYourGallery')?></h3>
+        <div class="list-group mt-1">
+                <a href="gallery/show/user/<?=$loggedInMember->Username?>/images" class="list-group-item"><i class="fa fa-image mr-1"></i><?=$words->get('GalleryUserImages',$cnt_pictures)?></a></li>
+                <a href="gallery/show/user/<?=$loggedInMember->Username?>/sets" class="list-group-item"><i class="fa fa-folder-open-o mr-1"></i><?=$words->get('GalleryUserPhotosets',count($galleries))?></a></li>
+                <a href="gallery/upload" class="list-group-item"><i class="fa fa-camera-retro mr-1"></i><?=$words->get('GalleryUpload')?></a>
+        </div>
+    </div>
 
-<h3><?=$words->get('GalleryYourGallery')?></h3>
-<div>
-    <ul>
-        <li><img src="images/icons/pictures.png"> <a href="gallery/show/user/<?=$loggedInMember->Username?>/images"><?=$words->get('GalleryUserImages',$cnt_pictures)?></a></li>
-        <li><img src="images/icons/folder_picture.png"> <a href="gallery/show/user/<?=$loggedInMember->Username?>/sets"><?=$words->get('GalleryUserPhotosets',count($galleries))?></a></li>
-        <li><img src="images/icons/picture_add.png"> <a href="gallery/upload"><?=$words->get('GalleryUpload')?></a></li>
-    </ul>
-    <?//=$this->userLinks()?>
-</div>
-
+    <div class="col-12 col-md-6">
     <h3><?=$words->get('GalleryCreateGallery')?></h3>
-    <p>
-        <form method="post" class="def-form" id="gallery-create-form">
+        <form method="post" class="def-form form-inline" id="gallery-create-form">
         <?=$callback_tag ?>
-        <?=$words->get('GalleryCreateNewPhotoset')?>: 
-        <br />
-        <input name="g-user" type="hidden" value="<?=$this->loggedInMember->get_userId()?>">
-        <input name="g-title" id="g-title" type="text" size="20" maxlength="30" onclick="$('newGallery').checked = true; $('deleteonly').value = 0;">
-        <?php
-        // Display errors from last submit	
-        if (isset($vars['errors']) && !empty($vars['errors']))
-        {
-            foreach ($vars['errors'] as $error)
+        <?=$words->get('GalleryCreateNewPhotoset')?>:
+
+            <?php
+            // Display errors from last submit
+            if (isset($vars['errors']) && !empty($vars['errors']))
             {
-                echo '<div class="error small">'.$words->get($error).'</div>';
+                foreach ($vars['errors'] as $error)
+                {
+                    echo '<div class="alert alert-danger small">'.$words->get($error).'</div>';
+                }
             }
-        }
-        ?>
-        <input name="new" type="hidden" value="1">
-        <input name="deleteOnly" type="hidden" value="0">
-        <br />
-        <input type="submit" class="button" name="button" value="<?=$words->getBuffered('Add')?>" id="button" onclick="return submitStuff();"/><?php echo $words->flushBuffer(); ?>
+            ?>
+
+            <div class="form-group">
+                <input name="g-user" type="hidden" value="<?=$this->loggedInMember->get_userId()?>">
+                <input name="g-title" id="g-title" type="text" size="20" maxlength="30" onclick="$('newGallery').checked = true; $('deleteonly').value = 0;">
+
+                <input name="new" type="hidden" value="1">
+                <input name="deleteOnly" type="hidden" value="0">
+            </div>
+        <input type="submit" class="btn btn-sm btn-primary" name="button" value="<?=$words->getBuffered('Add')?>" id="button" onclick="return submitStuff();"/><?php echo $words->flushBuffer(); ?>
         </form>
-    </p>
+    </div>
+</div>
 
 <? } ?>

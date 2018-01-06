@@ -24,7 +24,7 @@ class GalleryUploadPage extends GalleryUserPage
     protected function column_col3() {
         $words = $this->words;
         echo <<<HTML
-        <h2>{$words->getFormatted('Gallery_UploadTitle')}</h2>
+        <div class="col-12"><h2>{$words->getFormatted('Gallery_UploadTitle')}</h2></div>
 HTML;
         require SCRIPT_BASE . 'build/gallery/templates/uploadform.php';
     }

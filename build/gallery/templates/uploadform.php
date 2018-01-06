@@ -15,11 +15,11 @@ $words = $this->words;
 
 <?php
 if (!$member = $this->model->getLoggedInMember()) {
-    echo '<p class="error">'.$words->getFormatted('Gallery_NotLoggedIn').'</p>';
+    echo '<div class="alert alert-danger">'.$words->getFormatted('Gallery_NotLoggedIn').'</div>';
     return;
 }
 if(isset($vars->error)) {
-    echo '<p class="error">'.$words->getFormatted($vars['error']).'</p>';
+    echo '<div class="alert alert-danger">'.$words->getFormatted($vars['error']).'</div>';
 }
 if (isset($_GET['g'])) $galleryId = (int)$_GET['g']; 
 $postURL = 'gallery/uploaded';
@@ -27,36 +27,35 @@ if ($galleryId) $postURL = 'gallery/show/sets/'.$galleryId;
 
 // If the upload-form IS hidden, display a link to show it
 ?>
-<div id="gallery-upload-content">
+<div class="col-12 h4">
+    <?=$words->getFormatted('Gallery_UploadInstruction')?>
+</div>
+<div class="col-12" id="gallery-upload-content">
     <form method="post" action="<?=$postURL?>" class="def-form" id="gallery-img-upload" enctype="multipart/form-data">
     <input type="hidden" name="MAX_FILE_SIZE" value="<?=PFunctions::returnBytes(ini_get('upload_max_filesize'))?>"/>
-    <h4><?=$words->getFormatted('Gallery_UploadInstruction')?></h4>
-    <div class="notify"><?=$words->getFormatted('Gallery_UploadWarning')?> <? printf("%.1f MB", PFunctions::returnBytes(ini_get('upload_max_filesize')) / 1048576); ?></div>
-    <div id="gallery-img-upload-files">
-        <div class="bw-row">
-            <input type="file" name="gallery-file[]"/>
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <div id="gallery-img-upload-files">
+                    <input type="file" name="gallery-file[]" class="w-100">
+                    <input type="file" name="gallery-file[]" class="w-100">
+                <input type="file" name="gallery-file[]" class="w-100">
+                <input type="file" name="gallery-file[]" class="w-100">
+                <input type="file" name="gallery-file[]" class="w-100">
+                <input type="hidden" name="galleryId" value="<?=$galleryId;?>"/>
+                <?php echo $callbacktag; ?>
+                <input type="submit" class="btn btn-sm btn-primary my-2" value="<?=$words->getSilent('Gallery_UploadSubmit')?>"/>
+            </div>
         </div>
-        <div class="bw-row">
-            <input type="file" name="gallery-file[]"/>
+        <div class="col-12 col-md-6">
+
+            <div class="alert alert-warning">
+                <?=$words->getFormatted('Gallery_UploadWarning')?><? printf("%.1f MB", PFunctions::returnBytes(ini_get('upload_max_filesize')) / 1048576); ?>
+            </div>
         </div>
-        <div class="bw-row">
-            <input type="file" name="gallery-file[]"/>
-        </div>
-        <div class="bw-row">
-            <input type="file" name="gallery-file[]"/>
-        </div>
-        <div class="bw-row">
-            <input type="file" name="gallery-file[]"/>
-        </div>
-    </div>
-    <p>
-        <input type="hidden" name="galleryId" value="<?=$galleryId;?>"/>
-        <?php echo $callbacktag; ?>
-        <input type="submit" class="button" value="<?=$words->getSilent('Gallery_UploadSubmit')?>"/>
         <?=$words->flushBuffer()?>
-    </p>
+    </div>
     </form>
-    <iframe id="gallery-img-upload-getter" name="gallery-img-upload-getter" class="hidden"></iframe>
+    <iframe id="gallery-img-upload-getter" name="gallery-img-upload-getter" class="d-none"></iframe>
     <script type="text/javascript">//<!--
     <? if (isset($uploaderUrl)) { ?>
     var Gallery = {

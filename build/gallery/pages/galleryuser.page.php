@@ -25,8 +25,8 @@ class GalleryUserPage extends GalleryBasePage
 
         $ViewForumPosts=$words->get("ViewForumPosts",$member->forums_posts_count()) ;
         $tt = array();
-            $tt[]= array('overview', 'gallery/show/user/'.$member->Username.'/'.$this->page.'', $ww->GalleryTitleSets);
-            $tt[]= array('images', 'gallery/show/user/'.$member->Username.'/images/'.$this->page.'', $ww->GalleryTitleLatest);
+            $tt[]= array('overview', 'gallery/show/user/'.$member->Username.'/sets'.$this->page.'', $ww->GalleryTitleSets);
+            $tt[]= array('images', 'gallery/show/user/'.$member->Username.'/images'.$this->page.'', $ww->GalleryTitleLatest);
         if ($this->myself) {
             $tt[]= array("manage", 'gallery/manage', $ww->GalleryManage, 'manage');
             $tt[]= array("upload", 'gallery/upload', $ww->GalleryUpload, 'upload');
@@ -40,7 +40,7 @@ class GalleryUserPage extends GalleryBasePage
         $active_menu_item = $this->getSubmenuActiveItem();
         $cnt = count($this->getSubmenuItems());
         $ii = 1;
-        echo '<div class="list-group mt-1">';
+        echo '<div class="list-group mt-1" role="group">';
         foreach ($this->getSubmenuItems() as $index => $item) {
             $name = $item[0];
             $url = $item[1];
@@ -53,6 +53,30 @@ class GalleryUserPage extends GalleryBasePage
             }
             ?>
             <a class="list-group-item<?= $attributes; ?>" href="<?= $url; ?>"><?= $label; ?></a>
+            <?php
+        }
+        ?>
+        </div>
+        <?
+    }
+
+    protected function gallerynav() {
+        $active_menu_item = $this->getSubmenuActiveItem();
+        $cnt = count($this->getSubmenuItems());
+        $ii = 1;
+        echo '<div class="btn-group mb-2" role="group">';
+        foreach ($this->getSubmenuItems() as $index => $item) {
+            $name = $item[0];
+            $url = $item[1];
+            $label = $item[2];
+            // $class= isset($item[3]) ? $item[3] : '';
+            if ($name === $active_menu_item) {
+                $attributes = ' active';
+            } else {
+                $attributes = '';
+            }
+            ?>
+            <a class="btn btn-sm btn-light<?= $attributes; ?>" href="<?= $url; ?>"><?= $label; ?></a>
             <?php
         }
         ?>
@@ -76,27 +100,38 @@ class GalleryUserPage extends GalleryBasePage
     protected function teaser() {
 
         $member = $this->member;
-        $picture_url = 'members/avatar/'.$member->Username.'/500';
+        $picture_url = 'members/avatar/'.$member->Username.'/100';
         ?>
 
         <div class="row">
-            <div class="col-12 col-md-3">
-                <div>
-                    <a href="members/<?=$member->Username?>"><img src="<?=$picture_url?>" alt="Picture of <?=$member->Username?>" class="framed" height="100%" width="100%"/></a>
-                </div>
+            <div class="col-2">
+                <div class="w-100"><a href="members/<?=$member->Username?>"><img src="<?=$picture_url?>" alt="Picture of <?=$member->Username?>" class="framed" height="100%" width="100%"/></a></div>
                 <a class="btn btn-primary btn-sm btn-block" href="members/<?=$member->Username ?>">Profile</a>
-                <?= $this->submenu() ?>
             </div>
-
-            <div class="col-12 col-md-9">
-                <?= $this->leftSidebar() ?>
-                <?= $this->column_col3() ?>
+            <div class="col-10">
+                <?= $this->gallerynav() ?>
+                <? if ($this->myself){
+                    echo $this->subNav();
+                }
+                 ?>
             </div>
         </div>
         <?
     }
 
     public function leftSidebar()
+    {
+        /*
+        $words = $this->words;
+        $galleries = $this->galleries;
+        $cnt_pictures = $this->cnt_pictures;
+        $username = ($member = $this->loggedInMember) ? $member->Username : '';
+        $loggedInMember = $this->loggedInMember;
+        require SCRIPT_BASE . 'build/gallery/templates/userinfo.php';
+        */
+    }
+
+    public function subNav()
     {
         $words = $this->words;
         $galleries = $this->galleries;
@@ -114,7 +149,6 @@ class GalleryUserPage extends GalleryBasePage
         $itemsPerPage = 6;
         require SCRIPT_BASE . 'build/gallery/templates/galleries_overview.php';
     }
-
 } ?>
 
 

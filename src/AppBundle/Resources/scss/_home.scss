@@ -18,6 +18,10 @@
   top: -100%;
 }
 
+.homecity{
+  font-size: 1.5rem !important;
+}
+
 .dashbox{
   overflow: hidden;
   background: #fff;
@@ -46,12 +50,17 @@
   text-overflow: ellipsis;
   display: -webkit-box;
   line-height: 1.2rem;
-  max-height: 3.5rem;
+  max-height: 3.6rem;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 
   .text {
-    max-height: 2.3rem;
+    @include media-breakpoint-down(md) {
+      max-height: 2.1rem;
+    }
+    @include media-breakpoint-up(md) {
+      max-height: 2.4rem;
+    }
   }
 
   p {

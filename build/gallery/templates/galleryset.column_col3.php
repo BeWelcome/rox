@@ -22,7 +22,7 @@ if (!isset($vars['errors'])) {
     <div class="subcl" >
       <!-- Content left block -->
 <?php if ($d) { ?>
-      <a href="gallery/show/sets/<?=$gallery->id?>">
+        <a href="gallery/show/image/<?= $d; ?>">
           <img class="gallery_first" src="gallery/thumbimg?id=<?=$d?>&amp;t=1" alt="image"/>
       </a>
 <? } ?>
@@ -32,7 +32,8 @@ if (!isset($vars['errors'])) {
       ?>
       </p>
       <div class="clearfix">
-           <?=MOD_layoutbits::PIC_30_30($this->member->Username,'',$style='float_left')?><?php echo $words->flushBuffer(); ?>
+
+          <img src="members/avatar/<?= $this->member->Username; ?>/30">
            <p class="small"><?=$num_rows?> <?=$words->get('pictures')?><br />
            <?=$words->get('by')?> <a href="members/<?=$this->member->Username?>"><?=$this->member->Username?></a> 
            <a href="gallery/show/user/<?=$this->member->Username?>" title="<?=$words->getSilent('galleryUserOthers',$this->member->Username)?>"><?php echo $words->flushBuffer(); ?>

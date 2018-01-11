@@ -13,10 +13,10 @@ if ($galleries) {
     } else {
         $page = 1;
     }
-    if (!isset($itemsPerPage)) $itemsPerPage = 6;
+    if (!isset($itemsPerPage)) $itemsPerPage = 12;
     $p = PFunctions::paginate($galleries, $page, $itemsPerPage);
     $galleriesonpage = $p[0];
-    echo '<div class="clearfix">';
+    echo '<div class="row">';
     foreach ($galleriesonpage as $g) {
     	static $ii = 0;
         $d = $Gallery->getLatestGalleryItem($g->id);
@@ -27,15 +27,15 @@ if ($galleries) {
         // Only show the galleries with pictures. The belonging user might see them anyway.
     	if ($d || $this->myself) {
     	?>
-        <div class="gallery_container float_left">
+        <div class="col-12 col-sm-6 col-md-3">
+            <div class="gallery_container">
             <a href="gallery/show/sets/<?=$g->id?>">
-                <img class="framed" src="<?=($d) ? 'gallery/thumbimg?id='.$d : 'images/lightview/blank.gif'?>" alt="image"/>
+                <img class="mb-3" src="<?=($d) ? 'gallery/thumbimg?id='.$d : 'images/lightview/blank.gif'?>" style="width: 100px; height: 100px" alt="image"/>
+                <span class="alert alert-info p-1" style="position: absolute;"><i class="fa fa-image mr-1"></i><?=$num_rows?></span>
             </a>
-            <h4><a href="gallery/show/sets/<?=$g->id?>"><?= htmlspecialchars($g->title)?></a></h4>
-            <p>
-            <?=$num_rows?> <?=$words->get('pictures')?>
+            <h4 class="mb-0"><a href="gallery/show/sets/<?=$g->id?>"><?= htmlspecialchars($g->title)?></a></h4>
             <span class="grey small"><?=$words->get('by')?> <a href="members/<?=$username?>" class="grey"><?=$username?></a></span>
-            </p>
+            </div>
         </div>
         <?php
         }

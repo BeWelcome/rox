@@ -490,7 +490,7 @@ class GalleryController extends RoxControllerBase {
         $loggedInMember = $this->loggedInMember;
         if ($galleryId) $statement = $this->_model->getLatestItems(false,$galleryId);
         else $statement = $this->_model->getLatestItems($loggedInMember->get_userId());
-        $itemsPerPage = 6;
+        $itemsPerPage = 12;
         require_once 'templates/overview.php';
     }
 

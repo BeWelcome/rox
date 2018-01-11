@@ -35,9 +35,8 @@ $statement = $p[0];
             echo '<input type="checkbox" class="thumb_check input_check mr-2" name="imageId[]" onchange="highlightMe($(\'image_link_'.$d->id.'\'),this.checked);" value="'.$d->id.'">';
         }
         echo '<a href="gallery/show/image/'.$d->id.'" title="'.$d->title.'">'.$title_short.'</a><a href="gallery/img?id='.$d->id.'" class=\'lightview\' rel=\'gallery[BestOf]\'><i class="fa fa-expand float-right" title="'.$words->getSilent('Preview image').'"></i></a>'.$words->flushBuffer().'</div>';
-        echo '<p class="small">'.$layoutbits->ago(strtotime($d->created)).' '.$words->getFormatted('by');
-        echo '<a href="members/'.$d->user_handle.'">'.$d->user_handle.'</a>';
-        echo '<a href="gallery/show/user/'.$d->user_handle.'" title="'.$words->getSilent('galleryUserOthers',$d->user_handle).'"><i class="fa fa-image"></i></a>'.$words->flushBuffer().'</p>';
+        echo '<p class="small">'.$layoutbits->ago(strtotime($d->created)).' '.$words->getFormatted('by') .' <a href="members/'.$d->user_handle.'">'.$d->user_handle.'</a>';
+        echo '<a href="gallery/show/user/'.$d->user_handle.'" title="'.$words->getSilent('galleryUserOthers',$d->user_handle).'"><i class="fa fa-image ml-1"></i></a>'.$words->flushBuffer().'</p>';
         echo '</div>';
     }
     ?>

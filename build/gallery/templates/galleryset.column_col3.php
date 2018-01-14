@@ -16,7 +16,26 @@ if (!isset($vars['errors'])) {
     $vars['errors'] = array();
 }
 
+foreach ($statement as $d) {
+    echo '
+    <div class="col-12 col-sm-6 col-md-3">
+        <a href="gallery/show/image/'.$d->id.'"><img class="w-100" src="gallery/thumbimg?id='.$d->id.'&amp;t=1" alt="image"></a>
+    </div>';
+}
+echo '</div>';
+if ($this->myself) {
+// Display the upload form
+    echo '<div class="row mt-3">';
+require SCRIPT_BASE . 'build/gallery/templates/uploadform.php';
+}
+
+/*
 ?>
+
+
+
+
+
 <div class="subcolumns gallery_overview">
   <div class="c33l">
     <div class="subcl" >
@@ -78,18 +97,6 @@ HTML;
     <div class="subcr">
       <!-- Content right block -->
 HTML;
-  if ($this->myself && $this->upload) {
-      // Display the upload form
-      require SCRIPT_BASE . 'build/gallery/templates/uploadform.php';
-  } else {
-      echo '<div class="clearfix">';
-      foreach ($statement as $d) {
-      	echo '
-    <div class="img thumb_container float_left">
-      <a href="gallery/show/image/'.$d->id.'"><img class="thumb framed" src="gallery/thumbimg?id='.$d->id.'" alt="image" /></a>
-    </div>';
-      }
-  }
       echo '</div>';
       ?>
     </div>
@@ -98,7 +105,9 @@ HTML;
 <hr/>
 <?php
 
-$shoutsCtrl = new ShoutsController;
-$shoutsCtrl->shoutsList('gallery', $gallery->id);
+// $shoutsCtrl = new ShoutsController;
+// $shoutsCtrl->shoutsList('gallery', $gallery->id);
 
+
+*/
 ?>

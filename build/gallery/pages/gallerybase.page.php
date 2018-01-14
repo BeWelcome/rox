@@ -53,7 +53,6 @@ class GalleryBasePage extends PageWithActiveSkin
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/screen/custom/lightview.css';
-        $stylesheets[] = 'styles/css/minimal/screen/custom/gallery.css';
         return $stylesheets;
     }
     
@@ -74,23 +73,40 @@ class GalleryBasePage extends PageWithActiveSkin
 
     protected function submenu() {
         $active_menu_item = $this->getSubmenuActiveItem();
-        $cnt = count($this->getSubmenuItems());
-        $ii = 1;
+        echo '<div class="list-group mt-1" role="group">';
         foreach ($this->getSubmenuItems() as $index => $item) {
             $name = $item[0];
             $url = $item[1];
             $label = $item[2];
             $class = isset($item[3]) ? $item[3] : '';
             if ($name === $active_menu_item) {
-                $attributes = ' class="active '.$class.'"';
+                $attributes = ' active';
             } else {
-                $attributes = ' class="'.$class.'"';
+                $attributes = '';
             }
-
-            ?><a <?=$attributes ?> style="cursor:pointer;" href="<?=$url ?>"><span><?=$label ?></span></a> <?=($ii++ != $cnt) ? '|': '' ?>
+            ?><a class="list-group-item<?= $attributes; ?>" href="<?=$url ?>"><?=$label ?></a>
             <?php
-
         }
+        echo '</div>';
+    }
+
+    protected function gallerysetnav() {
+        $active_menu_item = $this->getSubmenuActiveItem();
+        echo '<div class="btn-group" role="group">';
+        foreach ($this->getSubmenuItems() as $index => $item) {
+            $name = $item[0];
+            $url = $item[1];
+            $label = $item[2];
+            $class = isset($item[3]) ? $item[3] : '';
+            if ($name === $active_menu_item) {
+                $attributes = ' active';
+            } else {
+                $attributes = '';
+            }
+            ?><a class="btn btn-light<?= $attributes; ?>" href="<?=$url ?>"><?=$label ?></a>
+            <?php
+        }
+        echo '</div>';
     }
     
     protected function userLinks()

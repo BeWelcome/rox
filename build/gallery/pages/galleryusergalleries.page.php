@@ -31,7 +31,7 @@ class GalleryUserGalleriesPage extends GalleryUserPage
         $cnt_pictures = $this->cnt_pictures;
         $username = ($member = $this->loggedInMember) ? $member->username : '';
         $loggedInMember = $this->loggedInMember;
-        require SCRIPT_BASE . 'build/gallery/templates/userinfo.php';
+        // require SCRIPT_BASE . 'build/gallery/templates/userinfo.php';
     }
 
     protected function column_col3() {

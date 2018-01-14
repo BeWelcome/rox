@@ -38,14 +38,11 @@ class GalleryUserPage extends GalleryBasePage
     
     protected function submenu() {
         $active_menu_item = $this->getSubmenuActiveItem();
-        $cnt = count($this->getSubmenuItems());
-        $ii = 1;
         echo '<div class="list-group mt-1" role="group">';
         foreach ($this->getSubmenuItems() as $index => $item) {
             $name = $item[0];
             $url = $item[1];
             $label = $item[2];
-            // $class= isset($item[3]) ? $item[3] : '';
             if ($name === $active_menu_item) {
                 $attributes = ' active';
             } else {
@@ -55,33 +52,26 @@ class GalleryUserPage extends GalleryBasePage
             <a class="list-group-item<?= $attributes; ?>" href="<?= $url; ?>"><?= $label; ?></a>
             <?php
         }
-        ?>
-        </div>
-        <?
+        echo '</div>';
     }
 
     protected function gallerynav() {
         $active_menu_item = $this->getSubmenuActiveItem();
-        $cnt = count($this->getSubmenuItems());
-        $ii = 1;
-        echo '<div class="btn-group mb-2" role="group">';
+        echo '<div class="btn-group" role="group">';
         foreach ($this->getSubmenuItems() as $index => $item) {
             $name = $item[0];
             $url = $item[1];
             $label = $item[2];
-            // $class= isset($item[3]) ? $item[3] : '';
             if ($name === $active_menu_item) {
                 $attributes = ' active';
             } else {
                 $attributes = '';
             }
             ?>
-            <a class="btn btn-sm btn-light<?= $attributes; ?>" href="<?= $url; ?>"><?= $label; ?></a>
+            <a class="btn btn-light<?= $attributes; ?>" href="<?= $url; ?>"><?= $label; ?></a>
             <?php
         }
-        ?>
-        </div>
-        <?
+        echo '</div>';
     }
 
 
@@ -138,7 +128,7 @@ class GalleryUserPage extends GalleryBasePage
         $cnt_pictures = $this->cnt_pictures;
         $username = ($member = $this->loggedInMember) ? $member->Username : '';
         $loggedInMember = $this->loggedInMember;
-        require SCRIPT_BASE . 'build/gallery/templates/userinfo.php';
+        // require SCRIPT_BASE . 'build/gallery/templates/userinfo.php';
     }
 
     protected function column_col3() {
@@ -146,7 +136,7 @@ class GalleryUserPage extends GalleryBasePage
         $words = new MOD_words();
         $username = $this->member->Username;
         $galleries = $this->galleries;
-        $itemsPerPage = 6;
+        $itemsPerPage = 12;
         require SCRIPT_BASE . 'build/gallery/templates/galleries_overview.php';
     }
 } ?>

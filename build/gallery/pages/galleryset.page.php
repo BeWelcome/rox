@@ -29,7 +29,7 @@ class GallerySetPage extends GalleryBasePage
         <div class="clearfix">
             <?=$this->teaserHeadline()?>
             <div class="gallery_menu">
-            <?=$this->submenu()?>
+            <?=$this->gallerysetnav()?>
             </div>
         </div>
         </div>
@@ -57,10 +57,10 @@ class GallerySetPage extends GalleryBasePage
         $wwsilent = $this->wwsilent;
 
         $tt = array();
+            $tt[]= array('albums', 'gallery/show/user/'. $username .'/sets', $ww->GalleryTitleSets);
             $tt[]= array('thumbnails', 'gallery/show/sets/'.$gallery->id.'/'.$this->page.'', $ww->GalleryThumbnails);
             $tt[]= array('details', 'gallery/show/sets/'.$gallery->id.'/details/'.$this->page.'', $ww->GalleryDetails);
         if ($this->myself) {
-            $tt[]= array("upload", 'gallery/show/sets/'.$gallery->id.'/upload', $ww->GalleryUpload, 'upload');
             $tt[]= array("delete", 'gallery/show/sets/'.$gallery->id.'/delete', $ww->GalleryDelete, 'delete');
         }
         return($tt) ;

@@ -97,10 +97,10 @@ AND t.last_postid = p.id";
     {
         $sql = <<<SQL
 SELECT 
-count(id) as count
+    count(id) as count
 FROM
 (SELECT 
-    count(g.id) as count
+    g.id
 FROM
     groups g, 
     forums_threads ft,

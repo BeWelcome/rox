@@ -91,6 +91,46 @@ AND t.last_postid = p.id";
     }
 
     /**
+     * 
+     */
+    public function countAll()
+    {
+        $sql = <<<SQL
+SELECT 
+count(id) as count
+FROM
+(SELECT 
+    count(g.id) as count
+FROM
+    groups g, 
+    forums_threads ft,
+    forums_posts fp 
+where g.id = ft.IdGroup AND ft.last_postId = fp.id AND DateDIFF(now(), fp.create_time) < 365
+group by g.id) as id
+SQL;
+        return $this->sqlCount($sql);
+    }
+
+    /**
+     * 
+     */
+    public function findAll($offset, $limit)
+    {
+        $sql = <<<SQL
+SELECT 
+    g.id
+FROM
+    groups g, 
+    forums_threads ft,
+    forums_posts fp 
+WHERE g.id = ft.IdGroup AND ft.last_postId = fp.id AND DateDIFF(NOW(), fp.create_time) < 365
+GROUP BY g.id
+LIMIT $limit OFFSET $offset
+SQL;
+        return $this->findBySQLMany($sql);
+    }
+
+    /**
      * Uses an array of terms to create a create to search for groups with
      * simple or search on names for now
      *
@@ -103,7 +143,7 @@ AND t.last_postid = p.id";
     {
         if (empty($terms))
         {
-            return $this->findAll($page, 10);
+            return $this->findAll($offset, $limit);
         }
         
         foreach ($terms as &$term)

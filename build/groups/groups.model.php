@@ -112,17 +112,16 @@ class GroupsModel extends  RoxModelBase
      * @acccess public
      * @return int
      */
-    public function countGroupsBySearchterms($terms)
+    public function countGroupsBySearchterms($terms = [])
     {
         $group = $this->createEntity('Group');
         if (empty($terms))
         {
             return $group->countAll();
         }
-        $terms_array = explode(' ', $terms);
-        $strings = array();
 
-        foreach ($terms_array as $term)
+        $strings = array();
+        foreach ($terms as $term)
         {
             $strings[] = "Name LIKE '%" . $this->dao->escape($term) . "%'";
         }
@@ -139,7 +138,7 @@ class GroupsModel extends  RoxModelBase
      * @param int $amount how many results to find
      * @return mixed false or an array of Groups
      */
-    public function findGroups($terms = '', $page = 1, $order = '', $amount = 10)
+    public function findGroups($terms = [], $page = 1, $order = '', $amount = 10)
     {
 
         if (!empty($order))
@@ -181,11 +180,9 @@ class GroupsModel extends  RoxModelBase
             $order = 'Name ASC';
         }
 
-        $terms_array = explode(' ', $terms);
-
         $group = $this->createEntity('Group');
         $group->sql_order = $order;
-        return $this->_group_list = $group->findBySearchTerms($terms_array, (($page - 1) * $amount), $amount);
+        return $this->_group_list = $group->findBySearchTerms($terms, (($page - 1) * $amount), $amount);
     }
 
 

@@ -1,5 +1,5 @@
 
-<form method="post" id="preferences" action="<?=$baseuri.'mypreferences/'?>">
+<form method="post" id="preferences" action="<?=$baseuri.'mypreferences'?>">
     <input type="hidden" name="memberid" value="<?=$this->member->id?>" />
 
     <div class="row mt-3">

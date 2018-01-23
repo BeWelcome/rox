@@ -22,21 +22,21 @@ $words = new MOD_words();
     <p><?php echo $words->get('GetActiveIntro') ?></p>
 </div>
 
-<div class="col-12 col-md-6 col-lg-4 mb-3">
+<div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
-            <h3 class="card-title"><i class="fa fa-code"
-                                      aria-hidden="true"></i> <?php echo $words->get('GetActiveDevTitle') ?></h3>
+            <h3 class="card-title m-0">
+<i class="fa fa-code" aria-hidden="true"></i> <?php echo $words->get('GetActiveDevTitle') ?></h3>
             <p class="text-muted"><?php echo $words->get('HelpBeWelcomeDevTags') . " <br> " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveDevContact') ?></p>
             <p class="card-text"><?php echo $words->get('GetActiveDevText') ?></p>
         </div>
     </div>
 </div>
 
-<div class="col-12 col-md-6 col-lg-4 mb-3">
+<div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
-            <h3 class="card-title"><i class="fa fa-flask"
+            <h3 class="card-title m-0"><i class="fa fa-flask"
                                       aria-hidden="true"></i> <?php echo $words->get('GetActiveTestingTitle') ?></h3>
             <p class="text-muted"><?php echo $words->get('HelpBeWelcomeTestingTags') . " <br> " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveTestingContact') ?></p>
             <p class="card-text"><?php echo $words->get('GetActiveTestingText') ?></p>
@@ -44,10 +44,10 @@ $words = new MOD_words();
     </div>
 </div>
 
-<div class="col-12 col-md-6 col-lg-4 mb-3">
+<div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
-            <h3 class="card-title"><i class="fa fa-question-circle-o"
+            <h3 class="card-title m-0"><i class="fa fa-question-circle-o"
                                       aria-hidden="true"></i> <?php echo $words->get('GetActiveSupportTitle') ?></h3>
             <p class="text-muted"><?php echo $words->get('HelpBeWelcomeSupportTags') . " <br> " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveSupportContact') ?></p>
             <p class="card-text"><?php echo $words->get('GetActiveSupportText') ?></p>
@@ -55,10 +55,10 @@ $words = new MOD_words();
     </div>
 </div>
 
-<div class="col-12 col-md-6 col-lg-4 mb-3">
+<div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
-            <h3 class="card-title"><i class="fa fa-paint-brush"
+            <h3 class="card-title m-0"><i class="fa fa-paint-brush"
                                       aria-hidden="true"></i> <?php echo $words->get('GetActiveDesignTitle') ?></h3>
             <p class="text-muted"><?php echo $words->get('HelpBeWelcomeDesignTags') . " <br> " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveDesignContact') ?></p>
             <p class="card-text"><?php echo $words->get('GetActiveDesignText') ?></p>
@@ -66,10 +66,10 @@ $words = new MOD_words();
     </div>
 </div>
 
-<div class="col-12 col-md-6 col-lg-4 mb-3">
+<div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
-            <h3 class="card-title"><i class="fa fa-handshake-o"
+            <h3 class="card-title m-0"><i class="fa fa-handshake-o"
                                       aria-hidden="true"></i> <?php echo $words->get('GetActiveNMBWTitle') ?></h3>
             <p class="text-muted"><?php echo $words->get('HelpBeWelcomeNMBWTags') . " <br> " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveNMBWContact') ?></p>
             <p class="card-text"><?php echo $words->get('GetActiveNMBWText') ?></p>
@@ -77,10 +77,10 @@ $words = new MOD_words();
     </div>
 </div>
 
-<div class="col-12 col-md-6 col-lg-4 mb-3">
+<div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
-            <h3 class="card-title"><i class="fa fa-language"
+            <h3 class="card-title m-0"><i class="fa fa-language"
                                       aria-hidden="true"></i> <?php echo $words->get('GetActiveTranslateTitle') ?></h3>
             <p class="text-muted"><?php echo $words->get('HelpBeWelcomeTranslateTags') . " <br> " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveTranslateContact') ?></p>
             <p class="card-text"><?php echo $words->get('GetActiveTranslateText') ?></p>
@@ -88,10 +88,10 @@ $words = new MOD_words();
     </div>
 </div>
 
-<div class="col-12 col-md-6 col-lg-4 mb-3">
+<div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
-            <h3 class="card-title"><i class="fa fa-bullhorn"
+            <h3 class="card-title m-0"><i class="fa fa-bullhorn"
                                       aria-hidden="true"></i> <?php echo $words->get('GetActivePRTitle') ?></h3>
             <p class="text-muted"><?php echo $words->get('HelpBeWelcomePRTags') . " <br> " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActivePRContact') ?></p>
             <p class="card-text"><?php echo $words->get('GetActivePRText') ?></p>
@@ -99,10 +99,10 @@ $words = new MOD_words();
     </div>
 </div>
 
-<div class="col-12 col-md-6 col-lg-4 mb-3">
+<div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
-            <h3 class="card-title"><i class="fa fa-user-circle"
+            <h3 class="card-title m-0"><i class="fa fa-user-circle"
                                       aria-hidden="true"></i> <?php echo $words->get('GetActiveModTitle') ?></h3>
             <p class="text-muted"><?php echo $words->get('HelpBeWelcomeModTags') . " <br> " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveModContact') ?></p>
             <p class="card-text"><?php echo $words->get('GetActiveModText') ?></p>
@@ -110,10 +110,10 @@ $words = new MOD_words();
     </div>
 </div>
 
-<div class="col-12 col-md-6 col-lg-4 mb-3">
+<div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
-            <h3 class="card-title"><i class="fa fa-map-marker"
+            <h3 class="card-title m-0"><i class="fa fa-map-marker"
                                       aria-hidden="true"></i> <?php echo $words->get('GetActiveLocalTitle') ?></h3>
             <p class="text-muted"><?php echo $words->get('HelpBeWelcomeLocalTags') . " <br> " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveLocalContact') ?></p>
             <p class="card-text"><?php echo $words->get('GetActiveLocalText') ?></p>
@@ -121,10 +121,10 @@ $words = new MOD_words();
     </div>
 </div>
 
-<div class="col-12 col-md-6 col-lg-4 mb-3">
+<div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
-            <h3 class="card-title"><i class="fa fa-money"
+            <h3 class="card-title m-0"><i class="fa fa-money"
                                       aria-hidden="true"></i> <?php echo $words->get('GetActiveDonationTitle') ?></h3>
             <p class="text-muted"><?php echo $words->get('HelpBeWelcomeDonationTags') . " <br> " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveDonationContact') ?></p>
             <p class="card-text"><?php echo $words->get('GetActiveDonationText') ?></p>
@@ -132,16 +132,14 @@ $words = new MOD_words();
     </div>
 </div>
 
-<div class="col-12 col-md-6 col-lg-4 mb-3">
+<div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
-            <h3 class="card-title"><i class="fa fa-heart"
+            <h3 class="card-title m-0"><i class="fa fa-heart"
                                       aria-hidden="true"></i> <?php echo $words->get('GetActiveBVTitle') ?></h3>
             <p class="text-muted"><?php echo $words->get('HelpBeWelcomeBVTags') . " <br> " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveBVContact') ?></p>
             <p class="card-text"><?php echo $words->get('GetActiveBVText') ?></p>
 
         </div>
     </div>
-</div>
-
 </div>

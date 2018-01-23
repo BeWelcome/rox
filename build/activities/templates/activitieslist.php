@@ -93,7 +93,7 @@ foreach($this->activities as $activity) {
 
         <div class="relative pr-2">
             <div><i class="fa fa-3x fa-calendar-o"></i></div>
-            <div class="absolute day"><strong><?php echo date("j", strtotime($activity->dateStart)); ?></strong></div>
+            <div class="absolute homeday"><strong><?php echo date("j", strtotime($activity->dateStart)); ?></strong></div>
             <div class="absolute monthyear"><?php echo date("m", strtotime($activity->dateStart)) . " " . date("Y", strtotime($activity->dateStart)); ?></div>
         </div>
 

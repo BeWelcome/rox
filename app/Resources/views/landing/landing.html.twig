@@ -82,10 +82,10 @@
                     <div class="d-flex btn-group justify-content-center m-1" data-toggle="buttons">
                         <label class="btn btn-primary btn-radio active" id="all">
                             <input type="radio" name="options" autocomplete="off" onclick="updateMessages()"
-                                   checked>All
+                                   checked hidden="true">All
                         </label>
                         <label for="unread" class="btn btn-primary btn-radio" id="unread">
-                            <input type="radio" name="options" autocomplete="off" onclick="updateMessages()">Unread
+                            <input type="radio" name="options" autocomplete="off" onclick="updateMessages()" hidden="true">Unread
                         </label>
                     </div>
 
@@ -136,10 +136,10 @@
                     {# display settings#}
                     <div class="d-flex btn-group justify-content-center m-1" data-toggle="buttons">
                         <label class="btn btn-primary btn-radio active" id="groups">
-                            <input type="checkbox" autocomplete="off" checked>groups
+                            <input type="checkbox" autocomplete="off" checked hidden="true">groups
                         </label>
                         <label class="btn btn-primary btn-radio" id="forum">
-                            <input type="checkbox" autocomplete="off" checked>forum
+                            <input type="checkbox" autocomplete="off" checked hidden="true">forum
                         </label>
                     </div>
 

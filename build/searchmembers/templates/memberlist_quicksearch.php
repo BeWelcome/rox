@@ -8,7 +8,7 @@ $words = new MOD_words();
     </a>
 </p>
 <p class="clearfix">
-    <a <?php if ($mapstyle=='mapoff') { ?> href="searchmembers/mapon" <?php } ?> class="small <?php if ($mapstyle=='mapon') echo 'active'; ?> float_right">
+    <a <?php if ($mapstyle=='mapoff') { ?> href="searchmembers/mapon" <?php } ?> class="small <?php if ($mapstyle=='mapon') echo 'active'; ?> float-right">
     <img src="images/misc/list-map<?php if ($mapstyle=='mapon') echo '_green'; ?>.gif" class="list-icon"> <?php echo $words->getFormatted('searchmembersViewMap');  ?> &nbsp;
     </a>
 

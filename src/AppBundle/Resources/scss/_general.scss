@@ -63,10 +63,6 @@ main {
   box-shadow: 0 0 1px #888888;
 }
 
-.fullheight {
-  height: 100%;
-}
-
 // Styles for auto complete box
 .ui-menu-item-highlight {
   font-weight: bold;
@@ -161,16 +157,8 @@ main {
   margin-bottom: 1rem;
 }
 
-.float_left {
-  float: left !important;
-}
-
 .pull-left {
   float: left !important;
-}
-
-.float_right {
-  float: right !important;
 }
 
 .pull-right {
@@ -203,19 +191,6 @@ main {
       list-style-type: none;
     }
   }
-
-  .tag_largest {
-    font-size: $font-size-lg;
-  }
-  .tag_large {
-    font-size: $font-size-base;
-  }
-  .tag_small {
-    font-size: $font-size-sm;
-  }
-  .tag_smallest {
-    font-size: 0.6rem;
-  }
 }
 
 .col3 li {
@@ -226,11 +201,6 @@ main {
   padding-left: ($grid-gutter-width /2);
   padding-right: ($grid-gutter-width /2);
   margin-bottom: $spacer;
-}
-
-.fullpager {
-  width: 100%;
-  @include clearfix();
 }
 
 a {
@@ -299,12 +269,4 @@ a {
 
 .btn:hover{
   cursor: pointer;
-}
-
-.bold {
-  font-weight: bold;
-}
-
-.red{
-  color: red !important;
 }

@@ -14,21 +14,20 @@
 
 {% block content %}
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-    <div class="row mb-1">
-        <div class="col-12">
-            {{ 'Sent by %sender%' | trans({'%sender%': sender.Username}) }}
-        </div>
-    </div>
-    <div class="row mb-1">
+
+    <div class="row my-3">
         <div class="col-12 col-sm-6 col-md-4">
+
+            {{ 'Sent by %sender%' | trans({'%sender%': sender.Username}) }}
+
             <p class="text-muted">{{ 'You can suggest new dates when you change the given ones below.' }}</p>
             <div class="form-group">
                 {{ form_errors(form.request.arrival) }}
                 <div class="input-group date" id="arrival" data-target-input="nearest">
                     <span class="input-group-addon" data-target="#arrival" data-toggle="datetimepicker">
-                        <span class="fa fa-calendar"></span>
+                        <i class="fa fa-calendar mt-2 mr-1"></i>
                     </span>
-                    {{ form_widget(form.request.arrival, { 'attr': {'data-target': '#arrival'}}) }}
+                    {{ form_widget(form.request.arrival, { 'attr': {'data-target': '#arrival', 'data-toggle': 'datetimepicker'}}) }}
                 </div>
             </div>
 
@@ -36,18 +35,27 @@
                 {{ form_errors(form.request.departure) }}
                 <div class="input-group date" id="departure" data-target-input="nearest">
                     <span class="input-group-addon" data-target="#departure" data-toggle="datetimepicker">
-                        <span class="fa fa-calendar"></span>
+                        <i class="fa fa-calendar mt-2 mr-1"></i>
                     </span>
-                    {{ form_widget(form.request.departure, { 'attr': {'data-target': '#departure'}}) }}
+                    {{ form_widget(form.request.departure, { 'attr': {'data-target': '#departure', 'data-toggle': 'datetimepicker'}}) }}
                 </div>
             </div>
 
             {{ form_widget(form.request.flexible) }}
-            <div class="input-group">Number of Travellers: {{ form_widget(form.request.numberOfTravellers) }}</div>
+            <div class="d-flex align-items-center ml-3">
+                Number of Travellers: {{ form_widget(form.request.numberOfTravellers) }}
+            </div>
+
+            <div class="btn-group-sm mt-2" role="group" aria-label="Reply to request">
+                {{ form_widget(form.accept, {'attr': {'class': 'btn btn-primary'}}) }}
+                {{ form_widget(form.tentatively, {'attr': {'class': 'btn btn-primary'}}) }}
+                {{ form_widget(form.decline, {'attr': {'class': 'btn btn-primary'}}) }}
+                {{ form_widget(form.update, {'attr': {'class': 'btn btn-primary'}}) }}
+            </div>
 
         </div>
         <div class="col-12 col-md-8">
-            <h2 class="mb-1">
+            <h2 class="mb-1 subjectbg">
                 {{ form_widget(form.subject.subject) }}
             </h2>
             {{ form_errors(form.subject.subject, {'attr': {'class': 'small'}}) }}
@@ -56,14 +64,7 @@
             {{ form_errors(form.message) }}
         </div>
     </div>
-    <div class="row">
-        <div class="col-12">
-            {{ form_widget(form.accept, {'attr': {'class': 'btn btn-primary mr-1'}}) }}
-            {{ form_widget(form.tentatively, {'attr': {'class': 'btn btn-primary mr-1'}}) }}
-            {{ form_widget(form.decline, {'attr': {'class': 'btn btn-primary mr-1'}}) }}
-            {{ form_widget(form.update, {'attr': {'class': 'btn btn-primary mr-1'}}) }}
-        </div>
-    </div>
+
     <div class="hidden_row">{{ form_rest(form) }}</div>
     {{ form_end(form) }}
     {% include ':message:thread.html.twig' %}

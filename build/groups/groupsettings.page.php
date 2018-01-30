@@ -109,7 +109,7 @@ class GroupSettingsPage extends GroupsBasePage
 
         <?= ((!empty($problems['GroupDesc_'])) ? "<p class='alert-danger p-2 mt-3'>" . $words->get('GroupsCreationDescriptionMissing') ."</p>" : '' ); ?>
         <div class="input-group my-3">
-            <span class="input-group-addon bold" style="white-space: normal;" id="newgroupdescription"><?= $words->get('Description');?></span>
+            <span class="input-group-addon font-weight-bold" style="white-space: normal;" id="newgroupdescription"><?= $words->get('Description');?></span>
             <label for="description" class="sr-only"><?= $words->get('Description');?></label>
             <textarea  id="description" name="GroupDesc_" aria-describedby="newgroupdescription" rows="5" class="w-100" ><?=htmlspecialchars($GroupDesc_, ENT_QUOTES)?></textarea>
         </div>

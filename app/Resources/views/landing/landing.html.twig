@@ -74,10 +74,10 @@
                 </li>
             </ul>
 
-            <div class="dashbox fullheight tab-content p-1">
+            <div class="dashbox h-100 tab-content p-1">
 
                 {# messages #}
-                <div role="tabpanel" class="tab-pane fullheight active" id="messages">
+                <div role="tabpanel" class="tab-pane h-100 active" id="messages">
                     <!-- all / unread messages toggle -->
                     <div class="d-flex btn-group justify-content-center m-1" data-toggle="buttons">
                         <label class="btn btn-primary btn-radio active" id="all">
@@ -105,7 +105,7 @@
                 </div>
 
                 {# notifications #}
-                <div role="tabpanel" class="tab-pane fullheight p-2" id="notifications">
+                <div role="tabpanel" class="tab-pane h-100 p-2" id="notifications">
 
                     <div id="notificationsdisplay">
                         <p class="text-center my-3">
@@ -129,9 +129,9 @@
                 </li>
             </ul>
 
-            <div class="dashbox fullheight tab-content p-1">
+            <div class="dashbox h-100 tab-content p-1">
                 {# forum discussions #}
-                <div role="tabpanel" class="tab-pane fullheight active" id="threads">
+                <div role="tabpanel" class="tab-pane h-100 active" id="threads">
 
                     {# display settings#}
                     <div class="d-flex btn-group justify-content-center m-1" data-toggle="buttons">
@@ -164,7 +164,7 @@
                 </div>
 
                 {# load activities #}
-                <div role="tabpanel" class="tab-pane fullheight" id="activities">
+                <div role="tabpanel" class="tab-pane h-100" id="activities">
                     <div class="d-flex btn-group justify-content-center m-1" role="group">
                         <a href="/activities" class="btn btn-outline-primary btn-homewhite"><i
                                     class="fa fa-map-o"></i> All activities</a>
@@ -192,7 +192,7 @@
     <div class="d-flex row flex-wrap">
 
         <div class="col-12 col-lg-5 mb-3">
-            <div class="card p-2 fullheight">
+            <div class="card p-2 h-100">
                 <h4 class="homehfour">Be Involved<br/><span class="homesubt">help the community</span></h4>
 
                 {% if campaign.yearDonated < campaign.yearNeeded %}
@@ -225,7 +225,7 @@
         </div>
         {# TO BE INCLUDED WHEN THE FEATURE GOES LIVE
         <div class="col-12 col-md-6 col-lg-3 mb-3">
-            <div class="card p-2 fullheight">
+            <div class="card p-2 h-100">
                 <h4 class="homehfour">Potential guests<br/><span class="homesubt">travelers in your area</span></h4>
                 {% if travellers %}
                     {% for traveller in travellers %}
@@ -263,7 +263,7 @@
         #}
 
         <div class="col-12 col-md-6 col-lg-5 mb-3">
-            <div class="card p-2 fullheight">
+            <div class="card p-2 h-100">
                 <h4 class="homehfour">BeWelcome News<br/><span class="homesubt">and other updates</span></h4>
 
                 <h5>
@@ -282,7 +282,7 @@
         </div>
 
         <div class="col-12 col-md-6 col-lg-2 mb-3">
-            <div class="card p-2 fullheight">
+            <div class="card p-2 h-100">
                 <h4 class="homehfour">Be Informed<br/><span class="homesubt">Transparency</span></h4>
                 <a href="about/" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
                             class="fa fa-question"></i> About</a>

@@ -85,11 +85,11 @@ class NotifyMemberWidget extends ItemlistWithPagination
         $created = MOD_layoutbits::ago(strtotime($item->created));
         echo <<<HTML
         <div class="clearfix">
-            <a target="notify-{$item->id}" class="dynamic float_right" href="notify/{$item->id}/check" title="Remove">
+            <a target="notify-{$item->id}" class="dynamic float-right" href="notify/{$item->id}/check" title="Remove">
                 <i class="fa fa-times-circle fa-2x grey" title="Remove"></i>
             </a>
-            <div class="float_right small grey" title="{$item->created}">{$created}</div>
-            <div class="float_left">
+            <div class="float-right small grey" title="{$item->created}">{$created}</div>
+            <div class="float-left">
 HTML;
             if ($item->IdRelMember != '') { 
                 echo "<a href='members/{$member->Username}'>";

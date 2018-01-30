@@ -104,7 +104,7 @@ if (isset($vars['tags']) && $vars['tags']) {
         <!-- input title -->
         <div class="">
             <div class="input-group">
-                <span class="input-group-addon bold" id="forumaddtitle"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></span>
+                <span class="input-group-addon font-weight-bold" id="forumaddtitle"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></span>
                 <label for="topic_title" class="sr-only"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label>
                     <?php
                     $topic_titletrad = "";

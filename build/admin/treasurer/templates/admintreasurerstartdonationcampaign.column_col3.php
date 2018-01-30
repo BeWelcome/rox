@@ -76,7 +76,7 @@ echo isset($vars['donate-start-date']) ? 'value="'.htmlentities($vars['donate-st
 </div>
 </div>
 </div>
-<div class="float_right"><br /><input class="button" type="submit" name="addDonation" 
+<div class="float-right"><br /><input class="button" type="submit" name="addDonation"
         value="<?php echo $words->getBuffered('AdminTreasurerStartCampaign'); ?>" /><?php echo $words->flushBuffer(); ?>
 </div>
 </fieldset>

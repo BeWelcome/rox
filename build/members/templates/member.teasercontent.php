@@ -96,14 +96,14 @@
                 echo '<br>';
              ?>
             <?php if ($this->loggedInMember) : ?>
-                <?php echo '<span class="bold">' . $words->get("MemberSince") . ': </span>';
+                <?php echo '<span class="font-weight-bold">' . $words->get("MemberSince") . ': </span>';
                     if (strtotime($member->created) > strtotime('-1 week')){
                         echo $words->get("LastLoginPrivacy");
                     } else {
                         echo $layoutbits->ago(strtotime($member->created));
                     }
                     echo  $this->memberSinceDate($member);
-                    echo '<br><span class="bold">' . $words->get("LastLogin") . ': </span>';
+                    echo '<br><span class="font-weight-bold">' . $words->get("LastLogin") . ': </span>';
                     if (strtotime($member->LastLogin) > strtotime('-1 week')){
                         echo $words->get("LastLoginPrivacy");
                     } else {

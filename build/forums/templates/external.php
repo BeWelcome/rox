@@ -59,7 +59,7 @@ $threadsliced = array_slice($threads, 0, 5);
                         echo "[ModOnly]" ;
                     }
                     ?>
-                    <a href="<?php echo $url; ?>" class="bold">
+                    <a href="<?php echo $url; ?>" class="font-weight-bold">
                     <?php
                     echo $words->fTrad($thread->IdTitle);
                     ?></a><br>

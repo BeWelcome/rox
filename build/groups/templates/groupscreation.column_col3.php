@@ -44,7 +44,7 @@
 
         <?= ((!empty($problems['Group_'])) ? "<p class='alert-danger p-2 mt-3'>" . $words->get('GroupsNameMissing') . "</p>" : '' ); ?>
         <div class="input-group mt-3">
-            <span class="input-group-addon bold" id="newgroupname"><?= $words->get('Name');?></span>
+            <span class="input-group-addon font-weight-bold" id="newgroupname"><?= $words->get('Name');?></span>
             <label for="name" class="sr-only"><?= $words->get('Name');?></label>
             <input class="form-control w-100" maxlength="200" id="name" name="Group_" value="<?=$Group_?>" aria-describedby="newgroupname" type="text">
         </div>
@@ -52,7 +52,7 @@
 
         <?= ((!empty($problems['GroupDesc_'])) ? "<p class='alert-danger p-2 mt-3'>" . $words->get('GroupsDescriptionMissing') ."</p>" : '' ); ?>
         <div class="input-group my-3">
-            <span class="input-group-addon bold" style="white-space: normal;" id="newgroupdescription"><?= $words->get('Description');?></span>
+            <span class="input-group-addon font-weight-bold" style="white-space: normal;" id="newgroupdescription"><?= $words->get('Description');?></span>
             <label for="description" class="sr-only"><?= $words->get('Description');?></label>
             <textarea  id="description" name="GroupDesc_" aria-describedby="newgroupdescription" rows="5" class="w-100" ><?=$GroupDesc_?></textarea>
         </div>

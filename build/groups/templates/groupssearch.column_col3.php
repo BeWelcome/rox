@@ -36,9 +36,9 @@
         $created_order = (($this->result_order == "createdasc") ? 'createddesc' : 'createdasc');
         $category_order = (($this->result_order == "categoryasc") ? 'categorydesc' : 'categoryasc');
         ?>
-        <div class="col-12 mb-2"><span class="bold"><?php echo $words->get('GroupsSearchOrdered'); ?>:</span> <span
+        <div class="col-12 mb-2"><span class="font-weight-bold"><?php echo $words->get('GroupsSearchOrdered'); ?>:</span> <span
                     class="p-2"><?php echo $words->get('GroupsSearchOrdered' . $this->result_order) ?></span>
-            <span class="bold ml-3"><?= $words->get('GroupsSearchOrder'); ?></span>
+            <span class="font-weight-bold ml-3"><?= $words->get('GroupsSearchOrder'); ?></span>
             <a class="btn btn-sm btn-primary mx-1"
                href="groups/search?GroupsSearchInput=<?= $this->search_terms; ?>&order=<?= $act_order; ?>&<?= $this->pager->getActivePageMarker(); ?>"><?= $words->get('GroupsOrderBy' . $act_order); ?></a>
             <a class="btn btn-sm btn-primary mx-1"

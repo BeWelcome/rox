@@ -23,27 +23,27 @@ class ReadMessagePage extends MessagesBasePage
             <div id="buttonstop">
                 <p class="clearfix">
                     <?php if ($direction_in) { ?>
-                        <a class="button float_left"
+                        <a class="button float-left"
                            href="messages/<?= $message->id ?>/reply"><?= $words->get('replymessage') ?></a>
                         <?php if ($message->InFolder == 'Spam') { ?>
-                            <a class="button float_right"
+                            <a class="button float-right"
                                href="messages/<?= $message->id ?>/nospam"><?= $words->get('marknospam') ?></a>
                         <?php } else { ?>
-                            <a class="button float_right"
+                            <a class="button float-right"
                                href="messages/<?= $message->id ?>/spam"><?= $words->get('markspam') ?></a>
                         <?php } ?>
                     <?php } else { ?>
-                        <a class="button float_left"
+                        <a class="button float-left"
                            href="messages/<?= $message->id ?>/edit"><?= $words->get('editmessage') ?></a>
                     <?php } ?>
-                    <a class="button float_right" href="messages/<?= $message->id ?>/delete"
+                    <a class="button float-right" href="messages/<?= $message->id ?>/delete"
                        onclick="return confirm ('<?php echo $words->getBuffered('MessagesWarningConfirmDelete'); ?>')"><?= $words->get('delmessage') ?></a>
                     <?php echo $words->flushBuffer(); ?>
                 </p>
             </div>
             <!-- buttonstop -->
             <div id="messageheader" class="clearfix">
-                <div id="messageside" class="float_right">
+                <div id="messageside" class="float-right">
                     <p class="small grey">
                         <?= $words->get('LivesIn') ?> <strong><?= $member->City ?>, <?= $member->Country ?></strong>
                         <br/>

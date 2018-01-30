@@ -27,7 +27,7 @@ if (!empty($errors)) {
         </div>
     </div>
     <div class="c33r">
-        <div class="subcr float_right">
+        <div class="subcr float-right">
         </div>
     </div>
 </div>

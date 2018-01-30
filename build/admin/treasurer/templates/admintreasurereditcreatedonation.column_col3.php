@@ -109,7 +109,7 @@ if (!empty($errors))
     ?>
     </select><?php echo $words->flushBuffer(); ?>
 </div>
-<div class="type-button float_right">
+<div class="type-button float-right">
           <input type="submit" class="button" name="addDonation" value="<?php 
             if ($vars['id'] == 0) {
             echo $words->getBuffered('AdminTreasurerAddDonation');

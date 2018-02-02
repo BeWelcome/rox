@@ -43,11 +43,11 @@
                             }
                                 ?>
                         </td>
-                        <td>
+                        <td class="w-100">
+                            <a class="btn btn-primary pull-right" role="button" href="members/<?php echo $m->Username ?>/note/delete"><i class="fa fa-trash" alt="<?php echo $words->get('Delete') ?>"></i></a>
+                            <a class="btn btn-primary pull-right mr-1" role="button" href="members/<?php echo $m->Username ?>/note/edit"><i class="fa fa-edit" alt="<?php echo $words->get('Edit') ?>"></i></a>
                             <?php echo $purifier->purify($note->Comment) ?>
                             <p class="small"><?php echo date($words->getSilent('DateFormatShort'),strtotime($note->updated)); ?></p>
-                            <a class="btn btn-primary pull-left" role="button" href="members/<?php echo $m->Username ?>/note/edit"><?php echo $words->get('Edit') ?></a>
-                            <a class="btn btn-primary pull-right" role="button" href="members/<?php echo $m->Username ?>/note/delete"><?php echo $words->get('Delete') ?></a>
                         </td>
                     </tr>
 

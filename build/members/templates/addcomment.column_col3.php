@@ -95,7 +95,7 @@ if (isset($vars['errors']) && !empty($vars['errors']))
 {
     foreach ($vars['errors'] as $error)
     {
-        echo '<div class="error">'.$words->get($error).'</div>';
+        echo '<div class="alert alert-danger">'.$words->get($error).'</div>';
     }
 }
 
@@ -103,101 +103,121 @@ if (isset($vars['errors']) && !empty($vars['errors']))
 ?>
 <?php
 if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit != 1) {
-    echo "<h3>" . $words->get("CantChangeNegative") . "</h3>" . $words->get("CantChangeNegative_Explanation");
+    echo '<h3 class="mt-3">' . $words->get("CantChangeNegative") . '</h3>' . $words->get("CantChangeNegative_Explanation");
 } else {
 ?>
 <?=$words->flushBuffer();?>
+
+
 <form method="post" name="addcomment" OnSubmit="return DoVerifySubmit('addcomment');">
 <?=$callback_tag ?>
     <?php if ($random == 2) { ?>
-    <input type="text" id="sweet" name="sweet" value="" title="Leave free of content"/>
+    <input type="text" id="sweet" name="sweet" value="" title="Leave free of content" hidden>
     <?php } ?>
-<fieldset>
-<legend><?=(!$edit_mode) ? $words->get("AddComments") : $words->get("EditComments")?></legend>
+
+    <? /* <h1><?=(!$edit_mode) ? $words->get("AddComments") : $words->get("EditComments")?></h1> */ ?>
+
 <input name="IdMember" value="<?=$member->id?>" type="hidden" />
-    <table valign="center" >
-      <tr>
-        <td colspan=2>
+
+    <div class="row mt-3">
+        <div class="col-12">
             <h2><?=$words->get("CommentHeading" , $Username)?></h2>
-            <p><strong><?=$words->get("FollowCommentGuidelines")?></strong></p>
-            <br />
-            <h3><?=$words->get("CommentQuality" , $Username)?></h3>
-        </td>
-      </tr>
-      <tr>
-        <td width>
-            <select name="Quality">
+            <div class="alert alert-info"><?=$words->get("FollowCommentGuidelines")?></div>
+        </div>
+
+        <div class="col-auto">
+            <label class="m-0" for="Quality">
+                <h5><?=$words->get("CommentQuality" , $Username)?></h5>
+            </label>
+
+            <button type="button" class="btn btn-primary btn-sm ml-1" data-container="body" data-toggle="popover" data-placement="right" data-content="<?=$words->get("CommentQualityDescription", $Username, $Username, $Username)?>">
+                <i class="fa fa-question"></i>
+            </button>
+
+            <select class="custom-select mb-2 mr-sm-2 mb-sm-0" name="Quality" id="Quality">
                 <option value=""><?=$words->getSilent("CommentQuality_SelectOne")?></option>
                 <option value="Good"
-                <?=(isset($TCom->comQuality) && $TCom->comQuality == "Good") ? " selected " : ""?>
+                    <?=(isset($TCom->comQuality) && $TCom->comQuality == "Good") ? " selected " : ""?>
                 >
-                <?=$words->getSilent("CommentQuality_Good")?></option>
+                    <?=$words->getSilent("CommentQuality_Good")?></option>
                 <option value="Neutral"
-                <?=(isset($TCom->comQuality) && $TCom->comQuality == "Neutral") ? " selected " : ""?>
+                    <?=(isset($TCom->comQuality) && $TCom->comQuality == "Neutral") ? " selected " : ""?>
                 >
-                <?=$words->getSilent("CommentQuality_Neutral")?></option>
+                    <?=$words->getSilent("CommentQuality_Neutral")?></option>
                 <option value="Bad"
-                <?=(isset($TCom->comQuality) && $TCom->comQuality == "Bad") ? " selected " : ""?>
+                    <?=(isset($TCom->comQuality) && $TCom->comQuality == "Bad") ? " selected " : ""?>
                 >
-                <?=$words->getSilent("CommentQuality_Bad")?></option>
-            </select><?=$words->flushBuffer();?>
-        </td>
-        <td>
-            <p class="grey"><?=$words->get("CommentQualityDescription", $Username, $Username, $Username)?></p>
-        </td>
-      </tr>
-    <tr>
-    <td colspan=2>
-        <h3><?=$words->get("CommentLength", $Username)?></h3>
-    </td>
-    </tr>
-    <tr>
-    <td>
-    <table valign=center >
-    <?php
-    for ($ii = 0; $ii < $max; $ii++) {
-        $chkName = "Comment_" . $ttc[$ii];
-        echo '<tr><td><label for="' . $chkName . '">' . $words->get($chkName) . "</td>";
-        echo '<td><input type="checkbox" id="' . $chkName . '" name="' . $chkName . '"';
-        if (in_array($ttc[$ii], $ttLenght))
-        echo " checked ";
-        echo ">\n</td>\n";
-    }
-    ?>
-    </table>
-    </td>
-    <td>
-    <p class="grey"><?php echo $words->get("CommentLengthDescription", $Username, $Username, $Username) ?></p>
-    </td>
-</tr>
-<tr>
-    <td colspan="2"><h3><label for="TextWhere"><?php echo $words->get("CommentsWhere", $Username) ?></label></h3></td>
-</tr>
-<tr>
-    <td><textarea name="TextWhere" id="TextWhere" cols="40" rows="3"><?php echo $textWhereWashed; ?></textarea></td>
-    <td><p class="grey"><?php echo $words->get("CommentsWhereDescription", $Username) ?></p></td>
-</tr>
-<tr>
-    <td colspan="2"><h3><label for="Commenter"><?php echo $words->get("CommentsCommenter") ?></label></h3></td>
-</tr>
-<tr>
-    <td><textarea name="TextFree" id="TextFree" cols="40" rows="8"><?php echo $textFreeWashed; ?></textarea></td>
-    <td style="vertical-align=top"><p class="grey"><?php echo $words->get("CommentsCommenterDescription", $Username) ?></p></td>
-</tr>
-<tr><td colspan="2">
-    <p class="checkbox"><input type="checkbox" name="CommentGuidelines"
-    <?php 
-    if (isset ($vars["CommentGuidelines"])) 
-        echo " checked=\"checked\"" ; 
-        echo " />";
-    ?>
-    <?php echo $words->get('ConfirmationCommentGuidelines'); ?> </p>
-    <input type="hidden" value="<?php echo $member->id?>" name="cid">
-    <input type="hidden" name="action" value="add">
-    <input type="submit" class="button" id="submit" name="valide" value="<?php echo $words->getSilent('SubmitComment'); ?>"><?=$words->flushBuffer();?></td>
-</tr>
-</table>
-</fieldset>
+                    <?=$words->getSilent("CommentQuality_Bad")?></option>
+            </select>
+        </div>
+
+        <div class="w-100"></div>
+
+        <div class="col-auto mt-3">
+            <label class="m-0" for="CommentLength">
+                <h5><?=$words->get("CommentLength", $Username)?></h5>
+            </label>
+            <button type="button" class="btn btn-primary btn-sm ml-1" data-container="body" data-toggle="popover" data-placement="right" data-content="<?php echo $words->get("CommentLengthDescription", $Username, $Username, $Username) ?>">
+                <i class="fa fa-question"></i>
+            </button>
+            <?php
+            for ($ii = 0; $ii < $max; $ii++) {
+                $chkName = "Comment_" . $ttc[$ii];
+            ?>
+                <div class="form-check my-2">
+                <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" id="<?= $chkName; ?>" name="<?= $chkName; ?>"<? if (in_array($ttc[$ii], $ttLenght)) echo ' checked'; ?>>
+                    <?= $words->get($chkName); ?>
+                </label>
+                </div>
+                <? } ?>
+        </div>
+
+        <div class="col-auto mt-3">
+            <label for="TextWhere"><h5><?= $words->get("CommentsWhere", $Username); ?></label>
+            <button type="button" class="btn btn-primary btn-sm ml-1" data-container="body" data-toggle="popover" data-placement="right" data-content="<?php echo $words->get("CommentsWhereDescription", $Username) ?>">
+                <i class="fa fa-question"></i>
+            </button>
+            <br>
+            <textarea name="TextWhere" id="TextWhere" class="w-100 mt-3" rows="3"><?php echo $textWhereWashed; ?></textarea>
+        </div>
+
+        <div class="w-100"></div>
+
+        <div class="col-auto mt-3">
+            <label for="Commenter" class="mb-1">
+                <h5><?php echo $words->get("CommentsCommenter") ?></h5>
+            </label>
+
+            <button type="button" class="btn btn-primary btn-sm ml-1" data-container="body" data-toggle="popover" data-placement="right" data-content="<?php echo $words->get("CommentsCommenterDescription", $Username) ?>">
+                <i class="fa fa-question"></i>
+            </button>
+
+            <textarea name="TextFree" id="TextFree" class="w-100" rows="8"><?php echo $textFreeWashed; ?></textarea>
+        </div>
+
+        <div class="col-12">
+            <div class="form-check my-3">
+                <label class="form-check-label">
+                    <input type="checkbox" name="CommentGuidelines" class="form-check-input"
+                        <?php
+                        if (isset ($vars["CommentGuidelines"]))
+                            echo ' checked="checked"';
+                        echo '/>';
+                        ?>
+                    <?php echo $words->get('ConfirmationCommentGuidelines'); ?>
+                </label>
+            </div>
+
+            <input type="hidden" value="<?php echo $member->id?>" name="cid">
+            <input type="hidden" name="action" value="add">
+            <input type="submit" class="btn btn-primary" id="submit" name="valide" value="<?php echo $words->getSilent('SubmitComment'); ?>"><?=$words->flushBuffer();?>
+        </div>
+
+    </div>
+
+
+
 </form>
 
 

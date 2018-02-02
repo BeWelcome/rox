@@ -146,7 +146,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
                         <?php
                         for ($jj = 0; $jj < count($tt); $jj++) {
                             // if ($tt[$jj]=="") continue; // Skip blank category comment : todo fix find the reason and fix this anomaly
-                            echo '<p class="small font-italic p-0">', $words->get("Comment_" . $tt[$jj]), "</p>\n";
+                            echo '<p class="small font-italic p-0 m-0">', $words->get("Comment_" . $tt[$jj]), "</p>\n";
                         }
                         ?>
 

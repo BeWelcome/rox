@@ -59,6 +59,8 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('forum_translate', '/forums/translate/m{postId}');
         $this->addRouteDirectly('forum_reverse', '/forums/s{threadId}//reverse');
         $this->addRouteDirectly('forum_posts_member', '/forums/member/{username}');
+        $this->addRouteDirectly('forum_thread_subscription_enable', '/forums/subscriptions/enable/thread/{threadId}');
+        $this->addRouteDirectly('forum_thread_subscription_disable', '/forums/subscriptions/disable/thread/{threadId}');
         $this->addRouteDirectly('subscriptions_disable', '/forums/subscriptions/disable');
         $this->addRouteDirectly('subscriptions_enable', '/forums/subscriptions/enable');
         $this->addRouteDirectly('subscriptions', '/forums/subscriptions');
@@ -71,6 +73,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('group_subscribe', '/forums/subscriptions/subscribe/group/{groupId}');
         $this->addRouteDirectly('group_unsubscribe', '/forums/subscriptions/unsubscribe/group/{groupId}');
         $this->addRouteDirectly('group_new_topic', '/groups/{groupId}/forum/new');
+        $this->addRouteDirectly('group_user_all', '/members/{username}/groups');
         $this->addRouteDirectly('community', '/community');
         $this->addRouteDirectly('faq', '/faq');
         $this->addRouteDirectly('about_faq', '/about/faq');

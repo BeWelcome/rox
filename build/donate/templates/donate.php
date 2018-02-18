@@ -42,10 +42,11 @@ if ($error) {?>
 			<div class="tab-pane card active p-2" id="bank" role="tabpanel">
 				<h3><?=$words->get('Donate_Account_Legend')?></h3>
 				<p><?=$words->get('Donate_Account2')?></p>
-				<p><?=$words->get('Donate_Account')?></p>
+				<p class="alert-primary p-2"><?=$words->get('Donate_Account')?></p>
 			</div>
 			<div class="tab-pane card p-2" id="bitcoin" role="tabpanel">
-				<h3><?php echo $words->get('Donate_Bitcoins');?> <img src="images/misc/bitcoin.gif" alt="bitcoin" /></h3>
+                <h3><?php echo $words->get('Donate_Bitcoins');?><i class="fa fa3x fa-bitcoin ml-2"></i></h3>
+                <a href="https://bitpay.com/528203/donate" target="_blank" class="btn btn-primary btn-block"><i class="fa fa-bitcoin mr-1"></i><?php echo $words->get('Donate_Bitcoins');?></a>
 				<p><?php echo $words->get('Donate_Bitcoins_Text');?></p>
 			</div>
 			<div class="tab-pane card p-2" id="paypal" role="tabpanel">
@@ -103,7 +104,7 @@ if ($error) {?>
 						<input type="hidden" name="currency_code" value="EUR" />
 						<input type="hidden" name="tax" value="0" />
 						<input type="hidden" name="bn" value="PP-DonationsBF" />
-						<input type="submit" class="btn btn-primary" name="submit" alt="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" onmouseover="return('<?php echo $words->getBuffered('Donate_DonateNow'); ?>')" value="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" />
+						<input type="submit" class="btn btn-primary btn-block" name="submit" alt="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" onmouseover="return('<?php echo $words->getBuffered('Donate_DonateNow'); ?>')" value="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" />
 						<img alt="Donate now" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
 					</p>
 				</form>
@@ -128,10 +129,6 @@ if ($error) {?>
 		<a name="transparency"></a>
 		<h3><?php echo $words->get('Donate_Transparency'); ?></h3>
 		<p><?php echo $words->getFormatted('Donate_TransparencyText'); ?></p>
-
-		<a name="tax"></a>
-		<h3><?php echo $words->get('Donate_Tax'); ?></h3>
-		<p><?php echo $words->get('Donate_TaxText'); ?></p>
 
 		<?php echo $words->flushBuffer() ?>
 	</div>

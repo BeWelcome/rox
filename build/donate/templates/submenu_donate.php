@@ -24,11 +24,13 @@ Boston, MA  02111-1307, USA.
 
 $words = new MOD_words();
 ?>
-          <ul class="nav nav-pills nav-justifiedmedia submenu"> 
-            <li id="sub1" class="<?php echo ($sub!=='list' ? 'active-bw' : 'disabled');?>">
-            <a href="donate">
-            <span><?php echo $words->getBuffered('DonateLink'); ?></span></a></li>
-            <li id="sub2" class="<?php echo ($sub=='list' ? 'active-bw' : 'disabled');?>"><a href="donate/list"><span><?php echo $words->getBuffered('DonateList'); ?></span></a></li>
-                <?php echo $words->flushBuffer() ?>            
-            <!--<li id="sub4"><a style="cursor:pointer;" onClick="$('FindPeopleFilter').toggle(); $('sub4').addClassName('active'); $('sub4').siblings().each(Element.removeClassName('active');"><span>another option</span></a></li> -->
-          </ul>
+
+<div class="col-6 col-md-3 sidebar-offcanvas mt-3" id="sidebar">
+    <div class="list-group">
+        <a class="list-group-item nav-link active" href="donate"><?php echo $words->getBuffered('DonateLink'); ?></a>
+        <a class="list-group-item nav-link" href="donate/list"><?php echo $words->getBuffered('DonateList'); ?></a>
+    </div>
+
+    <h4 class="mt-3"><?php echo $words->get('Donate_FurtherInfo'); ?></h4>
+    <?php echo $words->get('Donate_FurtherInfoText');?>
+</div>

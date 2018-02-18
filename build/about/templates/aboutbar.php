@@ -3,19 +3,24 @@ $userbarText = array();
 $words = new MOD_words();
 ?>
 
-        <h3><?php echo $words->get('About_AtAGlance') ?></h3>
-        <ul class="linklist">
-            <li class="circle1"><a href="about"<?php echo ($currentSubPage === 'theidea') ? ' class="active"' : ''; ?>><?php echo $words->get('About_TheIdea') ?></a></li>
-            <li class="circle2"><a href="about/thepeople"<?php echo ($currentSubPage === 'thepeople') ? ' class="active"' : ''; ?>><?php echo $words->get('About_ThePeople') ?></a></li>
-            <li class="circle3"><a href="about/getactive"<?php echo ($currentSubPage === 'getactive') ? ' class="active"' : ''; ?>><?php echo $words->get('About_GetActive') ?></a></li>
-        </ul>
-        <h3><?php echo $words->get('MoreInfo') ?></h3>
-        <ul class="linklist">
-            <li><a href="wiki/press%20information"><?php echo $words->get('PressInfoPage') ?></a></li>
-            <li><a href="http://www.bevolunteer.org/about-bevolunteer/board-of-directors/" target="_blank"><?php echo $words->get('BoardOfDirectorsPage') ?></a></li>
-            <li><a href="http://www.bevolunteer.org/" target="_blank"><?php echo $words->get('BeVolunteerBlogs') ?></a></li>
-            <li><a href="terms"><?php echo $words->get('TermsPage') ?></a></li>
-            <li><a href="privacy"><?php echo $words->get('PrivacyPage') ?></a></li>
-            <li><a href="about/commentguidelines"><?php echo $words->get('CommentGuidelinesPage') ?></a></li>
-            <li><a href="stats"><?php echo $words->get('StatsPage') ?></a></li>
-        </ul>
+<h3 class="mt-3"><?php echo $words->get('About_AtAGlance') ?></h3>
+<div class="list-group">
+    <a href="about"
+       class="list-group-item nav-link<?php echo ($currentSubPage === 'theidea') ? ' active' : ''; ?>"><?php echo $words->get('About_TheIdea') ?></a>
+    <a href="about/thepeople"
+       class="list-group-item nav-link<?php echo ($currentSubPage === 'thepeople') ? ' active' : ''; ?>"><?php echo $words->get('About_ThePeople') ?></a>
+    <a href="about/getactive"
+       class="list-group-item nav-link<?php echo ($currentSubPage === 'getactive') ? ' active' : ''; ?>"><?php echo $words->get('About_GetActive') ?></a>
+</div>
+
+<h3 class="mt-3"><?php echo $words->get('MoreInfo') ?></h3>
+<div class="list-group">
+    <a href="wiki/press%20information" class="list-group-item nav-link"><?php echo $words->get('PressInfoPage') ?></a>
+    <a href="http://www.bevolunteer.org/about-bevolunteer/board-of-directors/" class="list-group-item nav-link"
+           target="_blank"><?php echo $words->get('BoardOfDirectorsPage') ?></a>
+    <a href="http://www.bevolunteer.org/" class="list-group-item nav-link" target="_blank"><?php echo $words->get('BeVolunteerBlogs') ?></a>
+    <a href="terms" class="list-group-item nav-link"><?php echo $words->get('TermsPage') ?></a>
+    <a href="privacy" class="list-group-item nav-link"><?php echo $words->get('PrivacyPage') ?></a>
+    <a href="about/commentguidelines" class="list-group-item nav-link"><?php echo $words->get('CommentGuidelinesPage') ?></a>
+    <a href="stats" class="list-group-item nav-link"><?php echo $words->get('StatsPage') ?></a>
+</div>

@@ -3,34 +3,47 @@
 
 {% block content %}
     {% set request = thread[0].Request %}
-<div id="message_thread" class="row">
+<div id="message_thread" class="row mx-0 messagethread">
     {% if current.Sender.Username == my_member.Username %}{% set otherUser = current.Receiver %}{% set replyRoute = 'hosting_request_reply_guest' %}{% else %}{% set otherUser = current.Sender %}{% set replyRoute = 'hosting_request_reply_host'  %}{% endif %}
     {% set currentSubject = current.Subject.Subject %}
-    <div class="col-12">
-            <h1>{{ current.Subject.Subject | raw }}</h1>
+
+    <div class="col-12 sticky-top py-3 bg-white d-inline-block mb-2 messageheader">
+            <div class="pull-left">{{ macros.avatar(otherUser.Username, 50, true) }} {{ macros.profilelink(otherUser.Username) }}</div>
+            <div class="pull-right">{{ macros.avatar(my_member.Username, 50, true) }}</div>
+            <div class="mt-2"><h3 id="MessageSubject" class="m-0 px-3 text-truncate">{{ current.Subject.Subject | raw }}</h3></div>
     </div>
-    <div class="col-2"><i class="fa fa-calendar mr-1"></i>{{ 'Arrival' }}</div>
-    <div class="col-10 font-weight-bold">{{ request.Arrival | localizeddate }}</div>
+
+    <div class="col-12 col-md-4 p-0 h5">
+    {% if current.Sender.Username == my_member.Username %}
+        {% if request.flexible %}<div>{{ 'I\'m flexible with arrival and departure' }}</div>{% endif %}
+        {% if request.numberOfTravellers != 1 %}<div><i class="fa fa-group mr-1"></i>{{ 'Request for %s guest(s)' | format(request.numberOfTravellers) }}</div>{% endif %}
+        {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_CANCELLED') %}<div>{{ 'You have cancelled this hosting request' }}</div>{% endif %}
+        {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_DECLINED') %}<div>{{ 'Unfortunately your potential host declined' }}</div>{% endif %}
+        {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<div>{{ 'You can stay with this host' }}</div>{% endif %}
+        {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<div>{{ 'You might stay with this host' }}</div>{% endif %}
+    {% else %}
+        {% if request.flexible %}<div>{{ 'Flexible with arrival and departure' }}</div>{% endif %}
+        {% if request.numberOfTravellers != 1 %}<div><i class="fa fa-group mr-1"></i>{{ 'Travelling in a group of %s' | format(request.numberOfTravellers) }}</div>{% endif %}
+        {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_OPEN') %}<div class="alert alert-warning mr-md-2">{{ 'You have not yet replied to this request' }}<a class="btn btn-primary btn-sm" href="{{ path( replyRoute, { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a></div>{% endif %}
+        {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_DECLINED') %}<div>{{ 'You\'re not going to host this group/person' }}</div>{% endif %}
+        {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<div>{{ 'You\'re going to host this group/person' }}</div>{% endif %}
+        {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<div>{{ 'You\'re told this group/person you might host them.' }}</div>{% endif %}
+    {% endif %}
+    </div>
+    {# \todo constant(HostingRequest::REQUEST_OPEN) #}
+
+    <div class="col-12 col-sm-6 col-md-4 p-0">
+            <div class="h5"><i class="fa fa-calendar mr-1"></i>{{ 'Arrival' }}</div>
+            <div>{{ request.Arrival | localizeddate }}</div>
+    </div>
+
+
     {% if  request.Departure -%}
-    <div class="col-2"><i class="fa fa-calendar mr-1"></i>{{ 'Departure' }}</div>
-        <div class="col-10 font-weight-bold">{{ request.Departure | localizeddate }}</div>
+    <div class="col-12 col-sm-6 col-md-4 p-0">
+        <div class="h5"><i class="fa fa-calendar mr-1"></i>{{ 'Departure' }}</div>
+        <div>{{ request.Departure | localizeddate }}</div>
+    </div>
     {%- endif %}
-        {% if current.Sender.Username == my_member.Username %}
-            {% if request.flexible %}<div class="col-12">{{ 'I\'m flexible with arrival and departure' }}</div>{% endif %}
-            {% if request.numberOfTravellers != 1 %}<div class="col-12"><i class="fa fa-group mr-1"></i>{{ 'Request for %s guest(s)' | format(request.numberOfTravellers) }}</div>{% endif %}
-            {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_CANCELLED') %}<div class="col-12">{{ 'You have cancelled this hosting request' }}</div>{% endif %}
-            {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_DECLINED') %}<div class="col-12">{{ 'Unfortunately your potential host declined' }}</div>{% endif %}
-            {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<div class="col-12">{{ 'You can stay with this host' }}</div>{% endif %}
-            {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<div class="col-12">{{ 'You might stay with this host' }}</div>{% endif %}
-        {% else %}
-            {% if request.flexible %}<div class="col-12">{{ 'Flexible with arrival and departure' }}</div>{% endif %}
-            {% if request.numberOfTravellers != 1 %}<div class="col-12"><i class="fa fa-group mr-1"></i>{{ 'Travelling in a group of %s' | format(request.numberOfTravellers) }}</div>{% endif %}
-            {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_OPEN') %}<div class="col-12 alert alert-danger mt-2">{{ 'You have not yet replied to this request' }}<a class="btn btn-primary btn-sm mb-1 float-right" href="{{ path( replyRoute, { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a></div>{% endif %}
-            {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_DECLINED') %}<div class="col-12">{{ 'You\'re not going to host this group/person' }}</div>{% endif %}
-            {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<div class="col-12">{{ 'You\'re going to host this group/person' }}</div>{% endif %}
-            {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<div class="col-12">{{ 'You\'re told this group/person you might host them.' }}</div>{% endif %}
-        {% endif %}
-        {# \todo constant(HostingRequest::REQUEST_OPEN) #}
 
     {% include ':message:thread.html.twig' %}
     <div class="col-12"><a class="btn btn-primary mb-1 float-right" href="{{ path( replyRoute, { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a></div>

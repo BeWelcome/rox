@@ -102,28 +102,30 @@ if (isset($vars['tags']) && $vars['tags']) {
 
         ?>
         <!-- input title -->
-        <div class="">
-            <div class="input-group">
-                <span class="input-group-addon font-weight-bold" id="forumaddtitle"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></span>
-                <label for="topic_title" class="sr-only"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label>
-                    <?php
-                    $topic_titletrad = "";
-                    if (isset($vars['topic_title'])) {
-                        if (isset($vars['IdTitle'])) {
-                            $topic_titletrad = $words->fTrad($vars['IdTitle']);
-                        } else {
-                            $topic_titletrad = $vars['topic_title'];
-                        }
+
+        <div class="w-100">
+            <label class="sr-only" for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label>
+            <div class="input-group mb-2 mb-sm-0">
+                <div class="input-group-addon h5 mt-2 mr-2" id="forumaddtitle"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></div>
+                <?php
+                $topic_titletrad = "";
+                if (isset($vars['topic_title'])) {
+                    if (isset($vars['IdTitle'])) {
+                        $topic_titletrad = $words->fTrad($vars['IdTitle']);
+                    } else {
+                        $topic_titletrad = $vars['topic_title'];
                     }
-                    ?>
-                <input type="text" class="form-control w-100" name="topic_title" size="50" maxlength="200" id="topic_title"
+                }
+                ?>
+                <input type="text" class="form-control" name="topic_title" maxlength="200" id="topic_title"
                        value="<?php echo $topic_titletrad; ?>" aria-describedby="forumaddtitle">
             </div>
         </div>
+
     <? } ?>
-    <div class="">
+    <div class="w-100">
         <label for="topic_text" class="sr-only"><?php echo $words->getFormatted("forum_label_text"); ?></label><br/>
-        <textarea name="topic_text" cols="70" rows="15" id="topic_text" class="long"><?php
+        <textarea name="topic_text" rows="10" id="topic_text" class="w-100 long"><?php
             if (isset($void_string)) {
                 echo $void_string;
             } else {
@@ -132,39 +134,7 @@ if (isset($vars['tags']) && $vars['tags']) {
             ?></textarea>
     </div>
     <!-- row -->
-
     <?php
-
-    if (isset($allow_title) && $allow_title) {
-        ?>
-    <fieldset class="" id="fpost_tags_and_location_fieldset">
-        <legend onclick="toggleFieldsets('fpost_tags_and_location');"><?php echo $words->getFormatted("forum_label_tags_and_location"); ?></legend>
-        <div id="fpost_tags_and_location"><div>
-        <p class="small"><?php echo $words->getFormatted("forum_subline_tags"); ?></p>
-        <textarea id="create-tags" name="tags" cols="60" rows="2" class="w-100"
-        <?php
-// In case we are in edit mode, this field is a read only, tags cannot be edited by members
-// lupochen asks: Why?
-        if ($edit) {
-            echo "\"readonly\"" ;
-        }
-        ?>><?php
-        // the tags may be set
-            echo ($tags_with_commas) ? htmlentities($tags_with_commas, ENT_COMPAT, 'utf-8') : '';
-        ?></textarea>
-        <div id="suggestion"></div>
-<?php /*
-        <p class="small"><?php echo $words->getFormatted("forum_subline_place"); ?></p>
-        <div id="dropdowns">
-        <?php
-            echo $locationDropdowns;
-        ?>
-        </div>
-*/?>
-    </div></div>
-    </fieldset> <!-- row -->
-
-<?php } // End if $allow_title
 
     if ($groupsforum) {
         echo '<input type="hidden" name="IdGroup" value="' . $groupsforum . '">';
@@ -196,11 +166,68 @@ if (isset($vars['tags']) && $vars['tags']) {
     </fieldset>
 <?php } else { ?>
 
-    <fieldset class="mt-2" id="fpost_lang_fieldset">
-        <legend
-                onclick="toggleFieldsets('fpost_lang');" class="h4 m-0"><?php echo $words->getFormatted("forum_label_lang") ?></legend>
-        <div id="fpost_lang">
-            <?php echo $words->getFormatted("forum_ChooseYourLanguage") ?><br>
+    <div class="row pl-3 justify-content-start">
+
+    <div class="dropdown">
+        <legend class="sr-only"><?= $words->getFormatted("forum_label_visibility") ?></legend>
+        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownVisibility" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <?= $words->getFormatted("forum_label_visibility") ?>
+        </button>
+        <div class="dropdown-menu ddextras" aria-labelledby="dropdownVisibility">
+            <div>
+                <?php
+                // visibility can only be set on groups with 'VisiblePosts' set to 'yes'.
+                // Only option to change is to show group post to all members (see #2167)
+                if ($groupsforum || ($IdGroup != 0)) {
+                    if (empty($visibilityCheckbox)) {
+                        // Stupid hack to avoid too many code changes ?>
+                        <input type="hidden" name="PostVisibility" id="PostVisibility" value="GroupOnly">
+                        <input type="hidden" name="ThreadVisibility" id="ThreadVisibility" value="GroupOnly">
+                        <p><?php if ($allow_title) {
+                                echo $words->get('ForumsThreadGroupOnly');
+                            } else {
+                                echo $words->get('ForumsPostGroupOnly');
+                            } ?></p>
+                    <?php }  else {
+                        echo $visibilityCheckbox;
+                    }
+                } else {
+                    // Stupid hack to avoid too many code changes ?>
+                    <input type="hidden" name="PostVisibility" id="PostVisibility" value="MembersOnly"/>
+                    <input type="hidden" name="ThreadVisibility" id="ThreadVisibility" value="MembersOnly"/>
+                    <p><?php if ($allow_title) {
+                            echo $words->get('ForumsThreadMembersOnly');
+                        } else {
+                            echo $words->get('ForumsPostMembersOnly');
+                        } ?></p>
+                <?php } ?>
+            </div>
+        </div>
+    </div>
+
+    <?php } ?>
+
+    <div class="dropdown">
+        <legend class="sr-only"><?php echo $words->getFormatted("forum_Notify") ?></legend>
+        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownNotifications" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <?php echo $words->getFormatted("forum_Notify") ?>
+        </button>
+        <div class="dropdown-menu ddextras" aria-labelledby="dropdownNotifications">
+            <div id="fpost_note">
+                <input type="checkbox" name="NotifyMe" id="NotifyMe" <?php echo $notifymecheck ?>>
+                <label for="NotifyMe"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
+            </div>
+        </div>
+    </div>
+
+        <div>
+            <legend class="sr-only"><?php echo $words->getFormatted("forum_label_lang") ?></legend>
+            <button class="btn btn-info" type="button" id="dropdownLanguage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <?php echo $words->getFormatted("forum_label_lang") ?><i class="fa fa-caret-right ml-1"></i>
+            </button>
+        </div>
+
+            <div id="fpost_lang" class="bg-white">
                 <select name="IdLanguage" id="IdLanguage"><?php
                     // Here propose to choose a language, a javascript routine at the form checking must make it mandatory
                     if (!isset($AppropriatedLanguage)) {
@@ -245,50 +272,9 @@ if (isset($vars['tags']) && $vars['tags']) {
                         echo "</optgroup>";
                     }
                     ?></select><?php echo $words->flushBuffer(); ?>
-        </div>
-    </fieldset>
+            </div>
 
-    <fieldset class="mt-2" id="fpost_vis_fieldset">
-        <legend onclick="toggleFieldsets('fpost_vis');" class="h4 m-0"><?= $words->getFormatted("forum_label_visibility") ?></legend>
-        <div>
-            <?php
-            // visibility can only be set on groups with 'VisiblePosts' set to 'yes'.
-            // Only option to change is to show group post to all members (see #2167)
-            if ($groupsforum || ($IdGroup != 0)) {
-                if (empty($visibilityCheckbox)) {
-                    // Stupid hack to avoid too many code changes ?>
-                    <input type="hidden" name="PostVisibility" id="PostVisibility" value="GroupOnly"/>
-                    <input type="hidden" name="ThreadVisibility" id="ThreadVisibility" value="GroupOnly"/>
-                    <p><?php if ($allow_title) {
-                        echo $words->get('ForumsThreadGroupOnly');
-                    } else {
-                        echo $words->get('ForumsPostGroupOnly');
-                    } ?></p>
-                    <?php }  else {
-                        echo $visibilityCheckbox;
-                    }
-                } else {
-                    // Stupid hack to avoid too many code changes ?>
-                    <input type="hidden" name="PostVisibility" id="PostVisibility" value="MembersOnly"/>
-                    <input type="hidden" name="ThreadVisibility" id="ThreadVisibility" value="MembersOnly"/>
-                    <p><?php if ($allow_title) {
-                        echo $words->get('ForumsThreadMembersOnly');
-                    } else {
-                        echo $words->get('ForumsPostMembersOnly');
-                    } ?></p>
-            <?php } ?>
-        </div>
-    </fieldset>
-
-    <?php } ?>
-
-    <fieldset class="mt-2" id="fpost_note_fieldset">
-        <legend onclick="toggleFieldsets('fpost_note');" class="h4 m-0"><?php echo $words->getFormatted("forum_Notify") ?></legend>
-        <div id="fpost_note">
-            <input type="checkbox" name="NotifyMe" id="NotifyMe" <?php echo $notifymecheck ?>>
-            <label for="NotifyMe"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
-        </div>
-    </fieldset>
+    </div>
 
     <div class="">
         <input type="submit" class="btn btn-primary" value="<?php

@@ -17,7 +17,7 @@
         </div>
 
         <div class="pt-3"><h3 class="float-left m-0 mb-2"><?php echo $words->getFormatted('ForumRecentPostsLong'); ?></h3><a
-            href="<? echo $uri; ?>/new"
+            href="<? echo $uri; ?>/forum/new"
             class="btn btn-primary float-right"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a></div>
 
         <div class="w-100 pt-5">

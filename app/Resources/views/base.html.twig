@@ -43,7 +43,7 @@
                     {% endfor %}
                     {% for flash_message in app.session.flashBag.get('notice') %}
                         <div class="col-12 alert alert-info" role="alert">
-                            hallo{{ flash_message }}
+                            {{ flash_message }}
                         </div>
                     {% endfor %}
                     {% for flash_message in app.session.flashBag.get('success') %}

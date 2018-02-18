@@ -105,48 +105,6 @@ blockquote {
   }
 }
 
-#message_thread {
-  .message_own {
-    @include make-col(11);
-    padding: $pagination-padding-x;
-    margin-bottom: 1rem;
-    border-radius: $border-radius;
-    border: 1px solid #bbb;
-    background-color: #df9;
-  }
-
-  .message_own > blockquote {
-    padding: $pagination-padding-x;
-    border-radius: $border-radius;
-    border: 1px solid #bbb;
-    border-left: 8px $border-color solid;
-    margin: 0;
-  }
-
-  .message_other {
-    @include make-col(11);
-    @include make-col-offset(1);
-    padding: $pagination-padding-x;
-    margin-bottom: 1rem;
-    border-radius: $border-radius;
-    border: 1px solid #bbb;
-    background-color: #ddd;
-  }
-
-  .message_other > blockquote {
-    padding: $pagination-padding-x;
-    border-radius: $border-radius;
-    border: 1px solid #bbb;
-    background-color: #df9;
-    border-left: 8px $border-color solid;
-    margin: 0;
-  }
-
-  .current {
-    background-color: white;
-  }
-}
-
 main {
   margin-top: 1rem;
 }

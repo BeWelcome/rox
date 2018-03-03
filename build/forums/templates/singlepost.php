@@ -105,8 +105,8 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
         <p class="small gray">
             <?php
             //echo "[",$post->posttime,"]",$words->getFormatted('DateHHMMShortFormat') ;
-            echo '<span>' . $words->getFormatted('posted'); ?><?php echo date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($post->posttime, $this->getSession())) . "</span>";
-            echo $words->flushBuffer() . "<span class='ml-2'>" . $words->getFormatted("forum_label_visibility") . ": " . $words->getFormatted("forum_edit_vis_" . $post->PostVisibility) . "</span>";
+            echo '<span><i class="fa fa-comment mr-1" title="' . $words->getFormatted('posted'); ?>"></i><?php echo date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($post->posttime, $this->getSession())) . '</span>';
+            echo $words->flushBuffer() . '<span class="ml-2"><i class="fa fa-eye mr-1" title="' . $words->getFormatted("forum_label_visibility") . '"></i>' . $words->getFormatted("forum_edit_vis_" . $post->PostVisibility) . '</span>';
             $max = 0;
             if (!empty($post->Trad)) {
                 $max = count($post->Trad);
@@ -114,7 +114,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
             for ($jj = 0; (($jj < $max) and ($topic->WithDetail)); $jj++) { // Not optimized, it is a bit stupid to look in all the trads here
                 if (($post->Trad[$jj]->trad_created != $post->Trad[$jj]->trad_updated)) { // If one of the trads have been updated
                     if ($post->Trad[$jj]->IdLanguage == $this->_session->get("IdLanguage")) {
-                        echo "<br /><em>last edited on ", date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($post->Trad[$jj]->trad_updated, $this->getSession())), " by ", $post->Trad[$jj]->TranslatorUsername, "</em>";
+                        echo '<br><em><i class="fa fa-edit mr-1" title="edited"></i>' . date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($post->Trad[$jj]->trad_updated, $this->getSession())), ' by ', $post->Trad[$jj]->TranslatorUsername . '</em>';
                     }
                 }
             }
@@ -127,11 +127,11 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
             <?php
 
             if ($can_edit_own && $post->OwnerCanStillEdit == "Yes" && $User && $post->IdWriter == $this->_session->get("IdMember")) {
-                echo '<a href="forums/edit/m' . $post->postid . '" class="btn btn-primary"><i class="fa fa-pencil-square-o" alt="edit" /></i> ' . $words->getFormatted('forum_EditUser') . '</a><a href="forums/translate/m' . $post->postid . '" class="btn btn-primary ml-1"><i class="fa fa-globe" alt="translate"></i> ' . $words->getFormatted('forum_TranslateUser') . '</a>';
+                echo '<a href="forums/edit/m' . $post->postid . '" class="btn btn-outline-secondary"><i class="fa fa-pencil-square-o" alt="edit" /></i> ' . $words->getFormatted('forum_EditUser') . '</a><a href="forums/translate/m' . $post->postid . '" class="btn btn-outline-secondary ml-1"><i class="fa fa-globe" alt="translate"></i> ' . $words->getFormatted('forum_TranslateUser') . '</a>';
             }
             if (($this->BW_Right->HasRight("ForumModerator", "Edit")) || ($this->BW_Right->HasRight("ForumModerator", "All"))) {
 //                 echo ' [<a href="forums/modedit/m'.$post->postid.'">Mod Edit</a>]';
-                echo '<a href="forums/modfulleditpost/' . $post->postid . '" class="btn btn-primary ml-1"><i class="fa fa-drivers-license-o" alt="adminedit"></i> Admin Edit</a>';
+                echo '<a href="forums/modfulleditpost/' . $post->postid . '" class="btn btn-outline-secondary ml-1"><i class="fa fa-drivers-license-o" alt="adminedit"></i> Admin Edit</a>';
             }
 
             if ($can_del) {

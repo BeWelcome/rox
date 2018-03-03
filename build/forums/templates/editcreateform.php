@@ -39,14 +39,6 @@ if (isset($this->suggestionsGroupId)) {
 
 $vars =& PPostHandler::getVars($callbackId);
 
-if (isset($vars['tags']) && $vars['tags']) {
-    $tags_with_commas = implode(', ', $vars['tags']);
-} else if (isset($tags) && $tags) {
-    $tags_with_commas = implode(', ', $tags);
-} else {
-    $tags_with_commas = false;
-}
-
 ?>
 <script type="text/javascript" src="script/blog_suggest.js"></script>
 <script type="text/javascript" src="script/forums_suggest.js"></script>
@@ -63,7 +55,7 @@ if (isset($vars['tags']) && $vars['tags']) {
         $navichain = '';
     }
 
-    echo '<p class="h4 gray">' . $navichain . '</p>';
+    if ($navichain!= ''){ echo '<p class="h4 gray">' . $navichain . '</p>'; }
 
     echo '<h3>';
     if ($allow_title) { // New Topic
@@ -90,12 +82,12 @@ if (isset($vars['tags']) && $vars['tags']) {
     <?php
     if (isset($vars['errors']) && is_array($vars['errors'])) {
         if (in_array('title', $vars['errors'])) {
-            echo '<div class="row error">' . $words->getFormatted("forum_error_title") . '</div>';
+            echo '<div class="alert alert-danger">' . $words->getFormatted("forum_error_title") . '</div>';
         }
     }
     if (isset($vars['errors']) && is_array($vars['errors'])) {
         if (in_array('text', $vars['errors'])) {
-            echo '<div class="row error">' . $words->getFormatted("forum_error_post") . '</div>';
+            echo '<div class="alert alert-danger">' . $words->getFormatted("forum_error_post") . '</div>';
         }
     }
     if (isset($allow_title) && $allow_title) {
@@ -156,9 +148,9 @@ if (isset($vars['tags']) && $vars['tags']) {
     } ?>
 
 <?php if (isset($this->suggestionsGroupId) || ($groupsforum == SuggestionsModel::getGroupId())) { ?>
-    <fieldset class="" id = "fpost_vis_fieldset" >
-        <legend onclick = "toggleFieldsets('fpost_vis');" ><?php echo $words->getFormatted("ForumSuggestionsVisibilityAndLanguage"); ?></legend>
-        <div id="fpost_vis">
+    <fieldset class="alert alert-info" id = "fpost_vis_fieldset" >
+        <div>
+            <p class="h3"><?php echo $words->getFormatted("ForumSuggestionsVisibilityAndLanguage"); ?></p>
             <p><?= $words->get('SuggestionsGroupInfoReply') ?></p>
             <input type="hidden" name="PostVisibility" id="PostVisibility" value="MembersOnly"/>
             <input type="hidden" name="IdLanguage" id="IdLanguage" value="0"/>
@@ -220,6 +212,8 @@ if (isset($vars['tags']) && $vars['tags']) {
         </div>
     </div>
 
+        <?php if (isset($this->suggestionsGroupId) || ($groupsforum == SuggestionsModel::getGroupId())) { } else {?>
+
         <div>
             <legend class="sr-only"><?php echo $words->getFormatted("forum_label_lang") ?></legend>
             <button class="btn btn-info" type="button" id="dropdownLanguage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -273,11 +267,11 @@ if (isset($vars['tags']) && $vars['tags']) {
                     }
                     ?></select><?php echo $words->flushBuffer(); ?>
             </div>
-
+<? } ?>
     </div>
 
-    <div class="">
-        <input type="submit" class="btn btn-primary" value="<?php
+    <div>
+        <input type="submit" class="btn btn-primary px-5" value="<?php
         if ($allow_title) { // New Topic
             if ($edit) {
                 echo $words->getFormatted("forum_label_update_topic");
@@ -296,7 +290,6 @@ if (isset($vars['tags']) && $vars['tags']) {
     </div>
 
 </form>
-</div>
 
 <script type="text/javascript">
     function updateContinent() {

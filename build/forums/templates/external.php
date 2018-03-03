@@ -62,15 +62,19 @@ $threadsliced = array_slice($threads, 0, 5);
                     <a href="<?php echo $url; ?>" class="font-weight-bold">
                     <?php
                     echo $words->fTrad($thread->IdTitle);
-                    ?></a><br>
+                    ?></a>
+                    <div class="w-100">
                     <span class="small grey"><?php echo $words->getSilent('by');?> <a href="members/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
                     <?php if ($thread->IdGroup > 0 && $showGroups)
                         {
-                            echo $words->getFormatted('in') . ' <a href="groups/' . $thread->IdGroup . '/" title="' . $words->getSilent('Group') . ": " . $thread->GroupName . '">' . MOD_layoutbits::truncate($thread->GroupName, 13) . "</a>";
-                        }
+                            echo $words->getFormatted('in') . ' <a href="groups/' . $thread->IdGroup . '/" title="' . $words->getSilent('Group') . ': ' . $thread->GroupName . '">' . $thread->GroupName . '</a></span>';
+                        } else {
+                            echo '</span>';
+                    }
                     ?>
-                    <?php echo ' - <span title="' . date($words->getSilent('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time, $this->getSession())) . '"><a href="' . $last_url . '" class="grey">' . $layoutbits->ago($thread->last_create_time) . '<i class="fa fa-caret-right ml-1" title="' . $words->getBuffered('to_last') . '"></i></a></span>'; ?>
+                    <?php echo '<span class="small grey pull-right" title="' . date($words->getSilent('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time, $this->getSession())) . '"><a href="' . $last_url . '" class="grey">' . $layoutbits->ago($thread->last_create_time) . '<i class="fa fa-caret-right ml-1" title="' . $words->getBuffered('to_last') . '"></i></a></span>'; ?>
                   <?php echo $words->flushBuffer(); ?>
+                    </div>
                 </td>
             </tr>
         <?php

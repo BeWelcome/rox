@@ -14,7 +14,6 @@ use AppBundle\Model\RequestModel;
 use DateTime;
 use Doctrine\Common\Persistence\ObjectManager;
 use Html2Text\Html2Text;
-use InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -132,11 +131,11 @@ class RequestAndMessageController extends Controller
         }
 
         if (null !== $message->getRequest()) {
-            if ($message->getSender() == $sender) {
+            if ($message->getSender() === $sender) {
                 return $this->redirectToRoute('hosting_request_reply_guest', ['id' => $message->getId()]);
-            } else {
-                return $this->redirectToRoute('hosting_request_reply_host', ['id' => $message->getId()]);
             }
+
+            return $this->redirectToRoute('hosting_request_reply_host', ['id' => $message->getId()]);
         }
 
         $messageModel = new MessageModel($this->getDoctrine());
@@ -293,11 +292,13 @@ class RequestAndMessageController extends Controller
         $member = $this->getUser();
         if ($member === $receiver) {
             $this->addFlash('notice', 'You can\'t send yourself a hosting request.');
+
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
         }
 
-        if ($receiver->getAccommodation() == Member::ACC_NO) {
+        if (Member::ACC_NO === $receiver->getAccommodation()) {
             $this->addFlash('notice', 'This person says they are not willing to host.<hr>You might send a message instead.');
+
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
         }
 
@@ -742,6 +743,7 @@ class RequestAndMessageController extends Controller
     private function checkRequestExpired(HostingRequest $request)
     {
         $requestModel = new RequestModel($this->getDoctrine());
+
         return $requestModel->checkRequestExpired($request);
     }
 }

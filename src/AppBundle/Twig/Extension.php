@@ -130,14 +130,14 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
 
     public function getTranslations()
     {
-        $collector= new TranslationDataCollector($this->translator);
+        $collector = new TranslationDataCollector($this->translator);
         $collector->lateCollect();
 
         return [
             'defined' => $collector->getCountDefines(),
             'missing' => $collector->getCountMissings(),
             'fallback' => $collector->getCountFallbacks(),
-            'messages' => $collector->getMessages()
+            'messages' => $collector->getMessages(),
             ];
     }
 

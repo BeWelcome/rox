@@ -10,7 +10,7 @@ AppBundle\Entity\Word:
         created: <dateTime()>
         TranslationPriority: 1
         Description: 'Description'
-        isarchived: no
+        isarchived: 0
         majorupdate: <dateTime()>
     WelcomeToSignup_fr:
         code: WelcomeToSignup
@@ -23,6 +23,6 @@ AppBundle\Entity\Word:
         created: <dateTime()>
         TranslationPriority: 1
         Description: 'Description'
-        isarchived: no
+        isarchived: 0
         majorupdate: <dateTime()>
 

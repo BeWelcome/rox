@@ -40,7 +40,7 @@ class Message
     /**
      * @var DateTime
      *
-     * @ORM\Column(name="created", type="datetime", nullable=false, options={"default": 0})
+     * @ORM\Column(name="created", type="datetime", nullable=false, options={"default" : "CURRENT_TIMESTAMP"})
      */
     private $created;
 

@@ -865,7 +865,11 @@ class MembersController extends RoxControllerBase
             for ($i=0;$i<$totalChar;$i++) {  // loop and create password
                 $password = $password . substr ($salt, rand() % strlen($salt), 1);
             }
-
+            // Enforce all upper case to word around the problem that sometimes the mail
+            // contains the password in all upper case despite the password not being all uppercase
+            
+            $password = strtoupper( $password );
+            
             // Alternate version using md5
             // $password = md5($member->Username . uniqid());
             $member->setPassword($password);

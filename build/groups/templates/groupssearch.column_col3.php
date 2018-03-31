@@ -2,9 +2,10 @@
         <div class="floatbox">
         <div class="subcolumns">
             <div class="c50l">
-                <div class="groupbox float_left">
+                <div class="groupbox float_left" style="width:90%">
                     <h3><?= $words->get('GroupsSearchHeading'); ?></h3>
                     <form action="groups/search" method="get">
+                        <p><?= $words->get('GroupsSearchInfo'); ?></p>
                         <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $words->getSilent('GroupsSearchSubmit'); ?>" /><?=$words->flushBuffer()?><br />
                     </form>
                 </div>

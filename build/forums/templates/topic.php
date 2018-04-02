@@ -154,34 +154,34 @@ This File display a topic and the messages which are inside it
         if (isset($topic->isGroupSubscribed) && ($topic->isGroupSubscribed)) {
             if (isset($topic->IdSubscribe)) {
                 if ($topic->notificationsEnabled > 0) {
-                    echo '<a class="btn btn-primary" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
+                    echo '<a class="btn btn-tertiary" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
                         . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                 } else {
-                    echo '<a class="btn btn-primary" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
+                    echo '<a class="btn btn-tertiary" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
                         . '">' . $words->getBuffered('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                 }
             } else {
                 if ($topic->notificationsEnabled) {
-                    echo '<a class="btn btn-primary" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
+                    echo '<a class="btn btn-tertiary" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
                         . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                 } else {
-                    echo '<a class="btn btn-primary" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
+                    echo '<a class="btn btn-tertiary" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
                         . '">' . $words->getBuffered('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                 }
             }
         } else {
             if (isset($topic->IdSubscribe)) {
                 if ($topic->notificationsEnabled > 0) {
-                    echo '<a class="btn btn-primary" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
+                    echo '<a class="btn btn-tertiary" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
                         . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                 } else {
-                    echo '<a class="btn btn-primary" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
+                    echo '<a class="btn btn-tertiary" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
                         . '">' . $words->getBuffered('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
                 }
-                echo '<a class="btn btn-primary" href="' . $this->getURI() . '/subscriptions/unsubscribe/thread/' . $topic->IdSubscribe
+                echo '<a class="btn btn-tertiary" href="' . $this->getURI() . '/subscriptions/unsubscribe/thread/' . $topic->IdSubscribe
                     . '/' . $topic->IdKey . '">' . $words->getBuffered('ForumUnsubscribe') . '</a>' . $words->flushBuffer() . PHP_EOL;
             } else {
-                echo '<a class="btn btn-primary" href="' . $this->getURI() . '/subscribe/thread/' . $topic->IdThread . '">'
+                echo '<a class="btn btn-tertiary" href="' . $this->getURI() . '/subscribe/thread/' . $topic->IdThread . '">'
                     . $words->getBuffered('ForumSubscribe') . '</a>' . $words->flushBuffer() . PHP_EOL;
             }
         }

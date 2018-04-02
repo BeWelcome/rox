@@ -24,7 +24,7 @@
     {% else %}
         {% if request.flexible %}<div>{{ 'Flexible with arrival and departure' }}</div>{% endif %}
         {% if request.numberOfTravellers != 1 %}<div><i class="fa fa-group mr-1"></i>{{ 'Travelling in a group of %s' | format(request.numberOfTravellers) }}</div>{% endif %}
-        {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_OPEN') %}<div class="alert alert-warning mr-md-2">{{ 'You have not yet replied to this request' }}<a class="btn btn-primary btn-sm" href="{{ path( replyRoute, { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a></div>{% endif %}
+        {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_OPEN') %}<div class="alert alert-warning mr-md-2 mt-md-2">{{ 'You have not yet replied to this request' }}<a class="btn btn-primary btn-sm" href="{{ path( replyRoute, { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a></div>{% endif %}
         {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_DECLINED') %}<div>{{ 'You\'re not going to host this group/person' }}</div>{% endif %}
         {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<div>{{ 'You\'re going to host this group/person' }}</div>{% endif %}
         {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<div>{{ 'You\'re told this group/person you might host them.' }}</div>{% endif %}

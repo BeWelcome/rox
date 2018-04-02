@@ -32,7 +32,7 @@ $layoutbits = new MOD_layoutbits();
     <thead class="blank">
     <tr>
         <th><?php echo $words->getFormatted('Author'); ?></th>
-        <th class="w-100">
+        <th class="w-100 pl-0">
             <?php
             if (empty($TIGHT_THREADLIST)) {
             echo $words->getFormatted('Thread');

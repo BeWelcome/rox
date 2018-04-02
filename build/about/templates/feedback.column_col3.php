@@ -53,12 +53,15 @@ if ($errors = $this->getRedirectedMem('errors'))
 {
     foreach ($errors as $error)
     {
-        echo '<p class="error">{$words->get($error)}</p>';
+        echo '<div class="col-12 alert alert-danger">{$words->get($error)}</div>';
     }
 }
 ?>
-<div class="col-12">
+<div class="col-12 col-md-6">
 <p><?php echo $words->get("FeedBackDisclaimer") ?></p>
+</div>
+
+<div class="col-12 col-md-6">
 
 <form class="yform full" action="about/feedback" method="post">
     <?=$callback_tag ?>
@@ -79,18 +82,18 @@ if ($errors = $this->getRedirectedMem('errors'))
     <?php echo $words->flushBuffer(); ?>
     <!-- type-select -->
 
-    <div class="type-text <?php
+    <?php
         if (in_array('FeedbackErrorDataMissing', $errors))
         {
-            echo "error \">";
+            echo '<div class="alert alert-danger">';
             foreach ($errors as $error) 
             {
-                echo "<strong class=\"message\">{$words->get($error)}</strong>";
+                echo $words->get($error) . '<br>';
             }
+            echo '</div>';
         }
-        else echo " \">";
         ?>
-    </div>
+
     <div class="form-group">
         <label for="FeedbackQuestion"><?php echo $words->get("FeedBackEnterYourQuestion")?></label>
         <textarea id="FeedbackQuestion" name="FeedbackQuestion" class="form-control w-100" rows="9"><?php echo $FeedbackQuestion;?></textarea>

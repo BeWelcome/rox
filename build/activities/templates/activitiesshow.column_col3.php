@@ -200,7 +200,7 @@ if (empty($vars)) {
                         if ($activityInTheFuture) {
                             echo '<a href="activities/' . $this->activity->id . '/edit" role="button" class="btn btn-primary btn-block">' . $words->getSilent('ActivityEdit') . '</a>';
                         }
-                        echo '<button type="submit" class="btn btn-primary btn-block" id="activity-cancel" name="activity-cancel"';
+                        echo '<button type="submit" class="btn btn-danger btn-block" id="activity-cancel" name="activity-cancel"';
                         if (!$activityInTheFuture) {
                             echo ' disabled';
                         }
@@ -233,7 +233,7 @@ if (empty($vars)) {
 
     <div class="row mt-3">
 
-        <div class="col-12"><h4><?php echo $words->get('ActivityAttendees'); ?></h4></div>
+        <div class="col-12 p-0"><h4><?php echo $words->get('ActivityAttendees'); ?></h4></div>
 
         <?php if ($this->member) { ?>
 

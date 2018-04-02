@@ -134,7 +134,7 @@ if (empty($vars)) {
             <input class="row" type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
             <?php
             if (!$this->activity->status == 1 && $vars['activity-id'] != 0) {
-                echo '<button type="submit" class="btn btn-primary" id="activity-cancel" name="activity-cancel">' . $words->getSilent('ActivityEditCreateCancel') . '</button>';
+                echo '<button type="submit" class="btn btn-danger" id="activity-cancel" name="activity-cancel">' . $words->getSilent('ActivityEditCreateCancel') . '</button>';
             }
             ?>
         </div>

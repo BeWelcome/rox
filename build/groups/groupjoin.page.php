@@ -59,24 +59,35 @@ class GroupJoinPage extends GroupsBasePage
         {$error}
         <form action="" method="post">
             {$callback_tag}
+
             <fieldset>
-                <legend>{$words->get('GroupsJoinTheGroup')} {$group_name_html}</legend>
-                <input type='hidden' name='member_id' value='{$this->member->id}' />
-                <input type='hidden' name='group_id' value='{$this->group->id}' />
-                <label for="comment">{$words->get('GroupsMemberComments')}</label><br />
-                <textarea id="comment" name="membershipinfo_comment" cols="60" rows="5" class="long" ></textarea>
-                <div class="bw-row">
-                    <label>{$words->get('GroupsMemberAcceptMail')}:</label>
-                    <input id='no_option' type="radio" value="no" name="membershipinfo_acceptgroupmail" />
-                    <label for="no_option">{$words->get('no')}</label>
-                    <input id='yes_option' type="radio" value="yes" checked='checked' name="membershipinfo_acceptgroupmail" />
-                    <label for="yes_option">{$words->get('yes')}</label><br /><br />
-                    {$words->get('ValuesCanBeChangedLaterInMemberSettings')}
+             <legend>{$words->get('GroupsJoinTheGroup')} {$group_name_html}</legend>
+            <input type='hidden' name='member_id' value='{$this->member->id}'>
+                <input type='hidden' name='group_id' value='{$this->group->id}'>
+            <div class="row mt-3">
+                <div class="col-auto">
+                    <label for="comment">{$words->get('GroupsMemberComments')}</label><br>
+                    <textarea id="comment" name="membershipinfo_comment" cols="30" rows="3"></textarea>
                 </div> <!-- row -->
-                <h3>{$words->get('GroupsJoinNamedGroup', $group_name_html)}</h3>
-                <input type='submit' value='{$words->getSilent('GroupsGetMeIn')}' name='join'/>
-                <a class="button" role="button" href="groups/{$this->group->id}">{$words->get('GroupsDontGetMeIn')}</a>
-            </fieldset>           
+                <div class="col-auto">
+                    <label>{$words->get('GroupsMemberAcceptMail')}:</label><br>
+
+                    <div class="d-flex btn-group mb-3" data-toggle="buttons">
+                        <label class="btn btn-primary btn-radio active" for="yes_option">
+                            <input id='yes_option' class="noradio" checked="checked" autocomplete="off" type="radio" value="yes" name="membershipinfo_acceptgroupmail">Yes
+                        </label>
+                        <label for="no_option" class="btn btn-primary btn-radio">
+                            <input id='no_option' class="noradio" autocomplete="off" type="radio" value="no" name="membershipinfo_acceptgroupmail">No
+                        </label>
+                    </div>
+                </div>
+                <div class="w-100 px-3">
+                    <input type='submit' class='btn btn-primary' value='{$words->getSilent('GroupsGetMeIn')}' name='join'/>
+                </div>
+            </div>
+       
+            </fieldset>
+             
         </form>
 HTML;
         }

@@ -44,7 +44,7 @@ class MOD_layoutbits
     public static function PIC_75_75($username,$picfile='',$style="framed") {
         return self::linkWithPictureVar($username,$height=75,$width=75,$quality=85,$picfile,$style);
     }
-    public static function PIC_50_50($username,$picfile='',$style="framed") {
+    public static function PIC_50_50($username,$picfile='',$style="framed memberpic") {
         return self::linkWithPictureVar($username,$height=50,$width=50,$quality=85,$picfile,$style);
     }
     public static function PIC_40_40($username,$picfile='',$style="framed") {

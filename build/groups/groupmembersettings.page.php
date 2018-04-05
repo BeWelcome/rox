@@ -77,10 +77,10 @@ class GroupMemberSettingsPage extends GroupsBasePage
 
                     <div class="d-flex btn-group mb-3" data-toggle="buttons">
                         <label class="btn btn-primary btn-radio active" for="yes_option">
-                            <input id='yes_option' autocomplete="off" type="radio" value="yes" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'yes') ? 'checked="checked" ' : '' ); ?>>Yes
+                            <input id='yes_option' class="noradio" autocomplete="off" type="radio" value="yes" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'yes') ? 'checked="checked" ' : '' ); ?>>Yes
                         </label>
                         <label for="no_option" class="btn btn-primary btn-radio">
-                            <input id='no_option' autocomplete="off" type="radio" value="no" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'no' || !$membershipinfo->IacceptMassMailFromThisGroup) ? 'checked="checked" ' : '' ); ?>>No
+                            <input id='no_option' class="noradio" autocomplete="off" type="radio" value="no" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'no' || !$membershipinfo->IacceptMassMailFromThisGroup) ? 'checked="checked" ' : '' ); ?>>No
                         </label>
                     </div>
                 </div>

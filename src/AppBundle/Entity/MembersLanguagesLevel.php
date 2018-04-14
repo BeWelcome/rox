@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Memberslanguageslevel
+ * Memberslanguageslevel.
  *
  * @ORM\Table(name="memberslanguageslevel", indexes={@ORM\Index(name="IdMember", columns={"IdMember", "IdLanguage"})})
  * @ORM\Entity
  */
-class Memberslanguageslevel
+class MembersLanguagesLevel
 {
     /**
      * @var \DateTime
@@ -27,14 +27,14 @@ class Memberslanguageslevel
     private $created = '0000-00-00 00:00:00';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdMember", type="integer", nullable=false)
      */
     private $idmember;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdLanguage", type="integer", nullable=false)
      */
@@ -48,7 +48,7 @@ class Memberslanguageslevel
     private $level = 'Beginner';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -56,10 +56,8 @@ class Memberslanguageslevel
      */
     private $id;
 
-
-
     /**
-     * Set updated
+     * Set updated.
      *
      * @param \DateTime $updated
      *
@@ -73,7 +71,7 @@ class Memberslanguageslevel
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return \DateTime
      */
@@ -83,7 +81,7 @@ class Memberslanguageslevel
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
      *
@@ -97,7 +95,7 @@ class Memberslanguageslevel
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -107,9 +105,9 @@ class Memberslanguageslevel
     }
 
     /**
-     * Set idmember
+     * Set idmember.
      *
-     * @param integer $idmember
+     * @param int $idmember
      *
      * @return Memberslanguageslevel
      */
@@ -121,9 +119,9 @@ class Memberslanguageslevel
     }
 
     /**
-     * Get idmember
+     * Get idmember.
      *
-     * @return integer
+     * @return int
      */
     public function getIdmember()
     {
@@ -131,9 +129,9 @@ class Memberslanguageslevel
     }
 
     /**
-     * Set idlanguage
+     * Set idlanguage.
      *
-     * @param integer $idlanguage
+     * @param int $idlanguage
      *
      * @return Memberslanguageslevel
      */
@@ -145,9 +143,9 @@ class Memberslanguageslevel
     }
 
     /**
-     * Get idlanguage
+     * Get idlanguage.
      *
-     * @return integer
+     * @return int
      */
     public function getIdlanguage()
     {
@@ -155,7 +153,7 @@ class Memberslanguageslevel
     }
 
     /**
-     * Set level
+     * Set level.
      *
      * @param string $level
      *
@@ -169,7 +167,7 @@ class Memberslanguageslevel
     }
 
     /**
-     * Get level
+     * Get level.
      *
      * @return string
      */
@@ -179,9 +177,9 @@ class Memberslanguageslevel
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

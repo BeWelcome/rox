@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Comment
+ * Comment.
  *
  * @ORM\Table(name="comments", indexes={@ORM\Index(name="IdToMember", columns={"IdToMember"}), @ORM\Index(name="comments_ibfk_1", columns={"IdFromMember"})})
  * @ORM\Entity
@@ -69,21 +69,21 @@ class Comment
     private $displayableincommentofthemonth = 'Yes';
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="DisplayInPublic", type="boolean", nullable=false)
      */
     private $displayinpublic = '1';
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="AllowEdit", type="boolean", nullable=false)
      */
     private $allowedit = '0';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -111,10 +111,8 @@ class Comment
      */
     private $fromMember;
 
-
-
     /**
-     * Set length
+     * Set length.
      *
      * @param string $length
      *
@@ -128,7 +126,7 @@ class Comment
     }
 
     /**
-     * Get length
+     * Get length.
      *
      * @return string
      */
@@ -138,7 +136,7 @@ class Comment
     }
 
     /**
-     * Set quality
+     * Set quality.
      *
      * @param string $quality
      *
@@ -152,7 +150,7 @@ class Comment
     }
 
     /**
-     * Get quality
+     * Get quality.
      *
      * @return string
      */
@@ -162,7 +160,7 @@ class Comment
     }
 
     /**
-     * Set textfree
+     * Set textfree.
      *
      * @param string $textfree
      *
@@ -176,7 +174,7 @@ class Comment
     }
 
     /**
-     * Get textfree
+     * Get textfree.
      *
      * @return string
      */
@@ -186,7 +184,7 @@ class Comment
     }
 
     /**
-     * Set textwhere
+     * Set textwhere.
      *
      * @param string $textwhere
      *
@@ -200,7 +198,7 @@ class Comment
     }
 
     /**
-     * Get textwhere
+     * Get textwhere.
      *
      * @return string
      */
@@ -210,7 +208,7 @@ class Comment
     }
 
     /**
-     * Set updated
+     * Set updated.
      *
      * @param \DateTime $updated
      *
@@ -224,7 +222,7 @@ class Comment
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return \DateTime
      */
@@ -234,7 +232,7 @@ class Comment
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
      *
@@ -248,7 +246,7 @@ class Comment
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -258,7 +256,7 @@ class Comment
     }
 
     /**
-     * Set adminaction
+     * Set adminaction.
      *
      * @param string $adminaction
      *
@@ -272,7 +270,7 @@ class Comment
     }
 
     /**
-     * Get adminaction
+     * Get adminaction.
      *
      * @return string
      */
@@ -282,7 +280,7 @@ class Comment
     }
 
     /**
-     * Set displayableincommentofthemonth
+     * Set displayableincommentofthemonth.
      *
      * @param string $displayableincommentofthemonth
      *
@@ -296,7 +294,7 @@ class Comment
     }
 
     /**
-     * Get displayableincommentofthemonth
+     * Get displayableincommentofthemonth.
      *
      * @return string
      */
@@ -306,9 +304,9 @@ class Comment
     }
 
     /**
-     * Set displayinpublic
+     * Set displayinpublic.
      *
-     * @param boolean $displayinpublic
+     * @param bool $displayinpublic
      *
      * @return Comment
      */
@@ -320,9 +318,9 @@ class Comment
     }
 
     /**
-     * Get displayinpublic
+     * Get displayinpublic.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDisplayinpublic()
     {
@@ -330,9 +328,9 @@ class Comment
     }
 
     /**
-     * Set allowedit
+     * Set allowedit.
      *
-     * @param boolean $allowedit
+     * @param bool $allowedit
      *
      * @return Comment
      */
@@ -344,9 +342,9 @@ class Comment
     }
 
     /**
-     * Get allowedit
+     * Get allowedit.
      *
-     * @return boolean
+     * @return bool
      */
     public function getAllowedit()
     {
@@ -354,9 +352,9 @@ class Comment
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -364,7 +362,7 @@ class Comment
     }
 
     /**
-     * Set idtomember
+     * Set idtomember.
      *
      * @param Member $toMember
      *
@@ -378,7 +376,7 @@ class Comment
     }
 
     /**
-     * Get idtomember
+     * Get idtomember.
      *
      * @return Member
      */
@@ -388,7 +386,7 @@ class Comment
     }
 
     /**
-     * Set idfrommember
+     * Set idfrommember.
      *
      * @param Member $fromMember
      *
@@ -402,7 +400,7 @@ class Comment
     }
 
     /**
-     * Get idfrommember
+     * Get idfrommember.
      *
      * @return Member
      */

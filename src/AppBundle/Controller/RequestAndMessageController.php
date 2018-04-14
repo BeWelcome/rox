@@ -728,7 +728,8 @@ class RequestAndMessageController extends Controller
      * Creates a new message based on the original one.
      *
      * @param Message $hostingRequest
-     * @param bool $hostReply
+     * @param bool    $hostReply
+     *
      * @return Message
      */
     private function getNewRequestFromOriginal(Message $hostingRequest, $hostReply = false)

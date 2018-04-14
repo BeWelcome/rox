@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * MembersPhoto
+ * MembersPhoto.
  *
  * @ORM\Table(name="membersphotos", indexes={@ORM\Index(name="IdMember", columns={"IdMember"})})
  * @ORM\Entity
@@ -20,14 +20,14 @@ class MembersPhoto
     private $filepath;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdMember", type="integer", nullable=false)
      */
     private $idmember;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="SortOrder", type="boolean", nullable=false)
      */
@@ -48,14 +48,14 @@ class MembersPhoto
     private $created = '0000-00-00 00:00:00';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="Comment", type="integer", nullable=false)
      */
     private $comment;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -63,10 +63,8 @@ class MembersPhoto
      */
     private $id;
 
-
-
     /**
-     * Set filepath
+     * Set filepath.
      *
      * @param string $filepath
      *
@@ -80,7 +78,7 @@ class MembersPhoto
     }
 
     /**
-     * Get filepath
+     * Get filepath.
      *
      * @return string
      */
@@ -90,9 +88,9 @@ class MembersPhoto
     }
 
     /**
-     * Set idmember
+     * Set idmember.
      *
-     * @param integer $idmember
+     * @param int $idmember
      *
      * @return MembersPhoto
      */
@@ -104,9 +102,9 @@ class MembersPhoto
     }
 
     /**
-     * Get idmember
+     * Get idmember.
      *
-     * @return integer
+     * @return int
      */
     public function getIdmember()
     {
@@ -114,9 +112,9 @@ class MembersPhoto
     }
 
     /**
-     * Set sortorder
+     * Set sortorder.
      *
-     * @param boolean $sortorder
+     * @param bool $sortorder
      *
      * @return MembersPhoto
      */
@@ -128,9 +126,9 @@ class MembersPhoto
     }
 
     /**
-     * Get sortorder
+     * Get sortorder.
      *
-     * @return boolean
+     * @return bool
      */
     public function getSortorder()
     {
@@ -138,7 +136,7 @@ class MembersPhoto
     }
 
     /**
-     * Set updated
+     * Set updated.
      *
      * @param \DateTime $updated
      *
@@ -152,7 +150,7 @@ class MembersPhoto
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return \DateTime
      */
@@ -162,7 +160,7 @@ class MembersPhoto
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
      *
@@ -176,7 +174,7 @@ class MembersPhoto
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -186,9 +184,9 @@ class MembersPhoto
     }
 
     /**
-     * Set comment
+     * Set comment.
      *
-     * @param integer $comment
+     * @param int $comment
      *
      * @return MembersPhoto
      */
@@ -200,9 +198,9 @@ class MembersPhoto
     }
 
     /**
-     * Get comment
+     * Get comment.
      *
-     * @return integer
+     * @return int
      */
     public function getComment()
     {
@@ -210,9 +208,9 @@ class MembersPhoto
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

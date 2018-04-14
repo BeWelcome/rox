@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * MembersTrad
+ * MembersTrad.
  *
  * @ORM\Table(name="MembersTrads", uniqueConstraints={@ORM\UniqueConstraint(name="Unique_entry", columns={"IdTrad", "IdOwner", "IdLanguage"})}, indexes={@ORM\Index(name="IdTrad", columns={"IdTrad"}), @ORM\Index(name="IdLanguage", columns={"IdLanguage"})})
  * @ORM\Entity
@@ -13,21 +13,21 @@ use Doctrine\ORM\Mapping as ORM;
 class MembersTrad
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdOwner", type="integer", nullable=false)
      */
     private $idowner;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdTrad", type="integer", nullable=false)
      */
     private $idtrad;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdTranslator", type="integer", nullable=false)
      */
@@ -62,7 +62,7 @@ class MembersTrad
     private $sentence;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdRecord", type="integer", nullable=false)
      */
@@ -76,7 +76,7 @@ class MembersTrad
     private $tablecolumn = 'NotSet';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -94,12 +94,10 @@ class MembersTrad
      */
     private $language;
 
-
-
     /**
-     * Set idowner
+     * Set idowner.
      *
-     * @param integer $idowner
+     * @param int $idowner
      *
      * @return MembersTrad
      */
@@ -111,9 +109,9 @@ class MembersTrad
     }
 
     /**
-     * Get idowner
+     * Get idowner.
      *
-     * @return integer
+     * @return int
      */
     public function getIdowner()
     {
@@ -121,9 +119,9 @@ class MembersTrad
     }
 
     /**
-     * Set idtrad
+     * Set idtrad.
      *
-     * @param integer $idtrad
+     * @param int $idtrad
      *
      * @return MembersTrad
      */
@@ -135,9 +133,9 @@ class MembersTrad
     }
 
     /**
-     * Get idtrad
+     * Get idtrad.
      *
-     * @return integer
+     * @return int
      */
     public function getIdtrad()
     {
@@ -145,9 +143,9 @@ class MembersTrad
     }
 
     /**
-     * Set idtranslator
+     * Set idtranslator.
      *
-     * @param integer $idtranslator
+     * @param int $idtranslator
      *
      * @return MembersTrad
      */
@@ -159,9 +157,9 @@ class MembersTrad
     }
 
     /**
-     * Get idtranslator
+     * Get idtranslator.
      *
-     * @return integer
+     * @return int
      */
     public function getIdtranslator()
     {
@@ -169,7 +167,7 @@ class MembersTrad
     }
 
     /**
-     * Set updated
+     * Set updated.
      *
      * @param \DateTime $updated
      *
@@ -183,7 +181,7 @@ class MembersTrad
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return \DateTime
      */
@@ -193,7 +191,7 @@ class MembersTrad
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
      *
@@ -207,7 +205,7 @@ class MembersTrad
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -217,7 +215,7 @@ class MembersTrad
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param string $type
      *
@@ -231,7 +229,7 @@ class MembersTrad
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return string
      */
@@ -241,7 +239,7 @@ class MembersTrad
     }
 
     /**
-     * Set sentence
+     * Set sentence.
      *
      * @param string $sentence
      *
@@ -255,7 +253,7 @@ class MembersTrad
     }
 
     /**
-     * Get sentence
+     * Get sentence.
      *
      * @return string
      */
@@ -265,9 +263,9 @@ class MembersTrad
     }
 
     /**
-     * Set idrecord
+     * Set idrecord.
      *
-     * @param integer $idrecord
+     * @param int $idrecord
      *
      * @return MembersTrad
      */
@@ -279,9 +277,9 @@ class MembersTrad
     }
 
     /**
-     * Get idrecord
+     * Get idrecord.
      *
-     * @return integer
+     * @return int
      */
     public function getIdrecord()
     {
@@ -289,7 +287,7 @@ class MembersTrad
     }
 
     /**
-     * Set tablecolumn
+     * Set tablecolumn.
      *
      * @param string $tablecolumn
      *
@@ -303,7 +301,7 @@ class MembersTrad
     }
 
     /**
-     * Get tablecolumn
+     * Get tablecolumn.
      *
      * @return string
      */
@@ -313,9 +311,9 @@ class MembersTrad
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -323,7 +321,7 @@ class MembersTrad
     }
 
     /**
-     * Set language
+     * Set language.
      *
      * @param Language $language
      *
@@ -337,7 +335,7 @@ class MembersTrad
     }
 
     /**
-     * Get idlanguage
+     * Get idlanguage.
      *
      * @return Language
      */

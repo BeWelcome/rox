@@ -4,7 +4,7 @@
     <form action="groups/search" method="get">
         <div class="input-group">
             <input type="text" class="form-control" name="GroupsSearchInput" value="" id="GroupsSearchInput" />
-            <span class="input-group-btn">
+            <span class="input-group-append">
                             <button class="btn btn-primary" type="submit"><?= $words->getSilent('GroupsSearchSubmit'); ?></button>
                 <?=$words->flushBuffer()?>
                         </span>

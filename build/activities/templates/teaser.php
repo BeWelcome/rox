@@ -7,7 +7,7 @@
                 <div class="input-group">
                     <?php echo $callbackTags; ?>
                     <input class="form-control" type="text" name="activity-keyword" id="activity-keyword" />
-                    <span class="input-group-btn">
+                    <span class="input-group-append">
                         <button type="submit" class="btn btn-primary" id="activy-search-button" name="activy-search-button"><i class="fa fa-search"></i> <?php echo $words->getSilent('ActivitiesSearchButton'); ?></button>
                     </span>
                 </div>

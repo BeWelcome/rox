@@ -457,18 +457,10 @@ LIMIT 1
                 COUNT( DISTINCT m.id) cnt
             FROM
             " . $this->tables;
-        if ($publicOnly) {
-            $str .= ",
-                memberspublicprofiles mpp";
-        }
         $str .= "
             WHERE
                 " . $this->maxGuestCondition . "
                 " . $this->statusCondition;
-        if ($publicOnly) {
-            $str .= "
-                AND m.id = mpp.IdMember ";
-        }
         $str .= $this->locationCondition . "
             " . $this->genderCondition . "
             " . $this->ageCondition . "
@@ -587,10 +579,9 @@ LIMIT 1
                 " . $start . ", " . $limit;
 
         // Make sure only public profiles are found if no one's logged in
-        if (!$this->getLoggedInMember()) {
-            $str = str_replace('*FROM*', 'FROM memberspublicprofiles mpp,', $str);
-            $str = str_replace('*WHERE*', 'WHERE m.id = mpp.IdMember AND ', $str);
-        }
+//        if (!$this->getLoggedInMember()) {
+//            throw new InvalidArgumentException();
+//        }
         $str = str_replace('*FROM*', 'FROM', $str);
         $str = str_replace('*WHERE*', 'WHERE', $str);
 

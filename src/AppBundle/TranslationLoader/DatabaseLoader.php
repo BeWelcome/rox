@@ -33,6 +33,7 @@ class DatabaseLoader implements LoaderInterface
         $translations = $this->em->getRepository(Word::class)->findBy(['shortcode' => $locale]);
 
         $messages = [];
+        /** @var Word $translation */
         foreach ($translations as $translation) {
             $messages[$translation->getCode()] = $translation->getSentence();
         }

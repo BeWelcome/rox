@@ -3,6 +3,8 @@
 
 {% block content %}
     {% set request = thread[0].Request %}
+    {{ dump(request) }}
+    {{ constant('AppBundle\\Entity\\HostingRequest::REQUEST_ACCEPTED') }}
 <div id="message_thread" class="row mx-0 messagethread">
     {% if current.Sender.Username == my_member.Username %}{% set otherUser = current.Receiver %}{% set replyRoute = 'hosting_request_reply_guest' %}{% else %}{% set otherUser = current.Sender %}{% set replyRoute = 'hosting_request_reply_host'  %}{% endif %}
     {% set currentSubject = current.Subject.Subject %}

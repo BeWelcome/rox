@@ -39,22 +39,22 @@ class MOD_layoutbits
      *
      */
     public static function PIC_100_100($username,$picfile='',$style="framed") {
-        return self::linkWithPictureVar($username,$height=100,$width=100,$quality=85,$picfile,$style);
+        return self::linkWithPictureVar($username, $height = 100, $width = 100, $style);
     }
     public static function PIC_75_75($username,$picfile='',$style="framed") {
-        return self::linkWithPictureVar($username,$height=75,$width=75,$quality=85,$picfile,$style);
+        return self::linkWithPictureVar($username, $height = 75, $width = 75, $style);
     }
     public static function PIC_50_50($username,$picfile='',$style="framed memberpic") {
-        return self::linkWithPictureVar($username,$height=50,$width=50,$quality=85,$picfile,$style);
+        return self::linkWithPictureVar($username, $height = 50, $width = 50, $style);
     }
     public static function PIC_40_40($username,$picfile='',$style="framed") {
-        return self::linkWithPictureVar($username,$height=40,$width=40,$quality=100,$picfile,$style);
+        return self::linkWithPictureVar($username, $height = 40, $width = 40, $style);
     }
     public static function PIC_30_30($username,$picfile='',$style="framed") {
-        return self::linkWithPictureVar($username,$height=30,$width=30,$quality=100,$picfile,$style);
+        return self::linkWithPictureVar($username, $height = 30, $width = 30, $style);
     }
     public static function PIC_15_15($username,$picfile='',$style="framed") {
-        return self::linkWithPictureVar($username,$height=15,$width=15,$quality=100,$picfile,$style);
+        return self::linkWithPictureVar($username, $height = 15, $width = 15, $style);
     }
 
     /**
@@ -123,8 +123,8 @@ class MOD_layoutbits
             '><img '.
                 'class="framed" '.
                 'src="'.$thumburl.'" '.
-                'height="50px" '.
-                'width="50px" '.
+                'height="50" '.
+                'width="50" '.
                 'alt="Profile" '.
             '/></a>'
         ;
@@ -143,12 +143,11 @@ class MOD_layoutbits
      * @param string $username
      * @param string $height of picture
      * @param string $width of picture
-     * @param string $quality of picture
-     * @param string $picfile alternative picture path
      * @param string $style css-class for the image-tag
      * @return string html-formatted link with picture
+     * @throws PException
      */
-    public static function linkWithPictureVar($username,$height,$width,$quality,$picfile,$style)
+    public static function linkWithPictureVar($username, $height, $width, $style)
     {
         $words = new MOD_words();
         $thumburl = self::member_pic_url().$username.'?size='.$height;

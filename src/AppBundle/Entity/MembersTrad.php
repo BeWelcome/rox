@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Memberstrads
+ * MembersTrad
  *
- * @ORM\Table(name="memberstrads", uniqueConstraints={@ORM\UniqueConstraint(name="Unique_entry", columns={"IdTrad", "IdOwner", "IdLanguage"})}, indexes={@ORM\Index(name="IdTrad", columns={"IdTrad"}), @ORM\Index(name="IdLanguage", columns={"IdLanguage"})})
+ * @ORM\Table(name="MembersTrads", uniqueConstraints={@ORM\UniqueConstraint(name="Unique_entry", columns={"IdTrad", "IdOwner", "IdLanguage"})}, indexes={@ORM\Index(name="IdTrad", columns={"IdTrad"}), @ORM\Index(name="IdLanguage", columns={"IdLanguage"})})
  * @ORM\Entity
  */
-class Memberstrads
+class MembersTrad
 {
     /**
      * @var integer
@@ -85,14 +85,14 @@ class Memberstrads
     private $id;
 
     /**
-     * @var \AppBundle\Entity\Languages
+     * @var Language
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Languages")
+     * @ORM\ManyToOne(targetEntity="Language")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdLanguage", referencedColumnName="id")
      * })
      */
-    private $idlanguage;
+    private $language;
 
 
 
@@ -101,7 +101,7 @@ class Memberstrads
      *
      * @param integer $idowner
      *
-     * @return Memberstrads
+     * @return MembersTrad
      */
     public function setIdowner($idowner)
     {
@@ -125,7 +125,7 @@ class Memberstrads
      *
      * @param integer $idtrad
      *
-     * @return Memberstrads
+     * @return MembersTrad
      */
     public function setIdtrad($idtrad)
     {
@@ -149,7 +149,7 @@ class Memberstrads
      *
      * @param integer $idtranslator
      *
-     * @return Memberstrads
+     * @return MembersTrad
      */
     public function setIdtranslator($idtranslator)
     {
@@ -173,7 +173,7 @@ class Memberstrads
      *
      * @param \DateTime $updated
      *
-     * @return Memberstrads
+     * @return MembersTrad
      */
     public function setUpdated($updated)
     {
@@ -197,7 +197,7 @@ class Memberstrads
      *
      * @param \DateTime $created
      *
-     * @return Memberstrads
+     * @return MembersTrad
      */
     public function setCreated($created)
     {
@@ -221,7 +221,7 @@ class Memberstrads
      *
      * @param string $type
      *
-     * @return Memberstrads
+     * @return MembersTrad
      */
     public function setType($type)
     {
@@ -245,7 +245,7 @@ class Memberstrads
      *
      * @param string $sentence
      *
-     * @return Memberstrads
+     * @return MembersTrad
      */
     public function setSentence($sentence)
     {
@@ -269,7 +269,7 @@ class Memberstrads
      *
      * @param integer $idrecord
      *
-     * @return Memberstrads
+     * @return MembersTrad
      */
     public function setIdrecord($idrecord)
     {
@@ -293,7 +293,7 @@ class Memberstrads
      *
      * @param string $tablecolumn
      *
-     * @return Memberstrads
+     * @return MembersTrad
      */
     public function setTablecolumn($tablecolumn)
     {
@@ -323,15 +323,15 @@ class Memberstrads
     }
 
     /**
-     * Set idlanguage
+     * Set language
      *
-     * @param \AppBundle\Entity\Languages $idlanguage
+     * @param Language $language
      *
-     * @return Memberstrads
+     * @return MembersTrad
      */
-    public function setIdlanguage(\AppBundle\Entity\Languages $idlanguage = null)
+    public function setLanguage(Language $language = null)
     {
-        $this->idlanguage = $idlanguage;
+        $this->language = $language;
 
         return $this;
     }
@@ -339,10 +339,10 @@ class Memberstrads
     /**
      * Get idlanguage
      *
-     * @return \AppBundle\Entity\Languages
+     * @return Language
      */
-    public function getIdlanguage()
+    public function getLanguage()
     {
-        return $this->idlanguage;
+        return $this->language;
     }
 }

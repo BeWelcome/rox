@@ -38,16 +38,23 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
      */
     public function getGlobals()
     {
+        /** @var Member $member */
         $member = null;
         $rememberMeToken = unserialize($this->session->get('_security_default'));
         if (false !== $rememberMeToken) {
             $member = $rememberMeToken->getUser();
         }
 
+        $teams = [];
+        if (null !== $member) {
+            $roles = $rememberMeToken->getRoles();
+            $teams = $this->getTeams($roles);
+        }
+
         return [
             'my_member' => $member ? $member : null,
             'messageCount' => $member ? $this->getUnreadMessagesCount($member) : 0,
-            'teams' => $member ? $this->getTeams($rememberMeToken->getRoles()) : [],
+            'teams' => $teams,
         ];
     }
 

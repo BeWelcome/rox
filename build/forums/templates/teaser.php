@@ -24,7 +24,7 @@ if (isset($this->keyword)) {
                 <input type="hidden" name="<?= $this->searchCallbackId ?>" value="1"/>
                 <input type="text" name="fs-keyword" class="form-control"
                        placeholder="<?= $this->_model->words->getFormatted('ForumSearch') ?>" value="<?= $keyword ?>"/>
-                <span class="input-group-btn">
+                <span class="input-group-append">
                     <button type="submit" name="fss" class="btn btn-primary"><i
                                 class="fa fa-search"></i> <?php echo $this->_model->words->getSilent('Search') ?></button> <?php echo $this->_model->words->flushBuffer(); ?>
                     </span>

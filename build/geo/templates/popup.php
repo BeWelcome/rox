@@ -24,7 +24,7 @@
                         echo isset($mem_redirect->location) ? 'value="'.htmlentities($mem_redirect->location, ENT_COMPAT, 'utf-8').'" ' : '';
                         ?>
                          > 
-                         <span class="input-group-btn">
+                         <span class="input-group-append">
                              <button type="submit" class="button" id="btn-geo-search"><?=$words->get('label_search_location')?></button>
                          </span>
                     </div>

@@ -24,9 +24,9 @@
 
             <div class="form-group">
                 <div class="input-group date" id="arrival" data-target-input="nearest">
-                    <span class="input-group-addon" data-target="#arrival" data-toggle="datetimepicker">
-                        <span class="fa fa-calendar"></span>
-                    </span>
+                    <div class="input-group-prepend" data-target="#arrival" data-toggle="datetimepicker">
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    </div>
                     {{ form_widget(form.request.arrival, { 'attr': {'data-target': '#arrival'}}) }}
                 </div>
                 {{ form_errors(form.request.arrival) }}
@@ -34,9 +34,9 @@
 
             <div class="form-group">
                 <div class="input-group date" id="departure" data-target-input="nearest">
-                    <span class="input-group-addon" data-target="#departure" data-toggle="datetimepicker">
-                        <span class="fa fa-calendar"></span>
-                    </span>
+                    <div class="input-group-prepend" data-target="#departure" data-toggle="datetimepicker">
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    </div>
                     {{ form_widget(form.request.departure, { 'attr': {'data-target': '#departure'}}) }}
                 </div>
                 {{ form_errors(form.request.departure) }}

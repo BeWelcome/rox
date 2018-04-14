@@ -11,8 +11,8 @@ AppBundle\Entity\Member:
         Status: 'Active'
         ChangedId: 0
         city: '@Berlin'
-        Latitude: 0.0
-        Longitude: 0.0
+        Latitude: '<latitude(@Berlin->Latitude - 0.1,@Berlin->Latitude + 0.1)>'
+        Longitude: '<longitude(@Berlin->Longitude - 0.1,@Berlin->Longitude + 0.1)>'
         NbRemindWithoutLogingIn: 0
         HomePhoneNumber: 0
         CellPhoneNumber: 0

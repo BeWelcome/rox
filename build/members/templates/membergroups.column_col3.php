@@ -12,7 +12,7 @@
             foreach ($this->pager->getActiveSubset($my_groups) as $group)  : ?>
                 <div class="groupbox clearfix">
                     <a href="groups/<?=$group->id ?>">
-                        <img class="framed float_left"  width="50px" height="50px" alt="Group" src="<?= ((strlen($group->Picture) > 0) ? "groups/thumbimg/{$group->getPKValue()}" : 'images/icons/group.png' ) ;?>"/>
+                        <img class="framed float_left"  width="50" height="50" alt="Group" src="<?= ((strlen($group->Picture) > 0) ? "groups/thumbimg/{$group->getPKValue()}" : 'images/icons/group.png' ) ;?>"/>
                     </a>
                     <div class="groupinfo">
                     <h4><a href="groups/<?= $group->id ?>"><?=htmlspecialchars($group->Name, ENT_QUOTES)?></a></h4>

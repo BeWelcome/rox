@@ -401,7 +401,7 @@ class RequestAndMessageController extends Controller
             }
 
             if (HostingRequest::REQUEST_CANCELLED === $newRequest->getRequest()->getStatus()) {
-                $subject = 'Canceled! '.$subject;
+                $subject = 'Canceled: '.$subject;
             }
 
             $this->sendMailNotification(
@@ -467,7 +467,7 @@ class RequestAndMessageController extends Controller
         }
 
         // Make sure a new message has to be entered when changing the status of the request
-        $newRequest = $this->getNewRequestFromOriginal($hostingRequest);
+        $newRequest = $this->getNewRequestFromOriginal($hostingRequest, true);
 
         $requestForm = $this->createForm(HostingRequestHost::class, $newRequest);
         $requestForm->handleRequest($request);
@@ -724,7 +724,14 @@ class RequestAndMessageController extends Controller
         return (0 === $recipients) ? false : true;
     }
 
-    private function getNewRequestFromOriginal(Message $hostingRequest)
+    /**
+     * Creates a new message based on the original one.
+     *
+     * @param Message $hostingRequest
+     * @param bool $hostReply
+     * @return Message
+     */
+    private function getNewRequestFromOriginal(Message $hostingRequest, $hostReply = false)
     {
         $newRequest = new Message();
         $newRequest->setSubject(new Subject());
@@ -734,8 +741,13 @@ class RequestAndMessageController extends Controller
         $newRequest->getRequest()->setDeparture($hostingRequest->getRequest()->getDeparture());
         $newRequest->getRequest()->setFlexible($hostingRequest->getRequest()->getFlexible());
         $newRequest->getRequest()->setNumberOfTravellers($hostingRequest->getRequest()->getNumberOfTravellers());
-        $newRequest->setReceiver($hostingRequest->getReceiver());
-        $newRequest->setSender($hostingRequest->getSender());
+        if ($hostReply) {
+            $newRequest->setReceiver($hostingRequest->getSender());
+            $newRequest->setSender($hostingRequest->getReceiver());
+        } else {
+            $newRequest->setReceiver($hostingRequest->getReceiver());
+            $newRequest->setSender($hostingRequest->getSender());
+        }
 
         return $newRequest;
     }

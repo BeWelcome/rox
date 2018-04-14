@@ -60,7 +60,6 @@ class MOD_words
 
     /**
      * MOD_words constructor.
-     * @param SessionInterface $session
      * @param null $category
      * @throws Exception
      * @throws PException
@@ -89,7 +88,7 @@ class MOD_words
 
         $R = MOD_right::get();
         if ($R->hasRight("Words", $this->_lang)) {
-            $this->_offerTranslationLink = true;
+            $this->_offerTranslationLink = false;
         }
 
         // read translation mode from $this->_session->get('tr_mode')
@@ -121,7 +120,8 @@ class MOD_words
     }
 
     public function getTrMode() {
-        return $this->_trMode;
+        // Disable old style translation
+        return 'browse';
     }
 
 
@@ -132,7 +132,8 @@ class MOD_words
 
 
     public function translationLinksEnabled() {
-        return $this->_offerTranslationLink;
+        // Disable old style translation.
+        return false;
     }
 
 

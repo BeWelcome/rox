@@ -159,7 +159,7 @@ function Menu2_old($link = "", $tt = "") {
             <div class="input-group" style="width: 160px;">
                 <input class="form-control input-sm" type="text" name="vars" size="15" maxlength="30" placeholder="Search..." id="text-field" value="Search..." />
                 <input type="hidden" name="quicksearch_callbackId" value="1"/>
-                <span class="input-group-btn">
+                <span class="input-group-append">
                     <button type="submit" class="btn btn-default btn-sm" id="submit-button"><i class="fa fa-search"></i></button>
                 </span>
             </div><!-- /input-group -->

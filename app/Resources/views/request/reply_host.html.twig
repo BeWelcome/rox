@@ -24,9 +24,11 @@
             <div class="form-group">
                 {{ form_errors(form.request.arrival) }}
                 <div class="input-group date" id="arrival" data-target-input="nearest">
-                    <span class="input-group-addon" data-target="#arrival" data-toggle="datetimepicker">
-                        <i class="fa fa-calendar mt-2 mr-1"></i>
-                    </span>
+                    <div class="input-group-prepend" data-target="#arrival" data-toggle="datetimepicker">
+                        <span class="input-group-text">
+                            <i class="fa fa-calendar mt-2 mr-1"></i>
+                        </span>
+                    </div>
                     {{ form_widget(form.request.arrival, { 'attr': {'data-target': '#arrival', 'data-toggle': 'datetimepicker'}}) }}
                 </div>
             </div>
@@ -34,9 +36,11 @@
             <div class="form-group">
                 {{ form_errors(form.request.departure) }}
                 <div class="input-group date" id="departure" data-target-input="nearest">
-                    <span class="input-group-addon" data-target="#departure" data-toggle="datetimepicker">
-                        <i class="fa fa-calendar mt-2 mr-1"></i>
-                    </span>
+                    <div class="input-group-prepend" data-target="#departure" data-toggle="datetimepicker">
+                        <span class="input-group-text">
+                            <i class="fa fa-calendar mt-2 mr-1"></i>
+                        </span>
+                    </div>
                     {{ form_widget(form.request.departure, { 'attr': {'data-target': '#departure', 'data-toggle': 'datetimepicker'}}) }}
                 </div>
             </div>

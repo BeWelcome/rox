@@ -5,19 +5,19 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Comments
+ * Comment
  *
  * @ORM\Table(name="comments", indexes={@ORM\Index(name="IdToMember", columns={"IdToMember"}), @ORM\Index(name="comments_ibfk_1", columns={"IdFromMember"})})
  * @ORM\Entity
  */
-class Comments
+class Comment
 {
     /**
      * @var string
      *
      * @ORM\Column(name="Lenght", type="string", nullable=false)
      */
-    private $lenght;
+    private $length;
 
     /**
      * @var string
@@ -92,49 +92,49 @@ class Comments
     private $id;
 
     /**
-     * @var \AppBundle\Entity\Members
+     * @var Member
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Members")
+     * @ORM\ManyToOne(targetEntity="Member")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdToMember", referencedColumnName="id")
      * })
      */
-    private $idtomember;
+    private $toMember;
 
     /**
-     * @var \AppBundle\Entity\Members
+     * @var Member
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Members")
+     * @ORM\ManyToOne(targetEntity="Member")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdFromMember", referencedColumnName="id")
      * })
      */
-    private $idfrommember;
+    private $fromMember;
 
 
 
     /**
-     * Set lenght
+     * Set length
      *
-     * @param string $lenght
+     * @param string $length
      *
-     * @return Comments
+     * @return Comment
      */
-    public function setLenght($lenght)
+    public function setLength($length)
     {
-        $this->lenght = $lenght;
+        $this->length = $length;
 
         return $this;
     }
 
     /**
-     * Get lenght
+     * Get length
      *
      * @return string
      */
-    public function getLenght()
+    public function getLength()
     {
-        return $this->lenght;
+        return $this->length;
     }
 
     /**
@@ -142,7 +142,7 @@ class Comments
      *
      * @param string $quality
      *
-     * @return Comments
+     * @return Comment
      */
     public function setQuality($quality)
     {
@@ -166,7 +166,7 @@ class Comments
      *
      * @param string $textfree
      *
-     * @return Comments
+     * @return Comment
      */
     public function setTextfree($textfree)
     {
@@ -190,7 +190,7 @@ class Comments
      *
      * @param string $textwhere
      *
-     * @return Comments
+     * @return Comment
      */
     public function setTextwhere($textwhere)
     {
@@ -214,7 +214,7 @@ class Comments
      *
      * @param \DateTime $updated
      *
-     * @return Comments
+     * @return Comment
      */
     public function setUpdated($updated)
     {
@@ -238,7 +238,7 @@ class Comments
      *
      * @param \DateTime $created
      *
-     * @return Comments
+     * @return Comment
      */
     public function setCreated($created)
     {
@@ -262,7 +262,7 @@ class Comments
      *
      * @param string $adminaction
      *
-     * @return Comments
+     * @return Comment
      */
     public function setAdminaction($adminaction)
     {
@@ -286,7 +286,7 @@ class Comments
      *
      * @param string $displayableincommentofthemonth
      *
-     * @return Comments
+     * @return Comment
      */
     public function setDisplayableincommentofthemonth($displayableincommentofthemonth)
     {
@@ -310,7 +310,7 @@ class Comments
      *
      * @param boolean $displayinpublic
      *
-     * @return Comments
+     * @return Comment
      */
     public function setDisplayinpublic($displayinpublic)
     {
@@ -334,7 +334,7 @@ class Comments
      *
      * @param boolean $allowedit
      *
-     * @return Comments
+     * @return Comment
      */
     public function setAllowedit($allowedit)
     {
@@ -366,13 +366,13 @@ class Comments
     /**
      * Set idtomember
      *
-     * @param \AppBundle\Entity\Members $idtomember
+     * @param Member $toMember
      *
-     * @return Comments
+     * @return Comment
      */
-    public function setIdtomember(\AppBundle\Entity\Members $idtomember = null)
+    public function setToMember(Member $toMember = null)
     {
-        $this->idtomember = $idtomember;
+        $this->toMember = $toMember;
 
         return $this;
     }
@@ -380,23 +380,23 @@ class Comments
     /**
      * Get idtomember
      *
-     * @return \AppBundle\Entity\Members
+     * @return Member
      */
-    public function getIdtomember()
+    public function getToMember()
     {
-        return $this->idtomember;
+        return $this->toMember;
     }
 
     /**
      * Set idfrommember
      *
-     * @param \AppBundle\Entity\Members $idfrommember
+     * @param Member $fromMember
      *
-     * @return Comments
+     * @return Comment
      */
-    public function setIdfrommember(\AppBundle\Entity\Members $idfrommember = null)
+    public function setFromMember(Member $fromMember = null)
     {
-        $this->idfrommember = $idfrommember;
+        $this->fromMember = $fromMember;
 
         return $this;
     }
@@ -404,10 +404,10 @@ class Comments
     /**
      * Get idfrommember
      *
-     * @return \AppBundle\Entity\Members
+     * @return Member
      */
-    public function getIdfrommember()
+    public function getFromMember()
     {
-        return $this->idfrommember;
+        return $this->fromMember;
     }
 }

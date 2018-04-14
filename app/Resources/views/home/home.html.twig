@@ -258,18 +258,18 @@
                             <span>{{ 'IndexPageWord_share' | trans }}</span>
                             <span class="d-block">{{ 'and start meeting people from everywhere.' | trans }}</span>
                         </div>
+                        <label for="username" class="sr-only">{{ 'Choose your username!' | trans }}</label>
                         <div class="input-group" data-250-end="opacity:0;" data-50-end="opacity:1">
-                            <label for="username" class="sr-only">{{ 'Choose your username!' | trans }}</label>
-                            <span class="input-group-addon"><i class="fa fa-lg fa-user" aria-hidden="true"></i></span>
+                            <span class="input-group-prepend"><i class="input-group-text fa fa-lg fa-user" aria-hidden="true"></i></span>
                             <input type="text" class="form-control" name="username" id="username"
                                    placeholder="{{ 'Choose your username!' | trans }}"
                                    value=""/>
-                            <span class="input-group-addon p-0">
+                            <span class="input-group-append p-0">
                             <button class="btn btn-primary border-0" type="submit">
                                 <i class="fa fa-lg fa-chevron-right" aria-hidden="true"></i>
                                 <span class="sr-only">{{ 'Submit' | trans }}</span>
                             </button>
-                        </span>
+                            </span>
                         </div>
                     </form>
                 </div>
@@ -280,13 +280,13 @@
                             <span>{{ 'Find a place to stay' | trans }}</span>
                             <span class="d-block">{{ 'and meet locals when traveling worldwide.' | trans }}</span>
                         </div>
+                        <label for="location" class="sr-only">{{ 'Where do you want to go?' | trans }}</label>
                         <div class="input-group" data-250-end="opacity:0;" data-50-end="opacity:1">
-                            <label for="location" class="sr-only">{{ 'Where do you want to go?' | trans }}</label>
-                            <span class="input-group-addon"><i class="fa fa-lg fa-bed" aria-hidden="true"></i></span>
+                            <span class="input-group-prepend"><i class="input-group-text fa fa-lg fa-bed" aria-hidden="true"></i></span>
                             <input type="text" class="form-control" name="location"
                                    placeholder="{{ 'Where do you want to go?' | trans }}"
                                    value=""/>
-                            <span class="input-group-addon p-0">
+                            <span class="input-group-append p-0">
                                 <button class="btn btn-primary border-0" type="submit">
                                     <i class="fa fa-lg fa-chevron-right" aria-hidden="true"></i>
                                     <span class="sr-only">{{ 'Search' | trans }}</span>

@@ -2,11 +2,13 @@
 
 namespace AppBundle\Pagerfanta;
 
+use AppBundle\Entity\Member;
 use EnvironmentExplorer;
 use Pagerfanta\Adapter\AdapterInterface;
 use Rox\Framework\SessionSingleton;
 use SearchModel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class SearchAdapter implements AdapterInterface
 {
@@ -29,6 +31,22 @@ class SearchAdapter implements AdapterInterface
         // old code, which is now turned off.
         $session = $container->get('session');
         $session->start();
+
+        if (!$session->has('IdMember')) {
+            $rememberMeToken = unserialize($session->get('_security_default'));
+            if (null === $rememberMeToken) {
+                throw new AccessDeniedException();
+            }
+            if (false !== $rememberMeToken) {
+                /** @var Member $user */
+                $user = $rememberMeToken->getUser();
+                if (null !== $user) {
+                    $session->set('IdMember', $user->getId());
+                    $session->set('MemberStatus', $user->getStatus());
+                    $session->set('APP_User_id', $user->getId());
+                }
+            }
+        }
 
         // Make sure the Rox classes find this session
         SessionSingleton::createInstance($session);

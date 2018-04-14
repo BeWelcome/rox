@@ -141,7 +141,7 @@
                         <div class="mb-3 d-flex d-column">
                             <div>
                                 <a href="groups/<? echo $group_id; ?>">
-                                <img class="framed float-left mr-2" width="50px" height="50px" alt="Group"
+                                <img class="framed float-left mr-2" width="50" height="50" alt="Group"
                                      src="<? echo $group_img; ?>"/>
                             </a>
                             </div>

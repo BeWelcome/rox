@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Membersphotos
+ * MembersPhoto
  *
  * @ORM\Table(name="membersphotos", indexes={@ORM\Index(name="IdMember", columns={"IdMember"})})
  * @ORM\Entity
  */
-class Membersphotos
+class MembersPhoto
 {
     /**
      * @var string
@@ -70,7 +70,7 @@ class Membersphotos
      *
      * @param string $filepath
      *
-     * @return Membersphotos
+     * @return MembersPhoto
      */
     public function setFilepath($filepath)
     {
@@ -94,7 +94,7 @@ class Membersphotos
      *
      * @param integer $idmember
      *
-     * @return Membersphotos
+     * @return MembersPhoto
      */
     public function setIdmember($idmember)
     {
@@ -118,7 +118,7 @@ class Membersphotos
      *
      * @param boolean $sortorder
      *
-     * @return Membersphotos
+     * @return MembersPhoto
      */
     public function setSortorder($sortorder)
     {
@@ -142,7 +142,7 @@ class Membersphotos
      *
      * @param \DateTime $updated
      *
-     * @return Membersphotos
+     * @return MembersPhoto
      */
     public function setUpdated($updated)
     {
@@ -166,7 +166,7 @@ class Membersphotos
      *
      * @param \DateTime $created
      *
-     * @return Membersphotos
+     * @return MembersPhoto
      */
     public function setCreated($created)
     {
@@ -190,7 +190,7 @@ class Membersphotos
      *
      * @param integer $comment
      *
-     * @return Membersphotos
+     * @return MembersPhoto
      */
     public function setComment($comment)
     {

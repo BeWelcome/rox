@@ -10,6 +10,7 @@ use HtmlTruncator\Truncator;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\DataCollector\TranslationDataCollector;
 use Symfony\Component\Translation\DataCollectorTranslator;
+use Symfony\Component\VarDumper\Cloner\Data;
 use Twig_Extension;
 use Twig_Extension_GlobalsInterface;
 use Twig_SimpleFilter;
@@ -128,16 +129,50 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
         return $purifier->purify(trim($text));
     }
 
+/*    private function extractMessageTypes($messages)
+    {
+        $messageTypes = [
+            'defined' => [],
+            'missing' => [],
+            'fallback' => []
+        ];
+
+        foreach($messages as $message) {
+            if ($message['domain'] === 'messages') {
+                $value = [
+                    'id' => $message['id'],
+                    'original' => $this->translator->trans($message['id'], $message['parameters'], 'messages', 'en'),
+                    'locale' => $message['locale'],
+                    'translation' => $message['translation'],
+                    ];
+
+                $state = 'unknown';
+                switch ($message['state']) {
+                    case DataCollectorTranslator::MESSAGE_DEFINED:
+                        $state = 'defined';
+                        break;
+                    case DataCollectorTranslator::MESSAGE_MISSING:
+                        $state = 'missing';
+                        break;
+                    case DataCollectorTranslator::MESSAGE_EQUALS_FALLBACK:
+                        $state = 'fallback';
+                        break;
+                }
+
+                $messageTypes[$state][] = $value;
+            }
+        }
+
+        return $messageTypes;
+    }*/
+
     public function getTranslations()
     {
         $collector = new TranslationDataCollector($this->translator);
         $collector->lateCollect();
 
         return [
-            'defined' => $collector->getCountDefines(),
-            'missing' => $collector->getCountMissings(),
-            'fallback' => $collector->getCountFallbacks(),
-            'messages' => $collector->getMessages(),
+            'collector' => $collector,
             ];
     }
 

@@ -98,7 +98,9 @@ $vars =& PPostHandler::getVars($callbackId);
         <div class="w-100">
             <label class="sr-only" for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label>
             <div class="input-group mb-2 mb-sm-0">
-                <div class="input-group-addon h5 mt-2 mr-2" id="forumaddtitle"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></div>
+                <div class="input-group-prepend h5 mt-2 mr-2" id="forumaddtitle">
+                    <div class="input-group-text"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></div>
+                </div>
                 <?php
                 $topic_titletrad = "";
                 if (isset($vars['topic_title'])) {

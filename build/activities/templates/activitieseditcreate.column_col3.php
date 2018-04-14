@@ -61,8 +61,10 @@ if (empty($vars)) {
             <div class="input-group date" id="date-time-start" data-target-input="nearest">
                 <input type="text" id="activity-start-date" name="activity-start-date" class="form-control vaidate" data-target="#date-time-start"
                        value="<?php echo $vars['activity-start-date'];?>" placeholder="<?php echo $words->get('ActivityStart'); ?>*" />
-                <span class="input-group-addon" data-target="#date-time-start" data-toggle="datetimepicker">
-                    <span class="fa fa-calendar"></span>
+                <div class="input-group-append" data-target="#date-time-start" data-toggle="datetimepicker">
+                    <span class="input-group-text">
+                        <i class="fa fa-calendar"></i>
+                    </span>
                 </span>
             </div>
         </div>
@@ -73,8 +75,10 @@ if (empty($vars)) {
             <div class="input-group date" id="date-time-end" data-target-input="nearest">
                 <input type="text" id="activity-end-date" name="activity-end-date" class="form-control vaidate" data-target="#date-time-end"
                        value="<?php echo $vars['activity-end-date'];?>" placeholder="<?php echo $words->get('ActivityEnd'); ?>*" />
-                <span class="input-group-addon" data-target="#date-time-end" data-toggle="datetimepicker">
-                    <span class="fa fa-calendar"></span>
+                <div class="input-group-append" data-target="#date-time-end" data-toggle="datetimepicker">
+                    <span class="input-group-text">
+                        <i class="fa fa-calendar"></i>
+                    </span>
                 </span>
             </div>
         </div>
@@ -86,7 +90,7 @@ if (empty($vars)) {
         <div class="col-12 mt-3">
             <div class="input-group">
                 <input type="text" id="activity-location" name="activity-location" class="form-control" value="<?php echo $vars['activity-location']; ?>" placeholder="<?php echo $words->get('ActivityLocation'); ?>*">
-                <span class="input-group-btn">
+                <span class="input-group-append">
                         <button class="btn btn-primary" type="submit" id="activity-location-button" name="activity-location-button"><?php echo $words->getBuffered('ActivitiesLocationSearch'); ?></button><?php echo $words->flushBuffer(); ?>
                     </span>
             </div>

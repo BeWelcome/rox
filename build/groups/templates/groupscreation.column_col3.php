@@ -43,17 +43,21 @@
         <label for='group_image'><?= $words->get('GroupsImage'); ?></label><br /><input id='group_image' name='group_image' type='file' />
 
         <?= ((!empty($problems['Group_'])) ? "<p class='alert-danger p-2 mt-3'>" . $words->get('GroupsNameMissing') . "</p>" : '' ); ?>
+        <label for="name" class="sr-only"><?= $words->get('Name');?></label>
         <div class="input-group mt-3">
-            <span class="input-group-addon font-weight-bold" id="newgroupname"><?= $words->get('Name');?></span>
-            <label for="name" class="sr-only"><?= $words->get('Name');?></label>
+            <div class="input-group-prepend font-weight-bold" id="newgroupname">
+                <span class="input-group-text"><?= $words->get('Name');?></span>
+            </div>
             <input class="form-control w-100" maxlength="200" id="name" name="Group_" value="<?=$Group_?>" aria-describedby="newgroupname" type="text">
         </div>
 
 
         <?= ((!empty($problems['GroupDesc_'])) ? "<p class='alert-danger p-2 mt-3'>" . $words->get('GroupsDescriptionMissing') ."</p>" : '' ); ?>
+        <label for="description" class="sr-only"><?= $words->get('Description');?></label>
         <div class="input-group my-3">
-            <span class="input-group-addon font-weight-bold" style="white-space: normal;" id="newgroupdescription"><?= $words->get('Description');?></span>
-            <label for="description" class="sr-only"><?= $words->get('Description');?></label>
+            <div class="input-group-prepend font-weight-bold" style="white-space: normal;" id="newgroupdescription">
+                <span class="input-group-text"><?= $words->get('Description');?></span>
+            </div>
             <textarea  id="description" name="GroupDesc_" aria-describedby="newgroupdescription" rows="5" class="w-100" ><?=$GroupDesc_?></textarea>
         </div>
 

@@ -40,8 +40,10 @@ if (isset($this->suggestionsGroupId)) {
 $vars =& PPostHandler::getVars($callbackId);
 
 ?>
+<? /* obsolete javascript?
 <script type="text/javascript" src="script/blog_suggest.js"></script>
 <script type="text/javascript" src="script/forums_suggest.js"></script>
+*/ ?>
 
 <div class="col-12">
 
@@ -79,6 +81,7 @@ $vars =& PPostHandler::getVars($callbackId);
 <form method="post" onsubmit="return check_SelectedLanguage();" action="<?php echo $uri; ?>" name="editform"
       class="fieldset_toggles" id="forumsform">
     <input type="hidden" name="<?php echo $callbackId; ?>" value="1"/>
+    <input type="hidden" name="IdLanguage" id="IdLanguage" value="0">
     <?php
     if (isset($vars['errors']) && is_array($vars['errors'])) {
         if (in_array('title', $vars['errors'])) {
@@ -96,10 +99,9 @@ $vars =& PPostHandler::getVars($callbackId);
         <!-- input title -->
 
         <div class="w-100">
-            <label class="sr-only" for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label>
             <div class="input-group mb-2 mb-sm-0">
-                <div class="input-group-prepend h5 mt-2 mr-2" id="forumaddtitle">
-                    <div class="input-group-text"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></div>
+                <div class="input-group-prepend h5 m-0" id="forumaddtitle">
+                    <div class="input-group-text"><label class="m-0" for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label></div>
                 </div>
                 <?php
                 $topic_titletrad = "";
@@ -111,14 +113,17 @@ $vars =& PPostHandler::getVars($callbackId);
                     }
                 }
                 ?>
+
                 <input type="text" class="form-control" name="topic_title" maxlength="200" id="topic_title"
                        value="<?php echo $topic_titletrad; ?>" aria-describedby="forumaddtitle">
             </div>
         </div>
 
     <? } ?>
-    <div class="w-100">
-        <label for="topic_text" class="sr-only"><?php echo $words->getFormatted("forum_label_text"); ?></label><br/>
+    <div class="w-100 mt-2">
+
+        <label for="topic_text" class="h5 m-0"><?php echo $words->getFormatted("forum_label_text"); ?></label>
+
         <textarea name="topic_text" rows="10" id="topic_text" class="w-100 long"><?php
             if (isset($void_string)) {
                 echo $void_string;
@@ -132,15 +137,6 @@ $vars =& PPostHandler::getVars($callbackId);
 
     if ($groupsforum) {
         echo '<input type="hidden" name="IdGroup" value="' . $groupsforum . '">';
-        if (isset($this->suggestionsThreadId)) {
-            echo '<input type="hidden" name="ThreadId" value="' . $this->suggestionsThreadId . '">';
-        }
-        if (isset($this->suggestionId)) {
-            echo '<input type="hidden" name="SuggestionId" value="' . $this->suggestionId . '">';
-        }
-        if (isset($this->suggestionsUri)) {
-            echo '<input type="hidden" name="SuggestionURI" value="' . $this->suggestionsUri . '">';
-        }
     } else {
         if (isset($vars['IdGroup']) && $vars['IdGroup'] != 0 && is_numeric($vars['IdGroup'])) {
             echo '<input type="hidden" name="IdGroup" value="' . intval($vars['IdGroup']) . '">';
@@ -149,147 +145,78 @@ $vars =& PPostHandler::getVars($callbackId);
         }
     } ?>
 
-<?php if (isset($this->suggestionsGroupId) || ($groupsforum == SuggestionsModel::getGroupId())) { ?>
-    <fieldset class="alert alert-info" id = "fpost_vis_fieldset" >
-        <div>
-            <p class="h3"><?php echo $words->getFormatted("ForumSuggestionsVisibilityAndLanguage"); ?></p>
-            <p><?= $words->get('SuggestionsGroupInfoReply') ?></p>
-            <input type="hidden" name="PostVisibility" id="PostVisibility" value="MembersOnly"/>
-            <input type="hidden" name="IdLanguage" id="IdLanguage" value="0"/>
-        </div>
-    </fieldset>
-<?php } else { ?>
-
     <div class="row pl-3 justify-content-start">
 
-    <div class="dropdown">
-        <legend class="sr-only"><?= $words->getFormatted("forum_label_visibility") ?></legend>
-        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownVisibility" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <?= $words->getFormatted("forum_label_visibility") ?>
-        </button>
-        <div class="dropdown-menu ddextras" aria-labelledby="dropdownVisibility">
-            <div>
-                <?php
-                // visibility can only be set on groups with 'VisiblePosts' set to 'yes'.
-                // Only option to change is to show group post to all members (see #2167)
-                if ($groupsforum || ($IdGroup != 0)) {
-                    if (empty($visibilityCheckbox)) {
-                        // Stupid hack to avoid too many code changes ?>
-                        <input type="hidden" name="PostVisibility" id="PostVisibility" value="GroupOnly">
-                        <input type="hidden" name="ThreadVisibility" id="ThreadVisibility" value="GroupOnly">
-                        <p><?php if ($allow_title) {
-                                echo $words->get('ForumsThreadGroupOnly');
-                            } else {
-                                echo $words->get('ForumsPostGroupOnly');
-                            } ?></p>
-                    <?php }  else {
-                        echo $visibilityCheckbox;
-                    }
-                } else {
-                    // Stupid hack to avoid too many code changes ?>
-                    <input type="hidden" name="PostVisibility" id="PostVisibility" value="MembersOnly"/>
-                    <input type="hidden" name="ThreadVisibility" id="ThreadVisibility" value="MembersOnly"/>
-                    <p><?php if ($allow_title) {
-                            echo $words->get('ForumsThreadMembersOnly');
-                        } else {
-                            echo $words->get('ForumsPostMembersOnly');
-                        } ?></p>
-                <?php } ?>
-            </div>
-        </div>
-    </div>
-
-    <?php } ?>
-
-    <div class="dropdown">
-        <legend class="sr-only"><?php echo $words->getFormatted("forum_Notify") ?></legend>
-        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownNotifications" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <?php echo $words->getFormatted("forum_Notify") ?>
-        </button>
-        <div class="dropdown-menu ddextras" aria-labelledby="dropdownNotifications">
-            <div id="fpost_note">
-                <input type="checkbox" name="NotifyMe" id="NotifyMe" <?php echo $notifymecheck ?>>
-                <label for="NotifyMe"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
-            </div>
-        </div>
-    </div>
-
-        <?php if (isset($this->suggestionsGroupId) || ($groupsforum == SuggestionsModel::getGroupId())) { } else {?>
-
-        <div>
-            <legend class="sr-only"><?php echo $words->getFormatted("forum_label_lang") ?></legend>
-            <button class="btn btn-info" type="button" id="dropdownLanguage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                <?php echo $words->getFormatted("forum_label_lang") ?><i class="fa fa-caret-right ml-1"></i>
+        <div class="dropdown">
+            <legend class="sr-only"><?= $words->getFormatted("forum_label_visibility") ?></legend>
+            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownVisibility" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <?= $words->getFormatted("forum_label_visibility") ?>
             </button>
+            <div class="dropdown-menu ddextras" aria-labelledby="dropdownVisibility">
+                <div>
+                    <?php
+                    // visibility can only be set on groups with 'VisiblePosts' set to 'yes'.
+                    // Only option to change is to show group post to all members (see #2167)
+                    if ($groupsforum || ($IdGroup != 0)) {
+                        if (empty($visibilityCheckbox)) {
+                            // Stupid hack to avoid too many code changes ?>
+                            <input type="hidden" name="PostVisibility" id="PostVisibility" value="GroupOnly">
+                            <input type="hidden" name="ThreadVisibility" id="ThreadVisibility" value="GroupOnly">
+                            <p><?php if ($allow_title) {
+                                    echo $words->get('ForumsThreadGroupOnly');
+                                } else {
+                                    echo $words->get('ForumsPostGroupOnly');
+                                } ?></p>
+                        <?php }  else {
+                            echo $visibilityCheckbox;
+                        }
+                    } else {
+                        // Stupid hack to avoid too many code changes ?>
+                        <input type="hidden" name="PostVisibility" id="PostVisibility" value="MembersOnly"/>
+                        <input type="hidden" name="ThreadVisibility" id="ThreadVisibility" value="MembersOnly"/>
+                        <p><?php if ($allow_title) {
+                                echo $words->get('ForumsThreadMembersOnly');
+                            } else {
+                                echo $words->get('ForumsPostMembersOnly');
+                            } ?></p>
+                    <?php } ?>
+                </div>
+            </div>
         </div>
 
-            <div id="fpost_lang" class="bg-white">
-                <select name="IdLanguage" id="IdLanguage"><?php
-                    // Here propose to choose a language, a javascript routine at the form checking must make it mandatory
-                    if (!isset($AppropriatedLanguage)) {
-                        echo "<option value=\"-1\">-</option>";
-                    }
-
-                    $closeOptGroup = false;
-                    $closeOptGroupFinal = false;
-                    foreach ($LanguageChoices as $Choices) {
-                        if (is_string($Choices)) {
-                            switch ($Choices) {
-                                case "CurrentLanguage":
-                                    echo '<optgroup label="' . $words->getSilent("ForumCurrentLanguage") . '">';
-                                    $closeOptGroup = true;
-                                    break;
-                                case "DefaultLanguage":
-                                    echo '<optgroup label="' . $words->getSilent("ForumDefaultLanguage") . '">';
-                                    $closeOptGroup = true;
-                                    break;
-                                case "UILanguage":
-                                    echo '<optgroup label="' . $words->getSilent("ForumUILanguage") . '">';
-                                    $closeOptGroup = true;
-                                    break;
-                                case "AllLanguages":
-                                    echo '<optgroup label="' . $words->getSilent("ForumAllLanguages") . '">';
-                                    $closeOptGroupFinal = true;
-                                    break;
-                            }
-                        } else {
-                            echo "<option value=\"", $Choices->IdLanguage, "\"";
-                            if ((isset($AppropriatedLanguage)) and ($AppropriatedLanguage == $Choices->IdLanguage)) {
-                                echo " selected='selected'";
-                            }
-                            echo ">", $Choices->Name, "</option>";
-                            if ($closeOptGroup) {
-                                echo "</optgroup>";
-                                $closeOptGroup = false;
-                            }
-                        }
-                    }
-                    if ($closeOptGroupFinal) {
-                        echo "</optgroup>";
-                    }
-                    ?></select><?php echo $words->flushBuffer(); ?>
+        <div class="dropdown">
+            <legend class="sr-only"><?php echo $words->getFormatted("forum_Notify") ?></legend>
+            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownNotifications" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <?php echo $words->getFormatted("forum_Notify") ?>
+            </button>
+            <div class="dropdown-menu ddextras" aria-labelledby="dropdownNotifications">
+                <div id="fpost_note">
+                    <input type="checkbox" name="NotifyMe" id="NotifyMe" <?php echo $notifymecheck ?>>
+                    <label for="NotifyMe"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
+                </div>
             </div>
-<? } ?>
-    </div>
+        </div>
 
-    <div>
-        <input type="submit" class="btn btn-primary px-5" value="<?php
-        if ($allow_title) { // New Topic
-            if ($edit) {
-                echo $words->getFormatted("forum_label_update_topic");
-            } else {
-                echo $words->getFormatted("forum_label_create_topic");
+        <div class="w-100">
+            <input type="submit" class="btn btn-primary px-5" value="<?php
+            if ($allow_title) { // New Topic
+                if ($edit) {
+                    echo $words->getFormatted("forum_label_update_topic");
+                } else {
+                    echo $words->getFormatted("forum_label_create_topic");
+                }
+            } else { // Answer
+                if ($edit) {
+                    echo $words->getFormatted("forum_label_update_post");
+                } else {
+                    echo $words->getFormatted("forum_label_create_post");
+                }
             }
-        } else { // Answer
-            if ($edit) {
-                echo $words->getFormatted("forum_label_update_post");
-            } else {
-                echo $words->getFormatted("forum_label_create_post");
-            }
-        }
 
-        ?>"/>
+            ?>"/>
+        </div>
     </div>
+</div>
 
 </form>
 
@@ -343,21 +270,8 @@ $vars =& PPostHandler::getVars($callbackId);
         Element.toggleClassName($(el_name + '_fieldset'), 'collapsed');
     }
 
-    // purpose here is to force the user to select a language
-    function check_SelectedLanguage() {
-        if (document.editform.IdLanguage.value == -1) {
-            alert('<?php echo $words->getFormatted("YouMustSelectALanguage") ?>');
-            document.editform.IdLanguage.focus();
-            return(false);
-        }
-    }
     function forumOnload() {
-        ForumsSuggest.initialize();
-        <?php if (isset($allow_title) && $allow_title) { ?>
-        toggleFieldsets('fpost_tags_and_location', 1);
-        <? } ?>
         toggleFieldsets('fpost_note', 1);
-        // toggleFieldsets('fpost_lang',1);
     }
 
     document.observe("dom:loaded", forumOnload);

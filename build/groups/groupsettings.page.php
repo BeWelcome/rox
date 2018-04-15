@@ -62,7 +62,6 @@ class GroupSettingsPage extends GroupsBasePage
             $GroupDesc_ = ((!empty($redirected->post['GroupDesc_'])) ? $redirected->post['GroupDesc_'] : '');
             $Type = ((!empty($redirected->post['Type'])) ? $redirected->post['Type']: 'Public');
             $VisiblePosts = ((!empty($redirected->post['VisiblePosts'])) ? $redirected->post['VisiblePosts'] : 'yes');
-            $VisibleComments = ((!empty($redirected->post['VisibleComments'])) ? $redirected->post['VisibleComments'] : 'no');
             $DisplayedOnProfile = ((!empty($redirected->post['DisplayedOnProfile'])) ? $redirected->post['DisplayedOnProfile'] : 'Yes');
             $problems = ((is_array($redirected->problems)) ? $redirected->problems : array());
         }
@@ -71,7 +70,6 @@ class GroupSettingsPage extends GroupsBasePage
             $GroupDesc_ = str_replace(array('<br>','<br/>', '<br />'), "\n", $this->group->getDescription());
             $Type = $this->group->Type;
             $VisiblePosts = (($this->group->VisiblePosts == 'no') ? 'no' : 'yes');
-            $VisibleComments = (($this->group->VisibleComments == 'no') ? 'no' : 'yes');
             $DisplayedOnProfile = (($this->group->DisplayedOnProfile == 'No') ? 'No' : 'Yes');
             $problems = array();
         }
@@ -93,26 +91,35 @@ class GroupSettingsPage extends GroupsBasePage
         ?>
 
         <?php if (!empty($problems['ImageUploadTooBig']) && $problems['ImageUploadTooBig']){
-            echo "<p class='alert-danger p-2'>" . $words->get('GroupsImageUploadTooBig') . "</p>";
+            echo "<div class='alert alert-danger p-2'>" . $words->get('GroupsImageUploadTooBig') . "</div>";
         }
         if (!empty($problems['ImageUpload']) && $problems['ImageUpload']){
-            echo "<p class='alert-danger p-2'>" . $words->get('GroupsImageUploadFailed') . "</p>";
+            echo "<div class='alert alert-danger p-2'>" . $words->get('GroupsImageUploadFailed') . "</div>";
         }?>
-        <div class="float-right w-25">
-            <a class="btn btn-block btn-outline-primary" role="button" href="groups/<?= $this->group->id; ?>/memberadministration"><?= $words->get('GroupsAdministrateMembers'); ?></a>
-            <a class="btn btn-block btn-outline-primary" role="button" href="groups/<?= $this->group->id; ?>/delete"><?= $words->get('GroupsDeleteGroup'); ?></a>
-        </div>
-        <div class="float-left">
-            <h3><?= $words->get('GroupsAddImage'); ?></h3>
-            <label for='group_image'><?= $words->get('GroupsImage'); ?></label><br /><input id='group_image' name='group_image' type='file' />
+        <div class="row">
+
+            <div class="col-9">
+                <h5><?= $words->get('GroupsAddImage'); ?></h5>
+                <div class="float-left">
+                    <img class="float-left framed mr-2 mb-2" src="groups/realimg/<?= $this->group->getPKValue(); ?>" width="100px" alt="Group image">
+                </div>
+                <div>
+                    <label for='group_image'><?= $words->get('GroupsImage'); ?></label>
+                    <input id='group_image' name='group_image' type='file' />
+                </div>
+
+            </div>
+
+            <div class="col-3">
+                <a class="btn btn-block btn-outline-primary" role="button" href="groups/<?= $this->group->id; ?>/memberadministration"><?= $words->get('GroupsAdministrateMembers'); ?></a>
+                <a class="btn btn-block btn-outline-primary" role="button" href="groups/<?= $this->group->id; ?>/delete"><?= $words->get('GroupsDeleteGroup'); ?></a>
+            </div>
         </div>
 
-        <?= ((!empty($problems['GroupDesc_'])) ? "<p class='alert-danger p-2 mt-3'>" . $words->get('GroupsCreationDescriptionMissing') ."</p>" : '' ); ?>
-        <label for="description" class="sr-only"><?= $words->get('Description');?></label>
+        <?= ((!empty($problems['GroupDesc_'])) ? "<div class='alert alert-danger p-2 mt-3'>" . $words->get('GroupsCreationDescriptionMissing') ."</div>" : '' ); ?>
+
         <div class="input-group my-3">
-            <div class="input-group-prepend font-weight-bold" style="white-space: normal;" id="newgroupdescription">
-                <span class="input-group-text"><?= $words->get('Description');?></span>
-            </div>
+            <label for="description" class="h5 m-0"><?= $words->get('Description');?></label>
             <textarea  id="description" name="GroupDesc_" aria-describedby="newgroupdescription" rows="5" class="w-100" ><?=htmlspecialchars($GroupDesc_, ENT_QUOTES)?></textarea>
         </div>
 
@@ -120,11 +127,11 @@ class GroupSettingsPage extends GroupsBasePage
 
         <div class="col-12 col-lg-6">
 
-            <?= ((!empty($problems['Type'])) ? "<p class='alert-danger p-2'>" . $words->get('GroupsTypeMissing') . "</p>" : '' ); ?>
+            <?= ((!empty($problems['Type'])) ? "<div class='alert alert-danger p-2'>" . $words->get('GroupsTypeMissing') . "</div>" : '' ); ?>
 
             <fieldset class="form-group">
                 <legend class="m-0">
-                    <label class="m-0"><h3><?= $words->get('GroupsPublicStatusHeading'); ?></h3></label>
+                    <label class="m-0"><h5><?= $words->get('GroupsPublicStatusHeading'); ?></h5></label>
                 </legend>
 
                 <div class="form-check">
@@ -150,10 +157,10 @@ class GroupSettingsPage extends GroupsBasePage
 
         <div class="col-12 col-lg-6">
 
-            <?= ((!empty($problems['Visibility'])) ? "<p class='alert-danger p-2 mt-3'>" . $words->get('GroupsVisibilityMissing') . "</p>" : '' ); ?>
-            <fieldset class="form-group my-3">
+            <?= ((!empty($problems['Visibility'])) ? "<div class='alert alert-danger p-2 mt-3'>" . $words->get('GroupsVisibilityMissing') . "</div>" : '' ); ?>
+            <fieldset class="form-group">
                 <legend class="m-0">
-                    <label class="m-0"><h3><?= $words->get('GroupsVisiblePostsHeading'); ?></h3></label>
+                    <label class="m-0"><h5><?= $words->get('GroupsVisiblePostsHeading'); ?></h5></label>
                 </legend>
 
                 <div class="form-check">
@@ -171,24 +178,7 @@ class GroupSettingsPage extends GroupsBasePage
             </fieldset>
 
 
-            <fieldset class="form-group my-3">
-                <legend class="m-0">
-                    <label class="m-0"><h3><?= $words->get('GroupCommentsVisibility'); ?></h3></label>
-                </legend>
 
-                <div class="form-check">
-                    <label>
-                        <input type="radio" id="visiblecomments" name="VisibleComments" value="yes"<?= (($VisibleComments=='yes') ? ' checked="checked"': ''); ?> />
-                        <?=$words->get('GroupsCommentsVisible'); ?>
-                    </label>
-                </div>
-                <div class="form-check">
-                    <label>
-                        <input type="radio" id="invisiblecomments" name="VisibleComments" value="no"<?= (($VisibleComments=='no') ? ' checked="checked"': ''); ?> />
-                        <?=$words->get('GroupsCommentsInvisible'); ?>
-                    </label>
-                </div>
-            </fieldset>
         </div>
 
         <div class="col-12 text-center">

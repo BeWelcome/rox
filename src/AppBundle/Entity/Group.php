@@ -92,13 +92,6 @@ class Group
     private $visibleposts = 'yes';
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="VisibleComments", type="string", nullable=false)
-     */
-    private $visiblecomments = 'no';
-
-    /**
      * @var int
      *
      * @ORM\Column(name="id", type="integer")

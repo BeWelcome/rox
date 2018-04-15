@@ -127,7 +127,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
             <?php
 
             if ($can_edit_own && $post->OwnerCanStillEdit == "Yes" && $User && $post->IdWriter == $this->_session->get("IdMember")) {
-                echo '<a href="forums/edit/m' . $post->postid . '" class="btn btn-outline-secondary"><i class="fa fa-pencil-square-o" alt="edit" /></i> ' . $words->getFormatted('forum_EditUser') . '</a><a href="forums/translate/m' . $post->postid . '" class="btn btn-outline-secondary ml-1"><i class="fa fa-globe" alt="translate"></i> ' . $words->getFormatted('forum_TranslateUser') . '</a>';
+                echo '<a href="forums/edit/m' . $post->postid . '" class="btn btn-outline-secondary"><i class="fa fa-pencil-square-o" alt="edit" /></i> ' . $words->getFormatted('forum_EditUser') . '</a>';
             }
             if (($this->BW_Right->HasRight("ForumModerator", "Edit")) || ($this->BW_Right->HasRight("ForumModerator", "All"))) {
 //                 echo ' [<a href="forums/modedit/m'.$post->postid.'">Mod Edit</a>]';

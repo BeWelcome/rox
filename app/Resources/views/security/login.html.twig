@@ -35,31 +35,42 @@
             <form id="main-login-form" role="form" class="form-signin" method="post" action="{{ path('security_check') }}">
                 <h2 class="d-none d-md-block">{{ 'Login' | trans }}</h2>
 
-                <label class="sr-only" for="login-u">{{ 'Username' | trans }}</label>
-                <input type="text" id="login-u" name="_username" autofocus required value="{{ last_username }}" placeholder="{{ 'Username' | trans }}" class="form-control">
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <label class="m-0" for="login-u">{{ 'Username' | trans }}</label>
+                        <input type="text" id="login-u" name="_username" autofocus required value="{{ last_username }}" class="form-control">
+                    </div>
 
-                <label class="sr-only" for="login-p">{{ 'Password' | trans }}</label>
-                <input type="password" id="login-p" name="_password" placeholder="{{ 'Password' | trans }}" class="form-control">
+                    <div class="col-12 col-md-6">
+                        <label class="m-0" for="login-p">{{ 'Password' | trans }}</label>
+                        <input type="password" id="login-p" name="_password" class="form-control">
+                    </div>
 
-                <label for="login-r">
-                    <input type="checkbox" id="login-r" value="1" name="_remember_me">&nbsp;{{ 'StayLoggedIn' | trans }}
-                </label>
+                <div class="col-12 col-md-6 mt-3 text-md-right">
+                    <label for="login-r">
+                        <input type="checkbox" id="login-r" value="1" name="_remember_me">&nbsp;{{ 'StayLoggedIn' | trans }}
+                    </label>
+                </div>
+
 
                 <input type="hidden" name="_csrf_token"
                        value="{{ csrf_token('authenticate') }}"
                 >
 
-                <button type="submit" class="btn btn-primary btn-block">{{ 'IndexPageLoginSubmit' | trans }}</button>
+                <div class="col-12 col-md-6 mt-2">
+                    <button type="submit" class="btn btn-primary btn-block">{{ 'IndexPageLoginSubmit' | trans }}</button>
+                </div>
 
-                <p class="mt-3">
+                <p class="col-12 mt-3">
                     {{ 'LoginformForgetPassword' | trans | format('<a href="">', '</a>') | raw }}
                 </p>
+                </div>
             </form>
         </div>
         <div class="col-12 col-md-6 col-lg-4">
             <h2 class="mb-3">{{ 'SignupNow' | trans }}</h2>
             <p>{{ 'IndexPageWord17' | trans | format('<a class="btn btn-primary btn-block" role="button" href="signup/1">', '</a>') | raw }}</p>
-            <a class="btn btn-primary btn-block" role="button" href="">{{ 'tour_take' | trans }}</a>
+            <a class="btn btn-outline-dark btn-block" role="button" href="">{{ 'tour_take' | trans }}</a>
         </div>
     </div>
 

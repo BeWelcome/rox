@@ -396,7 +396,7 @@ AND t.last_postid = p.id";
      * @access public
      * @return bool
      */
-    public function updateSettings($description, $type, $visible_posts, 0, $picture = '')
+    public function updateSettings($description, $type, $visible_posts, $visible_comment, $picture = '')
     {
         if (!$this->isLoaded())
         {

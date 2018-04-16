@@ -61,6 +61,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('forum_posts_member', '/forums/member/{username}');
         $this->addRouteDirectly('forum_thread_subscription_enable', '/forums/subscriptions/enable/thread/{threadId}');
         $this->addRouteDirectly('forum_thread_subscription_disable', '/forums/subscriptions/disable/thread/{threadId}');
+        $this->addRouteDirectly('rss_feed', '/rss/forumthreads');
         $this->addRouteDirectly('subscriptions_disable', '/forums/subscriptions/disable');
         $this->addRouteDirectly('subscriptions_enable', '/forums/subscriptions/enable');
         $this->addRouteDirectly('subscriptions', '/forums/subscriptions');

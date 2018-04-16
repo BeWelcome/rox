@@ -25,23 +25,31 @@ $words = new MOD_words();
 ?>
 
 <div class="row my-1">
-    <div class="col-12 col-md-6">
-        <div class="list-group">
+
+
+
+    <div class="col-12 col-md-6 col-lg-4">
+        <div class="card">
             <a href="/forums" class="list-group-item list-group-item-action">
-                <h5 class="list-group-item-heading"><?php echo $words->get('CommunityDiscussions') ?></h5>
+                <h5 class="list-group-item-heading"><i class="fa fa-comments-o mr-1"></i><?php echo $words->get('CommunityDiscussions') ?></h5>
                 <p class="list-group-item-text"><?php echo $words->get('ExploreForumDescription') ?></p>
             </a>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4">
+        <div class="card">
             <a href="/groups/search" class="list-group-item list-group-item-action">
-                <h5 class="list-group-item-heading"><?php echo $words->get('Groups') ?></h5>
+                <h5 class="list-group-item-heading"><i class="fa fa-group mr-1"></i><?php echo $words->get('Groups') ?></h5>
                 <p class="list-group-item-text"><?php echo $words->get('ExploreGroupsDescription') ?></p>
             </a>
         </div>
     </div>
 
-    <div class="col-sm-12 col-md-6">
-        <div class="list-group">
+    <div class="col-12 col-md-6 col-lg-4">
+        <div class="card">
             <a href="/activities" class="list-group-item list-group-item-action">
-                <h5 class="list-group-item-heading"><?php echo $words->get('Activities') ?></h5>
+                <h5 class="list-group-item-heading"><i class="fa fa-calendar mr-1"></i><?php echo $words->get('Activities') ?></h5>
                 <p class="list-group-item-text"><?php echo $words->get('ExploreActivitiesDescription') ?></p>
             </a>
         </div>

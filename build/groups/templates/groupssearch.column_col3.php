@@ -37,27 +37,26 @@
         $category_order = (($this->result_order == "categoryasc") ? 'categorydesc' : 'categoryasc');
         ?>
         <div class="col-12 mb-2"><span class="font-weight-bold"><?php echo $words->get('GroupsSearchOrdered'); ?>:</span> <span
-                    class="p-2"><?php echo $words->get('GroupsSearchOrdered' . $this->result_order) ?></span>
-            <span class="font-weight-bold ml-3"><?= $words->get('GroupsSearchOrder'); ?></span>
-            <a class="btn btn-sm btn-primary mx-1"
-               href="groups/search?GroupsSearchInput=<?= $this->search_terms; ?>&order=<?= $act_order; ?>&<?= $this->pager->getActivePageMarker(); ?>"><?= $words->get('GroupsOrderBy' . $act_order); ?></a>
-            <a class="btn btn-sm btn-primary mx-1"
-               href="groups/search?GroupsSearchInput=<?= $this->search_terms; ?>&order=<?= $name_order; ?>&<?= $this->pager->getActivePageMarker(); ?>"><?= $words->get('GroupsOrderBy' . $name_order); ?></a>
-            <a class="btn btn-sm btn-primary mx-1"
-               href="groups/search?GroupsSearchInput=<?= $this->search_terms; ?>&order=<?= $member_order; ?>&<?= $this->pager->getActivePageMarker(); ?>"><?= $words->get('GroupsOrderBy' . $member_order); ?></a>
-            <a class="btn btn-sm btn-primary mx-1"
-               href="groups/search?GroupsSearchInput=<?= $this->search_terms; ?>&order=<?= $created_order; ?>&<?= $this->pager->getActivePageMarker(); ?>"><?= $words->get('GroupsOrderDate' . $created_order); ?></a>
+                    class="btn btn-sm btn-primary"><?php echo $words->get('GroupsSearchOrdered' . $this->result_order) ?></span>
+
+            <span class="dropdown">
+                <button class="btn btn-sm btn-info dropdown-toggle" type="button" id="dropdownVisibility" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= $words->get('GroupsSearchOrder'); ?></button>
+                <div class="dropdown-menu ddextras px-0 py-1" aria-labelledby="dropdownVisibility">
+                    <a class="btn btn-sm btn-light mx-1"
+                       href="groups/search?GroupsSearchInput=<?= $this->search_terms; ?>&order=<?= $act_order; ?>&<?= $this->pager->getActivePageMarker(); ?>"><?= $words->get('GroupsOrderBy' . $act_order); ?></a>
+                    <a class="btn btn-sm btn-light mx-1"
+                       href="groups/search?GroupsSearchInput=<?= $this->search_terms; ?>&order=<?= $name_order; ?>&<?= $this->pager->getActivePageMarker(); ?>"><?= $words->get('GroupsOrderBy' . $name_order); ?></a>
+                    <a class="btn btn-sm btn-light mx-1"
+                       href="groups/search?GroupsSearchInput=<?= $this->search_terms; ?>&order=<?= $member_order; ?>&<?= $this->pager->getActivePageMarker(); ?>"><?= $words->get('GroupsOrderBy' . $member_order); ?></a>
+                    <a class="btn btn-sm btn-light mx-1"
+                       href="groups/search?GroupsSearchInput=<?= $this->search_terms; ?>&order=<?= $created_order; ?>&<?= $this->pager->getActivePageMarker(); ?>"><?= $words->get('GroupsOrderDate' . $created_order); ?></a>
+                </div>
+            </span>
         </div>
 
-        <?
-        // Categories link disabled until we have categories
-        //            |
-        //            <a class="grey" href="groups/search?GroupsSearchInput={$this->search_terms}&amp;Order={$category_order}&Page={$this->result_page}">Category</a>
-
-        echo <<<HTML
 <div class="col-12">
 <div class="row px-2">
-HTML;
+<?
         foreach ($search_result as $group_data) :
 
             ?>

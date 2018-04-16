@@ -574,7 +574,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
                 }
             }
         }
-        return $group->updateSettings($description, $type, $visible_posts, 0, $picture);
+        return $group->updateSettings($description, $type, $visible_posts, $visible_comment, $picture);
     }
 
     /**

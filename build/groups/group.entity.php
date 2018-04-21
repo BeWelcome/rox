@@ -396,7 +396,7 @@ AND t.last_postid = p.id";
      * @access public
      * @return bool
      */
-    public function updateSettings($description, $type, $visible_posts, $visible_comments, $picture = '')
+    public function updateSettings($description, $type, $visible_posts, $visible_comment, $picture = '')
     {
         if (!$this->isLoaded())
         {
@@ -410,8 +410,6 @@ AND t.last_postid = p.id";
         
         $this->Type = $this->dao->escape($type);
         $this->VisiblePosts = $this->dao->escape($visible_posts);
-        $this->VisibleComments = $visible_comments;
-        $this->VisibleComments = $this->dao->escape($visible_comments);
         $this->Picture = (($picture) ? $this->dao->escape($picture) : $this->Picture);
         return $this->update();
     }

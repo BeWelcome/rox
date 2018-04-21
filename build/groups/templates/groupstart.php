@@ -88,12 +88,6 @@
 
 
     <?php endforeach; ?>
-    <?php
-    if (($this->group->VisibleComments == 'yes') && ($memberCount == $visibleMemberCount)) {
-        $shouts = new ShoutsController();
-        $shouts->shoutsList('groups', $group_id);
-    }
-    ?>
 </div>
 
 </div>

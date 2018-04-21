@@ -39,10 +39,10 @@
 
         if ($this->getSubmenuItems()) { ?>
         <div class="row row-offcanvas row-offcanvas-right">
-            <div class="col-12 col-md-9">
+            <div class="col-12 col-md-9 px-0">
     <?php } else { ?>
         <div class="row">
-            <div class="col-12">
+            <div class="col-12 px-0">
     <?php } ?>
 
             <?php

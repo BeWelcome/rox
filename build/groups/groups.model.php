@@ -548,7 +548,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
      * @return bool
      * @access public
      */
-    public function updateGroupSettings($group, $description, $type, $visible_posts, $visible_comments)
+    public function updateGroupSettings($group, $description, $type, $visible_posts)
     {
         if (!is_object($group) || !$group->isLoaded())
         {
@@ -574,7 +574,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
                 }
             }
         }
-        return $group->updateSettings($description, $type, $visible_posts, $visible_comments, $picture);
+        return $group->updateSettings($description, $type, $visible_posts, $visible_comment, $picture);
     }
 
     /**

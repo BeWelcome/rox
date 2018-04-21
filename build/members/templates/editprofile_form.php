@@ -23,7 +23,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
 }
 
 ?>
-<div class="col-12 mt-3">
+<div class="col-12">
     <?php if ($this->adminedit) : ?>
         <?= $words->get('ProfileStatus') ?>:
         <select id="Status" name="Status">
@@ -35,35 +35,35 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
 <div class="col-12">
     <ul class="nav nav-tabs flex-column flex-md-row" id="editProfileTab" role="tablist">
         <li class="nav-item">
-            <a class="nav-link active" id="basics-tab" data-toggle="tab" href="#basics" role="tab" aria-controls="basics"
+            <a class="nav-link btn btn-info" id="basics-tab" data-toggle="tab" href="#basics" role="tab" aria-controls="basics"
                aria-selected="true">Home</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="aboutme-tab" data-toggle="tab" href="#aboutme" role="tab" aria-controls="aboutme"
+            <a class="nav-link btn btn-outline-info" id="aboutme-tab" data-toggle="tab" href="#aboutme" role="tab" aria-controls="aboutme"
                aria-selected="false"><?= $words->get('ProfileSummary') ?></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="accommodation-tab" data-toggle="tab" href="#accommodation" role="tab"
+            <a class="nav-link btn btn-outline-info" id="accommodation-tab" data-toggle="tab" href="#accommodation" role="tab"
                aria-controls="contact" aria-selected="false"><?=$words->get('ProfileAccommodation')?></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="myinterests-tab" data-toggle="tab" href="#myinterests" role="tab"
+            <a class="nav-link btn btn-outline-info" id="myinterests-tab" data-toggle="tab" href="#myinterests" role="tab"
                aria-controls="contact" aria-selected="false"><?=$words->get('ProfileInterests')?></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="languages-tab" data-toggle="tab" href="#languages" role="tab"
+            <a class="nav-link btn btn-outline-info" id="languages-tab" data-toggle="tab" href="#languages" role="tab"
                aria-controls="contact" aria-selected="false">Languages</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="contactinfo-tab" data-toggle="tab" href="#contactinfo" role="tab"
+            <a class="nav-link btn btn-outline-info" id="contactinfo-tab" data-toggle="tab" href="#contactinfo" role="tab"
                aria-controls="contact" aria-selected="false"><?=$words->get('ContactInfo')?></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="travel-tab" data-toggle="tab" href="#travel" role="tab" aria-controls="contact"
+            <a class="nav-link btn btn-outline-info" id="travel-tab" data-toggle="tab" href="#travel" role="tab" aria-controls="contact"
                aria-selected="false">Travel Experience</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="family-tab" data-toggle="tab" href="#family" role="tab" aria-controls="contact"
+            <a class="nav-link btn btn-outline-info" id="family-tab" data-toggle="tab" href="#family" role="tab" aria-controls="contact"
                aria-selected="false"><?=$words->get('MyRelations')?></a>
         </li>
     </ul>
@@ -153,17 +153,17 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                         <label for='genderF'
                                class="btn btn-primary <?= (isset($vars['Gender']) && $vars['Gender'] == 'female') ? 'active' : '' ?>">
                             <input type="radio" id="genderF" name="gender"
-                                   value="female" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'female') ? ' checked="checked"' : ''); ?>/><?= $words->get('female'); ?>
+                                   value="female" class="noradio" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'female') ? ' checked="checked"' : ''); ?>/><?= $words->get('female'); ?>
                         </label>
                         <label for='genderM'
                                class="btn btn-primary <?= (isset($vars['Gender']) && $vars['Gender'] == 'male') ? 'active' : '' ?>"><input
                                     type="radio" id='genderM' name="gender"
-                                    value="male" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'male') ? ' checked="checked"' : ''); ?>/> <?= $words->get('male'); ?>
+                                    value="male" class="noradio" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'male') ? ' checked="checked"' : ''); ?>/> <?= $words->get('male'); ?>
                         </label>
                         <label for='genderX'
                                class="btn btn-primary <?= (isset($vars['Gender']) && $vars['Gender'] == 'other') ? 'active' : '' ?>"><input
                                     type="radio" id='genderX' name="gender"
-                                    value="other" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'other') ? ' checked="checked"' : ''); ?>/> <?= $words->get('GenderOther'); ?>
+                                    value="other" class="noradio" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'other') ? ' checked="checked"' : ''); ?>/> <?= $words->get('GenderOther'); ?>
                         </label>
                     </div>
                     <input name="HideGender" value="Yes" type="checkbox"
@@ -211,42 +211,37 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 <div class="col-3">
                     <?= $words->get('HostingStatus') ?>
                 </div>
-                <div class="col-9">
-                    <select name="Accomodation">
-                        <?php
-                        $syshcvol = PVars::getObj('syshcvol');
-                        $tt = $syshcvol->Accomodation;
-                        $max = count($tt);
-                        for ($ii = 0; $ii < $max; $ii++) {
-                            echo "<option value=\"" . $tt[$ii] . "\"";
-                            if ($tt[$ii] == $vars['Accomodation'])
-                                echo " selected=\"selected\"";
-                            echo ">", $words->get("Accomodation_" . $tt[$ii]), "</option>\n";
-                        }
+
+                <div class="col-9 btn-group" data-toggle="buttons">
+
+                    <?php
+                    $syshcvol = PVars::getObj('syshcvol');
+                    $tt = $syshcvol->Accomodation;
+                    $max = count($tt);
+                    for ($ii = 0; $ii < $max; $ii++) {
+                    $acctext = $words->get("Accomodation_" . $tt[$ii]);
                         ?>
-                    </select>
+
+                    <label for="<?= $tt[$ii] ?>" class="btn btn-light <? if ($tt[$ii] == $vars['Accomodation']) echo "active"; ?>">
+                        <input type="radio" id="<?= $tt[$ii] ?>" name="Accomodation" value="<?= $tt[$ii] ?>" class="noradio" <? if ($tt[$ii] == $vars['Accomodation']) echo "checked"; ?>><img src="images/icons/<?= $tt[$ii]; ?>.png" alt="<?= $acctext; ?>" title="<?= $acctext; ?>">
+                    </label>
+
+                    <? } ?>
                 </div>
 
                 <div class="col-3">
                     <? echo $words->get('ProfileNumberOfGuests'); ?>
                 </div>
                 <div class="col-9">
-                    <select name="MaxGuest">
-                        <?php
-                        for ($ii = 1; $ii < 21; $ii++) {
-                            ?>
-                            <option value="<?= $ii ?>" <?= ($vars['MaxGuest'] == $ii) ? 'selected="selected"' : '' ?>><?= $ii ?></option>
-                            <?php
-                        }
-                        ?>
-                    </select>
+                    <input id="rangevalue" name="MaxGuest" class="small maxguestsinput" value="<?= $vars['MaxGuest']; ?>">
+                    <input type="range" min="0" max="20" value="<?= $vars['MaxGuest'];?>" step="1" onchange="rangevalue.value=value" />
                 </div>
 
                 <div class="col-3">
                     <?= $words->get('ProfileMaxLenghtOfStay') ?>
                 </div>
                 <div class="col-9">
-<textarea name="MaxLenghtOfStay" class="long" cols="50"
+<textarea name="MaxLenghtOfStay" class="w-100"
           rows="2"><?= $vars['MaxLenghtOfStay'] ?></textarea>
                 </div>
 
@@ -254,31 +249,31 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     <?= $words->get('ProfileILiveWith') ?>
                 </div>
                 <div class="col-9">
-                    <textarea name="ILiveWith" class="long" cols="50" rows="2"><?= $vars['ILiveWith'] ?></textarea>
+                    <textarea name="ILiveWith" class="w-100" rows="2"><?= $vars['ILiveWith'] ?></textarea>
                 </div>
 
                 <div class="col-3">
                     <?= $words->get('ProfilePleaseBring') ?>
                 </div>
                 <div class="col-9">
-                        <textarea name="PleaseBring" class="long" cols="50"
-                                  rows="3"><?= $vars['PleaseBring'] ?></textarea>
+                        <textarea name="PleaseBring" class="w-100"
+                                  rows="2"><?= $vars['PleaseBring'] ?></textarea>
                 </div>
 
                 <div class="col-3">
                     <?= $words->get('ProfileOfferGuests') ?>
                 </div>
                 <div class="col-9">
-                        <textarea name="OfferGuests" class="long" cols="50"
-                                  rows="3"><?= $vars['OfferGuests'] ?></textarea>
+                        <textarea name="OfferGuests" class="w-100"
+                                  rows="2"><?= $vars['OfferGuests'] ?></textarea>
                 </div>
 
                 <div class="col-3">
                     <?= $words->get('ProfileOfferHosts') ?>
                 </div>
                 <div class="col-9">
-                        <textarea name="OfferHosts" class="long" cols="50"
-                                  rows="3"><?= $vars['OfferHosts'] ?></textarea>
+                        <textarea name="OfferHosts" class="w-100"
+                                  rows="2"><?= $vars['OfferHosts'] ?></textarea>
                 </div>
 
                 <div class="col-3">
@@ -303,8 +298,8 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     <?= $words->get('ProfilePublicTransport') ?>
                 </div>
                 <div class="col-9">
-<textarea name="PublicTransport" class="long" cols="50"
-          rows="3"><?= $vars['PublicTransport'] ?></textarea>
+<textarea name="PublicTransport" class="w-100"
+          rows="2"><?= $vars['PublicTransport'] ?></textarea>
                 </div>
 
                 <div class="col-3">
@@ -329,16 +324,16 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     <?= $words->get('ProfileHouseRules') ?>
                 </div>
                 <div class="col-9">
-<textarea name="OtherRestrictions" class="long" cols="50"
-          rows="3"><?= $vars['OtherRestrictions'] ?></textarea>
+<textarea name="OtherRestrictions" class="w-100"
+          rows="2"><?= $vars['OtherRestrictions'] ?></textarea>
                 </div>
 
                 <div class="col-3">
                     <?= $words->get('ProfileAdditionalAccomodationInfo') ?>
                 </div>
                 <div class="col-9">
-<textarea name="AdditionalAccomodationInfo" class="long" cols="50"
-          rows="4"><?= $vars['AdditionalAccomodationInfo'] ?></textarea>
+<textarea name="AdditionalAccomodationInfo" class="w-100"
+          rows="2"><?= $vars['AdditionalAccomodationInfo'] ?></textarea>
                 </div>
             </div>
         </div>
@@ -348,35 +343,35 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     <?= $words->get('ProfileHobbies') ?>
                 </div>
                 <div class="col-9">
-                    <textarea name="Hobbies" class="long" cols="50" rows="4"><?= $vars['Hobbies'] ?></textarea>
+                    <textarea name="Hobbies" class="w-100" rows="4"><?= $vars['Hobbies'] ?></textarea>
                 </div>
 
                 <div class="col-3">
                     <?= $words->get('ProfileBooks') ?>
                 </div>
                 <div class="col-9">
-                    <textarea name="Books" class="long" cols="50" rows="4"><?= $vars['Books'] ?></textarea>
+                    <textarea name="Books" class="w-100" rows="4"><?= $vars['Books'] ?></textarea>
                 </div>
 
                 <div class="col-3">
                     <?= $words->get('ProfileMusic') ?>
                 </div>
                 <div class="col-9">
-                    <textarea name="Music" class="long" cols="50" rows="4"><?= $vars['Music'] ?></textarea>
+                    <textarea name="Music" class="w-100" rows="4"><?= $vars['Music'] ?></textarea>
                 </div>
 
                 <div class="col-3">
                     <?= $words->get('ProfileMovies') ?>
                 </div>
                 <div class="col-9">
-                    <textarea name="Movies" class="long" cols="50" rows="4"><?= $vars['Movies'] ?></textarea>
+                    <textarea name="Movies" class="w-100" rows="4"><?= $vars['Movies'] ?></textarea>
                 </div>
 
                 <div class="col-3">
                     <?= $words->get('ProfileOrganizations') ?>
                 </div>
                 <div class="col-9">
-                        <textarea name="Organizations" class="long" cols="50"
+                        <textarea name="Organizations" class="w-100"
                                   rows="4"><?= $vars['Organizations'] ?></textarea>
                 </div>
 

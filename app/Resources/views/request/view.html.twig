@@ -2,11 +2,9 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    {% set request = thread[0].Request %}
-    {{ dump(request) }}
-    {{ constant('AppBundle\\Entity\\HostingRequest::REQUEST_ACCEPTED') }}
+    {% set original = thread | last %}{% set request = original.Request %}
 <div id="message_thread" class="row mx-0 messagethread">
-    {% if current.Sender.Username == my_member.Username %}{% set otherUser = current.Receiver %}{% set replyRoute = 'hosting_request_reply_guest' %}{% else %}{% set otherUser = current.Sender %}{% set replyRoute = 'hosting_request_reply_host'  %}{% endif %}
+    {% if original.Sender.Username == my_member.Username %}{% set otherUser = original.Receiver %}{% else %}{% set otherUser = original.Sender %}{% endif %}
     {% set currentSubject = current.Subject.Subject %}
 
     <div class="col-12 sticky-top py-3 bg-white d-inline-block mb-2 messageheader">
@@ -16,7 +14,7 @@
     </div>
 
     <div class="col-12 col-md-4 p-0 h5">
-    {% if current.Sender.Username == my_member.Username %}
+    {% if original.Sender.Username == my_member.Username %}
         {% if request.flexible %}<div>{{ 'I\'m flexible with arrival and departure' }}</div>{% endif %}
         {% if request.numberOfTravellers != 1 %}<div><i class="fa fa-group mr-1"></i>{{ 'Request for %s guest(s)' | format(request.numberOfTravellers) }}</div>{% endif %}
         {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_CANCELLED') %}<div>{{ 'You have cancelled this hosting request' }}</div>{% endif %}
@@ -26,19 +24,17 @@
     {% else %}
         {% if request.flexible %}<div>{{ 'Flexible with arrival and departure' }}</div>{% endif %}
         {% if request.numberOfTravellers != 1 %}<div><i class="fa fa-group mr-1"></i>{{ 'Travelling in a group of %s' | format(request.numberOfTravellers) }}</div>{% endif %}
-        {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_OPEN') %}<div class="alert alert-warning mr-md-2 mt-md-2">{{ 'You have not yet replied to this request' }}<a class="btn btn-primary btn-sm" href="{{ path( replyRoute, { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a></div>{% endif %}
+        {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_OPEN') %}<div class="alert alert-warning mr-md-2 mt-md-2">{{ 'You have not yet replied to this request' }}<a class="btn btn-primary btn-sm" href="{{ path( 'hosting_request_reply', { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a></div>{% endif %}
         {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_DECLINED') %}<div>{{ 'You\'re not going to host this group/person' }}</div>{% endif %}
         {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<div>{{ 'You\'re going to host this group/person' }}</div>{% endif %}
-        {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<div>{{ 'You\'re told this group/person you might host them.' }}</div>{% endif %}
+        {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<div>{{ 'You\'ve told this group/person you might host them.' }}</div>{% endif %}
     {% endif %}
     </div>
-    {# \todo constant(HostingRequest::REQUEST_OPEN) #}
 
     <div class="col-12 col-sm-6 col-md-4 p-0">
             <div class="h5"><i class="fa fa-calendar mr-1"></i>{{ 'Arrival' }}</div>
             <div>{{ request.Arrival | localizeddate }}</div>
     </div>
-
 
     {% if  request.Departure -%}
     <div class="col-12 col-sm-6 col-md-4 p-0">
@@ -48,6 +44,11 @@
     {%- endif %}
 
     {% include ':message:thread.html.twig' %}
-    <div class="col-12"><a class="btn btn-primary mb-1 float-right" href="{{ path( replyRoute, { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a></div>
+    {% if current.Sender.Username == my_member.Username %}
+        {% set label = 'Update' %}
+    {% else %}
+        {% set label = 'Reply' %}
+    {% endif %}
+    <div class="col-12"><a class="btn btn-primary mb-1 float-right" href="{{ path( 'hosting_request_reply', { id: current.id }) }}">{{ label | trans }}</a></div>
 </div>
 {% endblock content %}

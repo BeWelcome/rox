@@ -135,7 +135,7 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
                 'missing' => [],
                 'fallback' => []
             ];
-    
+
             foreach($messages as $message) {
                 if ($message['domain'] === 'messages') {
                     $value = [
@@ -144,7 +144,7 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
                         'locale' => $message['locale'],
                         'translation' => $message['translation'],
                         ];
-    
+
                     $state = 'unknown';
                     switch ($message['state']) {
                         case DataCollectorTranslator::MESSAGE_DEFINED:
@@ -157,11 +157,11 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
                             $state = 'fallback';
                             break;
                     }
-    
+
                     $messageTypes[$state][] = $value;
                 }
             }
-    
+
             return $messageTypes;
         }*/
 

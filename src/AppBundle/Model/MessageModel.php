@@ -23,7 +23,7 @@ class MessageModel extends BaseModel
      *
      * @throws \Doctrine\DBAL\DBALException
      *
-     * @return array
+     * @return Message[]
      */
     public function getThreadForMessage(Message $message)
     {

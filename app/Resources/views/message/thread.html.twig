@@ -1,4 +1,5 @@
 <div id="message_thread" class="container mt-1">
+    {% set current = thread|first %}
     {% if current.Sender.Username == my_member.Username %}{% set otherUser = current.Receiver %}{% else %}{% set otherUser = current.Sender %}{% endif %}
     {% if current.Subject %}{% set currentSubject = current.Subject.Subject %}{% else %}{% set currentSubject = 'Discussion with %s' | trans | format(otherUser.Username)  %} {% endif %}
     {% for message in thread %}
@@ -24,5 +25,4 @@
             </div>
         </div>
     {% endfor %}
-    {{ dump(thread) }}
 </div>

@@ -132,8 +132,7 @@ class Message
      * @var HostingRequest
      *
      * @ORM\OneToOne(targetEntity="HostingRequest", cascade={"persist"}, fetch="EAGER")
-     *
-     * @Assert\NotBlank()
+     * @ORM\JoinColumn(nullable=true)
      */
     private $request;
 

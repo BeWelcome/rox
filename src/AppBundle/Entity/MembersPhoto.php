@@ -1,4 +1,9 @@
 <?php
+/*
+ * @codingStandardsIgnoreFile
+ *
+ * Auto generated file ignore for Code Sniffer
+ */
 
 namespace AppBundle\Entity;
 
@@ -9,6 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="membersphotos", indexes={@ORM\Index(name="IdMember", columns={"IdMember"})})
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class MembersPhoto
 {
@@ -27,11 +35,11 @@ class MembersPhoto
     private $idmember;
 
     /**
-     * @var bool
+     * @var int
      *
-     * @ORM\Column(name="SortOrder", type="boolean", nullable=false)
+     * @ORM\Column(name="SortOrder", type="smallint", nullable=false)
      */
-    private $sortorder = '0';
+    private $sortOrder = '0';
 
     /**
      * @var \DateTime
@@ -114,13 +122,13 @@ class MembersPhoto
     /**
      * Set sortorder.
      *
-     * @param bool $sortorder
+     * @param int $sortOrder
      *
      * @return MembersPhoto
      */
-    public function setSortorder($sortorder)
+    public function setSortOrder($sortOrder)
     {
-        $this->sortorder = $sortorder;
+        $this->sortOrder = $sortOrder;
 
         return $this;
     }
@@ -128,11 +136,11 @@ class MembersPhoto
     /**
      * Get sortorder.
      *
-     * @return bool
+     * @return int
      */
-    public function getSortorder()
+    public function getSortOrder()
     {
-        return $this->sortorder;
+        return $this->sortOrder;
     }
 
     /**

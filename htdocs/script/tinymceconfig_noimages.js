@@ -21,4 +21,5 @@ tinymce.init({
     plugin_preview_height : "500",
     body_class : "forumsmessage",
     mobile: { theme: 'mobile' }
+    branding: false,
 });

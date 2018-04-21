@@ -1,5 +1,5 @@
 tinymce.srcMode = '';
-tinymce.baseURL = http_baseuri+'script/tinymce-4.0.28';
+tinymce.baseURL = http_baseuri+'script/tinymce-4.7.11';
 tinymce.init({
     menubar : false,
     mode: "textareas",
@@ -20,4 +20,5 @@ tinymce.init({
     plugin_preview_width : "600",
     plugin_preview_height : "500",
     body_class : "forumsmessage",
+    mobile: { theme: 'mobile' },
 });

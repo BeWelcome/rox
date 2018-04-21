@@ -118,12 +118,12 @@ SQL;
     {
         $sql = <<<SQL
 SELECT 
-    g.id
+    g.*
 FROM
     groups g, 
     forums_threads ft,
     forums_posts fp 
-WHERE g.id = ft.IdGroup AND ft.last_postId = fp.id AND DateDIFF(NOW(), fp.create_time) < 365
+WHERE g.id = ft.IdGroup AND ft.last_postId = fp.id AND DateDIFF(NOW(), fp.create_time) < 4000
 GROUP BY g.id
 LIMIT $limit OFFSET $offset
 SQL;

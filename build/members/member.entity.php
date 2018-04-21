@@ -1486,8 +1486,12 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         $method = $this->dao->escape($method);
 
         // search for an applicable privilege
-        if (!($privilege = $this->createEntity('Privilege')->findNamedPrivilege($controller, $method)) && !($privilege = $this->createEntity('Privilege')->findNamedPrivilege($controller)) && !($privilege = $this->createEntity('Privilege')->findNamedPrivilege('*', '*')))
-        {
+        if (!($privilege = $this->createEntity('Privilege')->findNamedPrivilege(
+                $controller,
+                $method
+            )) && !($privilege = $this->createEntity('Privilege')->findNamedPrivilege(
+                $controller
+            )) && !($privilege = $this->createEntity('Privilege')->findNamedPrivilege('*', '*'))) {
             return false;
         }
 

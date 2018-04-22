@@ -40,21 +40,21 @@
         </div>
 
 <div class="pt-3 row">
-    <?php
-    $relatedgroups = $this->group->findRelatedGroups($group_id);
-    if (!empty($relatedgroups)) { ?>
-        <h3 class="col-12"><?php echo $words->getFormatted('RelatedGroupsTitle'); ?></h3>
-    <?php } ?>
-
 
     <?php
+    $relatedgroups = $this->group->findRelatedGroups($group_id); ?>
+    <h3 class="col-12"><?php echo $words->getFormatted('RelatedGroupsTitle'); ?></h3>
+    <? if ($this->isGroupMember()) { ?>
+        <div class="col-12">
+            <a href="/selectrelatedgroup" class="btn btn-primary"><?= $words->getFormatted('AddRelatedGroupButton'); ?></a>
+        </div>
+    <? }
     foreach ($relatedgroups as $group_data) :
     if (strlen($group_data->Picture) > 0) {
         $img_link = "groups/thumbimg/{$group_data->getPKValue()}";
     } else {
         $img_link = "images/icons/group.png";
     } ?>
-
 
     <div class="col-12 col-md-6 p-2">
         <div class="float-left h-100 mr-2" style="width: 80px;">

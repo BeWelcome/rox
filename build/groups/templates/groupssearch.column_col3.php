@@ -1,9 +1,8 @@
-<div class="col-12">
 
     <div class="row mt-2">
 
         <div class="col-12 col-md-6">
-            <h3><?= $words->get('GroupsSearchHeading'); ?></h3>
+            <label class="h3" for="GroupsSearchInput"><?= $words->get('GroupsSearchHeading'); ?></label>
             <form action="groups/search" method="get">
                 <div class="input-group">
                     <input type="text" class="form-control" name="GroupsSearchInput" value="" id="GroupsSearchInput"/>
@@ -13,17 +12,47 @@
                         <?= $words->flushBuffer() ?>
                         </span>
                 </div>
+                <div class="small mt-1"><?= $words->get('GroupsSearchInfo'); ?></div>
             </form>
         </div>
         <div class="col-12 col-md-6">
-            <h3><?= $words->get('GroupsCreateHeading'); ?></h3>
-            <a class="btn btn-primary" role="button" href="groups/new"><?= $words->get('GroupsCreateNew'); ?></a>
+            <label class="h3" for="GroupsSearchInput"><?= $words->get('GroupsCreateHeading'); ?></label>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#CreateGroupModal">
+                <?= $words->get('GroupsCreateNew'); ?>
+            </button>
+
+            <div class="modal fade" id="CreateGroupModal" tabindex="-1" role="dialog" aria-labelledby="CreateGroupModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="CreateGroupModalLabel">Create a new group</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p><?= $words->get('GroupsCreateDescription'); ?></p>
+                            <p>By creating a new group you agree that:</p>
+                            <ul>
+                                <li>have searched for similar groups and have not found one alike</li>
+                                <li>you'll take the responsibility of the group and/or hand it over to another person willing to do so</li>
+                                <li>duplicate groups and groups that violate the Terms of Use of BeWelcome can and will be removed with no notice</li>
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <a class="btn btn-primary" role="button" href="groups/new"><?= $words->get('GroupsCreateNew'); ?></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     </div>
 
-    <div class="row mt-3">
-        <div class="col-12"><h3><?= $words->get('GroupsSearchResult'); ?></h3></div>
-
+    <div class="row mt-5 mb-3 w-100">
+        <div class="col col-auto col-lg-7 order-12 mt-3">
         <?php
         $search_result = $this->search_result;
 
@@ -36,11 +65,12 @@
         $created_order = (($this->result_order == "createdasc") ? 'createddesc' : 'createdasc');
         $category_order = (($this->result_order == "categoryasc") ? 'categorydesc' : 'categoryasc');
         ?>
-        <div class="col-12 mb-2"><span class="font-weight-bold"><?php echo $words->get('GroupsSearchOrdered'); ?>:</span> <span
-                    class="btn btn-sm btn-primary"><?php echo $words->get('GroupsSearchOrdered' . $this->result_order) ?></span>
-
+        </div>
+        <div class="col col-lg-5">
+            <h3><?= $words->get('GroupsSearchResult'); ?></h3>
+            <label class="font-weight-bold"><?php echo $words->get('GroupsSearchOrdered'); ?>:</label>
             <span class="dropdown">
-                <button class="btn btn-sm btn-info dropdown-toggle" type="button" id="dropdownVisibility" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= $words->get('GroupsSearchOrder'); ?></button>
+                <button class="btn btn-sm btn-info dropdown-toggle" type="button" id="dropdownVisibility" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $words->get('GroupsSearchOrdered' . $this->result_order) ?></button>
                 <div class="dropdown-menu ddextras px-0 py-1" aria-labelledby="dropdownVisibility">
                     <a class="btn btn-sm btn-light mx-1"
                        href="groups/search?GroupsSearchInput=<?= $this->search_terms; ?>&order=<?= $act_order; ?>&<?= $this->pager->getActivePageMarker(); ?>"><?= $words->get('GroupsOrderBy' . $act_order); ?></a>
@@ -53,9 +83,9 @@
                 </div>
             </span>
         </div>
+    </div>
+    <div class="row px-2">
 
-<div class="col-12">
-<div class="row px-2">
 <?
         foreach ($search_result as $group_data) :
 
@@ -98,8 +128,7 @@
             <?php
         endforeach;
         ?>
-    </div>
-</div><!-- end row -->
+    </div><!-- end row -->
 <?php
 $this->pager->render();
 ?>
@@ -111,5 +140,3 @@ $this->pager->render();
 HTML;
 endif;
 ?>
-</div>
-</div> <!-- groups -->

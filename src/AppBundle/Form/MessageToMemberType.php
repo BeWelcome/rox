@@ -26,6 +26,10 @@ class MessageToMemberType extends AbstractType
                         'path' => '/bundles/app/js/confighelper/',
                         'filename' => 'plugin.js',
                     ],
+                    'clipboard' => [
+                        'path' => '/bundles/app/js/clipboard/',
+                        'filename' => 'plugin.js',
+                    ],
                 ],
                 'attr' => [
                     'placeholder' => 'Please leave a message after the beep',

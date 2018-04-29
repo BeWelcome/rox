@@ -198,7 +198,7 @@ class RequestAndMessageController extends Controller
         // Walk through the thread and mark all messages as read (for current member)
         $em = $this->getDoctrine()->getManager();
         foreach ($thread as $item) {
-            if ($member->getId() === $item->getReceiver()->getId()) {
+            if ($member === $item->getReceiver()) {
                 // Only mark as read if it is a message and when the receiver reads the message,
                 // not when the message is presented to the Sender with url /messages/{id}/sent
                 $item->setWhenFirstRead(new \DateTime());
@@ -409,7 +409,7 @@ class RequestAndMessageController extends Controller
      *
      * @param Request       $request
      * @param Member        $sender
-     * @param array Message $thread
+     * @param Message[] $thread
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
@@ -417,7 +417,11 @@ class RequestAndMessageController extends Controller
     {
         $message = $thread[0];
         $replyMessage = new Message();
-        $replyMessage->getSubject()->setSubject($message->getSubject()->getSubject());
+        $subject = $message->getSubject();
+        if ($subject !== null)
+        {
+            $replyMessage->setSubject($subject);
+        }
 
         $messageForm = $this->createForm(MessageToMemberType::class, $replyMessage);
         $messageForm->handleRequest($request);

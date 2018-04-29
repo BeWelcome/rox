@@ -6,6 +6,7 @@ use AppBundle\Entity\ForumThread;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
 use Doctrine\ORM\Query;
+use Exception;
 
 class LandingModel extends BaseModel
 {
@@ -29,22 +30,29 @@ class LandingModel extends BaseModel
      */
     public function getMessages(Member $member, $unread, $limit = 0)
     {
-        $queryBuilder = $this->em->createQueryBuilder();
-        $queryBuilder
+        $qb = $this->em->createQueryBuilder();
+        $qb
             ->select('m')
             ->from('AppBundle:Message', 'm')
             ->where('m.receiver = :member')
             ->setParameter('member', $member);
         if ($unread) {
-            $queryBuilder
-                ->andWhere("m.whenfirstread = '0000-00-00 00:00.00'");
+            $qb
+                ->andWhere(
+                    $qb->expr()->orX(
+                        $qb->expr()->eq('m.whenfirstread', "'0000-00-00 00:00.00'"),
+                        $qb->expr()->isNull('m.whenfirstread')
+                    )
+                );
         }
 
         if (0 !== $limit) {
-            $queryBuilder->setMaxResults($limit);
+            $qb->setMaxResults($limit);
         }
 
-        return $queryBuilder
+        // throw new Exception($qb->getDQL());
+
+        return $qb
             ->orderBy('m.created', 'DESC')
             ->getQuery()
             ->getResult();

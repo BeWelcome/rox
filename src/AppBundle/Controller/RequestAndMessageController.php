@@ -266,7 +266,7 @@ class RequestAndMessageController extends Controller
         if ('/' !== $url[-1]) {
             $url .= '/';
         }
-        preg_match('#/(.+)/#', $url, $matches);
+        preg_match('#/(.+?)/#', $url, $matches);
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
         $sort = $request->query->get('sort', 'datesent');

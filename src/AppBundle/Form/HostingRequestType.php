@@ -73,6 +73,26 @@ class HostingRequestType extends AbstractType
             );
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setDefaults([
+                'data_class' => Message::class,
+            ])
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'appbundle_request';
+    }
+
     protected function addMessageTextArea(FormInterface $form, $placeholder)
     {
         $form
@@ -94,25 +114,5 @@ class HostingRequestType extends AbstractType
                     new NotBlank(),
                 ],
             ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver
-            ->setDefaults([
-                'data_class' => Message::class,
-            ])
-        ;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix()
-    {
-        return 'appbundle_request';
     }
 }

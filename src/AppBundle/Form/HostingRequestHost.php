@@ -12,7 +12,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class HostingRequestHost extends AbstractType
+class HostingRequestHost extends HostingRequestType
 {
     /**
      * {@inheritdoc}
@@ -25,26 +25,8 @@ class HostingRequestHost extends AbstractType
     {
         $builder
             ->add('subject', SubjectType::class)
-            ->add('request', HostingRequestType::class)
-            ->add('message', CKEditorType::class, [
-                'config' => [
-                    'extraPlugins' => 'confighelper',
-                ],
-                'plugins' => [
-                    'confighelper' => [
-                        'path' => '/bundles/app/js/confighelper/',
-                        'filename' => 'plugin.js',
-                    ],
-                ],
-                'attr' => [
-                    'placeholder' => 'Please leave a message after the beep',
-                    'class' => 'mb-1',
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ])
-        ;
+            ->add('request', HostingRequestType::class);
+        $this->addMessageTextArea($builder->getForm(), 'Please enter a message for your guest.');
         $builder->get('subject')
             ->addModelTransformer(new CallbackTransformer(
                 function (Subject $subject) {

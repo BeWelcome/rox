@@ -3,9 +3,8 @@
 
 {% block content %}
     {% set original = thread | last %}{% set request = original.Request %}
-<div id="message_thread" class="row mx-0 messagethread">
+<div id="message_thread" class="row">
     {% if original.Sender.Username == my_member.Username %}{% set otherUser = original.Receiver %}{% else %}{% set otherUser = original.Sender %}{% endif %}
-    {% set currentSubject = current.Subject.Subject %}
 
     <div class="col-12 sticky-top py-3 bg-white d-inline-block mb-2 messageheader">
             <div class="pull-left">{{ macros.avatar(otherUser.Username, 50, true) }} {{ macros.profilelink(otherUser.Username) }}</div>

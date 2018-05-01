@@ -62,7 +62,7 @@ class Message
      * @var Message
      *
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Message", fetch="LAZY")
-     * @ORM\JoinColumn(name="idParent", referencedColumnName="id")
+     * @ORM\JoinColumn(name="idParent", referencedColumnName="id", nullable=true)
      */
     private $parent;
 

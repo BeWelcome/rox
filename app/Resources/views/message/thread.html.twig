@@ -2,12 +2,20 @@
     {% set current = thread|first %}
     {% if current.Sender.Username == my_member.Username %}{% set otherUser = current.Receiver %}{% else %}{% set otherUser = current.Sender %}{% endif %}
     {% if current.Subject %}{% set currentSubject = current.Subject.Subject %}{% else %}{% set currentSubject = 'Discussion with %s' | trans | format(otherUser.Username)  %} {% endif %}
+    {% if current.Request %}{% set currentArrival = current.Request.Arrival %}{% set currentDeparture = current.Request.Departure %}{% endif %}
     {% for message in thread %}
         {% set own = (my_member.Username == message.Sender.Username) %}
-        {% if message.Subject %}{% set subject = message.Subject.Subject %}{% else %}{% set subject = '' %} {% endif %}
+        {% if message.Subject %}{% set subject = message.Subject.Subject %}
+            {% if subject != currentSubject %}
+                {% set currentSubject = subject %}
+                <div class="row">
+                    <div class="col-12 h3">{{ currentSubject | purify }}</div>
+                </div>
+            {% endif %}
+        {% endif %}
         <div class="row">
-            <div class="col-12 message_{% if own %}own{% else %}other{% endif %} {% if message.id == current.id %}current{% endif %}">
-                <small class="pull-left">{{ message.id }}</small><small class="pull-right text-muted m-0">
+            <div class="col-12 message_{% if own %}own{% else %}other{% endif %}">
+                <small class="{% if own %}pull-right{% else %}pull-left{% endif %} text-muted m-0">
                     {%- if own -%}
                         {{ 'You' | trans }}
                     {%- else -%}
@@ -17,6 +25,13 @@
                 </small>
                 <p class="clearfix m-0"></p>
                 {{ message.message | purify }}
+                {% if message.Request %}
+                    {% if message.Request.Arrival != currentArrival or message.Request.Departure != currentDeparture %}
+                        {{ currentArrival | localizeddate }} {{ currentDeparture | localizeddate }}
+                        {% set currentArrival = message.Request.Arrival%}
+                        {% set currentDeparture = message.Request.Departure %}
+                     {% endif %}
+                {% endif %}
             </div>
         </div>
     {% endfor %}

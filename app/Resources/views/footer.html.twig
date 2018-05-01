@@ -33,6 +33,7 @@
         </div>
     </div>
 </div>
+{#
 {% if is_granted('ROLE_ADMIN_WORDS') %}
 <div class="container">
     {% set translations = getTranslations() %}
@@ -73,7 +74,6 @@
         <h2>Translation Messages</h2>
     {% block messages %}
 
-        {# sort translation messages in groups #}
         {% set messages_defined, messages_missing, messages_fallback = [], [], [] %}
         {% for message in collector.messages %}
             {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}
@@ -209,3 +209,4 @@ transition:all .1s ease;">{{ message.id }}</span>
             </tbody>
         </table>
     {% endmacro %}
+#}

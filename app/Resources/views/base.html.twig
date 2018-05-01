@@ -34,25 +34,29 @@
         {% include 'menu.html.twig' %}
         <noscript><h1>Please activate Javascript for bewelcome.org</h1><p><small>Without it some function won't work.</small></p></noscript>
         <main role="main">
-            <div class="container">
-                <div class="row">
-                    {% for flash_message in app.session.flashBag.get('error') %}
+            <dfiv class="container">
+                {% for flash_message in app.session.flashBag.get('error') %}
+                    <div class="row">
                         <div class="col-12 alert alert-danger" role="alert">
                             {{ flash_message }}
                         </div>
-                    {% endfor %}
-                    {% for flash_message in app.session.flashBag.get('notice') %}
+                    </div>
+                {% endfor %}
+                {% for flash_message in app.session.flashBag.get('notice') %}
+                    <div class="row">
                         <div class="col-12 alert alert-info" role="alert">
                             {{ flash_message }}
                         </div>
-                    {% endfor %}
-                    {% for flash_message in app.session.flashBag.get('success') %}
+                    </div>
+                {% endfor %}
+                {% for flash_message in app.session.flashBag.get('success') %}
+                    <div class="row">
                         <div class="col-12 alert alert-success" role="alert">
                             {{ flash_message }}
                         </div>
-                    {% endfor %}
-                </div>
-            </div>
+                    </div>
+                {% endfor %}
+            </dfiv>
             {% set sidebar = (submenu is defined) %}
             <div class="container">
                 <div class="row{% if sidebar %} row-offcanvas row-offcanvas-right mt-2{% endif %}">

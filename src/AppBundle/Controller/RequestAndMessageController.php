@@ -407,8 +407,8 @@ class RequestAndMessageController extends Controller
     /**
      * Takes care of the reply to a message.
      *
-     * @param Request       $request
-     * @param Member        $sender
+     * @param Request   $request
+     * @param Member    $sender
      * @param Message[] $thread
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
@@ -418,8 +418,7 @@ class RequestAndMessageController extends Controller
         $message = $thread[0];
         $replyMessage = new Message();
         $subject = $message->getSubject();
-        if ($subject !== null)
-        {
+        if (null !== $subject) {
             $replyMessage->setSubject($subject);
         }
 
@@ -492,7 +491,7 @@ class RequestAndMessageController extends Controller
         }
 
         if ($this->checkRequestExpired($hostingRequest->getRequest())) {
-            $this->addFlash('information', 'This request can\'t be replied to anymore as the hosting period already started.');
+            $this->addFlash('notice', 'This request can\'t be replied to anymore as the hosting period already started.');
 
             return $this->redirectToRoute('hosting_request_show', ['id' => $hostingRequest->getId()]);
         }

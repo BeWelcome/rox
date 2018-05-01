@@ -33,86 +33,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class RequestAndMessageController extends Controller
 {
-    /*    public function update(Request $request)
-        {
-            $modifyAction = $request->request->get('modify');
-            $messageIds = $request->request->get('message_id');
-
-            $member = $this->getUser();
-
-            $message = new Message();
-
-            $messages = $message->newQuery()->findMany($messageIds);
-
-            foreach ($messages as $message) {
-                if ($modifyAction === 'delete') {
-                    $this->messageService->deleteMessage($message, $member);
-                } elseif ($modifyAction === 'markasspam') {
-                    $this->messageService->moveMessage($message, Message::FOLDER_SPAM);
-                } elseif ($modifyAction === 'nospam') {
-                    $this->messageService->moveMessage($message, Message::FOLDER_INBOX);
-                //} else {
-                    //throw new \InvalidArgumentException('Invalid message state.');
-                }
-            }
-
-            return new RedirectResponse($request->getUri());
-        }
-
-        public function with(Request $request)
-        {
-            $page = $request->query->get('page', 1);
-            $limit = $request->query->get('limit', 10);
-            //$sort = $request->query->get('sort', 'date');
-            //$dir = $request->query->get('dir', 'DESC');
-            $otherUsername = $request->attributes->get('username');
-
-            $otherMember = $this->memberRepository->getByUsername($otherUsername);
-
-            $member = $this->getUser();
-
-            $message = new Message();
-
-            $q = $message->newQuery();
-
-            // Eager load each sender for each message
-            $q->with('sender');
-
-            $q->where(function (Builder $builder) use ($member, $otherMember) {
-                $builder->where(function (Builder $builder) use ($member, $otherMember) {
-                    $builder->where('IdSender', $otherMember->id);
-                    $builder->where('IdReceiver', $member->id);
-                    $builder->where('Status', 'Sent');
-                });
-
-                $builder->orWhere(function (Builder $builder) use ($member, $otherMember) {
-                    $builder->where('IdSender', $member->id);
-                    $builder->where('IdReceiver', $otherMember->id);
-                });
-            });
-
-            $q->where('DeleteRequest', 'NOT LIKE', '%receiverdeleted%');
-
-            $q->orderByRaw('IF(messages.created > messages.DateSent, messages.created, messages.DateSent) DESC');
-
-            $q->forPage($page, $limit);
-
-            $count = $q->getQuery()->getCountForPagination();
-
-            $messages = $q->get();
-
-            $content = $this->render('@message/message/index.html.twig', [
-                'messages' => $messages,
-                'folder' => '',
-                'filter' => $request->query->all(),
-                'page' => $page,
-                'pages' => ceil($count / $limit),
-            ]);
-
-            return new Response($content);
-        }
-    */
-
     /**
      * Deals with replies to messages and hosting requests.
      *
@@ -329,7 +249,10 @@ class RequestAndMessageController extends Controller
 
     /**
      * @Route("/messages/{folder}", name="messages",
-     *     requirements={ "folder": "requests|inbox|sent|spam|deleted" },
+     *     defaults={"folder": "inbox"})
+     * @Route("/requests/{folder}", name="requests",
+     *     defaults={"folder": "inbox"})
+     * @Route("/both/{folder}", name="both",
      *     defaults={"folder": "inbox"})
      *
      * @param Request $request
@@ -337,8 +260,13 @@ class RequestAndMessageController extends Controller
      *
      * @return Response
      */
-    public function messages(Request $request, $folder)
+    public function folders(Request $request, $folder)
     {
+        $url = $request->getPathInfo();
+        if ('/' !== $url[-1]) {
+            $url .= '/';
+        }
+        preg_match('#/(.+)/#', $url, $matches);
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
         $sort = $request->query->get('sort', 'datesent');
@@ -351,7 +279,7 @@ class RequestAndMessageController extends Controller
         $member = $this->getUser();
 
         $messageModel = new MessageModel($this->getDoctrine());
-        $messages = $messageModel->getFilteredMessages($member, $folder, $sort, $sortDir, $page, $limit);
+        $messages = $messageModel->getFilteredMessages($member, $matches[1], $folder, $sort, $sortDir, $page, $limit);
 
         return $this->render(':message:index.html.twig', [
             'items' => $messages,
@@ -359,46 +287,7 @@ class RequestAndMessageController extends Controller
             'folder' => $folder,
             'filter' => $request->query->all(),
             'submenu' => [
-                'active' => 'messages_'.$folder,
-                'items' => $this->getSubMenuItems(),
-            ],
-        ]);
-    }
-
-    /**
-     * @Route("/requests/{folder}", name="requests",
-     *     requirements={ "folder": "inbox|sent" },
-     *     defaults={"folder": "inbox"})
-     *
-     * @param Request $request
-     * @param string  $folder
-     *
-     * @return Response
-     */
-    public function requests(Request $request, $folder)
-    {
-        $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', 10);
-        $sort = $request->query->get('sort', 'datesent');
-        $sortDir = $request->query->get('dir', 'desc');
-
-        if (!in_array($sortDir, ['asc', 'desc'], true)) {
-            throw new \InvalidArgumentException();
-        }
-
-        $member = $this->getUser();
-
-        $requestModel = new RequestModel($this->getDoctrine());
-        $requests = $requestModel->getFilteredRequests($member, $folder, $sort, $sortDir, $page, $limit);
-
-        return $this->render(':message:index.html.twig', [
-            'items' => $requests,
-            'type' => 'UserRequests',
-            'folder' => $folder,
-            'filter' => $request->query->all(),
-            'submenu' => [
-                'active' => 'requests_'.$folder,
-                'route' => 'messages',
+                'active' => $matches[1].'_'.$folder,
                 'items' => $this->getSubMenuItems(),
             ],
         ]);
@@ -703,17 +592,17 @@ class RequestAndMessageController extends Controller
     private function getSubMenuItems()
     {
         return [
-            'requests_inbox' => [
+            'both_inbox' => [
                 'key' => 'MessagesRequestsReceived',
+                'url' => $this->generateUrl('both', ['folder' => 'inbox']),
+            ],
+            'requests_inbox' => [
+                'key' => 'RequestsReceived',
                 'url' => $this->generateUrl('requests', ['folder' => 'inbox']),
             ],
             'requests_sent' => [
-                'key' => 'MessagesRequestsSent',
+                'key' => 'RequestsSent',
                 'url' => $this->generateUrl('requests', ['folder' => 'sent']),
-            ],
-            'messages_inbox' => [
-                'key' => 'MessagesReceived',
-                'url' => $this->generateUrl('messages', ['folder' => 'inbox']),
             ],
             'messages_sent' => [
                 'key' => 'MessagesSent',

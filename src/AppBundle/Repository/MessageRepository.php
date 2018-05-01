@@ -14,15 +14,20 @@ use Rox\Core\Exception\InvalidArgumentException;
 
 class MessageRepository extends EntityRepository
 {
+    const MESSAGES_ONLY = 1;
+    const REQUESTS_ONLY = 2;
+    const MESSAGES_AND_REQUESTS = 3;
+
     /**
      * @param Member $member
      * @param $folder
      * @param $sort
      * @param $sortDirection
+     * @param mixed $type
      *
      * @return Query
      */
-    public function queryLatest(Member $member, $folder, $sort, $sortDirection)
+    public function queryLatest(Member $member, $type, $folder, $sort, $sortDirection)
     {
         if ('date' === $sort) {
             $sort = 'created';
@@ -34,6 +39,17 @@ class MessageRepository extends EntityRepository
             $qb->where('m.receiver = :member');
         }
         $qb->setParameter('member', $member);
+        switch ($type) {
+            case self::MESSAGES_ONLY:
+                $qb->andWhere('m.request IS NULL');
+                break;
+            case self::REQUESTS_ONLY:
+                $qb->join('m.request', 'r');
+                break;
+            case self::MESSAGES_AND_REQUESTS:
+                // Nothing to do here
+                break;
+        }
         switch ($folder) {
             case 'inbox':
                 $qb->andWhere('m.infolder = :folder')
@@ -49,37 +65,6 @@ class MessageRepository extends EntityRepository
                 break;
         }
         $qb->orderBy('m.'.$sort, $sortDirection);
-
-        return $qb->getQuery();
-    }
-
-    /**
-     * @param Member $member
-     * @param $folder
-     * @param $sort
-     * @param $sortDirection
-     *
-     * @return Query
-     */
-    public function queryRequests(Member $member, $folder, $sort, $sortDirection)
-    {
-        if ('datesent' === $sort) {
-            $sort = 'created';
-        }
-        $qb = $this->createQueryBuilder('m');
-        switch ($folder) {
-            case 'inbox':
-                $qb->where('m.receiver = :member');
-                break;
-            case 'sent':
-                $qb->where('m.sender = :member');
-                break;
-            default:
-                throw new InvalidArgumentException('Wrong folder type');
-        }
-        $qb->join('m.request', 'r')
-            ->setParameter('member', $member)
-            ->orderBy('m.'.$sort, $sortDirection);
 
         return $qb->getQuery();
     }
@@ -117,6 +102,7 @@ class MessageRepository extends EntityRepository
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
      * @param Member $member
+     * @param $url
      * @param $filter
      * @param $sort
      * @param $sortDirection
@@ -125,15 +111,17 @@ class MessageRepository extends EntityRepository
      *
      * @return Pagerfanta
      */
-    public function findLatest(Member $member, $filter, $sort, $sortDirection, $page = 1, $items = 10)
+    public function findLatest(Member $member, $url, $filter, $sort, $sortDirection, $page = 1, $items = 10)
     {
-        list($type, $folder) = explode('_', $filter);
-        switch ($type) {
+        switch ($url) {
+            case 'both':
+                $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatest($member, self::MESSAGES_AND_REQUESTS, $filter, $sort, $sortDirection), false));
+                break;
             case 'requests':
-                $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryRequests($member, $folder, $sort, $sortDirection), false));
+                $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatest($member, self::REQUESTS_ONLY, $filter, $sort, $sortDirection), false));
                 break;
             case 'messages':
-                $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatest($member, $folder, $sort, $sortDirection), false));
+                $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatest($member, self::MESSAGES_ONLY, $filter, $sort, $sortDirection), false));
                 break;
             default:
                 throw new InvalidArgumentException('Wrong type for message repository');

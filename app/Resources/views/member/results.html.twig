@@ -2,8 +2,8 @@
 {% if pager.haveToPaginate %}
     <div class="pull-right">{{ pagerfanta( pager, 'twitter_bootstrap4_translated') }}</div>
 {% endif %}
-    <table id="memberresults" class="w-100">
-    <thead>
+    <table id="memberresults" class="table table-striped table-hover w-100">
+    <thead class="thead-light">
     <tr>
         <th colspan="2">{{ 'SearchHeaderMember' | trans }}</th>
         <th>{{ 'ProfileSummary' | trans }}</th>
@@ -13,20 +13,23 @@
     <tbody>
     {% for member in pager.currentPageResults %}
     {% set accommodationIcon %}<img src="members/avatar/{{ member.Username }}">{% endset %}
-    <tr class="{% if loop.index is odd %}blank{% else %}highlight{% endif %}">
-        <td class="memberleft"> 
-            <div class="picture"><div>{{ macros.avatar(member.Username, 50, true) }}</div><div>{{ macros.profilelink( member.Username ) }}</div></div>
-            </td><td class="memberright">
-            <div class="left">
+    <tr>
+        <td class="memberleft align-top">
+            {{ macros.avatar(member.Username, 100, true) }}
+            <div>{{ macros.profilelink( member.Username ) }}</div>
+            </td>
+        <td class="memberright align-top">
+            <div>
                 {% set displayName %}
                 {% if member.Name is empty %}{{ member.Username }}{% else %}{{ member.Name }}{% endif %}
                 {% endset %}
                 <strong>{{ macros.profilelink( member.Username, displayName, false, true ) }}</strong>
                 {% if (member.MessageCount) %}
-                <a href="messages/with/ {{ member.Username }}"><img src="images/icons/comments.png" alt="{{ 'messages_allmessageswith' | trans | format( member.Username ) | raw }} | trans "
-                        title="{{ 'messages_allmessageswith' | trans | format( member.Username ) | raw }}" /></a>
+                <a href="messages/with/ {{ member.Username }}"><i class="fa fa-envelope-o" alt="{{ 'messages_allmessageswith' | trans | format( member.Username ) | raw }} | trans "
+                                                                  title="{{ 'messages_allmessageswith' | trans | format( member.Username ) | raw }}"></i></a>
                 {% endif %}
-                <br />
+            </div>
+            <div class="small">
                 {% if (member.Age) -%}
                     {{ 'SearchYearsOld' | trans | format( member.Age) | raw -}}
                 {% endif -%}
@@ -40,16 +43,17 @@
                 {{ member.Occupation | purify }}
             </div>
             </td> 
-        <td class="summary">{{ member.ProfileSummary | purify }}</td>
+        <td class="summary py-2"><a href="/members/{{ member.Username }}" style="color: #000; text-underline: none; display: block; width: 100%;">{{ member.ProfileSummary | purify }}</a></td>
         <td class="details">
                 <div class="left"><img src="/images/icons/{{ member.Accommodation }}.png" alt="{{ member.Accommodation | trans }}"></div>
-                <div><strong>{{ 'SearchMaxGuestInfo' | trans | format( member.MaxGuest ) | raw }}</strong><br />
+                <div class="w-100"><strong style="white-space: nowrap;">{{ 'SearchMaxGuestInfo' | trans | format( member.MaxGuest ) | raw }}</strong><br />
                     <strong>{{ 'SearchCommentsInfo' | trans | format( member.CommentCount) | raw}}</strong>
                 </div>
-            <div class="clearfix"></div>
+            <div class="small">
                 {{ 'SearchMemberSinceInfo' | trans | format( '<strong>' ~ member.created ~ '</strong>' ) | raw }}<br />
                 {# \todo Use span to style last login info #}
                 <span>{{ 'SearchMemberLastLoginInfo' | trans | format( '<strong>' ~ member.LastLogin ~ '</strong>') | raw }}</span>
+            </div>
         </td>
     </tr>
     {% endfor %}

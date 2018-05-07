@@ -27,7 +27,7 @@ $layoutbits = new MOD_layoutbits();
 ?>
 
 <!-- table structure -->
-<table class="table table-responsive table-striped table-hover">
+<table class="table table-striped table-hover">
     <!-- beginning of table head -->
     <thead class="blank">
     <tr>

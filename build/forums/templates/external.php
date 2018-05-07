@@ -32,7 +32,7 @@ $layoutbits = new MOD_layoutbits();
     if ($threads = $boards->getThreads()) {
 ?>
 
-<table class="table table-responsive table-striped table-hover">
+<table class="table table-striped table-hover">
     <tbody>
 <?php 
 $threadsliced = array_slice($threads, 0, 5);

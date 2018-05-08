@@ -28,11 +28,11 @@ JeanYves notes : This is what is used to manage the report to moderators
 $words = new MOD_words();
 
 ?>
-<h3>Report to moderator</h3>
+<div class="col-12"><h3>Report to moderator</h3></div>
 
 <?php
 if (!empty($DataPost->Error)) {
-    echo "<h3 style=\"color:#ff0033;\" >",$DataPost->Error,"</h3>" ;
+    echo '<div class="col-12 alert alert-danger"><h3>'.$DataPost->Error.'</h3></div>';
 }
 
 $request = PRequest::get()->request;
@@ -40,77 +40,53 @@ $uri = implode('/', $request);
 
 ?>
 
-<table class="full" bgcolor="lightgray" align="left" border="3">
-<?
-if (isset($DataPost->Thread->title))
-?>
-        <form method="post" action="forums/modeditpost/<?=$DataPost->Post->id;?>" id="modpostforum">
-        <input type="hidden" name="<?=$callbackId;?>"  value="1" />
-        <input type="hidden" name="IdThread"  value="<?=$DataPost->Thread->id;?>" /><br />
-        <input type="hidden" name="IdPost"  value="<?=$DataPost->Post->id;?>"/>
-<?
-        echo "<tr><td>" ;
+<table class="table table-bordered table-sm">
+    <? if (isset($DataPost->Thread->title)) ?>
+    <form method="post" action="forums/modeditpost/<?=$DataPost->Post->id;?>" id="modpostforum">
+        <input type="hidden" name="<?=$callbackId;?>"  value="1">
+        <input type="hidden" name="IdThread" value="<?=$DataPost->Thread->id;?>">
+        <input type="hidden" name="IdPost" value="<?=$DataPost->Post->id;?>">
+            <tr><td>
+        <?
         if (isset($DataPost->UserNameStarter)) echo "Thread started by ".$DataPost->UserNameStarter;
-        echo "</td>" ;
-        echo "<td>Post by <a href=\"members/".$DataPost->Post->UserNamePoster,"\">".$DataPost->Post->UserNamePoster."</a></td>";
-        echo "<td><a href=\"forums/s",$DataPost->Thread->id,"/#post",$DataPost->Post->id,"\">go to post</a></td>" ;
-        echo "</tr>" ;
-        echo "<tr><td colspan=\"3\">",$DataPost->Thread->Title[0]->Sentence,"</td></tr>" ;
-        echo "<tr><td colspan=\"3\" >",$DataPost->Post->Content[0]->Sentence,"</td></tr>" ;
-        echo "<tr><td colspan=\"3\"><textarea name='PostComment' class=\"long\" rows=8></textarea></td></tr>" ;
-		
-        echo "<tr><td colspan=\"1\">" ;
-        echo "Status <select Name='Status'>" ;
-        if (isset($DataPost->Report->Status)) $Status=$DataPost->Report->Status ; else $Status="" ;
-        echo "<option value='Open'" ;
-        if ($Status=='Open') echo " selected" ;
-        echo ">Open</option>" ;
-        echo "<option value='OnDiscussion'" ;
-        if ($Status=='OnDiscussion') echo " selected" ;
-        echo ">In discussion</option>" ;
-        echo "<option value='Closed'" ;
-        if ($Status=='Closed') echo " selected" ;
-        echo ">Closed</option>" ;
-        echo "</select></td>" ;
-        $IdReporter=0 ;
-        if (isset($DataPost->Report->IdReporter)) $IdReporter=$DataPost->Report->IdReporter ; 
-        echo "<input type='hidden' name='IdReporter' value='".$IdReporter."'>" ;
-        if ($this->BW_Right->HasRight("ForumModerator")) {
-            echo "<td colspan=\"1\">" ;
-            echo "Type <select Name='Type'>" ;
-            if (isset($DataPost->Report->Type)) $Type=$DataPost->Report->Type ; else $Type="" ;
-            echo "<option value='SeeText'" ;
-            if ($Status=='SeeText') echo " selected" ;
-            echo ">SeeText</option>" ;
-            echo "<option value='AllowMeToEdit'" ;
-            if ($Status=='AllowMeToEdit') echo " selected" ;
-            echo ">AllowMeToEdit</option>" ;
-            echo "<option value='Insults'" ;
-            if ($Status=='Insults') echo " selected" ;
-            echo ">Insults</option>" ;
-            echo "<option value='RemoveMyPost'" ;
-            if ($Status=='RemoveMyPost') echo " selected" ;
-            echo ">RemoveMyPost</option>" ;
-            echo "<option value='Others'" ;
-            if ($Status=='Others') echo " selected" ;
-            echo ">Others</option>" ;
-            echo "</select></td>" ;
-            echo "<td colspan=\"1\"></td></tr>" ;
-        }
-        else {
-            echo "<td></td>" ;
-        }
-        echo "</tr>" ;
-        
+        ?>
+        </td>
+        <td>Post by <a href="members/<?= $DataPost->Post->UserNamePoster; ?>"><?= $DataPost->Post->UserNamePoster; ?></a></td>
+                <td><a href="forums/s<?= $DataPost->Thread->id ;?>/#post<?= $DataPost->Post->id; ?>" class="btn btn-primary btn-sm btn-block">go to post</a></td>
+        </tr>
+        <tr><td colspan="3" class="h5"><?= $DataPost->Thread->Title[0]->Sentence; ?></td></tr>
+        <tr><td colspan="3" ><?= $DataPost->Post->Content[0]->Sentence; ?></td></tr>
+        <tr><td colspan="3"><label for="PostComment">Your message to the moderators:</label><textarea name="PostComment" class="w-100" rows="2"></textarea></td></tr>
 
-echo "<th valign=center align=center colspan=3><input type=\"submit\" name=\"submit\" value=\"Add to report\"></th>" ;
+        <tr>
+            <td colspan="3"><label for="Status">Status</label>
+                <select Name="Status">
+        <?
+        $Status = "Open";
+        if (isset($DataPost->Report->Status)) $Status=$DataPost->Report->Status;
+        ?>
+        <option value="Open"<? if ($Status=='Open') echo ' selected'; ?>>Open</option>
+        <option value="OnDiscussion"<? if ($Status=='OnDiscussion') echo ' selected'; ?>>In discussion</option>
+        <option value="Closed"<? if ($Status=='Closed') echo ' selected';?>>Closed</option>
+        </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="3">
+                <?
+                $IdReporter=0 ;
+                if (isset($DataPost->Report->IdReporter)) $IdReporter=$DataPost->Report->IdReporter ;
+                echo "<input type='hidden' name='IdReporter' value='".$IdReporter."'>"; ?>
+
+                <input type="submit" name="submit" value="Add to report" class="btn btn-primary">
+            </td>
+        </tr>
+
+<?
 if (isset($DataPost->Report->PostComment))  {
-    echo "<tr><td colspan=\"3\" bgcolor=\"#FFFFFF\">",$DataPost->Report->PostComment,"</td></tr>" ;
-    $PostComment=$DataPost->Report->PostComment ;
+    echo '<tr><td colspan="3">'.$DataPost->Report->PostComment.'</td></tr>';
 }
-        
-
-echo "</form>" ;
-echo "</table>" ;
 ?>
+</form></table>
 

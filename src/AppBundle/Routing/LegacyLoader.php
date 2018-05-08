@@ -52,7 +52,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('forum_tag', '/forums/t{tag}');
         $this->addRouteDirectly('forum_tag_detail_1', '/forums/t{tag}/{detail1}');
         $this->addRouteDirectly('forum_tag_detail_2', '/forums/t{tag}/{detail1}/{detail2}');
-        $this->addRouteDirectly('forum_report', '/forums/reporttomod/{threadId}');
+        $this->addRouteDirectly('forum_report', '/forums/reporttomod/{postId}');
         $this->addRouteDirectly('forum_rules', '/forums/rules');
         $this->addRouteDirectly('forum_edit', '/forums/edit/m{postId}');
         $this->addRouteDirectly('forum_reply', '/forums/s{threadId}/reply');

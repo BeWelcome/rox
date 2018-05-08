@@ -20,7 +20,7 @@
         <div class="row mb-1">
             <div class="col-12 col-md-4 order-last order-md-first">
 
-                <div class="form-group mt-5">
+                <div class="form-group mt-1 mt-md-5">
                     {{ form_errors(form.request.arrival) }}
                     <div class="input-group date" id="arrival" data-target-input="nearest">
                         <div class="input-group-prepend" data-target="#arrival" data-toggle="datetimepicker">
@@ -58,8 +58,10 @@
                 {{ form_widget(form.message) }}
                 {{ form_errors(form.message) }}
 
-                {{ form_rest(form) }}
             </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-12 col-md-8 offset-md-4">{{ form_rest(form) }}</div>
         </div>
         {{ form_end(form) }}
     </div>

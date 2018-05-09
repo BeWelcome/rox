@@ -2,21 +2,38 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\Message;
 use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class MessageToMemberType extends AbstractType
+class HostingRequestAbstractType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $builder
-            ->add('subject', SubjectType::class)
+        $resolver
+            ->setDefaults([
+                'data_class' => Message::class,
+            ])
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'appbundle_message';
+    }
+
+    protected function addMessageTextArea(FormInterface $form, $placeholder)
+    {
+        $form
             ->add('message', CKEditorType::class, [
                 'config' => [
                     'extraPlugins' => 'confighelper',
@@ -26,37 +43,14 @@ class MessageToMemberType extends AbstractType
                         'path' => '/bundles/app/js/confighelper/',
                         'filename' => 'plugin.js',
                     ],
-                    'clipboard' => [
-                        'path' => '/bundles/app/js/clipboard/',
-                        'filename' => 'plugin.js',
-                    ],
                 ],
                 'attr' => [
-                    'placeholder' => 'Please enter a message.',
+                    'placeholder' => $placeholder,
                     'class' => 'mb-1',
                 ],
                 'constraints' => [
                     new NotBlank(),
                 ],
-            ])
-        ;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'data_class' => 'AppBundle\Entity\Message',
-        ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix()
-    {
-        return 'appbundle_message';
+            ]);
     }
 }

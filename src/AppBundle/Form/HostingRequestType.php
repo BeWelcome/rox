@@ -2,14 +2,12 @@
 
 namespace AppBundle\Form;
 
-use AppBundle\Entity\Message;
-use Ivory\CKEditorBundle\Form\Type\CKEditorType;
+use AppBundle\Entity\HostingRequest;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
@@ -80,7 +78,7 @@ class HostingRequestType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => Message::class,
+                'data_class' => HostingRequest::class,
             ])
         ;
     }
@@ -91,28 +89,5 @@ class HostingRequestType extends AbstractType
     public function getBlockPrefix()
     {
         return 'appbundle_request';
-    }
-
-    protected function addMessageTextArea(FormInterface $form, $placeholder)
-    {
-        $form
-            ->add('message', CKEditorType::class, [
-                'config' => [
-                    'extraPlugins' => 'confighelper',
-                ],
-                'plugins' => [
-                    'confighelper' => [
-                        'path' => '/bundles/app/js/confighelper/',
-                        'filename' => 'plugin.js',
-                    ],
-                ],
-                'attr' => [
-                    'placeholder' => $placeholder,
-                    'class' => 'mb-1',
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ]);
     }
 }

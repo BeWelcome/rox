@@ -7,9 +7,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class HostingRequestGuest extends HostingRequestType
+class HostingRequestGuest extends HostingRequestAbstractType
 {
     /**
      * {@inheritdoc}
@@ -32,25 +31,5 @@ class HostingRequestGuest extends HostingRequestType
                 $form->add('update', SubmitType::class);
             }
         });
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver
-            ->setDefaults([
-                'data_class' => Message::class,
-            ])
-        ;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix()
-    {
-        return 'appbundle_request';
     }
 }

@@ -7,9 +7,8 @@ use AppBundle\Entity\Subject;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class HostingRequestHost extends HostingRequestType
+class HostingRequestHost extends HostingRequestAbstractType
 {
     /**
      * {@inheritdoc}
@@ -40,25 +39,5 @@ class HostingRequestHost extends HostingRequestType
         $builder->add('tentatively', SubmitType::class);
         $builder->add('accept', SubmitType::class);
         $builder->add('update', SubmitType::class);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver
-            ->setDefaults([
-                'data_class' => Message::class,
-            ])
-        ;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix()
-    {
-        return 'appbundle_request';
     }
 }

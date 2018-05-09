@@ -73,6 +73,7 @@ class RequestAndMessageController extends Controller
         if ($isMessage) {
             return $this->messageReply($request, $sender, $thread);
         }
+
         // determine if guest or host reply to a request
         $first = $thread[count($thread) - 1];
         if ($sender->getId() === $first->getSender()->getId()) {
@@ -305,17 +306,20 @@ class RequestAndMessageController extends Controller
     private function messageReply(Request $request, Member $sender, array $thread)
     {
         $message = $thread[0];
+        $receiver = ($message->getReceiver() === $sender) ? $message->getSender() : $message->getReceiver();
+
         $replyMessage = new Message();
+        $replySubject = new Subject();
         $subject = $message->getSubject();
         if (null !== $subject) {
-            $replyMessage->setSubject($subject);
+            $replySubject->setSubject($subject->getSubject());
+            $replyMessage->setSubject($replySubject);
         }
 
         $messageForm = $this->createForm(MessageToMemberType::class, $replyMessage);
         $messageForm->handleRequest($request);
 
         if ($messageForm->isSubmitted() && $messageForm->isValid()) {
-            $receiver = ($message->getReceiver() === $sender) ? $sender : $message->getReceiver();
             $replyMessage = $messageForm->getData();
             $replyMessage->setParent($message);
             $replyMessage->setSender($sender);
@@ -323,12 +327,11 @@ class RequestAndMessageController extends Controller
             $replyMessage->setInfolder('Normal');
             $replyMessage->setCreated(new \DateTime());
 
-            $subject = $message->getSubject();
             $replySubject = $replyMessage->getSubject()->getSubject();
-            if (null === $subject || $subject->getSubject() !== $replySubject) {
-                $subject = $replyMessage->getSubject();
+            if (null !== $subject && $subject->getSubject() === $replySubject) {
+                $replyMessage->setSubject($subject);
             }
-            $replyMessage->setSubject($subject);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($replyMessage);
             $em->flush();

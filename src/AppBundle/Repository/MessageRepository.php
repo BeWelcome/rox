@@ -45,6 +45,7 @@ class MessageRepository extends EntityRepository
                 break;
             case self::REQUESTS_ONLY:
                 $qb->join('m.request', 'r');
+                $folder = 'requests';
                 break;
             case self::MESSAGES_AND_REQUESTS:
                 // Nothing to do here

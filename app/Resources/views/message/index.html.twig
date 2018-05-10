@@ -8,24 +8,13 @@
 {% endblock %}
 
 {% block content %}
+
     <h2>{{ type | trans | format(my_member.Username) }}</h2>
 
     {% if items.nbResults == 0 %}
         <p>{{ 'No messages in this folder.' | trans }}</p>
     {% else %}
-        <form method="POST">
-
-{#      <div class="float-left btn-group m-y-1" role="group" aria-label="Delete or spam">
-
-        <button type="submit" name="modify" value="delete" class="btn btn-secondary" onclick="return confirm ('{{ 'MessagesWarningConfirmDelete' | trans }}')">{{ 'delmessage' | trans }}</button>
-
-        {% if folder == 'spam' %}
-            <button type="submit" name="modify" value="nospam" class="btn btn-secondary">{{ 'marknospam' | trans }}</button>
-        {% elseif folder == 'inbox' %}
-            <button type="submit" name="modify" value="markasspam" class="btn btn-secondary">{{ 'markspam' | trans }}</button>
-        {% endif %}
-
-    </div> #}
+        <form id="msgform" name="msgform" method="POST">
 
     {% if items.haveToPaginate %}
     <div class="float-left">
@@ -37,7 +26,10 @@
         <table class="table table-responsive table-striped table-hover">
 
         <tr>
-            <th colspan="2" class="from text-center align-middle">
+            <th class="select align-middle">
+                <input type="checkbox" id="select_all">
+            </th>
+            <th class="from text-center align-middle">
                 <span class="small"><a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: correspondent, dir: 'asc' }) }}">&#x25b2;</a> {{ correspondent | trans | capitalize }} <a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: correspondent, dir: 'desc' }) }}">&#x25bc;</a></span><br>
                 <span class="small"><a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: 'date', dir: 'asc' }) }}">&#x25b2;</a> {{ 'Date' | trans }} <a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: 'date', dir: 'desc' }) }}">&#x25bc;</a></span>
             </th>
@@ -48,7 +40,7 @@
             {% set otherMember = directionIn ? message.sender : message.receiver %}
 
             <tr>
-                <td class="select align-middle">
+                <td class="select align-middle" id="selectcolumn">
                     <input type="checkbox" name="message_id[]" class="msganchor" value="{{ message.id }}">
                 </td>
                 <td class="align-middle small">
@@ -61,7 +53,7 @@
                                     {{- ' class="unread"' -}}
                                 {%- endif -%}
                         >
-                            <span class="text-truncate">
+                            <span class="d-block w-100 text-truncate">
                                 {{- message.subject.subject | raw -}}</span>
                         </a></p>{% endif %}
                     {# DevTip: Replace message.Message with faker.Text(2000) to create random message text #}
@@ -69,7 +61,7 @@
 
                     {% spaceless %}
                         <p class="m-0 mb-1">
-                            <a href="{{ path('message_show', { id: message.id}) }}" class="d-block w-100
+                            <a href="{{ path('message_show', { id: message.id}) }}" class="d-block w-100 messagetext
                                     {%- if not message.WhenFirstRead -%}
                                         {{- ' unread' -}}
                                     {%- endif -%}
@@ -98,22 +90,29 @@
                     {% set sentDate %}{% if message.dateSent != '-0001-11-30 00:00:00' %}{{ message.dateSent | localizeddate( 'medium', 'none') }}{% else %}{{ message.updated | localizeddate( 'medium', 'none')}}{% endif %}{% endset %}
                     <span class="text-muted small">{% if folder == 'sent' %}{% trans %}Sent on %sentDate%{% endtrans %}{% else %}{% trans %}Received on %sentDate%{% endtrans %}{% endif %}</span>
                 </td>
-                <td class="justify-content-between"><a href="{{ path('message_show', { id: message.id}) }}" class="btn btn-primary">{{ 'View' | trans }}</a></td>
+                <td class="align-middle">
+                    <div class="btn-group">
+                    <a href="{{ path('message_show', { id: message.id}) }}" class="btn btn-primary btn-sm float-right">{{ 'View' | trans }}</a>
+                    <button type="submit" name="submit_multi" value="delete" class="btn btn-sm  btn-outline-danger" onclick="return confirm ('{{ 'MessagesWarningConfirmDelete' | trans }}')"><i class="fa fa-times"></i></button>
+                    </div>
+                </td>
             </tr>
         {% endfor %}
+            <tr>
+                <td colspan="4">
+                    <div class="btn-group" aria-label="Delete or spam">
+
+                        <button type="submit" name="submit_multi" value="delete" class="btn btn-sm btn-danger" onclick="return confirm ('{{ 'MessagesWarningConfirmDelete' | trans }}')">{{ 'delmessage' | trans }}</button>
+                        {% if folder == 'spam' %}
+                            <button type="submit" name="submit_multi" value="nospam" class="btn btn-sm btn-light">{{ 'marknospam' | trans }}</button>
+                        {% elseif folder == 'inbox' %}
+                            <button type="submit" name="submit_multi" value="markasspam" class="btn btn-sm btn-light">{{ 'markspam' | trans }}</button>
+                        {% endif %}
+
+                    </div>
+                </td>
+            </tr>
     </table>
-
-{#    <div class="float-left btn-group" role="group" aria-label="Delete or spam">
-
-        <button type="submit" name="modify" value="delete" class="btn btn-secondary" onclick="return confirm ('{{ 'MessagesWarningConfirmDelete' | trans }}')">{{ 'delmessage' | trans }}</button>
-
-        {% if folder == 'spam' %}
-            <button type="submit" name="modify" value="nospam" class="btn btn-secondary">{{ 'marknospam' | trans }}</button>
-        {% elseif folder == 'inbox' %}
-            <button type="submit" name="modify" value="markasspam" class="btn btn-secondary">{{ 'markspam' | trans }}</button>
-        {% endif %}
-
-    </div> #}
 
             {% if items.haveToPaginate %}
     <div class="float-left">
@@ -121,5 +120,6 @@
     </div>
 {% endif %}
 </form>
+
         {% endif %}
 {% endblock %}

@@ -32,12 +32,6 @@
                         </div>
                         <div class="modal-body">
                             <p><?= $words->get('GroupsCreateDescription'); ?></p>
-                            <p>By creating a new group you agree that:</p>
-                            <ul>
-                                <li>have searched for similar groups and have not found one alike</li>
-                                <li>you'll take the responsibility of the group and/or hand it over to another person willing to do so</li>
-                                <li>duplicate groups and groups that violate the Terms of Use of BeWelcome can and will be removed with no notice</li>
-                            </ul>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

@@ -97,31 +97,33 @@ foreach($this->activities as $activity) {
             <div class="absolute monthyear"><?php echo date("m", strtotime($activity->dateStart)) . " " . date("Y", strtotime($activity->dateStart)); ?></div>
         </div>
 
-        <div class="text-truncate">
-            <h4 class="m-0 p-0"><?php echo '<a href="activities/' . $activity->id . '">' . htmlspecialchars($activity->title) . '</a>'; ?>
-                <?php
-                if ($activity->status == 0) {
+        <div class="text-truncate w-100">
+            <h4 class="m-0 p-0 text-truncate float-left"><?php echo '<a href="activities/' . $activity->id . '">' . htmlspecialchars($activity->title) . '</a>'; ?>
 
-                    $activityInTheFuture = (time()-24*60*60 < strtotime($activity->dateTimeEnd));
-                    if ($this->member && in_array($this->member->id, array_keys($activity->organizers))
-                        && $activityInTheFuture ) {
-                        echo '<a href="activities/' . $activity->id . '/edit" class="btn btn-sm btn-primary">' . $words->getBuffered('ActivityEdit') . '</a>' . $words->flushBuffer();
-                    }
-                } else {
-                    echo '<span class="badge badge-danger"><small>' . $words->getBuffered('ActivityCancelled') . '</small></span>' . $words->flushBuffer();
+                <?php
+                echo '<p class="p-0 m-0 smaller">' . date("d M Y", strtotime($activity->dateStart));
+                if ($activity->dateStart != $activity->dateEnd){
+                    echo ' - ' . date("d M Y", strtotime($activity->dateEnd));
                 }
-                ?>
+                echo '</p>'; ?>
             </h4>
 
             <?php
-            echo '<p class="p-0 m-0"><small>' . date("d M Y", strtotime($activity->dateStart));
-            if ($activity->dateStart != $activity->dateEnd){
-                echo ' - ' . date("d M Y", strtotime($activity->dateEnd));
+            if ($activity->status == 0) {
+
+                $activityInTheFuture = (time()-24*60*60 < strtotime($activity->dateTimeEnd));
+                if ($this->member && in_array($this->member->id, array_keys($activity->organizers))
+                    && $activityInTheFuture ) {
+                    echo '<a href="activities/' . $activity->id . '/edit" class="btn btn-sm btn-primary float-right mt-2 mr-md-2">' . $words->getBuffered('ActivityEdit') . '</a>' . $words->flushBuffer();
+                }
+            } else {
+                echo '<span class="badge badge-danger float-right mt-2 mr-lg-2"><small>' . $words->getBuffered('ActivityCancelled') . '</small></span>' . $words->flushBuffer();
             }
-            echo '</small></p>'; ?>
+            ?>
+
         </div>
 
-        <div class="ml-auto d-flex flex-row hidden-md-down">
+        <div class="flex-lg-row d-none d-lg-flex">
             <div class="text-right text-nowrap">
                 <?php if ($activity->location != null){
                     $locationName = htmlspecialchars($activity->location->name);
@@ -137,7 +139,9 @@ foreach($this->activities as $activity) {
                 echo $locationName . '<br>' . $countryName; ?>
             </div>
             <div class="px-2"><i class="fa fa-25 fa-map-marker"></i></div>
+        </div>
 
+        <div class="ml-auto flex-md-row d-none d-md-flex">
             <div><i class="fa fa-25 fa fa-user-circle-o"></i></div>
             <div class="attendees">
                         <?php

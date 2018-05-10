@@ -9,7 +9,7 @@
             {% if subject != currentSubject %}
                 {% set currentSubject = subject %}
                 <div class="row">
-                    <div class="col-12 h3">{{ currentSubject | purify }}</div>
+                    <div class="col-12 h3 px-0 mt-md-3 mb-0">{{ currentSubject | purify }}</div>
                 </div>
             {% endif %}
         {% endif %}

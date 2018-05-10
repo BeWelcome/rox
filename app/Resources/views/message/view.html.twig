@@ -4,7 +4,7 @@
 {% block content %}
 
         {% set original = thread | last %}{% set request = original.Request %}
-<div id="message_thread" class="row">
+<div>
     {% if original.Sender.Username == my_member.Username %}{% set otherUser = original.Receiver %}{% else %}{% set otherUser = original.Sender %}{% endif %}
     {% if current.subject %}{% set currentSubject = current.Subject.Subject %}{% else %}{% set currentSubject = 'Conversation with ' ~ otherUser.Username %}{% endif %}
     <div class="col-12 sticky-top py-3 bg-white d-inline-block mb-2 messageheader">
@@ -13,7 +13,6 @@
         <div class="mt-2"><h3 id="MessageSubject" class="m-0 px-3 text-truncate">{{ currentSubject }}</h3></div>
     </div>
 
-</div>
 
     {% include ':message:thread.html.twig' %}
     <div class="row justify-content-end"><a class="btn btn-primary" href="{{ path('message_reply', { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a></div>

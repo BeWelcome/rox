@@ -1,21 +1,15 @@
 {% extends 'base.html.twig' %}
 
 {% block javascripts %}
-    {% javascripts
-        '@jquery_ui_js'
-        '@leaflet_js'
-        '@AppBundle/Resources/public/js/search/createmap.js'
-        '@AppBundle/Resources/public/js/search/searchpicker.js' %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {%  endjavascripts %}
+    <script src="{{ asset('build/jquery_ui.js') }}"></script>
+    <script src="{{ asset('build/leaflet.js') }}"></script>
+    <script src="{{ asset('build/searchpicker.js') }}"></script>
+    {# '@AppBundle/Resources/public/js/search/createmap.js' #}
 {% endblock javascripts %}
 
 {% block stylesheets %}
-    {% stylesheets filter="cssrewrite"
-        '@leaflet_css'
-        '@jquery_ui_css' %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    <link rel="stylesheet" href="{{ asset('build/leaflet.css') }}" />
+    <link rel="stylesheet" href="{{ asset('build/jquery_ui.css') }}" />
 {% endblock stylesheets %}
 
 {% block content %}

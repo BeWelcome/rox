@@ -7,6 +7,8 @@ use AppBundle\Entity\Subject;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 class HostingRequestHost extends HostingRequestAbstractType
 {
@@ -21,23 +23,14 @@ class HostingRequestHost extends HostingRequestAbstractType
     {
         $builder
             ->add('subject', SubjectType::class)
-            ->add('request', HostingRequestType::class);
-        $this->addMessageTextArea($builder->getForm(), 'Please enter a message for your guest.');
-        $builder->get('subject')
-            ->addModelTransformer(new CallbackTransformer(
-                function (Subject $subject) {
-                    // transform the given subject to an integer
-                    return $subject->getId();
-                },
-                function ($subjectId) {
-                    // transform the string back to an array
-                    return $subjectId;
-                }
-            ))
-        ;
-        $builder->add('decline', SubmitType::class);
-        $builder->add('tentatively', SubmitType::class);
-        $builder->add('accept', SubmitType::class);
-        $builder->add('update', SubmitType::class);
+            ->add('request', HostingRequestType::class)
+            ->add('decline', SubmitType::class)
+            ->add('tentatively', SubmitType::class)
+            ->add('accept', SubmitType::class)
+            ->add('update', SubmitType::class);
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $form = $event->getForm();
+            $this->addMessageTextArea($form, 'Please enter a message for your guest.');
+        });
     }
 }

@@ -13,6 +13,9 @@
 {% endblock %}
 
 {% block content %}
+    {% set start = thread | last %}
+    {% set current = thread | first %}
+    {% set sender =  start.sender %}
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
     <div class="row my-3">

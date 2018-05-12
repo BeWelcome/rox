@@ -56,7 +56,6 @@
                             <span class="d-block w-100 text-truncate">
                                 {{- message.subject.subject | raw -}}</span>
                         </a></p>{% endif %}
-                    {# DevTip: Replace message.Message with faker.Text(2000) to create random message text #}
                     {% set messageText = message.Message | replace({'\n': ' ', '<br />': ' '}) | striptags %}
 
                     {% spaceless %}
@@ -72,17 +71,15 @@
                     {% endspaceless %}
                     {% if message.request %}
                         <div class="d-flex flex column">
-                            <div class="mr-1">
-                                <i class="fa fa-calendar"></i><br>
-                                <i class="fa fa-calendar"></i>
-                            </div>
                             <div class="mr-2 font-weight-bold">
-                                {{ 'Arrival' | trans }}<br>
-                                {{ 'Departure' | trans }}
+                                <i class="fa fa-calendar mr-1"></i>{{ 'Arrival' | trans }}
+                                {%- if message.request.departure %}<br>
+                                <i class="fa fa-calendar mr-1"></i>{{ 'Departure' | trans }}{%- endif %}
                             </div>
                             <div>
-                                {{ message.request.arrival | localizeddate( 'medium', 'none') }}<br>
-                                {{ message.request.departure | localizeddate( 'medium', 'none') }}
+                                {{ message.request.arrival | localizeddate( 'medium', 'none') }}
+                                {%- if message.request.departure %}<br>
+                                {{ message.request.departure | localizeddate( 'medium', 'none') }}{%- endif %}
                             </div>
                         </div>
                     {% endif %}

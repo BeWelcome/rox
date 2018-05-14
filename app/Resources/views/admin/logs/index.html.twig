@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block subnav %}
+    {% for filter,menuItem in submenu.items %}
+        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}"
+           href="{{ menuItem.url }}">{{ menuItem.key | trans }}</a>
+    {% endfor %}
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('build/jquery_ui.js') }}"></script>
+    <script src="{{ asset('build/member/autocomplete.js') }}"></script>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('build/jquery_ui.css') }}" />
+{% endblock stylesheets %}
+
+{% block content %}
+    {{ form(form) }}
+
+    <div class="log"></div>
+    {% if logs.nbResults == 0 %}
+        <p>{{ 'No logs found for this parameters.' | trans }}</p>
+    {% else %}
+        {% if logs.haveToPaginate %}
+            <div class="float-left">
+                {{ pagerfanta( logs, 'twitter_bootstrap4_translated') }}
+            </div>
+        {% endif %}
+        <table class="table table-responsive table-striped table-hover">
+
+        <tr>
+            <th>Type</th>
+            <th>Message</th>
+            <th>Member</th>
+            <th>Logged</th>
+            <th>IP Address</th>
+        </tr>
+        {% for log in logs.currentPageResults %}
+            <tr>
+                <td>{{ log.type }}</td>
+                <td>{{ log.logMessage }}</td>
+                <td>{% if log.member.id > 0 %}{{ log.member.Username }}{% endif %}</td>
+                <td>{{ log.created.DiffForHumans }}</td>
+                <td>{{ log.ipAddress }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+        {% if logs.haveToPaginate %}
+            <div class="float-left">
+                {{ pagerfanta( logs, 'twitter_bootstrap4_translated') }}
+            </div>
+        {% endif %}
+
+    {% endif %}
+{% endblock %}

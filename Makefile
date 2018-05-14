@@ -17,8 +17,8 @@ phpcsfix:
 
 build:
 	./node_modules/.bin/encore dev
-	php bin/console assets:install
-	php bin/console assetic:dump
+#	php bin/console assets:install
+#	php bin/console assetic:dump
 
 phpdox: phploc phpmd php-code-sniffer phpunit
 	./vendor/bin/phpdox

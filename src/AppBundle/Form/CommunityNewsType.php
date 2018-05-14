@@ -1,22 +1,20 @@
 <?php
 
-namespace Rox\Admin\Form;
+namespace AppBundle\Form;
 
+use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class CommunityNewsType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $formBuilder
-     * @param array $options
-     * @return FormInterface
-     * @internal param FormFactoryInterface $formFactory
+     * @param array                $options
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -28,13 +26,27 @@ class CommunityNewsType extends AbstractType
                     'placeholder' => 'Please enter the title',
                 ],
                 'label' => 'Enter the title of the community news',
-            ])
-            ->add('text', TextareaType::class, [
-                'attr' => [
-                    'placeholder' => 'Please enter the description',
+                'constraints' => [
+                    new NotBlank(),
                 ],
-                'label' => 'This will be the body of the news. You can use all formatting options that TinyMCE offers.',
-                'required' => false,
+            ])
+            ->add('text', CKEditorType::class, [
+                'config' => [
+                    'extraPlugins' => 'confighelper',
+                ],
+                'plugins' => [
+                    'confighelper' => [
+                        'path' => '/bundles/app/js/confighelper/',
+                        'filename' => 'plugin.js',
+                    ],
+                ],
+                'attr' => [
+                    'placeholder' => 'This will be the body of the community news.',
+                    'class' => 'mb-1',
+                ],
+                'constraints' => [
+                    new NotBlank(),
+                ],
             ])
             ->add('public', CheckboxType::class, [
                 'label' => 'Shall the community be visible to regular members yet?',

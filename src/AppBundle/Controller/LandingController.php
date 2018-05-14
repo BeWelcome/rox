@@ -106,6 +106,12 @@ class LandingController extends Controller
     /**
      * @Route( "/widget/accommodation", name="/widget/accommodation")
      *
+     * @param Request $request
+     *
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     *
      * @return Response
      */
     public function setAccommodationAction(Request $request)
@@ -145,8 +151,6 @@ class LandingController extends Controller
 
     /**
      * Shows the landing page.
-     *
-     * \todo create controller and add routes there
      *
      * @Route("/landing", name="landingpage")
      *

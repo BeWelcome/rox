@@ -40,39 +40,35 @@ class CommunityNews
      *
      * @ORM\Column(name="public", type="boolean", nullable=false)
      */
-    private $public = '0';
+    private $public = false;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     * @ORM\Column(name="created_at", type="datetime", nullable=true, options={"default": 0})
      */
-    private $createdAt = 'CURRENT_TIMESTAMP';
+    private $createdAt;
 
     /**
      * @var \AppBundle\Entity\Member
      *
      * @ORM\OneToOne(targetEntity="\AppBundle\Entity\Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="created_by", referencedColumnName="id")
-     * })
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
      */
     private $createdBy;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true, options={"default": 0})
      */
-    private $updatedAt = 'CURRENT_TIMESTAMP';
+    private $updatedAt;
 
     /**
      * @var \AppBundle\Entity\Member
      *
      * @ORM\OneToOne(targetEntity="\AppBundle\Entity\Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="updated_by", referencedColumnName="id")
-     * })
+     * @ORM\JoinColumn(name="updated_by", referencedColumnName="id", nullable=true)
      */
     private $updatedBy;
 

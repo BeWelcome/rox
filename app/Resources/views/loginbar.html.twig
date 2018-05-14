@@ -4,7 +4,7 @@
 <nav class="navbar navbar-expand-md navbar-light bg-primary bordert-1 borderb-1">
     <div class="container">
 
-        <a class="navbar-brand ml-3" href="{{ path('homepage') }}">{% image '@AppBundle/Resources/public/images/logo_index_top.png' %}<img src="{{ asset_url }}" alt="{{ 'BeWelcome' | trans }}"/>{% endimage %}</a>
+        <a class="navbar-brand ml-3" href="{{ path('homepage') }}"><img src="{{ asset('bundles/app/images/logo_index_top.png') }}" alt="{{ 'BeWelcome' | trans }}"/></a>
 
         <button class="navbar-toggler btn btn-primary mr-3" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>

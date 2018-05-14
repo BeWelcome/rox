@@ -39,6 +39,7 @@ class BlogToCommunityNews extends RoxMigration
                 ])
             ->addColumn('updated_by', 'biginteger',
                 [
+                    'null' => true,
                     'comment' => 'Stores the member who updated the news'
                 ])
             ->addColumn('deleted_at', 'datetime',

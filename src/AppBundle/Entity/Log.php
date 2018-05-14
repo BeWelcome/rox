@@ -1,30 +1,41 @@
 <?php
+/*
+ * @codingStandardsIgnoreFile
+ *
+ * Auto generated file ignore for Code Sniffer
+ */
 
 namespace AppBundle\Entity;
 
+use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Logs
+ * Logs.
  *
  * @ORM\Table(name="logs")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\LogRepository")
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
-class Logs
+class Log
 {
     /**
-     * @var integer
+     * @var \AppBundle\Entity\Member
      *
-     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Member", fetch="EAGER")
+     * @ORM\JoinColumn(name="idMember", referencedColumnName="id")
      */
-    private $idmember;
+    private $member;
 
     /**
      * @var string
      *
      * @ORM\Column(name="Str", type="text", length=65535, nullable=false)
      */
-    private $str;
+    private $logMessage;
 
     /**
      * @var string
@@ -41,21 +52,14 @@ class Logs
     private $created = 'CURRENT_TIMESTAMP';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IpAddress", type="integer", nullable=false)
      */
-    private $ipaddress;
+    private $ipAddress;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="DebugTracking", type="string", nullable=false)
-     */
-    private $debugtracking;
-
-    /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -63,62 +67,60 @@ class Logs
      */
     private $id;
 
-
-
     /**
-     * Set idmember
+     * Set member.
      *
-     * @param integer $idmember
+     * @param Member $member
      *
-     * @return Logs
+     * @return Log
      */
-    public function setIdmember($idmember)
+    public function setMember($member)
     {
-        $this->idmember = $idmember;
+        $this->member = $member;
 
         return $this;
     }
 
     /**
-     * Get idmember
+     * Get member.
      *
-     * @return integer
+     * @return Member
      */
-    public function getIdmember()
+    public function getMember()
     {
-        return $this->idmember;
+        return $this->member;
     }
 
     /**
-     * Set str
+     * Set str.
      *
-     * @param string $str
+     * @param string $logMessage
      *
-     * @return Logs
+     * @return Log
      */
-    public function setStr($str)
+    public function setLogMessage($logMessage)
     {
-        $this->str = $str;
+        $this->logMessage = $logMessage;
 
         return $this;
     }
 
     /**
-     * Get str
+     * Get str.
      *
      * @return string
      */
-    public function getStr()
+    public function getLogMessage()
     {
-        return $this->str;
+        return $this->logMessage;
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param string $type
      *
-     * @return Logs
+     * @return Log
      */
     public function setType($type)
     {
@@ -128,7 +130,7 @@ class Logs
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return string
      */
@@ -138,11 +140,11 @@ class Logs
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
      *
-     * @return Logs
+     * @return Log
      */
     public function setCreated($created)
     {
@@ -152,67 +154,43 @@ class Logs
     }
 
     /**
-     * Get created
+     * Get created.
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getCreated()
     {
-        return $this->created;
+        return Carbon::instance($this->created);
     }
 
     /**
-     * Set ipaddress
+     * Set ipaddress.
      *
-     * @param integer $ipaddress
+     * @param int $ipAddress
      *
-     * @return Logs
+     * @return Log
      */
-    public function setIpaddress($ipaddress)
+    public function setIpAddress($ipAddress)
     {
-        $this->ipaddress = $ipaddress;
+        $this->ipAddress = $ipAddress;
 
         return $this;
     }
 
     /**
-     * Get ipaddress
+     * Get ipaddress.
      *
-     * @return integer
+     * @return int
      */
-    public function getIpaddress()
+    public function getIpAddress()
     {
-        return $this->ipaddress;
+        return long2ip($this->ipAddress);
     }
 
     /**
-     * Set debugtracking
+     * Get id.
      *
-     * @param string $debugtracking
-     *
-     * @return Logs
-     */
-    public function setDebugtracking($debugtracking)
-    {
-        $this->debugtracking = $debugtracking;
-
-        return $this;
-    }
-
-    /**
-     * Get debugtracking
-     *
-     * @return string
-     */
-    public function getDebugtracking()
-    {
-        return $this->debugtracking;
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

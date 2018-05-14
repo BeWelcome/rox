@@ -20,10 +20,12 @@ Encore
     .addEntry('signup', './src/AppBundle/Resources/js/signup.js')
     .addEntry('landing', './src/AppBundle/Resources/public/js/landing/landing.js')
 
-    .addEntry('searchpicker', './src/AppBundle/Resources/public/js/search/searchpicker.js')
+    .addEntry('search/searchpicker', './src/AppBundle/Resources/public/js/search/searchpicker.js')
+    .addEntry('search/createmap', './src/AppBundle/Resources/public/js/search/createmap.js')
     .addEntry('tempusdominus', './src/AppBundle/Resources/js/tempusdominus.js')
     .addEntry('requests', './src/AppBundle/Resources/js/requests.js')
     .addEntry('leaflet', './src/AppBundle/Resources/js/leaflet.js')
+    .addEntry('member/autocomplete', './src/AppBundle/Resources/js/member/autocomplete.js')
 
     .enableSassLoader()
     // allow legacy applications to use $/jQuery as a global variable, make popper visible for bootstrap

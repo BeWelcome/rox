@@ -15,14 +15,40 @@ class MemberRepository extends EntityRepository implements UserLoaderInterface
      *
      * @param string $username The username
      *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     *
      * @return UserInterface|null
      */
-    public function loadUserByUsername($username)
+    public function loadMembersByUsernamePart($username)
     {
         return $this->createQueryBuilder('u')
-            ->where('u.username = :username OR u.email = :email')
+            ->select('u.username')
+            ->where('u.username Like :username')
+            ->setParameter('username', '%'.$username.'%')
+            ->setMaxResults(10)
+            ->orderBy('u.username', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Loads the user for the given username.
+     *
+     * This method must return null if the user is not found.
+     *
+     * @param string $username The username
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     *
+     * @return UserInterface|null
+     */
+    public function loadMemberByUsername($username)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.username = :username' /* OR u.email = :email' */)
             ->setParameter('username', $username)
-            ->setParameter('email', $username)
+//            ->setParameter('email', $username)
+                // \todo move email into table so that this works
             ->getQuery()
             ->getOneOrNullResult();
     }

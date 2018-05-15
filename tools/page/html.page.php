@@ -169,7 +169,7 @@ class PageWithHTML extends AbstractBasePage
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
-        <script src="/assetic/backwards_js.js"></script>
+        <script src="/build/backwards.js"></script>
         <![endif]-->
         </head>
         <body>
@@ -196,7 +196,7 @@ class PageWithHTML extends AbstractBasePage
         if (!$stylesheets = $this->getStylesheets()) {
             // no stylesheets
         } else foreach($stylesheets as $url) {
-            if (strpos($url, '/assetic/') === 0) {
+            if (strpos($url, '/build/') === 0) {
                 echo '<link rel="stylesheet" href="' . $url . '" type="text/css" />' . PHP_EOL;
             } else {
             ?><link rel="stylesheet" href="<?=$url ?>" type="text/css" />
@@ -262,7 +262,7 @@ class PageWithHTML extends AbstractBasePage
         if (!$scriptfiles = $this->getScriptfiles()) {
             // no additional Javascript files
         } else foreach($scriptfiles as $url) {
-            if (strpos($url, '/assetic/') === 0) {
+            if (strpos($url, '/build/') === 0) {
                 echo '<script type="text/javascript" src="' . ltrim($url, '/') . '"></script>' . PHP_EOL;
             } else {
                 ?>

@@ -35,7 +35,7 @@ $hasRight = $R->hasRight('Treasurer');
 
 if ($this->_session->has( 'AdminTreasurerStatus' )) {
     $status = $this->_session->get('AdminTreasurerStatus');
-    switch($status[0]) {
+    switch($status) {
         case 'StartSuccess':
             $class = 'success';
             $word = $words->get('AdminTreasurerCampaignStarted');
@@ -90,7 +90,9 @@ foreach($this->donations as $donation) {
 <td>€ <?php printf("%3.2f",$donation->Amount); ?></td>
 <td><?php echo $donation->SystemComment; ?></td>
 <td><?php echo $donation->CountryName; ?></td>
-<td><?php echo MOD_member::getUsername($donation->IdMember) . " " . $donation->referencepaypal; ?></td>
+<td><?php if ($donation->IdMember) {
+    $member = MOD_member::getMember_userId($donation->IdMember);
+    echo $member->getUsername(). " " . $donation->referencepaypal; }?></td>
 <td><?php echo '<a href="admin/treasurer/edit/' . $donation->id . '">' . $words->get('AdminTreasurerOverviewEdit') . '</a>'; ?></td>
 </tr>
 <?php

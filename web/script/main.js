@@ -180,15 +180,6 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "datepicker.js?1",
-        pages: [
-//            "activities",
-            "blog",
-//            "trip",
-            "admin/treasurer"
-        ]
-    },
-    {
         file: "adminrightstooltip.js",
         pages: [
             "admin/rights/list"

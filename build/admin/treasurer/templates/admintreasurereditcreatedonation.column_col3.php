@@ -57,46 +57,44 @@ if (!empty($errors))
     echo "</div>";
 }
 ?>
-<div class="bw-row">
-        <div class="c33l">
-            <div class=" subcl type-text">
+<div class="container">
+<div class="row">
+        <div class="col-12">
             <label for="donate-username"><?php echo $words->get('AdminTreasurerDonor'); ?></label>
-            <input type="text" id="donate-username" name="donate-username" value="<?php if (isset($vars['donate-username'])) { echo $vars['donate-username']; };  ?>" />
-            </div>
+            <input type="text" id="donate-username" name="donate-username" class="form-control" value="<?php if (isset($vars['donate-username'])) { echo $vars['donate-username']; };  ?>" />
         </div>
-        <div class="c33l">
-            <div class="subcl type-text">            
+</div>
+    <div class="row">
+        <div class="col12">
             <label for="donate-amount"><?php echo $words->get('AdminTreasurerDonatedAmount'); ?></label>
-            <input type="text" id="donate-amount" name="donate-amount" value="<?php if (isset($vars['donate-amount'])) { echo $vars['donate-amount']; };  ?>" />
-            </div>
+            <input type="text" id="donate-amount" name="donate-amount" class="form-control" value="<?php if (isset($vars['donate-amount'])) { echo $vars['donate-amount']; };  ?>" />
         </div>
-        <div class="c33r">
-            <div class="subcl type-text" style="overflow:visible">
+    </div>
+        <div class="row">
+            <div class="col-12">
             <label for="donate-date"><?php echo $words->get('AdminTreasurerDonatedOn'); ?></label>
-            <input type="text" id="donate-date" name="donate-date" class="date" maxlength="10" <?php
-            echo isset($vars['donate-date']) ? 'value="'.htmlentities($vars['donate-date'], ENT_COMPAT, 'utf-8').'" ' : ''; ?> />
+                    <div class="input-group date" id="donate-date-input" data-target-input="nearest">
+                        <div class="input-group-prepend" data-target="#donate-date" data-toggle="datetimepicker">
+                            <span class="input-group-text">
+                                <i class="fa fa-calendar mt-2 mr-1"></i>
+                            </span>
+                        </div>
+                        <input type="text" id="donate-date" name="donate-date" class="form-control datepicker" data-target="#donate-date" data-toggle="datetimepicker"
+                               value="<?php if (isset($vars['donate-date'])) { echo $vars['donate-date']; };  ?>" />
+                    </div>
             </div>
-            <script type="text/javascript">
-            /*<[CDATA[*/
-            var datepicker	= new DatePicker({
-            relative	: 'donate-date',
-            language	: '<?=$this->_session->has( 'lang' ) ? $this->_session->get('lang') : 'en'?>',
-            current_date : '', 
-            topOffset   : '25',
-            relativeAppend : false
-            });
-            /*]]>*/
-            </script>
-
         </div>
 </div>
-<div class="subcolumns type-text">
+    <div class="row">
+<div class="col-12">
     <label for="donate-comment"><?php echo $words->get('AdminTreasurerComment'); ?></label>
-    <input type="text" id="donate-comment" name="donate-comment" maxlength="100" value="<?php echo $vars['donate-comment'];?>" />
+    <input type="text" id="donate-comment" name="donate-comment" class="form-control" maxlength="100" value="<?php echo $vars['donate-comment'];?>" />
 </div>
-<div class="subcolumns type-select">
+    </div>
+<div class="row">
+    <div class="col-12">
     <label for="donate-country"><?php echo $words->get('AdminTreasurerSelectCountry'); ?></label>
-    <select id="donate-country" name="donate-country">
+    <select id="donate-country" name="donate-country" class="select2 form-control">
     <option value="0"><?php echo $words->getBuffered('AdminTreasurerSelectACountry'); ?></option>
     <?php
     foreach($countries as $country) {
@@ -108,8 +106,9 @@ if (!empty($errors))
     }
     ?>
     </select><?php echo $words->flushBuffer(); ?>
+    </div>
 </div>
-<div class="type-button float-right">
+<div class="btn float-right">
           <input type="submit" class="button" name="addDonation" value="<?php 
             if ($vars['id'] == 0) {
             echo $words->getBuffered('AdminTreasurerAddDonation');

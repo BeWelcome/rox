@@ -24,6 +24,7 @@ Encore
     .addEntry('search/createmap', './src/AppBundle/Resources/public/js/search/createmap.js')
     .addEntry('tempusdominus', './src/AppBundle/Resources/js/tempusdominus.js')
     .addEntry('requests', './src/AppBundle/Resources/js/requests.js')
+    .addEntry('treasurer', './src/AppBundle/Resources/js/treasurer.js')
     .addEntry('leaflet', './src/AppBundle/Resources/js/leaflet.js')
     .addEntry('member/autocomplete', './src/AppBundle/Resources/js/member/autocomplete.js')
 

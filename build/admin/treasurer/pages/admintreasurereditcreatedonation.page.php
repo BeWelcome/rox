@@ -29,9 +29,10 @@ Boston, MA  02111-1307, USA.
      * @package Apps
      * @subpackage Admin/Treasurer
      */
-class AdminTreasurerEditCreateDonationPage extends AdminBasePage
+class AdminTreasurerEditCreateDonationPage extends AdminTreasurerBasePage
 {
     public function __construct(AdminTreasurerModel $model, $id) {
+        parent::__construct($model);
         $this->model = $model;
         $this->member = $model->getLoggedInMember();
 
@@ -51,6 +52,7 @@ class AdminTreasurerEditCreateDonationPage extends AdminBasePage
             $this->comment = $donation->SystemComment;
             $this->countrycode = $this->model->getCountryCodeForGeonameId($donation->IdCountry);
         }
+        $this->addLateLoadScriptFile('/build/treasurer.js');
     }
     
     public function teaserHeadline()
@@ -62,5 +64,10 @@ class AdminTreasurerEditCreateDonationPage extends AdminBasePage
             $str .= $this->words->get('AdminTreasurerAddDonation');
         }
         return $str;
+    }
+
+    protected function getSubmenuActiveItem()
+    {
+        return 'add';
     }
 }

@@ -30,7 +30,7 @@ Boston, MA  02111-1307, USA.
      * @subpackage Admin
      */
 
-class AdminTreasurerStartDonationCampaignPage extends AdminBasePage
+class AdminTreasurerStartDonationCampaignPage extends AdminTreasurerBasePage
 {
     public function __construct(AdminTreasurerModel $model) {
         $this->model = $model;
@@ -44,5 +44,10 @@ class AdminTreasurerStartDonationCampaignPage extends AdminBasePage
     public function teaserHeadline()
     {
         return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin/treasurer'>{$this->words->get('AdminTreasurer')}</a> &raquo; {$this->words->get('AdminTreasurerStartDonationCampaign')}</a>";
+    }
+
+    protected function getSubmenuActiveItem()
+    {
+        return 'start';
     }
 }

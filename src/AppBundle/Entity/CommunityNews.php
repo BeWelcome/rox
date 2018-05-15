@@ -45,7 +45,7 @@ class CommunityNews
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="created_at", type="datetime", nullable=true, options={"default": 0})
+     * @ORM\Column(name="created_at", type="datetime", nullable=true, options={"default": "CURRENT_TIMESTAMP"})
      */
     private $createdAt;
 
@@ -60,7 +60,7 @@ class CommunityNews
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=true, options={"default": 0})
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true, options={"default": "CURRENT_TIMESTAMP"})
      */
     private $updatedAt;
 

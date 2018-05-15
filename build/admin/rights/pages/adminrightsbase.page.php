@@ -5,7 +5,6 @@
  * Date: 06.04.14
  * Time: 12:07
  */
-
 class AdminRightsBasePage extends AdminBasePage
 {
     protected $sidebar = array(
@@ -36,16 +35,7 @@ class AdminRightsBasePage extends AdminBasePage
     }
 
     /**
-     * includes the sidebar
-     *
-     * @todo: Find a better way to include the template
-     */
-    public function leftSidebar() {
-        require getcwd() . '/../build/admin/rights/templates/adminrights.leftsidebar.php';
-    }
-
-    /**
-     * @param $current current item in the side bar
+     * @param string $current current item in the side bar
      */
     protected function setCurrent($current) {
         $this->current = $current;
@@ -58,9 +48,28 @@ class AdminRightsBasePage extends AdminBasePage
         return $stylesheets;
     }
 
+    protected function getSubmenuItems()
+    {
+        $items = [];
+        foreach($this->sidebar as $key => $item) {
+            if (!$this->create && $key == 'AdminRightsCreate') continue;
+            $items[] = [
+                $key,
+                $item,
+                $this->words->get($key),
+            ];
+        }
+        return $items;
+    }
+
+    protected function getSubmenuActiveItem()
+    {
+        return $this->current;
+    }
+
     protected function rightsSelect($rights, $current, $disabled = false)
     {
-        $select = '<select id="rightid" name="rightid"' . ($disabled ? ' disabled="disabled"' : '') . '>';
+        $select = '<select id="rightid" name="rightid"' . ($disabled ? ' disabled="disabled"' : '') . ' class="form-control">';
         $select .= '<option value="0"></option>';
         foreach ($rights as $right) {
             $select .= '<option value="' . $right->id . '"';
@@ -75,7 +84,7 @@ class AdminRightsBasePage extends AdminBasePage
 
     function levelSelect($current, $disabled = false, $showEmpty = true)
     {
-        $select = '<select id="level" name="level"' . ($disabled ? ' disabled="disabled"' : '') . '>';
+        $select = '<select id="level" name="level"' . ($disabled ? ' disabled="disabled"' : '') . ' class="form-control">';
         if ($showEmpty) {
             $select .= '<option value="0"></option>';
         }

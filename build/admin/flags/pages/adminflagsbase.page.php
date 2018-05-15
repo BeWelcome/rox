@@ -36,16 +36,7 @@ class AdminFlagsBasePage extends AdminBasePage
     }
 
     /**
-     * includes the sidebar
-     *
-     * @todo: Find a better way to include the template
-     */
-    public function leftSidebar() {
-        require getcwd() . '/../build/admin/flags/templates/adminflags.leftsidebar.php';
-    }
-
-    /**
-     * @param $current current item in the side bar
+     * @param string $current current item in the side bar
      */
     protected function setCurrent($current) {
         $this->current = $current;
@@ -58,9 +49,28 @@ class AdminFlagsBasePage extends AdminBasePage
         return $stylesheets;
     }
 
+    protected function getSubmenuItems()
+    {
+        $items = [];
+        foreach($this->sidebar as $key => $item) {
+            if (!$this->create && $key == 'AdminRightsCreate') continue;
+            $items[] = [
+                $key,
+                $item,
+                $this->words->get($key),
+            ];
+        }
+        return $items;
+    }
+
+    protected function getSubmenuActiveItem()
+    {
+        return $this->current;
+    }
+
     protected function flagsSelect($flags, $current, $disabled = false)
     {
-        $select = '<select id="flagid" name="flagid"' . ($disabled ? ' disabled="disabled"' : '') . '>';
+        $select = '<select class="form-control" id="flagid" name="flagid"' . ($disabled ? ' disabled="disabled"' : '') . '>';
         $select .= '<option value="0"></option>';
         foreach ($flags as $flag) {
             $select .= '<option value="' . $flag->id . '"';
@@ -75,7 +85,7 @@ class AdminFlagsBasePage extends AdminBasePage
 
     function levelSelect($current, $disabled = false, $showEmpty = true)
     {
-        $select = '<select id="level" name="level"' . ($disabled ? ' disabled="disabled"' : '') . '>';
+        $select = '<select class="form-control" id="level" name="level"' . ($disabled ? ' disabled="disabled"' : '') . '>';
         if ($showEmpty) {
             $select .= '<option value="0"></option>';
         }

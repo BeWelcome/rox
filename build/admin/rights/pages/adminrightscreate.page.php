@@ -16,6 +16,6 @@ class AdminRightsCreatePage extends AdminRightsBasePage
     public function teaserHeadline()
     {
         $headline = parent::teaserHeadline();
-        return $headline . "&raquo; <a href='admin/rights'>{$this->words->get('AdminRights')}</a>";
+        return $headline . " &raquo; <a href='admin/rights'>{$this->words->get('AdminRights')}</a>";
     }
 }

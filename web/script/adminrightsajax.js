@@ -2,25 +2,15 @@ jQuery(function () {
     jQuery("#username").autocomplete({
         source: function (request, response) {
             jQuery.ajax({
-                url: "/search/members/username",
+                url: "/member/autocomplete",
                 dataType: "jsonp",
                 data: {
-                    username: request.term
+                    term: request.term
                 },
-                success: function (data) {
-                    if (data.status != "success") {
-                        data.usernames = [
-                            { username: "No match found" }
-                        ];
-                    }
-                    response(
-                        jQuery.map(data.usernames, function (item) {
-                            return {
-                                value: item.username
-                            };
-                        }));
-                }
-            });
+                success: function success(data) {
+                response(data);
+            }
+        });
         },
         change: function (event, ui) {
             if (ui.item == null) {

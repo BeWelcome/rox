@@ -9,14 +9,14 @@
 class AdminRightsListMembersPage extends AdminRightsBasePage
 {
     public function __construct($model = false) {
-        parent::__construct($model);
+        parent::__construct();
         $this->setCurrent('AdminRightsListMembers');
     }
 
     public function teaserHeadline()
     {
         $headline = parent::teaserHeadline();
-        return $headline . "&raquo; <a href='admin/rights/list/members'>{$this->words->get('AdminRightsListMembers')}</a>";
+        return $headline . " &raquo; <a href='admin/rights/list/members'>{$this->words->get('AdminRightsListMembers')}</a>";
     }
 
     public function getLateLoadScriptFiles() {

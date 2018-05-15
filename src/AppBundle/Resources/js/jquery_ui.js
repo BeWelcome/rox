@@ -46,8 +46,10 @@ require('jquery-ui/ui/effects/effect-size');
 require('jquery-ui/ui/effects/effect-slide');
 require('jquery-ui/ui/effects/effect-transfer');
 
-require('jquery-ui/themes/base/core.css');
+require('jquery-ui/themes/base/base.css');
+require('jquery-ui/themes/base/theme.css');
 
+/*
 require('jquery-ui/themes/base/draggable.css');
 require('jquery-ui/themes/base/resizable.css');
 require('jquery-ui/themes/base/selectable.css');
@@ -67,3 +69,4 @@ require('jquery-ui/themes/base/slider.css');
 require('jquery-ui/themes/base/spinner.css');
 require('jquery-ui/themes/base/tabs.css');
 require('jquery-ui/themes/base/tooltip.css');
+ */

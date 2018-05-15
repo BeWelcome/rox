@@ -23,6 +23,7 @@ class MemberController extends Controller
     public function autoCompleteAction(Request $request)
     {
         $names = [];
+        $callback = trim(strip_tags($request->get('callback')));
         $term = trim(strip_tags($request->get('term')));
 
         $em = $this->getDoctrine()->getManager();
@@ -31,10 +32,15 @@ class MemberController extends Controller
         $entities = $memberRepository->loadMembersByUsernamePart($term);
 
         foreach ($entities as $entity) {
-            $names[] = $entity['username'];
+            $names[] = [
+                'id' => $entity['username'],
+                'label' => $entity['username'],
+                'value' => $entity['username'],
+            ];
         }
 
         $response = new JsonResponse();
+        $response->setCallback($callback);
         $response->setData($names);
 
         return $response;

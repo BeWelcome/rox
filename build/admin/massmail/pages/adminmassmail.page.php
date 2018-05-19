@@ -40,13 +40,11 @@ class AdminMassmailPage extends AdminMassmailBasePage
         $params->items = $this->massmails;
         $params->items_per_page = 10; 
         $this->pager = new PagerWidget($params);
+        $this->setCurrent('AdminMassMail');
     }
 
     public function teaserHeadline()
     {
         return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin/massmail'>{$this->words->get('AdminMassMail')}</a>";
-    }
-
-    public function column_col2() {
     }
 }

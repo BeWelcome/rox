@@ -52,6 +52,7 @@ class AdminMassmailDetailsPage extends AdminMassmailBasePage
             $this->details = $this->model->getMassmailRecipientsInfo( $id, $detail, 
                 ($pageno -1 ) * $this->ROWSPERPAGE, $this->ROWSPERPAGE);
         }
+        $this->setCurrent('AdminMassMailDetails');
     }
     
     public function teaserHeadline() {

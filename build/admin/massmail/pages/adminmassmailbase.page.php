@@ -32,6 +32,13 @@ Boston, MA  02111-1307, USA.
 
 class AdminMassmailBasePage extends AdminBasePage
 {
+    protected $sidebar = array(
+        'AdminMassMail' => 'admin/massmail',
+        'AdminMassMailCreate' => 'admin/massmail/create',
+    );
+
+    protected $current = '';
+
     const NEWSLETTERSPECIFIC = 1;
     const NEWSLETTERGENERAL = 2;
     const LOGINREMINDER = 4;
@@ -138,5 +145,28 @@ class AdminMassmailBasePage extends AdminBasePage
             $this->mailToConfirmReminder = true;
             $this->termsOfUse = true;
         }
+    }
+
+    protected function getSubmenuItems()
+    {
+        $items = [];
+        foreach($this->sidebar as $key => $item) {
+            $items[] = [
+                $key,
+                $item,
+                $this->getWords()->get($key),
+            ];
+        }
+        return $items;
+    }
+
+    protected function getSubmenuActiveItem()
+    {
+        return $this->current;
+    }
+
+    protected function setCurrent($current)
+    {
+        $this->current = $current;
     }
 }

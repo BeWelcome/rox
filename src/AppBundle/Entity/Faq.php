@@ -1,4 +1,9 @@
 <?php
+/*
+ * @codingStandardsIgnoreFile
+ *
+ * Auto generated file ignore for Code Sniffer
+ */
 
 namespace AppBundle\Entity;
 
@@ -8,30 +13,43 @@ use Doctrine\ORM\Mapping as ORM;
  * Faq
  *
  * @ORM\Table(name="faq", indexes={@ORM\Index(name="IdCategory", columns={"IdCategory"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\FaqRepository")
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class Faq
 {
     /**
      * @var string
      *
-     * @ORM\Column(name="QandA", type="string", length=40, nullable=false)
+     * @ORM\Column(name="QandA", type="string", nullable=false)
      */
-    private $qanda;
+    private $qAndA;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $answer;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $question;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     * @ORM\Column(name="updated", type="datetime", nullable=false, options={"default" : "CURRENT_TIMESTAMP"})
      */
-    private $updated = 'CURRENT_TIMESTAMP';
+    private $updated;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
+     * @ORM\Column(name="created", type="datetime", nullable=false, options={"default" : "CURRENT_TIMESTAMP"})
      */
-    private $created = '0000-00-00 00:00:00';
+    private $created;
 
     /**
      * @var string
@@ -48,11 +66,14 @@ class Faq
     private $sortorder = '0';
 
     /**
-     * @var integer
+     * @var \AppBundle\Entity\FaqCategory
      *
-     * @ORM\Column(name="IdCategory", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\FaqCategory", fetch="EAGER")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdCategory", referencedColumnName="id")
+     * })
      */
-    private $idcategory = '0';
+    private $category = '0';
 
     /**
      * @var string
@@ -70,18 +91,16 @@ class Faq
      */
     private $id;
 
-
-
     /**
      * Set qanda
      *
-     * @param string $qanda
+     * @param string $qAndA
      *
      * @return Faq
      */
-    public function setQanda($qanda)
+    public function setQAndA($qAndA)
     {
-        $this->qanda = $qanda;
+        $this->qAndA = $qAndA;
 
         return $this;
     }
@@ -91,9 +110,9 @@ class Faq
      *
      * @return string
      */
-    public function getQanda()
+    public function getQAndA()
     {
-        return $this->qanda;
+        return $this->qAndA;
     }
 
     /**
@@ -193,27 +212,27 @@ class Faq
     }
 
     /**
-     * Set idcategory
+     * Set category
      *
-     * @param integer $idcategory
+     * @param FaqCategory $category
      *
      * @return Faq
      */
-    public function setIdcategory($idcategory)
+    public function setCategory($category)
     {
-        $this->idcategory = $idcategory;
+        $this->category = $category;
 
         return $this;
     }
 
     /**
-     * Get idcategory
+     * Get category
      *
-     * @return integer
+     * @return FaqCategory
      */
-    public function getIdcategory()
+    public function getCategory()
     {
-        return $this->idcategory;
+        return $this->category;
     }
 
     /**
@@ -249,4 +268,35 @@ class Faq
     {
         return $this->id;
     }
+
+    public function getAnswer()
+    {
+        return $this->answer;
+    }
+
+    /**
+     * @param string $answer
+     * @return Faq
+     */
+    public function setAnswer(string $answer)
+    {
+        $this->answer = $answer;
+        return $this;
+    }
+
+    public function getQuestion()
+    {
+        return $this->question;
+    }
+
+    /**
+     * @param string $question
+     * @return Faq
+     */
+    public function setQuestion(string $question)
+    {
+        $this->question = $question;
+        return $this;
+    }
+
 }

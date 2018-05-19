@@ -18,39 +18,29 @@
 {% endblock stylesheets %}
 
 {% block content %}
-    {{ form(form) }}
-
     <div class="log"></div>
-    {% if logs.nbResults == 0 %}
-        <p>{{ 'No logs found for these parameters.' | trans }}</p>
+    {% if faqs.nbResults == 0 %}
+        <p>{{ 'No faqs found.' | trans }}</p>
     {% else %}
-        {% if logs.haveToPaginate %}
+        {% if faqs.haveToPaginate %}
             <div class="float-left">
-                {{ pagerfanta( logs, 'twitter_bootstrap4_translated') }}
+                {{ pagerfanta( faqs, 'twitter_bootstrap4_translated') }}
             </div>
         {% endif %}
         <table class="table table-responsive table-striped table-hover">
 
         <tr>
-            <th>Type</th>
-            <th>Message</th>
-            <th>Member</th>
-            <th>Logged</th>
-            <th>IP Address</th>
+            <th>Category</th>
+            <th>Question</th>
+            <th>Answer</th>
         </tr>
-        {% for log in logs.currentPageResults %}
-            <tr>
-                <td>{{ log.type }}</td>
-                <td>{{ log.logMessage }}</td>
-                <td>{% if log.member.id > 0 %}{{ log.member.Username }}{% endif %}</td>
-                <td>{{ log.created.DiffForHumans }}</td>
-                <td>{{ log.ipAddress }}</td>
-            </tr>
+        {% for faq in faqs.currentPageResults %}
+            <tr><td>{{ faq.category.Description.Sentence }}<br>{{ faq.qAndA }}</td><td>{{ faq.Question }}</td><td>{{ faq.Answer }}</td></tr>
         {% endfor %}
         </table>
-        {% if logs.haveToPaginate %}
+        {% if faqs.haveToPaginate %}
             <div class="float-left">
-                {{ pagerfanta( logs, 'twitter_bootstrap4_translated') }}
+                {{ pagerfanta( faqs, 'twitter_bootstrap4_translated') }}
             </div>
         {% endif %}
 

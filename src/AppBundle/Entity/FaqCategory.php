@@ -5,17 +5,18 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Faqcategories
+ * FaqCategory
  *
  * @ORM\Table(name="faqcategories")
  * @ORM\Entity
  */
-class Faqcategories
+class FaqCategory
 {
     /**
      * @var string
      *
-     * @ORM\Column(name="Description", type="string", length=40, nullable=false)
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Word", fetch="EAGER")
+     * @ORM\JoinColumn(name="Description", referencedColumnName="code", nullable=false)
      */
     private $description;
 
@@ -36,16 +37,16 @@ class Faqcategories
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     * @ORM\Column(name="updated", type="datetime", nullable=false, options={"default": "CURRENT_TIMESTAMP"})
      */
-    private $updated = 'CURRENT_TIMESTAMP';
+    private $updated;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
+     * @ORM\Column(name="created", type="datetime", nullable=false, options={"default": "CURRENT_TIMESTAMP"})
      */
-    private $created = '0000-00-00 00:00:00';
+    private $created;
 
     /**
      * @var integer
@@ -63,7 +64,7 @@ class Faqcategories
      *
      * @param string $description
      *
-     * @return Faqcategories
+     * @return FaqCategory
      */
     public function setDescription($description)
     {
@@ -87,7 +88,7 @@ class Faqcategories
      *
      * @param integer $sortorder
      *
-     * @return Faqcategories
+     * @return FaqCategory
      */
     public function setSortorder($sortorder)
     {
@@ -111,7 +112,7 @@ class Faqcategories
      *
      * @param string $type
      *
-     * @return Faqcategories
+     * @return FaqCategory
      */
     public function setType($type)
     {
@@ -135,7 +136,7 @@ class Faqcategories
      *
      * @param \DateTime $updated
      *
-     * @return Faqcategories
+     * @return FaqCategory
      */
     public function setUpdated($updated)
     {
@@ -159,7 +160,7 @@ class Faqcategories
      *
      * @param \DateTime $created
      *
-     * @return Faqcategories
+     * @return FaqCategory
      */
     public function setCreated($created)
     {

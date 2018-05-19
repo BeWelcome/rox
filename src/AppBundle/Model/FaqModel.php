@@ -3,6 +3,7 @@
 namespace AppBundle\Model;
 
 use AppBundle\Entity\Faq;
+use AppBundle\Entity\FaqCategory;
 use AppBundle\Pagerfanta\FaqAdapter;
 use AppBundle\Repository\FaqRepository;
 use AppBundle\Repository\LogRepository;
@@ -35,15 +36,18 @@ class FaqModel extends BaseModel
         return $repository->findLatest($page, $limit);
     }
 
-    public function getFaqs($page, $limit)
+    public function getFaqs(FaqCategory $faqCategory, $page, $limit)
     {
-        $paginator = new Pagerfanta(new FaqAdapter($this->em));
+        $paginator = new Pagerfanta(new FaqAdapter($this->em, $faqCategory));
         $paginator->setMaxPerPage($limit);
         $paginator->setCurrentPage($page);
 
         return $paginator;
     }
 
+    /**
+     * @return array
+     */
     public function getFaqCategories()
     {
         $categories = [];

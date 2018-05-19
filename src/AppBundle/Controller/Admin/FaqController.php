@@ -11,12 +11,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class FaqController extends Controller
 {
     /**
-     * @Route("/admin/faqs/{categoryId}", name="admin_faqs_overview")
+     * @Route("/admin/faqs/{id}", name="admin_faqs_overview",
+     *     defaults={"id" = 1})
      *
      * @param Request $request
      *
-     * @throws \Doctrine\ORM\ORMException
-     *
+     * @param FaqCategory $faqCategory
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showOverview(Request $request, FaqCategory $faqCategory)
@@ -26,54 +26,32 @@ class FaqController extends Controller
         $limit = $request->query->get('limit', 20);
 
         $faqModel = new FaqModel($this->getDoctrine());
-        $faqs = $faqModel->getFaqs($page, $limit);
+        $faqs = $faqModel->getFaqs($faqCategory, $page, $limit);
         $faqCategories = $this->getSubMenuItems();
 
         return  $this->render(':admin:faqs/index.html.twig', [
-            'submenu' => $faqCategories,
+            'submenu' => [
+                'items' => $faqCategories,
+                'active' => ($faqCategories == null ? '' : $faqCategory->getId()),
+            ],
             'faqs' => $faqs,
-
         ]);
 
     }
 
     private function getSubMenuItems()
     {
-        $faqModel = new FaqModel($this->getDoctrine());
-        $faqCategories = $faqModel->getFaqCategories();
+        $repository = $this->getDoctrine()->getRepository(FaqCategory::class);
+        $faqCategories= $repository->findAll();
 
-        return  $faqCategories;
+        $subMenu = [];
+        foreach($faqCategories as $faqCategory)
+        {
+            $subMenu[$faqCategory->getId()] = [
+                'key' => $faqCategory->getDescription(),
+                'url' => $this->generateUrl('admin_faqs_overview', [ 'id' => $faqCategory->getId()])
+            ];
+        }
+        return $subMenu;
     }
-
-    private function getSubMenuItems()
-    {
-        return [
-            'both_inbox' => [
-                'key' => 'MessagesRequestsReceived',
-                'url' => $this->generateUrl('both', ['folder' => 'inbox']),
-            ],
-            'requests_inbox' => [
-                'key' => 'RequestsReceived',
-                'url' => $this->generateUrl('requests', ['folder' => 'inbox']),
-            ],
-            'requests_sent' => [
-                'key' => 'RequestsSent',
-                'url' => $this->generateUrl('requests', ['folder' => 'sent']),
-            ],
-            'messages_sent' => [
-                'key' => 'MessagesSent',
-                'url' => $this->generateUrl('messages', ['folder' => 'sent']),
-            ],
-            'messages_spam' => [
-                'key' => 'MessagesSpam',
-                'url' => $this->generateUrl('messages', ['folder' => 'spam']),
-            ],
-            'messages_deleted' => [
-                'key' => 'MessagesDeleted',
-                'url' => $this->generateUrl('messages', ['folder' => 'deleted']),
-            ],
-        ];
-    }
-
-
 }

@@ -126,6 +126,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('profilecomments', '/about/commentguidelines');
         $this->addRouteDirectly('setlocation', '/setlocation');
         $this->addRouteDirectly('editmyprofile_finish', '/editmyprofile/finish');
+        $this->addRouteDirectly('myprofile_in_langauge', '/members/{username}/{language}');
 
         return $this->routes;
     }

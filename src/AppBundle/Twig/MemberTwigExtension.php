@@ -116,7 +116,7 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
             ],
             'faq' => [
                 'AdminFAQ',
-                'bw/faq.php',
+                'admin/faqs/',
             ],
             'sqlforvolunteers' => [
                 'AdminSqlForVolunteers',

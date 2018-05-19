@@ -3,6 +3,7 @@
 namespace AppBundle\Pagerfanta;
 
 use AppBundle\Entity\Faq;
+use AppBundle\Entity\FaqCategory;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NativeQuery;
@@ -19,16 +20,18 @@ class FaqAdapter implements AdapterInterface
     /**
      * @var integer
      */
-    private $count;
+    private $categoryId;
 
     /**
      * FaqAdapter constructor.
      *
-     * @param NativeQuery $query
+     * @param EntityManager $entityManager
+     * @param FaqCategory $faqCategory
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, FaqCategory $faqCategory)
     {
         $this->em= $entityManager;
+        $this->categoryId = $faqCategory->getId();
     }
 
     /**
@@ -77,13 +80,14 @@ LEFT JOIN
         $query = $entityManager->createNativeQuery("SELECT 
     f.*, q.Sentence as question, a.Sentence as answer
 FROM
-    faq f
+    faq f    
 LEFT JOIN
     faqcategories fc ON f.idCategory = fc.id    
 LEFT JOIN
     words a ON a.code = CONCAT('FaqA_', f.qanda) and a.ShortCode = 'en'
 LEFT JOIN
 	words q ON q.code = CONCAT('FaqQ_', f.qanda) and q.ShortCode = 'en'
+WHERE fc.id = {$this->categoryId}	
 ORDER BY 
   fc.SortOrder, f.SortOrder
 LIMIT $length OFFSET $offset", $rsm);

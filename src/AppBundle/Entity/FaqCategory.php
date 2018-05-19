@@ -9,14 +9,16 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="faqcategories")
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class FaqCategory
 {
     /**
      * @var string
      *
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Word", fetch="EAGER")
-     * @ORM\JoinColumn(name="Description", referencedColumnName="code", nullable=false)
+     * @ORM\Column(name="Description", type="string", nullable=false)
      */
     private $description;
 

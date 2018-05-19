@@ -35,7 +35,7 @@
             <th>Answer</th>
         </tr>
         {% for faq in faqs.currentPageResults %}
-            <tr><td>{{ faq.category.Description.Sentence }}<br>{{ faq.qAndA }}</td><td>{{ faq.Question }}</td><td>{{ faq.Answer }}</td></tr>
+            <tr><td><br>{{ faq.qAndA }}</td><td>{{ faq.Question }}</td><td>{{ faq.Answer }}</td></tr>
         {% endfor %}
         </table>
         {% if faqs.haveToPaginate %}

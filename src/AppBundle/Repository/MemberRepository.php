@@ -42,7 +42,7 @@ class MemberRepository extends EntityRepository implements UserLoaderInterface
      *
      * @return UserInterface|null
      */
-    public function loadMemberByUsername($username)
+    public function loadUserByUsername($username)
     {
         return $this->createQueryBuilder('u')
             ->where('u.username = :username' /* OR u.email = :email' */)

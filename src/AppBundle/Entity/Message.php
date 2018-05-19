@@ -15,7 +15,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Message.
  *
- * @ORM\Table(name="messages", indexes={@ORM\Index(name="IdParent", columns={"IdParent", "IdReceiver", "IdSender"}), @ORM\Index(name="IdReceiver", columns={"IdReceiver"}), @ORM\Index(name="IdSender", columns={"IdSender"}), @ORM\Index(name="messages_by_spaminfo", columns={"SpamInfo"}), @ORM\Index(name="IdxStatus", columns={"Status"}), @ORM\Index(name="DeleteRequest", columns={"DeleteRequest"}), @ORM\Index(name="WhenFirstRead", columns={"WhenFirstRead"})})
+ * @ORM\Table(name="messages",
+ *     options={"collate":"utf8mb4_general_ci", "charset":"utf8mb4"},
+ *     indexes={@ORM\Index(name="IdParent",
+ *         columns={"IdParent", "IdReceiver", "IdSender"}),
+ *         @ORM\Index(name="IdReceiver", columns={"IdReceiver"}),
+ *         @ORM\Index(name="IdSender", columns={"IdSender"}),
+ *         @ORM\Index(name="messages_by_spaminfo", columns={"SpamInfo"}),
+ *         @ORM\Index(name="IdxStatus", columns={"Status"}),
+ *         @ORM\Index(name="DeleteRequest", columns={"DeleteRequest"}),
+ *         @ORM\Index(name="WhenFirstRead", columns={"WhenFirstRead"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MessageRepository")
  *
  * @SuppressWarnings(PHPMD)

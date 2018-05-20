@@ -48,6 +48,7 @@ class AdminMassmailEditCreatePage extends AdminMassmailBasePage
             // empty fields as we create a new mass mailing
             $this->name = $this->subject = $this->text = $this->description = "";
             $this->type = "None";
+            $this->setCurrent('AdminMassMailCreate');
         } else {
             $this->id = $id;
             // get fields from database
@@ -57,6 +58,7 @@ class AdminMassmailEditCreatePage extends AdminMassmailBasePage
             $this->body = $entry->Body;
             $this->description = $entry->Description;
             $this->type = $entry->Type;
+            $this->setCurrent('AdminMassMailEdit');
         }
     }
 
@@ -69,13 +71,5 @@ class AdminMassmailEditCreatePage extends AdminMassmailBasePage
         return '<a href="admin">' . $this->words->get('AdminTools') . "</a> "
             . ' &raquo; <a href="admin/massmail">' . $this->words->get('AdminMassMail') . "</a>"
             . ' &raquo; <a href="admin/massmail/' . $editcreate . '">' . $this->words->get('AdminMassMail'. $editcreate) . "</a>";
-    }
-
-    public function leftSidebar() {
-        $words = $this->getWords();
-        echo '<h3>' . $words->get('AdminMassMailActions') . '</h3>';
-        echo '<ul class="linklist">';
-        echo '<li><a href="admin/massmail">' . $words->get('AdminMassMailList') . '</a></li>';
-        echo '</ul>';
     }
 }

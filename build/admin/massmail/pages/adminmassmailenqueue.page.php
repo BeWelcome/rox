@@ -38,19 +38,12 @@ class AdminMassmailEnqueuePage extends AdminMassmailBasePage
         parent::__construct($model);
         $this->id = $massmail->id;
         $this->type = $massmail->Type;
+        $this->setCurrent('AdminMassMailEnqueue');
     }
 
     public function teaserHeadline() {
         return '<a href="admin">' . $this->words->get('AdminTools') . "</a> "
             . ' &raquo; <a href="admin/massmail">' . $this->words->get('AdminMassMail') . "</a>"
             . ' &raquo; <a href="admin/massmail/enqueue/' . $this->id . '">' . $this->words->get('AdminMassMailEnqueue') . "</a>";
-    }
-
-    public function leftSidebar() {
-        $words = $this->getWords();
-        echo '<h3>' . $words->get('AdminMassMailActions') . '</h3>';
-        echo '<ul class="linklist">';
-        echo '<li><a href="admin/massmail">' . $words->get('AdminMassMailList') . '</a></li>';
-        echo '</ul>';
     }
 }

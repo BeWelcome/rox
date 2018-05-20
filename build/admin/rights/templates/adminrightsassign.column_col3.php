@@ -31,33 +31,32 @@ include 'adminrightserrors.php';
 
 $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsController', 'assignCallback');
 ?>
-<form class="yform" method="post">
+<form class="row w-100" method="post">
     <?= $callbackTags ?>
-    <div class="type-text">
-        <label for="username"><?php echo $this->words->get("AdminRightsUserName")?></label>
-        <input type="text" class="form-control" id="username" name="username" value="<?= $this->vars['username'] ?>"
-            <?= ($this->member ? 'readonly="readonly"' : '') ?>
-               />
+
+    <div class="col-12 col-md-6">
+
+            <label for="username" class="mb-0"><?php echo $this->words->get("AdminRightsUserName")?></label>
+            <input type="text" class="form-control" id="username" name="username" value="<?= $this->vars['username'] ?>"
+                <?= ($this->member ? 'readonly="readonly"' : '') ?>
+            />
+
+            <label for="right" class="mb-0"><?php echo $words->get("AdminRightsRights")?></label>
+            <?= $this->rightsSelect($this->rights, $this->vars['rightid']) ?>
+
+            <label for="level" class="mb-0"><?php echo $words->get("AdminRightsLevel") ?></label>
+            <?= $this->levelSelect($this->vars['level'], false, true) ?>
     </div>
-    <div class="type-select">
-        <label for="right"><?php echo $words->get("AdminRightsRights")?></label>
-        <?= $this->rightsSelect($this->rights, $this->vars['rightid']) ?>
+    <div class="col-12 col-md-6">
+            <label for="scope"class="mb-0"><?php echo $this->words->get("AdminRightsScope") ?></label>
+            <input type="text" class="form-control" id="scope" name="scope" value="<?= htmlentities($this->vars['scope'], ENT_COMPAT, 'utf-8') ?>"
+                   title="Enter the scope. Use ';' as delimiter and &quot; around blocks"/>
+
+            <label for="comment" class="mb-0"><?php echo $this->words->get("AdminRightsComment") ?></label>
+            <textarea class="form-control" id="comment" name="comment" rows="2" placeholder="Enter a comment, so that others know why the right was assigned."><?=
+            htmlentities($this->vars['comment'], ENT_COMPAT, 'utf-8') ?></textarea>
     </div>
-    <div class="type-select">
-        <label for="level"><?php echo $words->get("AdminRightsLevel") ?></label>
-        <?= $this->levelSelect($this->vars['level'], false, true) ?>
-    </div>
-    <div class="type-text">
-        <label for="scope"><?php echo $this->words->get("AdminRightsScope") ?></label>
-        <input type="text" class="form-control" id="scope" name="scope" value="<?= htmlentities($this->vars['scope'], ENT_COMPAT, 'utf-8') ?>"
-            title="Enter the scope. Use ';' as delimiter and &quot; around blocks"/>
-    </div>
-    <div class="type-text">
-        <label for="comment"><?php echo $this->words->get("AdminRightsComment") ?></label>
-        <textarea class="form-control" id="comment" name="comment" rows="4" placeholder="Enter a comment, so that others know why the right was assigned."><?=
-        htmlentities($this->vars['comment'], ENT_COMPAT, 'utf-8') ?></textarea>
-    </div>
-    <div class="type-button">
-        <input type="submit" class="btn" id="AdminRightsSubmit" name="AdminRightsSubmit" value="<?php echo $this->words->getSilent("AdminRightsSubmit")?>" /><?php echo $words->flushBuffer(); ?>
+    <div class="col-12">
+        <input type="submit" class="btn btn-primary" id="AdminRightsSubmit" name="AdminRightsSubmit" value="<?php echo $this->words->getSilent("AdminRightsSubmit")?>" /><?php echo $words->flushBuffer(); ?>
     </div>
 </form>

@@ -31,7 +31,7 @@ $layoutbits = new MOD_layoutbits();
                    value="<?= $words->getSilent("AdminRightsListRightsSubmit") ?>"/><?php echo $words->flushBuffer(); ?>
         </div>
     </form>
-    <div style="height:50px">&nbsp;</div>
+    <div style="height:40px">&nbsp;</div>
     <table id="rights" style="width:130%">
         <tr>
             <th class="right"><?= $words->get('AdminRightsRight') ?></th>

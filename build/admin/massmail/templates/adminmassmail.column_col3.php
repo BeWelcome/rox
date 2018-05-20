@@ -37,7 +37,7 @@ $words = new MOD_words();
 $ii = 0; 
 $this->pager->render();
 if ($this->_session->has( 'AdminMassMailStatus' )) {
-    echo '<div class="success">';
+    echo '<div class="alert alert-success">';
     $status = $this->_session->get('AdminMassMailStatus');
     switch($status[0]) {
         case 'Edit':
@@ -62,8 +62,8 @@ if ($this->_session->has( 'AdminMassMailStatus' )) {
     echo '</div>';
     $this->_session->remove('AdminMassMailStatus');
 }
-echo '<table>';
-echo '<tr><th class="left" style="width:50%;">' . $words->getBuffered('AdminMassMailName') . '</th>';
+echo '<table class="table table-striped table-hover">';
+echo '<tr><th>' . $words->getBuffered('AdminMassMailName') . '</th>';
 if ($this->canTrigger) {
     echo '<th colspan="5">' . $words->getBuffered('AdminMassMailActions') . '</th>';
 } else {

@@ -17,24 +17,22 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsControlle
 $layoutbits = new MOD_layoutbits();
 
 ?>
-<div>
-    <form class="yform" method="post">
+<div class="w-100 row p-3">
+    <form method="post">
         <?= $callbackTags ?>
-        <div class="type-select">
-            <label for="member"><?= $words->get("AdminRightsMember") ?></label>
+
+            <label for="member" class="mb-0"><?= $words->get("AdminRightsMember") ?></label>
             <?= memberSelect($this->members, $this->vars['member']) ?>
-        </div>
-        <div class="type-check">
+
             <input type="checkbox" id="history" name="history" value="1" <?= (isset($this->vars['history'])) ? 'checked="checked' : '' ?> />
-            <label for="history"><?= $words->get("AdminRightsHistory") ?></label>
-        </div>
-        <div class="type-button">
-            <input type="submit" id="submit" name="submit"
+            <label for="history" class="mb-0"><?= $words->get("AdminRightsHistory") ?></label>
+
+            <input type="submit" id="submit" name="submit" class="btn btn-primary"
                    value="<?= $words->getSilent("AdminRightsListMembersSubmit") ?>"/><?php echo $words->flushBuffer(); ?>
-        </div>
     </form>
-    <div style="height:50px">&nbsp;</div>
-    <table id="rights" style="width:130%">
+</div>
+<div class="w-100 p-0">
+    <table id="rights" class="table table-striped table-hover">
         <tr>
             <th class="usercol"><?= $words->get('AdminRightsUsername') ?></th>
             <th class="right"><?= $words->get('AdminRightsRight') ?></th>
@@ -43,44 +41,38 @@ $layoutbits = new MOD_layoutbits();
             <th colspan="3" class="comment"><?= $words->get('AdminRightsComment') ?></th>
         </tr>
 <?php
-    $i = 0;
     foreach($this->membersWithRights as $username => $details) :
     $firstRow = true;
-    if ($i % 2 == 0) {
-        $class = 'highlight';
-    } else {
-        $class = 'blank';
-    }?>
-    <tr class="<?= $class ?>"><td class="usercol" rowspan="<?= count($details->Rights) ?>"><?php
+    ?>
+    <tr style="border-top: 2px solid #666;">
+        <td rowspan="<?= count($details->Rights) ?>"><?php
 		echo $layoutbits->PIC_50_50($username, 'class="framed"') . '<br />';
 		echo $username; ?><br/>(<?= $details->Status ?>, <?= $details->LastLogin ?>)<br />
         <a href="admin/rights/assign/<?= $username ?>">
-            <img src="images/icons/add.png" alt="add right"></a><br />
-        <a href="admin/rights/assign/<?= $username ?>">
+            <i class="fa fa-plus-square-o"></i>
             <?= $words->getSilent('AdminRightsAssignRight') ?></a><?= $words->flushBuffer() ?></td>
         <?php foreach($details->Rights as $id => $right) :
             if ($firstRow) :
                 $firstRow = false;
             else :
-                echo '<tr class="' . $class . '">';
+                echo '<tr>';
             endif;
             $ss = ($right->level == 0) ? '<span style="text-decoration: line-through; color: red;">' : '';
             $se = ($right->level == 0) ? '</span>' : '';
         ?>
-        <td class="right"><span title="tooltip<?= $id ?>"><?= $ss .  $this->rights[$id]->Name . $se ?></span></td>
-        <td class="level"><?= $ss . $right->level . $se ?></td>
-        <td class="scope"><?= $ss . $right->scope . $se ?></td>
-        <td class="comment"><?= $right->comment ?></td>
-        <td class="icon"><a href="admin/rights/edit/<?= $id ?>/<?= $username ?>">
-                <img src="images/icons/comment_edit.png" alt="edit"/></a></td>
-        <td class="icon"><?php if ($right->level <> 0) : ?>
+        <td><span title="tooltip<?= $id ?>"><?= $ss .  $this->rights[$id]->Name . $se ?></span></td>
+        <td><?= $ss . $right->level . $se ?></td>
+        <td><?= $ss . $right->scope . $se ?></td>
+        <td><?= $right->comment ?></td>
+        <td><a href="admin/rights/edit/<?= $id ?>/<?= $username ?>">
+                <i class="fa fa-edit" alt="edit"></i></a></td>
+        <td><?php if ($right->level <> 0) : ?>
             <a href="admin/rights/remove/<?= $id ?>/<?= $username ?>">
-                <img src="images/icons/delete.png" alt="remove"/></a>
+                <i class="fa fa-times" alt="delete"></i></a>
             <?php endif; ?></td>
         </tr>
         <?php
             endforeach;
-        $i++;
     endforeach; ?>
     </table>
 </div>

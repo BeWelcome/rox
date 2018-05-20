@@ -7,7 +7,7 @@
  */
 $errors = $this->getRedirectedMem('errors');
 if ($errors) {
-    echo '<div class="error">';
+    echo '<div class="alert alert-danger">';
     foreach($errors as $error) {
         echo '<p>' . $this->words->get($error) . '</p>';
     }

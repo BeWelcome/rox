@@ -22,14 +22,14 @@
 
     <div class="log"></div>
     {% if logs.nbResults == 0 %}
-        <p>{{ 'No logs found for these parameters.' | trans }}</p>
+        <div class="alert alert-warning">{{ 'No logs found for these parameters.' | trans }}</div>
     {% else %}
         {% if logs.haveToPaginate %}
             <div class="float-left">
                 {{ pagerfanta( logs, 'twitter_bootstrap4_translated') }}
             </div>
         {% endif %}
-        <table class="table table-responsive table-striped table-hover">
+        <table class="table table-striped table-hover">
 
         <tr>
             <th>Type</th>

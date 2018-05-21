@@ -18,7 +18,7 @@ class FaqCategory
     /**
      * @var string
      *
-     * @ORM\Column(name="Description", type="string", nullable=false)
+     * @ORM\Column(type="string", length=100, nullable=false)
      */
     private $description;
 
@@ -27,14 +27,7 @@ class FaqCategory
      *
      * @ORM\Column(name="SortOrder", type="integer", nullable=false)
      */
-    private $sortorder = '0';
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Type", type="string", nullable=false)
-     */
-    private $type = 'ForAll';
+    private $sortOrder = '0';
 
     /**
      * @var \DateTime
@@ -59,42 +52,16 @@ class FaqCategory
      */
     private $id;
 
-
-
-    /**
-     * Set description
-     *
-     * @param string $description
-     *
-     * @return FaqCategory
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get description
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
     /**
      * Set sortorder
      *
-     * @param integer $sortorder
+     * @param integer $sortOrder
      *
      * @return FaqCategory
      */
-    public function setSortorder($sortorder)
+    public function setSortOrder($sortOrder)
     {
-        $this->sortorder = $sortorder;
+        $this->sortOrder = $sortOrder;
 
         return $this;
     }
@@ -104,33 +71,9 @@ class FaqCategory
      *
      * @return integer
      */
-    public function getSortorder()
+    public function getSortOrder()
     {
-        return $this->sortorder;
-    }
-
-    /**
-     * Set type
-     *
-     * @param string $type
-     *
-     * @return FaqCategory
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
+        return $this->sortOrder;
     }
 
     /**
@@ -189,5 +132,25 @@ class FaqCategory
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     *
+     * @return FaqCategory
+     */
+    public function setDescription(string $description)
+    {
+        $this->description = $description;
+
+        return $this;
     }
 }

@@ -27,6 +27,7 @@ Encore
     .addEntry('treasurer', './src/AppBundle/Resources/js/treasurer.js')
     .addEntry('leaflet', './src/AppBundle/Resources/js/leaflet.js')
     .addEntry('member/autocomplete', './src/AppBundle/Resources/js/member/autocomplete.js')
+    .addEntry('admin/faqs', './src/AppBundle/Resources/js/admin/faqs.js')
 
     .enableSassLoader()
     // allow legacy applications to use $/jQuery as a global variable, make popper visible for bootstrap

@@ -8,6 +8,8 @@ use AppBundle\Pagerfanta\FaqAdapter;
 use AppBundle\Repository\FaqRepository;
 use AppBundle\Repository\LogRepository;
 use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\ParameterType;
+use Doctrine\ORM\EntityRepository;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use PDO;
@@ -18,13 +20,8 @@ class FaqModel extends BaseModel
     /**
      * Returns a Pagerfanta object that contains the currently selected logs.
      *
-     * @param array $types
-     * @param $member
-     * @param $ipAddress
      * @param int $page
      * @param int $limit
-     *
-     * @throws \Doctrine\ORM\ORMException
      *
      * @return \Pagerfanta\Pagerfanta
      */
@@ -36,13 +33,34 @@ class FaqModel extends BaseModel
         return $repository->findLatest($page, $limit);
     }
 
-    public function getFaqs(FaqCategory $faqCategory, $page, $limit)
+    public function getFaqsForCategory(FaqCategory $faqCategory)
     {
-        $paginator = new Pagerfanta(new FaqAdapter($this->em, $faqCategory));
-        $paginator->setMaxPerPage($limit);
-        $paginator->setCurrentPage($page);
+        $results = [];
+        try {
+            $connection = $this->em->getConnection();
+            $stmt = $connection->prepare(
+                "SELECT 
+    f.*, q.Sentence as Question, a.Sentence as Answer
+FROM
+    faq f    
+LEFT JOIN
+    faqcategories fc ON f.idCategory = fc.id    
+LEFT JOIN
+    words a ON a.code = CONCAT('FaqA_', f.qanda) and a.ShortCode = 'en'
+LEFT JOIN
+	words q ON q.code = CONCAT('FaqQ_', f.qanda) and q.ShortCode = 'en'
+WHERE fc.id = :categoryId	
+ORDER BY 
+    fc.SortOrder, f.SortOrder"
+            );
+            $stmt->bindValue(':categoryId', $faqCategory->getId(), ParameterType::INTEGER);
 
-        return $paginator;
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+        } catch (DBALException $e) {
+        }
+
+        return $results;
     }
 
     /**
@@ -50,24 +68,9 @@ class FaqModel extends BaseModel
      */
     public function getFaqCategories()
     {
-        $categories = [];
-        try {
-            $connection = $this->em->getConnection();
-            $stmt = $connection->prepare('
-                SELECT 
-                    `type`
-                FROM
-                  logs
-                ORDER BY `type`
-            ');
-            $stmt->execute();
-            $types = array_keys($stmt->fetchAll(PDO::FETCH_NUM | PDO::FETCH_UNIQUE));
-            // Satisfy ChoiceType
-            $types = array_combine($types, $types);
-        } catch (DBALException $e) {
-            // Return empty types array in case of DB problem.
-        }
+        /** @var EntityRepository $repository */
+        $repository = $this->em->getRepository(FaqCategory::class);
 
-        return $categories;
+        return $repository->findBy([], ['sortOrder' => 'ASC']);
     }
 }

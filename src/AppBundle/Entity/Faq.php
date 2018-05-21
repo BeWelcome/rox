@@ -28,16 +28,6 @@ class Faq
     private $qAndA;
 
     /**
-     * @ORM\Column(type="string")
-     */
-    private $answer;
-
-    /**
-     * @ORM\Column(type="string")
-     */
-    private $question;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=false, options={"default" : "CURRENT_TIMESTAMP"})
@@ -74,13 +64,6 @@ class Faq
      * })
      */
     private $category = '0';
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="PageTitle", type="string", length=100, nullable=false)
-     */
-    private $pagetitle;
 
     /**
      * @var integer
@@ -233,30 +216,6 @@ class Faq
     public function getCategory()
     {
         return $this->category;
-    }
-
-    /**
-     * Set pagetitle
-     *
-     * @param string $pagetitle
-     *
-     * @return Faq
-     */
-    public function setPagetitle($pagetitle)
-    {
-        $this->pagetitle = $pagetitle;
-
-        return $this;
-    }
-
-    /**
-     * Get pagetitle
-     *
-     * @return string
-     */
-    public function getPagetitle()
-    {
-        return $this->pagetitle;
     }
 
     /**

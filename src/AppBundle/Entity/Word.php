@@ -32,7 +32,7 @@ class Word
      *
      * @ORM\Column(name="ShortCode", type="string", length=16, nullable=false)
      */
-    private $shortcode = 'en';
+    private $shortCode = 'en';
 
     /**
      * @var string
@@ -46,7 +46,7 @@ class Word
      *
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
-    private $updated = 'CURRENT_TIMESTAMP';
+    private $updated;
 
     /**
      * @var string
@@ -81,7 +81,7 @@ class Word
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created = '0000-00-00 00:00:00';
+    private $created;
 
     /**
      * @var int
@@ -102,7 +102,7 @@ class Word
      *
      * @ORM\Column(name="majorupdate", type="datetime", nullable=false)
      */
-    private $majorUpdate = '0000-00-00 00:00:00';
+    private $majorUpdate;
 
     /**
      * @var int
@@ -138,27 +138,27 @@ class Word
     }
 
     /**
-     * Set shortcode.
+     * Set shortCode.
      *
-     * @param string $shortcode
+     * @param string $shortCode
      *
      * @return Word
      */
-    public function setShortcode($shortcode)
+    public function setShortCode($shortCode)
     {
-        $this->shortcode = $shortcode;
+        $this->shortCode = $shortCode;
 
         return $this;
     }
 
     /**
-     * Get shortcode.
+     * Get shortCode.
      *
      * @return string
      */
-    public function getShortcode()
+    public function getShortCode()
     {
-        return $this->shortcode;
+        return $this->shortCode;
     }
 
     /**

@@ -4,13 +4,13 @@
 {% block subnav %}
     {% for filter,menuItem in submenu.items %}
         <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}"
-           href="{{ menuItem.url }}">{{ menuItem.key | trans }}</a>
+           href="{{ menuItem.url }}">{{ menuItem.key | trans({}, 'messages', 'en') }}</a>
     {% endfor %}
 {% endblock %}
 
 {% block javascripts %}
     <script src="{{ asset('build/jquery_ui.js') }}"></script>
-    <script src="{{ asset('build/member/autocomplete.js') }}"></script>
+    <script src="{{ asset('build/admin/faqs.js') }}"></script>
 {% endblock %}
 
 {% block stylesheets %}
@@ -18,31 +18,38 @@
 {% endblock stylesheets %}
 
 {% block content %}
-    <div class="log"></div>
-    {% if faqs.nbResults == 0 %}
-        <p>{{ 'No faqs found.' | trans }}</p>
+    <h1>{{ faqCategory.description | trans({}, 'messages', 'en') }}<a class="float-right" href="{{ path('admin_faqs_category_edit', {'id' : faqCategory.id}) }}"><button class="btn btn-primary">{{ 'Edit' | trans }}</button></a></h1>
+    {% if faqs|length == 0 %}
+        <p>{{ 'No faqs found in this category.' | trans }}</p>
+        <p>{{ 'Please create one.' | trans }}<a class="float-right" href="{{ path('admin_faqs_faq_create', {'categoryId' : faqCategory.id}) }}"><button class="btn btn-primary">{{ 'CreateFaq' | trans }}</button></a></p>
     {% else %}
-        {% if faqs.haveToPaginate %}
-            <div class="float-left">
-                {{ pagerfanta( faqs, 'twitter_bootstrap4_translated') }}
+        {{ form_start(form) }}
+            {{ form_row(form.sortOrder) }}
+            <div class="card mb-1">
+                <div class="card-body">
+                    <h5 class="card-title">FAQ</h5>
+                    <p class="card-text">This shows the list of all FAQ in the above category. You can drag the cards to change the sort order.</p>
+                    <p class="card-text text-right">
+                    <a class="btn btn-primary" href="{{ path('admin_faqs_faq_create', {'categoryId' : faqCategory.id}) }}">{{ 'CreateFaq' | trans }}</a>
+                        <button type="submit" class="btn btn-primary">{{ 'UpdateFaqOrder' }}</button></p>
+                </div>
             </div>
-        {% endif %}
-        <table class="table table-responsive table-striped table-hover">
-
-        <tr>
-            <th>Category</th>
-            <th>Question</th>
-            <th>Answer</th>
-        </tr>
-        {% for faq in faqs.currentPageResults %}
-            <tr><td><br>{{ faq.qAndA }}</td><td>{{ faq.Question }}</td><td>{{ faq.Answer }}</td></tr>
-        {% endfor %}
-        </table>
-        {% if faqs.haveToPaginate %}
-            <div class="float-left">
-                {{ pagerfanta( faqs, 'twitter_bootstrap4_translated') }}
+            <div id="faqs">
+            {% for faq in faqs %}
+                <div id="faq_{{ faq.id }}" class="card mb-1">
+                    <div class="card-body">
+                        <p class="card-title"><small class="text-muted">{{ faq.QandA }}</small></p>
+                        <p class="card-text">{{ faq.Question|truncate(50) }}<br>{{ faq.Answer|truncate(50) }}</p>
+                        <a class="btn btn-primary float-right" href="{{ path('admin_faqs_faq_edit', {'id' : faq.id}) }}">{{ 'EditFaq' | trans }}</a>
+                    </div>
+                </div>
+            {% endfor %}
             </div>
-        {% endif %}
-
+            <div class="row">
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">{{ 'UpdateFaqOrder' }}</button>
+                </div>
+            </div>
+        {{ form_end(form) }}
     {% endif %}
 {% endblock %}

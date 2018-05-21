@@ -4,6 +4,7 @@ namespace AppBundle\TranslationLoader;
 
 use AppBundle\Entity\Word;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -30,7 +31,7 @@ class DatabaseLoader implements LoaderInterface
     public function load($resource, $locale, $domain = 'messages')
     {
         /** @var Word $translations */
-        $translations = $this->em->getRepository(Word::class)->findBy(['shortcode' => $locale]);
+        $translations = $this->em->getRepository(Word::class)->findBy(['shortCode' => $locale]);
 
         $messages = [];
         /** @var Word $translation */

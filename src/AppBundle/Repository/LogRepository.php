@@ -57,6 +57,7 @@ class LogRepository extends EntityRepository
                 ->andWhere('l.ipAddress = :ipAddress')
                 ->setParameter(':ipAddress', ip2long($ipAddress));
         }
+        $qb->orderBy('l.created', 'DESC');
 
         return $qb->getQuery();
     }

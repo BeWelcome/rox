@@ -42,7 +42,7 @@ class LogController extends Controller
             $types = $data['types'];
             $username = $data['username'];
             $memberRepository = $this->getDoctrine()->getRepository(Member::class);
-            $member = $memberRepository->loadMemberByUsername($username);
+            $member = $memberRepository->loadUserByUsername($username);
             $ipAddress = $data['ipaddress'];
         }
 

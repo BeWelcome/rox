@@ -10,7 +10,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Faq
+ * Faq.
  *
  * @ORM\Table(name="faq", indexes={@ORM\Index(name="IdCategory", columns={"IdCategory"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\FaqRepository")
@@ -49,7 +49,7 @@ class Faq
     private $active = 'Active';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="SortOrder", type="integer", nullable=false)
      */
@@ -66,7 +66,7 @@ class Faq
     private $category = '0';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -75,7 +75,7 @@ class Faq
     private $id;
 
     /**
-     * Set qanda
+     * Set qanda.
      *
      * @param string $qAndA
      *
@@ -89,7 +89,7 @@ class Faq
     }
 
     /**
-     * Get qanda
+     * Get qanda.
      *
      * @return string
      */
@@ -99,7 +99,7 @@ class Faq
     }
 
     /**
-     * Set updated
+     * Set updated.
      *
      * @param \DateTime $updated
      *
@@ -113,7 +113,7 @@ class Faq
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return \DateTime
      */
@@ -123,7 +123,7 @@ class Faq
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
      *
@@ -137,7 +137,7 @@ class Faq
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -147,7 +147,7 @@ class Faq
     }
 
     /**
-     * Set active
+     * Set active.
      *
      * @param string $active
      *
@@ -161,7 +161,7 @@ class Faq
     }
 
     /**
-     * Get active
+     * Get active.
      *
      * @return string
      */
@@ -171,9 +171,9 @@ class Faq
     }
 
     /**
-     * Set sortorder
+     * Set sortorder.
      *
-     * @param integer $sortorder
+     * @param int $sortorder
      *
      * @return Faq
      */
@@ -185,9 +185,9 @@ class Faq
     }
 
     /**
-     * Get sortorder
+     * Get sortorder.
      *
-     * @return integer
+     * @return int
      */
     public function getSortorder()
     {
@@ -195,7 +195,7 @@ class Faq
     }
 
     /**
-     * Set category
+     * Set category.
      *
      * @param FaqCategory $category
      *
@@ -209,7 +209,7 @@ class Faq
     }
 
     /**
-     * Get category
+     * Get category.
      *
      * @return FaqCategory
      */
@@ -219,9 +219,9 @@ class Faq
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -235,11 +235,13 @@ class Faq
 
     /**
      * @param string $answer
+     *
      * @return Faq
      */
     public function setAnswer(string $answer)
     {
         $this->answer = $answer;
+
         return $this;
     }
 
@@ -250,12 +252,13 @@ class Faq
 
     /**
      * @param string $question
+     *
      * @return Faq
      */
     public function setQuestion(string $question)
     {
         $this->question = $question;
+
         return $this;
     }
-
 }

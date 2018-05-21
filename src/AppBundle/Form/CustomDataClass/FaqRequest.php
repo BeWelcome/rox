@@ -17,24 +17,27 @@ class FaqRequest
 
     /**
      * @Assert\NotBlank()
+     *
      * @var string
      */
     public $wordCode;
 
     /**
      * @Assert\NotBlank()
+     *
      * @var string
      */
     public $question;
 
     /**
      * @Assert\NotBlank()
+     *
      * @var string
      */
     public $answer;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $active = true;
 
@@ -45,7 +48,8 @@ class FaqRequest
 
     /**
      * @param EntityManager $em
-     * @param Faq $faq
+     * @param Faq           $faq
+     *
      * @return FaqRequest
      */
     public static function fromFaq(EntityManager $em, Faq $faq): self
@@ -55,11 +59,11 @@ class FaqRequest
 
         // Find matching entry in words table for locale 'en'
         $wordRepository = $em->getRepository(Word::class);
-        $question = $wordRepository->findOneBy(['code' => 'FaqQ_' . $faqRequest->wordCode, 'shortCode' => 'en']);
-        $answer = $wordRepository->findOneBy(['code' => 'FaqA_' . $faqRequest->wordCode, 'shortCode' => 'en']);
+        $question = $wordRepository->findOneBy(['code' => 'FaqQ_'.$faqRequest->wordCode, 'shortCode' => 'en']);
+        $answer = $wordRepository->findOneBy(['code' => 'FaqA_'.$faqRequest->wordCode, 'shortCode' => 'en']);
         $faqRequest->question = $question->getSentence();
         $faqRequest->answer = $answer->getSentence();
-        $faqRequest->active = ($faq->getActive() == 'Active') ? true : false;
+        $faqRequest->active = ('Active' === $faq->getActive()) ? true : false;
 
         return $faqRequest;
     }

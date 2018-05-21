@@ -4,16 +4,11 @@ namespace AppBundle\Model;
 
 use AppBundle\Entity\Faq;
 use AppBundle\Entity\FaqCategory;
-use AppBundle\Pagerfanta\FaqAdapter;
 use AppBundle\Repository\FaqRepository;
-use AppBundle\Repository\LogRepository;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\EntityRepository;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
-use PDO;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
 class FaqModel extends BaseModel
 {

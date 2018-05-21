@@ -30,16 +30,18 @@
                     <h5 class="card-title">FAQ</h5>
                     <p class="card-text">This shows the list of all FAQ in the above category. You can drag the cards to change the sort order.</p>
                     <p class="card-text text-right">
-                    <a class="btn btn-primary" href="{{ path('admin_faqs_faq_create', {'categoryId' : faqCategory.id}) }}">{{ 'CreateFaq' | trans }}</a>
-                        <button type="submit" class="btn btn-primary">{{ 'UpdateFaqOrder' }}</button></p>
+                        <a class="btn btn-primary" href="{{ path('admin_faqs_faq_create', {'categoryId' : faqCategory.id}) }}">{{ 'CreateFaq' | trans }}</a>
+                        <button type="submit" class="btn btn-primary">{{ 'UpdateFaqOrder' }}</button>
+                    </p>
                 </div>
             </div>
             <div id="faqs">
             {% for faq in faqs %}
-                <div id="faq_{{ faq.id }}" class="card mb-1">
+                <div id="faq_{{ faq.id }}" class="card mb-1 {% if faq.Active == "Not Active" %}bg-secondary{% endif %}">
                     <div class="card-body">
-                        <p class="card-title"><small class="text-muted">{{ faq.QandA }}</small></p>
-                        <p class="card-text">{{ faq.Question|truncate(50) }}<br>{{ faq.Answer|truncate(50) }}</p>
+                        <p class="card-title"><small {% if faq.Active == "Active" %}class="text-muted"{% endif %}>{{ faq.QandA }}</small></p>
+                        <p class="card-text">{{ faq.Question|truncate(50) }}</p>
+                        <p class="card-text">{{ faq.Answer|truncate(50) }}</p>
                         <a class="btn btn-primary float-right" href="{{ path('admin_faqs_faq_edit', {'id' : faq.id}) }}">{{ 'EditFaq' | trans }}</a>
                     </div>
                 </div>

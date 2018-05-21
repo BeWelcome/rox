@@ -17,13 +17,10 @@ class CommunityNewsController extends Controller
      *
      * @param Request $request
      *
-     * @throws \Doctrine\ORM\ORMException
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showOverviewAction(Request $request)
     {
-        $member = null;
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 20);
 
@@ -39,8 +36,6 @@ class CommunityNewsController extends Controller
      * @Route("/admin/communitynews/create", name="admin_communitynews_create")
      *
      * @param Request $request
-     *
-     * @throws \Doctrine\ORM\ORMException
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

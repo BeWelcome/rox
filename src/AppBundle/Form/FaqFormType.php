@@ -29,13 +29,13 @@ class FaqFormType extends AbstractType
                 ],
             ])
             ->add('wordCode', TextType::class, [
-                'label' => 'FaqWordCode'
+                'label' => 'FaqWordCode',
             ])
             ->add('question', CKEditorType::class, [
-                'label' => 'FaqQuestion'
+                'label' => 'FaqQuestion',
             ])
             ->add('answer', CKEditorType::class, [
-                'label' => 'FaqAnswer'
+                'label' => 'FaqAnswer',
             ])
             ->add('active', CheckboxType::class, [
                 'label' => 'FaqActive',
@@ -49,13 +49,13 @@ class FaqFormType extends AbstractType
                 $form->add('FaqCreate', SubmitType::class, [
                     'attr' => [
                         'class' => 'btn-primary',
-                    ]
+                    ],
                 ]);
             } else {
                 $form->add('FaqUpdate', SubmitType::class, [
                     'attr' => [
                         'class' => 'btn-primary',
-                    ]
+                    ],
                 ]);
             }
         });

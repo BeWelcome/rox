@@ -2,7 +2,6 @@
 
 namespace AppBundle\Repository;
 
-use AppBundle\Entity\Member;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -13,8 +12,8 @@ class FaqRepository extends EntityRepository
     /**
      * Returns a Pagerfanta object encapsulating the matching paginated log messages.
      *
-     * @param int         $page
-     * @param int         $limit
+     * @param int $page
+     * @param int $limit
      *
      * @return Pagerfanta
      */
@@ -28,7 +27,6 @@ class FaqRepository extends EntityRepository
     }
 
     /**
-     *
      * @return Query
      */
     private function queryLatest()
@@ -38,6 +36,7 @@ class FaqRepository extends EntityRepository
             ->join('f.category', 'c')
             ->orderBy('c.sortorder', 'ASC')
             ->addOrderBy('f.sortorder', 'ASC');
+
         return $qb->getQuery();
     }
 }

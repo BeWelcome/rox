@@ -11,7 +11,9 @@ class LocaleController extends Controller
 {
     /**
      * @Route("/rox/in/{locale}", name="language", requirements={"locale" = "[a-z]{2}(-[A-Za-z]{2,})?"})
+     *
      * @param Request $request
+     *
      * @return RedirectResponse
      */
     public function selectLocaleAction(Request $request)

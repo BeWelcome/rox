@@ -4,7 +4,6 @@ namespace AppBundle\TranslationLoader;
 
 use AppBundle\Entity\Word;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 

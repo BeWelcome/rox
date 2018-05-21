@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * FaqCategory
+ * FaqCategory.
  *
  * @ORM\Table(name="faqcategories")
  * @ORM\Entity
@@ -23,7 +23,7 @@ class FaqCategory
     private $description;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="SortOrder", type="integer", nullable=false)
      */
@@ -44,7 +44,7 @@ class FaqCategory
     private $created;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -53,9 +53,9 @@ class FaqCategory
     private $id;
 
     /**
-     * Set sortorder
+     * Set sortorder.
      *
-     * @param integer $sortOrder
+     * @param int $sortOrder
      *
      * @return FaqCategory
      */
@@ -67,9 +67,9 @@ class FaqCategory
     }
 
     /**
-     * Get sortorder
+     * Get sortorder.
      *
-     * @return integer
+     * @return int
      */
     public function getSortOrder()
     {
@@ -77,7 +77,7 @@ class FaqCategory
     }
 
     /**
-     * Set updated
+     * Set updated.
      *
      * @param \DateTime $updated
      *
@@ -91,7 +91,7 @@ class FaqCategory
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return \DateTime
      */
@@ -101,7 +101,7 @@ class FaqCategory
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
      *
@@ -115,7 +115,7 @@ class FaqCategory
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -125,9 +125,9 @@ class FaqCategory
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

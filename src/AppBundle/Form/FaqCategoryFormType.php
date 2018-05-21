@@ -23,34 +23,32 @@ class FaqCategoryFormType extends AbstractType
     {
         $formBuilder
             ->add('wordCode', TextType::class, [
-                'label' => 'FaqCategoryWordCode'
+                'label' => 'FaqCategoryWordCode',
             ])
             ->add('description', TextType::class, [
-                'label' => 'FaqCategoryDescription'
+                'label' => 'FaqCategoryDescription',
             ])
         ;
         $formBuilder->get('wordCode')
             ->addModelTransformer(new CallbackTransformer(
                 function ($wordCode) {
-                    if ($wordCode === null)
-                    {
-                        return "";
+                    if (null === $wordCode) {
+                        return '';
                     }
-                    if (strpos($wordCode,'Faq_cat_') === false)
-                    {
+                    if (false === strpos($wordCode, 'Faq_cat_')) {
                         throw new TransformationFailedException('FaqCategory WordCode doesn\'t start with "Faq_cat_"');
                     }
+
                     return str_replace('Faq_cat_', '', $wordCode);
                 },
                 function ($strippedWordCode) {
-                    if (strpos($strippedWordCode,'Faq_cat_') === true)
-                    {
+                    if (true === strpos($strippedWordCode, 'Faq_cat_')) {
                         throw new TransformationFailedException('Stripped WordCode starts with "faq_cat_"');
                     }
-                    return 'Faq_cat_' . $strippedWordCode;
+
+                    return 'Faq_cat_'.$strippedWordCode;
                 }
-            )
-        );
+            ));
         $formBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $faqCategory = $event->getData();
             $form = $event->getForm();
@@ -58,13 +56,13 @@ class FaqCategoryFormType extends AbstractType
                 $form->add('FaqCategoryCreate', SubmitType::class, [
                     'attr' => [
                         'class' => 'btn-primary',
-                    ]
+                    ],
                 ]);
             } else {
                 $form->add('FaqCategoryUpdate', SubmitType::class, [
                     'attr' => [
                         'class' => 'btn-primary',
-                    ]
+                    ],
                 ]);
             }
         });

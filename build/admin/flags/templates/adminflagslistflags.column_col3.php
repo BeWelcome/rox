@@ -15,66 +15,56 @@ if ($vars) {
 $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminFlagsController', 'listFlagsCallback');
 $layoutbits = new MOD_layoutbits();
 ?>
-<div>
-    <form class="yform" method="post">
+<div class="w-100 row">
+    <form method="post">
         <?= $callbackTags ?>
-        <div class="type-select">
-            <label for="flagid"><?= $words->get("AdminFlagsFlag") ?></label>
+
+            <label for="flagid" class="mb-0"><?= $words->get("AdminFlagsFlag") ?></label>
             <?= $this->flagsSelect($this->flags, $this->vars['flagid']) ?>
-        </div>
-        <div class="type-check">
+
             <input type="checkbox" id="history" name="history" value="1" <?= (isset($this->vars['history'])) ? 'checked="checked' : '' ?> />
             <label for="history"><?= $words->get("AdminFlagsHistory") ?></label>
-        </div>
-        <div class="type-button">
-            <input type="submit" id="submit" name="submit"
+
+            <input type="submit" id="submit" name="submit" class="btn btn-primary"
                    value="<?= $words->getSilent("AdminFlagsListFlagsSubmit") ?>"/><?php echo $words->flushBuffer(); ?>
-        </div>
+
     </form>
-    <div style="height:50px">&nbsp;</div>
-    <table id="flags" style="width:130%">
+
+    <table id="flags" class="table table-striped table-hover">
         <tr>
-            <th class="flag"><?= $words->get('AdminFlagsFlag') ?></th>
-            <th class="usercol"><?= $words->get('AdminFlagsUsername') ?></th>
-            <th class="level"><?= $words->get('AdminFlagsLevel') ?></th>
+            <th><?= $words->get('AdminFlagsFlag') ?></th>
+            <th><?= $words->get('AdminFlagsUsername') ?></th>
+            <th><?= $words->get('AdminFlagsLevel') ?></th>
             <th colspan="3" ><?= $words->get('AdminFlagsComment') ?></th>
         </tr>
 <?php
-    $i = 0;
-    foreach($this->flagsWithMembers as $flagId => $details) :
-    $firstRow = true;
-    if ($i % 2 == 0) {
-        $class = 'highlight';
-    } else {
-        $class = 'blank';
-    }?>
-    <tr class="<?= $class ?>"><td class="flag" rowspan="<?= count($details->Members) ?>"><?= $this->flags[$flagId]->Name ?></td>
-        <?php foreach($details->Members as $id => $memberDetails) :
-            if ($firstRow) :
-                $firstRow = false;
-            else :
-                echo '<tr class="' . $class . '">';
-            endif;
-            $ss = ($memberDetails->level == 0) ? '<span style="text-decoration: line-through; color: red;">' : '';
-            $se = ($memberDetails->level == 0) ? '</span>' : '';
+    foreach($this->flagsWithMembers as $flagId => $details) {
         ?>
-        <td class="usercol"> 
-			<div class="picture"><div><?= $layoutbits->PIC_30_30($memberDetails->Username) ?></div>
-            <div><a href="members/<?= $memberDetails->Username ?>" target="_blank"><?= $memberDetails->Username ?></a><br/>
-                (<?= $memberDetails->Status ?> , <?= $memberDetails->LastLogin ?>)<br/></div></div>
-		</td>
-        <td class="level"><?= $ss . $memberDetails->level . $se ?></td>
-        <td class="comment"><?= $ss . $memberDetails->comment . $se ?></td>
-        <td class="icon"><a href="admin/flags/edit/<?= $flagId ?>/<?= $memberDetails->Username ?>">
-                <img src="images/icons/comment_edit.png" alt="edit"/></a></td>
-        <td class="icon"><?php if ($memberDetails->level <> 0) : ?>
-            <a href="admin/flags/remove/<?= $flagId ?>/<?= $memberDetails->Username ?>">
-                <img src="images/icons/delete.png" alt="remove"/></a>
-            <?php endif; ?></td>
-        </tr>
-        <?php
-            endforeach;
-        $i++;
-    endforeach; ?>
+        <tr>
+        <td rowspan="<?= count($details->Members) ?>"><?= $this->flags[$flagId]->Name ?></td>
+        <?php foreach ($details->Members as $id => $memberDetails) {
+            $ss = ($memberDetails->level == 0) ? '<span class="adminhistory">' : '';
+            $se = ($memberDetails->level == 0) ? '</span>' : '';
+            ?>
+            <td>
+                    <?= $layoutbits->PIC_30_30($memberDetails->Username) ?><br>
+                    <a href="members/<?= $memberDetails->Username ?>"
+                            target="_blank"><?= $memberDetails->Username ?></a><br/>
+                        <span class="small"><?= $memberDetails->Status ?></span>
+                        <span class="smaller">Last login: <?= $memberDetails->LastLogin ?></span>
+            </td>
+            <td><?= $ss . $memberDetails->level . $se ?></td>
+            <td class="w-100"><?= $ss . $memberDetails->comment . $se ?></td>
+            <td><a href="admin/flags/edit/<?= $flagId ?>/<?= $memberDetails->Username ?>">
+                    <i class="fa fa-edit" alt="edit"></i></a></td>
+            <td><?php if ($memberDetails->level <> 0) { ?>
+                <a href="admin/flags/remove/<?= $flagId ?>/<?= $memberDetails->Username ?>">
+                    <i class="fa fa-times" alt="remove"></i></a>
+                <? } ?>
+                </td>
+            </tr>
+        <? } ?>
+    <? } ?>
+
     </table>
 </div>

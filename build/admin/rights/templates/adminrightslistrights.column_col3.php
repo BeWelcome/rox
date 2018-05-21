@@ -15,68 +15,61 @@ if ($vars) {
 $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsController', 'listRightsCallback');
 $layoutbits = new MOD_layoutbits();
 ?>
-<div>
+<div class="w-100 row">
     <form class="yform" method="post">
         <?= $callbackTags ?>
-        <div class="type-select">
-            <label for="rightid"><?= $words->get("AdminRightsRight") ?></label>
+            <label for="rightid" class="mb-0"><?= $words->get("AdminRightsRight") ?></label>
             <?= $this->rightsSelect($this->rights, $this->vars['rightid']) ?>
-        </div>
-        <div class="type-check">
+
             <input type="checkbox" id="history" name="history" value="1" <?= (isset($this->vars['history'])) ? 'checked="checked' : '' ?> />
             <label for="history"><?= $words->get("AdminRightsHistory") ?></label>
-        </div>
-        <div class="type-button">
+
             <input type="submit" id="submit" name="submit"
                    value="<?= $words->getSilent("AdminRightsListRightsSubmit") ?>"/><?php echo $words->flushBuffer(); ?>
-        </div>
+
     </form>
-    <div style="height:40px">&nbsp;</div>
-    <table id="rights" style="width:130%">
+</div>
+<div class="w-100 p-0">
+    <table id="rights" class="table table-striped table-hover">
         <tr>
-            <th class="right"><?= $words->get('AdminRightsRight') ?></th>
-            <th class="usercol"><?= $words->get('AdminRightsUsername') ?></th>
-            <th class="level"><?= $words->get('AdminRightsLevel') ?></th>
-            <th class="scope"><?= $words->get('AdminRightsScope') ?></th>
-            <th colspan="3" ><?= $words->get('AdminRightsComment') ?></th>
+            <th><?= $words->get('AdminRightsRight') ?></th>
+            <th><?= $words->get('AdminRightsUsername') ?></th>
+            <th><?= $words->get('AdminRightsLevel') ?></th>
+            <th><?= $words->get('AdminRightsScope') ?></th>
+            <th colspan="3"><?= $words->get('AdminRightsComment') ?></th>
         </tr>
 <?php
-    $i = 0;
     foreach($this->rightsWithMembers as $rightId => $details) :
     $firstRow = true;
-    if ($i % 2 == 0) {
-        $class = 'highlight';
-    } else {
-        $class = 'blank';
-    }?>
-    <tr class="<?= $class ?>"><td class="right" rowspan="<?= count($details->Members) ?>"><?= $this->rights[$rightId]->Name ?></td>
+    ?>
+    <tr><td rowspan="<?= count($details->Members) ?>"><?= $this->rights[$rightId]->Name ?></td>
         <?php foreach($details->Members as $id => $memberDetails) :
             if ($firstRow) :
                 $firstRow = false;
             else :
-                echo '<tr class="' . $class . '">';
+                echo '<tr>';
             endif;
-            $ss = ($memberDetails->level == 0) ? '<span style="text-decoration: line-through; color: red;">' : '';
+            $ss = ($memberDetails->level == 0) ? '<span class="adminhistory">' : '';
             $se = ($memberDetails->level == 0) ? '</span>' : '';
         ?>
-        <td class="usercol"> 
-			<div class="picture"><div><?= $layoutbits->PIC_30_30($memberDetails->Username) ?></div>
-            <div><a href="members/<?= $memberDetails->Username ?>" target="_blank"><?= $memberDetails->Username ?></a><br/>
-                (<?= $memberDetails->Status ?> , <?= $memberDetails->LastLogin ?>)<br/></div></div>
+        <td>
+			<?= $layoutbits->PIC_30_30($memberDetails->Username) ?><br>
+            <a href="members/<?= $memberDetails->Username ?>" target="_blank"><?= $memberDetails->Username ?></a><br>
+                <span class="small"><?= $memberDetails->Status ?></span><br>
+                 <span class="smaller">Last login: <?= $memberDetails->LastLogin ?>
 		</td>
-        <td class="level"><?= $ss . $memberDetails->level . $se ?></td>
-        <td class="scope"><?= $ss . $memberDetails->scope . $se ?></td>
-        <td class="comment"><?= $ss . $memberDetails->comment . $se ?></td>
-        <td class="icon"><a href="admin/rights/edit/<?= $rightId ?>/<?= $memberDetails->Username ?>">
-                <img src="images/icons/comment_edit.png" alt="edit"/></a></td>
-        <td class="icon"><?php if ($memberDetails->level <> 0) : ?>
+        <td><?= $ss . $memberDetails->level . $se ?></td>
+        <td><?= $ss . $memberDetails->scope . $se ?></td>
+        <td class="w-100"><?= $ss . $memberDetails->comment . $se ?></td>
+        <td><a href="admin/rights/edit/<?= $rightId ?>/<?= $memberDetails->Username ?>">
+                <i class="fa fa-edit" alt="edit"></i></a></td>
+        <td><?php if ($memberDetails->level <> 0) : ?>
             <a href="admin/rights/remove/<?= $rightId ?>/<?= $memberDetails->Username ?>">
-                <img src="images/icons/delete.png" alt="remove"/></a>
+                <i class="fa fa-times" alt="remove"></i></a>
             <?php endif; ?></td>
         </tr>
         <?php
             endforeach;
-        $i++;
     endforeach; ?>
     </table>
 </div>

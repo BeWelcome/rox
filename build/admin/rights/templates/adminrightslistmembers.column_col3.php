@@ -34,11 +34,11 @@ $layoutbits = new MOD_layoutbits();
 <div class="w-100 p-0">
     <table id="rights" class="table table-striped table-hover">
         <tr>
-            <th class="usercol"><?= $words->get('AdminRightsUsername') ?></th>
-            <th class="right"><?= $words->get('AdminRightsRight') ?></th>
-            <th class="level"><?= $words->get('AdminRightsLevel') ?></th>
-            <th class="scope"><?= $words->get('AdminRightsScope') ?></th>
-            <th colspan="3" class="comment"><?= $words->get('AdminRightsComment') ?></th>
+            <th><?= $words->get('AdminRightsUsername') ?></th>
+            <th><?= $words->get('AdminRightsRight') ?></th>
+            <th><?= $words->get('AdminRightsLevel') ?></th>
+            <th><?= $words->get('AdminRightsScope') ?></th>
+            <th colspan="3"><?= $words->get('AdminRightsComment') ?></th>
         </tr>
 <?php
     foreach($this->membersWithRights as $username => $details) :
@@ -46,9 +46,11 @@ $layoutbits = new MOD_layoutbits();
     ?>
     <tr style="border-top: 2px solid #666;">
         <td rowspan="<?= count($details->Rights) ?>"><?php
-		echo $layoutbits->PIC_50_50($username, 'class="framed"') . '<br />';
-		echo $username; ?><br/>(<?= $details->Status ?>, <?= $details->LastLogin ?>)<br />
-        <a href="admin/rights/assign/<?= $username ?>">
+		echo $layoutbits->PIC_50_50($username, 'class="framed"') . '<br>';
+		echo $username; ?><br/>
+            <span class="small"><?= $details->Status ?></span><br>
+            <span class="smaller">Last login: <?= $details->LastLogin ?></span><br>
+        <a href="admin/rights/assign/<?= $username ?>" class="btn btn-outline-primary btn-sm">
             <i class="fa fa-plus-square-o"></i>
             <?= $words->getSilent('AdminRightsAssignRight') ?></a><?= $words->flushBuffer() ?></td>
         <?php foreach($details->Rights as $id => $right) :
@@ -57,18 +59,18 @@ $layoutbits = new MOD_layoutbits();
             else :
                 echo '<tr>';
             endif;
-            $ss = ($right->level == 0) ? '<span style="text-decoration: line-through; color: red;">' : '';
+            $ss = ($right->level == 0) ? '<span class="adminhistory">' : '';
             $se = ($right->level == 0) ? '</span>' : '';
         ?>
         <td><span title="tooltip<?= $id ?>"><?= $ss .  $this->rights[$id]->Name . $se ?></span></td>
         <td><?= $ss . $right->level . $se ?></td>
         <td><?= $ss . $right->scope . $se ?></td>
-        <td><?= $right->comment ?></td>
+        <td class="w-100"><?= $right->comment ?></td>
         <td><a href="admin/rights/edit/<?= $id ?>/<?= $username ?>">
                 <i class="fa fa-edit" alt="edit"></i></a></td>
         <td><?php if ($right->level <> 0) : ?>
             <a href="admin/rights/remove/<?= $id ?>/<?= $username ?>">
-                <i class="fa fa-times" alt="delete"></i></a>
+                <i class="fa fa-times" alt="remove"></i></a>
             <?php endif; ?></td>
         </tr>
         <?php

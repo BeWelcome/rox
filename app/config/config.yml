@@ -46,8 +46,7 @@ twig:
     base_template_class: 'Rox\Core\Template\RoxTemplate'
     exception_controller:  twig.controller.exception:showAction
     form_themes:
-#      - 'bootstrap_4_layout.html.twig'
-      - '@forms/bs4.html.twig'
+    form_themes: ['bootstrap_4_layout.html.twig']
     paths:
         '%kernel.root_dir%/../templates/twig/forms': forms
 
@@ -62,7 +61,12 @@ doctrine:
         password: "%database_password%"
         server_version: 5.6
 
-        charset:  UTF8
+        charset: utf8mb4
+
+        default_table_options:
+            charset: utf8mb4
+            collate: utf8mb4_unicode_ci
+
         # if using pdo_sqlite as your database driver:
         #   1. add the path in parameters.yml
         #     e.g. database_path: "%kernel.root_dir%/data/data.db3"

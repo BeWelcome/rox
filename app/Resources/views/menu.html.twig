@@ -152,10 +152,10 @@
 
                     {# messages #}
                     <li class="nav-item float-right">
-                        {# {{ 'MyInbox' | trans }} #} <a href="/messages" class="nav-link"><i class="fa fa-lg fa-envelope"></i> <span class="badge badge-warning d-md-none d-lg-inline-block">{{ messageCount }}</span></a>
+                        {# {{ 'MyInbox' | trans }} #}<div id="messageCount"><a href="/messages" class="nav-link"><i class="fa fa-lg fa-envelope"></i> <span class="badge badge-warning d-md-none d-lg-inline-block">{{ messageCount }}</span></a></div>
                     </li>
                     <li class="nav-item float-right">
-                        {# {{ 'Myrequests' | trans }} #} <a href="/requests" class="nav-link"><i class="fa fa-lg fa-bed"></i> <span class="badge badge-warning d-md-none d-lg-inline-block">{{ messageCount }}</span></a>
+                        {# {{ 'Myrequests' | trans }} #} <div id="requestCount"><a href="/requests" class="nav-link"><i class="fa fa-lg fa-bed"></i> <span class="badge badge-warning d-md-none d-lg-inline-block">{{ requestCount }}</span></a></div>
                     </li>
 
                     {# logout #}

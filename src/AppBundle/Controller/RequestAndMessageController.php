@@ -219,7 +219,7 @@ class RequestAndMessageController extends Controller
             $hostingRequest->setReceiver($receiver);
             $hostingRequest->setWhenFirstRead(new DateTime('0000-00-00 00:00:00'));
             $hostingRequest->setStatus('Sent');
-            $hostingRequest->setInfolder('normal');
+            $hostingRequest->setInfolder('Normal');
             $hostingRequest->setCreated(new \DateTime());
 
             $em = $this->getDoctrine()->getManager();

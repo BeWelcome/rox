@@ -6,7 +6,6 @@ use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
@@ -75,9 +74,39 @@ class MessageRepository extends EntityRepository
      *
      * @return mixed|null
      */
-    public function getUnreadCount(Member $member)
+    public function getUnreadMessageCount(Member $member)
     {
         $q = $this->createQueryBuilder('m')
+            ->select('count(m.id)')
+            ->where('m.receiver = :member')
+            ->setParameter('member', $member->getId())
+            ->andWhere('NOT (m.deleterequest LIKE :receiverDeleted)')
+            ->setParameter('receiverDeleted', 'receiverdeleted')
+            ->andWhere('m.whenfirstread = :whenFirstRead')
+            ->setParameter('whenFirstRead', '0000-00-00 00:00:00')
+            ->andWhere('m.status = :status')
+            ->setParameter('status', 'Sent')
+            ->andWhere('m.request IS NULL')
+            ->getQuery();
+
+        $results = null;
+        try {
+            $results = $q->getSingleScalarResult();
+        } catch (NonUniqueResultException $e) {
+        }
+
+        return $results;
+    }
+
+    /**
+     * @param Member $member
+     *
+     * @return mixed|null
+     */
+    public function getUnreadRequestCount(Member $member)
+    {
+        $q = $this->createQueryBuilder('m')
+            ->join('m.request', 'r')
             ->select('count(m.id)')
             ->where('m.receiver = :member')
             ->setParameter('member', $member->getId())
@@ -93,7 +122,6 @@ class MessageRepository extends EntityRepository
         try {
             $results = $q->getSingleScalarResult();
         } catch (NonUniqueResultException $e) {
-        } catch (NoResultException $e) {
         }
 
         return $results;

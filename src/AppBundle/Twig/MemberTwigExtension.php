@@ -53,7 +53,8 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
 
         return [
             'my_member' => $member ? $member : null,
-            'messageCount' => $member ? $this->getUnreadMessagesCount($member) : 0,
+            'messageCount' => $member ? $this->getUnreadMessageCount($member) : 0,
+            'requestCount' => $member ? $this->getUnreadRequestCount($member) : 0,
             'teams' => $teams,
         ];
     }
@@ -63,11 +64,18 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
         return self::class;
     }
 
-    protected function getUnreadMessagesCount(Member $member)
+    protected function getUnreadMessageCount(Member $member)
     {
         $messageRepository = $this->em->getRepository(Message::class);
 
-        return $messageRepository->getUnreadCount($member);
+        return $messageRepository->getUnreadMessageCount($member);
+    }
+
+    protected function getUnreadRequestCount(Member $member)
+    {
+        $messageRepository = $this->em->getRepository(Message::class);
+
+        return $messageRepository->getUnreadRequestCount($member);
     }
 
     /**

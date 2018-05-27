@@ -2,12 +2,136 @@
 
 namespace AppBundle\Model;
 
+use AppBundle\Doctrine\DeleteRequestType;
+use AppBundle\Doctrine\InFolderType;
+use AppBundle\Doctrine\SpamInfoType;
+use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
 use AppBundle\Repository\MessageRepository;
+use Doctrine\DBAL\DBALException;
 use PDO;
 
 class MessageModel extends BaseModel
 {
+    const new_members_messages_per_hour = 1;
+    const new_members_messages_per_day = 2;
+
+    /**
+     * @param Member $member
+     * @param array $messageIds
+     */
+    public function markDeleted(Member $member, array $messageIds)
+    {
+        /** @var MessageRepository $repository */
+        $repository = $this->em->getRepository(Message::class);
+
+        $messages = $repository->findBy([
+            'id' => $messageIds,
+        ]);
+
+        /** @var Message $message */
+        foreach($messages as $message)
+        {
+            if ($message->getReceiver()->getId() == $member->getId())
+            {
+                $deleteRequest = DeleteRequestType::addReceiverDeleted($message->getDeleteRequest());
+            }
+            else
+            {
+                $deleteRequest = DeleteRequestType::addSenderDeleted($message->getDeleteRequest());
+            }
+            $message->setDeleteRequest($deleteRequest);
+            $this->em->persist($message);
+        }
+        $this->em->flush();
+    }
+
+    /**
+     * @param Member $member
+     * @param array $messageIds
+     */
+    public function unmarkDeleted(Member $member, array $messageIds)
+    {
+        /** @var MessageRepository $repository */
+        $repository = $this->em->getRepository(Message::class);
+
+        $messages = $repository->findBy([
+            'id' => $messageIds,
+        ]);
+
+        /** @var Message $message */
+        foreach($messages as $message)
+        {
+            if ($message->getReceiver()->getId() == $member->getId())
+            {
+                $deleteRequest = DeleteRequestType::removeReceiverDeleted($message->getDeleteRequest());
+            }
+            else
+            {
+                $deleteRequest = DeleteRequestType::removeSenderDeleted($message->getDeleteRequest());
+            }
+            $message->setDeleteRequest($deleteRequest);
+            $this->em->persist($message);
+        }
+        $this->em->flush();
+    }
+
+    /**
+     * @param Member $member
+     * @param array $messageIds
+     */
+    public function markAsSpam(Member $member, array $messageIds)
+    {
+        /** @var MessageRepository $repository */
+        $repository = $this->em->getRepository(Message::class);
+
+        $messages = $repository->findBy([
+            'id' => $messageIds,
+        ]);
+
+        /** @var Message $message */
+        foreach($messages as $message)
+        {
+            $message->setInFolder(InFolderType::SPAM);
+            $message->setSpaminfo(SpamInfoType::MEMBER_SAYS_SPAM);
+            $this->em->persist($message);
+        }
+        $this->em->flush();
+    }
+
+    /**
+     * @param Member $member
+     * @param array $messageIds
+     */
+    public function unmarkAsSpam(Member $member, array $messageIds)
+    {
+        /** @var MessageRepository $repository */
+        $repository = $this->em->getRepository(Message::class);
+
+        $messages = $repository->findBy([
+            'id' => $messageIds,
+        ]);
+
+        /** @var Message $message */
+        foreach($messages as $message)
+        {
+            $message->setInFolder(InFolderType::NORMAL);
+            $message->setSpaminfo(SpamInfoType::NO_SPAM);
+            $this->em->persist($message);
+        }
+        $this->em->flush();
+    }
+
+    /**
+     * @param $member
+     * @param $url
+     * @param $folder
+     * @param $sort
+     * @param $sortDir
+     * @param int $page
+     * @param int $limit
+     * @return \Pagerfanta\Pagerfanta
+     */
     public function getFilteredMessages($member, $url, $folder, $sort, $sortDir, $page = 1, $limit = 10)
     {
         /** @var MessageRepository $repository */
@@ -85,4 +209,95 @@ class MessageModel extends BaseModel
 
         return $result;
     }
+
+    /**
+     * Tests if a member has exceeded its limit for sending messages
+     *
+     * @param Member $member
+     * @return bool|string False if not exceeded, error message if exceeded
+     */
+    public function hasMessageLimitExceeded($member) {
+        $id = $member->getId();
+
+        $sql = "
+            SELECT
+                (
+                SELECT
+                    COUNT(*)
+                FROM
+                    comments
+                WHERE
+                    comments.IdToMember = :id
+                    AND
+                    comments.Quality = 'Good'
+                ) AS numberOfComments,
+                (
+                SELECT
+                    COUNT(*)
+                FROM
+                    messages
+                WHERE
+                    messages.IdSender = :id
+                    AND
+                    (
+                        Status = 'ToSend'
+                        OR
+                        Status = 'Sent'
+                        AND
+                        DateSent > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+                    )
+                ) AS numberOfMessagesLastHour,
+                (
+                SELECT
+                    COUNT(*)
+                FROM
+                    messages
+                WHERE
+                    messages.IdSender = :id
+                    AND
+                    (
+                        Status = 'ToSend'
+                        OR
+                        Status = 'Sent'
+                        AND
+                        DateSent > DATE_SUB(NOW(), INTERVAL 1 DAY)
+                    )
+                ) AS numberOfMessagesLastDay
+            ";
+        $connection = $this->em->getConnection();
+
+        $row = null;
+        try {
+            $query = $connection->prepare($sql);
+            $query->bindValue(':id', $id);
+
+            $result = $query->execute();
+            if ($result) {
+                $row = $query->fetchAll(PDO::FETCH_OBJ);
+            }
+        } catch (DBALException $e) {
+            return false;
+        }
+
+        if ($row === null)
+        {
+            return false;
+        }
+
+        $comments = $row[0]->numberOfComments;
+        $lastHour = $row[0]->numberOfMessagesLastHour;
+        $lastDay = $row[0]->numberOfMessagesLastDay;
+
+        if ($comments < 1 && (
+                $lastHour >= self::new_members_messages_per_hour ||
+                $lastDay >=  self::new_members_messages_per_day)) {
+
+            return true;
+        }
+        else
+            {
+            return false;
+        }
+    }
+
 }

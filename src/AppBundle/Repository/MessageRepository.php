@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Doctrine\InFolderType;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
 use Doctrine\ORM\EntityRepository;
@@ -37,6 +38,11 @@ class MessageRepository extends EntityRepository
         } else {
             $qb->where('m.receiver = :member');
         }
+        if (('deleted' === $folder) or ('spam' === $folder))
+        {
+            // Show messages and requests in deleted and spam
+            $type = self::MESSAGES_AND_REQUESTS;
+        }
         $qb->setParameter('member', $member);
         switch ($type) {
             case self::MESSAGES_ONLY:
@@ -52,15 +58,19 @@ class MessageRepository extends EntityRepository
         }
         switch ($folder) {
             case 'inbox':
-                $qb->andWhere('m.infolder = :folder')
+                $qb->andWhere('NOT(m.deleteRequest LIKE :deleterequest)')
+                    ->setParameter('deleterequest', 'receiverdeleted')
+                    ->andWhere('m.infolder = :folder')
                     ->setParameter('folder', 'normal');
                 break;
             case 'spam':
-                $qb->andWhere('m.infolder = :folder')
+                $qb->andWhere('NOT(m.deleteRequest LIKE :deleterequest)')
+                    ->setParameter('deleterequest', 'receiverdeleted')
+                    ->andWhere('m.infolder = :folder')
                     ->setParameter('folder', $folder);
                 break;
             case 'deleted':
-                $qb->andWhere('m.deleterequest LIKE :deleterequest ')
+                $qb->andWhere('m.deleteRequest LIKE :deleterequest ')
                     ->setParameter('deleterequest', 'receiverdeleted');
                 break;
         }
@@ -80,7 +90,7 @@ class MessageRepository extends EntityRepository
             ->select('count(m.id)')
             ->where('m.receiver = :member')
             ->setParameter('member', $member->getId())
-            ->andWhere('NOT (m.deleterequest LIKE :receiverDeleted)')
+            ->andWhere('NOT (m.deleteRequest LIKE :receiverDeleted)')
             ->setParameter('receiverDeleted', 'receiverdeleted')
             ->andWhere('m.whenfirstread = :whenFirstRead')
             ->setParameter('whenFirstRead', '0000-00-00 00:00:00')
@@ -110,7 +120,7 @@ class MessageRepository extends EntityRepository
             ->select('count(m.id)')
             ->where('m.receiver = :member')
             ->setParameter('member', $member->getId())
-            ->andWhere('NOT (m.deleterequest LIKE :receiverDeleted)')
+            ->andWhere('NOT (m.deleteRequest LIKE :receiverDeleted)')
             ->setParameter('receiverDeleted', 'receiverdeleted')
             ->andWhere('m.whenfirstread = :whenFirstRead')
             ->setParameter('whenFirstRead', '0000-00-00 00:00:00')

@@ -35,6 +35,7 @@
         <noscript><h1>Please activate Javascript for bewelcome.org</h1><p><small>Without it some function won't work.</small></p></noscript>
         <main role="main">
             <div class="container">
+                {{ dump(app.session.flashBag.get('error') ) }}
                 {% for flash_message in app.session.flashBag.get('error') %}
                     <div class="row">
                         <div class="col-12 alert alert-danger" role="alert">

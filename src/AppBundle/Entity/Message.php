@@ -65,7 +65,7 @@ class Message
      *
      * @ORM\Column(name="DeleteRequest", type="delete_request", nullable=true)
      */
-    private $deleterequest;
+    private $deleteRequest;
 
     /**
      * @var Message
@@ -103,7 +103,7 @@ class Message
      *
      * @ORM\Column(name="Status", type="message_status", nullable=false)
      */
-    private $status = 'ToCheck';
+    private $status = 'ToSend';
 
     /**
      * @var string
@@ -254,13 +254,13 @@ class Message
     /**
      * Set deleterequest.
      *
-     * @param string $deleterequest
+     * @param string $deleteRequest
      *
      * @return Message
      */
-    public function setDeleterequest($deleterequest)
+    public function setDeleteRequest($deleteRequest)
     {
-        $this->deleterequest = $deleterequest;
+        $this->deleteRequest = $deleteRequest;
 
         return $this;
     }
@@ -270,9 +270,9 @@ class Message
      *
      * @return string
      */
-    public function getDeleterequest()
+    public function getDeleteRequest()
     {
-        return $this->deleterequest;
+        return $this->deleteRequest;
     }
 
     /**

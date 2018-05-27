@@ -9,5 +9,6 @@ $(function () {
             trigger: "click",
         });
         instance.show();
+        instance.show();
     }
 });

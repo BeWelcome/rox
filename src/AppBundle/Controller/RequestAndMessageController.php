@@ -6,8 +6,10 @@ use AppBundle\Entity\HostingRequest;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
 use AppBundle\Entity\Subject;
+use AppBundle\Form\CustomDataClass\MessageIndexRequest;
 use AppBundle\Form\HostingRequestGuest;
 use AppBundle\Form\HostingRequestHost;
+use AppBundle\Form\MessageIndexFormType;
 use AppBundle\Form\MessageToMemberType;
 use AppBundle\Model\MessageModel;
 use AppBundle\Model\RequestModel;
@@ -18,6 +20,7 @@ use Rox\Core\Exception\InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -146,12 +149,20 @@ class RequestAndMessageController extends Controller
      */
     public function newMessageAction(Request $request, Member $receiver)
     {
+        $sender = $this->getUser();
+        $messageModel = new MessageModel($this->getDoctrine());
+        if ($messageModel->hasMessageLimitExceeded($sender))
+        {
+            $this->addFlash('error', 'You have exceeded your message limit.');
+            $referrer = $request->headers->get('referer');
+            return $this->redirect($referrer);
+        }
+
         $messageForm = $this->createForm(MessageToMemberType::class);
         $messageForm->handleRequest($request);
 
         if ($messageForm->isSubmitted() && $messageForm->isValid()) {
             // Write request to database after doing some checks
-            $sender = $this->getUser();
             $message = $messageForm->getData();
             $message->setSender($sender);
             $message->setReceiver($receiver);
@@ -160,7 +171,6 @@ class RequestAndMessageController extends Controller
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($message);
-            $em->flush();
 
             $success = $this->sendMailNotification(
                 $sender,
@@ -170,10 +180,13 @@ class RequestAndMessageController extends Controller
                 'message'
             );
             if ($success) {
-                $this->addFlash('success', 'Request has been sent.');
+                $this->addFlash('success', 'Message has been sent.');
+                $message->setStatus('Sent');
+                $em->persist($message);
             } else {
-                $this->addFlash('notice', 'Request has been stored into the database. Mail notification couldn\'t be sent, though.');
+                $this->addFlash('notice', 'Message has been stored into the database. Mail notification couldn\'t be sent, though.');
             }
+            $em->flush();
 
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
         }
@@ -199,6 +212,14 @@ class RequestAndMessageController extends Controller
             $this->addFlash('notice', 'You can\'t send yourself a hosting request.');
 
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
+        }
+
+        $messageModel = new MessageModel($this->getDoctrine());
+        if ($messageModel->hasMessageLimitExceeded($member))
+        {
+            $this->addFlash('error', 'You have exceeded your request limit.');
+            $referrer = $request->headers->get('referer');
+            return $this->redirect($referrer);
         }
 
         if (Member::ACC_NO === $receiver->getAccommodation()) {
@@ -282,7 +303,55 @@ class RequestAndMessageController extends Controller
         $messageModel = new MessageModel($this->getDoctrine());
         $messages = $messageModel->getFilteredMessages($member, $matches[1], $folder, $sort, $sortDir, $page, $limit);
 
+        $messageIds = [];
+        foreach ($messages->getIterator() as $key=>$val)
+        {
+            $messageIds[$key] = $val->getId();
+        }
+        $messageRequest = new MessageIndexRequest();
+        $form = $this->createForm(MessageIndexFormType::class, $messageRequest, [
+            'folder' => $folder,
+            'ids' => $messageIds
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $messageIds = $data->getMessages();
+            if (!empty($messages))
+            {
+                if ($form->get('delete')->isClicked())
+                {
+                    if ($folder == 'deleted')
+                    {
+                        $messageModel->unmarkDeleted($member, $messageIds);
+                        $this->addFlash('notice', 'Messages and/or requests undeleted (see respective folders).');
+                    }
+                    else
+                    {
+                        $messageModel->markDeleted($member, $messageIds);
+                        $this->addFlash('notice', 'Messages and/or requests deleted (see deleted folder).');
+                    }
+                }
+                if ($form->get('spam')->isClicked())
+                {
+                    if ($folder == 'spam')
+                    {
+                        $messageModel->unmarkAsSpam($member, $messageIds);
+                        $this->addFlash('notice', 'Messages marked as regular messages (and moved to inbox).');
+                    }
+                    else
+                    {
+                        $messageModel->markAsSpam($member, $messageIds);
+                        $this->addFlash('notice', 'Messages marked as spam messages (and moved to spam folder).');
+                    }
+                }
+                return $this->redirect($request->getRequestUri());
+            }
+        }
+
         return $this->render(':message:index.html.twig', [
+            'form' => $form->createView(),
             'items' => $messages,
             'type' => 'UserMessages',
             'folder' => $folder,
@@ -336,7 +405,18 @@ class RequestAndMessageController extends Controller
             $em->persist($replyMessage);
             $em->flush();
 
-            // $replyMessage->refresh();
+            $success = $this->sendMailNotification(
+                $sender,
+                $receiver,
+                $replyMessage->getSubject()->getSubject(),
+                $replyMessage->getMessage(),
+                'message'
+            );
+            if ($success) {
+                $this->addFlash('success', 'Reply has been sent.');
+            } else {
+                $this->addFlash('notice', 'Reply has been stored into the database. Mail notification couldn\'t be sent, though.');
+            }
             return $this->redirectToRoute('message_show', ['id' => $replyMessage->getId()]);
         }
 

@@ -525,7 +525,8 @@ class ForumNotificationMailbot extends Mailbot
             $msg['title'] = '<a href="' .$this->baseuri. '/forums/s' . $post->IdThread . '">' . $msg['subject'] . '</a>';
         }
 
-        $text = $post->message;
+        $text = '<h3>' . $msg['title'] . '</h3><br>';
+        $text .= $post->message;
 
         $UnsubscribeLink = $this->_buildUnsubscribeLink($notification, $language, $post);
         if ($UnsubscribeLink!="") {

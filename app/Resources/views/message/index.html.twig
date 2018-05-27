@@ -30,7 +30,7 @@
             <th class="select align-middle">
                 <input type="checkbox" id="select_all">
             </th>
-            <th class="from text-center align-middle">
+            <th class="from text-center align-middle nowrap">
                 <span class="small"><a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: correspondent, dir: 'asc' }) }}">&#x25b2;</a> {{ correspondent | trans | capitalize }} <a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: correspondent, dir: 'desc' }) }}">&#x25bc;</a></span><br>
                 <span class="small"><a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: 'date', dir: 'asc' }) }}">&#x25b2;</a> {{ 'Date' | trans }} <a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: 'date', dir: 'desc' }) }}">&#x25bc;</a></span>
             </th>
@@ -65,7 +65,7 @@
                         <p class="m-0 mb-1">{{- messageText | truncate(150) | raw -}}</p>
                     {% endspaceless %}
                     {% if message.request %}
-                        <div class="d-flex flex column">
+                        <div class="d-flex alert-light p-2">
                             <div class="mr-2 font-weight-bold">
                                 <i class="fa fa-calendar mr-1"></i>{{ 'Arrival' | trans }}
                                 {%- if message.request.departure %}<br>

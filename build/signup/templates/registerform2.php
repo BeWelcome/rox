@@ -133,7 +133,6 @@
                     <div class="d-flex">
                         <select required class="select2 form-control" name="mothertongue" id="mothertongue"
                                 data-placeholder="<?= $words->getBuffered('SignupSelectMotherTongue') ?>">
-                            <option></option>
                             <option value="-1"></option>
                             <optgroup label="<?= $words->getSilent('SpokenLanguages') ?>">
                                 <?= $this->getAllLanguages(true, $motherTongue); ?>
@@ -157,11 +156,11 @@
                     <legend class="m-0"><?php echo $words->get('SignupBirthDate'); ?></legend>
                     <label for="mothertongue" class="sr-only"><?php echo $words->get('SignupBirthDate'); ?></label>
                     <div class="d-flex">
-                        <select required id="BirthDate" name="birthyear" class="form-control custom-select">
+                        <select required id="BirthDate" name="birthyear" class="form-control">
                             <option value=""><?php echo $words->getSilent('SignupBirthYear'); ?></option>
                             <?php echo $birthYearOptions; ?>
                         </select>
-                        <select required name="birthmonth" class="form-control custom-select">
+                        <select required name="birthmonth" class="form-control">
                             <option value=""><?php echo $words->getSilent('SignupBirthMonth'); ?></option>
                             <?php for ($i = 1; $i <= 12; $i++) { ?>
                                 <option value="<?php echo $i; ?>"<?php
@@ -172,7 +171,7 @@
                                 </option>
                             <?php } ?>
                         </select>
-                        <select required name="birthday" class="form-control custom-select">
+                        <select required name="birthday" class="form-control">
                             <option value=""><?php echo $words->getSilent('SignupBirthDay'); ?></option>
                             <?php for ($i = 1; $i <= 31; $i++) { ?>
                                 <option value="<?php echo $i; ?>"<?php
@@ -204,11 +203,8 @@
                 <!-- Gender-->
                 <div class="form-group has-feedback pt-3">
                     <legend class="m-0"><?php echo $words->get('SignupGender'); ?></legend>
-                    <label for="mothertongue" class="sr-only"><?php echo $words->get('SignupGender'); ?></label>
-
-                    <div class="d-flex" data-toggle="buttons">
-
-                        <label class="btn btn-outline-primary w-100 mr-1 <?php
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-outline-primary" <?php
                         if (isset($vars['gender']) && $vars['gender'] == 'female') {
                             echo ' active"';
                         }
@@ -219,7 +215,7 @@
                             }
                             ?> ><?php echo $words->get('female'); ?>
                         </label>
-                        <label class="btn btn-outline-primary w-100 mx-1 <?php
+                        <label class="btn btn-outline-primary <?php
                         if (isset($vars['gender']) && $vars['gender'] == 'male') {
                             echo ' active"';
                         }
@@ -230,7 +226,7 @@
                             }
                             ?> ><?php echo $words->get('male'); ?>
                         </label>
-                        <label class="btn btn-outline-primary w-100 ml-1 <?php
+                        <label class="btn btn-outline-primary <?php
                         if (isset($vars['gender']) && $vars['gender'] == 'other') {
                             echo ' active"';
                         }
@@ -241,6 +237,11 @@
                             }
                             ?> ><?php echo $words->get('GenderOther'); ?>
                         </label>
+                        <button type="button" class="btn btn-primary" data-trigger="focus" data-container="body"
+                                data-toggle="popover" data-placement="right"
+                                data-content="Do you consider yourself female, male, none or something else?">
+                            <i class="fa fa-question"></i>
+                        </button>
                     </div>
                     <span class="text-muted small red"></span>
                     <?php if (in_array('SignupErrorProvideGender', $vars['errors'])) {
@@ -270,7 +271,3 @@
             </div>
     </form>
 </div>
-
-<script type="text/javascript">
-    jQuery(".select2").select2(); // {no_results_text: "<?= htmlentities($words->getSilent('SignupNoLanguageFound'), ENT_COMPAT); ?>"});
-</script>

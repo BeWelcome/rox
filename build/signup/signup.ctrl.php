@@ -39,6 +39,7 @@ class SignupController extends RoxControllerBase {
      * @param void
      *
      * @return SignupBasePage
+     * @throws PException
      */
     public function index($args = false)
     {

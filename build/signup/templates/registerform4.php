@@ -1,9 +1,7 @@
-<?= print_r($vars, true); ?>
-
 <div class="card card-block w-100">
-    <form method="post" action="<?php echo $baseuri . 'signup/4' ?>" name="signup" id="user-register-form">
+    <form method="post" action="<?php echo $baseuri . 'signup/finish' ?>" name="signup" id="user-register-form">
         <?= $callback_tag ?>
-
+        <input type="hidden" name="feedback" id="feedback" value="">
         <?php
         if (in_array('inserror', $vars['errors'])) {
             echo '<span class="alert alert-danger">' . $errors['inserror'] . '</span>';
@@ -187,8 +185,3 @@
         </div>
     </form>
 </div>
-
-<!-- signup2 -->
-<script type="text/javascript">
-    jQuery(".select2").select2(); // {no_results_text: "<?= htmlentities($words->getSilent('SignupNoLanguageFound'), ENT_COMPAT); ?>"});
-</script>

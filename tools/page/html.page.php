@@ -162,6 +162,27 @@ class PageWithHTML extends AbstractBasePage
         $this->includeJsConfig();
         $this->includeScriptfiles();
         ?>
+            <link rel="stylesheet" href="styles/cookieconsent.min.css" type="text/css" />
+            <script src="script/cookieconsent.min.js"></script>
+            <script>
+                window.addEventListener("load", function(){
+                    window.cookieconsent.initialise({
+                        "palette": {
+                            "popup": {
+                                "background": "#efefef",
+                                "text": "#404040"
+                            },
+                            "button": {
+                                "background": "#f37000"
+                            }
+                        },
+                        "theme": "classic",
+                        "position": "bottom-right",
+                        "content": {
+                            "href": "https://www.bewelcome.org/privacy"
+                        }
+                    })});
+            </script>
         </head>
         <body>
         <div id="container">

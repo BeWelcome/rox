@@ -29,7 +29,6 @@ $words = new MOD_words(); ?>
     <h3><?php echo $words->getFormatted('ForumRulesGeneral'); ?></h3>
 
     <h3><?php echo $words->getFormatted('ForumRulesCharterHeadline1'); ?></h3>
-    <h3><?php echo $words->getFormatted('ForumRulesCharterHeadline1'); ?></h3>
 
     <h4><?php echo $words->getFormatted('ForumRulesCharterHeadline2'); ?></h4>
     <ol>
@@ -69,5 +68,15 @@ $words = new MOD_words(); ?>
     <p><?php echo $words->getFormatted('ForumRulesText15'); ?></p>
 
     <h4><?php echo $words->getFormatted('ForumRulesDiscussionGroups'); ?></h4>
-    <p><?php echo $words->getFormatted('ForumRulesDiscussionGroupsText'); ?></p>
+    <p><?php echo $words->getFormatted('ForumRulesDiscussionGroupsText1'); ?></p>
+    <p><?php echo $words->getFormatted('ForumRulesDiscussionGroupsText2'); ?></p>
+    <p><?php echo $words->getFormatted('ForumRulesDiscussionGroupsText3'); ?></p>
+    <ol>
+        <li><?php echo $words->getFormatted('ForumRulesDiscussionGroupsText4'); ?></li>
+        <li><?php echo $words->getFormatted('ForumRulesDiscussionGroupsText5'); ?></li>
+        <li><?php echo $words->getFormatted('ForumRulesDiscussionGroupsText6'); ?></li>
+        <li><?php echo $words->getFormatted('ForumRulesDiscussionGroupsText7'); ?></li>
+    </ol>
+    <p><?php echo $words->getFormatted('ForumRulesDiscussionGroupsText8'); ?></p>
+
 </div>

@@ -24,47 +24,50 @@ Boston, MA  02111-1307, USA.
 
 $words = new MOD_words(); ?>
 
-<div id="forumrules">
+<div class="col-12">
     <h1><?php echo $words->getFormatted('ForumRulesShort'); ?></h1>
+    <h3><?php echo $words->getFormatted('ForumRulesGeneral'); ?></h3>
+
+    <h3><?php echo $words->getFormatted('ForumRulesCharterHeadline1'); ?></h3>
     <h3><?php echo $words->getFormatted('ForumRulesCharterHeadline1'); ?></h3>
 
     <h4><?php echo $words->getFormatted('ForumRulesCharterHeadline2'); ?></h4>
     <ol>
-      <li><?php echo $words->getFormatted('ForumRulesCharterText1'); ?></li>
-      <li><?php echo $words->getFormatted('ForumRulesCharterText2'); ?></li>
-      <li><?php echo $words->getFormatted('ForumRulesCharterText3'); ?></li>
-      <li><?php echo $words->getFormatted('ForumRulesCharterText4'); ?></li>
-      <li><?php echo $words->getFormatted('ForumRulesCharterText5'); ?></li>
-      <li><?php echo $words->getFormatted('ForumRulesCharterText6'); ?></li>
+        <li><?php echo $words->getFormatted('ForumRulesCharterText1'); ?></li>
+        <li><?php echo $words->getFormatted('ForumRulesCharterText2'); ?></li>
+        <li><?php echo $words->getFormatted('ForumRulesCharterText3'); ?></li>
+        <li><?php echo $words->getFormatted('ForumRulesCharterText4'); ?></li>
+        <li><?php echo $words->getFormatted('ForumRulesCharterText5'); ?></li>
+        <li><?php echo $words->getFormatted('ForumRulesCharterText6'); ?></li>
     </ol>
 
-    <h3><?php echo $words->getFormatted('ForumRulesHeadline1'); ?></h3>
+    <h3 class="mt-3"><?php echo $words->getFormatted('ForumRulesHeadline1'); ?></h3>
 
     <h4><?php echo $words->getFormatted('ForumRulesHeadline2'); ?></h4>
     <p><?php echo $words->getFormatted('ForumRulesText1'); ?></p>
 
     <ol>
-      <li><?php echo $words->getFormatted('ForumRulesText2'); ?></li>
-      <li><?php echo $words->getFormatted('ForumRulesText3'); ?></li>
-      <li><?php echo $words->getFormatted('ForumRulesText4'); ?></li>
-      <li><?php echo $words->getFormatted('ForumRulesText5'); ?></li>
-      <li><?php echo $words->getFormatted('ForumRulesText6'); ?></li>
+        <li><?php echo $words->getFormatted('ForumRulesText2'); ?></li>
+        <li><?php echo $words->getFormatted('ForumRulesText3'); ?></li>
+        <li><?php echo $words->getFormatted('ForumRulesText4'); ?></li>
+        <li><?php echo $words->getFormatted('ForumRulesText5'); ?></li>
+        <li><?php echo $words->getFormatted('ForumRulesText6'); ?></li>
     </ol>
 
     <p><?php echo $words->getFormatted('ForumRulesText7'); ?></p>
 
     <ol>
-      <li><?php echo $words->getFormatted('ForumRulesText8'); ?></li>
-      <li><?php echo $words->getFormatted('ForumRulesText9'); ?></li>
-      <li><?php echo $words->getFormatted('ForumRulesText10'); ?></li>
-      <li><?php echo $words->getFormatted('ForumRulesText11'); ?></li>
+        <li><?php echo $words->getFormatted('ForumRulesText8'); ?></li>
+        <li><?php echo $words->getFormatted('ForumRulesText9'); ?></li>
+        <li><?php echo $words->getFormatted('ForumRulesText10'); ?></li>
+        <li><?php echo $words->getFormatted('ForumRulesText11'); ?></li>
     </ol>
 
     <p><?php echo $words->getFormatted('ForumRulesText12'); ?></p>
-
     <p><?php echo $words->getFormatted('ForumRulesText13'); ?></p>
-
     <p><?php echo $words->getFormatted('ForumRulesText14'); ?></p>
-
     <p><?php echo $words->getFormatted('ForumRulesText15'); ?></p>
+
+    <h4><?php echo $words->getFormatted('ForumRulesDiscussionGroups'); ?></h4>
+    <p><?php echo $words->getFormatted('ForumRulesDiscussionGroupsText'); ?></p>
 </div>

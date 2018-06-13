@@ -26,7 +26,6 @@ $words = new MOD_words(); ?>
 
 <div class="col-12">
     <h1><?php echo $words->getFormatted('ForumRulesShort'); ?></h1>
-    <h3><?php echo $words->getFormatted('ForumRulesGeneral'); ?></h3>
 
     <h3><?php echo $words->getFormatted('ForumRulesCharterHeadline1'); ?></h3>
 
@@ -76,7 +75,9 @@ $words = new MOD_words(); ?>
         <li><?php echo $words->getFormatted('ForumRulesDiscussionGroupsText5'); ?></li>
         <li><?php echo $words->getFormatted('ForumRulesDiscussionGroupsText6'); ?></li>
         <li><?php echo $words->getFormatted('ForumRulesDiscussionGroupsText7'); ?></li>
+        <li><?php echo $words->getFormatted('ForumRulesDiscussionGroupsText8'); ?></li>
+        <li><?php echo $words->getFormatted('ForumRulesDiscussionGroupsText9'); ?></li>
     </ol>
-    <p><?php echo $words->getFormatted('ForumRulesDiscussionGroupsText8'); ?></p>
+    <p><?php echo $words->getFormatted('ForumRulesDiscussionGroupsText10'); ?></p>
 
 </div>

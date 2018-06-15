@@ -89,7 +89,6 @@ class SuggestionsBasePage extends PageWithActiveSkin
         // The first item might be overwritten in SuggestionsEditCreatePage
         $items[] = array('about', 'suggestions/about', $words->getSilent('SuggestionsAbout'));
 		if ($this->member) {
-			$items[] = array('create', 'suggestions/create', $words->getSilent('SuggestionsCreate'));
             $items[] = array('approve', 'suggestions/approve', $words->getSilent('SuggestionsAwaitApproval'));
         }
         $items[] = array('discuss', 'suggestions/discuss', $words->getSilent('SuggestionsDiscuss'));

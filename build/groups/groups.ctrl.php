@@ -194,7 +194,8 @@ class GroupsController extends RoxControllerBase
             $terms_array = explode(' ', $terms);
         }
         $params = new stdClass();
-        $params->strategy = new HalfPagePager('left'$params->items = $this->_model->countGroupsBySearchterms($terms_array);
+        $params->strategy = new HalfPagePager('left');
+        $params->items = $this->_model->countGroupsBySearchterms($terms_array);
         $params->items_per_page = 30;
         $pager = new PagerWidget($params);
         $page = new GroupsSearchPage();

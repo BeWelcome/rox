@@ -30,7 +30,7 @@ if (!isset($daterange)){
         <span class="trip_daterange"><?=$daterange?></span>
         <a href="trip/<?=$trip->trip_id; ?>"><img src="styles/css/minimal/images/iconsfam/map.png" alt="Trip Map &amp; Details" /> </a>
          &mdash;
-        <?=$words->get('by');?> <a href="user/<?=$trip->handle; ?>"><?=$trip->handle; ?></a>
+        <?=$words->get('by');?> <a href="members/<?=$trip->handle; ?>"><?=$trip->handle; ?></a>
 <?php
 // show flags for a trip that is about a specific country !?
 if ($trip->fk_countrycode) {

@@ -67,7 +67,7 @@ class AdminNewMembersController extends AdminBaseController
     {
         list($loggedInMember, $rights) = $this->CheckRights();
         $safetyTeamOrAdmin = false;
-        if (isset($rights['SafetyTeam']) || isset($Rights['Admin'])) {
+        if (isset($rights['SafetyTeam']) || isset($rights['Admin'])) {
             $safetyTeamOrAdmin = true;
         }
         $newMemberBeWelcomeTeam = false;

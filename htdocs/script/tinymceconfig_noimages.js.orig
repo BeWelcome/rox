@@ -20,6 +20,10 @@ tinymce.init({
     plugin_preview_width : "600",
     plugin_preview_height : "500",
     body_class : "forumsmessage",
+<<<<<<< HEAD
+    mobile: { theme: 'mobile' }
+=======
     mobile: { theme: 'mobile' },
+>>>>>>> develop
     branding: false
 });

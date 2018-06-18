@@ -113,10 +113,6 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
      * - add this fact to the feedback text and
      * - write this fact to the log
      *
-     * FIXME: This method just finds e-mail addresses in
-     * table cryptedfields, which are plain text.
-     * TODO by jyh : this is the same stupid code as in old BW, it can be improved
-     *
      * @param string $email lower case e-mail address
      * @return string text to be added to feedback text, in
      * 				  case of no hit ''
@@ -124,6 +120,7 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
     public function takeCareForNonUniqueEmailAddress($email)
     {
         $email = $this->dao->escape($email);
+
         // Thanks to the messed up database we need to check more than just the DB column
         // First try with the 'real' email address and a plain entry in AdminCryptedValue
         // Second try with the 'real' email address and an 'XML' entry in AdminCryptedValue
@@ -364,11 +361,44 @@ WHERE `ShortCode` = \'' . $this->_session->get('lang') . '\'';
         return $result->id;
     }
 
+    public function registerTBMember($vars)
+    {
+        $Auth = new MOD_bw_user_Auth;
+        $authId = $Auth->checkAuth('defaultUser');
+
+        $query = '
+INSERT INTO `user`
+(`id`, `auth_id`, `handle`, `email`, `active`)
+VALUES
+(
+    '.$this->dao->nextId('user').',
+    '.(int)$authId.',
+    \'' . $vars['username'] . '\',
+    \'' . $vars['email'] . '\',
+    0
+)';
+        $s = $this->dao->query($query);
+        if (!$s->insertId()) {
+            $vars['errors'] = array('inserror');
+            return false;
+        }
+        $userId = $s->insertId();
+        $key = PFunctions::randomString(16);
+        // save register key
+        if (!APP_User::addSetting($userId, 'regkey', $key)) {
+            $vars['errors'] = array('inserror');
+            return false;
+        }
+        // save lang
+        if (!APP_User::addSetting($userId, 'lang', PVars::get()->lang)) {
+            $vars['errors'] = array('inserror');
+            return false;
+        }
+
+        return $userId;
+    }
+
     /**
-     *
-     * FIXME: IdCity is written both to the members and the address table!
-     *          This is just imitating the strategy of bw/signup.php!
-     *  JY Comment : wont fix, this redudancy is on purpose (this is so useful ...)
      *
      * This has NOT been executed:
      * ALTER TABLE members
@@ -377,6 +407,8 @@ WHERE `ShortCode` = \'' . $this->_session->get('lang') . '\'';
      * '.$this->dao->nextId('members').',
      * @param $vars
      * @return bool
+     * @throws EntityException
+     * @throws PException
      */
     public function registerBWMember($vars)     {
         // ********************************************************************
@@ -394,10 +426,15 @@ WHERE `ShortCode` = \'' . $this->_session->get('lang') . '\'';
                 `created`,
                 `BirthDate`,
                 `HideBirthDate`,
-                `MaxGuest`
+                `MaxGuest`,
+                `Email`,
+                `FirstName`,
+                `SecondName`,
+                `LastName`,
+                `HideAttribute`
             )
             VALUES
-            ( ?, ?, ?, ?, ?, ?, NOW(), ?, ?, 1 );";
+            ( ?, ?, ?, ?, ?, ?, NOW(), ?, ?, 1, ?, ?, ?, ?, ? );";
         $stmt = $this->dao->prepare($query);
         $stmt->bindParam(0, $vars['username']);
         $stmt->bindParam(1, $vars['location-geoname-id']);
@@ -407,6 +444,11 @@ WHERE `ShortCode` = \'' . $this->_session->get('lang') . '\'';
         $stmt->bindParam(5, $vars['genderhidden']);
         $stmt->bindParam(6, $vars['iso_date']);
         $stmt->bindParam(7, $vars['agehidden']);
+        $stmt->bindParam(8, $vars['firstname']);
+        $stmt->bindParam(9, $vars['secondname']);
+        $stmt->bindParam(10, $vars['lastname']);
+        $stmt->bindParam(11, $vars['email']);
+        $stmt->bindParam(12, \Member::MEMBER_EMAIL_HIDDEN);
 
         $res = $stmt->execute();
         $memberID = $stmt->insertId();
@@ -443,11 +485,6 @@ WHERE `ShortCode` = \'' . $this->_session->get('lang') . '\'';
         // ********************************************************************
         // e-mail, names/members
         // ********************************************************************
-        $crypted = new MOD_crypt($this->getSession());
-        $cryptedfieldsEmail = $crypted->insertCrypted($vars['email'],"members.Email", $memberID, $memberID, "always") ;
-        $cryptedfieldsFirstname =  $crypted->insertCrypted($this->dao->escape(strip_tags($vars['firstname'])),"members.FirstName", $memberID, $memberID) ;
-        $cryptedfieldsSecondname  =  $crypted->insertCrypted($this->dao->escape(strip_tags($vars['secondname'])),"members.SecondName", $memberID, $memberID) ;
-        $cryptedfieldsLastname =  $crypted->insertCrypted($this->dao->escape(strip_tags($vars['lastname'])),"members.LastName", $memberID, $memberID) ;
         $query = '
 UPDATE
 	`members`
@@ -527,69 +564,20 @@ VALUES
         
     }
 
-    public function registerTBMember($vars)
-    {
-        $Auth = new MOD_bw_user_Auth;
-        $authId = $Auth->checkAuth('defaultUser');
-
-        // TODO: we shouldn't use mysql's password(),
-        // but for now it's to get nearer to the BW style
-        $query = '
-INSERT INTO `user`
-(`id`, `auth_id`, `handle`, `email`, `active`)
-VALUES
-(
-    '.$this->dao->nextId('user').',
-    '.(int)$authId.',
-    \'' . $vars['username'] . '\',
-    \'' . $vars['email'] . '\',
-    0
-)';
-        $s = $this->dao->query($query);
-        if (!$s->insertId()) {
-            $vars['errors'] = array('inserror');
-            return false;
-        }
-        $userId = $s->insertId();
-        $key = PFunctions::randomString(16);
-        // save register key
-        if (!APP_User::addSetting($userId, 'regkey', $key)) {
-            $vars['errors'] = array('inserror');
-            return false;
-        }
-        // save lang
-        if (!APP_User::addSetting($userId, 'lang', PVars::get()->lang)) {
-            $vars['errors'] = array('inserror');
-            return false;
-        }
-
-        return $userId;
-    }
-
-    /**
-     * Check form values of registration form,
-     * do some cautious corrections
-     *
-     * @param $vars
-     * @return array
-     */
-	public function checkRegistrationForm(&$vars)
+    private function checkStepOne(&$vars)
     {
         $errors = array();
 
-
-        // geonameid
-        if (empty($vars['location-geoname-id'])) {
-            $errors[] = 'SignupErrorProvideLocation';
-            unset($vars['location-geoname-id']);
-        }
-
         // username
-        if (!isset($vars['username']) ||
+        try {
+            if (!isset($vars['username']) ||
                 !preg_match(self::HANDLE_PREGEXP, $vars['username']) ||
                 strpos($vars['username'], 'xn--') !== false) {
-            $errors[] = 'SignupErrorWrongUsername';
-        } elseif ($this->UsernameInUse($vars['username'])) {
+                $errors[] = 'SignupErrorWrongUsername';
+            } elseif ($this->UsernameInUse($vars['username'])) {
+                $errors[] = 'SignupErrorUsernameAlreadyTaken';
+            }
+        } catch (PException $e) {
             $errors[] = 'SignupErrorUsernameAlreadyTaken';
         }
 
@@ -609,8 +597,8 @@ VALUES
 
         // password
         if (!isset($vars['password']) || !isset($vars['passwordcheck']) ||
-                strlen($vars['password']) < 6 ||
-                strcmp($vars['password'], $vars['passwordcheck']) != 0
+            strlen($vars['password']) < 6 ||
+            strcmp($vars['password'], $vars['passwordcheck']) != 0
         ) {
             $errors[] = 'SignupErrorPasswordCheck';
         }
@@ -624,7 +612,16 @@ VALUES
         if (!empty($vars['sweet'])) {
             $errors[] = 'SignupErrorSomethingWentWrong';
         }
+        return $errors;
+    }
 
+    /**
+     * @param $vars
+     * @return array
+     */
+    private function checkStepTwo(&$vars)
+    {
+        $errors = [];
         // firstname, lastname
         if (empty($vars['firstname']) || empty($vars['lastname']))
         {
@@ -637,33 +634,84 @@ VALUES
 
         // gender
         if (empty($vars['gender']) || ($vars['gender']!='female' && $vars['gender']!='male'
-             && $vars['gender']!='other')) {
+                && $vars['gender']!='other')) {
             $errors[] = 'SignupErrorProvideGender';
         }
 
-        // birthyear
-        $birthmonth = 12;
-        if (!empty($vars['birthmonth'])) {
-            $birthmonth = $vars['birthmonth'];
-        }
-        $birthday = 28;    // TODO: could sometimes be 29, 30, 31
-        if (!empty($vars['birthday'])) {
-            $birthday = $vars['birthday'];
-        }
-        if (empty($vars['birthyear']) || !checkdate($birthmonth, $birthday, $vars['birthyear'])) {
+        // birthdate
+        if (empty($vars['birthdate'])) {
             $errors[] = 'SignupErrorBirthDate';
         } else {
-            $vars['iso_date'] =  $vars['birthyear'] . "-" . $birthmonth . "-" . $birthday;
+            $vars['iso_date'] = $vars['birthdate'];
             if ($this->ageValue($vars['iso_date']) < self::YOUNGEST_MEMBER) {
                 $errors[] = 'SignupErrorBirthDateToLow';
             }
         }
+        return $errors;
+    }
+
+    private function checkStepThree(&$vars)
+    {
+        $errors = [];
+        // geonameid
+        if (empty($vars['location-geoname-id'])) {
+            $errors[] = 'SignupErrorProvideLocation';
+            unset($vars['location-geoname-id']);
+        }
+
+        // latitude
+        if (empty($vars['location-latitude'])) {
+            $errors[] = 'SignupErrorProvideLocation';
+            unset($vars['location-latitude']);
+        }
+
+        // longitude
+        if (empty($vars['location-longitude'])) {
+            $errors[] = 'SignupErrorProvideLocation';
+            unset($vars['location-longitude']);
+        }
+
+        return $errors;
+    }
+
+    private function checkStepFour(&$vars)
+    {
+        $errors = [];
 
         // terms
         if (empty($vars['terms']) || !$vars['terms']) {
             $errors[] = 'SignupMustAcceptTerms';
         }
 
+        return $errors;
+    }
+
+    /**
+     * Check form values of registration form,
+     * do some cautious corrections
+     *
+     * @param $vars
+     * @param $step
+     * @return array
+     */
+	public function checkRegistrationForm(&$vars, $step)
+    {
+        $errors = [];
+        switch($step)
+        {
+            case 1:
+                $errors = $this->checkStepOne($vars);
+                break;
+            case 2:
+                $errors = $this->checkStepTwo($vars);
+                break;
+            case 3:
+                $errors = $this->checkStepThree($vars);
+                break;
+            case 4:
+                $errors = $this->checkStepFour($vars);
+                break;
+        }
         return $errors;
     }
 
@@ -689,66 +737,14 @@ VALUES
 		return filter_var($email, FILTER_VALIDATE_EMAIL);
 	}
 
-	/**
-	 * @see FunctionsTools.php (plain copy)
-	 * compute a nearly unique key according to parameters
-	 */
-	public function createKey($s1, $s2, $IdMember = "", $ss = "default")
-	{
-	    $key = sprintf("%X", crc32($s1 . " " . $s2 . " " . $IdMember . "_" . $ss));
-	    return ($key);
-	}
-
-	/**
-	 * confirmProcess: check the given key and username
-	 */
-	public function confirmSignup($username,$key)
-	{
-        // The TB WAY:
-        $userId = APP_User::userId($username);
-        if( !$userId)
-            return $error = 'NoSuchMember';
-        $keyDB = APP_User::getSetting($userId, 'regkey');
-        if( !$keyDB)
-            return $error = 'NoStoredKey';
-        if( $keyDB->value != $key)
-            return $error = 'WrongKey';
-        $memberEntity = new Member();
-        $member = $memberEntity->findByUsername ($username);
-        $query = '
-SELECT members.Status AS Status
-FROM members
-WHERE members.id = \''.$member->id.'\'
-        ';
-        $s = $this->dao->query($query);
-        if ($s->numRows() != 1)
-            return $error = 'NoMember';
-        $Status = $s->fetch(PDB::FETCH_OBJ)->Status;
-        if ($Status != 'MailToConfirm')
-            return $error = 'Status'.$Status;
-        APP_User::activate($userId);
-        $query = "
-UPDATE members
-SET Status = 'Active'
-WHERE id=" . $member->id; // The email is confirmed > make the status Active
-        $s = $this->dao->query($query);
-        if (!$s) {    // TODO: always integrate this check?
-            throw new PException('Could not determine if email is in use!');
-        }
-
-        $View = new SignupView($this);
-        define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
-        $View->sendActivationMail($member);
-
-        return false; // no error
-	}
-
-	/**
-	 * Resend the confirmation mail in case the user clicked on the link in the
-	 * login error message
-	 *
-	 * @param string $username
-	 */
+    /**
+     * Resend the confirmation mail in case the user clicked on the link in the
+     * login error message
+     *
+     * @param string $username
+     * @return bool|string
+     * @throws PException
+     */
 	public function resendConfirmationMail($username) {
         // fetch ID for member $username
         $vars = array();
@@ -756,7 +752,7 @@ WHERE id=" . $member->id; // The email is confirmed > make the status Active
         $member = $MembersModel->getMemberWithUsername($username);
         if ($member) {
             if ($member->Status == 'MailToConfirm') {
-                $crypted = new MOD_crypt($this->getSession());
+                $crypted = new MOD_crypt();
                 $vars['firstname'] = $crypted->AdminReadCrypted($member->Firstname);
                 $vars['secondname'] = $crypted->AdminReadCrypted($member->Secondname);
                 $vars['lastname'] = $crypted->AdminReadCrypted($member->Lastname);

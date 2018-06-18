@@ -7,7 +7,6 @@ use EnvironmentExplorer;
 use Rox\Framework\SessionSingleton;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class LegacyController extends Controller
@@ -15,7 +14,7 @@ class LegacyController extends Controller
     /**
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response|void
+     * @return \Symfony\Component\HttpFoundation\Response
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
@@ -58,14 +57,11 @@ class LegacyController extends Controller
             }
         }
 
-        try {
-            $kernel = $this->get('rox.legacy_kernel');
+        $kernel = $this->get('rox.legacy_kernel');
 
-            return $kernel->handle($request, $request->getRealMethod());
-        } catch (ResourceNotFoundException $e) {
-            // If the legacy kernel also failed to route the request, let the
-            // original error bubble back up to the new Symfony error handler.
-            return;
-        }
+        return $kernel->handle(
+            $request,
+            $request->getRealMethod()
+        );
     }
 }

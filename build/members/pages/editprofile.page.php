@@ -68,16 +68,16 @@ class EditProfilePage extends ProfilePage
         $vars['languages_all_signed'] = $all_signed_languages;
         $vars['languages_selected'] = $member->languages_spoken;
 
-        $vars['FirstName'] = $member->get_firstname();
-        $vars['SecondName'] = $member->get_secondname();
-        $vars['LastName'] = $member->get_lastname();
+        $vars['FirstName'] = $member->FirstName;
+        $vars['SecondName'] = $member->SecondName;
+        $vars['LastName'] = $member->LastName();
         $vars['HouseNumber'] = $member->get_housenumber();
         $vars['Street'] = $member->get_street();
         $vars['Zip'] = $member->get_zip();
         $modCrypt = new MOD_crypt();
-        $vars['IsHidden_FirstName'] = $modCrypt->IsCrypted($member->FirstName);
-        $vars['IsHidden_SecondName'] = $modCrypt->IsCrypted($member->SecondName);
-        $vars['IsHidden_LastName'] = $modCrypt->IsCrypted($member->LastName);
+        $vars['IsHidden_FirstName'] = ($member->HideAttribute & \Member::MEMBER_FIRSTNAME_HIDDEN) ? 'Yes' : 'No';
+        $vars['IsHidden_SecondName'] = ($member->HideAttribute & \Member::MEMBER_SECONDNAME_HIDDEN) ? 'Yes' : 'No';
+        $vars['IsHidden_LastName'] = ($member->HideAttribute & \Member::MEMBER_LASTNAME_HIDDEN) ? 'Yes' : 'No';
         $vars['IsHidden_Address'] = $modCrypt->IsCrypted($member->address->StreetName);
         $vars['IsHidden_Zip'] = $modCrypt->IsCrypted($member->address->Zip);
         $vars['IsHidden_HomePhoneNumber'] = $modCrypt->IsCrypted($member->HomePhoneNumber);
@@ -86,7 +86,7 @@ class EditProfilePage extends ProfilePage
         $vars['HomePhoneNumber'] = ($member->HomePhoneNumber > 0) ? $modCrypt->$ReadCrypted($member->HomePhoneNumber) : '';
         $vars['CellPhoneNumber'] = ($member->CellPhoneNumber > 0) ? $modCrypt->$ReadCrypted($member->CellPhoneNumber) : '';
         $vars['WorkPhoneNumber'] = ($member->WorkPhoneNumber > 0) ? $modCrypt->$ReadCrypted($member->WorkPhoneNumber) : '';
-        $vars['Email'] = ($member->Email > 0) ? $modCrypt->$ReadCrypted($member->Email) : '';
+        $vars['Email'] = $member->Email;
         $vars['WebSite'] = $member->WebSite;
 
         $vars['messengers'] = $member->messengers();

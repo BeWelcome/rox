@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css"><!--
+        blockquote {
+            color: #444;
+            background: #f8f8f8;
+            border: 1px #ddd solid;
+            border-left: 8px #ddd solid;
+            padding: 5px 20px;
+            margin: 0 0 20px 5px;
+        }
+
+        body {
+            background-color: #cccccc;
+            color: #333;
+            font-size: 1em;
+            line-height: 1.5em;
+            font-family: arial, verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .unsubscribe {
+            font-size: 0.7em;
+            line-height: 1.1em;
+        }
+        --></style>
+</head>
+<body>
+<div style="margin: 20px 20px 0 20px;
+padding: 5px 10px;
+background: #e5e5e5;
+border-top-left-radius: 10px;
+border-top-right-radius: 10px;
+height:50px;">
+    {% block content %}{% endblock content %}
+    <p>(cc) {{ "now" | date("Y") }} BeWelcome</p>
+</div>
+</body>
+</html>

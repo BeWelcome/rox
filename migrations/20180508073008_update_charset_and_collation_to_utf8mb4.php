@@ -12,6 +12,7 @@ class UpdateCharsetAndCollationToUtf8mb4 extends RoxMigration
         $tables = $this->fetchAll("SHOW FULL TABLES WHERE Table_Type = 'BASE TABLE'");
         foreach($tables as $table) {
             $tableName = $table[0];
+            echo $tableName . PHP_EOL;
             $this->execute(
                 "ALTER TABLE ".$tableName." CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci"
             );
@@ -20,7 +21,7 @@ class UpdateCharsetAndCollationToUtf8mb4 extends RoxMigration
 
     public function down()
     {
-        $tables = $this->fetchAll("SHOW TABLES");
+        $tables = $this->fetchAll("SHOW FULL TABLES WHERE Table_Type = 'BASE TABLE'");
         foreach($tables as $table) {
             $tableName = $table[0];
             $this->execute("ALTER TABLE " . $tableName . " CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_520_ci");

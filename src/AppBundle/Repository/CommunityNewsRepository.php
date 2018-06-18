@@ -2,7 +2,6 @@
 
 namespace AppBundle\Repository;
 
-use AppBundle\Entity\CommunityNews;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Pagerfanta\Adapter\DoctrineORMAdapter;

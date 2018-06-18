@@ -20,7 +20,6 @@ use Rox\Core\Exception\InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -151,10 +150,10 @@ class RequestAndMessageController extends Controller
     {
         $sender = $this->getUser();
         $messageModel = new MessageModel($this->getDoctrine());
-        if ($messageModel->hasMessageLimitExceeded($sender))
-        {
+        if ($messageModel->hasMessageLimitExceeded($sender)) {
             $this->addFlash('error', 'You have exceeded your message limit.');
             $referrer = $request->headers->get('referer');
+
             return $this->redirect($referrer);
         }
 
@@ -215,10 +214,10 @@ class RequestAndMessageController extends Controller
         }
 
         $messageModel = new MessageModel($this->getDoctrine());
-        if ($messageModel->hasMessageLimitExceeded($member))
-        {
+        if ($messageModel->hasMessageLimitExceeded($member)) {
             $this->addFlash('error', 'You have exceeded your request limit.');
             $referrer = $request->headers->get('referer');
+
             return $this->redirect($referrer);
         }
 
@@ -304,48 +303,39 @@ class RequestAndMessageController extends Controller
         $messages = $messageModel->getFilteredMessages($member, $matches[1], $folder, $sort, $sortDir, $page, $limit);
 
         $messageIds = [];
-        foreach ($messages->getIterator() as $key=>$val)
-        {
+        foreach ($messages->getIterator() as $key => $val) {
             $messageIds[$key] = $val->getId();
         }
         $messageRequest = new MessageIndexRequest();
         $form = $this->createForm(MessageIndexFormType::class, $messageRequest, [
             'folder' => $folder,
-            'ids' => $messageIds
+            'ids' => $messageIds,
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $messageIds = $data->getMessages();
-            if (!empty($messages))
-            {
-                if ($form->get('delete')->isClicked())
-                {
-                    if ($folder == 'deleted')
-                    {
+            if (!empty($messages)) {
+                if ($form->get('delete')->isClicked()) {
+                    if ('deleted' === $folder) {
                         $messageModel->unmarkDeleted($member, $messageIds);
                         $this->addFlash('notice', 'Messages and/or requests undeleted (see respective folders).');
-                    }
-                    else
-                    {
+                    } else {
                         $messageModel->markDeleted($member, $messageIds);
                         $this->addFlash('notice', 'Messages and/or requests deleted (see deleted folder).');
                     }
                 }
-                if ($form->get('spam')->isClicked())
-                {
-                    if ($folder == 'spam')
-                    {
+                if ($form->get('spam')->isClicked()) {
+                    if ('spam' === $folder) {
                         $messageModel->unmarkAsSpam($member, $messageIds);
                         $this->addFlash('notice', 'Messages marked as regular messages (and moved to inbox).');
-                    }
-                    else
-                    {
+                    } else {
                         $messageModel->markAsSpam($member, $messageIds);
                         $this->addFlash('notice', 'Messages marked as spam messages (and moved to spam folder).');
                     }
                 }
+
                 return $this->redirect($request->getRequestUri());
             }
         }
@@ -417,6 +407,7 @@ class RequestAndMessageController extends Controller
             } else {
                 $this->addFlash('notice', 'Reply has been stored into the database. Mail notification couldn\'t be sent, though.');
             }
+
             return $this->redirectToRoute('message_show', ['id' => $replyMessage->getId()]);
         }
 

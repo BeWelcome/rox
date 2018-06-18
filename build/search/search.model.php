@@ -491,9 +491,10 @@ LIMIT 1
     /**
      *
      * @param array $vars
-     * @param string $admin1
-     * @param string $country
+     * @param bool $admin1
+     * @param bool $country
      * @return mixed
+     * @throws PException
      */
     private function getMemberDetails(&$vars, $admin1 = false, $country = false)
     {
@@ -597,9 +598,9 @@ LIMIT 1
             $geonameIds[$member->geonameid] = $member->geonameid;
             $countryIds[$member->country] = $member->country;
             $aboutMe = MOD_layoutbits::truncate_words($this->FindTrad($member->ProfileSummary, true), 70);
-            $FirstName = $this->getNamePart($member->FirstName);
-            $SecondName = $this->getNamePart($member->SecondName);
-            $LastName = $this->getNamePart($member->LastName);
+            $FirstName = ($member->HideAttribute & \Member::MEMBER_FIRSTNAME_HIDDEN) ? "" : $member->FirstName;
+            $SecondName = ($member->HideAttribute & \Member::MEMBER_SECONDNAME_HIDDEN) ? "" : $member->SecondName;
+            $LastName = ($member->HideAttribute & \Member::MEMBER_LASTNAME_HIDDEN) ? "" : $member->LastName;
             $member->Name = trim($FirstName . " " . $SecondName . " " . $LastName);
             $member->ProfileSummary = $aboutMe;
 

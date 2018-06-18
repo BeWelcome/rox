@@ -1,5 +1,5 @@
 <div class="card card-block w-100">
-    <form method="post" action="<?php echo $baseuri . 'signup/finish' ?>" name="signup" id="user-register-form">
+    <form method="post" name="signup" id="user-register-form">
         <?= $callback_tag ?>
         <input type="hidden" name="feedback" id="feedback" value="">
         <?php
@@ -123,7 +123,7 @@
                         <td class="border-0">
                             <?php
                             //TODO: name the month to prevent confusion
-                            echo $vars['birthday'] . " - " . $vars['birthmonth'] . " - " . $vars['birthyear'];
+                            echo $vars['birthdate'];
                             ?>
                         </td>
                     </tr>

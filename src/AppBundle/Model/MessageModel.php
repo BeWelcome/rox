@@ -11,14 +11,21 @@ use AppBundle\Repository\MessageRepository;
 use Doctrine\DBAL\DBALException;
 use PDO;
 
+/**
+ * Class MessageModel
+ * @package AppBundle\Model
+ *
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ * Hide logic in DeleteRequestType
+ */
 class MessageModel extends BaseModel
 {
-    const new_members_messages_per_hour = 1;
-    const new_members_messages_per_day = 2;
-
     /**
      * @param Member $member
-     * @param array $messageIds
+     * @param array  $messageIds
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function markDeleted(Member $member, array $messageIds)
     {
@@ -30,14 +37,10 @@ class MessageModel extends BaseModel
         ]);
 
         /** @var Message $message */
-        foreach($messages as $message)
-        {
-            if ($message->getReceiver()->getId() == $member->getId())
-            {
+        foreach ($messages as $message) {
+            if ($message->getReceiver()->getId() === $member->getId()) {
                 $deleteRequest = DeleteRequestType::addReceiverDeleted($message->getDeleteRequest());
-            }
-            else
-            {
+            } else {
                 $deleteRequest = DeleteRequestType::addSenderDeleted($message->getDeleteRequest());
             }
             $message->setDeleteRequest($deleteRequest);
@@ -49,6 +52,9 @@ class MessageModel extends BaseModel
     /**
      * @param Member $member
      * @param array $messageIds
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function unmarkDeleted(Member $member, array $messageIds)
     {
@@ -60,14 +66,10 @@ class MessageModel extends BaseModel
         ]);
 
         /** @var Message $message */
-        foreach($messages as $message)
-        {
-            if ($message->getReceiver()->getId() == $member->getId())
-            {
+        foreach ($messages as $message) {
+            if ($message->getReceiver()->getId() === $member->getId()) {
                 $deleteRequest = DeleteRequestType::removeReceiverDeleted($message->getDeleteRequest());
-            }
-            else
-            {
+            } else {
                 $deleteRequest = DeleteRequestType::removeSenderDeleted($message->getDeleteRequest());
             }
             $message->setDeleteRequest($deleteRequest);
@@ -77,10 +79,12 @@ class MessageModel extends BaseModel
     }
 
     /**
-     * @param Member $member
      * @param array $messageIds
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function markAsSpam(Member $member, array $messageIds)
+    public function markAsSpam(array $messageIds)
     {
         /** @var MessageRepository $repository */
         $repository = $this->em->getRepository(Message::class);
@@ -90,8 +94,7 @@ class MessageModel extends BaseModel
         ]);
 
         /** @var Message $message */
-        foreach($messages as $message)
-        {
+        foreach ($messages as $message) {
             $message->setInFolder(InFolderType::SPAM);
             $message->setSpaminfo(SpamInfoType::MEMBER_SAYS_SPAM);
             $this->em->persist($message);
@@ -100,10 +103,12 @@ class MessageModel extends BaseModel
     }
 
     /**
-     * @param Member $member
      * @param array $messageIds
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function unmarkAsSpam(Member $member, array $messageIds)
+    public function unmarkAsSpam(array $messageIds)
     {
         /** @var MessageRepository $repository */
         $repository = $this->em->getRepository(Message::class);
@@ -113,8 +118,7 @@ class MessageModel extends BaseModel
         ]);
 
         /** @var Message $message */
-        foreach($messages as $message)
-        {
+        foreach ($messages as $message) {
             $message->setInFolder(InFolderType::NORMAL);
             $message->setSpaminfo(SpamInfoType::NO_SPAM);
             $this->em->persist($message);
@@ -130,6 +134,7 @@ class MessageModel extends BaseModel
      * @param $sortDir
      * @param int $page
      * @param int $limit
+     *
      * @return \Pagerfanta\Pagerfanta
      */
     public function getFilteredMessages($member, $url, $folder, $sort, $sortDir, $page = 1, $limit = 10)
@@ -211,12 +216,14 @@ class MessageModel extends BaseModel
     }
 
     /**
-     * Tests if a member has exceeded its limit for sending messages
+     * Tests if a member has exceeded its limit for sending messages.
      *
      * @param Member $member
+     *
      * @return bool|string False if not exceeded, error message if exceeded
      */
-    public function hasMessageLimitExceeded($member) {
+    public function hasMessageLimitExceeded($member)
+    {
         $id = $member->getId();
 
         $sql = "
@@ -279,8 +286,7 @@ class MessageModel extends BaseModel
             return false;
         }
 
-        if ($row === null)
-        {
+        if (null === $row) {
             return false;
         }
 
@@ -289,15 +295,11 @@ class MessageModel extends BaseModel
         $lastDay = $row[0]->numberOfMessagesLastDay;
 
         if ($comments < 1 && (
-                $lastHour >= self::new_members_messages_per_hour ||
-                $lastDay >=  self::new_members_messages_per_day)) {
-
+                $lastHour >= $this->getParameter('new_members_messages_per_hour') ||
+                $lastDay >= $this->getParameter('new_members_messages_per_day'))) {
             return true;
         }
-        else
-            {
-            return false;
-        }
-    }
 
+        return false;
+    }
 }

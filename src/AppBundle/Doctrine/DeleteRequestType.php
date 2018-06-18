@@ -10,31 +10,8 @@ class DeleteRequestType extends SetType
     protected $name = 'delete_request';
     protected $values = [
         self::SENDER_DELETED,
-        self::RECEIVER_DELETED
+        self::RECEIVER_DELETED,
     ];
-
-    private static function addRequest($deleteRequest, $request)
-    {
-        $requests = array_filter(explode(',', $deleteRequest));
-        $key = array_search($request, $requests);
-        if ($key === false)
-        {
-            $requests[] = $request;
-        }
-        return implode(',', $requests);
-    }
-
-    private static function removeRequest($deleteRequest, $request)
-    {
-        $requests = array_filter(explode(',', $deleteRequest));
-        $key = array_search($request, $requests);
-        if ($key !== false)
-        {
-            unset($requests[$key]);
-        }
-        $requests = implode(',', $requests);
-        return  ($requests == '') ? null : $requests;
-    }
 
     public static function addSenderDeleted($deleteRequest)
     {
@@ -54,5 +31,28 @@ class DeleteRequestType extends SetType
     public static function removeReceiverDeleted($deleteRequest)
     {
         return self::removeRequest($deleteRequest, self::RECEIVER_DELETED);
+    }
+
+    private static function addRequest($deleteRequest, $request)
+    {
+        $requests = array_filter(explode(',', $deleteRequest));
+        $key = array_search($request, $requests, true);
+        if (false === $key) {
+            $requests[] = $request;
+        }
+
+        return implode(',', $requests);
+    }
+
+    private static function removeRequest($deleteRequest, $request)
+    {
+        $requests = array_filter(explode(',', $deleteRequest));
+        $key = array_search($request, $requests, true);
+        if (false !== $key) {
+            unset($requests[$key]);
+        }
+        $requests = implode(',', $requests);
+
+        return  ('' === $requests) ? null : $requests;
     }
 }

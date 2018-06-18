@@ -2,8 +2,6 @@
 
 namespace AppBundle\Form;
 
-use AppBundle\Entity\Message;
-use AppBundle\Entity\Subject;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;

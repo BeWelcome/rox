@@ -70,7 +70,7 @@ class AddTripsTable extends AbstractMigration
      */
     public function down()
     {
-        $this->dropTable('sub_trips');
-        $this->dropTable('trips');
+        $this->table('sub_trips')->drop()->save();
+        $this->table('trips')->drop()->save();
     }
 }

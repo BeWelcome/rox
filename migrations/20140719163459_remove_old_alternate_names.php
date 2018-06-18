@@ -17,7 +17,7 @@ class RemoveOldAlternateNames extends Rox\Tools\RoxMigration
      */
     public function up()
     {
-        $this->dropTable('geonames_alternate_names');
+        $this->table('geonames_alternate_names')->drop()->save();
     }
 
     /**

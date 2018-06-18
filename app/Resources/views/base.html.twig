@@ -29,13 +29,13 @@
 
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <link rel="stylesheet" href="{{ asset('build/bewelcome.css') }}" />
     </head>
     <body>
         {% include 'menu.html.twig' %}
         <noscript><h1>Please activate Javascript for bewelcome.org</h1><p><small>Without it some function won't work.</small></p></noscript>
         <main role="main">
             <div class="container">
-                {{ dump(app.session.flashBag.get('error') ) }}
                 {% for flash_message in app.session.flashBag.get('error') %}
                     <div class="row">
                         <div class="col-12 alert alert-danger" role="alert">
@@ -82,6 +82,7 @@
         {% include 'footer.html.twig' %}
         <script src="{{ asset('build/manifest.js') }}"></script>
         <script src="{{ asset('build/bewelcome.js') }}"></script>
+        <script src="{{ asset('build/select2.js') }}"></script>
         <script type="application/javascript">
             {% if sidebar %}
             $(document).ready(function () {

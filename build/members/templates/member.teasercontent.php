@@ -8,7 +8,7 @@
       } ?>
       </strong>
 
-      <?$name = $member->name(); ?><?=($name == '') ? $member->Occupation : $name;?>
+      <?$name = $member->name(); ?><?=($name == '') ? (($member->Occupation) ? $member->Occupation : "") : $name;?>
       <?php if (!$this->passedAway) : ?>
 
           <?php

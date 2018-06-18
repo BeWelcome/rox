@@ -125,10 +125,11 @@ LIMIT 1
 
     /**
      *
-     * @param array $vars
-     * @param string $admin1
-     * @param string $country
-     * @return multitype:unknown
+     * @param $first
+     * @param $count
+     * @param $safetyTeamOrAdmin
+     * @return array
+     * @throws PException
      */
     public function getMembers($first, $count, $safetyTeamOrAdmin) {
         $langarr = explode('-', $this->_session->get('lang'));
@@ -158,7 +159,7 @@ LIMIT 1
                 m.FirstName,
                 m.SecondName,
                 m.LastName,
-                m.email,
+                m.Email,
                 m.bewelcomed,
                 g.geonameid as geonameid,
                 g.country as country
@@ -167,7 +168,7 @@ LIMIT 1
                 geonames g
             WHERE
                 m.Status IN (" . $statuses . ")
-                AND DATEDIFF(NOW(), created) < 90";
+                AND DATEDIFF(NOW(), created) < 5000";
         if (!$safetyTeamOrAdmin) {
             $str .= " AND bewelcomed < 3";
         }
@@ -193,15 +194,14 @@ LIMIT 1
             $geonameIds[$member->geonameid] = $member->geonameid;
             $countryIds[$member->country] = $member->country;
             $aboutMe = MOD_layoutbits::truncate_words($this->FindTrad($member->ProfileSummary,true), 70);
-            $FirstName = $this->getNamePart($member->FirstName);
-            $SecondName = $this->getNamePart($member->SecondName);
-            $LastName = $this->getNamePart($member->LastName);
+            $FirstName = $member->FirstName;
+            $SecondName = $member->SecondName;
+            $LastName = $member->LastName;
             $member->Name = trim($FirstName . " " . $SecondName . " " . $LastName);
             $member->ProfileSummary = $aboutMe;
 
             if ($safetyTeamOrAdmin) {
-                $email = Mod_crypt::AdminReadCrypted($member->email);
-                $member->EmailAddress = $email;
+                $member->EmailAddress = $member->Email;
             }
 
             if ($member->HideBirthDate=="No") {

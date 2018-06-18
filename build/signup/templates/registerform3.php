@@ -8,7 +8,7 @@ $map_conf = PVars::getObj('map');
        value="<?php echo($map_conf->osm_tiles_provider_api_key); ?>"/>
 
     <div class="card card-block w-100">
-        <form method="post" action="<?php echo $baseuri . 'signup/4' ?>" class="form" name="geo-form-js" id="geo-form-js">
+        <form method="post" class="form" name="geo-form-js" id="geo-form-js">
             <?= $callback_tag ?>
 
             <div class="row">

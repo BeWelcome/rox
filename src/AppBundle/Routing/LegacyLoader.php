@@ -89,15 +89,13 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('contactus', '/about/feedback');
         $this->addRouteDirectly('feedback', '/feedback');
         $this->addRouteDirectly('privacy', '/privacy');
-        $this->addRouteDirectly('signup', '/signup/');
+        $this->addRouteDirectly('signup', '/signup');
         $this->addRouteDirectly('signup_1', '/signup/1');
         $this->addRouteDirectly('signup_2', '/signup/2');
         $this->addRouteDirectly('signup_3', '/signup/3');
         $this->addRouteDirectly('signup_4', '/signup/4');
-        $this->addRouteDirectly('signup_finish', '/signup/finish');
         $this->addRouteDirectly('signup_email_check', '/signup/checkemail');
         $this->addRouteDirectly('signup_handle_check', '/signup/checkhandle');
-        $this->addRouteDirectly('signup_confirm', '/signup/confirm/{username}/{regkey}');
         $this->addRouteDirectly('editmyprofile', '/editmyprofile');
         $this->addRouteDirectly('editmyprofile_locale', '/editmyprofile/{locale}');
         $this->addRouteDirectly('donate', '/donate');

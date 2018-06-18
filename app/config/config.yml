@@ -36,19 +36,18 @@ framework:
         save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
     fragments:       ~
     http_method_override: true
-    assets: ~
+    assets:
+        json_manifest_path: '%kernel.project_dir%/web/build/manifest.json'
     translator: { fallbacks: [en] }
 
 # Twig Configuration
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
-    base_template_class: 'Rox\Core\Template\RoxTemplate'
     exception_controller:  twig.controller.exception:showAction
-    form_themes:
     form_themes: ['bootstrap_4_layout.html.twig']
-    paths:
-        '%kernel.root_dir%/../templates/twig/forms': forms
+#    paths:
+#        '%kernel.root_dir%/../templates/twig/forms': forms
 
 # Doctrine Configuration
 doctrine:
@@ -65,7 +64,7 @@ doctrine:
 
         default_table_options:
             charset: utf8mb4
-            collate: utf8mb4_unicode_ci
+            collate: utf8mb4_unicode_520_ci
 
         # if using pdo_sqlite as your database driver:
         #   1. add the path in parameters.yml

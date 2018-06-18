@@ -47,21 +47,22 @@ class SignupView extends PAppView
     /**
      * Sends a confirmation e-mail
      *
-     * @param string $userId
+     * @param $vars
+     * @param $IdMember
+     * @return bool|int
+     * @throws PException
      */
-    public function registerMail($vars, $IdMember, $idTB)
+    public function registerMail($vars, $IdMember)
     {
         $MembersModel = new MembersModel();
         $member = $MembersModel->getMemberWithId($IdMember);
         if (!$member)
             return false;
+
         $words = new MOD_words();
 
-        // KEY-GENERATION the TB Way
-        $key    = APP_User::getSetting($idTB, 'regkey');
-        if (!$key)
-            return false;
-        $key = $key->value;
+        // generate confirm key based on username and email address
+        $key = hash('sha256', $vars['email'] . ' - ' . $vars['username']);
         $confirmUrl = PVars::getObj('env')->baseuri.'signup/confirm/'.$member->Username.'/'.$key;
         $confirmUrl_html ="<a href=\"".$confirmUrl."\">".$confirmUrl."</a>";
 

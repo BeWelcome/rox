@@ -27,6 +27,7 @@ class UserProvider implements UserProviderInterface
     public function loadUserByUsername($username)
     {
         try {
+            throw new \Exception('Meine');
             return $this->entityManager->getRepository(Member::class)->loadUserByUsername($username);
         } catch (NotFoundException $e) {
             throw new UsernameNotFoundException(

@@ -1,0 +1,12 @@
+{% extends 'base-lite.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block title %}
+BeWelcome - Signup
+{% endblock title %}
+
+{% block content %}
+    <h1>Signup finished</h1>
+    <p>Congratulations {{ username }} you successfully signed up for BeWelcome. The only thing left is that you confirm you're email address.</p>
+    <p>Please check your emails as we have just sent you a link to {{ email }}. Follow the link so that we know emails reach you.</p>
+{% endblock content %}

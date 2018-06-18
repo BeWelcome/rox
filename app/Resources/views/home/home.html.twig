@@ -307,5 +307,24 @@
 <div id="bottom"></div>
 <script type="text/javascript" src="{{ asset('build/bewelcome.js') }}"></script>
 <script type="text/javascript" src="{{ asset('build/skrollr.js') }}"></script>
+<script>
+    window.addEventListener("load", function(){
+        window.cookieconsent.initialise({
+            "palette": {
+                "popup": {
+                    "background": "#efefef",
+                    "text": "#404040"
+                },
+                "button": {
+                    "background": "#f37000"
+                }
+            },
+            "theme": "classic",
+            "position": "bottom-right",
+            "content": {
+                "href": "https://www.bewelcome.org/privacy"
+            }
+        })});
+</script>
 </body>
 </html>

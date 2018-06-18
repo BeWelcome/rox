@@ -3,7 +3,6 @@
 namespace AppBundle\Repository;
 
 use AnthonyMartin\GeoLocation\GeoLocation;
-use AppBundle\Entity\Activity;
 use AppBundle\Entity\Location;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;

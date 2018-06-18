@@ -65,7 +65,7 @@ class LegacyHttpKernel extends HttpKernel
      */
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
-        $router = new RoxFrontRouter($this->engine);
+        $router = new RoxFrontRouter($this->engine, $this->getContainer());
 
         $router->session_memory = new SessionMemory('SessionMemory');
 

@@ -100,6 +100,6 @@ class BlogToCommunityNews extends RoxMigration
 
     public function down()
     {
-        $this->dropTable('community_news');
+        $this->table('community_news')->drop()->save();
     }
 }

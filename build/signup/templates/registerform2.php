@@ -1,5 +1,5 @@
 <div class="card card-block w-100">
-    <form method="post" action="<?php echo $baseuri . 'signup/3' ?>" name="signup" id="user-register-form" class="form"
+    <form method="post" name="signup" id="user-register-form" class="form"
           role="form" novalidate>
         <?= $callback_tag ?>
         <input type="hidden" name="javascriptactive" value="false"/>
@@ -62,22 +62,21 @@
                 <h3 class="mb-3">Please fill out all fields</h3>
 
                 <!-- First Name -->
-                <div class="form-group has-feedback">
-                    <legend class="m-0"><?php echo $words->get('FirstName'); ?></legend>
-                    <label for="register-firstname" class="sr-only"><?php echo $words->get('FirstName'); ?></label>
-                    <div class="d-flex">
-                        <input type="text" required minlength="2" class="form-control" name="firstname"
+                <div class="form-group">
+                    <label for="register-firstname"><?php echo $words->get('FirstName'); ?></label>
+                    <div class="input-group">
+                        <input type="text" required minlength="1" class="form-control" name="firstname"
                                id="register-firstname" placeholder="<?php echo $words->get('FirstName'); ?>"
                             <?php
                             echo isset($vars['firstname']) ? 'value="' . htmlentities($vars['firstname'], ENT_COMPAT, 'utf-8') . '" ' : '';
                             ?> />
-                        <button type="button" class="btn btn-primary ml-1" data-trigger="focus" data-container="body"
+                        <button type="button" class="input-group-append btn btn-primary" data-trigger="focus" data-container="body"
                                 data-toggle="popover" data-placement="right"
                                 data-content="<?= htmlentities($words->get('subline_firstname')) ?>">
                             <i class="fa fa-question"></i>
                         </button>
+                        <div class="invalid-feedback">The firstname must at least be 1 characters long</div>
                     </div>
-                    <span class="text-muted small red red"></span>
                     <?php
                     if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
                         echo '<span class="error">' . $words->get('SignupErrorFullNameRequired') . '</span>';
@@ -88,11 +87,9 @@
 
                 <!-- Second name -->
                 <div class="form-group">
-                    <legend class="m-0"><?php echo $words->get('SignupSecondNameOptional'); ?></legend>
-                    <label for="secondname"
-                           class="sr-only"><?php echo $words->get('SignupSecondNameOptional'); ?></label>
+                    <label for="secondname"><?php echo $words->get('SignupSecondNameOptional'); ?></label>
                     <div class="d-flex">
-                        <input type="text" minlength="2" class="form-control" name="secondname" id="secondname"
+                        <input type="text" minlength="1" class="form-control" name="secondname" id="secondname"
                                placeholder="<?php echo $words->get('SignupSecondNameOptional'); ?>"
                             <?php
                             echo isset($vars['secondname']) ? 'value="' . htmlentities($vars['secondname'], ENT_COMPAT, 'utf-8') . '" ' : '';
@@ -101,36 +98,33 @@
                 </div>
 
                 <!-- Last name -->
-                <div class="form-group has-feedback">
-                    <legend class="m-0"><?php echo $words->get('LastName'); ?></legend>
-                    <label for="lastname" class="sr-only"><?php echo $words->get('LastName'); ?></label>
-                    <div class="d-flex">
-                        <input type="text" minlength="2" required class="form-control" name="lastname" id="lastname"
+                <div class="form-group">
+                    <label for="lastname"><?php echo $words->get('LastName'); ?></label>
+                    <div class="input-group">
+                        <input type="text" minlength="1" required class="form-control" name="lastname" id="lastname"
                                placeholder="<?php echo $words->get('LastName'); ?>"
                             <?php
                             echo isset($vars['lastname']) ? 'value="' . htmlentities($vars['lastname'], ENT_COMPAT, 'utf-8') . '" ' : '';
                             ?> />
-                        <button type="button" class="btn btn-primary ml-1" data-trigger="focus" data-container="body"
+                        <button type="button" class="input-group-append btn btn-primary" data-trigger="focus" data-container="body"
                                 data-toggle="popover" data-placement="right"
                                 data-content="<?= htmlentities($words->get('subline_lastname')) ?>">
                             <i class="fa fa-question"></i>
                         </button>
+                        <div class="invalid-feedback">The lastname must at least be 1 characters long</div>
                     </div>
-                    <span class="text-muted small red"></span>
                 </div>
 
                 <!-- Mother tongues -->
-                <div class="form-group has-feedback pt-3">
+                <div class="form-group pt-3">
                     <?php
                     $motherTongue = -1;
                     if (isset($vars['mothertongue'])) {
                         $motherTongue = $vars['mothertongue'];
                     }
                     ?>
-                    <legend class="m-0"><?php echo $words->get('LanguageLevel_MotherLanguage'); ?></legend>
-                    <label for="mothertongue"
-                           class="sr-only"><?php echo $words->get('LanguageLevel_MotherLanguage'); ?></label>
-                    <div class="d-flex">
+                    <label for="mothertongue"><?php echo $words->get('LanguageLevel_MotherLanguage'); ?></label>
+                    <div class="input-group">
                         <select required class="select2 form-control" name="mothertongue" id="mothertongue"
                                 data-placeholder="<?= $words->getBuffered('SignupSelectMotherTongue') ?>">
                             <option value="-1"></option>
@@ -141,55 +135,28 @@
                                 <?= $this->getAllLanguages(false, $motherTongue); ?>
                             </optgroup>
                         </select>
-                        <button type="button" class="btn btn-primary ml-1" data-trigger="focus" data-container="body"
+                        <button type="button" class="input-group-append btn btn-primary" data-trigger="focus" data-container="body"
                                 data-toggle="popover" data-placement="right"
                                 data-content="<?= htmlentities($words->get('subline_mothertongue')) ?>">
                             <i class="fa fa-question"></i>
                         </button>
                     </div>
-                    <span class="text-muted small red"></span>
                 </div>
 
-
                 <!-- Date of birth-->
-                <div class="form-group has-feedback pt-3">
-                    <legend class="m-0"><?php echo $words->get('SignupBirthDate'); ?></legend>
-                    <label for="mothertongue" class="sr-only"><?php echo $words->get('SignupBirthDate'); ?></label>
-                    <div class="d-flex">
-                        <select required id="BirthDate" name="birthyear" class="form-control">
-                            <option value=""><?php echo $words->getSilent('SignupBirthYear'); ?></option>
-                            <?php echo $birthYearOptions; ?>
-                        </select>
-                        <select required name="birthmonth" class="form-control">
-                            <option value=""><?php echo $words->getSilent('SignupBirthMonth'); ?></option>
-                            <?php for ($i = 1; $i <= 12; $i++) { ?>
-                                <option value="<?php echo $i; ?>"<?php
-                                if (isset($vars['birthmonth']) && $vars['birthmonth'] == $i) {
-                                    echo ' selected="selected"';
-                                }
-                                ?>><?php echo $i; ?>
-                                </option>
-                            <?php } ?>
-                        </select>
-                        <select required name="birthday" class="form-control">
-                            <option value=""><?php echo $words->getSilent('SignupBirthDay'); ?></option>
-                            <?php for ($i = 1; $i <= 31; $i++) { ?>
-                                <option value="<?php echo $i; ?>"<?php
-                                if (isset($vars['birthday']) && $vars['birthday'] == $i) {
-                                    echo ' selected="selected"';
-                                }
-                                ?>><?php echo $i; ?>
-                                </option>
-                            <?php } ?>
-                            <?php echo $words->flushBuffer(); ?>
-                        </select>
-                        <button type="button" class="btn btn-primary" data-trigger="focus" data-container="body"
+                <div class="form-group pt-3">
+                    <label for="birthdate"><?php echo $words->get('SignupBirthDate'); ?></label>
+                    <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                        <div class="input-group-prepend" data-target="#datetimepicker1"
+                                data-toggle="datetimepicker"><i class="input-group-text bg-primary white fa fa-calendar"></i></div>
+                        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1" id="birthdate"
+                               name="birthdate"/>
+                        <button type="button" class="input-group-append btn btn-primary" data-trigger="focus" data-container="body"
                                 data-toggle="popover" data-placement="right"
-                                data-content="Do you consider yourself female, male, none or something else?">
+                                data-content="To use BeWelcome you need to be at least 18 years old.<br><br>Your birth date is never shown on the site. You might also decide to hide your age on your profile.">
                             <i class="fa fa-question"></i>
                         </button>
                     </div>
-                    <span class="text-muted small red"></span>
                     <?php
                     if (in_array('SignupErrorBirthDate', $vars['errors'])) {
                         echo '<span class="alert alert-danger">' . $words->get('SignupErrorBirthDate') . '</span>';
@@ -202,48 +169,47 @@
 
                 <!-- Gender-->
                 <div class="form-group has-feedback pt-3">
-                    <legend class="m-0"><?php echo $words->get('SignupGender'); ?></legend>
-                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                        <label class="btn btn-outline-primary" <?php
+                    <span class="d-block form-control-label"><?php echo $words->get('SignupGender'); ?></span>
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-outline-primary" <?php
+                    if (isset($vars['gender']) && $vars['gender'] == 'female') {
+                        echo ' active"';
+                    }
+                    ?>">
+                        <input type="radio" id="gender" required name="gender" value="female"<?php
                         if (isset($vars['gender']) && $vars['gender'] == 'female') {
-                            echo ' active"';
+                            echo ' checked="checked"';
                         }
-                        ?>">
-                            <input type="radio" id="gender" required name="gender" value="female"<?php
-                            if (isset($vars['gender']) && $vars['gender'] == 'female') {
-                                echo ' checked="checked"';
-                            }
-                            ?> ><?php echo $words->get('female'); ?>
-                        </label>
-                        <label class="btn btn-outline-primary <?php
+                        ?> ><?php echo $words->get('female'); ?>
+                    </label>
+                    <label class="btn btn-outline-primary <?php
+                    if (isset($vars['gender']) && $vars['gender'] == 'male') {
+                        echo ' active"';
+                    }
+                    ?>">
+                        <input type="radio" required name="gender" value="male"<?php
                         if (isset($vars['gender']) && $vars['gender'] == 'male') {
-                            echo ' active"';
+                            echo ' checked="checked"';
                         }
-                        ?>">
-                            <input type="radio" required name="gender" value="male"<?php
-                            if (isset($vars['gender']) && $vars['gender'] == 'male') {
-                                echo ' checked="checked"';
-                            }
-                            ?> ><?php echo $words->get('male'); ?>
-                        </label>
-                        <label class="btn btn-outline-primary <?php
+                        ?> ><?php echo $words->get('male'); ?>
+                    </label>
+                    <label class="btn btn-outline-primary <?php
+                    if (isset($vars['gender']) && $vars['gender'] == 'other') {
+                        echo ' active"';
+                    }
+                    ?>">
+                        <input type="radio" required name="gender" value="other"<?php
                         if (isset($vars['gender']) && $vars['gender'] == 'other') {
-                            echo ' active"';
+                            echo ' checked="checked"';
                         }
-                        ?>">
-                            <input type="radio" required name="gender" value="other"<?php
-                            if (isset($vars['gender']) && $vars['gender'] == 'other') {
-                                echo ' checked="checked"';
-                            }
-                            ?> ><?php echo $words->get('GenderOther'); ?>
-                        </label>
-                        <button type="button" class="btn btn-primary" data-trigger="focus" data-container="body"
-                                data-toggle="popover" data-placement="right"
-                                data-content="Do you consider yourself female, male, none or something else?">
-                            <i class="fa fa-question"></i>
-                        </button>
+                        ?> ><?php echo $words->get('GenderOther'); ?>
+                    </label>
                     </div>
-                    <span class="text-muted small red"></span>
+                    <button type="button" class="btn btn-primary float-right" data-trigger="focus" data-container="body"
+                            data-toggle="popover" data-placement="right"
+                            data-content="Do you consider yourself female, male, none or something else?">
+                        <i class="fa fa-question"></i>
+                    </button>
                     <?php if (in_array('SignupErrorProvideGender', $vars['errors'])) {
                         echo '<span class="help-block alert alert-danger">' . $words->get('SignupErrorProvideGender') . '</span>';
                     }
@@ -271,3 +237,14 @@
             </div>
     </form>
 </div>
+<script>
+    $( document ).ready(function() {
+        // Rough calculation of 18 years ago
+        let maxDate = new Date();
+        maxDate.setDate(maxDate.getDate() - 18 * 365 - 4);
+        $("#datetimepicker1").datetimepicker({
+            format: 'L',
+            maxDate: maxDate
+        });
+    });
+</script>

@@ -17,7 +17,7 @@ class DropDbVersion extends AbstractMigration
      */
     public function up()
     {
-        $this->dropTable('dbversion');
+        $this->table('dbversion')->drop()->save();
     }
 
     /**

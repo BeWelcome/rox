@@ -34,6 +34,12 @@ Boston, MA  02111-1307, USA.
      */
 class Member extends RoxEntityBase
 {
+    // Hide elements on the profile page
+    const MEMBER_FIRSTNAME_HIDDEN = 1;
+    const MEMBER_SECONDNAME_HIDDEN = 2;
+    const MEMBER_LASTNAME_HIDDEN = 4;
+    const MEMBER_EMAIL_HIDDEN = 8;
+
     const ACTIVE_ALL = "'Active', 'ActiveHidden', 'ChoiceInactive', 'OutOfRemind', 'Pending'";
     const ACTIVE_SEARCH = "'Active', 'ActiveHidden', 'OutOfRemind', 'Pending'";
     const ACTIVE_WITH_MESSAGES = "'Active', 'OutOfRemind', 'Pending'";
@@ -63,7 +69,7 @@ class Member extends RoxEntityBase
         } else {
             $this->lang = 'en';
         }
-        $this->_crypt = new MOD_crypt($this->getSession());
+        $this->_crypt = new MOD_crypt();
     }
 
     public function init($values, $dao)
@@ -313,10 +319,6 @@ class Member extends RoxEntityBase
     public function get_crypted_fields()
     {
         return array(
-            'FirstName',
-            'SecondName',
-            'LastName',
-            'Email',
             'HomePhoneNumber',
             'CellPhoneNumber',
             'WorkPhoneNumber',
@@ -464,28 +466,18 @@ WHERE IdMember = ".$this->id
      * TODO: get name from crypted fields in an architecturally sane place (to be determined)
      */
     public function get_name() {
-        $name = "{$this->get_firstname()} {$this->get_secondname()} {$this->get_lastname()}";
-        return $name;
-    }
-
-    public function get_firstname() {
-        return $this->get_crypted($this->FirstName, "");
-    }
-
-    public function get_secondname() {
-        return $this->get_crypted($this->SecondName, "");
-    }
-
-    public function get_lastname() {
-        return $this->get_crypted($this->LastName, "");
-    }
-
-    /**
-     * Get member's email address (uses various permission checks)
-     * @return string Email address of member, empty if read permission denied
-     */
-    public function get_email() {
-        return $this->get_crypted($this->Email, "");
+        $hideAttribute = $this->HideAttribute;
+        $name = "";
+        if (!($hideAttribute & self::MEMBER_FIRSTNAME_HIDDEN)) {
+            $name .= $this->FirstName;
+        }
+        if (!($hideAttribute & self::MEMBER_SECONDNAME_HIDDEN)) {
+            $name .= " " . $this->SecondName;
+        }
+        if (!($hideAttribute & self::MEMBER_LASTNAME_HIDDEN)) {
+            $name .= " " . $this->LastName;
+        }
+        return trim($name);
     }
 
     /**
@@ -1908,9 +1900,10 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
     /**
      * Validates "stay logged in" tokens and refreshes them
      *
-     * @param boolean   $newsession: flag for a new session (no validation)
+     * @param boolean $newsession : flag for a new session (no validation)
      *
      * @return boolean true if cookie refreshed, false if cookie removed
+     * @throws PException
      */
     public function refreshMemoryCookie($newsession = false) {
         $modified = 0;

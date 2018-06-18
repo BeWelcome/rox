@@ -16,6 +16,6 @@ class InFolderType extends EnumType
         self::JUNK,
         self::SPAM,
         self::DRAFT,
-        self::REQUESTS
+        self::REQUESTS,
     ];
 }

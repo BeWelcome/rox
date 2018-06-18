@@ -13,6 +13,6 @@ class SpamInfoType extends SetType
         'SpamBlkWord',
         self::MEMBER_SAYS_SPAM,
         'SpamSayMember',
-        'ProcessedBySpamManager'
+        'ProcessedBySpamManager',
     ];
 }

@@ -3,14 +3,16 @@
 
 use Rox\Tools\RoxMigration;
 
-class DropHcvolConfigTable extends RoxMigration
+class DropBlogTables extends RoxMigration
 {
     /**
      * Migrate Up.
      */
     public function up()
     {
-        $this->dropTable('hcvol_config');
+        $this->table('blog_tags_seq')->drop()->save();
+        $this->table('blog_tags')->drop()->save();
+        echo "Dropped table";
     }
 
     /**

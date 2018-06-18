@@ -5,8 +5,6 @@ class SetLocationPage extends PageWithRoxLayout
 {
     public function __construct() {
         parent::__construct();
-        $this->addLateLoadScriptFile('build/manifest.js');
-        $this->addLateLoadScriptFile('build/bewelcome.js');
         $this->addLateLoadScriptFile('build/jquery_ui.js');
         $this->addLateLoadScriptFile('build/leaflet.js');
         $this->addLateLoadScriptFile('script/signup/createmap.js');

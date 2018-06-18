@@ -2,7 +2,6 @@
 
 namespace AppBundle\Repository;
 
-use AppBundle\Doctrine\InFolderType;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
 use Doctrine\ORM\EntityRepository;
@@ -38,8 +37,7 @@ class MessageRepository extends EntityRepository
         } else {
             $qb->where('m.receiver = :member');
         }
-        if (('deleted' === $folder) or ('spam' === $folder))
-        {
+        if (('deleted' === $folder) or ('spam' === $folder)) {
             // Show messages and requests in deleted and spam
             $type = self::MESSAGES_AND_REQUESTS;
         }

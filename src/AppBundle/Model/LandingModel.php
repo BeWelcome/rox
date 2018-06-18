@@ -2,7 +2,6 @@
 
 namespace AppBundle\Model;
 
-use AppBundle\Entity\ForumThread;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
 use Doctrine\ORM\Query;

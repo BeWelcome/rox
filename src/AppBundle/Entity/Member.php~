@@ -62,7 +62,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
      *
      * @ORM\Column(name="PassWord", type="string", length=100, nullable=true)
      */
-    protected $password;
+    protected $password = 'ENCRYPT(\'password\')';
 
     /**
      * @var int
@@ -551,13 +551,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     private $bewelcomed;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="HideAttribute", type="integer", nullable=false)
-     */
-    private $hideAttribute;
-
-    /**
      * @ORM\OneToMany(targetEntity="CryptedField", mappedBy="member", fetch="EAGER")
      */
     private $cryptedFields;
@@ -693,7 +686,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     /**
      * Set email.
      *
-     * @param string $email
+     * @param int $email
      *
      * @return Member
      */
@@ -707,11 +700,13 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     /**
      * Get email.
      *
-     * @return string
+     * @return int
      */
     public function getEmail()
     {
-        return $this->email;
+        $email = urldecode($this->getCryptedField('Email'));
+
+        return $email;
     }
 
     /**
@@ -909,7 +904,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     /**
      * Set firstname.
      *
-     * @param string $firstname
+     * @param int $firstname
      *
      * @return Member
      */
@@ -923,17 +918,17 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     /**
      * Get firstname.
      *
-     * @return string
+     * @return int
      */
     public function getFirstName()
     {
-        return $this->firstname;
+        return $this->getCryptedField('FirstName');
     }
 
     /**
      * Set secondname.
      *
-     * @param string $secondname
+     * @param int $secondname
      *
      * @return Member
      */
@@ -947,17 +942,17 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     /**
      * Get secondname.
      *
-     * @return string
+     * @return int
      */
     public function getSecondName()
     {
-        return $this->secondname;
+        return $this->getCryptedField('SecondName');
     }
 
     /**
      * Set lastname.
      *
-     * @param string $lastname
+     * @param int $lastname
      *
      * @return Member
      */
@@ -971,11 +966,11 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     /**
      * Get lastname.
      *
-     * @return string
+     * @return int
      */
     public function getLastName()
     {
-        return $this->lastname;
+        return $this->getCryptedField('LastName');
     }
 
     /**
@@ -2614,24 +2609,5 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
         }
 
         return $stripped;
-    }
-
-    /**
-     * @param int $hideAttribute
-     * @return Member
-     */
-    public function setHideAttribute($hideAttribute)
-    {
-        $this->hideAttribute = $hideAttribute;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getHideAttribute()
-    {
-        return $this->hideAttribute;
     }
 }

@@ -15,8 +15,9 @@ class SignupPage extends SignupBasePage
     {
         parent::__construct();
         $this->_step = $step;
-        $this->addLateLoadScriptFile('build/manifest.js');
-        $this->addLateLoadScriptFile('build/bewelcome.js');
+        if ($step == 2) {
+            $this->addLateLoadScriptFile('build/tempusdominus.js');
+        }
         if ($step == 3) {
             $this->addLateLoadScriptFile('build/jquery_ui.js');
             $this->addLateLoadScriptFile('build/leaflet.js');

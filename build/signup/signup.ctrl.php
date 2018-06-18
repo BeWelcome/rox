@@ -83,8 +83,13 @@ class SignupController extends RoxControllerBase {
                         ));
                     PPHP::PExit();
                 }
-                $users = $model->takeCareForNonUniqueEmailAddress($_REQUEST['value']);
-                if ($users == '') {
+                // check if email address is valid
+                $count = 1; // Set count to one in case email address isn't valid
+                $email = $model->checkEmail($_REQUEST['value']);
+                if (false !== $email) {
+                    $count = $model->emailInUse($email);
+                }
+                if ($count == 0) {
                     echo json_encode(
                         array(
                             "value" => $_REQUEST['value'],
@@ -202,33 +207,20 @@ class SignupController extends RoxControllerBase {
             $vars = $args->post;
         }
         $this->_session->set('SignupBWVars', $vars);
-
-		$StrLog="Entering signupFormCallback " ;
-		if (!empty($args->post["Username"])) {
-			$StrLog=$StrLog." Username=[".$args->post["Username"]."]" ;
-		}
-        if (!empty($args->post["location-geoname-id"])) {
-            $StrLog=$StrLog." geonameid=[".$args->post["location-geoname-id"]."]" ;
-        }
-        if (!empty($args->post["location-latitude"])) {
-            $StrLog=$StrLog." latitude=[".$args->post["location-latitude"]."]" ;
-        }
-        if (!empty($args->post["location-longitude"])) {
-            $StrLog=$StrLog." longitude=[".$args->post["location-longitude"]."]" ;
-        }
-		if (!empty($args->post["iso_date"])) {
-			$StrLog=$StrLog." iso_date=[".$args->post["iso_date"]."]" ;
-		}
-
-		MOD_log::get()->write($StrLog,"Signup") ;
-
         $vars = $this->_session->get('SignupBWVars');
         $request = $args->request;
 
-        if (isset($request[1]) && $request[1] == '4') {
+        if (isset($request[1])) {
+            $step = intval($request[1]);
             $model = new SignupModel();
-
-            $errors = $model->checkRegistrationForm($vars);
+            if (($step >= 1) and ($step <= 4))
+            {
+                $errors = $model->checkRegistrationForm($vars, $step);
+            }
+            else
+            {
+                return false;
+            }
 
             if (count($errors) > 0) {
                 // show form again
@@ -237,33 +229,24 @@ class SignupController extends RoxControllerBase {
                 $mem_redirect->post = $vars;
                 return false;
             }
+            if ($step < '4') {
+                $step++;
+                $this->_session->set( 'SignupBWVars', $vars );
+                $mem_redirect->post = $vars;
+                return 'signup/' . ($step);
+            }
+
+            // step 4 successfully done register new member
             $model->polishFormValues($vars);
 
             if (!$idTB = $model->registerTBMember($vars)) {
                 // MyTB registration didn't work
             } else {
                 // signup on MyTB successful, yeah.
-                $id = $model->registerBWMember($vars);
-                $this->_session->set( 'IdMember', $id );
-
-                $vars['feedback'] .=
-                    $model->takeCareForNonUniqueEmailAddress($vars['email']);
-
-                $vars['feedback'] .=
-                    $model->takeCareForComputerUsedByBWMember();
-
-                $model->writeFeedback($vars['feedback']);
-
-                $View = new SignupView($model);
-                // TODO: BW 2007-08-19: $_SYSHCVOL['EmailDomainName']
-                // look at that ... a two years plus old todo :) ... and now four years plus :P
-                // finally 7 years and counting...
-
-                define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
-                $View->registerMail($vars, $id, $idTB);
-                $this->_session->remove('IdMember');
-                return 'signup/finish';
+                $model->registerBWMember($vars);
             }
+
+            return 'signup/finish';
         }
         return false;
     }

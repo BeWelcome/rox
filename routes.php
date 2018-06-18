@@ -26,6 +26,7 @@
     $this->addRoute('group_deleted','groups/:group_id:/delete/true', 'GroupsController', 'delete');
     $this->addRoute('group_forum','groups/:group_id:/forum', 'GroupsController', 'forum');
     $this->addRoute('group_forum_thread','groups/:group_id:/forum/:thread:', 'GroupsController', 'forum');
+    $this->addRoute('group_forum_thread_slash','groups/:group_id:/forum/:thread:/', 'GroupsController', 'forum');
     $this->addRoute('group_forum_action','groups/:group_id:/forum/:thread:/:action:', 'GroupsController', 'forum');
     $this->addRoute('group_groupsettings','groups/:group_id:/groupsettings', 'GroupsController', 'groupSettings');
     $this->addRoute('group_invitemember','groups/:group_id:/invitemember/:member_id:', 'GroupsController', 'inviteMember');
@@ -169,7 +170,6 @@
     $this->addRoute('admin_treasurer_edit_donation', 'admin/treasurer/edit/:id:', 'AdminTreasurerController', 'treasurerEditCreateDonation');
     $this->addRoute('admin_treasurer_campaign_start', 'admin/treasurer/campaign/start', 'AdminTreasurerController', 'treasurerStartDonationCampaign');
     $this->addRoute('admin_treasurer_campaign_stop', 'admin/treasurer/campaign/stop', 'AdminTreasurerController', 'treasurerStopDonationCampaign');
-    $this->addRoute('admin_treasurer_overview', 'admin/treasurer', 'AdminTreasurerController', 'treasurerOverview');
 
     // Simple newsletter page
     $this->addRoute('newsletter', 'newsletter', 'NewsletterController', 'index');

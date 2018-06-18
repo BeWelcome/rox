@@ -10,7 +10,7 @@ class DropWordsUseTable extends RoxMigration
      */
     public function up()
     {
-        $this->dropTable('words_use');
+        $this->table('words_use')->drop()->save();
     }
 
     /**

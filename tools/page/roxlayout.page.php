@@ -133,29 +133,6 @@ class PageWithRoxLayout extends PageWithHTML
      */
     protected function topnav()
     {
-        $words = $this->getWords();
-        $model = new VolunteerbarModel();
-        $numberPersonsToBeAccepted = $model->getNumberPersonsToBeAccepted() ;
-        $numberReportedComments = $model->getNumberReportedComments();
-        $numberPersonsToBeChecked = $model->getNumberPersonsToBeChecked() ;
-        $numberSpamToBeChecked = $model->getNumberSpamToBeChecked() ;
-        $numberPersonsToAcceptInGroup = $model->getNumberPersonsToAcceptInGroup() ;
-        $R = MOD_right::get();
-
-        $appUser = new APP_User();
-        $logged_in = $appUser->IsBWLoggedIn("NeedMore,Pending");
-
-        /*if (class_exists('MOD_online')) {
-            $who_is_online_count = MOD_online::get()->howManyMembersOnline();
-        } else {
-            // echo 'MOD_online not active';
-            if ($this->_session->has( 'WhoIsOnlineCount' ) {
-                $who_is_online_count = $this->_session->get('WhoIsOnlineCount'); // MOD_whoisonline::get()->whoIsOnlineCount();
-            } else {
-                $who_is_online_count = 0;
-            }
-        }*/
-        require TEMPLATE_DIR . 'shared/roxpage/topnav.php';
     }
 
 

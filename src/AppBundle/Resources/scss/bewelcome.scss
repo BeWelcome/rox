@@ -37,7 +37,7 @@ $font-family-bold: Signika-bold, Arial;
 
 // select2
 @import "../../../../node_modules/select2/src/scss/core";
-@import "select2-bootstrap4";
+@import "../../../../node_modules/select2-theme-bootstrap4/src/select2-bootstrap";
 
 // Set yaml classes to keep old style alive and constistent
 @import "yaml";

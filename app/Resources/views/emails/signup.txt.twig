@@ -1,0 +1,10 @@
+>Dear {{ username }},
+
+Thank you for signing up on BeWelcome. We need to be sure that you're email address is valid as you will get notifications for messages and hosting requests to that address.
+
+Please use the following link to confirm your email address ({{ email }}):
+
+{{ url('signup_confirm', { username: username, regkey: key }) }}
+
+Cheers,
+The volunteers of BeWelcome

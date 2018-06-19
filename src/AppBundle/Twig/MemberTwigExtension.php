@@ -5,7 +5,10 @@ namespace AppBundle\Twig;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
 use Doctrine\ORM\EntityManager;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\RequestContext;
 use Twig_Extension;
 use Twig_Extension_GlobalsInterface;
 
@@ -22,15 +25,22 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
     protected $em;
 
     /**
+     * @var Router
+     */
+    protected $router;
+
+    /**
      * MemberTwigExtension constructor.
      *
-     * @param Session       $session
+     * @param Session $session
      * @param EntityManager $em
+     * @param UrlGenerator $router
      */
-    public function __construct(Session $session, EntityManager $em)
+    public function __construct(Session $session, EntityManager $em, Router $router)
     {
         $this->session = $session;
         $this->em = $em;
+        $this->router = $router;
     }
 
     /**
@@ -88,47 +98,47 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
         $allTeams = [
             'communitynews' => [
                 'AdminCommunityNews',
-                'admin/communitynews',
+                'admin_communitynews_overview',
             ],
             'words' => [
                 'AdminWord',
-                'admin/word',
+                'admin_word_overview',
             ],
             'flags' => [
                 'AdminFlags',
-                'admin/flags',
+                'admin_flags',
             ],
             'rights' => [
                 'AdminRights',
-                'admin/rights',
+                'admin_rights',
             ],
             'logs' => [
                 'AdminLogs',
-                'admin/logs',
+                'admin_logs_overview',
             ],
             'comments' => [
                 'AdminComments',
-                'bw/admin/admincomments.php',
+                '/bw/admin/admincomments.php',
             ],
             'newmembersbewelcome' => [
                 'AdminNewMembers',
-                'admin/newmembers',
+                'newmembers',
             ],
             'massmail' => [
                 'AdminMassMail',
-                'admin/massmail',
+                'admin_massmail',
             ],
             'treasurer' => [
                 'AdminTreasurer',
-                'admin/treasurer',
+                'admin_treasurer_overview',
             ],
             'faq' => [
                 'AdminFAQ',
-                'admin/faqs/',
+                'admin_faqs_overview',
             ],
             'sqlforvolunteers' => [
                 'AdminSqlForVolunteers',
-                'bw/admin/adminquery.php',
+                '/bw/admin/adminquery.php',
             ],
         ];
 
@@ -139,7 +149,7 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
             if (in_array($role, $keys, true)) {
                 $teams[] = [
                     'trans' => $allTeams[$role][0],
-                    'link' => $allTeams[$role][1],
+                    'route' => $allTeams[$role][1],
                 ];
             }
         }

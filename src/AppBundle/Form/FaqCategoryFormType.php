@@ -24,6 +24,9 @@ class FaqCategoryFormType extends AbstractType
         $formBuilder
             ->add('wordCode', TextType::class, [
                 'label' => 'FaqCategoryWordCode',
+                'attr' => [
+                    'readonly' => true,
+                ],
             ])
             ->add('description', TextType::class, [
                 'label' => 'FaqCategoryDescription',

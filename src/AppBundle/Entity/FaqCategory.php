@@ -18,7 +18,7 @@ class FaqCategory
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=100, nullable=false)
+     * @ORM\Column(name="description", type="string", nullable=false)
      */
     private $description;
 

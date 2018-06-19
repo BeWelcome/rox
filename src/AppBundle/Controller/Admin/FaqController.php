@@ -235,24 +235,15 @@ class FaqController extends Controller
         $faqCategoryForm->handleRequest($request);
 
         if ($faqCategoryForm->isSubmitted() && $faqCategoryForm->isValid()) {
+            // Update description accordingly
             $data = $faqCategoryForm->getData();
-            // Check for changes
-            $valid = true;
-            if ($data->wordCode !== $faqCategory->getDescription()) {
-                // \todo Check that word code doesn't exist yet
-            }
-            if ($valid & ($data->description !== $faqCategory->getDescription()->getSentence())) {
-                // Update description accordingly
-                $wordRepository = $em->getRepository(Word::class);
-                $description = $wordRepository->findOneBy(['code' => $faqCategoryRequest->wordCode, 'shortCode' => 'en']);
-                $description->setSentence($data->description);
-                $em->persist($description);
-                $em->flush();
-                $this->removeCacheFile('en');
-            }
-            if ($valid) {
-                return $this->redirectToRoute('admin_faqs_overview', ['id' => $faqCategory->getId()]);
-            }
+            $wordRepository = $em->getRepository(Word::class);
+            $description = $wordRepository->findOneBy(['code' => $faqCategoryRequest->wordCode, 'shortCode' => 'en']);
+            $description->setSentence($data->description);
+            $em->persist($description);
+            $em->flush();
+            $this->removeCacheFile('en');
+            return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faqCategory->getId()]);
         }
 
         return  $this->render(
@@ -436,7 +427,7 @@ class FaqController extends Controller
         foreach ($faqCategories as $faqCategory) {
             $subMenu[$faqCategory->getId()] = [
                 'key' => $faqCategory->getDescription(),
-                'url' => $this->generateUrl('admin_faqs_overview', ['id' => $faqCategory->getId()]),
+                'url' => $this->generateUrl('admin_faqs_overview', ['categoryId' => $faqCategory->getId()]),
             ];
         }
 

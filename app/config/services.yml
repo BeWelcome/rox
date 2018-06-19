@@ -62,7 +62,7 @@ services:
     rox.member_twig_extension:
         class: AppBundle\Twig\MemberTwigExtension
         public: false
-        arguments: ['@session', '@doctrine.orm.entity_manager']
+        arguments: ['@session', '@doctrine.orm.entity_manager', '@router']
         tags:
             - { name: twig.extension }
 

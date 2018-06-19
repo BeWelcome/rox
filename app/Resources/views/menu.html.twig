@@ -97,7 +97,11 @@
                                         <a href="/about/getactive" class="btn btn-block py-0 pl-1 text-left mt-1">{{ 'About_GetActive' | trans}}</a>
                                         <a href="/donate" class="btn btn-block py-0 pl-1 text-left">{{ 'DonateLink'  | trans}}</a>
                                         {% for team in teams if teams %}
-                                            <a href="/{{ team.link }}" class="btn btn-block py-0 pl-1 text-left">{{ team.trans | trans}}</a>
+                                            {% if team.route starts with '/' %}
+                                                <a href="{{ team.route }}" class="btn btn-block py-0 pl-1 text-left">{{ team.trans | trans}}</a>
+                                            {% else %}
+                                                <a href="{{ path(team.route) }}" class="btn btn-block py-0 pl-1 text-left">{{ team.trans | trans}}</a>
+                                            {% endif %}
                                         {% endfor %}
 
                                     </div>

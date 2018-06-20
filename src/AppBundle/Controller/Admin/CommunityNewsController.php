@@ -25,7 +25,7 @@ class CommunityNewsController extends Controller
         $limit = $request->query->get('limit', 20);
 
         $communityNewsModel = new CommunityNewsModel($this->getDoctrine());
-        $communityNews = $communityNewsModel->getLatestPaginator($page, $limit);
+        $communityNews = $communityNewsModel->getLatestPaginator($page, $limit, false);
 
         return $this->render(':admin:communitynews/list.html.twig', [
             'communityNews' => $communityNews,
@@ -67,6 +67,7 @@ class CommunityNewsController extends Controller
     /**
      * @Route("/admin/communitynews/{id}/edit", name="admin_communitynews_edit")
      *
+     * @param Request $request
      * @param CommunityNews $communityNews
      *
      * @return \Symfony\Component\HttpFoundation\Response

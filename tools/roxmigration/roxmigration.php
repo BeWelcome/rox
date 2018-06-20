@@ -17,7 +17,7 @@ use Phinx\Migration\AbstractMigration;
 class RoxMigration extends AbstractMigration
 {
     /***
-     * Private worker function to eitehr update the word code in the DB or to add it as a new one.
+     * Private worker function to either update the word code in the DB or to add it as a new one.
      *
      * Basically the same query but the created column is handled differently
      *

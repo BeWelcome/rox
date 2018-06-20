@@ -18,14 +18,15 @@ class CommunityNewsModel extends BaseModel
      * @param mixed $page
      * @param mixed $limit
      *
+     * @param bool $publicOnly
      * @return Pagerfanta
      */
-    public function getLatestPaginator($page, $limit)
+    public function getLatestPaginator($page, $limit, $publicOnly = true)
     {
         /** @var CommunityNewsRepository $repository */
         $repository = $this->em->getRepository(CommunityNews::class);
 
-        return $repository->findLatest($page, $limit);
+        return $repository->findLatest($page, $limit, $publicOnly);
     }
 
     public function getLatest()

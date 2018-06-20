@@ -8,6 +8,7 @@
 namespace AppBundle\Entity;
 
 use Carbon\Carbon;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -80,6 +81,17 @@ class CommunityNews
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+    /**
+     * One news has many comments.
+     *
+     * @ORM\OneToMany(targetEntity="CommunityNewsComment", mappedBy="CommunityNews")
+     */
+    private $comments;
+
+    public function __construct() {
+        $this->comments = new ArrayCollection();
+    }
 
     /**
      * Set title.
@@ -257,5 +269,15 @@ class CommunityNews
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get comments.
+     *
+     * @return ArrayCollection
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

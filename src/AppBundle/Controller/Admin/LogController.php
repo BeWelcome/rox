@@ -36,7 +36,6 @@ class LogController extends Controller
 
         $types = [];
         $member = null;
-        $ipAddress = null;
         if ($logForm->isSubmitted() && $logForm->isValid()) {
             $data = $logForm->getData();
             $types = $data['types'];

@@ -525,6 +525,7 @@ LIMIT 1
                 m.Gender,
                 m.HideGender,
                 m.MaxGuest,
+                m.HideAttribute,
                 m.FirstName,
                 m.SecondName,
                 m.LastName,

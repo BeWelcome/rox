@@ -54,13 +54,6 @@ class Log
     /**
      * @var int
      *
-     * @ORM\Column(name="IpAddress", type="integer", nullable=false)
-     */
-    private $ipAddress;
-
-    /**
-     * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -161,30 +154,6 @@ class Log
     public function getCreated()
     {
         return Carbon::instance($this->created);
-    }
-
-    /**
-     * Set ipaddress.
-     *
-     * @param int $ipAddress
-     *
-     * @return Log
-     */
-    public function setIpAddress($ipAddress)
-    {
-        $this->ipAddress = $ipAddress;
-
-        return $this;
-    }
-
-    /**
-     * Get ipaddress.
-     *
-     * @return int
-     */
-    public function getIpAddress()
-    {
-        return long2ip($this->ipAddress);
     }
 
     /**

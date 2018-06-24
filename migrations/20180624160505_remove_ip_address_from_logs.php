@@ -3,7 +3,7 @@
 
 use Rox\Tools\RoxMigration;
 
-class CreateCommunityNewsCommentTable extends RoxMigration
+class RemoveIpAddressFromLogs extends RoxMigration
 {
     /**
      * Change Method.
@@ -32,15 +32,9 @@ class CreateCommunityNewsCommentTable extends RoxMigration
      */
     public function change()
     {
-        $communityNewsComment = $this->table('community_news_comment');
-        $communityNewsComment
-            ->addColumn('community_news_id', 'integer')
-            ->addColumn('author_id', 'integer')
-            ->addColumn('created', 'datetime')
-            ->addColumn('title', 'string', [ 'length' => 75])
-            ->addColumn('text', 'string', [ 'length' => 1000])
-            ->addForeignKey('community_news_id', 'community_news')
-            ->addForeignKey('author_id', 'members')
-            ->create();
+        $logsTable = $this->table('logs');
+        $logsTable
+            ->removeColumn('ipAddress')
+            ->update();
     }
 }

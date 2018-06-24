@@ -14,20 +14,17 @@ class LogModel extends BaseModel
      *
      * @param array $types
      * @param $member
-     * @param $ipAddress
      * @param int $page
      * @param int $limit
      *
-     * @throws \Doctrine\ORM\ORMException
-     *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getFilteredLogs(array $types, $member, $ipAddress, $page, $limit)
+    public function getFilteredLogs(array $types, $member, $page, $limit)
     {
         /** @var LogRepository $repository */
         $repository = $this->em->getRepository(Log::class);
 
-        return $repository->findLatest($types, $member, $ipAddress, $page, $limit);
+        return $repository->findLatest($types, $member, $page, $limit);
     }
 
     public function getLogTypes()

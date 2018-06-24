@@ -43,10 +43,9 @@ class LogController extends Controller
             $username = $data['username'];
             $memberRepository = $this->getDoctrine()->getRepository(Member::class);
             $member = $memberRepository->loadUserByUsername($username);
-            $ipAddress = $data['ipaddress'];
         }
 
-        $logs = $logModel->getFilteredLogs($types, $member, $ipAddress, $page, $limit);
+        $logs = $logModel->getFilteredLogs($types, $member, $page, $limit);
 
         return  $this->render(':admin:logs/index.html.twig', [
             'form' => $logForm->createView(),

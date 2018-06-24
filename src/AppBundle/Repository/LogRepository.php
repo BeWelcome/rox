@@ -15,15 +15,14 @@ class LogRepository extends EntityRepository
      *
      * @param array       $types
      * @param Member|null $member
-     * @param string      $ipAddress
      * @param int         $page
      * @param int         $limit
      *
      * @return Pagerfanta
      */
-    public function findLatest(array $types, Member $member = null, $ipAddress, $page, $limit)
+    public function findLatest(array $types, Member $member = null, $page, $limit)
     {
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatest($types, $member, $ipAddress)));
+        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatest($types, $member)));
         $paginator->setMaxPerPage($limit);
         $paginator->setCurrentPage($page);
 
@@ -33,11 +32,10 @@ class LogRepository extends EntityRepository
     /**
      * @param array  $types
      * @param Member $member
-     * @param string $ipAddress
      *
      * @return Query
      */
-    private function queryLatest(array $types, Member $member = null, $ipAddress)
+    private function queryLatest(array $types, Member $member = null)
     {
         $qb = $this->createQueryBuilder('l');
         if (!empty($types)) {
@@ -50,12 +48,6 @@ class LogRepository extends EntityRepository
             $qb
                 ->andWhere('l.member = :member')
                 ->setParameter(':member', $member);
-        }
-
-        if ($ipAddress) {
-            $qb
-                ->andWhere('l.ipAddress = :ipAddress')
-                ->setParameter(':ipAddress', ip2long($ipAddress));
         }
         $qb->orderBy('l.created', 'DESC');
 

@@ -33,13 +33,6 @@ class LogFormType extends AbstractType
                     'class' => 'member-autocomplete',
                 ],
             ])
-            ->add('ipaddress', TextType::class, [
-                'required' => false,
-                'attr' => [
-                    'pattern' => '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}',
-                ],
-                'label' => 'IP address',
-            ])
             ->add('Update', SubmitType::class);
     }
 }

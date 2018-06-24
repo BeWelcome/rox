@@ -85,7 +85,8 @@ class CommunityNews
     /**
      * One news has many comments.
      *
-     * @ORM\OneToMany(targetEntity="CommunityNewsComment", mappedBy="CommunityNews")
+     * @ORM\OneToMany(targetEntity="CommunityNewsComment", mappedBy="communityNews", fetch="EXTRA_LAZY")
+     * @ORM\OrderBy({"created" = "DESC"})
      */
     private $comments;
 

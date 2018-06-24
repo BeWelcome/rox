@@ -10,6 +10,8 @@ namespace AppBundle\Model;
 
 use AppBundle\Entity\CommunityNews;
 use AppBundle\Repository\CommunityNewsRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Pagerfanta\Adapter\DoctrineCollectionAdapter;
 use Pagerfanta\Pagerfanta;
 
 class CommunityNewsModel extends BaseModel
@@ -21,12 +23,12 @@ class CommunityNewsModel extends BaseModel
      * @param bool $publicOnly
      * @return Pagerfanta
      */
-    public function getLatestPaginator($page, $limit, $publicOnly = true)
+    public function getLatestPaginator($page, $limit)
     {
         /** @var CommunityNewsRepository $repository */
         $repository = $this->em->getRepository(CommunityNews::class);
 
-        return $repository->findLatest($page, $limit, $publicOnly);
+        return $repository->findLatest($page, $limit, true);
     }
 
     public function getLatest()
@@ -34,6 +36,21 @@ class CommunityNewsModel extends BaseModel
         /** @var CommunityNewsRepository $repository */
         $repository = $this->em->getRepository(CommunityNews::class);
 
-        return $repository->getLatest();
+        try {
+            return $repository->getLatest();
+        } catch (NonUniqueResultException $e) {
+        }
+    }
+
+    public function getCommentsPaginator(CommunityNews $communityNews, $page, $limit)
+    {
+        $adapter = new DoctrineCollectionAdapter($communityNews->getComments());
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta
+            ->setMaxPerPage($limit)
+            ->setCurrentPage($page)
+        ;
+
+        return $pagerfanta;
     }
 }

@@ -4,6 +4,7 @@ namespace AppBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 
@@ -11,20 +12,17 @@ class CommunityNewsRepository extends EntityRepository
 {
     /**
      * @param boolean $publicOnly
-     * @return Query
+     * @return QueryBuilder
      */
     public function queryLatest($publicOnly)
     {
-        $query = $this->createQueryBuilder('cn')
+        $qb = $this->createQueryBuilder('cn')
             ->orderBy('cn.createdAt', 'desc');
-        if ($publicOnly) {
-            $query
-                ->where('cn.public = :public')
-                ->setParameter(':public', false);
+        if ($publicOnly)
+        {
+            $qb->where('cn.public = true');
         }
-        return $query
-            ->setMaxResults(1)
-            ->getQuery();
+        return $qb;
     }
 
     /**
@@ -38,7 +36,7 @@ class CommunityNewsRepository extends EntityRepository
      */
     public function findLatest($page = 1, $items = 10, $publicOnly = true)
     {
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatest($publicOnly), false));
+        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatest($publicOnly)));
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
 

@@ -11,7 +11,7 @@
         "anthonymartin/geo-location": "^1.0",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-cache-bundle": "^1.2",
-        "doctrine/orm": "^2.5",
+        "doctrine/orm": "^2.6",
         "egeloen/ckeditor-bundle": "^6.0",
         "ezyang/htmlpurifier": "^4.0",
         "foolz/sphinxql-query-builder": "^1.0",
@@ -32,6 +32,7 @@
         "symfony/symfony": "^3.3",
         "twig/extensions": "^1.0",
         "vlucas/phpdotenv": "^2.2",
+        "pagerfanta/pagerfanta": "^2.0",
         "white-october/pagerfanta-bundle": "^1.0",
         "zendframework/zend-uri": "^2.4"
     },

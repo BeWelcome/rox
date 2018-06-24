@@ -23,6 +23,7 @@ class CommunityNewsComment
 {
     /**
      * @var CommunityNews
+     *
      * A news has many comments.
      * @ORM\ManyToOne(targetEntity="CommunityNews", inversedBy="comments")
      */

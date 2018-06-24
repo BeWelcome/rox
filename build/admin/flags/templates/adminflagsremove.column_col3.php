@@ -31,7 +31,7 @@ include 'adminflagserrors.php';
 
 $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminFlagsController', 'removeCallback');
 ?>
-<form class="yform" method="post" action="<?= $_SERVER['PHP_SELF'] ?>">
+<form class="yform" method="post">
     <?= $callbackTags ?>
     <input type="hidden" id="redirect" name="redirect" value="<?= $this->vars['redirect'] ?>"/>
     <input type="hidden" id="flagid" name="flagid" value="<?= $this->vars['flag'] ?>" />

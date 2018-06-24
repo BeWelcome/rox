@@ -31,13 +31,13 @@ include 'adminrightserrors.php';
 
 $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsController', 'removeCallback');
 ?>
-<form class="yform" method="post" action="<?= $_SERVER['PHP_SELF'] ?>">
+<form class="form" method="post">
     <?= $callbackTags ?>
     <input type="hidden" id="redirect" name="redirect" value="<?= $this->vars['redirect'] ?>"/>
     <input type="hidden" id="rightid" name="rightid" value="<?= $this->vars['right'] ?>" />
     <div class="type-text">
         <label for="username"><?php echo $this->words->get("AdminRightsUserName")?></label>
-        <input type="text" id="username" name="username" readonly="readonly" value="<?= $this->vars['username'] ?>"/>
+        <input class="form-control" type="text" id="username" name="username" readonly="readonly" value="<?= $this->vars['username'] ?>"/>
     </div>
     <div class="type-select">
         <label for="right"><?php echo $words->get("AdminRightsRights")?></label>

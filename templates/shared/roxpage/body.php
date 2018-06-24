@@ -14,13 +14,13 @@
     endif; ?>
 
     <div class="container">
-    <?php $flashMessages = $this->getFlashError();
+    <?php $flashMessages = $this->getFlashError(true);
     if (strlen($flashMessages) != 0): ?>
         <div class="row">
             <div class="col-12 alert alert-danger" role="alert"><?= $flashMessages ?></div>
         </div>
     <?php endif; ?>
-    <?php $flashMessages = $this->getFlashNotice();
+    <?php $flashMessages = $this->getFlashNotice(true);
     if (strlen($flashMessages) != 0): ?>
     <div class="row">
         <div class="col-12 alert alert-warning" role="alert"><?= $flashMessages ?></div>

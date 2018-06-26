@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Member;
 use EnvironmentExplorer;
+use PDO;
 use Rox\Framework\SessionSingleton;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,7 +53,18 @@ class LegacyController extends Controller
                 if (null !== $user) {
                     $session->set('IdMember', $user->getId());
                     $session->set('MemberStatus', $user->getStatus());
-                    $session->set('APP_User_id', $user->getId());
+                    $connection = $this->getDoctrine()->getConnection();
+                    $stmt = $connection->prepare('
+                        SELECT 
+                            id
+                        FROM
+                            user
+                        WHERE
+                            handle = :username
+                    ');
+                    $stmt->execute([':username' => $user->getUsername()]);
+                    $id = $stmt->fetch(PDO::FETCH_COLUMN);
+                    $session->set('APP_User_id', $id);
                 }
             }
         }

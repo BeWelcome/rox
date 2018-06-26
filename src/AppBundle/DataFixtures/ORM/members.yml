@@ -18,6 +18,7 @@ AppBundle\Entity\Member:
         CellPhoneNumber: 0
         WorkPhoneNumber: 0
         SecEmail: 0
+        HideAttribute: 8
         FirstName: 0
         SecondName: 0
         LastName: 0

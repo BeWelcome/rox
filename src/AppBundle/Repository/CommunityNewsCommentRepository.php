@@ -5,8 +5,7 @@ namespace AppBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * CommunityNewsCommentRepository
- *
+ * CommunityNewsCommentRepository.
  */
 class CommunityNewsCommentRepository extends EntityRepository
 {

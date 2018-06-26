@@ -8,7 +8,6 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Generator\UrlGenerator;
-use Symfony\Component\Routing\RequestContext;
 use Twig_Extension;
 use Twig_Extension_GlobalsInterface;
 
@@ -32,9 +31,9 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
     /**
      * MemberTwigExtension constructor.
      *
-     * @param Session $session
+     * @param Session       $session
      * @param EntityManager $em
-     * @param UrlGenerator $router
+     * @param UrlGenerator  $router
      */
     public function __construct(Session $session, EntityManager $em, Router $router)
     {

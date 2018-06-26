@@ -2618,6 +2618,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
 
     /**
      * @param int $hideAttribute
+     *
      * @return Member
      */
     public function setHideAttribute($hideAttribute)

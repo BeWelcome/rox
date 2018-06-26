@@ -12,8 +12,7 @@ use Doctrine\DBAL\DBALException;
 use PDO;
 
 /**
- * Class MessageModel
- * @package AppBundle\Model
+ * Class MessageModel.
  *
  * @SuppressWarnings(PHPMD.StaticAccess)
  * Hide logic in DeleteRequestType
@@ -51,7 +50,7 @@ class MessageModel extends BaseModel
 
     /**
      * @param Member $member
-     * @param array $messageIds
+     * @param array  $messageIds
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
@@ -128,7 +127,6 @@ class MessageModel extends BaseModel
 
     /**
      * @param $member
-     * @param $url
      * @param $folder
      * @param $sort
      * @param $sortDir
@@ -137,12 +135,48 @@ class MessageModel extends BaseModel
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getFilteredMessages($member, $url, $folder, $sort, $sortDir, $page = 1, $limit = 10)
+    public function getFilteredMessages($member, $folder, $sort, $sortDir, $page = 1, $limit = 10)
     {
         /** @var MessageRepository $repository */
         $repository = $this->em->getRepository(Message::class);
 
-        return $repository->findLatest($member, $url, $folder, $sort, $sortDir, $page, $limit);
+        return $repository->findLatestMessages($member, $folder, $sort, $sortDir, $page, $limit);
+    }
+
+    /**
+     * @param $member
+     * @param $folder
+     * @param $sort
+     * @param $sortDir
+     * @param int $page
+     * @param int $limit
+     *
+     * @return \Pagerfanta\Pagerfanta
+     */
+    public function getFilteredRequests($member, $folder, $sort, $sortDir, $page = 1, $limit = 10)
+    {
+        /** @var MessageRepository $repository */
+        $repository = $this->em->getRepository(Message::class);
+
+        return $repository->findLatestRequests($member, $folder, $sort, $sortDir, $page, $limit);
+    }
+
+    /**
+     * @param $member
+     * @param $folder
+     * @param $sort
+     * @param $sortDir
+     * @param int $page
+     * @param int $limit
+     *
+     * @return \Pagerfanta\Pagerfanta
+     */
+    public function getFilteredRequestsAndMessages($member, $folder, $sort, $sortDir, $page = 1, $limit = 10)
+    {
+        /** @var MessageRepository $repository */
+        $repository = $this->em->getRepository(Message::class);
+
+        return $repository->findLatestRequestsAndMessages($member, $folder, $sort, $sortDir, $page, $limit);
     }
 
     /**
@@ -218,10 +252,12 @@ class MessageModel extends BaseModel
      * Tests if a member has exceeded its limit for sending messages.
      *
      * @param Member $member
+     * @param int    $perHour
+     * @param int    $perDay
      *
-     * @return bool|string False if not exceeded, error message if exceeded
+     * @return bool
      */
-    public function hasMessageLimitExceeded($member)
+    public function hasMessageLimitExceeded($member, $perHour, $perDay)
     {
         $id = $member->getId();
 
@@ -294,8 +330,8 @@ class MessageModel extends BaseModel
         $lastDay = $row[0]->numberOfMessagesLastDay;
 
         if ($comments < 1 && (
-                $lastHour >= $this->getParameter('new_members_messages_per_hour') ||
-                $lastDay >= $this->getParameter('new_members_messages_per_day'))) {
+                $lastHour >= $perHour ||
+                $lastDay >= $perDay)) {
             return true;
         }
 

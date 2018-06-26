@@ -11,7 +11,7 @@ use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Community News Comments
+ * Community News Comments.
  *
  * @ORM\Table(name="community_news_comment")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CommunityNewsCommentRepository")
@@ -22,16 +22,16 @@ use Doctrine\ORM\Mapping as ORM;
 class CommunityNewsComment
 {
     /**
-     * @var CommunityNews
+     * @var communityNews
      *
-     * A news has many comments.
+     * A news has many comments
      * @ORM\ManyToOne(targetEntity="CommunityNews", inversedBy="comments")
      */
     private $communityNews;
 
     /**
      * @var Member
-     * A comment has one author
+     *             A comment has one author
      *
      * @ORM\OneToOne(targetEntity="Member")
      */
@@ -59,7 +59,7 @@ class CommunityNewsComment
     private $text;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -68,7 +68,7 @@ class CommunityNewsComment
     private $id;
 
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
      *
@@ -82,7 +82,7 @@ class CommunityNewsComment
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return Carbon
      */
@@ -92,7 +92,7 @@ class CommunityNewsComment
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
      *
@@ -106,7 +106,7 @@ class CommunityNewsComment
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -116,7 +116,7 @@ class CommunityNewsComment
     }
 
     /**
-     * Set text
+     * Set text.
      *
      * @param string $text
      *
@@ -130,7 +130,7 @@ class CommunityNewsComment
     }
 
     /**
-     * Get text
+     * Get text.
      *
      * @return string
      */
@@ -140,9 +140,9 @@ class CommunityNewsComment
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

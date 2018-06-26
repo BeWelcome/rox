@@ -3,7 +3,6 @@
 namespace AppBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
@@ -18,6 +17,7 @@ class CommunityNewsRepository extends EntityRepository
         $qb = $this->createQueryBuilder('cn')
             ->where('cn.public = true')
             ->orderBy('cn.createdAt', 'desc');
+
         return $qb;
     }
 
@@ -28,6 +28,7 @@ class CommunityNewsRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('cn')
             ->orderBy('cn.createdAt', 'desc');
+
         return $qb;
     }
 
@@ -68,8 +69,9 @@ class CommunityNewsRepository extends EntityRepository
     /**
      * Gets the latest community news (only visible to the public) if any.
      *
-     * @return mixed
      * @throws \Doctrine\ORM\NonUniqueResultException
+     *
+     * @return mixed
      */
     public function getLatest()
     {

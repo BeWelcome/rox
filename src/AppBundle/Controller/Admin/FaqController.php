@@ -243,6 +243,7 @@ class FaqController extends Controller
             $em->persist($description);
             $em->flush();
             $this->removeCacheFile('en');
+
             return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faqCategory->getId()]);
         }
 

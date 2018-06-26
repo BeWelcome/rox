@@ -6,27 +6,21 @@ use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
-use Rox\Core\Exception\InvalidArgumentException;
 
 class MessageRepository extends EntityRepository
 {
-    const MESSAGES_ONLY = 1;
-    const REQUESTS_ONLY = 2;
-    const MESSAGES_AND_REQUESTS = 3;
-
     /**
      * @param Member $member
      * @param $folder
      * @param $sort
      * @param $sortDirection
-     * @param mixed $type
      *
-     * @return Query
+     * @return QueryBuilder
      */
-    public function queryLatest(Member $member, $type, $folder, $sort, $sortDirection)
+    public function queryLatestMessages(Member $member, $folder, $sort, $sortDirection)
     {
         if ('date' === $sort) {
             $sort = 'created';
@@ -37,23 +31,9 @@ class MessageRepository extends EntityRepository
         } else {
             $qb->where('m.receiver = :member');
         }
-        if (('deleted' === $folder) or ('spam' === $folder)) {
-            // Show messages and requests in deleted and spam
-            $type = self::MESSAGES_AND_REQUESTS;
-        }
-        $qb->setParameter('member', $member);
-        switch ($type) {
-            case self::MESSAGES_ONLY:
-                $qb->andWhere('m.request IS NULL');
-                break;
-            case self::REQUESTS_ONLY:
-                $qb->join('m.request', 'r');
-                $folder = 'requests';
-                break;
-            case self::MESSAGES_AND_REQUESTS:
-                // Nothing to do here
-                break;
-        }
+        $qb
+            ->setParameter('member', $member)
+            ->andWhere('m.request IS NULL');
         switch ($folder) {
             case 'inbox':
                 $qb->andWhere('NOT(m.deleteRequest LIKE :deleterequest)')
@@ -74,7 +54,60 @@ class MessageRepository extends EntityRepository
         }
         $qb->orderBy('m.'.$sort, $sortDirection);
 
-        return $qb->getQuery();
+        return $qb;
+    }
+
+    /**
+     * @param Member $member
+     * @param $folder
+     * @param $sort
+     * @param $sortDirection
+     *
+     * @return QueryBuilder
+     */
+    public function queryLatestRequests(Member $member, $folder, $sort, $sortDirection)
+    {
+        if ('date' === $sort) {
+            $sort = 'created';
+        }
+        $qb = $this->createQueryBuilder('m');
+        if ('sent' === $folder) {
+            $qb->where('m.sender = :member');
+        } else {
+            $qb->where('m.receiver = :member');
+        }
+        $qb
+            ->setParameter('member', $member)
+            ->join('m.request', 'r')
+            ->orderBy('m.'.$sort, $sortDirection);
+
+        return $qb;
+    }
+
+    /**
+     * @param Member $member
+     * @param $folder
+     * @param $sort
+     * @param $sortDirection
+     *
+     * @return QueryBuilder
+     */
+    public function queryLatestRequestsAndMessages(Member $member, $folder, $sort, $sortDirection)
+    {
+        if ('date' === $sort) {
+            $sort = 'created';
+        }
+        $qb = $this->createQueryBuilder('m');
+        if ('sent' === $folder) {
+            $qb->where('m.sender = :member');
+        } else {
+            $qb->where('m.receiver = :member');
+        }
+        $qb
+            ->setParameter('member', $member)
+            ->orderBy('m.'.$sort, $sortDirection);
+
+        return $qb;
     }
 
     /**
@@ -139,6 +172,29 @@ class MessageRepository extends EntityRepository
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
      * @param Member $member
+     * @param $filter
+     * @param $sort
+     * @param $sortDirection
+     * @param int $page
+     * @param int $items
+     *
+     * @return Pagerfanta
+     */
+    public function findLatestMessages(Member $member, $filter, $sort, $sortDirection, $page = 1, $items = 10)
+    {
+        $queryBuilder = $this->queryLatestMessages($member, $filter, $sort, $sortDirection);
+        $adpater = new DoctrineORMAdapter($queryBuilder);
+        $paginator = new Pagerfanta($adpater);
+        $paginator->setMaxPerPage($items);
+        $paginator->setCurrentPage($page);
+
+        return $paginator;
+    }
+
+    /**
+     * Returns a Pagerfanta object encapsulating the matching paginated activities.
+     *
+     * @param Member $member
      * @param $url
      * @param $filter
      * @param $sort
@@ -148,21 +204,31 @@ class MessageRepository extends EntityRepository
      *
      * @return Pagerfanta
      */
-    public function findLatest(Member $member, $url, $filter, $sort, $sortDirection, $page = 1, $items = 10)
+    public function findLatestRequests(Member $member, $filter, $sort, $sortDirection, $page = 1, $items = 10)
     {
-        switch ($url) {
-            case 'both':
-                $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatest($member, self::MESSAGES_AND_REQUESTS, $filter, $sort, $sortDirection), false));
-                break;
-            case 'requests':
-                $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatest($member, self::REQUESTS_ONLY, $filter, $sort, $sortDirection), false));
-                break;
-            case 'messages':
-                $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatest($member, self::MESSAGES_ONLY, $filter, $sort, $sortDirection), false));
-                break;
-            default:
-                throw new InvalidArgumentException('Wrong type for message repository');
-        }
+        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatest($member, self::REQUESTS_ONLY, $filter, $sort, $sortDirection), false));
+        $paginator->setMaxPerPage($items);
+        $paginator->setCurrentPage($page);
+
+        return $paginator;
+    }
+
+    /**
+     * Returns a Pagerfanta object encapsulating the matching paginated activities.
+     *
+     * @param Member $member
+     * @param $url
+     * @param $filter
+     * @param $sort
+     * @param $sortDirection
+     * @param int $page
+     * @param int $items
+     *
+     * @return Pagerfanta
+     */
+    public function findLatestRequestsAndMessages(Member $member, $filter, $sort, $sortDirection, $page = 1, $items = 10)
+    {
+        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatest($member, self::REQUESTS_ONLY, $filter, $sort, $sortDirection), false));
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
 

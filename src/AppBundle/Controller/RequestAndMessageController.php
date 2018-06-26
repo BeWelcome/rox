@@ -150,7 +150,11 @@ class RequestAndMessageController extends Controller
     {
         $sender = $this->getUser();
         $messageModel = new MessageModel($this->getDoctrine());
-        if ($messageModel->hasMessageLimitExceeded($sender)) {
+        if ($messageModel->hasMessageLimitExceeded(
+            $sender,
+            $this->getParameter('new_members_messages_per_hour'),
+            $this->getParameter('new_members_messages_per_day')
+        )) {
             $this->addFlash('error', 'You have exceeded your message limit.');
             $referrer = $request->headers->get('referer');
 
@@ -214,7 +218,11 @@ class RequestAndMessageController extends Controller
         }
 
         $messageModel = new MessageModel($this->getDoctrine());
-        if ($messageModel->hasMessageLimitExceeded($member)) {
+        if ($messageModel->hasMessageLimitExceeded(
+            $member,
+            $this->getParameter('new_members_messages_per_hour'),
+            $this->getParameter('new_members_messages_per_day')
+        )) {
             $this->addFlash('error', 'You have exceeded your request limit.');
             $referrer = $request->headers->get('referer');
 
@@ -271,23 +279,17 @@ class RequestAndMessageController extends Controller
     /**
      * @Route("/messages/{folder}", name="messages",
      *     defaults={"folder": "inbox"})
-     * @Route("/requests/{folder}", name="requests",
-     *     defaults={"folder": "inbox"})
-     * @Route("/both/{folder}", name="both",
-     *     defaults={"folder": "inbox"})
      *
      * @param Request $request
      * @param string  $folder
      *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     *
      * @return Response
      */
-    public function folders(Request $request, $folder)
+    public function messages(Request $request, $folder)
     {
-        $url = $request->getPathInfo();
-        if ('/' !== $url[-1]) {
-            $url .= '/';
-        }
-        preg_match('#/(.+?)/#', $url, $matches);
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
         $sort = $request->query->get('sort', 'datesent');
@@ -298,10 +300,87 @@ class RequestAndMessageController extends Controller
         }
 
         $member = $this->getUser();
-
         $messageModel = new MessageModel($this->getDoctrine());
-        $messages = $messageModel->getFilteredMessages($member, $matches[1], $folder, $sort, $sortDir, $page, $limit);
+        $messages = $messageModel->getFilteredMessages($member, $folder, $sort, $sortDir, $page, $limit);
 
+        return $this->handleFolderRequest($request, $folder, $messages, 'messages');
+    }
+
+    /**
+     * @Route("/requests/{folder}", name="requests",
+     *     defaults={"folder": "inbox"})
+     *
+     * @param Request $request
+     * @param string  $folder
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     *
+     * @return Response
+     */
+    public function requests(Request $request, $folder)
+    {
+        $page = $request->query->get('page', 1);
+        $limit = $request->query->get('limit', 10);
+        $sort = $request->query->get('sort', 'datesent');
+        $sortDir = $request->query->get('dir', 'desc');
+
+        if (!in_array($sortDir, ['asc', 'desc'], true)) {
+            throw new \InvalidArgumentException();
+        }
+
+        $member = $this->getUser();
+        $messageModel = new MessageModel($this->getDoctrine());
+        $messages = $messageModel->getFilteredRequests($member, $folder, $sort, $sortDir, $page, $limit);
+
+        return $this->handleFolderRequest($request, $folder, $messages, 'requests');
+    }
+
+    /**
+     * @Route("/both/{folder}", name="messages",
+     *     defaults={"folder": "inbox"})
+     *
+     * @param Request $request
+     * @param string  $folder
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     *
+     * @return Response
+     */
+    public function requestsAndMessages(Request $request, $folder)
+    {
+        $page = $request->query->get('page', 1);
+        $limit = $request->query->get('limit', 10);
+        $sort = $request->query->get('sort', 'datesent');
+        $sortDir = $request->query->get('dir', 'desc');
+
+        if (!in_array($sortDir, ['asc', 'desc'], true)) {
+            throw new \InvalidArgumentException();
+        }
+
+        $member = $this->getUser();
+        $messageModel = new MessageModel($this->getDoctrine());
+        $messages = $messageModel->getFilteredRequestsAndMessages($member, $folder, $sort, $sortDir, $page, $limit);
+
+        return $this->handleFolderRequest($request, $folder, $messages, 'both');
+    }
+
+    /**
+     * @param Request $request
+     * @param string  $folder
+     * @param $messages
+     * @param $type
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     *
+     * @return Response
+     */
+    private function handleFolderRequest(Request $request, $folder, $messages, $type)
+    {
+        $member = $this->getUser();
+        $messageModel = new MessageModel($this->getDoctrine());
         $messageIds = [];
         foreach ($messages->getIterator() as $key => $val) {
             $messageIds[$key] = $val->getId();
@@ -347,7 +426,7 @@ class RequestAndMessageController extends Controller
             'folder' => $folder,
             'filter' => $request->query->all(),
             'submenu' => [
-                'active' => $matches[1].'_'.$folder,
+                'active' => $type.'_'.$folder,
                 'items' => $this->getSubMenuItems(),
             ],
         ]);
@@ -439,6 +518,7 @@ class RequestAndMessageController extends Controller
         }
 
         $user = $this->getUser();
+        /** @var Message $first */
         $first = $thread[count($thread) - 1];
         $guest = $first->getSender();
         $host = $first->getReceiver();
@@ -666,7 +746,7 @@ class RequestAndMessageController extends Controller
     private function getSubMenuItems()
     {
         return [
-            'both_inbox' => [
+            'requestsandmessages_inbox' => [
                 'key' => 'MessagesRequestsReceived',
                 'url' => $this->generateUrl('both', ['folder' => 'inbox']),
             ],

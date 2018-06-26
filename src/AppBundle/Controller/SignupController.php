@@ -4,7 +4,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Member;
 use AppBundle\Repository\MemberRepository;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +22,7 @@ class SignupController extends Controller
             // \todo Write info in to database
             $email = $signupVars['email'];
             $username = $signupVars['username'];
-            $key = hash('sha256', $email . ' - ' . $username);
+            $key = hash('sha256', $email.' - '.$username);
             $parameters = [
                 'username' => $username,
                 'email' => $email,
@@ -42,20 +41,21 @@ class SignupController extends Controller
                 ->setTo($email)
                 ->setBody(
                     $this->renderView(
-                        'emails/signup.html.twig', $parameters
+                        'emails/signup.html.twig',
+                        $parameters
                     ),
                     'text/html'
                 )
                 ->addPart(
                     $this->renderView(
-                        'emails/signup.txt.twig', $parameters
+                        'emails/signup.txt.twig',
+                        $parameters
                     ),
                     'text/plain'
                 )
             ;
             $recipientsCount = $this->get('mailer')->send($message);
-            if (1 !== $recipientsCount)
-            {
+            if (1 !== $recipientsCount) {
                 // \todo Mail couldn't be sent
                 // Do something about it!
             }
@@ -67,8 +67,10 @@ class SignupController extends Controller
 
     /**
      * @Route("/signup/confirm/{username}/{regkey}", name="signup_confirm")
+     *
      * @param $username
      * @param $regkey
+     *
      * @return Response
      */
     public function confirmEmailAddressAction($username, $regkey)
@@ -80,12 +82,12 @@ class SignupController extends Controller
         $member = $memberRepository->findOneBy(['username' => $username]);
         if (null === $member) {
             $this->addFlash('error', 'Provided key or username isn\'t correct');
+
             return $this->redirectToRoute('login');
         }
         $email = $member->getEmail();
-        $key = hash('sha256', $email . ' - ' . $username);
-        if ($regkey === $key)
-        {
+        $key = hash('sha256', $email.' - '.$username);
+        if ($regkey === $key) {
             // Yeah, successfully confirmed email address
             $member->setStatus('Active');
             $member->setLastlogin(new \DateTime());
@@ -93,10 +95,11 @@ class SignupController extends Controller
             $em->flush();
 
             $this->addFlash('notice', 'You just confirmed your email address and your profile got activated. Please login now and update your profile.');
+
             return $this->redirectToRoute('login');
         }
         $this->addFlash('error', 'Provided key isn\'t correct');
+
         return $this->redirectToRoute('login');
     }
-
 }

@@ -67,7 +67,7 @@ class CommunityNewsController extends Controller
     /**
      * @Route("/admin/communitynews/{id}/edit", name="admin_communitynews_edit")
      *
-     * @param Request $request
+     * @param Request       $request
      * @param CommunityNews $communityNews
      *
      * @return \Symfony\Component\HttpFoundation\Response

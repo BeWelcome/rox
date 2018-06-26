@@ -37,6 +37,7 @@ class SecurityController extends Controller
      * and handle the logout automatically. See logout in app/config/security.yml
      *
      * @Route("/logout", name="security_logout")
+     *
      * @throws \Exception
      */
     public function logoutAction()

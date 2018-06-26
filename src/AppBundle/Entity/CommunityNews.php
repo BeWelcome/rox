@@ -90,7 +90,8 @@ class CommunityNews
      */
     private $comments;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->comments = new ArrayCollection();
     }
 

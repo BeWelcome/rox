@@ -7,8 +7,6 @@ use AppBundle\Entity\CommunityNewsComment;
 use AppBundle\Form\CommunityNewsCommentType;
 use AppBundle\Form\CustomDataClass\CommunityNewsCommentRequest;
 use AppBundle\Model\CommunityNewsModel;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,7 +58,7 @@ class CommunityNewsController extends Controller
     /**
      * @Route("/communitynews/{id}/comment/add", name="communitynews_comment_add")
      *
-     * @param Request $request
+     * @param Request       $request
      * @param CommunityNews $communityNews
      *
      * @return Response
@@ -83,7 +81,7 @@ class CommunityNewsController extends Controller
             $em->persist($communityNewsComment);
             $em->flush();
 
-            return $this->redirectToRoute('communitynews_show', [ 'id' => $communityNews->getId() ]);
+            return $this->redirectToRoute('communitynews_show', ['id' => $communityNews->getId()]);
         }
 
         return $this->render(':communitynews:addcomment.html.twig', [

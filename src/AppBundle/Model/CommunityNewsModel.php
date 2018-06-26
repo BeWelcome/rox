@@ -14,21 +14,37 @@ use Doctrine\ORM\NonUniqueResultException;
 use Pagerfanta\Adapter\DoctrineCollectionAdapter;
 use Pagerfanta\Pagerfanta;
 
+/**
+ * @method getLatestAdminPaginator($page, $limit)
+ */
 class CommunityNewsModel extends BaseModel
 {
     /**
-     * @param mixed $page
-     * @param mixed $limit
+     * @param int $page
+     * @param int $limit
      *
-     * @param bool $publicOnly
      * @return Pagerfanta
      */
-    public function getLatestPaginator($page, $limit)
+    public function getPaginator($page, $limit)
     {
         /** @var CommunityNewsRepository $repository */
         $repository = $this->em->getRepository(CommunityNews::class);
 
-        return $repository->findLatest($page, $limit, true);
+        return $repository->pagePublic($page, $limit);
+    }
+
+    /**
+     * @param int $page
+     * @param int $limit
+     *
+     * @return Pagerfanta
+     */
+    public function getAdminPaginator($page, $limit)
+    {
+        /** @var CommunityNewsRepository $repository */
+        $repository = $this->em->getRepository(CommunityNews::class);
+
+        return $repository->pageAll($page, $limit);
     }
 
     public function getLatest()

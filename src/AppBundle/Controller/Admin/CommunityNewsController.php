@@ -25,7 +25,7 @@ class CommunityNewsController extends Controller
         $limit = $request->query->get('limit', 20);
 
         $communityNewsModel = new CommunityNewsModel($this->getDoctrine());
-        $communityNews = $communityNewsModel->getLatestPaginator($page, $limit, false);
+        $communityNews = $communityNewsModel->getAdminPaginator($page, $limit);
 
         return $this->render(':admin:communitynews/list.html.twig', [
             'communityNews' => $communityNews,

@@ -82,7 +82,7 @@ class RoxFrontRouter
         $this->setLanguage();
         PVars::register('lang', $this->_session->get('lang'));
 
-        $roxModelBase = new RoxModelBase($this->_session);
+        $roxModelBase = new RoxModelBase();
         $member = $roxModelBase->getLoggedInMember();
 
         // try restoring session from memory cookie
@@ -113,7 +113,7 @@ class RoxFrontRouter
             $this->_session->set('lang', $this->_session->get('locale'));
 
             // Set id of language
-            $Model = new RoxFrontRouterModel($this->_session);
+            $Model = new RoxFrontRouterModel();
             $lang = $Model->getLanguage($this->_session->get('locale'));
             $this->_session->set('IdLanguage', $lang->id);
         }
@@ -159,7 +159,7 @@ class RoxFrontRouter
         if (!isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) {
             return false;
         }
-        $Model = new RoxFrontRouterModel($this->_session);
+        $Model = new RoxFrontRouterModel();
         $browser_lang_str = trim($_SERVER["HTTP_ACCEPT_LANGUAGE"]);
         $best_q = 0;
         $result_lang = false;

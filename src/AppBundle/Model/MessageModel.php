@@ -156,7 +156,6 @@ class MessageModel extends BaseModel
      */
     public function getThreadForMessage(Message $message)
     {
-        /** @var MessageRepository $repository */
         $connection = $this->em->getConnection();
         $stmt = $connection->prepare('
             SELECT 

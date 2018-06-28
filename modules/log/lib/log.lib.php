@@ -141,15 +141,8 @@ class MOD_log {
             $idMember = $this->_session->get('IdMember');
         }
         
-        $ip = "127.0.0.1";
-        if (isset ($_SERVER['REMOTE_ADDR'])) {
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
-        $ip = ip2long($ip);
-        
         if (MOD_log::LOG2FILE) {
             $text = date("c") . "|" .
-                     $ip . "|" .
                      $idMember . "|" .
                      $type . "|" .
                      $message . "\n";
@@ -166,21 +159,18 @@ class MOD_log {
 	`IdMember`,
 	`Str`,
 	`Type`,
-	`created`,
-	`IpAddress`
+	`created`
 ) 
 VALUES(
 	' . $idMember . ',
 	\'' . $message . '\',
 	\'' . $type . '\',
 	now(),
-	\'' . $ip . '\'
 ) ;';
  
        $res = $this->dao->query($query);
 		if (!$res) 	{ // If the query has failed, log something in the text log file, and after rais the exception
             $text = "Execption raised : in MOD_Log->Write() ".date("c") . "|" .
-                     $ip . "|" .
                      $idMember . "|" .
                      $type . "|" .
                      $message . "\n";
@@ -191,4 +181,3 @@ VALUES(
     }
     
 }
-?>

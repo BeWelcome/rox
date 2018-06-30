@@ -11,7 +11,6 @@ class PageWithHTML extends AbstractBasePage
         '/build/manifest.js',
         '/build/bewelcome.js',
         '/script/main.js?9',
-        '/build/select2.js',
 //         '/script/common/common.js?1',
         '/script/common/initialize.js?1',
     );

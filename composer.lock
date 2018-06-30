@@ -53,7 +53,7 @@
         },
         {
             "name": "cakephp/cache",
-            "version": "3.6.5",
+            "version": "3.6.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cache.git",
@@ -96,16 +96,16 @@
         },
         {
             "name": "cakephp/collection",
-            "version": "3.6.5",
+            "version": "3.6.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/collection.git",
-                "reference": "1501057ca1d229373c21d03fdd2f25ce71360139"
+                "reference": "c3cce01e8c76a98cb6149f958e9b7acae5e1aa74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/collection/zipball/1501057ca1d229373c21d03fdd2f25ce71360139",
-                "reference": "1501057ca1d229373c21d03fdd2f25ce71360139",
+                "url": "https://api.github.com/repos/cakephp/collection/zipball/c3cce01e8c76a98cb6149f958e9b7acae5e1aa74",
+                "reference": "c3cce01e8c76a98cb6149f958e9b7acae5e1aa74",
                 "shasum": ""
             },
             "require": {
@@ -138,20 +138,20 @@
                 "collections",
                 "iterators"
             ],
-            "time": "2018-05-31T20:11:56+00:00"
+            "time": "2018-06-10T19:23:43+00:00"
         },
         {
             "name": "cakephp/core",
-            "version": "3.6.5",
+            "version": "3.6.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/core.git",
-                "reference": "43985aaf802847238ff625651a3677ed56ffcbb4"
+                "reference": "ad1ddaf85c88332392d999db4993ff1fb5429bea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/core/zipball/43985aaf802847238ff625651a3677ed56ffcbb4",
-                "reference": "43985aaf802847238ff625651a3677ed56ffcbb4",
+                "url": "https://api.github.com/repos/cakephp/core/zipball/ad1ddaf85c88332392d999db4993ff1fb5429bea",
+                "reference": "ad1ddaf85c88332392d999db4993ff1fb5429bea",
                 "shasum": ""
             },
             "require": {
@@ -187,20 +187,20 @@
                 "core",
                 "framework"
             ],
-            "time": "2018-05-26T15:25:09+00:00"
+            "time": "2018-06-21T02:41:27+00:00"
         },
         {
             "name": "cakephp/database",
-            "version": "3.6.5",
+            "version": "3.6.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/database.git",
-                "reference": "b564c821f10048b854fed5e2a04c4e68ed0d1193"
+                "reference": "a7200722b2fbf22502700b9d8515581007616a77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/database/zipball/b564c821f10048b854fed5e2a04c4e68ed0d1193",
-                "reference": "b564c821f10048b854fed5e2a04c4e68ed0d1193",
+                "url": "https://api.github.com/repos/cakephp/database/zipball/a7200722b2fbf22502700b9d8515581007616a77",
+                "reference": "a7200722b2fbf22502700b9d8515581007616a77",
                 "shasum": ""
             },
             "require": {
@@ -237,20 +237,20 @@
                 "database abstraction",
                 "pdo"
             ],
-            "time": "2018-05-23T01:22:07+00:00"
+            "time": "2018-06-13T23:11:10+00:00"
         },
         {
             "name": "cakephp/datasource",
-            "version": "3.6.5",
+            "version": "3.6.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/datasource.git",
-                "reference": "0cd8c4b760d50b908dc5f94b8cae4d191a906a5d"
+                "reference": "8ac1cd771b67bca472df53aa4f4105924419d8c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/datasource/zipball/0cd8c4b760d50b908dc5f94b8cae4d191a906a5d",
-                "reference": "0cd8c4b760d50b908dc5f94b8cae4d191a906a5d",
+                "url": "https://api.github.com/repos/cakephp/datasource/zipball/8ac1cd771b67bca472df53aa4f4105924419d8c8",
+                "reference": "8ac1cd771b67bca472df53aa4f4105924419d8c8",
                 "shasum": ""
             },
             "require": {
@@ -287,11 +287,11 @@
                 "entity",
                 "query"
             ],
-            "time": "2018-06-07T10:03:12+00:00"
+            "time": "2018-06-20T18:56:54+00:00"
         },
         {
             "name": "cakephp/utility",
-            "version": "3.6.5",
+            "version": "3.6.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/utility.git",
@@ -1966,16 +1966,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "1.31.0",
+            "version": "1.31.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "4dbe0e51d24a4c7e000999324d21fc25edbf7b05"
+                "reference": "385780c8ca2dbfd25452666e3f55e8dc1df58c41"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/4dbe0e51d24a4c7e000999324d21fc25edbf7b05",
-                "reference": "4dbe0e51d24a4c7e000999324d21fc25edbf7b05",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/385780c8ca2dbfd25452666e3f55e8dc1df58c41",
+                "reference": "385780c8ca2dbfd25452666e3f55e8dc1df58c41",
                 "shasum": ""
             },
             "require": {
@@ -2017,7 +2017,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2018-06-24T14:32:22+00:00"
+            "time": "2018-06-25T13:15:16+00:00"
         },
         {
             "name": "pagerfanta/pagerfanta",
@@ -3188,20 +3188,20 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v3.4.11",
+            "version": "v3.4.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "8eb567d8398ce31a402ea8db3e6b5b1faf121cbc"
+                "reference": "c36f8cb21b5f1661a14fdb8cef9cc611d54a3494"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/8eb567d8398ce31a402ea8db3e6b5b1faf121cbc",
-                "reference": "8eb567d8398ce31a402ea8db3e6b5b1faf121cbc",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/c36f8cb21b5f1661a14fdb8cef9cc611d54a3494",
+                "reference": "c36f8cb21b5f1661a14fdb8cef9cc611d54a3494",
                 "shasum": ""
             },
             "require": {
-                "doctrine/common": "~2.4",
+                "doctrine/common": "~2.4@stable",
                 "ext-xml": "*",
                 "fig/link-util": "^1.0",
                 "php": "^5.5.9|>=7.0.8",
@@ -3339,7 +3339,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2018-05-25T13:16:49+00:00"
+            "time": "2018-06-25T12:29:33+00:00"
         },
         {
             "name": "twig/extensions",
@@ -6168,16 +6168,16 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-            "version": "v3.4.11",
+            "version": "v3.4.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "63cdae00a75862fa543b765ba63d55f6b6397d0c"
+                "reference": "8a21eb6bedad38bf1f15d529c65eb9e17d0242fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/63cdae00a75862fa543b765ba63d55f6b6397d0c",
-                "reference": "63cdae00a75862fa543b765ba63d55f6b6397d0c",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/8a21eb6bedad38bf1f15d529c65eb9e17d0242fd",
+                "reference": "8a21eb6bedad38bf1f15d529c65eb9e17d0242fd",
                 "shasum": ""
             },
             "require": {
@@ -6230,7 +6230,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2018-05-16T12:49:49+00:00"
+            "time": "2018-06-10T07:25:02+00:00"
         },
         {
             "name": "symfony/polyfill-php72",

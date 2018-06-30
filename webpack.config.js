@@ -19,7 +19,7 @@ Encore
         './node_modules/cookieconsent/src/styles/media.css',
         './node_modules/cookieconsent/src/styles/themes/classic.css',
         './node_modules/cookieconsent/src/styles/themes/edgeless.css',
-        './node_modules/select2/dist/js/select2.full.js',
+        './node_modules/select2/dist/js/select2.full.js'
     ])
     .addEntry('jquery_ui', './src/AppBundle/Resources/js/jquery_ui.js')
     .addEntry('backwards', './src/AppBundle/Resources/js/backwards.js')
@@ -35,6 +35,8 @@ Encore
     .addEntry('leaflet', './src/AppBundle/Resources/js/leaflet.js')
     .addEntry('member/autocomplete', './src/AppBundle/Resources/js/member/autocomplete.js')
     .addEntry('admin/faqs', './src/AppBundle/Resources/js/admin/faqs.js')
+    .addEntry('chartjs', './node_modules/chart.js/dist/Chart.js')
+//    .addEntry('chartist', './node_modules/chart.js/dist/Chartist.js')
 //    .addEntry('jquery-typewatch', './src/AppBundle/Resources/js/jquery-typewatch.js')
 
     .enableSassLoader()

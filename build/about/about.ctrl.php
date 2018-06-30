@@ -57,7 +57,7 @@ class AboutController extends RoxControllerBase
                 }
                 $statsModel = new StatsModel();
                 // Generate new statsImages if needed
-                $statsModel->generateStatsImages();
+//                $statsModel->generateStatsImages();
                 $page = new AboutStatisticsPage();
                 $page->setModel($statsModel);
                 return $page;

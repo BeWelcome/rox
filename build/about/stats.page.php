@@ -12,6 +12,12 @@
  */
 class AboutStatisticsPage extends AboutBasePage
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->addEarlyLoadScriptFile('build/chartjs.js');
+    }
+
     protected function getPageTitle() {
         return 'About BeWelcome: Statistics';
     }
@@ -29,7 +35,7 @@ class AboutStatisticsPage extends AboutBasePage
         require 'templates/stats.php';
     }
 
-        protected function getColumnNames()
+    protected function getColumnNames()
     {
         // we don't need the other columns
         return array('col3');

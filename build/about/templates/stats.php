@@ -31,54 +31,213 @@ $words = new MOD_words();
 /*
  * Puts a set of divs onto the page that contain the generated images
  */
-function drawCharts($filename, $headlineCode, $words)
+function drawCharts($label, $headlineCode, $words)
 {
-?>
-    <div class="col-12 mb-1">
-        <span class="h3"><?php echo $words->get($headlineCode) ?></span>
+    ?>
+    <div class="row mb-1">
+        <div class="col-12">
+            <span class="h3"><?php echo $words->get($headlineCode) ?></span>
+        </div>
+    </div>
+    <div class="row mb-1">
+        <div class="col-12 col-md-6">
+            <div class="card">
+                <div class="card-header"><h4><?php echo $words->get('StatsHeadCol1') ?></h4></div>
+                <div class="card-body">
+                    <canvas id="<?php echo $label ?>-alltime"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="card">
+                <div class="card-header"><h4><?php echo $words->get('StatsHeadCol2') ?></h4></div>
+                <div class="card-body">
+                    <canvas id="<?php echo $label ?>-last2month"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="col-12 col-lg-6">
-        <h4><?php echo $words->get('StatsHeadCol1') ?></h4>
-        <div><?php echo '<img class="statimage" src="/stats/' . $filename . '-alltime.png">';?></div>
-    </div>
-
-    <div class="col-12 col-lg-6">
-        <h4><?php echo $words->get("StatsHeadCol2") ?></h4>
-        <div><?php echo '<img class="statimage" src="/stats/' . $filename . '-last2month.png">';?></div>
-    </div>
-
-<?php
- echo $words->flushBuffer();
+    <?php
+    echo $words->flushBuffer();
 }
 ?>
-<div class="row">
-<?php
-drawCharts('allmembers', 'StatsMembersAlltime', $words);
-drawCharts('newmembers', 'StatsNewMembersAlltime', $words);
-drawCharts('percentmembers', 'StatsPercentNewMembersLast', $words);
-drawCharts('login', 'StatsLoginAlltime', $words);
-drawCharts('percentlogin', 'StatsPercentLoginAlltime', $words);
-drawCharts('trust', 'StatsTrustAlltime', $words);
-drawCharts('messages', 'StatsMessagesAlltime', $words);
-?>
-<div class="col-12 col-lg-6">
-    <h4><?php echo $words->get("StatsLastLogin") ?></h4>
-    <div><img class="statimage" src="/stats/loginpie.png" /></div>
+    <?php
+    drawCharts('members', 'StatsMembersAlltime', $words);
+    drawCharts('newMembers', 'StatsNewMembersAlltime', $words);
+    drawCharts('newMembersPercent', 'StatsPercentNewMembersLast', $words);
+    drawCharts('membersLoggedIn', 'StatsLoginAlltime', $words);
+    drawCharts('newMembersLoggedInPercent', 'StatsPercentLoginAlltime', $words);
+    drawCharts('membersWithPositiveComments', 'StatsTrustAlltime', $words);
+    drawCharts('messageSent', 'StatsMessagesAlltime', $words);
+    drawCharts('messageRead', 'StatsMessagesAlltime', $words);
+    ?>
+<div class="row mb-1">
+    <div class="col-12 col-md-6">
+        <div class="card">
+            <div class="card-header"><h4><?php echo $words->get("StatsLastLogin") ?></h4></div>
+            <div class="card-body">
+                <canvas id="logins" width="100" height="130"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6">
+        <div class="card">
+            <div class="card-header"><h4><?php echo $words->get("StatsMemberCountry") ?></h4></div>
+            <div class="card-body">
+                <canvas id="countries" width="100" height="130"></canvas>
+            </div>
+        </div>
+    </div>
 </div>
+<div class="row mb-1">
+    <div class="col-12 col-md-6">
+        <div class="card">
+            <div class="card-header"><h4><?php echo $words->get("StatsLanguages") ?></h4></div>
+            <div class="card-body">
+                <canvas id="languages" width="100" height="130"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6">
+        <div class="card">
+            <div class="card-header"><h4><?php echo $words->get("StatsPreferredLanguages") ?></h4></div>
+            <div class="card-body">
+                <canvas id="preferred" width="100" height="130"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        function createLineChart(data, duration) {
+            let stats = data.statistics;
+            Object.keys(stats).forEach(
+                function(key) {
+                    let ctx = document.getElementById(key + "-" + duration).getContext('2d');
+                    let barChartData = {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Data',
+                            backgroundColor: '#999',
+                            borderColor: '#888',
+                            pointRadius: .5,
+                            data: stats[key]
+                        }]
+                    };
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: barChartData,
+                        options: {
+                            title: {
+                                display: false,
+                            },
+                            legend: {
+                                display: false
+                            }
 
-<div class="col-12 col-lg-6">
-    <h4><?php echo $words->get("StatsMemberCountry") ?></h4>
-    <div><img class="statimage" src="/stats/countrypie.png" /></div>
-</div>
+                        }
+                    });
+                }
+            );
+        }
 
-<div class="col-12 col-lg-6">
-    <h4><?php echo $words->get("StatsLanguages") ?></h4>
-    <div><img class="statimage" src="/stats/languagepie.png" /></div>
-</div>
+        function createLanguageChart(data) {
+            let labels = [];
+            let counts = [];
+            let i = 0;
+            Object.keys(data).forEach(
+                function(key) {
+                    labels[i] = key;
+                    counts[i] = data[key];
+                    i++;
+                }
+            );
+            let ctx = document.getElementById('languages').getContext('2d');
+            let barChartData = {
+                labels: labels,
+                datasets: [{
+                    label: 'Languages',
+                    backgroundColor: ["#BCE02E", "#E0642E","#E0D62E","#2E97E0","#B02EE0", "#E02E75", "#5CE02E","#E0B02E","#FF3179","#374AF9"],
+                    data: counts
+                }]
+            };
+            new Chart(ctx, {
+                type: 'bar',
+                data: barChartData,
+                options: {
+                    responsive: true,
+                    title: {
+                        display: false,
+                    },
+                    legend: {
+                        display: false,
+                        position: 'bottom'
+                    }
+                }
+            });
+        }
 
-<div class="col-12 col-lg-6">
-    <h4><?php echo $words->get("StatsPreferredLanguages") ?></h4>
-    <div><img class="statimage" src="/stats/preferredlanguagepie.png" /></div>
-</div>
-</div>
+        function createPieChart(data, canvas) {
+            let labels = [];
+            let counts = [];
+            let i = 0;
+            Object.keys(data).forEach(
+                function(key) {
+                    labels[i] = key;
+                    counts[i] = data[key];
+                    i++;
+                }
+            );
+            let ctx = document.getElementById(canvas).getContext('2d');
+            let pieChartData = {
+                labels: labels,
+                datasets: [{
+                    label: 'Data',
+                    backgroundColor: ["#BCE02E", "#E0642E","#E0D62E","#2E97E0","#B02EE0", "#E02E75", "#5CE02E","#E0B02E","#FF3179","#374AF9",
+                    "#E105A7", "#58A29E", "#4ADB83", "#916184", "#0EB109"],
+                    data: counts
+                }]
+            };
+            console.log(pieChartData);
+            new Chart(ctx, {
+                type: 'pie',
+                data: pieChartData,
+                options: {
+                    responsive: true,
+                    title: {
+                        display: false,
+                    },
+                    legend: {
+                        display: true,
+                        position: 'bottom'
+                    }
+                }
+            });
+        }
+
+        $.post("/stats/data/alltime",
+            function (data)
+            {
+                createLineChart(data, 'alltime');
+            }
+        );
+        $.post("/stats/data/last2month",
+            function (data)
+            {
+                createLineChart(data, 'last2month');
+            }
+        );
+        $.post("/stats/data/other",
+            function (data)
+            {
+                console.log(data);
+                createLanguageChart(data.languages);
+                createPieChart(data.preferred, 'preferred');
+                createPieChart(data.logins, 'logins');
+                createPieChart(data.countries, 'countries');
+            }
+        );
+    });
+</script>
+

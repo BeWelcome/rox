@@ -22,7 +22,6 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
-/* Include all the classes */
 ?>
 <div class="alert alert-info" role="alert">
     <span class="h5"><?php echo $words->get("StatsHead") ?></span>

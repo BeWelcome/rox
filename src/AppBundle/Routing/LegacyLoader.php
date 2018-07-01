@@ -83,7 +83,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('faq_category', '/faq/{category}');
         $this->addRouteDirectly('about_faq_category', '/about/faq/{category}');
         $this->addRouteDirectly('about', '/about');
-        $this->addRouteDirectly('about', '/about/thepeople');
+        $this->addRouteDirectly('about_people', '/about/thepeople');
         $this->addRouteDirectly('stats', '/stats');
         $this->addRouteDirectly('stats_images', '/stats/{image}.png');
         $this->addRouteDirectly('getactive', '/about/getactive');

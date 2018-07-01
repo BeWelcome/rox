@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'credits.title' | trans }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ 'credits.headline' | trans }}</h1>
+    <p>{{ 'credits.abstract' | trans }}</p>
+    <dl>
+        <dt>Geonames</dt>
+        <dd>We use the data from Geonames.org to help you find your way around the world.</dd>
+    </dl>
+{% endblock content %}

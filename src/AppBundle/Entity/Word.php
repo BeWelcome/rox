@@ -13,8 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  * Word.
  *
  * @ORM\Table(name="words", uniqueConstraints={@ORM\UniqueConstraint(name="code", columns={"code", "IdLanguage"}), @ORM\UniqueConstraint(name="code_2", columns={"code", "ShortCode"})})
- * @ORM\Entity
- *
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\WordRepository")
+
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
  */

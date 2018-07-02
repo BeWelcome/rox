@@ -109,3 +109,53 @@ blockquote {
 main {
   margin-top: 1rem;
 }
+
+.metrics {
+  margin: 1em 0 0;
+  overflow: auto;
+}
+
+.metrics .metric {
+  float: left;
+  margin: 0 1em 1em 0;
+}
+
+.metric {
+  background: #FFF;
+  border: 1px solid #E0E0E0;
+  box-shadow: 0 0 1px rgba(128, 128, 128, .2);
+  min-width: 100px;
+  min-height: 70px;
+}
+
+.metric .value {
+  display: block;
+  font-size: 28px;
+  padding: 8px 15px 4px;
+  text-align: center;
+}
+
+.metric .label {
+  background: #E0E0E0;
+  color: #222;
+  display: block;
+  font-size: 12px;
+  padding: 5px;
+  text-align: center;
+}
+
+footer {
+  display: flex;
+  flex-direction: column;
+}
+
+/* make sure translations are shown above the footer but loaded after it as this allows to translate the footer as well */
+#translations {
+  order: 1;
+
+  margin-top: 1em;
+}
+
+#footer_content {
+  order: 2;
+}

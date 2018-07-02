@@ -6,6 +6,7 @@ use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
@@ -183,8 +184,8 @@ class MessageRepository extends EntityRepository
     public function findLatestMessages(Member $member, $filter, $sort, $sortDirection, $page = 1, $items = 10)
     {
         $queryBuilder = $this->queryLatestMessages($member, $filter, $sort, $sortDirection);
-        $adpater = new DoctrineORMAdapter($queryBuilder);
-        $paginator = new Pagerfanta($adpater);
+        $adapter = new DoctrineORMAdapter($queryBuilder);
+        $paginator = new Pagerfanta($adapter);
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
 
@@ -195,7 +196,6 @@ class MessageRepository extends EntityRepository
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
      * @param Member $member
-     * @param $url
      * @param $filter
      * @param $sort
      * @param $sortDirection
@@ -206,7 +206,7 @@ class MessageRepository extends EntityRepository
      */
     public function findLatestRequests(Member $member, $filter, $sort, $sortDirection, $page = 1, $items = 10)
     {
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatest($member, self::REQUESTS_ONLY, $filter, $sort, $sortDirection), false));
+        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatestRequests($member, $filter, $sort, $sortDirection), false));
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
 
@@ -228,7 +228,7 @@ class MessageRepository extends EntityRepository
      */
     public function findLatestRequestsAndMessages(Member $member, $filter, $sort, $sortDirection, $page = 1, $items = 10)
     {
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatest($member, self::REQUESTS_ONLY, $filter, $sort, $sortDirection), false));
+        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatestRequestsAndMessages($member, $filter, $sort, $sortDirection), false));
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
 

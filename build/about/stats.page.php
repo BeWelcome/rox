@@ -41,6 +41,15 @@ class AboutStatisticsPage extends AboutBasePage
         return array('col3');
     }
 
+    protected function columnsArea($mid_column_name)
+    {
+        ?>
+        <div id="content" class="px-3">
+            <?php $this->column_col3() ?>
+        </div>
+        <?php
+    }
+
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();

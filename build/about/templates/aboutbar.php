@@ -23,4 +23,5 @@ $words = new MOD_words();
     <a href="privacy" class="list-group-item nav-link"><?php echo $words->get('PrivacyPage') ?></a>
     <a href="about/commentguidelines" class="list-group-item nav-link"><?php echo $words->get('CommentGuidelinesPage') ?></a>
     <a href="stats" class="list-group-item nav-link"><?php echo $words->get('StatsPage') ?></a>
+    <a href="about/credits" class="list-group-item nav-link"><?php echo $words->get('credits.title') ?></a>
 </div>

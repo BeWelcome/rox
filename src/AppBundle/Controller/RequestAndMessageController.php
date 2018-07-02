@@ -337,7 +337,7 @@ class RequestAndMessageController extends Controller
     }
 
     /**
-     * @Route("/both/{folder}", name="messages",
+     * @Route("/both/{folder}", name="both",
      *     defaults={"folder": "inbox"})
      *
      * @param Request $request

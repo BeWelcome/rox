@@ -104,9 +104,9 @@ class PDB_mysqli extends PDB {
             self::$_instance->_MySQLi = $mysqli;
             self::$_instance->_dbname = $args['dbname'];
             $queries = array (
-                "SET NAMES 'utf8'", 
-                "SET CHARACTER SET 'utf8'", 
-                "SET collation_connection='utf8_general_ci'",
+                "SET NAMES 'utf8mb4'",
+                "SET CHARACTER SET 'utf8mb4'",
+                "SET collation_connection='utf8mb4_unicode_520_ci'",
             );
             foreach ($queries as $query) {
                 $q = self::$_instance->exec($query);

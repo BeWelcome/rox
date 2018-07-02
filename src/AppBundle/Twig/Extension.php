@@ -200,6 +200,7 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
             'title' => 'BeWelcome',
             'languages' => $languages,
             'robots' => 'ALL',
+            'locale' => $locale,
         ];
     }
 }

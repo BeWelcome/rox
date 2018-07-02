@@ -85,8 +85,12 @@ class StatisticsController extends Controller
         $messageRead = [];
         foreach ($statistics as $val) {
             $members[$i] = $val->NbActiveMembers;
-            $yearWeek = strtotime(substr($val->week, 0, 4).'-W'.substr($val->week, 4, 2).'-1');
-            $labels[] = date('Y-m-d', $yearWeek);
+            if (isset($val->week)) {
+                $yearWeek = strtotime(substr($val->week, 0, 4).'-W'.substr($val->week, 4, 2).'-1');
+                $labels[] = date('Y-m-d', $yearWeek);
+            } else {
+                $labels[] = date('Y-m-d', strtotime('-'.(60 - $i).'days'));
+            }
             if (0 === $i) {
                 $newMembers[$i] = 0;
             } else {

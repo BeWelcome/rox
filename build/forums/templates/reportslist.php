@@ -37,41 +37,46 @@ $styles = array( 'highlight', 'blank' ); // alternating background for table row
 $iiMax = count($list) ; // This retrieve the number of polls
 ?>
 
-<table class="full">
+<table class="table table-striped table-hover">
 
 <?php if ($list != false) { ?>
-    <tr>
-        <th>Status</th>
-        <th>Author</th>
-        <th>Title and text</th>
-        <th>Updated</th>
-        <th>Action</th>
-    </tr>
+
+    <thead>
+        <tr>
+            <th scope="col">Status</th>
+            <th scope="col">Author</th>
+            <th scope="col">Title and text</th>
+            <th scope="col">Updated</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+
+
 <?php } ?>
+
+    <tbody>
 
 <?php
 for ($ii = 0; $ii < $iiMax; $ii++) {
     $p = $list[$ii];
     ?>
-    <tr class="<?=$styles[$ii%2] ?>">
-        <td>
-            <h4><?=$p->Status ?></h4>
-        </td>
+    <tr>
+        <th scope="row"><?=$p->Status ?></th>
         <td>
             <?
             if (!empty($p->IdReporter)) {
                 echo MOD_layoutbits::PIC_50_50($p->Username) ;
-                echo "<br />" ;
-                echo "<a class=\"username\" href=\"members/",$p->Username,"\">",$p->Username,"</a>" ;
+                echo '<br>';
+                echo '<a class="username" href="members"' . $p->Username . '">' . $p->Username . '</a>';
             }
             ?>
         </td>
-        <td><? echo "<b>",$p->PostComment,"</b></td>" ; ?>
-        <td>
-		<? echo "<a href='forums/reporttomod/",$p->IdPost,"/".$p->IdReporter."'>view report</a>" ;?>
-		</td>
+        <td class="font-weight-bold"><?= $p->PostComment; ?></td>
+        <td><a href="forums/reporttomod/<?= $p->IdPost; ?>/<?= $p->IdReporter; ?>">view report</a></td>
+        <td></td>
     </tr>
     <?php
 }
 ?>
+    </tbody>
 </table>

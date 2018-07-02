@@ -6,26 +6,26 @@
     <thead class="thead-light">
     <tr>
         <th colspan="2">{{ 'SearchHeaderMember' | trans }}</th>
-        <th>{{ 'ProfileSummary' | trans }}</th>
         <th>{{ 'SearchHeaderDetails' | trans }}</th>
+        <th>{{ 'ProfileSummary' | trans }}</th>
     </tr>
     </thead>
     <tbody>
     {% for member in pager.currentPageResults %}
     {% set accommodationIcon %}<img src="members/avatar/{{ member.Username }}">{% endset %}
     <tr>
-        <td class="memberleft align-top">
+        <td>
             {{ macros.avatar(member.Username, 100, true) }}
             <div>{{ macros.profilelink( member.Username ) }}</div>
-            </td>
-        <td class="memberright align-top">
+        </td>
+        <td>
             <div>
                 {% set displayName %}
                 {% if member.Name is empty %}{{ member.Username }}{% else %}{{ member.Name }}{% endif %}
                 {% endset %}
                 <strong>{{ macros.profilelink( member.Username, displayName, false, true ) }}</strong>
                 {% if (member.MessageCount) %}
-                <a href="messages/with/ {{ member.Username }}"><i class="fa fa-envelope-o" alt="{{ 'messages_allmessageswith' | trans | format( member.Username ) | raw }} | trans "
+                <a href="messages/with/{{ member.Username }}"><i class="fa fa-envelope-o" alt="{{ 'messages_allmessageswith' | trans | format( member.Username ) | raw }} | trans "
                                                                   title="{{ 'messages_allmessageswith' | trans | format( member.Username ) | raw }}"></i></a>
                 {% endif %}
             </div>
@@ -41,20 +41,22 @@
                 {{ member.CityName }}, {{ member.CountryName }}<br />
                 <br /> 
                 {{ member.Occupation | purify }}
+                {{ 'SearchMemberSinceInfo' | trans | format( '<strong>' ~ member.created ~ '</strong>' ) | raw }}
             </div>
-            </td> 
-        <td class="summary py-2"><a href="/members/{{ member.Username }}" style="color: #000; text-underline: none; display: block; width: 100%;">{{ member.ProfileSummary | purify }}</a></td>
-        <td class="details">
-                <div class="left"><img src="/images/icons/{{ member.Accommodation }}.png" alt="{{ member.Accommodation | trans }}"></div>
-                <div class="w-100"><strong style="white-space: nowrap;">{{ 'SearchMaxGuestInfo' | trans | format( member.MaxGuest ) | raw }}</strong><br />
-                    <strong>{{ 'SearchCommentsInfo' | trans | format( member.CommentCount) | raw}}</strong>
-                </div>
-            <div class="small">
-                {{ 'SearchMemberSinceInfo' | trans | format( '<strong>' ~ member.created ~ '</strong>' ) | raw }}<br />
-                {# \todo Use span to style last login info #}
+        </td>
+        <td>
+            <div class="row px-2">
+                <div><img src="/images/icons/{{ member.Accommodation }}.png" alt="{{ member.Accommodation | trans }}"></div>
+                <div class="ml-2"><i class="fa fa-2x fa-bed p-1"></i><span class="h4">{{ member.MaxGuest }}</span></div>
+            </div>
+            <div class="w-100 font-weight-bold nowrap">
+                <a href="members/{{ member.Username }}/comments">{{ 'SearchCommentsInfo' | trans | format( member.CommentCount) | raw}}</a>
+            </div>
+            <div class="small mt-2">
                 <span>{{ 'SearchMemberLastLoginInfo' | trans | format( '<strong>' ~ member.LastLogin ~ '</strong>') | raw }}</span>
             </div>
         </td>
+        <td class="col summary py-2"><a href="/members/{{ member.Username }}" style="color: #000; text-underline: none; display: block; width: 100%;">{{ member.ProfileSummary | purify }}</a></td>
     </tr>
     {% endfor %}
     </tbody>

@@ -20,7 +20,7 @@
         <div class="d-flex flex-wrap justify-content-between w-100">
             <div class="form-group my-3">
                 <div class="input-group">
-                    <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-lg fa-bed"></i></span>
+                    <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-lg fa-globe"></i></span>
                     {{ form_widget(form.search, {'attr': {'class': 'search-picker form-control'}, 'required': false }) }}
                 </div>
             </div>
@@ -38,6 +38,7 @@
                 </div>
             </div>
             <div class="form-group">
+                <i class="fa fa-lg fa-bed" alt="hosts at least"></i>
                 {{ form_label(form.search_can_host) }}
                 {{ form_widget(form.search_can_host, {'attr': {'class' : 'form-control select2',
                     'data-minimum-results-for-search': '-1'} }) }}

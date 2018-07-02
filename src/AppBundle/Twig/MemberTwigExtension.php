@@ -101,7 +101,7 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
             ],
             'words' => [
                 'AdminWord',
-                'admin_word_overview',
+                'translations',
             ],
             'flags' => [
                 'AdminFlags',

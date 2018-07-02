@@ -116,7 +116,7 @@
                                                 <a href="/groups/mygroups" class="btn btn-block btn-primary-outline py-0 pl-1 text-left"><i class="fa fa-users"></i> {{ 'MyGroups' | trans }}</a>
                                             </div>
                                             <div>
-                                                <a href="/message" class="btn btn-block btn-primary-outline py-0 pl-1 text-left mt-1"><i class="fa fa-envelope-o"></i> {{ 'MyMessages' | trans }}</a>
+                                                <a href="{{ path('messages') }}" class="btn btn-block btn-primary-outline py-0 pl-1 text-left mt-1"><i class="fa fa-envelope-o"></i> {{ 'MyMessages' | trans }}</a>
                                                 <a href="/mynotes" class="btn btn-block btn-primary-outline py-0 pl-1 text-left"><i class="fa fa-list"></i> {{ 'ProfileMyNotes' | trans }}</a>
                                                 <a href="{{ url( 'security_logout' ) }}" class="btn btn-block btn-primary-outline py-0 pl-1 text-left"><i class="fa fa-power-off"></i> {{ 'Logout' | trans }}</a>
                                             </div>
@@ -156,10 +156,10 @@
 
                     {# messages #}
                     <li class="nav-item float-right">
-                        {# {{ 'MyInbox' | trans }} #}<div id="messageCount"><a href="/messages" class="nav-link"><i class="fa fa-lg fa-envelope"></i> <span class="badge badge-warning d-md-none d-lg-inline-block">{{ messageCount }}</span></a></div>
+                        {# {{ 'MyInbox' | trans }} #}<div id="messageCount"><a href="{{ path('messages') }}" class="nav-link"><i class="fa fa-lg fa-envelope"></i> <span class="badge badge-warning d-md-none d-lg-inline-block">{{ messageCount }}</span></a></div>
                     </li>
                     <li class="nav-item float-right">
-                        {# {{ 'Myrequests' | trans }} #} <div id="requestCount"><a href="/requests" class="nav-link"><i class="fa fa-lg fa-bed"></i> <span class="badge badge-warning d-md-none d-lg-inline-block">{{ requestCount }}</span></a></div>
+                        {# {{ 'Myrequests' | trans }} #} <div id="requestCount"><a href="{{ path('requests') }}" class="nav-link"><i class="fa fa-lg fa-bed"></i> <span class="badge badge-warning d-md-none d-lg-inline-block">{{ requestCount }}</span></a></div>
                     </li>
 
                     {# logout #}

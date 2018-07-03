@@ -20,6 +20,10 @@ tinymce.init({
     plugin_preview_width : "600",
     plugin_preview_height : "500",
     body_class : "forumsmessage",
-    mobile: { theme: 'mobile' },
+    mobile: {
+        theme: 'mobile',
+        plugins: "image, charmap, link, autolink, paste, preview",
+        toolbar: "undo, redo,|,bold,italic,underline,strikethrough,|,bullist,numlist,|,forecolor,backcolor,|,charmap,link,image,|,blockquote,|,preview"
+    },
     branding: false
 });

@@ -5,7 +5,7 @@ tinymce.init({
     mode: "textareas",
     editor_selector : "mce",
     editor_deselector : "nomce",
-    // plugins : "advimage,preview,fullscreen,autolink",
+    //plugins : "advimage,preview,fullscreen,autolink",
     plugins: "image, charmap, link, autolink, paste, preview",
     theme: "modern",
     content_css : http_baseuri + "styles/css/minimal/screen/tinymce.css",
@@ -20,6 +20,10 @@ tinymce.init({
     plugin_preview_width : "600",
     plugin_preview_height : "500",
     body_class : "forumsmessage",
-    mobile: { theme: 'mobile' },
+    mobile: {
+        theme: 'mobile',
+        plugins: "image, charmap, link, autolink, paste, preview",
+        toolbar: "undo, redo,|,bold,italic,underline,strikethrough,|,bullist,numlist,|,forecolor,backcolor,|,charmap,link,image,|,blockquote,|,preview"
+    },
     branding: false
 });

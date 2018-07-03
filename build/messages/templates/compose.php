@@ -27,7 +27,7 @@ $member = $model->getMemberWithUsername($receiver_username);
 ?>
 <div id="message" >
     <div id="shade_top"></div>
-    <div id="messageheader" >
+    <div id="messageheader" style="height:6em">
         <div id="messageside" class="float_right">
       <p class="small grey">
         <?=$words->get('LivesIn')?> <strong><?=$member->City?>, <?=$member->Country?></strong><br />

@@ -382,7 +382,8 @@ dl.list {
    * @section content-forms
    */
 
-  form {overflow:hidden;}
+  form {}
+
   fieldset {
     border: 1px solid #ccc;
     padding: 2em;

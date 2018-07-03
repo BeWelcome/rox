@@ -22,8 +22,8 @@ tinymce.init({
     body_class : "forumsmessage",
     mobile: {
         theme: 'mobile',
-        plugins: "image, charmap, link, autolink, paste, preview",
-        toolbar: "undo, redo,|,bold,italic,underline,strikethrough,|,bullist,numlist,|,forecolor,backcolor,|,charmap,link,image,|,blockquote,|,preview"
+        plugins: [ 'autosave', 'lists', 'autolink' ],
+        toolbar: [ 'undo', 'bold', 'italic', 'underline', 'link', 'bulllist', 'numlist' ]
     },
     branding: false
 });

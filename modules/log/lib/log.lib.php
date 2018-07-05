@@ -165,8 +165,8 @@ VALUES(
 	' . $idMember . ',
 	\'' . $message . '\',
 	\'' . $type . '\',
-	now(),
-) ;';
+	now()
+)';
  
        $res = $this->dao->query($query);
 		if (!$res) 	{ // If the query has failed, log something in the text log file, and after rais the exception

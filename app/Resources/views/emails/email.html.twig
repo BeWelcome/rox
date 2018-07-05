@@ -2,19 +2,19 @@
 <html lang="en">
 <head>
     <title>Title</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <style type="text/css"><!--
         blockquote {
             color: #444;
             background: #f8f8f8;
             border: 1px #ddd solid;
-            border-left: 8px #ddd solid;
-            padding: 5px 20px;
-            margin: 0 0 20px 5px;
+            border-left: 8px #f37000 solid;
+            padding: 0.5rem 2rem;
+            margin: 0 0 1rem 0.5rem;
         }
 
         body {
-            background-color: #cccccc;
+            background-color: #ccc;
             color: #333;
             font-size: 1em;
             line-height: 1.5em;
@@ -22,21 +22,65 @@
             margin: 0;
             padding: 0;
         }
+
         .unsubscribe {
             font-size: 0.7em;
             line-height: 1.1em;
         }
+
+        h1 {
+            color: #fff;
+            padding-top: 0.7rem;
+        }
+
+        #message {
+            background: #e5e5e5;
+            border-radius: 10px;
+            margin: 1rem;
+        }
+
+        .header {
+            background-color: #f37000;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            min-height: 50px;
+        }
+
+        .logo {
+            float: left;
+            padding: 0.5rem;
+            padding-right: 2rem;
+        }
+
+        .content {
+            padding: 0.5rem 1rem;
+        }
+
+        #footer {
+            padding-left: 0.5rem;
+            font-size: 0.8rem;
+        }
+
         --></style>
 </head>
 <body>
-<div style="margin: 20px 20px 0 20px;
-padding: 5px 10px;
-background: #e5e5e5;
-border-top-left-radius: 10px;
-border-top-right-radius: 10px;
-height:50px;">
-    {% block content %}{% endblock content %}
-    <p>(cc) {{ "now" | date("Y") }} BeWelcome</p>
+<div id="message">
+    <div class="header">
+        <div>
+            <a href="https://www.bewelcome.org"><img
+                        src="https://alpha.bewelcome.org/bundles/app/images/logo_index_top.png" class="logo"></a>
+            <h1>Title</h1>
+        </div>
+    </div>
+    <div class="content">
+        {% block content %}{% endblock content %}
+
+    </div>
+    <div id="footer">
+        <p>(cc) {{ "now" | date("Y") }} BeWelcome</p>
+    </div>
+
 </div>
+
 </body>
 </html>

@@ -1,6 +1,7 @@
-<script type="text/javascript">//<!--
+<script type="text/javascript">
+//<!--
 tinymce.srcMode = '';
-tinymce.baseURL = http_baseuri+'script/tinymce-4.7.11';
+tinymce.baseURL = http_baseuri+'script/tinymce-4.7.13';
 tinymce.init({
     menubar : false,
     mode: "exact",
@@ -20,7 +21,11 @@ tinymce.init({
     plugin_preview_width : "600",
     plugin_preview_height : "500",
     body_class : "forumsmessage",
-    mobile: { theme: 'mobile' },
+    mobile: {
+        theme: 'mobile',
+        plugins: [ 'autosave', 'lists', 'autolink' ],
+        toolbar: [ 'undo', 'bold', 'italic', 'underline', 'link', 'bulllist', 'numlist' ]
+    },
     branding: false
 });
 //-->

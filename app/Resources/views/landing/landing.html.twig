@@ -275,7 +275,7 @@
                             class="btn btn-sm btn-primary">{{ 'Read more' | trans }}</a>
                 <div>
                     <small>{{ communityNews.createdAt.diffForHumans }}</small>
-                    {% set commentsCount = communityNews.comments | length %}<small class="float-right">{% trans %}%commentsCount% comments{% endtrans %}</small>
+                    {% set commentsCount = communityNews.comments | length %}<small class="float-right">{% transchoice commentsCount with {'%commentsCount%': commentsCount} %}communityNewsComments{% endtranschoice %}</small>
                 </div>
                 <a href="{{ url('communitynews') }}" class="btn btn-outline-primary btn-homewhite btn-block mt-2"><i
                             class="fa fa-newspaper-o"></i> All news</a>

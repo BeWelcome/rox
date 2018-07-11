@@ -11,10 +11,13 @@ use AppBundle\Encoder\LegacyPasswordEncoder;
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\Mapping as ORM;
 use Rox\Core\Exception\RuntimeException;
 use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Persistence\ObjectManagerAware;
 
 /**
  * Member.
@@ -25,7 +28,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
  */
-class Member implements UserInterface, \Serializable, EncoderAwareInterface
+class Member implements UserInterface, \Serializable, EncoderAwareInterface, ObjectManagerAware
 {
     const ACC_YES = 'anytime';
     const ACC_MAYBE = 'dependonrequest';
@@ -35,6 +38,11 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     const ACTIVE_SEARCH = "'Active', 'ActiveHidden', 'OutOfRemind', 'Pending'";
     const ACTIVE_WITH_MESSAGES = "'Active', 'OutOfRemind', 'Pending'";
     const MEMBER_COMMENTS = "'Active', 'ActiveHidden', 'AskToLeave', 'ChoiceInactive', 'OutOfRemind', 'Pending'";
+
+    /**
+     * @var ObjectManager
+     */
+    protected $em;
 
     /**
      * @var string
@@ -2388,7 +2396,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
      * and populated in any number of different ways when the user object
      * is created.
      *
-     * @return (Role|string)[] The user roles
+     * @return array string[] The user roles
      */
     public function getRoles()
     {
@@ -2634,5 +2642,47 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface
     public function getHideAttribute()
     {
         return $this->hideAttribute;
+    }
+
+    public function hasRightsForLocale($locale)
+    {
+        $hasRight = false;
+        $volunteerRights = $this->getVolunteerRights();
+        if (null !== $volunteerRights) {
+            // first check if member has the word right
+            $word = $this->em->getRepository(Right::class)->findOneBy(['name' => 'Words']);
+
+            /** @var RightVolunteer $volunteerRight */
+            foreach ($volunteerRights->getIterator() as $volunteerRight) {
+                if ($volunteerRight->getRight() == $word) {
+                    $strScope = str_replace('"', '', str_replace(',', ';', $volunteerRight->getScope()));
+                    $scope = explode(';', $strScope);
+                    if (in_array($locale, $scope, true))
+                    {
+                        $hasRight = true;
+                    }
+                    if (in_array('All', $scope, true))
+                    {
+                        $hasRight = true;
+                    }
+                }
+            }
+
+        }
+
+        return $hasRight;
+    }
+
+    /**
+     * Injects responsible ObjectManager and the ClassMetadata into this persistent object.
+     *
+     * @param ObjectManager $objectManager
+     * @param ClassMetadata $classMetadata
+     *
+     * @return void
+     */
+    public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
+    {
+        $this->em = $objectManager;
     }
 }

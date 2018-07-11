@@ -35,157 +35,162 @@
 </div>
 
 {% if is_granted('ROLE_ADMIN_WORDS') and not is_translation_interface is defined %}
-<div id="translations" class="container">
-    {% set translations = getTranslations() %}
-    {% set collector = translations.collector %}
-    {% if collector.messages|length %}
-    <div class="row">
-        <div class="col-12">
-            <h2>{{ 'Translation statistics' | trans }}</h2>
+    {% set hasEnglishRights = app.user.hasRightsForLocale('en') %}
+    {% set hasCurrentLocalRights =  app.user.hasRightsForLocale(locale) %}
+    <div id="translations" class="container">
+        {% set translations = getTranslations() %}
+        {% set collector = translations.collector %}
+        {% if collector.messages|length %}
+        <div class="row">
+            <div class="col-12">
+                <h2>{{ 'Translation statistics' | trans }}</h2>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-12 metrics">
-            <div class="metric">
-                <span class="value">{{ collector.locale|default('-') }}</span>
-                <span class="label">Locale</span>
-            </div>
-            <div class="metric">
-                <span class="value">{{ collector.fallbackLocales|join(', ')|default('-') }}</span>
-                <span class="label">Fallback locales</span>
-            </div>
-            <div class="metric">
-                <span class="value">{{ collector.countDefines }}</span>
-                <span class="label">Defined messages</span>
-            </div>
+        <div class="row">
+            <div class="col-12 metrics">
+                <div class="metric">
+                    <span class="value">{{ collector.locale|default('-') }}</span>
+                    <span class="label">Locale</span>
+                </div>
+                <div class="metric">
+                    <span class="value">{{ collector.fallbackLocales|join(', ')|default('-') }}</span>
+                    <span class="label">Fallback locales</span>
+                </div>
+                <div class="metric">
+                    <span class="value">{{ collector.countDefines }}</span>
+                    <span class="label">Defined messages</span>
+                </div>
 
-            <div class="metric">
-                <span class="value">{{ collector.countFallbacks }}</span>
-                <span class="label">Fallback messages</span>
-            </div>
+                <div class="metric">
+                    <span class="value">{{ collector.countFallbacks }}</span>
+                    <span class="label">Fallback messages</span>
+                </div>
 
-            <div class="metric">
-                <span class="value">{{ collector.countMissings }}</span>
-                <span class="label">Missing messages</span>
+                <div class="metric">
+                    <span class="value">{{ collector.countMissings }}</span>
+                    <span class="label">Missing messages</span>
+                </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-12">
+                <h2>Translation Messages</h2>
+            </div>
+        </div>
+        {% block messages %}
+            {% set messages_defined, messages_missing, messages_fallback = [], [], [] %}
+            {% for message in collector.messages %}
+                {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}
+                    {% set messages_defined = messages_defined|merge([message]) %}
+                {% elseif message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_MISSING') %}
+                    {% set messages_missing = messages_missing|merge([message]) %}
+                {% elseif message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_EQUALS_FALLBACK') %}
+                    {% set messages_fallback = messages_fallback|merge([message]) %}
+                {% endif %}
+            {% endfor %}
+            <ul class="nav nav-pills mb-4" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" id="defined-tab" data-toggle="tab" href="#defined" role="tab" aria-controls="defined" aria-selected="true">Defined <span class="badge">{{ collector.countDefines }}</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#fallback" role="tab" aria-controls="fallback" aria-selected="false">Fallback <span class="badge {{ collector.countFallbacks ? 'status-warning' }}">{{ collector.countFallbacks }}</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" id="contact-tab" data-toggle="tab" href="#missing" role="tab" aria-controls="missing" aria-selected="false">Missing <span class="badge {{ collector.countMissings ? 'status-error' }}">{{ collector.countMissings }}</span></a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="row tab-pane fade mb-2" id="defined" role="tabpanel" aria-labelledby="defined-tab">
+                    {% if messages_defined is empty %}
+                        <div class="col-12">
+                            <p>None of the used translation messages are defined for the given locale.</p>
+                        </div>
+                    {% else %}
+                        {% block defined_messages %}
+                            {{ helper.render_table(messages_defined, hasEnglishRights, constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED')) }}
+                        {% endblock %}
+                    {% endif %}
+                </div>
+                <div class="row tab-pane fade mb-2" id="fallback" role="tabpanel" aria-labelledby="fallback-tab">
+                    {% if messages_fallback is empty %}
+                        <div class="col-12">
+                            <p>No fallback translation messages were used.</p>
+                        </div>
+                    {% else %}
+                        {% block fallback_messages %}
+                            {{ helper.render_table(messages_fallback, hasEnglishRights, constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_EQUALS_FALLBACK')) }}
+                        {% endblock %}
+                    {% endif %}
+                </div>
+                <div class="row tab-pane fade show active mb-2" id="missing" role="tabpanel" aria-labelledby="missing-tab">
+                    {% if messages_missing is empty %}
+                        <div class="col-12">
+                            <p>There are no messages of this category.</p>
+                        </div>
+                    {% else %}
+                        {% block missing_messages %}
+                            {{ helper.render_table(messages_missing, hasEnglishRights, constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_MISSING')) }}
+                        {% endblock %}
+                    {% endif %}
+                </div>
+            </div>
+        {% endblock messages %}
+        {% endif %}
     </div>
-    <div class="row">
-        <div class="col-12">
-            <h2>Translation Messages</h2>
-        </div>
-    </div>
-    {% block messages %}
-        {% set messages_defined, messages_missing, messages_fallback = [], [], [] %}
-        {% for message in collector.messages %}
-            {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}
-                {% set messages_defined = messages_defined|merge([message]) %}
-            {% elseif message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_MISSING') %}
-                {% set messages_missing = messages_missing|merge([message]) %}
-            {% elseif message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_EQUALS_FALLBACK') %}
-                {% set messages_fallback = messages_fallback|merge([message]) %}
-            {% endif %}
-        {% endfor %}
-        <ul class="nav nav-pills mb-4" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="defined-tab" data-toggle="tab" href="#defined" role="tab" aria-controls="defined" aria-selected="true">Defined <span class="badge">{{ collector.countDefines }}</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#fallback" role="tab" aria-controls="fallback" aria-selected="false">Fallback <span class="badge {{ collector.countFallbacks ? 'status-warning' }}">{{ collector.countFallbacks }}</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#missing" role="tab" aria-controls="missing" aria-selected="false">Missing <span class="badge {{ collector.countMissings ? 'status-error' }}">{{ collector.countMissings }}</span></a>
-            </li>
-        </ul>
-        <div class="tab-content" id="myTabContent">
-            <div class="row tab-pane fade show active mb-2" id="defined" role="tabpanel" aria-labelledby="defined-tab">
-                {% if messages_defined is empty %}
-                    <div class="col-12">
-                        <p>None of the used translation messages are defined for the given locale.</p>
-                    </div>
-                {% else %}
-                    {% block defined_messages %}
-                        {{ helper.render_table(messages_defined) }}
-                    {% endblock %}
-                {% endif %}
-            </div>
-            <div class="row tab-pane fade mb-2" id="fallback" role="tabpanel" aria-labelledby="fallback-tab">
-                {% if messages_fallback is empty %}
-                    <div class="col-12">
-                        <p>No fallback translation messages were used.</p>
-                    </div>
-                {% else %}
-                    {% block fallback_messages %}
-                        {{ helper.render_table(messages_fallback) }}
-                    {% endblock %}
-                {% endif %}
-            </div>
-            <div class="row tab-pane fade mb-2" id="missing" role="tabpanel" aria-labelledby="missing-tab">
-                {% if messages_missing is empty %}
-                    <div class="col-12">
-                        <p>There are no messages of this category.</p>
-                    </div>
-                {% else %}
-                    {% block missing_messages %}
-                        {{ helper.render_table(messages_missing) }}
-                    {% endblock %}
-                {% endif %}
-            </div>
-        </div>
-    {% endblock messages %}
-    {% endif %}
-</div>
 {% endif %}
 </footer>
-{% macro render_table(messages) %}
+{% macro render_table(messages, hasEnglishRights, state) %}
     <div class="col-12">
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th class="w-25">ID and Message</th>
-            <th>Translated Message</th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for message in messages %}
+        <table class="table table-striped">
+            <thead>
             <tr>
-                <td class="w-25">
-                    <small class="text-muted">{{ message.id }}</small>
-                    <p>{{ message.id | trans( {}, message.domain, 'en' ) }}</p>
-                    {% if message.transChoiceNumber is not null %}
-                        <small class="newline">(pluralization is used)</small>
-                    {% endif %}
-
-                    {% if message.parameters|length > 0 %}
-                        <button class="btn btn-link newline text-small" data-toggle-selector="#parameters-{{ loop.index }}" data-toggle-alt-content="Hide parameters">Show parameters</button>
-
-                        <div id="parameters-{{ loop.index }}" class="hidden">
-                            {% for parameters in message.parameters %}
-                                {{ profiler_dump(parameters, maxDepth=1) }}
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </td>
-                <td class="w-75">
-                    <small class="invisible text-muted">{{ message.id }}</small>
-                    <p>{{ message.translation }}</p>
-                </td>
-                <td>
-                    <small>&nbsp;</small>
-                    {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}
-                        <a href="{{ url('translation_edit', { code: message.id, locale: locale }) }}"><i class="fa fa-edit"></i></a>
-                    {% endif %}
-                    {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_MISSING') %}
-                        <a href="{{ url('translation_create', { code: message.id, locale: locale }) }}"><i class="fa fa-plus"></i></a>
-                    {% endif %}
-                    {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_EQUALS_FALLBACK') %}
-                        <a href="{{ url('translation_add', { code: message.id, locale: locale }) }}"><i class="fa fa-plus"></i></a>
-                    {% endif %}
-                </td>
+                {% if state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}
+                <th>ID and Message</th>
+                <th>Translated Message</th>
+                <th></th>
+                {% else %}
+                <th>ID and Message</th>
+                <th></th>
+                {% endif %}
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for message in messages %}
+                <tr>
+                    <td {% if state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}class="w-25"{% else %}class="w-100"{% endif %}>
+                        <small class="text-muted">{{ message.id }}</small>
+                        <p>{{ message.id | trans( {}, message.domain, 'en' ) }}</p>
+                        {% if message.transChoiceNumber is not null %}
+                            <small class="newline">(pluralization is used)</small>
+                        {% endif %}
+
+                        {% if message.parameters|length > 0 %}
+                            {% for parameters in message.parameters %}
+                                {{ dump(parameters) }}
+                            {% endfor %}
+                        {% endif %}
+                    </td>
+                    {% if state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}
+                        <td class="w-75">
+                            <small class="invisible text-muted">{{ message.id }}</small>
+                            <p>{{ message.translation }}</p>
+                        </td>
+                    {% endif %}
+                    <td>
+                        <small>&nbsp;</small>
+                        {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') and hasEnglishRights %}
+                            <a href="{{ url('translation_edit', { code: message.id, locale: locale }) }}"><i class="fa fa-edit"></i></a>
+                        {% endif %}
+                        {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_MISSING') and hasEnglishRights %}
+                            <a href="{{ url('translation_create', { code: message.id, locale: locale }) }}"><i class="fa fa-plus"></i></a>
+                        {% endif %}
+                        {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_EQUALS_FALLBACK') %}
+                            <a href="{{ url('translation_add', { code: message.id, locale: locale }) }}"><i class="fa fa-plus"></i></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 {% endmacro %}

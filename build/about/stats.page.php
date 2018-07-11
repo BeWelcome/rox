@@ -44,7 +44,7 @@ class AboutStatisticsPage extends AboutBasePage
     protected function columnsArea($mid_column_name)
     {
         ?>
-        <div id="content" class="px-3">
+        <div id="content">
             <?php $this->column_col3() ?>
         </div>
         <?php

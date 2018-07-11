@@ -23,8 +23,8 @@ Boston, MA  02111-1307, USA.
 */
 $words = new MOD_words();
 ?>
-<div class="alert alert-info" role="alert">
-    <span class="h5"><?php echo $words->get("StatsHead") ?></span>
+<div>
+    <?php echo $words->get("StatsHead") ?>
 </div>
 <?php
 /*
@@ -34,14 +34,14 @@ function drawCharts($label, $headlineCode, $words)
 {
     ?>
     <div class="row mb-1">
-        <div class="col-12">
+        <div class="col-12 mt-3">
             <span class="h3"><?php echo $words->get($headlineCode) ?></span>
         </div>
     </div>
     <div class="row mb-1">
         <div class="col-12 col-md-6">
             <div class="card">
-                <div class="card-header"><h4><?php echo $words->get('StatsHeadCol1') ?></h4></div>
+                <div class="card-header"><h4 class="m-0"><?php echo $words->get('StatsHeadCol1') ?></h4></div>
                 <div class="card-body">
                     <canvas id="<?php echo $label ?>-alltime"></canvas>
                 </div>
@@ -49,7 +49,7 @@ function drawCharts($label, $headlineCode, $words)
         </div>
         <div class="col-12 col-md-6">
             <div class="card">
-                <div class="card-header"><h4><?php echo $words->get('StatsHeadCol2') ?></h4></div>
+                <div class="card-header"><h4 class="m-0"><?php echo $words->get('StatsHeadCol2') ?></h4></div>
                 <div class="card-body">
                     <canvas id="<?php echo $label ?>-last2month"></canvas>
                 </div>
@@ -74,7 +74,7 @@ function drawCharts($label, $headlineCode, $words)
 <div class="row mb-1">
     <div class="col-12 col-md-6">
         <div class="card">
-            <div class="card-header"><h4><?php echo $words->get("StatsLastLogin") ?></h4></div>
+            <div class="card-header"><h4 class="m-0"><?php echo $words->get("StatsLastLogin") ?></h4></div>
             <div class="card-body">
                 <canvas id="logins" width="100" height="130"></canvas>
             </div>
@@ -82,7 +82,7 @@ function drawCharts($label, $headlineCode, $words)
     </div>
     <div class="col-12 col-md-6">
         <div class="card">
-            <div class="card-header"><h4><?php echo $words->get("StatsMemberCountry") ?></h4></div>
+            <div class="card-header"><h4 class="m-0"><?php echo $words->get("StatsMemberCountry") ?></h4></div>
             <div class="card-body">
                 <canvas id="countries" width="100" height="130"></canvas>
             </div>
@@ -92,7 +92,7 @@ function drawCharts($label, $headlineCode, $words)
 <div class="row mb-1">
     <div class="col-12 col-md-6">
         <div class="card">
-            <div class="card-header"><h4><?php echo $words->get("StatsLanguages") ?></h4></div>
+            <div class="card-header"><h4 class="m-0"><?php echo $words->get("StatsLanguages") ?></h4></div>
             <div class="card-body">
                 <canvas id="languages" width="100" height="130"></canvas>
             </div>
@@ -100,7 +100,7 @@ function drawCharts($label, $headlineCode, $words)
     </div>
     <div class="col-12 col-md-6">
         <div class="card">
-            <div class="card-header"><h4><?php echo $words->get("StatsPreferredLanguages") ?></h4></div>
+            <div class="card-header"><h4 class="m-0"><?php echo $words->get("StatsPreferredLanguages") ?></h4></div>
             <div class="card-body">
                 <canvas id="preferred" width="100" height="130"></canvas>
             </div>

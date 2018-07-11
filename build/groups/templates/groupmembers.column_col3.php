@@ -38,7 +38,7 @@
                         <td>
                             <a href="members/<?=$member->Username ?>" class="username"><?=$member->Username ?></a>
                                <p class="small m-0"><?= $words->get('Age') ?>: <?= $member->age; ?> </p>
-                               <p class="small m-0"><?= $member->get_city(); ?></p>
+                               <p class="small m-0"><?= $member->get_city(); ?>, <?= $member->get_country(); ?></p>
                         </td>
                         <td>
                             <em><?php echo $purifier->purify($words->mTrad($membershipinfo->Comment,true)) ?></em>

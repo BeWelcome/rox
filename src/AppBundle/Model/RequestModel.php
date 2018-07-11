@@ -13,7 +13,7 @@ class RequestModel extends BaseModel
         /** @var MessageRepository $repository */
         $repository = $this->em->getRepository(Message::class);
 
-        return $repository->findLatest($member, 'requests_'.$folder, $sort, $sortDir, $page, $limit);
+        return $repository->findLatestRequests($member, 'requests_'.$folder, $sort, $sortDir, $page, $limit);
     }
 
     public function checkRequestExpired(HostingRequest $request)

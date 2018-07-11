@@ -95,7 +95,7 @@ swiftmailer:
     password:  "%mailer_password%"
     spool:     { type: memory }
 
-ivory_ck_editor:
+fos_ck_editor:
     default_config: rox_config
     configs:
         rox_config:

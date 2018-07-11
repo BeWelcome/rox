@@ -60,12 +60,12 @@ class SearchFormType extends AbstractType
             ->add('search_distance', ChoiceType::class, [
                 'choices' => [
                     'exact' => 0,
-                    '5km / 3mi' => 5,
-                    '10km / 6mi' => 10,
-                    '20km / 15mi' => 20,
-                    '50km / 31mi' => 50,
-                    '100km / 63mi' => 100,
-                    '200km / 128mi' => 200,
+                    '5km (~3mi)' => 5,
+                    '10km (~6mi)' => 10,
+                    '20km (~15mi)' => 20,
+                    '50km (~31mi)' => 50,
+                    '100km (~63mi)' => 100,
+                    '200km (~128mi)' => 200,
                 ],
                 'attr' => [
                     'class' => 'form-control-label',

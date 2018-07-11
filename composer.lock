@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4d7a9d675e7d65fbf761711e02397db1",
+    "content-hash": "e879305910272401aa936baa8697a015",
     "packages": [
         {
             "name": "anthonymartin/geo-location",
@@ -53,7 +53,7 @@
         },
         {
             "name": "cakephp/cache",
-            "version": "3.6.6",
+            "version": "3.6.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cache.git",
@@ -96,7 +96,7 @@
         },
         {
             "name": "cakephp/collection",
-            "version": "3.6.6",
+            "version": "3.6.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/collection.git",
@@ -142,16 +142,16 @@
         },
         {
             "name": "cakephp/core",
-            "version": "3.6.6",
+            "version": "3.6.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/core.git",
-                "reference": "ad1ddaf85c88332392d999db4993ff1fb5429bea"
+                "reference": "6b9a318ba91fad450ecfc42b303fbbc2fb1c15bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/core/zipball/ad1ddaf85c88332392d999db4993ff1fb5429bea",
-                "reference": "ad1ddaf85c88332392d999db4993ff1fb5429bea",
+                "url": "https://api.github.com/repos/cakephp/core/zipball/6b9a318ba91fad450ecfc42b303fbbc2fb1c15bd",
+                "reference": "6b9a318ba91fad450ecfc42b303fbbc2fb1c15bd",
                 "shasum": ""
             },
             "require": {
@@ -187,20 +187,20 @@
                 "core",
                 "framework"
             ],
-            "time": "2018-06-21T02:41:27+00:00"
+            "time": "2018-07-03T20:27:53+00:00"
         },
         {
             "name": "cakephp/database",
-            "version": "3.6.6",
+            "version": "3.6.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/database.git",
-                "reference": "a7200722b2fbf22502700b9d8515581007616a77"
+                "reference": "332c82c40c3e28fdbdf723b4ef822c1b6a10fd23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/database/zipball/a7200722b2fbf22502700b9d8515581007616a77",
-                "reference": "a7200722b2fbf22502700b9d8515581007616a77",
+                "url": "https://api.github.com/repos/cakephp/database/zipball/332c82c40c3e28fdbdf723b4ef822c1b6a10fd23",
+                "reference": "332c82c40c3e28fdbdf723b4ef822c1b6a10fd23",
                 "shasum": ""
             },
             "require": {
@@ -237,11 +237,11 @@
                 "database abstraction",
                 "pdo"
             ],
-            "time": "2018-06-13T23:11:10+00:00"
+            "time": "2018-07-05T01:30:21+00:00"
         },
         {
             "name": "cakephp/datasource",
-            "version": "3.6.6",
+            "version": "3.6.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/datasource.git",
@@ -291,7 +291,7 @@
         },
         {
             "name": "cakephp/utility",
-            "version": "3.6.6",
+            "version": "3.6.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/utility.git",
@@ -1217,128 +1217,6 @@
             "time": "2018-02-27T07:30:56+00:00"
         },
         {
-            "name": "egeloen/ckeditor-bundle",
-            "version": "6.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/egeloen/IvoryCKEditorBundle.git",
-                "reference": "9c9926918d3ae4b4d89ca2db578766ab9829ee7a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/egeloen/IvoryCKEditorBundle/zipball/9c9926918d3ae4b4d89ca2db578766ab9829ee7a",
-                "reference": "9c9926918d3ae4b4d89ca2db578766ab9829ee7a",
-                "shasum": ""
-            },
-            "require": {
-                "egeloen/json-builder": "^2.0|^3.0",
-                "php": "^5.6|^7.0",
-                "symfony/dependency-injection": "^2.7|^3.0",
-                "symfony/form": "^2.7|^3.0",
-                "symfony/framework-bundle": "^2.7|^3.0"
-            },
-            "require-dev": {
-                "composer/composer": "^1.0",
-                "friendsofphp/php-cs-fixer": "^2.0",
-                "phpunit/phpunit": "^5.0|^6.0",
-                "sensio/distribution-bundle": "^3.0.12|^4.0|^5.0",
-                "symfony/asset": "^2.7|^3.0",
-                "symfony/console": "^2.7|^3.0",
-                "symfony/phpunit-bridge": "^2.7|^3.0",
-                "symfony/templating": "^2.7|^3.0",
-                "symfony/twig-bridge": "^2.7|^3.0",
-                "symfony/yaml": "^2.7|^3.0",
-                "twig/twig": "^1.12"
-            },
-            "suggest": {
-                "egeloen/form-extra-bundle": "Allows to load CKEditor asynchronously",
-                "sensio/distribution-bundle": "Allows to install CKEditor via a script handler",
-                "symfony/asset": "Allows to rewrite/version assets",
-                "symfony/templating": "Allows to use PHP templates",
-                "symfony/twig-bridge": "Allows to use Twig templates",
-                "twig/twig": "Allows to use Twig templates"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "6.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Ivory\\CKEditorBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Eric GELOEN",
-                    "email": "geloen.eric@gmail.com"
-                }
-            ],
-            "description": "Provides a CKEditor integration for your Symfony2 Project.",
-            "keywords": [
-                "CKEditor"
-            ],
-            "time": "2017-08-18T08:19:45+00:00"
-        },
-        {
-            "name": "egeloen/json-builder",
-            "version": "3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/egeloen/ivory-json-builder.git",
-                "reference": "3e70bc681891d8aca88dd72164caea659739f284"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/egeloen/ivory-json-builder/zipball/3e70bc681891d8aca88dd72164caea659739f284",
-                "reference": "3e70bc681891d8aca88dd72164caea659739f284",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": "^5.6|^7.0",
-                "symfony/property-access": "^2.7|^3.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.0",
-                "phpunit/phpunit": "^5.0",
-                "symfony/phpunit-bridge": "^2.7|^3.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Ivory\\JsonBuilder\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Eric GELOEN",
-                    "email": "geloen.eric@gmail.com"
-                }
-            ],
-            "description": "JSON builder with escaping control for PHP 5.6+",
-            "keywords": [
-                "Escape",
-                "builder",
-                "json"
-            ],
-            "time": "2017-02-27T20:18:54+00:00"
-        },
-        {
             "name": "egulias/email-validator",
             "version": "2.1.4",
             "source": {
@@ -1598,6 +1476,86 @@
                 "sql"
             ],
             "time": "2017-11-07T14:00:57+00:00"
+        },
+        {
+            "name": "friendsofsymfony/ckeditor-bundle",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FriendsOfSymfony/FOSCKEditorBundle.git",
+                "reference": "8f021fd3f2728f2b4286fdd7ca5f7e4d24c3c828"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSCKEditorBundle/zipball/8f021fd3f2728f2b4286fdd7ca5f7e4d24c3c828",
+                "reference": "8f021fd3f2728f2b4286fdd7ca5f7e4d24c3c828",
+                "shasum": ""
+            },
+            "require": {
+                "ext-zip": "*",
+                "php": "^5.6 || ^7.0",
+                "symfony/config": "^2.7 || ^3.0 || ^4.0",
+                "symfony/dependency-injection": "^2.7 || ^3.0 || ^4.0",
+                "symfony/expression-language": "^2.7 || ^3.0 || ^4.0",
+                "symfony/form": "^2.7 || ^3.0 || ^4.0",
+                "symfony/framework-bundle": "^2.7 || ^3.0 || ^4.0",
+                "symfony/http-foundation": "^2.7 || ^3.0 || ^4.0",
+                "symfony/http-kernel": "^2.7 || ^3.0 || ^4.0",
+                "symfony/options-resolver": "^2.7 || ^3.0 || ^4.0",
+                "symfony/property-access": "^2.7 || ^3.0 || ^4.0",
+                "symfony/routing": "^2.7 || ^3.0 || ^4.0"
+            },
+            "conflict": {
+                "sebastian/environment": "<1.3.4",
+                "sebastian/exporter": "<2.0.0"
+            },
+            "require-dev": {
+                "composer/composer": "^1.0",
+                "friendsofphp/php-cs-fixer": "^2.0",
+                "matthiasnoback/symfony-dependency-injection-test": "^1.0 || ^2.0",
+                "phpunit/phpunit": "^5.0 || ^6.0",
+                "sensio/distribution-bundle": "^3.0.12 || ^4.0 || ^5.0",
+                "symfony/asset": "^2.7 || ^3.0 || ^4.0",
+                "symfony/console": "^2.7 || ^3.0 || ^4.0",
+                "symfony/phpunit-bridge": "^4.0",
+                "symfony/templating": "^2.7 || ^3.0 || ^4.0",
+                "symfony/twig-bridge": "^2.7 || ^3.0 || ^4.0",
+                "symfony/yaml": "^2.7 || ^3.0 || ^4.0",
+                "twig/twig": "^1.34 || ^2.0"
+            },
+            "suggest": {
+                "egeloen/form-extra-bundle": "Allows to load CKEditor asynchronously"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "FOS\\CKEditorBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Eric GELOEN",
+                    "email": "geloen.eric@gmail.com"
+                },
+                {
+                    "name": "FriendsOfSymfony Community",
+                    "homepage": "https://github.com/FriendsOfSymfony/FOSCKEditorBundle/graphs/contributors"
+                }
+            ],
+            "description": "Provides a CKEditor integration for your Symfony project.",
+            "keywords": [
+                "CKEditor"
+            ],
+            "time": "2018-05-25T18:07:58+00:00"
         },
         {
             "name": "html2text/html2text",
@@ -1966,16 +1924,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "1.31.1",
+            "version": "1.32.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "385780c8ca2dbfd25452666e3f55e8dc1df58c41"
+                "reference": "64563e2b9f69e4db1b82a60e81efa327a30ff343"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/385780c8ca2dbfd25452666e3f55e8dc1df58c41",
-                "reference": "385780c8ca2dbfd25452666e3f55e8dc1df58c41",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/64563e2b9f69e4db1b82a60e81efa327a30ff343",
+                "reference": "64563e2b9f69e4db1b82a60e81efa327a30ff343",
                 "shasum": ""
             },
             "require": {
@@ -2017,7 +1975,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2018-06-25T13:15:16+00:00"
+            "time": "2018-07-05T06:59:26+00:00"
         },
         {
             "name": "pagerfanta/pagerfanta",
@@ -2090,16 +2048,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v2.0.15",
+            "version": "v2.0.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "10bcb46e8f3d365170f6de9d05245aa066b81f09"
+                "reference": "29af24f25bab834fcbb38ad2a69fa93b867e070d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/10bcb46e8f3d365170f6de9d05245aa066b81f09",
-                "reference": "10bcb46e8f3d365170f6de9d05245aa066b81f09",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/29af24f25bab834fcbb38ad2a69fa93b867e070d",
+                "reference": "29af24f25bab834fcbb38ad2a69fa93b867e070d",
                 "shasum": ""
             },
             "require": {
@@ -2135,7 +2093,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2018-06-08T15:26:40+00:00"
+            "time": "2018-07-04T16:31:37+00:00"
         },
         {
             "name": "psr/cache",
@@ -2619,16 +2577,16 @@
         },
         {
             "name": "swiftmailer/swiftmailer",
-            "version": "v6.0.2",
+            "version": "v6.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "412333372fb6c8ffb65496a2bbd7321af75733fc"
+                "reference": "aa899fef280b1c1aec8d5d4ac069af7f80c89a23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/412333372fb6c8ffb65496a2bbd7321af75733fc",
-                "reference": "412333372fb6c8ffb65496a2bbd7321af75733fc",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/aa899fef280b1c1aec8d5d4ac069af7f80c89a23",
+                "reference": "aa899fef280b1c1aec8d5d4ac069af7f80c89a23",
                 "shasum": ""
             },
             "require": {
@@ -2639,10 +2597,14 @@
                 "mockery/mockery": "~0.9.1",
                 "symfony/phpunit-bridge": "~3.3@dev"
             },
+            "suggest": {
+                "ext-intl": "Needed to support internationalized email addresses",
+                "true/punycode": "Needed to support internationalized email addresses, if ext-intl is not installed"
+            },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "6.0-dev"
+                    "dev-master": "6.1-dev"
                 }
             },
             "autoload": {
@@ -2664,13 +2626,13 @@
                 }
             ],
             "description": "Swiftmailer, free feature-rich PHP mailer",
-            "homepage": "http://swiftmailer.symfony.com",
+            "homepage": "https://swiftmailer.symfony.com",
             "keywords": [
                 "email",
                 "mail",
                 "mailer"
             ],
-            "time": "2017-09-30T22:39:41+00:00"
+            "time": "2018-07-04T11:12:44+00:00"
         },
         {
             "name": "symfony/monolog-bundle",
@@ -3465,28 +3427,28 @@
         },
         {
             "name": "vlucas/phpdotenv",
-            "version": "v2.4.0",
+            "version": "v2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/phpdotenv.git",
-                "reference": "3cc116adbe4b11be5ec557bf1d24dc5e3a21d18c"
+                "reference": "6ae3e2e6494bb5e58c2decadafc3de7f1453f70a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/3cc116adbe4b11be5ec557bf1d24dc5e3a21d18c",
-                "reference": "3cc116adbe4b11be5ec557bf1d24dc5e3a21d18c",
+                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/6ae3e2e6494bb5e58c2decadafc3de7f1453f70a",
+                "reference": "6ae3e2e6494bb5e58c2decadafc3de7f1453f70a",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.9"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8 || ^5.0"
+                "phpunit/phpunit": "^4.8.35 || ^5.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.5-dev"
                 }
             },
             "autoload": {
@@ -3496,7 +3458,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD-3-Clause-Attribution"
+                "BSD-3-Clause"
             ],
             "authors": [
                 {
@@ -3511,7 +3473,7 @@
                 "env",
                 "environment"
             ],
-            "time": "2016-09-01T10:05:43+00:00"
+            "time": "2018-07-01T10:25:50+00:00"
         },
         {
             "name": "white-october/pagerfanta-bundle",
@@ -4008,16 +3970,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v2.12.1",
+            "version": "v2.12.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "beef6cbe6dec7205edcd143842a49f9a691859a6"
+                "reference": "dcc87d5414e9d0bd316fce81a5bedb9ce720b183"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/beef6cbe6dec7205edcd143842a49f9a691859a6",
-                "reference": "beef6cbe6dec7205edcd143842a49f9a691859a6",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/dcc87d5414e9d0bd316fce81a5bedb9ce720b183",
+                "reference": "dcc87d5414e9d0bd316fce81a5bedb9ce720b183",
                 "shasum": ""
             },
             "require": {
@@ -4051,7 +4013,7 @@
                 "php-cs-fixer/phpunit-constraint-isidenticalstring": "^1.0.1",
                 "php-cs-fixer/phpunit-constraint-xmlmatchesxsd": "^1.0.1",
                 "phpunit/phpunit": "^5.7.27 || ^6.5.8 || ^7.1",
-                "phpunitgoodpractices/traits": "^1.5",
+                "phpunitgoodpractices/traits": "^1.5.1",
                 "symfony/phpunit-bridge": "^4.0"
             },
             "suggest": {
@@ -4095,7 +4057,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2018-06-10T08:26:56+00:00"
+            "time": "2018-07-06T10:37:40+00:00"
         },
         {
             "name": "fzaninotto/faker",
@@ -4881,22 +4843,22 @@
         },
         {
             "name": "phpmetrics/phpmetrics",
-            "version": "v2.3.2",
+            "version": "v2.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpmetrics/PhpMetrics.git",
-                "reference": "e44f5224d08571ee6ba85c50379560b9ec217b91"
+                "reference": "39095017413805cd6d9ada16cfaf8aaffcb2fec4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpmetrics/PhpMetrics/zipball/e44f5224d08571ee6ba85c50379560b9ec217b91",
-                "reference": "e44f5224d08571ee6ba85c50379560b9ec217b91",
+                "url": "https://api.github.com/repos/phpmetrics/PhpMetrics/zipball/39095017413805cd6d9ada16cfaf8aaffcb2fec4",
+                "reference": "39095017413805cd6d9ada16cfaf8aaffcb2fec4",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "ext-tokenizer": "*",
-                "nikic/php-parser": "v3.*",
+                "nikic/php-parser": "^3|^4",
                 "php": ">=5.5"
             },
             "replace": {
@@ -4904,7 +4866,8 @@
                 "halleck45/phpmetrics": "*"
             },
             "require-dev": {
-                "phpunit/phpunit": ">=4.8.27,<=5.7.13"
+                "phpunit/phpunit": ">=4.8.27,<=5.7.13",
+                "sebastian/comparator": ">=1.2.3"
             },
             "bin": [
                 "bin/phpmetrics"
@@ -4938,7 +4901,7 @@
                 "quality",
                 "testing"
             ],
-            "time": "2017-10-13T16:11:30+00:00"
+            "time": "2018-07-10T17:19:33+00:00"
         },
         {
             "name": "phpspec/prophecy",

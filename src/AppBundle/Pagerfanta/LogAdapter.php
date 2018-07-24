@@ -36,31 +36,12 @@ class LogAdapter implements AdapterInterface
     {
         $count = 0;
         try {
-            $params = [];
-            $paramTypes = [];
-            $connection = $this->em->getConnection();
-            $sql = 'SELECT count(*) as count FROM logs l LEFT JOIN members m ON l.IdMember = m.id';
-            if (!empty($this->types) || $this->member) {
-                $sql .= ' WHERE ';
-            }
-            if (!empty($this->types)) {
-                $sql .= ' `type` IN (:types)';
-                $params[':types'] = $this->types;
-                $paramTypes[':types'] = Connection::PARAM_STR_ARRAY;
-                if ($this->member) {
-                    $sql .= ' AND ';
-                }
-            }
-            if ($this->member) {
-                $sql .= ' `l`.`IdMember` = :memberId';
-                $params[':memberId'] = $this->member->getId();
-                $paramTypes[':memberId'] = PDO::PARAM_INT;
-            }
-            $stmt = $connection->executeQuery($sql, $params, $paramTypes);
+            list($sql, $params, $paramTypes) = $this->getSqlAndParameters(true);
+            $stmt = $this->em->getConnection()->executeQuery($sql, $params, $paramTypes);
             $row = $stmt->fetchAll(PDO::FETCH_OBJ);
             $count = ($row[0])->count;
         } catch (DBALException $e) {
-            throw $e;
+            // Return 0
         }
 
         return $count;
@@ -78,34 +59,45 @@ class LogAdapter implements AdapterInterface
     {
         $results = [];
         try {
-            $params = [];
-            $paramTypes = [];
-            $connection = $this->em->getConnection();
-            $sql = "SELECT `l`.`type` as `type`, `l`.`Str` as logMessage, IFNULL(`m`.`Username`, '') as `Username`, `l`.`created` as created FROM logs l LEFT JOIN members m ON l.IdMember = m.id ";
-            if (!empty($this->types) || $this->member) {
-                $sql .= ' WHERE ';
-            }
-            if (!empty($this->types)) {
-                $sql .= ' `type` IN (:types)';
-                $params[':types'] = $this->types;
-                $paramTypes[':types'] = Connection::PARAM_STR_ARRAY;
-                if ($this->member) {
-                    $sql .= ' AND ';
-                }
-            }
-            if ($this->member) {
-                $sql .= ' `l`.`IdMember` = :memberId';
-                $params[':memberId'] = $this->member->getId();
-                $paramTypes[':memberId'] = PDO::PARAM_INT;
-            }
+            list($sql, $params, $paramTypes) = $this->getSqlAndParameters(false);
             $sql .= ' ORDER BY `l`.`created` DESC LIMIT '.$length.' OFFSET '.$offset;
-            $stmt = $connection->executeQuery($sql, $params, $paramTypes);
+            $stmt = $this->em->getConnection()->executeQuery($sql, $params, $paramTypes);
             $results = $stmt->fetchAll(PDO::FETCH_OBJ);
         } catch (DBALException $e) {
-            throw $e;
             // We return an empty array in this case
         }
 
         return $results;
+    }
+
+    private function getSqlAndParameters($count)
+    {
+        $params = [];
+        $paramTypes = [];
+        $sql = 'SELECT ';
+        if ($count) {
+            $sql .= 'count(*) as count';
+        } else {
+            $sql .= "`l`.`type` as `type`, `l`.`Str` as logMessage, IFNULL(`m`.`Username`, '') as `Username`, `l`.`created` as created";
+        }
+        $sql .= ' FROM logs l LEFT JOIN members m ON l.IdMember = m.id';
+        if (!empty($this->types) || $this->member) {
+            $sql .= ' WHERE ';
+        }
+        if (!empty($this->types)) {
+            $sql .= ' `type` IN (:types)';
+            $params[':types'] = $this->types;
+            $paramTypes[':types'] = Connection::PARAM_STR_ARRAY;
+            if ($this->member) {
+                $sql .= ' AND ';
+            }
+        }
+        if ($this->member) {
+            $sql .= ' `l`.`IdMember` = :memberId';
+            $params[':memberId'] = $this->member->getId();
+            $paramTypes[':memberId'] = PDO::PARAM_INT;
+        }
+
+        return [$sql, $params, $paramTypes];
     }
 }

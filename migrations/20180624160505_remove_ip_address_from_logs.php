@@ -35,6 +35,7 @@ class RemoveIpAddressFromLogs extends RoxMigration
         $logsTable = $this->table('logs');
         $logsTable
             ->removeColumn('ipAddress')
+            ->removeColumn('DebugTracking')
             ->update();
     }
 }

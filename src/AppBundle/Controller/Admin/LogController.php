@@ -25,6 +25,8 @@ class LogController extends Controller
         $member = null;
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 20);
+        $types = $request->query->get('log_form[types]', []);
+        $username = $request->query->get('log_form[username]', null);
 
         $logModel = new LogModel($this->getDoctrine());
         $logTypes = $logModel->getLogTypes();
@@ -34,12 +36,12 @@ class LogController extends Controller
         ]);
         $logForm->handleRequest($request);
 
-        $types = [];
-        $member = null;
         if ($logForm->isSubmitted() && $logForm->isValid()) {
             $data = $logForm->getData();
             $types = $data['types'];
             $username = $data['username'];
+        }
+        if (null !== $username) {
             $memberRepository = $this->getDoctrine()->getRepository(Member::class);
             $member = $memberRepository->loadUserByUsername($username);
         }

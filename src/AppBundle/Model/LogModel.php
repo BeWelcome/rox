@@ -2,10 +2,8 @@
 
 namespace AppBundle\Model;
 
-use AppBundle\Entity\Log;
-use AppBundle\Repository\LogRepository;
-use Doctrine\DBAL\DBALException;
-use PDO;
+use AppBundle\Pagerfanta\LogAdapter;
+use Pagerfanta\Pagerfanta;
 
 class LogModel extends BaseModel
 {
@@ -21,32 +19,92 @@ class LogModel extends BaseModel
      */
     public function getFilteredLogs(array $types, $member, $page, $limit)
     {
-        /** @var LogRepository $repository */
-        $repository = $this->em->getRepository(Log::class);
+        $adapter = new LogAdapter($this->em, $types, $member);
+        $pagerFanta = new Pagerfanta($adapter);
+        $pagerFanta->setMaxPerPage($limit);
+        $pagerFanta->setCurrentPage($page);
 
-        return $repository->findLatest($types, $member, $page, $limit);
+        return $pagerFanta;
     }
 
     public function getLogTypes()
     {
-        $types = [];
-        try {
-            $connection = $this->em->getConnection();
-            $stmt = $connection->prepare('
-                SELECT 
-                    `type`
-                FROM
-                  logs
-                ORDER BY `type`
-            ');
-            $stmt->execute();
-            $types = array_keys($stmt->fetchAll(PDO::FETCH_NUM | PDO::FETCH_UNIQUE));
-            // Satisfy ChoiceType
-            $types = array_combine($types, $types);
-        } catch (DBALException $e) {
-            // Return empty types array in case of DB problem.
-        }
+        $types = [
+            'accepting',
+            'AddressUpdate',
+            'AdminComment',
+            'Adminflags',
+            'admingroup',
+            'adminlog',
+            'adminmandatory',
+            'adminmassmails',
+            'adminquery',
+            'Adminrights',
+            'AdminWord',
+            'alarm',
+            'BirthdateUpdate',
+            'Bug',
+            'bw_mail',
+            'changepassword',
+            'ChangeUsername',
+            'chat',
+            'checking',
+            'Comment',
+            'comments',
+            'contactmember',
+            'cron_task',
+            'DataRetention',
+            'Debug',
+            'delrelation',
+            'donation',
+            'EmailUpdate',
+            'feedback',
+            'FlagEvent',
+            'Forum',
+            'ForumModerator',
+            'ForumTag',
+            'Gallery',
+            'GenderUpdate',
+            'Geo',
+            'Group',
+            'hacking',
+            'Log',
+            'Login',
+            'lostpassword',
+            'mailbot',
+            'MarkSpam',
+            'MEMBERUPDATE',
+            'Members',
+            'message',
+            'MyContacts',
+            'MyRelations',
+            'mytranslators',
+            'oldBW',
+            'polls',
+            'Profilupdate',
+            'Profileupdate',
+            'query',
+            'readmessage',
+            'resendconfirmyourmail',
+            'retire',
+            'rss',
+            'Search',
+            'Serach',
+            'Signup',
+            'sql_query',
+            'StopBoringMe',
+            'suggestions',
+            'SwitchLanguage',
+            'UpdateFaq',
+            'UpdatePreference',
+            'updateprofile',
+            'updatemandatory',
+            'UpdatingBoard',
+            'uploadphoto',
+            'VerifyMember',
+        ];
+        $logTypes = array_combine($types, $types);
 
-        return $types;
+        return $logTypes;
     }
 }

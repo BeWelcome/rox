@@ -19,8 +19,10 @@ class LogFormType extends AbstractType
     public function buildForm(FormBuilderInterface $formBuilder, array $options)
     {
         $formBuilder
+            ->setMethod('GET')
             ->add('types', ChoiceType::class, [
                 'choices' => $options['data']['logTypes'],
+                'choice_translation_domain' => false,
                 'required' => false,
                 'multiple' => true,
                 'attr' => [
@@ -33,6 +35,6 @@ class LogFormType extends AbstractType
                     'class' => 'member-autocomplete',
                 ],
             ])
-            ->add('Update', SubmitType::class);
+            ->add('update', SubmitType::class);
     }
 }

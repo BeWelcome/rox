@@ -15,7 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
  * Logs.
  *
  * @ORM\Table(name="logs")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\LogRepository")
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
@@ -56,7 +55,7 @@ class Log
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue
      */
     private $id;
 

@@ -188,7 +188,13 @@ class MemberPage extends PageWithActiveSkin
         ?>
 
         <div>
-                <a href="<?=$picture_url?>"><img src="<?=$picture_url?>" alt="Picture of <?=$member->Username?>" class="framed" height="100%" width="100%"/></a>
+            <a href="<?=$picture_url?>"><img src="<?=$picture_url?>" alt="Picture of <?=$member->Username?>" class="framed" height="100%" width="100%"/></a>
+            <?
+            if ($this->myself) {
+                // TODO : change language code (en) and wordcode
+                ?>
+                    <a href="editmyprofile/en" class="btn btn-outline-info btn-block">Change Avatar</a>
+            <? } ?>
         </div> <!-- profile_pic -->
 
         <div class="list-group mt-1">
@@ -222,19 +228,21 @@ class MemberPage extends PageWithActiveSkin
         // $stylesheets[] = 'styles/css/minimal/screen/custom/profile.css?2';
         return $stylesheets;
     }
-    
+
     /*
      * The idea was that stylesheetpatches was for MSIE
+     *
      */
+
     protected function getStylesheetPatches()
     {
         //$stylesheet_patches = parent::getStylesheetPatches();
-        $stylesheet_patches[] = 'styles/css/minimal/patches/patch_2col_left.css';
-        return $stylesheet_patches;
+        //$stylesheet_patches[] = 'styles/css/minimal/patches/patch_2col_left.css';
+        //return $stylesheet_patches;
     }
 
-    
-    
+
+
     protected function teaserContent()
     {
 /*        $this->__call('teaserContent', array()); */

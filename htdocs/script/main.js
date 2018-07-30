@@ -206,7 +206,7 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "tinymce-4.8.0/tinymce.min.js",
+        file: "tinymce-4.8.1/tinymce.min.js",
         pages: [
             "activities",
             "blog",

@@ -90,7 +90,10 @@
                 });
             });
             {% endif %}
-            $(".select2").select2();
+            $(".select2").select2({
+                theme: 'bootstrap',
+                containerCssClass: 'form-control'
+            });
         </script>
         {% block javascripts %}{% endblock javascripts %}
     </body>

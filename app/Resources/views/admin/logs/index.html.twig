@@ -18,12 +18,8 @@
 {% endblock stylesheets %}
 
 {% block content %}
-    {{ form_start(form) }}
-    <div class="row">
-        <div class="col-12 col-md-6">{{ form_label(form.types) }}{{ form_widget(form.types) }}</div>
-        <div class="col-12 col-md-6">{{ form_label(form.username) }}{{ form_widget(form.username) }}</div>
-    </div>
-    {{ form_end(form) }}
+    {% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
+    {{ form(form) }}
 
     <div class="log"></div>
     {% if logs.nbResults == 0 %}
@@ -46,8 +42,8 @@
             <tr>
                 <td>{{ log.type }}</td>
                 <td>{{ log.logMessage }}</td>
-                <td>{% if log.member.id > 0 %}{{ log.member.Username }}{% endif %}</td>
-                <td>{{ log.created.DiffForHumans }}</td>
+                <td>{{ log.Username }}</td>
+                <td>{{ log.created }}</td>
             </tr>
         {% endfor %}
         </table>

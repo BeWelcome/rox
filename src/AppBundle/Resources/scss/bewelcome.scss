@@ -136,12 +136,21 @@ main {
 }
 
 .metric .label {
-  background: #E0E0E0;
-  color: #222;
+  background: $bg-primary;
+  color: white;
   display: block;
   font-size: 12px;
   padding: 5px;
   text-align: center;
+}
+
+a.metric .value {
+  color: black;
+}
+
+a.active .metric .value {
+  color: white;
+  background: $brand-primary
 }
 
 footer {
@@ -159,3 +168,4 @@ footer {
 #footer_content {
   order: 2;
 }
+

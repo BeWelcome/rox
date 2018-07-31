@@ -8,15 +8,15 @@ class JoinMembersAndCryptedfieldsTable extends RoxMigration
     public function up()
     {
         $members = $this->table('members');
-        $members
-            ->addColumn('EmailText', 'string', [ 'after' => 'Email' ])
-            ->addColumn('FirstNameText', 'string', [ 'after' => 'FirstName' ])
-            ->addColumn('SecondNameText', 'string', [ 'after' => 'SecondName' ])
-            ->addColumn('LastNameText', 'string', [ 'after' => 'LastName' ])
-            ->addColumn('HideAttribute', 'biginteger')
-            ->save();
-        ;
-        // Collect information for 'active' members and update members table. Don't bother with asktoleave and the other statuses
+        /*        $members
+                    ->addColumn('EmailText', 'string', [ 'after' => 'Email' ])
+                    ->addColumn('FirstNameText', 'string', [ 'after' => 'FirstName' ])
+                    ->addColumn('SecondNameText', 'string', [ 'after' => 'SecondName' ])
+                    ->addColumn('LastNameText', 'string', [ 'after' => 'LastName' ])
+                    ->addColumn('HideAttribute', 'biginteger')
+                    ->save();
+                ;
+        */        // Collect information for 'active' members and update members table. Don't bother with asktoleave and the other statuses
         $sql = "SELECT id, FirstName, SecondName, LastName, Email fROM members WHERE Status IN ('Active', 'OutOfRemind', 'Banned', 'ChoiceInactive', 'Pending', 'SuspendedBeta') ORDER BY Id";
         $stmt = $this->query($sql);
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -25,9 +25,11 @@ class JoinMembersAndCryptedfieldsTable extends RoxMigration
             $cryptedRows = $cryptedStmt->fetchAll();
             $updateSql  = 'UPDATE members SET ';
             $hideAttribute = 0;
+            $updateNeeded = false;
             foreach($cryptedRows as $cryptedRow)
             {
                 if ($cryptedRow['TableColumn'] <> 'NotSet') {
+                    $updateNeeded = true;
                     $updateSql .= str_replace('members.', '', $cryptedRow['TableColumn'])."Text = '".strip_tags(
                             $cryptedRow['MemberCryptedValue']
                         )."', ";
@@ -53,7 +55,9 @@ class JoinMembersAndCryptedfieldsTable extends RoxMigration
             $updateSql .= ", HideAttribute = " . $hideAttribute;
             $updateSql .= " WHERE id = " . $row['id'];
             // echo $updateSql . PHP_EOL;
-            $this->execute($updateSql);
+            if ($updateNeeded) {
+                $this->execute($updateSql);
+            }
         };
         // drop original fields
         $members

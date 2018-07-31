@@ -31,13 +31,15 @@
 
 #message_thread {
   .message_own {
-    @include make-col(11);
-    @include make-col-offset(1);
+    // @include make-col(11);
+    // @include make-col-offset(1);
+    min-width: 50%;
     padding: $pagination-padding-x;
     margin-bottom: 1rem;
     border-radius: $border-radius;
     border: 1px solid #bbb;
     background-color: #df9;
+    text-align: right;
   }
 
   .message_own > blockquote {
@@ -49,7 +51,8 @@
   }
 
   .message_other {
-    @include make-col(11);
+    // @include make-col(11);
+    min-width: 50%;
     padding: $pagination-padding-x;
     margin-bottom: 1rem;
     border-radius: $border-radius;

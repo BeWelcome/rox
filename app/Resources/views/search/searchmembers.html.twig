@@ -18,13 +18,13 @@
         {{ form_start(form, {'attr': {'class': 'form-inline p-1 m-0 framed'}}) }}
         {{ form_errors(form) }}
         <div class="d-flex flex-wrap justify-content-between w-100">
-            <div class="form-group my-3">
-                <div class="input-group">
+            <div class="form-group my-2">
+                <div class="input-group mx-2">
                     <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-lg fa-globe"></i></span>
                     {{ form_widget(form.search, {'attr': {'class': 'search-picker form-control'}, 'required': false }) }}
                 </div>
             </div>
-            <div class="form-group my-3">
+            <div class="form-group my-3 mx-2">
                 <div class="hostcheckimg"><img src="{{ asset('images/icons/anytime.png') }}" alt="{{ 'I like to host' | trans }}" />
                     <div class="hostcheckbox">{{ form_widget(form.search_accommodation_anytime) }}</div>
                 </div>
@@ -37,13 +37,13 @@
                         {{ form_widget(form.search_accommodation_neverask) }}</div>
                 </div>
             </div>
-            <div class="form-group">
-                <i class="fa fa-lg fa-bed" alt="hosts at least"></i>
+            <div class="form-group mx-2">
+                <i class="fa fa-lg fa-bed mr-2" alt="hosts at least"></i>
                 {{ form_label(form.search_can_host) }}
                 {{ form_widget(form.search_can_host, {'attr': {'class' : 'form-control select2',
                     'data-minimum-results-for-search': '-1'} }) }}
             </div>
-            <div class="form-group">
+            <div class="form-group mx-2">
                 {{ form_label(form.search_distance) }}
                 {{ form_widget(form.search_distance, {'attr': {'class' : 'form-control select2',
                     'data-minimum-results-for-search': '-1'} }) }}
@@ -51,11 +51,22 @@
                 {{ form_rest(form) }}
                 {{ form_widget(form.update_map) }}
         </div>
-{#        <div class="row">
-            <div class="col-xs mt-1">
-                {{ form_widget(form.advanced_options) }}
+
+            <div class="collapse w-100" id="advancedNav">
+                <div class="d-flex flex-wrap justify-content-between w-100">
+                    <div>Advanced</div>
+                    <div>Advanced</div>
+                    <div>Advanced</div>
+                    {# {{ form_widget(form.advanced_options) }} #}
+                </div>
             </div>
-        </div> #}
+
+            <div class="w-100 btn btn-outline-light btn-sm btn-block p-0">
+                <a class="btn btn-sm btn-light" data-toggle="collapse" href="#advancedNav" role="button" aria-expanded="false" aria-controls="advancedNav">
+                    <i class="fa fa-angle-double-down mx-3"></i>advanced options<i class="fa fa-angle-double-down mx-3"></i>
+                </a>
+            </div>
+
         {{ form_end(form) }}
 
         <div id="map" class="framed w-100"></div>

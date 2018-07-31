@@ -8,9 +8,16 @@ use AppBundle\Form\CustomDataClass\Translation\EditTranslationRequest;
 use AppBundle\Form\TranslationFormType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class TranslationController.
+ *
+ * @SuppressWarnings(PHPMD)
+ */
 class TranslationController extends Controller
 {
     /**
@@ -18,6 +25,7 @@ class TranslationController extends Controller
      *     defaults={"locale": "en"})
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function listTranslationsAction(Request $request, $locale)
@@ -31,36 +39,44 @@ class TranslationController extends Controller
 
         return $this->render(':admin:translations/list.html.twig', [
             'translations' => $translations,
-            'is_translation_interface' => true,
         ]);
     }
 
     /**
-     * @Route("/admin/translations/edit/{locale}/{code}", name="translation_edit")
+     * @Route("/admin/translations/{locale}/{code}/edit", name="translation_edit")
      *
      * Update an existing translation for the locale
      *
      * @param Request $request
-     * @param mixed $locale
-     * @param mixed $code
+     * @param mixed   $locale
+     * @param mixed   $code
      *
      * @return Response
      */
     public function editTranslationAction(Request $request, $locale, $code)
     {
-/*        $editTranslationRequest = EditTranslationRequest::fromTranslation($locale, $code);
-        $form = $this->createForm(TranslationFormType::class, $editTranslationRequest );
-        $form->handleRequest($request);
+        $translationRepository = $this->getDoctrine()
+            ->getRepository(Word::class);
+        $original = $translationRepository->findOneBy([
+            'code' => $code,
+            'ShortCode' => 'en',
+        ]);
+        $translation = $translationRepository->findOneBy([
+           'code' => $code,
+           'ShortCode' => $locale,
+        ]);
+        $translationRequest = TranslationRequest::fromTranslations($original, $translation);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+        $editForm = $this->createForm(TranslationFormType::class, $translationRequest);
 
-            // \todo update entry in word table
-            return $this->redirectToRoute('translations', [ 'locale' => $locale ]);
-        }*/
+        $editForm->handleRequest($request);
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+        }
 
         return $this->render(':admin:translations/edit.html.twig', [
-            'is_translation_interface' => true,
+            'form' => $editForm->createView(),
+            'locale' => $locale,
+            'code' => $code,
         ]);
     }
 
@@ -95,25 +111,69 @@ class TranslationController extends Controller
         ]);
 */
         return $this->render(':admin:translations/create.html.twig', [
-            'is_translation_interface' => true,
         ]);
     }
 
     /**
-     * @Route("/admin/translations/add/{locale}/{code}", name="translation_add")
+     * @Route("/admin/translations/{locale}/{code}/add", name="translation_add")
      *
      * Adds a missing translation for an existing english index
      *
      * @param Request $request
-     * @param mixed $locale
-     * @param mixed $code
+     * @param mixed   $locale
+     * @param mixed   $code
      *
      * @return Response
      */
     public function addTranslationAction(Request $request, $locale, $code)
     {
-        return $this->render(':admin:translations/add.html.twig', [
-            'is_translation_interface' => true,
+        $translationRepository = $this->getDoctrine()
+            ->getRepository(Word::class);
+        $original = $translationRepository->findOneBy([
+            'code' => $code,
+            'ShortCode' => 'en',
         ]);
+        $translation = new Word();
+        $translation->setShortCode($locale);
+        $translation->setCode($code);
+
+        $translationRequest = TranslationRequest::fromTranslations($original, $translation);
+
+        $addForm = $this->createFormBuilder()
+            ->add('sortOrder', HiddenType::class)
+            ->getForm();
+
+        $addForm->handleRequest($request);
+        if ($addForm->isSubmitted() && $addForm->isValid()) {
+        }
+
+        return $this->render(':admin:translations/create.html.twig', [
+            'form' => $addForm->createView(),
+            'locale' => $locale,
+            'code' => $code,
+        ]);
+    }
+
+    /**
+     * @Route("/admin/translations/{mode}", name="translation_mode",
+     *     requirements={"mode": "on|off"}
+     * )
+     *
+     * @param Request $request
+     * @param $mode
+     *
+     * @return RedirectResponse
+     */
+    public function setTranslationModeAction(Request $request, $mode)
+    {
+        if ('on' === $mode) {
+            $this->addFlash('notice', 'Enabled translation mode');
+        } else {
+            $this->addFlash('notice', 'Disabled translation mode.');
+        }
+        $this->get('session')->set('translation_mode', $mode);
+        $referrer = $request->headers->get('referer');
+
+        return $this->redirect($referrer);
     }
 }

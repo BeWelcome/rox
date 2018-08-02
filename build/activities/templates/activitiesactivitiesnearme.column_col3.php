@@ -24,12 +24,12 @@ $radiusSelect .= '</select>';
 <form method="POST" name="activity-radius-form">
 <?php 
 echo $this->layoutkit->formkit->setPostCallback('ActivitiesController', 'setRadiusCallback');
-echo $words->get('ActivitiesRadiusSelect', $radiusSelect); ?>. &nbsp;
-<input type="submit" class="button" id="activity-nearme" name="activity-nearme" value="update" /> 
+echo $words->get('ActivitiesRadiusSelect', $radiusSelect); ?>
+<input type="submit" class="btn btn-primary btn-sm" id="activity-nearme" name="activity-nearme" value="update" />
 </form> 
-<div class="row w-100"><?php
+<div class="row w-100 px-3"><?php
 if (count($this->activities) == 0) {
-    echo '<p>' . $words->get('ActivitiesNoActivitiesNearYou', $vars['activity-radius']) . '</p>';
+    echo '<p class="h4 mt-3">' . $words->get('ActivitiesNoActivitiesNearYou', $vars['activity-radius']) . '</p>';
 } else {
     require_once('activitieslist.php');
 }

@@ -502,12 +502,18 @@ WHERE
 
     public function get_messengers() {
           $messengers = array(
-            array("network" => "GOOGLE", "nicename" => "Hangouts", "image" => "icon_gplus.png", "href" => ""),
-            array("network" => "ICQ", "nicename" => "ICQ", "image" => "icon_icq.png", "href" => ""),
-            array("network" => "AOL", "nicename" => "AIM", "image" => "icon_aim.png", "href" => "aim:goim?"),
-            array("network" => "YAHOO", "nicename" => "Yahoo", "image" => "icon_yahoo.png", "href" => "ymsgr:sendIM?"),
-            array("network" => "SKYPE", "nicename" => "Skype", "image" => "icon_skype.png", "href" => "skype:echo"),
-            array("network" => "Others", "nicename" => "Other", "image" => "icon_other.png", "href" => "#")
+            array("network" => "FACEBOOK", "nicename" => "Facebook", "image" => "facebook", "href" => ""),
+            array("network" => "YOUTUBE", "nicename" => "Youtube", "image" => "youtube", "href" => ""),
+              array("network" => "INSTAGRAM", "nicename" => "Instagram", "image" => "instagram", "href" => ""),
+              array("network" => "QZONE", "nicename" => "Qzone", "image" => "star", "href" => ""),
+              array("network" => "WEIBO", "nicename" => "Weibo", "image" => "weibo", "href" => ""),
+              array("network" => "TWITTER", "nicename" => "Twitter", "image" => "twitter", "href" => ""),
+              array("network" => "GOOGLEPLUS", "nicename" => "Google +", "image" => "google-plus", "href" => ""),
+              array("network" => "GITHUB", "nicename" => "Github", "image" => "github", "href" => ""),
+              array("network" => "SKYPE", "nicename" => "Skype", "image" => "skype", "href" => ""),
+              array("network" => "WHATSAPP", "nicename" => "Whatsapp", "image" => "whatsapp", "href" => ""),
+              array("network" => "TELElGRAM", "nicename" => "Telegram", "image" => "telegram", "href" => ""),
+            array("network" => "Others", "nicename" => "Other", "image" => "comment", "href" => "")
         );
           $r = array();
           foreach($messengers as $m) {

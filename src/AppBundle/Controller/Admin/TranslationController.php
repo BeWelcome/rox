@@ -21,8 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 class TranslationController extends Controller
 {
     /**
-     * @Route("/admin/translations/{locale}", name="translations",
-     *     defaults={"locale": "en"})
+     * @Route("/admin/translations", name="translations")
      *
      * @param Request $request
      *

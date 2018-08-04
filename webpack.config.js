@@ -1,6 +1,7 @@
 var Encore = require('@symfony/webpack-encore');
 
 Encore
+    .configureRuntimeEnvironment('dev')
     .setOutputPath('web/build/')
     .setPublicPath('/build')
     .cleanupOutputBeforeBuild()
@@ -25,6 +26,7 @@ Encore
     .addEntry('backwards', './src/AppBundle/Resources/js/backwards.js')
     .addEntry('skrollr', './src/AppBundle/Resources/js/skrollr.js')
     .addEntry('signup', './src/AppBundle/Resources/js/signup.js')
+//    .addEntry('initialize', './src/AppBundle/Resources/js/initialize.js')
     .addEntry('landing', './src/AppBundle/Resources/public/js/landing/landing.js')
 
     .addEntry('search/searchpicker', './src/AppBundle/Resources/public/js/search/searchpicker.js')

@@ -59,11 +59,11 @@ class TranslationController extends Controller
             ->getRepository(Word::class);
         $original = $translationRepository->findOneBy([
             'code' => $code,
-            'ShortCode' => 'en',
+            'shortCode' => 'en',
         ]);
         $translation = $translationRepository->findOneBy([
            'code' => $code,
-           'ShortCode' => $locale,
+           'shortCode' => $locale,
         ]);
         $translationRequest = TranslationRequest::fromTranslations($original, $translation);
 

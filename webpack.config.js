@@ -1,7 +1,7 @@
 var Encore = require('@symfony/webpack-encore');
 
 Encore
-    .configureRuntimeEnvironment("dev")
+    .configureRuntimeEnvironment('dev')
     .setOutputPath('web/build/')
     .setPublicPath('/build')
     .cleanupOutputBeforeBuild()

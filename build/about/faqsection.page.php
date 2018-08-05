@@ -12,7 +12,7 @@ class AboutFaqsectionPage extends AboutFaqPage
         <div class="col-12"><dl id="faqs">';
         foreach ($this->faq_section->faqs as $faq_key => &$faq) {
             echo '
-            <dt class="h5">'.$words->get("FaqQ_".$faq->QandA).'</dt>
+            <dt class="h5">'.strip_tags($words->get("FaqQ_".$faq->QandA)).'</dt>
             <dd id="question'.$faq_key.'">'.$words->get("FaqA_".$faq->QandA).'</dd>';
         }
         ?>

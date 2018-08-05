@@ -26,33 +26,6 @@ main {
   margin-top: 1rem;
 }
 
-.stickyfooter {
-  height: auto;
-  font-size: $font-size-sm;
-  line-height: 1.1;
-  width: 100%;
-  margin-top: 1rem;
-  padding: $spacer $spacer;
-  background-color: #555;
-  color: #999;
-
-  a {
-    color: #aaa;
-    white-space: nowrap;
-  }
-  a:hover {
-    color: #fff;
-  }
-  a:focus {
-    color: #fff;
-  }
-
-  & > .container {
-    padding: 1rem $spacer;
-  }
-
-}
-
 // standard framed box with slight shadow
 .framed {
   background-color: #EEEEEE;

@@ -157,8 +157,8 @@ class MemberPage extends PageWithActiveSkin
     protected function columnsArea($mid_column_name)
     {
         ?>
-        <div class="row">
-          <div class="col-12 col-lg-3" style="border-right: 1px dotted #ccc;">
+        <div class="row p-3">
+          <div class="col-12 col-lg-3 menu-divider">
               <? $name = 'column_col1';?>
               <?php $this->$name() ?>
           </div> 

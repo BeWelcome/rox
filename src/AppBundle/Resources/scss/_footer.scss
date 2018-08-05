@@ -1,0 +1,50 @@
+footer {
+  display: flex;
+  flex-direction: column;
+
+  #footer_content {
+    order: 2;
+  }
+
+  .stickyfooter {
+    height: auto;
+    font-size: $font-size-sm;
+    line-height: 1.1;
+    width: 100%;
+    margin-top: 1rem;
+    padding: $spacer $spacer;
+    background-color: #555;
+    color: #999;
+
+    a {
+      color: #aaa;
+      white-space: nowrap;
+
+      &:hover {
+        color: #fff;
+      }
+      &:focus {
+        color: #fff;
+      }
+    }
+
+    & > .container {
+      padding: 1rem $spacer;
+    }
+
+    .footnav:before{
+      content: "\2022";
+      margin-right: 0.5rem;
+      margin-left: 0.3rem;
+    }
+
+  }
+
+}
+
+/* make sure translations are shown above the footer but loaded after it as this allows to translate the footer as well */
+#translations {
+  order: 1;
+
+  margin-top: 1em;
+}

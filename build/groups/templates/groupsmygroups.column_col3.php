@@ -1,5 +1,5 @@
 
-<div class="col-12 col-md-6">
+<div class="col-12 col-md-6 pr-md-2 p-0">
     <h3><?= $words->get('GroupsSearchHeading'); ?></h3>
     <form action="groups/search" method="get">
         <div class="input-group">
@@ -11,7 +11,7 @@
         </div>
     </form>
 </div>
-<div class="col-12 col-md-6">
+<div class="col-12 col-md-6 pl-md-2 p-0">
     <h3><?= $words->get('GroupsCreateHeading'); ?></h3>
     <a class="btn btn-primary" role="button" href="groups/new"><?= $words->get('GroupsCreateNew'); ?></a>
 </div>
@@ -25,6 +25,9 @@
         {
         $mygroups = $this->pager->getActiveSubset($search_result);
         $this->pager->render();
+        ?>
+            <div class="w-100"></div>
+            <?
             foreach ($mygroups as $group_data) :
                ?>
 

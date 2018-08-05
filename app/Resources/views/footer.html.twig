@@ -14,13 +14,13 @@
     <div id="footer_content" class="stickyfooter my-0 py-0">
         <div class="container my-1">
             <div class="row align-items-center">
-                <form class="col-12 col-md-6 form-inline" method="post">
-                    Site currently displayed in&nbsp; {{ langsel }}.
+                <form class="col-8 form-inline" method="post">
+                    Site currently displayed in&nbsp; {{ langsel }}
                 </form>
-                <div class="col-12 col-md-6">
+                <div class="col-4">
                     {% if is_granted('ROLE_ADMIN_WORDS') and not is_translation_interface is defined %}
-                        <div class="pull-right">{{ 'Translation mode is' | trans }}&nbsp;
-                            <button type="button" class="btn btn-small btn-secondary dropdown-toggle"
+                        <div class="float-md-right form-inline">{{ 'Translation mode is' | trans }}&nbsp;
+                            <button type="button" class="btn btn-sm btn-secondary py-1 dropdown-toggle"
                                     data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
                                 {% if app.session.get('translation_mode') == 'on' %}{{ 'On' | trans }}{% else %}{{ 'Off' | trans }}{% endif %}
@@ -39,13 +39,13 @@
                     {% endif %}
                 </div>
                 <div class="col-12 mt-1">
-                    <a href="{{ url('about') }}"><strong>{{ 'AboutUsPage' | trans }}</strong></a> •
-                    <a href="{{ url('terms_french') }}" target="new">{{ 'TermsOfUse' | trans }}</a> •
-                    <a href="{{ url('privacy') }}" target="new">{{ 'Privacy' | trans }}</a> •
-                    <a href="{{ url('imprint') }}">{{ 'Impressum' | trans }}</a> •
-                    <a href="{{ url('about_faq') }}">{{ 'faq' | trans }}</a> •
-                    <a href="{{ url('feedback') }}">{{ 'Contact us' | trans }}</a> •
-                    <a href="{{ url('feedback', { IdCategory: 1, RequestURI: url('homepage')}) }}">{{ 'Reportbug' | trans }}</a>
+                    <a href="{{ url('about') }}"><strong>{{ 'AboutUsPage' | trans }}</strong></a>
+                    <a href="{{ url('terms_french') }}" class="footnav" target="new">{{ 'TermsOfUse' | trans }}</a>
+                    <a href="{{ url('privacy') }}" class="footnav" target="new">{{ 'Privacy' | trans }}</a>
+                    <a href="{{ url('imprint') }}" class="footnav">{{ 'Impressum' | trans }}</a>
+                    <a href="{{ url('about_faq') }}" class="footnav">{{ 'faq' | trans }}</a>
+                    <a href="{{ url('feedback') }}" class="footnav">{{ 'Contact us' | trans }}</a>
+                    <a href="{{ url('feedback', { IdCategory: 1, RequestURI: url('homepage')}) }}" class="footnav">{{ 'Reportbug' | trans }}</a>
                 </div>
                 <div class="col-12 mt-1">
                     &copy; 2007 &mdash; {{ "now" | date("Y") }} <a href="http://www.bevolunteer.org/"

@@ -70,7 +70,7 @@ class EditProfilePage extends ProfilePage
 
         $vars['FirstName'] = $member->FirstName;
         $vars['SecondName'] = $member->SecondName;
-        $vars['LastName'] = $member->LastName();
+        $vars['LastName'] = $member->LastName;
         $vars['HouseNumber'] = $member->get_housenumber();
         $vars['Street'] = $member->get_street();
         $vars['Zip'] = $member->get_zip();

@@ -11,7 +11,7 @@
 
                 <div class="item">
                     <a data-toggle="collapse" data-parent="#MyPreferences" href="#MyPreferences1" aria-expanded="false"
-                       aria-controls="MyPreferences1" class="btn btn-outline-primary editbutton text-left">
+                       aria-controls="MyPreferences1" class="btn btn-light editbutton text-left">
                         <i class="fa fa-angle-down"></i> <?=$words->get('PreferencesPassword')?>
                     </a>
                     <div id="MyPreferences1" class="collapse editprofilebox" role="tabpanel">
@@ -31,7 +31,7 @@
 
                 <div class="item">
                     <a data-toggle="collapse" data-parent="#MyPreferences" href="#MyPreferences2" aria-expanded="false"
-                       aria-controls="MyPreferences2" class="btn btn-outline-primary editbutton text-left">
+                       aria-controls="MyPreferences2" class="btn btn-light editbutton text-left">
                         <i class="fa fa-angle-down"></i> <?=$words->get('PreferenceLanguage')?>
                     </a>
                     <div id="MyPreferences2" class="collapse editprofilebox" role="tabpanel">
@@ -50,10 +50,10 @@
 
                 <div class="item">
                     <a data-toggle="collapse" data-parent="#MyPreferences" href="#MyPreferences3" aria-expanded="true"
-                       aria-controls="MyPreferences3" class="btn btn-outline-primary editbutton text-left">
+                       aria-controls="MyPreferences3" class="btn btn-light editbutton text-left">
                         <i class="fa fa-angle-down"></i> <?=$words->get('Website')?>
                     </a>
-                    <div id="MyPreferences3" class="collapse editprofilebox show" role="tabpanel">
+                    <div id="MyPreferences3" class="collapse editprofilebox" role="tabpanel">
                         <div class="row">
                             <div class="col-3">
                                 <?=$words->get('PreferencePublicProfile')?>
@@ -125,6 +125,6 @@
                 </div>
             </div>
         </div>
-        <div class="col-12"><input type="submit" class="btn btn-primary editbutton text-left" id="submit" value="<?php echo $words->getSilent('SubmitForm'); ?>" /> <?php echo $words->flushBuffer(); ?></div>
+        <div class="col-12 mt-3"><input type="submit" class="btn btn-primary editbutton text-left" id="submit" value="<?php echo $words->getSilent('SubmitForm'); ?>" /> <?php echo $words->flushBuffer(); ?></div>
     </div>
 </form>

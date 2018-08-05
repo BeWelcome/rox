@@ -32,43 +32,43 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
     <?php endif; ?>
 </div>
 
-<div class="col-12">
+<div class="col-12 mt-3">
     <ul class="nav nav-tabs flex-column flex-md-row" id="editProfileTab" role="tablist">
         <li class="nav-item">
-            <a class="nav-link btn btn-info" id="basics-tab" data-toggle="tab" href="#basics" role="tab" aria-controls="basics"
+            <a class="nav-link btn btn-sm btn-primary editprofile-tab p-1" id="basics-tab" data-toggle="tab" href="#basics" role="tab" aria-controls="basics"
                aria-selected="true">Home</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link btn btn-outline-info" id="aboutme-tab" data-toggle="tab" href="#aboutme" role="tab" aria-controls="aboutme"
+            <a class="nav-link btn btn-sm btn-info editprofile-tab p-1" id="aboutme-tab" data-toggle="tab" href="#aboutme" role="tab" aria-controls="aboutme"
                aria-selected="false"><?= $words->get('ProfileSummary') ?></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link btn btn-outline-info" id="accommodation-tab" data-toggle="tab" href="#accommodation" role="tab"
+            <a class="nav-link btn btn-sm btn-info editprofile-tab p-1" id="accommodation-tab" data-toggle="tab" href="#accommodation" role="tab"
                aria-controls="contact" aria-selected="false"><?=$words->get('ProfileAccommodation')?></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link btn btn-outline-info" id="myinterests-tab" data-toggle="tab" href="#myinterests" role="tab"
+            <a class="nav-link btn btn-sm btn-info editprofile-tab p-1" id="myinterests-tab" data-toggle="tab" href="#myinterests" role="tab"
                aria-controls="contact" aria-selected="false"><?=$words->get('ProfileInterests')?></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link btn btn-outline-info" id="languages-tab" data-toggle="tab" href="#languages" role="tab"
+            <a class="nav-link btn btn-sm btn-info editprofile-tab p-1" id="languages-tab" data-toggle="tab" href="#languages" role="tab"
                aria-controls="contact" aria-selected="false">Languages</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link btn btn-outline-info" id="contactinfo-tab" data-toggle="tab" href="#contactinfo" role="tab"
+            <a class="nav-link btn btn-sm btn-info editprofile-tab p-1" id="contactinfo-tab" data-toggle="tab" href="#contactinfo" role="tab"
                aria-controls="contact" aria-selected="false"><?=$words->get('ContactInfo')?></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link btn btn-outline-info" id="travel-tab" data-toggle="tab" href="#travel" role="tab" aria-controls="contact"
+            <a class="nav-link btn btn-sm btn-info editprofile-tab p-1" id="travel-tab" data-toggle="tab" href="#travel" role="tab" aria-controls="contact"
                aria-selected="false">Travel Experience</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link btn btn-outline-info" id="family-tab" data-toggle="tab" href="#family" role="tab" aria-controls="contact"
+            <a class="nav-link btn btn-sm btn-info editprofile-tab p-1" id="family-tab" data-toggle="tab" href="#family" role="tab" aria-controls="contact"
                aria-selected="false"><?=$words->get('MyRelations')?></a>
         </li>
     </ul>
     <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active card mx-1" id="basics" role="tabpanel" aria-labelledby="home-tab">
+        <div class="tab-pane fade show active card" id="basics" role="tabpanel" aria-labelledby="home-tab">
             <div class="row align-items-center p-3">
                 <div class="col-3 col-lg-2 h5 text-right">
                     <?= $words->get('SignupUsername') ?>:
@@ -92,6 +92,77 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     <span class="small"><?= $words->get('Profile_UploadWarning', sprintf("%.1f MB", PFunctions::returnBytes(ini_get('upload_max_filesize')) / 1048576)); ?></span>
                 </div>
 
+                <div class="w-100 mt-3"></div>
+
+                <? if ($this->adminedit || !$CanTranslate) { // member translator is not allowed to update crypted data ?>
+                <div class="col-3 h5">
+                    <?= $words->get('FirstName') ?>
+                </div>
+                <div class="col-9">
+                    <input class="<?php if (isset($errorFirstName)) { ?>error-input-text<?php } ?>" type="text"
+                           name="FirstName"
+                           value="<?php echo htmlentities($vars['FirstName'], ENT_COMPAT, 'UTF-8'); ?>"/>
+
+                    <input type="checkbox" value="Yes" class="pt-1" name="IsHidden_FirstName"
+                        <?php if ($vars['IsHidden_FirstName'])
+                            echo 'checked="checked"';
+                        ?> />
+                    <?= $words->get('hidden') ?>
+
+                    <?php if (isset($errorFirstName)) { ?>
+                        <div class="w-100 alert alert-danger"><?= $words->get('SignupErrorInvalidFirstName') ?></div>
+                    <?php } ?>
+
+                </div>
+
+                <div class="col-3 h5">
+                    <?= $words->get('SecondName') ?>
+                </div>
+                <div class="col-9">
+                    <input type="text" name="SecondName"
+                           value="<?php echo htmlentities($vars['SecondName'], ENT_COMPAT, 'UTF-8'); ?>"/>
+                    <input type="checkbox" value="Yes" name="IsHidden_SecondName"
+                        <?php if ($vars['IsHidden_SecondName'])
+                            echo 'checked="checked"';
+                        ?> />
+                    <?= $words->get('hidden') ?>
+                </div>
+
+                <div class="col-3 h5">
+                    <?= $words->get('LastName') ?>
+                </div>
+                <div class="col-9">
+                    <input class="<?php if (isset($errorLastName)) { ?>error-input-text<?php } ?>" type="text"
+                           name="LastName"
+                           value="<?php echo htmlentities($vars['LastName'], ENT_COMPAT, 'UTF-8'); ?>"/>
+                    <input type="checkbox" value="Yes" name="IsHidden_LastName"
+                        <?php if ($vars['IsHidden_LastName'])
+                            echo 'checked="checked"';
+                        ?> />
+                    <?= $words->get('hidden') ?>
+                    <?php if (isset($errorLastName)) { ?>
+                        <div class="w-100 alert alert-danger"><?= $words->get('SignupErrorInvalidLastName') ?></div>
+                    <?php } ?>
+                </div>
+                <div class="w-100 mt-3">
+                </div>
+
+                <div class="col-3 h5">
+                    <?= $words->get('SignupEmail') ?>
+                </div>
+                <div class="col-9">
+                    <input class="<?php if (isset($errorEmail)) { ?>error-input-text<?php } ?>" type="text"
+                           size="25"
+                           name="Email" value="<?= str_replace('%40', '@', $vars['Email']) ?>"/>
+                    <?= $words->get('EmailIsAlwayHidden') ?>
+                    <?php if (isset($errorEmail)) { ?>
+                        <div class="w-100 alert alert-danger"><?= $words->get('SignupErrorInvalidEmail') ?></div>
+                    <?php } ?>
+                </div>
+
+                <? } ?>
+
+                <div class="w-100 mt-3"></div>
 
                 <div class="col-3 mt-2 h5">
                     <?= $words->get('SignupBirthDate') ?><br>
@@ -186,7 +257,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 </div>
             </div>
         </div>
-        <div class="tab-pane fade card mx-1" id="aboutme" role="tabpanel" aria-labelledby="aboutme-tab">
+        <div class="tab-pane fade card" id="aboutme" role="tabpanel" aria-labelledby="aboutme-tab">
             <div class="row p-3">
                 <div class="col-2 h5"><?= $words->get('ProfileOccupation') ?></div>
                 <div class="col-10"><input class="w-100" name="Occupation"
@@ -200,7 +271,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
 
             </div>
         </div>
-        <div class="tab-pane fade card mx-1" id="accommodation" role="tabpanel" aria-labelledby="accommodation-tab">
+        <div class="tab-pane fade card" id="accommodation" role="tabpanel" aria-labelledby="accommodation-tab">
 
             <div class="row p-3">
                 <div class="col-4 h5 pt-2">
@@ -326,7 +397,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 </div>
             </div>
         </div>
-        <div class="tab-pane fade card mx-1" id="myinterests" role="tabpanel" aria-labelledby="myinterests-tab">
+        <div class="tab-pane fade card" id="myinterests" role="tabpanel" aria-labelledby="myinterests-tab">
             <div class="row p-3">
                 <div class="col-3 mt-3 h5">
                     <?= $words->get('ProfileHobbies') ?>
@@ -367,7 +438,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
             </div>
 
         </div>
-        <div class="tab-pane fade card mx-1" id="languages" role="tabpanel" aria-labelledby="languages-tab">
+        <div class="tab-pane fade card" id="languages" role="tabpanel" aria-labelledby="languages-tab">
             <div class="row p-3">
                 <div class="col-12 my-2 h5"><?= $words->get('ProfileLanguagesSpoken') ?></div>
                 <?php
@@ -451,75 +522,9 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 </div>
             </div>
         </div>
-        <div class="tab-pane fade card mx-1" id="contactinfo" role="tabpanel" aria-labelledby="contactinfo-tab">
+        <div class="tab-pane fade card" id="contactinfo" role="tabpanel" aria-labelledby="contactinfo-tab">
             <div class="row justify-content-start p-3">
                 <? if ($this->adminedit || !$CanTranslate) { // member translator is not allowed to update crypted data ?>
-                    <div class="col-3 h5">
-                        <?= $words->get('FirstName') ?>
-                    </div>
-                    <div class="col-9">
-                        <input class="<?php if (isset($errorFirstName)) { ?>error-input-text<?php } ?>" type="text"
-                               name="FirstName"
-                               value="<?php echo htmlentities($vars['FirstName'], ENT_COMPAT, 'UTF-8'); ?>"/>
-
-                        <input type="checkbox" value="Yes" class="pt-1" name="IsHidden_FirstName"
-                            <?php if ($vars['IsHidden_FirstName'])
-                                echo 'checked="checked"';
-                            ?> />
-                        <?= $words->get('hidden') ?>
-
-                        <?php if (isset($errorFirstName)) { ?>
-                            <div class="w-100 alert alert-danger"><?= $words->get('SignupErrorInvalidFirstName') ?></div>
-                        <?php } ?>
-
-                    </div>
-
-                    <div class="col-3 h5">
-                        <?= $words->get('SecondName') ?>
-                    </div>
-                    <div class="col-9">
-                        <input type="text" name="SecondName"
-                               value="<?php echo htmlentities($vars['SecondName'], ENT_COMPAT, 'UTF-8'); ?>"/></td>
-                        <input type="checkbox" value="Yes" name="IsHidden_SecondName"
-                            <?php if ($vars['IsHidden_SecondName'])
-                                echo 'checked="checked"';
-                            ?> />
-                        <?= $words->get('hidden') ?>
-                    </div>
-
-                    <div class="col-3 h5">
-                        <?= $words->get('LastName') ?>
-                    </div>
-                    <div class="col-9">
-                        <input class="<?php if (isset($errorLastName)) { ?>error-input-text<?php } ?>" type="text"
-                               name="LastName"
-                               value="<?php echo htmlentities($vars['LastName'], ENT_COMPAT, 'UTF-8'); ?>"/>
-                        <input type="checkbox" value="Yes" name="IsHidden_LastName"
-                            <?php if ($vars['IsHidden_LastName'])
-                                echo 'checked="checked"';
-                            ?> />
-                        <?= $words->get('hidden') ?>
-                        <?php if (isset($errorLastName)) { ?>
-                            <div class="w-100 alert alert-danger"><?= $words->get('SignupErrorInvalidLastName') ?></div>
-                        <?php } ?>
-                    </div>
-                    <div class="w-100 mt-3">
-                    </div>
-
-                    <div class="col-3 h5">
-                        <?= $words->get('SignupEmail') ?>
-                    </div>
-                    <div class="col-9">
-                        <input class="<?php if (isset($errorEmail)) { ?>error-input-text<?php } ?>" type="text"
-                               size="25"
-                               name="Email" value="<?= str_replace('%40', '@', $vars['Email']) ?>"/>
-                        <?= $words->get('EmailIsAlwayHidden') ?>
-                        <?php if (isset($errorEmail)) { ?>
-                            <div class="w-100 alert alert-danger"><?= $words->get('SignupErrorInvalidEmail') ?></div>
-                        <?php } ?>
-                    </div>
-
-                    <div class="w-100 mt-3"></div>
 
                     <div class="col-3 h5">
                         <?= $words->get('Street') ?>
@@ -649,27 +654,27 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 ?>
             </div>
         </div>
-        <div class="tab-pane fade card mx-1" id="travel" role="tabpanel" aria-labelledby="travel-tab">
+        <div class="tab-pane fade card" id="travel" role="tabpanel" aria-labelledby="travel-tab">
             <div class="row p-3">
                 <div class="col-3 h5">
                     <?= $words->get('ProfilePastTrips') ?>
                 </div>
                 <div class="col-9">
-                    <textarea name="PastTrips" class="long" cols="50" rows="2"><?= $vars['PastTrips'] ?></textarea>
+                    <textarea name="PastTrips" class="w-100" rows="3"><?= $vars['PastTrips'] ?></textarea>
                 </div>
 
                 <div class="col-3 h5">
                     <?= $words->get('ProfilePlannedTrips') ?>
                 </div>
                 <div class="col-9">
-                        <textarea name="PlannedTrips" class="long" cols="50"
-                                  rows="4"><?= $vars['PlannedTrips'] ?></textarea>
+                        <textarea name="PlannedTrips" class="w-100"
+                                  rows="3"><?= $vars['PlannedTrips'] ?></textarea>
                 </div>
 
             </div>
         </div>
 
-        <div class="tab-pane fade card mx-1" id="family" role="tabpanel" aria-labelledby="family-tab">
+        <div class="tab-pane fade card" id="family" role="tabpanel" aria-labelledby="family-tab">
             <div class="row p-3">
 
                 <?php
@@ -682,15 +687,15 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     ?>
 
                     <div class="col-2">
-                        <img src="members/avatar/<?= $Relation->Username ?>/50" height="50" width="50"
-                             alt="Profile"/><br>
+                        <a href="members/<?= $Relation->Username ?>"><img src="members/avatar/<?= $Relation->Username ?>/50" height="50" width="50"
+                             alt="Profile"/></a><br>
                         <span class="small
                 <?php
                         if ($Relation->Confirmed == 'Yes') {
                             echo ' font-weight-bold';
                         }
                         ?>
-                "><?= $Relation->Username ?></span>
+                "><a href="members/<?= $Relation->Username ?>"><?= $Relation->Username ?></a></span>
                     </div>
                     <div class="col-6">
                             <textarea cols="40" rows="2"

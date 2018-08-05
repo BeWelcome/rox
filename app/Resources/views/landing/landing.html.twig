@@ -119,7 +119,7 @@
         </div>
 
         {# community box #}
-        <div class="col-12 col-lg-7 align-items-stretch">
+        <div class="col-12 col-lg-7 align-items-stretch mt-sm-5 mt-lg-0">
 
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
@@ -216,7 +216,7 @@
                 <a href="/about/getactive" class="btn btn-outline-primary btn-homewhite btn-block"><i
                             class="fa fa-wrench"></i> Help BeWelcome</a>
 
-                {% if campaign.yearDonated > campaign.yearNeeded %}
+                {% if campaign.yearDonated < campaign.yearNeeded %}
                     <a href="/donate" class="btn btn-outline-primary btn-homewhite btn-block mb-1"><i
                                 class="fa fa-euro"></i> Please donate</a>
                 {% endif %}

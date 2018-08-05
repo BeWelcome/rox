@@ -48,6 +48,7 @@ $font-family-bold: Signika-bold, Arial;
 @import "gallery";
 @import "offcanvas";
 @import "tempusdominus_bootstrap4";
+@import "footer";
 
 .badge-warning {
   @include badge-variant(white);
@@ -152,20 +153,3 @@ a.active .metric .value {
   color: white;
   background: $brand-primary
 }
-
-footer {
-  display: flex;
-  flex-direction: column;
-}
-
-/* make sure translations are shown above the footer but loaded after it as this allows to translate the footer as well */
-#translations {
-  order: 1;
-
-  margin-top: 1em;
-}
-
-#footer_content {
-  order: 2;
-}
-

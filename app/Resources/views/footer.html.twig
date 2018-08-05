@@ -204,7 +204,7 @@
 
                         {% if message.parameters|length > 0 %}
                             {% for parameters in message.parameters %}
-                                {{ dump(parameters) }}
+                                {# dump(parameters) #}
                             {% endfor %}
                         {% endif %}
                     </td>

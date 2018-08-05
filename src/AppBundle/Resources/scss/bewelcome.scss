@@ -6,21 +6,21 @@ $font-path: '../fonts/';
 @include font-face('Signika-Bold', $font-path + 'signika-bold-webfont', normal, normal);
 @include font-face('Signika-Regular', $font-path + 'signika-regular-webfont', normal, normal);
 
-@import '../../../../node_modules/lato-font/scss/public-api';
+@import '~lato-font/scss/public-api';
 
 $lato-font-path: '../fonts';
 
 @include lato-include-font('black');
 @include lato-include-font('medium');
 
-@import '../../../../node_modules/font-awesome/scss/font-awesome';
+@import '~font-awesome/scss/font-awesome';
 
 // Core variables and mixins
 @import "custom";
 $font-family-bold: Signika-bold, Arial;
 
 
-@import "../../../../node_modules/bootstrap/scss/bootstrap";
+@import "~bootstrap/scss/bootstrap";
 
 @import "general";
 
@@ -36,8 +36,8 @@ $font-family-bold: Signika-bold, Arial;
 @import "admin";
 
 // select2
-@import "../../../../node_modules/select2/src/scss/core";
-@import "../../../../node_modules/select2-theme-bootstrap4/src/select2-bootstrap";
+@import "~select2/src/scss/core";
+@import "~select2-theme-bootstrap4/src/select2-bootstrap";
 
 // Set yaml classes to keep old style alive and constistent
 @import "yaml";
@@ -47,7 +47,7 @@ $font-family-bold: Signika-bold, Arial;
 @import "forums";
 @import "gallery";
 @import "offcanvas";
-@import "tempusdominus_bootstrap4";
+@import "~tempusdominus-bootstrap-4/src/sass/_tempusdominus-bootstrap-4.scss";
 @import "footer";
 
 .badge-warning {

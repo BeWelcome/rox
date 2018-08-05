@@ -8,7 +8,7 @@ class PageWithHTML extends AbstractBasePage
     // Add or increment query string if a JS file changes to make sure browsers
     // reload the file (e.g. "?1" -> "?2")
     private $_early_scriptfiles = array(
-        '/build/manifest.js',
+        '/build/runtime.js',
         '/build/bewelcome.js',
         '/script/main.js?9',
 //         '/script/common/common.js?1',

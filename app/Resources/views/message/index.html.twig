@@ -14,6 +14,11 @@
     {% if items.nbResults == 0 %}
         <p>{{ 'No messages in this folder.' | trans }}</p>
     {% else %}
+
+        {% for filter,menuItem in submenu.items %}
+            <a class="btn btn-sm btn-{% if submenu.active == filter %}primary{% else %}light{% endif %}" href="{{ menuItem.url }}">{{ menuItem.key | trans }}</a>
+        {% endfor %}
+
         <form name="message_index_form" method="post">
 
         {% if items.haveToPaginate %}

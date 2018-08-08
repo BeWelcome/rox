@@ -14,7 +14,7 @@
             {% endif %}
         {% endif %}
         <div class="row {% if own %}justify-content-end{% else %}justify-content-start{% endif %}">
-            <div class="col-auto{% if own %} order-12 pr-0{% else %} pl-0{% endif %}">
+            <div class="col-1{% if own %} order-12 pr-0{% else %} pl-0{% endif %}">
                 {# \todo streamline code --> macro #}
                 {% if own %}
                     <img class="profileimg" width="80" height="80" src="{{ path( 'avatar', { 'username': my_member.Username , 'size': 80 }) }}" title="{{ my_member.Username }}" alt="{{ 'Profile' | trans }}: {{ my_member.Username }}">
@@ -22,7 +22,7 @@
                     <img class="profileimg" width="80" height="80" src="{{ path( 'avatar', { 'username': otherUser.Username , 'size': 80 }) }}" title="{{ otherUser.Username }}" alt="{{ 'Profile' | trans }}: {{ otherUser.Username }}">
                 {% endif %}
             </div>
-            <div class="col message_{% if own %}own{% else %}other{% endif %}">
+            <div class="col-9 message_{% if own %}own{% else %}other{% endif %}">
                 <small class="{% if own %}pull-right{% else %}pull-left{% endif %} text-muted m-0">
                     {%- if own -%}
                         {{ 'You' | trans }}

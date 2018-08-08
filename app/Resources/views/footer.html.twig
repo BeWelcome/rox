@@ -1,12 +1,14 @@
-{% import _self as helper %}
+{%- import _self as helper -%}
+{%- set hasEnglishRights = app.user.hasRightsForLocale('en') -%}
+{%- set hasCurrentLocaleRights = app.user.hasRightsForLocale(app.session.get('locale')) -%}
 <footer>
     {% set langsel -%}
         <select id="language" name="language" class="small select2 combo"
                 onchange="window.location.href=this.value; return false">
             {% for lang in languages %}
-                <option {% if lang.ShortCode == app.request.locale %}selected="selected"{% endif %}
-                        value="{{ path('language', { locale: lang.ShortCode }) }}">{{ lang.name|raw }}
-                    ({{ lang.translatedname|raw }})
+                <option {% if lang['ShortCode'] == app.request.locale %}selected="selected"{% endif %}
+                        value="{{ path('language', { locale: lang['ShortCode'] }) }}">{{ lang['Name']|raw }}
+                    ({{ lang['TranslatedName']|raw }})
                 </option>
             {% endfor %}
         </select>
@@ -18,7 +20,7 @@
                     Site currently displayed in&nbsp; {{ langsel }}
                 </form>
                 <div class="col-4">
-                    {% if is_granted('ROLE_ADMIN_WORDS') and not is_translation_interface is defined %}
+                    {% if is_granted('ROLE_ADMIN_WORDS') and hasCurrentLocaleRights %}
                         <div class="float-md-right form-inline">{{ 'Translation mode is' | trans }}&nbsp;
                             <button type="button" class="btn btn-sm btn-secondary py-1 dropdown-toggle"
                                     data-toggle="dropdown"
@@ -39,13 +41,13 @@
                     {% endif %}
                 </div>
                 <div class="col-12 mt-1">
-                    <a href="{{ url('about') }}"><strong>{{ 'AboutUsPage' | trans }}</strong></a>
-                    <a href="{{ url('terms_french') }}" class="footnav" target="new">{{ 'TermsOfUse' | trans }}</a>
-                    <a href="{{ url('privacy') }}" class="footnav" target="new">{{ 'Privacy' | trans }}</a>
-                    <a href="{{ url('imprint') }}" class="footnav">{{ 'Impressum' | trans }}</a>
-                    <a href="{{ url('about_faq') }}" class="footnav">{{ 'faq' | trans }}</a>
-                    <a href="{{ url('feedback') }}" class="footnav">{{ 'Contact us' | trans }}</a>
-                    <a href="{{ url('feedback', { IdCategory: 1, RequestURI: url('homepage')}) }}" class="footnav">{{ 'Reportbug' | trans }}</a>
+                    <a href="{{ url('about') }}"><strong>{{ 'AboutUsPage' | trans }}</strong></a> •
+                    <a href="{{ url('terms_french') }}" target="new">{{ 'TermsOfUse' | trans }}</a> •
+                    <a href="{{ url('privacy') }}" target="new">{{ 'Privacy' | trans }}</a> •
+                    <a href="{{ url('imprint') }}">{{ 'Impressum' | trans }}</a> •
+                    <a href="{{ url('about_faq') }}">{{ 'faq' | trans }}</a> •
+                    <a href="{{ url('feedback') }}">{{ 'Contact us' | trans }}</a> •
+                    <a href="{{ url('feedback', { IdCategory: 1, RequestURI: url('homepage')}) }}">{{ 'Reportbug' | trans }}</a>
                 </div>
                 <div class="col-12 mt-1">
                     &copy; 2007 &mdash; {{ "now" | date("Y") }} <a href="http://www.bevolunteer.org/"
@@ -137,10 +139,10 @@
                                 </div>
                             {% else %}
                                 <div class="col-12"><h1>{{ 'Existing translations' | trans }}</h1>
-                                    <small class="text-muted">{{ 'The list shows all translatable items and have an existing translation in the current locale.' | trans }}</small>
+                                    <small class="text-muted">{{ 'The list shows all translatable items that have an existing translation in the current locale.' | trans }}</small>
                                 </div>
                                 {% block defined_messages %}
-                                    {{ helper.render_table(messages_defined) }}
+                                    {{ helper.render_table(messages_defined, hasEnglishRights) }}
                                 {% endblock %}
                             {% endif %}
                         </div>
@@ -154,7 +156,7 @@
                                 <h1>{{ 'Fallback Translations' | trans }}</h1>
                                 <small class="text-muted">{{ 'The list shows all translations that match the English original text.' | trans }}</small>
                                 {% block fallback_messages %}
-                                    {{ helper.render_table(messages_fallback) }}
+                                    {{ helper.render_table(messages_fallback, hasEnglishRights) }}
                                 {% endblock %}
                             {% endif %}
                         </div>
@@ -167,7 +169,7 @@
                             {% else %}
                                 {{ 'Translations keyword doesn\'t exist' | trans }}
                                 {% block missing_messages %}
-                                    {{ helper.render_table(messages_missing) }}
+                                    {{ helper.render_table(messages_missing, hasEnglishRights) }}
                                 {% endblock %}
                             {% endif %}
                         </div>
@@ -177,7 +179,10 @@
         </div>
     {% endif %}
 </footer>
-{% macro render_table(messages, hasEnglishRights, state) %}
+{% macro render_table(messages, hasEnglishRights) %}
+    {# We should alwas get messages but better be safe than sorry. #}
+    {% if messages|length %}
+        {% set state = messages[0].state %}
     <div class="col-12">
         <table class="table table-striped">
             <thead>
@@ -231,4 +236,5 @@
             </tbody>
         </table>
     </div>
+    {% endif %}
 {% endmacro %}

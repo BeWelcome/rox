@@ -56,11 +56,20 @@ class Word
     private $donottranslate = 'no';
 
     /**
-     * @var int
+     * @var Member
      *
-     * @ORM\Column(name="IdLanguage", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      */
-    private $idlanguage = '0';
+    private $author;
+
+    /**
+     * @var Language
+     *
+     * @ORM\OneToOne(targetEntity="Language")
+     * @ORM\JoinColumn(name="IdLanguage", referencedColumnName="id")
+     */
+    private $language;
 
     /**
      * @var string
@@ -68,13 +77,6 @@ class Word
      * @ORM\Column(name="Description", type="text", length=65535, nullable=false)
      */
     private $description;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="IdMember", type="integer", nullable=false)
-     */
-    private $idmember = '0';
 
     /**
      * @var \DateTime
@@ -234,27 +236,28 @@ class Word
     }
 
     /**
-     * Set idlanguage.
+     * Sets language and the matching shortcode (\todo remove shortcode or idlanguage when old code is finally replaced).
      *
-     * @param int $idlanguage
+     * @param Language $language
      *
      * @return Word
      */
-    public function setIdlanguage($idlanguage)
+    public function setLanguage($language)
     {
-        $this->idlanguage = $idlanguage;
+        $this->language = $language;
+        $this->setShortCode($language->getShortcode());
 
         return $this;
     }
 
     /**
-     * Get idlanguage.
+     * Get language.
      *
-     * @return int
+     * @return Language
      */
-    public function getIdlanguage()
+    public function getLanguage()
     {
-        return $this->idlanguage;
+        return $this->language;
     }
 
     /**
@@ -282,27 +285,27 @@ class Word
     }
 
     /**
-     * Set idmember.
+     * Set author.
      *
-     * @param int $idmember
+     * @param Member $author
      *
      * @return Word
      */
-    public function setIdmember($idmember)
+    public function setAuthor($author)
     {
-        $this->idmember = $idmember;
+        $this->author = $author;
 
         return $this;
     }
 
     /**
-     * Get idmember.
+     * Get author.
      *
-     * @return int
+     * @return Member
      */
-    public function getIdmember()
+    public function getAuthor()
     {
-        return $this->idmember;
+        return $this->author;
     }
 
     /**

@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
-class TranslationFormType extends AbstractType
+class EditTranslationFormType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $formBuilder
@@ -27,22 +27,21 @@ class TranslationFormType extends AbstractType
                 'label' => 'translation.wordcode',
             ])
             ->add('description', TextAreaType::class, [
+                'disabled' => true,
                 'label' => 'translation.description',
             ])
-            ->add('englishText', TextAreaType::class);
-        $formBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $translationRequest = $event->getData();
-            $form = $event->getForm();
-            if ('en' !== $translationRequest->locale) {
-                $form->add('locale', TextType::class, [
-                        'disabled' => true,
-                        'label' => 'translation.locale',
-                    ])
-                    ->add('translatedText', TextAreaType::class, [
-                        'required' => false,
-                    ]);
-            }
-            $form->add('Create', SubmitType::class);
-        });
+            ->add('englishText', TextAreaType::class, [
+                'disabled' => true,
+                'label' => 'translation.englishText',
+            ])
+            ->add('locale', TextType::class, [
+                'disabled' => true,
+                'label' => 'translation.locale',
+            ])
+            ->add('translatedText', TextAreaType::class, [
+                'required' => true,
+            ])
+            ->add('update', SubmitType::class)
+        ;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Model;
 
+use AppBundle\Doctrine\Hydrator\LanguageHydrator;
 use AppBundle\Entity\Language;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
@@ -20,7 +21,7 @@ class LanguageModel extends BaseModel
 
         $rsm = new ResultSetMappingBuilder($entityManager);
         $rsm->addRootEntityFromClassMetadata(Language::class, 'l');
-        //         $rsm->addFieldResult('l', 'TranslatedName', 'translatedname');
+        // $rsm->addFieldResult('l', 'TranslatedName', 'translatedname');
 
         $query = $entityManager->createNativeQuery("SELECT 
     l.*, IFNULL(w2.Sentence, l.EnglishName) as TranslatedName 
@@ -34,9 +35,9 @@ WHERE
     w1.code = 'WelcomeToSignup'
 ORDER BY Name ASC", $rsm);
 
-        $languages = $query->getResult();
+        $languages = $query->getResult('LanguageHydrator');
         $locales = array_map(function ($language) {
-            return $language->getShortCode();
+            return $language['ShortCode'];
         }, $languages);
         $merged = array_combine($locales, $languages);
 

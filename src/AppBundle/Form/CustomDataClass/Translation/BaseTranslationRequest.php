@@ -2,7 +2,6 @@
 
 namespace AppBundle\Form\CustomDataClass\Translation;
 
-
 class BaseTranslationRequest
 {
     /**
@@ -19,7 +18,6 @@ class BaseTranslationRequest
      * @var string
      */
     public $description;
-
 
     /**
      * @Assert\NotBlank()

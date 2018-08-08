@@ -13,11 +13,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\Mapping as ORM;
 use Rox\Core\Exception\RuntimeException;
 use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Doctrine\Common\Persistence\ObjectManagerAware;
 
 /**
  * Member.
@@ -38,6 +38,20 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     const ACTIVE_SEARCH = "'Active', 'ActiveHidden', 'OutOfRemind', 'Pending'";
     const ACTIVE_WITH_MESSAGES = "'Active', 'OutOfRemind', 'Pending'";
     const MEMBER_COMMENTS = "'Active', 'ActiveHidden', 'AskToLeave', 'ChoiceInactive', 'OutOfRemind', 'Pending'";
+
+    const ROLE_ADMIN_ADMIN = 'ROLE_ADMIN_ADMIN';
+    const ROLE_ADMIN_WORDS = 'ROLE_ADMIN_WORDS';
+    const ROLE_ADMIN_RIGHTS = 'ROLE_ADMIN_RIGHTS';
+    const ROLE_ADMIN_RUNBOT = 'ROLE_ADMIN_RUNBOT';
+    const ROLE_ADMIN_LOGS = 'ROLE_ADMIN_LOGS';
+    const ROLE_ADMIN_FAQ = 'ROLE_ADMIN_FAQ';
+    const ROLE_ADMIN_FLAGS = 'ROLE_ADMIN_FLAGS';
+    const ROLE_ADMIN_MASSMAIL = 'ROLE_ADMIN_MASSMAIL';
+    const ROLE_ADMIN_PROFILE = 'ROLE_ADMIN_PROFILE';
+    const ROLE_ADMIN_SUGGESTIONS = 'ROLE_ADMIN_SUGGESTIONS';
+    const ROLE_ADMIN_COMMUNITYNEWS = 'ROLE_ADMIN_COMMUNITYNEWS';
+    const ROLE_ADMIN_NEWMEMBERSBEWELCOME = 'ROLE_ADMIN_NEWMEMBERSBEWELCOME';
+    const ROLE_ADMIN = 'ROLE_ADMIN';
 
     /**
      * @var ObjectManager
@@ -2654,20 +2668,17 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
 
             /** @var RightVolunteer $volunteerRight */
             foreach ($volunteerRights->getIterator() as $volunteerRight) {
-                if ($volunteerRight->getRight() == $word) {
+                if ($volunteerRight->getRight() === $word) {
                     $strScope = str_replace('"', '', str_replace(',', ';', $volunteerRight->getScope()));
                     $scope = explode(';', $strScope);
-                    if (in_array($locale, $scope, true))
-                    {
+                    if (in_array($locale, $scope, true)) {
                         $hasRight = true;
                     }
-                    if (in_array('All', $scope, true))
-                    {
+                    if (in_array('All', $scope, true)) {
                         $hasRight = true;
                     }
                 }
             }
-
         }
 
         return $hasRight;
@@ -2678,8 +2689,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      *
      * @param ObjectManager $objectManager
      * @param ClassMetadata $classMetadata
-     *
-     * @return void
      */
     public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
     {

@@ -434,29 +434,4 @@ class FaqController extends Controller
 
         return $subMenu;
     }
-
-    /**
-     * Remove the cache file corresponding to the given locale.
-     *
-     * @param string $locale
-     *
-     * @return bool
-     */
-    private function removeCacheFile($locale)
-    {
-        $localeExploded = explode('_', $locale);
-        $finder = new Finder();
-        $finder->files()->in($this->getParameter('kernel.cache_dir'))->name(sprintf('/catalogue\.%s.*\.php$/', $localeExploded[0]));
-        $deleted = true;
-        foreach ($finder as $file) {
-            $path = $file->getRealPath();
-            $deleted = unlink($path);
-            $metadata = $path.'.meta';
-            if (file_exists($metadata)) {
-                unlink($metadata);
-            }
-        }
-
-        return $deleted;
-    }
 }

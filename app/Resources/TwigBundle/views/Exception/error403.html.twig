@@ -1,0 +1,15 @@
+{# app/Resources/TwigBundle/views/Exception/error403.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1>Page Access Denied</h1>
+
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <p>
+            Hi {{ app.user.Username }},<br>
+            You tried to access a page that needs special rights which you do not have.<br>
+
+            <a href="/landing">Return to the homepage</a>.
+        </p>
+    {% endif %}
+{% endblock %}

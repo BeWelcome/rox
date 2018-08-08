@@ -2,11 +2,14 @@
 
 namespace AppBundle\Form\CustomDataClass\Translation;
 
+use AppBundle\Entity\Word;
+use Symfony\Component\Validator\Constraints as Assert;
+use InvalidArgumentException;
+
 class EditTranslationRequest
 {
     /**
      * @Assert\NotBlank()
-     * @Assert\Length(min="10", max="100")
      *
      * @var string
      */
@@ -17,7 +20,19 @@ class EditTranslationRequest
      *
      * @var string
      */
+    public $locale;
+
+    /**
+     * @Assert\NotBlank()
+     *
+     * @var string
+     */
     public $englishText;
+
+    /**
+     * @var string
+     */
+    public $description;
 
     /**
      * @Assert\NotBlank()
@@ -26,9 +41,25 @@ class EditTranslationRequest
      */
     public $translatedText;
 
-    public static function fromTranslation(): self
+    /**
+     * @param Word $original
+     * @param Word $translation
+     * @return EditTranslationRequest
+     * @throws InvalidArgumentException
+     */
+    public static function fromTranslations(Word $original, Word $translation)
     {
+        if ($original->getCode() !== $translation->getCode())
+        {
+            throw new InvalidArgumentException();
+        }
+
         $editTranslationRequest = new self();
+        $editTranslationRequest->wordCode = $original->getCode();
+        $editTranslationRequest->englishText = $original->getSentence();
+        $editTranslationRequest->description = $original->getDescription();
+        $editTranslationRequest->locale = $translation->getShortCode();
+        $editTranslationRequest->translatedText = $translation->getSentence();
 
         return $editTranslationRequest;
     }

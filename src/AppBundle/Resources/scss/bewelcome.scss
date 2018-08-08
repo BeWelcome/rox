@@ -47,7 +47,9 @@ $font-family-bold: Signika-bold, Arial;
 @import "forums";
 @import "gallery";
 @import "offcanvas";
-@import "~tempusdominus-bootstrap-4/src/sass/_tempusdominus-bootstrap-4.scss";
+
+// tempus dominus date time picker
+@import "tempusdominus_bootstrap4.scss";
 @import "footer";
 
 .badge-warning {

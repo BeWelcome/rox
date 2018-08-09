@@ -155,7 +155,7 @@ class RequestAndMessageController extends Controller
             $this->getParameter('new_members_messages_per_hour'),
             $this->getParameter('new_members_messages_per_day')
         )) {
-            $this->addFlash('error', 'You have exceeded your message limit.');
+            $this->addFlash('error', 'You have exceeded your message limit. Try again later');
             $referrer = $request->headers->get('referer');
 
             return $this->redirect($referrer);
@@ -223,7 +223,7 @@ class RequestAndMessageController extends Controller
             $this->getParameter('new_members_messages_per_hour'),
             $this->getParameter('new_members_messages_per_day')
         )) {
-            $this->addFlash('error', 'You have exceeded your request limit.');
+            $this->addFlash('error', 'You have exceeded your request limit. Try again later.');
             $referrer = $request->headers->get('referer');
 
             return $this->redirect($referrer);

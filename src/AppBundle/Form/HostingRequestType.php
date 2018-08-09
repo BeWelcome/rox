@@ -46,9 +46,6 @@ class HostingRequestType extends AbstractType
             ])
             ->add('flexible', CheckboxType::class, [
                 'required' => false,
-                'attr' => [
-                    'class' => 'ml-3',
-                ],
             ])
             ->add(
                 'numberOfTravellers',

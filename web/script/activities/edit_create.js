@@ -1,7 +1,6 @@
 $(function () {
 
     $('#activity-start-date').datetimepicker({
-        debug: true
     });
     $('#activity-end-date').datetimepicker({
         useCurrent: false

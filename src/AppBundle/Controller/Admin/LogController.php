@@ -25,8 +25,8 @@ class LogController extends Controller
         $member = null;
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 20);
-        $types = $request->query->get('log_form[types]', []);
-        $username = $request->query->get('log_form[username]', null);
+        $types = $request->query->get('types', []);
+        $username = $request->query->get('username', null);
 
         $logModel = new LogModel($this->getDoctrine());
         $logTypes = $logModel->getLogTypes();

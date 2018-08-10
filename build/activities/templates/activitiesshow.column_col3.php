@@ -4,7 +4,7 @@ $formkit = $this->layoutkit->formkit;
 $callbackTagsJoinEdit = $formkit->setPostCallback('ActivitiesController', 'joinLeaveActivityCallback');
 $callbackTagsCancelUncancel = $formkit->setPostCallback('ActivitiesController', 'cancelUncancelActivityCallback');
 
-$layoutbits = new Mod_layoutbits();
+$layoutbits = new \MOD_layoutbits();
 $request = PRequest::get()->request;
 $login_url = 'login/' . htmlspecialchars(implode('/', $request), ENT_QUOTES);
 $purifierModule = new MOD_htmlpure();

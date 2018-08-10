@@ -118,7 +118,7 @@ LIMIT 1
         if (!$safetyTeamOrAdmin) {
             $query .= " AND bewelcomed < 3";
         }
-        $query .= " AND DATEDIFF(NOW(), created) < 90";
+        $query .= " AND DATEDIFF(NOW(), created) < 200";
         $row = $this->singleLookup($query);
         return $row->cnt;
     }

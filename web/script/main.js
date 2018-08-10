@@ -154,7 +154,7 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "../bundles/ivoryckeditor/ckeditor.js",
+        file: "../bundles/fosckeditor/ckeditor.js",
         pages: [
             "activities",
             "blog",

@@ -19,8 +19,10 @@
 
 {% block content %}
     {% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
-    {{ form(form) }}
-
+    {{ form_start(form) }}
+    {{ form_rest(form) }}
+    <button type="submit">{{ 'Update' | trans }}</button>
+    {{ form_end(form) }}
     <div class="log"></div>
     {% if logs.nbResults == 0 %}
         <div class="alert alert-warning">{{ 'No logs found for these parameters.' | trans }}</div>

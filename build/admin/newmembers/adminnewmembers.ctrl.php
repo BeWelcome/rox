@@ -120,7 +120,7 @@ class AdminNewMembersController extends AdminBaseController
                     $this->model->globalGreetingSent($member);
                     break;
             }
-            $this->redirectAbsolute('/messages/compose/' . $username);
+            $this->redirectAbsolute('/new/message/' . $username);
         } else {
             $this->redirectAbsolute('/members/' . $username);
         }

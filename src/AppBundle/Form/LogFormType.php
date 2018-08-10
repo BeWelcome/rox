@@ -34,7 +34,11 @@ class LogFormType extends AbstractType
                 'attr' => [
                     'class' => 'member-autocomplete',
                 ],
-            ])
-            ->add('update', SubmitType::class);
+            ]);
+    }
+
+    public function getBlockPrefix()
+    {
+        return null;
     }
 }

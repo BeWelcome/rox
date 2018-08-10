@@ -145,7 +145,7 @@ class MemberPage extends PageWithActiveSkin
             array_push($tt,array('adminflags', 'admin/flags/list/members/'. $username, $ww->AdminFlags) ) ;
         }
         if (MOD_right::get()->HasRight('Logs')) {
-            array_push($tt,array('admin','bw/admin/adminlogs.php?Username='.$username,$ww->AdminLogs) ) ;
+            array_push($tt,array('admin','admin/logs?username='.$username,$ww->AdminLogs) ) ;
         }
         return($tt) ;
     }

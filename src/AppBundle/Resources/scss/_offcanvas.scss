@@ -2,24 +2,54 @@
  * Off Canvas
  * --------------------------------------------------
  */
-@media (max-width: 991.98px) {
-  .offcanvas-collapse {
+@media screen and (max-width: 767px) {
+  .row-offcanvas {
     position: relative;
-    top: 0;
-    bottom: 0;
-    left: 100%;
-    width: 100%;
-    padding-right: 1rem;
-    padding-left: 1rem;
-    overflow-y: auto;
-    visibility: hidden;
-    background-color: #343a40;
-    transition-timing-function: ease-in-out;
-    transition-duration: .3s;
-    transition-property: left, visibility;
+    -webkit-transition: all .25s ease-out;
+    -o-transition: all .25s ease-out;
+    transition: all .25s ease-out;
   }
-  .offcanvas-collapse.open {
+
+  .row-offcanvas-right {
+    right: 0;
+  }
+
+  .row-offcanvas-left {
     left: 0;
-    visibility: visible;
+  }
+
+  .row-offcanvas-right
+  .sidebar-offcanvas {
+    right: -100%; /* 12 columns */
+  }
+
+  .row-offcanvas-right.active
+  .sidebar-offcanvas {
+    right: -50%; /* 6 columns */
+  }
+
+  .row-offcanvas-left
+  .sidebar-offcanvas {
+    left: -100%; /* 12 columns */
+  }
+
+  .row-offcanvas-left.active
+  .sidebar-offcanvas {
+    left: -50%; /* 6 columns */
+  }
+
+  .row-offcanvas-right.active {
+    right: 50%; /* 6 columns */
+  }
+
+  .row-offcanvas-left.active {
+    left: 50%; /* 6 columns */
+  }
+
+  .sidebar-offcanvas {
+    position: absolute;
+    top: 0;
+    margin: .25rem;
+    width: 50%; /* 6 columns */
   }
 }

@@ -23,7 +23,7 @@
 
         {% if items.haveToPaginate %}
         <div class="float-left">
-            {{ pagerfanta( items, 'twitter_bootstrap4_translated') }}
+            {{ pagerfanta( items, 'twitter_bootstrap4_translated', { 'proximity': 1, 'prev_message': '&larr;', 'next_message': '&rarr;' }) }}
         </div>
         {% endif %}
 
@@ -108,7 +108,7 @@
         </form>
         {% if items.haveToPaginate %}
             <div class="float-left">
-                {{ pagerfanta( items, 'twitter_bootstrap4_translated') }}
+                {{ pagerfanta( items, 'twitter_bootstrap4_translated', { 'proximity': 1, 'prev_message': '&larr;', 'next_message': '&rarr;' }) }}
             </div>
         {% endif %}
 

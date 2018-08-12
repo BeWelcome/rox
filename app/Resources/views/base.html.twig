@@ -58,37 +58,39 @@
                 {% endfor %}
             </div>
             {% set sidebar = (submenu is defined) %}
+            {% set contentBlock %} {% block content %}{% endblock %} {% endset %}
             <div class="container">
-                <div class="row{% if sidebar %} row-offcanvas row-offcanvas-right mt-2{% endif %}">
-                    <div class="col-12{% if sidebar %} col-md-9{% endif %}">
-                        {% if sidebar %}
-                        <p class="float-right d-md-none">
-                            <button type="button" class="btn btn-primary btn-sm ml-3" data-toggle="offcanvas">Toggle nav</button>
-                        </p>
-                        {% endif %}
-                        {% block content %}{% endblock %}
-                    </div>
-                    {% if sidebar %}
-                        <div class="col-6 col-md-3 sidebar-offcanvas mt-3" id="sidebar">
+                <div class="row"><div class="col-12">{{ dump(sidebar) }}</div></div>
+                {% if sidebar %}
+                    <div class="row row-offcanvas row-offcanvas-right mt-2">
+                        <div class="col-12 col-md-9">
+                            <p class="float-right d-md-none">
+                                <button type="button" class="btn btn-primary btn-sm ml-3" data-toggle="offcanvas">Toggle nav</button>
+                            </p>
+                            {{  contentBlock | raw }}
+                        </div>
+                        <div class="col-6 col-md-3 sidebar-offcanvas" id="sidebar">
                             <div class="list-group mb-2">
                                 {% block subnav %}{% endblock %}
                             </div>
                         </div>
-                    {% endif %}
-                </div>
+                    </div>
+                {% else %}
+                    <div class="row">
+                        <div class="col-12">
+                            {{  contentBlock | raw }}
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         </main>
         {% include 'footer.html.twig' %}
         <script src="{{ asset('build/runtime.js') }}"></script>
         <script src="{{ asset('build/bewelcome.js') }}"></script>
+        {% if sidebar %}
+            <script src="{{ asset('build/offcanvas.js') }}"></script>
+        {% endif %}
         <script type="application/javascript">
-            {% if sidebar %}
-            $(document).ready(function () {
-                $('[data-toggle="offcanvas"]').click(function () {
-                    $('.row-offcanvas').toggleClass('active')
-                });
-            });
-            {% endif %}
             $(".select2").select2({
                 theme: 'bootstrap',
                 containerCssClass: 'form-control'

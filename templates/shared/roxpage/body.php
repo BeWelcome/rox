@@ -67,7 +67,7 @@
         ?>
     </div> <!-- row -->
 </div> <!-- main -->
-<script src="bundles/app/js/offcanvas.js"></script>
+<script src="build/offcanvas.js"></script>
 <div>
     <?php $this->debugInfo() ?>
     <?php $this->leftoverTranslationLinks() ?>

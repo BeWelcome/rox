@@ -25,7 +25,7 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
 
-<div class="col-6 col-md-3 sidebar-offcanvas mt-3" id="sidebar">
+<div class="col-6 col-md-3 sidebar-offcanvas" id="sidebar">
     <div class="list-group">
         <a class="list-group-item nav-link active" href="donate"><?php echo $words->getBuffered('DonateLink'); ?></a>
         <a class="list-group-item nav-link" href="donate/list"><?php echo $words->getBuffered('DonateList'); ?></a>

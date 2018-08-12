@@ -1,7 +1,7 @@
 var Encore = require('@symfony/webpack-encore');
 
 Encore
-//    .configureRuntimeEnvironment('dev')
+    .configureRuntimeEnvironment('dev')
     .enableSingleRuntimeChunk()
     .setOutputPath('web/build/')
     .setPublicPath('/build')
@@ -23,6 +23,7 @@ Encore
     .addEntry('member/autocomplete', './src/AppBundle/Resources/js/member/autocomplete.js')
     .addEntry('admin/faqs', './src/AppBundle/Resources/js/admin/faqs.js')
     .addEntry('chartjs', './node_modules/chart.js/dist/Chart.js')
+    .addEntry('offcanvas', './src/AppBundle/Resources/public/js/offcanvas.js')
 
     .enableSassLoader()
     // allow legacy applications to use $/jQuery as a global variable, make popper visible for bootstrap

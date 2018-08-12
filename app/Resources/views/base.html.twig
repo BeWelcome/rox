@@ -60,7 +60,6 @@
             {% set sidebar = (submenu is defined) %}
             {% set contentBlock %} {% block content %}{% endblock %} {% endset %}
             <div class="container">
-                <div class="row"><div class="col-12">{{ dump(sidebar) }}</div></div>
                 {% if sidebar %}
                     <div class="row row-offcanvas row-offcanvas-right mt-2">
                         <div class="col-12 col-md-9">

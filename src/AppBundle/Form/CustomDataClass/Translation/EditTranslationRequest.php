@@ -49,7 +49,7 @@ class EditTranslationRequest
      */
     public static function fromTranslations(Word $original, Word $translation)
     {
-        if ($original->getCode() !== $translation->getCode())
+        if (strtolower($original->getCode()) !== strtolower($translation->getCode()))
         {
             throw new InvalidArgumentException();
         }

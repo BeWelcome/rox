@@ -64,12 +64,13 @@ class TranslationController extends Controller
      * Update an existing translation for the locale
      *
      * @param Request $request
-     * @param mixed   $locale
-     * @param mixed   $code
+     * @param Language $language
+     * @param mixed $code
      *
+     * @ParamConverter("language", class="AppBundle\Entity\Language", options={"mapping": {"locale": "shortcode"}})
      * @return Response
      */
-    public function editTranslationAction(Request $request, $locale, $code)
+    public function editTranslationAction(Request $request, Language $language, $code)
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
@@ -83,7 +84,7 @@ class TranslationController extends Controller
         /** @var Word $translation */
         $translation = $translationRepository->findOneBy([
            'code' => $code,
-           'shortCode' => $locale,
+           'shortCode' => $language->getShortCode(),
         ]);
         $translationRequest = EditTranslationRequest::fromTranslations($original, $translation);
 
@@ -92,22 +93,22 @@ class TranslationController extends Controller
         $editForm->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $data = $editForm->getData();
-            if ($data->translatedText !== $translation->getSentence())
-            {
-                $em = $this->getDoctrine()->getManager();
-                $translation->setSentence($data->translatedText);
-                $translation->setUpdated(new DateTime());
-                $em->persist($translation);
-                $em->flush();
-                $this->translationModel->removeCacheFile($this->getParameter('kernel.cache_dir'), $locale);
-                $this->addFlash('notice', 'translation.edit');
-            }
+            $em = $this->getDoctrine()->getManager();
+            // Make sure the ID of the translations match
+            $translation->setCode($original->getCode());
+            $translation->setSentence($data->translatedText);
+            $translation->setUpdated(new DateTime());
+            $translation->setAuthor($this->getUser());
+            // No need for a description as the English original has one
+            $translation->setDescription('');
+            $em->persist($translation);
+            $em->flush();
+            $this->translationModel->removeCacheFile($this->getParameter('kernel.cache_dir'), $language->getShortcode());
+            $this->addFlash('notice', 'translation.edit');
         }
 
         return $this->render(':admin:translations/edit.html.twig', [
-            'form' => $editForm->createView(),
-            'locale' => $locale,
-            'code' => $code,
+            'form' => $editForm->createView()
         ]);
     }
 
@@ -181,30 +182,60 @@ class TranslationController extends Controller
      * Adds a missing translation for an existing english index
      *
      * @param Request $request
-     * @param mixed   $locale
-     * @param mixed   $code
+     * @param Language $language
+     * @param mixed $code
      *
      * @return Response
+     * @ParamConverter("language", class="AppBundle\Entity\Language", options={"mapping": {"locale": "shortcode"}})
      */
-    public function addTranslationAction(Request $request, $locale, $code)
+    public function addTranslationAction(Request $request, Language $language, $code)
     {
+        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
+
+        if ($language->getShortcode() === 'en') {
+            $this->addFlash('notice', "Something's weird");
+            $this->redirectToRoute('translations');
+        }
         $translationRepository = $this->getDoctrine()
             ->getRepository(Word::class);
         /** @var Word $original */
         $original = $translationRepository->findOneBy([
             'code' => $code,
-            'ShortCode' => 'en',
+            'shortCode' => 'en',
         ]);
+        $translation = $translationRepository->findOneBy([
+            'code' => $code,
+            'shortCode' => $language->getShortcode(),
+        ]);
+
+        // Work around a problem in the database
+        // Sometimes the word code do not match between translations
+        if ($translation !== null)
+        {
+            return $this->redirectToRoute('translation_edit', [ 'locale' => $language->getShortCode(), 'code' => $code]);
+        }
+
         $translation = new Word();
-        $translation->setShortCode($locale);
-        $translation->setCode($code);
+        $translation->setCode($original->getCode());
 
-        $translationRequest = TranslationRequest::fromTranslations($original, $translation);
+        $addTranslationRequest = EditTranslationRequest::fromTranslations($original, $translation);
 
-        $addForm = $this->createForm(TranslationFormType::class, $translationRequest);
+        $addForm = $this->createForm(EditTranslationFormType::class, $addTranslationRequest);
 
         $addForm->handleRequest($request);
         if ($addForm->isSubmitted() && $addForm->isValid()) {
+            $data = $addForm->getData();
+            $em = $this->getDoctrine()->getManager();
+            $translation->setSentence($data->translatedText);
+            $translation->setLanguage($language);
+            $translation->setCreated(new DateTime());
+            $translation->setAuthor($this->getUser());
+            // No need for a description as the English original has one
+            $translation->setDescription('');
+            $em->persist($translation);
+            $em->flush();
+            $this->translationModel->removeCacheFile($this->getParameter('kernel.cache_dir'), $language->getShortcode());
+            $this->addFlash('notice', 'translation.edit');
         }
 
         return $this->render(':admin:translations/edit.html.twig', [

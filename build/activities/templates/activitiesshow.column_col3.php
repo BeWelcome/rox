@@ -40,7 +40,7 @@ if (empty($vars)) {
 }
 ?>
 
-<div class="d-flex flex-row justify-content-start w-100">
+<div class="d-flex flex-row w-100">
 
     <div>
         <h2 class="m-0"><?php echo $this->activity->title; ?></h2>
@@ -83,10 +83,10 @@ if (empty($vars)) {
             <img class="mappreview"
                  src="https://maps.googleapis.com/maps/api/staticmap?center={{ member.Latitude }},{{ member.Longitude }}&zoom=10&size=117x117&key=AIzaSyAiF_lG8CdC-hCIXbGs9jilOFJRoXteM3k">
 
-            <h4 class="m-0 mt-1"><?= $words->get('ActivityLocationAddress'); ?></h4>
+            <h5 class="m-0 my-1"><?= $words->get('ActivityLocationAddress'); ?></h5>
             <p class="small">
                 <?php echo $this->activity->address ?><br>
-                <?php echo '<strong>' . $this->activity->location->name . '<br>' . $this->activity->location->getCountry()->name . '</strong></p>'; ?>
+                <span class="mt-1 font-weight-bold"><?php echo $this->activity->location->name . '<br>' . $this->activity->location->getCountry()->name; ?></span></p>
         </div>
         <div class="float-right pl-2">
             <?php echo $purifier->purify($this->activity->description); ?>
@@ -231,7 +231,7 @@ if (empty($vars)) {
 
 
 
-    <div class="row mt-3">
+    <div class="row p-3">
 
         <div class="col-12 p-0"><h4><?php echo $words->get('ActivityAttendees'); ?></h4></div>
 

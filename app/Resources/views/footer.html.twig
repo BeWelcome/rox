@@ -41,19 +41,19 @@
                     {% endif %}
                 </div>
                 <div class="col-12 mt-1">
-                    <a href="{{ url('about') }}"><strong>{{ 'AboutUsPage' | trans }}</strong></a> •
-                    <a href="{{ url('terms_french') }}" target="new">{{ 'TermsOfUse' | trans }}</a> •
-                    <a href="{{ url('privacy') }}" target="new">{{ 'Privacy' | trans }}</a> •
-                    <a href="{{ url('imprint') }}">{{ 'Impressum' | trans }}</a> •
-                    <a href="{{ url('about_faq') }}">{{ 'faq' | trans }}</a> •
-                    <a href="{{ url('feedback') }}">{{ 'Contact us' | trans }}</a> •
-                    <a href="{{ url('feedback', { IdCategory: 1, RequestURI: url('homepage')}) }}">{{ 'Reportbug' | trans }}</a>
+                    <a href="{{ url('about') }}" class="font-weight-bold">{{ 'AboutUsPage' | trans }}</a>
+                    <a href="{{ url('terms_french') }}" class="footnav" target="new">{{ 'TermsOfUse' | trans }}</a>
+                    <a href="{{ url('privacy') }}" class="footnav" target="new">{{ 'Privacy' | trans }}</a>
+                    <a href="{{ url('imprint') }}" class="footnav">{{ 'Impressum' | trans }}</a>
+                    <a href="{{ url('about_faq') }}" class="footnav">{{ 'faq' | trans }}</a>
+                    <a href="{{ url('feedback') }}" class="footnav">{{ 'Contact us' | trans }}</a>
+                    <a href="{{ url('feedback', { IdCategory: 1, RequestURI: url('homepage')}) }}" class="footnav">{{ 'Reportbug' | trans }}</a>
                 </div>
                 <div class="col-12 mt-1">
                     &copy; 2007 &mdash; {{ "now" | date("Y") }} <a href="http://www.bevolunteer.org/"
                                                                    target="_blank">BeVolunteer</a> and contributors
 
-                    - <em> Running on open source <a style="display:inline" href="https://github.com/bewelcome/rox">BW
+                    - <em> Running on open source <a class="d-inline" href="https://github.com/bewelcome/rox">BW
                             Rox</a> rev. <a
                                 href="https://github.com/BeWelcome/rox/commit/{{ version }}">{{ version }}</a>
                         ({{ version_dt }})</em>

@@ -168,7 +168,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
             <a href="members/<?php echo $username; ?>/comments/add"
            class="btn btn-primary mt-3"><?php echo $words->get('addcomments'); ?></a>
             <? } else { ?>
-            ...
+            no comment
             <? } ?>
         </div>
     <? }
@@ -242,7 +242,13 @@ if ($showfrom || $editfrom || $showto || $editto) {
    } else {
          ?>
         <div class="col-12 col-sm-6 card comment-bg-neutral">
-            ...
+
+         <? if ($this->myself && ($c->UsernameToMember==$loginuser)){ ?>
+             <a href="members/<?php echo $username; ?>/comments/add"
+                class="btn btn-primary mt-3"><?php echo $words->get('addcomments'); ?></a>
+            <? } else { ?>
+             <p class="text-center mt-3">no comment</p>
+             <? } ?>
         </div>
     <? } ?>
 

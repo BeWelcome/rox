@@ -59,6 +59,7 @@
         #footer {
             padding-left: 0.5rem;
             font-size: 0.8rem;
+            background-color: rgba (0,0,0,.2);
         }
 
         --></style>
@@ -69,10 +70,11 @@
         <div>
             <a href="https://www.bewelcome.org"><img
                         src="https://alpha.bewelcome.org/bundles/app/images/logo_index_top.png" class="logo"></a>
-            <h1>Message</h1>
+            <h2><?= $subject; ?></h2>
         </div>
     </div>
     <div class="content">
+        Sender: <?= $sender->getUsername(); ?>
         {% block content %}
             {{ message_text | raw }}
         {% endblock content %}

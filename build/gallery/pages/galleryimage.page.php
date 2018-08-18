@@ -24,11 +24,11 @@ class GalleryImagePage extends GalleryBasePage
 
     protected function teaserHeadline() {
         $title = ($this->image) ? $this->image->title : '';
-        return '<h3 id="g-title">'.$title.'</h3>';
+        return '<h3 class="mt-2"> - '.$title.'</h3>';
     }
 
     public function leftSidebar() {
-        require SCRIPT_BASE . 'build/gallery/templates/galleryimage.leftsidebar.php';
+        // require SCRIPT_BASE . 'build/gallery/templates/galleryimage.leftsidebar.php';
     }
 
 

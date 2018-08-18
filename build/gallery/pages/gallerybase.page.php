@@ -18,16 +18,12 @@ class GalleryBasePage extends PageWithActiveSkin
     
     protected function teaser() {
         ?>
-        <div id="teaser" class="page-header clearfix">
-        <div class="breadcrumbs">
-        <?=$this->breadcrumbs()?>
+        <div class="d-flex d-inline d-inline-block">
+            <div><?=$this->breadcrumbs()?></div>
+            <div class="ml-3"><?=$this->teaserHeadline()?></div>
         </div>
-        <div class="clearfix">
-            <?=$this->teaserHeadline()?>
-            <div class="gallery_menu">
+        <div>
             <?=$this->submenu()?>
-            </div>
-        </div>
         </div>
         <?
     }

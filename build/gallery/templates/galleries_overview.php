@@ -16,7 +16,7 @@ if ($galleries) {
     if (!isset($itemsPerPage)) $itemsPerPage = 12;
     $p = PFunctions::paginate($galleries, $page, $itemsPerPage);
     $galleriesonpage = $p[0];
-    echo '<div class="row">';
+    echo '<div class="row w-100">';
     foreach ($galleriesonpage as $g) {
     	static $ii = 0;
         $d = $Gallery->getLatestGalleryItem($g->id);

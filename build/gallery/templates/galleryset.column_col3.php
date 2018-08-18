@@ -15,12 +15,13 @@ if ($this->myself) {
 if (!isset($vars['errors'])) {
     $vars['errors'] = array();
 }
-
+if ($statement){
 foreach ($statement as $d) {
     echo '
     <div class="col-12 col-sm-6 col-md-3">
         <a href="gallery/show/image/'.$d->id.'"><img class="w-100" src="gallery/thumbimg?id='.$d->id.'&amp;t=1" alt="image"></a>
     </div>';
+}
 }
 echo '</div>';
 if ($this->myself) {

@@ -13,6 +13,8 @@
 
   .nav-link:hover {
     background-color: rgba($navbar-dark-color, 0.2);
+    color: $navbar-dark-hover-color;
+    text-shadow: 0 0 0.1rem white;
   }
 
   z-index: 1000;

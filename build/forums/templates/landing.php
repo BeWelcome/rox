@@ -52,9 +52,8 @@ if (!$User) {
         </form><?php echo $this->words->flushBuffer(); ?>
     </span> -->
 
-<div class="col-12">
-    <h3><a href="groups/forums"><?php echo $this->words->getFormatted('Groups'); ?></a> <span class="small">&ndash; <?php echo $this->words->get('GroupsTagLine'); ?></span>
-        <span class="pull-right small"><a href="rss/forumthreads"><i class="fa fa-rss"></i></a></span></h3>
+<div class="col-12 px-0">
+    <h3><a href="groups/forums"><?php echo $this->words->getFormatted('Groups'); ?></a> <span class="small">&ndash; <?php echo $this->words->get('GroupsTagLine'); ?></span></h3>
 
 <?php
     $uri = 'forums/';

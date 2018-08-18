@@ -40,7 +40,7 @@ if (empty($vars)) {
 }
 ?>
 
-<div class="d-flex flex-row w-100">
+<div class="d-flex flex-row w-100 mb-3">
 
     <div>
         <h2 class="m-0"><?php echo $this->activity->title; ?></h2>
@@ -75,20 +75,19 @@ if (empty($vars)) {
     </div>
 </div>
 
-<div class="d-flex flex-row w-100">
+<div class="row no-gutters w-100">
 
-    <div class="d-flex flex-wrap pr-2 ">
-        <div class="float-left postleftcolumn pl-2 pt-2" style="width: 135px;">
+    <div class="col-12 col-md-6 order-md-1 col-lg-3 order-lg-1 col-xl-2 postleftcolumn">
+        <img class="mappreview m-2"
+             src="https://maps.googleapis.com/maps/api/staticmap?center={{ member.Latitude }},{{ member.Longitude }}&zoom=10&size=117x117&key=AIzaSyAiF_lG8CdC-hCIXbGs9jilOFJRoXteM3k">
 
-            <img class="mappreview"
-                 src="https://maps.googleapis.com/maps/api/staticmap?center={{ member.Latitude }},{{ member.Longitude }}&zoom=10&size=117x117&key=AIzaSyAiF_lG8CdC-hCIXbGs9jilOFJRoXteM3k">
+        <h5 class="ml-2"><?= $words->get('ActivityLocationAddress'); ?></h5>
+        <p class="small ml-2">
+            <?php echo $this->activity->address ?><br>
+            <span class="mt-1 font-weight-bold"><?php echo $this->activity->location->name . '<br>' . $this->activity->location->getCountry()->name; ?></span></p>
+    </div>
 
-            <h5 class="m-0 my-1"><?= $words->get('ActivityLocationAddress'); ?></h5>
-            <p class="small">
-                <?php echo $this->activity->address ?><br>
-                <span class="mt-1 font-weight-bold"><?php echo $this->activity->location->name . '<br>' . $this->activity->location->getCountry()->name; ?></span></p>
-        </div>
-        <div class="float-right pl-2">
+    <div class="col-12 order-md-3 col-lg-6 col-xl-7 order-lg-2 px-2 pt-sm-2 pt-lg-0">
             <?php echo $purifier->purify($this->activity->description); ?>
 
             <?
@@ -99,9 +98,24 @@ if (empty($vars)) {
                 echo '<i class="fa fa-calendar"></i> ' . $this->activity->dateStart . ' <i class="fa fa-clock-o px-2"></i><span class="compacttext back">' . $this->activity->timeStart . '</span><br>';
                 echo '<i class="fa fa-calendar"></i> ' . $this->activity->dateEnd . ' <i class="fa fa-clock-o px-2"></i><span class="compacttext back">' . $this->activity->timeEnd . '</span>';
             } ?>
+
+        <div class="w-100 py-3">
+            <div class="w-100"><h5 class="mb-0"><?php echo $words->get('ActivityOrganizers'); ?></h5></div>
+            <div class="d-flex flex-row">
+                <?php
+                foreach ($this->activity->organizers as $organizer) { ?>
+                    <div class="d-flex mr-2">
+                        <div class="mr-2"><a href="members/<?php $organizer->Username; ?>"><img
+                                        src="members/avatar/<?php echo $organizer->Username; ?>?size=50"></a></div>
+                        <div><a href="members/<?php echo $organizer->Username; ?>"><?php echo $organizer->Username; ?></a></div>
+                    </div>
+                <? } ?>
+            </div>
         </div>
+
     </div>
-    <div class="ml-auto">
+
+    <div class="col-12 col-md-6 order-md-2 col-lg-3 order-lg-3">
         <div class="card p-2">
             <h4 class="card-title">Join<br></h4>
             <?php
@@ -210,20 +224,6 @@ if (empty($vars)) {
                     }
                     } ?>
                 </div>
-        </div>
-    </div>
-
-    <div class="w-100">
-        <div class="w-100 mt-3"><h4 class="mb-0"><?php echo $words->get('ActivityOrganizers'); ?></h4></div>
-        <div class="d-flex flex-row">
-            <?php
-            foreach ($this->activity->organizers as $organizer) { ?>
-                <div class="d-flex mr-2">
-                    <div class="mr-2"><a href="members/<?php $organizer->Username; ?>"><img
-                                    src="members/avatar/<?php echo $organizer->Username; ?>?size=50"></a></div>
-                    <div><a href="members/<?php echo $organizer->Username; ?>"><?php echo $organizer->Username; ?></a></div>
-                </div>
-            <? } ?>
         </div>
     </div>
 

@@ -21,17 +21,18 @@ class GalleryUserPage extends GalleryBasePage
         $member = $this->member;
         $words = $this->getWords();
         $ww = $this->ww;
-        $wwsilent = $this->wwsilent;
+        // $wwsilent = $this->wwsilent;
 
-        $ViewForumPosts=$words->get("ViewForumPosts",$member->forums_posts_count()) ;
+        // $ViewForumPosts=$words->get("ViewForumPosts",$member->forums_posts_count()) ;
         $tt = array();
             $tt[]= array('overview', 'gallery/show/user/'.$member->Username.'/sets'.$this->page.'', $ww->GalleryTitleSets);
-            $tt[]= array('images', 'gallery/show/user/'.$member->Username.'/images'.$this->page.'', $ww->GalleryTitleLatest);
         if ($this->myself) {
             $tt[]= array("manage", 'gallery/manage', $ww->GalleryManage, 'manage');
             $tt[]= array("upload", 'gallery/upload', $ww->GalleryUpload, 'upload');
-            echo $words->flushBuffer();
+        } else {
+            $tt[]= array('images', 'gallery/show/user/'.$member->Username.'/images'.$this->page.'', $ww->GalleryTitleLatest);
         }
+        echo $words->flushBuffer();
         return($tt) ;
         
     }
@@ -95,7 +96,7 @@ class GalleryUserPage extends GalleryBasePage
 
         <div class="row">
             <div class="col-2">
-                <div class="w-100"><a href="members/<?=$member->Username?>"><img src="<?=$picture_url?>" alt="Picture of <?=$member->Username?>" class="framed" height="100%" width="100%"/></a></div>
+                <div class="w-100"><a href="members/<?=$member->Username?>"><img src="<?=$picture_url?>" alt="Picture of <?=$member->Username?>" height="100%" width="100%"/></a></div>
                 <a class="btn btn-primary btn-sm btn-block" href="members/<?=$member->Username ?>">Profile</a>
             </div>
             <div class="col-10">

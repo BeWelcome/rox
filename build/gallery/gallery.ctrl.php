@@ -476,7 +476,7 @@ class GalleryController extends RoxControllerBase {
     		}
         	return 'gallery/upload';
         }
-        return 'gallery/show/user/' . $username . '/images';        
+        return 'gallery/manage';
     }
     
     /**

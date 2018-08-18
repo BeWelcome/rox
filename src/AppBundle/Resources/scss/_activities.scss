@@ -98,67 +98,7 @@ li.picbox_activities {
     padding: 7px 7px 30px 0;
     width: 240px;
 }
-/*
-** Calendar icons
-*/
 
-.calendar {
-  float: left;
-  width: 42px;
-  height: 42px;
-  background: url('../bundles/app/images/icons/calendar_sprites_own.gif') no-repeat;
-  margin: 6px;
-}
-
-.calendar-icon-01 {
-  background-position: 0 0;
-}
-.calendar-icon-02 {
-  background-position: -52px 0;
-}
-.calendar-icon-03 {
-  background-position: -104px 0;
-}
-.calendar-icon-04 {
-  background-position: -156px 0;
-}
-.calendar-icon-05 {
-  background-position: 0 -52px;
-}
-.calendar-icon-06 {
-  background-position: -52px -52px;
-}
-.calendar-icon-07 {
-  background-position: -104px -52px;
-}
-.calendar-icon-08 {
-  background-position: -156px -52px;
-}
-.calendar-icon-09 {
-  background-position: 0 -104px;
-}
-.calendar-icon-10 {
-  background-position: -52px -104px;
-}
-.calendar-icon-11 {
-  background-position: -104px -104px;
-}
-.calendar-icon-12 {
-  background-position: -156px -104px;
-} 
-.calendar-day {
-  font-size: 1em;
-  color: #000;
-  width: 42px;
-  text-align:center;
-  padding-top: 18px;
-}
-.calendar-year {
-  font-weight: bold;
-  font-size: .6em;
-  color: #999;
-  text-align:center;
-}
 #activity-location-suggestion {
   width: 100%;
 }
@@ -187,6 +127,19 @@ li.picbox_activities {
 .ui-timepicker-rtl dl dt{ float: right; clear: right; }
 .ui-timepicker-rtl dl dd { margin: 0 45% 10px 10px; }
 
-.attend{
-  width: 24%;
+
+  @include media-breakpoint-down(sm) {
+    .attend{
+      width: 100%;
+    }
+  }
+@include media-breakpoint-between(md,lg) {
+  .attend{
+    width: 48%;
+  }
+}
+@include media-breakpoint-up(xl) {
+  .attend{
+    width: 24%;
+  }
 }

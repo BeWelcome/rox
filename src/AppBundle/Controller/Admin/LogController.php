@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Admin;
 use AppBundle\Entity\Member;
 use AppBundle\Form\LogFormType;
 use AppBundle\Model\LogModel;
+use AppBundle\Repository\MemberRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,6 +43,7 @@ class LogController extends Controller
             $username = $data['username'];
         }
         if (null !== $username) {
+            /** @var MemberRepository $memberRepository */
             $memberRepository = $this->getDoctrine()->getRepository(Member::class);
             $member = $memberRepository->loadUserByUsername($username);
         }

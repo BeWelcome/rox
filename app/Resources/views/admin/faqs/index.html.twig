@@ -1,13 +1,6 @@
 {% extends 'base.html.twig' %}
 {% import 'macros.twig' as macros %}
 
-{% block subnav %}
-    {% for filter,menuItem in submenu.items %}
-        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}"
-           href="{{ menuItem.url }}">{{ menuItem.key | trans({}, 'messages', 'en') }}</a>
-    {% endfor %}
-{% endblock %}
-
 {% block javascripts %}
     <script src="{{ asset('build/jquery_ui.js') }}"></script>
     <script src="{{ asset('build/admin/faqs.js') }}"></script>

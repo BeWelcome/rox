@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Logs.
  *
  * @ORM\Table(name="logs")
+ * @ORM\Entity
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess

@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block title %}
+    {{ 'admin.tools.title' | trans }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ 'tools.headline' | trans }}</h1>
+    {% if messagesSent|length %}
+        <table class="table table-responsive">
+            <tr>
+                <th colspan="2">Member</th>
+                <th>Status</th>
+                <th>Updated</th>
+                <th># messages</th>
+            </tr>
+        {%  for result in messagesSent %}
+            <tr>
+                <td>{{ macros.avatar(result.Username) }}</td>
+                <td>{{ macros.profilelink(result.Username) }}</td>
+                <td>{{ result.Status }}</td>
+                <td>{{ result.Updated }}</td>
+                <td>{{ result.MessagesSent }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% else %}
+        Nothing to show. Odd isn't it?
+    {% endif %}
+{% endblock content %}

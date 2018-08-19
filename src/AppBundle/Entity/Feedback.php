@@ -2,15 +2,16 @@
 
 namespace AppBundle\Entity;
 
+use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Feedbacks
+ * Feedback
  *
- * @ORM\Table(name="feedbacks", indexes={@ORM\Index(name="IdMember", columns={"IdMember", "IdFeedbackCategory", "IdVolunteer"}), @ORM\Index(name="IdFeedbackCategory", columns={"IdFeedbackCategory"}), @ORM\Index(name="IdVolunteer", columns={"IdVolunteer"})})
+ * @ORM\Table(name="feedbacks")
  * @ORM\Entity
  */
-class Feedbacks
+class Feedback
 {
     /**
      * @var \DateTime
@@ -27,11 +28,12 @@ class Feedbacks
     private $created = '0000-00-00 00:00:00';
 
     /**
-     * @var integer
+     * @var Member
      *
-     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      */
-    private $idmember;
+    private $author;
 
     /**
      * @var string
@@ -41,25 +43,12 @@ class Feedbacks
     private $discussion;
 
     /**
-     * @var integer
+     * @var Language
      *
-     * @ORM\Column(name="IdVolunteer", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Language")
+     * @ORM\JoinColumn(name="IdLanguage", referencedColumnName="id")
      */
-    private $idvolunteer = '0';
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Status", type="string", nullable=false)
-     */
-    private $status = 'open';
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="IdLanguage", type="integer", nullable=false)
-     */
-    private $idlanguage = '0';
+    private $language;
 
     /**
      * @var integer
@@ -71,23 +60,21 @@ class Feedbacks
     private $id;
 
     /**
-     * @var \AppBundle\Entity\Feedbackcategories
+     * @var FeedbackCategory
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Feedbackcategories")
+     * @ORM\ManyToOne(targetEntity="FeedbackCategory")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdFeedbackCategory", referencedColumnName="id")
      * })
      */
-    private $idfeedbackcategory;
-
-
+    private $category;
 
     /**
      * Set updated
      *
      * @param \DateTime $updated
      *
-     * @return Feedbacks
+     * @return Feedback
      */
     public function setUpdated($updated)
     {
@@ -99,11 +86,11 @@ class Feedbacks
     /**
      * Get updated
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getUpdated()
     {
-        return $this->updated;
+        return Carbon::instance($this->updated);
     }
 
     /**
@@ -111,7 +98,7 @@ class Feedbacks
      *
      * @param \DateTime $created
      *
-     * @return Feedbacks
+     * @return Feedback
      */
     public function setCreated($created)
     {
@@ -123,35 +110,35 @@ class Feedbacks
     /**
      * Get created
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getCreated()
     {
-        return $this->created;
+        return Carbon::instance($this->created);
     }
 
     /**
-     * Set idmember
+     * Set author
      *
-     * @param integer $idmember
+     * @param Member author
      *
-     * @return Feedbacks
+     * @return Feedback
      */
-    public function setIdmember($idmember)
+    public function setAuthor(Member $author)
     {
-        $this->idmember = $idmember;
+        $this->author = $author;
 
         return $this;
     }
 
     /**
-     * Get idmember
+     * Get author
      *
-     * @return integer
+     * @return Member
      */
-    public function getIdmember()
+    public function getAuthor()
     {
-        return $this->idmember;
+        return $this->author;
     }
 
     /**
@@ -159,7 +146,7 @@ class Feedbacks
      *
      * @param string $discussion
      *
-     * @return Feedbacks
+     * @return Feedback
      */
     public function setDiscussion($discussion)
     {
@@ -179,35 +166,11 @@ class Feedbacks
     }
 
     /**
-     * Set idvolunteer
-     *
-     * @param integer $idvolunteer
-     *
-     * @return Feedbacks
-     */
-    public function setIdvolunteer($idvolunteer)
-    {
-        $this->idvolunteer = $idvolunteer;
-
-        return $this;
-    }
-
-    /**
-     * Get idvolunteer
-     *
-     * @return integer
-     */
-    public function getIdvolunteer()
-    {
-        return $this->idvolunteer;
-    }
-
-    /**
      * Set status
      *
      * @param string $status
      *
-     * @return Feedbacks
+     * @return Feedback
      */
     public function setStatus($status)
     {
@@ -227,15 +190,15 @@ class Feedbacks
     }
 
     /**
-     * Set idlanguage
+     * Set language
      *
-     * @param integer $idlanguage
+     * @param integer $ianguage
      *
-     * @return Feedbacks
+     * @return Feedback
      */
-    public function setIdlanguage($idlanguage)
+    public function setLanguage($language)
     {
-        $this->idlanguage = $idlanguage;
+        $this->language = $language;
 
         return $this;
     }
@@ -243,11 +206,11 @@ class Feedbacks
     /**
      * Get idlanguage
      *
-     * @return integer
+     * @return Language
      */
-    public function getIdlanguage()
+    public function getLanguage()
     {
-        return $this->idlanguage;
+        return $this->language;
     }
 
     /**
@@ -261,26 +224,26 @@ class Feedbacks
     }
 
     /**
-     * Set idfeedbackcategory
+     * Set category
      *
-     * @param \AppBundle\Entity\Feedbackcategories $idfeedbackcategory
+     * @param FeedbackCategory $category
      *
-     * @return Feedbacks
+     * @return Feedback
      */
-    public function setIdfeedbackcategory(\AppBundle\Entity\Feedbackcategories $idfeedbackcategory = null)
+    public function setCategory(FeedbackCategory $category)
     {
-        $this->idfeedbackcategory = $idfeedbackcategory;
+        $this->category = $category;
 
         return $this;
     }
 
     /**
-     * Get idfeedbackcategory
+     * Get category
      *
-     * @return \AppBundle\Entity\Feedbackcategories
+     * @return FeedbackCategory
      */
-    public function getIdfeedbackcategory()
+    public function getCategory()
     {
-        return $this->idfeedbackcategory;
+        return $this->category;
     }
 }

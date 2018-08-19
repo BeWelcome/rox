@@ -41,12 +41,12 @@
                     {% endif %}
                 </div>
                 <div class="col-12 mt-1">
-                    <a href="{{ url('about') }}" class="font-weight-bold">{{ 'AboutUsPage' | trans }}</a>
-                    <a href="{{ url('terms_french') }}" class="footnav" target="new">{{ 'TermsOfUse' | trans }}</a>
-                    <a href="{{ url('privacy') }}" class="footnav" target="new">{{ 'Privacy' | trans }}</a>
-                    <a href="{{ url('imprint') }}" class="footnav">{{ 'Impressum' | trans }}</a>
-                    <a href="{{ url('about_faq') }}" class="footnav">{{ 'faq' | trans }}</a>
-                    <a href="{{ url('feedback') }}" class="footnav">{{ 'Contact us' | trans }}</a>
+                    <a href="{{ url('about') }}" class="font-weight-bold">{{ 'AboutUsPage' | trans }}</a> &bull;
+                    <a href="{{ url('terms_french') }}" class="footnav" target="new">{{ 'TermsOfUse' | trans }}</a> &bull;
+                    <a href="{{ url('privacy') }}" class="footnav" target="new">{{ 'Privacy' | trans }}</a> &bull;
+                    <a href="{{ url('imprint') }}" class="footnav">{{ 'Impressum' | trans }}</a> &bull;
+                    <a href="{{ url('about_faq') }}" class="footnav">{{ 'faq' | trans }}</a> &bull;
+                    <a href="{{ url('feedback') }}" class="footnav">{{ 'Contact us' | trans }}</a> &bull;
                     <a href="{{ url('feedback', { IdCategory: 1, RequestURI: url('homepage')}) }}" class="footnav">{{ 'Reportbug' | trans }}</a>
                 </div>
                 <div class="col-12 mt-1">
@@ -112,7 +112,6 @@
                             </a>
                         </li>
                         {# Show fallback count only if any exist #}
-                        {% if messages_fallback %}
                         <li class="nav-item">
                             <a class="nav-link" id="profile-tab" data-toggle="tab" href="#fallback" role="tab"
                                aria-controls="fallback" aria-selected="false">
@@ -122,7 +121,6 @@
                                 </div>
                             </a>
                         </li>
-                        {% endif %}
                         <li class="nav-item">
                             <a class="nav-link" id="contact-tab" data-toggle="tab" href="#missing" role="tab"
                                aria-controls="missing" aria-selected="false">
@@ -149,7 +147,6 @@
                                 {% endblock %}
                             {% endif %}
                         </div>
-                        {% if messages_fallback %}
                         <div class="row tab-pane fade mb-2" id="fallback" role="tabpanel"
                              aria-labelledby="fallback-tab">
                             {% if messages_fallback is empty %}
@@ -164,7 +161,6 @@
                                 {% endblock %}
                             {% endif %}
                         </div>
-                        {% endif %}
                         <div class="row tab-pane fade mb-2" id="missing" role="tabpanel"
                              aria-labelledby="missing-tab">
                             {% if messages_missing is empty %}

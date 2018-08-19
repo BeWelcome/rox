@@ -2,6 +2,7 @@
 
 namespace AppBundle\EventListener;
 
+use Carbon\Carbon;
 use Rox\Member\Model\Member;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
@@ -28,6 +29,7 @@ class UserLocaleListener
 
         if (null !== $user->getLocale()) {
             $this->session->set('locale', $user->getLocale());
+            Carbon::setLocale($user->getLocale());
         }
     }
 }

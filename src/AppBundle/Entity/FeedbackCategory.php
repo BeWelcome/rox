@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Feedbackcategories
+ * Feedback category
  *
  * @ORM\Table(name="feedbackcategories")
  * @ORM\Entity
  */
-class Feedbackcategories
+class FeedbackCategory
 {
     /**
      * @var string
@@ -24,7 +24,7 @@ class Feedbackcategories
      *
      * @ORM\Column(name="CategoryDescription", type="text", length=255, nullable=false)
      */
-    private $categorydescription;
+    private $description;
 
     /**
      * @var \DateTime
@@ -70,14 +70,12 @@ class Feedbackcategories
      */
     private $id;
 
-
-
     /**
      * Set name
      *
      * @param string $name
      *
-     * @return Feedbackcategories
+     * @return FeedbackCategory
      */
     public function setName($name)
     {
@@ -97,27 +95,27 @@ class Feedbackcategories
     }
 
     /**
-     * Set categorydescription
+     * Set description
      *
-     * @param string $categorydescription
+     * @param string $description
      *
-     * @return Feedbackcategories
+     * @return FeedbackCategory
      */
-    public function setCategorydescription($categorydescription)
+    public function setDescription($description)
     {
-        $this->categorydescription = $categorydescription;
+        $this->description = $description;
 
         return $this;
     }
 
     /**
-     * Get categorydescription
+     * Get description
      *
      * @return string
      */
-    public function getCategorydescription()
+    public function getDescription()
     {
-        return $this->categorydescription;
+        return $this->description;
     }
 
     /**
@@ -125,7 +123,7 @@ class Feedbackcategories
      *
      * @param \DateTime $created
      *
-     * @return Feedbackcategories
+     * @return FeedbackCategory
      */
     public function setCreated($created)
     {
@@ -149,7 +147,7 @@ class Feedbackcategories
      *
      * @param string $emailtonotify
      *
-     * @return Feedbackcategories
+     * @return FeedbackCategory
      */
     public function setEmailtonotify($emailtonotify)
     {
@@ -173,7 +171,7 @@ class Feedbackcategories
      *
      * @param integer $idvolunteer
      *
-     * @return Feedbackcategories
+     * @return FeedbackCategory
      */
     public function setIdvolunteer($idvolunteer)
     {
@@ -197,7 +195,7 @@ class Feedbackcategories
      *
      * @param integer $sortorder
      *
-     * @return Feedbackcategories
+     * @return FeedbackCategory
      */
     public function setSortorder($sortorder)
     {
@@ -221,7 +219,7 @@ class Feedbackcategories
      *
      * @param integer $visible
      *
-     * @return Feedbackcategories
+     * @return FeedbackCategory
      */
     public function setVisible($visible)
     {

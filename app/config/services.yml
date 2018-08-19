@@ -77,6 +77,10 @@ services:
             - "@translator"
         tags: [{ name: pagerfanta.view, alias: twitter_bootstrap4_translated }]
 
+    rox.logger:
+        class: AppBundle\Logger\Logger
+        arguments: ['@doctrine.orm.entity_manager']
+
     rox.authentication_listener:
         class: AppBundle\EventListener\AuthListener
         tags:

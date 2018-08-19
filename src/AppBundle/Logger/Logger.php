@@ -2,32 +2,35 @@
 
 namespace AppBundle\Logger;
 
+use AppBundle\Entity\Log;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Logger implements ContainerAwareInterface
+class Logger
 {
-    /** @var Container */
-    private $container;
-
     /** @var EntityManager */
     private $em;
 
-    public function setContainer(ContainerInterface $container = null)
+    public function __construct(EntityManager $em)
     {
-        $this->container = $container;
-        $this->em = $container->get('doctrine')->getManager();
+        $this->em = $em;
     }
 
     /**
      * @throws \Exception
      */
-    public function write()
+    public function write($msg, $type, $member)
     {
         try {
-            echo 1;
+            $log = new Log();
+            $log->setLogMessage($msg);
+            $log->setMember($member);
+            $log->setType($type);
+            $log->setCreated(new \DateTime());
+            $this->em->persist($log);
+            $this->em->flush();
         } catch (\Exception $e) {
             throw $e;
         }

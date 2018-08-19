@@ -2,6 +2,7 @@
 
 namespace AppBundle\EventListener;
 
+use Carbon\Carbon;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -46,6 +47,7 @@ class LocaleListener implements EventSubscriberInterface
         $session = $request->getSession();
 
         $request->setLocale($session->get('lang', $this->defaultLocale));
+        Carbon::setLocale($session->get('lang', $this->defaultLocale));
     }
 
     /**

@@ -70,7 +70,10 @@
                         </div>
                         <div class="col-6 col-md-3 sidebar-offcanvas" id="sidebar">
                             <div class="list-group mb-2">
-                                {% block subnav %}{% endblock %}
+                                {% for filter,menuItem in submenu.items %}
+                                    <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}"
+                                       href="{{ menuItem.url }}">{{ menuItem.key | trans({}, 'messages', 'en') }}</a>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>

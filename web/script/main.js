@@ -216,13 +216,6 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "lightview.js?1",
-        pages: [
-            "gallery",
-            "tour/meet"
-        ]
-    },
-    {
         file: "transition.js?1",
         pages: [
             "thepeople"

@@ -22,7 +22,17 @@ foreach ($statement as $d) { ?>
         <div class="card h-100 p-2">
             <a href="#" data-toggle="modal" data-target="#photo<?= $d->id ?>"><img class="w-100" src="gallery/thumbimg?id=<?= $d->id ?>&amp;t=1" alt="<?= $d->title ?>"></a>
             <? if ($this->myself) { ?>
-             <a href="gallery/show/image/<?= $d->id ?>" class="btn btn-outline-primary"><i class="fa fa-edit mr-1"></i><?= $words->get('Edit'); ?></a>
+             <a href="gallery/show/image/<?= $d->id ?>" class="btn btn-outline-primary mt-1"><i class="fa fa-edit mr-1"></i><?= $words->get('Edit'); ?></a>
+                <?
+                    $formkit = $this->layoutkit->formkit;
+                    $callback_tag = $formkit->setPostCallback('GalleryController', 'updateGalleryCallback');
+                ?>
+                <form method="POST" action=""><?= $callback_tag; ?>
+                <input type="checkbox" class="input_check d-none" name="imageId[]" value="<?= $d->id ?>" checked>
+                <input name="gallery" type="hidden" value="<?= $g->id ?>">
+                <input name="removeOnly" type="hidden" value="1">
+                <input type="submit" class="btn btn-outline-danger btn-block" name="button" value="<?= $words->getBuffered('GalleryRemoveImagesFromPhotoset') ?>">
+            </form>
             <? } ?>
         </div>
     </div>

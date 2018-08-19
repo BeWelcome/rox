@@ -16,8 +16,18 @@ if ($galleries) {
     if (!isset($itemsPerPage)) $itemsPerPage = 12;
     $p = PFunctions::paginate($galleries, $page, $itemsPerPage);
     $galleriesonpage = $p[0];
-    echo '<div class="row w-100">';
-    foreach ($galleriesonpage as $g) {
+
+    ?>
+    <div class="row w-100 my-3">
+
+        <div class="col-12 col-sm-6 col-md-3 text-center">
+            <a href="members/<?= $username ?>">
+                <img class="framed w-100" src="members/avatar/<?= $username ?>/100" alt="Picture of <?= $username ?>" width="100%" alt="Profile of <?= $username ?>">
+                <span class="w-100"><?=$username?></span>
+            </a>
+        </div>
+
+    <? foreach ($galleriesonpage as $g) {
     	static $ii = 0;
         $d = $Gallery->getLatestGalleryItem($g->id);
         $s = $Gallery->getGalleryItems($g->id,1);
@@ -29,12 +39,11 @@ if ($galleries) {
     	?>
         <div class="col-12 col-sm-6 col-md-3">
             <div class="gallery_container">
-            <a href="gallery/show/sets/<?=$g->id?>">
-                <img class="mb-3 framed" src="<?=($d) ? 'gallery/thumbimg?id='.$d : 'images/lightview/blank.gif'?>" alt="image"/>
-                <span class="alert alert-info p-1" style="position: absolute;"><i class="fa fa-image mr-1"></i><?=$num_rows?></span>
-            </a>
+                <a href="gallery/show/sets/<?=$g->id?>">
+                    <img class="mb-3 framed" src="<?=($d) ? 'gallery/thumbimg?id='.$d : 'images/lightview/blank.gif'?>" alt="image"/>
+                    <span class="alert alert-info p-1" style="position: absolute;"><i class="fa fa-image mr-1"></i><?=$num_rows?></span>
+                </a>
             <h4 class="mb-0"><a href="gallery/show/sets/<?=$g->id?>"><?= htmlspecialchars($g->title)?></a></h4>
-            <span class="grey small"><?=$words->get('by')?> <a href="members/<?=$username?>" class="grey"><?=$username?></a></span>
             </div>
         </div>
         <?php

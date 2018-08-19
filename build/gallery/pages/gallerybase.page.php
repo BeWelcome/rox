@@ -69,7 +69,8 @@ class GalleryBasePage extends PageWithActiveSkin
 
     protected function submenu() {
         $active_menu_item = $this->getSubmenuActiveItem();
-        echo '<div class="list-group mt-1" role="group">';
+        echo '<div class="col-6 col-md-3 sidebar-offcanvas" id="sidebar">';
+        echo '<div class="list-group w-100" role="group">';
         foreach ($this->getSubmenuItems() as $index => $item) {
             $name = $item[0];
             $url = $item[1];
@@ -83,7 +84,7 @@ class GalleryBasePage extends PageWithActiveSkin
             ?><a class="list-group-item<?= $attributes; ?>" href="<?=$url ?>"><?=$label ?></a>
             <?php
         }
-        echo '</div>';
+        echo '</div></div>';
     }
 
     protected function gallerysetnav() {

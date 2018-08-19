@@ -8,7 +8,7 @@ if (!is_array($pages) || count($pages) == 0) {
     return false;
 }
 ?>
-<div class="row">
+<div class="row px-3">
     <ul class="pagination pull-right">
        <li class="page-item <?php if ($currentPage == 1){ echo ' disabled'; } ?>"><a href="<?=sprintf($request, ($currentPage - 1))?>" class="page-link">&lt;&lt;</a></li>
         <?php

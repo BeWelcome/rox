@@ -39,7 +39,8 @@ class GalleryUserPage extends GalleryBasePage
     
     protected function submenu() {
         $active_menu_item = $this->getSubmenuActiveItem();
-        echo '<div class="list-group mt-1" role="group">';
+        echo '<div class="col-6 col-md-3 sidebar-offcanvas" id="sidebar">';
+        echo '<div class="list-group w-100" role="group">';
         foreach ($this->getSubmenuItems() as $index => $item) {
             $name = $item[0];
             $url = $item[1];
@@ -53,11 +54,11 @@ class GalleryUserPage extends GalleryBasePage
             <a class="list-group-item<?= $attributes; ?>" href="<?= $url; ?>"><?= $label; ?></a>
             <?php
         }
-        echo '</div>';
+        echo '</div></div>';
     }
 
     protected function gallerynav() {
-        $active_menu_item = $this->getSubmenuActiveItem();
+        /* $active_menu_item = $this->getSubmenuActiveItem();
         echo '<div class="btn-group" role="group">';
         foreach ($this->getSubmenuItems() as $index => $item) {
             $name = $item[0];
@@ -73,23 +74,12 @@ class GalleryUserPage extends GalleryBasePage
             <?php
         }
         echo '</div>';
+        */
     }
-
-
-/*    protected function breadcrumbs() {
-        $words = $this->words;
-        return '<h1><a href="gallery">'.$words->get('Gallery').'</a> &raquo; <a href="gallery/show/user/'.$this->member->Username.'">'.ucfirst($this->member->Username).'</a></h1>';
-    }
-/*
-
-/*    protected function teaserHeadline() {
-        $words = $this->words;
-        return '<h3 class="userpage">'.MOD_layoutbits::PIC_50_50($this->member->Username,'',$style='float_left').' <a href="members/'.$this->member->Username.'">'.$this->member->Username.'</a></h3>';
-    }
-*/
     
     protected function teaser() {
 
+        /*
         $member = $this->member;
         $picture_url = 'members/avatar/'.$member->Username.'/100';
         ?>
@@ -108,6 +98,7 @@ class GalleryUserPage extends GalleryBasePage
             </div>
         </div>
         <?
+        */
     }
 
     public function leftSidebar()

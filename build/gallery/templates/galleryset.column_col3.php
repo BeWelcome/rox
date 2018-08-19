@@ -16,25 +16,39 @@ if (!isset($vars['errors'])) {
     $vars['errors'] = array();
 }
 if ($statement){
-foreach ($statement as $d) {
-    echo '
-    <div class="col-12 col-sm-6 col-md-3">
-        <a href="gallery/show/image/'.$d->id.'"><img class="w-100" src="gallery/thumbimg?id='.$d->id.'&amp;t=1" alt="image"></a>
-    </div>';
+foreach ($statement as $d) { ?>
+
+    <div class="col-12 col-sm-6 col-md-3 pl-0 pr-2">
+        <div class="card h-100 p-2">
+            <a href="#" data-toggle="modal" data-target="#photo<?= $d->id ?>"><img class="w-100" src="gallery/thumbimg?id=<?= $d->id ?>&amp;t=1" alt="<?= $d->title ?>"></a>
+            <? if ($this->myself) { ?>
+             <a href="gallery/show/image/<?= $d->id ?>" class="btn btn-outline-primary"><i class="fa fa-edit mr-1"></i><?= $words->get('Edit'); ?></a>
+            <? } ?>
+        </div>
+    </div>
+
+    <div class="modal fade" id="photo<?= $d->id ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <img src="gallery/img?id=<?= $d->id ?>" class="w-100">
+            </div>
+        </div>
+    </div>
+<?
 }
 }
-echo '</div>';
+
 if ($this->myself) {
+    echo '</div>';
 // Display the upload form
-    echo '<div class="row mt-3">';
 require SCRIPT_BASE . 'build/gallery/templates/uploadform.php';
 }
 
 /*
 ?>
-
-
-
 
 
 <div class="subcolumns gallery_overview">

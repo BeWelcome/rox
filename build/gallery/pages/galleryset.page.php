@@ -12,26 +12,23 @@ class GallerySetPage extends GalleryBasePage
 {
     protected function breadcrumbs() {
         $words = $this->words;
-        return '<h1><a href="gallery">'.$words->get('Gallery').'</a> &raquo; <a href="gallery/show/user/'.$this->member->Username.'">'.ucfirst($this->member->Username).'</a> &raquo; <a href="gallery/show/user/'.$this->member->Username.'/sets">'.$words->get("Photosets").'</a></h1>';
+        return '<h3>'.$words->get('Gallery').' &raquo; <a href="gallery/show/user/'.$this->member->Username.'">'.ucfirst($this->member->Username).'</a> &raquo; <a href="gallery/show/user/'.$this->member->Username.'/sets">'.$words->get("Photosets").'</a></h3>';
     }
 
     protected function teaserHeadline() {
         $words = $this->words;
-        return '<h3><a href="gallery/show/sets/'.$this->gallery->id.'" class="black" id="g-title">'.htmlspecialchars($this->gallery->title).'</a></h3>';
+        return '<h2><i class="fa fa-image mr-1"></i>'.htmlspecialchars($this->gallery->title).'</h2>';
     }
     
     protected function teaser() {
         ?>
-        <div id="teaser">
-        <div class="breadcrumbs">
-        <?=$this->breadcrumbs()?>
-        </div>
-        <div class="clearfix">
-            <?=$this->teaserHeadline()?>
-            <div class="gallery_menu">
-            <?=$this->gallerysetnav()?>
+        <div>
+            <div>
+            <?=$this->breadcrumbs()?>
             </div>
-        </div>
+            <div class="w-100">
+                <?=$this->teaserHeadline()?>
+            </div>
         </div>
         <?
     }

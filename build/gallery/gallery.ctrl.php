@@ -292,6 +292,7 @@ class GalleryController extends RoxControllerBase {
      */
     public function gallerydetails(Gallery $gallery)
     {
+        /*
         $page = new GallerySetDetailsPage();
         
         //Check if current TB-user-id and Gallery-user-id are the same
@@ -305,6 +306,7 @@ class GalleryController extends RoxControllerBase {
         $page->d = $this->_model->getLatestGalleryItem($gallery->id);
         $page->num_rows = $this->_model->getGalleryItems($gallery->id,1);
         return $page;
+        */
     }
 
     /**

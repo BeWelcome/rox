@@ -37,10 +37,10 @@ if ($galleryId) $postURL = 'gallery/show/sets/'.$galleryId;
     <div class="row">
         <div class="col-12 col-md-6">
             <div id="gallery-img-upload-files">
-                    <input type="file" name="gallery-file[]" class="w-100 btn-outline-primary" id="upload" oninput="$('div.2').show(); $(this).removeClass('btn-outline-primary'); $(this).addClass('btn-success');">
-                    <div class="upload 2"><input type="file" name="gallery-file[]" class="w-100 btn-outline-primary" oninput="$('div.3').show(); $(this).removeClass('btn-outline-primary'); $(this).addClass('btn-success');"></div>
-                    <div class="upload 3"><input type="file" name="gallery-file[]" class="w-100 btn-outline-primary" oninput="$('div.4').show(); $(this).removeClass('btn-outline-primary'); $(this).addClass('btn-success');"></div>
-                    <div class="upload 4"><input type="file" name="gallery-file[]" class="w-100 btn-outline-primary" oninput="$('div.5').show(); $(this).removeClass('btn-outline-primary'); $(this).addClass('btn-success');"></div>
+                    <input type="file" name="gallery-file[]" class="w-100 btn-outline-primary" id="upload" oninput="$('div.2').show(); $(this).removeClass('btn-outline-primary').addClass('btn-success');">
+                    <div class="upload 2"><input type="file" name="gallery-file[]" class="w-100 btn-outline-primary" oninput="$('div.3').show(); $(this).removeClass('btn-outline-primary').addClass('btn-success');"></div>
+                    <div class="upload 3"><input type="file" name="gallery-file[]" class="w-100 btn-outline-primary" oninput="$('div.4').show(); $(this).removeClass('btn-outline-primary').addClass('btn-success');"></div>
+                    <div class="upload 4"><input type="file" name="gallery-file[]" class="w-100 btn-outline-primary" oninput="$('div.5').show(); $(this).removeClass('btn-outline-primary').addClass('btn-success');"></div>
                     <div class="upload 5"><input type="file" name="gallery-file[]" class="w-100 btn-outline-primary" oninput="$('div.max5').show();"></div>
                     <div class="upload max5 alert alert-warning">You can only upload 5 images at a time</div>
                                 <input type="hidden" name="galleryId" value="<?=$galleryId;?>">

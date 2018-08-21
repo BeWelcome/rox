@@ -25,13 +25,13 @@ class GalleryUserPage extends GalleryBasePage
 
         // $ViewForumPosts=$words->get("ViewForumPosts",$member->forums_posts_count()) ;
         $tt = array();
-            $tt[]= array('overview', 'gallery/show/user/'.$member->Username.'/sets'.$this->page.'', $ww->GalleryTitleSets);
         if ($this->myself) {
             $tt[]= array("manage", 'gallery/manage', $ww->GalleryManage, 'manage');
             $tt[]= array("upload", 'gallery/upload', $ww->GalleryUpload, 'upload');
         } else {
             $tt[]= array('images', 'gallery/show/user/'.$member->Username.'/images'.$this->page.'', $ww->GalleryTitleLatest);
         }
+        $tt[]= array('overview', 'gallery/show/user/'.$member->Username.'/sets'.$this->page.'', $ww->GalleryTitleSets);
         echo $words->flushBuffer();
         return($tt) ;
         

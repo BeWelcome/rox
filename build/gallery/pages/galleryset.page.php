@@ -55,9 +55,9 @@ class GallerySetPage extends GalleryBasePage
 
         $tt = array();
             $tt[]= array('albums', 'gallery/show/user/'. $username .'/sets', $ww->GalleryTitleSets);
-            $tt[]= array('thumbnails', 'gallery/show/sets/'.$gallery->id.'/'.$this->page.'', $ww->GalleryThumbnails);
-            $tt[]= array('details', 'gallery/show/sets/'.$gallery->id.'/details/'.$this->page.'', $ww->GalleryDetails);
+            // $tt[]= array('details', 'gallery/show/sets/'.$gallery->id.'/details/'.$this->page.'', $ww->GalleryDetails);
         if ($this->myself) {
+            $tt[]= array("manage", 'gallery/manage', $ww->GalleryManage, 'manage');
             $tt[]= array("delete", 'gallery/show/sets/'.$gallery->id.'/delete', $ww->GalleryDelete, 'delete');
         }
         return($tt) ;

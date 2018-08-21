@@ -2,9 +2,6 @@
 
 namespace AppBundle\Model;
 
-
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Finder;
 
 class TranslationModel

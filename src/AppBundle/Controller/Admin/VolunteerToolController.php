@@ -2,8 +2,6 @@
 
 namespace AppBundle\Controller\Admin;
 
-
-use AppBundle\Entity\FeedbackCategory;
 use AppBundle\Entity\Feedback;
 use AppBundle\Entity\Member;
 use AppBundle\Form\ChangeUsernameFormType;
@@ -17,9 +15,7 @@ use AppBundle\Repository\MemberRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class VolunteerToolController extends Controller
 {
@@ -44,8 +40,7 @@ class VolunteerToolController extends Controller
     {
         // check permissions
         $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems))
-        {
+        if (empty($subMenuItems)) {
             $this->addFlash('notice', 'admin.tools.not.allowed');
             $referrer = $request->headers->get('referer');
 
@@ -53,6 +48,7 @@ class VolunteerToolController extends Controller
         }
 
         $firstSubMenuItem = reset($subMenuItems);
+
         return $this->redirect($firstSubMenuItem['url']);
     }
 
@@ -67,8 +63,7 @@ class VolunteerToolController extends Controller
     {
         // check permissions
         $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems) | !array_key_exists(self::CHANGE_USERNAME, $subMenuItems))
-        {
+        if (empty($subMenuItems) | !array_key_exists(self::CHANGE_USERNAME, $subMenuItems)) {
             $this->addFlash('notice', 'admin.tools.not.allowed');
             $referrer = $request->headers->get('referer');
 
@@ -78,19 +73,16 @@ class VolunteerToolController extends Controller
         $form = $this->createForm(ChangeUsernameFormType::class, new ChangeUsernameRequest());
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $memberRepository = $this->getDoctrine()->getRepository(Member::class);
-            $oldMember = $memberRepository->findOneBy(['username' => $data->oldUsername ]);
-            if ($oldMember !== null)
-            {
+            $oldMember = $memberRepository->findOneBy(['username' => $data->oldUsername]);
+            if (null !== $oldMember) {
                 // check if new username is already taken
-                $newMember = $memberRepository->findOneBy(['username' => $data->newUsername ]);
-                if ($newMember === null)
-                {
+                $newMember = $memberRepository->findOneBy(['username' => $data->newUsername]);
+                if (null === $newMember) {
                     $logger = $this->get('rox.logger');
-                    $logger->write('Changed member username from ' . $data->oldUsername . ' to ' . $data->newUsername . '.', 'adminquery', $this->getUser());
+                    $logger->write('Changed member username from '.$data->oldUsername.' to '.$data->newUsername.'.', 'adminquery', $this->getUser());
 
                     $em = $this->getDoctrine()->getManager();
                     $oldMember->setUsername($data->newUsername);
@@ -98,22 +90,18 @@ class VolunteerToolController extends Controller
                     $em->flush();
                     $flashMessage = $this->get('translator')->trans('Changed username for %oldname% to %newname%', [
                         '%oldname%' => $data->oldUsername,
-                        '%newname%' => $data->newUsername
+                        '%newname%' => $data->newUsername,
                     ]);
                     $this->addFlash('notice', $flashMessage);
+
                     return $this->redirectToRoute('admin_tools_change_username');
                 }
-                else
-                {
-                    $form->get('newUsername')->addError(new FormError('A member with this username already exists. Please choose a different name.'));
-                }
-            } else
-            {
+                $form->get('newUsername')->addError(new FormError('A member with this username already exists. Please choose a different name.'));
+            } else {
                 $form->get('oldUsername')->addError(new FormError('No member with this username found.'));
                 // check if new username is already taken
-                $newMember = $memberRepository->findOneBy(['username' => $data->newUsername ]);
-                if ($newMember !== null)
-                {
+                $newMember = $memberRepository->findOneBy(['username' => $data->newUsername]);
+                if (null !== $newMember) {
                     $form->get('newUsername')->addError(new FormError('A member with this username already exists. Please choose a different name.'));
                 }
             }
@@ -142,8 +130,7 @@ class VolunteerToolController extends Controller
     {
         // check permissions
         $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems) | !array_key_exists(self::FIND_USER, $subMenuItems))
-        {
+        if (empty($subMenuItems) | !array_key_exists(self::FIND_USER, $subMenuItems)) {
             $this->addFlash('notice', 'admin.tools.not.allowed');
             $referrer = $request->headers->get('referer');
 
@@ -154,12 +141,11 @@ class VolunteerToolController extends Controller
         $form->handleRequest($request);
 
         $members = null;
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
             $logger = $this->get('rox.logger');
-            $logger->write('Searched for members using search term: ' . $data->term . '.', 'adminquery', $this->getUser());
+            $logger->write('Searched for members using search term: '.$data->term.'.', 'adminquery', $this->getUser());
 
             /** @var MemberRepository $memberRepository */
             $memberRepository = $this->getDoctrine()->getRepository(Member::class);
@@ -190,8 +176,7 @@ class VolunteerToolController extends Controller
     {
         // check permissions
         $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems) | !array_key_exists(self::CHECK_FEEDBACK, $subMenuItems))
-        {
+        if (empty($subMenuItems) | !array_key_exists(self::CHECK_FEEDBACK, $subMenuItems)) {
             $this->addFlash('notice', 'admin.tools.not.allowed');
             $referrer = $request->headers->get('referer');
 
@@ -235,15 +220,15 @@ class VolunteerToolController extends Controller
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Exception
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showTopSpammerAction(Request $request)
     {
         // check permissions
         $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems) | !array_key_exists(self::CHECK_SPAM_MESSAGES, $subMenuItems))
-        {
+        if (empty($subMenuItems) | !array_key_exists(self::CHECK_SPAM_MESSAGES, $subMenuItems)) {
             $this->addFlash('notice', 'admin.tools.not.allowed');
             $referrer = $request->headers->get('referer');
 
@@ -279,7 +264,7 @@ class VolunteerToolController extends Controller
             ':admin:tools/top.spammer.html.twig',
             [
                 'messagesSent' => $messagesSent,
-//                'damageDone' => $damageDone,
+            //                'damageDone' => $damageDone,
                 'submenu' => [
                     'items' => $subMenuItems,
                     'active' => 'admin.tools.top.spammer',
@@ -293,15 +278,15 @@ class VolunteerToolController extends Controller
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Exception
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showDamageDoneAction(Request $request)
     {
         // check permissions
         $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems) | !array_key_exists(self::DAMAGE_DONE, $subMenuItems))
-        {
+        if (empty($subMenuItems) | !array_key_exists(self::DAMAGE_DONE, $subMenuItems)) {
             $this->addFlash('notice', 'admin.tools.not.allowed');
             $referrer = $request->headers->get('referer');
 
@@ -330,6 +315,7 @@ class VolunteerToolController extends Controller
             ORDER BY m2.Updated, m2.Username, m1.updated DESC , m1.id
             LIMIT 40
         ")->fetchAll();
+
         return $this->render(
             ':admin:tools/damage.done.html.twig',
             [
@@ -348,15 +334,15 @@ class VolunteerToolController extends Controller
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Exception
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showMessagesLastWeekAction(Request $request)
     {
         // check permissions
         $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems) | !array_key_exists(self::MESSAGES_LAST_WEEK, $subMenuItems))
-        {
+        if (empty($subMenuItems) | !array_key_exists(self::MESSAGES_LAST_WEEK, $subMenuItems)) {
             $this->addFlash('notice', 'admin.tools.not.allowed');
             $referrer = $request->headers->get('referer');
 
@@ -364,7 +350,7 @@ class VolunteerToolController extends Controller
         }
 
         $baseModel = new BaseModel($this->getDoctrine());
-        $results = $baseModel->execQuery("
+        $results = $baseModel->execQuery('
         SELECT
 m.username AS Username,
 g.name AS City,
@@ -380,7 +366,7 @@ AND (DATE_ADD(msg.created,
     INTERVAL 3000 DAY) > NOW())
 GROUP BY m.Username
 HAVING COUNT(msg.id) > 500
-ORDER BY count(msg.id) DESC")->fetchAll();
+ORDER BY count(msg.id) DESC')->fetchAll();
 
         return $this->render(
             ':admin:tools/messages.lastweek.html.twig',
@@ -400,29 +386,25 @@ ORDER BY count(msg.id) DESC")->fetchAll();
     private function getSubMenuItems()
     {
         $subMenu = [];
-        if ($this->isGranted([ Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_PROFILE ]))
-        {
+        if ($this->isGranted([Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_PROFILE])) {
             $subMenu[self::CHANGE_USERNAME] = [
                 'key' => self::CHANGE_USERNAME,
                 'url' => $this->generateUrl('admin_tools_change_username'),
             ];
         }
-        if ($this->isGranted([ Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_PROFILE, Member::ROLE_ADMIN_ACCEPTER ]))
-        {
+        if ($this->isGranted([Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_PROFILE, Member::ROLE_ADMIN_ACCEPTER])) {
             $subMenu[self::FIND_USER] = [
                 'key' => self::FIND_USER,
                 'url' => $this->generateUrl('admin_tools_find_user'),
             ];
         }
-        if ($this->isGranted([Member::ROLE_ADMIN_ADMIN, Member::ROLE_ADMIN_CHECKER]))
-        {
+        if ($this->isGranted([Member::ROLE_ADMIN_ADMIN, Member::ROLE_ADMIN_CHECKER])) {
             $subMenu[self::CHECK_FEEDBACK] = [
                 'key' => self::CHECK_FEEDBACK,
                 'url' => $this->generateUrl('admin_tools_check_feedback'),
             ];
         }
-        if ($this->isGranted([Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_CHECKER ]))
-        {
+        if ($this->isGranted([Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_CHECKER])) {
             $subMenu[self::CHECK_SPAM_MESSAGES] = [
                 'key' => self::CHECK_SPAM_MESSAGES,
                 'url' => $this->generateUrl('admin_tools_top_spammer'),
@@ -432,21 +414,19 @@ ORDER BY count(msg.id) DESC")->fetchAll();
                 'url' => $this->generateUrl('admin_tools_damage_done'),
             ];
         }
-        if ($this->isGranted([Member::ROLE_ADMIN_ADMIN, Member::ROLE_ADMIN_CHECKER]))
-        {
+        if ($this->isGranted([Member::ROLE_ADMIN_ADMIN, Member::ROLE_ADMIN_CHECKER])) {
             $subMenu[self::AGE_BY_COUNTRY] = [
                 'key' => self::AGE_BY_COUNTRY,
                 'url' => $this->generateUrl('admin_tools_age_by_country'),
             ];
         }
-        if ($this->isGranted([Member::ROLE_ADMIN_PROFILE, Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_ADMIN]))
-        {
+        if ($this->isGranted([Member::ROLE_ADMIN_PROFILE, Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_ADMIN])) {
             $subMenu[self::MESSAGES_LAST_WEEK] = [
                 'key' => self::MESSAGES_LAST_WEEK,
                 'url' => $this->generateUrl('admin_tools_messages_last_week'),
             ];
         }
+
         return $subMenu;
     }
-
 }

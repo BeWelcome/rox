@@ -3,10 +3,8 @@
 namespace AppBundle\Model;
 
 use AppBundle\Entity\FeedbackCategory;
-use AppBundle\Pagerfanta\LogAdapter;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
-use Symfony\Bundle\FrameworkBundle\Tests\Fixtures\Validation\Category;
 
 class FeedbackModel extends BaseModel
 {
@@ -14,8 +12,8 @@ class FeedbackModel extends BaseModel
      * Returns a Pagerfanta object that contains the currently selected logs.
      *
      * @param array $categories
-     * @param int $page
-     * @param int $limit
+     * @param int   $page
+     * @param int   $limit
      *
      * @return \Pagerfanta\Pagerfanta
      */
@@ -29,7 +27,7 @@ class FeedbackModel extends BaseModel
             $qb->where('f.category in (:categories)')
                 ->setParameter('categories', $categories);
         }
-         $qb
+        $qb
             ->orderBy('f.created', 'DESC');
 
         $adapter = new DoctrineORMAdapter($qb, true);
@@ -46,10 +44,10 @@ class FeedbackModel extends BaseModel
 
         $categories = $categoryRepository->findAll();
         $mapped = [];
-        foreach($categories as  $category)
-        {
+        foreach ($categories as $category) {
             $mapped[$category->getName()] = $category->getId();
         }
+
         return $mapped;
     }
 }

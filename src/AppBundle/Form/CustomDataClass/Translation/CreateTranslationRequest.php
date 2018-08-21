@@ -2,9 +2,7 @@
 
 namespace AppBundle\Form\CustomDataClass\Translation;
 
-use AppBundle\Entity\Word;
 use Symfony\Component\Validator\Constraints as Assert;
-use InvalidArgumentException;
 
 class CreateTranslationRequest
 {

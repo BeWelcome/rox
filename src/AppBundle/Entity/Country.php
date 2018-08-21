@@ -47,7 +47,7 @@ class Country
      * @ORM\Column(name="country", type="string", length=2)
      * @ORM\Id
      */
-    private $country_iso;
+    private $country;
 
     /**
      * Set geonameid.
@@ -129,5 +129,19 @@ class Country
     public function getCountry()
     {
         return $this->country;
+    }
+
+    /**
+     * Set country.
+     *
+     * @param string $country
+     *
+     * @return string
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
+
+        return $this;
     }
 }

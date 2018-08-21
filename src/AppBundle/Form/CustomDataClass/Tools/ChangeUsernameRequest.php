@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: raymund
  * Date: 15.08.2018
- * Time: 11:25
+ * Time: 11:25.
  */
 
 namespace AppBundle\Form\CustomDataClass\Tools;
@@ -30,6 +30,7 @@ class ChangeUsernameRequest
      * @Assert\NotIdenticalTo(
      *     propertyPath = "oldUsername",
      *     message = "New username must be different." )
+     *
      * @var string
      */
     public $newUsername;

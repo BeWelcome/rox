@@ -54,7 +54,7 @@ class MemberRepository extends EntityRepository implements UserLoaderInterface
     {
         return $this->createQueryBuilder('u')
             ->where('u.username like :term OR u.email like :term')
-            ->setParameter('term', '%' . $term . '%')
+            ->setParameter('term', '%'.$term.'%')
             ->setMaxResults(20)
             ->getQuery()
             ->getResult();

@@ -36,7 +36,6 @@ class Language
 
     /**
      * @var string
-     *
      */
     private $translatedname;
 

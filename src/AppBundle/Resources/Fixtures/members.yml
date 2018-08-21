@@ -1,18 +1,18 @@
 AppBundle\Entity\Member:
     member_{1..10}:
         Username: 'member-<current()>'
-        BirthDate: '<DateTime()>'
+        BirthDate: <DateTime()>
         email: 0
-        created: '<dateTimeBetween("-200 days", "now")>'
-        updated: '<dateTimeBetween($created, "now")>'
-        LastLogin: '<dateTimeBetween($created, "now")>'
+        created: <dateTimeBetween("-200 days", "now")>
+        updated: <dateTimeBetween($created, "now")>
+        LastLogin: <dateTimeBetween($created, "now")>
         LastSwitchToActive: null
         ExUserId: 0
         Status: 'Active'
         ChangedId: 0
         city: '@Berlin'
-        Latitude: '<latitude(@Berlin->Latitude - 0.1,@Berlin->Latitude + 0.1)>'
-        Longitude: '<longitude(@Berlin->Longitude - 0.1,@Berlin->Longitude + 0.1)>'
+        Latitude: <latitude(@Berlin->Latitude,@Berlin->Latitude)>
+        Longitude: <longitude(@Berlin->Longitude,@Berlin->Longitude)>
         NbRemindWithoutLogingIn: 0
         HomePhoneNumber: 0
         CellPhoneNumber: 0

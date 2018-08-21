@@ -31,8 +31,9 @@ class JoinMembersAndCryptedfieldsTable extends RoxMigration
                 if ($cryptedRow['TableColumn'] <> 'NotSet') {
                     $updateNeeded = true;
                     $updateSql .= str_replace('members.', '', $cryptedRow['TableColumn'])."Text = '".strip_tags(
+                        urldecode(
                             $cryptedRow['MemberCryptedValue']
-                        )."', ";
+                        ))."', ";
                     if (($cryptedRow['IsCrypted'] == 'crypted') || ($cryptedRow['IsCrypted'] == 'always')){
                         switch($cryptedRow['TableColumn']) {
                             case 'members.FirstName':

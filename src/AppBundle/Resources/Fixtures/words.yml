@@ -5,8 +5,8 @@ AppBundle\Entity\Word:
         Sentence: 'Welcome to the sign-up page'
         updated: <dateTime()>
         donottranslate : no
-        IdLanguage: '@language_en->id'
-        IdMember: 1
+        Language: '@language_en'
+        author: '@member_1'
         created: <dateTime()>
         TranslationPriority: 1
         Description: 'Description'
@@ -18,8 +18,8 @@ AppBundle\Entity\Word:
         Sentence: 'Bienvenue sur la page d’inscription'
         updated: <dateTime()>
         donottranslate : no
-        IdLanguage: '@language_fr->id'
-        IdMember: 1
+        Language: '@language_fr'
+        author: '@member_2'
         created: <dateTime()>
         TranslationPriority: 1
         Description: 'Description'

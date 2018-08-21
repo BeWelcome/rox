@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Feedback
+ * Feedback.
  *
  * @ORM\Table(name="feedbacks")
  * @ORM\Entity
@@ -51,7 +51,7 @@ class Feedback
     private $language;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -70,7 +70,7 @@ class Feedback
     private $category;
 
     /**
-     * Set updated
+     * Set updated.
      *
      * @param \DateTime $updated
      *
@@ -84,7 +84,7 @@ class Feedback
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return Carbon
      */
@@ -94,7 +94,7 @@ class Feedback
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
      *
@@ -108,7 +108,7 @@ class Feedback
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return Carbon
      */
@@ -118,7 +118,7 @@ class Feedback
     }
 
     /**
-     * Set author
+     * Set author.
      *
      * @param Member author
      *
@@ -132,7 +132,7 @@ class Feedback
     }
 
     /**
-     * Get author
+     * Get author.
      *
      * @return Member
      */
@@ -142,7 +142,7 @@ class Feedback
     }
 
     /**
-     * Set discussion
+     * Set discussion.
      *
      * @param string $discussion
      *
@@ -156,7 +156,7 @@ class Feedback
     }
 
     /**
-     * Get discussion
+     * Get discussion.
      *
      * @return string
      */
@@ -166,7 +166,7 @@ class Feedback
     }
 
     /**
-     * Set status
+     * Set status.
      *
      * @param string $status
      *
@@ -180,7 +180,7 @@ class Feedback
     }
 
     /**
-     * Get status
+     * Get status.
      *
      * @return string
      */
@@ -190,9 +190,10 @@ class Feedback
     }
 
     /**
-     * Set language
+     * Set language.
      *
-     * @param integer $ianguage
+     * @param int   $ianguage
+     * @param mixed $language
      *
      * @return Feedback
      */
@@ -204,7 +205,7 @@ class Feedback
     }
 
     /**
-     * Get idlanguage
+     * Get idlanguage.
      *
      * @return Language
      */
@@ -214,9 +215,9 @@ class Feedback
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -224,7 +225,7 @@ class Feedback
     }
 
     /**
-     * Set category
+     * Set category.
      *
      * @param FeedbackCategory $category
      *
@@ -238,7 +239,7 @@ class Feedback
     }
 
     /**
-     * Get category
+     * Get category.
      *
      * @return FeedbackCategory
      */

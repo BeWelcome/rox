@@ -318,4 +318,18 @@ class Location
     {
         return $this->geonameid;
     }
+
+    /**
+     * Set geonameid.
+     *
+     * @param int $geonameid
+     *
+     * @return Location
+     */
+    public function setGeonameId($geonameid)
+    {
+        $this->geonameid = $geonameid;
+
+        return $this;
+    }
 }

@@ -4,9 +4,6 @@ namespace AppBundle\Logger;
 
 use AppBundle\Entity\Log;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Logger
 {
@@ -19,6 +16,10 @@ class Logger
     }
 
     /**
+     * @param mixed $msg
+     * @param mixed $type
+     * @param mixed $member
+     *
      * @throws \Exception
      */
     public function write($msg, $type, $member)

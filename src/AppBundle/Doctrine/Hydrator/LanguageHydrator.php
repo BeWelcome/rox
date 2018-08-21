@@ -1,5 +1,7 @@
 <?php
+
 namespace AppBundle\Doctrine\Hydrator;
+
 use Doctrine\ORM\Internal\Hydration\AbstractHydrator;
 use PDO;
 
@@ -7,9 +9,8 @@ class LanguageHydrator extends AbstractHydrator
 {
     protected function hydrateAllData()
     {
-        $result = array();
-        $cache  = array();
-        foreach($this->_stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        $result = [];
+        foreach ($this->_stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $this->hydrateRowData($row, $result);
         }
 
@@ -18,7 +19,7 @@ class LanguageHydrator extends AbstractHydrator
 
     protected function hydrateRowData(array $row, array &$result)
     {
-        if(count($row) == 0) {
+        if (0 === count($row)) {
             return false;
         }
 
@@ -27,9 +28,7 @@ class LanguageHydrator extends AbstractHydrator
         // Assume first column is id field
         $id = $row[$keys[0]];
 
-        $value = false;
-
-        if(count($row) == 2) {
+        if (2 === count($row)) {
             // If only one more field assume that this is the value field
             $value = $row[$keys[1]];
         } else {

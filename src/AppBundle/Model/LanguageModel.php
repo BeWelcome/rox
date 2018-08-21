@@ -2,7 +2,6 @@
 
 namespace AppBundle\Model;
 
-use AppBundle\Doctrine\Hydrator\LanguageHydrator;
 use AppBundle\Entity\Language;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 

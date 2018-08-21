@@ -7,18 +7,17 @@ use AppBundle\Entity\Member;
 use AppBundle\Entity\Word;
 use AppBundle\Form\CustomDataClass\Translation\CreateTranslationRequest;
 use AppBundle\Form\CustomDataClass\Translation\EditTranslationRequest;
-use AppBundle\Form\CustomDataClass\TranslationRequest;
 use AppBundle\Form\EditTranslationFormType;
 use AppBundle\Form\TranslationFormType;
 use AppBundle\Model\TranslationModel;
 use AppBundle\Repository\WordRepository;
 use DateTime;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * Class TranslationController.
@@ -27,7 +26,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
  */
 class TranslationController extends Controller
 {
-    /** @var TranslationModel  */
+    /** @var TranslationModel */
     private $translationModel;
 
     public function __construct()
@@ -63,11 +62,12 @@ class TranslationController extends Controller
      *
      * Update an existing translation for the locale
      *
-     * @param Request $request
+     * @param Request  $request
      * @param Language $language
-     * @param mixed $code
+     * @param mixed    $code
      *
      * @ParamConverter("language", class="AppBundle\Entity\Language", options={"mapping": {"locale": "shortcode"}})
+     *
      * @return Response
      */
     public function editTranslationAction(Request $request, Language $language, $code)
@@ -108,7 +108,7 @@ class TranslationController extends Controller
         }
 
         return $this->render(':admin:translations/edit.html.twig', [
-            'form' => $editForm->createView()
+            'form' => $editForm->createView(),
         ]);
     }
 
@@ -117,11 +117,12 @@ class TranslationController extends Controller
      *
      * Creates an English index and the matching translation (if locale != 'en')
      *
-     * @param Request $request
+     * @param Request  $request
      * @param Language $language
-     * @param mixed   $code
+     * @param mixed    $code
      *
      * @ParamConverter("language", class="AppBundle\Entity\Language", options={"mapping": {"locale": "shortcode"}})
+     *
      * @return Response
      */
     public function createTranslationAction(Request $request, $language, $code)
@@ -137,9 +138,9 @@ class TranslationController extends Controller
         $createTranslationRequest = new CreateTranslationRequest();
         $createTranslationRequest->wordCode = $code;
         $createTranslationRequest->locale = $language->getShortcode();
-        $createTranslationRequest->translatedText = ($createTranslationRequest->locale == 'en') ? 'not needed' : '';
+        $createTranslationRequest->translatedText = ('en' === $createTranslationRequest->locale) ? 'not needed' : '';
 
-        $createForm = $this->createForm(TranslationFormType::class, $createTranslationRequest );
+        $createForm = $this->createForm(TranslationFormType::class, $createTranslationRequest);
         $createForm->handleRequest($request);
 
         if ($createForm->isSubmitted() && $createForm->isValid()) {
@@ -153,8 +154,7 @@ class TranslationController extends Controller
             $original->setAuthor($user);
             $original->setLanguage($english);
             $em->persist($original);
-            if ($createTranslationRequest->locale != 'en')
-            {
+            if ('en' !== $createTranslationRequest->locale) {
                 $translation = new Word();
                 $translation->setCode($data->wordCode);
                 $translation->setDescription($data->description);
@@ -167,7 +167,8 @@ class TranslationController extends Controller
             $em->flush();
             $this->translationModel->removeCacheFile($this->getParameter('kernel.cache_dir'), 'en');
             $this->translationModel->removeCacheFile($this->getParameter('kernel.cache_dir'), $language->getShortcode());
-            $this->addFlash('notice', 'Added translatable item ' . $code);
+            $this->addFlash('notice', 'Added translatable item '.$code);
+
             return $this->redirectToRoute('translations');
         }
 
@@ -181,9 +182,9 @@ class TranslationController extends Controller
      *
      * Adds a missing translation for an existing english index
      *
-     * @param Request $request
+     * @param Request  $request
      * @param Language $language
-     * @param mixed $code
+     * @param mixed    $code
      *
      * @return Response
      * @ParamConverter("language", class="AppBundle\Entity\Language", options={"mapping": {"locale": "shortcode"}})
@@ -192,7 +193,7 @@ class TranslationController extends Controller
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
-        if ($language->getShortcode() === 'en') {
+        if ('en' === $language->getShortcode()) {
             $this->addFlash('notice', "Something's weird");
             $this->redirectToRoute('translations');
         }
@@ -210,9 +211,8 @@ class TranslationController extends Controller
 
         // Work around a problem in the database
         // Sometimes the word code do not match between translations
-        if ($translation !== null)
-        {
-            return $this->redirectToRoute('translation_edit', [ 'locale' => $language->getShortCode(), 'code' => $code]);
+        if (null !== $translation) {
+            return $this->redirectToRoute('translation_edit', ['locale' => $language->getShortCode(), 'code' => $code]);
         }
 
         $translation = new Word();
@@ -239,7 +239,7 @@ class TranslationController extends Controller
         }
 
         return $this->render(':admin:translations/edit.html.twig', [
-            'form' => $addForm->createView()
+            'form' => $addForm->createView(),
         ]);
     }
 

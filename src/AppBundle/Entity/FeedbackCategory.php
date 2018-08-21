@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Feedback category
+ * Feedback category.
  *
  * @ORM\Table(name="feedbackcategories")
  * @ORM\Entity
@@ -41,28 +41,28 @@ class FeedbackCategory
     private $emailtonotify;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdVolunteer", type="integer", nullable=false)
      */
     private $idvolunteer = '0';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="sortOrder", type="integer", nullable=false)
      */
     private $sortorder = '0';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="visible", type="integer", nullable=false)
      */
     private $visible = '0';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -71,7 +71,7 @@ class FeedbackCategory
     private $id;
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -85,7 +85,7 @@ class FeedbackCategory
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -95,7 +95,7 @@ class FeedbackCategory
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
      *
@@ -109,7 +109,7 @@ class FeedbackCategory
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -119,7 +119,7 @@ class FeedbackCategory
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
      *
@@ -133,7 +133,7 @@ class FeedbackCategory
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -143,7 +143,7 @@ class FeedbackCategory
     }
 
     /**
-     * Set emailtonotify
+     * Set emailtonotify.
      *
      * @param string $emailtonotify
      *
@@ -157,7 +157,7 @@ class FeedbackCategory
     }
 
     /**
-     * Get emailtonotify
+     * Get emailtonotify.
      *
      * @return string
      */
@@ -167,9 +167,9 @@ class FeedbackCategory
     }
 
     /**
-     * Set idvolunteer
+     * Set idvolunteer.
      *
-     * @param integer $idvolunteer
+     * @param int $idvolunteer
      *
      * @return FeedbackCategory
      */
@@ -181,9 +181,9 @@ class FeedbackCategory
     }
 
     /**
-     * Get idvolunteer
+     * Get idvolunteer.
      *
-     * @return integer
+     * @return int
      */
     public function getIdvolunteer()
     {
@@ -191,9 +191,9 @@ class FeedbackCategory
     }
 
     /**
-     * Set sortorder
+     * Set sortorder.
      *
-     * @param integer $sortorder
+     * @param int $sortorder
      *
      * @return FeedbackCategory
      */
@@ -205,9 +205,9 @@ class FeedbackCategory
     }
 
     /**
-     * Get sortorder
+     * Get sortorder.
      *
-     * @return integer
+     * @return int
      */
     public function getSortorder()
     {
@@ -215,9 +215,9 @@ class FeedbackCategory
     }
 
     /**
-     * Set visible
+     * Set visible.
      *
-     * @param integer $visible
+     * @param int $visible
      *
      * @return FeedbackCategory
      */
@@ -229,9 +229,9 @@ class FeedbackCategory
     }
 
     /**
-     * Get visible
+     * Get visible.
      *
-     * @return integer
+     * @return int
      */
     public function getVisible()
     {
@@ -239,9 +239,9 @@ class FeedbackCategory
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

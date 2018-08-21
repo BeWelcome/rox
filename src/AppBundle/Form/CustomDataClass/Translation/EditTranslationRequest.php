@@ -3,8 +3,8 @@
 namespace AppBundle\Form\CustomDataClass\Translation;
 
 use AppBundle\Entity\Word;
-use Symfony\Component\Validator\Constraints as Assert;
 use InvalidArgumentException;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class EditTranslationRequest
 {
@@ -44,13 +44,14 @@ class EditTranslationRequest
     /**
      * @param Word $original
      * @param Word $translation
-     * @return EditTranslationRequest
+     *
      * @throws InvalidArgumentException
+     *
+     * @return EditTranslationRequest
      */
     public static function fromTranslations(Word $original, Word $translation)
     {
-        if (strtolower($original->getCode()) !== strtolower($translation->getCode()))
-        {
+        if (strtolower($original->getCode()) !== strtolower($translation->getCode())) {
             throw new InvalidArgumentException();
         }
 

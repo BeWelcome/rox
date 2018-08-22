@@ -330,7 +330,6 @@ class VolunteerToolController extends Controller
 
     /**
      * @Route("/admin/tools/messages/lastweek", name="admin_tools_messages_last_week")
-     * @Route("/admin/tools/countryage", name="admin_tools_age_by_country")
      *
      * @param Request $request
      *
@@ -381,6 +380,57 @@ ORDER BY count(msg.id) DESC')->fetchAll();
     }
 
     /**
+     * @Route("/admin/tools/countryage", name="admin_tools_age_by_country")
+     *
+     * @param Request $request
+     *
+     * @throws \Exception
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function showAverageAgePerCountryAction(Request $request)
+    {
+        // check permissions
+        $subMenuItems = $this->getSubMenuItems();
+        if (empty($subMenuItems) | !array_key_exists(self::AGE_BY_COUNTRY, $subMenuItems)) {
+            $this->addFlash('notice', 'admin.tools.not.allowed');
+            $referrer = $request->headers->get('referer');
+
+            return $this->redirect($referrer);
+        }
+
+        $baseModel = new BaseModel($this->getDoctrine());
+        $results = $baseModel->execQuery("
+            SELECT 
+                gc.Name AS Name,
+                COUNT(*) AS Count,
+                ROUND(AVG(m.BirthDate) / 10000) AS BirthYear,
+                DATE_FORMAT(NOW(), '%Y') - ROUND(AVG(m.BirthDate) / 10000) AS 'Age'
+            FROM
+                members m,
+                geonames g,
+                geonamescountries gc
+            WHERE
+                m.Status = 'Active'
+                AND m.IdCity = g.geonameId
+                AND g.country = gc.country
+            GROUP BY g.country
+            ORDER BY 2 DESC;
+        ")->fetchAll();
+
+        return $this->render(
+            ':admin/tools:age.country.html.twig',
+            [
+                'results' => $results,
+                'submenu' => [
+                    'items' => $subMenuItems,
+                    'active' => self::AGE_BY_COUNTRY,
+                ],
+            ]
+        );
+    }
+
+    /**
      * @return array
      */
     private function getSubMenuItems()
@@ -414,17 +464,17 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                 'url' => $this->generateUrl('admin_tools_damage_done'),
             ];
         }
-        if ($this->isGranted([Member::ROLE_ADMIN_ADMIN, Member::ROLE_ADMIN_CHECKER])) {
-            $subMenu[self::AGE_BY_COUNTRY] = [
+//        if ($this->isGranted([Member::ROLE_ADMIN_ADMIN, Member::ROLE_ADMIN_CHECKER])) {
+        $subMenu[self::AGE_BY_COUNTRY] = [
                 'key' => self::AGE_BY_COUNTRY,
                 'url' => $this->generateUrl('admin_tools_age_by_country'),
             ];
-        }
+//        }
         if ($this->isGranted([Member::ROLE_ADMIN_PROFILE, Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_ADMIN])) {
             $subMenu[self::MESSAGES_LAST_WEEK] = [
                 'key' => self::MESSAGES_LAST_WEEK,
                 'url' => $this->generateUrl('admin_tools_messages_last_week'),
-            ];
+                ];
         }
 
         return $subMenu;

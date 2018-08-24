@@ -9,18 +9,22 @@
 
 {% block content %}
 
+    <script type="text/javascript">
+        function toggle(source) {
+            checkboxes = document.getElementsByName('.selectable');
+            for(var i=0, n=checkboxes.length;i<n;i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+    </script>
+
     <h2>{{ type | trans | format(my_member.Username) }}</h2>
 
     {% if items.nbResults == 0 %}
         <p>{{ 'No messages in this folder.' | trans }}</p>
     {% else %}
 
-        {% for filter,menuItem in submenu.items %}
-            <a class="btn btn-sm btn-{% if submenu.active == filter %}primary{% else %}light{% endif %}" href="{{ menuItem.url }}">{{ menuItem.key | trans }}</a>
-        {% endfor %}
-
-        <form name="message_index_form" method="post">
-
+        {{ form_start(form) }}
         {% if items.haveToPaginate %}
         <div class="float-left">
             {{ pagerfanta( items, 'twitter_bootstrap4_translated', { 'proximity': 1, 'prev_message': '&larr;', 'next_message': '&rarr;' }) }}
@@ -33,7 +37,7 @@
 
         <tr>
             <th class="select align-middle">
-                <input type="checkbox" id="select_all">
+                <input type="checkbox" id="select_all" onClick="javascript:toogle(this);">
             </th>
             <th class="from text-center align-middle nowrap">
                 <span class="small"><a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: correspondent, dir: 'asc' }) }}">&#x25b2;</a> {{ correspondent | trans | capitalize }} <a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: correspondent, dir: 'desc' }) }}">&#x25bc;</a></span><br>
@@ -47,8 +51,7 @@
 
             <tr>
                 <td class="select align-middle" id="selectcolumn">
-                    <div class="form-check"><input id="message_index_form_messages_{{ loop.index0 }}" name="message_index_form[messages][]" class="form-check-input" value="{{ message.id }}" type="checkbox">
-                        </div>
+                    {{ form_widget(form.messages[loop.index0], {'attr': {'class': 'selectable'}}) }}
                 </td>
                 <td class="align-middle small">
                     <p class="m-0">{{ macros.avatar(otherMember.Username, 50, true) }}</p>
@@ -97,15 +100,19 @@
             <tr>
                 <td colspan="4">
                     <div class="btn-group" aria-label="Delete or spam">
-                        <button type="submit" id="message_index_form_delete" name="message_index_form[delete]" class="btn btn-sm btn-danger"
-                                {% if folder != 'deleted' %}onclick="return confirm ('{{ 'MessagesWarningConfirmDelete' | trans }}')"{% endif %}>{{ form.delete.vars.label | trans }}</button>
-                        <button type="submit" id="message_index_form_reportAsNoSpam" name="message_index_form[reportAsSpam]" class="btn btn-sm btn-light">{{ form.spam.vars.label | trans }}</button>
+                        {% if folder == 'deleted' %}
+                            {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-sm btn-danger' } }) }}
+                        {% else %}
+                            {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-sm btn-danger', 'onclick': "return confirm ('{{ 'MessagesWarningConfirmDelete' | trans }}')"} }) }}
+                        {% endif %}
+                        {{ form_widget(form.spam, { 'attr': { 'class': 'btn btn-sm btn-light' } }) }}
                     </div>
                 </td>
             </tr>
         </table>
         <input id="message_index_form__token" name="message_index_form[_token]" value="{{ form._token.vars.value }}" type="hidden">
-        </form>
+        {{ form_rest(form) }}
+        {{ form_end(form) }}
         {% if items.haveToPaginate %}
             <div class="float-left">
                 {{ pagerfanta( items, 'twitter_bootstrap4_translated', { 'proximity': 1, 'prev_message': '&larr;', 'next_message': '&rarr;' }) }}
@@ -113,4 +120,12 @@
         {% endif %}
 
     {% endif %}
+    <script type="text/javascript">
+        function toggle(source) {
+            checkboxes = document.getElementsByName('.selectable');
+            for(var i=0, n=checkboxes.length;i<n;i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+    </script>
 {% endblock %}

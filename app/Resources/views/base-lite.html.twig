@@ -35,24 +35,21 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 </head>
 <body>
-
-    <nav class="navbar navbar-sticky-top navbar-light bg-primary">
+    <nav class="navbar navbar-sticky-top navbar-expand-md navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
         <div class="container">
-            <button class="navbar-toggler d-sm-none" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
-                &#9776;
-            </button>
-            <div class="collapse navbar-expand" id="exCollapsingNavbar2">
-                <a class="navbar-brand" href="/"><img src="{{ asset('bundles/app/images/logo_index_top.png') }}" alt="{{ 'BeWelcome' | trans }}"/></a>
+            <a class="navbar-brand mr-3 float-left" href="{{ url('homepage') }}"><img src="{{ asset('bundles/app/images/logo_index_top.png') }}" alt="{{ 'BeWelcome' | trans }}"/></a>
+
             </div>
-        </div>
     </nav>
+    <main role="main">
 
-    <noscript><h1>Please activate Javascript for bewelcome.org</h1><p><small>Without it some function won't work.</small></p></noscript>
+        <noscript><h1>Please activate Javascript for bewelcome.org</h1><p><small>Without it some function won't work.</small></p></noscript>
 
-    <div class="container-content p-0">
-        {% block content %}{% endblock %}
-    </div>
-
+        <div class="container container-content p-0">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+    {% include 'footer.html.twig' %}
     <script src="{{ asset('build/runtime.js') }}"></script>
     <script src="{{ asset('build/bewelcome.js') }}"></script>
 </body>

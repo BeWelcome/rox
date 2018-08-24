@@ -193,10 +193,10 @@
 
                 <form id="main-login-form" role="form" class="form-inline" method="post" action="{{ path('security_check') }}">
                     <label class="sr-only" for="login-u">{{ 'Username' | trans }}</label>
-                    <input type="text" id="login-u" name="username" autofocus required placeholder="{{ 'Username' | trans }}" class="form-control mx-1">
+                    <input type="text" id="login-u" name="_username" autofocus required placeholder="{{ 'Username' | trans }}" class="form-control mx-1">
 
                     <label class="sr-only" for="login-p">{{ 'Password' | trans }}</label>
-                    <input type="password" id="login-p" name="password" placeholder="{{ 'Password' | trans }}" class="form-control mx-1">
+                    <input type="password" id="login-p" name="_password" placeholder="{{ 'Password' | trans }}" class="form-control mx-1">
 
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" >
 

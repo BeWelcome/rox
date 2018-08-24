@@ -37,6 +37,7 @@ security:
             security: false
 
         default:
+            user_checker: rox.user_checker
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 31536000 # 1 year in seconds
@@ -48,6 +49,7 @@ security:
                 login_path: /login
                 check_path: /login_check
                 default_target_path: /landing
+                use_referer: true
                 csrf_token_generator: security.csrf.token_manager
 
             logout:

@@ -407,10 +407,10 @@ class RequestAndMessageController extends Controller
                 }
                 if ($form->get('spam')->isClicked()) {
                     if ('spam' === $folder) {
-                        $messageModel->unmarkAsSpam($member, $messageIds);
+                        $messageModel->unmarkAsSpam($messageIds);
                         $this->addFlash('notice', 'Messages marked as regular messages (and moved to inbox).');
                     } else {
-                        $messageModel->markAsSpam($member, $messageIds);
+                        $messageModel->markAsSpam($messageIds);
                         $this->addFlash('notice', 'Messages marked as spam messages (and moved to spam folder).');
                     }
                 }

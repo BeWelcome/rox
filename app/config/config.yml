@@ -76,7 +76,7 @@ doctrine:
             in_folder: AppBundle\Doctrine\InFolderType
             delete_request: AppBundle\Doctrine\DeleteRequestType
             spam_info: AppBundle\Doctrine\SpamInfoType
-            message_status: AppBundle\Doctrine\StatusType
+            message_status: AppBundle\Doctrine\MessageStatusType
 
         mapping_types:
             enum:       string

@@ -34,7 +34,16 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     const ACC_MAYBE = 'dependonrequest';
     const ACC_NO = 'neverask';
 
+    // Possible member statuses
+    const ACTIVE = 'Active';
+    const CHOICE_INACTIVE = 'ChoiceInactive';
+    const BANNED = 'Banned';
+    const AWAITING_MAIL_CONFIRMATION = 'MailToConfirm';
+
     const ACTIVE_ALL = "'Active', 'ActiveHidden', 'ChoiceInactive', 'OutOfRemind', 'Pending'";
+    const ACTIVE_ALL_ARRAY = [
+        'Active', 'ActiveHidden', 'ChoiceInactive', 'OutOfRemind', 'Pending',
+    ];
     const ACTIVE_SEARCH = "'Active', 'ActiveHidden', 'OutOfRemind', 'Pending'";
     const ACTIVE_WITH_MESSAGES = "'Active', 'OutOfRemind', 'Pending'";
     const MEMBER_COMMENTS = "'Active', 'ActiveHidden', 'AskToLeave', 'ChoiceInactive', 'OutOfRemind', 'Pending'";
@@ -2520,26 +2529,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         return 'en';
     }
 
-    public function isBrowseable()
-    {
-        if (in_array(
-            $this->status,
-            [
-                'TakenOut',
-                'SuspendedBeta',
-                'AskToLeave',
-                'Buggy',
-                'Banned',
-                'Rejected',
-                'DuplicateSigned', ],
-            true
-        )) {
-            return false;
-        }
-
-        return true;
-    }
-
     public function getVolunteerRights()
     {
         return $this->volunteerRights;
@@ -2716,5 +2705,50 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
     {
         $this->em = $objectManager;
+    }
+
+    public function isBrowseable()
+    {
+        if (in_array(
+            $this->status,
+            [
+                'TakenOut',
+                'SuspendedBeta',
+                'AskToLeave',
+                'Buggy',
+                'Banned',
+                'Rejected',
+                'DuplicateSigned', ],
+            true
+        )) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function isExpired()
+    {
+        return ('SuspendedBeta' === $this->status) ? true : false;
+    }
+
+    public function isBanned()
+    {
+        return (self::BANNED === $this->status) ? true : false;
+    }
+
+    /**
+     * This is returns !isBrowseable.
+     *
+     * @return bool
+     */
+    public function isDeniedAccess()
+    {
+        return !$this->isBrowseable();
+    }
+
+    public function isNotConfirmedYet()
+    {
+        return (self::AWAITING_MAIL_CONFIRMATION === $this->status) ? true : false;
     }
 }

@@ -2,12 +2,8 @@
 
 namespace AppBundle\EventListener;
 
-use ReflectionObject;
-use Rox\Core\Exception\RuntimeException;
-use Rox\Member\Model\Member;
-use Rox\Member\Service\MemberService;
-use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use AppBundle\Entity\Member;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 /**
@@ -19,46 +15,23 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
  */
 class AuthListener
 {
-    public function onAuthenticationSuccess(InteractiveLoginEvent $e)
+    /** @var EntityManager */
+    private $em;
+
+    public function __construct(EntityManager $em)
     {
-        // $token = $e->getAuthenticationToken();
-
-        /** @var Member $user */
-        // $user = $token->getUser();
-
-        $password = $e->getRequest()->request->get('_password');
-        if (!$password) {
-            throw new RuntimeException('Could not extract password from interactive login request.');
-        }
+        $this->em = $em;
     }
 
-    /**
-     * We need to know what the defined cost is for a given
-     * BCryptPasswordEncoder. The cost property is not public, so we use
-     * reflection to extract it.
-     *
-     * @param PasswordEncoderInterface $encoder
-     *
-     * @throws RuntimeException
-     *
-     * @return int
-     */
-    protected function getCost(PasswordEncoderInterface $encoder)
+    public function onAuthenticationSuccess(InteractiveLoginEvent $e)
     {
-        if (!$encoder instanceof BCryptPasswordEncoder) {
-            throw new RuntimeException('Encoder for getCost() is not BCrypt.');
+        /** @var Member $user */
+        $user = $e->getAuthenticationToken()->getUser();
+        if (Member::ACTIVE !== $user->getStatus() && Member::CHOICE_INACTIVE !== $user->getStatus()) {
+            $user->setStatus(Member::ACTIVE);
         }
-
-        $refl = new ReflectionObject($encoder);
-
-        $property = $refl->getProperty('cost');
-
-        $property->setAccessible(true);
-
-        $cost = $property->getValue($encoder);
-
-        $property->setAccessible(false);
-
-        return $cost;
+        $user->setLastlogin(new \DateTime());
+        $this->em->persist($user);
+        $this->em->flush();
     }
 }

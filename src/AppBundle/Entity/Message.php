@@ -386,6 +386,25 @@ class Message
     }
 
     /**
+     * Update spaminfo.
+     *
+     * @param string $spaminfo
+     *
+     * @return Message
+     */
+    public function updateSpaminfo($spaminfo)
+    {
+        $info = array_filter(explode(',', $this->spaminfo));
+        $key = array_search($spaminfo, $info, true);
+        if (false !== $key) {
+            unset($info[$key]);
+        }
+        $this->spaminfo = implode(',', $info);
+
+        return $this;
+    }
+
+    /**
      * Get spaminfo.
      *
      * @return string

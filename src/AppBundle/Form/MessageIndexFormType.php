@@ -27,6 +27,7 @@ class MessageIndexFormType extends AbstractType
             ])
             ->add('messages', ChoiceType::class, [
                 'choices' => $options['ids'],
+                'choice_label' => false,
                 'expanded' => true,
                 'multiple' => true,
             ]);

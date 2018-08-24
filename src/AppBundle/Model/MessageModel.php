@@ -4,6 +4,7 @@ namespace AppBundle\Model;
 
 use AppBundle\Doctrine\DeleteRequestType;
 use AppBundle\Doctrine\InFolderType;
+use AppBundle\Doctrine\MessageStatusType;
 use AppBundle\Doctrine\SpamInfoType;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
@@ -94,8 +95,10 @@ class MessageModel extends BaseModel
 
         /** @var Message $message */
         foreach ($messages as $message) {
-            $message->setInFolder(InFolderType::SPAM);
-            $message->setSpaminfo(SpamInfoType::MEMBER_SAYS_SPAM);
+            $message
+                ->setInFolder(InFolderType::SPAM)
+                ->setStatus(MessageStatusType::CHECK)
+                ->updateSpaminfo(SpamInfoType::MEMBER_SAYS_SPAM);
             $this->em->persist($message);
         }
         $this->em->flush();
@@ -118,8 +121,10 @@ class MessageModel extends BaseModel
 
         /** @var Message $message */
         foreach ($messages as $message) {
-            $message->setInFolder(InFolderType::NORMAL);
-            $message->setSpaminfo(SpamInfoType::NO_SPAM);
+            $message
+                ->setInFolder(InFolderType::NORMAL)
+                ->setStatus(MessageStatusType::CHECKED)
+                ->setSpaminfo(SpamInfoType::NO_SPAM);
             $this->em->persist($message);
         }
         $this->em->flush();

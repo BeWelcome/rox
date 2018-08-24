@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Doctrine\DeleteRequestType;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
 use Doctrine\ORM\EntityRepository;
@@ -38,19 +39,19 @@ class MessageRepository extends EntityRepository
         switch ($folder) {
             case 'inbox':
                 $qb->andWhere('NOT(m.deleteRequest LIKE :deleterequest)')
-                    ->setParameter('deleterequest', 'receiverdeleted')
+                    ->setParameter('deleterequest', DeleteRequestType::RECEIVER_DELETED)
                     ->andWhere('m.infolder = :folder')
                     ->setParameter('folder', 'normal');
                 break;
             case 'spam':
                 $qb->andWhere('NOT(m.deleteRequest LIKE :deleterequest)')
-                    ->setParameter('deleterequest', 'receiverdeleted')
+                    ->setParameter('deleterequest', DeleteRequestType::RECEIVER_DELETED)
                     ->andWhere('m.infolder = :folder')
                     ->setParameter('folder', $folder);
                 break;
             case 'deleted':
                 $qb->andWhere('m.deleteRequest LIKE :deleterequest ')
-                    ->setParameter('deleterequest', 'receiverdeleted');
+                    ->setParameter('deleterequest', DeleteRequestType::RECEIVER_DELETED);
                 break;
         }
         $qb->orderBy('m.'.$sort, $sortDirection);
@@ -71,11 +72,14 @@ class MessageRepository extends EntityRepository
         if ('date' === $sort) {
             $sort = 'created';
         }
-        $qb = $this->createQueryBuilder('m');
+        $qb = $this->createQueryBuilder('m')
+            ->where('NOT(m.deleteRequest LIKE :deleterequest)')
+            ->setParameter('deleterequest', DeleteRequestType::RECEIVER_DELETED)
+        ;
         if ('sent' === $folder) {
-            $qb->where('m.sender = :member');
+            $qb->andWhere('m.sender = :member');
         } else {
-            $qb->where('m.receiver = :member');
+            $qb->andWhere('m.receiver = :member');
         }
         $qb
             ->setParameter('member', $member)
@@ -98,11 +102,13 @@ class MessageRepository extends EntityRepository
         if ('date' === $sort) {
             $sort = 'created';
         }
-        $qb = $this->createQueryBuilder('m');
+        $qb = $this->createQueryBuilder('m')
+            ->where('NOT(m.deleteRequest LIKE :deleterequest)')
+            ->setParameter('deleterequest', DeleteRequestType::RECEIVER_DELETED);
         if ('sent' === $folder) {
-            $qb->where('m.sender = :member');
+            $qb->andWhere('m.sender = :member');
         } else {
-            $qb->where('m.receiver = :member');
+            $qb->andWhere('m.receiver = :member');
         }
         $qb
             ->setParameter('member', $member)

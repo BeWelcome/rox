@@ -78,8 +78,12 @@ if (empty($vars)) {
 <div class="row no-gutters w-100">
 
     <div class="col-12 col-md-6 order-md-1 col-lg-3 order-lg-1 col-xl-2 postleftcolumn">
-        <img class="mappreview m-2"
-             src="https://maps.googleapis.com/maps/api/staticmap?center={{ member.Latitude }},{{ member.Longitude }}&zoom=10&size=117x117&key=AIzaSyAiF_lG8CdC-hCIXbGs9jilOFJRoXteM3k">
+        <input type="hidden" id="location" value="<?= $this->activity->location->name ?>">
+        <input type="hidden" id="latitude" value="<?= $this->activity->location->latitude ?>">
+        <input type="hidden" id="longitude" value="<?= $this->activity->location->longitude ?>">
+        <input type="hidden" id="zoom" value="10">
+        <div id="map" class="mappreview m-2" style="width:117px;height:117px;"></div>
+    </div>
 
         <h5 class="ml-2"><?= $words->get('ActivityLocationAddress'); ?></h5>
         <p class="small ml-2">
@@ -292,3 +296,22 @@ if (empty($vars)) {
         } ?>
     <!-- </div> -->
 <?php echo $words->flushBuffer(); ?>
+<script type="text/javascript">
+    $(function () {
+        if ($('#map').length) {
+            let latitude = $('#latitude').val();
+            let longitude = $('#longitude').val();
+            let zoom = $('#zoom').val();
+            var map = L.map('map', {
+                center: [latitude, longitude],
+                minZoom: zoom,
+                zoom: zoom
+            });
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="/about/credits#OSM">OpenStreetMap contributors</a>',
+                subdomains: ['a', 'b', 'c']
+            }).addTo(map);
+        }
+    });
+</script>

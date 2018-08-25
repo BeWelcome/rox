@@ -104,7 +104,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                            value="<?php echo htmlentities($vars['FirstName'], ENT_COMPAT, 'UTF-8'); ?>"/>
 
                     <input type="checkbox" value="Yes" class="pt-1" name="IsHidden_FirstName"
-                        <?php if ($vars['IsHidden_FirstName'])
+                        <?php if ($vars['IsHidden_FirstName'] === 'Yes')
                             echo 'checked="checked"';
                         ?> />
                     <?= $words->get('hidden') ?>
@@ -122,7 +122,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     <input type="text" name="SecondName"
                            value="<?php echo htmlentities($vars['SecondName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     <input type="checkbox" value="Yes" name="IsHidden_SecondName"
-                        <?php if ($vars['IsHidden_SecondName'])
+                        <?php if ($vars['IsHidden_SecondName'] === 'Yes')
                             echo 'checked="checked"';
                         ?> />
                     <?= $words->get('hidden') ?>
@@ -136,7 +136,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                            name="LastName"
                            value="<?php echo htmlentities($vars['LastName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     <input type="checkbox" value="Yes" name="IsHidden_LastName"
-                        <?php if ($vars['IsHidden_LastName'])
+                        <?php if ($vars['IsHidden_LastName'] === 'Yes')
                             echo 'checked="checked"';
                         ?> />
                     <?= $words->get('hidden') ?>

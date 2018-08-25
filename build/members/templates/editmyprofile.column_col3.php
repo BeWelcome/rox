@@ -10,7 +10,6 @@ require_once 'editprofile_form.php';
 
 ?>
 </form>
-
 </div>
 
 <script type="text/javascript">//<!--

@@ -1061,8 +1061,8 @@ ORDER BY
     /**
      * Update Member's Profile
      *
-     * @param unknown_type $vars
-     * @return unknown
+     * @param mixed $vars
+     * @return string
      */
     public function updateProfile(&$vars)     {
         $IdMember = (int)$vars['memberid'];
@@ -1090,12 +1090,22 @@ ORDER BY
         // Set the language that ReplaceinMTrad uses for writing
         $words->setlangWrite($vars['profile_language']);
 
-        // refactoring to use member entity
-//        $m->LastLogin = '0000-00-00' ? 'Never' : $layoutbits->ago(strtotime($TM->LastLogin)); // Members lastlogin is no to be updated here
-
         if (isset($vars['Status']) && (!empty($vars['Status']))) {
             // this can only happen when an admin or the safety team edits a profile
             $m->Status = $vars['Status'];
+        }
+        $m->HideAttribute = \Member::MEMBER_EMAIL_HIDDEN;
+        $m->FirstName = $vars['FirstName'];
+        if ($vars['IsHidden_FirstName'] == 'Yes') {
+            $m->HideAttribute |= \Member::MEMBER_FIRSTNAME_HIDDEN;
+        }
+        $m->SecondName = $vars['SecondName'];
+        if ($vars['IsHidden_SecondName'] == 'Yes') {
+            $m->HideAttribute |= \Member::MEMBER_SECONDNAME_HIDDEN;
+        }
+        $m->LastName = $vars['LastName'];
+        if ($vars['IsHidden_LastName'] == 'Yes') {
+            $m->HideAttribute |= \Member::MEMBER_LASTNAME_HIDDEN;
         }
         $m->Gender = $vars['gender'];
         $m->HideGender = $vars['HideGender'];
@@ -1127,9 +1137,6 @@ ORDER BY
         $m->OfferGuests = $words->ReplaceInMTrad($vars['OfferGuests'],"members.OfferGuests", $IdMember, $m->OfferGuests, $IdMember);
         $m->OfferHosts = $words->ReplaceInMTrad($vars['OfferHosts'],"members.OfferHosts", $IdMember, $m->OfferHosts, $IdMember);
         $m->PublicTransport = $words->ReplaceInMTrad($vars['PublicTransport'],"members.PublicTransport", $IdMember, $m->PublicTransport, $IdMember);
-
-        // as $CanTranslate is set explicitly above, this is disabled
-        // if (!$CanTranslate) { // a volunteer translator will not be allowed to update crypted data
 
         if ($vars["HouseNumber"] != $m->get_housenumber()) {
             $this->logWrite("Housenumber updated", "Address Update");
@@ -1242,7 +1249,6 @@ ORDER BY
         foreach($Relations as $Relation) {
             if (($words->mInTrad($Relation->Comment,$vars['profile_language'])!=$vars["RelationComment_".$Relation->id])
                 and (!empty($vars["RelationComment_".$Relation->id])))  {
-//              echo "Relation #".$Relation->id,"<br />", $words->mInTrad($Relation->Comment,$vars['profile_language']),"<br />",$vars['RelationComment_'.$Relation->id],"<br />" ;
                 $IdTrad = $words->ReplaceInMTrad(strip_tags($vars["RelationComment_".$Relation->id]),"specialrelations.Comment", $Relation->id, $Relation->Comment, $IdMember);
                 // Empty comments have trad id 0. Causing ReplaceInMTrad to create
                 // a new trad id and returning the new number.
@@ -1252,28 +1258,6 @@ ORDER BY
                 $this->logWrite("updating relation #".$Relation->id." Relation Confirmed=".$Relation->Confirmed, "Profile update");
             }
         }
-
-        // Check groups membership description, and update them if they have changed
-        // Tod od with Peter: check if there is other feature to update a group membership (a groupmembership model for example, or entity)
-        /* group membership should not be present here, disabled for now
-        $Groups=$m->getGroups() ;
-        for ($i = 0; $i < count($Groups) ; $i++) {
-            $group=$Groups[$i] ;
-            $group_id = $group->getPKValue() ;
-            $group_name_translated = $words->get("Group_".$group->Name);
-            $group_comment_translated = htmlspecialchars($words->mInTrad($m->getGroupMembership($group)->Comment,$vars['profile_language']), ENT_QUOTES);
-            $IdMemberShip=$m->getGroupMembership($group)->id ;
-            if (($words->mInTrad($m->getGroupMembership($group)->Comment,$vars['profile_language'])!=$vars["GroupMembership_".$IdMemberShip])
-                and (!empty($vars["GroupMembership_".$IdMemberShip])))  {
-                echo "Group #".$group_id,"<br />",$words->mInTrad($m->getGroupMembership($group)->Comment,$vars['profile_language']),"<br />",$vars["GroupMembership_".$IdMemberShip],"<br />" ;
-                $words->ReplaceInMTrad(strip_tags($vars["GroupMembership_".$IdMemberShip]),"membersgroups.Comment", $IdMemberShip, $m->getGroupMembership($group)->Comment, $IdMember);
-                $this->logWrite("updating membership description in group #".$group_id." Group name=".$group->name, "Profil update");
-            }
-        }
-        */
-
-        // if a member with status NeedMore updates her/his profile, moving them back to pending
-        if ($m->Status == 'NeedMore') $m->Status = 'Pending';
 
         $status = $m->update();
 

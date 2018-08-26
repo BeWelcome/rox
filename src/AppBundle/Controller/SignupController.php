@@ -96,10 +96,10 @@ class SignupController extends Controller
 
             $this->addFlash('notice', 'You just confirmed your email address and your profile got activated. Please login now and update your profile.');
 
-            return $this->redirectToRoute('login');
+            return $this->redirect('/login');
         }
         $this->addFlash('error', 'Provided key isn\'t correct');
 
-        return $this->redirectToRoute('login');
+        return $this->redirect('/login');
     }
 }

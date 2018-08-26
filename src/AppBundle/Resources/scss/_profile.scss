@@ -251,3 +251,15 @@ a.grouplist:hover {
 .menu-divider{
 	border-right: 1px dotted #ccc;
 }
+
+.bg-avatar{
+	padding-top: 100%;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.avatarclick{
+	position: absolute;
+	top: 0;
+}

@@ -191,15 +191,17 @@ class MemberPage extends PageWithActiveSkin
         $picture_url = 'members/avatar/'.$member->Username.'/500';
         ?>
 
-        <div>
-            <a href="<?=$picture_url?>"><img src="<?=$picture_url?>" alt="Picture of <?=$member->Username?>" class="framed" height="100%" width="100%"/></a>
-            <?
+        <div class="framed w-100 bg-avatar" style="background-image: url('<?=$picture_url?>');">
+            <a href="<?=$picture_url?>" alt="Picture of <?=$member->Username?>"><span class="w-100 h-100 avatarclick"></span></a>
+        </div>
+        <?
             if ($this->myself) {
                 // TODO : change language code (en) and wordcode
                 ?>
-                    <a href="editmyprofile/en" class="btn btn-outline-info btn-block">Change Avatar</a>
-            <? } ?>
-        </div> <!-- profile_pic -->
+        <div>
+            <a href="editmyprofile/en" class="btn btn-info btn-block">Change Avatar</a>
+        </div>
+                <? } ?>
 
         <div class="list-group mt-1">
             <?php

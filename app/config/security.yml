@@ -48,7 +48,7 @@ security:
             form_login:
                 login_path: /login
                 check_path: /login_check
-                default_target_path: /landing
+                default_target_path: /
                 use_referer: true
                 csrf_token_generator: security.csrf.token_manager
 

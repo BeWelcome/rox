@@ -18,7 +18,7 @@ class HomeController extends Controller
     {
         $member = $this->getUser();
         if ($member) {
-            return $this->redirectToRoute('landingpage');
+            return $this->forward(LandingController::class . "::indexAction");
         }
 
         $form = $this->createForm(LoginFormType::class, null, [

@@ -152,14 +152,14 @@ class LandingController extends Controller
     /**
      * Shows the landing page.
      *
-     * @Route("/landing", name="landingpage")
+     * @Route("/", name="landingpage")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction()
     {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw $this->createAccessDeniedException();
+            return $this->forward(HomeController::class);
         }
 
         $member = $this->getUser();

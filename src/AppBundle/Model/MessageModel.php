@@ -97,7 +97,7 @@ class MessageModel extends BaseModel
         foreach ($messages as $message) {
             $message
                 ->setStatus(MessageStatusType::CHECKED)
-                ->updateSpaminfo(SpamInfoType::CHECKER_SAYS_SPAM);
+                ->addToSpamInfo(SpamInfoType::CHECKER_SAYS_SPAM);
             $this->em->persist($message);
         }
         $this->em->flush();
@@ -151,7 +151,7 @@ class MessageModel extends BaseModel
             $message
                 ->setInFolder(InFolderType::SPAM)
                 ->setStatus(MessageStatusType::CHECK)
-                ->updateSpaminfo(SpamInfoType::MEMBER_SAYS_SPAM);
+                ->addToSpamInfo(SpamInfoType::MEMBER_SAYS_SPAM);
             $this->em->persist($message);
         }
         $this->em->flush();
@@ -177,7 +177,8 @@ class MessageModel extends BaseModel
             $message
                 ->setInFolder(InFolderType::NORMAL)
                 ->setStatus(MessageStatusType::CHECKED)
-                ->setSpaminfo(SpamInfoType::NO_SPAM);
+                ->removeSpaminfo(SpamInfoType::MEMBER_SAYS_SPAM)
+                ->updateSpaminfo(SpamInfoType::NO_SPAM);
             $this->em->persist($message);
         }
         $this->em->flush();

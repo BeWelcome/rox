@@ -7,6 +7,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Doctrine\SpamInfoType;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -96,7 +97,7 @@ class Message
      *
      * @ORM\Column(name="SpamInfo", type="spam_info", nullable=false)
      */
-    private $spaminfo = 'NotSpam';
+    private $spaminfo = SpamInfoType::NO_SPAM;
 
     /**
      * @var string
@@ -392,12 +393,38 @@ class Message
      *
      * @return Message
      */
-    public function updateSpaminfo($spaminfo)
+    public function removeFromSpaminfo($spaminfo)
     {
         $info = array_filter(explode(',', $this->spaminfo));
         $key = array_search($spaminfo, $info, true);
         if (false !== $key) {
             unset($info[$key]);
+        }
+        $this->spaminfo = implode(',', $info);
+        if (empty($this->spaminfo))
+        {
+            $this->spaminfo = SpamInfoType::NO_SPAM;
+        }
+        return $this;
+    }
+
+    /**
+     * Update spaminfo.
+     *
+     * @param string $spaminfo
+     *
+     * @return Message
+     */
+    public function addToSpamInfo($spaminfo)
+    {
+        if (SpamInfoType::NO_SPAM === $this->spaminfo)
+        {
+            $this->spaminfo = '';
+        }
+        $info = array_filter(explode(',', $this->spaminfo));
+        $key = array_search($spaminfo, $info, true);
+        if (false === $key) {
+            $info[] = $spaminfo;
         }
         $this->spaminfo = implode(',', $info);
 

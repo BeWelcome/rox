@@ -4,15 +4,20 @@ namespace AppBundle\Logger;
 
 use AppBundle\Entity\Log;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Security\Core\Security;
 
 class Logger
 {
     /** @var EntityManager */
     private $em;
 
-    public function __construct(EntityManager $em)
+    /** @var Security */
+    private $security;
+
+    public function __construct(EntityManager $em, Security $security)
     {
         $this->em = $em;
+        $this->security = $security;
     }
 
     /**
@@ -22,8 +27,13 @@ class Logger
      *
      * @throws \Exception
      */
-    public function write($msg, $type, $member)
+    public function write($msg, $type, $member = null)
     {
+        if (null === $member)
+        {
+            // Get member from the security context
+            $member = $this->security->getUser();
+        }
         try {
             $log = new Log();
             $log->setLogMessage($msg);

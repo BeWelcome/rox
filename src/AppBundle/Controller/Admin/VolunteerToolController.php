@@ -82,7 +82,7 @@ class VolunteerToolController extends Controller
                 $newMember = $memberRepository->findOneBy(['username' => $data->newUsername]);
                 if (null === $newMember) {
                     $logger = $this->get('rox.logger');
-                    $logger->write('Changed member username from '.$data->oldUsername.' to '.$data->newUsername.'.', 'adminquery', $this->getUser());
+                    $logger->write('Changed member username from '.$data->oldUsername.' to '.$data->newUsername.'.', 'adminquery');
 
                     $em = $this->getDoctrine()->getManager();
                     $oldMember->setUsername($data->newUsername);
@@ -145,7 +145,7 @@ class VolunteerToolController extends Controller
             $data = $form->getData();
 
             $logger = $this->get('rox.logger');
-            $logger->write('Searched for members using search term: '.$data->term.'.', 'adminquery', $this->getUser());
+            $logger->write('Searched for members using search term: '.$data->term.'.', 'adminquery');
 
             /** @var MemberRepository $memberRepository */
             $memberRepository = $this->getDoctrine()->getRepository(Member::class);

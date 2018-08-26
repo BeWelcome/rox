@@ -79,7 +79,7 @@ services:
 
     rox.logger:
         class: AppBundle\Logger\Logger
-        arguments: ['@doctrine.orm.entity_manager']
+        arguments: ['@doctrine.orm.entity_manager', '@security.helper']
 
     rox.authentication_listener:
         class: AppBundle\EventListener\AuthListener

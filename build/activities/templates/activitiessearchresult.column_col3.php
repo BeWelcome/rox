@@ -2,8 +2,6 @@
 $formkit = $this->layoutkit->formkit;
 $callbackTags = $formkit->setPostCallback('ActivitiesController', 'searchActivitiesCallback');
 
-require_once('build/geo/geo.entity.php');
-
 $errors = array();
 if ($this->_session->has( 'errors' )) {
     $errors = $this->_session->get('errors');

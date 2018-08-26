@@ -444,11 +444,12 @@ VALUES
         $stmt->bindParam(5, $vars['genderhidden']);
         $stmt->bindParam(6, $vars['iso_date']);
         $stmt->bindParam(7, $vars['agehidden']);
-        $stmt->bindParam(8, $vars['firstname']);
-        $stmt->bindParam(9, $vars['secondname']);
-        $stmt->bindParam(10, $vars['lastname']);
-        $stmt->bindParam(11, $vars['email']);
-        $stmt->bindParam(12, \Member::MEMBER_EMAIL_HIDDEN);
+        $stmt->bindParam(8, $vars['email']);
+        $stmt->bindParam(9, $vars['firstname']);
+        $stmt->bindParam(10, $vars['secondname']);
+        $stmt->bindParam(11, $vars['lastname']);
+        $hide = \Member::MEMBER_EMAIL_HIDDEN;
+        $stmt->bindParam(12, $hide);
 
         $res = $stmt->execute();
         $memberID = $stmt->insertId();
@@ -481,22 +482,6 @@ VALUES
         }
         $memberEntity->update();
         $memberEntity->setPassword($vars['password']);
-
-        // ********************************************************************
-        // e-mail, names/members
-        // ********************************************************************
-        $query = '
-UPDATE
-	`members`
-SET
-	`Email`=' . $cryptedfieldsEmail . ',
-	`FirstName`=' . $cryptedfieldsFirstname . ',
-	`SecondName`=' . $cryptedfieldsSecondname . ',
-	`LastName`=' . $cryptedfieldsLastname . '
-WHERE
-	`id` = ' . $memberID;
-
-        $this->dao->query($query);
 
         // ********************************************************************
         // address/addresses

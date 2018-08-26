@@ -210,6 +210,10 @@ class SignupController extends RoxControllerBase {
         $vars = $this->_session->get('SignupBWVars');
         $request = $args->request;
 
+        if (!isset($request[1])) {
+            $request[1] = 1;
+        }
+
         if (isset($request[1])) {
             $step = intval($request[1]);
             $model = new SignupModel();

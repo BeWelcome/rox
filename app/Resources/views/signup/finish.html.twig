@@ -6,7 +6,23 @@ BeWelcome - Signup
 {% endblock title %}
 
 {% block content %}
-    <h1>Signup finished</h1>
-    <p>Congratulations {{ username }} you successfully signed up for BeWelcome. The only thing left is that you confirm you're email address.</p>
-    <p>Please check your emails as we have just sent you a link to {{ email }}. Follow the link so that we know emails reach you.</p>
+
+    {# TODO: make a wordcode for this text #}
+
+    <div class="row">
+        <div class="col-12 col-lg-6 mb-3">
+            <span class="h1 small">Signup finished!</span>
+            <h1 class="m-0">Last step:</h1>
+            <p><p>Congratulations <strong>{{ username }}</strong>, you have now almost completed the signup. We have sent you an email to <strong>{{ email }}</strong> that contains a link to confirm your email address and to activate your profile.</p>
+            <p>If you don't find the message in your inbox, <strong>please check the spam folder</strong>. It sometimes happens that automatic e-mail confirmation messages are marked as junk by e-mail providers or by the safety settings in your e-mail program. If you find the confirmation e-mail there just click on the confirmation link and you should be able to access your account.</p>
+        </div>
+
+        <div class="w-100"></div>
+
+        {# TODO: add usefull info #}
+        <div class="col-12 col-lg-6">
+            <a href="/col-12 alert alert-info" class="btn btn-primary">BeWelcome</a>
+        </div>
+
+    </div>
 {% endblock content %}

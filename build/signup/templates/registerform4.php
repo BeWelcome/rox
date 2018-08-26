@@ -150,36 +150,24 @@
                     </tr>
                     </tbody>
 
-                    <thead class="thead-default mt-5">
-                    <tr>
-                        <th colspan="2">
-                            <?php echo $words->get('Accommodation'); ?>
-                        </th>
-                    </tr>
-                    </thead>
                     <tbody>
                     <tr>
                         <th scope="row" class="float-right border-0 text-nowrap">
-                            <?php echo $words->get('Location'); ?>
+                            <?php echo $words->get('Accommodation'); ?>
                         </th>
                         <td class="w-100 border-0">
                             <?php
-                            echo $vars['location'];
-                            ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row" class="float-right border-0 text-nowrap">
-                            <?php echo $words->get('Accommodation'); ?>
-                        </th>
-                        <td class="border-0">
-                            <?php
-                            echo "<img src=\"images/icons/" . $vars['accommodation'] . ".png\">";
+                            echo '<img src="images/icons/' . $vars['accommodation'] . '.png"> ' . $vars['location'];
                             ?>
                         </td>
                     </tr>
                     </tbody>
                 </table>
+
+                <button type="submit"
+                        class="form-control btn btn-primary"><?php echo $words->getSilent('SubmitForm'); ?> <i
+                            class="fa fa-check-square"></i></button>
+                <?php echo $words->flushBuffer(); ?>
 
             </div>
         </div>

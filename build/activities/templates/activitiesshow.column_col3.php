@@ -55,7 +55,7 @@ if (empty($vars)) {
 
         </div>
     </div>
-    <div class="ml-auto">
+    <div class="d-none d-md-block ml-md-auto">
         <div class="d-flex flex-row hidden-md-down">
             <div class="pr-2 align-self-center"><i class="fa fa-3x fa-user-circle-o"></i></div>
             <div>
@@ -75,51 +75,20 @@ if (empty($vars)) {
     </div>
 </div>
 
-<div class="row no-gutters w-100">
+<div class="row w-100 pl-3">
 
-    <div class="col-12 col-md-6 order-md-1 col-lg-3 order-lg-1 col-xl-2 postleftcolumn">
+    <div class="col-12 col-md-6 postleftcolumn">
         <input type="hidden" id="location" value="<?= $this->activity->location->name ?>">
         <input type="hidden" id="latitude" value="<?= $this->activity->location->latitude ?>">
         <input type="hidden" id="longitude" value="<?= $this->activity->location->longitude ?>">
         <input type="hidden" id="zoom" value="10">
-        <div id="map" class="mappreview m-2" style="width:117px;height:117px;"></div>
-    </div>
-
-        <h5 class="ml-2"><?= $words->get('ActivityLocationAddress'); ?></h5>
-        <p class="small ml-2">
+        <div id="map" class="mappreview m-2 w-100" style="width:100%;height:10rem;"></div>
+        <p class="ml-2">
             <?php echo $this->activity->address ?><br>
             <span class="mt-1 font-weight-bold"><?php echo $this->activity->location->name . '<br>' . $this->activity->location->getCountry()->name; ?></span></p>
     </div>
 
-    <div class="col-12 order-md-3 col-lg-6 col-xl-7 order-lg-2 px-2 pt-sm-2 pt-lg-0">
-            <?php echo $purifier->purify($this->activity->description); ?>
-
-            <?
-            if ($this->activity->dateStart == $this->activity->dateEnd) {
-                echo '<i class="fa fa-calendar"></i> ' . $this->activity->dateStart . '><br>';
-                echo '<i class="fa fa-clock-o"></i> <span class="compacttext back">' . $this->activity->timeStart . ' - ' . $this->activity->timeEnd . '</span><br>';
-            } else {
-                echo '<i class="fa fa-calendar"></i> ' . $this->activity->dateStart . ' <i class="fa fa-clock-o px-2"></i><span class="compacttext back">' . $this->activity->timeStart . '</span><br>';
-                echo '<i class="fa fa-calendar"></i> ' . $this->activity->dateEnd . ' <i class="fa fa-clock-o px-2"></i><span class="compacttext back">' . $this->activity->timeEnd . '</span>';
-            } ?>
-
-        <div class="w-100 py-3">
-            <div class="w-100"><h5 class="mb-0"><?php echo $words->get('ActivityOrganizers'); ?></h5></div>
-            <div class="d-flex flex-row">
-                <?php
-                foreach ($this->activity->organizers as $organizer) { ?>
-                    <div class="d-flex mr-2">
-                        <div class="mr-2"><a href="members/<?php $organizer->Username; ?>"><img
-                                        src="members/avatar/<?php echo $organizer->Username; ?>?size=50"></a></div>
-                        <div><a href="members/<?php echo $organizer->Username; ?>"><?php echo $organizer->Username; ?></a></div>
-                    </div>
-                <? } ?>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="col-12 col-md-6 order-md-2 col-lg-3 order-lg-3">
+    <div class="col-12 col-md-6">
         <div class="card p-2">
             <h4 class="card-title">Join<br></h4>
             <?php
@@ -231,71 +200,93 @@ if (empty($vars)) {
         </div>
     </div>
 
-</div>
+    <div class="col-12 mt-2">
+        <?php echo $purifier->purify($this->activity->description); ?>
 
-
-
-    <div class="row p-3">
-
-        <div class="col-12 p-0"><h4><?php echo $words->get('ActivityAttendees'); ?></h4></div>
-
-        <?php if ($this->member) { ?>
-
-            <?php echo $this->attendeesPager->render(); ?>
-
-            <?php
-            foreach ($this->attendeesPager->getActiveSubset($this->activity->attendees) as $attendee) {
-
-                ?>
-                <div class="attend m-1 p-2
-<?
-                switch ($attendee->status) {
-                    case 1:
-                        echo " attendyes";
-                        break;
-                    case 2:
-                        echo " attendmaybe";
-                        break;
-                    case 3:
-                        echo " attendno";
-                        break;
-                }
-                ?>
-">
-                    <div class="d-flex flex-row">
-                        <div class="mr-2"><a href="members/<?php echo $attendee->Username; ?>"><img
-                                        src="members/avatar/<?php echo $attendee->Username; ?>?size=50"></a></div>
-                        <div><a href="members/<?php echo $attendee->Username; ?>"><?php echo $attendee->Username; ?></a><br>
-                            <small>
-                                <?
-                                switch ($attendee->status) {
-                                    case 1:
-                                        echo $words->get('ActivityYesIAttend');
-                                        break;
-                                    case 2:
-                                        echo $words->get('ActivityIMightAttend');
-                                        break;
-                                    case 3:
-                                        echo $words->get('ActivitySorryCantJoinYou');
-                                        break;
-                                }
-                                ?>
-                            </small>
-                        </div>
-                    </div>
-                    <? if ($attendee->comment) { ?>
-                        <div class="small gray"><i><?php echo htmlspecialchars($attendee->comment); ?></i></div>
-                    <? } ?>
-                </div>
-                <?php
-            }
-            echo $this->attendeesPager->render();
+        <?
+        if ($this->activity->dateStart == $this->activity->dateEnd) {
+            echo '<i class="fa fa-calendar"></i> ' . $this->activity->dateStart . '><br>';
+            echo '<i class="fa fa-clock-o"></i> <span class="compacttext back">' . $this->activity->timeStart . ' - ' . $this->activity->timeEnd . '</span><br>';
         } else {
-            echo '<div><h3>' . $words->get('ActivityAttendees') . '</h3>';
-            echo '<p>' . $words->getBuffered('ActivitiesLogInWhoIsComing', '<a href="' . $login_url . '">', '</a>') . '</p></div>';
+            echo '<i class="fa fa-calendar"></i> ' . $this->activity->dateStart . ' <i class="fa fa-clock-o px-2"></i><span class="compacttext back">' . $this->activity->timeStart . '</span><br>';
+            echo '<i class="fa fa-calendar"></i> ' . $this->activity->dateEnd . ' <i class="fa fa-clock-o px-2"></i><span class="compacttext back">' . $this->activity->timeEnd . '</span>';
         } ?>
-    <!-- </div> -->
-<?php echo $words->flushBuffer(); ?>
+
+        <div class="w-100 py-3">
+            <div class="w-100"><h5 class="mb-0"><?php echo $words->get('ActivityOrganizers'); ?></h5></div>
+            <div class="d-flex flex-row">
+                <?php
+                foreach ($this->activity->organizers as $organizer) { ?>
+                    <div class="d-flex mr-2">
+                        <div class="mr-2"><a href="members/<?php $organizer->Username; ?>"><img
+                                        src="members/avatar/<?php echo $organizer->Username; ?>?size=50"></a></div>
+                        <div><a href="members/<?php echo $organizer->Username; ?>"><?php echo $organizer->Username; ?></a></div>
+                    </div>
+                <? } ?>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-12"><h4><?php echo $words->get('ActivityAttendees'); ?></h4></div>
+
+    <?php if ($this->member) { ?>
+
+        <?php echo $this->attendeesPager->render(); ?>
+
+        <?php
+        foreach ($this->attendeesPager->getActiveSubset($this->activity->attendees) as $attendee) {
+
+            ?>
+            <div class="attend m-1 p-2
+<?
+            switch ($attendee->status) {
+                case 1:
+                    echo " attendyes";
+                    break;
+                case 2:
+                    echo " attendmaybe";
+                    break;
+                case 3:
+                    echo " attendno";
+                    break;
+            }
+            ?>
+">
+                <div class="d-flex flex-row">
+                    <div class="mr-2"><a href="members/<?php echo $attendee->Username; ?>"><img
+                                    src="members/avatar/<?php echo $attendee->Username; ?>?size=50"></a></div>
+                    <div><a href="members/<?php echo $attendee->Username; ?>"><?php echo $attendee->Username; ?></a><br>
+                        <small>
+                            <?
+                            switch ($attendee->status) {
+                                case 1:
+                                    echo $words->get('ActivityYesIAttend');
+                                    break;
+                                case 2:
+                                    echo $words->get('ActivityIMightAttend');
+                                    break;
+                                case 3:
+                                    echo $words->get('ActivitySorryCantJoinYou');
+                                    break;
+                            }
+                            ?>
+                        </small>
+                    </div>
+                </div>
+                <? if ($attendee->comment) { ?>
+                    <div class="small gray"><i><?php echo htmlspecialchars($attendee->comment); ?></i></div>
+                <? } ?>
+            </div>
+            <?php
+        }
+        echo $this->attendeesPager->render();
+    } else {
+        echo '<div><h3>' . $words->get('ActivityAttendees') . '</h3>';
+        echo '<p>' . $words->getBuffered('ActivitiesLogInWhoIsComing', '<a href="' . $login_url . '">', '</a>') . '</p></div>';
+    }
+
+    echo $words->flushBuffer(); ?>
 <script type="text/javascript">
     $(function () {
         if ($('#map').length) {

@@ -24,7 +24,7 @@
                 <div class="col-4">
                     {% if is_granted('ROLE_ADMIN_WORDS') and hasCurrentLocaleRights %}
                         <div class="float-md-right form-inline">{{ 'Translation mode is' | trans }}&nbsp;
-                            <button type="button" class="btn btn-sm btn-secondary py-1 dropdown-toggle"
+                            <button type="button" class="btn btn-sm btn-light dropdown-toggle ml-md-2"
                                     data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
                                 {% if app.session.get('translation_mode') == 'on' %}{{ 'On' | trans }}{% else %}{{ 'Off' | trans }}{% endif %}
@@ -38,8 +38,8 @@
                             </div>
                         </div>
                     {% else %}
-                        <a class="pull-right"
-                           href="https://www.bewelcome.org/groups/60/wiki">{{ 'Help us Translate' | trans }}.</a>
+                        <a class="btn btn-sm btn-outline-primary pull-right"
+                           href="groups/60">{{ 'Help us Translate' | trans }}</a>
                     {% endif %}
                 </div>
                 <div class="col-12 mt-1">

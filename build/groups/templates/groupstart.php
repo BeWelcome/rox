@@ -46,7 +46,7 @@
     <h3 class="col-12"><?php echo $words->getFormatted('RelatedGroupsTitle'); ?></h3>
     <? if ($this->isGroupMember()) { ?>
         <div class="col-12">
-            <a href="/selectrelatedgroup" class="btn btn-primary"><?= $words->getFormatted('AddRelatedGroupButton'); ?></a>
+            <a href="/selectrelatedgroup" class="btn btn-outline-primary"><?= $words->getFormatted('AddRelatedGroupButton'); ?></a>
         </div>
     <? }
     foreach ($relatedgroups as $group_data) :
@@ -70,14 +70,14 @@
             </h4>
             <!-- group details -->
             <ul class="groupul mt-1">
-                <li><i class="fa fa-group"
-                       title="<? echo $words->get('GroupsMemberCount'); ?>"></i> <?= $group_data->getMemberCount(); ?></li>
-                <li><? echo $words->get('GroupsNewMembers'); ?> <?php echo count($group_data->getNewMembers()); ?></li>
+                <li><i class="fa fa-group mr-1"
+                       title="<? echo $words->get('GroupsMemberCount'); ?>"></i><?= $group_data->getMemberCount(); ?></li>
+                <li><i class="fa fa-user-plus mr-1" title="<? echo $words->get('GroupsNewMembers'); ?>"></i><?php echo count($group_data->getNewMembers()); ?></li>
                 <li><?php
                     if ($group_data->latestPost) {
                         $interval = date_diff(date_create(date('d F Y')), date_create(date('d F Y', ServerToLocalDateTime($group_data->latestPost, $this->getSession()))));
-                        echo $words->get('GroupsLastPost') . ": " . $interval->format('%a') . " " . $words->get('days_ago');
-
+                        ?>
+                    <i class="fa fa-comments mr-1" title="<? echo $words->get('GroupsLastPost'); ?>"></i><? echo $interval->format('%a') . " ". $words->get('days_ago');
                     } else {
                         echo $words->get('GroupsNoPostYet');
                     }
@@ -122,7 +122,7 @@
                     echo $words->getSilent('GroupsJoinNeedAccept');
                 }
                 if (!$this->isGroupMember()) { ?>
-                    <a class="btn btn-primary btn-block mb-3" href="groups/<?= $this->group->id ?>/join">
+                    <a class="btn btn-outline-primary btn-block mb-3" href="groups/<?= $this->group->id ?>/join">
                         <?= $words->getSilent('GroupsJoinTheGroup'); ?>
                     </a>
                     <?php echo $words->flushBuffer(); ?>
@@ -142,7 +142,7 @@
         echo $words->get("GroupMoreMembers", $memberCount - $visibleMemberCount, $loginstr);
     } else { ?>
         <a href="groups/<?= $group_id . '/members'; ?>"
-           class="btn btn-block btn-primary"><?= $words->get('GroupSeeAllMembers'); ?></a>
+           class="btn btn-block btn-outline-primary"><?= $words->get('GroupSeeAllMembers'); ?></a>
     <?php } ?>
 
     <?php
@@ -168,7 +168,7 @@
         <?php
         if ($this->isGroupMember()) { ?>
 
-            <a class="btn btn-block btn-primary mt-3" href="groups/<?= $this->group->id ?>/leave">
+            <a class="btn btn-block btn-danger mt-3" href="groups/<?= $this->group->id ?>/leave">
                 <?= $words->getSilent('GroupsLeaveTheGroup'); ?>
             </a>
 

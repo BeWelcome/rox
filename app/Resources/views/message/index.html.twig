@@ -7,16 +7,17 @@
     {% endfor %}
 {% endblock %}
 
-{% block content %}
+{% block javascripts %}
+<script type="text/javascript">
+    $(window).on('load', function () {
+        $('#checkAll').click(function () {
+            $('input:checkbox.checkable').prop('checked', this.checked);
+        });
+    });
+</script>
+{% endblock %}
 
-    <script type="text/javascript">
-        function toggle(source) {
-            checkboxes = document.getElementsByName('.selectable');
-            for(var i=0, n=checkboxes.length;i<n;i++) {
-                checkboxes[i].checked = source.checked;
-            }
-        }
-    </script>
+{% block content %}
 
     <h2>{{ type | trans | format(my_member.Username) }}</h2>
 
@@ -37,7 +38,7 @@
 
         <tr>
             <th class="select align-middle">
-                <input type="checkbox" id="select_all" onClick="javascript:toogle(this);">
+                <input type="checkbox" id="checkAll">
             </th>
             <th class="from text-center align-middle nowrap">
                 <span class="small"><a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: correspondent, dir: 'asc' }) }}">&#x25b2;</a> {{ correspondent | trans | capitalize }} <a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: correspondent, dir: 'desc' }) }}">&#x25bc;</a></span><br>
@@ -51,7 +52,7 @@
 
             <tr>
                 <td class="select align-middle" id="selectcolumn">
-                    {{ form_widget(form.messages[loop.index0], {'attr': {'class': 'selectable'}}) }}
+                    {{ form_widget(form.messages[loop.index0], {'attr': {'class': 'checkable'}}) }}
                 </td>
                 <td class="align-middle small">
                     <p class="m-0">{{ macros.avatar(otherMember.Username, 50, true) }}</p>

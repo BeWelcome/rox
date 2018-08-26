@@ -7,6 +7,7 @@ use AppBundle\Entity\Message;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Core\Security;
 use Twig_Extension;
 use Twig_Extension_GlobalsInterface;
 
@@ -28,17 +29,24 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
     protected $router;
 
     /**
+     * @var Security
+     */
+    protected $security;
+
+    /**
      * MemberTwigExtension constructor.
      *
      * @param Session       $session
      * @param EntityManager $em
      * @param Router        $router
+     * @param Security      $security
      */
-    public function __construct(Session $session, EntityManager $em, Router $router)
+    public function __construct(Session $session, EntityManager $em, Router $router, Security $security)
     {
         $this->session = $session;
         $this->em = $em;
         $this->router = $router;
+        $this->security = $security;
     }
 
     /**
@@ -61,8 +69,9 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
 
         return [
             'my_member' => $member ? $member : null,
-            'messageCount' => $member ? $this->getUnreadMessageCount($member) : 0,
-            'requestCount' => $member ? $this->getUnreadRequestCount($member) : 0,
+            'reportedCount' => $member ? $this->getReportedMessagesCount($member) : 0,
+            'messageCount' => $member ? $this->getUnreadMessagesCount($member) : 0,
+            'requestCount' => $member ? $this->getUnreadRequestsCount($member) : 0,
             'teams' => $teams,
         ];
     }
@@ -72,18 +81,33 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
         return self::class;
     }
 
-    protected function getUnreadMessageCount(Member $member)
+    protected function getReportedMessagesCount(Member $member)
     {
-        $messageRepository = $this->em->getRepository(Message::class);
+        $reportedMessagesCount = 0;
+        $user = $this->security->getUser();
+        if ($user &&
+            ($this->security->isGranted(Member::ROLE_ADMIN_CHECKER) ||
+            $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM))) {
+            $messageRepository = $this->em->getRepository(Message::class);
 
-        return $messageRepository->getUnreadMessageCount($member);
+            $reportedMessagesCount = $messageRepository->getReportedMessagesCount();
+        }
+
+        return $reportedMessagesCount;
     }
 
-    protected function getUnreadRequestCount(Member $member)
+    protected function getUnreadMessagesCount(Member $member)
     {
         $messageRepository = $this->em->getRepository(Message::class);
 
-        return $messageRepository->getUnreadRequestCount($member);
+        return $messageRepository->getUnreadMessagesCount($member);
+    }
+
+    protected function getUnreadRequestsCount(Member $member)
+    {
+        $messageRepository = $this->em->getRepository(Message::class);
+
+        return $messageRepository->getUnreadRequestsCount($member);
     }
 
     /**

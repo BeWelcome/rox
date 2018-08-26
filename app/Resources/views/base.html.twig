@@ -34,6 +34,15 @@
         {% include 'menu.html.twig' %}
         <noscript><h1>Please activate Javascript for bewelcome.org</h1><p><small>Without it some function won't work.</small></p></noscript>
         <main role="main">
+            {% if is_granted('ROLE_ADMIN_CHECKER') or is_granted('ROLE_ADMIN_SAFETYTEAM') %}
+                <div class="container mb-4">
+                    <div class="row no-gutters justify-content-end border">
+                        <div class="col-12 p-2 text-right">
+                            <a href="{{ path('admin_spam_overview') }}">{% transchoice reportedCount with {'%reportedCount%': reportedCount} %}admin.spam.reported{% endtranschoice %}</a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
             <div class="container">
                 {% for flash_message in app.session.flashBag.get('error') %}
                     <div class="row">

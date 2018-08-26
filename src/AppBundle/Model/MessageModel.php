@@ -84,6 +84,59 @@ class MessageModel extends BaseModel
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
+    public function markAsSpamByChecker(array $messageIds)
+    {
+        /** @var MessageRepository $repository */
+        $repository = $this->em->getRepository(Message::class);
+
+        $messages = $repository->findBy([
+            'id' => $messageIds,
+        ]);
+
+        /** @var Message $message */
+        foreach ($messages as $message) {
+            $message
+                ->setStatus(MessageStatusType::CHECKED)
+                ->updateSpaminfo(SpamInfoType::CHECKER_SAYS_SPAM);
+            $this->em->persist($message);
+        }
+        $this->em->flush();
+    }
+
+    /**
+     * @param array $messageIds
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function unmarkAsSpamByChecker(array $messageIds)
+    {
+        /** @var MessageRepository $repository */
+        $repository = $this->em->getRepository(Message::class);
+
+        $messages = $repository->findBy([
+            'id' => $messageIds,
+        ]);
+
+        /** @var Message $message */
+        foreach ($messages as $message) {
+            // \todo If message wasn't sent yet, send it now
+            if (MessageStatusType::FROZEN === $message->getStatus()) {
+                $message->setStatus(MessageStatusType::SEND);
+            } else {
+                $message->setStatus(MessageStatusType::CHECKED);
+            }
+            $this->em->persist($message);
+        }
+        $this->em->flush();
+    }
+
+    /**
+     * @param array $messageIds
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function markAsSpam(array $messageIds)
     {
         /** @var MessageRepository $repository */
@@ -128,6 +181,20 @@ class MessageModel extends BaseModel
             $this->em->persist($message);
         }
         $this->em->flush();
+    }
+
+    /**
+     * @param int $page
+     * @param int $limit
+     *
+     * @return \Pagerfanta\Pagerfanta
+     */
+    public function getReportedMessages($page = 1, $limit = 10)
+    {
+        /** @var MessageRepository $repository */
+        $repository = $this->em->getRepository(Message::class);
+
+        return $repository->findReportedMessages($page, $limit);
     }
 
     /**

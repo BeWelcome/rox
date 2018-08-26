@@ -3,6 +3,8 @@
 namespace AppBundle\Repository;
 
 use AppBundle\Doctrine\DeleteRequestType;
+use AppBundle\Doctrine\MessageStatusType;
+use AppBundle\Doctrine\SpamInfoType;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
 use Doctrine\ORM\EntityRepository;
@@ -55,6 +57,21 @@ class MessageRepository extends EntityRepository
                 break;
         }
         $qb->orderBy('m.'.$sort, $sortDirection);
+
+        return $qb;
+    }
+
+    /**
+     * @return QueryBuilder
+     */
+    public function queryReportedMessages()
+    {
+        $qb = $this->createQueryBuilder('m');
+        $qb
+            ->where('m.status = :status')
+            ->setParameter('status', MessageStatusType::CHECK)
+            ->andWhere('m.spaminfo LIKE :spaminfo')
+            ->setParameter('spaminfo', SpamInfoType::MEMBER_SAYS_SPAM);
 
         return $qb;
     }
@@ -122,7 +139,7 @@ class MessageRepository extends EntityRepository
      *
      * @return mixed|null
      */
-    public function getUnreadMessageCount(Member $member)
+    public function getUnreadMessagesCount(Member $member)
     {
         $q = $this->createQueryBuilder('m')
             ->select('count(m.id)')
@@ -151,7 +168,7 @@ class MessageRepository extends EntityRepository
      *
      * @return mixed|null
      */
-    public function getUnreadRequestCount(Member $member)
+    public function getUnreadRequestsCount(Member $member)
     {
         $q = $this->createQueryBuilder('m')
             ->join('m.request', 'r')
@@ -173,6 +190,47 @@ class MessageRepository extends EntityRepository
         }
 
         return $results;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getReportedMessagesCount()
+    {
+        $q = $this->createQueryBuilder('m')
+            ->select('count(m.id)')
+            ->where('m.status = :status')
+            ->setParameter('status', MessageStatusType::CHECK)
+            ->andWhere('m.spaminfo LIKE :spaminfo')
+            ->setParameter('spaminfo', SpamInfoType::MEMBER_SAYS_SPAM)
+            ->getQuery();
+
+        $results = null;
+        try {
+            $results = $q->getSingleScalarResult();
+        } catch (NonUniqueResultException $e) {
+        }
+
+        return $results;
+    }
+
+    /**
+     * Returns a Pagerfanta object encapsulating the matching paginated activities.
+     *
+     * @param int $page
+     * @param int $items
+     *
+     * @return Pagerfanta
+     */
+    public function findReportedMessages($page = 1, $items = 10)
+    {
+        $queryBuilder = $this->queryReportedMessages();
+        $adapter = new DoctrineORMAdapter($queryBuilder);
+        $paginator = new Pagerfanta($adapter);
+        $paginator->setMaxPerPage($items);
+        $paginator->setCurrentPage($page);
+
+        return $paginator;
     }
 
     /**

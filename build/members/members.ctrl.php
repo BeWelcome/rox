@@ -120,6 +120,7 @@ class MembersController extends RoxControllerBase
         $request = $args->request;
 
         $myself = true;
+        $page = new \stdClass();
 
         $adminMember = false;
         $rights_self = $member_self->getOldRights();

@@ -401,10 +401,10 @@ class Message
             unset($info[$key]);
         }
         $this->spaminfo = implode(',', $info);
-        if (empty($this->spaminfo))
-        {
+        if (empty($this->spaminfo)) {
             $this->spaminfo = SpamInfoType::NO_SPAM;
         }
+
         return $this;
     }
 
@@ -417,8 +417,7 @@ class Message
      */
     public function addToSpamInfo($spaminfo)
     {
-        if (SpamInfoType::NO_SPAM === $this->spaminfo)
-        {
+        if (SpamInfoType::NO_SPAM === $this->spaminfo) {
             $this->spaminfo = '';
         }
         $info = array_filter(explode(',', $this->spaminfo));

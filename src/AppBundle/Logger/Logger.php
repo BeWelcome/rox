@@ -29,8 +29,7 @@ class Logger
      */
     public function write($msg, $type, $member = null)
     {
-        if (null === $member)
-        {
+        if (null === $member) {
             // Get member from the security context
             $member = $this->security->getUser();
         }

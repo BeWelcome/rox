@@ -81,7 +81,7 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
         return self::class;
     }
 
-    protected function getReportedMessagesCount(Member $member)
+    protected function getReportedMessagesCount()
     {
         $reportedMessagesCount = 0;
         $user = $this->security->getUser();

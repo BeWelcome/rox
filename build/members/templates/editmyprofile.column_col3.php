@@ -15,12 +15,6 @@ require_once 'editprofile_form.php';
 <script type="text/javascript">//<!--
     var iterator = 1;
     function insertNewTemplate(event){
-/* no reason for an arbitrary limit
-        var element = Event.element(event);
-        if (iterator == 7) {
-            Event.stopObserving(element, 'click', insertNewTemplate);
-            element.disable;
-        } */
         var node1 = $('lang'+iterator);
         var sel1 = node1.cells[0].children[1];
         if (sel1.selectedIndex > 0)

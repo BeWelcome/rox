@@ -111,7 +111,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
             </div>
             <div class="d-flex flex-row justify-content-between">
                 <?php if ($this->loggedInMember){ ?>
-                    <div><a href="members/reportcomment/<?php echo $this->member->Username;?>/<?php echo $c->id;?>" title="<?=$words->getSilent('ReportCommentProblem') ?>"><i class="fa fa-flag-o" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a></div>
+                    <div><a href="/members/<?= $this->member->Username;?>/comment/<?php echo $c->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>"><i class="fa fa-flag-o" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a></div>
                 <? } ?>
                 <div><? if (!$this->passedAway) { ?><p class="h4 <?=$quality?>"><?=$c->comQuality?></p><? } ?></div>
             <div><span title="<?php echo $c->created; ?>" class="small"><?php echo $layoutbits->ago($c->unix_created); ?></span></div>

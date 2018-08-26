@@ -26,9 +26,6 @@ class LandingController extends Controller
     public function showMessagesAction(Request $request)
     {
         $unread = $request->query->get('unread', false);
-        /* Ignore query parameter all as $unread is set accordingly
-        $all = $request->query->get('all', false);
-        */
 
         $member = $this->getUser();
 
@@ -159,7 +156,7 @@ class LandingController extends Controller
     public function indexAction()
     {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->forward(HomeController::class);
+            throw $this->createAccessDeniedException();
         }
 
         $member = $this->getUser();

@@ -101,7 +101,6 @@ using a browser or use curl _url_ > _filename_.
     ```bash
     $ php composer.phar install
     $ npm update
-    $ ./node_modules/.bin/encore dev
     ```
 
 1. Execute
@@ -119,7 +118,7 @@ using a browser or use curl _url_ > _filename_.
         
     ```bash
     $ php bin/console doctrine:schema:create
-    $ php bin/console doctrine:fixtures:load
+    $ php bin/console hautelook:fixtures:load
     ``` 
    
 10. To get translated keywords update words and language tables to match the current translation on the site
@@ -137,10 +136,10 @@ using a browser or use curl _url_ > _filename_.
 2. Run 
 
     ```bash
-    $ make version
-    $ php bin/console assets:install
-    $ php bin/console assetic:dump
+    $ make build version
    ```
+
+   to build the CSS and JS files. The version creates a file referenced in the footer. 
 
 3. Start the server 
 

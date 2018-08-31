@@ -30,27 +30,29 @@
                 {% endif %}
             </div>
             <div class="small">
-                {% if (member.Age) -%}
+                <p class="m-0 mb-2">{% if (member.Age) -%}
                     {{ 'SearchYearsOld' | trans | format( member.Age) | raw -}}
                 {% endif -%}
                 {%- if (member.HideGender == 'No') %}
                     {%- if member.Age %}, {% endif %}
                     {{- member.Gender }}
                 {% endif %}
-                <br />
-                {{ member.CityName }}, {{ member.CountryName }}<br />
-                <br /> 
-                {{ member.Occupation | purify }}
-                {{ 'SearchMemberSinceInfo' | trans | format( '<strong>' ~ member.created ~ '</strong>' ) | raw }}
+                </p>
+                <div class="m-0 mb-2 d-flex">
+                    <div class="mr-1"><i class="fa fa-2x fa-map-marker"></i></div>
+                    <div><strong>{{ member.CityName }}</strong><br>{{ member.CountryName }}</div>
+                </div>
+                <p class="m-0 mb-1 font-italic">{{ member.Occupation | raw }}</p>
+                <p class="m-0">{{ 'SearchMemberSinceInfo' | trans | format( '<strong>' ~ member.created ~ '</strong>' ) | raw }}</p>
             </div>
         </td>
         <td>
             <div class="row px-2">
                 <div><img src="/images/icons/{{ member.Accommodation }}.png" alt="{{ member.Accommodation | trans }}"></div>
-                <div class="ml-2"><i class="fa fa-2x fa-bed p-1"></i><span class="h4">{{ member.MaxGuest }}</span></div>
+                <div class="ml-2"><i class="fa fa-bed p-1"></i><span class="h4">{{ member.MaxGuest }}</span></div>
             </div>
             <div class="w-100 font-weight-bold nowrap">
-                <a href="members/{{ member.Username }}/comments">{{ 'SearchCommentsInfo' | trans | format( member.CommentCount) | raw}}</a>
+                <a href="members/{{ member.Username }}/comments"><i class="fa fa-comments mr-1"></i>{{ 'SearchCommentsInfo' | trans | format( member.CommentCount) | raw}}</a>
             </div>
             <div class="small mt-2">
                 <span>{{ 'SearchMemberLastLoginInfo' | trans | format( '<strong>' ~ member.LastLogin ~ '</strong>') | raw }}</span>

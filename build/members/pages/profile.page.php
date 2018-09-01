@@ -35,6 +35,12 @@ Boston, MA  02111-1307, USA.
 
 class ProfilePage extends MemberPage
 {
+    protected function getLateLoadScriptfiles()
+    {
+        $scripts = parent::getLateLoadScriptfiles();
+        $scripts[] = 'profile/profile.js';
+    }
+
     protected function getSubmenuActiveItem()
     {
         return 'profile';

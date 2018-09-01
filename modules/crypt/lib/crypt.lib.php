@@ -58,16 +58,15 @@ class MOD_crypt {
      */
     public function enc($function,$ss)
     {
-        require_once SCRIPT_BASE.'inc/enc.inc.php';
         switch ($function) {
             case 'CryptA':
-                return CryptA($ss);
+                return urlencode($ss);
             case 'CryptM':
-                return CryptM($ss);
+                return urlencode($ss);
             case 'DeCryptA':
-                return DeCryptA($ss);
+                return urldecode($ss);
             case 'DeCryptM':
-                return DeCryptM($ss);
+                return urldecode($ss);
             default:
                 return false;
         }

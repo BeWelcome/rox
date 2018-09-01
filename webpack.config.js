@@ -1,5 +1,9 @@
 var Encore = require('@symfony/webpack-encore');
 
+const CKEditorWebpackPlugin = require( '@ckeditor/ckeditor5-dev-webpack-plugin' );
+
+const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
+
 Encore
     .configureRuntimeEnvironment('dev')
     .enableSingleRuntimeChunk()
@@ -24,6 +28,8 @@ Encore
     .addEntry('admin/faqs', './src/AppBundle/Resources/js/admin/faqs.js')
     .addEntry('chartjs', './node_modules/chart.js/dist/Chart.js')
     .addEntry('offcanvas', './src/AppBundle/Resources/public/js/offcanvas.js')
+    .addEntry('profile/profile', './src/AppBundle/Resources/js/profile.js')
+    .addEntry('ckeditor5', './src/AppBundle/Resources/js/ckeditor5.js')
 
     .enableSassLoader()
     // allow legacy applications to use $/jQuery as a global variable, make popper visible for bootstrap
@@ -31,6 +37,18 @@ Encore
     .autoProvideVariables({
         Popper: ['popper.js', 'default'],
     })
+
+    .addPlugin(
+        new CKEditorWebpackPlugin( {
+            // See https://docs.ckeditor.com/ckeditor5/latest/features/ui-language.html
+            language: 'en',
+
+            // Additional languages that will be emitted to the `outputDirectory`.
+            // This option can be set to an array of language codes or `'all'` to build all found languages.
+            // The bundle is optimized for one language when this option is omitted.
+            additionalLanguages: 'all',
+        } )
+    )
     .addLoader({
         test: require.resolve('jquery'),
         use: [{
@@ -45,7 +63,18 @@ Encore
         test: require.resolve('select2'),
         use: "imports-loader?define=>false"
     })
-
+    .addLoader({
+        test: /\.svg$/,
+        use: [{
+            loader: "inspect-loader/raw",
+            options: {
+                callback(inspect) {
+                    console.log(inspect.arguments);
+                }
+            }}, {
+            loader: "raw-loader" // raw loader that you want to test/debug
+        }]
+    })
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
 ;

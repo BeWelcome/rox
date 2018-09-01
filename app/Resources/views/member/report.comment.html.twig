@@ -1,7 +1,44 @@
 {% extends 'base.html.twig' %}
 {% import 'macros.twig' as macros %}
 
+{% block javascripts %}
+    <script src="{{ asset('build/profile/profile.js') }}"></script>
+    <script src="{{ asset('script/ckeditor.js') }}"></script>
+    <script>
+        ClassicEditor
+            .create( document.querySelector( '#editor' ), {
+                removePlugins: [ 'Heading' ],
+                toolbar: [ 'bold', 'italic', 'bulletedList', 'numberedList', 'blockQuote', 'link' ]
+            } )
+            .then( editor => {
+                window.editor = editor;
+            } )
+            .catch( err => {
+                console.error( err.stack );
+            } );
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .ck-editor__editable {
+        min-height: 10em;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-    {{ dump(comment) }}
-    {{ dump(member) }}
+    <h1>{{ 'Report a Comment' | trans }}</h1>
+    <div class="row">
+        <div class="col-12 col-md-6 text-left">{{ 'From:' |trans }} {{ macros.avatar(comment.FromMember.Username, true) }}</div>
+        <div class="col-12 col-md-6 text-md-right">{{ 'To:' |trans }} {{ macros.avatar(comment.ToMember.Username, true) }}</div>
+        <div class="col-12">{{ comment.quality | trans }}</div>
+        <div class="col-12">{{ comment.textwhere }}</div>
+        <div class="col-12">{{ comment.textfree }}</div>
+        <div class="col-12"><textarea name="content" id="editor">
+    &lt;p&gt;Here goes the initial content of the editor.&lt;/p&gt;
+</textarea>
+
+        </div>
+    </div>
 {% endblock %}

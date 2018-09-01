@@ -101,14 +101,9 @@ bwrox.selectScripts([
         // complete jquery ui with theme smoothness
         file: "jquery-ui-1.11.2/jquery-ui.min.js",
         pages: [
-//            "activities",
             "search",
             "admin/rights",
             "admin/flags",
-            /*,
-             "blog",
-             "trip",
-             "admin/treasurer" */
         ]
     },
     {
@@ -119,16 +114,8 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "jquery.multiselect.min.js",
-        pages: [
-            "search"
-        ]
-    },
-    {
         file: "leaflet/1.0.0-master/leaflet.js",
         pages: [
-            "searchmembers",
-            "blog",
             "activities"
         ]
     },
@@ -139,38 +126,13 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "//maps.googleapis.com/maps/api/js?sensor=false",
-        remote: true,
-        pages: [
-            "searchmembers",
-            "blog"
-        ]
-    },
-    {
-        file: "leaflet/plugins/shramov-leaflet-plugins/1.1.0/layer/tile/Google.js",
-        pages: [
-            "searchmembers",
-            "blog"
-        ]
-    },
-    {
         file: "../bundles/fosckeditor/ckeditor.js",
         pages: [
             "activities",
-            "blog",
             "forums",
             "groups",
-            "suggestions",
-//            "trip",
             "messages/",
             "invite"
-        ]
-    },
-    {
-        file: "blog_suggest.js?1",
-        pages: [
-            "blog",
-//            "trip"
         ]
     },
     {
@@ -188,125 +150,11 @@ bwrox.selectScripts([
     {
         file: "fieldset.js?1",
         pages: [
-            "blog/create",
-            "blog/edit",
-            "user/settings",
-//            "trip/create",
-//            "trip/edit",
-//            "trip",
-            "gallery/show/image",
-            "message/write",
-            "editmyprofile",
             "admin/massmail",
-            "members/"
-        ]
-    },
-    {
-        file: "gallery.js?1",
-        pages: [
-            "blog/create",
-            "editmyprofile"
-        ]
-    },
-    {
-        file: "uploader.js?1",
-        pages: [
-            "blog/create",
-            "editmyprofile"
-        ]
-    },
-    {
-        file: "transition.js?1",
-        pages: [
-            "thepeople"
-        ]
-    },
-    {
-        file: "prototip.js?2",
-        pages: [
-            "searchmembers"
-        ]
-    },
-    {
-        file: "fancyzoom.js?1",
-        pages: [
-            "members",
-            "editmyprofile",
-            "mypreferences",
-            "myvisitors",
-            "deleteprofile",
-            "people"
         ]
     },
     {
         file: "util/console.js?1"
-    },
-    {
-        file: "map/geolocation/BWGoogleMapReverseGeolocator.js?2",
-        pages: [
-            "searchmembers",
-            "blog",
-            //    "trip"
-        ]
-    },
-    {
-        file: "map/leaflet/LeafletFlagIcon.js?1",
-        pages: [
-            "blog"
-        ]
-    },
-    {
-        file: "map/builder/BWSimpleMapBuilder.js?4",
-        pages: [
-            "blog"
-        ]
-    },
-    {
-        file: "map/builder/BWGeosearchMapBuilder.js?4",
-        pages: ["searchmembers"]
-    },
-    {
-        file: "map/BWMapMaths.js?1",
-        pages: [
-            "searchmembers",
-            "blog",
-            //    "trip"
-        ]
-    },
-    {
-        file: "map/BWMapAddressPoint.js?1",
-        pages: [
-            "searchmembers",
-            "blog",
-            //    "trip"
-        ]
-    },
-    {
-        file: "map/BWMapHostPoint.js?1",
-        pages: ["searchmembers"]
-    },
-    {
-        file: "map/BWMapSearchResult.js?1",
-        pages: ["searchmembers"]
-    },
-    {
-        file: "map/small/blogSmallMapGeoLocation.js?4",
-        pages: [
-            "blog"
-            //, "trip"
-        ]
-    },
-    {
-        file: "map/small/blogMap.js?4",
-        pages: ["blog"]
-    },
-    {
-        file: "map/small/singlePost.js?4",
-        pages: ["blog"]
-    },
-    {
-        file: "searchmembers.js?4",
-        pages: ["searchmembers"]
     },
     {
         file: "map/activities/activities_map.js?4",

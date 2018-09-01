@@ -120,7 +120,6 @@ class MembersController extends RoxControllerBase
         $request = $args->request;
 
         $myself = true;
-        $page = new \stdClass();
 
         $adminMember = false;
         $rights_self = $member_self->getOldRights();
@@ -411,6 +410,7 @@ class MembersController extends RoxControllerBase
                 }
         }
         if (!isset($member)) {
+//            $page = new \stdClass();
             $page->member = $member_self;
         } else if (is_object($member)) {
             $page->member = $member;

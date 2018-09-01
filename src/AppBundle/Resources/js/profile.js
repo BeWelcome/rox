@@ -1,0 +1,4 @@
+require('ekko-lightbox');
+
+$(function () {
+});

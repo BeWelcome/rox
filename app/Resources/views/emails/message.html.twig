@@ -74,7 +74,7 @@
         </div>
     </div>
     <div class="content">
-        Sender: <?= $sender->getUsername(); ?>
+        Sender: {{ sender.username }}
         {% block content %}
             {{ message_text | raw }}
         {% endblock content %}

@@ -77,7 +77,7 @@ class RequestAndMessageController extends Controller
         }
 
         // determine if guest or host reply to a request
-        $first = $thread[count($thread) - 1];
+        $first = $thread[\count($thread) - 1];
         if ($sender->getId() === $first->getSender()->getId()) {
             return $this->hostingRequestGuestReply($request, $thread);
         }
@@ -295,7 +295,7 @@ class RequestAndMessageController extends Controller
         $sort = $request->query->get('sort', 'datesent');
         $sortDir = $request->query->get('dir', 'desc');
 
-        if (!in_array($sortDir, ['asc', 'desc'], true)) {
+        if (!\in_array($sortDir, ['asc', 'desc'], true)) {
             throw new \InvalidArgumentException();
         }
 
@@ -325,7 +325,7 @@ class RequestAndMessageController extends Controller
         $sort = $request->query->get('sort', 'datesent');
         $sortDir = $request->query->get('dir', 'desc');
 
-        if (!in_array($sortDir, ['asc', 'desc'], true)) {
+        if (!\in_array($sortDir, ['asc', 'desc'], true)) {
             throw new \InvalidArgumentException();
         }
 
@@ -355,7 +355,7 @@ class RequestAndMessageController extends Controller
         $sort = $request->query->get('sort', 'datesent');
         $sortDir = $request->query->get('dir', 'desc');
 
-        if (!in_array($sortDir, ['asc', 'desc'], true)) {
+        if (!\in_array($sortDir, ['asc', 'desc'], true)) {
             throw new \InvalidArgumentException();
         }
 
@@ -519,7 +519,7 @@ class RequestAndMessageController extends Controller
 
         $user = $this->getUser();
         /** @var Message $first */
-        $first = $thread[count($thread) - 1];
+        $first = $thread[\count($thread) - 1];
         $guest = $first->getSender();
         $host = $first->getReceiver();
 
@@ -606,7 +606,7 @@ class RequestAndMessageController extends Controller
         $hostingRequest = $thread[0];
 
         $user = $this->getUser();
-        $first = $thread[count($thread) - 1];
+        $first = $thread[\count($thread) - 1];
         $guest = $first->getSender();
         $host = $first->getReceiver();
 

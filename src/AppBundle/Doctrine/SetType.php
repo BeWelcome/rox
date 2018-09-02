@@ -38,9 +38,9 @@ abstract class SetType extends Type
         if (null !== $value) {
             // Split given value
             $values = explode(',', $value);
-            $valueCount = count($values);
+            $valueCount = \count($values);
 
-            if (count(array_intersect($values, $this->values)) !== $valueCount) {
+            if (\count(array_intersect($values, $this->values)) !== $valueCount) {
                 throw new \InvalidArgumentException("Invalid '".$this->name."' value: ".$value.'.');
             }
         } else {

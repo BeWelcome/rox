@@ -7,6 +7,7 @@
 
 namespace AppBundle\Entity;
 
+use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -232,11 +233,11 @@ class Comment
     /**
      * Get updated.
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getUpdated()
     {
-        return $this->updated;
+        return Carbon::instance($this->updated);
     }
 
     /**
@@ -256,11 +257,11 @@ class Comment
     /**
      * Get created.
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getCreated()
     {
-        return $this->created;
+        return Carbon::instance($this->created);
     }
 
     /**

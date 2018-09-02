@@ -19,7 +19,7 @@ class LanguageHydrator extends AbstractHydrator
 
     protected function hydrateRowData(array $row, array &$result)
     {
-        if (0 === count($row)) {
+        if (0 === \count($row)) {
             return false;
         }
 
@@ -28,7 +28,7 @@ class LanguageHydrator extends AbstractHydrator
         // Assume first column is id field
         $id = $row[$keys[0]];
 
-        if (2 === count($row)) {
+        if (2 === \count($row)) {
             // If only one more field assume that this is the value field
             $value = $row[$keys[1]];
         } else {

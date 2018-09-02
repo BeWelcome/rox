@@ -66,13 +66,7 @@ Encore
     .addLoader({
         test: /\.svg$/,
         use: [{
-            loader: "inspect-loader/raw",
-            options: {
-                callback(inspect) {
-                    console.log(inspect.arguments);
-                }
-            }}, {
-            loader: "raw-loader" // raw loader that you want to test/debug
+            loader: "raw-loader"
         }]
     })
     .enableSourceMaps(!Encore.isProduction())

@@ -181,8 +181,8 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
         $assignedTeams = [];
         foreach ($allTeams as $name => $team) {
             foreach ($roles as $role) {
-                if (!in_array($name, $assignedTeams, true)) {
-                    if (in_array($role->getRole(), $team['rights'], true)) {
+                if (!\in_array($name, $assignedTeams, true)) {
+                    if (\in_array($role->getRole(), $team['rights'], true)) {
                         $assignedTeams[] = $name;
                         $teams[] = [
                             'trans' => $team['trans'],

@@ -24,7 +24,7 @@ class EncoderFactory implements EncoderFactoryInterface
     public function getEncoder($user)
     {
         // Use the class name of the user to get the intended default encoder
-        $encoderName = get_class($user);
+        $encoderName = \get_class($user);
 
         // If the user is privileged, escalate the encoder to 'harsh'
         if ($this->isPrivileged($user)) {

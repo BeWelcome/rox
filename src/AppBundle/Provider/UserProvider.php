@@ -52,7 +52,7 @@ class UserProvider implements UserProviderInterface
             throw new UnsupportedUserException(
                 sprintf(
                     'Instances of "%s" are not supported.',
-                    get_class($user)
+                    \get_class($user)
                 )
             );
         }

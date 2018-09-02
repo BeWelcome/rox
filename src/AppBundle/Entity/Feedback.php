@@ -1,4 +1,9 @@
 <?php
+/*
+ * @codingStandardsIgnoreFile
+ *
+ * Auto generated file ignore for Code Sniffer
+ */
 
 namespace AppBundle\Entity;
 
@@ -10,6 +15,9 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="feedbacks")
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class Feedback
 {

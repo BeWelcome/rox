@@ -194,7 +194,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
                 <div><? if (!$this->passedAway) { ?><p class="h4 <?=$quality?>"><?=$cc->comQuality?></p><? } ?></div>
 
                 <?php if ($this->loggedInMember) :?>
-                    <div><a href="members/reportcomment/<?php echo $cc->UsernameToMember;?>/<?php echo $cc->id;?>" title="<?=$words->getSilent('ReportCommentProblem') ?>"><i class="fa fa-flag-o" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a></div>
+                    <div><a href="members/<?php echo $cc->UsernameToMember;?>/comment/<?php echo $cc->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>"><i class="fa fa-flag-o" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a></div>
                 <?php endif;?>
             </div>
 

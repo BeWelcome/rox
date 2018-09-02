@@ -2460,7 +2460,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
             }
 
             // If additional roles are found add ROLE_ADMIN as well to get past the /admin firewall
-            if (count($roles) > 1) {
+            if (\count($roles) > 1) {
                 $roles[] = 'ROLE_ADMIN';
             }
         }
@@ -2683,10 +2683,10 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
                 if ($volunteerRight->getRight() === $word) {
                     $strScope = str_replace('"', '', str_replace(',', ';', $volunteerRight->getScope()));
                     $scope = explode(';', $strScope);
-                    if (in_array($locale, $scope, true)) {
+                    if (\in_array($locale, $scope, true)) {
                         $hasRight = true;
                     }
-                    if (in_array('All', $scope, true)) {
+                    if (\in_array('All', $scope, true)) {
                         $hasRight = true;
                     }
                 }
@@ -2709,7 +2709,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
 
     public function isBrowseable()
     {
-        if (in_array(
+        if (\in_array(
             $this->status,
             [
                 'TakenOut',

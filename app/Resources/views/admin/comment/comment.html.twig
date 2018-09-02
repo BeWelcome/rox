@@ -12,11 +12,11 @@
         </div>
     </div>
     <div class="row">
-        {% include ':member:comment.html.twig' with { 'comment': comment } %}
+        {% include ':member:comment.html.twig' with { 'comment': comment, 'mute': false } %}
         {% if reply %}
-            {% include ':member:comment.html.twig' with { 'comment': reply } %}
+            {% include ':member:comment.html.twig' with { 'comment': reply, 'mute': true } %}
         {% endif %}
-        <div class="col-12 col-sm-6 card">
+        <div class="col-12 {% if not reply %}col-sm-6{% endif %} p-2 card">
             {{ form(form, { 'attr': { 'class': 'form-inline'}}) }}
         </div>
     </div>

@@ -805,7 +805,7 @@ class RequestAndMessageController extends Controller
                 );
         }
         $message
-            ->setTo($receiver->getCryptedField('Email'))
+            ->setTo($receiver->getEmail())
             ->setBody(
                 $this->renderView(
                     'emails/'.$template.'.html.twig',

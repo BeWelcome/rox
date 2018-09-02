@@ -2,9 +2,12 @@
 
 namespace AppBundle\Controller\Admin;
 
+use AppBundle\Doctrine\CommentAdminActionType;
+use AppBundle\Doctrine\CommentQualityType;
 use AppBundle\Entity\Comment;
 use AppBundle\Entity\Member;
 use AppBundle\Form\AdminCommentFormType;
+use AppBundle\Model\Admin\CommentModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -14,8 +17,104 @@ use Symfony\Component\HttpFoundation\Response;
 class CommentController extends Controller
 {
     /**
-     * @Route("/admin/comment/{commentId}", name="admin_comment")
      * @Route("/admin/comment", name="admin_comment_overview")
+     * @param Request $request
+     * @return Response
+     */
+    public function adminCommentOverview(Request $request)
+    {
+        $page = $request->query->get('page', 1);
+        $limit = $request->query->get('limit', 10);
+
+        $commentModel = new CommentModel($this->getDoctrine());
+        $comments = $commentModel->getComments($page, $limit);
+
+        return $this->render(':admin:comment/overview.html.twig', [
+            'headline' => 'admin.comment.all',
+            'route' => 'admin_comment_overview',
+            'comments' => $comments,
+            'submenu' => [
+                'items' => $this->getSubMenuItems(),
+                'active' => 'overview',
+            ],
+        ]);
+    }
+
+    /**
+     * @Route("/admin/comment/safetyteam", name="admin_abuser_overview")
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function adminSafetyTeamOverview(Request $request)
+    {
+        $page = $request->query->get('page', 1);
+        $limit = $request->query->get('limit', 10);
+
+        $commentModel = new CommentModel($this->getDoctrine());
+        $comments = $commentModel->getCommentsByAdminAction(CommentAdminActionType::SAFETY_TEAM_CHECK, $page, $limit);
+
+        return $this->render(':admin:comment/overview.html.twig', [
+            'headline' => 'admin.comment.safetyteam',
+            'route' => 'admin_abuser_overview',
+            'comments' => $comments,
+            'submenu' => [
+                'items' => $this->getSubMenuItems(),
+                'active' => 'abusermustcheck',
+            ],
+        ]);
+    }
+
+    /**
+     * @Route("/admin/comment/reported", name="admin_reported_overview")
+     * @param Request $request
+     * @return Response
+     */
+    public function adminReportedOverview(Request $request)
+    {
+        $page = $request->query->get('page', 1);
+        $limit = $request->query->get('limit', 10);
+
+        $commentModel = new CommentModel($this->getDoctrine());
+        $comments = $commentModel->getCommentsByAdminAction(CommentAdminActionType::ADMIN_CHECK, $page, $limit);
+
+        return $this->render(':admin:comment/overview.html.twig', [
+            'headline' => 'admin.comment.reported',
+            'route' => 'admin_reported_overview',
+            'comments' => $comments,
+            'submenu' => [
+                'items' => $this->getSubMenuItems(),
+                'active' => 'reportedcomment',
+            ],
+        ]);
+    }
+
+    /**
+     * @Route("/admin/comment/negative", name="admin_negative_overview")
+     * @param Request $request
+     * @return Response
+     */
+    public function adminNegativeOverview(Request $request)
+    {
+        $page = $request->query->get('page', 1);
+        $limit = $request->query->get('limit', 10);
+
+        $commentModel = new CommentModel($this->getDoctrine());
+        $comments = $commentModel->getCommentsByQuality(CommentQualityType::NEGATIVE, $page, $limit);
+
+        return $this->render(':admin:comment/overview.html.twig', [
+            'headline' => 'admin.comment.negative',
+            'route' => 'admin_negative_overview',
+            'comments' => $comments,
+            'submenu' => [
+                'items' => $this->getSubMenuItems(),
+                'active' => 'reportedcomment',
+            ],
+        ]);
+    }
+
+    /**
+     * @Route("/admin/comment/{commentId}", name="admin_comment")
      *
      * @param Request $request
      * @param Comment $comment
@@ -23,7 +122,7 @@ class CommentController extends Controller
      * @return Response
      * @ParamConverter("comment", class="AppBundle\Entity\Comment", options={"mapping": {"commentId": "id"}})
      */
-    public function showOverview(Request $request, Comment $comment)
+    public function adminCommentAction(Request $request, Comment $comment)
     {
         if (!$this->isGranted([Member::ROLE_ADMIN_COMMENTS, Member::ROLE_ADMIN_SAFETYTEAM])) {
             $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
@@ -39,6 +138,7 @@ class CommentController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
             $clickedButton = $form->getClickedButton()->getName();
             if ('hideComment' === $clickedButton) {
                 $comment->setDisplayinpublic(false);
@@ -56,25 +156,144 @@ class CommentController extends Controller
                 $comment->setAllowedit(false);
                 $this->addFlash('notice', 'Comment is now locked.');
             }
-            $em = $this->getDoctrine()->getManager();
+            if ('delectComment' === $clickedButton) {
+                $this->addFlash('notice', 'Comment was deleted.');
+                $em->remove($comment);
+                $em->flush();
+
+                return $this->redirectToRoute('admin_comment_overview');
+            }
             $em->persist($comment);
             $em->flush();
+
+            // Redirect to self to ensure buttons are correctly labeled after update
+            return $this->redirectToRoute('admin_comment', [
+                'commentId' => $comment->getId(),
+            ]);
         }
 
         return $this->render(':admin:comment/comment.html.twig', [
             'form' => $form->createView(),
             'comment' => $comment,
             'reply' => $reply,
-            'submenu' => [
-                'active' => 'overview',
-                'items' => $this->getSubMenuItems(),
-            ],
         ]);
+    }
+
+    /**
+     * @Route("/admin/comment/{commentId}/safetyteam", name="admin_comment_assign_safetyteam")
+     *
+     * @param Request $request
+     * @param Comment $comment
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @ParamConverter("comment", class="AppBundle\Entity\Comment", options={"mapping": {"commentId": "id"}})
+     */
+    public function adminCommentAssignSafetyTeamAction(Request $request, Comment $comment)
+    {
+        if (!$this->isGranted([Member::ROLE_ADMIN_COMMENTS, Member::ROLE_ADMIN_SAFETYTEAM])) {
+            $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $comment->setAdminAction(CommentAdminActionType::SAFETY_TEAM_CHECK);
+        $em->persist($comment);
+        $em->flush();
+
+        $this->addFlash('notice', 'Comment has been assigned to safety team');
+        return $this->redirect($request->headers->get('referer'));
+    }
+
+    /**
+     * @Route("/admin/comment/{commentId}/checked", name="admin_comment_mark_checked")
+     *
+     * @param Request $request
+     * @param Comment $comment
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @ParamConverter("comment", class="AppBundle\Entity\Comment", options={"mapping": {"commentId": "id"}})
+     */
+    public function adminCommentMarkChecked(Request $request, Comment $comment)
+    {
+        if (!$this->isGranted([Member::ROLE_ADMIN_COMMENTS, Member::ROLE_ADMIN_SAFETYTEAM])) {
+            $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $comment->setAdminAction(CommentAdminActionType::ADMIN_CHECKED);
+        $em->persist($comment);
+        $em->flush();
+
+        $this->addFlash('notice', 'Comment has been marked as checked');
+        return $this->redirect($request->headers->get('referer'));
+    }
+
+    /**
+     * @Route("/admin/comment/{commentId}/hide", name="admin_comment_hide")
+     *
+     * @param Request $request
+     * @param Comment $comment
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @ParamConverter("comment", class="AppBundle\Entity\Comment", options={"mapping": {"commentId": "id"}})
+     */
+    public function adminCommentHide(Request $request, Comment $comment)
+    {
+        if (!$this->isGranted([Member::ROLE_ADMIN_COMMENTS, Member::ROLE_ADMIN_SAFETYTEAM])) {
+            $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $comment->setDisplayinpublic(false);
+        $em->persist($comment);
+        $em->flush();
+
+        $this->addFlash('notice', 'Comment has been hidden.');
+        return $this->redirect($request->headers->get('referer'));
+    }
+
+    /**
+     * @Route("/admin/comment/{commentId}/show", name="admin_comment_show")
+     *
+     * @param Request $request
+     * @param Comment $comment
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @ParamConverter("comment", class="AppBundle\Entity\Comment", options={"mapping": {"commentId": "id"}})
+     */
+    public function adminCommentShow(Request $request, Comment $comment)
+    {
+        if (!$this->isGranted([Member::ROLE_ADMIN_COMMENTS, Member::ROLE_ADMIN_SAFETYTEAM])) {
+            $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $comment->setDisplayinpublic(true);
+        $em->persist($comment);
+        $em->flush();
+
+        $this->addFlash('notice', 'Comment is now visible.');
+        return $this->redirect($request->headers->get('referer'));
     }
 
     private function getSubMenuItems()
     {
         return [
+            'abusermustcheck' => [
+                'key' => 'AdminAbuserMustCheck',
+                'url' => $this->generateUrl('admin_abuser_overview'),
+            ],
+            'reportedcomment' => [
+                'key' => 'AdminReportedComment',
+                'url' => $this->generateUrl('admin_reported_overview'),
+            ],
+            'negativecomment' => [
+                'key' => 'AdminNegativeComment',
+                'url' => $this->generateUrl('admin_negative_overview'),
+            ],
             'overview' => [
                 'key' => 'AdminComment',
                 'url' => $this->generateUrl('admin_comment_overview'),

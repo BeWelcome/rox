@@ -111,6 +111,11 @@ class MemberController extends Controller
                 if (0 === $recipients) {
                     $this->addFlash('error', 'Your feedback couldn\'t be sent. Please try again later.');
                 } else {
+                    $em = $this->getDoctrine()->getManager();
+                    $comment->setAdminAction('AdminCheck');
+                    $em->persist($comment);
+                    $em->flush();
+
                     $this->addFlash('notice', 'Your feedback has been forwarded to the Safety Team.');
 
                     return $this->redirectToRoute('profile_all_comments', ['username' => $member->getUsername()]);

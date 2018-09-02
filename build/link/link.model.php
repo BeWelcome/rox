@@ -308,12 +308,12 @@ class LinkModel extends RoxModelBase
 			FROM `comments`, `members`
 			WHERE `IdToMember` = `members`.`id`
 			AND (`members`.`Status` in ('Active','OutOfRemind','ActiveHidden'))
-			AND NOT FIND_IN_SET('NeverMetInRealLife',`comments`.`Lenght`)
-			AND (FIND_IN_SET('hewasmyguest',`comments`.`Lenght`) or
-					 FIND_IN_SET('hehostedme',`comments`.`Lenght`) or
-					 FIND_IN_SET('OnlyOnce',`comments`.`Lenght`) or
-					 FIND_IN_SET('HeIsMyFamily',`comments`.`Lenght`) or
-					 FIND_IN_SET('HeHisMyOldCloseFriend',`comments`.`Lenght`) )
+			AND NOT FIND_IN_SET('NeverMetInRealLife',`comments`.`relation`)
+			AND (FIND_IN_SET('hewasmyguest',`comments`.`relation`) or
+					 FIND_IN_SET('hehostedme',`comments`.`relation`) or
+					 FIND_IN_SET('OnlyOnce',`comments`.`relation`) or
+					 FIND_IN_SET('HeIsMyFamily',`comments`.`relation`) or
+					 FIND_IN_SET('HeHisMyOldCloseFriend',`comments`.`relation`) )
 			ORDER BY `IdFromMember`,`IdToMember` Asc
             "
         );

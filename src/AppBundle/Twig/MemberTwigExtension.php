@@ -2,8 +2,11 @@
 
 namespace AppBundle\Twig;
 
+use AppBundle\Entity\Comment;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
+use AppBundle\Repository\CommentRepository;
+use AppBundle\Repository\MessageRepository;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -69,7 +72,8 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
 
         return [
             'my_member' => $member ? $member : null,
-            'reportedCount' => $member ? $this->getReportedMessagesCount($member) : 0,
+            'reportedCommentsCount' => $member ? $this->getReportedCommentsCount() : 0,
+            'reportedMessagesCount' => $member ? $this->getReportedMessagesCount() : 0,
             'messageCount' => $member ? $this->getUnreadMessagesCount($member) : 0,
             'requestCount' => $member ? $this->getUnreadRequestsCount($member) : 0,
             'teams' => $teams,
@@ -87,7 +91,9 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
         $user = $this->security->getUser();
         if ($user &&
             ($this->security->isGranted(Member::ROLE_ADMIN_CHECKER) ||
-            $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM))) {
+                $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM))) {
+
+            /** @var MessageRepository $messageRepository */
             $messageRepository = $this->em->getRepository(Message::class);
 
             $reportedMessagesCount = $messageRepository->getReportedMessagesCount();
@@ -96,8 +102,26 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
         return $reportedMessagesCount;
     }
 
+
+    protected function getReportedCommentsCount()
+    {
+        $reportedCommentsCount = 0;
+        $user = $this->security->getUser();
+        if ($user &&
+            ($this->security->isGranted(Member::ROLE_ADMIN_CHECKER) ||
+                $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM))) {
+
+            /** @var CommentRepository $commentRepository */
+            $commentRepository = $this->em->getRepository(Comment::class);
+            $reportedCommentsCount = $commentRepository->getReportedCommentsCount();
+        }
+
+        return $reportedCommentsCount;
+    }
+
     protected function getUnreadMessagesCount(Member $member)
     {
+        /** @var MessageRepository $messageRepository */
         $messageRepository = $this->em->getRepository(Message::class);
 
         return $messageRepository->getUnreadMessagesCount($member);
@@ -105,6 +129,7 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
 
     protected function getUnreadRequestsCount(Member $member)
     {
+        /** @var MessageRepository $messageRepository */
         $messageRepository = $this->em->getRepository(Message::class);
 
         return $messageRepository->getUnreadRequestsCount($member);
@@ -146,7 +171,7 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
             'comments' => [
                 'trans' => 'AdminComments',
                 'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_COMMENTS],
-                'route' => '/bw/admin/admincomments.php',
+                'route' => 'admin_comment_overview',
             ],
             'newmembersbewelcome' => [
                 'trans' => 'AdminNewMembers',

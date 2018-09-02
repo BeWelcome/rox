@@ -7,6 +7,8 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Doctrine\CommentAdminActionType;
+use AppBundle\Doctrine\CommentQualityType;
 use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Comment.
  *
  * @ORM\Table(name="comments", indexes={@ORM\Index(name="IdToMember", columns={"IdToMember"}), @ORM\Index(name="comments_ibfk_1", columns={"IdFromMember"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CommentRepository")
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
@@ -24,16 +26,16 @@ class Comment
     /**
      * @var string
      *
-     * @ORM\Column(name="Lenght", type="string", nullable=false)
+     * @ORM\Column(name="relations", type="comment_relations", nullable=false)
      */
-    private $length;
+    private $relations;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Quality", type="string", nullable=false)
+     * @ORM\Column(name="Quality", type="comment_quality", nullable=false)
      */
-    private $quality = 'Neutral';
+    private $quality = CommentQualityType::NEUTRAL;
 
     /**
      * @var string
@@ -66,9 +68,9 @@ class Comment
     /**
      * @var string
      *
-     * @ORM\Column(name="AdminAction", type="string", nullable=false)
+     * @ORM\Column(name="AdminAction", type="comment_admin_action", nullable=false)
      */
-    private $adminaction = 'NothingNeeded';
+    private $adminAction = CommentAdminActionType::NOTHING_NEEDED;
 
     /**
      * @var string
@@ -121,27 +123,27 @@ class Comment
     private $fromMember;
 
     /**
-     * Set length.
+     * Set relations.
      *
-     * @param string $length
+     * @param string $relations
      *
      * @return Comment
      */
-    public function setLength($length)
+    public function setRelations($relations)
     {
-        $this->length = $length;
+        $this->relations = $relations;
 
         return $this;
     }
 
     /**
-     * Get length.
+     * Get relations.
      *
      * @return string
      */
-    public function getLength()
+    public function getRelations()
     {
-        return $this->length;
+        return $this->relations;
     }
 
     /**
@@ -267,13 +269,13 @@ class Comment
     /**
      * Set adminaction.
      *
-     * @param string $adminaction
+     * @param string $adminAction
      *
      * @return Comment
      */
-    public function setAdminaction($adminaction)
+    public function setAdminAction($adminAction)
     {
-        $this->adminaction = $adminaction;
+        $this->adminAction = $adminAction;
 
         return $this;
     }
@@ -283,9 +285,9 @@ class Comment
      *
      * @return string
      */
-    public function getAdminaction()
+    public function getAdminAction()
     {
-        return $this->adminaction;
+        return $this->adminAction;
     }
 
     /**

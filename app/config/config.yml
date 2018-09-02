@@ -77,6 +77,9 @@ doctrine:
             delete_request: AppBundle\Doctrine\DeleteRequestType
             spam_info: AppBundle\Doctrine\SpamInfoType
             message_status: AppBundle\Doctrine\MessageStatusType
+            comment_admin_action: AppBundle\Doctrine\CommentAdminActionType
+            comment_quality: AppBundle\Doctrine\CommentQualityType
+            comment_relations: AppBundle\Doctrine\CommentRelationType
 
         mapping_types:
             enum:       string

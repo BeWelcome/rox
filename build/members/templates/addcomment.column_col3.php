@@ -8,7 +8,7 @@ $member = $this->member;
 $Username = $member->Username;
 
 $syshcvol = PVars::getObj('syshcvol');
-$ttc = $syshcvol->LenghtComments;
+$ttc = $syshcvol->CommentRelations;
 $max = count($ttc);
 $comments = $member->get_comments_commenter($this->loggedInMember->id);
 $TCom = (isset($comments[0])) ? $comments[0] : false;
@@ -17,7 +17,7 @@ $edit_mode = $TCom;
 // values from previous form submit
 if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
     // this is a fresh form
-    $ttLenght = ($TCom) ? explode(',',$TCom->Lenght) : array();
+    $ttRelation = ($TCom) ? explode(',',$TCom->Relation) : array();
     if ($this->commentGuidelinesRead) {
         $vars["CommentGuidelines"] = 'checked';
     }
@@ -26,11 +26,11 @@ if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
     // recover old form input.
     $vars = $mem_redirect->post;
     $TCom = new stdClass();
-    $ttLenght = array();
+    $ttRelation = array();
     for ($ii = 0; $ii < $max; $ii++) {
         $chkName = "Comment_" . $ttc[$ii];
         if (isset($vars[$chkName])) {
-            $ttLenght[] = $ttc[$ii];
+            $ttRelation[] = $ttc[$ii];
         }
     }
     if (isset($vars['Quality'])) {
@@ -166,7 +166,7 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
             ?>
                 <div class="form-check my-2">
                 <label class="form-check-label">
-                    <input class="form-check-input" type="checkbox" id="<?= $chkName; ?>" name="<?= $chkName; ?>"<? if (in_array($ttc[$ii], $ttLenght)) echo ' checked'; ?>>
+                    <input class="form-check-input" type="checkbox" id="<?= $chkName; ?>" name="<?= $chkName; ?>"<? if (in_array($ttc[$ii], $ttRelation)) echo ' checked'; ?>>
                     <?= $words->get($chkName); ?>
                 </label>
                 </div>

@@ -1,5 +1,5 @@
 {% import 'macros.twig' as macros %}
-<div class="col-12 col-sm-6 card comment-bg-{{ comment.quality|lower }}">
+<div class="col-12 col-sm-6 card {% if not mute %}comment-bg-{{ comment.quality|lower }}{% else %}text-muted{% endif %}">
     <div class="d-flex flex-row justify-content-between">
         <div><p class="h4 good">{{ comment.quality }}</p></div>
         <div><span title="2013-01-22 00:00:00" class="small">{{ comment.created.diffForHumans }}</span></div>
@@ -22,6 +22,7 @@
 
     <div>
         <p>{{ comment.TextFree | nl2br }}</p>
-        <p class="small font-italic p-0 m-0">{{ 'Comment_' ~ comment.length | trans }}</p>
+        {% set relations = comment.relations | split(',') %}
+        <p class="small font-italic p-0 m-0">{% for relation in relations %}{{ ()'Comment_' ~ relation) | trans }}{% endfor %}</p>
     </div>
 </div>

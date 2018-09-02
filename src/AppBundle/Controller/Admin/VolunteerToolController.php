@@ -464,12 +464,12 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                 'url' => $this->generateUrl('admin_tools_damage_done'),
             ];
         }
-//        if ($this->isGranted([Member::ROLE_ADMIN_ADMIN, Member::ROLE_ADMIN_CHECKER])) {
-        $subMenu[self::AGE_BY_COUNTRY] = [
+        if ($this->isGranted([Member::ROLE_ADMIN_ADMIN, Member::ROLE_ADMIN_CHECKER])) {
+            $subMenu[self::AGE_BY_COUNTRY] = [
                 'key' => self::AGE_BY_COUNTRY,
                 'url' => $this->generateUrl('admin_tools_age_by_country'),
             ];
-//        }
+        }
         if ($this->isGranted([Member::ROLE_ADMIN_PROFILE, Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_ADMIN])) {
             $subMenu[self::MESSAGES_LAST_WEEK] = [
                 'key' => self::MESSAGES_LAST_WEEK,

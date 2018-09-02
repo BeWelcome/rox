@@ -228,7 +228,11 @@
                             <a href="{{ url('translation_edit', { code: message.id, locale: locale }) }}" target="_blank"><i class="fa fa-edit"></i></a>
                         {% endif %}
                         {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_MISSING') and hasEnglishRights %}
-                            <a href="{{ url('translation_create', { code: message.id, locale: locale }) }}" target="_blank"><i class="fa fa-plus"></i></a>
+                            {% if message.id %}
+                                <a href="{{ url('translation_create', { code: message.id, locale: locale }) }}" target="_blank"><i class="fa fa-plus"></i></a>
+                            {% else %}
+                                message.id not correctly set.
+                            {% endif %}
                         {% endif %}
                         {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_EQUALS_FALLBACK') %}
                             <a href="{{ url('translation_add', { code: message.id, locale: locale }) }}" target="_blank"><i class="fa fa-plus"></i></a>

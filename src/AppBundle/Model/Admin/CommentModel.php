@@ -3,17 +3,9 @@
 namespace AppBundle\Model\Admin;
 
 use AppBundle\Doctrine\DeleteRequestType;
-use AppBundle\Doctrine\InFolderType;
-use AppBundle\Doctrine\MessageStatusType;
-use AppBundle\Doctrine\SpamInfoType;
 use AppBundle\Entity\Comment;
-use AppBundle\Entity\Member;
-use AppBundle\Entity\Message;
 use AppBundle\Model\BaseModel;
 use AppBundle\Repository\CommentRepository;
-use AppBundle\Repository\MessageRepository;
-use Doctrine\DBAL\DBALException;
-use PDO;
 
 /**
  * Class MessageModel.

@@ -92,7 +92,6 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
         if ($user &&
             ($this->security->isGranted(Member::ROLE_ADMIN_CHECKER) ||
                 $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM))) {
-
             /** @var MessageRepository $messageRepository */
             $messageRepository = $this->em->getRepository(Message::class);
 
@@ -102,7 +101,6 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
         return $reportedMessagesCount;
     }
 
-
     protected function getReportedCommentsCount()
     {
         $reportedCommentsCount = 0;
@@ -110,7 +108,6 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
         if ($user &&
             ($this->security->isGranted(Member::ROLE_ADMIN_CHECKER) ||
                 $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM))) {
-
             /** @var CommentRepository $commentRepository */
             $commentRepository = $this->em->getRepository(Comment::class);
             $reportedCommentsCount = $commentRepository->getReportedCommentsCount();

@@ -18,7 +18,9 @@ class CommentController extends Controller
 {
     /**
      * @Route("/admin/comment", name="admin_comment_overview")
+     *
      * @param Request $request
+     *
      * @return Response
      */
     public function adminCommentOverview(Request $request)
@@ -44,6 +46,7 @@ class CommentController extends Controller
      * @Route("/admin/comment/safetyteam", name="admin_abuser_overview")
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function adminSafetyTeamOverview(Request $request)
@@ -67,7 +70,9 @@ class CommentController extends Controller
 
     /**
      * @Route("/admin/comment/reported", name="admin_reported_overview")
+     *
      * @param Request $request
+     *
      * @return Response
      */
     public function adminReportedOverview(Request $request)
@@ -91,7 +96,9 @@ class CommentController extends Controller
 
     /**
      * @Route("/admin/comment/negative", name="admin_negative_overview")
+     *
      * @param Request $request
+     *
      * @return Response
      */
     public function adminNegativeOverview(Request $request)
@@ -201,6 +208,7 @@ class CommentController extends Controller
         $em->flush();
 
         $this->addFlash('notice', 'Comment has been assigned to safety team');
+
         return $this->redirect($request->headers->get('referer'));
     }
 
@@ -226,6 +234,7 @@ class CommentController extends Controller
         $em->flush();
 
         $this->addFlash('notice', 'Comment has been marked as checked');
+
         return $this->redirect($request->headers->get('referer'));
     }
 
@@ -251,6 +260,7 @@ class CommentController extends Controller
         $em->flush();
 
         $this->addFlash('notice', 'Comment has been hidden.');
+
         return $this->redirect($request->headers->get('referer'));
     }
 
@@ -276,6 +286,7 @@ class CommentController extends Controller
         $em->flush();
 
         $this->addFlash('notice', 'Comment is now visible.');
+
         return $this->redirect($request->headers->get('referer'));
     }
 

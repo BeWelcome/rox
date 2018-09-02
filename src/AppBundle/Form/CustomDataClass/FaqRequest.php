@@ -52,7 +52,7 @@ class FaqRequest
      *
      * @return FaqRequest
      */
-    public static function fromFaq(EntityManager $em, Faq $faq): self
+    public static function fromFaq(EntityManager $em, Faq $faq)
     {
         $faqRequest = new self($faq->getCategory());
         $faqRequest->wordCode = $faq->getQAndA();

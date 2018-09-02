@@ -24,6 +24,7 @@ class CommentRepository extends EntityRepository
 
     /**
      * @param $quality
+     *
      * @return QueryBuilder
      */
     public function queryAllByQuality($quality)
@@ -37,6 +38,7 @@ class CommentRepository extends EntityRepository
 
     /**
      * @param $action
+     *
      * @return QueryBuilder
      */
     public function queryAllByAdminAction($action)
@@ -120,5 +122,4 @@ class CommentRepository extends EntityRepository
 
         return $results;
     }
-
 }

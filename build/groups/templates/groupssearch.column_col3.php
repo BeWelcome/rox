@@ -45,7 +45,7 @@
         </div>
     </div>
 
-    <div class="row mt-5 mb-3 w-100">
+    <div class="row mt-2 mb-3 w-100">
         <div class="col col-auto col-lg-7 order-12 mt-3">
         <?php
         $search_result = $this->search_result;

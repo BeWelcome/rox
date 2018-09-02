@@ -192,7 +192,7 @@ class MemberPage extends PageWithActiveSkin
         ?>
 
         <div class="framed w-100 bg-avatar" style="background-image: url('<?=$picture_url?>');">
-            <a href="<?=$picture_url?>" alt="Picture of <?=$member->Username?>"><span class="w-100 h-100 avatarclick"></span></a>
+            <a href="<?=$picture_url?>" alt="Picture of <?=$member->Username?>"><span class="w-100 avatarclick"></span></a>
         </div>
         <?
             if ($this->myself) {

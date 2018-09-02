@@ -7,30 +7,30 @@ if ($this->_session->has( 'errors' )) {
     $errors = $this->_session->get('errors');
     $this->_session->remove('errors');
 }
+?>
+<?
 if (!empty($errors)) {
-    echo '<div class="subcolumns error">';
+    echo '<div class="col-12 alert alert-danger">';
     foreach($errors as $error) {
         echo '<p>' . $words->get($error) . '<p>';
     }
     echo '</div>';
 }
 ?>
-<div class="subcolumns row">
-    <div class="c66l">
-        <div class="subcl">
-            <form id="activities-search-box" method="post" >
-            <?php echo $callbackTags; ?>
-            <input type="text" name="activity-keyword" id="activity-keyword" size="50" value="<?php echo $this->keyword; ?>" /><input type="submit" class="button" name="activities-search" value="<?php echo $words->getSilent('ActivitiesSearchButton'); ?>" /><?php echo $words->flushBuffer(); ?>
-            </form>
-        </div>
+    <div class="col-12 px-0 mb-1">
+        <form id="activities-search-box" method="post">
+            <div class="input-group">
+                <?php echo $callbackTags; ?>
+                <input class="form-control" type="text" name="activity-keyword" id="activity-keyword" value="<?= $this->keyword ?>">
+                <span class="input-group-append">
+                            <button type="submit" class="btn btn-primary" id="activy-search-button" name="activy-search-button"><i class="fa fa-search"></i> <?php echo $words->getSilent('ActivitiesSearchButton'); ?></button>
+                        </span>
+            </div>
+        </form>
+        <?php echo $words->flushBuffer(); ?>
     </div>
-    <div class="c33r">
-        <div class="subcr float-right">
-        </div>
-    </div>
-</div>
-</div>
-<div class="row>">
+
+    <div class="col-12 px-0">
 <?php 
 if ($this->keyword != '') {
     if (count($this->activities) == 0) {
@@ -41,7 +41,9 @@ if ($this->keyword != '') {
         }
     } else {
         require_once('activitieslist.php');
+        echo '</div>';
     }
 }
 ?>
+
 </div>

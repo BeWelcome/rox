@@ -13,3 +13,10 @@
   left: -12px;
   top: -2px;
 }
+
+#mapsearchoptions{
+  @include media-breakpoint-down(sm) {
+    width: 100%;
+    padding-top: 1rem !important;
+  }
+}

@@ -1,5 +1,5 @@
-<div class="row mb-2">
-    <div class="col px-sm-0 px-md-3">
+<div class="row">
+    <div class="col">
         <h1><a href="activities"><?php echo $words->get('Activities'); ?></a></h1>
     </div>
 

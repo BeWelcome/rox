@@ -12,34 +12,12 @@
         </div>
     </div>
     <div class="row">
-    <div class="col-12 col-sm-6 card comment-bg-{{ comment.quality|lower }}">
-        <div class="d-flex flex-row justify-content-between">
-            <div><p class="h4 good">{{ comment.quality }}</p></div>
-            <div><span title="2013-01-22 00:00:00" class="small">{{ comment.created.diffForHumans }}</span></div>
+        {% include ':member:comment.html.twig' with { 'comment': comment } %}
+        {% if reply %}
+            {% include ':member:comment.html.twig' with { 'comment': reply } %}
+        {% endif %}
+        <div class="col-12 col-sm-6 card">
+            {{ form(form, { 'attr': { 'class': 'form-inline'}}) }}
         </div>
-
-        <div class="d-flex flex-row justify-content-between">
-            <div>
-                <p class="h4 m-0">{{ 'From:' | trans }}</p>
-                {{ macros.avatarstack(comment.FromMember.Username, 50) }}
-            </div>
-            <div class="my-1">
-                <p class="text-mute small p-3 font-italic">
-                    {{ comment.TextWhere }}</p>
-            </div>
-            <div class="text-right">
-                <p class="h4 m-0">{{ 'about' | trans}}</p>
-                {{ macros.avatarstack(comment.ToMember.Username, 50, true) }}
-            </div>
-        </div>
-
-        <div>
-            <p>{{ comment.TextFree }}</p>
-            <p class="small font-italic p-0 m-0">{{ 'Comment_' ~ comment.length | trans }}</p>
-        </div>
-    </div>
-    <div class="col-12 col-sm-6 card">
-        {{ form(form, { 'attr': { 'class': 'form-inline'}}) }}
-    </div>
     </div>
 {% endblock %}

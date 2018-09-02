@@ -69,9 +69,10 @@ class MemberController extends Controller
      */
     public function reportCommentAction(Request $request, Member $member, Comment $comment)
     {
-        if ($comment->getToMember()->getId() !== $member->getId() && $comment->getFromMember()->getId() !== $member->getId()) {
-            throw new AccessDeniedException('Hau ab!');
-        }
+//        \todo Should we only allow the receiver of a comment to report it?
+//        if ($comment->getToMember()->getId() !== $member->getId() && $comment->getFromMember()->getId() !== $member->getId()) {
+//            throw new AccessDeniedException('Hau ab!');
+//        }
 
         $user = $this->getUser();
 

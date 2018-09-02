@@ -3,11 +3,13 @@
 
 {% block content %}
     <h1>{{ 'Report a Comment' | trans }}</h1>
-    {% include ':member:comment.html.twig' with {'comment' : comment } %}
-    <div class="col-12 col-sm-6 card">
-        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-        <div class="row"><div class="col-12 mb-4">{% trans %}Please enter your feedback below. It will be forwarded to the Safety Team which will review it and contact you in case further information are needed.{% endtrans %}</div></div>
-        {{ form_widget(form) }}
-        {{ form_end(form) }}
+    <div class="row">
+        {% include ':member:comment.html.twig' with {'comment' : comment } %}
+        <div class="col-12 col-sm-6 card">
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+            <div class="row"><div class="col-12 mb-4">{% trans %}Please enter your feedback below. It will be forwarded to the Safety Team which will review it and contact you in case further information are needed.{% endtrans %}</div></div>
+            {{ form_widget(form) }}
+            {{ form_end(form) }}
+        </div>
     </div>
 {% endblock %}

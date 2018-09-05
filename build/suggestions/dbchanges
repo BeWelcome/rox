@@ -1,5 +1,0 @@
-ALTER TABLE  `suggestions_options` ADD  `state` INT NOT NULL COMMENT  '1 = Ranking; 2 = In Implementation; 4 = Implemented;' AFTER  `suggestionId`;
-
-ALTER TABLE  `suggestions_options` CHANGE  `state`  `state` INT( 11 ) NOT NULL DEFAULT  '0' COMMENT  '1 = Ranking; 2 = In Implementation; 4 = Implemented;'
-
-

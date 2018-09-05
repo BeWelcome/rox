@@ -28,9 +28,13 @@
                     <tr>
                         <td>{{ macros.avatarstack(comment.fromMember.Username, 50) }}</td>
                         <td class="w-100">
-                            {{ comment.Quality | trans }} ({{ 'written' | trans }} {{ comment.created.diffForHumans }})<hr>
-                            {{ comment.TextWhere | nl2br }}<hr>
-                            {{ comment.TextFree | nl2br }}<hr>
+                            <small class="text-muted">{{ 'Quality and Date' }}</small><br>
+                            {{ comment.Quality | trans }} ({{ 'written' | trans }} {{ comment.created.diffForHumans }})<hr style="margin-top:0; margin-bottom:.25rem;">
+                            <small class="text-muted">{{ 'Where we met' }}</small><br>
+                            {{ comment.TextWhere | nl2br }}<hr style="margin-top:0; margin-bottom:.25rem;">
+                            <small class="text-muted">{{ 'Comment text' }}</small><br>
+                            {{ comment.TextFree | nl2br }}<hr style="margin-top:0; margin-bottom:.25rem;">
+                            <small class="text-muted">{{ 'How we know each other' }}</small><br>
                             {% set relations = comment.relations | split(',') %}
                             {% for relation in relations %}{{ ('Comment_' ~ relation) | trans }} {% endfor %}
 

@@ -33,17 +33,6 @@ Encore
         Popper: ['popper.js', 'default'],
     })
 
-    .addPlugin(
-        new CKEditorWebpackPlugin( {
-            // See https://docs.ckeditor.com/ckeditor5/latest/features/ui-language.html
-            language: 'en',
-
-            // Additional languages that will be emitted to the `outputDirectory`.
-            // This option can be set to an array of language codes or `'all'` to build all found languages.
-            // The bundle is optimized for one language when this option is omitted.
-            additionalLanguages: 'all',
-        } )
-    )
     .addLoader({
         test: require.resolve('jquery'),
         use: [{
@@ -57,12 +46,6 @@ Encore
     .addLoader({
         test: require.resolve('select2'),
         use: "imports-loader?define=>false"
-    })
-    .addLoader({
-        test: /\.svg$/,
-        use: [{
-            loader: "raw-loader"
-        }]
     })
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())

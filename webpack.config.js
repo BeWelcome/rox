@@ -1,9 +1,5 @@
 var Encore = require('@symfony/webpack-encore');
 
-const CKEditorWebpackPlugin = require( '@ckeditor/ckeditor5-dev-webpack-plugin' );
-
-const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
-
 Encore
     .configureRuntimeEnvironment('dev')
     .enableSingleRuntimeChunk()
@@ -29,7 +25,6 @@ Encore
     .addEntry('chartjs', './node_modules/chart.js/dist/Chart.js')
     .addEntry('offcanvas', './src/AppBundle/Resources/public/js/offcanvas.js')
     .addEntry('profile/profile', './src/AppBundle/Resources/js/profile.js')
-    .addEntry('ckeditor5', './src/AppBundle/Resources/js/ckeditor5.js')
 
     .enableSassLoader()
     // allow legacy applications to use $/jQuery as a global variable, make popper visible for bootstrap

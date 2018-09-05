@@ -126,16 +126,6 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "../bundles/fosckeditor/ckeditor.js",
-        pages: [
-            "activities",
-            "forums",
-            "groups",
-            "messages/",
-            "invite"
-        ]
-    },
-    {
         file: "act_suggest.js?1",
         pages: [
             "activities"

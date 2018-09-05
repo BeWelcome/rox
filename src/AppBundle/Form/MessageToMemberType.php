@@ -2,7 +2,6 @@
 
 namespace AppBundle\Form;
 
-use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,23 +16,10 @@ class MessageToMemberType extends AbstractType
     {
         $builder
             ->add('subject', SubjectType::class)
-            ->add('message', CKEditorType::class, [
-                'config' => [
-                    'extraPlugins' => 'confighelper',
-                ],
-                'plugins' => [
-                    'confighelper' => [
-                        'path' => '/bundles/app/js/confighelper/',
-                        'filename' => 'plugin.js',
-                    ],
-                    'clipboard' => [
-                        'path' => '/bundles/app/js/clipboard/',
-                        'filename' => 'plugin.js',
-                    ],
-                ],
+            ->add('message', CkEditorType::class, [
                 'attr' => [
                     'placeholder' => 'Please enter a message.',
-                    'class' => 'mb-1',
+                    'class' => 'editor mb-1',
                 ],
                 'constraints' => [
                     new NotBlank(),

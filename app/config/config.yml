@@ -45,7 +45,10 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     exception_controller:  twig.controller.exception:showAction
-    form_themes: ['bootstrap_4_layout.html.twig']
+    form_themes:
+        - 'bootstrap_4_layout.html.twig'
+        - 'ckeditor/ckeditor.html.twig'
+
 #    paths:
 #        '%kernel.root_dir%/../templates/twig/forms': forms
 
@@ -102,12 +105,3 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
-
-fos_ck_editor:
-    default_config: rox_config
-    configs:
-        rox_config:
-            toolbar: "rox_toolbar"
-    toolbars:
-        configs:
-            rox_toolbar: [ ["Undo", "Redo"], ["Bold", "Italic", "Underline", "Strike", "Subscript", "Superscript", "-", "RemoveFormat" ], ["Image", "Link", "Unlink", "Smileys"], ["NumberedList", "BulletedList", "Blockquote", "Smiley"] ]

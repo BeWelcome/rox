@@ -807,10 +807,9 @@ class RequestAndMessageController extends Controller
         $message
             ->setTo($receiver->getEmail())
             ->setBody(
-                $this->renderView(
-                    'emails/'.$template.'.html.twig',
-                    [$template.'_text' => $body]
-                ),
+                $this->renderView('emails/'.$template.'.html.twig', [
+                     'sender' => $sender,
+                     $template.'_text' => $body, ]),
                 'text/html'
             )
             ->addPart(

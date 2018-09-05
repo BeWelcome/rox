@@ -1,1 +1,10 @@
-{{ request_text | raw }}
+{% extends ':emails:email.html.twig' %}
+
+{% block content%}
+    Sender: {{ sender.username }}
+    {{ request_text | raw }}
+
+    <div id="footer">
+        <p>(cc) {{ "now" | date("Y") }} BeWelcome</p>
+    </div>
+{% endblock %}

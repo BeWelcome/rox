@@ -1,13 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% set scriptFiles = ['js/tinymce.min.js', 'js/communitynews.js'] %}
-
 {% block title %}
     {{ 'Community News' | trans }}
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        {{ form(form) }}
-    </div>
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
 {% endblock content %}

@@ -69,7 +69,7 @@ class CommentController extends Controller
     }
 
     /**
-     * @Route("/admin/comment/reported", name="admin_reported_overview")
+     * @Route("/admin/comment/reported", name="admin_comment_reported_overview")
      *
      * @param Request $request
      *
@@ -299,7 +299,7 @@ class CommentController extends Controller
             ],
             'reportedcomment' => [
                 'key' => 'AdminReportedComment',
-                'url' => $this->generateUrl('admin_reported_overview'),
+                'url' => $this->generateUrl('admin_comment_reported_overview'),
             ],
             'negativecomment' => [
                 'key' => 'AdminNegativeComment',

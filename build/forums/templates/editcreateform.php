@@ -128,7 +128,7 @@ $vars =& PPostHandler::getVars($callbackId);
 
             <label for="topic_text" class="h5 m-0"><?php echo $words->getFormatted("forum_label_text"); ?></label>
 
-            <textarea name="topic_text" rows="10" id="topic_text" class="w-100 long"><?php
+            <textarea name="topic_text" rows="10" id="topic_text" class="w-100 long editor"><?php
                 if (isset($void_string)) {
                     echo $void_string;
                 } else {
@@ -221,67 +221,8 @@ $vars =& PPostHandler::getVars($callbackId);
                 ?>"/>
             </div>
         </div>
+    </form>
 </div>
-
-</form>
-
-<script type="text/javascript">
-    function updateContinent() {
-        var urlbit = 'k' + $('d_continent').value;
-        update(urlbit);
-    }
-
-    function updateCountry() {
-        var urlbit = 'k' + $('d_continent').value + '/c' + $('d_country').value;
-        update(urlbit);
-    }
-
-    function updateAdmincode() {
-        var urlbit = 'k' + $('d_continent').value + '/c' + $('d_country').value + '/a' + $('d_admin').value;
-        update(urlbit);
-    }
-
-    function updateGeonames() {
-        var urlbit = 'k' + $('d_continent').value + '/c' + $('d_country').value + '/a' + $('d_admin').value + '/g' + $('d_geoname').value;
-        update(urlbit);
-    }
-
-    function update(urlbit) {
-        <?php /*
-        if ($edit) {
-            echo '$("forumsform").action = http_baseuri+"forums/edit/m'.$messageid.'/"+urlbit;';
-        } else {
-            echo '$("forumsform").action = http_baseuri+"forums/new/"+urlbit;';
-        }
-        */ ?>
-
-        var url = http_baseuri + 'forums/locationDropdowns/' + urlbit
-        new Ajax.Request(url,
-            {
-                method: 'get',
-                onSuccess: function (req) {
-                    updateDropdowns(req.responseText);
-                }
-            });
-    }
-
-    function updateDropdowns(text) {
-        Element.update('dropdowns', text);
-    }
-
-    function toggleFieldsets(el_name, instantly) {
-        if (instantly) $(el_name).toggle();
-        else Effect.toggle(el_name, 'slide', {duration: 0.2});
-        Element.toggleClassName($(el_name + '_fieldset'), 'collapsed');
-    }
-
-    function forumOnload() {
-        toggleFieldsets('fpost_note', 1);
-    }
-
-    document.observe("dom:loaded", forumOnload);
-
-</script>
 <?php
 if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
     $textarea = 'topic_text';

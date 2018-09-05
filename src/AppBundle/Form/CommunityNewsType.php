@@ -2,7 +2,6 @@
 
 namespace AppBundle\Form;
 
-use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -30,19 +29,10 @@ class CommunityNewsType extends AbstractType
                     new NotBlank(),
                 ],
             ])
-            ->add('text', CKEditorType::class, [
-                'config' => [
-                    'extraPlugins' => 'confighelper',
-                ],
-                'plugins' => [
-                    'confighelper' => [
-                        'path' => '/bundles/app/js/confighelper/',
-                        'filename' => 'plugin.js',
-                    ],
-                ],
+            ->add('text', CkEditorType::class, [
                 'attr' => [
                     'placeholder' => 'This will be the body of the community news.',
-                    'class' => 'mb-1',
+                    'class' => 'editor mb-1',
                 ],
                 'constraints' => [
                     new NotBlank(),

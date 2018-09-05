@@ -2,7 +2,6 @@
 
 namespace AppBundle\Form;
 
-use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -22,13 +21,19 @@ class CommunityNewsCommentType extends AbstractType
             ->add('title', TextType::class, [
                 'label' => 'Title',
             ])
-            ->add('text', CKEditorType::class, [
+            ->add('text', CkEditorType::class, [
                 'label' => 'Text',
+                'attr' => [
+                    'class' => 'editor',
+                ],
             ])
             ->add('CommunityNewsCommentCreate', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn-primary',
                 ],
-            ]);
+            ])
+            ->setAttribute('novalidate', 'novalidate')
+            ->setAttribute('test', 'otto')
+        ;
     }
 }

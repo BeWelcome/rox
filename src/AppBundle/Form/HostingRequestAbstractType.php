@@ -3,7 +3,6 @@
 namespace AppBundle\Form;
 
 use AppBundle\Entity\Message;
-use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -34,19 +33,10 @@ class HostingRequestAbstractType extends AbstractType
     protected function addMessageTextArea(FormInterface $form, $placeholder)
     {
         $form
-            ->add('message', CKEditorType::class, [
-                'config' => [
-                    'extraPlugins' => 'confighelper',
-                ],
-                'plugins' => [
-                    'confighelper' => [
-                        'path' => '/bundles/app/js/confighelper/',
-                        'filename' => 'plugin.js',
-                    ],
-                ],
+            ->add('message', CkEditorType::class, [
                 'attr' => [
                     'placeholder' => $placeholder,
-                    'class' => 'mb-1',
+                    'class' => 'editor mb-1',
                 ],
                 'constraints' => [
                     new NotBlank(),

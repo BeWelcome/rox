@@ -107,7 +107,7 @@ if (empty($vars)) {
 
         <div class="col-12 col-md-8">
             <input type="text" id="activity-title" name="activity-title" maxlength="80" class="form-control" value="<?php echo $vars['activity-title']; ?>" placeholder="<?php echo $words->get('ActivityTitle'); ?>*">
-            <textarea id="activity-description" name="activity-description" class="w-100" rows="10">
+            <textarea id="activity-description" name="activity-description" class="w-100 editor" rows="10">
                 <?php
                 if (!empty($vars['activity-description'])){
                     echo $vars['activity-description'];

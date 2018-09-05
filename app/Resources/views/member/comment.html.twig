@@ -19,10 +19,9 @@
             {{ macros.avatarstack(comment.ToMember.Username, 50, true) }}
         </div>
     </div>
-
     <div>
         <p>{{ comment.TextFree | nl2br }}</p>
         {% set relations = comment.relations | split(',') %}
-        <p class="small font-italic p-0 m-0">{% for relation in relations %}{{ ()'Comment_' ~ relation) | trans }}{% endfor %}</p>
+        <p class="small font-italic p-0 m-0">{% for relation in relations %}{{ ('Comment_' ~ relation) | trans }}{% endfor %}</p>
     </div>
 </div>

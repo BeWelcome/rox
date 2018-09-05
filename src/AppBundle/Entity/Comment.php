@@ -91,7 +91,7 @@ class Comment
      *
      * @ORM\Column(name="AllowEdit", type="boolean", nullable=false)
      */
-    private $allowedit = '0';
+    private $allowedit = '1';
 
     /**
      * @var int

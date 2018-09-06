@@ -14,6 +14,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class CommentController.
+ *
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class CommentController extends Controller
 {
     /**
@@ -290,6 +296,63 @@ class CommentController extends Controller
         return $this->redirect($request->headers->get('referer'));
     }
 
+    /**
+     * @Route("/admin/comment/for/{username}", name="admin_comments_for_member")
+     *
+     * @param Request $request
+     * @param Member  $member
+     *
+     * @return Response
+     */
+    public function showAllCommentsForMember(Request $request, Member $member)
+    {
+        $page = $request->query->get('page', 1);
+        $limit = $request->query->get('limit', 10);
+
+        $commentModel = new CommentModel($this->getDoctrine());
+        $comments = $commentModel->getCommentsForMember($member, $page, $limit);
+
+        return $this->render(':admin:comment/overview.html.twig', [
+            'headline' => 'admin.comment.all',
+            'route' => 'admin_comments_for_member',
+            'comments' => $comments,
+            'submenu' => [
+                'items' => $this->getSubMenuItems(),
+                'active' => 'overview',
+            ],
+        ]);
+    }
+
+    /**
+     * @Route("/admin/comment/from/{username}", name="admin_comments_from_member")
+     *
+     * @param Request $request
+     * @param Member  $member
+     *
+     * @return Response
+     */
+    public function showAllCommentsFromMember(Request $request, Member $member)
+    {
+        $page = $request->query->get('page', 1);
+        $limit = $request->query->get('limit', 10);
+
+        $commentModel = new CommentModel($this->getDoctrine());
+        $comments = $commentModel->getCommentsFromMember($member, $page, $limit);
+
+        return $this->render(':admin:comment/overview.html.twig', [
+            'headline' => 'admin.comment.all',
+            'route' => 'admin_comments_from_member',
+            'comments' => $comments,
+            'submenu' => [
+                'items' => $this->getSubMenuItems(),
+                'active' => 'overview',
+            ],
+        ]);
+    }
+
+    /**
+     * @return array
+     */
     private function getSubMenuItems()
     {
         return [

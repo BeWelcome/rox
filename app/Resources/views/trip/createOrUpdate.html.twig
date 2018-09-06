@@ -1,3 +1,4 @@
+{#
 {% extends 'base.html.twig' %}
 
 {% block title %}
@@ -96,7 +97,6 @@
     {{ form_row( form.description ) }}
     {{ form_row( form.countoftravellers ) }}
     {{ form_row( form.additionalinfo ) }}
-    {# store the prototype on the data-prototype attribute #}
 
             <div id="subtrips-list"
                 data-prototype="{{ _self.widget_prototype(form.subtrips.vars.prototype)|escape }}">
@@ -123,3 +123,4 @@
     {{ form_end( form ) }}
 
 {% endblock content %}
+#}

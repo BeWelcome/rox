@@ -3,6 +3,7 @@
 namespace AppBundle\Repository;
 
 use AppBundle\Doctrine\CommentAdminActionType;
+use AppBundle\Entity\Member;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -23,15 +24,29 @@ class CommentRepository extends EntityRepository
     }
 
     /**
-     * @param $quality
+     * @param Member $member
      *
      * @return QueryBuilder
      */
-    public function queryAllByQuality($quality)
+    public function queryAllForMember(Member $member)
     {
         $qb = $this->queryAll()
-            ->where('c.quality = :quality')
-            ->setParameter('quality', $quality);
+            ->where('c.toMember = :member')
+            ->setParameter('member', $member);
+
+        return $qb;
+    }
+
+    /**
+     * @param Member $member
+     *
+     * @return QueryBuilder
+     */
+    public function queryAllFromMember(Member $member)
+    {
+        $qb = $this->queryAll()
+            ->where('c.fromMember = :member')
+            ->setParameter('member', $member);
 
         return $qb;
     }
@@ -61,6 +76,42 @@ class CommentRepository extends EntityRepository
     public function pageAll($page = 1, $items = 10)
     {
         $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryAll()));
+        $paginator->setMaxPerPage($items);
+        $paginator->setCurrentPage($page);
+
+        return $paginator;
+    }
+
+    /**
+     * Returns a Pagerfanta object encapsulating the matching paginated activities.
+     *
+     * @param Member $member
+     * @param int    $page
+     * @param int    $items
+     *
+     * @return Pagerfanta
+     */
+    public function pageAllForMember(Member $member, $page = 1, $items = 10)
+    {
+        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryAllForMember($member)));
+        $paginator->setMaxPerPage($items);
+        $paginator->setCurrentPage($page);
+
+        return $paginator;
+    }
+
+    /**
+     * Returns a Pagerfanta object encapsulating the matching paginated activities.
+     *
+     * @param Member $member
+     * @param int    $page
+     * @param int    $items
+     *
+     * @return Pagerfanta
+     */
+    public function pageAllFromMember(Member $member, $page = 1, $items = 10)
+    {
+        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryAllFromMember($member)));
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
 

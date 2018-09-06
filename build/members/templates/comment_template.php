@@ -103,7 +103,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
 //            echo $c->UsernameFromMember;
     if ($showfrom || $editfrom) {
         $quality = strtolower($c->comQuality); 
-        $tt = explode(',', $c->Relation); ?>
+        $tt = explode(',', $c->Relations); ?>
 
         <div class="col-12 col-sm-6 card comment-bg-<?=$quality?>">
             <div>
@@ -176,7 +176,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
      if ($showto || $editto){
          $cc = $comment['to'];
          $quality = strtolower($cc->comQuality);
-         $tt = explode(',', $cc->Relation); ?>
+         $tt = explode(',', $cc->Relations); ?>
         <div class="col-12 col-sm-6 card comment-bg-<?=$quality?>">
 
             <div>

@@ -4,6 +4,7 @@ namespace AppBundle\Model\Admin;
 
 use AppBundle\Doctrine\DeleteRequestType;
 use AppBundle\Entity\Comment;
+use AppBundle\Entity\Member;
 use AppBundle\Model\BaseModel;
 use AppBundle\Repository\CommentRepository;
 
@@ -27,6 +28,36 @@ class CommentModel extends BaseModel
         $repository = $this->em->getRepository(Comment::class);
 
         return $repository->pageAll($page, $limit);
+    }
+
+    /**
+     * @param Member $member
+     * @param int    $page
+     * @param int    $limit
+     *
+     * @return \Pagerfanta\Pagerfanta
+     */
+    public function getCommentsForMember(Member $member, $page = 1, $limit = 10)
+    {
+        /** @var CommentRepository $repository */
+        $repository = $this->em->getRepository(Comment::class);
+
+        return $repository->pageAllForMember($member, $page, $limit);
+    }
+
+    /**
+     * @param Member $member
+     * @param int    $page
+     * @param int    $limit
+     *
+     * @return \Pagerfanta\Pagerfanta
+     */
+    public function getCommentsFromMember(Member $member, $page = 1, $limit = 10)
+    {
+        /** @var CommentRepository $repository */
+        $repository = $this->em->getRepository(Comment::class);
+
+        return $repository->pageAllFromMember($member, $page, $limit);
     }
 
     /**

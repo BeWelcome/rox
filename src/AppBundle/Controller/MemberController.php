@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Doctrine\CommentAdminActionType;
 use AppBundle\Entity\Comment;
 use AppBundle\Entity\FeedbackCategory;
 use AppBundle\Entity\Member;
@@ -112,7 +113,7 @@ class MemberController extends Controller
                     $this->addFlash('error', 'Your feedback couldn\'t be sent. Please try again later.');
                 } else {
                     $em = $this->getDoctrine()->getManager();
-                    $comment->setAdminAction('AdminCheck');
+                    $comment->setAdminAction(CommentAdminActionType::ADMIN_CHECK);
                     $em->persist($comment);
                     $em->flush();
 

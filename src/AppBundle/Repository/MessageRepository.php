@@ -154,13 +154,13 @@ class MessageRepository extends EntityRepository
             ->andWhere('m.request IS NULL')
             ->getQuery();
 
-        $results = null;
+        $unreadCount = 0;
         try {
-            $results = $q->getSingleScalarResult();
+            $unreadCount = $q->getSingleScalarResult();
         } catch (NonUniqueResultException $e) {
         }
 
-        return $results;
+        return intval($unreadCount);
     }
 
     /**
@@ -183,13 +183,13 @@ class MessageRepository extends EntityRepository
             ->setParameter('status', 'Sent')
             ->getQuery();
 
-        $results = null;
+        $unreadCount = 0;
         try {
-            $results = $q->getSingleScalarResult();
+            $unreadCount = $q->getSingleScalarResult();
         } catch (NonUniqueResultException $e) {
         }
 
-        return $results;
+        return intval($unreadCount);
     }
 
     /**
@@ -205,13 +205,13 @@ class MessageRepository extends EntityRepository
             ->setParameter('spaminfo', SpamInfoType::MEMBER_SAYS_SPAM)
             ->getQuery();
 
-        $results = null;
+        $result = 0;
         try {
-            $results = $q->getSingleScalarResult();
+            $result = $q->getSingleScalarResult();
         } catch (NonUniqueResultException $e) {
         }
 
-        return $results;
+        return $result;
     }
 
     /**

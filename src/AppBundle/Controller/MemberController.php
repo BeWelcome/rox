@@ -140,24 +140,56 @@ class MemberController extends Controller
      *
      * @return JsonResponse
      */
-    public function getUnreadMessageCount(Request $request)
+    public function getUnreadMessagesCount(Request $request)
     {
         $member = $this->getUser();
         $countWidget = '';
-        $lastUnreadCount = $request->request->get('current');
+        $lastUnreadCount = intval($request->request->get('current'));
 
         /** @var MessageRepository $messageRepository */
         $messageRepository = $this->getDoctrine()->getRepository(Message::class);
         $unreadMessageCount = $messageRepository->getUnreadMessagesCount($member);
 
-        if ($unreadMessageCount != $lastUnreadCount) {
-            $countWidget = $this->renderView(':widgets:messagescount.html.twig', [
+        if ($unreadMessageCount !== $lastUnreadCount) {
+            $countWidget = $this->renderView(':widgets:messagescount.hml.twig', [
                 'messageCount' => $unreadMessageCount,
             ]);
         }
         $response = new JsonResponse();
         $response->setData([
-            'count' => $unreadMessageCount,
+            'oldCount' => $lastUnreadCount,
+            'newCount' => $unreadMessageCount,
+            'html' => $countWidget,
+        ]);
+        return $response;
+    }
+
+    /**
+     * @Route("/count/requests/unread", name="count_requests_unread")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getUnreadRequestsCount(Request $request)
+    {
+        $member = $this->getUser();
+        $countWidget = '';
+        $lastUnreadCount = intval($request->request->get('current'));
+
+        /** @var MessageRepository $messageRepository */
+        $messageRepository = $this->getDoctrine()->getRepository(Message::class);
+        $unreadRequestsCount = $messageRepository->getUnreadRequestsCount($member);
+
+        if ($unreadRequestsCount !== $lastUnreadCount) {
+            $countWidget = $this->renderView(':widgets:requestscount.html.twig', [
+                'requestCount' => $unreadRequestsCount,
+            ]);
+        }
+        $response = new JsonResponse();
+        $response->setData([
+            'oldCount' => $lastUnreadCount,
+            'newCount' => $unreadRequestsCount,
             'html' => $countWidget,
         ]);
         return $response;

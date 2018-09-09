@@ -505,8 +505,8 @@ WHERE
         $errors = array();
         $member = $this->getLoggedInMember();
         $syshcvol = PVars::getObj('syshcvol');
-        $max = count($syshcvol->LenghtComments);
-        $tt = $syshcvol->LenghtComments;
+        $max = count($syshcvol->CommentRelations);
+        $tt = $syshcvol->CommentRelations;
         for ($ii = 0; $ii < $max; $ii++) {
             $chkName = "Comment_" . $tt[$ii];
             if (isset($vars[$chkName])) {
@@ -557,8 +557,8 @@ WHERE
             // bw_mail($_SYSHCVOL['CommentNotificationSenderMail'], $subj, $text, "", $_SYSHCVOL['CommentNotificationSenderMail'], $defLanguage, "no", "", "");
         }
         $syshcvol = PVars::getObj('syshcvol');
-        $max = count($syshcvol->LenghtComments);
-        $tt = $syshcvol->LenghtComments;
+        $max = count($syshcvol->CommentRelations);
+        $tt = $syshcvol->CommentRelations;
         $LenghtComments = "";
         for ($ii = 0; $ii < $max; $ii++) {
             $var = $tt[$ii];
@@ -575,7 +575,7 @@ INSERT INTO
     comments (
         IdToMember,
         IdFromMember,
-        Lenght,
+        Relations,
         Quality,
         TextWhere,
         TextFree,
@@ -612,7 +612,7 @@ SET
     AdminAction='" . $AdminAction . "',
     IdToMember=" . $vars['IdMember'] . ",
     IdFromMember=" . $this->_session->get('IdMember') . ",
-    Lenght='" . $LenghtComments . "',
+    Relations='" . $LenghtComments . "',
     Quality='" . $vars['Quality'] . "',
     TextWhere='" . $this->dao->escape($vars['TextWhere']) . "',
     TextFree='" . $this->dao->escape($vars['TextFree']) . "',

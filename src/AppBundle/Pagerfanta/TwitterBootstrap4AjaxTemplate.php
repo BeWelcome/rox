@@ -2,8 +2,6 @@
 
 namespace AppBundle\Pagerfanta;
 
-use AppBundle\Pagerfanta\TwitterBootstrap4Template;
-
 /**
  * TwitterBootstrap4Template.
 

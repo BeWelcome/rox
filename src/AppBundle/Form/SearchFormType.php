@@ -37,6 +37,11 @@ class SearchFormType extends AbstractType
         $this->addButtons($formBuilder);
     }
 
+    public function getBlockPrefix()
+    {
+        return '';
+    }
+
     protected function addSelects(FormBuilderInterface $formBuilder)
     {
         $formBuilder
@@ -122,10 +127,5 @@ class SearchFormType extends AbstractType
                 'data' => false,
             ])
         ;
-    }
-
-    public function getBlockPrefix()
-    {
-        return '';
     }
 }

@@ -38,7 +38,7 @@ class SearchController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $page = $request->query->get('page', 1);
-            if ($page === '') {
+            if ('' === $page) {
                 $page = 1;
             }
             $searchAdapter = new SearchAdapter($this->get('service_container'), $form->getData());
@@ -65,8 +65,7 @@ class SearchController extends Controller
      */
     public function searchGetPageResultsAjax(Request $request)
     {
-        if ($request->getMethod() !== 'POST')
-        {
+        if ('POST' !== $request->getMethod()) {
             // JavaScript doesn't work on client
             // redirect to search members
             return $this->redirectToRoute('search_members', $request->query->all());
@@ -74,9 +73,6 @@ class SearchController extends Controller
 
         $page = $request->query->get('page', 1);
         $form = $this->createForm(SearchFormType::class, $request->query->all(), ['csrf_protection' => false]);
-        $valid = $form->isValid();
-        $data = $form->getData();
-        $viewData = $form->getViewData();
 
         $searchAdapter = new SearchAdapter($this->get('service_container'), $form->getData());
         $pager = new Pagerfanta($searchAdapter);
@@ -88,6 +84,7 @@ class SearchController extends Controller
             'routeParams' => $request->query->all(),
         ]);
     }
+
     /**
      * @param Request $request
      * @param $formName

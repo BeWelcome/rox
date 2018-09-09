@@ -505,8 +505,8 @@ WHERE
         $errors = array();
         $member = $this->getLoggedInMember();
         $syshcvol = PVars::getObj('syshcvol');
-        $max = count($syshcvol->LenghtComments);
-        $tt = $syshcvol->LenghtComments;
+        $max = count($syshcvol->CommentRelations);
+        $tt = $syshcvol->CommentRelations;
         for ($ii = 0; $ii < $max; $ii++) {
             $chkName = "Comment_" . $tt[$ii];
             if (isset($vars[$chkName])) {
@@ -557,8 +557,8 @@ WHERE
             // bw_mail($_SYSHCVOL['CommentNotificationSenderMail'], $subj, $text, "", $_SYSHCVOL['CommentNotificationSenderMail'], $defLanguage, "no", "", "");
         }
         $syshcvol = PVars::getObj('syshcvol');
-        $max = count($syshcvol->LenghtComments);
-        $tt = $syshcvol->LenghtComments;
+        $max = count($syshcvol->CommentRelations);
+        $tt = $syshcvol->CommentRelations;
         $LenghtComments = "";
         for ($ii = 0; $ii < $max; $ii++) {
             $var = $tt[$ii];
@@ -575,7 +575,7 @@ INSERT INTO
     comments (
         IdToMember,
         IdFromMember,
-        Lenght,
+        Relations,
         Quality,
         TextWhere,
         TextFree,
@@ -612,7 +612,7 @@ SET
     AdminAction='" . $AdminAction . "',
     IdToMember=" . $vars['IdMember'] . ",
     IdFromMember=" . $this->_session->get('IdMember') . ",
-    Lenght='" . $LenghtComments . "',
+    Relations='" . $LenghtComments . "',
     Quality='" . $vars['Quality'] . "',
     TextWhere='" . $this->dao->escape($vars['TextWhere']) . "',
     TextFree='" . $this->dao->escape($vars['TextFree']) . "',
@@ -1063,6 +1063,7 @@ ORDER BY
      *
      * @param mixed $vars
      * @return string
+     * @throws PException
      */
     public function updateProfile(&$vars)     {
         $IdMember = (int)$vars['memberid'];
@@ -1107,6 +1108,7 @@ ORDER BY
         if ($vars['IsHidden_LastName'] == 'Yes') {
             $m->HideAttribute |= \Member::MEMBER_LASTNAME_HIDDEN;
         }
+        $m->Email = $vars['Email'];
         $m->Gender = $vars['gender'];
         $m->HideGender = $vars['HideGender'];
         $m->BirthDate = $vars['BirthYear'] . '-' . $vars['BirthMonth'] . '-' . $vars['BirthDay'];
@@ -1148,19 +1150,6 @@ ORDER BY
             $this->logWrite("Zip updated", "Address Update");
         }
 
-		if ($vars["Email"]=="cryptedhidden") {
-			$this->logWrite("members.model updateprofile email keeps previous value (cryptedhidden detected)", "Debug");
-		}
-        else {
-			if ($vars["Email"] != $m->email) {
-				$this->logWrite("Email updated (previous was " . $m->email . ")", "Email Update"); // Sticking to old BW, the previous email is stored in logs,
-                                                                                               // this might be discussed, but if the member fills a bad email,
-                                                                                               // there is no more way to retrieve him
-                                                                                               // Todo : get rid with this, but implement a confimmation mail
-				// TODO: check why this gives an error while keeping the same e-mail address, something to do with encrypting it?
-                // $m->Email = $this->_crypt->NewReplaceInCrypted(strip_tags($vars['Email']),"members.Email",$IdMember, $m->Email, $IdMember, $this->ShallICrypt($vars,"Email"));
-			}
-		}
 
         /* TODO: check why the following lines return errors
 		if ($vars["HomePhoneNumber"]!="cryptedhidden") {

@@ -14,7 +14,6 @@ use AppBundle\Form\MessageIndexFormType;
 use AppBundle\Form\MessageToMemberType;
 use AppBundle\Model\MessageModel;
 use AppBundle\Model\RequestModel;
-use DateTime;
 use Doctrine\Common\Persistence\ObjectManager;
 use Html2Text\Html2Text;
 use Rox\Core\Exception\InvalidArgumentException;

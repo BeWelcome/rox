@@ -1882,7 +1882,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
      */
     public function sendMail($subject, $body) {
         $from = PVars::getObj('mailAddresses')->noreply;
-        $to = $this->getEmailWithoutPermissionChecks();
+        $to = $this->Email;
 
         // Create HTML version via purifier (linkify and add paragraphs)
         $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();

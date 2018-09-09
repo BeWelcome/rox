@@ -1,4 +1,30 @@
-        <div id="profilesummary" class="card mb-3">
+<div class="accordion" id="accordionSummary">
+    <div class="card mb-3">
+        <h3 class="card-header"><?php echo $words->get('ProfileSummary'); ?></h3>
+        <div class="card-block p-2">
+
+            <div id="SummaryShort" class="card-text m-0 collapse show" aria-labelledby="headingSummary" data-parent="#accordionSummary">
+                <?php
+                $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
+                $textlong = $purifier->purify(stripslashes($member->get_trad("ProfileSummary", $profile_language, true)));
+                echo substr($textlong, 0, 150) . '...';
+                ?>
+                <button class="btn btn-sm btn-outline-primary" type="button" data-toggle="collapse" data-target="#SummaryLong" aria-expanded="true" aria-controls="SummaryLong">Read more</button>
+            </div>
+
+            <div id="SummaryLong" class="card-text m-0 collapse" aria-labelledby="headingSummary" data-parent="#accordionSummary">
+                    <?php
+                    echo $textlong;
+                    ?>
+                <button class="btn btn-sm btn-outline-primary" type="button" data-toggle="collapse" data-target="#SummaryShort" aria-expanded="true" aria-controls="SummaryShort">Collapse</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div id="profilesummary" class="card mb-3">
             <h3 class="card-header"><?php echo $words->get('ProfileSummary'); ?>
                 <?php if ($showEditLinks): ?>
                 <span class="float-right">

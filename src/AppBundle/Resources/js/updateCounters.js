@@ -36,3 +36,7 @@ function updateCounts() {
 }
 
 let interval = setInterval(function () { updateCounts(); }, 120 * 1000);
+
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})

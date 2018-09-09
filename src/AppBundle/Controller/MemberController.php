@@ -65,7 +65,7 @@ class MemberController extends Controller
      * @ParamConverter("comment", class="AppBundle\Entity\Comment", options={"mapping": {"commentId": "id"}})
      *
      * @param Request $request
-     * @param Member $member
+     * @param Member  $member
      * @param Comment $comment
      *
      * @return Response
@@ -100,7 +100,7 @@ class MemberController extends Controller
                     ->setSubject('Comment report')
                     ->setFrom(
                         [
-                            $user->getEmail() => 'BeWelcome - ' . $user->getUsername(),
+                            $user->getEmail() => 'BeWelcome - '.$user->getUsername(),
                         ]
                     )
                     ->setTo([
@@ -144,7 +144,7 @@ class MemberController extends Controller
     {
         $member = $this->getUser();
         $countWidget = '';
-        $lastUnreadCount = intval($request->request->get('current'));
+        $lastUnreadCount = (int) ($request->request->get('current'));
 
         /** @var MessageRepository $messageRepository */
         $messageRepository = $this->getDoctrine()->getRepository(Message::class);
@@ -161,6 +161,7 @@ class MemberController extends Controller
             'newCount' => $unreadMessageCount,
             'html' => $countWidget,
         ]);
+
         return $response;
     }
 
@@ -175,7 +176,7 @@ class MemberController extends Controller
     {
         $member = $this->getUser();
         $countWidget = '';
-        $lastUnreadCount = intval($request->request->get('current'));
+        $lastUnreadCount = (int) ($request->request->get('current'));
 
         /** @var MessageRepository $messageRepository */
         $messageRepository = $this->getDoctrine()->getRepository(Message::class);
@@ -192,6 +193,7 @@ class MemberController extends Controller
             'newCount' => $unreadRequestsCount,
             'html' => $countWidget,
         ]);
+
         return $response;
     }
 }

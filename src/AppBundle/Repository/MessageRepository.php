@@ -160,7 +160,7 @@ class MessageRepository extends EntityRepository
         } catch (NonUniqueResultException $e) {
         }
 
-        return intval($unreadCount);
+        return (int) $unreadCount;
     }
 
     /**
@@ -189,7 +189,7 @@ class MessageRepository extends EntityRepository
         } catch (NonUniqueResultException $e) {
         }
 
-        return intval($unreadCount);
+        return (int) $unreadCount;
     }
 
     /**

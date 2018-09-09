@@ -15,7 +15,6 @@
         "doctrine/orm": "^2.6",
         "ezyang/htmlpurifier": "^4.0",
         "foolz/sphinxql-query-builder": "^1.0",
-        "friendsofsymfony/ckeditor-bundle": "^1.1",
         "html2text/html2text": "^4.0",
         "incenteev/composer-parameter-handler": "^2.0",
         "judev/php-htmltruncator": "^1.1",
@@ -94,7 +93,6 @@
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "FOS\\CKEditorBundle\\Composer\\CKEditorScriptHandler::install",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
@@ -119,7 +117,6 @@
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
         },
-        "branch-alias": null,
-        "ckeditor-clear": "drop"
+        "branch-alias": null
     }
 }

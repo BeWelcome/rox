@@ -156,10 +156,10 @@
 
                     {# messages #}
                     <li class="nav-item float-right">
-                        {# {{ 'MyInbox' | trans }} #}<div id="messageCount"><a href="{{ path('messages') }}" class="nav-link"><i class="fa fa-lg fa-envelope"></i> <span class="badge badge-warning d-md-none d-lg-inline-block">{{ messageCount }}</span></a></div>
+                        {% include ':widgets:messagescount.hml.twig' %}
                     </li>
                     <li class="nav-item float-right">
-                        {# {{ 'Myrequests' | trans }} #} <div id="requestCount"><a href="{{ path('requests') }}" class="nav-link"><i class="fa fa-lg fa-bed"></i> <span class="badge badge-warning d-md-none d-lg-inline-block">{{ requestCount }}</span></a></div>
+                        {% include ':widgets:requestscount.html.twig' %}
                     </li>
 
                     {# logout #}

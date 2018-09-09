@@ -6,9 +6,11 @@ use AppBundle\Doctrine\CommentAdminActionType;
 use AppBundle\Entity\Comment;
 use AppBundle\Entity\FeedbackCategory;
 use AppBundle\Entity\Member;
+use AppBundle\Entity\Message;
 use AppBundle\Form\CustomDataClass\ReportCommentRequest;
 use AppBundle\Form\ReportCommentType;
 use AppBundle\Repository\MemberRepository;
+use AppBundle\Repository\MessageRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Swift_Message;
@@ -63,7 +65,7 @@ class MemberController extends Controller
      * @ParamConverter("comment", class="AppBundle\Entity\Comment", options={"mapping": {"commentId": "id"}})
      *
      * @param Request $request
-     * @param Member  $member
+     * @param Member $member
      * @param Comment $comment
      *
      * @return Response
@@ -98,7 +100,7 @@ class MemberController extends Controller
                     ->setSubject('Comment report')
                     ->setFrom(
                         [
-                            $user->getEmail() => 'BeWelcome - '.$user->getUsername(),
+                            $user->getEmail() => 'BeWelcome - ' . $user->getUsername(),
                         ]
                     )
                     ->setTo([
@@ -129,5 +131,35 @@ class MemberController extends Controller
             'comment' => $comment,
             'member' => $member,
         ]);
+    }
+
+    /**
+     * @Route("/count/messages/unread", name="count_messages_unread")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getUnreadMessageCount(Request $request)
+    {
+        $member = $this->getUser();
+        $countWidget = '';
+        $lastUnreadCount = $request->request->get('current');
+
+        /** @var MessageRepository $messageRepository */
+        $messageRepository = $this->getDoctrine()->getRepository(Message::class);
+        $unreadMessageCount = $messageRepository->getUnreadMessagesCount($member);
+
+        if ($unreadMessageCount != $lastUnreadCount) {
+            $countWidget = $this->renderView(':widgets:messagescount.html.twig', [
+                'messageCount' => $unreadMessageCount,
+            ]);
+        }
+        $response = new JsonResponse();
+        $response->setData([
+            'count' => $unreadMessageCount,
+            'html' => $countWidget,
+        ]);
+        return $response;
     }
 }

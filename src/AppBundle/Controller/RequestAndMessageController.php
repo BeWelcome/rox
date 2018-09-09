@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Doctrine\MessageStatusType;
 use AppBundle\Entity\HostingRequest;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
@@ -170,6 +171,8 @@ class RequestAndMessageController extends Controller
             $message->setSender($sender);
             $message->setReceiver($receiver);
             $message->setInfolder('Normal');
+            $message->setWhenFirstRead(new \DateTime('0000-00-00 00:00:00'));
+            $message->setStatus(MessageStatusType::SENT);
             $message->setCreated(new \DateTime());
 
             $em = $this->getDoctrine()->getManager();
@@ -245,7 +248,7 @@ class RequestAndMessageController extends Controller
             $hostingRequest = $requestForm->getData();
             $hostingRequest->setSender($sender);
             $hostingRequest->setReceiver($receiver);
-            $hostingRequest->setWhenFirstRead(new DateTime('0000-00-00 00:00:00'));
+            $hostingRequest->setWhenFirstRead(new \DateTime('0000-00-00 00:00:00'));
             $hostingRequest->setStatus('Sent');
             $hostingRequest->setInfolder('Normal');
             $hostingRequest->setCreated(new \DateTime());
@@ -462,6 +465,8 @@ class RequestAndMessageController extends Controller
             $replyMessage->setParent($message);
             $replyMessage->setSender($sender);
             $replyMessage->setReceiver($receiver);
+            $replyMessage->setWhenFirstRead(new \DateTime('0000-00-00 00:00:00'));
+            $replyMessage->setStatus(MessageStatusType::SENT);
             $replyMessage->setInfolder('Normal');
             $replyMessage->setCreated(new \DateTime());
 
@@ -557,6 +562,8 @@ class RequestAndMessageController extends Controller
 
             // handle changes in request and subject
             $newRequest = $this->getFinalRequest($em, $newRequest, $hostingRequest, $data, $clickedButton);
+            $newRequest->setWhenFirstRead(new \DateTime('0000-00-00 00:00:00'));
+            $newRequest->setStatus(MessageStatusType::SENT);
             $em->persist($newRequest);
             $em->flush();
 
@@ -644,6 +651,8 @@ class RequestAndMessageController extends Controller
             $data = $requestForm->getData();
             $clickedButton = $requestForm->getClickedButton()->getName();
             $newRequest = $this->getFinalRequest($em, $newRequest, $hostingRequest, $data, $clickedButton);
+            $newRequest->setWhenFirstRead(new \DateTime('0000-00-00 00:00:00'));
+            $newRequest->setStatus(MessageStatusType::SENT);
             $em->persist($newRequest);
 
             $em = $this->getDoctrine()->getManager();
@@ -808,7 +817,9 @@ class RequestAndMessageController extends Controller
             ->setTo($receiver->getEmail())
             ->setBody(
                 $this->renderView('emails/'.$template.'.html.twig', [
-                     'sender' => $sender,
+                    'sender' => $sender,
+                    'receiver' => $receiver,
+                     'subject' => $subject,
                      $template.'_text' => $body, ]),
                 'text/html'
             )

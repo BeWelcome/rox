@@ -118,15 +118,15 @@ class SearchAdapter implements AdapterInterface
         $vars['location-longitude'] = $data['search_longitude'];
         $vars['search-accommodation'] = [];
 
-        if ($data['search_accommodation_anytime']) {
+        if (isset($data['search_accommodation_anytime']) && ($data['search_accommodation_anytime'])) {
             $vars['search-accommodation'][] = 'anytime';
         }
 
-        if ($data['search_accommodation_dependonrequest']) {
+        if (isset($data['search_accommodation_dependonrequest']) && ($data['search_accommodation_dependonrequest'])) {
             $vars['search-accommodation'][] = 'dependonrequest';
         }
 
-        if ($data['search_accommodation_neverask']) {
+        if (isset($data['search_accommodation_neverask']) && ($data['search_accommodation_neverask'])) {
             $vars['search-accommodation'][] = 'neverask';
         }
 

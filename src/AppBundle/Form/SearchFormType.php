@@ -123,4 +123,9 @@ class SearchFormType extends AbstractType
             ])
         ;
     }
+
+    public function getBlockPrefix()
+    {
+        return '';
+    }
 }

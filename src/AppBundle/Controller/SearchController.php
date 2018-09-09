@@ -38,6 +38,9 @@ class SearchController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $page = $request->query->get('page', 1);
+            if ($page === '') {
+                $page = 1;
+            }
             $searchAdapter = new SearchAdapter($this->get('service_container'), $form->getData());
             $results = $searchAdapter->getMapResults();
             $pager = new Pagerfanta($searchAdapter);
@@ -47,10 +50,44 @@ class SearchController extends Controller
         return $this->render(':search:searchmembers.html.twig', [
             'form' => $form->createView(),
             'pager' => $pager,
+            'routeName' => 'search_members_ajax',
+            'routeParams' => $request->query->all(),
             'results' => $results,
         ]);
     }
 
+    /**
+     * @Route("/search/members/ajax", name="search_members_ajax")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function searchGetPageResultsAjax(Request $request)
+    {
+        if ($request->getMethod() !== 'POST')
+        {
+            // JavaScript doesn't work on client
+            // redirect to search members
+            return $this->redirectToRoute('search_members', $request->query->all());
+        }
+
+        $page = $request->query->get('page', 1);
+        $form = $this->createForm(SearchFormType::class, $request->query->all(), ['csrf_protection' => false]);
+        $valid = $form->isValid();
+        $data = $form->getData();
+        $viewData = $form->getViewData();
+
+        $searchAdapter = new SearchAdapter($this->get('service_container'), $form->getData());
+        $pager = new Pagerfanta($searchAdapter);
+        $pager->setCurrentPage($page);
+
+        return $this->render(':member:results.html.twig', [
+            'pager' => $pager,
+            'routeName' => 'search_members_ajax',
+            'routeParams' => $request->query->all(),
+        ]);
+    }
     /**
      * @param Request $request
      * @param $formName

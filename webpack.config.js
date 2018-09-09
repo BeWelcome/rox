@@ -16,6 +16,8 @@ Encore
 
     .addEntry('search/searchpicker', './src/AppBundle/Resources/public/js/search/searchpicker.js')
     .addEntry('search/createmap', './src/AppBundle/Resources/public/js/search/createmap.js')
+    .addEntry('search/loadcontent', './src/AppBundle/Resources/public/js/search/loadajax.js')
+
     .addEntry('tempusdominus', './src/AppBundle/Resources/js/tempusdominus.js')
     .addEntry('requests', './src/AppBundle/Resources/js/requests.js')
     .addEntry('treasurer', './src/AppBundle/Resources/js/treasurer.js')

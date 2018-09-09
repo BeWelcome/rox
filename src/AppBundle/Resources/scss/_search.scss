@@ -9,3 +9,7 @@
   width: 100%;
   position: absolute;
 }
+
+#overlay.loading {
+  filter: blur(2px);
+}

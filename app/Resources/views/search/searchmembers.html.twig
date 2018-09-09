@@ -1,10 +1,12 @@
 {% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
 
 {% block javascripts %}
     <script src="{{ asset('build/jquery_ui.js') }}"></script>
     <script src="{{ asset('build/leaflet.js') }}"></script>
     <script src="{{ asset('build/search/searchpicker.js') }}"></script>
     <script src="{{ asset('build/search/createmap.js') }}"></script>
+    <script src="{{ asset('build/search/loadcontent.js') }}"></script>
 {% endblock javascripts %}
 
 {% block stylesheets %}
@@ -13,44 +15,47 @@
 {% endblock stylesheets %}
 
 {% block content %}
-
     <div>
         {{ form_start(form, {'attr': {'class': 'form-inline p-1 m-0 framed'}}) }}
         {{ form_errors(form) }}
         <div class="d-flex flex-wrap justify-content-between w-100">
             <div class="form-group my-2">
                 <div class="input-group mx-2">
-                    <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-lg fa-globe"></i></span>
-                    {{ form_widget(form.search, {'attr': {'class': 'search-picker form-control'}, 'required': false }) }}
+                    <div class="input-group-prepend"><span class="input-group-text"><i
+                                    class="fa fa-lg fa-globe"></i></span>
+                        {{ form_widget(form.search, {'attr': {'class': 'search-picker form-control'}, 'required': false }) }}
+                    </div>
                 </div>
-            </div>
-            <div class="form-group my-3 mx-2">
-                <div class="hostcheckimg"><img src="{{ asset('images/icons/anytime.png') }}" alt="{{ 'I like to host' | trans }}" />
-                    <div class="hostcheckbox">{{ form_widget(form.search_accommodation_anytime) }}</div>
+                <div class="form-group my-3 mx-2">
+                    <div class="hostcheckimg"><img src="{{ asset('images/icons/anytime.png') }}"
+                                                   alt="{{ 'I like to host' | trans }}"/>
+                        <div class="hostcheckbox">{{ form_widget(form.search_accommodation_anytime) }}</div>
+                    </div>
+                    <div class="hostcheckimg"><img src="{{ asset('images/icons/dependonrequest.png') }}"
+                                                   alt="{{ 'I might host you' | trans }}"/>
+                        <div class="hostcheckbox">
+                            {{ form_widget(form.search_accommodation_dependonrequest) }}</div>
+                    </div>
+                    <div class="hostcheckimg"><img src="{{ asset('images/icons/neverask.png') }}"
+                                                   alt="{{ 'I can\'t host' | trans }}"/>
+                        <div class="hostcheckbox">
+                            {{ form_widget(form.search_accommodation_neverask) }}</div>
+                    </div>
                 </div>
-                <div class="hostcheckimg"><img src="{{ asset('images/icons/dependonrequest.png') }}" alt="{{ 'I might host you' | trans }}"/>
-                    <div class="hostcheckbox">
-                        {{ form_widget(form.search_accommodation_dependonrequest) }}</div>
+                <div id="mapsearchoptions" class="form-group mx-2">
+                    <i class="fa fa-lg fa-bed mr-2" alt="hosts at least"></i>
+                    {{ form_label(form.search_can_host) }}
+                    {{ form_widget(form.search_can_host, {'attr': {'class' : 'form-control select2',
+                        'data-minimum-results-for-search': '-1'} }) }}
                 </div>
-                <div class="hostcheckimg"><img src="{{ asset('images/icons/neverask.png') }}" alt="{{ 'I can\'t host' | trans }}"/>
-                    <div class="hostcheckbox">
-                        {{ form_widget(form.search_accommodation_neverask) }}</div>
+                <div class="form-group mx-2">
+                    {{ form_label(form.search_distance) }}
+                    {{ form_widget(form.search_distance, {'attr': {'class' : 'form-control select2',
+                        'data-minimum-results-for-search': '-1'} }) }}
                 </div>
-            </div>
-            <div id="mapsearchoptions" class="form-group mx-2">
-                <i class="fa fa-lg fa-bed mr-2" alt="hosts at least"></i>
-                {{ form_label(form.search_can_host) }}
-                {{ form_widget(form.search_can_host, {'attr': {'class' : 'form-control select2',
-                    'data-minimum-results-for-search': '-1'} }) }}
-            </div>
-            <div class="form-group mx-2">
-                {{ form_label(form.search_distance) }}
-                {{ form_widget(form.search_distance, {'attr': {'class' : 'form-control select2',
-                    'data-minimum-results-for-search': '-1'} }) }}
-            </div>
                 {{ form_rest(form) }}
                 {{ form_widget(form.update_map) }}
-        </div>
+            </div>
 
             <div class="collapse w-100" id="advancedNav">
                 <div class="d-flex flex-wrap justify-content-between w-100">
@@ -62,27 +67,30 @@
             </div>
 
             <div class="w-100 btn btn-outline-light btn-sm btn-block p-0">
-                <a class="btn btn-sm btn-light" data-toggle="collapse" href="#advancedNav" role="button" aria-expanded="false" aria-controls="advancedNav">
-                    <i class="fa fa-angle-double-down mx-3"></i>advanced options<i class="fa fa-angle-double-down mx-3"></i>
+                <a class="btn btn-sm btn-light" data-toggle="collapse" href="#advancedNav" role="button"
+                   aria-expanded="false" aria-controls="advancedNav">
+                    <i class="fa fa-angle-double-down mx-3"></i>advanced options<i
+                            class="fa fa-angle-double-down mx-3"></i>
                 </a>
             </div>
 
-        {{ form_end(form) }}
+            {{ form_end(form) }}
 
-        <div id="map" class="framed w-100"></div>
+            <div id="map" class="framed w-100"></div>
 
-        <script>
-            var mapMembers = {% if results %}
-                    {{ results.map | json_encode | raw }};
-            {% else %}
-                 null;
+            <script>
+                var mapMembers = {% if results %}
+                        {{ results.map | json_encode | raw }};
+                {% else %}
+                null;
+                {% endif %}
+            </script>
+        </div>
+
+        <div class="col-12">
+            {% if results %}
+                {% include ':member:results.html.twig'%}
             {% endif %}
-        </script>
-    </div>
-
-    <div class="col-12">
-        {% if results %}
-            {% include ':member:results.html.twig' %}
-        {% endif %}
+        </div>
     </div>
 {% endblock content %}

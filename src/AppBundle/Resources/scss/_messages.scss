@@ -31,28 +31,18 @@
 
 #message_thread {
   .message_own {
-    // @include make-col(11);
-    // @include make-col-offset(1);
     min-width: 50%;
+    max-width: 80%;
     padding: $pagination-padding-x;
     margin-bottom: 1rem;
     border-radius: $border-radius;
     border: 1px solid #bbb;
     background-color: #df9;
-    text-align: right;
-  }
-
-  .message_own > blockquote {
-    padding: $pagination-padding-x;
-    border-radius: $border-radius;
-    border: 1px solid #bbb;
-    border-left: 8px $border-color solid;
-    margin: 0;
   }
 
   .message_other {
-    // @include make-col(11);
     min-width: 50%;
+    max-width: 80%;
     padding: $pagination-padding-x;
     margin-bottom: 1rem;
     border-radius: $border-radius;
@@ -60,20 +50,21 @@
     background-color: #ddd;
   }
 
-  .message_other > blockquote {
+  blockquote {
     padding: $pagination-padding-x;
     border-radius: $border-radius;
     border: 1px solid #bbb;
-    background-color: #df9;
-    border-left: 8px $border-color solid;
-    margin: 0;
+    border-left: 8px #cc9037 solid;
+    background-color: rgba(255,255,255,.7);
+    margin: 0.5rem 0 0.5rem 0;
+
+    p {
+      margin: 0;
+    }
   }
 
   .current {
-    background-color: rgba(255, 255, 0, 0.7);
-  }
-  div div h3 p{
-    margin: 0 !important;
+   // background-color: rgba(255, 255, 0, 0.7);
   }
 }
 

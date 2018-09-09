@@ -9,28 +9,34 @@
             background: #f8f8f8;
             border: 1px #ddd solid;
             border-left: 8px #f37000 solid;
-            padding: 0.5rem 2rem;
+            padding: 0 0.5rem;
             margin: 0 0 1rem 0.5rem;
         }
 
         body {
-            background-color: #ccc;
             color: #333;
-            font-size: 1em;
-            line-height: 1.5em;
+            font-size: 1.2rem;
+            line-height: 1.5rem;
             font-family: arial, verdana, sans-serif;
             margin: 0;
             padding: 0;
         }
 
+        a{
+            color: #fff;
+            text-decoration: none;
+            text-shadow: 0 0 1rem #f37000;
+        }
+
         .unsubscribe {
-            font-size: 0.7em;
-            line-height: 1.1em;
+            font-size: 0.7rem;
+            line-height: 1.1rem;
         }
 
         h1 {
             color: #fff;
             padding-top: 0.7rem;
+            font-size: 2rem;
         }
 
         #message {
@@ -48,19 +54,28 @@
 
         .logo {
             float: left;
-            padding: 0.5rem;
-            padding-right: 2rem;
+            padding: 0.5rem 2rem 0;
         }
 
         .content {
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 1rem 0;
+        }
+
+        .from{
+            background-color: rgba(0,0,0,.4);
+            font-size: 0.9rem;
+            padding: 0 0 0 1rem;
+            color: #ddd;
         }
 
         #footer {
+            background-color: #f37000;
             padding-left: 0.5rem;
             font-size: 0.8rem;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            font-weight: bold;
         }
-
         --></style>
 </head>
 <body>
@@ -69,15 +84,16 @@
         <div>
             <a href="{{ url('homepage') }}"><img
                         src="{{ absolute_url(asset('bundles/app/images/logo_index_top.png')) }}" class="logo"></a>
-            <h1>Title</h1>
+            <h1>{{ subject }}</h1>
         </div>
     </div>
+    {% block sender %}{% endblock sender %}
     <div class="content">
         {% block content %}{% endblock content %}
 
     </div>
     <div id="footer">
-        <p>(cc) {{ "now" | date("Y") }} BeWelcome</p>
+        <p>(cc) {{ "now" | date("Y") }} <a href="{{ url('homepage') }}" target="_blank">BeWelcome</a></p>
     </div>
 
 </div>

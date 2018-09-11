@@ -1,83 +1,66 @@
-<div class="accordion" id="accordionSummary">
-    <div class="card mb-3">
-        <h3 class="card-header"><?php echo $words->get('ProfileSummary'); ?></h3>
-        <div class="card-block p-2">
+<div id="profilesummary" class="mb-3">
+    <h2 class="mb-0"><?php echo $words->get('ProfileSummary'); ?>
+        <?php if ($showEditLinks): ?>
+            <span class="float-right">
+                <a href="editmyprofile/<?php echo $profile_language_code; ?>" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+            </span>
+        <?php endif; ?>
+    </h2>
 
-            <div id="SummaryShort" class="card-text m-0 collapse show" aria-labelledby="headingSummary" data-parent="#accordionSummary">
-                <?php
-                $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
-                $textlong = $purifier->purify(stripslashes($member->get_trad("ProfileSummary", $profile_language, true)));
-                echo substr($textlong, 0, 150) . '...';
-                ?>
-                <button class="btn btn-sm btn-outline-primary" type="button" data-toggle="collapse" data-target="#SummaryLong" aria-expanded="true" aria-controls="SummaryLong">Read more</button>
-            </div>
-
-            <div id="SummaryLong" class="card-text m-0 collapse" aria-labelledby="headingSummary" data-parent="#accordionSummary">
-                    <?php
-                    echo $textlong;
-                    ?>
-                <button class="btn btn-sm btn-outline-primary" type="button" data-toggle="collapse" data-target="#SummaryShort" aria-expanded="true" aria-controls="SummaryShort">Collapse</button>
-            </div>
-
-        </div>
+    <div class="p-2">
+        <?php
+        $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
+        echo $purifier->purify(stripslashes($member->get_trad("ProfileSummary", $profile_language, true)));
+        ?>
     </div>
 </div>
 
+<div class="d-block d-lg-none">
+    <?php
+    if (!$this->passedAway){
+        require 'profile.subcolumn_accommodation.php';
+    }
+    ?>
+</div>
 
-<div id="profilesummary" class="card mb-3">
-            <h3 class="card-header"><?php echo $words->get('ProfileSummary'); ?>
-                <?php if ($showEditLinks): ?>
-                <span class="float-right">
-                    <a href="editmyprofile/<?php echo $profile_language_code; ?>" class="btn btn-sm btn-primary p-0"><?php echo $words->get('Edit'); ?></a>
-                </span>
-                <?php endif; ?>
-            </h3>
-            <div class="card-block p-2">
-                <div class="card-text m-0">
-                    <?php
-                    $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
-                    echo $purifier->purify(stripslashes($member->get_trad("ProfileSummary", $profile_language, true)));
-                    ?>
-                </div>
-            </div>
-        </div>
+<div id="languages" class="mb-3">
+    <h3><?php echo $words->get('ProfileLanguagesSpoken'); ?>
+        <?php if ($showEditLinks): ?>
+            <span class="float-right">
+                <a href="editmyprofile/<?php echo $profile_language_code; ?>" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+            </span>
+        <?php endif; ?>
+    </h3>
 
-        <div id="languages" class="card mb-3">
-            <h3 class="card-header"><?php echo $words->get('ProfileLanguagesSpoken'); ?>
-                <?php if ($showEditLinks): ?>
-                    <span class="float-right">
-                    <a href="editmyprofile/<?php echo $profile_language_code; ?>" class="btn btn-sm btn-primary p-0"><?php echo $words->get('Edit'); ?></a>
-                </span>
-                <?php endif; ?>
-            </h3>
-            <div class="card-block p-2">
-                <div class="card-text m-0">
-                    <ul>
-                        <?php
-                        foreach ($member->get_languages_spoken() as $lang) {
-
-                        echo '<li>' . $words->get($lang->WordCode) . '<sup>' . $words->get("LanguageLevel_" . $lang->Level) . '</sup></li>';
-                        }
-                      ?>
-                    </ul>
-                </div>
-            </div>
-        </div>
+    <div class="p-2">
+        <i class="fa fa-check langcheck langcol1"></i>
+        <i class="fa fa-check langcheck langcol2"></i>
+        <i class="fa fa-check langcheck langcol3"></i>
+        <i class="fa fa-check langcheck langcol4"></i>
+        <i class="fa fa-check langcheck langcol5"></i>
+        <i class="fa fa-check langcheck langcol6"></i>
+        <ul>
+            <?php
+            foreach ($member->get_languages_spoken() as $lang) {
+                echo '<li>' . $words->get($lang->WordCode) . '<sup class="ml-1">' . $words->get("LanguageLevel_" . $lang->Level) . '</sup></li>';
+            }
+            ?>
+        </ul>
+    </div>
+</div>
 
         <?php
             if ($member->get_trad("Hobbies", $profile_language, true) != "" || $member->get_trad("Organizations", $profile_language, true) != "" || $member->get_trad("Books", $profile_language, true) != "" || $member->get_trad("Music", $profile_language, true) != "" || $member->get_trad("Movies", $profile_language, true) != ""){
         ?>
-
-        <div id="interests" class="card mb-3">
-            <h3 class="card-header"><?php echo $words->get('ProfileInterests'); ?>
+        <div id="interests" class="mb-3">
+            <h3><?php echo $words->get('ProfileInterests'); ?>
                 <?php if ($showEditLinks): ?>
                     <span class="float-right">
-                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileinterests" class="btn btn-sm btn-primary p-0"><?php echo $words->get('Edit'); ?></a>
+                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileinterests" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
                 </span>
                 <?php endif; ?>
             </h3>
-            <div class="card-block p-2">
-                <div class="card-text m-0">
+            <div class="p-2">
                 <dl>
                     <?php
                     if ($member->get_trad("Hobbies", $profile_language, true) != "") {
@@ -106,7 +89,6 @@
                     }
                     ?>
                 </dl>
-                </div>
             </div>
         </div>
         <?php } ?>
@@ -115,47 +97,40 @@
             if ($member->get_trad("PastTrips", $profile_language, true) != "" || $member->get_trad("PlannedTrips", $profile_language, true) != "") {
                 ?>
 
-                <div id="travel" class="card mb-3">
-                    <h3 class="card-header"><?php echo $words->get('ProfileTravelExperience'); ?>
+                <div id="travel" class="mb-3">
+                    <h3><?php echo $words->get('ProfileTravelExperience'); ?>
                         <?php if ($showEditLinks): ?>
                             <span class="float-right">
-                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileinterests" class="btn btn-sm btn-primary p-0"><?php echo $words->get('Edit'); ?></a>
+                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileinterests" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
                 </span>
                         <?php endif; ?>
                     </h3>
-                    <div class="card-block p-2">
-                        <div class="card-text m-0">
+                    <div class="p-2">
                             <dl>
                                 <dt class="h5"><?php echo $words->get('ProfilePastTrips'); ?>:</dt>
                                 <dd><?php echo $purifier->purify($member->get_trad("PastTrips", $profile_language, true)); ?></dd>
                                 <dt class="h5"><?php echo $words->get('ProfilePlannedTrips'); ?>:</dt>
                                 <dd><?php echo $purifier->purify($member->get_trad("PlannedTrips", $profile_language, true)); ?></dd>
                             </dl>
-                        </div>
                     </div>
                 </div>
 
                 <?php
                     }
 
-
         // display my groups, if there are any
         $my_groups = $member->getGroups();
         if (!empty($my_groups)){ ?>
 
-
-
-        <div id="groups" class="card mb-3 p-0">
-            <h3 class="card-header"><?php echo $words->get('ProfileGroups'); ?>
+        <div id="groups" class="mb-3 p-0">
+            <h3><?php echo $words->get('ProfileGroups'); ?>
                 <?php if ($showEditLinks): ?>
                     <span class="float-right">
-                    <a href="/groups/mygroups" class="btn btn-sm btn-primary p-0"><?php echo $words->get('Edit'); ?></a>
+                    <a href="/groups/mygroups" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
                 </span>
                 <?php endif; ?>
             </h3>
-            <div class="card-block p-2">
-                <div class="card-text m-0">
-
+            <div class="p-2">
                     <?php
                     // display my groups, if there are any
                     for ($i = 0; $i < count($my_groups) && $i < 5; $i++) :
@@ -179,10 +154,9 @@
                         <?php
                     endfor;
                     if (count($my_groups) > 5) :
-                        echo '<p class="float-right"><a href="members/' . $member->Username . '/groups">' . $words->get('GroupsAllMyLink') . '</a></p>';
+                        echo '<a class="btn btn-sm btn-block btn-outline-primary" href="members/' . $member->Username . '/groups">' . $words->get('GroupsAllMyLink') . '</a>';
                     endif;
                     ?>
-                </div>
             </div>
         </div>
         <? } ?>
@@ -191,16 +165,16 @@
         if ($this->model->getLoggedInMember() && !$this->passedAway){ ?>
 
 
-            <div class="card mb-3">
-                <h3 class="card-header"><?php echo $words->get('ContactInfo'); ?>
+            <div class="mb-3">
+                <h3><?php echo $words->get('ContactInfo'); ?>
                     <?php if ($showEditLinks): ?>
                         <span class="float-right">
-                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!contactinfo" class="btn btn-sm btn-primary p-0"><?php echo $words->get('Edit'); ?></a>
+                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!contactinfo" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
                 </span>
                     <?php endif; ?>
                 </h3>
-                <div class="card-block p-2">
-                    <div class="card-text m-0">
+                <div class="p-2">
+
                         <dl id="address">
                             <dt class="h5"><?php echo $words->get('Name'); ?></dt>
                             <dd><?php echo $member->name ?></dd>
@@ -241,7 +215,6 @@
                                 </dd>
                             <?php } ?>
                         </dl>
-                    </div>
                 </div>
             </div>
         <? } ?>

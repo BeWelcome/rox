@@ -16,6 +16,7 @@
           if (strstr($member->TypicOffer, "CanHostWeelChair"))
           {
               $icons[] = '<img src="images/icons/wheelchairblue.png" ' .
+                  'class="mb-2" ' .
                   'alt="' . $words->getSilent('wheelchair') . '" ' .
                   'title="' . $words->getSilent('CanHostWheelChairYes') . '" />';
           }

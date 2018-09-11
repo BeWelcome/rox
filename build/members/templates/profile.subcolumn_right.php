@@ -1,139 +1,13 @@
+<div class="d-none d-lg-block">
 <?php
 
-if (!$this->passedAway){ ?>
-
-    <div id="accommodationinfo" class="card mb-3">
-        <h3 class="card-header"><?php echo $words->get('ProfileAccommodation'); ?>
-            <?php if ($showEditLinks): ?>
-                <span class="float-right">
-                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileaccommodation" class="btn btn-sm btn-primary p-0"><?php echo $words->get('Edit'); ?></a>
-                </span>
-            <?php endif; ?>
-        </h3>
-        <div class="card-block p-2">
-            <div class="card-text m-0">
-
-                <div id="quickinfo" class="float-right text-right">
-                    <?php
-                    $icons = array();
-                    if (strstr($member->TypicOffer, "CanHostWeelChair"))
-                    {
-                        $icons[] = '<img src="images/icons/wheelchairblue.png" ' .
-                            'alt="' . $words->getSilent('wheelchair') . '" ' .
-                            'title="' . $words->getSilent('CanHostWheelChairYes') . '" />';
-                    }
-
-                    $icons[] = '<img src="images/icons/' . $member->Accomodation . '.png"' .
-                        ' alt="' . $words->getSilent($member->Accomodation) .'"' .
-                        ' title="' . $words->getSilent('CanOffer' . $member->Accomodation) . '" />';
-
-                    for($ii=0; $ii < count($icons); $ii++)
-                    {
-                        echo $icons[$ii];
-                    }
-                    ?>
-                </div>
-
-                <dl id="accommodation" >
-                    <?php if ($member->MaxGuest != 0 && $member->MaxGuest != "") { ?>
-                        <dt class="guests h5"><?=$words->get('ProfileNumberOfGuests');?>: <?php echo $member->MaxGuest ?></dt>
-                    <?php }
-                    if ($member->get_trad("MaxLenghtOfStay", $profile_language,true) != "") { ?>
-                        <dt class="stay h5"><?=$words->get('ProfileMaxLenghtOfStay');?>:</dt>
-                        <dd><?php echo $purifier->purify($member->get_trad("MaxLenghtOfStay", $profile_language,true)); ?></dd>
-                    <?php }
-                    if ($member->get_trad("ILiveWith", $profile_language,true) != "") { ?>
-                        <dt class="h5"><?=$words->get('ProfileILiveWith');?>:</dt>
-                        <dd><?php echo $purifier->purify($member->get_trad("ILiveWith", $profile_language,true)); ?></dd>
-                    <?php }
-                    if ($member->get_trad("PleaseBring", $profile_language,true) != "") { ?>
-                        <dt class="h5"><?=$words->get('ProfilePleaseBring');?>:</dt>
-                        <dd><?php echo $purifier->purify($member->get_trad("PleaseBring", $profile_language,true)); ?></dd>
-                    <?php }
-
-                    $comma = false;
-                    $offers = '';
-
-                    $TabTypicOffer = explode(",", $member->TypicOffer);
-                    foreach($TabTypicOffer as $typicOffer) {
-                        if ($typicOffer == '') continue;
-                        if ($typicOffer == 'CanHostWeelChair') continue;
-                        if ($comma) {
-                            $offers .= ', ';
-                        }
-                        $offers .=  $words->get("ProfileTypicOffer_" . $typicOffer);
-                        $comma = true;
-                    }
-                    if ($comma) {
-                        $offers .= '.';
-                    }
-
-                    $offerGuests = $member->get_trad("OfferGuests", $profile_language,true);
-                    if (!empty($offerGuests)) {
-                        if ($comma) {
-                            $offers .= '<br>';
-                        }
-                        $offers .= $purifier->purify($member->get_trad("OfferGuests", $profile_language,true));
-                    }
-                    if (!empty($offers)) { ?>
-
-                        <dt class="h5"><?=$words->get('ProfileOfferGuests');?>:</dt>
-                        <dd><?php echo $offers;?></dd>
-                    <?php }
-                    if ($member->get_trad("OfferHosts", $profile_language,true) != "") { ?>
-                        <dt class="h5"><?=$words->get('ProfileOfferHosts');?>:</dt>
-                        <dd><?php echo $purifier->purify($member->get_trad("OfferHosts", $profile_language,true)); ?></dd>
-                    <?php }
-                    if ($member->get_trad("AdditionalAccomodationInfo", $profile_language,true) != ""
-                        or $member->get_trad("InformationToGuest", $profile_language,true) != "") { ?>
-                        <dt class="h5"><?=$words->get('OtherInfosForGuest');?>:</dt>
-                        <dd>
-                            <?php echo $purifier->purify($member->get_trad("AdditionalAccomodationInfo", $profile_language,true)); ?>
-                            <?php echo $purifier->purify($member->get_trad("InformationToGuest", $profile_language,true)); ?>
-                        </dd>
-                    <?php }
-
-                    if ($member->get_trad("PublicTransport", $profile_language,true) != "") { ?>
-                        <dt class="h5"><?=$words->get('ProfilePublicTransport');?>:</dt>
-                        <dd><?php echo $purifier->purify($member->get_trad("PublicTransport", $profile_language,true)); ?></dd>
-                    <?php }
-
-                    $restrictions = '';
-                    $TabRestrictions = explode(",", $member->Restrictions);
-                    $max = count($TabRestrictions);
-
-                    $otherRestrictions = $member->get_trad("OtherRestrictions", $profile_language, true);
-
-                    $comma = false;
-                    foreach($TabRestrictions as $restriction) {
-                        if ($restriction == '') continue;
-                        if ($restriction == 'SeeOtherRestrictions') continue;
-                        if ($comma) {
-                            $restrictions .= ',<br>';
-                        }
-                        $restrictions .= $words->get("Restriction_" . $restriction);
-                        $comma = true;
-                    }
-                    if ($comma) {
-                        $restrictions .= '';
-                    }
-                    if (!empty($otherRestrictions)) {
-                        if ($comma) {
-                            $restrictions .= '<br>';
-                        }
-                        $restrictions .= $purifier->purify($otherRestrictions);
-                    }
-                    if (!empty($restrictions)) { ?>
-                        <dt class="h5"><?=$words->get('ProfileHouseRules');?>:</dt>
-                        <dd><?php echo $restrictions; ?></dd>
-                    <?php } ?>
-                </dl>
-
-            </div>
-        </div>
-    </div>
-<?php
+if (!$this->passedAway){
+    require 'profile.subcolumn_accommodation.php';
 }
+
+?>
+</div>
+<?
 
     $comments = $this->member->comments;
     $username = $this->member->Username;
@@ -142,8 +16,8 @@ if (!$this->passedAway){ ?>
     $max = 3;
     if (count($comments) > 0) { ?>
 
-        <div id="comments" class="card mb-3">
-            <h3 class="card-header">
+        <div id="comments" class="mb-3">
+            <h3 class="mb-0">
                 <?php if ($this->passedAway) {
                     echo $words->get('LatestCommentsAndCondolences');
                 } else {
@@ -151,12 +25,11 @@ if (!$this->passedAway){ ?>
                 }
                 if ($showEditLinks): ?>
                     <span class="float-right">
-                    <a href="members/<?php echo $member->Username; ?>/comments/" class="btn btn-sm btn-primary p-0"><?php echo $words->get('Edit'); ?></a>
+                    <a href="members/<?php echo $member->Username; ?>/comments/" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
                 </span>
                 <?php endif; ?>
             </h3>
-            <div class="card-block p-2">
-                <div class="card-text m-0">
+            <div class="p-2">
 
                 <?php
                   if ($this->model->getLoggedInMember()){
@@ -200,13 +73,12 @@ if (!$this->passedAway){ ?>
 
                    <?php } ?>
 
-                      <a href="members/<?=$member->Username?>/comments/" class="btn btn-block btn-primary"><?=$words->get('ShowAllComments')?></a>
+                      <a href="members/<?=$member->Username?>/comments/" class="btn btn-sm btn-block btn-outline-primary"><?=$words->get('ShowAllComments')?></a>
                 <?php
                   } else {
                       // hide comments from others when not logged in
                       echo $this->getLoginLink('/members/' . $member->Username,'ProfileShowComments');
                   } ?>
-                </div>
             </div>
         </div>
 
@@ -221,16 +93,15 @@ $relations = $member->relations;
 if (count($relations) > 0) { ?>
 
 
-    <div id="relations" class="card mb-3">
-        <h3 class="card-header"><?php echo $words->get('MyRelations'); ?>
+    <div id="relations" class="mb-3">
+        <h3 class="mb-0"><?php echo $words->get('MyRelations'); ?>
             <?php if ($showEditLinks): ?>
                 <span class="float-right">
-                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!specialrelations" class="btn btn-sm btn-primary p-0"><?php echo $words->get('Edit'); ?></a>
+                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!specialrelations" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
                 </span>
             <?php endif; ?>
         </h3>
-        <div class="card-block p-2">
-            <div class="card-text m-0">
+        <div class="p-2">
                 <?php   if ($this->model->getLoggedInMember()){ ?>
 
                         <?php
@@ -258,11 +129,9 @@ if (count($relations) > 0) { ?>
                                 </div>
                             </div>
                         <?php } ?>
-                    </div>
                 <?php } else {
                     echo $this->getLoginLink('/members/' . $member->Username,'ProfileShowRelations');
                 }?>
-
             </div>
         </div>
 
@@ -277,21 +146,22 @@ $gallery = new GalleryModel;
 $statement = $userid ? $gallery->getLatestItems($userid) : false;
 if ($statement) {
 ?>
-    <div id="gallery" class="card mb-3">
-    <h3 class="card-header"><?php echo $words->get('GalleryTitleLatest'); ?>
+    <div id="gallery" class="mb-3">
+    <h3 class="mb-0"><?php echo $words->get('GalleryTitleLatest'); ?>
         <?php if ($showEditLinks): ?>
             <span class="float-right">
-                    <a href="/gallery/manage" class="btn btn-sm btn-primary p-0"><?php echo $words->get('Edit'); ?></a>
+                    <a href="/gallery/manage" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
                 </span>
         <?php endif; ?>
     </h3>
-    <div class="card-block p-2">
+
+    <div class="w-100">
 
     <?php
     // if the gallery is NOT empty, go show it
     $p = PFunctions::paginate($statement, 1, $itemsPerPage = 8);
     $statement = $p[0];
-          echo '<div class="w-100">';
+
     foreach ($statement as $d) {
         echo '<a href="gallery/show/image/'.$d->id.'">' .
            '<img src="gallery/thumbimg?id='.$d->id.'"' .
@@ -299,12 +169,9 @@ if ($statement) {
                ' style="height: 50px; width: 50px;"/>' .
            '</a>';
     }
-    echo '</div>';
     ?>
-    <p class="float-right">
-      <a href="gallery/show/user/<?php echo $member->Username;?>/images" title="<?php echo $words->getSilent('GalleryTitleLatest');?>">
+      <a class="btn btn-sm btn-block btn-outline-primary" href="gallery/show/user/<?php echo $member->Username;?>/images" title="<?php echo $words->getSilent('GalleryTitleLatest');?>">
           <?php echo $words->get('GalleryShowAll');?></a>
-    </p>
     </div>
     <?php echo $words->flushBuffer();
 }

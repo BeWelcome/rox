@@ -265,3 +265,37 @@ a.grouplist:hover {
 	height: 22rem;
 	z-index: -1;
 }
+
+.langcheck{
+	position: relative;
+	text-shadow: 0 0 1px #000;
+}
+
+.langcol1{
+	color: rgb(255, 51, 0);
+}
+
+.langcol2{
+	color: rgb(255, 153, 51);
+	left: -0.7rem;
+}
+
+.langcol3{
+	color: rgb(255, 204, 0);
+	left: -1.4rem;
+}
+
+.langcol4{
+	color: rgb(204, 204, 0);
+	left: -2.1rem;
+}
+
+.langcol5{
+	color: rgb(153, 255, 51);
+	left: -2.8rem;
+}
+
+.langcol6{
+	color: rgb(0, 255, 0);
+	left: -3.5rem;
+}

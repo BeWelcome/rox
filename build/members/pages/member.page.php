@@ -161,12 +161,12 @@ class MemberPage extends PageWithActiveSkin
     protected function columnsArea($mid_column_name)
     {
         ?>
-        <div class="row p-3">
-          <div class="col-12 col-lg-3 menu-divider">
+        <div class="row">
+          <div class="col-6 col-sm-5 col-lg-3 pr-sm-1 p-lg-3 menu-divider">
               <? $name = 'column_col1';?>
               <?php $this->$name() ?>
           </div> 
-          <div class="col-12 col-lg-9">
+          <div class="col-6 col-sm-7 col-lg-9 pl-sm-1 p-lg-3">
               <?php $this->teaserReplacement(); ?>
               <? $name = 'column_col3';?>
                 <?php $this->$name() ?>

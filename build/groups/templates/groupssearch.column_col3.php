@@ -99,15 +99,15 @@
                     </h4>
                     <!-- group details -->
                     <ul class="groupul mt-1">
-                        <li><i class="fa fa-group"
-                               title="Number of group members"></i> <?= $group_data->getMemberCount(); ?></li>
-                        <li><?= $words->get('GroupsDateCreation'); ?>
-                            : <?= date('d F Y', ServerToLocalDateTime(strtotime($group_data->created), $this->getSession())); ?></li>
+                        <li><i class="fa fa-group mr-1"
+                               title="Number of group members"></i><?= $group_data->getMemberCount(); ?></li>
+                        <li><i class="fa fa-history mr-1" title="<?= $words->get('GroupsDateCreation'); ?>"></i>
+                            <?= date('d F Y', ServerToLocalDateTime(strtotime($group_data->created), $this->getSession())); ?></li>
                         <?php if ($group_data !== 0) { ?>
                             <li><?php
                                 if ($group_data->latestPost) {
                                     $interval = date_diff(date_create(date('d F Y')), date_create(date('d F Y', ServerToLocalDateTime($group_data->latestPost, $this->getSession()))));
-                                    echo $words->get('GroupsLastPost') . ": " . $interval->format('%a') . " " . $words->get('days_ago');
+                                    echo '<i class="fa fa-address-card mr-1" title="' . $words->get('GroupsLastPost') . '"></i>' . $interval->format('%a') . ' ' . $words->get('days_ago');
 
                                 } else {
                                     echo $words->get('GroupsNoPostYet');

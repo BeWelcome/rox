@@ -86,7 +86,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     <?= $words->get('ProfilePicture') ?>
                 </div>
 
-                <div class="col-9 mt-3">
+                <div class="col-9 mt-3 h5">
                     <input id="profile_picture" name="profile_picture" class="btn btn-outline-primary" type="file"/>
                     <label for="profile_picture" class="alert-primary mb-0"><?= $words->get('uploadselectpicture'); ?></label><br/>
                     <span class="small"><?= $words->get('Profile_UploadWarning', sprintf("%.1f MB", PFunctions::returnBytes(ini_get('upload_max_filesize')) / 1048576)); ?></span>
@@ -98,7 +98,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 <div class="col-3 h5">
                     <?= $words->get('FirstName') ?>
                 </div>
-                <div class="col-9">
+                <div class="col-9 h5">
                     <input class="<?php if (isset($errorFirstName)) { ?>error-input-text<?php } ?>" type="text"
                            name="FirstName"
                            value="<?php echo htmlentities($vars['FirstName'], ENT_COMPAT, 'UTF-8'); ?>"/>
@@ -118,7 +118,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 <div class="col-3 h5">
                     <?= $words->get('SecondName') ?>
                 </div>
-                <div class="col-9">
+                <div class="col-9 h5">
                     <input type="text" name="SecondName"
                            value="<?php echo htmlentities($vars['SecondName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     <input type="checkbox" value="Yes" name="IsHidden_SecondName"
@@ -131,7 +131,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 <div class="col-3 h5">
                     <?= $words->get('LastName') ?>
                 </div>
-                <div class="col-9">
+                <div class="col-9 h5">
                     <input class="<?php if (isset($errorLastName)) { ?>error-input-text<?php } ?>" type="text"
                            name="LastName"
                            value="<?php echo htmlentities($vars['LastName'], ENT_COMPAT, 'UTF-8'); ?>"/>
@@ -150,7 +150,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 <div class="col-3 h5">
                     <?= $words->get('SignupEmail') ?>
                 </div>
-                <div class="col-9">
+                <div class="col-9 h5">
                     <input class="<?php if (isset($errorEmail)) { ?>error-input-text<?php } ?>" type="text"
                            size="25"
                            name="Email" value="<?= str_replace('%40', '@', $vars['Email']) ?>"/>
@@ -167,7 +167,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 <div class="col-3 mt-2 h5">
                     <?= $words->get('SignupBirthDate') ?><br>
                 </div>
-                <div class="col-4 mt-4">
+                <div class="col-4 mt-4 h6">
                     <select id="BirthYear" name="BirthYear">
                         <option value="0"><?php echo $words->getSilent('SignupBirthYear'); ?></option>
                         <?php echo $birthYearOptions; ?>
@@ -260,12 +260,12 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
         <div class="tab-pane fade card" id="aboutme" role="tabpanel" aria-labelledby="aboutme-tab">
             <div class="row p-3">
                 <div class="col-2 h5"><?= $words->get('ProfileOccupation') ?></div>
-                <div class="col-10"><input class="w-100" name="Occupation"
+                <div class="col-10 h5"><input class="w-100" name="Occupation"
                                           value="<?php echo htmlentities($vars['Occupation'], ENT_COMPAT, 'UTF-8'); ?>"/>
                 </div>
 
                 <div class="col-2 h5"><?= $words->get('ProfileSummary') ?></div>
-                <div class="col-10"><textarea name="ProfileSummary" id="ProfileSummary" class="w-100"
+                <div class="col-10 h5"><textarea name="ProfileSummary" id="ProfileSummary" class="w-100"
                                              rows="6"><?php echo htmlentities($vars['ProfileSummary'], ENT_COMPAT, 'UTF-8'); ?></textarea>
                 </div>
 
@@ -306,7 +306,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 <div class="col-4 mt-3 h5">
                     <?= $words->get('ProfileMaxLenghtOfStay') ?>
                 </div>
-                <div class="col-8 mt-3">
+                <div class="col-8 mt-3 h5">
 <textarea name="MaxLenghtOfStay" class="w-100"
           rows="2"><?= $vars['MaxLenghtOfStay'] ?></textarea>
                 </div>
@@ -314,14 +314,14 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 <div class="col-4 mt-3 h5">
                     <?= $words->get('ProfileILiveWith') ?>
                 </div>
-                <div class="col-8 mt-3">
+                <div class="col-8 mt-3 h5">
                     <textarea name="ILiveWith" class="w-100" rows="2"><?= $vars['ILiveWith'] ?></textarea>
                 </div>
 
                 <div class="col-4 mt-3 h5">
                     <?= $words->get('ProfilePleaseBring') ?>
                 </div>
-                <div class="col-8 mt-3">
+                <div class="col-8 mt-3 h5">
                         <textarea name="PleaseBring" class="w-100"
                                   rows="2"><?= $vars['PleaseBring'] ?></textarea>
                 </div>
@@ -329,7 +329,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 <div class="col-4 mt-3 h5">
                     <?= $words->get('ProfileOfferGuests') ?>
                 </div>
-                <div class="col-8 mt-3">
+                <div class="col-8 mt-3 h5">
                         <textarea name="OfferGuests" class="w-100"
                                   rows="2"><?= $vars['OfferGuests'] ?></textarea>
                 </div>
@@ -337,7 +337,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 <div class="col-4 mt-3 h5">
                     <?= $words->get('ProfileOfferHosts') ?>
                 </div>
-                <div class="col-8 mt-3">
+                <div class="col-8 mt-3 h5">
                         <textarea name="OfferHosts" class="w-100"
                                   rows="2"><?= $vars['OfferHosts'] ?></textarea>
                 </div>
@@ -360,7 +360,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 <div class="col-4 mt-3 h5">
                     <?= $words->get('ProfilePublicTransport') ?>
                 </div>
-                <div class="col-8 mt-3">
+                <div class="col-8 mt-3 h5">
 <textarea name="PublicTransport" class="w-100"
           rows="2"><?= $vars['PublicTransport'] ?></textarea>
                 </div>
@@ -391,7 +391,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 <div class="col-4 mt-3 h5">
                     <?= $words->get('ProfileAdditionalAccomodationInfo') ?>
                 </div>
-                <div class="col-8 mt-3">
+                <div class="col-8 mt-3 h5">
 <textarea name="AdditionalAccomodationInfo" class="w-100"
           rows="2"><?= $vars['AdditionalAccomodationInfo'] ?></textarea>
                 </div>
@@ -402,21 +402,21 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 <div class="col-3 mt-3 h5">
                     <?= $words->get('ProfileHobbies') ?>
                 </div>
-                <div class="col-9 mt-3">
+                <div class="col-9 mt-3 h5">
                     <textarea name="Hobbies" class="w-100" rows="4"><?= $vars['Hobbies'] ?></textarea>
                 </div>
 
                 <div class="col-3 mt-3 h5">
                     <?= $words->get('ProfileBooks') ?>
                 </div>
-                <div class="col-9 mt-3">
+                <div class="col-9 mt-3 h5">
                     <textarea name="Books" class="w-100" rows="4"><?= $vars['Books'] ?></textarea>
                 </div>
 
                 <div class="col-3 mt-3 h5">
                     <?= $words->get('ProfileMusic') ?>
                 </div>
-                <div class="col-9 mt-3">
+                <div class="col-9 mt-3 h5">
                     <textarea name="Music" class="w-100" rows="4"><?= $vars['Music'] ?></textarea>
                 </div>
 
@@ -529,7 +529,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     <div class="col-3 h5">
                         <?= $words->get('Street') ?>
                     </div>
-                    <div class="col-9">
+                    <div class="col-9 h5">
                         <input class="<?php if (isset($errorStreet)) { ?>error-input-text<?php } ?>" type="text"
                                name="Street"
                                id="Street"
@@ -547,7 +547,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     <div class="col-3 h5">
                         <?= $words->get('HouseNumber') ?>
                     </div>
-                    <div class="col-9">
+                    <div class="col-9 h5">
                         <input class="short<?php if (isset($errorHouseNumber)) { ?> error-input-text<?php } ?>"
                                type="text"
                                name="HouseNumber" id="HouseNumber"
@@ -562,7 +562,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     <div class="col-3 h5">
                         <?= $words->get('Post code') ?>
                     </div>
-                    <div class="col-9">
+                    <div class="col-9 h5">
                         <input class="short <?php if (isset($errorZip)) { ?> error-input-text<?php } ?>" type="text"
                                name="Zip"
                                value="<?php echo htmlentities($vars['Zip'], ENT_COMPAT, 'UTF-8'); ?>" size="6"/>
@@ -582,7 +582,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     <div class="col-3 h5">
                         <?= $words->get('ProfileHomePhoneNumber') ?>
                     </div>
-                    <div class="col-9">
+                    <div class="col-9 h5">
                         <input type="text" size="15" name="HomePhoneNumber"
                                value="<?php echo htmlentities($vars['HomePhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>"/>
                         <input type="checkbox" value="Yes" name="IsHidden_HomePhoneNumber"
@@ -595,7 +595,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     <div class="col-3 h5">
                         <?= $words->get('ProfileCellPhoneNumber') ?>
                     </div>
-                    <div class="col-9">
+                    <div class="col-9 h5">
                         <input type="text" size="15" name="CellPhoneNumber"
                                value="<?php echo htmlentities($vars['CellPhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>"/>
                         <input type="checkbox" value="Yes" name="IsHidden_CellPhoneNumber"
@@ -608,7 +608,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     <div class="col-3 h5">
                         <?= $words->get('ProfileWorkPhoneNumber') ?>
                     </div>
-                    <div class="col-9">
+                    <div class="col-9 h5">
                         <input type="text" size="15" name="WorkPhoneNumber"
                                value="<?php echo htmlentities($vars['WorkPhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>"/>
                         <input type="checkbox" value="Yes" name="IsHidden_WorkPhoneNumber"
@@ -624,7 +624,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     <div class="col-3 h5">
                         <?= $words->get('Website') ?>
                     </div>
-                    <div class="col-9">
+                    <div class="col-9 h5">
                         <input type="text" class="w-100" name="WebSite"
                                value="<?php echo htmlentities($vars['WebSite'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
@@ -643,7 +643,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                                 <i class="fa fa-<?= $me["image"]; ?> pr-2" alt="<?= $me["image"]; ?>" title="<?= $me["image"]; ?>"></i>
                                 <?= $me["network"] ?>
                             </div>
-                            <div class="col-9">
+                            <div class="col-9 h5">
                                 <input type="text" size="15" name="<?= $val ?>"
                                        value="<?php echo htmlentities($me["address"], ENT_COMPAT, 'UTF-8'); ?>"/>
                             </div>
@@ -659,14 +659,14 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 <div class="col-3 h5">
                     <?= $words->get('ProfilePastTrips') ?>
                 </div>
-                <div class="col-9">
+                <div class="col-9 h5">
                     <textarea name="PastTrips" class="w-100" rows="3"><?= $vars['PastTrips'] ?></textarea>
                 </div>
 
                 <div class="col-3 h5">
                     <?= $words->get('ProfilePlannedTrips') ?>
                 </div>
-                <div class="col-9">
+                <div class="col-9 h5">
                         <textarea name="PlannedTrips" class="w-100"
                                   rows="3"><?= $vars['PlannedTrips'] ?></textarea>
                 </div>
@@ -697,7 +697,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                         ?>
                 "><a href="members/<?= $Relation->Username ?>"><?= $Relation->Username ?></a></span>
                     </div>
-                    <div class="col-6">
+                    <div class="col-6 h5">
                             <textarea cols="40" rows="2"
                                       name="RelationComment_<?= $Relation->id ?>"><?= $comment ?></textarea>
                     </div>

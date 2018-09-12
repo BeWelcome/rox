@@ -40,6 +40,9 @@
                         {% set currentDeparture = message.Request.Departure %}
                      {% endif %}
                 {% endif %}
+                {% if not own %}
+                <a class="btn btn-sm btn-primary" href="{{ path('message_reply', { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a>
+                {% endif %}
             </div>
         </div>
     {% endfor %}

@@ -220,7 +220,8 @@ if (empty($vars)) {
                     <div class="d-flex mr-2">
                         <div class="mr-2"><a href="members/<?php $organizer->Username; ?>"><img
                                         src="members/avatar/<?php echo $organizer->Username; ?>?size=50"></a></div>
-                        <div><a href="members/<?php echo $organizer->Username; ?>"><?php echo $organizer->Username; ?></a></div>
+                        <div><a href="members/<?php echo $organizer->Username; ?>"><?php echo $organizer->Username; ?></a><br>
+                            <a href="new/message/member-16526"><i class="fa fa-envelope" title="Write organiser"></i></a></div>
                     </div>
                 <? } ?>
             </div>

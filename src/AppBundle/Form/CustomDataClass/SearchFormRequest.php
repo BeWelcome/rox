@@ -4,7 +4,11 @@ namespace AppBundle\Form\CustomDataClass;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-
+/**
+ * Class SearchFormRequest
+ * @package AppBundle\Form\CustomDataClass
+ * @SuppressWarnings(PHPMD)
+ */
 class SearchFormRequest
 {
     /**

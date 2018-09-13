@@ -22,8 +22,6 @@ class SearchFormType extends AbstractType
      * @param FormBuilderInterface $formBuilder
      * @param array $options
      *
-     * @return FormInterface
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function buildForm(FormBuilderInterface $formBuilder, array $options)

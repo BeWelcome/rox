@@ -23,34 +23,34 @@
                 <div class="input-group mx-2">
                     <div class="input-group-prepend"><span class="input-group-text"><i
                                     class="fa fa-lg fa-globe"></i></span>
-                        {{ form_widget(form.search, {'attr': {'class': 'search-picker form-control'}, 'required': false }) }}
+                        {{ form_widget(form.location, {'attr': {'class': 'search-picker form-control'}, 'required': false }) }}
                     </div>
                 </div>
                 <div class="form-group my-3 mx-2">
                     <div class="hostcheckimg"><img src="{{ asset('images/icons/anytime.png') }}"
                                                    alt="{{ 'I like to host' | trans }}"/>
-                        <div class="hostcheckbox">{{ form_widget(form.search_accommodation_anytime) }}</div>
+                        <div class="hostcheckbox">{{ form_widget(form.accommodation_anytime) }}</div>
                     </div>
                     <div class="hostcheckimg"><img src="{{ asset('images/icons/dependonrequest.png') }}"
                                                    alt="{{ 'I might host you' | trans }}"/>
                         <div class="hostcheckbox">
-                            {{ form_widget(form.search_accommodation_dependonrequest) }}</div>
+                            {{ form_widget(form.accommodation_dependonrequest) }}</div>
                     </div>
                     <div class="hostcheckimg"><img src="{{ asset('images/icons/neverask.png') }}"
                                                    alt="{{ 'I can\'t host' | trans }}"/>
                         <div class="hostcheckbox">
-                            {{ form_widget(form.search_accommodation_neverask) }}</div>
+                            {{ form_widget(form.accommodation_neverask) }}</div>
                     </div>
                 </div>
                 <div id="mapsearchoptions" class="form-group mx-2">
                     <i class="fa fa-lg fa-bed mr-2" alt="hosts at least"></i>
-                    {{ form_label(form.search_can_host) }}
-                    {{ form_widget(form.search_can_host, {'attr': {'class' : 'form-control select2',
+                    {{ form_label(form.can_host) }}
+                    {{ form_widget(form.can_host, {'attr': {'class' : 'form-control select2',
                         'data-minimum-results-for-search': '-1'} }) }}
                 </div>
                 <div class="form-group mx-2">
-                    {{ form_label(form.search_distance) }}
-                    {{ form_widget(form.search_distance, {'attr': {'class' : 'form-control select2',
+                    {{ form_label(form.distance) }}
+                    {{ form_widget(form.distance, {'attr': {'class' : 'form-control select2',
                         'data-minimum-results-for-search': '-1'} }) }}
                 </div>
                 {{ form_rest(form) }}

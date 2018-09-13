@@ -47,12 +47,13 @@ class ActivityRepository extends EntityRepository
      * Get all activities around a given location.
      *
      * @param Location $location
-     * @param int      $limit
-     * @param int      $distance
+     * @param int $limit
+     * @param int $distance
      *
      * @return array
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
+     * @throws \Exception
      */
     public function findUpcomingAroundLocation(Location $location, $limit = 5, $distance = 20)
     {

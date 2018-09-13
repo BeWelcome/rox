@@ -3,6 +3,12 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Member;
+use AppBundle\Form\CustomDataClass\SearchFormRequest;
+use AppBundle\Form\CustomDataClass\SearchHomeLocationRequest;
+use AppBundle\Form\CustomDataClass\WhereDoYouWantToGoRequest;
+use AppBundle\Form\MinimalSearchFormType;
+use AppBundle\Form\SearchFormBaseType;
+use AppBundle\Form\SearchFormType;
 use AppBundle\Form\SearchGotoLocationFormType;
 use AppBundle\Form\SearchHomeLocationFormType;
 use AppBundle\Model\CommunityNewsModel;
@@ -91,7 +97,7 @@ class LandingController extends Controller
     {
         $member = $this->getUser();
         $homeModel = new LandingModel($this->getDoctrine());
-        $activities = $homeModel->getActivities($member, 4);
+        $activities = $homeModel->getActivities($member);
 
         $content = $this->render(':landing:widget/activities.html.twig', [
             'activities' => $activities,
@@ -170,11 +176,11 @@ class LandingController extends Controller
         $latestNews = $communityNews->getLatest();
 
         // Prepare search form for home location link
-        $data = $this->getSearchHomeLocationData($member);
-        $searchHomeLocation = $this->createForm(SearchHomeLocationFormType::class, $data);
+        $searchHomeLocationRequest = $this->getSearchHomeLocationRequest($member);
+        $searchHomeLocation = $this->createForm(SearchFormType::class, $searchHomeLocationRequest);
 
         // Prepare small search form
-        $searchGotoLocation = $this->createForm(SearchGotoLocationFormType::class);
+        $searchGotoLocation = $this->createForm(SearchFormType::class, new WhereDoYouWantToGoRequest());
 
         $content = $this->render(':landing:landing.html.twig', [
                 'title' => 'BeWelcome',
@@ -195,16 +201,17 @@ class LandingController extends Controller
     /**
      * @param Member $member
      *
-     * @return array
+     * @return SearchHomeLocationRequest
      */
-    private function getSearchHomeLocationData(Member $member)
+    private function getSearchHomeLocationRequest(Member $member)
     {
+        $searchHomeRequest = new SearchHomeLocationRequest();
         $geo = $member->getCity();
-        $data['search_geoname_id'] = $geo->getGeonameid();
-        $data['search'] = $geo->getName();
-        $data['search_latitude'] = $member->getLatitude();
-        $data['search_longitude'] = $member->getLongitude();
+        $searchHomeRequest->geoname_id = $geo->getGeonameid();
+        $searchHomeRequest->location = $geo->getName();
+        $searchHomeRequest->latitude = $member->getLatitude();
+        $searchHomeRequest->longitude = $member->getLongitude();
 
-        return $data;
+        return $searchHomeRequest;
     }
 }

@@ -2,8 +2,10 @@
 
 namespace AppBundle\Model;
 
+use AppBundle\Entity\Activity;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
+use AppBundle\Repository\ActivityRepository;
 use Doctrine\ORM\Query;
 use Exception;
 
@@ -154,7 +156,8 @@ class LandingModel extends BaseModel
      */
     public function getActivities(Member $member)
     {
-        $repository = $this->em->getRepository('AppBundle:Activity');
+        /** @var ActivityRepository $repository */
+        $repository = $this->em->getRepository(Activity::class);
         $activities = $repository->findUpcomingAroundLocation($member->getCity());
 
         return $activities;

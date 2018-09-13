@@ -25,8 +25,8 @@ class SearchController extends Controller
         $results = false;
         // Check if request contains a standard search form or one of the specialized search form
         // if the latter turn them into a standard form (add missing default fields).
-        if ($request->request->has('search_home_location_form')) {
-            $request = $this->updateRequestSearchFormData($request, 'search_home_location_form');
+        if ($request->request->has('search_form_base')) {
+            $request = $this->updateRequestSearchFormData($request, 'search_form_base');
         }
         if ($request->request->has('search_goto_location_form')) {
             $request = $this->updateRequestSearchFormData($request, 'search_goto_location_form');
@@ -99,7 +99,8 @@ class SearchController extends Controller
         $data['search_accommodation_neverask'] = true;
         $data['search_can_host'] = 1;
         $data['search_distance'] = 5;
-
+        // Overwrite the CSRF token with the one for the general search form
+        $data['_token'] = $this->get('security.csrf.token_manager')->getToken('search_form')->getValue();
         $request->request->remove($formName);
         $request->request->add(['search_form' => $data]);
 

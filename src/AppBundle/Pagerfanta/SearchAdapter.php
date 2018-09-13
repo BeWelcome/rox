@@ -112,26 +112,26 @@ class SearchAdapter implements AdapterInterface
     private function prepareModelData($data)
     {
         $vars = [];
-        $vars['search-location'] = $data['search'];
-        $vars['location-geoname-id'] = $data['search_geoname_id'];
-        $vars['location-latitude'] = $data['search_latitude'];
-        $vars['location-longitude'] = $data['search_longitude'];
+        $vars['search-location'] = $data['location'];
+        $vars['location-geoname-id'] = $data['geoname_id'];
+        $vars['location-latitude'] = $data['latitude'];
+        $vars['location-longitude'] = $data['longitude'];
         $vars['search-accommodation'] = [];
 
-        if (isset($data['search_accommodation_anytime']) && ($data['search_accommodation_anytime'])) {
+        if (isset($data['accommodation_anytime']) && ($data['accommodation_anytime'])) {
             $vars['search-accommodation'][] = 'anytime';
         }
 
-        if (isset($data['search_accommodation_dependonrequest']) && ($data['search_accommodation_dependonrequest'])) {
+        if (isset($data['accommodation_dependonrequest']) && ($data['accommodation_dependonrequest'])) {
             $vars['search-accommodation'][] = 'dependonrequest';
         }
 
-        if (isset($data['search_accommodation_neverask']) && ($data['search_accommodation_neverask'])) {
+        if (isset($data['accommodation_neverask']) && ($data['accommodation_neverask'])) {
             $vars['search-accommodation'][] = 'neverask';
         }
 
-        $vars['search-distance'] = $data['search_distance'];
-        $vars['search-can-host'] = $data['search_can_host'];
+        $vars['search-distance'] = $data['distance'];
+        $vars['search-can-host'] = $data['can_host'];
         $vars['search-number-items'] = 10;
         $vars['search-sort-order'] = 6;
 

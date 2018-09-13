@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: raymund
- * Date: 26.05.2018
- * Time: 17:27.
- */
 
 namespace AppBundle\Form\CustomDataClass;
 

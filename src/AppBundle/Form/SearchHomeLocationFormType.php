@@ -8,7 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SearchHomeLocationFormType extends AbstractType
+class SearchHomeLocationFormType extends MinimalSearchFormType
 {
     /**
      * @param FormBuilderInterface $formBuilder
@@ -18,34 +18,9 @@ class SearchHomeLocationFormType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $formBuilder, array $options)
     {
-        $formBuilder->setAction('search/members');
-        $this->addButtons($formBuilder);
-        $this->addHiddenFields($formBuilder);
-    }
-
-    /**
-     * @param OptionsResolver $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-
-        $resolver->setRequired('type');
-        $resolver->setDefault('type', 'standard');
-    }
-
-    private function addHiddenFields(FormBuilderInterface $formBuilder)
-    {
+        parent::buildForm($formBuilder, $options);
         $formBuilder
-            ->add('search', HiddenType::class)
-            ->add('search_geoname_id', HiddenType::class)
-            ->add('search_latitude', HiddenType::class)
-            ->add('search_longitude', HiddenType::class)
-        ;
-    }
+            ->add('search', HiddenType::class);
 
-    private function addButtons(FormBuilderInterface $formBuilder)
-    {
-        $formBuilder->add('update_map', SubmitType::class);
     }
 }

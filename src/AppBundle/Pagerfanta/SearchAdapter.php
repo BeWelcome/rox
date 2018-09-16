@@ -3,6 +3,7 @@
 namespace AppBundle\Pagerfanta;
 
 use AppBundle\Entity\Member;
+use AppBundle\Form\CustomDataClass\SearchFormRequest;
 use EnvironmentExplorer;
 use Pagerfanta\Adapter\AdapterInterface;
 use Rox\Framework\SessionSingleton;
@@ -21,7 +22,7 @@ class SearchAdapter implements AdapterInterface
      * SearchAdapter constructor.
      *
      * @param ContainerInterface $container Needed for the time being to allow to use the old search model
-     * @param array              $data      The query parameters for the search
+     * @param SearchFormRequest  $data      The query parameters for the search
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
@@ -105,35 +106,58 @@ class SearchAdapter implements AdapterInterface
     }
 
     /**
-     * @param array $data
+     * @param SearchFormRequest $data
      *
      * @return array|string
      */
     private function prepareModelData($data)
     {
         $vars = [];
-        $vars['search-location'] = $data['location'];
-        $vars['location-geoname-id'] = $data['geoname_id'];
-        $vars['location-latitude'] = $data['latitude'];
-        $vars['location-longitude'] = $data['longitude'];
+        $vars['search-location'] = $data->location;
+        $vars['location-geoname-id'] = $data->location_geoname_id;
+        $vars['location-latitude'] = $data->location_latitude;
+        $vars['location-longitude'] = $data->location_longitude;
         $vars['search-accommodation'] = [];
 
-        if (isset($data['accommodation_anytime']) && ($data['accommodation_anytime'])) {
+        if ($data->accommodation_anytime) {
             $vars['search-accommodation'][] = 'anytime';
         }
 
-        if (isset($data['accommodation_dependonrequest']) && ($data['accommodation_dependonrequest'])) {
+        if ($data->accommodation_dependonrequest) {
             $vars['search-accommodation'][] = 'dependonrequest';
         }
 
-        if (isset($data['accommodation_neverask']) && ($data['accommodation_neverask'])) {
+        if ($data->accommodation_neverask) {
             $vars['search-accommodation'][] = 'neverask';
         }
 
-        $vars['search-distance'] = $data['distance'];
-        $vars['search-can-host'] = $data['can_host'];
-        $vars['search-number-items'] = 10;
+        if ($data->offerdinner) {
+            $vars['search-typical-offers'][] = 'dinner';
+        }
+
+        if ($data->offertour) {
+            $vars['search-typical-offers'][] = 'guidedtour';
+        }
+
+        if ($data->accessible) {
+            $vars['search-typical-offers'][] = 'CanHostWeelChair';
+        }
+
+        $vars['search-distance'] = $data->distance;
+        $vars['search-can-host'] = $data->can_host;
+        $vars['search-gender'] = $data->gender;
+        $vars['search-age-minimum'] = $data->min_age;
+        $vars['search-age-maximum'] = $data->max_age;
+        $vars['search-groups'] = $data->groups;
+        $vars['search-languages'] = $data->languages;
+        $vars['search-text'] = $data->keywords;
+        $vars['search-number-items'] = 20;
         $vars['search-sort-order'] = 6;
+        if ($data->inactive) {
+            $vars['search-membership'] = 1;
+        }
+        $vars['search-sort-order'] = $data->order;
+        $vars['search-number-items'] = $data->items;
 
         return $vars;
     }

@@ -53,15 +53,12 @@
                     {{ form_widget(form.distance, {'attr': {'class' : 'form-control select2',
                         'data-minimum-results-for-search': '-1'} }) }}
                 </div>
-                {{ form_rest(form) }}
                 {{ form_widget(form.update_map) }}
             </div>
 
-            <div class="collapse w-100" id="advancedNav">
+            <div class=" w-100" id="advancedNav">
                 <div class="d-flex flex-wrap justify-content-between w-100">
-                    <div>Advanced</div>
-                    <div>Advanced</div>
-                    <div>Advanced</div>
+                    {{ form_rest(form) }}
                     {# {{ form_widget(form.advanced_options) }} #}
                 </div>
             </div>

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Form\CustomDataClass\SearchFormRequest;
 use AppBundle\Form\SearchFormType;
 use AppBundle\Pagerfanta\SearchAdapter;
 use Pagerfanta\Pagerfanta;
@@ -23,6 +24,8 @@ class SearchController extends Controller
     {
         $pager = false;
         $results = false;
+        $member = $this->getUser();
+
         // Check if request contains a standard search form or one of the specialized search form
         // if the latter turn them into a standard form (add missing default fields).
         if ($request->request->has('search_form_base')) {
@@ -32,19 +35,21 @@ class SearchController extends Controller
             $request = $this->updateRequestSearchFormData($request, 'search_goto_location_form');
         }
 
-        $form = $this->createForm(SearchFormType::class);
+        $searchFormRequest = new SearchFormRequest();
+        $form = $this->createForm(SearchFormType::class, $searchFormRequest, [
+            'groups' => $member->getGroups(),
+            'languages' => $member->getLanguages(),
+        ]);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $page = $request->query->get('page', 1);
-            if ('' === $page) {
-                $page = 1;
-            }
-            $searchAdapter = new SearchAdapter($this->get('service_container'), $form->getData());
+            $data = $form->getData();
+            $searchAdapter = new SearchAdapter($this->get('service_container'), $data);
             $results = $searchAdapter->getMapResults();
             $pager = new Pagerfanta($searchAdapter);
-            $pager->setCurrentPage($page);
+            $pager->setMaxPerPage($data->items);
+            $pager->setCurrentPage($data->page);
         }
 
         return $this->render(':search:searchmembers.html.twig', [
@@ -62,6 +67,8 @@ class SearchController extends Controller
      * @param Request $request
      *
      * @return Response
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function searchGetPageResultsAjax(Request $request)
     {
@@ -71,12 +78,12 @@ class SearchController extends Controller
             return $this->redirectToRoute('search_members', $request->query->all());
         }
 
-        $page = $request->query->get('page', 1);
-        $form = $this->createForm(SearchFormType::class, $request->query->all(), ['csrf_protection' => false]);
+        $searchFormRequest = SearchFormRequest::fromRequest($request);
 
-        $searchAdapter = new SearchAdapter($this->get('service_container'), $form->getData());
+        $searchAdapter = new SearchAdapter($this->get('service_container'), $searchFormRequest);
         $pager = new Pagerfanta($searchAdapter);
-        $pager->setCurrentPage($page);
+        $pager->setMaxPerPage($searchFormRequest->items);
+        $pager->setCurrentPage($searchFormRequest->page);
 
         return $this->render(':member:results.html.twig', [
             'pager' => $pager,

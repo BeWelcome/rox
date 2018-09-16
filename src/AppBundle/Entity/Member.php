@@ -38,6 +38,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     const ACTIVE = 'Active';
     const CHOICE_INACTIVE = 'ChoiceInactive';
     const BANNED = 'Banned';
+    const SUSPENDED = 'SuspendedBeta';
     const AWAITING_MAIL_CONFIRMATION = 'MailToConfirm';
 
     const ACTIVE_ALL = "'Active', 'ActiveHidden', 'ChoiceInactive', 'OutOfRemind', 'Pending'";
@@ -632,6 +633,16 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      */
     private $groups;
 
+    /**
+     * @var arrayCollection
+     *
+     * One Member has many languages
+     * @ORM\ManyToMany(targetEntity="Language")
+     * @ORM\JoinTable(name="memberslanguageslevel",
+     *      joinColumns={@ORM\JoinColumn(name="IdMember", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="IdLanguage", referencedColumnName="id")}
+     *      )
+     */
     private $languages;
 
     private $comments;
@@ -2713,10 +2724,10 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
             $this->status,
             [
                 'TakenOut',
-                'SuspendedBeta',
+                self::SUSPENDED,
                 'AskToLeave',
                 'Buggy',
-                'Banned',
+                self::BANNED,
                 'Rejected',
                 'DuplicateSigned', ],
             true
@@ -2729,7 +2740,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
 
     public function isExpired()
     {
-        return ('SuspendedBeta' === $this->status) ? true : false;
+        return (self::SUSPENDED === $this->status) ? true : false;
     }
 
     public function isBanned()

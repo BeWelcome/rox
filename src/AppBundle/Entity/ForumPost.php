@@ -35,7 +35,7 @@ class ForumPost
      * @ORM\ManyToOne(targetEntity="ForumThread", inversedBy="posts")
      * @ORM\JoinColumn(name="threadid", referencedColumnName="id")
      */
-    private $threadId;
+    private $thread;
 
     /**
      * @var string
@@ -165,30 +165,6 @@ class ForumPost
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set threadid.
-     *
-     * @param int $threadId
-     *
-     * @return ForumPost
-     */
-    public function setThreadId($threadId)
-    {
-        $this->threadId = $threadId;
-
-        return $this;
-    }
-
-    /**
-     * Get threadid.
-     *
-     * @return int
-     */
-    public function getThreadId()
-    {
-        return $this->threadId;
     }
 
     /**

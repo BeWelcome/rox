@@ -2,11 +2,8 @@
 
 namespace AppBundle\Form;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SearchHomeLocationFormType extends MinimalSearchFormType
 {
@@ -21,6 +18,5 @@ class SearchHomeLocationFormType extends MinimalSearchFormType
         parent::buildForm($formBuilder, $options);
         $formBuilder
             ->add('search', HiddenType::class);
-
     }
 }

@@ -4,13 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Member;
 use AppBundle\Form\CustomDataClass\SearchFormRequest;
-use AppBundle\Form\CustomDataClass\SearchHomeLocationRequest;
-use AppBundle\Form\CustomDataClass\WhereDoYouWantToGoRequest;
-use AppBundle\Form\MinimalSearchFormType;
-use AppBundle\Form\SearchFormBaseType;
 use AppBundle\Form\SearchFormType;
-use AppBundle\Form\SearchGotoLocationFormType;
-use AppBundle\Form\SearchHomeLocationFormType;
 use AppBundle\Model\CommunityNewsModel;
 use AppBundle\Model\DonateModel;
 use AppBundle\Model\LandingModel;
@@ -180,7 +174,7 @@ class LandingController extends Controller
         $searchHomeLocation = $this->createForm(SearchFormType::class, $searchHomeLocationRequest);
 
         // Prepare small search form
-        $searchGotoLocation = $this->createForm(SearchFormType::class, new WhereDoYouWantToGoRequest());
+        $searchGotoLocation = $this->createForm(SearchFormType::class, new SearchFormRequest());
 
         $content = $this->render(':landing:landing.html.twig', [
                 'title' => 'BeWelcome',
@@ -201,16 +195,19 @@ class LandingController extends Controller
     /**
      * @param Member $member
      *
-     * @return SearchHomeLocationRequest
+     * @return SearchFormRequest
      */
     private function getSearchHomeLocationRequest(Member $member)
     {
-        $searchHomeRequest = new SearchHomeLocationRequest();
+        $searchHomeRequest = new SearchFormRequest();
         $geo = $member->getCity();
         $searchHomeRequest->geoname_id = $geo->getGeonameid();
         $searchHomeRequest->location = $geo->getName();
         $searchHomeRequest->latitude = $member->getLatitude();
         $searchHomeRequest->longitude = $member->getLongitude();
+        $searchHomeRequest->accommodation_anytime = true;
+        $searchHomeRequest->accommodation_dependonrequest = true;
+        $searchHomeRequest->accommodation_neverask = true;
 
         return $searchHomeRequest;
     }

@@ -24,11 +24,8 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
 
-<div class="row my-1">
-
-
-
-    <div class="col-12 col-md-6 col-lg-4">
+<div class="row mb-5">
+    <div class="col-12 col-md-6 col-lg-4 py-2">
         <div class="card">
             <a href="/forums" class="list-group-item list-group-item-action">
                 <h5 class="list-group-item-heading"><i class="fa fa-comments-o mr-1"></i><?php echo $words->get('CommunityDiscussions') ?></h5>
@@ -37,7 +34,7 @@ $words = new MOD_words();
         </div>
     </div>
 
-    <div class="col-12 col-md-6 col-lg-4">
+    <div class="col-12 col-md-6 col-lg-4 py-2">
         <div class="card">
             <a href="/groups/search" class="list-group-item list-group-item-action">
                 <h5 class="list-group-item-heading"><i class="fa fa-group mr-1"></i><?php echo $words->get('Groups') ?></h5>
@@ -46,7 +43,7 @@ $words = new MOD_words();
         </div>
     </div>
 
-    <div class="col-12 col-md-6 col-lg-4">
+    <div class="col-12 col-md-6 col-lg-4 py-2">
         <div class="card">
             <a href="/activities" class="list-group-item list-group-item-action">
                 <h5 class="list-group-item-heading"><i class="fa fa-calendar mr-1"></i><?php echo $words->get('Activities') ?></h5>

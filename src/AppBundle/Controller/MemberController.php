@@ -11,15 +11,22 @@ use AppBundle\Form\CustomDataClass\ReportCommentRequest;
 use AppBundle\Form\ReportCommentType;
 use AppBundle\Repository\MemberRepository;
 use AppBundle\Repository\MessageRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Html2Text\Html2Text;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class MemberController extends Controller
 {
@@ -40,7 +47,7 @@ class MemberController extends Controller
 
         /** @var MemberRepository $memberRepository */
         $memberRepository = $em->getRepository(Member::class);
-        $entities = $memberRepository->loadMembersByUsernamePart($term);
+            $entities = $memberRepository->loadMembersByUsernamePart($term);
 
         foreach ($entities as $entity) {
             $names[] = [
@@ -55,6 +62,139 @@ class MemberController extends Controller
         $response->setData($names);
 
         return $response;
+    }
+
+    /**
+     * @Route("/resetpassword", name="member_request_reset_password")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function requestResetPasswordAction(Request $request)
+    {
+        // Someone obviously lost their way. No sense in resetting your password if you're currently logged in.
+        if ($this->isGranted('ROLE_USER')) {
+            return $this->redirectToRoute('landingpage');
+        }
+
+        $form = $this->createFormBuilder()
+            ->add('usernameOrEmail', TextType::class, [
+                'constraints' => [
+                    new NotBlank()
+                ],
+            ])
+            ->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $member = null;
+            /** @var MemberRepository $memberRepository */
+            $memberRepository = $this->getDoctrine()->getRepository(Member::class);
+            try {
+                /** @var Member $member */
+                $member = $memberRepository->loadUserByUsername($data['usernameOrEmail']);
+            }
+            catch (NonUniqueResultException $e) {
+
+            }
+            if ($member === null) {
+                $form->addError( new FormError('No member with that username or email address.'));
+            } else {
+                /* Sent the member a link to follow to reset the password */
+                $sent = $this->sendPasswordResetLink($member, 'Password Reset for BeWelcome', $member->generatePasswordResetKey());
+                if ($sent) {
+                    $this->addFlash('notice', 'We just sent you a mail with a link that allows you to reset your password.');
+                    return $this->redirectToRoute('security_login');
+                } else {
+                    $form->addError( new FormError('There was an error sending the password reset link.'));
+                }
+            }
+        }
+        return $this->render(':member:request.password.reset.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/resetpassword/{username}/{key}", name="member_reset_password")
+     *
+     * @param Request $request
+     * @param Member $member
+     * @param $key
+     * @return Response
+     */
+    public function resetPasswordAction(Request $request, Member $member, $key)
+    {
+        // Someone obviously lost their way. No sense in resetting your password if you're currently logged in.
+        if ($this->isGranted('ROLE_USER')) {
+            return $this->redirectToRoute('landingpage');
+        }
+
+        $resetPasswordKey = $member->generatePasswordResetKey();
+        if ($resetPasswordKey !== $key) {
+            $this->addFlash('notice', 'Either username or key aren\'t valid to reset the password.');
+            return $this->redirectToRoute('login');
+        }
+
+        $form = $this->createFormBuilder()
+            ->add('password', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'invalid_message' => 'The password fields must match.',
+                'required' => true,
+                'first_options'  => ['label' => 'Password'],
+                'second_options' => ['label' => 'Repeat Password'],
+            ])
+            ->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $newPassword = $data['password'];
+            $member->setPassword($newPassword);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($member);
+            $em->flush();
+            $this->addFlash('notice', 'Your password has been reset. Please login now with the new password.');
+            return $this->redirectToRoute('security_login');
+        }
+
+        return $this->render(':member:reset.password.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    private function sendPasswordResetLink(Member $receiver, $subject, $key)
+    {
+        // Send mail notification
+        $html = $this->renderView('emails/reset.password.html.twig', [
+            'receiver' => $receiver,
+            'subject' => $subject,
+            'key' => $key,
+        ]);
+        $plainText = new Html2Text($html);
+        $message = new Swift_Message();
+        $message
+            ->setSubject($subject)
+            ->setFrom(
+                [
+                    'password@bewelcome.org' => 'BeWelcome',
+                ]
+            )
+            ->setTo($receiver->getEmail())
+            ->setBody(
+                $html,
+                'text/html'
+            )
+            ->addPart(
+                $plainText->getText(),
+                'text/plain'
+            )
+        ;
+        $recipients = $this->get('mailer')->send($message);
+
+        return (0 === $recipients) ? false : true;
     }
 
     /**

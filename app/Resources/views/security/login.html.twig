@@ -68,7 +68,8 @@
                     </div>
 
                     <p class="col-12 mt-3">
-                        {{ 'LoginformForgetPassword' | trans | format('<a href="">', '</a>') | raw }}
+                        {{ 'Forgot your password?' }}<br>
+                        <a href="{{ url('member_request_reset_password') }}">{{ 'Get a new one!' | trans }}</a>
                     </p>
                 </div>
             </form>

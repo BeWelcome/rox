@@ -1652,7 +1652,11 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      */
     public function setPassword($password)
     {
-        $this->password = password_hash($password, PASSWORD_DEFAULT, ['cost' => 12]);
+        $cost = 12;
+        if ($this->isPrivileged()) {
+            $cost = 13;
+        }
+        $this->password = password_hash($password, PASSWORD_DEFAULT, ['cost' => $cost]);
 
         return $this;
     }
@@ -2761,5 +2765,10 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     public function isNotConfirmedYet()
     {
         return (self::AWAITING_MAIL_CONFIRMATION === $this->status) ? true : false;
+    }
+
+    public function generatePasswordResetKey()
+    {
+        return hash('sha256', $this->getEmail() . ' - ' . $this->getUsername() . ' - ' . $this->getGender() );
     }
 }

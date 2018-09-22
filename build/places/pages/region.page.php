@@ -44,7 +44,7 @@ class RegionPage extends PageWithActiveSkin
         $formkit = $layoutkit->formkit;
         $words = $layoutkit->getWords();
         $countryName = htmlspecialchars($this->countryName);
-        return '<a href="/places/">' . $words->get('Countries'). '</a> &raquo; <a href="/places/' . $countryName . '/' . $this->countryCode . '">'
+        return '<a href="/places">' . $words->get('Countries'). '</a> &raquo; <a href="/places/' . $countryName . '/' . $this->countryCode . '">'
             . $countryName . '</a>' . ' &raquo; ' . htmlspecialchars($this->regionName);
     }
 
@@ -56,7 +56,6 @@ class RegionPage extends PageWithActiveSkin
 
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/places.css?2';
        return $stylesheets;
     }
 

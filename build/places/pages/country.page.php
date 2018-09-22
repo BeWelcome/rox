@@ -44,7 +44,7 @@ class CountryPage extends PageWithActiveSkin
         $formkit = $layoutkit->formkit;
         $words = $layoutkit->getWords();
         $countryName = htmlspecialchars($this->countryName);
-        return '<a href="/places/">' . $words->get('Countries'). '</a> &raquo; ' . $countryName;
+        return '<a href="/places">' . $words->get('Countries'). '</a> &raquo; ' . $countryName;
     }
 
     protected function getColumnNames()
@@ -53,8 +53,7 @@ class CountryPage extends PageWithActiveSkin
         return array('col3');
     }
     protected function getStylesheets() {
-       $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/places.css?2';
+        $stylesheets = parent::getStylesheets();
        return $stylesheets;
     }
     

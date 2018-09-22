@@ -45,7 +45,7 @@ class CityPage extends PageWithActiveSkin
         $words = $layoutkit->getWords();
         $countryName = htmlspecialchars($this->countryName);
         $regionName = htmlspecialchars($this->regionName);
-        return '<a href="/places/">' . $words->get('Countries'). '</a> &raquo; <a href="/places/' . $countryName. '/' . $this->countryCode . '/">'
+        return '<a href="/places">' . $words->get('Countries'). '</a> &raquo; <a href="/places/' . $countryName. '/' . $this->countryCode . '/">'
             . $countryName . '</a> &raquo; <a href="/places/' . $countryName. '/' . $this->countryCode . '/'
             . $regionName . '/' . $this->regionCode . '/">' . $regionName . '</a>'
             . ' &raquo; ' . htmlspecialchars($this->cityName);
@@ -59,7 +59,6 @@ class CityPage extends PageWithActiveSkin
 
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/places.css?2';
        return $stylesheets;
     }
 

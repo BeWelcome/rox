@@ -1,23 +1,25 @@
 <?php
-echo '<h2>' . $words->get('Cities') . '</h2>';
-define('MINROWS',5); // minimum number of rows to be used before next column
-define('MAXCOLS',4); // maximum number columns before extending rows beyond MINROWS
-echo '<div id="places" class="clearfix">';
-echo '<ul class="float_left">';
+echo '<div class="col-12 p-0"><h2>' . $words->get('Cities') . '</h2></div>';
 
+echo '<div class="col-12 col-md-6 col-lg-3 p-0">';
 $listcnt = 0;
+$number_of_cities = count($this->cities);
+$per_column = round($number_of_cities/4);
+
 foreach ($this->cities as $city) {
     $listcnt++;
-    if ($listcnt > max(MINROWS,ceil(count($this->cities)/MAXCOLS))) {
-        echo '</ul>';
-        echo '<ul class="float_left">';
+
+    if ($listcnt > $per_column) {
+        echo '</div><div class="col-12 col-md-6 col-lg-3 p-0">';
         $listcnt = 1;
     }
-    echo '<li><a class="highlighted" href="places/' . htmlspecialchars($this->countryName) . '/' . $this->countryCode
-        . '/' . htmlspecialchars($this->regionName) . '/' . $this->regionCode . '/'
-        . htmlspecialchars($city->city) . '/' . $city->geonameid . '">'. htmlentities($city->city, ENT_COMPAT, 'utf-8') .'</a> <span class="small grey">('.$city->NbMember.')</span>';
-    echo '</li>';
+
+    echo '<div><a href="places/' . htmlspecialchars($this->countryName) . '/' . $this->countryCode
+         . '/' . htmlspecialchars($this->regionName) . '/' . $this->regionCode . '/'
+         . htmlspecialchars($city->city) . '/' . $city->geonameid . '">'. htmlentities($city->city, ENT_COMPAT, 'utf-8') .'</a><span class="small ml-1 badge badge-info">' . $city->NbMember . '</span>';
+    echo '</div>';
+
 }
-echo '</ul></div>';
+echo '</div>';
 include 'memberlist.php';
 ?>

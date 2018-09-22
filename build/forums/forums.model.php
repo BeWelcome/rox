@@ -276,7 +276,6 @@ function FindAppropriatedLanguage($IdPost=0) {
 				$this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . "," . $rr->IdGroup;
 				array_push($MyGroups,$rr->IdGroup) ; // Save the group list
 			}
-			$this->ThreadGroupsRestriction .= "," . SuggestionsModel::getGroupId();
 			$this->PostGroupsRestriction = $this->PostGroupsRestriction . "))";
 			$this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . "))";
 		}

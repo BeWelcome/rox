@@ -69,10 +69,10 @@
 
             <input name="IdMember" value="<?=$member->id?>" type="hidden" />
 
-            <div class="col-4">
+            <div class="col-12 col-sm-4 col-lg-2">
             <?=$words->get("Category")?>
             </div>
-            <div class="col-8">
+            <div class="col-12 col-sm-8 col-lg-10">
                 <select name="ProfileNoteCategory" id="ProfileNoteCategory">
                     <option value="">---</option>
                             <?php foreach($categories as $category) {
@@ -87,7 +87,7 @@
                     <option value="new">-- add new category --</option>
                 </select><?php echo $words->flushBuffer(); ?>
             </div>
-            <div class="ProfileCategory col-8 offset-4" id="new" style="display: none;">
+            <div class="ProfileCategory col-12 col-sm-8 offset-sm-4 col-lg-10 offset-lg-2" id="new" style="display: none;">
                 <label for="ProfileNoteCategoryFree"><?=$words->get("ProfileNoteCategoryFree")?></label>
                 <?php echo '<input name="ProfileNoteCategoryFree" id="ProfileNoteCategoryFree" value="';
                     if (!in_array($note->CategoryFree, $categories)) {
@@ -96,13 +96,15 @@
                     echo '" />';
                 ?>
             </div>
-            <div class="col-4">
+
+            <div class="col-12 col-sm-4 col-lg-2">
                 <label for="ProfileNoteComment"><?php echo $words->get("ProfileNoteCommentInfo") ?></label>
             </div>
-            <div class="col-8">
-                <textarea name="ProfileNoteComment" id="ProfileNoteComment" rows="8" class="w-100"><?php echo $note->Comment; ?></textarea>
+            <div class="col-12 col-sm-8 col-lg-10">
+                <textarea name="ProfileNoteComment" id="ProfileNoteComment" rows="4" class="w-100 h5"><?php echo $note->Comment; ?></textarea>
             </div>
-            <div class="col-8 offset-4">
+
+            <div class="col offset-sm-4 offset-lg-2">
                 <?php
                 if ($edit_mode || isset($vars['success']) || isset($vars['errors'])) { ?>
                     <input type="submit" class="btn btn-primary" id="submit" name="submit" value="<?php echo $words->getBuffered("ProfileNoteButtonEdit") ?>" /><?=$words->flushBuffer();?>

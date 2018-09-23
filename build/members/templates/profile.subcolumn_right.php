@@ -1,4 +1,4 @@
-<div class="d-none d-lg-block">
+<div class="d-none d-lg-block mb-lg-3">
 <?php
 
 if (!$this->passedAway){

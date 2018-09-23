@@ -125,6 +125,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('mypreferences', '/mypreferences');
         $this->addRouteDirectly('myvisitors', '/myvisitors');
         $this->addRouteDirectly('profilecomments', '/about/commentguidelines');
+        $this->addRouteDirectly('profile_addtorelations', '/members/{username}/relations/add');
         $this->addRouteDirectly('setlocation', '/setlocation');
         $this->addRouteDirectly('editmyprofile_finish', '/editmyprofile/finish');
         $this->addRouteDirectly('editmyprofile_finish', '/members/{username}/adminedit/finish');

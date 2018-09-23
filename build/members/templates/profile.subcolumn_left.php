@@ -15,7 +15,7 @@
     </div>
 </div>
 
-<div class="d-block d-lg-none">
+<div class="d-block d-lg-none mb-sm-3 mb-lg-0">
     <?php
     if (!$this->passedAway){
         require 'profile.subcolumn_accommodation.php';
@@ -33,16 +33,10 @@
     </h3>
 
     <div class="p-2">
-        <i class="fa fa-check langcheck langcol1"></i>
-        <i class="fa fa-check langcheck langcol2"></i>
-        <i class="fa fa-check langcheck langcol3"></i>
-        <i class="fa fa-check langcheck langcol4"></i>
-        <i class="fa fa-check langcheck langcol5"></i>
-        <i class="fa fa-check langcheck langcol6"></i>
-        <ul>
+        <ul class="pl-2">
             <?php
             foreach ($member->get_languages_spoken() as $lang) {
-                echo '<li>' . $words->get($lang->WordCode) . '<sup class="ml-1">' . $words->get("LanguageLevel_" . $lang->Level) . '</sup></li>';
+                echo '<li>' . $words->get($lang->WordCode) . '<sup class="ml-1 gray">' . $words->get("LanguageLevel_" . $lang->Level) . '</sup></li>';
             }
             ?>
         </ul>
@@ -61,34 +55,32 @@
                 <?php endif; ?>
             </h3>
             <div class="p-2">
-                <dl>
                     <?php
                     if ($member->get_trad("Hobbies", $profile_language, true) != "") {
-                        echo '<dt class="h5">' . $words->get('ProfileHobbies') . '</dt>';
-                        echo '<dd>' . $purifier->purify($member->get_trad("Hobbies", $profile_language, true)) . '</dd>';
+                        echo '<div class="h5 mb-0">' . $words->get('ProfileHobbies') . '</div>';
+                        echo '<div>' . $purifier->purify($member->get_trad("Hobbies", $profile_language, true)) . '</div>';
                     }
 
                     if ($member->get_trad("Books", $profile_language, true) != "") {
-                        echo '<dt class="h5">' . $words->get('ProfileBooks') . '</dt>';
-                        echo '<dd>' . $purifier->purify($member->get_trad("Books", $profile_language, true)) . '</dd>';
+                        echo '<div class="h5 mb-0">' . $words->get('ProfileBooks') . '</div>';
+                        echo '<div>' . $purifier->purify($member->get_trad("Books", $profile_language, true)) . '</div>';
                     }
 
                     if ($member->get_trad("Music", $profile_language, true) != "") {
-                        echo '<dt class="h5">' . $words->get('ProfileMusic') . '</dt>';
-                        echo '<dd>' . $purifier->purify($member->get_trad("Music", $profile_language, true)) . '</dd>';
+                        echo '<div class="h5 mb-0">' . $words->get('ProfileMusic') . '</div>';
+                        echo '<div>' . $purifier->purify($member->get_trad("Music", $profile_language, true)) . '</div>';
                     }
 
                     if ($member->get_trad("Movies", $profile_language, true) != "") {
-                        echo '<dt class="h5">' . $words->get('ProfileMovies') . '</dt>';
-                        echo '<dd>' . $purifier->purify($member->get_trad("Movies", $profile_language, true)) . '</dd>';
+                        echo '<div class="h5 mb-0">' . $words->get('ProfileMovies') . '</div>';
+                        echo '<div>' . $purifier->purify($member->get_trad("Movies", $profile_language, true)) . '</div>';
                     }
 
                     if ($member->get_trad("Organizations", $profile_language, true) != "") {
-                        echo '<dt class="h5">' . $words->get('ProfileOrganizations') . '</dt>';
-                        echo '<dd>' . $purifier->purify($member->get_trad("Organizations", $profile_language, true)) . '</dd>';
+                        echo '<div class="h5 mb-0">' . $words->get('ProfileOrganizations') . '</div>';
+                        echo '<div>' . $purifier->purify($member->get_trad("Organizations", $profile_language, true)) . '</div>';
                     }
                     ?>
-                </dl>
             </div>
         </div>
         <?php } ?>

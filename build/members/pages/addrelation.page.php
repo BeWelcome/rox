@@ -25,10 +25,13 @@ class AddRelationPage extends RelationsPage
             } else {
                $action = 'add';
             }        ?>
+
+        <div class="row">
+            <div class="col-12">
          <? if ($action == 'update' && isset($relation['member']->Confirmed)) : ?>
-            <p class="note"><?=$words->get('RelationIsConfirmed',$member->Username)?></p>
+            <div class="alert alert-success"><?=$words->get('RelationIsConfirmed',$member->Username)?></div>
          <? elseif ($action == 'update') : ?>
-            <p class="note"><?=$words->get('RelationWaitConfirmed',$member->Username)?></p>
+            <div class="alert alert-info"><?=$words->get('RelationWaitConfirmed',$member->Username)?></div>
          <? endif ?>
         <form method="post" action="<?=$page_url?>" name="relation" id="relation" enctype="multipart/form-data">
         <fieldset>
@@ -36,9 +39,9 @@ class AddRelationPage extends RelationsPage
             <input type="hidden"  name="IdOwner"  value="<?=$this->_session->get('IdMember')?>" />
             <?=$callback_tag?>
             <legend><?=$words->get($action.'Relation')?></legend>
-            <p><?=$words->get('MyRelationListExplanation',$member->Username,$member->Username)?></p>
+            <p class="small"><?=$words->get('MyRelationListExplanation',$member->Username,$member->Username)?></p>
             <? if (count($relation['member']) <= 0) : ?>
-            <div class="bw-row">
+            <div>
             <label class="grey"><?=$words->get('RelationListCategory')?></label><br />
             <?php
                 $tt=$TabRelationsType;
@@ -50,16 +53,16 @@ class AddRelationPage extends RelationsPage
                     echo "> ".$words->get("Relation_Type_" . $tt[$ii])."<br />";
                 }
             ?>
-            <p class="desc"><?=$words->get('RelationListExplanation')?></p>
+            <p class="mt-3"><?=$words->get('RelationListExplanation')?></p>
             </div>
             <? else : ?>
-            <div class="bw-row">
+            <div>
             <?=$words->get('RelationType')?>: <strong><?=$words->get("Relation_Type_" . $relation['member']->Type)?></strong>
             </div>
             <? endif ?>
-            <div class="bw-row">
+            <div>
                 <label class="grey"><?=$words->get("RelationText",$member->Username)?>:</label><br />
-                <textarea rows="4" cols="60" name="Comment"><?php
+                <textarea rows="4" class="w-100 h5" name="Comment"><?php
                     if (isset($relation['myself']->Comment)) {
                         $lang = $this->model->get_profile_language();
                         $comment = $words->mInTrad($relation['myself']->IdTradComment, $lang->id);
@@ -87,17 +90,14 @@ class AddRelationPage extends RelationsPage
                echo '<input type="hidden" name="action" value="add">';
             }
             ?>
-            <br />
-            <input type="submit" class="button" name="submit" value="<?=$words->getSilent($action.'Relation')?>" /><?php echo $words->flushBuffer(); ?>
+            <input type="submit" class="btn btn-primary" name="submit" value="<?=$words->getSilent($action.'Relation')?>" /><?php echo $words->flushBuffer(); ?>
             <br />
         </fieldset>
         </form>
+            </div>
+
+        </div>
         <?php
-    
     }
 }
-
-
-
-
 ?>

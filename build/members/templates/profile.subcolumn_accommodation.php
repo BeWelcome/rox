@@ -30,21 +30,21 @@
                 ?>
             </div>
 
-            <dl id="accommodation" >
+            <div id="accommodation" >
                 <?php if ($member->MaxGuest != 0 && $member->MaxGuest != "") { ?>
-                    <dt class="guests h5"><?=$words->get('ProfileNumberOfGuests');?>: <?php echo $member->MaxGuest ?></dt>
+                    <div class="guests h5"><?=$words->get('ProfileNumberOfGuests');?>: <?php echo $member->MaxGuest ?></div>
                 <?php }
                 if ($member->get_trad("MaxLenghtOfStay", $profile_language,true) != "") { ?>
-                    <dt class="stay h5"><?=$words->get('ProfileMaxLenghtOfStay');?>:</dt>
-                    <dd><?php echo $purifier->purify($member->get_trad("MaxLenghtOfStay", $profile_language,true)); ?></dd>
+                    <div class="stay h5 mb-0"><?=$words->get('ProfileMaxLenghtOfStay');?>:</div>
+                    <div><?php echo $purifier->purify($member->get_trad("MaxLenghtOfStay", $profile_language,true)); ?></div>
                 <?php }
                 if ($member->get_trad("ILiveWith", $profile_language,true) != "") { ?>
-                    <dt class="h5"><?=$words->get('ProfileILiveWith');?>:</dt>
-                    <dd><?php echo $purifier->purify($member->get_trad("ILiveWith", $profile_language,true)); ?></dd>
+                    <div class="h5 mb-0"><?=$words->get('ProfileILiveWith');?>:</div>
+                    <div><?php echo $purifier->purify($member->get_trad("ILiveWith", $profile_language,true)); ?></div>
                 <?php }
                 if ($member->get_trad("PleaseBring", $profile_language,true) != "") { ?>
-                    <dt class="h5"><?=$words->get('ProfilePleaseBring');?>:</dt>
-                    <dd><?php echo $purifier->purify($member->get_trad("PleaseBring", $profile_language,true)); ?></dd>
+                    <div class="h5 mb-0"><?=$words->get('ProfilePleaseBring');?>:</div>
+                    <div><?php echo $purifier->purify($member->get_trad("PleaseBring", $profile_language,true)); ?></div>
                 <?php }
 
                 $comma = false;
@@ -55,13 +55,10 @@
                     if ($typicOffer == '') continue;
                     if ($typicOffer == 'CanHostWeelChair') continue;
                     if ($comma) {
-                        $offers .= ', ';
+                        $offers .= '<br>';
                     }
                     $offers .=  $words->get("ProfileTypicOffer_" . $typicOffer);
                     $comma = true;
-                }
-                if ($comma) {
-                    $offers .= '.';
                 }
 
                 $offerGuests = $member->get_trad("OfferGuests", $profile_language,true);
@@ -73,25 +70,25 @@
                 }
                 if (!empty($offers)) { ?>
 
-                    <dt class="h5"><?=$words->get('ProfileOfferGuests');?>:</dt>
-                    <dd><?php echo $offers;?></dd>
+                    <div class="h5 mb-0"><?=$words->get('ProfileOfferGuests');?>:</div>
+                    <div><?php echo $offers;?></div>
                 <?php }
                 if ($member->get_trad("OfferHosts", $profile_language,true) != "") { ?>
-                    <dt class="h5"><?=$words->get('ProfileOfferHosts');?>:</dt>
-                    <dd><?php echo $purifier->purify($member->get_trad("OfferHosts", $profile_language,true)); ?></dd>
+                    <div class="h5 mb-0"><?=$words->get('ProfileOfferHosts');?>:</div>
+                    <div><?php echo $purifier->purify($member->get_trad("OfferHosts", $profile_language,true)); ?></div>
                 <?php }
                 if ($member->get_trad("AdditionalAccomodationInfo", $profile_language,true) != ""
                     or $member->get_trad("InformationToGuest", $profile_language,true) != "") { ?>
-                    <dt class="h5"><?=$words->get('OtherInfosForGuest');?>:</dt>
-                    <dd>
+                    <div class="h5 mb-0"><?=$words->get('OtherInfosForGuest');?>:</div>
+                    <div>
                         <?php echo $purifier->purify($member->get_trad("AdditionalAccomodationInfo", $profile_language,true)); ?>
                         <?php echo $purifier->purify($member->get_trad("InformationToGuest", $profile_language,true)); ?>
-                    </dd>
+                    </div>
                 <?php }
 
                 if ($member->get_trad("PublicTransport", $profile_language,true) != "") { ?>
-                    <dt class="h5"><?=$words->get('ProfilePublicTransport');?>:</dt>
-                    <dd><?php echo $purifier->purify($member->get_trad("PublicTransport", $profile_language,true)); ?></dd>
+                    <div class="h5 mb-0"><?=$words->get('ProfilePublicTransport');?>:</div>
+                    <div><?php echo $purifier->purify($member->get_trad("PublicTransport", $profile_language,true)); ?></div>
                 <?php }
 
                 $restrictions = '';
@@ -105,13 +102,10 @@
                     if ($restriction == '') continue;
                     if ($restriction == 'SeeOtherRestrictions') continue;
                     if ($comma) {
-                        $restrictions .= ',<br>';
+                        $restrictions .= '<br>';
                     }
                     $restrictions .= $words->get("Restriction_" . $restriction);
                     $comma = true;
-                }
-                if ($comma) {
-                    $restrictions .= '';
                 }
                 if (!empty($otherRestrictions)) {
                     if ($comma) {
@@ -120,10 +114,10 @@
                     $restrictions .= $purifier->purify($otherRestrictions);
                 }
                 if (!empty($restrictions)) { ?>
-                    <dt class="h5"><?=$words->get('ProfileHouseRules');?>:</dt>
-                    <dd><?php echo $restrictions; ?></dd>
+                    <div class="h5 mb-0"><?=$words->get('ProfileHouseRules');?>:</div>
+                    <div><?php echo $restrictions; ?></div>
                 <?php } ?>
-            </dl>
+            </div>
 
         </div>
     </div>

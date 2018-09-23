@@ -27,6 +27,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+/**
+ * Class MemberController.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class MemberController extends Controller
 {
     /**

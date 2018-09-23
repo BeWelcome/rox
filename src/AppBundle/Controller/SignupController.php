@@ -13,7 +13,9 @@ class SignupController extends Controller
 {
     /**
      * @Route("/signup/finish", name="signup_finish")
+     *
      * @param Request $request
+     *
      * @return Response
      */
     public function finishSignup(Request $request)

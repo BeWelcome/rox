@@ -7,6 +7,8 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Doctrine\LanguageLevelType;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,37 +25,39 @@ class MembersLanguagesLevel
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     * @ORM\Column(name="updated", type="datetime", nullable=true)
      */
-    private $updated = 'CURRENT_TIMESTAMP';
+    private $updated;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created = '0000-00-00 00:00:00';
+    private $created;
 
     /**
-     * @var int
+     * @var Member
      *
-     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Member", inversedBy="languagelevels")
+     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id", nullable=FALSE)
      */
-    private $idmember;
+    protected $member;
 
     /**
-     * @var int
+     * @var Language
      *
-     * @ORM\Column(name="IdLanguage", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Language", inversedBy="levels")
+     * @ORM\JoinColumn(name="IdLanguage", referencedColumnName="id", nullable=FALSE)
      */
-    private $idlanguage;
+    private $language;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Level", type="string", nullable=false)
+     * @ORM\Column(name="Level", type="language_level", nullable=false)
      */
-    private $level = 'Beginner';
+    private $level = LanguageLevelType::BEGINNER;
 
     /**
      * @var int
@@ -63,6 +67,11 @@ class MembersLanguagesLevel
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+    public function __construct()
+    {
+        $this->created = new \DateTime();
+    }
 
     /**
      * Set updated.
@@ -113,51 +122,51 @@ class MembersLanguagesLevel
     }
 
     /**
-     * Set idmember.
+     * Set member.
      *
-     * @param int $idmember
+     * @param Member $member
      *
      * @return Memberslanguageslevel
      */
-    public function setIdmember($idmember)
+    public function setMember($member)
     {
-        $this->idmember = $idmember;
+        $this->member = $member;
 
         return $this;
     }
 
     /**
-     * Get idmember.
+     * Get member.
      *
-     * @return int
+     * @return Member
      */
-    public function getIdmember()
+    public function getMember()
     {
-        return $this->idmember;
+        return $this->member;
     }
 
     /**
-     * Set idlanguage.
+     * Set language.
      *
-     * @param int $idlanguage
+     * @param Language $language
      *
      * @return Memberslanguageslevel
      */
-    public function setIdlanguage($idlanguage)
+    public function setLanguage(Language $language)
     {
-        $this->idlanguage = $idlanguage;
+        $this->language = $language;
 
         return $this;
     }
 
     /**
-     * Get idlanguage.
+     * Get language.
      *
-     * @return int
+     * @return Language
      */
-    public function getIdlanguage()
+    public function getLanguage()
     {
-        return $this->idlanguage;
+        return $this->language;
     }
 
     /**

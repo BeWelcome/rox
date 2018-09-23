@@ -7,6 +7,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -82,6 +83,13 @@ class Language
     private $issignlanguage = '0';
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="MembersLanguagesLevel", mappedBy="language")
+     */
+    private $levels;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="id", type="integer")
@@ -89,6 +97,11 @@ class Language
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+    public function __construct()
+    {
+        $this->levels = new ArrayCollection();
+    }
 
     /**
      * Set englishname.
@@ -304,6 +317,47 @@ class Language
     public function getIsSignlanguage()
     {
         return $this->issignlanguage;
+    }
+
+    /**
+     * Get levels.
+     *
+     * @return array
+     */
+    public function getLevels()
+    {
+        return $this->levels->toArray();
+    }
+
+    /**
+     * Add level.
+     *
+     * @return Language
+     */
+    public function addLevel(MembersLanguagesLevel $level)
+    {
+        if (!$this->levels->contains($level)) {
+            $this->levels->add($level);
+            $level->setLanguage($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove level
+     *
+     * @param MembersLanguagesLevel $level
+     * @return $this
+     */
+    public function removeJob(MembersLanguagesLevel $level)
+    {
+        if ($this->levels->contains($level)) {
+            $this->levels->removeElement($level);
+            $level->setLanguage(null);
+        }
+
+        return $this;
     }
 
     /**

@@ -82,7 +82,8 @@ doctrine:
             message_status: AppBundle\Doctrine\MessageStatusType
             comment_admin_action: AppBundle\Doctrine\CommentAdminActionType
             comment_quality: AppBundle\Doctrine\CommentQualityType
-            comment_relations: AppBundle\Doctrine\CommentRelationType
+            comment_relations: AppBundle\Doctrine\CommentRelationsType
+            language_level: AppBundle\Doctrine\LanguageLevelType
 
         mapping_types:
             enum:       string

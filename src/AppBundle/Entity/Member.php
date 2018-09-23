@@ -637,13 +637,10 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      * @var arrayCollection
      *
      * One Member has many languages
-     * @ORM\ManyToMany(targetEntity="Language")
-     * @ORM\JoinTable(name="memberslanguageslevel",
-     *      joinColumns={@ORM\JoinColumn(name="IdMember", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="IdLanguage", referencedColumnName="id")}
-     *      )
+     *
+     * @ORM\OneToMany(targetEntity="MembersLanguagesLevel", mappedBy="member")
      */
-    private $languages;
+    private $languageLevels;
 
     private $comments;
 
@@ -654,7 +651,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         $this->volunteerRights = new ArrayCollection();
         $this->cryptedFields = new ArrayCollection();
         $this->groups = new ArrayCollection();
-        $this->languages = new ArrayCollection();
+        $this->languageLevels = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->relationships = new ArrayCollection();
     }
@@ -2554,11 +2551,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         return $this->groups;
     }
 
-    public function getLanguages()
-    {
-        return $this->languages;
-    }
-
     public function getComments()
     {
         return $this->comments;
@@ -2771,4 +2763,52 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     {
         return hash('sha256', $this->getEmail().' - '.$this->getUsername().' - '.$this->getGender());
     }
-}
+
+    /**
+     * @return array
+     */
+    public function getLanguageLevels()
+    {
+        return $this->languageLevels->toArray();
+    }
+
+    /**
+     * @param MembersLanguagesLevel $level
+     * @return $this
+     */
+    public function addLanguageLevel(MembersLanguagesLevel $level)
+    {
+        if (!$this->languageLevels->contains($level)) {
+            $this->languageLevels->add($level);
+            $level->setMember($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param MembersLanguagesLevel $level
+     * @return $this
+     */
+    public function removeLanguageLevel(MembersLanguagesLevel $level)
+    {
+        if ($this->languageLevels->contains($level)) {
+            $this->languageLevels->removeElement($level);
+            $level->setMember(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLanguages()
+    {
+        return array_map(
+            function ($level) {
+                return $level->getLanguage();
+            },
+            $this->languageLevels->toArray()
+        );
+    }}

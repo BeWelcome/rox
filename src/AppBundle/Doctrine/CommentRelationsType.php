@@ -2,7 +2,7 @@
 
 namespace AppBundle\Doctrine;
 
-class CommentRelationType extends SetType
+class CommentRelationsType extends SetType
 {
     const WAS_GUEST = 'hewasmyguest';
     const WAS_HOST = 'hehostedme';
@@ -13,7 +13,7 @@ class CommentRelationType extends SetType
     const TRAVEL_BUDDY = 'TravelledTogether';
     const IS_FRIEND = 'WeAreFriends';
 
-    protected $name = 'comment_relation';
+    protected $name = 'comment_relations';
 
     protected $values = [
         self::WAS_GUEST,

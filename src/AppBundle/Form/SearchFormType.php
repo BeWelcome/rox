@@ -77,7 +77,7 @@ class SearchFormType extends AbstractType
             ->add('groups', ChoiceType::class, [
                 'choices' => $groups,
                 'attr' => [
-                    'class' => 'w-100 select2',
+                    'class' => 'select2',
                 ],
                 'multiple' => true,
                 'required' => false,
@@ -85,7 +85,7 @@ class SearchFormType extends AbstractType
             ->add('languages', ChoiceType::class, [
                 'choices' => $languages,
                 'attr' => [
-                    'class' => 'w-100 select2',
+                    'class' => 'select2',
                 ],
                 'multiple' => true,
                 'required' => false,

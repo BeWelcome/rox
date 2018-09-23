@@ -21,7 +21,6 @@ use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,7 +46,7 @@ class MemberController extends Controller
 
         /** @var MemberRepository $memberRepository */
         $memberRepository = $em->getRepository(Member::class);
-            $entities = $memberRepository->loadMembersByUsernamePart($term);
+        $entities = $memberRepository->loadMembersByUsernamePart($term);
 
         foreach ($entities as $entity) {
             $names[] = [
@@ -81,7 +80,7 @@ class MemberController extends Controller
         $form = $this->createFormBuilder()
             ->add('usernameOrEmail', TextType::class, [
                 'constraints' => [
-                    new NotBlank()
+                    new NotBlank(),
                 ],
             ])
             ->getForm();
@@ -95,23 +94,22 @@ class MemberController extends Controller
             try {
                 /** @var Member $member */
                 $member = $memberRepository->loadUserByUsername($data['usernameOrEmail']);
+            } catch (NonUniqueResultException $e) {
             }
-            catch (NonUniqueResultException $e) {
-
-            }
-            if ($member === null) {
-                $form->addError( new FormError('No member with that username or email address.'));
+            if (null === $member) {
+                $form->addError(new FormError('No member with that username or email address.'));
             } else {
                 /* Sent the member a link to follow to reset the password */
                 $sent = $this->sendPasswordResetLink($member, 'Password Reset for BeWelcome', $member->generatePasswordResetKey());
                 if ($sent) {
                     $this->addFlash('notice', 'We just sent you a mail with a link that allows you to reset your password.');
+
                     return $this->redirectToRoute('security_login');
-                } else {
-                    $form->addError( new FormError('There was an error sending the password reset link.'));
                 }
+                $form->addError(new FormError('There was an error sending the password reset link.'));
             }
         }
+
         return $this->render(':member:request.password.reset.html.twig', [
             'form' => $form->createView(),
         ]);
@@ -121,8 +119,9 @@ class MemberController extends Controller
      * @Route("/resetpassword/{username}/{key}", name="member_reset_password")
      *
      * @param Request $request
-     * @param Member $member
+     * @param Member  $member
      * @param $key
+     *
      * @return Response
      */
     public function resetPasswordAction(Request $request, Member $member, $key)
@@ -135,6 +134,7 @@ class MemberController extends Controller
         $resetPasswordKey = $member->generatePasswordResetKey();
         if ($resetPasswordKey !== $key) {
             $this->addFlash('notice', 'Either username or key aren\'t valid to reset the password.');
+
             return $this->redirectToRoute('login');
         }
 
@@ -143,7 +143,7 @@ class MemberController extends Controller
                 'type' => PasswordType::class,
                 'invalid_message' => 'The password fields must match.',
                 'required' => true,
-                'first_options'  => ['label' => 'Password'],
+                'first_options' => ['label' => 'Password'],
                 'second_options' => ['label' => 'Repeat Password'],
             ])
             ->getForm();
@@ -157,44 +157,13 @@ class MemberController extends Controller
             $em->persist($member);
             $em->flush();
             $this->addFlash('notice', 'Your password has been reset. Please login now with the new password.');
+
             return $this->redirectToRoute('security_login');
         }
 
         return $this->render(':member:reset.password.html.twig', [
             'form' => $form->createView(),
         ]);
-    }
-
-    private function sendPasswordResetLink(Member $receiver, $subject, $key)
-    {
-        // Send mail notification
-        $html = $this->renderView('emails/reset.password.html.twig', [
-            'receiver' => $receiver,
-            'subject' => $subject,
-            'key' => $key,
-        ]);
-        $plainText = new Html2Text($html);
-        $message = new Swift_Message();
-        $message
-            ->setSubject($subject)
-            ->setFrom(
-                [
-                    'password@bewelcome.org' => 'BeWelcome',
-                ]
-            )
-            ->setTo($receiver->getEmail())
-            ->setBody(
-                $html,
-                'text/html'
-            )
-            ->addPart(
-                $plainText->getText(),
-                'text/plain'
-            )
-        ;
-        $recipients = $this->get('mailer')->send($message);
-
-        return (0 === $recipients) ? false : true;
     }
 
     /**
@@ -335,5 +304,37 @@ class MemberController extends Controller
         ]);
 
         return $response;
+    }
+
+    private function sendPasswordResetLink(Member $receiver, $subject, $key)
+    {
+        // Send mail notification
+        $html = $this->renderView('emails/reset.password.html.twig', [
+            'receiver' => $receiver,
+            'subject' => $subject,
+            'key' => $key,
+        ]);
+        $plainText = new Html2Text($html);
+        $message = new Swift_Message();
+        $message
+            ->setSubject($subject)
+            ->setFrom(
+                [
+                    'password@bewelcome.org' => 'BeWelcome',
+                ]
+            )
+            ->setTo($receiver->getEmail())
+            ->setBody(
+                $html,
+                'text/html'
+            )
+            ->addPart(
+                $plainText->getText(),
+                'text/plain'
+            )
+        ;
+        $recipients = $this->get('mailer')->send($message);
+
+        return (0 === $recipients) ? false : true;
     }
 }

@@ -2769,6 +2769,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
 
     public function generatePasswordResetKey()
     {
-        return hash('sha256', $this->getEmail() . ' - ' . $this->getUsername() . ' - ' . $this->getGender() );
+        return hash('sha256', $this->getEmail().' - '.$this->getUsername().' - '.$this->getGender());
     }
 }

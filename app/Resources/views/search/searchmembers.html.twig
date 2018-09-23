@@ -53,7 +53,7 @@
                     {{ form_widget(form.distance, {'attr': {'class' : 'form-control select2',
                         'data-minimum-results-for-search': '-1'} }) }}
                 </div>
-                {{ form_widget(form.update_map) }}
+                {{ form_widget(form.updateMap) }}
             </div>
 
             <div class="collapse w-100" id="advancedNav">
@@ -84,10 +84,12 @@
             </script>
         </div>
 
+        {% if showMemberDetails %}
         <div class="col-12">
             {% if results %}
                 {% include ':member:results.html.twig'%}
             {% endif %}
         </div>
+        {% endif %}
     </div>
 {% endblock content %}

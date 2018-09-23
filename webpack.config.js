@@ -5,7 +5,7 @@ Encore
     .enableSingleRuntimeChunk()
     .setOutputPath('web/build/')
     .setPublicPath('/build')
-    .cleanupOutputBeforeBuild()
+//    .cleanupOutputBeforeBuild()
 
     .createSharedEntry('bewelcome', './src/AppBundle/Resources/js/bewelcome.js')
     .addEntry('jquery_ui', './src/AppBundle/Resources/js/jquery_ui.js')
@@ -27,6 +27,7 @@ Encore
     .addEntry('chartjs', './node_modules/chart.js/dist/Chart.js')
     .addEntry('offcanvas', './src/AppBundle/Resources/public/js/offcanvas.js')
     .addEntry('profile/profile', './src/AppBundle/Resources/js/profile.js')
+    .addEntry( 'updatecounters', './src/AppBundle/Resources/js/updateCounters.js')
 
     .enableSassLoader()
     // allow legacy applications to use $/jQuery as a global variable, make popper visible for bootstrap

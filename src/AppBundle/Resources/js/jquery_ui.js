@@ -49,7 +49,6 @@ require('jquery-ui/ui/effects/effect-transfer');
 require('jquery-ui/themes/base/base.css');
 require('jquery-ui/themes/base/theme.css');
 
-/*
 require('jquery-ui/themes/base/draggable.css');
 require('jquery-ui/themes/base/resizable.css');
 require('jquery-ui/themes/base/selectable.css');
@@ -62,11 +61,10 @@ require('jquery-ui/themes/base/checkboxradio.css');
 require('jquery-ui/themes/base/controlgroup.css');
 require('jquery-ui/themes/base/datepicker.css');
 require('jquery-ui/themes/base/dialog.css');
-require('jquery-ui/themes/base/menu.css');
+require('../scss/_menu.scss');
 require('jquery-ui/themes/base/progressbar.css');
 require('jquery-ui/themes/base/selectmenu.css');
 require('jquery-ui/themes/base/slider.css');
 require('jquery-ui/themes/base/spinner.css');
 require('jquery-ui/themes/base/tabs.css');
 require('jquery-ui/themes/base/tooltip.css');
- */

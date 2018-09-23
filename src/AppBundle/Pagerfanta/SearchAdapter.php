@@ -81,9 +81,24 @@ class SearchAdapter implements AdapterInterface
      *
      * @return array|\Traversable the slice
      */
+    public function getFullResults()
+    {
+        $results = $this->model->getResultsForLocation($this->modelData);
+
+        return $results;
+    }
+
+    /**
+     * Returns map data.
+     *
+     * @return array|\Traversable the slice
+     */
     public function getMapResults()
     {
         $results = $this->model->getResultsForLocation($this->modelData);
+
+        $results['members'] = null;
+        $results['map'] = array_map( function($value) { $value->Username = ''; return $value; }, $results['map']);
 
         return $results;
     }

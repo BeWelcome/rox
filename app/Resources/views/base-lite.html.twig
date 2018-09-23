@@ -49,5 +49,12 @@
     {% include 'footer.html.twig' %}
     <script src="{{ asset('build/runtime.js') }}"></script>
     <script src="{{ asset('build/bewelcome.js') }}"></script>
+    <script type="application/javascript">
+        $(".select2").select2({
+            theme: 'bootstrap',
+            containerCssClass: 'form-control'
+        });
+    </script>
+    {% block javascripts %}{% endblock javascripts %}
 </body>
 </html>

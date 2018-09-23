@@ -575,9 +575,11 @@ VALUES
             $errors[] = 'SignupErrorEmailCheck';
         }
 
-        $users = $this->takeCareForNonUniqueEmailAddress($vars['email']);
-        if ($users != '') {
-            $errors[] = 'SignupErrorEmailAddressAlreadyInUse';
+        if (isset($vars['email'])) {
+            $users = $this->takeCareForNonUniqueEmailAddress($vars['email']);
+            if ($users != '') {
+                $errors[] = 'SignupErrorEmailAddressAlreadyInUse';
+            }
         }
 
         // password

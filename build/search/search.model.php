@@ -1513,7 +1513,7 @@ LIMIT 1
             $rectangle = $this->_getRectangle($latitude, $longitude, $distance);
             $query = "
                 SELECT
-                    m.Accomodation as Accommodation, m.Username, latitude, longitude
+                    m.Accomodation as Accommodation, m.Username, latitude, longitude, maxGuest as CanHost
                 FROM
                     members m
                 WHERE
@@ -1523,13 +1523,9 @@ LIMIT 1
                     AND m.longitude BETWEEN $rectangle->longne AND $rectangle->longsw
             ";
             $query .= $this->accommodationCondition;
-            if ($distance == 6000) {
-                // randomize search results around the world
-                $query .= " ORDER BY RAND() LIMIT 0,1000";
-            }
-            else {
-                $query .= " ORDER BY Accomodation LIMIT 0,1000";
-            }
+            // Randomize results for the map
+            $query .= " ORDER BY RAND()";
+            $query .= " LIMIT 0,2000";
             $this->membersLowDetails = $this->bulkLookup($query);
         }
         return $this->membersLowDetails;

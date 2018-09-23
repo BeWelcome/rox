@@ -29,7 +29,6 @@ class SearchFormType extends AbstractType
                 'label' => false,
             ])
             ->setMethod('GET')
-            ->setAction('/search/members')
             ->add('keywords', TextType::class, [
                 'label' => 'Specific words in profile',
                 'required' => false,
@@ -188,7 +187,7 @@ class SearchFormType extends AbstractType
     private function addButtons(FormBuilderInterface $formBuilder)
     {
         $formBuilder
-            ->add('update_map', SubmitType::class, [
+            ->add('updateMap', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn btn-primary float-right',
                 ],

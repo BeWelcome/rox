@@ -20,6 +20,7 @@
 
     <link rel="stylesheet" href="{{ asset('build/bewelcome.css') }}"/>
     <link rel="stylesheet" href="{{ asset('bundles/app/css/start/parallax.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('build/jquery_ui.css') }}" />
 </head>
 <body>
 {% include 'loginbar.html.twig' %}
@@ -254,47 +255,51 @@
             </div>
             <div class="row justify-content-center">
                 <div class="col-12 col-md-6 col-lg-4">
-                    <form method="post" action="signup/1">
-                        <div class="form-group" data-350-end="opacity:0;" data-150-end="opacity:1">
-                            <span>{{ 'IndexPageWord_share' | trans }}</span>
-                            <span class="d-block">{{ 'and start meeting people from everywhere.' | trans }}</span>
-                        </div>
-                        <label for="username" class="sr-only">{{ 'Choose your username!' | trans }}</label>
-                        <div class="input-group" data-250-end="opacity:0;" data-50-end="opacity:1">
-                            <span class="input-group-prepend"><i class="input-group-text fa fa-lg fa-user" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" name="username" id="username"
-                                   placeholder="{{ 'Choose your username!' | trans }}"
-                                   value=""/>
-                            <span class="input-group-append p-0">
+                    {{ form_start(username) }}
+                    <input type="hidden" name="posthandler_callback_id" value="8tBUc9=ZwL2esykm-lsMOjfbDGU">
+                    <input type="hidden" name="posthandler_callback_classname" value="6DDiBzJnmTb=4HbaIvQJbexCyGW">
+                    <input type="hidden" name="posthandler_callback_methodname" value="biG1CvvUpva7dU1eFx2TKjNWZse">
+                    <div class="form-group" data-350-end="opacity:0;" data-150-end="opacity:1">
+                        <span>{{ 'IndexPageWord_share' | trans }}</span>
+                        <span class="d-block">{{ 'and start meeting people from everywhere.' | trans }}</span>
+                    </div>
+                    <label for="{{ username.username.vars.id }}" class="sr-only">{{ 'Choose your username!' | trans }}</label>
+                    <div class="input-group" data-250-end="opacity:0;" data-50-end="opacity:1">
+                        <span class="input-group-prepend"><i class="input-group-text fa fa-lg fa-user" aria-hidden="true"></i></span>
+                        <input type="text" class="form-control" name="{{ username.username.vars.name }}" id="{{ username.username.vars.id }}"
+                               placeholder="{{ 'Choose your username!' | trans }}"
+                               value="{{ username.username.vars.value }}"/>
+                        <span class="input-group-append p-0">
                             <button class="btn btn-primary border-0" type="submit">
                                 <i class="fa fa-lg fa-chevron-right" aria-hidden="true"></i>
                                 <span class="sr-only">{{ 'Submit' | trans }}</span>
                             </button>
-                            </span>
-                        </div>
-                    </form>
+                            {% do username.username.setRendered %}
+                        </span>
+                    </div>
+                    {{ form_end(username) }}
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-4">
-                    <form method="post" action="search/map">
-                        <div class="form-group" data-350-end="opacity:0;" data-150-end="opacity:1">
-                            <span>{{ 'Find a place to stay' | trans }}</span>
-                            <span class="d-block">{{ 'and meet locals when traveling worldwide.' | trans }}</span>
-                        </div>
-                        <label for="location" class="sr-only">{{ 'Where do you want to go?' | trans }}</label>
-                        <div class="input-group" data-250-end="opacity:0;" data-50-end="opacity:1">
-                            <span class="input-group-prepend"><i class="input-group-text fa fa-lg fa-bed" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" name="location"
-                                   placeholder="{{ 'Where do you want to go?' | trans }}"
-                                   value=""/>
-                            <span class="input-group-append p-0">
-                                <button class="btn btn-primary border-0" type="submit">
+                    {{ form_start( search ) }}
+                    <div class="form-group" data-350-end="opacity:0;" data-150-end="opacity:1">
+                        <span>{{ 'Find a place to stay' | trans }}</span>
+                        <span class="d-block">{{ 'and meet locals when traveling worldwide.' | trans }}</span>
+                    </div>
+                    <label for="location" class="sr-only">{{ 'Where do you want to go?' | trans }}</label>
+                    <div class="input-group" data-250-end="opacity:0;" data-50-end="opacity:1">>
+                        <span class="input-group-prepend"><i class="input-group-text fa fa-lg fa-user" aria-hidden="true"></i></span>
+                        {{ form_widget( search.location, { 'attr' : { 'class' : 'search-picker form-control' } } ) }}
+                        <span class="input-group-append">
+                            <button id="{{ search.updateMap.vars.id }}" name="updateMap" type="submit" class="btn btn-primary">
                                     <i class="fa fa-lg fa-chevron-right" aria-hidden="true"></i>
                                     <span class="sr-only">{{ 'Search' | trans }}</span>
-                                </button>
-                            </span>
-                        </div>
-                    </form>
+                            </button>
+                            {% do search.updateMap.setRendered %}
+                        </span>
+                    </div>
+                    <div class="d-none invisible">{{ form_rest( search ) }}</div>
+                    {{ form_end( search ) }}
                 </div>
             </div>
         </div>
@@ -309,6 +314,8 @@
 <div id="bottom"></div>
 <script type="text/javascript" src="{{ asset('build/bewelcome.js') }}"></script>
 <script type="text/javascript" src="{{ asset('build/skrollr.js') }}"></script>
+<script src="{{ asset('build/jquery_ui.js') }}"></script>
+<script src="{{ asset('build/search/searchpicker.js') }}"></script>
 <script>
     window.addEventListener("load", function(){
         window.cookieconsent.initialise({

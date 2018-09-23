@@ -62,6 +62,8 @@ security:
         - { path: ^/resetpassword, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/rox/in, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/search/locations/all, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/search/map, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/volunteer, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/, roles: ROLE_USER }
 

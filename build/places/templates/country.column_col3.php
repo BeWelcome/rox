@@ -19,12 +19,13 @@
             $listcnt = 1;
         }
 
-        echo '<div><a href="places/' . htmlspecialchars($this->countryName) . '/' . $this->countryCode . '/'
+        echo '<div class="p-1"><a href="places/' . htmlspecialchars($this->countryName) . '/' . $this->countryCode . '/'
             . htmlspecialchars($region['name']) . '/' . $code . '"> ' . htmlspecialchars($region['name']) . '</a><span class="small ml-1 badge badge-info">' . $region['number'] . '</span></div>';
 
     }
-    echo '</div></div>';
+    echo '</div>';
 }
+echo '</div>';
 
 include_once 'memberlist.php';
 ?>

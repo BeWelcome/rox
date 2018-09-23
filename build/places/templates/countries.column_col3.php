@@ -3,7 +3,7 @@
 $columns = array();
 $lastcontinent = "";
 ?>
-<div class="accordion w-100" id="accordionPlaces">
+<div class="card-columns" id="accordionPlaces">
 
 
 <? foreach($this->continents as $continent => $value) { ?>
@@ -17,14 +17,14 @@ $lastcontinent = "";
             </h3>
         </div>
 
-        <div id="collapse<?= $value[0] ?>" class="collapse" aria-labelledby="heading<?= $value[0] ?>" data-parent="#accordionPlaces">
+        <div id="collapse<?= $value[0] ?>" class="expand" aria-labelledby="heading<?= $value[0] ?>" data-parent="#accordionPlaces">
             <div class="card-body">
                 <div class="row">
                 <?php
 
                 foreach ($this->countries[$continent] as $country) {
 
-                    echo '<div class="col-12 col-md-3"><i class="famfamfam-flag-' . strtolower($country->country) . ' mt-2 mr-1"></i>';
+                    echo '<div class="col-12"><i class="famfamfam-flag-' . strtolower($country->country) . ' mt-2 mr-1"></i>';
                     if ($country->number) {
                         echo '<a href="/places/' . htmlspecialchars($country->name) . '/' . $country->country . '">';
                     }

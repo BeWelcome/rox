@@ -17,7 +17,7 @@
     {%- endset %}
     <div id="footer_content" class="stickyfooter my-0 py-0">
         <div class="container my-1">
-            <div class="row align-items-center">
+            <div class="row align-items-center row justify-content-end">
                 <div class="col-sm-8">
                     <form method="post">
                         <div class="form-group form-row">
@@ -47,8 +47,10 @@
                                    href="{{ url('translation_mode', {mode: 'on'}) }}">{{ 'On' | trans }}</a>
                                 </div>
                             {% else %}
-                            <a class="btn btn-sm btn-outline-primary pull-right"
-                            href="groups/60">{{ 'Help us Translate' | trans }}</a>
+                                {% if is_granted('ROLE_USER') %}
+                                    <a class="btn btn-sm btn-outline-primary pull-right"
+                                    href="groups/60">{{ 'Help us Translate' | trans }}</a>
+                                {% endif %}
                             {% endif %}
                     </div>
                 </div>
@@ -65,7 +67,7 @@
                     &copy; 2007 &mdash; {{ "now" | date("Y") }} <a href="http://www.bevolunteer.org/"
                                                                    target="_blank">BeVolunteer</a> and contributors
 
-                    - <em> Running on open source <a class="d-inline" href="https://github.com/bewelcome/rox">BW
+                    - <em>Running on open source <a class="d-inline" href="https://github.com/bewelcome/rox">BW
                             Rox</a> rev. <a
                                 href="https://github.com/BeWelcome/rox/commit/{{ version }}">{{ version }}</a>
                         ({{ version_dt }})</em>

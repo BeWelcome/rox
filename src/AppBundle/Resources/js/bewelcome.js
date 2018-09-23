@@ -11,5 +11,4 @@ import '../../../../node_modules/cookieconsent/src/styles/media.css';
 import '../../../../node_modules/cookieconsent/src/styles/themes/classic.css';
 import '../../../../node_modules/cookieconsent/src/styles/themes/edgeless.css';
 import '../../../../node_modules/select2/dist/js/select2.full.js';
-import '../../../../src/AppBundle/Resources/js/updateCounters.js';
 

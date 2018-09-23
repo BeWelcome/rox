@@ -76,9 +76,16 @@ function addMarkers(map){
         var icon = new L.DivIcon({ html: '<div><img src="/images/icons/' + iconFile + '.png" class="mapicon"></div>', className: '', iconSize: new L.Point(17, 17) });
         var marker = new L.marker([value.latitude, value.longitude], {icon: icon, className: 'marker-cluster marker-cluster-unique'});
         value.MaxGuest = 9; //TODO: get the real maxGuest number
-        var popupContent = '<div class="d-flex"><div><img src="/members/avatar/' + value.Username + '?size=50"></div>' +
-            '<div class="hosticon nowrap"><img src="/images/icons/' + iconFile + '.png"><i class="fa fa-2x fa-bed p-1"></i><span class="h4">' + value.MaxGuest + '</span></div></div>' +
-            '<div class="d-flex"><h5 class="nowrap"><a href="/members/' + value.Username + '" target="_blank">' + value.Username + '</a></h5></div>';
+        var popupContent = '<div class="d-flex">';
+        if (value.Username) {
+            popupContent = popupContent + '<div><img src="/members/avatar/\' + value.Username + \'?size=50"></div>';
+        }
+        popupContent = popupContent +
+            '<div class="hosticon nowrap"><img src="/images/icons/' + iconFile + '.png"><i class="fa fa-2x fa-bed p-1"></i><span class="h4">' + value.CanHost + '</span></div></div>';
+        if (value.Username) {
+            popupContent = popupContent +
+                '<div class="d-flex"><h5 class="nowrap"><a href="/members/' + value.Username + '" target="_blank">' + value.Username + '</a></h5></div>';
+        }
 
         marker.bindPopup(popupContent).openPopup();
 

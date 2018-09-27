@@ -2774,6 +2774,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
 
     /**
      * @param MembersLanguagesLevel $level
+     *
      * @return $this
      */
     public function addLanguageLevel(MembersLanguagesLevel $level)
@@ -2788,6 +2789,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
 
     /**
      * @param MembersLanguagesLevel $level
+     *
      * @return $this
      */
     public function removeLanguageLevel(MembersLanguagesLevel $level)
@@ -2811,4 +2813,5 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
             },
             $this->languageLevels->toArray()
         );
-    }}
+    }
+}

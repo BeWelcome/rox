@@ -14,13 +14,17 @@ use Doctrine\ORM\Mapping as ORM;
  * Group.
  *
  * @ORM\Table(name="groups")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\GroupRepository")
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
  */
 class Group
 {
+    const NOT_APPROVED = 0;
+    const APPROVED = 1;
+    const DISMISSED = 2;
+
     /**
      * @var string
      *
@@ -45,9 +49,9 @@ class Group
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
+     * @ORM\Column(name="created", type="datetime", nullable=false, options={"default" : "CURRENT_TIMESTAMP"})
      */
-    private $created = 'CURRENT_TIMESTAMP';
+    private $created;
 
     /**
      * @var int
@@ -90,6 +94,13 @@ class Group
      * @ORM\Column(name="VisiblePosts", type="string", nullable=false)
      */
     private $visibleposts = 'yes';
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="Approved", type="smallint", nullable = true)
+     */
+    private $approved = self::NOT_APPROVED;
 
     /**
      * @var int
@@ -393,11 +404,11 @@ class Group
     /**
      * Add member.
      *
-     * @param \AppBundle\Entity\Member $member
+     * @param Member $member
      *
      * @return Group
      */
-    public function addMember(\AppBundle\Entity\Member $member)
+    public function addMember(Member $member)
     {
         $this->members[] = $member;
 
@@ -407,9 +418,9 @@ class Group
     /**
      * Remove member.
      *
-     * @param \AppBundle\Entity\Member $member
+     * @param Member $member
      */
-    public function removeMember(\AppBundle\Entity\Member $member)
+    public function removeMember(Member $member)
     {
         $this->members->removeElement($member);
     }
@@ -422,5 +433,29 @@ class Group
     public function getMembers()
     {
         return $this->members;
+    }
+
+    /**
+     * Set approved.
+     *
+     * @param boolean $approved
+     *
+     * @return Group
+     */
+    public function setApproved($approved)
+    {
+        $this->approved = $approved;
+
+        return $this;
+    }
+
+    /**
+     * Get approved.
+     *
+     * @return boolean
+     */
+    public function getApproved()
+    {
+        return $this->approved;
     }
 }

@@ -23,6 +23,13 @@ use Doctrine\ORM\Mapping as ORM;
 class MembersLanguagesLevel
 {
     /**
+     * @var Member
+     *
+     * @ORM\ManyToOne(targetEntity="Member", inversedBy="languageLevels")
+     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id", nullable=FALSE)
+     */
+    protected $member;
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=true)
@@ -35,14 +42,6 @@ class MembersLanguagesLevel
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
     private $created;
-
-    /**
-     * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="Member", inversedBy="languagelevels")
-     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id", nullable=FALSE)
-     */
-    protected $member;
 
     /**
      * @var Language

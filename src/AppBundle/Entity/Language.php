@@ -345,9 +345,10 @@ class Language
     }
 
     /**
-     * Remove level
+     * Remove level.
      *
      * @param MembersLanguagesLevel $level
+     *
      * @return $this
      */
     public function removeJob(MembersLanguagesLevel $level)

@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block javascripts %}
+    <script>
+        var delay = (function(){
+            var timer = 0;
+            return function(callback, ms, that){
+                clearTimeout (timer);
+                timer = setTimeout(callback.bind(that), ms);
+            };
+        })();
+        $('#group_name').keyup(function() {
+            delay(function(){
+                var name = $('#group_name').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/groups/new/check',
+                    data: {
+                        name: name
+                    },
+                    success: function(data) {
+                        $('#duplicates').html(data.html);
+                    }
+                });
+            }, 1000, this);
+        });
+    </script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+{% endblock stylesheets %}
+
+{% block content %}
+    <h1>{{ 'Create a new group' | trans}}</h1>
+    <p>{{ 'We\'re happy that you want to open a new group! But unfortunately spammers like then as well, so please note
+    that the group will need to be activated by the forum moderators. That shouldn\'t take too long.'}}</p>
+    {{ form_start(form, { 'attr': { 'novalidate': 'novalidate'}}) }}
+    {{ form_row(form.name) }}
+    <div id="duplicates"></div>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+{% endblock content %}

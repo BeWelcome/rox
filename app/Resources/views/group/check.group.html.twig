@@ -1,0 +1,8 @@
+{% if groups|length %}
+<p>{{ 'We found a few existing groups that match (part) of your group\'s name. You might want to check if you really need a new group:' | trans }}</p>
+<div class="form-row">
+{% for group in groups %}
+    <div class="col-12 col-sm-6 col-md-4 mb-3"><a href="/groups/{{ group.id }}" class="btn btn-primary">{{ group.name }}</a></div>
+{% endfor %}
+</div>
+{% endif %}

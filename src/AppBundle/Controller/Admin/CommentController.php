@@ -138,7 +138,7 @@ class CommentController extends Controller
     public function adminCommentAction(Request $request, Comment $comment)
     {
         if (!$this->isGranted([Member::ROLE_ADMIN_COMMENTS, Member::ROLE_ADMIN_SAFETYTEAM])) {
-            $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
+            throw $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
         }
 
         $commentRepository = $this->getDoctrine()->getRepository(Comment::class);
@@ -205,7 +205,7 @@ class CommentController extends Controller
     public function adminCommentAssignSafetyTeamAction(Request $request, Comment $comment)
     {
         if (!$this->isGranted([Member::ROLE_ADMIN_COMMENTS, Member::ROLE_ADMIN_SAFETYTEAM])) {
-            $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
+            throw $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -231,7 +231,7 @@ class CommentController extends Controller
     public function adminCommentMarkChecked(Request $request, Comment $comment)
     {
         if (!$this->isGranted([Member::ROLE_ADMIN_COMMENTS, Member::ROLE_ADMIN_SAFETYTEAM])) {
-            $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
+            throw $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -257,7 +257,7 @@ class CommentController extends Controller
     public function adminCommentHide(Request $request, Comment $comment)
     {
         if (!$this->isGranted([Member::ROLE_ADMIN_COMMENTS, Member::ROLE_ADMIN_SAFETYTEAM])) {
-            $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
+            throw $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -283,7 +283,7 @@ class CommentController extends Controller
     public function adminCommentShow(Request $request, Comment $comment)
     {
         if (!$this->isGranted([Member::ROLE_ADMIN_COMMENTS, Member::ROLE_ADMIN_SAFETYTEAM])) {
-            $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
+            throw $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
         }
 
         $em = $this->getDoctrine()->getManager();

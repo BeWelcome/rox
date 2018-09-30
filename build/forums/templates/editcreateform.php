@@ -158,7 +158,7 @@ $vars =& PPostHandler::getVars($callbackId);
             <label for="NotifyMe"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
         </div>
 
-        <div class="col-12 col-md-auto order-3 text-right">
+        <div class="col-12 col-md-auto order-3 text-md-right">
                     <legend class="sr-only"><?= $words->getFormatted("forum_label_visibility") ?></legend>
             <i class="fa fa-eye" title="<?= $words->getFormatted("forum_label_visibility"); ?>"></i>
                     <?php

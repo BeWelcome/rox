@@ -10,41 +10,46 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="d-sm-block d-md-none">
-            <form class="form-inline p-1" method="post" action="{{ url('security_check') }}">
-                {{ macros.input('_username', 'Username') }}
-                {{ macros.input('_password', 'Password', '', 'password') }}
-                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                {{ macros.submit('Login') }}
-            </form>
-        </div>
-
         <div class="collapse navbar-collapse my-1" id="navbarToggler">
-            <ul class="nav navbar-nav mr-auto ml-3">
-                <li class="nav-item float-left d-none d-md-block">
-                    <form class="form-inline p-1" method="post" action="{{ url('security_check') }}">
-                        {{ macros.input('_username', 'Username') }}
-                        {{ macros.input('_password', 'Password', '', 'password') }}
-                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                        {{ macros.submit('Login') }}
-                    </form>
-                </li>
-                <li><span class="d-none d-md-inline-block mt-3 mr-2">or</span><a href="/signup" class="btn btn-primary">Sign-up</a></li>
-            </ul>
-            <ul class="nav navbar-nav ml-auto">
-                <li class="nav-item dropdown float-right mt-2">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-lg fa-globe m-r-1"></i>
-                        {{ languages[locale].Name|raw }}
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-right columns">
-                        {% for lang in languages %}
-                            <li class="text-center"><a href="{{ path('language', { locale: lang.ShortCode }) }}" class="btn {% if lang.ShortCode == locale %}btn-primary mb-1{% else %}btn-secondary{% endif %}" data-toggle="tooltip" data-placement="top" title="{{ lang.TranslatedName|raw }}" style="width: 9rem">{{ lang.Name|raw }}</a></li>
-                        {% endfor %}
+            <div class="d-sm-block d-md-none">
+                <form class="form-inline p-1" method="post" action="{{ url('security_check') }}">
+                    {{ macros.input('_username', 'Username') }}
+                    {{ macros.input('_password', 'Password', '', 'password') }}
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                    {{ macros.submit('Login') }}
+                </form>
+            </div>
+
+            <div>
+                <ul class="nav navbar-nav mr-auto ml-md-3">
+                    <li class="nav-item float-left d-none d-md-block">
+                        <form class="form-inline p-1" method="post" action="{{ url('security_check') }}">
+                            {{ macros.input('_username', 'Username') }}
+                            {{ macros.input('_password', 'Password', '', 'password') }}
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                            {{ macros.submit('Login') }}
+                        </form>
+                    </li>
+                    <li class="d-none d-md-inline-block mt-2"><span class="mt-1 mr-2">{{ 'or'|trans }}</span><a href="/signup" class="btn btn-primary">{{ 'Signup'|trans }}</a></li>
+                    <li class="d-block d-md-none mx-1"><a href="/signup" class="btn btn-block btn-outline-light">{{ 'Signup'|trans }}</a></li>
+                </ul>
+            </div>
+            <div class="ml-auto float-right">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item dropdown float-right">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-lg fa-globe m-r-1"></i>
+                            {{ languages[locale].Name|raw }}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right columns">
+                            {% for lang in languages %}
+                                <li class="text-center"><a href="{{ path('language', { locale: lang.ShortCode }) }}" class="btn {% if lang.ShortCode == locale %}btn-primary mb-1{% else %}btn-secondary{% endif %}" data-toggle="tooltip" data-placement="top" title="{{ lang.TranslatedName|raw }}" style="width: 9rem">{{ lang.Name|raw }}</a></li>
+                            {% endfor %}
                         </ul>
-                    </ul>
+                </ul>
                 </li>
-            </ul>
+                </ul>
+            </div>
         </div>
     </div>
 </nav>

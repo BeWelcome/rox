@@ -3,11 +3,9 @@
 namespace AppBundle\Doctrine\Filter;
 
 use AppBundle\Entity\Language;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Annotations\Reader;
+use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class Configurator
 {
@@ -17,9 +15,9 @@ class Configurator
 
     public function __construct(ObjectManager $em, RequestStack $requestStack, Reader $reader)
     {
-        $this->em              = $em;
-        $this->requestStack    = $requestStack;
-        $this->reader          = $reader;
+        $this->em = $em;
+        $this->requestStack = $requestStack;
+        $this->reader = $reader;
     }
 
     public function onKernelRequest()

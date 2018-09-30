@@ -3,9 +3,9 @@
 namespace AppBundle\Doctrine\Filter;
 
 use AppBundle\Doctrine\Annotation\LanguageAware;
+use Doctrine\Common\Annotations\Reader;
 use Doctrine\ORM\Mapping\ClassMetaData;
 use Doctrine\ORM\Query\Filter\SQLFilter;
-use Doctrine\Common\Annotations\Reader;
 
 class LanguageFilter extends SQLFilter
 {

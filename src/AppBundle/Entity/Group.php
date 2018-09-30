@@ -115,7 +115,7 @@ class Group
     private $id;
 
     /**
-     * @var ArrayCollection.
+     * @var arrayCollection
      *
      * @ORM\ManyToMany(targetEntity="Member", mappedBy="groups", fetch="EAGER")
      * @ORM\JoinTable(name="membersgroups",
@@ -470,17 +470,17 @@ class Group
     {
         $descriptions = [];
         // return array based on locale
-        foreach($this->descriptions as $description )
-        {
+        foreach ($this->descriptions as $description) {
             $descriptions[$description->getLanguage()->getShortCode()] = $description;
         }
+
         return $descriptions;
     }
 
     /**
      * Set approved.
      *
-     * @param boolean $approved
+     * @param bool $approved
      *
      * @return Group
      */
@@ -494,7 +494,7 @@ class Group
     /**
      * Get approved.
      *
-     * @return boolean
+     * @return bool
      */
     public function getApproved()
     {

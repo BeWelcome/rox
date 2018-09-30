@@ -38,9 +38,9 @@ class GroupRequest
     public $membersOnly = 'Yes';
 
     /**
-     * Visible comments? always false for new groups
+     * Visible comments? always false for new groups.
+     *
      * @var bool
      */
     public $comments = false;
 }
-

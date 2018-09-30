@@ -8,7 +8,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use AppBundle\Doctrine\Annotation\LanguageAware as LanguageAware;
+
 /**
  * MembersTrad.
  *

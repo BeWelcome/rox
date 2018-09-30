@@ -119,7 +119,7 @@ if ($threads = $groups->getThreads()) {
 }
 ?>
 
-<div id="forum" class="col-12 mt-3">
+<div id="forum" class="col-12 mt-3 px-0">
 <!-- Now displays the recent forum post list -->
 <?php
 if ($User) {

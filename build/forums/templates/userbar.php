@@ -26,22 +26,21 @@ Boston, MA  02111-1307, USA.
     $uri = htmlspecialchars(implode('/', $request), ENT_QUOTES);
     $uri = rtrim($uri, '/').'/';
 ?>
-    <h3><?php echo $this->words->getFormatted('Actions'); ?></h3>
 
-<div class="btn-group-vertical btn-block mb-3">
+<div class="list-group mb-3">
 
-    <a href="groups/search" class="btn btn-light text-left text-truncate" title="<?php echo $this->words->get('GroupsSearchHeading'); ?>"><?php echo $this->words->get('GroupsSearchHeading'); ?></a>
-    <a href="forums/rules" class="btn btn-light text-left text-truncate" title="<?php echo $this->words->get('ForumRulesShort'); ?>"><?php echo $this->words->get('ForumRulesShort'); ?></a>
-    <a href="http://www.bewelcome.org/wiki/Howto_Forum" class="btn btn-light text-left text-truncate" title="<?php echo $this->words->get('ForumLinkToDoc'); ?>"><?php echo $this->words->get('ForumLinkToDoc'); ?></a>
+    <a href="groups/search" class="list-group-item nav-link" title="<?php echo $this->words->get('GroupsSearchHeading'); ?>"><?php echo $this->words->get('GroupsSearchHeading'); ?></a>
+    <a href="forums/rules" class="list-group-item nav-link" title="<?php echo $this->words->get('ForumRulesShort'); ?>"><?php echo $this->words->get('ForumRulesShort'); ?></a>
+    <a href="about/faq/6" class="list-group-item nav-link" title="<?php echo $this->words->get('ForumLinkToDoc'); ?>"><?php echo $this->words->get('ForumLinkToDoc'); ?></a>
     <?php  if ($this->_session->has( "IdMember" )) {
-        echo '<a href="forums/subscriptions" class="btn btn-light text-left text-truncate" title="' . $this->words->get('forum_YourSubscription') . '">' . $this->words->get('forum_YourSubscription') . '</a>';
+        echo '<a href="forums/subscriptions" class="list-group-item nav-link" title="' . $this->words->get('forum_YourSubscription') . '">' . $this->words->get('forum_YourSubscription') . '</a>';
         if ($this->BW_Right->HasRight("ForumModerator")) { ?>
             </div>
             <h3>Moderation actions</h3>
-                <div class="btn-group-vertical btn-block mb-3">
-                <a href="forums/reporttomod/AllMyReport" class="btn btn-outline-primary text-left text-truncate">All reports for me</a>
-                <a href="forums/reporttomod/MyReportActive" class="btn btn-outline-primary text-left text-truncate">Pending reports for me <span class="badge badge-default"><?php echo $this->_model->countReportList($this->_session->get("IdMember"),"('Open','OnDiscussion')"); ?></span></a>
-                <a href="forums/reporttomod/AllActiveReports" class="btn btn-outline-primary text-left text-truncate">All pending reports <span class="badge badge-default"><?php echo $this->_model->countReportList(0,"('Open','OnDiscussion')"); ?></span></a>
+                <div class="list-group">
+                <a href="forums/reporttomod/AllMyReport" class="list-group-item nav-link">All reports for me</a>
+                <a href="forums/reporttomod/MyReportActive" class="list-group-item nav-link">Pending reports for me <span class="badge badge-default"><?php echo $this->_model->countReportList($this->_session->get("IdMember"),"('Open','OnDiscussion')"); ?></span></a>
+                <a href="forums/reporttomod/AllActiveReports" class="list-group-item nav-link">All pending reports <span class="badge badge-default"><?php echo $this->_model->countReportList(0,"('Open','OnDiscussion')"); ?></span></a>
        <?php }
     }
     ?>

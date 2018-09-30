@@ -45,7 +45,7 @@ $vars =& PPostHandler::getVars($callbackId);
 <script type="text/javascript" src="script/forums_suggest.js"></script>
 */ ?>
 
-<div class="col-12">
+<div class="col-12 px-0">
 
     <?php
     if ($navichain_items = $boards->getNaviChain()) {
@@ -79,12 +79,13 @@ $vars =& PPostHandler::getVars($callbackId);
     ?>
 
 </div>
-<div class="col-12">
-    <form method="post" onsubmit="return check_SelectedLanguage();" action="<?php echo $uri; ?>" name="editform"
-          class="fieldset_toggles" id="forumsform">
-        <input type="hidden" name="<?php echo $callbackId; ?>" value="1"/>
-        <input type="hidden" name="IdLanguage" id="IdLanguage" value="0">
-        <?php
+
+<form method="post" onsubmit="return check_SelectedLanguage();" action="<?php echo $uri; ?>" name="editform"
+      class="fieldset_toggles w-100" id="forumsform">
+    <input type="hidden" name="<?php echo $callbackId; ?>" value="1"/>
+    <input type="hidden" name="IdLanguage" id="IdLanguage" value="0">
+
+    <?php
         if (isset($vars['errors']) && is_array($vars['errors'])) {
             if (in_array('title', $vars['errors'])) {
                 echo '<div class="alert alert-danger">' . $words->getFormatted("forum_error_title") . '</div>';
@@ -95,12 +96,14 @@ $vars =& PPostHandler::getVars($callbackId);
                 echo '<div class="alert alert-danger">' . $words->getFormatted("forum_error_post") . '</div>';
             }
         }
+        ?>
+
+<div class="col-12 px-0">
+        <?
         if (isset($allow_title) && $allow_title) {
 
             ?>
             <!-- input title -->
-
-            <div class="w-100">
                 <div class="input-group mb-2 mb-sm-0">
                     <div class="input-group-prepend h5 m-0" id="forumaddtitle">
                         <div class="input-group-text"><label class="m-0"
@@ -120,11 +123,10 @@ $vars =& PPostHandler::getVars($callbackId);
 
                     <input type="text" class="form-control" name="topic_title" maxlength="200" id="topic_title"
                            value="<?php echo $topic_titletrad; ?>" aria-describedby="forumaddtitle">
-                </div>
             </div>
 
         <? } ?>
-        <div class="w-100 mt-2">
+        <div class="col-12 px-0 mt-2">
 
             <label for="topic_text" class="h5 m-0"><?php echo $words->getFormatted("forum_label_text"); ?></label>
 
@@ -135,74 +137,59 @@ $vars =& PPostHandler::getVars($callbackId);
                     echo isset($vars['topic_text']) ? $vars['topic_text'] : '';
                 }
                 ?></textarea>
-        </div>
-        <!-- row -->
-        <?php
 
-        if ($groupsforum) {
-            echo '<input type="hidden" name="IdGroup" value="' . $groupsforum . '">';
-        } else {
-            if (isset($vars['IdGroup']) && $vars['IdGroup'] != 0 && is_numeric($vars['IdGroup'])) {
-                echo '<input type="hidden" name="IdGroup" value="' . intval($vars['IdGroup']) . '">';
+            <?php
+            if ($groupsforum) {
+                echo '<input type="hidden" name="IdGroup" value="' . $groupsforum . '">';
             } else {
-                echo '<input type="hidden" name="IdGroup" value="0">';
-            }
-        } ?>
+                if (isset($vars['IdGroup']) && $vars['IdGroup'] != 0 && is_numeric($vars['IdGroup'])) {
+                    echo '<input type="hidden" name="IdGroup" value="' . intval($vars['IdGroup']) . '">';
+                } else {
+                    echo '<input type="hidden" name="IdGroup" value="0">';
+                }
+            } ?>
+        </div>
+</div>
+    <div class="row justify-content-between align-items-center">
 
-        <div class="d-flex">
-            <div class="dropdown order-2">
-                <legend class="sr-only"><?= $words->getFormatted("forum_label_visibility") ?></legend>
-                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownVisibility"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <?= $words->getFormatted("forum_label_visibility") ?>
-                </button>
-                <div class="dropdown-menu ddextras" aria-labelledby="dropdownVisibility">
-                    <div>
-                        <?php
-                        // visibility can only be set on groups with 'VisiblePosts' set to 'yes'.
-                        // Only option to change is to show group post to all members (see #2167)
-                        if ($groupsforum || ($IdGroup != 0)) {
-                            if (empty($visibilityCheckbox)) {
-                                // Stupid hack to avoid too many code changes ?>
-                                <input type="hidden" name="PostVisibility" id="PostVisibility" value="GroupOnly">
-                                <input type="hidden" name="ThreadVisibility" id="ThreadVisibility" value="GroupOnly">
-                                <p><?php if ($allow_title) {
-                                        echo $words->get('ForumsThreadGroupOnly');
-                                    } else {
-                                        echo $words->get('ForumsPostGroupOnly');
-                                    } ?></p>
-                            <?php } else {
-                                echo $visibilityCheckbox;
-                            }
-                        } else {
+        <div class="col-12 col-md-auto order-2">
+            <legend class="sr-only"><?php echo $words->getFormatted("forum_Notify") ?></legend>
+            <input type="checkbox" name="NotifyMe" id="NotifyMe" <?php echo $notifymecheck ?>>
+            <label for="NotifyMe"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
+        </div>
+
+        <div class="col-12 col-md-auto order-3 text-right">
+                    <legend class="sr-only"><?= $words->getFormatted("forum_label_visibility") ?></legend>
+            <i class="fa fa-eye" title="<?= $words->getFormatted("forum_label_visibility"); ?>"></i>
+                    <?php
+                    // visibility can only be set on groups with 'VisiblePosts' set to 'yes'.
+                    // Only option to change is to show group post to all members (see #2167)
+                    if ($groupsforum || ($IdGroup != 0)) {
+                        if (empty($visibilityCheckbox)) {
                             // Stupid hack to avoid too many code changes ?>
-                            <input type="hidden" name="PostVisibility" id="PostVisibility" value="MembersOnly"/>
-                            <input type="hidden" name="ThreadVisibility" id="ThreadVisibility" value="MembersOnly"/>
-                            <p><?php if ($allow_title) {
-                                    echo $words->get('ForumsThreadMembersOnly');
+                            <input type="hidden" name="PostVisibility" id="PostVisibility" value="GroupOnly">
+                            <input type="hidden" name="ThreadVisibility" id="ThreadVisibility" value="GroupOnly">
+                            <?php if ($allow_title) {
+                                    echo $words->get('ForumsThreadGroupOnly');
                                 } else {
-                                    echo $words->get('ForumsPostMembersOnly');
-                                } ?></p>
-                        <?php } ?>
-                    </div>
-                </div>
-            </div>
+                                    echo $words->get('ForumsPostGroupOnly');
+                                } ?>
+                        <?php } else {
+                            echo $visibilityCheckbox;
+                        }
+                    } else {
+                        // Stupid hack to avoid too many code changes ?>
+                        <input type="hidden" name="PostVisibility" id="PostVisibility" value="MembersOnly"/>
+                        <input type="hidden" name="ThreadVisibility" id="ThreadVisibility" value="MembersOnly"/>
+                        <?php if ($allow_title) {
+                                echo $words->get('ForumsThreadMembersOnly');
+                            } else {
+                                echo $words->get('ForumsPostMembersOnly');
+                            } ?>
+                    <?php } ?>
+        </div>
 
-            <div class="dropdown order-3">
-                <legend class="sr-only"><?php echo $words->getFormatted("forum_Notify") ?></legend>
-                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownNotifications"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <?php echo $words->getFormatted("forum_Notify") ?>
-                </button>
-                <div class="dropdown-menu ddextras" aria-labelledby="dropdownNotifications">
-                    <div id="fpost_note">
-                        <input type="checkbox" name="NotifyMe" id="NotifyMe" <?php echo $notifymecheck ?>>
-                        <label for="NotifyMe"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex-grow-1 order-1">
+            <div class="col-12 col-md-auto order-1">
                 <input type="submit" class="btn btn-primary px-5" value="<?php
                 if ($allow_title) { // New Topic
                     if ($edit) {
@@ -220,7 +207,7 @@ $vars =& PPostHandler::getVars($callbackId);
 
                 ?>"/>
             </div>
-        </div>
+
     </form>
 </div>
 <?php

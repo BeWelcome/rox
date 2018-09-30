@@ -98,6 +98,10 @@ doctrine:
                 mappings: ~
                 hydrators:
                     LanguageHydrator: AppBundle\Doctrine\Hydrator\LanguageHydrator
+                filters:
+                    language_filter:
+                        class:   AppBundle\Doctrine\Filter\LanguageFilter
+                        enabled: true
 
 # Swiftmailer Configuration
 swiftmailer:

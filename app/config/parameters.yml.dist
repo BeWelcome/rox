@@ -18,3 +18,5 @@ parameters:
 
     new_members_messages_per_hour: 1
     new_members_messages_per_day: 2
+
+    group_directory:   "%kernel.root_dir%/../data/groups"

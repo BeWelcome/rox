@@ -101,3 +101,11 @@ services:
         tags:
             - { name: 'twig.extension' }
 
+    doctrine.filter.configurator:
+        class: AppBundle\Doctrine\Filter\Configurator
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@request_stack"
+            - "@annotation_reader"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }

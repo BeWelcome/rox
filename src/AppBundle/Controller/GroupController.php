@@ -3,15 +3,19 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Group;
+use AppBundle\Entity\Language;
 use AppBundle\Entity\Member;
+use AppBundle\Entity\MembersTrad;
 use AppBundle\Form\CustomDataClass\GroupRequest;
 use AppBundle\Form\CustomDataClass\SearchFormRequest;
 use AppBundle\Form\GroupType;
 use AppBundle\Form\SearchFormType;
 use AppBundle\Pagerfanta\SearchAdapter;
 use AppBundle\Repository\GroupRepository;
+use Html2Text\Html2Text;
 use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -50,30 +54,147 @@ class GroupController extends Controller
                     $fileName
                 );
             }
+            $em = $this->getDoctrine()->getManager();
+
+            // \todo: This is convoluted due to having to support the old structure! When recoding groups this should be simpler
+            // We need the current locale for the MembersTrad entity
+            $languageRepository = $em->getRepository(Language::class);
+            $language = $languageRepository->findOneBy(['shortcode' => $request->getSession()->get('locale')]);
+
+            // We create the group entity and add the first member
             $group = new Group();
             $group->setName($data->name);
             $group->setType($data->type);
             $group->setVisibleposts($data->membersOnly);
             $group->setVisiblecomments(false);
-            $group->setIdDescription(0 );
             $group->setMoreinfo('');
             $group->setPicture($fileName);
             $group->addMember($member);
-
-            $em = $this->getDoctrine()->getManager();
+            $member->addGroup($group);
             $em->persist($group);
             $em->flush();
+
+            // Create the description as a member trad using the current language
+            $description = new MembersTrad();
+            $description->setCreated(new \DateTime());
+            $description->setOwner($member);
+            $description->setIdTranslator($member->getId());
+            $description->setSentence($data->description);
+            $description->setIdrecord($group->getId());
+            $description->setIdTrad($group->getId());
+            $description->setLanguage($language);
+            $em->persist($description);
+            $em->flush();
+
+            // We need a trad id so we use the current id
+            $description->setIdTrad($description->getId());
+            $em->persist($description);
+
+            // Link group and description
+            $group->addDescription($description);
+            $em->persist($group);
+            $em->flush();
+
+            // Now add the current member as admin for this group
+            $connection = $this->getDoctrine()->getConnection();
+            $stmt = $connection->prepare("
+                UPDATE  
+                    `membersgroups`
+                SET
+                    `Status` = 'In'
+                WHERE
+                    IdGroup = :groupId
+                    AND IdMember = :memberId
+            ");
+            $stmt->execute([
+                ':groupId' => $group->getId(),
+                ':memberId' => $member->getId(),
+            ]);
+
+            $stmt = $connection->prepare("
+                REPLACE INTO 
+                    `privilegescopes`
+                SET
+                    `Idmember` = :memberId,
+                    `IdRole` = 2,
+                    `IdPrivilege` = 3,
+                    `IdType` = :groupId,
+                    `updated` = :updated
+            ");
+            $stmt->execute([
+                ':groupId' => $group->getId(),
+                ':memberId' => $member->getId(),
+                'updated' => (new \DateTime())->format('Y-m-d'),
+            ]);
 
             $this->addFlash('notice', 'The group was created and is now awaiting approval. You get a notification with the result.');
 
             // Get all group admins and send them a notification
-            // \todo
+            $recipients = $this->getNewGroupNotificationRecipients();
+
+            $count  = $this->sendNewGroupNotifications($group, $member);
+
             return $this->redirectToRoute('groups_overview');
         }
 
         return $this->render(':group:create.group.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    private function sendNewGroupNotifications(Group $group, Member $member)
+    {
+        $recipients = $this->getNewGroupNotificationRecipients();
+        $subject = '[New Group] '.strip_tags($group->getName());
+        $message = new Swift_Message();
+        $message
+            ->setSubject($subject)
+            ->setFrom(
+                [
+                    'groups@bewelcome.org' => 'BeWelcome - Group Administration',
+                ]
+            )
+            ->setTo($recipients)
+            ->setBody(
+                $this->renderView('emails/new.group.html.twig', [
+                    'subject' => $subject,
+                    'group' => $group,
+                    'member' => $member,
+                ]),
+                'text/html'
+            )
+        ;
+        $recipients = $this->get('mailer')->send($message);
+
+        return (0 === $recipients) ? false : true;
+    }
+
+    private function getNewGroupNotificationRecipients()
+    {
+        $connection = $this->getDoctrine()->getConnection();
+        $stmt = $connection->prepare("
+            SELECT 
+                m.Email 
+            FROM 
+                members m, 
+                rightsvolunteers rv, 
+                rights r 
+            WHERE 
+                r.Name = 'Group' 
+                AND r.id = rv.IdRight 
+                AND rv.Level <> 0 
+                AND rv.IdMember = m.id;
+        ");
+        $stmt->execute();
+        $emails = $stmt->fetchAll();
+        $recipients = [];
+        foreach($emails as $email)
+        {
+            if (!empty($email['Email'])) {
+                $recipients[] = $email['Email'];
+            }
+        }
+        return $recipients;
     }
 
     /**

@@ -8,11 +8,17 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use AppBundle\Doctrine\Annotation\LanguageAware as LanguageAware;
 /**
  * MembersTrad.
  *
- * @ORM\Table(name="MembersTrads", uniqueConstraints={@ORM\UniqueConstraint(name="Unique_entry", columns={"IdTrad", "IdOwner", "IdLanguage"})}, indexes={@ORM\Index(name="IdTrad", columns={"IdTrad"}), @ORM\Index(name="IdLanguage", columns={"IdLanguage"})})
+ * @ORM\Table(name="MembersTrads",
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="Unique_entry", columns={"IdTrad", "IdOwner", "IdLanguage"})},
+ *     indexes={@ORM\Index(name="IdTrad", columns={"IdTrad"}),
+ *          @ORM\Index(name="IdLanguage", columns={"IdLanguage"}),
+ *          @ORM\Index(name="TradLanguage", columns={"IdLanguage", "IdTrad"})
+ *      }
+ *     )
  * @ORM\Entity
  *
  * @SuppressWarnings(PHPMD)
@@ -21,11 +27,12 @@ use Doctrine\ORM\Mapping as ORM;
 class MembersTrad
 {
     /**
-     * @var int
+     * @var Member
      *
-     * @ORM\Column(name="IdOwner", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Member", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="IdOwner", referencedColumnName="id")
      */
-    private $idowner;
+    private $owner;
 
     /**
      * @var int
@@ -35,7 +42,7 @@ class MembersTrad
     private $idtrad;
 
     /**
-     * @var int
+     * @var Member
      *
      * @ORM\Column(name="IdTranslator", type="integer", nullable=false)
      */
@@ -44,16 +51,16 @@ class MembersTrad
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     * @ORM\Column(name="updated", type="datetime", nullable=false, options={"default": 0})
      */
-    private $updated = 'CURRENT_TIMESTAMP';
+    private $updated;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
+     * @ORM\Column(name="created", type="datetime", nullable=false, options={"default": 0})
      */
-    private $created = '0000-00-00 00:00:00';
+    private $created;
 
     /**
      * @var string
@@ -103,27 +110,27 @@ class MembersTrad
     private $language;
 
     /**
-     * Set idowner.
+     * Set owner.
      *
-     * @param int $idowner
+     * @param Member $owner
      *
      * @return MembersTrad
      */
-    public function setIdowner($idowner)
+    public function setOwner($owner)
     {
-        $this->idowner = $idowner;
+        $this->owner = $owner;
 
         return $this;
     }
 
     /**
-     * Get idowner.
+     * Get owner.
      *
-     * @return int
+     * @return Member
      */
-    public function getIdowner()
+    public function getOwner()
     {
-        return $this->idowner;
+        return $this->owner;
     }
 
     /**

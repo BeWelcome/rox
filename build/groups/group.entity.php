@@ -99,11 +99,11 @@ AND t.last_postid = p.id";
      * @return mixed false or group of arrays that match any of the terms
      * @access public
      */
-    public function findBySearchTerms($terms = array(), $offset, $limit = 10)
+    public function findBySearchTerms($terms = array(), $offset = 0, $limit = 10)
     {
         if (empty($terms))
         {
-            return $this->findAll($page, 10);
+            return $this->findAll($offset, 10);
         }
         
         foreach ($terms as &$term)
@@ -120,10 +120,14 @@ AND t.last_postid = p.id";
         
         $clause = implode(' or ', $terms);
 
-        return $this->findByWhereMany($clause, $offset, $limit);
+        return $this->findByWhereMany('approved = 1 AND (' . $clause . ')', $offset, $limit);
 
     }
 
+    public function findAll($offset = 0, $limit = 0)
+    {
+        return $this->findByWhereMany('approved = 1');
+    }
 
     /**
      * return the members of the group that have joined in the last two weeks

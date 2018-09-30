@@ -49,7 +49,7 @@ class Group
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="created", type="datetime", nullable=false, options={"default" : "CURRENT_TIMESTAMP"})
+     * @ORM\Column(name="created", type="datetime", nullable=false, options={"default" : 0})
      */
     private $created;
 
@@ -81,12 +81,15 @@ class Group
      */
     private $displayedonprofile = 'Yes';
 
-    /**
-     * @var int
+    /** @var ArrayCollection
      *
-     * @ORM\Column(name="IdDescription", type="integer", nullable=true)
+     * @ORM\ManyToMany(targetEntity="MembersTrad", fetch="EAGER")
+     * @ORM\JoinTable(name="groups_trads",
+     *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="trad_id", referencedColumnName="id", unique=true)}
+     *      )
      */
-    private $iddescription;
+    private $descriptions;
 
     /**
      * @var string
@@ -112,9 +115,9 @@ class Group
     private $id;
 
     /**
-     * Many Groups have Many Users.
+     * @var ArrayCollection.
      *
-     * @ORM\ManyToMany(targetEntity="Member", mappedBy="groups")
+     * @ORM\ManyToMany(targetEntity="Member", mappedBy="groups", fetch="EAGER")
      * @ORM\JoinTable(name="membersgroups",
      *      joinColumns={@ORM\JoinColumn(name="IdMember", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="IdGroup", referencedColumnName="id")}
@@ -125,6 +128,7 @@ class Group
     public function __construct()
     {
         $this->members = new ArrayCollection();
+        $this->descriptions = new ArrayCollection();
     }
 
     /**
@@ -320,27 +324,27 @@ class Group
     }
 
     /**
-     * Set iddescription.
+     * Set description.
      *
-     * @param int $iddescription
+     * @param MembersTrad $description
      *
      * @return Group
      */
-    public function setIddescription($iddescription)
+    public function setDescription($description)
     {
-        $this->iddescription = $iddescription;
+        $this->description = $description;
 
         return $this;
     }
 
     /**
-     * Get iddescription.
+     * Get MembersTrad.
      *
-     * @return int
+     * @return MembersTrad
      */
-    public function getIddescription()
+    public function getDescription()
     {
-        return $this->iddescription;
+        return $this->description;
     }
 
     /**
@@ -433,6 +437,44 @@ class Group
     public function getMembers()
     {
         return $this->members;
+    }
+
+    /**
+     * Add description.
+     *
+     * @param MembersTrad $description
+     *
+     * @return Group
+     */
+    public function addDescription(MembersTrad $description)
+    {
+        $this->descriptions[] = $description;
+
+        return $this;
+    }
+
+    /**
+     * Remove description.
+     *
+     * @param MembersTrad $description
+     */
+    public function removeDescription(MembersTrad $description)
+    {
+        $this->descriptions->removeElement($description);
+    }
+
+    /**
+     * @return array
+     */
+    public function getDescriptions()
+    {
+        $descriptions = [];
+        // return array based on locale
+        foreach($this->descriptions as $description )
+        {
+            $descriptions[$description->getLanguage()->getShortCode()] = $description;
+        }
+        return $descriptions;
     }
 
     /**

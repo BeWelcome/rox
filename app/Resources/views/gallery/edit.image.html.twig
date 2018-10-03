@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block javascripts %}
+{% endblock javascripts %}
+
+{% block stylesheets %}
+{% endblock stylesheets %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12 col-md-6 text-center">
+            <a href="/gallery/img?id={{ image.id }}" class="w-100" title="{{ image.title }}" rel="image">
+                <img src="/gallery/thumbimg?id={{ image.id}}&amp;t=2" class="framed big" alt="image">
+            </a>
+        </div>
+        <div class="col-12 col-md-6">
+            {{ form(form) }}
+        </div>
+    </div>
+{% endblock content %}

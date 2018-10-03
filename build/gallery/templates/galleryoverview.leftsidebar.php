@@ -44,8 +44,8 @@
         <?=$callback_tag ?>
         <?=$words->get('GalleryCreateNewPhotoset')?>: 
         <br />
-        <input name="g-user" type="hidden" value="<?=$this->loggedInMember->get_userId()?>">
-        <input name="g-title" id="g-title" type="text" maxlength="30" style="width: 90%" onclick="$('newGallery').checked = true; $('deleteonly').value = 0;">
+        <input name="g-user" type="hidden" value="<?=$this->loggedInMember->id?>">
+        <input name="g-title" id="g-title" type="text" maxlength="30" style="width: 90%" onclick="$('newGallery').checked = true; $('#deleteOnly').val(0);">
         <?php
         // Display errors from last submit	
         if (isset($vars['errors']) && !empty($vars['errors']))
@@ -57,9 +57,9 @@
         }
         ?>
         <input name="new" type="hidden" value="1">
-        <input id="deleteonly" name="deleteOnly" type="hidden" value="0">
+        <input id="deleteOnly" name="deleteOnly" type="hidden" value="0">
         <br />
-        <input type="submit" class="button" name="button" value="<?=$words->getBuffered('Add')?>" id="button" onclick="$('deleteonly').value = 0; return submitStuff();"/>
+        <input type="submit" class="button" name="button" value="<?=$words->getBuffered('Add')?>" id="button" onclick="$('#deleteOnly').val(0); return submitStuff();"/>
         </form>
     </p>
 

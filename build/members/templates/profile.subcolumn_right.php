@@ -141,7 +141,7 @@ if (count($relations) > 0) { ?>
 ** Profile Gallery  **
 **********************/
 
-$userid = $member->userid;
+$userid = $member->id;
 $gallery = new GalleryModel;
 $statement = $userid ? $gallery->getLatestItems($userid) : false;
 if ($statement) {

@@ -25,7 +25,7 @@ class GalleryView extends PAppView {
     {
         if (!$d = $this->_model->imageData($id))
             PPHP::PExit();
-        $tmpDir = new PDataDir('gallery/user'.$d->user_id_foreign);
+        $tmpDir = new PDataDir('gallery/member'.$d->user_id_foreign);
         if (!$tmpDir->fileExists($d->file))
             PPHP::PExit();
         header('Content-type: '.$d->mimetype);
@@ -63,7 +63,7 @@ class GalleryView extends PAppView {
     {
         if (!$d = $this->_model->imageData($id))
             PPHP::PExit();
-        $tmpDir = new PDataDir('gallery/user'.$d->user_id_foreign);
+        $tmpDir = new PDataDir('gallery/member'.$d->user_id_foreign);
         if (isset($_GET['t'])) {
             $thumbFile = 'thumb'.(int)$_GET['t'].$d->file;
         } else {

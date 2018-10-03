@@ -45,11 +45,11 @@
             ?>
 
             <div class="form-group">
-                <input name="g-user" type="hidden" value="<?=$this->loggedInMember->get_userId()?>">
-                <input name="g-title" id="g-title" type="text" size="20" maxlength="30" onclick="$('newGallery').checked = true; $('deleteonly').value = 0;">
+                <input name="g-user" type="hidden" value="<?=$this->loggedInMember->id?>">
+                <input name="g-title" id="g-title" type="text" size="20" maxlength="30" onclick="$('newGallery').checked = true; $('#deleteonly').val(0);">
 
                 <input name="new" type="hidden" value="1">
-                <input name="deleteOnly" type="hidden" value="0">
+                <input name="deleteOnly" id="deleteOnly" type="hidden" value="0">
             </div>
         <input type="submit" class="btn btn-sm btn-primary" name="button" value="<?=$words->getBuffered('Add')?>" id="button" onclick="return submitStuff();"/><?php echo $words->flushBuffer(); ?>
         </form>

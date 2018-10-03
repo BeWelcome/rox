@@ -27,7 +27,7 @@ INSERT INTO `gallery`
 (`id`, `user_id_foreign`, `flags`, `title`, `text`)
 VALUES
 ('.$this->dao->nextId('gallery').',
-'.(int)$member->get_userid().',
+'.(int)$member->id.',
 0,
 \''.$this->dao->escape($title).'\',
 \''.($desc ? $this->dao->escape($desc) : '').'\')
@@ -64,7 +64,7 @@ VALUES
             return false;
         $R = MOD_right::get();
         $GalleryRight = $R->hasRight('Gallery');
-        if (($member->get_userid() == $image->user_id_foreign) || ($GalleryRight > 1)) {
+        if (($member->id == $image->user_id_foreign) || ($GalleryRight > 1)) {
             // Log the deletion to prevent admin abuse
             MOD_log::get()->write("Deleting a gallery item #".$image->id." filename: ".$image->file." belonging to user: ".$image->user_id_foreign, "Gallery");
             $this->deleteThisImage($image);
@@ -134,7 +134,7 @@ VALUES
             if (!$image) {
                 return false;
             }
-            if ($member->get_userid() == $this->imageGalleryOwner('image',$image) || ($GalleryRight > 1)) {
+            if ($member->id == $this->imageGalleryOwner('image',$image) || ($GalleryRight > 1)) {
                 $image = $this->imageData($image);
                 // Log the deletion to prevent admin abuse
                 MOD_log::get()->write("Deleting multiple gallery items #".$image->id." filename: ".$image->file." belonging to user: ".$image->user_id_foreign, "Gallery");
@@ -154,7 +154,7 @@ VALUES
     protected function deleteThisImage($image)
     {
         $filename = $image->file;
-        $userDir = new PDataDir('gallery/user'.$image->user_id_foreign);
+        $userDir = new PDataDir('gallery/memebr'.$image->user_id_foreign);
         $userDir->delFile($filename);
         $userDir->delFile('thumb'.$filename);
         $userDir->delFile('thumb1'.$filename);
@@ -334,35 +334,11 @@ SELECT DISTINCT
     `text`
 FROM `gallery` AS g
 LEFT JOIN `gallery_items_to_gallery` AS gi ON
-    g.`id` = gi.`gallery_id_foreign`';
-        if ($publicOnly) {
-            $query .= '
-LEFT JOIN `user` AS `u` ON
-    u.`id` = g.`user_id_foreign`
-LEFT JOIN `members` AS `m` ON
-    u.`handle` = m.`Username`
-LEFT JOIN `memberspublicprofiles` AS `mp` ON
-    m.`id` = mp.`IdMember`';
-        }
-        $query .= '
+    g.`id` = gi.`gallery_id_foreign`
 WHERE
     g.`id` = gi.`gallery_id_foreign`
-    AND ';
-        if ($UserId) {
-            $query .= '
+    AND 
     g.`user_id_foreign` = ' . (int)$UserId . '
-    AND ';
-        }
-        if ($publicOnly) {
-            $query .= '
-    m.`id` = mp.`idMember`
-    AND
-    m.`Status` = \'Active\'
-    AND ';
-        }
-        $query .= '
-    1';
-        $query .= '
 ORDER BY `id` DESC';
         $s = $this->dao->query($query);
         if ($s->numRows() == 0)
@@ -390,8 +366,7 @@ SQL;
         {
             return false;
         }
-        $s = $this->singleLookup('SELECT handle FROM user WHERE id = '.(int)$userId);
-        return $this->createEntity('Member')->findByUsername($s->handle);
+        return $this->createEntity('Member')->findById($userId);
     }
 
     public function getLatestItems($userId = false, $galleryId = false, $numRows = false, $publicOnly = false)
@@ -400,7 +375,7 @@ SQL;
 SELECT
     i.`id`,
     i.`user_id_foreign`,
-    u.`handle` AS `user_handle`,
+    m.`username` AS `user_handle`,
     i.`file`,
     i.`original`,
     i.`flags`,
@@ -410,17 +385,10 @@ SELECT
     i.`title`,
     i.`created`
 FROM `gallery_items` AS i
-LEFT JOIN `user` AS `u` ON
-    u.`id` = i.`user_id_foreign`
+LEFT JOIN `members` AS `m` ON
+    m.`id` = i.`user_id_foreign`
 LEFT JOIN `gallery_items_to_gallery` AS `g` ON
     g.`item_id_foreign` = i.`id` ';
-        if ($publicOnly) {
-            $query .= '
-LEFT JOIN `members` AS `m` ON
-    u.`handle` = m.`Username`
-LEFT JOIN `memberspublicprofiles` AS `mp` ON
-    m.`id` = mp.`IdMember`';
-        }
         $query .= '
 WHERE ';
         if ($userId) {
@@ -431,13 +399,6 @@ AND ';
         if ($galleryId) {
         	$query .= '
     `gallery_id_foreign` = '.(int)$galleryId.'
-AND ';
-        }
-        if ($publicOnly) {
-            $query .= '
-    m.`id` = mp.`idMember`
-AND
-    m.`Status` IN ( \'Active\', \'Pending\', \'OutOfRemind\')
 AND ';
         }
         $query .= '1 = 1';
@@ -457,7 +418,7 @@ ORDER BY `created` DESC
 SELECT
     i.`id`,
     i.`user_id_foreign`,
-    u.`handle` AS `user_handle`,
+    m.`username` AS `user_handle`,
     i.`file`,
     i.`original`,
     i.`flags`,
@@ -467,8 +428,8 @@ SELECT
     i.`title`,
     i.`created`
 FROM `gallery_items` AS i
-LEFT JOIN `user` AS `u` ON
-    u.`id` = i.`user_id_foreign`
+LEFT JOIN `members` AS `m` ON
+    m.`id` = i.`user_id_foreign`
 WHERE i.`id` > '.(int)$imageId.'
         ';
         if ($userId) {
@@ -491,7 +452,7 @@ ORDER BY `id` ASC LIMIT '.(int)$limit.'
 SELECT
     i.`id`,
     i.`user_id_foreign`,
-    u.`handle` AS `user_handle`,
+    m.`username` AS `user_handle`,
     i.`file`,
     i.`original`,
     i.`flags`,
@@ -501,8 +462,8 @@ SELECT
     i.`title`,
     i.`created`
 FROM `gallery_items` AS i
-LEFT JOIN `user` AS `u` ON
-    u.`id` = i.`user_id_foreign`
+LEFT JOIN `members` AS `m` ON
+    m.`id` = i.`user_id_foreign`
 WHERE i.`id` < '.(int)$imageId.'
         ';
         if ($userId) {
@@ -559,7 +520,7 @@ ORDER BY `id` DESC LIMIT '.(int)$limit.'
 SELECT
     i.`id`,
     i.`user_id_foreign`,
-    u.`handle` AS `user_handle`,
+    m.`username` AS `user_handle`,
     i.`file`,
     i.`original`,
     i.`flags`,
@@ -570,11 +531,9 @@ SELECT
     i.`description`,
     i.`created`
 FROM `gallery_items` AS i,
-user as u,
 members as m
 WHERE i.`id` = ". (int)$itemId . "
-AND u.id = i.user_id_foreign
-AND m.Username = u.handle
+AND m.id = i.user_id_foreign
 AND m.Status IN ('Active', 'Pending', 'OutOfRemind')
         ";
 
@@ -617,7 +576,7 @@ WHERE
             return false;
         }
         $noError = true; // flag for error on one file
-        $userDir = new PDataDir('gallery/user'.$member->get_userid());
+        $userDir = new PDataDir('gallery/member'.$member->id);
         $insert = $this->dao->prepare('
 INSERT INTO `gallery_items`
 (`id`, `user_id_foreign`, `file`, `original`, `flags`, `mimetype`, `width`, `height`, `title`, `created`)
@@ -626,7 +585,7 @@ VALUES
             ');
         $itemId = false;
         $insert->bindParam(0, $itemId);
-        $userId = $member->get_userid();
+        $userId = $member->id;
         $insert->bindParam(1, $userId);
         $hash = false;
         $insert->bindParam(2, $hash);

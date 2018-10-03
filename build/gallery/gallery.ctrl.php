@@ -35,7 +35,7 @@ class GalleryController extends RoxControllerBase {
         $request = PRequest::get()->request;
 
         if (!isset($request[1])) {
-            $this->redirect('main');
+            $this->redirect('/');
             PPHP::PExit();
         }
         switch ($request[1]) {
@@ -74,7 +74,8 @@ class GalleryController extends RoxControllerBase {
                 break;
 
             case 'images':
-                $this->redirect('main');
+                $this->redirect('/');
+                break;
                 
             case 'upload':
                 return $this->upload();
@@ -89,22 +90,23 @@ class GalleryController extends RoxControllerBase {
                 $galleryId = (isset($_GET['id'])) ? $_GET['id'] : false;
                 $this->ajaxlatestimages($galleryId, true);
                 PPHP::PExit();
+                break;
                 
             case 'avatars': 
                 if ($loggedInMember) {
                     $page = new GalleryAvatarsPage();
-                    $userId = $loggedInMember->get_userid();
+                    $userId = $loggedInMember->id;
                     $page->statement = $this->_model->getLatestItems($userId);
                     return $page;
                 } else $this->redirect('gallery');
-
+                break;
             case 'create':
                 if (!$loggedInMember)
                     return false;
                 if (isset($request[2])) {
                     $vars['gallery'] = $this->_model->updateGalleryProcess();
                 }
-                $insertId = isset($vars['gallery']) ? $vars['gallery'] : mysql_insert_id();
+                $insertId = isset($vars['gallery']) ? $vars['gallery'] : mysqli_insert_id();
                 $loc_rel = 'gallery/show/sets/'.$insertId;
                 header('Location: ' . PVars::getObj('env')->baseuri . $loc_rel);
                 PVars::getObj('page')->output_done = true;
@@ -134,8 +136,6 @@ class GalleryController extends RoxControllerBase {
                         switch (isset($request[4]) ? $request[4] : '') {
                             case 'delete':
                                 return $this->deleteImage($image);
-                            case 'edit':
-                                $this->_model->editProcess($image);
                             default:
                                 return $this->image($image);
                         }
@@ -144,16 +144,7 @@ class GalleryController extends RoxControllerBase {
                     case 'galleries':
                     case 'sets':
                         if (!isset($request[3]) || !$gallery = $this->_model->getGallery($request[3])) {
-                            $this->redirect('main');
-                        }
-                        if (!$loggedInMember) {
-                            // Check if gallery owner's profile is public,
-                            // redirect to login if it is not
-                            $owner = $this->_model->getMemberWithUserId(
-                                $gallery->user_id_foreign);
-                            if (!$owner->publicProfile) {
-                                $this->redirectToLogin(implode('/', $request));
-                            }
+                            $this->redirect('/');
                         }
                         if (isset($request[4])) {
                             switch ($request[4]) {
@@ -178,13 +169,13 @@ class GalleryController extends RoxControllerBase {
                             }                      
                         } 
                         return $this->gallery($gallery,(isset($request[4]) && $request[4] == 'upload'));
-
+                        break;
                     case 'user':
                         $subTab = 'user';
                         if (isset($request[3])) {
                             $member = $membersmodel->getMemberWithUsername($request[3]);
                             if ($member) {
-                                $userId = $member->get_userid();
+                                $userId = $member->id;
                                 $this->member = $member;
                                 if (!$loggedInMember
                                     && !$member->publicProfile
@@ -211,35 +202,13 @@ class GalleryController extends RoxControllerBase {
                                 return $this->user($userId);
                             }
                         }
-                        
+                        break;
                     default:
-                        $this->redirect('main');
+                        $this->redirect('/');
                 }
         }
     }
 
-    /**
-     * handles showing gallery overview page
-     *
-     * @access public
-     * @return object $page
-     */
-    public function overview()
-    {
-        $page = new GalleryOverviewPage();
-        if ($this->loggedInMember) {
-            $page->images = $this->_model->getLatestItems($this->loggedInMember->get_userId());
-            $page->galleries = $this->_model->getGalleriesNotEmpty();
-            $page->cnt_pictures = $page->images ? $page->images->numRows() : 0;
-        } else {
-            $page->galleries = $this->_model->getGalleriesNotEmpty(false,
-                true);
-        }
-        $page->loggedInMember = $this->_model->getLoggedInMember();
-        $page->statement = $this->_model->getLatestItems();
-        return $page;
-    }
-    
     /**
      * handles showing a page for a single gallery
      *
@@ -252,8 +221,8 @@ class GalleryController extends RoxControllerBase {
     {
         $page = new GallerySetPage(); // TODO: Deal with the PageNames. We could easily name this GalleryPage but this reminds of the name of the app itself. How to proceed with this?        
         $page->loggedInMember = $this->loggedInMember;
-        $page->myself = ($this->loggedInMember && $this->loggedInMember->get_userId() == $gallery->user_id_foreign) ? $this->loggedInMember->Username : false;
-        $page->username = MOD_member::getUserHandle($gallery->user_id_foreign);
+        $page->myself = ($this->loggedInMember && $this->loggedInMember->id == $gallery->user_id_foreign) ? $this->loggedInMember->Username : false;
+        $page->username = $this->loggedInMember->Username;
         $page->gallery = $gallery;
         $page->statement = $this->_model->getLatestItems('',$gallery->id);
         $page->cnt_pictures = $page->statement ? $page->statement->numRows() : 0;
@@ -278,7 +247,7 @@ class GalleryController extends RoxControllerBase {
         $page->member = $this->_model->getMemberWithUserId($gallery->user_id_foreign);
         $page->loggedInMember = $this->loggedInMember;
         $user_id_foreign = $gallery->user_id_foreign;
-        $page->myself = ($this->loggedInMember && ($this->loggedInMember->get_userId() == $user_id_foreign)) ? $this->loggedInMember->Username : false;
+        $page->myself = ($this->loggedInMember && ($this->loggedInMember->id == $user_id_foreign)) ? $this->loggedInMember->Username : false;
         $page->gallery = $gallery;
         if ($status) $page->deleted = $this->_model->deleteGalleryProcess($gallery->id);
         return $page;
@@ -320,7 +289,7 @@ class GalleryController extends RoxControllerBase {
         $words = $this->getWords();
         $page = new GalleryUserPage();
         $page->member = $this->member;
-        $page->myself = ($this->loggedInMember && ($this->loggedInMember->get_userId() == $userId)) ? $this->loggedInMember : false;
+        $page->myself = ($this->loggedInMember && ($this->loggedInMember->id == $userId)) ? $this->loggedInMember : false;
         $page->infoMessage = $words->get($this->message);
         if ($page->myself) {
             $page->galleries = $this->_model->getUserGalleries($userId);
@@ -354,8 +323,8 @@ class GalleryController extends RoxControllerBase {
         $page->member = $this->member = $this->loggedInMember;
         $page->myself = true;
         $page->infoMessage = $words->get($this->message);
-        $page->galleries = $this->_model->getUserGalleries($this->member->get_userId());
-        $page->statement = $this->_model->getLatestItems($this->member->get_userId());
+        $page->galleries = $this->_model->getUserGalleries($this->member->id);
+        $page->statement = $this->_model->getLatestItems($this->member->id);
         $page->cnt_pictures = $page->statement ? $page->statement->numRows() : 0;
         $page->loggedInMember = $this->loggedInMember;
         return $page;        
@@ -407,7 +376,7 @@ class GalleryController extends RoxControllerBase {
     {
         $page = new GalleryUserImagesPage();
         $page->member = $this->member;
-        $page->myself = ($this->loggedInMember && ($this->loggedInMember->get_userId() == $userId)) ? $this->loggedInMember : false;
+        $page->myself = ($this->loggedInMember && ($this->loggedInMember->id == $userId)) ? $this->loggedInMember : false;
         $page->galleries = $this->_model->getUserGalleries($userId);
         $page->statement = $this->_model->getLatestItems($userId);
         $page->cnt_pictures = $page->statement ? $page->statement->numRows() : 0;
@@ -445,7 +414,7 @@ class GalleryController extends RoxControllerBase {
         if ($deleted = $this->_model->deleteOneProcess($image)) {
             $this->message = 'Gallery_ImageDeleted';
             $this->member = $this->loggedInMember;
-            $userId =$this->loggedInMember->get_userId();
+            $userId =$this->loggedInMember->id;
             return $this->user($userId);
         } else {
             $this->message = 'Gallery_ImageNotDeleted';
@@ -453,7 +422,7 @@ class GalleryController extends RoxControllerBase {
             if (!$this->member) {
                 return false;
             }
-            $userId =$this->loggedInMember->get_userId();
+            $userId =$this->loggedInMember->id;
             return $this->user($userId);
         }
     }
@@ -491,7 +460,7 @@ class GalleryController extends RoxControllerBase {
     {
         $loggedInMember = $this->loggedInMember;
         if ($galleryId) $statement = $this->_model->getLatestItems(false,$galleryId);
-        else $statement = $this->_model->getLatestItems($loggedInMember->get_userId());
+        else $statement = $this->_model->getLatestItems($loggedInMember->id);
         $itemsPerPage = 12;
         require_once 'templates/overview.php';
     }
@@ -512,7 +481,7 @@ class GalleryController extends RoxControllerBase {
     	// Modifying an IMAGE using an ajax-request
         if( isset($_GET['item']) ) {
             $id = $_GET['item'];
-            if ($member->get_userId() == $this->_model->imageGalleryOwner($type,$id)) {
+            if ($member->id == $this->_model->imageGalleryOwner($type,$id)) {
                 if( isset($_GET['title']) ) {
                     $str = htmlentities($_GET['title'], ENT_QUOTES, "UTF-8");
                     if ($str === '') {
@@ -685,7 +654,7 @@ class GalleryController extends RoxControllerBase {
     {
         if (!$d = $this->_model->imageData($id))
             PPHP::PExit();
-        $tmpDir = new PDataDir('gallery/user'.$d->user_id_foreign);
+        $tmpDir = new PDataDir('gallery/member'.$d->user_id_foreign);
         if (isset($_GET['t'])) {
             $thumbFile = 'thumb'.(int)$_GET['t'].$d->file;
         } else {

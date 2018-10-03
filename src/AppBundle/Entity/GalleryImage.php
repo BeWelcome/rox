@@ -10,14 +10,15 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="gallery_items", indexes={@ORM\Index(name="file", columns={"file"}), @ORM\Index(name="user_id_foreign", columns={"user_id_foreign"})})
  * @ORM\Entity
  */
-class GalleryItems
+class GalleryImage
 {
     /**
-     * @var integer
+     * @var Member
      *
-     * @ORM\Column(name="user_id_foreign", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Member", fetch="EAGER")
+     * @ORM\JoinColumn(name="user_id_foreign", referencedColumnName="id", nullable=false)
      */
-    private $userIdForeign;
+    private $owner;
 
     /**
      * @var string
@@ -91,18 +92,16 @@ class GalleryItems
      */
     private $id;
 
-
-
     /**
-     * Set userIdForeign
+     * Set owner
      *
-     * @param integer $userIdForeign
+     * @param TBUser $owner
      *
-     * @return GalleryItems
+     * @return GalleryImage
      */
-    public function setUserIdForeign($userIdForeign)
+    public function setOwner($owner)
     {
-        $this->userIdForeign = $userIdForeign;
+        $this->owner = $owner;
 
         return $this;
     }
@@ -110,11 +109,11 @@ class GalleryItems
     /**
      * Get userIdForeign
      *
-     * @return integer
+     * @return TBUser
      */
-    public function getUserIdForeign()
+    public function getOwner()
     {
-        return $this->userIdForeign;
+        return $this->owner;
     }
 
     /**
@@ -122,7 +121,7 @@ class GalleryItems
      *
      * @param string $file
      *
-     * @return GalleryItems
+     * @return GalleryImage
      */
     public function setFile($file)
     {
@@ -146,7 +145,7 @@ class GalleryItems
      *
      * @param string $original
      *
-     * @return GalleryItems
+     * @return GalleryImage
      */
     public function setOriginal($original)
     {
@@ -170,7 +169,7 @@ class GalleryItems
      *
      * @param string $flags
      *
-     * @return GalleryItems
+     * @return GalleryImage
      */
     public function setFlags($flags)
     {
@@ -194,7 +193,7 @@ class GalleryItems
      *
      * @param string $mimetype
      *
-     * @return GalleryItems
+     * @return GalleryImage
      */
     public function setMimetype($mimetype)
     {
@@ -218,7 +217,7 @@ class GalleryItems
      *
      * @param integer $width
      *
-     * @return GalleryItems
+     * @return GalleryImage
      */
     public function setWidth($width)
     {
@@ -242,7 +241,7 @@ class GalleryItems
      *
      * @param integer $height
      *
-     * @return GalleryItems
+     * @return GalleryImage
      */
     public function setHeight($height)
     {
@@ -266,7 +265,7 @@ class GalleryItems
      *
      * @param string $title
      *
-     * @return GalleryItems
+     * @return GalleryImage
      */
     public function setTitle($title)
     {
@@ -290,7 +289,7 @@ class GalleryItems
      *
      * @param \DateTime $created
      *
-     * @return GalleryItems
+     * @return GalleryImage
      */
     public function setCreated($created)
     {
@@ -314,7 +313,7 @@ class GalleryItems
      *
      * @param string $description
      *
-     * @return GalleryItems
+     * @return GalleryImage
      */
     public function setDescription($description)
     {

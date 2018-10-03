@@ -32,7 +32,7 @@ $statement = $p[0];
         echo '<a href="gallery/show/image/'.$d->id.'" id="image_link_'.$d->id.'"><img class="framed w-100" src="gallery/thumbimg?id='.$d->id.($thumbsize ? '&t='.$thumbsize : '').'" alt="image"></a>';
         echo '<div class="w-100 bg-white h5 px-2">';
         if ($this->loggedInMember && $this->loggedInMember->Username == $d->user_handle) {
-            echo '<input type="checkbox" class="thumb_check input_check mr-2" name="imageId[]" onchange="highlightMe($(\'image_link_'.$d->id.'\'),this.checked);" value="'.$d->id.'">';
+            echo '<input type="checkbox" class="thumb_check input_check mr-2" name="imageId[]" value="'.$d->id.'">';
         }
         echo '<a href="gallery/show/image/'.$d->id.'" title="'.$d->title.'">'.$title_short.'</a><a href="gallery/img?id='.$d->id.'" class=\'lightview\' rel=\'gallery[BestOf]\'><i class="fa fa-expand float-right" title="'.$words->getSilent('Preview image').'"></i></a>'.$words->flushBuffer().'</div>';
         echo '<p class="small">'.$layoutbits->ago(strtotime($d->created)).' '.$words->getFormatted('by') .' <a href="members/'.$d->user_handle.'">'.$d->user_handle.'</a>';

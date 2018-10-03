@@ -113,7 +113,6 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('gallery_album_delete_confirmation', '/gallery/show/sets/{galleryId}/delete/true');
         $this->addRouteDirectly('gallery_delete_image', '/gallery/show/image/{imageId}/delete');
         $this->addRouteDirectly('gallery_image', '/gallery/img');
-        $this->addRouteDirectly('gallery_image_edit', '/gallery/show/image/{imageId}/edit');
         $this->addRouteDirectly('gallery_upload_image', '/gallery/upload');
         $this->addRouteDirectly('gallery_upload_finish', '/gallery/uploaded');
         $this->addRouteDirectly('gallery_manage', '/gallery/manage');

@@ -13,11 +13,12 @@ use Doctrine\ORM\Mapping as ORM;
 class Gallery
 {
     /**
-     * @var integer
+     * @var Member
      *
-     * @ORM\Column(name="user_id_foreign", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Member", fetch="EAGER")
+     * @ORM\JoinColumn(name="user_id_foreign", referencedColumnName="id", nullable=false)
      */
-    private $userIdForeign;
+    private $owner;
 
     /**
      * @var string
@@ -38,7 +39,7 @@ class Gallery
      *
      * @ORM\Column(name="text", type="text", length=16777215, nullable=false)
      */
-    private $text;
+    private $description;
 
     /**
      * @var integer
@@ -52,27 +53,27 @@ class Gallery
 
 
     /**
-     * Set userIdForeign
+     * Set owner
      *
-     * @param integer $userIdForeign
+     * @param Member $owner
      *
      * @return Gallery
      */
-    public function setUserIdForeign($userIdForeign)
+    public function setOwner($owner)
     {
-        $this->userIdForeign = $userIdForeign;
+        $this->owner = $owner;
 
         return $this;
     }
 
     /**
-     * Get userIdForeign
+     * Get owner
      *
-     * @return integer
+     * @return Member
      */
-    public function getUserIdForeign()
+    public function getOwner()
     {
-        return $this->userIdForeign;
+        return $this->owner;
     }
 
     /**
@@ -126,13 +127,13 @@ class Gallery
     /**
      * Set text
      *
-     * @param string $text
+     * @param string $description
      *
      * @return Gallery
      */
-    public function setText($text)
+    public function setDescription($description)
     {
-        $this->text = $text;
+        $this->description = $description;
 
         return $this;
     }
@@ -142,9 +143,9 @@ class Gallery
      *
      * @return string
      */
-    public function getText()
+    public function getDescription()
     {
-        return $this->text;
+        return $this->description;
     }
 
     /**

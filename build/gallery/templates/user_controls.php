@@ -70,9 +70,9 @@ $vars = PPostHandler::getVars($callbackId);
     &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;
     <?=$words->get('ImagesWithSelected')?>: &nbsp;&nbsp;&nbsp;&nbsp;
 
-    <input name="deleteOnly" id="deleteonly" type="hidden" value="0">
+    <input name="deleteOnly" id="deleteOnly" type="hidden" value="0">
     
-    <input type="submit" class="button" name="button" value="<?=$words->getBuffered('Delete')?>" class="button" onclick="return confirm('<?=$words->getBuffered("confirmdeleteimages")?>'); $('deleteonly').value = 1;" style="cursor:pointer"/>
+    <input type="submit" class="button" name="button" value="<?=$words->getBuffered('Delete')?>" onclick=" $('deleteOnly').val(1); return confirm('<?=$words->getBuffered("confirmdeleteimages")?>');" style="cursor:pointer"/>
 
     <br />
     <br />
@@ -98,9 +98,9 @@ if (isset($galleries) && $galleries) { ?>
 <br />
 <input type="radio" name="new" id="newGallery" value="1">&nbsp;&nbsp;
 <input name="g-user" type="hidden" value="<?=$User->getId()?>">
-<input name="g-title" id="g-title" type="text" size="20" maxlength="30" onclick="$('newGallery').checked = true; $('deleteonly').value = 0;">
+<input name="g-title" id="g-title" type="text" size="20" maxlength="30" onclick="$('newGallery').checked = true; $('#deleteOnly').val(0);">
 <br>
-<input type="submit" class="button" name="button" value="<?=$words->getBuffered('Add')?>" id="button" onclick="$('deleteonly').value = 0; return submitStuff();"/>
+<input type="submit" class="button" name="button" value="<?=$words->getBuffered('Add')?>" id="button" onclick="$('#deleteOnly').val(0); return submitStuff();"/>
 </p>
 
 
@@ -116,17 +116,17 @@ echo $words->flushBuffer(); ?>
 
 <script type="text/javascript">
 function submitStuff() {
-    if ($('deleteonly').value == false && $('newGallery').checked == true && CheckEmpty($('g-title')) == true) {
-        return true;
-    } else if ($('deleteonly').value == false && $('newGallery').checked == false) {
+    let deleteOnly = $('#deleteOnly').val();
+    let newGallery = $('#newGallery').checked;
+    if ( deleteOnly === 0 &&  newGallery === true && trim($('#g-title').val() !== '')) {
         return true;
     } else {
-        return false;
+        return ((deleteOnly === 0) && (newGallery === false));
     }
 }
 </script>
 
 <?php
 if ($User) { 
-PPostHandler::clearVars($callbackId); 
+    PPostHandler::clearVars($callbackId);
 }

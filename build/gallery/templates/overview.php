@@ -32,11 +32,11 @@ if ($statement) {
     echo '<div class="w-100 bg-white h6 px-2">';
     $loggedmember = isset($this->model) ? $this->model->getLoggedInMember : $this->loggedInMember;
     if ($loggedmember && $loggedmember->Username == $d->user_handle) {
-        echo '<input type="checkbox" class="input_check mr-2" name="imageId[]" onchange="highlightMe($(\'image_link_'.$d->id.'\'),this.checked);" value="'.$d->id.'">';
+        echo '<input type="checkbox" class="input_check mr-2" name="imageId[]" value="'.$d->id.'">';
         echo '<a href="gallery/show/image/'. $d->id .'" title="'. $d->title .'">'. $title_short . '</a>';
         echo '<a href="gallery/show/image/'.$d->id.'"><i class="fa fa-edit float-right pt-1"></i></a>';
         echo '<div class="d-inline"><p class="small float-left pt-2">'.$layoutbits->ago(strtotime($d->created)).'</p>';
-        echo '<a href="gallery/show/image/'. $d->id .'/delete" title="DELETE '. $d->title .'" class="btn btn-sm btn-danger float-right"><i class="fa fa-trash"></i></a></div></div>';
+        echo '<a href="gallery/show/image/'. $d->id .'/delete" title="DELETE '. $d->title .'" class="btn btn-sm btn-danger float-right"><i class="fa fa-trash"></i></a></div>';
     }
     ?>
         <div class="modal fade" id="photo<?= $d->id ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -50,6 +50,7 @@ if ($statement) {
             </div>
         </div>
     <?
+        echo '</div>';
         echo '</div>';
     }
     echo '</div>';

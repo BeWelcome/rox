@@ -285,20 +285,22 @@ class CommunityNews
     }
 
     /**
-     * Triggered on insert
+     * Triggered on insert.
+     *
      * @ORM\PrePersist
      */
     public function onPrePersist()
     {
-        $this->createdAt = new \DateTime("now");
+        $this->createdAt = new \DateTime('now');
     }
 
     /**
-     * Triggered on update
+     * Triggered on update.
+     *
      * @ORM\PreUpdate
      */
     public function onPreUpdate()
     {
-        $this->updatedAt = new \DateTime("now");
+        $this->updatedAt = new \DateTime('now');
     }
 }

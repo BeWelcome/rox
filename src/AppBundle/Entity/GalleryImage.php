@@ -1,14 +1,22 @@
 <?php
+/*
+ * @codingStandardsIgnoreFile
+ *
+ * Auto generated file ignore for Code Sniffer
+ */
 
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * GalleryItems
+ * GalleryItems.
  *
  * @ORM\Table(name="gallery_items", indexes={@ORM\Index(name="file", columns={"file"}), @ORM\Index(name="user_id_foreign", columns={"user_id_foreign"})})
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class GalleryImage
 {
@@ -49,14 +57,14 @@ class GalleryImage
     private $mimetype;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="width", type="integer", nullable=false)
      */
     private $width;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="height", type="integer", nullable=false)
      */
@@ -84,7 +92,7 @@ class GalleryImage
     private $description;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -93,7 +101,7 @@ class GalleryImage
     private $id;
 
     /**
-     * Set owner
+     * Set owner.
      *
      * @param TBUser $owner
      *
@@ -107,7 +115,7 @@ class GalleryImage
     }
 
     /**
-     * Get userIdForeign
+     * Get userIdForeign.
      *
      * @return TBUser
      */
@@ -117,7 +125,7 @@ class GalleryImage
     }
 
     /**
-     * Set file
+     * Set file.
      *
      * @param string $file
      *
@@ -131,7 +139,7 @@ class GalleryImage
     }
 
     /**
-     * Get file
+     * Get file.
      *
      * @return string
      */
@@ -141,7 +149,7 @@ class GalleryImage
     }
 
     /**
-     * Set original
+     * Set original.
      *
      * @param string $original
      *
@@ -155,7 +163,7 @@ class GalleryImage
     }
 
     /**
-     * Get original
+     * Get original.
      *
      * @return string
      */
@@ -165,7 +173,7 @@ class GalleryImage
     }
 
     /**
-     * Set flags
+     * Set flags.
      *
      * @param string $flags
      *
@@ -179,7 +187,7 @@ class GalleryImage
     }
 
     /**
-     * Get flags
+     * Get flags.
      *
      * @return string
      */
@@ -189,7 +197,7 @@ class GalleryImage
     }
 
     /**
-     * Set mimetype
+     * Set mimetype.
      *
      * @param string $mimetype
      *
@@ -203,7 +211,7 @@ class GalleryImage
     }
 
     /**
-     * Get mimetype
+     * Get mimetype.
      *
      * @return string
      */
@@ -213,9 +221,9 @@ class GalleryImage
     }
 
     /**
-     * Set width
+     * Set width.
      *
-     * @param integer $width
+     * @param int $width
      *
      * @return GalleryImage
      */
@@ -227,9 +235,9 @@ class GalleryImage
     }
 
     /**
-     * Get width
+     * Get width.
      *
-     * @return integer
+     * @return int
      */
     public function getWidth()
     {
@@ -237,9 +245,9 @@ class GalleryImage
     }
 
     /**
-     * Set height
+     * Set height.
      *
-     * @param integer $height
+     * @param int $height
      *
      * @return GalleryImage
      */
@@ -251,9 +259,9 @@ class GalleryImage
     }
 
     /**
-     * Get height
+     * Get height.
      *
-     * @return integer
+     * @return int
      */
     public function getHeight()
     {
@@ -261,7 +269,7 @@ class GalleryImage
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
      *
@@ -275,7 +283,7 @@ class GalleryImage
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -285,7 +293,7 @@ class GalleryImage
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
      *
@@ -299,7 +307,7 @@ class GalleryImage
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -309,7 +317,7 @@ class GalleryImage
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
      *
@@ -323,7 +331,7 @@ class GalleryImage
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -333,9 +341,9 @@ class GalleryImage
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

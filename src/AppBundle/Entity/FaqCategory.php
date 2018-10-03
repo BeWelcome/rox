@@ -161,20 +161,22 @@ class FaqCategory
     }
 
     /**
-     * Triggered on insert
+     * Triggered on insert.
+     *
      * @ORM\PrePersist
      */
     public function onPrePersist()
     {
-        $this->created = new \DateTime("now");
+        $this->created = new \DateTime('now');
     }
 
     /**
-     * Triggered on update
+     * Triggered on update.
+     *
      * @ORM\PreUpdate
      */
     public function onPreUpdate()
     {
-        $this->updated = new \DateTime("now");
+        $this->updated = new \DateTime('now');
     }
 }

@@ -6,8 +6,8 @@ use AppBundle\Entity\Gallery;
 use AppBundle\Entity\GalleryImage;
 use AppBundle\Form\CustomDataClass\GalleryImageEditRequest;
 use AppBundle\Form\GalleryEditImageFormType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,8 +18,9 @@ class GalleryController extends Controller
      *     requirements = {"id": "\d+"}
      * )
      *
-     * @param Request $request
+     * @param Request      $request
      * @param GalleryImage $image
+     *
      * @return Response
      */
     public function editImageAction(Request $request, GalleryImage $image)
@@ -32,8 +33,7 @@ class GalleryController extends Controller
         $editImageRequest = new GalleryImageEditRequest($image);
         $editImageForm = $this->createForm(GalleryEditImageFormType::class, $editImageRequest);
         $editImageForm->handleRequest($request);
-        if ($editImageForm->isValid() && $editImageForm->isSubmitted())
-        {
+        if ($editImageForm->isValid() && $editImageForm->isSubmitted()) {
             $data = $editImageForm->getData();
             $image->setTitle($data->title);
             $image->setDescription($data->description);
@@ -42,7 +42,8 @@ class GalleryController extends Controller
             $em->flush();
 
             $this->addFlash('notice', 'Updated image information');
-            return $this->redirectToRoute('gallery_show_image', [ 'imageId' => $image->getId()]);
+
+            return $this->redirectToRoute('gallery_show_image', ['imageId' => $image->getId()]);
         }
 
         return $this->render(':gallery:edit.image.html.twig', [

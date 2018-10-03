@@ -1,14 +1,22 @@
 <?php
+/*
+ * @codingStandardsIgnoreFile
+ *
+ * Auto generated file ignore for Code Sniffer
+ */
 
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Gallery
+ * Gallery.
  *
  * @ORM\Table(name="gallery", indexes={@ORM\Index(name="user_id_foreign", columns={"user_id_foreign"})})
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class Gallery
 {
@@ -42,7 +50,7 @@ class Gallery
     private $description;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -50,10 +58,8 @@ class Gallery
      */
     private $id;
 
-
-
     /**
-     * Set owner
+     * Set owner.
      *
      * @param Member $owner
      *
@@ -67,7 +73,7 @@ class Gallery
     }
 
     /**
-     * Get owner
+     * Get owner.
      *
      * @return Member
      */
@@ -77,7 +83,7 @@ class Gallery
     }
 
     /**
-     * Set flags
+     * Set flags.
      *
      * @param string $flags
      *
@@ -91,7 +97,7 @@ class Gallery
     }
 
     /**
-     * Get flags
+     * Get flags.
      *
      * @return string
      */
@@ -101,7 +107,7 @@ class Gallery
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
      *
@@ -115,7 +121,7 @@ class Gallery
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -125,7 +131,7 @@ class Gallery
     }
 
     /**
-     * Set text
+     * Set text.
      *
      * @param string $description
      *
@@ -139,7 +145,7 @@ class Gallery
     }
 
     /**
-     * Get text
+     * Get text.
      *
      * @return string
      */
@@ -149,9 +155,9 @@ class Gallery
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

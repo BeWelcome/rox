@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="groups")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\GroupRepository")
+ * @ORM\HasLifecycleCallbacks
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
@@ -49,7 +50,7 @@ class Group
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="created", type="datetime", nullable=false, options={"default" : 0})
+     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
     private $created;
 
@@ -499,5 +500,14 @@ class Group
     public function getApproved()
     {
         return $this->approved;
+    }
+
+    /**
+     * Triggered on insert
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created = new \DateTime("now");
     }
 }

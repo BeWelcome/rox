@@ -27,6 +27,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *         @ORM\Index(name="DeleteRequest", columns={"DeleteRequest"}),
  *         @ORM\Index(name="WhenFirstRead", columns={"WhenFirstRead"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MessageRepository")
+ * @ORM\HasLifecycleCallbacks
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
@@ -50,7 +51,7 @@ class Message
     /**
      * @var DateTime
      *
-     * @ORM\Column(name="created", type="datetime", nullable=false, options={"default" : "CURRENT_TIMESTAMP"})
+     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
     private $created;
 
@@ -601,5 +602,23 @@ class Message
     public function getRequest()
     {
         return $this->request;
+    }
+
+    /**
+     * Triggered on insert
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created = new \DateTime("now");
+    }
+
+    /**
+     * Triggered on update
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updated = new \DateTime("now");
     }
 }

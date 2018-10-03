@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="community_news")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CommunityNewsRepository")
+ * @ORM\HasLifecycleCallbacks
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
@@ -46,7 +47,7 @@ class CommunityNews
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="created_at", type="datetime", nullable=true, options={"default": "CURRENT_TIMESTAMP"})
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
      */
     private $createdAt;
 
@@ -61,7 +62,7 @@ class CommunityNews
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=true, options={"default": "CURRENT_TIMESTAMP"})
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
      */
     private $updatedAt;
 
@@ -281,5 +282,23 @@ class CommunityNews
     public function getComments()
     {
         return $this->comments;
+    }
+
+    /**
+     * Triggered on insert
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->createdAt = new \DateTime("now");
+    }
+
+    /**
+     * Triggered on update
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updatedAt = new \DateTime("now");
     }
 }

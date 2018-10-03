@@ -20,6 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  *      }
  *     )
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
@@ -51,14 +52,14 @@ class MembersTrad
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="updated", type="datetime", nullable=false, options={"default": 0})
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
     private $updated;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="created", type="datetime", nullable=false, options={"default": 0})
+     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
     private $created;
 
@@ -357,5 +358,23 @@ class MembersTrad
     public function getLanguage()
     {
         return $this->language;
+    }
+
+    /**
+     * Triggered on insert
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created = new \DateTime("now");
+    }
+
+    /**
+     * Triggered on update
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updated = new \DateTime("now");
     }
 }

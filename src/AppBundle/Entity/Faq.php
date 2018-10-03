@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="faq", indexes={@ORM\Index(name="IdCategory", columns={"IdCategory"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\FaqRepository")
+ * @ORM\HasLifecycleCallbacks
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
@@ -30,14 +31,14 @@ class Faq
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="updated", type="datetime", nullable=false, options={"default" : "CURRENT_TIMESTAMP"})
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
     private $updated;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="created", type="datetime", nullable=false, options={"default" : "CURRENT_TIMESTAMP"})
+     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
     private $created;
 
@@ -260,5 +261,23 @@ class Faq
         $this->question = $question;
 
         return $this;
+    }
+
+    /**
+     * Triggered on insert
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created = new \DateTime("now");
+    }
+
+    /**
+     * Triggered on update
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updated = new \DateTime("now");
     }
 }

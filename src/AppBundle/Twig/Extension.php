@@ -32,6 +32,13 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
      */
     protected $translator;
 
+    /**
+     * Extension constructor.
+     *
+     * @param SessionInterface        $session
+     * @param Registry                $registry
+     * @param DataCollectorTranslator $translator
+     */
     public function __construct(
         SessionInterface $session,
         Registry $registry,

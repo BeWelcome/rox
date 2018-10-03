@@ -72,8 +72,7 @@ class LegacyController extends Controller
         $kernel = $this->get('rox.legacy_kernel');
 
         return $kernel->handle(
-            $request,
-            $request->getRealMethod()
+            $request
         );
     }
 }

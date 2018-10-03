@@ -3,7 +3,8 @@
     <form method="post" novalidate name="signup" id="user-register-form" class="needs-validation" role="form" autocomplete="off">
         <?=$callback_tag ?>
         <?php
-        if (in_array('inserror', $vars['errors'])) {
+        $errors = $vars['errors'];
+        if (in_array('inserror', $errors)) {
             echo '<span class="alert alert-danger">'.$errors['inserror'].'</span>';
         }
         ?>
@@ -49,9 +50,10 @@
 
                 <!-- Username -->
                 <div class="form-group">
+                    <?php $usernameError = in_array('SignupErrorUsernameAlreadyTaken', $errors); ?>
                     <label for="register-username" ><?php echo $words->get('SignupUsername'); ?></label>
                     <div class="input-group">
-                        <input type="text" required class="form-control" name="username"
+                        <input type="text" required class="form-control <?php if ($usernameError) { echo 'is-invalid'; }?>" name="username"
                                minlength="4"
                                maxlength="20"
                                pattern="[A-Za-z](?!.*[-_.][-_.])[A-Za-z0-9-._]{2,18}[A-Za-z0-9]"
@@ -64,7 +66,12 @@
                             <i class="fa fa-question"></i>
                         </button>
                         <div class="valid-feedback">Username looks good</div>
-                        <div class="invalid-feedback" id="username-invalid">Username must be at least 4 and maximum 20 characters long. They have to start with a letter, they have to end with either a letter or a number. In between the following characters may be used: . _ -</div>
+                        <?php
+                            if ($usernameError) { ?>
+                                <div class="invalid-feedback" id="username-invalid">Please choose a different username that is at least 4 and maximum 20 characters long. They have to start with a letter, they have to end with either a letter or a number. In between the following characters may be used: . _ -</div>
+                         <?php } else { ?>
+                            <div class="invalid-feedback" id="username-invalid">Username must be at least 4 and maximum 20 characters long. They have to start with a letter, they have to end with either a letter or a number. In between the following characters may be used: . _ -</div>
+                        <?php } ?>
                     </div>
                 </div>
 

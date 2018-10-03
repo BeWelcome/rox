@@ -52,8 +52,13 @@ class HomeController extends Controller
 
         $statisticsModel = new StatisticsModel($this->getDoctrine());
         $statistics = $statisticsModel->getStatistics();
+        $roxPostHandler = new \RoxPostHandler();
+        $roxPostHandler->classes = [
+            'SignupController',
+        ];
 
         return $this->render(':home:home.html.twig', [
+            'postHandler' => $roxPostHandler,
             'form' => $loginForm->createView(),
             'search' => $searchForm->createView(),
             'username' => $usernameForm->createView(),

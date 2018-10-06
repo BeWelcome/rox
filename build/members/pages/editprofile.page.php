@@ -1,17 +1,17 @@
 <?php
 
-// Utility function to sort the languages
-function cmpEditLang($a, $b)
-{
-    if ($a == $b) {
-        return 0;
-    }
-    return (strtolower($a->TranslatedName) < strToLower($b->TranslatedName)) ? -1 : 1;
-}
-
-
 class EditProfilePage extends ProfilePage
 {
+// Utility function to sort the languages
+    private function _cmpEditLang($a, $b)
+    {
+        if ($a == $b) {
+            return 0;
+        }
+        return (strtolower($a->TranslatedName) < strToLower($b->TranslatedName)) ? -1 : 1;
+    }
+
+
 
     protected function getSubmenuActiveItem()
     {
@@ -20,25 +20,29 @@ class EditProfilePage extends ProfilePage
 
     private function sortLanguages($languages)
     {
-        $words = new MOD_words;
+        $words = new MOD_words();
         $langarr = array();
         foreach($languages as $language) {
             $lang = $language;
             $lang->TranslatedName = $words->getSilent($language->WordCode);
             $langarr[] = $lang;
         }
-        usort($langarr, "cmpEditLang");
+        usort($langarr, [$this, "_cmpEditLang"]);
         return $langarr;
     }
-    
+
+    /**
+     * @param \Member $member
+     *
+     * @return array
+     * @throws PException
+     */
     protected function editMyProfileFormPrepare($member)
     {
         $member->setEditMode(true);
         $Rights = MOD_right::get();
         $lang = $this->model->get_profile_language();
         $profile_language = $lang->id;
-        $profile_language_code = $lang->ShortCode;
-        $profile_language_name = $lang->Name;
         $all_spoken_languages = $this->sortLanguages($member->get_all_spoken_languages());
         $all_signed_languages = $this->sortLanguages($member->get_all_signed_languages());
 
@@ -149,12 +153,7 @@ class EditProfilePage extends ProfilePage
                     $ii2++;
                 }
             }
-            // problems from previous form
-            if (is_array($memory->problems)) {
-                require_once 'edit_warning.php';
-            }
         }
-        // var_dump($vars);
 
         return $vars;
     }

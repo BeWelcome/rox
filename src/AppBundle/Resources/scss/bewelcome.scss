@@ -139,7 +139,7 @@ main {
 }
 
 .metric .label {
-  background: $bg-primary;
+  background: $primary;
   color: white;
   display: block;
   font-size: 12px;
@@ -168,5 +168,40 @@ a.active .metric .value {
   }
   @include media-breakpoint-only(xl) {
     column-count: 4;
+  }
+}
+
+#editProfileTab .nav-tabs {
+  border-bottom: $nav-tabs-border-width solid $nav-tabs-border-color;
+
+  .nav-item {
+    margin-bottom: -$nav-tabs-border-width;
+  }
+
+  .nav-link {
+    font-size: $font-size-sm;
+    line-height: $line-height-sm;
+    padding: $input-btn-padding-y-sm;
+    border: $nav-tabs-border-width solid transparent;
+    background-color: $info;
+    color: white;
+    @include border-top-radius($nav-tabs-border-radius);
+
+    @include hover-focus {
+      border-color: $nav-tabs-link-hover-border-color;
+    }
+
+    &.disabled {
+      color: $nav-link-disabled-color;
+      background-color: transparent;
+      border-color: transparent;
+    }
+  }
+
+  .nav-link.active,
+  .nav-item.show .nav-link {
+    color: $white;
+    background-color: $primary;
+    border-color: $primary;
   }
 }

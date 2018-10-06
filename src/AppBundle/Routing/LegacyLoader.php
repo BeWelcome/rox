@@ -127,7 +127,8 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('profile_addtorelations', '/members/{username}/relations/add');
         $this->addRouteDirectly('setlocation', '/setlocation');
         $this->addRouteDirectly('editmyprofile_finish', '/editmyprofile/finish');
-        $this->addRouteDirectly('editmyprofile_finish', '/members/{username}/adminedit/finish');
+        $this->addRouteDirectly('editmyprofile_language_finish', '/editmyprofile/{language}/finish');
+        $this->addRouteDirectly('admin_editprofile_finish', '/members/{username}/adminedit/finish');
         $this->addRouteDirectly('myprofile_in_langauge', '/members/{username}/{language}');
         $this->addRouteDirectly('imprint', '/impressum');
 

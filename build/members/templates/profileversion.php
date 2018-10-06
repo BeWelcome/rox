@@ -43,27 +43,27 @@ $words = $this->getWords();
 $myself = $this->myself;
 if (count($languages) > 1 || $myself) {
 ?>
-<div class="clearfix">
+<div>
     <div class="profile_translations float_right">
         <strong><?=$words->get('ProfileTranslations')?></strong>
-        <div class="clearfix btn-group btn-group-sm"><?php
+        <div class="btn-group btn-group-sm"><?php
             $ii = 0;
             $activelang_set = false;
             $max = count($languages);
             foreach($languages as $language) {
                 if (($language->ShortCode == $profile_language_code)) {
                 ?>
-                    <span class="btn btn-primary activelanguage"><?=$profile_language_name ?><? if ($this->myself && $max > 1) { ?><a href="editmyprofile/<?=$profile_language_code?>/delete"> <img src="images/icons/cancel.png" title="<?=$words->getSilent('delete')?>" alt="<?=$words->getSilent('delete')?>" /></a> <? } ?></span><?
+                    <button class="btn btn-primary"><?=$profile_language_name ?><? if ($this->myself && $max > 1) { ?><a href="editmyprofile/<?=$profile_language_code?>/delete" title="<?= $words->getSilent('delete')?>"> <i class="fa fa-close"></i></a> <? } ?></button><?
                     $activelang_set = true;
                 } else {
                     
-                ?><a class="btn btn-secondary availablelanguages" href="<?=$urlstring?>/<?=$language->ShortCode ?>"><?=$language->Name ?></a> <?
+                    ?><button class="btn btn-outline-primary bg-white"><a href="<?=$urlstring?>/<?=$language->ShortCode ?>"><?=$language->Name ?></a></button> <?
                 $ii++;
                 }
             }
             ?><?php echo $words->flushBuffer(); ?></div>
 <?php if ($myself) { ?>
-<select class="clearfix select2 small" id="add_language">
+<select class="select2 small" id="add_language">
     <option>- <?=$wwsilent->AddLanguage?> -</option>
       <?php
       $ownLanguages = "";
@@ -95,19 +95,10 @@ if (count($languages) > 1 || $myself) {
 } ?>
 
 <script type="text/javascript">//<!--
-    function linkDropDown(event){
-        var element = Event.element(event);
-        var index = element.selectedIndex;
-        var lang = element.options[index].value;
-
-        window.location.href = http_baseuri + 'editmyprofile/' + lang;
-    }
-
-    document.observe("dom:loaded", function() {
-        var element = $('add_language');
-        if (element !== null) {
-            element.observe('change', linkDropDown);
+    $('#add_language').change(function () {
+            var lang = $("#add_language option:selected").val();
+            window.location.href = http_baseuri + 'editmyprofile/' + lang;
         }
-    });
-//-->
+    )
+    //-->
 </script>

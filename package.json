@@ -39,7 +39,7 @@
     "popper.js": "^1.14.4",
     "respond.js": "^1.4.2",
     "sass-graph": "^3.0.0",
-    "select2": "^4.0.6-rc.1",
+    "select2": "~4.0.3",
     "select2-theme-bootstrap4": "^0.2.0-beta.2",
     "skrollr": "^0.6.26",
     "skrollr-menu": "github:prinzhorn/skrollr-menu",

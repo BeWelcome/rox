@@ -1,6 +1,6 @@
 .PHONY: all build phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpmetrics phpunit version
 
-SRC_DIR=src/ tests/TranslationLoader
+SRC_DIR=src/AppBundle tests/TranslationLoader
 
 null  :=
 SPACE := $(null) $(null)
@@ -27,7 +27,7 @@ mkdocs:
 	mkdocs build
 
 phpcpd:
-	./vendor/bin/phpcpd $(SRC_DIR) --progress --no-interaction --exclude=AppBundle/Entity
+	./vendor/bin/phpcpd $(SRC_DIR) --progress --no-interaction --exclude=Entity
 
 phploc:
 	./vendor/bin/phploc --log-xml=phploc.xml $(SRC_DIR)

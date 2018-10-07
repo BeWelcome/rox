@@ -6,6 +6,8 @@
 
 {% block content %}
 
-{{ wikipage | raw }}
+    <h1>{{ title | title }}</h1>
+
+    {{ wikipage | raw }}
 
 {% endblock content %}

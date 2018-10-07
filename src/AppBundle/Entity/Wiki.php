@@ -1,19 +1,27 @@
 <?php
+/*
+ * @codingStandardsIgnoreFile
+ *
+ * Auto generated file ignore for Code Sniffer
+ */
 
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Ewiki
+ * Ewiki.
  *
  * @ORM\Table(name="ewiki")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\WikiRepository")
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
-class Ewiki
+class Wiki
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="flags", type="integer", nullable=true)
      */
@@ -34,14 +42,14 @@ class Ewiki
     private $author = 'ewiki';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="created", type="integer", nullable=true)
      */
     private $created = '1168175948';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="lastmodified", type="integer", nullable=true)
      */
@@ -62,7 +70,7 @@ class Ewiki
     private $meta;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="hits", type="integer", nullable=true)
      */
@@ -78,7 +86,7 @@ class Ewiki
     private $pagename;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="version", type="integer")
      * @ORM\Id
@@ -86,14 +94,12 @@ class Ewiki
      */
     private $version;
 
-
-
     /**
-     * Set flags
+     * Set flags.
      *
-     * @param integer $flags
+     * @param int $flags
      *
-     * @return Ewiki
+     * @return Wiki
      */
     public function setFlags($flags)
     {
@@ -103,9 +109,9 @@ class Ewiki
     }
 
     /**
-     * Get flags
+     * Get flags.
      *
-     * @return integer
+     * @return int
      */
     public function getFlags()
     {
@@ -113,11 +119,11 @@ class Ewiki
     }
 
     /**
-     * Set content
+     * Set content.
      *
      * @param string $content
      *
-     * @return Ewiki
+     * @return Wiki
      */
     public function setContent($content)
     {
@@ -127,7 +133,7 @@ class Ewiki
     }
 
     /**
-     * Get content
+     * Get content.
      *
      * @return string
      */
@@ -137,11 +143,11 @@ class Ewiki
     }
 
     /**
-     * Set author
+     * Set author.
      *
      * @param string $author
      *
-     * @return Ewiki
+     * @return Wiki
      */
     public function setAuthor($author)
     {
@@ -151,7 +157,7 @@ class Ewiki
     }
 
     /**
-     * Get author
+     * Get author.
      *
      * @return string
      */
@@ -161,11 +167,11 @@ class Ewiki
     }
 
     /**
-     * Set created
+     * Set created.
      *
-     * @param integer $created
+     * @param int $created
      *
-     * @return Ewiki
+     * @return Wiki
      */
     public function setCreated($created)
     {
@@ -175,9 +181,9 @@ class Ewiki
     }
 
     /**
-     * Get created
+     * Get created.
      *
-     * @return integer
+     * @return int
      */
     public function getCreated()
     {
@@ -185,11 +191,11 @@ class Ewiki
     }
 
     /**
-     * Set lastmodified
+     * Set lastmodified.
      *
-     * @param integer $lastmodified
+     * @param int $lastmodified
      *
-     * @return Ewiki
+     * @return Wiki
      */
     public function setLastmodified($lastmodified)
     {
@@ -199,9 +205,9 @@ class Ewiki
     }
 
     /**
-     * Get lastmodified
+     * Get lastmodified.
      *
-     * @return integer
+     * @return int
      */
     public function getLastmodified()
     {
@@ -209,11 +215,11 @@ class Ewiki
     }
 
     /**
-     * Set refs
+     * Set refs.
      *
      * @param string $refs
      *
-     * @return Ewiki
+     * @return Wiki
      */
     public function setRefs($refs)
     {
@@ -223,7 +229,7 @@ class Ewiki
     }
 
     /**
-     * Get refs
+     * Get refs.
      *
      * @return string
      */
@@ -233,11 +239,11 @@ class Ewiki
     }
 
     /**
-     * Set meta
+     * Set meta.
      *
      * @param string $meta
      *
-     * @return Ewiki
+     * @return Wiki
      */
     public function setMeta($meta)
     {
@@ -247,7 +253,7 @@ class Ewiki
     }
 
     /**
-     * Get meta
+     * Get meta.
      *
      * @return string
      */
@@ -257,11 +263,11 @@ class Ewiki
     }
 
     /**
-     * Set hits
+     * Set hits.
      *
-     * @param integer $hits
+     * @param int $hits
      *
-     * @return Ewiki
+     * @return Wiki
      */
     public function setHits($hits)
     {
@@ -271,9 +277,9 @@ class Ewiki
     }
 
     /**
-     * Get hits
+     * Get hits.
      *
-     * @return integer
+     * @return int
      */
     public function getHits()
     {
@@ -281,11 +287,11 @@ class Ewiki
     }
 
     /**
-     * Set pagename
+     * Set pagename.
      *
      * @param string $pagename
      *
-     * @return Ewiki
+     * @return Wiki
      */
     public function setPagename($pagename)
     {
@@ -295,7 +301,7 @@ class Ewiki
     }
 
     /**
-     * Get pagename
+     * Get pagename.
      *
      * @return string
      */
@@ -305,11 +311,11 @@ class Ewiki
     }
 
     /**
-     * Set version
+     * Set version.
      *
-     * @param integer $version
+     * @param int $version
      *
-     * @return Ewiki
+     * @return Wiki
      */
     public function setVersion($version)
     {
@@ -319,9 +325,9 @@ class Ewiki
     }
 
     /**
-     * Get version
+     * Get version.
      *
-     * @return integer
+     * @return int
      */
     public function getVersion()
     {

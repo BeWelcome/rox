@@ -148,6 +148,7 @@ class GroupsBasePage extends PageWithActiveSkin
             $group_id = $this->group->id;
             $items[] = array('start', 'groups/'.$group_id, $words->getSilent('GroupOverview'));
             $items[] = array('forum', 'groups/'.$group_id.'/forum', $words->getSilent('GroupDiscussions'));
+            $items[] = array('wiki', 'groups/'.$group_id.'/wiki', $words->getSilent('GroupWiki'));
             $items[] = array('members', 'groups/'.$group_id.'/members', $words->getSilent('GroupMembers'));
             if ($this->isGroupMember())
             {

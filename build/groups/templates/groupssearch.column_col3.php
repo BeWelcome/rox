@@ -94,25 +94,24 @@
                 </div>
                 <div>
                     <!-- group name -->
-                    <h4>
+                    <h5>
                         <a href="groups/<?= $group_data->getPKValue() ?>"><?= htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a>
-                    </h4>
+                    </h5>
                     <!-- group details -->
                     <ul class="groupul mt-1">
                         <li><i class="fa fa-group mr-1"
                                title="Number of group members"></i><?= $group_data->getMemberCount(); ?></li>
-                        <li><i class="fa fa-history mr-1" title="<?= $words->get('GroupsDateCreation'); ?>"></i>
-                            <?= date('d F Y', ServerToLocalDateTime(strtotime($group_data->created), $this->getSession())); ?></li>
+                        <li><i class="fa fa-user-plus mr-1" title="<? echo $words->get('GroupsNewMembers'); ?>"></i><?php echo count($group_data->getNewMembers()); ?></li>
                         <?php if ($group_data !== 0) { ?>
                             <li><?php
                                 if ($group_data->latestPost) {
                                     $interval = date_diff(date_create(date('d F Y')), date_create(date('d F Y', ServerToLocalDateTime($group_data->latestPost, $this->getSession()))));
-                                    echo '<i class="fa fa-address-card mr-1" title="' . $words->get('GroupsLastPost') . '"></i>' . $interval->format('%a') . ' ' . $words->get('days_ago');
-
+                                    ?>
+                                    <i class="fa fa-history mr-1" title="<? echo $words->get('GroupsLastPost'); ?>"></i><span class="text-nowrap"><?=date($words->getBuffered('d F Y'), ServerToLocalDateTime($group_data->latestPost, $this->getSession())); ?></span>
+                                    <?
                                 } else {
                                     echo $words->get('GroupsNoPostYet');
                                 }
-
                                 ?></li>
                         <?php } ?>
                     </ul>

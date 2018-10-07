@@ -18,7 +18,7 @@ $lastcontinent = "";
         </div>
 
         <div id="collapse<?= $value[0] ?>" class="expand" aria-labelledby="heading<?= $value[0] ?>" data-parent="#accordionPlaces">
-            <div class="card-body">
+            <div class="card-body pt-0">
                 <div class="row">
                 <?php
 

@@ -56,7 +56,7 @@ if (!$this->members) {
         <tr>
             <td>
                 <? echo MOD_layoutbits::PIC_100_100($member->username,''); ?>
-                <div><a href="members/<?= $member->username; ?>"><?= $member->username; ?></a></div>
+                <div class="text-center"><a href="members/<?= $member->username; ?>"><?= $member->username; ?></a></div>
             </td>
             <td>
                 <div>

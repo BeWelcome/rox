@@ -148,7 +148,7 @@ class WordPrintStrategy_translate extends WordPrintStrategy_notranslate
     
     protected function standaloneTrLink($text, $code, $missing_language, $tr_quality)
     {
-        $href = PVars::getObj('env')->baseuri."bw/admin/adminwords_edit.php?lang=$missing_language->id&code=$code";
+        $href = "/admin/translations/" . $missing_language->id . "/" . $code . "/edit";
         $class = 'standalone tr_link '.$this->css_class_strings[$tr_quality];
         $title = $this->title_action_strings[$tr_quality].' '.$code.' in '.$missing_language->ShortCode;
         return '

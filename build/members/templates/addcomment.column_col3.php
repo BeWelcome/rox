@@ -153,7 +153,7 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
 
         <div class="w-100"></div>
 
-        <div class="col-auto mt-3">
+        <div class="col-12 col-xl-auto mt-3">
             <label class="m-0" for="CommentLength">
                 <h5><?=$words->get("CommentLength", $Username)?></h5>
             </label>
@@ -173,18 +173,18 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
                 <? } ?>
         </div>
 
-        <div class="col-auto mt-3">
-            <label for="TextWhere"><h5><?= $words->get("CommentsWhere", $Username); ?></label>
+        <div class="col-12 col-xl-auto ml-xl-auto mt-3">
+            <label for="TextWhere" class="mb-0"><h5><?= $words->get("CommentsWhere", $Username); ?></h5></label>
             <button type="button" class="btn btn-primary btn-sm ml-1" data-container="body" data-toggle="popover" data-placement="right" data-content="<?php echo $words->get("CommentsWhereDescription", $Username) ?>">
                 <i class="fa fa-question"></i>
             </button>
             <br>
-            <textarea name="TextWhere" id="TextWhere" class="w-100 mt-3" rows="3"><?php echo $textWhereWashed; ?></textarea>
+            <textarea name="TextWhere" id="TextWhere" class="w-100 form-control h5" rows="4"><?php echo $textWhereWashed; ?></textarea>
         </div>
 
         <div class="w-100"></div>
 
-        <div class="col-auto mt-3">
+        <div class="col-12 mt-3">
             <label for="Commenter" class="mb-1">
                 <h5><?php echo $words->get("CommentsCommenter") ?></h5>
             </label>
@@ -193,7 +193,7 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
                 <i class="fa fa-question"></i>
             </button>
 
-            <textarea name="TextFree" id="TextFree" class="w-100" rows="8"><?php echo $textFreeWashed; ?></textarea>
+            <textarea name="TextFree" id="TextFree" class="w-100 form-control h5" rows="4"><?php echo $textFreeWashed; ?></textarea>
         </div>
 
         <div class="col-12">

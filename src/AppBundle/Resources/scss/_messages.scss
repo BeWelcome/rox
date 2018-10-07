@@ -82,3 +82,10 @@
 .messagetext{
   color: #333;
 }
+
+.ck-focused {
+  color: #495057 !important;
+  border-color: #ffb474 !important;
+  outline: 0 !important;
+  box-shadow: 0 0 0 0.2rem rgba(243, 112, 0, 0.25) !important;
+}

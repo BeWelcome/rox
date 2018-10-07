@@ -705,19 +705,6 @@ class ForumsController extends PAppController
         }
     }
 
-    public function replySuggestionsProcess() {
-        $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-
-        if (PPostHandler::isHandling()) {
-            $groupId = SuggestionsModel::getGroupId();
-            $this->_model->setGroupId($groupId);
-            return $this->_model->replyProcess(true);
-        } else {
-            PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
-            return $callbackId;
-        }
-    }
-
     public function reportpostProcess() {
         $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
 

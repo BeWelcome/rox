@@ -352,9 +352,6 @@ class ForumsView extends RoxAppView {
                 $noForumNewTopicButton = true;
             }
         }
-        if ($boards->IdGroup == SuggestionsModel::getGroupId()) {
-            $noForumNewTopicButton = true;
-        }
         $pages = $this->getBoardPageLinks();
         $currentPage = $this->_model->getPage();
         $max = $this->_model->getBoard()->getNumberOfThreads();
@@ -548,11 +545,6 @@ class ForumsView extends RoxAppView {
     private function getVisibilityCheckbox($visibility, $highestVisibility, $IdGroup, $newTopic) {
         if ($IdGroup == 0) {
             // Indicate to the form that only MembersOnly is allowed; this is a hack to avoid too much code changes
-            return '';
-        }
-
-        if ($IdGroup == SuggestionsModel::getGroupId()) {
-            // Indicate to the form that only MembersOnly is allowed;
             return '';
         }
 

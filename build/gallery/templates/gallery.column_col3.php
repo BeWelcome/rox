@@ -28,7 +28,7 @@ if ($d) {
   foreach ($statement as $d) {
   	echo '
 <div class="img thumb float_left" style="width: 75px; height: 75px; margin: 0; padding-right: 6px;">
-  <a href="gallery/show/image/'.$d->id.'"><img class="framed" src="gallery/thumbimg?id='.$d->id.'" alt="image" style="width: 75px; height: 75px; margin: 0; padding: 0;" /></a>
+  <a href="gallery/img?id='.$d->id.'"><img class="img-fluid" src="gallery/thumbimg?id='.$d->id.'" alt="image" style="width: 75px; height: 75px; margin: 0; padding: 0;" /></a>
 </div>';
   }
       

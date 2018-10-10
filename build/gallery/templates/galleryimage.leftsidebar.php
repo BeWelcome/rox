@@ -45,5 +45,5 @@ echo '    <div class="clearfix" style="padding-top: 30px;">
 echo '  
     <p class="small" title="'.$d->created.'">'.$words->get('created').': '.$layoutbits->ago(strtotime($d->created)).'</br>'.$words->getFormatted('by').' <a href="members/'.$d->user_handle.'">'.$d->user_handle.'</a></p>
     <p class="small"><a href="gallery/img?id='.$d->id.'&amp;t=1" title="'.$words->getSilent('GalleryOriginal').'" />'.$d->width.'x'.$d->height.'</a>; '.$d->mimetype.'</p>
-    <p class="small"><a href="gallery/img?id='.$d->id.'&amp;s=1"><img src="images/icons/disk.png" alt="'.$words->getSilent('GalleryDownload').'" title="'.$words->getSilent('GalleryDownload').'"/> </a>  </a>' . $words->flushBuffer() . '</p>
+    <p class="small"><a href="gallery/img?id='.$d->id.'&amp;s=1"><i class="fa fa-disk"></i> </a>' . $words->flushBuffer() . '</p>
     </div>';

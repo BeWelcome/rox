@@ -42,12 +42,12 @@ HTML;
         $title = htmlentities($d->title, ENT_COMPAT, 'utf-8');
         $description = htmlentities($d->description, ENT_COMPAT, 'utf-8');
         echo <<<HTML
-    <a href="gallery/show/image/{$d->id}" id="g-title-edit" class="button" style="display:none;">{$words->getSilent("EditTitle")}</a>
-    <a href="gallery/show/image/{$d->id}" id="g-text-edit" class="button" style="display:none;">{$words->getSilent("EditDescription")}</a>
-    <a style="cursor:pointer" href="gallery/show/image/<?=$d->id?>/delete" class="button" onclick="return confirm('{$words->getFormatted("confirmdeletepicture")}')">{$words->getSilent("Delete")}</a>
+    <a href="gallery/img?id={$d->id}" id="g-title-edit" class="button" style="display:none;">{$words->getSilent("EditTitle")}</a>
+    <a href="gallery/img?id={$d->id}" id="g-text-edit" class="button" style="display:none;">{$words->getSilent("EditDescription")}</a>
+    <a style="cursor:pointer" href="gallery/img?id=<?=$d->id?>/delete" class="button" onclick="return confirm('{$words->getFormatted("confirmdeletepicture")}')">{$words->getSilent("Delete")}</a>
     {$words->flushBuffer()}
 
-<form method="post" action="gallery/show/image/{$d->id}/edit" class="def-form">
+<form method="post" action="gallery/img?id={$d->id}/edit" class="def-form">
     <fieldset id="image-edit" class="inline NotDisplayed">
     <legend>{$words->getFormatted('GalleryTitleEdit')}</legend>
     
@@ -99,7 +99,7 @@ echo <<<HTML
 <div class="img">
 HTML;
 
-echo '<a id="link_'.$d->id.'" href="gallery/img?id='.$d->id.'" title="'.$d->title.' :: '.$d->description.'" class="lightview" rel="image">
+echo '<a id="link_'.$d->id.'" href="gallery/img?id='.$d->id.'" title="'.$d->title.' :: '.$d->description.'" data-toggle="lightbox"  data-type="image" rel="image">
     <img id="thumb_'.$d->id.'" src="gallery/thumbimg?id='.$d->id.'&amp;t=2" class="framed big" alt="image"/>
 </a>';
 ?>

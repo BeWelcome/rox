@@ -14,6 +14,7 @@ class GalleryBasePage extends PageWithActiveSkin
     {
         $this->page_title = 'Gallery | BeWelcome';
         $this->model = new GalleryModel();
+        $this->addLateLoadScriptFile('/build/lightbox.js');
     }
     
     protected function teaser() {
@@ -48,10 +49,10 @@ class GalleryBasePage extends PageWithActiveSkin
    
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'styles/css/minimal/screen/custom/lightview.css';
+        $stylesheets[] = 'build/lightbox.css';
         return $stylesheets;
     }
-    
+
     protected function getMessage()
     {
         return $this->message;
@@ -131,8 +132,6 @@ class GalleryBasePage extends PageWithActiveSkin
             return $items;
         }
     }
-
-
 }
 
 ?>

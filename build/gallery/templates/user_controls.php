@@ -29,7 +29,7 @@ $vars = PPostHandler::getVars($callbackId);
 <form method="post" action="gallery/create/finished" class="def-form" id="gallery-create-form">
 <input type="hidden" name="<?=$callbackId?>" value="1"/>
 <p class="small">
-    <img src="images/icons/add.png" class="float_left"> <?=$words->get('GalleryCreateNewPhotoset')?>
+    <i class="fa fa-plus"></i><?=$words->get('GalleryCreateNewPhotoset')?>
     &nbsp;&nbsp;
     <input type="hidden" name="new" id="newGallery" value="1">
     <input name="g-user" type="hidden" value="<?=$User->getId()?>">
@@ -78,7 +78,7 @@ $vars = PPostHandler::getVars($callbackId);
     <br />
 <?php
 if (isset($galleries) && $galleries) { ?>
-<img src="images/icons/picture_go.png"> <?=$words->get('GalleryAddToPhotoset')?>
+<i class="fa fa-plus"></i> <?=$words->get('GalleryAddToPhotoset')?>
 <br />
 <input type="radio" name="new" id="oldGallery" value="0">&nbsp;&nbsp;
 <input name="removeOnly" type="hidden" value="0">

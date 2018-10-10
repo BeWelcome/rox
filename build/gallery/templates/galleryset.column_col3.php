@@ -20,9 +20,9 @@ foreach ($statement as $d) { ?>
 
     <div class="col-12 col-sm-6 col-md-3 pl-0 pr-2">
         <div class="card h-100 p-2">
-            <a href="#" data-toggle="modal" data-target="#photo<?= $d->id ?>"><img class="w-100" src="gallery/thumbimg?id=<?= $d->id ?>&amp;t=1" alt="<?= $d->title ?>"></a>
+            <a href="#" data-toggle="lightbox"  data-type="image"><img class="w-100" src="gallery/thumbimg?id=<?= $d->id ?>&amp;t=1" alt="<?= $d->title ?>"></a>
             <? if ($this->myself) { ?>
-             <a href="gallery/show/image/<?= $d->id ?>" class="btn btn-outline-primary mt-1"><i class="fa fa-edit mr-1"></i><?= $words->get('Edit'); ?></a>
+             <a href="gallery/img?id=<?= $d->id ?>" class="btn btn-outline-primary mt-1"><i class="fa fa-edit mr-1"></i><?= $words->get('Edit'); ?></a>
                 <?
                     $formkit = $this->layoutkit->formkit;
                     $callback_tag = $formkit->setPostCallback('GalleryController', 'updateGalleryCallback');
@@ -34,17 +34,6 @@ foreach ($statement as $d) { ?>
                 <input type="submit" class="btn btn-outline-danger btn-block" name="button" value="<?= $words->getBuffered('GalleryRemoveImagesFromPhotoset') ?>">
             </form>
             <? } ?>
-        </div>
-    </div>
-
-    <div class="modal fade" id="photo<?= $d->id ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <img src="gallery/img?id=<?= $d->id ?>" class="w-100">
-            </div>
         </div>
     </div>
 <?
@@ -66,7 +55,7 @@ require SCRIPT_BASE . 'build/gallery/templates/uploadform.php';
     <div class="subcl" >
       <!-- Content left block -->
 <?php if ($d) { ?>
-        <a href="gallery/show/image/<?= $d; ?>">
+        <a href="gallery/img?<?= $d; ?>">
           <img class="gallery_first" src="gallery/thumbimg?id=<?=$d?>&amp;t=1" alt="image"/>
       </a>
 <? } ?>

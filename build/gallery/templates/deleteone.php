@@ -12,12 +12,12 @@ $d = $image;
 if ($deleted)
 { 
     echo <<<HTML
-    <p class="note"><img src="images/misc/check.gif">&nbsp; &nbsp; {$words->getFormatted('GalleryImageDeleted')}: <i>{$d->title}</i></p>
+    <p class="note"><i class="fa fa-check"></i>&nbsp; &nbsp; {$words->getFormatted('GalleryImageDeleted')}: <i>{$d->title}</i></p>
 HTML;
 }
 else
 {
     echo <<<HTML
-    <p class="warning"><img src="images/misc/checkfalse.gif">&nbsp; &nbsp; {$words->getFormatted('GalleryImageNotDeleted')}: <i>{$d->title}</i></p>
+    <p class="warning"><i class="fa fa-cancel"></i>&nbsp; &nbsp; {$words->getFormatted('GalleryImageNotDeleted')}: <i>{$d->title}</i></p>
 HTML;
 }

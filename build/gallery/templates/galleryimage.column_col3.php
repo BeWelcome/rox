@@ -8,10 +8,10 @@ if ($d->description) {
 
 <div class="col">
     <div class="img">
-        <a id="link_<?= $d->id ?>" href="gallery/img?id=<?= $d->id ?>" title="<?= $d->title ?> rel="image">
+        <a id="link_<?= $d->id ?>" href="gallery/img?id=<?= $d->id ?>" title="<?= $d->title ?> rel="image" data-toggle="lightbox" data-type="image">
         <img id="thumb_<?= $d->id ?>" src="gallery/thumbimg?id=<?= $d->id ?>&amp;t=2" class="framed big" alt="image">
         </a>
-        <a href="gallery/show/image/<?=$d->id?>/delete" class="btn btn-danger" onclick="return confirm('<?= $words->getSilent("confirmdeletepicture")?>')"><?= $words->getSilent("GalleryDeleteImage")?></a>
+        <a href="gallery/img?id=<?=$d->id?>/delete" class="btn btn-danger" onclick="return confirm('<?= $words->getSilent("confirmdeletepicture")?>')"><?= $words->getSilent("GalleryDeleteImage")?></a>
     </div>
 </div>
 <div class="col">

@@ -28,6 +28,7 @@ Encore
     .addEntry('offcanvas', './src/AppBundle/Resources/public/js/offcanvas.js')
     .addEntry('profile/profile', './src/AppBundle/Resources/js/profile.js')
     .addEntry( 'updatecounters', './src/AppBundle/Resources/js/updateCounters.js')
+    .addEntry( 'lightbox', './src/AppBundle/Resources/js/lightbox.js')
 
     .enableSassLoader()
     // allow legacy applications to use $/jQuery as a global variable, make popper visible for bootstrap

@@ -8,11 +8,24 @@ use AppBundle\Entity\Wiki;
 use AppBundle\Model\WikiModel;
 use AppBundle\Repository\WikiRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class WikiController extends Controller
 {
+    /**
+     * @Route("/wiki", name="wiki_front_page")
+     *
+     * @return Response
+     */
+    public function showWikiFrontPageAction()
+    {
+        return $this->showWikiPageAction('WikiFrontPage');
+    }
+
     /**
      * @Route("/wiki/{pageTitle}", name="wiki_page")
      *
@@ -40,6 +53,55 @@ class WikiController extends Controller
         return $this->render(':wiki:wiki.html.twig', [
             'title' => $pageTitle,
             'wikipage' => $output,
+        ]);
+    }
+
+    /**
+     * @Route("/wiki/{pageTitle}/edit", name="wiki_page_edit")
+     *
+     * @param Request $request
+     * @param $pageTitle
+     *
+     * @return Response
+     */
+    public function editWikiPageAction(Request $request, $pageTitle)
+    {
+        $wikiModel = new WikiModel();
+        $pageName = $wikiModel->getPageName($pageTitle);
+
+        $em = $this->getDoctrine()->getManager();
+        /** @var WikiRepository $wikiRepository */
+        $wikiRepository = $this->getDoctrine()->getRepository(Wiki::class);
+
+        $wikiPage = $wikiRepository->getPageByName($pageName);
+
+        if (null === $wikiPage) {
+            $output = 'No wiki page found with this name. Creating not possible yet.';
+        } else {
+            $output = $wikiModel->parseWikiMarkup($wikiPage->getContent());
+        }
+
+        $form = $this->createFormBuilder([ 'wiki_markup' => $wikiPage->getContent()])
+            ->add('wiki_markup', TextAreaType::class)
+            ->add('submit', SubmitType::class)
+            ->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isValid() && $form->isSubmitted())
+        {
+            $data = $form->getData();
+            $newWikiPage = clone $wikiPage;
+            $newWikiPage->setContent($data['wiki_markup']);
+            // \todo make this safe against multiple edits at the same time
+            $newWikiPage->setVersion($wikiPage->getVersion() + 1);
+            $em->persist($newWikiPage);
+            $em->flush();
+            $this->addFlash('notice', 'Updated wiki text');
+            return $this->redirectToRoute('wiki_page', [ 'pageTitle' => $pageTitle]);
+        }
+        return $this->render(':wiki:edit.html.twig', [
+            'title' => $pageTitle,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -109,7 +171,7 @@ class WikiController extends Controller
             ],
         ];
         // \todo: Check if current user is member of this group
-        if ($group->getMembers()->contains($member)) {
+        if (in_array($member, $group->getCurrentMembers())) {
             $submenuItems['membersettings'] = [
                 'key' => 'GroupMembersettings',
                 'url' => $this->generateUrl('group_membersettings', ['group_id' => $groupId]),

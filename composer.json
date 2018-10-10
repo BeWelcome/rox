@@ -59,18 +59,7 @@
         "psr-4": {
             "AppBundle\\": "src/AppBundle",
             "Rox\\": "Rox/",
-            "Rox\\Activity\\": "module/Activity/src",
-            "Rox\\Admin\\": "module/Admin/src",
-            "Rox\\Auth\\": "module/Auth/src",
-            "Rox\\Core\\": "module/Core/src",
-            "Rox\\Forum\\": "module/Forum/src",
-            "Rox\\Geo\\": "module/Geo/src",
-            "Rox\\I18n\\": "module/I18n/src",
-            "Rox\\Member\\": "module/Member/src",
-            "Rox\\Message\\": "module/Message/src",
-            "Rox\\Start\\": "module/Start/src",
-            "Rox\\Trip\\": "module/Trip/src",
-            "Rox\\CommunityNews\\": "module/CommunityNews/src"
+            "Mike42\\": "src/Mike42"
         },
         "classmap": [
             "app/AppKernel.php",

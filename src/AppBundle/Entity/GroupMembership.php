@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="membersgroups", uniqueConstraints={@ORM\UniqueConstraint(name="UniqueIdMemberIdGroup", columns={"IdMember", "IdGroup"})}, indexes={@ORM\Index(name="IdGroup", columns={"IdGroup"}), @ORM\Index(name="IdMember", columns={"IdMember"})})
  * @ORM\Entity
  */
-class Membersgroups
+class GroupMembershipDetails
 {
     /**
      * @var \DateTime
@@ -91,7 +91,7 @@ class Membersgroups
      *
      * @param \DateTime $updated
      *
-     * @return Membersgroups
+     * @return GroupMembershipDetails
      */
     public function setUpdated($updated)
     {
@@ -115,7 +115,7 @@ class Membersgroups
      *
      * @param \DateTime $created
      *
-     * @return Membersgroups
+     * @return GroupMembershipDetails
      */
     public function setCreated($created)
     {
@@ -139,7 +139,7 @@ class Membersgroups
      *
      * @param integer $comment
      *
-     * @return Membersgroups
+     * @return GroupMembershipDetails
      */
     public function setComment($comment)
     {
@@ -163,7 +163,7 @@ class Membersgroups
      *
      * @param integer $idmember
      *
-     * @return Membersgroups
+     * @return GroupMembershipDetails
      */
     public function setIdmember($idmember)
     {
@@ -187,7 +187,7 @@ class Membersgroups
      *
      * @param integer $idgroup
      *
-     * @return Membersgroups
+     * @return GroupMembershipDetails
      */
     public function setIdgroup($idgroup)
     {
@@ -211,7 +211,7 @@ class Membersgroups
      *
      * @param string $status
      *
-     * @return Membersgroups
+     * @return GroupMembershipDetails
      */
     public function setStatus($status)
     {
@@ -235,7 +235,7 @@ class Membersgroups
      *
      * @param string $iacceptmassmailfromthisgroup
      *
-     * @return Membersgroups
+     * @return GroupMembershipDetails
      */
     public function setIacceptmassmailfromthisgroup($iacceptmassmailfromthisgroup)
     {
@@ -259,7 +259,7 @@ class Membersgroups
      *
      * @param string $cansendgroupmessage
      *
-     * @return Membersgroups
+     * @return GroupMembershipDetails
      */
     public function setCansendgroupmessage($cansendgroupmessage)
     {
@@ -283,7 +283,7 @@ class Membersgroups
      *
      * @param boolean $notificationsenabled
      *
-     * @return Membersgroups
+     * @return GroupMembershipDetails
      */
     public function setNotificationsenabled($notificationsenabled)
     {

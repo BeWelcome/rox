@@ -625,13 +625,9 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * @var ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Group", inversedBy="members")
-     * @ORM\JoinTable(name="membersgroups",
-     *      joinColumns={@ORM\JoinColumn(name="IdMember", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="IdGroup", referencedColumnName="id")}
-     *      )
+     * @ORM\OneToMany(targetEntity="GroupMembership", mappedBy="member", cascade={"persist", "remove"}, orphanRemoval=true)
      */
-    private $groups;
+    private $groupMemberships;
 
     /**
      * @var arrayCollection
@@ -650,7 +646,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     {
         $this->volunteerRights = new ArrayCollection();
         $this->cryptedFields = new ArrayCollection();
-        $this->groups = new ArrayCollection();
+        $this->groupMemberships = new ArrayCollection();
         $this->languageLevels = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->relationships = new ArrayCollection();
@@ -2546,9 +2542,35 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         return $this->volunteerRights;
     }
 
+    public function getGroupMemberships()
+    {
+        return $this->groupMemberships;
+    }
+
+    public function addGroupMembership(GroupMembership $groupMembership)
+    {
+        $this->groupMemberships->add($groupMembership);
+
+        return $this;
+    }
+
+    public function removeGroupMembership(GroupMembership $groupMembership)
+    {
+        if ($this->groupMemberships->contains($groupMembership)) {
+            $this->groupMemberships->removeElement($groupMembership);
+            $groupMembership->setMember(null);
+        }
+        $this->groupMemberships->remove($groupMembership);
+    }
+
     public function getGroups()
     {
-        return $this->groups;
+        return array_map(
+            function ($groupMembership) {
+                return $groupMembership->getGroup();
+            },
+            $this->groupMemberships->toArray()
+        );
     }
 
     public function getComments()
@@ -2628,7 +2650,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      */
     public function addGroup(Group $group)
     {
-        $this->groups[] = $group;
+        $this->groupMemberships[] = $group;
 
         return $this;
     }
@@ -2640,7 +2662,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      */
     public function removeGroup(Group $group)
     {
-        $this->groups->removeElement($group);
+        $this->groupMemberships->removeElement($group);
     }
 
     public function getCryptedField($fieldName)

@@ -8,6 +8,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,7 +32,7 @@ class Group
      *
      * @ORM\Column(name="HasMembers", type="string", nullable=false)
      */
-    private $hasmembers = 'HasMember';
+    private $hasMembers = 'HasMember';
 
     /**
      * @var string
@@ -73,14 +74,14 @@ class Group
      *
      * @ORM\Column(name="MoreInfo", type="text", length=65535, nullable=false)
      */
-    private $moreinfo;
+    private $moreInfo;
 
     /**
      * @var string
      *
      * @ORM\Column(name="DisplayedOnProfile", type="string", nullable=false)
      */
-    private $displayedonprofile = 'Yes';
+    private $displayedOnProfile = 'Yes';
 
     /** @var ArrayCollection
      *
@@ -91,6 +92,12 @@ class Group
      *      )
      */
     private $descriptions;
+
+    /** @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="GroupMembership", mappedBy="group", cascade={"persist", "remove"}, orphanRemoval=TRUE)
+     */
+    private $groupMemberships;
 
     /**
      * @var string
@@ -115,33 +122,22 @@ class Group
      */
     private $id;
 
-    /**
-     * @var arrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="Member", mappedBy="groups", fetch="EAGER")
-     * @ORM\JoinTable(name="membersgroups",
-     *      joinColumns={@ORM\JoinColumn(name="IdMember", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="IdGroup", referencedColumnName="id")}
-     *      )
-     */
-    private $members;
-
     public function __construct()
     {
-        $this->members = new ArrayCollection();
         $this->descriptions = new ArrayCollection();
+        $this->groupMemberships = new ArrayCollection();
     }
 
     /**
      * Set hasmembers.
      *
-     * @param string $hasmembers
+     * @param string $hasMembers
      *
      * @return Group
      */
-    public function setHasmembers($hasmembers)
+    public function setHasMembers($hasMembers)
     {
-        $this->hasmembers = $hasmembers;
+        $this->hasMembers = $hasMembers;
 
         return $this;
     }
@@ -151,9 +147,9 @@ class Group
      *
      * @return string
      */
-    public function getHasmembers()
+    public function getHasMembers()
     {
-        return $this->hasmembers;
+        return $this->hasMembers;
     }
 
     /**
@@ -279,13 +275,13 @@ class Group
     /**
      * Set moreinfo.
      *
-     * @param string $moreinfo
+     * @param string $moreInfo
      *
      * @return Group
      */
-    public function setMoreinfo($moreinfo)
+    public function setMoreInfo($moreInfo)
     {
-        $this->moreinfo = $moreinfo;
+        $this->moreInfo = $moreInfo;
 
         return $this;
     }
@@ -295,9 +291,9 @@ class Group
      *
      * @return string
      */
-    public function getMoreinfo()
+    public function getMoreInfo()
     {
-        return $this->moreinfo;
+        return $this->moreInfo;
     }
 
     /**
@@ -309,7 +305,7 @@ class Group
      */
     public function setDisplayedonprofile($displayedonprofile)
     {
-        $this->displayedonprofile = $displayedonprofile;
+        $this->displayedOnProfile = $displayedonprofile;
 
         return $this;
     }
@@ -321,7 +317,7 @@ class Group
      */
     public function getDisplayedonprofile()
     {
-        return $this->displayedonprofile;
+        return $this->displayedOnProfile;
     }
 
     /**
@@ -405,41 +401,6 @@ class Group
     {
         return $this->id;
     }
-
-    /**
-     * Add member.
-     *
-     * @param Member $member
-     *
-     * @return Group
-     */
-    public function addMember(Member $member)
-    {
-        $this->members[] = $member;
-
-        return $this;
-    }
-
-    /**
-     * Remove member.
-     *
-     * @param Member $member
-     */
-    public function removeMember(Member $member)
-    {
-        $this->members->removeElement($member);
-    }
-
-    /**
-     * Get members.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getMembers()
-    {
-        return $this->members;
-    }
-
     /**
      * Add description.
      *
@@ -510,5 +471,52 @@ class Group
     public function onPrePersist()
     {
         $this->created = new \DateTime('now');
+    }
+
+    public function getGroupMemberships()
+    {
+        return $this->groupMemberships->toArray();
+    }
+
+    public function addGroupMembership(GroupMembership $groupMembership)
+    {
+        if (!$this->groupMemberships->contains($groupMembership)) {
+            $this->groupMemberships->add($groupMembership);
+            $groupMembership->setGroup($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupMembership(GroupMembership $groupMembership)
+    {
+        if ($this->groupMemberships->contains($groupMembership)) {
+            $this->groupMemberships->removeElement($groupMembership);
+            $groupMembership->setGroup(null);
+        }
+
+        return $this;
+    }
+
+    public function getMembers()
+    {
+        return array_map(
+            function ($groupMembership) {
+                return $groupMembership->getPerson();
+            },
+            $this->groupMemberships->toArray()
+        );
+    }
+
+    public function getCurrentMembers()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('status', 'In'));
+        return array_map(
+            function ($groupMembership) {
+                return $groupMembership->getMember();
+            },
+            $this->groupMemberships->matching($criteria)->toArray()
+        );
     }
 }

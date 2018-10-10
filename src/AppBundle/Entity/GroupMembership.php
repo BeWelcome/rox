@@ -1,4 +1,9 @@
 <?php
+/*
+ * @codingStandardsIgnoreFile
+ *
+ * Auto generated file ignore for Code Sniffer
+ */
 
 namespace AppBundle\Entity;
 
@@ -8,9 +13,13 @@ use Doctrine\ORM\Mapping as ORM;
  * Membersgroups
  *
  * @ORM\Table(name="membersgroups", uniqueConstraints={@ORM\UniqueConstraint(name="UniqueIdMemberIdGroup", columns={"IdMember", "IdGroup"})}, indexes={@ORM\Index(name="IdGroup", columns={"IdGroup"}), @ORM\Index(name="IdMember", columns={"IdMember"})})
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
-class GroupMembershipDetails
+class GroupMembership
 {
     /**
      * @var \DateTime
@@ -34,23 +43,25 @@ class GroupMembershipDetails
     private $comment;
 
     /**
-     * @var integer
+     * @var Member
      *
-     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Member", inversedBy="groupMemberships")
+     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id", nullable=FALSE)
      */
-    private $idmember;
+    private $member;
 
     /**
-     * @var integer
+     * @var Group
      *
-     * @ORM\Column(name="IdGroup", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Group", inversedBy="groupMemberships")
+     * @ORM\JoinColumn(name="IdGroup", referencedColumnName="id", nullable=FALSE)
      */
-    private $idgroup;
+    private $group;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Status", type="string", nullable=false)
+     * @ORM\Column(name="Status", type="group_membership_status", nullable=false)
      */
     private $status = 'WantToBeIn';
 
@@ -91,7 +102,7 @@ class GroupMembershipDetails
      *
      * @param \DateTime $updated
      *
-     * @return GroupMembershipDetails
+     * @return GroupMembership
      */
     public function setUpdated($updated)
     {
@@ -115,7 +126,7 @@ class GroupMembershipDetails
      *
      * @param \DateTime $created
      *
-     * @return GroupMembershipDetails
+     * @return GroupMembership
      */
     public function setCreated($created)
     {
@@ -139,7 +150,7 @@ class GroupMembershipDetails
      *
      * @param integer $comment
      *
-     * @return GroupMembershipDetails
+     * @return GroupMembership
      */
     public function setComment($comment)
     {
@@ -159,51 +170,51 @@ class GroupMembershipDetails
     }
 
     /**
-     * Set idmember
+     * Set member
      *
-     * @param integer $idmember
+     * @param Member $member
      *
-     * @return GroupMembershipDetails
+     * @return GroupMembership
      */
-    public function setIdmember($idmember)
+    public function setMember($member)
     {
-        $this->idmember = $idmember;
+        $this->member = $member;
 
         return $this;
     }
 
     /**
-     * Get idmember
+     * Get member
      *
-     * @return integer
+     * @return Member
      */
-    public function getIdmember()
+    public function getMember()
     {
-        return $this->idmember;
+        return $this->member;
     }
 
     /**
-     * Set idgroup
+     * Set group
      *
-     * @param integer $idgroup
+     * @param Group $group
      *
-     * @return GroupMembershipDetails
+     * @return GroupMembership
      */
-    public function setIdgroup($idgroup)
+    public function setGroup($group)
     {
-        $this->idgroup = $idgroup;
+        $this->group = $group;
 
         return $this;
     }
 
     /**
-     * Get idgroup
+     * Get group
      *
-     * @return integer
+     * @return Group
      */
-    public function getIdgroup()
+    public function getGroup()
     {
-        return $this->idgroup;
+        return $this->group;
     }
 
     /**
@@ -211,7 +222,7 @@ class GroupMembershipDetails
      *
      * @param string $status
      *
-     * @return GroupMembershipDetails
+     * @return GroupMembership
      */
     public function setStatus($status)
     {
@@ -235,7 +246,7 @@ class GroupMembershipDetails
      *
      * @param string $iacceptmassmailfromthisgroup
      *
-     * @return GroupMembershipDetails
+     * @return GroupMembership
      */
     public function setIacceptmassmailfromthisgroup($iacceptmassmailfromthisgroup)
     {
@@ -259,7 +270,7 @@ class GroupMembershipDetails
      *
      * @param string $cansendgroupmessage
      *
-     * @return GroupMembershipDetails
+     * @return GroupMembership
      */
     public function setCansendgroupmessage($cansendgroupmessage)
     {
@@ -283,7 +294,7 @@ class GroupMembershipDetails
      *
      * @param boolean $notificationsenabled
      *
-     * @return GroupMembershipDetails
+     * @return GroupMembership
      */
     public function setNotificationsenabled($notificationsenabled)
     {

@@ -84,6 +84,7 @@ doctrine:
             comment_quality: AppBundle\Doctrine\CommentQualityType
             comment_relations: AppBundle\Doctrine\CommentRelationsType
             language_level: AppBundle\Doctrine\LanguageLevelType
+            group_membership_status: AppBundle\Doctrine\GroupMembershipStatusType
 
         mapping_types:
             enum:       string

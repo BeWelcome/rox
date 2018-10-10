@@ -65,7 +65,7 @@ class GroupController extends Controller
                 ->setType($data->type)
                 ->setVisibleposts($data->membersOnly)
                 ->setVisiblecomments(false)
-                ->setMoreinfo('')
+                ->setMoreInfo('')
                 ->setPicture($fileName)
                 ->addMember($member)
             ;
@@ -295,8 +295,9 @@ class GroupController extends Controller
             WHERE 
                 r.Name = 'Group' 
                 AND r.id = rv.IdRight 
-                AND rv.Level <> 0 
-                AND rv.IdMember = m.id;
+                AND rv.Level = 10 
+                AND rv.IdMember = m.id
+                AND m.Status IN (" . Member::ACTIVE_ALL . ")
         ");
         $stmt->execute();
         $emails = $stmt->fetchAll();

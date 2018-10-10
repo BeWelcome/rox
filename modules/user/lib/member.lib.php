@@ -80,6 +80,7 @@ class MOD_member
      *
      * @access public
      * @return string
+     * @throws PException
      */
     public static function getUserHandle($user_id)
     {
@@ -91,14 +92,14 @@ class MOD_member
             throw new PException('DB config error!');
         }
         $dao = PDB::get($db->dsn, $db->user, $db->password);
-        $result = $dao->query("SELECT handle FROM user WHERE id = ". intval($user_id));
+        $result = $dao->query("SELECT username FROM members WHERE id = ". intval($user_id));
         if ($result && $fetched = $result->fetch(PDB::FETCH_OBJ))
         {
-            return $fetched->handle;
+            return $fetched->username;
         }
         return '';
     }
-    
+
     /**
      * Creates a member object for a given username.
      * 

@@ -19,7 +19,7 @@ class AvatarController extends Controller
     /**
      * @Route("/members/avatar/{username}/{size}", name="avatar",
      *     requirements={"username" : "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])",
-     *          "size" : "\d+" }))
+     *          "size" : "\d+|original" }))
      *
      * @param mixed $username
      * @param mixed $size
@@ -39,6 +39,7 @@ class AvatarController extends Controller
             case '150':
             case '200':
             case '500':
+            case 'original':
                 $suffix = '_'.$size;
                 break;
             default:

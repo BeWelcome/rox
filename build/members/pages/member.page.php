@@ -39,8 +39,7 @@ class MemberPage extends PageWithActiveSkin
         $member = $this->member;
         return $this->wwsilent->ProfilePageFor($member->Username)." - BeWelcome";
     }
-    
-    
+
     protected function getTopmenuActiveItem()
     {
         return 'profile';
@@ -122,34 +121,34 @@ class MemberPage extends PageWithActiveSkin
                 $mynotelinkname= "members/$username/note/add" ;
             }
             $tt= array(
-                array('sendrequest', "new/request/$username", $ww->SendRequest, 'sendrequest'),
-                array('messagesadd', "new/message/$username", $ww->ContactMember, 'messagesadd'),
-                (isset($TCom[0])) ? array('commmentsadd', "members/$username/comments/edit", $ww->EditComments, 'commentsadd') : array('commmentsadd', "members/$username/comments/add", $ww->AddComments, 'commentsadd'),
-                array('relationsadd', "members/$username/relations/add", $ww->addRelation, 'relationsadd'),
-                array('notes', $mynotelinkname, $mynotewordsname, 'mynotes'),
+                array('sendrequest', "new/request/$username", '<i class="fa fa-bed"></i> ' . $ww->SendRequest, 'sendrequest'),
+                array('messagesadd', "new/message/$username", '<i class="fa fa-envelope"></i> ' . $ww->ContactMember, 'messagesadd'),
+                (isset($TCom[0])) ? array('commmentsadd', "members/$username/comments/edit", '<i class="fa fa-comment"></i> ' . $ww->EditComments, 'commentsadd') : array('commmentsadd', "members/$username/comments/add", '<i class="fa fa-comment"></i> ' . $ww->AddComments, 'commentsadd'),
+                array('relationsadd', "members/$username/relations/add", '<i class="fa fa-group"></i> ' . $ww->addRelation, 'relationsadd'),
+                array('notes', $mynotelinkname, '<i class="fa fa-pencil"></i> ' . $mynotewordsname, 'mynotes'),
                 // Verification link hidden in accordance with trac ticket 1992 until bugs which limit the validity of verification system are resolved:
                 /**array('verificationadd', "verification/$username", $ww->addVerification, 'verificationadd'),*/
                 array('space', '', '', 'space'),
-                array('profile', "members/$username", $ww->MemberPage),
-                array('comments', "members/$username/comments", $ww->ViewComments.' <span class="badge badge-primary pull-right">'.$comments_count['all'].'</span>'),
-                array('gallery', "gallery/show/user/$username/pictures", $ww->Gallery . ' <span class="badge badge-primary pull-right">' . $galleryItemsCount . '</span>'),
+                array('profile', "members/$username",'<i class="fa fa-user"></i> '  . $ww->MemberPage),
+                array('comments', "members/$username/comments", '<i class="fa fa-comments"></i> ' . $ww->ViewComments.' <span class="badge badge-primary pull-right">'.$comments_count['all'].'</span>'),
+                array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary pull-right">' . $galleryItemsCount . '</span>'),
             );
             if ($linkMembersForumPosts) {
-                $tt[] = array('forum', "forums/member/$username", $viewForumPosts);
+                $tt[] = array('forum', "forums/member/$username", '<i class="fa fa-wechat"></i> ' . $viewForumPosts);
             }
         }
         if (MOD_right::get()->HasRight('SafetyTeam') || MOD_right::get()->HasRight('Admin'))
         {
-            $tt[] = array('adminedit',"members/{$username}/adminedit",'Admin: Edit Profile');
+            $tt[] = array('adminedit',"members/{$username}/adminedit", '<i class="fa fa-wechat invisible"></i> Admin: Edit Profile');
         }
         if (MOD_right::get()->HasRight('Rights')) {
-            array_push($tt,array('adminrights','admin/rights/list/members/'.$username,$ww->AdminRights) ) ;
+            array_push($tt,array('adminrights','admin/rights/list/members/'.$username, '<i class="fa fa-wechat invisible"></i> ' .  $ww->AdminRights) ) ;
         }
         if (MOD_right::get()->HasRight('Flags')) {
-            array_push($tt,array('adminflags', 'admin/flags/list/members/'. $username, $ww->AdminFlags) ) ;
+            array_push($tt,array('adminflags', 'admin/flags/list/members/'. $username, '<i class="fa fa-flag"></i> ' .  $ww->AdminFlags) ) ;
         }
         if (MOD_right::get()->HasRight('Logs')) {
-            array_push($tt,array('admin','admin/logs?username='.$username,$ww->AdminLogs) ) ;
+            array_push($tt,array('admin','admin/logs?username='.$username,'<i class="fa fa-wechat invisible"></i> ' .  $ww->AdminLogs) ) ;
         }
         return($tt) ;
     }
@@ -184,22 +183,35 @@ class MemberPage extends PageWithActiveSkin
         //parent::submenu();
     }
 
+    protected function teaserContent()
+    {
+        /*        $this->__call('teaserContent', array()); */
+    }
+
     protected function leftsidebar() {
         // TODO: move HTML to a template
         $member = $this->member;
         $words = $this->getWords();
-        $picture_url = 'members/avatar/'.$member->Username.'/500';
+        $picture_url = 'members/avatar/'.$member->Username;
         ?>
 
-        <div class="framed w-100 bg-avatar" style="background-image: url('<?=$picture_url?>');">
-            <a href="<?=$picture_url?>" alt="Picture of <?=$member->Username?>"><span class="w-100 avatarclick"></span></a>
-        </div>
+            <div class="avatar-box">
+                <?php if ($this->useLightbox) { ?>
+            <a class="avatar-box-inside" href="<?= $picture_url . '/original' ?>" data-toggle="lightbox" data-type="image" title="Picture of <?=$member->Username?>">
+                <img src="<?= $picture_url . '/500'?>" class="w-100 h-100">
+            </a>
+                <?php } else { ?>}
+            <a class="avatar-box-inside" href="/members/<?=$member->Username?>" data-toggle="lightbox" data-type="image" title="Profile of <?=$member->Username?>">
+                <img src="<?= $picture_url . '/500'?>" class="w-100 h-100">
+            </a>
+            <?php } ?>
+            </div>
         <?
             if ($this->myself) {
                 // TODO : change language code (en) and wordcode
                 ?>
         <div>
-            <a href="editmyprofile/en" class="btn btn-info btn-block">Change Avatar</a>
+            <a href="editmyprofile" class="btn btn-info btn-block">Change Avatar</a>
         </div>
                 <? } ?>
 
@@ -231,27 +243,8 @@ class MemberPage extends PageWithActiveSkin
 
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
-        // $stylesheets[] = 'styles/css/minimal/screen/custom/profile.css?2';
+        $stylesheets[] = '/build/lightbox.css';
         return $stylesheets;
-    }
-
-    /*
-     * The idea was that stylesheetpatches was for MSIE
-     *
-     */
-
-    protected function getStylesheetPatches()
-    {
-        //$stylesheet_patches = parent::getStylesheetPatches();
-        //$stylesheet_patches[] = 'styles/css/minimal/patches/patch_2col_left.css';
-        //return $stylesheet_patches;
-    }
-
-
-
-    protected function teaserContent()
-    {
-/*        $this->__call('teaserContent', array()); */
     }
 
     /*

@@ -102,9 +102,11 @@ class MembersController extends RoxControllerBase
                         case '':
                         case false:
                             $page = new ProfilePage();
+                        $page->enableLightBox();
                             break;
                         default:
                             $page = new ProfilePage();
+                            $page->enableLightBox();
                             $this->model->set_profile_language($request[2]);
                             break;
                     }
@@ -173,6 +175,7 @@ class MembersController extends RoxControllerBase
             case 'self':
             case 'myself':
                 $page = new ProfilePage;
+                $page->enableLightBox();
                 break;
             case 'my':
                 switch (isset($request[1]) ? $request[1] : false) {
@@ -187,7 +190,8 @@ class MembersController extends RoxControllerBase
                         return;
                     case 'profile':
                     default:
-                        $page = new ProfilePage;
+                        $page = new ProfilePage();
+                        $page->enableLightBox();
                 }
                 break;
             case 'flagcomment':
@@ -392,6 +396,7 @@ class MembersController extends RoxControllerBase
                                 $page = new InactiveProfilePage();
                             } else {
                                 $page = new ProfilePage();
+                                $page->enableLightBox();
                                 $page->statuses = $this->model->getStatuses();
                             }
 
@@ -402,6 +407,7 @@ class MembersController extends RoxControllerBase
                                 $page = new InactiveProfilePage();
                             } else {
                                 $page = new ProfilePage();
+                                $page->enableLightBox();
                                 $this->model->set_profile_language($request[2]);
                                 $page->statuses = $this->model->getStatuses();
                             }

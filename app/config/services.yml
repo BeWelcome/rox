@@ -109,3 +109,8 @@ services:
             - "@annotation_reader"
         tags:
             - { name: kernel.event_listener, event: kernel.request }
+
+    rox.wiki.model:
+        class: AppBundle\Model\WikiModel
+        arguments:
+            - "@doctrine.orm.entity_manager"

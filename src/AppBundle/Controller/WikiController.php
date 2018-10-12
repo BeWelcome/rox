@@ -5,7 +5,6 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Group;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Wiki;
-use AppBundle\Model\WikiModel;
 use AppBundle\Repository\WikiRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -35,7 +34,7 @@ class WikiController extends Controller
      */
     public function showWikiPageAction($pageTitle)
     {
-        $wikiModel = new WikiModel();
+        $wikiModel = $this->get('rox.wiki.model');
         $pageName = $wikiModel->getPageName($pageTitle);
 
         $em = $this->getDoctrine();
@@ -45,9 +44,13 @@ class WikiController extends Controller
         $wikiPage = $wikiRepository->getPageByName($pageName);
 
         if (null === $wikiPage) {
-            $output = 'No wiki page found with this name. Creating not possible yet.';
-        } else {
-            $output = $wikiModel->parseWikiMarkup($wikiPage->getContent());
+            return $this->redirectToRoute('wiki_page_create', ['pageTitle' => $pageTitle]);
+        }
+        $output = $wikiModel->parseWikiMarkup($wikiPage->getContent());
+        if (null === $output) {
+            $this->addFlash('error', 'Couldn\'t process markup. Please check content and fix.');
+
+            return $this->redirectToRoute('wiki_page_edit', ['pageTitle' => $pageTitle]);
         }
 
         return $this->render(':wiki:wiki.html.twig', [
@@ -66,40 +69,82 @@ class WikiController extends Controller
      */
     public function editWikiPageAction(Request $request, $pageTitle)
     {
-        $wikiModel = new WikiModel();
-        $pageName = $wikiModel->getPageName($pageTitle);
-
-        $em = $this->getDoctrine()->getManager();
-        /** @var WikiRepository $wikiRepository */
-        $wikiRepository = $this->getDoctrine()->getRepository(Wiki::class);
-
-        $wikiPage = $wikiRepository->getPageByName($pageName);
+        $wikiModel = $this->get('rox.wiki.model');
+        /** @var Wiki $wikiPage */
+        $wikiPage = $wikiModel->getPage($pageTitle);
 
         if (null === $wikiPage) {
-            $output = 'No wiki page found with this name. Creating not possible yet.';
-        } else {
-            $output = $wikiModel->parseWikiMarkup($wikiPage->getContent());
+            return $this->redirectToRoute('wiki_page_create', ['pageTitle' => $pageTitle]);
         }
 
-        $form = $this->createFormBuilder([ 'wiki_markup' => $wikiPage->getContent()])
+        $form = $this->createFormBuilder(['wiki_markup' => $wikiPage->getContent()])
             ->add('wiki_markup', TextAreaType::class)
-            ->add('submit', SubmitType::class)
+            ->add('submit', SubmitType::class, [
+                'label' => 'Update Page',
+            ])
             ->getForm();
 
         $form->handleRequest($request);
-        if ($form->isValid() && $form->isSubmitted())
-        {
+        if ($form->isValid() && $form->isSubmitted()) {
             $data = $form->getData();
             $newWikiPage = clone $wikiPage;
             $newWikiPage->setContent($data['wiki_markup']);
             // \todo make this safe against multiple edits at the same time
             $newWikiPage->setVersion($wikiPage->getVersion() + 1);
+            $em = $this->getDoctrine()->getManager();
             $em->persist($newWikiPage);
             $em->flush();
             $this->addFlash('notice', 'Updated wiki text');
-            return $this->redirectToRoute('wiki_page', [ 'pageTitle' => $pageTitle]);
+
+            return $this->redirectToRoute('wiki_page', ['pageTitle' => $pageTitle]);
         }
-        return $this->render(':wiki:edit.html.twig', [
+
+        return $this->render(':wiki:edit_create.html.twig', [
+            'title' => $pageTitle,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/wiki/{pageTitle}/create", name="wiki_page_create")
+     *
+     * @param Request $request
+     * @param $pageTitle
+     *
+     * @return Response
+     */
+    public function createWikiPageAction(Request $request, $pageTitle)
+    {
+        $wikiModel = $this->get('rox.wiki.model');
+        $wikiPage = $wikiModel->getPage($pageTitle);
+
+        if (null !== $wikiPage) {
+            return $this->redirectToRoute('wiki_page_edit', ['pageTitle' => $pageTitle]);
+        }
+
+        $form = $this->createFormBuilder(['wiki_markup' => ''])
+            ->add('wiki_markup', TextAreaType::class)
+            ->add('submit', SubmitType::class, [
+                'label' => 'Create Page',
+            ])
+            ->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isValid() && $form->isSubmitted()) {
+            $data = $form->getData();
+            $newWikiPage = new Wiki();
+            $newWikiPage->setPagename($wikiModel->getPagename($pageTitle));
+            $newWikiPage->setVersion(1);
+            $newWikiPage->setContent($data['wiki_markup']);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($newWikiPage);
+            $em->flush();
+            $this->addFlash('notice', 'Created wiki page');
+
+            return $this->redirectToRoute('wiki_page', ['pageTitle' => $pageTitle]);
+        }
+
+        return $this->render(':wiki:edit_create.html.twig', [
             'title' => $pageTitle,
             'form' => $form->createView(),
         ]);
@@ -116,7 +161,7 @@ class WikiController extends Controller
     {
         $member = $this->getUser();
 
-        $wikiModel = new WikiModel();
+        $wikiModel = $this->get('rox.wiki.model');
         $pageName = $wikiModel->getPageName('Group_'.$group->getName());
 
         $em = $this->getDoctrine();
@@ -171,7 +216,7 @@ class WikiController extends Controller
             ],
         ];
         // \todo: Check if current user is member of this group
-        if (in_array($member, $group->getCurrentMembers())) {
+        if (\in_array($member, $group->getCurrentMembers(), true)) {
             $submenuItems['membersettings'] = [
                 'key' => 'GroupMembersettings',
                 'url' => $this->generateUrl('group_membersettings', ['group_id' => $groupId]),

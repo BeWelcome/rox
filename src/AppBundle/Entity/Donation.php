@@ -13,9 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
  * DonationEntity.
  *
  * @ORM\Table(name="donations")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\DonationRepository")
+ * @ORM\HasLifecycleCallbacks
  *
- *  (repositoryClass="AppBundle\Repository\DonationRepository")
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
  */
@@ -44,7 +44,7 @@ class Donation
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created = 'CURRENT_TIMESTAMP';
+    private $created;
     /**
      * @var string
      *
@@ -368,5 +368,15 @@ class Donation
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Triggered on insert.
+     *
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created = new \DateTime('now');
     }
 }

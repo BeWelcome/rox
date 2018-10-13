@@ -7,14 +7,15 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Membersgroups
+ * Membersgroups.
  *
  * @ORM\Table(name="membersgroups", uniqueConstraints={@ORM\UniqueConstraint(name="UniqueIdMemberIdGroup", columns={"IdMember", "IdGroup"})}, indexes={@ORM\Index(name="IdGroup", columns={"IdGroup"}), @ORM\Index(name="IdMember", columns={"IdMember"})})
- * @ORM\HasLifecycleCallbacks
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
@@ -26,21 +27,25 @@ class GroupMembership
      *
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
-    private $updated = 'CURRENT_TIMESTAMP';
+    private $updated;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created = '0000-00-00 00:00:00';
+    private $created;
 
     /**
-     * @var integer
+     * @var MembersTrad
      *
-     * @ORM\Column(name="Comment", type="integer", nullable=false)
+     * @ORM\ManyToMany(targetEntity="MembersTrad", fetch="LAZY")
+     * @ORM\JoinTable(name="group_membership_trads",
+     *      joinColumns={@ORM\JoinColumn(name="group_membership_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="members_trad_id", referencedColumnName="id", unique=true)}
+     *      )
      */
-    private $comment;
+    private $comments;
 
     /**
      * @var Member
@@ -80,14 +85,14 @@ class GroupMembership
     private $cansendgroupmessage = 'yes';
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="notificationsEnabled", type="boolean", nullable=false)
      */
     private $notificationsenabled = '1';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -95,10 +100,13 @@ class GroupMembership
      */
     private $id;
 
-
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+    }
 
     /**
-     * Set updated
+     * Set updated.
      *
      * @param \DateTime $updated
      *
@@ -112,7 +120,7 @@ class GroupMembership
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return \DateTime
      */
@@ -122,7 +130,7 @@ class GroupMembership
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
      *
@@ -136,7 +144,7 @@ class GroupMembership
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -146,9 +154,9 @@ class GroupMembership
     }
 
     /**
-     * Set comment
+     * Set comment.
      *
-     * @param integer $comment
+     * @param int $comment
      *
      * @return GroupMembership
      */
@@ -160,9 +168,9 @@ class GroupMembership
     }
 
     /**
-     * Get comment
+     * Get comment.
      *
-     * @return integer
+     * @return int
      */
     public function getComment()
     {
@@ -170,7 +178,7 @@ class GroupMembership
     }
 
     /**
-     * Set member
+     * Set member.
      *
      * @param Member $member
      *
@@ -184,7 +192,7 @@ class GroupMembership
     }
 
     /**
-     * Get member
+     * Get member.
      *
      * @return Member
      */
@@ -194,7 +202,7 @@ class GroupMembership
     }
 
     /**
-     * Set group
+     * Set group.
      *
      * @param Group $group
      *
@@ -208,7 +216,7 @@ class GroupMembership
     }
 
     /**
-     * Get group
+     * Get group.
      *
      * @return Group
      */
@@ -218,7 +226,7 @@ class GroupMembership
     }
 
     /**
-     * Set status
+     * Set status.
      *
      * @param string $status
      *
@@ -232,7 +240,7 @@ class GroupMembership
     }
 
     /**
-     * Get status
+     * Get status.
      *
      * @return string
      */
@@ -242,7 +250,7 @@ class GroupMembership
     }
 
     /**
-     * Set iacceptmassmailfromthisgroup
+     * Set iacceptmassmailfromthisgroup.
      *
      * @param string $iacceptmassmailfromthisgroup
      *
@@ -256,7 +264,7 @@ class GroupMembership
     }
 
     /**
-     * Get iacceptmassmailfromthisgroup
+     * Get iacceptmassmailfromthisgroup.
      *
      * @return string
      */
@@ -266,7 +274,7 @@ class GroupMembership
     }
 
     /**
-     * Set cansendgroupmessage
+     * Set cansendgroupmessage.
      *
      * @param string $cansendgroupmessage
      *
@@ -280,7 +288,7 @@ class GroupMembership
     }
 
     /**
-     * Get cansendgroupmessage
+     * Get cansendgroupmessage.
      *
      * @return string
      */
@@ -290,9 +298,9 @@ class GroupMembership
     }
 
     /**
-     * Set notificationsenabled
+     * Set notificationsenabled.
      *
-     * @param boolean $notificationsenabled
+     * @param bool $notificationsenabled
      *
      * @return GroupMembership
      */
@@ -304,9 +312,9 @@ class GroupMembership
     }
 
     /**
-     * Get notificationsenabled
+     * Get notificationsenabled.
      *
-     * @return boolean
+     * @return bool
      */
     public function getNotificationsenabled()
     {
@@ -314,12 +322,64 @@ class GroupMembership
     }
 
     /**
-     * Get id
+     * Add a comment for the membership.
      *
-     * @return integer
+     * @param MembersTrad $comment
+     *
+     * @return GroupMembership
+     */
+    public function addComment(MembersTrad $comment)
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a comment from the membership.
+     *
+     * @param MembersTrad $comment
+     *
+     * @return GroupMembership
+     */
+    public function removeComment(MembersTrad $comment)
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->remove($comment);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get id.
+     *
+     * @return int
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Triggered on insert.
+     *
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created = new \DateTime('now');
+    }
+
+    /**
+     * Triggered on update.
+     *
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updated = new \DateTime('now');
     }
 }

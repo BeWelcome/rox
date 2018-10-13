@@ -368,6 +368,17 @@ class MembersTrad
     public function onPrePersist()
     {
         $this->created = new \DateTime('now');
+        $this->idtrad = random_int(0, 24500000);
+    }
+
+    /**
+     * Triggered on insert.
+     *
+     * @ORM\PostPersist
+     */
+    public function onPostPersist()
+    {
+        $this->idtrad = $this->id;
     }
 
     /**

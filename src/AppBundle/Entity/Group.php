@@ -85,7 +85,7 @@ class Group
 
     /** @var ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="MembersTrad", fetch="EAGER")
+     * @ORM\ManyToMany(targetEntity="MembersTrad", fetch="LAZY")
      * @ORM\JoinTable(name="groups_trads",
      *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="trad_id", referencedColumnName="id", unique=true)}
@@ -401,6 +401,7 @@ class Group
     {
         return $this->id;
     }
+
     /**
      * Add description.
      *
@@ -502,7 +503,7 @@ class Group
     {
         return array_map(
             function ($groupMembership) {
-                return $groupMembership->getPerson();
+                return $groupMembership->getMember();
             },
             $this->groupMemberships->toArray()
         );
@@ -512,6 +513,7 @@ class Group
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('status', 'In'));
+
         return array_map(
             function ($groupMembership) {
                 return $groupMembership->getMember();

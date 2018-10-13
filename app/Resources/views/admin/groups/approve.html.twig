@@ -27,7 +27,7 @@
                                      <small class="text-muted">{{ description.Language.WordCode|trans }} ({{ locale }})</small><br>{{ description.Sentence|purify }}
                                 {% endfor %}
                                 </td>
-                            <td>{% if group.members.values|first %}{{ macros.avatarstack((group.members.values|first).Username) }}{% endif %}</td>
+                            <td>{% if group.members|first %}{{ macros.avatarstack((group.members|first).Username) }}{% endif %}</td>
                             <td class="text-center">
                                 <a href="{{ path('admin_groups_approve', { 'id': group.id }) }}"><i class="fa fa-check"></i></a><br>
                                 <a href="{{ path('admin_groups_dismiss', { 'id': group.id }) }}"><i class="fa fa-ban"></i></a>

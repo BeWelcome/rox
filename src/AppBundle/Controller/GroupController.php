@@ -2,7 +2,9 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Doctrine\GroupMembershipStatusType;
 use AppBundle\Entity\Group;
+use AppBundle\Entity\GroupMembership;
 use AppBundle\Entity\Language;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\MembersTrad;
@@ -17,6 +19,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class GroupController extends Controller
 {
     /**
@@ -56,7 +61,10 @@ class GroupController extends Controller
             // \todo: This is convoluted due to having to support the old structure! When recoding groups this should be simpler
             // We need the current locale for the MembersTrad entity
             $languageRepository = $em->getRepository(Language::class);
+            /** @var Language $language */
             $language = $languageRepository->findOneBy(['shortcode' => $request->getSession()->get('locale')]);
+            /** @var Language $english */
+            $english = $languageRepository->findOneBy(['shortcode' => 'en']);
 
             // We create the group entity and add the first member
             $group = new Group();
@@ -67,28 +75,41 @@ class GroupController extends Controller
                 ->setVisiblecomments(false)
                 ->setMoreInfo('')
                 ->setPicture($fileName)
-                ->addMember($member)
             ;
-            $member->addGroup($group);
             $em->persist($group);
             $em->flush();
 
             // Create the description as a member trad using the current language
             $description = new MembersTrad();
             $description
-                ->setCreated(new \DateTime())
                 ->setOwner($member)
                 ->setIdTranslator($member->getId())
                 ->setSentence($data->description)
                 ->setIdrecord($group->getId())
-                ->setIdTrad($group->getId())
                 ->setLanguage($language);
             $em->persist($description);
             $em->flush();
 
-            // We need a trad id so we use the current id
-            $description->setIdTrad($description->getId());
-            $em->persist($description);
+            // Add a comment for the creator of the group in English
+            $groupComment = new MembersTrad();
+            $groupComment
+                ->setOwner($member)
+                ->setIdtranslator($member->getId())
+                ->setSentence('Group creator')
+                ->setIdrecord($group->getId())
+                ->setLanguage($english);
+            $em->persist($groupComment);
+            $em->flush();
+
+            $groupMembership = new GroupMembership();
+            $groupMembership
+                ->setStatus(GroupMembershipStatusType::CURRENT_MEMBER)
+                ->addComment($groupComment)
+                ->setGroup($group)
+                ->setMember($member);
+
+            $member->addGroupMembership($groupMembership);
+            $group->addGroupMembership($groupMembership);
 
             // Link group and description
             $group->addDescription($description);
@@ -97,20 +118,6 @@ class GroupController extends Controller
 
             // Now add the current member as admin for this group
             $connection = $this->getDoctrine()->getConnection();
-            $stmt = $connection->prepare("
-                UPDATE  
-                    `membersgroups`
-                SET
-                    `Status` = 'In'
-                WHERE
-                    IdGroup = :groupId
-                    AND IdMember = :memberId
-            ");
-            $stmt->execute([
-                ':groupId' => $group->getId(),
-                ':memberId' => $member->getId(),
-            ]);
-
             $stmt = $connection->prepare('
                 REPLACE INTO 
                     `privilegescopes`
@@ -297,8 +304,8 @@ class GroupController extends Controller
                 AND r.id = rv.IdRight 
                 AND rv.Level = 10 
                 AND rv.IdMember = m.id
-                AND m.Status IN (" . Member::ACTIVE_ALL . ")
-        ");
+                AND m.Status IN (".Member::ACTIVE_ALL.')
+        ');
         $stmt->execute();
         $emails = $stmt->fetchAll();
         $recipients = [];

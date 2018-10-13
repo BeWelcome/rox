@@ -19,7 +19,7 @@ class AddGroupTradsTable extends RoxMigration
 
     public function down()
     {
-        $groupTrads = $this->table('groups_trads',  ['id' => false, 'primary_key' => ['group_id', 'trad_id']]);
+        $groupTrads = $this->table('groups_trads');
         $groupTrads->drop()
             ->save();
     }

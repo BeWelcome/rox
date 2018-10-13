@@ -190,6 +190,11 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
                 'rights' => [Member::ROLE_ADMIN_FAQ],
                 'route' => 'admin_faqs_overview',
             ],
+            'group' => [
+                'trans' => 'AdminGroup',
+                'rights' => [Member::ROLE_ADMIN_GROUP],
+                'route' => 'admin_groups_approval',
+            ],
             'tools' => [
                 'trans' => 'AdminVolunteerTools',
                 'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_ADMIN,

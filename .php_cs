@@ -26,6 +26,7 @@ return PhpCsFixer\Config::create()
     ->setFinder(
         PhpCsFixer\Finder::create()
             ->exclude('tests/Fixtures')
+            ->exclude('src/Mike42')
             ->notName('*.twig')
             ->notName('*.yml')
             ->in('src')

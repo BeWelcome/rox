@@ -2,7 +2,7 @@
     <a name="travels"></a>
     <h3 class="card-header profile-bg2">
         <i class="fa fa-globe"></i><span class="icontext">Travelled to</span>
-        {% if member.id == my_member.id %}
+        {% if member.id == app.user.id %}
             <a href="{{ path('member/edit') }}" class="btn btn-sm btn-primary float-right">edit</a>
         {% endif %}
     </h3>
@@ -18,7 +18,7 @@
 
     <h3 class="card-header profile-bg2">
         <i class="fa fa-globe"></i><span class="icontext">Planned trips</span>
-        {% if member.id == my_member.id %}
+        {% if member.id == app.user.id %}
             <a href="{{ path('member/edit') }}" class="btn btn-sm btn-primary">edit</a>
         {% endif %}
     </h3>
@@ -26,7 +26,7 @@
         {{ member.PlannedTrips | nl2br }}
         {# Link with trips-feature, if trips are available #}
 
-        {% if member.id == my_member.id %}
+        {% if member.id == app.user.id %}
             <a href="trips/create" class="btn btn-primary btn-block"><i class="fa fa-map-marker"></i> Plan your trip</a>
         {% endif %}
     </div>

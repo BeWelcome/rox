@@ -8,7 +8,7 @@
         {%  if member.Accommodation == 'dependonrequest' %}{% set hosttext = 'Maybe Hosting' %}{% endif %}
         {%  if member.Accommodation == 'neverask' %}{% set hosttext = 'Not hosting' %}{% endif %}
 
-        {% if member.id == my_member.id %}
+        {% if member.id == app.user.id %}
 
             {# TODO: display right status #}
             <a href="#" id="SetStatus" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -39,7 +39,7 @@
     </div>
 </div>
 <div class="d-flex flex-row pt-3">
-    {% if member.id == my_member.id %}
+    {% if member.id == app.user.id %}
         <a href="#" class="btn btn-sm btn-primary btn-block btn-edit"><i class="fa fa-street-view"></i><span class="icontext">Change location</span></a>
     {% else %}
         <a href="{{ path('message/compose', { username: member.Username }) }}" class="btn btn-sm btn-primary btn-block btn-profile"><i class="fa fa-envelope"></i><span class="icontext">Send request</span></a>

@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-
+    {% set myself = app.user %}
     <div class="row">
         <div class="col-12">
             <div class="pull-right">{{ pagerfanta( trips, 'twitter_bootstrap4_translated', { routeName: 'activity' }) }}</div>
@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div>
-                <p class="small">{{ trip.createdBy.Username }}{% if trip.createdBy == my_member %}<a href="{{  path('trip_update', { id: trip.id} ) }}">Update</a>{% endif %}</p>
+                <p class="small">{{ trip.createdBy.Username }}{% if trip.createdBy == myself%}<a href="{{  path('trip_update', { id: trip.id} ) }}">Update</a>{% endif %}</p>
                 <p>{{ trip.description | truncate(200) }}</p>
             </div>
         </div>

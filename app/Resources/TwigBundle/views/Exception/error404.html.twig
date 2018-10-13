@@ -6,7 +6,7 @@
 
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <p>
-            Hi {{ my_member.Username }},<br>
+            Hi {{ app.user.Username }},<br>
             The requested page couldn't be located. Checkout for any URL
             misspelling or <a href="/landing">return to the homepage</a>.
         </p>

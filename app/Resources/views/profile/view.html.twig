@@ -6,11 +6,11 @@
 
 {% block content %}
     {% set FirstName, LastName = member.FirstName, member.LastName %}
-
+    {% set myself = app.user %}
     <div>
 
         <div class="btn-group btn-group-profile" role="group">
-            {% if member.id == my_member.id %}
+            {% if member.id == myself.id %}
                 <a href="#" class="btn btn-edit"><span class="fa fa-pencil btn-edit-animation small pr-2"></span>{{ 'MyPreferences' | trans  }}</a>
             {% else %}
                 <a href="{{ path('message/compose', { username: member.Username }) }}"
@@ -71,7 +71,7 @@
                 <br><span class="text-truncate whiteshadow">{{ member.occupation }}</span>
             {% endif %}
 
-            {% if member.id == my_member.id %}
+            {% if member.id == myself.id %}
                 <br><a href="{{ path('member/edit') }}" class="btn btn-sm btn-edit"><span class="fa fa-pencil btn-edit-animation small pr-2"></span>{{ 'EditMyProfile' | trans  }}</a>
             {% endif %}
 
@@ -116,7 +116,7 @@
                 <a name="aboutme"></a>
                 <h3 class="card-header profile-bg2">
                     <i class="fa fa-info-circle"></i><span class="icontext">About me</span>
-                    {% if member.id == my_member.id %}
+                    {% if member.id == myself.id %}
                         {# TODO the span tag was empty, assuming edit #}
                         <a href="{{ path('member/edit') }}" class="btn btn-sm btn-edit float-right"><span class="fa fa-pencil btn-edit-animation small pr-2"></span>edit</a>
                     {% endif %}
@@ -131,7 +131,7 @@
                 <a name="interests"></a>
                 <h3 class="card-header profile-bg2">
                     <i class="fa fa-bicycle"></i><span class="icontext">Interests</span>
-                    {% if member.id == my_member.id %}
+                    {% if member.id == myself.id %}
                         <a href="{{ path('member/edit') }}" class="btn btn-sm btn-edit float-right"><span class="fa fa-pencil btn-edit-animation small pr-2"></span>edit</a>
                     {% endif %}
                 </h3>
@@ -174,7 +174,7 @@
         </div>
 
     </div>
-    {% if member.id == my_member.id %}
+    {% if member.id == myself.id %}
         </form>
     {% endif %}
 {% endblock content %}

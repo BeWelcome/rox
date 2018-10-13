@@ -17,6 +17,7 @@ use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\Mapping as ORM;
 use Rox\Core\Exception\RuntimeException;
 use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
+use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -619,6 +620,8 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     private $cryptedFields;
 
     /**
+     * @var ArrayCollection
+     *
      * @ORM\OneToMany(targetEntity="RightVolunteer", mappedBy="member", fetch="EAGER")
      */
     private $volunteerRights;
@@ -632,8 +635,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
 
     /**
      * @var arrayCollection
-     *
-     * One Member has many languages
      *
      * @ORM\OneToMany(targetEntity="MembersLanguagesLevel", mappedBy="member")
      */
@@ -2440,37 +2441,26 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * Returns the roles granted to the user.
      *
-     * <code>
-     * public function getRoles()
-     * {
-     *     return array('ROLE_USER');
-     * }
-     * </code>
-     *
-     * Alternatively, the roles might be stored on a ``roles`` property,
-     * and populated in any number of different ways when the user object
-     * is created.
-     *
-     * @return array string[] The user roles
+     * @return array Role[] The user roles
      */
     public function getRoles()
     {
         // Grant user role to everyone
         $roles = [
-            'ROLE_USER',
+            new Role('ROLE_USER'),
         ];
 
         $volunteerRights = $this->getVolunteerRights();
         if (null !== $volunteerRights) {
             foreach ($volunteerRights->getIterator() as $volunteerRight) {
                 if (0 !== $volunteerRight->getLevel()) {
-                    $roles[] = 'ROLE_ADMIN_'.strtoupper($volunteerRight->getRight()->getName());
+                    $roles[] = new Role('ROLE_ADMIN_'.strtoupper($volunteerRight->getRight()->getName()));
                 }
             }
 
             // If additional roles are found add ROLE_ADMIN as well to get past the /admin firewall
             if (\count($roles) > 1) {
-                $roles[] = 'ROLE_ADMIN';
+                $roles[] = new Role('ROLE_ADMIN');
             }
         }
 
@@ -2524,10 +2514,8 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
 
     public function isPrivileged()
     {
-        foreach ($this->getRoles() as $role) {
-            if (preg_match('/ROLE_ADMIN.*/', $role)) {
-                return true;
-            }
+        if (in_array(new Role("ROLE_SUPER_ADMIN"), $this->getRoles())) {
+            return true;
         }
 
         return false;
@@ -2724,6 +2712,25 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         }
 
         return $hasRight;
+    }
+
+    public function getLevelForRight($rightName)
+    {
+        $level = false;
+        $volunteerRights = $this->getVolunteerRights();
+        if (null !== $volunteerRights) {
+            // first check if member has the word right
+            $right = $this->em->getRepository(Right::class)->findOneBy(['name' => $rightName]);
+
+            /** @var RightVolunteer $volunteerRight */
+            foreach ($volunteerRights->getIterator() as $volunteerRight) {
+                if ($volunteerRight->getRight() === $right) {
+                    $level = $volunteerRight->getLevel();
+                }
+            }
+        }
+
+        return $level;
     }
 
     /**

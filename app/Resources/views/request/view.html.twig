@@ -3,16 +3,17 @@
 
 {% block content %}
     {% set original = thread | last %}{% set request = original.Request %}
+    {% set myself = app.user %}
 <div id="message_thread" class="row px-3">
-    {% if original.Sender.Username == my_member.Username %}{% set otherUser = original.Receiver %}{% else %}{% set otherUser = original.Sender %}{% endif %}
+    {% if original.Sender.Username == myself.Username %}{% set otherUser = original.Receiver %}{% else %}{% set otherUser = original.Sender %}{% endif %}
 
     <div class="col-12 sticky-top py-3 pb-0 bg-white d-inline-block mb-2 messageheader">
             <div class="pull-left">{{ macros.avatar(otherUser.Username, 50, true) }} {{ macros.profilelink(otherUser.Username) }}</div>
-            <div class="pull-right">{{ macros.avatar(my_member.Username, 50, true) }}</div>
+            <div class="pull-right">{{ macros.avatar(self.Username, 50, true) }}</div>
             <div class="mt-2"><h3 id="MessageSubject" class="m-0 px-3 text-truncate">{{ current.Subject.Subject | raw }}</h3></div>
 
         <div class="col-12 px-0 mt-2">
-            {% if original.Sender.Username == my_member.Username %}
+            {% if original.Sender.Username == myself.Username %}
                 {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_OPEN') %}<div class="alert alert-warning mb-0 h5"><i class="fa fa-question mr-1"></i>{{ 'Your potential host has not yet decided if he/she can host you' }}</div>{% endif %}
                 {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_CANCELLED') %}<div class="alert alert-danger mb-0 h5"><i class="fa fa-times mr-1"></i>{{ 'You have cancelled this hosting request' }}</div>{% endif %}
                 {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_DECLINED') %}<div class="alert alert-danger mb-0 h5"><i class="fa fa-times mr-1"></i>{{ 'Unfortunately your potential host declined' }}</div>{% endif %}
@@ -31,7 +32,7 @@
 
 
     <div class="col-12 col-md-4 p-0 h5 my-3">
-    {% if original.Sender.Username == my_member.Username %}
+    {% if original.Sender.Username == myself.Username %}
         {% if request.flexible %}<div>{{ 'I\'m flexible with arrival and departure' }}</div>{% endif %}
         {% if request.numberOfTravellers != 1 %}<div><i class="fa fa-group mr-1"></i>{{ 'Request for %s guest(s)' | format(request.numberOfTravellers) }}</div>{% endif %}
     {% else %}
@@ -53,7 +54,7 @@
     {%- endif %}
 
     {% include ':message:thread.html.twig' %}
-    {% if current.Sender.Username == my_member.Username %}
+    {% if current.Sender.Username == myself.Username %}
         {% set label = 'Update' %}
     {% else %}
         {% set label = 'Reply' %}

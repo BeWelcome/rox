@@ -62,7 +62,7 @@
     </div>
     <div class="row">
         <div class="col-12">
-            {% if current.sender.Username == my_member.Username %}
+            {% if current.sender.Username == app.user.Username %}
                 {% set label = 'Update' %}
             {% else %}
                 {% set label = 'Reply' %}

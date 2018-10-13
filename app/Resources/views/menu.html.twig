@@ -1,5 +1,6 @@
 {% import 'macros.twig' as macros %}
-{% if my_member %}
+{% set member = app.user %}
+{% if member %}
     <nav class="navbar navbar-sticky-top navbar-expand-md navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
         <div class="container">
             <a class="navbar-brand mr-3 float-left" href="{{ url('homepage') }}"><img src="{{ asset('bundles/app/images/logo_index_top.png') }}" alt="{{ 'BeWelcome' | trans }}"/></a>
@@ -11,7 +12,7 @@
             <div class="collapse d-xl-none px-0 w-100" id="smallNavBar">
                 <ul class="navbar-nav mr-auto mt-2">
                     <li class="nav-item bordert-1">
-                        <a href="{{ url('members_profile', { username: my_member.Username }) }}" class="nav-link pl-1">{{ my_member.Username }}</a>
+                        <a href="{{ url('members_profile', { username: member.Username }) }}" class="nav-link pl-1">{{ member.Username }}</a>
                     </li>
                     <li class="nav-item bordert-1">
                         <a href="{{ path( 'messages' ) }}" class="nav-link pl-4">{{ 'MyMessages' | trans }}</a>
@@ -107,7 +108,7 @@
                                     </div>
                                     <div class="subnavborder py-3">
                                         <div class="pl-5 pr-0">
-                                            <a href="/members/{{ my_member.Username }}">{{ macros.avatar( my_member.Username, 50, true) }} <span class="h4">{{ my_member.Username }}</span></a>
+                                            <a href="/members/{{ member.Username }}">{{ macros.avatar( member.Username, 50, true) }} <span class="h4">{{ member.Username }}</span></a>
                                         </div>
                                         <div class="d-flex flex-row justify-content-between pl-5 pr-0">
                                             <div>
@@ -137,18 +138,18 @@
 
                     {# profile link on smaller screens #}
                     <li class="nav-item float-right d-block d-lg-none">
-                        <a href="{{ path( 'members_profile' , { username: my_member.Username } ) }}" class="nav-link"><i class="fa fa-lg fa-user"></i></a>
+                        <a href="{{ path( 'members_profile' , { username: member.Username } ) }}" class="nav-link"><i class="fa fa-lg fa-user"></i></a>
                     </li>
 
                     {# member dropdown on bigger screens #}
                     <li class="nav-item dropdown float-right d-none d-lg-block">
-                        <a href="{{ path( 'members_profile' , { username: my_member.Username } ) }}" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ my_member.Username }} <span class="caret"></span></a>
+                        <a href="{{ path( 'members_profile' , { username: member.Username } ) }}" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ member.Username }} <span class="caret"></span></a>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                            <li class="text-right"><a href="{{ path( 'members_profile' , { username: my_member.Username } ) }}" class="dropdown-item">{{ 'Profile' | trans }}</a></li>
-                            <li class="text-right"><a href="/editmyprofile" class="dropdown-item">{{ 'EditMyProfile' | trans }}</a></li>
-                            <li class="text-right"><a href="/mypreferences" class="dropdown-item">{{ 'MyPreferences' | trans }}</a></li>
-                            <li class="text-right"><a href="/mynotes" class="dropdown-item">{{ 'ProfileMyNotes' | trans }}</a></li>
-                            <li class="text-right"><a href="/groups/mygroups" class="dropdown-item">{{ 'MyGroups' | trans }}</a></li>
+                            <li class="text-right"><a href="{{ path( 'members_profile' , { username: member.Username } ) }}" class="dropdown-item">{{ 'Profile' | trans }}</a></li>
+                            <li class="text-right"><a href="{{ path('edit_my_profile') }}" class="dropdown-item">{{ 'EditMyProfile' | trans }}</a></li>
+                            <li class="text-right"><a href="{{ path('my_preferences') }}" class="dropdown-item">{{ 'MyPreferences' | trans }}</a></li>
+                            <li class="text-right"><a href="{{ path('members_show_all_notes') }}" class="dropdown-item">{{ 'ProfileMyNotes' | trans }}</a></li>
+                            <li class="text-right"><a href="{{ path('groups_mygroups') }}" class="dropdown-item">{{ 'MyGroups' | trans }}</a></li>
                             <li class="text-right"><a href="/trips" class="dropdown-item">{{ 'TripsShowMy' | trans }}</a></li>
                             <li class="text-right"><a href="{{ url( 'security_logout' ) }}" class="dropdown-item">{{ 'Logout' | trans }}</a></li>
                         </ul>

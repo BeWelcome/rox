@@ -19,7 +19,7 @@
 
 {% block content %}
 
-    <h2>{{ type | trans | format(my_member.Username) }}</h2>
+    <h2>{{ type | trans | format(member.Username) }}</h2>
 
     {% if items.nbResults == 0 %}
         <p>{{ 'No messages in this folder.' | trans }}</p>
@@ -47,7 +47,7 @@
             <th colspan="2" class="align-middle">{{ 'MessagesText' | trans }}</th>
         </tr>
         {% for message in items.currentPageResults %}
-            {% set directionIn = (my_member.id == message.receiver.id) %}
+            {% set directionIn = (member.id == message.receiver.id) %}
             {% set otherMember = directionIn ? message.sender : message.receiver %}
 
             <tr>

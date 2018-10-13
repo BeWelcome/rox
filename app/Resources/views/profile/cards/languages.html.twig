@@ -2,7 +2,7 @@
     <a name="languages"></a>
     <h3 class="card-header profile-bg2">
         <i class="fa fa-language"></i><span class="icontext">Languages</span>
-        {% if member.id == my_member.id %}
+        {% if member.id == app.user.id %}
             <a href="{{ path('member/edit') }}" class="btn btn-sm btn-primary float-right">edit</a>
         {% endif %}
     </h3>

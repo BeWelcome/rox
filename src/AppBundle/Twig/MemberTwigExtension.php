@@ -37,6 +37,11 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
     protected $security;
 
     /**
+     * @var Member
+     */
+    protected $member;
+
+    /**
      * MemberTwigExtension constructor.
      *
      * @param Session       $session
@@ -50,6 +55,7 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
         $this->em = $em;
         $this->router = $router;
         $this->security = $security;
+        $this->member = $this->security->getUser();
     }
 
     /**
@@ -57,25 +63,17 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
      */
     public function getGlobals()
     {
-        /** @var Member $member */
-        $member = null;
-        $rememberMeToken = unserialize($this->session->get('_security_default'));
-        if (false !== $rememberMeToken) {
-            $member = $rememberMeToken->getUser();
-        }
-
         $teams = [];
-        if (null !== $member) {
-            $roles = $rememberMeToken->getRoles();
+        if (null !== $this->member) {
+            $roles = $this->security->getUser()->getRoles();
             $teams = $this->getTeams($roles);
         }
 
         return [
-            'my_member' => $member ? $member : null,
-            'reportedCommentsCount' => $member ? $this->getReportedCommentsCount() : 0,
-            'reportedMessagesCount' => $member ? $this->getReportedMessagesCount() : 0,
-            'messageCount' => $member ? $this->getUnreadMessagesCount($member) : 0,
-            'requestCount' => $member ? $this->getUnreadRequestsCount($member) : 0,
+            'reportedCommentsCount' => $this->member ? $this->getReportedCommentsCount() : 0,
+            'reportedMessagesCount' => $this->member ? $this->getReportedMessagesCount() : 0,
+            'messageCount' => $this->member ? $this->getUnreadMessagesCount() : 0,
+            'requestCount' => $this->member ? $this->getUnreadRequestsCount() : 0,
             'teams' => $teams,
         ];
     }
@@ -116,20 +114,20 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
         return $reportedCommentsCount;
     }
 
-    protected function getUnreadMessagesCount(Member $member)
+    protected function getUnreadMessagesCount()
     {
         /** @var MessageRepository $messageRepository */
         $messageRepository = $this->em->getRepository(Message::class);
 
-        return $messageRepository->getUnreadMessagesCount($member);
+        return $messageRepository->getUnreadMessagesCount($this->member);
     }
 
-    protected function getUnreadRequestsCount(Member $member)
+    protected function getUnreadRequestsCount()
     {
         /** @var MessageRepository $messageRepository */
         $messageRepository = $this->em->getRepository(Message::class);
 
-        return $messageRepository->getUnreadRequestsCount($member);
+        return $messageRepository->getUnreadRequestsCount($this->member);
     }
 
     /**
@@ -194,6 +192,7 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
                 'trans' => 'AdminGroup',
                 'rights' => [Member::ROLE_ADMIN_GROUP],
                 'route' => 'admin_groups_approval',
+                'minimum_level' => 10,
             ],
             'tools' => [
                 'trans' => 'AdminVolunteerTools',
@@ -210,11 +209,20 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
             foreach ($roles as $role) {
                 if (!\in_array($name, $assignedTeams, true)) {
                     if (\in_array($role->getRole(), $team['rights'], true)) {
-                        $assignedTeams[] = $name;
-                        $teams[] = [
-                            'trans' => $team['trans'],
-                            'route' => $team['route'],
-                        ];
+                        $add = true;
+                        if (isset($team['minimum_level'])) {
+                            $level = $this->member->getLevelForRight($role->getRole());
+                            if ($level !== 10) {
+                                $add = false;
+                            }
+                        }
+                        if ($add) {
+                            $assignedTeams[] = $name;
+                            $teams[] = [
+                                'trans' => $team['trans'],
+                                'route' => $team['route'],
+                            ];
+                        }
                     }
                 }
             }

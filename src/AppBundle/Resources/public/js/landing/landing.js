@@ -12,7 +12,7 @@ $(document).ready(function() {
         setTimeout(Home.updateMessages, 500);
     });
 
-    $('#groups, #forum, #following').change(function() {
+    $('#groupsButton, #forumButton, #followingButton').change(function() {
         setTimeout(Home.updateThreads, 500);
     });
 
@@ -77,8 +77,8 @@ var Home = {
     },
     updateThreads: function () {
         // Get parameters
-        var groups = $('#groups').hasClass('active') ? 1 : 0;
-        var forum = $('#forum').hasClass('active') ? 1 : 0;
+        var groups = $('#groupsButton').hasClass('active') ? 1 : 0;
+        var forum = $('#forumButton').hasClass('active') ? 1 : 0;
         var following = $('#following').hasClass('active') ? 1 : 0;
 
         $.ajax({

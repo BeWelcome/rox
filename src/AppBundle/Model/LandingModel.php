@@ -126,7 +126,10 @@ class LandingModel extends BaseModel
 
         $groupIds = [];
         if ($groups) {
-            $groups = $member->getGroupMemberships();
+            $groups = $member->getGroups();
+            $groupIds = array_map(function($group) {
+                return $group->getId();
+            }, $groups);
         }
         if ($following) {
         }

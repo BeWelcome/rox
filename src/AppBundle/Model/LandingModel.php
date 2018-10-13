@@ -126,17 +126,17 @@ class LandingModel extends BaseModel
 
         $groupIds = [];
         if ($groups) {
-            $groups = $member->getGroups();
-            $groupIds = array_map(function($group) {
+            $groupIds = array_map(function ($group) {
                 return $group->getId();
-            }, $groups);
-        }
-        if ($following) {
-        }
-        if (!empty($groupIds)) {
+            }, $member->getGroups());
             $queryBuilder
                 ->andWhere('ft.group IN (:groups)')
-                ->setParameter('groups', $groups);
+                ->setParameter('groups', $groupIds);
+        } else {
+            $queryBuilder
+                ->andWhere('ft.group = 0');
+        }
+        if ($following) {
         }
 
         if ($limit) {

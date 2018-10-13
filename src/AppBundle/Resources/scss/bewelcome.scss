@@ -13,12 +13,14 @@ $lato-font-path: '../fonts';
 @include lato-include-font('black');
 @include lato-include-font('medium');
 
-@import '~font-awesome/scss/font-awesome';
+
+$fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/solid';
 
 // Core variables and mixins
 @import "custom";
 $font-family-bold: Signika-bold, Arial;
-
 
 @import "~bootstrap/scss/bootstrap";
 

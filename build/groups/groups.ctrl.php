@@ -23,14 +23,18 @@ Boston, MA  02111-1307, USA.
      * @author Fake51
      */
 
-    /**
-     * groups controller
-     * handles all requests that have to do with groups
-     * 
-     * @package    Apps
-     * @subpackage Groups
-     * @author     Fake51 <peter.e.lind@gmail.com>
-     */
+use AppBundle\Entity\Group;
+
+/**
+ * groups controller
+ * handles all requests that have to do with groups
+ *
+ * @property GroupsModel _model
+ *
+ * @package    Apps
+ * @subpackage Groups
+ * @author     Fake51 <peter.e.lind@gmail.com>
+ */
 class GroupsController extends RoxControllerBase   
 {
 
@@ -54,9 +58,9 @@ class GroupsController extends RoxControllerBase
     public function showGroup()
     {
         $group = $this->_getGroupFromRequest();
-        if ($group->Type == 'NeedInvitation' && !$this->_model->getLoggedInMember())
+        if (false === $group || ($group->Type == 'NeedInvitation' && !$this->_model->getLoggedInMember()))
         {
-            $this->redirectAbsolute($this->router->url('groups_overview'));
+            return $this->redirectAbsolute($this->router->url('groups_overview'));
         }
         $this->_model->setGroupVisit($group->getPKValue());
         $page = new GroupStartPage();

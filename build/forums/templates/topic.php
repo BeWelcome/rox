@@ -65,7 +65,7 @@ This File display a topic and the messages which are inside it
             if (strpos($url, "/reverse") === false) { // THis in order to avoid to concatenate /reverse twice
                 $url .= "/reverse";
             }
-            echo ' <a href="' . $url . '" title="' . $words->getSilent('ReverseOrder') . '" ><i class="fa fa-refresh" alt="'
+            echo ' <a href="' . $url . '" title="' . $words->getSilent('ReverseOrder') . '" ><i class="fa fa-exchange fa-rotate-90" alt="'
                 . $words->getSilent('ReverseOrder') . '" /></i></a> ' . $words->flushBuffer();
         }
         echo "</h2>";

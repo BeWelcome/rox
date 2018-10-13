@@ -63,6 +63,8 @@
 
     // member app routes
     $this->addRoute('members_profile', '/members/:username:', 'MembersController', 'index');
+    $this->addRoute('edit_my_profile', '/editmyprofile', 'MembersController', 'index');
+    $this->addRoute('my_preferences', '/mypreferences', 'MembersController', 'index');
 
     $this->addRoute('members_profile_retired', 'retired', 'MembersController', 'retired');
     $this->addRoute('members_profile_set_active', 'setprofileactive', 'MembersController', 'setactive');

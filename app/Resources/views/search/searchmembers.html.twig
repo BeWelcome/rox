@@ -16,7 +16,7 @@
 {% endblock stylesheets %}
 
 {% block content %}
-    <div class="container">
+    <div class="container px-0">
         {{ form_start(form, {'attr': {'class': 'm-1'}}) }}
         {{ form_errors(form) }}
         <div class="form-row form-inline align-items-start mb-4">
@@ -48,18 +48,22 @@
                 </label>
             </div>
             <div id="mapsearchoptions" class="form-group mx-2">
-                <i class="fa fa-bed"></i> {{ form_label(form.can_host) }}
+                <i class="fa fa-2x fa-bed mr-1" title="{{ 'search.hosts_at_least' | trans }}"></i> {{ form_label(form.can_host) }}
                 {{ form_widget(form.can_host) }}
             </div>
             <div class="form-group mx-2">
+                <i class="fa fa-2x fa-bullseye mr-1" title="{{ 'in a radius of' | trans }}"></i>
                 {{ form_label(form.distance) }}
                 {{ form_widget(form.distance, {'attr': {
                     'data-minimum-results-for-search': '-1'} }) }}
             </div>
-            <div class="form-group ml-2">
+            <div class="form-group ml-1">
                 <a class="btn btn-primary advanced float-right" data-toggle="collapse" href="#advancedNav" role="button"
                    aria-expanded="false" aria-controls="advancedNav"
                    >{{ 'search.show.advanced' | trans }}</a>
+            </div>
+            <div class="form-group ml-1">
+                {{ form_widget(form.updateMap, {'attr': {'class': 'btn-primary float-right'}}) }}
             </div>
         </div>
         <div class="collapse" id="advancedNav">
@@ -105,9 +109,7 @@
         </div>
     </div>
     <div class="form-row">
-        <div class="form-group col-12">
-            {{ form_widget(form.updateMap, {'attr': {'class': 'btn-primary float-right'}}) }}
-        </div>
+
     </div>
 
     {{ form_rest(form) }}

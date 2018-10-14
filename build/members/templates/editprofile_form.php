@@ -315,10 +315,8 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     <? echo $words->get('ProfileNumberOfGuests'); ?>
                 </div>
                 <div class="col-8">
-                    <input id="rangevalue" name="MaxGuest" class="small maxguestsinput"
+                    <input type="number" min="0" max="20" name="MaxGuest" class="maxguestsinput"
                            value="<?= $vars['MaxGuest']; ?>">
-                    <input type="range" min="0" max="20" value="<?= $vars['MaxGuest']; ?>" step="1"
-                           onchange="rangevalue.value=value"/>
                 </div>
 
                 <div class="col-4 mt-3 h5">
@@ -399,7 +397,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 <div class="col-4 mt-3 h5">
                     <?= $words->get('ProfileHouseRules') ?>
                 </div>
-                <div class="col-8 mt-3">
+                <div class="col-8 mt-3 h5">
                     <textarea name="OtherRestrictions" class="w-100"
                               rows="2"><?= $vars['OtherRestrictions'] ?></textarea>
                 </div>

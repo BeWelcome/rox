@@ -160,7 +160,7 @@ class SearchFormType extends AbstractType
                 ],
                 'label' => 'search.hosts_at_least',
                 'label_attr' => [
-                    'class' => 'mx-1',
+                    'class' => 'mx-1 sr-only',
                 ],
                 'translation_domain' => 'messages',
             ])
@@ -181,7 +181,7 @@ class SearchFormType extends AbstractType
                 ],
                 'label' => 'in a radius of',
                 'label_attr' => [
-                    'class' => 'mr-1',
+                    'class' => 'mr-1 sr-only',
                 ],
                 'translation_domain' => 'messages',
             ])

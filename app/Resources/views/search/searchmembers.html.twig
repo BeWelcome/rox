@@ -19,7 +19,7 @@
     <div class="container px-0">
         {{ form_start(form, {'attr': {'class': 'm-1'}}) }}
         {{ form_errors(form) }}
-        <div class="form-row form-inline align-items-start mb-4">
+        <div class="form-row form-inline align-items-start">
             <div class="form-group">
                 <div class="input-group">
                     <div class="input-group-prepend"><span class="input-group-text"><i
@@ -67,7 +67,7 @@
             </div>
         </div>
         <div class="collapse" id="advancedNav">
-            <div class="form-row mb-4">
+            <div class="form-row mb-1">
                 <div class="form-group col-12 col-md-6">
                     {{ form_label(form.keywords) }}
                     {{ form_widget(form.keywords) }}

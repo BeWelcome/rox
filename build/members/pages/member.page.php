@@ -81,36 +81,36 @@ class MemberPage extends PageWithActiveSkin
         $mynotes_count = $member->count_mynotes();
         if ($this->myself) {
             $tt=array(
-                array('editmyprofile', 'editmyprofile/' . $profile_language_code, '<i class="fa fa-wt fa-edit"></i> ' . $ww->EditMyProfile, 'editmyprofile'),
-                array('mypreferences', 'mypreferences', '<i class="fa fa-wt fa-cogs"></i> ' . $ww->MyPreferences, 'mypreferences'),
-                array('mynotes', 'mynotes', '<i class="fa fa-wt fa-sticky-note"></i> ' . $words->get('MyNotes', '<span class="badge badge-primary pull-right">' . $mynotes_count . '</span>'), 'mynotes')
+                array('editmyprofile', 'editmyprofile/' . $profile_language_code, '<i class="fa fa-fw fa-edit"></i> ' . $ww->EditMyProfile, 'editmyprofile'),
+                array('mypreferences', 'mypreferences', '<i class="fa fa-fw fa-cogs"></i> ' . $ww->MyPreferences, 'mypreferences'),
+                array('mynotes', 'mynotes', '<i class="fa fa-fw fa-sticky-note"></i> ' . $words->get('MyNotes', '<span class="badge badge-primary pull-right">' . $mynotes_count . '</span>'), 'mynotes')
                 );
 
             if ($this instanceof EditMyProfilePage)
             {
-                $tt[] = array('deleteprofile', 'deleteprofile', '<i class="fa fa-wt fa-times"></i> ' . $ww->DeleteProfile, 'deleteprofile');
+                $tt[] = array('deleteprofile', 'deleteprofile', '<i class="fa fa-fw fa-times"></i> ' . $ww->DeleteProfile, 'deleteprofile');
                 if ($member->Status <> 'ChoiceInactive') {
-                    $tt[] = array('setprofileinactive', 'setprofileinactive', '<i class="fa fa-wt fa-edit"></i> ' . $ww->SetProfileInactive, 'setprofileinactive');
+                    $tt[] = array('setprofileinactive', 'setprofileinactive', '<i class="fa fa-fw fa-edit"></i> ' . $ww->SetProfileInactive, 'setprofileinactive');
                 } else {
-                    $tt[] = array('setprofileactive', 'setprofileactive', '<i class="fa fa-wt fa-edit"></i> ' . $ww->SetProfileActive);
+                    $tt[] = array('setprofileactive', 'setprofileactive', '<i class="fa fa-fw fa-edit"></i> ' . $ww->SetProfileActive);
                 }
             }
 
             $showVisitors = $member->getPreference('PreferenceShowProfileVisits',
                 'Yes');
             if ($showVisitors == 'Yes') {
-                $tt[] = array('myvisitors', "myvisitors", '<i class="fa fa-wt fa-comments invisible"></i> ' . $ww->MyVisitors, 'myvisitors');
+                $tt[] = array('myvisitors', "myvisitors", '<i class="fa fa-fw fa-comments invisible"></i> ' . $ww->MyVisitors, 'myvisitors');
             }
             $tt[] = array('space', '', '', 'space');
 
-            $tt[] = array('profile', "members/$username", '<i class="fa fa-wt fa-user"></i> ' . $ww->MemberPage);
-            $tt[] = array('comments', "members/$username/comments", '<i class="fa fa-wt fa-comments"></i> ' . $ww->ViewComments.' <span class="badge badge-primary pull-right">'.$comments_count['all'].'</span>');
+            $tt[] = array('profile', "members/$username", '<i class="fa fa-fw fa-user"></i> ' . $ww->MemberPage);
+            $tt[] = array('comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' <span class="badge badge-primary pull-right">'.$comments_count['all'].'</span>');
             if ($this->myself) {
-                $tt[] = array('gallery', "gallery/manage", '<i class="fa fa-wt fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary pull-right">' . $galleryItemsCount . '</span>');
+                $tt[] = array('gallery', "gallery/manage", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary pull-right">' . $galleryItemsCount . '</span>');
             } else {
-                $tt[] = array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-wt fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary pull-right">' . $galleryItemsCount . '</span>');
+                $tt[] = array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary pull-right">' . $galleryItemsCount . '</span>');
             }
-            $tt[] = array('forum', "forums/member/$username", '<i class="fa fa-wt fa-bed invisible"></i> ' . $viewForumPosts);
+            $tt[] = array('forum', "forums/member/$username", '<i class="fa fa-fw fa-bed invisible"></i> ' . $viewForumPosts);
         } else {
             if (isset($note)) {
                 $mynotewordsname=$words->get('NoteEditMyNotesOfMember') ;
@@ -121,32 +121,32 @@ class MemberPage extends PageWithActiveSkin
                 $mynotelinkname= "members/$username/note/add" ;
             }
             $tt= array(
-                array('sendrequest', "new/request/$username", '<i class="fa fa-wt fa-bed"></i> ' . $words->getSilent('profile.request.hosting'), 'sendrequest'),
-                array('messagesadd', "new/message/$username", '<i class="fa fa-wt fa-envelope"></i> ' . $ww->ContactMember, 'messagesadd'),
-                (isset($TCom[0])) ? array('commmentsadd', "members/$username/comments/edit", '<i class="fa fa-wt fa-comment"></i> ' . $ww->EditComments, 'commentsadd') : array('commmentsadd', "members/$username/comments/add", '<i class="fa fa-wt fa-comment"></i> ' . $ww->AddComments, 'commentsadd'),
-                array('relationsadd', "members/$username/relations/add", '<i class="fa fa-wt fa-group"></i> ' . $ww->addRelation, 'relationsadd'),
-                array('notes', $mynotelinkname, '<i class="fa fa-wt fa-pencil-alt"></i> ' . $mynotewordsname, 'mynotes'),
+                array('sendrequest', "new/request/$username", '<i class="fa fa-fw fa-bed"></i> ' . $words->getSilent('profile.request.hosting'), 'sendrequest'),
+                array('messagesadd', "new/message/$username", '<i class="fa fa-fw fa-envelope"></i> ' . $ww->ContactMember, 'messagesadd'),
+                (isset($TCom[0])) ? array('commmentsadd', "members/$username/comments/edit", '<i class="fa fa-fw fa-comment"></i> ' . $ww->EditComments, 'commentsadd') : array('commmentsadd', "members/$username/comments/add", '<i class="fa fa-fw fa-comment"></i> ' . $ww->AddComments, 'commentsadd'),
+                array('relationsadd', "members/$username/relations/add", '<i class="fa fa-fw fa-handshake"></i> ' . $ww->addRelation, 'relationsadd'),
+                array('notes', $mynotelinkname, '<i class="fa fa-fw fa-pencil-alt"></i> ' . $mynotewordsname, 'mynotes'),
                 array('space', '', '', 'space'),
-                array('profile', "members/$username", '<i class="fa fa-wt fa-user"></i> '  . $ww->MemberPage),
-                array('comments', "members/$username/comments", '<i class="fa fa-wt fa-comments"></i> ' . $ww->ViewComments.' <span class="badge badge-primary pull-right">'.$comments_count['all'].'</span>'),
-                array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-wt fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary pull-right">' . $galleryItemsCount . '</span>'),
+                array('profile', "members/$username", '<i class="fa fa-fw fa-user"></i> '  . $ww->MemberPage),
+                array('comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' <span class="badge badge-primary pull-right">'.$comments_count['all'].'</span>'),
+                array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary pull-right">' . $galleryItemsCount . '</span>'),
             );
             if ($linkMembersForumPosts) {
-                $tt[] = array('forum', "forums/member/$username", '<i class="fa fa-wt fa-bed invisible"></i> ' . $viewForumPosts);
+                $tt[] = array('forum', "forums/member/$username", '<i class="fa fa-fw fa-bed invisible"></i> ' . $viewForumPosts);
             }
         }
         if (MOD_right::get()->HasRight('SafetyTeam') || MOD_right::get()->HasRight('Admin'))
         {
-            $tt[] = array('adminedit',"members/{$username}/adminedit", '<i class="fa fa-wt fa-bed invisible"></i> Admin: Edit Profile');
+            $tt[] = array('adminedit',"members/{$username}/adminedit", '<i class="fa fa-fw fa-bed invisible"></i> Admin: Edit Profile');
         }
         if (MOD_right::get()->HasRight('Rights')) {
-            array_push($tt,array('adminrights','admin/rights/list/members/'.$username, '<i class="fa fa-wt fa-bed invisible"></i> ' .  $ww->AdminRights) ) ;
+            array_push($tt,array('adminrights','admin/rights/list/members/'.$username, '<i class="fa fa-fw fa-bed invisible"></i> ' .  $ww->AdminRights) ) ;
         }
         if (MOD_right::get()->HasRight('Flags')) {
-            array_push($tt,array('adminflags', 'admin/flags/list/members/'. $username, '<i class="fa fa-wt fa-flag"></i> ' .  $ww->AdminFlags) ) ;
+            array_push($tt,array('adminflags', 'admin/flags/list/members/'. $username, '<i class="fa fa-fw fa-flag"></i> ' .  $ww->AdminFlags) ) ;
         }
         if (MOD_right::get()->HasRight('Logs')) {
-            array_push($tt,array('admin','admin/logs?username='.$username,'<i class="fa fa-wt fa-bed invisible"></i> ' .  $ww->AdminLogs) ) ;
+            array_push($tt,array('admin','admin/logs?username='.$username,'<i class="fa fa-fw fa-bed invisible"></i> ' .  $ww->AdminLogs) ) ;
         }
         return($tt) ;
     }
@@ -213,12 +213,21 @@ class MemberPage extends PageWithActiveSkin
         </div>
                 <? } ?>
 
-        <div class="list-group mt-1">
+        <div class="list-group mt-2">
             <?php
 
             $active_menu_item = $this->getSubmenuActiveItem();
             foreach ($this->getLeftSubmenuItems() as $index => $item) {
                 $name = $item[0];
+                if ('space' === $name)
+                {
+                    // Brutal hack to separate the two blocks in the menu visually
+                    ?>
+                    </div>
+                    <div class="list-group mt-2">
+                    <?php
+                    continue;
+                }
                 $url = $item[1];
                 $label = $item[2];
                 $attributes = '';

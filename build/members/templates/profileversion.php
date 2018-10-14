@@ -63,7 +63,7 @@ if (count($languages) > 1 || $myself) {
             }
             ?><?php echo $words->flushBuffer(); ?></div>
 <?php if ($myself) { ?>
-<select class="select2 small" id="add_language">
+<select class="form-control-sm my-1" id="add_language">
     <option>- <?=$wwsilent->AddLanguage?> -</option>
       <?php
       $ownLanguages = "";

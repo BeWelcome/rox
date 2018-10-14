@@ -259,7 +259,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
 
                 <div class="col-3 mt-3 h5"><?= $words->get('Location') ?></div>
                 <div class="col-9 mt-3">
-                    <i class="fa fa-3x fa-map-marker float-left"></i>
+                    <i class="fa fa-3x fa-map-marker-alt float-left"></i>
                     <div class="float-left ml-2"><span class="font-weight-bold"><?= $member->city ?></span>
                         <br>
                         <?= $member->region ?>, <?= $member->country ?>

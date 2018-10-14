@@ -38,6 +38,7 @@ class SearchFormType extends AbstractType
         $this->addHiddenFields($formBuilder);
         $this->addCheckboxes($formBuilder);
         $this->addVariableSelects($formBuilder, $options);
+        $this->addAgeAndGenderSelects($formBuilder);
         $this->addSelects($formBuilder);
         $this->addButtons($formBuilder);
     }
@@ -63,7 +64,9 @@ class SearchFormType extends AbstractType
         $groups = [];
         if (null !== $options['groups']) {
             foreach ($options['groups'] as $group) {
-                $groups[$group->getName()] = $group->getId();
+                if ($group->getApproved()) {
+                    $groups[$group->getName()] = $group->getId();
+                }
             }
         }
         $languages = [];
@@ -91,12 +94,53 @@ class SearchFormType extends AbstractType
             ]);
     }
 
-    protected function addSelects(FormBuilderInterface $formBuilder)
+    protected function addAgeAndGenderSelects(FormBuilderInterface $formBuilder)
     {
         $ageArray = [];
         for ($i = 18; $i <= 118; $i = $i + 2) {
             $ageArray[$i] = $i;
         }
+        $formBuilder
+            ->add('min_age', ChoiceType::class, [
+                'choices' => $ageArray,
+                'choice_translation_domain' => false,
+                'attr' => [
+                    'class' => 'select2',
+                    'data-minimum-results-for-search' => '-1',
+                ],
+                'required' => false,
+                'label' => 'Minimum age',
+                'translation_domain' => 'messages',
+            ])
+            ->add('max_age', ChoiceType::class, [
+                'choices' => $ageArray,
+                'choice_translation_domain' => false,
+                'attr' => [
+                    'class' => 'select2',
+                    'data-minimum-results-for-search' => '-1',
+                ],
+                'required' => false,
+                'label' => 'Maximum age',
+                'translation_domain' => 'messages',
+            ])
+            ->add('gender', ChoiceType::class, [
+                'choices' => [
+                    'male' => 'male',
+                    'female' => 'female',
+                    'other' => 'idonttell',
+                ],
+                'choice_translation_domain' => false,
+                'attr' => [
+                    'class' => 'select2',
+                    'data-minimum-results-for-search' => '-1',
+                ],
+                'required' => false,
+                'translation_domain' => 'messages',
+            ]);
+    }
+
+    protected function addSelects(FormBuilderInterface $formBuilder)
+    {
         $formBuilder
             ->add('can_host', ChoiceType::class, [
                 'choices' => [
@@ -109,10 +153,16 @@ class SearchFormType extends AbstractType
                     10 => '10',
                     20 => '20',
                 ],
+                'choice_translation_domain' => false,
                 'attr' => [
-                    'class' => 'form-control-label',
+                    'class' => 'select2',
+                    'data-minimum-results-for-search' => '-1',
                 ],
-                'label' => 'hosts at least',
+                'label' => 'search.hosts_at_least',
+                'label_attr' => [
+                    'class' => 'mx-1',
+                ],
+                'translation_domain' => 'messages',
             ])
             ->add('distance', ChoiceType::class, [
                 'choices' => [
@@ -124,33 +174,21 @@ class SearchFormType extends AbstractType
                     '100km (~63mi)' => 100,
                     '200km (~128mi)' => 200,
                 ],
+                'choice_translation_domain' => false,
                 'attr' => [
-                    'class' => 'form-control-label',
+                    'class' => 'select2',
+                    'data-minimum-results-for-search' => '-1',
                 ],
                 'label' => 'in a radius of',
-            ])
-            ->add('min_age', ChoiceType::class, [
-                'choices' => $ageArray,
-                'required' => false,
-                'label' => 'minimum age',
-            ])
-            ->add('max_age', ChoiceType::class, [
-                'choices' => $ageArray,
-                'required' => false,
-                'label' => 'maximum age',
-            ])
-            ->add('gender', ChoiceType::class, [
-                'choices' => [
-                    'male' => 'male',
-                    'female' => 'female',
-                    'other' => 'idonttell',
+                'label_attr' => [
+                    'class' => 'mr-1',
                 ],
-                'required' => false,
+                'translation_domain' => 'messages',
             ])
             ->add('order', ChoiceType::class, [
                 'choices' => [
-                    'Username ascending' => 2,
-                    'Username descending' => 3,
+                    'search.username.ascending' => 2,
+                    'search.username.descending' => 3,
                     'Accommodation (Yes, Maybe, No)' => 6,
                     'Accommodation (No, Maybe, Yes)' => 7,
                     'Distance ascending' => 14,
@@ -162,6 +200,11 @@ class SearchFormType extends AbstractType
                     'Number of comments ascending' => 12,
                     'Number of comments descending' => 13,
                 ],
+                'attr' => [
+                    'class' => 'select2',
+                    'data-minimum-results-for-search' => '-1',
+                ],
+                'translation_domain' => 'messages',
             ])
             ->add('items', ChoiceType::class, [
                 'choices' => [
@@ -171,6 +214,12 @@ class SearchFormType extends AbstractType
                     50 => 50,
                     100 => 100,
                 ],
+                'choice_translation_domain' => false,
+                'attr' => [
+                    'class' => 'select2',
+                    'data-minimum-results-for-search' => '-1',
+                ],
+                'translation_domain' => 'messages',
             ])
         ;
     }

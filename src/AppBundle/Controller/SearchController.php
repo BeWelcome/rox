@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Member;
 use AppBundle\Form\CustomDataClass\SearchFormRequest;
 use AppBundle\Form\SearchFormType;
 use AppBundle\Pagerfanta\SearchAdapter;
@@ -24,6 +25,7 @@ class SearchController extends Controller
     {
         $pager = false;
         $results = false;
+        /** @var Member $member */
         $member = $this->getUser();
 
         $searchFormRequest = new SearchFormRequest();

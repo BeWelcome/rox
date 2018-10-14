@@ -212,7 +212,7 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
                         $add = true;
                         if (isset($team['minimum_level'])) {
                             $level = $this->member->getLevelForRight($role->getRole());
-                            if ($level !== 10) {
+                            if ($level !== $team['minimum_level']) {
                                 $add = false;
                             }
                         }

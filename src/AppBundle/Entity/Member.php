@@ -2514,7 +2514,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
 
     public function isPrivileged()
     {
-        if (in_array(new Role("ROLE_SUPER_ADMIN"), $this->getRoles())) {
+        if (\in_array(new Role('ROLE_ADMIN'), $this->getRoles(), true)) {
             return true;
         }
 

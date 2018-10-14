@@ -209,3 +209,20 @@ a.active .metric .value {
 }
 
 @import "wiki";
+
+/* styles for the accommodation checkboxes */
+.checked {
+   border-color: #f37000 !important;
+   border-radius: 2px;
+   background-color: #f37000 !important;
+   outline: 0 !important;
+   box-shadow: 0 0 0 0.2rem rgba(243, 112, 0, 1) !important;
+}
+
+.not_checked {
+  border-color: #fff !important;
+  border-radius: 2px;
+  background-color: #fff !important;
+  outline: 0 !important;
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 1) !important;
+}

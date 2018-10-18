@@ -130,7 +130,7 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
                 <h5><?=$words->get("CommentQuality" , $Username)?></h5>
             </label>
 
-            <a tabindex="0" class="btn btn-outline-primary btn-sm ml-1 py-0" data-container="body" data-toggle="popover" data-placement="right" data-trigger="focus" data-content="<?=$words->get("CommentQualityDescription", $Username, $Username, $Username)?>">
+            <a tabindex="0" class="btn btn-outline-primary btn-sm ml-1 py-0" data-container="body" data-toggle="popover" data-html="true" data-placement="right" data-trigger="focus" data-content="<?=$words->get("CommentQualityDescription", $Username, $Username, $Username)?>">
                 <i class="fa fa-question"></i>
             </a>
 
@@ -157,7 +157,7 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
             <label class="m-0" for="CommentLength">
                 <h5><?=$words->get("CommentLength", $Username)?></h5>
             </label>
-            <a tabindex="0" class="btn btn-outline-primary btn-sm ml-1 py-0" data-container="body" data-toggle="popover" data-placement="right" data-trigger="focus" data-content="<?php echo $words->get("CommentLengthDescription", $Username, $Username, $Username) ?>">
+            <a tabindex="0" class="btn btn-outline-primary btn-sm ml-1 py-0" data-container="body" data-toggle="popover" data-html="true" data-placement="right" data-trigger="focus" data-content="<?php echo $words->get("CommentLengthDescription", $Username, $Username, $Username) ?>">
                 <i class="fa fa-question"></i>
             </a>
             <?php
@@ -175,7 +175,7 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
 
         <div class="col-12 col-xl-auto ml-xl-auto mt-3">
             <label for="TextWhere" class="mb-0"><h5><?= $words->get("CommentsWhere", $Username); ?></h5></label>
-            <a tabindex="0" class="btn btn-outline-primary btn-sm ml-1 py-0" data-container="body" data-toggle="popover" data-placement="right" data-trigger="focus" data-content="<?php echo $words->get("CommentsWhereDescription", $Username) ?>">
+            <a tabindex="0" class="btn btn-outline-primary btn-sm ml-1 py-0" data-container="body" data-toggle="popover" data-html="true" data-placement="right" data-trigger="focus" data-content="<?php echo $words->get("CommentsWhereDescription", $Username) ?>">
                 <i class="fa fa-question"></i>
             </a>
             <br>
@@ -189,7 +189,7 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
                 <h5><?php echo $words->get("CommentsCommenter") ?></h5>
             </label>
 
-            <a tabindex="0" class="btn btn-outline-primary btn-sm ml-1 py-0" data-container="body" data-toggle="popover" data-placement="right" data-trigger="focus" data-content="<?php echo $words->get("CommentsCommenterDescription", $Username) ?>">
+            <a tabindex="0" class="btn btn-outline-primary btn-sm ml-1 py-0" data-container="body" data-toggle="popover" data-html="true" data-placement="right" data-trigger="focus" data-content="<?php echo $words->get("CommentsCommenterDescription", $Username) ?>">
                 <i class="fa fa-question"></i>
             </a>
 

@@ -126,7 +126,7 @@ class Mailbot
      * @param string $language  the language code used in the message
      * @param bool $html        HTML preference: false -> text-only, true -> multi part (text, html)
      *
-     * @return object the result from the MOD_mail::sendEmail call
+     * @return boolean
      */
     protected function sendEmail($subject, $from, $to, $title, $body, $language, $html)
     {

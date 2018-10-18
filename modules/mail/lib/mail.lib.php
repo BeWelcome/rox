@@ -137,6 +137,12 @@ class MOD_mail
         $purifier = MOD_htmlpure::get()->getMailHtmlPurifier();
         $body = $purifier->purify($body);
 
+        // If a title is set add it to the plain text body (for HTML that is done in the template)
+        if ($title) {
+            $title = $purifier->purify($title);
+            $body = $title . PHP_EOL . PHP_EOL . $body;
+        }
+
         $html2text = new Html2Text\Html2Text($body, false, array('do_links' => 'table', 'width' => 75));
         $plain = $html2text->getText();
 

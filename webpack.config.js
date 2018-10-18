@@ -3,6 +3,7 @@ var Encore = require('@symfony/webpack-encore');
 Encore
     .configureRuntimeEnvironment('dev')
     .enableSingleRuntimeChunk()
+    .enablePostCssLoader()
     .setOutputPath('web/build/')
     .setPublicPath('/build')
 //    .cleanupOutputBeforeBuild()

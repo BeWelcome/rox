@@ -64,7 +64,7 @@
             <h3><?= $words->get('GroupsSearchResult'); ?></h3>
             <label class="font-weight-bold"><?php echo $words->get('GroupsSearchOrdered'); ?>:</label>
             <span class="dropdown">
-                <button class="btn btn-sm btn-info dropdown-toggle" type="button" id="dropdownVisibility" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $words->get('GroupsSearchOrdered' . $this->result_order) ?></button>
+                <button class="btn btn-sm btn-secondary " type="button" id="dropdownVisibility" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $words->get('GroupsSearchOrdered' . $this->result_order) ?></button>
                 <div class="dropdown-menu ddextras px-0 py-1" aria-labelledby="dropdownVisibility">
                     <a class="btn btn-sm btn-light mx-1"
                        href="groups/search?GroupsSearchInput=<?= $this->search_terms; ?>&order=<?= $act_order; ?>&<?= $this->pager->getActivePageMarker(); ?>"><?= $words->get('GroupsOrderBy' . $act_order); ?></a>
@@ -99,7 +99,7 @@
                     </h5>
                     <!-- group details -->
                     <ul class="groupul mt-1">
-                        <li><i class="fa fa-group mr-1"
+                        <li><i class="fa fa-users mr-1"
                                title="Number of group members"></i><?= $group_data->getMemberCount(); ?></li>
                         <li><i class="fa fa-user-plus mr-1" title="<? echo $words->get('GroupsNewMembers'); ?>"></i><?php echo count($group_data->getNewMembers()); ?></li>
                         <?php if ($group_data !== 0) { ?>

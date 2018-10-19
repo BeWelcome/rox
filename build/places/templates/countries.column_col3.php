@@ -30,7 +30,7 @@ $lastcontinent = "";
                     }
                     echo htmlspecialchars($country->name);;
                     if ($country->number) {
-                        echo '</a><span class="small ml-1 badge badge-info">' . $country->number . '</span>';
+                        echo '</a><span class="small ml-1 badge badge-primary">' . $country->number . '</span>';
                     }
                     echo '</div>';
 

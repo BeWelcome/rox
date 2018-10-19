@@ -110,7 +110,7 @@ class MemberPage extends PageWithActiveSkin
             } else {
                 $tt[] = array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary pull-right">' . $galleryItemsCount . '</span>');
             }
-            $tt[] = array('forum', "forums/member/$username", '<i class="fa fa-fw fa-bed invisible"></i> ' . $viewForumPosts);
+            $tt[] = array('forum', "forums/member/$username", '<i class="far fa-fw fa-sticky-note"></i> ' . $viewForumPosts);
         } else {
             if (isset($note)) {
                 $mynotewordsname=$words->get('NoteEditMyNotesOfMember') ;
@@ -132,7 +132,7 @@ class MemberPage extends PageWithActiveSkin
                 array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary pull-right">' . $galleryItemsCount . '</span>'),
             );
             if ($linkMembersForumPosts) {
-                $tt[] = array('forum', "forums/member/$username", '<i class="fa fa-fw fa-bed invisible"></i> ' . $viewForumPosts);
+                $tt[] = array('forum', "forums/member/$username", '<i class="far fa-fw fa-sticky-note"></i> ' . $viewForumPosts);
             }
         }
         if (MOD_right::get()->HasRight('SafetyTeam') || MOD_right::get()->HasRight('Admin'))

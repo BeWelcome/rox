@@ -1,5 +1,5 @@
 <!-- #main: content begins here -->
-<div id="main" class="mt-4">
+<div id="main">
     <?php $this->topnav() ?>
     <?php $this->statusMessage() ?>
     <?php $loginMessages = $this->_getLoginMessages();

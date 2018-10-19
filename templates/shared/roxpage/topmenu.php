@@ -13,7 +13,7 @@
       <?php if ($logged_in) { ?>
       <div class="navbar-brand navbar-username visible-xs-block">
           <p>
-              <a href="logout" data-toggle="tooltip" data-placement="bottom" title="<?php echo $words->getBuffered('Logout'); ?>" id="header-logout-link"><?php echo $words->flushBuffer(); ?><i class="fa fa-sign-out" > </i><?php echo $username; ?></a>
+              <a href="logout" data-toggle="tooltip" data-placement="bottom" title="<?php echo $words->getBuffered('Logout'); ?>" id="header-logout-link"><?php echo $words->flushBuffer(); ?><i class="fa fa-sign-out-alt"></i><?php echo $username; ?></a>
               <span class="<?php echo $badgestyle ?>"><a href="messages" data-toggle="tooltip" data-placement="bottom" title="<?php echo $words->getBuffered('Mymessages'); ?>"><i class="fa fa-envelope" title="<?php echo $words->getBuffered('Mymessages'); ?>"></i>
                    <?php echo $nbOfNewMessagees;?></a>
               </span>

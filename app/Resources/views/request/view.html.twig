@@ -34,10 +34,10 @@
     <div class="col-12 col-md-4 p-0 h5 my-3">
     {% if original.Sender.Username == myself.Username %}
         {% if request.flexible %}<div>{{ 'I\'m flexible with arrival and departure' }}</div>{% endif %}
-        {% if request.numberOfTravellers != 1 %}<div><i class="fa fa-group mr-1"></i>{{ 'Request for %s guest(s)' | format(request.numberOfTravellers) }}</div>{% endif %}
+        {% if request.numberOfTravellers != 1 %}<div><i class="fa fa-users mr-1"></i>{{ 'Request for %s guest(s)' | format(request.numberOfTravellers) }}</div>{% endif %}
     {% else %}
         {% if request.flexible %}<div>{{ 'Flexible with arrival and departure' }}</div>{% endif %}
-        {% if request.numberOfTravellers != 1 %}<div><i class="fa fa-group mr-1"></i>{{ 'Travelling in a group of %s' | format(request.numberOfTravellers) }}</div>{% endif %}
+        {% if request.numberOfTravellers != 1 %}<div><i class="fa fa-users mr-1"></i>{{ 'Travelling in a group of %s' | format(request.numberOfTravellers) }}</div>{% endif %}
     {% endif %}
     </div>
 

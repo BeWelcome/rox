@@ -45,7 +45,7 @@
                         </h5>
                         <!-- group details -->
                         <ul class="groupul mt-1">
-                            <li><i class="fa fa-group mr-1"
+                            <li><i class="fa fa-users mr-1"
                                    title="<? echo $words->get('GroupsMemberCount'); ?>"></i><?= $group_data->getMemberCount(); ?></li>
                             <li><i class="fa fa-user-plus mr-1" title="<? echo $words->get('GroupsNewMembers'); ?>"></i><?php echo count($group_data->getNewMembers()); ?></li>
                             <li><?php

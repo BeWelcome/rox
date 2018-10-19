@@ -315,7 +315,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     <? echo $words->get('ProfileNumberOfGuests'); ?>
                 </div>
                 <div class="col-8">
-                    <input type="number" min="0" max="20" name="MaxGuest" class="maxguestsinput"
+                    <input type="number" min="1" max="20" name="MaxGuest" class="maxguestsinput"
                            value="<?= $vars['MaxGuest']; ?>">
                 </div>
 

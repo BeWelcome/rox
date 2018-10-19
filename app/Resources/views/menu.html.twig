@@ -169,6 +169,16 @@
             </div>
         </div>
     </nav>
+    {% if is_granted('ROLE_ADMIN_CHECKER') or is_granted('ROLE_ADMIN_COMMENTS') or is_granted('ROLE_ADMIN_SAFETYTEAM') %}
+        <div class="container">
+            <div class="row no-gutters justify-content-end">
+                <div class="col-12 p-2 text-right">
+                    {% if is_granted('ROLE_ADMIN_COMMENTS') or is_granted('ROLE_ADMIN_SAFETYTEAM') %}<a class="btn btn-primary btn-sm mr-2" href="{{ path('admin_comment_reported_overview') }}">{% transchoice reportedCommentsCount with {'%reportedCommentsCount%': reportedCommentsCount} %}admin.comments.reported{% endtranschoice %}</a>{% endif %}
+                    {% if is_granted('ROLE_ADMIN_COMMENTS') or is_granted('ROLE_ADMIN_SAFETYTEAM') %}<a class="btn btn-primary btn-sm" href="{{ path('admin_spam_overview') }}">{% transchoice reportedMessagesCount with {'%reportedMessagesCount%': reportedMessagesCount} %}admin.spam.reported{% endtranschoice %}</a>{% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% else %}
     {# navbar not logged in, showing main links #}
     <nav class="navbar navbar-sticky-top navbar-expand-lg navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">

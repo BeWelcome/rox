@@ -53,7 +53,7 @@ class FullPagePager extends RoxWidget
     public function getHtml()
     {
         $pager = $this->pager;
-        $return = '<div class="w-100"><div class="col-12 col-sm-6"><span class="pagination page">' . $this->getWords()->get('PagerShowing', $pager->getActiveStart() + 1,
+        $return = '<div class="w-100"><div class="col-12 col-sm-6"><span class="pagination page small text-black-50">' . $this->getWords()->get('PagerShowing', $pager->getActiveStart() + 1,
             $pager->getActiveStart() + $pager->getActiveLength(), $pager->getTotalCount()) . '</span></div><div class="col-12 col-sm-6"><ul class="pagination pull-xs-right">';
         if ($this->active_page > 1)
         {
@@ -103,7 +103,7 @@ class FullPagePager extends RoxWidget
 
             if ($end_range > ($this->active_page + 1) && $end_range > (self::block_links + 1))
             {
-                $return .= "<li class='page-item'><a class='page-link'>...</a></li>\n";
+                $return .= "<li class='page-item disabled'><a class='page-link'>...</a></li>\n";
             }
 
             while ($end_range <= $this->pages)

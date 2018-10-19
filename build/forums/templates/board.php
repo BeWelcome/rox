@@ -24,6 +24,8 @@ Boston, MA  02111-1307, USA.
 
 This file displays the list of threads under a given tag/category
 
+TODO: CAN THIS PAGE BE DELETED COMPLETELY SINCE WE DON'T USE TAGS???
+
 */
 $User = APP_User::login();
 
@@ -45,39 +47,7 @@ $navigationPath .= '<a href="' . htmlspecialchars($boards->getBoardLink(), ENT_Q
 
 ?>
 
-<?php 
-// Quick hack to avoid "no tags" showing up at the top of tag search results
-// TODO: fix this properly in Forums::boardTopLevelLastPosts() (forums model)
-if ($boardName != 'no tags') {
-    echo "<h2>" . $navigationPath . "</h2>";
-}
-
-	if (($this->BW_Right->HasRight("ForumModerator","Edit")) ||($this->BW_Right->HasRight("ForumModerator","All")) ) {
-	   if (isset($boards->IdTag)) echo " <a href=\"forums/modedittag/".$boards->IdTag."\">Edit Tag</a>" ;
-   }
-
-   if (isset($boards->IdSubscribe)) {
-	 	echo " <span class=\"button\"><a href=\"forums/subscriptions/unsubscribe/tag/",$boards->IdTag,"\">",$words->getBuffered('ForumUnsubscribe'),"</a></span>",$words->flushBuffer();
-	}
-	else {
-	 	if (isset($boards->IdTag)) echo " <span class=\"button\"><a href=\"forums/subscribe/tag/",$boards->IdTag,"\">",$words->getBuffered('ForumSubscribe'),"</a></span>",$words->flushBuffer(); 
-	}  
-	
-?>
-<p><?php
-    $tags = $boards->getBoardDescription();
-?></p>
-<!-- cut end -->
-<?php
-
-	if ($boards->hasSubBoards()) {
-		require 'boardboards.php';
-	}
-
-?>
-<?php echo $words->flushBuffer(); ?>
-
-<!-- <h3><?php
+<?php echo $words->flushBuffer();
 
 	$number = $boards->getTotalThreads(); 
 	if ($number == 0) {
@@ -89,14 +59,11 @@ if ($boardName != 'no tags') {
 		echo $words->getFormatted("FoundXThreads", $number);
 	}
 
-?></h3>
--->
 
-<?php
 if ($User && empty($noForumNewTopicButton)) {
 ?>
-	<div id="boardnewtopictop">
-    <a class="button" role="button" href="<?php echo $uri; ?>new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a><?php echo $words->flushBuffer(); ?></div>
+	<div class="col-12 mb-2 px-0">
+    <a class="btn btn-primary float-right" role="button" href="<?php echo $uri; ?>new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a><?php echo $words->flushBuffer(); ?></div>
 <?php
 } // end if $User
 

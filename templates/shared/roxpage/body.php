@@ -53,7 +53,7 @@
                 <?php
             }
             ?>
-            <div class="my-3">
+            <div class="mb-3">
                 <?php $this->teaser() ?>
             </div>
             <?php

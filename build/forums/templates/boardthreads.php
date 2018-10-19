@@ -208,31 +208,13 @@ $layoutbits = new MOD_layoutbits();
 <?php
 if ($User && empty($noForumNewTopicButton)) {
 ?>
-<a class="btn btn-primary float-right" href="<?php echo $uri; ?>new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a><?php echo $words->flushBuffer(); ?></div>
-<?php
+    <div class="col-12 px-0">
+        <a class="btn btn-primary float-right" href="<?php echo $uri; ?>new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a><?php echo $words->flushBuffer(); ?>
+    </div>
+    <?php
 }
 ?>
 
 <?php
 require 'pages.php';
-if (empty($noForumLegendBox)) {
-?>
-
-<div class="clearfix small float_left" style="width: 80%">
-    <?php echo '<img src="styles/css/minimal/images/iconsfam/tag_blue.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
-    ?>
-     = <?php echo $words->get('ForumLegendTagged');?>
-</div>
-<div class="clearfix small float_left" style="width: 80%">
-    <?php echo '<img src="styles/css/minimal/images/iconsfam/world.png" alt="'. $words->getBuffered('geo') .'" title="'. $words->getBuffered('geo') .'" class="forum_icon" />' . $words->flushBuffer();
-    ?>
-     = <?php echo $words->get('ForumLegendTaggedGeo');?>
-</div>
-<div class="clearfix small float_left" style="width: 80%">
-    <?php echo '<img src="styles/css/minimal/images/iconsfam/help.png" alt="'. $words->getBuffered('help') .'" title="'. $words->getBuffered('help') .'" class="forum_icon" />' . $words->flushBuffer();
-    ?>
-     = <?php echo $words->get('ForumLegendTaggedHelp');?>
-</div>
-<?php
-}
 ?>

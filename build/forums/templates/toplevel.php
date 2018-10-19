@@ -67,17 +67,13 @@ $uri = 'forums/';
   </div><!--  row -->
 
 <?php if (!$noForumNewTopicButton) { ?>
-  <div id="boardnewtopictop">
-      <a class="btn btn-primary" role="button" href="<?php echo $uri; ?>new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a><?php echo $this->words->flushBuffer(); ?>
+  <div id="col-12 mb-2 px-0">
+      <a class="btn btn-primary float-right" role="button" href="<?php echo $uri; ?>new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a><?php echo $this->words->flushBuffer(); ?>
   </div>
 <?php
 }
 
 require 'boardthreads.php';
-?>
-</div> <!-- Forum-->
-<?php
     }
+// <a href="rss/forumthreads"><img src="images/icons/feed.png" alt="RSS feed" /></a>
 ?>
-<br /><br />
-<a href="rss/forumthreads"><img src="images/icons/feed.png" alt="RSS feed" /></a>

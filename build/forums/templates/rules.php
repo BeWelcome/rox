@@ -29,7 +29,6 @@ $words = new MOD_words(); ?>
     <h3><?php echo $words->getFormatted('ForumRulesGeneral'); ?></h3>
 
     <h3><?php echo $words->getFormatted('ForumRulesCharterHeadline1'); ?></h3>
-    <h3><?php echo $words->getFormatted('ForumRulesCharterHeadline1'); ?></h3>
 
     <h4><?php echo $words->getFormatted('ForumRulesCharterHeadline2'); ?></h4>
     <ol>

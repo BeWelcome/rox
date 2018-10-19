@@ -248,8 +248,18 @@ input.noradio{
     display:none;
 }
 
-.page-link:hover {
-  color: #fff !important;
+.page-link {
+  color: #333 !important;
+
+  &:hover {
+    color: #fff !important;
+  }
+}
+
+.page-item {
+  &.active .page-link {
+    color: $pagination-active-color !important;
+  }
 }
 
 .nowrap{

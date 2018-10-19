@@ -61,11 +61,11 @@ Boston, MA  02111-1307, USA.
                 <div class="btn-group" role="group" aria-label="Toggle Subscription On-Off">
                 <? if ($group->AcceptMails == 'yes') { ?>
                     <a class="btn btn-primary" style="color: #fff; cursor: default; border: 1px solid #868e96 !important;">On</a>
-                    <a href="forums/subscriptions/unsubscribe/group/<? echo $group->IdGroup; ?>" type="button" class="btn btn-secondary mb-0 border-0" style="border: 1px solid #868e96 !important;">Off</a>
+                    <a href="forums/subscriptions/unsubscribe/group/<? echo $group->IdGroup; ?>" type="button" class="btn btn-light mb-0 border-0" style="border: 1px solid #868e96 !important;">Off</a>
                 </div></td>
                 <?
                 } else { ?>
-                <a href="forums/subscriptions/subscribe/group/<? echo $group->IdGroup; ?>" type="button" class="btn btn-secondary mb-0 border-0" style="border: 1px solid #868e96 !important;">On</a>
+                <a href="forums/subscriptions/subscribe/group/<? echo $group->IdGroup; ?>" type="button" class="btn btn-light mb-0 border-0" style="border: 1px solid #868e96 !important;">On</a>
                 <a class="btn btn-primary" style="color: #fff; cursor: default; border: 1px solid #868e96 !important;">Off</a>
                 </div></td>
                 <? } ?>
@@ -109,10 +109,10 @@ if (count($TResults->TData) > 0) { ?>
         if ($data->notificationsEnabled > 0) {
             // on - turn off
             echo '<a class="btn btn-primary" style="color: #fff; cursor: default; border: 1px solid #868e96 !important;">On</a>';
-            echo '<a href="forums/subscriptions/disable/thread/' . $data->IdThread . '/' . $data->UnSubscribeKey . '" type="button" class="btn btn-secondary mb-0 border-0" style="border: 1px solid #868e96 !important;">Off</a>';
+            echo '<a href="forums/subscriptions/disable/thread/' . $data->IdThread . '/' . $data->UnSubscribeKey . '" type="button" class="btn btn-light mb-0 border-0" style="border: 1px solid #868e96 !important;">Off</a>';
         } else {
             // off - turn on
-            echo '<a href="forums/subscriptions/enable/thread/' . $data->IdThread . '/' . $data->UnSubscribeKey . '"  type="button" class="btn btn-secondary mb-0 border-0" style="border: 1px solid #868e96 !important;">On</a>';
+            echo '<a href="forums/subscriptions/enable/thread/' . $data->IdThread . '/' . $data->UnSubscribeKey . '"  type="button" class="btn btn-light mb-0 border-0" style="border: 1px solid #868e96 !important;">On</a>';
             echo '<a class="btn btn-primary" style="color: #fff; cursor: default; border: 1px solid #868e96 !important;">Off</a>';
         }
 

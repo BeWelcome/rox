@@ -143,19 +143,6 @@ div#forumsboardselect {
     font-weight: normal;
     color: #888888;
 }
-div#boardnewtopictop {
-    width: 100%;
-    text-align: right;
-    font-weight: bold;
-    margin-bottom: 10px;
-    margin-top: 0px;
-}
-div#boardnewtopicbottom {
-    width: 100%;
-    text-align: right;
-    margin-top: 5px;
-/*    float: right; */
-}
 .forumsthreadtags {
     font-size: 11px;
     font-weight: normal;

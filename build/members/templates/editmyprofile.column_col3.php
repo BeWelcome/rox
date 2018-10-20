@@ -1,4 +1,3 @@
-<div class="row">
 <form method="post" action="<?=$page_url?>" name="signup" id="profile-edit-form" class="fieldset-menu-form" enctype="multipart/form-data">
 <input type="hidden"  name="memberid"  value="<?=$member->id?>" />
 <input type="hidden"  name="profile_language"  value="<?=$profile_language?>" />
@@ -10,7 +9,6 @@ require_once 'editprofile_form.php';
 
 ?>
 </form>
-</div>
 
 <script type="text/javascript"><!--
     var iterator = 1;

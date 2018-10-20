@@ -1,5 +1,5 @@
 <div id="accommodationinfo" class="card mb-3">
-    <h3 class="card-header"><?php echo $words->get('ProfileAccommodation'); ?>
+    <h3 class="card-header<? if ($member->Accomodation == 'neverask'){ echo ' bg-secondary'; } ?>"><?php echo $words->get('ProfileAccommodation'); ?>
         <?php if ($showEditLinks): ?>
             <span class="float-right">
                     <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileaccommodation" class="btn btn-sm btn-primary p-0"><?php echo $words->get('Edit'); ?></a>
@@ -118,7 +118,11 @@
                     <div><?php echo $restrictions; ?></div>
                 <?php } ?>
             </div>
-
+            <? if (!$this->myself && $member->Accomodation != 'neverask') { ?>
+            <div>
+                <a href="new/request/<?= $member->Username ?>" class="btn btn-primary float-right"><?=$words->get('profile.request.hosting');?></a>
+            </div>
+            <? } ?>
         </div>
     </div>
 </div>

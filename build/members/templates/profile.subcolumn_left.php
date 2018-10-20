@@ -1,11 +1,11 @@
-<div id="profilesummary" class="mb-3">
-    <h2 class="mb-0"><?php echo $words->get('ProfileSummary'); ?>
+<div id="profilesummary" class="card mb-3">
+    <h3 class="card-header bg-secondary"><?php echo $words->get('ProfileSummary'); ?>
         <?php if ($showEditLinks): ?>
             <span class="float-right">
-                <a href="editmyprofile/<?php echo $profile_language_code; ?>" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+                <a href="editmyprofile/<?php echo $profile_language_code; ?>" class="btn btn-sm btn-secondary p-0"><?php echo $words->get('Edit'); ?></a>
             </span>
         <?php endif; ?>
-    </h2>
+    </h3>
 
     <div class="p-2">
         <?php
@@ -23,34 +23,32 @@
     ?>
 </div>
 
-<div id="languages" class="mb-3">
-    <h3><?php echo $words->get('ProfileLanguagesSpoken'); ?>
+<div id="languages" class="card mb-3">
+    <h3 class="card-header bg-secondary"><?php echo $words->get('ProfileLanguagesSpoken'); ?>
         <?php if ($showEditLinks): ?>
             <span class="float-right">
-                <a href="editmyprofile/<?php echo $profile_language_code; ?>" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+                <a href="editmyprofile/<?php echo $profile_language_code; ?>" class="btn btn-sm btn-secondary p-0"><?php echo $words->get('Edit'); ?></a>
             </span>
         <?php endif; ?>
     </h3>
 
     <div class="p-2">
-        <ul class="pl-2">
             <?php
             foreach ($member->get_languages_spoken() as $lang) {
-                echo '<li>' . $words->get($lang->WordCode) . '<sup class="ml-1 gray">' . $words->get("LanguageLevel_" . $lang->Level) . '</sup></li>';
+                echo '<p class="m-0">' . $words->get($lang->WordCode) . '<sup class="ml-1 gray">' . $words->get("LanguageLevel_" . $lang->Level) . '</sup></p>';
             }
             ?>
-        </ul>
     </div>
 </div>
 
         <?php
             if ($member->get_trad("Hobbies", $profile_language, true) != "" || $member->get_trad("Organizations", $profile_language, true) != "" || $member->get_trad("Books", $profile_language, true) != "" || $member->get_trad("Music", $profile_language, true) != "" || $member->get_trad("Movies", $profile_language, true) != ""){
         ?>
-        <div id="interests" class="mb-3">
-            <h3><?php echo $words->get('ProfileInterests'); ?>
+        <div id="interests" class="card mb-3">
+            <h3 class="card-header bg-secondary"><?php echo $words->get('ProfileInterests'); ?>
                 <?php if ($showEditLinks): ?>
                     <span class="float-right">
-                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileinterests" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileinterests" class="btn btn-sm btn-secondary p-0"><?php echo $words->get('Edit'); ?></a>
                 </span>
                 <?php endif; ?>
             </h3>
@@ -89,11 +87,11 @@
             if ($member->get_trad("PastTrips", $profile_language, true) != "" || $member->get_trad("PlannedTrips", $profile_language, true) != "") {
                 ?>
 
-                <div id="travel" class="mb-3">
-                    <h3><?php echo $words->get('ProfileTravelExperience'); ?>
+                <div id="travel" class="card mb-3">
+                    <h3 class="card-header bg-secondary"><?php echo $words->get('ProfileTravelExperience'); ?>
                         <?php if ($showEditLinks): ?>
                             <span class="float-right">
-                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileinterests" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileinterests" class="btn btn-sm btn-secondary p-0"><?php echo $words->get('Edit'); ?></a>
                 </span>
                         <?php endif; ?>
                     </h3>
@@ -114,11 +112,11 @@
         $my_groups = $member->getGroups();
         if (!empty($my_groups)){ ?>
 
-        <div id="groups" class="mb-3 p-0">
-            <h3><?php echo $words->get('ProfileGroups'); ?>
+        <div id="groups" class="card mb-3">
+            <h3 class="card-header bg-secondary"><?php echo $words->get('ProfileGroups'); ?>
                 <?php if ($showEditLinks): ?>
                     <span class="float-right">
-                    <a href="/groups/mygroups" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+                    <a href="/groups/mygroups" class="btn btn-sm btn-secondary p-0"><?php echo $words->get('Edit'); ?></a>
                 </span>
                 <?php endif; ?>
             </h3>
@@ -129,7 +127,7 @@
                         $group_img = ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png');
                         $group_id = $my_groups[$i]->id;
                         $group_name = htmlspecialchars($my_groups[$i]->Name, ENT_QUOTES);
-                        $comment = $purifier->purify($words->mInTrad($member->getGroupMembership($my_groups[$i])->Comment, $profile_language));
+                        $comment = strip_tags($purifier->purify($words->mInTrad($member->getGroupMembership($my_groups[$i])->Comment, $profile_language)));
                         ?>
                         <div class="mb-3 d-flex d-column">
                             <div>
@@ -138,9 +136,9 @@
                                      src="<? echo $group_img; ?>"/>
                             </a>
                             </div>
-                            <div>
-                                <h4 class="m-0"><a href="groups/<? echo $group_id; ?>"><? echo $group_name; ?></a></h4>
-                                <p class="m-0"><? echo $comment; ?></p>
+                            <div class="text-truncate">
+                                <h4 class="m-0 text-truncate"><a href="groups/<? echo $group_id; ?>"><? echo $group_name; ?></a></h4>
+                                <p class="m-0 text-truncate"><? echo $comment; ?></p>
                             </div>  <!-- groupinfo -->
                         </div>
                         <?php
@@ -157,11 +155,11 @@
         if ($this->model->getLoggedInMember() && !$this->passedAway){ ?>
 
 
-            <div class="mb-3">
-                <h3><?php echo $words->get('ContactInfo'); ?>
+            <div class="card mb-3">
+                <h3 class="card-header bg-secondary"><?php echo $words->get('ContactInfo'); ?>
                     <?php if ($showEditLinks): ?>
                         <span class="float-right">
-                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!contactinfo" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!contactinfo" class="btn btn-sm btn-secondary p-0"><?php echo $words->get('Edit'); ?></a>
                 </span>
                     <?php endif; ?>
                 </h3>

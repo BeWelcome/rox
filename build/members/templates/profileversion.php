@@ -43,8 +43,8 @@ $words = $this->getWords();
 $myself = $this->myself;
 if (count($languages) > 1 || $myself) {
 ?>
-<div>
-    <div class="profile_translations float_right">
+
+    <div class="profile_translations form-inline mt-1">
         <strong><?=$words->get('ProfileTranslations')?></strong>
         <div class="btn-group btn-group-sm"><?php
             $ii = 0;
@@ -53,11 +53,11 @@ if (count($languages) > 1 || $myself) {
             foreach($languages as $language) {
                 if (($language->ShortCode == $profile_language_code)) {
                 ?>
-                    <button class="btn btn-primary"><?=$profile_language_name ?><? if ($this->myself && $max > 1) { ?><a href="editmyprofile/<?=$profile_language_code?>/delete" title="<?= $words->getSilent('delete')?>"> <i class="fa fa-close"></i></a> <? } ?></button><?
+                    <button class="btn btn-primary"><?=$profile_language_name ?><? if ($this->myself && $max > 1) { ?><a href="editmyprofile/<?=$profile_language_code?>/delete" title="<?= $words->getSilent('delete')?>"> <i class="fa fa-close"></i></a><? } ?></button><?
                     $activelang_set = true;
                 } else {
                     
-                    ?><button class="btn btn-outline-primary bg-white"><a href="<?=$urlstring?>/<?=$language->ShortCode ?>"><?=$language->Name ?></a></button> <?
+                    ?><a href="<?=$urlstring?>/<?=$language->ShortCode ?>" class="btn btn-outline-primary"><?=$language->Name ?></a><?
                 $ii++;
                 }
             }
@@ -89,7 +89,7 @@ if (count($languages) > 1 || $myself) {
                 <?php } ?>
     </div>
 <?=$words->flushBuffer()?>
-    </div> <!-- profile_translations -->
+    <!-- profile_translations -->
 <?php } ?>
 
 <script type="text/javascript">//<!--

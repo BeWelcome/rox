@@ -16,8 +16,8 @@ if (!$this->passedAway){
     $max = 3;
     if (count($comments) > 0) { ?>
 
-        <div id="comments" class="mb-3">
-            <h3 class="mb-0">
+        <div id="comments" class="card mb-3">
+            <h3 class="card-header bg-secondary">
                 <?php if ($this->passedAway) {
                     echo $words->get('LatestCommentsAndCondolences');
                 } else {
@@ -25,7 +25,7 @@ if (!$this->passedAway){
                 }
                 if ($showEditLinks): ?>
                     <span class="float-right">
-                    <a href="members/<?php echo $member->Username; ?>/comments/" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+                    <a href="members/<?php echo $member->Username; ?>/comments/" class="btn btn-sm btn-secondary p-0"><?php echo $words->get('Edit'); ?></a>
                 </span>
                 <?php endif; ?>
             </h3>
@@ -49,6 +49,7 @@ if (!$this->passedAway){
                    } ?>
 
                        <div class="w-100 mt-1">
+                          
                            <a href="members/<?=$c->UsernameFromMember?>">
                                <img class="float-left mr-2"  src="members/avatar/<?=$c->UsernameFromMember?>/50"  height="50"  width="50"  alt="<?=$c->UsernameFromMember?>" />
                            </a>
@@ -68,12 +69,11 @@ if (!$this->passedAway){
                                    echo $textStripped;
                                    ?>
                                </p>
-                               <?php if (($commentLoopCount > (count($comments)))&&($commentLoopCount < $max)) echo '<hr />' ?>
                            </div>
 
                    <?php } ?>
 
-                      <a href="members/<?=$member->Username?>/comments/" class="btn btn-sm btn-block btn-outline-primary"><?=$words->get('ShowAllComments')?></a>
+                      <a href="members/<?=$member->Username?>/comments/" class="btn btn-block btn-sm btn-outline-dark"><?=$words->get('ShowAllComments')?></a>
                 <?php
                   } else {
                       // hide comments from others when not logged in
@@ -93,11 +93,11 @@ $relations = $member->relations;
 if (count($relations) > 0) { ?>
 
 
-    <div id="relations" class="mb-3">
-        <h3 class="mb-0"><?php echo $words->get('MyRelations'); ?>
+    <div id="relations" class="card mb-3">
+        <h3 class="card-header bg-secondary"><?php echo $words->get('MyRelations'); ?>
             <?php if ($showEditLinks): ?>
                 <span class="float-right">
-                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!specialrelations" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!specialrelations" class="btn btn-sm btn-secondary p-0"><?php echo $words->get('Edit'); ?></a>
                 </span>
             <?php endif; ?>
         </h3>
@@ -146,16 +146,16 @@ $gallery = new GalleryModel;
 $statement = $userid ? $gallery->getLatestItems($userid) : false;
 if ($statement) {
 ?>
-    <div id="gallery" class="mb-3">
-        <h3 class="mb-0"><?php echo $words->get('GalleryTitleLatest'); ?>
+    <div id="gallery" class="card mb-3">
+        <h3 class="card-header bg-secondary"><?php echo $words->get('GalleryTitleLatest'); ?>
             <?php if ($showEditLinks): ?>
                 <span class="float-right">
-                        <a href="/gallery/manage" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+                        <a href="/gallery/manage" class="btn btn-sm btn-secondary p-0"><?php echo $words->get('Edit'); ?></a>
                     </span>
             <?php endif; ?>
         </h3>
 
-        <div class="w-100"></div>
+        <div class="p-2 d-flex justify-content-between">
 
     <?php
     // if the gallery is NOT empty, go show it
@@ -163,14 +163,15 @@ if ($statement) {
     $statement = $p[0];
 
     foreach ($statement as $d) {
-        echo '<a href="gallery/show/image/'.$d->id.'">' .
+        echo '<div><a href="gallery/show/image/'.$d->id.'">' .
            '<img src="gallery/thumbimg?id='.$d->id.'"' .
                ' alt="image"' .
                ' style="height: 50px; width: 50px;"/>' .
-           '</a>';
+           '</a></div>';
     }
     ?>
-      <a class="btn btn-sm btn-block btn-outline-primary" href="gallery/show/user/<?php echo $member->Username;?>/images" title="<?php echo $words->getSilent('GalleryTitleLatest');?>">
+        </div>
+      <a class="btn btn-sm btn-block btn-outline-dark" href="gallery/show/user/<?php echo $member->Username;?>/images" title="<?php echo $words->getSilent('GalleryTitleLatest');?>">
           <?php echo $words->get('GalleryShowAll');?></a>
     </div>
     <?php echo $words->flushBuffer();

@@ -30,7 +30,7 @@
                     <div class="my-3"><i class="fa fa-user"></i><br><?php echo $words->get('LoginInformation'); ?></div>
                     <div class="my-3"><i class="fa fa-tag"></i><br><?php echo $words->get('SignupName'); ?></div>
                     <div class="my-3 text-muted"><i
-                                class="fa fa-map-marker"></i><br><?php echo $words->get('Location'); ?></div>
+                                class="fa fa-map-marker-alt"></i><br><?php echo $words->get('Location'); ?></div>
                     <div class="my-3 text-muted"><i
                                 class="fa fa-check-square"></i><br><?php echo $words->get('SignupSummary'); ?></div>
                 </div>

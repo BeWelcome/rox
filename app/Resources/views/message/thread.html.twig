@@ -15,12 +15,11 @@
             {% endif %}
         {% endif %}
         <div class="row {% if own %}justify-content-end{% else %}justify-content-start{% endif %}">
-            <div class="col-1{% if own %} order-12 pr-0{% else %} pl-0{% endif %}">
-                {# \todo streamline code --> macro #}
+            <div class="col-auto{% if own %} order-12 pr-0{% else %} pl-0{% endif %}">
                 {% if own %}
-                    <img class="profileimg" width="80" height="80" src="{{ path( 'avatar', { 'username': myself.Username , 'size': 80 }) }}" title="{{ myself.Username }}" alt="{{ 'Profile' | trans }}: {{ myself.Username }}">
+                    <img class="profileimg d-none d-sm-block" width="80" height="80" src="{{ path( 'avatar', { 'username': myself.Username , 'size': 80 }) }}" title="{{ myself.Username }}" alt="{{ 'Profile' | trans }}: {{ myself.Username }}">
                 {% else %}
-                    <img class="profileimg" width="80" height="80" src="{{ path( 'avatar', { 'username': otherUser.Username , 'size': 80 }) }}" title="{{ otherUser.Username }}" alt="{{ 'Profile' | trans }}: {{ otherUser.Username }}">
+                    <img class="profileimg d-none d-sm-block" width="80" height="80" src="{{ path( 'avatar', { 'username': otherUser.Username , 'size': 80 }) }}" title="{{ otherUser.Username }}" alt="{{ 'Profile' | trans }}: {{ otherUser.Username }}">
                 {% endif %}
             </div>
             <div class="col-auto message_{% if own %}own{% else %}other{% endif %}">
@@ -40,9 +39,6 @@
                         {% set currentArrival = message.Request.Arrival%}
                         {% set currentDeparture = message.Request.Departure %}
                      {% endif %}
-                {% endif %}
-                {% if not own %}
-                <a class="btn btn-sm btn-primary" href="{{ path('message_reply', { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a>
                 {% endif %}
             </div>
         </div>

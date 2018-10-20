@@ -22,24 +22,25 @@
     <?php endif; ?>
     <?php $flashMessages = $this->getFlashNotice(true);
     if (strlen($flashMessages) != 0): ?>
-    <div class="row">
-        <div class="col-12 alert alert-warning" role="alert"><?= $flashMessages ?></div>
-    </div>
+        <div class="row">
+            <div class="col-12 alert alert-warning" role="alert"><?= $flashMessages ?></div>
+        </div>
     <?php endif; ?>
     <?php $flashSuccess = $this->getFlashSuccess(true);
     if (strlen($flashSuccess) != 0): ?>
-    <div class="row">
-        <div class="col-12 alert alert-success" role="alert"><?= $flashSuccess; ?></div>
+        <div class="row">
+            <div class="col-12 alert alert-success" role="alert"><?= $flashSuccess; ?></div>
+        </div>
+    <?php endif; ?>
     </div>
-    </div>
-    <?php endif;
 
+    <?
         $side_column_names = $this->getColumnNames();
         $mid_column_name = array_pop($side_column_names);
 
         if ($this->getSubmenuItems()) { ?>
         <div class="row row-offcanvas row-offcanvas-right">
-            <div class="col-12 col-md-9 px-0">
+            <div class="col-12 col-md-9">
     <?php } else { ?>
         <div class="row">
             <div class="col-12 px-0">
@@ -56,6 +57,7 @@
             <div class="mb-3">
                 <?php $this->teaser() ?>
             </div>
+
             <?php
             $this->columnsArea($mid_column_name); ?>
             <!-- col-12 -->

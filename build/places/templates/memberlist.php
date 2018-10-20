@@ -67,7 +67,7 @@ if (!$this->members) {
                         <? echo $words->get("yearsold",$member->age); ?>
                     </p>
                     <div class="m-0 mb-2 d-flex">
-                        <div class="mr-1"><i class="fa fa-2x fa-map-marker"></i></div>
+                        <div class="mr-1"><i class="fa fa-2x fa-map-marker-alt"></i></div>
                         <div><strong><?= $member->city; ?></strong><br><?= htmlspecialchars($this->countryName); ?></div>
                     </div>
                     <p class="m-0 mb-1 font-italic">Occupation</p>

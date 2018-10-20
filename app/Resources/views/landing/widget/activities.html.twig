@@ -9,9 +9,9 @@
                     <div class="absolute monthyear">{{ activity.starts | date("m") }} {{ activity.starts | date("Y") }}</div>
             </div>
 
-            <div class="text-truncate mr-2" style="white-space: normal;">
+            <div class="text-truncate mr-2 ml-5" style="white-space: normal;">
                 <p class="m-0 p-0 dashentry"><strong><a href="activities/{{ activity.id }}">{{ activity.title }}</a></strong></p>
-                <p class="p-0 m-0"><small><i class="fa fa-map-marker"></i> {{ activity.location.name }}, {{ activity.location.country.name }}</small></p>
+                <p class="p-0 m-0"><small><i class="fa fa-map-marker-alt"></i> {{ activity.location.name }}, {{ activity.location.country.name }}</small></p>
             </div>
 
             <div class="ml-auto relative">

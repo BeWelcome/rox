@@ -91,17 +91,11 @@ foreach($this->activities as $activity) {
     ?>
     <div class="d-flex flex-row justify-content-start align-items-center p-2 w-100">
 
-        <div class="relative pr-2">
-            <div><i class="fa fa-3x fa-calendar-o"></i></div>
-            <div class="absolute homeday"><strong><?php echo date("j", strtotime($activity->dateStart)); ?></strong></div>
-            <div class="absolute monthyear"><?php echo date("m", strtotime($activity->dateStart)) . " " . date("Y", strtotime($activity->dateStart)); ?></div>
-        </div>
-
         <div class="text-truncate w-100">
-            <h4 class="m-0 p-0 text-truncate float-left"><?php echo '<a href="activities/' . $activity->id . '">' . htmlspecialchars($activity->title) . '</a>'; ?>
+            <h4 class="m-0 p-0 w-100 text-truncate"><?php echo '<a href="activities/' . $activity->id . '">' . htmlspecialchars($activity->title) . '</a>'; ?>
 
                 <?php
-                echo '<p class="p-0 m-0 smaller">' . date("d M Y", strtotime($activity->dateStart));
+                echo '<p class="p-0 m-0 smaller text-black-50">' . date("d M Y", strtotime($activity->dateStart));
                 if ($activity->dateStart != $activity->dateEnd){
                     echo ' - ' . date("d M Y", strtotime($activity->dateEnd));
                 }
@@ -138,7 +132,7 @@ foreach($this->activities as $activity) {
                 }
                 echo $locationName . '<br>' . $countryName; ?>
             </div>
-            <div class="px-2"><i class="fa fa-25 fa-map-marker"></i></div>
+            <div class="px-2"><i class="fa fa-25 fa-map-marker-alt"></i></div>
         </div>
 
         <div class="ml-auto flex-md-row d-none d-md-flex">

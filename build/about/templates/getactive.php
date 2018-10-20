@@ -113,7 +113,7 @@ $words = new MOD_words();
 <div class="col-12 col-md-6 mb-3 pl-0">
     <div class="card p-3 h-100">
         <div class="card-body">
-            <h3 class="card-title m-0"><i class="fa fa-map-marker"
+            <h3 class="card-title m-0"><i class="fa fa-map-marker-alt"
                                       aria-hidden="true"></i> <?php echo $words->get('GetActiveLocalTitle') ?></h3>
             <p class="text-muted"><?php echo $words->get('HelpBeWelcomeLocalTags') . " <br> " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveLocalContact') ?></p>
             <p class="card-text"><?php echo $words->get('GetActiveLocalText') ?></p>

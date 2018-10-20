@@ -174,6 +174,35 @@ a.active .metric .value {
 }
 
 #editProfileTab .nav-tabs {
+  display:none;
+}
+
+@media(min-width:768px) {
+  #editProfileTab .nav-tabs {
+    display: flex;
+  }
+
+  #editProfileTab .card {
+    border: none;
+  }
+
+  #editProfileTab .card .card-header {
+    display:none;
+  }
+
+  #editProfileTab .card .collapse{
+    display:block;
+  }
+}
+
+@media(max-width:767px){
+  #editProfileTab .tab-pane {
+    display: block !important;
+    opacity: 1;
+  }
+}
+
+#editProfileTab .nav-tabs {
   border-bottom: $nav-tabs-border-width solid $nav-tabs-border-color;
 
   .nav-item {

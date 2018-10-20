@@ -62,37 +62,35 @@ if (count($languages) > 1 || $myself) {
                 }
             }
             ?><?php echo $words->flushBuffer(); ?></div>
-<?php if ($myself) { ?>
-<select class="form-control-sm my-1" id="add_language">
-    <option>- <?=$wwsilent->AddLanguage?> -</option>
-      <?php
-      $ownLanguages = "";
-      foreach ($languages_spoken as $lang) {
-          if ((!array_key_exists($lang->IdLanguage,$languages)) && (array_key_exists($lang->IdLanguage,$all_written_languages))) {
-           $ownLanguages .= '<option value="'.$lang->ShortCode.'">' . $lang->Name . '</option>';
-          }
-      }
+            <?php if ($myself) { ?>
+            <select class="form-control-sm my-1 select2" id="add_language">
+                <option>- <?=$wwsilent->AddLanguage?> -</option>
+                  <?php
+                  $ownLanguages = "";
+                  foreach ($languages_spoken as $lang) {
+                      if ((!array_key_exists($lang->IdLanguage,$languages)) && (array_key_exists($lang->IdLanguage,$all_written_languages))) {
+                       $ownLanguages .= '<option value="'.$lang->ShortCode.'">' . $lang->Name . '</option>';
+                      }
+                  }
 
-      if (!empty($ownLanguages)) { ?>
-    <optgroup label="<?=$wwsilent->YourLanguages?>">
-    <?php echo $ownLanguages; ?>
-    </optgroup>
-    <?php } ?>
-    <optgroup label="<?=$wwsilent->AllLanguages?>">
-      <?php
-      foreach ($all_written_languages as $lang) {
-      if (!in_array($lang->id,$languages))
-      echo '<option value="'.$lang->ShortCode.'">' . $lang->TranslatedName . ' (' . $lang->Name . ')</option>';
-      } ?>
-    </optgroup>
-</select>
-    <?php } ?>
+                  if (!empty($ownLanguages)) { ?>
+                <optgroup label="<?=$wwsilent->YourLanguages?>">
+                <?php echo $ownLanguages; ?>
+                </optgroup>
+                <?php } ?>
+                <optgroup label="<?=$wwsilent->AllLanguages?>">
+                  <?php
+                  foreach ($all_written_languages as $lang) {
+                  if (!in_array($lang->id,$languages))
+                  echo '<option value="'.$lang->ShortCode.'">' . $lang->TranslatedName . ' (' . $lang->Name . ')</option>';
+                  } ?>
+                </optgroup>
+            </select>
+                <?php } ?>
     </div>
 <?=$words->flushBuffer()?>
-<?php }
-if (count($languages) > 1 || $myself) {
-    echo "</div> <!-- profile_translations -->";
-} ?>
+    </div> <!-- profile_translations -->
+<?php } ?>
 
 <script type="text/javascript">//<!--
     $('#add_language').change(function () {

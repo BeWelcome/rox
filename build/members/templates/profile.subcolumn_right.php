@@ -147,15 +147,15 @@ $statement = $userid ? $gallery->getLatestItems($userid) : false;
 if ($statement) {
 ?>
     <div id="gallery" class="mb-3">
-    <h3 class="mb-0"><?php echo $words->get('GalleryTitleLatest'); ?>
-        <?php if ($showEditLinks): ?>
-            <span class="float-right">
-                    <a href="/gallery/manage" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
-                </span>
-        <?php endif; ?>
-    </h3>
+        <h3 class="mb-0"><?php echo $words->get('GalleryTitleLatest'); ?>
+            <?php if ($showEditLinks): ?>
+                <span class="float-right">
+                        <a href="/gallery/manage" class="btn btn-sm btn-primary"><?php echo $words->get('Edit'); ?></a>
+                    </span>
+            <?php endif; ?>
+        </h3>
 
-    <div class="w-100">
+        <div class="w-100"></div>
 
     <?php
     // if the gallery is NOT empty, go show it

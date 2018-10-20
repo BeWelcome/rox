@@ -464,22 +464,22 @@ AND t.last_postid = p.id";
         $group_owners = array();
         foreach ($priv_scopes as $priv_scope) {
             $group_owner = $this->createEntity('Member', $priv_scope->IdMember);
-            if ($loggedIn || $group_owner->get_publicProfile()) {
-                $group_owners[] = $group_owner;
+            if (strpos(\Member::ACTIVE_WITH_MESSAGES, $group_owner->Status) !== false) {
+                if ($loggedIn || $group_owner->get_publicProfile()) {
+                    $group_owners[] = $group_owner;
+                }
             }
         }
         return $group_owners;
     }
 
-
-
     /**
      * sets ownership for a group - owner has admin powers + more for a group
      *
-     * @param object $member
+     * @param Member $member
      * @access public
      * @return bool
-     */
+m     */
     public function setGroupOwner(Member $member)
     {
         if (!$this->isLoaded() || !($role = $this->createEntity('Role')->findByName('GroupOwner')) || !$this->isMember($member))

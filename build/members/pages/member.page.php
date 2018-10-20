@@ -46,7 +46,7 @@ class MemberPage extends PageWithActiveSkin
     }
     
     
-    protected function getLeftSubmenuItems()
+    protected function getSubmenuItems()
     {
         $username = $this->member->Username;
         $member = $this->member;
@@ -150,44 +150,29 @@ class MemberPage extends PageWithActiveSkin
         }
         return($tt) ;
     }
-        protected function getColumnNames()
+
+    protected function getColumnNames()
     {
         // we don't need the other columns
-        return array('col1_left', 'col3_right');
-    }
-    protected function columnsArea($mid_column_name)
-    {
-        ?>
-        <div class="row">
-          <div class="col-6 col-sm-5 col-lg-3 pr-sm-1 p-lg-3 menu-divider">
-              <? $name = 'column_col1';?>
-              <?php $this->$name() ?>
-          </div> 
-          <div class="col-6 col-sm-7 col-lg-9 pl-sm-1 p-lg-3">
-              <?php $this->teaserReplacement(); ?>
-              <? $name = 'column_col3';?>
-                <?php $this->$name() ?>
-              <?php $this->$name ?>
-          </div>
-        </div>
-        <?php
+        return array('col3');
     }
 
-    protected function submenu() {
-    }
-
-    protected function teaserReplacement() {
-        $this->__call('teaserContent', array());
-        //parent::submenu();
+    protected function leftsidebar() {
     }
 
     protected function teaserContent()
     {
-        /*        $this->__call('teaserContent', array()); */
+        $this->__call('teaserContent', array());
+        //parent::submenu();
     }
 
-    protected function leftsidebar() {
-        // TODO: move HTML to a template
+    protected function submenu() {
+        ?>
+        <div class="col-6 col-md-3 sidebar-offcanvas" id="sidebar">
+        <div class="list-group mb-2">
+<?php
+
+    // TODO: move HTML to a template
         $member = $this->member;
         $words = $this->getWords();
         $picture_url = 'members/avatar/'.$member->Username;
@@ -217,7 +202,7 @@ class MemberPage extends PageWithActiveSkin
             <?php
 
             $active_menu_item = $this->getSubmenuActiveItem();
-            foreach ($this->getLeftSubmenuItems() as $index => $item) {
+            foreach ($this->getSubmenuItems() as $index => $item) {
                 $name = $item[0];
                 if ('space' === $name)
                 {
@@ -243,6 +228,8 @@ class MemberPage extends PageWithActiveSkin
             }
 
                 ?>
+        </div>
+        </div>
         </div>
 <?php
     }

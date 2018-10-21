@@ -85,38 +85,38 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 </h5>
             </div>
             <div id="collapse-home" class="collapse show" role="tabpanel" aria-labelledby="heading-home">
-                <div class="card-body">
-                    <div class="row align-items-center p-3">
-                        <div class="col-3 col-lg-2 h5 text-right">
+                <div class="card-body p-0 p-md-3">
+                    <div class="row align-items-center p-2 p-md-3">
+                        <div class="col-12 col-sm-3 col-lg-2 h5 text-md-right">
                             <?= $words->get('SignupUsername') ?>:
                         </div>
-                        <div class="col-9 col-lg-3 h4">
+                        <div class="col-12 col-sm-9 col-lg-3 h4">
                             <?= $member->Username ?>
                         </div>
                         <div class="col-12 col-lg-7 small mb-3 alert alert-info">
                             <?= $words->get('subline_username_edit') ?>
                         </div>
 
-                        <div class="col-3 h5">
+                        <div class="col-12 col-sm-3 h5">
                             <img src="members/avatar/<?= $member->Username ?>/100"
                                  title="Current picture" alt="Current picture" height="100" width="100"><br>
                             <?= $words->get('ProfilePicture') ?>
                         </div>
 
-                        <div class="col-9 mt-3 h5">
+                        <div class="col-12 col-sm-9 mt-3 h5">
                             <input id="profile_picture" name="profile_picture" class="btn btn-outline-primary" type="file"/>
                             <label for="profile_picture"
                                    class="alert-primary mb-0"><?= $words->get('uploadselectpicture'); ?></label><br/>
                             <span class="small"><?= $words->get('Profile_UploadWarning', sprintf("%.1f MB", PFunctions::returnBytes(ini_get('upload_max_filesize')) / 1048576)); ?></span>
                         </div>
 
-                        <div class="w-100 mt-3"></div>
+                        <div class="w-100 mt-1 mt-md-3"></div>
 
                         <? if ($this->adminedit || !$CanTranslate) { // member translator is not allowed to update crypted data ?>
-                            <div class="col-3 h5">
+                            <div class="col-12 col-sm-3 h5 mb-0">
                                 <?= $words->get('FirstName') ?>
                             </div>
-                            <div class="col-9 h5">
+                            <div class="col-12 col-sm-9 mb-1 mb-sm-0">
                                 <input class="<?php if (isset($errorFirstName)) { ?>error-input-text<?php } ?>" type="text"
                                        name="FirstName"
                                        value="<?php echo htmlentities($vars['FirstName'], ENT_COMPAT, 'UTF-8'); ?>"/>
@@ -133,10 +133,10 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
 
                             </div>
 
-                            <div class="col-3 h5">
+                            <div class="col-12 col-sm-3 h5 mb-0">
                                 <?= $words->get('SecondName') ?>
                             </div>
-                            <div class="col-9 h5">
+                            <div class="col-12 col-sm-9 mb-1 mb-sm-0">
                                 <input type="text" name="SecondName"
                                        value="<?php echo htmlentities($vars['SecondName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                                 <input type="checkbox" value="Yes" name="IsHidden_SecondName"
@@ -146,10 +146,10 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                                 <?= $words->get('hidden') ?>
                             </div>
 
-                            <div class="col-3 h5">
+                            <div class="col-12 col-sm-3 h5 mb-0">
                                 <?= $words->get('LastName') ?>
                             </div>
-                            <div class="col-9 h5">
+                            <div class="col-12 col-sm-9 mb-1 mb-sm-0">
                                 <input class="<?php if (isset($errorLastName)) { ?>error-input-text<?php } ?>" type="text"
                                        name="LastName"
                                        value="<?php echo htmlentities($vars['LastName'], ENT_COMPAT, 'UTF-8'); ?>"/>
@@ -165,14 +165,15 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                             <div class="w-100 mt-3">
                             </div>
 
-                            <div class="col-3 h5">
+                            <div class="col-12 col-sm-3 h5 mb-0">
                                 <?= $words->get('SignupEmail') ?>
                             </div>
-                            <div class="col-9 h5">
+                            <div class="col-12 col-sm-9">
+                                <div class="nowrap">
                                 <input class="<?php if (isset($errorEmail)) { ?>error-input-text<?php } ?>" type="text"
-                                       size="25"
-                                       name="Email" value="<?= str_replace('%40', '@', $vars['Email']) ?>"/>
-                                <?= $words->get('EmailIsAlwayHidden') ?>
+                                        name="Email" value="<?= str_replace('%40', '@', $vars['Email']) ?>"/>
+                                <small><?= $words->get('EmailIsAlwayHidden') ?></small>
+                                </div>
                                 <?php if (isset($errorEmail)) { ?>
                                     <div class="w-100 alert alert-danger"><?= $words->get('SignupErrorInvalidEmail') ?></div>
                                 <?php } ?>
@@ -180,12 +181,12 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
 
                         <? } ?>
 
-                        <div class="w-100 mt-3"></div>
+                        <div class="w-100 mt-1 mt-sm-2"></div>
 
-                        <div class="col-3 mt-2 h5">
+                        <div class="col-12 col-sm-3 h5 mb-0">
                             <?= $words->get('SignupBirthDate') ?><br>
                         </div>
-                        <div class="col-4 mt-4 h6">
+                        <div class="col-12 col-sm-9">
                             <select id="BirthYear" name="BirthYear">
                                 <option value="0"><?php echo $words->getSilent('SignupBirthYear'); ?></option>
                                 <?php echo $birthYearOptions; ?>
@@ -210,7 +211,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                                     ?>><?php echo $i; ?></option>
                                 <?php } ?>
                             </select>
-                            <span class="small m-0"><?= $words->get('EmailIsAlwayHidden') ?></span>
+                            <small><?= $words->get('EmailIsAlwayHidden') ?></small>
 
                             <?php echo $words->flushBuffer(); ?>
                             <?php
@@ -223,17 +224,16 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                             ?>
 
                         </div>
-                        <div class="col-5 mt-3">
-                            <input class="mt-3" name="HideBirthDate" value="Yes"
+                        <div class="col-12 col-sm-9 offset-md-3 mb-2 mb-sm-0">
+                            <input name="HideBirthDate" value="Yes"
                                    type="checkbox" <?= ($vars['HideBirthDate'] == 'Yes') ? 'checked="checked"' : '' ?> />
-                            <?= $words->get("Hidden"); ?>
-                            <p class="small m-0"><?= $words->get('HiddenAgeInfo'); ?></p>
+                            <small><?= $words->get('HiddenAgeInfo'); ?></small>
                         </div>
 
-                        <div class="col-3 mt-3 h5">
+                        <div class="col-12 col-sm-3 h5 mb-0">
                             <?= $words->get('Gender'); ?>
                         </div>
-                        <div class="col-4 mt-3">
+                        <div class="col-12 col-sm-9 form-inline">
                             <div class="btn-group" data-toggle="buttons">
                                 <label for='genderF'
                                        class="btn btn-outline-primary <?= (isset($vars['Gender']) && $vars['Gender'] == 'female') ? 'active' : '' ?>">
@@ -253,21 +253,24 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                                             value="other"
                                             class="noradio" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'other') ? ' checked="checked"' : ''); ?>/> <?= $words->get('GenderOther'); ?>
                                 </label>
-                            </div>
-                        </div>
-                        <div class="col-5 mt-3"><input name="HideGender" value="Yes" type="checkbox"
-                                                       id='HideGender' <?= ((isset($vars['HideGender']) && $vars['HideGender'] == "Yes") ? ' checked="checked"' : ''); ?>/><label
-                                    for="HideGender" class="ml-1"><?= $words->get("Hidden"); ?></label>
-                        </div>
 
+                            </div>
+
+                                <input name="HideGender" value="Yes" type="checkbox"
+                                       id='HideGender' <?= ((isset($vars['HideGender']) && $vars['HideGender'] == "Yes") ? ' checked="checked"' : ''); ?> class="ml-2">
+                                    <?= $words->get("Hidden"); ?>
+
+                        </div>
                         <?php
                         if (in_array('SignupErrorInvalidGender', $vars['errors'])) {
-                            echo '<div class="error">' . $words->get('SignupErrorInvalidGender') . '</div>';
+                            echo '<div class="alert alert-danger">' . $words->get('SignupErrorInvalidGender') . '</div>';
                         }
                         ?>
 
-                        <div class="col-3 mt-3 h5"><?= $words->get('Location') ?></div>
-                        <div class="col-9 mt-3">
+
+
+                        <div class="col-12 col-sm-3 h5 mb-0 mt-sm-2"><?= $words->get('Location') ?></div>
+                        <div class="col-12 col-sm-9 mt-sm-2">
                             <i class="fa fa-3x fa-map-marker-alt float-left"></i>
                             <div class="float-left ml-2"><span class="font-weight-bold"><?= $member->city ?></span>
                                 <br>
@@ -275,6 +278,11 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                             </div>
                             <a href="setlocation"
                                class="btn btn-outline-primary float-left ml-5"><?= $words->get('UpdateMyLocation') ?></a>
+                        </div>
+
+                        <div class="col-12">
+                            <input type="submit" class="btn btn-primary float-right m-2" id="submit" name="submit"
+                                   value="<?= $words->getSilent('Save Profile') ?>"/> <?php echo $words->flushBuffer(); ?>
                         </div>
                     </div>
                 </div>
@@ -290,15 +298,19 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
             </div>
             <div id="collapse-aboutme" class="collapse" role="tabpanel" aria-labelledby="heading-aboutme">
                 <div class="card-body">
-                    <div class="row p-3">
-                        <div class="col-2 h5"><?= $words->get('ProfileOccupation') ?></div>
-                        <div class="col-10 h5"><input class="w-100" name="Occupation"
+                    <div class="row">
+                        <div class="col-12 col-sm-2 h5 mb-0"><?= $words->get('ProfileOccupation') ?></div>
+                        <div class="col-12 col-sm-10"><input class="w-100" name="Occupation"
                                                       value="<?php echo htmlentities($vars['Occupation'], ENT_COMPAT, 'UTF-8'); ?>"/>
                         </div>
 
-                        <div class="col-2 h5"><?= $words->get('ProfileSummary') ?></div>
-                        <div class="col-10 h5"><textarea name="ProfileSummary" id="ProfileSummary" class="w-100"
+                        <div class="col-12 col-sm-2 h5 mb-0"><?= $words->get('ProfileSummary') ?></div>
+                        <div class="col-12 col-sm-10"><textarea name="ProfileSummary" id="ProfileSummary" class="w-100"
                                                          rows="6"><?php echo htmlentities($vars['ProfileSummary'], ENT_COMPAT, 'UTF-8'); ?></textarea>
+                        </div>
+                        <div class="col-12 mt-3">
+                            <input type="submit" class="btn btn-primary float-right m-2" id="submit" name="submit"
+                                   value="<?= $words->getSilent('Save Profile') ?>"/> <?php echo $words->flushBuffer(); ?>
                         </div>
                     </div>
                 </div>
@@ -314,12 +326,12 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
             </div>
             <div id="collapse-accommodation" class="collapse" role="tabpanel" aria-labelledby="heading-accommodation">
                 <div class="card-body">
-                    <div class="row p-3">
-                        <div class="col-4 h5 pt-2">
+                    <div class="row align-content-center">
+                        <div class="col-12 col-sm-4 h5 mb-0">
                             <?= $words->get('HostingStatus') ?>
                         </div>
 
-                        <div class="col-8 btn-group" data-toggle="buttons">
+                        <div class="col-12 col-sm-8 btn-group" data-toggle="buttons">
 
                             <?php
                             $syshcvol = PVars::getObj('syshcvol');
@@ -340,56 +352,56 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                             <? } ?>
                         </div>
 
-                        <div class="col-4 h5">
+                        <div class="col-12 col-sm-4 h5 mb-0">
                             <? echo $words->get('ProfileNumberOfGuests'); ?>
                         </div>
-                        <div class="col-8">
+                        <div class="col-12 col-sm-8">
                             <input type="number" min="1" max="20" name="MaxGuest" class="maxguestsinput"
                                    value="<?= $vars['MaxGuest']; ?>">
                         </div>
 
-                        <div class="col-4 mt-3 h5">
+                        <div class="col-12 col-sm-4 mt-3 h5 mb-0">
                             <?= $words->get('ProfileMaxLenghtOfStay') ?>
                         </div>
-                        <div class="col-8 mt-3 h5">
+                        <div class="col-12 col-sm-8">
                             <textarea name="MaxLenghtOfStay" class="w-100" rows="2"><?= $vars['MaxLenghtOfStay'] ?></textarea>
                         </div>
 
-                        <div class="col-4 mt-3 h5">
+                        <div class="col-12 col-sm-4 h5 mb-0">
                             <?= $words->get('ProfileILiveWith') ?>
                         </div>
-                        <div class="col-8 mt-3 h5">
+                        <div class="col-12 col-sm-8">
                             <textarea name="ILiveWith" class="w-100" rows="2"><?= $vars['ILiveWith'] ?></textarea>
                         </div>
 
-                        <div class="col-4 mt-3 h5">
+                        <div class="col-12 col-sm-4 h5 mb-0">
                             <?= $words->get('ProfilePleaseBring') ?>
                         </div>
-                        <div class="col-8 mt-3 h5">
+                        <div class="col-12 col-sm-8">
                                 <textarea name="PleaseBring" class="w-100"
                                           rows="2"><?= $vars['PleaseBring'] ?></textarea>
                         </div>
 
-                        <div class="col-4 mt-3 h5">
+                        <div class="col-12 col-sm-4 h5 mb-0">
                             <?= $words->get('ProfileOfferGuests') ?>
                         </div>
-                        <div class="col-8 mt-3 h5">
+                        <div class="col-12 col-sm-8">
                                 <textarea name="OfferGuests" class="w-100"
                                           rows="2"><?= $vars['OfferGuests'] ?></textarea>
                         </div>
 
-                        <div class="col-4 mt-3 h5">
+                        <div class="col-12 col-sm-4 h5 mb-0">
                             <?= $words->get('ProfileOfferHosts') ?>
                         </div>
-                        <div class="col-8 mt-3 h5">
+                        <div class="col-12 col-sm-8">
                                 <textarea name="OfferHosts" class="w-100"
                                           rows="2"><?= $vars['OfferHosts'] ?></textarea>
                         </div>
 
-                        <div class="col-4 mt-3 h4">
+                        <div class="col-12 col-sm-4 h5 mb-0">
                             <?= $words->get('ICanAlsoOffer') ?>
                         </div>
-                        <div class="col-8 mt-3">
+                        <div class="col-12 col-sm-8">
                             <?php
                             $max = count($vars['TabTypicOffer']);
                             for ($ii = 0; $ii < $max; $ii++) {
@@ -401,17 +413,17 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                             ?>
                         </div>
 
-                        <div class="col-4 mt-3 h5">
+                        <div class="col-12 col-sm-4 h5 mb-0">
                             <?= $words->get('ProfilePublicTransport') ?>
                         </div>
-                        <div class="col-8 mt-3 h5">
+                        <div class="col-12 col-sm-8 h5">
                             <textarea name="PublicTransport" class="w-100" rows="2"><?= $vars['PublicTransport'] ?></textarea>
                         </div>
 
-                        <div class="col-4 mt-3 h5">
+                        <div class="col-12 col-sm-4 h5 mb-0">
                             <?= $words->get('ProfileRestrictionForGuest') ?>
                         </div>
-                        <div class="col-8 mt-3">
+                        <div class="col-12 col-sm-8">
                             <?php
                             $max = count($member->TabRestrictions);
                             for ($ii = 0; $ii < $max; $ii++) {
@@ -423,20 +435,24 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                             ?>
                         </div>
 
-                        <div class="col-4 mt-3 h5">
+                        <div class="col-12 col-sm-4 h5 mb-0">
                             <?= $words->get('ProfileHouseRules') ?>
                         </div>
-                        <div class="col-8 mt-3 h5">
+                        <div class="col-12 col-sm-8">
                             <textarea name="OtherRestrictions" class="w-100"
                                       rows="2"><?= $vars['OtherRestrictions'] ?></textarea>
                         </div>
 
-                        <div class="col-4 mt-3 h5">
+                        <div class="col-12 col-sm-4 h5 mb-0">
                             <?= $words->get('ProfileAdditionalAccomodationInfo') ?>
                         </div>
-                        <div class="col-8 mt-3 h5">
+                        <div class="col-12 col-sm-8">
                             <textarea name="AdditionalAccomodationInfo" class="w-100"
                                       rows="2"><?= $vars['AdditionalAccomodationInfo'] ?></textarea>
+                        </div>
+                        <div class="col-12 mt-3">
+                            <input type="submit" class="btn btn-primary float-right m-2" id="submit" name="submit"
+                                   value="<?= $words->getSilent('Save Profile') ?>"/> <?php echo $words->flushBuffer(); ?>
                         </div>
                     </div>
                 </div>
@@ -452,41 +468,45 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
             </div>
             <div id="collapse-myinterests" class="collapse" role="tabpanel" aria-labelledby="heading-myinterests">
                 <div class="card-body">
-                    <div class="row p-3">
-                        <div class="col-3 mt-3 h5">
+                    <div class="row">
+                        <div class="col-12 col-sm-3 h5 mb-0">
                             <?= $words->get('ProfileHobbies') ?>
                         </div>
-                        <div class="col-9 mt-3 h5">
+                        <div class="col-12 col-sm-9">
                             <textarea name="Hobbies" class="w-100" rows="4"><?= $vars['Hobbies'] ?></textarea>
                         </div>
 
-                        <div class="col-3 mt-3 h5">
+                        <div class="col-12 col-sm-3 h5 mb-0">
                             <?= $words->get('ProfileBooks') ?>
                         </div>
-                        <div class="col-9 mt-3 h5">
+                        <div class="col-12 col-sm-9">
                             <textarea name="Books" class="w-100" rows="4"><?= $vars['Books'] ?></textarea>
                         </div>
 
-                        <div class="col-3 mt-3 h5">
+                        <div class="col-12 col-sm-3 h5 mb-0">
                             <?= $words->get('ProfileMusic') ?>
                         </div>
-                        <div class="col-9 mt-3 h5">
+                        <div class="col-12 col-sm-9">
                             <textarea name="Music" class="w-100" rows="4"><?= $vars['Music'] ?></textarea>
                         </div>
 
-                        <div class="col-3 mt-3 h5">
+                        <div class="col-12 col-sm-3 h5 mb-0">
                             <?= $words->get('ProfileMovies') ?>
                         </div>
-                        <div class="col-9 mt-3 h5">
+                        <div class="col-12 col-sm-9">
                             <textarea name="Movies" class="w-100" rows="4"><?= $vars['Movies'] ?></textarea>
                         </div>
 
-                        <div class="col-3 mt-3 h5">
+                        <div class="col-12 col-sm-3 h5 mb-0">
                             <?= $words->get('ProfileOrganizations') ?>
                         </div>
-                        <div class="col-9 mt-3 h5">
+                        <div class="col-12 col-sm-9">
                                 <textarea name="Organizations" class="w-100"
                                           rows="4"><?= $vars['Organizations'] ?></textarea>
+                        </div>
+                        <div class="col-12 mt-3">
+                            <input type="submit" class="btn btn-primary float-right m-2" id="submit" name="submit"
+                                   value="<?= $words->getSilent('Save Profile') ?>"/> <?php echo $words->flushBuffer(); ?>
                         </div>
                     </div>
                 </div>
@@ -507,23 +527,23 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     for ($ii = 0; $ii < count($vars['languages_selected']); $ii++) {
                         $lang_ids[] = $vars['languages_selected'][$ii]->IdLanguage; } ?>
                     <div class="row px-3">
-                        <div class="col-12 my-2 h5"><?= $words->get('ProfileLanguagesSpoken') ?></div>
+                        <div class="col-12 h5 mb-0 mb-sm-2"><?= $words->get('ProfileLanguagesSpoken') ?></div>
                     </div>
                     <?php for ($ii = 0; $ii < count($vars['languages_selected']); $ii++) { ?>
-                        <div class="row px-3 py-1">
-                            <div class="col-1 mb-1">
-                                <a href="#" class="btn btn-outline-danger p-1 px-2 remove_lang"><i class="fa fa-trash"></i><span
+                        <div class="row py-1">
+                            <div class="col-2 col-sm-1">
+                                <a href="#" class="btn btn-outline-danger p-1 px-2 remove_lang" title="<?= $words->get('RemoveLanguage') ?>"><i class="fa fa-times-circle"></i><span
                                             class="sr-only"><?= $words->get('RemoveLanguage') ?></span></a>
                             </div>
 
-                            <div class="col-4 mb-1">
+                            <div class="col-10 col-sm-4">
                                 <input type="hidden" name="memberslanguages[]"
                                        value="<?= $vars['languages_selected'][$ii]->IdLanguage ?>">
                                 <input type="text" disabled value="<?= $vars['languages_selected'][$ii]->Name ?>"
                                        title="<?= $words->getSilent('Lang_' . $vars['languages_selected'][$ii]->ShortCode) ?>" class="form-control">
 
                             </div>
-                            <div class="col-7 mb-1">
+                            <div class="col-10 offset-2 col-sm-7 offset-sm-0">
                                 <select class="mll form-control" name="memberslanguageslevel[]">
                                     <?
                                     for ($jj = 0; $jj < count($vars['language_levels']); $jj++) {
@@ -537,13 +557,13 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                             </div>
                         </div>
                     <?php } ?>
-                    <div class="row langsel px-3 py-1">
-                        <div class="col-1 mb-1">
+                    <div class="row langsel mt-2 d-none">
+                        <div class="col-2 col-sm-1">
                             <a href="#" class="btn btn-outline-danger p-1 px-2 remove_lang invisible"><i
-                                        class="fa fa-trash"></i><span
+                                        class="fa fa-times-circle"></i><span
                                         class="sr-only"><?= $words->get('RemoveLanguage') ?></span></a>
                         </div>
-                        <div class="col-4 mb-1">
+                        <div class="col-10 col-sm-4">
                             <select class='lang_selector form-control' name="memberslanguages[]">
                                 <option selected="selected">-<?= $words->get("ChooseNewLanguage") ?>-</option>
                                 <optgroup label="<?= $words->getSilent('SpokenLanguages') ?>">
@@ -574,7 +594,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                                 </optgroup>
                             </select>
                         </div>
-                        <div class="col-7 mb-1">
+                        <div class="col-10 offset-2 col-sm-7 offset-sm-0">
                             <select class="mll form-control" name="memberslanguageslevel[]">
                                 <?
                                 for ($jj = 0; $jj < count($vars['language_levels']); $jj++) {
@@ -586,14 +606,19 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                             </select>
                         </div>
                     </div>
-                    <div class="row px-3 py-1">
-                        <div class="col-1 mb-1"></div>
-                        <div class="col-11 mb-1">
-                        <input type="button" id="langbutton" class="btn btn-outline-primary mt-1" name="addlang"
-                               value="<?= $words->getSilent('AddLanguage') ?>"/>
+                    <div class="row">
+                        <div class="col-10 offset-2 offset-sm-1 mt-1">
+                            <input type="button" id="langbutton" class="btn btn-outline-primary mt-1" name="addlang"
+                                   value="<?= $words->getSilent('AddLanguage') ?>"/>
+                            <?= $words->flushBuffer() ?>
                         </div>
-                        <?= $words->flushBuffer() ?>
+
+                        <div class="col-12 mt-3">
+                            <input type="submit" class="btn btn-primary float-right m-2" id="submit" name="submit"
+                                   value="<?= $words->getSilent('Save Profile') ?>"/> <?php echo $words->flushBuffer(); ?>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -607,13 +632,13 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
             </div>
             <div id="collapse-contactinfo" class="collapse" role="tabpanel" aria-labelledby="heading-contactinfo">
                 <div class="card-body">
-                    <div class="row justify-content-start p-3">
+                    <div class="row">
                         <? if ($this->adminedit || !$CanTranslate) { // member translator is not allowed to update crypted data ?>
 
-                            <div class="col-3 h5">
+                            <div class="col-12 col-sm-3 h5 mb-0">
                                 <?= $words->get('Street') ?>
                             </div>
-                            <div class="col-9 h5">
+                            <div class="col-12 col-sm-9 form-inline">
                                 <input class="<?php if (isset($errorStreet)) { ?>error-input-text<?php } ?>" type="text"
                                        name="Street"
                                        id="Street"
@@ -621,17 +646,16 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                                 <input type="checkbox" value="Yes" name="IsHidden_Address"
                                     <?php if ($vars['IsHidden_Address'])
                                         echo 'checked="checked"';
-                                    ?> />
-                                <?= $words->get('hidden') ?>
+                                    ?>><?= $words->get('hidden') ?>
                                 <?php if (isset($errorStreet)) { ?>
                                     <div class="w-100 alert alert-danger"><?= $words->get('SignupErrorInvalidStreet') ?></div>
                                 <?php } ?>
                             </div>
 
-                            <div class="col-3 h5">
+                            <div class="col-12 col-sm-3 h5 mb-0">
                                 <?= $words->get('HouseNumber') ?>
                             </div>
-                            <div class="col-9 h5">
+                            <div class="col-12 col-sm-9">
                                 <input class="short<?php if (isset($errorHouseNumber)) { ?> error-input-text<?php } ?>"
                                        type="text"
                                        name="HouseNumber" id="HouseNumber"
@@ -643,10 +667,10 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                             </div>
 
 
-                            <div class="col-3 h5">
+                            <div class="col-12 col-sm-3 h5 mb-0">
                                 <?= $words->get('Post code') ?>
                             </div>
-                            <div class="col-9 h5">
+                            <div class="col-12 col-sm-9">
                                 <input class="short <?php if (isset($errorZip)) { ?> error-input-text<?php } ?>" type="text"
                                        name="Zip"
                                        value="<?php echo htmlentities($vars['Zip'], ENT_COMPAT, 'UTF-8'); ?>" size="6"/>
@@ -660,13 +684,10 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                                 <?php } ?>
                             </div>
 
-                            <div class="w-100">
-                            </div>
-
-                            <div class="col-3 h5">
+                            <div class="col-12 col-sm-3 h5 mb-0">
                                 <?= $words->get('ProfileHomePhoneNumber') ?>
                             </div>
-                            <div class="col-9 h5">
+                            <div class="col-12 col-sm-9">
                                 <input type="text" size="15" name="HomePhoneNumber"
                                        value="<?php echo htmlentities($vars['HomePhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>"/>
                                 <input type="checkbox" value="Yes" name="IsHidden_HomePhoneNumber"
@@ -676,10 +697,10 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                                 <?= $words->get('hidden') ?>
                             </div>
 
-                            <div class="col-3 h5">
+                            <div class="col-12 col-sm-3 h5 mb-0">
                                 <?= $words->get('ProfileCellPhoneNumber') ?>
                             </div>
-                            <div class="col-9 h5">
+                            <div class="col-12 col-sm-9">
                                 <input type="text" size="15" name="CellPhoneNumber"
                                        value="<?php echo htmlentities($vars['CellPhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>"/>
                                 <input type="checkbox" value="Yes" name="IsHidden_CellPhoneNumber"
@@ -689,10 +710,10 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                                 <?= $words->get('hidden') ?>
                             </div>
 
-                            <div class="col-3 h5">
+                            <div class="col-12 col-sm-3 h5 mb-0">
                                 <?= $words->get('ProfileWorkPhoneNumber') ?>
                             </div>
-                            <div class="col-9 h5">
+                            <div class="col-12 col-sm-9">
                                 <input type="text" size="15" name="WorkPhoneNumber"
                                        value="<?php echo htmlentities($vars['WorkPhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>"/>
                                 <input type="checkbox" value="Yes" name="IsHidden_WorkPhoneNumber"
@@ -705,15 +726,15 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                             <div class="w-100 mt-3">
                             </div>
 
-                            <div class="col-3 h5">
+                            <div class="col-12 col-sm-3 h5 mb-0">
                                 <?= $words->get('Website') ?>
                             </div>
-                            <div class="col-9 h5">
+                            <div class="col-12 col-sm-9">
                                 <input type="text" class="w-100" name="WebSite"
                                        value="<?php echo htmlentities($vars['WebSite'], ENT_COMPAT, 'UTF-8'); ?>"/>
                             </div>
 
-                            <div class="w-100 mt-3 pl-3 h4">
+                            <div class="w-100 m-3 h5 mb-0">
                                 Social media
                             </div>
 
@@ -723,13 +744,13 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                                     $val = 'chat_' . $me['network_raw'];
                                     ?>
 
-                                    <div class="col-3 h5">
-                                        <i class="fa fa-<?= $me["image"]; ?> pr-2" alt="<?= $me["image"]; ?>"
+                                    <div class="col-12 col-sm-3 h5 mb-0">
+                                        <i class="<? if ($me["image"] == 'user-plus'){ echo 'fa'; } else { echo 'fab'; } ?> fa-<?= $me["image"]; ?> pr-2" alt="<?= $me["image"]; ?>"
                                            title="<?= $me["image"]; ?>"></i>
                                         <?= $me["network"] ?>
                                     </div>
-                                    <div class="col-9 h5">
-                                        <input type="text" size="15" name="<?= $val ?>"
+                                    <div class="col-12 col-sm-9 mb-2">
+                                        <input type="text" name="<?= $val ?>"
                                                value="<?php echo htmlentities($me["address"], ENT_COMPAT, 'UTF-8'); ?>"/>
                                     </div>
                                     <?php
@@ -737,6 +758,10 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                             }
                         }
                         ?>
+                        <div class="col-12 mt-3">
+                            <input type="submit" class="btn btn-primary float-right m-2" id="submit" name="submit"
+                                   value="<?= $words->getSilent('Save Profile') ?>"/> <?php echo $words->flushBuffer(); ?>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -751,20 +776,24 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
             </div>
             <div id="collapse-travel" class="collapse" role="tabpanel" aria-labelledby="heading-travel">
                 <div class="card-body">
-                    <div class="row p-3">
-                        <div class="col-3 h5">
+                    <div class="row">
+                        <div class="col-12 col-sm-3 h5 mb-0">
                             <?= $words->get('ProfilePastTrips') ?>
                         </div>
-                        <div class="col-9 h5">
+                        <div class="col-12 col-sm-9">
                             <textarea name="PastTrips" class="w-100" rows="3"><?= $vars['PastTrips'] ?></textarea>
                         </div>
 
-                        <div class="col-3 h5">
+                        <div class="col-12 col-sm-3 h5 mb-0">
                             <?= $words->get('ProfilePlannedTrips') ?>
                         </div>
-                        <div class="col-9 h5">
+                        <div class="col-12 col-sm-9">
                                 <textarea name="PlannedTrips" class="w-100"
                                           rows="3"><?= $vars['PlannedTrips'] ?></textarea>
+                        </div>
+                        <div class="col-12 mt-3">
+                            <input type="submit" class="btn btn-primary float-right m-2" id="submit" name="submit"
+                                   value="<?= $words->getSilent('Save Profile') ?>"/> <?php echo $words->flushBuffer(); ?>
                         </div>
                     </div>
                 </div>
@@ -781,8 +810,6 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
             </div>
             <div id="collapse-family" class="collapse" role="tabpanel" aria-labelledby="heading-family">
                 <div class="card-body">
-                    <div class="row p-3">
-
                         <?php
                         $Relations = $vars['Relations'];
                         foreach ($Relations as $Relation) {
@@ -791,8 +818,9 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                                 $comment = '';
                             }
                             ?>
+                    <div class="row mb-3">
 
-                            <div class="col-2">
+                            <div class="col-10 col-sm-2 order-sm-2">
                                 <a href="members/<?= $Relation->Username ?>"><img
                                             src="members/avatar/<?= $Relation->Username ?>/50"
                                             height="50" width="50"
@@ -805,25 +833,25 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                                 ?>
                         "><a href="members/<?= $Relation->Username ?>"><?= $Relation->Username ?></a></span>
                             </div>
-                            <div class="col-9 h5">
+                            <div class="col-2 col-sm-1 order-sm-1 pt-2">
+                                <a href="/members/<?php echo $member->Username; ?>/relations/delete/<?php echo $Relation->id; ?>?redirect=editmyprofile#!specialrelations"
+                                   class="btn btn-danger"
+                                   onclick="return confirm('<?php echo $words->getSilent('Relation_delete_confirmation'); ?>');"><i class="fa fa-times" title="<?php echo $words->getFormatted("delrelation", $Relation->Username); ?>"></i><?php echo $words->flushBuffer(); ?></a>
+                            </div>
+                            <div class="col-12 col-sm-9 order-sm-3">
                                     <textarea class="w-100"
                                               name="RelationComment_<?= $Relation->id ?>"><?= $comment ?></textarea>
                             </div>
-                            <div class="col-1">
-                                <a href="/members/<?php echo $member->Username; ?>/relations/delete/<?php echo $Relation->id; ?>?redirect=editmyprofile#!specialrelations"
-                                   class="btn btn-outline-secondary p-1 py-0"
-                                   onclick="return confirm('<?php echo $words->getSilent('Relation_delete_confirmation'); ?>');"><i class="fa fa-trash" title="<?php echo $words->getFormatted("delrelation", $Relation->Username); ?>"></i><?php echo $words->flushBuffer(); ?></a>
-                            </div>
+                    </div>
                         <?php } ?>
+                    <div class="row">
+                        <div class="col-12">
+                            <input type="submit" class="btn btn-primary float-right m-2" id="submit" name="submit"
+                                   value="<?= $words->getSilent('Save Profile') ?>"/> <?php echo $words->flushBuffer(); ?>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="row mt-2">
-        <div class="col-12">
-            <input type="submit" class="btn btn-primary float-md-right ml-1" id="submit" name="submit"
-               value="<?= $words->getSilent('Save Profile') ?>"/> <?php echo $words->flushBuffer(); ?>
         </div>
     </div>
 </div>

@@ -48,8 +48,8 @@ if (!$this->passedAway){
                    $quality = "bad";
                    } ?>
 
+                       <? if ($commentLoopCount > 1){ ?><hr><? } ?>
                        <div class="w-100 mt-1">
-                          
                            <a href="members/<?=$c->UsernameFromMember?>">
                                <img class="float-left mr-2"  src="members/avatar/<?=$c->UsernameFromMember?>/50"  height="50"  width="50"  alt="<?=$c->UsernameFromMember?>" />
                            </a>
@@ -62,7 +62,7 @@ if (!$this->passedAway){
                                </p>
                            </div>
                        </div>
-                           <div class="w-100 pt-2" style="border-bottom: 1px dotted #CCC;">
+                           <div class="w-100 pt-2">
                                <p class="mb-1">
                                    <?php
                                    $textStripped = strip_tags($c->TextFree, '<font>');
@@ -71,15 +71,16 @@ if (!$this->passedAway){
                                </p>
                            </div>
 
+
                    <?php } ?>
 
-                      <a href="members/<?=$member->Username?>/comments/" class="btn btn-block btn-sm btn-outline-dark"><?=$words->get('ShowAllComments')?></a>
                 <?php
                   } else {
                       // hide comments from others when not logged in
                       echo $this->getLoginLink('/members/' . $member->Username,'ProfileShowComments');
                   } ?>
             </div>
+            <a href="members/<?=$member->Username?>/comments/" class="btn btn-block btn-sm btn-outline-dark"><?=$words->get('ShowAllComments')?></a>
         </div>
 
 <?php }
@@ -155,7 +156,7 @@ if ($statement) {
             <?php endif; ?>
         </h3>
 
-        <div class="p-2 d-flex justify-content-between">
+        <div class="p-2 d-flex flex-wrap justify-content-around">
 
     <?php
     // if the gallery is NOT empty, go show it
@@ -166,7 +167,7 @@ if ($statement) {
         echo '<div><a href="gallery/show/image/'.$d->id.'">' .
            '<img src="gallery/thumbimg?id='.$d->id.'"' .
                ' alt="image"' .
-               ' style="height: 50px; width: 50px;"/>' .
+               ' style="height: 50px; width: 50px; margin: 1rem;"/>' .
            '</a></div>';
     }
     ?>

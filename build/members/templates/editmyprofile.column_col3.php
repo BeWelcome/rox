@@ -1,4 +1,4 @@
-<form method="post" action="<?=$page_url?>" name="signup" id="profile-edit-form" class="fieldset-menu-form" enctype="multipart/form-data">
+<form method="post" action="<?=$page_url?>" name="signup" id="profile-edit-form" class="fieldset-menu-form w-100" enctype="multipart/form-data">
 <input type="hidden"  name="memberid"  value="<?=$member->id?>" />
 <input type="hidden"  name="profile_language"  value="<?=$profile_language?>" />
 <?php
@@ -45,6 +45,7 @@ require_once 'editprofile_form.php';
         e.preventDefault();
         destroyLanguageSelect2s();
         $("div.langsel:first").clone(true, true).insertAfter("div.langsel:last");
+        $("div.langsel:last").removeClass('d-none');
         initLanguageSelect2s();
     }
 

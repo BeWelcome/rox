@@ -490,18 +490,9 @@ WHERE IdMember = ".$this->id
 
     public function get_messengers() {
           $messengers = array(
-            array("network" => "FACEBOOK", "nicename" => "Facebook", "image" => "facebook", "href" => ""),
-            array("network" => "YOUTUBE", "nicename" => "Youtube", "image" => "youtube", "href" => ""),
-              array("network" => "INSTAGRAM", "nicename" => "Instagram", "image" => "instagram", "href" => ""),
-              array("network" => "QZONE", "nicename" => "Qzone", "image" => "star", "href" => ""),
-              array("network" => "WEIBO", "nicename" => "Weibo", "image" => "weibo", "href" => ""),
-              array("network" => "TWITTER", "nicename" => "Twitter", "image" => "twitter", "href" => ""),
-              array("network" => "GOOGLEPLUS", "nicename" => "Google +", "image" => "google-plus", "href" => ""),
-              array("network" => "GITHUB", "nicename" => "Github", "image" => "github", "href" => ""),
-              array("network" => "SKYPE", "nicename" => "Skype", "image" => "skype", "href" => ""),
-              array("network" => "WHATSAPP", "nicename" => "Whatsapp", "image" => "whatsapp", "href" => ""),
-              array("network" => "TELElGRAM", "nicename" => "Telegram", "image" => "telegram", "href" => ""),
-            array("network" => "Others", "nicename" => "Other", "image" => "comment", "href" => "")
+            array("network" => "GOOGLE", "nicename" => "Google+", "image" => "google-plus-g", "href" => ""),
+            array("network" => "SKYPE", "nicename" => "Skype", "image" => "skype", "href" => "skype:echo"),
+            array("network" => "Others", "nicename" => "Other", "image" => "user-plus", "href" => "#")
         );
           $r = array();
           foreach($messengers as $m) {

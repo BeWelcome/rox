@@ -1,12 +1,12 @@
 <div class="row">
   <div class="col-12 col-md-8">
-    <h1 class="m-0"><strong>
+    <h1 class="h2 m-0"><strong>
       <?php if ($this->passedAway == 'PassedAway') {
            echo $words->get('ProfileInMemoriam', $member->Username);
       } else {
             echo $member->Username;
       } ?>
-      </strong>
+      </strong><br>
 
       <?$name = $member->name(); ?><?=($name == '') ? (($member->Occupation) ? $member->Occupation : "") : $name;?>
       <?php if (!$this->passedAway) : ?>
@@ -56,7 +56,7 @@
       <?php endif; ?>
     </h1> <!-- username -->
 
-      <h2>
+      <h4>
           <?php
           // The "Hong Kong solution": Only display and link country.
           if ($member->region() == '' && $member->city() == $member->country()):
@@ -77,7 +77,7 @@
               <?php
           endif;
           ?>
-      </h2><!-- location -->
+      </h4><!-- location -->
   </div>
       <div class="col-12 col-md-4">
           <div class="card">

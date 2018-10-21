@@ -204,7 +204,7 @@ a.active .metric .value {
 }
 
 #editProfileTab .nav-tabs {
-  border-bottom: $nav-tabs-border-width solid $nav-tabs-border-color;
+  // border-bottom: $nav-tabs-border-width solid $nav-tabs-border-color;
 
   .nav-item {
     margin-bottom: -$nav-tabs-border-width;
@@ -215,7 +215,7 @@ a.active .metric .value {
     line-height: $line-height-sm;
     padding: $input-btn-padding-y-sm;
     border: $nav-tabs-border-width solid transparent;
-    background-color: $info;
+    background-color: $secondary;
     color: white;
     @include border-top-radius($nav-tabs-border-radius);
 
@@ -235,7 +235,9 @@ a.active .metric .value {
     color: $white;
     background-color: $primary;
     border-color: $primary;
+    border: none !important;
   }
+
 }
 
 @import "wiki";

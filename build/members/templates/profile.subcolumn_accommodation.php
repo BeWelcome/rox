@@ -2,7 +2,7 @@
     <h3 class="card-header<? if ($member->Accomodation == 'neverask'){ echo ' bg-secondary'; } ?>"><?php echo $words->get('ProfileAccommodation'); ?>
         <?php if ($showEditLinks): ?>
             <span class="float-right">
-                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileaccommodation" class="btn btn-sm <? if ($member->Accomodation == 'neverask'){ echo ' btn-secondary'; } else { ?>btn-primary p-0"><?php } echo $words->get('Edit'); ?></a>
+                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileaccommodation" class="btn btn-sm <? if ($member->Accomodation == 'neverask'){ echo ' btn-secondary'; } else { echo 'btn-primary'; } ?> p-0"><?= $words->get('Edit'); ?></a>
                 </span>
         <?php endif; ?>
     </h3>

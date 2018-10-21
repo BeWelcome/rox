@@ -135,12 +135,12 @@ li.picbox_activities {
   }
 @include media-breakpoint-between(md,lg) {
   .attend{
-    width: 48%;
+    width: 45%;
   }
 }
 @include media-breakpoint-up(xl) {
   .attend{
-    width: 24%;
+    width: 21%;
   }
 }
 

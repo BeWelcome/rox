@@ -26,6 +26,7 @@ $words = new MOD_words();
 $layoutbits = new MOD_layoutbits();
 ?>
 
+<div class="col-12">
 <!-- table structure -->
 <table class="table table-striped table-hover">
     <!-- beginning of table head -->
@@ -204,17 +205,17 @@ $layoutbits = new MOD_layoutbits();
     </tbody>
 </table>
 <!-- end of new table structure -->
+</div>
 
 <?php
 if ($User && empty($noForumNewTopicButton)) {
 ?>
-    <div class="col-12 px-0">
-        <a class="btn btn-primary float-right" href="<?php echo $uri; ?>new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a><?php echo $words->flushBuffer(); ?>
+    <div class="col-12">
+        <a class="btn btn-primary" href="<?php echo $uri; ?>new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a><?php echo $words->flushBuffer(); ?>
     </div>
     <?php
 }
 ?>
-
-<?php
-require 'pages.php';
-?>
+    <div class="col-12">
+        <?php require 'pages.php'; ?>
+    </div>

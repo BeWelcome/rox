@@ -45,7 +45,7 @@ $vars =& PPostHandler::getVars($callbackId);
 <script type="text/javascript" src="script/forums_suggest.js"></script>
 */ ?>
 
-<div class="col-12 px-0">
+<div class="col-12">
 
     <?php
     if ($navichain_items = $boards->getNaviChain()) {
@@ -98,7 +98,7 @@ $vars =& PPostHandler::getVars($callbackId);
         }
         ?>
 
-<div class="col-12 px-0">
+<div class="col-12">
         <?
         if (isset($allow_title) && $allow_title) {
 
@@ -126,11 +126,12 @@ $vars =& PPostHandler::getVars($callbackId);
             </div>
 
         <? } ?>
-        <div class="col-12 px-0 mt-2">
+    </div>
+    <div class="col-12 mt-2">
 
-            <label for="topic_text" class="h5 m-0"><?php echo $words->getFormatted("forum_label_text"); ?></label>
+            <label for="topic_text"><?php echo $words->getFormatted("forum_label_text"); ?></label>
 
-            <textarea name="topic_text" rows="10" id="topic_text" class="w-100 long editor"><?php
+            <textarea name="topic_text" id="topic_text" class="form-control long editor"><?php
                 if (isset($void_string)) {
                     echo $void_string;
                 } else {
@@ -209,7 +210,7 @@ $vars =& PPostHandler::getVars($callbackId);
             </div>
 
     </form>
-</div>
+
 <?php
 if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
     $textarea = 'topic_text';

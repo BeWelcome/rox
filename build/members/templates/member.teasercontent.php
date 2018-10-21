@@ -6,9 +6,8 @@
       } else {
             echo $member->Username;
       } ?>
-      </strong><br>
+      </strong>
 
-      <?$name = $member->name(); ?><?=($name == '') ? (($member->Occupation) ? $member->Occupation : "") : $name;?>
       <?php if (!$this->passedAway) : ?>
 
           <?php
@@ -26,27 +25,6 @@
               ' alt="' . $words->getSilent($member->Accomodation) .'"' .
               ' title="' . $words->getSilent('CanOffer' . $member->Accomodation) . '" />';
 
-          /*
-          switch($member->Accomodation)
-          {
-              case 'anytime':
-                  $icons[] = '<img src="images/icons/anytime.png"' .
-                      ' alt="' . $words->getSilent('anytime') .'"' .
-                      ' title="' . $words->getSilent('CanOfferAccomodation') . '" />';
-                  break;
-              case 'dependonrequest':
-                  $icons[] = '<img src="images/icons/dependonrequest.png"' .
-                      ' alt="' . $words->getSilent('dependonrequest') .'"' .
-                      ' title="' . $words->getSilent('CanOfferdependonrequest') . '" />';
-                  break;
-              case 'neverask':
-                  $icons[] = '<img src="images/icons/neverask.png"' .
-                      ' alt="' . $words->getSilent('neverask') .'"' .
-                      ' title="' . $words->getSilent('CannotOfferneverask') . '" />';
-                  break;
-          }
-          */
-
           for($ii=0; $ii < count($icons); $ii++)
           {
               echo $icons[$ii];
@@ -54,6 +32,8 @@
           ?>
             <?=$words->flushBuffer()?>
       <?php endif; ?>
+        <br>
+        <?$name = $member->name(); ?><?=($name == '') ? (($member->Occupation) ? $member->Occupation : "") : $name;?>
     </h1> <!-- username -->
 
       <h4>
@@ -79,15 +59,14 @@
           ?>
       </h4><!-- location -->
   </div>
-      <div class="col-12 col-md-4">
-          <div class="card">
-        <?php echo $this->statusForm($member); ?>
+      <div class="col-12 col-md-4" style="border-left: 1px solid #ccc;">
+          <div class="form-group form-inline small"><?php echo $this->statusForm($member); ?></div>
 
               <?php if($occupation != null){
-                  echo '<p class="h5 pt-2 px-2">' . $occupation . '</p>';
+                  echo '<p class="h5">' . $occupation . '</p>';
               } ?><!-- occupation -->
 
-              <p class="m-0 p-2">
+              <p class="m-0">
             <?php
                 echo $agestr;
                 $strGender = MOD_layoutbits::getGenderTranslated($member->Gender, $member->HideGender, true);
@@ -113,7 +92,6 @@
                     ?>
             <?php endif; ?>
           </p>
-          </div>
       </div>
     </div> <!-- profile header -->
 
@@ -121,7 +99,7 @@
             if (get_class($this) == 'EditMyProfilePage' || get_class($this) == 'EditProfilePage') $urlstring = 'editmyprofile';
             if (get_class($this) == 'ProfilePage' || get_class($this) == 'MyProfilePage') $urlstring = 'members/'.$member->Username;
             if (isset($urlstring)) { ?>
-            <div class="row" >
+            <div class="row">
                 <div class="col-12" >
                     <?php require 'profileversion.php'; ?>
                 </div>

@@ -39,10 +39,10 @@ if (empty($vars)) {
     }
 }
 ?>
-    <div class="col-12 col-md-9 px-0">
+    <div class="col-12 col-md-9 order-1">
         <h2 class="m-0"><?php echo $this->activity->title; ?></h2>
     </div>
-    <div class="col-md-3 d-none d-md-block ml-md-auto px-0 mb-2">
+    <div class="col-md-3 d-none d-md-block ml-md-auto mb-2 order-2">
         <div class="d-flex flex-row hidden-md-down pull-right">
             <div class="pr-2 align-self-center"><i class="fa fa-3x fa-users"></i></div>
             <div>
@@ -61,7 +61,7 @@ if (empty($vars)) {
         </div>
     </div>
 
-    <div class="col-12 col-md-6 pl-0 bg-white">
+    <div class="col-12 col-md-6 order-3">
         <input type="hidden" id="location" value="<?= $this->activity->location->name ?>">
         <input type="hidden" id="latitude" value="<?= $this->activity->location->latitude ?>">
         <input type="hidden" id="longitude" value="<?= $this->activity->location->longitude ?>">
@@ -72,7 +72,7 @@ if (empty($vars)) {
             <span class="mt-1 font-weight-bold"><?php echo $this->activity->location->name . '<br>' . $this->activity->location->getCountry()->name; ?></span></p>
     </div>
 
-    <div class="col-12 col-md-6 px-0">
+    <div class="col-12 col-md-6 order-4">
         <div class="card p-2">
             <div class="d-flex flex-row justify-content-between">
                 <div class="h4"><?php echo $words->getSilent('activity.headline.join'); ?></div>
@@ -195,7 +195,7 @@ if (empty($vars)) {
                 </div>
     </div>
 
-    <div class="col-12 col-md-4 col-lg-3 mt-2 px-0">
+    <div class="col-12 col-md-4 col-lg-3 mt-3 order-6 order-md-5">
         <h5 class="mb-0"><?php echo $words->get('ActivityOrganizers'); ?></h5>
             <div class="d-flex flex-row">
                 <?php
@@ -211,21 +211,25 @@ if (empty($vars)) {
                 <? } ?>
             </div>
     </div>
-    <div class="col-12 col-md-8 col-lg-9 mt-2 px-0">
+    <div class="col-12 col-md-8 col-lg-9 mt-3 order-5 order-md-6">
         <large><?php echo $purifier->purify($this->activity->description); ?></large>
     </div>
 
-    <div class="col-12 px-0"><h4><?php echo $words->get('ActivityAttendees'); ?></h4></div>
+    <div class="col-12 mt-3 order-7">
+        <h5 class="mb-0"><?php echo $words->get('ActivityAttendees'); ?></h5>
+    </div>
+
 
     <?php if ($this->member) { ?>
 
-        <?php echo $this->attendeesPager->render(); ?>
+        <div class="col-12 d-flex flex-row flex-wrap justify-content-start order-9">
+
 
         <?php
         foreach ($this->attendeesPager->getActiveSubset($this->activity->attendees) as $attendee) {
 
             ?>
-            <div class="attend m-1 p-2
+            <div class="col m-1 p-2
 <?
             switch ($attendee->status) {
                 case 1:
@@ -267,9 +271,17 @@ if (empty($vars)) {
             </div>
             <?php
         }
+        ?>
+        </div>
+        <div class="col-12 order-10">
+            <?
         echo $this->attendeesPager->render();
+        ?>
+        </div>
+
+            <?
     } else {
-        echo '<div><h3>' . $words->get('ActivityAttendees') . '</h3>';
+        echo '<div class="col-12 order-9"><h3>' . $words->get('ActivityAttendees') . '</h3>';
         echo '<p>' . $words->getBuffered('ActivitiesLogInWhoIsComing', '<a href="' . $login_url . '">', '</a>') . '</p></div>';
     }
 

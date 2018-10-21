@@ -19,7 +19,7 @@ if (empty($vars)) {
     }
 }
 ?>
-
+<div class="col-12">
 <form method="post" id="activity-create-form" name="activity-create-form">
     <input type="hidden" id="activity-id" name="activity-id" value="<?php echo $vars['activity-id']; ?>" />
     <input type="hidden" id="activity-location-id" name="activity-location-id" value="<?php echo $vars['activity-location-id']; ?>" />
@@ -107,7 +107,7 @@ if (empty($vars)) {
 
         <div class="col-12 col-md-8">
             <input type="text" id="activity-title" name="activity-title" maxlength="80" class="form-control" value="<?php echo $vars['activity-title']; ?>" placeholder="<?php echo $words->get('ActivityTitle'); ?>*">
-            <textarea id="activity-description" name="activity-description" class="w-100 editor" rows="10">
+            <textarea id="activity-description" name="activity-description" class="form-control editor">
                 <?php
                 if (!empty($vars['activity-description'])){
                     echo $vars['activity-description'];
@@ -151,6 +151,7 @@ if (empty($vars)) {
 
     </div>
 </form>
+</div>
 
 <?php
 if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {

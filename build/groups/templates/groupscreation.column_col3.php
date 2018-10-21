@@ -72,19 +72,19 @@
             <label class="m-0"><h3><?= $words->get('GroupsJoinHeading'); ?></h3></label>
         </legend>
 
-        <div class="form-check">
+        <div class="form-check-inline">
             <label>
                 <input type="radio" id="public" name="Type" value="Public"<?= (($Type=='Public') ? ' checked': ''); ?>>
                 <?=$words->get('GroupsJoinPublic'); ?>
             </label>
         </div>
-        <div class="form-check">
+        <div class="form-check-inline">
             <label>
                 <input type="radio" id="approved" name="Type" value="NeedAcceptance"<?= (($Type=='NeedAcceptance') ? ' checked': ''); ?>>
                 <?=$words->get('GroupsJoinApproved'); ?>
             </label>
         </div>
-        <div class="form-check">
+        <div class="form-check-inline">
             <label>
                 <input type="radio" id="invited" name="Type" value="NeedInvitation"<?= (($Type=='NeedInvitation') ? ' checked': ''); ?>>
                 <?=$words->get('GroupsJoinInvited'); ?>
@@ -98,13 +98,13 @@
             <label class="m-0"><h3><?= $words->get('GroupsVisiblePostsHeading'); ?></h3></label>
         </legend>
 
-        <div class="form-check">
+        <div class="form-check-inline">
             <label>
                 <input type="radio" id="visible" name="VisiblePosts" value="yes"<?= (($VisiblePosts=='yes') ? ' checked="checked"': ''); ?>>
                 <?=$words->get('GroupsVisiblePosts'); ?>
             </label>
         </div>
-        <div class="form-check">
+        <div class="form-check-inline">
             <label>
                 <input type="radio" id="invisible" name="VisiblePosts" value="no"<?= (($VisiblePosts=='no') ? ' checked="checked"': ''); ?>>
                 <?=$words->get('GroupsInvisiblePosts'); ?>

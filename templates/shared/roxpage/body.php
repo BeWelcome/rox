@@ -43,7 +43,7 @@
             <div class="col-12 col-md-9">
     <?php } else { ?>
         <div class="row">
-            <div class="col-12 px-0">
+            <div class="col-12">
     <?php } ?>
 
             <?php
@@ -54,9 +54,9 @@
                 <?php
             }
             ?>
-            <div class="mb-3">
+                <div>
                 <?php $this->teaser() ?>
-            </div>
+                </div>
 
             <?php
             $this->columnsArea($mid_column_name); ?>

@@ -52,9 +52,11 @@ if (!$User) {
         </form><?php echo $this->words->flushBuffer(); ?>
     </span> -->
 
-<div class="col-12 px-0">
+<div class="col-12">
     <h3><a href="groups/forums"><?php echo $this->words->getFormatted('Groups'); ?></a> <span class="small">&ndash; <?php echo $this->words->get('GroupsTagLine'); ?></span></h3>
-
+</div>
+</div>
+<div class="row">
 <?php
     $uri = 'forums/';
 if ($threads = $groups->getThreads()) {
@@ -69,7 +71,7 @@ if ($threads = $groups->getThreads()) {
 
         require 'boardthreads.php';
 ?>
-</div>
+
 <?php
     if ($User && $moreLessThreadsCallbackId) {
 ?>
@@ -119,7 +121,7 @@ if ($threads = $groups->getThreads()) {
 }
 ?>
 
-<div id="forum" class="col-12 mt-3 px-0">
+<div id="forum" class="col-12 mt-3">
 <!-- Now displays the recent forum post list -->
 <?php
 if ($User) {
@@ -128,6 +130,7 @@ if ($User) {
 }
 ?>
     <h2><a href="forums/bwforum"><?php echo $this->words->getFormatted('AgoraForum'); ?></a> <span class="small">&ndash; <?php echo $this->words->get('AgoraTagLine'); ?></span></h2>
+</div>
 <?php 
     $uri = 'forums/';
 if ($threads = $forum->getThreads()) {
@@ -171,7 +174,7 @@ if ($threads = $forum->getThreads()) {
     require 'pages.php';
 
 ?>
-</div> <!-- Forum-->
+ <!-- Forum-->
 
 <?php
 }

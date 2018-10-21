@@ -24,7 +24,6 @@ Boston, MA  02111-1307, USA.
 $User = APP_User::login();
 ?>
 
-<div class="w-100 mt-3">
 
 <?php
 $noForumLegendBox = true;
@@ -44,7 +43,7 @@ if ($User && $ownGroupsButtonCallbackId) {
         $buttonText = $this->words->getBuffered('SwitchShowAllGroupsTopics');
     }
     ?>
-    <div class="float-right">
+    <div class="col-12 col-md-4 order-2 text-right">
         <form method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
             <input type="hidden" name="<?php echo $ownGroupsButtonCallbackId; ?>"  value="1">
             <input type="submit" class="btn btn-primary" name="submit" value="<?php echo $buttonText; ?>">
@@ -61,13 +60,13 @@ $uri = 'forums/';
 <?php
     if ($threads = $boards->getThreads()) {
 ?>
-  <div class="row">
+  <div class="col-12 col-md-8">
     <h3><?php echo $this->words->getFormatted('ForumRecentPosts'); $boards->getTotalThreads(); ?>
     </h3>
   </div><!--  row -->
 
 <?php if (!$noForumNewTopicButton) { ?>
-  <div id="col-12 mb-2 px-0">
+  <div class="col-12 col-md-4">
       <a class="btn btn-primary float-right" role="button" href="<?php echo $uri; ?>new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a><?php echo $this->words->flushBuffer(); ?>
   </div>
 <?php

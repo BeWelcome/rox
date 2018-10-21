@@ -8,22 +8,26 @@
     </div>
     <div id="collapse-travel" class="collapse" role="tabpanel" aria-labelledby="heading-travel">
         <div class="card-body">
-            <div class="row">
-                <div class="col-12 col-md-3 h5 mb-0">
+            <div class="form-row">
+                <label for="PastTrips" class="col-md-3 col-form-label">
                     <?= $words->get('ProfilePastTrips') ?>
-                </div>
+                </label>
                 <div class="col-12 col-md-9">
-                    <textarea name="PastTrips" class="w-100" rows="3"><?= $vars['PastTrips'] ?></textarea>
+                    <textarea name="PastTrips" class="form-control" rows="3"><?= $vars['PastTrips'] ?></textarea>
                 </div>
+            </div>
 
-                <div class="col-12 col-md-3 h5 mb-0">
+            <div class="form-row mt-2">
+                <label for="PlannedTrips" class="col-md-3 col-form-label">
                     <?= $words->get('ProfilePlannedTrips') ?>
-                </div>
+                </label>
                 <div class="col-12 col-md-9">
-                                <textarea name="PlannedTrips" class="w-100"
+                                <textarea name="PlannedTrips" class="form-control"
                                           rows="3"><?= $vars['PlannedTrips'] ?></textarea>
                 </div>
-                <div class="col-12 mt-3">
+            </div>
+            <div class="row">
+                <div class="col-12">
                     <input type="submit" class="btn btn-primary float-right m-2" id="submit" name="submit"
                            value="<?= $words->getSilent('Save Profile') ?>"/> <?php echo $words->flushBuffer(); ?>
                 </div>

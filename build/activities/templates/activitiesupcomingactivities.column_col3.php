@@ -1,3 +1,4 @@
+<div class="col-12">
 <?php
 if (count($this->activities) == 0) {
 ?>
@@ -14,3 +15,4 @@ if ($this->publicOnly) {
     require_once('activitieslist.php');
 }
 ?>
+</div>

@@ -1,5 +1,5 @@
 <?php if (count($this->regions) > 0) { ?>
-    <div class="col-12 px-0">
+    <div class="col-12">
         <h2><?php echo $words->get('region_overview_title'); ?></h2>
     </div>
 

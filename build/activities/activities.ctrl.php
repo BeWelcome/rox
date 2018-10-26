@@ -7,7 +7,7 @@
 class ActivitiesController extends RoxControllerBase
 {
     const ACTIVITIES_PER_PAGE = 10;
-    const ATTENDEES_PER_PAGE = 10;
+    const ATTENDEES_PER_PAGE = 48;
     
     /**
      * Declaring private variables.

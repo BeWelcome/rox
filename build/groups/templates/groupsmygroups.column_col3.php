@@ -1,5 +1,5 @@
 
-<div class="col-12 col-md-6 pr-md-2 p-0">
+<div class="col-12 col-md-6 mb-3">
     <h3><?= $words->get('GroupsSearchHeading'); ?></h3>
     <form action="groups/search" method="get">
         <div class="input-group">
@@ -11,13 +11,10 @@
         </div>
     </form>
 </div>
-<div class="col-12 col-md-6 pl-md-2 p-0">
+<div class="col-12 col-md-6 mb-3">
     <h3><?= $words->get('GroupsCreateHeading'); ?></h3>
     <a class="btn btn-primary" role="button" href="groups/new"><?= $words->get('GroupsCreateNew'); ?></a>
 </div>
-
-    <div class="col-12 mt-3">
-        <div class="row">
 
         <?php
         $search_result = $this->search_result;
@@ -25,13 +22,11 @@
         {
         $mygroups = $this->pager->getActiveSubset($search_result);
         $this->pager->render();
-        ?>
-            <div class="w-100"></div>
-            <?
+
             foreach ($mygroups as $group_data) :
                ?>
 
-                <div class="col-12 col-md-6 col-lg-4 p-2">
+                <div class="col-12 col-md-6 col-lg-4">
                     <div class="float-left h-100 mr-2" style="width: 80px;">
                         <!-- group image -->
                         <a href="groups/<?= $group_data->getPKValue() ?>">
@@ -74,5 +69,3 @@
 HTML;
         }
         ?>
-        </div>
-    </div>

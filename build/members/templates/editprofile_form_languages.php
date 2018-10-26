@@ -12,11 +12,13 @@
             $lang_ids = array();
             for ($ii = 0; $ii < count($vars['languages_selected']); $ii++) {
                 $lang_ids[] = $vars['languages_selected'][$ii]->IdLanguage; } ?>
-            <div class="row px-3">
-                <div class="col-12 h5 mb-0 mb-sm-2"><?= $words->get('ProfileLanguagesSpoken') ?></div>
+            <div class="row">
+                <label for="ProfileLanguagesSpoken" class="col-form-label">
+                <?= $words->get('ProfileLanguagesSpoken') ?>
+                </label>
             </div>
             <?php for ($ii = 0; $ii < count($vars['languages_selected']); $ii++) { ?>
-                <div class="row py-1">
+                <div class="form-group row">
                     <div class="col-2 col-md-1">
                         <a href="#" class="btn btn-outline-danger p-1 px-2 remove_lang" title="<?= $words->get('RemoveLanguage') ?>"><i class="fa fa-times-circle"></i><span
                                 class="sr-only"><?= $words->get('RemoveLanguage') ?></span></a>

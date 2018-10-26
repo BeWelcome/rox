@@ -17,7 +17,7 @@ if (!empty($errors)) {
     echo '</div>';
 }
 ?>
-    <div class="col-12 px-0 mb-1">
+    <div class="col-12 mb-1">
         <form id="activities-search-box" method="post">
             <div class="input-group">
                 <?php echo $callbackTags; ?>
@@ -30,7 +30,7 @@ if (!empty($errors)) {
         <?php echo $words->flushBuffer(); ?>
     </div>
 
-    <div class="col-12 px-0">
+    <div class="col-12">
 <?php 
 if ($this->keyword != '') {
     if (count($this->activities) == 0) {
@@ -41,7 +41,6 @@ if ($this->keyword != '') {
         }
     } else {
         require_once('activitieslist.php');
-        echo '</div>';
     }
 }
 ?>

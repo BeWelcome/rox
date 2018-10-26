@@ -1,7 +1,5 @@
 
-    <div class="row mt-2">
-
-        <div class="col-12 col-md-6">
+      <div class="col-12 col-md-6">
             <label class="h3" for="GroupsSearchInput"><?= $words->get('GroupsSearchHeading'); ?></label>
             <form action="groups/search" method="get">
                 <div class="input-group">
@@ -41,12 +39,10 @@
                 </div>
             </div>
 
-
         </div>
-    </div>
 
-    <div class="row mt-2 mb-3 w-100">
-        <div class="col col-auto col-lg-7 order-12 mt-3">
+
+        <div class="col col-auto col-lg-7 order-2 mt-3">
         <?php
         $search_result = $this->search_result;
 
@@ -60,7 +56,7 @@
         $category_order = (($this->result_order == "categoryasc") ? 'categorydesc' : 'categoryasc');
         ?>
         </div>
-        <div class="col col-lg-5">
+        <div class="col col-lg-5 order-1">
             <h3><?= $words->get('GroupsSearchResult'); ?></h3>
             <label class="font-weight-bold"><?php echo $words->get('GroupsSearchOrdered'); ?>:</label>
             <span class="dropdown">
@@ -77,14 +73,12 @@
                 </div>
             </span>
         </div>
-    </div>
-    <div class="row px-2">
 
 <?
         foreach ($search_result as $group_data) :
 
             ?>
-            <div class="col-12 col-md-6 col-lg-4 p-2">
+            <div class="col-12 col-md-6 col-lg-4 order-3">
                 <div class="float-left h-100 mr-2" style="width: 80px;">
                     <!-- group image -->
                     <a href="groups/<?= $group_data->getPKValue() ?>">
@@ -121,10 +115,11 @@
             <?php
         endforeach;
         ?>
-    </div><!-- end row -->
+      <div class="order-12 mt-3">
 <?php
 $this->pager->render();
 ?>
+      </div>
 <?php else :
     echo <<<HTML
             <p class="note">

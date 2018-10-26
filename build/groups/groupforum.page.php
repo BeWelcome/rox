@@ -73,7 +73,7 @@ class GroupForumsOverviewPage extends GroupsBasePage
         $words = $this->getWords();
 
     ?>
-        <div>
+        <div class="col-12 col-md-6 col-lg-4">
             <h3 class="m-0"><?= $words->get('GroupsSearchHeading'); ?></h3>
             <form action="groups/search" method="get">
                 <div class="input-group">
@@ -84,7 +84,9 @@ class GroupForumsOverviewPage extends GroupsBasePage
                         </span>
                 </div>
             </form>
-        </div>             
+        </div>
+        </div>
+        <div class="row">
     <?php 
         $Forums = new ForumsController;
         $Forums->setEngine($this->engine);

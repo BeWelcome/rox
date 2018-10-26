@@ -17,12 +17,12 @@ Boston, MA 02111-1307, USA.
 */
 $words = new MOD_words();
 ?>
-<div class="col-12 px-0">
+<div class="col-12">
     <h2><?php echo $words->get('GetActive') ?></h2>
     <p><?php echo $words->get('GetActiveIntro') ?></p>
 </div>
 
-<div class="col-12 col-md-6 mb-3 pl-0">
+<div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
             <h3 class="card-title m-0">
@@ -33,7 +33,7 @@ $words = new MOD_words();
     </div>
 </div>
 
-<div class="col-12 col-md-6 mb-3 pl-0">
+<div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
             <h3 class="card-title m-0"><i class="fa fa-flask"
@@ -44,7 +44,7 @@ $words = new MOD_words();
     </div>
 </div>
 
-<div class="col-12 col-md-6 mb-3 pl-0">
+<div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
             <h3 class="card-title m-0"><i class="fa fa-question-circle-o"
@@ -55,7 +55,7 @@ $words = new MOD_words();
     </div>
 </div>
 
-<div class="col-12 col-md-6 mb-3 pl-0">
+<div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
             <h3 class="card-title m-0"><i class="fa fa-paint-brush"
@@ -77,7 +77,7 @@ $words = new MOD_words();
     </div>
 </div>
 
-<div class="col-12 col-md-6 mb-3 pl-0">
+<div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
             <h3 class="card-title m-0"><i class="fa fa-language"
@@ -88,7 +88,7 @@ $words = new MOD_words();
     </div>
 </div>
 
-<div class="col-12 col-md-6 mb-3 pl-0">
+<div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
             <h3 class="card-title m-0"><i class="fa fa-bullhorn"
@@ -99,7 +99,7 @@ $words = new MOD_words();
     </div>
 </div>
 
-<div class="col-12 col-md-6 mb-3 pl-0">
+<div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
             <h3 class="card-title m-0"><i class="fa fa-user-circle"
@@ -110,7 +110,7 @@ $words = new MOD_words();
     </div>
 </div>
 
-<div class="col-12 col-md-6 mb-3 pl-0">
+<div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
             <h3 class="card-title m-0"><i class="fa fa-map-marker-alt"
@@ -121,7 +121,7 @@ $words = new MOD_words();
     </div>
 </div>
 
-<div class="col-12 col-md-6 mb-3 pl-0">
+<div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
             <h3 class="card-title m-0"><i class="fa fa-money"
@@ -132,7 +132,7 @@ $words = new MOD_words();
     </div>
 </div>
 
-<div class="col-12 col-md-6 mb-3 pl-0">
+<div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
             <h3 class="card-title m-0"><i class="fa fa-heart"

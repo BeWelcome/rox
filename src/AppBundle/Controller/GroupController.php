@@ -134,7 +134,10 @@ class GroupController extends Controller
                 'updated' => (new \DateTime())->format('Y-m-d'),
             ]);
 
-            $this->addFlash('notice', 'The group was created and is now awaiting approval. You get a notification with the result.');
+            $flashMessage = $this->get('rox.datacollector_translator')->trans('group.create.successful', [
+                '%name%' => $group->getName(),
+            ]);
+            $this->addFlash('notice', $flashMessage);
 
             $this->sendNewGroupNotifications($group, $member);
 
@@ -178,7 +181,7 @@ class GroupController extends Controller
     }
 
     /**
-     * Allows to approved or dismiss group creation requests.
+     * Allows to set a status for group creation requests.
      *
      * @Route("/admin/groups/approval", name="admin_groups_approval")
      *
@@ -192,11 +195,45 @@ class GroupController extends Controller
 
         // Fetch unapproved groups and decide on their fate
         $groupsRepository = $this->getDoctrine()->getRepository(Group::class);
-        $groups = $groupsRepository->findBy(['approved' => Group::NOT_APPROVED]);
+        $groups = $groupsRepository->findBy([
+            'approved' => [Group::NOT_APPROVED, Group::IN_DISCUSSION],
+        ]);
 
         return $this->render(':admin:groups/approve.html.twig', [
             'groups' => $groups,
         ]);
+    }
+
+    /**
+     * Move a group creation requests to the discussion queue.
+     *
+     * @Route("/admin/groups/{id}/discuss", name="admin_groups_discuss")
+     *
+     * @param Request $request
+     * @param Group   $group
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function discussGroupAction(Request $request, Group $group)
+    {
+        if (!$this->isGranted([Member::ROLE_ADMIN_GROUP])) {
+            throw $this->createAccessDeniedException('You need to have Group right to access this.');
+        }
+
+        $group->setApproved(Group::IN_DISCUSSION);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($group);
+        $em->flush();
+
+        $flashMessage = $this->get('translator')->trans('Moved group %name% into the discussion queue', [
+            '%name%' => $group->getName(),
+        ]);
+
+        $this->addFlash('notice', $flashMessage);
+
+        $referrer = $request->headers->get('referer');
+
+        return $this->redirect($referrer);
     }
 
     /**
@@ -232,7 +269,7 @@ class GroupController extends Controller
     }
 
     /**
-     * Dismiss a group creation requests.
+     * Approve a group creation requests.
      *
      * @Route("/admin/groups/{id}/approve", name="admin_groups_approve")
      *
@@ -257,6 +294,8 @@ class GroupController extends Controller
         ]);
         $this->addFlash('notice', $flashMessage);
 
+        $creator = current($group->getMembers());
+        $this->sendNewGroupApprovedNotification($group, $creator);
         $referrer = $request->headers->get('referer');
 
         return $this->redirect($referrer);
@@ -280,6 +319,35 @@ class GroupController extends Controller
                     'subject' => $subject,
                     'group' => $group,
                     'member' => $member,
+                ]),
+                'text/html'
+            )
+        ;
+        $recipients = $this->get('mailer')->send($message);
+
+        return (0 === $recipients) ? false : true;
+    }
+
+
+    private function sendNewGroupApprovedNotification(Group $group, Member $creator)
+    {
+        $recipient = $creator->getEmail();
+
+        $subject = '[New Group] '.strip_tags($group->getName()).' approved';
+        $message = new Swift_Message();
+        $message
+            ->setSubject($subject)
+            ->setFrom(
+                [
+                    'groups@bewelcome.org' => 'BeWelcome - Group Administration',
+                ]
+            )
+            ->setTo($recipient)
+            ->setBody(
+                $this->renderView('emails/group.approved.html.twig', [
+                    'subject' => $subject,
+                    'group' => $group,
+                    'creator' => $creator,
                 ]),
                 'text/html'
             )

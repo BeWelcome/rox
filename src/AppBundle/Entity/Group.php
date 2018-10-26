@@ -26,6 +26,7 @@ class Group
     const NOT_APPROVED = 0;
     const APPROVED = 1;
     const DISMISSED = 2;
+    const IN_DISCUSSION = 3;
 
     /**
      * @var string
@@ -318,30 +319,6 @@ class Group
     public function getDisplayedonprofile()
     {
         return $this->displayedOnProfile;
-    }
-
-    /**
-     * Set description.
-     *
-     * @param MembersTrad $description
-     *
-     * @return Group
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get MembersTrad.
-     *
-     * @return MembersTrad
-     */
-    public function getDescription()
-    {
-        return $this->description;
     }
 
     /**

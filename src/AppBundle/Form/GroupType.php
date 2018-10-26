@@ -36,7 +36,6 @@ class GroupType extends AbstractType
                 'choices' => [
                     'GroupsJoinPublic' => 'Public',
                     'GroupsJoinApproved' => 'NeedAcceptance',
-                    'GroupsJoinInvited' => 'NeedInvitation',
                 ],
                 'expanded' => true,
                 'multiple' => false,

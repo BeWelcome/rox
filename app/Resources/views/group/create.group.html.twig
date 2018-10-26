@@ -34,11 +34,23 @@
 
 {% block content %}
     <h1>{{ 'Create a new group' | trans}}</h1>
-    <p>{{ 'We\'re happy that you want to open a new group! But unfortunately spammers like then as well, so please note
-    that the group will need to be activated by the forum moderators. That shouldn\'t take too long.'}}</p>
+    <p>{{ 'We\'re happy that you want to open a new group, but unfortunately spammers like them as well, so please note
+      that the group will need to be activated by the BW Forum Moderators. Please also read the Rules for Groups (link) when thinking about the new group\'s name and description.'}}</p>
     {{ form_start(form, { 'attr': { 'novalidate': 'novalidate'}}) }}
-    {{ form_row(form.name) }}
+    <div class="form-group">
+        {{ form_label(form.name) }}
+        {{ form_widget(form.name) }}
+        <small id="nameHelp" class="form-text text-muted">{{ 'For local groups, include the country (e.g. Place, Country) as this will help with searches.' | trans }}</small>
+    </div>
+
     <div id="duplicates"></div>
+
+    <div class="form-group">
+        {{ form_label(form.description) }}
+        {{ form_widget(form.description) }}
+        <small id="nameHelp" class="form-text text-muted">{{ 'Include the purpose of the group or the main features of the place covered by the group.' | trans }}</small>
+    </div>
+
     {{ form_rest(form) }}
     {{ form_end(form) }}
 {% endblock content %}

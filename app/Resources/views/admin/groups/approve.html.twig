@@ -22,15 +22,19 @@
                 <tbody>
                     {% for group in groups %}
                         <tr>
-                            <td>{{ group.Name }}</td>
+                            <td>{{ group.Name }}{% if group.approved == constant('AppBundle\\Entity\\Group::IN_DISCUSSION') %}<br><br>
+                                    <p class="alert alert-danger">{{ 'Group approval under discussion' }}</p>{% endif %}</td>
                             <td>{% for locale, description in group.descriptions %}
                                      <small class="text-muted">{{ description.Language.WordCode|trans }} ({{ locale }})</small><br>{{ description.Sentence|purify }}
                                 {% endfor %}
                                 </td>
                             <td>{% if group.members|first %}{{ macros.avatarstack((group.members|first).Username) }}{% endif %}</td>
                             <td class="text-center">
-                                <a href="{{ path('admin_groups_approve', { 'id': group.id }) }}"><i class="fa fa-check"></i></a><br>
-                                <a href="{{ path('admin_groups_dismiss', { 'id': group.id }) }}"><i class="fa fa-ban"></i></a>
+                                <a href="{{ path('admin_groups_approve', { 'id': group.id }) }}"><i class="fa fa-fw fa-check"></i></a><br>
+                                <a href="{{ path('admin_groups_dismiss', { 'id': group.id }) }}"><i class="fa fa-fw fa-ban"></i></a>
+                                {% if group.approved != constant('AppBundle\\Entity\\Group::IN_DISCUSSION') %}<br>
+                                    <a href="{{ path('admin_groups_discuss', { 'id': group.id }) }}"><i class="fa fa-fw fa-comments"></i></a>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}

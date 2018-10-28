@@ -95,11 +95,11 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
             $groups = $groupsRepository->findBy([
                 'approved' => [Group::NOT_APPROVED, Group::IN_DISCUSSION],
             ]);
-            $groupsInApprovalCount = count($groups);
+            $groupsInApprovalCount = \count($groups);
         }
+
         return $groupsInApprovalCount;
     }
-
 
     protected function getReportedMessagesCount()
     {

@@ -30,10 +30,10 @@
                                 </td>
                             <td>{% if group.members|first %}{{ macros.avatarstack((group.members|first).Username) }}{% endif %}</td>
                             <td class="text-center">
-                                <a href="{{ path('admin_groups_approve', { 'id': group.id }) }}"><i class="fa fa-fw fa-check"></i></a><br>
-                                <a href="{{ path('admin_groups_dismiss', { 'id': group.id }) }}"><i class="fa fa-fw fa-ban"></i></a>
+                                <a href="{{ path('admin_groups_approve', { 'id': group.id }) }}"><i class="fa fa-2x fa-fw fa-check" title="{{ 'Approve group'|trans }}"></i></a><br>
+                                <a href="{{ path('admin_groups_dismiss', { 'id': group.id }) }}"><i class="fa fa-2x fa-fw fa-ban" title="{{ 'Dismiss group'|trans }}"></i></a>
                                 {% if group.approved != constant('AppBundle\\Entity\\Group::IN_DISCUSSION') %}<br>
-                                    <a href="{{ path('admin_groups_discuss', { 'id': group.id }) }}"><i class="fa fa-fw fa-comments"></i></a>
+                                    <a href="{{ path('admin_groups_discuss', { 'id': group.id }) }}"><i class="fa fa-2x fa-fw fa-comments" title="{{ 'Move group to discussion queue'|trans }}"></i></a>
                                 {% endif %}
                             </td>
                         </tr>

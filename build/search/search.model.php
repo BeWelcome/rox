@@ -289,7 +289,7 @@ LIMIT 1
                     $latne = $vars['ne-latitude'];
                     $latsw = $vars['sw-latitude'];
                     $longne = $vars['ne-longitude'];
-                    $longsw = $vars['ne-longitude'];
+                    $longsw = $vars['sw-longitude'];
                 }
                 // Sanity check if $latne < $latsw or $longne < $longsw switch the two (Melbourne)
                 // TODO: search around the date line

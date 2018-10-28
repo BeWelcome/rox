@@ -11,17 +11,20 @@ $(function () {
             subdomains: ['a', 'b', 'c']
         }).addTo(map);
 
+        var noRefresh = false;
         var markerClusterGroup = addMarkers(map);
 
         if (markerClusterGroup.getLayers().length > 0) {
             // Check if a rectangle is set if so use this for the bounds else fit the bounds to the markerClusterGroup
             var query= getQueryStrings($("[name=search_form]").serialize());
             if (query["search_form[distance]"] == -1) {
+                noRefresh = true;
                 map.fitBounds([
                     [query["search_form[ne_latitude]"], query["search_form[ne_longitude]"]],
                     [query["search_form[sw_latitude]"], query["search_form[sw_longitude]"]]
                 ]);
             } else {
+                noRefresh = true;
                 map.fitBounds(markerClusterGroup.getBounds());
             }
 
@@ -30,8 +33,13 @@ $(function () {
         map.on("dragend", function () {
             refreshMap();
         });
+
+        // Avoid refreshing on zoomend if the map has just been fit to bounds (infinite loop)
         map.on("zoomend", function () {
-            refreshMap();
+            if (!noRefresh) {
+                refreshMap();
+            }
+            noRefresh = false;
         });
 
         function refreshMap() {
@@ -43,8 +51,6 @@ $(function () {
             var sw = bounds.getSouthWest();
             var query= getQueryStrings($("[name=search_form]").serialize());
 
-            console.log(createQueryString(query));
-
             query["search_form[location_latitude]"] = lat;
             query["search_form[location_longitude]"] = lng;
             query["search_form[distance]"] = -1;
@@ -53,7 +59,6 @@ $(function () {
             query["search_form[sw_latitude]"] = sw.lat;
             query["search_form[sw_longitude]"] = sw.lng;
 
-            console.log(createQueryString(query));
             window.location.href =
                 window.location.protocol + "//" +
                 window.location.host +

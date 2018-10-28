@@ -9,7 +9,11 @@ class AddTranslationIds extends RoxMigration
     {
         // group
         $this->AddWordCode('group.create.successful', 'You have submitted a request to set up a group %name% on BeWelcome. This request will be reviewed by the BW Moderators and you will be contacted as quickly as possible.', 'Flash notice after creating a new group. Make sure to keep the %name% tag.');
-        $this->AddWordCode('admin.groups.awaiting.approval', 'No groups in queue|One group in queue|%groupsInApprovalQueue% groups in queue', 'Button label make sure to keep the %groupsInApprovalQueue% so that the button shows the correct information.');
+
+        // admin
+        $this->AddWordCode('admin.groups.awaiting.approval', '{0} No groups in queue|{1} One group in queue|]1,Inf[ %count% groups in queue', 'Button label make sure to keep the %count% so that the button shows the correct information.');
+        $this->AddWordCode('admin.comments.reported', '{0} No reported comments|{1} One reported comment|]1,Inf[ %count% reported comments', 'Button label make sure to keep the %count% so that the button shows the correct information.');
+        $this->AddWordCode('admin.spam.reported', '{0} No messages reported|{1} One message reported|]1,Inf[ %count% reported messages', 'Button label make sure to keep the %count% so that the button shows the correct information.');
 
         // home
         $this->AddWordCode('home.headline.bewelcome.cultural', 'BeWelcome is a cultural crossing network', 'Headline on the home page. Accompanied by home.abstract.bewelcome.cultural.');

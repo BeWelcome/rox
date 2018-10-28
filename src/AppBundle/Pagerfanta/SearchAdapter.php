@@ -136,6 +136,10 @@ class SearchAdapter implements AdapterInterface
         $vars['location-geoname-id'] = $data->location_geoname_id;
         $vars['location-latitude'] = $data->location_latitude;
         $vars['location-longitude'] = $data->location_longitude;
+        $vars['ne-latitude'] = $data->ne_latitude;
+        $vars['ne-longitude'] = $data->ne_longitude;
+        $vars['sw-latitude'] = $data->sw_latitude;
+        $vars['sw-longitude'] = $data->sw_longitude;
         $vars['search-accommodation'] = [];
 
         if ($data->accommodation_anytime) {

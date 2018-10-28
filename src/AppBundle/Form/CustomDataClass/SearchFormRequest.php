@@ -3,6 +3,7 @@
 namespace AppBundle\Form\CustomDataClass;
 
 use Doctrine\ORM\PersistentCollection;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -15,18 +16,59 @@ class SearchFormRequest
 {
     /**
      * @var string
-     * @Assert\NotBlank()
+     *
+     * @Assert\NotBlank(groups={"text-search"})
      */
     public $location;
 
-    /** @var int */
+    /**
+     * @var int
+     *
+     * @Assert\NotBlank(groups={"text-search"})
+     */
     public $location_geoname_id;
 
-    /** @var float */
+    /**
+     * @var float
+     *
+     * @Assert\NotBlank(groups={"text-search"})
+     */
     public $location_latitude;
 
-    /** @var float */
+    /**
+     * @var float
+     *
+     * @Assert\NotBlank(groups={"text-search"})
+     */
     public $location_longitude;
+
+    /**
+     * @var float
+     *
+     * @Assert\NotBlank(groups={"map-search"})
+     */
+    public $ne_latitude;
+
+    /**
+     * @var float
+     *
+     * @Assert\NotBlank(groups={"map-search"})
+     */
+    public $ne_longitude;
+
+    /**
+     * @var float
+     *
+     * @Assert\NotBlank(groups={"map-search"})
+     */
+    public $sw_latitude;
+
+    /**
+     * @var float
+     *
+     * @Assert\NotBlank(groups={"map-search"})
+     */
+    public $sw_longitude;
 
     /** @var bool */
     public $accommodation_anytime = true;
@@ -37,7 +79,12 @@ class SearchFormRequest
     /** @var bool */
     public $accommodation_neverask = false;
 
-    /** @var int */
+    /**
+     * @var int
+     *
+     * @Assert\Choice({ 0, 5, 10, 20, 50, 100, 200}, groups={"text-search"})
+     * @Assert\EqualTo(value=-1, groups={"map-search"})
+     */
     public $distance = 5;
 
     /** @var int */
@@ -107,7 +154,21 @@ class SearchFormRequest
         $searchFormRequest->offerdinner = $request->query->get('dinner');
         $searchFormRequest->offertour = $request->query->get('tour');
         $searchFormRequest->accessible = $request->query->get('accessible');
+        $searchFormRequest->ne_latitude = $request->query->get('ne-latitude');
+        $searchFormRequest->ne_longitude = $request->query->get('ne-longitude');
+        $searchFormRequest->sw_latitude = $request->query->get('sw-latitude');
+        $searchFormRequest->sw_longitude = $request->query->get('sw-longitude');
 
         return $searchFormRequest;
+    }
+
+    public static function determineValidationGroups(FormInterface $form)
+    {
+        $data = $form->getData();
+        if (-1 === $data->distance) {
+            return ['map-search'];
+        }
+
+        return ['text-search'];
     }
 }

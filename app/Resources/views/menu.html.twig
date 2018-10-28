@@ -173,6 +173,8 @@
         <div class="container">
             <div class="row no-gutters justify-content-end">
                 <div class="col-12 p-2 text-right">
+                    {{ dump(groupsInApprovalQueue) }}
+                    {% if is_granted('ROLE_ADMIN_GROUP')  %}<a class="btn btn-primary btn-sm" href="{{ path('admin_groups_approval') }}">{% transchoice groupsInApprovalQueue with {'%groupsInApproval%': groupsInApprovalQueue} %}admin.groups.awaiting.approval{% endtranschoice %}</a>{% endif %}
                     {% if is_granted('ROLE_ADMIN_COMMENTS') or is_granted('ROLE_ADMIN_SAFETYTEAM') %}<a class="btn btn-primary btn-sm mr-2" href="{{ path('admin_comment_reported_overview') }}">{% transchoice reportedCommentsCount with {'%reportedCommentsCount%': reportedCommentsCount} %}admin.comments.reported{% endtranschoice %}</a>{% endif %}
                     {% if is_granted('ROLE_ADMIN_COMMENTS') or is_granted('ROLE_ADMIN_SAFETYTEAM') %}<a class="btn btn-primary btn-sm" href="{{ path('admin_spam_overview') }}">{% transchoice reportedMessagesCount with {'%reportedMessagesCount%': reportedMessagesCount} %}admin.spam.reported{% endtranschoice %}</a>{% endif %}
                 </div>

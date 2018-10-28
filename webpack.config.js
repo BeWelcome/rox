@@ -11,9 +11,9 @@ Encore
     .createSharedEntry('bewelcome', './src/AppBundle/Resources/js/bewelcome.js')
     .addEntry('jquery_ui', './src/AppBundle/Resources/js/jquery_ui.js')
     .addEntry('backwards', './src/AppBundle/Resources/js/backwards.js')
-    .addEntry('skrollr', './src/AppBundle/Resources/js/skrollr.js')
-    .addEntry('signup', './src/AppBundle/Resources/js/signup.js')
+    .addEntry('signup/signup', './src/AppBundle/Resources/js/signup.js')
     .addEntry('landing', './src/AppBundle/Resources/public/js/landing/landing.js')
+    .addEntry('skrollr', './src/AppBundle/Resources/js/skrollr.js')
 
     .addEntry('search/searchpicker', './src/AppBundle/Resources/public/js/search/searchpicker.js')
     .addEntry('search/createmap', './src/AppBundle/Resources/public/js/search/createmap.js')

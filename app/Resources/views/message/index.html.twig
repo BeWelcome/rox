@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block content %}
-
+    {%  set member = app.user %}
     <h2>{{ type | trans | format(member.Username) }}</h2>
 
     {% if items.nbResults == 0 %}

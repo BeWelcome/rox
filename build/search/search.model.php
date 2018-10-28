@@ -234,6 +234,7 @@ LIMIT 1
      * @param $distance
      *
      * @return stdClass
+     * @throws Exception
      */
     private function _getRectangle($latitude, $longitude, $distance) {
 
@@ -272,17 +273,24 @@ LIMIT 1
         } else {
             // a simple place with a square rectangle around it
             $distance = $vars['search-distance'];
-            if ($distance != 0) {
-                // calculate rectangle around place with given distance
-                $lat = deg2rad(doubleval($vars['location-latitude']));
-                $long = deg2rad(doubleval($vars['location-longitude']));
+            if ($distance <> 0) {
+                if ($distance >  -1) {
+                    // calculate rectangle around place with given distance
+                    $lat = deg2rad(doubleval($vars['location-latitude']));
+                    $long = deg2rad(doubleval($vars['location-longitude']));
 
-                $longne = rad2deg(($distance + self::EARTH_RADIUS * $long) / self::EARTH_RADIUS);
-                $longsw = rad2deg((self::EARTH_RADIUS * $long - $distance) / self::EARTH_RADIUS);
+                    $longne = rad2deg(($distance + self::EARTH_RADIUS * $long) / self::EARTH_RADIUS);
+                    $longsw = rad2deg((self::EARTH_RADIUS * $long - $distance) / self::EARTH_RADIUS);
 
-                $radiusAtLatitude = cos($lat) * self::EARTH_RADIUS;
-                $latne = rad2deg(($distance + $radiusAtLatitude * $lat) / $radiusAtLatitude);
-                $latsw = rad2deg(($radiusAtLatitude * $lat - $distance) / $radiusAtLatitude);
+                    $radiusAtLatitude = cos($lat) * self::EARTH_RADIUS;
+                    $latne = rad2deg(($distance + $radiusAtLatitude * $lat) / $radiusAtLatitude);
+                    $latsw = rad2deg(($radiusAtLatitude * $lat - $distance) / $radiusAtLatitude);
+                } else {
+                    $latne = $vars['ne-latitude'];
+                    $latsw = $vars['sw-latitude'];
+                    $longne = $vars['ne-longitude'];
+                    $longsw = $vars['ne-longitude'];
+                }
                 // Sanity check if $latne < $latsw or $longne < $longsw switch the two (Melbourne)
                 // TODO: search around the date line
                 if ($latne < $latsw) {
@@ -1051,101 +1059,19 @@ LIMIT 1
     */
     public function getResultsForLocation(&$vars)
     {
-        // first we need to check if someone clicked on one of the suggestions buttons
-        $geonameid = 0;
-        foreach (array_keys($vars) as $key) {
-            if (strstr($key, 'geonameid-') !== false) {
-                $geonameid = str_replace('geonameid-', '', $key);
-            }
-        }
-        if ($geonameid != 0) {
-            $vars['location-geoname-id'] = $geonameid;
-            // We need longitude and latitude for the search so let's fetch that
-            $query = "SELECT * FROM geonames g WHERE g.geonameid = " . $geonameid;
-            $rowGeonameId = $this->singleLookup($query);
-            $vars['location-latitude'] = $rowGeonameId->latitude;
-            $vars['location-longitude'] = $rowGeonameId->longitude;
-            // Now collect admin1 (if any) and country information to set search location correctly
-            // Additionally we need to set the admin1 unit and the country for the given geonameid
-            $query = "
-                SELECT
-                    g.name name, ";
-            if (!empty($rowGeonameId->admin1)) {
-                $query .= "a.name admin1, ";
-            }
-            $query .= "c.name country
-                FROM
-                    geonames g,";
-            if (!empty($rowGeonameId->admin1)) {
-                $query .= " geonamesadminunits a, ";
-            }
-            $query .= " geonamescountries c
-                WHERE
-                    g.geonameid = " . $geonameid;
-            if (!empty($rowGeonameId->admin1)) {
-                $query .= " AND g.admin1 = a.admin1
-                    AND g.country = a.country
-                    AND a.fcode = 'ADM1' ";
-            }
-            $query .= "
-                    AND g.country = c.country";
-            $row = $this->singleLookup($query);
-            $searchLocation = $row->name . ", ";
-            if (!empty($rowGeonameId->admin1)) {
-                $searchLocation .= $row->admin1 . ", ";
-            }
-            $searchLocation .= $row->country;
-            $vars['location'] = $searchLocation;
-        }
-        $country = $admin1 = "";
-        $countryCode = $admin1Code = "";
-        foreach ($vars as $key => $value) {
-            if (strstr($key, 'country-') !== false) {
-                $countryCode = str_replace('country-', '', $key);
-                $country = $value;
-            }
-            if (strstr($key, 'admin1-') !== false) {
-                $admin1Code = str_replace('admin1-', '', $key);
-                $admin1 = $value;
-            }
-        }
-        if (!empty($country)) {
-            $vars['search-location'] = $vars['search-location'] . ", " . $country;
-        }
-        if (!empty($admin1)) {
-            $locationParts = explode(",", $vars['search-location']);
-            $vars['search-location'] = $locationParts[0] . ", " . $admin1 . ", " . $locationParts[1];
-        }
+        // first we check if someone moved the map (distance is set to -1)
         $results = array();
-        $geonameid = $vars['location-geoname-id'];
-        if ($geonameid == 0) {
-            if (empty($vars['location'])) {
-                // Search all over the world
-                $vars['location-latitude'] = 0;
-                $vars['location-longitude'] = 0;
-                $vars['search-distance'] = 6000;
-                $this->prepareQuery($vars);
-                $results['type'] = 'members';
-                $results['members'] = $this->getMemberDetails($vars);
-                $results['map'] = $this->_getMembersLowDetails($vars['location-latitude'], $vars['location-longitude'], $vars['search-distance'], $vars['search-can-host']);
-            } else {
-                // User didn't select from the suggestion list (javascript might be disabled)
-                // get suggestions directly from the database
-                $res = $this->suggestLocationsFromDatabase($vars['search-location']);
-                if ($res["status"] == "success") {
-                    if (count($res["locations"]) == 1) {
-                        // found exactly one location get members for this one and return them
-                        // todo
-                        return $res;
-                    } else {
-                        return $res;
-                    }
-                }
-            }
+        $distance = $vars['search-distance'];
+        if ($distance == -1) {
+            $this->prepareQuery($vars);
+            $results['type'] = 'members';
+            $results['members'] = $this->getMemberDetails($vars);
+            $results['map'] = $this->_getMembersLowDetails($vars);
         } else {
-            // we have a geoname id.
+            // a location was given
+            $geonameId = $vars['location-geoname-id'];
             // Let's check if it is an admin unit
-            $query = "SELECT * FROM geonames WHERE geonameid = " . $geonameid;
+            $query = "SELECT * FROM geonames WHERE geonameid = " . $geonameId;
             $location = $this->singleLookup($query);
             if ($location->fclass == 'A') {
                 // check if found unit is a country
@@ -1172,7 +1098,7 @@ LIMIT 1
                 $this->prepareQuery($vars);
                 $results['type'] = 'members';
                 $results['members'] = $this->getMemberDetails($vars);
-                $results['map'] = $this->_getMembersLowDetails($vars['location-latitude'], $vars['location-longitude'], $vars['search-distance'], $vars['search-can-host']);
+                $results['map'] = $this->_getMembersLowDetails($vars);
             }
         }
         $results['countOfMembers'] = $vars['countOfMembers'];
@@ -1498,30 +1424,49 @@ LIMIT 1
     }
 
     /**
-     * Gets only username and accommodation status for the given location and distance
+     * Gets only username and accommodation status for the given location and distance or the map boundary
      *
      * Used on the map to show the results
      *
-     * @param $latitude
-     * @param $longitude
-     * @param $distance
-     * @param int $canhost
+     * @param $vars
      * @return array
+     * @throws Exception
      */
-    private function _getMembersLowDetails($latitude, $longitude, $distance, $canhost = 1) {
+    private function _getMembersLowDetails(&$vars) {
         if (!$this->membersLowDetails) {
-            $rectangle = $this->_getRectangle($latitude, $longitude, $distance);
+            $ne_latitude = $vars['ne-latitude'];
+            $sw_latitude = $vars['sw-latitude'];
+            $ne_longitude = $vars['ne-longitude'];
+            $sw_longitude = $vars['sw-longitude'];
+            $latitude = $vars['location-latitude'];
+            $longitude = $vars['location-longitude'];
+            $distance = $vars['search-distance'];
+            $canhost = $vars['search-can-host'];
             $query = "
-                SELECT
-                    m.Accomodation as Accommodation, m.Username, latitude, longitude, maxGuest as CanHost
-                FROM
-                    members m
-                WHERE
-                    m.Status IN ('Active', 'OutOfRemind')
-                    AND m.maxGuest >= {$canhost}
-                    AND m.latitude BETWEEN $rectangle->latne AND $rectangle->latsw
-                    AND m.longitude BETWEEN $rectangle->longne AND $rectangle->longsw
-            ";
+                    SELECT
+                        m.Accomodation as Accommodation, m.Username, latitude, longitude, maxGuest as CanHost
+                    FROM
+                        members m
+                    WHERE
+                        m.Status IN ('Active', 'OutOfRemind')
+                        AND m.maxGuest >= {$canhost}";
+            if ($ne_latitude == 0 && $sw_latitude == 0 && $ne_longitude == 0 && $sw_longitude == 0) {
+                $rectangle = $this->_getRectangle($latitude, $longitude, $distance);
+                $query .="
+                        AND m.latitude BETWEEN $rectangle->latne AND $rectangle->latsw
+                        AND m.longitude BETWEEN $rectangle->longne AND $rectangle->longsw";
+            } else {
+                if ($ne_latitude > $sw_latitude) {
+                    $tmp = $ne_latitude; $ne_latitude = $sw_latitude; $sw_latitude = $tmp;
+                }
+                if ($ne_longitude > $sw_longitude) {
+                    $tmp = $ne_longitude; $ne_longitude = $sw_longitude; $sw_longitude = $tmp;
+                }
+                    
+                $query .="
+                        AND m.latitude BETWEEN $ne_latitude AND $sw_latitude
+                        AND m.longitude BETWEEN $ne_longitude AND $sw_longitude";
+            }
             $query .= $this->accommodationCondition;
             // Randomize results for the map
             $query .= " ORDER BY RAND()";

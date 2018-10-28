@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Form\CustomDataClass\SearchFormRequest;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -43,11 +44,6 @@ class SearchFormType extends AbstractType
         $this->addButtons($formBuilder);
     }
 
-    public function getBlockPrefix()
-    {
-        return '';
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -56,6 +52,10 @@ class SearchFormType extends AbstractType
         $resolver->setDefaults([
             'groups' => null,
             'languages' => null,
+            'validation_groups' => [
+                SearchFormRequest::class,
+                'determineValidationGroups',
+            ],
         ]);
     }
 
@@ -166,6 +166,7 @@ class SearchFormType extends AbstractType
             ])
             ->add('distance', ChoiceType::class, [
                 'choices' => [
+                    'map only' => -1,
                     'exact' => 0,
                     '5km (~3mi)' => 5,
                     '10km (~6mi)' => 10,
@@ -230,7 +231,11 @@ class SearchFormType extends AbstractType
             ->add('page', HiddenType::class)
             ->add('location_geoname_id', HiddenType::class)
             ->add('location_latitude', HiddenType::class)
-            ->add('location_longitude', HiddenType::class);
+            ->add('location_longitude', HiddenType::class)
+            ->add('ne_latitude', HiddenType::class)
+            ->add('ne_longitude', HiddenType::class)
+            ->add('sw_latitude', HiddenType::class)
+            ->add('sw_longitude', HiddenType::class);
     }
 
     private function addButtons(FormBuilderInterface $formBuilder)

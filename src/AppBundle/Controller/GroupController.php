@@ -328,7 +328,6 @@ class GroupController extends Controller
         return (0 === $recipients) ? false : true;
     }
 
-
     private function sendNewGroupApprovedNotification(Group $group, Member $creator)
     {
         $recipient = $creator->getEmail();

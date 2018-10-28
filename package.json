@@ -3,7 +3,6 @@
   "browserslist": [
     "last 2 version",
     "> 1%",
-    "maintained node versions",
     "not dead"
   ],
   "version": "3.0.0",
@@ -16,14 +15,13 @@
     "@babel/core": "^7.1.2",
     "@babel/preset-env": "^7.1.0",
     "@ckeditor/ckeditor5-build-classic": "^11.1.1",
-    "@symfony/webpack-encore": "github:symfony/webpack-encore",
-    "autoprefixer": "^9.2.1",
+    "@symfony/webpack-encore": "0.20.1",
+    "autoprefixer": "^9.3.1",
     "babel-loader": "^8.0.4",
     "node-sass": "^4.9.4",
     "postcss-loader": "^3.0.0",
     "raw-loader": "^0.5.1",
-    "sass-loader": "^7.1.0",
-    "webpack": "^4.21.0"
+    "sass-loader": "^7.1.0"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.4.1",
@@ -37,7 +35,7 @@
     "hoek": "^5.0.4",
     "html5shiv": "^3.7.3",
     "inspect-loader": "^1.0.0",
-    "jarallax": "^1.10.5",
+    "jarallax": "^1.10.6",
     "jquery": "^3.3.1",
     "jquery-mousewheel": "^3.1.13",
     "jquery-ui": "^1.12.1",

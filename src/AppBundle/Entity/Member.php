@@ -7,6 +7,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Doctrine\GroupMembershipStatusType;
 use AppBundle\Encoder\LegacyPasswordEncoder;
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -2554,11 +2555,18 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
 
     public function getGroups()
     {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('status', GroupMembershipStatusType::CURRENT_MEMBER));
+
+        // get all groups, work around problem with database
         return array_map(
             function ($groupMembership) {
-                return $groupMembership->getGroup();
+                try {
+                    return $groupMembership->getGroup();
+                } catch (\Exception $e) {
+                }
             },
-            $this->groupMemberships->toArray()
+            $this->groupMemberships->matching($criteria)->toArray()
         );
     }
 
@@ -2716,6 +2724,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
 
     public function getLevelForRight($rightName)
     {
+        $rightName = strtolower(str_replace('ROLE_ADMIN_', '', $rightName));
         $level = false;
         $volunteerRights = $this->getVolunteerRights();
         if (null !== $volunteerRights) {

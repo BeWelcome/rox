@@ -3,6 +3,7 @@
 namespace AppBundle\Twig;
 
 use AppBundle\Entity\Comment;
+use AppBundle\Entity\Group;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Message;
 use AppBundle\Repository\CommentRepository;
@@ -70,6 +71,7 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
         }
 
         return [
+            'groupsInApprovalQueue' => $this->member ? $this->getGroupsInApprovalQueueCount() : 0,
             'reportedCommentsCount' => $this->member ? $this->getReportedCommentsCount() : 0,
             'reportedMessagesCount' => $this->member ? $this->getReportedMessagesCount() : 0,
             'messageCount' => $this->member ? $this->getUnreadMessagesCount() : 0,
@@ -82,6 +84,22 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
     {
         return self::class;
     }
+
+    protected function getGroupsInApprovalQueueCount()
+    {
+        $groupsInApprovalCount = 0;
+        $user = $this->security->getUser();
+        if ($user &&
+            ($this->security->isGranted(Member::ROLE_ADMIN_GROUP))) {
+            $groupsRepository = $this->em->getRepository(Group::class);
+            $groups = $groupsRepository->findBy([
+                'approved' => [Group::NOT_APPROVED, Group::IN_DISCUSSION],
+            ]);
+            $groupsInApprovalCount = count($groups);
+        }
+        return $groupsInApprovalCount;
+    }
+
 
     protected function getReportedMessagesCount()
     {

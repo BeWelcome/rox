@@ -4,7 +4,8 @@
         <?= $callback_tag ?>
         <input type="hidden" name="javascriptactive" value="false"/>
         <?php
-        if (in_array('inserror', $vars['errors'])) {
+        $errors = $vars['errors'];
+        if (in_array('inserror', $errors)) {
             echo '<span class="alert alert-danger">' . $errors['inserror'] . '</span>';
         }
         ?>
@@ -118,16 +119,17 @@
                 <!-- Mother tongues -->
                 <div class="form-group pt-3">
                     <?php
-                    $motherTongue = -1;
+                    $motherTongueError = in_array('SignupErrorNoMotherTongue', $errors);
+                    $motherTongue = "";
                     if (isset($vars['mothertongue'])) {
                         $motherTongue = $vars['mothertongue'];
                     }
                     ?>
                     <label for="mothertongue"><?php echo $words->get('LanguageLevel_MotherLanguage'); ?></label>
-                    <div class="input-group">
-                        <select required class="select2 form-control" name="mothertongue" id="mothertongue"
+                    <div class="input-group <?= ($motherTongueError) ? "was-validated" : "" ?>">
+                        <select required class="form-control" name="mothertongue" id="mothertongue"
                                 data-placeholder="<?= $words->getBuffered('SignupSelectMotherTongue') ?>">
-                            <option value="-1"></option>
+                            <option></option>
                             <optgroup label="<?= $words->getSilent('SpokenLanguages') ?>">
                                 <?= $this->getAllLanguages(true, $motherTongue); ?>
                             </optgroup>
@@ -140,6 +142,10 @@
                                 data-content="<?= htmlentities($words->get('subline_mothertongue')) ?>">
                             <i class="fa fa-question"></i>
                         </button>
+                        <?php
+                        if ($motherTongueError) { ?>
+                            <div class="invalid-feedback" id="mothertongue-invalid"><?= $words->get('signup.error.mothertongue') ?></div>
+                        <?php } ?>
                     </div>
                 </div>
 
@@ -148,7 +154,7 @@
                     <label for="birthdate"><?php echo $words->get('SignupBirthDate'); ?></label>
                     <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
                         <div class="input-group-prepend" data-target="#datetimepicker1"
-                                data-toggle="datetimepicker"><i class="input-group-text bg-primary white fa fa-calendar"></i></div>
+                                data-toggle="datetimepicker"><i class="input-group-text bg-primary white far fa-calendar"></i></div>
                         <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1" id="birthdate"
                                name="birthdate"/>
                         <button type="button" class="input-group-append btn btn-primary" data-trigger="focus" data-container="body"

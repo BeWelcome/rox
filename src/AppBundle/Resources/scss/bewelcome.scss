@@ -178,7 +178,7 @@ a.active .metric .value {
   display:none;
 }
 
-@media(min-width:768px) {
+@include media-breakpoint-up(md) {
   #editProfileTab .nav-tabs {
     display: flex;
   }
@@ -196,7 +196,7 @@ a.active .metric .value {
   }
 }
 
-@media(max-width:767px){
+@include media-breakpoint-down(md){
   #editProfileTab .tab-pane {
     display: block !important;
     opacity: 1;
@@ -258,3 +258,5 @@ a.active .metric .value {
   outline: 0 !important;
   box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 1) !important;
 }
+
+@import "parallax";

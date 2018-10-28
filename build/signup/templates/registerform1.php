@@ -40,7 +40,7 @@
                                 <?php echo $words->get('SignupIntroduction'); ?>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal"><?= $words->get('Close'); ?></button>
                             </div>
                         </div>
                     </div>
@@ -68,9 +68,9 @@
                         <div class="valid-feedback">Username looks good</div>
                         <?php
                             if ($usernameError) { ?>
-                                <div class="invalid-feedback" id="username-invalid">Please choose a different username that is at least 4 and maximum 20 characters long. They have to start with a letter, they have to end with either a letter or a number. In between the following characters may be used: . _ -</div>
+                                <div class="invalid-feedback" id="username-invalid"><?= $words->get('signup.error.username.taken') ?></div>
                          <?php } else { ?>
-                            <div class="invalid-feedback" id="username-invalid">Username must be at least 4 and maximum 20 characters long. They have to start with a letter, they have to end with either a letter or a number. In between the following characters may be used: . _ -</div>
+                            <div class="invalid-feedback" id="username-invalid"><?= $words->get('signup.error.username') ?></div>
                         <?php } ?>
                     </div>
                 </div>
@@ -85,7 +85,7 @@
                             <?php
                             echo isset($vars['password']) ? 'value="'.$vars['password'].'" ' : '';
                             ?> >
-                        <button type="button" class="input-group-append btn btn-primary" data-trigger="focus" data-container="body" data-toggle="popover" data-placement="right" data-content="Please choose a strong password. You may use all letters (a-z A-Z), numbers (0-9) and some special characters (# % ! = + - _)">
+                        <button type="button" class="input-group-append btn btn-primary" data-trigger="focus" data-container="body" data-toggle="popover" data-placement="right" data-content="<?= $words->get('signup.popover.password'); ?>">
                             <i class="fa fa-question"></i>
                         </button>
                         <div class="valid-feedback">Password looks good.</div>

@@ -615,7 +615,7 @@ VALUES
             $errors[] = 'SignupErrorFullNameRequired';
         }
 
-        if (!isset($vars['mothertongue']) || ($vars['mothertongue'] == -1)) {
+        if (!isset($vars['mothertongue']) || ($vars['mothertongue'] == "")) {
             $errors[] = 'SignupErrorNoMotherTongue';
         }
 

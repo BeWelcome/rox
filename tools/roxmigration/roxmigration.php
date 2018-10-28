@@ -105,7 +105,7 @@ class RoxMigration extends AbstractMigration
      * @param string $code The new WordCode
      * @param string $sentence The 'translation'
      * @param string $description The description needs to be at least 15 characters long
-     * @param bool $majorupdate The update is a major one rendering the old translation obsolete
+     * @param bool $majorUpdate The update is a major one rendering the old translation obsolete
      * @param string $dnt Sets the donottranslate flag (either 'yes' or 'no')
      * @param string $priority Sets the translation priority
      * @throws \Exception
@@ -156,8 +156,10 @@ WHERE `code` = " . $code
      * Remove the word code and all translations from the database
      *
      * @param string $code The WordCode to remove
+     * @param null $sentence
+     * @param null $description
      */
-    protected function RemoveWordCode($code)
+    protected function RemoveWordCode($code, $sentence = null, $description = null)
     {
         list($code) = $this->EscapeVariables(array($code));
         $query = "DELETE FROM words WHERE code = " . $code;

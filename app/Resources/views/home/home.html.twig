@@ -17,284 +17,159 @@
     <!--[if lt IE 9]>
     <script type="text/javascript" src="{{ asset('build/backwards.js') }}"></script>
     <![endif]-->
+    <link rel="stylesheet" href="{{ asset('build/skrollr.css') }}"/>
+    <script type="text/javascript" src="https://unpkg.com/jarallax@1.10/dist/jarallax.min.js"></script>
 
     <link rel="stylesheet" href="{{ asset('build/bewelcome.css') }}"/>
-    <link rel="stylesheet" href="{{ asset('bundles/app/css/start/parallax.css') }}"/>
-    <link rel="stylesheet" href="{{ asset('build/jquery_ui.css') }}" />
+    <link rel="stylesheet" href="{{ asset('build/jquery_ui.css') }}"/>
 </head>
-<body>
+<body id="parallax-home">
 {% include 'loginbar.html.twig' %}
 <!-- Section #1 -->
 <!-- first section - Home -->
 <div id="skrollr-body">
-<div id="home"
-     data-start="background-position: 0px 0px;"
-     data-end="background-position: 0px -100px;">
-    <div class="container" id="landingcontainer"
-         data-start="background-color:rgba(0, 0, 0, 0.4); box-shadow: 0px 0px 100px 25px rgba(0, 0, 0, 0.4) inset;"
-         data-400-start="background-color:rgba(0, 0, 0, 0.0); box-shadow: 0px 0px 100px -100px rgba(0, 0, 0, 0.4) inset;">
-        <div class="row justify-content-center">
-            <div class="col-12 col-lg-8 text-center" id="landingcontainerdiv"
-                 data-start="display:block; position:fixed; right: 50%; transform: translateX(50%);"
-                 data-200-start="display:none">
-                <h1 data-start="color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0), 0px 0px 3px rgba(255,255,255,0);letter-spacing:0.0rem;"
-                    data-50-start="color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0.5), 0px 0px 3px rgba(255,255,255,0.5);letter-spacing:0rem;"
-                    data-200-start="color:rgba(255,255,255,0); text-shadow:3px 0px 3px rgba(255,255,255,0.25), -3px 0px 3px rgba(255,255,255,0.25);letter-spacing:0rem;"
-                    data-250-start="color:rgba(255,255,255,0); text-shadow: 6px 0px 6px rgba(255,255,255,0), -6px 0px 6px rgba(255,255,255,0);letter-spacing:0.15rem;">
-                    BeWelcome is a cultural crossing network
-                </h1>
-                <p class="d-none d-md-block" data-start="color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0)"
-                   data-50-start="color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0)"
-                   data-200-start="color:rgba(255,255,255,0); text-shadow:0px 0px 3px rgba(255,255,255,0.3)"
-                   data-250-start="color:rgba(255,255,255,0); text-shadow:0px 0px 3px rgba(255,255,255,0)">
-                    which lets you share a place to stay, connect with travellers, meet up and find accommodation on
-                    your journey
-                </p>
-                <div data-start="opacity:1"
-                      data-50-start="opacity:1"
-                      data-250-start="opacity:0">
-                    <a href="signup/1" class="btn btn-primary">Join BeWelcome!</a>
-                </div>
-                <p class="contrastbg orangelink"
-                   data-start="opacity:1"
-                   data-250-start="opacity:0">
-                    <small class="smaller">BeWelcome is and <a href="#">will always be</a> a free, open source, non for
-                        profit, democratic community
-                    </small>
-                </p>
-            </div>
-        </div>
-        <div class="row secondblock justify-content-center">
-            <div class="col-12 col-lg-8 text-center">
-                <h1 data--0-bottom="color:rgba(255,255,255,0); text-shadow: 0px 0px 3px rgba(255,255,255,0), 0px -20px 3px rgba(0, 0, 0, 0); letter-spacing:0.15rem"
-                    data--0-bottom="color:rgba(255,255,255,0); text-shadow:0px 0px 3px rgba(255,255,255,0.25), 0px -10px 3px rgba(0, 0, 0, 0.2); letter-spacing:0.05rem"
-                    data--100-bottom="color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0.5), 0px -10px 3px rgba(0, 0, 0, 0.4); letter-spacing:0.05rem"
-                    data--200-bottom="color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0), 0px 30px 3px rgba(0, 0, 0, 0.4); letter-spacing:0.15rem"
-                    data--500-bottom="color:rgba(255,255,255,0); text-shadow:0px 0px 3px rgba(255,255,255,0.3), 0px 30px 3px rgba(0, 0, 0, 0.2); letter-spacing:0.15rem"
-                    data--500-bottom="color:rgba(255,255,255,0); text-shadow:0px 0px 3px rgba(255,255,255,0), 0px 60px 15px rgba(0, 0, 0, 0); letter-spacing:0.20rem">{{ 'Find hosts and guests everywhere in the world' | trans }}</h1>
-            </div>
-        </div>
-        <div class="row thirdblock justify-content-center">
-            <a href="#bottom" aria-label="Go directly to the bottom of the website"
-               data--50-bottom="opacity:0"
-               data--100-bottom="opacity:1"
-               data--250-bottom="opacity:1"
-               data--350-bottom="opacity:0">
-                <i class="chevron_icon fa fa-4x fa-chevron-down" aria-hidden="true"></i>
-            </a>
-        </div>
-    </div>
-</div>
-<div id="footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 text-left">
-                <a href="about"><strong>{{ 'AboutUsPage' | trans }}</strong></a> •
-                <a href="terms" target="new">{{ 'TermsOfUse' | trans }}</a> •
-                <a href="privacy" target="new">{{ 'Privacy' | trans }}</a> •
-                <a href="impressum">{{ 'Impressum' | trans }}</a> •
-                <a href="faq">{{ 'faq' | trans }}</a> •
-                <a href="about/feedback">{{ 'Contact us' | trans }}</a> •
-                <a href="about/feedback?IdCategory=1&RequestURI={{ url('homepage') }}">{{ 'Reportbug' | trans }}</a><br>
-                {{ 'CopyrightByBV' | trans }} - {{ 'RunningOn' | trans }} BW Rox rev. ca44ccc (27 Jun 2015)
-            </div>
-        </div>
-    </div>
-</div>
-<!-- /first section -->
-<!-- second section - About -->
-<div id="about" class="pad-section"
-     data-450-top="background-color:rgb(127, 68, 0)"
-     data-400-top="background-color:rgb(255, 136, 0)">
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-12 col-lg-10 mb-1"
-                 data-bottom="opacity:0;"
-                 data--100-bottom="opacity:1"><h1 class="my-5"
-                        data-bottom="letter-spacing: 0.35em; text-shadow:0 0 30px rgba(0,0,0,0.8)"
-                        data--200-bottom="letter-spacing: 0.1em; text-shadow: 0 0 60px rgba(0,0,0,0.2)">{{ 'tourpage' | trans }}</h1>
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-6 col-lg-2"
-                 data-600-top="opacity:0"
-                 data-550-top="opacity:0.2"
-                 data-500-top="transform:translateX(-110px)"
-                 data-490-top="transform:translateX(-20px)"
-                 data-450-top="opacity:1">
-                <p><i class="fa fa-start fa-handshake-o" aria-hidden="true"></i></p>
-                <h3>{{ 'tour_link_meet' | trans }}</h3>
-                <p>{{ 'tourpage_text3' | trans }}</p>
-            </div>
-            <div class="col-12 col-md-6 col-lg-2"
-                 data-550-top="opacity:0"
-                 data-450-top="opacity:1">
-                <p><i class="fa fa-start fa-map-signs" aria-hidden="true"></i></p>
-                <h3>{{ 'tour_link_travel' | trans }}</h3>
-                <p>{{ 'tourpage_text4' | trans }}</p>
-            </div>
-            <div class="col-12 col-md-6 col-lg-2"
-                 data-550-top="opacity:0"
-                 data-450-top="opacity:1">
-                <p><i class="fa fa-start fa-magic" aria-hidden="true"></i></p>
-                <h3>{{ 'tour_link_info' | trans }}</h3>
-                <p>{{ 'tourpage_text5' | trans }}</p>
-            </div>
-            <div class="col-12 col-md-6 col-lg-2"
-                 data-600-top="opacity:0"
-                 data-550-top="opacity:0.2"
-                 data-500-top="transform:translateX(110px)"
-                 data-490-top="transform:translateX(20px)"
-                 data-450-top="opacity:1">
-                <p><i class="fa fa-start fa-heart" aria-hidden="true"></i></p>
-                <h3>{{ 'tour_link_share' | trans }}</h3>
-                <p>{{ 'tourpage_text2' | trans }}</p></div>
-        </div>
-    </div>
-</div>
-<!-- /second section -->
-<!-- third section - Services -->
-
-
-<div id="about_trailing" class="d-none d-lg-block pad-section"
-     data-bottom-top="background-position: 0px 0px"
-     data-top-bottom="background-position: 0px -100px;">
-
-    <div class="container">
-        <div class="row justify-content-center"
-             data-1500-start="position:fixed">
-            <div class="col-12 col-lg-8">
-                <h1 data-start="display:none"
-                    data-1500-start="display:block; color:rgba(255,255,255,0); text-shadow: 6px 0px 3px rgba(255,255,255,0), -6px 0px 3px rgba(255,255,255,0);letter-spacing:0.05rem;"
-                    data-1550-start="color:rgba(255,255,255,0); text-shadow:3px 0px 3px rgba(255,255,255,0.25), -3px 0px 3px rgba(255,255,255,0.25);letter-spacing:0.02rem;"
-                    data-1650-start="color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0.5), 0px 0px 3px rgba(255,255,255,0.5);letter-spacing:0.0rem;"
-                    data-2000-start="color:rgba(255,255,255,1); text-shadow:0px 0px 3px rgba(255,255,255,0.5), 0px 0px 3px rgba(255,255,255,0.5);letter-spacing:0.0rem;"
-                    data-2170-start="color:rgba(255,255,255,0); text-shadow:3px 0px 3px rgba(255,255,255,0.25), -3px 0px 3px rgba(255,255,255,0.25);letter-spacing:0.02rem"
-                    data-2200-start="display:none; color:rgba(255,255,255,0); text-shadow: 6px 0px 3px rgba(255,255,255,0), -6px 0px 3px rgba(255,255,255,0);letter-spacing:0.05rem;">{{ 'We are 100% run by volunteers, non-profit and open source' | trans }}</h1>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--
-
-
-</div>
--->
-<div id="statistics" class="pad-section"
-     data-450-top="background-color:rgb(243,168,6)"
-     data-400-top="background-color:rgb(255, 136, 0)">
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-12"
-                 data-bottom="opacity:0"
-                 data--100-bottom="opacity:1"><h1 class="text-center" data-bottom="letter-spacing: 0.35em;"
-                                                  data--200-bottom="letter-spacing: 0.1em;">{{ 'Some statistics' | trans }}</h1>
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-6 col-lg-2 text-center"
-                 data-385-top="opacity:0"
-                 data-375-top="opacity:0.2"
-                 data-365-top="transform:translateX(-110px)"
-                 data-345-top="transform:translateX(-20px)"
-                 data-330-top="opacity:1">
-                <p><i class="fa fa-start fa-user-o" aria-hidden="true"></i></p>
-                <h2>{{ stats.members }}</h2>
-                <h4>{{ 'members' | trans }}</h4></div>
-            <div class="col-12 col-md-6 col-lg-2 text-center"
-                 data-400-top="opacity:0"
-                 data-350-top="opacity:1">
-                <p><i class="fa fa-start fa-flag-o" aria-hidden="true"></i></p>
-                <h2>{{ stats.countries }}</h2>
-                <h4>{{ 'countries' | trans }}</h4></div>
-            <div class="col-12 col-md-6 col-lg-2 text-center"
-                 data-600-top="opacity:0"
-                 data-450-top="opacity:1">
-                <p><i class="fa fa-start fa-language" aria-hidden="true"></i></p>
-                <h2>{{ stats.languages }}</h2>
-                <h4>{{ 'languages' | trans }}</h4></div>
-            <div class="col-12 col-md-6 col-lg-2 text-center"
-                 data-400-top="opacity:0"
-                 data-350-top="opacity:1">
-                <p><i class="fa fa-start fa-smile-o" aria-hidden="true"></i></p>
-                <h2>{{ stats.comments }}</h2>
-                <h4>{{ 'positive comments' | trans }}</h4></div>
-            <div class="col-12 col-lg-2 text-center"
-                 data-385-top="opacity:0"
-                 data-375-top="opacity:0.2"
-                 data-365-top="transform:translateX(110px)"
-                 data-345-top="transform:translateX(20px)"
-                 data-330-top="opacity:1">
-                <p><i class="fa fa-start fa-calendar-check-o" aria-hidden="true"></i></p>
-                <h2>{{ stats.activities }}</h2>
-                <h4>{{ 'Activities' | trans }}</h4></div>
-        </div>
-    </div>
-</div>
-<div id="statistics_trailing" class="pad-section">
-    <div id="search" class="pad-section"
-         data-start="position:fixed; visibility:hidden;"
-         data-901-end="visibility:hidden;"
-         data-900-end="visibility:visible;"
-         data-900-end="opacity:0;"
-         data-600-end="opacity:1;"
-         data-end="position:fixed">
-        <div class="container" data-start="position:relative; bottom:0px" data-end="position:relative">
+    <div class="jarallax">
+        <img class="jarallax-img" src="images/homepicture-1200px_1.jpg" alt="Background image for parallax">
+        <div class="d-flex container h-100 align-items-center">
             <div class="row justify-content-center">
-                <div class="col-12 col-lg-10">
-                    <h1 class="text-center"
-                        data-700-end="color:rgba(255,255,255,0); text-shadow: 6px 0px 10px rgba(255,255,255,0),-6px 0px 10px rgba(255,255,255,0);letter-spacing:0.05rem"
-                        data-650-end="color:rgba(255,255,255,0); text-shadow: 3px 0px 5px rgba(255,255,255,0.4),-3px 0px 5px rgba(255,255,255,0.4);letter-spacing:0.02rem"
-                        data-550-end="color:rgba(255,255,255,1); text-shadow: 0px 0px 0px rgba(255,255,255,0), 0px 0px 0px rgba(255,255,255,0);letter-spacing:0.00rem"
-                    >{{ 'The world is just one step from here' | trans }}</h1>
-                    <p data-700-end="color:rgba(255,255,255,0); text-shadow: 0px 0px 6px rgba(255,255,255,0);letter-spacing:0.005rem"
-                       data-500-end="color:rgba(255,255,255,0.2); text-shadow: 0px 0px 2px rgba(255,255,255,0.4);letter-spacing:0rem"
-                       data-end="color:rgba(255,255,255,1); text-shadow: 0px 0px 0px rgba(255,255,255,0);letter-spacing:0.0rem">{{ 'We believe that sharing creates a better world. You can let people stay over or show them around. It\'s easy and it\'s called hospitality.' | trans }}</p>
+                <div class="col-12 col-lg-10 text-center">
+                    <h1>{{ 'home.headline.bewelcome.cultural' | trans }}</h1>
+                    <h4 class="d-none d-md-block">{{ 'home.abstract.bewelcome.cultural' | trans }}</h4>
+                </div>
+                <div class="col-auto text-center">
+                    <p><a href="{{ url('signup') }}" class="btn btn-primary btn-lg">{{ 'home.button.join' | trans }}</a></p>
+                    <p class="bg-dark p-3 text-white rounded">{{ 'home.bewelcome.free' | trans | escape |replace({'%link_start%': '<a href="'~path('wiki_page', { 'pageTitle': 'Can BeWelcome be sold'})~'" class="text-primary">', '%link_end%': '</a>'})|raw }}</p>
                 </div>
             </div>
+        </div>
+    </div>
+    {# about #}
+    <div id="about">
+        <div class="container">
             <div class="row justify-content-center">
-                <div class="col-12 col-md-6 col-lg-4">
+                <div class="col-12 col-lg-10 mb-1"><h1 class="my-2">{{ 'tourpage' | trans }}</h1></div>
+            </div>
+            <div class="row justify-content-center text-center">
+                <div class="col-12 col-md-6 col-lg-3">
+                    <p><i class="far fa-start fa-handshake" aria-hidden="true"></i></p>
+                    <h3>{{ 'tour_link_meet' | trans }}</h3>
+                    <p>{{ 'tourpage_text3' | trans }}</p>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3">
+                    <p><i class="fa fa-start fa-map-signs" aria-hidden="true"></i></p>
+                    <h3>{{ 'tour_link_travel' | trans }}</h3>
+                    <p>{{ 'tourpage_text4' | trans }}</p>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3">
+                    <p><i class="fa fa-start fa-magic" aria-hidden="true"></i></p>
+                    <h3>{{ 'tour_link_info' | trans }}</h3>
+                    <p>{{ 'tourpage_text5' | trans }}</p>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3">
+                    <p><i class="far fa-start fa-heart" aria-hidden="true"></i></p>
+                    <h3>{{ 'tour_link_share' | trans }}</h3>
+                    <p>{{ 'tourpage_text2' | trans }}</p></div>
+            </div>
+        </div>
+    </div>
+    {# end about #}
+    <div class="jarallax">
+        <img class="jarallax-img" src="images/homepicture-1200px_2.jpg" alt="Background image for parallax">
+        <div class="d-flex container h-100 align-items-center">
+            <div class="row justify-content-center">
+                <div class="col-12 text-center">
+                    <h1>{{ 'home.headline.find.hosts' | trans }}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    {# statistics #}
+    <div id="statistics">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <h1 class="text-center">{{ 'Some statistics' | trans }}</h1>
+                </div>
+            </div>
+            <div class="row justify-content-center text-center">
+                <div class="col-12 col-md-6 col-lg-2">
+                    <p><i class="far fa-start fa-user" aria-hidden="true"></i></p>
+                    <h2>{{ stats.members }}</h2>
+                    <h4>{{ 'members' | trans }}</h4></div>
+                <div class="col-12 col-md-6 col-lg-2">
+                    <p><i class="far fa-start fa-flag" aria-hidden="true"></i></p>
+                    <h2>{{ stats.countries }}</h2>
+                    <h4>{{ 'countries' | trans }}</h4></div>
+                <div class="col-12 col-md-6 col-lg-2">
+                    <p><i class="fa fa-start fa-language" aria-hidden="true"></i></p>
+                    <h2>{{ stats.languages }}</h2>
+                    <h4>{{ 'languages' | trans }}</h4></div>
+                <div class="col-12 col-md-6 col-lg-2">
+                    <p><i class="far fa-start fa-smile" aria-hidden="true"></i></p>
+                    <h2>{{ stats.comments }}</h2>
+                    <h4>{{ 'positive comments' | trans }}</h4></div>
+                <div class="col-12 col-md-6 col-lg-2">
+                    <p><i class="far fa-start fa-calendar-check" aria-hidden="true"></i></p>
+                    <h2>{{ stats.activities }}</h2>
+                    <h4>{{ 'Activities' | trans }}</h4></div>
+            </div>
+        </div>
+    </div>
+    {# end statistics #}
+    <div class="jarallax">
+        <img class="jarallax-img" src="images/homepicture-1200px_3.jpg" alt="Background image for parallax">
+        <div class="d-flex container h-100 align-items-center">
+            <div class="row w-100 justify-content-center text-center">
+                <div class="col-12">
+                    <h1>{{ 'The world is just one step from here' | trans }}</h1>
+                    <p class="text-white">{{ 'We believe that sharing creates a better world. You can let people stay over or show them around. It\'s easy and it\'s called hospitality.' | trans }}</p>
+                </div>
+                <div class="col-12 col-md-6 col-lg-5">
                     {{ form_start(username) }}
                     {{ postHandler.registerCallbackMethod('SignupController', 'signupFormCallback')|raw }}
-                    <div class="form-group" data-350-end="opacity:0;" data-150-end="opacity:1">
-                        <span>{{ 'IndexPageWord_share' | trans }}</span>
-                        <span class="d-block">{{ 'and start meeting people from everywhere.' | trans }}</span>
+                    <div class="form-group">
+                        <h4 class="text-uppercase">{{ 'IndexPageWord_share' | trans }}</h4>
+                        <span class="text-white">{{ 'and start meeting people from everywhere.' | trans }}</span>
                     </div>
-                    <label for="{{ username.username.vars.id }}" class="sr-only">{{ 'Choose your username!' | trans }}</label>
-                    <div class="input-group" data-250-end="opacity:0;" data-50-end="opacity:1">
-                        <span class="input-group-prepend"><i class="input-group-text fa fa-lg fa-user" aria-hidden="true"></i></span>
-                        <input type="text" class="form-control" name="{{ username.username.vars.name }}" id="{{ username.username.vars.id }}"
+                    <label for="{{ username.username.vars.id }}"
+                           class="sr-only">{{ 'Choose your username!' | trans }}</label>
+                    <div class="input-group">
+                        <span class="input-group-prepend"><i class="input-group-text fa fa-lg fa-user"
+                                                             aria-hidden="true"></i></span>
+                        <input type="text" class="form-control" name="{{ username.username.vars.name }}"
+                               id="{{ username.username.vars.id }}"
                                placeholder="{{ 'Choose your username!' | trans }}"
                                value="{{ username.username.vars.value }}"/>
                         <span class="input-group-append p-0">
-                            <button class="btn btn-primary border-0" type="submit">
-                                <i class="fa fa-lg fa-chevron-right" aria-hidden="true"></i>
-                                <span class="sr-only">{{ 'Submit' | trans }}</span>
-                            </button>
-                            {% do username.username.setRendered %}
-                        </span>
+                        <button class="btn btn-primary border-0" type="submit">
+                            <i class="fa fa-lg fa-chevron-right" aria-hidden="true"></i>
+                            <span class="sr-only">{{ 'Submit' | trans }}</span>
+                        </button>
+                        {% do username.username.setRendered %}
+                    </span>
                     </div>
                     {{ form_end(username) }}
                 </div>
 
-                <div class="col-12 col-md-6 col-lg-4">
+                <div class="col-12 col-md-6 col-lg-5">
                     {{ form_start( search ) }}
-                    <div class="form-group" data-450-end="opacity:0;" data-250-end="opacity:1">
-                        <span>{{ 'Find a place to stay' | trans }}</span>
-                        <span class="d-block">{{ 'and meet locals when traveling worldwide.' | trans }}</span>
+                    <div class="form-group">
+                        <h4 class="text-uppercase">{{ 'Find a place to stay' | trans }}</h4>
+                        <span class="text-white">{{ 'and meet locals when traveling worldwide.' | trans }}</span>
                     </div>
                     <label for="location" class="sr-only">{{ 'Where do you want to go?' | trans }}</label>
-                    <div class="input-group" data-350-end="opacity:0;" data-200-end="opacity:1">
-                        <span class="input-group-prepend"><i class="input-group-text fa fa-lg fa-user" aria-hidden="true"></i></span>
+                    <div class="input-group">
+                        <span class="input-group-prepend"><i class="input-group-text fa fa-lg fa-map-marker"
+                                                             aria-hidden="true"></i></span>
                         {{ form_widget( search.location, { 'attr' : { 'class' : 'search-picker form-control' } } ) }}
                         <span class="input-group-append">
-                            <button id="{{ search.updateMap.vars.id }}" name="updateMap" type="submit" class="btn btn-primary">
-                                    <i class="fa fa-lg fa-chevron-right" aria-hidden="true"></i>
-                                    <span class="sr-only">{{ 'Search' | trans }}</span>
-                            </button>
-                            {% do search.updateMap.setRendered %}
-                        </span>
+                        <button id="{{ search.updateMap.vars.id }}" name="updateMap" type="submit"
+                                class="btn btn-primary">
+                                <i class="fa fa-lg fa-chevron-right" aria-hidden="true"></i>
+                                <span class="sr-only">{{ 'Search' | trans }}</span>
+                        </button>
+                        {% do search.updateMap.setRendered %}
+                    </span>
                     </div>
                     <div class="d-none invisible">{{ form_rest( search ) }}</div>
                     {{ form_end( search ) }}
@@ -303,19 +178,31 @@
         </div>
     </div>
 </div>
-<div id="statistics_trailing_blur"
-     data-640-end="opacity:0;"
-     data-400-end="opacity:1;"
->
+<div id="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-left">
+                <a href="{{ url('about') }}"><strong>{{ 'AboutUsPage' | trans }}</strong></a> •
+                <a href="{{ url('terms_french') }}" target="new">{{ 'TermsOfUse' | trans }}</a> •
+                <a href="{{ url('privacy') }}" target="new">{{ 'Privacy' | trans }}</a> •
+                <a href="{{ url('imprint') }}">{{ 'Imprint' | trans }}</a> •
+                <a href="{{ url('faq') }}">{{ 'faq' | trans }}</a> •
+                <a href="{{ url('feedback') }}">{{ 'Contact us' | trans }}</a> •
+                <a href="{{ url('feedback', {'IdCategory': 1, 'RequestUri': url('homepage')}) }}">{{ 'Reportbug' | trans }}</a><br>
+                &copy;2007
+                &mdash; {{ "now" | date("Y") }} {{ 'CopyrightByBV' | trans | escape | replace({'%link_start%': '<a href="https://bevolunteer.org">', '%link_end%': '</a>'})| raw }}
+                - {{ 'RunningOn' | trans }} BW Rox rev. {{ version }} ({{ version_dt }})
+            </div>
+        </div>
+    </div>
 </div>
-</div>
-<div id="bottom"></div>
+<script type="text/javascript" src="{{ asset('build/runtime.js') }}"></script>
 <script type="text/javascript" src="{{ asset('build/bewelcome.js') }}"></script>
 <script type="text/javascript" src="{{ asset('build/skrollr.js') }}"></script>
 <script src="{{ asset('build/jquery_ui.js') }}"></script>
 <script src="{{ asset('build/search/searchpicker.js') }}"></script>
 <script>
-    window.addEventListener("load", function(){
+    window.addEventListener("load", function () {
         window.cookieconsent.initialise({
             "palette": {
                 "popup": {
@@ -331,7 +218,11 @@
             "content": {
                 "href": "https://www.bewelcome.org/privacy"
             }
-        })});
+        })
+    });
+</script>
+<script>
+    jarallax(document.querySelectorAll('.jarallax'));
 </script>
 </body>
 </html>

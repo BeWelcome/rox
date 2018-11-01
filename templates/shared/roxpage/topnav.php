@@ -38,10 +38,10 @@ if ($logged_in) {
         echo '<div class="container"><div class="row"><ul class="nav nav-inline pull-right mt-1 mb-1">';
     }
     if ($R->hasRight('Comments')) {
-        echo '<li class="nav-item"><a class="nav-link" href="bw/admin/admincomments.php" title="Review negative comments">Negative comments <span class="badge badge-primary">' . $numberReportedComments . '</span></a></li>';
+        echo '<li class="nav-item"><a class="nav-link" href="admin/comment/negative" title="Review negative comments">Negative comments <span class="badge badge-primary">' . $numberReportedComments . '</span></a></li>';
     }
     if ($R->hasRight('Checker')) {
-        echo '<li class="nav-item"><a class="nav-link" href="bw/admin/adminchecker.php?action=viewSpamSayMember" title="Review messages reported by users as spam">Reported messages <span class="badge badge-primary">' . $numberSpamToBeChecked . '</span></a></li>';
+        echo '<li class="nav-item"><a class="nav-link" href="admin/checker" title="Review messages reported by users as spam">Reported messages <span class="badge badge-primary">' . $numberSpamToBeChecked . '</span></a></li>';
     }
     if ($R->hasRight('Comments') || ($R->hasRight('Checker'))) {
         echo '</ul></div></div></div>';

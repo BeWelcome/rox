@@ -1,0 +1,29 @@
+<div id="activitiesdisplay" class="scrollcontent">
+
+    {% for activity in activities %}
+        <div class="d-flex flex-row justify-content-between align-items-center p-2">
+
+            <div class="relative pr-2">
+                    <div><i class="fa fa-3x fa-calendar-o"></i></div>
+                    <div class="absolute homeday"><strong>{{ activity.starts | date("d") }}</strong></div>
+                    <div class="absolute monthyear">{{ activity.starts | date("m") }} {{ activity.starts | date("Y") }}</div>
+            </div>
+
+            <div class="text-truncate mr-2 ml-5" style="white-space: normal;">
+                <p class="m-0 p-0 dashentry"><strong><a href="activities/{{ activity.id }}">{{ activity.title }}</a></strong></p>
+                <p class="p-0 m-0"><small><i class="fa fa-map-marker-alt"></i> {{ activity.location.name }}, {{ activity.location.country.name }}</small></p>
+            </div>
+
+            <div class="ml-auto relative">
+                <div class="mr-5rem"><i class="fa fa-2x fa  fa-user-circle-o"></i></div>
+                <div class="absolute attendees">
+                    <small>{{ activity.attendeesyes.count }} yes
+                        <br><span{% if activity.attendeesmaybe.count==0 %} class="invisible"{% endif %}>{{ activity.attendeesmaybe.count }} maybe</span></small>
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        <p>{{ 'No activities near you' | trans }}</p>
+    {% endfor %}
+</div>

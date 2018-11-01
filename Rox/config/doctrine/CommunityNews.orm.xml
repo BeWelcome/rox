@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\CommunityNews" table="community_news">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="title" type="string" column="title" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">Stores the title of the community news</option>
+      </options>
+    </field>
+    <field name="text" type="text" column="text" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">Stores the text of the community news</option>
+      </options>
+    </field>
+    <field name="public" type="boolean" column="public" nullable="false">
+      <options>
+        <option name="comment">Controls if the community news is shown to all users yet</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="createdAt" type="datetime" column="created_at" nullable="true">
+      <options>
+        <option name="comment">Eloquent standard column</option>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
+    <field name="createdBy" type="bigint" column="created_by" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Stores the member who created the news</option>
+      </options>
+    </field>
+    <field name="updatedAt" type="datetime" column="updated_at" nullable="true">
+      <options>
+        <option name="comment">Eloquent standard column</option>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
+    <field name="updatedBy" type="bigint" column="updated_by" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Stores the member who updated the news</option>
+      </options>
+    </field>
+    <field name="deletedAt" type="datetime" column="deleted_at" nullable="true">
+      <options>
+        <option name="comment">Eloquent standard column</option>
+      </options>
+    </field>
+    <field name="deletedBy" type="bigint" column="deleted_by" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Stores the member who deleted the news</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

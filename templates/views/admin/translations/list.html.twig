@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'translations.title' | trans }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ 'translations.headline' | trans }}</h1>
+    <p>{% trans with { '%locale%': locale } %}translations.abstract{% endtrans %}</p>
+    {% if translations.nbResults == 0  %}
+    {% else %}
+        {% if translations.haveToPaginate %}
+            <div class="row">
+                <div class="col-12 float-left">
+                    {{ pagerfanta( translations, 'twitter_bootstrap4_translated') }}
+                </div>
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-12">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th class="w-25">ID and Message</th>
+                        <th>Translated Message</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for translation in translations.currentPageResults %}
+                        <tr>
+                            <td class="w-25">
+                                <p class="m-0"><small class="text-muted">{{ translation.code }}</small></p>
+                                <p class="m-0">{{ translation.code | trans( {}, 'messages', 'en' ) | purify | truncate(50) }}</p>
+                            </td>
+                            <td class="w-75">
+                                <p class="m-0"><small class="invisible text-muted">&nbsp;</small></p>
+                                <p class="m-0">{{ translation.Sentence | purify | truncate(50) }}</p>
+                            </td>
+                            <td>
+                                <p class="m-0"><small>&nbsp;</small></p>
+                                <p class="m-0"><a href="{{ url('translation_edit', { code: translation.code, locale: locale }) }}"><i class="fa fa-edit"></i></a></p>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% if translations.haveToPaginate %}
+            <div class="row">
+                <div class="float-left">
+                    {{ pagerfanta( translations, 'twitter_bootstrap4_translated') }}
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock content %}

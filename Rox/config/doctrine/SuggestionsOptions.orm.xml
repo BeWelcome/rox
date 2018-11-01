@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\SuggestionsOptions" table="suggestions_options">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="suggestionid" type="integer" column="suggestionId" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="state" type="integer" column="state" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">1 = Ranking; 2 = In Implementation; 4 = Implemented;</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="summary" type="string" column="summary" length="160" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="description" type="text" column="description" length="16777215" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="created" type="date" column="created" nullable="false"/>
+    <field name="createdby" type="integer" column="createdBy" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="modified" type="date" column="modified" nullable="true"/>
+    <field name="modifiedby" type="integer" column="modifiedBy" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="deleted" type="date" column="deleted" nullable="true"/>
+    <field name="deletedby" type="integer" column="deletedBy" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="mutuallyexclusivewith" type="text" column="mutuallyExclusiveWith" length="16777215" nullable="true">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">The list of mutually exclusion options. Comma separated.</option>
+      </options>
+    </field>
+    <field name="rank" type="boolean" column="rank" nullable="true">
+      <options>
+        <option name="comment">The resulting rank of the option.</option>
+      </options>
+    </field>
+    <field name="orderhint" type="integer" column="orderHint" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">The option's position in the resulting ranks.</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

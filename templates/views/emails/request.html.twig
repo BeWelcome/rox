@@ -1,0 +1,13 @@
+{% extends ':emails:email.html.twig' %}
+
+{% block content%}
+    Subject: {{ subject }}
+    Sender: {{ sender.username }}
+    Receiver: {{ receiver.username }}
+
+    {{ request_text | raw }}
+
+    <div id="footer">
+        <p>(cc) {{ "now" | date("Y") }} BeWelcome</p>
+    </div>
+{% endblock %}

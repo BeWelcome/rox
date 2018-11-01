@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\PollsChoices" table="polls_choices">
+    <indexes>
+      <index name="IdPoll" columns="IdPoll"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="idchoicetext" type="integer" column="IdChoiceText" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">forum_trad Id</option>
+      </options>
+    </field>
+    <field name="counter" type="integer" column="Counter" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">counter of choice for this record</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="updated" type="datetime" column="updated" nullable="false">
+      <options>
+        <option name="comment">when it was updated</option>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
+    <field name="created" type="datetime" column="created" nullable="false">
+      <options>
+        <option name="comment">when it was updated</option>
+        <option name="default">0000-00-00 00:00:00</option>
+      </options>
+    </field>
+    <many-to-one field="idpoll" target-entity="Polls" fetch="LAZY">
+      <join-columns>
+        <join-column name="IdPoll" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,132 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block subnav %}
+    {% for filter,menuItem in submenu.items %}
+        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}" href="{{ menuItem.url }}">{{ menuItem.key | trans }}</a>
+    {% endfor %}
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+    $(window).on('load', function () {
+        $('#checkAll').click(function () {
+            $('input:checkbox.checkable').prop('checked', this.checked);
+        });
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+    {%  set member = app.user %}
+    <h2>{{ type | trans | format(member.Username) }}</h2>
+
+    {% if items.nbResults == 0 %}
+        <p>{{ 'No messages in this folder.' | trans }}</p>
+    {% else %}
+
+        {{ form_start(form) }}
+        {% if items.haveToPaginate %}
+        <div class="float-left">
+            {{ pagerfanta( items, 'twitter_bootstrap4_translated', { 'proximity': 1, 'prev_message': '&larr;', 'next_message': '&rarr;' }) }}
+        </div>
+        {% endif %}
+
+        {# set sorting header based on current folder. Outside of sent sort by sender #}
+        {% set correspondent %}{% if folder == 'sent' %}receiver{% else %}sender{% endif %}{% endset %}
+        <table class="table table-responsive table-striped table-hover">
+
+        <tr>
+            <th class="select align-middle">
+                <input type="checkbox" id="checkAll">
+            </th>
+            <th class="from text-center align-middle nowrap">
+                <span class="small"><a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: correspondent, dir: 'asc' }) }}">&#x25b2;</a> {{ correspondent | trans | capitalize }} <a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: correspondent, dir: 'desc' }) }}">&#x25bc;</a></span><br>
+                <span class="small"><a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: 'date', dir: 'asc' }) }}">&#x25b2;</a> {{ 'Date' | trans }} <a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: 'date', dir: 'desc' }) }}">&#x25bc;</a></span>
+            </th>
+            <th colspan="2" class="align-middle">{{ 'MessagesText' | trans }}</th>
+        </tr>
+        {% for message in items.currentPageResults %}
+            {% set directionIn = (member.id == message.receiver.id) %}
+            {% set otherMember = directionIn ? message.sender : message.receiver %}
+
+            <tr>
+                <td class="select align-middle" id="selectcolumn">
+                    {{ form_widget(form.messages[loop.index0], {'attr': {'class': 'checkable'}}) }}
+                </td>
+                <td class="align-middle small">
+                    <p class="m-0">{{ macros.avatar(otherMember.Username, 50, true) }}</p>
+                    <p class="m-0">{{ macros.profilelink(otherMember.Username) }}</p>
+                </td>
+                <td class="align-middle w-100">
+                    <a href="{{ path('message_show', { id: message.id}) }}"
+                            {%- if not message.WhenFirstRead -%}
+                                {{- ' class="unread"' -}}
+                            {%- endif -%}
+                    >
+                        <div>
+                            {% if message.subject %}<p class="h5 m-0">
+                                {{- message.subject.subject | striptags -}}</span>
+                                </p>{% endif %}
+                    {% set messageText = message.Message | replace({'\n': ' ', '<br />': ' '}) | striptags %}
+
+                    {% spaceless %}
+                        <p class="m-0 mb-1">{{- messageText | truncate(150) | raw -}}</p>
+                    {% endspaceless %}
+                    {% if message.request %}
+                        <div class="d-flex alert-light p-2">
+                            <div class="mr-2 font-weight-bold">
+                                <i class="fa fa-calendar mr-1"></i>{{ 'Arrival' | trans }}
+                                {%- if message.request.departure %}<br>
+                                    <i class="fa fa-calendar mr-1"></i>{{ 'Departure' | trans }}{%- endif %}
+                            </div>
+                            <div>
+                                {{ message.request.arrival | localizeddate( 'medium', 'none') }}
+                                {%- if message.request.departure %}<br>
+                                    {{ message.request.departure | localizeddate( 'medium', 'none') }}{%- endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    {# Handle the case where a message/request doesn't have a sent date #}
+                    {% set sentDate %}{% if message.dateSent != '-0001-11-30 00:00:00' %}{{ message.dateSent | localizeddate( 'medium', 'none') }}{% else %}{{ message.updated | localizeddate( 'medium', 'none')}}{% endif %}{% endset %}
+                    <span class="text-muted small">{% if folder == 'sent' %}{% trans %}Sent on %sentDate%{% endtrans %}{% else %}{% trans %}Received on %sentDate%{% endtrans %}{% endif %}</span>
+                        </div>
+                    </a>
+                </td>
+                <td class="align-right">
+                    <a href="{{ path('message_show', { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'View' | trans }}</a>
+                </td>
+            </tr>
+        {% endfor %}
+            <tr>
+                <td colspan="4">
+                    <div class="btn-group" aria-label="Delete or spam">
+                        {% if folder == 'deleted' %}
+                            {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-sm btn-danger' } }) }}
+                        {% else %}
+                            {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-sm btn-danger', 'onclick': "return confirm ('{{ 'MessagesWarningConfirmDelete' | trans }}')"} }) }}
+                        {% endif %}
+                        {{ form_widget(form.spam, { 'attr': { 'class': 'btn btn-sm btn-light' } }) }}
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <input id="message_index_form__token" name="message_index_form[_token]" value="{{ form._token.vars.value }}" type="hidden">
+        {{ form_rest(form) }}
+        {{ form_end(form) }}
+        {% if items.haveToPaginate %}
+            <div class="float-left">
+                {{ pagerfanta( items, 'twitter_bootstrap4_translated', { 'proximity': 1, 'prev_message': '&larr;', 'next_message': '&rarr;' }) }}
+            </div>
+        {% endif %}
+
+    {% endif %}
+    <script type="text/javascript">
+        function toggle(source) {
+            checkboxes = document.getElementsByName('.selectable');
+            for(var i=0, n=checkboxes.length;i<n;i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+    </script>
+{% endblock %}

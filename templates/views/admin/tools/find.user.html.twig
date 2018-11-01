@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block title %}
+    {{ 'admin.tools.title' | trans }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ 'tools.headline' | trans }}</h1>
+    {{ form(form) }}
+    {% if members is defined %}
+        <table class="table table-responsive">
+        {%  for member in members %}
+            <tr>
+                <td>{{ macros.avatar(member.username) }}</td>
+                <td>{{ macros.profilelink(member.username) }}</td>
+                <td>{{ member.email }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% endif %}
+{% endblock content %}

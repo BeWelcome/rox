@@ -1,0 +1,26 @@
+App\Entity\Params:
+  params:
+    updated: '<dateTime()>'
+    isrealproductiondatabase: 'No'
+    recordonline: 0
+    toggledonatebar: 0
+    neededperyear: 1260
+    campaignstartdate: '<dateTime(2012-10-11)>'
+    mailtonotifywhennewmembersignup: ''
+    featureforumclosed: 'No'
+    featureajaxchatclosed: 'No'
+    featuresignupclose: 'No'
+    featuresearchpageisclosed: 'No'
+    featurequicksearchisclosed: 'No'
+    rssfeedisclosed: 'No'
+    ajaxchatspecialallowedlist: ''
+    ajaxchatdebulevel: 0
+    reloadrightsandflags: 'No'
+    logsIdMidnight: 1
+    previousLogsIdMidnight: 0
+    memcache: 'False'
+    daylightoffset: 0
+    nbcommentsinlastcomments: 20
+    idcommentofthemoment: 0
+    mailbotmode: 'Manual'
+    togglestatsforwordsusage: 'No'

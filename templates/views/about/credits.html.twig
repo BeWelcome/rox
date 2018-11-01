@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'credits.title' | trans }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ 'credits.headline' | trans }}</h1>
+    <p>{{ 'credits.abstract' | trans }}</p>
+    <dl>
+        <dt><a href="https://geonames.org">Geonames</a></dt>
+        <dd>We use the data from geonames.org to help you find your way around the world.</dd>
+    </dl>
+    <dl>
+        <dt><a href="OSM"></a><a href="https://openstreetmap.org">Open Street Map</a></dt>
+        <dd>Without OpenStreetMap and its contributors our website would be pretty dull. We rely on the database for locations and tiles for the maps.</dd>
+    </dl>
+{% endblock content %}

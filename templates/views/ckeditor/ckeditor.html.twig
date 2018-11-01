@@ -1,0 +1,36 @@
+{% block ckeditor_widget %}
+    <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
+
+    {% if not async %}
+        {{ block( '_ckeditor_javascript' ) }}
+        {{ block( '_ckeditor_stylesheet' ) }}
+    {% endif %}
+{% endblock %}
+
+{% block _ckeditor_javascript %}
+    <script src="{{ asset('script/ckeditor.js') }}"></script>
+    <script>
+        var allEditors = document.querySelectorAll('.editor');
+        for (var i = 0; i < allEditors.length; ++i) {
+            ClassicEditor.create(allEditors[i], {
+                removePlugins: [ 'Heading' ],
+                toolbar: [ 'bold', 'italic', '|', 'link', '|', 'bulletedList', 'numberedList', '|', 'blockQuote' ]
+            } )
+                .then( editor => {
+                    window.editor = editor;
+                } )
+                .catch( err => {
+                    console.error( err.stack );
+                } );
+        }
+    </script>
+{% endblock %}
+
+{% block _ckeditor_stylesheet %}
+    <style>
+        .ck-editor__editable {
+            min-height: 10em;
+        }
+    </style>
+{% endblock %}
+

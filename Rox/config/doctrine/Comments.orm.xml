@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Comments" table="comments">
+    <indexes>
+      <index name="IdToMember" columns="IdToMember"/>
+      <index name="comments_ibfk_1" columns="IdFromMember"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="lenght" type="string" column="Lenght" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="quality" type="string" column="Quality" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default">Neutral</option>
+      </options>
+    </field>
+    <field name="textfree" type="text" column="TextFree" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="textwhere" type="text" column="TextWhere" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="updated" type="datetime" column="updated" nullable="true"/>
+    <field name="created" type="datetime" column="created" nullable="false">
+      <options>
+        <option name="default">0000-00-00 00:00:00</option>
+      </options>
+    </field>
+    <field name="adminaction" type="string" column="AdminAction" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default">NothingNeeded</option>
+      </options>
+    </field>
+    <field name="displayableincommentofthemonth" type="string" column="DisplayableInCommentOfTheMonth" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">State wethere thsi comment can be allowed to be display in comment of the month</option>
+        <option name="default">Yes</option>
+      </options>
+    </field>
+    <field name="displayinpublic" type="boolean" column="DisplayInPublic" nullable="false">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="allowedit" type="boolean" column="AllowEdit" nullable="false">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <many-to-one field="idtomember" target-entity="Members" fetch="LAZY">
+      <join-columns>
+        <join-column name="IdToMember" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idfrommember" target-entity="Members" fetch="LAZY">
+      <join-columns>
+        <join-column name="IdFromMember" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

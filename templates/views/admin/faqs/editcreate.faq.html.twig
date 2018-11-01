@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block subnav %}
+    {% for filter,menuItem in submenu.items %}
+        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}"
+           href="{{ menuItem.url }}">{{ menuItem.key | trans({}, "messages", 'en') }}</a>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    {% if edit %}
+        <h1>{{ 'Edit an FAQ' | trans}}</h1>
+    {% else %}
+        <h1>{{ 'Create an FAQ' | trans }}</h1>
+    {% endif %}
+    {{ form_start(form) }}
+    <div class="form-group">
+        {{ form_label(form.faqCategory) }}
+        {{ form_widget(form.faqCategory) }}
+        <small class="form-text text-muted">The category the FAQ will be added to (read-only).</small>
+    </div>
+    <div class="form-group">
+        {{ form_label(form.wordCode) }}
+        {{ form_widget(form.wordCode) }}
+        <small class="form-text text-muted">The word code to be used for the FAQ.</small>
+    </div>
+    <div class="form-group">
+        {{ form_label(form.question) }}
+        {{ form_widget(form.question) }}
+        <small class="form-text text-muted">The question to be answered (English only).</small>
+    </div>
+    <div class="form-group">
+        {{ form_label(form.answer) }}
+        {{ form_widget(form.answer) }}
+        <small class="form-text text-muted">The answer to the question (English only).</small>
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.active) }}
+        <small class="form-text text-muted">Is this an active FAQ (read will be shown to the users).</small>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\PollsRecordOfChoices" table="polls_record_of_choices">
+    <indexes>
+      <index name="IdMember" columns="IdMember"/>
+      <index name="idEmail" columns="Email"/>
+      <index name="IdPoll" columns="IdPoll"/>
+      <index name="IdPollChoice" columns="IdPollChoice"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="updated" type="datetime" column="updated" nullable="false">
+      <options>
+        <option name="comment">when the record was updated</option>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
+    <field name="created" type="datetime" column="created" nullable="false">
+      <options>
+        <option name="comment">when the record was created</option>
+        <option name="default">0000-00-00 00:00:00</option>
+      </options>
+    </field>
+    <field name="idpollchoice" type="integer" column="IdPollChoice" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">the id of the choice made</option>
+      </options>
+    </field>
+    <field name="hierarchyvalue" type="integer" column="HierarchyValue" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Thi is use to store the hierarchy value (if it is a hierarchic choice)</option>
+      </options>
+    </field>
+    <field name="email" type="text" column="Email" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">email of the contributor (if not logged in)</option>
+      </options>
+    </field>
+    <many-to-one field="idpoll" target-entity="Polls" fetch="LAZY">
+      <join-columns>
+        <join-column name="IdPoll" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idmember" target-entity="Members" fetch="LAZY">
+      <join-columns>
+        <join-column name="IdMember" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

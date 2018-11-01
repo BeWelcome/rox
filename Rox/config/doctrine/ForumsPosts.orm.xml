@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\ForumsPosts" table="forums_posts">
+    <indexes>
+      <index name="authorid" columns="authorid"/>
+      <index name="last_editorid" columns="last_editorid"/>
+      <index name="threadid" columns="threadid"/>
+      <index name="IdWriter" columns="IdWriter"/>
+      <index name="id" columns="id"/>
+      <index name="IdLocalEvent" columns="IdLocalEvent"/>
+      <index name="IdPoll" columns="IdPoll"/>
+      <index name="IdLocalVolMessage" columns="IdLocalVolMessage"/>
+      <index name="PostVisibility" columns="PostVisibility"/>
+      <index name="PostDeleted" columns="PostDeleted"/>
+      <index name="create_time" columns="create_time"/>
+    </indexes>
+    <id name="postid" type="integer" column="postid">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="id" type="integer" column="id" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">id of the  posts (this will be the primary key) currently redudant with postid</option>
+      </options>
+    </field>
+    <field name="threadid" type="integer" column="threadid" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="postvisibility" type="string" column="PostVisibility" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">States who can read this post (usually same value as parent thread)</option>
+        <option name="default">NoRestriction</option>
+      </options>
+    </field>
+    <field name="authorid" type="integer" column="authorid" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idwriter" type="integer" column="IdWriter" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">This is the member who write the post, this is th index to use to retrieve the member data in Members table</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="createTime" type="datetime" column="create_time" nullable="false"/>
+    <field name="message" type="text" column="message" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">Obsolete, refer to IdContent</option>
+      </options>
+    </field>
+    <field name="idcontent" type="integer" column="IdContent" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Corresponding record for post message in translations</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="ownercanstilledit" type="string" column="OwnerCanStillEdit" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">Wether the user can still edit this post</option>
+        <option name="default">Yes</option>
+      </options>
+    </field>
+    <field name="lastEdittime" type="datetime" column="last_edittime" nullable="true"/>
+    <field name="lastEditorid" type="integer" column="last_editorid" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="editCount" type="boolean" column="edit_count" nullable="false">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="idfirstlanguageused" type="integer" column="IdFirstLanguageUsed" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">This is the id of the first language used for this post, which allows to consider the "reference language" for it</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="hasvotes" type="string" column="HasVotes" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">States if there is a vote connected to this post</option>
+        <option name="default">No</option>
+      </options>
+    </field>
+    <field name="idlocalvolmessage" type="integer" column="IdLocalVolMessage" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Connection with a possible Message to send to a location (to manage thump up/down)</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="idlocalevent" type="integer" column="IdLocalEvent" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">States if there is a local event connected to this posts</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="idpoll" type="integer" column="IdPoll" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">optional id of a poll connected to this forum post</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="postdeleted" type="string" column="PostDeleted" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">tells if the post was deleted</option>
+        <option name="default">NotDeleted</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

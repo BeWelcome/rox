@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block javascripts %}
+    <script>
+        var delay = (function(){
+            var timer = 0;
+            return function(callback, ms, that){
+                clearTimeout (timer);
+                timer = setTimeout(callback.bind(that), ms);
+            };
+        })();
+        $('#group_name').keyup(function() {
+            delay(function(){
+                var name = $('#group_name').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/groups/new/check',
+                    data: {
+                        name: name
+                    },
+                    success: function(data) {
+                        $('#duplicates').html(data.html);
+                    }
+                });
+            }, 1000, this);
+        });
+    </script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+{% endblock stylesheets %}
+
+{% block content %}
+    <h1>{{ 'Create a new group' | trans}}</h1>
+    <p>{{ 'We\'re happy that you want to open a new group, but unfortunately spammers like them as well, so please note
+      that the group will need to be activated by the BW Forum Moderators. Please also read the Rules for Groups (link) when thinking about the new group\'s name and description.'}}</p>
+    {{ form_start(form, { 'attr': { 'novalidate': 'novalidate'}}) }}
+    <div class="form-group">
+        {{ form_label(form.name) }}
+        {{ form_widget(form.name) }}
+        <small id="nameHelp" class="form-text text-muted">{{ 'For local groups, include the country (e.g. Place, Country) as this will help with searches.' | trans }}</small>
+    </div>
+
+    <div id="duplicates"></div>
+
+    <div class="form-group">
+        {{ form_label(form.description) }}
+        {{ form_widget(form.description) }}
+        <small id="nameHelp" class="form-text text-muted">{{ 'Include the purpose of the group or the main features of the place covered by the group.' | trans }}</small>
+    </div>
+
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+{% endblock content %}

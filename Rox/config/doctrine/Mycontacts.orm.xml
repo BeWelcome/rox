@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Mycontacts" table="mycontacts">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="idmember" type="integer" column="Idmember" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">member who own the contact</option>
+      </options>
+    </field>
+    <field name="idcontact" type="integer" column="IdContact" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">id of the contact</option>
+      </options>
+    </field>
+    <field name="updated" type="datetime" column="updated" nullable="false">
+      <options>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
+    <field name="category" type="text" column="Category" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">category of the contact (can be used as a sort otion)</option>
+      </options>
+    </field>
+    <field name="comment" type="text" column="Comment" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">comment of the member about contact</option>
+      </options>
+    </field>
+    <field name="created" type="datetime" column="created" nullable="false">
+      <options>
+        <option name="default">0000-00-00 00:00:00</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

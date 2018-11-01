@@ -1,0 +1,9 @@
+App\Entity\MembersLanguagesLevel:
+    member_1_english_mother_tongue:
+        Member:  '@member_1'
+        Language: '@language_en'
+        Level: 'MotherLanguage'
+    member_1_french_beginner:
+        Member:  '@member_1'
+        Language: '@language_fr'
+        Level: 'Intermediate'

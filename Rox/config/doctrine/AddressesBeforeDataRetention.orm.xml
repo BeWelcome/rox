@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\AddressesBeforeDataRetention" table="addresses_before_data_retention">
+    <indexes>
+      <index name="IdMember" columns="IdMember"/>
+      <index name="IdCity" columns="IdCity"/>
+      <index name="CityAndRank" columns="IdCity,Rank"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="idmember" type="integer" column="IdMember" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Member who own this address</option>
+      </options>
+    </field>
+    <field name="housenumber" type="integer" column="HouseNumber" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">house member of the member</option>
+      </options>
+    </field>
+    <field name="streetname" type="integer" column="StreetName" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Name of the street where the address is, this is a crypted field which the member can choose to hide</option>
+      </options>
+    </field>
+    <field name="zip" type="integer" column="Zip" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Zip of the address, this is a crypted field which the member can choose to hide</option>
+      </options>
+    </field>
+    <field name="idcity" type="integer" column="IdCity" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">City where the address is</option>
+      </options>
+    </field>
+    <field name="explanation" type="integer" column="Explanation" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Explanation about the current address (useful for secundary addresses) this is a translatable field</option>
+      </options>
+    </field>
+    <field name="rank" type="boolean" column="Rank" nullable="false">
+      <options>
+        <option name="comment">rank of the address (0 being the main address of the member)</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="updated" type="datetime" column="updated" nullable="false">
+      <options>
+        <option name="default">0000-00-00 00:00:00</option>
+      </options>
+    </field>
+    <field name="created" type="datetime" column="created" nullable="false">
+      <options>
+        <option name="default">0000-00-00 00:00:00</option>
+      </options>
+    </field>
+    <field name="idgettingthere" type="integer" column="IdGettingThere" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">This is and extra field which allow the member how to get to this address, this field can be translated</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\TripOld" table="trip_old">
+    <indexes>
+      <index name="IdMember" columns="IdMember"/>
+    </indexes>
+    <id name="tripId" type="integer" column="trip_id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="tripOptions" type="blob" column="trip_options" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tripTouched" type="datetime" column="trip_touched" nullable="false">
+      <options>
+        <option name="default">0000-00-00 00:00:00</option>
+      </options>
+    </field>
+    <field name="idmember" type="integer" column="IdMember" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">References members table</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

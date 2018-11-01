@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\SuggestionsOptionRanks" table="suggestions_option_ranks">
+    <id name="optionid" type="integer" column="optionid"/>
+    <id name="memberhash" type="string" column="memberhash" length="64"/>
+    <field name="vote" type="integer" column="vote" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">vote</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

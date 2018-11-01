@@ -1,0 +1,11 @@
+{% for comment in member.comments %}
+
+    {{ dump(comment) }}
+
+    {{ comment.fromMember.username }}
+    {{ comment.created.diffForHumans }}
+    {{ comment.created.format('r') }}
+    {{ comment.TextFree }}
+    {{ comment.TextWhere }}
+
+{% endfor %}

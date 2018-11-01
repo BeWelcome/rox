@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Translations" table="translations">
+    <indexes>
+      <index name="IdTrad" columns="IdTrad"/>
+    </indexes>
+    <unique-constraints>
+      <unique-constraint name="unique_entry" columns="IdTrad,IdOwner,IdLanguage"/>
+    </unique-constraints>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="idlanguage" type="integer" column="IdLanguage" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">supposed language of the Sentence</option>
+      </options>
+    </field>
+    <field name="idowner" type="integer" column="IdOwner" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">owner of the record (guy who created it)</option>
+      </options>
+    </field>
+    <field name="idtrad" type="integer" column="IdTrad" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Unique IdTrad (with the IdLa,gauge) for this record</option>
+      </options>
+    </field>
+    <field name="idtranslator" type="integer" column="IdTranslator" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Id of the translator</option>
+      </options>
+    </field>
+    <field name="updated" type="datetime" column="updated" nullable="false">
+      <options>
+        <option name="comment">when the record was updated</option>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
+    <field name="created" type="datetime" column="created" nullable="false">
+      <options>
+        <option name="comment">when the record was created</option>
+        <option name="default">0000-00-00 00:00:00</option>
+      </options>
+    </field>
+    <field name="type" type="string" column="Type" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">Type of translation</option>
+      </options>
+    </field>
+    <field name="sentence" type="text" column="Sentence" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">Text in one language</option>
+      </options>
+    </field>
+    <field name="idrecord" type="integer" column="IdRecord" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Id of the record in the foreign table</option>
+      </options>
+    </field>
+    <field name="tablecolumn" type="string" column="TableColumn" length="200" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">name of the table and field (linked with this record)</option>
+        <option name="default">NotSet</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

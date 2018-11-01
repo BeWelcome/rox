@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\PollsContributions" table="polls_contributions">
+    <indexes>
+      <index name="idEmail" columns="Email"/>
+      <index name="IdPoll" columns="IdPoll"/>
+      <index name="IDX_D41FF2B3EA8330B4" columns="IdMember"/>
+    </indexes>
+    <unique-constraints>
+      <unique-constraint name="IdMember" columns="IdMember,IdPoll"/>
+    </unique-constraints>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="email" type="text" column="Email" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">email of the external contributor (if open to not logged people)</option>
+      </options>
+    </field>
+    <field name="emailisconfirmed" type="string" column="EmailIsConfirmed" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">State wether the email is confirmed or not</option>
+        <option name="default">No</option>
+      </options>
+    </field>
+    <field name="updated" type="datetime" column="updated" nullable="false">
+      <options>
+        <option name="comment">when teh record was updated</option>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
+    <field name="created" type="datetime" column="created" nullable="false">
+      <options>
+        <option name="comment">when the record was created</option>
+        <option name="default">0000-00-00 00:00:00</option>
+      </options>
+    </field>
+    <field name="comment" type="text" column="comment" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">possible common (depend on option polls.AllowComment)</option>
+      </options>
+    </field>
+    <many-to-one field="idpoll" target-entity="Polls" fetch="LAZY">
+      <join-columns>
+        <join-column name="IdPoll" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idmember" target-entity="Members" fetch="LAZY">
+      <join-columns>
+        <join-column name="IdMember" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

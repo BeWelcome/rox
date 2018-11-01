@@ -1,6 +1,0 @@
-AppBundle\Entity\Country:
-  Germany:
-    name: 'Germany'
-    geonameid: 2921044
-    continent: 'EU'
-    country: 'DE'

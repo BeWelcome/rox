@@ -1,0 +1,18 @@
+{% import 'macros.twig' as macros %}
+<div id="notificationsdisplay" class="scrollcontent">
+    {% for notification in notifications %}
+        <div class="d-flex flex-row justify-content-start align-items-center p-2">
+            <div class="pr-2">{{ macros.avatar( notification.member.Username, 50, true ) }}</div>
+            <div class="text-truncate">
+                <p class="text-truncate m-0 p-0 dashentry">
+                    <a href="{{ notification.link }}" title="{{ notification.translationcode|trans }}">{{ notification.translationcode|trans| raw }}</a><br>
+                </p>
+                <p class="p-0 m-0"><small><abbr title="{{ notification.created }}">{{ notification.created.DiffForHumans }}</abbr></small></p>
+            </div>
+            <div class="ml-auto"><a class="notify" id="notify-{{ notification.id }}" href="#"><i class="fa fa-remove"></i></a></div>
+        </div>
+    {% else %}
+        <em>{{ 'No notifications' | trans }}</em>
+    {% endfor %}
+
+</div>

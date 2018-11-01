@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Suggestions" table="suggestions">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="summary" type="string" column="summary" length="80" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">A short summary of the suggestions objective (no HTML)</option>
+      </options>
+    </field>
+    <field name="description" type="text" column="description" length="16777215" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">The description of the objective of the decision (HTML)</option>
+      </options>
+    </field>
+    <field name="salt" type="string" column="salt" length="64" nullable="false">
+      <options>
+        <option name="fixed">1</option>
+      </options>
+    </field>
+    <field name="state" type="smallint" column="state" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="flags" type="integer" column="flags" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Versatile field. Currently used to store if the voting start message was already posted. </option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="threadid" type="integer" column="threadId" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="created" type="date" column="created" nullable="false">
+      <options>
+        <option name="comment">Creation date of the decision</option>
+      </options>
+    </field>
+    <field name="createdby" type="integer" column="createdby" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Member (id( that created the suggestion</option>
+      </options>
+    </field>
+    <field name="modified" type="date" column="modified" nullable="true">
+      <options>
+        <option name="comment">Last time the suggestion was updated</option>
+      </options>
+    </field>
+    <field name="modifiedby" type="integer" column="modifiedby" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="laststatechanged" type="date" column="laststatechanged" nullable="true">
+      <options>
+        <option name="comment">Stores the last state change to be able to calculate the start of the next phase</option>
+      </options>
+    </field>
+    <field name="votingend" type="date" column="votingend" nullable="true">
+      <options>
+        <option name="comment">Stores the date when the voting ended. Might be useful information.</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

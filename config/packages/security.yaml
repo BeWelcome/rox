@@ -1,0 +1,75 @@
+parameters:
+    # Checkbox name in form
+    remember_me.form_parameter: remember
+    # Cookie name
+    remember_me.cookie_name: remember_me
+
+security:
+    encoders:
+        # For the legacy MySQL PASSWORD()
+        AppBundle\Encoder\LegacyPasswordEncoder:
+            id: rox.legacy_password_encoder
+
+        # Default for all members
+        default:
+            algorithm: bcrypt
+            cost: 12
+
+        # Stronger password cost for privileged members. See
+        # AppBundle\Factory\EncoderFactory
+        harsh:
+            algorithm: bcrypt
+            cost: 13
+
+    providers:
+        our_db_provider:
+            entity:
+                class: AppBundle:Member
+
+    firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        default:
+            user_checker: rox.user_checker
+            remember_me:
+                secret: '%env(APP_SECRET)%'
+                lifetime: 31536000 # 1 year in seconds
+                path: /
+
+            anonymous: ~
+
+            form_login:
+                login_path: /login
+                check_path: /login_check
+                default_target_path: /
+                use_referer: true
+                csrf_token_generator: security.csrf.token_manager
+
+            logout:
+                path:   /logout
+                target: /
+
+
+    access_control:
+        - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/login, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/about, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/terms, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/privacy, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/stats, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/safety, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/signup, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetpassword, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/rox/in, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/search/locations/all, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/search/map, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/volunteer, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/, roles: ROLE_USER }
+
+#    role_hierarchy:
+#        ROLE_ADMIN:       ROLE_USER
+#        ROLE_SUPER_ADMIN: ROLE_ADMIN

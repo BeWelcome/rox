@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Geonamesalternatenames" table="geonamesalternatenames">
+    <indexes>
+      <index name="idx_alternatename" columns="alternatename"/>
+      <index name="idx_isoLanguage" columns="isolanguage"/>
+      <index name="idx_ispreferred" columns="ispreferred"/>
+      <index name="idx_isshort" columns="isshort"/>
+      <index name="idx_iscolloquial" columns="iscolloquial"/>
+      <index name="idx_ishistoric" columns="ishistoric"/>
+      <index name="idx_geonameid" columns="geonameid"/>
+    </indexes>
+    <id name="alternatenameid" type="integer" column="alternatenameId">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="isolanguage" type="string" column="isolanguage" length="7" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="alternatename" type="string" column="alternatename" length="200" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ispreferred" type="boolean" column="ispreferred" nullable="true"/>
+    <field name="isshort" type="boolean" column="isshort" nullable="true"/>
+    <field name="iscolloquial" type="boolean" column="iscolloquial" nullable="true"/>
+    <field name="ishistoric" type="boolean" column="ishistoric" nullable="true"/>
+    <many-to-one field="geonameid" target-entity="Geonames" fetch="LAZY">
+      <join-columns>
+        <join-column name="geonameid" referenced-column-name="geonameid"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Polls" table="polls">
+    <indexes>
+      <index name="IdCreator" columns="IdCreator"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="idgroupcreator" type="integer" column="IdGroupCreator" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Id of the group(if any) who created the poll </option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="status" type="string" column="Status" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">Status of the poll</option>
+        <option name="default">Project</option>
+      </options>
+    </field>
+    <field name="resultsvisibility" type="string" column="ResultsVisibility" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">Wether the results are  visible or not (usually we wait for the end of the poll)</option>
+        <option name="default">VisibleAfterVisit</option>
+      </options>
+    </field>
+    <field name="type" type="string" column="Type" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">The kind of poll</option>
+        <option name="default">MemberPoll</option>
+      </options>
+    </field>
+    <field name="updated" type="datetime" column="updated" nullable="false">
+      <options>
+        <option name="comment">When teh poll was updated</option>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
+    <field name="started" type="datetime" column="Started" nullable="false">
+      <options>
+        <option name="comment">When the poll will start</option>
+        <option name="default">0000-00-00 00:00:00</option>
+      </options>
+    </field>
+    <field name="ended" type="datetime" column="Ended" nullable="false">
+      <options>
+        <option name="comment">When the poll will close</option>
+        <option name="default">0000-00-00 00:00:00</option>
+      </options>
+    </field>
+    <field name="created" type="datetime" column="created" nullable="false">
+      <options>
+        <option name="comment">when the poll was created</option>
+        <option name="default">0000-00-00 00:00:00</option>
+      </options>
+    </field>
+    <field name="title" type="integer" column="Title" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Title of the poll, this is a forum_trad</option>
+      </options>
+    </field>
+    <field name="formembersonly" type="string" column="ForMembersOnly" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">define if only members can contribute to this poll</option>
+        <option name="default">Yes</option>
+      </options>
+    </field>
+    <field name="idlocationslist" type="integer" column="IdLocationsList" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">for future, Id of a location list for people who are allowed to contribute to this poll</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="idgroupslist" type="integer" column="IdGroupsList" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">useless to remove</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="idcountrieslist" type="integer" column="IdCountriesList" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">for future, Id of a country list for people who are allowed to contribute to this poll</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="opentosubgroups" type="string" column="OpenToSubGroups" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">wether subgroups of teh group list (if any) can contribute </option>
+        <option name="default">Yes</option>
+      </options>
+    </field>
+    <field name="typeofchoice" type="string" column="TypeOfChoice" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">Type of the possibel choice for answer (one, several, sorted)</option>
+      </options>
+    </field>
+    <field name="canchangevote" type="string" column="CanChangeVote" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">State wether member can change their votes for this poll</option>
+        <option name="default">No</option>
+      </options>
+    </field>
+    <field name="allowcomment" type="string" column="AllowComment" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">wether the contributor can make an additional comment or not</option>
+        <option name="default">No</option>
+      </options>
+    </field>
+    <field name="description" type="integer" column="Description" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">This is a forum_trad which allows to describe the poll</option>
+      </options>
+    </field>
+    <field name="wheretorestrictmember" type="text" column="WhereToRestrictMember" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">This can be a SQL text usable to restrict the member allow to contribute to the poll</option>
+      </options>
+    </field>
+    <field name="anonym" type="string" column="Anonym" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">wether the poll is made anonymously</option>
+        <option name="default">Yes</option>
+      </options>
+    </field>
+    <many-to-one field="idcreator" target-entity="Members" fetch="LAZY">
+      <join-columns>
+        <join-column name="IdCreator" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

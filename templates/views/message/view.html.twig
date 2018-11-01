@@ -1,0 +1,22 @@
+{% import 'macros.twig' as macros %}
+{% extends 'base.html.twig' %}
+
+{% block content %}
+<div class="row px-3">
+    {% set original = thread | last %}{% set request = original.Request %}
+    {% set myself = app.user %}
+    {% if original.Sender.Username == myself.Username %}{% set otherUser = original.Receiver %}{% else %}{% set otherUser = original.Sender %}{% endif %}
+    {% if current.subject %}{% set currentSubject = current.Subject.Subject %}{% else %}{% set currentSubject = 'Conversation with ' ~ otherUser.Username %}{% endif %}
+    <div class="col-12 sticky-top py-1 bg-white d-inline-block messageheader">
+        <div class="pull-left">{{ macros.avatarstack(otherUser.Username, 50, false) }}</div>
+        <div class="pull-right">{{ macros.avatarstack(myself.Username, 50, true) }}</div>
+        <div>
+            <h3 id="MessageSubject" class="m-0 px-3 text-truncate">{{ currentSubject }}</h3>
+            <a class="btn btn-sm btn-primary mx-3" href="{{ path('message_reply', { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a>
+        </div>
+    </div>
+</div>
+
+    {% include ':message:thread.html.twig' %}
+<div class="row justify-content-end px-3"><a class="btn btn-primary" href="{{ path('message_reply', { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a></div>
+{% endblock content %}

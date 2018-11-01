@@ -1,0 +1,84 @@
+{% extends 'base-lite.html.twig' %}
+
+{% block title %}
+    {{ 'Login' | trans }}
+{% endblock %}
+
+{% block content %}
+    {% for flash_message in app.session.flashBag.get('error') %}
+        <div class="flash error">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+    {% for flash_message in app.session.flashBag.get('notice') %}
+        <div class="flash notice">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+    <div class="row">
+        <div class="col-12 col-lg-8 offset-lg-2 mb-3">
+            <h1 class="d-none d-md-block">BeWelcome - {{ 'IndexPageTeaserOpenDoor' | trans }}</h1>
+        </div>
+    </div>
+
+
+    {% if error %}
+        <div class="row justify-content-md-center">
+            <div class="col-12 col-md-12 col-lg-8 p-3 mb-3  alert alert-danger mb-3">
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row justify-content-md-center">
+        <div class="col-12 col-md-6 col-lg-4 card p-3 mb-3">
+
+
+            <form id="main-login-form" role="form" class="form-signin" method="post"
+                  action="{{ path('security_check') }}">
+                <h2 class="d-none d-md-block">{{ 'Login' | trans }}</h2>
+
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <label class="m-0" for="login-u">{{ 'Username' | trans }}</label>
+                        <input type="text" id="login-u" name="_username" autofocus required value="{{ last_username }}"
+                               class="form-control">
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="m-0" for="login-p">{{ 'Password' | trans }}</label>
+                        <input type="password" id="login-p" name="_password" class="form-control">
+                    </div>
+
+                    <div class="col-12 col-md-6 mt-3 text-md-right">
+                        <label for="login-r">
+                            <input type="checkbox" id="login-r" value="1"
+                                   name="_remember_me">&nbsp;{{ 'StayLoggedIn' | trans }}
+                        </label>
+                    </div>
+
+
+                    <input type="hidden" name="_csrf_token"
+                           value="{{ csrf_token('authenticate') }}"
+                    >
+
+                    <div class="col-12 col-md-6 mt-2">
+                        <button type="submit"
+                                class="btn btn-primary btn-block">{{ 'IndexPageLoginSubmit' | trans }}</button>
+                    </div>
+
+                    <p class="col-12 mt-3">
+                        {{ 'Forgot your password?' }}<br>
+                        <a href="{{ url('member_request_reset_password') }}">{{ 'Get a new one!' | trans }}</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4">
+            <h2 class="mb-3">{{ 'SignupNow' | trans }}</h2>
+            <p>{{ 'IndexPageWord17' | trans | format('<a class="btn btn-primary btn-block" role="button" href="signup/1">', '</a>') | raw }}</p>
+            <a class="btn btn-outline-dark btn-block" role="button" href="">{{ 'tour_take' | trans }}</a>
+        </div>
+    </div>
+
+{% endblock %}

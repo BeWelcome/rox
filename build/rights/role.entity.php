@@ -163,11 +163,10 @@ class Role extends RoxEntityBase
         $mr = $this->createEntity('MemberRole');
         if (!$mr->findById($member, $this) && !$mr->createMemberRoleLink($member, $this))
         {
-            foreach ($scopes as $scope)
+            foreach ($privscopes as $scope)
             {
                 $scope->deleteScope();
             }
-            return false;
         }
         return true;
     }

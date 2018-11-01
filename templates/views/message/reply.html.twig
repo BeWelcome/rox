@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_errors(form) }}
+    <div class="row mb-1">
+        <div class="col-12">
+            {{ form_label(form.subject, null, {'label_attr': {'class': 'sr-only '} }) }}
+            {{ form_errors(form.subject) }}
+            {{ form_widget(form.subject.subject) }}
+            {{ form_widget(form.message) }}
+            {{ form_rest(form) }}
+        </div>
+    </div>
+
+    <div class="row mb-1">
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">{{ 'Reply' | trans }}</button>
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+    {% include ':message:thread.html.twig' %}
+
+{% endblock content %}

@@ -1,0 +1,8 @@
+App\Entity\CommunityNews:
+  news_1:
+    title: 'The very first community news'
+    text: '<text(300)>'
+    public: 1
+    createdAt: '<dateTime()>'
+    createdBy: '@member_1'
+    updatedAt: '@self->createdAt'

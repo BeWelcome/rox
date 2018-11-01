@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Params" table="params">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="updated" type="datetime" column="updated" nullable="false">
+      <options>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
+    <field name="isrealproductiondatabase" type="string" column="IsRealProductionDatabase" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">Says if it is the real website or not</option>
+        <option name="default">No</option>
+      </options>
+    </field>
+    <field name="recordonline" type="integer" column="recordonline" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">This parameter contains the number max of members seen online</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="toggledonatebar" type="integer" column="ToggleDonateBar" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">This field is used for the donate bar in the teaser, default is 0, if one, it shows up on the mainpage</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="neededperyear" type="integer" column="neededperyear" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Amount needed per year as shown during the donation campaign.</option>
+        <option name="default">1260</option>
+      </options>
+    </field>
+    <field name="campaignstartdate" type="date" column="campaignstartdate" nullable="false">
+      <options>
+        <option name="comment">The date the donation campaign started, used to gather the donated amount in this campaign.</option>
+        <option name="default">2012-10-11</option>
+      </options>
+    </field>
+    <field name="mailtonotifywhennewmembersignup" type="text" column="MailToNotifyWhenNewMemberSignup" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">these are the mail addresses which receive notification about new people who have signup</option>
+      </options>
+    </field>
+    <field name="featureforumclosed" type="string" column="FeatureForumClosed" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">This will allow to close the forum</option>
+        <option name="default">No</option>
+      </options>
+    </field>
+    <field name="featureajaxchatclosed" type="string" column="FeatureAjaxChatClosed" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">This will allow to close the Ajax chat</option>
+        <option name="default">No</option>
+      </options>
+    </field>
+    <field name="featuresignupclose" type="string" column="FeatureSignupClose" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">This will allow to close the Signup</option>
+        <option name="default">No</option>
+      </options>
+    </field>
+    <field name="featuresearchpageisclosed" type="string" column="FeatureSearchPageIsClosed" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">allow to disbale the main search page</option>
+        <option name="default">No</option>
+      </options>
+    </field>
+    <field name="featurequicksearchisclosed" type="string" column="FeatureQuickSearchIsClosed" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">allows to disable teh quick search feature</option>
+        <option name="default">No</option>
+      </options>
+    </field>
+    <field name="rssfeedisclosed" type="string" column="RssFeedIsClosed" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">Allow to disable the RSS feature</option>
+        <option name="default">No</option>
+      </options>
+    </field>
+    <field name="ajaxchatspecialallowedlist" type="text" column="AjaxChatSpecialAllowedList" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">This is a special list  of usernames for  admin/prog able to use chat even if it is closed</option>
+      </options>
+    </field>
+    <field name="ajaxchatdebulevel" type="integer" column="AjaxChatDebuLevel" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">If greater than 0 this value allow to add debug logs in the AjaxChat </option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="reloadrightsandflags" type="string" column="ReloadRightsAndFlags" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">Must be set to No, if Yes force the reload of Flags and Rights for online users</option>
+        <option name="default">No</option>
+      </options>
+    </field>
+    <field name="logsIdMidnight" type="integer" column="logs_id_midnight" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">id of logs table at previous midnight</option>
+      </options>
+    </field>
+    <field name="previousLogsIdMidnight" type="integer" column="previous_logs_id_midnight" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">id of logs table at midnight day before</option>
+      </options>
+    </field>
+    <field name="memcache" type="string" column="memcache" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">Used to enable the use of memcache</option>
+        <option name="default">False</option>
+      </options>
+    </field>
+    <field name="daylightoffset" type="integer" column="DayLightOffset" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">This is the Day light Offset  to be added to display dates tiem for members who chose this preference</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="nbcommentsinlastcomments" type="integer" column="NbCommentsInLastComments" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">This is the number of comments to display in the lastcomments page</option>
+        <option name="default">20</option>
+      </options>
+    </field>
+    <field name="idcommentofthemoment" type="integer" column="IdCommentOfTheMoment" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Id of the comment of the moment (updated by lastcomments votes)</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="mailbotmode" type="string" column="MailBotMode" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">State whether mail bot is running or not</option>
+        <option name="default">Manual</option>
+      </options>
+    </field>
+    <field name="togglestatsforwordsusage" type="string" column="ToggleStatsForWordsUsage" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">This toggle statistics about words usage, becareful it can affect performances</option>
+        <option name="default">No</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,61 @@
+parameters:
+    # Adds a fallback DATABASE_URL if the env var is not set.
+    # This allows you to run cache:warmup even if your
+    # environment variables are not available yet.
+    # You should not need to change this value.
+    env(DATABASE_URL): ''
+
+doctrine:
+    dbal:
+        driver:   pdo_mysql
+        host:     "%env(DB_HOST)%"
+        port:     "%env(DB_PORT)%"
+        dbname:   "%env(DB_NAME)%"
+        user:     "%env(DB_USER)%"
+        password: "%env(DB_PASS)%"
+        server_version: 5.6
+
+        charset: utf8mb4
+
+        default_table_options:
+            charset: utf8mb4
+            collate: utf8mb4_unicode_520_ci
+
+        # if using pdo_sqlite as your database driver:
+        #   1. add the path in parameters.yml
+        #     e.g. database_path: "%kernel.root_dir%/data/data.db3"
+        #   2. Uncomment database_path in parameters.yml.dist
+        #   3. Uncomment next line:
+        #     path:     "%database_path%"
+        types:
+            in_folder: App\Doctrine\InFolderType
+            delete_request: App\Doctrine\DeleteRequestType
+            spam_info: App\Doctrine\SpamInfoType
+            message_status: App\Doctrine\MessageStatusType
+            comment_admin_action: App\Doctrine\CommentAdminActionType
+            comment_quality: App\Doctrine\CommentQualityType
+            comment_relations: App\Doctrine\CommentRelationsType
+            language_level: App\Doctrine\LanguageLevelType
+            group_membership_status: App\Doctrine\GroupMembershipStatusType
+
+        mapping_types:
+            enum:       string
+            set:        string
+
+    orm:
+        auto_generate_proxy_classes: '%kernel.debug%'
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
+        mappings:
+            App:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Entity'
+                prefix: 'App\Entity'
+                alias: App
+        hydrators:
+            LanguageHydrator: App\Doctrine\Hydrator\LanguageHydrator
+        filters:
+            language_filter:
+                class:   App\Doctrine\Filter\LanguageFilter
+                enabled: true

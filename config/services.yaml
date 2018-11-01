@@ -1,0 +1,135 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+
+services:
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Entity,Migrations,Twig,Tests,Kernel.php}'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+
+
+    translation.loader.db:
+        class: App\TranslationLoader\DatabaseLoader
+        arguments: ['@doctrine.orm.entity_manager']
+        tags:
+            - { name: translation.loader, alias: db}
+
+    app.locale_listener:
+        class: App\EventListener\LocaleListener
+        arguments: ['%kernel.default_locale%']
+        tags:
+            - { name: kernel.event_subscriber }
+
+    app.user_locale_listener:
+        class: App\EventListener\UserLocaleListener
+        arguments: ['@session']
+        tags:
+            - { name: kernel.event_listener, event: security.interactive_login, method: onInteractiveLogin }
+
+    app.userprovider:
+        class: App\Provider\UserProvider
+        arguments: ['@doctrine.orm.entity_manager']
+
+    #    rox.legacy_dispatch_listener:
+    #        class: App\EventListener\LegacyDispatchListener
+    #        arguments: ['@rox.legacy_kernel', '@session', '@security.token_storage' ]
+    #        tags:
+    #            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 200000 }
+
+    rox.legacy_kernel:
+        class: App\LegacyKernel\LegacyHttpKernel
+        arguments: ['@templating.engine.twig', '@event_dispatcher', '@controller_resolver', '@request_stack', '@argument_resolver', '@service_container']
+
+    rox.legacy_password_encoder:
+        class: App\Encoder\LegacyPasswordEncoder
+
+    rox.legacy_loader:
+        class: App\Routing\LegacyLoader
+        tags:
+            - { name: routing.loader }
+
+    rox.legacy_controller:
+        class: App\Controller\LegacyController
+        calls:
+            - [setContainer, ['@service_container']]
+
+    rox.twig_extension:
+        class: App\Twig\Extension
+        arguments: ['@session', '@doctrine', '@translator']
+        tags:
+            - { name: 'twig.extension' }
+
+    rox.member_twig_extension:
+        class: App\Twig\MemberTwigExtension
+        public: false
+        arguments: ['@session', '@doctrine.orm.entity_manager', '@router', '@security.helper']
+        tags:
+            - { name: twig.extension }
+
+    pagerfanta.bootstrap4.ajax.template:
+        class: App\Pagerfanta\TwitterBootstrap4AjaxTemplate
+
+    pagerfanta.bootstrap4.ajax.view:
+        class: Pagerfanta\View\DefaultView
+        public: false
+        arguments:
+            - "@pagerfanta.bootstrap4.ajax.template"
+            - "@translator"
+        tags: [{ name: pagerfanta.view, alias: twitter_bootstrap4_ajax_translated }]
+
+    rox.logger:
+        class: App\Logger\Logger
+        arguments: ['@doctrine.orm.entity_manager', '@security.helper']
+
+    rox.authentication_listener:
+        class: App\EventListener\AuthListener
+        arguments: ['@doctrine.orm.entity_manager']
+        tags:
+            - { name: kernel.event_listener, event: security.interactive_login, method: onAuthenticationSuccess }
+
+    rox.datacollector_translator:
+        class: Symfony\Component\Translation\DataCollectorTranslator
+        decorates: translator
+        arguments: ['@rox.datacollector_translator.inner']
+
+    rox.user_checker:
+        class: App\Security\UserChecker
+        autowire: true
+
+    intl.twig_extension:
+        class: Twig_Extensions_Extension_Intl
+        tags:
+            - { name: 'twig.extension' }
+
+    doctrine.filter.configurator:
+        class: App\Doctrine\Filter\Configurator
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@request_stack"
+            - "@annotation_reader"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
+
+    rox.wiki.model:
+        class: App\Model\WikiModel
+        arguments:
+            - "@doctrine.orm.entity_manager"
+
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: false       # Allows optimizing the container by removing unused services; this also means
+        # fetching services directly from the container via $container->get() won't work.
+        # The best practice is to be explicit about your dependencies anyway.
+

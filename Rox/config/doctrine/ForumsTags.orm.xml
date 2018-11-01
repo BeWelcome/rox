@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\ForumsTags" table="forums_tags">
+    <indexes>
+      <index name="id" columns="id"/>
+      <index name="tag" columns="tag"/>
+    </indexes>
+    <id name="tagid" type="integer" column="tagid">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="tag" type="string" column="tag" length="64" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">Obsolete look to IdName</option>
+      </options>
+    </field>
+    <field name="tagDescription" type="string" column="tag_description" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">obsolete look to IdDescription</option>
+      </options>
+    </field>
+    <field name="tagPosition" type="boolean" column="tag_position" nullable="false">
+      <options>
+        <option name="default">250</option>
+      </options>
+    </field>
+    <field name="counter" type="integer" column="counter" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="idname" type="integer" column="IdName" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Name of the tag (in forum_trads)</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="iddescription" type="integer" column="IdDescription" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Description of the tag (in forum_trads)</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="type" type="string" column="Type" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">Type of the tag</option>
+        <option name="default">Member</option>
+      </options>
+    </field>
+    <field name="id" type="integer" column="id" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">id of the tag (for transition with tagid)</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

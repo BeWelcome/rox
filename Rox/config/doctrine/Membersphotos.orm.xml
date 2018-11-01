@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Membersphotos" table="membersphotos">
+    <indexes>
+      <index name="IdMember" columns="IdMember"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="filepath" type="text" column="FilePath" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">path where the photo is stored, can be a local server path or some www place</option>
+      </options>
+    </field>
+    <field name="idmember" type="integer" column="IdMember" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="sortorder" type="boolean" column="SortOrder" nullable="false">
+      <options>
+        <option name="comment">Sort order of the picture (0 teh first one which will be displayed,1 the second, etc)</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="updated" type="datetime" column="updated" nullable="false">
+      <options>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
+    <field name="created" type="datetime" column="created" nullable="false">
+      <options>
+        <option name="default">0000-00-00 00:00:00</option>
+      </options>
+    </field>
+    <field name="comment" type="integer" column="Comment" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">translatable comment associated with the picture </option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

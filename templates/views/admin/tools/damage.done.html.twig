@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block title %}
+    {{ 'admin.tools.title' | trans }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ 'tools.headline' | trans }}</h1>
+    {% if damageDone|length %}
+        <table class="table table-responsive">
+            <tr>
+                <th colspan="2">Spammer</th>
+                <th>Status</th>
+                <th colspan="2">Target</th>
+                <th>Status</th>
+            </tr>
+        {%  for result in damageDone %}
+            <tr>
+                <td>{{ macros.avatar(result.Sender) }}</td>
+                <td>{{ macros.profilelink(result.Sender) }}</td>
+                <td>{{ result.SenderStatus }}<br />{{ result.LastUpdated }}</td>
+                <td>{{ macros.avatar(result.Receiver) }}</td>
+                <td>{{ macros.profilelink(result.Receiver) }}</td>
+                <td>{{ result.ReceiverStatus }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% else %}
+        Nothing to show. Odd isn't it?
+    {% endif %}
+{% endblock content %}

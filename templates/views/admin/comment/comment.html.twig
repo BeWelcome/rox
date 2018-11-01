@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block content %}
+    <h1>{{ 'AdminComment' | trans }}</h1>
+    <div class="row">
+        <div class="col-12 mb-2">
+            {% if comment.displayinpublic %}{{ 'Comment is visible to everyone.' }}{% else %}{{ 'Comment is currently hidden.' }}{% endif %}
+        </div>
+        <div class="col-12 mb-2">
+            {% if comment.allowedit %}{{ 'Comment can be edited.' }}{% else %}{{ 'Comment is currently locked.' }}{% endif %}
+        </div>
+    </div>
+    <div class="row">
+        {% include ':member:comment.html.twig' with { 'comment': comment, 'mute': false } %}
+        {% if reply %}
+            {% include ':member:comment.html.twig' with { 'comment': reply, 'mute': true } %}
+        {% endif %}
+        <div class="col-12 {% if not reply %}col-sm-6{% endif %} p-2 card">
+            {{ form_start(form, { 'attr': { 'class': 'form-inline'}}) }}
+            {% if form.showComment is defined %}{{ form_widget(form.showComment) }}{% else %}{{ form_widget(form.hideComment) }}{% endif %}
+            {% if form.disableEditing is defined %}{{ form_widget(form.disableEditing) }}{% else %}{{ form_widget(form.allowEditing) }}{% endif %}
+            {{ form_widget(form.MarkAsChecked) }} {{ form_widget(form.MarkAsChecked) }}
+            {{ form_widget(form.MarkAsAbuse) }} {{ form_widget(form.MoveToNegative) }} {{ form_widget(form.DeleteComment) }}
+            <a class="btn btn-primary btn-sm mb-2 mr-sm-2" href="{{ path('admin_comments_for_member', { 'username': comment.toMember.username }) }}">{% trans with {'%username%': comment.toMember.username} %}All comments to %username%{% endtrans %}</a>
+            <a class="btn btn-primary btn-sm mb-2 mr-sm-2" href="{{ path('admin_comments_from_member', { 'username': comment.fromMember.username }) }}">{% trans with {'%username%': comment.fromMember.username} %}All comments from %username%{% endtrans %}</a>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('build/requests.js') }}"></script>
+{% endblock javascripts %}
+
+{% block subnav %}
+    {% for filter, menuitem in submenu.items %}
+        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}"
+           href="{{ path( submenu.route, { filter: filter } ) }}">{{ filter | trans }}</a>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        {{ form_errors(form) }}
+
+        <div class="row mb-1">
+            <div class="col-12 col-md-4 order-last order-md-first">
+
+                <div class="form-group mt-1 mt-md-5">
+                    {{ form_errors(form.request.arrival) }}
+                    <div class="input-group date" id="arrival" data-target-input="nearest">
+                        <div class="input-group-prepend" data-target="#arrival" data-toggle="datetimepicker">
+                            <span class="input-group-text">
+                                <i class="fa fa-calendar mt-2 mr-1"></i>
+                            </span>
+                        </div>
+                        {{ form_widget(form.request.arrival, { 'attr': {'data-target': '#arrival', 'data-toggle': 'datetimepicker'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group date" id="departure" data-target-input="nearest">
+                        <div class="input-group-prepend" data-target="#departure" data-toggle="datetimepicker">
+                            <span class="input-group-text">
+                                <i class="fa fa-calendar mt-2 mr-1"></i>
+                            </span>
+                        </div>
+                        {{ form_widget(form.request.departure, { 'attr': {'data-target': '#departure', 'data-toggle': 'datetimepicker'}}) }}
+                    </div>
+                </div>
+
+                {{ form_widget(form.request.flexible) }}
+                <div class="d-flex align-items-center ml-3 mt-2">
+                   Number of Travellers: {{ form_widget(form.request.numberOfTravellers) }}</div>
+                {{ form_errors(form.request.numberOfTravellers) }}
+
+            </div>
+            <div class="col-12 col-md-8">
+                <h2 class="mb-1 subjectbg">
+                    {{ form_widget(form.subject.subject) }}
+                </h2>
+                {{ form_errors(form.subject.subject, {'attr': {'class': 'small'}}) }}
+                {{ form_label(form.subject, null, {'label_attr': {'class': 'sr-only '} }) }}
+                {{ form_widget(form.message) }}
+                {{ form_errors(form.message) }}
+
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-12 col-md-8 offset-md-4">{{ form_rest(form) }}</div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

@@ -1,0 +1,15 @@
+<div class="card mb-3">
+    <a name="friends"></a>
+    <h3 class="card-header profile-bg2 mb-0"><i class="fa fa-child"></i><span class="icontext">Family, friends and other connections</span></h3>
+    <div class="card-block p-0">
+
+        <div class="list-group">
+            {% for relatedMember in member.relationships %}
+                <span class="list-group-item">
+                {{ macros.avatar(relatedMember.Username, 30, true) }} {{ relatedMember.Username }} - {{ relatedMember.pivot.Type | trans }}
+                    </span>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>

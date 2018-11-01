@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\GeonamesCache" table="geonames_cache">
+    <indexes>
+      <index name="fk_countrycode" columns="fk_countrycode"/>
+      <index name="fk_admincode" columns="fk_admincode"/>
+      <index name="parentAdm1Id" columns="parentAdm1Id"/>
+      <index name="parentCountryId" columns="parentCountryId"/>
+      <index name="name" columns="name"/>
+      <index name="fcode" columns="fcode"/>
+    </indexes>
+    <id name="geonameid" type="integer" column="geonameid">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="latitude" type="float" column="latitude" precision="10" scale="0" nullable="false">
+      <options>
+        <option name="comment">latitude of the place</option>
+      </options>
+    </field>
+    <field name="longitude" type="float" column="longitude" precision="10" scale="0" nullable="false">
+      <options>
+        <option name="comment">longitude of the place</option>
+      </options>
+    </field>
+    <field name="name" type="string" column="name" length="200" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">Usual name of the place (generally an english one)</option>
+      </options>
+    </field>
+    <field name="population" type="integer" column="population" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="comment">Estimated number of peopl eliving in this place</option>
+      </options>
+    </field>
+    <field name="fkCountrycode" type="string" column="fk_countrycode" length="2" nullable="false">
+      <options>
+        <option name="fixed">1</option>
+        <option name="comment">ISO code of the country the place belongs to</option>
+      </options>
+    </field>
+    <field name="fkAdmincode" type="string" column="fk_admincode" length="2" nullable="true">
+      <options>
+        <option name="fixed">1</option>
+      </options>
+    </field>
+    <field name="fclass" type="string" column="fclass" length="1" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="fcode" type="string" column="fcode" length="10" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="timezone" type="integer" column="timezone" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="parentadm1id" type="integer" column="parentAdm1Id" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">geonameId of the parent Adm1 region</option>
+      </options>
+    </field>
+    <field name="parentcountryid" type="integer" column="parentCountryId" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">geonameId of the parent country</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

@@ -1,5 +1,0 @@
-services:
-    Doctrine\Common\Cache\FilesystemCache:
-        class: Doctrine\Common\Cache\FilesystemCache
-        arguments: ['%kernel.cache_dir%/doctrine']
-        autowiring_types: Doctrine\Common\Cache\Cache

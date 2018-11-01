@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'All trips' | trans }}
+{% endblock %}
+
+{% block content %}
+    {% set myself = app.user %}
+    <div class="row">
+        <div class="col-12">
+            <div class="pull-right">{{ pagerfanta( trips, 'twitter_bootstrap4_translated', { routeName: 'activity' }) }}</div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        {% for trip in trips %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="d-flex">
+                <div class="flex-column mr-2">
+                    <img src="placeholder.jpg" width="50" height="50">
+                </div>
+                <div class="flex-column">
+                <p class="h4 m-0"><a href="{{ path('trip_show_details', { id: trip.id } ) }}">{{ trip.summary }}</a></p>
+                </div>
+            </div>
+            <div>
+                <p class="small">{{ trip.createdBy.Username }}{% if trip.createdBy == myself%}<a href="{{  path('trip_update', { id: trip.id} ) }}">Update</a>{% endif %}</p>
+                <p>{{ trip.description | truncate(200) }}</p>
+            </div>
+        </div>
+        {% else %}
+            <div class="col-12 well">{{ 'trip.no_trips_found'|trans }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="pull-right">{{ pagerfanta( trips, 'twitter_bootstrap4_translated', { routeName: 'activity' }) }}</div>
+        </div>
+    </div>
+
+{% endblock content %}

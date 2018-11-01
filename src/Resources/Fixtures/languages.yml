@@ -1,0 +1,19 @@
+App\Entity\Language:
+    language_en:
+        EnglishName: English
+        Name: English
+        ShortCode: en
+        WordCode: Lang_en
+        FlagSortCriteria: -1017
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_fr:
+        EnglishName: French
+        Name: fran&ccedil;ais
+        ShortCode: fr
+        WordCode: Lang_fr
+        FlagSortCriteria: -492
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0

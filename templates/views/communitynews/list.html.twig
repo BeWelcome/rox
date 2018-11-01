@@ -1,0 +1,29 @@
+{% import 'macros.twig' as macros %}
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'All Community News' | trans }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ 'Community News' | trans }}</h1>
+    <div class="row">
+        <div class="col-12 pull-right">{{ pagerfanta( communityNews, 'twitter_bootstrap4_translated', { routeName: 'communitynews' }) }}</div>
+    </div>
+    <div class="row">
+        {% for news in communityNews %}
+        <div class="col-12 mb-3">
+            <div class="card p-3">
+            <h1><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ news.title }}</a></h1>
+            <small>{{ 'written by' | trans }} {{ macros.avatar( news.createdBy.Username , 20, true) }} ({{ news.createdAt.DiffForHumans }}){% if news.createdAt != news.updatedAt %} {{ 'updated by' | trans }} {{ macros.avatar( news.updatedBy.Username , 20, true) }} ({{ news.updatedAt.DiffForHumans }}){% endif %}</small>
+            {{ news.text | truncate(500) | raw }}
+            <p>{% set commentsCount = news.comments | length %}{% trans %}%commentsCount% comments{% endtrans %}</p>
+            <p><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ 'Read more' | trans }}</a></p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="row">
+        <div class="col-12 pull-right">{{ pagerfanta( communityNews, 'twitter_bootstrap4_translated', { routeName: 'communitynews' }) }}</div>
+    </div>
+{% endblock content %}

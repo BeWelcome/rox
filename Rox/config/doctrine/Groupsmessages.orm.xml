@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Groupsmessages" table="groupsmessages">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="created" type="datetime" column="created" nullable="false">
+      <options>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
+    <field name="title" type="text" column="Title" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">message title</option>
+      </options>
+    </field>
+    <field name="message" type="text" column="Message" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">message text</option>
+      </options>
+    </field>
+    <field name="idsender" type="integer" column="IdSender" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">cid of the sender</option>
+      </options>
+    </field>
+    <field name="idgroup" type="integer" column="IdGroup" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">concerned group</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

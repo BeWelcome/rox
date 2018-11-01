@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\ForumsThreads" table="forums_threads">
+    <indexes>
+      <index name="first_postid" columns="first_postid"/>
+      <index name="last_postid" columns="last_postid"/>
+      <index name="geonameid" columns="geonameid"/>
+      <index name="admincode" columns="admincode"/>
+      <index name="countrycode" columns="countrycode"/>
+      <index name="continent" columns="continent"/>
+      <index name="IdGroup" columns="IdGroup"/>
+      <index name="ThreadVisibility" columns="ThreadVisibility"/>
+      <index name="ThreadDeleted" columns="ThreadDeleted"/>
+    </indexes>
+    <id name="threadid" type="integer" column="threadid">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="id" type="integer" column="id" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">This is aime to be the primary key (currently redudnant with threadid)</option>
+      </options>
+    </field>
+    <field name="expiredate" type="datetime" column="expiredate" nullable="true">
+      <options>
+        <option name="comment">When the thread will expire</option>
+        <option name="default">0000-00-00 00:00:00</option>
+      </options>
+    </field>
+    <field name="idtitle" type="integer" column="IdTitle" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Corresponding record for text title in forum_trads</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="title" type="string" column="title" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="firstPostid" type="integer" column="first_postid" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="lastPostid" type="integer" column="last_postid" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="replies" type="smallint" column="replies" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="views" type="integer" column="views" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="geonameid" type="integer" column="geonameid" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="admincode" type="string" column="admincode" length="2" nullable="true">
+      <options>
+        <option name="fixed">1</option>
+      </options>
+    </field>
+    <field name="countrycode" type="string" column="countrycode" length="2" nullable="true">
+      <options>
+        <option name="fixed">1</option>
+      </options>
+    </field>
+    <field name="continent" type="string" column="continent" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tag1" type="integer" column="tag1" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="tag2" type="integer" column="tag2" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="tag3" type="integer" column="tag3" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="tag4" type="integer" column="tag4" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="tag5" type="integer" column="tag5" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="stickyvalue" type="integer" column="stickyvalue" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">This field is used for sticky thread, default is 0, if negative then it become sticky, the more negative, the one at the top</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="idfirstlanguageused" type="integer" column="IdFirstLanguageUsed" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">This is the id of the first language used for this thread title, which allows to consider the "reference language" for this forum title</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="idgroup" type="integer" column="IdGroup" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Optional Id of the group the thread depens on</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="threadvisibility" type="string" column="ThreadVisibility" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">Visibility for this thread</option>
+        <option name="default">NoRestriction</option>
+      </options>
+    </field>
+    <field name="whocanreply" type="string" column="WhoCanReply" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">Who is allowed to reply in this thread</option>
+        <option name="default">MembersOnly</option>
+      </options>
+    </field>
+    <field name="threaddeleted" type="string" column="ThreadDeleted" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">tells if the thread was deleted</option>
+        <option name="default">NotDeleted</option>
+      </options>
+    </field>
+    <field name="createdAt" type="datetime" column="created_at" nullable="false">
+      <options>
+        <option name="default">0000-00-00 00:00:00</option>
+      </options>
+    </field>
+    <field name="updatedAt" type="datetime" column="updated_at" nullable="false">
+      <options>
+        <option name="default">0000-00-00 00:00:00</option>
+      </options>
+    </field>
+    <field name="deletedAt" type="datetime" column="deleted_at" nullable="false">
+      <options>
+        <option name="default">0000-00-00 00:00:00</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

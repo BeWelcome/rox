@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\ForumsPostsVotes" table="forums_posts_votes">
+    <id name="idpost" type="integer" column="IdPost"/>
+    <id name="idcontributor" type="integer" column="IdContributor"/>
+    <field name="choice" type="string" column="Choice" nullable="true">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">result of vote</option>
+      </options>
+    </field>
+    <field name="updated" type="datetime" column="updated" nullable="false">
+      <options>
+        <option name="comment">when it was updated</option>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
+    <field name="created" type="datetime" column="created" nullable="false">
+      <options>
+        <option name="comment">when it was created</option>
+        <option name="default">0000-00-00 00:00:00</option>
+      </options>
+    </field>
+    <field name="nbupdates" type="integer" column="NbUpdates" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">use to count the number of time a guy has voted/updated for a given post</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

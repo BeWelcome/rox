@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Intermembertranslations" table="intermembertranslations">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="idtranslator" type="integer" column="IdTranslator" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Id of the member who can translate</option>
+      </options>
+    </field>
+    <field name="idmember" type="integer" column="IdMember" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Id of the member who's profile can be translated</option>
+      </options>
+    </field>
+    <field name="updated" type="datetime" column="updated" nullable="false">
+      <options>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
+    <field name="idlanguage" type="integer" column="IdLanguage" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">id of the language the translator can translate in</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

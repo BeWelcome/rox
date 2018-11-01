@@ -5,7 +5,7 @@ class RoxComponentBase
 {
     use Rox\RoxTraits\SessionTrait;
 
-    function __construct() {
+    public function __construct() {
         $this->setSession();
     }
     

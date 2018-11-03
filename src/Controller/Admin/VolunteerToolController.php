@@ -108,7 +108,7 @@ class VolunteerToolController extends Controller
         }
 
         return $this->render(
-            ':admin:tools/change.username.html.twig',
+            'admin/tools/change.username.html.twig',
             [
                 'form' => $form->createView(),
                 'submenu' => [
@@ -153,7 +153,7 @@ class VolunteerToolController extends Controller
         }
 
         return $this->render(
-            ':admin:tools/find.user.html.twig',
+            'admin/tools/find.user.html.twig',
             [
                 'form' => $form->createView(),
                 'members' => $members,
@@ -203,7 +203,7 @@ class VolunteerToolController extends Controller
         $feedbacks = $feedbackModel->getFilteredFeedback($types, $page, $limit);
 
         return $this->render(
-            ':admin:tools/check.feedback.html.twig',
+            'admin/tools/check.feedback.html.twig',
             [
                 'form' => $feedbackForm->createView(),
                 'feedbacks' => $feedbacks,
@@ -261,7 +261,7 @@ class VolunteerToolController extends Controller
         ");
         */
         return $this->render(
-            ':admin:tools/top.spammer.html.twig',
+            'admin/tools/top.spammer.html.twig',
             [
                 'messagesSent' => $messagesSent,
             //                'damageDone' => $damageDone,
@@ -317,7 +317,7 @@ class VolunteerToolController extends Controller
         ")->fetchAll();
 
         return $this->render(
-            ':admin:tools/damage.done.html.twig',
+            'admin/tools/damage.done.html.twig',
             [
                 'damageDone' => $damageDone,
                 'submenu' => [
@@ -368,7 +368,7 @@ HAVING COUNT(msg.id) > 500
 ORDER BY count(msg.id) DESC')->fetchAll();
 
         return $this->render(
-            ':admin:tools/messages.lastweek.html.twig',
+            'admin/tools/messages.lastweek.html.twig',
             [
                 'results' => $results,
                 'submenu' => [
@@ -419,7 +419,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
         ")->fetchAll();
 
         return $this->render(
-            ':admin/tools:age.country.html.twig',
+            'admin/tools/age.country.html.twig',
             [
                 'results' => $results,
                 'submenu' => [

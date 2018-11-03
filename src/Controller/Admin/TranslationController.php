@@ -52,7 +52,7 @@ class TranslationController extends Controller
         $translations = $translationRepository
             ->paginateTranslations($locale, $page, $limit);
 
-        return $this->render(':admin:translations/list.html.twig', [
+        return $this->render('admin/translations/list.html.twig', [
             'translations' => $translations,
         ]);
     }
@@ -107,7 +107,7 @@ class TranslationController extends Controller
             $this->addFlash('notice', 'translation.edit');
         }
 
-        return $this->render(':admin:translations/edit.html.twig', [
+        return $this->render('admin/translations/edit.html.twig', [
             'form' => $editForm->createView(),
         ]);
     }
@@ -172,7 +172,7 @@ class TranslationController extends Controller
             return $this->redirectToRoute('translations');
         }
 
-        return $this->render(':admin:translations/create.html.twig', [
+        return $this->render('admin/translations/create.html.twig', [
             'form' => $createForm->createView(),
         ]);
     }
@@ -238,7 +238,7 @@ class TranslationController extends Controller
             $this->addFlash('notice', 'translation.edit');
         }
 
-        return $this->render(':admin:translations/edit.html.twig', [
+        return $this->render('admin/translations/edit.html.twig', [
             'form' => $addForm->createView(),
         ]);
     }

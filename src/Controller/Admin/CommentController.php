@@ -37,7 +37,7 @@ class CommentController extends Controller
         $commentModel = new CommentModel($this->getDoctrine());
         $comments = $commentModel->getComments($page, $limit);
 
-        return $this->render(':admin:comment/overview.html.twig', [
+        return $this->render('admin/comment/overview.html.twig', [
             'headline' => 'admin.comment.all',
             'route' => 'admin_comment_overview',
             'comments' => $comments,
@@ -63,7 +63,7 @@ class CommentController extends Controller
         $commentModel = new CommentModel($this->getDoctrine());
         $comments = $commentModel->getCommentsByAdminAction(CommentAdminActionType::SAFETY_TEAM_CHECK, $page, $limit);
 
-        return $this->render(':admin:comment/overview.html.twig', [
+        return $this->render('admin/comment/overview.html.twig', [
             'headline' => 'admin.comment.safetyteam',
             'route' => 'admin_abuser_overview',
             'comments' => $comments,
@@ -89,7 +89,7 @@ class CommentController extends Controller
         $commentModel = new CommentModel($this->getDoctrine());
         $comments = $commentModel->getCommentsByAdminAction(CommentAdminActionType::ADMIN_CHECK, $page, $limit);
 
-        return $this->render(':admin:comment/overview.html.twig', [
+        return $this->render('admin/comment/overview.html.twig', [
             'headline' => 'admin.comment.reported',
             'route' => 'admin_reported_overview',
             'comments' => $comments,
@@ -115,7 +115,7 @@ class CommentController extends Controller
         $commentModel = new CommentModel($this->getDoctrine());
         $comments = $commentModel->getCommentsByQuality(CommentQualityType::NEGATIVE, $page, $limit);
 
-        return $this->render(':admin:comment/overview.html.twig', [
+        return $this->render('admin/comment/overview.html.twig', [
             'headline' => 'admin.comment.negative',
             'route' => 'admin_negative_overview',
             'comments' => $comments,
@@ -185,7 +185,7 @@ class CommentController extends Controller
             ]);
         }
 
-        return $this->render(':admin:comment/comment.html.twig', [
+        return $this->render('admin/comment/comment.html.twig', [
             'form' => $form->createView(),
             'comment' => $comment,
             'reply' => $reply,
@@ -312,7 +312,7 @@ class CommentController extends Controller
         $commentModel = new CommentModel($this->getDoctrine());
         $comments = $commentModel->getCommentsForMember($member, $page, $limit);
 
-        return $this->render(':admin:comment/overview.html.twig', [
+        return $this->render('admin/comment/overview.html.twig', [
             'headline' => 'admin.comment.all',
             'route' => 'admin_comments_for_member',
             'comments' => $comments,
@@ -339,7 +339,7 @@ class CommentController extends Controller
         $commentModel = new CommentModel($this->getDoctrine());
         $comments = $commentModel->getCommentsFromMember($member, $page, $limit);
 
-        return $this->render(':admin:comment/overview.html.twig', [
+        return $this->render('admin/comment/overview.html.twig', [
             'headline' => 'admin.comment.all',
             'route' => 'admin_comments_from_member',
             'comments' => $comments,

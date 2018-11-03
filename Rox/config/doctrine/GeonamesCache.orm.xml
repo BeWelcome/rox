@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="AppBundle\Entity\GeonamesCache" table="geonames_cache">
+  <entity name="App\Entity\GeonamesCache" table="geonames_cache">
     <indexes>
       <index name="fk_countrycode" columns="fk_countrycode"/>
       <index name="fk_admincode" columns="fk_admincode"/>

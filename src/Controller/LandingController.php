@@ -32,7 +32,7 @@ class LandingController extends Controller
         $homeModel = new LandingModel($this->getDoctrine());
         $messages = $homeModel->getMessages($member, $unread, 4);
 
-        $content = $this->render(':landing/widget:messages.html.twig', [
+        $content = $this->render('landing/widget/messages.html.twig', [
             'messages' => $messages,
         ]);
 
@@ -51,7 +51,7 @@ class LandingController extends Controller
         $homeModel = new LandingModel($this->getDoctrine());
         $notifications = $homeModel->getNotifications($member, 5);
 
-        $content = $this->render(':landing/widget:notifications.html.twig', [
+        $content = $this->render('landing/widget/notifications.html.twig', [
             'notifications' => $notifications,
         ]);
 
@@ -75,7 +75,7 @@ class LandingController extends Controller
         $homeModel = new LandingModel($this->getDoctrine());
         $threads = $homeModel->getThreads($member, $groups, $forum, $following, 4);
 
-        $content = $this->render(':landing:widget/forums.html.twig', [
+        $content = $this->render('landing/widget/forums.html.twig', [
             'threads' => $threads,
         ]);
 
@@ -93,7 +93,7 @@ class LandingController extends Controller
         $homeModel = new LandingModel($this->getDoctrine());
         $activities = $homeModel->getActivities($member);
 
-        $content = $this->render(':landing:widget/activities.html.twig', [
+        $content = $this->render('landing/widget/activities.html.twig', [
             'activities' => $activities,
         ]);
 
@@ -132,11 +132,11 @@ class LandingController extends Controller
         }
 
         // we need raw HTML and no response therefore we do not use the render method of the controller
-        $profilePictureWithAccommodation = $this->container->get('twig')->render(':landing:widget/profilepicturewithaccommodation.html.twig', [
+        $profilePictureWithAccommodation = $this->container->get('twig')->render('landing/widget/profilepicturewithaccommodation.html.twig', [
             'member' => $member,
         ]);
 
-        $accommodationHtml = $this->container->get('twig')->render(':landing:widget/accommodation.html.twig', [
+        $accommodationHtml = $this->container->get('twig')->render('landing/widget/accommodation.html.twig', [
             'member' => $member,
         ]);
 
@@ -176,7 +176,7 @@ class LandingController extends Controller
         // Prepare small search form
         $searchGotoLocation = $this->createForm(SearchFormType::class, new SearchFormRequest());
 
-        $content = $this->render(':landing:landing.html.twig', [
+        $content = $this->render('landing/landing.html.twig', [
                 'title' => 'BeWelcome',
                 'searchLocation' => $searchHomeLocation->createView(),
                 'tinySearch' => $searchGotoLocation->createView(),

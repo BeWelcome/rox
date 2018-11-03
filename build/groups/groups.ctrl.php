@@ -23,7 +23,7 @@ Boston, MA  02111-1307, USA.
      * @author Fake51
      */
 
-use AppBundle\Entity\Group;
+use App\Entity\Group;
 
 /**
  * groups controller

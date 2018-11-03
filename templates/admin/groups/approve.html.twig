@@ -22,7 +22,7 @@
                 <tbody>
                     {% for group in groups %}
                         <tr>
-                            <td>{{ group.Name }}{% if group.approved == constant('AppBundle\\Entity\\Group::IN_DISCUSSION') %}<br><br>
+                            <td>{{ group.Name }}{% if group.approved == constant('App\\Entity\\Group::IN_DISCUSSION') %}<br><br>
                                     <p class="alert alert-danger">{{ 'Group approval under discussion' }}</p>{% endif %}</td>
                             <td>{% for locale, description in group.descriptions %}
                                      <small class="text-muted">{{ description.Language.WordCode|trans }} ({{ locale }})</small><br>{{ description.Sentence|purify }}
@@ -32,7 +32,7 @@
                             <td class="text-center">
                                 <a href="{{ path('admin_groups_approve', { 'id': group.id }) }}"><i class="fa fa-2x fa-fw fa-check" title="{{ 'Approve group'|trans }}"></i></a><br>
                                 <a href="{{ path('admin_groups_dismiss', { 'id': group.id }) }}"><i class="fa fa-2x fa-fw fa-ban" title="{{ 'Dismiss group'|trans }}"></i></a>
-                                {% if group.approved != constant('AppBundle\\Entity\\Group::IN_DISCUSSION') %}<br>
+                                {% if group.approved != constant('App\\Entity\\Group::IN_DISCUSSION') %}<br>
                                     <a href="{{ path('admin_groups_discuss', { 'id': group.id }) }}"><i class="fa fa-2x fa-fw fa-comments" title="{{ 'Move group to discussion queue'|trans }}"></i></a>
                                 {% endif %}
                             </td>

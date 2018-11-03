@@ -21,7 +21,7 @@ class ActivityRepository extends EntityRepository
         return $this->getEntityManager()
             ->createQuery('
                 SELECT a
-                FROM AppBundle:Activity a
+                FROM App:Activity a
                 ORDER BY a.id DESC
             ');
     }
@@ -72,7 +72,7 @@ class ActivityRepository extends EntityRepository
             ->andWhere($expr->gte('longitude', $coordinates[0]->getLongitudeInDegrees()))
             ->andWhere($expr->lte('longitude', $coordinates[1]->getLongitudeInDegrees()));
 
-        $locations = $this->getEntityManager()->getRepository('AppBundle:Location')
+        $locations = $this->getEntityManager()->getRepository('App:Location')
             ->matching($criteria);
 
         $queryBuilder = $this->createQueryBuilder('a')

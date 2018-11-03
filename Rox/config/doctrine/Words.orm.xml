@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="AppBundle\Entity\Words" table="words">
+  <entity name="App\Entity\Words" table="words">
     <unique-constraints>
       <unique-constraint name="code" columns="code,IdLanguage"/>
       <unique-constraint name="code_2" columns="code,ShortCode"/>

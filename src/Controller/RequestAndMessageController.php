@@ -130,7 +130,7 @@ class RequestAndMessageController extends Controller
         }
         $em->flush();
 
-        $view = (null === $message->getRequest()) ? ':message:view.html.twig' : ':request:view.html.twig';
+        $view = (null === $message->getRequest()) ? 'message/view.html.twig' : 'request/view.html.twig';
 
         return $this->render($view, [
             'current' => $current,
@@ -196,7 +196,7 @@ class RequestAndMessageController extends Controller
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
         }
 
-        return $this->render(':message:message.html.twig', [
+        return $this->render('message/message.html.twig', [
             'receiver' => $receiver,
             'form' => $messageForm->createView(),
         ]);
@@ -272,7 +272,7 @@ class RequestAndMessageController extends Controller
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
         }
 
-        return $this->render(':request:request.html.twig', [
+        return $this->render('request/request.html.twig', [
             'receiver' => $receiver,
             'form' => $requestForm->createView(),
         ]);
@@ -421,7 +421,7 @@ class RequestAndMessageController extends Controller
             }
         }
 
-        return $this->render(':message:index.html.twig', [
+        return $this->render('message/index.html.twig', [
             'form' => $form->createView(),
             'items' => $messages,
             'type' => 'UserMessages',
@@ -494,7 +494,7 @@ class RequestAndMessageController extends Controller
             return $this->redirectToRoute('message_show', ['id' => $replyMessage->getId()]);
         }
 
-        return $this->render(':message:reply.html.twig', [
+        return $this->render('message/reply.html.twig', [
             'form' => $messageForm->createView(),
             'current' => $message,
             'thread' => $thread,
@@ -590,7 +590,7 @@ class RequestAndMessageController extends Controller
         $messageModel = new MessageModel($this->getDoctrine());
         $thread = $messageModel->getThreadForMessage($hostingRequest);
 
-        return $this->render(':request:reply_guest.html.twig', [
+        return $this->render('request/reply_guest.html.twig', [
             'form' => $requestForm->createView(),
             'thread' => $thread,
         ]);
@@ -682,7 +682,7 @@ class RequestAndMessageController extends Controller
         $messageModel = new MessageModel($this->getDoctrine());
         $thread = $messageModel->getThreadForMessage($hostingRequest);
 
-        return $this->render(':request:reply_host.html.twig', [
+        return $this->render('request/reply_host.html.twig', [
             'form' => $requestForm->createView(),
             'thread' => $thread,
         ]);

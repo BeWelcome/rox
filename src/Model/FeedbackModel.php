@@ -22,7 +22,7 @@ class FeedbackModel extends BaseModel
         $qb = $this->em->createQueryBuilder();
         $qb
             ->select('f')
-            ->from('AppBundle:Feedback', 'f');
+            ->from('App:Feedback', 'f');
         if (!empty($categories)) {
             $qb->where('f.category in (:categories)')
                 ->setParameter('categories', $categories);

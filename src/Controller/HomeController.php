@@ -62,7 +62,7 @@ class HomeController extends Controller
             'form' => $loginForm->createView(),
             'search' => $searchForm->createView(),
             'username' => $usernameForm->createView(),
-            'locale' => "en", // \todo make this working again $this->getParameter('locale'),
+            'locale' => $this->getParameter('locale'),
             'title' => 'BeWelcome',
             'stats' => $statistics,
         ]);

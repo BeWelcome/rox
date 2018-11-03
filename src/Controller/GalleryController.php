@@ -46,7 +46,7 @@ class GalleryController extends Controller
             return $this->redirectToRoute('gallery_show_image', ['imageId' => $image->getId()]);
         }
 
-        return $this->render(':gallery:edit.image.html.twig', [
+        return $this->render('gallery/edit.image.html.twig', [
             'image' => $image,
             'form' => $editImageForm->createView(),
         ]);

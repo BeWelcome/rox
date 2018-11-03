@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -64,9 +64,9 @@ class Geonamesalternatenames
     private $alternatenameid;
 
     /**
-     * @var \AppBundle\Entity\Geonames
+     * @var \App\Entity\Geonames
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Geonames")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Geonames")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="geonameid", referencedColumnName="geonameid")
      * })
@@ -232,11 +232,11 @@ class Geonamesalternatenames
     /**
      * Set geonameid
      *
-     * @param \AppBundle\Entity\Geonames $geonameid
+     * @param \App\Entity\Geonames $geonameid
      *
      * @return Geonamesalternatenames
      */
-    public function setGeonameid(\AppBundle\Entity\Geonames $geonameid = null)
+    public function setGeonameid(\App\Entity\Geonames $geonameid = null)
     {
         $this->geonameid = $geonameid;
 
@@ -246,7 +246,7 @@ class Geonamesalternatenames
     /**
      * Get geonameid
      *
-     * @return \AppBundle\Entity\Geonames
+     * @return \App\Entity\Geonames
      */
     public function getGeonameid()
     {

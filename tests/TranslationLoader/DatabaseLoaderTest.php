@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\TranslationLoader;
+namespace App\TranslationLoader;
 
-use AppBundle\Entity\Word;
+use App\Entity\Word;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\MessageCatalogue;
 

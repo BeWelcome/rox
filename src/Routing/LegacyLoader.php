@@ -29,7 +29,7 @@ class LegacyLoader extends Loader
 
         // Handle current directory (difference between cache clear and web access)
         $cwd = getcwd();
-        if (false === strpos($cwd, 'web')) {
+        if (false === strpos($cwd, 'public')) {
             $dirfix = '';
         } else {
             $dirfix = '../';

@@ -28,15 +28,15 @@ doctrine:
         #   3. Uncomment next line:
         #     path:     "%database_path%"
         types:
-            in_folder: AppBundle\Doctrine\InFolderType
-            delete_request: AppBundle\Doctrine\DeleteRequestType
-            spam_info: AppBundle\Doctrine\SpamInfoType
-            message_status: AppBundle\Doctrine\MessageStatusType
-            comment_admin_action: AppBundle\Doctrine\CommentAdminActionType
-            comment_quality: AppBundle\Doctrine\CommentQualityType
-            comment_relations: AppBundle\Doctrine\CommentRelationsType
-            language_level: AppBundle\Doctrine\LanguageLevelType
-            group_membership_status: AppBundle\Doctrine\GroupMembershipStatusType
+            in_folder: App\Doctrine\InFolderType
+            delete_request: App\Doctrine\DeleteRequestType
+            spam_info: App\Doctrine\SpamInfoType
+            message_status: App\Doctrine\MessageStatusType
+            comment_admin_action: App\Doctrine\CommentAdminActionType
+            comment_quality: App\Doctrine\CommentQualityType
+            comment_relations: App\Doctrine\CommentRelationsType
+            language_level: App\Doctrine\LanguageLevelType
+            group_membership_status: App\Doctrine\GroupMembershipStatusType
 
         mapping_types:
             enum:       string
@@ -50,8 +50,8 @@ doctrine:
                 auto_mapping: true
                 mappings: ~
                 hydrators:
-                    LanguageHydrator: AppBundle\Doctrine\Hydrator\LanguageHydrator
+                    LanguageHydrator: App\Doctrine\Hydrator\LanguageHydrator
                 filters:
                     language_filter:
-                        class:   AppBundle\Doctrine\Filter\LanguageFilter
+                        class:   App\Doctrine\Filter\LanguageFilter
                         enabled: true

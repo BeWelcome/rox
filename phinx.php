@@ -1,8 +1,8 @@
 <?php
+$dotenv = new Dotenv\Dotenv(__DIR__);
+$dotenv->load();
 
-include_once 'bootstrap/autoload.php';
-
-return [
+$config = [
     'migration_base_class' => \Rox\Tools\RoxMigration::class,
     'seeds_base_class' => \Rox\Tools\RoxSeed::class,
     'paths' => [
@@ -14,12 +14,15 @@ return [
         'default_database' => 'development',
         'development' => [
             'adapter' => 'mysql',
-            'host' => $container->getParameter('database_host'),
-            'name' => $container->getParameter('database_name'),
-            'user' => $container->getParameter('database_user'),
-            'pass' => $container->getParameter('database_password'),
-            'port' => '3306',
-            'charset' => 'utf8',
+            'host' => getenv('DB_HOST'),
+            'name' => getenv('DB_NAME'),
+            'user' => getenv('DB_USER'),
+            'pass' => getenv('DB_PASS'),
+            'port' => getenv('DB_PORT'),
+            'charset' => 'utf8mb4',
         ],
     ],
 ];
+
+print_r($config);
+return $config;

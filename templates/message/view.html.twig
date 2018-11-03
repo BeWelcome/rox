@@ -17,6 +17,6 @@
     </div>
 </div>
 
-    {% include ':message:thread.html.twig' %}
+    {% include 'message/thread.html.twig' %}
 <div class="row justify-content-end px-3"><a class="btn btn-primary" href="{{ path('message_reply', { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a></div>
 {% endblock content %}

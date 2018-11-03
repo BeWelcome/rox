@@ -31,7 +31,7 @@ class TripController extends Controller
 
         $trips = $tripModel->findLatest($page, $items);
 
-        $content = $this->render(':trip:list.html.twig', [
+        $content = $this->render('trip/list.html.twig', [
             'trips' => $trips,
             'filter' => $request->query->all(),
             'page' => $page,
@@ -51,7 +51,7 @@ class TripController extends Controller
      */
     public function showAction(Trip $trip)
     {
-        $content = $this->render(':trip:show.html.twig', [
+        $content = $this->render('trip/show.html.twig', [
             'trip' => $trip,
         ]);
 
@@ -89,7 +89,7 @@ class TripController extends Controller
             return $this->redirectToRoute('trip');
         }
 
-        return $this->render(':trip:createOrUpdate.html.twig', [
+        return $this->render('trip/createOrUpdate.html.twig', [
             'create' => true,
             'form' => $createForm->createView(),
         ]);
@@ -128,7 +128,7 @@ class TripController extends Controller
             return $this->redirectToRoute('trip');
         }
 
-        return $this->render(':trip:createOrUpdate.html.twig', [
+        return $this->render('trip/createOrUpdate.html.twig', [
             'create' => false,
             'form' => $updateForm->createView(),
         ]);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="AppBundle\Entity\PollsRecordOfChoices" table="polls_record_of_choices">
+  <entity name="App\Entity\PollsRecordOfChoices" table="polls_record_of_choices">
     <indexes>
       <index name="IdMember" columns="IdMember"/>
       <index name="idEmail" columns="Email"/>

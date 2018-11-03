@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="AppBundle\Entity\MembersRoles" table="members_roles">
+  <entity name="App\Entity\MembersRoles" table="members_roles">
     <id name="idmember" type="integer" column="IdMember"/>
     <id name="idrole" type="integer" column="IdRole"/>
     <field name="updated" type="datetime" column="updated" nullable="false">

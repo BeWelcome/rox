@@ -74,7 +74,7 @@ class FaqController extends Controller
         $faqs = $faqModel->getFaqsForCategory($faqCategory);
         $faqCategories = $this->getSubMenuItems();
 
-        return  $this->render(':admin:faqs/index.html.twig', [
+        return  $this->render('admin/faqs/index.html.twig', [
             'form' => $form->createView(),
             'submenu' => [
                 'items' => $faqCategories,
@@ -130,7 +130,7 @@ class FaqController extends Controller
         }
 
         return  $this->render(
-            ':admin:faqs/editcreate.category.html.twig',
+            'admin/faqs/editcreate.category.html.twig',
             [
                 'submenu' => [
                     'items' => $faqCategories,
@@ -202,7 +202,7 @@ class FaqController extends Controller
         }
 
         return  $this->render(
-            ':admin:faqs/editcreate.faq.html.twig',
+            'admin/faqs/editcreate.faq.html.twig',
             [
                 'submenu' => [
                     'items' => $faqCategories,
@@ -247,7 +247,7 @@ class FaqController extends Controller
         }
 
         return  $this->render(
-            ':admin:faqs/editcreate.category.html.twig',
+            'admin/faqs/editcreate.category.html.twig',
             [
                 'submenu' => [
                     'items' => $faqCategories,
@@ -328,7 +328,7 @@ class FaqController extends Controller
         }
 
         return  $this->render(
-            ':admin:faqs/editcreate.faq.html.twig',
+            'admin/faqs/editcreate.faq.html.twig',
             [
                 'submenu' => [
                     'items' => $faqCategories,
@@ -384,7 +384,7 @@ class FaqController extends Controller
         $faqCategories = $faqModel->getFaqCategories();
 
         return $this->render(
-            ':admin:faqs/sort.categories.html.twig',
+            'admin/faqs/sort.categories.html.twig',
             [
                 'form' => $form->createView(),
                 'submenu' => [

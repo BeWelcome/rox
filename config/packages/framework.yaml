@@ -4,16 +4,34 @@ framework:
     #csrf_protection: true
     #http_method_override: true
 
-    # Enables session support. Note that the session will ONLY be started if you read or write from it.
-    # Remove or comment this section to explicitly disable session support.
-    session:
-        handler_id: ~
-
     #esi: true
     #fragments: true
     php_errors:
         log: true
 
+    form:            ~
+    csrf_protection: ~
+    validation:
+        enable_annotations: true
+        enabled: true
+    #serializer:      { enable_annotations: true }
+    templating:
+        engines:
+            twig
+    default_locale:  "en"
+    trusted_hosts:   ~
+
+    # Enables session support. Note that the session will ONLY be started if you read or write from it.
+    # Remove or comment this section to explicitly disable session support.
+    session:
+        # http://symfony.com/doc/current/reference/configuration/framework.html#handler-id
+        handler_id:  session.handler.native_file
+        save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
+    fragments:       ~
+    http_method_override: true
+    assets:
+        json_manifest_path: '%kernel.project_dir%/web/build/manifest.json'
+    translator: { fallbacks: [en] }
     cache:
         # Put the unique name of your app here: the prefix seed
         # is used to compute stable namespaces for cache keys.

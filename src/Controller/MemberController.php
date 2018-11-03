@@ -115,7 +115,7 @@ class MemberController extends Controller
             }
         }
 
-        return $this->render(':member:request.password.reset.html.twig', [
+        return $this->render('member/request.password.reset.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -166,7 +166,7 @@ class MemberController extends Controller
             return $this->redirectToRoute('security_login');
         }
 
-        return $this->render(':member:reset.password.html.twig', [
+        return $this->render('member/reset.password.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -202,7 +202,7 @@ class MemberController extends Controller
             if (empty($feedback)) {
                 $form->addError(new FormError('Feedback can not be empty.'));
             } else {
-                $messageText = $this->render(':emails:comment.feedback.html.twig', [
+                $messageText = $this->render('emails/comment.feedback.html.twig', [
                     'comment' => $comment,
                     'feedback' => $feedback,
                 ]);
@@ -240,7 +240,7 @@ class MemberController extends Controller
             }
         }
 
-        return $this->render(':member:report.comment.html.twig', [
+        return $this->render('member/report.comment.html.twig', [
             'form' => $form->createView(),
             'comment' => $comment,
             'member' => $member,
@@ -265,7 +265,7 @@ class MemberController extends Controller
         $unreadMessageCount = $messageRepository->getUnreadMessagesCount($member);
 
         if ($unreadMessageCount !== $lastUnreadCount) {
-            $countWidget = $this->renderView(':widgets:messagescount.hml.twig', [
+            $countWidget = $this->renderView('widgets/messagescount.hml.twig', [
                 'messageCount' => $unreadMessageCount,
             ]);
         }
@@ -297,7 +297,7 @@ class MemberController extends Controller
         $unreadRequestsCount = $messageRepository->getUnreadRequestsCount($member);
 
         if ($unreadRequestsCount !== $lastUnreadCount) {
-            $countWidget = $this->renderView(':widgets:requestscount.html.twig', [
+            $countWidget = $this->renderView('widgets/requestscount.html.twig', [
                 'requestCount' => $unreadRequestsCount,
             ]);
         }

@@ -5,69 +5,69 @@ parameters:
 
 services:
 #    service_name:
-#        class: AppBundle\Directory\ClassName
+#        class: App\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
 
     translation.loader.db:
-        class: AppBundle\TranslationLoader\DatabaseLoader
+        class: App\TranslationLoader\DatabaseLoader
         arguments: ['@doctrine.orm.entity_manager']
         tags:
             - { name: translation.loader, alias: db}
 
     app.locale_listener:
-        class: AppBundle\EventListener\LocaleListener
+        class: App\EventListener\LocaleListener
         arguments: ['%kernel.default_locale%']
         tags:
            - { name: kernel.event_subscriber }
 
     app.user_locale_listener:
-        class: AppBundle\EventListener\UserLocaleListener
+        class: App\EventListener\UserLocaleListener
         arguments: ['@session']
         tags:
             - { name: kernel.event_listener, event: security.interactive_login, method: onInteractiveLogin }
 
     app.userprovider:
-        class: AppBundle\Provider\UserProvider
+        class: App\Provider\UserProvider
         arguments: ['@doctrine.orm.entity_manager']
 
 #    rox.legacy_dispatch_listener:
-#        class: AppBundle\EventListener\LegacyDispatchListener
+#        class: App\EventListener\LegacyDispatchListener
 #        arguments: ['@rox.legacy_kernel', '@session', '@security.token_storage' ]
 #        tags:
 #            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 200000 }
 
     rox.legacy_kernel:
-        class: AppBundle\LegacyKernel\LegacyHttpKernel
+        class: App\LegacyKernel\LegacyHttpKernel
         arguments: ['@templating.engine.twig', '@event_dispatcher', '@controller_resolver', '@request_stack', '@argument_resolver', '@service_container']
 
     rox.legacy_password_encoder:
-        class: AppBundle\Encoder\LegacyPasswordEncoder
+        class: App\Encoder\LegacyPasswordEncoder
 
     rox.legacy_loader:
-        class: AppBundle\Routing\LegacyLoader
+        class: App\Routing\LegacyLoader
         tags:
             - { name: routing.loader }
 
     rox.legacy_controller:
-        class: AppBundle\Controller\LegacyController
+        class: App\Controller\LegacyController
         calls:
             - [setContainer, ['@service_container']]
 
     rox.twig_extension:
-        class: AppBundle\Twig\Extension
+        class: App\Twig\Extension
         arguments: ['@session', '@doctrine', '@translator']
         tags:
             - { name: 'twig.extension' }
 
     rox.member_twig_extension:
-        class: AppBundle\Twig\MemberTwigExtension
+        class: App\Twig\MemberTwigExtension
         public: false
         arguments: ['@session', '@doctrine.orm.entity_manager', '@router', '@security.helper']
         tags:
             - { name: twig.extension }
 
     pagerfanta.bootstrap4.ajax.template:
-        class: AppBundle\Pagerfanta\TwitterBootstrap4AjaxTemplate
+        class: App\Pagerfanta\TwitterBootstrap4AjaxTemplate
 
     pagerfanta.bootstrap4.ajax.view:
         class: Pagerfanta\View\DefaultView
@@ -78,11 +78,11 @@ services:
         tags: [{ name: pagerfanta.view, alias: twitter_bootstrap4_ajax_translated }]
 
     rox.logger:
-        class: AppBundle\Logger\Logger
+        class: App\Logger\Logger
         arguments: ['@doctrine.orm.entity_manager', '@security.helper']
 
     rox.authentication_listener:
-        class: AppBundle\EventListener\AuthListener
+        class: App\EventListener\AuthListener
         arguments: ['@doctrine.orm.entity_manager']
         tags:
             - { name: kernel.event_listener, event: security.interactive_login, method: onAuthenticationSuccess }
@@ -93,7 +93,7 @@ services:
         arguments: ['@rox.datacollector_translator.inner']
 
     rox.user_checker:
-        class: AppBundle\Security\UserChecker
+        class: App\Security\UserChecker
         autowire: true
 
     intl.twig_extension:
@@ -102,7 +102,7 @@ services:
             - { name: 'twig.extension' }
 
     doctrine.filter.configurator:
-        class: AppBundle\Doctrine\Filter\Configurator
+        class: App\Doctrine\Filter\Configurator
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@request_stack"
@@ -111,6 +111,6 @@ services:
             - { name: kernel.event_listener, event: kernel.request }
 
     rox.wiki.model:
-        class: AppBundle\Model\WikiModel
+        class: App\Model\WikiModel
         arguments:
             - "@doctrine.orm.entity_manager"

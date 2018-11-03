@@ -45,7 +45,7 @@ class SearchController extends Controller
             $pager->setCurrentPage($data->page);
         }
 
-        return $this->render(':search:searchmembers.html.twig', [
+        return $this->render('search/searchmembers.html.twig', [
             'form' => $form->createView(),
             'pager' => $pager,
             'routeName' => 'search_members_ajax',
@@ -84,7 +84,7 @@ class SearchController extends Controller
             $pager->setCurrentPage($data->page);
         }
 
-        return $this->render(':search:searchmembers.html.twig', [
+        return $this->render('search/searchmembers.html.twig', [
             'form' => $form->createView(),
             'pager' => $pager,
             'routeName' => 'search_members_ajax',
@@ -118,7 +118,7 @@ class SearchController extends Controller
         $pager->setMaxPerPage($searchFormRequest->items);
         $pager->setCurrentPage($searchFormRequest->page);
 
-        return $this->render(':member:results.html.twig', [
+        return $this->render('member/results.html.twig', [
             'pager' => $pager,
             'routeName' => 'search_members_ajax',
             'routeParams' => $request->query->all(),

@@ -74,7 +74,7 @@ config/*.local.yml
 phploc.xml
 
 /app/config/parameters.yml
-/src/AppBundle/Resources/css/bewelcome.css
+/src/App/Resources/css/bewelcome.css
 /phpunit.xml
 /var/*
 !/var/cache

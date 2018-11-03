@@ -14,7 +14,7 @@
 {% block content %}
     <div class="row welcomeback mx-0 mb-4 p-2">
 
-        {% include ':landing:widget/profilepicturewithaccommodation.html.twig' with {
+        {% include 'landing/widget/profilepicturewithaccommodation.html.twig' with {
         member: app.user
         } only %}
 
@@ -25,7 +25,7 @@
                 </div>
                 <div class="d-inline-flex align-items-center h4">
                     <span class="d-none d-md-flex">Your hosting status is</span>
-                    {% include ':landing:widget/accommodation.html.twig' with {
+                    {% include 'landing/widget/accommodation.html.twig' with {
                     member: app.user
                     } only %}
                     in

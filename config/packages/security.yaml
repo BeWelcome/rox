@@ -7,7 +7,7 @@ parameters:
 security:
     encoders:
         # For the legacy MySQL PASSWORD()
-        AppBundle\Encoder\LegacyPasswordEncoder:
+        App\Encoder\LegacyPasswordEncoder:
             id: rox.legacy_password_encoder
 
         # Default for all members
@@ -16,7 +16,7 @@ security:
             cost: 12
 
         # Stronger password cost for privileged members. See
-        # AppBundle\Factory\EncoderFactory
+        # App\Factory\EncoderFactory
         harsh:
             algorithm: bcrypt
             cost: 13
@@ -24,7 +24,7 @@ security:
     providers:
         our_db_provider:
             entity:
-                class: AppBundle:Member
+                class: App:Member
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs

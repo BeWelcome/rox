@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -50,9 +50,9 @@ class PollsChoices
     private $id;
 
     /**
-     * @var \AppBundle\Entity\Polls
+     * @var \App\Entity\Polls
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Polls")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Polls")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdPoll", referencedColumnName="id")
      * })
@@ -170,11 +170,11 @@ class PollsChoices
     /**
      * Set idpoll
      *
-     * @param \AppBundle\Entity\Polls $idpoll
+     * @param \App\Entity\Polls $idpoll
      *
      * @return PollsChoices
      */
-    public function setIdpoll(\AppBundle\Entity\Polls $idpoll = null)
+    public function setIdpoll(\App\Entity\Polls $idpoll = null)
     {
         $this->idpoll = $idpoll;
 
@@ -184,7 +184,7 @@ class PollsChoices
     /**
      * Get idpoll
      *
-     * @return \AppBundle\Entity\Polls
+     * @return \App\Entity\Polls
      */
     public function getIdpoll()
     {

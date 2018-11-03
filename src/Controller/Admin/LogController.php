@@ -50,7 +50,7 @@ class LogController extends Controller
 
         $logs = $logModel->getFilteredLogs($types, $member, $page, $limit);
 
-        return  $this->render(':admin:logs/index.html.twig', [
+        return  $this->render('admin/logs/index.html.twig', [
             'form' => $logForm->createView(),
             'logs' => $logs,
         ]);

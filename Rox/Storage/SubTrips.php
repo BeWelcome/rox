@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -50,9 +50,9 @@ class SubTrips
     private $id;
 
     /**
-     * @var \AppBundle\Entity\Trips
+     * @var \App\Entity\Trips
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Trips")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Trips")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="trip_id", referencedColumnName="id")
      * })
@@ -170,11 +170,11 @@ class SubTrips
     /**
      * Set trip
      *
-     * @param \AppBundle\Entity\Trips $trip
+     * @param \App\Entity\Trips $trip
      *
      * @return SubTrips
      */
-    public function setTrip(\AppBundle\Entity\Trips $trip = null)
+    public function setTrip(\App\Entity\Trips $trip = null)
     {
         $this->trip = $trip;
 
@@ -184,7 +184,7 @@ class SubTrips
     /**
      * Get trip
      *
-     * @return \AppBundle\Entity\Trips
+     * @return \App\Entity\Trips
      */
     public function getTrip()
     {

@@ -40,7 +40,7 @@ class MigrateOldTrips extends RoxMigration
 
         $lastTrip = -1;
         $trip = null;
-        $memberRepository = $em->getRepository(\AppBundle\Entity\Member::class);
+        $memberRepository = $em->getRepository(\App\Entity\Member::class);
 
         foreach ($trips as $tripRaw) {
             $curTrip = $tripRaw["trip_id"];
@@ -49,7 +49,7 @@ class MigrateOldTrips extends RoxMigration
                     $em->flush();
                     $em->persist($trip);
                 }
-                $trip = new \AppBundle\Entity\Trip();
+                $trip = new \App\Entity\Trip();
                 $trip->setSummary($tripRaw["trip_name"]);
                 $trip->setDescription($tripRaw["trip_descr"]);
                 $createdBy = $memberRepository->find($tripRaw["IdMember"]);
@@ -59,7 +59,7 @@ class MigrateOldTrips extends RoxMigration
                 $trip->setCountoftravellers(1);
                 $lastTrip = $curTrip;
             }
-            $subTrip = new \AppBundle\Entity\SubTrip();
+            $subTrip = new \App\Entity\SubTrip();
             $subTrip->setTrip($trip);
             $subTrip->setGeonameid($tripRaw["blog_geonameId"])
                 ->setArrival(new \DateTime($tripRaw["blog_start"]));

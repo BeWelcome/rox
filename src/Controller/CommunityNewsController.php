@@ -29,7 +29,7 @@ class CommunityNewsController extends Controller
         $communityNewsModel = new CommunityNewsModel($this->getDoctrine());
         $communityNews = $communityNewsModel->getPaginator($page, $limit);
 
-        return $this->render(':communitynews:list.html.twig', [
+        return $this->render('communitynews/list.html.twig', [
             'communityNews' => $communityNews,
         ]);
     }
@@ -49,7 +49,7 @@ class CommunityNewsController extends Controller
         $communityNewsModel = new CommunityNewsModel($this->getDoctrine());
         $comments = $communityNewsModel->getCommentsPaginator($communityNews, $page, $limit);
 
-        return $this->render(':communitynews:show.html.twig', [
+        return $this->render('communitynews/show.html.twig', [
             'communityNews' => $communityNews,
             'comments' => $comments,
         ]);
@@ -84,7 +84,7 @@ class CommunityNewsController extends Controller
             return $this->redirectToRoute('communitynews_show', ['id' => $communityNews->getId()]);
         }
 
-        return $this->render(':communitynews:addcomment.html.twig', [
+        return $this->render('communitynews/addcomment.html.twig', [
             'communityNews' => $communityNews,
             'form' => $form->createView(),
         ]);

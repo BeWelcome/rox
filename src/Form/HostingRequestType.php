@@ -85,6 +85,6 @@ class HostingRequestType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'appbundle_request';
+        return 'App_request';
     }
 }

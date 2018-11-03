@@ -34,7 +34,7 @@ class LandingModel extends BaseModel
         $qb = $this->em->createQueryBuilder();
         $qb
             ->select('m')
-            ->from('AppBundle:Message', 'm')
+            ->from('App:Message', 'm')
             ->where('m.receiver = :member')
             ->setParameter('member', $member);
         if ($unread) {
@@ -77,7 +77,7 @@ class LandingModel extends BaseModel
         $queryBuilder = $this->em->createQueryBuilder();
         $queryBuilder
             ->select('n')
-            ->from('AppBundle:Notification', 'n')
+            ->from('App:Notification', 'n')
             ->where('n.member = :member')
             ->setParameter('member', $member)
             ->setMaxResults($limit);
@@ -119,7 +119,7 @@ class LandingModel extends BaseModel
 
         $queryBuilder
             ->select('ft')
-            ->from('AppBundle:ForumThread', 'ft')
+            ->from('App:ForumThread', 'ft')
             ->where("ft.threadDeleted = 'NotDeleted'")
             ->orderBy('ft.createdAt', 'desc')
         ;

@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\AppBundle\Entity;
+namespace Tests\App\Entity;
 
-use AppBundle\Doctrine\SpamInfoType;
-use AppBundle\Entity\Message;
+use App\Doctrine\SpamInfoType;
+use App\Entity\Message;
 use PHPUnit\Framework\TestCase;
 
 class MessageTest extends TestCase

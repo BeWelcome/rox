@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -71,9 +71,9 @@ class Trips
     private $id;
 
     /**
-     * @var \AppBundle\Entity\Members
+     * @var \App\Entity\Members
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Members")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Members")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="created_by", referencedColumnName="id")
      * })
@@ -263,11 +263,11 @@ class Trips
     /**
      * Set createdBy
      *
-     * @param \AppBundle\Entity\Members $createdBy
+     * @param \App\Entity\Members $createdBy
      *
      * @return Trips
      */
-    public function setCreatedBy(\AppBundle\Entity\Members $createdBy = null)
+    public function setCreatedBy(\App\Entity\Members $createdBy = null)
     {
         $this->createdBy = $createdBy;
 
@@ -277,7 +277,7 @@ class Trips
     /**
      * Get createdBy
      *
-     * @return \AppBundle\Entity\Members
+     * @return \App\Entity\Members
      */
     public function getCreatedBy()
     {

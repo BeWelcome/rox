@@ -27,7 +27,7 @@ class CommunityNewsController extends Controller
         $communityNewsModel = new CommunityNewsModel($this->getDoctrine());
         $communityNews = $communityNewsModel->getAdminPaginator($page, $limit);
 
-        return $this->render(':admin:communitynews/list.html.twig', [
+        return $this->render('admin/communitynews/list.html.twig', [
             'communityNews' => $communityNews,
         ]);
     }
@@ -59,7 +59,7 @@ class CommunityNewsController extends Controller
             return $this->redirectToRoute('admin_communitynews_overview');
         }
 
-        return $this->render(':admin:communitynews/editcreate.html.twig', [
+        return $this->render('admin/communitynews/editcreate.html.twig', [
             'form' => $communityNewsForm->createView(),
             ]);
     }
@@ -88,7 +88,7 @@ class CommunityNewsController extends Controller
             return $this->redirectToRoute('admin_communitynews_overview');
         }
 
-        return $this->render(':admin:communitynews/editcreate.html.twig', [
+        return $this->render('admin/communitynews/editcreate.html.twig', [
             'form' => $communityNewsForm->createView(),
         ]);
     }

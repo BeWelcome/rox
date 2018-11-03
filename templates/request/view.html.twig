@@ -14,16 +14,16 @@
 
         <div class="col-12 mt-2">
             {% if original.Sender.Username == myself.Username %}
-                {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_OPEN') %}<div class="alert alert-warning mb-0 h5"><i class="fa fa-question mr-1"></i>{{ 'Your potential host has not yet decided if he/she can host you' }}</div>{% endif %}
-                {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_CANCELLED') %}<div class="alert alert-danger mb-0 h5"><i class="fa fa-times mr-1"></i>{{ 'You have cancelled this hosting request' }}</div>{% endif %}
-                {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_DECLINED') %}<div class="alert alert-danger mb-0 h5"><i class="fa fa-times mr-1"></i>{{ 'Unfortunately your potential host declined' }}</div>{% endif %}
-                {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<div class="alert alert-success mb-0 h5"><i class="fa fa-handshake-o mr-1"></i>{{ 'You can stay with this host' }}</div>{% endif %}
-                {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<div class="alert alert-warning mb-0 h5"><i class="fa fa-question mr-1"></i>{{ 'You might stay with this host' }}</div>{% endif %}
+                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}<div class="alert alert-warning mb-0 h5"><i class="fa fa-question mr-1"></i>{{ 'Your potential host has not yet decided if he/she can host you' }}</div>{% endif %}
+                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}<div class="alert alert-danger mb-0 h5"><i class="fa fa-times mr-1"></i>{{ 'You have cancelled this hosting request' }}</div>{% endif %}
+                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}<div class="alert alert-danger mb-0 h5"><i class="fa fa-times mr-1"></i>{{ 'Unfortunately your potential host declined' }}</div>{% endif %}
+                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<div class="alert alert-success mb-0 h5"><i class="fa fa-handshake-o mr-1"></i>{{ 'You can stay with this host' }}</div>{% endif %}
+                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<div class="alert alert-warning mb-0 h5"><i class="fa fa-question mr-1"></i>{{ 'You might stay with this host' }}</div>{% endif %}
             {% else %}
-                {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_OPEN') %}<div class="alert alert-warning mb-0 h5"><i class="fa fa-times mr-1"></i>{{ 'You have not yet replied to this request' }}<a class="btn btn-primary btn-sm ml-3" href="{{ path( 'hosting_request_reply', { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a></div>{% endif %}
-                {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_DECLINED') %}<div class="alert alert-danger mb-0 h5"><i class="fa fa-times mr-1"></i>{{ 'You\'re not going to host this group/person' }}</div>{% endif %}
-                {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<div class="alert alert-success mb-0 h5"><i class="fa fa-handshake-o mr-1"></i>{{ 'You\'re going to host this group/person' }}</div>{% endif %}
-                {% if request.status == constant('AppBundle\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<div class="alert alert-warning mb-0 h5"><i class="fa fa-question mr-1"></i>{{ 'You\'ve told this group/person you might host them.' }}</div>{% endif %}
+                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}<div class="alert alert-warning mb-0 h5"><i class="fa fa-times mr-1"></i>{{ 'You have not yet replied to this request' }}<a class="btn btn-primary btn-sm ml-3" href="{{ path( 'hosting_request_reply', { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a></div>{% endif %}
+                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}<div class="alert alert-danger mb-0 h5"><i class="fa fa-times mr-1"></i>{{ 'You\'re not going to host this group/person' }}</div>{% endif %}
+                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<div class="alert alert-success mb-0 h5"><i class="fa fa-handshake-o mr-1"></i>{{ 'You\'re going to host this group/person' }}</div>{% endif %}
+                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<div class="alert alert-warning mb-0 h5"><i class="fa fa-question mr-1"></i>{{ 'You\'ve told this group/person you might host them.' }}</div>{% endif %}
             {% endif %}
         </div>
 

@@ -57,7 +57,7 @@ class CheckerController extends Controller
             }
         }
 
-        return  $this->render(':admin:checker/index.html.twig', [
+        return  $this->render('admin/checker/index.html.twig', [
             'form' => $form->createView(),
             'reported' => $reportedMessages,
         ]);

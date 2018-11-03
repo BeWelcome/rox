@@ -144,7 +144,7 @@ class GroupController extends Controller
             return $this->redirectToRoute('groups_overview');
         }
 
-        return $this->render(':group:create.group.html.twig', [
+        return $this->render('group/create.group.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -170,7 +170,7 @@ class GroupController extends Controller
 
             // Check if there are duplicate groups and provide a list of these
 
-            $html = $this->renderView(':group:check.group.html.twig', [
+            $html = $this->renderView('group/check.group.html.twig', [
                 'groups' => $groups,
             ]);
         }
@@ -199,7 +199,7 @@ class GroupController extends Controller
             'approved' => [Group::NOT_APPROVED, Group::IN_DISCUSSION],
         ]);
 
-        return $this->render(':admin:groups/approve.html.twig', [
+        return $this->render('admin/groups/approve.html.twig', [
             'groups' => $groups,
         ]);
     }

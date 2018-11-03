@@ -16,9 +16,9 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminNewMembersContr
 $layoutbits = new MOD_layoutbits();
 
 ?>
-<div id="newmembers">
+<div id="newmembers" class="table-responsive">
     <?= $this->pager->render() ?>
-    <table>
+    <table class="table">
         <tr>
             <th class="usercol" colspan="3"><?= $words->get('AdminNewMembersMemberDetails') ?></th>
             <th class="send"></th>

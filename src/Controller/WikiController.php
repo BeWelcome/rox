@@ -53,7 +53,7 @@ class WikiController extends Controller
             return $this->redirectToRoute('wiki_page_edit', ['pageTitle' => $pageTitle]);
         }
 
-        return $this->render(':wiki:wiki.html.twig', [
+        return $this->render('wiki/wiki.html.twig', [
             'title' => $pageTitle,
             'wikipage' => $output,
         ]);
@@ -99,7 +99,7 @@ class WikiController extends Controller
             return $this->redirectToRoute('wiki_page', ['pageTitle' => $pageTitle]);
         }
 
-        return $this->render(':wiki:edit_create.html.twig', [
+        return $this->render('wiki/edit_create.html.twig', [
             'title' => $pageTitle,
             'form' => $form->createView(),
         ]);
@@ -144,7 +144,7 @@ class WikiController extends Controller
             return $this->redirectToRoute('wiki_page', ['pageTitle' => $pageTitle]);
         }
 
-        return $this->render(':wiki:edit_create.html.twig', [
+        return $this->render('wiki/edit_create.html.twig', [
             'title' => $pageTitle,
             'form' => $form->createView(),
         ]);
@@ -176,7 +176,7 @@ class WikiController extends Controller
             $output = $wikiModel->parseWikiMarkup($wikiPage->getContent());
         }
 
-        return $this->render(':group:wiki.html.twig', [
+        return $this->render('group/wiki.html.twig', [
             'title' => 'Group '.$group->getName(),
             'submenu' => [
                 'active' => 'wiki',

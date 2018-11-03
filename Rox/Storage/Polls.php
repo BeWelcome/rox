@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -162,9 +162,9 @@ class Polls
     private $id;
 
     /**
-     * @var \AppBundle\Entity\Members
+     * @var \App\Entity\Members
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Members")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Members")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdCreator", referencedColumnName="id")
      * })
@@ -666,11 +666,11 @@ class Polls
     /**
      * Set idcreator
      *
-     * @param \AppBundle\Entity\Members $idcreator
+     * @param \App\Entity\Members $idcreator
      *
      * @return Polls
      */
-    public function setIdcreator(\AppBundle\Entity\Members $idcreator = null)
+    public function setIdcreator(\App\Entity\Members $idcreator = null)
     {
         $this->idcreator = $idcreator;
 
@@ -680,7 +680,7 @@ class Polls
     /**
      * Get idcreator
      *
-     * @return \AppBundle\Entity\Members
+     * @return \App\Entity\Members
      */
     public function getIdcreator()
     {

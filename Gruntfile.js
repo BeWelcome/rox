@@ -101,7 +101,7 @@ module.exports = function (grunt) {
                     style: 'expanded'
                 },
                 files: {
-                    'web/css/app.css': 'src/AppBundle/Resources/scss/bewelcome.scss'
+                    'web/css/app.css': 'src/App/Resources/scss/bewelcome.scss'
                 }
             }
         },

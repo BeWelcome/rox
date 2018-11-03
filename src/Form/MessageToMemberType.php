@@ -43,6 +43,6 @@ class MessageToMemberType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'appbundle_message';
+        return 'App_message';
     }
 }

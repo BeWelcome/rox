@@ -49,7 +49,7 @@ npm install
  
 everytime you see a change in either ```package.json``` or ```package-lock.json```.
 
-If any ```.scss``` file or a file in ```src/AppBundle/Resources``` changed a ```make build``` is necessary.
+If any ```.scss``` file or a file in ```src/App/Resources``` changed a ```make build``` is necessary.
  
 ## Useful links
 * [Legacy developer space on Trac](http://trac.bewelcome.org/)

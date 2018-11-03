@@ -14,6 +14,6 @@ class AboutController extends Controller
      */
     public function showCreditsAction()
     {
-        return $this->render(':about:credits.html.twig');
+        return $this->render('about/credits.html.twig');
     }
 }

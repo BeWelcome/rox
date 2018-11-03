@@ -104,7 +104,7 @@
             #}
         </div>
         <div class="ml-auto profilestatusbox card m-3 py-3 px-3">
-            {% include(':profile:cards/hosting.html.twig') %}
+            {% include('profile/cards/hosting.html.twig') %}
         </div>
 
     </div>
@@ -146,30 +146,30 @@
 
             </div>
 
-            {% include(':profile:cards/gallery.html.twig') %}
+            {% include('profile/cards/gallery.html.twig') %}
 
             {% if member.PastTrips %}
-                {% include(':profile:cards/travels.html.twig') %}
+                {% include('profile/cards/travels.html.twig') %}
             {% endif %}
 
             {% if member.groups %}
-                {% include(':profile:cards/groups.html.twig') %}
+                {% include('profile/cards/groups.html.twig') %}
             {% endif %}
 
             {% if member.languages %}
-                {% include(':profile:cards/languages.html.twig') %}
+                {% include('profile/cards/languages.html.twig') %}
             {% endif %}
         </div>
 
         <div class="col-12 col-md-7">
 
-            {% include(':profile:cards/accommodation.html.twig') %}
+            {% include('profile/cards/accommodation.html.twig') %}
 
-            {% include(':profile:cards/contact.html.twig') %}
+            {% include('profile/cards/contact.html.twig') %}
 
-            {% include(':profile:cards/comments.html.twig') %}
+            {% include('profile/cards/comments.html.twig') %}
 
-            {% include(':profile:cards/relationships.html.twig') %}
+            {% include('profile/cards/relationships.html.twig') %}
 
         </div>
 

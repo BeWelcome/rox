@@ -24,7 +24,7 @@ class ActivityController extends Controller
         $activityModel = new ActivityModel($this->getDoctrine());
         $activities = $activityModel->getLatest($page, $limit);
 
-        return $this->render(':activity:list.html.twig', [
+        return $this->render('activity/list.html.twig', [
             'active' => 'ActivitiesNearMe',
             'activities' => $activities,
         ]);
@@ -40,7 +40,7 @@ class ActivityController extends Controller
      */
     public function showAction(Activity $activity)
     {
-        $content = $this->render(':activity:show.html.twig', [
+        $content = $this->render('activity/show.html.twig', [
             'activity' => $activity,
         ]);
 
@@ -57,7 +57,7 @@ class ActivityController extends Controller
      */
     public function editAction(Activity $activity)
     {
-        $content = $this->render(':activity:show.html.twig', [
+        $content = $this->render('activity/show.html.twig', [
             'activity' => $activity,
         ]);
 

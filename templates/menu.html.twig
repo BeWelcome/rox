@@ -3,7 +3,7 @@
 {% if member %}
     <nav class="navbar navbar-sticky-top navbar-expand-md navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
         <div class="container">
-            <a class="navbar-brand mr-3 float-left" href="{{ url('homepage') }}"><img src="{{ asset('bundles/app/images/logo_index_top.png') }}" alt="{{ 'BeWelcome' | trans }}"/></a>
+            <a class="navbar-brand mr-3 float-left" href="{{ url('homepage') }}"><img src="{{ asset('images/logo_index_top.png') }}" alt="{{ 'BeWelcome' | trans }}"/></a>
 
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#smallNavBar" aria-controls="smallNavBar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -157,10 +157,10 @@
 
                     {# messages #}
                     <li class="nav-item float-right">
-                        {% include ':widgets:messagescount.hml.twig' %}
+                        {% include 'widgets/messagescount.hml.twig' %}
                     </li>
                     <li class="nav-item float-right">
-                        {% include ':widgets:requestscount.html.twig' %}
+                        {% include 'widgets/requestscount.html.twig' %}
                     </li>
 
                     {# logout #}
@@ -184,7 +184,7 @@
     {# navbar not logged in, showing main links #}
     <nav class="navbar navbar-sticky-top navbar-expand-lg navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
         <div class="container">
-            <a class="navbar-brand mr-3 float-left" href="{{ url('homepage') }}"><img src="{{ asset('bundles/app/images/logo_index_top.png') }}" alt="{{ 'BeWelcome' | trans }}"/></a>
+            <a class="navbar-brand mr-3 float-left" href="{{ url('homepage') }}"><img src="{{ asset('images/logo_index_top.png') }}" alt="{{ 'BeWelcome' | trans }}"/></a>
 
             <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#NavbarNotLoggedIn" aria-controls="NavbarNotLoggedIn" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>

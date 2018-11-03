@@ -60,7 +60,6 @@ class SearchAdapter implements AdapterInterface
             $container->getParameter('database_user'),
             $container->getParameter('database_password')
         );
-
         $this->model = new \SearchModel();
         $this->modelData = $this->prepareModelData($data);
         $this->model->prepareQuery($this->modelData);

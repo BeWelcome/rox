@@ -1,6 +1,6 @@
 .PHONY: all build phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpmetrics phpunit version
 
-SRC_DIR=src/AppBundle tests/TranslationLoader
+SRC_DIR=src/App tests/TranslationLoader
 
 null  :=
 SPACE := $(null) $(null)
@@ -12,7 +12,7 @@ all: phpci
 phpci: phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpunit version
 
 phpcsfix:
-	./vendor/bin/phpcbf src/AppBundle
+	./vendor/bin/phpcbf src/App
 	./vendor/bin/php-cs-fixer fix -v
 
 build:
@@ -46,7 +46,7 @@ phpunit:
 	./vendor/bin/phpunit
 
 phpmetrics:
-	./vendor/bin/phpmetrics --exclude=src/AppBundle/Entity --report-violations=phpmetrics.xml $(SRC_DIR_COMMA)
+	./vendor/bin/phpmetrics --exclude=src/App/Entity --report-violations=phpmetrics.xml $(SRC_DIR_COMMA)
 
 version:
 	git rev-parse --short HEAD > VERSION

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="AppBundle\Entity\LoginMessagesAcknowledged" table="login_messages_acknowledged">
+  <entity name="App\Entity\LoginMessagesAcknowledged" table="login_messages_acknowledged">
     <id name="messageid" type="integer" column="messageId"/>
     <id name="memberid" type="integer" column="memberId"/>
     <field name="acknowledged" type="boolean" column="acknowledged" nullable="false"/>

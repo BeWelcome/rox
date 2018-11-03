@@ -47,10 +47,10 @@
                             {% else %}
                                 <a href="{{ path('admin_comment_show', { 'commentId' : comment.id }) }}"><i class="fa fa-eye" title="{{ 'Show' | trans }}"></i></a>
                             {% endif %}<br>
-                            {% if comment.adminaction != constant('AppBundle\\Doctrine\\CommentAdminActionType::SAFETY_TEAM_CHECK') %}
+                            {% if comment.adminaction != constant('App\\Doctrine\\CommentAdminActionType::SAFETY_TEAM_CHECK') %}
                                 <a href="{{ path('admin_comment_assign_safetyteam', { 'commentId' : comment.id }) }}"><i class="fa fa-arrow-right" title="{{ 'Assign to safety team' | trans }}"></i></a><br/>
                             {% endif %}
-                            {% if comment.adminaction != constant('AppBundle\\Doctrine\\CommentAdminActionType::ADMIN_CHECKED') %}
+                            {% if comment.adminaction != constant('App\\Doctrine\\CommentAdminActionType::ADMIN_CHECKED') %}
                                 <a href="{{ path('admin_comment_mark_checked', { 'commentId' : comment.id }) }}"><i class="fa fa-check" title="{{ 'Mark as checked' | trans }}"></i></a>
                             {% endif %}
                         </td>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="AppBundle\Entity\BlogComments" table="blog_comments">
+  <entity name="App\Entity\BlogComments" table="blog_comments">
     <indexes>
       <index name="id" columns="id"/>
       <index name="blog_id_foreign" columns="blog_id_foreign"/>

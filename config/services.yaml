@@ -20,24 +20,28 @@ services:
 
 
     translation.loader.db:
+        public: true
         class: App\TranslationLoader\DatabaseLoader
         arguments: ['@doctrine.orm.entity_manager']
         tags:
             - { name: translation.loader, alias: db}
 
     app.locale_listener:
+        public: true
         class: App\EventListener\LocaleListener
         arguments: ['%kernel.default_locale%']
         tags:
             - { name: kernel.event_subscriber }
 
     app.user_locale_listener:
+        public: true
         class: App\EventListener\UserLocaleListener
         arguments: ['@session']
         tags:
             - { name: kernel.event_listener, event: security.interactive_login, method: onInteractiveLogin }
 
     app.userprovider:
+        public: true
         class: App\Provider\UserProvider
         arguments: ['@doctrine.orm.entity_manager']
 
@@ -49,22 +53,27 @@ services:
 
     rox.legacy_kernel:
         class: App\LegacyKernel\LegacyHttpKernel
+        public: true
         arguments: ['@templating.engine.twig', '@event_dispatcher', '@controller_resolver', '@request_stack', '@argument_resolver', '@service_container']
 
     rox.legacy_password_encoder:
+        public: true
         class: App\Encoder\LegacyPasswordEncoder
 
     rox.legacy_loader:
+        public: true
         class: App\Routing\LegacyLoader
         tags:
             - { name: routing.loader }
 
     rox.legacy_controller:
+        public: true
         class: App\Controller\LegacyController
         calls:
             - [setContainer, ['@service_container']]
 
     rox.twig_extension:
+        public: true
         class: App\Twig\Extension
         arguments: ['@session', '@doctrine', '@translator']
         tags:
@@ -72,47 +81,54 @@ services:
 
     rox.member_twig_extension:
         class: App\Twig\MemberTwigExtension
-        public: false
+        public: true
         arguments: ['@session', '@doctrine.orm.entity_manager', '@router', '@security.helper']
         tags:
             - { name: twig.extension }
 
     pagerfanta.bootstrap4.ajax.template:
+        public: true
         class: App\Pagerfanta\TwitterBootstrap4AjaxTemplate
 
     pagerfanta.bootstrap4.ajax.view:
+        public: true
         class: Pagerfanta\View\DefaultView
-        public: false
         arguments:
             - "@pagerfanta.bootstrap4.ajax.template"
             - "@translator"
         tags: [{ name: pagerfanta.view, alias: twitter_bootstrap4_ajax_translated }]
 
     rox.logger:
+        public: true
         class: App\Logger\Logger
         arguments: ['@doctrine.orm.entity_manager', '@security.helper']
 
     rox.authentication_listener:
+        public: true
         class: App\EventListener\AuthListener
         arguments: ['@doctrine.orm.entity_manager']
         tags:
             - { name: kernel.event_listener, event: security.interactive_login, method: onAuthenticationSuccess }
 
     rox.datacollector_translator:
+        public: true
         class: Symfony\Component\Translation\DataCollectorTranslator
         decorates: translator
         arguments: ['@rox.datacollector_translator.inner']
 
     rox.user_checker:
+        public: true
         class: App\Security\UserChecker
         autowire: true
 
     intl.twig_extension:
+        public: true
         class: Twig_Extensions_Extension_Intl
         tags:
             - { name: 'twig.extension' }
 
     doctrine.filter.configurator:
+        public: true
         class: App\Doctrine\Filter\Configurator
         arguments:
             - "@doctrine.orm.entity_manager"
@@ -122,6 +138,7 @@ services:
             - { name: kernel.event_listener, event: kernel.request }
 
     rox.wiki.model:
+        public: true
         class: App\Model\WikiModel
         arguments:
             - "@doctrine.orm.entity_manager"

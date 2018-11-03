@@ -1,5 +1,5 @@
 app:
-    resource: "@AppBundle/Controller/"
+    resource: "@App/Controller/"
     type:     annotation
 
 legacy:

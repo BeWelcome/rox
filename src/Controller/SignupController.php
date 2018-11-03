@@ -65,7 +65,7 @@ class SignupController extends Controller
             }
 
             // show finish page
-            return $this->render(':signup:finish.html.twig', $parameters);
+            return $this->render('signup/finish.html.twig', $parameters);
         }
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -57,9 +57,9 @@ class PollsContributions
     private $id;
 
     /**
-     * @var \AppBundle\Entity\Polls
+     * @var \App\Entity\Polls
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Polls")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Polls")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdPoll", referencedColumnName="id")
      * })
@@ -67,9 +67,9 @@ class PollsContributions
     private $idpoll;
 
     /**
-     * @var \AppBundle\Entity\Members
+     * @var \App\Entity\Members
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Members")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Members")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      * })
@@ -211,11 +211,11 @@ class PollsContributions
     /**
      * Set idpoll
      *
-     * @param \AppBundle\Entity\Polls $idpoll
+     * @param \App\Entity\Polls $idpoll
      *
      * @return PollsContributions
      */
-    public function setIdpoll(\AppBundle\Entity\Polls $idpoll = null)
+    public function setIdpoll(\App\Entity\Polls $idpoll = null)
     {
         $this->idpoll = $idpoll;
 
@@ -225,7 +225,7 @@ class PollsContributions
     /**
      * Get idpoll
      *
-     * @return \AppBundle\Entity\Polls
+     * @return \App\Entity\Polls
      */
     public function getIdpoll()
     {
@@ -235,11 +235,11 @@ class PollsContributions
     /**
      * Set idmember
      *
-     * @param \AppBundle\Entity\Members $idmember
+     * @param \App\Entity\Members $idmember
      *
      * @return PollsContributions
      */
-    public function setIdmember(\AppBundle\Entity\Members $idmember = null)
+    public function setIdmember(\App\Entity\Members $idmember = null)
     {
         $this->idmember = $idmember;
 
@@ -249,7 +249,7 @@ class PollsContributions
     /**
      * Get idmember
      *
-     * @return \AppBundle\Entity\Members
+     * @return \App\Entity\Members
      */
     public function getIdmember()
     {

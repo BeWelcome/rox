@@ -30,7 +30,7 @@ framework:
     fragments:       ~
     http_method_override: true
     assets:
-        json_manifest_path: '%kernel.project_dir%/web/build/manifest.json'
+        json_manifest_path: '%kernel.project_dir%/public/build/manifest.json'
     translator: { fallbacks: [en] }
     cache:
         # Put the unique name of your app here: the prefix seed

@@ -1,7 +1,0 @@
-app:
-    resource: "@App/Controller/"
-    type:     annotation
-
-legacy:
-    resource: .
-    type:     legacy

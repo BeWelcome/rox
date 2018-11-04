@@ -1,6 +1,6 @@
 .PHONY: all build phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpmetrics phpunit version
 
-SRC_DIR=src/App tests/TranslationLoader
+SRC_DIR=src tests/TranslationLoader
 
 null  :=
 SPACE := $(null) $(null)
@@ -12,7 +12,7 @@ all: phpci
 phpci: phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpunit version
 
 phpcsfix:
-	./vendor/bin/phpcbf src/App
+	./vendor/bin/phpcbf src
 	./vendor/bin/php-cs-fixer fix -v
 
 build:

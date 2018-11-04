@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "800230ac0483e360dd3fcd44ddb6b7ee",
+    "content-hash": "a96c3cb33db117a434e5c745d1e1eb56",
     "packages": [
         {
             "name": "anthonymartin/geo-location",
@@ -8871,8 +8871,10 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.1.7",
         "ext-pdo": "*"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "platform-overrides": {
+        "php": "7.2.11"
+    }
 }

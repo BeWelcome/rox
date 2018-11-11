@@ -31,8 +31,8 @@ $layoutbits = new MOD_layoutbits();
                    value="<?= $words->getSilent("AdminRightsListMembersSubmit") ?>"/><?php echo $words->flushBuffer(); ?>
     </form>
 </div>
-<div class="w-100 p-0">
-    <table id="rights" class="table table-striped table-hover">
+<div class="table-responsive">
+    <table id="rights" class="table table-striped table-hover" style="table-layout: fixed;">
         <tr>
             <th><?= $words->get('AdminRightsUsername') ?></th>
             <th><?= $words->get('AdminRightsRight') ?></th>
@@ -64,7 +64,7 @@ $layoutbits = new MOD_layoutbits();
         ?>
         <td><span title="tooltip<?= $id ?>"><?= $ss .  $this->rights[$id]->Name . $se ?></span></td>
         <td><?= $ss . $right->level . $se ?></td>
-        <td><?= $ss . $right->scope . $se ?></td>
+        <td style="word-break: break-word"><?= $ss . $right->scope . $se ?></td>
         <td class="w-100"><?= $right->comment ?></td>
         <td><a href="admin/rights/edit/<?= $id ?>/<?= $username ?>">
                 <i class="fa fa-edit" alt="edit"></i></a></td>

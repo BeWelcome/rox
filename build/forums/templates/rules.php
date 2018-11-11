@@ -67,6 +67,6 @@ $words = new MOD_words(); ?>
     <p><?php echo $words->getFormatted('ForumRulesText14'); ?></p>
     <p><?php echo $words->getFormatted('ForumRulesText15'); ?></p>
 
-    <h4><?php echo $words->getFormatted('ForumRulesDiscussionGroups'); ?></h4>
+    <a id="groups"></a><h4><?php echo $words->getFormatted('ForumRulesDiscussionGroups'); ?></h4>
     <p><?php echo $words->getFormatted('ForumRulesDiscussionGroupsText'); ?></p>
 </div>

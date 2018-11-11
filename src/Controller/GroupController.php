@@ -141,6 +141,9 @@ class GroupController extends Controller
 
             $this->sendNewGroupNotifications($group, $member);
 
+            $logger = $this->get('rox.logger');
+            $logger->write('Group '.$group->getName().' created by '.$member->getUsername().'.', 'Group');
+
             return $this->redirectToRoute('groups_overview');
         }
 
@@ -228,8 +231,10 @@ class GroupController extends Controller
         $flashMessage = $this->get('translator')->trans('Moved group %name% into the discussion queue', [
             '%name%' => $group->getName(),
         ]);
-
         $this->addFlash('notice', $flashMessage);
+
+        $logger = $this->get('rox.logger');
+        $logger->write('Group '.$group->getName().' moved into discussion by '.$this->getUser()->getUsername().'.', 'Group');
 
         $referrer = $request->headers->get('referer');
 
@@ -260,8 +265,10 @@ class GroupController extends Controller
         $flashMessage = $this->get('translator')->trans('Dismissed group %name%', [
             '%name%' => $group->getName(),
         ]);
-
         $this->addFlash('notice', $flashMessage);
+
+        $logger = $this->get('rox.logger');
+        $logger->write('Group '.$group->getName().' dismissed by '.$this->getUser()->getUsername().'.', 'Group');
 
         $referrer = $request->headers->get('referer');
 
@@ -293,6 +300,9 @@ class GroupController extends Controller
             '%name%' => $group->getName(),
         ]);
         $this->addFlash('notice', $flashMessage);
+
+        $logger = $this->get('rox.logger');
+        $logger->write('Group '.$group->getName().' approved by '.$this->getUser()->getUsername().'.', 'Group');
 
         $creator = current($group->getMembers());
         $this->sendNewGroupApprovedNotification($group, $creator);

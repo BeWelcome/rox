@@ -29,7 +29,12 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p><?= $words->get('GroupsCreateDescription'); ?></p>
+                            <p><<?php
+                            $str = $words->get('GroupsCreateDescription');
+                            $str = str_replace('%linkstart%', '<a href="/forums/rules#groups" target="_blank">', $str);
+                            $str = str_replace('%linkend%', '</a>', $str);
+                            echo $str;
+                            ?></p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

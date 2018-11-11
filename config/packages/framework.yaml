@@ -1,3 +1,6 @@
+parameters:
+    locale: "%kernel.default_locale%"
+
 framework:
     secret: '%env(APP_SECRET)%'
     #default_locale: en

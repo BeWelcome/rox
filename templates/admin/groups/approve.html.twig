@@ -13,7 +13,7 @@
                 </colgroup>
                 <thead>
                     <tr>
-                        <th scope="col">{{ 'Group Name'|trans }}</th>
+                        <th scope="col">{{ 'Group Info'|trans }}</th>
                         <th scope="col" class="w-100">{{ 'Group Description'|trans }}</th>
                         <th scope="col">{{ 'Creator'|trans }}</th>
                         <th scope="col">{{ 'Actions'|trans }}</th>
@@ -22,8 +22,11 @@
                 <tbody>
                     {% for group in groups %}
                         <tr>
-                            <td>{{ group.Name }}{% if group.approved == constant('App\\Entity\\Group::IN_DISCUSSION') %}<br><br>
-                                    <p class="alert alert-danger">{{ 'Group approval under discussion' }}</p>{% endif %}</td>
+                            <td><p>{{ group.Name }}</p>
+                                <p>{{ group.created|localizeddate }}</p>
+                                {% if group.approved == constant('App\\Entity\\Group::IN_DISCUSSION') %}
+                                    <p class="alert alert-danger my-2">{{ 'Group approval under discussion' }}</p>{% endif %}
+                                </td>
                             <td>{% for locale, description in group.descriptions %}
                                      <small class="text-muted">{{ description.Language.WordCode|trans }} ({{ locale }})</small><br>{{ description.Sentence|purify }}
                                 {% endfor %}

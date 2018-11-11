@@ -6,13 +6,11 @@
     else
     {
 ?>
-<div id="groups">
-    <div class="subcolumns">
     <h3><?= $words->get('GroupsMembers'); ?></h3>
 
     <?php $this->pager_widget->render(); ?>
-
-        <table class="table table-responsive table-striped table-hover">
+<div class="table-responsive">
+        <table class="table table-striped table-hover">
             <thead class="blank">
             <tr>
                 <th colspan="2">
@@ -48,9 +46,8 @@
                 ?>
             </tbody>
         </table>
+</div>
     <?php 
         $this->pager_widget->render();
     }
     ?>
-</div>
-</div>

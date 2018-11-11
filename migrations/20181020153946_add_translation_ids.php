@@ -9,6 +9,10 @@ class AddTranslationIds extends RoxMigration
     {
         // group
         $this->AddWordCode('group.create.successful', 'You have submitted a request to set up a group %name% on BeWelcome. This request will be reviewed by the BW Moderators and you will be contacted as quickly as possible.', 'Flash notice after creating a new group. Make sure to keep the %name% tag.');
+        $this->UpdateWordCode('GroupsCreateDescription', 'Thinking of creating a new group?<br>First, make sure that there is no group already covering your area or interest. Remember that it is better to join an active group covering a wider area than to start a very specialist or very local group that nobody sees.' .
+            '<br>If you do want to start a new group, you need to submit a new group request to the Forum Moderators. Groups on BeWelcome are moderated, so you will need to agree to follow the <a href="/forums/rules#groups">Rules for Groups</a>.',
+            'Text shown in the modal when you click on New group on the groups search page.');
+        $this->AddWordCode('group.create', 'Create a group', 'Headline on the new group page');
 
         // admin
         $this->AddWordCode('admin.groups.awaiting.approval', '{0} No groups in queue|{1} One group in queue|]1,Inf[ %count% groups in queue', 'Button label make sure to keep the %count% so that the button shows the correct information.');

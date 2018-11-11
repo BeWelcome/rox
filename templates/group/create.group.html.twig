@@ -33,9 +33,10 @@
 {% endblock stylesheets %}
 
 {% block content %}
-    <h1>{{ 'Create a new group' | trans}}</h1>
+    <h1>{{ 'group.create' | trans}}</h1>
     <p>{{ 'We\'re happy that you want to open a new group, but unfortunately spammers like them as well, so please note
-      that the group will need to be activated by the BW Forum Moderators. Please also read the Rules for Groups (link) when thinking about the new group\'s name and description.'}}</p>
+      that the group will need to be activated by the BW Forum Moderators. Please also read the %link_start%Rules for Groups%link_end% when thinking about the new group\'s name and description.'|
+        trans| escape | replace({'%link_start%': '<a href="/forums/rules#groups" target="_blank" class="text-primary">', '%link_end%': '</a>'})|raw }}</p>
     {{ form_start(form, { 'attr': { 'novalidate': 'novalidate'}}) }}
     <div class="form-group">
         {{ form_label(form.name) }}

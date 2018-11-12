@@ -38,6 +38,7 @@ class AddTranslationIds extends RoxMigration
 
         // profile
         $this->AddWordCode('profile.request.hosting', 'Request Stay', 'Menu entry on the members pages to sent a request for staying/be hosted by another member');
+        $this->AddWordCode('profile.delete.cleanup', 'Please remove my data with the next cleanup (in the next 24 hours).', 'Label for the data cleanup checkbox on the retire profile page');
     }
 
     public function down()

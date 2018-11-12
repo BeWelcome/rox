@@ -98,6 +98,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('signup_4', '/signup/4');
         $this->addRouteDirectly('signup_email_check', '/signup/checkemail');
         $this->addRouteDirectly('signup_handle_check', '/signup/checkhandle');
+        $this->addRouteDirectly('deleteprofile', '/deleteprofile');
         $this->addRouteDirectly('editmyprofile', '/editmyprofile');
         $this->addRouteDirectly('editmyprofile_locale', '/editmyprofile/{locale}');
         $this->addRouteDirectly('donate', '/donate');

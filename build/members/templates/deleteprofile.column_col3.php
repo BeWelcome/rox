@@ -27,15 +27,18 @@ Boston, MA  02111-1307, USA.
  */
  
 -->
-<form class="yform full" method="post" action="">
+<form class="form" method="post" action="">
     <p><?php echo $this->getCallbackOutput('MembersController','retireProfile'); ?></p>
     <p><?php echo $words->getFormatted('ProfileDeleteInfo',$this->member->Username); ?></p>
-    <div class="type-text">
-        <label for="explain"><?php echo $words->getFormatted ('retire_membercanexplain'); ?></label>
-        <textarea name="explanation" id="explain" cols="65" rows="6"></textarea>
+    <div class="form-group">
+        <label class="form-control-label" for="explain"><?php echo $words->getFormatted ('retire_membercanexplain'); ?></label>
+        <textarea class="form-control" name="explanation" id="explain" cols="65" rows="6"></textarea>
     </div>
-    <p class="center">
-    <input type="submit" class="button" value="<?php echo $words->getBuffered('DeleteProfile') ?>"
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="cleanup" name="cleanup"><label class="form-check-label" for="cleanup"><?php echo $words->getFormatted ('profile.delete.cleanup'); ?></label>
+    </div>
+    <p class="text-center mt-2">
+    <input type="submit" class="btn btn-primary" value="<?php echo $words->getBuffered('DeleteProfile') ?>"
         onclick="return confirm ('<?php echo $words->getBuffered ('retire_WarningConfirmRetire'); ?>')" />
         <?php echo $words->flushBuffer(); ?>    </p>
 </form>

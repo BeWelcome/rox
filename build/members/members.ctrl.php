@@ -732,10 +732,18 @@ class MembersController extends RoxControllerBase
             return false;
         }
         $feedback = !empty($args->post['explanation']) ? $args->post['explanation'] : '';
+        $flashNotice = "";
+        if (isset($args->post['cleanup']) && ($args->post['cleanup'])) {
+            // Set last login date into the past so that data retention is triggered immediately
+            $date = new \DateTime();
+            $date->sub(new \DateInterval('P185D'));
+            $member->LastLogin = $date->format('Y-m-d');
+            $flashNotice .= "All you're data will be deleted in the next 24 hours.";
+        }
         $member->removeProfile();
         $this->model->sendRetiringFeedback($feedback);
         $member->logOut();
-        return $this->router->url('members_profile_retired', array(), false);
+        return 'logout';
     }
 
     /**

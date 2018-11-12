@@ -50,9 +50,8 @@ class ActivitiesEditCreatePage extends ActivitiesBasePage
     
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-//       $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery-ui-1.10.4.custom.min.css';
-//       $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/datetimepicker.css';
 //       $stylesheets[] = 'build/tempusdominus.css';
+        $stylesheets[] = 'build/jquery_ui.css';
        return $stylesheets;
     }
 
@@ -61,6 +60,8 @@ class ActivitiesEditCreatePage extends ActivitiesBasePage
         $scripts = parent::getLateLoadScriptfiles();
         $scripts[] = 'build/tempusdominus.js';
         $scripts[] = 'script/activities/edit_create.js';
+        $scripts[] = 'build/jquery_ui.js';
+        $scripts[] = 'build/search/searchpicker.js';
         return $scripts;
     }
 }

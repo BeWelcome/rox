@@ -197,7 +197,7 @@ class ActivitiesModel extends RoxModelBase
         if (empty($post['activity-location'])) {
             $errors[] = 'ActivityLocationEmpty';
         } else {
-            if ($post['activity-location-id'] == 0) {
+            if ($post['activity-location_geoname_id'] == 0) {
                 $geo = $this->CreateEntity('Geo', $this->getLoggedInMember()->IdCity);
                 $defaultLocation = $geo->name . ", " . $geo->getCountry()->name;
                 if ($defaultLocation != $post['activity-location']) {
@@ -333,7 +333,7 @@ class ActivitiesModel extends RoxModelBase
 
     public function createActivity($args) {
         // First add geo location to geonames_cache if it doesn't exist yet
-        $locationId = $args->post['activity-location-id'];
+        $locationId = $args->post['activity-location_geoname_id'];
         if ($locationId != 0) {
             $geomodel = new GeoModel();
             $geomodel->addGeonameId($locationId, 'member_primary');
@@ -360,7 +360,7 @@ class ActivitiesModel extends RoxModelBase
 
     public function updateActivity($args) {
         // First add geo location to geonames_cache if it doesn't exist yet
-        $locationId = $args->post['activity-location-id'];
+        $locationId = $args->post['activity-location_geoname_id'];
         if ($locationId != 0) {
             $geomodel = new GeoModel();
             $geomodel->addGeonameId($locationId, 'member_primary');

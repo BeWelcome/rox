@@ -1,8 +1,10 @@
 $(function () {
 
     $('#activity-start-date').datetimepicker({
+        format: 'YYYY-MM-DD HH:mm'
     });
     $('#activity-end-date').datetimepicker({
+        format: 'YYYY-MM-DD HH:mm',
         useCurrent: false
     });
     $('#activity-start-date').on("change.datetimepicker", function (e) {

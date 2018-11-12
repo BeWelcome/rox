@@ -75,55 +75,48 @@ if (empty($vars)) {
                 <label for="activity-start-end"
                        class="control-label mb-0 mt-1"><?php echo $words->get('ActivityEnd'); ?>*</label>
                 <div class="input-group date" id="date-time-end" data-target-input="nearest">
-                    <input type="text" id="activity-end-date" name="activity-end-date" class="form-control vaidate" data-target="#date-time-end"
+                    <input type="text" id="activity-end-date" name="activity-end-date" class="form-control validate" data-target="#date-time-end"
                            value="<?php echo $vars['activity-end-date'];?>" />
                     <div class="input-group-append" data-target="#date-time-end" data-toggle="datetimepicker">
                         <span class="input-group-text">
                             <i class="fa fa-calendar"></i>
-                        </span>
                         </span>
                     </div>
                 </div>
             </div>
 
             <label for="activity-location" class="mb-0 mt-1"><?php echo $words->getBuffered('ActivitiesLocationSearch'); ?></label>
-                <div class="input-group">
-                    <input type="text" id="activity-location" name="activity-location" class="form-control" value="<?php echo $vars['activity-location']; ?>" placeholder="<?php echo $words->get('ActivityLocation'); ?>*">
-                    <span class="input-group-append">
-                        <button class="btn btn-primary" type="submit" id="activity-location-button" name="activity-location-button"><i class="fa fa-search"></i></button><?php echo $words->flushBuffer(); ?>
-                    </span>
-                </div>
-                <div id="activity-location-suggestion" style="display: none;">
-                    <ol id="locations" class="plain"></ol>
-                </div>
-
-                <div class="mt-1">
-                    <label for="activity-address" class="mb-0"><?php echo $words->get('ActivityAddress'); ?></label>
-                    <textarea id="activity-address" name="activity-address" class="form-control w-100" rows="3"><?php echo $vars['activity-address']; ?></textarea>
-                </div>
-
+            <div class="input-group">
+                <input type="text" id="activity-location" name="activity-location" class="form-control search-picker" value="<?php echo $vars['activity-location']; ?>" placeholder="<?php echo $words->get('ActivityLocation'); ?>*">
+                <span class="input-group-append">
+                    <button class="btn btn-primary" type="submit" id="activity-location-button" name="activity-location-button"><i class="fa fa-search"></i></button><?php echo $words->flushBuffer(); ?>
+                </span>
+            </div>
+            <div class="mt-1">
+                <label for="activity-address" class="mb-0"><?php echo $words->get('ActivityAddress'); ?></label>
+                <textarea id="activity-address" name="activity-address" class="form-control w-100" rows="3"><?php echo $vars['activity-address']; ?></textarea>
+            </div>
+            <input type="hidden" id="activity-location_geoname_id" name="activity-location_geoname_id">
+            <input type="hidden" id="activity-location_latitude" name="activity-location_latitude">
+            <input type="hidden" id="activity-location_longitude" name="activity-location_longitude">
         </div>
 
 
         <div class="col-12 col-md-8">
+            <label for="activity-title" class="form-control-label"><?php echo $words->get('ActivityTitle'); ?>*</label>
             <input type="text" id="activity-title" name="activity-title" maxlength="80" class="form-control" value="<?php echo $vars['activity-title']; ?>" placeholder="<?php echo $words->get('ActivityTitle'); ?>*">
+            <label for="activity-description" class="form-control-label"><?php echo $words->get('ActivityDescription'); ?>*</label>
             <textarea id="activity-description" name="activity-description" class="form-control editor">
                 <?php
                 if (!empty($vars['activity-description'])){
                     echo $vars['activity-description'];
-                } else {
-                    echo $words->get('ActivityDescription');
-                }  ?>
+                } ?>
             </textarea>
         </div>
 
     </div>
     <div class="row">
         <div class="col-12 mt-3">
-            <input type="checkbox" id="activity-public" name="activity-public">&nbsp;<label for="activity-public"><?php echo $words->get('ActivityPublic'); ?></label>
-        </div>
-
-        <div class="col-12">
             <?php
             if ($vars['activity-id'] != 0) {
                 $activitieseditcreatebutton = $words->getSilent('ActivitiesEditCreateUpdate');
@@ -156,6 +149,6 @@ if (empty($vars)) {
 <?php
 if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
     $textarea = 'activity-description';
-    require_once SCRIPT_BASE . 'web/script/tinymceconfig_php.js';
+    require_once SCRIPT_BASE . 'public/script/tinymceconfig_php.js';
 }
 ?>

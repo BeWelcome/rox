@@ -114,24 +114,6 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "leaflet/1.0.0-master/leaflet.js",
-        pages: [
-            "activities"
-        ]
-    },
-    {
-        file: "leaflet.markercluster/leaflet.markercluster.js",
-        pages: [
-            "activities"
-        ]
-    },
-    {
-        file: "act_suggest.js?1",
-        pages: [
-            "activities"
-        ]
-    },
-    {
         file: "adminrightstooltip.js",
         pages: [
             "admin/rights/list"
@@ -145,10 +127,6 @@ bwrox.selectScripts([
     },
     {
         file: "util/console.js?1"
-    },
-    {
-        file: "map/activities/activities_map.js?4",
-        pages: ["activities"]
     }
 ]);
 

@@ -10,10 +10,10 @@ namespace App\Controller;
 
 use EnvironmentExplorer;
 use Rox\Framework\SessionSingleton;
-use Symfony\Component\Routing\Annotation\Route;
 use StatsModel;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
 class StatisticsController extends Controller
 {

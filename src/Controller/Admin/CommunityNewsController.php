@@ -5,10 +5,10 @@ namespace App\Controller\Admin;
 use App\Entity\CommunityNews;
 use App\Form\CommunityNewsType;
 use App\Model\CommunityNewsModel;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class CommunityNewsController extends Controller
 {

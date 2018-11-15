@@ -1,6 +1,10 @@
 <?php
 
-
+/**
+ * Class RoxControllerBase
+ *
+ * @property \Symfony\Component\Routing\Router $router
+ */
 abstract class RoxControllerBase extends RoxComponentBase
 {
     /** @var  \Symfony\Component\Form\FormFactoryInterface */

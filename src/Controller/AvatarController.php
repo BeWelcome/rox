@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Member;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Class AvatarController.

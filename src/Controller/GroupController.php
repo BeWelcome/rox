@@ -11,13 +11,13 @@ use App\Entity\MembersTrad;
 use App\Form\CustomDataClass\GroupRequest;
 use App\Form\GroupType;
 use App\Repository\GroupRepository;
-use Symfony\Component\Routing\Annotation\Route;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)

@@ -27,6 +27,9 @@ class AddTranslationIds extends RoxMigration
         $this->AddWordCode('home.headline.find.hosts', 'Find hosts and guests everywhere in the world', 'Headline on the home page');
         $this->UpdateWordCode('CopyrightByBV', '%link_start%BeVolunteer%link_end% and contributors.', 'Make sure to keep %link_start% and %link_end% so that the link can be added.');
 
+        // admin
+        $this->AddWordCode('admin.comment.reported', 'Reported comments', 'Headline for the admin comments tool.');
+
         // activities
         $this->AddWordCode('activity.headline.join', 'Join', 'Headline for the section to decide if one joins the activity.');
 

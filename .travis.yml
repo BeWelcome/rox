@@ -30,6 +30,7 @@ install:
   - composer install --no-interaction --ignore-platform-reqs
 
 script:
+  - cp .env.dist .env
   - php bin/console doctrine:schema:create
   - php bin/console hautelook:fixtures:load --no-interaction
   - make version

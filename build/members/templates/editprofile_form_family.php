@@ -32,7 +32,7 @@
                         "><a href="members/<?= $Relation->Username ?>"><?= $Relation->Username ?></a></span>
                     </div>
                     <div class="col-2 col-md-1 order-md-1 pt-2">
-                        <a href="/members/<?php echo $member->Username; ?>/relations/delete/<?php echo $Relation->id; ?>?redirect=editmyprofile#!specialrelations"
+                        <a href="/members/<?php echo $member->Username; ?>/relations/delete/<?php echo $Relation->id; ?>/editprofile"
                            class="btn btn-danger"
                            onclick="return confirm('<?php echo $words->getSilent('Relation_delete_confirmation'); ?>');"><i class="fa fa-times" title="<?php echo $words->getFormatted("delrelation", $Relation->Username); ?>"></i><?php echo $words->flushBuffer(); ?></a>
                     </div>

@@ -114,7 +114,7 @@ class MOD_layoutbits
      */
     public static function linkWithPicture($username, $picfile="", $mode="")
     {
-        $words = new MOD_words(self::$_instance->_session);
+        $words = new MOD_words();
         $thumburl = self::smallUserPic_username($username);
         return
             '<a '.

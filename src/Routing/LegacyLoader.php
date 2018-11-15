@@ -132,6 +132,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('admin_editprofile_finish', '/members/{username}/adminedit/finish');
         $this->addRouteDirectly('myprofile_in_langauge', '/members/{username}/{language}');
         $this->addRouteDirectly('imprint', '/impressum');
+        $this->addRouteDirectly('delete_relation_editprofile', '/members/{username}/relations/delete/{relationId}/editprofile');
 
         return $this->routes;
     }
@@ -145,7 +146,7 @@ class LegacyLoader extends Loader
     {
         $path = preg_replace('^:(.*?):^', '{\1}', $path);
         $this->routes->add($name, new Route($path, [
-            '_controller' => 'rox.legacy_controller:showAction',
+            '_controller' => 'rox.legacy_controller::showAction',
         ], [], [], '', [], ['get', 'post']));
     }
 
@@ -153,7 +154,7 @@ class LegacyLoader extends Loader
     {
         $path = preg_replace('^:(.*?):^', '{\1}', $path);
         $this->routes->add($name, new Route($path, [
-            '_controller' => 'rox.legacy_controller:showAction',
+            '_controller' => 'rox.legacy_controller::showAction',
         ], [], [], '', [], ['get', 'post']));
     }
 }

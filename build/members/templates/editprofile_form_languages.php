@@ -18,16 +18,16 @@
                 </label>
             </div>
             <?php for ($ii = 0; $ii < count($vars['languages_selected']); $ii++) { ?>
-                <div class="form-group row">
+                <div id="lang_<?= $ii ?>_row" class="form-group row">
                     <div class="col-2 col-md-1">
-                        <a href="#" class="btn btn-outline-danger p-1 px-2 remove_lang" title="<?= $words->get('RemoveLanguage') ?>"><i class="fa fa-times-circle"></i><span
-                                class="sr-only"><?= $words->get('RemoveLanguage') ?></span></a>
+                        <button class="btn btn-outline-danger p-1 px-2 remove_lang" id="lang_<?= $ii ?>" title="<?= $words->get('RemoveLanguage') ?>"><i class="fa fa-times-circle"></i><span
+                                class="sr-only"><?= $words->get('RemoveLanguage') ?></span></button>
                     </div>
 
                     <div class="col-10 col-md-4">
-                        <input type="hidden" name="memberslanguages[]"
+                        <input id="lang_<?= $ii ?>_id" type="hidden" name="memberslanguages[]"
                                value="<?= $vars['languages_selected'][$ii]->IdLanguage ?>">
-                        <input type="text" disabled value="<?= $vars['languages_selected'][$ii]->Name ?>"
+                        <input id="lang_<?= $ii ?>_name" type="text" disabled value="<?= $vars['languages_selected'][$ii]->Name ?>"
                                title="<?= $words->getSilent('Lang_' . $vars['languages_selected'][$ii]->ShortCode) ?>" class="form-control">
 
                     </div>
@@ -47,9 +47,9 @@
             <?php } ?>
             <div class="row langsel mt-2 d-none">
                 <div class="col-2 col-md-1">
-                    <a href="#" class="btn btn-outline-danger p-1 px-2 remove_lang invisible"><i
+                    <button class="btn btn-outline-danger p-1 px-2 remove_lang invisible"><i
                             class="fa fa-times-circle"></i><span
-                            class="sr-only"><?= $words->get('RemoveLanguage') ?></span></a>
+                            class="sr-only"><?= $words->get('RemoveLanguage') ?></span></button>
                 </div>
                 <div class="col-10 col-md-4">
                     <select class='lang_selector form-control' name="memberslanguages[]">

@@ -324,19 +324,20 @@ class MembersController extends RoxControllerBase
                                         }
                                     }
                                     // Define redirect target
-                                    // TODO: if there is a nicer way than using $_GET, please change this
-                                    if ($_GET['redirect']) {
-                                        $redirect = $_GET['redirect'];
-                                    } else {
-                                        // Redirect to relations page or homepage
-                                        if ($this->_session->has( 'Username' )) {
-                                            $redirect = 'members/' . $this->_session->get('Username') . '/relations/';
-                                        } else {
-                                            $redirect = '';
-                                        }
+                                    $redirect = '';
+                                    switch ($request[4])
+                                    {
+                                        case 'editprofile':
+                                            $redirect = '/editmyprofile';
+                                            break;
+                                        default:
+                                            if ($this->_session->has( 'Username' )) {
+                                                $redirect = 'members/' . $this->_session->get('Username') . '/relations/';
+                                            } else {
+                                                $redirect = '';
+                                            }
                                     }
-                                    $this->redirect($redirect);
-                                    return;
+                                    return $this->redirect($redirect);
                                 }
                             }
 

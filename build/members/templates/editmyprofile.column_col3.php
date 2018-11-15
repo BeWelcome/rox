@@ -14,7 +14,7 @@ require_once 'editprofile_form.php';
     var iterator = 1;
     $(document).ready(function() {
         $('#langbutton').click( insertNewTemplate );
-        $('a.remove_lang').click( removeLang );
+        $('button.remove_lang').click( removeLang );
         initLanguageSelect2s();
     });
 
@@ -52,19 +52,12 @@ require_once 'editprofile_form.php';
     function removeLang(e)
     {
         e.preventDefault();
-        alert('removeLang');
-        /*
-        Event.stop(e);
-        var eve = e || window.event;
-        var elem = eve.target || eve.srcElement;
-        var tr = elem.parentNode.parentNode;
-        var lang = document.createElement('option');
-        lang.value = tr.cells[0].getElementsByTagName('input')[0].value;
-        lang.text = tr.cells[0].getElementsByTagName('input')[1].value;
-        var sel = $$('select.lang_selector');
-        sel[0].appendChild(lang);
-        tr.parentNode.removeChild(tr);
-        */
+        let id = e.target.id;
+        let languageId = $("#" + id + "_id").val();
+        let languageName = $("#" + id + "_name").val();
+        $('.lang_selector').append($('<option>', {value: languageId, text: languageName}));
+        let row = "#" + id + "_row";
+        $(row).remove();
     }
     //-->
 </script>

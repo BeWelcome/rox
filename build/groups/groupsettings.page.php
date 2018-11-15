@@ -182,7 +182,7 @@ class GroupSettingsPage extends GroupsBasePage
         </div>
 
         <div class="col-12 text-center">
-            <input type="submit" class="btn btn-block btn-primary m-2" value="<?= $words->getSilent('GroupsUpdateGroupSettings'); ?>">
+            <input type="submit" class="btn btn-block btn-primary my-2" value="<?= $words->getSilent('GroupsUpdateGroupSettings'); ?>">
             </form>
         </div>
 

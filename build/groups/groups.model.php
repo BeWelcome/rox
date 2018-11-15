@@ -574,7 +574,8 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
                 }
             }
         }
-        return $group->updateSettings($description, $type, $visible_posts, $visible_comment, $picture);
+        // never show comments
+        return $group->updateSettings($description, $type, $visible_posts, false, $picture);
     }
 
     /**

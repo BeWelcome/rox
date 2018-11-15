@@ -17,7 +17,7 @@ use App\Model\RequestModel;
 use Doctrine\Common\Persistence\ObjectManager;
 use Html2Text\Html2Text;
 use Rox\Core\Exception\InvalidArgumentException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;

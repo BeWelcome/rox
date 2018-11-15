@@ -11,7 +11,7 @@ use App\Entity\MembersTrad;
 use App\Form\CustomDataClass\GroupRequest;
 use App\Form\GroupType;
 use App\Repository\GroupRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -270,6 +270,8 @@ class GroupController extends Controller
         $logger = $this->get('rox.logger');
         $logger->write('Group '.$group->getName().' dismissed by '.$this->getUser()->getUsername().'.', 'Group');
 
+        $creator = current($group->getMembers());
+        $this->sendNewGroupDismissedNotification($group, $creator);
         $referrer = $request->headers->get('referer');
 
         return $this->redirect($referrer);
@@ -288,7 +290,7 @@ class GroupController extends Controller
     public function approveGroupAction(Request $request, Group $group)
     {
         if (!$this->isGranted([Member::ROLE_ADMIN_GROUP])) {
-            throw $this->createAccessDeniedException('You need to have Group right to access this.');
+            throw $this->createAccessDeniedException('You need to have the Group right to access this.');
         }
 
         $group->setApproved(Group::APPROVED);
@@ -329,6 +331,34 @@ class GroupController extends Controller
                     'subject' => $subject,
                     'group' => $group,
                     'member' => $member,
+                ]),
+                'text/html'
+            )
+        ;
+        $recipients = $this->get('mailer')->send($message);
+
+        return (0 === $recipients) ? false : true;
+    }
+
+    private function sendNewGroupDismissedNotification(Group $group, Member $creator)
+    {
+        $recipient = $creator->getEmail();
+
+        $subject = '[New Group] '.strip_tags($group->getName()).' dismissed';
+        $message = new Swift_Message();
+        $message
+            ->setSubject($subject)
+            ->setFrom(
+                [
+                    'groups@bewelcome.org' => 'BeWelcome - Group Administration',
+                ]
+            )
+            ->setTo($recipient)
+            ->setBody(
+                $this->renderView('emails/group.dismissed.html.twig', [
+                    'subject' => $subject,
+                    'group' => $group,
+                    'creator' => $creator,
                 ]),
                 'text/html'
             )

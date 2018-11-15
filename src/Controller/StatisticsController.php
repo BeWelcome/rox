@@ -10,7 +10,7 @@ namespace App\Controller;
 
 use EnvironmentExplorer;
 use Rox\Framework\SessionSingleton;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use StatsModel;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;

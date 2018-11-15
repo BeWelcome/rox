@@ -6,7 +6,7 @@ use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\LoginFormType;
 use App\Form\SearchFormType;
 use App\Model\StatisticsModel;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\NotBlank;

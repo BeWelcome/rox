@@ -6,7 +6,7 @@ use App\Entity\Member;
 use App\Form\LogFormType;
 use App\Model\LogModel;
 use App\Repository\MemberRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 

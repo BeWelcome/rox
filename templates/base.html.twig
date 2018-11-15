@@ -35,25 +35,15 @@
         <noscript><h1>Please activate Javascript for bewelcome.org</h1><p><small>Without it some function won't work.</small></p></noscript>
         <main role="main">
             <div class="container">
-                {% for flash_message in app.session.flashBag.get('error') %}
+                {% for label, messages in app.flashes %}
                     <div class="row">
-                        <div class="col-12 alert alert-danger" role="alert">
-                            {{ flash_message }}
+                        {% for message in messages %}
+                        <div class="col-12">
+                            <div class="alert alert-{{ label }}">
+                                {{ message }}
+                            </div>
                         </div>
-                    </div>
-                {% endfor %}
-                {% for flash_message in app.session.flashBag.get('notice') %}
-                    <div class="row">
-                        <div class="col-12 alert alert-info" role="alert">
-                            {{ flash_message }}
-                        </div>
-                    </div>
-                {% endfor %}
-                {% for flash_message in app.session.flashBag.get('success') %}
-                    <div class="row">
-                        <div class="col-12 alert alert-success" role="alert">
-                            {{ flash_message }}
-                        </div>
+                        {% endfor %}
                     </div>
                 {% endfor %}
             </div>

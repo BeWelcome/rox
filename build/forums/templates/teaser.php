@@ -6,6 +6,7 @@ if (isset($this->keyword)) {
 }
 ?>
 <div class="row">
+    <div class="col-12">
     <h1 class="col pl-0">
         <a href="forums"><?php echo $this->_model->words->getFormatted('CommunityLanding'); ?></a>
 
@@ -25,6 +26,7 @@ if (isset($this->keyword)) {
                         </span>
         </div>
     </form>
+    </div>
 </div>
         <!-- Google froum search bar -->
 <!-- CategoryTitle in teaser -->

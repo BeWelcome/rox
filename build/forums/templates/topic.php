@@ -30,6 +30,7 @@ This File display a topic and the messages which are inside it
 */
 
 ?>
+<div class="col-12">
 <div class="d-flex justify-content-start w-100">
     <div>
         <?php
@@ -195,6 +196,7 @@ This File display a topic and the messages which are inside it
         ?>
     </div>
 
+</div>
 </div>
 
 <?php

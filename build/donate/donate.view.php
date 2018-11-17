@@ -16,7 +16,7 @@ class DonateView extends PAppView
     public function ShowSimpleTeaser($title)
     {
         $words = new MOD_words();
-        echo '<div id="teaser" class="page-teaser clearfix">';
+        echo '<div>';
         echo '<h1>'.$words->getFormatted($title).'</h1>';
         echo '</div>';
     }

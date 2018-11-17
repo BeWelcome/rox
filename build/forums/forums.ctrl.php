@@ -169,7 +169,7 @@ class ForumsController extends PAppController
             PPostHandler::clearVars($callbackId);
          }
 
-        elseif ($this->action == self::ACTION_MODERATOR_EDITTAG) {
+        /* elseif ($this->action == self::ACTION_MODERATOR_EDITTAG) {
             if (!isset($request[2])) {
                  die("Need to have a IdTag") ;
              }
@@ -183,7 +183,7 @@ class ForumsController extends PAppController
             $DataTag=$this->_model->prepareModeratorEditTag($IdTag);
             $this->_view->showModeratorEditTag($callbackId,$DataTag);
             PPostHandler::clearVars($callbackId);
-         }
+         } */
         else if ($this->action == self::ACTION_VIEW) {
             if ($this->_model->isTopic()) {
                 $this->_model->prepareTopic(true);

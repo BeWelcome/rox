@@ -4,7 +4,7 @@
     {% if pager.haveToPaginate %}
         <div class="pull-right">{{ pagerfanta( pager, 'twitter_bootstrap4_ajax_translated', { 'routeName': routeName, 'routeParams': routeParams, 'ajaxFunction': 'loadAjax' } ) }}</div>
     {% endif %}
-    <table id="memberresults" class="table table-striped table-hover w-100">
+    <table id="memberresults" class="table table-striped table-hover table-responsive-sm w-100">
         <thead class="thead-light">
         <tr>
             <th colspan="2">{{ 'SearchHeaderMember' | trans }}</th>
@@ -17,7 +17,7 @@
             <tr>
                 <td>
                     {{ macros.avatar(member.Username, 100, true) }}
-                    <div>{{ macros.profilelink( member.Username ) }}</div>
+                    <div class="align-center">{{ macros.profilelink( member.Username ) }}</div>
                 </td>
                 <td>
                     <div>

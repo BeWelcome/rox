@@ -126,7 +126,7 @@ class GroupsBasePage extends PageWithActiveSkin
         $words = $this->getWords();
         ?>
         <div class="row">
-        <h2><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; <a href="groups/search"><?= $words->get('Groups');?></a> &raquo; <a href="groups/<?=$this->group->id ?>"><?= htmlspecialchars($this->group->Name, ENT_QUOTES) ?></a></h2>
+        <div class="col-12"><h2><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; <a href="groups/search"><?= $words->get('Groups');?></a> &raquo; <a href="groups/<?=$this->group->id ?>"><?= htmlspecialchars($this->group->Name, ENT_QUOTES) ?></a></h2></div>col pl-0
         </div>
         <?php
     }

@@ -3,14 +3,17 @@
 {% if member %}
     <nav class="navbar navbar-sticky-top navbar-expand-md navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
         <div class="container">
-            <a class="navbar-brand mr-3 float-left" href="{{ url('homepage') }}"><img src="{{ asset('images/logo_index_top.png') }}" alt="{{ 'BeWelcome' | trans }}"/></a>
+            <a class="navbar-brand mr-3 pl-3 pl-md-0 float-left" href="{{ url('homepage') }}"><img src="{{ asset('images/logo_index_top.png') }}" alt="{{ 'BeWelcome' | trans }}"/></a>
 
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#smallNavBar" aria-controls="smallNavBar" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler mr-3 mr-md-0" type="button" data-toggle="collapse" data-target="#smallNavBar" aria-controls="smallNavBar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             {# Navbar small screens #}
             <div class="collapse d-xl-none px-0 w-100" id="smallNavBar">
                 <ul class="navbar-nav mr-auto mt-2">
+                    <li class="nav-item bordert-1">
+                        <a href="{{ url( 'search_members' ) }}" class="nav-link pl-1">{{ 'MapSearch' | trans }}</a>
+                    </li>
                     <li class="nav-item bordert-1">
                         <a href="{{ url('members_profile', { username: member.Username }) }}" class="nav-link pl-1">{{ member.Username }}</a>
                     </li>
@@ -23,13 +26,8 @@
                     <li class="nav-item bordert-1">
                         <a href="/mynotes" class="nav-link pl-4">{{ 'MyNotes' | trans }}</a>
                     </li>
+
                     <li class="nav-item bordert-1">
-                        <a href="{{ url( 'search_members' ) }}" class="nav-link pl-1">{{ 'MapSearch' | trans }}</a>
-                    </li>
-{# Removed at the moment                   <li class="nav-item bordert-1">
-                        <a href="{{ path('trips') }}" class="nav-link pl-1">{{ 'Trips' | trans }}</a>
-                    </li>
-#}                    <li class="nav-item bordert-1">
                         <a href="/community" class="nav-link pl-1">{{ 'CommunityMenu' | trans }}</a>
                     </li>
                     <li class="nav-item bordert-1">
@@ -71,11 +69,10 @@
 
                                 <div class="d-flex flex-row justify-content-between">
                                     <div class="py-3">
-                                        <a href="/search" class="h4">{{ 'FindMembers' | trans }}</a>
+                                        <a href="/search/members" class="h4">{{ 'FindMembers' | trans }}</a>
 
                                         <a href="/search/members" class="btn btn-block py-0 pl-1 text-left mt-1">{{ 'MapSearch' | trans }}</a>
                                         <a href="/places" class="btn btn-block py-0 pl-1 text-left">{{ 'BrowseCountries' | trans}}</a>
-                                        <a href="/trips" class="btn btn-block py-0 pl-1 text-left">{{ 'Trips' | trans}}</a>
                                     </div>
                                     <div class="py-3">
                                         <a href="/community" class="h4">{{ 'CommunityMenu' | trans }}</a>
@@ -117,7 +114,7 @@
                                                 <a href="/groups/mygroups" class="btn btn-block btn-primary-outline py-0 pl-1 text-left"><i class="fa fa-users"></i> {{ 'MyGroups' | trans }}</a>
                                             </div>
                                             <div>
-                                                <a href="{{ path('messages') }}" class="btn btn-block btn-primary-outline py-0 pl-1 text-left mt-1"><i class="fa fa-envelope-o"></i> {{ 'MyMessages' | trans }}</a>
+                                                <a href="{{ path('messages') }}" class="btn btn-block btn-primary-outline py-0 pl-1 text-left mt-1"><i class="fa fa-envelope"></i> {{ 'MyMessages' | trans }}</a>
                                                 <a href="/mynotes" class="btn btn-block btn-primary-outline py-0 pl-1 text-left"><i class="fa fa-list"></i> {{ 'ProfileMyNotes' | trans }}</a>
                                                 <a href="{{ url( 'security_logout' ) }}" class="btn btn-block btn-primary-outline py-0 pl-1 text-left"><i class="fa fa-power-off"></i> {{ 'Logout' | trans }}</a>
                                             </div>
@@ -184,7 +181,7 @@
     {# navbar not logged in, showing main links #}
     <nav class="navbar navbar-sticky-top navbar-expand-lg navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
         <div class="container">
-            <a class="navbar-brand mr-3 float-left" href="{{ url('homepage') }}"><img src="{{ asset('images/logo_index_top.png') }}" alt="{{ 'BeWelcome' | trans }}"/></a>
+            <a class="navbar-brand mr-3 pl-3 pl-md-0 float-left" href="{{ url('homepage') }}"><img src="{{ asset('images/logo_index_top.png') }}" alt="{{ 'BeWelcome' | trans }}"/></a>
 
             <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#NavbarNotLoggedIn" aria-controls="NavbarNotLoggedIn" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>

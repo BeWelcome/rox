@@ -37,6 +37,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 ?>
 
 <!-- entire row -->
+<div class="col-12">
 <div class="d-flex flex-row <?php echo $styles[$cnt % 2]; ?> mb-2 postbox w-100">
 
     <!-- left column -->
@@ -190,7 +191,6 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
             } // end If the details of trads are available, we will display them
             // If current user has a moderator right, he can see the post
 
-// Todo: something in the following lines is causing a markup error, adding <b></b> and </div>
 
             ?>
 
@@ -258,6 +258,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 
     </div>
     <!-- end message -->
+</div>
 </div>
 
 <?php

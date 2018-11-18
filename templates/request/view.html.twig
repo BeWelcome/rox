@@ -51,7 +51,7 @@
     </div>
     {%- endif %}
 
-    {% include ':message:thread.html.twig' %}
+    {% include 'message/thread.html.twig' %}
     {% if current.Sender.Username == myself.Username %}
         {% set label = 'Update' %}
     {% else %}

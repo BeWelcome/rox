@@ -42,6 +42,48 @@ class AddTranslationIds extends RoxMigration
         // profile
         $this->AddWordCode('profile.request.hosting', 'Request Stay', 'Menu entry on the members pages to sent a request for staying/be hosted by another member');
         $this->AddWordCode('profile.delete.cleanup', 'Please remove my data with the next cleanup (in the next 24 hours).', 'Label for the data cleanup checkbox on the retire profile page');
+
+        // landing page
+        $this->AddWordCode('landing.welcomeback', 'Welcome back', 'Greeting on the opening page after logging in, followed my the members username');
+        $this->AddWordCode('landing.yourhostingstatus', 'Your hosting status is', 'After this text comes, for example \'Maybe hosting\'');
+        $this->AddWordCode('landing.whereyougo', 'Where are you going?', 'Invitation to make people search for a specific place');
+        $this->AddWordCode('landing.tab.messagesreceived', 'Messages received', 'Text for tab on landing page');
+        $this->AddWordCode('landing.tab.notifications', 'Notifications', 'Text for tab on landing page');
+        $this->AddWordCode('landing.button.all', 'All', 'Text for a button showing all messages');
+        $this->AddWordCode('landing.button.unread', 'Unread', 'Text for a button showing unread messages');
+        $this->AddWordCode('landing.button.myinbox', 'My inbox', 'Text for a link to members inbox');
+        $this->AddWordCode('landing.tab.forum', 'Forum', 'Text for tab on landing page');
+        $this->AddWordCode('landing.tab.activities ', 'Activities', 'Text for tab on landing page');
+        $this->AddWordCode('landing.button.groups', 'groups', 'Filters groups discussions');
+        $this->AddWordCode('landing.button.forum', 'forum', 'Filters forum discussions');
+        $this->AddWordCode('landing.button.discussions', 'Discussions', 'Text for a button to go to the discussion pages');
+        $this->AddWordCode('landing.button.mygroups', 'My groups', 'Text for a button to go to the members groups');
+        $this->AddWordCode('landing.button.subscriptions', 'My subscriptions', 'Text for a button to go to forum subscriptions');
+        $this->AddWordCode('landing.activities.allactivities', 'All activities', 'Text for a button that redirects to all activities');
+        $this->AddWordCode('landing.activities.myactivities', 'My activities', 'Text for a button that redirects to activities of the member');
+        $this->AddWordCode('landing.activities.create', 'Create activity', 'Text for a button to create an activity');
+        $this->AddWordCode('landing.beinvolved.title', 'Be Involved', 'Title for information box');
+        $this->AddWordCode('landing.beinvolved.subtitle', 'help the community', 'Subtitle of \'Be Involved\'');
+        $this->AddWordCode('landing.beinvolved.goalfor', 'Goal for', 'Text comes in front of a year, for example \'Goal for 2020-2021\'');
+        $this->AddWordCode('landing.beinvolved.pleasedonate', 'Please donate', 'Text on button to ask for donations');
+        $this->AddWordCode('landing.beinvolved.intro', 'BeWelcome is run by volunteers - free of charge and open source. Volunteering for the project is a great opportunity for you to get to know enthusiastic people who really believe in promoting hospitality and respect for each other. And it\'s fun, too!', 'Motivational text to ask people to volunteer and/or donate');
+        $this->AddWordCode('landing.beinvolved.helpbewelcome', 'Help BeWelcome', 'Text for a button to redirect members to become volunteers');
+        $this->AddWordCode('landing.bwnews.title', 'BeWelcome News', 'Title of info box');
+        $this->AddWordCode('landing.bwnews.subtitle', 'and other updates', 'Subtitle for \'BeWelcome News\'');
+        $this->AddWordCode('landing.bwnews.allnews', 'All news', 'Button text to see all the news messages');
+        $this->AddWordCode('landing.beinformed.title', 'Be Informed', 'Title of info box');
+        $this->AddWordCode('landing.beinformed.subtitle', 'Transparency', 'Subtitle of \'Be Informed\', keep it short');
+        $this->AddWordCode('landing.beinformed.about', 'About', 'keep it very short');
+        $this->AddWordCode('landing.beinformed.faq', 'FAQ', 'Frequently Asked Questions - keep it very short');
+        $this->AddWordCode('landing.beinformed.safety', 'Safety', 'keep it very short');
+        $this->AddWordCode('landing.beinformed.bevolunteer', 'BeVolunteer', 'It\'s the name of the organisation');
+        $this->AddWordCode('landing.beinformed.annualreport', 'Annual Report', 'keep it very short');
+        $this->AddWordCode('landing.beinformed.finances', 'Finances', 'keep it very short');
+        $this->AddWordCode('landing.beinformed.termsofuse', 'Terms of Use', 'keep it very short');
+        $this->AddWordCode('landing.beinformed.privacypolicy', 'Privacy Policy', 'keep it very short');
+
+        // donation page
+        $this->AddWordCode('donation.donatetime', 'Donate time', 'explanation how people can volunteer for BeWelcome');
     }
 
     public function down()
@@ -64,5 +106,47 @@ class AddTranslationIds extends RoxMigration
 
         // profile
         $this->RemoveWordCode('profile.request.hosting', 'Request Stay', 'Menu entry on the members pages to sent a request for staying/be hosted by another member');
+
+        // landing page
+        $this->RemoveWordCode('landing.welcomeback', 'Welcome back', 'Greeting on the opening page after logging in, followed my the members username');
+        $this->RemoveWordCode('landing.yourhostingstatus', 'Your hosting status is', 'After this text comes, for example \'Maybe hosting\'');
+        $this->RemoveWordCode('landing.whereyougo', 'Where are you going?', 'Invitation to make people search for a specific place');
+        $this->RemoveWordCode('landing.tab.messagesreceived', 'Messages received', 'Text for tab on landing page');
+        $this->RemoveWordCode('landing.tab.notifications', 'Notifications', 'Text for tab on landing page');
+        $this->RemoveWordCode('landing.button.all', 'All', 'Text for a button showing all messages');
+        $this->RemoveWordCode('landing.button.unread', 'Unread', 'Text for a button showing unread messages');
+        $this->RemoveWordCode('landing.button.myinbox', 'My inbox', 'Text for a link to members inbox');
+        $this->RemoveWordCode('landing.tab.forum', 'Forum', 'Text for tab on landing page');
+        $this->RemoveWordCode('landing.tab.activities ', 'Activities', 'Text for tab on landing page');
+        $this->RemoveWordCode('landing.button.groups', 'groups', 'Filters groups discussions');
+        $this->RemoveWordCode('landing.button.forum', 'forum', 'Filters forum discussions');
+        $this->RemoveWordCode('landing.button.discussions', 'Discussions', 'Text for a button to go to the discussion pages');
+        $this->RemoveWordCode('landing.button.mygroups', 'My groups', 'Text for a button to go to the members groups');
+        $this->RemoveWordCode('landing.button.subscriptions', 'My subscriptions', 'Text for a button to go to forum subscriptions');
+        $this->RemoveWordCode('landing.activities.allactivities', 'All activities', 'Text for a button that redirects to all activities');
+        $this->RemoveWordCode('landing.activities.myactivities', 'My activities', 'Text for a button that redirects to activities of the member');
+        $this->RemoveWordCode('landing.activities.create', 'Create activity', 'Text for a button to create an activity');
+        $this->RemoveWordCode('landing.beinvolved.title', 'Be Involved', 'Title for information box');
+        $this->RemoveWordCode('landing.beinvolved.subtitle', 'help the community', 'Subtitle of \'Be Involved\'');
+        $this->RemoveWordCode('landing.beinvolved.goalfor', 'Goal for', 'Text comes in front of a year, for example \'Goal for 2020-2021\'');
+        $this->RemoveWordCode('landing.beinvolved.pleasedonate', 'Please donate', 'Text on button to ask for donations');
+        $this->RemoveWordCode('landing.beinvolved.intro', 'BeWelcome is run by volunteers - free of charge and open source. Volunteering for the project is a great opportunity for you to get to know enthusiastic people who really believe in promoting hospitality and respect for each other. And it\'s fun, too!', 'Motivational text to ask people to volunteer and/or donate');
+        $this->RemoveWordCode('landing.beinvolved.helpbewelcome', 'Help BeWelcome', 'Text for a button to redirect members to become volunteers');
+        $this->RemoveWordCode('landing.bwnews.title', 'BeWelcome News', 'Title of info box');
+        $this->RemoveWordCode('landing.bwnews.subtitle', 'and other updates', 'Subtitle for \'BeWelcome News\'');
+        $this->RemoveWordCode('landing.bwnews.allnews', 'All news', 'Button text to see all the news messages');
+        $this->RemoveWordCode('landing.beinformed.title', 'Be Informed', 'Title of info box');
+        $this->RemoveWordCode('landing.beinformed.subtitle', 'Transparency', 'Subtitle of \'Be Informed\', keep it short');
+        $this->RemoveWordCode('landing.beinformed.about', 'About', 'keep it very short');
+        $this->RemoveWordCode('landing.beinformed.faq', 'FAQ', 'Frequently Asked Questions - keep it very short');
+        $this->RemoveWordCode('landing.beinformed.safety', 'Safety', 'keep it very short');
+        $this->RemoveWordCode('landing.beinformed.bevolunteer', 'BeVolunteer', 'It\'s the name of the organisation');
+        $this->RemoveWordCode('landing.beinformed.annualreport', 'Annual Report', 'keep it very short');
+        $this->RemoveWordCode('landing.beinformed.finances', 'Finances', 'keep it very short');
+        $this->RemoveWordCode('landing.beinformed.termsofuse', 'Terms of Use', 'keep it very short');
+        $this->RemoveWordCode('landing.beinformed.privacypolicy', 'Privacy Policy', 'keep it very short');
+
+        // donation page
+        $this->RemoveWordCode('donation.donatetime', 'Donate time', 'explanation how people can volunteer for BeWelcome');
     }
 }

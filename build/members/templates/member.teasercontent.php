@@ -1,6 +1,16 @@
 <div class="row">
   <div class="col-12 col-md-8">
-    <h1 class="h2 m-0"><strong>
+
+      <?php
+
+      // TODO: move HTML to a template
+      // $member = $this->member;
+      // $words = $this->getWords();
+      $picture_url = 'members/avatar/'.$member->Username;
+      ?>
+      <div class="p-2"><img src="<?= $picture_url . '/100'?>" class="float-left d-md-none"></div>
+
+    <h1 class="h2 m-0 d-inline"><strong>
       <?php if ($this->passedAway == 'PassedAway') {
            echo $words->get('ProfileInMemoriam', $member->Username);
       } else {

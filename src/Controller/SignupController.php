@@ -27,7 +27,9 @@ class SignupController extends Controller
             $email = $signupVars['email'];
             $username = $signupVars['username'];
             $key = hash('sha256', $email.' - '.$username);
+            $subject = $this->get('translator')->trans('signup.confirm.email');
             $parameters = [
+                'subject' => $subject,
                 'username' => $username,
                 'email' => $email,
                 'key' => $key,
@@ -36,7 +38,7 @@ class SignupController extends Controller
             // Send email with confirmation link
             $message = new \Swift_Message();
             $message
-                ->setSubject('Please confirm your email address')
+                ->setSubject($subject)
                 ->setFrom(
                     [
                         'signup@bewelcome.org' => 'BeWelcome',

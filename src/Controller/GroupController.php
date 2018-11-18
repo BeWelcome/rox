@@ -29,11 +29,12 @@ class GroupController extends Controller
      *
      * @param Request $request
      *
+     * @throws \Exception
+     *
      * @return Response
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * Because of the mix between old code and new code this method is way too long.
-     * @throws \Exception
      */
     public function createNewGroupAction(Request $request)
     {
@@ -214,10 +215,11 @@ class GroupController extends Controller
      * @Route("/admin/groups/{id}/discuss", name="admin_groups_discuss")
      *
      * @param Request $request
-     * @param Group $group
+     * @param Group   $group
+     *
+     * @throws \Exception
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @throws \Exception
      */
     public function discussGroupAction(Request $request, Group $group)
     {
@@ -249,10 +251,11 @@ class GroupController extends Controller
      * @Route("/admin/groups/{id}/dismiss", name="admin_groups_dismiss")
      *
      * @param Request $request
-     * @param Group $group
+     * @param Group   $group
+     *
+     * @throws \Exception
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @throws \Exception
      */
     public function dismissGroupAction(Request $request, Group $group)
     {
@@ -284,10 +287,11 @@ class GroupController extends Controller
      * @Route("/admin/groups/{id}/approve", name="admin_groups_approve")
      *
      * @param Request $request
-     * @param Group $group
+     * @param Group   $group
+     *
+     * @throws \Exception
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @throws \Exception
      */
     public function approveGroupAction(Request $request, Group $group)
     {

@@ -668,8 +668,8 @@ class RequestAndMessageController extends Controller
             }
 
             $this->sendMailNotification(
-                $guest,
                 $host,
+                $guest,
                 $subject,
                 $newRequest->getMessage(),
                 'request'

@@ -35,7 +35,7 @@ class HostingRequestType extends AbstractType
                         'message' => 'Please provide an arrival date.',
                     ]),
                     new Date([
-                        'message' => 'Please provide an arrival date.'
+                        'message' => 'Please provide an arrival date.',
                     ]),
                 ],
             ])

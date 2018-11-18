@@ -18,7 +18,7 @@ class RoxGenericPage extends PageWithParameterizedRoxLayout
 
     protected function submenu()
     {
-        echo '<div class="col-6 col-md-3 sidebar-offcanvas">';
+        echo '<div class="col-6 col-md-3 offcanvas-collapse">';
         echo $this->get('newBar');
         echo '</div>';
     }

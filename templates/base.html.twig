@@ -51,14 +51,14 @@
             {% set contentBlock %} {% block content %}{% endblock %} {% endset %}
             <div class="container">
                 {% if sidebar %}
-                    <div class="row row-offcanvas row-offcanvas-right mt-2">
+                    <div class="row mt-2">
                         <div class="col-12 col-md-9">
                             <p class="float-right d-md-none">
                                 <button type="button" class="btn btn-primary btn-sm ml-3" data-toggle="offcanvas">Toggle nav</button>
                             </p>
                             {{  contentBlock | raw }}
                         </div>
-                        <div class="col-6 col-md-3 sidebar-offcanvas" id="sidebar">
+                        <div class="col-6 col-md-3 offcanvas-collapse" id="sidebar">
                             <div class="list-group mb-2">
                                 {% for filter,menuItem in submenu.items %}
                                     <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}"

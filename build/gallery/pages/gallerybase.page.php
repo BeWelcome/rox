@@ -70,7 +70,7 @@ class GalleryBasePage extends PageWithActiveSkin
 
     protected function submenu() {
         $active_menu_item = $this->getSubmenuActiveItem();
-        echo '<div class="col-6 col-md-3 sidebar-offcanvas" id="sidebar">';
+        echo '<div class="col-6 col-md-3 offcanvas-collapse" id="sidebar">';
         echo '<div class="list-group w-100" role="group">';
         foreach ($this->getSubmenuItems() as $index => $item) {
             $name = $item[0];

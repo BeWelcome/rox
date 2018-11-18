@@ -42,31 +42,32 @@ $(function () {
             noRefresh = false;
         });
 
-        function refreshMap() {
-            var lat = map.getCenter().lat;
-            var lng = map.getCenter().lng; // get current form values
-
-            var bounds = map.getBounds();
-            var ne = bounds.getNorthEast();
-            var sw = bounds.getSouthWest();
-            var query= getQueryStrings($("[name=search_form]").serialize());
-
-            query["search_form[location_latitude]"] = lat;
-            query["search_form[location_longitude]"] = lng;
-            query["search_form[distance]"] = -1;
-            query["search_form[ne_latitude]"] = ne.lat;
-            query["search_form[ne_longitude]"] = ne.lng;
-            query["search_form[sw_latitude]"] = sw.lat;
-            query["search_form[sw_longitude]"] = sw.lng;
-
-            window.location.href =
-                window.location.protocol + "//" +
-                window.location.host +
-                window.location.pathname +
-                createQueryString(query);
-        }
     }
 });
+
+function refreshMap() {
+    var lat = map.getCenter().lat;
+    var lng = map.getCenter().lng; // get current form values
+
+    var bounds = map.getBounds();
+    var ne = bounds.getNorthEast();
+    var sw = bounds.getSouthWest();
+    var query= getQueryStrings($("[name=search_form]").serialize());
+
+    query["search_form[location_latitude]"] = lat;
+    query["search_form[location_longitude]"] = lng;
+    query["search_form[distance]"] = -1;
+    query["search_form[ne_latitude]"] = ne.lat;
+    query["search_form[ne_longitude]"] = ne.lng;
+    query["search_form[sw_latitude]"] = sw.lat;
+    query["search_form[sw_longitude]"] = sw.lng;
+
+    window.location.href =
+        window.location.protocol + "//" +
+        window.location.host +
+        window.location.pathname +
+        createQueryString(query);
+}
 
 // http://stackoverflow.com/questions/2907482
 // Gets Querystring from window.location and converts all keys to lowercase

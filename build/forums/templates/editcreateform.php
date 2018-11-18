@@ -214,6 +214,6 @@ $vars =& PPostHandler::getVars($callbackId);
 <?php
 if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
     $textarea = 'topic_text';
-    require_once SCRIPT_BASE . 'web/script/tinymceconfig_php.js';
+    require_once SCRIPT_BASE . 'public/script/tinymceconfig_php.js';
 }
 ?>

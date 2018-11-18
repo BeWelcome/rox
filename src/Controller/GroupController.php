@@ -33,6 +33,7 @@ class GroupController extends Controller
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * Because of the mix between old code and new code this method is way too long.
+     * @throws \Exception
      */
     public function createNewGroupAction(Request $request)
     {
@@ -213,9 +214,10 @@ class GroupController extends Controller
      * @Route("/admin/groups/{id}/discuss", name="admin_groups_discuss")
      *
      * @param Request $request
-     * @param Group   $group
+     * @param Group $group
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Exception
      */
     public function discussGroupAction(Request $request, Group $group)
     {
@@ -247,9 +249,10 @@ class GroupController extends Controller
      * @Route("/admin/groups/{id}/dismiss", name="admin_groups_dismiss")
      *
      * @param Request $request
-     * @param Group   $group
+     * @param Group $group
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Exception
      */
     public function dismissGroupAction(Request $request, Group $group)
     {
@@ -270,8 +273,6 @@ class GroupController extends Controller
         $logger = $this->get('rox.logger');
         $logger->write('Group '.$group->getName().' dismissed by '.$this->getUser()->getUsername().'.', 'Group');
 
-        $creator = current($group->getMembers());
-        $this->sendNewGroupDismissedNotification($group, $creator);
         $referrer = $request->headers->get('referer');
 
         return $this->redirect($referrer);
@@ -283,9 +284,10 @@ class GroupController extends Controller
      * @Route("/admin/groups/{id}/approve", name="admin_groups_approve")
      *
      * @param Request $request
-     * @param Group   $group
+     * @param Group $group
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Exception
      */
     public function approveGroupAction(Request $request, Group $group)
     {
@@ -331,34 +333,6 @@ class GroupController extends Controller
                     'subject' => $subject,
                     'group' => $group,
                     'member' => $member,
-                ]),
-                'text/html'
-            )
-        ;
-        $recipients = $this->get('mailer')->send($message);
-
-        return (0 === $recipients) ? false : true;
-    }
-
-    private function sendNewGroupDismissedNotification(Group $group, Member $creator)
-    {
-        $recipient = $creator->getEmail();
-
-        $subject = '[New Group] '.strip_tags($group->getName()).' dismissed';
-        $message = new Swift_Message();
-        $message
-            ->setSubject($subject)
-            ->setFrom(
-                [
-                    'groups@bewelcome.org' => 'BeWelcome - Group Administration',
-                ]
-            )
-            ->setTo($recipient)
-            ->setBody(
-                $this->renderView('emails/group.dismissed.html.twig', [
-                    'subject' => $subject,
-                    'group' => $group,
-                    'creator' => $creator,
                 ]),
                 'text/html'
             )

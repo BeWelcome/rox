@@ -22,7 +22,9 @@ class MessageToMemberType extends AbstractType
                     'class' => 'editor mb-1',
                 ],
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank([
+                        'message' => 'Please enter a message text.',
+                    ]),
                 ],
             ])
         ;

@@ -27,7 +27,7 @@ class HostingRequestAbstractType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'App_message';
+        return 'app_message';
     }
 
     protected function addMessageTextArea(FormInterface $form, $placeholder)
@@ -39,7 +39,9 @@ class HostingRequestAbstractType extends AbstractType
                     'class' => 'editor mb-1',
                 ],
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank([
+                        'message' => 'Please provide a message text.',
+                    ]),
                 ],
             ]);
     }

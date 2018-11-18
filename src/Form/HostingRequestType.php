@@ -31,7 +31,12 @@ class HostingRequestType extends AbstractType
                     'placeholder' => 'Arrival (date)',
                 ],
                 'constraints' => [
-                    new Date(),
+                    new NotBlank([
+                        'message' => 'Please provide an arrival date.',
+                    ]),
+                    new Date([
+                        'message' => 'Please provide an arrival date.'
+                    ]),
                 ],
             ])
             ->add('departure', DateType::class, [
@@ -54,13 +59,13 @@ class HostingRequestType extends AbstractType
                     'empty_data' => 1,
                     'label' => 'Number of travellers',
                     'attr' => [
-                        'min' => 1,
-                        'max' => 10,
                         'placeholder' => '#',
                         'class' => 'ml-2 p-2 travellersnr',
                     ],
                     'constraints' => [
-                        new NotBlank(),
+                        new NotBlank([
+                            'message' => 'Please provide number of travellers.',
+                        ]),
                         new LessThanOrEqual(10),
                         new GreaterThanOrEqual(1),
                     ],

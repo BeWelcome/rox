@@ -20,7 +20,9 @@ class SubjectType extends AbstractType
                 'placeholder' => 'Please enter a subject',
             ],
             'constraints' => [
-                new NotBlank(),
+                new NotBlank([
+                    'message' => 'Please enter a subject.',
+                ]),
             ],
         ]);
     }

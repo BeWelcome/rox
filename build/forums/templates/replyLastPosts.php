@@ -30,9 +30,10 @@ Boston, MA  02111-1307, USA.
 	$can_edit_foreign = false;
 ?>
 
-<h2 class="mt-5 w-100"><?php echo $words->getFormatted('last_posts'); ?></h2><br>
+<div class="col-12 order-12">
+<h2 class="mt-5 mb-0 w-100"><?php echo $words->getFormatted('last_posts'); ?></h2>
 <p><?php echo $words->getFormatted('LastPostSubline'); ?></p>
-
+    <div class="row">
 <?php
   // counting for background switch trick
   $cntx = '1';
@@ -42,4 +43,5 @@ Boston, MA  02111-1307, USA.
       $cntx = $cnt;
   }
 ?>
+    </div>
 </div>

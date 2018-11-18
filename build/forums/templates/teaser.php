@@ -7,7 +7,7 @@ if (isset($this->keyword)) {
 ?>
 <div class="row">
     <div class="col-12">
-    <h1 class="col pl-0">
+    <h1 class="pull-left">
         <a href="forums"><?php echo $this->_model->words->getFormatted('CommunityLanding'); ?></a>
 
         <?php if ($this->_model->getTopMode() == Forums::CV_TOPMODE_FORUM) {

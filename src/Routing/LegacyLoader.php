@@ -133,6 +133,10 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('myprofile_in_langauge', '/members/{username}/{language}');
         $this->addRouteDirectly('imprint', '/impressum');
         $this->addRouteDirectly('delete_relation_editprofile', '/members/{username}/relations/delete/{relationId}/editprofile');
+        // Simple newsletter page
+        $this->addRouteDirectly('newsletters', '/newsletters');
+        $this->addRouteDirectly('newsletter_single', '/newsletter/{shortCode}/{language}');
+
 
         return $this->routes;
     }

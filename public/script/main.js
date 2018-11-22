@@ -120,12 +120,6 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "fieldset.js?1",
-        pages: [
-            "admin/massmail",
-        ]
-    },
-    {
         file: "util/console.js?1"
     }
 ]);

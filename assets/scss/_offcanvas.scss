@@ -5,7 +5,7 @@
 @media screen and (max-width: 767px) {
     .offcanvas-collapse {
       position: fixed;
-      top: 56px; /* Height of navbar */
+      top: 46px; /* Height of navbar */
       bottom: 0;
       left: 100%;
       width: 100%;
@@ -17,6 +17,7 @@
       transition-timing-function: ease-in-out;
       transition-duration: .3s;
       transition-property: left, visibility;
+      z-index: 1500;
     }
     .offcanvas-collapse.open {
       left: 0;

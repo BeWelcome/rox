@@ -32,6 +32,10 @@ class AddTranslationIds extends RoxMigration
         // activities
         $this->AddWordCode('activity.headline.join', 'Join', 'Headline for the section to decide if one joins the activity.');
 
+        // search
+        $this->AddWordCode('search.show.advanced', 'Advanced options', 'Button label on the search page (Find Members).');
+        $this->AddWordCode('search.find.members', 'Find Members', 'Button label on the search page (Find Members).');
+
         // signup
         $this->AddWordCode( 'signup.error.mothertongue', 'Please select a mother tongue.', 'Error message if no mother tongue was selected.');
         $this->AddWordCode('signup.error.username.taken', 'Please choose a different username that is at least 4 and maximum 20 characters long. They have to start with a letter, they have to end with either a letter or a number. In between the following characters may be used: . _ -', 'Error message if username is already in use.');
@@ -97,6 +101,10 @@ class AddTranslationIds extends RoxMigration
 
         // activities
         $this->RemoveWordCode('activity.headline.join', 'Join', 'Headline for the section to decide if one joins the activity.');
+
+        // search
+        $this->RemoveWordCode('search.show.advanced', 'Advanced options', 'Button label on the search page (Find Members).');
+        $this->RemoveWordCode('search.find.members', 'Find Members', 'Button label on the search page (Find Members).');
 
         // signup
         $this->RemoveWordCode( 'signup.error.mothertongue', 'Please select a mother tongue.', 'Error message if no mother tongue was selected.');

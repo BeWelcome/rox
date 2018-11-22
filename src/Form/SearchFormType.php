@@ -31,7 +31,7 @@ class SearchFormType extends AbstractType
             ])
             ->setMethod('GET')
             ->add('keywords', TextType::class, [
-                'label' => 'Specific words in profile',
+                'label' => 'TextToFind',
                 'required' => false,
             ])
         ;
@@ -245,6 +245,7 @@ class SearchFormType extends AbstractType
                 'attr' => [
                     'class' => 'btn btn-primary float-right',
                 ],
+                'label' => 'search.find.members',
             ]);
     }
 

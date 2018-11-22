@@ -169,10 +169,6 @@
     $this->addRoute('admin_treasurer_campaign_start', 'admin/treasurer/campaign/start', 'AdminTreasurerController', 'treasurerStartDonationCampaign');
     $this->addRoute('admin_treasurer_campaign_stop', 'admin/treasurer/campaign/stop', 'AdminTreasurerController', 'treasurerStopDonationCampaign');
 
-    // Simple newsletter page
-    $this->addRoute('newsletter', 'newsletter', 'NewsletterController', 'index');
-    $this->addRoute('api_member','api/v1/member/:username:\.:format:', 'ApiController', 'memberAction');
-
     // places routes
     $this->addRoute('places', 'places', 'PlacesController', 'countries');
     $this->addRoute('places_country', 'places/:countryname:/:countrycode:', 'PlacesController', 'country');

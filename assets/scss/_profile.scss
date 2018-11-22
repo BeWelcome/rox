@@ -267,7 +267,6 @@ a.grouplist:hover {
 	left: -3.5rem;
 }
 
-
 .avatar-box-inside {
 	position: absolute;
 	top: 0;
@@ -278,9 +277,16 @@ a.grouplist:hover {
 
 .avatar-box {
 	height: 0;
-	width: 100%;
+	@include media-breakpoint-down(xs) {
+		width: 90%;
+		padding-top: 90%;
+	}
+	@include media-breakpoint-only(sm) {
+		width: 50%;
+		padding-top: 50%;
+	}
+	margin:0 auto;
 	overflow: hidden;
-	padding-top: 100%;
 	position: relative;
 }
 

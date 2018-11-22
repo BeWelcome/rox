@@ -39,7 +39,12 @@ class GalleryUserPage extends GalleryBasePage
     
     protected function submenu() {
         $active_menu_item = $this->getSubmenuActiveItem();
-        echo '<div class="col-6 col-md-3 offcanvas-collapse" id="sidebar">';
+        echo '<div class="offcanvas-collapse" id="sidebar">';
+        echo '     <div class="w-100 p-1 text-right">';
+        echo '          <button type="button" class="btn btn-sm" aria-label="Close" data-toggle="offcanvas">';
+        echo '               <i class="fa fa-lg fa-times" aria-hidden="true"></i>';
+        echo '          </button>';
+        echo '      </div>';
         echo '<div class="list-group w-100" role="group">';
         foreach ($this->getSubmenuItems() as $index => $item) {
             $name = $item[0];

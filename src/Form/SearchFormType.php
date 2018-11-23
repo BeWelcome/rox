@@ -155,7 +155,7 @@ class SearchFormType extends AbstractType
                 ],
                 'choice_translation_domain' => false,
                 'attr' => [
-                    'class' => 'select2',
+                    'class' => 'select2-inline',
                     'data-minimum-results-for-search' => '-1',
                 ],
                 'label' => 'search.hosts_at_least',
@@ -177,7 +177,7 @@ class SearchFormType extends AbstractType
                 ],
                 'choice_translation_domain' => false,
                 'attr' => [
-                    'class' => 'select2',
+                    'class' => 'select2-inline',
                     'data-minimum-results-for-search' => '-1',
                 ],
                 'label' => 'in a radius of',

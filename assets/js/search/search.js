@@ -4,5 +4,5 @@ $(function () {
     });
     $(".advanced").click(function(){
         $(this).toggleClass("btn-primary").toggleClass("btn-outline-primary");
-    })
+    });
 });

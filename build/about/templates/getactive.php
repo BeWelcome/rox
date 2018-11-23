@@ -66,7 +66,7 @@ $words = new MOD_words();
     </div>
 </div>
 
-<div class="col-12 col-md-6 mb-3 pl-0">
+<div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
             <h3 class="card-title m-0"><i class="fa fa-handshake-o"

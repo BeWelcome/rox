@@ -8,7 +8,7 @@
       // $words = $this->getWords();
       $picture_url = 'members/avatar/'.$member->Username;
       ?>
-      <div class="p-2"><img src="<?= $picture_url . '/100'?>" class="float-left d-md-none"></div>
+      <div class="p-2"><img src="<?= $picture_url . '/100'?>" alt="profile picture of <?= $member->Username ?>" class="float-left d-md-none"></div>
 
     <h1 class="h2 m-0 d-inline"><strong>
       <?php if ($this->passedAway == 'PassedAway') {
@@ -51,19 +51,24 @@
           // The "Hong Kong solution": Only display and link country.
           if ($member->region() == '' && $member->city() == $member->country()):
               ?>
-              <strong><a class="" href="places/<?php echo $member->country() . "/" . $member->countrycode(); ?>"><?php echo $member->country(); ?></a></strong>
+              <strong><a href="places/<?php echo urlencode($member->country()) . "/" . urlencode($member->countrycode()); ?>"><?php echo $member->country(); ?></a></strong>
               <?php
           // In case of missing parent in Geonames DB: Only display city and country. Don't link city.
           elseif ($member->region() == ''):
               ?>
-              <strong><?php echo $member->city(); ?></strong>, <a class="" href="places/<?php echo $member->country() . "/" . $member->countryCode(); ?>"><?php echo $member->country(); ?></a>
+              <strong><?php echo urlencode($member->city()); ?></strong>, <a href="places/<?php
+                echo urlencode($member->country()) . "/" . urlencode($member->countryCode()); ?>"><?php echo $member->country(); ?></a>
               <?php
           // For every other city display normal path. Don't show region if it has the same name as city.
           else:
               ?>
-              <strong><a class="" href="places/<?php echo $member->country() . "/" . $member->countrycode() . "/" . $member->region() . "/" . $member->regioncode() . "/" . $member->city . "/" . $member->IdCity; ?>">              <?php echo $member->city(); ?></a></strong><?php if ($member->region() != $member->city()): ?>,
-              <a class="" href="places/<?php echo $member->country() . "/" . $member->countryCode() . "/" . $member->region() . "/" . $member->regioncode(); ?>"><?php echo $member->region(); ?></a><?php endif; ?>,
-              <a class="" href="places/<?php echo $member->country() . "/" . $member->countryCode(); ?>"><?php echo $member->country(); ?></a>
+              <strong><a href="places/<?php echo urlencode($member->country()) . "/" . urlencode($member->countrycode())
+                  . "/" . urlencode($member->region()) . "/" . urlencode($member->regioncode()) . "/"
+                  . urlencode($member->city) . "/" . $member->IdCity; ?>"><?php echo $member->city(); ?></a></strong>
+              <?php if ($member->region() != $member->city()): ?>,
+              <a href="places/<?php echo urlencode($member->country()) . "/" . urlencode($member->countryCode()) . "/"
+                  . urlencode($member->region()) . "/" . urlencode($member->regioncode()); ?>"><?php echo $member->region(); ?></a><?php endif; ?>,
+              <a href="places/<?php echo urlencode($member->country()) . "/" . urlencode($member->countryCode()); ?>"><?php echo $member->country(); ?></a>
               <?php
           endif;
           ?>

@@ -70,7 +70,7 @@ class AdminGeneralController extends AdminBaseController
      */
     public function tempVolStart()
     {
-        list($member, $rights) = $this->checkRights();
+//        list($member, $rights) = $this->checkRights();
         $page = new TempVolStartPage;
         return $page;
     }

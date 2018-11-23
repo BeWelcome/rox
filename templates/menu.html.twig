@@ -9,23 +9,22 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            {# Navbar big screens #}
             <div class="collapse navbar-collapse" id="mainNavBar">
 
                 <ul class="navbar-nav mr-auto">
-                    <li class="menuborder">
+                    <li class="nav-item">
                         <a href="{{ url( 'search_members' ) }}" class="nav-link px-3">{{ 'FindMembers' | trans }}</a>
                     </li>
-                    <li class="menuborder">
+                    <li class="nav-item">
                         <a href="/community" class="nav-link px-3">{{ 'CommunityMenu' | trans }}</a>
                     </li>
-                    <li class="menuborder">
+                    <li class="nav-item">
                         <a href="/safety" class="nav-link px-3">{{ 'Safety' | trans}}</a>
                     </li>
-                    <li class="menuborder">
+                    <li class="nav-item">
                         <a href="/volunteer" class="nav-link px-3">{{ 'Volunteer' | trans}}</a>
                     </li>
-                    <li class="menuborder dropdown d-none d-md-flex">
+                    <li class="nav-item dropdown">
                         <a href="#" class="nav-link px-3" id="subNavBar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             &#9776;
                         </a>
@@ -73,7 +72,7 @@
                                     </div>
                                     <div class="subnavborder py-3">
                                         <div class="pl-5 pr-0">
-                                            <a href="/members/{{ member.Username }}">{{ macros.avatar( member.Username, 50, true) }} <span class="h4">{{ member.Username }}</span></a>
+                                            {{ macros.avatar( member.Username, 50, true) }} <span class="h4">{{ member.Username }}</span>
                                         </div>
                                         <div class="d-flex flex-row justify-content-between pl-5 pr-0">
                                             <div>
@@ -101,13 +100,7 @@
 
                 <ul class="navbar-nav mr-0">
 
-                    {# profile link on smaller screens #}
-                    <li class="nav-item float-right d-block d-lg-none">
-                        <a href="{{ path( 'members_profile' , { username: member.Username } ) }}" class="nav-link"><i class="fa fa-lg fa-user"></i></a>
-                    </li>
-
-                    {# member dropdown on bigger screens #}
-                    <li class="nav-item dropdown float-right d-none d-lg-block">
+                    <li class="nav-item dropdown float-md-right">
                         <a href="{{ path( 'members_profile' , { username: member.Username } ) }}" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ member.Username }} <span class="caret"></span></a>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
                             <li class="text-right"><a href="{{ path( 'members_profile' , { username: member.Username } ) }}" class="dropdown-item">{{ 'Profile' | trans }}</a></li>
@@ -121,15 +114,15 @@
                     </li>
 
                     {# messages #}
-                    <li class="nav-item float-right">
+                    <li class="nav-item float-md-right">
                         {% include 'widgets/messagescount.hml.twig' %}
                     </li>
-                    <li class="nav-item float-right">
+                    <li class="nav-item float-md-right">
                         {% include 'widgets/requestscount.html.twig' %}
                     </li>
 
                     {# logout #}
-                    <li class="nav-item float-right"><a href="{{ url( 'security_logout' ) }}" class="nav-link"><i class="fa fa-lg fa-sign-out-alt"></i></a></li>
+                    <li class="nav-item float-md-right"><a href="{{ url( 'security_logout' ) }}" class="nav-link"><i class="fa fa-lg fa-sign-out-alt"></i></a></li>
                 </ul>
             </div>
         </div>

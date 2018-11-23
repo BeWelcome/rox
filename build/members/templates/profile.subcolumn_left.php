@@ -18,6 +18,7 @@
 <div class="d-block d-lg-none mb-sm-3 mb-lg-0">
     <?php
     if (!$this->passedAway){
+        $accIdSuffix = 'Left';
         require 'profile.subcolumn_accommodation.php';
     }
     ?>

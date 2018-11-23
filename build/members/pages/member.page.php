@@ -168,8 +168,8 @@ class MemberPage extends PageWithActiveSkin
 
     protected function submenu() {
         ?>
-        <div class="offcanvas-collapse" id="sidebar">
-            <div class="w-100 p-1 text-right">
+        <div class="col-md-3 offcanvas-collapse" id="sidebar">
+            <div class="w-100 p-1 text-right d-md-none">
                 <button type="button" class="btn btn-sm" aria-label="Close" data-toggle="offcanvas">
                     <i class="fa fa-lg fa-times" aria-hidden="true"></i>
                 </button>
@@ -186,11 +186,11 @@ class MemberPage extends PageWithActiveSkin
             <div class="avatar-box">
                 <?php if ($this->useLightbox) { ?>
             <a class="avatar-box-inside" href="<?= $picture_url . '/original' ?>" data-toggle="lightbox" data-type="image" title="Picture of <?=$member->Username?>">
-                <img src="<?= $picture_url . '/500'?>" class="w-100 h-100">
+                <img src="<?= $picture_url . '/500'?>" class="w-100 h-100" alt="picture of <?= $member->Username ?>">
             </a>
                 <?php } else { ?>}
             <a class="avatar-box-inside" href="/members/<?=$member->Username?>" data-toggle="lightbox" data-type="image" title="Profile of <?=$member->Username?>">
-                <img src="<?= $picture_url . '/500'?>" class="w-100 h-100">
+                <img src="<?= $picture_url . '/500'?>" class="w-100 h-100" alt="picture of <?= $member->Username ?>">
             </a>
             <?php } ?>
             </div>

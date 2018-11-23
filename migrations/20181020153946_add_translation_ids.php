@@ -88,6 +88,11 @@ class AddTranslationIds extends RoxMigration
 
         // donation page
         $this->AddWordCode('donation.donatetime', 'Donate time', 'explanation how people can volunteer for BeWelcome');
+
+        // credits
+        $this->AddWordCode('credits.title', 'Credits', 'Title for the credits page');
+        $this->AddWordCode('credits.headline', 'Credits', 'Headline on the credits page');
+        $this->AddWordCode('credits.abstract', 'This website wouldn\'t be possible without the help of other.', 'Title for the credits page');
     }
 
     public function down()
@@ -156,5 +161,23 @@ class AddTranslationIds extends RoxMigration
 
         // donation page
         $this->RemoveWordCode('donation.donatetime', 'Donate time', 'explanation how people can volunteer for BeWelcome');
+
+        // groups
+        $this->RemoveWordCode('group.create.successful');
+        $this->RemoveWordCode('group.create');
+        $this->RemoveWordCode('admin.groups.awaiting.approval');
+
+        // admin
+        $this->RemoveWordCode('admin.comments.reported');
+        $this->RemoveWordCode('admin.spam.reported');
+        $this->RemoveWordCode('admin.comment.reported');
+        $this->RemoveWordCode('home.headline.find.hosts');
+        $this->RemoveWordCode('signup.confirm.email');
+        $this->RemoveWordCode('profile.delete.cleanup');
+
+        // credits
+        $this->RemoveWordCode('credits.title', 'Credits', 'Title for the credits page');
+        $this->RemoveWordCode('credits.headline', 'Credits', 'Headline on the credits page');
+        $this->RemoveWordCode('credits.abstract', 'This website wouldn\'t be possible without the help of other.', 'Title for the credits page');
     }
 }

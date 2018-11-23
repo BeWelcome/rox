@@ -1,4 +1,4 @@
-<div id="accommodationinfo" class="card mb-3">
+<div id="accommodationinfo<?= $accIdSuffix ?>" class="card mb-3">
     <h3 class="card-header<? if ($member->Accomodation == 'neverask'){ echo ' bg-secondary'; } ?>"><?php echo $words->get('ProfileAccommodation'); ?>
         <?php if ($showEditLinks): ?>
             <span class="float-right">
@@ -30,7 +30,7 @@
                 ?>
             </div>
 
-            <div id="accommodation" >
+            <div id="accommodation<?= $accIdSuffix ?>" >
                 <?php if ($member->MaxGuest != 0 && $member->MaxGuest != "") { ?>
                     <div class="guests h5"><?=$words->get('ProfileNumberOfGuests');?>: <?php echo $member->MaxGuest ?></div>
                 <?php }

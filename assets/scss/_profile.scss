@@ -285,6 +285,10 @@ a.grouplist:hover {
 		width: 50%;
 		padding-top: 50%;
 	}
+	@include media-breakpoint-up(md) {
+		width: 100%;
+		padding-top: 100%;
+	}
 	margin:0 auto;
 	overflow: hidden;
 	position: relative;

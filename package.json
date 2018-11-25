@@ -1,8 +1,7 @@
 {
   "name": "bewelcome-rox",
   "browserslist": [
-    "last 2 version",
-    "> 1%",
+    "last 4 version",
     "not dead"
   ],
   "version": "3.0.0",

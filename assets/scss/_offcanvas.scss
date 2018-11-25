@@ -3,24 +3,41 @@
  * --------------------------------------------------
  */
 @media screen and (max-width: 767px) {
-    .offcanvas-collapse {
-      position: fixed;
-      top: 46px; /* Height of navbar */
-      bottom: 0;
-      left: 100%;
-      width: 100%;
-      padding-right: 1rem;
-      padding-left: 1rem;
-      overflow-y: auto;
-      visibility: hidden;
-      background-color: #343a40;
-      transition-timing-function: ease-in-out;
-      transition-duration: .3s;
-      transition-property: left, visibility;
-      z-index: 1500;
-    }
-    .offcanvas-collapse.open {
-      left: 0;
-      visibility: visible;
-    }
+  .offcanvas-collapse {
+    position: fixed;
+    top: 46px; /* Height of navbar */
+    bottom: 0;
+    left: 100%;
+    width: 100%;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    overflow-y: auto;
+    visibility: hidden;
+    background-color: #343a40;
+    transition-timing-function: ease-in-out;
+    transition-duration: .3s;
+    transition-property: left, visibility;
+    z-index: 1500;
+  }
+  .offcanvas-collapse.open {
+    left: 0;
+    visibility: visible;
+  }
+  .offcanvas1-collapse {
+    position: fixed;
+    top: 46px; /* Height of navbar */
+    bottom: 0;
+    left: 100%;
+    width: 100%;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    overflow-y: auto;
+    visibility: hidden;
+    background-color: #343a40;
+    z-index: 1500;
+  }
+  .offcanvas1-collapse.open {
+    left: 0;
+    visibility: visible;
+  }
 }

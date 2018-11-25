@@ -161,9 +161,9 @@
                         <span class="input-group-prepend"><i class="input-group-text fa fa-lg fa-map-marker"
                                                              aria-hidden="true"></i></span>
                         {{ form_widget( search.location, { 'attr' : { 'class' : 'search-picker form-control' } } ) }}
-                        <span class="input-group-append">
+                        <span class="input-group-append p-0">
                         <button id="{{ search.updateMap.vars.id }}" name="updateMap" type="submit"
-                                class="btn btn-primary">
+                                class="btn btn-primary border-0">
                                 <i class="fa fa-lg fa-chevron-right" aria-hidden="true"></i>
                                 <span class="sr-only">{{ 'Search' | trans }}</span>
                         </button>

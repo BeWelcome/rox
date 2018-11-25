@@ -137,7 +137,6 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('newsletters', '/newsletters');
         $this->addRouteDirectly('newsletter_single', '/newsletter/{shortCode}/{language}');
 
-
         return $this->routes;
     }
 

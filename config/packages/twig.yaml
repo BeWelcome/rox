@@ -2,7 +2,7 @@
 twig:
   debug:            "%kernel.debug%"
   strict_variables: "%kernel.debug%"
-  exception_controller:  twig.controller.exception:showAction
+  exception_controller:  twig.controller.exception::showAction
   form_themes:
     - 'bootstrap_4_layout.html.twig'
     - 'ckeditor/ckeditor.html.twig'

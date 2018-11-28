@@ -79,6 +79,9 @@ class SearchFormRequest
     /** @var bool */
     public $accommodation_neverask = false;
 
+    /** @var bool */
+    public $showMap = false;
+
     /**
      * @var int
      *
@@ -151,6 +154,7 @@ class SearchFormRequest
         $searchFormRequest->gender = $request->query->get('gender');
         $searchFormRequest->order = $request->query->get('order');
         $searchFormRequest->items = $request->query->get('items');
+        $searchFormRequest->showMap = $request->query->get('showMap');
         $searchFormRequest->offerdinner = $request->query->get('dinner');
         $searchFormRequest->offertour = $request->query->get('tour');
         $searchFormRequest->accessible = $request->query->get('accessible');

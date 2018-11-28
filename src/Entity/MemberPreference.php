@@ -9,22 +9,25 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="memberspreferences", indexes={@ORM\Index(name="IdMember", columns={"IdMember", "IdPreference"}), @ORM\Index(name="IdPreference", columns={"IdPreference"})})
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
-class Memberspreferences
+class MemberPreference
 {
     /**
-     * @var integer
+     * @var Member
      *
-     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Member", inversedBy="preferences")
+     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id", nullable=false)
      */
-    private $idmember;
+    protected $member;
 
     /**
-     * @var integer
+     * @var Preference
      *
-     * @ORM\Column(name="IdPreference", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Preference")
+     * @ORM\JoinColumn(name="IdPreference", referencedColumnName="id")
      */
-    private $idpreference;
+    private $preference;
 
     /**
      * @var string
@@ -38,14 +41,14 @@ class Memberspreferences
      *
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
-    private $updated = 'CURRENT_TIMESTAMP';
+    private $updated;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created = '0000-00-00 00:00:00';
+    private $created;
 
     /**
      * @var integer
@@ -59,51 +62,51 @@ class Memberspreferences
 
 
     /**
-     * Set idmember
+     * Set member
      *
-     * @param integer $idmember
+     * @param Member $member
      *
-     * @return Memberspreferences
+     * @return MemberPreference
      */
-    public function setIdmember($idmember)
+    public function setMember(Member $member)
     {
-        $this->idmember = $idmember;
+        $this->member = $member;
 
         return $this;
     }
 
     /**
-     * Get idmember
+     * Get member
      *
-     * @return integer
+     * @return Member
      */
-    public function getIdmember()
+    public function getMember()
     {
-        return $this->idmember;
+        return $this->member;
     }
 
     /**
-     * Set idpreference
+     * Set preference
      *
-     * @param integer $idpreference
+     * @param Preference $preference
      *
-     * @return Memberspreferences
+     * @return MemberPreference
      */
-    public function setIdpreference($idpreference)
+    public function setPreference(Preference $preference)
     {
-        $this->idpreference = $idpreference;
+        $this->preference = $preference;
 
         return $this;
     }
 
     /**
-     * Get idpreference
+     * Get preference
      *
-     * @return integer
+     * @return Preference
      */
-    public function getIdpreference()
+    public function getPreference()
     {
-        return $this->idpreference;
+        return $this->preference;
     }
 
     /**
@@ -111,7 +114,7 @@ class Memberspreferences
      *
      * @param string $value
      *
-     * @return Memberspreferences
+     * @return MemberPreference
      */
     public function setValue($value)
     {
@@ -135,7 +138,7 @@ class Memberspreferences
      *
      * @param \DateTime $updated
      *
-     * @return Memberspreferences
+     * @return MemberPreference
      */
     public function setUpdated($updated)
     {
@@ -159,7 +162,7 @@ class Memberspreferences
      *
      * @param \DateTime $created
      *
-     * @return Memberspreferences
+     * @return MemberPreference
      */
     public function setCreated($created)
     {
@@ -186,5 +189,25 @@ class Memberspreferences
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Triggered on insert.
+     *
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created = new \DateTime('now');
+    }
+
+    /**
+     * Triggered on update.
+     *
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updated = new \DateTime('now');
     }
 }

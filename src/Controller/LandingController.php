@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Member;
+use App\Entity\MemberPreference;
+use App\Entity\Preference;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\SearchFormType;
 use App\Model\CommunityNewsModel;
@@ -25,9 +27,21 @@ class LandingController extends Controller
      */
     public function showMessagesAction(Request $request)
     {
-        $unread = $request->query->get('unread', false);
-
         $member = $this->getUser();
+        $unread = $request->query->get('unread', '0');
+
+        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
+        /** @var Preference $preference */
+        $preference = $preferenceRepository->findOneBy(['codename' => Preference::MESSAGE_AND_REQUEST_FILTER]);
+        $memberPreference = $member->getMemberPreference($preference);
+        if ($unread === '1') {
+            $memberPreference->setValue('Unread');
+        } else {
+            $memberPreference->setValue('All');
+        }
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($memberPreference);
+        $em->flush();
 
         $homeModel = new LandingModel($this->getDoctrine());
         $messages = $homeModel->getMessages($member, $unread, 4);
@@ -67,11 +81,29 @@ class LandingController extends Controller
      */
     public function showThreadsAction(Request $request)
     {
-        $groups = $request->query->get('groups');
-        $forum = $request->query->get('forum');
+        $groups = $request->query->get('groups', '0');
+        $forum = $request->query->get('forum', '0');
         $following = $request->query->get('following');
 
         $member = $this->getUser();
+        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
+        /** @var Preference $preference */
+        $preference = $preferenceRepository->findOneBy(['codename' => Preference::FORUM_FILTER]);
+        $memberPreference = $member->getMemberPreference($preference);
+        $value = '';
+        if ($groups === '1') {
+            $value = 'Groups';
+        }
+        if ($forum === '1') {
+            if (!empty($value)) {
+                $value .= 'And';
+            }
+            $value .= 'Forums';
+        }
+        $memberPreference->setValue($value);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($memberPreference);
+        $em->flush();
         $homeModel = new LandingModel($this->getDoctrine());
         $threads = $homeModel->getThreads($member, $groups, $forum, $following, 4);
 
@@ -104,10 +136,6 @@ class LandingController extends Controller
      * @Route( "/widget/accommodation", name="/widget/accommodation")
      *
      * @param Request $request
-     *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
      *
      * @return Response
      */
@@ -176,6 +204,12 @@ class LandingController extends Controller
         // Prepare small search form
         $searchGotoLocation = $this->createForm(SearchFormType::class, new SearchFormRequest());
 
+        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
+        $preference = $preferenceRepository->findOneBy(['codename' => Preference::MESSAGE_AND_REQUEST_FILTER]);
+        $messageFilter = $member->getMemberPreferenceValue($preference);
+
+        $preference = $preferenceRepository->findOneBy(['codename' => Preference::FORUM_FILTER]);
+        $forumFilter = $member->getMemberPreferenceValue($preference);
         $content = $this->render('landing/landing.html.twig', [
                 'title' => 'BeWelcome',
                 'searchLocation' => $searchHomeLocation->createView(),
@@ -187,6 +221,8 @@ class LandingController extends Controller
                 ],
                 'travellers' => $travellersInArea,
                 'communityNews' => $latestNews,
+                'messageFilter' => $messageFilter,
+                'forumFilter' => $forumFilter,
         ]);
 
         return $content;

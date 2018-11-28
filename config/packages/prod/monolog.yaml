@@ -1,0 +1,26 @@
+# config/packages/prod/monolog.yaml
+monolog:
+  handlers:
+    filter_for_errors:
+      type: fingers_crossed
+      # if *one* log is error or higher, pass *all* to file_log
+      action_level: error
+      handler: file_log
+
+    # now passed *all* logs, but only if one log is error or higher
+    file_log:
+      type: stream
+      path: "%kernel.logs_dir%/%kernel.environment%.log"
+
+    # still passed *all* logs, and still only logs error or higher
+    syslog_handler:
+      type: syslog
+      level: error
+
+    main:
+      type:  rotating_file
+      path:  '%kernel.logs_dir%/%kernel.environment%.log'
+      level: debug
+      # max number of log files to keep
+      # defaults to zero, which means infinite files
+      max_files: 10

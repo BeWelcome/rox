@@ -635,15 +635,28 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     private $groupMemberships;
 
     /**
-     * @var arrayCollection
+     * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="MembersLanguagesLevel", mappedBy="member")
      */
     private $languageLevels;
 
+    /**
+     * @var ArrayCollection
+     */
     private $comments;
 
+    /**
+     * @var ArrayCollection
+     */
     private $relationships;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="MemberPreference", mappedBy="member")
+     */
+    private $preferences;
 
     public function __construct()
     {
@@ -653,6 +666,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         $this->languageLevels = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->relationships = new ArrayCollection();
+        $this->preferences = new ArrayCollection();
     }
 
     /**
@@ -2852,6 +2866,46 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
             },
             $this->languageLevels->toArray()
         );
+    }
+
+    /**
+     * @param Preference $preference
+     *
+     * @return MemberPreference
+     */
+    public function getMemberPreference(Preference $preference)
+    {
+        // Check if member has preference
+        $criteria = Criteria::create()->where(Criteria::expr()->eq("preference", $preference));
+
+        $memberPreference = $this->preferences->matching($criteria)->first();
+        if ($memberPreference === false) {
+            $memberPreference = new MemberPreference();
+            $memberPreference->setMember($this);
+            $memberPreference->setPreference($preference);
+            $memberPreference->setValue($preference->getDefaultValue());
+        }
+        return $memberPreference;
+    }
+
+    /**
+     * @param Preference $preference
+     *
+     * @return string
+     */
+    public function getMemberPreferenceValue(Preference $preference)
+    {
+        $value = $preference->getDefaultValue();
+
+        // Check if member has preference
+        $criteria = Criteria::create()->where(Criteria::expr()->eq("preference", $preference));
+
+        $match = $this->preferences->matching($criteria)->first();
+        if ($match) {
+            $value = $match->getValue();
+        }
+
+        return $value;
     }
 
     /**

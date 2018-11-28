@@ -4,25 +4,13 @@ $columns = array();
 $lastcontinent = "";
 ?>
 <div class="col-12">
-    <div class="card-columns" id="accordionPlaces">
-
-
+    <div class="card-columns">
         <? foreach ($this->continents as $continent => $value) { ?>
-
             <div class="card">
-                <div class="card-header bg-light" id="heading<?= $value[0] ?>">
-                    <h3 class="mb-0">
-                        <button class="btn btn-link btn-block" type="button" data-toggle="collapse"
-                                data-target="#collapse<?= $value[0] ?>" aria-expanded="true"
-                                aria-controls="collapse<?= $value[0] ?>">
-                            <i class="fa fa-angle-double-down mr-3"></i><?= $value[0] ?><i
-                                    class="fa fa-angle-double-down ml-3"></i>
-                        </button>
-                    </h3>
+                <div class="card-header bg-primary" id="heading<?= $value[0] ?>">
+                    <h5 class="m-0"><?= $value[0] ?></h5>
                 </div>
-
-                <div id="collapse<?= $value[0] ?>" class="expand" aria-labelledby="heading<?= $value[0] ?>"
-                     data-parent="#accordionPlaces">
+                <div aria-labelledby="heading<?= $value[0] ?>">
                     <div class="card-body pt-0">
                         <div class="row">
                             <?php
@@ -40,7 +28,6 @@ $lastcontinent = "";
                                 echo '</div>';
 
                             }
-
                             ?>
                         </div>
                     </div>

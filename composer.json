@@ -4,6 +4,7 @@
     "homepage": "https://www.bewelcome.org/",
     "type": "project",
     "license": "GPL",
+    "minimum-stability": "RC",
     "require": {
         "ext-pdo": "*",
         "Twig/Twig": "^2.4",
@@ -105,7 +106,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "4.1.*"
+            "require": "4.2.*"
         }
     }
 }

@@ -85,7 +85,7 @@ class WikiController extends Controller
             ->getForm();
 
         $form->handleRequest($request);
-        if ($form->isValid() && $form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $newWikiPage = clone $wikiPage;
             $newWikiPage->setContent($data['wiki_markup']);
@@ -130,7 +130,7 @@ class WikiController extends Controller
             ->getForm();
 
         $form->handleRequest($request);
-        if ($form->isValid() && $form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $newWikiPage = new Wiki();
             $newWikiPage->setPagename($wikiModel->getPagename($pageTitle));

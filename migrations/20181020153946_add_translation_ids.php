@@ -35,6 +35,7 @@ class AddTranslationIds extends RoxMigration
         // search
         $this->AddWordCode('search.show.advanced', 'Advanced options', 'Button label on the search page (Find Members).');
         $this->AddWordCode('search.find.members', 'Find Members', 'Button label on the search page (Find Members).');
+        $this->AddWordCode('search.show.map', 'Show map', 'Checkbox to toggle the map display.');
 
         // signup
         $this->AddWordCode( 'signup.error.mothertongue', 'Please select a mother tongue.', 'Error message if no mother tongue was selected.');
@@ -57,7 +58,7 @@ class AddTranslationIds extends RoxMigration
         $this->AddWordCode('landing.button.unread', 'Unread', 'Text for a button showing unread messages');
         $this->AddWordCode('landing.button.myinbox', 'My inbox', 'Text for a link to members inbox');
         $this->AddWordCode('landing.tab.forum', 'Forum', 'Text for tab on landing page');
-        $this->AddWordCode('landing.tab.activities ', 'Activities', 'Text for tab on landing page');
+        $this->AddWordCode('landing.tab.activities', 'Activities', 'Text for tab on landing page');
         $this->AddWordCode('landing.button.groups', 'groups', 'Filters groups discussions');
         $this->AddWordCode('landing.button.forum', 'forum', 'Filters forum discussions');
         $this->AddWordCode('landing.button.discussions', 'Discussions', 'Text for a button to go to the discussion pages');
@@ -110,6 +111,7 @@ class AddTranslationIds extends RoxMigration
         // search
         $this->RemoveWordCode('search.show.advanced', 'Advanced options', 'Button label on the search page (Find Members).');
         $this->RemoveWordCode('search.find.members', 'Find Members', 'Button label on the search page (Find Members).');
+        $this->RemoveWordCode('search.show.map', 'Show map', 'Checkbox to toggle the map display.');
 
         // signup
         $this->RemoveWordCode( 'signup.error.mothertongue', 'Please select a mother tongue.', 'Error message if no mother tongue was selected.');
@@ -130,7 +132,7 @@ class AddTranslationIds extends RoxMigration
         $this->RemoveWordCode('landing.button.unread', 'Unread', 'Text for a button showing unread messages');
         $this->RemoveWordCode('landing.button.myinbox', 'My inbox', 'Text for a link to members inbox');
         $this->RemoveWordCode('landing.tab.forum', 'Forum', 'Text for tab on landing page');
-        $this->RemoveWordCode('landing.tab.activities ', 'Activities', 'Text for tab on landing page');
+        $this->RemoveWordCode('landing.tab.activities', 'Activities', 'Text for tab on landing page');
         $this->RemoveWordCode('landing.button.groups', 'groups', 'Filters groups discussions');
         $this->RemoveWordCode('landing.button.forum', 'forum', 'Filters forum discussions');
         $this->RemoveWordCode('landing.button.discussions', 'Discussions', 'Text for a button to go to the discussion pages');

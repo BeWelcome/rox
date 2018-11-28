@@ -18,7 +18,7 @@
 {% block content %}
     {{ form_start(form, {'attr': {'class': 'm-1'}}) }}
     {{ form_errors(form) }}
-    <div class="form-row form-inline">
+    <div class="form-row form-inline mb-1">
         <div class="input-group mr-2">
             <div class="input-group-prepend"><span class="input-group-text"><i
                             class="fa fa-lg fa-globe"></i></span>
@@ -63,6 +63,9 @@
         <div class="form-group">
             {{ form_widget(form.updateMap, {'attr': {'class': 'btn-primary float-right'}}) }}
         </div>
+    </div>
+    <div class="form-row my-1">
+        {{ form_widget(form.showMap, { 'attr': {'class': 'showMap'}}) }}
     </div>
     <div class="collapse" id="advancedNav">
         <div class="form-row my-1">
@@ -113,7 +116,7 @@
     {{ form_rest(form) }}
     {{ form_end(form) }}
 
-    <div class="map-box">
+    <div class="map-box {% if form.showMap.vars.checked %}d-block{% else %}d-none{% endif %}">
         <div id="map" class="map p-2 framed w-100"></div>
     </div>
 

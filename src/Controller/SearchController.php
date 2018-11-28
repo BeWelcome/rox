@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Member;
+use App\Entity\Preference;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\SearchFormType;
 use App\Pagerfanta\SearchAdapter;
@@ -28,7 +29,13 @@ class SearchController extends Controller
         /** @var Member $member */
         $member = $this->getUser();
 
+        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
+        /** @var Preference $preference */
+        $preference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_MAP]);
+        $showMap = $member->getMemberPreferenceValue($preference);
+
         $searchFormRequest = new SearchFormRequest();
+        $searchFormRequest->showMap = ($showMap == 'Yes') ? true : false;
         $form = $this->createForm(SearchFormType::class, $searchFormRequest, [
             'groups' => $member->getGroups(),
             'languages' => $member->getLanguages(),
@@ -38,6 +45,15 @@ class SearchController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
+            $memberPreference = $member->getMemberPreference($preference);
+            if ($data->showMap) {
+                $memberPreference->setValue('Yes');
+            } else {
+                $memberPreference->setValue('No');
+            }
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($memberPreference);
+            $em->flush();
             $searchAdapter = new SearchAdapter($this->container, $data);
             $results = $searchAdapter->getFullResults();
             $pager = new Pagerfanta($searchAdapter);

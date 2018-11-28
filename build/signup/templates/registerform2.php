@@ -175,7 +175,7 @@
 
                 <!-- Gender-->
                 <div class="form-group has-feedback pt-3">
-                    <span class="d-block form-control-label"><?php echo $words->get('SignupGender'); ?></span>
+                    <span class="d-block form-control-label"><?php echo $words->get('Gender'); ?></span>
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
                     <label class="btn btn-outline-primary" <?php
                     if (isset($vars['gender']) && $vars['gender'] == 'female') {

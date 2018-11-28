@@ -78,14 +78,14 @@
 
                 {# messages #}
                 <div role="tabpanel" class="tab-pane h-100 active" id="messages">
-                    <!-- all / unread messages toggle -->
+                    {# all / unread messages toggle #}
                     <div class="d-flex btn-group justify-content-center m-1" data-toggle="buttons">
-                        <label class="btn btn-primary btn-radio active" id="all">
+                        <label class="btn btn-primary btn-radio{% if messageFilter == 'All' %} active{% endif %}" id="all">
                             <input type="radio" name="options" autocomplete="off" onclick="updateMessages()"
-                                   checked hidden="true">{{ 'landing.button.all' | trans }}
+                                   {% if messageFilter == 'All' %}checked{% endif %} hidden>{{ 'landing.button.all' | trans }}
                         </label>
-                        <label for="unread" class="btn btn-primary btn-radio" id="unread">
-                            <input type="radio" name="options" autocomplete="off" onclick="updateMessages()" hidden="true">{{ 'landing.button.unread' | trans }}
+                        <label for="unread" class="btn btn-primary btn-radio{% if messageFilter == 'Unread' %} active{% endif %}" id="unread">
+                            <input type="radio" name="options" autocomplete="off" onclick="updateMessages()" {% if messageFilter == 'Unread' %}checked{% endif %} hidden>{{ 'landing.button.unread' | trans }}
                         </label>
                     </div>
 
@@ -135,11 +135,11 @@
 
                     {# display settings#}
                     <div class="d-flex btn-group justify-content-center m-1" data-toggle="buttons">
-                        <label class="btn btn-primary btn-radio active" id="groupsButton">
-                            <input type="checkbox" autocomplete="off" checked hidden="true">{{ 'landing.button.groups' | trans }}
+                        <label class="btn btn-primary btn-radio{% if forumFilter == 'GroupsAndForums' or forumFiler == 'Groups' %} active{% endif %}" id="groupsButton">
+                            <input type="checkbox" autocomplete="off"{% if forumFilter == 'GroupsAndForums' or forumFiler == 'Groups' %} checked{% endif %} hidden>{{ 'landing.button.groups' | trans }}
                         </label>
-                        <label class="btn btn-primary btn-radio" id="forumButton">
-                            <input type="checkbox" autocomplete="off" checked hidden="true">{{ 'landing.button.forum' | trans }}
+                        <label class="btn btn-primary btn-radio{% if forumFilter == 'GroupsAndForums' or forumFiler == 'Forums' %} active{% endif %}" id="forumButton">
+                            <input type="checkbox" autocomplete="off"{% if forumFilter == 'GroupsAndForums' or forumFiler == 'Forums' %} checked{% endif %} hidden>{{ 'landing.button.forum' | trans }}
                         </label>
                     </div>
 

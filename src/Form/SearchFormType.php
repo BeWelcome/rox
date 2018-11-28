@@ -280,6 +280,10 @@ class SearchFormType extends AbstractType
                 'label' => 'SearchIncludeInactive',
                 'required' => false,
             ])
+            ->add('showMap', CheckboxType::class, [
+                'label' => 'search.show.map',
+                'required' => false,
+            ])
         ;
     }
 }

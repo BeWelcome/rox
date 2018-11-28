@@ -29,6 +29,7 @@ class MembersLanguagesLevel
      * @ORM\JoinColumn(name="IdMember", referencedColumnName="id", nullable=FALSE)
      */
     protected $member;
+
     /**
      * @var \DateTime
      *

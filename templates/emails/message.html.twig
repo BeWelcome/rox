@@ -7,12 +7,9 @@
 {% endblock %}
 
 {% block content %}
-    {# Subject: {{ subject }}
-    Sender: {{ sender.username }}
-    Receiver: {{ receiver.username }}
-#}
+    {% trans with {'%username%': receiver.Username} %}email.greeting{% endtrans %}<br>
+    {% trans with {'%username%': sender.Username} %}email.message{% endtrans %}<br>
 
-
-    {{ message_text | raw }}
+    {{ body | raw }}
 
 {% endblock %}

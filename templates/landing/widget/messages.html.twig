@@ -5,6 +5,7 @@
         <div class="d-flex flex-row justify-content-start align-items-center p-2">
             <div class="pr-2">{{ macros.avatar( message.sender.username, 50, true) }}</div>
             <div class="dashentry w-100">
+                {% set unread = (message.whenfirstread == '0000-00-00 00:00.00') or (message.whenfirstread is null) %}
                 {% if message.request %}
                     <div class="d-flex justify-content-start align-items-center">
                         <div><i class="fa fa-lg fa-bed"></i></div>
@@ -13,8 +14,8 @@
                             {{ message.request.departure | localizeddate( 'medium', 'none') }}
                         </div>
                         <div class="text-truncate text">
-                            <a href="{{ path(route, { id: message.id } ) }}">
-                            <span class="text-truncate bold">{{ message.subject.subject|raw }}</span>
+                            <a href="{{ path(route, { id: message.id } ) }}" {% if unread %}class="unread"{% endif %}>
+                                <span class="text-truncate">{{ message.subject.subject|raw }}</span>
                                 <span class="text-truncate">{{ message.message|raw }}</span>
                             </a>
                         </div>
@@ -22,8 +23,7 @@
                 {% else %}
                     <div class="text-truncate text">
                         <a href="{{ path(route, { id: message.id } ) }}">
-                            {% set unread = (message.whenfirstread == '0000-00-00 00:00.00') %}
-                        {% if (message.unread) %}<strong>{% endif %}
+                        {% if (unread) %}<strong>{% endif %}
                             {{ message.message|raw }}
                             {% if unread %}</strong>{% endif %}
                         </a>

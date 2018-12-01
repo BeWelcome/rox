@@ -131,13 +131,14 @@ class AddTranslationIds extends RoxMigration
 
         // emails
         $this->AddWordCode('email.greeting', 'Dear %username%,', 'Greeting in emails. Make sure to include the %username% when translating.');
+        $this->AddWordCode('email.message', '%username% send you a message.', 'First paragraph in a message. Make sure to include the %username% when translating.');
         $this->AddWordCode('email.request.stay', '%username% would like to stay with you.', 'first paragraph in a hosting request');
         $this->AddWordCode('email.request.reply.host', '%username% replied to your request to stay with them.', 'first paragraph in a reply from the host');
         $this->AddWordCode('email.request.reply.host.open', 'Please read your messages below.', 'State of the request in reply from host (accepted)');
         $this->AddWordCode('email.request.reply.host.accepted', 'You can stay with %username%.', 'State of the request in reply from host (accepted)');
         $this->AddWordCode('email.request.reply.host.declined', '%username% declined to host you.', 'State of the request in reply from host (declined)');
         $this->AddWordCode('email.request.reply.host.tentatively', '%username% might host you.', 'State of the request in reply from host (tentatively)');
-        $this->AddWordCode('email.request.reply.guest', '%username% replied to your request to stay with them.', 'first paragraph in a reply from the host');
+        $this->AddWordCode('email.request.reply.guest', '%username% replied to your request to stay with them.', 'First paragraph in a reply from the host. Make sure to include the %username when translating.');
         $this->AddWordCode('email.request.reply.guest.open', 'This request is still open.', 'State of the request in reply from guest (accepted)');
         $this->AddWordCode('email.request.reply.guest.accepted', 'You accepted this request.', 'State of the request in reply from guest (accepted)');
         $this->AddWordCode('email.request.reply.guest.declined', 'You declined this request.', 'State of the request in reply from guest (declined)');
@@ -266,6 +267,7 @@ class AddTranslationIds extends RoxMigration
 
         // emails
         $this->RemoveWordCode('email.greeting', 'Dear %username%,', 'Greeting in emails. Make sure to include the %username% when translating.');
+        $this->RemoveWordCode('email.message', '%username% send you a message.', 'First paragraph in a message. Make sure to include the %username% when translating.');
         $this->RemoveWordCode('email.request.stay', '%username% would like to stay with you.', 'first paragraph in a hosting request');
         $this->RemoveWordCode('email.request.reply.host', '%username% replied to your request to stay with them.', 'first paragraph in a reply from the host');
         $this->RemoveWordCode('email.request.reply.host.open', 'Please read your messages below.', 'State of the request in reply from host (accepted)');

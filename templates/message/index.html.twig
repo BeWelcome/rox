@@ -59,14 +59,15 @@
                     <p class="m-0">{{ macros.profilelink(otherMember.Username) }}</p>
                 </td>
                 <td class="align-middle w-100">
+                    {% set unread = (message.whenfirstread == '0000-00-00 00:00.00') or (message.whenfirstread is null) %}
                     <a href="{{ path('message_show', { id: message.id}) }}"
-                            {%- if not message.WhenFirstRead -%}
+                            {%- if unread -%}
                                 {{- ' class="unread"' -}}
                             {%- endif -%}
                     >
                         <div>
                             {% if message.subject %}<p class="h5 m-0">
-                                {{- message.subject.subject | striptags -}}</span>
+                                {{- message.subject.subject | striptags -}}
                                 </p>{% endif %}
                     {% set messageText = message.Message | replace({'\n': ' ', '<br />': ' '}) | striptags %}
 

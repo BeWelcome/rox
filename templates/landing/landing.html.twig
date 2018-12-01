@@ -192,7 +192,7 @@
     <div class="d-flex row flex-wrap">
 
         <div class="col-12 col-lg-5 mb-3">
-            <div class="card p-2 h-100">
+            <p class="card p-2 h-100">
                 <h4 class="homehfour">{{ 'landing.beinvolved.title' | trans }}<br/><span class="homesubt">{{ 'landing.beinvolved.subtitle' | trans }}</span></h4>
 
                 {% if campaign.yearDonated < campaign.yearNeeded %}
@@ -211,8 +211,8 @@
                 {% endif %}
 
                 <p>{{ 'landing.beinvolved.intro' | trans }}</p>
-                <a href="{{ url('get_active') }}" class="btn btn-outline-primary btn-homewhite btn-block"><i
-                            class="fa fa-wrench"></i> {{ 'landing.beinvolved.helpbewelcome' | trans }}</a>
+                <p><a href="{{ url('getactive') }}" class="btn btn-outline-primary btn-homewhite btn-block"><i
+                            class="fa fa-wrench"></i> {{ 'landing.beinvolved.helpbewelcome' | trans }}</a></p>
                 <p><a href="{{ url('donate') }}" class="btn btn-outline-primary btn-homewhite btn-block mb-1"><i
                                 class="fa fa-euro"></i> {{ 'landing.beinvolved.pleasedonate' | trans }}</a></p>
 

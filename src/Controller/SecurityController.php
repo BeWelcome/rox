@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
  * Controller used to manage the application security.
@@ -14,11 +16,11 @@ class SecurityController extends AbstractController
      * @Route("/login", name="login", defaults={"access_denied_redirect" = "/"}))
      * @Route("/login", name="security_login", defaults={"access_denied_redirect" = "/"}))
      * @Route("/login_check", name="security_check", defaults={"access_denied_redirect" = "/"}))
+     * @param AuthenticationUtils $helper
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function loginAction()
+    public function loginAction(AuthenticationUtils $helper)
     {
-        $helper = $this->get('security.authentication_utils');
-
         // get the login error if there is one
         $error = $helper->getLastAuthenticationError();
 

@@ -206,8 +206,7 @@ class RequestAndMessageController extends AbstractController
             $success = $this->sendMessageNotification(
                 $sender,
                 $receiver,
-                $message,
-                $mailer
+                $message
             );
             if ($success) {
                 $this->addFlash('success', 'Message has been sent.');
@@ -532,7 +531,6 @@ class RequestAndMessageController extends AbstractController
     /**
      * @param Request       $request
      * @param array Message $thread
-     * @param Swift_Mailer  $mailer
      *
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Doctrine\DBAL\Exception\InvalidArgumentException

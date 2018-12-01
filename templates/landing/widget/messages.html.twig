@@ -1,5 +1,6 @@
 {% import 'macros.twig' as macros %}
 <div id="messagesdisplay" class="scrollcontent">
+    {% dump messages %}
     {% for message in messages %}
         {% if message.request %}{% set route = 'hosting_request_show' %}{% else %}{% set route = 'message_show' %}{% endif %}
         <div class="d-flex flex-row justify-content-start align-items-center p-2">
@@ -22,10 +23,9 @@
                     </div>
                 {% else %}
                     <div class="text-truncate text">
-                        <a href="{{ path(route, { id: message.id } ) }}">
-                        {% if (unread) %}<strong>{% endif %}
-                            {{ message.message|raw }}
-                            {% if unread %}</strong>{% endif %}
+                        <a href="{{ path(route, { id: message.id } ) }}" class="{%- if unread %}unread{% else %}read{% endif %}">
+                            {% if message.subject %}<span class="text-truncate">{{ message.subject.subject|raw }}</span>{% endif %}
+                            <span class="text-truncate">{{ message.message|raw }}</span>
                         </a>
                     </div>
                 {% endif %}

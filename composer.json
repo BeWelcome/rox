@@ -4,7 +4,6 @@
     "homepage": "https://www.bewelcome.org/",
     "type": "project",
     "license": "GPL",
-    "minimum-stability": "RC",
     "require": {
         "ext-pdo": "*",
         "Twig/Twig": "^2.4",
@@ -25,6 +24,7 @@
         "sensio/framework-extra-bundle": "^5.2",
         "swiftmailer/swiftmailer": "^6.0",
         "symfony/asset": "^4.1",
+        "symfony/debug-bundle": "4.2.*",
         "symfony/flex": "^1.1",
         "symfony/form": "^4.1",
         "symfony/monolog-bundle": "^3.3",
@@ -36,6 +36,7 @@
         "symfony/translation": "^4.1",
         "symfony/twig-bundle": "^4.1",
         "symfony/validator": "^4.1",
+        "symfony/var-dumper": "4.2.*",
         "symfony/web-server-bundle": "^4.1",
         "twig/extensions": "^1.5",
         "vlucas/phpdotenv": "^2.2",
@@ -59,7 +60,7 @@
         "phpunit/phpunit": "^7.0",
         "sebastian/phpcpd": "^4.0",
         "squizlabs/php_codesniffer": "^2.5",
-        "symfony/debug-bundle": "^4.1",
+        "symfony/debug-pack": "^1.0",
         "symfony/dotenv": "^4.1",
         "symfony/maker-bundle": "^1.8",
         "symfony/phpunit-bridge": "^4.1",
@@ -68,7 +69,6 @@
     "autoload": {
         "psr-4": {
             "App\\": "src/",
-            "Rox\\": "Rox/",
             "Mike42\\": "Mike42/"
         },
         "classmap": [

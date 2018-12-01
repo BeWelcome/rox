@@ -159,13 +159,12 @@ class RequestAndMessageController extends AbstractController
      *
      * @param Request      $request
      * @param Member       $receiver
-     * @param Swift_Mailer $mailer
      *
      * @throws \Exception
      *
      * @return Response
      */
-    public function newMessageAction(Request $request, Member $receiver, Swift_Mailer $mailer)
+    public function newMessageAction(Request $request, Member $receiver)
     {
         $sender = $this->getUser();
         if (!$receiver->isBrowseable()) {

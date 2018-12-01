@@ -137,7 +137,7 @@ class MessageRepository extends EntityRepository
     /**
      * @param Member $member
      *
-     * @return mixed|null
+     * @return int
      */
     public function getUnreadMessagesCount(Member $member)
     {
@@ -147,8 +147,7 @@ class MessageRepository extends EntityRepository
             ->setParameter('member', $member->getId())
             ->andWhere('NOT (m.deleteRequest LIKE :receiverDeleted)')
             ->setParameter('receiverDeleted', 'receiverdeleted')
-            ->andWhere('m.whenfirstread = :whenFirstRead')
-            ->setParameter('whenFirstRead', '0000-00-00 00:00:00')
+            ->andWhere('m.whenfirstread IS NULL')
             ->andWhere('m.status = :status')
             ->setParameter('status', 'Sent')
             ->andWhere('m.request IS NULL')
@@ -166,7 +165,7 @@ class MessageRepository extends EntityRepository
     /**
      * @param Member $member
      *
-     * @return mixed|null
+     * @return int
      */
     public function getUnreadRequestsCount(Member $member)
     {
@@ -176,11 +175,10 @@ class MessageRepository extends EntityRepository
             ->where('m.receiver = :member')
             ->setParameter('member', $member->getId())
             ->andWhere('NOT (m.deleteRequest LIKE :receiverDeleted)')
-            ->setParameter('receiverDeleted', 'receiverdeleted')
-            ->andWhere('m.whenfirstread = :whenFirstRead')
-            ->setParameter('whenFirstRead', '0000-00-00 00:00:00')
+            ->setParameter(':receiverDeleted', 'receiverdeleted')
+            ->andWhere('m.whenfirstread IS NULL')
             ->andWhere('m.status = :status')
-            ->setParameter('status', 'Sent')
+            ->setParameter(':status', 'Sent')
             ->getQuery();
 
         $unreadCount = 0;
@@ -193,7 +191,7 @@ class MessageRepository extends EntityRepository
     }
 
     /**
-     * @return mixed|null
+     * @return int
      */
     public function getReportedMessagesCount()
     {

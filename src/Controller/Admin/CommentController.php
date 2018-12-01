@@ -9,7 +9,7 @@ use App\Entity\Member;
 use App\Form\AdminCommentFormType;
 use App\Model\Admin\CommentModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
-class CommentController extends Controller
+class CommentController extends AbstractController
 {
     /**
      * @Route("/admin/comment", name="admin_comment_overview")

@@ -27,7 +27,9 @@
 
     <rule ref="rulesets/controversial.xml" />
 
-    <rule ref="rulesets/design.xml" />
+    <rule ref="rulesets/design.xml">
+        <exclude name="CouplingBetweenObjects"/>
+    </rule>
 
     <rule ref="rulesets/naming.xml">
         <exclude name="ShortVariable"/>
@@ -45,6 +47,18 @@
             <property name="exceptions" value="a,b,id,i,e,q,qb,dt,em" />
         </properties>
     </rule>
+
+    <rule ref="rulesets/design.xml/CouplingBetweenObjects"
+          since="1.1.0"
+          message="The class {0} has a coupling between objects value of {1}. Consider to reduce the number of dependencies under {2}."
+          class="PHPMD\Rule\Design\CouplingBetweenObjects"
+          externalInfoUrl="http://phpmd.org/rules/design.html#couplingbetweenobjects">
+        <priority>2</priority>
+        <properties>
+            <property name="minimum" value="20" description="Maximum number of acceptable dependencies." />
+        </properties>
+    </rule>
+
 
     <rule ref="rulesets/unusedcode.xml" />
 

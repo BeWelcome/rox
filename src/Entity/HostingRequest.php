@@ -7,6 +7,7 @@
 
 namespace App\Entity;
 
+use Carbon\Carbon;
 use Doctrine\DBAL\Exception\InvalidArgumentException;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -110,11 +111,15 @@ class HostingRequest
     /**
      * Get arrival.
      *
-     * @return \DateTime
+     * @return Carbon|null
      */
     public function getArrival()
     {
-        return $this->arrival;
+        if ($this->arrival) {
+            return Carbon::instance($this->arrival);
+        }
+
+        return null;
     }
 
     /**
@@ -134,11 +139,15 @@ class HostingRequest
     /**
      * Get departure.
      *
-     * @return \DateTime
+     * @return Carbon|null
      */
     public function getDeparture()
     {
-        return $this->departure;
+        if ($this->departure) {
+            return Carbon::instance($this->departure);
+        }
+
+        return null;
     }
 
     /**

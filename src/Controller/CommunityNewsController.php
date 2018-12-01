@@ -7,12 +7,12 @@ use App\Entity\CommunityNewsComment;
 use App\Form\CommunityNewsCommentType;
 use App\Form\CustomDataClass\CommunityNewsCommentRequest;
 use App\Model\CommunityNewsModel;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CommunityNewsController extends Controller
+class CommunityNewsController extends AbstractController
 {
     /**
      * @param Request $request
@@ -60,6 +60,8 @@ class CommunityNewsController extends Controller
      *
      * @param Request       $request
      * @param CommunityNews $communityNews
+     *
+     * @throws \Exception
      *
      * @return Response
      */

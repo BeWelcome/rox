@@ -15,7 +15,8 @@
 {% endblock stylesheets %}
 
 {% block content %}
-    <h1>{{ 'tools.headline' | trans }}</h1>
+    <h1>{{ 'admin.tools.headline' | trans }}</h1>
+    <h2>{{ 'admin.tools.check_feedback' | trans }}</h2>
 
     {% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
     {{ form_start(form) }}

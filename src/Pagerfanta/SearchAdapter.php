@@ -8,7 +8,7 @@ use EnvironmentExplorer;
 use Pagerfanta\Adapter\AdapterInterface;
 use Rox\Framework\SessionSingleton;
 use SearchModel;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class SearchAdapter implements AdapterInterface
@@ -21,16 +21,18 @@ class SearchAdapter implements AdapterInterface
     /**
      * SearchAdapter constructor.
      *
-     * @param ContainerInterface $container Needed for the time being to allow to use the old search model
-     * @param SearchFormRequest  $data      The query parameters for the search
-     *
+     * @param SearchFormRequest $data       The query parameters for the search
+     * @param SessionInterface  $session
+     * @param string            $dbHost
+     * @param string            $dbName
+     * @param string            $dbUser
+     * @param string            $dbPassword
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function __construct($container, $data)
+    public function __construct($data, $session, $dbHost, $dbName, $dbUser, $dbPassword)
     {
         // Kick-start the Symfony session. This replaces session_start() in the
         // old code, which is now turned off.
-        $session = $container->get('session');
         $session->start();
 
         if (!$session->has('IdMember')) {
@@ -55,11 +57,12 @@ class SearchAdapter implements AdapterInterface
         // make sure everything's setup for the old code used below
         $environmentExplorer = new EnvironmentExplorer();
         $environmentExplorer->initializeGlobalState(
-            $container->getParameter('database_host'),
-            $container->getParameter('database_name'),
-            $container->getParameter('database_user'),
-            $container->getParameter('database_password')
+            $dbHost,
+            $dbName,
+            $dbUser,
+            $dbPassword
         );
+        $dbPassword = str_repeat('*', \strlen($dbPassword));
         $this->model = new \SearchModel();
         $this->modelData = $this->prepareModelData($data);
         $this->model->prepareQuery($this->modelData);

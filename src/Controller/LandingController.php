@@ -3,20 +3,19 @@
 namespace App\Controller;
 
 use App\Entity\Member;
-use App\Entity\MemberPreference;
 use App\Entity\Preference;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\SearchFormType;
 use App\Model\CommunityNewsModel;
 use App\Model\DonateModel;
 use App\Model\LandingModel;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class LandingController extends Controller
+class LandingController extends AbstractController
 {
     /**
      * @param Request $request
@@ -34,7 +33,7 @@ class LandingController extends Controller
         /** @var Preference $preference */
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::MESSAGE_AND_REQUEST_FILTER]);
         $memberPreference = $member->getMemberPreference($preference);
-        if ($unread === '1') {
+        if ('1' === $unread) {
             $memberPreference->setValue('Unread');
         } else {
             $memberPreference->setValue('All');
@@ -91,10 +90,10 @@ class LandingController extends Controller
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::FORUM_FILTER]);
         $memberPreference = $member->getMemberPreference($preference);
         $value = '';
-        if ($groups === '1') {
+        if ('1' === $groups) {
             $value = 'Groups';
         }
-        if ($forum === '1') {
+        if ('1' === $forum) {
             if (!empty($value)) {
                 $value .= 'And';
             }

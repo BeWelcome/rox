@@ -101,7 +101,6 @@ services:
         tags: [{ name: pagerfanta.view, alias: twitter_bootstrap4_ajax_translated }]
 
     rox.logger:
-        public: true
         class: App\Logger\Logger
         arguments: ['@doctrine.orm.entity_manager', '@security.helper']
 

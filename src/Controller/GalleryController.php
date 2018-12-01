@@ -6,12 +6,12 @@ use App\Entity\Gallery;
 use App\Entity\GalleryImage;
 use App\Form\CustomDataClass\GalleryImageEditRequest;
 use App\Form\GalleryEditImageFormType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class GalleryController extends Controller
+class GalleryController extends AbstractController
 {
     /**
      * @Route("/gallery/show/image/{id}/edit", name="gallery_edit_image",

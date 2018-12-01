@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Doctrine\MessageStatusType;
 use App\Entity\HostingRequest;
+use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Entity\Preference;
 use App\Entity\Subject;
 use App\Form\CustomDataClass\MessageIndexRequest;
 use App\Form\HostingRequestGuest;
@@ -17,12 +19,14 @@ use App\Model\RequestModel;
 use Doctrine\Common\Persistence\ObjectManager;
 use Html2Text\Html2Text;
 use Rox\Core\Exception\InvalidArgumentException;
+use Swift_Mailer;
 use Swift_Message;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class RequestAndMessageController.
@@ -33,8 +37,20 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  * @SuppressWarnings(PHPMD.CyclomaticComplexity)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
-class RequestAndMessageController extends Controller
+class RequestAndMessageController extends AbstractController
 {
+    /** @var Swift_Mailer */
+    private $mailer;
+
+    /** @var TranslatorInterface */
+    private $translator;
+
+    public function __construct(Swift_Mailer $mailer, TranslatorInterface $translator)
+    {
+        $this->mailer = $mailer;
+        $this->translator = $translator;
+    }
+
     /**
      * Deals with replies to messages and hosting requests.
      *
@@ -141,14 +157,24 @@ class RequestAndMessageController extends Controller
     /**
      * @Route("/new/message/{username}", name="message_new")
      *
-     * @param Request $request
-     * @param Member  $receiver
+     * @param Request      $request
+     * @param Member       $receiver
+     * @param Swift_Mailer $mailer
+     *
+     * @throws \Exception
      *
      * @return Response
      */
-    public function newMessageAction(Request $request, Member $receiver)
+    public function newMessageAction(Request $request, Member $receiver, Swift_Mailer $mailer)
     {
         $sender = $this->getUser();
+        if (!$receiver->isBrowseable()) {
+            $this->addFlash('error', 'This member doesn\'t exist');
+            $referrer = $request->headers->get('referer');
+
+            return $this->redirect($referrer);
+        }
+
         $messageModel = new MessageModel($this->getDoctrine());
         if ($messageModel->hasMessageLimitExceeded(
             $sender,
@@ -177,12 +203,11 @@ class RequestAndMessageController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($message);
 
-            $success = $this->sendMailNotification(
+            $success = $this->sendMessageNotification(
                 $sender,
                 $receiver,
-                $message->getSubject()->getSubject(),
-                $message->getMessage(),
-                'message'
+                $message,
+                $mailer
             );
             if ($success) {
                 $this->addFlash('success', 'Message has been sent.');
@@ -206,19 +231,24 @@ class RequestAndMessageController extends Controller
      * @Route("/new/request/{username}", name="hosting_request")
      *
      * @param Request $request
-     * @param Member  $receiver
+     * @param Member  $host
+     *
+     * @throws \Exception
      *
      * @return Response
      */
-    public function newHostingRequestAction(Request $request, Member $receiver)
+    public function newHostingRequestAction(Request $request, Member $host)
     {
         $member = $this->getUser();
-        if ($member === $receiver) {
+        if ($member === $host) {
             $this->addFlash('notice', 'You can\'t send yourself a hosting request.');
 
-            return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
+            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 
+        if (!$host->isBrowseable()) {
+            $this->addFlash('note', 'not browseable');
+        }
         $messageModel = new MessageModel($this->getDoctrine());
         if ($messageModel->hasMessageLimitExceeded(
             $member,
@@ -231,10 +261,10 @@ class RequestAndMessageController extends Controller
             return $this->redirect($referrer);
         }
 
-        if (Member::ACC_NO === $receiver->getAccommodation()) {
-            $this->addFlash('notice', 'This person says they are not willing to host.<hr>You might send a message instead.');
+        if (Member::ACC_NO === $host->getAccommodation()) {
+            $this->addFlash('notice', 'request.not.hosting');
 
-            return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
+            return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
         }
 
         $requestForm = $this->createForm(HostingRequestGuest::class);
@@ -243,10 +273,10 @@ class RequestAndMessageController extends Controller
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
             // Write request to database after doing some checks
             /** @var Message $hostingRequest */
-            $sender = $this->getUser();
+            $guest = $this->getUser();
             $hostingRequest = $requestForm->getData();
-            $hostingRequest->setSender($sender);
-            $hostingRequest->setReceiver($receiver);
+            $hostingRequest->setSender($guest);
+            $hostingRequest->setReceiver($host);
             $hostingRequest->setWhenFirstRead(new \DateTime('0000-00-00 00:00:00'));
             $hostingRequest->setStatus('Sent');
             $hostingRequest->setInfolder('Normal');
@@ -256,12 +286,10 @@ class RequestAndMessageController extends Controller
             $em->persist($hostingRequest);
             $em->flush();
 
-            $success = $this->sendMailNotification(
-                $sender,
-                $receiver,
-                $hostingRequest->getSubject()->getSubject(),
-                $hostingRequest->getMessage(),
-                'request'
+            $success = $this->sendRequestNotification(
+                $guest,
+                $host,
+                $hostingRequest
             );
             if ($success) {
                 $this->addFlash('success', 'Request has been sent.');
@@ -269,11 +297,11 @@ class RequestAndMessageController extends Controller
                 $this->addFlash('notice', 'Request has been stored into the database. Mail notification couldn\'t be sent, though.');
             }
 
-            return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
+            return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
         }
 
         return $this->render('request/request.html.twig', [
-            'receiver' => $receiver,
+            'receiver' => $host,
             'form' => $requestForm->createView(),
         ]);
     }
@@ -441,6 +469,8 @@ class RequestAndMessageController extends Controller
      * @param Member    $sender
      * @param Message[] $thread
      *
+     * @throws \Exception
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     private function messageReply(Request $request, Member $sender, array $thread)
@@ -478,12 +508,10 @@ class RequestAndMessageController extends Controller
             $em->persist($replyMessage);
             $em->flush();
 
-            $success = $this->sendMailNotification(
+            $success = $this->sendMessageNotification(
                 $sender,
                 $receiver,
-                $replyMessage->getSubject()->getSubject(),
-                $replyMessage->getMessage(),
-                'message'
+                $replyMessage
             );
             if ($success) {
                 $this->addFlash('success', 'Reply has been sent.');
@@ -504,13 +532,14 @@ class RequestAndMessageController extends Controller
     /**
      * @param Request       $request
      * @param array Message $thread
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * Ignore as too strict in this case (function is easily readable)
+     * @param Swift_Mailer  $mailer
      *
      * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      *
      * @return Response
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * Ignore as too strict in this case (function is easily readable)
      */
     private function hostingRequestGuestReply(Request $request, array $thread)
     {
@@ -575,12 +604,10 @@ class RequestAndMessageController extends Controller
                 $subject = 'Canceled: '.$subject;
             }
 
-            $this->sendMailNotification(
+            $this->sendGuestReplyNotification(
                 $guest,
                 $host,
-                $subject,
-                $newRequest->getMessage(),
-                'request'
+                $newRequest
             );
             $this->addFlash('success', 'Notification with updated information has been sent.');
 
@@ -667,12 +694,10 @@ class RequestAndMessageController extends Controller
                 $subject = 'Canceled: '.$subject;
             }
 
-            $this->sendMailNotification(
+            $this->sendHostReplyNotification(
                 $host,
                 $guest,
-                $subject,
-                $newRequest->getMessage(),
-                'request'
+                $newRequest
             );
             $this->addFlash('notice', 'Notification with updated information has been sent.');
 
@@ -782,55 +807,164 @@ class RequestAndMessageController extends Controller
     }
 
     /**
-     * @param Member $sender
-     * @param Member $receiver
-     * @param string $subject
-     * @param string $body
-     * @param string $template
+     * @param Member  $sender   Host/Guest
+     * @param Member  $receiver Guest/Host
+     * @param Message $message
      *
      * @return bool
      */
-    private function sendMailNotification($sender, $receiver, $subject, $body, $template)
+    private function sendMessageNotification(Member $sender, Member $receiver, Message $message)
     {
-        // Send mail notification
-        $html2Text = new Html2Text($body);
-        $message = new Swift_Message();
-        if ('message' === $template) {
-            $message
-                ->setSubject($subject)
-                ->setFrom(
-                    [
-                        'message@bewelcome.org' => 'BeWelcome - '.$sender->getUsername(),
-                    ]
-                );
-        } else {
-            $message
-                ->setSubject('[Request] '.strip_tags($subject))
-                ->setFrom(
-                    [
-                        'request@bewelcome.org' => 'BeWelcome - '.$sender->getUsername(),
-                    ]
-                );
-        }
-        $message
+        // Send mail notification with the receiver's preferred locale
+        $this->setTranslatorLocale($receiver);
+        $subject = $message->getSubject()->getSubject();
+        $messageBody = $message->getMessage();
+
+        $body = $this->renderView('emails/message.html.twig', [
+            'sender' => $sender,
+            'receiver' => $receiver,
+            'subject' => $subject,
+            'body' => $messageBody,
+        ]);
+
+        $message = (new Swift_Message())
+            ->setSubject($subject)
+            ->setFrom([
+                'message@bewelcome.org' => 'BeWelcome - '.$sender->getUsername(),
+            ])
             ->setTo($receiver->getEmail())
             ->setBody(
-                $this->renderView('emails/'.$template.'.html.twig', [
-                    'sender' => $sender,
-                    'receiver' => $receiver,
-                     'subject' => $subject,
-                     $template.'_text' => $body, ]),
+                $body,
                 'text/html'
-            )
-            ->addPart(
-                $this->renderView(
-                    'emails/'.$template.'.txt.twig',
-                    [$template.'_text' => $html2Text->getText()]
-                ),
-                'text/plain'
-            )
+            );
+        $html2text = new Html2Text($body);
+        $message
+            ->addPart($html2text->getText(), 'text/plain')
         ;
-        $recipients = $this->get('mailer')->send($message);
+        $recipients = $this->mailer->send($message);
+
+        return (0 === $recipients) ? false : true;
+    }
+
+    /**
+     * @param Member  $guest
+     * @param Member  $host
+     * @param Message $request
+     *
+     * @return bool
+     */
+    private function sendRequestNotification(Member $guest, Member $host, Message $request)
+    {
+        // Send mail notification with the receiver's preferred locale
+        $this->setTranslatorLocale($host);
+
+        $subject = $request->getSubject()->getSubject();
+        $message = $request->getMessage();
+        $body = $this->renderView('emails/request.html.twig', [
+            'sender' => $guest,
+            'receiver' => $host,
+            'subject' => $subject,
+            'message' => $message,
+            'request' => $request->getRequest(),
+        ]);
+
+        $message = (new Swift_Message())
+            ->setSubject('[Request] '.strip_tags($subject))
+            ->setFrom([
+                'request@bewelcome.org' => 'BeWelcome - '.$guest->getUsername(),
+            ])
+            ->setTo($host->getEmail())
+            ->setBody(
+                $body,
+                'text/html'
+            );
+        $html2text = new Html2Text($body);
+        $message
+            ->addPart($html2text->getText(), 'text/plain')
+        ;
+        $recipients = $this->mailer->send($message);
+
+        return (0 === $recipients) ? false : true;
+    }
+
+    /**
+     * @param Member  $guest
+     * @param Member  $host
+     * @param Message $request
+     *
+     * @return bool
+     */
+    private function sendHostReplyNotification(Member $guest, Member $host, Message $request)
+    {
+        // Send mail notification with the receiver's preferred locale
+        $this->setTranslatorLocale($guest);
+
+        $subject = $request->getSubject()->getSubject();
+        $message = $request->getMessage();
+        $body = $this->renderView('emails/reply_host.html.twig', [
+            'sender' => $host,
+            'receiver' => $guest,
+            'subject' => $subject,
+            'message' => $message,
+            'request' => $request->getRequest(),
+        ]);
+
+        $message = (new Swift_Message())
+            ->setSubject(strip_tags($subject))
+            ->setFrom([
+                'request@bewelcome.org' => 'BeWelcome - '.$guest->getUsername(),
+            ])
+            ->setTo($host->getEmail())
+            ->setBody(
+                $body,
+                'text/html'
+            );
+        $html2text = new Html2Text($body);
+        $message
+            ->addPart($html2text->getText(), 'text/plain')
+        ;
+        $recipients = $this->mailer->send($message);
+
+        return (0 === $recipients) ? false : true;
+    }
+
+    /**
+     * @param Member  $guest
+     * @param Member  $host
+     * @param Message $request
+     *
+     * @return bool
+     */
+    private function sendGuestReplyNotification(Member $guest, Member $host, Message $request)
+    {
+        // Send mail notification with the receiver's preferred locale
+        $this->setTranslatorLocale($host);
+
+        $subject = $request->getSubject()->getSubject();
+        $message = $request->getMessage();
+        $body = $this->renderView('emails/reply_guest.html.twig', [
+            'sender' => $guest,
+            'receiver' => $host,
+            'subject' => $subject,
+            'message' => $message,
+            'request' => $request->getRequest(),
+        ]);
+
+        $message = (new Swift_Message())
+            ->setSubject(strip_tags($subject).' - '.date('YMD', $request->getRequest()->getArrival()))
+            ->setFrom([
+                'request@bewelcome.org' => 'BeWelcome - '.$guest->getUsername(),
+            ])
+            ->setTo($host->getEmail())
+            ->setBody(
+                $body,
+                'text/html'
+            );
+        $html2text = new Html2Text($body);
+        $message
+            ->addPart($html2text->getText(), 'text/plain')
+        ;
+        $recipients = $this->mailer->send($message);
 
         return (0 === $recipients) ? false : true;
     }
@@ -840,5 +974,18 @@ class RequestAndMessageController extends Controller
         $requestModel = new RequestModel($this->getDoctrine());
 
         return $requestModel->checkRequestExpired($request);
+    }
+
+    private function setTranslatorLocale(Member $receiver)
+    {
+        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
+        /** @var Preference $preference */
+        $preference = $preferenceRepository->findOneBy(['codename' => Preference::LOCALE]);
+
+        $languageRepository = $this->getDoctrine()->getRepository(Language::class);
+        /** @var Language $language */
+        $language = $languageRepository->find($receiver->getMemberPreferenceValue($preference));
+
+        $this->translator->setLocale($language->getShortcode());
     }
 }

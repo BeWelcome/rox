@@ -10,10 +10,12 @@ use App\Form\CustomDataClass\Translation\EditTranslationRequest;
 use App\Form\EditTranslationFormType;
 use App\Form\TranslationFormType;
 use App\Model\TranslationModel;
-use App\Repository\WordRepository;
+use App\Pagerfanta\TranslationAdapter;
 use DateTime;
+use Doctrine\DBAL\Connection;
+use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +26,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @SuppressWarnings(PHPMD)
  */
-class TranslationController extends Controller
+class TranslationController extends AbstractController
 {
     /** @var TranslationModel */
     private $translationModel;
@@ -46,11 +48,13 @@ class TranslationController extends Controller
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 20);
         $locale = $this->get('session')->get('locale');
-        /** @var WordRepository $translationRepository */
-        $translationRepository = $this->getDoctrine()
-            ->getRepository(Word::class);
-        $translations = $translationRepository
-            ->paginateTranslations($locale, $page, $limit);
+
+        /** @var Connection $connection */
+        $connection = $this->getDoctrine()->getConnection();
+        $translationAdapter = new TranslationAdapter($connection, $locale);
+        $translations = new Pagerfanta($translationAdapter);
+        $translations->setMaxPerPage($limit);
+        $translations->setCurrentPage($page);
 
         return $this->render('admin/translations/list.html.twig', [
             'translations' => $translations,
@@ -66,9 +70,10 @@ class TranslationController extends Controller
      * @param Language $language
      * @param mixed    $code
      *
-     * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
+     * @throws \Exception
      *
      * @return Response
+     * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
      */
     public function editTranslationAction(Request $request, Language $language, $code)
     {
@@ -105,6 +110,10 @@ class TranslationController extends Controller
             $em->flush();
             $this->translationModel->removeCacheFile($this->getParameter('kernel.cache_dir'), $language->getShortcode());
             $this->addFlash('notice', 'translation.edit');
+
+            $referrer = $request->headers->get('referer');
+
+            return $this->redirect($referrer);
         }
 
         return $this->render('admin/translations/edit.html.twig', [
@@ -122,6 +131,8 @@ class TranslationController extends Controller
      * @param mixed    $code
      *
      * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
+     *
+     * @throws \Exception
      *
      * @return Response
      */
@@ -186,6 +197,8 @@ class TranslationController extends Controller
      * @param Language $language
      * @param mixed    $code
      *
+     * @throws \Exception
+     *
      * @return Response
      * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
      */
@@ -236,6 +249,10 @@ class TranslationController extends Controller
             $em->flush();
             $this->translationModel->removeCacheFile($this->getParameter('kernel.cache_dir'), $language->getShortcode());
             $this->addFlash('notice', 'translation.edit');
+
+            $referrer = $request->headers->get('referer');
+
+            return $this->redirect($referrer);
         }
 
         return $this->render('admin/translations/edit.html.twig', [

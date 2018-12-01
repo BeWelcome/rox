@@ -6,14 +6,15 @@
 {% endblock %}
 
 {% block content %}
-    <h1>{{ 'tools.headline' | trans }}</h1>
+    <h1>{{ 'admin.tools.headline' | trans }}</h1>
+    <h2>{{ 'admin.tools.age_by_country' | trans }}</h2>
     {% if results|length %}
         <table class="table table-responsive">
             <tr>
-                <th>Country</th>
-                <th># members</th>
-                <th>Birth Year</th>
-                <th>Age</th>
+                <th>{{ 'Country' | trans }}</th>
+                <th>{{ '# members' | trans }}</th>
+                <th>{{ 'Birth Year' | trans }}</th>
+                <th>{{ 'Age' | trans }}</th>
             </tr>
         {%  for result in results %}
             <tr>
@@ -25,6 +26,6 @@
         {% endfor %}
         </table>
     {% else %}
-        Nothing to show. Odd isn't it?
+        {{ 'admin.tools.age_by_country.nothing'| trans }}
     {% endif %}
 {% endblock content %}

@@ -1,0 +1,18 @@
+{% extends 'emails/email.html.twig' %}
+
+{% block content%}
+    {% trans with {'%username%': receiver.Username} %}email.greeting{% endtrans %}<br>
+    {% trans with {'%username%': sender.Username} %}email.request.reply.host{% endtrans %}
+    <br>
+    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}{{ 'email.request.reply.host.open'|trans }}<br>{% endif %}
+    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}{{ 'email.request.reply.host.declined'|trans }}<br>{% endif %}
+    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}{{ 'email.request.reply.host.accepted'|trans }}<br>{% endif %}
+    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}{{ 'email.request.reply.host.tentatively'|trans }}<br>{% endif %}
+    <br>
+    {{ 'request.arrival' | trans }}: {{ request.arrival.toDateString }}<br>
+    {% if request.departure %}{{ 'request.departure' | trans }}: {{ request.departure.toDateString }}<br>{% endif %}
+    {% if request.flexible %}{{ 'request.flexible' }}<br>{% endif %}
+    {{ 'request.number_of_travellers' | trans}}: {{ request.numberOfTravellers }}<br>
+    <br>
+    {{ message | raw }}
+{% endblock %}

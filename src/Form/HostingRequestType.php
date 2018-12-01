@@ -30,6 +30,7 @@ class HostingRequestType extends AbstractType
                     'class' => 'datepicker',
                     'placeholder' => 'Arrival (date)',
                 ],
+                'label' => 'request.arrival',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Please provide an arrival date.',
@@ -48,6 +49,7 @@ class HostingRequestType extends AbstractType
                     'class' => 'datepicker',
                     'placeholder' => 'Departure (date)',
                 ],
+                'label' => 'request.departure',
             ])
             ->add('flexible', CheckboxType::class, [
                 'required' => false,
@@ -57,7 +59,7 @@ class HostingRequestType extends AbstractType
                 IntegerType::class,
                 [
                     'empty_data' => 1,
-                    'label' => 'Number of travellers',
+                    'label' => 'request.number_of_travellers',
                     'attr' => [
                         'placeholder' => '#',
                         'class' => 'ml-2 p-2 travellersnr',

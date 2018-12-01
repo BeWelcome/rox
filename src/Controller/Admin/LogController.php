@@ -6,11 +6,11 @@ use App\Entity\Member;
 use App\Form\LogFormType;
 use App\Model\LogModel;
 use App\Repository\MemberRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class LogController extends Controller
+class LogController extends AbstractController
 {
     /**
      * @Route("/admin/logs", name="admin_logs_overview")

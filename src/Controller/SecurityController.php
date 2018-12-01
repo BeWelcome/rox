@@ -2,13 +2,13 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Controller used to manage the application security.
  */
-class SecurityController extends Controller
+class SecurityController extends AbstractController
 {
     /**
      * @Route("/login", name="login", defaults={"access_denied_redirect" = "/"}))

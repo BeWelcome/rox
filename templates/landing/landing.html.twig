@@ -204,20 +204,17 @@
                     </div>
                     <p class="text-center">
                     {{ '€ ' ~ campaign.yearDonated ~ ' received' | trans }}</p>
-
-                    <p><a href="/donate" class="btn btn-outline-primary btn-homewhite btn-block mb-1"><i
+                    <p><a href="{{ url('donate') }}" class="btn btn-outline-primary btn-homewhite btn-block mb-1"><i
                                     class="fa fa-euro"></i> {{ 'landing.beinvolved.pleasedonate' | trans }}</a></p>
+
+
                 {% endif %}
 
                 <p>{{ 'landing.beinvolved.intro' | trans }}</p>
-                <a href="/about/getactive" class="btn btn-outline-primary btn-homewhite btn-block"><i
+                <a href="{{ url('get_active') }}" class="btn btn-outline-primary btn-homewhite btn-block"><i
                             class="fa fa-wrench"></i> {{ 'landing.beinvolved.helpbewelcome' | trans }}</a>
-
-                {% if campaign.yearDonated < campaign.yearNeeded %}
-                    <a href="/donate" class="btn btn-outline-primary btn-homewhite btn-block mb-1"><i
-                                class="fa fa-euro"></i> {{ 'landing.beinvolved.pleasedonate' | trans }}</a>
-                {% endif %}
-
+                <p><a href="{{ url('donate') }}" class="btn btn-outline-primary btn-homewhite btn-block mb-1"><i
+                                class="fa fa-euro"></i> {{ 'landing.beinvolved.pleasedonate' | trans }}</a></p>
 
             </div>
         </div>

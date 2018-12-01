@@ -8,12 +8,12 @@ use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\SearchFormType;
 use App\Pagerfanta\SearchAdapter;
 use Pagerfanta\Pagerfanta;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class SearchController extends Controller
+class SearchController extends AbstractController
 {
     /**
      * @Route("/search/members", name="search_members")
@@ -35,7 +35,7 @@ class SearchController extends Controller
         $showMap = $member->getMemberPreferenceValue($preference);
 
         $searchFormRequest = new SearchFormRequest();
-        $searchFormRequest->showMap = ($showMap == 'Yes') ? true : false;
+        $searchFormRequest->showMap = ('Yes' === $showMap) ? true : false;
         $form = $this->createForm(SearchFormType::class, $searchFormRequest, [
             'groups' => $member->getGroups(),
             'languages' => $member->getLanguages(),
@@ -54,7 +54,14 @@ class SearchController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($memberPreference);
             $em->flush();
-            $searchAdapter = new SearchAdapter($this->container, $data);
+            $searchAdapter = new SearchAdapter(
+                $data,
+                $this->get('session'),
+                $this->getParameter('database_host'),
+                $this->getParameter('database_name'),
+                $this->getParameter('database_user'),
+                $this->getParameter('database_password')
+            );
             $results = $searchAdapter->getFullResults();
             $pager = new Pagerfanta($searchAdapter);
             $pager->setMaxPerPage($data->items);
@@ -93,7 +100,14 @@ class SearchController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $searchAdapter = new SearchAdapter($this->container, $data);
+            $searchAdapter = new SearchAdapter(
+                $data,
+                $this->get('session'),
+                $this->getParameter('database_host'),
+                $this->getParameter('database_name'),
+                $this->getParameter('database_user'),
+                $this->getParameter('database_password')
+            );
             $results = $searchAdapter->getMapResults();
             $pager = new Pagerfanta($searchAdapter);
             $pager->setMaxPerPage($data->items);
@@ -129,7 +143,14 @@ class SearchController extends Controller
 
         $searchFormRequest = SearchFormRequest::fromRequest($request);
 
-        $searchAdapter = new SearchAdapter($this->container, $searchFormRequest);
+        $searchAdapter = new SearchAdapter(
+            $searchFormRequest,
+            $this->get('session'),
+            $this->getParameter('database_host'),
+            $this->getParameter('database_name'),
+            $this->getParameter('database_user'),
+            $this->getParameter('database_password')
+        );
         $pager = new Pagerfanta($searchAdapter);
         $pager->setMaxPerPage($searchFormRequest->items);
         $pager->setCurrentPage($searchFormRequest->page);

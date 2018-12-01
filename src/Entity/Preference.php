@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Preference
+ * Preference.
  *
  * @ORM\Table(name="preferences", uniqueConstraints={@ORM\UniqueConstraint(name="codeName", columns={"codeName"})})
  * @ORM\Entity(readOnly=true)
@@ -15,9 +15,10 @@ class Preference
     const MESSAGE_AND_REQUEST_FILTER = 'PreferenceMessageFilter';
     const FORUM_FILTER = 'PreferenceForumFilter';
     const SHOW_MAP = 'PreferenceShowMap';
+    const LOCALE = 'PreferenceLanguage';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="position", type="integer", nullable=false)
      */
@@ -73,7 +74,7 @@ class Preference
     private $status = 'Inactive';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -82,9 +83,9 @@ class Preference
     private $id;
 
     /**
-     * Get position
+     * Get position.
      *
-     * @return integer
+     * @return int
      */
     public function getPosition()
     {
@@ -92,7 +93,7 @@ class Preference
     }
 
     /**
-     * Get codename
+     * Get codename.
      *
      * @return string
      */
@@ -102,7 +103,7 @@ class Preference
     }
 
     /**
-     * Get codedescription
+     * Get codedescription.
      *
      * @return string
      */
@@ -112,7 +113,7 @@ class Preference
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -122,7 +123,7 @@ class Preference
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -132,7 +133,7 @@ class Preference
     }
 
     /**
-     * Get default value
+     * Get default value.
      *
      * @return string
      */
@@ -142,7 +143,7 @@ class Preference
     }
 
     /**
-     * Get possiblevalues
+     * Get possiblevalues.
      *
      * @return string
      */
@@ -152,7 +153,7 @@ class Preference
     }
 
     /**
-     * Get status
+     * Get status.
      *
      * @return string
      */
@@ -162,9 +163,9 @@ class Preference
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

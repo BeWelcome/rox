@@ -6,13 +6,13 @@ use App\Entity\SubTrip;
 use App\Entity\Trip;
 use App\Form\TripType;
 use App\Model\TripModel;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class TripController extends Controller
+class TripController extends AbstractController
 {
     /**
      * @Route("/trip", name="trip")

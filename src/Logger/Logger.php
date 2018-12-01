@@ -3,7 +3,7 @@
 namespace App\Logger;
 
 use App\Entity\Log;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 
 class Logger
@@ -14,7 +14,7 @@ class Logger
     /** @var Security */
     private $security;
 
-    public function __construct(EntityManager $em, Security $security)
+    public function __construct(EntityManagerInterface $em, Security $security)
     {
         $this->em = $em;
         $this->security = $security;

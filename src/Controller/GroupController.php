@@ -10,24 +10,28 @@ use App\Entity\Member;
 use App\Entity\MembersTrad;
 use App\Form\CustomDataClass\GroupRequest;
 use App\Form\GroupType;
+use App\Logger\Logger;
 use App\Repository\GroupRepository;
 use Swift_Message;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * Class GroupController.
  */
-class GroupController extends Controller
+class GroupController extends AbstractController
 {
     /**
      * @Route("/groups/new", name="new_group")
      *
-     * @param Request $request
+     * @param Request             $request
+     * @param TranslatorInterface $translator
+     * @param Logger              $logger
      *
      * @throws \Exception
      *
@@ -36,7 +40,7 @@ class GroupController extends Controller
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * Because of the mix between old code and new code this method is way too long.
      */
-    public function createNewGroupAction(Request $request)
+    public function createNewGroupAction(Request $request, TranslatorInterface $translator, Logger $logger)
     {
         $groupRequest = new GroupRequest();
         $form = $this->createForm(GroupType::class, $groupRequest);
@@ -136,14 +140,13 @@ class GroupController extends Controller
                 'updated' => (new \DateTime())->format('Y-m-d'),
             ]);
 
-            $flashMessage = $this->get('rox.datacollector_translator')->trans('group.create.successful', [
+            $flashMessage = $translator->trans('group.create.successful', [
                 '%name%' => $group->getName(),
             ]);
             $this->addFlash('notice', $flashMessage);
 
             $this->sendNewGroupNotifications($group, $member);
 
-            $logger = $this->get('rox.logger');
             $logger->write('Group '.$group->getName().' created by '.$member->getUsername().'.', 'Group');
 
             return $this->redirectToRoute('groups_overview');
@@ -214,14 +217,16 @@ class GroupController extends Controller
      *
      * @Route("/admin/groups/{id}/discuss", name="admin_groups_discuss")
      *
-     * @param Request $request
-     * @param Group   $group
+     * @param Request             $request
+     * @param Group               $group
+     * @param TranslatorInterface $translator
+     * @param Logger              $logger
      *
      * @throws \Exception
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function discussGroupAction(Request $request, Group $group)
+    public function discussGroupAction(Request $request, Group $group, TranslatorInterface $translator, Logger $logger)
     {
         if (!$this->isGranted([Member::ROLE_ADMIN_GROUP])) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
@@ -232,12 +237,11 @@ class GroupController extends Controller
         $em->persist($group);
         $em->flush();
 
-        $flashMessage = $this->get('translator')->trans('Moved group %name% into the discussion queue', [
+        $flashMessage = $translator->trans('Moved group %name% into the discussion queue', [
             '%name%' => $group->getName(),
         ]);
         $this->addFlash('notice', $flashMessage);
 
-        $logger = $this->get('rox.logger');
         $logger->write('Group '.$group->getName().' moved into discussion by '.$this->getUser()->getUsername().'.', 'Group');
 
         $referrer = $request->headers->get('referer');
@@ -250,14 +254,16 @@ class GroupController extends Controller
      *
      * @Route("/admin/groups/{id}/dismiss", name="admin_groups_dismiss")
      *
-     * @param Request $request
-     * @param Group   $group
+     * @param Request             $request
+     * @param Group               $group
+     * @param TranslatorInterface $translator
+     * @param Logger              $logger
      *
      * @throws \Exception
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function dismissGroupAction(Request $request, Group $group)
+    public function dismissGroupAction(Request $request, Group $group, TranslatorInterface $translator, Logger $logger)
     {
         if (!$this->isGranted([Member::ROLE_ADMIN_GROUP])) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
@@ -268,12 +274,11 @@ class GroupController extends Controller
         $em->persist($group);
         $em->flush();
 
-        $flashMessage = $this->get('translator')->trans('Dismissed group %name%', [
+        $flashMessage = $translator->trans('Dismissed group %name%', [
             '%name%' => $group->getName(),
         ]);
         $this->addFlash('notice', $flashMessage);
 
-        $logger = $this->get('rox.logger');
         $logger->write('Group '.$group->getName().' dismissed by '.$this->getUser()->getUsername().'.', 'Group');
 
         $referrer = $request->headers->get('referer');
@@ -286,14 +291,16 @@ class GroupController extends Controller
      *
      * @Route("/admin/groups/{id}/approve", name="admin_groups_approve")
      *
-     * @param Request $request
-     * @param Group   $group
+     * @param Request             $request
+     * @param Group               $group
+     * @param TranslatorInterface $translator
+     * @param Logger              $logger
      *
      * @throws \Exception
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function approveGroupAction(Request $request, Group $group)
+    public function approveGroupAction(Request $request, Group $group, TranslatorInterface $translator, Logger $logger)
     {
         if (!$this->isGranted([Member::ROLE_ADMIN_GROUP])) {
             throw $this->createAccessDeniedException('You need to have the Group right to access this.');
@@ -304,12 +311,11 @@ class GroupController extends Controller
         $em->persist($group);
         $em->flush();
 
-        $flashMessage = $this->get('rox.datacollector_translator')->trans('Approved creation for group %name% ', [
+        $flashMessage = $translator->trans('Approved creation for group %name% ', [
             '%name%' => $group->getName(),
         ]);
         $this->addFlash('notice', $flashMessage);
 
-        $logger = $this->get('rox.logger');
         $logger->write('Group '.$group->getName().' approved by '.$this->getUser()->getUsername().'.', 'Group');
 
         $creator = current($group->getMembers());

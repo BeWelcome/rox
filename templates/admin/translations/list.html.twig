@@ -35,11 +35,19 @@
                             </td>
                             <td class="w-75">
                                 <p class="m-0"><small class="invisible text-muted">&nbsp;</small></p>
-                                <p class="m-0">{{ translation.Sentence | purify | truncate(50) }}</p>
+                                {% if translation.shortcode == locale %}
+                                    <p class="m-0">{{ translation.Sentence | purify | truncate(50) }}</p>
+                                {% else %}
+                                    <p class="m-0">{{ 'translations.missing' | trans }}</p>
+                                {% endif %}
                             </td>
                             <td>
                                 <p class="m-0"><small>&nbsp;</small></p>
-                                <p class="m-0"><a href="{{ url('translation_edit', { code: translation.code, locale: locale }) }}"><i class="fa fa-edit"></i></a></p>
+                                {% if translation.shortcode == locale %}
+                                    <p class="m-0"><a href="{{ url('translation_edit', { code: translation.code, locale: locale }) }}"><i class="fa fa-edit"></i></a></p>
+                                {% else %}
+                                    <p class="m-0"><a href="{{ url('translation_add', { code: translation.code, locale: locale }) }}"><i class="fa fa-plus"></i></a></p>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}

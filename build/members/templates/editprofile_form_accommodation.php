@@ -32,6 +32,16 @@
                     <? } ?>
                 </div>
             </div>
+<!--
+                <div class="form-group row">
+                    <label for="eagerness-duration"
+                           class="col-md-4 col-form-label"><? echo $words->get('profile.accommodation.eagerness'); ?></label>
+                    <div class="col-12 col-md-8">
+                        <input type="text" min="1" max="20" id="eagerness-duration" name="eagerness-duration" class="form-control datepicker"
+                               value="<?= $vars['MaxGuest']; ?>">
+                    </div>
+                </div>
+-->
             <div class="form-group row">
                 <label for="MaxGuests"
                        class="col-md-4 col-form-label"><? echo $words->get('ProfileNumberOfGuests'); ?></label>
@@ -46,7 +56,7 @@
                        class="col-md-4 col-form-label"><?= $words->get('ProfileMaxLenghtOfStay') ?></label>
                 <div class="col-12 col-md-8">
                     <textarea name="MaxLenghtOfStay" class="form-control"
-                              rows="2"><?= $vars['MaxLenghtOfStay'] ?></textarea>
+                              rows="3"><?= $vars['MaxLenghtOfStay'] ?></textarea>
                 </div>
             </div>
 
@@ -55,7 +65,7 @@
                     <?= $words->get('ProfileILiveWith') ?>
                 </label>
                 <div class="col-12 col-md-8">
-                    <textarea name="ILiveWith" class="form-control" rows="2"><?= $vars['ILiveWith'] ?></textarea>
+                    <textarea id="ILiveWith" name="ILiveWith" class="form-control" rows="3"><?= $vars['ILiveWith'] ?></textarea>
                 </div>
             </div>
 
@@ -64,8 +74,8 @@
                     <?= $words->get('ProfilePleaseBring') ?>
                 </label>
                 <div class="col-12 col-md-8">
-                                <textarea name="PleaseBring" class="form-control"
-                                          rows="2"><?= $vars['PleaseBring'] ?></textarea>
+                    <textarea id="PleaseBring" name="PleaseBring" class="form-control"
+                                          rows="3"><?= $vars['PleaseBring'] ?></textarea>
                 </div>
             </div>
 
@@ -74,8 +84,8 @@
                     <?= $words->get('ProfileOfferGuests') ?>
                 </label>
                 <div class="col-12 col-md-8">
-                                <textarea name="OfferGuests" class="form-control"
-                                          rows="2"><?= $vars['OfferGuests'] ?></textarea>
+                    <textarea id="OfferGuests" name="OfferGuests" class="form-control"
+                                          rows="3"><?= $vars['OfferGuests'] ?></textarea>
                 </div>
             </div>
 
@@ -84,8 +94,8 @@
                     <?= $words->get('ProfileOfferHosts') ?>
                 </label>
                 <div class="col-12 col-md-8">
-                                <textarea name="OfferHosts" class="form-control"
-                                          rows="2"><?= $vars['OfferHosts'] ?></textarea>
+                    <textarea id="OfferHosts" name="OfferHosts" class="form-control"
+                                          rows="3"><?= $vars['OfferHosts'] ?></textarea>
                 </div>
             </div>
 
@@ -111,9 +121,9 @@
                 <label for="PublicTransport" class="col-md-4 col-form-label">
                     <?= $words->get('ProfilePublicTransport') ?>
                 </label>
-                <div class="col-12 col-md-8 h5">
-                    <textarea name="PublicTransport" class="form-control"
-                              rows="2"><?= $vars['PublicTransport'] ?></textarea>
+                <div class="col-12 col-md-8">
+                    <textarea id="PublicTransport" name="PublicTransport" class="form-control"
+                              rows="3"><?= $vars['PublicTransport'] ?></textarea>
                 </div>
 
             </div>
@@ -140,8 +150,8 @@
                     <?= $words->get('ProfileHouseRules') ?>
                 </label>
                 <div class="col-12 col-md-8">
-                            <textarea name="OtherRestrictions" class="form-control"
-                                      rows="2"><?= $vars['OtherRestrictions'] ?></textarea>
+                            <textarea id="OtherRestrictions" name="OtherRestrictions" class="form-control"
+                                      rows="3"><?= $vars['OtherRestrictions'] ?></textarea>
                 </div>
             </div>
 
@@ -150,11 +160,10 @@
                     <?= $words->get('ProfileAdditionalAccomodationInfo') ?>
                 </label>
                 <div class="col-12 col-md-8">
-                            <textarea name="AdditionalAccomodationInfo" class="form-control"
-                                      rows="2"><?= $vars['AdditionalAccomodationInfo'] ?></textarea>
+                            <textarea id="AdditionalAccomodationInfo" name="AdditionalAccomodationInfo" class="form-control"
+                                      rows="3"><?= $vars['AdditionalAccomodationInfo'] ?></textarea>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-12">
                     <input type="submit" class="btn btn-primary float-right m-2" id="submit" name="submit"

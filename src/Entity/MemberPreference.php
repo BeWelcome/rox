@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Memberspreferences
+ * Memberspreferences.
  *
  * @ORM\Table(name="memberspreferences", indexes={@ORM\Index(name="IdMember", columns={"IdMember", "IdPreference"}), @ORM\Index(name="IdPreference", columns={"IdPreference"})})
  * @ORM\Entity
@@ -51,7 +51,7 @@ class MemberPreference
     private $created;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -59,10 +59,8 @@ class MemberPreference
      */
     private $id;
 
-
-
     /**
-     * Set member
+     * Set member.
      *
      * @param Member $member
      *
@@ -76,7 +74,7 @@ class MemberPreference
     }
 
     /**
-     * Get member
+     * Get member.
      *
      * @return Member
      */
@@ -86,7 +84,7 @@ class MemberPreference
     }
 
     /**
-     * Set preference
+     * Set preference.
      *
      * @param Preference $preference
      *
@@ -100,7 +98,7 @@ class MemberPreference
     }
 
     /**
-     * Get preference
+     * Get preference.
      *
      * @return Preference
      */
@@ -110,7 +108,7 @@ class MemberPreference
     }
 
     /**
-     * Set value
+     * Set value.
      *
      * @param string $value
      *
@@ -124,7 +122,7 @@ class MemberPreference
     }
 
     /**
-     * Get value
+     * Get value.
      *
      * @return string
      */
@@ -134,7 +132,7 @@ class MemberPreference
     }
 
     /**
-     * Set updated
+     * Set updated.
      *
      * @param \DateTime $updated
      *
@@ -148,7 +146,7 @@ class MemberPreference
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return \DateTime
      */
@@ -158,7 +156,7 @@ class MemberPreference
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
      *
@@ -172,7 +170,7 @@ class MemberPreference
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -182,9 +180,9 @@ class MemberPreference
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

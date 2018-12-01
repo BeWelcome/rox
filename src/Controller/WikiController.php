@@ -5,15 +5,16 @@ namespace App\Controller;
 use App\Entity\Group;
 use App\Entity\Member;
 use App\Entity\Wiki;
+use App\Model\WikiModel;
 use App\Repository\WikiRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class WikiController extends Controller
+class WikiController extends AbstractController
 {
     /**
      * @Route("/wiki", name="wiki_front_page")
@@ -29,12 +30,12 @@ class WikiController extends Controller
      * @Route("/wiki/{pageTitle}", name="wiki_page")
      *
      * @param $pageTitle
+     * @param WikiModel $wikiModel
      *
      * @return Response
      */
-    public function showWikiPageAction($pageTitle)
+    public function showWikiPageAction($pageTitle, WikiModel $wikiModel)
     {
-        $wikiModel = $this->get('rox.wiki.model');
         $pageName = $wikiModel->getPageName($pageTitle);
 
         $em = $this->getDoctrine();

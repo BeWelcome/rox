@@ -6,12 +6,12 @@ use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\LoginFormType;
 use App\Form\SearchFormType;
 use App\Model\StatisticsModel;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class HomeController extends Controller
+class HomeController extends AbstractController
 {
     /**
      * @Route("/", name="homepage")

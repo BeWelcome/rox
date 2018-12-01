@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Member;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @SuppressWarnings(PHPMD.CyclomaticComplexity)
  */
-class AvatarController extends Controller
+class AvatarController extends AbstractController
 {
     const OFFSET = 172800;
 

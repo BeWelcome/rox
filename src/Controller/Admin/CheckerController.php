@@ -4,12 +4,12 @@ namespace App\Controller\Admin;
 
 use App\Form\CheckerIndexFormType;
 use App\Model\MessageModel;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CheckerController extends Controller
+class CheckerController extends AbstractController
 {
     /**
      * @Route("/admin/spamchecker", name="admin_spam_overview")

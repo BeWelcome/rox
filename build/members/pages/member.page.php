@@ -49,6 +49,7 @@ class MemberPage extends PageWithActiveSkin
     protected function getSubmenuItems()
     {
         $username = $this->member->Username;
+        $accommodation = $this->member->Accommodation;
         $member = $this->member;
         $lang = $this->model->get_profile_language();
         $profile_language_code = $lang->ShortCode;
@@ -121,7 +122,6 @@ class MemberPage extends PageWithActiveSkin
                 $mynotelinkname= "members/$username/note/add" ;
             }
             $tt= array(
-                array('sendrequest', "new/request/$username", '<i class="fa fa-fw fa-bed"></i> ' . $words->getSilent('profile.request.hosting'), 'sendrequest'),
                 array('messagesadd', "new/message/$username", '<i class="fa fa-fw fa-envelope"></i> ' . $ww->ContactMember, 'messagesadd'),
                 (isset($TCom[0])) ? array('commmentsadd', "members/$username/comments/edit", '<i class="fa fa-fw fa-comment"></i> ' . $ww->EditComments, 'commentsadd') : array('commmentsadd', "members/$username/comments/add", '<i class="fa fa-fw fa-comment"></i> ' . $ww->AddComments, 'commentsadd'),
                 array('relationsadd', "members/$username/relations/add", '<i class="fa fa-fw fa-handshake"></i> ' . $ww->addRelation, 'relationsadd'),
@@ -131,6 +131,10 @@ class MemberPage extends PageWithActiveSkin
                 array('comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' <span class="badge badge-primary pull-right">'.$comments_count['all'].'</span>'),
                 array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary pull-right">' . $galleryItemsCount . '</span>'),
             );
+            if ($accommodation != 'neverask')
+            {
+                array_unshift($tt, array('sendrequest', "new/request/$username", '<i class="fa fa-fw fa-bed"></i> ' . $words->getSilent('profile.request.hosting'), 'sendrequest'));
+            }
             if ($linkMembersForumPosts) {
                 $tt[] = array('forum', "forums/member/$username", '<i class="far fa-fw fa-sticky-note"></i> ' . $viewForumPosts);
             }

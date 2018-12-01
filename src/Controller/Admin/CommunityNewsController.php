@@ -5,12 +5,12 @@ namespace App\Controller\Admin;
 use App\Entity\CommunityNews;
 use App\Form\CommunityNewsType;
 use App\Model\CommunityNewsModel;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CommunityNewsController extends Controller
+class CommunityNewsController extends AbstractController
 {
     /**
      * @Route("/admin/communitynews", name="admin_communitynews_overview")

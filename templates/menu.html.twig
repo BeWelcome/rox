@@ -5,26 +5,60 @@
         <div class="container">
             <a class="navbar-brand mr-3 pl-3 pl-md-0 float-left" href="{{ url('homepage') }}"><img src="{{ asset('images/logo_index_top.png') }}" alt="{{ 'BeWelcome' | trans }}"/></a>
 
-            <button class="navbar-toggler mr-3 mr-md-0" type="button" data-toggle="collapse" data-target="#mainNavBar" aria-controls="mainNavBar" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler mr-3 mr-md-0" type="button" data-toggle="collapse" data-target="#smallNavBar" aria-controls="smallNavBar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            {# Navbar small screens #}
+            <div class="collapse d-xl-none px-0 w-100" id="smallNavBar">
+                <ul class="navbar-nav mr-auto mt-2">
+                    <li class="nav-item bordert-1">
+                        <a href="{{ url( 'search_members' ) }}" class="nav-link pl-1">{{ 'MapSearch' | trans }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url('members_profile', { username: member.Username }) }}" class="nav-link pl-1">{{ member.Username }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ path( 'messages' ) }}" class="nav-link pl-4">{{ 'MyMessages' | trans }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/mypreferences" class="nav-link pl-4">{{ 'MyPreferences' | trans }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/mynotes" class="nav-link pl-4">{{ 'MyNotes' | trans }}</a>
+                    </li>
 
-            <div class="collapse navbar-collapse" id="mainNavBar">
+                    <li class="nav-item">
+                        <a href="/community" class="nav-link pl-1">{{ 'CommunityMenu' | trans }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/safety" class="nav-link pl-1">{{ 'Safety' | trans}}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/about" class="nav-link pl-1">{{ 'GetAnswers' | trans}}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url( 'security_logout') }}" class="nav-link pl-1">{{ 'Logout' | trans }}</a>
+                    </li>
+                </ul>
+            </div>
+
+            {# Navbar big screens #}
+            <div class="collapse navbar-collapse d-none d-md-block" id="mainNavBar">
 
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
+                    <li class="menuborder">
                         <a href="{{ url( 'search_members' ) }}" class="nav-link px-3">{{ 'FindMembers' | trans }}</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="menuborder">
                         <a href="/community" class="nav-link px-3">{{ 'CommunityMenu' | trans }}</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="menuborder">
                         <a href="/safety" class="nav-link px-3">{{ 'Safety' | trans}}</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="menuborder">
                         <a href="/volunteer" class="nav-link px-3">{{ 'Volunteer' | trans}}</a>
                     </li>
-                    <li class="nav-item dropdown">
+                    <li class="menuborder dropdown d-none d-md-flex">
                         <a href="#" class="nav-link px-3" id="subNavBar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             &#9776;
                         </a>
@@ -46,7 +80,6 @@
                                         <a href="/forums" class="btn btn-block py-0 pl-1 text-left mt-1">{{ 'CommunityDiscussions' | trans }}</a>
                                         <a href="/groups/search" class="btn btn-block py-0 pl-1 text-left">{{ 'Groups' | trans }}</a>
                                         <a href="/activities" class="btn btn-block py-0 pl-1 text-left">{{ 'Activities' | trans}}</a>
-                                        <a href="/newsletters" class="btn btn-block py-0 pl-1 text-left">{{ 'NewsLetters' | trans}}</a>
                                     </div>
                                     <div class="py-3">
                                         <a href="/about" class="h4">{{ 'GetAnswers' | trans}}</a>
@@ -72,7 +105,7 @@
                                     </div>
                                     <div class="subnavborder py-3">
                                         <div class="pl-5 pr-0">
-                                            {{ macros.avatar( member.Username, 50, true) }} <span class="h4">{{ member.Username }}</span>
+                                            <a href="/members/{{ member.Username }}">{{ macros.avatar( member.Username, 50, true) }} <span class="h4">{{ member.Username }}</span></a>
                                         </div>
                                         <div class="d-flex flex-row justify-content-between pl-5 pr-0">
                                             <div>
@@ -89,7 +122,7 @@
                                     </div>
                                     <div class="pt-1">
                                         <button type="button" class="close pull-right float-md-right" aria-label="Close" data-toggle="collapse" data-target="#mainNavBar2">
-                                            <span aria-hidden="true"><i class="fa fa-lg fa-times"></i></span>
+                                            <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                 </div>
@@ -100,7 +133,13 @@
 
                 <ul class="navbar-nav mr-0">
 
-                    <li class="nav-item dropdown float-md-right">
+                    {# profile link on smaller screens #}
+                    <li class="nav-item float-right d-block d-lg-none">
+                        <a href="{{ path( 'members_profile' , { username: member.Username } ) }}" class="nav-link"><i class="fa fa-lg fa-user"></i></a>
+                    </li>
+
+                    {# member dropdown on bigger screens #}
+                    <li class="nav-item dropdown float-right d-none d-lg-block">
                         <a href="{{ path( 'members_profile' , { username: member.Username } ) }}" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ member.Username }} <span class="caret"></span></a>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
                             <li class="text-right"><a href="{{ path( 'members_profile' , { username: member.Username } ) }}" class="dropdown-item">{{ 'Profile' | trans }}</a></li>
@@ -108,20 +147,21 @@
                             <li class="text-right"><a href="{{ path('my_preferences') }}" class="dropdown-item">{{ 'MyPreferences' | trans }}</a></li>
                             <li class="text-right"><a href="{{ path('members_show_all_notes') }}" class="dropdown-item">{{ 'ProfileMyNotes' | trans }}</a></li>
                             <li class="text-right"><a href="{{ path('groups_mygroups') }}" class="dropdown-item">{{ 'MyGroups' | trans }}</a></li>
+                            <li class="text-right"><a href="/trips" class="dropdown-item">{{ 'TripsShowMy' | trans }}</a></li>
                             <li class="text-right"><a href="{{ url( 'security_logout' ) }}" class="dropdown-item">{{ 'Logout' | trans }}</a></li>
                         </ul>
                     </li>
 
                     {# messages #}
-                    <li class="nav-item float-md-right">
+                    <li class="nav-item float-right">
                         {% include 'widgets/messagescount.hml.twig' %}
                     </li>
-                    <li class="nav-item float-md-right">
+                    <li class="nav-item float-right">
                         {% include 'widgets/requestscount.html.twig' %}
                     </li>
 
                     {# logout #}
-                    <li class="nav-item float-md-right"><a href="{{ url( 'security_logout' ) }}" class="nav-link"><i class="fa fa-lg fa-sign-out-alt"></i></a></li>
+                    <li class="nav-item float-right"><a href="{{ url( 'security_logout' ) }}" class="nav-link"><i class="fa fa-lg fa-sign-out-alt"></i></a></li>
                 </ul>
             </div>
         </div>

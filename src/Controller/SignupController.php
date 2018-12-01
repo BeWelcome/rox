@@ -4,21 +4,24 @@ namespace App\Controller;
 
 use App\Entity\Member;
 use App\Repository\MemberRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class SignupController extends Controller
+class SignupController extends AbstractController
 {
     /**
      * @Route("/signup/finish", name="signup_finish")
      *
-     * @param Request $request
+     * @param Request             $request
+     * @param TranslatorInterface $translator
+     * @param \Swift_Mailer       $mailer
      *
      * @return Response
      */
-    public function finishSignup(Request $request)
+    public function finishSignup(Request $request, TranslatorInterface $translator, \Swift_Mailer $mailer)
     {
         $signupVars = $request->getSession()->get('SignupBWVars');
 
@@ -27,13 +30,18 @@ class SignupController extends Controller
             $email = $signupVars['email'];
             $username = $signupVars['username'];
             $key = hash('sha256', $email.' - '.$username);
-            $subject = $this->get('translator')->trans('signup.confirm.email');
+            $subject = $translator->trans('signup.confirm.email');
             $parameters = [
                 'subject' => $subject,
                 'username' => $username,
                 'email' => $email,
                 'key' => $key,
             ];
+            $body = $this->renderView(
+                'emails/signup.html.twig',
+                $parameters
+            );
+            $html2text = new \Html2Text($body);
 
             // Send email with confirmation link
             $message = new \Swift_Message();
@@ -46,21 +54,15 @@ class SignupController extends Controller
                 )
                 ->setTo($email)
                 ->setBody(
-                    $this->renderView(
-                        'emails/signup.html.twig',
-                        $parameters
-                    ),
+                    $body,
                     'text/html'
                 )
                 ->addPart(
-                    $this->renderView(
-                        'emails/signup.txt.twig',
-                        $parameters
-                    ),
+                    $html2text->get_text(),
                     'text/plain'
                 )
             ;
-            $recipientsCount = $this->get('mailer')->send($message);
+            $recipientsCount = $mailer->send($message);
             if (1 !== $recipientsCount) {
                 // \todo Mail couldn't be sent
                 // Do something about it!
@@ -76,6 +78,8 @@ class SignupController extends Controller
      *
      * @param $username
      * @param $regkey
+     *
+     * @throws \Exception
      *
      * @return Response
      */

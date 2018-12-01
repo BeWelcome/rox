@@ -6,7 +6,9 @@
 {% endblock %}
 
 {% block content %}
-    <h1>{{ 'tools.headline' | trans }}</h1>
+    <h1>{{ 'admin.tools.headline' | trans }}</h1>
+    <h2>{{ 'admin.tools.damage_done' | trans }}</h2>
+
     {% if damageDone|length %}
         <table class="table table-responsive">
             <tr>
@@ -27,6 +29,6 @@
         {% endfor %}
         </table>
     {% else %}
-        Nothing to show. Odd isn't it?
+        {{ 'admin.tools.nothing' | trans }}
     {% endif %}
 {% endblock content %}

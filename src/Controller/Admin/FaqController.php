@@ -12,7 +12,7 @@ use App\Form\FaqFormType;
 use App\Model\FaqModel;
 use Doctrine\ORM\EntityRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,10 +20,9 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * Class FaqController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.StaticAccess)
  */
-class FaqController extends Controller
+class FaqController extends AbstractController
 {
     /**
      * @Route(

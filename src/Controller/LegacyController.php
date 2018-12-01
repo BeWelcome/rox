@@ -6,30 +6,31 @@ use App\Entity\Member;
 use EnvironmentExplorer;
 use PDO;
 use Rox\Framework\SessionSingleton;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class LegacyController extends Controller
+class LegacyController extends AbstractController
 {
     /**
-     * @param Request $request
+     * @param Request            $request
+     * @param ContainerInterface $container
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function showAction(Request $request)
+    public function showAction(Request $request, ContainerInterface $container)
     {
         // Kick-start the Symfony session. This replaces session_start() in the
         // old code, which is now turned off.
-        $session = $this->get('session');
+        $session = $container->get('session');
         $session->start();
 
         // Make sure the Rox classes find this session
         SessionSingleton::createInstance($session);
 
-        $container = $this->get('service_container');
         $environmentExplorer = new EnvironmentExplorer();
         $environmentExplorer->initializeGlobalState(
             $container->getParameter('database_host'),
@@ -69,7 +70,7 @@ class LegacyController extends Controller
             }
         }
 
-        $kernel = $this->get('rox.legacy_kernel');
+        $kernel = $container->get('rox.legacy_kernel');
 
         return $kernel->handle(
             $request

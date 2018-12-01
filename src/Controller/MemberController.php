@@ -15,7 +15,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Html2Text\Html2Text;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Swift_Message;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -29,10 +29,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Class MemberController.
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class MemberController extends Controller
+class MemberController extends AbstractController
 {
     /**
      * @Route("/member/autocomplete", name="members_autocomplete")
@@ -71,11 +69,12 @@ class MemberController extends Controller
     /**
      * @Route("/resetpassword", name="member_request_reset_password")
      *
-     * @param Request $request
+     * @param Request       $request
+     * @param \Swift_Mailer $mailer
      *
      * @return Response
      */
-    public function requestResetPasswordAction(Request $request)
+    public function requestResetPasswordAction(Request $request, \Swift_Mailer $mailer)
     {
         // Someone obviously lost their way. No sense in resetting your password if you're currently logged in.
         if ($this->isGranted('ROLE_USER')) {
@@ -105,7 +104,7 @@ class MemberController extends Controller
                 $form->addError(new FormError('No member with that username or email address.'));
             } else {
                 /* Sent the member a link to follow to reset the password */
-                $sent = $this->sendPasswordResetLink($member, 'Password Reset for BeWelcome', $member->generatePasswordResetKey());
+                $sent = $this->sendPasswordResetLink($member, 'Password Reset for BeWelcome', $member->generatePasswordResetKey(), $mailer);
                 if ($sent) {
                     $this->addFlash('notice', 'We just sent you a mail with a link that allows you to reset your password.');
 
@@ -178,13 +177,14 @@ class MemberController extends Controller
      * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
      * @ParamConverter("comment", class="App\Entity\Comment", options={"mapping": {"commentId": "id"}})
      *
-     * @param Request $request
-     * @param Member  $member
-     * @param Comment $comment
+     * @param Request       $request
+     * @param Member        $member
+     * @param Comment       $comment
+     * @param \Swift_Mailer $mailer
      *
      * @return Response
      */
-    public function reportCommentAction(Request $request, Member $member, Comment $comment)
+    public function reportCommentAction(Request $request, Member $member, Comment $comment, \Swift_Mailer $mailer)
     {
 //        \todo Should we only allow the receiver of a comment to report it?
 //        if ($comment->getToMember()->getId() !== $member->getId() && $comment->getFromMember()->getId() !== $member->getId()) {
@@ -224,7 +224,7 @@ class MemberController extends Controller
                         $messageText,
                         'text/html'
                     );
-                $recipients = $this->get('mailer')->send($message);
+                $recipients = $mailer->send($message);
                 if (0 === $recipients) {
                     $this->addFlash('error', 'Your feedback couldn\'t be sent. Please try again later.');
                 } else {
@@ -311,7 +311,7 @@ class MemberController extends Controller
         return $response;
     }
 
-    private function sendPasswordResetLink(Member $receiver, $subject, $key)
+    private function sendPasswordResetLink(Member $receiver, $subject, $key, \Swift_Mailer $mailer)
     {
         // Send mail notification
         $html = $this->renderView('emails/reset.password.html.twig', [
@@ -338,7 +338,7 @@ class MemberController extends Controller
                 'text/plain'
             )
         ;
-        $recipients = $this->get('mailer')->send($message);
+        $recipients = $mailer->send($message);
 
         return (0 === $recipients) ? false : true;
     }

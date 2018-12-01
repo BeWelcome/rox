@@ -2876,15 +2876,16 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     public function getMemberPreference(Preference $preference)
     {
         // Check if member has preference
-        $criteria = Criteria::create()->where(Criteria::expr()->eq("preference", $preference));
+        $criteria = Criteria::create()->where(Criteria::expr()->eq('preference', $preference));
 
         $memberPreference = $this->preferences->matching($criteria)->first();
-        if ($memberPreference === false) {
+        if (false === $memberPreference) {
             $memberPreference = new MemberPreference();
             $memberPreference->setMember($this);
             $memberPreference->setPreference($preference);
             $memberPreference->setValue($preference->getDefaultValue());
         }
+
         return $memberPreference;
     }
 
@@ -2898,7 +2899,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         $value = $preference->getDefaultValue();
 
         // Check if member has preference
-        $criteria = Criteria::create()->where(Criteria::expr()->eq("preference", $preference));
+        $criteria = Criteria::create()->where(Criteria::expr()->eq('preference', $preference));
 
         $match = $this->preferences->matching($criteria)->first();
         if ($match) {

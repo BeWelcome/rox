@@ -9,15 +9,20 @@ use App\Form\CustomDataClass\Tools\ChangeUsernameRequest;
 use App\Form\CustomDataClass\Tools\FindUserRequest;
 use App\Form\FeedbackFormType;
 use App\Form\FindUserFormType;
+use App\Logger\Logger;
 use App\Model\BaseModel;
 use App\Model\FeedbackModel;
 use App\Repository\MemberRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class VolunteerToolController extends Controller
+/**
+ * Class VolunteerToolController.
+ */
+class VolunteerToolController extends AbstractController
 {
     const CHANGE_USERNAME = 'admin.tools.change_username';
     const FIND_USER = 'admin.tools.find_user';
@@ -55,11 +60,15 @@ class VolunteerToolController extends Controller
     /**
      * @Route("/admin/tools/change", name="admin_tools_change_username")
      *
-     * @param Request $request
+     * @param Request             $request
+     * @param TranslatorInterface $translator
+     * @param Logger              $logger
+     *
+     * @throws \Exception
      *
      * @return \Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function changeUsernameAction(Request $request)
+    public function changeUsernameAction(Request $request, TranslatorInterface $translator, Logger $logger)
     {
         // check permissions
         $subMenuItems = $this->getSubMenuItems();
@@ -81,14 +90,13 @@ class VolunteerToolController extends Controller
                 // check if new username is already taken
                 $newMember = $memberRepository->findOneBy(['username' => $data->newUsername]);
                 if (null === $newMember) {
-                    $logger = $this->get('rox.logger');
                     $logger->write('Changed member username from '.$data->oldUsername.' to '.$data->newUsername.'.', 'adminquery');
 
                     $em = $this->getDoctrine()->getManager();
                     $oldMember->setUsername($data->newUsername);
                     $em->persist($oldMember);
                     $em->flush();
-                    $flashMessage = $this->get('translator')->trans('Changed username for %oldname% to %newname%', [
+                    $flashMessage = $translator->trans('Changed username for %oldname% to %newname%', [
                         '%oldname%' => $data->oldUsername,
                         '%newname%' => $data->newUsername,
                     ]);
@@ -126,7 +134,7 @@ class VolunteerToolController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function findUserAction(Request $request)
+    public function findUserAction(Request $request, Logger $logger)
     {
         // check permissions
         $subMenuItems = $this->getSubMenuItems();
@@ -144,7 +152,6 @@ class VolunteerToolController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            $logger = $this->get('rox.logger');
             $logger->write('Searched for members using search term: '.$data->term.'.', 'adminquery');
 
             /** @var MemberRepository $memberRepository */

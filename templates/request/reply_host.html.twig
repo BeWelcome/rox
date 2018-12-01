@@ -23,7 +23,7 @@
 
             {{ 'Sent by %sender%' | trans({'%sender%': sender.Username}) }}
 
-            <p class="text-muted">{{ 'You can suggest new dates when you change the given ones below.' }}</p>
+            <p class="text-muted">{{ 'request.host.suggest.dates'|trans }}</p>
             <div class="form-group">
                 {{ form_errors(form.request.arrival) }}
                 <div class="input-group date" id="arrival" data-target-input="nearest">

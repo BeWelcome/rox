@@ -193,8 +193,8 @@ class MemberPage extends PageWithActiveSkin
                 <img src="<?= $picture_url . '/500'?>" class="w-100 h-100" alt="picture of <?= $member->Username ?>">
             </a>
                 <?php } else { ?>}
-            <a class="avatar-box-inside" href="/members/<?=$member->Username?>" data-toggle="lightbox" data-type="image" title="Profile of <?=$member->Username?>">
-                <img src="<?= $picture_url . '/500'?>" class="w-100 h-100" alt="picture of <?= $member->Username ?>">
+            <a class="avatar-box-inside" href="/members/<?=$member->Username?>" data-toggle="lightbox" data-type="image" title="Profile of <?=$member->Username?>" style="background-image: url(\"<?= $picture_url . '/500'?>\")">
+                <!-- <img src="<?= $picture_url . '/500'?>" class="w-100 h-100" alt="picture of <?= $member->Username ?>"> -->
             </a>
             <?php } ?>
             </div>

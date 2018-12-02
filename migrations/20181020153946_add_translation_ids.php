@@ -104,11 +104,11 @@ class AddTranslationIds extends RoxMigration
         $this->AddWordCode('request.guest.cancelled', 'Request cancelled on your behalf.', 'Request status for guest (cancelled)');
         $this->AddWordCode('request.guest.declined', 'Request has been declined.', 'Request status for guest (declined by host)');
         $this->AddWordCode('request.guest.accepted', 'Request has been accepted.', 'Request status for guest (accepted by host)');
-        $this->AddWordCode('request.guest.tentatively', 'Your host hasn\'t decided yet.', 'Request status for guest (host hasn\'t decided yet)');
+        $this->AddWordCode('request.guest.tentatively', 'Your host has replied "Maybe" to this request', 'Request status for guest (host hasn\'t decided yet)');
         $this->AddWordCode('request.host.open', 'Please reply to this request.', 'Request status for host (just received)');
         $this->AddWordCode('request.host.declined', 'You declined this request.', 'Request status for host (declined)');
-        $this->AddWordCode('request.host.accepted', 'You decided to host.', 'Request status for host (hosting)');
-        $this->AddWordCode('request.host.tentatively', 'Did you decide yet?', 'Request status for host (undecided)');
+        $this->AddWordCode('request.host.accepted', 'You accepted this request.', 'Request status for host (hosting)');
+        $this->AddWordCode('request.host.tentatively', 'You have replied "Maybe" to this request', 'Request status for host (undecided)');
         $this->AddWordCode('request.not.hosting', 'This person says they are not willing to host.<br>You might send a message instead.', 'Flash message shown if accommodation is set to No.');
 
         // admin volunteer tools
@@ -131,18 +131,18 @@ class AddTranslationIds extends RoxMigration
 
         // emails
         $this->AddWordCode('email.greeting', 'Dear %username%,', 'Greeting in emails. Make sure to include the %username% when translating.');
-        $this->AddWordCode('email.message', '%username% send you a message.', 'First paragraph in a message. Make sure to include the %username% when translating.');
+        $this->AddWordCode('email.message', '<a href="https://www.bewelcome.org/members/%username%">%username%</a> sent you a message.', 'First paragraph in a message. Make sure to include the %username% when translating.');
         $this->AddWordCode('email.request.stay', '%username% would like to stay with you.', 'first paragraph in a hosting request');
         $this->AddWordCode('email.request.reply.host', '%username% replied to your request to stay with them.', 'first paragraph in a reply from the host');
         $this->AddWordCode('email.request.reply.host.open', 'Please read your messages below.', 'State of the request in reply from host (accepted)');
         $this->AddWordCode('email.request.reply.host.accepted', 'You can stay with %username%.', 'State of the request in reply from host (accepted)');
         $this->AddWordCode('email.request.reply.host.declined', '%username% declined to host you.', 'State of the request in reply from host (declined)');
-        $this->AddWordCode('email.request.reply.host.tentatively', '%username% might host you.', 'State of the request in reply from host (tentatively)');
+        $this->AddWordCode('email.request.reply.host.tentatively', '%username% has replied "Maybe" to this request', 'State of the request in reply from host (maybe)');
         $this->AddWordCode('email.request.reply.guest', '%username% replied to your request to stay with them.', 'First paragraph in a reply from the host. Make sure to include the %username when translating.');
         $this->AddWordCode('email.request.reply.guest.open', 'This request is still open.', 'State of the request in reply from guest (accepted)');
         $this->AddWordCode('email.request.reply.guest.accepted', 'You accepted this request.', 'State of the request in reply from guest (accepted)');
         $this->AddWordCode('email.request.reply.guest.declined', 'You declined this request.', 'State of the request in reply from guest (declined)');
-        $this->AddWordCode('email.request.reply.guest.tentatively', 'Please decide if you want to host.', 'State of the request in reply from guest (tentatively)');
+        $this->AddWordCode('email.request.reply.guest.tentatively', 'You have replied "Maybe" to this request', 'State of the request in reply from guest (maybe)');
     }
 
     public function down()
@@ -240,12 +240,12 @@ class AddTranslationIds extends RoxMigration
         $this->RemoveWordCode('request.guest.cancelled', 'Request cancelled on your behalf.', 'Request status for guest (cancelled)');
         $this->RemoveWordCode('request.guest.declined', 'Request has been declined.', 'Request status for guest (declined by host)');
         $this->RemoveWordCode('request.guest.accepted', 'Request has been accepted.', 'Request status for guest (accepted by host)');
-        $this->RemoveWordCode('request.guest.tentatively', 'Your host hasn\'t decided yet.', 'Request status for guest (host hasn\'t decided yet)');
+        $this->RemoveWordCode('request.guest.tentatively', 'Your host has replied "Maybe" to this request', 'Request status for guest (host hasn\'t decided yet)');
         $this->RemoveWordCode('request.host.open', 'Please reply to this request.', 'Request status for host (just received)');
         $this->RemoveWordCode('request.host.declined', 'You declined this request.', 'Request status for host (declined)');
-        $this->RemoveWordCode('request.host.accepted', 'You decided to host.', 'Request status for host (hosting)');
-        $this->RemoveWordCode('request.host.tentatively', 'Did you decide yet?', 'Request status for host (undecided)');
-        $this->RemoveWordCode('request.not.hosting', 'This person says they are not willing to host.<br>You might send a message instead.', 'Flash message shown if accommodation is set to No.');
+        $this->RemoveWordCode('request.host.accepted', 'You accepted this request.', 'Request status for host (hosting)');
+        $this->RemoveWordCode('request.host.tentatively', 'You have replied "Maybe" to this request', 'Request status for host (undecided)');
+        $this->RemoveWordCode('request.not.hosting', 'This person says they are not willing to host.<br>You may send a message instead.', 'Flash message shown if accommodation is set to No.');
 
         // admin volunteer tools
         $this->RemoveWordCode('admin.tools.title', 'Volunteer Tools', 'Title of the volunteer tools pages');
@@ -267,17 +267,17 @@ class AddTranslationIds extends RoxMigration
 
         // emails
         $this->RemoveWordCode('email.greeting', 'Dear %username%,', 'Greeting in emails. Make sure to include the %username% when translating.');
-        $this->RemoveWordCode('email.message', '%username% send you a message.', 'First paragraph in a message. Make sure to include the %username% when translating.');
+        $this->RemoveWordCode('email.message', '%username% sent you a message.', 'First paragraph in a message. Make sure to include the %username% when translating.');
         $this->RemoveWordCode('email.request.stay', '%username% would like to stay with you.', 'first paragraph in a hosting request');
         $this->RemoveWordCode('email.request.reply.host', '%username% replied to your request to stay with them.', 'first paragraph in a reply from the host');
         $this->RemoveWordCode('email.request.reply.host.open', 'Please read your messages below.', 'State of the request in reply from host (accepted)');
         $this->RemoveWordCode('email.request.reply.host.accepted', 'You can stay with %username%.', 'State of the request in reply from host (accepted)');
         $this->RemoveWordCode('email.request.reply.host.declined', '%username% declined to host you.', 'State of the request in reply from host (declined)');
-        $this->RemoveWordCode('email.request.reply.host.tentatively', '%username% might host you.', 'State of the request in reply from host (tentatively)');
+        $this->RemoveWordCode('email.request.reply.host.tentatively', '%username% has replied "Maybe" to this request', 'State of the request in reply from host (tentatively)');
         $this->RemoveWordCode('email.request.reply.guest', '%username% replied to your request to stay with them.', 'first paragraph in a reply from the host');
         $this->RemoveWordCode('email.request.reply.guest.open', 'This request is still open.', 'State of the request in reply from guest (accepted)');
         $this->RemoveWordCode('email.request.reply.guest.accepted', 'You accepted this request.', 'State of the request in reply from guest (accepted)');
         $this->RemoveWordCode('email.request.reply.guest.declined', 'You declined this request.', 'State of the request in reply from guest (declined)');
-        $this->RemoveWordCode('email.request.reply.guest.tentatively', 'Please decide if you want to host.', 'State of the request in reply from guest (tentatively)');
+        $this->RemoveWordCode('email.request.reply.guest.tentatively', 'You have replied "Maybe" to this request', 'State of the request in reply from guest (tentatively)');
     }
 }

@@ -2,13 +2,11 @@
 
 {% block sender %}
 <div class="from">
-    Sender: <a href="{{ url('homepage') }}members/{{ sender.username }}" target="_blank">{{ sender.username }}</a>
+    {% trans with {'%username%': receiver.Username} %}email.greeting{% endtrans %} {% trans with {'%username%': sender.Username} %}email.message{% endtrans %}
 </div>
 {% endblock %}
 
 {% block content %}
-    {% trans with {'%username%': receiver.Username} %}email.greeting{% endtrans %}<br>
-    {% trans with {'%username%': sender.Username} %}email.message{% endtrans %}<br>
 
     {{ body | raw }}
 

@@ -692,8 +692,8 @@ class RequestAndMessageController extends AbstractController
             }
 
             $this->sendHostReplyNotification(
-                $host,
                 $guest,
+                $host,
                 $newRequest
             );
             $this->addFlash('notice', 'Notification with updated information has been sent.');

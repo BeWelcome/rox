@@ -1,6 +1,5 @@
 {% import 'macros.twig' as macros %}
 <div id="messagesdisplay" class="scrollcontent">
-    {% dump messages %}
     {% for message in messages %}
         {% if message.request %}{% set route = 'hosting_request_show' %}{% else %}{% set route = 'message_show' %}{% endif %}
         <div class="d-flex flex-row justify-content-start align-items-center p-2">

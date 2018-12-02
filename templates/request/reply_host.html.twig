@@ -16,7 +16,7 @@
     {% set start = thread | last %}
     {% set current = thread | first %}
     {% set sender =  start.sender %}
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
 
     <div class="row my-3">
         <div class="col-12 col-sm-6 col-md-4">

@@ -13,8 +13,9 @@
 {% endblock %}
 
 {% block content %}
+    {% dump form %}
     <div class="container">
-        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
         {{ form_errors(form) }}
 
         <div class="row mb-1">

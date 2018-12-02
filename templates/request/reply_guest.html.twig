@@ -16,7 +16,7 @@
     {% set start = thread | last %}
     {% set current = thread | first %}
     {% set receiver =  start.receiver %}
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
     <div class="row mb-1">
         <div class="col-12">
             {{ 'Sent to %receiver%' | trans({'%receiver%': receiver.Username}) }}

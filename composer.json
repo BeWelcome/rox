@@ -69,6 +69,7 @@
     "autoload": {
         "psr-4": {
             "App\\": "src/",
+            "Rox\\": "Rox/",
             "Mike42\\": "Mike42/"
         },
         "classmap": [

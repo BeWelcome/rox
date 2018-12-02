@@ -8,23 +8,27 @@ class DropUnnecessaryFaqFields extends RoxMigration
     public function up()
     {
         $faq = $this->table('faq');
-        $faq->removeColumn('PageTitle');
+        $faq->removeColumn('PageTitle')
+            ->save();
 
         $faqCategories = $this->table('faqcategories');
-        $faqCategories->removeColumn('Type');
+        $faqCategories->removeColumn('Type')
+            ->save();
     }
 
     public function down()
     {
         $faq = $this->table('faq');
         $faq->addColumn('PageTitle', 'string', [
-            'null' => true,
-        ]);
+                'null' => true,
+            ])
+            ->save();
 
         $faqCategories = $this->table('faqcategories');
         $faqCategories->addColumn('Type', 'string', [
-            'null' => false,
-            'default' => 'ForAll',
-        ]);
+                'null' => false,
+                'default' => 'ForAll',
+            ])
+            ->save();
     }
 }

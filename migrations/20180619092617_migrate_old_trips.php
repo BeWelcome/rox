@@ -1,5 +1,6 @@
 <?php
 
+use App\Kernel;
 use Rox\Tools\RoxMigration;
 use Symfony\Component\Debug\Debug;
 
@@ -8,7 +9,7 @@ class MigrateOldTrips extends RoxMigration
     public function up()
     {
         Debug::enable();
-        $kernel = new AppKernel('dev', true);
+        $kernel = new Kernel('dev', true);
         $kernel->boot();
 
         $container = $kernel->getContainer();

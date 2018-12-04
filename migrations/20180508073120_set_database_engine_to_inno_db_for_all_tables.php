@@ -6,7 +6,7 @@ use Rox\Tools\RoxMigration;
 class SetDatabaseEngineToInnoDbForAllTables extends RoxMigration
 {
     /**
-     * Alter all tables to use utf8mb4 as charset. Set all collations to utf8mb4_unicode_520_ci.
+     * Alter all tables to use InnoDB engine.
      */
     public function up()
     {

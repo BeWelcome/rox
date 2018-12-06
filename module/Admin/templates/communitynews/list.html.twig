@@ -18,7 +18,7 @@
                     <td>
                         {{ news.title }}
                     </td>
-                    <td style="width: 10%"><a class="btn btn-primary" href="{{ path('admin_communitynews_edit', { id: news.id }) }}"><i class="fa fa-pencil" title="{{ 'Edit' | trans }}"></i></a></td>
+                    <td style="width: 10%"><a class="btn btn-primary" href="{{ path('admin_communitynews_edit', { id: news.id }) }}"><i class="fa fa-pencil-alt" title="{{ 'Edit' | trans }}"></i></a></td>
                     <td style="width: 10%">
                     {%- if news.public == true -%}
                         <a class="btn btn-primary" href="{{ path('admin_communitynews_hide', { id: news.id }) }}"><i class="fa fa-ban" title="{{ 'Hide' | trans }}"></i></a>

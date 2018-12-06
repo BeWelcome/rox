@@ -21,7 +21,7 @@
             {% for news in communityNews %}
                 <tr>
                     <td class="w-100">
-                        <div class="pull-right"><a class="ml-1 btn btn-primary" href="{{ path('admin_communitynews_edit', { id: news.id }) }}"><i class="fa fa-pencil" title="{{ 'Edit' | trans }}"></i></a>
+                        <div class="pull-right"><a class="ml-1 btn btn-primary" href="{{ path('admin_communitynews_edit', { id: news.id }) }}"><i class="fa fa-pencil-alt" title="{{ 'Edit' | trans }}"></i></a>
                             {%- if news.public == true -%}
                                 <a class="ml-1 btn btn-primary" href="{{ path('admin_communitynews_hide', { id: news.id }) }}"><i class="fa fa-ban" title="{{ 'Hide' | trans }}"></i></a>
                             {%- else -%}

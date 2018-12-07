@@ -753,11 +753,13 @@ class RequestAndMessageController extends AbstractController
         }
 
         // check if request was altered
-        $arrivalDiff = date_diff($data->getRequest()->getArrival(), $hostingRequest->getRequest()->getArrival());
-        $newArrival = ($arrivalDiff->y <> 0) && ($arrivalDiff->m <> 0) && ($arrivalDiff->d <> 0);
-        $newDeparture = ($data->getRequest()->getDeparture() == $hostingRequest->getRequest()->getDeparture());
+        $diff = date_diff($data->getRequest()->getArrival(), $hostingRequest->getRequest()->getArrival());
+        $newArrival = ($diff->y <> 0) && ($diff->m <> 0) && ($diff->d <> 0);
+        $diff = date_diff($data->getRequest()->getDeparture(), $hostingRequest->getRequest()->getDeparture());
+        $newDeparture = ($diff->y <> 0) && ($diff->m <> 0) && ($diff->d <> 0);
         $newFlexible = ($data->getRequest()->getFlexible() !== $hostingRequest->getRequest()->getFlexible());
-        $newNumberOfTravellers = ($data->getRequest()->getNumberOfTravellers() !== $hostingRequest->getRequest()->getNumberOfTravellers());
+        $newNumberOfTravellers = ($data->getRequest()->getNumberOfTravellers()
+            !== $hostingRequest->getRequest()->getNumberOfTravellers());
         if ($newArrival || $newDeparture || $newFlexible || $newNumberOfTravellers) {
             $newHostingRequest = new HostingRequest();
             $newHostingRequest->setArrival($data->getRequest()->getArrival());

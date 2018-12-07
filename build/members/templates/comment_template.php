@@ -94,7 +94,7 @@ foreach($comments as $comment) {
     }
 
 if ($showfrom || $editfrom || $showto || $editto) {
-    echo '<div class="row my-3">';
+    echo '<div class="row my-3 w-100">';
 } else {
     echo '<div>';
 }
@@ -168,7 +168,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
             <a href="members/<?php echo $username; ?>/comments/add"
            class="btn btn-primary mt-3"><?php echo $words->get('addcomments'); ?></a>
             <? } else { ?>
-            no comment
+                <div><p><?php echo $words->get('profile.comments.nocomment'); ?></p></div>
             <? } ?>
         </div>
     <? }

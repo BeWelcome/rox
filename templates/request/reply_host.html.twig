@@ -52,23 +52,18 @@
             <div class="d-flex align-items-center ml-3">
                 Number of Travellers: {{ form_widget(form.request.numberOfTravellers) }}
             </div>
-
+        </div>
+        <div class="col-12 col-md-8">
+            {{ form_row(form.subject.subject) }}
+            {{ form_row(form.message) }}
+        </div>
+        <div class="col-12 col-md-8">
             <div class="btn-group-sm mt-2" role="group" aria-label="Reply to request">
                 {{ form_widget(form.accept, {'attr': {'class': 'btn btn-primary'}}) }}
                 {{ form_widget(form.tentatively, {'attr': {'class': 'btn btn-primary'}}) }}
                 {{ form_widget(form.decline, {'attr': {'class': 'btn btn-primary'}}) }}
                 {{ form_widget(form.update, {'attr': {'class': 'btn btn-primary'}}) }}
             </div>
-
-        </div>
-        <div class="col-12 col-md-8">
-            <h2 class="mb-1 subjectbg">
-                {{ form_widget(form.subject.subject) }}
-            </h2>
-            {{ form_errors(form.subject.subject, {'attr': {'class': 'small'}}) }}
-            {{ form_label(form.subject, null, {'label_attr': {'class': 'sr-only '} }) }}
-            {{ form_widget(form.message) }}
-            {{ form_errors(form.message) }}
         </div>
     </div>
 

@@ -132,7 +132,9 @@ class VolunteerToolController extends AbstractController
      *
      * @param Request $request
      *
+     * @param Logger $logger
      * @return \Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Exception
      */
     public function findUserAction(Request $request, Logger $logger)
     {

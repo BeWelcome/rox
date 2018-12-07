@@ -17,11 +17,11 @@ class SubjectType extends AbstractType
     {
         $builder->add('subject', TextType::class, [
             'attr' => [
-                'placeholder' => 'Please enter a subject',
+                'placeholder' => 'message.subject',
             ],
             'constraints' => [
                 new NotBlank([
-                    'message' => 'Please enter a subject.',
+                    'message' => 'message.subject',
                 ]),
             ],
         ]);

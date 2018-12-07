@@ -42,8 +42,8 @@ security:
             anonymous: ~
 
             form_login:
-                login_path: /login
-                check_path: /login_check
+                login_path: security_login
+                check_path: security_check
                 default_target_path: /
                 use_referer: true
                 csrf_token_generator: security.csrf.token_manager
@@ -57,6 +57,7 @@ security:
         - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/about, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/impressum, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/terms, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/privacy, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/stats, roles:  IS_AUTHENTICATED_ANONYMOUSLY }

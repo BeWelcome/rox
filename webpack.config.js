@@ -31,6 +31,7 @@ Encore
     .addEntry('profile/profile', './assets/js/profile.js')
     .addEntry( 'updatecounters', './assets/js/updateCounters.js')
     .addEntry( 'lightbox', './assets/js/lightbox.js')
+    .addEntry( 'ckeditor5', './assets/js/ckeditor5.js')
 
     .enableSassLoader()
     // allow legacy applications to use $/jQuery as a global variable, make popper visible for bootstrap

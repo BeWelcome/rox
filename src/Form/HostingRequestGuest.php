@@ -15,8 +15,8 @@ class HostingRequestGuest extends HostingRequestAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('subject', SubjectType::class)
             ->add('request', HostingRequestType::class)
+            ->add('subject', SubjectType::class)
         ;
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $messageRequest = $event->getData();

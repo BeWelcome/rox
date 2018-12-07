@@ -9,7 +9,6 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -31,12 +30,10 @@ class HostingRequestType extends AbstractType
                     'placeholder' => 'Arrival (date)',
                 ],
                 'label' => 'request.arrival',
+                'invalid_message' => 'request.error.arrival.no_date',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please provide an arrival date.',
-                    ]),
-                    new Date([
-                        'message' => 'Please provide an arrival date.',
+                        'message' => 'request.error.arrival.empty',
                     ]),
                 ],
             ])
@@ -50,6 +47,7 @@ class HostingRequestType extends AbstractType
                     'placeholder' => 'Departure (date)',
                 ],
                 'label' => 'request.departure',
+                'invalid_message' => 'request.error.arrival.no_date',
             ])
             ->add('flexible', CheckboxType::class, [
                 'required' => false,
@@ -62,13 +60,12 @@ class HostingRequestType extends AbstractType
                     'label' => 'request.number_of_travellers',
                     'attr' => [
                         'placeholder' => '#',
-                        'class' => 'ml-2 p-2 travellersnr',
+                        'min' => 1,
+                        'max' => 20,
                     ],
+                    'invalid_message' => 'request.error.number_of_travellers',
                     'constraints' => [
-                        new NotBlank([
-                            'message' => 'Please provide number of travellers.',
-                        ]),
-                        new LessThanOrEqual(10),
+                        new LessThanOrEqual(20),
                         new GreaterThanOrEqual(1),
                     ],
                 ]

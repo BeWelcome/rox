@@ -118,7 +118,7 @@ LIMIT 1
         if (!$safetyTeamOrAdmin) {
             $query .= " AND bewelcomed < 3";
         }
-        $query .= " AND DATEDIFF(NOW(), created) < 200";
+        $query .= " AND DATEDIFF(NOW(), created) < 90";
         $row = $this->singleLookup($query);
         return $row->cnt;
     }
@@ -168,7 +168,7 @@ LIMIT 1
                 geonames g
             WHERE
                 m.Status IN (" . $statuses . ")
-                AND DATEDIFF(NOW(), created) < 5000";
+                AND DATEDIFF(NOW(), created) < 90";
         if (!$safetyTeamOrAdmin) {
             $str .= " AND bewelcomed < 3";
         }

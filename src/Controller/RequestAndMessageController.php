@@ -157,8 +157,8 @@ class RequestAndMessageController extends AbstractController
     /**
      * @Route("/new/message/{username}", name="message_new")
      *
-     * @param Request      $request
-     * @param Member       $receiver
+     * @param Request $request
+     * @param Member  $receiver
      *
      * @throws \Exception
      *
@@ -195,7 +195,7 @@ class RequestAndMessageController extends AbstractController
             $message->setSender($sender);
             $message->setReceiver($receiver);
             $message->setInfolder('Normal');
-            $message->setWhenFirstRead(new \DateTime('0000-00-00 00:00:00'));
+            $message->setWhenFirstRead(null);
             $message->setStatus(MessageStatusType::SENT);
             $message->setCreated(new \DateTime());
 
@@ -275,7 +275,7 @@ class RequestAndMessageController extends AbstractController
             $hostingRequest = $requestForm->getData();
             $hostingRequest->setSender($guest);
             $hostingRequest->setReceiver($host);
-            $hostingRequest->setWhenFirstRead(new \DateTime('0000-00-00 00:00:00'));
+            $hostingRequest->setWhenFirstRead(null);
             $hostingRequest->setStatus('Sent');
             $hostingRequest->setInfolder('Normal');
             $hostingRequest->setCreated(new \DateTime());
@@ -492,7 +492,7 @@ class RequestAndMessageController extends AbstractController
             $replyMessage->setParent($message);
             $replyMessage->setSender($sender);
             $replyMessage->setReceiver($receiver);
-            $replyMessage->setWhenFirstRead(new \DateTime('0000-00-00 00:00:00'));
+            $replyMessage->setWhenFirstRead(null);
             $replyMessage->setStatus(MessageStatusType::SENT);
             $replyMessage->setInfolder('Normal');
             $replyMessage->setCreated(new \DateTime());
@@ -587,7 +587,7 @@ class RequestAndMessageController extends AbstractController
 
             // handle changes in request and subject
             $newRequest = $this->getFinalRequest($em, $newRequest, $hostingRequest, $data, $clickedButton);
-            $newRequest->setWhenFirstRead(new \DateTime('0000-00-00 00:00:00'));
+            $newRequest->setWhenFirstRead(null);
             $newRequest->setStatus(MessageStatusType::SENT);
             $em->persist($newRequest);
             $em->flush();
@@ -674,7 +674,7 @@ class RequestAndMessageController extends AbstractController
             $data = $requestForm->getData();
             $clickedButton = $requestForm->getClickedButton()->getName();
             $newRequest = $this->getFinalRequest($em, $newRequest, $hostingRequest, $data, $clickedButton);
-            $newRequest->setWhenFirstRead(new \DateTime('0000-00-00 00:00:00'));
+            $newRequest->setWhenFirstRead(null);
             $newRequest->setStatus(MessageStatusType::SENT);
             $em->persist($newRequest);
 
@@ -753,8 +753,9 @@ class RequestAndMessageController extends AbstractController
         }
 
         // check if request was altered
-        $newArrival = ($data->getRequest()->getArrival() !== $hostingRequest->getRequest()->getArrival());
-        $newDeparture = ($data->getRequest()->getDeparture() !== $hostingRequest->getRequest()->getDeparture());
+        $arrivalDiff = date_diff($data->getRequest()->getArrival(), $hostingRequest->getRequest()->getArrival());
+        $newArrival = ($arrivalDiff->y <> 0) && ($arrivalDiff->m <> 0) && ($arrivalDiff->d <> 0);
+        $newDeparture = ($data->getRequest()->getDeparture() == $hostingRequest->getRequest()->getDeparture());
         $newFlexible = ($data->getRequest()->getFlexible() !== $hostingRequest->getRequest()->getFlexible());
         $newNumberOfTravellers = ($data->getRequest()->getNumberOfTravellers() !== $hostingRequest->getRequest()->getNumberOfTravellers());
         if ($newArrival || $newDeparture || $newFlexible || $newNumberOfTravellers) {
@@ -911,7 +912,7 @@ class RequestAndMessageController extends AbstractController
             ->setFrom([
                 'request@bewelcome.org' => 'BeWelcome - '.$guest->getUsername(),
             ])
-            ->setTo($host->getEmail())
+            ->setTo($guest->getEmail())
             ->setBody(
                 $body,
                 'text/html'
@@ -948,7 +949,7 @@ class RequestAndMessageController extends AbstractController
         ]);
 
         $message = (new Swift_Message())
-            ->setSubject(strip_tags($subject).' - '.date('YMD', $request->getRequest()->getArrival()))
+            ->setSubject('[Request] ' . strip_tags($subject))
             ->setFrom([
                 'request@bewelcome.org' => 'BeWelcome - '.$guest->getUsername(),
             ])

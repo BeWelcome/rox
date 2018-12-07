@@ -34,15 +34,8 @@ class HostingRequestAbstractType extends AbstractType
     {
         $form
             ->add('message', CkEditorType::class, [
-                'attr' => [
-                    'placeholder' => $placeholder,
-                    'class' => 'editor mb-1',
-                ],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please provide a message text.',
-                    ]),
-                ],
-            ]);
+                'invalid_message' => 'request.message.empty',
+            ])
+        ;
     }
 }

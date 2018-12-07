@@ -16,7 +16,9 @@ class SecurityController extends AbstractController
      * @Route("/login", name="login", defaults={"access_denied_redirect" = "/"}))
      * @Route("/login", name="security_login", defaults={"access_denied_redirect" = "/"}))
      * @Route("/login_check", name="security_check", defaults={"access_denied_redirect" = "/"}))
+     *
      * @param AuthenticationUtils $helper
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function loginAction(AuthenticationUtils $helper)

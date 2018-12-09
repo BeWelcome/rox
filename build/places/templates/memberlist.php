@@ -81,7 +81,7 @@ if (!$this->members) {
                     <div class="ml-2"><i class="fa fa-bed p-1"></i><span class="h4">max guests</span>
                     </div>
                 </div>
-                <div class="w-100 font-weight-bold nowrap">
+                <div class="w-100 font-weight-bold text-nowrap">
                     <a href="members/<?= $member->username; ?>/comments"><i
                                 class="fa fa-comments mr-1"></i>number of comments
                     </a>

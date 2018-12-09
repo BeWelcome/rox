@@ -262,6 +262,19 @@ input.noradio{
   }
 }
 
-.nowrap{
-  white-space: nowrap;
+.signupmap{
+  border: 1px solid #aaa;
+
+  @include media-breakpoint-down(md) {
+    width: 80%;
+    height: 220px;
+    margin: auto;
+  }
+
+  @include media-breakpoint-up(lg) {
+    width: 100%;
+    height: 440px;
+  }
 }
+
+

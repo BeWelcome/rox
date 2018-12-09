@@ -40,7 +40,7 @@
             <th class="select align-middle">
                 <input type="checkbox" id="checkAll">
             </th>
-            <th class="from text-center align-middle nowrap">
+            <th class="from text-center align-middle text-nowrap">
                 <span class="small"><a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: correspondent, dir: 'asc' }) }}">&#x25b2;</a> {{ correspondent | trans | capitalize }} <a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: correspondent, dir: 'desc' }) }}">&#x25bc;</a></span><br>
                 <span class="small"><a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: 'date', dir: 'asc' }) }}">&#x25b2;</a> {{ 'Date' | trans }} <a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: 'date', dir: 'desc' }) }}">&#x25bc;</a></span>
             </th>

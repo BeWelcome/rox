@@ -19,9 +19,9 @@
                 </div>
 
                 <div class="h4 text-center d-none d-md-block mt-1">
-                    <div class="my-3"><i class="fa fa-user"></i><br><?php echo $words->get('LoginInformation'); ?></div>
-                    <div class="my-3"><i class="fa fa-tag"></i><br><?php echo $words->get('SignupName'); ?></div>
-                    <div class="my-3"><i class="fa fa-map-marker-alt"></i><br><?php echo $words->get('Location'); ?></div>
+                    <div class="my-3"><i class="fa fa-user"></i><br><a href="signup/1"><?php echo $words->get('LoginInformation'); ?></a></div>
+                    <div class="my-3"><i class="fa fa-tag"></i><br><a href="signup/2"><?php echo $words->get('SignupName'); ?></a></div>
+                    <div class="my-3"><i class="fa fa-map-marker-alt"></i><br><a href="signup/3"><?php echo $words->get('Location'); ?></a></div>
                     <div class="my-3"><i class="fa fa-check-square"></i><br><?php echo $words->get('SignupSummary'); ?>
                     </div>
                 </div>
@@ -48,7 +48,7 @@
                     ?>
 
                     <button type="submit"
-                            class="form-control btn btn-primary"><?php echo $words->getSilent('SubmitForm'); ?> <i
+                            class="form-control btn btn-primary"><?php echo $words->getSilent('signup.submit'); ?> <i
                                 class="fa fa-check-square"></i></button>
                     <?php echo $words->flushBuffer(); ?>
 
@@ -165,7 +165,7 @@
                 </table>
 
                 <button type="submit"
-                        class="form-control btn btn-primary"><?php echo $words->getSilent('SubmitForm'); ?> <i
+                        class="form-control btn btn-primary"><?php echo $words->getSilent('signup.submit'); ?> <i
                             class="fa fa-check-square"></i></button>
                 <?php echo $words->flushBuffer(); ?>
 

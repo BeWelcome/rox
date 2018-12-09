@@ -21,8 +21,8 @@ $map_conf = PVars::getObj('map');
                     </div>
 
                     <div class="h4 text-center d-none d-md-block mt-1">
-                        <div class="my-3"><i class="fa fa-user"></i><br><?php echo $words->get('LoginInformation'); ?></div>
-                        <div class="my-3"><i class="fa fa-tag"></i><br><?php echo $words->get('SignupName'); ?></div>
+                        <div class="my-3"><i class="fa fa-user"></i><br><a href="signup/1"><?php echo $words->get('LoginInformation'); ?></a></div>
+                        <div class="my-3"><i class="fa fa-tag"></i><br><a href="signup/2"><?php echo $words->get('SignupName'); ?></a></div>
                         <div class="my-3"><i class="fa fa-map-marker-alt"></i><br><?php echo $words->get('Location'); ?></div>
                         <div class="my-3 text-muted"><i class="fa fa-check-square"></i><br><?php echo $words->get('SignupSummary'); ?></div>
                     </div>
@@ -50,7 +50,9 @@ $map_conf = PVars::getObj('map');
                         <div id="mapoverlay">
                             <span class="text-muted text-justify"><?= $words->get('subline_location') ?></span>
                         </div>
-                        <div id="map" class="mb-1" style="width: 100%; height: 440px; border: 1px solid #aaa;"></div>
+                        <div class="w-100">
+                            <div id="map" class="signupmap mb-1"></div>
+                        </div>
                     </div>
 
                     <button type="submit" class="form-control btn btn-primary"><?php echo $words->getSilent('NextStep'); ?> <i class="fa fa-angle-double-right"></i></button>

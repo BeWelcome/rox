@@ -65,7 +65,7 @@
         </div>
     </div>
     <div class="form-row my-1">
-        {{ form_widget(form.showMap, { 'attr': {'class': 'showMap'}}) }}
+        {{ form_widget(form.showmap, { 'attr': {'class': 'showMap'}}) }}
     </div>
     <div class="collapse" id="advancedNav">
         <div class="form-row my-1">
@@ -109,14 +109,14 @@
         </div>
         <div class="form-row mb-1">
             <div class="form-group w-100">
-                <button type="submit" name="search_form[updateMap]" class="btn-primary float-right btn">{{ 'search.find.members'|trans }}</button>
+                <button type="submit" name="search_form[updateMap]" class="btn-primary float-right btn" disabled="disabled">{{ 'search.find.members'|trans }}</button>
             </div>
         </div>
     </div>
     {{ form_rest(form) }}
     {{ form_end(form) }}
 
-    <div class="map-box {% if form.showMap.vars.checked %}d-block{% else %}d-none{% endif %}">
+    <div class="map-box {% if form.showmap.vars.checked %}d-block{% else %}d-none{% endif %}">
         <div id="map" class="map p-2 framed w-100"></div>
     </div>
 

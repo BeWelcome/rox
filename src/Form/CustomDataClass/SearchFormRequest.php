@@ -22,7 +22,7 @@ class SearchFormRequest
     public $location;
 
     /**
-     * @var int
+     * @var integer
      *
      * @Assert\NotBlank(groups={"text-search"})
      */
@@ -80,10 +80,10 @@ class SearchFormRequest
     public $accommodation_neverask = false;
 
     /** @var bool */
-    public $showMap = false;
+    public $showmap = false;
 
     /**
-     * @var int
+     * @var integer
      *
      * @Assert\Choice({ 0, 5, 10, 20, 50, 100, 200}, groups={"text-search"})
      * @Assert\EqualTo(value=-1, groups={"map-search"})
@@ -146,7 +146,7 @@ class SearchFormRequest
         $searchFormRequest->groups = $request->query->get('groups');
         $searchFormRequest->languages = $request->query->get('languages');
         $searchFormRequest->inactive = $request->query->get('inactive');
-        $searchFormRequest->location_geoname_id = $request->query->get('location_genoname_id');
+        $searchFormRequest->location_geoname_id = $request->query->get('location_geoname_id');
         $searchFormRequest->location_latitude = $request->query->get('location_latitude');
         $searchFormRequest->location_longitude = $request->query->get('location_longitude');
         $searchFormRequest->min_age = $request->query->get('min_age');
@@ -154,7 +154,7 @@ class SearchFormRequest
         $searchFormRequest->gender = $request->query->get('gender');
         $searchFormRequest->order = $request->query->get('order');
         $searchFormRequest->items = $request->query->get('items');
-        $searchFormRequest->showMap = $request->query->get('showMap');
+        $searchFormRequest->showmap = $request->query->get('showMap');
         $searchFormRequest->offerdinner = $request->query->get('dinner');
         $searchFormRequest->offertour = $request->query->get('tour');
         $searchFormRequest->accessible = $request->query->get('accessible');

@@ -60,7 +60,7 @@ class GroupJoinPage extends GroupsBasePage
         <form action="" method="post">
             {$callback_tag}
 
-            <fieldset>
+            <fieldset class="px-3">
              <legend>{$words->get('GroupsJoinTheGroup')} {$group_name_html}</legend>
             <input type='hidden' name='member_id' value='{$this->member->id}'>
                 <input type='hidden' name='group_id' value='{$this->group->id}'>

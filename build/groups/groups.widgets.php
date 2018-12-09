@@ -63,9 +63,9 @@ class GroupMemberlistWidget  // extends MemberlistWidget?
         $memberships = $this->_group->getLastLoggedInMembers($numberOfMembers);
         foreach ($memberships as $membership)
         { ?>
-            <span>
+            <div class="p-1">
             <?= MOD_layoutbits::PIC_50_50($membership->Username); ?>
-            </span>
+            </div>
         <?
         }
     }

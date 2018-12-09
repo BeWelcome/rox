@@ -32,11 +32,10 @@ Boston, MA  02111-1307, USA.
      * @subpackage RelatedGroups
      */
 ?>
-<div class="subcolumns"> 
-    <div class="subcr">
+
         <?php // display my groups, if there are any
         if (!empty($relatedgroups)) {
-            echo "<h3>" . $words->get('TitleDeleteRelatedGroupFromGroup') . " " . htmlspecialchars($group->Name, ENT_QUOTES) . "</h3>" ;
+            echo '<div class="col-12"><h3>' . $words->get('TitleDeleteRelatedGroupFromGroup') . ' ' . htmlspecialchars($group->Name, ENT_QUOTES) . '</h3></div>';
             foreach($relatedgroups as $relatedgroup) :
                 if (strlen($relatedgroup->Picture) > 0) {
                     $img_link = "groups/thumbimg/{$relatedgroup->getPKValue()}";
@@ -44,22 +43,15 @@ Boston, MA  02111-1307, USA.
                     $img_link = "images/icons/group.png";
                 } ?>
 
-                <div class="relatedgroupinfo">
-                    <div class="groupbox clearfix">
+                <div class="col-12 col-md-6 col-lg-4">
                         <a href="groups/<?php echo $relatedgroup->getPKValue(); ?>">
                             <img class="framed float_left"  width="60px" height="60px" alt="Group" src="<?php echo $img_link; ?>"/>
                         </a>
                         <div class="groupinfo">
                             <h4><a href="groups/<?php echo $relatedgroup->getPKValue(); ?>"><?php echo htmlspecialchars($relatedgroup->Name, ENT_QUOTES); ?></a></h4>
-                            <a class="button" role="button" href="groups/<?php echo $group->getPKValue(); ?>/deleterelatedgroup/<?php echo $relatedgroup->id; ?>"><span><?php echo $words->get('GroupsRemoveFromGroup'); ?></span></a>
+                            <a class="btn btn-primary" role="button" href="groups/<?php echo $group->getPKValue(); ?>/deleterelatedgroup/<?php echo $relatedgroup->id; ?>"><span><?php echo $words->get('GroupsRemoveFromGroup'); ?></span></a>
                         </div> <!-- groupinfo -->
-                    </div> <!-- groupbox clearfix -->
                 </div>   
             <?php endforeach;
         } ?>
-                
-
-    </div> <!-- subcr -->
-</div> <!-- subcolumns -->
-</div> <!-- groups -->
 

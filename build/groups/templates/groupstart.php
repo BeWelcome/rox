@@ -10,10 +10,12 @@
 
     <div class="col-12 col-md-8">
 
-        <div class="w-100">
+        <div class="media">
             <?= ((strlen($this->group->Picture) > 0) ? "<img class=\"float-left framed mr-2 mb-2\" src='groups/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$group_name_html}' />" : ''); ?>
-            <h4><?php echo $words->get('GroupDescription'); ?></h4>
-            <?php echo $purifier->purify(nl2br($this->group->getDescription())) ?>
+            <div class="media-body">
+                <h4><?php echo $words->get('GroupDescription'); ?></h4>
+                <?php echo $purifier->purify(nl2br($this->group->getDescription())) ?>
+            </div>
         </div>
 
         <div class="pt-3"><h3 class="float-left m-0 mb-2"><?php echo $words->getFormatted('ForumRecentPostsLong'); ?></h3><a
@@ -30,66 +32,9 @@
             if ($this->isGroupMember()) {
                 $showNewTopicButton = true;
             }
-            /* only relevant if Suggestion Feature ever comes back
-            $suggestionsGroupId = PVars::getObj('suggestions')->groupid;
-            if ($group_id == $suggestionsGroupId) {
-                $showNewTopicButton = false;
-            }
-            */
+
             echo $Forums->showExternalGroupThreads($group_id, $this->isGroupMember(), false, $showNewTopicButton); ?>
         </div>
-
-<div class="pt-3 row">
-
-    <?php
-    $relatedgroups = $this->group->findRelatedGroups($group_id); ?>
-    <h3 class="col-12"><?php echo $words->getFormatted('RelatedGroupsTitle'); ?></h3>
-    <? if ($this->isGroupMember()) { ?>
-        <div class="col-12">
-            <a href="groups/<? echo $this->group->id; ?>/selectrelatedgroup" class="btn btn-outline-primary"><?= $words->getFormatted('AddRelatedGroupButton'); ?></a>
-        </div>
-    <? }
-    foreach ($relatedgroups as $group_data) :
-    if (strlen($group_data->Picture) > 0) {
-        $img_link = "groups/thumbimg/{$group_data->getPKValue()}";
-    } else {
-        $img_link = "images/icons/group.png";
-    } ?>
-
-    <div class="col-12 col-md-6 p-2">
-        <div class="float-left h-100 mr-2" style="width: 80px;">
-            <!-- group image -->
-            <a href="groups/<?php echo $group_data->getPKValue() ?>">
-                <img class="groupimg framed" alt="Group" src="<?php echo $img_link; ?>"/>
-            </a>
-        </div>
-        <div>
-            <!-- group name -->
-            <h5>
-                <a href="groups/<?= $group_data->getPKValue() ?>"><?php echo htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a>
-            </h5>
-            <!-- group details -->
-            <ul class="groupul mt-1">
-                <li><i class="fa fa-users mr-1"
-                       title="<? echo $words->get('GroupsMemberCount'); ?>"></i><?= $group_data->getMemberCount(); ?></li>
-                <li><i class="fa fa-user-plus mr-1" title="<? echo $words->get('GroupsNewMembers'); ?>"></i><?php echo count($group_data->getNewMembers()); ?></li>
-                <li><?php
-                    if ($group_data->latestPost) {
-                        $interval = date_diff(date_create(date('d F Y')), date_create(date('d F Y', ServerToLocalDateTime($group_data->latestPost, $this->getSession()))));
-                        ?>
-                        <i class="fa fa-comments-o mr-1" title="<? echo $words->get('GroupsLastPost'); ?>"></i><span class="text-nowrap"><?=date($words->getBuffered('d F Y'), ServerToLocalDateTime($group_data->latestPost, $this->getSession())); ?></span>
-                        <?
-                    } else {
-                        echo $words->get('GroupsNoPostYet');
-                    }
-                    ?></li>
-            </ul>
-        </div>
-    </div>
-
-
-    <?php endforeach; ?>
-</div>
 
 </div>
 
@@ -132,9 +77,11 @@
     } // endif logged in member
     ?>
 
-    <h3><?= $words->get('GroupMembers'); ?></h3>
+    <div class="h3"><?= $words->get('GroupMembers'); ?></div>
 
+    <div class="row justify-content-between px-3">
     <?php $memberlist_widget->render() ?>
+    </div>
 
     <?php
     if ($memberCount != $visibleMemberCount) {
@@ -178,3 +125,20 @@
         <?php }
     } ?>
 </div>
+
+</div>
+<div class="pt-3 row">
+
+    <?php
+    $relatedgroups = $this->group->findRelatedGroups($group_id); ?>
+    <div class="col-12 col-md-8 h3"><?php echo $words->getFormatted('RelatedGroupsTitle'); ?></div>
+    <? if ($this->isGroupMember()) { ?>
+        <div class="col-12 col-md-4 float-md-right">
+            <a href="groups/<? echo $this->group->id; ?>/selectrelatedgroup" class="btn btn-block btn-outline-primary"><?= $words->getFormatted('AddRelatedGroupButton'); ?></a>
+        </div>
+    <? }
+    foreach ($relatedgroups as $group_data) :
+
+        include('groupsdisplay.php');
+
+    endforeach; ?>

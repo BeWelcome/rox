@@ -27,11 +27,11 @@ Boston, MA  02111-1307, USA.
         foreach ($relatedgroups as $group_data) :
         ?>
 
-        <div class="col-12 col-md-6 col-lg-4 p-2">
-            <div class="float-left h-100 mr-2" style="width: 80px;">
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="float-left h-100 mr-2 groupimg">
                 <!-- group image -->
                 <a href="groups/<?=$group_data->getPKValue() ?>">
-                    <img class="framed" alt="<?=htmlspecialchars($group_data->Name, ENT_QUOTES) ?>" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>" style="width: 80px; height: 80px;" />
+                    <img class="framed groupimg" alt="<?=htmlspecialchars($group_data->Name, ENT_QUOTES) ?>" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>" />
                 </a>
             </div>
             <div>
@@ -39,8 +39,8 @@ Boston, MA  02111-1307, USA.
                 <a href="groups/<?=$group_data->getPKValue() ?>" class="h4"><?=htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a>
                 <!-- group details -->
                 <ul class="groupul mt-1">
-                    <li><i class="fa fa-group pr-1" title="<?php echo $words->get('GroupsMemberCount');?>"></i> <?=$group_data->getMemberCount(); ?></li>
-                    <li><?= $words->get('GroupsDateCreation');?>: <?=date('d F Y', ServerToLocalDateTime(strtotime($group_data->created), $this->getSession())); ?></li>
+                    <li><i class="fa fa-users pr-1" title="<?php echo $words->get('GroupsMemberCount');?>"></i><?=$group_data->getMemberCount(); ?></li>
+                    <li><i class="fa fa-history pr-1" title="<?= $words->get('GroupsDateCreation');?>"></i><?=date('d F Y', ServerToLocalDateTime(strtotime($group_data->created), $this->getSession())); ?></li>
                 </ul>
             </div>
         </div>
@@ -75,8 +75,8 @@ Boston, MA  02111-1307, USA.
             <?php
                 foreach ($logvar as &$value) : ?>
 
-                    <div class="col-12 col-md-6 p-2">
-                        <div class="float-left h-100 mr-2" style="width: 50px;">
+                    <div class="col-12 col-md-6">
+                        <div class="float-left h-100 mr-2">
                             <a href="members/<?php echo $value->member->Username; ?>">
                                 <img class="framed float-left" src="members/avatar/<?php echo $value->member->Username; ?>?50"/>
                             </a>

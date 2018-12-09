@@ -46,7 +46,7 @@
     <h3 class="col-12"><?php echo $words->getFormatted('RelatedGroupsTitle'); ?></h3>
     <? if ($this->isGroupMember()) { ?>
         <div class="col-12">
-            <a href="/selectrelatedgroup" class="btn btn-outline-primary"><?= $words->getFormatted('AddRelatedGroupButton'); ?></a>
+            <a href="groups/<? echo $this->group->id; ?>/selectrelatedgroup" class="btn btn-outline-primary"><?= $words->getFormatted('AddRelatedGroupButton'); ?></a>
         </div>
     <? }
     foreach ($relatedgroups as $group_data) :

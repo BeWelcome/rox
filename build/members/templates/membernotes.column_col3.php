@@ -1,8 +1,11 @@
-    <div id="profile_notes" class="row">
         <div class="col-12">
             <h3><?= $words->get('ProfileMyNotes') ?></h3>
         </div>
         <div class="col-12 mt-3">
+
+            <?php // display my notes, if there are any
+            if (!empty($mynotes)) {
+                ?>
 
             <table class="table table-responsive table-striped table-hover">
                 <thead class="blank">
@@ -16,9 +19,7 @@
                 <tbody>
 
 
-            <?php // display my notes, if there are any
-
-            if (!empty($mynotes)) {
+          <?
                 $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
                 echo $this->pager->render();
                 $left = "";
@@ -60,4 +61,3 @@
                 echo $words->get("MyNotesNoNotes");
             }  ?>
         </div>
-    </div>

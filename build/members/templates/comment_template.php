@@ -54,7 +54,7 @@ function getEditCondition($com,$login){
 $loginuser = $this->loggedInMember->Username;
 
 if (!$this->passedAway) {
-    echo '<p>'.$words->get('CommentGuidlinesLink').'</p>';
+    echo '<div class="m-3">'.$words->get('CommentGuidlinesLink').'</div>';
 }
 
 $showfrom = false; $showto = false;
@@ -73,8 +73,8 @@ foreach ($comments as $com){
 if (!$showfrom && !$this->myself) {
     // Show "Add comment" button
    ?>
-        <a href="members/<?php echo $username; ?>/comments/add"
-           class="btn btn-primary"><?php echo $words->get('addcomments'); ?></a>
+        <div class="w-100 ml-3profile_notesw-100 p-1 text-right"><a href="members/<?php echo $username; ?>/comments/add"
+                class="btn btn-primary"><?php echo $words->get('addcomments'); ?></a></div>
     <?
 }
 
@@ -94,7 +94,7 @@ foreach($comments as $comment) {
     }
 
 if ($showfrom || $editfrom || $showto || $editto) {
-    echo '<div class="row my-3 w-100">';
+    echo '<div class="row m-3 w-100">';
 } else {
     echo '<div>';
 }
@@ -165,10 +165,10 @@ if ($showfrom || $editfrom || $showto || $editto) {
     } else { ?>
         <div class="col-12 col-sm-6 card comment-bg-neutral">
             <? if (!$this->myself && ($c->UsernameToMember==$loginuser)){ ?>
-            <a href="members/<?php echo $username; ?>/comments/add"
+            <a href="members/<?php echo $c->UsernameFromMember; ?>/comments/add"
            class="btn btn-primary mt-3"><?php echo $words->get('addcomments'); ?></a>
             <? } else { ?>
-                <div><p><?php echo $words->get('profile.comments.nocomment'); ?></p></div>
+                <div><p class="text-center mt-3"><?php echo $words->get('profile.comments.nocomment'); ?></p></div>
             <? } ?>
         </div>
     <? }
@@ -244,10 +244,10 @@ if ($showfrom || $editfrom || $showto || $editto) {
         <div class="col-12 col-sm-6 card comment-bg-neutral">
 
          <? if ($this->myself && ($c->UsernameToMember==$loginuser)){ ?>
-             <a href="members/<?php echo $username; ?>/comments/add"
+             <a href="members/<?php echo $c->UsernameFromMember; ?>/comments/add"
                 class="btn btn-primary mt-3"><?php echo $words->get('addcomments'); ?></a>
             <? } else { ?>
-             <p class="text-center mt-3">no comment</p>
+             <p class="text-center mt-3"><?php echo $words->get('profile.comments.nocomment'); ?></p>
              <? } ?>
         </div>
     <? } ?>

@@ -1,4 +1,4 @@
-<div id="profile_notes" class="row">
+
     <?php
         $vars = array();
         $words = $this->words;
@@ -80,4 +80,3 @@
 
     </form>
     <?=$words->flushBuffer();?>
-</div>

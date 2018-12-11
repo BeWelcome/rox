@@ -1,6 +1,7 @@
 <?php
 
 
+use Phinx\Util\Literal;
 use Rox\Tools\RoxMigration;
 
 class CreateHostingEagnernessSliderTable extends RoxMigration
@@ -22,6 +23,12 @@ class CreateHostingEagnernessSliderTable extends RoxMigration
                 'comment' => 'Current value used in search result to adapt order'
             ])
             ->addColumn('initialized', 'timestamp', [
+                'null' => true,
+                'default' => null,
+                'comment' => 'The date when the slider was last initialized'
+            ])
+            ->addColumn('updated', 'timestamp', [
+                'default' => 'CURRENT_TIMESTAMP',
                 'comment' => 'The date when the slider was last initialized'
             ])
             ->create();

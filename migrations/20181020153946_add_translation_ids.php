@@ -40,6 +40,7 @@ class AddTranslationIds extends RoxMigration
         $this->AddWordCode('search.show.advanced', 'Advanced options', 'Button label on the search page (Find Members).');
         $this->AddWordCode('search.find.members', 'Find Members', 'Button label on the search page (Find Members).');
         $this->AddWordCode('search.show.map', 'Show map', 'Checkbox to toggle the map display.');
+        $this->AddWordCode('search.location.invalid', 'Please select a location from the auto complete list', 'Information shown when there isn\'t enough information to find members.' );
 
         // signup
         $this->AddWordCode( 'signup.error.mothertongue', 'Please select a mother tongue.', 'Error message if no mother tongue was selected.');
@@ -161,6 +162,7 @@ class AddTranslationIds extends RoxMigration
         $this->RemoveWordCode('search.show.advanced', 'Advanced options', 'Button label on the search page (Find Members).');
         $this->RemoveWordCode('search.find.members', 'Find Members', 'Button label on the search page (Find Members).');
         $this->RemoveWordCode('search.show.map', 'Show map', 'Checkbox to toggle the map display.');
+        $this->RemoveWordCode('search.location.invalid', 'Please select a location from the auto complete list', 'Information shown when there isn\'t enough information to find members.' );
 
         // signup
         $this->RemoveWordCode( 'signup.error.mothertongue', 'Please select a mother tongue.', 'Error message if no mother tongue was selected.');

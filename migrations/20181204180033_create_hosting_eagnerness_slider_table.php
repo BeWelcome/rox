@@ -22,6 +22,9 @@ class CreateHostingEagnernessSliderTable extends RoxMigration
             ->addColumn('current', 'float', [
                 'comment' => 'Current value used in search result to adapt order'
             ])
+            ->addColumn('remaining', 'integer', [
+                'comment' => 'The remaining hours for the boost'
+            ])
             ->addColumn('initialized', 'timestamp', [
                 'null' => true,
                 'default' => null,

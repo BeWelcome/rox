@@ -1,6 +1,8 @@
 <?php
-$dotenv = new Dotenv\Dotenv(__DIR__);
-$dotenv->load();
+use Symfony\Component\Dotenv\Dotenv;
+
+$dotenv = new Dotenv();
+$dotenv->load(__DIR__.'/.env', __DIR__.'/.env.local');
 
 $config = [
     'migration_base_class' => \Rox\Tools\RoxMigration::class,
@@ -24,5 +26,5 @@ $config = [
     ],
 ];
 
-print_r($config);
+echo print_r($config, true);
 return $config;

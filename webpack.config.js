@@ -16,9 +16,8 @@ Encore
     .addEntry('skrollr', './assets/js/skrollr.js')
 
     .addEntry('search/searchpicker', './assets/public/js/search/searchpicker.js')
-    .addEntry('search/createmap', './assets/public/js/search/createmap.js')
     .addEntry('search/loadcontent', './assets/public/js/search/loadajax.js')
-    .addEntry('search/clickfunctions', './assets/js/search/search.js')
+    .addEntry('search/search', './assets/js/search/search.js')
 
     .addEntry('tempusdominus', './assets/js/tempusdominus.js')
     .addEntry('requests', './assets/js/requests.js')
@@ -31,7 +30,7 @@ Encore
     .addEntry('profile/profile', './assets/js/profile.js')
     .addEntry( 'updatecounters', './assets/js/updateCounters.js')
     .addEntry( 'lightbox', './assets/js/lightbox.js')
-//    .addEntry( 'ckeditor5', './assets/js/ckeditor5.js')
+    .addEntry( 'ckeditor5', './assets/js/ckeditor5.js')
 
     .enableSassLoader()
     // allow legacy applications to use $/jQuery as a global variable, make popper visible for bootstrap

@@ -34,8 +34,8 @@ class SearchController extends AbstractController
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_MAP]);
         $showMap = $member->getMemberPreferenceValue($preference);
 
-        $searchFormRequest = new SearchFormRequest();
-        $searchFormRequest->showMap = ('Yes' === $showMap) ? true : false;
+        $searchFormRequest = new SearchFormRequest($this->getDoctrine()->getManager());
+        $searchFormRequest->showmap = ('Yes' === $showMap) ? true : false;
         $form = $this->createForm(SearchFormType::class, $searchFormRequest, [
             'groups' => $member->getGroups(),
             'languages' => $member->getLanguages(),
@@ -44,9 +44,10 @@ class SearchController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var SearchFormRequest $data */
             $data = $form->getData();
             $memberPreference = $member->getMemberPreference($preference);
-            if ($data->showMap) {
+            if ($data->showmap) {
                 $memberPreference->setValue('Yes');
             } else {
                 $memberPreference->setValue('No');

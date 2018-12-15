@@ -2,6 +2,8 @@
 
 namespace App\Form\CustomDataClass;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,31 +18,49 @@ class SearchFormRequest
 {
     /**
      * @var string
-     *
-     * @Assert\NotBlank(groups={"text-search"})
      */
     public $location;
 
     /**
      * @var integer
-     *
-     * @Assert\NotBlank(groups={"text-search"})
      */
     public $location_geoname_id;
 
     /**
      * @var float
-     *
-     * @Assert\NotBlank(groups={"text-search"})
      */
     public $location_latitude;
 
     /**
      * @var float
-     *
-     * @Assert\NotBlank(groups={"text-search"})
      */
     public $location_longitude;
+
+    /**
+     * @var EntityManager
+     */
+    private $em;
+
+    /**
+     * @Assert\IsTrue(message="search.location.invalid", groups={"text-search"})
+     */
+    public function isLocationValid()
+    {
+        if (empty($this->location)) {
+            // Empty location is never correct
+            return false;
+        }
+        // Check if $location_geoname_id, $location_latitude and $location_longitude are set
+        if ($this->location_geoname_id != 0 && $this->location_latitude && $this->location_longitude) {
+            // The searchpicker set all necessary information
+            return true;
+        }
+
+        // Searchpicker didn't get a chance to set the location information
+        // \todo Try to find one based on the entered information in the location field
+
+        return false;
+    }
 
     /**
      * @var float
@@ -131,6 +151,15 @@ class SearchFormRequest
 
     /** @var int */
     public $items = 20;
+
+    /**
+     * SearchFormRequest constructor.
+     * @param ObjectManager $em
+     */
+    public function __construct(ObjectManager $em)
+    {
+        $this->em = $em;
+    }
 
     public static function fromRequest(Request $request)
     {

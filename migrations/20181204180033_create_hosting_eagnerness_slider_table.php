@@ -32,6 +32,7 @@ class CreateHostingEagnernessSliderTable extends RoxMigration
             ])
             ->addColumn('updated', 'timestamp', [
                 'default' => 'CURRENT_TIMESTAMP',
+                'update' => 'CURRENT_TIMESTAMP',
                 'comment' => 'The date when the slider was last initialized'
             ])
             ->create();

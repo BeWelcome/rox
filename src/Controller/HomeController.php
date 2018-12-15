@@ -31,7 +31,7 @@ class HomeController extends AbstractController
         ]);
 
         // Find all members around 100km of the given location
-        $searchFormRequest = new SearchFormRequest();
+        $searchFormRequest = new SearchFormRequest($this->getDoctrine()->getManager());
         $searchFormRequest->accommodation_neverask = true;
         $searchFormRequest->inactive = true;
         $searchFormRequest->distance = 100;

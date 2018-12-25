@@ -9,9 +9,9 @@ class JoinMembersAndCryptedfieldsTable extends RoxMigration
     {
         $members = $this->table('members');
         $members
-            ->addColumn('EmailText', 'string', [ 'after' => 'Email' ])
+            ->addColumn('EmailText', 'string', [ 'after' => 'Email'])
             ->addColumn('FirstNameText', 'string', [ 'after' => 'FirstName' ])
-            ->addColumn('SecondNameText', 'string', [ 'after' => 'SecondName' ])
+            ->addColumn('SecondNameText', 'string', [ 'after' => 'SecondName', 'null' => true ])
             ->addColumn('LastNameText', 'string', [ 'after' => 'LastName' ])
             ->addColumn('HideAttribute', 'biginteger')
             ->save();

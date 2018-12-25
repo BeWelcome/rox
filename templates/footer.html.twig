@@ -1,7 +1,7 @@
 {%- import _self as helper -%}
 {% if app.user %}
 {%- set hasEnglishRights = app.user.hasRightsForLocale('en') -%}
-{%- set hasCurrentLocaleRights = app.user.hasRightsForLocale(app.session.get('locale')) -%}
+{%- set hasCurrentLocaleRights = app.user.hasRightsForLocale(app.request.locale) -%}
 {% endif %}
 <footer>
     {% set langsel -%}

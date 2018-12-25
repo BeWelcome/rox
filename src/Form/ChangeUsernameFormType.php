@@ -23,7 +23,7 @@ class ChangeUsernameFormType extends AbstractType
                 'attr' => [
                     'minlength' => 4,
                     'maxlength' => 20,
-                    'pattern' => SignupModel::PATTERN_USERNAME,
+                    'pattern' => SignupModel::PATTERN_USERNAME_HTML5,
                     'placeholder' => 'Old Username',
                 ],
             ])
@@ -31,7 +31,7 @@ class ChangeUsernameFormType extends AbstractType
                 'attr' => [
                     'minlength' => 4,
                     'maxlength' => 20,
-                    'pattern' => SignupModel::PATTERN_USERNAME,
+                    'pattern' => SignupModel::PATTERN_USERNAME_HTML5,
                     'placeholder' => 'New Username',
                 ],
             ])

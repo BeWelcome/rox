@@ -131,10 +131,11 @@ class VolunteerToolController extends AbstractController
      * @Route("/admin/tools/findmember", name="admin_tools_find_user")
      *
      * @param Request $request
+     * @param Logger  $logger
      *
-     * @param Logger $logger
-     * @return \Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Exception
+     *
+     * @return \Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function findUserAction(Request $request, Logger $logger)
     {
@@ -371,9 +372,9 @@ LEFT JOIN geonames g ON m.IdCity = g.geonameID
 WHERE
 m.id = msg.IdSender
 AND (DATE_ADD(msg.created,
-    INTERVAL 3000 DAY) > NOW())
+    INTERVAL 7 DAY) > NOW())
 GROUP BY m.Username
-HAVING COUNT(msg.id) > 500
+HAVING COUNT(msg.id) > 9
 ORDER BY count(msg.id) DESC')->fetchAll();
 
         return $this->render(

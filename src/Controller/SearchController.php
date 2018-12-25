@@ -142,7 +142,7 @@ class SearchController extends AbstractController
             return $this->redirectToRoute('search_members', $request->query->all());
         }
 
-        $searchFormRequest = SearchFormRequest::fromRequest($request);
+        $searchFormRequest = SearchFormRequest::fromRequest($request, $this->getDoctrine()->getManager());
 
         $searchAdapter = new SearchAdapter(
             $searchFormRequest,

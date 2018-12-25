@@ -22,7 +22,7 @@ class SearchFormRequest
     public $location;
 
     /**
-     * @var integer
+     * @var int
      */
     public $location_geoname_id;
 
@@ -35,32 +35,6 @@ class SearchFormRequest
      * @var float
      */
     public $location_longitude;
-
-    /**
-     * @var EntityManager
-     */
-    private $em;
-
-    /**
-     * @Assert\IsTrue(message="search.location.invalid", groups={"text-search"})
-     */
-    public function isLocationValid()
-    {
-        if (empty($this->location)) {
-            // Empty location is never correct
-            return false;
-        }
-        // Check if $location_geoname_id, $location_latitude and $location_longitude are set
-        if ($this->location_geoname_id != 0 && $this->location_latitude && $this->location_longitude) {
-            // The searchpicker set all necessary information
-            return true;
-        }
-
-        // Searchpicker didn't get a chance to set the location information
-        // \todo Try to find one based on the entered information in the location field
-
-        return false;
-    }
 
     /**
      * @var float
@@ -103,12 +77,12 @@ class SearchFormRequest
     public $showmap = false;
 
     /**
-     * @var integer
+     * @var int
      *
-     * @Assert\Choice({ 0, 5, 10, 20, 50, 100, 200}, groups={"text-search"})
+     * @Assert\Choice({ 0, 5, 10, 15, 20, 50, 100, 200}, groups={"text-search"})
      * @Assert\EqualTo(value=-1, groups={"map-search"})
      */
-    public $distance = 5;
+    public $distance = 20;
 
     /** @var int */
     public $can_host = 1;
@@ -153,7 +127,13 @@ class SearchFormRequest
     public $items = 20;
 
     /**
+     * @var EntityManager
+     */
+    private $em;
+
+    /**
      * SearchFormRequest constructor.
+     *
      * @param ObjectManager $em
      */
     public function __construct(ObjectManager $em)
@@ -161,9 +141,30 @@ class SearchFormRequest
         $this->em = $em;
     }
 
-    public static function fromRequest(Request $request)
+    /**
+     * @Assert\IsTrue(message="search.location.invalid", groups={"text-search"})
+     */
+    public function isLocationValid()
     {
-        $searchFormRequest = new self();
+        if (empty($this->location)) {
+            // Empty location is never correct
+            return false;
+        }
+        // Check if $location_geoname_id, $location_latitude and $location_longitude are set
+        if (0 !== $this->location_geoname_id && $this->location_latitude && $this->location_longitude) {
+            // The searchpicker set all necessary information
+            return true;
+        }
+
+        // Searchpicker didn't get a chance to set the location information
+        // \todo Try to find one based on the entered information in the location field
+
+        return false;
+    }
+
+    public static function fromRequest(Request $request, ObjectManager $em)
+    {
+        $searchFormRequest = new self($em);
         $searchFormRequest->location = $request->query->get('location');
         $searchFormRequest->accommodation_anytime = $request->query->get('accommodation_anytim');
         $searchFormRequest->accommodation_dependonrequest = $request->query->get('accommodation_dependonrequest');

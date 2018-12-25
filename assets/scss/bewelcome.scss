@@ -2,17 +2,8 @@
 
 @import "mixins";
 
-$font-path: '../fonts/';
-@include font-face('Signika-Bold', $font-path + 'signika-bold-webfont', normal, normal);
-@include font-face('Signika-Regular', $font-path + 'signika-regular-webfont', normal, normal);
-
-@import '~lato-font/scss/public-api';
-
-$lato-font-path: '../fonts';
-
-@include lato-include-font('black');
-@include lato-include-font('medium');
-
+@import "~typeface-signika/index.css";
+@import '~typeface-lato/index.css';
 
 $fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
 @import '~@fortawesome/fontawesome-free/scss/fontawesome';
@@ -21,7 +12,7 @@ $fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
 
 // Core variables and mixins
 @import "custom";
-$font-family-bold: Signika-bold, Arial;
+$font-family-bold: Signika;
 
 @import "~bootstrap/scss/bootstrap";
 
@@ -42,7 +33,7 @@ $font-family-bold: Signika-bold, Arial;
 @import "~select2/src/scss/core";
 @import "~select2-theme-bootstrap4/src/select2-bootstrap";
 
-// Set yaml classes to keep old style alive and constistent
+// Set yaml classes to keep old style alive and consistent
 @import "yaml";
 @import "navs";
 @import "search";

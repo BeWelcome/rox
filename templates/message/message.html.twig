@@ -8,6 +8,10 @@
     {% endfor %}
 {% endblock %}
 
+{% block javascripts %}
+<!--    <script src="{{ asset('build/roxeditor.js') }}"></script> -->
+{% endblock %}
+
 {% block content %}
     <div class="my-3"><h2>{{ 'Write a message to %s' | trans | format(receiver.Username) }}</h2></div>
 
@@ -16,10 +20,8 @@
         {{ form_errors(form) }}
     <div class="row mb-1">
         <div class="col-12">
-            {{ form_label(form.subject, null, {'label_attr': {'class': 'sr-only '} }) }}
-            {{ form_errors(form.subject) }}
-            {{ form_widget(form.subject.subject) }}
-            {{ form_widget(form.message) }}
+            {{ form_row(form.subject.subject) }}
+            {{ form_row(form.message) }}
             {{ form_rest(form) }}
         </div>
     </div>

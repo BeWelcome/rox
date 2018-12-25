@@ -16,15 +16,15 @@ $(function () {
         if (markerClusterGroup.getLayers().length > 0) {
             // Check if a rectangle is set if so use this for the bounds else fit the bounds to the markerClusterGroup
             var query= getQueryStrings($("[name=search_form]").serialize());
-            if (query["search_form[distance]"] == -1) {
+            if (query["distance"] == -1) {
                 noRefresh = true;
                 map.fitBounds([
-                    [query["search_form[ne_latitude]"], query["search_form[ne_longitude]"]],
-                    [query["search_form[sw_latitude]"], query["search_form[sw_longitude]"]]
+                    [query["ne_latitude"], query["ne_longitude"]],
+                    [query["sw_latitude"], query["sw_longitude"]]
                 ]);
             } else {
-                noRefresh = true;
-                map.fitBounds(markerClusterGroup.getBounds());
+                this.noRefresh = true;
+                map.fitBounds(this.markerClusterGroup.getBounds());
             }
 
         }
@@ -50,13 +50,13 @@ $(function () {
             var sw = bounds.getSouthWest();
             var query= getQueryStrings($("[name=search_form]").serialize());
 
-            query["search_form[location_latitude]"] = lat;
-            query["search_form[location_longitude]"] = lng;
-            query["search_form[distance]"] = -1;
-            query["search_form[ne_latitude]"] = ne.lat;
-            query["search_form[ne_longitude]"] = ne.lng;
-            query["search_form[sw_latitude]"] = sw.lat;
-            query["search_form[sw_longitude]"] = sw.lng;
+            query["location_latitude"] = lat;
+            query["location_longitude"] = lng;
+            query["distance"] = -1;
+            query["ne_latitude"] = ne.lat;
+            query["ne_longitude"] = ne.lng;
+            query["sw_latitude"] = sw.lat;
+            query["sw_longitude"] = sw.lng;
 
             window.location.href =
                 window.location.protocol + "//" +

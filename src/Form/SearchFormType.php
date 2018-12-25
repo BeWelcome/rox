@@ -56,8 +56,13 @@ class SearchFormType extends AbstractType
                 SearchFormRequest::class,
                 'determineValidationGroups',
             ],
-            'allow_extra_fields' => true
+            'allow_extra_fields' => true,
         ]);
+    }
+
+    public function getBlockPrefix()
+    {
+        return '';
     }
 
     protected function addVariableSelects(FormBuilderInterface $formBuilder, array $options)
@@ -171,6 +176,7 @@ class SearchFormType extends AbstractType
                     'exact' => 0,
                     '5km (~3mi)' => 5,
                     '10km (~6mi)' => 10,
+                    '15km (~10mi)' => 15,
                     '20km (~15mi)' => 20,
                     '50km (~31mi)' => 50,
                     '100km (~63mi)' => 100,
@@ -231,13 +237,13 @@ class SearchFormType extends AbstractType
         $formBuilder
             ->add('page', HiddenType::class)
             ->add('location_geoname_id', HiddenType::class, [
-                'error_mapping' => 'location'
+                'error_mapping' => 'location',
             ])
             ->add('location_latitude', HiddenType::class, [
-                'error_mapping' => 'location'
+                'error_mapping' => 'location',
             ])
             ->add('location_longitude', HiddenType::class, [
-                'error_mapping' => 'location'
+                'error_mapping' => 'location',
             ])
             ->add('ne_latitude', HiddenType::class)
             ->add('ne_longitude', HiddenType::class)
@@ -292,10 +298,5 @@ class SearchFormType extends AbstractType
                 'required' => false,
             ])
         ;
-    }
-
-    public function getBlockPrefix()
-    {
-        return '';
     }
 }

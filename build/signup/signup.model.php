@@ -39,6 +39,7 @@ class SignupModel extends RoxModelBase
      */
     // Allow usernames with up to 20 chars for new signup. Allow ., - and _. Don't allow consecutive special chars.
     const PATTERN_USERNAME = '[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9]';
+    const PATTERN_USERNAME_HTML5 = '[A-Za-z](?!.*[-_.][-_.])[A-Za-z0-9-._]{2,18}[A-Za-z0-9]';
     const HANDLE_PREGEXP = '/^[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9]$/i';
 
     /**

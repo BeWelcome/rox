@@ -1,15 +1,16 @@
 import 'jquery';
 import 'popper.js';
-import 'bootstrap';
+import 'bootstrap/js/src/index.js';
 import '../../public/script/common/common.js';
-import '../../assets/scss/bewelcome.scss';
-import '../../node_modules/cookieconsent/src/cookieconsent.js';
-import '../../node_modules/cookieconsent/src/styles/animation.css';
-import '../../node_modules/cookieconsent/src/styles/base.css';
-import '../../node_modules/cookieconsent/src/styles/layout.css';
-import '../../node_modules/cookieconsent/src/styles/media.css';
-import '../../node_modules/cookieconsent/src/styles/themes/classic.css';
-import '../../node_modules/cookieconsent/src/styles/themes/edgeless.css';
-import '../../node_modules/select2/dist/js/select2.full.js';
-// import '@fortawesome/fontawesome-free';
+import '../scss/bewelcome.scss';
+import 'cookieconsent/src/cookieconsent.js';
+import 'cookieconsent/src/styles/animation.css';
+import 'cookieconsent/src/styles/base.css';
+import 'cookieconsent/src/styles/layout.css';
+import 'cookieconsent/src/styles/media.css';
+import 'cookieconsent/src/styles/themes/classic.css';
+import 'cookieconsent/src/styles/themes/edgeless.css';
+import 'select2/dist/js/select2.full.js';
+import '@fortawesome/fontawesome-free';
+
 

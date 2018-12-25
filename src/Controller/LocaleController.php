@@ -28,6 +28,7 @@ class LocaleController extends AbstractController
 
         $this->get('session')->set('lang', $locale);
         $this->get('session')->set('locale', $locale);
+        $this->get('session')->set('_locale', $locale);
 
         return new RedirectResponse($redirect);
     }

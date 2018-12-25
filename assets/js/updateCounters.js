@@ -9,11 +9,9 @@ function updateCounts() {
         },
         dataType: 'json',
         success: function (data) {
-            if (data.oldCount != data.newCount) {
+            if (data.oldCount !== data.newCount) {
                 $('#messageCount').replaceWith(data.html);
-                $('#messageCount').tooltip('show');
             } else {
-                $('#messageCount').tooltip('hide');
             }
         }});
     let requestCount = $('#requestCount');
@@ -26,11 +24,9 @@ function updateCounts() {
         },
         dataType: 'json',
         success: function (data) {
-            if (data.oldCount != data.newCount) {
+            if (data.oldCount !== data.newCount) {
                 $('#requestCount').replaceWith(data.html);
-                $('#requestCount').tooltip('show');
             } else {
-                $('#requestCount').tooltip('hide');
             }
         }});
 }
@@ -38,5 +34,8 @@ function updateCounts() {
 let interval = setInterval(function () { updateCounts(); }, 120 * 1000);
 
 $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-})
+    $('[data-toggle="toast"]').toast({
+        autohide: false
+    })
+});
+

@@ -234,18 +234,22 @@ LIMIT 1
      * @param $distance
      *
      * @return stdClass
-     * @throws Exception
      */
     private function _getRectangle($latitude, $longitude, $distance) {
 
-        $edison = GeoLocation::fromDegrees($latitude, $longitude);
-        $coordinates = $edison->boundingCoordinates($distance, 'km');
-
         $result = new stdClass;
-        $result->latne = $coordinates[0]->getLatitudeInDegrees();
-        $result->longne = $coordinates[0]->getLongitudeInDegrees();
-        $result->latsw = $coordinates[1]->getLatitudeInDegrees();
-        $result->longsw = $coordinates[1]->getLongitudeInDegrees();
+        $edison = GeoLocation::fromDegrees($latitude, $longitude);
+        try {
+            $coordinates = $edison->boundingCoordinates($distance, 'km');
+            $result->latne = $coordinates[0]->getLatitudeInDegrees();
+            $result->longne = $coordinates[0]->getLongitudeInDegrees();
+            $result->latsw = $coordinates[1]->getLatitudeInDegrees();
+            $result->longsw = $coordinates[1]->getLongitudeInDegrees();
+        } catch (\Exception $e) {
+            // If this really happens the map search area will be rather small :)
+            $result->latne = $result->longne = $result->latsw = $result->longsw = 0;
+        }
+
         return $result;
     }
 
@@ -275,16 +279,13 @@ LIMIT 1
             $distance = $vars['search-distance'];
             if ($distance <> 0) {
                 if ($distance >  -1) {
+                    $rectangle = $this->_getRectangle($vars['location-latitude'], $vars['location-longitude'], $distance);
                     // calculate rectangle around place with given distance
-                    $lat = deg2rad(doubleval($vars['location-latitude']));
-                    $long = deg2rad(doubleval($vars['location-longitude']));
+                    $longne = $rectangle->longne;
+                    $longsw = $rectangle->longsw;
 
-                    $longne = rad2deg(($distance + self::EARTH_RADIUS * $long) / self::EARTH_RADIUS);
-                    $longsw = rad2deg((self::EARTH_RADIUS * $long - $distance) / self::EARTH_RADIUS);
-
-                    $radiusAtLatitude = cos($lat) * self::EARTH_RADIUS;
-                    $latne = rad2deg(($distance + $radiusAtLatitude * $lat) / $radiusAtLatitude);
-                    $latsw = rad2deg(($radiusAtLatitude * $lat - $distance) / $radiusAtLatitude);
+                    $latne = $rectangle->latne;
+                    $latsw = $rectangle->latsw;
                 } else {
                     $latne = $vars['ne-latitude'];
                     $latsw = $vars['sw-latitude'];

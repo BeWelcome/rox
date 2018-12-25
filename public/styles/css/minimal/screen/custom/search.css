@@ -60,7 +60,7 @@ td.details {
 .ui-autocomplete { max-height: 200px; }
 
 .ui-autocomplete-loading {
-  background: white url('/styles/css/minimal/screen/custom/jquery-ui/smoothness/images/ui-anim_basic_16x16.gif') right center no-repeat !important;
+  background: white url('/styles/css/minimal/screen/custom/jquery-ui/smoothness/images/ui-anim_basic_32x32.gif') right center no-repeat !important;
 }
 
 .ui-menu-item-highlight {

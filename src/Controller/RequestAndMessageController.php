@@ -754,9 +754,9 @@ class RequestAndMessageController extends AbstractController
 
         // check if request was altered
         $diff = date_diff($data->getRequest()->getArrival(), $hostingRequest->getRequest()->getArrival());
-        $newArrival = ($diff->y <> 0) && ($diff->m <> 0) && ($diff->d <> 0);
+        $newArrival = (0 !== $diff->y) && (0 !== $diff->m) && (0 !== $diff->d);
         $diff = date_diff($data->getRequest()->getDeparture(), $hostingRequest->getRequest()->getDeparture());
-        $newDeparture = ($diff->y <> 0) && ($diff->m <> 0) && ($diff->d <> 0);
+        $newDeparture = (0 !== $diff->y) && (0 !== $diff->m) && (0 !== $diff->d);
         $newFlexible = ($data->getRequest()->getFlexible() !== $hostingRequest->getRequest()->getFlexible());
         $newNumberOfTravellers = ($data->getRequest()->getNumberOfTravellers()
             !== $hostingRequest->getRequest()->getNumberOfTravellers());
@@ -951,7 +951,7 @@ class RequestAndMessageController extends AbstractController
         ]);
 
         $message = (new Swift_Message())
-            ->setSubject('[Request] ' . strip_tags($subject))
+            ->setSubject('[Request] '.strip_tags($subject))
             ->setFrom([
                 'request@bewelcome.org' => 'BeWelcome - '.$guest->getUsername(),
             ])

@@ -6,7 +6,6 @@ use App\Entity\Message;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class HostingRequestAbstractType extends AbstractType
 {
@@ -35,6 +34,7 @@ class HostingRequestAbstractType extends AbstractType
         $form
             ->add('message', CkEditorType::class, [
                 'invalid_message' => 'request.message.empty',
+                'placeholder' => $placeholder,
             ])
         ;
     }

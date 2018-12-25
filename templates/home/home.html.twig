@@ -12,13 +12,6 @@
     <meta name="keywords" content="{{ 'default_meta_keyword' | trans }}"/>
     <meta name="robots" content="{{ 'default_meta_robots' | trans }}"/>
 
-    <script type="text/javascript" src="{{ asset('build/runtime.js') }}"></script>
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    <script type="text/javascript" src="{{ asset('build/backwards.js') }}"></script>
-    <![endif]-->
-    <script type="text/javascript" src="https://unpkg.com/jarallax@1.10/dist/jarallax.min.js"></script>
-
     <link rel="stylesheet" href="{{ asset('build/bewelcome.css') }}"/>
     <link rel="stylesheet" href="{{ asset('build/jquery_ui.css') }}"/>
 </head>
@@ -26,8 +19,7 @@
 {% include 'loginbar.html.twig' %}
 <!-- Section #1 -->
 <!-- first section - Home -->
-<div id="skrollr-body">
-    <div class="jarallax">
+<div id="skrollr-body"><div class="jarallax">
         <img class="jarallax-img" src="images/homepicture-1200px_1.jpg" alt="Background image for parallax">
         <div class="d-flex container h-100 align-items-center">
             <div class="row justify-content-center">
@@ -195,11 +187,23 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="{{ asset('build/runtime.js') }}"></script>
-<script type="text/javascript" src="{{ asset('build/bewelcome.js') }}"></script>
-<script type="text/javascript" src="{{ asset('build/skrollr.js') }}"></script>
+<script src="{{ asset('build/runtime.js') }}"></script>
+<script src="{{ asset('build/bewelcome.js') }}"></script>
 <script src="{{ asset('build/jquery_ui.js') }}"></script>
 <script src="{{ asset('build/search/searchpicker.js') }}"></script>
+<script src="{{ asset('build/select2.js') }}"></script>
+<script type="application/javascript">
+    $(".select2").select2({
+        theme: 'bootstrap',
+        containerCssClass: 'form-control'
+    });
+    $(".select2-inline").select2({
+        theme: 'bootstrap',
+        containerCssClass: 'form-control',
+        width: 'style'
+    });
+</script>
+<script type="text/javascript" src="https://unpkg.com/jarallax@1.10/dist/jarallax.min.js"></script>
 <script>
     window.addEventListener("load", function () {
         window.cookieconsent.initialise({

@@ -28,7 +28,7 @@ class UserLocaleListener
         $user = $event->getAuthenticationToken()->getUser();
 
         if (null !== $user->getLocale()) {
-            $this->session->set('locale', $user->getLocale());
+            $this->session->set('_locale', $user->getLocale());
             Carbon::setLocale($user->getLocale());
         }
     }

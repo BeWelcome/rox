@@ -337,9 +337,11 @@ class Notification
      *
      * @return string
      */
-    public function getTranslationparams()
+    public function getTranslationParameters()
     {
-        return $this->translationparams;
+        $a = unserialize($this->translationparams);
+
+        return $a[1];
     }
 
     /**

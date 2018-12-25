@@ -136,7 +136,9 @@
         <div class="col-12 col-md-4 float-md-right">
             <a href="groups/<? echo $this->group->id; ?>/selectrelatedgroup" class="btn btn-block btn-outline-primary"><?= $words->getFormatted('AddRelatedGroupButton'); ?></a>
         </div>
-    <? }
+    <? } else {
+        echo '<div class="col-12 col-md-4"></div>';
+    }
     foreach ($relatedgroups as $group_data) :
 
         include('groupsdisplay.php');

@@ -4,7 +4,7 @@
 {% block content %}
     {% set original = thread | last %}{% set request = original.Request %}
     {% set myself = app.user %}
-<div id="message_thread" class="row">
+<div id="message_thread" class="row px-3">
     {% if original.Sender.Username == myself.Username %}{% set otherUser = original.Receiver %}{% else %}{% set otherUser = original.Sender %}{% endif %}
 
     <div class="col-12 sticky-top py-3 pb-0 bg-white d-inline-block mb-2 messageheader">

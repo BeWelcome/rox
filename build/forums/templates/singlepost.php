@@ -52,7 +52,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
             </div>
 
             <!-- member name/location -->
-            <div>
+            <div class="d-none d-md-block">
                 <small class="username"><a
                             href="members/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
                 <br>
@@ -70,7 +70,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
         </div>
 
         <!-- permanlink, bans, reports -->
-        <div class="text-nowrap m-2">
+        <div class="text-nowrap text-truncate m-2">
             <?php
 
             if ($this->_session->has("IdMember")) {
@@ -194,7 +194,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 
             ?>
 
-            <div id="d<?= $post->IdContent ?>" class="float-left pr-2">
+            <div id="d<?= $post->IdContent ?>" class="float-left pr-2 w-100">
 
                 <?php
                 $Sentence = $words->fTrad($post->IdContent);

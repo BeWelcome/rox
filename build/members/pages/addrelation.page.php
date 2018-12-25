@@ -26,7 +26,7 @@ class AddRelationPage extends RelationsPage
                $action = 'add';
             }        ?>
 
-        <div class="row">
+
             <div class="col-12">
          <? if ($action == 'update' && isset($relation['member']->Confirmed)) : ?>
             <div class="alert alert-success"><?=$words->get('RelationIsConfirmed',$member->Username)?></div>
@@ -62,7 +62,7 @@ class AddRelationPage extends RelationsPage
             <? endif ?>
             <div>
                 <label class="grey"><?=$words->get("RelationText",$member->Username)?>:</label><br />
-                <textarea rows="4" class="w-100 h5" name="Comment"><?php
+                <textarea rows="4" class="w-100" name="Comment"><?php
                     if (isset($relation['myself']->Comment)) {
                         $lang = $this->model->get_profile_language();
                         $comment = $words->mInTrad($relation['myself']->IdTradComment, $lang->id);
@@ -95,8 +95,6 @@ class AddRelationPage extends RelationsPage
         </fieldset>
         </form>
             </div>
-
-        </div>
         <?php
     }
 }

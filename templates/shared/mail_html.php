@@ -81,7 +81,7 @@
 <div id="message">
 <div class="header">
     <div>
-        <a href="<?php echo PVars::getObj('env')->baseuri; ?>"><img src="<?php echo PVars::getObj('env')->baseuri; ?>images/misc/email_logo.gif" alt="<?php echo PVars::getObj('env')->sitename; ?>" class="logo"></a>
+        <a href="<?php echo PVars::getObj('env')->baseuri; ?>"><img src="<?php echo PVars::getObj('env')->baseuri; ?>images/logo_index_top.png" alt="<?php echo PVars::getObj('env')->sitename; ?>" class="logo"></a>
         <?php if($title) { ?>
             <h1 style="font-size:1.2em; font-weight: bold; line-height: 1.2em"><?= $title ?></h1>
         <?php } ?>

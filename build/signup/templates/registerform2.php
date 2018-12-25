@@ -249,7 +249,7 @@
         let maxDate = new Date();
         maxDate.setDate(maxDate.getDate() - 18 * 365 - 4);
         $("#datetimepicker1").datetimepicker({
-            format: 'L',
+            format: 'YYYY-MM-DD',
             maxDate: maxDate
         });
     });

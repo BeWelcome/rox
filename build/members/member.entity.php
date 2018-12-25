@@ -39,6 +39,8 @@ class Member extends RoxEntityBase
     const MEMBER_SECONDNAME_HIDDEN = 2;
     const MEMBER_LASTNAME_HIDDEN = 4;
     const MEMBER_EMAIL_HIDDEN = 8;
+    const MEMBER_All_HIDDEN = self::MEMBER_FIRSTNAME_HIDDEN | self::MEMBER_SECONDNAME_HIDDEN
+        | self::MEMBER_LASTNAME_HIDDEN | self::MEMBER_EMAIL_HIDDEN;
 
     const ACTIVE_ALL = "'Active', 'ActiveHidden', 'ChoiceInactive', 'OutOfRemind', 'Pending'";
     const ACTIVE_SEARCH = "'Active', 'ActiveHidden', 'OutOfRemind', 'Pending'";

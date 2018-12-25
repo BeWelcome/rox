@@ -21,6 +21,9 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+
+use Carbon\Carbon;
+
 /**
  * signup model
  *
@@ -38,9 +41,8 @@ class SignupModel extends RoxModelBase
      * TODO: should get a more specific name - refactoring needed!
      */
     // Allow usernames with up to 20 chars for new signup. Allow ., - and _. Don't allow consecutive special chars.
-    const PATTERN_USERNAME = '[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9]';
-    const PATTERN_USERNAME_HTML5 = '[A-Za-z](?!.*[-_.][-_.])[A-Za-z0-9-._]{2,18}[A-Za-z0-9]';
-    const HANDLE_PREGEXP = '/^[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9]$/i';
+    const PATTERN_USERNAME = '[A-Za-z](?!.*[-_.][-_.])[A-Za-z0-9-._]{2,18}[A-Za-z0-9]';
+    const HANDLE_PREGEXP = '/^[A-Za-z](?!.*[-_.][-_.])[A-Za-z0-9-._]{2,18}[A-Za-z0-9]$/';
 
     /**
      * FIXME: use BW constant from config file instead of this one
@@ -52,12 +54,10 @@ class SignupModel extends RoxModelBase
 
     /**
      * Constructor
-     *
-     * @param void
      */
-    public function __construct($data = false)
+    public function __construct()
     {
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**
@@ -415,6 +415,8 @@ VALUES
         // ********************************************************************
         // members
         // ********************************************************************
+        error_log(print_r($vars, true));
+
         $query = "
             INSERT INTO `members`
             (
@@ -449,7 +451,7 @@ VALUES
         $stmt->bindParam(9, $vars['firstname']);
         $stmt->bindParam(10, $vars['secondname']);
         $stmt->bindParam(11, $vars['lastname']);
-        $hide = \Member::MEMBER_EMAIL_HIDDEN;
+        $hide = \Member::MEMBER_All_HIDDEN;
         $stmt->bindParam(12, $hide);
 
         $res = $stmt->execute();

@@ -27,10 +27,7 @@ Boston, MA  02111-1307, USA.
      * @author Fake51
      * @author shevek
 	 * @Fix jeanyves (2011-09-19)
-     */
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-
-/**
+     *
      * members app model
      *
      * @package Apps
@@ -944,8 +941,8 @@ ORDER BY
      * Check form values of Mandatory form,
      * should always be analog to /build/signup/signup.model.php !!
      *
-     * @param unknown_type $vars
-     * @return unknown
+     * @param array $vars
+     * @return array
      */
     public function checkProfileForm(&$vars)
     {
@@ -998,12 +995,11 @@ ORDER BY
      * validates a date and outputs valid date or false
      * checks if the age of the person is 17 > x > 100
      *
-     * @param string $birthdate
+     * @param string $dd the birthdate in iso format
      * @access public
      * @return string|bool
      */
-
-       	public function ageValue($dd)
+  	public function ageValue($dd)
 	{
 		$iDate = strtotime($dd);
 		$age = (time() - $iDate) / (365 * 24 * 60 * 60);

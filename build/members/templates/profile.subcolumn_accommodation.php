@@ -120,7 +120,7 @@
             </div>
             <? if (!$this->myself && $member->Accomodation != 'neverask') { ?>
             <div>
-                <i class="fa fa-bed mr-1"></i><a href="new/request/<?= $member->Username ?>" class="btn btn-primary float-right"><?=$words->get('profile.request.hosting');?></a>
+               <a href="new/request/<?= $member->Username ?>" class="btn btn-primary float-right"><i class="fa fa-bed mr-1"></i><?=$words->get('profile.request.hosting');?></a>
             </div>
             <? } ?>
         </div>

@@ -42,29 +42,27 @@ HTML;
         $title = htmlentities($d->title, ENT_COMPAT, 'utf-8');
         $description = htmlentities($d->description, ENT_COMPAT, 'utf-8');
         echo <<<HTML
-    <a href="gallery/img?id={$d->id}" id="g-title-edit" class="button" style="display:none;">{$words->getSilent("EditTitle")}</a>
-    <a href="gallery/img?id={$d->id}" id="g-text-edit" class="button" style="display:none;">{$words->getSilent("EditDescription")}</a>
-    <a style="cursor:pointer" href="gallery/img?id=<?=$d->id?>/delete" class="button" onclick="return confirm('{$words->getFormatted("confirmdeletepicture")}')">{$words->getSilent("Delete")}</a>
+    <a href="gallery/img?id={$d->id}" id="g-title-edit" class="button d-none">{$words->getSilent("EditTitle")}</a>
+    <a href="gallery/img?id={$d->id}" id="g-text-edit" class="button d-none">{$words->getSilent("EditDescription")}</a>
+    <a href="gallery/show/image/<?=$d->id?>/delete" class="button" style="cursor:pointer" onclick="return confirm('{$words->getFormatted("confirmdeletepicture")}')">{$words->getSilent("Delete")}</a>
     {$words->flushBuffer()}
 
 <form method="post" action="gallery/img?id={$d->id}/edit" class="def-form">
     <fieldset id="image-edit" class="inline NotDisplayed">
     <legend>{$words->getFormatted('GalleryTitleEdit')}</legend>
     
-        <div class="bw-row">
-            <label for="image-edit-t">{$words->getFormatted('GalleryLabelTitle')}</label><br/>
+        <div class="row">
+            <label for="image-edit-t">{$words->getFormatted('GalleryLabelTitle')}</label>
             <input type="text" id="image-edit-t" name="t" class="short" value="{$title}" />
-            <br/><br/>
+           
             <label for="image-edit-txt">{$words->getFormatted('GalleryLabelText')}</label><br/>
             <textarea id="image-edit-txt" name="txt" cols="30" rows="4">{$description}</textarea>
-            <div id="bcomment-text" class="statbtn"></div>
+            
 	        <input type="hidden" name="{$callbackId}" value="1"/>
 	        <input type="hidden" name="id" value="{$d->id}"/>
             <p class="desc">{$words->getFormatted('GalleryDescTitle')}</p>
             <input type="submit" class="button" name="button" value="{$words->getFormatted('SubmitForm')}" id="button" />
-        </div>
-        <div class="bw-row">
-        </div>    
+        </div>  
 </fieldset>
 </form>
     <script type="text/javascript">

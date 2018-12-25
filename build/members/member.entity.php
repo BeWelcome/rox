@@ -760,7 +760,7 @@ WHERE IdMember = ".$this->id
     public function getGalleryItemsCount()
     {
         $gallery = new GalleryModel;
-        $count = $gallery->getUserItemCount($this->get_userid());
+        $count = $gallery->getUserItemCount($this->id);
         return $count;
     }
 

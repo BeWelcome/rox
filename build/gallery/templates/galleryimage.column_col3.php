@@ -1,22 +1,14 @@
-<?php
-if ($d->description) {
-    $desc = $d->description;
-} else {
-    $desc = "no description";
-}
-?>
-
 <div class="col">
     <div class="img">
         <a id="link_<?= $d->id ?>" href="gallery/img?id=<?= $d->id ?>" title="<?= $d->title ?> rel="image" data-toggle="lightbox" data-type="image">
         <img id="thumb_<?= $d->id ?>" src="gallery/thumbimg?id=<?= $d->id ?>&amp;t=2" class="framed big" alt="image">
         </a>
-        <a href="gallery/img?id=<?=$d->id?>/delete" class="btn btn-danger" onclick="return confirm('<?= $words->getSilent("confirmdeletepicture")?>')"><?= $words->getSilent("GalleryDeleteImage")?></a>
+        <a href="gallery/show/image/<?=$d->id?>/delete" class="btn btn-danger" onclick="return confirm('<?= $words->getSilent("confirmdeletepicture")?>')"><?= $words->getSilent("GalleryDeleteImage")?></a>
     </div>
 </div>
 <div class="col">
 
-    <p id="desc"><?=$desc?></p>
+
     <?php
     echo $words->flushBuffer();
     if ($canEdit  || ($GalleryRight > 1)) {
@@ -27,7 +19,7 @@ if ($d->description) {
             <input type="hidden" name="<?php echo $callbackId; ?>" value="1"/>
             <input type="hidden" name="id" value="<?=$d->id; ?>"/>
 
-            <label for="image-edit-t"><?php echo $words->getFormatted('GalleryLabelTitle'); ?></label>
+            <label for="image-edit-t" class="sr-only"><?php echo $words->getFormatted('GalleryLabelTitle'); ?></label>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="photo_title"><?php echo $words->getFormatted('GalleryLabelTitle'); ?></span>

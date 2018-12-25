@@ -88,3 +88,4 @@ var GalleryImg = new Uploader('gallery-img-upload', {
     </script>
 
 </div>
+</div>

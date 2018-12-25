@@ -33,10 +33,10 @@ if ($statement) {
     $loggedmember = isset($this->model) ? $this->model->getLoggedInMember : $this->loggedInMember;
     if ($loggedmember && $loggedmember->Username == $d->user_handle) {
         echo '<input type="checkbox" class="input_check mr-2" name="imageId[]" value="'.$d->id.'">';
-        echo '<a href="gallery/img?id='. $d->id .'" title="'. $d->title .'">'. $title_short . '</a>';
-        echo '<a href="gallery/img?id='.$d->id.'"><i class="fa fa-edit float-right pt-1"></i></a>';
+        echo '<a href="gallery/img?id='. $d->id .'" title="'. $d->title .'" data-toggle="lightbox" data-type="image">'. $title_short . '</a>';
+        echo '<a href="gallery/show/image/'.$d->id.'"><i class="fa fa-edit float-right pt-1"></i></a>';
         echo '<div class="d-inline"><p class="small float-left pt-2">'.$layoutbits->ago(strtotime($d->created)).'</p>';
-        echo '<a href="gallery/img?id='. $d->id .'/delete" title="DELETE '. $d->title .'" class="btn btn-sm btn-danger float-right"><i class="fa fa-trash"></i></a></div>';
+        echo '<a href="gallery/show/image/'. $d->id .'/delete" title="DELETE '. $d->title .'" class="btn btn-sm btn-danger float-right"><i class="fa fa-trash"></i></a></div>';
     }
         echo '</div>';
         echo '</div>';

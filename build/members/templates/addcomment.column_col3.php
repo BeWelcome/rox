@@ -95,7 +95,7 @@ if (isset($vars['errors']) && !empty($vars['errors']))
 {
     foreach ($vars['errors'] as $error)
     {
-        echo '<div class="alert alert-danger">'.$words->get($error).'</div>';
+        echo '<div class="alert alert-danger w-100">'.$words->get($error).'</div>';
     }
 }
 

@@ -29,18 +29,18 @@ class GroupController extends AbstractController
     /**
      * @Route("/groups/new", name="new_group")
      *
-     * @param Request             $request
+     * @param Request $request
      * @param TranslatorInterface $translator
-     * @param Logger              $logger
+     * @param Logger $logger
      *
-     * @throws \Exception
-     *
+     * @param \Swift_Mailer $mailer
      * @return Response
      *
+     * @throws \Exception
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * Because of the mix between old code and new code this method is way too long.
      */
-    public function createNewGroupAction(Request $request, TranslatorInterface $translator, Logger $logger)
+    public function createNewGroupAction(Request $request, TranslatorInterface $translator, Logger $logger, \Swift_Mailer $mailer)
     {
         $groupRequest = new GroupRequest();
         $form = $this->createForm(GroupType::class, $groupRequest);
@@ -68,7 +68,7 @@ class GroupController extends AbstractController
             // We need the current locale for the MembersTrad entity
             $languageRepository = $em->getRepository(Language::class);
             /** @var Language $language */
-            $language = $languageRepository->findOneBy(['shortcode' => $request->getSession()->get('locale')]);
+            $language = $languageRepository->findOneBy(['shortcode' => $request->getLocale()]);
             /** @var Language $english */
             $english = $languageRepository->findOneBy(['shortcode' => 'en']);
 
@@ -145,7 +145,7 @@ class GroupController extends AbstractController
             ]);
             $this->addFlash('notice', $flashMessage);
 
-            $this->sendNewGroupNotifications($group, $member);
+            $this->sendNewGroupNotifications($group, $member, $mailer);
 
             $logger->write('Group '.$group->getName().' created by '.$member->getUsername().'.', 'Group');
 
@@ -291,16 +291,17 @@ class GroupController extends AbstractController
      *
      * @Route("/admin/groups/{id}/approve", name="admin_groups_approve")
      *
-     * @param Request             $request
-     * @param Group               $group
+     * @param Request $request
+     * @param Group $group
      * @param TranslatorInterface $translator
-     * @param Logger              $logger
+     * @param Logger $logger
      *
-     * @throws \Exception
-     *
+     * @param \Swift_Mailer $mailer
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Exception
      */
-    public function approveGroupAction(Request $request, Group $group, TranslatorInterface $translator, Logger $logger)
+    public function approveGroupAction(Request $request, Group $group, TranslatorInterface $translator, Logger $logger,
+        \Swift_Mailer $mailer)
     {
         if (!$this->isGranted([Member::ROLE_ADMIN_GROUP])) {
             throw $this->createAccessDeniedException('You need to have the Group right to access this.');
@@ -319,13 +320,13 @@ class GroupController extends AbstractController
         $logger->write('Group '.$group->getName().' approved by '.$this->getUser()->getUsername().'.', 'Group');
 
         $creator = current($group->getMembers());
-        $this->sendNewGroupApprovedNotification($group, $creator);
+        $this->sendNewGroupApprovedNotification($group, $creator, $mailer);
         $referrer = $request->headers->get('referer');
 
         return $this->redirect($referrer);
     }
 
-    private function sendNewGroupNotifications(Group $group, Member $member)
+    private function sendNewGroupNotifications(Group $group, Member $member, \Swift_Mailer $mailer)
     {
         $recipients = $this->getNewGroupNotificationRecipients();
         $subject = '[New Group] '.strip_tags($group->getName());
@@ -347,12 +348,12 @@ class GroupController extends AbstractController
                 'text/html'
             )
         ;
-        $recipients = $this->get('mailer')->send($message);
+        $recipients = $mailer->send($message);
 
         return (0 === $recipients) ? false : true;
     }
 
-    private function sendNewGroupApprovedNotification(Group $group, Member $creator)
+    private function sendNewGroupApprovedNotification(Group $group, Member $creator, \Swift_Mailer $mailer)
     {
         $recipient = $creator->getEmail();
 
@@ -375,7 +376,7 @@ class GroupController extends AbstractController
                 'text/html'
             )
         ;
-        $recipients = $this->get('mailer')->send($message);
+        $recipients = $mailer->send($message);
 
         return (0 === $recipients) ? false : true;
     }

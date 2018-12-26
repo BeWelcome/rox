@@ -18,15 +18,15 @@
     {{ form_start(form, {'attr': {'class': 'm-1 search_form'}}) }}
     {{ form_errors(form) }}
     <div class="form-row form-inline mb-1">
-        <div class="input-group mr-2">
+        <div class="input-group mr-2 mb-2 mb-md-0">
             <div class="input-group-prepend"><span class="input-group-text"><i
                             class="fa fa-lg fa-globe"></i></span>
             </div>
             {{ form_label(form.location) }}
             {{ form_widget(form.location, {'attr': {'class': 'search-picker'}, 'required': false }) }}
         </div>
-        <div class="form-group">
-            <label class="mr-2"><img src="{{ asset('images/icons/anytime.png') }}"
+        <div class="form-group mb-0">
+            <label class="mr-2 ml-1 ml-md-0"><img src="{{ asset('images/icons/anytime.png') }}"
                                      class="img-check {% if form.accommodation_anytime.vars.checked %}checked{% else %}not_checked{% endif %}"
                                      alt="{{ 'I like to host' | trans }}"/>
                 <div class="d-none">{{ form_widget(form.accommodation_anytime) }}</div>
@@ -44,22 +44,22 @@
                     {{ form_widget(form.accommodation_neverask) }}</div>
             </label>
         </div>
-        <div class="input-group mr-2">
+        <div class="input-group mr-2 mb-1 mb-md-0">
             <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-bed" title="{{ 'search.hosts_at_least' | trans }}"></i></span></div>
             {{ form_label(form.can_host) }}
             {{ form_widget(form.can_host, {'attr': {'data-minimum-results-for-search': '-1'}} ) }}
         </div>
-        <div class="input-group mr-2">
+        <div class="input-group mr-2 mb-1 mb-md-0">
             <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-bullseye" title="{{ 'in a radius of' | trans }}"></i></span></div>
             {{ form_label(form.distance) }}
             {{ form_widget(form.distance, {'attr': {'data-minimum-results-for-search': '-1'} }) }}
         </div>
-        <div class="form-group mr-2">
+        <div class="form-group mr-2 mb-1 mb-md-0 mt-md-1 mt-xl-0">
             <a class="btn btn-secondary advanced" data-toggle="collapse" href="#advancedNav" role="button"
                aria-expanded="false" aria-controls="advancedNav"
                >{{ 'search.show.advanced' | trans }}</a>
         </div>
-        <div class="form-group">
+        <div class="form-group mb-1 mb-md-0 mt-md-1 mt-xl-0">
             {{ form_widget(form.updateMap, {'attr': {'class': 'btn-primary float-right'}}) }}
         </div>
     </div>
@@ -68,41 +68,41 @@
     </div>
     <div class="collapse" id="advancedNav">
         <div class="form-row my-1">
-            <div class="form-group col-12 col-md-6">
-                {{ form_label(form.keywords) }}
+            <div class="form-group col-12 col-md-6 mt-2 mb-1">
+                {{ form_label(form.keywords, '', { 'label_attr': {'class': 'mb-0'} }) }}
                 {{ form_widget(form.keywords) }}
             </div>
-            <div class="form-group col-4 col-md-2">
+            <div class="form-group col-4 col-md-2 mb-1">
                 {{ form_row(form.offerdinner) }}
                 {{ form_row(form.offertour) }}
             </div>
-            <div class="form-group col-8 col-md-4">
+            <div class="form-group col-8 col-md-4 mb-1">
                 {{ form_row(form.accessible) }}
                 {{ form_row(form.inactive) }}
             </div>
-            <div class="form-group col-6 col-md-3">
-                {{ form_row(form.min_age) }}
+            <div class="form-group col-6 col-md-3 mb-1">
+                {{ form_row(form.min_age, { 'label_attr': {'class': 'mb-0'} }) }}
             </div>
-            <div class="form-group col-6 col-md-3">
-                {{ form_row(form.max_age) }}
+            <div class="form-group col-6 col-md-3 mb-1">
+                {{ form_row(form.max_age, { 'label_attr': {'class': 'mb-0'} }) }}
             </div>
-            <div class="form-group col-12 col-md-6">
-                {{ form_row(form.gender) }}
+            <div class="form-group col-12 col-md-6 mb-1">
+                {{ form_row(form.gender, { 'label_attr': {'class': 'mb-0'} }) }}
             </div>
-            <div class="form-group col-12 col-md-6">
-                {{ form_label(form.groups) }}
+            <div class="form-group col-12 col-md-6 mb-1">
+                {{ form_label(form.groups, '', { 'label_attr': {'class': 'mb-0'} }) }}
                 {{ form_widget(form.groups) }}
             </div>
-            <div class="form-group col-12 col-md-6">
-                {{ form_label(form.languages) }}
+            <div class="form-group col-12 col-md-6 mb-1">
+                {{ form_label(form.languages, '', { 'label_attr': {'class': 'mb-0'} }) }}
                 {{ form_widget(form.languages) }}
             </div>
-            <div class="form-group col-12 col-md-6">
-                {{ form_label(form.order) }}
+            <div class="form-group col-12 col-md-6 mb-1">
+                {{ form_label(form.order, '', { 'label_attr': {'class': 'mb-0'} }) }}
                 {{ form_widget(form.order) }}
             </div>
-            <div class="form-group col-12 col-md-6">
-                {{ form_label(form.items) }}
+            <div class="form-group col-12 col-md-6 mb-1">
+                {{ form_label(form.items, '', { 'label_attr': {'class': 'mb-0'} }) }}
                 {{ form_widget(form.items) }}
             </div>
         </div>

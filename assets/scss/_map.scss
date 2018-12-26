@@ -14,11 +14,12 @@
 
 .map-box {
   height: 0;
-  @include media-breakpoint-down(sm) {
-    width: 100%;
+
+  @include media-breakpoint-down(md) {
+    width: 90%;
     padding-top: 100%;
   }
-  @include media-breakpoint-up(md) {
+  @include media-breakpoint-up(lg) {
     width: 100%;
     padding-top: 33%;
   }

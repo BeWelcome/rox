@@ -72,148 +72,179 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         $invited = $this->group->getMembers('Invited');
 
 ?>
-    <div id="groups">
-    <div class="subcolumns">
+    <div class="col-12">
         <h3><?= $words->get('GroupsAdministrateMembers'); ?></h3>
-        <div class="c50l">
-            <div class="subcl">
-        <h4><?= $words->get('GroupsCurrentMembers');?></h4>
-        <?php $this->pager_widget->render(); ?>
-        <table id='current_members'>
-            <tr>
-              <th colspan="2"><?= $words->get('Username');?></th>
-              <th><?= $words->get('Action');?></th>
-            </tr>
-        <?php
+    </div>
+        <div class="col-12">
+            <?php $this->pager_widget->render(); ?>
+        </div>
+
+        <div class="col-12">
+            <h4><?= $words->get('GroupsCurrentMembers');?></h4>
+        </div>
+    </div>
+
+        <div class="row">
+            <div class="col-8 col-md-3">
+                <?= $words->get('Username');?>
+            </div>
+            <div class="col-4 col-md-3">
+                <?= $words->get('Action');?>
+            </div>
+            <div class="col-8 col-md-3 d-none d-md-block">
+                <?= $words->get('Username');?>
+            </div>
+            <div class="col-4 col-md-3 d-none d-md-block">
+                <?= $words->get('Action');?>
+            </div>
+
+            <?php
             $purifier = MOD_htmlpure::getBasicHtmlPurifier();
             $count = 0;
             foreach ($this->pager_widget->getActiveSubset($this->group->getMembers('In', $this->pager_widget->getActiveStart(), $this->pager_widget->getActiveLength())) as $member)
             {
                 ?>
-                <tr>
-                    <td><?=MOD_layoutbits::linkWithPicture($member->Username) ?></td>
-                    <td><a href="members/<?= $member->Username; ?>" class="username"><?=$member->Username ?></a></td>
-                    <td>
-                        <?php
-                        $groupid = $this->group->getPKValue();
-                        $memberid = $member->getPKValue();
-                        $BWAdmin = $this->isBWAdmin;
-                        if ($this->member->getPKValue() == $memberid  && !$BWAdmin) {
-                            echo "<a class='resignAdmin' href='groups/{$groupid}/resignAdmin'>{$words->getSilent('resignAsAdmin')}</a>";
-                        } elseif ($this->member->getPKValue() == $memberid  && $BWAdmin) {
-                            echo "SuperAdminPower!";
-                        }
-                        else {
-                            if ($this->group->isGroupOwner($member) && !$BWAdmin) {
-                                echo $words->getSilent('MemberIsAdmin');
-                            } elseif ($this->group->isGroupOwner($member) && $BWAdmin) {
-                                echo $words->getSilent('MemberIsAdmin');
-                                echo " / <a class='ban' href='groups/{$groupid}/banmember/{$memberid}'>{$words->getSilent('GroupsBanMember')}</a>";
-                                echo " / <a class='kick' href='groups/{$groupid}/kickmember/{$memberid}'>{$words->getSilent('GroupsKickMember')}</a>";
-                            } else {
-                                echo "<a class='addAdmin' href='groups/{$groupid}/addAdmin/{$memberid}'>{$words->getSilent('GroupsAddAdmin')}</a>";
-                                echo " / <a class='ban' href='groups/{$groupid}/banmember/{$memberid}'>{$words->getSilent('GroupsBanMember')}</a>";
-                                echo " / <a class='kick' href='groups/{$groupid}/kickmember/{$memberid}'>{$words->getSilent('GroupsKickMember')}</a>";
-                            }
-                        } ?>
-                    </td>
-                </tr>
+            <div class="col-8 col-md-3">
+                <?=MOD_layoutbits::linkWithPicture($member->Username) ?>
+                <a href="members/<?= $member->Username; ?>" class="username"><?=$member->Username ?></a>
+            </div>
+
+            <div class="col-4 col-md-3 pt-2">
+                <?php
+                $groupid = $this->group->getPKValue();
+                $memberid = $member->getPKValue();
+                $BWAdmin = $this->isBWAdmin;
+                if ($this->member->getPKValue() == $memberid  && !$BWAdmin) {
+                    echo "<a class='resignAdmin' href='groups/{$groupid}/resignAdmin'>{$words->getSilent('resignAsAdmin')}</a>";
+                } elseif ($this->member->getPKValue() == $memberid  && $BWAdmin) {
+                    echo "SuperAdminPower!";
+                }
+                else {
+                    if ($this->group->isGroupOwner($member) && !$BWAdmin) {
+                        echo "<i class='fa fa-user-cog mr-1 mt-3' title='{$words->getSilent('MemberIsAdmin')}'></i>";
+                    } elseif ($this->group->isGroupOwner($member) && $BWAdmin) {
+                        echo "<i class='fa fa-user-cog' title='{$words->getSilent('MemberIsAdmin')}'></i>";
+                        echo "<a class='kick btn btn-sm btn-warning' href='groups/{$groupid}/kickmember/{$memberid}'><i class='fa fa-user-times' title='{$words->getSilent('GroupsKickMember')}'></i></a>";
+                        echo "<a class='ban btn btn-sm btn-danger' href='groups/{$groupid}/banmember/{$memberid}'><i class='fa fa-user-slash' title='{$words->getSilent('GroupsBanMember')}'></i></a>";
+                    } else {
+                        echo "<a class='addAdmin btn btn-sm btn-info' href='groups/{$groupid}/addAdmin/{$memberid}'><i class='fa fa-user-cog' title='{$words->getSilent('GroupsAddAdmin')}'></i></a>";
+                        echo "<a class='kick btn btn-sm btn-warning' href='groups/{$groupid}/kickmember/{$memberid}'><i class='fa fa-user-times' title='{$words->getSilent('GroupsKickMember')}'></i></a>";
+                        echo "<a class='ban btn btn-sm btn-danger' href='groups/{$groupid}/banmember/{$memberid}'><i class='fa fa-user-slash' title='{$words->getSilent('GroupsBanMember')}'></i></a>";
+                    }
+                } ?>
+            </div>
                 <?php
                 $count++;
             }
-        echo "</table>";
-        $this->pager_widget->render();
-        ?>
-        <script type='text/javascript'>
-        var memberban = $('current_members').getElementsBySelector('a.ban');
-        var memberkick = $('current_members').getElementsBySelector('a.kick');
-        var memberasadmin = $('current_members').getElementsBySelector('a.addAdmin');
-        var resignasadmin = $('current_members').getElementsBySelector('a.resignAdmin');
-        memberban.each(function(elem){
-            elem.observe('click', function(e){
-                if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberBan'));?>'))
-                {
-                    Event.stop(e);
-                }
-            })
-        });
-        memberkick.each(function(elem){
-            elem.observe('click', function(e){
-                if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberKick'));?>'))
-                {
-                    Event.stop(e);
-                }
-            })
-        });
-        memberasadmin.each(function(elem){
-            elem.observe('click', function(e){
-                if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberAsAdmin'));?>'))
-                {
-                    Event.stop(e);
-                }
-            })
-        });
-        resignasadmin.each(function(elem){
-            elem.observe('click', function(e){
-                if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmResignAsAdmin'));?>'))
-                {
-                    Event.stop(e);
-                }
-            })
-        });
-        </script>
-        <?=$words->flushBuffer()?>
-            </div> <!-- subcl -->
-        </div> <!-- c62l -->
+            ?>
+            <div class="col-12">
+                <?
+                $this->pager_widget->render();
+                ?>
+            </div>
 
-        <div class="c50r">
+            <script type='text/javascript'>
+                var memberban = $('current_members').getElementsBySelector('a.ban');
+                var memberkick = $('current_members').getElementsBySelector('a.kick');
+                var memberasadmin = $('current_members').getElementsBySelector('a.addAdmin');
+                var resignasadmin = $('current_members').getElementsBySelector('a.resignAdmin');
+                memberban.each(function(elem){
+                    elem.observe('click', function(e){
+                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberBan'));?>'))
+                        {
+                            Event.stop(e);
+                        }
+                    })
+                });
+                memberkick.each(function(elem){
+                    elem.observe('click', function(e){
+                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberKick'));?>'))
+                        {
+                            Event.stop(e);
+                        }
+                    })
+                });
+                memberasadmin.each(function(elem){
+                    elem.observe('click', function(e){
+                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberAsAdmin'));?>'))
+                        {
+                            Event.stop(e);
+                        }
+                    })
+                });
+                resignasadmin.each(function(elem){
+                    elem.observe('click', function(e){
+                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmResignAsAdmin'));?>'))
+                        {
+                            Event.stop(e);
+                        }
+                    })
+                });
+            </script>
+            <?=$words->flushBuffer()?>
+
+
 <?php if ($this->group->Type != 'Public') :?>
-            <div class="subcl">
+            <div class="col-12">
                 <h4><?= $words->get('GroupsProspectiveMembers');?></h4>
-                <table id='possible_members'>
-                    <tr>
-                      <th colspan="2"><?= $words->get('Username');?></th>
-                      <th><?= $words->get('Action');?></th>
-                    </tr>
-                <?php foreach ($need_approval as $member) : ?>
-                    <tr>
-                        <td><?=MOD_layoutbits::linkWithPicture($member->Username) ?></td>
-                        <td><a href="members/<?=$member->Username ?>" class="username"><?=$member->Username ?></a></td>
-                        <td><?= (($this->member->getPKValue() == $member->getPKValue()) ? '' :
-                                 "<a class='accept' href='groups/{$this->group->getPKValue()}/acceptmember/{$member->getPKValue()}'>".$words->get('GroupsAcceptMember')."</a><br>
-                                  <a class='kick' href='groups/{$this->group->getPKValue()}/declinemember/{$member->getPKValue()}'>".$words->get('GroupsDeclineMember')."</a><br>
-                                  <a class='ban' href='groups/{$this->group->getPKValue()}/banmember/{$member->getPKValue()}'>".$words->get('GroupsBanMember')."</a>");?>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-                </table>
+            </div>
 
-            </div> <!-- subcl -->
+            <div class="col-8 col-md-3">
+                <?= $words->get('Username');?>
+            </div>
+            <div class="col-4 col-md-3">
+                <?= $words->get('Action');?>
+            </div>
+            <div class="col-8 col-md-3 d-none d-md-block">
+                <?= $words->get('Username');?>
+            </div>
+            <div class="col-4 col-md-3 d-none d-md-block">
+                <?= $words->get('Action');?>
+            </div>
+
+                <?php foreach ($need_approval as $member) : ?>
+            <div class="col-8 col-md-3">
+                <?=MOD_layoutbits::linkWithPicture($member->Username) ?>
+                <a href="members/<?=$member->Username ?>" class="username"><?=$member->Username ?></a>
+            </div>
+            <div class="col-4 col-md-3">
+                       <?= (($this->member->getPKValue() == $member->getPKValue()) ? '' :
+                                 "<a class='accept btn btn-sm btn-success' href='groups/{$this->group->getPKValue()}/acceptmember/{$member->getPKValue()}'><i class='fa fa-user-check' title='".$words->get('GroupsAcceptMember')."'></i></a><br>
+                                  <a class='kick btn btn-sm btn-warning' href='groups/{$this->group->getPKValue()}/declinemember/{$member->getPKValue()}'><i class='fa fa-user-times' title='".$words->get('GroupsDeclineMember')."'></i></a><br>
+                                  <a class='ban btn btn-sm btn-danger' href='groups/{$this->group->getPKValue()}/banmember/{$member->getPKValue()}'><i class='fa fa-user-slash' title='".$words->get('GroupsBanMember')."'></i></a>");?>
+            </div>
+                <?php endforeach; ?>
+
 <?php endif ;?>
-            <div class='subcl'>
+            <div class="col-12">
                 <h4><?= $words->get('GroupsInvitedMembers');?></h4>
-                <table id='invited_members'>
-                    <tr>
-                      <th colspan="2"><?= $words->get('Username');?></th>
-                    </tr>
+            </div>
+
+            <div class="col-12">
+                <?= $words->get('Username');?>
+            </div>
+
 <?php if ($invited) : ?>
     <?php foreach ($invited as $member) : ?>
-                    <tr>
-                        <td><?=MOD_layoutbits::linkWithPicture($member->Username) ?></td>
-                        <td><a href="members/<?=$member->Username ?>" class="username"><?=$member->Username ?></a></td>
-                    </tr>
+                    <div class="col-12 col-md-6">
+                        <?=MOD_layoutbits::linkWithPicture($member->Username) ?></td>
+                        <a href="members/<?=$member->Username ?>" class="username"><?=$member->Username ?></a>
+                    </div>
     <?php endforeach; ?>
 <?php endif; ?>
-                </table>
-            </div>
-            <div class='subcl'>
+            <div class="col-12">
                 <h4><?= $words->get('GroupsInviteMember') ?></h4>
-                <div id='search_result' style='display: none;padding: 3px; margin-bottom: 3px'></div>
+            </div>
+
+            <div id="search_result" class="col-12" style="display: none;"></div>
+
+            <div class="col-12">
                 <form method='get' action='groups/<?= $this->group->getPKValue(); ?>/invitemembers/search' id='invite_form'>
                     <input type='text' value='<?= $words->getSilent('GroupsEnterUsername');?>' name='username' id='search_username'/><input type='submit' value='<?= $words->getSilent('Search');?>' id='search_username_submit'/>
                 </form>
                 <?=$words->flushBuffer()?>
             </div>
+
             <script type='text/javascript'>
                 var possiblemembers = $('possible_members');
                 if (possiblemembers) {
@@ -318,13 +349,8 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                 });
             </script>
             <?=$words->flushBuffer()?>
-        </div> <!-- c50r -->
-    </div> <!-- subcolums -->
-</div>
+
     <?php
     }
-
-
 }
-
 ?>

@@ -21,14 +21,21 @@
         if ($search_result)
         {
         $mygroups = $this->pager->getActiveSubset($search_result);
-        $this->pager->render();
-
+        ?>
+        <div class="col-12">
+            <? $this->pager->render(); ?>
+        </div>
+        <?
             foreach ($mygroups as $group_data) :
 
                 include('groupsdisplay.php');
 
             endforeach ;
-            $this->pager->render();
+            ?>
+        <div class="col-12 order-12 mt-3">
+            <? $this->pager->render(); ?>
+        </div>
+<?
         }
         else
         {

@@ -111,7 +111,7 @@ if ($error) {?>
 				<p><?=$words->get('Donate_Process')?></p>
 			</div>
 			<div class="tab-pane card p-2" id="time" role="tabpanel">
-                {{ 'donation.donatetime' | trans }}
+                <?=$words->get('donation.donatetime')?>
 			</div>
 		</div>
 

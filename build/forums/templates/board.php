@@ -20,6 +20,7 @@ $navigationPath .= '<a href="' . htmlspecialchars($boards->getBoardLink(), ENT_Q
 
 ?>
 
+<div class="col-8">
 <?php echo $words->flushBuffer();
 
 	$number = $boards->getTotalThreads(); 
@@ -31,11 +32,13 @@ $navigationPath .= '<a href="' . htmlspecialchars($boards->getBoardLink(), ENT_Q
 	} else {
 		echo $words->getFormatted("FoundXThreads", $number);
 	}
+	?>
+</div>
 
-
+<?
 if ($User && empty($noForumNewTopicButton)) {
 ?>
-	<div class="col-12 col-md-4">
+	<div class="col-4 mb-1">
     <a class="btn btn-primary float-right" role="button" href="<?php echo $uri; ?>new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a><?php echo $words->flushBuffer(); ?></div>
 <?php
 } // end if $User

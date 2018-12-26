@@ -5,7 +5,7 @@
 
     <?php
     define('MINROWS', 5); // minimum number of rows to be used before next column
-    echo '<div class="d-flex flex-column pb-3">';
+    echo '<div class="d-flex flex-column pb-3 px-3">';
     $listcnt = 0;
     $memberCount = 0;
     foreach ($this->regions as $code => $region) {
@@ -19,7 +19,7 @@
             $listcnt = 1;
         }
 
-        echo '<div class="p-1"><a href="places/' . htmlspecialchars($this->countryName) . '/' . $this->countryCode . '/'
+        echo '<div class="pb-1"><a href="places/' . htmlspecialchars($this->countryName) . '/' . $this->countryCode . '/'
             . htmlspecialchars($region['name']) . '/' . $code . '"> ' . htmlspecialchars($region['name']) . '</a><span class="small ml-1 badge badge-primary">' . $region['number'] . '</span></div>';
 
     }

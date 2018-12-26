@@ -98,21 +98,21 @@ class GroupSettingsPage extends GroupsBasePage
         }?>
         <div class="row">
 
-            <div class="col-9">
+            <div class="col-8">
                 <h5><?= $words->get('GroupsAddImage'); ?></h5>
                 <div class="float-left">
                     <img class="float-left framed mr-2 mb-2" src="groups/realimg/<?= $this->group->getPKValue(); ?>" width="100px" alt="Group image">
                 </div>
                 <div>
-                    <label for='group_image'><?= $words->get('GroupsImage'); ?></label>
-                    <input id='group_image' name='group_image' type='file' />
+                    <label for="group_image"><?= $words->get('GroupsImage'); ?></label>
+                    <input id="group_image" name="group_image" type="file" class="form-control btn btn-outline-primary p-0 text-left">
                 </div>
 
             </div>
 
-            <div class="col-3">
-                <a class="btn btn-block btn-outline-primary" role="button" href="groups/<?= $this->group->id; ?>/memberadministration"><?= $words->get('GroupsAdministrateMembers'); ?></a>
-                <a class="btn btn-block btn-outline-primary" role="button" href="groups/<?= $this->group->id; ?>/delete"><?= $words->get('GroupsDeleteGroup'); ?></a>
+            <div class="col-4 mt-3">
+                <a class="btn btn-block btn-secondary" role="button" href="groups/<?= $this->group->id; ?>/memberadministration"><i class="fa fa-users mr-1"></i><?= $words->get('GroupsAdministrateMembers'); ?></a>
+                <a class="btn btn-block btn-danger" role="button" href="groups/<?= $this->group->id; ?>/delete"><i class="fa fa-trash mr-1"></i><?= $words->get('GroupsDeleteGroup'); ?></a>
             </div>
         </div>
 
@@ -120,7 +120,7 @@ class GroupSettingsPage extends GroupsBasePage
 
         <div class="input-group my-3">
             <label for="description" class="h5 m-0"><?= $words->get('Description');?></label>
-            <textarea  id="description" name="GroupDesc_" aria-describedby="newgroupdescription" rows="5" class="w-100" ><?=htmlspecialchars($GroupDesc_, ENT_QUOTES)?></textarea>
+            <textarea  id="description" name="GroupDesc_" aria-describedby="newgroupdescription" rows="5" class="w-100 p-2"><?=htmlspecialchars($GroupDesc_, ENT_QUOTES)?></textarea>
         </div>
 
 </div>
@@ -144,12 +144,6 @@ class GroupSettingsPage extends GroupsBasePage
                     <label>
                         <input type="radio" id="approved" name="Type" value="NeedAcceptance"<?= (($Type=='NeedAcceptance') ? ' checked': ''); ?>>
                         <?=$words->get('GroupsJoinApproved'); ?>
-                    </label>
-                </div>
-                <div class="form-check-inline">
-                    <label>
-                        <input type="radio" id="invited" name="Type" value="NeedInvitation"<?= (($Type=='NeedInvitation') ? ' checked': ''); ?>>
-                        <?=$words->get('GroupsJoinInvited'); ?>
                     </label>
                 </div>
             </fieldset>
@@ -176,9 +170,6 @@ class GroupSettingsPage extends GroupsBasePage
                     </label>
                 </div>
             </fieldset>
-
-
-
         </div>
 
         <div class="col-12 text-center">
@@ -186,13 +177,6 @@ class GroupSettingsPage extends GroupsBasePage
             </form>
         </div>
 
-        <div class="col-12 col-sm-6">
-            <a class="btn btn-block btn-outline-primary" role="button" href="groups/<?= $this->group->id; ?>/memberadministration"><?= $words->get('GroupsAdministrateMembers'); ?></a>
-        </div>
-
-        <div class="col-12 col-sm-6">
-            <a class="btn btn-block btn-outline-primary" role="button" href="groups/<?= $this->group->id; ?>/delete"><?= $words->get('GroupsDeleteGroup'); ?></a>
-        </div>
     <?php
     }
 }

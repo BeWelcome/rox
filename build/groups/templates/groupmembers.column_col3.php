@@ -6,10 +6,15 @@
     else
     {
 ?>
-    <h3><?= $words->get('GroupsMembers'); ?></h3>
+    <div class="col-12">
+        <h3><?= $words->get('GroupsMembers'); ?></h3>
+    </div>
 
+    <div class="col-12">
     <?php $this->pager_widget->render(); ?>
-<div class="table-responsive">
+    </div>
+
+<div class="col-12 table-responsive">
         <table class="table table-striped table-hover">
             <thead class="blank">
             <tr>
@@ -47,7 +52,9 @@
             </tbody>
         </table>
 </div>
-    <?php 
-        $this->pager_widget->render();
-    }
-    ?>
+        <div class="col-12">
+        <?php
+            $this->pager_widget->render();
+        }
+        ?>
+        </div>

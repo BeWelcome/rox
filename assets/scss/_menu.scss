@@ -17,6 +17,7 @@ $input-padding-x:         .75rem !default;
   margin: 0;
   display: block;
   outline: 0;
+  background-color: $white;
 }
 .ui-menu .ui-menu {
   position: absolute;
@@ -28,7 +29,6 @@ $input-padding-x:         .75rem !default;
   list-style-image: url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
 }
 .ui-menu .ui-menu-item-wrapper {
-  background-color: white;
   cursor: pointer;
   position: relative;
   padding: $input-padding-x $input-padding-y;

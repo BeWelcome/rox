@@ -151,17 +151,16 @@ $vars =& PPostHandler::getVars($callbackId);
             } ?>
         </div>
 </div>
-    <div class="row justify-content-between align-items-center">
+    <div class="row mt-2">
 
-        <div class="col-12 col-md-auto order-2">
+        <div class="col-12 col-md-4 order-1 order-md-2 form-inline">
             <legend class="sr-only"><?php echo $words->getFormatted("forum_Notify") ?></legend>
             <input type="checkbox" name="NotifyMe" id="NotifyMe" <?php echo $notifymecheck ?>>
             <label for="NotifyMe"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
         </div>
 
-        <div class="col-12 col-md-auto order-3 text-md-right">
+        <div class="col-12 col-md-4 order-2 order-md-3 form-inline">
                     <legend class="sr-only"><?= $words->getFormatted("forum_label_visibility") ?></legend>
-            <i class="fa fa-eye" title="<?= $words->getFormatted("forum_label_visibility"); ?>"></i>
                     <?php
                     // visibility can only be set on groups with 'VisiblePosts' set to 'yes'.
                     // Only option to change is to show group post to all members (see #2167)
@@ -190,7 +189,7 @@ $vars =& PPostHandler::getVars($callbackId);
                     <?php } ?>
         </div>
 
-            <div class="col-12 col-md-auto order-1">
+            <div class="col-12 col-md-4 order-3 order-md-1">
                 <input type="submit" class="btn btn-primary px-5" value="<?php
                 if ($allow_title) { // New Topic
                     if ($edit) {

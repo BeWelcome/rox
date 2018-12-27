@@ -28,9 +28,14 @@ class GroupRequest
     public $type = 'Public';
 
     /**
-     * @var string
+     * @Assert\Image(
+     *     minWidth = 200,
+     *     maxWidth = 400,
+     *     minHeight = 200,
+     *     maxHeight = 400
+     * )
      */
-    public $picture = '';
+    public $picture;
 
     /**
      * @var bool

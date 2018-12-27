@@ -31,6 +31,7 @@ Encore
     .addEntry('profile/profile', './assets/js/profile.js')
     .addEntry( 'updatecounters', './assets/js/updateCounters.js')
     .addEntry( 'lightbox', './assets/js/lightbox.js')
+    .addEntry('bsfileselect', './assets/js/bsfileselect.js')
     // .addEntry( 'roxeditor', './assets/js/roxeditor.js')
 
     .enableSassLoader()

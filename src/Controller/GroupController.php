@@ -12,6 +12,7 @@ use App\Form\CustomDataClass\GroupRequest;
 use App\Form\GroupType;
 use App\Logger\Logger;
 use App\Repository\GroupRepository;
+use Intervention\Image\ImageManagerStatic as Image;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -51,16 +52,23 @@ class GroupController extends AbstractController
             $member = $this->getUser();
             // if a file was uploaded move it into the image storage
             /** @var UploadedFile $file */
+
             $file = $data->picture;
             $fileName = '';
             if (null !== $file) {
+                $groupImageDir = $this->getParameter('group_directory');
                 $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
 
-                // moves the file to the directory where brochures are stored
+                // moves the file to the directory where group images are stored
                 $file->move(
-                    $this->getParameter('group_directory'),
+                    $groupImageDir,
                     $fileName
                 );
+                $img = Image::make($groupImageDir . '/' . $fileName);
+                $img->resize(80,80, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+                $img->save($groupImageDir . '/thumb' . $fileName);
             }
             $em = $this->getDoctrine()->getManager();
 

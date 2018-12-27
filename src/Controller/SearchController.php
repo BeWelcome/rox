@@ -94,7 +94,7 @@ class SearchController extends AbstractController
         $pager = false;
         $results = false;
 
-        $searchFormRequest = new SearchFormRequest();
+        $searchFormRequest = new SearchFormRequest($this->getDoctrine()->getManager());
         $form = $this->createForm(SearchFormType::class, $searchFormRequest);
 
         $form->handleRequest($request);

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <ruleset name="Rox">
-    <file>module/</file>
+    <file>src/</file>
 
     <exclude-pattern>*.js</exclude-pattern>
 
@@ -10,11 +10,11 @@
     <rule ref="PSR2"/>
 
     <rule ref="Squiz.Commenting.FunctionCommentThrowTag">
-        <exclude-pattern>module/*/tests/*</exclude-pattern>
+        <exclude-pattern>tests/*</exclude-pattern>
     </rule>
 
     <rule ref="Squiz.Commenting.VariableComment">
-        <exclude-pattern>module/*/tests/*</exclude-pattern>
+        <exclude-pattern>tests/*</exclude-pattern>
     </rule>
 
 </ruleset>

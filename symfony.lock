@@ -122,6 +122,9 @@
     "fzaninotto/faker": {
         "version": "v1.8.0"
     },
+    "guzzlehttp/psr7": {
+        "version": "1.5.2"
+    },
     "hamcrest/hamcrest-php": {
         "version": "v1.2.2"
     },
@@ -139,6 +142,9 @@
     },
     "incenteev/composer-parameter-handler": {
         "version": "v2.1.3"
+    },
+    "intervention/image": {
+        "version": "2.4.2"
     },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
@@ -248,11 +254,17 @@
     "psr/container": {
         "version": "1.0.0"
     },
+    "psr/http-message": {
+        "version": "1.0.1"
+    },
     "psr/log": {
         "version": "1.0.2"
     },
     "psr/simple-cache": {
         "version": "1.0.1"
+    },
+    "ralouphie/getallheaders": {
+        "version": "2.0.5"
     },
     "robmorgan/phinx": {
         "version": "0.10.6"
@@ -584,9 +596,6 @@
     "twig/twig": {
         "version": "v2.5.0"
     },
-    "vlucas/phpdotenv": {
-        "version": "v2.5.1"
-    },
     "webmozart/assert": {
         "version": "1.3.0"
     },
@@ -609,6 +618,6 @@
         "version": "2.6.1"
     },
     "zendframework/zend-validator": {
-        "version": "2.10.2"
+        "version": "2.11.0"
     }
 }

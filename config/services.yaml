@@ -6,7 +6,7 @@
 parameters:
     new_members_messages_per_hour: "%env(new_members_messages_per_hour)%"
     new_members_messages_per_day: "%env(new_members_messages_per_day)%"
-    group_directory: "%env(group_directory)%"
+    group_directory: "%kernel.project_dir%/%env(group_directory)%"
 
 services:
     # makes classes in src/ available to be used as services

@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Image;
 
 class GroupType extends AbstractType
 {
@@ -52,6 +53,10 @@ class GroupType extends AbstractType
             ])
             ->add('picture', FileType::class, [
                 'required' => false,
+                'attr' => [
+                    'placeholder' => 'group.choose.group.image',
+                ],
+                'help' => 'group.picture.help',
             ])
             ->add('submit', SubmitType::class, [
                 'attr' => [

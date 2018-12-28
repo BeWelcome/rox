@@ -4,7 +4,7 @@
     {# 4 most recent forum messages #}
     {% for thread in threads %}
         <div class="d-flex flex-row justify-content-start align-items-center p-2">
-            <div class="pr-2">{{ macros.avatar(thread.lastpost.author.Username, 50, true) }}</div>
+            <div class="pr-2">{{ macros.avatar(thread.firstpost.author.Username, 50, true) }}</div>
             <div class="dashentry">
                 <div class="text-truncate text">
                     <a href="{{ url('forum_thread', {'threadId': thread.id}) }}">{{ thread.title }}</a>

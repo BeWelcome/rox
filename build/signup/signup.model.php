@@ -291,8 +291,8 @@ FROM `user` WHERE
 
             $idTB = $this->registerTBMember($vars);
             if (!$idTB) {
-		MOD_log::get()->write("TB registration failed","Signup") ;
-		return false;
+                MOD_log::get()->write("TB registration failed","Signup") ;
+                return false;
             }
 
             $id = $this->registerBWMember($vars);
@@ -415,8 +415,6 @@ VALUES
         // ********************************************************************
         // members
         // ********************************************************************
-        error_log(print_r($vars, true));
-
         $query = "
             INSERT INTO `members`
             (
@@ -472,17 +470,23 @@ VALUES
             return function ($v) use ($lang) { return $v->id == $lang; };
         };
 
+        $update="INSERT INTO memberspreferences (IdMember, IdPreference, Value) VALUES ";
         $filteredLanguages = array_filter($languages, $languageFilter($motherTongue->id));
         if (!empty($filteredLanguages)) {
-            $update="
-                INSERT INTO
-                    memberspreferences
-                SET
-                    IdMember = " . $memberEntity->id . ",
-                    IdPreference = 1,
-                    Value = " . $motherTongue->id;
-            $this->dao->query($update);
+            // \todo Remove hard coded pointer into preference table
+            $update .= "($memberEntity->id, 1, " . $motherTongue->id . ")," . PHP_EOL;
         }
+
+        // Set newsletter preference
+        // \todo Remove hard coded pointer into preference table
+        $update .= "($memberEntity->id, 8, '" . $vars['newsletters'] . "',)" . PHP_EOL;
+
+        // Set local info preference
+        // \todo Remove hard coded pointer into preference table
+        $update .= "($memberEntity->id, 13, '" . $vars['local-info'] . "')" . PHP_EOL;
+
+        $this->dao->query($update);
+
         $memberEntity->update();
         $memberEntity->setPassword($vars['password']);
 
@@ -671,6 +675,12 @@ VALUES
         // terms
         if (empty($vars['terms']) || !$vars['terms']) {
             $errors[] = 'SignupMustAcceptTerms';
+        }
+        if (empty($vars['newsletters']) || !$vars['newsletters']) {
+            $errors[] = 'SignupReceiveNewsletters';
+        }
+        if (empty($vars['local-info']) || !$vars['local-info']) {
+            $errors[] = 'SignupReceiveLocalInfo';
         }
 
         return $errors;

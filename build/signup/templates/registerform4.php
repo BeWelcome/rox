@@ -29,25 +29,58 @@
             </div>
 
             <div class="col-12 col-md-9">
-
-                    <!-- terms -->
-                    <div class="checkbox w-100">
-                        <label>
-                            <input type="checkbox" id="terms" name="terms" required
-                            <?php
-                            if (isset ($vars["terms"])) echo " checked"; // if user has already clicked, we will not bore him again
-                            echo " >";
-                            ?>
-                            <?php echo $words->get('IAgreeWithTerms'); ?>
-                        </label>
+                <!-- terms -->
+                <div class="checkbox w-100">
+                    <label>
+                        <input type="checkbox" id="terms" name="terms" required
+                        <?php
+                        if (isset ($vars["terms"])) echo " checked"; // if user has already clicked, we will not bore him again
+                        echo " >";
+                        ?>
+                        <?php echo $words->get('IAgreeWithTerms'); ?>
+                    </label>
+                </div>
+                <?php
+                if (in_array('SignupMustAcceptTerms', $vars['errors'])) {
+                    echo '<div class="w-100 text-muted alert alert-danger">' . $words->get('SignupTermsAndConditions') . '</div>';
+                }
+                ?>
+                <div class="row">
+                    <span class="col-12"><?php echo $words->get('signup.receive.newsletters'); ?></span>
+                    <div class="col-12 form-inline">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="newsletters" id="newsletters-yes" value="Yes" required>
+                            <label class="form-check-label" for="newsletters-yes">
+                                <?php echo $words->get('Yes'); ?>
+                            </label>
+                        </div>
+                        <div class="form-check pl-2">
+                            <input class="form-check-input" type="radio" name="newsletters" id="newsletters-no" value="No" required>
+                            <label class="form-check-label" for="newsletters-no">
+                                <?php echo $words->get('No'); ?>
+                            </label>
+                        </div>
                     </div>
-                    <?php
-                    if (in_array('SignupMustAcceptTerms', $vars['errors'])) {
-                        echo '<div class="w-100 text-muted alert alert-danger">' . $words->get('SignupTermsAndConditions') . '</div>';
-                    }
-                    ?>
+                </div>
+                <div class="row">
+                    <span class="col-12"><?php echo $words->get('signup.receive.local-info'); ?></span>
+                    <div class="col-12 form-inline">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="local-info" id="local-info-yes" value="Yes" required>
+                            <label class="form-check-label" for="local-info-yes">
+                                <?php echo $words->get('Yes'); ?>
+                            </label>
+                        </div>
+                        <div class="form-check pl-2">
+                            <input class="form-check-input" type="radio" name="local-info" id="local-info-no" value="No" required>
+                            <label class="form-check-label" for="local-info-no">
+                                <?php echo $words->get('No'); ?>
+                            </label>
+                        </div>
+                    </div>
+                </div>
 
-                    <button type="submit"
+                <button type="submit"
                             class="form-control btn btn-primary"><?php echo $words->getSilent('signup.submit'); ?> <i
                                 class="fa fa-check-square"></i></button>
                     <?php echo $words->flushBuffer(); ?>

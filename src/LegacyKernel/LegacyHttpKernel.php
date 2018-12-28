@@ -67,8 +67,14 @@ class LegacyHttpKernel extends HttpKernel
     {
         $router = new RoxFrontRouter($this->engine);
         // The only classname ever used
+        $router->classes = ['SignupController'];
 
         $router->session_memory = new SessionMemory('SessionMemory');
+        $roxPostHandler = $router->session_memory->__get('posthandler');
+        $roxPostHandler->setClasses( [
+            'SignupController'
+        ]);
+        $router->session_memory->__set('posthandler', $roxPostHandler);
 
         ob_start();
 

@@ -54,9 +54,9 @@ class HomeController extends AbstractController
         $statisticsModel = new StatisticsModel($this->getDoctrine());
         $statistics = $statisticsModel->getStatistics();
         $roxPostHandler = new \RoxPostHandler();
-        $roxPostHandler->classes = [
+        $roxPostHandler->setClasses([
             'SignupController',
-        ];
+        ]);
 
         return $this->render('home/home.html.twig', [
             'postHandler' => $roxPostHandler,

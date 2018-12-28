@@ -11,13 +11,18 @@ class RoxPostHandler extends ObjectWithInjection
 {
     private $_registered_callbacks = array();
     
-    
+    private $classes;
+
     public function __sleep()
     {
         return array('_registered_callbacks');
     }
     
-    
+    public function setClasses(array $classes)
+    {
+        $this->classes = $classes;
+    }
+
     public function getCallbackAction(array $post_args)
     {
         if (isset($post_args['formkit_redirect_req'])) {

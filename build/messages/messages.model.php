@@ -601,11 +601,6 @@ WHERE id = ".$input['receiver_id']."
     * It look a bit weird to have it in the model, but some day it might require additional data from database
     */
     public function DisplayCaptcha($value) {
-        $this->_session->get('TheCaptcha')=$value ;
-        $ss='<img src="bw/captcha.php?PHPSESSID='.session_id().'" alt="copy this captcha"/>';
-//      $ss='<img src="http://www.bewelcome.org/bw/captcha.php" alt="copy this captcha"/>';
-//      $ss=$this->_session->get('TheCaptcha') ;
-        return($ss) ;
     } // end of DisplayCaptcha
 
     public function CaptchaNeeded($IdMember) {

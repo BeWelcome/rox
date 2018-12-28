@@ -71,11 +71,12 @@ class LegacyHttpKernel extends HttpKernel
 
         $router->session_memory = new SessionMemory('SessionMemory');
         $roxPostHandler = $router->session_memory->__get('posthandler');
-        $roxPostHandler->setClasses( [
-            'SignupController'
-        ]);
-        $router->session_memory->__set('posthandler', $roxPostHandler);
-
+        if ($roxPostHandler) {
+            $roxPostHandler->setClasses([
+                'SignupController'
+            ]);
+            $router->session_memory->__set('posthandler', $roxPostHandler);
+        }
         ob_start();
 
         $router->route();

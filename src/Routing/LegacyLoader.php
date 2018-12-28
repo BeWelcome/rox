@@ -136,6 +136,8 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('imprint', '/impressum');
         $this->addRouteDirectly('add_relation_finish', '/members/{username}/relations/add/finish');
         $this->addRouteDirectly('delete_relation_editprofile', '/members/{username}/relations/delete/{relationId}/editprofile');
+        $this->addRouteDirectly('messages_with', '/messages/with/{username}');
+
         // Simple newsletter page
         $this->addRouteDirectly('newsletters', '/newsletters');
         $this->addRouteDirectly('newsletter_single', '/newsletter/{shortCode}/{language}');

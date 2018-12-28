@@ -479,7 +479,7 @@ VALUES
 
         // Set newsletter preference
         // \todo Remove hard coded pointer into preference table
-        $update .= "($memberEntity->id, 8, '" . $vars['newsletters'] . "',)" . PHP_EOL;
+        $update .= "($memberEntity->id, 8, '" . $vars['newsletters'] . "'), " . PHP_EOL;
 
         // Set local info preference
         // \todo Remove hard coded pointer into preference table

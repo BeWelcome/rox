@@ -110,11 +110,6 @@ class LandingModel extends BaseModel
 
         $em = $this->em;
 
-        // There seems to be an issue with some threads/posts missing their author.
-        // To get around that, this task is split it two parts: first do the search
-        // query we want using inner join on all required dependent tables, then second,
-        // use the IDs from that result set to do a findMany using the ORM.
-
         $queryBuilder = $em->createQueryBuilder();
 
         $queryBuilder
@@ -129,13 +124,16 @@ class LandingModel extends BaseModel
             $groupIds = array_map(function ($group) {
                 return $group->getId();
             }, $member->getGroups());
-            $queryBuilder
-                ->andWhere('ft.group IN (:groups)')
-                ->setParameter('groups', $groupIds);
-        } else {
-            $queryBuilder
-                ->andWhere('ft.group = 0');
         }
+        if ($forum) {
+            // The forum is identified by a group set to 0
+            array_push($groupIds, 0);
+        }
+        $queryBuilder
+            ->andWhere('ft.group IN (:groups)')
+            ->setParameter('groups', $groupIds)
+        ;
+
         if ($following) {
         }
 

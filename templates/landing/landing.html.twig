@@ -135,11 +135,11 @@
 
                     {# display settings#}
                     <div class="d-flex btn-group justify-content-center m-1" data-toggle="buttons">
-                        <label class="btn btn-primary btn-radio{% if forumFilter == 'GroupsAndForums' or forumFiler == 'Groups' %} active{% endif %}" id="groupsButton">
-                            <input type="checkbox" autocomplete="off"{% if forumFilter == 'GroupsAndForums' or forumFiler == 'Groups' %} checked{% endif %} hidden>{{ 'landing.button.groups' | trans }}
+                        <label class="btn btn-primary btn-radio{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Groups' %} active{% endif %}" id="groupsButton">
+                            <input type="checkbox" autocomplete="off"{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Groups' %} checked{% endif %} hidden>{{ 'landing.button.groups' | trans }}
                         </label>
-                        <label class="btn btn-primary btn-radio{% if forumFilter == 'GroupsAndForums' or forumFiler == 'Forums' %} active{% endif %}" id="forumButton">
-                            <input type="checkbox" autocomplete="off"{% if forumFilter == 'GroupsAndForums' or forumFiler == 'Forums' %} checked{% endif %} hidden>{{ 'landing.button.forum' | trans }}
+                        <label class="btn btn-primary btn-radio{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Forums' %} active{% endif %}" id="forumButton">
+                            <input type="checkbox" autocomplete="off"{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Forums' %} checked{% endif %} hidden>{{ 'landing.button.forum' | trans }}
                         </label>
                     </div>
 

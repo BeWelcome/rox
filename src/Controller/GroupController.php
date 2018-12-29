@@ -50,27 +50,9 @@ class GroupController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $member = $this->getUser();
-            // if a file was uploaded move it into the image storage
-            /** @var UploadedFile $file */
-
-            $file = $data->picture;
-            $fileName = '';
-            if (null !== $file) {
-                $groupImageDir = $this->getParameter('group_directory');
-                $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
-
-                // moves the file to the directory where group images are stored
-                $file->move(
-                    $groupImageDir,
-                    $fileName
-                );
-                $img = Image::make($groupImageDir . '/' . $fileName);
-                $img->resize(80,80, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
-                $img->save($groupImageDir . '/thumb' . $fileName);
-            }
             $em = $this->getDoctrine()->getManager();
+
+            $groupPicture = $this->handleGroupPicture($data->picture);
 
             // \todo: This is convoluted due to having to support the old structure! When recoding groups this should be simpler
             // We need the current locale for the MembersTrad entity
@@ -88,7 +70,7 @@ class GroupController extends AbstractController
                 ->setVisibleposts($data->membersOnly)
                 ->setVisiblecomments(false)
                 ->setMoreInfo('')
-                ->setPicture($fileName)
+                ->setPicture($groupPicture)
             ;
             $em->persist($group);
             $em->flush();
@@ -418,6 +400,31 @@ class GroupController extends AbstractController
         return $recipients;
     }
 
+    /**
+     * @param UploadedFile $picture
+     * @return string
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
+    private function handleGroupPicture($picture)
+    {
+        // if a file was uploaded move it into the image storage
+        $groupImageDir = $this->getParameter('group_directory');
+        $fileName = $this->generateUniqueFileName().'.'.$picture->guessExtension();
+
+        // moves the file to the directory where group images are stored
+        $picture->move(
+            $groupImageDir,
+            $fileName
+        );
+        $img = Image::make($groupImageDir . '/' . $fileName);
+        $img->resize(80,80, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        $img->save($groupImageDir . '/thumb' . $fileName);
+
+        return $fileName;
+    }
     /**
      * @return string
      */

@@ -161,7 +161,7 @@ class Role extends RoxEntityBase
 
         // if the user already has this role, no need to reassign it
         $mr = $this->createEntity('MemberRole');
-        if (!$mr->findById($member, $this) && !$mr->createMemberRoleLink($member, $this))
+        if (!$mr->find($member, $this) && !$mr->createMemberRoleLink($member, $this))
         {
             foreach ($privscopes as $scope)
             {

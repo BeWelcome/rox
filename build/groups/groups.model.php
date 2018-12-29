@@ -706,7 +706,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
     /**
      * adds a member as admin of the group
      *
-     * @param object $group - group entity
+     * @param \Group $group - group entity
      * @param int $memberId
      * @return bool
      * @access public

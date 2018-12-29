@@ -482,6 +482,7 @@ AND t.last_postid = p.id";
 m     */
     public function setGroupOwner(Member $member)
     {
+        /** @var $role \Role */
         if (!$this->isLoaded() || !($role = $this->createEntity('Role')->findByName('GroupOwner')) || !$this->isMember($member))
         {
             return false;

@@ -82,9 +82,8 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         <div class="col-12">
             <h4><?= $words->get('GroupsCurrentMembers');?></h4>
         </div>
-    </div>
-
-        <div class="row">
+</div>
+<div id="current_members" class="row">
             <div class="col-8 col-md-3">
                 <?= $words->get('Username');?>
             </div>
@@ -144,41 +143,31 @@ class GroupMemberAdministrationPage extends GroupsBasePage
             </div>
 
             <script type='text/javascript'>
-                var memberban = $('current_members').getElementsBySelector('a.ban');
-                var memberkick = $('current_members').getElementsBySelector('a.kick');
-                var memberasadmin = $('current_members').getElementsBySelector('a.addAdmin');
-                var resignasadmin = $('current_members').getElementsBySelector('a.resignAdmin');
-                memberban.each(function(elem){
-                    elem.observe('click', function(e){
-                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberBan'));?>'))
-                        {
+                $(function () {
+                    $('#current_members a.ban').click(function (e) {
+                        // code goes here
+                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberBan'));?>')) {
+                            e.preventDefault();
+                        }
+                    });
+                    $('#current_members a.kick').click(function (e) {
+                        // code goes here
+                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberKick'));?>')) {
+                            e.preventDefault();
+                        }
+                    });
+                    $('#current_members a.addAdmin').click(function (e) {
+                        // code goes here
+                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberAsAdmin'));?>')) {
+                            e.preventDefault();
+                        }
+                    });
+                    $('#current_members a.resignAdmin').click(function (e) {
+                        // code goes here
+                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmResignAsAdmin'));?>')) {
                             Event.stop(e);
                         }
-                    })
-                });
-                memberkick.each(function(elem){
-                    elem.observe('click', function(e){
-                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberKick'));?>'))
-                        {
-                            Event.stop(e);
-                        }
-                    })
-                });
-                memberasadmin.each(function(elem){
-                    elem.observe('click', function(e){
-                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberAsAdmin'));?>'))
-                        {
-                            Event.stop(e);
-                        }
-                    })
-                });
-                resignasadmin.each(function(elem){
-                    elem.observe('click', function(e){
-                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmResignAsAdmin'));?>'))
-                        {
-                            Event.stop(e);
-                        }
-                    })
+                    });
                 });
             </script>
             <?=$words->flushBuffer()?>
@@ -246,29 +235,27 @@ class GroupMemberAdministrationPage extends GroupsBasePage
             </div>
 
             <script type='text/javascript'>
-                var possiblemembers = $('possible_members');
-                if (possiblemembers) {
-                    var newmemberban = $('possible_members').getElementsBySelector('a.ban');
-                    var newmemberkick = $('possible_members').getElementsBySelector('a.kick');
-                    newmemberban.each(function (elem) {
-                        elem.observe('click', function (e) {
-                            if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberBan'));?>')) {
-                                Event.stop(e);
-                            }
-                        })
+                $(function () {
+                var possiblemembers = $('#possible_members');
+                if (possiblemembers.length) {
+                    $('#possible_members a .ban').click(function (e) {
+                        // code goes here
+                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberBan'));?>')) {
+                            Event.stop(e);
+                        }
                     });
-                    newmemberkick.each(function (elem) {
-                        elem.observe('click', function (e) {
-                            if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberDecline'));?>')) {
-                                Event.stop(e);
-                            }
-                        })
+                    $('#possible_members a.kick').click(function (e) {
+                        // code goes here
+                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberKick'));?>')) {
+                            Event.stop(e);
+                        }
                     });
                 }
-
+                });
+/*
                 var search_handler = {
                     display_result: function(member_object){
-                        var search_div = $('search_result');
+                        var search_div = $('#search_result');
                         search_div.innerHTML = '';
                         search_div.style.border = '1px solid black';
                         search_div.style.display = 'block';
@@ -347,7 +334,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                     });
                     Event.stop(e)
                 });
-            </script>
+*/            </script>
             <?=$words->flushBuffer()?>
 
     <?php

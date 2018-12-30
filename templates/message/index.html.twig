@@ -103,11 +103,11 @@
                 <td colspan="4">
                     <div class="btn-group" aria-label="Delete or spam">
                         {% if folder == 'deleted' %}
-                            {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-sm btn-danger' } }) }}
+                            {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-danger' } }) }}
                         {% else %}
-                            {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-sm btn-danger', 'onclick': "return confirm ('{{ 'MessagesWarningConfirmDelete' | trans }}')"} }) }}
+                            {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-danger', 'onclick': "return confirm ('{{ 'MessagesWarningConfirmDelete' | trans }}')"} }) }}
                         {% endif %}
-                        {{ form_widget(form.spam, { 'attr': { 'class': 'btn btn-sm btn-light' } }) }}
+                        {{ form_widget(form.spam, { 'attr': { 'class': 'btn btn-light' } }) }}
                     </div>
                 </td>
             </tr>

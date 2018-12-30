@@ -38,9 +38,9 @@ class MessagesPageWithMailbox extends MessagesBasePage
         $callback_tag = $formkit->setPostCallback('MessagesController', 'mailBoxCallback');
         
         $this->mailboxDescription();
-        $formstart = '<form name="msgform" id="msgform" action="'.$page_url.'" method="post">';
+        $formstart = '<div class="col-12"><form name="msgform" id="msgform" action="'.$page_url.'" method="post">';
         $formstart .= $callback_tag;
-        $formend = '</form>';
+        $formend = '</form></div>';
         $widget = $this->getMailboxWidget();
         if ($widget->needsPagination()) {
             echo $formstart;

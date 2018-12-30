@@ -12,11 +12,19 @@
         <div class="pull-right">{{ macros.avatarstack(myself.Username, 50, true) }}</div>
         <div>
             <h3 id="MessageSubject" class="m-0 px-3 text-truncate">{{ currentSubject }}</h3>
-            <a class="btn btn-sm btn-primary mx-3" href="{{ path('message_reply', { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a>
         </div>
     </div>
 </div>
+    <div class="row my-1">
+        <div class="col-12">
+            <a class="btn btn-primary px-4" href="{{ path('message_reply', { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a>
+        </div>
+    </div>
 
     {% include 'message/thread.html.twig' %}
-<div class="row justify-content-end px-3"><a class="btn btn-primary" href="{{ path('message_reply', { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a></div>
+<div class="row my-1">
+    <div class="col-12">
+        <a class="btn btn-primary float-right px-4" href="{{ path('message_reply', { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a>
+    </div>
+</div>
 {% endblock content %}

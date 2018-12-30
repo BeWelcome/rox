@@ -76,13 +76,13 @@ if ($threads = $groups->getThreads()) {
     if ($User && $moreLessThreadsCallbackId) {
 ?>
         <div class="col-12 col-lg-6 mb-2 d-flex flex-row justify-content-center justify-content-lg-start">
-        <form method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
+        <form method="post" action="<?php echo rtrim(implode('/', $request), '/');?>">
             <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
             <input type="hidden" name="agoragroupsthreadscountmoreless" value="moregroups">
             <input type="submit" class="btn btn-primary mx-1" name="submit" value="<?php echo $this->words->getSilent('ShowMore'); ?>">
         </form>
 
-        <form method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
+        <form method="post" action="<?php echo rtrim(implode('/', $request), '/');?>">
             <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
             <input type="hidden" name="agoragroupsthreadscountmoreless" value="lessgroups">
             <input type="submit" class="btn btn-primary mx-1" name="submit" value="<?php echo $this->words->getSilent('ShowLess'); ?>">
@@ -97,7 +97,7 @@ if ($threads = $groups->getThreads()) {
         }
          echo $words->flushBuffer();
 ?>
-        <form method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
+        <form method="post" action="<?php echo rtrim(implode('/', $request), '/');?>">
             <input type="hidden" name="<?php echo $ownGroupsButtonCallbackId; ?>"  value="1">
             <input type="submit" class="btn btn-primary mx-1" name="submit" value="<?php echo $buttonText; ?>">
         </form>

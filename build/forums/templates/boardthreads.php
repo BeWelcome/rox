@@ -42,7 +42,7 @@ $layoutbits = new MOD_layoutbits();
             echo $words->getFormatted('ForumRecentPosts');
             } ?>
         </th>
-        <th><i class="fa fa-sticky-note d-lg-none" title="<?php echo $words->getFormatted('Replies'); ?>"></i><span class="d-none d-lg-table-cell"><?php echo $words->getFormatted('Replies'); ?></span></th>
+        <th><i class="fa fa-comment d-lg-none" title="<?php echo $words->getFormatted('Replies'); ?>"></i><span class="d-none d-lg-table-cell"><?php echo $words->getFormatted('Replies'); ?></span></th>
         <th class="d-none d-md-table-cell"><i class="fa fa-eye d-lg-none" title="<?php echo $words->getFormatted('Views'); ?>"></i><span class="d-none d-lg-table-cell"><?php echo $words->getFormatted('Views'); ?></span></th>
         <th class="text-nowrap d-none d-md-table-cell"><?php echo $words->getFormatted('LastPost'); ?></th>
         <th></th>

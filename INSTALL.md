@@ -9,6 +9,8 @@ Windows users may use XAMPP and execute most of the commands in the git bash.
 Commands for mysql need to be run in the XAMPP shell. Instead of wget either download
 using a browser or use curl _url_ > _filename_.
 
+Production OS is Debian GNU/Linux Strech.
+
 ## Requirements
 
 * Apache with mod_rewrite enabled
@@ -39,7 +41,7 @@ using a browser or use curl _url_ > _filename_.
 1.  Create database and set privileges:
 
     ```bash
-    $ mysql -u root -p
+    $ sudo mysql -u root -p
     mysql> CREATE DATABASE bewelcome;
     mysql> GRANT ALL PRIVILEGES ON bewelcome.* TO 'bewelcome'@'localhost' IDENTIFIED BY 'bewelcome';
     mysql> FLUSH PRIVILEGES;

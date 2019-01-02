@@ -23,16 +23,15 @@ class NewsletterPage extends RoxPageView
      */
     protected function column_col3()
     {
-		echo "<p>" ;
+        echo "<div class='col-12'>";
 		foreach ($this->Data as $OneLetter) {
-			echo "<b>",$this->getWords()->get('BroadCast_Title_'.$OneLetter->Name)."</b>" ;
+			echo "<p><strong>",$this->getWords()->get('BroadCast_Title_'.$OneLetter->Name)."</strong>" ;
 			foreach ($OneLetter->Lang as $Lang)  {
-				echo " ","<a href='newsletter/".$OneLetter->Name."/".$Lang->ShortCode."' title='in ".$Lang->Name."'>".$Lang->ShortCode."</a>" ;
+				echo "<a class='btn btn-sm btn-primary ml-1' href='newsletter/".$OneLetter->Name."/".$Lang->ShortCode."' title='in ".$Lang->Name."'>".$Lang->ShortCode."</a>" ;
 			}
-			echo "<br />" ;
+			echo "</p>" ;
 		}
-		echo "</p>" ;
- 
+		echo "</div>";
     }
     
     /**

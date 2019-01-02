@@ -93,7 +93,7 @@ class GroupsModel extends  RoxModelBase
             return array();
         }
         $term = ((strlen($name) < 3) ? $this->dao->escape($name) : '%' . $this->dao->escape($name) . '%');
-        $members = $this->createEntity('Member')->findByWhereMany("Username like '{$term}'");
+        $members = $this->createEntity('Member')->findByWhereMany("Username like '{$term}' limit 12");
         $result = array();
         foreach ($members as $member)
         {

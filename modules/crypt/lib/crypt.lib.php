@@ -91,7 +91,7 @@ WHERE id = $IdCrypt
             "
         )->fetch(PDB::FETCH_OBJ);
 
-        if ($rr != NULL && sizeof($rr) > 0)
+        if ($rr)
         {
             if ($rr->IsCrypted == "not crypted") {
                 return $rr->MemberCryptedValue;
@@ -214,7 +214,7 @@ WHERE id = $IdCrypt
 
     	if (!$IdCrypt)
     		return (false); // if no value, it is not crypted
-        if ($rr != NULL && sizeof($rr) > 0)
+        if ($rr)
         {
         	switch ($rr->IsCrypted) {
         		case "not crypted" :

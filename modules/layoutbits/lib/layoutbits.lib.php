@@ -403,12 +403,18 @@ class MOD_layoutbits
         return $string;
     }
 
-    public static function GetPreference($namepref,$idm=0) {
+    /**
+     * @param $namepref
+     * @param int $idm
+     * @return mixed|null
+     * @throws Exception
+     */
+    public static function GetPreference($namepref, $idm=0) {
         $IdMember=$idm;
         if ($idm==0) {
-            if (isset($_SESSION['IdMember'])) $IdMember=$_SESSION['IdMember'];
-
+            throw new \Exception('Layoutbits: Can\t get preference without member id.');
         }
+
         if ($IdMember==0) {
             $row = self::get()->dao->query("select SQL_CACHE DefaultValue  from preferences where codeName='".$namepref."'")->fetch(PDB::FETCH_OBJ);
             if (!empty($row))

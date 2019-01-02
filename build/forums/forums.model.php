@@ -524,8 +524,9 @@ WHERE
 
         $layoutbits = new MOD_layoutbits();
 
-        $forumthreads = intval($layoutbits->getPreference("ForumThreadsOnLandingPage"));
-        $groupsthreads = intval($layoutbits->getPreference("GroupsThreadsOnLandingPage"));
+        $idMember = $this->getSession()->get('IdMember');
+        $forumthreads = intval($layoutbits->getPreference("ForumThreadsOnLandingPage", $idMember));
+        $groupsthreads = intval($layoutbits->getPreference("GroupsThreadsOnLandingPage", $idMember));
 
         $page_array = $this->getPageArray();
 

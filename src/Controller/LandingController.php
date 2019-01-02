@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Member;
+use App\Entity\MemberPreference;
 use App\Entity\Preference;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\SearchFormType;
@@ -88,6 +89,7 @@ class LandingController extends AbstractController
         $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
         /** @var Preference $preference */
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::FORUM_FILTER]);
+        /** @var MemberPreference $memberPreference */
         $memberPreference = $member->getMemberPreference($preference);
         $value = '';
         if ('1' === $groups) {

@@ -75,37 +75,30 @@ if ($threads = $groups->getThreads()) {
 <?php
     if ($User && $moreLessThreadsCallbackId) {
 ?>
-        <div class="col-12 col-lg-6 mb-2 d-flex flex-row justify-content-center justify-content-lg-start">
-        <form method="post" action="<?php echo rtrim(implode('/', $request), '/');?>">
-            <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
-            <input type="hidden" name="agoragroupsthreadscountmoreless" value="moregroups">
-            <input type="submit" class="btn btn-primary mx-1" name="submit" value="<?php echo $this->words->getSilent('ShowMore'); ?>">
-        </form>
-
-        <form method="post" action="<?php echo rtrim(implode('/', $request), '/');?>">
-            <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
-            <input type="hidden" name="agoragroupsthreadscountmoreless" value="lessgroups">
-            <input type="submit" class="btn btn-primary mx-1" name="submit" value="<?php echo $this->words->getSilent('ShowLess'); ?>">
-        </form>
+        <div class="col-12 col-md-6 mb-2 d-flex flex-row justify-content-center justify-content-lg-start">
+            <a href="/forums/less/group" class="btn btn-primary mr-2"><?php echo $this->words->getSilent('ShowLess'); ?></a>
+            <a href="/forums/more/group" class="btn btn-primary mr-2"><?php echo $this->words->getSilent('ShowMore'); ?></a>
 <?php
     }
     if ($User && $ownGroupsButtonCallbackId) {
         if ($boards->owngroupsonly == "No") {
             $buttonText = $this->words->getBuffered('SwitchShowOnlyMyGroupsTopics');
+            $href = "/forums/show/groups/only-mine";
         } else {
             $buttonText = $this->words->getBuffered('SwitchShowAllGroupsTopics');
-        }
+            $href = "/forums/show/groups/all";
+        } ?>
+        <a href="<?= $href ?>" class="btn btn-primary"><?= $buttonText ?></a>
+<?php
          echo $words->flushBuffer();
 ?>
-        <form method="post" action="<?php echo rtrim(implode('/', $request), '/');?>">
-            <input type="hidden" name="<?php echo $ownGroupsButtonCallbackId; ?>"  value="1">
-            <input type="submit" class="btn btn-primary mx-1" name="submit" value="<?php echo $buttonText; ?>">
-        </form>
-<?php
+
+        <?php
     echo $words->flushBuffer();
     }
 ?>
-</div><div class="col-12 col-lg-6 d-flex flex-row justify-content-center justify-content-lg-end">
+        </div>
+<div class="col-12 col-md-6 d-flex flex-row justify-content-center justify-content-lg-end">
 <?php
 
     $multipages = array($currentForumPage, $groupspages);
@@ -145,24 +138,16 @@ if ($threads = $forum->getThreads()) {
 
         require 'boardthreads.php';
 ?>
-</div>
     <?
         $pages = null;
 
     if ($User && $moreLessThreadsCallbackId) {
 ?>
-        <div class="col-12">
-        <form class="float-left" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
-            <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
-            <input type="hidden" name="agoragroupsthreadscountmoreless" value="moreagora">
-            <input type="submit" class="btn btn-primary mx-1" name="submit" value="<?php echo $this->words->getSilent('ShowMore'); ?>">
-        </form>
-
-        <form class="float-left" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
-            <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
-            <input type="hidden" name="agoragroupsthreadscountmoreless" value="lessagora">
-            <input type="submit" class="btn btn-primary mx-1" name="submit" value="<?php echo $this->words->getSilent('ShowLess'); ?>">
-        </form>
+        <div class="col-12 col-md-6">
+            <a href="/forums/less/agora" class="btn btn-primary mr-2"><?php echo $this->words->getSilent('ShowLess'); ?></a>
+            <a href="/forums/more/agora" class="btn btn-primary mr-2"><?php echo $this->words->getSilent('ShowMore'); ?></a>
+        </div>
+        <div class="col-12 col-md-6">
 <?php
     echo $words->flushBuffer();
     }
@@ -174,6 +159,8 @@ if ($threads = $forum->getThreads()) {
     require 'pages.php';
 
 ?>
+</div>
+</div>
  <!-- Forum-->
 
 <?php

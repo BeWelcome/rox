@@ -16,6 +16,9 @@ class Preference
     const FORUM_FILTER = 'PreferenceForumFilter';
     const SHOW_MAP = 'PreferenceShowMap';
     const LOCALE = 'PreferenceLanguage';
+    const NUMBER_FORUM_POSTS = 'ForumThreadsOnLandingPage';
+    const NUMBER_GROUPS_POSTS = 'GroupsThreadsOnLandingPage';
+    const SHOW_MY_GROUP_POSTS_ONLY = 'ShowMyGroupsTopicsOnly';
 
     /**
      * @var int

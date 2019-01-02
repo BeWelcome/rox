@@ -90,7 +90,7 @@ class MailboxWidget extends ItemlistWithPagination
         $class = ($read) ? '' : 'class="unread"';
         $text = strip_tags((strlen($TheMessage) >= 250) ? substr($TheMessage,0,250).' ...' : $TheMessage);
         echo <<<HTML
-        <p><a {$class} href="messages/{$message->id}">{$text}</a></p>
+        <p><a {$class} href="message/{$message->id}">{$text}</a></p>
 HTML;
     }
 

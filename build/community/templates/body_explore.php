@@ -27,7 +27,7 @@ $words = new MOD_words();
     <div class="col-12 col-md-6 col-lg-4 py-2">
         <div class="card">
             <a href="/forums" class="list-group-item list-group-item-action">
-                <h5 class="list-group-item-heading"><i class="fa fa-sticky-note mr-1"></i><?php echo $words->get('CommunityDiscussions') ?></h5>
+                <h5 class="list-group-item-heading"><i class="fa fa-comment mr-1"></i><?php echo $words->get('CommunityDiscussions') ?></h5>
                 <p class="list-group-item-text"><?php echo $words->get('ExploreForumDescription') ?></p>
             </a>
         </div>

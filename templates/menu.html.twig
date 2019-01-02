@@ -20,47 +20,50 @@
             <div class="collapse d-xl-none px-0 w-100" id="smallNavBar">
                 <ul class="navbar-nav mr-auto mt-2">
                     <li class="nav-item bordert-1">
-                        <a href="{{ url( 'search_members' ) }}" class="nav-link pl-1">{{ 'MapSearch' | trans }}</a>
+                        <a href="{{ url( 'search_members' ) }}" class="nav-link pl-1"><i class="fa fa-globe-americas mr-1"></i>{{ 'MapSearch' | trans }}</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url('members_profile', { username: member.Username }) }}" class="nav-link pl-1">{{ member.Username }}</a>
+                        <a href="{{ url('members_profile', { username: member.Username }) }}" class="nav-link pl-1"><i class="fa fa-user mr-1"></i>{{ member.Username }}</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url( 'messages' ) }}" class="nav-link pl-4">{{ 'MyMessages' | trans }}</a>
+                        <a href="{{ url( 'messages' ) }}" class="nav-link pl-4"><i class="fa fa-envelope mr-1"></i>{{ 'MyMessages' | trans }}</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url('my_preferences') }}" class="nav-link pl-4">{{ 'MyPreferences' | trans }}</a>
+                        <a href="{{ url( 'requests' ) }}" class="nav-link pl-4"><i class="fa fa-bed mr-1"></i>{{ 'MyRequests' | trans }}</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url('members_show_all_notes') }}" class="nav-link pl-4">{{ 'MyNotes' | trans }}</a>
+                        <a href="{{ url('my_preferences') }}" class="nav-link pl-4"><i class="fa fa-cogs mr-1"></i>{{ 'MyPreferences' | trans }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url('members_show_all_notes') }}" class="nav-link pl-4"><i class="fa fa-sticky-note mr-1"></i>{{ 'MyNotes' | trans }}</a>
                     </li>
 
                     <li class="nav-item">
-                        <a href="{{ url('community') }}" class="nav-link pl-1">{{ 'CommunityMenu' | trans }}</a>
+                        <a href="{{ url('community') }}" class="nav-link pl-1"><i class="fa fa-users mr-1"></i>{{ 'CommunityMenu' | trans }}</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url('safety') }}" class="nav-link pl-1">{{ 'Safety' | trans}}</a>
+                        <a href="{{ url('safety') }}" class="nav-link pl-1"><i class="fa fa-shield-alt mr-1"></i>{{ 'Safety' | trans}}</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url('about') }}" class="nav-link pl-1">{{ 'GetAnswers' | trans}}</a>
+                        <a href="{{ url('about') }}" class="nav-link pl-1"><i class="fa fa-info-circle mr-1"></i>{{ 'GetAnswers' | trans}}</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url('volunteer') }}" class="nav-link pl-1">{{ 'Volunteer' | trans}}</a>
+                        <a href="{{ url('volunteer') }}" class="nav-link pl-1"><i class="fa fa-hands-helping mr-1"></i>{{ 'Volunteer' | trans}}</a>
                     </li>
                     {% for team in teams if teams %}
                         {% if team.route starts with '/' %}
                         <li class="nav-item">
-                            <a href="{{ team.route }}" class="nav-link pl-3">{{ team.trans | trans}}</a>
+                            <a href="{{ team.route }}" class="nav-link pl-4"><i class="fa fa-angle-double-right mr-1"></i>{{ team.trans | trans}}</a>
                         </li>
                         {% else %}
                         <li class="nav-item">
-                            <a href="{{ path(team.route) }}" class="nav-link pl-3">{{ team.trans | trans}}</a>
+                            <a href="{{ path(team.route) }}" class="nav-link pl-4"><i class="fa fa-angle-double-right mr-1"></i>{{ team.trans | trans}}</a>
                         </li>
                         {% endif %}
                     {% endfor %}
 
                     <li class="nav-item">
-                        <a href="{{ url( 'security_logout') }}" class="nav-link pl-1">{{ 'Logout' | trans }}</a>
+                        <a href="{{ url( 'security_logout') }}" class="nav-link pl-1"><i class="fa fa-sign-out-alt mr-1"></i>{{ 'Logout' | trans }}</a>
                     </li>
                 </ul>
             </div>
@@ -139,7 +142,7 @@
                                             </div>
                                             <div>
                                                 <a href="{{ url('messages') }}" class="btn btn-block btn-primary-outline py-0 pl-1 text-left mt-1"><i class="fa fa-envelope"></i> {{ 'MyMessages' | trans }}</a>
-                                                <a href="{{ url('members_show_all_notes') }}" class="btn btn-block btn-primary-outline py-0 pl-1 text-left"><i class="fa fa-list"></i> {{ 'ProfileMyNotes' | trans }}</a>
+                                                <a href="{{ url('members_show_all_notes') }}" class="btn btn-block btn-primary-outline py-0 pl-1 text-left"><i class="fa fa-sticky-note"></i> {{ 'ProfileMyNotes' | trans }}</a>
                                                 <a href="{{ url( 'security_logout' ) }}" class="btn btn-block btn-primary-outline py-0 pl-1 text-left"><i class="fa fa-power-off"></i> {{ 'Logout' | trans }}</a>
                                             </div>
                                         </div>

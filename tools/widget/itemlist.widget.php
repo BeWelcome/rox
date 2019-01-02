@@ -43,28 +43,21 @@ class ItemlistWidget extends RoxWidget
         }
         // table rows with items
         $items = $this->getItems();
-        $index = 0;
         foreach ($items as $itemkey => $item) {
-            echo '
-            <tr class="' . ($index%2 ? 'highlight' : 'blank') . '">';
+            echo '<tr>';
             foreach ($this->getTableColumns() as $key => $value) {
                 $methodname = 'tableCell_'.$key;
-                echo '
-                <td class="'.$key.'">';
+                echo '<td class="'.$key.' vmiddle">';
                 if (method_exists($this, $methodname)) {
                     $this->$methodname($item, $itemkey);
                 } else {
                     $this->tableCell($key, $item, $itemkey);
                 }
-                echo '
-                </td>';
+                echo '</td>';
             }
-            echo '
-            </tr>';
-            ++$index;
+            echo '</tr>';
         }
-        echo '
-        </table>';
+        echo '</table>';
     }
     
     protected function showItems_float()

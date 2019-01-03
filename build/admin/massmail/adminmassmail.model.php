@@ -591,7 +591,7 @@ class AdminMassmailModel extends RoxModelBase
                 SET
                     m.status = 'OutOfRemind'
                 WHERE
-                    DATEDIFF(NOW(), m.LastLogin) > 365
+                    (DATEDIFF(NOW(), m.LastLogin) > 365 OR m.LastLogin = '0000-00-00 00:00:00')
                     AND m.status = 'Active'";
         $r = $this->dao->query($query);
         $query = "

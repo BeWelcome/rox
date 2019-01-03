@@ -166,7 +166,7 @@ class SearchFormRequest
     {
         $searchFormRequest = new self($em);
         $searchFormRequest->location = $request->query->get('location');
-        $searchFormRequest->accommodation_anytime = $request->query->get('accommodation_anytim');
+        $searchFormRequest->accommodation_anytime = $request->query->get('accommodation_anytime');
         $searchFormRequest->accommodation_dependonrequest = $request->query->get('accommodation_dependonrequest');
         $searchFormRequest->accommodation_neverask = $request->query->get('accommodation_neverask');
         $searchFormRequest->can_host = $request->query->get('can_host');

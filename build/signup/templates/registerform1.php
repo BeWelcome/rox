@@ -31,7 +31,7 @@
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title"><?php echo $words->get('SignupIntroductionTitle'); ?></h5>
+                                <h5 class="modal-title"><?php echo $words->get('Signup'); ?></h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -45,8 +45,6 @@
                         </div>
                     </div>
                 </div>
-
-                <h3 class="mb-3">Please fill out all fields</h3>
 
                 <!-- Username -->
                 <div class="form-group">

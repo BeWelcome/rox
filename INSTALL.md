@@ -12,19 +12,16 @@ using a browser or use curl _url_ > _filename_.
 ## Requirements
 
 * Apache with mod_rewrite enabled
-* PHP version >= 7.1
+* PHP version >= 7.1 (and < 7.3)
 * PHP GD lib enabled
 * PHP short opening tags enabled
 * PHP magic quotes gpc disabled
 * PHP extensions: mbstring, dom, fileinfo, intl, xsl
 * MariaDB >=10.1 or MySQL server >= 5.6 (not in strict mode) 
 * SMTP server for email features
-* [Composer](https://www.getcomposer.org)
-* [Node.js](https://nodejs.org/)
-* [Grunt](http://gruntjs.com/)
-* [Ruby](http://www.ruby-lang.org/en/downloads/)
-* [Sass](http://www.ruby-lang.org/en/downloads/)
-* [Sphinxsearch](http://sphinxsearch.com/)
+* [Composer](https://www.getcomposer.org) Latest version
+* [Node.js](https://nodejs.org/) Latest version
+* [Sphinxsearch](http://sphinxsearch.com/) (optional)
 * wget (if you want to follow the instructions word to word)
 
 ### Download
@@ -60,39 +57,6 @@ using a browser or use curl _url_ > _filename_.
     ```bash
     $ mkdir data
     ```
-    ```bash
-    $ touch \
-      build/alias.cache.ini \
-      build/autoload.cache.ini \
-      modules/autoload.cache.ini \
-      pthacks/autoload.cache.ini \
-      tools/autoload.cache.ini \
-      htdocs/exception.log
-    ```
-
-4. Make things writable by webserver:
-
-    ```bash
-    $ sudo chgrp www-data \
-      data \
-      build/autoload.cache.ini \
-      modules/autoload.cache.ini \
-      tools/autoload.cache.ini \
-      pthacks/autoload.cache.ini \
-      build/alias.cache.ini \
-      htdocs/exception.log
-    ```
-
-    ```bash
-    $ sudo chmod g+rw \
-      data \
-      build/autoload.cache.ini \
-      modules/autoload.cache.ini \
-      tools/autoload.cache.ini \
-      pthacks/autoload.cache.ini \
-      build/alias.cache.ini \
-      htdocs/exception.log
-    ```
 
 ### Initialize installation
 
@@ -100,21 +64,16 @@ using a browser or use curl _url_ > _filename_.
 
     ```bash
     $ php composer.phar install
-    $ npm update
+    $ npm install
     ```
 
 1. Execute
  
-    ```bash
-    $ cp app/config/parameters.yml.dist app/config/parameters.yml
-    ```
-    
-    Update the database parameters in ```parameters.yml``` match with your MYSQL credentials.       
+    If your database parameters are different from above copy ```.env``` to ```.env.local``` and match with your MYSQL credentials.       
 
 2.  Initialize the database.
 
-    This generates a new database named bewelcome which is accessible by a user named bewelcome which uses the password 
-    bewelcome. Update ```parameters.yml``` if you need something else.
+    This generates a new database as given in the ```.env.*``` files and presets some data.
         
     ```bash
     $ php bin/console doctrine:schema:create
@@ -151,12 +110,11 @@ using a browser or use curl _url_ > _filename_.
 
    Access the site using http://localhost:8000/
 
-
 4. Log in as user `member-1` and password `password`. See [Useful hints](#useful-hints) section below
    on password usage.
 
 5. Click around the site a bit and check if all CSS and images are loaded.
-   Refer to var/logs/dev.log if errors appear or something looks broken. Also make use of the Symfony3 debug toolbar.
+   Refer to var/log/dev.log if errors appear or something looks broken. Also make use of the Symfony3 debug toolbar.
 
 ## Useful hints
 

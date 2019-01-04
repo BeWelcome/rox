@@ -47,7 +47,7 @@ class TranslationController extends AbstractController
     {
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 20);
-        $locale = $this->get('session')->get('locale');
+        $locale = $this->get('session')->get('_locale');
 
         /** @var Connection $connection */
         $connection = $this->getDoctrine()->getConnection();

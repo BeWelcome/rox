@@ -28,14 +28,20 @@
  * @link     http://www.bewelcome.org
  */
 
-$i_am_the_mailbot = true;
-
 // manually define the script base. mailbot MUST be run from the root directory (like php tools/mailbot/mailbot.class.php)
 define('SCRIPT_BASE', dirname(__FILE__) . "/../../");
-
+define('DATA_DIR', dirname(__FILE__) . "/../../data");
 require_once SCRIPT_BASE . 'vendor/autoload.php';
-require_once SCRIPT_BASE . 'roxlauncher/roxloader.php';
-require_once SCRIPT_BASE . 'roxlauncher/environmentexplorer.php';
+
+use Symfony\Component\Dotenv\Dotenv;
+use Rox\Framework\SessionSingleton;
+use Symfony\Component\HttpFoundation\Session\Session;
+
+$dotenv = new Dotenv();
+$dotenv->load('.env', '.env.local');
+
+$i_am_the_mailbot = true;
+
 
 /**
  * Mailbot base class
@@ -56,6 +62,9 @@ class Mailbot
         'Failed' => 0,
         'Freeze' => 0
     );
+
+    /** @var string */
+    protected $siteUrl;
 
     /**
      * constructor...
@@ -79,6 +88,22 @@ class Mailbot
             throw new PException('DB config error!');
         }
         $this->dao = PDB::get($db_vars->dsn, $db_vars->user, $db_vars->password);
+    }
+
+    /**
+     * @return string
+     */
+    public function getSiteUrl(): string
+    {
+        return $this->siteUrl;
+    }
+
+    /**
+     * @param string $siteUrl
+     */
+    public function setSiteUrl(string $siteUrl): void
+    {
+        $this->siteUrl = $siteUrl;
     }
 
     /**
@@ -118,20 +143,21 @@ class Mailbot
     /**
      * actually send out emails using a common BW template
      *
-     * @param string $subject   the subject line for the message
-     * @param string $from      the email address of the sender
-     * @param string $to        the email address of the recipient
-     * @param string $body      the plaintext body of the message
-     * @param string $title     an optional title to show in the message (HTML H1 tag)
-     * @param string $language  the language code used in the message
-     * @param bool $html        HTML preference: false -> text-only, true -> multi part (text, html)
+     * @param string $subject the subject line for the message
+     * @param string $from the email address of the sender
+     * @param string $to the email address of the recipient
+     * @param string $title an optional title to show in the message (HTML H1 tag)
+     * @param string $body the plaintext body of the message
+     * @param string $language the language code used in the message
+     * @param bool $html HTML preference: false -> text-only, true -> multi part (text, html)
      *
+     * @param string $siteUrl
      * @return boolean
      */
-    protected function sendEmail($subject, $from, $to, $title, $body, $language, $html)
+    protected function sendEmail($subject, $from, $to, $title, $body, $language, $html, $siteUrl)
     {
         try {
-            return MOD_mail::sendEmail($subject, $from, $to, $title, $body, $language, $html);
+            return MOD_mail::sendEmail($subject, $from, $to, $title, $body, $language, $html, $siteUrl);
         }
         catch (Exception $e) {
             $this->log("Error (" . date("Y-m-d\TH:i:sO") . "): Couldn't send mail to " . $to );
@@ -312,7 +338,7 @@ class MassMailbot extends Mailbot
             if ($receiver->getPreference('PreferenceHtmlMails', 'Yes') == 'No') {
                 $memberPrefersHtml = false;
             }
-            if (!$this->sendEmail($subj, $sender_mail, $email, $subj, $text, $language, $memberPrefersHtml)) {
+            if (!$this->sendEmail($subj, $sender_mail, $email, $subj, $text, $language, $memberPrefersHtml, $this->getSiteUrl())) {
                 $this->_updateMessageStatus($msg->IdBroadcast, 'Failed', $msg->IdReceiver);
                 $this->log("Cannot send broadcastmessages.id=#" . $msg->IdBroadcast . " to <b>".$msg->Username."</b>
                 \$Email=[".$email."] Type=[".$msg->broadcast_type."]");
@@ -584,7 +610,7 @@ class ForumNotificationMailbot extends Mailbot
                 $memberPrefersHtml = false;
             }
             if (!$this->sendEmail($msg['subject'], $from, $to, $msg['title'], $msg['body'], $MemberIdLanguage,
-                $memberPrefersHtml)) {
+                $memberPrefersHtml, $this->getSiteUrl())) {
                 $this->_updateNotificationStatus($notification->id, 'Failed');
                 $this->log("Could not send posts_notificationqueue=#" . $notification->id . " to <b>".$post->Username
                     ."</b> \$Email=[" . $to . "]");
@@ -598,170 +624,35 @@ class ForumNotificationMailbot extends Mailbot
 } // class ForumNotificationMailbot
 
 
-// -----------------------------------------------------------------------------
-// Normal messages between members
-// -----------------------------------------------------------------------------
-/**
- * the mailbot that sends private messages between members
- *
- * @category  Tools
- * @package   Mailbot
- * @author    Laurent Savaëte (franskmanen) <laurent.savaete@gmail.com>
- * @copyright 2012 BeVolunteer Team
- * @license   http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL) v2
- * @version   $Id$
- * @link      http://www.bewelcome.org
- */
-class MemberToMemberMailbot extends Mailbot
-{
-    /**
-     * get the list of messages to be sent from the database
-     *
-     * @return object a mysql query object
-     */
-    private function _getMessageList()
-    {
-        return $this->messages_model->filteredMailbox(
-            array(
-                'messages.Status = "ToSend"',
-                'messages.MessageType = "MemberToMember"'
-                )
-        );
-    }
-
-    /**
-     * return the formatted email content for $msg
-     *
-     * @param object $message the msg object as returned by the SQL query
-     * @param bool   $html    whether to format message in html (true) or plaintext (false)
-     *
-     * @return string the formatted email message body
-     */
-    private function _formatMessage($message)
-    {
-        $inboxUrl = $this->baseuri."messages";
-        $messageUrl = $inboxUrl . '/' . $message->id;
-        $purifier = MOD_htmlpure::get()->getPurifier();
-        $direction_in = true;   // true means received message (false is sent)
-
-        $contact_username = $this->Sender->Username;
-        $contactProfileUrl = $this->baseuri.'members/'.$contact_username;
-        $member = $this->Sender;
-
-        $languages = $this->Sender->get_languages_spoken();
-        $words = $this->words;
-        $templateUsedInEmail = true;
-        $baseuri = $this->baseuri;
-
-        ob_start();
-        include SCRIPT_BASE . 'tools/mailbot/templates/readMessage.php';
-        $text = ob_get_contents();
-        ob_end_clean();
-
-        return $text;
-    }
-
-    /**
-     * update the DB with new message statuses
-     *
-     * @param int    $msgId       the id of the message for which to update the DB
-     * @param string $status      the status to set for the message
-     * @param int    $IdTriggerer the user id of the user running the bot (default to 0)
-     *
-     * @return nothing
-     */
-    private function _updateMessageStatus($msgId, $status, $IdTriggerer = 0)
-    {
-        $status_values = Array('Sent', 'Failed', 'Freeze');
-        if (!in_array($status, $status_values)) {
-            die("ERROR! Mailbot is trying to set some incorrect Status for a message.");
-        }
-
-        $this->messages_model->markSent($msgId, $status, $IdTriggerer);
-
-        $this->count[$status]++;
-    }
-
-    /**
-     *
-     */
-    private function _calculateReplyAddress() {
-        return PVars::getObj('syshcvol')->MessageSenderMail;
-    }
-
-    /**
-     * Actually run the bot
-     *
-     * @return nothing
-     */
-    public function run()
-    {
-
-        $msg_list = $this->_getMessageList();
-
-        foreach ($msg_list as $msg) {
-            $FreezeMsgFor = Array('Active', 'ActiveHidden', 'NeedMore', 'Pending');
-            $this->Sender = $this->members_model->getMemberWithId($msg->IdSender);
-            $this->Receiver = $this->members_model->getMemberWithId($msg->IdReceiver);
-
-            if (!in_array($this->Sender->Status, $FreezeMsgFor)) {
-                // Don't send messages from e.g. banned members, unless it is a reply
-                // TODO: replies are marked with IdParent != 0 in DB, check that earlier than in markMsgStatus if possible
-
-                $this->_updateMessageStatus($msg->id, 'Freeze');
-                $this->log("Message ".$msg->id." from ". $this->Sender->Username." is rejected ("
-                    .$this->Sender->Status.")");
-            } else {
-                $from = array($this->_calculateReplyAddress() => '"BeWelcome - ' . $msg->senderUsername . '"' );
-                $to = $this->getEmailAddress($this->Receiver);
-                if (empty($to)) {
-                    $this->_updateMessageStatus($msg->id, 'Failed');
-                    continue;
-                }
-                $MemberIdLanguage = $this->Receiver->getLanguagePreference();
-                $memberPrefersHtml = true;
-                if ($this->Receiver->getPreference('PreferenceHtmlMails', 'Yes') == 'No') {
-                    $memberPrefersHtml = false;
-                }
-                $subject = $this->words->get("YouveGotAMail", $this->Sender->Username);
-                $title = $this->words->get("YouveGotAMail", '<a href="https://www.bewelcome.org/members/' . $this->Sender->Username . '"">'
-                    . $this->Sender->Username . '</a>');
-                $body = $this->_formatMessage($msg);
-
-                // send email and update DB according to result
-                if (!$this->sendEmail($subject, $from, $to, $title, $body, $MemberIdLanguage, $memberPrefersHtml)) {
-                    $this->_updateMessageStatus($msg->id, 'Failed');
-                    $this->log("Cannot send messages.id=#" . $msg->id . " to <b>".$this->Receiver->Username."</b> \$Email=[".$to."]");
-                } else {
-                    $this->_updateMessageStatus($msg->id, 'Sent');
-                }
-            }
-        }
-        $this->reportStats();
-    }
-
-}   // class MemberToMemberMailbot
 /**
  * main function instantiating and running the mailbots
  *
- * @return none
+ * @param array $config
+ * @return void
+ * @throws PException
  */
-function runMailbots()
+function runMailbots($config)
 {
     // load Rox environment
-    $env_explorer = new EnvironmentExplorer;
-    $env_explorer->initializeGlobalState();
+    $session = new Session();
+    SessionSingleton::createInstance($session);
 
-    $m2mbot = new MemberToMemberMailbot();
-    $m2mbot->run();
+    $env_explorer = new EnvironmentExplorer;
+    $env_explorer->initializeGlobalState($config['host'], $config['name'], $config['user'], $config['pass']);
 
     $forum_bot = new ForumNotificationMailbot();
+    $forum_bot->setSiteUrl($config['site_url']);
     $forum_bot->run();
 
     $massmailbot = new MassMailbot();
+    $massmailbot->setSiteUrl($config['site_url']);
     $massmailbot->run();
 }
 
-runMailbots();
-
-?>
+runMailbots( [
+    'host' => getenv('DB_HOST'),
+    'name' => getenv('DB_NAME'),
+    'user' => getenv('DB_USER'),
+    'pass' => getenv('DB_PASS'),
+    'site_url' => getenv('SITE_URL'),
+]);

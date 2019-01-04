@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Title</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>{{ subject }}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <style type="text/css"><!--
         blockquote {
             color: #444;
@@ -35,19 +35,20 @@
         h1 {
             color: #fff;
             padding-top: 0.7rem;
-            font-size: 2rem;
+            font-size: 1.8rem;
+            line-height: 1.8rem;
         }
 
         #message {
             background: #e5e5e5;
-            border-radius: 10px;
+            border-radius: 5px;
             margin: 1rem;
         }
 
         .header {
             background-color: #f37000;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
             min-height: 50px;
         }
 
@@ -60,19 +61,27 @@
             padding: 0.5rem 1rem 0;
         }
 
-        .from{
-            background-color: rgba(0,0,0,.4);
-            font-size: 0.9rem;
-            padding: 0 0 0 1rem;
-            color: #ddd;
+        .from {
+            background-color: rgba(0,0,0,.25);
+            font-weight: bold;
+            padding: 1rem;
+            color: #eee;
+        }
+
+        div.from a:link {
+            color: #000;
+        }
+
+        .bodytext {
+
         }
 
         #footer {
             background-color: #f37000;
             padding-left: 0.5rem;
             font-size: 0.8rem;
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
             font-weight: bold;
         }
         --></style>
@@ -81,7 +90,7 @@
 <div id="message">
 <div class="header">
     <div>
-        <a href="<?php echo PVars::getObj('env')->baseuri; ?>"><img src="<?php echo PVars::getObj('env')->baseuri; ?>images/logo_index_top.png" alt="<?php echo PVars::getObj('env')->sitename; ?>" class="logo"></a>
+        <a href="<?php echo $siteUrl; ?>"><img src="<?php echo $siteUrl; ?>/images/logo_index_top.png" alt="BeWelcome" class="logo"></a>
         <?php if($title) { ?>
             <h1 style="font-size:1.2em; font-weight: bold; line-height: 1.2em"><?= $title ?></h1>
         <?php } ?>

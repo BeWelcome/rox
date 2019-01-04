@@ -51,7 +51,7 @@ class MemberPreference
     private $created;
 
     /**
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id

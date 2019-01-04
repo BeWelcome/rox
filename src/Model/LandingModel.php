@@ -6,7 +6,6 @@ use App\Entity\Activity;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Repository\ActivityRepository;
-use Doctrine\ORM\Query;
 use Exception;
 
 class LandingModel extends BaseModel

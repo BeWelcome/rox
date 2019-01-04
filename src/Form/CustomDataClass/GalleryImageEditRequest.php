@@ -22,7 +22,7 @@ class GalleryImageEditRequest
     public $description;
 
     /**
-     * @var int
+     * @var integer
      */
     public $id;
 

@@ -22,7 +22,7 @@ class SearchFormRequest
     public $location;
 
     /**
-     * @var int
+     * @var integer
      */
     public $location_geoname_id;
 

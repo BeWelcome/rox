@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-
 use App\Entity\MemberPreference;
 use App\Entity\Preference;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -28,7 +27,7 @@ class ForumsController extends AbstractController
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::NUMBER_GROUPS_POSTS]);
         /** @var MemberPreference $memberPreference */
         $memberPreference = $member->getMemberPreference($preference);
-        $value = intval($memberPreference->getValue());
+        $value = (int) ($memberPreference->getValue());
         $value = min($value + self::POSTS_DIFF, self::POSTS_MAX);
         $memberPreference->setValue($value);
         $em = $this->getDoctrine()->getManager();
@@ -52,7 +51,7 @@ class ForumsController extends AbstractController
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::NUMBER_GROUPS_POSTS]);
         /** @var MemberPreference $memberPreference */
         $memberPreference = $member->getMemberPreference($preference);
-        $value = intval($memberPreference->getValue());
+        $value = (int) ($memberPreference->getValue());
         $value = min($value - self::POSTS_DIFF, self::POSTS_MIN);
         $memberPreference->setValue($value);
         $em = $this->getDoctrine()->getManager();
@@ -76,7 +75,7 @@ class ForumsController extends AbstractController
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::NUMBER_FORUM_POSTS]);
         /** @var MemberPreference $memberPreference */
         $memberPreference = $member->getMemberPreference($preference);
-        $value = intval($memberPreference->getValue());
+        $value = (int) ($memberPreference->getValue());
         $value = min($value + self::POSTS_DIFF, self::POSTS_MAX);
         $memberPreference->setValue($value);
         $em = $this->getDoctrine()->getManager();
@@ -100,7 +99,7 @@ class ForumsController extends AbstractController
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::NUMBER_FORUM_POSTS]);
         /** @var MemberPreference $memberPreference */
         $memberPreference = $member->getMemberPreference($preference);
-        $value = intval($memberPreference->getValue());
+        $value = (int) ($memberPreference->getValue());
         $value = min($value - self::POSTS_DIFF, self::POSTS_MIN);
         $memberPreference->setValue($value);
         $em = $this->getDoctrine()->getManager();

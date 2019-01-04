@@ -3,7 +3,7 @@ const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
 var Encore = require('@symfony/webpack-encore');
 
 Encore
-    .configureRuntimeEnvironment('dev')
+//updatecounter    .configureRuntimeEnvironment('dev')
     .enableSingleRuntimeChunk()
     .setOutputPath('public/build/')
     .setPublicPath('/build')
@@ -69,21 +69,20 @@ Encore
 */
  .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
-/*    .configureBabel(function(babelConfig) {
+    .configureBabel(function(babelConfig) {
         // add additional presets
-        // babelConfig.presets.push('@babel/preset-env');
+        // babelConfig.presets.push('@babel/preset-flow');
 
         // no plugins are added by default, but you can add some
         // babelConfig.plugins.push('styled-jsx/babel');
     }, {
         // node_modules is not processed through Babel by default
         // but you can whitelist specific modules to process
-        // include_node_modules: ['@ckeditor']
+        include_node_modules: ['bootstrap']
 
         // or completely control the exclude
-        // exclude: /bower_components/
+        // exclude: /node_modules/
     })
-*/
 ;
 
 // console.log(JSON.stringify(Encore.getWebpackConfig(), null, 4));

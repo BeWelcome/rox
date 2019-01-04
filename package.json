@@ -2,7 +2,8 @@
   "name": "bewelcome-rox",
   "browserslist": [
     "last 4 version",
-    "not dead"
+    "not dead",
+    "> 1%"
   ],
   "version": "3.0.0",
   "license": "GPL-2.0",

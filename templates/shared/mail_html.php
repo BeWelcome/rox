@@ -32,11 +32,8 @@
             line-height: 1.1rem;
         }
 
-        h1 {
+        h1, h1 a {
             color: #fff;
-            padding-top: 0.7rem;
-            font-size: 1.8rem;
-            line-height: 1.8rem;
         }
 
         #message {
@@ -84,23 +81,27 @@
             border-bottom-right-radius: 5px;
             font-weight: bold;
         }
+
+        #footer a {
+            color: #fff;
+        }
         --></style>
 </head>
 <body>
 <div id="message">
-<div class="header">
-    <div>
-        <a href="<?php echo $siteUrl; ?>"><img src="<?php echo $siteUrl; ?>/images/logo_index_top.png" alt="BeWelcome" class="logo"></a>
+    <div class="header" style="display: flex;">
+        <div>
+            <a href="<?php echo $siteUrl; ?>"><img src="<?php echo $siteUrl; ?>/images/logo_index_top.png" alt="BeWelcome" class="logo"></a>
+        </div>
         <?php if($title) { ?>
-            <h1 style="font-size:1.2em; font-weight: bold; line-height: 1.2em"><?= $title ?></h1>
+            <div><h1 style="font-size:1em; font-weight: bold; line-height: 1em;"><?= $title ?></h1></div>
         <?php } ?>
     </div>
-</div>
-<div class="content">
-    <?= $body ?>
-</div>
-<div id="footer">
-    <?php echo $footer_message; ?>
-</div>
+    <div class="content">
+        <?= $body ?>
+    </div>
+    <div id="footer">
+        <?php echo $footer_message; ?>
+    </div>
 </body>
 </html>

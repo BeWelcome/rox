@@ -66,14 +66,19 @@ class Mailbot
     /** @var string */
     protected $siteUrl;
 
+    /** @var string */
+    protected $baseuri;
+
     /**
      * constructor...
      *
-     * @return nothing
+     * @param $siteUrl
+     * @throws PException
      */
-    function __construct()
+    function __construct($siteUrl)
     {
-        $this->baseuri = PVars::getObj('env')->baseuri;
+        $this->baseuri = $siteUrl . '/';
+        $this->siteUrl = $siteUrl;
 
         $this->IdTriggerer = 0;   //TODO: set this to bot id
 
@@ -571,7 +576,7 @@ class ForumNotificationMailbot extends Mailbot
      * Actually run the bot
      *
      * @param integer grace_period Wait for grace period minutes before sending email notifications to allow author to edit post
-     * @return nothing
+     * @return void
      */
     public function run($grace_period = 5)
     {
@@ -640,12 +645,10 @@ function runMailbots($config)
     $env_explorer = new EnvironmentExplorer;
     $env_explorer->initializeGlobalState($config['host'], $config['name'], $config['user'], $config['pass']);
 
-    $forum_bot = new ForumNotificationMailbot();
-    $forum_bot->setSiteUrl($config['site_url']);
+    $forum_bot = new ForumNotificationMailbot($config['site_url']);
     $forum_bot->run();
 
-    $massmailbot = new MassMailbot();
-    $massmailbot->setSiteUrl($config['site_url']);
+    $massmailbot = new MassMailbot($config['site_url']);
     $massmailbot->run();
 }
 

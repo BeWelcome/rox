@@ -6,8 +6,7 @@ Check [INSTALL](INSTALL.md) for installation instructions.
 
 You probably want to get started by checking out the code in `src/`.
 
-`htdocs/bw/` and `build/` are deprecated and the code needs to be rewritten in
-`src`.
+`build/` is deprecated and the code needs to be rewritten in `src/`.
 
 ## Documentation
 
@@ -33,9 +32,9 @@ The result can then be accessed via `doc/phpdox/` in your cloned repository.
 
 ## Procedure
 
-Fork a repository on Github. Work on what you like to update and send a pull request to merge it into the main repositiory.
+Fork a repository on Github. Work on what you like to update and send a pull request to merge it into the main repository.
 
-If you see an updated ```composer.json``` or ```composer.lock```` make sure to run 
+If you see an updated ```composer.json``` or ```composer.lock``` make sure to run 
 
 ```bash
 composer install
@@ -49,7 +48,7 @@ npm install
  
 everytime you see a change in either ```package.json``` or ```package-lock.json```.
 
-If any ```.scss``` file or a file in ```src/App/Resources``` changed a ```make build``` is necessary.
+If any ```.scss``` file or a file in ```assets/``` changed a ```make build``` is necessary.
  
 ## Useful links
 * [Legacy developer space on Trac](http://trac.bewelcome.org/)

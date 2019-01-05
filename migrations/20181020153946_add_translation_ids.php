@@ -48,10 +48,14 @@ class AddTranslationIds extends RoxMigration
         $this->AddWordCode('signup.error.username', 'Username must be at least 4 and maximum 20 characters long. They have to start with a letter, they have to end with either a letter or a number. In between the following characters may be used: . _ -', 'Error message if username is malformed.');
         $this->AddWordCode('signup.popover.password', 'Please choose a strong password that is at least 6 characters long.', 'Popover text on signup regarding the password.');
         $this->AddWordCode('signup.confirm.email', 'Please confirm your email address', 'Subject line for the signup confirmation email');
+        $this->AddWordCode( 'signup.error.name.empty', 'Please provide a name.', 'Error message shown when first or last name are left empty.');
 
         // profile
         $this->AddWordCode('profile.request.hosting', 'Request Stay', 'Menu entry on the members pages to sent a request for staying/be hosted by another member');
         $this->AddWordCode('profile.delete.cleanup', 'Please remove my data with the next cleanup (in the next 24 hours).', 'Label for the data cleanup checkbox on the retire profile page');
+        $this->AddWordCode('profile.accommodation.hes.label', 'Hosting Eagerness', 'Label for the Hosting Eagerness Slider');
+        $this->AddWordCode('profile.accommodation.hes.dont-boost', 'Move to end of search results instead of to the top', 'Label for the Hosting Eagerness Slider do not boost checkbox');
+        $this->AddWordCode('profile.accommodation.hes.helptext', 'You can influence your position in search results by selecting a date in the future. The further away the date is the less high your boost becomes. You can also decide to be shown at the end of the list instead by ticking the checkbox. ', 'Help text for the hosting eagerness slider.');
 
         // landing page
         $this->AddWordCode('landing.welcomeback', 'Welcome back', 'Greeting on the opening page after logging in, followed my the members username');
@@ -169,9 +173,16 @@ class AddTranslationIds extends RoxMigration
         $this->RemoveWordCode('signup.error.username.taken', 'Please choose a different username that is at least 4 and maximum 20 characters long. They have to start with a letter, they have to end with either a letter or a number. In between the following characters may be used: . _ -', 'Error message if username is already in use.');
         $this->RemoveWordCode('signup.error.username', 'Username must be at least 4 and maximum 20 characters long. They have to start with a letter, they have to end with either a letter or a number. In between the following characters may be used: . _ -', 'Error message if username is malformed.');
         $this->RemoveWordCode('signup.popover.password', 'Please choose a strong password that is at least 6 characters long.', 'Popover text on signup regarding the password.');
+        $this->RemoveWordCode('signup.confirm.email', 'Please confirm your email address', 'Subject line for the signup confirmation email');
+        $this->RemoveWordCode( 'signup.names.hidden', 'Your first, second and last name are hidden to other users by default. If you\'d like to share these with other members you can change this later.');
+        $this->RemoveWordCode('signup.error.name.empty');
 
         // profile
         $this->RemoveWordCode('profile.request.hosting', 'Request Stay', 'Menu entry on the members pages to sent a request for staying/be hosted by another member');
+        $this->RemoveWordCode('profile.delete.cleanup', 'Please remove my data with the next cleanup (in the next 24 hours).', 'Label for the data cleanup checkbox on the retire profile page');
+        $this->RemoveWordCode('profile.accommodation.hes.label', 'Hosting Eagerness', 'Label for the Hosting Eagerness Slider');
+        $this->RemoveWordCode('profile.accommodation.hes.dont-boost', 'Move to end of search results instead of to the top', 'Label for the Hosting Eagerness Slider do not boost checkbox');
+        $this->RemoveWordCode('profile.accommodation.hes.helptext', 'You can influence your position in search results by selecting a date in the future. The further away the date is the less high your boost becomes. You can also decide to be shown at the end of the list instead by ticking the checkbox. ', 'Help text for the hosting eagerness slider.');
 
         // landing page
         $this->RemoveWordCode('landing.welcomeback', 'Welcome back', 'Greeting on the opening page after logging in, followed my the members username');

@@ -142,13 +142,6 @@ class MOD_mail
             $title = $purifier->purify($title);
         }
 
-        $html2text = new Html2Text\Html2Text($body, false, array('do_links' => 'table', 'width' => 75));
-        $plain = $html2text->getText();
-
-        $message->setBody($plain);
-
-//        $message->addPart($plain, 'text/plain');
-
         // Add the html-body only if the member wants HTML mails
         if ($html) {
             // Translate footer text (used in HTML template)
@@ -163,6 +156,11 @@ class MOD_mail
 
             $message->addPart($mail_html, 'text/html');
         }
+
+        $html2text = new Html2Text\Html2Text($mail_html, false, array('do_links' => 'table', 'width' => 75));
+        $plain = $html2text->getText();
+
+        $message->setBody($plain);
 
         return self::sendSwift($message);
     }

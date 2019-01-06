@@ -13,11 +13,11 @@ Encore
     .addEntry('jquery_ui', './assets/js/jquery_ui.js')
     .addEntry('backwards', './assets/js/backwards.js')
     .addEntry('signup/signup', './assets/js/signup.js')
-    .addEntry('landing', './assets/public/js/landing/landing.js')
+    .addEntry('landing', './assets/js/landing/landing.js')
     .addEntry('skrollr', './assets/js/skrollr.js')
 
-    .addEntry('search/searchpicker', './assets/public/js/search/searchpicker.js')
-    .addEntry('search/loadcontent', './assets/public/js/search/loadajax.js')
+    .addEntry('search/searchpicker', './assets/js/search/searchpicker.js')
+    .addEntry('search/loadcontent', './assets/js/search/loadajax.js')
     .addEntry('search/search', './assets/js/search/search.js')
 
     .addEntry('tempusdominus', './assets/js/tempusdominus.js')
@@ -27,7 +27,7 @@ Encore
     .addEntry('member/autocomplete', './assets/js/member/autocomplete.js')
     .addEntry('admin/faqs', './assets/js/admin/faqs.js')
     .addEntry('chartjs', './node_modules/chart.js/dist/Chart.js')
-    .addEntry('offcanvas', './assets/public/js/offcanvas.js')
+    .addEntry('offcanvas', './assets/js/offcanvas.js')
     .addEntry('profile/profile', './assets/js/profile.js')
     .addEntry( 'updatecounters', './assets/js/updateCounters.js')
     .addEntry( 'lightbox', './assets/js/lightbox.js')

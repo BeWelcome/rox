@@ -35,18 +35,6 @@
         <noscript><h1>Please activate Javascript for bewelcome.org</h1><p><small>Without it some function won't work.</small></p></noscript>
         <main role="main">
             <div class="container">
-                {% for label, messages in app.flashes %}
-                    <div class="row">
-                        {% for message in messages %}
-                        <div class="col-12">
-                            <div class="alert alert-{{ label }}">
-                                {{ message }}
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-            </div>
             {% set sidebar = (submenu is defined) %}
             {% set contentBlock %} {% block content %}{% endblock %} {% endset %}
             <div class="container">

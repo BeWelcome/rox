@@ -74,6 +74,8 @@ class LegacyHttpKernel extends HttpKernel
         if ($roxPostHandler) {
             $roxPostHandler->setClasses([
                 'SignupController',
+                'MessagesController',
+                'MembersController',
             ]);
             $router->session_memory->__set('posthandler', $roxPostHandler);
         }

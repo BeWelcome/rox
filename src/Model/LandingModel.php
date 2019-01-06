@@ -79,6 +79,7 @@ class LandingModel extends BaseModel
             ->from('App:Notification', 'n')
             ->where('n.member = :member')
             ->setParameter('member', $member)
+            ->andWhere('n.checked = 0')
             ->setMaxResults($limit);
 
         return $queryBuilder
@@ -153,6 +154,7 @@ class LandingModel extends BaseModel
      * @param Member $member
      *
      * @return array
+     * @throws Exception
      */
     public function getActivities(Member $member)
     {

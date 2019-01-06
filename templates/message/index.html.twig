@@ -105,7 +105,7 @@
                         {% if folder == 'deleted' %}
                             {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-danger' } }) }}
                         {% else %}
-                            {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-danger', 'onclick': "return confirm ('{{ 'MessagesWarningConfirmDelete' | trans }}')"} }) }}
+                            {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-danger', 'onclick': 'return confirm ("' ~ 'MessagesWarningConfirmDelete' | trans  ~ '")'} }) }}
                         {% endif %}
                         {{ form_widget(form.spam, { 'attr': { 'class': 'btn btn-light' } }) }}
                     </div>
@@ -122,12 +122,4 @@
         {% endif %}
 
     {% endif %}
-    <script type="text/javascript">
-        function toggle(source) {
-            checkboxes = document.getElementsByName('.selectable');
-            for(var i=0, n=checkboxes.length;i<n;i++) {
-                checkboxes[i].checked = source.checked;
-            }
-        }
-    </script>
 {% endblock %}

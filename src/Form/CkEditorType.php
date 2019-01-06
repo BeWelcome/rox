@@ -37,9 +37,11 @@ class CkEditorType extends TextAreaType
                     'class' => 'editor mb-1',
                 ],
                 'async' => false,
+                'placeholder' => '',
                 'error_bubbling' => false,
             ])
-            ->addAllowedTypes('async', 'bool');
+            ->addAllowedTypes('async', 'bool')
+            ->addAllowedTypes('placeholder', 'string');
     }
 
     /**

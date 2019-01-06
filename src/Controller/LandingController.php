@@ -106,7 +106,7 @@ class LandingController extends AbstractController
         $em->persist($memberPreference);
         $em->flush();
         $homeModel = new LandingModel($this->getDoctrine());
-        $threads = $homeModel->getThreads($member, $groups, $forum, $following, 4);
+        $threads = $homeModel->getThreads($member, $groups, $forum, $following, 5);
 
         $content = $this->render('landing/widget/forums.html.twig', [
             'threads' => $threads,

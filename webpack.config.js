@@ -3,11 +3,11 @@ const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
 var Encore = require('@symfony/webpack-encore');
 
 Encore
-//updatecounter    .configureRuntimeEnvironment('dev')
+//    .configureRuntimeEnvironment('dev')
     .enableSingleRuntimeChunk()
     .setOutputPath('public/build/')
     .setPublicPath('/build')
-    // .cleanupOutputBeforeBuild()
+    .cleanupOutputBeforeBuild()
 
     .addEntry('bewelcome', './assets/js/bewelcome.js')
     .addEntry('jquery_ui', './assets/js/jquery_ui.js')
@@ -39,7 +39,15 @@ Encore
     .autoProvideVariables({
         Popper: ['popper.js', 'default'],
     })
-
+    .addAliases({
+        'TweenLite': 'gsap/src/minified/TweenLite.min.js',
+        'TweenMax': 'gsap/src/minified/TweenMax.min.js',
+        'TimelineLite': 'gsap/src/minified/TimelineLite.min.js',
+        'TimelineMax': 'gsap/src/minified/TimelineMax.min.js',
+        'ScrollMagic': 'scrollmagic/scrollmagic/minified/ScrollMagic.min.js',
+        'animation.gsap': 'scrollmagic/scrollmagic/minified/plugins/animation.gsap.min.js',
+        'debug.addIndicators': 'scrollmagic/scrollmagic/minified/plugins/debug.addIndicators.min.js'
+    })
     .addLoader({
         test: require.resolve('jquery'),
         use: [{

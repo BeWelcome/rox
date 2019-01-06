@@ -195,6 +195,7 @@
 <script src="{{ asset('build/bewelcome.js') }}"></script>
 <script src="{{ asset('build/jquery_ui.js') }}"></script>
 <script src="{{ asset('build/search/searchpicker.js') }}"></script>
+<script src="{{ asset('build/scrollmagic.js') }}"></script>
 <script type="application/javascript">
     $(".select2").select2({
         theme: 'bootstrap',
@@ -229,21 +230,6 @@
 </script>
 <script>
     jarallax(document.querySelectorAll('.jarallax'));
-</script>
-<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.6/ScrollMagic.min.js"></script>
-<script>
-    var controller = new ScrollMagic.Controller();
-    new ScrollMagic.Scene({triggerElement: "#trigger-1", duration: 600 })
-        .setClassToggle("#scrollmagic-animation-1", "parallax--fixed-active")
-        .addTo(controller);
-
-    new ScrollMagic.Scene({triggerElement: "#trigger-2", duration: 600 })
-        .setClassToggle("#scrollmagic-animation-2", "parallax--fixed-active")
-        .addTo(controller);
-
-     new ScrollMagic.Scene({triggerElement: "#trigger-3" })
-        .setClassToggle("#scrollmagic-animation-3", "parallax--fixed-active")
-        .addTo(controller);
 </script>
 </body>
 </html>

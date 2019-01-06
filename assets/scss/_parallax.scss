@@ -127,11 +127,13 @@
       transform: translate(-50%,-50%);
       opacity:0;
       transition: opacity 0.8s;
+      visibility: hidden;
     }
 
     .parallax--fixed-active {
       opacity: 1;
       transition: opacity 0.8s;
+      visibility: visible;
     }
 
     .parallax--fixed--h {

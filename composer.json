@@ -19,7 +19,7 @@
         "intervention/image": "^2.4",
         "judev/php-htmltruncator": "^1.1",
         "michelf/php-markdown": "*",
-        "nesbot/carbon": "^1.21",
+        "nesbot/carbon": "^2.0",
         "pagerfanta/pagerfanta": "^2.0",
         "psr/log": "*",
         "robmorgan/phinx": "*",

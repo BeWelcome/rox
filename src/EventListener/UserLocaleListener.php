@@ -2,8 +2,12 @@
 
 namespace App\EventListener;
 
+use App\Entity\Language;
+use App\Entity\Member;
+use App\Entity\Preference;
 use Carbon\Carbon;
-use Rox\Member\Model\Member;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
@@ -17,9 +21,20 @@ class UserLocaleListener
      */
     protected $session;
 
-    public function __construct(Session $session)
+    /**
+     * @var EntityManager
+     */
+    private $em;
+
+    /**
+     * UserLocaleListener constructor.
+     * @param Session $session
+     * @param EntityManagerInterface $em
+     */
+    public function __construct(Session $session, EntityManagerInterface $em)
     {
         $this->session = $session;
+        $this->em = $em;
     }
 
     public function onInteractiveLogin(InteractiveLoginEvent $event)
@@ -27,9 +42,24 @@ class UserLocaleListener
         /** @var Member $user */
         $user = $event->getAuthenticationToken()->getUser();
 
-        if (null !== $user->getLocale()) {
-            $this->session->set('_locale', $user->getLocale());
-            Carbon::setLocale($user->getLocale());
+        // Get preference for locale
+        $preferenceRepository = $this->em->getRepository(Preference::class);
+        /** @var Preference $preference */
+        $preference = $preferenceRepository->findOneBy([
+            'codename' => Preference::LOCALE
+        ]);
+        $languageId = $user->getMemberPreferenceValue($preference);
+
+        $languageRepository = $this->em->getRepository(Language::class);
+        $language = $languageRepository->findOneBy([
+            'id' => $languageId
+        ]);
+        if ($language) {
+            $locale = $language->getShortCode();
+        } else {
+            $locale = $this->session->get('_locale', 'en');
         }
+
+        $this->session->set('_locale', $locale);
     }
 }

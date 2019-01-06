@@ -14,7 +14,7 @@ Encore
     .addEntry('backwards', './assets/js/backwards.js')
     .addEntry('signup/signup', './assets/js/signup.js')
     .addEntry('landing', './assets/public/js/landing/landing.js')
-    .addEntry('skrollr', './assets/js/skrollr.js')
+    .addEntry('scrollmagic', './assets/js/scrollmagic.js')
 
     .addEntry('search/searchpicker', './assets/public/js/search/searchpicker.js')
     .addEntry('search/loadcontent', './assets/public/js/search/loadajax.js')

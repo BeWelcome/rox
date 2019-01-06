@@ -98,6 +98,15 @@
     "doctrine/reflection": {
         "version": "v1.0.0"
     },
+    "easycorp/easy-log-handler": {
+        "version": "1.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.0",
+            "ref": "70062abc2cd58794d2a90274502f81b55cd9951b"
+        }
+    },
     "egulias/email-validator": {
         "version": "2.1.6"
     },
@@ -356,6 +365,9 @@
             "ref": "f8863cbad2f2e58c4b65fa1eac892ab189971bea"
         }
     },
+    "symfony/debug-pack": {
+        "version": "v1.0.7"
+    },
     "symfony/dependency-injection": {
         "version": "v4.1.6"
     },
@@ -463,6 +475,9 @@
     },
     "symfony/process": {
         "version": "v4.1.6"
+    },
+    "symfony/profiler-pack": {
+        "version": "v1.0.4"
     },
     "symfony/property-access": {
         "version": "v4.1.6"

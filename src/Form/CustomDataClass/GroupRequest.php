@@ -38,14 +38,14 @@ class GroupRequest
     public $picture;
 
     /**
-     * @var bool
+     * @var boolean
      */
     public $membersOnly = 'Yes';
 
     /**
      * Visible comments? always false for new groups.
      *
-     * @var bool
+     * @var boolean
      */
     public $comments = false;
 }

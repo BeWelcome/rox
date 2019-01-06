@@ -17,6 +17,9 @@
     "cakephp/datasource": {
         "version": "3.6.12"
     },
+    "cakephp/log": {
+        "version": "3.7.2"
+    },
     "cakephp/utility": {
         "version": "3.6.12"
     },

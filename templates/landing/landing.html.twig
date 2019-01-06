@@ -65,12 +65,13 @@
 
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-controls="messages" href="#messages" role="tab" data-toggle="tab">{{ 'landing.tab.messagesreceived' | trans }} {% if messageCount %}<span
+                    <a class="nav-link active" aria-controls="messages" href="#messages" role="tab" data-toggle="tab">{{ 'landing.tab.messagesreceived' | trans }}{% if messageCount %} <span
                                 class="badge badge-primary">{{ messageCount }}</span>{% endif %}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" aria-controls="notifications" href="#notifications" role="tab"
-                       data-toggle="tab">{{ 'landing.tab.notifications' | trans }}</a>
+                       data-toggle="tab">{{ 'landing.tab.notifications' | trans }}{% if notificationCount %} <span
+                                class="badge badge-primary">{{ notificationCount }}</span>{% endif %}</a>
                 </li>
             </ul>
 
@@ -99,8 +100,8 @@
                     {# message buttons #}
                     <div class="text-center">
                         <a href="{{ url( 'messages' )}}" class="btn btn-outline-primary btn-homewhite"><i
-                                    class="fa fa-envelope"></i>{{ 'landing.button.myinbox' | trans }} {% if messageCount %}<span
-                                    class="badge badge-primary badge-pill">{{ messageCount }}</span>{% endif %}</a>
+                                    class="fa fa-envelope"></i>{{ 'landing.button.myinbox' | trans }}{% if messageCount %} <span
+                                    class="badge badge-primary">{{ messageCount }}</span>{% endif %}</a>
                     </div>
                 </div>
 
@@ -111,6 +112,13 @@
                         <p class="text-center my-3">
                             <i class="fa fa-4x fa-spin fa-spinner my-3"></i><br/>
                             {{ 'Please wait while we load the notifications' | trans }}</p>
+                    </div>
+
+                    {# notifications button #}
+                    <div class="text-center mt-2">
+                        <a href="{{ url( 'notifications' )}}" class="btn btn-outline-primary btn-homewhite"><i
+                                    class="far fa-bell"></i> {{ 'landing.button.notifications' | trans }} {% if notificationCount %}<span
+                                    class="badge badge-primary">{{ notificationCount }}</span>{% endif %}</a>
                     </div>
                 </div>
 
@@ -125,7 +133,8 @@
                     <a href="#threads" class="nav-link active" aria-controls="threads" role="tab" data-toggle="tab">{{ 'landing.tab.forum' | trans }}</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#activities" class="nav-link" aria-controls="activities" role="tab" data-toggle="tab">{{ 'landing.tab.activities' | trans }}</a>
+                    <a href="#activities" class="nav-link" aria-controls="activities" role="tab" data-toggle="tab">{{ 'landing.tab.activities' | trans }}{% if activityCount %} <span
+                                class="badge badge-primary">{{ activityCount }}</span>{% endif %}</a>
                 </li>
             </ul>
 

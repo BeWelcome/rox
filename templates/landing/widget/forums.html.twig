@@ -1,7 +1,7 @@
 {% import 'macros.twig' as macros %}
 <div id="threadsdisplay" class="scrollcontent">
 
-    {# 4 most recent forum messages #}
+    {# 5 most recent forum messages #}
     {% for thread in threads %}
         <div class="d-flex flex-row justify-content-start align-items-center p-2">
             <div class="pr-2">{{ macros.avatar(thread.firstpost.author.Username, 50, true) }}</div>
@@ -17,5 +17,4 @@
             <div class="ml-auto"><a href="{{ url('forum_thread', {'threadId': thread.id}) }}"><i class="fa fa-chevron-right"></i></a></div>
         </div>
     {% endfor %}
-    {# infinite scroll??? #}
 </div>

@@ -3,7 +3,7 @@
     {% for notification in notifications %}
         <div class="d-flex flex-row justify-content-start align-items-center p-2">
             <div class="pr-2">{{ macros.avatar( notification.relMember.Username, 50, true ) }}</div>
-            <div class="text-truncate">
+            <div class="pr-2">
                 {% if notification.Type == "message" %}
                     {% set notificationText %}{{ notification.translationcode|trans|raw|format(notification.TranslationParameters)|raw }}{% endset %}
                 {% elseif notification.Type == "profile_comment" %}
@@ -11,12 +11,10 @@
                 {% else %}
                     {% set notificationText %}{{ notification.translationcode|trans|raw|format(notification.relMember.Username)|raw }}{% endset %}
                 {% endif %}
-                <p class="text-truncate m-0 p-0 dashentry">
-                    <a href="{{ notification.link }}" title="{{ notificationText }}">{{ notificationText }}</a><br>
-                </p>
-                <p class="p-0 m-0"><small><abbr title="{{ notification.created }}">{{ notification.created.DiffForHumans }}</abbr></small></p>
+                <p class="m-0 p-0"><a href="{{ notification.link }}" title="{{ notificationText }}">{{ notificationText }}</a><br>
+                <small title="{{ notification.created|localizeddate('medium', 'none') }}">{{ notification.created.DiffForHumans }}</small></p>
             </div>
-            <div class="ml-auto"><a class="notify" id="notify-{{ notification.id }}" href="#"><i class="fa fa-remove"></i></a></div>
+            <div class="ml-auto"><a class="notify" id="notify-{{ notification.id }}" href="#"><i class="fas fa-times"></i></a></div>
         </div>
     {% else %}
         <em>{{ 'No notifications' | trans }}</em>

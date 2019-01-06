@@ -3,7 +3,7 @@ const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
 var Encore = require('@symfony/webpack-encore');
 
 Encore
-    .configureRuntimeEnvironment('dev')
+//updatecounter    .configureRuntimeEnvironment('dev')
     .enableSingleRuntimeChunk()
     .setOutputPath('public/build/')
     .setPublicPath('/build')
@@ -13,11 +13,11 @@ Encore
     .addEntry('jquery_ui', './assets/js/jquery_ui.js')
     .addEntry('backwards', './assets/js/backwards.js')
     .addEntry('signup/signup', './assets/js/signup.js')
-    .addEntry('landing', './assets/public/js/landing/landing.js')
+    .addEntry('landing', './assets/js/landing/landing.js')
     .addEntry('scrollmagic', './assets/js/scrollmagic.js')
-
-    .addEntry('search/searchpicker', './assets/public/js/search/searchpicker.js')
-    .addEntry('search/loadcontent', './assets/public/js/search/loadajax.js')
+    .addEntry('skrollr', './assets/js/skrollr.js')
+    .addEntry('search/searchpicker', './assets/js/search/searchpicker.js')
+    .addEntry('search/loadcontent', './assets/js/search/loadajax.js')
     .addEntry('search/search', './assets/js/search/search.js')
 
     .addEntry('tempusdominus', './assets/js/tempusdominus.js')
@@ -27,7 +27,7 @@ Encore
     .addEntry('member/autocomplete', './assets/js/member/autocomplete.js')
     .addEntry('admin/faqs', './assets/js/admin/faqs.js')
     .addEntry('chartjs', './node_modules/chart.js/dist/Chart.js')
-    .addEntry('offcanvas', './assets/public/js/offcanvas.js')
+    .addEntry('offcanvas', './assets/js/offcanvas.js')
     .addEntry('profile/profile', './assets/js/profile.js')
     .addEntry( 'updatecounters', './assets/js/updateCounters.js')
     .addEntry( 'lightbox', './assets/js/lightbox.js')
@@ -69,21 +69,20 @@ Encore
 */
  .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
-/*    .configureBabel(function(babelConfig) {
+    .configureBabel(function(babelConfig) {
         // add additional presets
-        // babelConfig.presets.push('@babel/preset-env');
+        // babelConfig.presets.push('@babel/preset-flow');
 
         // no plugins are added by default, but you can add some
         // babelConfig.plugins.push('styled-jsx/babel');
     }, {
         // node_modules is not processed through Babel by default
         // but you can whitelist specific modules to process
-        // include_node_modules: ['@ckeditor']
+        include_node_modules: ['bootstrap']
 
         // or completely control the exclude
-        // exclude: /bower_components/
+        // exclude: /node_modules/
     })
-*/
 ;
 
 // console.log(JSON.stringify(Encore.getWebpackConfig(), null, 4));

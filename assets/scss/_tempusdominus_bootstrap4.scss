@@ -1,24 +1,13 @@
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip: rect(0,0,0,0);
-  border: 0;
-}
-
 $bs-datetimepicker-timepicker-font-size: 1.2em !default;
-$bs-datetimepicker-active-bg: white !default;
-$bs-datetimepicker-active-color: $info !default;
+$bs-datetimepicker-active-bg: $brand-primary !default;
+$bs-datetimepicker-active-color: $white !default;
 $bs-datetimepicker-border-radius: $border-radius !default;
-$bs-datetimepicker-btn-hover-bg: color('gray-200') !default;
-$bs-datetimepicker-disabled-color: $gray-400 !default;
-$bs-datetimepicker-alternate-color: color('gray-400') !default;
+$bs-datetimepicker-btn-hover-bg: $gray-200 !default;
+$bs-datetimepicker-disabled-color: $gray-600 !default;
+$bs-datetimepicker-alternate-color: $gray-600 !default;
 $bs-datetimepicker-secondary-border-color: #ccc !default;
 $bs-datetimepicker-secondary-border-color-rgba: rgba(0, 0, 0, 0.2) !default;
-$bs-datetimepicker-primary-border-color: black !default;
+$bs-datetimepicker-primary-border-color: white !default;
 $bs-datetimepicker-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25) !default;
 
 .bootstrap-datetimepicker-widget {
@@ -28,7 +17,9 @@ $bs-datetimepicker-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25) !default;
     display: block;
     margin: 2px 0;
     padding: 4px;
+    width: 14rem;
     background-color: white;
+    border: 1px solid #ccc;
 
     &.timepicker-sbs {
       @media (min-width: map-get($grid-breakpoints, 'sm')) {
@@ -98,6 +89,10 @@ $bs-datetimepicker-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25) !default;
         left: auto;
         right: 7px;
       }
+    }
+
+    &.wider {
+      width: 16rem;
     }
   }
 
@@ -344,8 +339,6 @@ $bs-datetimepicker-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25) !default;
   }
 }
 
-.input-group.date {
-  & .input-group-addon {
-    cursor: pointer;
-  }
+.input-group [data-toggle="datetimepicker"] {
+  cursor: pointer;
 }

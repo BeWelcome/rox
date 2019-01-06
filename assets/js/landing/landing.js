@@ -59,7 +59,9 @@ var Home = {
                 $('#notificationsdisplay').replaceWith(notifications);
 
                 // Set click event
-                $('.notify').click(function () {
+                $('.notify').click(function (e) {
+                    e.preventDefault();
+
                     var that = $(this);
                     var id = $(this).attr('id');
 

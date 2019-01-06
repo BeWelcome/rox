@@ -30,14 +30,15 @@ class GroupController extends AbstractController
     /**
      * @Route("/groups/new", name="new_group")
      *
-     * @param Request $request
+     * @param Request             $request
      * @param TranslatorInterface $translator
-     * @param Logger $logger
-     *
-     * @param \Swift_Mailer $mailer
-     * @return Response
+     * @param Logger              $logger
+     * @param \Swift_Mailer       $mailer
      *
      * @throws \Exception
+     *
+     * @return Response
+     *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * Because of the mix between old code and new code this method is way too long.
      */
@@ -281,18 +282,23 @@ class GroupController extends AbstractController
      *
      * @Route("/admin/groups/{id}/approve", name="admin_groups_approve")
      *
-     * @param Request $request
-     * @param Group $group
+     * @param Request             $request
+     * @param Group               $group
      * @param TranslatorInterface $translator
-     * @param Logger $logger
+     * @param Logger              $logger
+     * @param \Swift_Mailer       $mailer
      *
-     * @param \Swift_Mailer $mailer
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Exception
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function approveGroupAction(Request $request, Group $group, TranslatorInterface $translator, Logger $logger,
-        \Swift_Mailer $mailer)
-    {
+    public function approveGroupAction(
+        Request $request,
+        Group $group,
+        TranslatorInterface $translator,
+        Logger $logger,
+        \Swift_Mailer $mailer
+    ) {
         if (!$this->isGranted([Member::ROLE_ADMIN_GROUP])) {
             throw $this->createAccessDeniedException('You need to have the Group right to access this.');
         }
@@ -402,6 +408,7 @@ class GroupController extends AbstractController
 
     /**
      * @param UploadedFile $picture
+     *
      * @return string
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
@@ -417,14 +424,15 @@ class GroupController extends AbstractController
             $groupImageDir,
             $fileName
         );
-        $img = Image::make($groupImageDir . '/' . $fileName);
-        $img->resize(80,80, function ($constraint) {
+        $img = Image::make($groupImageDir.'/'.$fileName);
+        $img->resize(80, 80, function ($constraint) {
             $constraint->aspectRatio();
         });
-        $img->save($groupImageDir . '/thumb' . $fileName);
+        $img->save($groupImageDir.'/thumb'.$fileName);
 
         return $fileName;
     }
+
     /**
      * @return string
      */

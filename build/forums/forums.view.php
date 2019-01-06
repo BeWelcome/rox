@@ -563,11 +563,11 @@ class ForumsView extends RoxAppView {
 
         $words = new MOD_words();
 
-        $out = '<input type="checkbox" name="' . $name . '" id="' . $name . '" value="GroupOnly"';
+        $out = '<div class="form-check"><input type="checkbox" class="form-check-input" name="' . $name . '" id="' . $name . '" value="GroupOnly"';
         if ($visibility == 'GroupOnly') {
             $out .= ' checked="checked" ';
         }
-        $out .= '/> <label for="' . $name . '">' . $words->get($word) . '</label>';
+        $out .= '/> <label for="' . $name . '" class="form-check-label">' . $words->get($word) . '</label></div>';
         return $out;
     }
 

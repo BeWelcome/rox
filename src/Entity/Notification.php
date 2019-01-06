@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Notes.
  *
  * @ORM\Table(name="notes")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\NotificationRepository")
  * @ORM\HasLifecycleCallbacks
  *
  * @SuppressWarnings(PHPMD)

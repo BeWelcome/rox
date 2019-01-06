@@ -113,7 +113,7 @@ class MOD_mail
         }
     }
 
-    public static function sendEmail($subject, $from, $to, $title, $body, $language = 'en', $html = true, $attach = array())
+    public static function sendEmail($subject, $from, $to, $title, $body, $lang = 'de', $html = true, $siteUrl = '')
     {
          self::init();
 
@@ -140,21 +140,13 @@ class MOD_mail
         // If a title is set add it to the plain text body (for HTML that is done in the template)
         if ($title) {
             $title = $purifier->purify($title);
-            $body = $title . PHP_EOL . PHP_EOL . $body;
         }
-
-        $html2text = new Html2Text\Html2Text($body, false, array('do_links' => 'table', 'width' => 75));
-        $plain = $html2text->getText();
-
-        $message->setBody($plain);
-
-//        $message->addPart($plain, 'text/plain');
 
         // Add the html-body only if the member wants HTML mails
         if ($html) {
             // Translate footer text (used in HTML template)
             $words = new MOD_words();
-            $footer_message = $words->getPurified('MailFooterMessage', array(date('Y')), $language);
+            $footer_message = $words->getPurified('MailFooterMessage', array(date('Y')), $lang);
 
             // Using a html-template
             ob_start();
@@ -164,6 +156,11 @@ class MOD_mail
 
             $message->addPart($mail_html, 'text/html');
         }
+
+        $html2text = new Html2Text\Html2Text($mail_html, false, array('do_links' => 'table', 'width' => 75));
+        $plain = $html2text->getText();
+
+        $message->setBody($plain);
 
         return self::sendSwift($message);
     }

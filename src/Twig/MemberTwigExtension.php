@@ -2,12 +2,16 @@
 
 namespace App\Twig;
 
+use App\Entity\Activity;
 use App\Entity\Comment;
 use App\Entity\Group;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Entity\Notification;
 use App\Repository\CommentRepository;
 use App\Repository\MessageRepository;
+use App\Repository\NotificationRepository;
+use App\Repository\ActivityRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -79,6 +83,8 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
             'reportedMessagesCount' => $this->member ? $this->getReportedMessagesCount() : 0,
             'messageCount' => $this->member ? $this->getUnreadMessagesCount() : 0,
             'requestCount' => $this->member ? $this->getUnreadRequestsCount() : 0,
+            'notificationCount' => $this->member ? $this->getUncheckedNotificationsCount() : 0,
+            'activityCount' => $this->member ? $this->getUpcomingAroundLocationCount() : 0,
             'teams' => $teams,
         ];
     }
@@ -149,6 +155,25 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
         $messageRepository = $this->em->getRepository(Message::class);
 
         return $messageRepository->getUnreadRequestsCount($this->member);
+    }
+
+    protected function getUncheckedNotificationsCount()
+    {
+        /** @var NotificationRepository $notificationRepository*/
+        $notificationRepository = $this->em->getRepository(Notification::class);
+
+        return $notificationRepository->getUncheckedNotificationsCount($this->member);
+    }
+
+    /**
+     * @return int
+     */
+    protected function getUpcomingAroundLocationCount()
+    {
+        /** @var ActivityRepository $activityRepository*/
+        $activityRepository = $this->em->getRepository(Activity::class);
+
+        return $activityRepository->getUpcomingAroundLocationCount($this->member->getCity());
     }
 
     /**

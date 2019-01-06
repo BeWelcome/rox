@@ -37,7 +37,7 @@ class FaqRequest
     public $answer;
 
     /**
-     * @var bool
+     * @var boolean
      */
     public $active = true;
 

@@ -39,28 +39,26 @@
             </div>
 
             <div class="col-12 col-md-6">
-                <div class="modal fade" id="SignupIntroduction" tabindex="-1" role="dialog"
-                     aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal fade" id="SignupIntroduction" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
+                                <h5 class="modal-title"><?php echo $words->get('Signup'); ?></h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
-                                <h4 class="modal-title"
-                                    id="myModalLabel"><?php echo $words->get('SignupIntroductionTitle'); ?></h4>
                             </div>
                             <div class="modal-body">
                                 <?php echo $words->get('SignupIntroduction'); ?>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal"><?= $words->get('Close'); ?></button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <h3 class="mb-3">Please fill out all fields</h3>
+                <div class="text-muted"><?= $words->get('signup.names.hidden'); ?></div>
 
                 <!-- First Name -->
                 <div class="form-group">
@@ -76,13 +74,13 @@
                                 data-content="<?= htmlentities($words->get('subline_firstname')) ?>">
                             <i class="fa fa-question"></i>
                         </button>
-                        <div class="invalid-feedback">The firstname must at least be 1 characters long</div>
+                        <div class="invalid-feedback"><?= $words->get('signup.error.name.empty'); ?></div>
+                        <?php
+                        if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
+                            echo '<div class="invalid-feedback">' . $words->get('SignupErrorFullNameRequired') . '</div>';
+                        }
+                        ?>
                     </div>
-                    <?php
-                    if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
-                        echo '<span class="error">' . $words->get('SignupErrorFullNameRequired') . '</span>';
-                    }
-                    ?>
                 </div>
 
 
@@ -245,9 +243,7 @@
 </div>
 <script>
     $( document ).ready(function() {
-        // Rough calculation of 18 years ago
-        let maxDate = new Date();
-        maxDate.setDate(maxDate.getDate() - 18 * 365 - 4);
+        let maxDate = moment().subtract(18, "years");
         $("#datetimepicker1").datetimepicker({
             format: 'YYYY-MM-DD',
             maxDate: maxDate

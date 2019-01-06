@@ -2,8 +2,6 @@
 
 namespace App\Model;
 
-
 class GroupModel
 {
-
 }

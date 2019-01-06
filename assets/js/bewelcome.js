@@ -1,5 +1,6 @@
 import 'jquery';
 import 'popper.js';
+
 import 'bootstrap/js/src/index.js';
 import '../../public/script/common/common.js';
 import '../scss/bewelcome.scss';

@@ -9,7 +9,7 @@
 namespace App\Model;
 
 use App\Entity\CommunityNews;
-use App\Repository\CommunityNewsRepository;
+use App\Repository\NotificationRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Pagerfanta\Adapter\DoctrineCollectionAdapter;
 use Pagerfanta\Pagerfanta;
@@ -27,7 +27,7 @@ class CommunityNewsModel extends BaseModel
      */
     public function getPaginator($page, $limit)
     {
-        /** @var CommunityNewsRepository $repository */
+        /** @var NotificationRepository $repository */
         $repository = $this->em->getRepository(CommunityNews::class);
 
         return $repository->pagePublic($page, $limit);
@@ -41,7 +41,7 @@ class CommunityNewsModel extends BaseModel
      */
     public function getAdminPaginator($page, $limit)
     {
-        /** @var CommunityNewsRepository $repository */
+        /** @var NotificationRepository $repository */
         $repository = $this->em->getRepository(CommunityNews::class);
 
         return $repository->pageAll($page, $limit);
@@ -49,7 +49,7 @@ class CommunityNewsModel extends BaseModel
 
     public function getLatest()
     {
-        /** @var CommunityNewsRepository $repository */
+        /** @var NotificationRepository $repository */
         $repository = $this->em->getRepository(CommunityNews::class);
 
         try {

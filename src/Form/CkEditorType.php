@@ -21,7 +21,7 @@ class CkEditorType extends TextAreaType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         parent::buildView($view, $form, $options);
-        $view->vars = \array_replace($view->vars, [
+        $view->vars = array_replace($view->vars, [
             'async' => $options['async'],
         ]);
     }
@@ -37,9 +37,11 @@ class CkEditorType extends TextAreaType
                     'class' => 'editor mb-1',
                 ],
                 'async' => false,
+                'placeholder' => '',
                 'error_bubbling' => false,
             ])
-            ->addAllowedTypes('async', 'bool');
+            ->addAllowedTypes('async', 'bool')
+            ->addAllowedTypes('placeholder', 'string');
     }
 
     /**

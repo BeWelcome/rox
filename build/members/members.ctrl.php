@@ -155,10 +155,12 @@ class MembersController extends RoxControllerBase
             case 'editmyprofile':
                 $page = new EditMyProfilePage();
                 // $member->edit_mode = true;
-                if (isset($request[1]))
+                if (isset($request[1])) {
                     $this->model->set_profile_language($request[1]);
-                if (isset($request[2]) && $request[2] == 'delete')
-                    $page = new DeleteTranslationPage();
+                    if (isset($request[2]) && $request[2] == 'delete') {
+                        $page = new DeleteTranslationPage();
+                    }
+                }
                 if (in_array('finish',$request))
                     $page->status = "finish";
                 break;
@@ -325,7 +327,7 @@ class MembersController extends RoxControllerBase
                                     }
                                     // Define redirect target
                                     $redirect = '';
-                                    switch ($request[4])
+                                    switch ($request[5])
                                     {
                                         case 'editprofile':
                                             $redirect = '/editmyprofile';

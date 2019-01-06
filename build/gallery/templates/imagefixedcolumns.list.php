@@ -24,8 +24,7 @@ $p = PFunctions::paginate($statement, $page, $itemsPerPage);
 $statement = $p[0];
 
 ?>
-<div class="row">
-<div class="card-columns">
+<div class="col-12 card-columns">
     <?
     foreach ($statement as $d) {
         echo '<div class="card">';
@@ -36,14 +35,13 @@ $statement = $p[0];
             echo '<input type="checkbox" class="thumb_check input_check mr-2" name="imageId[]" value="'.$d->id.'">';
         }
         echo '<a href="gallery/img?id='.$d->id.'" title="'.$d->title.'">'.$title_short.'</a><a href="gallery/img?id='.$d->id.'" class=\'lightview\' rel=\'gallery[BestOf]\'><i class="fa fa-expand float-right" title="'.$words->getSilent('Preview image').'"></i></a>'.$words->flushBuffer().'</div>';
-        echo '<p class="small">'.$layoutbits->ago(strtotime($d->created)).' '.$words->getFormatted('by') .' <a href="members/'.$d->user_handle.'">'.$d->user_handle.'</a>';
+        echo '<p class="small p-2">'.$layoutbits->ago(strtotime($d->created)).' '.$words->getFormatted('by') .' <a href="members/'.$d->user_handle.'">'.$d->user_handle.'</a>';
         echo '<a href="gallery/show/user/'.$d->user_handle.'" title="'.$words->getSilent('galleryUserOthers',$d->user_handle).'"><i class="fa fa-image ml-1"></i></a>'.$words->flushBuffer().'</p>';
         echo '</div>';
     }
     ?>
 </div>
-</div>
-<div class="row w-100">
+<div class="col-12">
 <?
     $pages = $p[1];
     $maxPage = $p[2];

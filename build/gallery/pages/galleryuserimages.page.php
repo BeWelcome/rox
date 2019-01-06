@@ -21,7 +21,7 @@ class GalleryUserImagesPage extends GalleryUserPage
         $words = $this->getWords();
         $this->thumbsize = 1;
 
-        echo '<h3>'.$words->getFormatted('GalleryTitleLatest').'</h3>';        
+        echo '<div class="col-12"><h3>'.$words->getFormatted('GalleryTitleLatest').'</h3></div>';
         require SCRIPT_BASE . 'build/gallery/templates/imagefixedcolumns.list.php';
     }
 

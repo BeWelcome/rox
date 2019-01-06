@@ -160,7 +160,7 @@ if ($threads = $forum->getThreads()) {
 
 ?>
 </div>
-</div>
+
  <!-- Forum-->
 
 <?php

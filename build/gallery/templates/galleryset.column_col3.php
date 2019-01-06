@@ -18,7 +18,7 @@ if (!isset($vars['errors'])) {
 if ($statement){
 foreach ($statement as $d) { ?>
 
-    <div class="col-12 col-sm-6 col-md-3 pl-0 pr-2">
+    <div class="col-12 col-sm-6 col-md-3">
         <div class="card h-100 p-2">
             <a href="#" data-toggle="lightbox"  data-type="image"><img class="w-100" src="gallery/thumbimg?id=<?= $d->id ?>&amp;t=1" alt="<?= $d->title ?>"></a>
             <? if ($this->myself) { ?>

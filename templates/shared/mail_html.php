@@ -9,14 +9,14 @@
             background: #f8f8f8;
             border: 1px #ddd solid;
             border-left: 8px #f37000 solid;
-            padding: 0 0.5rem;
-            margin: 0 0 1rem 0.5rem;
+            padding: 0 0.5em;
+            margin: 0 0 1em 0.5em;
         }
 
         body {
             color: #333;
-            font-size: 1.2rem;
-            line-height: 1.5rem;
+            font-size: 1.2em;
+            line-height: 1.5em;
             font-family: arial, verdana, sans-serif;
             margin: 0;
             padding: 0;
@@ -28,8 +28,8 @@
         }
 
         .unsubscribe {
-            font-size: 0.7rem;
-            line-height: 1.1rem;
+            font-size: 0.7em;
+            line-height: 1.1em;
         }
 
         h1, h1 a {
@@ -39,29 +39,38 @@
         #message {
             background: #e5e5e5;
             border-radius: 5px;
-            margin: 1rem;
+            margin: 1em;
         }
 
         .header {
+            display: inline-block;
+            width:100%;
             background-color: #f37000;
             border-top-left-radius: 5px;
             border-top-right-radius: 5px;
             min-height: 50px;
         }
 
+        .header h1{
+            font-size:1em;
+            font-weight: bold;
+            line-height: 1em ;
+            padding-top: 0.2em;
+        }
+
         .logo {
             float: left;
-            padding: 0.5rem 2rem 0;
+            padding: 0.5rem 2em 0;
         }
 
         .content {
-            padding: 0.5rem 1rem 0;
+            padding: 0.5rem 2em 0;
         }
 
         .from {
             background-color: rgba(0,0,0,.25);
             font-weight: bold;
-            padding: 1rem;
+            padding: 1em;
             color: #eee;
         }
 
@@ -69,39 +78,34 @@
             color: #000;
         }
 
-        .bodytext {
-
-        }
-
-        #footer {
+        footer {
             background-color: #f37000;
-            padding-left: 0.5rem;
+            padding-left: 2em;
             font-size: 0.8rem;
             border-bottom-left-radius: 5px;
             border-bottom-right-radius: 5px;
-            font-weight: bold;
         }
 
-        #footer a {
+        footer a {
             color: #fff;
+            font-weight: bold;
         }
         --></style>
 </head>
 <body>
 <div id="message">
-    <div class="header" style="display: flex;">
-        <div>
-            <a href="<?php echo $siteUrl; ?>"><img src="<?php echo $siteUrl; ?>/images/logo_index_top.png" alt="BeWelcome" class="logo"></a>
-        </div>
+    <div class="header">
+            <a href="<?php echo $siteUrl; ?>"><img src="<?php echo $siteUrl; ?>/images/logo_index_top.png" alt="BeWelcome" class="logo" border="0"></a>
         <?php if($title) { ?>
-            <div><h1 style="font-size:1em; font-weight: bold; line-height: 1em;"><?= $title ?></h1></div>
+            <h1><?= $title ?></h1>
         <?php } ?>
     </div>
     <div class="content">
         <?= $body ?>
     </div>
-    <div id="footer">
+    <footer>
         <?php echo $footer_message; ?>
-    </div>
+    </footer>
+</div>
 </body>
 </html>

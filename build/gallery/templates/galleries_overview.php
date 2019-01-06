@@ -18,8 +18,6 @@ if ($galleries) {
     $galleriesonpage = $p[0];
 
     ?>
-    <div class="row w-100 my-3">
-
         <div class="col-12 col-sm-6 col-md-3 text-center">
             <a href="members/<?= $username ?>">
                 <img class="framed w-100" src="members/avatar/<?= $username ?>/100" alt="Picture of <?= $username ?>" width="100%" alt="Profile of <?= $username ?>">
@@ -49,13 +47,16 @@ if ($galleries) {
         <?php
         }
     }
-    echo '</div>';
+?>
+    <div class="w-100"></div>
+    <div class="col-12 mt-3">
+        <?
     if (isset($emptyPhotosets)) echo $emptyPhotosets;
     $pages = $p[1];
     $maxPage = $p[2];
     $currentPage = $page;
     if (isset($requestStrNew)) $requestStr = $requestStrNew;
     $request = $requestStr.'/=page%d';
-    require 'pages.php';
-
-}
+    require 'pages.php'; ?>
+    </div>
+<? } ?>

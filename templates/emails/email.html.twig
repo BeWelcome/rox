@@ -9,14 +9,14 @@
             background: #f8f8f8;
             border: 1px #ddd solid;
             border-left: 8px #f37000 solid;
-            padding: 0 0.5rem;
-            margin: 0 0 1rem 0.5rem;
+            padding: 0 0.5em;
+            margin: 0 0 1em 0.5em;
         }
 
         body {
             color: #333;
-            font-size: 1.2rem;
-            line-height: 1.5rem;
+            font-size: 1.2em;
+            line-height: 1.5em;
             font-family: arial, verdana, sans-serif;
             margin: 0;
             padding: 0;
@@ -28,43 +28,49 @@
         }
 
         .unsubscribe {
-            font-size: 0.7rem;
-            line-height: 1.1rem;
+            font-size: 0.7em;
+            line-height: 1.1em;
         }
 
-        h1 {
+        h1, h1 a {
             color: #fff;
-            padding-top: 0.7rem;
-            font-size: 1.8rem;
-            line-height: 1.8rem;
         }
 
         #message {
             background: #e5e5e5;
             border-radius: 5px;
-            margin: 1rem;
+            margin: 1em;
         }
 
         .header {
+            display: inline-block;
+            width:100%;
             background-color: #f37000;
             border-top-left-radius: 5px;
             border-top-right-radius: 5px;
             min-height: 50px;
         }
 
+        .header h1{
+            font-size:1em;
+            font-weight: bold;
+            line-height: 1em ;
+            padding-top: 0.2em;
+        }
+
         .logo {
             float: left;
-            padding: 0.5rem 2rem 0;
+            padding: 0.5rem 2em 0;
         }
 
         .content {
-            padding: 0.5rem 1rem 0;
+            padding: 0.5rem 2em 0;
         }
 
         .from {
             background-color: rgba(0,0,0,.25);
             font-weight: bold;
-            padding: 1rem;
+            padding: 1em;
             color: #eee;
         }
 
@@ -72,16 +78,16 @@
             color: #000;
         }
 
-        .bodytext {
-
-        }
-
-        #footer {
+        footer {
             background-color: #f37000;
-            padding-left: 0.5rem;
+            padding-left: 2em;
             font-size: 0.8rem;
             border-bottom-left-radius: 5px;
             border-bottom-right-radius: 5px;
+        }
+
+        footer a {
+            color: #fff;
             font-weight: bold;
         }
         --></style>
@@ -89,19 +95,17 @@
 <body>
 <div id="message">
     <div class="header">
-        <div>
             <a href="{{ url('homepage') }}"><img
                         src="{{ absolute_url(asset('images/logo_index_top.png')) }}" class="logo"></a>
             <h1>{{ subject }}</h1>
-        </div>
     </div>
     {% block sender %}{% endblock sender %}
     <div class="content">
         {%- block content -%}{%- endblock content -%}
     </div>
-    <div id="footer">
+    <footer>
         <p>(cc) {{ "now" | date("Y") }} <a href="{{ url('homepage') }}" target="_blank">BeWelcome</a></p>
-    </div>
+    </footer>
 </div>
 
 </body>

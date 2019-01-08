@@ -20,7 +20,7 @@
             <div class="collapse d-xl-none px-0 w-100" id="smallNavBar">
                 <ul class="navbar-nav mr-auto mt-2">
                     <li class="nav-item bordert-1">
-                        <a href="{{ url( 'search_members' ) }}" class="nav-link pl-1"><i class="fa fa-globe-americas mr-1"></i>{{ 'MapSearch' | trans }}</a>
+                        <a href="{{ url( 'search_members' ) }}" class="nav-link pl-1"><i class="fa fa-globe-americas mr-1"></i>{{ 'FindMembers' | trans }}</a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ url('members_profile', { username: member.Username }) }}" class="nav-link pl-1"><i class="fa fa-user mr-1"></i>{{ member.Username }}</a>
@@ -85,9 +85,9 @@
                         <a href="{{ url('volunteer') }}" class="nav-link px-3">{{ 'Volunteer' | trans}}</a>
                     </li>
                     <li class="menuborder dropdown d-none d-md-flex">
-                        <a class="nav-link px-3" id="subNavBar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="nav-link px-3" id="subNavBar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             &#9776;
-                        </a>
+                        </button>
 
                         <div class="dropdown-menu subnav py-0 bordert-1 borderb-1" aria-labelledby="subNavBar">
 

@@ -75,7 +75,7 @@ Encore
     })
 */
  .enableSourceMaps(!Encore.isProduction())
-    .enableVersioning(Encore.isProduction())
+//    .enableVersioning(Encore.isProduction())
     .configureBabel(function(babelConfig) {
         // add additional presets
         // babelConfig.presets.push('@babel/preset-flow');

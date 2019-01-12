@@ -85,11 +85,11 @@
                         <a href="{{ url('volunteer') }}" class="nav-link px-3">{{ 'Volunteer' | trans}}</a>
                     </li>
                     <li class="menuborder dropdown d-none d-md-flex">
-                        <a href="#subNavBar" class="nav-link px-3" id="subNavBar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a href="#subNavBar" class="nav-link px-3" id="subNavBarToggle" data-target="subNavBar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             &#9776;
                         </a>
 
-                        <div class="dropdown-menu subnav py-0 bordert-1 borderb-1" aria-labelledby="subNavBar">
+                        <div id="subNavBar" class="dropdown-menu subnav py-0 bordert-1 borderb-1" aria-labelledby="subNavBarToggle">
 
                             <div class="container">
 
@@ -167,7 +167,7 @@
 
                     {# member dropdown on bigger screens #}
                     <li class="nav-item dropdown float-right d-none d-lg-block">
-                        <a href="#member_menu" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"></i> {{ member.Username }}</a>
+                        <a href="#member_menu" class="nav-link dropdown-toggle" data-target="member_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"></i> {{ member.Username }}</a>
                         <ul id="member_menu" class="dropdown-menu dropdown-menu-right" role="menu">
                             <li class="text-right"><a href="{{ path( 'members_profile' , { username: member.Username } ) }}" class="dropdown-item">{{ 'Profile' | trans }}</a></li>
                             <li class="text-right"><a href="{{ path('edit_my_profile') }}" class="dropdown-item">{{ 'EditMyProfile' | trans }}</a></li>

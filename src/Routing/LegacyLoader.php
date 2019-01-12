@@ -119,6 +119,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('gallery_upload_image', '/gallery/upload');
         $this->addRouteDirectly('gallery_upload_finish', '/gallery/uploaded');
         $this->addRouteDirectly('gallery_manage', '/gallery/manage');
+        $this->addRouteDirectly('gallery_manage_pages', '/gallery/manage/=page{pageNo}');
         $this->addRouteDirectly('gallery_thumbnail', '/gallery/thumbimg');
         $this->addRouteDirectly('gallery', '/gallery');
         $this->addRouteDirectly('profile_all_comments', '/members/{username}/comments/');

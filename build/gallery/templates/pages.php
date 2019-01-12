@@ -10,11 +10,11 @@ if (!is_array($pages) || count($pages) == 0) {
 ?>
 <div class="row px-3">
     <ul class="pagination pull-right">
-       <li class="page-item <?php if ($currentPage == 1){ echo ' disabled'; } ?>"><a href="<?=sprintf($request, ($currentPage - 1))?>" class="page-link">&lt;&lt;</a></li>
+       <li class="page-item <?php if ($currentPage == 1){ echo 'disabled'; } ?>"><a href="<?=sprintf($request, ($currentPage - 1))?>" class="page-link">&lt;&lt;</a></li>
         <?php
         foreach ($pages as $page) {
             if (!is_array($page)) {
-		echo '<li class="page-item disabled">...</li>';
+		echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
                 continue;
             }
             if (!isset($page['current'])) {

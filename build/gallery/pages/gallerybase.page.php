@@ -14,7 +14,7 @@ class GalleryBasePage extends PageWithActiveSkin
     {
         $this->page_title = 'Gallery | BeWelcome';
         $this->model = new GalleryModel();
-        $this->addLateLoadScriptFile('/build/lightbox.js');
+        $this->addLateLoadScriptFile('build/lightbox.js');
     }
     
     protected function teaser() {

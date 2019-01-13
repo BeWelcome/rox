@@ -1,9 +1,7 @@
 {
   "name": "bewelcome-rox",
   "browserslist": [
-    "last 4 version",
-    "not dead",
-    "> 1%"
+    "last 6 version"
   ],
   "version": "3.0.0",
   "license": "GPL-2.0",
@@ -30,7 +28,7 @@
     "@ckeditor/ckeditor5-theme-lark": "^12.0.0",
     "@symfony/webpack-encore": "^0.22.4",
     "autoprefixer": "^9.3.1",
-    "css-loader": "^1.0.0",
+    "css-loader": "^1.0.1",
     "file-loader": "^3.0.1",
     "grunt": "^1.0.3",
     "grunt-assets-versioning": "^1.0.6",

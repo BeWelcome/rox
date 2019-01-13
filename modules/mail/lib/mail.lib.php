@@ -142,25 +142,23 @@ class MOD_mail
             $title = $purifier->purify($title);
         }
 
-        // Add the html-body only if the member wants HTML mails
-        if ($html) {
-            // Translate footer text (used in HTML template)
-            $words = new MOD_words();
-            $footer_message = $words->getPurified('MailFooterMessage', array(date('Y')), $lang);
+        // Translate footer text (used in HTML template)
+        $words = new MOD_words();
+        $footer_message = $words->getPurified('MailFooterMessage', array(date('Y')), $lang);
 
-            // Using a html-template
-            ob_start();
-            require SCRIPT_BASE . 'templates/shared/mail_html.php';
-            $mail_html = ob_get_contents();
-            ob_end_clean();
-
-            $message->addPart($mail_html, 'text/html');
-        }
+        // Using a html-template
+        ob_start();
+        require SCRIPT_BASE . 'templates/shared/mail_html.php';
+        $mail_html = ob_get_contents();
+        ob_end_clean();
 
         $html2text = new Html2Text\Html2Text($mail_html, false, array('do_links' => 'table', 'width' => 75));
         $plain = $html2text->getText();
 
         $message->setBody($plain);
+        if ($html) {
+            $message->addPart($mail_html, 'text/html');
+        }
 
         return self::sendSwift($message);
     }

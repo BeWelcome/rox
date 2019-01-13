@@ -28,8 +28,6 @@ Boston, MA  02111-1307, USA.
  * - class MOD_words: One global object of this type, to handle all the translation requests.
  * -
  */
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
 /**

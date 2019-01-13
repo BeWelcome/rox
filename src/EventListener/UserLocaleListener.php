@@ -59,6 +59,7 @@ class UserLocaleListener
         } else {
             $locale = $this->session->get('_locale', 'en');
         }
+        \PVars::register('lang', $locale);
 
         $this->session->set('_locale', $locale);
     }

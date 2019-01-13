@@ -34,13 +34,16 @@ class LocaleListener implements EventSubscriberInterface
             $request->setLocale($locale);
         }
         Carbon::setLocale($locale);
+        \PVars::register('lang', $locale);
     }
 
     public static function getSubscribedEvents()
     {
         return [
             // must be registered before (i.e. with a higher priority than) the default Locale listener
-            KernelEvents::REQUEST => [['onKernelRequest', 20]],
+            KernelEvents::REQUEST => [
+                ['onKernelRequest', 20]
+            ],
         ];
     }
 }

@@ -67,7 +67,7 @@
             padding: 0.5rem 2em 0;
         }
 
-        .from {
+        .from, .subheader {
             background-color: rgba(0,0,0,.25);
             font-weight: bold;
             padding: 1em;
@@ -96,10 +96,14 @@
 <div id="message">
     <div class="header">
             <a href="<?php echo $siteUrl; ?>"><img src="<?php echo $siteUrl; ?>/images/logo_index_top.png" alt="BeWelcome" class="logo" border="0"></a>
-        <?php if($title) { ?>
-            <h1><?= $title ?></h1>
-        <?php } ?>
     </div>
+
+        <?php if($title) { ?>
+            <div class="subheader">
+            <h1><?= $title ?></h1>
+            </div>
+        <?php } ?>
+
     <div class="content">
         <?= $body ?>
     </div>

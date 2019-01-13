@@ -31,7 +31,7 @@
                 </div>
                 <div class="col-auto text-center">
                     <p class="p-3"><a href="{{ url('signup') }}" class="btn btn-primary btn-lg p-3 font-weight-bold home-button-shadow">{{ 'home.button.join' | trans }}</a></p>
-                    <p class="parallax--fixed--h py-2">{{ 'home.bewelcome.free' | trans | escape |replace({'%link_start%': '<a href="'~path('wiki_page', { 'pageTitle': 'Can BeWelcome be sold'})~'" class="text-primary">', '%link_end%': '</a>'})|raw }}</p>
+                    <p class="parallax--fixed--h py-2">{{ 'home.bewelcome.free' | trans | escape |replace({'%link_start%': '<a href="'~path('wiki_page', { 'pageTitle': 'Can BeWelcome be sold'})~'" class="text-primary bold">', '%link_end%': '</a>'})|raw }}</p>
                 </div>
             </div>
         </div>
@@ -54,8 +54,8 @@
                     <p>{{ 'tourpage_text4' | trans }}</p>
                 </div>
                 <div class="col-12 col-md-6 col-lg-3">
-                    <p><i class="fa fa-start fa-magic" aria-hidden="true"></i></p>
-                    <h3>{{ 'tour_link_info' | trans }}</h3>
+                    <p><i class="fa fa-start fa-home" aria-hidden="true"></i></p>
+                    <h3>{{ 'tour_link_host' | trans }}</h3>
                     <p>{{ 'tourpage_text5' | trans }}</p>
                 </div>
                 <div class="col-12 col-md-6 col-lg-3">
@@ -154,8 +154,9 @@
                     </div>
                     <label for="location" class="sr-only">{{ 'Where do you want to go?' | trans }}</label>
                     <div class="input-group">
-                        <span class="input-group-prepend"><i class="input-group-text fa fa-lg fa-map-marker"
-                                                             aria-hidden="true"></i></span>
+                        <span class="input-group-prepend">
+                            <i class="input-group-text fa fa-lg fa-map" aria-hidden="true"></i>
+                        </span>
                         {{ form_widget( search.location, { 'attr' : { 'class' : 'search-picker form-control' } } ) }}
                         <span class="input-group-append p-0">
                         <button id="{{ search.updateMap.vars.id }}" name="updateMap" type="submit"

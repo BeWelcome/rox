@@ -1,6 +1,5 @@
 <?php
 
-
 class PageWithHTML extends AbstractBasePage
 {
     private $_widgets = array();  // will be asked for stylesheet and scriptfile information
@@ -8,8 +7,9 @@ class PageWithHTML extends AbstractBasePage
     // Add or increment query string if a JS file changes to make sure browsers
     // reload the file (e.g. "?1" -> "?2")
     private $_early_scriptfiles = array(
-        '/build/runtime.js',
-        '/build/bewelcome.js',
+        'build/runtime.js',
+        'build/bewelcome.js',
+        'build/offcanvas.js',
         '/script/main.js?9',
 //         '/script/common/common.js?1',
         '/script/common/initialize.js?1',
@@ -166,11 +166,6 @@ class PageWithHTML extends AbstractBasePage
         $this->includeJsConfig();
         $this->includeScriptfiles();
         ?>
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-        <script src="/build/backwards.js"></script>
-        <![endif]-->
         </head>
         <body>
         <?php $this->topmenu() ?>
@@ -196,8 +191,8 @@ class PageWithHTML extends AbstractBasePage
         if (!$stylesheets = $this->getStylesheets()) {
             // no stylesheets
         } else foreach($stylesheets as $url) {
-            if (strpos($url, '/build/') === 0) {
-                echo '<link rel="stylesheet" href="' . $url . '" type="text/css" />' . PHP_EOL;
+            if (strpos($url, 'build/') === 0) {
+                echo '<link rel="stylesheet" href="' . $this->getUrl($url). '" type="text/css" />' . PHP_EOL;
             } else {
             ?><link rel="stylesheet" href="<?=$url ?>" type="text/css" />
             <?php
@@ -208,7 +203,7 @@ class PageWithHTML extends AbstractBasePage
         } else foreach($stylesheet_patches as $url) {
             ?>
     <!--[if lte IE 8]>
-                    <link rel="stylesheet" href="<?=$url ?>" type="text/css" />
+                    <link rel="stylesheet" href="<?=$this->getUrl($url) ?>" type="text/css" />
         <![endif]-->
             <?php
         }
@@ -262,8 +257,8 @@ class PageWithHTML extends AbstractBasePage
         if (!$scriptfiles = $this->getScriptfiles()) {
             // no additional Javascript files
         } else foreach($scriptfiles as $url) {
-            if (strpos($url, '/build/') === 0) {
-                echo '<script type="text/javascript" src="' . ltrim($url, '/') . '"></script>' . PHP_EOL;
+            if (strpos($url, 'build/') === 0) {
+                echo '<script type="text/javascript" src="' . $this->getUrl($url) . '"></script>' . PHP_EOL;
             } else {
                 ?>
                 <script type="text/javascript" src="<?= ltrim($url, '/') ?>"></script>
@@ -281,15 +276,13 @@ class PageWithHTML extends AbstractBasePage
      */
     protected function includeLateScriptfiles()
     {
+        echo getcwd();
+
         if ($scriptfiles = $this->getLateLoadScriptfiles())
         {
             foreach($scriptfiles as $url)
             {
-                if (strpos($url, '/assetic/') === 0) {
-                    echo '<script type="text/javascript" src="' . ltrim($url, '/') . '"></script>' . PHP_EOL;
-                } else {
-                    echo "<script type='text/javascript' src='" . ltrim($url, '/') . "'></script>" . PHP_EOL;
-                }
+                echo '<script type="text/javascript" src="' . $this->getUrl($url) . '"></script>' . PHP_EOL;
             }
         }
     }

@@ -1,15 +1,20 @@
 <?php
 
 
+use Symfony\Component\Asset\Package;
+use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
+
 class RoxComponentBase
 {
     use Rox\RoxTraits\SessionTrait;
 
+    protected $package;
+
     public function __construct() {
         $this->setSession();
+        $this->package = new Package(new JsonManifestVersionStrategy('build/manifest.json'));
     }
-    
-    
+
     // TODO: The __get / __set mechanic is quite cool, but
     // there is no good way to make some things protected and others public!
     // Ideally, things injected from outside (with __set) would be protected,
@@ -139,6 +144,11 @@ class RoxComponentBase
             $version = "0000000";
         }
         return $version;
+    }
+
+    protected function getUrl($path)
+    {
+        return $this->package->getUrl($path);
     }
 }
 

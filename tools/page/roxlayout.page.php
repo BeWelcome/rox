@@ -20,12 +20,7 @@ class PageWithRoxLayout extends PageWithHTML
     {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'build/bewelcome.css';
-        if (PVars::getObj('development')->uncompress_css != 1) {
-            $stylesheets = str_replace(".css", ".min.css", $stylesheets);
-            return $stylesheets;
-        } else {
-            return $stylesheets;
-        }
+        return $stylesheets;
     }
 
     protected function getPage_meta_keyword()

@@ -39,7 +39,6 @@ class HostingRequestType extends AbstractType
             ])
             ->add('departure', DateType::class, [
                 'widget' => 'single_text',
-                'required' => false,
                 'html5' => false,
                 'format' => 'yyyy-MM-dd',
                 'attr' => [

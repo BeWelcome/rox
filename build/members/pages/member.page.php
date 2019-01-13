@@ -244,7 +244,7 @@ class MemberPage extends PageWithActiveSkin
 
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
-        $stylesheets[] = '/build/lightbox.css';
+        $stylesheets[] = 'build/lightbox.css';
         return $stylesheets;
     }
 

@@ -3,5 +3,5 @@
 
 class EditMyProfilePage extends EditProfilePage
 {    
-   
+
 }

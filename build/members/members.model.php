@@ -20,8 +20,10 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
+use Carbon\Carbon;
 
-    /**
+
+/**
      * @author Lemon-Head
      * @author Lupochen
      * @author Fake51
@@ -1065,6 +1067,7 @@ ORDER BY
         $IdMember = (int)$vars['memberid'];
         $words = new MOD_words();
         $rights = new MOD_right();
+        /** @var Member $m */
         $m = $vars['member'];
 
         // fantastic ... love the implementation. Fake
@@ -1146,89 +1149,6 @@ ORDER BY
             $this->logWrite("Zip updated", "Address Update");
         }
 
-
-        /* TODO: check why the following lines return errors
-		if ($vars["HomePhoneNumber"]!="cryptedhidden") {
-			$m->HomePhoneNumber = $this->_crypt->NewReplaceInCrypted(addslashes(strip_tags($vars['HomePhoneNumber'])),"members.HomePhoneNumber",$IdMember, $m->HomePhoneNumber, $IdMember, $this->ShallICrypt($vars,"HomePhoneNumber"));
-		}
-		if ($vars["CellPhoneNumber"]!="cryptedhidden") {
-			$m->CellPhoneNumber = $this->_crypt->NewReplaceInCrypted(addslashes(strip_tags($vars['CellPhoneNumber'])),"members.CellPhoneNumber",$IdMember, $m->CellPhoneNumber, $IdMember, $this->ShallICrypt($vars,"CellPhoneNumber"));
-		}
-		if ($vars["WorkPhoneNumber"]!="cryptedhidden") {
-			$m->WorkPhoneNumber = $this->_crypt->NewReplaceInCrypted(addslashes(strip_tags($vars['WorkPhoneNumber'])),"members.WorkPhoneNumber",$IdMember, $m->WorkPhoneNumber, $IdMember, $this->ShallICrypt($vars,"WorkPhoneNumber"));
-		}
-		if ($vars["chat_SKYPE"]!="cryptedhidden") {
-			$m->chat_SKYPE = $this->_crypt->NewReplaceInCrypted(addslashes(strip_tags($vars['chat_SKYPE'])),"members.chat_SKYPE",$IdMember, $m->chat_SKYPE, $IdMember, $this->ShallICrypt($vars,"chat_SKYPE"));
-		}
-		if ($vars["chat_AOL"]!="cryptedhidden") {
-			$m->chat_AOL = $this->_crypt->NewReplaceInCrypted(addslashes(strip_tags($vars['chat_AOL'])),"members.chat_AOL",$IdMember, $m->chat_AOL, $IdMember, $this->ShallICrypt($vars,"chat_AOL"));
-		}
-		if ($vars["chat_YAHOO"]!="cryptedhidden") {
-			$m->chat_YAHOO = $this->_crypt->NewReplaceInCrypted(addslashes(strip_tags($vars['chat_YAHOO'])),"members.chat_YAHOO",$IdMember, $m->chat_YAHOO, $IdMember, $this->ShallICrypt($vars,"chat_YAHOO"));
-		}
-		if ($vars["chat_ICQ"]!="cryptedhidden") {
-			$m->chat_ICQ = $this->_crypt->NewReplaceInCrypted(addslashes(strip_tags($vars['chat_ICQ'])),"members.chat_ICQ",$IdMember, $m->chat_ICQ, $IdMember, $this->ShallICrypt($vars,"chat_ICQ"));
-		}
-		if ($vars["chat_Others"]!="cryptedhidden") {
-			$m->chat_Others = $this->_crypt->NewReplaceInCrypted(addslashes(strip_tags($vars['chat_Others'])),"members.chat_Others",$IdMember, $m->chat_Others, $IdMember, $this->ShallICrypt($vars,"chat_Others"));
-		}
-		if ($vars["chat_GOOGLE"]!="cryptedhidden") {
-			$m->chat_GOOGLE = $this->_crypt->NewReplaceInCrypted(addslashes(strip_tags($vars['chat_GOOGLE'])),"members.chat_GOOGLE",$IdMember,$m->chat_GOOGLE, $IdMember, $this->ShallICrypt($vars,"chat_GOOGLE"));
-		}
-
-
-        $firstname = $this->_crypt->AdminReadCrypted($m->FirstName);
-        $secondname = $this->_crypt->AdminReadCrypted($m->SecondName);
-        $lastname = $this->_crypt->AdminReadCrypted($m->LastName);
-
-
-		if ($firstname != strip_tags($vars['FirstName']) || $secondname != strip_tags($vars['SecondName']) || $lastname != strip_tags($vars['LastName']))
-        {
-            $this->logWrite("{$m->Username} changed name. Firstname: {$firstname} -> " . strip_tags($vars['FirstName']) . ", second name: {$secondname} -> " . strip_tags($vars['SecondName']) . ", second name: {$lastname} -> " . strip_tags($vars['LastName']), 'Profile update');
-        }
-
-		if ($vars["FirstName"]!="cryptedhidden") {
-			$this->_crypt->NewReplaceInCrypted($this->dao->escape(strip_tags($vars['FirstName'])),"members.FirstName",$IdMember, $m->FirstName, $IdMember, $this->ShallICrypt($vars, "FirstName"));
-		}
-        if ($vars["SecondName"] != "cryptedhidden") {
-            $cryptId = $this->_crypt->NewReplaceInCrypted($this->dao->escape(strip_tags($vars['SecondName'])),"members.SecondName",$IdMember, $m->SecondName, $IdMember, $this->ShallICrypt($vars, "SecondName"));
-
-            // Update member if a new crypted SecondName value was added
-            if ($cryptId != $m->SecondName) {
-                $m->SecondName = $cryptId;
-            }
-        }
-		if ($vars["LastName"]!="cryptedhidden") {
-			$this->_crypt->NewReplaceInCrypted($this->dao->escape(strip_tags($vars['LastName'])),"members.LastName",$IdMember, $m->LastName, $IdMember, $this->ShallICrypt($vars, "LastName"));
-		}
-        if ($vars["Zip"] != "cryptedhidden") {
-            $this->logWrite("in members.model updateprofile() Before Zip update addresss.Zip=" . $m->address->Zip, "Debug");
-            $cryptId = $this->_crypt->NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Zip'])), "addresses.Zip", $m->IdAddress, $m->address->Zip, $IdMember, $this->ShallICrypt($vars, "Zip"));
-
-            // Update addresses table if a new crypted zip value was added
-            if ($cryptId != $m->address->Zip) {
-                $m->setCryptedZip($cryptId);
-            }
-
-            $this->logWrite("in members.model updateprofile() After Zip update addresss.Zip=". $m->address->Zip . " \$cryptId=" . $cryptId, "Debug");
-        }
-        if ($vars["HouseNumber"] != "cryptedhidden") {
-            $cryptId = $this->_crypt->NewReplaceInCrypted($this->dao->escape(strip_tags($vars['HouseNumber'])), "addresses.HouseNumber", $m->IdAddress, $m->address->HouseNumber, $IdMember, $this->ShallICrypt($vars, "Address"));
-
-            // Update addresses table if a new crypted HouseNumber value was added
-            if ($cryptId != $m->address->HouseNumber) {
-                $m->setCryptedHouseNumber($cryptId);
-            }
-        }
-		if ($vars["Street"]!="cryptedhidden") {
-			$cryptId = $this->_crypt->NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Street'])),"addresses.StreetName",$m->IdAddress,$m->address->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
-            // Update addresses table if a new crypted StreetName value was added
-            if ($cryptId != $m->address->StreetName) {
-                $m->setCryptedStreetName($cryptId);
-            }
-        }
-*/
-
         // Check relations, and update them if they have changed
         $Relations=$m->get_all_relations() ;
         foreach($Relations as $Relation) {
@@ -1245,6 +1165,16 @@ ORDER BY
         }
 
         $status = $m->update();
+
+        // Update hosting eagerness data if necessary
+        $hesData = $this->getHostingEagernessData($m);
+        if ($hesData->endDate !== $vars['hes-duration']) {
+            $this->setHostingEagernessData($m, $vars['hes-id'], $vars['hes-duration'], $vars['hes-boost']);
+        }
+
+        if ($hesData->step < 0 && ($vars['hes-dont-boost'] === false)) {
+            $this->setHostingEagernessData($m, $vars['hes-id'], $vars['hes-duration'], $vars['hes-boost']);
+        }
 
         if (!empty($_FILES['profile_picture']) && !empty($_FILES['profile_picture']['tmp_name']))
         {
@@ -1340,19 +1270,7 @@ ORDER BY
             }
         } // end of for $ii
 
-//        $vars['PublicTransport'] = $this->dao->escape($vars['PublicTransport']);
-//        $vars['Restrictions'] = $this->dao->escape($vars['Restrictions']);
-//        $vars['OtherRestrictions'] = $this->dao->escape($vars['OtherRestrictions']);
-//        $vars['AdditionalAccomodationInfo'] = $this->dao->escape($vars['AdditionalAccomodationInfo']);
-//        $vars['OfferHosts'] = $this->dao->escape($vars['OfferHosts']);
-//        $vars['OfferGuests'] = $this->dao->escape($vars['OfferGuests']);
-//        $vars['Hobbies'] = $this->dao->escape($vars['Hobbies']);
-//        $vars['Books'] = $this->dao->escape($vars['Books']);
-//        $vars['Music'] = $this->dao->escape($vars['Music']);
-//        $vars['Movies'] = $this->dao->escape($vars['Movies']);
-//        $vars['Organizations'] = $this->dao->escape($vars['Organizations']);
-//        $vars['PastTrips'] = $this->dao->escape($vars['PastTrips']);
-//        $vars['PlannedTrips'] = $this->dao->escape($vars['PlannedTrips']);
+        if (!isset($vars['hes-boost'])) $vars['hes-boost'] = 'No';
 
         return $vars;
     }
@@ -1914,5 +1832,55 @@ VALUES
             MOD_log::get()->write("Removed private data for " . count($rawMembers) . " members.", "Data Retention");
         }
         return count($rawMembers);
+    }
+
+    /**
+     * @param Member $member
+     * @return stdClass
+     * @throws Exception
+     */
+    public function getHostingEagernessData(\Member $member)
+    {
+        $result = $this->dao->query("SELECT `id`, DATE_FORMAT(`enddate`, '%Y-%m-%d') AS `enddate`, `step` FROM `hosting_eagerness_slider` WHERE `member_id` = " . $member->id);
+        $row = $result->fetch(PDB::FETCH_OBJ);
+        $hesData = new \stdClass();
+        if ($row) {
+            $hesData->id = $row->id;
+            $hesData->step = $row->step;
+            $hesData->endDate = ($hesData->step <> 0) ? $row->enddate : '';
+        } else {
+            $hesData->id = 0;
+            $hesData->step = 0;
+            $hesData->endDate = '';
+        }
+        return $hesData;
+    }
+
+    /**
+     * Calculate the values for the hosting eagerness slider
+     *
+     * Sets duration, step and current based on the selected end date
+     * @param Member $member
+     * @param string $hesEnddate
+     * @param bool $hesBoost
+     */
+    private function setHostingEagernessData(\Member $member, $hesId, $hesEnddate, $hesBoost)
+    {
+        $endDate = Carbon::createFromFormat('Y-m-d', $hesEnddate);
+        $time = mktime(23,59,0,$endDate->month, $endDate->day, $endDate->year);
+        $current = time();
+        $duration = floor(($time - $current) / 3600);
+        $step = floor(6220800 / ($duration * $duration));
+        if ($hesBoost === 'No') {
+            $step = -$step;
+        }
+        $current = $duration * $step;
+
+        if ($hesId == 0) {
+            $query = "INSERT INTO `hosting_eagerness_slider` SET `member_id` = {$member->id}, `endDate` = '{$hesEnddate}', `step` = {$step}, `remaining` = {$duration}, `current` = {$current}, `initialized` = NOW(), `updated` = NOW()";
+        } else {
+            $query = "UPDATE `hosting_eagerness_slider` SET `member_id` = {$member->id}, `endDate` = '{$hesEnddate}', `step` = {$step}, `remaining` = {$duration}, `current` = {$current}, `initialized` = NOW(), `updated` = NOW() WHERE `id` = {$hesId}";
+        }
+        $this->dao->query($query);
     }
 }

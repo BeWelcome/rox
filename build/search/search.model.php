@@ -67,7 +67,7 @@ class SearchModel extends RoxModelBase
 
     private static $ORDERBY = array(
         self::ORDER_USERNAME => array('WordCode' => 'SearchOrderUsername', 'Column' => 'm.Username'),
-        self::ORDER_ACCOM => array('WordCode' => 'SearchOrderAccommodation', 'Column' => 'm.Accomodation'),
+        self::ORDER_ACCOM => array('WordCode' => 'SearchOrderAccommodation', 'Column' => '(m.Accomodation * 12441600 + COALESCE(hes.current, 0))'),
         self::ORDER_DISTANCE => array('WordCode' => 'SearchOrderDistance', 'Column' => 'Distance'),
         self::ORDER_LOGIN => array('WordCode' => 'SearchOrderLogin', 'Column' => 'LastLogin'),
         self::ORDER_MEMBERSHIP => array('WordCode' => 'SearchOrderMembership', 'Column' => 'm.created'),
@@ -94,18 +94,19 @@ class SearchModel extends RoxModelBase
     {
         $orderType = $orderBy - ($orderBy % 2);
         $order = self::$ORDERBY[$orderType]['Column'];
-        if ($orderBy % 2 == 1) {
-            $order .= " DESC";
+        if ($orderType == self::ORDER_ACCOM) {
+            $orderSuffix = [ 'DESC', 'ASC'];
         } else {
-            $order .= " ASC";
+            $orderSuffix = [ 'ASC', 'DESC'];
         }
+        $order .= " " . $orderSuffix[$orderBy % 2];
         switch ($orderType) {
             case self::ORDER_ACCOM:
             case self::ORDER_COMMENTS:
                 $order .= ', Distance ASC, HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
                 break;
             case self::ORDER_DISTANCE:
-                $order .= ', m.Accomodation, HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
+                $order .= ', (m.Accomodation * 12441600 + COALESCE(hes.current, 0)) DESC, HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
                 break;
         }
 
@@ -538,6 +539,7 @@ LIMIT 1
                 m.FirstName,
                 m.SecondName,
                 m.LastName,
+                hes.current,
                 date_format(m.LastLogin,'%Y-%m-%d') AS LastLogin,
                 IF(m.ProfileSummary != 0, 1, 0) AS HasProfileSummary,
                 IF(mp.photoCount IS NULL, 0, 1) AS HasProfilePhoto,
@@ -550,6 +552,8 @@ LIMIT 1
                 IF(c.IdToMember IS NULL, 0, c.commentCount) AS CommentCount
             *FROM*
                 " . $this->tables . "
+            LEFT JOIN
+                hosting_eagerness_slider hes on (hes.member_id = m.id)
             LEFT JOIN (
                 SELECT
                     COUNT(*) As commentCount, IdToMember

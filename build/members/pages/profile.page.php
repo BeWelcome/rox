@@ -45,7 +45,7 @@ class ProfilePage extends MemberPage
     public function enableLightBox()
     {
         $this->useLightbox = true;
-        $this->addLateLoadScriptFile('/build/lightbox.js');
+        $this->addLateLoadScriptFile('build/lightbox.js');
     }
 
     protected function getSubmenuActiveItem()

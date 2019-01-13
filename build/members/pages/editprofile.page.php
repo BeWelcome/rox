@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+
 class EditProfilePage extends ProfilePage
 {
 // Utility function to sort the languages
@@ -10,8 +12,6 @@ class EditProfilePage extends ProfilePage
         }
         return (strtolower($a->TranslatedName) < strToLower($b->TranslatedName)) ? -1 : 1;
     }
-
-
 
     protected function getSubmenuActiveItem()
     {
@@ -42,6 +42,8 @@ class EditProfilePage extends ProfilePage
         $member->setEditMode(true);
         $Rights = MOD_right::get();
         $lang = $this->model->get_profile_language();
+        $hesData = $this->model->getHostingEagernessData($member);
+
         $profile_language = $lang->id;
         $all_spoken_languages = $this->sortLanguages($member->get_all_spoken_languages());
         $all_signed_languages = $this->sortLanguages($member->get_all_signed_languages());
@@ -96,6 +98,12 @@ class EditProfilePage extends ProfilePage
         $vars['messengers'] = $member->messengers();
 
         $vars['Accomodation'] = $member->Accomodation;
+
+        /** @var Carbon $hesData->enddate */
+        $vars['hes-id'] = $hesData->id;
+        $vars['hes-duration'] = $hesData->endDate;
+        $vars['hes-boost'] = ($hesData->step < 0) ? 'No' : 'Yes';
+
         $vars['MaxGuest'] = $member->MaxGuest;
         $vars['MaxLenghtOfStay'] = $member->get_trad("MaxLenghtOfStay", $profile_language);
         $vars['ILiveWith'] = $member->get_trad("ILiveWith", $profile_language);

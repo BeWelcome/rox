@@ -5,6 +5,8 @@
 
 echo $callback_tag;
 
+$this->addLateLoadScriptFile('build/tempusdominus.js');
+
 require_once 'editprofile_form.php';
 
 ?>
@@ -12,11 +14,6 @@ require_once 'editprofile_form.php';
 
 <script type="text/javascript"><!--
     var iterator = 1;
-    $(document).ready(function() {
-        $('#langbutton').click( insertNewTemplate );
-        $('button.remove_lang').click( removeLang );
-        initLanguageSelect2s();
-    });
 
     function initLanguageSelect2s()
     {
@@ -59,5 +56,20 @@ require_once 'editprofile_form.php';
         let row = "#" + id + "_row";
         $(row).remove();
     }
-    //-->
+
+    $(document).ready(function() {
+        $('#langbutton').click( insertNewTemplate );
+        $('button.remove_lang').click( removeLang );
+        initLanguageSelect2s();
+
+        let minDate = moment();
+        let maxDate = moment().add(30, 'days');
+        $("#hes-duration-div").datetimepicker({
+            format: 'YYYY-MM-DD',
+            minDate: minDate,
+            maxDate: maxDate,
+            keepInvalid: true
+        });
+    });
+
 </script>

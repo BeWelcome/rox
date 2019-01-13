@@ -32,21 +32,32 @@
                     <? } ?>
                 </div>
             </div>
-<!--
-                <div class="form-group row">
-                    <label for="eagerness-duration"
-                           class="col-md-4 col-form-label"><? echo $words->get('profile.accommodation.eagerness'); ?></label>
-                    <div class="col-12 col-md-8">
-                        <input type="text" min="1" max="20" id="eagerness-duration" name="eagerness-duration" class="form-control datepicker"
-                               value="<?= $vars['MaxGuest']; ?>">
+            <div class="form-group row">
+                <label for="hes-duration"
+                       class="col-md-4 col-form-label"><? echo $words->get('profile.accommodation.hes.label'); ?></label>
+                <div class="col-12 col-md-8">
+                    <input type="hidden" id="hes-id" name="hes-id" value="<?= $vars['hes-id']; ?>">
+                    <div class="input-group date" id="hes-duration-div" data-target-input="nearest">
+                        <input type="text" class="form-control datetimepicker-input" data-target="#hes-duration-div" id="hes-duration"
+                               name="hes-duration" value="<?= $vars['hes-duration']; ?>">
+                        <div class="input-group-append" data-target="#hes-duration-div"
+                             data-toggle="datetimepicker"><i class="input-group-text bg-primary white far fa-calendar"></i></div>
                     </div>
+                    <div class="form-check">
+                        <?php $checked = ''; if ($vars['hes-boost'] === 'Yes') { $checked = 'checked="checked"'; }?>
+                        <input type="checkbox" class="form-check-input" id="hes-boost"
+                               name="hes-boost" <?= $checked ?>>
+                        <label for="hes-boost" class="form-check-label"><?= $words->get('profile.accommodation.hes.boost'); ?></label>
+                    </div>
+                    <small class="form-text text-muted"><?= $words->get('profile.accommodation.hes.helptext'); ?></small>
                 </div>
--->
+
+            </div>
             <div class="form-group row">
                 <label for="MaxGuests"
                        class="col-md-4 col-form-label"><? echo $words->get('ProfileNumberOfGuests'); ?></label>
                 <div class="col-12 col-md-8">
-                    <input type="number" min="1" max="20" name="MaxGuest" class="form-control maxguestsinput"
+                    <input type="number" min="1" max="20" name="MaxGuest" class="form-control"
                            value="<?= $vars['MaxGuest']; ?>">
                 </div>
             </div>

@@ -9,6 +9,7 @@ namespace App\Entity;
 
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -302,5 +303,28 @@ class CommunityNews
     public function onPreUpdate()
     {
         $this->updatedAt = new \DateTime('now');
+    }
+
+    public function addComment(CommunityNewsComment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setCommunityNews($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(CommunityNewsComment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getCommunityNews() === $this) {
+                $comment->setCommunityNews(null);
+            }
+        }
+
+        return $this;
     }
 }

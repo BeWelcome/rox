@@ -11,6 +11,7 @@ use App\Doctrine\GroupMembershipStatusType;
 use App\Encoder\LegacyPasswordEncoder;
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -2927,5 +2928,36 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     public function onPreUpdate()
     {
         $this->updated = new \DateTime('now');
+    }
+
+    /**
+     * @return Collection|MemberPreference[]
+     */
+    public function getPreferences(): Collection
+    {
+        return $this->preferences;
+    }
+
+    public function addPreference(MemberPreference $preference): self
+    {
+        if (!$this->preferences->contains($preference)) {
+            $this->preferences[] = $preference;
+            $preference->setMember($this);
+        }
+
+        return $this;
+    }
+
+    public function removePreference(MemberPreference $preference): self
+    {
+        if ($this->preferences->contains($preference)) {
+            $this->preferences->removeElement($preference);
+            // set the owning side to null (unless already changed)
+            if ($preference->getMember() === $this) {
+                $preference->setMember(null);
+            }
+        }
+
+        return $this;
     }
 }

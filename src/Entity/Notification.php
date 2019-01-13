@@ -353,4 +353,9 @@ class Notification
     {
         $this->created = new \DateTime('now');
     }
+
+    public function getTranslationparams(): ?string
+    {
+        return $this->translationparams;
+    }
 }

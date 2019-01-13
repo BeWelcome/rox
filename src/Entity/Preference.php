@@ -174,4 +174,60 @@ class Preference
     {
         return $this->id;
     }
+
+    public function setPosition(int $position): self
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    public function setCodename(string $codename): self
+    {
+        $this->codename = $codename;
+
+        return $this;
+    }
+
+    public function setCodedescription(string $codedescription): self
+    {
+        $this->codedescription = $codedescription;
+
+        return $this;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function setCreated(\DateTimeInterface $created): self
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    public function setDefaultValue(string $defaultValue): self
+    {
+        $this->defaultValue = $defaultValue;
+
+        return $this;
+    }
+
+    public function setPossibleValues(string $possibleValues): self
+    {
+        $this->possibleValues = $possibleValues;
+
+        return $this;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
 }

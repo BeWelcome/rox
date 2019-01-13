@@ -55,7 +55,7 @@
             font-size:1em;
             font-weight: bold;
             line-height: 1em ;
-            padding-top: 0.2em;
+            margin: 0 auto;
         }
 
         .logo {

@@ -107,18 +107,10 @@
 
                 {# notifications #}
                 <div role="tabpanel" class="tab-pane h-100 p-2" id="notifications">
-
                     <div id="notificationsdisplay">
                         <p class="text-center my-3">
                             <i class="fa fa-4x fa-spin fa-spinner my-3"></i><br/>
                             {{ 'Please wait while we load the notifications' | trans }}</p>
-                    </div>
-
-                    {# notifications button #}
-                    <div class="text-center mt-2">
-                        <a href="{{ url( 'notifications' )}}" class="btn btn-outline-primary btn-homewhite"><i
-                                    class="far fa-bell"></i> {{ 'landing.button.notifications' | trans }} {% if notificationCount %}<span
-                                    class="badge badge-primary">{{ notificationCount }}</span>{% endif %}</a>
                     </div>
                 </div>
 

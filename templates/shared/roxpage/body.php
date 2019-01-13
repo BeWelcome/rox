@@ -1,3 +1,7 @@
+<?php
+use Symfony\Component\Asset\Package;
+use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
+?>
 <!-- #main: content begins here -->
 <div id="main">
     <?php $this->topnav() ?>
@@ -69,7 +73,6 @@
         ?>
     </div> <!-- row -->
 </div> <!-- main -->
-<script src="build/offcanvas.js"></script>
 <div>
     <?php $this->debugInfo() ?>
     <?php $this->leftoverTranslationLinks() ?>

@@ -330,7 +330,7 @@ class MembersController extends RoxControllerBase
                                     switch ($request[5])
                                     {
                                         case 'editprofile':
-                                            $redirect = '/editmyprofile';
+                                            $redirect = 'editmyprofile';
                                             break;
                                         default:
                                             if ($this->_session->has( 'Username' )) {

@@ -19,11 +19,12 @@ class WikiController extends AbstractController
     /**
      * @Route("/wiki", name="wiki_front_page")
      *
+     * @param WikiModel $wikiModel
      * @return Response
      */
-    public function showWikiFrontPageAction()
+    public function showWikiFrontPageAction(WikiModel $wikiModel)
     {
-        return $this->showWikiPageAction('WikiFrontPage');
+        return $this->showWikiPageAction('WikiFrontPage', $wikiModel);
     }
 
     /**

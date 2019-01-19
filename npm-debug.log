@@ -1,0 +1,23 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'run', 'deb' ]
+2 info using npm@3.5.2
+3 info using node@v8.10.0
+4 verbose stack Error: missing script: deb
+4 verbose stack     at run (/usr/share/npm/lib/run-script.js:147:19)
+4 verbose stack     at /usr/share/npm/lib/run-script.js:57:5
+4 verbose stack     at /usr/share/npm/node_modules/read-package-json/read-json.js:345:5
+4 verbose stack     at checkBinReferences_ (/usr/share/npm/node_modules/read-package-json/read-json.js:309:45)
+4 verbose stack     at final (/usr/share/npm/node_modules/read-package-json/read-json.js:343:3)
+4 verbose stack     at then (/usr/share/npm/node_modules/read-package-json/read-json.js:113:5)
+4 verbose stack     at /usr/share/npm/node_modules/read-package-json/read-json.js:232:12
+4 verbose stack     at /usr/share/npm/node_modules/graceful-fs/graceful-fs.js:76:16
+4 verbose stack     at FSReqWrap.readFileAfterClose [as oncomplete] (fs.js:511:3)
+5 verbose cwd /var/www/html/bewelcome/rox
+6 error Linux 4.15.0-43-generic
+7 error argv "/usr/bin/node" "/usr/bin/npm" "run" "deb"
+8 error node v8.10.0
+9 error npm  v3.5.2
+10 error missing script: deb
+11 error If you need help, you may report this error at:
+11 error     <https://github.com/npm/npm/issues>
+12 verbose exit [ 1, true ]

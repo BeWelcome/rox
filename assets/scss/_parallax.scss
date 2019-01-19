@@ -30,7 +30,9 @@
         position: relative;
     }
 
-    h1 {
+    //Fonts weights and sizes - decoupled from html tags for SEO
+
+    .parallax--h {
         font-size: 4.25rem;
         font-weight: bolder;
         text-align: center;
@@ -38,30 +40,35 @@
         color: white;
         text-shadow: 0 0 3px rgba(0,0,0,0.4);
         letter-spacing: 0.15rem;
+        font-family: Signika;
     }
 
-    h2 {
+    .parallax--subh {
         font-size: 2.75rem;
         font-weight: bold;
         text-align: center;
         color: white;
         text-shadow: 0 0 3px rgba(0,0,0,0.4);
         letter-spacing: 0.1rem;
+        font-family: Signika;
     }
 
-    h3 {
-        color: white;
-        font-size: 1.7rem;
-        text-align: center;
-        text-shadow: 0 0 3px rgba(0,0,0,0.4);
-    }
-
-    h4 {
+    .parallax--numsubh {
         color: white;
         font-size: 1.2rem;
         font-weight: normal;
         text-align: center;
         text-shadow: 0 0 3px rgba(0,0,0,0.4);
+        font-weight: 400;
+        font-family: Signika;
+    }
+
+    .parallax--smallsubh {
+        color: white;
+        font-size: 1.7rem;
+        text-align: center;
+        text-shadow: 0 0 3px rgba(0,0,0,0.4);
+        font-family: Signika;
     }
 
     .fa-start {
@@ -82,8 +89,9 @@
         .fa-start {
             font-size: 4rem;
         }
-        h1 {
+        .parallax--h {
             font-size: 3rem;
+            line-height: 3.5rem;
         }
     }
 
@@ -93,13 +101,17 @@
         }
     }
 
-    .jarallax {
+    .input-group {
+
+    }
+
+    .parallax {
         position: relative;
         z-index: 0;
         height:150vh;
     }
 
-    .jarallax > .jarallax-img {
+    .parallax > .parallax--img {
         position: absolute;
         object-fit: cover;
         top: 0;
@@ -128,6 +140,7 @@
       opacity:0;
       transition: opacity 0.8s;
       visibility: hidden;
+      margin: initial;
     }
 
     .parallax--fixed-active {
@@ -142,6 +155,28 @@
       opacity:0;
       animation-fill-mode: both;
     }
+
+    @include media-breakpoint-down(md) {
+        .parallax--h {
+            font-size: 3rem;
+            line-height: 3.5rem;
+        }
+        .parallax--shadow {
+          min-height: 100vh;
+        }
+        .parallax--fixed {
+          position: relative;
+          top: initial;
+          left: initial;
+          transform: none;
+        }
+        .parallax {
+          height: initial;
+          min-height: 100vh;
+        }
+    }
+
+    //Animations
 
     @-webkit-keyframes background-in {
       0% {

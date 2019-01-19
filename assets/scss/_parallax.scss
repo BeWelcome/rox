@@ -170,7 +170,8 @@
       animation-fill-mode: forwards;
     }
 
-    #icon-animation.icon-animation-start i {
+    #icon-animation-1.icon-animation-start i,
+    #icon-animation-2.icon-animation-start i {
       animation: 1s iconAnimation 0.5s ease;
       animation-fill-mode: forwards;
     }

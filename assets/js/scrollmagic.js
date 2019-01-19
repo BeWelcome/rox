@@ -29,7 +29,11 @@ new ScrollMagic.Scene({triggerElement: "#trigger-fade-3" })
     .addTo(controller);
 
 new ScrollMagic.Scene({triggerElement: "#trigger-icon-animation-1", triggerHook: 1 })
-    .setClassToggle("#icon-animation", "icon-animation-start")
+    .setClassToggle("#icon-animation-1", "icon-animation-start")
+    .addTo(controller);
+
+new ScrollMagic.Scene({triggerElement: "#trigger-icon-animation-2", triggerHook: 1 })
+    .setClassToggle("#icon-animation-2", "icon-animation-start")
     .addTo(controller);
 
 

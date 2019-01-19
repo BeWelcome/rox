@@ -24,7 +24,7 @@ new ScrollMagic.Scene({triggerElement: "#trigger-fade-2", offset: 100, duration:
     .setClassToggle("#fade-animation-2", "parallax--fixed-active")
     .addTo(controller);
 
-new ScrollMagic.Scene({triggerElement: "#trigger-fade-3" })
+new ScrollMagic.Scene({triggerElement: "#trigger-fade-3", triggerHook: 0.2 })
     .setClassToggle("#fade-animation-3", "parallax--fixed-enter")
     .addTo(controller);
 

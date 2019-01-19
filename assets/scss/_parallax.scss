@@ -171,7 +171,8 @@
     }
 
     #icon-animation.icon-animation-start i {
-      animation: 0.5s iconAnimation ease-in;
+      animation: 1s iconAnimation 0.5s ease;
+      animation-fill-mode: forwards;
     }
 
     @include media-breakpoint-down(md) {

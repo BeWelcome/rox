@@ -65,13 +65,13 @@ class WikiController extends AbstractController
      * @Route("/wiki/{pageTitle}/edit", name="wiki_page_edit")
      *
      * @param Request $request
+     * @param WikiModel $wikiModel
      * @param $pageTitle
      *
      * @return Response
      */
-    public function editWikiPageAction(Request $request, $pageTitle)
+    public function editWikiPageAction(Request $request, WikiModel $wikiModel, $pageTitle)
     {
-        $wikiModel = $this->get('rox.wiki.model');
         /** @var Wiki $wikiPage */
         $wikiPage = $wikiModel->getPage($pageTitle);
 
@@ -115,9 +115,8 @@ class WikiController extends AbstractController
      *
      * @return Response
      */
-    public function createWikiPageAction(Request $request, $pageTitle)
+    public function createWikiPageAction(Request $request, WikiModel $wikiModel, $pageTitle)
     {
-        $wikiModel = $this->get('rox.wiki.model');
         $wikiPage = $wikiModel->getPage($pageTitle);
 
         if (null !== $wikiPage) {
@@ -159,11 +158,10 @@ class WikiController extends AbstractController
      *
      * @return Response
      */
-    public function showGroupWikiPageAction(Group $group)
+    public function showGroupWikiPageAction(Group $group, WikiModel $wikiModel)
     {
         $member = $this->getUser();
 
-        $wikiModel = $this->get('rox.wiki.model');
         $pageName = $wikiModel->getPageName('Group_'.$group->getName());
 
         $em = $this->getDoctrine();

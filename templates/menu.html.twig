@@ -3,7 +3,7 @@
 {% if member %}
     <nav class="navbar navbar-sticky-top navbar-expand-md navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
         <div class="container">
-            <a class="navbar-brand mr-3 pl-3 pl-md-0 float-left" href="{{ url('homepage') }}"><img src="{{ asset('images/logo_index_top.png') }}" alt="{{ 'BeWelcome' | trans }}"/></a>
+            <a class="navbar-brand mr-3 pl-3 pl-md-0 float-left" href="{{ url('homepage') }}"><img src="{{ asset('images/logo_index_top.png') }}" alt="BeWelcome"/></a>
 
             <button class="navbar-toggler mr-auto mr-md-0" type="button" data-toggle="collapse" data-target="#smallNavBar" aria-controls="smallNavBar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -111,7 +111,7 @@
                                     <div class="py-3">
                                         <a href="{{ url('about') }}" class="h4">{{ 'GetAnswers' | trans}}</a>
 
-                                        <a href="{{ url('faq') }}" class="btn btn-block py-0 pl-1 text-left mt-1">{{ 'FAQ' | trans }}</a>
+                                        <a href="{{ url('faq') }}" class="btn btn-block py-0 pl-1 text-left mt-1">{{ 'menu.faq' | trans }}</a>
                                         <a href="{{ url('feedback') }}" class="btn btn-block py-0 pl-1 text-left">{{ 'ContactUs' | trans}}</a>
                                         <a href="{{ url('stats') }}" class="btn btn-block py-0 pl-1 text-left">{{ 'StatsPage' | trans}}</a>
                                         <a href="{{ url('terms_french') }}" class="btn btn-block py-0 pl-1 text-left">{{ 'TermsOfUse'  | trans}}</a>
@@ -208,7 +208,7 @@
     {# navbar not logged in, showing main links #}
     <nav class="navbar navbar-sticky-top navbar-expand-lg navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
         <div class="container">
-            <a class="navbar-brand mr-3 pl-3 pl-md-0 float-left" href="{{ url('homepage') }}"><img src="{{ asset('images/logo_index_top.png') }}" alt="{{ 'BeWelcome' | trans }}"/></a>
+            <a class="navbar-brand mr-3 pl-3 pl-md-0 float-left" href="{{ url('homepage') }}"><img src="{{ asset('images/logo_index_top.png') }}" alt="BeWelcome"/></a>
 
             <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#NavbarNotLoggedIn" aria-controls="NavbarNotLoggedIn" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -217,7 +217,7 @@
             <div class="navbar-collapse collapse" id="NavbarNotLoggedIn" aria-expanded="false">
                 <ul class="navbar-nav mr-auto">
                     <li class="about">
-                        <a href="{{ url('about') }}" class="nav-link px-3 menuborder">{{ 'About' | trans }}</a>
+                        <a href="{{ url('about') }}" class="nav-link px-3 menuborder">{{ 'menu.about' | trans }}</a>
                     </li>
                     <li class="menuborder">
                         <a href="{{ url('safety') }}" class="nav-link px-3">{{ 'Safety' | trans }}</a>

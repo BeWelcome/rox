@@ -184,7 +184,7 @@
                 <a href="{{ url('imprint') }}">{{ 'Imprint' | trans }}</a> •
                 <a href="{{ url('faq') }}">{{ 'faq' | trans }}</a> •
                 <a href="{{ url('feedback') }}">{{ 'Contact us' | trans }}</a> •
-                <a href="{{ url('feedback', {'IdCategory': 1, 'RequestUri': url('homepage')}) }}">{{ 'Reportbug' | trans }}</a><br>
+                <a href="{{ url('feedback', {'IdCategory': 1, 'RequestUri': url('homepage')}) }}">{{ 'footer.reportbug' | trans }}</a><br>
                 &copy;2007
                 &mdash; {{ "now" | date("Y") }} {{ 'CopyrightByBV' | trans | escape | replace({'%link_start%': '<a href="https://bevolunteer.org">', '%link_end%': '</a>'})| raw }}
                 - {{ 'RunningOn' | trans }} BW Rox rev. {{ version }} ({{ version_dt }})

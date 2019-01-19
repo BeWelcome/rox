@@ -4,14 +4,32 @@ import 'animation.gsap';
 import 'debug.addIndicators';
 
 var controller = new ScrollMagic.Controller();
-new ScrollMagic.Scene({triggerElement: "#trigger-1", duration: 600 })
-    .setClassToggle("#scrollmagic-animation-1", "parallax--fixed-active")
+new ScrollMagic.Scene({triggerElement: "#trigger-fade-1", duration: 600 })
+    .setClassToggle("#fade-animation-1", "parallax--fixed-abovethefold")
     .addTo(controller);
 
-new ScrollMagic.Scene({triggerElement: "#trigger-2", duration: 600 })
-    .setClassToggle("#scrollmagic-animation-2", "parallax--fixed-active")
+new ScrollMagic.Scene({triggerElement: "#trigger-fade-1", offset: 600, duration: 400  })
+    .setClassToggle("#fade-animation-1", "parallax--fixed-leave")
     .addTo(controller);
 
-new ScrollMagic.Scene({triggerElement: "#trigger-3" })
-    .setClassToggle("#scrollmagic-animation-3", "parallax--fixed-active")
+new ScrollMagic.Scene({triggerElement: "#trigger-fade-2", offset: 100, duration: 500 })
+    .setClassToggle("#fade-animation-2", "parallax--fixed-enter")
     .addTo(controller);
+
+new ScrollMagic.Scene({triggerElement: "#trigger-fade-2", offset: 600, duration: 400  })
+    .setClassToggle("#fade-animation-2", "parallax--fixed-leave")
+    .addTo(controller);
+
+new ScrollMagic.Scene({triggerElement: "#trigger-fade-2", offset: 100, duration: 500 })
+    .setClassToggle("#fade-animation-2", "parallax--fixed-active")
+    .addTo(controller);
+
+new ScrollMagic.Scene({triggerElement: "#trigger-fade-3" })
+    .setClassToggle("#fade-animation-3", "parallax--fixed-enter")
+    .addTo(controller);
+
+new ScrollMagic.Scene({triggerElement: "#trigger-letterspace-1", triggerHook: 1 })
+    .setClassToggle("#letterspace-animation-1", "parallax--fixed-letterspace")
+    .addTo(controller);
+
+

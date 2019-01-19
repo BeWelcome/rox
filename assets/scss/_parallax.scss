@@ -30,7 +30,9 @@
         position: relative;
     }
 
-    h1 {
+    //Fonts weights and sizes - decoupled from html tags for SEO
+
+    .parallax--h {
         font-size: 4.25rem;
         font-weight: bolder;
         text-align: center;
@@ -38,30 +40,36 @@
         color: white;
         text-shadow: 0 0 3px rgba(0,0,0,0.4);
         letter-spacing: 0.15rem;
+        font-family: Signika;
     }
 
-    h2 {
+    .parallax--subh {
         font-size: 2.75rem;
         font-weight: bold;
         text-align: center;
         color: white;
         text-shadow: 0 0 3px rgba(0,0,0,0.4);
         letter-spacing: 0.1rem;
+        font-family: Signika;
     }
 
-    h3 {
+    .parallax--numsubh {
+        color: white;
+        font-size: 1.2rem;
+        line-height: 1.7rem;
+        font-weight: normal;
+        text-align: center;
+        text-shadow: 0 0 3px rgba(0,0,0,0.4);
+        font-weight: 400;
+        font-family: Signika;
+    }
+
+    .parallax--smallsubh {
         color: white;
         font-size: 1.7rem;
         text-align: center;
         text-shadow: 0 0 3px rgba(0,0,0,0.4);
-    }
-
-    h4 {
-        color: white;
-        font-size: 1.2rem;
-        font-weight: normal;
-        text-align: center;
-        text-shadow: 0 0 3px rgba(0,0,0,0.4);
+        font-family: Signika;
     }
 
     .fa-start {
@@ -82,8 +90,9 @@
         .fa-start {
             font-size: 4rem;
         }
-        h1 {
+        .parallax--h {
             font-size: 3rem;
+            line-height: 3.5rem;
         }
     }
 
@@ -93,13 +102,13 @@
         }
     }
 
-    .jarallax {
+    .parallax {
         position: relative;
         z-index: 0;
         height:150vh;
     }
 
-    .jarallax > .jarallax-img {
+    .parallax > .parallax--img {
         position: absolute;
         object-fit: cover;
         top: 0;
@@ -128,20 +137,72 @@
       opacity:0;
       transition: opacity 0.8s;
       visibility: hidden;
+      margin: initial;
     }
 
-    .parallax--fixed-active {
+    .parallax--fixed-abovethefold,
+    .parallax--fixed-enter,
+    .parallax--fixed-leave {
       opacity: 1;
       transition: opacity 0.8s;
       visibility: visible;
     }
 
-    .parallax--fixed--h {
+    .parallax--fixed--letteranim {
       animation: textblur 6s ease;
       animation-delay:1s;
       opacity:0;
       animation-fill-mode: both;
     }
+
+     .parallax--fixed-enter .parallax--fixed--letteranim {
+      animation: 1s textblur ease;
+      animation-fill-mode: forwards;
+    }
+
+    .parallax--fixed-leave .parallax--fixed--letteranim {
+      animation: 1s textblur-out ease;
+      animation-fill-mode: forwards;
+    }
+
+    .parallax--fixed-leave .parallax--fixed--button {
+      animation: 1s fadeOut 0.5s ease;
+      animation-fill-mode: forwards;
+    }
+
+    .parallax--fixed-letterspace .parallax--h {
+      animation: 0.5s letterSpace ease-in;
+    }
+
+    @include media-breakpoint-down(md) {
+        .parallax--h {
+            font-size: 3rem;
+            line-height: 3.5rem;
+        }
+        .parallax--shadow {
+          min-height: 100vh;
+        }
+        .parallax--fixed {
+          position: relative;
+          top: initial;
+          left: initial;
+          transform: none;
+          visibility: visible;
+          opacity: 1;
+        }
+        .parallax {
+          height: initial;
+          min-height: 100vh;
+        }
+
+        .parallax-fixed-enter .parallax--fixed--letteranim,
+        .parallax-fixed-leave .parallax--fixed--letteranim,
+        .parallax--fixed-leave .parallax--fixed--button  {
+          animation: none;
+        }
+    }
+
+    //Animations
 
     @-webkit-keyframes background-in {
       0% {
@@ -199,22 +260,22 @@
       text-shadow: 6px 3px 10px rgba(255,255,255,0), -6px -3px 10px rgba(255,255,255,0), 6px 3px 10px rgba(255,255,255,0), -6px -3px 10px rgba(255,255,255,0), 0px 0px 5px rgba(255,255,255,0);
       opacity:0.7;
     }
-    25% {
+    30% {
       color:rgba(255,255,255,0);
       text-shadow:3px 1px 5px rgba(255,255,255,0.25), -3px -1px 5px rgba(255,255,255,0.25), 3px 1px 5px rgba(255,255,255,0.25), -3px -1px 5px rgba(255,255,255,0.25), 0px 0px 2px rgba(255,255,255,0.25);
       opacity:0.8;
     }
-    50% {
+    66% {
       color:rgba(255,255,255,0);
       text-shadow:0px 0px 1px rgba(255,255,255,0.5), 0px 0px 1px rgba(255,255,255,0.5), 0px 0px 1px rgba(255,255,255,0.5), 0px 0px 1px rgba(255,255,255,0.5), 0px 0px 0px rgba(255,255,255,0.4);
       opacity:0.9;
     }
-    70% {
+    80% {
       color:rgba(255,255,255,1);
       text-shadow:0px 0px 1px rgba(255,255,255,0.5), 0px 0px 1px rgba(255,255,255,0.5), 0px 0px 1px rgba(255,255,255,0.5), 0px 0px 1px rgba(255,255,255,0.5), 0px 0px 1px rgba(255,255,255,0.5);
       opacity:0.8;
     }
-    75% {
+    90% {
       color:rgba(255,255,255,1);
       text-shadow:0px 0px 1px rgba(255,255,255,0.4), 0px 0px 1px rgba(255,255,255,0.4), 0px 0px 1px rgba(255,255,255,0.4), 0px 0px 1px rgba(255,255,255,0.4), 0px 0px 0px rgba(255,255,255,0.4);
       opacity:0.9;
@@ -223,6 +284,105 @@
       color:rgba(255,255,255,1);
       text-shadow:0px 0px 3px rgba(0,0,0,0.4), 0px 0px 2px rgba(0,0,0,0.2), 0px 0px 1px rgba(0,0,0,0.1), 0px 0px 1px rgba(0,0,0,0.1), 0px 0px 0px rgba(255,255,255,0.1);
       opacity:1;
+    }
+  }
+
+  @-webkit-keyframes textblur-out {
+     0% {
+      color:rgba(255,255,255,1);
+      text-shadow:0px 0px 3px rgba(0,0,0,0.4), 0px 0px 2px rgba(0,0,0,0.2), 0px 0px 1px rgba(0,0,0,0.1), 0px 0px 1px rgba(0,0,0,0.1), 0px 0px 0px rgba(255,255,255,0.1);
+      opacity:1;
+    }
+    10% {
+      color:rgba(255,255,255,1);
+      text-shadow:0px 0px 1px rgba(255,255,255,0.4), 0px 0px 1px rgba(255,255,255,0.4), 0px 0px 1px rgba(255,255,255,0.4), 0px 0px 1px rgba(255,255,255,0.4), 0px 0px 0px rgba(255,255,255,0.4);
+      opacity:0.9;
+    }
+    20% {
+      color:rgba(255,255,255,1);
+      text-shadow:0px 0px 1px rgba(255,255,255,0.5), 0px 0px 1px rgba(255,255,255,0.5), 0px 0px 1px rgba(255,255,255,0.5), 0px 0px 1px rgba(255,255,255,0.5), 0px 0px 1px rgba(255,255,255,0.5);
+      opacity:0.8;
+    }
+    33% {
+      color:rgba(255,255,255,0);
+      text-shadow:0px 0px 1px rgba(255,255,255,0.5), 0px 0px 1px rgba(255,255,255,0.5), 0px 0px 1px rgba(255,255,255,0.5), 0px 0px 1px rgba(255,255,255,0.5), 0px 0px 0px rgba(255,255,255,0.4);
+      opacity:0.9;
+    }
+    66% {
+      color:rgba(255,255,255,0);
+      text-shadow:3px 1px 5px rgba(255,255,255,0.25), -3px -1px 5px rgba(255,255,255,0.25), 3px 1px 5px rgba(255,255,255,0.25), -3px -1px 5px rgba(255,255,255,0.25), 0px 0px 2px rgba(255,255,255,0.25);
+      opacity:0.8;
+    }
+    100% {
+      color:rgba(255,255,255,0);
+      text-shadow: 6px 3px 10px rgba(255,255,255,0), -6px -3px 10px rgba(255,255,255,0), 6px 3px 10px rgba(255,255,255,0), -6px -3px 10px rgba(255,255,255,0), 0px 0px 5px rgba(255,255,255,0);
+      opacity:0;
+    }
+  }
+
+  @keyframes textblur-out {
+     0% {
+      color:rgba(255,255,255,1);
+      text-shadow:0px 0px 3px rgba(0,0,0,0.4), 0px 0px 2px rgba(0,0,0,0.2), 0px 0px 1px rgba(0,0,0,0.1), 0px 0px 1px rgba(0,0,0,0.1), 0px 0px 0px rgba(255,255,255,0.1);
+      opacity:1;
+    }
+    10% {
+      color:rgba(255,255,255,1);
+      text-shadow:0px 0px 1px rgba(255,255,255,0.4), 0px 0px 1px rgba(255,255,255,0.4), 0px 0px 1px rgba(255,255,255,0.4), 0px 0px 1px rgba(255,255,255,0.4), 0px 0px 0px rgba(255,255,255,0.4);
+      opacity:0.9;
+    }
+    20% {
+      color:rgba(255,255,255,1);
+      text-shadow:0px 0px 1px rgba(255,255,255,0.5), 0px 0px 1px rgba(255,255,255,0.5), 0px 0px 1px rgba(255,255,255,0.5), 0px 0px 1px rgba(255,255,255,0.5), 0px 0px 1px rgba(255,255,255,0.5);
+      opacity:0.8;
+    }
+    44% {
+      color:rgba(255,255,255,0);
+      text-shadow:0px 0px 1px rgba(255,255,255,0.5), 0px 0px 1px rgba(255,255,255,0.5), 0px 0px 1px rgba(255,255,255,0.5), 0px 0px 1px rgba(255,255,255,0.5), 0px 0px 0px rgba(255,255,255,0.4);
+      opacity:0.9;
+    }
+    70% {
+      color:rgba(255,255,255,0);
+      text-shadow:3px 1px 5px rgba(255,255,255,0.25), -3px -1px 5px rgba(255,255,255,0.25), 3px 1px 5px rgba(255,255,255,0.25), -3px -1px 5px rgba(255,255,255,0.25), 0px 0px 2px rgba(255,255,255,0.25);
+      opacity:0.8;
+    }
+    100% {
+      color:rgba(255,255,255,0);
+      text-shadow: 6px 3px 10px rgba(255,255,255,0), -6px -3px 10px rgba(255,255,255,0), 6px 3px 10px rgba(255,255,255,0), -6px -3px 10px rgba(255,255,255,0), 0px 0px 5px rgba(255,255,255,0);
+      opacity:0;
+    }
+  }
+  @-webkit-keyframes fadeOut {
+    0% {
+      opacity:1
+    }
+    to {
+      opacity:0
+    }
+  }
+  @keyframes fadeOut {
+    0% {
+      opacity:1
+    }
+    to {
+      opacity:0
+    }
+  }
+
+  @-webkit-keyframes letterSpace {
+    0% {
+      letter-spacing: 1rem
+    }
+    to {
+      letter-spacing: 0.15rem
+    }
+  }
+  @keyframes letterSpace {
+    0% {
+      letter-spacing: 1rem
+    }
+    to {
+      letter-spacing: 0.15rem
     }
   }
 }

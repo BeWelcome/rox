@@ -30,7 +30,8 @@
         position: relative;
     }
 
-    //Fonts weights and sizes - decoupled from html tags for SEO
+    //Fonts weights and sizes - h1,h2,h3,h4 decoupled from html tags for SEO
+
 
     .parallax--h {
         font-size: 4.25rem;
@@ -60,7 +61,7 @@
         font-weight: normal;
         text-align: center;
         text-shadow: 0 0 3px rgba(0,0,0,0.4);
-        font-weight: 400;
+        font-weight: 600;
         font-family: Signika;
     }
 
@@ -78,6 +79,45 @@
 
     .home-button-shadow {
       box-shadow: 0 0 10px 1px rgba(0,0,0,0.6);
+    }
+
+    .home-button-center {
+      max-width:690px;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%)
+    }
+
+    .form-control {
+      height: 3rem;
+      border: none;
+      font-family: Signika;
+      font-weight: 300;
+      background-color: rgba(255,255,255,0.98);
+    }
+
+    .input-group {
+      box-shadow: 0 0 10px 2px #545454;
+      width: 50%;
+    }
+
+    .input-group-text {
+      padding: 0.5rem 1rem;
+      border: none;
+    }
+
+    .input-group-text:before {
+      font-weight: 900;
+    }
+
+    .input-group button {
+      width: 3rem;
+      box-shadow: -3px 0 5px -1px #d4d4d4;
+    }
+
+    .parallax--fixed-enter .input-group {
+      animation: 1s growInput 0.5s ease-in;
+      animation-fill-mode: forwards;
     }
 
     @include media-breakpoint-down(sm) {
@@ -175,6 +215,26 @@
       animation: 1s iconAnimation 0.5s ease;
       animation-fill-mode: forwards;
     }
+
+/*    #icon-animation-1.icon-animation-start i.animation-2,
+    #icon-animation-2.icon-animation-start i.animation-2 {
+      animation-delay: 0.5s;
+    }
+
+    #icon-animation-1.icon-animation-start i.animation-3,
+    #icon-animation-2.icon-animation-start i.animation-3 {
+      animation-delay: 1s;
+    }
+
+    #icon-animation-1.icon-animation-start i.animation-4,
+    #icon-animation-2.icon-animation-start i.animation-4 {
+      animation-delay: 1.5s;
+    }
+
+    #icon-animation-1.icon-animation-start i.animation-5,
+    #icon-animation-2.icon-animation-start i.animation-5 {
+      animation-delay: 2s;
+    }*/
 
     @include media-breakpoint-down(md) {
         .parallax--h {
@@ -373,30 +433,56 @@
 
   @-webkit-keyframes iconAnimation {
     0% {
-      transform:rotate(0deg)
+      transform:rotate(0deg);
+      text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
     }
     25% {
-      transform:rotate(-3deg)
+      transform:rotate(-5deg);
+      text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
     }
-    75% {
-      transform:rotate(7deg)
+    50% {
+      transform:rotate(15deg);
+      text-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
     }
     100% {
-      transform:rotate(0deg)
+      transform:rotate(0deg);
+      text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
     }
   }
   @keyframes iconAnimation {
     0% {
-      transform:rotate(0deg)
+      transform:rotate(0deg);
+      text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
     }
     25% {
-      transform:rotate(-3deg)
+      transform:rotate(-5deg);
+      text-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
     }
-    75% {
-      transform:rotate(7deg)
+    50% {
+      transform:rotate(15deg);
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
     }
     100% {
-      transform:rotate(0deg)
+      transform:rotate(0deg);
+      text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  @-webkit-keyframes growInput {
+    0% {
+      width:50%
+    }
+    to {
+      width:100%
+    }
+  }
+
+  @keyframes growInput {
+    0% {
+      width:50%
+    }
+    to {
+      width:100%
     }
   }
 }

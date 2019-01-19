@@ -36,16 +36,41 @@ class SearchController extends AbstractController
 
         $searchFormRequest = new SearchFormRequest($this->getDoctrine()->getManager());
         $searchFormRequest->showmap = ('Yes' === $showMap) ? true : false;
-        $form = $this->createForm(SearchFormType::class, $searchFormRequest, [
+
+        // There are three different forms that might end up on this page
+        $formFactory = $this->get('form.factory');
+        $tiny = $formFactory->createNamed('tiny', SearchFormType::class, $searchFormRequest);
+        $home = $formFactory->createNamed('home', SearchFormType::class, $searchFormRequest);
+        $search = $formFactory->createNamed('search', SearchFormType::class, $searchFormRequest, [
             'groups' => $member->getGroups(),
             'languages' => $member->getLanguages(),
         ]);
 
-        $form->handleRequest($request);
+        // Check which form was used to get here
+        $tiny->handleRequest($request);
+        $tinyIsSubmitted = $tiny->isSubmitted();
+        $tinyIsValid = ($tinyIsSubmitted && $tiny->isValid());
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $home->handleRequest($request);
+        $homeIsSubmitted = $home->isSubmitted();
+        $homeIsValid = ($homeIsSubmitted && $home->isValid());
+
+        $search->handleRequest($request);
+        $searchIsSubmitted = $search->isSubmitted();
+        $searchIsValid = ($searchIsSubmitted && $search->isValid());
+
+        if ($tinyIsValid || $homeIsValid || $searchIsValid) {
+            $data = null;
             /** @var SearchFormRequest $data */
-            $data = $form->getData();
+            if ($tinyIsValid) {
+                $data = $tiny->getData();
+            }
+            if ($homeIsValid) {
+                $data = $home->getData();
+            }
+            if ($searchIsValid) {
+                $data = $search->getData();
+            }
             $memberPreference = $member->getMemberPreference($preference);
             if ($data->showmap) {
                 $memberPreference->setValue('Yes');
@@ -67,10 +92,18 @@ class SearchController extends AbstractController
             $pager = new Pagerfanta($searchAdapter);
             $pager->setMaxPerPage($data->items);
             $pager->setCurrentPage($data->page);
+            $search->setData($data);
+        } else {
+            if ($tinyIsSubmitted) {
+                // The user probably clicked on 'go' to fast on the landing page
+                // so set the entered location into the search location field and just show the form
+                $viewData = $tiny->getViewData();
+                $search->get('location')->submit($viewData->location);
+            }
         }
 
         return $this->render('search/searchmembers.html.twig', [
-            'form' => $form->createView(),
+            'form' => $search->createView(),
             'pager' => $pager,
             'routeName' => 'search_members_ajax',
             'routeParams' => $request->query->all(),

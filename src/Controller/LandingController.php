@@ -198,12 +198,13 @@ class LandingController extends AbstractController
         $communityNews = new CommunityNewsModel($this->getDoctrine());
         $latestNews = $communityNews->getLatest();
 
+        $formFactory = $this->get('form.factory');
         // Prepare search form for home location link
         $searchHomeLocationRequest = $this->getSearchHomeLocationRequest($member);
-        $searchHomeLocation = $this->createForm(SearchFormType::class, $searchHomeLocationRequest);
+        $searchHomeLocation = $formFactory->createNamed('home', SearchFormType::class, $searchHomeLocationRequest);
 
         // Prepare small search form
-        $searchGotoLocation = $this->createForm(SearchFormType::class, new SearchFormRequest($this->getDoctrine()->getManager()));
+        $searchGotoLocation = $formFactory->createNamed('tiny', SearchFormType::class, new SearchFormRequest($this->getDoctrine()->getManager()));
 
         $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::MESSAGE_AND_REQUEST_FILTER]);
@@ -238,10 +239,10 @@ class LandingController extends AbstractController
     {
         $searchHomeRequest = new SearchFormRequest($this->getDoctrine()->getManager());
         $geo = $member->getCity();
-        $searchHomeRequest->geoname_id = $geo->getGeonameid();
         $searchHomeRequest->location = $geo->getName();
-        $searchHomeRequest->latitude = $member->getLatitude();
-        $searchHomeRequest->longitude = $member->getLongitude();
+        $searchHomeRequest->location_geoname_id = $geo->getGeonameid();
+        $searchHomeRequest->location_latitude = $member->getLatitude();
+        $searchHomeRequest->location_longitude = $member->getLongitude();
         $searchHomeRequest->accommodation_anytime = true;
         $searchHomeRequest->accommodation_dependonrequest = true;
         $searchHomeRequest->accommodation_neverask = true;

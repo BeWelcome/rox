@@ -28,8 +28,8 @@ new ScrollMagic.Scene({triggerElement: "#trigger-fade-3" })
     .setClassToggle("#fade-animation-3", "parallax--fixed-enter")
     .addTo(controller);
 
-new ScrollMagic.Scene({triggerElement: "#trigger-letterspace-1", triggerHook: 1 })
-    .setClassToggle("#letterspace-animation-1", "parallax--fixed-letterspace")
+new ScrollMagic.Scene({triggerElement: "#trigger-icon-animation-1", triggerHook: 1 })
+    .setClassToggle("#icon-animation", "icon-animation-start")
     .addTo(controller);
 
 

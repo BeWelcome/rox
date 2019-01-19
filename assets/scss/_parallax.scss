@@ -170,8 +170,8 @@
       animation-fill-mode: forwards;
     }
 
-    .parallax--fixed-letterspace .parallax--h {
-      animation: 0.5s letterSpace ease-in;
+    #icon-animation.icon-animation-start i {
+      animation: 0.5s iconAnimation ease-in;
     }
 
     @include media-breakpoint-down(md) {
@@ -369,20 +369,32 @@
     }
   }
 
-  @-webkit-keyframes letterSpace {
+  @-webkit-keyframes iconAnimation {
     0% {
-      letter-spacing: 1rem
+      transform:rotate(0deg)
     }
-    to {
-      letter-spacing: 0.15rem
+    25% {
+      transform:rotate(-5deg)
+    }
+    75% {
+      transform:rotate(5deg)
+    }
+    100% {
+      transform:rotate(0deg)
     }
   }
-  @keyframes letterSpace {
+  @keyframes iconAnimation {
     0% {
-      letter-spacing: 1rem
+      transform:rotate(0deg)
     }
-    to {
-      letter-spacing: 0.15rem
+    25% {
+      transform:rotate(-5deg)
+    }
+    75% {
+      transform:rotate(5deg)
+    }
+    100% {
+      transform:rotate(0deg)
     }
   }
 }

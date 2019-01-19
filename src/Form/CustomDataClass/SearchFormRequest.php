@@ -5,6 +5,7 @@ namespace App\Form\CustomDataClass;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\PersistentCollection;
+use SearchModel;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -79,7 +80,7 @@ class SearchFormRequest
     /**
      * @var int
      *
-     * @Assert\Choice({ 0, 5, 10, 15, 20, 50, 100, 200}, groups={"text-search"})
+     * @Assert\Choice({ 5, 10, 15, 20, 50, 100, 200}, groups={"text-search"})
      * @Assert\EqualTo(value=-1, groups={"map-search"})
      */
     public $distance = 20;
@@ -162,36 +163,52 @@ class SearchFormRequest
         return false;
     }
 
+    private static function _getElement($data, $index, $default)
+    {
+        return (isset($data[$index])) ? $data[$index] : $default;
+    }
+
     public static function fromRequest(Request $request, ObjectManager $em)
     {
         $searchFormRequest = new self($em);
-        $searchFormRequest->location = $request->query->get('location');
-        $searchFormRequest->accommodation_anytime = $request->query->get('accommodation_anytime');
-        $searchFormRequest->accommodation_dependonrequest = $request->query->get('accommodation_dependonrequest');
-        $searchFormRequest->accommodation_neverask = $request->query->get('accommodation_neverask');
-        $searchFormRequest->can_host = $request->query->get('can_host');
-        $searchFormRequest->distance = $request->query->get('distance');
-        $searchFormRequest->keywords = $request->query->get('keywords');
-        $searchFormRequest->page = $request->query->get('page');
-        $searchFormRequest->groups = $request->query->get('groups');
-        $searchFormRequest->languages = $request->query->get('languages');
-        $searchFormRequest->inactive = $request->query->get('inactive');
-        $searchFormRequest->location_geoname_id = $request->query->get('location_geoname_id');
-        $searchFormRequest->location_latitude = $request->query->get('location_latitude');
-        $searchFormRequest->location_longitude = $request->query->get('location_longitude');
-        $searchFormRequest->min_age = $request->query->get('min_age');
-        $searchFormRequest->max_age = $request->query->get('max_age');
-        $searchFormRequest->gender = $request->query->get('gender');
-        $searchFormRequest->order = $request->query->get('order');
-        $searchFormRequest->items = $request->query->get('items');
-        $searchFormRequest->showmap = $request->query->get('showMap');
-        $searchFormRequest->offerdinner = $request->query->get('dinner');
-        $searchFormRequest->offertour = $request->query->get('tour');
-        $searchFormRequest->accessible = $request->query->get('accessible');
-        $searchFormRequest->ne_latitude = $request->query->get('ne-latitude');
-        $searchFormRequest->ne_longitude = $request->query->get('ne-longitude');
-        $searchFormRequest->sw_latitude = $request->query->get('sw-latitude');
-        $searchFormRequest->sw_longitude = $request->query->get('sw-longitude');
+        $data = [];
+        if ($request->query->has('tiny')) {
+            $data = $request->query->get('tiny');
+        }
+        if ($request->query->has('home')) {
+            $data = $request->query->get('home');
+        }
+        if ($request->query->has('search')) {
+            $data = $request->query->get('search');
+        }
+
+        $searchFormRequest->location = self::_getElement($data, 'location', '');
+        $searchFormRequest->accommodation_anytime = self::_getElement($data, 'accommodation_anytime', null);
+        $searchFormRequest->accommodation_dependonrequest = self::_getElement($data, 'accommodation_dependonrequest', null);
+        $searchFormRequest->accommodation_neverask = self::_getElement($data, 'accommodation_neverask', null);
+        $searchFormRequest->can_host = self::_getElement($data, 'can_host', 1);
+        $searchFormRequest->distance = self::_getElement($data, 'distance', 20);
+        $searchFormRequest->keywords = self::_getElement($data, 'keywords', '');
+        $searchFormRequest->page = $request->query->get('page', 1);
+        $searchFormRequest->groups = self::_getElement($data, 'groups', []);
+        $searchFormRequest->languages = self::_getElement($data, 'languages', []);
+        $searchFormRequest->inactive = self::_getElement($data, 'inactive', 0);
+        $searchFormRequest->location_geoname_id = self::_getElement($data, 'location_geoname_id', null);
+        $searchFormRequest->location_latitude = self::_getElement($data, 'location_latitude', null);
+        $searchFormRequest->location_longitude = self::_getElement($data, 'location_longitude', null);
+        $searchFormRequest->min_age = self::_getElement($data, 'min_age', null);
+        $searchFormRequest->max_age = self::_getElement($data, 'max_age', null);
+        $searchFormRequest->gender = self::_getElement($data, 'gender', null);
+        $searchFormRequest->order = self::_getElement($data, 'order', SearchModel::ORDER_ACCOM);
+        $searchFormRequest->items = self::_getElement($data, 'items', 10);
+        $searchFormRequest->showmap = self::_getElement($data, 'showmap', 0);
+        $searchFormRequest->offerdinner = self::_getElement($data, 'dinner', 0);
+        $searchFormRequest->offertour = self::_getElement($data, 'tour', 0);
+        $searchFormRequest->accessible = self::_getElement($data, 'accessible', 0);
+        $searchFormRequest->ne_latitude = self::_getElement($data, 'ne-latitude', null);
+        $searchFormRequest->ne_longitude = self::_getElement($data, 'ne-longitude', null);
+        $searchFormRequest->sw_latitude = self::_getElement($data, 'sw-latitude', null);
+        $searchFormRequest->sw_longitude = self::_getElement($data, 'sw-longitude', null);
 
         return $searchFormRequest;
     }

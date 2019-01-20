@@ -337,8 +337,8 @@ function FindAppropriatedLanguage($IdPost=0) {
         }
         $command = $vars['agoragroupsthreadscountmoreless'];
         $layoutbits = new MOD_layoutbits();
-        $forumthreads = intval($layoutbits->GetPreference("ForumThreadsOnLandingPage"));
-        $groupsthreads = intval($layoutbits->GetPreference("GroupsThreadsOnLandingPage"));
+        $forumthreads = intval($layoutbits->GetPreference("ForumThreadsOnLandingPage", $member->id));
+        $groupsthreads = intval($layoutbits->GetPreference("GroupsThreadsOnLandingPage", $member->id));
         $membersmodel = new MembersModel();
 
         $query = "

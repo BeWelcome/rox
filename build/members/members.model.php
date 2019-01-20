@@ -442,7 +442,8 @@ WHERE
     
     public function getCommentGuidelinesRead() {
         $layoutbits = new MOD_layoutbits();
-        return intval($layoutbits->GetPreference("ReadCommentGuidelines"));
+        $loggedInMember = $this->getLoggedInMember();
+        return intval($layoutbits->getPreference("ReadCommentGuidelines", $loggedInMember->id));
     }
 
 

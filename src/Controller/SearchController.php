@@ -92,7 +92,10 @@ class SearchController extends AbstractController
             $pager = new Pagerfanta($searchAdapter);
             $pager->setMaxPerPage($data->items);
             $pager->setCurrentPage($data->page);
-            $search->setData($data);
+            if (!$searchIsValid) {
+                // only set data if the form wasn't submitted from search_members
+                $search->setData($data);
+            }
         } else {
             if ($tinyIsSubmitted) {
                 // The user probably clicked on 'go' to fast on the landing page

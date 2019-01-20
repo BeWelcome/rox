@@ -96,7 +96,8 @@ class ActivitiesModel extends RoxModelBase
     
     public function getRadius() {
         $layoutbits = new MOD_layoutbits();
-        return intval($layoutbits->getPreference("ActivitiesNearMeRadius"));
+        $loggedInMember = $this->getLoggedInMember();
+        return intval($layoutbits->getPreference("ActivitiesNearMeRadius", $loggedInMember->id));
     }
     
     protected function getNearMeQuery($distance, $count = false) {

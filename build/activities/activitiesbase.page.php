@@ -78,13 +78,16 @@ class ActivitiesBasePage extends PageWithActiveSkin
 
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'script/leaflet/1.0.0-master/leaflet.css';
-       $stylesheets[] = 'script/leaflet.markercluster/MarkerCluster.css';
-       $stylesheets[] = 'script/leaflet.markercluster/MarkerCluster.Default.css';
-       $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome.min.css';
-       $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome-ie7.min.css';
+       $stylesheets[] = 'build/leaflet.css';
        return $stylesheets;
     }
 
+    protected function getLateLoadScriptfiles()
+    {
+        $scriptFiles = parent::getLateLoadScriptfiles();
+        $scriptFiles[] = 'build/leaflet.js';
+        $scriptFiles[] = 'script/map/activities/activities_map.js';
+        return $scriptFiles;
+    }
 }
 

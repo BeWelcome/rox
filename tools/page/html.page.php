@@ -276,8 +276,6 @@ class PageWithHTML extends AbstractBasePage
      */
     protected function includeLateScriptfiles()
     {
-        echo getcwd();
-
         if ($scriptfiles = $this->getLateLoadScriptfiles())
         {
             foreach($scriptfiles as $url)

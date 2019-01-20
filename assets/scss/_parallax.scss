@@ -89,10 +89,15 @@
     }
 
     .form-control {
-      height: 3rem;
+      // Affect the main menu
       border: none;
       font-family: Signika;
       font-weight: 300;
+    }
+
+    .parallax .form-control {
+      // Doesn't affect the main menu
+      height: 3rem;
       background-color: rgba(255,255,255,0.98);
     }
 

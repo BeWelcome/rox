@@ -20,7 +20,7 @@
                 {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<div class="alert alert-success mb-0 h5"><i class="fa fa-handshake-o mr-1"></i>{{ 'request.guest.accepted'|trans }}</div>{% endif %}
                 {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<div class="alert alert-warning mb-0 h5"><i class="fa fa-question mr-1"></i>{{ 'request.guest.tentatively'|trans }}</div>{% endif %}
             {% else %}
-                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}<div class="alert alert-warning mb-0 h5"><i class="fa fa-times mr-1"></i>{{ 'request.host.open'|trans }}<a class="btn btn-primary btn-sm ml-3" href="{{ path( 'hosting_request_reply', { id: thread[0].id }) }}">{{ 'Reply' | trans }}</a></div>{% endif %}
+                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}<div class="alert alert-warning mb-0 h5"><i class="fa fa-times mr-1"></i>{{ 'request.host.open'|trans }}<a class="btn btn-primary btn-sm ml-3" href="{{ path( 'hosting_request_reply', { id: thread[0].id }) }}">{{ 'message.button.reply' | trans }}</a></div>{% endif %}
                 {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}<div class="alert alert-danger mb-0 h5"><i class="fa fa-times mr-1"></i>{{ 'request.host.declined'|trans }}</div>{% endif %}
                 {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<div class="alert alert-success mb-0 h5"><i class="fa fa-handshake-o mr-1"></i>{{ 'request.host.accepted'|trans }}</div>{% endif %}
                 {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<div class="alert alert-warning mb-0 h5"><i class="fa fa-question mr-1"></i>{{ 'request.host.tentatively'|trans }}</div>{% endif %}
@@ -40,13 +40,13 @@
     </div>
 
     <div class="col-12 col-sm-6 col-md-4 my-3">
-            <div class="h5"><i class="fa fa-calendar mr-1"></i>{{ 'Arrival' }}</div>
+            <div class="h5"><i class="fa fa-calendar mr-1"></i>{{ 'request.arrival' | trans }}</div>
             <div>{{ request.Arrival | date('l, F d, Y') }}</div>
     </div>
 
     {% if  request.Departure -%}
     <div class="col-12 col-sm-6 col-md-4 my-3">
-        <div class="h5"><i class="fa fa-calendar mr-1"></i>{{ 'Departure' }}</div>
+        <div class="h5"><i class="fa fa-calendar mr-1"></i>{{ 'request.departure' | trans }}</div>
         <div>{{ request.Departure | date('l, F d, Y') }}</div>
     </div>
     {%- endif %}

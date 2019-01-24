@@ -632,7 +632,7 @@ class ForumsController extends PAppController
     *
     **/
     public function showExternalSuggestionsThreadReply($suggestionId, $groupId, $threadId, $urlpart) {
-        $request = $this->request;
+        $request = $this->request;''
         $this->parseRequest();
         $this->_model->setGroupId($groupId);
         $this->_model->setThreadId($threadId);

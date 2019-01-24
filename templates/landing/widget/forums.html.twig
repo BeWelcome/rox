@@ -10,7 +10,7 @@
                     <a href="{{ url('forum_thread', {'threadId': thread.id}) }}">{{ thread.title }}</a>
                 </div>
                 <div>
-                    <small>in <a href={%  if thread.group.id != 0 %}"groups/{{ thread.group.id }}">{{ thread.group.name }}{% else %}"/forums/bwforum">{{ 'BWForum' | trans }}{% endif %}</a> {{ 'thread.lastpostby' | trans }} {{ macros.profilelink(thread.lastpost.author.Username) }} <span title="{{ thread.lastpost.updated.toDateTimeString }}">{{ thread.lastpost.updated.diffForHumans }}</span> </small>
+                    <small>in <a href={%  if thread.group.id != 0 %}"groups/{{ thread.group.id }}">{{ thread.group.name }}{% else %}"/forums/bwforum">{{ 'dashboard.bwforum' | trans }}{% endif %}</a> {{ 'thread.lastpostby' | trans }} {{ macros.profilelink(thread.lastpost.author.Username) }} <span title="{{ thread.lastpost.updated.toDateTimeString }}">{{ thread.lastpost.updated.diffForHumans }}</span> </small>
                 </div>
 
             </div>

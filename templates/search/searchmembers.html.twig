@@ -28,29 +28,29 @@
         <div class="form-group mb-0">
             <label class="mr-2 ml-1 ml-md-0"><img src="{{ asset('images/icons/anytime.png') }}"
                                      class="img-check {% if form.accommodation_anytime.vars.checked %}checked{% else %}not_checked{% endif %}"
-                                     alt="{{ 'I like to host' | trans }}"/>
+                                     alt="{{ 'search.filter.host.yes' | trans }}"/>
                 <div class="d-none">{{ form_widget(form.accommodation_anytime) }}</div>
             </label>
             <label class="mr-2"><img src="{{ asset('images/icons/dependonrequest.png') }}"
                                      class="img-check {% if form.accommodation_dependonrequest.vars.checked %}checked{% else %}not_checked{% endif %}"
-                                     alt="{{ 'I might host you' | trans }}"/>
+                                     alt="{{ 'search.filter.host.maybe' | trans }}"/>
                 <div class="d-none">
                     {{ form_widget(form.accommodation_dependonrequest) }}</div>
             </label>
             <label class="mr-2"><img src="{{ asset('images/icons/neverask.png') }}"
                                      class="img-check {% if form.accommodation_neverask.vars.checked %}check{% else %}not_checked{% endif %}"
-                                     alt="{{ 'I can\'t host' | trans }}"/>
+                                     alt="{{ 'search.filter.host.no' | trans }}"/>
                 <div class="d-none">
                     {{ form_widget(form.accommodation_neverask) }}</div>
             </label>
         </div>
         <div class="input-group mr-2 mb-1 mb-md-0">
-            <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-bed" title="{{ 'search.hosts_at_least' | trans }}"></i></span></div>
+            <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-bed" title="{{ 'search.filter.hosts_at_least' | trans }}"></i></span></div>
             {{ form_label(form.can_host) }}
             {{ form_widget(form.can_host, {'attr': {'data-minimum-results-for-search': '-1'}} ) }}
         </div>
         <div class="input-group mr-2 mb-1 mb-md-0">
-            <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-bullseye" title="{{ 'in a radius of' | trans }}"></i></span></div>
+            <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-bullseye" title="{{ 'search.filter.radius' | trans }}"></i></span></div>
             {{ form_label(form.distance) }}
             {{ form_widget(form.distance, {'attr': {'data-minimum-results-for-search': '-1'} }) }}
         </div>

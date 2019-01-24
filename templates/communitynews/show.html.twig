@@ -7,10 +7,10 @@
 
 {% block content %}
     <h1>{{ communityNews.title }}</h1>
-    <p class="small text-muted">{{ 'Written by' | trans }}{{ macros.avatar( communityNews.createdBy.Username, 30, true) }} {{ communityNews.createdAt.DiffForHumans }}
-        {% if communityNews.updatedBy and communityNews.updatedBy.Username != communityNews.createdBy.Username %} {{ 'and last updated by' | trans}}{{ macros.avatar( communityNews.updatedBy.Username, 30, true) }} {{ communityNews.updatedAt.DiffForHumans }}{% endif %}</p>
+    <p class="small text-muted">{{ 'bewelcome_news.writtenby' | trans }}{{ macros.avatar( communityNews.createdBy.Username, 30, true) }} {{ communityNews.createdAt.DiffForHumans }}
+        {% if communityNews.updatedBy and communityNews.updatedBy.Username != communityNews.createdBy.Username %} {{ 'bewelcome_news.lastupdater' | trans}}{{ macros.avatar( communityNews.updatedBy.Username, 30, true) }} {{ communityNews.updatedAt.DiffForHumans }}{% endif %}</p>
     <p class="my-0">{{ communityNews.text| raw }}</p>
-    <p class="mt-4">{% set commentsCount = communityNews.comments | length %}{% trans %}%commentsCount% comments{% endtrans %} <a class="btn btn-primary" href="{{ url('communitynews_comment_add', { id: communityNews.id }) }}">{{ 'Add Comment' | trans }}</a></p>
+    <p class="mt-4">{% set commentsCount = communityNews.comments | length %}{% trans %}%commentsCount% comments{% endtrans %} <a class="btn btn-primary" href="{{ url('communitynews_comment_add', { id: communityNews.id }) }}">{{ 'bewelcome_news.addcomment' | trans }}</a></p>
     {% if comments.haveToPaginate %}
         <div class="row">
             <div class="col-12">

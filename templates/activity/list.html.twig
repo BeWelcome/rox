@@ -3,7 +3,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {{ 'All activities' | trans }}
+    {{ 'activities.allactivities' | trans }}
 {% endblock %}
 
 {% block subnav %}
@@ -70,7 +70,7 @@
                     </tr>
                 {% else %}
                     <tr><td>
-                    {{ 'No activities found' | trans }}
+                    {{ 'activities.nonefound' | trans }}
                         </td></tr>
                 {% endfor %}
                 </tbody>

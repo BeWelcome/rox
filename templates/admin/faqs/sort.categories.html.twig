@@ -18,10 +18,10 @@
 {% endblock stylesheets %}
 
 {% block content %}
-    <h1>{{ 'SortFaqCategories' | trans }}</h1>
+    <h1>{{ 'admin.faqs.sort_categories' | trans }}</h1>
     {% if faqCategories|length == 0 %}
-        <p>{{ 'No categories found.' | trans }}</p>
-        <p>{{ 'Please create one.' | trans }}<a class="float-right" href="{{ path('admin_faqs_category_create') }}"><button class="btn btn-primary">{{ 'CreateFaqCategory' | trans }}</button></a></p>
+        <p>{{ 'faqs.none' | trans }}</p>
+        <p>{{ 'faqs.none.create' | trans }}<a class="float-right" href="{{ path('admin_faqs_category_create') }}"><button class="btn btn-primary">{{ 'CreateFaqCategory' | trans }}</button></a></p>
     {% else %}
         {{ form_start(form) }}
             {{ form_row(form.sortOrder) }}

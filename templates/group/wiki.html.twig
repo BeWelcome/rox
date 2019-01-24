@@ -6,6 +6,6 @@
 
     <div id="wiki">{{ wikipage | raw }}</div>
 
-    <a class="btn btn-primary mb-3 float-right" href="{{ url('wiki_page_edit', { 'pageTitle': title}) }}">{{ 'Edit page' | trans }}</a>
+    <a class="btn btn-primary mb-3 float-right" href="{{ url('wiki_page_edit', { 'pageTitle': title}) }}">{{ 'wiki.page.edit' | trans }}</a>
 
 {% endblock content %}

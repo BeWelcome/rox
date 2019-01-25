@@ -185,6 +185,18 @@
       margin: initial;
     }
 
+    @include media-breakpoint-down(sm){
+
+      .parallax--fixed {
+        padding: 104px 0;
+      }
+
+      .parallax--fixed-abovethefold {
+        padding-top: 52px;
+      }
+
+    }
+
     .parallax--fixed-abovethefold,
     .parallax--fixed-enter,
     .parallax--fixed-leave {

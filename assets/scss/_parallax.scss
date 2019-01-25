@@ -163,24 +163,6 @@
         z-index: -1;
     }
 
-    .parallax--img-l {
-      display: initial;
-    }
-
-    .parallax--img-s {
-      display: none;
-    }
-
-    @include media-breakpoint-down(sm) {
-        .parallax--img-l {
-          display: none;
-        }
-
-        .parallax--img-s {
-          display: initial;
-        }
-    }
-
     .parallax--shadow {
       width: 100%;
       height: 100%;

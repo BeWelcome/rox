@@ -89,7 +89,7 @@
         <div class="container-fluid my-5 py-5">
             <div class="row justify-content-center mb-5">
                 <div class="col-12">
-                    <h3 class="parallax--h text-center">{{ 'Some statistics' | trans }}</h3>
+                    <h3 class="parallax--h text-center">{{ 'home.header.statistics' | trans }}</h3>
                 </div>
             </div>
             <div id="trigger-icon-animation-2"></div>
@@ -97,23 +97,23 @@
                 <div class="col-12 col-md-6 col-lg-2 mx-3">
                     <p><i class="far fa-start fa-user" aria-hidden="true"></i></p>
                     <p class="parallax--subh">{{ stats.members }}</p>
-                    <p class="parallax--numsubh text-capitalize">{{ 'members' | trans }}</p></div>
+                    <p class="parallax--numsubh text-capitalize">{{ 'home.stats.members' | trans }}</p></div>
                 <div class="col-12 col-md-6 col-lg-2 mx-3">
                     <p><i class="far fa-start fa-flag" aria-hidden="true"></i></p>
                     <p class="parallax--subh">{{ stats.countries }}</p>
-                    <p class="parallax--numsubh text-capitalize">{{ 'countries' | trans }}</p></div>
+                    <p class="parallax--numsubh text-capitalize">{{ 'home.stats.countries' | trans }}</p></div>
                 <div class="col-12 col-md-6 col-lg-2 mx-3">
                     <p><i class="fa fa-start fa-language" aria-hidden="true"></i></p>
                     <p class="parallax--subh">{{ stats.languages }}</p>
-                    <p class="parallax--numsubh text-capitalize">{{ 'languages' | trans }}</p></div>
+                    <p class="parallax--numsubh text-capitalize">{{ 'home.stats.languages' | trans }}</p></div>
                 <div class="col-12 col-md-6 col-lg-2 mx-3">
                     <p><i class="far fa-start fa-smile" aria-hidden="true"></i></p>
                     <p class="parallax--subh">{{ stats.comments }}</p>
-                    <p class="parallax--numsubh text-capitalize">{{ 'positive comments' | trans }}</p></div>
+                    <p class="parallax--numsubh text-capitalize">{{ 'home.stats.positive_comments' | trans }}</p></div>
                 <div class="col-12 col-md-6 col-lg-2 mx-3">
                     <p><i class="far fa-start fa-calendar-check" aria-hidden="true"></i></p>
                     <p class="parallax--subh">{{ stats.activities }}</p>
-                    <p class="parallax--numsubh text-capitalize">{{ 'Activities' | trans }}</p></div>
+                    <p class="parallax--numsubh text-capitalize">{{ 'home.stats.activities' | trans }}</p></div>
             </div>
         </div>
     </div>
@@ -127,8 +127,8 @@
             <div id="trigger-fade-3"></div>
             <div id="fade-animation-3" class="parallax--fixed row w-100 justify-content-center text-center">
                 <div class="col-12 mb-4">
-                    <h1 class="parallax--h parallax--fixed--letteranim mb-4">{{ 'The world is just one step from here' | trans }}</h1>
-                    <p class="text-white">{{ 'We believe that sharing creates a better world. You can let people stay over or show them around. It\'s easy and it\'s called hospitality.' | trans }}</p>
+                    <h1 class="parallax--h parallax--fixed--letteranim mb-4">{{ 'home.title.onestep' | trans }}</h1>
+                    <p class="text-white">{{ 'home.title.onestep.sub' | trans }}</p>
                 </div>
                 <div class="col-12 col-md-6 col-lg-5">
                     {{ form_start(username) }}
@@ -143,26 +143,26 @@
                                                              aria-hidden="true"></i></span>
                         <input type="text" class="form-control" name="{{ username.username.vars.name }}"
                                id="{{ username.username.vars.id }}"
-                               placeholder="{{ 'Choose your username!' | trans }}"
+                               placeholder="{{ 'home.username' | trans }}"
                                value="{{ username.username.vars.value }}"/>
                         <span class="input-group-append p-0">
                             <button class="btn btn-primary border-0" type="submit">
                                 <i class="fa fa-lg fa-chevron-right" aria-hidden="true"></i>
-                                <span class="sr-only">{{ 'Submit' | trans }}</span>
+                                <span class="sr-only">{{ 'home.username.signup' | trans }}</span>
                             </button>
                             {% do username.username.setRendered %}
                         </span>
                     </div>
-                    <p class="text-white text-md-left">{{ 'and start meeting people from everywhere.' | trans }}</p>
+                    <p class="text-white text-md-left">{{ 'home.username.subheader' | trans }}</p>
                     {{ form_end(username) }}
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-5">
                     {{ form_start( search ) }}
                     <div class="form-group">
-                        <p class="parallax--numsubh text-uppercase text-md-left">{{ 'Find a place to stay' | trans }}</p>
+                        <p class="parallax--numsubh text-uppercase text-md-left">{{ 'home.searchplace' | trans }}</p>
                     </div>
-                    <label for="location" class="sr-only">{{ 'Where do you want to go?' | trans }}</label>
+                    <label for="location" class="sr-only">{{ 'home.searchplace.question' | trans }}</label>
                     <div class="input-group mb-4">
                         <span class="input-group-prepend">
                             <i class="input-group-text fas fa-map-marker-alt" aria-hidden="true"></i>
@@ -177,7 +177,7 @@
                             {% do search.updateMap.setRendered %}
                         </span>
                     </div>
-                    <p class="text-white text-md-left">{{ 'and meet locals when traveling worldwide.' | trans }}</p>
+                    <p class="text-white text-md-left">{{ 'home.searchplace.subheader' | trans }}</p>
                     <div class="d-none invisible">{{ form_rest( search ) }}</div>
                     {{ form_end( search ) }}
                 </div>
@@ -191,11 +191,11 @@
             <div class="col-12 text-left">
                 <a href="{{ url('about') }}"><strong>{{ 'AboutUsPage' | trans }}</strong></a> •
                 <a href="{{ url('terms_french') }}" target="new">{{ 'TermsOfUse' | trans }}</a> •
-                <a href="{{ url('privacy') }}" target="new">{{ 'Privacy' | trans }}</a> •
-                <a href="{{ url('imprint') }}">{{ 'Imprint' | trans }}</a> •
+                <a href="{{ url('privacy') }}" target="new">{{ 'footer.privacy' | trans }}</a> •
+                <a href="{{ url('imprint') }}">{{ 'footer.imprint' | trans }}</a> •
                 <a href="{{ url('faq') }}">{{ 'faq' | trans }}</a> •
-                <a href="{{ url('feedback') }}">{{ 'Contact us' | trans }}</a> •
-                <a href="{{ url('feedback', {'IdCategory': 1, 'RequestUri': url('homepage')}) }}">{{ 'Reportbug' | trans }}</a><br>
+                <a href="{{ url('feedback') }}">{{ 'footer.contactus' | trans }}</a> •
+                <a href="{{ url('feedback', {'IdCategory': 1, 'RequestUri': url('homepage')}) }}">{{ 'footer.reportbug' | trans }}</a><br>
                 &copy;2007
                 &mdash; {{ "now" | date("Y") }} {{ 'CopyrightByBV' | trans | escape | replace({'%link_start%': '<a href="https://bevolunteer.org">', '%link_end%': '</a>'})| raw }}
                 - {{ 'RunningOn' | trans }} BW Rox rev. {{ version }} ({{ version_dt }})

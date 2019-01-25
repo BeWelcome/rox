@@ -7,7 +7,7 @@
 
     <div class="d-flex flex-row justify-content-between">
         <div>
-            <p class="h4 m-0">{{ 'From:' | trans }}</p>
+            <p class="h4 m-0">{{ 'member.comment.from' | trans }}</p>
             {{ macros.avatarstack(comment.FromMember.Username, 50) }}
         </div>
         <div class="my-1">
@@ -15,7 +15,7 @@
                 {{ comment.TextWhere | nl2br }}</p>
         </div>
         <div class="text-right">
-            <p class="h4 m-0">{{ 'about' | trans}}</p>
+            <p class="h4 m-0">{{ 'member.comment.on' | trans}}</p>
             {{ macros.avatarstack(comment.ToMember.Username, 50, true) }}
         </div>
     </div>

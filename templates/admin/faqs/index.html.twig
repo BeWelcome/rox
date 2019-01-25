@@ -11,10 +11,10 @@
 {% endblock stylesheets %}
 
 {% block content %}
-    <h1>{{ faqCategory.description | trans({}, 'messages', 'en') }}<a class="float-right" href="{{ path('admin_faqs_category_edit', {'id' : faqCategory.id}) }}"><button class="btn btn-primary">{{ 'Edit' | trans }}</button></a></h1>
+    <h1>{{ faqCategory.description | trans({}, 'messages', 'en') }}<a class="float-right" href="{{ path('admin_faqs_category_edit', {'id' : faqCategory.id}) }}"><button class="btn btn-primary">{{ 'button.edit' | trans }}</button></a></h1>
     {% if faqs|length == 0 %}
-        <p>{{ 'No faqs found in this category.' | trans }}</p>
-        <p>{{ 'Please create one.' | trans }}<a class="float-right" href="{{ path('admin_faqs_faq_create', {'categoryId' : faqCategory.id}) }}"><button class="btn btn-primary">{{ 'CreateFaq' | trans }}</button></a></p>
+        <p>{{ 'faqs.none' | trans }}</p>
+        <p>{{ 'faqs.none.create' | trans }}<a class="float-right" href="{{ path('admin_faqs_faq_create', {'categoryId' : faqCategory.id}) }}"><button class="btn btn-primary">{{ 'faqs.button.create' | trans }}</button></a></p>
     {% else %}
         {{ form_start(form) }}
             {{ form_row(form.sortOrder) }}
@@ -23,7 +23,7 @@
                     <h5 class="card-title">FAQ</h5>
                     <p class="card-text">This shows the list of all FAQ in the above category. You can drag the cards to change the sort order.</p>
                     <p class="card-text text-right">
-                        <a class="btn btn-primary" href="{{ path('admin_faqs_faq_create', {'categoryId' : faqCategory.id}) }}">{{ 'CreateFaq' | trans }}</a>
+                        <a class="btn btn-primary" href="{{ path('admin_faqs_faq_create', {'categoryId' : faqCategory.id}) }}">{{ 'faqs.button.create' | trans }}</a>
                         <button type="submit" class="btn btn-primary">{{ 'UpdateFaqOrder' }}</button>
                     </p>
                 </div>
@@ -35,7 +35,7 @@
                         <p class="card-title"><small {% if faq.Active == "Active" %}class="text-muted"{% endif %}>{{ faq.QandA }}</small></p>
                         <p class="card-text">{{ faq.Question|truncate(50) }}</p>
                         <p class="card-text">{{ faq.Answer|truncate(50) }}</p>
-                        <a class="btn btn-primary float-right" href="{{ path('admin_faqs_faq_edit', {'id' : faq.id}) }}">{{ 'EditFaq' | trans }}</a>
+                        <a class="btn btn-primary float-right" href="{{ path('admin_faqs_faq_edit', {'id' : faq.id}) }}">{{ 'faqs.button.edit' | trans }}</a>
                     </div>
                 </div>
             {% endfor %}

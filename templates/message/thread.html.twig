@@ -2,7 +2,7 @@
     {% set current = thread|first %}
     {% set myself = app.user %}
     {% if current.Sender.Username == myself.Username %}{% set otherUser = current.Receiver %}{% else %}{% set otherUser = current.Sender %}{% endif %}
-    {% if current.Subject %}{% set currentSubject = current.Subject.Subject %}{% else %}{% set currentSubject = 'Discussion with %s' | trans | format(otherUser.Username)  %} {% endif %}
+    {% if current.Subject %}{% set currentSubject = current.Subject.Subject %}{% else %}{% set currentSubject = 'message.conversation_with' | trans | format(otherUser.Username)  %} {% endif %}
     {% if current.Request %}{% set currentArrival = current.Request.Arrival %}{% set currentDeparture = current.Request.Departure %}{% endif %}
     {% for message in thread %}
         {% set own = (myself.Username == message.Sender.Username) %}
@@ -25,7 +25,7 @@
             <div class="col-auto message_{% if own %}own{% else %}other{% endif %}">
                 <small class="{% if own %}pull-right{% else %}pull-left{% endif %} text-muted m-0">
                     {%- if own -%}
-                        {{ 'You' | trans }}
+                        {{ 'message.you' | trans }}
                     {%- else -%}
                         {{ message.sender.Username }}
                     {%- endif %}

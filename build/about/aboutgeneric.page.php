@@ -17,6 +17,7 @@ class AboutGenericPage extends AboutBasePage
     private $_lang;
 
     public function __construct($pagename, $lang) {
+        parent::__construct();
         $this->_pagename = $pagename;
         $this->_lang = $lang;
     }

@@ -55,7 +55,7 @@ class AddTranslationIds extends RoxMigration
         $this->AddWordCode('profile.delete.cleanup', 'Please remove my data with the next cleanup (in the next 24 hours).', 'Label for the data cleanup checkbox on the retire profile page');
         $this->AddWordCode('profile.accommodation.hes.label', 'Hosting Eagerness', 'Label for the Hosting Eagerness Slider');
         $this->AddWordCode('profile.accommodation.hes.boost', 'Show me at the top of the search results', 'Label for the Hosting Eagerness Slider boost checkbox');
-        $this->AddWordCode('profile.accommodation.hes.helptext', 'You can influence your position in search results by selecting a date in the future. The further away the date is the less high your boost becomes (maximum of 30 days). You can also decide to be shown at the end of the list instead by unticking the checkbox. ', 'Help text for the hosting eagerness slider.');
+        $this->AddWordCode('profile.accommodation.hes.helptext', 'You can influence your position in search results by selecting a date in the future. The further away the date is the less high your boost becomes (maximum of 30 days). You can also decide to be shown at the end of the list instead by un-ticking the checkbox.', 'Help text for the hosting eagerness slider.');
 
         // landing page
         $this->AddWordCode('landing.welcomeback', 'Welcome back', 'Greeting on the opening page after logging in, followed my the members username');

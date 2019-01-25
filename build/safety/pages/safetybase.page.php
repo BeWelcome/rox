@@ -70,7 +70,7 @@ class SafetyBasePage extends PageWithActiveSkin
     
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/safety.css';
+//       $stylesheets[] = 'styles/css/minimal/screen/custom/safety.css';
        return $stylesheets;
     }
 

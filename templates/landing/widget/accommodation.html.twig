@@ -5,8 +5,8 @@
         {%  if member.Accommodation == 'neverask' %}{{ 'not hosting' | trans }}{% endif %}
     </button>
     <div class="dropdown-menu hoststatusdropdown">
-        <a id="anytime" class="hosting dropdown-item" href="#">{{ 'hosting' | trans }}</a>
-        <a id="dependonrequest" class="hosting dropdown-item" href="#">{{ 'maybe hosting' | trans }}</a>
-        <a id="neverask" class="hosting dropdown-item" href="#">{{ 'not hosting' | trans }}</a>
+        <a id="anytime" class="hosting dropdown-item" href="#">{{ 'dashboard.hosting.yes' | trans }}</a>
+        <a id="dependonrequest" class="hosting dropdown-item" href="#">{{ 'dashboard.hosting.maybe' | trans }}</a>
+        <a id="neverask" class="hosting dropdown-item" href="#">{{ 'dashboard.hosting.no' | trans }}</a>
     </div>
 </div>

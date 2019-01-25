@@ -22,7 +22,7 @@
     <h2>{{ type | trans | format(member.Username) }}</h2>
 
     {% if items.nbResults == 0 %}
-        <p>{{ 'No messages in this folder.' | trans }}</p>
+        <p>{{ 'messages.none' | trans }}</p>
     {% else %}
 
         {{ form_start(form) }}
@@ -77,9 +77,9 @@
                     {% if message.request %}
                         <div class="d-flex alert-light p-2">
                             <div class="mr-2 font-weight-bold">
-                                <i class="fa fa-calendar mr-1"></i>{{ 'Arrival' | trans }}
+                                <i class="fa fa-calendar mr-1"></i>{{ 'request.arrival' | trans }}
                                 {%- if message.request.departure %}<br>
-                                    <i class="fa fa-calendar mr-1"></i>{{ 'Departure' | trans }}{%- endif %}
+                                    <i class="fa fa-calendar mr-1"></i>{{ 'request.departure' | trans }}{%- endif %}
                             </div>
                             <div>
                                 {{ message.request.arrival | localizeddate( 'medium', 'none') }}
@@ -90,7 +90,7 @@
                     {% endif %}
                     {# Handle the case where a message/request doesn't have a sent date #}
                     {% set sentDate %}{% if message.dateSent != '-0001-11-30 00:00:00' %}{{ message.dateSent | localizeddate( 'medium', 'none') }}{% else %}{{ message.updated | localizeddate( 'medium', 'none')}}{% endif %}{% endset %}
-                    <span class="text-muted small">{% if folder == 'sent' %}{% trans %}Sent on %sentDate%{% endtrans %}{% else %}{% trans %}Received on %sentDate%{% endtrans %}{% endif %}</span>
+                    <span class="text-muted small">{% if folder == 'sent' %}{% trans %}message.sentdate{% endtrans %}{% else %}{% trans %}message.sentdate{% endtrans %}{% endif %}</span>
                         </div>
                     </a>
                 </td>

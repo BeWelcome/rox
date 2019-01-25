@@ -35,14 +35,13 @@
 
 {% block content %}
     <h1>{{ 'group.create' | trans}}</h1>
-    <p>{{ 'We\'re happy that you want to open a new group, but unfortunately spammers like them as well, so please note
-      that the group will need to be activated by the BW Forum Moderators. Please also read the %link_start%Rules for Groups%link_end% when thinking about the new group\'s name and description.'|
+    <p>{{ 'group.create.warning'|
         trans| escape | replace({'%link_start%': '<a href="/forums/rules#groups" target="_blank" class="text-primary">', '%link_end%': '</a>'})|raw }}</p>
     {{ form_start(form, { 'attr': { 'novalidate': 'novalidate'}}) }}
     <div class="form-group">
         {{ form_label(form.name) }}
         {{ form_widget(form.name) }}
-        <small id="nameHelp" class="form-text text-muted">{{ 'For local groups, include the country (e.g. Place, Country) as this will help with searches.' | trans }}</small>
+        <small id="nameHelp" class="form-text text-muted">{{ 'group.create.name.hint' | trans }}</small>
     </div>
 
     <div id="duplicates"></div>
@@ -50,7 +49,7 @@
     <div class="form-group">
         {{ form_label(form.description) }}
         {{ form_widget(form.description) }}
-        <small id="nameHelp" class="form-text text-muted">{{ 'Include the purpose of the group or the main features of the place covered by the group.' | trans }}</small>
+        <small id="nameHelp" class="form-text text-muted">{{ 'group.create.description.hint' | trans }}</small>
     </div>
 
     {{ form_rest(form) }}

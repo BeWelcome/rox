@@ -135,7 +135,11 @@ SQL
     /**
      * Sends a Feedback e-mail
      *
-     * @param string $IdMember
+     * @param $receiver
+     * @param $message_subject
+     * @param $message_text
+     * @param $sender
+     * @return bool
      */
     public function feedbackMail($receiver, $message_subject, $message_text, $sender)
     {
@@ -153,10 +157,10 @@ SQL
         }
 
         //Create the Transport
-        $transport = Swift_SmtpTransport::newInstance('localhost', 25, false);
+        $transport = new Swift_SmtpTransport('localhost', 25, false);
 
         //Create the Mailer using your created Transport
-        $mailer = Swift_Mailer::newInstance($transport);
+        $mailer = new Swift_Mailer($transport);
 
         try
         {

@@ -9,31 +9,13 @@ use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 
+/**
+ * Class NotificationRepository.
+ *
+ * @SuppressWarning(PHPMD.
+ */
 class NotificationRepository extends EntityRepository
 {
-    /**
-     * @return QueryBuilder
-     */
-    public function queryPublic()
-    {
-        $qb = $this->createQueryBuilder('cn')
-            ->where('cn.public = true')
-            ->orderBy('cn.createdAt', 'desc');
-
-        return $qb;
-    }
-
-    /**
-     * @return QueryBuilder
-     */
-    public function queryAll()
-    {
-        $qb = $this->createQueryBuilder('cn')
-            ->orderBy('cn.createdAt', 'desc');
-
-        return $qb;
-    }
-
     /**
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
@@ -49,6 +31,18 @@ class NotificationRepository extends EntityRepository
         $paginator->setCurrentPage($page);
 
         return $paginator;
+    }
+
+    /**
+     * @return QueryBuilder
+     */
+    public function queryPublic()
+    {
+        $qb = $this->createQueryBuilder('cn')
+            ->where('cn.public = true')
+            ->orderBy('cn.createdAt', 'desc');
+
+        return $qb;
     }
 
     /**
@@ -68,6 +62,16 @@ class NotificationRepository extends EntityRepository
         return $paginator;
     }
 
+    /**
+     * @return QueryBuilder
+     */
+    public function queryAll()
+    {
+        $qb = $this->createQueryBuilder('cn')
+            ->orderBy('cn.createdAt', 'desc');
+
+        return $qb;
+    }
 
     /**
      * Gets the latest community news (only visible to the public) if any.

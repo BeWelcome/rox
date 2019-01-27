@@ -7,9 +7,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ReportCommentRequest
 {
     /**
-     * @Assert\NotBlank()
-     *
      * @var string
+     *
+     * @Assert\NotBlank()
      */
     public $feedback;
 }

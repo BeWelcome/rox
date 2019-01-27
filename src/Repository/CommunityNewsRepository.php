@@ -10,29 +10,6 @@ use Pagerfanta\Pagerfanta;
 class CommunityNewsRepository extends EntityRepository
 {
     /**
-     * @return QueryBuilder
-     */
-    public function queryPublic()
-    {
-        $qb = $this->createQueryBuilder('cn')
-            ->where('cn.public = true')
-            ->orderBy('cn.createdAt', 'desc');
-
-        return $qb;
-    }
-
-    /**
-     * @return QueryBuilder
-     */
-    public function queryAll()
-    {
-        $qb = $this->createQueryBuilder('cn')
-            ->orderBy('cn.createdAt', 'desc');
-
-        return $qb;
-    }
-
-    /**
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
      * @param int $page
@@ -50,6 +27,18 @@ class CommunityNewsRepository extends EntityRepository
     }
 
     /**
+     * @return QueryBuilder
+     */
+    public function queryPublic()
+    {
+        $qb = $this->createQueryBuilder('cn')
+            ->where('cn.public = true')
+            ->orderBy('cn.createdAt', 'desc');
+
+        return $qb;
+    }
+
+    /**
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
      * @param int $page
@@ -64,6 +53,17 @@ class CommunityNewsRepository extends EntityRepository
         $paginator->setCurrentPage($page);
 
         return $paginator;
+    }
+
+    /**
+     * @return QueryBuilder
+     */
+    public function queryAll()
+    {
+        $qb = $this->createQueryBuilder('cn')
+            ->orderBy('cn.createdAt', 'desc');
+
+        return $qb;
     }
 
     /**

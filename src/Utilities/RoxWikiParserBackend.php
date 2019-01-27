@@ -23,7 +23,7 @@ class RoxWikiParserBackend extends DefaultParserBackend
      * RoxWikiParserBackend constructor.
      *
      * @param EntityManagerInterface $entityManager
-     * @param WikiModel     $wikiModel
+     * @param WikiModel              $wikiModel
      */
     public function __construct(EntityManagerInterface $entityManager, WikiModel $wikiModel)
     {

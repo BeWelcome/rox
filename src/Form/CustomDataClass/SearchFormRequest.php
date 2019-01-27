@@ -65,30 +65,30 @@ class SearchFormRequest
      */
     public $sw_longitude;
 
-    /** @var bool */
+    /** @var boolean */
     public $accommodation_anytime = true;
 
-    /** @var bool */
+    /** @var boolean */
     public $accommodation_dependonrequest = true;
 
-    /** @var bool */
+    /** @var boolean */
     public $accommodation_neverask = false;
 
-    /** @var bool */
+    /** @var boolean */
     public $showmap = false;
 
     /**
-     * @var int
+     * @var integer
      *
      * @Assert\Choice({ 5, 10, 15, 20, 50, 100, 200}, groups={"text-search"})
      * @Assert\EqualTo(value=-1, groups={"map-search"})
      */
     public $distance = 20;
 
-    /** @var int */
+    /** @var integer */
     public $can_host = 1;
 
-    /** @var int */
+    /** @var integer */
     public $page = 1;
 
     /** @var PersistentCollection */
@@ -97,34 +97,34 @@ class SearchFormRequest
     /** @var PersistentCollection */
     public $languages;
 
-    /** @var int */
+    /** @var integer */
     public $min_age;
 
-    /** @var int */
+    /** @var integer */
     public $max_age;
 
     /** @var string */
     public $gender;
 
-    /** @var bool */
+    /** @var boolean */
     public $inactive;
 
-    /** @var bool */
+    /** @var boolean */
     public $offerdinner;
 
-    /** @var bool */
+    /** @var boolean */
     public $offertour;
 
-    /** @var bool */
+    /** @var boolean */
     public $accessible;
 
     /** @var string */
     public $keywords;
 
-    /** @var int */
+    /** @var integer */
     public $order = 6;
 
-    /** @var int */
+    /** @var integer */
     public $items = 20;
 
     /**
@@ -161,11 +161,6 @@ class SearchFormRequest
         // \todo Try to find one based on the entered information in the location field
 
         return false;
-    }
-
-    private static function _getElement($data, $index, $default)
-    {
-        return (isset($data[$index])) ? $data[$index] : $default;
     }
 
     public static function fromRequest(Request $request, ObjectManager $em)
@@ -221,5 +216,10 @@ class SearchFormRequest
         }
 
         return ['text-search'];
+    }
+
+    private static function _getElement($data, $index, $default)
+    {
+        return (isset($data[$index])) ? $data[$index] : $default;
     }
 }

@@ -5,7 +5,6 @@ namespace App\EventListener;
 use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\Preference;
-use Carbon\Carbon;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -28,7 +27,8 @@ class UserLocaleListener
 
     /**
      * UserLocaleListener constructor.
-     * @param Session $session
+     *
+     * @param Session                $session
      * @param EntityManagerInterface $em
      */
     public function __construct(Session $session, EntityManagerInterface $em)
@@ -37,6 +37,11 @@ class UserLocaleListener
         $this->em = $em;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     *
+     * @param InteractiveLoginEvent $event
+     */
     public function onInteractiveLogin(InteractiveLoginEvent $event)
     {
         /** @var Member $user */
@@ -46,13 +51,13 @@ class UserLocaleListener
         $preferenceRepository = $this->em->getRepository(Preference::class);
         /** @var Preference $preference */
         $preference = $preferenceRepository->findOneBy([
-            'codename' => Preference::LOCALE
+            'codename' => Preference::LOCALE,
         ]);
         $languageId = $user->getMemberPreferenceValue($preference);
 
         $languageRepository = $this->em->getRepository(Language::class);
         $language = $languageRepository->findOneBy([
-            'id' => $languageId
+            'id' => $languageId,
         ]);
         if ($language) {
             $locale = $language->getShortCode();

@@ -11,6 +11,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class LocaleListener implements EventSubscriberInterface
 {
+    /** @var string */
     private $defaultLocale;
 
     public function __construct($defaultLocale = 'en')
@@ -18,6 +19,21 @@ class LocaleListener implements EventSubscriberInterface
         $this->defaultLocale = $defaultLocale;
     }
 
+    public static function getSubscribedEvents()
+    {
+        return [
+            // must be registered before (i.e. with a higher priority than) the default Locale listener
+            KernelEvents::REQUEST => [
+                ['onKernelRequest', 20],
+            ],
+        ];
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     *
+     * @param GetResponseEvent $event
+     */
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
@@ -35,15 +51,5 @@ class LocaleListener implements EventSubscriberInterface
         }
         Carbon::setLocale($locale);
         \PVars::register('lang', $locale);
-    }
-
-    public static function getSubscribedEvents()
-    {
-        return [
-            // must be registered before (i.e. with a higher priority than) the default Locale listener
-            KernelEvents::REQUEST => [
-                ['onKernelRequest', 20]
-            ],
-        ];
     }
 }

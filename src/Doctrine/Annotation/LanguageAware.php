@@ -10,5 +10,6 @@ use Doctrine\Common\Annotations\Annotation;
  */
 final class LanguageAware
 {
+    /** @var string */
     public $language;
 }

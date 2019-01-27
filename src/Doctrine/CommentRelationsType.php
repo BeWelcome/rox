@@ -13,8 +13,10 @@ class CommentRelationsType extends SetType
     const TRAVEL_BUDDY = 'TravelledTogether';
     const IS_FRIEND = 'WeAreFriends';
 
+    /** @var string */
     protected $name = 'comment_relations';
 
+    /** @var array */
     protected $values = [
         self::WAS_GUEST,
         self::WAS_HOST,

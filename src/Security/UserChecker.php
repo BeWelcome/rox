@@ -11,6 +11,9 @@ class UserChecker implements UserCheckerInterface
 {
     /**
      * @param UserInterface $user
+     *
+     * @throws AccountBannedException
+     * @throws AccountMailNotConfirmedException
      */
     public function checkPreAuth(UserInterface $user)
     {
@@ -30,6 +33,9 @@ class UserChecker implements UserCheckerInterface
 
     /**
      * @param UserInterface $user
+     *
+     * @throws AccountExpiredException
+     * @throws AccountDeniedLoginException
      */
     public function checkPostAuth(UserInterface $user)
     {

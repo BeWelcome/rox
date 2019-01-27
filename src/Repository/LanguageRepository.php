@@ -2,9 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Language;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
 class LanguageRepository extends EntityRepository
 {

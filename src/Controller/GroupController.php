@@ -12,6 +12,7 @@ use App\Form\CustomDataClass\GroupRequest;
 use App\Form\GroupType;
 use App\Logger\Logger;
 use App\Repository\GroupRepository;
+use Doctrine\DBAL\Statement;
 use Intervention\Image\ImageManagerStatic as Image;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,10 +21,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class GroupController.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class GroupController extends AbstractController
 {
@@ -115,6 +119,7 @@ class GroupController extends AbstractController
 
             // Now add the current member as admin for this group
             $connection = $this->getDoctrine()->getConnection();
+            /** @var Statement $stmt */
             $stmt = $connection->prepare('
                 REPLACE INTO 
                     `privilegescopes`
@@ -183,6 +188,8 @@ class GroupController extends AbstractController
      * Allows to set a status for group creation requests.
      *
      * @Route("/admin/groups/approval", name="admin_groups_approval")
+     *
+     * @throws AccessDeniedException
      *
      * @return Response
      */

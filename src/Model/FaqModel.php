@@ -8,7 +8,6 @@ use App\Repository\FaqRepository;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\EntityRepository;
-use Pagerfanta\Pagerfanta;
 
 class FaqModel extends BaseModel
 {

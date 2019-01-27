@@ -10,9 +10,11 @@ use App\Form\AdminCommentFormType;
 use App\Model\Admin\CommentModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Class CommentController.
@@ -132,6 +134,8 @@ class CommentController extends AbstractController
      * @param Request $request
      * @param Comment $comment
      *
+     * @throws AccessDeniedException
+     *
      * @return Response
      * @ParamConverter("comment", class="App\Entity\Comment", options={"mapping": {"commentId": "id"}})
      */
@@ -198,7 +202,9 @@ class CommentController extends AbstractController
      * @param Request $request
      * @param Comment $comment
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws AccessDeniedException
+     *
+     * @return RedirectResponse
      *
      * @ParamConverter("comment", class="App\Entity\Comment", options={"mapping": {"commentId": "id"}})
      */
@@ -224,7 +230,9 @@ class CommentController extends AbstractController
      * @param Request $request
      * @param Comment $comment
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws AccessDeniedException
+     *
+     * @return RedirectResponse
      *
      * @ParamConverter("comment", class="App\Entity\Comment", options={"mapping": {"commentId": "id"}})
      */
@@ -250,7 +258,9 @@ class CommentController extends AbstractController
      * @param Request $request
      * @param Comment $comment
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws AccessDeniedException
+     *
+     * @return RedirectResponse
      *
      * @ParamConverter("comment", class="App\Entity\Comment", options={"mapping": {"commentId": "id"}})
      */
@@ -276,7 +286,9 @@ class CommentController extends AbstractController
      * @param Request $request
      * @param Comment $comment
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws AccessDeniedException
+     *
+     * @return RedirectResponse
      *
      * @ParamConverter("comment", class="App\Entity\Comment", options={"mapping": {"commentId": "id"}})
      */

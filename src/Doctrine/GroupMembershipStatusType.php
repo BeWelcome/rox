@@ -9,7 +9,10 @@ class GroupMembershipStatusType extends EnumType
     const KICKED_FROM_GROUP = 'Kicked';
     const INVITED_INTO_GROUP = 'Invited';
 
+    /** @var string */
     protected $name = 'group_membership_status';
+
+    /** @var array */
     protected $values = [
         self::CURRENT_MEMBER,
         self::APPLIED_FOR_MEMBERSHIP,

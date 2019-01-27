@@ -21,6 +21,8 @@ class SearchController extends AbstractController
      * @param Request $request
      *
      * @return Response
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function searchAction(Request $request)
     {
@@ -61,7 +63,7 @@ class SearchController extends AbstractController
 
         if ($tinyIsValid || $homeIsValid || $searchIsValid) {
             $data = null;
-            /** @var SearchFormRequest $data */
+            /* @var SearchFormRequest $data */
             if ($tinyIsValid) {
                 $data = $tiny->getData();
             }

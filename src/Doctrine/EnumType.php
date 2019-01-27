@@ -13,7 +13,10 @@ use Doctrine\DBAL\Types\Type;
  */
 abstract class EnumType extends Type
 {
+    /** @var string */
     protected $name;
+
+    /** @var array */
     protected $values = [];
 
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)

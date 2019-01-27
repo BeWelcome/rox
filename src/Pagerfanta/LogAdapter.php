@@ -78,7 +78,8 @@ class LogAdapter implements AdapterInterface
         if ($count) {
             $sql .= 'count(*) as count';
         } else {
-            $sql .= "`l`.`type` as `type`, `l`.`Str` as logMessage, IFNULL(`m`.`Username`, '') as `Username`, `l`.`created` as created";
+            $sql .= "`l`.`type` as `type`, `l`.`Str` as logMessage, IFNULL(`m`.`Username`, '') as `Username`,".
+                '`l`.`created` as created';
         }
         $sql .= ' FROM logs l LEFT JOIN members m ON l.IdMember = m.id';
         if (!empty($this->types) || $this->member) {

@@ -13,9 +13,10 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class SearchAdapter implements AdapterInterface
 {
+    /** @var array|string */
     private $modelData;
 
-    /* @var SearchModel */
+    /** @var SearchModel */
     private $model;
 
     /**
@@ -27,6 +28,9 @@ class SearchAdapter implements AdapterInterface
      * @param string            $dbName
      * @param string            $dbUser
      * @param string            $dbPassword
+     *
+     * @throws AccessDeniedException
+     *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function __construct($data, $session, $dbHost, $dbName, $dbUser, $dbPassword)

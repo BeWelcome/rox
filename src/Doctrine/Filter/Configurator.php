@@ -9,8 +9,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class Configurator
 {
+    /** @var ObjectManager */
     protected $em;
+
+    /** @var RequestStack */
     protected $requestStack;
+
+    /** @var Reader */
     protected $reader;
 
     public function __construct(ObjectManager $em, RequestStack $requestStack, Reader $reader)

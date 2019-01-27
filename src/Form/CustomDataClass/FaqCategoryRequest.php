@@ -10,17 +10,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 class FaqCategoryRequest
 {
     /**
+     * @var string
      * @Assert\NotBlank()
      * @Assert\Length(min="10", max="100")
-     *
-     * @var string
      */
     public $wordCode;
 
     /**
-     * @Assert\NotBlank()
-     *
      * @var string
+     * @Assert\NotBlank()
      */
     public $description;
 

@@ -11,8 +11,10 @@ class LanguageLevelType extends EnumType
     const BEGINNER = 'Beginner';
     const HELLO_ONLY = 'HelloOnly';
 
+    /** @var string */
     protected $name = 'language_level';
 
+    /** @var array */
     protected $values = [
         self::MOTHER_TONGUE,
         self::EXPERT,

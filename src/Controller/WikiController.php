@@ -20,6 +20,7 @@ class WikiController extends AbstractController
      * @Route("/wiki", name="wiki_front_page")
      *
      * @param WikiModel $wikiModel
+     *
      * @return Response
      */
     public function showWikiFrontPageAction(WikiModel $wikiModel)
@@ -64,7 +65,7 @@ class WikiController extends AbstractController
     /**
      * @Route("/wiki/{pageTitle}/edit", name="wiki_page_edit")
      *
-     * @param Request $request
+     * @param Request   $request
      * @param WikiModel $wikiModel
      * @param $pageTitle
      *

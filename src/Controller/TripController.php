@@ -20,9 +20,9 @@ class TripController extends AbstractController
      * @param Request $request
      * @param int     $items
      *
-     * @return Response
+     * @throws
      *
-     * @internal param int $page
+     * @return Response
      */
     public function listAction(Request $request, $items = 10)
     {
@@ -65,6 +65,8 @@ class TripController extends AbstractController
      *
      * @param Request $request
      *
+     * @throws
+     *
      * @return Response
      */
     public function createAction(Request $request)
@@ -101,6 +103,8 @@ class TripController extends AbstractController
      *
      * @param Request $request
      * @param Trip    $trip    The trip to update
+     *
+     * @throws AccessDeniedException
      *
      * @return Response
      */

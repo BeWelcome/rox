@@ -17,8 +17,17 @@ class LegacyLoader extends Loader
     /** @var RouteCollection */
     private $routes;
 
+    /** @var boolean */
     private $loaded = false;
 
+    /**
+     * @param mixed $resource
+     * @param null  $type
+     *
+     * @throws \RuntimeException
+     *
+     * @return RouteCollection
+     */
     public function load($resource, $type = null)
     {
         if (true === $this->loaded) {
@@ -69,9 +78,18 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('subscriptions_enable', '/forums/subscriptions/enable');
         $this->addRouteDirectly('subscriptions', '/forums/subscriptions');
         $this->addRouteDirectly('thread_subscribe', '/forums/subscriptions/subscribe/thread/{threadId}');
-        $this->addRouteDirectly('thread_unsubscribe', '/forums/subscriptions/unsubscribe/thread/{threadId}/{subscriptionId}');
-        $this->addRouteDirectly('thread_notifications_disable', '/forums/subscriptions/disable/thread/{threadId}/{subscriptionId}');
-        $this->addRouteDirectly('thread_notifications_enable', '/forums/subscriptions/enable/thread/{threadId}/{subscriptionId}');
+        $this->addRouteDirectly(
+            'thread_unsubscribe',
+            '/forums/subscriptions/unsubscribe/thread/{threadId}/{subscriptionId}'
+        );
+        $this->addRouteDirectly(
+            'thread_notifications_disable',
+            '/forums/subscriptions/disable/thread/{threadId}/{subscriptionId}'
+        );
+        $this->addRouteDirectly(
+            'thread_notifications_enable',
+            '/forums/subscriptions/enable/thread/{threadId}/{subscriptionId}'
+        );
         $this->addRouteDirectly('group_notifications_enable', '/forums/subscriptions/enable/group/{groupId}');
         $this->addRouteDirectly('group_notifications_enable', '/forums/subscriptions/disable/group/{groupId}');
         $this->addRouteDirectly('group_subscribe', '/forums/subscriptions/subscribe/group/{groupId}');
@@ -136,7 +154,10 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('myprofile_in_langauge', '/members/{username}/{language}');
         $this->addRouteDirectly('imprint', '/impressum');
         $this->addRouteDirectly('add_relation_finish', '/members/{username}/relations/add/finish');
-        $this->addRouteDirectly('delete_relation_editprofile', '/members/{username}/relations/delete/{relationId}/editprofile');
+        $this->addRouteDirectly(
+            'delete_relation_editprofile',
+            '/members/{username}/relations/delete/{relationId}/editprofile'
+        );
         $this->addRouteDirectly('messages_with', '/messages/with/{username}');
         $this->addRouteDirectly('check_notification', '/notify/{notificationId}/check');
 
@@ -152,7 +173,7 @@ class LegacyLoader extends Loader
         return 'legacy' === $type;
     }
 
-    private function addRoute($name, $path, $controller = '', $action = '')
+    private function addRouteDirectly($name, $path)
     {
         $path = preg_replace('^:(.*?):^', '{\1}', $path);
         $this->routes->add($name, new Route($path, [
@@ -160,7 +181,7 @@ class LegacyLoader extends Loader
         ], [], [], '', [], ['get', 'post']));
     }
 
-    private function addRouteDirectly($name, $path)
+    private function addRoute($name, $path, $controller = '', $action = '')
     {
         $path = preg_replace('^:(.*?):^', '{\1}', $path);
         $this->routes->add($name, new Route($path, [

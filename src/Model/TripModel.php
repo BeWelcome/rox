@@ -32,7 +32,11 @@ class TripModel extends BaseModel
     public function findInMemberAreaNextThreeMonths(Member $member, $count = 2, $distance = 25)
     {
         $location = new LocationModel($this->em);
-        $locationIds = $location->getLocationIdsAroundLocation($member->getLatitude(), $member->getLongitude(), $distance);
+        $locationIds = $location->getLocationIdsAroundLocation(
+            $member->getLatitude(),
+            $member->getLongitude(),
+            $distance
+        );
         $geonameIds = array_map(function ($item) {
             return $item->getGeonameId();
         }, $locationIds);

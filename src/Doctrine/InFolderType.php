@@ -10,7 +10,10 @@ class InFolderType extends EnumType
     const DRAFT = 'Draft';
     const REQUESTS = 'requests';
 
+    /** @var string */
     protected $name = 'in_folder';
+
+    /** @var array */
     protected $values = [
         self::NORMAL,
         self::JUNK,

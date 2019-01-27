@@ -18,124 +18,6 @@ class MessageRepository extends EntityRepository
 {
     /**
      * @param Member $member
-     * @param $folder
-     * @param $sort
-     * @param $sortDirection
-     *
-     * @return QueryBuilder
-     */
-    public function queryLatestMessages(Member $member, $folder, $sort, $sortDirection)
-    {
-        if ('date' === $sort) {
-            $sort = 'created';
-        }
-        $qb = $this->createQueryBuilder('m');
-        if ('sent' === $folder) {
-            $qb->where('m.sender = :member');
-        } else {
-            $qb->where('m.receiver = :member');
-        }
-        $qb
-            ->setParameter('member', $member)
-            ->andWhere('m.request IS NULL');
-        switch ($folder) {
-            case 'inbox':
-                $qb->andWhere('NOT(m.deleteRequest LIKE :deleterequest)')
-                    ->setParameter('deleterequest', DeleteRequestType::RECEIVER_DELETED)
-                    ->andWhere('m.infolder = :folder')
-                    ->setParameter('folder', 'normal');
-                break;
-            case 'spam':
-                $qb->andWhere('NOT(m.deleteRequest LIKE :deleterequest)')
-                    ->setParameter('deleterequest', DeleteRequestType::RECEIVER_DELETED)
-                    ->andWhere('m.infolder = :folder')
-                    ->setParameter('folder', $folder);
-                break;
-            case 'deleted':
-                $qb->andWhere('m.deleteRequest LIKE :deleterequest ')
-                    ->setParameter('deleterequest', DeleteRequestType::RECEIVER_DELETED);
-                break;
-        }
-        $qb->orderBy('m.'.$sort, $sortDirection);
-
-        return $qb;
-    }
-
-    /**
-     * @return QueryBuilder
-     */
-    public function queryReportedMessages()
-    {
-        $qb = $this->createQueryBuilder('m');
-        $qb
-            ->where('m.status = :status')
-            ->setParameter('status', MessageStatusType::CHECK)
-            ->andWhere('m.spaminfo LIKE :spaminfo')
-            ->setParameter('spaminfo', SpamInfoType::MEMBER_SAYS_SPAM);
-
-        return $qb;
-    }
-
-    /**
-     * @param Member $member
-     * @param $folder
-     * @param $sort
-     * @param $sortDirection
-     *
-     * @return QueryBuilder
-     */
-    public function queryLatestRequests(Member $member, $folder, $sort, $sortDirection)
-    {
-        if ('date' === $sort) {
-            $sort = 'created';
-        }
-        $qb = $this->createQueryBuilder('m')
-            ->where('NOT(m.deleteRequest LIKE :deleterequest)')
-            ->setParameter('deleterequest', DeleteRequestType::RECEIVER_DELETED)
-        ;
-        if ('sent' === $folder) {
-            $qb->andWhere('m.sender = :member');
-        } else {
-            $qb->andWhere('m.receiver = :member');
-        }
-        $qb
-            ->setParameter('member', $member)
-            ->join('m.request', 'r')
-            ->orderBy('m.'.$sort, $sortDirection);
-
-        return $qb;
-    }
-
-    /**
-     * @param Member $member
-     * @param $folder
-     * @param $sort
-     * @param $sortDirection
-     *
-     * @return QueryBuilder
-     */
-    public function queryLatestRequestsAndMessages(Member $member, $folder, $sort, $sortDirection)
-    {
-        if ('date' === $sort) {
-            $sort = 'created';
-        }
-        $qb = $this->createQueryBuilder('m')
-            ->where('NOT(m.deleteRequest LIKE :deleterequest)')
-            ->setParameter('deleterequest', DeleteRequestType::RECEIVER_DELETED);
-        if ('sent' === $folder) {
-            $qb->andWhere('m.sender = :member');
-        } else {
-            $qb->andWhere('m.receiver = :member');
-        }
-        $qb
-            ->setParameter('member', $member)
-            ->orderBy('m.'.$sort, $sortDirection);
-
-        return $qb;
-    }
-
-    /**
-     * @param Member $member
      *
      * @return int
      */
@@ -232,6 +114,21 @@ class MessageRepository extends EntityRepository
     }
 
     /**
+     * @return QueryBuilder
+     */
+    public function queryReportedMessages()
+    {
+        $qb = $this->createQueryBuilder('m');
+        $qb
+            ->where('m.status = :status')
+            ->setParameter('status', MessageStatusType::CHECK)
+            ->andWhere('m.spaminfo LIKE :spaminfo')
+            ->setParameter('spaminfo', SpamInfoType::MEMBER_SAYS_SPAM);
+
+        return $qb;
+    }
+
+    /**
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
      * @param Member $member
@@ -255,6 +152,51 @@ class MessageRepository extends EntityRepository
     }
 
     /**
+     * @param Member $member
+     * @param $folder
+     * @param $sort
+     * @param $sortDirection
+     *
+     * @return QueryBuilder
+     */
+    public function queryLatestMessages(Member $member, $folder, $sort, $sortDirection)
+    {
+        if ('date' === $sort) {
+            $sort = 'created';
+        }
+        $qb = $this->createQueryBuilder('m');
+        if ('sent' === $folder) {
+            $qb->where('m.sender = :member');
+        } else {
+            $qb->where('m.receiver = :member');
+        }
+        $qb
+            ->setParameter('member', $member)
+            ->andWhere('m.request IS NULL');
+        switch ($folder) {
+            case 'inbox':
+                $qb->andWhere('NOT(m.deleteRequest LIKE :deleterequest)')
+                    ->setParameter('deleterequest', DeleteRequestType::RECEIVER_DELETED)
+                    ->andWhere('m.infolder = :folder')
+                    ->setParameter('folder', 'normal');
+                break;
+            case 'spam':
+                $qb->andWhere('NOT(m.deleteRequest LIKE :deleterequest)')
+                    ->setParameter('deleterequest', DeleteRequestType::RECEIVER_DELETED)
+                    ->andWhere('m.infolder = :folder')
+                    ->setParameter('folder', $folder);
+                break;
+            case 'deleted':
+                $qb->andWhere('m.deleteRequest LIKE :deleterequest ')
+                    ->setParameter('deleterequest', DeleteRequestType::RECEIVER_DELETED);
+                break;
+        }
+        $qb->orderBy('m.'.$sort, $sortDirection);
+
+        return $qb;
+    }
+
+    /**
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
      * @param Member $member
@@ -268,7 +210,12 @@ class MessageRepository extends EntityRepository
      */
     public function findLatestRequests(Member $member, $filter, $sort, $sortDirection, $page = 1, $items = 10)
     {
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatestRequests($member, $filter, $sort, $sortDirection), false));
+        $paginator = new Pagerfanta(
+            new DoctrineORMAdapter(
+                $this->queryLatestRequests($member, $filter, $sort, $sortDirection),
+                false
+            )
+        );
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
 
@@ -276,10 +223,38 @@ class MessageRepository extends EntityRepository
     }
 
     /**
+     * @param Member $member
+     * @param $folder
+     * @param $sort
+     * @param $sortDirection
+     *
+     * @return QueryBuilder
+     */
+    public function queryLatestRequests(Member $member, $folder, $sort, $sortDirection)
+    {
+        if ('date' === $sort) {
+            $sort = 'created';
+        }
+        $qb = $this->createQueryBuilder('m')
+            ->where('NOT(m.deleteRequest LIKE :deleterequest)')
+            ->setParameter('deleterequest', DeleteRequestType::RECEIVER_DELETED);
+        if ('sent' === $folder) {
+            $qb->andWhere('m.sender = :member');
+        } else {
+            $qb->andWhere('m.receiver = :member');
+        }
+        $qb
+            ->setParameter('member', $member)
+            ->join('m.request', 'r')
+            ->orderBy('m.'.$sort, $sortDirection);
+
+        return $qb;
+    }
+
+    /**
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
      * @param Member $member
-     * @param $url
      * @param $filter
      * @param $sort
      * @param $sortDirection
@@ -288,13 +263,52 @@ class MessageRepository extends EntityRepository
      *
      * @return Pagerfanta
      */
-    public function findLatestRequestsAndMessages(Member $member, $filter, $sort, $sortDirection, $page = 1, $items = 10)
-    {
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatestRequestsAndMessages($member, $filter, $sort, $sortDirection), false));
+    public function findLatestRequestsAndMessages(
+        Member $member,
+        $filter,
+        $sort,
+        $sortDirection,
+        $page = 1,
+        $items = 10
+    ) {
+        $paginator = new Pagerfanta(
+            new DoctrineORMAdapter(
+                $this->queryLatestRequestsAndMessages($member, $filter, $sort, $sortDirection),
+                false
+            )
+        );
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
 
         return $paginator;
+    }
+
+    /**
+     * @param Member $member
+     * @param $folder
+     * @param $sort
+     * @param $sortDirection
+     *
+     * @return QueryBuilder
+     */
+    public function queryLatestRequestsAndMessages(Member $member, $folder, $sort, $sortDirection)
+    {
+        if ('date' === $sort) {
+            $sort = 'created';
+        }
+        $qb = $this->createQueryBuilder('m')
+            ->where('NOT(m.deleteRequest LIKE :deleterequest)')
+            ->setParameter('deleterequest', DeleteRequestType::RECEIVER_DELETED);
+        if ('sent' === $folder) {
+            $qb->andWhere('m.sender = :member');
+        } else {
+            $qb->andWhere('m.receiver = :member');
+        }
+        $qb
+            ->setParameter('member', $member)
+            ->orderBy('m.'.$sort, $sortDirection);
+
+        return $qb;
     }
 
     public function getThread(Message $message)
@@ -303,7 +317,7 @@ class MessageRepository extends EntityRepository
             ->setHint('partial', Query::HINT_FORCE_PARTIAL_LOAD);
         $result = $qb->execute([
             'message_id' => $message->getId(),
-            ]);
+        ]);
 
         return $result;
     }

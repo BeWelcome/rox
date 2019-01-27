@@ -6,13 +6,13 @@ use Pagerfanta\View\Template\TwitterBootstrap3Template;
 
 /**
  * TwitterBootstrap4Template.
-
  *
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TwitterBootstrap4Template extends TwitterBootstrap3Template
 {
+    /** @var array Options for the paginator */
     protected static $defaultOptions = [
         'prev_message' => '&laquo;',
         'next_message' => '&raquo;',

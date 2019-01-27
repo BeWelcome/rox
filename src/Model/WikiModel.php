@@ -10,19 +10,16 @@ use Mike42\Wikitext\WikitextParser;
 
 class WikiModel
 {
+    /** @var EntityManagerInterface */
     private $entityManager;
 
+    /** @var RoxWikiParserBackend */
     private $roxWikiParserBackend;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
         $this->roxWikiParserBackend = new RoxWikiParserBackend($entityManager, $this);
-    }
-
-    public function getPagename($pageTitle)
-    {
-        return str_replace(' ', '_', trim($pageTitle));
     }
 
     public function getPage($pageTitle)
@@ -35,6 +32,11 @@ class WikiModel
         $wikiPage = $wikiRepository->getPageByName($pageName);
 
         return $wikiPage;
+    }
+
+    public function getPagename($pageTitle)
+    {
+        return str_replace(' ', '_', trim($pageTitle));
     }
 
     /**

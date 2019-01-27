@@ -18,10 +18,11 @@ use App\Model\MessageModel;
 use App\Model\RequestModel;
 use Doctrine\Common\Persistence\ObjectManager;
 use Html2Text\Html2Text;
-use Rox\Core\Exception\InvalidArgumentException;
+use InvalidArgumentException;
 use Swift_Mailer;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -62,7 +63,7 @@ class RequestAndMessageController extends AbstractController
      * @param Request $request
      * @param Message $message
      *
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws AccessDeniedException
      *
      * @return Response
      */
@@ -109,7 +110,7 @@ class RequestAndMessageController extends AbstractController
      *
      * @param Message $message
      *
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws AccessDeniedException
      *
      * @return Response
      */
@@ -159,8 +160,6 @@ class RequestAndMessageController extends AbstractController
      *
      * @param Request $request
      * @param Member  $receiver
-     *
-     * @throws \Exception
      *
      * @return Response
      */
@@ -311,8 +310,7 @@ class RequestAndMessageController extends AbstractController
      * @param Request $request
      * @param string  $folder
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws InvalidArgumentException
      *
      * @return Response
      */
@@ -324,7 +322,7 @@ class RequestAndMessageController extends AbstractController
         $sortDir = $request->query->get('dir', 'desc');
 
         if (!\in_array($sortDir, ['asc', 'desc'], true)) {
-            throw new \InvalidArgumentException();
+            throw new InvalidArgumentException();
         }
 
         $member = $this->getUser();
@@ -341,8 +339,7 @@ class RequestAndMessageController extends AbstractController
      * @param Request $request
      * @param string  $folder
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \InvalidArgumentException
      *
      * @return Response
      */
@@ -371,8 +368,7 @@ class RequestAndMessageController extends AbstractController
      * @param Request $request
      * @param string  $folder
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \InvalidArgumentException
      *
      * @return Response
      */
@@ -399,9 +395,6 @@ class RequestAndMessageController extends AbstractController
      * @param string  $folder
      * @param $messages
      * @param $type
-     *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      *
      * @return Response
      */
@@ -531,8 +524,7 @@ class RequestAndMessageController extends AbstractController
      * @param Request       $request
      * @param array Message $thread
      *
-     * @throws \Doctrine\DBAL\DBALException
-     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     * @throws \InvalidArgumentException
      *
      * @return Response
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -544,7 +536,7 @@ class RequestAndMessageController extends AbstractController
         if (null === $hostingRequest->getRequest()) {
             // This should never happen as it is handled in replyToMessageOrHostingRequest
             //so we throw an exception in this case
-            throw new InvalidArgumentException('wrong call to hosting reply guest');
+            throw new \InvalidArgumentException('wrong call to hosting reply guest');
         }
 
         $user = $this->getUser();
@@ -555,12 +547,12 @@ class RequestAndMessageController extends AbstractController
 
         if ($user->getId() === $host->getId()) {
             // This should never happen so we throw an exception in this case
-            throw new InvalidArgumentException('wrong call to hosting reply guest');
+            throw new \InvalidArgumentException('wrong call to hosting reply guest');
         }
 
         if ($user->getId() !== $guest->getId()) {
             // This should never happen so we throw an exception in this case
-            throw new InvalidArgumentException('wrong call to hosting reply guest');
+            throw new \InvalidArgumentException('wrong call to hosting reply guest');
         }
 
         if ($this->checkRequestExpired($hostingRequest->getRequest())) {
@@ -624,10 +616,10 @@ class RequestAndMessageController extends AbstractController
      * @param Request       $request
      * @param array Message $thread
      *
-     * @throws \Doctrine\DBAL\DBALException
-     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * Ignore as too strict in this case (function is easily readable)
+     *
+     * @throws InvalidArgumentException
      *
      * @return Response
      */
@@ -637,7 +629,9 @@ class RequestAndMessageController extends AbstractController
 
         $user = $this->getUser();
         $first = $thread[\count($thread) - 1];
+        /** @var Member $guest */
         $guest = $first->getSender();
+        /** @var Member $host */
         $host = $first->getReceiver();
 
         if ($user->getId() === $guest->getId()) {
@@ -666,6 +660,7 @@ class RequestAndMessageController extends AbstractController
         $newRequest->setRequest($hostingRequest->getRequest());
         $newRequest->setSubject($hostingRequest->getSubject());
 
+        /** @var Form $requestForm */
         $requestForm = $this->createForm(HostingRequestHost::class, $newRequest);
         $requestForm->handleRequest($request);
 

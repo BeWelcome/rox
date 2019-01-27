@@ -9,23 +9,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 class EditTranslationRequest
 {
     /**
-     * @Assert\NotBlank()
-     *
      * @var string
+     *
+     * @Assert\NotBlank()
      */
     public $wordCode;
 
     /**
-     * @Assert\NotBlank()
-     *
      * @var string
+     * @Assert\NotBlank()
      */
     public $locale;
 
     /**
-     * @Assert\NotBlank()
-     *
      * @var string
+     * @Assert\NotBlank()
      */
     public $englishText;
 
@@ -35,9 +33,8 @@ class EditTranslationRequest
     public $description;
 
     /**
-     * @Assert\NotBlank()
-     *
      * @var string
+     * @Assert\NotBlank()
      */
     public $translatedText;
 

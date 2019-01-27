@@ -10,7 +10,10 @@ class SpamInfoType extends SetType
     const SPAM_BLOCKED_WORD = 'SpamBlkWord';
     const SPAM_MANAGER = 'ProcessedBySpamManager';
 
+    /** @var string */
     protected $name = 'spam_info';
+
+    /** @var array */
     protected $values = [
         self::NO_SPAM,
         self::SPAM_BLOCKED_WORD,

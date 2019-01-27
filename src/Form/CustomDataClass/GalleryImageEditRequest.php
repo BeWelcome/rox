@@ -8,16 +8,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 class GalleryImageEditRequest
 {
     /**
-     * @Assert\NotBlank()
-     *
      * @var string
+     * @Assert\NotBlank()
      */
     public $title;
 
     /**
-     * @Assert\NotBlank()
-     *
      * @var string
+     * @Assert\NotBlank()
      */
     public $description;
 

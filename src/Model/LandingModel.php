@@ -4,7 +4,6 @@ namespace App\Model;
 
 use App\Entity\Activity;
 use App\Entity\Member;
-use App\Entity\Message;
 use App\Repository\ActivityRepository;
 use Exception;
 
@@ -22,7 +21,6 @@ class LandingModel extends BaseModel
      *   'read': true
      *
      * @param Member $member
-     * @param $all
      * @param $unread
      * @param int|bool $limit
      *
@@ -116,8 +114,7 @@ class LandingModel extends BaseModel
             ->select('ft')
             ->from('App:ForumThread', 'ft')
             ->where("ft.threadDeleted = 'NotDeleted'")
-            ->orderBy('ft.createdAt', 'desc')
-        ;
+            ->orderBy('ft.createdAt', 'desc');
 
         $groupIds = [];
         if ($groups) {
@@ -131,8 +128,7 @@ class LandingModel extends BaseModel
         }
         $queryBuilder
             ->andWhere('ft.group IN (:groups)')
-            ->setParameter('groups', $groupIds)
-        ;
+            ->setParameter('groups', $groupIds);
 
         if ($following) {
         }
@@ -153,8 +149,9 @@ class LandingModel extends BaseModel
      *
      * @param Member $member
      *
-     * @return array
      * @throws Exception
+     *
+     * @return array
      */
     public function getActivities(Member $member)
     {
@@ -167,15 +164,6 @@ class LandingModel extends BaseModel
 
     public function getMemberDetails()
     {
-        /*        $loggedInMember = $this->getLoggedInMember();
-        $location = Capsule::table('geonames')->where('geonameId', $loggedInMember->IdCity)->first(['name']);
-        return ['member' =>
-            [
-                'location' => $location->name,
-                'hosting' => $loggedInMember->Accomodation
-            ]
-        ];
-*/
     }
 
     public function getDonationCampaignDetails()
@@ -184,32 +172,18 @@ class LandingModel extends BaseModel
 
     /**
      * @param Member $member
-     *
-     * @return array|bool
      */
     public function getTravellersInAreaOfMember(Member $member)
     {
         $member;
-        /*        $travellers = false;
-                $trip = new Trip();
-                $trips = $trip->findInMemberAreaNextThreeMonths( $member );
-                if($trips) {
-                    foreach($trips as $t) {
-                        $traveller = new \stdClass;
-                        $traveller->Username = $t->createdBy->Username;
-                        $traveller->arrives = $t->subtrips[0]->arrival;
-                        $traveller->leaves = $t->subtrips[0]->departure ? $t->subtrips[0]->departure : $t->subtrips[0]->arrival;
-                        $traveller->livesIn = $t->createdBy->city;
-                        $travellers[] = $traveller;
-                    }
-                }
-                return $travellers;
-        */
     }
 
     /**
      * @param Member $member
      * @param $accommodation
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      *
      * @return Member
      */

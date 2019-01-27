@@ -3,12 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Member;
+use Doctrine\DBAL\Statement;
 use EnvironmentExplorer;
 use PDO;
 use Rox\Framework\SessionSingleton;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class LegacyController extends AbstractController
@@ -17,7 +20,10 @@ class LegacyController extends AbstractController
      * @param Request            $request
      * @param ContainerInterface $container
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws AccessDeniedException
+     *
+     * @return Response
+     *
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
@@ -25,6 +31,7 @@ class LegacyController extends AbstractController
     {
         // Kick-start the Symfony session. This replaces session_start() in the
         // old code, which is now turned off.
+        /** @var Session $session */
         $session = $container->get('session');
         $session->start();
 
@@ -55,6 +62,7 @@ class LegacyController extends AbstractController
                     $session->set('IdMember', $user->getId());
                     $session->set('MemberStatus', $user->getStatus());
                     $connection = $this->getDoctrine()->getConnection();
+                    /** @var Statement $stmt */
                     $stmt = $connection->prepare('
                         SELECT 
                             id

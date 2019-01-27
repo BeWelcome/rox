@@ -7,7 +7,10 @@ class DeleteRequestType extends SetType
     const SENDER_DELETED = 'senderdeleted';
     const RECEIVER_DELETED = 'receiverdeleted';
 
+    /** @var string */
     protected $name = 'delete_request';
+
+    /** @var array */
     protected $values = [
         self::SENDER_DELETED,
         self::RECEIVER_DELETED,

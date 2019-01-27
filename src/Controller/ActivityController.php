@@ -14,6 +14,8 @@ class ActivityController extends AbstractController
     /**
      * @Route("/activity", name="activity")
      *
+     * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function listAction(Request $request)

@@ -16,23 +16,20 @@ class FaqRequest
     public $faqCategory;
 
     /**
-     * @Assert\NotBlank()
-     *
      * @var string
+     * @Assert\NotBlank()
      */
     public $wordCode;
 
     /**
-     * @Assert\NotBlank()
-     *
      * @var string
+     * @Assert\NotBlank()
      */
     public $question;
 
     /**
-     * @Assert\NotBlank()
-     *
      * @var string
+     * @Assert\NotBlank()
      */
     public $answer;
 

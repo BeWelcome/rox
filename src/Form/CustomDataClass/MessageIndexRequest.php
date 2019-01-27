@@ -4,6 +4,7 @@ namespace App\Form\CustomDataClass;
 
 class MessageIndexRequest
 {
+    /** @var array */
     private $messages;
 
     public function setMessages($messages)

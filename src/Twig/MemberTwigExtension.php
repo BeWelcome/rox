@@ -8,10 +8,10 @@ use App\Entity\Group;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Notification;
+use App\Repository\ActivityRepository;
 use App\Repository\CommentRepository;
 use App\Repository\MessageRepository;
 use App\Repository\NotificationRepository;
-use App\Repository\ActivityRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -57,8 +57,12 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
      * @param RouterInterface        $router
      * @param Security               $security
      */
-    public function __construct(SessionInterface $session, EntityManagerInterface $em, RouterInterface $router, Security $security)
-    {
+    public function __construct(
+        SessionInterface $session,
+        EntityManagerInterface $em,
+        RouterInterface $router,
+        Security $security
+    ) {
         $this->session = $session;
         $this->em = $em;
         $this->router = $router;
@@ -92,88 +96,6 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
     public function getName()
     {
         return self::class;
-    }
-
-    protected function getGroupsInApprovalQueueCount()
-    {
-        $groupsInApprovalCount = 0;
-        $user = $this->security->getUser();
-        if ($user &&
-            ($this->security->isGranted(Member::ROLE_ADMIN_GROUP))) {
-            $groupsRepository = $this->em->getRepository(Group::class);
-            $groups = $groupsRepository->findBy([
-                'approved' => [Group::NOT_APPROVED, Group::IN_DISCUSSION],
-            ]);
-            $groupsInApprovalCount = \count($groups);
-        }
-
-        return $groupsInApprovalCount;
-    }
-
-    protected function getReportedMessagesCount()
-    {
-        $reportedMessagesCount = 0;
-        $user = $this->security->getUser();
-        if ($user &&
-            ($this->security->isGranted(Member::ROLE_ADMIN_CHECKER) ||
-                $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM))) {
-            /** @var MessageRepository $messageRepository */
-            $messageRepository = $this->em->getRepository(Message::class);
-
-            $reportedMessagesCount = $messageRepository->getReportedMessagesCount();
-        }
-
-        return $reportedMessagesCount;
-    }
-
-    protected function getReportedCommentsCount()
-    {
-        $reportedCommentsCount = 0;
-        $user = $this->security->getUser();
-        if ($user &&
-            ($this->security->isGranted(Member::ROLE_ADMIN_CHECKER) ||
-                $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM))) {
-            /** @var CommentRepository $commentRepository */
-            $commentRepository = $this->em->getRepository(Comment::class);
-            $reportedCommentsCount = $commentRepository->getReportedCommentsCount();
-        }
-
-        return $reportedCommentsCount;
-    }
-
-    protected function getUnreadMessagesCount()
-    {
-        /** @var MessageRepository $messageRepository */
-        $messageRepository = $this->em->getRepository(Message::class);
-
-        return $messageRepository->getUnreadMessagesCount($this->member);
-    }
-
-    protected function getUnreadRequestsCount()
-    {
-        /** @var MessageRepository $messageRepository */
-        $messageRepository = $this->em->getRepository(Message::class);
-
-        return $messageRepository->getUnreadRequestsCount($this->member);
-    }
-
-    protected function getUncheckedNotificationsCount()
-    {
-        /** @var NotificationRepository $notificationRepository*/
-        $notificationRepository = $this->em->getRepository(Notification::class);
-
-        return $notificationRepository->getUncheckedNotificationsCount($this->member);
-    }
-
-    /**
-     * @return int
-     */
-    protected function getUpcomingAroundLocationCount()
-    {
-        /** @var ActivityRepository $activityRepository*/
-        $activityRepository = $this->em->getRepository(Activity::class);
-
-        return $activityRepository->getUpcomingAroundLocationCount($this->member->getCity());
     }
 
     /**
@@ -275,5 +197,87 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
         }
 
         return $teams;
+    }
+
+    protected function getGroupsInApprovalQueueCount()
+    {
+        $groupsInApprovalCount = 0;
+        $user = $this->security->getUser();
+        if ($user &&
+            ($this->security->isGranted(Member::ROLE_ADMIN_GROUP))) {
+            $groupsRepository = $this->em->getRepository(Group::class);
+            $groups = $groupsRepository->findBy([
+                'approved' => [Group::NOT_APPROVED, Group::IN_DISCUSSION],
+            ]);
+            $groupsInApprovalCount = \count($groups);
+        }
+
+        return $groupsInApprovalCount;
+    }
+
+    protected function getReportedCommentsCount()
+    {
+        $reportedCommentsCount = 0;
+        $user = $this->security->getUser();
+        if ($user &&
+            ($this->security->isGranted(Member::ROLE_ADMIN_CHECKER) ||
+                $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM))) {
+            /** @var CommentRepository $commentRepository */
+            $commentRepository = $this->em->getRepository(Comment::class);
+            $reportedCommentsCount = $commentRepository->getReportedCommentsCount();
+        }
+
+        return $reportedCommentsCount;
+    }
+
+    protected function getReportedMessagesCount()
+    {
+        $reportedMessagesCount = 0;
+        $user = $this->security->getUser();
+        if ($user &&
+            ($this->security->isGranted(Member::ROLE_ADMIN_CHECKER) ||
+                $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM))) {
+            /** @var MessageRepository $messageRepository */
+            $messageRepository = $this->em->getRepository(Message::class);
+
+            $reportedMessagesCount = $messageRepository->getReportedMessagesCount();
+        }
+
+        return $reportedMessagesCount;
+    }
+
+    protected function getUnreadMessagesCount()
+    {
+        /** @var MessageRepository $messageRepository */
+        $messageRepository = $this->em->getRepository(Message::class);
+
+        return $messageRepository->getUnreadMessagesCount($this->member);
+    }
+
+    protected function getUnreadRequestsCount()
+    {
+        /** @var MessageRepository $messageRepository */
+        $messageRepository = $this->em->getRepository(Message::class);
+
+        return $messageRepository->getUnreadRequestsCount($this->member);
+    }
+
+    protected function getUncheckedNotificationsCount()
+    {
+        /** @var NotificationRepository $notificationRepository */
+        $notificationRepository = $this->em->getRepository(Notification::class);
+
+        return $notificationRepository->getUncheckedNotificationsCount($this->member);
+    }
+
+    /**
+     * @return int
+     */
+    protected function getUpcomingAroundLocationCount()
+    {
+        /** @var ActivityRepository $activityRepository */
+        $activityRepository = $this->em->getRepository(Activity::class);
+
+        return $activityRepository->getUpcomingAroundLocationCount($this->member->getCity());
     }
 }

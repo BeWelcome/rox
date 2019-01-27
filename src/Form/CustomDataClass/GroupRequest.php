@@ -2,32 +2,32 @@
 
 namespace App\Form\CustomDataClass;
 
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class GroupRequest
 {
     /**
-     * @Assert\NotBlank()
-     *
      * @var string
+     * @Assert\NotBlank()
      */
     public $name;
 
     /**
-     * @Assert\NotBlank()
-     *
      * @var string
+     * @Assert\NotBlank()
      */
     public $description;
 
     /**
-     * @Assert\NotBlank()
-     *
      * @var string
+     * @Assert\NotBlank()
      */
     public $type = 'Public';
 
     /**
+     * @var File
+     *
      * @Assert\Image(
      *     minWidth = 200,
      *     maxWidth = 400,

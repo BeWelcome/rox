@@ -13,59 +13,6 @@ use Pagerfanta\Pagerfanta;
 class CommentRepository extends EntityRepository
 {
     /**
-     * @return QueryBuilder
-     */
-    public function queryAll()
-    {
-        $qb = $this->createQueryBuilder('c')
-            ->orderBy('c.created', 'desc');
-
-        return $qb;
-    }
-
-    /**
-     * @param Member $member
-     *
-     * @return QueryBuilder
-     */
-    public function queryAllForMember(Member $member)
-    {
-        $qb = $this->queryAll()
-            ->where('c.toMember = :member')
-            ->setParameter('member', $member);
-
-        return $qb;
-    }
-
-    /**
-     * @param Member $member
-     *
-     * @return QueryBuilder
-     */
-    public function queryAllFromMember(Member $member)
-    {
-        $qb = $this->queryAll()
-            ->where('c.fromMember = :member')
-            ->setParameter('member', $member);
-
-        return $qb;
-    }
-
-    /**
-     * @param $action
-     *
-     * @return QueryBuilder
-     */
-    public function queryAllByAdminAction($action)
-    {
-        $qb = $this->queryAll()
-            ->where('c.adminAction = :action')
-            ->setParameter('action', $action);
-
-        return $qb;
-    }
-
-    /**
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
      * @param int $page
@@ -80,6 +27,17 @@ class CommentRepository extends EntityRepository
         $paginator->setCurrentPage($page);
 
         return $paginator;
+    }
+
+    /**
+     * @return QueryBuilder
+     */
+    public function queryAll()
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->orderBy('c.created', 'desc');
+
+        return $qb;
     }
 
     /**
@@ -101,6 +59,20 @@ class CommentRepository extends EntityRepository
     }
 
     /**
+     * @param Member $member
+     *
+     * @return QueryBuilder
+     */
+    public function queryAllForMember(Member $member)
+    {
+        $qb = $this->queryAll()
+            ->where('c.toMember = :member')
+            ->setParameter('member', $member);
+
+        return $qb;
+    }
+
+    /**
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
      * @param Member $member
@@ -116,6 +88,20 @@ class CommentRepository extends EntityRepository
         $paginator->setCurrentPage($page);
 
         return $paginator;
+    }
+
+    /**
+     * @param Member $member
+     *
+     * @return QueryBuilder
+     */
+    public function queryAllFromMember(Member $member)
+    {
+        $qb = $this->queryAll()
+            ->where('c.fromMember = :member')
+            ->setParameter('member', $member);
+
+        return $qb;
     }
 
     /**
@@ -152,6 +138,20 @@ class CommentRepository extends EntityRepository
         $paginator->setCurrentPage($page);
 
         return $paginator;
+    }
+
+    /**
+     * @param $action
+     *
+     * @return QueryBuilder
+     */
+    public function queryAllByAdminAction($action)
+    {
+        $qb = $this->queryAll()
+            ->where('c.adminAction = :action')
+            ->setParameter('action', $action);
+
+        return $qb;
     }
 
     /**

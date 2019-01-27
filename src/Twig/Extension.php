@@ -40,11 +40,8 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
      * @param Registry            $registry
      * @param TranslatorInterface $translator
      */
-    public function __construct(
-        SessionInterface $session,
-        Registry $registry,
-        TranslatorInterface $translator
-    ) {
+    public function __construct(SessionInterface $session, Registry $registry, TranslatorInterface $translator)
+    {
         $this->session = $session;
         $this->registry = $registry;
         $this->translator = $translator;
@@ -143,7 +140,7 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
 
         return [
             'collector' => $collector,
-            ];
+        ];
     }
 
     /**

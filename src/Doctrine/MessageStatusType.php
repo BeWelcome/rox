@@ -11,7 +11,10 @@ class MessageStatusType extends EnumType
     const SENT = 'Sent';
     const FROZEN = 'Freeze';
 
+    /** @var string */
     protected $name = 'message_status_old';
+
+    /** @var array */
     protected $values = [
         self::DRAFT,
         self::CHECK,

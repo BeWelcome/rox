@@ -2,7 +2,6 @@
 
 namespace App\Model\Admin;
 
-use App\Doctrine\DeleteRequestType;
 use App\Entity\Comment;
 use App\Entity\Member;
 use App\Model\BaseModel;

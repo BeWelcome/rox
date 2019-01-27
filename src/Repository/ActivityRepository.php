@@ -15,19 +15,6 @@ use Pagerfanta\Pagerfanta;
 class ActivityRepository extends EntityRepository
 {
     /**
-     * @return Query
-     */
-    public function queryLatest()
-    {
-        return $this->getEntityManager()
-            ->createQuery('
-                SELECT a
-                FROM App:Activity a
-                ORDER BY a.id DESC
-            ');
-    }
-
-    /**
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
      * @param int $page
@@ -42,6 +29,19 @@ class ActivityRepository extends EntityRepository
         $paginator->setCurrentPage($page);
 
         return $paginator;
+    }
+
+    /**
+     * @return Query
+     */
+    public function queryLatest()
+    {
+        return $this->getEntityManager()
+            ->createQuery('
+                SELECT a
+                FROM App:Activity a
+                ORDER BY a.id DESC
+            ');
     }
 
     /**
@@ -81,7 +81,8 @@ class ActivityRepository extends EntityRepository
             ->where('a.location IN (:locations)')
             ->andWhere($qb->expr()->orX(
                 $qb->expr()->lte('a.ends', ':threeMonths'),
-                $qb->expr()->gte('a.starts', ':now')))
+                $qb->expr()->gte('a.starts', ':now')
+            ))
             ->setParameter('now', new DateTime())
             ->setParameter('threeMonths', (new DateTime())->modify('+3 months'))
             ->setParameter('locations', $locations)
@@ -97,7 +98,7 @@ class ActivityRepository extends EntityRepository
      * Get all activities around a given location.
      *
      * @param Location $location
-     * @param int $distance
+     * @param int      $distance
      *
      * @return int
      *
@@ -133,7 +134,8 @@ class ActivityRepository extends EntityRepository
             ->where('a.location IN (:locations)')
             ->andWhere($qb->expr()->orX(
                 $qb->expr()->lte('a.ends', ':threeMonths'),
-                $qb->expr()->gte('a.starts', ':now')))
+                $qb->expr()->gte('a.starts', ':now')
+            ))
             ->setParameter('now', new DateTime())
             ->setParameter('threeMonths', (new DateTime())->modify('+3 months'))
             ->setParameter('locations', $locations)

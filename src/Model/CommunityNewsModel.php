@@ -64,8 +64,7 @@ class CommunityNewsModel extends BaseModel
         $pagerfanta = new Pagerfanta($adapter);
         $pagerfanta
             ->setMaxPerPage($limit)
-            ->setCurrentPage($page)
-        ;
+            ->setCurrentPage($page);
 
         return $pagerfanta;
     }

@@ -115,7 +115,7 @@ class PPostHandler {
                 }
                 if (is_array($query) && array_key_exists(session_name(), $query))
                     return;
-                $query[session_name()] = session_id();
+                // $query[session_name()] = session_id();
                 $queries = array ();
                 foreach ($query as $k=>$q)
                     $queries[] = $k . '=' . $q;

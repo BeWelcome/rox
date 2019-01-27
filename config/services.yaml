@@ -129,15 +129,15 @@ services:
     tags:
       - { name: 'twig.extension' }
 
-  doctrine.filter.configurator:
-    public: true
-    class: App\Doctrine\Filter\Configurator
-    arguments:
-      - "@doctrine.orm.entity_manager"
-      - "@request_stack"
-      - "@annotation_reader"
-    tags:
-      - { name: kernel.event_listener, event: kernel.request }
+#  doctrine.filter.configurator:
+#    public: true
+#    class: App\Doctrine\Filter\Configurator
+#    arguments:
+#      - "@doctrine.orm.entity_manager"
+#      - "@request_stack"
+#      - "@annotation_reader"
+#    tags:
+#      - { name: kernel.event_listener, event: kernel.request }
 
   rox.wiki.model:
     public: true

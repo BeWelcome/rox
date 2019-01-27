@@ -228,7 +228,7 @@ if ($User) {
 
     if (!$topic->topicinfo->IsClosed) {
         ?>
-        <div class="w-100">
+        <div class="col-12">
             <a href="<?php echo $replyuri; ?>" class="btn btn-primary float-right"><?php echo $words->getBuffered('ForumReply');; ?></a>
             <?php echo $words->flushBuffer() ?>
         </div>

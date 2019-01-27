@@ -9,6 +9,9 @@
 * @version $Id: forums.model.php 32 2007-04-03 10:22:22Z marco_p $
 */
 
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 // Utility function to sort the languages
 function cmpForumLang($a, $b)
 {
@@ -3591,6 +3594,9 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 	 * Handle forum notifications (public to be able to call it from suggestions)
 	 */
     public function prepare_notification($postId, $type) {
+        $log = new Logger('name');
+        $log->pushHandler(new StreamHandler('../var/log/dev.log', Logger::WARNING));
+
         // Get post details
         $query = "
             SELECT
@@ -3732,7 +3738,18 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
                     )
                 VALUES ";
 			foreach($membersTemp as $member => $subscriptionId) {
-				if (($post->groupId == 0) || ($post->PostVisibility != 'GroupOnly' && $post->ThreadVisibility != 'GroupOnly')
+                // add records to the log
+                $log->error('Condition', [
+                    'nogrouppost' => ($post->groupId == 0),
+                    'postGroupOnly' => ($post->PostVisibility != 'GroupOnly'),
+                    'threadGroupOnly' => ($post->ThreadVisibility != 'GroupOnly'),
+                    'groupOnly' => ($post->PostVisibility != 'GroupOnly' && $post->ThreadVisibility != 'GroupOnly'),
+                    'member' => $member,
+                    'memberSearch' => array_search($member, $groupMembers),
+                    'alreadyNotified' => (array_search($member, $groupMembers) === false),
+                ]);
+
+                if (($post->groupId == 0) || ($post->PostVisibility != 'GroupOnly' && $post->ThreadVisibility != 'GroupOnly')
 					|| (array_search($member, $groupMembers) === false)) {
 					$query .= "(" . $member . ", " . $postId . ", now(), '" . $type . "', 'members_threads_subscribed', '" . $this->dao->escape($subscriptionId) . "'), ";
 					$members[] = $member;

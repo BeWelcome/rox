@@ -128,11 +128,11 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
             <?php
 
             if ($can_edit_own && $post->OwnerCanStillEdit == "Yes" && $User && $post->IdWriter == $this->_session->get("IdMember")) {
-                echo '<a href="forums/edit/m' . $post->postid . '" class="btn btn-sm btn-outline-primary"><i class="fa fa-edit" title="edit" /></i> ' . $words->getFormatted('forum_EditUser') . '</a>';
+                echo '<a href="forums/edit/m' . $post->postid . '" class="btn btn-sm btn-outline-primary mr-1"><i class="fa fa-edit" title="edit" /></i> ' . $words->getFormatted('forum_EditUser') . '</a>';
             }
             if (($this->BW_Right->HasRight("ForumModerator", "Edit")) || ($this->BW_Right->HasRight("ForumModerator", "All"))) {
 //                 echo ' [<a href="forums/modedit/m'.$post->postid.'">Mod Edit</a>]';
-                echo '<a href="forums/modfulleditpost/' . $post->postid . '" class="btn btn-sm btn-outline-primary mx-1"><i class="fa fa-edit" title="adminedit"></i> Admin Edit</a>';
+                echo '<a href="forums/modfulleditpost/' . $post->postid . '" class="btn btn-sm btn-outline-primary mr-1"><i class="fa fa-edit" title="adminedit"></i> Admin Edit</a>';
             }
 
             if ($can_del) {

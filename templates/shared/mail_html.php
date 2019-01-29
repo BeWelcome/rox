@@ -27,35 +27,20 @@
             text-decoration: none;
         }
 
-        .unsubscribe {
-            font-size: 0.7em;
-            line-height: 1.1em;
-        }
-
-        h1, h1 a {
-            color: #fff;
-        }
-
-        #message {
+       #message {
             background: #e5e5e5;
-            border-radius: 5px;
-            margin: 1em;
         }
 
         .header {
-            display: inline-block;
-            width:100%;
             background-color: #f37000;
-            border-top-left-radius: 5px;
-            border-top-right-radius: 5px;
             min-height: 50px;
         }
 
-        .header h1{
+        h1{
             font-size:1em;
             font-weight: bold;
             line-height: 1em ;
-            margin: 0 auto;
+            padding-top: 0.2em;
         }
 
         .logo {
@@ -67,13 +52,6 @@
             padding: 0.5rem 2em 0;
         }
 
-        .from, .subheader {
-            background-color: rgba(0,0,0,.25);
-            font-weight: bold;
-            padding: 1em;
-            color: #eee;
-        }
-
         div.from a:link {
             color: #000;
         }
@@ -82,8 +60,7 @@
             background-color: #f37000;
             padding-left: 2em;
             font-size: 0.8rem;
-            border-bottom-left-radius: 5px;
-            border-bottom-right-radius: 5px;
+            color: #eee;
         }
 
         footer a {
@@ -98,13 +75,14 @@
             <a href="<?php echo $siteUrl; ?>"><img src="<?php echo $siteUrl; ?>/images/logo_index_top.png" alt="BeWelcome" class="logo" border="0"></a>
     </div>
 
+    <div class="content">
+
         <?php if($title) { ?>
             <div class="subheader">
-            <h1><?= $title ?></h1>
+                <h1><?= $title ?></h1>
             </div>
         <?php } ?>
 
-    <div class="content">
         <?= $body ?>
     </div>
     <footer>

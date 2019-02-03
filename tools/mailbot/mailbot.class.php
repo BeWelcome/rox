@@ -551,13 +551,12 @@ class ForumNotificationMailbot extends Mailbot
         $msg['subject'] = $NotificationType . $post->thread_title;
         if ($post->groupId) {
             $msg['subject'] .= ' [' . $this->_getGroupName($post->groupId)->Name . ']';
-            $msg['title'] = '<a href="' .$this->baseuri. 'groups/' . $post->groupId . '/forum/s' . $post->IdThread .'">' . $msg['subject'] . '</a>';
+            $msg['title'] = '<a href="' .$this->baseuri. 'groups/' . $post->groupId . '/forum/s' . $post->IdThread .'/reply">' . $msg['subject'] . '</a>';
         } else {
-            $msg['title'] = '<a href="' .$this->baseuri. '/forums/s' . $post->IdThread . '">' . $msg['subject'] . '</a>';
+            $msg['title'] = '<a href="' .$this->baseuri. '/forums/s' . $post->IdThread . '/reply">' . $msg['subject'] . '</a>';
         }
 
-        $text = '<h5>' . $msg['title'] . '</h5>';
-        $text .= $post->message;
+        $text = $post->message;
 
         $UnsubscribeLink = $this->_buildUnsubscribeLink($notification, $language, $post);
         if ($UnsubscribeLink!="") {

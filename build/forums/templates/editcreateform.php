@@ -131,7 +131,7 @@ $vars =& PPostHandler::getVars($callbackId);
 
             <label for="topic_text" class="sr-only"><?php echo $words->getFormatted("forum_label_text"); ?></label>
 
-            <textarea name="topic_text" id="topic_text" class="form-control long editor"><?php
+            <textarea name="topic_text" id="topic_text" class="form-control long editor" rows="10"><?php
                 if (isset($void_string)) {
                     echo $void_string;
                 } else {

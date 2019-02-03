@@ -3594,9 +3594,6 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 	 * Handle forum notifications (public to be able to call it from suggestions)
 	 */
     public function prepare_notification($postId, $type) {
-        $log = new Logger('name');
-        $log->pushHandler(new StreamHandler('../var/log/dev.log', Logger::WARNING));
-
         // Get post details
         $query = "
             SELECT
@@ -3668,6 +3665,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
                 if ($memberId == 0) continue;
                 if (array_search($memberId, $members) === false) {
                     $membersTemp[] = $memberId;
+                    $members[] = $memberId;
                 }
             }
             if (!empty($membersTemp)) {
@@ -3711,17 +3709,19 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
         
 		$membersTemp = array();
 		while ($row = $res->fetch(PDB::FETCH_OBJ)) {
-			if ($row->subscriber > 0 && $row->notificationsEnabled) {
-				// if member already gets notification don't add one
-				if (array_search($row->subscriber, $members) === false) {
-					$membersTemp[$row->subscriber] = $row->subscriptionId;
-				}
-			} else {
-				// did member disable notifications for this thread?
-				if (array_search($row->subscriber, $members) !== false) {
-					unset($membersTemp[$row->subscriber]);
-				}
-			}
+			if ($row->subscriber > 0) {
+                // did member disable notifications for this thread?
+                if ($row->notificationsEnabled) {
+                    // only add gets notification don't add one
+                    if (array_search($row->subscriber, $members) === false) {
+                        $membersTemp[$row->subscriber] = $row->subscriptionId;
+                    }
+                } else {
+                    if (array_search($row->subscriber, $members) !== false) {
+                        unset($membersTemp[$row->subscriber]);
+                    }
+                }
+            }
 		}
 
 		if (!empty($membersTemp)) {
@@ -3738,80 +3738,16 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
                     )
                 VALUES ";
 			foreach($membersTemp as $member => $subscriptionId) {
-                // add records to the log
-                $log->error('Condition', [
-                    'nogrouppost' => ($post->groupId == 0),
-                    'postGroupOnly' => ($post->PostVisibility != 'GroupOnly'),
-                    'threadGroupOnly' => ($post->ThreadVisibility != 'GroupOnly'),
-                    'groupOnly' => ($post->PostVisibility != 'GroupOnly' && $post->ThreadVisibility != 'GroupOnly'),
-                    'member' => $member,
-                    'memberSearch' => array_search($member, $groupMembers),
-                    'alreadyNotified' => (array_search($member, $groupMembers) === false),
-                ]);
-
-                if (($post->groupId == 0) || ($post->PostVisibility != 'GroupOnly' && $post->ThreadVisibility != 'GroupOnly')
-					|| (array_search($member, $groupMembers) === false)) {
-					$query .= "(" . $member . ", " . $postId . ", now(), '" . $type . "', 'members_threads_subscribed', '" . $this->dao->escape($subscriptionId) . "'), ";
-					$members[] = $member;
-					$count++;
-				}
-			}
-			if ($count > 0) {
-				$query = substr($query, 0, -2);
-				$this->dao->query($query);
-			}
-		}
-
-		// Set notifications for subscribed tags
-		$query = "
-            SELECT
-                mts.IdSubscriber as subscriber,
-                mts.notificationsEnabled AS notificationsEnabled,
-                mts.id as subscriptionId
-            FROM
-                members_tags_subscribed mts,
-                tags_threads tt
-            WHERE
-                tt.IdTag = mts.IdTag
-                AND tt.IdThread = '" . $this->dao->escape($post->threadId) . "'";
-		$res = $this->dao->query($query);
-		if (!$res) {
-			// just don't write notifications
-			return;
-		}
-
-		$membersTemp = array(); // members that will receive a notification because of tags
-		while ($row = $res->fetch(PDB::FETCH_OBJ)) {
-			// Unfortunately the DB has a lot of faulty entries
-			$subscriber = $row->subscriber;
-			if ($subscriber > 0 && $row->notificationsEnabled) {
-				// Add only if the member doesn't already get a notification
-				if (array_search($subscriber, $members) === false) {
-					$membersTemp[$subscriber] = $row->subscriptionId;
-				}
-			}
-		}
-		if (!empty($membersTemp)) {
-			$count = 0;
-			$query = "
-                INSERT INTO
-                    posts_notificationqueue (
-                        `IdMember`,
-                        `IdPost`,
-                        `created`,
-                        `Type`,
-                        `TableSubscription`,
-                        `IdSubscription`
-                    )
-                VALUES ";
-			foreach($membersTemp as $member => $subscriptionId ) {
-				if ($member == 0) continue;
-				if (($post->groupId == 0) || ($post->PostVisibility != 'GroupOnly' && $post->ThreadVisibility != 'GroupOnly')
-					|| (array_search($member, $groupMembers) === false)) {
-					$query .= "(" . $member . ", " . $postId . ", now(), '" . $type . "', 'members_tags_subscribed', '" . $subscriptionId . "'), ";
-					$members[] = $member;
-					$count++;
-				}
+			    // current member doesn't get a notification yet
+			    if (array_search($member, $members) === false) {
+			        // Thread notifications might need to be limited to group members only
+                    if (($post->groupId == 0) || ($post->PostVisibility != 'GroupOnly' && $post->ThreadVisibility != 'GroupOnly')
+                        || (array_search($member, $groupMembers) !== false)) {
+                        $query .= "(" . $member . ", " . $postId . ", now(), '" . $type . "', 'members_threads_subscribed', '" . $this->dao->escape($subscriptionId) . "'), ";
+                        $members[] = $member;
+                        $count++;
+                    }
+                }
 			}
 			if ($count > 0) {
 				$query = substr($query, 0, -2);

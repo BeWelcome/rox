@@ -305,10 +305,10 @@
 
     @keyframes background-in {
       0% {
-        color: rgba(255,255,255,0);
+        background-color: rgba(0,0,0,0);
       }
       100% {
-        color:rgba(243, 112,0,1);
+        background-color: rgba(0,0,0,0.4);
       }
     }
 
@@ -319,7 +319,7 @@
         box-shadow: none;
       }
       100% {
-        color:rgba(243, 112,0,1);
+        color:rgba(243,112,0,1);
         opacity: 1;
         box-shadow: none;
       }
@@ -332,7 +332,7 @@
         box-shadow: none;
       }
       100% {
-        color:rgba(243, 112,0,1);
+        color:rgba(243,112,0,1);
         opacity: 1;
         box-shadow: none;
       }
@@ -340,7 +340,7 @@
 
     @-webkit-keyframes link-fadeout {
       0% {
-        color: rgba(243, 112,0,1);
+        color: rgba(243,112,0,1);
         opacity: 1;
         box-shadow: none;
       }
@@ -353,7 +353,7 @@
 
     @keyframes link-fadeout {
       0% {
-        color: rgba(243, 112,0,1);
+        color: rgba(243,112,0,1);
         opacity: 1;
         box-shadow: none;
       }

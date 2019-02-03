@@ -15,25 +15,23 @@
 
         body {
             color: #333;
-            font-size: 1.2em;
-            line-height: 1.5em;
             font-family: arial, verdana, sans-serif;
             margin: 0;
             padding: 0;
         }
 
-        a{
+        a {
             color: #f37000;
             text-decoration: none;
         }
 
        #message {
-            background: #e5e5e5;
-        }
+            background: #f0f0f0;
+       }
 
         .header {
             background-color: #f37000;
-            min-height: 50px;
+            width:100%;
         }
 
         h1{
@@ -44,26 +42,27 @@
         }
 
         .logo {
-            float: left;
-            padding: 0.5rem 2em 0;
+            float: right;
+            padding: 0.25em;
         }
 
         .content {
-            padding: 0.5rem 2em 0;
+            padding: 0.25em;
         }
 
         div.from a:link {
             color: #000;
         }
 
-        footer {
+        .footer {
             background-color: #f37000;
-            padding-left: 2em;
-            font-size: 0.8rem;
+            width:100%;
+            padding: 0.25em;
+            font-size: 0.8em;
             color: #eee;
         }
 
-        footer a {
+        .footer a {
             color: #fff;
             font-weight: bold;
         }
@@ -74,20 +73,18 @@
     <div class="header">
             <a href="<?php echo $siteUrl; ?>"><img src="<?php echo $siteUrl; ?>/images/logo_index_top.png" alt="BeWelcome" class="logo" border="0"></a>
     </div>
-
     <div class="content">
-
         <?php if($title) { ?>
             <div class="subheader">
-                <h1><?= $title ?></h1>
+                <strong><?= $title ?></strong>
             </div>
         <?php } ?>
 
         <?= $body ?>
     </div>
-    <footer>
+    <div class="footer">
         <?php echo $footer_message; ?>
-    </footer>
+    </div>
 </div>
 </body>
 </html>

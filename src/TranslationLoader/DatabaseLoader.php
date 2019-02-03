@@ -35,7 +35,7 @@ class DatabaseLoader implements LoaderInterface
         $messages = [];
         /** @var Word $translation */
         foreach ($translations as $translation) {
-            $messages[$translation->getCode()] = $translation->getSentence();
+            $messages[strtolower($translation->getCode())] = $translation->getSentence();
         }
 
         $catalogue = new MessageCatalogue($locale, ['messages' => $messages]);

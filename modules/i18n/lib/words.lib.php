@@ -594,7 +594,7 @@ class MOD_words
                 '
 SELECT SQL_CACHE code, Sentence, donottranslate, updated, majorupdate
 FROM words
-WHERE code = "' . $this->_dao->escape($code) . '" AND ShortCode = "' . $this->_dao->escape($lang) .'"'. $extraWhere;
+WHERE code = "' . $this->_dao->escape(strtolower($code)) . '" AND ShortCode = "' . $this->_dao->escape($lang) .'"'. $extraWhere;
         }
 
         $q = $this->_dao->query($query);

@@ -44,6 +44,10 @@
         font-family: Signika;
     }
 
+    .parallax--a {
+      color: #f37000;
+    }
+
     .parallax--subh {
         font-size: 2.75rem;
         font-weight: bold;
@@ -212,6 +216,13 @@
       animation-fill-mode: both;
     }
 
+    .parallax--fixed--linkanim {
+      animation: link-fadein 6s ease;
+      animation-delay:1s;
+      opacity:0;
+      animation-fill-mode: both;
+    }
+
      .parallax--fixed-enter .parallax--fixed--letteranim {
       animation: 1s textblur ease;
       animation-fill-mode: forwards;
@@ -298,6 +309,58 @@
       }
       100% {
         background-color: rgba(0,0,0,0.4);
+      }
+    }
+
+    @-webkit-keyframes link-fadein {
+      0% {
+        color:rgba(255,255,255,0);
+        opacity: 0;
+        box-shadow: none;
+      }
+      100% {
+        color:rgba(243,112,0,1);
+        opacity: 1;
+        box-shadow: none;
+      }
+    }
+
+    @keyframes link-fadein {
+      0% {
+        color:rgba(255,255,255,0);
+        opacity: 0;
+        box-shadow: none;
+      }
+      100% {
+        color:rgba(243,112,0,1);
+        opacity: 1;
+        box-shadow: none;
+      }
+    }
+
+    @-webkit-keyframes link-fadeout {
+      0% {
+        color: rgba(243,112,0,1);
+        opacity: 1;
+        box-shadow: none;
+      }
+      100% {
+        color:rgba(255,255,255,0);
+        opacity: 0;
+        box-shadow: none;
+      }
+    }
+
+    @keyframes link-fadeout {
+      0% {
+        color: rgba(243,112,0,1);
+        opacity: 1;
+        box-shadow: none;
+      }
+      100% {
+        color:rgba(255,255,255,0);
+        opacity: 0;
+        box-shadow: none;
       }
     }
 

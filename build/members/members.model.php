@@ -1165,8 +1165,6 @@ ORDER BY
             }
         }
 
-        $status = $m->update();
-
         // Update hosting eagerness data if necessary
         $hesData = $this->getHostingEagernessData($m);
         if ($hesData->endDate !== $vars['hes-duration']) {
@@ -1183,6 +1181,17 @@ ORDER BY
                 $this->avatarMake($vars['memberid'],$_FILES['profile_picture']['tmp_name']);
         }
 
+        $cryptModule = new MOD_crypt();
+        if ($vars["chat_SKYPE"]!="cryptedhidden") {
+            $m->chat_SKYPE = $cryptModule->NewReplaceInCrypted(addslashes(strip_tags($vars['chat_SKYPE'])),"members.chat_SKYPE",$IdMember, $m->chat_SKYPE, $IdMember, $this->ShallICrypt($vars,"chat_SKYPE"));
+        }
+        if ($vars["chat_Others"]!="cryptedhidden") {
+            $m->chat_Others = $cryptModule->NewReplaceInCrypted(addslashes(strip_tags($vars['chat_Others'])),"members.chat_Others",$IdMember, $m->chat_Others, $IdMember, $this->ShallICrypt($vars,"chat_Others"));
+        }
+        if ($vars["chat_GOOGLE"]!="cryptedhidden") {
+            $m->chat_GOOGLE = $cryptModule->NewReplaceInCrypted(addslashes(strip_tags($vars['chat_GOOGLE'])),"members.chat_GOOGLE",$IdMember,$m->chat_GOOGLE, $IdMember, $this->ShallICrypt($vars,"chat_GOOGLE"));
+        }
+
         if ($IdMember == $this->_session->get('IdMember'))
         {
             $this->logWrite("Profile update by member himself [Status={$m->Status}]", "Profile update");
@@ -1190,6 +1199,8 @@ ORDER BY
         else {
             $this->logWrite("update of another profile <b>".$m->Username."</b>", "Profile update"); // It can be an admin update or a delegated translation update
         }
+
+        $status = $m->update();
 
         return $status;
     }

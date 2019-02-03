@@ -119,7 +119,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
 
             <div class="d-flex flex-row justify-content-between">
                 <div>
-                    <p class="h4 m-0"><?= $words->get('CommentFrom') ?></p>
+                    <p class="h4 m-0"><?= $words->get('From') ?></p>
                     <a href="members/<?= $c->UsernameFromMember ?>">
                         <img src="members/avatar/<?= $c->UsernameFromMember ?>/50" alt="Profile">
                         <p class="username smaller"><?= $c->UsernameFromMember ?></p></a>
@@ -130,7 +130,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
                     </p>
                 </div>
                 <div class="text-right">
-                    <p class="h4 m-0"><?=$words->get('CommentTo') ?></p>
+                    <p class="h4 m-0"><?=$words->get('To') ?></p>
                     <a href="members/<?= $c->UsernameToMember ?>">
                         <img src="members/avatar/<?= $c->UsernameToMember ?>/30" alt="Profile" class="mt-2">
                         <p class="username smaller"><?= $c->UsernameToMember ?></p></a>
@@ -168,7 +168,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
             <a href="members/<?php echo $c->UsernameFromMember; ?>/comments/add"
            class="btn btn-primary mt-3"><?php echo $words->get('addcomments'); ?></a>
             <? } else { ?>
-                <div><p class="text-center mt-3"><?php echo $words->get('profile.comments.nocomment'); ?></p></div>
+                <div><p class="text-center mt-3"><?php echo $words->get('CommentNoComment'); ?></p></div>
             <? } ?>
         </div>
     <? }
@@ -200,7 +200,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
 
             <div class="d-flex flex-row justify-content-between">
                 <div>
-                    <p class="h4 m-0"><?= $words->get('CommentFrom') ?></p>
+                    <p class="h4 m-0"><?= $words->get('From') ?></p>
                     <a href="members/<?= $cc->UsernameFromMember ?>">
                         <img src="members/avatar/<?= $cc->UsernameFromMember ?>/50" alt="Profile">
                         <p class="username smaller"><?= $cc->UsernameFromMember ?></p></a>
@@ -211,7 +211,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
                     </p>
                 </div>
                 <div class="text-right">
-                    <p class="h4 m-0"><?=$words->get('CommentTo') ?></p>
+                    <p class="h4 m-0"><?=$words->get('To') ?></p>
                     <a href="members/<?= $cc->UsernameToMember ?>">
                         <img src="members/avatar/<?= $cc->UsernameToMember ?>/30" alt="Profile">
                         <p class="username smaller"><?= $cc->UsernameToMember ?></p></a>

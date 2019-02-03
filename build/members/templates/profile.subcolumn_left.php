@@ -200,7 +200,7 @@
                                     <?php
                                     foreach ($messengers as $m) {
                                         if (isset($m["address"]) && $m["address"] != '')
-                                            echo "<img src='" . PVars::getObj('env')->baseuri . "images/icons/icons1616/" . $m["image"] . "' width='16' height='16' title='" . $m["network"] . "' alt='" . $m["network"] . "' /> " . $m["network"] . ": " . $m["address"] . "<br>";
+                                            echo "<i class='fa fa-" . $m["image"] . "' width='16' height='16' title='" . $m["network"] . "' alt='" . $m["network"] . "'></i> " . $m["network"] . ": " . $m["address"] . "<br>";
                                     }
                                     ?>
                                 </dd>

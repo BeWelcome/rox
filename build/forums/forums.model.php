@@ -237,7 +237,8 @@ function FindAppropriatedLanguage($IdPost=0) {
                     $this->setTopMode(Forums::CV_TOPMODE_LANDING) ;
                     break ;
             }
-            $this->ForumOrderList = $member->getPreference("PreferenceForumOrderListAsc");
+            $layoutbits = new MOD_layoutbits();
+            $this->ForumOrderList = $layoutbits->GetPreference("PreferenceForumOrderListAsc", $member->id);
         } else {
             $this->setTopMode(Forums::CV_TOPMODE_FORUM);
         }

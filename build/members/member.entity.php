@@ -492,16 +492,17 @@ WHERE IdMember = ".$this->id
 
     public function get_messengers() {
           $messengers = array(
-            array("network" => "GOOGLE", "nicename" => "Google+", "image" => "google-plus-g", "href" => ""),
-            array("network" => "SKYPE", "nicename" => "Skype", "image" => "skype", "href" => "skype:echo"),
-            array("network" => "Others", "nicename" => "Other", "image" => "user-plus", "href" => "#")
+            array("network" => "GOOGLE", "nicename" => "Google+", "class" => "fab", "image" => "google-plus-g", "href" => ""),
+            array("network" => "SKYPE", "nicename" => "Skype", "class" => "fab", "image" => "skype", "href" => "skype:echo"),
+            array("network" => "Others", "nicename" => "Other", "class" => "fa", "image" => "user-plus", "href" => "#")
         );
           $r = array();
           foreach($messengers as $m) {
               $address_id = $this->__get("chat_".$m['network']);
               $address = $this->get_crypted($address_id, "");
               if(isset($address) && $address != "*") {
-                  $r[] = array("network" => $m["nicename"], "network_raw" => $m['network'], "image" => $m["image"], "href" => $m["href"], "address" => $address, "address_id" => $address_id);
+                  $r[] = array("network" => $m["nicename"], "network_raw" => $m['network'], "class" => $m['class'],
+                      "image" => $m["image"], "href" => $m["href"], "address" => $address, "address_id" => $address_id);
               }
           }
           if(sizeof($r) == 0)

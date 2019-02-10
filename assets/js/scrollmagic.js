@@ -1,12 +1,9 @@
-import TweenMax from 'TweenMax';
 import ScrollMagic from 'ScrollMagic';
-import 'animation.gsap';
-import 'debug.addIndicators';
 
 var controller = new ScrollMagic.Controller();
-new ScrollMagic.Scene({triggerElement: "#trigger-fade-1", duration: 600 })
-    .setClassToggle("#fade-animation-1", "parallax--fixed-abovethefold")
-    .addTo(controller);
+// new ScrollMagic.Scene({triggerElement: "#trigger-fade-1", duration: 600 })
+//     .setClassToggle("#fade-animation-1", "parallax--fixed-abovethefold")
+//     .addTo(controller);
 
 new ScrollMagic.Scene({triggerElement: "#trigger-fade-1", offset: 600, duration: 300})
     .setClassToggle("#fade-animation-1", "parallax--fixed-leave")

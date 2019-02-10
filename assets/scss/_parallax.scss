@@ -131,13 +131,13 @@
 
     @include media-breakpoint-down(sm) {
         .fa-start {
-            font-size: 2rem;
+            font-size: 8rem;
         }
     }
 
     @include media-breakpoint-down(md) {
         .fa-start {
-            font-size: 4rem;
+            font-size: 8rem;
         }
         .parallax--h {
             font-size: 3rem;
@@ -216,6 +216,13 @@
       animation-fill-mode: both;
     }
 
+    .parallax--fixed--buttonanim {
+      animation: button-fadein 6s ease;
+      animation-delay:1s;
+      opacity:0;
+      animation-fill-mode: both;
+    }
+
     .parallax--fixed--linkanim {
       animation: link-fadein 6s ease;
       animation-delay:1s;
@@ -223,8 +230,18 @@
       animation-fill-mode: both;
     }
 
-     .parallax--fixed-enter .parallax--fixed--letteranim {
+    .parallax--fixed-enter .parallax--fixed--letteranim {
       animation: 1s textblur ease;
+      animation-fill-mode: forwards;
+    }
+
+    .parallax--fixed-enter .parallax--fixed--linkanim {
+      animation: 1s link-fadein ease;
+      animation-fill-mode: forwards;
+    }
+
+    .parallax--fixed-enter .parallax--fixed--buttonanim {
+      animation: 1s button-fadein ease;
       animation-fill-mode: forwards;
     }
 
@@ -233,8 +250,13 @@
       animation-fill-mode: forwards;
     }
 
-    .parallax--fixed-leave .parallax--fixed--button {
-      animation: 1s fadeOut 0.5s ease;
+    .parallax--fixed-leave .parallax--fixed--linkanim {
+      animation: 1s link-fadeout ease;
+      animation-fill-mode: forwards;
+    }
+
+    .parallax--fixed-leave .parallax--fixed--buttonanim {
+      animation: 1s button-fadeout ease;
       animation-fill-mode: forwards;
     }
 
@@ -338,6 +360,7 @@
       }
     }
 
+
     @-webkit-keyframes link-fadeout {
       0% {
         color: rgba(243,112,0,1);
@@ -361,6 +384,58 @@
         color:rgba(255,255,255,0);
         opacity: 0;
         text-shadow: 0 0 3px rgba(0, 0, 0, 0);
+      }
+    }
+
+    @-webkit-keyframes button-fadein {
+      0% {
+        opacity: 0;
+        box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0);
+      }
+      50% {
+        opacity: 1;
+        box-shadow: 0 0 20px 2px rgba(0, 0, 0, 1);
+      }
+      100% {
+        opacity: 1;
+        box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.6);
+      }
+    }
+
+    @keyframes button-fadein {
+       0% {
+        opacity: 0;
+        box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0);
+      }
+      50% {
+        opacity: 1;
+        box-shadow: 0 0 20px 2px rgba(0, 0, 0, 1);
+      }
+      100% {
+        opacity: 1;
+        box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.6);
+      }
+    }
+
+    @-webkit-keyframes button-fadeout {
+      0% {
+        opacity: 1;
+        box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.6);
+      }
+      100% {
+        opacity: 0;
+        box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0);
+      }
+    }
+
+    @keyframes button-fadeout {
+      0% {
+        opacity: 1;
+        box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.6);
+      }
+      100% {
+        opacity: 0;
+        box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0);
       }
     }
 

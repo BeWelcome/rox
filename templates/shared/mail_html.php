@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>{{ subject }}</title>
+    <title><?= $title ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <style type="text/css"><!--
         blockquote {
@@ -71,7 +71,7 @@
 <body>
 <div id="message">
     <div class="header">
-            <a href="<?php echo $siteUrl; ?>"><img src="<?php echo $siteUrl; ?>/images/logo_index_top.png" alt="BeWelcome" class="logo" border="0"></a>
+            <a href="<?php echo $siteUrl; ?>"><img src="<?php echo $siteUrl; ?>/images/logo_index_top.png" alt="BeWelcome" class="logo" border="0" style="border:0"></a>
     </div>
     <div class="content">
         <?php if($title) { ?>

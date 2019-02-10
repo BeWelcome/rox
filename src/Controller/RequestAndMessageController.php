@@ -17,8 +17,8 @@ use App\Form\MessageToMemberType;
 use App\Model\MessageModel;
 use App\Model\RequestModel;
 use Doctrine\Common\Persistence\ObjectManager;
-use Html2Text\Html2Text;
 use InvalidArgumentException;
+use League\HTMLToMarkdown\HtmlConverter;
 use Swift_Mailer;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -832,9 +832,51 @@ class RequestAndMessageController extends AbstractController
                 $body,
                 'text/html'
             );
-        $html2text = new Html2Text($body);
+        $converter = new HtmlConverter([
+            'strip_tags' => true,
+            'remove_nodes' => 'script'
+        ]);
+        $plainText = $converter->convert($body);
         $message
-            ->addPart($html2text->getText(), 'text/plain')
+            ->addPart($plainText, 'text/plain')
+        ;
+        $recipients = $this->mailer->send($message);
+
+        return (0 === $recipients) ? false : true;
+    }
+
+    private function sendNotification(Member $guest, Member $host, Message $request, $template)
+    {
+        // Send mail notification with the receiver's preferred locale
+        $this->setTranslatorLocale($host);
+
+        $subject = $request->getSubject()->getSubject();
+        $message = $request->getMessage();
+        $body = $this->renderView($template, [
+            'sender' => $guest,
+            'receiver' => $host,
+            'subject' => $subject,
+            'message' => $message,
+            'request' => $request->getRequest(),
+        ]);
+
+        $message = (new Swift_Message())
+            ->setSubject('[Request] '.strip_tags($subject))
+            ->setFrom([
+                'request@bewelcome.org' => 'BeWelcome - '.$guest->getUsername(),
+            ])
+            ->setTo($host->getEmail())
+            ->setBody(
+                $body,
+                'text/html'
+            );
+        $converter = new HtmlConverter([
+            'strip_tags' => true,
+            'remove_nodes' => 'script'
+        ]);
+        $plainText = $converter->convert($body);
+        $message
+            ->addPart($plainText, 'text/plain')
         ;
         $recipients = $this->mailer->send($message);
 
@@ -850,36 +892,7 @@ class RequestAndMessageController extends AbstractController
      */
     private function sendRequestNotification(Member $guest, Member $host, Message $request)
     {
-        // Send mail notification with the receiver's preferred locale
-        $this->setTranslatorLocale($host);
-
-        $subject = $request->getSubject()->getSubject();
-        $message = $request->getMessage();
-        $body = $this->renderView('emails/request.html.twig', [
-            'sender' => $guest,
-            'receiver' => $host,
-            'subject' => $subject,
-            'message' => $message,
-            'request' => $request->getRequest(),
-        ]);
-
-        $message = (new Swift_Message())
-            ->setSubject('[Request] '.strip_tags($subject))
-            ->setFrom([
-                'request@bewelcome.org' => 'BeWelcome - '.$guest->getUsername(),
-            ])
-            ->setTo($host->getEmail())
-            ->setBody(
-                $body,
-                'text/html'
-            );
-        $html2text = new Html2Text($body);
-        $message
-            ->addPart($html2text->getText(), 'text/plain')
-        ;
-        $recipients = $this->mailer->send($message);
-
-        return (0 === $recipients) ? false : true;
+        return $this->sendNotification($guest, $host, $request, 'emails/request.html.twig');
     }
 
     /**
@@ -891,36 +904,7 @@ class RequestAndMessageController extends AbstractController
      */
     private function sendHostReplyNotification(Member $guest, Member $host, Message $request)
     {
-        // Send mail notification with the receiver's preferred locale
-        $this->setTranslatorLocale($guest);
-
-        $subject = $request->getSubject()->getSubject();
-        $message = $request->getMessage();
-        $body = $this->renderView('emails/reply_host.html.twig', [
-            'sender' => $host,
-            'receiver' => $guest,
-            'subject' => $subject,
-            'message' => $message,
-            'request' => $request->getRequest(),
-        ]);
-
-        $message = (new Swift_Message())
-            ->setSubject(strip_tags($subject))
-            ->setFrom([
-                'request@bewelcome.org' => 'BeWelcome - '.$guest->getUsername(),
-            ])
-            ->setTo($guest->getEmail())
-            ->setBody(
-                $body,
-                'text/html'
-            );
-        $html2text = new Html2Text($body);
-        $message
-            ->addPart($html2text->getText(), 'text/plain')
-        ;
-        $recipients = $this->mailer->send($message);
-
-        return (0 === $recipients) ? false : true;
+        return $this->sendNotification($guest, $host, $request, 'emails/reply_host.html.twig');
     }
 
     /**
@@ -932,36 +916,7 @@ class RequestAndMessageController extends AbstractController
      */
     private function sendGuestReplyNotification(Member $guest, Member $host, Message $request)
     {
-        // Send mail notification with the receiver's preferred locale
-        $this->setTranslatorLocale($host);
-
-        $subject = $request->getSubject()->getSubject();
-        $message = $request->getMessage();
-        $body = $this->renderView('emails/reply_guest.html.twig', [
-            'sender' => $guest,
-            'receiver' => $host,
-            'subject' => $subject,
-            'message' => $message,
-            'request' => $request->getRequest(),
-        ]);
-
-        $message = (new Swift_Message())
-            ->setSubject('[Request] '.strip_tags($subject))
-            ->setFrom([
-                'request@bewelcome.org' => 'BeWelcome - '.$guest->getUsername(),
-            ])
-            ->setTo($host->getEmail())
-            ->setBody(
-                $body,
-                'text/html'
-            );
-        $html2text = new Html2Text($body);
-        $message
-            ->addPart($html2text->getText(), 'text/plain')
-        ;
-        $recipients = $this->mailer->send($message);
-
-        return (0 === $recipients) ? false : true;
+        return $this->sendNotification($guest, $host, $request, 'emails/reply_guest.html.twig');
     }
 
     private function checkRequestExpired(HostingRequest $request)
@@ -971,6 +926,11 @@ class RequestAndMessageController extends AbstractController
         return $requestModel->checkRequestExpired($request);
     }
 
+    /**
+     * Make sure to sent the email notification in the preferred language of the user
+     *
+     * @param Member $receiver
+     */
     private function setTranslatorLocale(Member $receiver)
     {
         $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);

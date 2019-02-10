@@ -27,6 +27,8 @@ Boston, MA  02111-1307, USA.
  * @author Meinhard (bw:planetcruiser)
  */
 
+use League\HTMLToMarkdown\HtmlConverter;
+
 /**
  * MOD_mails lets you create & send mails using our default template
  *
@@ -152,8 +154,11 @@ class MOD_mail
         $mail_html = ob_get_contents();
         ob_end_clean();
 
-        $html2text = new Html2Text\Html2Text($mail_html, false, array('do_links' => 'table', 'width' => 75));
-        $plain = $html2text->getText();
+        $converter = new HtmlConverter([
+            'strip_tags' => true,
+            'remove_nodes' => 'script'
+        ]);
+        $plain = $converter->convert($mail_html);
 
         $message->setBody($plain);
         if ($html) {

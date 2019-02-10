@@ -3,8 +3,9 @@ use Symfony\Component\Asset\Package;
 use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
 ?>
 <!-- #main: content begins here -->
-<div id="main">
     <?php $this->topnav() ?>
+    <div id="toasts" class="position-absolute w-100 d-flex flex-column p-4">
+    </div>
     <?php $this->statusMessage() ?>
     <?php $loginMessages = $this->_getLoginMessages();
     if (!empty($loginMessages)) :
@@ -17,7 +18,7 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
         endforeach;
     endif; ?>
 
-    <div class="container">
+<div class="container">
     <?php $flashMessages = $this->getFlashError(true);
     if (strlen($flashMessages) != 0): ?>
         <div class="row">
@@ -38,6 +39,7 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
     <?php endif; ?>
     </div>
 
+<div class="container">
     <?
         $side_column_names = $this->getColumnNames();
         $mid_column_name = array_pop($side_column_names);
@@ -72,7 +74,7 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
         }
         ?>
     </div> <!-- row -->
-</div> <!-- main -->
+</div>
 <div>
     <?php $this->debugInfo() ?>
     <?php $this->leftoverTranslationLinks() ?>

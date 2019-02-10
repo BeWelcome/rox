@@ -149,9 +149,6 @@
             "ref": "89df96834a83a6b41c0a21b78d471840f8666a85"
         }
     },
-    "html2text/html2text": {
-        "version": "4.2.1"
-    },
     "incenteev/composer-parameter-handler": {
         "version": "v2.1.3"
     },
@@ -163,6 +160,12 @@
     },
     "judev/php-htmltruncator": {
         "version": "1.1.0"
+    },
+    "league/commonmark": {
+        "version": "0.18.1"
+    },
+    "league/html-to-markdown": {
+        "version": "4.8.1"
     },
     "michelf/php-markdown": {
         "version": "1.8.0"

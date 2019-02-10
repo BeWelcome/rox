@@ -11,6 +11,8 @@ function updateCounts() {
         success: function (data) {
             if (data.oldCount !== data.newCount) {
                 $('#messageCount').replaceWith(data.html);
+                $('#toasts').append(data.toast);
+                $('[data-toggle="toast"]').toast('show');
             } else {
             }
         }});
@@ -26,12 +28,14 @@ function updateCounts() {
         success: function (data) {
             if (data.oldCount !== data.newCount) {
                 $('#requestCount').replaceWith(data.html);
+                $('#toasts').append(data.toast);
+                $('[data-toggle="toast"]').toast('show');
             } else {
             }
         }});
 }
 
-let interval = setInterval(function () { updateCounts(); }, 120 * 1000);
+let interval = setInterval(function () { updateCounts(); }, 60 * 1000);
 
 $(function () {
     $('[data-toggle="toast"]').toast({

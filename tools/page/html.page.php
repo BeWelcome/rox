@@ -10,6 +10,7 @@ class PageWithHTML extends AbstractBasePage
         'build/runtime.js',
         'build/bewelcome.js',
         'build/offcanvas.js',
+        'build/updatecounters.js',
         '/script/main.js?9',
 //         '/script/common/common.js?1',
         '/script/common/initialize.js?1',
@@ -169,7 +170,7 @@ class PageWithHTML extends AbstractBasePage
         </head>
         <body>
         <?php $this->topmenu() ?>
-        <main class="container">
+        <main role="main">
         <?php
 
         echo (is_object($this->layoutkit) && (is_object($this->layoutkit->mem_from_redirect))) ? $this->layoutkit->mem_from_redirect->buffered_text : '';

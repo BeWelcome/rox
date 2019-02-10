@@ -12,7 +12,7 @@ use App\Form\ReportCommentType;
 use App\Repository\MemberRepository;
 use App\Repository\MessageRepository;
 use Doctrine\ORM\NonUniqueResultException;
-use Html2Text\Html2Text;
+use League\HTMLToMarkdown\HtmlConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -257,16 +257,20 @@ class MemberController extends AbstractController
     public function getUnreadMessagesCount(Request $request)
     {
         $member = $this->getUser();
-        $countWidget = '';
+        $countWidget = $toastWidget = '';
         $lastUnreadCount = (int) ($request->request->get('current'));
 
         /** @var MessageRepository $messageRepository */
         $messageRepository = $this->getDoctrine()->getRepository(Message::class);
         $unreadMessageCount = $messageRepository->getUnreadMessagesCount($member);
 
-        if ($unreadMessageCount !== $lastUnreadCount) {
+        if (($unreadMessageCount !== $lastUnreadCount) && ($unreadMessageCount > $lastUnreadCount)) {
             $countWidget = $this->renderView('widgets/messagescount.hml.twig', [
                 'messageCount' => $unreadMessageCount,
+            ]);
+            $toastWidget = $this->renderView('widgets/messages.toast.html.twig', [
+                'messageCount' => $unreadMessageCount,
+                'lastMessageCount' => $lastUnreadCount,
             ]);
         }
         $response = new JsonResponse();
@@ -274,6 +278,7 @@ class MemberController extends AbstractController
             'oldCount' => $lastUnreadCount,
             'newCount' => $unreadMessageCount,
             'html' => $countWidget,
+            'toast' => $toastWidget,
         ]);
 
         return $response;
@@ -289,16 +294,20 @@ class MemberController extends AbstractController
     public function getUnreadRequestsCount(Request $request)
     {
         $member = $this->getUser();
-        $countWidget = '';
+        $countWidget = $toastWidget = '';
         $lastUnreadCount = (int) ($request->request->get('current'));
 
         /** @var MessageRepository $messageRepository */
         $messageRepository = $this->getDoctrine()->getRepository(Message::class);
         $unreadRequestsCount = $messageRepository->getUnreadRequestsCount($member);
 
-        if ($unreadRequestsCount !== $lastUnreadCount) {
+        if (($unreadRequestsCount !== $lastUnreadCount) && ($unreadRequestsCount > $lastUnreadCount)) {
             $countWidget = $this->renderView('widgets/requestscount.html.twig', [
                 'requestCount' => $unreadRequestsCount,
+            ]);
+            $toastWidget = $this->renderView('widgets/requests.toast.html.twig', [
+                'requestCount' => $unreadRequestsCount,
+                'lastRequestCount' => $lastUnreadCount,
             ]);
         }
         $response = new JsonResponse();
@@ -306,6 +315,7 @@ class MemberController extends AbstractController
             'oldCount' => $lastUnreadCount,
             'newCount' => $unreadRequestsCount,
             'html' => $countWidget,
+            'toast' => $toastWidget,
         ]);
 
         return $response;
@@ -319,7 +329,11 @@ class MemberController extends AbstractController
             'subject' => $subject,
             'key' => $key,
         ]);
-        $plainText = new Html2Text($html);
+        $converter = new HtmlConverter([
+            'strip_tags' => true,
+            'remove_nodes' => 'script'
+        ]);
+        $plainText = $converter->convert($html);
         $message = new Swift_Message();
         $message
             ->setSubject($subject)

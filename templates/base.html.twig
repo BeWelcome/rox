@@ -34,6 +34,8 @@
         {% include 'menu.html.twig' %}
         <noscript><h1>Please activate Javascript for bewelcome.org</h1><p><small>Without it some function won't work.</small></p></noscript>
         <main role="main">
+            <div id="toasts" class="position-absolute w-100 d-flex flex-column p-4">
+            </div>
             <div class="container">
                 {% for label, messages in app.flashes %}
                     <div class="row">
@@ -94,6 +96,8 @@
                 containerCssClass: 'form-control',
                 width: 'style'
             });
+            $(".toast").toast('show');
+
         </script>
         {% block javascripts %}{% endblock javascripts %}
     </body>

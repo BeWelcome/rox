@@ -147,8 +147,6 @@ if (empty($vars)) {
 </div>
 
 <?php
-if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
     $textarea = 'activity-description';
     require_once SCRIPT_BASE . 'public/script/tinymceconfig_php.js';
-}
 ?>

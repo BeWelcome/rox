@@ -10,6 +10,8 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SearchFormType extends AbstractType
@@ -34,6 +36,10 @@ class SearchFormType extends AbstractType
                 'label' => 'TextToFind',
                 'required' => false,
             ])
+            ->addEventListener(
+                FormEvents::PRE_SET_DATA,
+                [$this, 'onPostSetData']
+            )
         ;
 
         $this->addHiddenFields($formBuilder);
@@ -170,29 +176,6 @@ class SearchFormType extends AbstractType
                 ],
                 'translation_domain' => 'messages',
             ])
-            ->add('distance', ChoiceType::class, [
-                'choices' => [
-                    'map only' => -1,
-                    'exact' => 0,
-                    '5km (~3mi)' => 5,
-                    '10km (~6mi)' => 10,
-                    '15km (~10mi)' => 15,
-                    '20km (~15mi)' => 20,
-                    '50km (~31mi)' => 50,
-                    '100km (~63mi)' => 100,
-                    '200km (~128mi)' => 200,
-                ],
-                'choice_translation_domain' => false,
-                'attr' => [
-                    'class' => 'select2-inline',
-                    'data-minimum-results-for-search' => '-1',
-                ],
-                'label' => 'in a radius of',
-                'label_attr' => [
-                    'class' => 'mr-1 sr-only',
-                ],
-                'translation_domain' => 'messages',
-            ])
             ->add('order', ChoiceType::class, [
                 'choices' => [
                     'search.username.ascending' => 2,
@@ -237,13 +220,13 @@ class SearchFormType extends AbstractType
         $formBuilder
             ->add('page', HiddenType::class)
             ->add('location_geoname_id', HiddenType::class, [
-                'error_mapping' => 'location',
+//                'error_mapping' => 'location',
             ])
             ->add('location_latitude', HiddenType::class, [
-                'error_mapping' => 'location',
+//                'error_mapping' => 'location',
             ])
             ->add('location_longitude', HiddenType::class, [
-                'error_mapping' => 'location',
+//                'error_mapping' => 'location',
             ])
             ->add('ne_latitude', HiddenType::class)
             ->add('ne_longitude', HiddenType::class)
@@ -298,5 +281,47 @@ class SearchFormType extends AbstractType
                 'required' => false,
             ])
         ;
+    }
+
+    /*
+     *
+     */
+    /**
+     * Add 'see map' option in case the map shows result from a zoom/pan operation or
+     * an empty search location (\todo)
+     *
+     * @param FormEvent $event
+     */
+    public function onPostSetData(FormEvent $event)
+    {
+        $data = $event->getData();
+        $choices = [
+            'exact' => 0,
+            '5km (~3mi)' => 5,
+            '10km (~6mi)' => 10,
+            '15km (~10mi)' => 15,
+            '20km (~15mi)' => 20,
+            '50km (~31mi)' => 50,
+            '100km (~63mi)' => 100,
+            '200km (~128mi)' => 200,
+        ];
+        $showOnMap = boolval($data->showOnMap);
+        if (true === $showOnMap) {
+            $choices = ['see map' => -1] + $choices;
+        }
+        $form = $event->getForm();
+        $form->add('distance', ChoiceType::class, [
+            'choices' => $choices,
+            'choice_translation_domain' => false,
+            'attr' => [
+                'class' => 'select2-inline',
+                'data-minimum-results-for-search' => '-1',
+            ],
+            'label' => 'in a radius of',
+            'label_attr' => [
+                'class' => 'mr-1 sr-only',
+            ],
+            'translation_domain' => 'messages',
+        ]);
     }
 }

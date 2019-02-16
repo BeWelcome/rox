@@ -156,7 +156,7 @@ class MOD_mail
 
         $converter = new HtmlConverter([
             'strip_tags' => true,
-            'remove_nodes' => 'script'
+            'remove_nodes' => 'style,script',
         ]);
         $plain = $converter->convert($mail_html);
 

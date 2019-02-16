@@ -36,7 +36,7 @@ class SearchController extends AbstractController
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_MAP]);
         $showMap = $member->getMemberPreferenceValue($preference);
 
-        $searchFormRequest = new SearchFormRequest($this->getDoctrine()->getManager());
+        $searchFormRequest = SearchFormRequest::fromRequest($request, $this->getDoctrine()->getManager());
         $searchFormRequest->showmap = ('Yes' === $showMap) ? true : false;
 
         // There are three different forms that might end up on this page

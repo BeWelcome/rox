@@ -4,7 +4,7 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
 ?>
 <!-- #main: content begins here -->
     <?php $this->topnav() ?>
-    <div id="toasts" class="position-absolute w-100 d-flex flex-column p-4">
+    <div id="toasts" class="position-absolute w-100 d-flex flex-column px-2" style="z-index:1000">
     </div>
     <?php $this->statusMessage() ?>
     <?php $loginMessages = $this->_getLoginMessages();

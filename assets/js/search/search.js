@@ -1,10 +1,13 @@
 function Map() {
     this.map = undefined;
+    this.noRefresh = false;
+    this.initializing = false;
     this.mapBox = $("#map-box");
 }
 
 Map.prototype.showMap = function () {
     if (this.map === undefined) {
+        this.initializing = true;
         // add the container hosting the map
 
         this.mapBox.toggleClass("map-box");
@@ -28,23 +31,26 @@ Map.prototype.showMap = function () {
             if (query["distance"] === -1) {
                 this.noRefresh = true;
                 this.map.fitBounds([[query["ne_latitude"], query["ne_longitude"]], [query["sw_latitude"], query["sw_longitude"]]]);
+                this.noRefresh = false;
             } else {
                 this.noRefresh = true;
                 this.map.fitBounds(this.markerClusterGroup.getBounds());
+                this.noRefresh = false;
             }
         }
-
+        that = this;
         this.map.on("dragend", function () {
-            this.refreshMap();
-        }); // Avoid refreshing on zoomend if the map has just been fit to bounds (infinite loop)
+            if (!that.noRefresh && !that.initializing) {
+                that.refreshMap();
+            }
+        }); // Avoid refreshing on dragend if the map has just been fit to bounds (infinite loop)
 
         this.map.on("zoomend", function () {
-            if (!this.noRefresh) {
-                this.refreshMap();
+            if (!that.noRefresh && !that.initializing) {
+                that.refreshMap();
             }
-
-            this.noRefresh = false;
-        });
+        }); // Avoid refreshing on zoomend if the map has just been fit to bounds (infinite loop)
+        this.initializing = false;
     }
 };
 
@@ -65,22 +71,23 @@ Map.prototype.refreshMap = function () {
     var bounds = this.map.getBounds();
     var ne = bounds.getNorthEast();
     var sw = bounds.getSouthWest();
-    var query = this.getQueryStrings($("[name=search_form]").serialize());
-    query["location_latitude"] = lat;
-    query["location_longitude"] = lng;
-    query["distance"] = -1;
-    query["ne_latitude"] = ne.lat;
-    query["ne_longitude"] = ne.lng;
-    query["sw_latitude"] = sw.lat;
-    query["sw_longitude"] = sw.lng;
+    var query = this.getQueryStrings($("[name=search]").serialize());
+    query["search[location_latitude]"] = lat;
+    query["search[location_longitude]"] = lng;
+    query["search[distance]"] = -1;
+    query["search[ne_latitude]"] = ne.lat;
+    query["search[ne_longitude]"] = ne.lng;
+    query["search[sw_latitude]"] = sw.lat;
+    query["search[sw_longitude]"] = sw.lng;
+    query["search[showOnMap]"] = 1;
+    query["search[updateMap]"] = 1;
 
-//    window.location.href =
-//        window.location.protocol + "//" +
-//        window.location.host +
-//        window.location.pathname + this.createQueryString(query);
+    window.location.href =
+        window.location.protocol + "//" +
+        window.location.host +
+        window.location.pathname + this.createQueryString(query)
+    ;
 }; // http://stackoverflow.com/questions/2907482
-// Gets Querystring from window.location and converts all keys to lowercase
-
 
 Map.prototype.getQueryStrings = function (url) {
     var assoc = {};
@@ -140,7 +147,7 @@ Map.prototype.addMarkers = function (map) {
     $.each(mapMembers, function (index, value) {
         // TODO the icons might be easier to see on the map if they had a drop shadow.
         // Add a class to the img tag and css eg. box-shadow: 10px 10px 5px #888888;
-        var iconFile;
+        var iconFile = 'undefined';
 
         switch (value.Accommodation) {
             case 'anytime':
@@ -151,8 +158,12 @@ Map.prototype.addMarkers = function (map) {
                 iconFile = 'dependonrequest';
                 break;
 
-            case 'dontask':
+            case 'neverask':
                 iconFile = 'neverask';
+                break;
+
+            default:
+                iconFile = value.Accommodation;
                 break;
         }
 
@@ -169,7 +180,7 @@ Map.prototype.addMarkers = function (map) {
         if (value.Username) {
             var popupContent = '<div class="d-flex">';
             popupContent = popupContent + '<div><img src="/members/avatar/' + value.Username + '?size=50" width="50" height="50"></div>';
-            popupContent = popupContent + '<div><i class="fa fa-2x fa-bed p-1"></i><span class="h4">' + value.CanHost + '</span></div></div>';
+            popupContent = popupContent + '<div class="hosticon nowrap"><img src="/images/icons/' + iconFile + '.png"><i class="fa fa-2x fa-bed p-1"></i><span class="h4">' + value.CanHost + '</span></div></div>';
             popupContent = popupContent + '<div class="d-flex"><h5 class="nowrap"><a href="/members/' + value.Username + '" target="_blank">' + value.Username + '</a></h5></div>';
 
             marker.bindPopup(popupContent).openPopup(); // groups[accommodation].addLayer(marker);

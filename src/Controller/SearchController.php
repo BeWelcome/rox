@@ -23,6 +23,7 @@ class SearchController extends AbstractController
      * @return Response
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function searchAction(Request $request)
     {

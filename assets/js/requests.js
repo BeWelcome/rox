@@ -7,14 +7,14 @@ $(function () {
     arrival.datetimepicker({
         locale: lang,
         keepInvalid: true,
-        format: 'yyyy-MM-dd',
+        format: 'YYYY-MM-DD',
         minDate: Date.now(),
     });
     departure.datetimepicker({
         locale: lang,
         keepInvalid: true,
         useCurrent: false,
-        format: 'yyyy-MM-dd'
+        format: 'YYYY-MM-DD'
     });
     arrival.on("change.datetimepicker", function (e) {
         $('#departure').datetimepicker('minDate', e.date.add(1, 'days'));

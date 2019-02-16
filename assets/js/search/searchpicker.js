@@ -80,6 +80,10 @@ $( function() {
                 return false;
             }
 
+            let showOnMap = $('search[showOnMap]');
+            if (showOnMap.length) {
+                showOnMap.val(0);
+            }
             $("#" + this.id + "_geoname_id").val(ui.item.value);
             $("#" + this.id + "_latitude").val(ui.item.latitude);
             $("#" + this.id + "_longitude").val(ui.item.longitude);

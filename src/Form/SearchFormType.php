@@ -228,6 +228,7 @@ class SearchFormType extends AbstractType
             ->add('location_longitude', HiddenType::class, [
 //                'error_mapping' => 'location',
             ])
+            ->add('showOnMap', HiddenType::class)
             ->add('ne_latitude', HiddenType::class)
             ->add('ne_longitude', HiddenType::class)
             ->add('sw_latitude', HiddenType::class)

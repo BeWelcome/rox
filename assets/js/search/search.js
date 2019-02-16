@@ -31,23 +31,23 @@ Map.prototype.showMap = function () {
             if (query["distance"] === -1) {
                 this.noRefresh = true;
                 this.map.fitBounds([[query["ne_latitude"], query["ne_longitude"]], [query["sw_latitude"], query["sw_longitude"]]]);
-                this.noRefresh = false;
             } else {
                 this.noRefresh = true;
                 this.map.fitBounds(this.markerClusterGroup.getBounds());
-                this.noRefresh = false;
             }
         }
         that = this;
         this.map.on("dragend", function () {
             if (!that.noRefresh && !that.initializing) {
                 that.refreshMap();
+                that.noRefresh = false;
             }
         }); // Avoid refreshing on dragend if the map has just been fit to bounds (infinite loop)
 
         this.map.on("zoomend", function () {
             if (!that.noRefresh && !that.initializing) {
                 that.refreshMap();
+                that.noRefresh = false;
             }
         }); // Avoid refreshing on zoomend if the map has just been fit to bounds (infinite loop)
         this.initializing = false;

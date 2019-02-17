@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Member;
 use App\Repository\MemberRepository;
+use Html2Text\Html2Text;
 use League\HTMLToMarkdown\HtmlConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,11 +43,11 @@ class SignupController extends AbstractController
                 'emails/signup.html.twig',
                 $parameters
             );
-            $converter = new HtmlConverter([
-                'strip_tags' => true,
-                'remove_nodes' => 'script'
-            ]);
-            $plainText = $converter->convert($body);
+            $converter = new Html2Text($body, [
+                    'do_links' => 'table',
+                    'width' => 75]
+            );
+            $plainText = $converter->getText();
 
             // Send email with confirmation link
             $message = new \Swift_Message();

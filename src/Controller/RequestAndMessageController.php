@@ -17,6 +17,7 @@ use App\Form\MessageToMemberType;
 use App\Model\MessageModel;
 use App\Model\RequestModel;
 use Doctrine\Common\Persistence\ObjectManager;
+use Html2Text\Html2Text;
 use InvalidArgumentException;
 use League\HTMLToMarkdown\HtmlConverter;
 use Swift_Mailer;
@@ -283,7 +284,7 @@ class RequestAndMessageController extends AbstractController
             $em->persist($hostingRequest);
             $em->flush();
 
-            $success = $this->sendRequestNotification(
+            $success = $this->sendInitialRequestNotification(
                 $guest,
                 $host,
                 $hostingRequest
@@ -832,11 +833,11 @@ class RequestAndMessageController extends AbstractController
                 $body,
                 'text/html'
             );
-        $converter = new HtmlConverter([
-            'strip_tags' => true,
-            'remove_nodes' => 'script'
-        ]);
-        $plainText = $converter->convert($body);
+        $converter = new Html2Text($body, [
+                'do_links' => 'table',
+                'width' => 75]
+        );
+        $plainText = $converter->getText();
         $message
             ->addPart($plainText, 'text/plain')
         ;
@@ -845,16 +846,16 @@ class RequestAndMessageController extends AbstractController
         return (0 === $recipients) ? false : true;
     }
 
-    private function sendNotification(Member $guest, Member $host, Message $request, $template)
+    private function sendNotification(Member $sender, Member $receiver, Message $request, $template)
     {
         // Send mail notification with the receiver's preferred locale
-        $this->setTranslatorLocale($host);
+        $this->setTranslatorLocale($receiver);
 
         $subject = $request->getSubject()->getSubject();
         $message = $request->getMessage();
         $body = $this->renderView($template, [
-            'sender' => $guest,
-            'receiver' => $host,
+            'sender' => $sender,
+            'receiver' => $receiver,
             'subject' => $subject,
             'message' => $message,
             'request' => $request->getRequest(),
@@ -863,16 +864,16 @@ class RequestAndMessageController extends AbstractController
         $message = (new Swift_Message())
             ->setSubject('[Request] '.strip_tags($subject))
             ->setFrom([
-                'request@bewelcome.org' => 'BeWelcome - '.$guest->getUsername(),
+                'request@bewelcome.org' => 'BeWelcome - '.$receiver->getUsername(),
             ])
-            ->setTo($host->getEmail())
+            ->setTo($receiver->getEmail())
             ->setBody(
                 $body,
                 'text/html'
             );
         $converter = new HtmlConverter([
             'strip_tags' => true,
-            'remove_nodes' => 'script'
+            'remove_nodes' => 'head script style'
         ]);
         $plainText = $converter->convert($body);
         $message
@@ -890,7 +891,7 @@ class RequestAndMessageController extends AbstractController
      *
      * @return bool
      */
-    private function sendRequestNotification(Member $guest, Member $host, Message $request)
+    private function sendInitialRequestNotification(Member $guest, Member $host, Message $request)
     {
         return $this->sendNotification($guest, $host, $request, 'emails/request.html.twig');
     }
@@ -916,7 +917,7 @@ class RequestAndMessageController extends AbstractController
      */
     private function sendGuestReplyNotification(Member $guest, Member $host, Message $request)
     {
-        return $this->sendNotification($guest, $host, $request, 'emails/reply_guest.html.twig');
+        return $this->sendNotification($host, $guest, $request, 'emails/reply_guest.html.twig');
     }
 
     private function checkRequestExpired(HostingRequest $request)

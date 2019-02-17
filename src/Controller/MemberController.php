@@ -12,6 +12,7 @@ use App\Form\ReportCommentType;
 use App\Repository\MemberRepository;
 use App\Repository\MessageRepository;
 use Doctrine\ORM\NonUniqueResultException;
+use Html2Text\Html2Text;
 use League\HTMLToMarkdown\HtmlConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Swift_Message;
@@ -329,11 +330,11 @@ class MemberController extends AbstractController
             'subject' => $subject,
             'key' => $key,
         ]);
-        $converter = new HtmlConverter([
-            'strip_tags' => true,
-            'remove_nodes' => 'script'
-        ]);
-        $plainText = $converter->convert($html);
+        $converter = new Html2Text($html, [
+                'do_links' => 'table',
+                'width' => 75]
+        );
+        $plainText = $converter->getText();
         $message = new Swift_Message();
         $message
             ->setSubject($subject)
@@ -348,7 +349,7 @@ class MemberController extends AbstractController
                 'text/html'
             )
             ->addPart(
-                $plainText->getText(),
+                $plainText,
                 'text/plain'
             )
         ;

@@ -21,7 +21,6 @@ class MessageIndexFormType extends AbstractType
             ->add('delete', SubmitType::class, [
                 'label' => $deleteButtonLabel,
             ])
-
             ->add('spam', SubmitType::class, [
                 'label' => $spamButtonLabel,
             ])
@@ -31,6 +30,12 @@ class MessageIndexFormType extends AbstractType
                 'expanded' => true,
                 'multiple' => true,
             ]);
+        if ('deleted' === $options['folder']) {
+            $builder
+                ->add('purge', SubmitType::class, [
+                    'label' => 'purge'
+                ]);
+        }
     }
 
     /**

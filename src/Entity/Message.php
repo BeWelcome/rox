@@ -7,6 +7,7 @@
 
 namespace App\Entity;
 
+use App\Doctrine\DeleteRequestType;
 use App\Doctrine\SpamInfoType;
 use Carbon\Carbon;
 use DateTime;
@@ -592,6 +593,50 @@ class Message
         $this->request = $request;
 
         return $this;
+    }
+
+    /**
+     * @param Member $member
+     * @return bool
+     */
+    public function isReceiverDeleted(Member $member)
+    {
+        if ($member === $this->getReceiver()) {
+            $deleteRequest = $this->getDeleteRequest();
+            $requests = array_filter(explode(',', $deleteRequest));
+            $key = array_search(DeleteRequestType::RECEIVER_DELETED, $requests, true);
+            if (false !== $key) {
+                return true;
+            }
+            $key = array_search(DeleteRequestType::RECEIVER_PURGED, $requests, true);
+            if (false !== $key) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Member $member
+     * @return bool
+     */
+    public function isSenderDeleted(Member $member)
+    {
+        if ($member === $this->getSender()) {
+            $deleteRequest = $this->getDeleteRequest();
+            $requests = array_filter(explode(',', $deleteRequest));
+            $key = array_search(DeleteRequestType::SENDER_DELETED, $requests, true);
+            if (false !== $key) {
+                return true;
+            }
+            $key = array_search(DeleteRequestType::SENDER_PURGED, $requests, true);
+            if (false !== $key) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -34,6 +34,7 @@
 
         {# set sorting header based on current folder. Outside of sent sort by sender #}
         {% set correspondent %}{% if folder == 'sent' %}receiver{% else %}sender{% endif %}{% endset %}
+        {% set _route = app.request.attributes.get('_route') %}
         <table class="table table-responsive table-striped table-hover">
 
         <tr>
@@ -41,8 +42,8 @@
                 <input type="checkbox" id="checkAll">
             </th>
             <th class="from text-center align-middle text-nowrap">
-                <span class="small"><a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: correspondent, dir: 'asc' }) }}">&#x25b2;</a> {{ correspondent | trans | capitalize }} <a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: correspondent, dir: 'desc' }) }}">&#x25bc;</a></span><br>
-                <span class="small"><a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: 'date', dir: 'asc' }) }}">&#x25b2;</a> {{ 'Date' | trans }} <a href="{{ path( app.request.attributes.get('_route'), { folder: folder, sort: 'date', dir: 'desc' }) }}">&#x25bc;</a></span>
+                <span class="small"><a href="{{ path( _route, { folder: folder, sort: correspondent, dir: 'asc' }) }}">&#x25b2;</a> {{ correspondent | trans | capitalize }} <a href="{{ path( _route, { folder: folder, sort: correspondent, dir: 'desc' }) }}">&#x25bc;</a></span><br>
+                <span class="small"><a href="{{ path( _route, { folder: folder, sort: 'date', dir: 'asc' }) }}">&#x25b2;</a> {{ 'Date' | trans }} <a href="{{ path( _route, { folder: folder, sort: 'date', dir: 'desc' }) }}">&#x25bc;</a></span>
             </th>
             <th colspan="2" class="align-middle">{{ 'MessagesText' | trans }}</th>
         </tr>
@@ -90,7 +91,7 @@
                     {% endif %}
                     {# Handle the case where a message/request doesn't have a sent date #}
                     {% set sentDate %}{% if message.dateSent != '-0001-11-30 00:00:00' %}{{ message.dateSent | localizeddate( 'medium', 'none') }}{% else %}{{ message.updated | localizeddate( 'medium', 'none')}}{% endif %}{% endset %}
-                    <span class="text-muted small">{% if folder == 'sent' %}{% trans %}message.sentdate{% endtrans %}{% else %}{% trans %}message.sentdate{% endtrans %}{% endif %}</span>
+                    <span class="text-muted small">{% trans with {'%sentDate%': sentDate} %}message.sentdate{% endtrans %}</span>
                         </div>
                     </a>
                 </td>
@@ -103,7 +104,8 @@
                 <td colspan="4">
                     <div class="btn-group" aria-label="Delete or spam">
                         {% if folder == 'deleted' %}
-                            {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-danger' } }) }}
+                            {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-light' } }) }}
+                            {{ form_widget(form.purge, { 'attr': { 'class': 'btn btn-danger' } }) }}
                         {% else %}
                             {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-danger', 'onclick': 'return confirm ("' ~ 'MessagesWarningConfirmDelete' | trans  ~ '")'} }) }}
                         {% endif %}

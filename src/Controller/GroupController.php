@@ -8,11 +8,13 @@ use App\Entity\GroupMembership;
 use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\MembersTrad;
+use App\Entity\Preference;
 use App\Form\CustomDataClass\GroupRequest;
 use App\Form\GroupType;
 use App\Logger\Logger;
 use App\Repository\GroupRepository;
 use Doctrine\DBAL\Statement;
+use Html2Text\Html2Text;
 use Intervention\Image\ImageManagerStatic as Image;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -360,7 +362,24 @@ class GroupController extends AbstractController
     {
         $recipient = $creator->getEmail();
 
+        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
+        /** @var Preference $preference */
+        $preference = $preferenceRepository->findOneBy(['codename' => Preference::HTML_MAILS]);
+        $htmlMails = ('Yes' === $creator->getMemberPreferenceValue($preference));
+
         $subject = '[New Group] '.strip_tags($group->getName()).' approved';
+        $htmlBody = $this->renderView('emails/group.approved.html.twig', [
+            'subject' => $subject,
+            'group' => $group,
+            'creator' => $creator,
+        ]);
+
+        $converter = new Html2Text($htmlBody, [
+            'do_links' => 'table',
+            'width' => 75
+        ]);
+        $body = $converter->getText();
+
         $message = new Swift_Message();
         $message
             ->setSubject($subject)
@@ -371,14 +390,16 @@ class GroupController extends AbstractController
             )
             ->setTo($recipient)
             ->setBody(
-                $this->renderView('emails/group.approved.html.twig', [
-                    'subject' => $subject,
-                    'group' => $group,
-                    'creator' => $creator,
-                ]),
+                $body,
+                'text/plain'
+            );
+        if ($htmlMails) {
+            $message->addPart(
+                $htmlBody,
                 'text/html'
-            )
-        ;
+            );
+        }
+
         $recipients = $mailer->send($message);
 
         return (0 === $recipients) ? false : true;

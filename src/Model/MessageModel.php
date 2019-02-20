@@ -22,6 +22,37 @@ use PDO;
 class MessageModel extends BaseModel
 {
     /**
+     * Mark a message as purged (can not be unmarked)
+     *
+     * @param Member $member
+     * @param array  $messageIds
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function markPurged(Member $member, array $messageIds)
+    {
+        /** @var MessageRepository $repository */
+        $repository = $this->em->getRepository(Message::class);
+
+        $messages = $repository->findBy([
+            'id' => $messageIds,
+        ]);
+
+        /** @var Message $message */
+        foreach ($messages as $message) {
+            if ($message->getReceiver()->getId() === $member->getId()) {
+                $deleteRequest = DeleteRequestType::addReceiverPurged($message->getDeleteRequest());
+            } else {
+                $deleteRequest = DeleteRequestType::addSenderPurged($message->getDeleteRequest());
+            }
+            $message->setDeleteRequest($deleteRequest);
+            $this->em->persist($message);
+        }
+        $this->em->flush();
+    }
+
+    /**
      * @param Member $member
      * @param array  $messageIds
      *

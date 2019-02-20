@@ -44,9 +44,9 @@ class SignupController extends AbstractController
                 $parameters
             );
             $converter = new Html2Text($body, [
-                    'do_links' => 'table',
-                    'width' => 75]
-            );
+                'do_links' => 'table',
+                'width' => 75
+            ]);
             $plainText = $converter->getText();
 
             // Send email with confirmation link

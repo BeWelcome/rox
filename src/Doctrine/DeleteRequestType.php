@@ -6,6 +6,8 @@ class DeleteRequestType extends SetType
 {
     const SENDER_DELETED = 'senderdeleted';
     const RECEIVER_DELETED = 'receiverdeleted';
+    const SENDER_PURGED = 'senderpurged';
+    const RECEIVER_PURGED = 'receiverpurged';
 
     /** @var string */
     protected $name = 'delete_request';
@@ -14,6 +16,8 @@ class DeleteRequestType extends SetType
     protected $values = [
         self::SENDER_DELETED,
         self::RECEIVER_DELETED,
+        self::SENDER_PURGED,
+        self::RECEIVER_PURGED,
     ];
 
     public static function addSenderDeleted($deleteRequest)
@@ -34,6 +38,26 @@ class DeleteRequestType extends SetType
     public static function removeReceiverDeleted($deleteRequest)
     {
         return self::removeRequest($deleteRequest, self::RECEIVER_DELETED);
+    }
+
+    public static function addSenderPurged($deleteRequest)
+    {
+        return self::addRequest($deleteRequest, self::SENDER_PURGED);
+    }
+
+    public static function addReceiverPurged($deleteRequest)
+    {
+        return self::addRequest($deleteRequest, self::RECEIVER_PURGED);
+    }
+
+    public static function removeSenderPurged($deleteRequest)
+    {
+        return self::removeRequest($deleteRequest, self::SENDER_PURGED);
+    }
+
+    public static function removeReceiverPurged($deleteRequest)
+    {
+        return self::removeRequest($deleteRequest, self::RECEIVER_PURGED);
     }
 
     private static function addRequest($deleteRequest, $request)

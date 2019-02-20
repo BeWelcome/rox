@@ -6,6 +6,7 @@
     {% if current.Request %}{% set currentArrival = current.Request.Arrival %}{% set currentDeparture = current.Request.Departure %}{% endif %}
     {% for message in thread %}
         {% set own = (myself.Username == message.Sender.Username) %}
+        {# Check if the member deleted the message/request #}
         {% if message.Subject %}{% set subject = message.Subject.Subject %}
             {% if subject != currentSubject %}
                 {% set currentSubject = subject %}
@@ -14,6 +15,7 @@
                 </div>
             {% endif %}
         {% endif %}
+        {% if not (message.isSenderDeleted(myself) or message.isReceiverDeleted(myself)) %}
         <div class="row {% if own %}justify-content-end{% else %}justify-content-start{% endif %}">
             <div class="col-auto{% if own %} order-12 pr-0{% else %} pl-0{% endif %}">
                 {% if own %}
@@ -29,7 +31,7 @@
                     {%- else -%}
                         {{ message.sender.Username }}
                     {%- endif %}
-                    {{ message.created.DiffForHumans }}
+                    {{ message.created.DiffForHumans }} - {{ message.id }}
                 </small>
                 <p class="clearfix m-0"></p>
                 {{ message.message | purify }}
@@ -42,5 +44,6 @@
                 {% endif %}
             </div>
         </div>
+        {% endif %}
     {% endfor %}
 </div>

@@ -8,9 +8,9 @@ use Pagerfanta\Pagerfanta;
 
 class WordRepository extends EntityRepository
 {
-    public function paginateTranslations($locale, $page = 1, $items = 20)
+    public function paginateTranslations($locale, $code = '', $page = 1, $items = 20)
     {
-        $queryBuilder = $this->queryAll($locale);
+        $queryBuilder = $this->queryAll($locale, $code);
         $adapter = new DoctrineORMAdapter($queryBuilder);
         $paginator = new Pagerfanta($adapter);
         $paginator->setMaxPerPage($items);
@@ -19,13 +19,18 @@ class WordRepository extends EntityRepository
         return $paginator;
     }
 
-    private function queryAll($locale)
+    private function queryAll($locale, $code = '')
     {
         $qb = $this->createQueryBuilder('t')
             ->where('t.shortCode = :locale')
             ->setParameter(':locale', $locale)
             ->orderBy('t.created', 'DESC')
             ->addOrderBy('t.code', 'ASC');
+        if (!empty($code)) {
+            $qb
+                ->andWhere('t.code LIKE :code')
+                ->setParameter(':code', '%'.$code.'%');
+        }
 
         return $qb;
     }

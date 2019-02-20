@@ -11,6 +11,9 @@ class TranslationAdapter implements AdapterInterface
     /** @var string */
     private $query;
 
+    /** @var string */
+    private $code;
+
     /** @var Connection */
     private $connection;
 
@@ -20,11 +23,13 @@ class TranslationAdapter implements AdapterInterface
      * @SuppressWarnings(PHPMD.StaticAccess)
      *
      * @param Connection $connection
-     * @param string     $locale
+     * @param string $locale
+     * @param string $code
      */
-    public function __construct(Connection $connection, string $locale)
+    public function __construct(Connection $connection, string $locale, string $code)
     {
         $this->connection = $connection;
+        $this->code = $code;
 
         $this->query = "
             SELECT distinct p.code
@@ -39,7 +44,11 @@ class TranslationAdapter implements AdapterInterface
             LEFT OUTER 
               JOIN words AS pi_lang 
                 ON pi_lang.code = p.code
-                AND pi_lang.shortcode = '{$locale}'
+                AND pi_lang.shortcode = '{$locale}'";
+        if (!empty($code)) {
+            $this->query .= " WHERE (pi_lang.code LIKE '%" . $code . "%' OR pi_dflt.code LIKE '%" . $code . "%')";
+        }
+        $this->query .= "
             ORDER BY created desc";
     }
 
@@ -50,7 +59,12 @@ class TranslationAdapter implements AdapterInterface
      */
     public function getNbResults()
     {
-        $statement = $this->connection->query("SELECT count(*) as cnt FROM words WHERE shortcode = 'en'");
+        $query = "SELECT count(*) as cnt FROM words WHERE shortcode = 'en'";
+        if (!empty($this->code)) {
+            $query .= " AND code LIKE '%" . $this->code . "%'";
+        }
+
+        $statement = $this->connection->query($query);
         $result = $statement->fetch(PDO::FETCH_OBJ);
 
         return $result->cnt;

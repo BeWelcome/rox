@@ -65,8 +65,8 @@
 
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-controls="messages" href="#messages" role="tab" data-toggle="tab">{{ 'landing.tab.messagesreceived' | trans }}{% if messageCount %} <span
-                                class="badge badge-primary">{{ messageCount }}</span>{% endif %}</a>
+                    <a class="nav-link active" aria-controls="messages" href="#messages" role="tab" data-toggle="tab">{{ 'landing.tab.messagesreceived' | trans }}{% if messageCount + requestCount %} <span
+                                class="badge badge-primary">{{ messageCount + requestCount }}</span>{% endif %}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" aria-controls="notifications" href="#notifications" role="tab"
@@ -99,9 +99,9 @@
 
                     {# message buttons #}
                     <div class="text-center">
-                        <a href="{{ url( 'messages' )}}" class="btn btn-outline-primary btn-homewhite"><i
-                                    class="fa fa-envelope"></i>{{ 'landing.button.myinbox' | trans }}{% if messageCount %} <span
-                                    class="badge badge-primary">{{ messageCount }}</span>{% endif %}</a>
+                        <a href="{{ url( 'both' )}}" class="btn btn-outline-primary btn-homewhite"><i
+                                    class="fa fa-envelope"></i>{{ 'landing.button.myinbox' | trans }}{% if messageCount + requestCount %} <span
+                                    class="badge badge-primary">{{ messageCount + requestCount }}</span>{% endif %}</a>
                     </div>
                 </div>
 

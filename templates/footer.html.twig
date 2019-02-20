@@ -4,7 +4,6 @@
 {%- set hasCurrentLocaleRights = app.user.hasRightsForLocale(app.request.locale) -%}
 {% endif %}
 <footer>
-    {{ app.request.locale }}
     {% set langsel -%}
         <select id="language" name="language" class="col-auto small select2 combo"
                 onchange="window.location.href=this.value; return false">

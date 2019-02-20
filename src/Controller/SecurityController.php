@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
@@ -43,10 +44,10 @@ class SecurityController extends AbstractController
      *
      * @Route("/logout", name="security_logout")
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function logoutAction()
     {
-        throw new \Exception('This should never be reached!');
+        throw new Exception('This should never be reached!');
     }
 }

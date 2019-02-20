@@ -7,12 +7,13 @@
 {% block content %}
     <h1>{{ 'translations.headline' | trans }}</h1>
     <p>{% trans with { '%locale%': locale } %}translations.abstract{% endtrans %}</p>
+    {{ form(form) }}
     {% if translations.nbResults == 0  %}
     {% else %}
         {% if translations.haveToPaginate %}
             <div class="row">
                 <div class="col-12 float-left">
-                    {{ pagerfanta( translations, 'twitter_bootstrap4_translated') }}
+                    {{ pagerfanta( translations , 'twitter_bootstrap4_translated') }}
                 </div>
             </div>
         {% endif %}

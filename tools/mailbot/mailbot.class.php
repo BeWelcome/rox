@@ -84,7 +84,6 @@ class Mailbot
 
         $this->words = new MOD_words();
 
-        $this->messages_model = new MessagesModel;
         $this->members_model = new MembersModel;
 
         // setup DB access
@@ -577,7 +576,7 @@ class ForumNotificationMailbot extends Mailbot
      * @param integer grace_period Wait for grace period minutes before sending email notifications to allow author to edit post
      * @return void
      */
-    public function run($grace_period = 5)
+    public function run($grace_period = 1)
     {
         $qry = $this->_getNotificationList($grace_period);
         while ($notification = $qry->fetch(PDB::FETCH_OBJ)) {
@@ -627,7 +626,6 @@ class ForumNotificationMailbot extends Mailbot
     }
 } // class ForumNotificationMailbot
 
-
 /**
  * main function instantiating and running the mailbots
  *
@@ -651,10 +649,13 @@ function runMailbots($config)
     $massmailbot->run();
 }
 
-runMailbots( [
-    'host' => getenv('DB_HOST'),
-    'name' => getenv('DB_NAME'),
-    'user' => getenv('DB_USER'),
-    'pass' => getenv('DB_PASS'),
-    'site_url' => getenv('SITE_URL'),
-]);
+try {
+    runMailbots([
+        'host' => getenv('DB_HOST'),
+        'name' => getenv('DB_NAME'),
+        'user' => getenv('DB_USER'),
+        'pass' => getenv('DB_PASS'),
+        'site_url' => getenv('SITE_URL'),
+    ]);
+} catch (PException $e) {
+}

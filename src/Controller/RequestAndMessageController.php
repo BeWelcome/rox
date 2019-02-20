@@ -418,6 +418,14 @@ class RequestAndMessageController extends AbstractController
             $data = $form->getData();
             $messageIds = $data->getMessages();
             if (!empty($messages)) {
+                if ('deleted' === $folder) {
+                    if ($form->get('purge')->isClicked()) {
+                        $messageModel->markPurged($member, $messageIds);
+                        $this->addFlash('notice', 'Messages and/or requests permanently deleted.');
+                    } else {
+                        // ignore as this can never happen (purge only possible in deleted folder)
+                    }
+                }
                 if ($form->get('delete')->isClicked()) {
                     if ('deleted' === $folder) {
                         $messageModel->unmarkDeleted($member, $messageIds);
@@ -779,6 +787,10 @@ class RequestAndMessageController extends AbstractController
                 'key' => 'MessagesRequestsReceived',
                 'url' => $this->generateUrl('both', ['folder' => 'inbox']),
             ],
+            'messages_inbox' => [
+                'key' => 'MessagesReceived',
+                'url' => $this->generateUrl('messages', ['folder' => 'inbox']),
+            ],
             'requests_inbox' => [
                 'key' => 'RequestsReceived',
                 'url' => $this->generateUrl('requests', ['folder' => 'inbox']),
@@ -803,6 +815,45 @@ class RequestAndMessageController extends AbstractController
     }
 
     /**
+     * @param Member $sender
+     * @param Member $receiver
+     * @param string $subject
+     * @param string $htmlBody
+     */
+    private function sendEmail(Member $sender, Member $receiver, $subject, $htmlBody)
+    {
+        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
+        /** @var Preference $preference */
+        $preference = $preferenceRepository->findOneBy(['codename' => Preference::HTML_MAILS]);
+        $htmlMails = ('Yes' === $receiver->getMemberPreferenceValue($preference));
+
+        $converter = new Html2Text($htmlBody, [
+            'do_links' => 'table',
+            'width' => 75
+        ]);
+        $plainText = $converter->getText();
+        $message = (new Swift_Message())
+            ->setSubject($subject)
+            ->setFrom([
+                'message@bewelcome.org' => 'BeWelcome - '.$sender->getUsername(),
+            ])
+            ->setTo($receiver->getEmail())
+            ->setBody(
+                $plainText,
+                'text/html'
+            );
+
+        if ($htmlMails) {
+            $message
+                ->addPart($htmlBody, 'text/html')
+            ;
+        }
+        $recipients = $this->mailer->send($message);
+
+        return (0 === $recipients) ? false : true;
+    }
+
+    /**
      * @param Member  $sender   Host/Guest
      * @param Member  $receiver Guest/Host
      * @param Message $message
@@ -823,30 +874,10 @@ class RequestAndMessageController extends AbstractController
             'body' => $messageBody,
         ]);
 
-        $message = (new Swift_Message())
-            ->setSubject($subject)
-            ->setFrom([
-                'message@bewelcome.org' => 'BeWelcome - '.$sender->getUsername(),
-            ])
-            ->setTo($receiver->getEmail())
-            ->setBody(
-                $body,
-                'text/html'
-            );
-        $converter = new Html2Text($body, [
-                'do_links' => 'table',
-                'width' => 75]
-        );
-        $plainText = $converter->getText();
-        $message
-            ->addPart($plainText, 'text/plain')
-        ;
-        $recipients = $this->mailer->send($message);
-
-        return (0 === $recipients) ? false : true;
+        return $this->sendEmail($sender, $receiver, $subject, $body);
     }
 
-    private function sendNotification(Member $sender, Member $receiver, Message $request, $template)
+    private function sendRequestNotification(Member $sender, Member $receiver, Message $request, $template)
     {
         // Send mail notification with the receiver's preferred locale
         $this->setTranslatorLocale($receiver);
@@ -861,27 +892,7 @@ class RequestAndMessageController extends AbstractController
             'request' => $request->getRequest(),
         ]);
 
-        $message = (new Swift_Message())
-            ->setSubject('[Request] '.strip_tags($subject))
-            ->setFrom([
-                'request@bewelcome.org' => 'BeWelcome - '.$receiver->getUsername(),
-            ])
-            ->setTo($receiver->getEmail())
-            ->setBody(
-                $body,
-                'text/html'
-            );
-        $converter = new HtmlConverter([
-            'strip_tags' => true,
-            'remove_nodes' => 'head script style'
-        ]);
-        $plainText = $converter->convert($body);
-        $message
-            ->addPart($plainText, 'text/plain')
-        ;
-        $recipients = $this->mailer->send($message);
-
-        return (0 === $recipients) ? false : true;
+        return $this->sendEmail($sender, $receiver, $subject, $body);
     }
 
     /**
@@ -893,7 +904,7 @@ class RequestAndMessageController extends AbstractController
      */
     private function sendInitialRequestNotification(Member $guest, Member $host, Message $request)
     {
-        return $this->sendNotification($guest, $host, $request, 'emails/request.html.twig');
+        return $this->sendRequestNotification($guest, $host, $request, 'emails/request.html.twig');
     }
 
     /**
@@ -905,7 +916,7 @@ class RequestAndMessageController extends AbstractController
      */
     private function sendHostReplyNotification(Member $guest, Member $host, Message $request)
     {
-        return $this->sendNotification($guest, $host, $request, 'emails/reply_host.html.twig');
+        return $this->sendRequestNotification($guest, $host, $request, 'emails/reply_host.html.twig');
     }
 
     /**
@@ -917,7 +928,7 @@ class RequestAndMessageController extends AbstractController
      */
     private function sendGuestReplyNotification(Member $guest, Member $host, Message $request)
     {
-        return $this->sendNotification($host, $guest, $request, 'emails/reply_guest.html.twig');
+        return $this->sendRequestNotification($host, $guest, $request, 'emails/reply_guest.html.twig');
     }
 
     private function checkRequestExpired(HostingRequest $request)

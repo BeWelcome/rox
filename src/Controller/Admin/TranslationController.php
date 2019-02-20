@@ -11,15 +11,20 @@ use App\Form\EditTranslationFormType;
 use App\Form\TranslationFormType;
 use App\Model\TranslationModel;
 use App\Pagerfanta\TranslationAdapter;
+use App\Repository\MemberRepository;
 use DateTime;
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\NonUniqueResultException;
 use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Class TranslationController.
@@ -37,26 +42,50 @@ class TranslationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/translations", name="translations")
+     * @Route("/admin/translations/{code}", name="translations",
+     *     defaults={"code":""})
      *
      * @param Request $request
+     * @param string code
      *
      * @return Response
      */
-    public function listTranslationsAction(Request $request)
+    public function listTranslationsAction(Request $request, $code)
     {
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 20);
         $locale = $this->get('session')->get('_locale');
 
+        $form = $this->createFormBuilder(['wordCode' => $code])
+            ->add('wordCode', TextType::class, [
+                'label' => 'translation.id',
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+            ->add('search', SubmitType::class)
+            ->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $newCode = $data['wordCode'];
+            if ($code <> $newCode) {
+                $page=1;
+                $code = $newCode;
+            }
+        }
+
         /** @var Connection $connection */
         $connection = $this->getDoctrine()->getConnection();
-        $translationAdapter = new TranslationAdapter($connection, $locale);
+        $translationAdapter = new TranslationAdapter($connection, $locale, $code);
         $translations = new Pagerfanta($translationAdapter);
         $translations->setMaxPerPage($limit);
         $translations->setCurrentPage($page);
 
         return $this->render('admin/translations/list.html.twig', [
+            'form' => $form->createView(),
+            'code' => $code,
             'translations' => $translations,
         ]);
     }
@@ -282,4 +311,5 @@ class TranslationController extends AbstractController
 
         return $this->redirect($referrer);
     }
+
 }

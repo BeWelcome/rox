@@ -7,6 +7,7 @@ use App\Entity\Comment;
 use App\Entity\FeedbackCategory;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Entity\Preference;
 use App\Form\CustomDataClass\ReportCommentRequest;
 use App\Form\ReportCommentType;
 use App\Repository\MemberRepository;
@@ -324,6 +325,11 @@ class MemberController extends AbstractController
 
     private function sendPasswordResetLink(Member $receiver, $subject, $key, \Swift_Mailer $mailer)
     {
+        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
+        /** @var Preference $preference */
+        $preference = $preferenceRepository->findOneBy(['codename' => Preference::HTML_MAILS]);
+        $htmlMails = ('Yes' === $receiver->getMemberPreferenceValue($preference));
+
         // Send mail notification
         $html = $this->renderView('emails/reset.password.html.twig', [
             'receiver' => $receiver,
@@ -331,12 +337,11 @@ class MemberController extends AbstractController
             'key' => $key,
         ]);
         $converter = new Html2Text($html, [
-                'do_links' => 'table',
-                'width' => 75]
-        );
+            'do_links' => 'table',
+            'width' => 75
+        ]);
         $plainText = $converter->getText();
-        $message = new Swift_Message();
-        $message
+        $message = (new Swift_Message())
             ->setSubject($subject)
             ->setFrom(
                 [
@@ -344,15 +349,17 @@ class MemberController extends AbstractController
                 ]
             )
             ->setTo($receiver->getEmail())
-            ->setBody(
-                $html,
-                'text/html'
-            )
             ->addPart(
                 $plainText,
                 'text/plain'
-            )
-        ;
+            );
+        if ($htmlMails) {
+            $message->setPart(
+                $html,
+                'text/html'
+            );
+        }
+
         $recipients = $mailer->send($message);
 
         return (0 === $recipients) ? false : true;

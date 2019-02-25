@@ -11,10 +11,12 @@ use App\Form\FaqCategoryFormType;
 use App\Form\FaqFormType;
 use App\Model\FaqModel;
 use Doctrine\ORM\EntityRepository;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -37,7 +39,7 @@ class FaqController extends AbstractController
      * @param Request     $request
      * @param FaqCategory $faqCategory
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
@@ -89,7 +91,8 @@ class FaqController extends AbstractController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws Exception
      */
     public function createCategoryAction(Request $request)
     {
@@ -150,7 +153,7 @@ class FaqController extends AbstractController
      * @param Request     $request
      * @param FaqCategory $faqCategory
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function createFaqInCategoryAction(Request $request, FaqCategory $faqCategory)
     {
@@ -221,7 +224,7 @@ class FaqController extends AbstractController
      * @param Request     $request
      * @param FaqCategory $faqCategory
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function editCategoryAction(Request $request, FaqCategory $faqCategory)
     {
@@ -265,7 +268,7 @@ class FaqController extends AbstractController
      * @param Request $request
      * @param Faq     $faq
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function editFaqAction(Request $request, Faq $faq)
     {
@@ -345,7 +348,7 @@ class FaqController extends AbstractController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function sortFaqCategoriesAction(Request $request)
@@ -408,19 +411,19 @@ class FaqController extends AbstractController
         $subMenu = [];
         if (null === $faqCategory) {
             $subMenu['createCategory'] = [
-                'key' => 'CreateFaqCategory',
+                'key' => 'admin.faq.create.category',
                 'url' => $this->generateUrl('admin_faqs_category_create'),
             ];
         } else {
             $subMenu['editCategory'] = [
-                'key' => 'EditFaqCategory',
+                'key' => 'admin.faq.edit.category',
                 'url' => $this->generateUrl('admin_faqs_category_edit', [
                     'id' => $faqCategory->getId(),
                 ]),
             ];
         }
         $subMenu['sortCategories'] = [
-            'key' => 'SortFaqCategories',
+            'key' => 'admin.faq.sort.categories',
             'url' => $this->generateUrl('admin_faqs_category_sort'),
         ];
         foreach ($faqCategories as $faqCategory) {

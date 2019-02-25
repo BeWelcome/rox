@@ -16,7 +16,7 @@
 
 {% block content %}
     {% if reported.nbResults == 0 %}
-        <div class="alert alert-warning">{{ 'No messages have been reported as spam.' | trans }}</div>
+        <div class="alert alert-warning">{{ 'admin.checker.no.messages' | trans }}</div>
     {% else %}
         {{ form_start(form) }}
         {{ form_errors(form) }}
@@ -32,7 +32,8 @@
                 <th>Message</th>
                 <th>Receiver</th>
                 <th>Created</th>
-                <th colspan="2">No - Spam</th>
+                <th>{{ 'ok' | trans }}</th>
+                <th>{{ 'spam' | trans }}</th>
             </tr>
             <tr>
                 <th colspan="4"></th>

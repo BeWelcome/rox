@@ -1,13 +1,6 @@
 {% extends 'base.html.twig' %}
 {% import 'macros.twig' as macros %}
 
-{% block subnav %}
-    {% for filter,menuItem in submenu.items %}
-        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}"
-           href="{{ menuItem.url }}">{{ menuItem.key | trans({}, 'messages', 'en') }}</a>
-    {% endfor %}
-{% endblock %}
-
 {% block javascripts %}
     <script src="{{ asset('build/jquery_ui.js') }}"></script>
     <script src="{{ asset('build/admin/faqs.js') }}"></script>
@@ -21,16 +14,16 @@
     <h1>{{ 'admin.faqs.sort_categories' | trans }}</h1>
     {% if faqCategories|length == 0 %}
         <p>{{ 'faqs.none' | trans }}</p>
-        <p>{{ 'faqs.none.create' | trans }}<a class="float-right" href="{{ path('admin_faqs_category_create') }}"><button class="btn btn-primary">{{ 'CreateFaqCategory' | trans }}</button></a></p>
+        <p>{{ 'faqs.none.create' | trans }}<a class="float-right" href="{{ path('admin_faqs_category_create') }}"><button class="btn btn-primary">{{ 'faq.create.category.label' | trans }}</button></a></p>
     {% else %}
         {{ form_start(form) }}
             {{ form_row(form.sortOrder) }}
             <div class="card mb-1">
                 <div class="card-body">
-                    <h5 class="card-title">FAQ</h5>
-                    <p class="card-text">This shows the list of all FAQ categories. You can drag the cards to change the sort order.</p>
+                    <h5 class="card-title">{{ 'faq' | trans }}</h5>
+                    <p class="card-text">{{ 'admin.faq.abstract' | trans }}</p>
                     <p class="card-text text-right">
-                        <button type="submit" class="btn btn-primary">{{ 'UpdateFaqOrder' }}</button>
+                        <button type="submit" class="btn btn-primary">{{ 'admin.faq.category.update.order' | trans }}</button>
                     </p>
                 </div>
             </div>
@@ -38,15 +31,21 @@
             {% for faqCategory in faqCategories %}
                 <div id="faq_{{ faqCategory.id }}" class="card mb-1">
                     <div class="card-body">
-                        <p class="card-title"><small class="text-muted">{{ faqCategory.description }}</small></p>
-                        <p class="card-text">{{ faqCategory.description | trans({}, 'messages', 'en') }}</p>
+                        <p class="card-text"><small class="text-muted">{{ faqCategory.description }} (en)</small><br>
+                        {{ faqCategory.description | lower | trans({}, 'messages', 'en') }}
+                        {% if app.request.locale != 'en' %}
+                            <hr>
+                            <small class="text-muted">{{ faqCategory.description }} ({{ app.request.locale }})</small><br>
+                            {{ faqCategory.description | lower | trans }}
+                        {% endif %}
+                        </p>
                     </div>
                 </div>
             {% endfor %}
             </div>
             <div class="row">
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary">{{ 'UpdateFaqOrder' }}</button>
+                    <button type="submit" class="btn btn-primary">{{  'admin.faq.category.update.order' | trans  }}</button>
                 </div>
             </div>
         {{ form_end(form) }}

@@ -1,4 +1,5 @@
 <div id="message_thread" class="mt-1 p-0 px-3 w-100">
+    Report as abuse/spam
     {% set current = thread|first %}
     {% set myself = app.user %}
     {% if current.Sender.Username == myself.Username %}{% set otherUser = current.Receiver %}{% else %}{% set otherUser = current.Sender %}{% endif %}

@@ -3,6 +3,7 @@
 namespace App\Form\CustomDataClass;
 
 use App\Entity\Word;
+use Symfony\Component\Validator\Constraint as Assert;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 
 class TranslationRequest extends FormType

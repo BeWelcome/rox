@@ -9,6 +9,7 @@ use App\Form\CustomDataClass\Translation\CreateTranslationRequest;
 use App\Form\CustomDataClass\Translation\EditTranslationRequest;
 use App\Form\EditTranslationFormType;
 use App\Form\TranslationFormType;
+use App\Kernel;
 use App\Model\TranslationModel;
 use App\Pagerfanta\TranslationAdapter;
 use App\Repository\MemberRepository;
@@ -18,6 +19,8 @@ use Doctrine\ORM\NonUniqueResultException;
 use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Contracts\Translation\TranslatorInterface as Translator;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -91,20 +94,20 @@ class TranslationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/translations/{locale}/{code}/edit", name="translation_edit")
+     * @Route("/admin/translations/{locale}/{code}/edit", name="translations_edit")
      *
      * Update an existing translation for the locale
      *
-     * @param Request  $request
+     * @param Request $request
      * @param Language $language
-     * @param mixed    $code
-     *
-     * @throws \Exception
+     * @param KernelInterface $kernel
+     * @param mixed $code
      *
      * @return Response
+     * @throws \Exception
      * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
      */
-    public function editTranslationAction(Request $request, Language $language, $code)
+    public function editTranslationAction(Request $request, Language $language, KernelInterface $kernel, $code)
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
@@ -137,7 +140,10 @@ class TranslationController extends AbstractController
             $translation->setDescription('');
             $em->persist($translation);
             $em->flush();
-            $this->translationModel->removeCacheFile($this->getParameter('kernel.cache_dir'), $language->getShortcode());
+            $this->translationModel->removeCacheFile(
+                $kernel,
+                $language->getShortcode()
+            );
             $this->addFlash('notice', 'translation.edit');
 
             $referrer = $request->headers->get('referer');
@@ -151,21 +157,21 @@ class TranslationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/translations/create/{code}/{locale}", name="translation_create")
+     * @Route("/admin/translations/create/{code}/{locale}", name="translations_create")
      *
      * Creates an English index and the matching translation (if locale != 'en')
      *
-     * @param Request  $request
+     * @param Request $request
      * @param Language $language
-     * @param mixed    $code
-     *
-     * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
-     *
-     * @throws \Exception
+     * @param KernelInterface $kernel
+     * @param mixed $code
      *
      * @return Response
+     * @throws \Exception
+     * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
+     *
      */
-    public function createTranslationAction(Request $request, $language, $code)
+    public function createTranslationAction(Request $request, Language $language, KernelInterface $kernel, $code)
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
         $user = $this->getUser();
@@ -205,8 +211,14 @@ class TranslationController extends AbstractController
                 $em->persist($translation);
             }
             $em->flush();
-            $this->translationModel->removeCacheFile($this->getParameter('kernel.cache_dir'), 'en');
-            $this->translationModel->removeCacheFile($this->getParameter('kernel.cache_dir'), $language->getShortcode());
+            $this->translationModel->removeCacheFile(
+                $kernel,
+                'en'
+            );
+            $this->translationModel->removeCacheFile(
+                $kernel,
+                $language->getShortcode()
+            );
             $this->addFlash('notice', 'Added translatable item '.$code);
 
             return $this->redirectToRoute('translations');
@@ -222,16 +234,16 @@ class TranslationController extends AbstractController
      *
      * Adds a missing translation for an existing english index
      *
-     * @param Request  $request
+     * @param Request $request
      * @param Language $language
-     * @param mixed    $code
-     *
-     * @throws \Exception
+     * @param KernelInterface $kernel
+     * @param mixed $code
      *
      * @return Response
+     * @throws \Exception
      * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
      */
-    public function addTranslationAction(Request $request, Language $language, $code)
+    public function addTranslationAction(Request $request, Language $language, KernelInterface $kernel, $code)
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
@@ -254,7 +266,7 @@ class TranslationController extends AbstractController
         // Work around a problem in the database
         // Sometimes the word code do not match between translations
         if (null !== $translation) {
-            return $this->redirectToRoute('translation_edit', ['locale' => $language->getShortCode(), 'code' => $code]);
+            return $this->redirectToRoute('translations_edit', ['locale' => $language->getShortCode(), 'code' => $code]);
         }
 
         $translation = new Word();
@@ -276,7 +288,10 @@ class TranslationController extends AbstractController
             $translation->setDescription('');
             $em->persist($translation);
             $em->flush();
-            $this->translationModel->removeCacheFile($this->getParameter('kernel.cache_dir'), $language->getShortcode());
+            $this->translationModel->removeCacheFile(
+                $kernel,
+                $language->getShortcode()
+            );
             $this->addFlash('notice', 'translation.edit');
 
             $referrer = $request->headers->get('referer');
@@ -290,7 +305,7 @@ class TranslationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/translations/{mode}", name="translation_mode",
+     * @Route("/admin/translations/mode/{mode}", name="translation_mode",
      *     requirements={"mode": "on|off"}
      * )
      *

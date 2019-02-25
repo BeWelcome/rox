@@ -2,7 +2,7 @@
 {% import 'macros.twig' as macros %}
 
 {% block content %}
-    <h1>{{ 'AdminComment' | trans }}</h1>
+    <h1>{{ 'admin.comment.headline' | trans }}</h1>
     <div class="row">
         <div class="col-12 mb-2">
             {% if comment.displayinpublic %}{{ 'Comment is visible to everyone.' }}{% else %}{{ 'Comment is currently hidden.' }}{% endif %}
@@ -22,8 +22,8 @@
             {% if form.disableEditing is defined %}{{ form_widget(form.disableEditing) }}{% else %}{{ form_widget(form.allowEditing) }}{% endif %}
             {{ form_widget(form.MarkAsChecked) }} {{ form_widget(form.MarkAsChecked) }}
             {{ form_widget(form.MarkAsAbuse) }} {{ form_widget(form.MoveToNegative) }} {{ form_widget(form.DeleteComment) }}
-            <a class="btn btn-primary btn-sm mb-2 mr-sm-2" href="{{ path('admin_comments_for_member', { 'username': comment.toMember.username }) }}">{% trans with {'%username%': comment.toMember.username} %}All comments to %username%{% endtrans %}</a>
-            <a class="btn btn-primary btn-sm mb-2 mr-sm-2" href="{{ path('admin_comments_from_member', { 'username': comment.fromMember.username }) }}">{% trans with {'%username%': comment.fromMember.username} %}All comments from %username%{% endtrans %}</a>
+            <a class="btn btn-primary btn-sm mb-2 mr-sm-2" href="{{ path('admin_comments_for_member', { 'username': comment.toMember.username }) }}">{% trans with {'%username%': comment.toMember.username} %}admin.comments.to.all{% endtrans %}</a>
+            <a class="btn btn-primary btn-sm mb-2 mr-sm-2" href="{{ path('admin_comments_from_member', { 'username': comment.fromMember.username }) }}">{% trans with {'%username%': comment.fromMember.username} %}admin.comments.from.all{% endtrans %}</a>
 
             {{ form_end(form) }}
         </div>

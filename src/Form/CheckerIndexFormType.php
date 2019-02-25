@@ -14,15 +14,16 @@ class CheckerIndexFormType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $ids = $options['ids'];
         $builder
             ->add('spamMessages', ChoiceType::class, [
-                'choices' => $options['ids'],
+                'choices' => $ids,
                 'choice_label' => false,
                 'expanded' => true,
                 'multiple' => true,
             ])
             ->add('noSpamMessages', ChoiceType::class, [
-                'choices' => $options['ids'],
+                'choices' => $ids,
                 'choice_label' => false,
                 'expanded' => true,
                 'multiple' => true,

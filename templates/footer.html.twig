@@ -22,7 +22,7 @@
                     <form method="post">
                         <div class="form-group form-row">
                             <label for="language" class="col-auto col-form-label">
-                            Site currently displayed in&nbsp;
+                            {{ 'footer.site.language' | trans }}
                             </label>
                             {{ langsel }}
                         </div>
@@ -32,35 +32,35 @@
                     <div class="form-group form-row float-md-right">
                             {% if is_granted('ROLE_ADMIN_WORDS') and hasCurrentLocaleRights %}
                                 <label for="translation_mode" class="col-auto col-form-label">
-                                    {{ 'Translation mode is' | trans }}&nbsp;
+                                    {{ 'translation.mode' | trans }}&nbsp;
                                 </label>
                                     <button type="button" class="col-auto btn btn-sm btn-light dropdown-toggle ml-md-2"
                                         data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false">
-                                    {% if app.session.get('translation_mode') == 'on' %}{{ 'On' | trans }}{% else %}{{ 'Off' | trans }}{% endif %}
+                                    {% if app.session.get('translation_mode') == 'on' %}{{ 'on' | trans }}{% else %}{{ 'off' | trans }}{% endif %}
                                     </button>
                                 <div class="dropdown-menu small">
                                 <a id="off" class="dropdown-item"
-                                   href="{{ url('translation_mode', {mode: 'off'}) }}">{{ 'Off' | trans }}</a>
+                                   href="{{ url('translation_mode', {mode: 'off'}) }}">{{ 'off' | trans }}</a>
                                 <a id="on"
                                    class="dropdown-item{% if app.session.get('translation_mode') == 'on' %} active{% endif %}"
-                                   href="{{ url('translation_mode', {mode: 'on'}) }}">{{ 'On' | trans }}</a>
+                                   href="{{ url('translation_mode', {mode: 'on'}) }}">{{ 'on' | trans }}</a>
                                 </div>
                             {% else %}
                                 {% if is_granted('ROLE_USER') %}
                                     <a class="btn btn-sm btn-outline-primary pull-right"
-                                    href="groups/60">{{ 'Help us Translate' | trans }}</a>
+                                    href="groups/60">{{ 'translation.help' | trans }}</a>
                                 {% endif %}
                             {% endif %}
                     </div>
                 </div>
                 <div class="col-12 mt-1">
-                    <a href="{{ url('about') }}" class="font-weight-bold">{{ 'AboutUsPage' | trans }}</a> &bull;
-                    <a href="{{ url('terms_french') }}" class="footnav" target="new">{{ 'TermsOfUse' | trans }}</a> &bull;
-                    <a href="{{ url('privacy') }}" class="footnav" target="new">{{ 'Privacy' | trans }}</a> &bull;
-                    <a href="{{ url('imprint') }}" class="footnav">{{ 'Impressum' | trans }}</a> &bull;
+                    <a href="{{ url('about') }}" class="font-weight-bold">{{ 'aboutuspage' | trans }}</a> &bull;
+                    <a href="{{ url('terms_french') }}" class="footnav" target="new">{{ 'termsofuse' | trans }}</a> &bull;
+                    <a href="{{ url('privacy') }}" class="footnav" target="new">{{ 'privacy' | trans }}</a> &bull;
+                    <a href="{{ url('imprint') }}" class="footnav">{{ 'impressum' | trans }}</a> &bull;
                     <a href="{{ url('about_faq') }}" class="footnav">{{ 'faq' | trans }}</a> &bull;
-                    <a href="{{ url('feedback') }}" class="footnav">{{ 'Contact us' | trans }}</a> &bull;
+                    <a href="{{ url('feedback') }}" class="footnav">{{ 'contactus' | trans }}</a> &bull;
                     <a href="{{ url('feedback', { IdCategory: 1, RequestURI: url('homepage')}) }}" class="footnav">{{ 'footer.reportbug' | trans }}</a>
                 </div>
                 <div class="col-12 mt-1">
@@ -237,11 +237,11 @@
                     <td>
                         <small>&nbsp;</small>
                         {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}
-                            <a href="{{ url('translation_edit', { code: message.id, locale: app.request.locale }) }}" target="_blank"><i class="fa fa-edit"></i></a>
+                            <a href="{{ url('translations_edit', { code: message.id, locale: app.request.locale }) }}" target="_blank"><i class="fa fa-edit"></i></a>
                         {% endif %}
                         {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_MISSING') and hasEnglishRights %}
                             {% if message.id %}
-                                <a href="{{ url('translation_create', { code: message.id, locale: locale }) }}" target="_blank"><i class="fa fa-plus"></i></a>
+                                <a href="{{ url('translations_create', { code: message.id, locale: locale }) }}" target="_blank"><i class="fa fa-plus"></i></a>
                             {% else %}
                                 message.id not correctly set.
                             {% endif %}

@@ -57,6 +57,7 @@ security:
         - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/about, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/feedback, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/impressum, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/terms, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/privacy, roles:  IS_AUTHENTICATED_ANONYMOUSLY }

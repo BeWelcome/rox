@@ -11,8 +11,6 @@ use Pagerfanta\Pagerfanta;
 
 /**
  * Class NotificationRepository.
- *
- * @SuppressWarning(PHPMD.
  */
 class NotificationRepository extends EntityRepository
 {

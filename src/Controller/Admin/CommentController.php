@@ -40,7 +40,7 @@ class CommentController extends AbstractController
         $comments = $commentModel->getComments($page, $limit);
 
         return $this->render('admin/comment/overview.html.twig', [
-            'headline' => 'admin.comment.all',
+            'headline' => 'admin.comments.all',
             'route' => 'admin_comment_overview',
             'comments' => $comments,
             'submenu' => [

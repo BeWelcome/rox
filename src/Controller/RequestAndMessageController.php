@@ -452,7 +452,7 @@ class RequestAndMessageController extends AbstractController
         return $this->render('message/index.html.twig', [
             'form' => $form->createView(),
             'items' => $messages,
-            'type' => 'UserMessages',
+            'type' => 'usermessages',
             'folder' => $folder,
             'filter' => $request->query->all(),
             'submenu' => [

@@ -4,15 +4,15 @@
 {% block subnav %}
     {% for filter,menuItem in submenu.items %}
         <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}"
-           href="{{ menuItem.url }}">{{ menuItem.key | trans({}, "messages", 'en') }}</a>
+           href="{{ menuItem.url }}">{{ menuItem.key | lower | trans }}</a>
     {% endfor %}
 {% endblock %}
 
 {% block content %}
     {% if edit %}
-        <h1>{{ 'Edit a FAQ' | trans}}</h1>
+        <h1>{{ 'admin.faq.edit' | trans}}</h1>
     {% else %}
-        <h1>{{ 'Create a FAQ' | trans }}</h1>
+        <h1>{{ 'admin.faq.create' | trans }}</h1>
     {% endif %}
     {{ form_start(form) }}
     <div class="form-group">

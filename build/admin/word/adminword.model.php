@@ -499,7 +499,7 @@ WHERE code = "'.$this->dao->escape($form['EngCode']).'" AND idLanguage=0
      * @param array $errors Array of already collected error messages
      */    
     private function checkWordcodeFormat($code,&$errors){
-        if (!preg_match('#^[a-z][-a-z0-9_]+[a-z0-9]$#i',$code)){
+        if (!preg_match('#^[a-z][-a-z0-9\._]+[a-z0-9]$#i',$code)){
             $errors[] = 'AdminWordErrorBadCodeFormat';
         }
     }

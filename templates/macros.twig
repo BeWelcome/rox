@@ -46,7 +46,7 @@
     {% import _self as macros %}
     {% set imgclasses %}profileimg{% if addimage %} {{ addimage }}{% endif %}{% endset %}
     {% set linkclasses %}{% if addlink %} {{ addlink }}{% endif %}{% endset %}
-    {% set img %}<img class="{{ imgclasses }}" width="{{ size }}" height="{{ size }}" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'Profile' | trans }}: {{ username }}">{% endset %}
+    {% set img %}<img class="{{ imgclasses }}" width="{{ size }}" height="{{ size }}" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">{% endset %}
     {% if linked %}
         {{ macros.profilelink(username, img, linkclasses) }}
     {% else %}
@@ -57,7 +57,7 @@
 {# \todo align left/right depending on right parameter #}
 {% macro avatarstack(username, size, right) %}
     {% import _self as macros %}
-    {% set img %}<img class="profileimg" width="{{ size }}" height="{{ size }}" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'Profile' | trans }}: {{ username }}">{% endset %}
+    {% set img %}<img class="profileimg" width="{{ size }}" height="{{ size }}" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">{% endset %}
     {{ macros.profilelink(username, img) }}<br><small>{{ macros.profilelink(username) }}</small>
 {% endmacro %}
 

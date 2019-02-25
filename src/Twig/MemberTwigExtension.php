@@ -187,7 +187,7 @@ class MemberTwigExtension extends Twig_Extension implements Twig_Extension_Globa
                         if ($add) {
                             $assignedTeams[] = $name;
                             $teams[] = [
-                                'trans' => $team['trans'],
+                                'trans' => strtolower($team['trans']),
                                 'route' => $team['route'],
                             ];
                         }

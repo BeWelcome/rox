@@ -267,12 +267,12 @@ LIMIT 1
         if ($country) {
             if ($admin1) {
                 // We run based on an admin unit
-                $condition = "AND a.IdCity = g.geonameid
+                $condition = "AND m.IdCity = g.geonameid
                 AND g.admin1 = '" . $admin1 . "'
                 AND g.country = '" . $country . "'";
             } else {
                 // we're looking for all members of a country
-                $condition = "AND a.IdCity = g.geonameid
+                $condition = "AND m.IdCity = g.geonameid
                 AND g.country = '" . $country . "'";
             }
         } else {
@@ -464,7 +464,7 @@ LIMIT 1
         // Fetch count of public members at/around the given place
         $str = "
             SELECT
-                COUNT( DISTINCT m.id) cnt
+                COUNT(DISTINCT m.id) cnt
             FROM
             " . $this->tables;
         $str .= "
@@ -480,7 +480,7 @@ LIMIT 1
             " . $this->languagesCondition . "
             " . $this->accommodationCondition . "
             " . $this->typicalOfferCondition;
-        $str = str_replace('geonames g,', '', $str);
+//        $str = str_replace('geonames g,', '', $str);
         $count = $this->dao->query($str);
 
         $row = $count->fetch(PDB::FETCH_OBJ);
@@ -1088,6 +1088,7 @@ LIMIT 1
                         $location->admin1,
                         $location->country
                     );
+                    $results['map'] = $this->_getMembersLowDetails($vars);
                 } else {
                     // get all members of that country
                     $this->prepareQuery($vars, false, $location->country);
@@ -1097,6 +1098,7 @@ LIMIT 1
                         false,
                         $location->country
                     );
+                    $results['map'] = $this->_getMembersLowDetails($vars);
                 }
             } else {
                 // just get all active members from that place

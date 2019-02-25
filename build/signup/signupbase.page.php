@@ -23,7 +23,7 @@ class SignupBasePage extends PageWithRoxLayout
     protected function getLateLoadScriptfiles()
     {
         $scripts = parent::getLateLoadScriptfiles();
-        $scripts[] = 'build//signup/signup.js';
+        $scripts[] = '/build/signup/signup.js';
         return $scripts;
     }
 

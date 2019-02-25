@@ -63,9 +63,9 @@
     <div class="row">
         <div class="col-12">
             {% if current.sender.Username == app.user.Username %}
-                {% set label = 'Update' %}
+                {% set label = 'update' %}
             {% else %}
-                {% set label = 'Reply' %}
+                {% set label = 'reply' %}
             {% endif %}
             {{ form_widget(form.cancel, {'attr': {'class': 'btn btn-primary mr-1'}}) }}
             {{ form_widget(form.update, {'attr': {'class': 'btn btn-primary mr-1'},

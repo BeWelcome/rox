@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Kernel;
 use Symfony\Component\Finder\Finder;
 
 class TranslationModel
@@ -14,11 +15,12 @@ class TranslationModel
      *
      * @return bool
      */
-    public function removeCacheFile($kernelCacheDir, $locale)
+    public function removeCacheFile(Kernel $kernel, $locale)
     {
+        $kernelCacheDir = $kernel->getCacheDir();
         $localeExploded = explode('_', $locale);
         $finder = new Finder();
-        $finder->files()->in($kernelCacheDir)->name(sprintf('/catalogue\.%s.*\.php$/', $localeExploded[0]));
+        $finder->files()->in($kernelCacheDir)->name(sprintf('/translations/catalogue\.%s.*\.php$/', $localeExploded[0]));
         $deleted = true;
         foreach ($finder as $file) {
             $path = $file->getRealPath();

@@ -8,7 +8,7 @@
 {% block content %}
     <h1>{{ headline | trans }}</h1>
     {% if comments.nbResults == 0 %}
-        <p>{{ 'No comments found for these parameters.' | trans }}</p>
+        <p>{{ 'admin.comments.no.comments' | trans }}</p>
     {% else %}
         {% if comments.haveToPaginate %}
             <div class="row">
@@ -19,10 +19,10 @@
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
-                        <th>{{ 'From' | trans }}</th>
-                        <th>{{ 'Comment' }}</th>
-                        <th>{{ 'About' | trans }}</th>
-                        <th>{{ 'Action' | trans }}</th>
+                        <th>{{ 'from' | trans | capitalize }}</th>
+                        <th>{{ 'comment' | trans | capitalize }}</th>
+                        <th>{{ 'about' | trans | capitalize }}</th>
+                        <th>{{ 'action' | trans | capitalize }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,30 +30,30 @@
                     <tr>
                         <td>{{ macros.avatarstack(comment.fromMember.Username, 50) }}</td>
                         <td class="w-100">
-                            <small class="text-muted">{{ 'Quality and Date' }}</small><br>
-                            {{ comment.Quality | trans }} ({{ 'written' | trans }} {{ comment.created.diffForHumans }})<hr style="margin-top:0; margin-bottom:.25rem;">
-                            <small class="text-muted">{{ 'Where we met' }}</small><br>
+                            <small class="text-muted">{{ 'comment.quality' | trans }}</small><br>
+                            {{ comment.Quality | trans }} ({{ 'written' | trans | capitalize }} {{ comment.created.diffForHumans }})<hr style="margin-top:0; margin-bottom:.25rem;">
+                            <small class="text-muted">{{ 'Where we met' | trans }}</small><br>
                             {{ comment.TextWhere | nl2br }}<hr style="margin-top:0; margin-bottom:.25rem;">
-                            <small class="text-muted">{{ 'Comment text' }}</small><br>
+                            <small class="text-muted">{{ 'Comment text' | trans }}</small><br>
                             {{ comment.TextFree | nl2br }}<hr style="margin-top:0; margin-bottom:.25rem;">
-                            <small class="text-muted">{{ 'How we know each other' }}</small><br>
+                            <small class="text-muted">{{ 'How we know each other' | trans }}</small><br>
                             {% set relations = comment.relations | split(',') %}
                             {% for relation in relations %}{{ ('Comment_' ~ relation) | trans }} {% endfor %}
 
                         </td>
                         <td>{{ macros.avatarstack(comment.toMember.Username, 50) }}</td>
                         <td class="text-center">
-                            <a href="{{ path('admin_comment', { 'commentId' : comment.id }) }}"><i class="fa fa-edit" title="{{ 'Edit comment' | trans }}"></i></a><br/>
+                            <a href="{{ path('admin_comment', { 'commentId' : comment.id }) }}"><i class="fa fa-edit" title="{{ 'admin.comment.edit' | trans }}"></i></a><br/>
                             {% if comment.displayinpublic %}
-                                <a href="{{ path('admin_comment_hide', { 'commentId' : comment.id }) }}"><i class="fa fa-eye-slash" title="{{ 'Hide' | trans }}"></i></a>
+                                <a href="{{ path('admin_comment_hide', { 'commentId' : comment.id }) }}"><i class="fa fa-eye-slash" title="{{ 'admin.comment.hide' | trans }}"></i></a>
                             {% else %}
-                                <a href="{{ path('admin_comment_show', { 'commentId' : comment.id }) }}"><i class="fa fa-eye" title="{{ 'Show' | trans }}"></i></a>
+                                <a href="{{ path('admin_comment_show', { 'commentId' : comment.id }) }}"><i class="fa fa-eye" title="{{ 'admin.comment.show' | trans }}"></i></a>
                             {% endif %}<br>
                             {% if comment.adminaction != constant('App\\Doctrine\\CommentAdminActionType::SAFETY_TEAM_CHECK') %}
-                                <a href="{{ path('admin_comment_assign_safetyteam', { 'commentId' : comment.id }) }}"><i class="fa fa-arrow-right" title="{{ 'Assign to safety team' | trans }}"></i></a><br/>
+                                <a href="{{ path('admin_comment_assign_safetyteam', { 'commentId' : comment.id }) }}"><i class="fa fa-arrow-right" title="{{ 'admin.comment.assign.safety' | trans }}"></i></a><br/>
                             {% endif %}
                             {% if comment.adminaction != constant('App\\Doctrine\\CommentAdminActionType::ADMIN_CHECKED') %}
-                                <a href="{{ path('admin_comment_mark_checked', { 'commentId' : comment.id }) }}"><i class="fa fa-check" title="{{ 'Mark as checked' | trans }}"></i></a>
+                                <a href="{{ path('admin_comment_mark_checked', { 'commentId' : comment.id }) }}"><i class="fa fa-check" title="{{ 'admin.comment.checked' | trans }}"></i></a>
                             {% endif %}
                         </td>
                     </tr>
@@ -65,7 +65,6 @@
             <div class="row">
                 <div class="col-12 pull-right">{{ pagerfanta( comments, 'twitter_bootstrap4_translated') }}</div>
             </div>
-
         {% endif %}
     {% endif %}
 {% endblock content %}

@@ -13,35 +13,35 @@
             <div class="collapse d-xl-none px-0 w-100" id="smallNavBar">
                 <ul class="navbar-nav mr-auto mt-2">
                     <li class="nav-item bordert-1">
-                        <a href="{{ url( 'search_members' ) }}" class="nav-link pl-1"><i class="fa fa-globe-americas mr-1"></i>{{ 'FindMembers' | trans }}</a>
+                        <a href="{{ url( 'search_members' ) }}" class="nav-link pl-1"><i class="fa fa-globe-americas mr-1"></i>{{ 'findmembers' | trans }}</a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ url('members_profile', { username: member.Username }) }}" class="nav-link pl-1"><i class="fa fa-user mr-1"></i>{{ member.Username }}</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url( 'messages' ) }}" class="nav-link pl-4"><i class="fa fa-envelope mr-1"></i>{{ 'MyMessages' | trans }}</a>
+                        <a href="{{ url( 'messages' ) }}" class="nav-link pl-4"><i class="fa fa-envelope mr-1"></i>{{ 'mymessages' | trans }}</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url( 'requests' ) }}" class="nav-link pl-4"><i class="fa fa-bed mr-1"></i>{{ 'MyRequests' | trans }}</a>
+                        <a href="{{ url( 'requests' ) }}" class="nav-link pl-4"><i class="fa fa-bed mr-1"></i>{{ 'myrequests' | trans }}</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url('my_preferences') }}" class="nav-link pl-4"><i class="fa fa-cogs mr-1"></i>{{ 'MyPreferences' | trans }}</a>
+                        <a href="{{ url('my_preferences') }}" class="nav-link pl-4"><i class="fa fa-cogs mr-1"></i>{{ 'mypreferences' | trans }}</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url('members_show_all_notes') }}" class="nav-link pl-4"><i class="fa fa-sticky-note mr-1"></i>{{ 'MyNotes' | trans }}</a>
+                        <a href="{{ url('members_show_all_notes') }}" class="nav-link pl-4"><i class="fa fa-sticky-note mr-1"></i>{{ 'mynotes' | trans }}</a>
                     </li>
 
                     <li class="nav-item">
-                        <a href="{{ url('community') }}" class="nav-link pl-1"><i class="fa fa-users mr-1"></i>{{ 'CommunityMenu' | trans }}</a>
+                        <a href="{{ url('community') }}" class="nav-link pl-1"><i class="fa fa-users mr-1"></i>{{ 'communitymenu' | trans }}</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url('safety') }}" class="nav-link pl-1"><i class="fa fa-shield-alt mr-1"></i>{{ 'Safety' | trans}}</a>
+                        <a href="{{ url('safety') }}" class="nav-link pl-1"><i class="fa fa-shield-alt mr-1"></i>{{ 'safety' | trans}}</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url('about') }}" class="nav-link pl-1"><i class="fa fa-info-circle mr-1"></i>{{ 'GetAnswers' | trans}}</a>
+                        <a href="{{ url('about') }}" class="nav-link pl-1"><i class="fa fa-info-circle mr-1"></i>{{ 'getanswers' | trans}}</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url('volunteer') }}" class="nav-link pl-1"><i class="fa fa-hands-helping mr-1"></i>{{ 'Volunteer' | trans}}</a>
+                        <a href="{{ url('volunteer') }}" class="nav-link pl-1"><i class="fa fa-hands-helping mr-1"></i>{{ 'volunteer' | trans}}</a>
                     </li>
                     {% for team in teams if teams %}
                         {% if team.route starts with '/' %}
@@ -56,7 +56,7 @@
                     {% endfor %}
 
                     <li class="nav-item">
-                        <a href="{{ url( 'security_logout') }}" class="nav-link pl-1"><i class="fa fa-sign-out-alt mr-1"></i>{{ 'Logout' | trans }}</a>
+                        <a href="{{ url( 'security_logout') }}" class="nav-link pl-1"><i class="fa fa-sign-out-alt mr-1"></i>{{ 'logout' | trans }}</a>
                     </li>
                 </ul>
             </div>
@@ -66,16 +66,16 @@
 
                 <ul class="navbar-nav mr-auto">
                     <li class="menuborder">
-                        <a href="{{ url( 'search_members' ) }}" class="nav-link px-3">{{ 'FindMembers' | trans }}</a>
+                        <a href="{{ url( 'search_members' ) }}" class="nav-link px-3">{{ 'findmembers' | trans }}</a>
                     </li>
                     <li class="menuborder">
-                        <a href="{{ url('community') }}" class="nav-link px-3">{{ 'CommunityMenu' | trans }}</a>
+                        <a href="{{ url('community') }}" class="nav-link px-3">{{ 'communitymenu' | trans }}</a>
                     </li>
                     <li class="menuborder">
-                        <a href="{{ url('safety') }}" class="nav-link px-3">{{ 'Safety' | trans}}</a>
+                        <a href="{{ url('safety') }}" class="nav-link px-3">{{ 'safety' | trans}}</a>
                     </li>
                     <li class="menuborder">
-                        <a href="{{ url('volunteer') }}" class="nav-link px-3">{{ 'Volunteer' | trans}}</a>
+                        <a href="{{ url('volunteer') }}" class="nav-link px-3">{{ 'volunteer' | trans}}</a>
                     </li>
                     <li class="menuborder dropdown d-none d-md-flex">
                         <a href="#subNavBar" class="nav-link px-3" id="subNavBarToggle" data-target="subNavBar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -88,32 +88,32 @@
 
                                 <div class="d-flex flex-row justify-content-between">
                                     <div class="py-3">
-                                        <a href="{{ url('search_members') }}" class="h4">{{ 'FindMembers' | trans }}</a>
+                                        <a href="{{ url('search_members') }}" class="h4">{{ 'findmembers' | trans }}</a>
 
-                                        <a href="{{ url('search_members') }}" class="btn btn-block py-0 pl-1 text-left mt-1">{{ 'MapSearch' | trans }}</a>
-                                        <a href="{{ url('places') }}" class="btn btn-block py-0 pl-1 text-left">{{ 'BrowseCountries' | trans}}</a>
+                                        <a href="{{ url('search_members') }}" class="btn btn-block py-0 pl-1 text-left mt-1">{{ 'mapsearch' | trans }}</a>
+                                        <a href="{{ url('places') }}" class="btn btn-block py-0 pl-1 text-left">{{ 'browsecountries' | trans}}</a>
                                     </div>
                                     <div class="py-3">
-                                        <a href="{{ url('community') }}" class="h4">{{ 'CommunityMenu' | trans }}</a>
+                                        <a href="{{ url('community') }}" class="h4">{{ 'communitymenu' | trans }}</a>
 
-                                        <a href="{{ url('forums') }}" class="btn btn-block py-0 pl-1 text-left mt-1">{{ 'CommunityDiscussions' | trans }}</a>
-                                        <a href="{{ url('groups_overview') }}" class="btn btn-block py-0 pl-1 text-left">{{ 'Groups' | trans }}</a>
-                                        <a href="{{ url('activities') }}" class="btn btn-block py-0 pl-1 text-left">{{ 'Activities' | trans}}</a>
-                                        <a href="{{ url('newsletters') }}" class="btn btn-block py-0 pl-1 text-left">{{ 'Newsletters' | trans}}</a>
+                                        <a href="{{ url('forums') }}" class="btn btn-block py-0 pl-1 text-left mt-1">{{ 'communitydiscussions' | trans }}</a>
+                                        <a href="{{ url('groups_overview') }}" class="btn btn-block py-0 pl-1 text-left">{{ 'groups' | trans }}</a>
+                                        <a href="{{ url('activities') }}" class="btn btn-block py-0 pl-1 text-left">{{ 'activities' | trans}}</a>
+                                        <a href="{{ url('newsletters') }}" class="btn btn-block py-0 pl-1 text-left">{{ 'newsletters' | trans}}</a>
                                     </div>
                                     <div class="py-3">
-                                        <a href="{{ url('about') }}" class="h4">{{ 'GetAnswers' | trans}}</a>
+                                        <a href="{{ url('about') }}" class="h4">{{ 'getanswers' | trans}}</a>
 
                                         <a href="{{ url('faq') }}" class="btn btn-block py-0 pl-1 text-left mt-1">{{ 'menu.faq' | trans }}</a>
-                                        <a href="{{ url('feedback') }}" class="btn btn-block py-0 pl-1 text-left">{{ 'ContactUs' | trans}}</a>
-                                        <a href="{{ url('stats') }}" class="btn btn-block py-0 pl-1 text-left">{{ 'StatsPage' | trans}}</a>
-                                        <a href="{{ url('terms_french') }}" class="btn btn-block py-0 pl-1 text-left">{{ 'TermsOfUse'  | trans}}</a>
+                                        <a href="{{ url('feedback') }}" class="btn btn-block py-0 pl-1 text-left">{{ 'contactus' | trans}}</a>
+                                        <a href="{{ url('stats') }}" class="btn btn-block py-0 pl-1 text-left">{{ 'statspage' | trans}}</a>
+                                        <a href="{{ url('terms_french') }}" class="btn btn-block py-0 pl-1 text-left">{{ 'termsofuse'  | trans}}</a>
                                     </div>
                                     <div class="py-3">
-                                        <a href="{{ url('volunteer') }}" class="h4">{{ 'Volunteer' | trans}}</a>
+                                        <a href="{{ url('volunteer') }}" class="h4">{{ 'volunteer' | trans}}</a>
 
-                                        <a href="{{ url('getactive') }}" class="btn btn-block py-0 pl-1 text-left mt-1">{{ 'About_GetActive' | trans}}</a>
-                                        <a href="{{ url('donate') }}" class="btn btn-block py-0 pl-1 text-left">{{ 'DonateLink'  | trans}}</a>
+                                        <a href="{{ url('getactive') }}" class="btn btn-block py-0 pl-1 text-left mt-1">{{ 'about_getactive' | trans}}</a>
+                                        <a href="{{ url('donate') }}" class="btn btn-block py-0 pl-1 text-left">{{ 'donatelink'  | trans}}</a>
                                         {% for team in teams if teams %}
                                             {% if team.route starts with '/' %}
                                                 <a href="{{ team.route }}" class="btn btn-block py-0 pl-1 text-left">{{ team.trans | trans}}</a>
@@ -129,14 +129,14 @@
                                         </div>
                                         <div class="d-flex flex-row justify-content-between pl-5 pr-0">
                                             <div>
-                                                <a href="{{ url('edit_my_profile') }}" class="btn btn-block btn-primary-outline py-0 pl-1 text-left mt-1"><i class="fa fa-edit"></i> {{ 'EditMyProfile' | trans }}</a>
-                                                <a href="{{ url('mypreferences') }}" class="btn btn-block btn-primary-outline py-0 pl-1 text-left"><i class="fa fa-cogs"></i> {{ 'MyPreferences' | trans }}</a>
-                                                <a href="{{ url('groups_mygroups') }}" class="btn btn-block btn-primary-outline py-0 pl-1 text-left"><i class="fa fa-users"></i> {{ 'MyGroups' | trans }}</a>
+                                                <a href="{{ url('edit_my_profile') }}" class="btn btn-block btn-primary-outline py-0 pl-1 text-left mt-1"><i class="fa fa-edit"></i> {{ 'editmyprofile' | trans }}</a>
+                                                <a href="{{ url('mypreferences') }}" class="btn btn-block btn-primary-outline py-0 pl-1 text-left"><i class="fa fa-cogs"></i> {{ 'mypreferences' | trans }}</a>
+                                                <a href="{{ url('groups_mygroups') }}" class="btn btn-block btn-primary-outline py-0 pl-1 text-left"><i class="fa fa-users"></i> {{ 'mygroups' | trans }}</a>
                                             </div>
                                             <div>
-                                                <a href="{{ url('messages') }}" class="btn btn-block btn-primary-outline py-0 pl-1 text-left mt-1"><i class="fa fa-envelope"></i> {{ 'MyMessages' | trans }}</a>
-                                                <a href="{{ url('members_show_all_notes') }}" class="btn btn-block btn-primary-outline py-0 pl-1 text-left"><i class="fa fa-sticky-note"></i> {{ 'ProfileMyNotes' | trans }}</a>
-                                                <a href="{{ url( 'security_logout' ) }}" class="btn btn-block btn-primary-outline py-0 pl-1 text-left"><i class="fa fa-power-off"></i> {{ 'Logout' | trans }}</a>
+                                                <a href="{{ url('messages') }}" class="btn btn-block btn-primary-outline py-0 pl-1 text-left mt-1"><i class="fa fa-envelope"></i> {{ 'mymessages' | trans }}</a>
+                                                <a href="{{ url('members_show_all_notes') }}" class="btn btn-block btn-primary-outline py-0 pl-1 text-left"><i class="fa fa-sticky-note"></i> {{ 'mynotes' | trans }}</a>
+                                                <a href="{{ url( 'security_logout' ) }}" class="btn btn-block btn-primary-outline py-0 pl-1 text-left"><i class="fa fa-power-off"></i> {{ 'logout' | trans }}</a>
                                             </div>
                                         </div>
                                     </div>
@@ -162,13 +162,13 @@
                     <li class="nav-item dropdown float-right d-none d-lg-block">
                         <a href="#member_menu" class="nav-link dropdown-toggle" data-target="member_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"></i> {{ member.Username }}</a>
                         <ul id="member_menu" class="dropdown-menu dropdown-menu-right" role="menu">
-                            <li class="text-right"><a href="{{ path( 'members_profile' , { username: member.Username } ) }}" class="dropdown-item">{{ 'Profile' | trans }}</a></li>
-                            <li class="text-right"><a href="{{ path('edit_my_profile') }}" class="dropdown-item">{{ 'EditMyProfile' | trans }}</a></li>
-                            <li class="text-right"><a href="{{ path('my_preferences') }}" class="dropdown-item">{{ 'MyPreferences' | trans }}</a></li>
-                            <li class="text-right"><a href="{{ path('members_show_all_notes') }}" class="dropdown-item">{{ 'ProfileMyNotes' | trans }}</a></li>
-                            <li class="text-right"><a href="{{ path('groups_mygroups') }}" class="dropdown-item">{{ 'MyGroups' | trans }}</a></li>
+                            <li class="text-right"><a href="{{ path( 'members_profile' , { username: member.Username } ) }}" class="dropdown-item">{{ 'profile' | trans }}</a></li>
+                            <li class="text-right"><a href="{{ path('edit_my_profile') }}" class="dropdown-item">{{ 'editmyprofile' | trans }}</a></li>
+                            <li class="text-right"><a href="{{ path('my_preferences') }}" class="dropdown-item">{{ 'mypreferences' | trans }}</a></li>
+                            <li class="text-right"><a href="{{ path('members_show_all_notes') }}" class="dropdown-item">{{ 'mynotes' | trans }}</a></li>
+                            <li class="text-right"><a href="{{ path('groups_mygroups') }}" class="dropdown-item">{{ 'mygroups' | trans }}</a></li>
                             {# <li class="text-right"><a href="/trips" class="dropdown-item">{{ 'TripsShowMy' | trans }}</a></li> #}
-                            <li class="text-right"><a href="{{ url( 'security_logout' ) }}" class="dropdown-item">{{ 'Logout' | trans }}</a></li>
+                            <li class="text-right"><a href="{{ url( 'security_logout' ) }}" class="dropdown-item">{{ 'logout' | trans }}</a></li>
                         </ul>
                     </li>
 
@@ -213,23 +213,23 @@
                         <a href="{{ url('about') }}" class="nav-link px-3 menuborder">{{ 'menu.about' | trans }}</a>
                     </li>
                     <li class="menuborder">
-                        <a href="{{ url('safety') }}" class="nav-link px-3">{{ 'Safety' | trans }}</a>
+                        <a href="{{ url('safety') }}" class="nav-link px-3">{{ 'safety' | trans }}</a>
                     </li>
                     <li class="menuborder">
-                        <a href="{{ url('volunteer') }}" class="nav-link px-3 menuborder-r">{{ 'Volunteer' | trans }}</a>
+                        <a href="{{ url('volunteer') }}" class="nav-link px-3 menuborder-r">{{ 'volunteer' | trans }}</a>
                     </li>
                 </ul>
 
                 <form id="main-login-form" role="form" class="form-inline" method="post" action="{{ path('security_check') }}">
-                    <label class="sr-only" for="login-u">{{ 'Username' | trans }}</label>
-                    <input type="text" id="login-u" name="_username" autofocus required placeholder="{{ 'Username' | trans }}" class="form-control mx-1">
+                    <label class="sr-only" for="login-u">{{ 'username' | trans }}</label>
+                    <input type="text" id="login-u" name="_username" autofocus required placeholder="{{ 'username' | trans }}" class="form-control mx-1">
 
-                    <label class="sr-only" for="login-p">{{ 'Password' | trans }}</label>
-                    <input type="password" id="login-p" name="_password" placeholder="{{ 'Password' | trans }}" class="form-control mx-1">
+                    <label class="sr-only" for="login-p">{{ 'password' | trans }}</label>
+                    <input type="password" id="login-p" name="_password" placeholder="{{ 'password' | trans }}" class="form-control mx-1">
 
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" >
 
-                    <button type="submit" class="btn btn-primary">{{ 'IndexPageLoginSubmit' | trans }}</button>
+                    <button type="submit" class="btn btn-primary">{{ 'indexpageloginsubmit' | trans }}</button>
                 </form>
             </div>
         </div>

@@ -75,7 +75,7 @@
     <div class="content">
         <?php if($title) { ?>
             <div class="subheader">
-                <strong><?= $title ?></strong>
+                <p><?= $title ?></p>
             </div>
         <?php } ?>
 

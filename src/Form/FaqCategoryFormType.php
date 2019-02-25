@@ -23,14 +23,16 @@ class FaqCategoryFormType extends AbstractType
     {
         $formBuilder
             ->add('wordCode', TextType::class, [
-                'label' => 'FaqCategoryWordCode',
+                'label' => 'admin.faq.category.wordcode',
                 'attr' => [
                     'readonly' => true,
                 ],
             ])
             ->add('description', TextType::class, [
-                'label' => 'FaqCategoryDescription',
+                'label' => 'admin.faq.category.description',
+                'help_text' => 'admin.faq.category.help',
             ])
+
         ;
         $formBuilder->get('wordCode')
             ->addModelTransformer(new CallbackTransformer(

@@ -70,17 +70,14 @@ $font-family-bold: Signika;
     z-index: 2000!important;
 }
 
-// Use own blockquote style
-/*
 blockquote {
   color: #444;
   background: transparent;
   border: 1px #ddd solid;
-  border-left: 8px #ddd solid;
-  padding: 0 1rem;
-  margin: 0;
+  border-left: 8px $brand-primary solid;
+  padding: 0 0.5em;
+  margin: 0 0 1em 0.5em;
 }
- */
 
 .jumbotron {
   a {

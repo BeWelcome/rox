@@ -285,8 +285,8 @@ class RequestAndMessageController extends AbstractController
             $em->flush();
 
             $success = $this->sendInitialRequestNotification(
-                $guest,
                 $host,
+                $guest,
                 $hostingRequest
             );
             if ($success) {
@@ -603,8 +603,8 @@ class RequestAndMessageController extends AbstractController
             }
 
             $this->sendGuestReplyNotification(
-                $guest,
                 $host,
+                $guest,
                 $newRequest
             );
             $this->addFlash('success', 'Notification with updated information has been sent.');
@@ -696,8 +696,8 @@ class RequestAndMessageController extends AbstractController
             }
 
             $this->sendHostReplyNotification(
-                $guest,
                 $host,
+                $guest,
                 $newRequest
             );
             $this->addFlash('notice', 'Notification with updated information has been sent.');
@@ -840,7 +840,7 @@ class RequestAndMessageController extends AbstractController
             ->setTo($receiver->getEmail())
             ->setBody(
                 $plainText,
-                'text/html'
+                'text/plain'
             );
 
         if ($htmlMails) {
@@ -896,13 +896,13 @@ class RequestAndMessageController extends AbstractController
     }
 
     /**
-     * @param Member  $guest
      * @param Member  $host
+     * @param Member  $guest
      * @param Message $request
      *
      * @return bool
      */
-    private function sendInitialRequestNotification(Member $guest, Member $host, Message $request)
+    private function sendInitialRequestNotification(Member $host, Member $guest, Message $request)
     {
         return $this->sendRequestNotification($guest, $host, $request, 'emails/request.html.twig');
     }
@@ -914,9 +914,9 @@ class RequestAndMessageController extends AbstractController
      *
      * @return bool
      */
-    private function sendHostReplyNotification(Member $guest, Member $host, Message $request)
+    private function sendHostReplyNotification(Member $host, Member $guest, Message $request)
     {
-        return $this->sendRequestNotification($guest, $host, $request, 'emails/reply_host.html.twig');
+        return $this->sendRequestNotification($host, $guest, $request, 'emails/reply_host.html.twig');
     }
 
     /**
@@ -926,9 +926,9 @@ class RequestAndMessageController extends AbstractController
      *
      * @return bool
      */
-    private function sendGuestReplyNotification(Member $guest, Member $host, Message $request)
+    private function sendGuestReplyNotification(Member $host, Member $guest, Message $request)
     {
-        return $this->sendRequestNotification($host, $guest, $request, 'emails/reply_guest.html.twig');
+        return $this->sendRequestNotification($guest, $host, $request, 'emails/reply_guest.html.twig');
     }
 
     private function checkRequestExpired(HostingRequest $request)

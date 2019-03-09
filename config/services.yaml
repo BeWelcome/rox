@@ -145,6 +145,10 @@ services:
     arguments:
       - "@doctrine.orm.entity_manager"
 
+#  rox.activator:
+#    class: App\Activator\RoleActivator
+#    arguments: ["@security.helper"]
+
   _defaults:
     autowire: true      # Automatically injects dependencies in your services.
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.

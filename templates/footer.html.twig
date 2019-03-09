@@ -153,8 +153,8 @@
                                     <p>None of the used translation messages are defined for the given locale.</p>
                                 </div>
                             {% else %}
-                                <div class="col-12"><h1>{{ 'Existing translations' | trans }}</h1>
-                                    <small class="text-muted">{{ 'The list shows all translatable items that have an existing translation in the current locale.' | trans }}</small>
+                                <div class="col-12"><h1>{{ 'translation.existing' | trans }}</h1>
+                                    <small class="text-muted">{{ 'translation.existing.info' | trans }}</small>
                                 </div>
                                 {% block defined_messages %}
                                     {{ helper.render_table(messages_defined, hasEnglishRights) }}
@@ -168,8 +168,8 @@
                                     <p>No fallback translation messages were used.</p>
                                 </div>
                             {% else %}
-                                <h1>{{ 'Fallback Translations' | trans }}</h1>
-                                <small class="text-muted">{{ 'The list shows all translations that match the English original text.' | trans }}</small>
+                                <h1>{{ 'translation.fallback' | trans }}</h1>
+                                <small class="text-muted">{{ 'translation.fallback.info' | trans }}</small>
                                 {% block fallback_messages %}
                                     {{ helper.render_table(messages_fallback, hasEnglishRights) }}
                                 {% endblock %}
@@ -182,7 +182,7 @@
                                     <p>There are no messages of this category.</p>
                                 </div>
                             {% else %}
-                                {{ 'Translations keyword doesn\'t exist' | trans }}
+                                {{ 'translation.keyword.doesnt.exist' | trans }}
                                 {% block missing_messages %}
                                     {{ helper.render_table(messages_missing, hasEnglishRights) }}
                                 {% endblock %}

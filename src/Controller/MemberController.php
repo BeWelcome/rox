@@ -122,7 +122,8 @@ class MemberController extends AbstractController
     }
 
     /**
-     * @Route("/resetpassword/{username}/{key}", name="member_reset_password")
+     * @Route("/resetpassword/{username}/{key}", name="member_reset_password",
+     *     requirements={"key": "\d{160}"})
      *
      * @param Request $request
      * @param Member  $member
@@ -147,10 +148,10 @@ class MemberController extends AbstractController
         $form = $this->createFormBuilder()
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'invalid_message' => 'The password fields must match.',
+                'invalid_message' => 'password.must.match',
                 'required' => true,
-                'first_options' => ['label' => 'Password'],
-                'second_options' => ['label' => 'Repeat Password'],
+                'first_options' => ['label' => 'password'],
+                'second_options' => ['label' => 'Password.repeat'],
             ])
             ->getForm();
         $form->handleRequest($request);
@@ -162,7 +163,7 @@ class MemberController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($member);
             $em->flush();
-            $this->addFlash('notice', 'Your password has been reset. Please login now with the new password.');
+            $this->addFlash('notice', 'password.reset.flash');
 
             return $this->redirectToRoute('security_login');
         }

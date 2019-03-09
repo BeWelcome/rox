@@ -22,9 +22,9 @@ class CommunityNewsType extends AbstractType
         $formBuilder
             ->add('title', TextType::class, [
                 'attr' => [
-                    'placeholder' => 'Please enter the title',
+                    'placeholder' => 'enter.title',
                 ],
-                'label' => 'Enter the title of the community news',
+                'label' => 'enter.title.labelEnter the title of the community news',
                 'constraints' => [
                     new NotBlank(),
                 ],

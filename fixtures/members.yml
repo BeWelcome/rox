@@ -2,7 +2,7 @@ App\Entity\Member:
     member_{1..10}:
         Username: 'member-<current()>'
         BirthDate: <DateTime()>
-        email: 0
+        email: <email()>
         created: <dateTimeBetween("-200 days", "now")>
         updated: <dateTimeBetween($created, "now")>
         LastLogin: <dateTimeBetween($created, "now")>
@@ -19,9 +19,9 @@ App\Entity\Member:
         WorkPhoneNumber: 0
         SecEmail: 0
         HideAttribute: 8
-        FirstName: 0
-        SecondName: 0
-        LastName: 0
+        FirstName: <firstName()>
+        SecondName: '70%? <firstName()>: '
+        LastName: <lastName()>
         Accommodation: 'dependonrequest'
         AdditionalAccommodationInfo: 0
         ILiveWith: 0

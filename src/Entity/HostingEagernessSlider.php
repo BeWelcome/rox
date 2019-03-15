@@ -39,7 +39,7 @@ class HostingEagernessSlider
      * @var Member
      *
      * @ORM\ManyToOne(targetEntity="Member", inversedBy="groupMemberships")
-     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id", nullable=FALSE)
+     * @ORM\JoinColumn(name="member_id", referencedColumnName="id", nullable=FALSE)
      */
     private $member;
 

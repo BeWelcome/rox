@@ -1,0 +1,46 @@
+App\Entity\Preference:
+    LOCALE:
+        codename: 'PreferenceLanguage'
+        position: 10
+        codeDescription: 'PreferenceLanguageDesc'
+        Description: 'This preference will be used for language preference.\r\nIt is initially set to the language the member has choosen at first profile update \r\nMembers.Preferences.Value will contain the corresponding IdLanguage'
+        DefaultValue: 0
+        PossibleValues: ''
+        created: <DateTime()>
+        Status: 'Normal'
+    FORUM_FILTER:
+        codename: 'PreferenceForumFilter'
+        position: 100
+        codeDescription: 'PreferenceForumFilter'
+        Description: 'Stores the filter for forum posts applied on the landing page'
+        created: <DateTime()>
+        DefaultValue: 'GroupsAndForums'
+        PossibleValues: 'GroupsAndForums:Groups:Forums'
+        Status: 'Inactive'
+    MESSAGE_AND_REQUEST_FILTER:
+        codename: 'PreferenceMessageFilter'
+        position: 100
+        codeDescription: 'PreferenceForumFilter'
+        Description: 'Stores the filter for messages and requests applied on the landing page'
+        created: <DateTime()>
+        DefaultValue: 'Unread'
+        PossibleValues: 'All:Unread'
+        Status: 'Inactive'
+    SHOW_MAP:
+        codename: 'PreferenceShowMap'
+        position: 100
+        codeDescription: 'PreferenceShowMap'
+        Description: 'Stores if the user wants to see the map on find members'
+        created: <DateTime()>
+        DefaultValue: 'Yes'
+        PossibleValues: 'Yes:No'
+        Status: 'Normal'
+    HTML_MAILS:
+        codename: 'PreferenceHtmlMails'
+        position: 51
+        codeDescription: 'PreferenceHtmlMailsDesc'
+        Description: 'This allows the member to choose the format of the\nmessages send by bewelcome.org. Defaults to HTML'
+        created: <DateTime()>
+        DefaultValue: 'Yes'
+        PossibleValues: 'Yes:No'
+        Status: 'Normal'

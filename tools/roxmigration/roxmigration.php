@@ -93,9 +93,9 @@ class RoxMigration extends AbstractMigration
      */
     protected function AddWordCode($code, $sentence, $description, $dnt = 'No', $priority = '5')
     {
-        if (strlen($description) < 15) {
-            throw new \Exception("Description too short need at least 15 characters");
-        }
+//        if (strlen($description) < 15) {
+//            throw new \Exception("Description too short need at least 15 characters");
+//        }
         $this->_writeWordCodeToDb(true, $code, $sentence, $description, false, $dnt, $priority);
     }
 
@@ -188,5 +188,13 @@ WHERE `code` = " . $code
             $varSafe[] = $connection->quote($var);
         }
         return $varSafe;        
+    }
+
+    /**
+     * @param $oldCode
+     * @param $newCode
+     */
+    protected function RenameWordCode($oldCode, $newCode)
+    {
     }
 }

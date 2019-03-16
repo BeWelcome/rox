@@ -49,6 +49,19 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
             <!-- member avatar -->
             <div class="p-1">
                 <img class="media-object" src="/members/avatar/<?php echo($post->OwnerUsername); ?>?size=50">
+                <small class="d-block d-md-none username"><a
+                            href="members/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
+                    <br>
+                    <?php
+                    if ($this->_session->has("IdMember")) {
+                        if (isset($post->city) && isset($post->country)) {
+
+                            echo $post->city . '<br>' .$post->country;
+
+                        }
+                    }
+                    ?>
+                </small>
             </div>
 
             <!-- member name/location -->

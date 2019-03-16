@@ -49,6 +49,7 @@
         {% for message in items.currentPageResults %}
             {% set directionIn = (member.id == message.receiver.id) %}
             {% set otherMember = directionIn ? message.sender : message.receiver %}
+            {% set unread = (message.whenfirstread == '0000-00-00 00:00.00') or (message.whenfirstread is null) %}
 
             <tr>
                 <td class="select align-middle" id="selectcolumn">
@@ -59,7 +60,7 @@
                     <p class="m-0">{{ macros.profilelink(otherMember.Username) }}</p>
                 </td>
                 <td class="align-middle w-100">
-                    {% set unread = (message.whenfirstread == '0000-00-00 00:00.00') or (message.whenfirstread is null) %}
+                    {%- if unread -%}<div class="float-left"><i class="fa fa-lg fa-exclamation pr-1" title="{{ 'unread' | trans }}"></i></div>{%- endif -%}
                     <a href="{{ path('message_show', { id: message.id}) }}"
                             {%- if unread -%}
                                 {{- ' class="unread"' -}}

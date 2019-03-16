@@ -2,12 +2,14 @@
 <div id="messagesdisplay" class="scrollcontent">
     {% for message in messages %}
         {% if message.request %}{% set route = 'hosting_request_show' %}{% else %}{% set route = 'message_show' %}{% endif %}
+        {% set unread = (message.whenfirstread == '0000-00-00 00:00.00') or (message.whenfirstread is null) %}
         <div class="d-flex flex-row justify-content-start align-items-center p-2">
             <div class="pr-2">{{ macros.avatar( message.sender.username, 50, true) }}</div>
             <div class="dashentry w-100">
-                {% set unread = (message.whenfirstread == '0000-00-00 00:00.00') or (message.whenfirstread is null) %}
+
                 {% if message.request %}
                     <div class="d-flex justify-content-start align-items-center">
+                        {%- if unread -%}<div><i class="fa fa-lg fa-exclamation pr-1" title="{{ 'unread' | trans }}"></i></div>{%- endif -%}
                         <div><i class="fa fa-lg fa-bed"></i></div>
                         <div class="small mx-2 alert alert-dark my-0 px-1 py-0 text-nowrap">
                             {{ message.request.arrival | localizeddate( 'medium', 'none') }}<br>
@@ -22,6 +24,7 @@
                     </div>
                 {% else %}
                     <div class="text-truncate text">
+                        {%- if unread -%}<div><i class="fa fa-lg fa-exclamation pr-1" title="{{ 'unread' | trans }}"></i></div>{%- endif -%}
                         <a href="{{ path(route, { id: message.id } ) }}" class="{%- if unread %}unread{% else %}read{% endif %}">
                             {% if message.subject %}<span class="text-truncate">{{ message.subject.subject|raw }}</span>{% endif %}
                             <span class="text-truncate">{{ message.message|raw }}</span>

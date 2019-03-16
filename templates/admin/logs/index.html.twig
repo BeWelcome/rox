@@ -25,7 +25,7 @@
     {{ form_end(form) }}
     <div class="log"></div>
     {% if logs.nbResults == 0 %}
-        <div class="alert alert-warning">{{ 'No logs found for these parameters.' | trans }}</div>
+        <div class="alert alert-warning">{{ 'admin.logs.no.logs' | trans }}</div>
     {% else %}
         {% if logs.haveToPaginate %}
             <div class="float-left">

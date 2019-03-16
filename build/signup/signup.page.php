@@ -30,8 +30,8 @@ class SignupPage extends SignupBasePage
     {
         $stylesheets = parent::getStylesheets();
         if ($this->_step == 3) {
-            $stylesheets[] = '/build/leaflet.css';
-            $stylesheets[] = '/build/jquery_ui.css';
+            $stylesheets[] = 'build/leaflet.css';
+            $stylesheets[] = 'build/jquery_ui.css';
         }
         return $stylesheets;
     }

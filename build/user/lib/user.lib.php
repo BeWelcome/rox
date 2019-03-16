@@ -142,14 +142,14 @@ class APP_User extends MOD_bw_user_Auth
 
     private function _getUser($userId) {
         if( !isset($this->_userHandle)) {
-            $s = $this->dao->query('SELECT `id`, `auth_id`, `handle` FROM `user` WHERE `id` = '.(int)$userId);
+            $s = $this->dao->query('SELECT `id`, `handle` FROM `user` WHERE `id` = '.(int)$userId);
             if( $s->numRows() == 0) {
                 return false;
             } elseif( $s->numRows() != 1) {
                 throw new PException('D.i.e.!');
             } else {
                 $d = $s->fetch(PDB::FETCH_OBJ);
-                $this->setAuth($d->auth_id);
+//                $this->setAuth($d->auth_id);
                 $this->_userId     = $d->id;
                 $this->_userHandle = $d->handle;
                 $this->loggedIn = true;

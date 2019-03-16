@@ -75,7 +75,7 @@ class Searchmembers extends RoxModelBase
             $query =<<<SQL
 SELECT  ShortCode
 FROM    words
-WHERE   code = 'WelcomeToSignup'
+WHERE   code = 'welcometosignup'
 SQL;
             $result = $this->dao->query($query);
             while ($row = $result->fetch(PDB::FETCH_OBJ)) {

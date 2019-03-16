@@ -44,3 +44,14 @@ App\Entity\Preference:
         DefaultValue: 'Yes'
         PossibleValues: 'Yes:No'
         Status: 'Normal'
+    FORUM_FIRST_PAGE:
+        codename: 'PreferenceForumFirstPage'
+        position: 51
+        codeDescription: 'PreferenceForumFirstPageDesc'
+        Description: 'This preference is used to state what is the first page of the forum for the user'
+        created: <DateTime()>
+        DefaultValue: 'Pref_ForumFirstPageLastPost'
+        PossibleValues: 'Pref_ForumFirstPageLastPost:Pref_ForumFirstPageCategory'
+        Status: 'Normal'
+
+

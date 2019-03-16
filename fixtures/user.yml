@@ -1,0 +1,7 @@
+App\Entity\User:
+  user_{1..10}:
+    handle: 'member-<current()>'
+    email: <email()>
+    password: 'password'
+    lastlogin: <dateTimeBetween("-200 days", "now")>
+    location: 0

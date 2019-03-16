@@ -29,7 +29,7 @@ class RoxFrontRouterModel extends RoxModelBase
                     WHERE
                         languages.id = '" . $this->dao->escape($langcode) . "' AND
                         languages.id = words.Idlanguage AND
-                        words.code = 'WelcomeToSignup'");
+                        words.code = 'welcometosignup'");
             } else {
                 return $this->singleLookup("
                     SELECT
@@ -41,7 +41,7 @@ class RoxFrontRouterModel extends RoxModelBase
                     WHERE
                         languages.ShortCode = '" . $this->dao->escape($langcode) . "' AND
                         languages.id = words.Idlanguage AND
-                        words.code = 'WelcomeToSignup'");
+                        words.code = 'welcometosignup'");
             }
         }
     }

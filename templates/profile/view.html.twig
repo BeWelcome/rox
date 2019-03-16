@@ -11,7 +11,7 @@
 
         <div class="btn-group btn-group-profile" role="group">
             {% if member.id == myself.id %}
-                <a href="#" class="btn btn-edit"><span class="fa fa-pencil btn-edit-animation small pr-2"></span>{{ 'MyPreferences' | trans  }}</a>
+                <a href="#" class="btn btn-edit"><span class="fa fa-pencil btn-edit-animation small pr-2"></span>{{ 'mypreferences' | trans  }}</a>
             {% else %}
                 <a href="{{ path('message/compose', { username: member.Username }) }}"
                    class="btn btn-edit"><i class="fa fa-envelope"></i> Message</a>
@@ -72,7 +72,7 @@
             {% endif %}
 
             {% if member.id == myself.id %}
-                <br><a href="{{ path('member/edit') }}" class="btn btn-sm btn-edit"><span class="fa fa-pencil btn-edit-animation small pr-2"></span>{{ 'EditMyProfile' | trans  }}</a>
+                <br><a href="{{ path('member/edit') }}" class="btn btn-sm btn-edit"><span class="fa fa-pencil btn-edit-animation small pr-2"></span>{{ 'editmyprofile' | trans  }}</a>
             {% endif %}
 
             <div class="mt-4">

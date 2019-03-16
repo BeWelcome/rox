@@ -13,10 +13,10 @@
                 </colgroup>
                 <thead>
                     <tr>
-                        <th scope="col">{{ 'Group Info'|trans }}</th>
-                        <th scope="col" class="w-100">{{ 'Group Description'|trans }}</th>
-                        <th scope="col">{{ 'Creator'|trans }}</th>
-                        <th scope="col">{{ 'Actions'|trans }}</th>
+                        <th scope="col">{{ 'admin.group.info'|trans }}</th>
+                        <th scope="col" class="w-100">{{ 'admin.group.description'|trans }}</th>
+                        <th scope="col">{{ 'admin.group.creator'|trans }}</th>
+                        <th scope="col">{{ 'admin.group.actions'|trans }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,6 +45,6 @@
             </table>
         </div>
     {% else %}
-        {{ 'No groups need to be approved' | trans }}
+        {{ 'admin.group.no.group' | trans }}
     {% endif %}
 {% endblock %}

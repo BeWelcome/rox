@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block content %}
-<h1>{{ 'Activities' | trans }}</h1>
+<h1>{{ 'activities' | trans }}</h1>
     <div class="pull-right">{{ pagerfanta( activities, 'twitter_bootstrap4_translated', { routeName: 'activity' }) }}</div>
     <div class="row">
         <div class="col-xs-12">
@@ -46,8 +46,8 @@
                             <div class="d-inline-block"><i class="fa fa-3x fa-users"></i></div>
                             <div class="ll-1 d-inline-block">
                                 <small>
-                                    {% if activity.attendeesYes.count != 0 %}{{ activity.attendeesYes.count }}&nbsp;{{ 'ActivitiesNumbAttendeesYes' | trans }}{% endif %} <br>
-                                    {% if activity.attendeesMaybe.count != 0 %}{{ activity.attendeesMaybe.count }}&nbsp;{{ 'ActivitiesNumbAttendeesMaybe' | trans }}{% endif %}<br>
+                                    {% if activity.attendeesYes.count != 0 %}{{ activity.attendeesYes.count }}&nbsp;{{ 'activitiesnumbattendeesyes' | trans }}{% endif %} <br>
+                                    {% if activity.attendeesMaybe.count != 0 %}{{ activity.attendeesMaybe.count }}&nbsp;{{ 'activitiesnumbattendeesmaybe' | trans }}{% endif %}<br>
                                 </small>
                             </div>
                         </td>

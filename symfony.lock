@@ -464,8 +464,14 @@
     "symfony/polyfill-ctype": {
         "version": "v1.9.0"
     },
+    "symfony/polyfill-iconv": {
+        "version": "v1.10.0"
+    },
     "symfony/polyfill-intl-icu": {
         "version": "v1.9.0"
+    },
+    "symfony/polyfill-intl-idn": {
+        "version": "v1.10.0"
     },
     "symfony/polyfill-mbstring": {
         "version": "v1.9.0"

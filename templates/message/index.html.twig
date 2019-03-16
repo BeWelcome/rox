@@ -44,7 +44,7 @@
                 <span class="small"><a href="{{ path( _route, { folder: folder, sort: correspondent, dir: 'asc' }) }}">&#x25b2;</a> {{ correspondent | trans | capitalize }} <a href="{{ path( _route, { folder: folder, sort: correspondent, dir: 'desc' }) }}">&#x25bc;</a></span><br>
                 <span class="small"><a href="{{ path( _route, { folder: folder, sort: 'date', dir: 'asc' }) }}">&#x25b2;</a> {{ 'Date' | trans }} <a href="{{ path( _route, { folder: folder, sort: 'date', dir: 'desc' }) }}">&#x25bc;</a></span>
             </th>
-            <th colspan="2" class="align-middle">{{ 'MessagesText' | trans }}</th>
+            <th colspan="2" class="align-middle">{{ 'messagestext' | trans }}</th>
         </tr>
         {% for message in items.currentPageResults %}
             {% set directionIn = (member.id == message.receiver.id) %}
@@ -106,7 +106,7 @@
                             {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-light' } }) }}
                             {{ form_widget(form.purge, { 'attr': { 'class': 'btn btn-danger' } }) }}
                         {% else %}
-                            {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-danger', 'onclick': 'return confirm ("' ~ 'MessagesWarningConfirmDelete' | trans  ~ '")'} }) }}
+                            {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-danger', 'onclick': 'return confirm ("' ~ 'messageswarningconfirmdelete' | trans  ~ '")'} }) }}
                         {% endif %}
                         {{ form_widget(form.spam, { 'attr': { 'class': 'btn btn-light' } }) }}
                     </div>

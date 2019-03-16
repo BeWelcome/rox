@@ -103,7 +103,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     protected $username;
 
     /**
-     * @var int
+     * @var string
      *
      * @ORM\Column(name="Email", type="string", nullable=false)
      */

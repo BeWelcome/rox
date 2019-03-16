@@ -4,6 +4,9 @@ namespace App\Form;
 
 use App\Form\CustomDataClass\SearchFormRequest;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Exception\AlreadySubmittedException;
+use Symfony\Component\Form\Exception\LogicException;
+use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -33,7 +36,7 @@ class SearchFormType extends AbstractType
             ])
             ->setMethod('GET')
             ->add('keywords', TextType::class, [
-                'label' => 'TextToFind',
+                'label' => 'texttofind',
                 'required' => false,
             ])
             ->addEventListener(
@@ -121,7 +124,7 @@ class SearchFormType extends AbstractType
                     'data-minimum-results-for-search' => '-1',
                 ],
                 'required' => false,
-                'label' => 'Minimum age',
+                'label' => 'findpeopleminimumage',
                 'translation_domain' => 'messages',
             ])
             ->add('max_age', ChoiceType::class, [
@@ -132,7 +135,7 @@ class SearchFormType extends AbstractType
                     'data-minimum-results-for-search' => '-1',
                 ],
                 'required' => false,
-                'label' => 'Maximum age',
+                'label' => 'findpeoplemaximumage',
                 'translation_domain' => 'messages',
             ])
             ->add('gender', ChoiceType::class, [
@@ -141,7 +144,6 @@ class SearchFormType extends AbstractType
                     'female' => 'female',
                     'other' => 'idonttell',
                 ],
-                'choice_translation_domain' => false,
                 'attr' => [
                     'class' => 'select2',
                     'data-minimum-results-for-search' => '-1',
@@ -170,7 +172,7 @@ class SearchFormType extends AbstractType
                     'class' => 'select2-inline',
                     'data-minimum-results-for-search' => '-1',
                 ],
-                'label' => 'search.hosts_at_least',
+                'label' => 'searchcanhostatleast',
                 'label_attr' => [
                     'class' => 'mx-1 sr-only',
                 ],
@@ -178,18 +180,18 @@ class SearchFormType extends AbstractType
             ])
             ->add('order', ChoiceType::class, [
                 'choices' => [
-                    'search.username.ascending' => 2,
-                    'search.username.descending' => 3,
-                    'Accommodation (Yes, Maybe, No)' => 6,
-                    'Accommodation (No, Maybe, Yes)' => 7,
-                    'Distance ascending' => 14,
-                    'Distance descending' => 15,
-                    'Last login (oldest first)' => 8,
-                    'Last login (latest first)' => 9,
-                    'Member since (older member first)' => 10,
-                    'Member since (newer member first)' => 11,
-                    'Number of comments ascending' => 12,
-                    'Number of comments descending' => 13,
+                    'searchorderusernameasc' => 2,
+                    'searchorderusernamedesc' => 3,
+                    'searchorderaccommodationasc' => 6,
+                    'searchorderaccommodationdesc' => 7,
+                    'searchorderdistanceasc' => 14,
+                    'searchorderdistancedesc' => 15,
+                    'searchorderloginasc' => 8,
+                    'searchorderlogindesc' => 9,
+                    'searchordermembershipasc' => 10,
+                    'searchordermembershipdesc' => 11,
+                    'searchordercommentsasc' => 12,
+                    'searchordercommentsdesc' => 13,
                 ],
                 'attr' => [
                     'class' => 'select2',
@@ -262,19 +264,19 @@ class SearchFormType extends AbstractType
                 'required' => false,
             ])
             ->add('offerdinner', CheckboxType::class, [
-                'label' => 'TypicOffer_dinner',
+                'label' => 'typicoffer_dinner',
                 'required' => false,
             ])
             ->add('offertour', CheckboxType::class, [
-                'label' => 'TypicOffer_guidedtour',
+                'label' => 'typicoffer_guidedtour',
                 'required' => false,
             ])
             ->add('accessible', CheckboxType::class, [
-                'label' => 'TypicOffer_CanHostWheelChair',
+                'label' => 'typicoffer_canhostwheelchair',
                 'required' => false,
             ])
             ->add('inactive', CheckboxType::class, [
-                'label' => 'SearchIncludeInactive',
+                'label' => 'searchincludeinactive',
                 'required' => false,
             ])
             ->add('showmap', CheckboxType::class, [
@@ -292,6 +294,9 @@ class SearchFormType extends AbstractType
      * an empty search location (\todo)
      *
      * @param FormEvent $event
+     * @throws AlreadySubmittedException
+     * @throws LogicException
+     * @throws UnexpectedTypeException
      */
     public function onPostSetData(FormEvent $event)
     {
@@ -308,7 +313,7 @@ class SearchFormType extends AbstractType
         ];
         $showOnMap = boolval($data->showOnMap);
         if (true === $showOnMap) {
-            $choices = ['see map' => -1] + $choices;
+            $choices = ['search.see_map' => -1] + $choices;
         }
         $form = $event->getForm();
         $form->add('distance', ChoiceType::class, [

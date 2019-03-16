@@ -31,7 +31,7 @@ LEFT JOIN
 left JOIN
 	words w2 ON w2.ShortCode = '{$locale}' and w2.Code = l.WordCode 
 WHERE
-    w1.code = 'WelcomeToSignup'
+    w1.code = 'welcometosignup'
 ORDER BY Name ASC", $rsm);
 
         $languages = $query->getResult('LanguageHydrator');

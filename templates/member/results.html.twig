@@ -9,7 +9,7 @@
                 <thead class="thead-light">
                 <tr>
                     <th colspan="2">{{ 'member' | trans | capitalize }}</th>
-                    <th>{{ 'profile.summary' | trans | capitalize }}</th>
+                    <th>{{ 'profilesummary' | trans | capitalize }}</th>
                     <th>{{ 'details' | trans | capitalize }}</th>
                 </tr>
                 </thead>
@@ -33,7 +33,7 @@
                             </div>
                             <div class="small">
                                 <p class="m-0 mb-2">{% if (member.Age) -%}
-                                        {{ 'SearchYearsOld' | trans | format( member.Age) | raw -}}
+                                        {{ 'searchyearsold' | trans | format( member.Age) | raw -}}
                                     {% endif -%}
                                     {%- if (member.HideGender == 'No') %}
                                         {%- if member.Age %}, {% endif %}
@@ -47,7 +47,7 @@
                             </div>
                         </td>
                         <td class="col summary py-2">
-                            {% if member.Occupation|length %}<p class="m-0 mb-1 font-italic">{{ 'Occupation' }}
+                            {% if member.Occupation|length %}<p class="m-0 mb-1 font-italic">{{ 'occupation' | trans }}
                                 : {{ member.Occupation | raw }}</p>{% endif %}
                             <a href="/members/{{ member.Username }}"
                                style="color: #000; text-underline: none; display: block; width: 100%;">{{ member.ProfileSummary | truncate(250) | purify }}</a>
@@ -62,12 +62,12 @@
                             <div class="clearfix"></div>
                             <div class="w-100 font-weight-bold text-nowrap">
                                 <a href="/members/{{ member.Username }}/comments"><i
-                                            class="fa fa-comments mr-1"></i>{{ 'SearchCommentsInfo' | trans | format( member.CommentCount) | raw }}
+                                            class="fa fa-comments mr-1"></i>{{ 'searchvommentsinfo' | trans | format( member.CommentCount) | raw }}
                                 </a>
                             </div>
                             <div class="mt-2">
-                                <small>{{ 'SearchMemberLastLoginInfo' | trans | format( '<strong>' ~ member.LastLogin ~ '</strong>') | raw }}</small>
-                                <small>{{ 'SearchMemberSinceInfo' | trans | format( '<strong>' ~ member.created ~ '</strong>' ) | raw }}</small>
+                                <small>{{ 'searchmemberlastlogininfo' | trans | format( '<strong>' ~ member.LastLogin ~ '</strong>') | raw }}</small>
+                                <small>{{ 'searchmembersinceinfo' | trans | format( '<strong>' ~ member.created ~ '</strong>' ) | raw }}</small>
                             </div>
                         </td>
                     </tr>

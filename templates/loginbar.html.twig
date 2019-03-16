@@ -5,12 +5,12 @@
     <div class="container">
 
         <a class="navbar-brand ml-3" href="{{ path('homepage') }}"><img src="{{ asset('images/logo_index_top.png') }}"
-                                                                        alt="{{ 'BeWelcome' | trans }}"></a>
+                                                                        alt="{{ 'bewelcome' | trans }}"></a>
 
         <button class="navbar-toggler btn btn-primary mr-3" type="button" data-toggle="collapse"
                 data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false"
                 aria-label="Toggle navigation">
-            <span><i class="fa fa-sign-in-alt pr-1"></i>{{ 'Login' | trans }}</span>
+            <span><i class="fa fa-sign-in-alt pr-1"></i>{{ 'login' | trans }}</span>
         </button>
 
         <div class="collapse navbar-collapse my-1" id="navbarToggler">
@@ -32,7 +32,7 @@
                             {{ macros.submit('Login') }}
                         </form>
                     </li>
-                    <li class="d-none d-md-inline-block mt-2"><span class="mt-1 mr-2">{{ 'or'|trans }}</span><a
+                    <li class="d-none d-md-inline-block mt-2"><span class="mt-1 mr-2">{{ 'or' | trans }}</span><a
                                 href="/signup" class="btn btn-primary">{{ 'navbar.button.signup'|trans }}</a></li>
                     <li class="d-block d-md-none mx-1"><a href="/signup"
                                                           class="btn btn-block btn-outline-light">{{ 'navbar.button.signup'|trans }}</a>

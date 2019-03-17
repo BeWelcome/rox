@@ -8,6 +8,7 @@
 
 {% block content %}
 
-    {{ body | raw }}
-
+    {{ message.text | raw }}<br>
+    <br>
+    <a href="{{ url('message_reply', { 'id': message.id }) }}">{{ request.reply }}</a>
 {% endblock %}

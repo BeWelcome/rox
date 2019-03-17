@@ -16,7 +16,6 @@ class HostingRequestGuest extends HostingRequestAbstractType
     {
         $builder
             ->add('request', HostingRequestType::class)
-            ->add('subject', SubjectType::class)
         ;
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $messageRequest = $event->getData();
@@ -28,10 +27,12 @@ class HostingRequestGuest extends HostingRequestAbstractType
                     'when and how you\'re going to arrive.'
                 );
                 $form->add('send', SubmitType::class);
+                $form->add('subject', SubjectType::class);
             } else {
                 $this->addMessageTextArea($form, 'Please enter a message for your host.');
                 $form->add('cancel', SubmitType::class);
                 $form->add('update', SubmitType::class);
+                $form->add('subject', SubjectType::class, ['disabled' => true]);
             }
         });
     }

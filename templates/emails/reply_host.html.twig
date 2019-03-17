@@ -14,5 +14,7 @@
     {% if request.flexible %}{{ 'request.flexible' }}<br>{% endif %}
     {{ 'request.number_of_travellers' | trans}}: {{ request.numberOfTravellers }}<br>
     <br>
-    {{ message | raw }}
+    {{ message | raw }}<br>
+    <br>
+    <a href="{{ url('hosting_request_reply', { 'id': request.id }) }}">{{ request.reply }}</a>
 {% endblock %}

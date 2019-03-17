@@ -536,6 +536,7 @@ class RequestAndMessageController extends AbstractController
      * @throws \InvalidArgumentException
      *
      * @return Response
+     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * Ignore as too strict in this case (function is easily readable)
      */
@@ -565,7 +566,7 @@ class RequestAndMessageController extends AbstractController
         }
 
         if ($this->checkRequestExpired($hostingRequest->getRequest())) {
-            $this->addFlash('notice', 'This request can\'t be replied to anymore as the hosting period already started.');
+            $this->addFlash('notice', 'request.cant.reply');
 
             return $this->redirectToRoute('hosting_request_show', ['id' => $hostingRequest->getId()]);
         }
@@ -607,7 +608,7 @@ class RequestAndMessageController extends AbstractController
                 $guest,
                 $newRequest
             );
-            $this->addFlash('success', 'Notification with updated information has been sent.');
+            $this->addFlash('success', 'request.reply.flash');
 
             return $this->redirectToRoute('hosting_request_show', ['id' => $newRequest->getId()]);
         }
@@ -656,7 +657,7 @@ class RequestAndMessageController extends AbstractController
         }
 
         if ($this->checkRequestExpired($hostingRequest->getRequest())) {
-            $this->addFlash('notice', 'This request can\'t be replied to anymore as the hosting period already started.');
+            $this->addFlash('notice', 'request.cant.reply');
 
             return $this->redirectToRoute('hosting_request_show', ['id' => $hostingRequest->getId()]);
         }
@@ -700,7 +701,7 @@ class RequestAndMessageController extends AbstractController
                 $guest,
                 $newRequest
             );
-            $this->addFlash('notice', 'Notification with updated information has been sent.');
+            $this->addFlash('notice', 'request.reply.flash');
 
             return $this->redirectToRoute('hosting_request_show', ['id' => $newRequest->getId()]);
         }
@@ -819,6 +820,8 @@ class RequestAndMessageController extends AbstractController
      * @param Member $receiver
      * @param string $subject
      * @param string $htmlBody
+     *
+     * @return bool
      */
     private function sendEmail(Member $sender, Member $receiver, $subject, $htmlBody)
     {

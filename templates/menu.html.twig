@@ -8,7 +8,7 @@
             <a class="navbar-brand d-inline d-lg-none" href="{{ url('homepage') }}"><img src="{{ asset('images/logo_no_text.png') }}"
                                                                                          alt="BeWelcome"/></a>
 
-            <button class="navbar-toggler mr-auto" type="button" data-toggle="collapse" data-target="#smallNavBar"
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#smallNavBar"
                     aria-controls="smallNavBar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -184,8 +184,8 @@
             </div>
                 <ul class="nav mr-0">
                     <li class="nav-item dropdown">
-                        <a href="#member_menu" class="nav-link dropdown-toggle" data-target="member_menu"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
+                        <a href="#member_menu" class="nav-link dropdown-toggle" style="padding-left: .25rem; padding-right: .25rem;"
+                           data-target="member_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
                                     class="fa fa-user"></i><span
                                     class="d-none d-sm-inline">&nbsp;{{ member.Username }}</span></a>
                         <ul id="member_menu" class="dropdown-menu" role="menu">
@@ -215,7 +215,7 @@
                         {% include 'widgets/requestscount.html.twig' %}
                     </li>
                     {# logout #}
-                    <li class="nav-item"><a href="{{ url( 'security_logout' ) }}" class="nav-link"><i
+                    <li class="nav-item"><a href="{{ url( 'security_logout' ) }}" class="nav-link" style="padding-left: .25rem; padding-right: .25rem;"><i
                                     class="fa fa-lg fa-sign-out-alt"></i></a></li>
                 </ul>
             </div>

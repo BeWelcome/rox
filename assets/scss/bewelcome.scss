@@ -162,6 +162,13 @@ a.active .metric .value {
   }
 }
 
+.nav-link {
+  @include media-breakpoint-down(sm) {
+    padding-right: $input-btn-padding-x-sm;
+    padding-left: $input-btn-padding-x-sm;
+  }
+}
+
 #editProfileTab .nav-tabs {
   display:none;
 }

@@ -60,15 +60,14 @@
                     <p class="m-0">{{ macros.profilelink(otherMember.Username) }}</p>
                 </td>
                 <td class="align-middle w-100">
-                    {%- if unread -%}<div class="float-left"><i class="fa fa-lg fa-exclamation pr-1" title="{{ 'unread' | trans }}"></i></div>{%- endif -%}
                     <a href="{{ path('message_show', { id: message.id}) }}"
                             {%- if unread -%}
                                 {{- ' class="unread"' -}}
                             {%- endif -%}
                     >
                         <div>
-                            {% if message.subject %}<p class="h5 m-0">
-                                {{- message.subject.subject | striptags -}}
+                            {% if message.subject %}<p class="m-0">
+                                <em>{{- message.subject.subject | striptags -}}</em>
                                 </p>{% endif %}
                     {% set messageText = message.Message | replace({'\n': ' ', '<br />': ' '}) | striptags %}
 

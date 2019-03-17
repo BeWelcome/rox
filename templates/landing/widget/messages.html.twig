@@ -9,7 +9,6 @@
 
                 {% if message.request %}
                     <div class="d-flex justify-content-start align-items-center">
-                        {%- if unread -%}<div><i class="fa fa-lg fa-exclamation pr-1" title="{{ 'unread' | trans }}"></i></div>{%- endif -%}
                         <div><i class="fa fa-lg fa-bed"></i></div>
                         <div class="small mx-2 alert alert-dark my-0 px-1 py-0 text-nowrap">
                             {{ message.request.arrival | localizeddate( 'medium', 'none') }}<br>
@@ -17,16 +16,15 @@
                         </div>
                         <div class="text-truncate text">
                             <a href="{{ path(route, { id: message.id } ) }}" {% if unread %}class="unread"{% endif %}>
-                                <span class="text-truncate">{{ message.subject.subject|raw }}</span>
+                                <span class="text-truncate"><em>{{ message.subject.subject|raw }}</em></span>
                                 <span class="text-truncate">{{ message.message|raw }}</span>
                             </a>
                         </div>
                     </div>
                 {% else %}
                     <div class="text-truncate text">
-                        {%- if unread -%}<div><i class="fa fa-lg fa-exclamation pr-1" title="{{ 'unread' | trans }}"></i></div>{%- endif -%}
                         <a href="{{ path(route, { id: message.id } ) }}" class="{%- if unread %}unread{% else %}read{% endif %}">
-                            {% if message.subject %}<span class="text-truncate">{{ message.subject.subject|raw }}</span>{% endif %}
+                            {% if message.subject %}<span class="text-truncate"><em>{{ message.subject.subject|raw }}</em></span>{% endif %}
                             <span class="text-truncate">{{ message.message|raw }}</span>
                         </a>
                     </div>

@@ -201,6 +201,7 @@ class RequestAndMessageController extends AbstractController
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($message);
+            $em->flush();
 
             $success = $this->sendMessageNotification(
                 $sender,
@@ -214,7 +215,6 @@ class RequestAndMessageController extends AbstractController
             } else {
                 $this->addFlash('notice', 'Message has been stored into the database. Mail notification couldn\'t be sent, though.');
             }
-            $em->flush();
 
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
         }
@@ -868,13 +868,11 @@ class RequestAndMessageController extends AbstractController
         // Send mail notification with the receiver's preferred locale
         $this->setTranslatorLocale($receiver);
         $subject = $message->getSubject()->getSubject();
-        $messageBody = $message->getMessage();
-
         $body = $this->renderView('emails/message.html.twig', [
             'sender' => $sender,
             'receiver' => $receiver,
+            'message' => $message,
             'subject' => $subject,
-            'body' => $messageBody,
         ]);
 
         return $this->sendEmail($sender, $receiver, $subject, $body);

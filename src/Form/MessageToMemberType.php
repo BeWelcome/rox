@@ -4,6 +4,8 @@ namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -15,7 +17,6 @@ class MessageToMemberType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('subject', SubjectType::class)
             ->add('message', CkEditorType::class, [
                 'attr' => [
                     'placeholder' => 'Please enter a message.',
@@ -28,6 +29,15 @@ class MessageToMemberType extends AbstractType
                 ],
             ])
         ;
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $message = $event->getData();
+            $form = $event->getForm();
+            if ($message) {
+                $form->add('subject', SubjectType::class, ['disabled' => true]);
+            } else {
+                $form->add('subject', SubjectType::class);
+            }
+        });
     }
 
     /**

@@ -8,7 +8,7 @@
 
 {% block content %}
 
-    {{ message.text | raw }}<br>
+    {{ message.message | raw }}<br>
     <br>
-    <a href="{{ url('message_reply', { 'id': message.id }) }}">{{ request.reply }}</a>
+    <a href="{{ url('message_reply', { 'id': message.id }) }}">{{ 'reply' | trans }}</a>
 {% endblock %}

@@ -19,9 +19,9 @@ class RequestModel extends BaseModel
     public function checkRequestExpired(HostingRequest $request)
     {
         $today = (new \DateTime())->setTime(0, 0);
-        $arrival = $request->getArrival();
-        $arrival = $arrival->add(new \DateInterval('P1D'))->setTime(23, 59);
+        $departure = $request->getDeparture();
+        $departure = $departure->add(new \DateInterval('P1D'))->setTime(23, 59);
 
-        return ($today < $arrival) ? false : true;
+        return ($today < $departure) ? false : true;
     }
 }

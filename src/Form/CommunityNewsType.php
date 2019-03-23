@@ -21,17 +21,18 @@ class CommunityNewsType extends AbstractType
     {
         $formBuilder
             ->add('title', TextType::class, [
+                'label' => 'label.admin.communitynews.title',
                 'attr' => [
                     'placeholder' => 'enter.title',
                 ],
-                'label' => 'enter.title.labelEnter the title of the community news',
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
             ->add('text', CkEditorType::class, [
+                'label' => 'label.admin.communitynews.text',
                 'attr' => [
-                    'placeholder' => 'This will be the body of the community news.',
+                    'placeholder' => 'placeholder.admin.communitynews.text',
                     'class' => 'editor mb-1',
                 ],
                 'constraints' => [
@@ -39,11 +40,11 @@ class CommunityNewsType extends AbstractType
                 ],
             ])
             ->add('public', CheckboxType::class, [
-                'label' => 'Shall the community be visible to regular members yet?',
+                'label' => 'label.admin.communitynews.public',
                 'required' => false,
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'submit',
+                'label' => 'label.submit',
             ]);
     }
 }

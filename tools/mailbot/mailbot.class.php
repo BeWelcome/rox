@@ -453,7 +453,7 @@ class ForumNotificationMailbot extends Mailbot
      *
      * @param object $notification     the notification object returned by the SQL query
      * @param string $MemberIdLanguage the language code to use
-     * @param integer $post            The associated post
+     * @param object $post            The associated post
      *
      * @return string the url to unsubscribe
      */
@@ -550,9 +550,10 @@ class ForumNotificationMailbot extends Mailbot
         $msg['subject'] = $NotificationType . $post->thread_title;
         if ($post->groupId) {
             $msg['subject'] .= ' [' . $this->_getGroupName($post->groupId)->Name . ']';
-            $msg['title'] = '<a href="' .$this->baseuri. 'groups/' . $post->groupId . '/forum/s' . $post->IdThread .'/reply">' . $msg['subject'] . '</a>';
+            $msg['title'] = '<a href="' .$this->baseuri. 'groups/' . $post->groupId . '/forum/s' . $post->IdThread .'">' . $msg['subject'] . '</a>  (<a href="' .$this->baseuri. 'groups/' . $post->groupId . '/forum/s' . $post->IdThread .'/reply">' .
+                $this->words->getFormattedInLang('reply', $language) . '</a>)';
         } else {
-            $msg['title'] = '<a href="' .$this->baseuri. '/forums/s' . $post->IdThread . '/reply">' . $msg['subject'] . '</a>';
+            $msg['title'] = '<a href="' .$this->baseuri. '/forums/s' . $post->IdThread . '">' . $msg['subject'] . '</a> (<a href="' .$this->baseuri. '/forums/s' . $post->IdThread . '">' . $this->words->getFormattedInLang('reply', $language) . '</a>)';
         }
 
         $text = $post->message;

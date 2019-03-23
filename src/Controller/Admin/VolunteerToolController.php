@@ -46,7 +46,7 @@ class VolunteerToolController extends AbstractController
         // check permissions
         $subMenuItems = $this->getSubMenuItems();
         if (empty($subMenuItems)) {
-            $this->addFlash('notice', 'admin.tools.not.allowed');
+            $this->addFlash('notice', 'flash.admin.tools.forbidden');
             $referrer = $request->headers->get('referer');
 
             return $this->redirect($referrer);

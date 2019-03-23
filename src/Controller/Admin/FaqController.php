@@ -18,6 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class FaqController.
@@ -348,10 +349,11 @@ class FaqController extends AbstractController
      *
      * @param Request $request
      *
+     * @param TranslatorInterface $translator
      * @return Response
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    public function sortFaqCategoriesAction(Request $request)
+    public function sortFaqCategoriesAction(Request $request, TranslatorInterface $translator)
     {
         $form = $this->createFormBuilder()
             ->add('sortOrder', HiddenType::class)
@@ -376,7 +378,8 @@ class FaqController extends AbstractController
                     $em->persist($faq);
                 }
                 $em->flush();
-                $this->addFlash('notice', 'Updated sort order of FAQ categories.');
+
+                $this->addFlash('notice', $translator->trans('flash.admin.faq.sort.order.updated'));
                 $this->redirectToRoute('admin_faqs_category_sort');
             }
         }

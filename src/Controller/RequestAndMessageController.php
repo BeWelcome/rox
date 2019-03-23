@@ -19,7 +19,6 @@ use App\Model\RequestModel;
 use Doctrine\Common\Persistence\ObjectManager;
 use Html2Text\Html2Text;
 use InvalidArgumentException;
-use League\HTMLToMarkdown\HtmlConverter;
 use Swift_Mailer;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -168,7 +167,7 @@ class RequestAndMessageController extends AbstractController
     {
         $sender = $this->getUser();
         if (!$receiver->isBrowseable()) {
-            $this->addFlash('error', 'This member doesn\'t exist');
+            $this->addFlash('error', 'flash.member.invalid');
             $referrer = $request->headers->get('referer');
 
             return $this->redirect($referrer);
@@ -180,7 +179,7 @@ class RequestAndMessageController extends AbstractController
             $this->getParameter('new_members_messages_per_hour'),
             $this->getParameter('new_members_messages_per_day')
         )) {
-            $this->addFlash('error', 'You have exceeded your message limit. Try again later');
+            $this->addFlash('error', 'flash.message.limit');
             $referrer = $request->headers->get('referer');
 
             return $this->redirect($referrer);
@@ -209,11 +208,11 @@ class RequestAndMessageController extends AbstractController
                 $message
             );
             if ($success) {
-                $this->addFlash('success', 'Message has been sent.');
+                $this->addFlash('success', 'flash.message.sent');
                 $message->setStatus('Sent');
                 $em->persist($message);
             } else {
-                $this->addFlash('notice', 'Message has been stored into the database. Mail notification couldn\'t be sent, though.');
+                $this->addFlash('notice', 'flash.message.stored');
             }
 
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
@@ -239,13 +238,13 @@ class RequestAndMessageController extends AbstractController
     {
         $member = $this->getUser();
         if ($member === $host) {
-            $this->addFlash('notice', 'You can\'t send yourself a hosting request.');
+            $this->addFlash('notice', 'flash.request.self');
 
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 
         if (!$host->isBrowseable()) {
-            $this->addFlash('note', 'not browseable');
+            $this->addFlash('note', 'flash.member.invalid');
         }
         $messageModel = new MessageModel($this->getDoctrine());
         if ($messageModel->hasMessageLimitExceeded(
@@ -253,7 +252,7 @@ class RequestAndMessageController extends AbstractController
             $this->getParameter('new_members_messages_per_hour'),
             $this->getParameter('new_members_messages_per_day')
         )) {
-            $this->addFlash('error', 'You have exceeded your request limit. Try again later.');
+            $this->addFlash('error', 'flash.request.limit');
             $referrer = $request->headers->get('referer');
 
             return $this->redirect($referrer);
@@ -290,9 +289,9 @@ class RequestAndMessageController extends AbstractController
                 $hostingRequest
             );
             if ($success) {
-                $this->addFlash('success', 'Request has been sent.');
+                $this->addFlash('success', 'flash.request.sent');
             } else {
-                $this->addFlash('notice', 'Request has been stored into the database. Mail notification couldn\'t be sent, though.');
+                $this->addFlash('notice', 'flash.request.stored');
             }
 
             return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
@@ -421,7 +420,7 @@ class RequestAndMessageController extends AbstractController
                 if ('deleted' === $folder) {
                     if ($form->get('purge')->isClicked()) {
                         $messageModel->markPurged($member, $messageIds);
-                        $this->addFlash('notice', 'Messages and/or requests permanently deleted.');
+                        $this->addFlash('notice', 'flash.purged');
                     } else {
                         // ignore as this can never happen (purge only possible in deleted folder)
                     }
@@ -429,19 +428,19 @@ class RequestAndMessageController extends AbstractController
                 if ($form->get('delete')->isClicked()) {
                     if ('deleted' === $folder) {
                         $messageModel->unmarkDeleted($member, $messageIds);
-                        $this->addFlash('notice', 'Messages and/or requests undeleted (see respective folders).');
+                        $this->addFlash('notice', 'flash.undeleted');
                     } else {
                         $messageModel->markDeleted($member, $messageIds);
-                        $this->addFlash('notice', 'Messages and/or requests deleted (see deleted folder).');
+                        $this->addFlash('notice', 'flash.deleted');
                     }
                 }
                 if ($form->get('spam')->isClicked()) {
                     if ('spam' === $folder) {
                         $messageModel->unmarkAsSpam($messageIds);
-                        $this->addFlash('notice', 'Messages marked as regular messages (and moved to inbox).');
+                        $this->addFlash('notice', 'flash.marked.nospam');
                     } else {
                         $messageModel->markAsSpam($messageIds);
-                        $this->addFlash('notice', 'Messages marked as spam messages (and moved to spam folder).');
+                        $this->addFlash('notice', 'flash.marked.spam');
                     }
                 }
 
@@ -452,7 +451,6 @@ class RequestAndMessageController extends AbstractController
         return $this->render('message/index.html.twig', [
             'form' => $form->createView(),
             'items' => $messages,
-            'type' => 'usermessages',
             'folder' => $folder,
             'filter' => $request->query->all(),
             'submenu' => [
@@ -514,9 +512,9 @@ class RequestAndMessageController extends AbstractController
                 $replyMessage
             );
             if ($success) {
-                $this->addFlash('success', 'Reply has been sent.');
+                $this->addFlash('success', 'flash.reply.sent');
             } else {
-                $this->addFlash('notice', 'Reply has been stored into the database. Mail notification couldn\'t be sent, though.');
+                $this->addFlash('notice', 'flash.reply.stored');
             }
 
             return $this->redirectToRoute('message_show', ['id' => $replyMessage->getId()]);
@@ -566,7 +564,7 @@ class RequestAndMessageController extends AbstractController
         }
 
         if ($this->checkRequestExpired($hostingRequest->getRequest())) {
-            $this->addFlash('notice', 'request.cant.reply');
+            $this->addExpiredFlash($host);
 
             return $this->redirectToRoute('hosting_request_show', ['id' => $hostingRequest->getId()]);
         }
@@ -608,7 +606,7 @@ class RequestAndMessageController extends AbstractController
                 $guest,
                 $newRequest
             );
-            $this->addFlash('success', 'request.reply.flash');
+            $this->addFlash('success', 'flash.notification.updated');
 
             return $this->redirectToRoute('hosting_request_show', ['id' => $newRequest->getId()]);
         }
@@ -657,7 +655,7 @@ class RequestAndMessageController extends AbstractController
         }
 
         if ($this->checkRequestExpired($hostingRequest->getRequest())) {
-            $this->addFlash('notice', 'request.cant.reply');
+            $this->addExpiredFlash($guest);
 
             return $this->redirectToRoute('hosting_request_show', ['id' => $hostingRequest->getId()]);
         }
@@ -701,7 +699,7 @@ class RequestAndMessageController extends AbstractController
                 $guest,
                 $newRequest
             );
-            $this->addFlash('notice', 'request.reply.flash');
+            $this->addFlash('notice', 'flash.notification.updated');
 
             return $this->redirectToRoute('hosting_request_show', ['id' => $newRequest->getId()]);
         }
@@ -955,5 +953,16 @@ class RequestAndMessageController extends AbstractController
         $language = $languageRepository->find($receiver->getMemberPreferenceValue($preference));
 
         $this->translator->setLocale($language->getShortcode());
+    }
+
+    private function addExpiredFlash(Member $receiver)
+    {
+        $expiredSendMessage = $this->translator->trans('flash.request.expired', [
+            '%link_start%' => '<a href="' . $this->generateUrl('message_new', [
+                'username' => $receiver->getUsername()
+                ]) . '">',
+            '%link_end%' => '</a>',
+        ]);
+        $this->addFlash('notice', $expiredSendMessage);
     }
 }

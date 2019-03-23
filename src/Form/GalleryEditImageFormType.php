@@ -20,13 +20,15 @@ class GalleryEditImageFormType extends AbstractType
     {
         $formBuilder
             ->add('title', TextType::class, [
+                'label' => 'label.gallery.title',
                 'attr' => [
-                    'placeholder' => 'Image Title',
+                    'placeholder' => 'placeholder.gallery.title',
                 ],
             ])
             ->add('description', TextType::class, [
+                'label' => 'label.gallery.description',
                 'attr' => [
-                    'placeholder' => 'Image Description',
+                    'placeholder' => 'placeholder.gallery.description',
                 ],
             ])
             ->add('id', HiddenType::class)

@@ -229,7 +229,7 @@
                 </h5>
                 {{ communityNews.text | truncate(200) | raw }}<a
                             href="{{ url('communitynews_show', { id: communityNews.id} ) }}"
-                            class="btn btn-sm btn-primary">{{ 'Read more' | trans }}</a>
+                            class="btn btn-sm btn-primary">{{ 'label.read.more' | trans }}</a>
                 <div>
                     <small>{{ communityNews.createdAt.diffForHumans }}</small>
                     {% set commentsCount = communityNews.comments | length %}<small class="float-right">{% transchoice commentsCount with {'%commentsCount%': commentsCount} %}bewelcome_news.nrcomments{% endtranschoice %}</small>

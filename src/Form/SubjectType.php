@@ -16,12 +16,13 @@ class SubjectType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('subject', TextType::class, [
+            'label' => 'label.subject',
             'attr' => [
-                'placeholder' => 'message.subject',
+                'placeholder' => 'placeholder.subject',
             ],
             'constraints' => [
                 new NotBlank([
-                    'message' => 'message.subject',
+                    'message' => 'error.subject.blank',
                 ]),
             ],
         ]);

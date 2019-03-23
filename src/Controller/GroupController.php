@@ -138,7 +138,7 @@ class GroupController extends AbstractController
                 'updated' => (new \DateTime())->format('Y-m-d'),
             ]);
 
-            $flashMessage = $translator->trans('group.create.successful', [
+            $flashMessage = $translator->trans('flash.group.create.successful', [
                 '%name%' => $group->getName(),
             ]);
             $this->addFlash('notice', $flashMessage);
@@ -237,7 +237,7 @@ class GroupController extends AbstractController
         $em->persist($group);
         $em->flush();
 
-        $flashMessage = $translator->trans('Moved group %name% into the discussion queue', [
+        $flashMessage = $translator->trans('flash.group.moved.discussion', [
             '%name%' => $group->getName(),
         ]);
         $this->addFlash('notice', $flashMessage);
@@ -274,7 +274,7 @@ class GroupController extends AbstractController
         $em->persist($group);
         $em->flush();
 
-        $flashMessage = $translator->trans('Dismissed group %name%', [
+        $flashMessage = $translator->trans('flash.group.dismissed', [
             '%name%' => $group->getName(),
         ]);
         $this->addFlash('notice', $flashMessage);
@@ -317,7 +317,7 @@ class GroupController extends AbstractController
         $em->persist($group);
         $em->flush();
 
-        $flashMessage = $translator->trans('Approved creation for group %name% ', [
+        $flashMessage = $translator->trans('flash.group.approved', [
             '%name%' => $group->getName(),
         ]);
         $this->addFlash('notice', $flashMessage);

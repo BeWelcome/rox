@@ -19,9 +19,10 @@ class FindUserFormType extends AbstractType
     {
         $formBuilder
             ->add('term', TextType::class, [
+                'label' => 'label.username.part',
                 'attr' => [
                     'minlength' => 4,
-                    'placeholder' => 'Part of username',
+                    'placeholder' => 'placeholder.username.part',
                 ],
             ])
             ->add('Search', SubmitType::class);

@@ -20,22 +20,22 @@ class AdminCommentFormType extends AbstractType
     public function buildForm(FormBuilderInterface $formBuilder, array $options)
     {
         $formBuilder
-            ->add('admin.comment.mark.checked', SubmitType::class, [
+            ->add('label.admin.comment.mark.checked', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn-sm btn-primary mb-2 mr-sm-2',
                 ],
             ])
-            ->add('admin.comment.mark.abuse', SubmitType::class, [
+            ->add('label.admin.comment.mark.abuse', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn-sm btn-primary mb-2 mr-sm-2',
                 ],
             ])
-            ->add('admin.comment.move.negative', SubmitType::class, [
+            ->add('label.admin.comment.move.negative', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn-sm btn-primary mb-2 mr-sm-2',
                 ],
             ])
-            ->add('admin.comment.delete', SubmitType::class, [
+            ->add('label.admin.comment.delete', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn-sm btn-primary mb-2 mr-sm-2',
                 ],
@@ -46,26 +46,26 @@ class AdminCommentFormType extends AbstractType
             $comment = $event->getData();
             $form = $event->getForm();
             if ($comment->getDisplayinpublic()) {
-                $form->add('admin.comment.hide', SubmitType::class, [
+                $form->add('label.admin.comment.hide', SubmitType::class, [
                     'attr' => [
                         'class' => 'btn-primary btn-sm mb-2 mr-sm-2',
                     ],
                 ]);
             } else {
-                $form->add('admin.comment.show', SubmitType::class, [
+                $form->add('label.admin.comment.show', SubmitType::class, [
                     'attr' => [
                         'class' => 'btn-primary btn-sm mb-2 mr-sm-2',
                     ],
                 ]);
             }
             if ($comment->getAllowedit()) {
-                $form->add('admin.comment.lock', SubmitType::class, [
+                $form->add('label.admin.comment.lock', SubmitType::class, [
                     'attr' => [
                         'class' => 'btn-primary btn-sm mb-2 mr-sm-2',
                     ],
                 ]);
             } else {
-                $form->add('admin.comment.mark.editable', SubmitType::class, [
+                $form->add('label.admin.comment.mark.editable', SubmitType::class, [
                     'attr' => [
                         'class' => 'btn-primary btn-sm mb-2 mr-sm-2',
                     ],

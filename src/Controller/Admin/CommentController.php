@@ -142,7 +142,7 @@ class CommentController extends AbstractController
     public function adminCommentAction(Request $request, Comment $comment)
     {
         if (!$this->isGranted([Member::ROLE_ADMIN_COMMENTS, Member::ROLE_ADMIN_SAFETYTEAM])) {
-            throw $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
+            throw $this->createAccessDeniedException('error.access.comment');
         }
 
         $commentRepository = $this->getDoctrine()->getRepository(Comment::class);
@@ -159,22 +159,22 @@ class CommentController extends AbstractController
             $clickedButton = $form->getClickedButton()->getName();
             if ('hideComment' === $clickedButton) {
                 $comment->setDisplayinpublic(false);
-                $this->addFlash('notice', 'Comment is now hidden.');
+                $this->addFlash('notice', 'flash.admin.comment.hidden');
             }
             if ('showComment' === $clickedButton) {
                 $comment->setDisplayinpublic(true);
-                $this->addFlash('notice', 'Comment is now visible again.');
+                $this->addFlash('notice', 'flash.admin.comment.visible');
             }
             if ('allowEditing' === $clickedButton) {
                 $comment->setAllowedit(true);
-                $this->addFlash('notice', 'Comment can be edited by author now.');
+                $this->addFlash('notice', 'flash.admin.comment.editable');
             }
             if ('disableEditing' === $clickedButton) {
                 $comment->setAllowedit(false);
-                $this->addFlash('notice', 'Comment is now locked.');
+                $this->addFlash('notice', 'flash.admin.comment.locked');
             }
             if ('delectComment' === $clickedButton) {
-                $this->addFlash('notice', 'Comment was deleted.');
+                $this->addFlash('notice', 'flash.admin.comment.deleted');
                 $em->remove($comment);
                 $em->flush();
 
@@ -219,7 +219,7 @@ class CommentController extends AbstractController
         $em->persist($comment);
         $em->flush();
 
-        $this->addFlash('notice', 'Comment has been assigned to safety team');
+        $this->addFlash('notice', 'flash.admin.comment.safetyteam');
 
         return $this->redirect($request->headers->get('referer'));
     }
@@ -247,7 +247,7 @@ class CommentController extends AbstractController
         $em->persist($comment);
         $em->flush();
 
-        $this->addFlash('notice', 'Comment has been marked as checked');
+        $this->addFlash('notice', 'flash.admin.comment.checked');
 
         return $this->redirect($request->headers->get('referer'));
     }
@@ -275,7 +275,7 @@ class CommentController extends AbstractController
         $em->persist($comment);
         $em->flush();
 
-        $this->addFlash('notice', 'Comment has been hidden.');
+        $this->addFlash('notice', 'flash.admin.comment.hidden');
 
         return $this->redirect($request->headers->get('referer'));
     }
@@ -303,7 +303,7 @@ class CommentController extends AbstractController
         $em->persist($comment);
         $em->flush();
 
-        $this->addFlash('notice', 'Comment is now visible.');
+        $this->addFlash('notice', 'flash.admin.comment.visible');
 
         return $this->redirect($request->headers->get('referer'));
     }

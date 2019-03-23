@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class TranslationController.
@@ -101,13 +102,19 @@ class TranslationController extends AbstractController
      * @param Request $request
      * @param Language $language
      * @param KernelInterface $kernel
+     * @param TranslatorInterface $translator
      * @param mixed $code
      *
      * @return Response
      * @throws \Exception
      * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
      */
-    public function editTranslationAction(Request $request, Language $language, KernelInterface $kernel, $code)
+    public function editTranslationAction(
+        Request $request,
+        Language $language,
+        KernelInterface $kernel,
+        TranslatorInterface $translator,
+        $code)
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
@@ -144,7 +151,7 @@ class TranslationController extends AbstractController
                 $kernel,
                 $language->getShortcode()
             );
-            $this->addFlash('notice', 'translation.edit');
+            $this->addFlash('notice', $translator->trans('translation.edit'));
 
             $referrer = $request->headers->get('referer');
 
@@ -164,14 +171,19 @@ class TranslationController extends AbstractController
      * @param Request $request
      * @param Language $language
      * @param KernelInterface $kernel
+     * @param TranslatorInterface $translator
      * @param mixed $code
      *
      * @return Response
      * @throws \Exception
      * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
-     *
      */
-    public function createTranslationAction(Request $request, Language $language, KernelInterface $kernel, $code)
+    public function createTranslationAction(
+        Request $request,
+        Language $language,
+        KernelInterface $kernel,
+        TranslatorInterface $translator,
+        $code)
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
         $user = $this->getUser();
@@ -219,7 +231,8 @@ class TranslationController extends AbstractController
                 $kernel,
                 $language->getShortcode()
             );
-            $this->addFlash('notice', 'Added translatable item '.$code);
+            $flashMessage = $translator->trans('flash.added.translatable.item', [ 'code' => $code ]);
+            $this->addFlash('notice', $flashMessage);
 
             return $this->redirectToRoute('translations');
         }
@@ -248,7 +261,7 @@ class TranslationController extends AbstractController
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
         if ('en' === $language->getShortcode()) {
-            $this->addFlash('notice', "Something's weird");
+            $this->addFlash('notice', "flash.translation.weird");
             $this->redirectToRoute('translations');
         }
         $translationRepository = $this->getDoctrine()
@@ -310,17 +323,20 @@ class TranslationController extends AbstractController
      * )
      *
      * @param Request $request
+     * @param TranslatorInterface $translator
      * @param $mode
      *
      * @return RedirectResponse
      */
-    public function setTranslationModeAction(Request $request, $mode)
+    public function setTranslationModeAction(Request $request, TranslatorInterface $translator, $mode)
     {
         if ('on' === $mode) {
-            $this->addFlash('notice', 'Enabled translation mode');
+            $flashId = 'flash.translation.enabled';
         } else {
-            $this->addFlash('notice', 'Disabled translation mode.');
+            $flashId = 'flash.translation.disabled';
         }
+        $this->addFlash('notice', $translator->trans($flashId));
+
         $this->get('session')->set('translation_mode', $mode);
         $referrer = $request->headers->get('referer');
 

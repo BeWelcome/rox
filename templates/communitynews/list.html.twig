@@ -19,7 +19,7 @@
             {{ news.text | truncate(500) | raw }}
             <p>{% set commentsCount = news.comments | length %}{{ 'bewelcome_news.nrcomments' | trans }}</p>
                 <!-- <p>{% set commentsCount = news.comments | length %}{% trans %}%commentsCount% comments{% endtrans %}</p> -->
-            <p><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ 'Read more' | trans }}</a></p>
+            <p><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ 'label.read.more' | trans }}</a></p>
             </div>
         </div>
         {% endfor %}

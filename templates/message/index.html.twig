@@ -19,7 +19,7 @@
 
 {% block content %}
     {%  set member = app.user %}
-    <h2>{{ type | format(member.Username) | trans }}</h2>
+    <h2>{{ submenu.active | trans }}</h2>
 
     {% if items.nbResults == 0 %}
         <p>{{ 'messages.none' | trans }}</p>

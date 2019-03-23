@@ -108,7 +108,7 @@ class MemberController extends AbstractController
                 /* Sent the member a link to follow to reset the password */
                 $sent = $this->sendPasswordResetLink($member, 'Password Reset for BeWelcome', $member->generatePasswordResetKey(), $mailer);
                 if ($sent) {
-                    $this->addFlash('notice', 'We just sent you a mail with a link that allows you to reset your password.');
+                    $this->addFlash('notice', 'flash.email.reset.password');
 
                     return $this->redirectToRoute('security_login');
                 }
@@ -140,7 +140,7 @@ class MemberController extends AbstractController
 
         $resetPasswordKey = $member->generatePasswordResetKey();
         if ($resetPasswordKey !== $key) {
-            $this->addFlash('notice', 'Either username or key aren\'t valid to reset the password.');
+            $this->addFlash('notice', 'flash.reset.password.invalid');
 
             return $this->redirectToRoute('login');
         }
@@ -163,7 +163,7 @@ class MemberController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($member);
             $em->flush();
-            $this->addFlash('notice', 'password.reset.flash');
+            $this->addFlash('notice', 'flash.password.reset');
 
             return $this->redirectToRoute('security_login');
         }
@@ -229,14 +229,14 @@ class MemberController extends AbstractController
                     );
                 $recipients = $mailer->send($message);
                 if (0 === $recipients) {
-                    $this->addFlash('error', 'Your feedback couldn\'t be sent. Please try again later.');
+                    $this->addFlash('error', 'flash.feedback.not.sent');
                 } else {
                     $em = $this->getDoctrine()->getManager();
                     $comment->setAdminAction(CommentAdminActionType::ADMIN_CHECK);
                     $em->persist($comment);
                     $em->flush();
 
-                    $this->addFlash('notice', 'Your feedback has been forwarded to the Safety Team.');
+                    $this->addFlash('notice', 'flash.feedback.safetyteam');
 
                     return $this->redirectToRoute('profile_all_comments', ['username' => $member->getUsername()]);
                 }

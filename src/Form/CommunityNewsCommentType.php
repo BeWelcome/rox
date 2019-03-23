@@ -19,15 +19,16 @@ class CommunityNewsCommentType extends AbstractType
     {
         $formBuilder
             ->add('title', TextType::class, [
-                'label' => 'Title',
+                'label' => 'label.commnunitynews.comment.title',
             ])
             ->add('text', CkEditorType::class, [
-                'label' => 'Text',
+                'label' => 'label.communitynews.comment.text',
                 'attr' => [
                     'class' => 'editor',
                 ],
             ])
             ->add('CommunityNewsCommentCreate', SubmitType::class, [
+                'label' => 'label.communitynews.comment.create',
                 'attr' => [
                     'class' => 'btn-primary',
                 ],

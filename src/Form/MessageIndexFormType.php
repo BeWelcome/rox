@@ -15,8 +15,8 @@ class MessageIndexFormType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $deleteButtonLabel = ('deleted' === $options['folder']) ? 'undelete' : 'delete';
-        $spamButtonLabel = ('spam' === $options['folder']) ? 'marknospam' : 'markspam';
+        $deleteButtonLabel = ('deleted' === $options['folder']) ? 'label.undelete' : 'label.delete';
+        $spamButtonLabel = ('spam' === $options['folder']) ? 'label.marknospam' : 'label.markspam';
         $builder
             ->add('delete', SubmitType::class, [
                 'label' => $deleteButtonLabel,
@@ -25,6 +25,7 @@ class MessageIndexFormType extends AbstractType
                 'label' => $spamButtonLabel,
             ])
             ->add('messages', ChoiceType::class, [
+                'label' => 'label.messages',
                 'choices' => $options['ids'],
                 'choice_label' => false,
                 'expanded' => true,
@@ -33,7 +34,7 @@ class MessageIndexFormType extends AbstractType
         if ('deleted' === $options['folder']) {
             $builder
                 ->add('purge', SubmitType::class, [
-                    'label' => 'purge'
+                    'label' => 'label.purge'
                 ]);
         }
     }

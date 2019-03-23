@@ -21,24 +21,27 @@ class EditTranslationFormType extends AbstractType
         $formBuilder
             ->add('wordCode', TextType::class, [
                 'disabled' => true,
-                'label' => 'translation.wordcode',
+                'label' => 'label.admin.translation.wordcode',
             ])
             ->add('description', TextAreaType::class, [
                 'disabled' => true,
-                'label' => 'translation.description',
+                'label' => 'label.admin.translation.description',
             ])
             ->add('englishText', TextAreaType::class, [
                 'disabled' => true,
-                'label' => 'translation.englishText',
+                'label' => 'label.admin.translation.englishText',
             ])
             ->add('locale', TextType::class, [
                 'disabled' => true,
-                'label' => 'translation.locale',
+                'label' => 'label.admin.translation.locale',
             ])
             ->add('translatedText', TextAreaType::class, [
+                'label' => 'label.admin.translation',
                 'required' => true,
             ])
-            ->add('update', SubmitType::class)
+            ->add('update', SubmitType::class, [
+                'label' => 'label.update',
+            ])
         ;
     }
 }

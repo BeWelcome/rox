@@ -21,12 +21,14 @@ class CheckerIndexFormType extends AbstractType
                 'choice_label' => false,
                 'expanded' => true,
                 'multiple' => true,
+                'label' => 'label.spam.messages',
             ])
             ->add('noSpamMessages', ChoiceType::class, [
                 'choices' => $ids,
                 'choice_label' => false,
                 'expanded' => true,
                 'multiple' => true,
+                'label' => 'label.no.spam.messages',
             ]);
     }
 

@@ -51,7 +51,7 @@ class WikiController extends AbstractController
         }
         $output = $wikiModel->parseWikiMarkup($wikiPage->getContent());
         if (null === $output) {
-            $this->addFlash('error', 'Couldn\'t process markup. Please check content and fix.');
+            $this->addFlash('error', 'flash.wiki.markup.invalid');
 
             return $this->redirectToRoute('wiki_page_edit', ['pageTitle' => $pageTitle]);
         }
@@ -97,7 +97,7 @@ class WikiController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($newWikiPage);
             $em->flush();
-            $this->addFlash('notice', 'Updated wiki text');
+            $this->addFlash('notice', 'flash.wiki.updated');
 
             return $this->redirectToRoute('wiki_page', ['pageTitle' => $pageTitle]);
         }
@@ -141,7 +141,7 @@ class WikiController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($newWikiPage);
             $em->flush();
-            $this->addFlash('notice', 'Created wiki page');
+            $this->addFlash('notice', 'flash.wiki.created');
 
             return $this->redirectToRoute('wiki_page', ['pageTitle' => $pageTitle]);
         }

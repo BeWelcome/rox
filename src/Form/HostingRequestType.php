@@ -22,14 +22,14 @@ class HostingRequestType extends AbstractType
     {
         $builder
             ->add('arrival', DateType::class, [
+                'label' => 'request.arrival',
                 'widget' => 'single_text',
                 'html5' => false,
                 'format' => 'yyyy-MM-dd',
                 'attr' => [
                     'class' => 'datepicker',
-                    'placeholder' => 'Arrival (date)',
+                    'placeholder' => 'placeholder.arrival',
                 ],
-                'label' => 'request.arrival',
                 'invalid_message' => 'request.error.arrival.no_date',
                 'constraints' => [
                     new NotBlank([
@@ -38,17 +38,18 @@ class HostingRequestType extends AbstractType
                 ],
             ])
             ->add('departure', DateType::class, [
+                'label' => 'request.departure',
                 'widget' => 'single_text',
                 'html5' => false,
                 'format' => 'yyyy-MM-dd',
                 'attr' => [
                     'class' => 'datepicker',
-                    'placeholder' => 'Departure (date)',
+                    'placeholder' => 'placeholder.departure',
                 ],
-                'label' => 'request.departure',
                 'invalid_message' => 'request.error.arrival.no_date',
             ])
             ->add('flexible', CheckboxType::class, [
+                'label' => 'label.flexible',
                 'required' => false,
             ])
             ->add(
@@ -58,10 +59,11 @@ class HostingRequestType extends AbstractType
                     'empty_data' => 1,
                     'label' => 'request.number_of_travellers',
                     'attr' => [
-                        'placeholder' => '#',
+                        'placeholder' => 'placeholder.request.nbtravellers',
                         'min' => 1,
                         'max' => 20,
                     ],
+                    'translation_domain' => false,
                     'invalid_message' => 'request.error.number_of_travellers',
                     'constraints' => [
                         new LessThanOrEqual(20),

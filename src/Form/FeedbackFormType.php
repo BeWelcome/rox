@@ -19,6 +19,7 @@ class FeedbackFormType extends AbstractType
         $formBuilder
             ->setMethod('GET')
             ->add('types', ChoiceType::class, [
+                'label' => 'label.feedback.types',
                 'choices' => $options['data']['categories'],
                 'choice_translation_domain' => false,
                 'required' => false,

@@ -196,5 +196,20 @@ WHERE `code` = " . $code
      */
     protected function RenameWordCode($oldCode, $newCode)
     {
+        $statement = $this->getAdapter()->getConnection()->prepare("UPDATE words SET code = :newCode WHERE code = :oldCode");
+        $statement->execute([
+            ':oldCode' => $oldCode,
+            ':newCode' => $newCode,
+        ]);
+    }
+
+    /**
+     * @param $oldCode
+     * @param $newCode
+     */
+    protected function RevertRenameWordCode($oldCode, $newCode)
+    {
+        // To be used in the down method of a migration (renaming RenameWordCode to RevertRenameWordCode for easier maintenance)
+        $this->RenameWordCode($newCode, $oldCode);
     }
 }

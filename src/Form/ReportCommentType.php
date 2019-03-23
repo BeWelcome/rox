@@ -19,12 +19,13 @@ class ReportCommentType extends AbstractType
     {
         $formBuilder
             ->add('feedback', TextareaType::class, [
-                'label' => 'Feedback on Comment',
+                'label' => 'label.feedback',
                 'attr' => [
                     'class' => 'editor',
                 ],
             ])
             ->add('SendFeedback', SubmitType::class, [
+                'label' => 'label.send.feedback',
                 'attr' => [
                     'class' => 'btn-primary pull-right',
                 ],

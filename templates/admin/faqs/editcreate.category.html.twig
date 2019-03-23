@@ -16,14 +16,10 @@
     {% endif %}
     {{ form_start(form) }}
     <div class="form-group">
-        {{ form_label(form.wordCode) }}
-        {{ form_widget(form.wordCode) }}
-        <small class="form-text text-muted">The word code to be used for the FAQ category. ("faq_cat_" will automatically be added at the start.)</small>
+        {{ form_row(form.wordCode) }}
     </div>
     <div class="form-group">
-        {{ form_label(form.description) }}
-        {{ form_widget(form.description) }}
-        <small class="form-text text-muted">The title of the category as shown in the menu of the faq pages.</small>
+        {{ form_row(form.description) }}
     </div>
     {{ form_end(form) }}
 {% endblock %}

@@ -37,7 +37,7 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
             <div class="col-12 alert alert-success" role="alert"><?= $flashSuccess; ?></div>
         </div>
     <?php endif; ?>
-    </div>
+</div>
 
 <div class="container">
     <?

@@ -98,7 +98,7 @@ class SignupController extends AbstractController
         /** @var Member $member */
         $member = $memberRepository->findOneBy(['username' => $username]);
         if (null === $member) {
-            $this->addFlash('error', 'Provided key or username isn\'t correct');
+            $this->addFlash('error', 'flash.username.invalid');
 
             return $this->redirectToRoute('login');
         }
@@ -111,11 +111,11 @@ class SignupController extends AbstractController
             $em->persist($member);
             $em->flush();
 
-            $this->addFlash('notice', 'You just confirmed your email address and your profile got activated. Please login now and update your profile.');
+            $this->addFlash('notice', 'flash.signup.activated');
 
             return $this->redirect('/login');
         }
-        $this->addFlash('error', 'Provided key isn\'t correct');
+        $this->addFlash('error', 'flash.key.invalid');
 
         return $this->redirect('/login');
     }

@@ -21,43 +21,48 @@ class GroupType extends AbstractType
     {
         $formBuilder
             ->add('name', TextType::class, [
+                'label' => 'label.group.name',
+                'help' => 'group.create.name.hint',
                 'attr' => [
-                    'placeholder' => 'Please enter a name for the group',
+                    'placeholder' => 'placeholder.group.name',
                 ],
-                'label' => 'Group name',
             ])
             ->add('description', CkEditorType::class, [
+                'label' => 'label.group.description',
+                'help' => 'group.create.description.hint',
                 'attr' => [
-                    'placeholder' => 'Please provide a meaningful description for the new group.',
+                    'placeholder' => 'placeholder.group.description',
                     'class' => 'editor mb-1',
                 ],
             ])
             ->add('type', ChoiceType::class, [
                 'choices' => [
-                    'GroupsJoinPublic' => 'Public',
-                    'GroupsJoinApproved' => 'NeedAcceptance',
+                    'label.group.join.public' => 'Public',
+                    'label.group.join.approve' => 'NeedAcceptance',
                 ],
                 'expanded' => true,
                 'multiple' => false,
-                'label' => 'GroupsJoinHeading',
+                'label' => 'headline.group.join',
             ])
             ->add('membersOnly', ChoiceType::class, [
                 'choices' => [
-                    'GroupsVisiblePosts' => 'Yes',
-                    'GroupsInvisiblePosts' => 'No',
+                    'label.group.posts.invisible' => 'Yes',
+                    'label.group.posts.visible' => 'No',
                 ],
                 'expanded' => true,
                 'multiple' => false,
-                'label' => 'GroupsVisiblePostsHeading',
+                'label' => 'headline.group.posts',
             ])
             ->add('picture', FileType::class, [
+                'label' => 'label.group.picture',
+                'help' => 'group.picture.help',
                 'required' => false,
                 'attr' => [
                     'placeholder' => 'group.choose.group.image',
                 ],
-                'help' => 'group.picture.help',
             ])
             ->add('submit', SubmitType::class, [
+                'label' => 'label.submit',
                 'attr' => [
                     'class' => 'btn btn-primary',
                 ],

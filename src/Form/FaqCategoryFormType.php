@@ -23,14 +23,15 @@ class FaqCategoryFormType extends AbstractType
     {
         $formBuilder
             ->add('wordCode', TextType::class, [
-                'label' => 'admin.faq.category.wordcode',
+                'label' => 'label.admin.faq.category.translation.id',
+                'help' => 'help.admin.faq.category.translation.id',
                 'attr' => [
                     'readonly' => true,
                 ],
             ])
             ->add('description', TextType::class, [
-                'label' => 'admin.faq.category.description',
-                'help_text' => 'admin.faq.category.help',
+                'label' => 'label.admin.faq.category.description',
+                'help' => 'help.admin.faq.category.description',
             ])
 
         ;
@@ -40,18 +41,18 @@ class FaqCategoryFormType extends AbstractType
                     if (null === $wordCode) {
                         return '';
                     }
-                    if (false === strpos($wordCode, 'Faq_cat_')) {
-                        throw new TransformationFailedException('FaqCategory WordCode doesn\'t start with "Faq_cat_"');
+                    if (false === stripos($wordCode, 'faq_cat_')) {
+                        throw new TransformationFailedException('error.admin.faq.transform.invalid');
                     }
 
-                    return str_replace('Faq_cat_', '', $wordCode);
+                    return str_replace('faq_cat_', '', $wordCode);
                 },
                 function ($strippedWordCode) {
-                    if (true === strpos($strippedWordCode, 'Faq_cat_')) {
-                        throw new TransformationFailedException('Stripped WordCode starts with "faq_cat_"');
+                    if (true === stripos($strippedWordCode, 'faq_cat_')) {
+                        throw new TransformationFailedException('error.admin.faq.transform.invalid');
                     }
 
-                    return 'Faq_cat_'.$strippedWordCode;
+                    return 'faq_cat_'.$strippedWordCode;
                 }
             ));
         $formBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
@@ -59,12 +60,14 @@ class FaqCategoryFormType extends AbstractType
             $form = $event->getForm();
             if (!$faqCategory) {
                 $form->add('FaqCategoryCreate', SubmitType::class, [
+                    'label' => 'label.create',
                     'attr' => [
                         'class' => 'btn-primary',
                     ],
                 ]);
             } else {
                 $form->add('FaqCategoryUpdate', SubmitType::class, [
+                    'label' => 'label.update',
                     'attr' => [
                         'class' => 'btn-primary',
                     ],

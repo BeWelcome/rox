@@ -24,7 +24,7 @@ class ChangeUsernameFormType extends AbstractType
                     'minlength' => 4,
                     'maxlength' => 20,
                     'pattern' => SignupModel::PATTERN_USERNAME,
-                    'placeholder' => 'Old Username',
+                    'placeholder' => 'old.username',
                 ],
             ])
             ->add('newUsername', TextType::class, [
@@ -32,9 +32,9 @@ class ChangeUsernameFormType extends AbstractType
                     'minlength' => 4,
                     'maxlength' => 20,
                     'pattern' => SignupModel::PATTERN_USERNAME,
-                    'placeholder' => 'New Username',
+                    'placeholder' => 'new.username',
                 ],
             ])
-            ->add('change', SubmitType::class);
+            ->add('label.admin.tools.change.username', SubmitType::class);
     }
 }

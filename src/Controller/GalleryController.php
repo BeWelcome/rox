@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GalleryController extends AbstractController
 {
@@ -26,7 +27,7 @@ class GalleryController extends AbstractController
      *
      * @return Response
      */
-    public function editImageAction(Request $request, GalleryImage $image)
+    public function editImageAction(Request $request, GalleryImage $image, TranslatorInterface $translator)
     {
         $user = $this->getUser();
         if ($user !== $image->getOwner()) {
@@ -44,7 +45,7 @@ class GalleryController extends AbstractController
             $em->persist($image);
             $em->flush();
 
-            $this->addFlash('notice', 'Updated image information');
+            $this->addFlash('notice', $translator->trans('flash.gallery.information.update'));
 
             return $this->redirectToRoute('gallery_show_image', ['imageId' => $image->getId()]);
         }

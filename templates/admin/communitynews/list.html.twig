@@ -36,7 +36,7 @@
                                     ({{ news.updatedAt.DiffForHumans }})
                                 {% endif %}</small></p>
                         <p class="m-0">{{ news.text | truncate(50) | raw }}</p>
-                        <p class="m-0"><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ 'Read more' | trans }}</a></p>
+                        <p class="m-0"><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ 'label.read.more' | trans }}</a></p>
                     </td>
                 </tr>
             {% endfor %}

@@ -30,7 +30,7 @@ class SearchFormType extends AbstractType
         $formBuilder
             ->add('location', TextType::class, [
                 'attr' => [
-                    'placeholder' => 'Where are you going?',
+                    'placeholder' => 'landing.whereyougo',
                 ],
                 'label' => false,
             ])
@@ -179,6 +179,7 @@ class SearchFormType extends AbstractType
                 'translation_domain' => 'messages',
             ])
             ->add('order', ChoiceType::class, [
+                'label' => 'label.order',
                 'choices' => [
                     'searchorderusernameasc' => 2,
                     'searchorderusernamedesc' => 3,
@@ -200,6 +201,7 @@ class SearchFormType extends AbstractType
                 'translation_domain' => 'messages',
             ])
             ->add('items', ChoiceType::class, [
+                'label' => 'label.items',
                 'choices' => [
                     5 => 5,
                     10 => 10,
@@ -323,7 +325,7 @@ class SearchFormType extends AbstractType
                 'class' => 'select2-inline',
                 'data-minimum-results-for-search' => '-1',
             ],
-            'label' => 'in a radius of',
+            'label' => 'label.radius',
             'label_attr' => [
                 'class' => 'mr-1 sr-only',
             ],

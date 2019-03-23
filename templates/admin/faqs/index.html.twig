@@ -24,7 +24,7 @@
                     <p class="card-text">This shows the list of all FAQ in the above category. You can drag the cards to change the sort order.</p>
                     <p class="card-text text-right">
                         <a class="btn btn-primary" href="{{ path('admin_faqs_faq_create', {'categoryId' : faqCategory.id}) }}">{{ 'faqs.button.create' | trans }}</a>
-                        <button type="submit" class="btn btn-primary">{{ 'UpdateFaqOrder' }}</button>
+                        <button type="submit" class="btn btn-primary">{{ 'label.admin.faq.update.order' | trans }}</button>
                     </p>
                 </div>
             </div>
@@ -42,7 +42,7 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary">{{ 'UpdateFaqOrder' }}</button>
+                    <button type="submit" class="btn btn-primary">{{ 'label.admin.faq.update.order' | trans }}</button>
                 </div>
             </div>
         {{ form_end(form) }}

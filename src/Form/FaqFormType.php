@@ -22,29 +22,29 @@ class FaqFormType extends AbstractType
     {
         $formBuilder
             ->add('faqCategory', TextType::class, [
-                'label' => 'FaqCategory',
+                'label' => 'label.admin.faq.category',
                 'attr' => [
                     'readonly' => true,
                 ],
             ])
             ->add('wordCode', TextType::class, [
-                'label' => 'FaqWordCode',
+                'label' => 'label.admin.faq.translation.id',
             ])
             ->add('question', CkEditorType::class, [
                 'async' => true,
-                'label' => 'FaqQuestion',
+                'label' => 'label.admin.faq.question',
                 'attr' => [
                     'class' => 'editor',
                 ],
             ])
             ->add('answer', CkEditorType::class, [
-                'label' => 'FaqAnswer',
+                'label' => 'label.admin.faq.answer',
                 'attr' => [
                     'class' => 'editor',
                 ],
             ])
             ->add('active', CheckboxType::class, [
-                'label' => 'FaqActive',
+                'label' => 'label.admin.faq.active',
                 'required' => false,
             ])
         ;
@@ -53,12 +53,14 @@ class FaqFormType extends AbstractType
             $form = $event->getForm();
             if (empty($faq->wordCode)) {
                 $form->add('FaqCreate', SubmitType::class, [
+                    'label' => 'label.create',
                     'attr' => [
                         'class' => 'btn-primary',
                     ],
                 ]);
             } else {
                 $form->add('FaqUpdate', SubmitType::class, [
+                    'label' => 'label.update',
                     'attr' => [
                         'class' => 'btn-primary',
                     ],

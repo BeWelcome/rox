@@ -1,6 +1,10 @@
 <?php
 
 
+/**
+ * @property bool|mixed ShortCode
+ * @property bool|mixed id
+ */
 class Language extends RoxEntityBase
 {
     protected $_table_name = 'languages';

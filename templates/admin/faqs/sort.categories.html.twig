@@ -14,7 +14,7 @@
     <h1>{{ 'admin.faqs.sort_categories' | trans }}</h1>
     {% if faqCategories|length == 0 %}
         <p>{{ 'faqs.none' | trans }}</p>
-        <p>{{ 'faqs.none.create' | trans }}<a class="float-right" href="{{ path('admin_faqs_category_create') }}"><button class="btn btn-primary">{{ 'faq.create.category.label' | trans }}</button></a></p>
+        <p>{{ 'faqs.none.create' | trans }}<a class="float-right" href="{{ path('admin_faqs_category_create') }}"><button class="btn btn-primary">{{ 'label.faq.create.category' | trans }}</button></a></p>
     {% else %}
         {{ form_start(form) }}
             {{ form_row(form.sortOrder) }}

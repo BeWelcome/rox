@@ -38,19 +38,9 @@
     <p>{{ 'group.create.warning'|
         trans| escape | replace({'%link_start%': '<a href="/forums/rules#groups" target="_blank" class="text-primary">', '%link_end%': '</a>'})|raw }}</p>
     {{ form_start(form, { 'attr': { 'novalidate': 'novalidate'}}) }}
-    <div class="form-group">
-        {{ form_label(form.name) }}
-        {{ form_widget(form.name) }}
-        <small id="nameHelp" class="form-text text-muted">{{ 'group.create.name.hint' | trans }}</small>
-    </div>
+    {{ form_row(form.name) }}
 
     <div id="duplicates"></div>
-
-    <div class="form-group">
-        {{ form_label(form.description) }}
-        {{ form_widget(form.description) }}
-        <small id="nameHelp" class="form-text text-muted">{{ 'group.create.description.hint' | trans }}</small>
-    </div>
 
     {{ form_rest(form) }}
     {{ form_end(form) }}

@@ -465,10 +465,10 @@ VALUES
     }
 
     public function getLocation($userId) {
-        $s = $this->dao->query('SELECT `user`.`location`, `geonames_cache`.`latitude`, `geonames_cache`.`longitude`, `geonames_cache`.`name` AS `location`, `geonames_countries`.`name` AS `country`, `geonames_cache`.`fk_countrycode` AS `code`, `geonames_cache`.`fk_admincode`
+        $s = $this->dao->query('SELECT `user`.`location`, `geonames`.`latitude`, `geonames`.`longitude`, `geonames`.`name` AS `location`, `geonamescountries`.`name` AS `country`, `geonames`.`country` AS `code`, `geonames`.`admin1`
             FROM `user`
-            LEFT JOIN `geonames_cache` ON( `user`.`location` = `geonames_cache`.`geonameid`)
-            LEFT JOIN `geonames_countries` ON( `geonames_cache`.`fk_countrycode` = `geonames_countries`.`iso_alpha2`)
+            LEFT JOIN `geonames` ON( `user`.`location` = `geonames`.`geonameid`)
+            LEFT JOIN `geonamescountries` ON( `geonames`.`country` = `geonamescountries`.`country`)
             WHERE `user`.`id` = '.(int)$userId);
         if( $s->numRows() != 1)
             return false;

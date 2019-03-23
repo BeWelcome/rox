@@ -185,7 +185,7 @@ class Activity extends RoxEntityBase
         $sql .= "UNION ";
 
         // Add results from place names
-        $sql .= "SELECT a.* FROM activities AS a, geonames_cache AS g WHERE ";
+        $sql .= "SELECT a.* FROM activities AS a, geonames AS g WHERE ";
         if ($publicOnly) {
             $sql .= "public = 1 AND ";
         }
@@ -193,11 +193,11 @@ class Activity extends RoxEntityBase
         $sql .= "UNION ";
 
         // Add results for countries (english names only sorry)
-        $sql .= "SELECT a.* FROM activities AS a, geonames_cache AS g, geonames_countries AS gc WHERE ";
+        $sql .= "SELECT a.* FROM activities AS a, geonames AS g, geonamescountries AS gc WHERE ";
         if ($publicOnly) {
             $sql .= "public = 1 AND ";
         }
-        $sql .= "a.locationId = g.geonameid AND g.fk_countrycode = gc.iso_alpha2 AND gc.name LIKE '%" . $keywordEscaped . "%' ";
+        $sql .= "a.locationId = g.geonameid AND g.country = gc.country AND gc.name LIKE '%" . $keywordEscaped . "%' ";
         $sql .= ") AS r ORDER BY r.dateTimeEnd DESC LIMIT " . $items . " OFFSET " . ($pageno * $items);
         return $this->findBySQLMany($sql);
     }
@@ -220,17 +220,17 @@ class Activity extends RoxEntityBase
         $sql .= "(a.title LIKE '%". $keywordEscaped . "%' OR a.address LIKE '%". $keywordEscaped . "%'";
         $sql .= "OR a.description LIKE '%". $keywordEscaped . "%') ";
         $sql .= "UNION ";
-        $sql .= "SELECT a.* FROM activities AS a, geonames_cache AS g WHERE ";
+        $sql .= "SELECT a.* FROM activities AS a, geonames AS g WHERE ";
         if ($publicOnly) {
             $sql .= "public = 1 AND ";
         }
         $sql .= "a.locationId = g.geonameid AND g.name LIKE '%" . $keywordEscaped . "%' ";
         $sql .= "UNION ";
-        $sql .= "SELECT a.* FROM activities AS a, geonames_cache AS g, geonames_countries AS gc WHERE ";
+        $sql .= "SELECT a.* FROM activities AS a, geonames AS g, geonamescountries AS gc WHERE ";
         if ($publicOnly) {
             $sql .= "public = 1 AND ";
         }
-        $sql .= "a.locationId = g.geonameid AND g.fk_countrycode = gc.iso_alpha2 AND gc.name LIKE '%" . $keywordEscaped . "%' ";
+        $sql .= "a.locationId = g.geonameid AND g.country = gc.country AND gc.name LIKE '%" . $keywordEscaped . "%' ";
         $sql .= ") AS r";
         return $this->sqlCount($sql);
     }

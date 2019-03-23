@@ -497,9 +497,9 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
     public static function countryCode($handle) 
     {
         $c = self::get();
-        $query = sprintf("SELECT `fk_countrycode` 
+        $query = sprintf("SELECT `country` 
         	FROM `user` 
-        	LEFT JOIN `geonames_cache` ON( `user`.`location` = `geonames_cache`.`geonameid`)
+        	LEFT JOIN `geonames` ON( `user`.`location` = `geonames`.`geonameid`)
         	WHERE `handle` = '%s'",
         	$c->dao->escape($handle));
         $q = $c->dao->query($query);

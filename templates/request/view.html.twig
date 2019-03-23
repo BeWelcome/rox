@@ -5,26 +5,33 @@
     {% set original = thread | last %}{% set request = original.Request %}
     {% set myself = app.user %}
 <div id="message_thread" class="row px-3">
-    {% if original.Sender.Username == myself.Username %}{% set otherUser = original.Receiver %}{% else %}{% set otherUser = original.Sender %}{% endif %}
+    {% if original.Sender.Username == myself.Username %}
+        {% set label = 'Update' %}
+        {% set otherUser = original.Receiver %}
+    {% else %}
+        {% set label = 'Reply' %}
+        {% set otherUser = original.Sender %}
+    {% endif %}
 
     <div class="col-12 sticky-top py-3 pb-0 bg-white d-inline-block mb-2 messageheader">
             <div class="pull-left">{{ macros.avatar(otherUser.Username, 50, true) }} {{ macros.profilelink(otherUser.Username) }}</div>
             <div class="pull-right">{{ macros.avatar(myself.Username, 50, true) }}</div>
             <div class="mt-2"><h3 id="MessageSubject" class="m-0 px-3 text-truncate">{{ current.Subject.Subject | raw }}</h3></div>
-
-        <div class="col-12 mt-2">
+<div class="clearfix"></div>
+        <div class="mt-2 alert alert-warning mb-0 h5">
             {% if original.Sender.Username == myself.Username %}
-                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}<div class="alert alert-warning mb-0 h5"><i class="fa fa-question mr-1"></i>{{ 'request.guest.open'|trans }}<a class="btn btn-primary btn-sm ml-3" href="{{ path( 'hosting_request_reply', { id: thread[0].id }) }}">{{ 'message.button.reply' | trans }}</a></div>{% endif %}
-                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}<div class="alert alert-danger mb-0 h5"><i class="fa fa-times mr-1"></i>{{ 'request.guest.cancelled'|trans }}<a class="btn btn-primary btn-sm ml-3" href="{{ path( 'hosting_request_reply', { id: thread[0].id }) }}">{{ 'message.button.reply' | trans }}</a></div>{% endif %}
-                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}<div class="alert alert-danger mb-0 h5"><i class="fa fa-times mr-1"></i>{{ 'request.guest.declined'|trans }}<a class="btn btn-primary btn-sm ml-3" href="{{ path( 'hosting_request_reply', { id: thread[0].id }) }}">{{ 'message.button.reply' | trans }}</a></div>{% endif %}
-                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<div class="alert alert-success mb-0 h5"><i class="fa fa-handshake-o mr-1"></i>{{ 'request.guest.accepted'|trans }}<a class="btn btn-primary btn-sm ml-3" href="{{ path( 'hosting_request_reply', { id: thread[0].id }) }}">{{ 'message.button.reply' | trans }}</a></div>{% endif %}
-                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<div class="alert alert-warning mb-0 h5"><i class="fa fa-question mr-1"></i>{{ 'request.guest.tentatively'|trans }}<a class="btn btn-primary btn-sm ml-3" href="{{ path( 'hosting_request_reply', { id: thread[0].id }) }}">{{ 'message.button.reply' | trans }}</a></div>{% endif %}
+                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}<i class="fa fa-question mr-1"></i>{% endif %}
+                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}<i class="fa fa-times mr-1"></i> {{ 'request.guest.cancelled'|trans }}{% endif %}
+                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}<i class="fa fa-times mr-1"></i> {{ 'request.guest.declined'|trans }}{% endif %}
+                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<i class="fa fa-handshake-o mr-1"></i> {{ 'request.guest.accepted'|trans }}{% endif %}
+                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<i class="fa fa-question mr-1"></i> {{ 'request.guest.tentatively'|trans }}{% endif %}
             {% else %}
-                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}<div class="alert alert-warning mb-0 h5"><i class="fa fa-times mr-1"></i>{{ 'request.host.open'|trans }}<a class="btn btn-primary btn-sm ml-3" href="{{ path( 'hosting_request_reply', { id: thread[0].id }) }}">{{ 'message.button.reply' | trans }}</a></div>{% endif %}
-                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}<div class="alert alert-danger mb-0 h5"><i class="fa fa-times mr-1"></i>{{ 'request.host.declined'|trans }}<a class="btn btn-primary btn-sm ml-3" href="{{ path( 'hosting_request_reply', { id: thread[0].id }) }}">{{ 'message.button.reply' | trans }}</a></div>{% endif %}
-                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<div class="alert alert-success mb-0 h5"><i class="fa fa-handshake-o mr-1"></i>{{ 'request.host.accepted'|trans }}<a class="btn btn-primary btn-sm ml-3" href="{{ path( 'hosting_request_reply', { id: thread[0].id }) }}">{{ 'message.button.reply' | trans }}</a></div>{% endif %}
-                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<div class="alert alert-warning mb-0 h5"><i class="fa fa-question mr-1"></i>{{ 'request.host.tentatively'|trans }}<a class="btn btn-primary btn-sm ml-3" href="{{ path( 'hosting_request_reply', { id: thread[0].id }) }}">{{ 'message.button.reply' | trans }}</a></div>{% endif %}
+                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}<i class="fa fa-times mr-1"></i> {{ 'request.host.open'|trans }}{% endif %}
+                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}<i class="fa fa-times mr-1"></i> {{ 'request.host.declined'|trans }}{% endif %}
+                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<i class="fa fa-handshake-o mr-1"></i> {{ 'request.host.accepted'|trans }}{% endif %}
+                {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<i class="fa fa-question mr-1"></i> {{ 'request.host.tentatively'|trans }}{% endif %}
             {% endif %}
+            <a class="btn btn-sm btn-primary" href="{{ path( 'hosting_request_reply', { id: thread[0].id }) }}">{{ label | trans }}</a>
         </div>
 
     </div>
@@ -52,11 +59,6 @@
     {%- endif %}
 
     {% include 'message/thread.html.twig' %}
-    {% if current.Sender.Username == myself.Username %}
-        {% set label = 'Update' %}
-    {% else %}
-        {% set label = 'Reply' %}
-    {% endif %}
-    <div class="col-12"><a class="btn btn-primary mb-1 float-right" href="{{ path( 'hosting_request_reply', { id: current.id }) }}">{{ label | trans }}</a></div>
+    <div class="col-12"><a class="btn btn-primary mb-1 pull-right" href="{{ path( 'hosting_request_reply', { id: current.id }) }}">{{ label | trans }}</a></div>
 </div>
 {% endblock content %}

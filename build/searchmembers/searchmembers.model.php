@@ -86,7 +86,7 @@ SQL;
 
     /**
      * @param
-     * @return associative array mapping language abbreviations to
+     * @return array mapping language abbreviations to
      *             long, English names of the language
      */
     public function getLangNames()
@@ -111,172 +111,6 @@ SQL;
             $langNames[$row->ShortCode] = $row->EnglishName;
         }
         return $langNames;
-    }
-
-    public function quicksearch($_searchtext)
-    {
-        $TMembers = array ();
-        $TReturn->searchtext = $_searchtext ;
-
-        if(strlen($_searchtext) > 2)
-        {
-            $searchtext = $this->dao->escape(str_replace('*','%',$_searchtext)); // Allows for wildcard
-
-            // search for username
-            $where = '';
-            $tablelist = '';
-            if (!$this->getLoggedInMember())
-            {
-                $where = "AND memberspublicprofiles.IdMember = m.id"; // must be in the public profile list
-                $tablelist = ",memberspublicprofiles";
-            }
-            $str =<<<SQL
-SELECT
-    m.id AS IdMember,
-    m.Username,
-    m.Gender,
-    m.HideGender,
-    a.IdCity,
-    m.ProfileSummary
-FROM
-    members AS m,
-    addresses AS a
-    {$tablelist}
-WHERE
-    m.Status = 'Active'
-    AND m.Username LIKE '{$searchtext}'
-    AND a.IdMember = m.id
-    $where
-LIMIT 20
-SQL;
-
-            $qry = $this->dao->query($str);
-
-            while ($rr = $qry->fetch(PDB::FETCH_OBJ))
-            {
-                $geo = $this->createEntity('Geo')->findById($rr->IdCity);
-                if (!($country = $geo->getCountry()) || !($parent = $geo->getParent()))
-                {
-                    $this->logWrite("FindMember(Missing country result for geonames_cache - id = {$rr->IdCity}", "Bug");
-                    $rr->RegionName="";
-                    $rr->CountryName='';
-                    $rr->CityName = '';
-                    $rr->fk_countrycode = '';
-                }
-                else
-                {
-                    $rr->CountryName = $country->name ;
-                    $rr->CityName = $geo->name ;
-                    $rr->fk_countrycode = $geo->fk_countrycode ;
-                    $rr->RegionName = $parent->name;
-                }
-
-                $rr->ProfileSummary = $this->ellipsis($this->FindTrad($rr->ProfileSummary), 100);
-                $rr->result = '';
-
-                $query = $this->dao->query("SELECT SQL_CACHE    *
-FROM
-    membersphotos
-WHERE
-    IdMember=" . $rr->IdMember . " AND
-    SortOrder=0
-                "
-                );
-                $photo = $query->fetch(PDB::FETCH_OBJ);
-
-                if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
-                else $rr->photo=$this->DummyPict($rr->Gender,$rr->HideGender) ;
-                $rr->photo = MOD_layoutbits::linkWithPicture($rr->Username, $rr->photo);
-                array_push($TMembers, $rr);
-            }
-        } // end of search for username
-        $TReturn->TMembers=$TMembers ;
-
-// Now search in places
-        $TPlaces=array() ;
-
-                if(strlen($_searchtext) > 1) { // Needs to give more that two chars for a place
-            $searchtext = $this->dao->escape($_searchtext) ;
-            $str = "SELECT DISTINCT(geonames_cache.geonameId) AS geonameid FROM geonamesalternatenames,geonames_cache WHERE alternateName='{$searchtext}' and geonamesalternatenames.geonameid=geonames_cache.geonameid";
-            $qry = $this->dao->query($str);
-
-            while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
-                $str="select geonames_cache.*,geo_usage.count as NbMembers from geonames_cache left join geo_usage on geonames_cache.geonameid=geo_usage.geoId and typeId=1 where geonames_cache.geonameid=".$rr->geonameid;
-                $result = $this->dao->query($str);
-                $cc = $result->fetch(PDB::FETCH_OBJ);
-
-                // Jeanyves trying to find a bug when venice is search in the quicksearch
-                if (empty($cc->fcode)) {
-            		$this->logWrite("SearchMembersModel : Failed to [".$str."] searchtext=[".$searchtext."]", "Bug");
-                }
-                // end of Jeanyves trying to find a bug when venice is search in the quicksearch
-
-                if (($cc->fcode=='PPLI') or ($cc->fcode=='PCLI')or ($cc->fcode=='PCLD')or ($cc->fcode=='PCLS')or ($cc->fcode=='PCLF')or ($cc->fcode=='PCLX')){
-                    $cc->TypePlace='country' ; // Becareful this will be use as a word, take care with lowercase, don't change
-                    $cc->link="places/".$cc->fk_countrycode ;
-                    $cc->CountryName="" ;
-                    $cc->RegionName="" ;
-                }
-                elseif (($cc->fcode=='PPL')or($cc->fcode=='PPLA')or($cc->fcode=='PPLG')or($cc->fcode=='PPLC')or($cc->fcode=='PPLS')or($cc->fcode=='PPLX')or($cc->fcode=='PPLA2')or($cc->fcode=='PPLA3')or($cc->fcode=='PPLA4')) {
-                    $cc->TypePlace='City' ; // Becareful this will be use as a word, take care with lowercase, don't change
-                    $sRegion="select name from geonames_cache where geonameid=".$cc->parentAdm1Id;
-                    $qryRegion = $this->dao->query($sRegion);
-                    $Region=$qryRegion->fetch(PDB::FETCH_OBJ)  ;
-
-                    $sCountry="select name from geonames_cache where geonameid=".$cc->parentCountryId;
-                    $qryCountry = $this->dao->query($sCountry);
-                    $Country=$qryCountry->fetch(PDB::FETCH_OBJ)  ;
-                    if (isset($Country->name)) {
-						$cc->CountryName=$Country->name ;
-					}
-					else {
-						$cc->CountryName="" ;
-					}
-
-                    if (isset($Region->name)) {
-                    	$cc->RegionName=$Region->name ;
-                        $cc->link="places/".$cc->fk_countrycode."/".$Region->name."/".$cc->name ;
-                    }
-                    else {
-                        $cc->link="places/".$cc->fk_countrycode."//".$cc->name ;
-			$cc->RegionName='No region' ;
-                    }
-                }
-                elseif (($cc->fcode=='ADM1') or ($cc->fcode=='ADM2')or ($cc->fcode=='ADMD')) {
-                    $sCountry="select name from geonames_cache where geonameid=".$cc->parentCountryId;
-                    $qryCountry = $this->dao->query($sCountry);
-                    $Country=$qryCountry->fetch(PDB::FETCH_OBJ)  ;
-                    $cc->CountryName=$Country->name ;
-
-                    $cc->RegionName="" ;
-                    $cc->TypePlace='Region' ; // Becareful this will be use as a word, take care with lowercase, don't change
-                    $cc->link="places/".$cc->fk_countrycode."/".$cc->name ;
-                }
-                $cc->searchtext=$searchtext ;
-                array_push($TPlaces, $cc);
-
-            }
-        }// end of search for Places
-        $TReturn->TPlaces=$TPlaces ;
-
-
-// Now search in forums tags
-        $TForumTags=array() ;
-
-        if(strlen($_searchtext) > 1) { // Needs to give more that two chars for a place
-            $searchtext=mysql_real_escape_string($_searchtext) ;
-            $str="select forums_tags.id as IdTag,counter as NbThreads
-            from forums_tags,translations
-            where forums_tags.IdName=translations.IdTrad and Sentence='".$searchtext."'" ;
-            $qry = $this->dao->query($str);
-            while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
-                $rr->link="forums/t".$rr->IdTag ;
-                array_push($TForumTags, $rr);
-            }
-        }// end of search for forums tags
-        $TReturn->TForumTags = $TForumTags;
-        return($TReturn) ;
-
     }
 
     private function ellipsis($str, $len)
@@ -317,7 +151,7 @@ WHERE
         $vars['OrderBy'] = $order_by;
 
         // tables to query
-        $tablelist = "members, geonames_cache, geonames_countries, addresses";
+        $tablelist = "members, geonames, geonamescountries, addresses";
 
         // get all conditions for search
         $where = 'WHERE ' . $this->generateMemberTypeCond($vars)
@@ -411,8 +245,8 @@ WHERE
         $str = 'SELECT SQL_CALC_FOUND_ROWS DISTINCT
                     members.id AS IdMember,
                     Username,
-                    geonames_cache.name AS CityName,
-                    geonames_countries.name AS CountryName,
+                    geonames.name AS CityName,
+                    geonamescountries.name AS CountryName,
                     IF(members.ProfileSummary != 0, 1, 0) AS HasSummary,
                     IF(DATEDIFF(NOW(), members.LastLogin) < 300, 1, 0) AS HasLoggedIn
                 FROM
@@ -442,10 +276,10 @@ WHERE
                           gc.longitude AS Longitude
                       FROM
                           members AS m,
-                          geonames_cache AS gc,
+                          geonames AS g,
                           addresses AS a
                       WHERE
-                          a.IdCity = gc.geonameid
+                          a.IdCity = g.geonameid
                           AND m.id = ' . $rr->IdMember . '
                           AND m.id = a.IdMember';
 
@@ -530,19 +364,19 @@ WHERE
         if($latSW > $latNE) { // searching across pole (impossible on map?)
             $where .= '
                 AND ((
-                    geonames_cache.latitude > ' . $latSW . '
+                    geonames.latitude > ' . $latSW . '
                     AND
-                    geonames_cache.latitude <= 90
+                    geonames.latitude <= 90
                 ) OR (
-                    geonames_cache.latitude >= -90
+                    geonames.latitude >= -90
                     AND
-                    geonames_cache.latitude < ' . $latNE . '))';
+                    geonames.latitude < ' . $latNE . '))';
         } else {
             $where .= '
                 AND (
-                    geonames_cache.latitude > ' . $latSW .'
+                    geonames.latitude > ' . $latSW .'
                     AND
-                    geonames_cache.latitude < ' . $latNE . '
+                    geonames.latitude < ' . $latNE . '
                 )';
         }
 
@@ -550,21 +384,21 @@ WHERE
         if($longSW > $longNE) { // searching across 180th meridian
             $where .= '
         AND ((
-            geonames_cache.longitude >= ' . $longSW . '
+            geonames.longitude >= ' . $longSW . '
             AND
-            geonames_cache.longitude <= 180
+            geonames.longitude <= 180
         ) OR (
-            geonames_cache.longitude >= -180
+            geonames.longitude >= -180
             AND
-            geonames_cache.longitude <= ' . $longNE . '))'  ;
+            geonames.longitude <= ' . $longNE . '))'  ;
         }
         else
         {
             $where .= '
         AND (
-            geonames_cache.longitude > ' . $longSW . '
+            geonames.longitude > ' . $longSW . '
             AND
-            geonames_cache.longitude < ' . $longNE . ')' ;
+            geonames.longitude < ' . $longNE . ')' ;
         }
 
         return '1=1 AND ' . $where;
@@ -583,18 +417,18 @@ WHERE
         $where = '1=1';
 
         // only use consistent records
-        $where .= " AND geonames_cache.geonameid = addresses.IdCity AND addresses.IdMember = members.id AND geonames_countries.iso_alpha2=geonames_cache.fk_countrycode" ;
+        $where .= " AND geonames.geonameid = addresses.IdCity AND addresses.IdMember = members.id AND geonamescountries.country=geonames.country" ;
         if ($IdCountry = $this->GetParam($vars, 'IdCountry', 0)) {
-            $where .= " AND geonames_countries.iso_alpha2='" . $IdCountry . "'";
+            $where .= " AND geonamescountries.country='" . $IdCountry . "'";
         }
         if ($IdCity = $this->GetParam($vars, 'IdCity', 0)) {
-            $where .= ' AND geonames_cache.geonameid=' . $IdCity;
+            $where .= ' AND geonames.geonameid=' . $IdCity;
         }
         if (($g_city = $this->GetParam($vars, 'CityName', '')) || ($g_city = $this->GetParam($vars, 'CityNameOrg', ''))) {
             if ($places = $this->createEntity('Geo')->findLocationsByName($g_city)) {
                 foreach ($places as $geo) {
                     if ($geo->isCity() || $geo->isBorough()) {
-                        $WhereCity = 'geonames_cache.geonameid = ' . $geo->getPKValue();
+                        $WhereCity = 'geonames.geonameid = ' . $geo->getPKValue();
                         break;
                     }
                 }
@@ -615,7 +449,7 @@ WHERE
             }
 
             if (!empty($cities)) {
-                $WhereCity = 'geonames_cache.geonameid IN (' . implode(',', $cities) . ')';
+                $WhereCity = 'geonames.geonameid IN (' . implode(',', $cities) . ')';
             } else {
                 $WhereCity = "1 = 0";
             }
@@ -761,7 +595,7 @@ WHERE
     */
     private function generateRegionCond(&$vars) {
         if ($IdRegion = $this->GetParam($vars, 'IdRegion', '')) {
-            return "geonames_cache.parentAdm1Id = " . $this->dao->escape($IdRegion);
+            return "geonames.admin1 = " . $this->dao->escape($IdRegion);
         }
         return '1=1';
     }

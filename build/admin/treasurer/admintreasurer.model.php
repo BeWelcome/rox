@@ -46,10 +46,10 @@ class AdminTreasurerModel extends RoxModelBase {
             SELECT
                 geonameid
             FROM
-                geonames_cache AS g
+                geonames AS g
             WHERE
                 g.fcode LIKE 'PCL%'
-                AND g.fk_countrycode = '" . $countrycode . "'";
+                AND g.country = '" . $countrycode . "'";
         $cc = $this->singleLookup($query);
         if ($cc) {
             return $cc->geonameid;
@@ -60,9 +60,9 @@ class AdminTreasurerModel extends RoxModelBase {
     public function getCountryCodeForGeonameId($geonameid) {
         $query = "
             SELECT
-                fk_countrycode
+                country
             FROM
-                geonames_cache AS g
+                geonames AS g
             WHERE
                 g.geonameid = " . $geonameid;
         $cc = $this->singleLookup($query);

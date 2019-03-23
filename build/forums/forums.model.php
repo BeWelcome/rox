@@ -781,8 +781,8 @@ WHERE `country_code` = '%s' AND `admin_code` = '%s'
         $query = sprintf(
             "
 SELECT `geonameid`, `name`
-FROM `geonames_cache`
-WHERE `fk_countrycode` = '%s' AND `fk_admincode` = '%s'
+FROM `geonames`
+WHERE `country` = '%s' AND `admin1` = '%s'
 ORDER BY `population` DESC
 LIMIT 100
             ",
@@ -970,7 +970,7 @@ WHERE `country_code` = '%s' AND `admin_code` = '%s'
         $query = sprintf(
             "
 SELECT `name`
-FROM `geonames_cache`
+FROM `geonames`
 WHERE `geonameid` = '%d'
             ",
             $this->geonameid
@@ -2340,14 +2340,17 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d,'%s')
     `forums_threads`.`stickyvalue`,
     `forums_threads`.`continent`,
     `forums_threads`.`IdGroup`,
-    `forums_threads`.`geonameid`, `geonames_cache`.`name` AS `geonames_name`,
-    `forums_threads`.`admincode`, `geonames_admincodes`.`name` AS `adminname`,
-    `forums_threads`.`countrycode`, `geonames_countries`.`name` AS `countryname`,
+    `forums_threads`.`geonameid`, 
+    `geonames`.`name` AS `geonames_name`,
+    `forums_threads`.`admincode`, 
+    `geonamesadminunits`.`name` AS `adminname`,
+    `forums_threads`.`countrycode`, 
+    `geonamescountries`.`name` AS `countryname`,
 	 `groups`.`Name` AS `GroupName`
 FROM `forums_threads`
-LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)
-LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)
-LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)
+LEFT JOIN `geonames` ON (`forums_threads`.`geonameid` = `geonames`.`geonameid`)
+LEFT JOIN `geonamescountries` ON (`forums_threads`.`countrycode` = `geonamescountries`.`country`)
+LEFT JOIN `geonamesadminunits` ON (`forums_threads`.`admincode` = `geonamesadminunits`.`admin1` AND `forums_threads`.`countrycode` = `geonamescountries`.`country`)
 LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
 WHERE `threadid` = '$this->threadid'
 and ($this->PublicThreadVisibility)
@@ -2432,9 +2435,9 @@ SELECT
     message,
     IdContent,
     IdWriter,
-    geonames_cache.fk_countrycode,
-    geonames_cache.name AS city,
-    geonames_countries.name AS country,
+    geonames.country,
+    geonames.name AS city,
+    geonamescountries.name AS country,
     forums_posts.threadid,
     OwnerCanStillEdit,
     members.Username as OwnerUsername,
@@ -2451,9 +2454,9 @@ LEFT
 LEFT JOIN
     addresses AS a ON a.IdMember = members.id AND a.rank = 0
 LEFT JOIN
-    geonames_cache ON a.IdCity = geonames_cache.geonameid
+    geonames ON a.IdCity = geonames.geonameid
 LEFT JOIN
-    geonames_countries ON geonames_cache.fk_countrycode = geonames_countries.iso_alpha2
+    geonamescountries ON geonames.country = geonamescountries.country
 WHERE
     forums_posts.threadid = '%d'
     AND forums_posts.threadid=forums_threads.id
@@ -2539,12 +2542,12 @@ SELECT
     `PostDeleted`,
     `ThreadDeleted`,
 	`OwnerCanStillEdit`,
-    `geonames_cache`.`fk_countrycode`,
+    `geonames`.`country`,
     `HasVotes`,
     `IdLocalEvent`,
     `IdGroup`
 FROM forums_posts, forums_threads, members, addresses
-LEFT JOIN `geonames_cache` ON (addresses.IdCity = `geonames_cache`.`geonameid`)
+LEFT JOIN `geonames` ON (addresses.IdCity = `geonames`.`geonameid`)
 WHERE `forums_posts`.`threadid` = '%d' AND `forums_posts`.`IdWriter` = `members`.`id`
 AND addresses.IdMember = members.id AND addresses.rank = 0
  AND `forums_posts`.`threadid`=`forums_threads`.`id`
@@ -3154,10 +3157,10 @@ AND IdTag=%d
     `PostDeleted`,
     `ThreadDeleted`,
     `IdLocalEvent`,
-    `forums_threads`.`IdTitle`,`forums_threads`.`IdGroup`,   `IdWriter`,   `members`.`Username` AS `OwnerUsername`, `groups`.`Name` AS `GroupName`,    `geonames_cache`.`fk_countrycode`
+    `forums_threads`.`IdTitle`,`forums_threads`.`IdGroup`,   `IdWriter`,   `members`.`Username` AS `OwnerUsername`, `groups`.`Name` AS `GroupName`,    `geonames`.`country`
 		FROM (forums_posts, members, forums_threads, addresses)
 LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
-LEFT JOIN `geonames_cache` ON (addresses.IdCity = geonames_cache.geonameid)
+LEFT JOIN `geonames` ON (addresses.IdCity = geonames.geonameid)
 WHERE `forums_posts`.`IdWriter` = %d AND `forums_posts`.`IdWriter` = `members`.`id`
 AND `forums_posts`.`threadid` = `forums_threads`.`threadid`
 AND addresses.IdMember = members.id AND addresses.rank = 0
@@ -4165,16 +4168,16 @@ class Board implements Iterator {
 				  `last`.`postid` AS `last_postid`,
 				  `last`.`authorid` AS `last_authorid`,
 				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`," ;
-		$query .= "`first_member`.`Username` AS `first_author`,`last_member`.`Username` AS `last_author`,`geonames_cache`.`name` AS `geonames_name`, `geonames_cache`.`geonameid`," ;
-		$query .= "`geonames_admincodes`.`name` AS `adminname`, `geonames_admincodes`.`admin_code` AS `admincode`,`geonames_countries`.`name` AS `countryname`, `geonames_countries`.`iso_alpha2` AS `countrycode`" ;
+		$query .= "`first_member`.`Username` AS `first_author`,`last_member`.`Username` AS `last_author`,`geonames`.`name` AS `geonames_name`, `geonames`.`geonameid`," ;
+		$query .= "`geonamesadminunits`.`name` AS `adminname`, `geonamesadminunits`.`admin1` AS `admincode`,`geonamescountries`.`name` AS `countryname`, `geonamescountries`.`country` AS `countrycode`" ;
 		$query .= "FROM ".$tabletagthread."`forums_threads` LEFT JOIN `forums_posts` AS `first` ON (`forums_threads`.`first_postid` = `first`.`postid`)" ;
 		$query .= "LEFT JOIN `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)" ;
 		$query .= "LEFT JOIN `forums_posts` AS `last` ON (`forums_threads`.`last_postid` = `last`.`postid`)" ;
 		$query .= "LEFT JOIN `members` AS `first_member` ON (`first`.`IdWriter` = `first_member`.`id`)" ;
 		$query .= "LEFT JOIN `members` AS `last_member` ON (`last`.`IdWriter` = `last_member`.`id`)" ;
-		$query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)";
-		$query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ;
-		$query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
+		$query .= "LEFT JOIN `geonames` ON (`forums_threads`.`geonameid` = `geonames`.`geonameid`)";
+		$query .= "LEFT JOIN `geonamesadminunits` ON (`forums_threads`.`admincode` = `geonamesadminunits`.`admin1` AND `forums_threads`.`countrycode` = `geonamesadminunits`.`country`)" ;
+		$query .= "LEFT JOIN `geonamescountries` ON (`forums_threads`.`countrycode` = `geonamescountries`.`country`)" ;
 		$query .= " WHERE 1 ".$wherethread . $orderby . " LIMIT ".$from.", ".$this->THREADS_PER_PAGE ;
 
 
@@ -4243,16 +4246,16 @@ class Board implements Iterator {
 				  `last`.`postid` AS `last_postid`,
 				  `last`.`authorid` AS `last_authorid`,
 				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`," ;
-			$query .= "`first_member`.`Username` AS `first_author`,`last_member`.`Username` AS `last_author`,`geonames_cache`.`name` AS `geonames_name`, `geonames_cache`.`geonameid`," ;
-			$query .= "`geonames_admincodes`.`name` AS `adminname`, `geonames_admincodes`.`admin_code` AS `admincode`,`geonames_countries`.`name` AS `countryname`, `geonames_countries`.`iso_alpha2` AS `countrycode`" ;
+			$query .= "`first_member`.`Username` AS `first_author`,`last_member`.`Username` AS `last_author`,`geonames`.`name` AS `geonames_name`, `geonames`.`geonameid`," ;
+			$query .= "`geonamesadminunits`.`name` AS `adminname`, `geonamesadminunits`.`admin1` AS `admincode`,`geonamescountries`.`name` AS `countryname`, `geonamescountries`.`county` AS `countrycode`" ;
 			$query .= "FROM `tags_threads`,`forums_threads` LEFT JOIN `forums_posts` AS `first` ON (`forums_threads`.`first_postid` = `first`.`postid`)" ;
 			$query .= "LEFT JOIN `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)" ;
 			$query .= "LEFT JOIN `forums_posts` AS `last` ON (`forums_threads`.`last_postid` = `last`.`postid`)" ;
 			$query .= "LEFT JOIN `members` AS `first_member` ON (`first`.`IdWriter` = `first_member`.`id`)" ;
 			$query .= "LEFT JOIN `members` AS `last_member` ON (`last`.`IdWriter` = `last_member`.`id`)" ;
-			$query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)";
-			$query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ;
-			$query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
+			$query .= "LEFT JOIN `geonames` ON (`forums_threads`.`geonameid` = `geonames`.`geonameid`)";
+			$query .= "LEFT JOIN `geonamesadminunits` ON (`forums_threads`.`admincode` = `geonamesadminunits`.`admin1` AND `forums_threads`.`countrycode` = `geonamesadminunits`.`country`)" ;
+			$query .= "LEFT JOIN `geonamescountries` ON (`forums_threads`.`countrycode` = `geonames`.`county`)" ;
 			$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id`  and  `tags_threads`.`IdTag` not in (".$NoInCategoryList.")" ;
 			$query = $query ." and (".$this->PublicThreadVisibility.")" ;
 			$query = $query ." and (".$this->ThreadGroupsRestriction.")" ;
@@ -4278,16 +4281,16 @@ class Board implements Iterator {
 				  `last`.`postid` AS `last_postid`,
 				  `last`.`authorid` AS `last_authorid`,
 				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`," ;
-			$query .= "`first_member`.`Username` AS `first_author`,`last_member`.`Username` AS `last_author`,`geonames_cache`.`name` AS `geonames_name`, `geonames_cache`.`geonameid`," ;
-			$query .= "`geonames_admincodes`.`name` AS `adminname`, `geonames_admincodes`.`admin_code` AS `admincode`,`geonames_countries`.`name` AS `countryname`, `geonames_countries`.`iso_alpha2` AS `countrycode`" ;
+			$query .= "`first_member`.`Username` AS `first_author`,`last_member`.`Username` AS `last_author`,`geonames`.`name` AS `geonames_name`, `geonames`.`geonameid`," ;
+			$query .= "`geonamesadminunits`.`name` AS `adminname`, `geonamesadminunits`.`admin1` AS `admincode`,`geonamescountries`.`name` AS `countryname`, `geonamescountries`.`country` AS `countrycode`" ;
 			$query .= "FROM `tags_threads`,`forums_threads` LEFT JOIN `forums_posts` AS `first` ON (`forums_threads`.`first_postid` = `first`.`postid`)" ;
 			$query .= "LEFT JOIN `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)" ;
 			$query .= "LEFT JOIN `forums_posts` AS `last` ON (`forums_threads`.`last_postid` = `last`.`postid`)" ;
 			$query .= "LEFT JOIN `members` AS `first_member` ON (`first`.`IdWriter` = `first_member`.`id`)" ;
 			$query .= "LEFT JOIN `members` AS `last_member` ON (`last`.`IdWriter` = `last_member`.`id`)" ;
-			$query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)";
-			$query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ;
-			$query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
+			$query .= "LEFT JOIN `geonames` ON (`forums_threads`.`geonameid` = `geonames`.`geonameid`)";
+			$query .= "LEFT JOIN `geonamesadminunits` ON (`forums_threads`.`admincode` = `geonamesadminunits`.`admin_code` AND `forums_threads`.`countrycode` = `geonamesadminunits`.`country`)" ;
+			$query .= "LEFT JOIN `geonamescountries` ON (`forums_threads`.`countrycode` = `geonamescountries`.`country`)" ;
 			$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id` and  `tags_threads`.`IdTag`=".$IdTagCategory ;
 			$query = $query ." and (".$this->PublicThreadVisibility.")" ;
 			$query = $query ." and (".$this->ThreadGroupsRestriction.")" ;

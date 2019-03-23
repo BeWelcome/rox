@@ -81,24 +81,5 @@ Boston, MA  02111-1307, USA.
         <h4><?php 
         echo $words->getFormatted('tour_meet_title2')?></h4>
         <p><?php echo $words->getFormatted('tour_meet_text2')?></p>
-        
-<?php
-// Get 4 random members with a public profile and show their pictures+username
-$Rox = new Rox();
-$members = $Rox->getMembersStartpage(12,'random');
-$count = count($members);
-for ($ii=0;$ii<count($members);$ii++) {
-        $m=$members[$ii] ;
-?>
-            <div class="float_left" style="padding-right: 15px">
-                <p class="center">
-                    <span class="username"><?php echo '<a href="members/'.$m->Username.'">'.$m->Username.'</a>' ?></span><br />
-                    <?php echo MOD_layoutbits::PIC_50_50($m->Username,'',$style='framed') ?><br />
-                    <span class="small grey"><?php echo $m->countryname; ?></span>
-                </p>
-            </div> <!-- float_left -->
-<?php } ?>
-
     </div>
-    <a class="button" href="tour/trips" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_goNext')?> &raquo; <?php echo $words->getFormatted('tour_link_trips')?></span></a>
 </div>

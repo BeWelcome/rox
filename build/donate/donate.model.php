@@ -116,7 +116,7 @@ class DonateModel extends RoxModelBase
                     SELECT
                         name
                     FROM
-                        geonames_cache
+                        geonames
                     WHERE
                         geonameId = $idCountry
                     ");
@@ -236,14 +236,14 @@ http://www.bewelcome.org/donate/?action=done&tx=0ME24142PE152304A&st=Completed&a
                     $IdMember=$this->_session->get("IdMember") ;
                     $query = "
                         SELECT
-                            geonames_cache.parentCountryId AS IdCountry
+                            geonames.country AS IdCountry
                         FROM
                             members,
-                            geonames_cache
+                            geonames
                         WHERE
                             members.id = $IdMember
                             AND
-                            geonames_cache.geonameId = members.IdCity
+                            geonames.geonameId = members.IdCity
                         ";
                     $result = $this->dao->query($query);
                     $m = $result->fetch(PDB::FETCH_OBJ);

@@ -215,6 +215,9 @@ class MoreMissingWordCodes extends RoxMigration
         $this->AddWordCode("message.subject", "Subject", "src\\Form\\SubjectType.php:20");
         $this->AddWordCode("signup.receive.newsletters", "I'd like to receive newsletters from BeWelcome.", "signup\\4");
         $this->AddWordCode("signup.receive.local-info", "I'd like to receive information about local events.", "signup\\4");
+        $this->AddWordCode("request.cant.reply", "This request can't be replied to anymore as the hosting period already started.", "request reply");
+        $this->AddWordCode("request.reply.flash", "Notification with updated information has been sent.", "request reply");
+        $this->AddWordCode("reply", "Reply", "Used in the email ");
     }
 
     public function down()

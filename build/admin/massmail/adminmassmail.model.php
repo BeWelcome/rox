@@ -188,13 +188,13 @@ class AdminMassmailModel extends RoxModelBase
             SELECT
                 m.Id AS Id, m.Username AS Username, gc.Name AS Country, m.Status AS Status
             FROM
-                broadcastmessages AS bm, members AS m, geonames_cache AS g, geonames_countries AS gc
+                broadcastmessages AS bm, members AS m, geonames AS g, geonamescountries AS gc
             WHERE
                 bm.IdBroadcast = " . $id . "
                 AND bm.Status = '" . $status . "'
                 AND bm.IdReceiver = m.id
                 AND g.geonameid = m.IdCity
-                AND gc.iso_alpha2 = g.fk_countrycode
+                AND g.country = gc.country 
             LIMIT " . $start . "," . $limit;
         $mmris = $this->BulkLookup($query);
         // Now get email address and preferred language of the found members
@@ -382,11 +382,11 @@ class AdminMassmailModel extends RoxModelBase
     public function getAdminUnits($countrycode) {
         $query = "
             SELECT
-                fk_admincode, name
+                country, name
             FROM
-                geonames_cache
+                geonames
             WHERE
-                fk_countrycode = '" . $countrycode . "'
+                country = '" . $countrycode . "'
                 AND fcode = 'ADM1'
             ORDER BY
                 name";
@@ -398,10 +398,10 @@ class AdminMassmailModel extends RoxModelBase
             SELECT
                 geonameid, name
             FROM
-                geonames_cache
+                geonames
             WHERE
-                fk_countrycode = '" . $countrycode . "'
-                AND fk_admincode = '" . $adminunit . "'
+                country = '" . $countrycode . "'
+                AND admin1 = '" . $adminunit . "'
                 AND fclass = 'P'
                 AND fcode <> 'PPLX'
             ORDER BY
@@ -532,17 +532,17 @@ class AdminMassmailModel extends RoxModelBase
             SELECT
                 " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
             FROM
-                geonames_cache AS g, members AS m
+                geonames AS g, members AS m
             LEFT JOIN
                 memberspreferences AS mp
                 ON (m.id = mp.IdMember AND mp.IdPreference = " . $pref_id . ")
             WHERE
                 (m.IdCity = g.geonameId)
-                AND g.fk_countrycode = '" . $this->dao->escape($countrycode) . "'
+                AND g.country = '" . $this->dao->escape($countrycode) . "'
                 AND (mp.Value = 'Yes' OR mp.Value IS NULL)
                 AND (m.Status IN (" . Member::ACTIVE_WITH_MESSAGES . "))";
         if ($adminunit) {
-            $query .= " AND g.fk_admincode = '". $adminunit . "'";
+            $query .= " AND g.admin1 = '". $adminunit . "'";
         }
         if ($place) {
             $query .= " AND g.geonameid = ". $place;

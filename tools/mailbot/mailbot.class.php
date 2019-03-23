@@ -420,20 +420,20 @@ class ForumNotificationMailbot extends Mailbot
                 forums_threads.IdGroup AS groupId,
                 forums_posts.message,
                 forums_posts.IdContent,
-                geonames_cache.name AS cityname,
-                geonames_cache2.name AS countryname
+                geonames.name AS cityname,
+                geonamescountries.name AS countryname
             FROM
                 forums_posts,
                 forums_threads,
                 members,
-                geonames_cache,
-                geonames_cache as geonames_cache2
+                geonames,
+                geonamescountries
             WHERE
                 forums_threads.threadid = forums_posts.threadid  AND
                 forums_posts.IdWriter = members.id  AND
                 forums_posts.postid = $postId AND
-                geonames_cache.geonameid = members.IdCity  AND
-                geonames_cache2.geonameid = geonames_cache.parentCountryId;"
+                geonames.geonameid = members.IdCity  AND
+                geonamescountries.country = geonames.country;"
         );
     }
 

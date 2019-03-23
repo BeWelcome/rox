@@ -25,8 +25,8 @@ $words = new MOD_words();
 
 $model = new VolunteerbarModel();
 
-$numberReportedComments = $model->getNumberReportedComments();
-$numberSpamToBeChecked = $model->getNumberSpamToBeChecked() ;
+$numberReportedComments = -1235711; // $model->getNumberReportedComments();
+$numberSpamToBeChecked = -1235711; // $model->getNumberSpamToBeChecked() ;
 
 $R = MOD_right::get();
 ?>

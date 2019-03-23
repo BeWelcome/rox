@@ -27,20 +27,20 @@ class StatsModel extends RoxModelBase
 		// This query countes the number of members in the same way as HC or CS
         $query = "
             SELECT
-                geonames_countries.name AS countryname,
+                gc.name AS countryname,
                 count(*) AS cnt
             FROM
-                members,
-                geonames_countries,
-                geonames_cache
+                members m,
+                geonamescountries gc,
+                geonames g
             WHERE
-                members.Status IN (" . Member::ACTIVE_ALL . ")
+                m.Status IN (" . Member::ACTIVE_ALL . ")
                 AND
-                members.IdCity = geonames_cache.geonameId
+                m.IdCity = g.geonameId
                 AND
-                geonames_cache.fk_countrycode = geonames_countries.iso_alpha2
+                g.country = gc.country
             GROUP BY
-                geonames_countries.iso_alpha2
+                gc.country
             ORDER BY
                 cnt DESC
             ";

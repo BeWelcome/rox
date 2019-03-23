@@ -106,9 +106,9 @@ class Activity extends RoxEntityBase
             $entityFactory = new RoxEntityFactory();
             $this->location = $entityFactory->create('Geo', $this->locationId);
             // get counts for yes, maybe and no attendees
-            $this->attendeesYes = $this->getAttendeesCountByStatus( 1 );
-            $this->attendeesMaybe = $this->getAttendeesCountByStatus( 2 );
-            $this->attendeesNo = $this->getAttendeesCountByStatus( 3 );
+            $this->attendeesYes = $this->getAttendeesCountByStatus(1);
+            $this->attendeesMaybe = $this->getAttendeesCountByStatus(2);
+            $this->attendeesNo = $this->getAttendeesCountByStatus(3);
         }
         return $status;
     }
@@ -125,7 +125,7 @@ class Activity extends RoxEntityBase
         if ($status) {
             if (count($this->organizers) > 0) {
                 // add organizers to activitiesattendees table
-                foreach($this->organizers as $organizer) {
+                foreach ($this->organizers as $organizer) {
                     $query = "INSERT INTO activitiesattendees SET activityId = " . $this->id;
                     $query .= ", attendeeId=" . $organizer['attendeeId'];
                     $query .= ", organizer=1, status=1";
@@ -180,8 +180,8 @@ class Activity extends RoxEntityBase
         if ($publicOnly) {
             $sql .= "public = 1 AND ";
         }
-        $sql .= "(a.title LIKE '%". $keywordEscaped . "%' OR a.address LIKE '%". $keywordEscaped . "%'";
-        $sql .= "OR a.description LIKE '%". $keywordEscaped . "%') ";
+        $sql .= "(a.title LIKE '%" . $keywordEscaped . "%' OR a.address LIKE '%" . $keywordEscaped . "%'";
+        $sql .= "OR a.description LIKE '%" . $keywordEscaped . "%') ";
         $sql .= "UNION ";
 
         // Add results from place names
@@ -217,8 +217,8 @@ class Activity extends RoxEntityBase
         if ($publicOnly) {
             $sql .= "public = 1 AND ";
         }
-        $sql .= "(a.title LIKE '%". $keywordEscaped . "%' OR a.address LIKE '%". $keywordEscaped . "%'";
-        $sql .= "OR a.description LIKE '%". $keywordEscaped . "%') ";
+        $sql .= "(a.title LIKE '%" . $keywordEscaped . "%' OR a.address LIKE '%" . $keywordEscaped . "%'";
+        $sql .= "OR a.description LIKE '%" . $keywordEscaped . "%') ";
         $sql .= "UNION ";
         $sql .= "SELECT a.* FROM activities AS a, geonames AS g WHERE ";
         if ($publicOnly) {

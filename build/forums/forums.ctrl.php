@@ -516,28 +516,45 @@ class ForumsController extends PAppController
         exit;
     }
 
+    /**
+     * Set flash message
+     *
+     * @param string $message Message text for flash
+     * @param string $type Type of flash, i.e. "error" or "notice"
+     */
+    private function setFlash($message) {
+        $this->_session->set( 'flash_notice', $message );
+    }
+
+
     private function EnableGroup($IdGroup) {
         $this->_model->enableGroup($IdGroup);
+        $this->setFlash('t.notification.group.enabled');
         $this->redirectSubscriptions();
     }
     private function DisableGroup($IdGroup) {
         $this->_model->disableGroup($IdGroup);
+        $this->setFlash('t.notification.group.enabled');
         $this->redirectSubscriptions();
     }
     private function SubscribeGroup($IdGroup) {
         $this->_model->subscribeGroup($IdGroup);
+        $this->setFlash('t.notification.group.subscribed');
         $this->redirectSubscriptions();
     }
     private function UnsubscribeGroup($IdGroup) {
         $this->_model->unsubscribeGroup($IdGroup);
+        $this->setFlash('t.notification.group.unsubscribed');
         $this->redirectSubscriptions();
     }
     private function enableSubscriptions() {
         $this->_model->enableSubscriptions();
+        $this->setFlash('t.notification.subscriptions.enabled');
         $this->redirectSubscriptions();
     }
     private function disableSubscriptions() {
         $this->_model->disableSubscriptions();
+        $this->setFlash('t.notification.subscriptions.disabled');
         $this->redirectSubscriptions();
     }
     private function searchSubscriptions() {
@@ -546,10 +563,12 @@ class ForumsController extends PAppController
     }
     private function SubscribeThread($IdThread) {
         $res = $this->_model->SubscribeThread($IdThread);
+        $this->setFlash('t.notification.thread.subscribed');
         $this->redirectSubscriptions();
     }
     private function UnsubscribeThread($IdSubscribe=0,$Key="") {
         $this->_model->UnsubscribeThread($IdSubscribe,$Key);
+        $this->setFlash('t.notification.thread.unsubscribed');
         $this->redirectSubscriptions();
     }
 
@@ -563,6 +582,7 @@ class ForumsController extends PAppController
     }
     private function EnableThread($IdThread) {
         $this->_model->EnableThread($IdThread);
+        $this->setFlash('t.notification.thread.enabled');
         $this->redirectSubscriptions();
     }
     private function EnableTag($IdTag) {
@@ -571,6 +591,7 @@ class ForumsController extends PAppController
     }
     private function DisableThread($IdThread) {
         $this->_model->DisableThread($IdThread);
+        $this->setFlash('t.notification.thread.disabled');
         $this->redirectSubscriptions();
     }
     private function DisableTag($IdThread) {

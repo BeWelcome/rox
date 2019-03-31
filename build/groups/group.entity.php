@@ -24,7 +24,9 @@ Boston, MA  02111-1307, USA.
      * @author Fake51
      */
 
-    /**
+use App\Doctrine\MemberStatusType;
+
+/**
      * represents a single group
      *
      * @package Apps
@@ -464,7 +466,7 @@ AND t.last_postid = p.id";
         $group_owners = array();
         foreach ($priv_scopes as $priv_scope) {
             $group_owner = $this->createEntity('Member', $priv_scope->IdMember);
-            if (strpos(\Member::ACTIVE_WITH_MESSAGES, $group_owner->Status) !== false) {
+            if (strpos(MemberStatusType::ACTIVE_WITH_MESSAGES, $group_owner->Status) !== false) {
                 if ($loggedIn || $group_owner->get_publicProfile()) {
                     $group_owners[] = $group_owner;
                 }

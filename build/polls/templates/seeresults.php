@@ -34,7 +34,7 @@ $Data=$this->_data ; // Retrieve the data to display (set by the controller)
 $list=$Data->Choices ; // Retrieve the possible choices 
 
 ?>
-<h2><?=$words->fTrad($Data->rPoll->Title);?></h2> 
+<h2><?=$words->fTrad($Data->rPoll->Title);?></h2>
 <p><?=$words->fTrad($Data->rPoll->Description);?></p>
 <p><?=$words->getFormatted("polls_peoplehavecontributed",$Data->rPoll->Started,$Data->rPoll->Ended,$Data->TotContrib);?></p>
 <?
@@ -42,8 +42,8 @@ $styles = array( 'highlight', 'blank' ); // alternating background for table row
 $iiMax = count($list) ; // This retrieve the number of polls
 $IdPoll=$Data->rPoll->id ;
 ?>
-
-<table class="fixed">
+<div class="table-responsive">
+<table class="table table-striped">
 
 <?php if ($list != false) { ?>
     <tr>
@@ -91,7 +91,7 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
         </td>
     </tr>
 </table>
-
+</div>
 <?
 if ($Data->rPoll->AllowComment=="Yes") {
 ?>

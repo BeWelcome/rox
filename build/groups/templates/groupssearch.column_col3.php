@@ -1,4 +1,4 @@
-
+<div class="row">
       <div class="col-12 col-md-6">
             <label class="h3" for="GroupsSearchInput"><?= $words->get('GroupsSearchHeading'); ?></label>
             <form action="groups/search" method="get">
@@ -99,3 +99,4 @@ $this->pager->render();
 HTML;
 endif;
 ?>
+</div>

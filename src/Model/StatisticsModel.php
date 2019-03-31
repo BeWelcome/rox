@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 
 class StatisticsModel extends BaseModel
@@ -14,21 +15,17 @@ class StatisticsModel extends BaseModel
             FROM
                 members m
             WHERE
-                m.status IN ('.Member::ACTIVE_ALL.')
+                m.status IN ('.MemberStatusType::ACTIVE_ALL.')
         ')->fetch();
 
-        /*        $countries = $this->execQuery('
-                    SELECT
-                        COUNT(DISTINCT gc.country) AS cnt
-                    FROM
-                        geonamescountries gc,
-                        geonames g,
-                        members m
-                    WHERE
-                        gc.country = g.country
-                        AND g.geonameId = m.IdCity
-                        AND m.Status IN (' . Member::ACTIVE_ALL . ')
-                ')->fetch();*/
+        $countries = $this->execQuery("
+            SELECT
+                DISTINCT gc.country
+            FROM
+                geonamescountries gc
+                join geonames g on gc.country = g.country
+                join members m on g.geonameId = m.IdCity and m.Status IN ('Active', 'OutOfRemind')        
+        ")->fetchAll();
 
         $languages = $this->execQuery('
             SELECT
@@ -40,20 +37,20 @@ class StatisticsModel extends BaseModel
             WHERE
                 l.id = mll.idLanguage
                 AND mll.IdMember = m.Id
-                AND m.Status IN ('.Member::ACTIVE_ALL.')
+                AND m.Status IN ('.MemberStatusType::ACTIVE_ALL.')
         ')->fetch();
 
-        $positiveComments = $this->execQuery('
+        $positiveComments = $this->execQuery("
             SELECT
                 COUNT(c.id) AS cnt
             FROM
                 comments c,
                 members m
             WHERE
-                c.Quality = \'Good\'
+                c.Quality = 'Good'
                 AND IdFromMember = m.Id
-                AND m.Status IN ('.Member::ACTIVE_ALL.')
-        ')->fetch();
+                AND m.Status IN (".MemberStatusType::ACTIVE_ALL.")
+        ")->fetch();
 
         $activities = $this->execQuery('
             SELECT
@@ -66,7 +63,7 @@ class StatisticsModel extends BaseModel
 
         $stats = [
             'members' => $members['cnt'],
-            'countries' => 215,
+            'countries' => count($countries),
             'languages' => $languages['cnt'],
             'comments' => $positiveComments['cnt'],
             'activities' => $activities['cnt'],

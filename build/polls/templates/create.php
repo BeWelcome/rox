@@ -1,3 +1,4 @@
+<div class="col-12">
 <?php
 /*
 
@@ -26,258 +27,231 @@ $words = $this->getWords();
 
 if (!empty($errormessage)) {
     ?>
-    <p class="error"><?=$errormessage; ?></p>
+    <p class="alert alert-error"><?= $errormessage; ?></p>
     <?
 }
 $words = new MOD_words();
-$Data=$this->_data  ;
+$Data = $this->_data;
 if (isset($Data->rPoll->id)) { // Form for update
-    $rr=$Data->rPoll ;
+    $rr = $Data->rPoll;
 
 
-?>
-<p class="note">
-This is the page to update a poll
-
-You need to fill the following fields
-
-Use English language for now only
-
-</p>
-
-<form name="contribute" action="polls/doupdatepoll"  id="idupdatepoll" method="post">
-<!-- The following will disable the nasty PPostHandler -->
-<input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
-
-<input type="hidden" name="<?=$callbackId ?>"  value="1"/>
-<input type="hidden" name="IdPoll"  value="<?=$Data->rPoll->id?>"/>
-
-<table class="full">
-    <tr>
-        <td><label for="Status">Polls Status:</label></td>
-        <td>
-            <?
-            $sChoice=array("Project","Open","Close") ;
-            if (empty($rr->Status)) $rr->Status="Project" ; // By default a poll will be at Project Status
-                echo "<select id=\"Status\" name=\"Status\">\n" ;
-            for ($ii=0;$ii<count($sChoice);$ii++) {
-                echo "<option value=\"".$sChoice[$ii]."\"" ;
-                if ($sChoice[$ii]==$rr->Status) {
-                    echo " selected " ;
-                }
-                echo ">",$sChoice[$ii],"</option>\n" ;
-            }
-            echo "</select>\n"  ;
-            ?>
-        </td>
-    </tr>
-    <tr>
-        <td><label for="TypeOfChoice" >Type of choice:</label></td>
-        <td>
-            <?
-            $sChoice=array('Exclusive', 'Inclusive', 'Ordered') ;
-            if (empty($rr->TypeOfChoice)) $rr->TypeOfChoice="Exclusive" ; // By default a poll will be Exclusive
-                echo "<select id=\"TypeOfChoice\" name=\"TypeOfChoice\">\n" ;
-            for ($ii=0;$ii<count($sChoice);$ii++) {
-                echo "<option value=\"".$sChoice[$ii]."\"" ;
-                if ($sChoice[$ii]==$rr->TypeOfChoice) {
-                    echo " selected " ;
-                }
-                echo ">",$sChoice[$ii],"</option>\n" ;
-            }
-            echo "</select>\n"  ;
-            ?>
-        </td>
-    </tr>
-    <tr>
-        <td><label for="Ended" >Poll will end on:</label></td>
-        <td>
-            <?
-            $ii=0 ;
-            if (empty($rr->Ended)) {
-                $rr->Ended="0000-00-00 00:00:00" ; // By default a poll will not have a end
-            }
-            echo "<input id=\"Ended\" name=\"Ended\" Value=\"" .$rr->Ended."\" type=\"text\" />" ;
-            ?>
-        </td>
-    </tr>
-    <tr>
-        <td><label for="CreatorUsername" >Owner:</label></td>
-        <td>
-            <?
-            $ii=0 ;
-            if (empty($rr->CreatorUsername)) {
-                $rr->CreatorUsername=$this->_session->get('Username') ; // By default a poll is owned by the current member
-            }
-            echo "<input id=\"CreatorUsername\" name=\"CreatorUsername\" Value=\"" .$rr->CreatorUsername."\" type=\"text\" />" ;
-            ?>
-        </td>
-    </tr>
-    <tr>
-        <td><label for="Allow Comment" >Allow Comments</label></td>
-        <td>
-            <?
-            if (empty($rr->AllowComment)) $rr->AllowComment="No" ; // By default a poll is not aimed to collect comments
-            $sChoice=array("Yes","No") ;
-                echo "<select id=\"AllowComment\"name=\"AllowComment\">\n" ;
-            for ($ii=0;$ii<count($sChoice);$ii++) {
-                echo "<option value=\"".$sChoice[$ii]."\"" ;
-                if ($sChoice[$ii]==$rr->AllowComment) {
-                    echo " selected " ;
-                }
-                echo ">",$sChoice[$ii],"</option>\n" ;
-            }
-            echo "</select>\n"  ;
-            ?>
-        </td>
-    </tr>
-    <tr>
-        <td><label for="Anonym" >Anonymous Poll</label></td>
-        <td>
-            <?
-            if (empty($rr->Anonym)) $rr->Anonym="No" ; // By default a poll is not aimed to collect comments
-            $sChoice=array("Yes","No") ;
-                echo "<select id=\"Anonym\"name=\"Anonym\">\n" ;
-            for ($ii=0;$ii<count($sChoice);$ii++) {
-                echo "<option value=\"".$sChoice[$ii]."\"" ;
-                if ($sChoice[$ii]==$rr->Anonym) {
-                    echo " selected " ;
-                }
-                echo ">",$sChoice[$ii],"</option>\n" ;
-            }
-            echo "</select>\n"  ;
-            ?>
-        </td>
-    </tr>
-    <tr>
-        <td><label for="ResultVisibility" >Result visibility:</label></td>
-        <td>
-            <?
-            if ($rr->ResultsVisibility=="") $rr->ResultsVisibility="No" ; // By default a poll is not aimed to collect comments
-            $sChoice=array("Not Visible","Visible","VisibleAfterVisit") ;
-                echo "<select id=\"ResultVisibiliyt\" name=\"ResultsVisibility\">\n" ;
-            for ($ii=0;$ii<count($sChoice);$ii++) {
-                echo "<option value=\"".$sChoice[$ii]."\"" ;
-                if ($sChoice[$ii]==$rr->ResultsVisibility) {
-                    echo " selected " ;
-                }
-                echo ">",$sChoice[$ii],"</option>\n" ;
-            }
-            echo "</select>\n"  ;
-            ?>
-        </td>
-    </tr>
-    <tr>
-        <td><label for="Title" >Poll Title:</label></td>
-        <td><input type="text" ID="Titile" name="Title" size="60" value="<?=$words->fTrad($Data->rPoll->Title)?>"/></td>
-    </tr>
-    <tr>
-        <td><label for="Description" >Poll Description:</label></td>
-        <td><textarea id="Description" name="Description" cols="60" rows="5"><?=$words->fTrad($Data->rPoll->Description) ?></textarea></td>
-    </tr>
-    <tr>
-        <td><label for="GroupIdLimit">Limited to groups Id : </label></td>
-        <td><input type="text" id="GroupIdLimit" name="GroupIdLimit" size="8" class="long" value="
-<?php for ($ii=0;$ii<count($Data->IdGroupRestricted);$ii++) {
-	if ($ii>0) echo "," ;
-	echo $Data->IdGroupRestricted[$ii]->IdGroup ;
-}
-?>
-"> (experimental comma separated)</td>
-    </tr>
-	<?php if (!empty($rr->WhereToRestrictMember)) {
-			echo "<tr bgcolor='Yellow'><td>Special restriction<br />(ask admin)</td><td>".$rr->WhereToRestrictMember."</td></tr>" ;
-		}
-	?>
-</table>
-<p class="center"><input type="submit" class="button" value="go update"></p>
-</form>
-
-<hr>
-
-<table class="full">
-<?
-for ($ii=0;$ii<count($Data->Choices);$ii++) {
-    $cc=$Data->Choices[$ii] ;
     ?>
-<form name="updatechoice_<?=$ii?>" action="polls/updatechoice"  id="idupdatechoice_<?=$ii?>" method="post">
-    <!-- The following will disable the nasty PPostHandler -->
-    <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
+    <p class="note">
+        This is the page to update a poll.<br>
+        You need to fill the following fields<br>
+        Use English language for now only
+    </p>
 
-    <input type="hidden" name="<?=$callbackId ?>"  value="1"/>
-	<input name="IdLanguage"  value="<?php echo $this->_session->get("IdLanguage") ; ?>" type="hidden"/>
-    <input type="hidden" name="IdPoll"  value="<?=$Data->rPoll->id?>"/>
-    <input type="hidden" name="IdPollChoice" value="<?=$cc->id?>"/>
-    <input type="hidden" name="IdChoiceText" value="
-    <?=$cc->IdChoiceText?>
+    <form class="form" name="contribute" action="polls/doupdatepoll" id="idupdatepoll" method="post">
+        <!-- The following will disable the nasty PPostHandler -->
+        <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
+
+        <input type="hidden" name="<?= $callbackId ?>" value="1"/>
+        <input type="hidden" name="IdPoll" value="<?= $Data->rPoll->id ?>"/>
+        <div class="form-group">
+            <label for="Status">Polls Status:</label>
+            <?
+            $sChoice = array("Project", "Open", "Close");
+            if (empty($rr->Status)) $rr->Status = "Project"; // By default a poll will be at Project Status
+            echo "<select class='form-control select2' id=\"Status\" name=\"Status\">\n";
+            for ($ii = 0; $ii < count($sChoice); $ii++) {
+                echo "<option value=\"" . $sChoice[$ii] . "\"";
+                if ($sChoice[$ii] == $rr->Status) {
+                    echo " selected ";
+                }
+                echo ">", $sChoice[$ii], "</option>\n";
+            }
+            echo "</select>\n";
+            ?>
+        </div>
+        <div class="form-group">
+            <label for="TypeOfChoice">Type of choice:</label>
+            <?
+            $sChoice = array('Exclusive', 'Inclusive', 'Ordered');
+            if (empty($rr->TypeOfChoice)) $rr->TypeOfChoice = "Exclusive"; // By default a poll will be Exclusive
+            echo "<select class='form-control select2' id=\"TypeOfChoice\" name=\"TypeOfChoice\">\n";
+            for ($ii = 0; $ii < count($sChoice); $ii++) {
+                echo "<option value=\"" . $sChoice[$ii] . "\"";
+                if ($sChoice[$ii] == $rr->TypeOfChoice) {
+                    echo " selected ";
+                }
+                echo ">", $sChoice[$ii], "</option>\n";
+            }
+            echo "</select>\n";
+            ?>
+        </div>
+        <div class="form-group">
+            <label for="Ended">Poll will end on:</label>
+            <?
+            $ii = 0;
+            if (empty($rr->Ended)) {
+                $rr->Ended = "0000-00-00 00:00:00"; // By default a poll will not have a end
+            }
+            echo "<input class='form-control' id=\"Ended\" name=\"Ended\" Value=\"" . $rr->Ended . "\" type=\"text\" />";
+            ?>
+        </div>
+        <div class="form-group">
+            <label for="CreatorUsername">Owner:</label>
+            <?
+            $ii = 0;
+            if (empty($rr->CreatorUsername)) {
+                $rr->CreatorUsername = $this->_session->get('Username'); // By default a poll is owned by the current member
+            }
+            echo "<input class='form-control' id=\"CreatorUsername\" name=\"CreatorUsername\" Value=\"" . $rr->CreatorUsername . "\" type=\"text\" />";
+            ?>
+        </div>
+        <div class="form-group">
+            <label for="Allow Comment">Allow Comments</label>
+            <?
+            if (empty($rr->AllowComment)) $rr->AllowComment = "No"; // By default a poll is not aimed to collect comments
+            $sChoice = array("Yes", "No");
+            echo "<select class='form-control select2' id=\"AllowComment\" name=\"AllowComment\">";
+            for ($ii = 0; $ii < count($sChoice); $ii++) {
+                echo "<option value=\"" . $sChoice[$ii] . "\"";
+                if ($sChoice[$ii] == $rr->AllowComment) {
+                    echo " selected ";
+                }
+                echo ">", $sChoice[$ii], "</option>";
+            }
+            echo "</select>";
+            ?>
+        </div>
+        <div class="form-group">
+            <label for="Anonym">Anonymous Poll</label>
+            <?
+            if (empty($rr->Anonym)) $rr->Anonym = "No"; // By default a poll is not aimed to collect comments
+            $sChoice = array("Yes", "No");
+            echo "<select class='form-control select2' id=\"Anonym\"name=\"Anonym\">";
+            for ($ii = 0; $ii < count($sChoice); $ii++) {
+                echo "<option value=\"" . $sChoice[$ii] . "\"";
+                if ($sChoice[$ii] == $rr->Anonym) {
+                    echo " selected ";
+                }
+                echo ">", $sChoice[$ii], "</option>";
+            }
+            echo "</select>";
+            ?>
+        </div>
+        <div class="form-group">
+            <label for="ResultVisibility">Result visibility:</label>
+            <?
+            if ($rr->ResultsVisibility == "") $rr->ResultsVisibility = "No"; // By default a poll is not aimed to collect comments
+            $sChoice = array("Not Visible", "Visible", "VisibleAfterVisit");
+            echo "<select class='form-control select2' id=\"ResultVisibiliyt\" name=\"ResultsVisibility\">";
+            for ($ii = 0; $ii < count($sChoice); $ii++) {
+                echo "<option value=\"" . $sChoice[$ii] . "\"";
+                if ($sChoice[$ii] == $rr->ResultsVisibility) {
+                    echo " selected ";
+                }
+                echo ">", $sChoice[$ii], "</option>";
+            }
+            echo "</select>";
+            ?>
+        </div>
+        <div class="form-group">
+            <label for="Title">Poll Title:</label>
+            <input class="form-control" type="text" ID="Titile" name="Title" size="60"
+                   value="<?= $words->fTrad($Data->rPoll->Title) ?>"/></div>
+        <div class="form-group">
+            <label for="Description">Poll Description:</label>
+            <textarea class="form-control" id="Description" name="Description" cols="60"
+                      rows="5"><?= $words->fTrad($Data->rPoll->Description) ?></textarea>
+        </div>
+        <div class="form-group">
+            <label for="GroupIdLimit">Limited to groups Id : </label>
+            <input class="form-control" type="text" id="GroupIdLimit" name="GroupIdLimit" size="8" class="long" value="
+<?php for ($ii = 0; $ii < count($Data->IdGroupRestricted); $ii++) {
+                if ($ii > 0) echo ",";
+                echo $Data->IdGroupRestricted[$ii]->IdGroup;
+            }
+            ?>
+">
+            <small class="text-muted ">(experimental comma separated)</small>
+        </div>
+        <?php if (!empty($rr->WhereToRestrictMember)) {
+            echo "<p>Special restriction (ask admin) " . $rr->WhereToRestrictMember . "</p>";
+        }
+        ?>
+        <input type="submit" class="btn btn-primary" value="go update">
+    </form>
+
+    <hr>
+
+    <?
+    for ($ii = 0; $ii < count($Data->Choices); $ii++) {
+        $cc = $Data->Choices[$ii];
+        ?>
+        <form name="updatechoice_<?= $ii ?>" action="polls/updatechoice" id="idupdatechoice_<?= $ii ?>" method="post">
+            <!-- The following will disable the nasty PPostHandler -->
+            <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
+
+            <input type="hidden" name="<?= $callbackId ?>" value="1"/>
+            <input name="IdLanguage" value="<?php echo $this->_session->get("IdLanguage"); ?>" type="hidden"/>
+            <input type="hidden" name="IdPoll" value="<?= $Data->rPoll->id ?>"/>
+            <input type="hidden" name="IdPollChoice" value="<?= $cc->id ?>"/>
+            <input type="hidden" name="IdChoiceText" value="
+    <?= $cc->IdChoiceText ?>
     "/>
-<tr>
-    <td><label for="Option">Option:</label></td>
-    <td>
-        <textarea id="Option" name="ChoiceText" cols="60" rows="2"><?=$words->fTrad($cc->IdChoiceText)?></textarea>
-        <input type="submit" class="button" value="update choice" />
-    <td>
-</tr>
-</form>
+            <div class="form-group"><label for="Option">Option:</label>
+                <textarea class="form-control" id="Option" name="ChoiceText" cols="60"
+                          rows="2"><?= $words->fTrad($cc->IdChoiceText) ?></textarea>
+            </div>
+                <input type="submit" class="btn btn-primary" value="update choice"/>
+            
+        </form>
+        <?
+    }
+    ?>
+
+
+    <form name="addchoice" action="polls/addchoice" id="idaddchoice" method="post">
+        <!-- The following will disable the nasty PPostHandler -->
+        <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
+
+        <input type="hidden" name="<?= $callbackId ?>" value="1"/>
+        <input type="hidden" name="IdLanguage" value="<?
+        $this->_session->get("IdLanguage") ?>"/>
+        <input type="hidden" name="IdPoll" value="<?= $Data->rPoll->id ?>"/>
+        <div class="form-group">
+            <label for="NewOption">New option:</label>
+            <textarea class="form-control" id="NewOption" name="ChoiceText" cols="60" rows="2"></textarea>
+        </div>
+        <input type="submit" class="btn btn-primary" value="Add"/>
+        
+    </form>
+    <?
+} else { // form for create
+    ?>
+    <p class="alert alert-notice">
+        This is the page to create a new poll<br>
+        You need to fill the following fields<br>
+        Use English language for now only
+    </p>
+
+    <form name="contribute" action="polls/createpoll" id="idcreatepoll" method="post">
+        <!-- The following will disable the nasty PPostHandler -->
+        <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
+
+        <input type="hidden" name="<?= $callbackId ?>" value="1"/>
+        <input name="IdLanguage" value="<?php echo $this->_session->get("IdLanguage"); ?>" type="hidden"/>
+        <div class="form-group">
+            <label for="Title">Poll Title:</label>
+            <input type="text" id="Title" name="Title" size="60" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="Description">Poll Description:</label>
+            <textarea id="Description" name="Description" rows="5" cols="60" class="form-control"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="GroupIdLimit">Limited to groups Id : </label>
+            <input type="text" id="GroupIdLimit" name="GroupIdLimit" class="form-control">
+            <small class="text-muted">experimental comma separated</small>
+        </div>
+        <input type="submit" class="btn btn-primary" name="go create">
+        
+    </form>
     <?
 }
 ?>
-
-
-<form name="addchoice" action="polls/addchoice"  id="idaddchoice" method="post">
-    <!-- The following will disable the nasty PPostHandler -->
-    <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
-
-    <input type="hidden" name="<?=$callbackId ?>"  value="1"/>
-    <input type="hidden" name="IdLanguage"  value="<?$this->_session->get("IdLanguage")?>"/>
-    <input type="hidden" name="IdPoll"  value="<?=$Data->rPoll->id?>"/>
-        <tr>
-            <td><label for="NewOption">New option:</label></td>
-            <td><textarea id="NewOption" name="ChoiceText" cols="60" rows="2"></textarea>
-                <input type="submit" class="button" value="Add" />
-            </td>
-        </tr>
-    
-</form>
-</table>
-<?
-}
-else { // form for create
-?>
-<p class="note">
-This is the page to create a new poll
-
-You need to fill the following fields
-
-Use English language for now only
-
-</p>
-
-<form name="contribute" action="polls/createpoll"  id="idcreatepoll" method="post">
-<!-- The following will disable the nasty PPostHandler -->
-<input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
-
-<input type="hidden" name="<?=$callbackId ?>"  value="1"/>
-<input name="IdLanguage"  value="<?php echo $this->_session->get("IdLanguage") ; ?>" type="hidden"/>
-
-<table>
-    <tr>
-        <td><label for="Title">Poll Title:</label></td>
-        <td><input type="text" id="Title" name="Title" size="60" class="long"></td>
-    </tr>
-    <tr>
-        <td><label for="Description">Poll Description:</label></td>
-        <td><textarea id="Description" name="Description" rows="5" cols="60" class="long" ></textarea></td>
-    </tr>
-    <tr>
-        <td><label for="GroupIdLimit">Limited to groups Id : </label></td>
-        <td><input type="text"  id="GroupIdLimit" name="GroupIdLimit" size="8" class="long"> (experimental comma separated)</td>
-    </tr>
-</table>
-<p class="center"><input type="submit" class="button" name="go create"></p>
-
-</form>
-
-<?
-}
-?>
+</div>

@@ -1,4 +1,4 @@
-<div id="content" class="row">
+<div id="content">
     <?php $this->_column($mid_column_name) ?>
 </div>
  <!-- content -->

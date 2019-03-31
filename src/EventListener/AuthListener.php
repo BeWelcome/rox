@@ -2,6 +2,7 @@
 
 namespace App\EventListener;
 
+use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
@@ -27,8 +28,8 @@ class AuthListener
     {
         /** @var Member $user */
         $user = $e->getAuthenticationToken()->getUser();
-        if (Member::ACTIVE !== $user->getStatus() && Member::CHOICE_INACTIVE !== $user->getStatus()) {
-            $user->setStatus(Member::ACTIVE);
+        if (MemberStatusType::ACTIVE !== $user->getStatus() && MemberStatusType::CHOICE_INACTIVE !== $user->getStatus()) {
+            $user->setStatus(MemberStatusType::ACTIVE);
         }
         $user->setLastlogin(new \DateTime());
         $this->em->persist($user);

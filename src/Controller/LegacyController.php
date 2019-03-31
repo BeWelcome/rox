@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use Doctrine\DBAL\Statement;
 use EnvironmentExplorer;
@@ -23,7 +24,6 @@ class LegacyController extends AbstractController
      * @throws AccessDeniedException
      *
      * @return Response
-     *
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
@@ -60,7 +60,8 @@ class LegacyController extends AbstractController
                 $user = $rememberMeToken->getUser();
                 if (null !== $user) {
                     $session->set('IdMember', $user->getId());
-                    $session->set('MemberStatus', $user->getStatus());
+                    // \todo Status isn't set correctly. Force for now.
+                    $session->set('MemberStatus', MemberStatusType::ACTIVE);
                     $connection = $this->getDoctrine()->getConnection();
                     /** @var Statement $stmt */
                     $stmt = $connection->prepare('

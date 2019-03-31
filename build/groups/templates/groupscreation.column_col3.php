@@ -27,9 +27,9 @@
     }
 
 ?>
-
-<div class="col-12 col-lg-5">
+<div class="row">
     <form method="post" action="" enctype='multipart/form-data'>
+<div class="col-12 col-lg-5">
         <?=$callback_tag ?>
     <?= ((!empty($problems['General'])) ? "<p class='error'>" . $words->get('GroupsCreationFailed') . "</p>" : '' ); ?>
 
@@ -115,5 +115,6 @@
 
 <div class="col-12 text-center">
     <input type="submit" class="btn btn-block btn-primary m-2" value="Create Group">
+</div>
     </form>
 </div>

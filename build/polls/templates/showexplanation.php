@@ -26,12 +26,12 @@ $words = $this->getWords();
 
 if (!empty($errormessage)) {
     ?>
-    <p class="error"><?=$errormessage;?></p>;
+    <p class="alert alert-error"><?=$errormessage;?></p>;
     <?
 }
 
 ?>
-<p class="note">
+<p class="alert alert-notice">
 <?=$words->getFormatted("polls_showexplanation") ?>
 </p>
 

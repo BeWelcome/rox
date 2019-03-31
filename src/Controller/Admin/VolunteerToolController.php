@@ -96,7 +96,7 @@ class VolunteerToolController extends AbstractController
                     $oldMember->setUsername($data->newUsername);
                     $em->persist($oldMember);
                     $em->flush();
-                    $flashMessage = $translator->trans('Changed username for %oldname% to %newname%', [
+                    $flashMessage = $translator->trans('flash.admin.tools.changed', [
                         '%oldname%' => $data->oldUsername,
                         '%newname%' => $data->newUsername,
                     ]);

@@ -15,7 +15,7 @@
 /**
 This page prepare the verification
 **/
-class PollsPage extends RoxPageView {
+class PollsPage extends PageWithActiveSkin {
     /**
      * content of the middle column - this is the most important part
      */
@@ -31,13 +31,19 @@ class PollsPage extends RoxPageView {
 * 
 */
     public function __construct($error="",$action="",$Data="") {
+        parent::__construct();
         $this->_error = $error;
                 $this->_action=$action ;
                 if (!empty($Data)) {
             $this->_data = $Data;
                 }
-    }    
-      
+    }
+
+    protected function getColumnNames ()
+    {
+        return array('col3');
+    }
+
     protected function column_col3()    {
          
         // get the translation module
@@ -110,7 +116,7 @@ class PollsPage extends RoxPageView {
      * @return string name of the menu
      */
     protected function getTopmenuActiveItem() {
-        return 'getanswers';
+        return $this->_action;
     }
 
     /**
@@ -135,16 +141,25 @@ class PollsPage extends RoxPageView {
      */
     protected function leftSidebar()
     {
-        $words = $this->getWords();
-        echo '<ul class="linklist">';
-        echo '<li><a href="http://www.bevolunteer.org/wiki/How_pollsworks">Wiki Doc</a></li>';
-        echo '<li><a href="polls/listall">',$words->getFormatted("polls_listlink"),'</a></li>';
-        if (MOD_right::get()->HasRight("Poll","create")) {
-                    echo '<li><a href="polls/create">',$words->getFormatted("polls_createlink"),'</a></li>';
-                }
-        echo "</ul>" ;
     }
-     
+
+    protected function getSubmenuItems()
+    {
+        $items = array();
+
+        $words = $this->getWords();
+
+        $items[] = array('wiki', 'https://www.bevolunteer.org/wiki/How_pollsworks', 'Wiki Doc');
+        $items[] = array('listall', 'polls/listall', $words->getSilent("polls_listlink"));
+        if (MOD_right::get()->HasRight("Poll","create"))
+        {
+            $items[] = array('create', 'polls/create', $words->getSilent("polls_createlink"));
+        }
+
+        return $items;
+    }
+
+
 } // end of PollsPage
 
 

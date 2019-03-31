@@ -1,4 +1,4 @@
-<?php foreach ($this->getMessages() as $message) : ?>
+<div class="row"><?php foreach ($this->getMessages() as $message) : ?>
 <p><?= $words->get($message); ?>
     <?php endforeach; ?>
     <?php
@@ -144,3 +144,4 @@
         include('groupsdisplay.php');
 
     endforeach; ?>
+</div>

@@ -35,7 +35,8 @@ $styles = array( 'highlight', 'blank' ); // alternating background for table row
 $iiMax = count($list) ; // This retrieve the number of polls
 ?>
 
-<table class="full">
+<div class="table-responsive">
+<table class="table">
 
 <?php if ($list != false) { ?>
     <tr>
@@ -76,3 +77,4 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
 }
 ?>
 </table>
+</div>

@@ -14,6 +14,7 @@
  * @version $Id: app_controller.lib.php 68 2006-06-23 12:10:27Z kang $
  */
 
+use Rox\RoxTraits\SessionTrait;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
@@ -27,7 +28,7 @@ use Symfony\Component\Templating\EngineInterface;
  */
 abstract class PAppController implements PApplication 
 {
-    use \Rox\RoxTraits\SessionTrait;
+    use SessionTrait;
 
     /**
      * The database access object

@@ -1,5 +1,7 @@
 <?php
 
+use App\Doctrine\MemberStatusType;
+
 /**
  * Class AdminRightsModel
  */
@@ -37,7 +39,7 @@ class AdminRightsModel extends RoxModelBase {
             $errors[] = 'AdminRightsNoRightSelected';
         } else {
             // check if right is already assigned
-            if (isset($member)) {
+            if ($member) {
                 $right = new Right($vars['rightid']);
                 $assigned = $right->getRightForMember($member);
                 if ($assigned) {
@@ -108,7 +110,7 @@ class AdminRightsModel extends RoxModelBase {
                 geonames g,
                 geonamescountries gc
             WHERE
-                m.Status in (' . Member::ACTIVE_ALL . ')';
+                m.Status in (' . MemberStatusType::ACTIVE_ALL . ')';
         if ($member) {
             $query .= ' AND m.id = ' . $member->id;
         }
@@ -181,7 +183,7 @@ class AdminRightsModel extends RoxModelBase {
                 geonames g,
                 geonamescountries gc
             WHERE
-                m.Status in (' . Member::ACTIVE_ALL . ')
+                m.Status in (' . MemberStatusType::ACTIVE_ALL . ')
                 AND rv.IdMember = m.id
                 AND rv.IdRight = r.id';
         if ($rightId) {

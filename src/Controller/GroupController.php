@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Doctrine\GroupMembershipStatusType;
+use App\Doctrine\MemberStatusType;
 use App\Entity\Group;
 use App\Entity\GroupMembership;
 use App\Entity\Language;
@@ -13,6 +14,7 @@ use App\Form\CustomDataClass\GroupRequest;
 use App\Form\GroupType;
 use App\Logger\Logger;
 use App\Repository\GroupRepository;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Statement;
 use Html2Text\Html2Text;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -407,6 +409,7 @@ class GroupController extends AbstractController
 
     private function getNewGroupNotificationRecipients()
     {
+        /** @var Connection $connection */
         $connection = $this->getDoctrine()->getConnection();
         $stmt = $connection->prepare("
             SELECT 
@@ -420,9 +423,11 @@ class GroupController extends AbstractController
                 AND r.id = rv.IdRight 
                 AND rv.Level = 10 
                 AND rv.IdMember = m.id
-                AND m.Status IN (".Member::ACTIVE_ALL.')
-        ');
-        $stmt->execute();
+                AND m.Status IN (:active:)
+        ");
+        $stmt->execute([
+            ':active:' => MemberStatusType::ACTIVE_ALL_ARRAY,
+        ]);
         $emails = $stmt->fetchAll();
         $recipients = [];
         foreach ($emails as $email) {

@@ -1,4 +1,4 @@
-
+<div class="row">
 <div class="col-12 col-md-6 mb-3">
     <h3><?= $words->get('GroupsSearchHeading'); ?></h3>
     <form action="groups/search" method="get">
@@ -46,3 +46,4 @@
 HTML;
         }
         ?>
+</div>

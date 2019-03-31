@@ -42,6 +42,8 @@ doctrine:
             comment_relations: App\Doctrine\CommentRelationsType
             language_level: App\Doctrine\LanguageLevelType
             group_membership_status: App\Doctrine\GroupMembershipStatusType
+            member_status: App\Doctrine\MemberStatusType
+            accommodation: App\Doctrine\AccommodationType
 
         mapping_types:
             enum:       string

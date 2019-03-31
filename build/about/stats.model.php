@@ -1,5 +1,7 @@
 <?php
 
+use App\Doctrine\MemberStatusType;
+
 /**
  * AboutStatisticsPage
  *
@@ -34,7 +36,7 @@ class StatsModel extends RoxModelBase
                 geonamescountries gc,
                 geonames g
             WHERE
-                m.Status IN (" . Member::ACTIVE_ALL . ")
+                m.Status IN (" . MemberStatusType::ACTIVE_ALL . ")
                 AND
                 m.IdCity = g.geonameId
                 AND
@@ -83,7 +85,7 @@ class StatsModel extends RoxModelBase
             WHERE
                 l.id = mll.IdLanguage
                 AND mll.idMember = m.id
-                AND m.Status IN (" . Member::ACTIVE_ALL . ")
+                AND m.Status IN (" . MemberStatusType::ACTIVE_ALL . ")
             GROUP BY
                 l.name
             ORDER BY
@@ -127,7 +129,7 @@ class StatsModel extends RoxModelBase
                 m.id = mp.idmember
                 AND mp.idpreference = 1
             WHERE
-                m.status IN (" . Member::ACTIVE_ALL . ")
+                m.status IN (" . MemberStatusType::ACTIVE_ALL . ")
                 AND l.id = IFNULL(mp.value, 0)
             GROUP BY
                 language
@@ -166,7 +168,7 @@ SELECT
     COUNT(*) AS cnt
 FROM members
 WHERE TIMESTAMPDIFF(DAY,members.LastLogin,NOW()) >= 0
-AND status IN (' . Member::ACTIVE_ALL . ')
+AND status IN (' . MemberStatusType::ACTIVE_ALL . ')
 GROUP BY logindiff
 ORDER BY logindiff ASC';
         $s = $this->dao->query($query);
@@ -187,7 +189,7 @@ SELECT
     COUNT(*) AS cnt
 FROM members
 WHERE TIMESTAMPDIFF(DAY,members.LastLogin,NOW()) >= 0
-AND status IN (' . Member::ACTIVE_ALL . ')
+AND status IN (' . MemberStatusType::ACTIVE_ALL . ')
 GROUP BY logindiff
 ORDER BY logindiff ASC
         ';

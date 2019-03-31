@@ -7,7 +7,9 @@
 
 namespace App\Entity;
 
+use App\Doctrine\AccommodationType;
 use App\Doctrine\GroupMembershipStatusType;
+use App\Doctrine\MemberStatusType;
 use App\Encoder\LegacyPasswordEncoder;
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -34,25 +36,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class Member implements UserInterface, \Serializable, EncoderAwareInterface, ObjectManagerAware
 {
-    const ACC_YES = 'anytime';
-    const ACC_MAYBE = 'dependonrequest';
-    const ACC_NO = 'neverask';
-
-    // Possible member statuses
-    const ACTIVE = 'Active';
-    const CHOICE_INACTIVE = 'ChoiceInactive';
-    const BANNED = 'Banned';
-    const SUSPENDED = 'SuspendedBeta';
-    const AWAITING_MAIL_CONFIRMATION = 'MailToConfirm';
-
-    const ACTIVE_ALL = "'Active', 'ActiveHidden', 'ChoiceInactive', 'OutOfRemind', 'Pending'";
-    const ACTIVE_ALL_ARRAY = [
-        'Active', 'ActiveHidden', 'ChoiceInactive', 'OutOfRemind', 'Pending',
-    ];
-    const ACTIVE_SEARCH = "'Active', 'ActiveHidden', 'OutOfRemind', 'Pending'";
-    const ACTIVE_WITH_MESSAGES = "'Active', 'OutOfRemind', 'Pending'";
-    const MEMBER_COMMENTS = "'Active', 'ActiveHidden', 'AskToLeave', 'ChoiceInactive', 'OutOfRemind', 'Pending'";
-
     const ROLE_ADMIN_ACCEPTER = 'ROLE_ADMIN_ACCEPTER';
     const ROLE_ADMIN_ADMIN = 'ROLE_ADMIN_ADMIN';
     const ROLE_ADMIN_BETA = 'ROLE_ADMIN_BETA';
@@ -142,9 +125,9 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * @var string
      *
-     * @ORM\Column(name="Status", type="string", nullable=false)
+     * @ORM\Column(name="Status", type="member_status", nullable=false)
      */
-    private $status = 'MailToConfirm';
+    private $status;
 
     /**
      * @var int
@@ -234,9 +217,9 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * @var string
      *
-     * @ORM\Column(name="Accomodation", type="string", nullable=false)
+     * @ORM\Column(name="Accomodation", type="accommodation", nullable=false)
      */
-    private $accommodation = 'dependonrequest';
+    private $accommodation = AccommodationType::ACC_MAYBE;
 
     /**
      * @var int
@@ -2773,13 +2756,14 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         if (\in_array(
             $this->status,
             [
-                'TakenOut',
-                self::SUSPENDED,
-                'AskToLeave',
-                'Buggy',
-                self::BANNED,
-                'Rejected',
-                'DuplicateSigned', ],
+                MemberStatusType::TAKEN_OUT,
+                MemberStatusType::SUSPENDED,
+                MemberStatusType::ASKED_TO_LEAVE,
+                MemberStatusType::BUGGY,
+                MemberStatusType::BANNED,
+                MemberStatusType::REJECTED,
+                MemberStatusType::DUPLICATE_SIGNED,
+            ],
             true
         )) {
             return false;
@@ -2790,12 +2774,12 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
 
     public function isExpired()
     {
-        return (self::SUSPENDED === $this->status) ? true : false;
+        return (MemberStatusType::SUSPENDED === $this->status) ? true : false;
     }
 
     public function isBanned()
     {
-        return (self::BANNED === $this->status) ? true : false;
+        return (MemberStatusType::BANNED === $this->status) ? true : false;
     }
 
     /**
@@ -2810,7 +2794,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
 
     public function isNotConfirmedYet()
     {
-        return (self::AWAITING_MAIL_CONFIRMATION === $this->status) ? true : false;
+        return (MemberStatusType::AWAITING_MAIL_CONFIRMATION === $this->status) ? true : false;
     }
 
     public function generatePasswordResetKey()

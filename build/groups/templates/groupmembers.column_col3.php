@@ -13,7 +13,7 @@
     <div class="col-12">
     <?php $this->pager_widget->render(); ?>
     </div>
-
+<div class="row">
 <div class="col-12 table-responsive">
         <table class="table table-striped table-hover">
             <thead class="blank">
@@ -58,3 +58,4 @@
         }
         ?>
         </div>
+</div>

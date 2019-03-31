@@ -1,5 +1,7 @@
 <?php
 
+use App\Doctrine\MemberStatusType;
+
 /**
  * Class AdminFlagsModel
  */
@@ -100,7 +102,7 @@ class AdminFlagsModel extends RoxModelBase {
                 geonames g,
                 geonamescountries gc
             WHERE
-                m.Status in (' . Member::ACTIVE_ALL . ')';
+                m.Status in (' . MemberStatusType::ACTIVE_ALL . ')';
         if ($member) {
             $query .= ' AND m.id = ' . $member->id;
         }
@@ -169,7 +171,7 @@ class AdminFlagsModel extends RoxModelBase {
                 geonames g,
                 geonamescountries gc
             WHERE
-                m.Status in (' . Member::ACTIVE_ALL . ')
+                m.Status in (' . MemberStatusType::ACTIVE_ALL . ')
                 AND fm.IdMember = m.id
                 AND fm.IdFlag = f.id
                 AND f.Relevance <> 0';

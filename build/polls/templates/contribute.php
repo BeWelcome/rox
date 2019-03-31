@@ -70,36 +70,35 @@ $rPoll=$Data->rPoll ;
 //	}
 ?>
 
-<ul class="poll">
 <?php
 for ($ii = 0; $ii < $iiMax; $ii++) {
     $p = $list[$ii];
     ?>
-        <li>
+        <div class="form-check">
             <?
             if ($Data->rPoll->TypeOfChoice=="Exclusive") {
                 ?>
-                <input type="radio" id="choice<?=$ii;?>" name="ExclusiveChoice" value="<? echo $p->id; ?>" />
-                <label for="choice<?=$ii;?>"><? echo $words->fTrad($p->IdChoiceText); ?></label>
+                <input class="form-check-input" type="radio" id="choice<?=$ii;?>" name="ExclusiveChoice" value="<? echo $p->id; ?>" />
+                <label class="form-check-label" for="choice<?=$ii;?>"><? echo $words->fTrad($p->IdChoiceText); ?></label>
                 <?
             }
             if ($Data->rPoll->TypeOfChoice=="Inclusive") {
                 ?>
-                <input type="checkbox" id="choice<?=$ii;?>" name="choice_<?=$p->id;?>" />
-                <label for="choice<?=$ii;?>"><? echo $words->fTrad($p->IdChoiceText); ?></label>
+                <input class="form-check-input" type="checkbox" id="choice<?=$ii;?>" name="choice_<?=$p->id;?>" />
+                <label class="form-check-label" for="choice<?=$ii;?>"><? echo $words->fTrad($p->IdChoiceText); ?></label>
                 <?
             }
             ?>
-        </li>
+        </div>
 <?php
 }
 ?>
-</ul>
 <?php
 if ($Data->rPoll->AllowComment=="Yes") {
     ?>
-    <h4><label><?=$words->getFormatted("polls_comment");?></label></h4>
-    <textarea name="Comment" cols="60" rows="4"></textarea>
+    <div class="form-group"><label for="comment"><?=$words->getFormatted("polls_comment");?></label>
+    <textarea class="form-control" id="comment" name="Comment" cols="60" rows="4"></textarea>
+    </div>
     <?
 }
 else {
@@ -108,5 +107,5 @@ else {
     <?
 }
 ?>
-<p class="center"><input type="submit" class="button" value="<?=$words->getFormatted("polls_vote");?>" /></p>
+<input type="submit" class="btn btn-primary" value="<?=$words->getFormatted("polls_vote");?>" />
 </form>

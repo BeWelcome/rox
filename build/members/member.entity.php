@@ -26,7 +26,9 @@ Boston, MA  02111-1307, USA.
      * @author jeanyves
      */
 
-    /**
+use App\Doctrine\MemberStatusType;
+
+/**
      * ORM for members table
      *
      * @package Apps
@@ -41,11 +43,6 @@ class Member extends RoxEntityBase
     const MEMBER_EMAIL_HIDDEN = 8;
     const MEMBER_All_HIDDEN = self::MEMBER_FIRSTNAME_HIDDEN | self::MEMBER_SECONDNAME_HIDDEN
         | self::MEMBER_LASTNAME_HIDDEN | self::MEMBER_EMAIL_HIDDEN;
-
-    const ACTIVE_ALL = "'Active', 'ActiveHidden', 'ChoiceInactive', 'OutOfRemind', 'Pending'";
-    const ACTIVE_SEARCH = "'Active', 'ActiveHidden', 'OutOfRemind', 'Pending'";
-    const ACTIVE_WITH_MESSAGES = "'Active', 'OutOfRemind', 'Pending'";
-    const MEMBER_COMMENTS = "'Active', 'ActiveHidden', 'AskToLeave', 'ChoiceInactive', 'OutOfRemind', 'Pending'";
 
     protected $_table_name = 'members';
 
@@ -1049,7 +1046,7 @@ FROM
 WHERE
     specialrelations.IdOwner = $this->id  AND
     specialrelations.IdRelation = members.Id AND
-    members.Status in (" . self::ACTIVE_ALL . ")
+    members.Status in (" . MemberStatusType::ACTIVE_ALL . ")
           ";
           $s = $this->dao->query($sql);
           $Relations = array();

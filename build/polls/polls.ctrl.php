@@ -8,9 +8,6 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-require_once("../htdocs/bw/lib/rights.php") ; // Requiring BW right 
-// TODO: use the MyTB right.. (MOD_right)
-// no, not for now
 class PollsController extends RoxControllerBase
 {
 
@@ -44,14 +41,14 @@ class PollsController extends RoxControllerBase
                 break;
             case 'create':
                 $page = new PollsPage("","create");
-                break ;
-						case 'listClose':
+                break;
+            case 'listClose':
                 $page = new PollsPage("","listClose",$model->LoadList("Close"));
-                break ;
-						case 'listOpen':
+                break;
+            case 'listOpen':
                 $page = new PollsPage("","listOpen",$model->LoadList("Open"));
                 break ;
-						case 'listProject':
+			case 'listProject':
                 $page = new PollsPage("","listProject",$model->LoadList("Project"));
                 break ;
             case 'cancelvote':

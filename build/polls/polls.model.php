@@ -70,7 +70,8 @@ class PollsModel extends RoxModelBase {
 				return(false) ;
 			}
 			// Todo: proceed with status VisibleAfterVisit in a better way (for now someone who knows the results of a not closed poll)
-			
+
+			$Data = new \stdClass();
 			$Data->rPoll=$rPoll ;
 			$rr=$this->singlelookup("select count(*) as TotContrib from polls_contributions where  IdPoll=".$IdPoll) ;
 			$TotContrib=$Data->TotContrib=$rr->TotContrib ;
@@ -143,7 +144,7 @@ class PollsModel extends RoxModelBase {
 					$IdGroup=(int)$TIdGrouRestricted[$ii] ;
 					if ($IdGroup==0) continue ;
 					$sSql="insert into polls_list_allowed_groups(IdPoll,IdGroup) values(".$IdPoll.",".$IdGroup.") " ;
-					$rPoll=$this->singleLookup($sSql) ;
+					$rPoll=$this->dao->query($sSql) ;
 				}
 
 				MOD_log::get()->write("poll : ".$post["Title"]." created IdPoll=#".$IdPoll,"polls") ; 
@@ -192,11 +193,11 @@ class PollsModel extends RoxModelBase {
 		 		$words->ReplaceInFTrad($ss,"polls.Title",$rPoll->id,$rPoll->Title) ;
 
 				$TIdGrouRestricted=explode(",",$post["GroupIdLimit"]) ;
-				$this->singleLookup("delete from polls_list_allowed_groups where IdPoll=".$IdPoll) ;
+				$this->dao->query("delete from polls_list_allowed_groups where IdPoll=".$IdPoll) ;
 				for ($ii=0;$ii<count($TIdGrouRestricted);$ii++) {
 					$IdGroup=(int)$TIdGrouRestricted[$ii] ;
 					if ($IdGroup==0) continue ;
-					$this->singleLookup("insert into polls_list_allowed_groups(IdPoll,IdGroup) values(".$IdPoll.",".$IdGroup.") ") ;
+					$this->dao->query("insert into polls_list_allowed_groups(IdPoll,IdGroup) values(".$IdPoll.",".$IdGroup.") ") ;
 				}
 
 
@@ -478,6 +479,7 @@ class PollsModel extends RoxModelBase {
 		 * @IdPoll is the id of the poll
      **/
     function PrepareContribute($IdPoll=0) {
+    	$Data = new \stdClass();
 			$Data->rPoll=$this->singleLookup("select * from polls where id=".$IdPoll) ;
 			$choices_alreadydone=array() ;
 			if ($this->HasAlreadyContributed($IdPoll)) {
@@ -499,6 +501,7 @@ class PollsModel extends RoxModelBase {
 			$ss="select polls.*,members.Username as 'CreatorUsername' from (polls)" ;
 			$ss.=" left join members on members.id=polls.IdCreator " ;
 			$ss=$ss. " where polls.id=".$IdPoll ;
+			$Data = new \stdClass();
 			$Data->rPoll=$this->singleLookup($ss) ;
 			$Data->Choices=$this->bulkLookup("select * from polls_choices where IdPoll=".$IdPoll." order by created asc") ;
 			$Data->IdGroupRestricted=$this->BulkLookup("select IdGroup from polls_list_allowed_groups where IdPoll=".$IdPoll) ;
@@ -553,32 +556,31 @@ class PollsModel extends RoxModelBase {
 					$rContrib=$this->singleLookup("select count(*) as cnt from polls_contributions where IdPoll=".$rr->id) ;
 					$rr->NbContributors=$rContrib->cnt ;
 					
-// This is the logic for the possible action (may be this could be better in the controller)
-					$rr->PossibleActions="<ul>" ;
-					
+					// This is the logic for the possible action (may be this could be better in the controller)
+					$rr->PossibleActions = "";
+
 					// Only owner of admin with proper right can update the poll
 					if ( ($this->_session->has( "IdMember" ) and ($rr->IdCreator==$this->_session->get("IdMember")) and ($rr->Status=="Projet")) or (MOD_right::get()->HasRight("Poll","update")) ) {
-						$rr->PossibleActions=$rr->PossibleActions."<li><a href=\"polls/update/".$rr->id."\">".$words->getFormatted("polls_adminlink")."</a></li>" ;
+						$rr->PossibleActions=$rr->PossibleActions."<a class='btn btn-sm btn-primary' href=\"polls/update/".$rr->id."\">".$words->getFormatted("polls_adminlink")."</a>" ;
 					}
 
 
 					if ($this->HasAlreadyContributed($rr->id,"",$this->_session->get("IdMember"))) {
-						$rr->PossibleActions=$words->getFormatted("polls_youhavealreadyvoted") ;
+						$rr->PossibleActions=$words->getFormatted("polls_youhavealreadyvoted") . "<br>" ;
 						if (($rr->CanChangeVote=="Yes") and ($rr->Status=="Open") ) {
-						  $rr->PossibleActions.="<li<a href=\"polls/cancelvote/".$rr->id."\">".$words->getFormatted("polls_remove_vote")."</a></li>" ;
+						  $rr->PossibleActions.="<a class='btn btn-sm btn-primary' href=\"polls/cancelvote/".$rr->id."\">".$words->getFormatted("polls_remove_vote")."</a>" ;
 						}
 						if (($rr->ResultsVisibility=="VisibleAfterVisit") and ($rr->Status!="Closed")) {
-						  $rr->PossibleActions=$rr->PossibleActions."<li><a href=\"polls/seeresults/".$rr->id."\">".$words->getFormatted("polls_seeresults")."</li>" ;
+						  $rr->PossibleActions=$rr->PossibleActions."<a class='btn btn-sm btn-primary' href=\"polls/seeresults/".$rr->id."\">".$words->getFormatted("polls_seeresults")."</a>" ;
 						}
 					}
 					if ($this->CanUserContribute($rr->id,"",$this->_session->get("IdMember"))) {
-						$rr->PossibleActions=$rr->PossibleActions."<li><a href=\"polls/contribute/".$rr->id."\">".$words->getFormatted("polls_contribute")."</li>" ;
+						$rr->PossibleActions=$rr->PossibleActions."<a class='btn btn-sm btn-primary' href=\"polls/contribute/".$rr->id."\">".$words->getFormatted("polls_contribute")."</a>" ;
 					} 
 					if ($rr->Status=="Closed") {
-						$rr->PossibleActions.="<li><a href=\"polls/results/".$rr->id."\">".$words->getFormatted("polls_seeresults")."</li>" ;
+						$rr->PossibleActions.="<a class='btn btn-sm btn-primary' href=\"polls/results/".$rr->id."\">".$words->getFormatted("polls_seeresults")."</a>" ;
 					}
-					$rr->PossibleActions.="</ul>" ;
-					
+
 					array_push( $tt,$rr) ;
 
 				}

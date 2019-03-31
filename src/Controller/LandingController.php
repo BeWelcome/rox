@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Doctrine\AccommodationType;
 use App\Entity\Member;
 use App\Entity\MemberPreference;
 use App\Entity\Preference;
@@ -146,9 +147,9 @@ class LandingController extends AbstractController
         $accommodation = $request->request->get('accommodation');
 
         switch ($accommodation) {
-            case Member::ACC_YES:
-            case Member::ACC_MAYBE:
-            case Member::ACC_NO:
+            case AccommodationType::ACC_YES:
+            case AccommodationType::ACC_MAYBE:
+            case AccommodationType::ACC_NO:
                 $valid = true;
                 break;
             default:

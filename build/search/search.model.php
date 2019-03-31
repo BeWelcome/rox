@@ -21,6 +21,7 @@ Boston, MA  02111-1307, USA.
 
 */
 
+use App\Doctrine\MemberStatusType;
 use Foolz\SphinxQL\Drivers\Pdo\Connection;
 use Foolz\SphinxQL\SphinxQL;
 use AnthonyMartin\GeoLocation\GeoLocation as GeoLocation;
@@ -221,7 +222,7 @@ LIMIT 1
     private function getStatusCondition($vars)
     {
         if (array_key_exists('search-membership', $vars) && ($vars['search-membership'] == 1)) {
-            $statusCondition = " AND m.status IN (" . Member::ACTIVE_SEARCH . ") ";
+            $statusCondition = " AND m.status IN (" . MemberStatusType::ACTIVE_SEARCH . ") ";
         } else {
             $statusCondition = " AND m.status IN ( 'Active') ";
         }
@@ -1400,7 +1401,7 @@ LIMIT 1
                 members m
             WHERE
                 username like '" . $this->dao->escape($username) . "%'
-                AND Status in (" . Member::ACTIVE_ALL . ")
+                AND Status in (" . MemberStatusType::ACTIVE_ALL . ")
             ORDER BY
                 username
             LIMIT

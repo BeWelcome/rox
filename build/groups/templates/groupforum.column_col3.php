@@ -1,4 +1,5 @@
-<h3><?= $words->get('GroupForum'); ?></h3>
+<div class="row">
+    <h3><?= $words->get('GroupForum'); ?></h3>
 <div>
     <?php
         $showNewTopicButton = false;
@@ -6,4 +7,6 @@
             $showNewTopicButton = true;
         }
         echo $Forums->showExternalGroupThreads($group_id, $this->isGroupMember(), false, $showNewTopicButton); ?>
+</div>
+
 </div>

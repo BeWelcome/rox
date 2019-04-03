@@ -30,9 +30,8 @@ This File display a topic and the messages which are inside it
 */
 
 ?>
-<div class="col-12">
-<div class="d-flex justify-content-start w-100">
-    <div>
+<div class="row">
+<div class="col">
         <?php
         // This means no thread was fetch or that it was outside visibility
         if ((!isset($topic->topicinfo->IdTitle)) and (!isset($topic->topicinfo->ThreadDeleted))) {
@@ -149,8 +148,8 @@ This File display a topic and the messages which are inside it
             if ($User) {
             ?>
 
-    </div>
-    <div class="ml-auto">
+</div>
+<div class="col ml-auto">
         <?php
         if (isset($topic->isGroupSubscribed) && ($topic->isGroupSubscribed)) {
             if (isset($topic->IdSubscribe)) {
@@ -194,16 +193,13 @@ This File display a topic and the messages which are inside it
             <?php
         }
         ?>
-    </div>
-
 </div>
 </div>
-
 <?php
 
 } // end if ($User)
 ?>
-
+<div class="row">
 <?php
 // counting for background switch trick
 $cntx = '1';
@@ -238,3 +234,4 @@ if ($User) {
 }
 }
 ?>
+</div>

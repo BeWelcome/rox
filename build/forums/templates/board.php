@@ -19,7 +19,7 @@ $navigationPath .= '<a href="' . htmlspecialchars($boards->getBoardLink(), ENT_Q
     . $boardName . '</a>';
 
 ?>
-
+<div class="row">
 <div class="col-8">
 <?php echo $words->flushBuffer();
 
@@ -49,3 +49,4 @@ if ($User && empty($noForumNewTopicButton)) {
 	}
 
 ?>
+</div>

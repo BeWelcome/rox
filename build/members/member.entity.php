@@ -722,7 +722,7 @@ WHERE IdMember = ".$this->id
                 AND
                 members.id = comments.IdFromMember
                 AND
-                members.status IN (" . self::MEMBER_COMMENTS . ")
+                members.status IN (" . MemberStatusType::MEMBER_COMMENTS . ")
             "
         );
 
@@ -738,7 +738,7 @@ WHERE IdMember = ".$this->id
                 AND
                 members.id = comments.IdFromMember
                 AND
-                members.status IN (" . self::MEMBER_COMMENTS . ")
+                members.status IN (" . MemberStatusType::MEMBER_COMMENTS . ")
                 AND
                 DisplayInPublic = 1
             "
@@ -1148,7 +1148,7 @@ WHERE
     comments.IdToMember   = " . $this->id . " AND
     comments.IdFromMember = members.Id AND
     comments.IdToMember = members2.Id
-    AND members.Status IN (" . self::MEMBER_COMMENTS . ")
+    AND members.Status IN (" . MemberStatusType::MEMBER_COMMENTS . ")
 ORDER BY
     comments.updated DESC
           ";

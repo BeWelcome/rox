@@ -1,4 +1,5 @@
-<div class="row"><div id="groups">
+<div class="row">
+    <div id="groups">
         <h3><? echo $this->words->get('GroupsFeaturedGroups'); ?></h3>
         <form action="groups/featured" method="get">
             <input type="hidden" name="GroupsFeaturedInput" value="" id="GroupsFeaturedInput" />

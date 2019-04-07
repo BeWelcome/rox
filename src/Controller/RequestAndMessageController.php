@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Doctrine\AccommodationType;
 use App\Doctrine\MessageStatusType;
 use App\Entity\HostingRequest;
 use App\Entity\Language;
@@ -258,7 +259,7 @@ class RequestAndMessageController extends AbstractController
             return $this->redirect($referrer);
         }
 
-        if (Member::ACC_NO === $host->getAccommodation()) {
+        if (AccommodationType::NO === $host->getAccommodation()) {
             $this->addFlash('notice', 'request.not.hosting');
 
             return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);

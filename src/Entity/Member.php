@@ -219,7 +219,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      *
      * @ORM\Column(name="Accomodation", type="accommodation", nullable=false)
      */
-    private $accommodation = AccommodationType::ACC_MAYBE;
+    private $accommodation = AccommodationType::MAYBE;
 
     /**
      * @var int

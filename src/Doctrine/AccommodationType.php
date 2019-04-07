@@ -4,17 +4,17 @@ namespace App\Doctrine;
 
 class AccommodationType extends EnumType
 {
-    const ACC_YES = 'anytime';
-    const ACC_MAYBE = 'dependonrequest';
-    const ACC_NO = 'neverask';
+    const YES = 'anytime';
+    const MAYBE = 'dependonrequest';
+    const NO = 'neverask';
 
     /** @var string */
     protected $name = 'accommodation';
 
     /** @var array */
     protected $values = [
-        self::ACC_YES,
-        self::ACC_MAYBE,
-        self::ACC_NO,
+        self::YES,
+        self::MAYBE,
+        self::NO,
     ];
 }

@@ -147,9 +147,9 @@ class LandingController extends AbstractController
         $accommodation = $request->request->get('accommodation');
 
         switch ($accommodation) {
-            case AccommodationType::ACC_YES:
-            case AccommodationType::ACC_MAYBE:
-            case AccommodationType::ACC_NO:
+            case AccommodationType::YES:
+            case AccommodationType::MAYBE:
+            case AccommodationType::NO:
                 $valid = true;
                 break;
             default:

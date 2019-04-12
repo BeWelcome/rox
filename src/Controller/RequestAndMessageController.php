@@ -168,7 +168,7 @@ class RequestAndMessageController extends AbstractController
     {
         $sender = $this->getUser();
         if (!$receiver->isBrowseable()) {
-            $this->addFlash('error', 'flash.member.invalid');
+            $this->addTranslatedFlash('error', 'flash.member.invalid');
             $referrer = $request->headers->get('referer');
 
             return $this->redirect($referrer);
@@ -180,7 +180,7 @@ class RequestAndMessageController extends AbstractController
             $this->getParameter('new_members_messages_per_hour'),
             $this->getParameter('new_members_messages_per_day')
         )) {
-            $this->addFlash('error', 'flash.message.limit');
+            $this->addTranslatedFlash('error', 'flash.message.limit');
             $referrer = $request->headers->get('referer');
 
             return $this->redirect($referrer);
@@ -209,11 +209,11 @@ class RequestAndMessageController extends AbstractController
                 $message
             );
             if ($success) {
-                $this->addFlash('success', 'flash.message.sent');
+                $this->addTranslatedFlash('success', 'flash.message.sent');
                 $message->setStatus('Sent');
                 $em->persist($message);
             } else {
-                $this->addFlash('notice', 'flash.message.stored');
+                $this->addTranslatedFlash('notice', 'flash.message.stored');
             }
 
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
@@ -239,13 +239,13 @@ class RequestAndMessageController extends AbstractController
     {
         $member = $this->getUser();
         if ($member === $host) {
-            $this->addFlash('notice', 'flash.request.self');
+            $this->addTranslatedFlash('notice', 'flash.request.self');
 
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 
         if (!$host->isBrowseable()) {
-            $this->addFlash('note', 'flash.member.invalid');
+            $this->addTranslatedFlash('note', 'flash.member.invalid');
         }
         $messageModel = new MessageModel($this->getDoctrine());
         if ($messageModel->hasMessageLimitExceeded(
@@ -253,14 +253,14 @@ class RequestAndMessageController extends AbstractController
             $this->getParameter('new_members_messages_per_hour'),
             $this->getParameter('new_members_messages_per_day')
         )) {
-            $this->addFlash('error', 'flash.request.limit');
+            $this->addTranslatedFlash('error', 'flash.request.limit');
             $referrer = $request->headers->get('referer');
 
             return $this->redirect($referrer);
         }
 
         if (AccommodationType::NO === $host->getAccommodation()) {
-            $this->addFlash('notice', 'request.not.hosting');
+            $this->addTranslatedFlash('notice', 'request.not.hosting');
 
             return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
         }
@@ -290,9 +290,9 @@ class RequestAndMessageController extends AbstractController
                 $hostingRequest
             );
             if ($success) {
-                $this->addFlash('success', 'flash.request.sent');
+                $this->addTranslatedFlash('success', 'flash.request.sent');
             } else {
-                $this->addFlash('notice', 'flash.request.stored');
+                $this->addTranslatedFlash('notice', 'flash.request.stored');
             }
 
             return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
@@ -421,7 +421,7 @@ class RequestAndMessageController extends AbstractController
                 if ('deleted' === $folder) {
                     if ($form->get('purge')->isClicked()) {
                         $messageModel->markPurged($member, $messageIds);
-                        $this->addFlash('notice', 'flash.purged');
+                        $this->addTranslatedFlash('notice', 'flash.purged');
                     } else {
                         // ignore as this can never happen (purge only possible in deleted folder)
                     }
@@ -429,19 +429,19 @@ class RequestAndMessageController extends AbstractController
                 if ($form->get('delete')->isClicked()) {
                     if ('deleted' === $folder) {
                         $messageModel->unmarkDeleted($member, $messageIds);
-                        $this->addFlash('notice', 'flash.undeleted');
+                        $this->addTranslatedFlash('notice', 'flash.undeleted');
                     } else {
                         $messageModel->markDeleted($member, $messageIds);
-                        $this->addFlash('notice', 'flash.deleted');
+                        $this->addTranslatedFlash('notice', 'flash.deleted');
                     }
                 }
                 if ($form->get('spam')->isClicked()) {
                     if ('spam' === $folder) {
                         $messageModel->unmarkAsSpam($messageIds);
-                        $this->addFlash('notice', 'flash.marked.nospam');
+                        $this->addTranslatedFlash('notice', 'flash.marked.nospam');
                     } else {
                         $messageModel->markAsSpam($messageIds);
-                        $this->addFlash('notice', 'flash.marked.spam');
+                        $this->addTranslatedFlash('notice', 'flash.marked.spam');
                     }
                 }
 
@@ -513,9 +513,9 @@ class RequestAndMessageController extends AbstractController
                 $replyMessage
             );
             if ($success) {
-                $this->addFlash('success', 'flash.reply.sent');
+                $this->addTranslatedFlash('success', 'flash.reply.sent');
             } else {
-                $this->addFlash('notice', 'flash.reply.stored');
+                $this->addTranslatedFlash('notice', 'flash.reply.stored');
             }
 
             return $this->redirectToRoute('message_show', ['id' => $replyMessage->getId()]);
@@ -607,7 +607,7 @@ class RequestAndMessageController extends AbstractController
                 $guest,
                 $newRequest
             );
-            $this->addFlash('success', 'flash.notification.updated');
+            $this->addTranslatedFlash('success', 'flash.notification.updated');
 
             return $this->redirectToRoute('hosting_request_show', ['id' => $newRequest->getId()]);
         }
@@ -700,7 +700,7 @@ class RequestAndMessageController extends AbstractController
                 $guest,
                 $newRequest
             );
-            $this->addFlash('notice', 'flash.notification.updated');
+            $this->addTranslatedFlash('notice', 'flash.notification.updated');
 
             return $this->redirectToRoute('hosting_request_show', ['id' => $newRequest->getId()]);
         }
@@ -965,5 +965,10 @@ class RequestAndMessageController extends AbstractController
             '%link_end%' => '</a>',
         ]);
         $this->addFlash('notice', $expiredSendMessage);
+    }
+
+    private function addTranslatedFlash($type, $flashId)
+    {
+        $this->addFlash($type, $this->translator->trans($flashId));
     }
 }

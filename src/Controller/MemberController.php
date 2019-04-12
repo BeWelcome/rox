@@ -16,6 +16,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Html2Text\Html2Text;
 use League\HTMLToMarkdown\HtmlConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Swift_Mailer;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
@@ -28,6 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class MemberController.
@@ -71,12 +73,13 @@ class MemberController extends AbstractController
     /**
      * @Route("/resetpassword", name="member_request_reset_password")
      *
-     * @param Request       $request
-     * @param \Swift_Mailer $mailer
+     * @param Request $request
+     * @param Swift_Mailer $mailer
      *
+     * @param TranslatorInterface $translator
      * @return Response
      */
-    public function requestResetPasswordAction(Request $request, \Swift_Mailer $mailer)
+    public function requestResetPasswordAction(Request $request, Swift_Mailer $mailer, TranslatorInterface $translator)
     {
         // Someone obviously lost their way. No sense in resetting your password if you're currently logged in.
         if ($this->isGranted('ROLE_USER')) {
@@ -106,9 +109,14 @@ class MemberController extends AbstractController
                 $form->addError(new FormError('No member with that username or email address.'));
             } else {
                 /* Sent the member a link to follow to reset the password */
-                $sent = $this->sendPasswordResetLink($member, 'Password Reset for BeWelcome', $member->generatePasswordResetKey(), $mailer);
+                $sent = $this->sendPasswordResetLink(
+                    $member,
+                    'Password Reset for BeWelcome',
+                    $member->generatePasswordResetKey(),
+                    $mailer
+                );
                 if ($sent) {
-                    $this->addFlash('notice', 'flash.email.reset.password');
+                    $this->addFlash('notice', $translator->trans('flash.email.reset.password'));
 
                     return $this->redirectToRoute('security_login');
                 }
@@ -126,12 +134,13 @@ class MemberController extends AbstractController
      *     requirements={"key": "\d{160}"})
      *
      * @param Request $request
-     * @param Member  $member
+     * @param Member $member
+     * @param TranslatorInterface $translator
      * @param $key
      *
      * @return Response
      */
-    public function resetPasswordAction(Request $request, Member $member, $key)
+    public function resetPasswordAction(Request $request, Member $member, TranslatorInterface $translator, $key)
     {
         // Someone obviously lost their way. No sense in resetting your password if you're currently logged in.
         if ($this->isGranted('ROLE_USER')) {
@@ -140,7 +149,7 @@ class MemberController extends AbstractController
 
         $resetPasswordKey = $member->generatePasswordResetKey();
         if ($resetPasswordKey !== $key) {
-            $this->addFlash('notice', 'flash.reset.password.invalid');
+            $this->addFlash('notice', $translator->trans('flash.reset.password.invalid'));
 
             return $this->redirectToRoute('login');
         }
@@ -163,7 +172,7 @@ class MemberController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($member);
             $em->flush();
-            $this->addFlash('notice', 'flash.password.reset');
+            $this->addFlash('notice', $translator->trans('flash.password.reset'));
 
             return $this->redirectToRoute('security_login');
         }
@@ -180,14 +189,21 @@ class MemberController extends AbstractController
      * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
      * @ParamConverter("comment", class="App\Entity\Comment", options={"mapping": {"commentId": "id"}})
      *
-     * @param Request       $request
-     * @param Member        $member
-     * @param Comment       $comment
-     * @param \Swift_Mailer $mailer
+     * @param Request $request
+     * @param Member $member
+     * @param Comment $comment
+     * @param Swift_Mailer $mailer
      *
+     * @param TranslatorInterface $translator
      * @return Response
      */
-    public function reportCommentAction(Request $request, Member $member, Comment $comment, \Swift_Mailer $mailer)
+    public function reportCommentAction(
+        Request $request,
+        Member $member,
+        Comment $comment,
+        Swift_Mailer $mailer,
+        TranslatorInterface $translator
+    )
     {
 //        \todo Should we only allow the receiver of a comment to report it?
 //        if ($comment->getToMember()->getId() !== $member->getId() && $comment->getFromMember()->getId() !== $member->getId()) {
@@ -229,14 +245,14 @@ class MemberController extends AbstractController
                     );
                 $recipients = $mailer->send($message);
                 if (0 === $recipients) {
-                    $this->addFlash('error', 'flash.feedback.not.sent');
+                    $this->addFlash('error', $translator->trans('flash.feedback.not.sent'));
                 } else {
                     $em = $this->getDoctrine()->getManager();
                     $comment->setAdminAction(CommentAdminActionType::ADMIN_CHECK);
                     $em->persist($comment);
                     $em->flush();
 
-                    $this->addFlash('notice', 'flash.feedback.safetyteam');
+                    $this->addFlash('notice', $translator->trans('flash.feedback.safetyteam'));
 
                     return $this->redirectToRoute('profile_all_comments', ['username' => $member->getUsername()]);
                 }
@@ -324,7 +340,7 @@ class MemberController extends AbstractController
         return $response;
     }
 
-    private function sendPasswordResetLink(Member $receiver, $subject, $key, \Swift_Mailer $mailer)
+    private function sendPasswordResetLink(Member $receiver, $subject, $key, Swift_Mailer $mailer)
     {
         $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
         /** @var Preference $preference */

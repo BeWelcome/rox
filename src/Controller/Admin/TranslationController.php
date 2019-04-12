@@ -256,12 +256,12 @@ class TranslationController extends AbstractController
      * @throws \Exception
      * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
      */
-    public function addTranslationAction(Request $request, Language $language, KernelInterface $kernel, $code)
+    public function addTranslationAction(Request $request, Language $language, KernelInterface $kernel, TranslatorInterface $translator, $code)
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
         if ('en' === $language->getShortcode()) {
-            $this->addFlash('notice', "flash.translation.weird");
+            $this->addFlash('notice', $translator->trans("flash.translation.weird"));
             $this->redirectToRoute('translations');
         }
         $translationRepository = $this->getDoctrine()
@@ -305,7 +305,7 @@ class TranslationController extends AbstractController
                 $kernel,
                 $language->getShortcode()
             );
-            $this->addFlash('notice', 'translation.edit');
+            $this->addFlash('notice', $translator->trans('translation.edit'));
 
             $referrer = $request->headers->get('referer');
 

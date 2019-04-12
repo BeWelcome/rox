@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Zend\Validator\Translator\TranslatorInterface;
 
 class WikiController extends AbstractController
 {
@@ -31,12 +32,13 @@ class WikiController extends AbstractController
     /**
      * @Route("/wiki/{pageTitle}", name="wiki_page")
      *
+     * @param TranslatorInterface $translator
      * @param $pageTitle
      * @param WikiModel $wikiModel
      *
      * @return Response
      */
-    public function showWikiPageAction($pageTitle, WikiModel $wikiModel)
+    public function showWikiPageAction(TranslatorInterface $translator, $pageTitle, WikiModel $wikiModel)
     {
         $pageName = $wikiModel->getPageName($pageTitle);
 
@@ -51,7 +53,7 @@ class WikiController extends AbstractController
         }
         $output = $wikiModel->parseWikiMarkup($wikiPage->getContent());
         if (null === $output) {
-            $this->addFlash('error', 'flash.wiki.markup.invalid');
+            $this->addFlash('error', $translator->trans('flash.wiki.markup.invalid'));
 
             return $this->redirectToRoute('wiki_page_edit', ['pageTitle' => $pageTitle]);
         }
@@ -65,13 +67,14 @@ class WikiController extends AbstractController
     /**
      * @Route("/wiki/{pageTitle}/edit", name="wiki_page_edit")
      *
-     * @param Request   $request
+     * @param Request $request
+     * @param TranslatorInterface $translator
      * @param WikiModel $wikiModel
      * @param $pageTitle
      *
      * @return Response
      */
-    public function editWikiPageAction(Request $request, WikiModel $wikiModel, $pageTitle)
+    public function editWikiPageAction(Request $request, TranslatorInterface $translator, WikiModel $wikiModel, $pageTitle)
     {
         /** @var Wiki $wikiPage */
         $wikiPage = $wikiModel->getPage($pageTitle);
@@ -97,7 +100,7 @@ class WikiController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($newWikiPage);
             $em->flush();
-            $this->addFlash('notice', 'flash.wiki.updated');
+            $this->addFlash('notice', $translator->trans('flash.wiki.updated'));
 
             return $this->redirectToRoute('wiki_page', ['pageTitle' => $pageTitle]);
         }
@@ -112,11 +115,13 @@ class WikiController extends AbstractController
      * @Route("/wiki/{pageTitle}/create", name="wiki_page_create")
      *
      * @param Request $request
+     * @param TranslatorInterface $translator
+     * @param WikiModel $wikiModel
      * @param $pageTitle
      *
      * @return Response
      */
-    public function createWikiPageAction(Request $request, WikiModel $wikiModel, $pageTitle)
+    public function createWikiPageAction(Request $request, TranslatorInterface $translator, WikiModel $wikiModel, $pageTitle)
     {
         $wikiPage = $wikiModel->getPage($pageTitle);
 
@@ -141,7 +146,7 @@ class WikiController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($newWikiPage);
             $em->flush();
-            $this->addFlash('notice', 'flash.wiki.created');
+            $this->addFlash('notice', $translator->trans('flash.wiki.created'));
 
             return $this->redirectToRoute('wiki_page', ['pageTitle' => $pageTitle]);
         }

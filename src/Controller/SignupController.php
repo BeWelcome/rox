@@ -83,14 +83,14 @@ class SignupController extends AbstractController
     /**
      * @Route("/signup/confirm/{username}/{regkey}", name="signup_confirm")
      *
+     * @param TranslatorInterface $translator
      * @param $username
      * @param $regkey
      *
-     * @throws \Exception
-     *
      * @return Response
+     * @throws \Exception
      */
-    public function confirmEmailAddressAction($username, $regkey)
+    public function confirmEmailAddressAction(TranslatorInterface $translator, $username, $regkey)
     {
         $em = $this->getDoctrine()->getManager();
         /** @var MemberRepository $memberRepository */
@@ -98,7 +98,7 @@ class SignupController extends AbstractController
         /** @var Member $member */
         $member = $memberRepository->findOneBy(['username' => $username]);
         if (null === $member) {
-            $this->addFlash('error', 'flash.username.invalid');
+            $this->addFlash('error', $translator->trans('flash.username.invalid'));
 
             return $this->redirectToRoute('login');
         }
@@ -111,11 +111,11 @@ class SignupController extends AbstractController
             $em->persist($member);
             $em->flush();
 
-            $this->addFlash('notice', 'flash.signup.activated');
+            $this->addFlash('notice', $translator->trans('flash.signup.activated'));
 
             return $this->redirect('/login');
         }
-        $this->addFlash('error', 'flash.key.invalid');
+        $this->addFlash('error', $translator->trans('flash.key.invalid'));
 
         return $this->redirect('/login');
     }

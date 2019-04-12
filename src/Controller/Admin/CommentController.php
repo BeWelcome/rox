@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class CommentController.
@@ -24,6 +25,20 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class CommentController extends AbstractController
 {
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * CommentController constructor.
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+    
     /**
      * @Route("/admin/comment", name="admin_comment_overview")
      *
@@ -159,22 +174,22 @@ class CommentController extends AbstractController
             $clickedButton = $form->getClickedButton()->getName();
             if ('hideComment' === $clickedButton) {
                 $comment->setDisplayinpublic(false);
-                $this->addFlash('notice', 'flash.admin.comment.hidden');
+                $this->addTranslatedFlash('notice', 'flash.admin.comment.hidden');
             }
             if ('showComment' === $clickedButton) {
                 $comment->setDisplayinpublic(true);
-                $this->addFlash('notice', 'flash.admin.comment.visible');
+                $this->addTranslatedFlash('notice', 'flash.admin.comment.visible');
             }
             if ('allowEditing' === $clickedButton) {
                 $comment->setAllowedit(true);
-                $this->addFlash('notice', 'flash.admin.comment.editable');
+                $this->addTranslatedFlash('notice', 'flash.admin.comment.editable');
             }
             if ('disableEditing' === $clickedButton) {
                 $comment->setAllowedit(false);
-                $this->addFlash('notice', 'flash.admin.comment.locked');
+                $this->addTranslatedFlash('notice', 'flash.admin.comment.locked');
             }
             if ('delectComment' === $clickedButton) {
-                $this->addFlash('notice', 'flash.admin.comment.deleted');
+                $this->addTranslatedFlash('notice', 'flash.admin.comment.deleted');
                 $em->remove($comment);
                 $em->flush();
 
@@ -219,7 +234,7 @@ class CommentController extends AbstractController
         $em->persist($comment);
         $em->flush();
 
-        $this->addFlash('notice', 'flash.admin.comment.safetyteam');
+        $this->addTranslatedFlash('notice', 'flash.admin.comment.safetyteam');
 
         return $this->redirect($request->headers->get('referer'));
     }
@@ -247,7 +262,7 @@ class CommentController extends AbstractController
         $em->persist($comment);
         $em->flush();
 
-        $this->addFlash('notice', 'flash.admin.comment.checked');
+        $this->addTranslatedFlash('notice', 'flash.admin.comment.checked');
 
         return $this->redirect($request->headers->get('referer'));
     }
@@ -275,7 +290,7 @@ class CommentController extends AbstractController
         $em->persist($comment);
         $em->flush();
 
-        $this->addFlash('notice', 'flash.admin.comment.hidden');
+        $this->addTranslatedFlash('notice', 'flash.admin.comment.hidden');
 
         return $this->redirect($request->headers->get('referer'));
     }
@@ -303,7 +318,7 @@ class CommentController extends AbstractController
         $em->persist($comment);
         $em->flush();
 
-        $this->addFlash('notice', 'flash.admin.comment.visible');
+        $this->addTranslatedFlash('notice', 'flash.admin.comment.visible');
 
         return $this->redirect($request->headers->get('referer'));
     }
@@ -385,5 +400,10 @@ class CommentController extends AbstractController
                 'url' => $this->generateUrl('admin_comment_overview'),
             ],
         ];
+    }
+
+    private function addTranslatedFlash($type, $flashId)
+    {
+        $this->addFlash($type, $this->translator->trans($flashId));
     }
 }

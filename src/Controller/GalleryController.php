@@ -20,11 +20,10 @@ class GalleryController extends AbstractController
      *     requirements = {"id": "\d+"}
      * )
      *
-     * @param Request      $request
+     * @param Request $request
      * @param GalleryImage $image
      *
-     * @throws AccessDeniedException
-     *
+     * @param TranslatorInterface $translator
      * @return Response
      */
     public function editImageAction(Request $request, GalleryImage $image, TranslatorInterface $translator)

@@ -1,5 +1,5 @@
-const CKEditorWebpackPlugin = require( '@ckeditor/ckeditor5-dev-webpack-plugin' );
-const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
+// const CKEditorWebpackPlugin = require( '@ckeditor/ckeditor5-dev-webpack-plugin' );
+// const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
 var Encore = require('@symfony/webpack-encore');
 
 Encore

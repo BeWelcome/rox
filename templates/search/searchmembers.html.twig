@@ -38,7 +38,7 @@
                     {{ form_widget(form.accommodation_dependonrequest) }}</div>
             </label>
             <label class="mr-2"><img src="{{ asset('images/icons/neverask.png') }}"
-                                     class="img-check {% if form.accommodation_neverask.vars.checked %}check{% else %}not_checked{% endif %}"
+                                     class="img-check {% if form.accommodation_neverask.vars.checked %}checked{% else %}not_checked{% endif %}"
                                      alt="{{ 'search.filter.host.no' | trans }}"/>
                 <div class="d-none">
                     {{ form_widget(form.accommodation_neverask) }}</div>
@@ -55,7 +55,7 @@
             {{ form_widget(form.distance, {'attr': {'data-minimum-results-for-search': '-1'} }) }}
         </div>
         <div class="form-group mr-2 mb-1 mb-md-0 mt-md-1 mt-xl-0">
-            <a class="btn btn-secondary advanced" data-toggle="collapse" href="#advancedNav" role="button"
+            <a class="btn {% if form.showadvanced.vars.checked %}btn-outline-primary{% else %}btn-primary{% endif %} advanced" data-toggle="collapse" href="#advancedNav" role="button"
                aria-expanded="false" aria-controls="advancedNav"
                >{{ 'search.show.advanced' | trans }}</a>
         </div>
@@ -65,8 +65,9 @@
     </div>
     <div class="form-row my-1">
         {{ form_widget(form.showmap, { 'attr': {'class': 'showMap'}}) }}
+        {{ form_widget(form.showadvanced) }}
     </div>
-    <div class="collapse" id="advancedNav">
+    <div class="collapse{% if form.showadvanced.vars.checked %} show{% endif %}" id="advancedNav">
         <div class="form-row my-1">
             <div class="form-group col-12 col-md-6 mt-2 mb-1">
                 {{ form_label(form.keywords, '', { 'label_attr': {'class': 'mb-0'} }) }}
@@ -127,7 +128,7 @@
     </script>
 
     {% if showMemberDetails %}
-        <div class="col-12">
+        <div class="row no-gutters">
             {% if results %}
                 {% include 'member/results.html.twig' %}
             {% endif %}

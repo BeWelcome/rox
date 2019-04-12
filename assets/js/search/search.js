@@ -14,13 +14,17 @@ Map.prototype.showMap = function () {
         this.mapBox.append('<div id="map" class="map p-2 framed w-100"></div>');
         this.map = L.map('map', {
             center: [15, 0],
-            minZoom: 2,
+            zoomSnap: 0.25,
+            zoomDelta: 0.25,
+            maxZoom: 18,
+            minZoom: 1,
             zoom: 2
         });
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>',
             subdomains: ['a', 'b', 'c']
         }).addTo(this.map);
+        L.control.scale().addTo(this.map);
         this.noRefresh = false;
         this.markerClusterGroup = this.addMarkers(this.map);
 
@@ -28,12 +32,12 @@ Map.prototype.showMap = function () {
             // Check if a rectangle is set if so use this for the bounds else fit the bounds to the markerClusterGroup
             var query = this.getQueryStrings($(".search_form").serialize());
 
-            if (query["distance"] === -1) {
+            if (query["search[distance]"] === -1) {
                 this.noRefresh = true;
-                this.map.fitBounds([[query["ne_latitude"], query["ne_longitude"]], [query["sw_latitude"], query["sw_longitude"]]]);
+                this.map.fitBounds([[query["search[ne_latitude]"], query["search[ne_longitude]"]], [query["search[sw_latitude]"], query["search[sw_longitude]"]]]);
             } else {
                 this.noRefresh = true;
-                this.map.fitBounds(this.markerClusterGroup.getBounds());
+                this.map.fitBounds(this.boundingBox(query["search[location_latitude]"], query["search[location_longitude]"], query["search[distance]"]));
             }
         }
         that = this;
@@ -196,6 +200,13 @@ Map.prototype.addMarkers = function (map) {
     return markers;
 };
 
+Map.prototype.boundingBox = function(latitude, longitude, distance) {
+    const approx = distance * 1.569612305760477e-2;
+    var ne = L.latLng(parseFloat(latitude) - approx / 2, parseFloat(longitude) - approx);
+    var sw = L.latLng(parseFloat(latitude) + approx / 2, parseFloat(longitude) + approx);
+    return L.latLngBounds( ne, sw);
+};
+
 $(function () {
     var map = new Map();
     $(".img-check").click(function(){
@@ -203,6 +214,11 @@ $(function () {
     });
     $(".advanced").click(function(){
         $(this).toggleClass("btn-primary").toggleClass("btn-outline-primary");
+        if ($("#search_showadvanced").is(":checked")) {
+            $("#search_showadvanced").prop("checked", false);
+        } else {
+            $("#search_showadvanced").prop("checked", true);
+        }
     });
     if ($(".showMap").is(":checked")) {
         map.showMap();

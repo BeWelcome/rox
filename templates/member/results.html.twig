@@ -1,6 +1,6 @@
 {% import 'macros.twig' as macros %}
-<div id="searchresults">
-    <div id="overlay">
+<div id="searchresults" class="col-12">
+    <div id="overlay" class="mt-2">
         {% if pager.haveToPaginate %}
             <div class="pull-right">{{ pagerfanta( pager, 'twitter_bootstrap4_ajax_translated', { 'routeName': routeName, 'routeParams': routeParams, 'ajaxFunction': 'loadAjax' } ) }}</div>
         {% endif %}
@@ -47,8 +47,7 @@
                             </div>
                         </td>
                         <td class="col summary py-2">
-                            {% if member.Occupation|length %}<p class="m-0 mb-1 font-italic">{{ 'occupation' | trans }}
-                                : {{ member.Occupation | raw }}</p>{% endif %}
+                            {% if member.Occupation|length %}<p class="m-0 mb-1 font-italic">{{ 'occupation' | trans }}: {{ member.Occupation | raw }}</p>{% endif %}
                             <a href="/members/{{ member.Username }}"
                                style="color: #000; text-underline: none; display: block; width: 100%;">{{ member.ProfileSummary | truncate(250) | purify }}</a>
                         </td>
@@ -62,7 +61,7 @@
                             <div class="clearfix"></div>
                             <div class="w-100 font-weight-bold text-nowrap">
                                 <a href="/members/{{ member.Username }}/comments"><i
-                                            class="fa fa-comments mr-1"></i>{{ 'searchvommentsinfo' | trans | format( member.CommentCount) | raw }}
+                                            class="fa fa-comments mr-1"></i>{{ 'searchcommentsinfo' | trans | format( member.CommentCount) | raw }}
                                 </a>
                             </div>
                             <div class="mt-2">

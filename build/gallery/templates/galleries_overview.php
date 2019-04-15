@@ -1,3 +1,4 @@
+<div class="row">
 <?php
 $words = new MOD_words();
 $Gallery = new GalleryModel;
@@ -60,3 +61,4 @@ if ($galleries) {
     require 'pages.php'; ?>
     </div>
 <? } ?>
+</div>

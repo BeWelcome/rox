@@ -8,7 +8,6 @@
     color: $navbar-dark-color;
     font-weight: bold;
     padding-top: 0.75rem;
-    height: 100% !important;
   }
 
   .nav-link:hover {
@@ -98,9 +97,17 @@
 
 @include media-breakpoint-up(lg) {
 
+  .navbar {
+    .nav-link{
+      height: 100% !important;
+    }
+  }
+
   #requestCount a:link, #messageCount a:link{
     padding: 0.5rem 1rem;
     padding-top: 0.75rem;
   }
+
+
 
 }

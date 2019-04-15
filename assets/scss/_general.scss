@@ -255,6 +255,11 @@ input.noradio{
 .page-link {
   color: #333 !important;
 
+  @include media-breakpoint-down(md) {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem !important;
+  }
+
   &:hover {
     color: #fff !important;
   }

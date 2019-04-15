@@ -57,7 +57,7 @@ if (!$this->passedAway){
                            <div>
                                <p class="m-0" style="line-height: 1.1;">
                                    <?php if (!$this->passedAway) { ?>
-                                       <span class="commenttitle <?=$quality?>"><?=$c->comQuality?></span><br>
+                                       <span class="commenttitle <?=$quality?>"><?= $words->get('CommentQuality_'.$c->comQuality.''); ?></span><br>
                                    <?php }?>
                                    <span class="small grey"><?=$words->get('CommentFrom','<a href="members/'.$c->UsernameFromMember.'">'.$c->UsernameFromMember.'</a>')?><br><?=$c->created?></span>
                                </p>

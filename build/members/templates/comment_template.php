@@ -1,3 +1,4 @@
+<div class="row m-1">
 <?php
 /*
 
@@ -26,9 +27,6 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 $rights = new MOD_right;
 $rights->HasRight('Comments');
 
-
-
-
 function getShowCondition($com,$login){
    // show comment when marked as display in public (default situation)
    if ($com->DisplayInPublic == 1) return 1;
@@ -54,7 +52,7 @@ function getEditCondition($com,$login){
 $loginuser = $this->loggedInMember->Username;
 
 if (!$this->passedAway) {
-    echo '<div class="m-3">'.$words->get('CommentGuidlinesLink').'</div>';
+    echo '<div class="col-12 p-0 py-3">'.$words->get('CommentGuidlinesLink').'</div>';
 }
 
 $showfrom = false; $showto = false;
@@ -73,7 +71,7 @@ foreach ($comments as $com){
 if (!$showfrom && !$this->myself) {
     // Show "Add comment" button
    ?>
-        <div class="w-100 ml-3profile_notesw-100 p-1 text-right"><a href="members/<?php echo $username; ?>/comments/add"
+        <div class="col-12 p-0 pb-3"><a href="members/<?php echo $username; ?>/comments/add"
                 class="btn btn-primary"><?php echo $words->get('addcomments'); ?></a></div>
     <?
 }
@@ -93,11 +91,6 @@ foreach($comments as $comment) {
         $editto = getEditCondition($comment['to'],$loginuser);
     }
 
-if ($showfrom || $editfrom || $showto || $editto) {
-    echo '<div class="row m-3 w-100">';
-} else {
-    echo '<div>';
-}
 
     if (isset($comment['from'])) {$c = $comment['from'];}
 //            echo $c->UsernameFromMember;
@@ -105,35 +98,36 @@ if ($showfrom || $editfrom || $showto || $editto) {
         $quality = strtolower($c->comQuality); 
         $tt = explode(',', $c->Relations); ?>
 
-        <div class="col-12 col-sm-6 card comment-bg-<?=$quality?>">
+        <div class="col-12 col-sm-6 card comment-bg-<?=$quality?> mb-3">
             <div>
                 <?php if ($showfrom > 1){echo '<strong>'.$words->get('CommentHiddenEdit').'</strong>'; } ?>
             </div>
             <div class="d-flex flex-row justify-content-between">
                 <?php if ($this->loggedInMember){ ?>
-                    <div><a href="/members/<?= $this->member->Username;?>/comment/<?php echo $c->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>"><i class="fa fa-flag-o" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a></div>
+                    <div><a href="/members/<?= $this->member->Username;?>/comment/<?php echo $c->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="gray"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a></div>
                 <? } ?>
-                <div><? if (!$this->passedAway) { ?><p class="h4 <?=$quality?>"><?=$c->comQuality?></p><? } ?></div>
-            <div><span title="<?php echo $c->created; ?>" class="small"><?php echo $layoutbits->ago($c->unix_created); ?></span></div>
+                <div><? if (!$this->passedAway) { ?><p class="h4 m-0 ml-lg-5 <?=$quality?>"><?= $words->get('CommentQuality_'.$c->comQuality.''); ?></p><? } ?></div>
+            <div><span title="<?php echo $c->created; ?>" class="small float-right"><?php echo $layoutbits->ago($c->unix_created); ?></span></div>
             </div>
 
-            <div class="d-flex flex-row justify-content-between">
-                <div>
-                    <p class="h4 m-0"><?= $words->get('from') ?></p>
+            <div class="d-flex flex-row justify-content-center">
+                <div class="mr-lg-3 text-center">
                     <a href="members/<?= $c->UsernameFromMember ?>">
                         <img src="members/avatar/<?= $c->UsernameFromMember ?>/50" alt="Profile">
-                        <p class="username smaller"><?= $c->UsernameFromMember ?></p></a>
+                        <p class="username m-0"><?= $c->UsernameFromMember ?></p></a>
                 </div>
-                <div class="my-1">
-                    <p class="text-mute small p-3 font-italic">
-                        <?= $c->TextWhere; ?>
+                <div class="text-center">
+                    <p class="text-mute p-3 m-0 font-italic">
+                        <?= $words->get('about') ?>
                     </p>
+                    <? if ($editfrom){ ?>
+                        <a class="btn btn-sm btn-primary" href="members/<?= $this->member->Username ?>/comments/add" title="Edit"><?= $ww->edit ?></a>
+                    <? } ?>
                 </div>
-                <div class="text-right">
-                    <p class="h4 m-0"><?=$words->get('commentto') ?></p>
+                <div class="ml-lg-3 text-center">
                     <a href="members/<?= $c->UsernameToMember ?>">
-                        <img src="members/avatar/<?= $c->UsernameToMember ?>/30" alt="Profile" class="mt-2">
-                        <p class="username smaller"><?= $c->UsernameToMember ?></p></a>
+                        <img src="members/avatar/<?= $c->UsernameToMember ?>/50" alt="Profile">
+                        <p class="username m-0"><?= $c->UsernameToMember ?></p></a>
                 </div>
             </div>
 
@@ -141,18 +135,15 @@ if ($showfrom || $editfrom || $showto || $editto) {
                 <? if ($c->created != $c->updated){ ?>
                     <p class="small">(<?=$words->get('CommentLastUpdated')?>: <span title="<?= $c->updated; ?>"><?php echo $layoutbits->ago($c->unix_updated); ?></span>)</p>
                 <? } ?>
-                <? echo $purifier->purify(nl2br($c->TextFree)); ?>
 
                         <?php
                         for ($jj = 0; $jj < count($tt); $jj++) {
                             // if ($tt[$jj]=="") continue; // Skip blank category comment : todo fix find the reason and fix this anomaly
-                            echo '<p class="small font-italic p-0 m-0">', $words->get("Comment_" . $tt[$jj]), "</p>\n";
+                            echo '<p class="small font-italic p-0 mb-1">', $words->get("Comment_" . $tt[$jj]), "</p>\n";
                         }
                         ?>
 
-                <? if ($editfrom){ ?>
-                    <a class="btn btn-sm btn-primary" href="members/<?= $this->member->Username ?>/comments/add" title="Edit"><?= $ww->edit ?></a>
-                <? } ?>
+                <? echo $purifier->purify(nl2br($c->TextFree)); ?>
 
                 <?php if (MOD_right::get()->HasRight('Comments'))  { ?>
                     <a href="bw/admin/admincomments.php?action=editonecomment&IdComment=<?php echo $c->id; ?>"><?=$words->get('EditComment')?></a>
@@ -163,7 +154,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
 
     <?php
     } else { ?>
-        <div class="col-12 col-sm-6 card comment-bg-neutral">
+        <div class="col-12 col-sm-6 card comment-bg-neutral mb-3">
             <? if (!$this->myself && ($c->UsernameToMember==$loginuser)){ ?>
             <a href="members/<?php echo $c->UsernameFromMember; ?>/comments/add"
            class="btn btn-primary mt-3"><?php echo $words->get('addcomments'); ?></a>
@@ -177,7 +168,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
          $cc = $comment['to'];
          $quality = strtolower($cc->comQuality);
          $tt = explode(',', $cc->Relations); ?>
-        <div class="col-12 col-sm-6 card comment-bg-<?=$quality?>">
+        <div class="col-12 col-sm-6 card comment-bg-<?=$quality?> mb-3">
 
             <div>
                 <?php // give an aditional message when comment is exceptionally shown
@@ -191,46 +182,45 @@ if ($showfrom || $editfrom || $showto || $editto) {
                     </span>
                 </div>
 
-                <div><? if (!$this->passedAway) { ?><p class="h4 <?=$quality?>"><?=$cc->comQuality?></p><? } ?></div>
+                <div><? if (!$this->passedAway) { ?><p class="h4 m-0 mr-lg-5 <?=$quality?>"><?= $words->get('CommentQuality_'.$cc->comQuality.''); ?></p><? } ?></div>
 
                 <?php if ($this->loggedInMember) :?>
                     <div><a href="members/<?php echo $cc->UsernameToMember;?>/comment/<?php echo $cc->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>"><i class="fa fa-flag-o" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a></div>
                 <?php endif;?>
             </div>
 
-            <div class="d-flex flex-row justify-content-between">
-                <div>
-                    <p class="h4 m-0"><?= $words->get('from') ?></p>
+            <div class="d-flex flex-row justify-content-center">
+                <div class="mr-lg-3 text-center">
                     <a href="members/<?= $cc->UsernameFromMember ?>">
                         <img src="members/avatar/<?= $cc->UsernameFromMember ?>/50" alt="Profile">
-                        <p class="username smaller"><?= $cc->UsernameFromMember ?></p></a>
+                        <p class="username m-0"><?= $cc->UsernameFromMember ?></p></a>
                 </div>
-                <div class="my-1">
-                    <p class="text-mute small p-3 font-italic">
-                        <?= $cc->TextWhere; ?>
+                <div class="text-center">
+                    <p class="text-mute p-3 m-0 font-italic">
+                        <?=$words->getSilent('about') ?>
                     </p>
+                    <? if ($editto){ ?>
+                    <a class="btn btn-sm btn-primary" role="button" href="members/<?= $cc->UsernameToMember ?>/comments/add" title="Edit"><?= $ww->edit ?></a>
+                    <? } ?>
                 </div>
-                <div class="text-right">
-                    <p class="h4 m-0"><?=$words->get('commentto') ?></p>
+                <div class="ml-lg-3 text-center">
                     <a href="members/<?= $cc->UsernameToMember ?>">
-                        <img src="members/avatar/<?= $cc->UsernameToMember ?>/30" alt="Profile">
-                        <p class="username smaller"><?= $cc->UsernameToMember ?></p></a>
+                        <img src="members/avatar/<?= $cc->UsernameToMember ?>/50" alt="Profile">
+                        <p class="username m-0"><?= $cc->UsernameToMember ?></p></a>
                 </div>
             </div>
 
             <div>
+
              <? if ($cc->created != $cc->updated){ ?>
                  <p class="small">(<?=$words->get('CommentLastUpdated')?>: <span title="<?= $cc->updated; ?>"><?php echo $layoutbits->ago($cc->unix_updated); ?></span>)</p>
              <? }
 
-             echo $purifier->purify(nl2br($cc->TextFree));
-             if ($editto){ ?>
-                 <a class="btn btn-sm btn-primary" role="button" href="members/<?= $cc->UsernameToMember ?>/comments/add" title="Edit"><?= $ww->edit ?></a>
-             <? }
-
              for ($jj = 0; $jj < count($tt); $jj++) {
-                echo '<p class="small font-italic p-0">'.$words->get("Comment_" . $tt[$jj]).'</p>';
+                echo '<p class="small font-italic p-0 mb-1">'.$words->get("Comment_" . $tt[$jj]).'</p>';
              }
+
+             echo $purifier->purify(nl2br($cc->TextFree));
 
              if (MOD_right::get()->HasRight('Comments'))  { ?>
                 <a href="bw/admin/admincomments.php?action=editonecomment&IdComment=<?php echo $cc->id; ?>"><?=$words->get('EditComment')?></a>
@@ -241,7 +231,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
 <?php
    } else {
          ?>
-        <div class="col-12 col-sm-6 card comment-bg-neutral">
+        <div class="col-12 col-sm-6 card comment-bg-neutral mb-3">
 
          <? if ($this->myself && ($c->UsernameToMember==$loginuser)){ ?>
              <a href="members/<?php echo $c->UsernameFromMember; ?>/comments/add"
@@ -250,8 +240,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
              <p class="text-center mt-3"><?php echo $words->get('profile.comments.nocomment'); ?></p>
              <? } ?>
         </div>
-    <? } ?>
+        <? }
+    } ?>
+</div>
 
-    </div>
-
-    <? } // end loop ?>

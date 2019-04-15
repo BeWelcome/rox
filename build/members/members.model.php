@@ -587,7 +587,7 @@ INSERT INTO
         " . $vars['IdMember'] . ",
         " . $this->_session->get('IdMember') . ",
         '" . $LenghtComments . "','" . $vars['Quality'] . "',
-        '" . $this->dao->escape($vars['TextWhere']) . "',
+        '',
         '" . $this->dao->escape($vars['TextFree']) . "',
         '" . $AdminAction . "',
         now(),
@@ -614,7 +614,7 @@ SET
     IdFromMember=" . $this->_session->get('IdMember') . ",
     Relations='" . $LenghtComments . "',
     Quality='" . $vars['Quality'] . "',
-    TextWhere='" . $this->dao->escape($vars['TextWhere']) . "',
+    TextWhere='',
     TextFree='" . $this->dao->escape($vars['TextFree']) . "',
     updated = NOW()
 WHERE

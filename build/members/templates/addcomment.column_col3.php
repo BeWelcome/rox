@@ -125,7 +125,7 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
             <div class="alert alert-info"><?=$words->get("FollowCommentGuidelines")?></div>
         </div>
 
-        <div class="col-auto">
+        <div class="col-12 col-lg-6">
             <label class="m-0" for="Quality">
                 <h5><?=$words->get("CommentQuality" , $Username)?></h5>
             </label>
@@ -149,12 +149,8 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
                 >
                     <?=$words->getSilent("CommentQuality_Bad")?></option>
             </select>
-        </div>
 
-        <div class="w-100"></div>
-
-        <div class="col-12 col-xl-auto mt-3">
-            <label class="m-0" for="CommentLength">
+            <label class="m-0 mt-3" for="CommentLength">
                 <h5><?=$words->get("CommentLength", $Username)?></h5>
             </label>
             <a tabindex="0" class="btn btn-outline-primary btn-sm ml-1 py-0" data-container="body" data-toggle="popover" data-html="true" data-placement="right" data-trigger="focus" data-content="<?php echo $words->get("CommentLengthDescription", $Username, $Username, $Username) ?>">
@@ -163,28 +159,18 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
             <?php
             for ($ii = 0; $ii < $max; $ii++) {
                 $chkName = "Comment_" . $ttc[$ii];
-            ?>
+                ?>
                 <div class="form-check my-2">
-                <label class="form-check-label">
-                    <input class="form-check-input" type="checkbox" id="<?= $chkName; ?>" name="<?= $chkName; ?>"<? if (in_array($ttc[$ii], $ttRelation)) echo ' checked'; ?>>
-                    <?= $words->get($chkName); ?>
-                </label>
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="<?= $chkName; ?>" name="<?= $chkName; ?>"<? if (in_array($ttc[$ii], $ttRelation)) echo ' checked'; ?>>
+                        <?= $words->get($chkName); ?>
+                    </label>
                 </div>
-                <? } ?>
+            <? } ?>
+
         </div>
 
-        <div class="col-12 col-xl-auto ml-xl-auto mt-3">
-            <label for="TextWhere" class="mb-0"><h5><?= $words->get("CommentsWhere", $Username); ?></h5></label>
-            <a tabindex="0" class="btn btn-outline-primary btn-sm ml-1 py-0" data-container="body" data-toggle="popover" data-html="true" data-placement="right" data-trigger="focus" data-content="<?php echo $words->get("CommentsWhereDescription", $Username) ?>">
-                <i class="fa fa-question"></i>
-            </a>
-            <br>
-            <textarea name="TextWhere" id="TextWhere" class="w-100 form-control h5" rows="4"><?php echo $textWhereWashed; ?></textarea>
-        </div>
-
-        <div class="w-100"></div>
-
-        <div class="col-12 mt-3">
+        <div class="col-12 col-lg-6">
             <label for="Commenter" class="mb-1">
                 <h5><?php echo $words->get("CommentsCommenter") ?></h5>
             </label>
@@ -193,11 +179,11 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
                 <i class="fa fa-question"></i>
             </a>
 
-            <textarea name="TextFree" id="TextFree" class="w-100 form-control h5" rows="4"><?php echo $textFreeWashed; ?></textarea>
+            <textarea name="TextFree" id="TextFree" class="w-100 form-control" rows="10"><?php echo $textFreeWashed; ?></textarea>
         </div>
 
         <div class="col-12">
-            <div class="form-check my-3">
+            <div class="form-check alert alert-warning">
                 <label class="form-check-label">
                     <input type="checkbox" name="CommentGuidelines" class="form-check-input"
                         <?php

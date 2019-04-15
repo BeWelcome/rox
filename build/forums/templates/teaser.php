@@ -28,7 +28,6 @@ if (isset($this->keyword)) {
     </form>
     </div>
 </div>
-        <!-- Google froum search bar -->
 <!-- CategoryTitle in teaser -->
 <div class="forumtitle">
     <?php $title = $boards->getBoardName();

@@ -23,7 +23,7 @@ Boston, MA  02111-1307, USA.
 */
 $words = new MOD_words();
 ?>
-
+<div class="row">
 <div class="col-12 col-md-6 py-2">
     <div class="card">
         <a href="/forums" class="list-group-item list-group-item-action">
@@ -61,4 +61,5 @@ $words = new MOD_words();
             <p class="list-group-item-text"><?php echo $words->get('ExploreNewslettersDescription') ?></p>
         </a>
     </div>
+</div>
 </div>

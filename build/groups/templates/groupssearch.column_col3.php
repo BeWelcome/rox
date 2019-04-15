@@ -14,7 +14,7 @@
             </form>
         </div>
         <div class="col-12 col-md-6">
-            <label class="h3" for="GroupsSearchInput"><?= $words->get('GroupsCreateHeading'); ?></label>
+            <label class="h3 w-100"><?= $words->get('GroupsCreateHeading'); ?></label>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#CreateGroupModal">
                 <?= $words->get('GroupsCreateNew'); ?>
             </button>
@@ -61,7 +61,7 @@
         $category_order = (($this->result_order == "categoryasc") ? 'categorydesc' : 'categoryasc');
         ?>
         </div>
-        <div class="col col-lg-5 order-1">
+        <div class="col col-lg-5 order-1 mt-3">
             <h3><?= $words->get('GroupsSearchResult'); ?></h3>
             <label class="font-weight-bold"><?php echo $words->get('GroupsSearchOrdered'); ?>:</label>
             <span class="dropdown">

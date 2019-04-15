@@ -45,16 +45,11 @@ if (!$User) {
 <?php
     echo $this->words->flushBuffer();
 ?>
-<!--       <span class="float_right">
-        <?= $this->words->get('GroupsSearchHeading'); ?>
-        <form action="groups/search" method="get">
-            <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" class="button" value="<?= $this->words->getSilent('GroupsSearchSubmit'); ?>" /><br />
-        </form><?php echo $this->words->flushBuffer(); ?>
-    </span> -->
-
-<div class="col-12">
-    <h3><a href="groups/forums"><?php echo $this->words->getFormatted('Groups'); ?></a> <span class="small">&ndash; <?php echo $this->words->get('GroupsTagLine'); ?></span></h3>
-</div>
+    <div class="row">
+        <div class="col-12">
+            <h3><a href="groups/forums"><?php echo $this->words->getFormatted('Groups'); ?></a> <span class="small">&ndash; <?php echo $this->words->get('GroupsTagLine'); ?></span></h3>
+        </div>
+    </div>
 </div>
 <div class="row">
 <?php

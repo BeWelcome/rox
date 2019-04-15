@@ -8,6 +8,7 @@ if ($this->_session->has( 'errors' )) {
     $this->_session->remove('errors');
 }
 ?>
+<div class="row">
 <?
 if (!empty($errors)) {
     echo '<div class="col-12 alert alert-danger">';
@@ -45,4 +46,5 @@ if ($this->keyword != '') {
 }
 ?>
 
+    </div>
 </div>

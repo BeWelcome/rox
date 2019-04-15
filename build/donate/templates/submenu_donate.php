@@ -25,7 +25,7 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
 
-<div class="col-md-3 offcanvas-collapse" id="sidebar">
+<div class="col-md-3 offcanvas-collapse mb-2" id="sidebar">
     <div class="pt-1">
         <button type="button" class="close pull-right float-md-right" aria-label="Close" data-toggle="offcanvas-collapse" data-target="#sidebar">
             <span aria-hidden="true">&times;</span>

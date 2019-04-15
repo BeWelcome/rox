@@ -31,7 +31,7 @@ This File display a topic and the messages which are inside it
 
 ?>
 <div class="row">
-<div class="col">
+<div class="col-12 mb-2">
         <?php
         // This means no thread was fetch or that it was outside visibility
         if ((!isset($topic->topicinfo->IdTitle)) and (!isset($topic->topicinfo->ThreadDeleted))) {
@@ -50,7 +50,7 @@ This File display a topic and the messages which are inside it
         if (!isset($topic->topicinfo->IsClosed)) {
             $topic->topicinfo->IsClosed = false;
         }
-        echo '<h2 class="m-0">';
+        echo '<h2 class="mb-0">';
 
         if ($topic->topicinfo->ThreadDeleted == 'Deleted') {
             echo "[Deleted]";
@@ -73,11 +73,11 @@ This File display a topic and the messages which are inside it
             <?php
             if ($topic->topicinfo->IdGroup > 0) {
                 ?>
-                <p class="small gray"><strong><?php echo $words->get("group"); ?>:</strong>
+                <small class="text-muted"><strong><?php echo $words->get("group"); ?>:</strong>
                     <a href="groups/<?php echo $this->_model->getGroupName($topic->topicinfo->IdGroup); ?>">
                         <?php echo $this->_model->getGroupName($topic->topicinfo->GroupName); ?>
                     </a>
-                </p>
+                </small>
                 <?php
             }
             ?>
@@ -149,7 +149,7 @@ This File display a topic and the messages which are inside it
             ?>
 
 </div>
-<div class="col ml-auto">
+<div class="col-12 mb-2 text-right">
         <?php
         if (isset($topic->isGroupSubscribed) && ($topic->isGroupSubscribed)) {
             if (isset($topic->IdSubscribe)) {
@@ -224,7 +224,7 @@ if ($User) {
 
     if (!$topic->topicinfo->IsClosed) {
         ?>
-        <div class="col-12">
+        <div class="col-12 mb-2">
             <a href="<?php echo $replyuri; ?>" class="btn btn-primary float-right"><?php echo $words->getBuffered('ForumReply');; ?></a>
             <?php echo $words->flushBuffer() ?>
         </div>

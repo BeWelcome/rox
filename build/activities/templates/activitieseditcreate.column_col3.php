@@ -19,7 +19,7 @@ if (empty($vars)) {
     }
 }
 ?>
-<div class="col-12">
+<div class="row"><div class="col-12">
 <form method="post" id="activity-create-form" name="activity-create-form">
     <input type="hidden" id="activity-id" name="activity-id" value="<?php echo $vars['activity-id']; ?>" />
     <input type="hidden" id="activity-location-id" name="activity-location-id" value="<?php echo $vars['activity-location-id']; ?>" />
@@ -150,3 +150,4 @@ if (empty($vars)) {
     $textarea = 'activity-description';
     require_once SCRIPT_BASE . 'public/script/tinymceconfig_php.js';
 ?>
+</div>

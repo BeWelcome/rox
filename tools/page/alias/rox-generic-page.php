@@ -19,7 +19,7 @@ class RoxGenericPage extends PageWithParameterizedRoxLayout
     protected function submenu()
     {
         echo <<<SUBMENU
-<div class="col-md-3 offcanvas-collapse">
+<div class="col-md-3 offcanvas-collapse mb-2">
     <div class="w-100 p-1 text-right d-md-none">
         <button type="button" class="btn btn-sm" aria-label="Close" data-toggle="offcanvas">
             <i class="fa fa-lg fa-times" aria-hidden="true"></i>

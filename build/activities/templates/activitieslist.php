@@ -12,7 +12,7 @@ if ($this->allActivities != null && sizeof ($this->allActivities) > 0){
     echo '<div id="activities-map"></div>';
 
     // activities map data
-    echo '<div id="activities-data">';
+    echo '<div id="activities-data" class="table-responsive">';
     
     $latitudeMin = null;
     $latitudeMax = null;
@@ -20,7 +20,7 @@ if ($this->allActivities != null && sizeof ($this->allActivities) > 0){
     $longitudeMax = null;
 
     // activities data is stored in a hidden table in order to retrieve it from activities_map.js script
-    echo '<table>';
+    echo '<table class="table">';
     foreach($this->allActivities as $activity) {
         $location = $activity->location;
 

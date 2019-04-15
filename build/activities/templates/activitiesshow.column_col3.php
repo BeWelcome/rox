@@ -1,4 +1,5 @@
-﻿<?php
+﻿<div class="row">
+<?php
 $activityInTheFuture = (time() - 7 * 24 * 60 * 60 < strtotime($this->activity->dateTimeEnd));
 $formkit = $this->layoutkit->formkit;
 $callbackTagsJoinEdit = $formkit->setPostCallback('ActivitiesController', 'joinLeaveActivityCallback');
@@ -306,3 +307,4 @@ if (empty($vars)) {
         }
     });
 </script>
+</div>

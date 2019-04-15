@@ -45,7 +45,8 @@ $vars =& PPostHandler::getVars($callbackId);
 <script type="text/javascript" src="script/forums_suggest.js"></script>
 */ ?>
 
-<div class="row no-gutters"><div class="col-12">
+<div class="row no-gutters">
+    <div class="col-12">
 
     <?php
     if ($navichain_items = $boards->getNaviChain()) {
@@ -79,9 +80,8 @@ $vars =& PPostHandler::getVars($callbackId);
     ?>
 
 </div>
-
 <form method="post" onsubmit="return check_SelectedLanguage();" action="<?php echo $uri; ?>" name="editform"
-      class="fieldset_toggles w-100" id="forumsform">
+      class="row no-gutters" id="forumsform">
     <input type="hidden" name="<?php echo $callbackId; ?>" value="1"/>
     <input type="hidden" name="IdLanguage" id="IdLanguage" value="0">
 
@@ -104,7 +104,7 @@ $vars =& PPostHandler::getVars($callbackId);
 
             ?>
             <!-- input title -->
-                <div class="input-group mb-2 mb-sm-0">
+                <div class="input-group mb-2">
                     <div class="input-group-prepend h5 m-0" id="forumaddtitle">
                         <div class="input-group-text"><label class="m-0"
                                                              for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label>
@@ -127,7 +127,7 @@ $vars =& PPostHandler::getVars($callbackId);
 
         <? } ?>
     </div>
-    <div class="col-12 mt-2">
+    <div class="col-12 mb-2">
 
             <label for="topic_text" class="sr-only"><?php echo $words->getFormatted("forum_label_text"); ?></label>
 
@@ -150,17 +150,14 @@ $vars =& PPostHandler::getVars($callbackId);
                 }
             } ?>
         </div>
-</div>
-    <div class="row mt-2">
-
-        <div class="col-12 col-md-4 order-1 order-md-2 form-inline">
+        <div class="col-12 col-md-4 order-1 order-md-2 form-inline mb-2">
             <div class="form-check">
                 <input type="checkbox" name="NotifyMe" id="NotifyMe" class="form-check-input" <?php echo $notifymecheck ?>>
                 <label for="NotifyMe" class="form-check-label"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
             </div>
         </div>
 
-        <div class="col-12 col-md-4 order-2 order-md-3 form-inline">
+        <div class="col-12 col-md-4 order-2 order-md-3 form-inline mb-2">
                     <legend class="sr-only"><?= $words->getFormatted("forum_label_visibility") ?></legend>
                     <?php
                     // visibility can only be set on groups with 'VisiblePosts' set to 'yes'.
@@ -190,7 +187,7 @@ $vars =& PPostHandler::getVars($callbackId);
                     <?php } ?>
         </div>
 
-            <div class="col-12 col-md-4 order-3 order-md-1">
+            <div class="col-12 col-md-4 order-3 order-md-1 mb-2">
                 <input type="submit" class="btn btn-primary px-5" value="<?php
                 if ($allow_title) { // New Topic
                     if ($edit) {
@@ -208,11 +205,10 @@ $vars =& PPostHandler::getVars($callbackId);
 
                 ?>"/>
             </div>
-
     </form>
 
 <?php
 $textarea = 'topic_text';
 require_once SCRIPT_BASE . 'public/script/tinymceconfig_php.js';
 ?>
-    </div>
+</div>

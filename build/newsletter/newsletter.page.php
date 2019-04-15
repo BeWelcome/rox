@@ -15,6 +15,7 @@
 class NewsletterPage extends RoxPageView  
 {
     public function __construct($_Data) {
+        parent::__construct();
         $this->Data=$_Data;
     }
 
@@ -23,7 +24,7 @@ class NewsletterPage extends RoxPageView
      */
     protected function column_col3()
     {
-        echo "<div class='col-12'>";
+        echo "<div class='row mb-2'><div class='col-12'>";
 		foreach ($this->Data as $OneLetter) {
 			echo "<p><strong>",$this->getWords()->get('BroadCast_Title_'.$OneLetter->Name)."</strong>" ;
 			foreach ($OneLetter->Lang as $Lang)  {
@@ -31,7 +32,7 @@ class NewsletterPage extends RoxPageView
 			}
 			echo "</p>" ;
 		}
-		echo "</div>";
+		echo "</div></div>";
     }
     
     /**

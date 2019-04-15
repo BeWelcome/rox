@@ -21,6 +21,7 @@ foreach($distance as $value => $display) :
 endforeach;
 $radiusSelect .= '</select>';
 ?>
+<div class="row">
 <div class="col-12">
 <form method="POST" name="activity-radius-form">
 <?php 
@@ -36,3 +37,4 @@ if (count($this->activities) == 0) {
     require_once('activitieslist.php');
 }
 ?>
+</div>

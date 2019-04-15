@@ -1456,7 +1456,11 @@ WHERE `threadid` = '%d' ",
 
 		$PostComment=$vars['PostComment'] ;
 		$Status=$vars['Status'] ;
-		if (isset($vars['Type'])) $Type=$vars['Type'] ;
+		if (isset($vars['Type'])) {
+            $Type=$vars['Type'] ;
+        } else {
+		    $Type = 'SeeText';
+        }
 		if (!empty($vars['IdReporter'])) {
 			$IdReporter=$vars['IdReporter'] ;
 		}

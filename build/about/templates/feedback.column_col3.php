@@ -57,13 +57,14 @@ if ($errors = $this->getRedirectedMem('errors'))
     }
 }
 ?>
+<div class="row">
 <div class="col-12 col-md-6">
 <p><?php echo $words->get("FeedBackDisclaimer") ?></p>
 </div>
 
 <div class="col-12 col-md-6">
 
-<form class="yform full" action="about/feedback" method="post">
+<form action="about/feedback" method="post">
     <?=$callback_tag ?>
     <input type="hidden" name="RequestURI" value="<?= htmlspecialchars($RequestURI, ENT_QUOTES) ?>">
     <input type="hidden" name="redirect" value="<?php echo htmlentities($redirect); ?>">
@@ -111,11 +112,11 @@ if ($errors = $this->getRedirectedMem('errors'))
         }
         else echo " \">";
         ?>
-        </div>
-        <div class="form-group">
+    </div>
+    <div class="form-group">
         <label for="FeedbackEmail"><?php echo $words->get("FeedBackEmail")?></label>
         <input type="text" id="FeedbackEmail" name="FeedbackEmail" value="<?php echo $FeedbackEmail;?>"/>
-        </div>
+    </div>
     <?php endif; ?>
 
     <div class="type-check form-group">
@@ -127,4 +128,5 @@ if ($errors = $this->getRedirectedMem('errors'))
         <input name="action" type="hidden" value="ask" />
     </div>
 </form>
+</div>
 </div>

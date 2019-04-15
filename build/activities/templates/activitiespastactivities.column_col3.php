@@ -1,4 +1,5 @@
-<div class="col-12"><?php
+<div class="row">
+    <div class="col-12"><?php
 if (count($this->activities) == 0) {
     if ($this->publicOnly) {
         echo '<p>' . $words->get('ActivitiesNoPublicPastActivities') . '</p>';
@@ -9,3 +10,4 @@ if (count($this->activities) == 0) {
     require_once('activitieslist.php');
 }
 ?></div>
+</div>

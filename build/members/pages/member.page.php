@@ -172,7 +172,7 @@ class MemberPage extends PageWithActiveSkin
 
     protected function submenu() {
         ?>
-        <div class="col-md-3 offcanvas-collapse" id="sidebar">
+        <div class="col-md-3 offcanvas-collapse mb-2" id="sidebar">
             <div class="w-100 p-1 text-right d-md-none">
                 <button type="button" class="btn btn-sm" aria-label="Close" data-toggle="offcanvas">
                     <i class="fa fa-lg fa-times" aria-hidden="true"></i>

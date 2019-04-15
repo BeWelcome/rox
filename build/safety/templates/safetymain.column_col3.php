@@ -1,3 +1,4 @@
+<div class="row">
     <div class="col-12 col-md-6">
         <h3><?php echo $words->get('Safety_How');?></h3>
         <p><?php echo $words->get('Safety_HowText');?></p>
@@ -28,3 +29,4 @@
             <p><?php echo $words->get('Safety_KeepItSafeText');?></p>
         </div>
     </div>
+</div>

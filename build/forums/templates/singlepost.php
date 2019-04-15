@@ -37,8 +37,8 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 ?>
 
 <!-- entire row -->
-<div class="col-12">
-<div class="d-flex flex-row <?php echo $styles[$cnt % 2]; ?> mb-2 postbox w-100">
+<div class="col-12 mb-2">
+<div class="d-flex flex-row <?php echo $styles[$cnt % 2]; ?> postbox">
 
     <!-- left column -->
     <div class="d-flex flex-column col-4 col-md-3 mr-2 p-0 postleftcolumn">

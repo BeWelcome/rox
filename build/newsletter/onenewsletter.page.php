@@ -21,6 +21,7 @@ class OneNewsLetterPage extends RoxPageView  /* HelloUniversePage doesn't work! 
 
     **/
     public function __construct($_Data) {
+        parent::__construct();
         $this->Data=$_Data;
     }
 

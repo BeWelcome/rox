@@ -1,4 +1,5 @@
-<div class="col-12">
+<div class="row">
+    <div class="col-12">
 <?php
 if ($this->_session->has( 'ActivityStatus' )) {
     echo '<div class="success">';
@@ -21,4 +22,5 @@ if (count($this->activities) == 0) {
 require_once('activitieslist.php');
 }
 ?>
+</div>
 </div>

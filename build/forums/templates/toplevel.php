@@ -22,21 +22,11 @@ Boston, MA  02111-1307, USA.
 
 */
 $User = APP_User::login();
-?>
-
-
-<?php
 $noForumLegendBox = true;
 $ToogleTagCloud=true ;
-if ($User) $TagCloud=true ;
-if (!$User) {
-?>
-    <div class="row subcolumns">
-        <?=$this->words->getFormatted('ForumOnlyForBeWelcomeMember'); ?>
-    </div>
-<?php
-} // end if not User
-if ($User && $ownGroupsButtonCallbackId) {
+$TagCloud=true ;
+?> <div class="row no-gutters mt-2"><?php
+if ($ownGroupsButtonCallbackId) {
     if ($boards->owngroupsonly == "No") {
         $buttonText = $this->words->getBuffered('SwitchShowOnlyMyGroupsTopics');
     } else {
@@ -76,3 +66,4 @@ require 'boardthreads.php';
     }
 // <a href="rss/forumthreads"><img src="images/icons/feed.png" alt="RSS feed" /></a>
 ?>
+</div>

@@ -26,7 +26,7 @@ class AddRelationPage extends RelationsPage
                $action = 'add';
             }        ?>
 
-
+<div class="row">
             <div class="col-12">
          <? if ($action == 'update' && isset($relation['member']->Confirmed)) : ?>
             <div class="alert alert-success"><?=$words->get('RelationIsConfirmed',$member->Username)?></div>
@@ -95,6 +95,7 @@ class AddRelationPage extends RelationsPage
         </fieldset>
         </form>
             </div>
+</div>
         <?php
     }
 }

@@ -45,7 +45,7 @@ $vars =& PPostHandler::getVars($callbackId);
 <script type="text/javascript" src="script/forums_suggest.js"></script>
 */ ?>
 
-<div class="col-12">
+<div class="row no-gutters"><div class="col-12">
 
     <?php
     if ($navichain_items = $boards->getNaviChain()) {
@@ -215,3 +215,4 @@ $vars =& PPostHandler::getVars($callbackId);
 $textarea = 'topic_text';
 require_once SCRIPT_BASE . 'public/script/tinymceconfig_php.js';
 ?>
+    </div>

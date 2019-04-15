@@ -17,6 +17,7 @@ Boston, MA 02111-1307, USA.
 */
 $words = new MOD_words();
 ?>
+<div class="row">
 <div class="col-12">
     <h2><?php echo $words->get('GetActive') ?></h2>
     <p><?php echo $words->get('GetActiveIntro') ?></p>
@@ -142,4 +143,5 @@ $words = new MOD_words();
 
         </div>
     </div>
+</div>
 </div>

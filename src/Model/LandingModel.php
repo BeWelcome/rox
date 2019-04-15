@@ -114,7 +114,7 @@ class LandingModel extends BaseModel
             ->select('ft')
             ->from('App:ForumThread', 'ft')
             ->where("ft.threadDeleted = 'NotDeleted'")
-            ->orderBy('ft.createdAt', 'desc');
+            ->orderBy('ft.lastPostid', 'desc');
 
         $groupIds = [];
         if ($groups) {

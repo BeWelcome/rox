@@ -1,5 +1,5 @@
-<div class="">
-<?php
+<div class="d-lg-block d-none mb-sm-3 mb-lg-0">
+    <?php
 
 if (!$this->passedAway){
     $accIdSuffix = 'Right';

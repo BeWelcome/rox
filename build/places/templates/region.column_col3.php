@@ -1,3 +1,4 @@
+<div class="row">
 <?php
 echo '<div class="col-12 p-0"><h2>' . $words->get('Cities') . '</h2></div>';
 
@@ -20,6 +21,7 @@ foreach ($this->cities as $city) {
     echo '</div>';
 
 }
-echo '</div>';
+echo '</div></div>';
 include 'memberlist.php';
 ?>
+</div>

@@ -1,5 +1,5 @@
 <div class="row">
-    <h3><?= $words->get('GroupForum'); ?></h3>
+hallo    <h3><?= $words->get('GroupForum'); ?></h3>
 <div>
     <?php
         $showNewTopicButton = false;

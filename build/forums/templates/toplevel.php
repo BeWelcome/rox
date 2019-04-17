@@ -25,7 +25,7 @@ $User = APP_User::login();
 $noForumLegendBox = true;
 $ToogleTagCloud=true ;
 $TagCloud=true ;
-?> <div class="row no-gutters mt-2"><?php
+?><?php
 if ($ownGroupsButtonCallbackId) {
     if ($boards->owngroupsonly == "No") {
         $buttonText = $this->words->getBuffered('SwitchShowOnlyMyGroupsTopics');
@@ -66,4 +66,3 @@ require 'boardthreads.php';
     }
 // <a href="rss/forumthreads"><img src="images/icons/feed.png" alt="RSS feed" /></a>
 ?>
-</div>

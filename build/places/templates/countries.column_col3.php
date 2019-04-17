@@ -3,6 +3,7 @@
 $columns = array();
 $lastcontinent = "";
 ?>
+<div class="row">
 <div class="col-12">
     <div class="card-columns">
         <? foreach ($this->continents as $continent => $value) { ?>
@@ -35,4 +36,5 @@ $lastcontinent = "";
             </div>
         <? } ?>
     </div>
+</div>
 </div>

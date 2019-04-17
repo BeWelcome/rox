@@ -35,7 +35,7 @@ function updateCounts() {
         }});
 }
 
-let interval = setInterval(function () { updateCounts(); }, 60 * 1000);
+let interval = setInterval(function () { updateCounts(); }, 600 * 1000);
 
 $(function () {
     $('[data-toggle="toast"]').toast({

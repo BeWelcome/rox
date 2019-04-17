@@ -158,7 +158,12 @@ class GroupsBasePage extends PageWithActiveSkin
                 $items[] = array('admin', "groups/{$this->group->getPKValue()}/groupsettings", $words->getSilent('GroupGroupsettings'));
             }
 
+        } else {
+            $items[] = [ 'search', 'groups/search', $words->getSilent('GroupsSearchHeading') ];
+            $items[] = [ 'rules', 'forums/rules', $words->getSilent('ForumRulesShort') ];
+            $items[] = [ 'faq', 'about/faq/6', $words->getSilent('ForumLinkToDoc') ];
         }
+
         return $items;
     }
 

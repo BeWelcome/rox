@@ -164,6 +164,8 @@ class GroupsBasePage extends PageWithActiveSkin
             $items[] = [ 'faq', 'about/faq/6', $words->getSilent('ForumLinkToDoc') ];
         }
 
+        $items[] = [ 'subscription', 'forums/subscriptions', $this->words->getSilent('forum_YourSubscription') ];
+
         return $items;
     }
 

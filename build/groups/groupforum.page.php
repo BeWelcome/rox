@@ -73,24 +73,14 @@ class GroupForumsOverviewPage extends GroupsBasePage
         $words = $this->getWords();
 
     ?>
-        <div class="col-12 col-md-6 col-lg-4">
-            <h3 class="m-0"><?= $words->get('GroupsSearchHeading'); ?></h3>
-            <form action="groups/search" method="get">
-                <div class="input-group">
-                    <input type="text" class="form-control" name="GroupsSearchInput" value="" id="GroupsSearchInput" />
-                    <span class="input-group-append">
-                            <button class="btn btn-primary" type="submit"><?= $words->getSilent('GroupsSearchSubmit'); ?></button>
-                        <?=$words->flushBuffer()?>
-                        </span>
-                </div>
-            </form>
-        </div>
-        </div>
         <div class="row">
     <?php 
         $Forums = new ForumsController;
         $Forums->setEngine($this->engine);
         $Forums->index();
+        ?>
+        </div>
+        <?php
     }
     protected function teaserContent()
     {

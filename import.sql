@@ -1,6 +1,6 @@
-SET NAMES utf8;
-SET CHARACTER SET 'utf8';
-SET collation_connection = 'utf8_general_ci';
+SET NAMES utf8mb4;
+SET CHARACTER SET 'utf8mb4';
+SET collation_connection = 'utf8mb4_general_ci';
 
 /* Delete existing tables first */
 DROP TABLE IF EXISTS `geonamesalternatenames`;
@@ -20,7 +20,7 @@ CREATE TABLE `geonames` (
   `population` int(11) DEFAULT NULL,
   `moddate` date DEFAULT NULL,
   PRIMARY KEY (`geonameid`)
-) DEFAULT CHARACTER SET 'utf8'; 
+) DEFAULT CHARACTER SET 'utf8mb4'; 
 
 CREATE TABLE `geonamesadminunits` (
   `geonameid` int(11) NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE `geonamesadminunits` (
   `admin1` varchar(20) DEFAULT NULL,
   `moddate` date DEFAULT NULL,
   PRIMARY KEY (`geonameid`)
-) DEFAULT CHARACTER SET 'utf8'; 
+) DEFAULT CHARACTER SET 'utf8mb4'; 
 
 CREATE TABLE geonamescountries ( 
 geonameId int(11), 
@@ -39,7 +39,7 @@ country char(2),
 name varchar(200),
 continent char(2),
 PRIMARY KEY (`country`)
-) DEFAULT CHARACTER SET 'utf8'; 
+) DEFAULT CHARACTER SET 'utf8mb4'; 
 
 CREATE TABLE `geonamesalternatenames` (
   `alternatenameId` int(11) NOT NULL,
@@ -54,7 +54,7 @@ CREATE TABLE `geonamesalternatenames` (
   FOREIGN KEY (`geonameid`) 
         REFERENCES `geonames` (`geonameid`)
         ON DELETE CASCADE
-) DEFAULT CHARACTER SET 'utf8'; 
+) DEFAULT CHARACTER SET 'utf8mb4'; 
 
 LOAD DATA LOCAL INFILE './countryInfo.txt' INTO TABLE geonamescountries IGNORE 51 LINES (country, @skip, @skip, @skip, name, @skip, @skip, @skip, continent, @skip, @skip, @skip, @skip, @skip, @skip, @skip, geonameid, @skip, @skip);
 
@@ -65,14 +65,13 @@ UPDATE geonamescountries SET continent = 'EA' WHERE (continent = 'EU' OR contine
 /* Don't include dissolved countries */
 DELETE FROM geonamescountries WHERE geonameid = 0;
 
-LOAD DATA LOCAL INFILE './allCountries.txt' INTO TABLE geonames CHARACTER SET 'utf8' (geonameid, name, @skip, @skip, latitude, longitude, fclass, fcode, country, @skip, admin1, @skip, @skip, @skip, population, @skip, @skip, @skip, moddate);
-LOAD DATA LOCAL INFILE './alternateNames.txt' INTO TABLE geonamesalternatenames CHARACTER SET 'utf8' (alternatenameid, geonameid, isolanguage, alternatename, ispreferred, isshort, iscolloquial, ishistoric);
+LOAD DATA LOCAL INFILE './allCountries.txt' INTO TABLE geonames CHARACTER SET 'utf8mb4' (geonameid, name, @skip, @skip, latitude, longitude, fclass, fcode, country, @skip, admin1, @skip, @skip, @skip, population, @skip, @skip, @skip, moddate);
 
 /* fill the geonamesadminunits table based on the content of the geonames table (much faster with a separate table)*/
 INSERT INTO geonamesadminunits SELECT geonameid, name, fclass, fcode, country, admin1, moddate FROM geonames WHERE fclass = 'A';
 
 /* REMOVE every non-place from the geonames table to save space */
- DELETE FROM geonames WHERE (fclass != 'P') AND (fclass != 'A');
+DELETE FROM geonames WHERE (fclass != 'P') AND (fclass != 'A');
 
 /* Put all indices in place (should be faster after import) */
 CREATE INDEX idx_name ON geonames (name);
@@ -88,6 +87,9 @@ CREATE INDEX idx_fclass ON geonamesadminunits (fclass);
 CREATE INDEX idx_fcode ON geonamesadminunits (fcode);
 CREATE INDEX idx_country ON geonamesadminunits (country);
 CREATE INDEX idx_admin1 ON geonamesadminunits (admin1);
+
+/* make sure the site is operational and include alternate names last */
+LOAD DATA LOCAL INFILE './alternateNames.txt' INTO TABLE geonamesalternatenames CHARACTER SET 'utf8mb4' (alternatenameid, geonameid, isolanguage, alternatename, ispreferred, isshort, iscolloquial, ishistoric);
 
 CREATE INDEX idx_alternatename ON geonamesalternatenames (alternatename);
 CREATE INDEX idx_isoLanguage ON geonamesalternatenames (isoLanguage);

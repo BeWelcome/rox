@@ -1,7 +1,8 @@
+<div class="row no-gutters">
         <div class="col-12">
             <h3><?= $words->get('ProfileMyNotes') ?></h3>
         </div>
-        <div class="col-12 mt-3">
+        <div class="col-12">
 
             <?php // display my notes, if there are any
             if (!empty($mynotes)) {
@@ -61,3 +62,4 @@
                 echo $words->get("MyNotesNoNotes");
             }  ?>
         </div>
+</div>

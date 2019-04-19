@@ -1,4 +1,5 @@
-<?php
+<div class="row">
+    <?php
     $vars = array();
     $words = $this->words;
     $layoutbits = new MOD_layoutbits();
@@ -30,11 +31,11 @@
     {
         foreach ($vars['errors'] as $error)
         {
-            echo '<div class="alert alert-danger">'.$words->get($error).'</div>';
+            echo '<div class="col-12"><div class="alert alert-danger">'.$words->get($error).'</div></div>';
         }
     }
     if (isset($vars['success'])) {
-        echo '<div class="alert alert-success">' . $words->get('ProfileNoteSuccess');
+        echo '<div class="col-12"><div class="alert alert-success">' . $words->get('ProfileNoteSuccess') - ' ';
         echo '<a href="mynotes">' . $words->get('ProfileNoteAllNotes') . '</a></div>';
         if ($note->Category == "") {
             $note->Category = $note->CategoryFree;
@@ -46,7 +47,6 @@
     $callback_tag = $formkit->setPostCallback('MembersController', 'addnoteCallback');
     ?>
     
-        <div class="row">
             <div class="col-12">
                 <h3><?php
                 if (!$edit_mode) {

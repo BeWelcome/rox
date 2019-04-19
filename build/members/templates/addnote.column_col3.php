@@ -36,7 +36,7 @@
     }
     if (isset($vars['success'])) {
         echo '<div class="col-12"><div class="alert alert-success">' . $words->get('ProfileNoteSuccess') . ' ';
-        echo '<a href="mynotes">' . $words->get('ProfileNoteAllNotes') . '</a></div>';
+        echo '<a href="mynotes">' . $words->get('ProfileNoteAllNotes') . '</a></div></div>';
         if ($note->Category == "") {
             $note->Category = $note->CategoryFree;
             $note->CategoryFree = "";

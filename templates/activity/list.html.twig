@@ -19,7 +19,7 @@
 
 {% block content %}
 <h1>{{ 'activities' | trans }}</h1>
-    <div class="pull-right">{{ pagerfanta( activities, 'twitter_bootstrap4_translated', { routeName: 'activity' }) }}</div>
+    <div class="pull-right">{{ pagerfanta( activities, 'rox_default', { routeName: 'activity' }) }}</div>
     <div class="row">
         <div class="col-xs-12">
             <table class="table" id="activitylist" style="table-layout: fixed;">
@@ -77,6 +77,6 @@
             </table>
         </div>
     </div>
-    <div class="pull-right">{{ pagerfanta( activities, 'twitter_bootstrap4_translated', { routeName: 'activity' }) }}</div>
+    <div class="pull-right">{{ pagerfanta( activities, 'rox_default', { routeName: 'activity' }) }}</div>
 
 {% endblock content %}

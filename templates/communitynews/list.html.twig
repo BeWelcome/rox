@@ -8,7 +8,7 @@
 {% block content %}
     <h1>{{ 'bewelcome_news.header' | trans }}</h1>
     <div class="row">
-        <div class="col-12 pull-right">{{ pagerfanta( communityNews, 'twitter_bootstrap4_translated', { routeName: 'communitynews' }) }}</div>
+        <div class="col-12 pull-right">{{ pagerfanta( communityNews, 'rox_default', { routeName: 'communitynews' }) }}</div>
     </div>
     <div class="row">
         {% for news in communityNews %}
@@ -25,6 +25,6 @@
         {% endfor %}
     </div>
     <div class="row">
-        <div class="col-12 pull-right">{{ pagerfanta( communityNews, 'twitter_bootstrap4_translated', { routeName: 'communitynews' }) }}</div>
+        <div class="col-12 pull-right">{{ pagerfanta( communityNews, 'rox_default', { routeName: 'communitynews' }) }}</div>
     </div>
 {% endblock content %}

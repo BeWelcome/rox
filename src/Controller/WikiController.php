@@ -13,7 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Zend\Validator\Translator\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class WikiController extends AbstractController
 {
@@ -24,9 +24,9 @@ class WikiController extends AbstractController
      *
      * @return Response
      */
-    public function showWikiFrontPageAction(WikiModel $wikiModel)
+    public function showWikiFrontPageAction(TranslatorInterface $translator, WikiModel $wikiModel)
     {
-        return $this->showWikiPageAction('WikiFrontPage', $wikiModel);
+        return $this->showWikiPageAction($translator, 'WikiFrontPage', $wikiModel);
     }
 
     /**
@@ -177,7 +177,7 @@ class WikiController extends AbstractController
         $wikiPage = $wikiRepository->getPageByName($pageName);
 
         if (null === $wikiPage) {
-            $output = 'No wiki found for this group. Creating not possible yet.';
+            $output = 'No wiki found for this group.';
         } else {
             $output = $wikiModel->parseWikiMarkup($wikiPage->getContent());
         }

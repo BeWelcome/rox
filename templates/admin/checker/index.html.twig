@@ -22,7 +22,7 @@
         {{ form_errors(form) }}
         {% if reported.haveToPaginate %}
             <div class="float-left">
-                {{ pagerfanta( reported, 'twitter_bootstrap4_translated') }}
+                {{ pagerfanta( reported, 'rox_default') }}
             </div>
         {% endif %}
         <table class="table table-striped table-hover">
@@ -59,7 +59,7 @@
         </div>
         {% if reported.haveToPaginate %}
             <div class="float-left">
-                {{ pagerfanta( reported, 'twitter_bootstrap4_translated') }}
+                {{ pagerfanta( reported, 'rox_default') }}
             </div>
         {% endif %}
         {{ form_rest(form) }}

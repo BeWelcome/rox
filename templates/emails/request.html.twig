@@ -11,5 +11,5 @@
     <br>
     {{ message | raw }}<br>
     <br>
-    <a href="{{ url('hosting_request_reply', { 'id': message.id }) }}">{{ 'reply' | trans }}</a>
+    <a href="{{ url('hosting_request_reply', { 'id': request.id }) }}">{{ 'reply' | trans }}</a>
 {% endblock %}

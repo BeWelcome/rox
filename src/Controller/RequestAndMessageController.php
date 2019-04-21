@@ -392,6 +392,40 @@ class RequestAndMessageController extends AbstractController
     }
 
     /**
+     * @Route("/message/{id}/spam", name="message_mark_spam")
+     *
+     * @param Message $message
+     *
+     * @return Response
+     */
+    public function markAsSpamAction(Message $message)
+    {
+        $messageModel = new MessageModel($this->getDoctrine());
+        $messages = $messageModel->markAsSpam([$message->getId()]);
+
+        $this->addTranslatedFlash('notice', 'flash.marked.spam');
+
+        return $this->redirectToRoute('message_show', [ 'id' => $message->getId() ]);
+    }
+
+    /**
+     * @Route("/message/{id}/nospam", name="message_mark_nospam")
+     *
+     * @param Message $message
+     *
+     * @return Response
+     */
+    public function unmarkAsSpamAction(Message $message)
+    {
+        $messageModel = new MessageModel($this->getDoctrine());
+        $messages = $messageModel->unmarkAsSpam([$message->getId()]);
+
+        $this->addTranslatedFlash('notice', 'flash.marked.nospam');
+
+        return $this->redirectToRoute('message_show', [ 'id' => $message->getId() ]);
+    }
+
+    /**
      * @param Request $request
      * @param string  $folder
      * @param $messages
@@ -874,6 +908,9 @@ class RequestAndMessageController extends AbstractController
             'subject' => $subject,
         ]);
 
+        // Reset to former locale as otherwise flash notification will be shown in receiver's locale
+        $this->setTranslatorLocale($sender);
+
         return $this->sendEmail($sender, $receiver, $subject, $body);
     }
 
@@ -883,14 +920,16 @@ class RequestAndMessageController extends AbstractController
         $this->setTranslatorLocale($receiver);
 
         $subject = $request->getSubject()->getSubject();
-        $message = $request->getMessage();
         $body = $this->renderView($template, [
             'sender' => $sender,
             'receiver' => $receiver,
             'subject' => $subject,
-            'message' => $message,
+            'message' => $request,
             'request' => $request->getRequest(),
         ]);
+
+        // Reset to former locale as otherwise flash notification will be shown in receiver's locale
+        $this->setTranslatorLocale($sender);
 
         return $this->sendEmail($sender, $receiver, $subject, $body);
     }

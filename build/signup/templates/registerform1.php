@@ -230,10 +230,10 @@
         password[0].setCustomValidity('');
         var valid = password[0].checkValidity();
         if (valid) {
-            $(check).addClass('is-valid').removeClass('is-invalid');
+            $(password).addClass('is-valid').removeClass('is-invalid');
             $("#register-passwordcheck").change();
         } else {
-            $(check).addClass('is-invalid').removeClass('is-valid');
+            $(password).addClass('is-invalid').removeClass('is-valid');
         }
     });
 

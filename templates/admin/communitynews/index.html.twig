@@ -18,6 +18,7 @@
 {% endblock stylesheets %}
 
 {% block content %}
+    <div class="row">
     {{ form(form) }}
 
     <div class="log"></div>
@@ -25,11 +26,12 @@
         <p>{{ 'admin.community.news.no.news' | trans }}</p>
     {% else %}
         {% if logs.haveToPaginate %}
-            <div class="float-left">
-                {{ pagerfanta( logs, 'twitter_bootstrap4_translated') }}
+            <div class="float-right">
+                {{ pagerfanta( logs, 'rox_default') }}
             </div>
         {% endif %}
-        <table class="table table-responsive table-striped table-hover">
+        <div class="row table-responsive">
+        <table class="table table-striped table-hover">
 
         <tr>
             <th>Type</th>
@@ -48,11 +50,13 @@
             </tr>
         {% endfor %}
         </table>
+        </div>
         {% if logs.haveToPaginate %}
-            <div class="float-left">
-                {{ pagerfanta( logs, 'twitter_bootstrap4_translated') }}
+            <div class="float-right">
+                {{ pagerfanta( logs, 'rox_default') }}
             </div>
         {% endif %}
 
     {% endif %}
+    </div>
 {% endblock %}

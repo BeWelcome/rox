@@ -1,0 +1,62 @@
+version: '3.7'
+
+# To run:
+# Set in .env.local DB_HOST as the db container_name: bewelcome_mysql
+# $ docker-compose up -d && docker-compose logs -f -t
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: bewelcome_mysql
+    init: true
+    environment:
+      MYSQL_ROOT_PASSWORD: bewelcome_root_dev
+      MYSQL_DATABASE: bewelcome
+      MYSQL_USER: bewelcome
+      MYSQL_PASSWORD: bewelcome
+    ports:
+      - 127.0.0.1:9906:3306
+  web:
+    image: alpine:3.9
+    container_name: bewelcome_web
+    init: true
+    depends_on:
+      - db
+    volumes:
+      - ./:/var/Code
+    ports:
+      - 127.0.0.1:8000:8000 # Expose development app instance only on localhost
+    working_dir: /var/Code
+    command: "sh -c 'echo \"Starting initial setup\" &&
+
+              apk update &&
+
+              apk add \"php7<7.3\" &&
+              apk add wget unzip npm git mysql-client make \
+                      php7-json php7-phar php7-pdo_mysql php7-gd php7-pecl-xdebug php7-tokenizer php7-fileinfo \
+                      php7-xml php7-iconv php7-mbstring php7-dom php7-xmlwriter php7-simplexml php7-zip php7-session \
+                      php7-pcntl php7-mysqli php7-posix &&
+
+              sed -i \"s/short_open_tag = .*/short_open_tag = On/\" /etc/php7/php.ini &&
+              sed -i \"s/magic_quotes_gpc = .*/magic_quotes_gpc = Off/\" /etc/php7/php.ini &&
+
+              wget https://raw.githubusercontent.com/composer/getcomposer.org/master/web/installer -O - -q \
+                   | php -- --quiet &&
+              mv composer.phar /usr/local/bin/composer &&
+
+              composer install &&
+              npm install &&
+
+              php bin/console doctrine:schema:create --no-interaction &&
+              php bin/console hautelook:fixtures:load --no-interaction &&
+
+              wget https://downloads.bewelcome.org/for_developers/rox_test_db/languages.sql.bz2 -O /tmp/languages.sql.bz2 &&
+              wget https://downloads.bewelcome.org/for_developers/rox_test_db/words.sql.bz2 -O /tmp/words.sql.bz2 &&
+
+              bunzip2 /tmp/languages.sql.bz2 /tmp/words.sql.bz2 &&
+              mysql --host db bewelcome -u bewelcome -pbewelcome < /tmp/languages.sql &&
+              mysql --host db bewelcome -u bewelcome -pbewelcome < /tmp/words.sql &&
+
+              echo \"Initial setup DONE\" &&
+              php bin/console server:run 0.0.0.0:8000 --verbose;
+              '"

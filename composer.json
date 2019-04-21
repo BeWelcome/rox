@@ -7,6 +7,9 @@
     "require": {
         "ext-gd": "*",
         "ext-pdo": "*",
+        "ext-pdo-mysql": "*",
+        "ext-mysqli": "*",
+        "ext-session": "*",
         "twig/twig": "^2.4",
         "anthonymartin/geo-location": "^1.0",
         "doctrine/doctrine-bundle": "^1.9",

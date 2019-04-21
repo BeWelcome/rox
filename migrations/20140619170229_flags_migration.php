@@ -21,8 +21,8 @@ class FlagsMigration extends AbstractMigration
         $table = $this->table("flags");
         $table->addColumn('Relevance', 'integer',
                     array( 'length' => 1,
-                            'comment' => 'Relevance > 0 means the flag is in use.',
-                            'after' => 'Description'))
+                            'comment' => 'Relevance > 0 means the flag is in use.'
+                    ))
                 ->save();
         $this->execute("
 UPDATE `flags` SET Name = 'NotAllowedToPostInForum', Relevance = 100 WHERE Name = 'NotAllowToPostInForum';

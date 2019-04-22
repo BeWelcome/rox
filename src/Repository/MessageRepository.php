@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Doctrine\DeleteRequestType;
+use App\Doctrine\InFolderType;
 use App\Doctrine\MessageStatusType;
 use App\Doctrine\SpamInfoType;
 use App\Entity\Member;
@@ -27,6 +28,8 @@ class MessageRepository extends EntityRepository
             ->select('count(m.id)')
             ->where('m.receiver = :member')
             ->setParameter('member', $member)
+            ->andWhere('m.infolder = :infolder')
+            ->setParameter('infolder', InFolderType::NORMAL)
             ->andWhere('NOT (m.deleteRequest LIKE :receiverDeleted)')
             ->setParameter(':receiverDeleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
             ->andWhere('NOT (m.deleteRequest LIKE :receiverPurged)')
@@ -58,6 +61,8 @@ class MessageRepository extends EntityRepository
             ->select('count(m.id)')
             ->where('m.receiver = :member')
             ->setParameter('member', $member)
+            ->andWhere('m.infolder = :infolder')
+            ->setParameter('infolder', InFolderType::NORMAL)
             ->andWhere('NOT (m.deleteRequest LIKE :receiverDeleted)')
             ->setParameter(':receiverDeleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
             ->andWhere('NOT (m.deleteRequest LIKE :receiverPurged)')
@@ -249,6 +254,8 @@ class MessageRepository extends EntityRepository
         }
         $qb
             ->setParameter('member', $member)
+            ->andWhere('m.infolder = :infolder')
+            ->setParameter('infolder', InFolderType::NORMAL)
             ->join('m.request', 'r')
             ->orderBy('m.'.$sort, $sortDirection);
 

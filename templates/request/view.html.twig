@@ -32,6 +32,7 @@
                 {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<i class="fa fa-question mr-1"></i> {{ 'request.host.tentatively'|trans }}{% endif %}
             {% endif %}
             <a class="btn btn-sm btn-primary" href="{{ path( 'hosting_request_reply', { id: thread[0].id }) }}">{{ label | trans }}</a>
+            <a class="btn btn-sm btn-primary float-right" href="{{ path( 'message_mark_spam', { id: thread[0].id }) }}">{{ 'markspam' | trans }}</a>
         </div>
 
     </div>

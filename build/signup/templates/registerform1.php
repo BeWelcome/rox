@@ -231,7 +231,7 @@
 
     $( passwordCheck ).change(function() {
         passwordCheck[0].setCustomValidity('');
-        var valid = check[0].checkValidity();
+        var valid = passwordCheck[0].checkValidity();
         if (valid) {
             $(passwordCheck).addClass('is-valid').removeClass('is-invalid');
         } else {

@@ -67,7 +67,10 @@
             {% else %}
                 {% set label = 'reply' %}
             {% endif %}
-            {{ form_widget(form.cancel, {'attr': {'class': 'btn btn-primary mr-1'}}) }}
+            {{ form_widget(form.cancel, {'attr': {'class': 'btn btn-primary mr-1',
+                'onclick': 'return confirm(\'' ~ ('request.confirm.cancel'|trans) ~ '\');'}})
+            }}
+
             {{ form_widget(form.update, {'attr': {'class': 'btn btn-primary mr-1'},
                 'label' : label}) }}
         </div>

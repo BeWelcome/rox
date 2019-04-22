@@ -60,7 +60,7 @@
                             echo isset($vars['username']) ? 'value="'.htmlentities($vars['username'], ENT_COMPAT, 'utf-8').'" ' : '';
                             ?>
                         >
-                        <button type="button" class="input-group-append btn btn-primary" data-container="body" data-toggle="popover" data-placement="right" data-content='<?= $words->getSilent('subline_username') ?>'>
+                        <button type="button" class="input-group-append btn btn-primary" data-container="body" data-toggle="popover" data-placement="right" data-content="<?= htmlentities($words->getSilent('subline_username')) ?>">
                             <i class="fa fa-question"></i>
                         </button>
                         <div class="valid-feedback"><?= $words->get('signup.username.looks.good') ?></div>
@@ -200,18 +200,18 @@
                 if (data.value === username.val()) {
                     if (data.valid === true) {
                         username[0].setCustomValidity('');
-                        $("#username-invalid").html('<?= $words->getSilent("signup.error.username"); ?>');
+                        $("#username-invalid").html("<?= $words->getSilent("signup.error.username"); ?>");
                         $(username).addClass('is-valid').removeClass('is-invalid');
                     } else {
-                        username[0].setCustomValidity('<?= $words->getSilent("signup.error.username.taken"); ?>');
-                        $("#username-invalid").html('Username is already taken. Please choose another one')
+                        username[0].setCustomValidity("<?= $words->getSilent("signup.error.username.taken"); ?>");
+                        $("#username-invalid").html("<?= $words->getSilent("signup.error.username.taken"); ?>");
                         $(username).addClass('is-invalid').removeClass('is-valid');
                     }
                 }
             });
         } else {
             username[0].setCustomValidity('Format wrong');
-            $("#username-invalid").html('<?= $words->getSilent("signup.error.username"); ?>');
+            $("#username-invalid").html("<?= $words->getSilent("signup.error.username"); ?>");
             $(username).addClass('is-invalid').removeClass('is-valid');
         }
     });
@@ -245,7 +245,7 @@
         var valid = email[0].checkValidity();
         if (valid) {
             email[0].setCustomValidity('Checking email');
-            $("#email-invalid").html('<?= $words->getSilent("signup.email.checking"); ?>');
+            $("#email-invalid").html("<?= $words->getSilent('signup.email.checking'); ?>");
             $(email).addClass('is-invalid').removeClass('is-valid');
             // Check if email is not in use
             $.get('/signup/checkemail', {'field': '', 'value': $(this).val()}, function(data) {
@@ -256,19 +256,19 @@
                     if (data.valid === true) {
                         email[0].setCustomValidity('');
                         $(email).addClass('is-valid').removeClass('is-invalid');
-                        $("#email-invalid").html('<?= $words->getSilent("signup.error.email"); ?>');
+                        $("#email-invalid").html("<?= $words->getSilent('signup.error.email'); ?>");
                         $("#register-emailcheck").change();
                     } else {
-                        email[0].setCustomValidity('<?= $words->getSilent("signup.error.email.taken"); ?>');
+                        email[0].setCustomValidity("<?= $words->getSilent('signup.error.email.taken'); ?>");
                         $(email).addClass('is-invalid').removeClass('is-valid');
-                        $("#email-invalid").html('<?= $words->getSilent("signup.error.email.taken"); ?>')
+                        $("#email-invalid").html("<?= $words->getSilent('signup.error.email.taken'); ?>");
                     }
                 } else {
                     $(email).addClass('is-invalid').removeClass('is-valid');
                 }
             });
         } else {
-            $("#email-invalid").html('<?= $words->getSilent("signup.error.email"); ?>');
+            $("#email-invalid").html("<?= $words->getSilent('signup.error.email'); ?>");
             $(email).addClass('is-invalid').removeClass('is-valid');
         }
     });

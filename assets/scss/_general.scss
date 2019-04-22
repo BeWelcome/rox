@@ -18,7 +18,8 @@ body {
 }
 
 main {
-  flex: 1;
+  flex: 1 0 auto;
+  margin-bottom: 1rem;
 }
 /* Wrapper for the main content, below the menu */
 .container-content {

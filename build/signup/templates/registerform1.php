@@ -115,7 +115,7 @@
                             <i class="fa fa-question"></i>
                         </button>
                         <div class="valid-feedback"><?= $words->getSilent('signup.email.wellformed'); ?></div>
-                        <div class="invalid-feedback" id="email-invalid"><?= $words->getSilent('signup.email.invalid'); ?></div>
+                        <div class="invalid-feedback" id="email-invalid"><?= $words->getSilent('signup.error.email'); ?></div>
                     </div>
                 </div>
 
@@ -170,11 +170,9 @@
                 </div>
                 <!-- Next button -->
                 <div class="form-group">
-                    <div class="d-flex">
-                        <button type="submit" class="btn btn-primary"><?php echo $words->getSilent('NextStep'); ?> <i class="fa fa-angle-double-right"></i></button>
+                        <button type="submit" class="btn btn-primary w-100"><?php echo $words->getSilent('NextStep'); ?> <i class="fa fa-angle-double-right"></i></button>
                         <?php echo $words->flushBuffer(); ?>
                     </div>
-                </div>
             </div>
 
             <div class="col-12 col-md-3">
@@ -202,46 +200,42 @@
                 if (data.value === username.val()) {
                     if (data.valid === true) {
                         username[0].setCustomValidity('');
-                        $("#username-invalid").html('Username must be at least 4 and maximum 20 characters long. They have to start with a letter, they have to end with either a letter or a number. In between the following characters may be used: . _ -');
+                        $("#username-invalid").html('<?= $words->getSilent("signup.error.username"); ?>');
+                        $(username).addClass('is-valid').removeClass('is-invalid');
                     } else {
-                        username[0].setCustomValidity('Username is already taken. Please choose another one');
+                        username[0].setCustomValidity('<?= $words->getSilent("signup.error.username.taken"); ?>');
                         $("#username-invalid").html('Username is already taken. Please choose another one')
+                        $(username).addClass('is-invalid').removeClass('is-valid');
                     }
                 }
             });
         } else {
-            username[0].setCustomValidity('Username is already taken. Please choose another one');
-            $("#username-invalid").html('Username must be at least 4 and maximum 20 characters long. They have to start with a letter, they have to end with either a letter or a number. In between the following characters may be used: . _ -');
+            username[0].setCustomValidity('Format wrong');
+            $("#username-invalid").html('<?= $words->getSilent("signup.error.username"); ?>');
+            $(username).addClass('is-invalid').removeClass('is-valid');
         }
     });
 
-    let check = $( "#register-passwordcheck" );
+    let passwordCheck = $( "#register-passwordcheck" );
     $( "#register-password" ).change(function() {
         let password = $( "#register-passwordcheck" );
         password[0].setCustomValidity('');
         var valid = password[0].checkValidity();
         if (valid) {
             $(password).addClass('is-valid').removeClass('is-invalid');
-            check[0].setCustomValidity('');
-            $("#register-passwordcheck").change();
+            $(passwordCheck).change();
         } else {
             $(password).addClass('is-invalid').removeClass('is-valid');
-            $(check).addClass('is-invalid').removeClass('is-valid');
         }
     });
 
-    $( "#register-passwordcheck" ).change(function() {
-        check[0].setCustomValidity('');
+    $( passwordCheck ).change(function() {
+        passwordCheck[0].setCustomValidity('');
         var valid = check[0].checkValidity();
         if (valid) {
-            let password = $("#register-password");
-            if (check.val() === password.val()) {
-                $(check).addClass('is-valid').removeClass('is-invalid');
-            } else {
-                $(check).addClass('is-invalid').removeClass('is-valid');
-            }
+            $(passwordCheck).addClass('is-valid').removeClass('is-invalid');
         } else {
-            $(check).addClass('is-invalid').removeClass('is-valid');
+            $(passwordCheck).addClass('is-invalid').removeClass('is-valid');
         }
     });
 
@@ -250,7 +244,9 @@
         email[0].setCustomValidity('');
         var valid = email[0].checkValidity();
         if (valid) {
-            email[0].setCustomValidity('Nope');
+            email[0].setCustomValidity('Checking email');
+            $("#email-invalid").html('<?= $words->getSilent("signup.email.checking"); ?>');
+            $(email).addClass('is-invalid').removeClass('is-valid');
             // Check if email is not in use
             $.get('/signup/checkemail', {'field': '', 'value': $(this).val()}, function(data) {
                 let email = $( "#register-email" );
@@ -259,16 +255,21 @@
                 if (data.value === email.val()) {
                     if (data.valid === true) {
                         email[0].setCustomValidity('');
-                        $("#email-invalid").html('Please enter a valid email address.');
+                        $(email).addClass('is-valid').removeClass('is-invalid');
+                        $("#email-invalid").html('<?= $words->getSilent("signup.error.email"); ?>');
                         $("#register-emailcheck").change();
                     } else {
-                        email[0].setCustomValidity('<?= $words->getSilent("signup.email.taken"); ?>');
-                        $("#email-invalid").html('<?= $words->getSilent("signup.email.taken"); ?>')
+                        email[0].setCustomValidity('<?= $words->getSilent("signup.error.email.taken"); ?>');
+                        $(email).addClass('is-invalid').removeClass('is-valid');
+                        $("#email-invalid").html('<?= $words->getSilent("signup.error.email.taken"); ?>')
                     }
+                } else {
+                    $(email).addClass('is-invalid').removeClass('is-valid');
                 }
             });
         } else {
-            $("#email-invalid").html('Please enter a valid email address.');
+            $("#email-invalid").html('<?= $words->getSilent("signup.error.email"); ?>');
+            $(email).addClass('is-invalid').removeClass('is-valid');
         }
     });
 

@@ -60,7 +60,7 @@
                             echo isset($vars['username']) ? 'value="'.htmlentities($vars['username'], ENT_COMPAT, 'utf-8').'" ' : '';
                             ?>
                         >
-                        <button type="button" class="input-group-append btn btn-primary" data-container="body" data-toggle="popover" data-placement="right" data-content='<?= $words->getSilent('subline_username') ?>'>
+                        <button type="button" class="input-group-append btn btn-primary" data-container="body" data-toggle="popover" data-placement="right" data-content="<?= htmlentities($words->getSilent('subline_username')) ?>">
                             <i class="fa fa-question"></i>
                         </button>
                         <div class="valid-feedback"><?= $words->get('signup.username.looks.good') ?></div>

@@ -7,7 +7,7 @@
     "require": {
         "ext-gd": "*",
         "ext-pdo": "*",
-        "Twig/Twig": "^2.4",
+        "twig/twig": "^2.4",
         "anthonymartin/geo-location": "^1.0",
         "doctrine/doctrine-bundle": "^1.9",
         "doctrine/doctrine-cache-bundle": "^1.2",

@@ -46,56 +46,8 @@ class TranslationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/translations/{code}", name="translations",
-     *     defaults={"code":""})
-     *
-     * @param Request $request
-     * @param string code
-     *
-     * @return Response
-     */
-    public function listTranslationsAction(Request $request, $code)
-    {
-        $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', 20);
-        $locale = $this->get('session')->get('_locale');
-
-        $form = $this->createFormBuilder(['wordCode' => $code])
-            ->add('wordCode', TextType::class, [
-                'label' => 'translation.id',
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ])
-            ->add('search', SubmitType::class)
-            ->getForm();
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $newCode = $data['wordCode'];
-            if ($code <> $newCode) {
-                $page=1;
-                $code = $newCode;
-            }
-        }
-
-        /** @var Connection $connection */
-        $connection = $this->getDoctrine()->getConnection();
-        $translationAdapter = new TranslationAdapter($connection, $locale, $code);
-        $translations = new Pagerfanta($translationAdapter);
-        $translations->setMaxPerPage($limit);
-        $translations->setCurrentPage($page);
-
-        return $this->render('admin/translations/list.html.twig', [
-            'form' => $form->createView(),
-            'code' => $code,
-            'translations' => $translations,
-        ]);
-    }
-
-    /**
-     * @Route("/admin/translations/{locale}/{code}/edit", name="translations_edit")
+     * @Route("/admin/translations/edit/{locale}/{code}", name="translations_edit",
+     *     requirements={"code"=".+"}))
      *
      * Update an existing translation for the locale
      *
@@ -164,7 +116,8 @@ class TranslationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/translations/create/{code}/{locale}", name="translations_create")
+     * @Route("/admin/translations/create/{locale}/{code}", name="translations_create",
+     *     requirements={"code"=".+"}))
      *
      * Creates an English index and the matching translation (if locale != 'en')
      *
@@ -243,7 +196,8 @@ class TranslationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/translations/{locale}/{code}/add", name="translation_add")
+     * @Route("/admin/translations/add/{locale}/{code}", name="translation_add",
+     *     requirements={"code"=".+"}))
      *
      * Adds a missing translation for an existing english index
      *
@@ -341,6 +295,56 @@ class TranslationController extends AbstractController
         $referrer = $request->headers->get('referer');
 
         return $this->redirect($referrer);
+    }
+
+    /**
+     * @Route("/admin/translations/{code}", name="translations",
+     *     defaults={"code":""},
+     *     requirements={"code"=".+"})
+     *
+     * @param Request $request
+     * @param string code
+     *
+     * @return Response
+     */
+    public function listTranslationsAction(Request $request, $code)
+    {
+        $page = $request->query->get('page', 1);
+        $limit = $request->query->get('limit', 20);
+        $locale = $this->get('session')->get('_locale');
+
+        $form = $this->createFormBuilder(['wordCode' => $code])
+            ->add('wordCode', TextType::class, [
+                'label' => 'translation.id',
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+            ->add('search', SubmitType::class)
+            ->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $newCode = $data['wordCode'];
+            if ($code <> $newCode) {
+                $page=1;
+                $code = $newCode;
+            }
+        }
+
+        /** @var Connection $connection */
+        $connection = $this->getDoctrine()->getConnection();
+        $translationAdapter = new TranslationAdapter($connection, $locale, $code);
+        $translations = new Pagerfanta($translationAdapter);
+        $translations->setMaxPerPage($limit);
+        $translations->setCurrentPage($page);
+
+        return $this->render('admin/translations/list.html.twig', [
+            'form' => $form->createView(),
+            'code' => $code,
+            'translations' => $translations,
+        ]);
     }
 
 }

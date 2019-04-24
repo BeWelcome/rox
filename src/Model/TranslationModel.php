@@ -10,17 +10,18 @@ class TranslationModel
     /**
      * Remove the cache file corresponding to the given locale.
      *
-     * @param $kernelCacheDir
+     * @param Kernel $kernel
      * @param string $locale
      *
      * @return bool
      */
     public function removeCacheFile(Kernel $kernel, $locale)
     {
-        $kernelCacheDir = $kernel->getCacheDir();
+        $kernelCacheDir = $kernel->getCacheDir() . '/translations';
         $localeExploded = explode('_', $locale);
+        $cacheFilename = sprintf('/catalogue\.%s.*\.php$/', $localeExploded[0]);
         $finder = new Finder();
-        $finder->files()->in($kernelCacheDir)->name(sprintf('/translations/catalogue\.%s.*\.php$/', $localeExploded[0]));
+        $finder->files()->in($kernelCacheDir)->name($cacheFilename);
         $deleted = true;
         foreach ($finder as $file) {
             $path = $file->getRealPath();

@@ -481,7 +481,12 @@ LIMIT 1
             " . $this->languagesCondition . "
             " . $this->accommodationCondition . "
             " . $this->typicalOfferCondition;
-//        $str = str_replace('geonames g,', '', $str);
+
+        // check if we search for in country or for an admin unit in which case we need
+        if (strpos($this->locationCondition, 'g.country') === false)
+        {
+            $str = str_replace('geonames g,', '', $str);
+        }
         $count = $this->dao->query($str);
 
         $row = $count->fetch(PDB::FETCH_OBJ);

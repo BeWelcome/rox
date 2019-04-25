@@ -184,7 +184,7 @@ class TranslationController extends AbstractController
                 $kernel,
                 $language->getShortcode()
             );
-            $flashMessage = $translator->trans('flash.added.translatable.item', [ 'code' => $code ]);
+            $flashMessage = $translator->trans('flash.added.translatable.item', [ '%code%' => $code ]);
             $this->addFlash('notice', $flashMessage);
 
             return $this->redirectToRoute('translations');

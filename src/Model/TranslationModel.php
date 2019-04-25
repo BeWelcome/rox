@@ -17,21 +17,17 @@ class TranslationModel
      */
     public function removeCacheFile(Kernel $kernel, $locale)
     {
-        $kernelCacheDir = $kernel->getCacheDir() . '/translations';
-        $localeExploded = explode('_', $locale);
-        $cacheFilename = sprintf('/catalogue\.%s.*\.php$/', $localeExploded[0]);
+        $locale;
+        $kernelCacheDir = $kernel->getCacheDir();
         $finder = new Finder();
-        $finder->files()->in($kernelCacheDir)->name($cacheFilename);
+        $finder->files()->in($kernelCacheDir . '/translations')->name('/.*/');
         $deleted = true;
         foreach ($finder as $file) {
             $path = $file->getRealPath();
             $deleted = unlink($path);
-            $metadata = $path.'.meta';
-            if (file_exists($metadata)) {
-                unlink($metadata);
-            }
         }
 
+        $finder->files()->in($kernelCacheDir)->name('');
         return $deleted;
     }
 }

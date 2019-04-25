@@ -8,7 +8,7 @@ class SetLocationPage extends PageWithRoxLayout
         $this->addLateLoadScriptFile('build/jquery_ui.js');
         $this->addLateLoadScriptFile('build/leaflet.js');
         $this->addLateLoadScriptFile('script/signup/createmap.js');
-        $this->addLateLoadScriptFile('build/search/searchpicker.js');
+        $this->addLateLoadScriptFile('script/search/searchlocation.js');
     }
 
     protected function getStylesheets()

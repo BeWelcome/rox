@@ -50,7 +50,7 @@ $map_conf = PVars::getObj('map');
                         <input type="hidden" name="location-longitude" id="location-longitude"
                                value="<?= isset($vars['location-longitude']) ? $vars['location-longitude'] : '' ?>"/>
                         <input type="text" name="location"
-                               id="location" class="form-control search-picker"
+                               id="location" class="form-control location-picker"
                                placeholder="<?= $words->get(
                                    'label_setlocation'
                                ) ?>"

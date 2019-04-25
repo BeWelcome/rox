@@ -63,7 +63,6 @@ class HostingRequestType extends AbstractType
                         'min' => 1,
                         'max' => 20,
                     ],
-                    'translation_domain' => false,
                     'invalid_message' => 'request.error.number_of_travellers',
                     'constraints' => [
                         new LessThanOrEqual(20),

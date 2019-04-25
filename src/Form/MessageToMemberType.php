@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Message;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -30,9 +31,11 @@ class MessageToMemberType extends AbstractType
             ])
         ;
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            /** @var Message $message */
             $message = $event->getData();
             $form = $event->getForm();
-            if ($message) {
+            if ($message && ($message->getSubject() !== null)) {
+                // set subject to read only if one exists already
                 $form->add('subject', SubjectType::class, ['disabled' => true]);
             } else {
                 $form->add('subject', SubjectType::class);

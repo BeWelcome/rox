@@ -5,10 +5,9 @@
     {{ form_errors(form) }}
     <div class="row mb-1">
         <div class="col-12">
-            {{ form_label(form.subject, null, {'label_attr': {'class': 'sr-only '} }) }}
+            {{ form_row(form.subject.subject) }}
             {{ form_errors(form.subject) }}
-            {{ form_widget(form.subject.subject) }}
-            {{ form_widget(form.message) }}
+            {{ form_row(form.message) }}
             {{ form_rest(form) }}
         </div>
     </div>

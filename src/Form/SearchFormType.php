@@ -93,6 +93,8 @@ class SearchFormType extends AbstractType
         $formBuilder
             ->add('groups', ChoiceType::class, [
                 'choices' => $groups,
+                'choice_translation_domain' => false,
+                'label' => 'groups',
                 'attr' => [
                     'class' => 'select2',
                 ],
@@ -101,9 +103,12 @@ class SearchFormType extends AbstractType
             ])
             ->add('languages', ChoiceType::class, [
                 'choices' => $languages,
+                'choice_translation_domain' => false,
+                'label' => 'languages',
                 'attr' => [
                     'class' => 'select2',
                 ],
+                'translation_domain' => false,
                 'multiple' => true,
                 'required' => false,
             ]);
@@ -144,6 +149,7 @@ class SearchFormType extends AbstractType
                     'female' => 'female',
                     'other' => 'idonttell',
                 ],
+                'label' => 'gender',
                 'attr' => [
                     'class' => 'select2',
                     'data-minimum-results-for-search' => '-1',

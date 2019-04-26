@@ -238,6 +238,7 @@ class TranslationController extends AbstractController
 
         $translation = new Word();
         $translation->setCode($original->getCode());
+        $translation->setLanguage($language);
 
         $addTranslationRequest = EditTranslationRequest::fromTranslations($original, $translation);
 

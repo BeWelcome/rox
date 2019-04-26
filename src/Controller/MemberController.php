@@ -371,7 +371,7 @@ class MemberController extends AbstractController
                 'text/plain'
             );
         if ($htmlMails) {
-            $message->setPart(
+            $message->addPart(
                 $html,
                 'text/html'
             );

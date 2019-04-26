@@ -158,7 +158,7 @@ a.active .metric .value {
     column-count: 3;
   }
   @include media-breakpoint-only(xl) {
-    column-count: 4;
+    column-count: 3;
   }
 }
 

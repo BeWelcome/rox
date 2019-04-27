@@ -80,8 +80,10 @@ $vars =& PPostHandler::getVars($callbackId);
     ?>
 
 </div>
+    <div class="col-12">
 <form method="post" onsubmit="return check_SelectedLanguage();" action="<?php echo $uri; ?>" name="editform"
-      class="row no-gutters" id="forumsform">
+      id="forumsform">
+    <div class="row no-gutters">
     <input type="hidden" name="<?php echo $callbackId; ?>" value="1"/>
     <input type="hidden" name="IdLanguage" id="IdLanguage" value="0">
 
@@ -205,8 +207,9 @@ $vars =& PPostHandler::getVars($callbackId);
 
                 ?>"/>
             </div>
+    </div>
     </form>
-
+    </div>
 <?php
 $textarea = 'topic_text';
 require_once SCRIPT_BASE . 'public/script/tinymceconfig_php.js';

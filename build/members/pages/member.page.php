@@ -131,9 +131,9 @@ class MemberPage extends PageWithActiveSkin
                 array('comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' <span class="badge badge-primary pull-right">'.$comments_count['all'].'</span>'),
                 array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary pull-right">' . $galleryItemsCount . '</span>'),
             );
-            if ($accommodation != 'neverask')
+            if ($member->Accommodation != 'neverask')
             {
-                array_unshift($tt, array('sendrequest', "new/request/$username", '<i class="fa fa-fw fa-bed"></i> ' . $words->getSilent('profile.request.hosting'), 'sendrequest'));
+                array_unshift($tt, array('sendrequest', "new/request/$username", '<i class="fa fa-fw fa-bed"></i> ' . $words->get('profile.request.hosting'), 'sendrequest'));
             }
             if ($linkMembersForumPosts) {
                 $tt[] = array('forum', "forums/member/$username", '<i class="far fa-fw fa-comment"></i> ' . $viewForumPosts);

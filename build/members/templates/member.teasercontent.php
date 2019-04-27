@@ -1,6 +1,5 @@
 <div class="row">
   <div class="col-12 col-md-8">
-
       <?php
 
       // TODO: move HTML to a template
@@ -43,7 +42,7 @@
             <?=$words->flushBuffer()?>
       <?php endif; ?>
         <br>
-        <?$name = $member->name(); ?><?=($name == '') ? (($member->Occupation) ? $member->Occupation : "") : $name;?>
+        <?$name = $member->name(); ?><?=($name == '') ? (($occupation) ? $occupation : "") : $name;?>
     </h1> <!-- username -->
 
       <h4>
@@ -78,7 +77,7 @@
           <div class="form-group form-inline small"><?php echo $this->statusForm($member); ?></div>
 
               <?php if($occupation != null){
-                  echo '<p class="h5">' . $occupation . '</p>';
+                  echo '<p class="h5">' . $member->Occupation . '</p>';
               } ?><!-- occupation -->
 
               <p class="m-0">

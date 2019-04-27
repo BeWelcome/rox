@@ -534,7 +534,7 @@ class ForumsController extends PAppController
     }
     private function DisableGroup($IdGroup) {
         $this->_model->disableGroup($IdGroup);
-        $this->setFlash('t.notification.group.enabled');
+        $this->setFlash('t.notification.group.disabled');
         $this->redirectSubscriptions();
     }
     private function SubscribeGroup($IdGroup) {

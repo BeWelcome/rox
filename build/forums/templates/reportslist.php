@@ -47,7 +47,6 @@ $iiMax = count($list) ; // This retrieve the number of polls
             <th scope="col">Author</th>
             <th scope="col">Title and text</th>
             <th scope="col">Updated</th>
-            <th scope="col">Action</th>
         </tr>
     </thead>
 

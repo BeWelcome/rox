@@ -83,7 +83,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
         </div>
 
         <!-- permanlink, bans, reports -->
-        <div class="text-nowrap text-truncate m-2">
+        <div class="m-2">
             <?php
 
             if ($this->_session->has("IdMember")) {
@@ -91,20 +91,20 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                     $TheReports = $this->_model->GetReports($post->IdPost);
                     $max = count($TheReports);
                     foreach ($TheReports as $report) {
-                        echo "<br>report from ", $report->Username, " [" . $report->Status . "] ";
-                        echo "<a href='forums/reporttomod/", $report->IdPost, "/" . $report->IdReporter . "'>view report</a>";
+                        echo "<small class='text-muted'>{$report->Status} report from ", $report->Username, "</small><br>";
+                        echo "<small class='text-muted'><a href='forums/reporttomod/", $report->IdPost, "/" . $report->IdReporter . "'>view report</a></small><br>";
                     }
                 }
 
-                echo '<span class="gray">';
+                echo '<small class="text-muted">';
                 if (isset($TheReports[0]->IdReporter)) {
                     echo "<a href='forums/reporttomod/", $post->IdPost, "'>", $words->getBuffered('ForumViewMyReportToMod'), "</a>";
                 } else {
-                    echo "<small><a href='forums/reporttomod/", $post->IdPost, "'><i class=\"fa fa-flag\"></i> ", $words->getBuffered('ForumMyReportToMod'), "</a></small>";
+                    echo "<a href='forums/reporttomod/", $post->IdPost, "'><i class=\"fa fa-flag\"></i> ", $words->getBuffered('ForumMyReportToMod'), "</a>";
                 }
-                echo '</span><br>';
+                echo '</small><br>';
 
-                echo '<span class="gray"><small><a href="forums/s' . $post->threadid . '/#post' . $post->IdPost . '"><i class="fa fa-link"></i> ' . $words->get('ForumPermalink') . '</a></small></span>';
+                echo '<small class="text-muted"><a href="forums/s' . $post->threadid . '/#post' . $post->IdPost . '"><i class="fa fa-link"></i> ' . $words->get('ForumPermalink') . '</a></small><br>';
                 $TheReports = $this->_model->GetReports($post->IdPost, $this->_session->get("IdMember")); // Check if there is a pending report for this member
 
             }

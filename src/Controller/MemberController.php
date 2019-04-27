@@ -131,7 +131,7 @@ class MemberController extends AbstractController
 
     /**
      * @Route("/resetpassword/{username}/{key}", name="member_reset_password",
-     *     requirements={"key": "\d{160}"})
+     *     requirements={"key": "[a-z0-9]+"})
      *
      * @param Request $request
      * @param Member $member

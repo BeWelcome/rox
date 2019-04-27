@@ -19,6 +19,7 @@ class SearchFormRequest
 {
     /**
      * @var string
+     * @Assert\NotNull(message="search.location.invalid", groups={"text-search"})
      */
     public $location;
 

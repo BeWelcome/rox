@@ -6,10 +6,10 @@
     {% set myself = app.user %}
 <div id="message_thread" class="row px-3">
     {% if original.Sender.Username == myself.Username %}
-        {% set label = 'Update' %}
+        {% set label = 'update' %}
         {% set otherUser = original.Receiver %}
     {% else %}
-        {% set label = 'Reply' %}
+        {% set label = 'reply' %}
         {% set otherUser = original.Sender %}
     {% endif %}
 

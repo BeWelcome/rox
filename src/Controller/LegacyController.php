@@ -62,6 +62,7 @@ class LegacyController extends AbstractController
                     $session->set('IdMember', $user->getId());
                     // \todo Status isn't set correctly. Force for now.
                     $session->set('MemberStatus', MemberStatusType::ACTIVE);
+                    $session->set('Username', $user->getUsername());
                     $connection = $this->getDoctrine()->getConnection();
                     /** @var Statement $stmt */
                     $stmt = $connection->prepare('

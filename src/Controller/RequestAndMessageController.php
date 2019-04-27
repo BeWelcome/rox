@@ -52,7 +52,6 @@ class RequestAndMessageController extends AbstractController
         $this->mailer = $mailer;
         $this->translator = $translator;
     }
-
     /**
      * Deals with replies to messages and hosting requests.
      *
@@ -633,13 +632,16 @@ class RequestAndMessageController extends AbstractController
             }
 
             if (HostingRequest::REQUEST_CANCELLED === $newRequest->getRequest()->getStatus()) {
-                $subject = 'Canceled: '.$subject;
+                if (strpos('(Cancelled)', $subject) === false) {
+                    $subject = $subject . " (Cancelled)";
+                }
             }
 
             $this->sendGuestReplyNotification(
                 $host,
                 $guest,
-                $newRequest
+                $newRequest,
+                $subject
             );
             $this->addTranslatedFlash('success', 'flash.notification.updated');
 
@@ -725,14 +727,29 @@ class RequestAndMessageController extends AbstractController
                 $subject = 'Re: '.$subject;
             }
 
-            if (HostingRequest::REQUEST_CANCELLED === $newRequest->getRequest()->getStatus()) {
-                $subject = 'Canceled: '.$subject;
+            if (HostingRequest::REQUEST_DECLINED === $newRequest->getRequest()->getStatus()) {
+                if (strpos('(Declined)', $subject) === false) {
+                    $subject = $subject . " (Declined)";
+                }
+            }
+
+            if (HostingRequest::REQUEST_ACCEPTED === $newRequest->getRequest()->getStatus()) {
+                if (strpos('(Accepted)', $subject) === false) {
+                    $subject = $subject . " (Accepted)";
+                }
+            }
+
+            if (HostingRequest::REQUEST_TENTATIVELY_ACCEPTED === $newRequest->getRequest()->getStatus()) {
+                if (strpos('(Tentatively accepted)', $subject) === false) {
+                    $subject = $subject . " (Tentatively accepted)";
+                }
             }
 
             $this->sendHostReplyNotification(
                 $host,
                 $guest,
-                $newRequest
+                $newRequest,
+                $subject
             );
             $this->addTranslatedFlash('notice', 'flash.notification.updated');
 
@@ -914,12 +931,11 @@ class RequestAndMessageController extends AbstractController
         return $this->sendEmail($sender, $receiver, $subject, $body);
     }
 
-    private function sendRequestNotification(Member $sender, Member $receiver, Message $request, $template)
+    private function sendRequestNotification(Member $sender, Member $receiver, Message $request, $subject, $template)
     {
         // Send mail notification with the receiver's preferred locale
         $this->setTranslatorLocale($receiver);
 
-        $subject = $request->getSubject()->getSubject();
         $body = $this->renderView($template, [
             'sender' => $sender,
             'receiver' => $receiver,
@@ -943,7 +959,8 @@ class RequestAndMessageController extends AbstractController
      */
     private function sendInitialRequestNotification(Member $host, Member $guest, Message $request)
     {
-        return $this->sendRequestNotification($guest, $host, $request, 'emails/request.html.twig');
+        $subject = $request->getSubject()->getSubject();
+        return $this->sendRequestNotification($guest, $host, $request, $subject, 'emails/request.html.twig');
     }
 
     /**
@@ -953,9 +970,9 @@ class RequestAndMessageController extends AbstractController
      *
      * @return bool
      */
-    private function sendHostReplyNotification(Member $host, Member $guest, Message $request)
+    private function sendHostReplyNotification(Member $host, Member $guest, Message $request, $subject)
     {
-        return $this->sendRequestNotification($host, $guest, $request, 'emails/reply_host.html.twig');
+        return $this->sendRequestNotification($host, $guest, $request, $subject, 'emails/reply_host.html.twig');
     }
 
     /**
@@ -965,9 +982,9 @@ class RequestAndMessageController extends AbstractController
      *
      * @return bool
      */
-    private function sendGuestReplyNotification(Member $host, Member $guest, Message $request)
+    private function sendGuestReplyNotification(Member $host, Member $guest, Message $request, $subject)
     {
-        return $this->sendRequestNotification($guest, $host, $request, 'emails/reply_guest.html.twig');
+        return $this->sendRequestNotification($guest, $host, $request, $subject, 'emails/reply_guest.html.twig');
     }
 
     private function checkRequestExpired(HostingRequest $request)
@@ -1010,4 +1027,18 @@ class RequestAndMessageController extends AbstractController
     {
         $this->addFlash($type, $this->translator->trans($flashId));
     }
+
+    /**
+     * @Route("/all/messages/with/{username}", name="all_messages_with")
+     *
+     * @param Request $request
+     * @param Member $member
+     *
+     * @return Response
+     */
+    public function allMessagesWithMember(Request $request, Member $member)
+    {
+        return new Response($member->getUsername());
+    }
+
 }

@@ -33,6 +33,7 @@ class SearchFormType extends AbstractType
                     'placeholder' => 'landing.whereyougo',
                 ],
                 'label' => false,
+                'error_bubbling' => true,
             ])
             ->setMethod('GET')
             ->add('keywords', TextType::class, [

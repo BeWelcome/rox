@@ -11,5 +11,5 @@
     <br>
     {{ message.message | raw }}<br>
     <br>
-    <a href="{{ url('hosting_request_reply', { 'id': message.id }) }}">{{ 'reply' | trans }}</a>
+    <a href="{{ url('members_profile', { 'username': sender.Username}) }}">{% trans with {'%username%': sender.Username} %}visit.profile{% endtrans %}</a> {{ 'or' | trans }} <a href="{{ url('hosting_request_reply', { 'id': message.id }) }}">{{ 'reply' | trans }}</a>
 {% endblock %}

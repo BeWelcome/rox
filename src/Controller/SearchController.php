@@ -50,18 +50,18 @@ class SearchController extends AbstractController
         ]);
 
         // Check which form was used to get here
-        $tiny->handleRequest($request);
+/*        $tiny->handleRequest($request);
         $tinyIsSubmitted = $tiny->isSubmitted();
         $tinyIsValid = ($tinyIsSubmitted && $tiny->isValid());
 
         $home->handleRequest($request);
         $homeIsSubmitted = $home->isSubmitted();
         $homeIsValid = ($homeIsSubmitted && $home->isValid());
-
+*/
         $search->handleRequest($request);
         $searchIsSubmitted = $search->isSubmitted();
         $searchIsValid = ($searchIsSubmitted && $search->isValid());
-
+    $tinyIsSubmitted = $tinyIsValid = $homeIsValid = false;
         if ($tinyIsValid || $homeIsValid || $searchIsValid) {
             $data = null;
             /* @var SearchFormRequest $data */

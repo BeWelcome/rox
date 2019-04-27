@@ -94,8 +94,11 @@
                         </div>
                     </a>
                 </td>
-                <td class="align-right">
-                    <a href="{{ path('message_show', { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'View' | trans }}</a>
+                <td class="text-right">
+                    <a href="{{ path('message_show', { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'view' | trans }}</a>
+                    {% if folder == 'inbox' %}<br>
+                    <a href="{{ path('message_reply', { id: message.id}) }}" class="btn btn-primary btn-sm mt-1">{{ 'reply' | trans }}</a>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}

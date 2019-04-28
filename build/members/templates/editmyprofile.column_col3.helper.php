@@ -57,7 +57,7 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
     echo "</div></div>";
 } else {
     if ($this->status == 'finish') {
-          echo '<div class="col-12 alert alert-success" role="alert">'.$words->getFormatted("EditmyprofileFinish", $profile_language_name,
+          echo '<div class="col-12 alert alert-success mt-2" role="alert">'.$words->getFormatted("EditmyprofileFinish", $profile_language_name,
                 '<a href="members/'. $member->Username . '/' . $profile_language_code . '">', '</a>') . '</div>';
     }
     $vars['errors'] = array();

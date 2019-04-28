@@ -1,3 +1,4 @@
+{% import 'macros.twig' as macros %}
 <div id="message_thread" class="mt-1 p-0 px-3 w-100">
     {% set current = thread|first %}
     {% set myself = app.user %}
@@ -21,15 +22,16 @@
                 {% if own %}
                     <img class="profileimg d-none d-sm-block" width="80" height="80" src="{{ path( 'avatar', { 'username': myself.Username , 'size': 80 }) }}" title="{{ myself.Username }}" alt="{{ 'Profile' | trans }}: {{ myself.Username }}">
                 {% else %}
-                    <img class="profileimg d-none d-sm-block" width="80" height="80" src="{{ path( 'avatar', { 'username': otherUser.Username , 'size': 80 }) }}" title="{{ otherUser.Username }}" alt="{{ 'Profile' | trans }}: {{ otherUser.Username }}">
-                {% endif %}
+                    {{ macros.avatarstack(otherUser.Username, 80, false, false) }}
+                   {#  <img class="profileimg d-none d-sm-block" width="80" height="80" src="{{ path( 'avatar', { 'username': otherUser.Username , 'size': 80 }) }}" title="{{ otherUser.Username }}" alt="{{ 'Profile' | trans }}: {{ otherUser.Username }}"> #}
+                    {% endif %}
             </div>
             <div class="col-auto message_{% if own %}own{% else %}other{% endif %}">
                 <small class="{% if own %}pull-right{% else %}pull-left{% endif %} text-muted m-0">
                     {%- if own -%}
                         {{ 'message.you' | trans }}
                     {%- else -%}
-                        {{ message.sender.Username }}
+                        {{ macros.profilelink(message.sender.Username) }}
                     {%- endif %}
                     {{ message.created.DiffForHumans }} - {{ message.id }}
                 </small>

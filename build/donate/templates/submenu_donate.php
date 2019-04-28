@@ -26,16 +26,13 @@ $words = new MOD_words();
 ?>
 
 <div class="col-md-3 offcanvas-collapse mb-2" id="sidebar">
-    <div class="pt-1">
-        <button type="button" class="close pull-right float-md-right" aria-label="Close" data-toggle="offcanvas-collapse" data-target="#sidebar">
-            <span aria-hidden="true">&times;</span>
+    <div class="w-100 p-1 text-right d-md-none">
+        <button type="button" class="btn btn-sm" aria-label="Close" data-toggle="offcanvas">
+            <i class="fa fa-lg fa-times white" aria-hidden="true"></i>
         </button>
     </div>
     <div class="list-group">
         <a class="list-group-item nav-link active" href="donate"><?php echo $words->getBuffered('DonateLink'); ?></a>
         <a class="list-group-item nav-link" href="donate/list"><?php echo $words->getBuffered('DonateList'); ?></a>
     </div>
-
-    <h4 class="mt-3"><?php echo $words->get('Donate_FurtherInfo'); ?></h4>
-    <?php echo $words->get('Donate_FurtherInfoText');?>
 </div>

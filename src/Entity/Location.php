@@ -56,7 +56,7 @@ class Location
     private $fcode;
 
     /**
-     * @var string
+     * @var Country
      *
      * @ORM\OneToOne(targetEntity="Country")
      * @ORM\JoinColumn(name="country", referencedColumnName="country")

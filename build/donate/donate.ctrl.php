@@ -47,6 +47,7 @@ class DonateController extends PAppController
                 break;
                 }
             default:
+
                 $TDonationArray = $this->_model->getDonations();
                 break;
         }
@@ -54,13 +55,14 @@ class DonateController extends PAppController
         $P->content .= $vw->donate($sub,$TDonationArray,$error);
         
         // teaser content
-        $P->teaserBar .= $vw->ShowSimpleTeaser('Donate',$TDonationArray);
+        $P->teaserBar .= $vw->ShowSimpleTeaser('Donate',$TDonationArray)
+            . $vw->donateBar($TDonationArray);
 
         // submenu
         $P->subMenu .= $vw->submenu($sub);
         
         // User bar on the left
-        $P->newBar .= $vw->donateBar($TDonationArray);
+
     }
 }
 

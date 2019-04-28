@@ -8,9 +8,9 @@
             <a class="navbar-brand d-inline d-lg-none" href="{{ url('homepage') }}"><img src="{{ asset('images/logo_no_text.png') }}"
                                                                                          alt="BeWelcome"/></a>
 
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#smallNavBar"
+            <button class="navbar-toggler dropdown-toggle" type="button" data-toggle="collapse" data-target="#smallNavBar"
                     aria-controls="smallNavBar" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+                {{ 'mainmenu' | trans }}
             </button>
 
             {# Navbar small screens #}
@@ -59,7 +59,7 @@
 
                     <li class="nav-item">
                         <a href="{{ url( 'security_logout') }}" class="nav-link"><i
-                                    class="fa fa-sign-out-alt"></i>&nbsp;{{ 'logout' | trans }}</a>
+                           class="fa fa-sign-out-alt"></i>&nbsp;{{ 'logout' | trans }}</a>
                     </li>
                 </ul>
             </div>
@@ -80,9 +80,9 @@
                         <a href="{{ url('volunteer') }}" class="nav-link">{{ 'volunteer' | trans }}</a>
                     </li>
                     <li class="menuborder dropdown d-none d-md-flex">
-                        <a href="#subNavBar" class="nav-link" id="subNavBarToggle" data-target="subNavBar"
+                        <a href="#subNavBar" class="nav-link btn-outline-secondary dropdown-toggle" id="subNavBarToggle" data-target="subNavBar"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            &#9776;
+                            {{ 'mainmenu' | trans }}
                         </a>
 
                         <div id="subNavBar" class="dropdown-menu subnav py-1 bordert-1 borderb-1"

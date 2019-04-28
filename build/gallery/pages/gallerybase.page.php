@@ -73,7 +73,7 @@ class GalleryBasePage extends PageWithActiveSkin
         echo '<div class="col-md-3 offcanvas-collapse mb-2" id="sidebar">';
         echo '     <div class="w-100 p-1 text-right d-md-none">';
         echo '          <button type="button" class="btn btn-sm" aria-label="Close" data-toggle="offcanvas">';
-        echo '               <i class="fa fa-lg fa-times" aria-hidden="true"></i>';
+        echo '               <i class="fa fa-lg fa-times white" aria-hidden="true"></i>';
         echo '          </button>';
         echo '      </div>';
         echo '<div class="list-group w-100" role="group">';

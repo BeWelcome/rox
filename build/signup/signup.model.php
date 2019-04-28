@@ -369,10 +369,9 @@ WHERE `ShortCode` = \'' . $this->_session->get('lang') . '\'';
 
         $query = '
 INSERT INTO `user`
-(`id`, `auth_id`, `handle`, `email`, `active`)
+(`auth_id`, `handle`, `email`, `active`)
 VALUES
 (
-    '.$this->dao->nextId('user').',
     '.(int)$authId.',
     \'' . $vars['username'] . '\',
     \'' . $vars['email'] . '\',

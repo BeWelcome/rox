@@ -18,26 +18,14 @@ if ($TDonationArray) {
     //if ($TextState > 160) $TextState = 160;
     $TextState= 5;
 ?>
-<div class="bw-row">
-    <table>
-        <tr>
-            <td style="padding-left:0">
-                <img src="images/misc/donationbar.png" alt="<?=$Percent?>%" 
-                class="percentImage" style="
-                     background: white url(images/misc/donationbar_bg.png) top left no-repeat;
-                     padding: 0;
-                     margin: 5px 0 0 0;
-                     background-position: 0pt <?=$BarState?>px;"
-                />
-            </td>
-
-            <td style="vertical-align: top">
-                <div style="position: relative; top: <?=$TextState?>px">
-                    <?=$words->getFormatted('Donate_bar_annual_2013',$TotalDonations,$TotalDonationsNeeded); ?>
-                </div>
-            </td>
-
-        </tr>
-    </table>
-</div>
+    <div class="row">
+    <div class="col-12 mb-3">
+        <div class="card p-3">
+            <p class="h4 card-text text-center m-b-0"><?= $words->get('landing.beinvolved.goalfor'); ?> <?= $Stat->year ?>-<?= ($Stat->year +1 )?>: <strong>€<?= $TotalDonationsNeeded ?></strong></p>
+            <progress class="progress progress-primary ma-0 w-100" value="<?= $TotalDonations ?>" max="<?= $TotalDonationsNeeded ?>"></progress>
+            <p class="h4 card-text text-center"><strong>€<?= $TotalDonations ?></strong> received</p>
+        </div>
+    </div>
+    </div>
 <?php } ?>
+

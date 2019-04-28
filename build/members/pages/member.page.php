@@ -49,7 +49,7 @@ class MemberPage extends PageWithActiveSkin
     protected function getSubmenuItems()
     {
         $username = $this->member->Username;
-        $accommodation = $this->member->Accommodation;
+        $accommodation = $this->member->Accomodation;
         $member = $this->member;
         $lang = $this->model->get_profile_language();
         $profile_language_code = $lang->ShortCode;
@@ -131,7 +131,7 @@ class MemberPage extends PageWithActiveSkin
                 array('comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' <span class="badge badge-primary pull-right">'.$comments_count['all'].'</span>'),
                 array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary pull-right">' . $galleryItemsCount . '</span>'),
             );
-            if ($member->Accommodation != 'neverask')
+            if ($accommodation != \App\Doctrine\AccommodationType::NO)
             {
                 array_unshift($tt, array('sendrequest', "new/request/$username", '<i class="fa fa-fw fa-bed"></i> ' . $words->get('profile.request.hosting'), 'sendrequest'));
             }
@@ -175,7 +175,7 @@ class MemberPage extends PageWithActiveSkin
         <div class="col-md-3 offcanvas-collapse mb-2" id="sidebar">
             <div class="w-100 p-1 text-right d-md-none">
                 <button type="button" class="btn btn-sm" aria-label="Close" data-toggle="offcanvas">
-                    <i class="fa fa-lg fa-times" aria-hidden="true"></i>
+                    <i class="fa fa-lg fa-times white" aria-hidden="true"></i>
                 </button>
             </div>
         <div class="list-group mb-2">

@@ -1,4 +1,4 @@
-<?php
+<div class="row"><?php
 $words = new MOD_words();
 ?>
 
@@ -12,14 +12,6 @@ if ($error) {?>
 } elseif ($sub == 'cancel') { ?>
 		<p class="warning"><?php echo $words->getFormatted('Donate_CancelText'); ?></p>
 <?php } ?>
-
-<div class="col-12 mb-3">
-	<div class="card p-3">
-		<p class="h4 card-text text-center m-b-0">Goal for 2016-2017: <strong>€1000,-</strong></p>
-		<progress class="progress progress-primary ma-0" value="60" max="100"></progress>
-		<p class="h4 card-text text-center"><strong>€600.00</strong> received</p>
-	</div>
-</div>
 
 	<div class="col-12 col-lg-6">
 		<ul class="nav nav-tabs" role="tablist">
@@ -122,17 +114,18 @@ if ($error) {?>
 	</div>
 
 	<div class="col-12 col-lg-6">
-		<a name="why"></a>
+		<a id="why"></a>
 		<h3><?php echo $words->get('Donate_Why');?></h3>
 		<p><?php echo $words->getFormatted('Donate_WhyText','<a href="feedback">','</a>')?></p>
 
-		<a name="transparency"></a>
+		<a id="transparency"></a>
 		<h3><?php echo $words->get('Donate_Transparency'); ?></h3>
 		<p><?php echo $words->getFormatted('Donate_TransparencyText'); ?></p>
 
 		<?php echo $words->flushBuffer() ?>
 	</div>
 
+</div>
 <script type="text/javascript">
 /* update the amount-field in the donation form when an option is selected/ an amount is entered */
 function changeAmount (Amount) {

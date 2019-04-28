@@ -117,7 +117,7 @@ if ($User) {
 <?php
 }
 ?>
-    <h2><a href="forums/bwforum"><?php echo $this->words->getFormatted('AgoraForum'); ?></a> <span class="small">&ndash; <?php echo $this->words->get('AgoraTagLine'); ?></span></h2>
+    <h4><a href="forums/bwforum"><?php echo $this->words->getFormatted('AgoraForum'); ?></a> <span class="small">&ndash; <?php echo $this->words->get('AgoraTagLine'); ?></span></h4>
 </div>
 <?php 
     $uri = 'forums/';

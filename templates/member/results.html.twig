@@ -9,8 +9,8 @@
                 <thead class="thead-light">
                 <tr>
                     <th colspan="2">{{ 'member' | trans | capitalize }}</th>
-                    <th>{{ 'profilesummary' | trans | capitalize }}</th>
-                    <th>{{ 'details' | trans | capitalize }}</th>
+                    <th class="d-none d-lg-table-cell">{{ 'profilesummary' | trans | capitalize }}</th>
+                    <th class="d-none d-sm-table-cell">{{ 'details' | trans | capitalize }}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -44,14 +44,22 @@
                                     <div class="mr-1"><i class="fa fa-2x fa-map-marker-alt"></i></div>
                                     <div><strong>{{ member.CityName }}</strong><br>{{ member.CountryName }}</div>
                                 </div>
+
+                                <div class="d-sm-none">
+                                    <div class="float-left"><img src="/images/icons/{{ member.Accommodation }}.png"
+                                                                 alt="{{ member.Accommodation | trans }}"></div>
+                                    <div class="float-left ml-2"><i class="fa fa-2x fa-bed p-1"></i><span
+                                                class="h4">{{ member.MaxGuest }}</span></div>
+                                </div>
+
                             </div>
                         </td>
-                        <td class="col summary py-2">
+                        <td class="col summary py-2 d-none d-lg-table-cell">
                             {% if member.Occupation|length %}<p class="m-0 mb-1 font-italic">{{ 'occupation' | trans }}: {{ member.Occupation | raw }}</p>{% endif %}
                             <a href="/members/{{ member.Username }}"
                                style="color: #000; text-underline: none; display: block; width: 100%;">{{ member.ProfileSummary | truncate(250) | purify }}</a>
                         </td>
-                        <td>
+                        <td class="d-none d-sm-table-cell">
                             <div>
                                 <div class="float-left"><img src="/images/icons/{{ member.Accommodation }}.png"
                                                              alt="{{ member.Accommodation | trans }}"></div>

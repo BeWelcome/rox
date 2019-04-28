@@ -207,7 +207,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 
             ?>
 
-            <div id="d<?= $post->IdContent ?>" class="float-left pr-2 w-100">
+            <div id="d<?= $post->IdContent ?>" class="post float-left pr-2 w-100">
 
                 <?php
                 $Sentence = $words->fTrad($post->IdContent);

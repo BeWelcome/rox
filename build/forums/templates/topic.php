@@ -65,7 +65,7 @@ This File display a topic and the messages which are inside it
             if (strpos($url, "/reverse") === false) { // THis in order to avoid to concatenate /reverse twice
                 $url .= "/reverse";
             }
-            echo ' <a href="' . $url . '" title="' . $words->getSilent('ReverseOrder') . '" ><i class="fa fa-exchange-alt fa-rotate-90" alt="'
+            echo '<a href="' . $url . '" class="h6 ml-2" title="' . $words->getSilent('ReverseOrder') . '" ><i class="fa fa-exchange-alt fa-rotate-90" alt="'
                 . $words->getSilent('ReverseOrder') . '" /></i></a> ' . $words->flushBuffer();
         }
         echo "</h2>";
@@ -116,23 +116,7 @@ This File display a topic and the messages which are inside it
                 }
             }
 
-
-            for ($ii = 0; $ii < $topic->topicinfo->NbTags; $ii++) {
-                $wordtag = $words->fTrad($topic->topicinfo->IdName[$ii]);
-                if ($breadcrumb) {
-                    $breadcrumb .= '|| ';
-                }
-                $tagUrl = $tagBase . 't' . $topic->topicinfo->IdTag[$ii] . '-'
-                    . $wordtag;
-                $breadcrumb .= '<a href="' . $tagUrl . '">' . $wordtag . '</a> ';
-            } // end of for $ii
             ?>
-            <?php if ($breadcrumb != ""): ?>
-                <p class="forumsthreadtags">
-                    <strong><?php echo $words->get("forum_label_tags"); ?>:</strong>
-                    <?php echo $breadcrumb; ?>
-                </p>
-            <?php endif; ?>
             <?php
             $topic->topicinfo->IsClosed = false;
             if ($topic->topicinfo->expiredate != "0000-00-00 00:00:00") {

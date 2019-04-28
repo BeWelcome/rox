@@ -46,7 +46,7 @@ if (count($languages) > 1 || $myself) {
 
     <div class="profile_translations form-inline mt-1">
         <strong><?=$words->get('ProfileTranslations')?></strong>
-        <div class="btn-group btn-group-sm"><?php
+        <div class="btn-group btn-group-sm ml-1"><?php
             $ii = 0;
             $activelang_set = false;
             $max = count($languages);

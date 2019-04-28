@@ -68,53 +68,106 @@ This File display a topic and the messages which are inside it
             echo '<a href="' . $url . '" class="h6 ml-2" title="' . $words->getSilent('ReverseOrder') . '" ><i class="fa fa-exchange-alt fa-rotate-90" alt="'
                 . $words->getSilent('ReverseOrder') . '" /></i></a> ' . $words->flushBuffer();
         }
+
+
+        if ($User) {
+
+            if (isset($topic->isGroupSubscribed) && ($topic->isGroupSubscribed)) {
+                if (isset($topic->IdSubscribe)) {
+                    if ($topic->notificationsEnabled > 0) {
+                        echo '<a class="btn btn-sm btn-light float-right" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
+                            . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
+                    } else {
+                        echo '<a class="btn btn-sm btn-light float-right" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
+                            . '">' . $words->getBuffered('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
+                    }
+                } else {
+                    if ($topic->notificationsEnabled) {
+                        echo '<a class="btn btn-sm btn-light float-right" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
+                            . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
+                    } else {
+                        echo '<a class="btn btn-sm btn-light float-right" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
+                            . '">' . $words->getBuffered('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
+                    }
+                }
+            } else {
+                if (isset($topic->IdSubscribe)) {
+                    if ($topic->notificationsEnabled > 0) {
+                        echo '<a class="btn btn-sm btn-light float-right" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
+                            . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
+                    } else {
+                        echo '<a class="btn btn-sm btn-light float-right" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
+                            . '">' . $words->getBuffered('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
+                    }
+                    echo '<a class="btn btn-sm btn-light float-right" href="' . $this->getURI() . '/subscriptions/unsubscribe/thread/' . $topic->IdSubscribe
+                        . '/' . $topic->IdKey . '">' . $words->getBuffered('ForumUnsubscribe') . '</a>' . $words->flushBuffer() . PHP_EOL;
+                } else {
+                    echo '<a class="btn btn-sm btn-light float-right" href="' . $this->getURI() . '/subscribe/thread/' . $topic->IdThread . '">'
+                        . $words->getBuffered('ForumSubscribe') . '</a>' . $words->flushBuffer() . PHP_EOL;
+                }
+            }
+        }
+
         echo "</h2>";
         ?>
             <?php
             if ($topic->topicinfo->IdGroup > 0) {
                 ?>
-                <small class="text-muted"><strong><?php echo $words->get("group"); ?>:</strong>
+                <p class="m-0 text-muted"><strong><?php echo $words->get("group"); ?>:</strong>
                     <a href="groups/<?php echo $this->_model->getGroupName($topic->topicinfo->IdGroup); ?>">
                         <?php echo $this->_model->getGroupName($topic->topicinfo->GroupName); ?>
                     </a>
-                </small>
-                <?php
-            }
-            ?>
+
+                    <?
+                    if ($User) {
+
+                        $replyuri = preg_replace('#/page.{1,3}/#', '/', $uri . 'reply');
+
+                        if ((!$topic->topicinfo->IsClosed) and ($topic->topicinfo->CanReply)) {
+                            ?>
+                            <a class="btn btn-primary float-right"
+                               href="<?= $replyuri ?>"><?= $words->getBuffered('ForumReply') ?></a><?= $words->flushBuffer() ?>
+                            <?
+                        }
+                    }
+                    }
+                    ?>
+                </p>
 
             <?php
 
-            $url = ForumsView::getURI() . '';
-            $breadcrumb = '';
+            /*
+                       $url = ForumsView::getURI() . '';
+                       $breadcrumb = '';
 
-            // Append slash to URL if it's not there yet
-            if (substr($url, -1) != '/') {
-                $url = $url . '/';
-            }
+                       // Append slash to URL if it's not there yet
+                       if (substr($url, -1) != '/') {
+                           $url = $url . '/';
+                       }
 
-            $replyuri = preg_replace('#/page.{1,3}/#', '/', $uri . 'reply');
+                       $replyuri = preg_replace('#/page.{1,3}/#', '/', $uri . 'reply');
 
-            $tagBase = $url;
+                       $tagBase = $url;
 
-            if (isset($topic->topicinfo->continent) && $topic->topicinfo->continent) {
-                $url = $url . 'k' . $topic->topicinfo->continent . '-' . Forums::$continents[$topic->topicinfo->continent] . '/';
-                $breadcrumb .= '<a href="' . $url . '">' . Forums::$continents[$topic->topicinfo->continent] . '</a> ';
+                       if (isset($topic->topicinfo->continent) && $topic->topicinfo->continent) {
+                           $url = $url . 'k' . $topic->topicinfo->continent . '-' . Forums::$continents[$topic->topicinfo->continent] . '/';
+                           $breadcrumb .= '<a href="' . $url . '">' . Forums::$continents[$topic->topicinfo->continent] . '</a> ';
 
-                if (isset($topic->topicinfo->countryname) && $topic->topicinfo->countryname) {
-                    $url = $url . 'c' . $topic->topicinfo->countrycode . '-' . $topic->topicinfo->countryname . '/';
-                    $breadcrumb .= '&raquo; <a href="' . $url . '">' . $topic->topicinfo->countryname . '</a> ';
+                           if (isset($topic->topicinfo->countryname) && $topic->topicinfo->countryname) {
+                               $url = $url . 'c' . $topic->topicinfo->countrycode . '-' . $topic->topicinfo->countryname . '/';
+                               $breadcrumb .= '&raquo; <a href="' . $url . '">' . $topic->topicinfo->countryname . '</a> ';
 
-                    if (isset($topic->topicinfo->adminname) && $topic->topicinfo->adminname) {
-                        $url = $url . 'a' . $topic->topicinfo->admincode . '-' . $topic->topicinfo->adminname . '/';
-                        $breadcrumb .= '&raquo; <a href="' . $url . '">' . $topic->topicinfo->adminname . '</a> ';
+                               if (isset($topic->topicinfo->adminname) && $topic->topicinfo->adminname) {
+                                   $url = $url . 'a' . $topic->topicinfo->admincode . '-' . $topic->topicinfo->adminname . '/';
+                                   $breadcrumb .= '&raquo; <a href="' . $url . '">' . $topic->topicinfo->adminname . '</a> ';
 
-                        if (isset($topic->topicinfo->geonames_name) && $topic->topicinfo->geonames_name) {
-                            $url = $url . 'g' . $topic->topicinfo->geonameid . '-' . $topic->topicinfo->geonames_name . '/';
-                            $breadcrumb .= '&raquo; <a href="' . $url . '">' . $topic->topicinfo->geonames_name . '</a> ';
-                        }
-                    }
-                }
-            }
+                                   if (isset($topic->topicinfo->geonames_name) && $topic->topicinfo->geonames_name) {
+                                       $url = $url . 'g' . $topic->topicinfo->geonameid . '-' . $topic->topicinfo->geonames_name . '/';
+                                       $breadcrumb .= '&raquo; <a href="' . $url . '">' . $topic->topicinfo->geonames_name . '</a> ';
+                                   }
+                               }
+                           }
+                       } */
 
             ?>
             <?php
@@ -125,64 +178,12 @@ This File display a topic and the messages which are inside it
             }
 
             if ($topic->topicinfo->IsClosed) {
-                echo " &nbsp;&nbsp;&nbsp;<span class=\"forumsthreadtags\"><strong> this thread is closed</strong>";
+                echo " &nbsp;&nbsp;&nbsp;<span class=\"forumsthreadtags\"><strong>this thread is closed</strong>";
             }
-            ?>
-            <?php
-            if ($User) {
             ?>
 
 </div>
-<div class="col-12 mb-2 text-right">
-        <?php
-        if (isset($topic->isGroupSubscribed) && ($topic->isGroupSubscribed)) {
-            if (isset($topic->IdSubscribe)) {
-                if ($topic->notificationsEnabled > 0) {
-                    echo '<a class="btn btn-light" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
-                        . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
-                } else {
-                    echo '<a class="btn btn-light" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
-                        . '">' . $words->getBuffered('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
-                }
-            } else {
-                if ($topic->notificationsEnabled) {
-                    echo '<a class="btn btn-light" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
-                        . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
-                } else {
-                    echo '<a class="btn btn-light" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
-                        . '">' . $words->getBuffered('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
-                }
-            }
-        } else {
-            if (isset($topic->IdSubscribe)) {
-                if ($topic->notificationsEnabled > 0) {
-                    echo '<a class="btn btn-light" href="' . $this->getURI() . '/subscriptions/disable/thread/' . $topic->IdThread
-                        . '">' . $words->getBuffered('ForumDisable') . '</a>' . $words->flushBuffer() . PHP_EOL;
-                } else {
-                    echo '<a class="btn btn-light" href="' . $this->getURI() . '/subscriptions/enable/thread/' . $topic->IdThread
-                        . '">' . $words->getBuffered('ForumEnable') . '</a>' . $words->flushBuffer() . PHP_EOL;
-                }
-                echo '<a class="btn btn-light" href="' . $this->getURI() . '/subscriptions/unsubscribe/thread/' . $topic->IdSubscribe
-                    . '/' . $topic->IdKey . '">' . $words->getBuffered('ForumUnsubscribe') . '</a>' . $words->flushBuffer() . PHP_EOL;
-            } else {
-                echo '<a class="btn btn-light" href="' . $this->getURI() . '/subscribe/thread/' . $topic->IdThread . '">'
-                    . $words->getBuffered('ForumSubscribe') . '</a>' . $words->flushBuffer() . PHP_EOL;
-            }
-        }
-
-        if ((!$topic->topicinfo->IsClosed) and ($topic->topicinfo->CanReply)) {
-            ?>
-            <a class="btn btn-primary"
-               href="<?= $replyuri ?>"><?= $words->getBuffered('ForumReply') ?></a><?= $words->flushBuffer() ?>
-            <?php
-        }
-        ?>
 </div>
-</div>
-<?php
-
-} // end if ($User)
-?>
 <div class="row">
 <?php
 // counting for background switch trick

@@ -204,7 +204,8 @@
                         <div class="progress-bar" role="progressbar" style="width: {{ (campaign.yearDonated / campaign.yearNeeded) * 100 }}%;" aria-valuenow="{{ campaign.yearDonated }}" aria-valuemin="0" aria-valuemax="{{ campaign.yearNeeded }}"></div>
                     </div>
                     <p class="text-center">
-                    {{ '€ ' ~ campaign.yearDonated ~ ' dashboard.donation.received' | trans }}</p>
+                        {{ '€ ' ~ campaign.yearDonated ~ ''}}
+                        <span class="ml-1">{{ 'dashboard.donation.received' | trans }}</span></p>
                     <p><a href="{{ url('donate') }}" class="btn btn-outline-primary btn-homewhite btn-block mb-1"><i
                                     class="fa fa-euro"></i> {{ 'landing.beinvolved.pleasedonate' | trans }}</a></p>
 

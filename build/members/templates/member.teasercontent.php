@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-12 col-md-8">
+  <div class="col-12 col-md-7">
       <?php
 
       // TODO: move HTML to a template
@@ -7,9 +7,9 @@
       // $words = $this->getWords();
       $picture_url = 'members/avatar/'.$member->Username;
       ?>
-      <div class="p-2"><img src="<?= $picture_url . '/100'?>" alt="profile picture of <?= $member->Username ?>" class="float-left d-md-none"></div>
+      <div class="p-2 d-md-none"><img src="<?= $picture_url . '/100'?>" alt="profile picture of <?= $member->Username ?>" class="float-left d-md-none"></div>
 
-    <h1 class="h2 m-0 d-inline"><strong>
+    <h2 class="m-0 d-inline"><strong>
       <?php if ($this->passedAway == 'PassedAway') {
            echo $words->get('ProfileInMemoriam', $member->Username);
       } else {
@@ -42,10 +42,10 @@
             <?=$words->flushBuffer()?>
       <?php endif; ?>
         <br>
-        <?$name = $member->name(); ?><?=($name == '') ? (($occupation) ? $occupation : "") : $name;?>
-    </h1> <!-- username -->
+        <span class="h4"><?$name = $member->name(); ?><?=($name == '') ? (($occupation) ? $occupation : "") : $name;?></span>
+    </h2> <!-- username -->
 
-      <h4>
+      <h5>
           <?php
           // The "Hong Kong solution": Only display and link country.
           if ($member->region() == '' && $member->city() == $member->country()):
@@ -71,10 +71,12 @@
               <?php
           endif;
           ?>
-      </h4><!-- location -->
+      </h5><!-- location -->
+
+      <div class="form-group form-inline small"><?php echo $this->statusForm($member); ?></div>
+
   </div>
-      <div class="col-12 col-md-4" style="border-left: 1px solid #ccc;">
-          <div class="form-group form-inline small"><?php echo $this->statusForm($member); ?></div>
+      <div class="col-12 col-md-5" style="border-left: 1px solid #ccc;">
 
               <?php if($occupation != null){
                   echo '<p class="h5">' . $occupation . '</p>';

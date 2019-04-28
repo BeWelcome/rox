@@ -113,7 +113,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
         <!-- end permalink -->
     </div>
     <!-- message -->
-    <div class="col-8 col-md-9 p-2">
+    <div class="col-8 col-md-9 p-1">
         <div class="float-left">
         <a name="post<?php echo $post->postid; ?>"></a>
         <p class="small gray">

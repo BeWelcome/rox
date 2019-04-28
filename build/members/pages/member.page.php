@@ -263,16 +263,18 @@ class MemberPage extends PageWithActiveSkin
             if ($logged_member && $logged_member->hasOldRight(array('Admin' => '', 'SafetyTeam' => '', 'Accepter' => '', 'Profile' => ''))) {
                 $form .= '<div><form method="post" name="member-status" id="member-status">' . $callbackTags;
                 $form .= '<input type="hidden" name="member-id" value="' . $member->id . '">';
-                $form .= '<select name="new-status">';
+                $form .= '<select name="new-status" class="form-control">';
                 foreach ($this->statuses as $status) {
-                    $form .= '<option value="' . $status . '"';
-                    if ($status == $member->Status) {
-                        $form .= ' selected="selected"';
+
+                    if (strpos($this->words->getSilent('MemberStatus' . $status), 'obsolete') === false) { // remove obsolete statuses
+                        $form .= '<option value="' . $status . '"';
+                        if ($status == $member->Status) {
+                            $form .= ' selected="selected"';
+                        }
+                        $form .= '>' . $this->words->getSilent('MemberStatus' . $status) . '</option>';
                     }
-                    $form .= '>' . $this->words->getSilent('MemberStatus' .
-                            $status) . '</option>';
                 }
-                $form .= '</select>&nbsp;&nbsp;<input type="submit" value="Submit"/>';
+                $form .= '</select>&nbsp;&nbsp;<input type="submit" value="Submit" class="btn btn-primary">';
                 $form .= '</form>' . $this->words->FlushBuffer() . '</div>';
             }
         }

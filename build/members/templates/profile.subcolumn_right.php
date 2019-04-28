@@ -49,18 +49,25 @@ if (!$this->passedAway){
                    $quality = "bad";
                    } ?>
 
-                       <? if ($commentLoopCount > 1){ ?><hr><? } ?>
+                       <? if ($commentLoopCount > 1){ ?><hr class="m-1"><? } ?>
+                    <div class="comment-bg-<?=$quality?> p-2">
                        <div class="w-100 mt-1">
                            <a href="members/<?=$c->UsernameFromMember?>">
                                <img class="float-left mr-2"  src="members/avatar/<?=$c->UsernameFromMember?>/50"  height="50"  width="50"  alt="<?=$c->UsernameFromMember?>" />
                            </a>
                            <div>
-                               <p class="m-0" style="line-height: 1.1;">
                                    <?php if (!$this->passedAway) { ?>
-                                       <span class="commenttitle <?=$quality?>"><?= $words->get('CommentQuality_'.$c->comQuality.''); ?></span><br>
-                                   <?php }?>
-                                   <span class="small grey"><?=$words->get('CommentFrom','<a href="members/'.$c->UsernameFromMember.'">'.$c->UsernameFromMember.'</a>')?><br><?=$c->created?></span>
+                               <p class="m-0" style="line-height: 0.6;">
+                                       <span class="commenttitle <?=$quality?>"><?= $words->get('CommentQuality_'.$c->comQuality.''); ?></span>
+                                       <span class="float-right">
+                                       <?php if ($this->loggedInMember){ ?>
+                                           <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $c->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="gray"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
+                                       <? } ?>
+                                   </span>
                                </p>
+                                   <?php }?>
+                                   <p class="small grey m-0 p-0"><?=$words->get('CommentFrom','<a href="members/'.$c->UsernameFromMember.'">'.$c->UsernameFromMember.'</a>')?>
+                                   <br><span><?=$c->created?></span></p>
                            </div>
                        </div>
                            <div class="w-100 pt-2">
@@ -71,6 +78,7 @@ if (!$this->passedAway){
                                    ?>
                                </p>
                            </div>
+                    </div>
 
 
                    <?php } ?>
@@ -81,7 +89,7 @@ if (!$this->passedAway){
                       echo $this->getLoginLink('/members/' . $member->Username,'ProfileShowComments');
                   } ?>
             </div>
-            <a href="members/<?=$member->Username?>/comments/" class="btn btn-block btn-sm btn-outline-dark"><?=$words->get('ShowAllComments')?></a>
+            <a href="members/<?=$member->Username?>/comments/" class="btn btn-block btn-sm btn-outline-primary"><?=$words->get('ShowAllComments')?></a>
         </div>
 
 <?php }

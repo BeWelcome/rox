@@ -1032,13 +1032,33 @@ class RequestAndMessageController extends AbstractController
      * @Route("/all/messages/with/{username}", name="all_messages_with")
      *
      * @param Request $request
-     * @param Member $member
+     * @param Member $other
      *
      * @return Response
      */
-    public function allMessagesWithMember(Request $request, Member $member)
+    public function allMessagesWithMember(Request $request, Member $other)
     {
-        return new Response($member->getUsername());
+        $page = $request->query->get('page', 1);
+        $limit = $request->query->get('limit', 10);
+        $sort = $request->query->get('sort', 'datesent');
+        $sortDir = $request->query->get('dir', 'desc');
+
+        if (!\in_array($sortDir, ['asc', 'desc'], true)) {
+            throw new InvalidArgumentException();
+        }
+
+        $member = $this->getUser();
+        $messageModel = new MessageModel($this->getDoctrine());
+        $messages = $messageModel->getMessagesBetween($member, $other, $sort, $sortDir, $page, $limit);
+
+        return $this->render('message/between.html.twig', [
+            'items' => $messages,
+            'otherMember' => $other,
+            'submenu' => [
+                'active' => 'between',
+                'items' => $this->getSubMenuItems(),
+            ],
+        ]);
     }
 
 }

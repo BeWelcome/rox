@@ -77,7 +77,7 @@
           <div class="form-group form-inline small"><?php echo $this->statusForm($member); ?></div>
 
               <?php if($occupation != null){
-                  echo '<p class="h5">' . $member->Occupation . '</p>';
+                  echo '<p class="h5">' . $occupation . '</p>';
               } ?><!-- occupation -->
 
               <p class="m-0">

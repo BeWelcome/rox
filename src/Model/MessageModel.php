@@ -285,6 +285,24 @@ class MessageModel extends BaseModel
     }
 
     /**
+     * @param Member $member
+     * @param Member $other
+     * @param $sort
+     * @param $sortDir
+     * @param int $page
+     * @param int $limit
+     *
+     * @return Pagerfanta
+     */
+    public function getMessagesBetween(Member $member, Member $other, $sort, $sortDir, $page = 1, $limit = 10)
+    {
+        /** @var MessageRepository $repository */
+        $repository = $this->em->getRepository(Message::class);
+
+        return $repository->findAllMessagesBetween($member, $other, $sort, $sortDir, $page, $limit);
+    }
+
+    /**
      * Returns the thread that contains the given message.
      *
      * @param Message $message

@@ -27,7 +27,7 @@
                                 {% endset %}
                                 <strong>{{ macros.profilelink( member.Username, displayName, false, true ) }}</strong>
                                 {% if (member.MessageCount) %}
-                                    <a href="/messages/with/{{ member.Username }}"><i class="far fa-envelope-open"
+                                    <a href="{{ path('all_messages_with', {username: member.Username }}"><i class="far fa-envelope-open"
                                                                                      title="{{ 'messages_allmessageswith' | trans | format( member.Username ) | raw }}"></i></a>
                                 {% endif %}
                             </div>

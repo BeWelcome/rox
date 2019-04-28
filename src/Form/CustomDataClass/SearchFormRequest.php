@@ -25,6 +25,7 @@ class SearchFormRequest
 
     /**
      * @var integer
+     * @Assert\NotNull(message="search.location.dropdown", groups={"text-search"})
      */
     public $location_geoname_id;
 
@@ -100,9 +101,6 @@ class SearchFormRequest
 
     /** @var integer */
     public $can_host = 1;
-
-    /** @var integer */
-    public $page = 1;
 
     /** @var PersistentCollection */
     public $groups;

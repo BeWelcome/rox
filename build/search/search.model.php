@@ -1447,43 +1447,30 @@ LIMIT 1
      */
     private function _getMembersLowDetails(&$vars) {
         if (!$this->membersLowDetails) {
-            $ne_latitude = $vars['ne-latitude'];
-            $sw_latitude = $vars['sw-latitude'];
-            $ne_longitude = $vars['ne-longitude'];
-            $sw_longitude = $vars['sw-longitude'];
-            $latitude = $vars['location-latitude'];
-            $longitude = $vars['location-longitude'];
-            $distance = $vars['search-distance'];
-            $canhost = $vars['search-can-host'];
             $query = "
-                    SELECT
-                        m.Accomodation as Accommodation, m.Username, latitude, longitude, maxGuest as CanHost
-                    FROM
-                        members m
-                    WHERE
-                        m.Status IN ('Active', 'OutOfRemind')
-                        AND m.maxGuest >= {$canhost}";
-            if ($ne_latitude == 0 && $sw_latitude == 0 && $ne_longitude == 0 && $sw_longitude == 0) {
-                $rectangle = $this->_getRectangle($latitude, $longitude, $distance);
-                $query .="
-                        AND m.latitude BETWEEN $rectangle->latne AND $rectangle->latsw
-                        AND m.longitude BETWEEN $rectangle->longne AND $rectangle->longsw";
-            } else {
-                if ($ne_latitude > $sw_latitude) {
-                    $tmp = $ne_latitude; $ne_latitude = $sw_latitude; $sw_latitude = $tmp;
-                }
-                if ($ne_longitude > $sw_longitude) {
-                    $tmp = $ne_longitude; $ne_longitude = $sw_longitude; $sw_longitude = $tmp;
-                }
-                    
-                $query .="
-                        AND m.latitude BETWEEN $ne_latitude AND $sw_latitude
-                        AND m.longitude BETWEEN $ne_longitude AND $sw_longitude";
-            }
-            $query .= $this->accommodationCondition;
-            // Randomize results for the map
-            $query .= " ORDER BY RAND()";
-            $query .= " LIMIT 0,2000";
+                SELECT
+                    m.Accomodation as Accommodation, m.Username, m.latitude, m.longitude, m.maxGuest as CanHost
+                FROM
+                    " . $this->tables . "
+                WHERE
+                    " . $this->maxGuestCondition . "
+                    " . $this->statusCondition . "
+                    " . $this->locationCondition . "
+                    " . $this->genderCondition . "
+                    " . $this->ageCondition . "
+                    " . $this->usernameCondition . "
+                    " . $this->keywordCondition . "
+                    " . $this->groupsCondition . "
+                    " . $this->languagesCondition . "
+                    " . $this->accommodationCondition . "
+                    " . $this->typicalOfferCondition . "
+                    AND m.IdCity = g.geonameId
+                ORDER BY
+                    RAND()
+                LIMIT
+                    2000;
+             ";
+
             $this->membersLowDetails = $this->bulkLookup($query);
         }
         return $this->membersLowDetails;

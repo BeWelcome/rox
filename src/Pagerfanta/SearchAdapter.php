@@ -2,9 +2,12 @@
 
 namespace App\Pagerfanta;
 
+use App\Entity\Location;
 use App\Entity\Member;
 use App\Form\CustomDataClass\SearchFormRequest;
+use Doctrine\ORM\EntityManagerInterface;
 use EnvironmentExplorer;
+use Exception;
 use Pagerfanta\Adapter\AdapterInterface;
 use Rox\Framework\SessionSingleton;
 use SearchModel;
@@ -13,7 +16,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class SearchAdapter implements AdapterInterface
 {
-    /** @var array|string */
+    /** @var array */
     private $modelData;
 
     /** @var SearchModel */
@@ -22,18 +25,17 @@ class SearchAdapter implements AdapterInterface
     /**
      * SearchAdapter constructor.
      *
-     * @param SearchFormRequest $data       The query parameters for the search
-     * @param SessionInterface  $session
-     * @param string            $dbHost
-     * @param string            $dbName
-     * @param string            $dbUser
-     * @param string            $dbPassword
-     *
-     * @throws AccessDeniedException
+     * @param SearchFormRequest $data The query parameters for the search
+     * @param SessionInterface $session
+     * @param string $dbHost
+     * @param string $dbName
+     * @param string $dbUser
+     * @param string $dbPassword
+     * @param EntityManagerInterface $em
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function __construct($data, $session, $dbHost, $dbName, $dbUser, $dbPassword)
+    public function __construct($data, $session, $dbHost, $dbName, $dbUser, $dbPassword, EntityManagerInterface $em)
     {
         // Kick-start the Symfony session. This replaces session_start() in the
         // old code, which is now turned off.
@@ -69,7 +71,28 @@ class SearchAdapter implements AdapterInterface
         $dbPassword = str_repeat('*', \strlen($dbPassword));
         $this->model = new \SearchModel();
         $this->modelData = $this->prepareModelData($data);
-        $this->model->prepareQuery($this->modelData);
+
+        // Determine if we search for a country or an admin unit and call prepareQuery accordingly
+        $admin1 = false;
+        $country = false;
+        $repository = $em->getRepository(Location::class);
+        /** @var Location $location */
+        $location = null;
+        try {
+            $location = $repository->find($data->location_geoname_id);
+        } catch(Exception $e)
+        {
+            // nothing found?
+            $e->getCode();
+        }
+        if (null !== $location && $location->getFclass() == 'A') {
+            // check if found unit is a country
+            if (strstr($location->getFcode(), 'PCL') === false) {
+                $admin1 = $location->getAdmin1();
+            }
+            $country = $location->getCountry()->getCountry();
+        }
+        $this->model->prepareQuery($this->modelData, $admin1, $country);
     }
 
     /**
@@ -185,6 +208,7 @@ class SearchAdapter implements AdapterInterface
         if ($data->inactive) {
             $vars['search-membership'] = 1;
         }
+        $vars['search-page'] = $data->page;
         $vars['search-sort-order'] = $data->order;
         $vars['search-number-items'] = $data->items;
 

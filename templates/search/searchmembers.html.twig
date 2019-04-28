@@ -15,7 +15,7 @@
 {% endblock stylesheets %}
 
 {% block content %}
-    {{ form_start(form, {'attr': {'class': 'm-1 search_form'}}) }}
+    {{ form_start(form, {'attr': {'class': 'm-1 search_form', 'onkeypress': 'return event.keyCode != 13;'}}) }}
     {{ form_errors(form) }}
     <div class="form-row form-inline mb-1">
         <div class="input-group mr-2 mb-2 mb-md-0">
@@ -109,7 +109,7 @@
         </div>
         <div class="form-row mb-1">
             <div class="form-group w-100">
-                <button type="submit" name="search_form[updateMap]" class="btn-primary float-right btn">{{ 'search.find.members'|trans }}</button>
+                <button type="button" name="search_form[updateMap]" class="btn-primary float-right btn">{{ 'search.find.members'|trans }}</button>
             </div>
         </div>
     </div>

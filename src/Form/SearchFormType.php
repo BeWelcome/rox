@@ -67,6 +67,9 @@ class SearchFormType extends AbstractType
                 'determineValidationGroups',
             ],
             'allow_extra_fields' => true,
+            'error_mapping' => [
+                '.' => 'location',
+            ]
         ]);
     }
 
@@ -229,16 +232,9 @@ class SearchFormType extends AbstractType
     private function addHiddenFields(FormBuilderInterface $formBuilder)
     {
         $formBuilder
-            ->add('page', HiddenType::class)
-            ->add('location_geoname_id', HiddenType::class, [
-//                'error_mapping' => 'location',
-            ])
-            ->add('location_latitude', HiddenType::class, [
-//                'error_mapping' => 'location',
-            ])
-            ->add('location_longitude', HiddenType::class, [
-//                'error_mapping' => 'location',
-            ])
+            ->add('location_geoname_id', HiddenType::class)
+            ->add('location_latitude', HiddenType::class)
+            ->add('location_longitude', HiddenType::class)
             ->add('showOnMap', HiddenType::class)
             ->add('ne_latitude', HiddenType::class)
             ->add('ne_longitude', HiddenType::class)
@@ -302,9 +298,6 @@ class SearchFormType extends AbstractType
         ;
     }
 
-    /*
-     *
-     */
     /**
      * Add 'see map' option in case the map shows result from a zoom/pan operation or
      * an empty search location (\todo)

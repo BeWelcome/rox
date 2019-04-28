@@ -50,18 +50,18 @@ class SearchController extends AbstractController
         ]);
 
         // Check which form was used to get here
-/*        $tiny->handleRequest($request);
+        $tiny->handleRequest($request);
         $tinyIsSubmitted = $tiny->isSubmitted();
         $tinyIsValid = ($tinyIsSubmitted && $tiny->isValid());
 
         $home->handleRequest($request);
         $homeIsSubmitted = $home->isSubmitted();
         $homeIsValid = ($homeIsSubmitted && $home->isValid());
-*/
+
         $search->handleRequest($request);
         $searchIsSubmitted = $search->isSubmitted();
         $searchIsValid = ($searchIsSubmitted && $search->isValid());
-    $tinyIsSubmitted = $tinyIsValid = $homeIsValid = false;
+
         if ($tinyIsValid || $homeIsValid || $searchIsValid) {
             $data = null;
             /* @var SearchFormRequest $data */
@@ -83,18 +83,20 @@ class SearchController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($memberPreference);
             $em->flush();
+
             $searchAdapter = new SearchAdapter(
                 $data,
                 $this->get('session'),
                 $this->getParameter('database_host'),
                 $this->getParameter('database_name'),
                 $this->getParameter('database_user'),
-                $this->getParameter('database_password')
+                $this->getParameter('database_password'),
+                $this->getDoctrine()->getManager()
             );
             $results = $searchAdapter->getFullResults();
             $pager = new Pagerfanta($searchAdapter);
             $pager->setMaxPerPage($data->items);
-            $pager->setCurrentPage($data->page);
+            $pager->setCurrentPage($request->get('page', 1 ));
             if (!$searchIsValid) {
                 // only set data if the form wasn't submitted from search_members
                 $search->setData($data);
@@ -189,11 +191,12 @@ class SearchController extends AbstractController
             $this->getParameter('database_host'),
             $this->getParameter('database_name'),
             $this->getParameter('database_user'),
-            $this->getParameter('database_password')
+            $this->getParameter('database_password'),
+            $this->getDoctrine()->getManager()
         );
         $pager = new Pagerfanta($searchAdapter);
         $pager->setMaxPerPage($searchFormRequest->items);
-        $pager->setCurrentPage($searchFormRequest->page);
+        $pager->setCurrentPage($request->get('page', 1));
 
         return $this->render('member/results.html.twig', [
             'pager' => $pager,

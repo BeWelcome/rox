@@ -16,7 +16,7 @@
     <div class="col-12 sticky-top py-3 pb-0 bg-white d-inline-block mb-2 messageheader">
             <div class="pull-left">{{ macros.avatar(otherUser.Username, 50, true) }} {{ macros.profilelink(otherUser.Username) }}</div>
             <div class="pull-right">{{ macros.avatar(myself.Username, 50, true) }}</div>
-            <div class="mt-2"><h3 id="MessageSubject" class="m-0 px-3 text-truncate">{{ current.Subject.Subject | raw }}</h3></div>
+            <div class="mt-2"><h3 id="MessageSubject" class="p-3 text-truncate">{{ current.Subject.Subject | raw }}</h3></div>
 <div class="clearfix"></div>
         <div class="mt-2 alert alert-warning mb-0 h5">
             {% if original.Sender.Username == myself.Username %}

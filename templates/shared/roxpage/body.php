@@ -22,19 +22,25 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
     <?php $flashMessages = $this->getFlashError(true);
     if (strlen($flashMessages) != 0): ?>
         <div class="row">
-            <div class="col-12 alert alert-danger" role="alert"><?= $flashMessages ?></div>
+            <div class="col-12">
+                <div class="alert alert-danger" role="alert"><?= $flashMessages ?></div>
+            </div>
         </div>
     <?php endif; ?>
     <?php $flashMessages = $this->getFlashNotice(true);
     if (strlen($flashMessages) != 0): ?>
         <div class="row">
-            <div class="col-12 alert alert-warning" role="alert"><?= $flashMessages ?></div>
+            <div class="col-12">
+                <div class="alert alert-warning" role="alert"><?= $flashMessages ?></div>
+            </div>
         </div>
     <?php endif; ?>
     <?php $flashSuccess = $this->getFlashSuccess(true);
     if (strlen($flashSuccess) != 0): ?>
         <div class="row">
-            <div class="col-12 alert alert-success" role="alert"><?= $flashSuccess; ?></div>
+            <div class="col-12">
+                <div class="alert alert-success" role="alert"><?= $flashMessages ?></div>
+            </div>
         </div>
     <?php endif; ?>
 </div>

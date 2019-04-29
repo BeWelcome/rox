@@ -18,7 +18,7 @@ class GalleryGalleriesPage extends GalleryBasePage
 
     protected function teaserHeadline()
     {
-        return '<a href="gallery">'.parent::teaserHeadline() . '</a> &raquo; '. $this->words->getBuffered("Photosets");
+        return '';
     }
     
     public function leftSidebar()

@@ -30,7 +30,7 @@ class GalleryBasePage extends PageWithActiveSkin
     }
 
     protected function breadcrumbs() {
-        return '<h1><a href="gallery">'.$this->getWords()->getBuffered('Gallery').'</a>' . $this->getWords()->flushBuffer() . '</h1>'; 
+        return 'Gallery';
     }
 
     protected function teaserHeadline() {

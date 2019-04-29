@@ -19,13 +19,6 @@ if ($galleries) {
     $galleriesonpage = $p[0];
 
     ?>
-        <div class="col-12 col-sm-6 col-md-3 text-center">
-            <a href="members/<?= $username ?>">
-                <img class="framed w-100" src="members/avatar/<?= $username ?>/100" alt="Picture of <?= $username ?>" width="100%" alt="Profile of <?= $username ?>">
-                <span class="w-100"><?=$username?></span>
-            </a>
-        </div>
-
     <? foreach ($galleriesonpage as $g) {
     	static $ii = 0;
         $d = $Gallery->getLatestGalleryItem($g->id);

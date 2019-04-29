@@ -36,7 +36,7 @@ class GalleryController extends AbstractController
         $editImageRequest = new GalleryImageEditRequest($image);
         $editImageForm = $this->createForm(GalleryEditImageFormType::class, $editImageRequest);
         $editImageForm->handleRequest($request);
-        if ($editImageForm->isValid() && $editImageForm->isSubmitted()) {
+        if ($editImageForm->isSubmitted() && $editImageForm->isValid()) {
             $data = $editImageForm->getData();
             $image->setTitle($data->title);
             $image->setDescription($data->description);

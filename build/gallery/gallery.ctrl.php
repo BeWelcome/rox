@@ -204,7 +204,7 @@ class GalleryController extends RoxControllerBase {
                         }
                         break;
                     default:
-                        $this->redirect('/');
+                        $this->redirect('');
                 }
         }
     }

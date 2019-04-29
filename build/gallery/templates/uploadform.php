@@ -1,4 +1,3 @@
-<div class="row mt-3">
 <?php
 $layoutkit = $this->layoutkit;
 $formkit = $layoutkit->formkit;
@@ -28,8 +27,8 @@ if ($galleryId) $postURL = 'gallery/show/sets/'.$galleryId;
 
 // If the upload-form IS hidden, display a link to show it
 ?>
-<div class="col-12 h4">
-    <?=$words->getFormatted('Gallery_UploadInstruction')?>
+<div class="col-12">
+    <h4><?=$words->getFormatted('Gallery_UploadInstruction')?></h4>
 </div>
 <div class="col-12" id="gallery-upload-content">
     <form method="post" action="<?=$postURL?>" class="def-form" id="gallery-img-upload" enctype="multipart/form-data">
@@ -87,5 +86,4 @@ var GalleryImg = new Uploader('gallery-img-upload', {
         });
     </script>
 
-</div>
 </div>

@@ -25,19 +25,26 @@ if ($statement) {
 
     echo '<div class="row">';
     foreach ($statement as $d) {
-    	echo '<div class="col-12 col-md-6 col-lg-4">';
+    	echo '<div class="col-12 col-md-6 mb-2">';
+    	echo '<div class="card">';
+        echo '<a href="test"><img src="gallery/thumbimg?id='.$d->id.
+            ($thumbsize ? '&t='.$thumbsize : '' ) . '" class="card-img-top" alt="{$d->title}"></a>';
     $title_short = ((strlen($d->title) >= 26) ? substr($d->title,0,20).'...' : $d->title);
-    echo '<a href="gallery/img?id='.$d->id.'" data-toggle="lightbox" data-type="image"><img class="framed w-100" src="gallery/thumbimg?id='.$d->id.($thumbsize ? '&t='.$thumbsize : '').'" alt="image"></a>';
+        echo '<div class="card-body">';
+        echo '<h6 class="card-title">';
+        $loggedmember = isset($this->model) ? $this->model->getLoggedInMember : $this->loggedInMember;
+        $edit = ($loggedmember && $loggedmember->Username == $d->user_handle);
+        if ($edit) {
+            echo '<input type="checkbox" class="form-check-inline" name="imageId[]" value="' . $d->id . '">&nbsp;';
+        }
+        echo '<a href="gallery/img?id='. $d->id .'" title="'. $d->title .'" data-toggle="lightbox" data-type="image">'. $title_short . '</a></h6>';
 
-    echo '<div class="w-100 bg-white h6 px-2">';
-    $loggedmember = isset($this->model) ? $this->model->getLoggedInMember : $this->loggedInMember;
-    if ($loggedmember && $loggedmember->Username == $d->user_handle) {
-        echo '<input type="checkbox" class="input_check mr-2" name="imageId[]" value="'.$d->id.'">';
-        echo '<a href="gallery/img?id='. $d->id .'" title="'. $d->title .'" data-toggle="lightbox" data-type="image">'. $title_short . '</a>';
-        echo '<a href="gallery/show/image/'.$d->id.'"><i class="fa fa-edit float-right pt-1"></i></a>';
-        echo '<div class="d-inline"><p class="small float-left pt-2">'.$layoutbits->ago(strtotime($d->created)).'</p>';
-        echo '<a href="gallery/show/image/'. $d->id .'/delete" title="DELETE '. $d->title .'" class="btn btn-sm btn-danger float-right"><i class="fa fa-trash"></i></a></div>';
-    }
+        if ($edit) {
+            echo '<div class="d-inline"><small class="text-muted">'.$layoutbits->ago(strtotime($d->created)).'</small>';
+            echo '<a href="gallery/show/image/'.$d->id.'/edit" title="edit '. $d->title .'" class="btn btn-sm btn-outline-primary float-right ml-1"> <i class="fa fa-edit"></i></a>';
+            echo '<a href="gallery/show/image/'. $d->id .'/delete" title="delete '. $d->title .'" class="btn btn-sm btn-danger float-right"><i class="fa fa-trash"></i></a></div>';
+        }
+        echo '</div>';
         echo '</div>';
         echo '</div>';
     }

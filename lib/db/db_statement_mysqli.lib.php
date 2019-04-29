@@ -266,7 +266,6 @@ class PDBStatement_mysqli extends PDBStatement {
      * @return int
      */
     public function prepare($statement) {
-        error_log($statement);
         if (PVars::get()->debug) {
             $tm = microtime();
             PSurveillance::setPoint('statement_prepare'.$tm);

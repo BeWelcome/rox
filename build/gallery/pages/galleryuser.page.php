@@ -31,7 +31,7 @@ class GalleryUserPage extends GalleryBasePage
         } else {
             $tt[]= array('images', 'gallery/show/user/'.$member->Username.'/images'.$this->page.'', $ww->GalleryTitleLatest);
         }
-        $tt[]= array('overview', 'gallery/show/user/'.$member->Username.'/sets'.$this->page.'', $ww->GalleryTitleSets);
+        $tt[]= array('overview', 'gallery/show/user/'.$member->Username.'/'.$this->page.'', $ww->GalleryTitleSets);
         echo $words->flushBuffer();
         return($tt) ;
         

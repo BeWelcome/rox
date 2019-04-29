@@ -13,7 +13,7 @@ class GalleryPage extends GalleryBasePage
 
     protected function teaserHeadline() {
         $words = $this->words;
-        return '<a href="gallery">'.$words->get('Gallery').'</a> &raquo; <a href="gallery/show/sets">'.$words->get("Photosets").'</a>';
+        return '<a href="/gallery/show/user/'. $member->username . '/images">'.$words->get('Gallery').'</a>';
     }
     
     protected function getTopmenuActiveItem()

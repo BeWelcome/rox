@@ -135,7 +135,7 @@ This File display a topic and the messages which are inside it
                 </p>
 
             <?php
-
+                $replyuri = preg_replace('#/page.{1,3}/#', '/', $uri . 'reply');
             /*
                        $url = ForumsView::getURI() . '';
                        $breadcrumb = '';

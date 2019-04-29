@@ -181,7 +181,7 @@ if ($statement) {
     }
     ?>
         </div>
-      <a class="btn btn-sm btn-block btn-outline-dark" href="gallery/show/user/<?php echo $member->Username;?>/images" title="<?php echo $words->getSilent('GalleryTitleLatest');?>">
+      <a class="btn btn-sm btn-block btn-outline-primary" href="gallery/show/user/<?php echo $member->Username;?>/images" title="<?php echo $words->getSilent('GalleryTitleLatest');?>">
           <?php echo $words->get('GalleryShowAll');?></a>
     </div>
     <?php echo $words->flushBuffer();

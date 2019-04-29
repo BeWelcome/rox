@@ -112,7 +112,6 @@ class SearchFormType extends AbstractType
                 'attr' => [
                     'class' => 'select2',
                 ],
-                'translation_domain' => false,
                 'multiple' => true,
                 'required' => false,
             ]);
@@ -327,7 +326,6 @@ class SearchFormType extends AbstractType
         $form = $event->getForm();
         $form->add('distance', ChoiceType::class, [
             'choices' => $choices,
-            'choice_translation_domain' => false,
             'attr' => [
                 'class' => 'select2-inline',
                 'data-minimum-results-for-search' => '-1',

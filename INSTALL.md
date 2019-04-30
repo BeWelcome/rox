@@ -17,7 +17,7 @@ using a browser or use curl _url_ > _filename_.
 * PHP short opening tags enabled
 * PHP magic quotes gpc disabled
 * PHP extensions: mbstring, dom, fileinfo, intl, xsl
-* MariaDB >=10.1 or MySQL server >= 5.6 (not in strict mode) 
+* MariaDB >=10.1
 * SMTP server for email features
 * [Composer](https://www.getcomposer.org) Latest version
 * [Node.js](https://nodejs.org/) Latest version

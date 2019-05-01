@@ -115,7 +115,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
     <!-- message -->
     <div class="col-8 col-md-9 p-1">
         <div class="float-left">
-        <a name="post<?php echo $post->postid; ?>"></a>
+        <a name="post<?php echo $post->postid; ?>" style="position: relative;top: -50px;"></a>
         <p class="small gray">
             <?php
             //echo "[",$post->posttime,"]",$words->getFormatted('DateHHMMShortFormat') ;

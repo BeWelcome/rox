@@ -39,6 +39,10 @@ class TranslatorSingleton
      */
     public static function getInstance()
     {
+        if (null === static::$_instance) {
+            return null;
+        }
+
         return static::$_instance;
     }
 

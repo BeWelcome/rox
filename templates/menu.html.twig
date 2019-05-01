@@ -8,9 +8,9 @@
             <a class="navbar-brand d-inline d-lg-none" href="{{ url('homepage') }}"><img src="{{ asset('images/logo_no_text.png') }}"
                                                                                          alt="BeWelcome"/></a>
 
-            <button class="navbar-toggler dropdown-toggle" type="button" data-toggle="collapse" data-target="#smallNavBar"
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#smallNavBar"
                     aria-controls="smallNavBar" aria-expanded="false" aria-label="Toggle navigation">
-                {{ 'mainmenu' | trans }}
+                <span class="navbar-toggler-icon"></span>&nbsp;<i class="fas fa-caret-down"></i>
             </button>
 
             {# Navbar small screens #}
@@ -82,7 +82,7 @@
                     <li class="menuborder dropdown d-none d-md-flex">
                         <a href="#subNavBar" class="nav-link btn-outline-secondary dropdown-toggle" id="subNavBarToggle" data-target="subNavBar"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{ 'mainmenu' | trans }}
+                            <span class="navbar-toggler-icon"></span>&nbsp;<i class="fas fa-caret-down"></i>
                         </a>
 
                         <div id="subNavBar" class="dropdown-menu subnav py-1 bordert-1 borderb-1"
@@ -219,6 +219,7 @@
                                     class="fa fa-lg fa-sign-out-alt"></i></a></li>
                 </ul>
             </div>
+        </div>
     </nav>
     {% if is_granted('ROLE_ADMIN_CHECKER') or is_granted('ROLE_ADMIN_COMMENTS') or is_granted('ROLE_ADMIN_SAFETYTEAM') %}
         <div class="container">

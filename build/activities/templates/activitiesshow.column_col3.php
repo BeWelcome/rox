@@ -16,19 +16,19 @@ if ($this->_session->has('ActivityStatus')) {
     $this->_session->remove('ActivityStatus');
 }
 if (!empty($status)) {
-    echo '<div class="alert alert-success w-100" role="alert"><strong>' . $words->get($status[0], $status[1]) . '</strong></div>';
+    echo '<div class="col-12"><div class="alert alert-success" role="alert">' . $words->get($status[0], $status[1]) . '</div></div>';
 }
 if ($this->activity->status == 1) {
     // the activity has been cancelled
-    echo '<div class="alert alert-warning w-100" role="alert"><strong>' . $words->get('ActivityHasBeenCancelled') . '</strong></div>';
+    echo '<div class="col-12"><div class="alert alert-warning w-100" role="alert">' . $words->get('ActivityHasBeenCancelled') . '</div></div>';
 }
 $errors = $this->getRedirectedMem('errors');
 if (!empty($errors)) {
-    $errStr = '<div class="alert alert-danger" role="alert"><strong>';
+    $errStr = '<div class="col-12"><div class="alert alert-danger" role="alert">';
     foreach ($errors as $error) {
         $errStr .= $words->get($error) . "<br />";
     }
-    $errStr = substr($errStr, 0, -6) . '</strong></div>';
+    $errStr = substr($errStr, 0, -6) . '</div></div>';
     echo $errStr;
 }
 $vars = $this->getRedirectedMem('vars');

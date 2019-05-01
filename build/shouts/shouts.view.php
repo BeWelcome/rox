@@ -1,4 +1,7 @@
 <?php
+
+use App\Utilities\SessionTrait;
+
 /**
  * blog view
  *
@@ -10,7 +13,7 @@
  */
 class ShoutsView extends PAppView 
 {
-    use \Rox\RoxTraits\SessionTrait;
+    use SessionTrait;
 
     private $_model;
     

@@ -4,12 +4,14 @@
  * Processes PHP and server environement variables and sets up PHP
  * autoload.  A lot of this is taken from PT, inc/
  */
+
+use App\Utilities\SessionTrait;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Zend\Uri\Http;
 
 class EnvironmentExplorer
 {
-    use \Rox\RoxTraits\SessionTrait;
+    use SessionTrait;
 
     public function __construct() {
         $this->setSession();

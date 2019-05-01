@@ -29,6 +29,9 @@ Boston, MA  02111-1307, USA.
  * -
  */
 
+use App\Utilities\SessionTrait;
+use App\Utilities\TranslatorTrait;
+
 
 /**
  * Enables us to use content from words table of BW from within the platform PT structure.
@@ -44,7 +47,8 @@ Boston, MA  02111-1307, USA.
 
 class MOD_words
 {
-    use \Rox\RoxTraits\SessionTrait;
+    use SessionTrait;
+    use TranslatorTrait;
 
     private $_lang;  // the active language
     private $_trMode;  // the translation mode - can be browse, translate, or edit
@@ -65,6 +69,7 @@ class MOD_words
     public function __construct($category=null)
     {
         $this->setSession();
+        $this->setTranslator();
 
         $this->_lang = \PVars::get()->lang;
 
@@ -86,7 +91,7 @@ class MOD_words
 
         $R = MOD_right::get();
         if ($R->hasRight("Words", $this->_lang)) {
-            $this->_offerTranslationLink = false;
+            $this->_offerTranslationLink = true;
         }
 
         // read translation mode from $this->_session->get('tr_mode')
@@ -444,81 +449,23 @@ class MOD_words
         $row_en = $this->_lookup_row($code, 'en','AND (isarchived=0 or isarchived is null)');
         $R = MOD_right::get();
 
-        if(! $this->_offerTranslationLink) {
-            // for normal people no translation stuff
-            if(!$row_en) {
-                // if English doesn't exist, show code
-                $lookup_result = $code;
-            } elseif (!$row || $row->updated < $row_en->majorupdate) {
-                // if no translation or translation is outdated, show English
-                $lookup_result = $this->_modified_sentence_from_row($row_en, $args, $get_raw);
-            } else {
-                // if up-to-date translation present, show translation
-                $lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);
-            }
-            
-            return new LookedUpWord($code, $lang, $lookup_result);
+        // for normal people no translation stuff
+        if(!$row_en) {
+            // if English doesn't exist, show code
+            $lookup_result = $code;
+        } elseif (!$row || $row->updated < $row_en->majorupdate) {
+            // if no translation or translation is outdated, show English
+            $lookup_result = $this->_modified_sentence_from_row($row_en, $args, $get_raw);
         } else {
-            // for translators, the LookedUpWord object needs more info
-            $tr_quality = LookedUpWord::FINE;
-            if (!$row_en){
-                // there is no English text: show the wordcode
-                // show as missing if user has enough rights
-                if ($R->hasRight("Words")<10){
-                    $tr_success = LookedUpWord::NO_TR_LINK;
-                } else {
-                    $tr_success = LookedUpWord::MISSING_WORD;
-                }
-                $lookup_result = $code;
-            } elseif (!$row){
-                // there is no translation: show the English text and as missing
-                $tr_success = LookedUpWord::MISSING_TR;
-                $lookup_result = $this->_modified_sentence_from_row($row_en, $args, $get_raw);
-            } elseif (!($row_en->updated > $row->updated)){
-                // the English text has not been updated at all after the translation: show translation normally                
-                $tr_success = LookedUpWord::SUCCESSFUL;
-                $lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);
-            } elseif (!($row_en->majorupdate > $row->updated)){
-                // the English text did not have a major update after the translation: show translation and as obsolete
-                $tr_success = LookedUpWord::OBSOLETE;
-                $lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);
-            } else {
-                // the English text did have a major update after the translation: show English text and as obsolete
-                $tr_success = LookedUpWord::OBSOLETE;
-                $lookup_result = $this->_modified_sentence_from_row($row_en, $args, $get_raw);
-            }
-
-            if (!$row_en) {
-            } else {
-                if ($row_en->donottranslate == 'yes') {
-                    // text is dnt: show normally               
-                    $tr_success = LookedUpWord::NO_TR_LINK;
-                    if (!$row || $row->updated < $row_en->majorupdate) {
-                        $lookup_result = $this->_modified_sentence_from_row($row_en, $args, $get_raw);
-                    } else {
-                        $lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);                    
-                    }
-                }
-            }
-            
-            switch ($this->_trMode) {
-                case 'browse':
-                    $tr_success = LookedUpWord::NO_TR_LINK;
-                    break;
-                case 'proofread':
-                    // does not yet exist.
-                    break;
-                case 'translate':
-                    if($tr_success == LookedUpWord::SUCCESSFUL) {
-                        $tr_success = LookedUpWord::NO_TR_LINK;
-                    }
-                    break;
-                case 'edit':
-                    // no need to do anything
-                    break;
-                }
-	        return new LookedUpWord($code, $lang, $lookup_result, $tr_success, $tr_quality);
+            // if up-to-date translation present, show translation
+            $lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);
         }
+
+        if ($this->_offerTranslationLink) {
+            // make sure translation shows up in new translation interface
+            $trans = $this->_translator->trans(strtolower($code));
+        }
+        return new LookedUpWord($code, $lang, $lookup_result);
     }
 
 

@@ -4,30 +4,32 @@ namespace App\Controller;
 
 use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
+use App\Utilities\TranslatorSingleton;
 use Doctrine\DBAL\Statement;
 use EnvironmentExplorer;
 use PDO;
-use Rox\Framework\SessionSingleton;
+use App\Utilities\SessionSingleton;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LegacyController extends AbstractController
 {
     /**
-     * @param Request            $request
+     * @param Request $request
      * @param ContainerInterface $container
      *
-     * @throws AccessDeniedException
-     *
+     * @param TranslatorInterface $translator
      * @return Response
      *
+     * @throws \Doctrine\DBAL\DBALException
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function showAction(Request $request, ContainerInterface $container)
+    public function showAction(Request $request, ContainerInterface $container, TranslatorInterface $translator)
     {
         // Kick-start the Symfony session. This replaces session_start() in the
         // old code, which is now turned off.
@@ -35,8 +37,9 @@ class LegacyController extends AbstractController
         $session = $container->get('session');
         $session->start();
 
-        // Make sure the Rox classes find this session
+        // Make sure the Rox classes find this session and the translator
         SessionSingleton::createInstance($session);
+        TranslatorSingleton::createInstance($translator);
 
         $environmentExplorer = new EnvironmentExplorer();
         $environmentExplorer->initializeGlobalState(

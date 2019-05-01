@@ -34,7 +34,7 @@ define('DATA_DIR', dirname(__FILE__) . "/../../data");
 require_once SCRIPT_BASE . 'vendor/autoload.php';
 
 use Symfony\Component\Dotenv\Dotenv;
-use Rox\Framework\SessionSingleton;
+use App\Utilities\SessionSingleton;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 $dotenv = new Dotenv();
@@ -553,7 +553,7 @@ class ForumNotificationMailbot extends Mailbot
             $msg['title'] = '<a href="' .$this->baseuri. 'groups/' . $post->groupId . '/forum/s' . $post->IdThread .'">' . $msg['subject'] . '</a>  (<a href="' .$this->baseuri. 'groups/' . $post->groupId . '/forum/s' . $post->IdThread .'/reply">' .
                 $this->words->getFormattedInLang('reply', $language) . '</a>)';
         } else {
-            $msg['title'] = '<a href="' .$this->baseuri. 'forums/s' . $post->IdThread . '">' . $msg['subject'] . '</a> (<a href="' .$this->baseuri. '/forums/s' . $post->IdThread . '">' . $this->words->getFormattedInLang('reply', $language) . '</a>)';
+            $msg['title'] = '<a href="' .$this->baseuri. 'forums/s' . $post->IdThread . '">' . $msg['subject'] . '</a> (<a href="' .$this->baseuri. 'forums/s' . $post->IdThread . '">' . $this->words->getFormattedInLang('reply', $language) . '</a>)';
         }
 
         $text = $post->message;

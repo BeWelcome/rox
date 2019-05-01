@@ -32,6 +32,8 @@ Boston, MA  02111-1307, USA.
  * April 2009
  */
 
+use App\Utilities\SessionTrait;
+
 
 /**
  * It needs the memcache extension to be activated in PHP and the $param->memcache entry to be set to true
@@ -49,7 +51,7 @@ class trad { // This class will be used for a future advanced use
 }
 
 class MOD_bw_memcache {
-	use \Rox\RoxTraits\SessionTrait;
+	use SessionTrait;
 
 	private $_tablename;  // the name of the table the memcache module is going to refer
 	private $_sentencecolumn;  // the name of the column in the table which is suppose to keep the value

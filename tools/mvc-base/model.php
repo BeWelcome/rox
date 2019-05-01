@@ -1,4 +1,7 @@
 <?php
+
+use App\Utilities\SessionSingleton;
+use App\Utilities\CryptTrait;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
@@ -11,7 +14,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class RoxModelBase extends RoxComponentBase
 {
-    use \Rox\RoxTraits\CryptTrait;
+    use CryptTrait;
 
     /**
      * stores the currently logged in member
@@ -37,7 +40,7 @@ class RoxModelBase extends RoxComponentBase
      */
     public function __construct()
     {
-        $session = \Rox\Framework\SessionSingleton::getSession();
+        $session = SessionSingleton::getSession();
         MOD_params::get($session)->loadParams();
         $this->_crypt = new MOD_crypt($session);
         $this->_session = $session;

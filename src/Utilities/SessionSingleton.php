@@ -1,7 +1,6 @@
 <?php
 
-namespace Rox\Framework;
-
+namespace App\Utilities;
 
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -9,7 +8,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class SessionSingleton
 {
     /**
-     * @var SessionSingleton The reference to *SessionSingleton* instance of this class
+     * @var SessionInterface The reference to *SessionSingleton* instance of this class
      */
     private static $_instance;
 
@@ -34,7 +33,7 @@ class SessionSingleton
     /**
      * Returns the *SessionSingleton* instance of this class.
      *
-     * @return SessionSingleton The *session* instance.
+     * @return TranslatorSingleton The *session* instance.
      * @throws InvalidArgumentException
      */
     public static function getInstance()

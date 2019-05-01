@@ -1,10 +1,11 @@
 <?php
 
+use App\Utilities\SessionTrait;
 use Symfony\Component\Templating\EngineInterface;
 
 class RoxFrontRouter
 {
-    use \Rox\RoxTraits\SessionTrait;
+    use SessionTrait;
 
     protected $engine;
 

@@ -19,8 +19,10 @@
         </div>
     {% endif %}
     {% for comment in comments.currentPageResults %}
-        <p class="h4 mt-4">{{ comment.title }}, {{ comment.author.Username }}, {{ comment.created.DiffForHumans | trans }}<p>
-        {{ comment.text | raw }}
+        <div class="mt-2">
+            <p class="mt-2"><strong>{{ comment.title }}</strong> <small class="text-muted">{{ comment.author.Username }}, {{ comment.created.DiffForHumans | trans }}</small><p>
+            {{ comment.text | raw }}
+        </div>
     {% endfor %}
     {% if comments.haveToPaginate %}
         <div class="row">

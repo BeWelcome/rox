@@ -21,6 +21,9 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+
+use App\Utilities\SessionTrait;
+
 /**
  * 
  * @see /htdocs/bw/lib/rights.php
@@ -31,7 +34,7 @@ Boston, MA  02111-1307, USA.
  */
 class MOD_right_flag {
 
-	use \Rox\RoxTraits\SessionTrait;
+	use SessionTrait;
 
     private $tableName;
 		

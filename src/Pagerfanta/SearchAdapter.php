@@ -5,14 +5,16 @@ namespace App\Pagerfanta;
 use App\Entity\Location;
 use App\Entity\Member;
 use App\Form\CustomDataClass\SearchFormRequest;
+use App\Utilities\TranslatorSingleton;
 use Doctrine\ORM\EntityManagerInterface;
 use EnvironmentExplorer;
 use Exception;
 use Pagerfanta\Adapter\AdapterInterface;
-use Rox\Framework\SessionSingleton;
+use App\Utilities\SessionSingleton;
 use SearchModel;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SearchAdapter implements AdapterInterface
 {
@@ -35,7 +37,7 @@ class SearchAdapter implements AdapterInterface
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function __construct($data, $session, $dbHost, $dbName, $dbUser, $dbPassword, EntityManagerInterface $em)
+    public function __construct($data, $session, $dbHost, $dbName, $dbUser, $dbPassword, EntityManagerInterface $em, TranslatorInterface $translator)
     {
         // Kick-start the Symfony session. This replaces session_start() in the
         // old code, which is now turned off.
@@ -59,6 +61,7 @@ class SearchAdapter implements AdapterInterface
 
         // Make sure the Rox classes find this session
         SessionSingleton::createInstance($session);
+        TranslatorSingleton::createInstance($translator);
 
         // make sure everything's setup for the old code used below
         $environmentExplorer = new EnvironmentExplorer();

@@ -336,8 +336,6 @@ class ActivitiesModel extends RoxModelBase
         // First add geo location to geonames_cache if it doesn't exist yet
         $locationId = $args->post['activity-location_geoname_id'];
         if ($locationId != 0) {
-            $geomodel = new GeoModel();
-            $geomodel->addGeonameId($locationId, 'member_primary');
         } else {
             $locationId = $this->getLoggedInMember()->IdCity;
         }
@@ -363,8 +361,6 @@ class ActivitiesModel extends RoxModelBase
         // First add geo location to geonames_cache if it doesn't exist yet
         $locationId = $args->post['activity-location_geoname_id'];
         if ($locationId != 0) {
-            $geomodel = new GeoModel();
-            $geomodel->addGeonameId($locationId, 'member_primary');
         } else {
             $locationId = $this->getLoggedInMember()->IdCity;
         }

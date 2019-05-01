@@ -9,7 +9,7 @@
 namespace App\Controller;
 
 use EnvironmentExplorer;
-use Rox\Framework\SessionSingleton;
+use App\Utilities\SessionSingleton;
 use StatsModel;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

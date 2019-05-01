@@ -21,6 +21,9 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+
+use App\Utilities\SessionTrait;
+
 /**
  * Collection of functions that create elements for a page.
  *
@@ -32,7 +35,7 @@ Boston, MA  02111-1307, USA.
  */
 class MOD_layoutbits
 {
-    use \Rox\RoxTraits\SessionTrait;
+    use SessionTrait;
 
     /**
      * Quasi-constant functions for userthumbnails
@@ -385,10 +388,9 @@ class MOD_layoutbits
      *
      * @return string 'Gender: male/female/other/ translated or empty string
      */
-    public static function getGenderTranslated($gender, $hideGender, $addGenderText = true) {
-        return $gender;
+    public static function getGenderTranslated($gender, $hideGender, $addGenderText = false) {
 
-        $words = new MOD_words(self::$_instance->_session);
+        $words = new MOD_words();
         $string = '';
         if (($hideGender == 'No') && ($gender != 'IDontTell')) {
             if ($addGenderText) {

@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SearchController extends AbstractController
 {
@@ -25,7 +26,7 @@ class SearchController extends AbstractController
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function searchAction(Request $request)
+    public function searchAction(Request $request, TranslatorInterface $translator)
     {
         $pager = false;
         $results = false;
@@ -91,7 +92,8 @@ class SearchController extends AbstractController
                 $this->getParameter('database_name'),
                 $this->getParameter('database_user'),
                 $this->getParameter('database_password'),
-                $this->getDoctrine()->getManager()
+                $this->getDoctrine()->getManager(),
+                $translator
             );
             $results = $searchAdapter->getFullResults();
             $pager = new Pagerfanta($searchAdapter);
@@ -171,11 +173,12 @@ class SearchController extends AbstractController
      *
      * @param Request $request
      *
+     * @param TranslatorInterface $translator
      * @return Response
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function searchGetPageResultsAjax(Request $request)
+    public function searchGetPageResultsAjax(Request $request, TranslatorInterface $translator)
     {
         if ('POST' !== $request->getMethod()) {
             // JavaScript doesn't work on client
@@ -192,7 +195,8 @@ class SearchController extends AbstractController
             $this->getParameter('database_name'),
             $this->getParameter('database_user'),
             $this->getParameter('database_password'),
-            $this->getDoctrine()->getManager()
+            $this->getDoctrine()->getManager(),
+            $translator
         );
         $pager = new Pagerfanta($searchAdapter);
         $pager->setMaxPerPage($searchFormRequest->items);

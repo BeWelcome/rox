@@ -60,6 +60,10 @@ class TranslatorSingleton
      * @return TranslatorInterface
      */
     public static function getTranslator() {
+        if (null === static::$_instance) {
+            return null;
+        }
+
         return self::getInstance()->_translator;
     }
 

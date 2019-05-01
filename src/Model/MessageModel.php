@@ -183,7 +183,8 @@ class MessageModel extends BaseModel
             $message
                 ->setInFolder(InFolderType::SPAM)
                 ->setStatus(MessageStatusType::CHECK)
-                ->addToSpamInfo(SpamInfoType::MEMBER_SAYS_SPAM);
+                ->addToSpamInfo(SpamInfoType::MEMBER_SAYS_SPAM)
+            ;
             $this->em->persist($message);
         }
         $this->em->flush();
@@ -209,8 +210,8 @@ class MessageModel extends BaseModel
             $message
                 ->setInFolder(InFolderType::NORMAL)
                 ->setStatus(MessageStatusType::CHECKED)
-                ->removeSpaminfo(SpamInfoType::MEMBER_SAYS_SPAM)
-                ->updateSpaminfo(SpamInfoType::NO_SPAM);
+                ->removeFromSpaminfo(SpamInfoType::MEMBER_SAYS_SPAM)
+            ;
             $this->em->persist($message);
         }
         $this->em->flush();

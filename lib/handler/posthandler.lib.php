@@ -13,6 +13,10 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id: posthandler.lib.php 179 2006-11-27 22:48:50Z kang $
  */
+
+use App\Utilities\SessionSingleton;
+use App\Utilities\SessionTrait;
+
 /**
  * Post handling class
  * 
@@ -21,7 +25,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  */
 class PPostHandler {
-    use \Rox\RoxTraits\SessionTrait;
+    use SessionTrait;
 
     private static $_instance;
     private $_vars = array();
@@ -38,7 +42,7 @@ class PPostHandler {
     }
     
     public static function get () {
-        $session = \Rox\Framework\SessionSingleton::getSession();
+        $session = SessionSingleton::getSession();
         if (!isset(self::$_instance) || get_class(self::$_instance) != __CLASS__) {
             if ($session->has('PostHandler') && !empty ($session->get('PostHandler'))) {
                 self::$_instance = unserialize($session->get('PostHandler'));

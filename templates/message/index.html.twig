@@ -107,9 +107,9 @@
                     <div class="btn-group" aria-label="Delete or spam">
                         {% if folder == 'deleted' %}
                             {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-light' } }) }}
-                            {{ form_widget(form.purge, { 'attr': { 'class': 'btn btn-danger' } }) }}
+                            {{ form_widget(form.purge, { 'attr': { 'class': 'btn btn-danger', 'onclick': 'return confirm ("' ~ 'messageswarningconfirmdelete' | trans  ~ '")' } }) }}
                         {% else %}
-                            {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-danger', 'onclick': 'return confirm ("' ~ 'messageswarningconfirmdelete' | trans  ~ '")'} }) }}
+                            {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-danger'} }) }}
                         {% endif %}
                         {{ form_widget(form.spam, { 'attr': { 'class': 'btn btn-light' } }) }}
                     </div>

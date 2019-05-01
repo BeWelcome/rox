@@ -34,7 +34,7 @@ define('DATA_DIR', dirname(__FILE__) . "/../../data");
 require_once SCRIPT_BASE . 'vendor/autoload.php';
 
 use Symfony\Component\Dotenv\Dotenv;
-use Rox\Framework\SessionSingleton;
+use App\Utilities\SessionSingleton;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 $dotenv = new Dotenv();

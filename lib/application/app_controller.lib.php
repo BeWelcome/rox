@@ -14,7 +14,7 @@
  * @version $Id: app_controller.lib.php 68 2006-06-23 12:10:27Z kang $
  */
 
-use Rox\RoxTraits\SessionTrait;
+use App\Utilities\SessionTrait;
 use Symfony\Component\Templating\EngineInterface;
 
 /**

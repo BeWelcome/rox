@@ -21,13 +21,16 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+
+use App\Utilities\SessionTrait;
+
 /**
  * Writes and reads from the logs table.
  * Replacement for old BW LogStr method.
  * @author Felix van Hove, <fvanhove@gmx.de>
  */
 class MOD_log {
-    use \Rox\RoxTraits\SessionTrait;
+    use SessionTrait;
     
     /**
      * if LOG2FILE is true, stuff gets additionally loged

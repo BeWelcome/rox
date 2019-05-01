@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use EnvironmentExplorer;
 use Exception;
 use Pagerfanta\Adapter\AdapterInterface;
-use Rox\Framework\SessionSingleton;
+use App\Utilities\SessionSingleton;
 use SearchModel;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;

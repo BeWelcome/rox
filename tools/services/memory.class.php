@@ -1,10 +1,11 @@
 <?php
 
+use App\Utilities\SessionTrait;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class SessionMemory
 {
-    use \Rox\RoxTraits\SessionTrait;
+    use SessionTrait;
 
     private $_store = array();
     private $_session_key = false;

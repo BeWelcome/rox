@@ -1,4 +1,7 @@
 <?php
+
+use App\Utilities\SessionTrait;
+
 /**
 * Forums view
 *
@@ -10,7 +13,7 @@
 */
 
 class ForumsView extends RoxAppView {
-    use \Rox\RoxTraits\SessionTrait;
+    use SessionTrait;
 
     private $_model;
     public $page;

@@ -21,6 +21,8 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+
+use App\Utilities\SessionTrait;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -29,7 +31,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  * @author Philipp Lange
  */
 class MOD_crypt {
-    use \Rox\RoxTraits\SessionTrait;
+    use SessionTrait;
 
     /** @var PDB */
     private $dao;

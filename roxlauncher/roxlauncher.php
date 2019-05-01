@@ -1,4 +1,7 @@
 <?php
+
+use App\Utilities\SessionSingleton;
+use App\Utilities\SessionTrait;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -7,7 +10,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class RoxLauncher
 {
-    use \Rox\RoxTraits\SessionTrait;
+    use SessionTrait;
 
     public function __construct()
     {
@@ -105,7 +108,7 @@ class ExceptionLogger
 
     public static function logException(Exception $e)
     {
-        $session = \Rox\Framework\SessionSingleton::getSession();
+        $session = SessionSingleton::getSession();
         if ($handle = fopen('exception.log', 'at'))
         {
             $string = "Exception occurred at " . date('Y-m-d H:i:s') . ". Here are the details:". PHP_EOL;

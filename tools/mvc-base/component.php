@@ -1,12 +1,13 @@
 <?php
 
 
+use App\Utilities\SessionTrait;
 use Symfony\Component\Asset\Package;
 use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
 
 class RoxComponentBase
 {
-    use Rox\RoxTraits\SessionTrait;
+    use SessionTrait;
 
     protected $package;
 

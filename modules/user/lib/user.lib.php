@@ -1,10 +1,13 @@
 <?php
+
+use App\Utilities\SessionTrait;
+
 /**
  * @author Philipp Hunstein & Seong-Min Kang <info@respice.de>
  * @version v2.0.0 Pre-Alpha
  */
 abstract class MOD_user {
-    use \Rox\RoxTraits\SessionTrait;
+    use SessionTrait;
 
     protected $authId;
     protected $sessionName;

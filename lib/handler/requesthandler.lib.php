@@ -13,6 +13,8 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id: requesthandler.lib.php 235 2007-03-01 17:26:10Z marco $
  */
+
+use App\Utilities\SessionTrait;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
@@ -23,7 +25,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  */
 class PRequest {
-    use Rox\RoxTraits\SessionTrait;
+    use SessionTrait;
 
     private static $_instance;
 

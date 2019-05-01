@@ -45,14 +45,21 @@
                                     <div><strong>{{ member.CityName }}</strong><br>{{ member.CountryName }}</div>
                                 </div>
 
-                                <div class="d-sm-none">
+                                <div class="d-sm-none ml-2">
                                     <div class="float-left"><img src="/images/icons/{{ member.Accommodation }}.png"
                                                                  alt="{{ member.Accommodation | trans }}"></div>
                                     <div class="float-left ml-2"><i class="fa fa-2x fa-bed p-1"></i><span
                                                 class="h4">{{ member.MaxGuest }}</span></div>
+
+                                    <div class="float-left ml-2">
+                                        <i class="fa fa-2x fa-comments mr-1 mt-1"></i><a href="/members/{{ member.Username }}/comments"><span
+                                                    class="h4">{{ member.CommentCount }}</span></a>
+                                    </div>
                                 </div>
 
+
                             </div>
+
                         </td>
                         <td class="col summary py-2 d-none d-lg-table-cell">
                             {% if member.Occupation|length %}<p class="m-0 mb-1 font-italic">{{ 'occupation' | trans }}: {{ member.Occupation | raw }}</p>{% endif %}
@@ -76,8 +83,28 @@
                                 <small>{{ 'searchmemberlastlogininfo' | trans | format( '<strong>' ~ member.LastLogin ~ '</strong>') | raw }}</small>
                                 <small>{{ 'searchmembersinceinfo' | trans | format( '<strong>' ~ member.created ~ '</strong>' ) | raw }}</small>
                             </div>
+
                         </td>
                     </tr>
+
+                    {% if member.ProfileSummary|length %}
+                    <tr><td colspan="3" class="p-0 pb-3">
+                        <div class="d-lg-none">
+                            <a class="btn btn-block btn-secondary" data-toggle="collapse" href="#collapse{{ member.Username }}" role="button" aria-expanded="false" aria-controls="collapse{{ member.Username }}">
+                                {{ 'profilesummary' | trans | capitalize }}
+                            </a>
+                        </div>
+                        <div class="collapse" id="collapse{{ member.Username }}">
+                            <div class="card card-body">
+                                {% if member.Occupation|length %}<p class="m-0 mb-1 font-italic">{{ 'occupation' | trans }}: {{ member.Occupation | raw }}</p>{% endif %}
+                                <a href="/members/{{ member.Username }}"
+                                   class="profilesummary">{{ member.ProfileSummary | truncate(250) | purify }}</a>
+                            </div>
+                        </div>
+                        </td></tr>
+                    {% endif %}
+
+
                 {% endfor %}
                 </tbody>
             </table>

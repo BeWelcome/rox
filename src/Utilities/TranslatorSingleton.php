@@ -39,10 +39,6 @@ class TranslatorSingleton
      */
     public static function getInstance()
     {
-        if (null === static::$_instance) {
-            throw new \InvalidArgumentException('TranslatorSingleton::getInstance() called without a call to createInstance()');
-        }
-
         return static::$_instance;
     }
 

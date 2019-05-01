@@ -132,7 +132,7 @@ class SearchController extends AbstractController
      *
      * @return Response
      */
-    public function showMapAction(Request $request)
+    public function showMapAction(Request $request, TranslatorInterface $translator)
     {
         $pager = false;
         $results = false;
@@ -150,7 +150,9 @@ class SearchController extends AbstractController
                 $this->getParameter('database_host'),
                 $this->getParameter('database_name'),
                 $this->getParameter('database_user'),
-                $this->getParameter('database_password')
+                $this->getParameter('database_password'),
+                $this->getDoctrine()->getManager(),
+                $translator
             );
             $results = $searchAdapter->getMapResults();
             $pager = new Pagerfanta($searchAdapter);

@@ -91,7 +91,6 @@ foreach($this->donations as $donation) {
 <td><?php echo $donation->SystemComment; ?></td>
 <td><?php echo $donation->CountryName; ?></td>
 <td><?php if ($donation->IdMember) {
-    echo "*" . $donation->IdMember . "*";
     $member = MOD_member::getMember_userId($donation->IdMember);
     echo $member->getUsername(). " " . $donation->referencepaypal; }?></td>
 <td><?php echo '<a href="admin/treasurer/edit/' . $donation->id . '">' . $words->get('AdminTreasurerOverviewEdit') . '</a>'; ?></td>

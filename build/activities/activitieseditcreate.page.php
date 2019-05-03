@@ -49,17 +49,15 @@ class ActivitiesEditCreatePage extends ActivitiesBasePage
     }
     
     protected function getStylesheets() {
-       $stylesheets = parent::getStylesheets();
-//       $stylesheets[] = 'build/tempusdominus.css';
+        $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'build/jquery_ui.css';
-       return $stylesheets;
+        return $stylesheets;
     }
 
     public function getLateLoadScriptFiles()
     {
         $scripts = parent::getLateLoadScriptfiles();
-        $scripts[] = 'build/tempusdominus.js';
-        $scripts[] = 'script/activities/edit_create.js';
+        $scripts[] = 'build/activities.js';
         $scripts[] = 'build/jquery_ui.js';
         $scripts[] = 'build/search/searchpicker.js';
         return $scripts;

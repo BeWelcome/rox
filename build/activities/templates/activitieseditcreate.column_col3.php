@@ -60,26 +60,26 @@ if (empty($vars)) {
             <div class="form-group mb-1">
                 <label for="activity-start-date"><?php echo $words->get('ActivityStart'); ?>*</label>
                 <div class="input-group date" id="date-time-start" data-target-input="nearest">
-                    <input type="text" id="activity-start-date" name="activity-start-date" class="form-control " data-target="#date-time-start"
-                           value="<?php echo $vars['activity-start-date'];?>"/>
-                    <div class="input-group-append" data-target="#date-time-start" data-toggle="datetimepicker">
+                    <div class="input-group-prepend" data-target="#date-time-start" data-toggle="datetimepicker">
                         <span class="input-group-text">
                             <i class="fa fa-calendar"></i>
                         </span>
                     </div>
+                    <input type="text" id="activity-start-date" name="activity-start-date" class="form-control datepicker" data-target="#date-time-start"
+                           data-toggle="datetimepicker" value="<?php echo $vars['activity-start-date'];?>" autocomplete="off"/>
                 </div>
             </div>
 
             <div class="form-group mb-1">
                 <label for="activity-start-end"><?php echo $words->get('ActivityEnd'); ?>*</label>
                 <div class="input-group date" id="date-time-end" data-target-input="nearest">
-                    <input type="text" id="activity-end-date" name="activity-end-date" class="form-control validate" data-target="#date-time-end"
-                           value="<?php echo $vars['activity-end-date'];?>" />
-                    <div class="input-group-append" data-target="#date-time-end" data-toggle="datetimepicker">
+                    <div class="input-group-prepend" data-target="#date-time-end" data-toggle="datetimepicker">
                         <span class="input-group-text">
                             <i class="fa fa-calendar"></i>
                         </span>
                     </div>
+                    <input type="text" id="activity-end-date" name="activity-end-date" class="form-control datepicker" data-target="#date-time-end"
+                           data-toggle="datetimepicker" value="<?php echo $vars['activity-end-date'];?>" autocomplete="off" />
                 </div>
             </div>
 

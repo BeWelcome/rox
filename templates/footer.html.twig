@@ -217,13 +217,13 @@
                 <tr>
                     <td {% if state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}class="w-25"{% else %}class="w-100"{% endif %}>
                         <small class="text-muted">{{ message.id }}</small>
-                        <p>{{ message.id | trans( {}, message.domain, 'en' ) }}</p>
+                        <p>{{ message.id | trans( {}, message.domain, 'en' ) | truncate(50) }}</p>
                         {% if message.transChoiceNumber is not null %}
                             <small class="newline">(pluralization is used)</small>
                         {% endif %}
 
                         {% if message.parameters|length > 0 %}
-                            {% for parameters in message.parameters %}
+                            {% for parameter in message.parameters %}
                                 {# dump(parameters) #}
                             {% endfor %}
                         {% endif %}
@@ -231,7 +231,7 @@
                     {% if state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}
                         <td class="w-75">
                             <small class="invisible text-muted">{{ message.id }}</small>
-                            <p>{{ message.translation }}</p>
+                            <p>{{ message.translation | truncate(50)  }}</p>
                         </td>
                     {% endif %}
                     <td>

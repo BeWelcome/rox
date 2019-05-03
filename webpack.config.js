@@ -22,6 +22,7 @@ Encore
     .addEntry('tempusdominus', './assets/js/tempusdominus.js')
     .addEntry('requests', './assets/js/requests.js')
     .addEntry('treasurer', './assets/js/treasurer.js')
+    .addEntry('activities', './assets/js/activities/edit_create.js')
     .addEntry('leaflet', './assets/js/leaflet.js')
     .addEntry('member/autocomplete', './assets/js/member/autocomplete.js')
     .addEntry('admin/faqs', './assets/js/admin/faqs.js')

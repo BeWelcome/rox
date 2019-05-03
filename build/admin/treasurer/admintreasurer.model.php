@@ -88,11 +88,8 @@ class AdminTreasurerModel extends RoxModelBase {
                 referencepaypal = '',
                 membercomment = '',
                 SystemComment = '" . $this->dao->escape($comment) . "'";
-        $sql = $this->dao->query($query);
-        if (!$sql) {
-            return false;
-        }
-        if ($sql->affectedRows() != 1) {
+        $affected = $this->dao->exec($query);
+        if ($affected != 1) {
             return false;
         }
         return true;

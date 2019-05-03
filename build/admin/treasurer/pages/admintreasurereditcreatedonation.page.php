@@ -52,7 +52,7 @@ class AdminTreasurerEditCreateDonationPage extends AdminTreasurerBasePage
             $this->comment = $donation->SystemComment;
             $this->countrycode = $this->model->getCountryCodeForGeonameId($donation->IdCountry);
         }
-        $this->addLateLoadScriptFile('/build/treasurer.js');
+        $this->addLateLoadScriptFile('build/treasurer.js');
     }
     
     public function teaserHeadline()

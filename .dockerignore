@@ -1,0 +1,10 @@
+vendor/
+node_modules/
+.git
+.idea
+.project
+db_dumps/
+data/
+var/
+coverage/
+public/build/

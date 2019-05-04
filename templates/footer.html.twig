@@ -195,7 +195,7 @@
     {% endif %}
 </footer>
 {% macro render_table(messages, hasEnglishRights) %}
-    {# We should alwas get messages but better be safe than sorry. #}
+    {# We should always get messages but better be safe than sorry. #}
     {% if messages|length %}
         {% set state = messages[0].state %}
     <div class="col-12">
@@ -203,11 +203,11 @@
             <thead>
             <tr>
                 {% if state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}
-                <th>ID and Message</th>
-                <th>Translated Message</th>
+                <th>{{ 'translations.id.and.message' | trans }}</th>
+                <th>{{ 'translations.translated.message' | trans }}</th>
                 <th></th>
                 {% else %}
-                <th>ID and Message</th>
+                <th>{{ 'translations.id.and.message' | trans }}</th>
                 <th></th>
                 {% endif %}
             </tr>

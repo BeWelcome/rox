@@ -6,6 +6,8 @@ monolog:
       # if *one* log is error or higher, pass *all* to file_log
       action_level: error
       handler: file_log
+      excluded_404s:
+        - ^/
 
     # now passed *all* logs, but only if one log is error or higher
     file_log:

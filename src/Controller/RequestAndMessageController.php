@@ -385,7 +385,7 @@ class RequestAndMessageController extends AbstractController
 
         $member = $this->getUser();
         $messageModel = new MessageModel($this->getDoctrine());
-        $messages = $messageModel->getFilteredRequestsAndMessages($member, $folder, $sort, $sortDir, $page, $limit);
+        $messages = $messageModel->getFilteredRequestsAndMessages($member, $sort, $sortDir, $page, $limit);
 
         return $this->handleFolderRequest($request, $folder, $messages, 'both');
     }
@@ -426,11 +426,13 @@ class RequestAndMessageController extends AbstractController
 
     /**
      * @param Request $request
-     * @param string  $folder
+     * @param string $folder
      * @param $messages
      * @param $type
      *
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     private function handleFolderRequest(Request $request, $folder, $messages, $type)
     {
@@ -834,7 +836,7 @@ class RequestAndMessageController extends AbstractController
     private function getSubMenuItems()
     {
         return [
-            'requestsandmessages_inbox' => [
+            'both_inbox' => [
                 'key' => 'MessagesRequestsReceived',
                 'url' => $this->generateUrl('both', ['folder' => 'inbox']),
             ],

@@ -7,6 +7,7 @@ use App\Entity\Member;
 use App\Entity\Preference;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use PVars;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
@@ -44,6 +45,8 @@ class UserLocaleListener
      */
     public function onInteractiveLogin(InteractiveLoginEvent $event)
     {
+        $request = $event->getRequest();
+
         /** @var Member $user */
         $user = $event->getAuthenticationToken()->getUser();
 
@@ -56,6 +59,7 @@ class UserLocaleListener
         $languageId = $user->getMemberPreferenceValue($preference);
 
         $languageRepository = $this->em->getRepository(Language::class);
+        /** @var Language $language */
         $language = $languageRepository->findOneBy([
             'id' => $languageId,
         ]);
@@ -63,9 +67,14 @@ class UserLocaleListener
             $locale = $language->getShortCode();
         } else {
             $locale = $this->session->get('_locale', 'en');
+            $language = $languageRepository->findOneBy([
+                'shortcode' => $locale,
+            ]);
         }
-        \PVars::register('lang', $locale);
+        PVars::register('lang', $locale);
 
+        $request->setLocale($locale);
+        $this->session->set('IdLanguage', $language->getId());
         $this->session->set('_locale', $locale);
     }
 }

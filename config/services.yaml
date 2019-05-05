@@ -6,7 +6,10 @@
 parameters:
   new_members_messages_per_hour: "%env(new_members_messages_per_hour)%"
   new_members_messages_per_day: "%env(new_members_messages_per_day)%"
+  data_directory: "%kernel.project_dir%/data"
   group_directory: "%kernel.project_dir%/%env(group_directory)%"
+  upload_directory: "%kernel.project_dir%/%env(upload_directory)%"
+  upload_max_size: "%env(upload_max_size)%"
 
 services:
   # makes classes in src/ available to be used as services
@@ -32,7 +35,7 @@ services:
   app.locale_listener:
     public: true
     class: App\EventListener\LocaleListener
-    arguments: ['%kernel.default_locale%']
+    arguments: ['@doctrine.orm.entity_manager', '%kernel.default_locale%']
     tags:
       - { name: kernel.event_subscriber }
 
@@ -78,7 +81,7 @@ services:
   rox.twig_extension:
     public: true
     class: App\Twig\Extension
-    arguments: ['@session', '@doctrine', '@translator']
+    arguments: ['@session', '@doctrine', '@translator', '%data_directory%']
     tags:
       - { name: 'twig.extension' }
 
@@ -152,6 +155,13 @@ services:
     class: App\Model\WikiModel
     arguments:
       - "@doctrine.orm.entity_manager"
+
+  \HTMLPurifier:
+    alias: rox.html_purifier
+
+  rox.html_purifier:
+    class: App\Utilities\CustomHTMLPurifier
+    tags: [{ name: exercise.html_purifier, profile: custom }]
 
 #  rox.activator:
 #    class: App\Activator\RoleActivator

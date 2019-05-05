@@ -21,6 +21,7 @@ class SearchController extends AbstractController
      *
      * @param Request $request
      *
+     * @param TranslatorInterface $translator
      * @return Response
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -130,6 +131,7 @@ class SearchController extends AbstractController
      *
      * @param Request $request
      *
+     * @param TranslatorInterface $translator
      * @return Response
      */
     public function showMapAction(Request $request, TranslatorInterface $translator)

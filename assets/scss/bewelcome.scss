@@ -2,8 +2,8 @@
 
 @import "mixins";
 
-@import "~typeface-signika/index.css";
-@import '~typeface-lato/index.css';
+@import "~typeface-signika";
+@import '~typeface-lato';
 
 $fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
 @import '~@fortawesome/fontawesome-free/scss/fontawesome';
@@ -70,13 +70,13 @@ $font-family-bold: Signika;
     z-index: 2000!important;
 }
 
-blockquote {
-  color: #444;
-  background: transparent;
-  border: 1px #ddd solid;
-  border-left: 8px $brand-primary solid;
-  padding: 0 0.5em;
-  margin: 0 0 1em 0.5em;
+.ck-content blockquote, blockquote {
+  color: #444 !important;
+  background: transparent !important;
+  border: 1px #ddd solid !important;
+  border-left: 8px $brand-primary solid !important;
+  padding: 0 0.5em !important;
+  margin: 0.5em 0 !important;
 }
 
 .jumbotron {
@@ -263,3 +263,12 @@ a.active .metric .value {
 .alert-error {
   @extend .alert-danger;
 }
+
+figure > img {
+  max-width: 100%;
+}
+
+figure > figcaption {
+  text-align: center;
+}
+

@@ -133,7 +133,7 @@ $vars =& PPostHandler::getVars($callbackId);
 
             <label for="topic_text" class="sr-only"><?php echo $words->getFormatted("forum_label_text"); ?></label>
 
-            <textarea name="topic_text" id="topic_text" class="form-control long editor" rows="10"><?php
+            <textarea name="topic_text" id="topic_text" class="form-control editor" rows="10" style="min-height: 10em;" placeholder="<?= $words->get('forum.post.placeholder'); ?>"><?php
                 if (isset($void_string)) {
                     echo $void_string;
                 } else {
@@ -210,8 +210,5 @@ $vars =& PPostHandler::getVars($callbackId);
     </div>
     </form>
     </div>
-<?php
-$textarea = 'topic_text';
-require_once SCRIPT_BASE . 'public/script/tinymceconfig_php.js';
-?>
 </div>
+<script src="script/ckeditor.js"></script>

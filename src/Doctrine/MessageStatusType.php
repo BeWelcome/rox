@@ -12,7 +12,7 @@ class MessageStatusType extends EnumType
     const FROZEN = 'Freeze';
 
     /** @var string */
-    protected $name = 'message_status_old';
+    protected $name = 'message_status';
 
     /** @var array */
     protected $values = [

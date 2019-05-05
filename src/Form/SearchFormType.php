@@ -91,13 +91,13 @@ class SearchFormType extends AbstractType
         $languages = [];
         if (null !== $options['languages']) {
             foreach ($options['languages'] as $language) {
-                $languages[$language->getEnglishName()] = $language->getId();
+                $languages['lang_' . $language->getShortCode()] = $language->getId();
             }
         }
         $formBuilder
             ->add('groups', ChoiceType::class, [
                 'choices' => $groups,
-                'choice_translation_domain' => false,
+                'choice_translation_domain' => true,
                 'label' => 'groups',
                 'attr' => [
                     'class' => 'select2',
@@ -107,7 +107,6 @@ class SearchFormType extends AbstractType
             ])
             ->add('languages', ChoiceType::class, [
                 'choices' => $languages,
-                'choice_translation_domain' => false,
                 'label' => 'languages',
                 'attr' => [
                     'class' => 'select2',

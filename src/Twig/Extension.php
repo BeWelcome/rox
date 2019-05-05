@@ -5,18 +5,17 @@ namespace App\Twig;
 use App\Model\LanguageModel;
 use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use HTMLPurifier_Config;
 use HtmlTruncator\Truncator;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\DataCollector\TranslationDataCollector;
 use Symfony\Component\Translation\DataCollectorTranslator;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Twig_Extension;
-use Twig_Extension_GlobalsInterface;
-use Twig_SimpleFilter;
-use Twig_SimpleFunction;
+use Twig\Extension\GlobalsInterface;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
+use Twig\Extension\AbstractExtension;
 
-class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterface
+class Extension extends AbstractExtension implements GlobalsInterface
 {
     /**
      * @var SessionInterface
@@ -34,17 +33,24 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
     protected $translator;
 
     /**
+     * @var string location of the data directory (for purifier output)
+     */
+    private $dataDirectory;
+
+    /**
      * Extension constructor.
      *
-     * @param SessionInterface    $session
-     * @param Registry            $registry
+     * @param SessionInterface $session
+     * @param Registry $registry
      * @param TranslatorInterface $translator
+     * @param $dataDirectory
      */
-    public function __construct(SessionInterface $session, Registry $registry, TranslatorInterface $translator)
+    public function __construct(SessionInterface $session, Registry $registry, TranslatorInterface $translator, $dataDirectory)
     {
         $this->session = $session;
         $this->registry = $registry;
         $this->translator = $translator;
+        $this->dataDirectory = $dataDirectory;
     }
 
     /**
@@ -55,9 +61,9 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
     public function getFunctions()
     {
         return [
-            new Twig_SimpleFunction('ago', [$this, 'ago']),
-            new Twig_SimpleFunction('getTranslations', [$this, 'getTranslations']),
-            new Twig_SimpleFunction('dump_it', [$this, 'dumpIt'], [
+            new TwigFunction('ago', [$this, 'ago']),
+            new TwigFunction('getTranslations', [$this, 'getTranslations']),
+            new TwigFunction('dump_it', [$this, 'dumpIt'], [
                 'is_safe' => ['html'],
             ]),
         ];
@@ -71,16 +77,9 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
     public function getFilters()
     {
         return [
-            new Twig_SimpleFilter(
+            new TwigFilter(
                 'truncate',
                 [$this, 'truncate'],
-                [
-                    'is_safe' => ['html'],
-                ]
-            ),
-            new Twig_SimpleFilter(
-                'purify',
-                [$this, 'purify'],
                 [
                     'is_safe' => ['html'],
                 ]
@@ -113,24 +112,6 @@ class Extension extends Twig_Extension implements Twig_Extension_GlobalsInterfac
     public function dumpIt($variable)
     {
         return highlight_string(var_export($variable, true), true);
-    }
-
-    /**
-     * Uses the HTMLPurifier to ensure safe HTML or display of messages and other user provided information.
-     *
-     * @param string $text string to truncate
-     *
-     * @return string purified string
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
-     */
-    public function purify($text)
-    {
-        $config = HTMLPurifier_Config::createDefault();
-        $config->set('AutoFormat.AutoParagraph', true);
-        $purifier = new \HTMLPurifier($config);
-
-        return $purifier->purify(trim($text));
     }
 
     public function getTranslations()

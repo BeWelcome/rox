@@ -23,7 +23,6 @@
                     <img class="profileimg d-none d-sm-block" width="80" height="80" src="{{ path( 'avatar', { 'username': myself.Username , 'size': 80 }) }}" title="{{ myself.Username }}" alt="{{ 'Profile' | trans }}: {{ myself.Username }}">
                 {% else %}
                     {{ macros.avatarstack(otherUser.Username, 80, false, false) }}
-                   {#  <img class="profileimg d-none d-sm-block" width="80" height="80" src="{{ path( 'avatar', { 'username': otherUser.Username , 'size': 80 }) }}" title="{{ otherUser.Username }}" alt="{{ 'Profile' | trans }}: {{ otherUser.Username }}"> #}
                     {% endif %}
             </div>
             <div class="col-auto message_{% if own %}own{% else %}other{% endif %}">
@@ -36,7 +35,7 @@
                     {{ message.created.DiffForHumans }} - {{ message.id }}
                 </small>
                 <p class="clearfix m-0"></p>
-                {{ message.message | purify }}
+                {{ message.message | purify('custom') }}
                 {% if message.Request %}
                     {% if message.Request.Arrival != currentArrival or message.Request.Departure != currentDeparture %}
                         {{ currentArrival | localizeddate }} {{ currentDeparture | localizeddate }}

@@ -68,14 +68,14 @@ class MOD_htmlpure
      */
     public function getPurifier()
     {
-        $config = HTMLPurifier_Config::createDefault();
+        $config = HTMLPurifier_HTML5Config::createDefault();
         $config->set('Cache.SerializerPath', SCRIPT_BASE . '/data');
         return new HTMLPurifier($config);
     }
 
     public function getBasicHtmlPurifier()
     {
-        $config = HTMLPurifier_Config::createDefault();
+        $config = HTMLPurifier_HTML5Config::createDefault();
         $config->set('Cache.SerializerPath', SCRIPT_BASE . '/data');
         $config->set('HTML.Allowed', 'p,b,a[href],br,i,strong,em,ol,ul,li,dl,dt,dd,blockquote');
         $config->set('AutoFormat.AutoParagraph', true);
@@ -84,7 +84,7 @@ class MOD_htmlpure
 
     public function getAdvancedHtmlPurifier()
     {
-        $config = HTMLPurifier_Config::createDefault();
+        $config = HTMLPurifier_HTML5Config::createDefault();
         $config->set('Cache.SerializerPath', SCRIPT_BASE . '/data');
         $config->set('HTML.Allowed', 'p,b,a[href|target],br,i,strong,em,ol,ul,li,dl,dt,dd,blockquote');
         $config->set('HTML.TargetBlank', true);
@@ -108,7 +108,7 @@ class MOD_htmlpure
     public function getForumsHtmlPurifier() {
         // allow tables in forum posts to be able to format the suggestion results nicely
         // don't offer tables in TinyMCE for now
-        return self::getSophisticatedHtmlPurifier(array('table[id]', 'tr[class]', 'td[class|rowspan]', 'th[class]', 'span[style]'));
+        return self::getSophisticatedHtmlPurifier(array('table[id]', 'tr[class]', 'td[class|rowspan]', 'th[class]', 'span[style]', 'figure[class]', 'figcaption'));
     }
 
     public function getMailHtmlPurifier() {
@@ -117,9 +117,13 @@ class MOD_htmlpure
         return self::getSophisticatedHtmlPurifier(array('table[id]', 'tr[class]', 'td[class|rowspan]', 'th[class]', 'span[class]', 'hr', 'h3'));
     }
 
-    private function getSophisticatedHtmlPurifier($additionalTags = false)
+    /**
+     * @param array $additionalTags
+     * @return HTMLPurifier
+     */
+    private function getSophisticatedHtmlPurifier($additionalTags = [])
     {
-        $config = HTMLPurifier_Config::createDefault();
+        $config = HTMLPurifier_HTML5Config::createDefault();
         $config->set('Cache.SerializerPath', SCRIPT_BASE . '/data');
         $allowedHtml = self::ALLOWED_HTML;
         if ($additionalTags) {
@@ -134,8 +138,9 @@ class MOD_htmlpure
         $config->set('CSS.AllowedProperties', array('text-decoration'));
         $config->set('AutoFormat.AutoParagraph', true); // automatically turn double newlines into paragraphs
         $config->set('AutoFormat.Linkify', true); // automatically turn stuff like http://domain.com into links
-//        $config->set('AutoFormat.RemoveSpansWithoutAttributes', true);
+        $config->set('AutoFormat.RemoveSpansWithoutAttributes', true);
         $config->set('CSS.AllowTricky','true');
+
         return new HTMLPurifier($config);
     }
 }

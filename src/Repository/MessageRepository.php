@@ -181,32 +181,21 @@ class MessageRepository extends EntityRepository
         }
         $qb
             ->setParameter('member', $member)
-            ->andWhere('m.request IS NULL');
+            ->andWhere('m.request IS NULL')
+            ->andWhere('m.deleteRequest LIKE :deleted ')
+            ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
+            ->andWhere('NOT(m.deleteRequest LIKE :purged)')
+            ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%');
         switch ($folder) {
             case 'inbox':
                 $qb
-                    ->andWhere('NOT(m.deleteRequest LIKE :deleted)')
-                    ->setParameter('deleted', DeleteRequestType::RECEIVER_DELETED)
-                    ->andWhere('NOT(m.deleteRequest LIKE :purged)')
-                    ->setParameter('purged', DeleteRequestType::RECEIVER_PURGED)
                     ->andWhere('m.infolder = :folder')
                     ->setParameter('folder', 'normal');
                 break;
             case 'spam':
                 $qb
-                    ->andWhere('NOT(m.deleteRequest LIKE :deleted)')
-                    ->setParameter('deleted', DeleteRequestType::RECEIVER_DELETED)
-                    ->andWhere('NOT(m.deleteRequest LIKE :purged)')
-                    ->setParameter('purged', DeleteRequestType::RECEIVER_PURGED)
                     ->andWhere('m.infolder = :folder')
                     ->setParameter('folder', $folder);
-                break;
-            case 'deleted':
-                $qb
-                    ->andWhere('m.deleteRequest LIKE :deleted ')
-                    ->setParameter('deleted', DeleteRequestType::RECEIVER_DELETED)
-                    ->andWhere('NOT(m.deleteRequest LIKE :purged)')
-                    ->setParameter('purged', DeleteRequestType::RECEIVER_PURGED);
                 break;
         }
         $qb->orderBy('m.'.$sort, $sortDirection);
@@ -255,9 +244,9 @@ class MessageRepository extends EntityRepository
         }
         $qb = $this->createQueryBuilder('m')
             ->where('NOT(m.deleteRequest LIKE :deleted)')
-            ->setParameter('deleted', DeleteRequestType::RECEIVER_DELETED)
+            ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
             ->andWhere('NOT(m.deleteRequest LIKE :purged)')
-            ->setParameter('purged', DeleteRequestType::RECEIVER_PURGED);
+            ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%');
         if ('sent' === $folder) {
             $qb->andWhere('m.sender = :member');
         } else {
@@ -277,7 +266,6 @@ class MessageRepository extends EntityRepository
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
      * @param Member $member
-     * @param $filter
      * @param $sort
      * @param $sortDirection
      * @param int $page
@@ -287,7 +275,6 @@ class MessageRepository extends EntityRepository
      */
     public function findLatestRequestsAndMessages(
         Member $member,
-        $filter,
         $sort,
         $sortDirection,
         $page = 1,
@@ -295,7 +282,7 @@ class MessageRepository extends EntityRepository
     ) {
         $paginator = new Pagerfanta(
             new DoctrineORMAdapter(
-                $this->queryLatestRequestsAndMessages($member, $filter, $sort, $sortDirection),
+                $this->queryLatestRequestsAndMessages($member, $sort, $sortDirection),
                 false
             )
         );
@@ -307,29 +294,24 @@ class MessageRepository extends EntityRepository
 
     /**
      * @param Member $member
-     * @param $folder
      * @param $sort
      * @param $sortDirection
      *
      * @return QueryBuilder
      */
-    public function queryLatestRequestsAndMessages(Member $member, $folder, $sort, $sortDirection)
+    public function queryLatestRequestsAndMessages(Member $member, $sort, $sortDirection)
     {
         if ('date' === $sort) {
             $sort = 'created';
         }
         $qb = $this->createQueryBuilder('m')
             ->where('NOT(m.deleteRequest LIKE :deleted)')
-            ->setParameter('deleted', DeleteRequestType::RECEIVER_DELETED)
+            ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
             ->andWhere('NOT(m.deleteRequest LIKE :purged)')
-            ->setParameter('purged', DeleteRequestType::RECEIVER_DELETED)
-        ;
-        if ('sent' === $folder) {
-            $qb->andWhere('m.sender = :member');
-        } else {
-            $qb->andWhere('m.receiver = :member');
-        }
-        $qb
+            ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
+            ->andWhere('m.infolder = :folder')
+            ->setParameter('folder', InFolderType::NORMAL)
+            ->andWhere('m.receiver = :member')
             ->setParameter('member', $member)
             ->orderBy('m.'.$sort, $sortDirection);
 
@@ -389,9 +371,9 @@ class MessageRepository extends EntityRepository
         $qb = $this->createQueryBuilder('m');
         $qb
             ->where('NOT(m.deleteRequest LIKE :deleted)')
-            ->setParameter('deleted', DeleteRequestType::RECEIVER_DELETED)
+            ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
             ->andWhere('NOT(m.deleteRequest LIKE :purged)')
-            ->setParameter('purged', DeleteRequestType::RECEIVER_PURGED)
+            ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
             ->andWhere(
                 $qb
                     ->expr()->orX(

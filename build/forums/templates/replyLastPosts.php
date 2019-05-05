@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
 	$can_edit_own = false;
 	$can_edit_foreign = false;
 ?>
-
+<div class="row">
 <div class="col-12 order-12">
 <h2 class="mt-5 mb-0 w-100"><?php echo $words->getFormatted('last_posts'); ?></h2>
 <p><?php echo $words->getFormatted('LastPostSubline'); ?></p>
@@ -44,4 +44,5 @@ Boston, MA  02111-1307, USA.
   }
 ?>
     </div>
+</div>
 </div>

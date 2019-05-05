@@ -1,6 +1,8 @@
 <?php
 
 use App\Utilities\SessionTrait;
+use Symfony\Component\Asset\Package;
+use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
 
 /**
 * Forums view
@@ -30,6 +32,7 @@ class ForumsView extends RoxAppView {
         $this->uri=$this->getURI() ;
         $this->forum_uri='forums' ;
         $this->page = new stdClass();
+        $this->package = new Package(new JsonManifestVersionStrategy('build/manifest.json'));
     }
 
 

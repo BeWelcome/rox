@@ -1,14 +1,18 @@
-// const CKEditorWebpackPlugin = require( '@ckeditor/ckeditor5-dev-webpack-plugin' );
-// const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
+const CKEditorWebpackPlugin = require( '@ckeditor/ckeditor5-dev-webpack-plugin' );
+const {styles} = require('@ckeditor/ckeditor5-dev-utils');
 var Encore = require('@symfony/webpack-encore');
 
 Encore
 //    .configureRuntimeEnvironment('dev')
+    .addPlugin(new CKEditorWebpackPlugin({
+        // .. CKEditor options like language and stuf...
+        language: 'en',
+        additionalLanguages: 'all'
+    }))
     .enableSingleRuntimeChunk()
     .setOutputPath('public/build/')
     .setPublicPath('/build')
     .cleanupOutputBeforeBuild()
-
     .addEntry('bewelcome', './assets/js/bewelcome.js')
     .addEntry('jquery_ui', './assets/js/jquery_ui.js')
     .addEntry('backwards', './assets/js/backwards.js')
@@ -32,7 +36,7 @@ Encore
     .addEntry( 'updatecounters', './assets/js/updateCounters.js')
     .addEntry( 'lightbox', './assets/js/lightbox.js')
     .addEntry('bsfileselect', './assets/js/bsfileselect.js')
-    // .addEntry( 'roxeditor', './assets/js/roxeditor.js')
+//    .addEntry( 'roxeditor', './assets/js/roxeditor.js')
 
     .enableSassLoader()
     // allow legacy applications to use $/jQuery as a global variable, make popper visible for bootstrap
@@ -63,34 +67,19 @@ Encore
         test: require.resolve('select2'),
         use: "imports-loader?define=>false"
     })
-/*    .addLoader( {
-        test: /\.svg$/,
-        use: "raw-loader"
+    .addLoader({
+        test: /\.svg$/i,
+        use: 'raw-loader'
     })
     .enablePostCssLoader(options => {
-         Object.assign(options, styles.getPostCssConfig({
-             themeImporter: {
-                 themePath: require.resolve( '@ckeditor/ckeditor5-theme-lark' )
-             }
-         }));
+        Object.assign(options, styles.getPostCssConfig({
+            themeImporter: {
+                themePath: require.resolve( '@ckeditor/ckeditor5-theme-lark' )
+            }
+        }));
     })
-*/
- .enableSourceMaps(!Encore.isProduction())
- .enableVersioning(true)
-    .configureBabel(function(babelConfig) {
-        // add additional presets
-        // babelConfig.presets.push('@babel/preset-flow');
-
-        // no plugins are added by default, but you can add some
-        // babelConfig.plugins.push('styled-jsx/babel');
-    }, {
-        // node_modules is not processed through Babel by default
-        // but you can whitelist specific modules to process
-        include_node_modules: ['bootstrap']
-
-        // or completely control the exclude
-        // exclude: /node_modules/
-    })
+    .enableSourceMaps(!Encore.isProduction())
+    .enableVersioning(true)
 ;
 
 // console.log(JSON.stringify(Encore.getWebpackConfig(), null, 4));

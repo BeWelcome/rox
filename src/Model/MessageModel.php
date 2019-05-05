@@ -269,7 +269,6 @@ class MessageModel extends BaseModel
 
     /**
      * @param $member
-     * @param $folder
      * @param $sort
      * @param $sortDir
      * @param int $page
@@ -277,12 +276,12 @@ class MessageModel extends BaseModel
      *
      * @return Pagerfanta
      */
-    public function getFilteredRequestsAndMessages($member, $folder, $sort, $sortDir, $page = 1, $limit = 10)
+    public function getFilteredRequestsAndMessages($member, $sort, $sortDir, $page = 1, $limit = 10)
     {
         /** @var MessageRepository $repository */
         $repository = $this->em->getRepository(Message::class);
 
-        return $repository->findLatestRequestsAndMessages($member, $folder, $sort, $sortDir, $page, $limit);
+        return $repository->findLatestRequestsAndMessages($member, $sort, $sortDir, $page, $limit);
     }
 
     /**

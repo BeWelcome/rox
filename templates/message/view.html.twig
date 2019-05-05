@@ -20,9 +20,9 @@
             <a class="btn btn-sm btn-primary float-right" href="{{ path('message_reply', { id: thread[0].id }) }}">{{ 'message.button.reply' | trans }}</a>
             {% if current.Sender != myself %}
                 {% if current.infolder == constant('App\\Doctrine\\InFolderType::SPAM') %}
-                    <a class="btn btn-sm btn-primary mr-2 float-right" href="{{ path('message_mark_nospam', { id: thread[0].id }) }}">{{ 'marknospam' | trans }}</a>
+                    <a class="btn btn-sm btn-primary mr-2 float-left" href="{{ path('message_mark_nospam', { id: thread[0].id }) }}">{{ 'marknospam' | trans }}</a>
                 {% else %}
-                    <a class="btn btn-sm btn-primary mr-2 float-right" href="{{ path('message_mark_spam', { id: thread[0].id }) }}"><i class="fas fa-flag"></i> {{ 'markspam' | trans }}</a>
+                    <a class="btn btn-sm btn-primary mr-2 float-left" href="{{ path('message_mark_spam', { id: thread[0].id }) }}"><i class="fas fa-flag"></i> {{ 'markspam' | trans }}</a>
                 {% endif %}
             {%  endif %}
         </div>
@@ -35,9 +35,9 @@
             <a class="btn btn-sm btn-primary float-right" href="{{ path('message_reply', { id: thread[0].id }) }}">{{ 'message.button.reply' | trans }}</a>
             {% if current.Sender != myself %}
                 {% if current.infolder == constant('App\\Doctrine\\InFolderType::SPAM') %}
-                    <a class="btn btn-sm btn-primary mr-2 float-right" href="{{ path('message_mark_nospam', { id: thread[0].id }) }}">{{ 'marknospam' | trans }}</a>
+                    <a class="btn btn-sm btn-primary mr-2 float-left" href="{{ path('message_mark_nospam', { id: thread[0].id }) }}">{{ 'marknospam' | trans }}</a>
                 {% else %}
-                    <a class="btn btn-sm btn-primary mr-2 float-right" href="{{ path('message_mark_spam', { id: thread[0].id }) }}"><i class="fas fa-flag"></i> {{ 'markspam' | trans }}</a>
+                    <a class="btn btn-sm btn-primary mr-2 float-left" href="{{ path('message_mark_spam', { id: thread[0].id }) }}"><i class="fas fa-flag"></i> {{ 'markspam' | trans }}</a>
                 {% endif %}
             {%  endif %}
         </div>

@@ -4,7 +4,10 @@
 
 namespace App\EventListener;
 
+use App\Entity\Language;
 use Carbon\Carbon;
+use Doctrine\ORM\EntityManagerInterface;
+use PVars;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -14,9 +17,20 @@ class LocaleListener implements EventSubscriberInterface
     /** @var string */
     private $defaultLocale;
 
-    public function __construct($defaultLocale = 'en')
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
+
+    /**
+     * LocaleListener constructor.
+     * @param EntityManagerInterface $em
+     * @param string $defaultLocale
+     */
+    public function __construct(EntityManagerInterface $em, $defaultLocale = 'en')
     {
         $this->defaultLocale = $defaultLocale;
+        $this->em = $em;
     }
 
     public static function getSubscribedEvents()
@@ -50,6 +64,17 @@ class LocaleListener implements EventSubscriberInterface
             $request->setLocale($locale);
         }
         Carbon::setLocale($locale);
-        \PVars::register('lang', $locale);
+
+        $languageRepository = $this->em->getRepository(Language::class);
+        /** @var Language $language */
+        $language = $languageRepository->findOneBy([
+            'shortcode' => $locale,
+        ]);
+
+        if (null !== $language) {
+            $request->getSession()->set('lang', $language->getShortcode());
+            $request->getSession()->set('IdLanguage', $language->getId());
+        }
+        PVars::register('lang', $locale);
     }
 }

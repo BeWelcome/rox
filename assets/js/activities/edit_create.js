@@ -1,19 +1,23 @@
+require('../tempusdominus.js');
+
 $(function () {
 
-    $('#activity-start-date').datetimepicker({
+    let activityStartDate = $('#activity-start-date');
+    let activityEndDate = $('#activity-end-date');
+    activityStartDate.datetimepicker({
         format: 'YYYY-MM-DD HH:mm',
         sideBySide: true
     });
-    $('#activity-end-date').datetimepicker({
+    activityEndDate.datetimepicker({
         format: 'YYYY-MM-DD HH:mm',
         sideBySide: true,
         useCurrent: false
     });
 
-    $('#activity-start-date').on("change.datetimepicker", function (e) {
-        $('#activity-end-date').datetimepicker('minDate', e.date);
+    activityStartDate.on("change.datetimepicker", function (e) {
+        activityEndDate.datetimepicker('minDate', e.date);
     });
-    $('#activity-end-date').on("change.datetimepicker", function (e) {
-        $('#activity-start-date').datetimepicker('maxDate', e.date);
+    activityEndDate.on("change.datetimepicker", function (e) {
+        activityStartDate.datetimepicker('maxDate', e.date);
     });
 });

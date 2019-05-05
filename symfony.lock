@@ -116,6 +116,18 @@
     "electrolinux/php-html5lib": {
         "version": "0.1.0"
     },
+    "exercise/htmlpurifier-bundle": {
+        "version": "0.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "0.2",
+            "ref": "0b76657841c2ba52647bb1b4a5595a0e3b9f485c"
+        },
+        "files": [
+            "./config/packages/exercise_html_purifier.yaml"
+        ]
+    },
     "ezyang/htmlpurifier": {
         "version": "v4.10.0"
     },
@@ -625,6 +637,9 @@
     },
     "white-october/pagerfanta-bundle": {
         "version": "v1.2.2"
+    },
+    "xemlock/htmlpurifier-html5": {
+        "version": "v0.1.10"
     },
     "zendframework/zend-code": {
         "version": "3.3.1"

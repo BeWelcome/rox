@@ -13,24 +13,18 @@
 {% endblock %}
 
 {% block content %}
-    <div class="my-3"><h2>{{ 'message.write_to' | trans | format(receiver.Username) }}</h2></div>
+    <div class="col-12 my-3"><h2>{{ 'message.write_to' | trans | format(receiver.Username) }}</h2></div>
 
-    <div>
+    <div class="col-12">
         {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
         {{ form_errors(form) }}
-    <div class="row mb-1">
-        <div class="col-12">
-            {{ form_row(form.subject.subject) }}
-            {{ form_row(form.message) }}
-            {{ form_rest(form) }}
-        </div>
+        {{ form_row(form.subject.subject) }}
+        {{ form_row(form.message) }}
+        {{ form_rest(form) }}
     </div>
 
-    <div class="row mb-1">
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary">{{ 'message.send' | trans }}</button>
-        </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">{{ 'message.send' | trans }}</button>
     </div>
     {{ form_end(form) }}
-    </div>
 {% endblock %}

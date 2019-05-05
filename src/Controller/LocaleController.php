@@ -21,7 +21,7 @@ class LocaleController extends AbstractController
         $redirect = $request->headers->get('referer');
 
         if (!$redirect) {
-            $redirect = $this->redirectToRoute('home');
+            $redirect = $this->redirectToRoute('homepage');
         }
 
         $locale = $request->attributes->get('locale');

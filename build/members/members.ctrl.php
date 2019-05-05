@@ -607,7 +607,7 @@ class MembersController extends RoxControllerBase
 			if (in_array('UploadedProfileImageTooBig', $errors) === false
 				|| in_array('ProfileImageUploadFailed', $errors) === false
             ) {
-            	$uploadFailed = true;
+            	$uploadFailed = false;
             } else {
 				// check if uploaded file is image
 				$img = new MOD_images_Image($_FILES['profile_picture']['tmp_name']);

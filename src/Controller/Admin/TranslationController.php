@@ -312,7 +312,7 @@ class TranslationController extends AbstractController
     {
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 20);
-        $locale = $this->get('session')->get('_locale');
+        $locale = $request->get('_locale');
 
         $form = $this->createFormBuilder(['wordCode' => $code])
             ->add('wordCode', TextType::class, [

@@ -1,0 +1,46 @@
+version: '3.7'
+
+# To run:
+# Set in .env.local DB_HOST=bewelcome_mysql (database container name)
+# $ docker-compose up --build --detach && docker-compose logs -f -t
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: bewelcome_mysql
+    init: true
+    environment:
+      MYSQL_ROOT_PASSWORD: bewelcome_root_dev
+      MYSQL_DATABASE: bewelcome
+      MYSQL_USER: bewelcome
+      MYSQL_PASSWORD: bewelcome
+    ports:
+      - 127.0.0.1:9906:3306
+  web:
+    build: .
+    container_name: bewelcome_web
+    init: true
+    depends_on:
+      - db
+    volumes:
+      - ./:/var/Code/
+    ports:
+      - 127.0.0.1:8000:8000 # Expose development app instance only on localhost
+    working_dir: /var/Code/
+    command: "sh -x -c '
+              composer install &&
+              npm install &&
+
+              php bin/console doctrine:schema:create --no-interaction &&
+              php bin/console hautelook:fixtures:load --no-interaction &&
+
+              curl https://downloads.bewelcome.org/for_developers/rox_test_db/languages.sql.bz2 -o /tmp/languages.sql.bz2 &&
+              curl https://downloads.bewelcome.org/for_developers/rox_test_db/words.sql.bz2 -o /tmp/words.sql.bz2 &&
+
+              bunzip2 /tmp/languages.sql.bz2 /tmp/words.sql.bz2 &&
+              mysql --host bewelcome_mysql bewelcome -u bewelcome -pbewelcome < /tmp/languages.sql &&
+              mysql --host bewelcome_mysql bewelcome -u bewelcome -pbewelcome < /tmp/words.sql &&
+
+              echo Initial setup DONE &&
+              php bin/console server:run 0.0.0.0:8000 --verbose;
+              '"

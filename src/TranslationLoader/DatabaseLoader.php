@@ -33,13 +33,25 @@ class DatabaseLoader implements LoaderInterface
         $translations = $this->em->getRepository(Word::class)->findBy(['shortCode' => $locale]);
 
         $messages = [];
+        $validators = [];
         /** @var Word $translation */
         foreach ($translations as $translation) {
-            $messages[$translation->getCode()] = $translation->getSentence();
+            // hack for validations messages
+            $code = $translation->getCode();
+            if ($this->startsWith($code, 'search.location')) {
+                $validators[$code] = $translation->getSentence();
+            }
+            $messages[$code] = $translation->getSentence();
         }
 
-        $catalogue = new MessageCatalogue($locale, ['messages' => $messages]);
+        $catalogue = new MessageCatalogue($locale, ['messages' => $messages, 'validators' => $validators]);
 
         return $catalogue;
+    }
+
+    function startsWith ($string, $startString)
+    {
+        $len = strlen($startString);
+        return (substr($string, 0, $len) === $startString);
     }
 }

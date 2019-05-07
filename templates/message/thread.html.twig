@@ -32,7 +32,7 @@
                     {%- else -%}
                         {{ macros.profilelink(message.sender.Username) }}
                     {%- endif %}
-                    {{ message.created.DiffForHumans }} - {{ message.id }}
+                    <span title="{{ message.created.toDateTimeString }}">{{ message.created.DiffForHumans }}</span>
                 </small>
                 <p class="clearfix m-0"></p>
                 {{ message.message | purify('custom') }}

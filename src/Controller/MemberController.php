@@ -106,7 +106,7 @@ class MemberController extends AbstractController
             } catch (NonUniqueResultException $e) {
             }
             if (null === $member) {
-                $form->addError(new FormError('No member with that username or email address.'));
+                $form->addError(new FormError($translator->trans('flash.email.reset.password')));
             } else {
                 /* Sent the member a link to follow to reset the password */
                 $sent = $this->sendPasswordResetLink(

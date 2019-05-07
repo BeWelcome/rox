@@ -576,7 +576,11 @@ WHERE
             return false;
         }
         $noError = true; // flag for error on one file
-        $userDir = new PDataDir('gallery/member'.$member->id);
+        try {
+            $userDir = new PDataDir('gallery/member' . $member->id);
+        } catch (PException $e) {
+        }
+        /** @var PDBStatement_mysqli $insert */
         $insert = $this->dao->prepare('
 INSERT INTO `gallery_items`
 (`id`, `user_id_foreign`, `file`, `original`, `flags`, `mimetype`, `width`, `height`, `title`, `created`)

@@ -7,7 +7,7 @@
     "require": {
         "ext-gd": "*",
         "ext-pdo": "*",
-        "ext-pdo-mysql": "*",
+        "ext-pdo_mysql": "*",
         "ext-mysqli": "*",
         "ext-session": "*",
         "anthonymartin/geo-location": "^1.0",

@@ -203,7 +203,7 @@
             <thead>
             <tr>
                 {% if state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}
-                <th>{{ 'translations.id.and.message' | trans }}</th>
+                <th>{{ 'translations.id.and.message' | trans }}|{{ 'translation.domain' | trans }}</th>
                 <th>{{ 'translations.translated.message' | trans }}</th>
                 <th></th>
                 {% else %}
@@ -217,7 +217,7 @@
                 <tr>
                     <td {% if state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}class="w-25"{% else %}class="w-100"{% endif %}>
                         <small class="text-muted">{{ message.id }}</small>
-                        <p>{{ message.id | trans( {}, message.domain, 'en' ) | truncate(50) }}</p>
+                        <p>{{ message.id | trans( {}, message.domain, 'en' ) | truncate(50) }}|{{ message.domain }}</p>
                         {% if message.transChoiceNumber is not null %}
                             <small class="newline">(pluralization is used)</small>
                         {% endif %}

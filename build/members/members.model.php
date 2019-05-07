@@ -1150,6 +1150,44 @@ ORDER BY
             $this->logWrite("Zip updated", "Address Update");
         }
 
+        $cryptModule = new MOD_crypt();
+        if ($vars["HomePhoneNumber"]!="cryptedhidden") {
+			$m->HomePhoneNumber = $cryptModule->NewReplaceInCrypted(addslashes(strip_tags($vars['HomePhoneNumber'])),"members.HomePhoneNumber",$IdMember, $m->HomePhoneNumber, $IdMember, $this->ShallICrypt($vars,"HomePhoneNumber"));
+		}
+		if ($vars["CellPhoneNumber"]!="cryptedhidden") {
+			$m->CellPhoneNumber = $cryptModule->NewReplaceInCrypted(addslashes(strip_tags($vars['CellPhoneNumber'])),"members.CellPhoneNumber",$IdMember, $m->CellPhoneNumber, $IdMember, $this->ShallICrypt($vars,"CellPhoneNumber"));
+		}
+		if ($vars["WorkPhoneNumber"]!="cryptedhidden") {
+			$m->WorkPhoneNumber = $cryptModule->NewReplaceInCrypted(addslashes(strip_tags($vars['WorkPhoneNumber'])),"members.WorkPhoneNumber",$IdMember, $m->WorkPhoneNumber, $IdMember, $this->ShallICrypt($vars,"WorkPhoneNumber"));
+		}
+
+        if ($vars["Zip"] != "cryptedhidden") {
+            $this->logWrite("in members.model updateprofile() Before Zip update addresss.Zip=" . $m->address->Zip, "Debug");
+            $cryptId = $cryptModule->NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Zip'])), "addresses.Zip", $m->IdAddress, $m->address->Zip, $IdMember, $this->ShallICrypt($vars, "Zip"));
+
+            // Update addresses table if a new crypted zip value was added
+            if ($cryptId != $m->address->Zip) {
+                $m->setCryptedZip($cryptId);
+            }
+
+            $this->logWrite("in members.model updateprofile() After Zip update addresss.Zip=". $m->address->Zip . " \$cryptId=" . $cryptId, "Debug");
+        }
+        if ($vars["HouseNumber"] != "cryptedhidden") {
+            $cryptId = $cryptModule->NewReplaceInCrypted($this->dao->escape(strip_tags($vars['HouseNumber'])), "addresses.HouseNumber", $m->IdAddress, $m->address->HouseNumber, $IdMember, $this->ShallICrypt($vars, "Address"));
+
+            // Update addresses table if a new crypted HouseNumber value was added
+            if ($cryptId != $m->address->HouseNumber) {
+                $m->setCryptedHouseNumber($cryptId);
+            }
+        }
+		if ($vars["Street"]!="cryptedhidden") {
+			$cryptId = $cryptModule->NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Street'])),"addresses.StreetName",$m->IdAddress,$m->address->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
+            // Update addresses table if a new crypted StreetName value was added
+            if ($cryptId != $m->address->StreetName) {
+                $m->setCryptedStreetName($cryptId);
+            }
+        }
+
         // Check relations, and update them if they have changed
         $Relations=$m->get_all_relations() ;
         foreach($Relations as $Relation) {
@@ -1851,7 +1889,7 @@ VALUES
      * @return stdClass
      * @throws Exception
      */
-    public function getHostingEagernessData(\Member $member)
+    public function getHostingEagernessData(Member $member)
     {
         $result = $this->dao->query("SELECT `id`, DATE_FORMAT(`enddate`, '%Y-%m-%d') AS `enddate`, `step` FROM `hosting_eagerness_slider` WHERE `member_id` = " . $member->id);
         $row = $result->fetch(PDB::FETCH_OBJ);

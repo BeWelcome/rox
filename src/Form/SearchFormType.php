@@ -34,6 +34,7 @@ class SearchFormType extends AbstractType
                 ],
                 'label' => false,
                 'error_bubbling' => true,
+                'translation_domain' => 'messages',
             ])
             ->setMethod('GET')
             ->add('keywords', TextType::class, [
@@ -66,6 +67,7 @@ class SearchFormType extends AbstractType
                 SearchFormRequest::class,
                 'determineValidationGroups',
             ],
+            'translation_domain' => 'messages',
             'allow_extra_fields' => true,
             'error_mapping' => [
                 '.' => 'location',

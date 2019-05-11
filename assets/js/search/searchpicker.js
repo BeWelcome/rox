@@ -41,8 +41,7 @@ $( function() {
                     response(
                         $.map(data.locations, function (item) {
                             return {
-                                label: (item.name ? item.name : "") + (item.admin1 ? (item.name ? ", " : "") + item.admin1 : "") + (item.country ? ", " + item.country : "") + (item.cnt !== 0 ? " (" + item.cnt + ")" : ""),
-                                labelnocount: (item.name ? item.name : "") + (item.admin1 ? (item.name ? ", " : "") + item.admin1 : "") + (item.country ? ", " + item.country : ""),
+                                label: (item.name ? item.name : "") + (item.admin1 ? (item.name ? ", " : "") + item.admin1 : "") + (item.country ? ", " + item.country : ""),
                                 value: item.geonameid, latitude: item.latitude, longitude: item.longitude,
                                 category: item.category
                             };
@@ -56,7 +55,7 @@ $( function() {
                 $("#" + this.id + "_latitude").val("");
                 $("#" + this.id + "_longitude").val("");
             } else {
-                $(this).val(ui.item.labelnocount);
+                $(this).val(ui.item.label);
                 $("#" + this.id + "_geoname_id").val(ui.item.value);
                 $("#" + this.id + "_latitude").val(ui.item.latitude);
                 $("#" + this.id + "_longitude").val(ui.item.longitude);
@@ -69,7 +68,7 @@ $( function() {
                 $("#" + this.id + "_latitude").val("");
                 $("#" + this.id + "_longitude").val("");
             } else {
-                $(this).val(ui.item.labelnocount);
+                $(this).val(ui.item.label);
                 $("#" + this.id + "_geoname_id").val(ui.item.value);
                 $("#" + this.id + "_latitude").val(ui.item.latitude);
                 $("#" + this.id + "_longitude").val(ui.item.longitude);
@@ -88,7 +87,7 @@ $( function() {
             $("#" + this.id + "_latitude").val(ui.item.latitude);
             $("#" + this.id + "_longitude").val(ui.item.longitude);
 
-            $(this).val(ui.item.labelnocount);
+            $(this).val(ui.item.label);
 
             return false;
         },

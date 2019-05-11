@@ -41,8 +41,7 @@ function enableAutoComplete(addMarker) {
                     response(
                         $.map(data.locations, function (item) {
                             return {
-                                label: (item.name ? item.name : "") + (item.admin1 ? (item.name ? ", " : "") + item.admin1 : "") + (item.country ? ", " + item.country : "") + (item.cnt !== 0 ? " (" + item.cnt + ")" : ""),
-                                labelnocount: (item.name ? item.name : "") + (item.admin1 ? (item.name ? ", " : "") + item.admin1 : "") + (item.country ? ", " + item.country : ""),
+                                label: (item.name ? item.name : "") + (item.admin1 ? (item.name ? ", " : "") + item.admin1 : "") + (item.country ? ", " + item.country : ""),
                                 value: item.geonameid, latitude: item.latitude, longitude: item.longitude,
                                 category: item.category
                             };
@@ -56,7 +55,7 @@ function enableAutoComplete(addMarker) {
                 $("#" + this.id + "-latitude").val("");
                 $("#" + this.id + "-longitude").val("");
             } else {
-                $(this).val(ui.item.labelnocount);
+                $(this).val(ui.item.label);
                 $("#" + this.id + "-geoname-id").val(ui.item.value);
                 $("#" + this.id + "-latitude").val(ui.item.latitude);
                 $("#" + this.id + "-longitude").val(ui.item.longitude);
@@ -69,7 +68,7 @@ function enableAutoComplete(addMarker) {
                 $("#" + this.id + "-latitude").val("");
                 $("#" + this.id + "-longitude").val("");
             } else {
-                $(this).val(ui.item.labelnocount);
+                $(this).val(ui.item.label);
                 $("#" + this.id + "-geoname-id").val(ui.item.value);
                 $("#" + this.id + "-latitude").val(ui.item.latitude);
                 $("#" + this.id + "-longitude").val(ui.item.longitude);
@@ -84,9 +83,9 @@ function enableAutoComplete(addMarker) {
             $("#" + this.id + "-latitude").val(ui.item.latitude);
             $("#" + this.id + "-longitude").val(ui.item.longitude);
 
-            $(this).val(ui.item.labelnocount);
+            $(this).val(ui.item.label);
 
-            addMarker(this.id, ui.item.labelnocount, ui.item.value, ui.item.latitude, ui.item.longitude);
+            addMarker(this.id, ui.item.label, ui.item.value, ui.item.latitude, ui.item.longitude);
 
             return false;
         },

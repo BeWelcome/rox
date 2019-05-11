@@ -138,7 +138,9 @@ class MOD_htmlpure
         $config->set('CSS.AllowedProperties', array('text-decoration'));
         $config->set('AutoFormat.AutoParagraph', true); // automatically turn double newlines into paragraphs
         $config->set('AutoFormat.Linkify', true); // automatically turn stuff like http://domain.com into links
-        $config->set('AutoFormat.RemoveSpansWithoutAttributes', true);
+        if (strpos($allowedHtml, 'span') !== false) {
+            $config->set('AutoFormat.RemoveSpansWithoutAttributes', true);
+        }
         $config->set('CSS.AllowTricky','true');
 
         return new HTMLPurifier($config);

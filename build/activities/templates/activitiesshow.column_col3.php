@@ -203,7 +203,7 @@ if (empty($vars)) {
                 foreach ($this->activity->organizers as $organizer) { ?>
                     <div class="d-flex mr-2">
                         <div class="mr-2"><a href="members/<?php $organizer->Username; ?>"><img
-                                        src="members/avatar/<?php echo $organizer->Username; ?>?size=50"></a></div>
+                                        src="members/avatar/<?php echo $organizer->Username; ?>/50" width="50" height="50"></a></div>
                         <div>
                             <a href="members/<?php echo $organizer->Username; ?>"><?php echo $organizer->Username; ?></a>
                             <br><a href="new/message/member-16526"><i class="fa fa-envelope mt-3" title="Write organiser"></i></a>
@@ -247,7 +247,7 @@ if (empty($vars)) {
 ">
                 <div class="d-flex flex-row">
                     <div class="mr-2"><a href="members/<?php echo $attendee->Username; ?>"><img
-                                    src="members/avatar/<?php echo $attendee->Username; ?>?size=50"></a></div>
+                                    src="members/avatar/<?php echo $attendee->Username; ?>/50" width="50" height="50"></a></div>
                     <div><a href="members/<?php echo $attendee->Username; ?>"><?php echo $attendee->Username; ?></a><br>
                         <small>
                             <?

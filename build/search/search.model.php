@@ -1347,7 +1347,7 @@ LIMIT 1
             foreach ( $result as $row) {
                 $ids[] = $row['id'];
             }
-            $adminunits= $this->getFromDataBase($ids, $this->getWords()->getSilent('SearchAdminUnits'));
+            $adminunits= $this->getFromDataBase($ids, $this->getWords()->getSilent('searchadminunits'));
             $locations = array_merge($locations, $adminunits);
             $result["status"] = "success";
             $result['adminunits'] = 1;
@@ -1360,7 +1360,7 @@ LIMIT 1
             foreach ( $result as $row) {
                 $ids[] = $row['id'];
             }
-            $countries= $this->getFromDataBase($ids, $this->getWords()->getSilent('SearchCountries'));
+            $countries= $this->getFromDataBase($ids, $this->getWords()->getSilent('searchcountries'));
             $locations = array_merge($locations, $countries);
             $result["status"] = "success";
             $result['countries'] = 1;

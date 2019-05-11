@@ -13,49 +13,47 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
 
-        <div class="row mb-1">
-            <div class="col-12 col-md-4 order-last order-md-first">
+    <div class="row mb-1">
+        <div class="col-12 col-md-4 order-last order-md-first">
 
-                <div class="form-group mt-1 mt-md-5">
-                    {{ form_label(form.request.arrival) }}
-                    <div class="input-group date" id="arrival" data-target-input="nearest">
-                        <div class="input-group-prepend" data-target="#arrival" data-toggle="datetimepicker">
-                            <span class="input-group-text">
-                                <i class="fa fa-calendar mt-2 mr-1"></i>
-                            </span>
-                        </div>
-                        {{ form_widget(form.request.arrival, { 'attr': {'data-target': '#arrival', 'data-toggle': 'datetimepicker'}}) }}
+            <div class="form-group mt-1 mt-md-5">
+                {{ form_label(form.request.arrival) }}
+                <div class="input-group date" id="arrival" data-target-input="nearest">
+                    <div class="input-group-prepend" data-target="#arrival" data-toggle="datetimepicker">
+                        <span class="input-group-text">
+                            <i class="fa fa-calendar mt-2 mr-1"></i>
+                        </span>
                     </div>
+                    {{ form_widget(form.request.arrival, { 'attr': {'data-target': '#arrival', 'data-toggle': 'datetimepicker'}}) }}
                 </div>
+            </div>
 
-                <div class="form-group">
-                    {{ form_label(form.request.departure) }}
-                    <div class="input-group date" id="departure" data-target-input="nearest">
-                        <div class="input-group-prepend" data-target="#departure" data-toggle="datetimepicker">
-                            <span class="input-group-text">
-                                <i class="fa fa-calendar mt-2 mr-1"></i>
-                            </span>
-                        </div>
-                        {{ form_widget(form.request.departure, { 'attr': {'data-target': '#departure', 'data-toggle': 'datetimepicker'}}) }}
+            <div class="form-group">
+                {{ form_label(form.request.departure) }}
+                <div class="input-group date" id="departure" data-target-input="nearest">
+                    <div class="input-group-prepend" data-target="#departure" data-toggle="datetimepicker">
+                        <span class="input-group-text">
+                            <i class="fa fa-calendar mt-2 mr-1"></i>
+                        </span>
                     </div>
+                    {{ form_widget(form.request.departure, { 'attr': {'data-target': '#departure', 'data-toggle': 'datetimepicker'}}) }}
                 </div>
+            </div>
 
-                <div class="mb-2">
-                {{ form_widget(form.request.flexible) }}
-                </div>
-                {{ form_row(form.request.numberOfTravellers) }}
+            <div class="mb-2">
+            {{ form_widget(form.request.flexible) }}
             </div>
-            <div class="col-12 col-md-8">
-                {{ form_row(form.subject.subject) }}
-                {{ form_row(form.message) }}
-            </div>
+            {{ form_row(form.request.numberOfTravellers) }}
         </div>
-        <div class="row mt-1">
-            <div class="col-12 col-md-8 offset-md-4">{{ form_rest(form) }}</div>
+        <div class="col-12 col-md-8">
+            {{ form_row(form.subject.subject) }}
+            {{ form_row(form.message) }}
         </div>
-        {{ form_end(form) }}
     </div>
+    <div class="row mt-1">
+        <div class="col-12 col-md-8 offset-md-4">{{ form_rest(form) }}</div>
+    </div>
+    {{ form_end(form) }}
 {% endblock %}

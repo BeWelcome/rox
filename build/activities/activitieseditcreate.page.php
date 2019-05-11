@@ -57,9 +57,13 @@ class ActivitiesEditCreatePage extends ActivitiesBasePage
     public function getLateLoadScriptFiles()
     {
         $scripts = parent::getLateLoadScriptfiles();
-        $scripts[] = 'build/activities.js';
+//        $scripts[] = 'build/tempusdominus.js';
+//        $scripts[] = 'build/activities.js';
+        $scripts[] = 'script/moment-with-locales.min.js';
+        $scripts[] = 'script/tempusdominus-bootstrap-4.js';
         $scripts[] = 'build/jquery_ui.js';
         $scripts[] = 'build/search/searchpicker.js';
+        $scripts[] = 'script/ckeditor.js';
         return $scripts;
     }
 }

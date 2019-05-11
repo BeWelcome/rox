@@ -297,3 +297,20 @@ a.grouplist:hover {
 	position: relative;
 }
 
+#MyPreferences [data-toggle="collapse"]:after {
+    display: inline-block;
+        display: inline-block;
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        font-size: inherit;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      content: "\f105";
+      transform: rotate(90deg) ;
+      transition: all linear 0.25s;
+      float: right;
+      }   
+#MyPreferences [data-toggle="collapse"].collapsed:after {
+      transform: rotate(0deg) ;
+    }

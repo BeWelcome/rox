@@ -20,8 +20,12 @@
                         <div class="form-group row">
                             <label for="passwordold" class="col-md-3 col-form-label"><?=$words->get('PreferencesPasswordOld')?></label>
                             <div class="col-12 col-md-9"><input type="password" name="passwordold" class="form-control" /></div>
+                        </div>
+                        <div class="form-group row">    
                             <label for="passwordnew" class="col-md-3 col-form-label"><?=$words->get('PreferencesPasswordNew')?></label>
                             <div class="col-12 col-md-9"><input type="password" name="passwordnew" class="form-control" /></div>
+                        </div>
+                        <div class="form-group row">    
                             <label for="passwordconfirm" class="col-md-3 col-form-label"><?=$words->get('PreferencesPasswordConfirm')?></label>
                             <div class="col-12 col-md-9"><input type="password" name="passwordconfirm" class="form-control" /></div>
                         </div>

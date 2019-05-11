@@ -11,7 +11,7 @@
                 <div class="item">
                     <div class="card-header">
                     <a data-toggle="collapse" data-parent="#MyPreferences" href="#MyPreferences1" aria-expanded="true"
-                       aria-controls="MyPreferences1" class="mb-0">
+                       aria-controls="MyPreferences1" class="mb-0 d-block">
                         <?=$words->get('PreferencesPassword')?>
                     </a>
                     </div>
@@ -20,8 +20,12 @@
                         <div class="form-group row">
                             <label for="passwordold" class="col-md-3 col-form-label"><?=$words->get('PreferencesPasswordOld')?></label>
                             <div class="col-12 col-md-9"><input type="password" name="passwordold" class="form-control" /></div>
+                        </div>
+                        <div class="form-group row">    
                             <label for="passwordnew" class="col-md-3 col-form-label"><?=$words->get('PreferencesPasswordNew')?></label>
                             <div class="col-12 col-md-9"><input type="password" name="passwordnew" class="form-control" /></div>
+                        </div>
+                        <div class="form-group row">    
                             <label for="passwordconfirm" class="col-md-3 col-form-label"><?=$words->get('PreferencesPasswordConfirm')?></label>
                             <div class="col-12 col-md-9"><input type="password" name="passwordconfirm" class="form-control" /></div>
                         </div>
@@ -32,7 +36,7 @@
                 <div class="item">
                     <div class="card-header">
                     <a data-toggle="collapse" data-parent="#MyPreferences" href="#MyPreferences2" aria-expanded="false"
-                       aria-controls="MyPreferences2" class="mb-0">
+                       aria-controls="MyPreferences2" class="mb-0 d-block">
                         <?=$words->get('PreferenceLanguage')?>
                     </a>
                     </div>
@@ -53,7 +57,7 @@
                 <div class="item">
                     <div class="card-header">
                     <a data-toggle="collapse" data-parent="#MyPreferences" href="#MyPreferences3" aria-expanded="true"
-                       aria-controls="MyPreferences3" class="mb-0">
+                       aria-controls="MyPreferences3" class="mb-0 d-block">
                         <?=$words->get('Website')?>
                     </a>
                     </div>

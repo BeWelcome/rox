@@ -126,14 +126,20 @@ class SignupPage extends SignupBasePage
             // redirect should happen in the controller.
             // but for translators show the page.
             echo '
-<div style="background:yellow; border:1px solid black; padding:10px; width: 44em; margin-bottom: 2em;">
-<div style="font-size:160%;">
+<div style="background:yellow; border:1px solid black; padding:10px; margin-bottom: 2em;">
+<div style="font-size:150%;">
 You can see the signup page because you are a translator.<br>
 Normally you cannot see it when logged in.<br>
 Please only use the page for translations!
 </div>
 <br>
-Related page: <a href="signup/finish">Signup confirmation</a>
+Related page:  
+<a href="signup/1">Signup page 1</a>, 
+<a href="signup/2">Signup page 2</a>, 
+<a href="signup/3">Signup page 3</a>, 
+<a href="signup/4">Signup page 4</a>, 
+<a href="signup/finish">Signup confirmation</a>,
+<a href="login">Login page</a>
 </div>
 '
             ;

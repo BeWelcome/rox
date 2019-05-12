@@ -35,7 +35,7 @@
         {% include 'menu.html.twig' %}
         <noscript><h1>Please activate Javascript for bewelcome.org</h1><p><small>Without it some function won't work.</small></p></noscript>
         <main role="main">
-            <div id="toasts" class="position-absolute w-100 d-flex flex-column px-2" style="z-index:1000">
+            <div id="toasts" class="position-fixed w-100 d-flex flex-column px-2" style="z-index:1000">
             </div>
             <div class="container">
                 {% for label, messages in app.flashes %}

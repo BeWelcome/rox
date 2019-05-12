@@ -7,12 +7,16 @@ use App\Entity\Comment;
 use App\Entity\FeedbackCategory;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Entity\PasswordReset;
 use App\Entity\Preference;
 use App\Form\CustomDataClass\ReportCommentRequest;
 use App\Form\ReportCommentType;
+use App\Model\MemberModel;
 use App\Repository\MemberRepository;
 use App\Repository\MessageRepository;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Html2Text\Html2Text;
 use League\HTMLToMarkdown\HtmlConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -108,11 +112,24 @@ class MemberController extends AbstractController
             if (null === $member) {
                 $form->addError(new FormError($translator->trans('flash.email.reset.password')));
             } else {
+                $model = new MemberModel($this->getDoctrine());
+                $token = null;
+                try {
+                    $token = $model->generatePasswordResetToken($member);
+                } catch (OptimisticLockException $e) {
+                } catch (ORMException $e) {
+                }
+                if ($token === null) {
+                    $this->addFlash('error', 'Password can\'t be reset.');
+
+                    return $this->redirectToRoute('security_login');
+                }
+
                 /* Sent the member a link to follow to reset the password */
                 $sent = $this->sendPasswordResetLink(
                     $member,
                     'Password Reset for BeWelcome',
-                    $member->generatePasswordResetKey(),
+                    $token,
                     $mailer
                 );
                 if ($sent) {
@@ -130,28 +147,38 @@ class MemberController extends AbstractController
     }
 
     /**
-     * @Route("/resetpassword/{username}/{key}", name="member_reset_password",
-     *     requirements={"key": "[a-z0-9]+"})
+     * @Route("/resetpassword/{username}/{token}", name="member_reset_password",
+     *     requirements={"key": "[a-z0-9]{32}"})
      *
      * @param Request $request
      * @param Member $member
      * @param TranslatorInterface $translator
-     * @param $key
+     * @param $token
      *
      * @return Response
      */
-    public function resetPasswordAction(Request $request, Member $member, TranslatorInterface $translator, $key)
+    public function resetPasswordAction(Request $request, Member $member, TranslatorInterface $translator, $token)
     {
         // Someone obviously lost their way. No sense in resetting your password if you're currently logged in.
         if ($this->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('landingpage');
         }
 
-        $resetPasswordKey = $member->generatePasswordResetKey();
-        if ($resetPasswordKey !== $key) {
-            $this->addFlash('notice', $translator->trans('flash.reset.password.invalid'));
+        $repository = $this->getDoctrine()->getRepository(PasswordReset::class);
+        /** @var PasswordReset $passwordReset */
+        $passwordReset = $repository->findOneBy([ 'member' => $member, 'token' => $token]);
 
-            return $this->redirectToRoute('login');
+        if ($passwordReset === null) {
+            $this->addFlash('error', $translator->trans('flash.reset.password.invalid'));
+
+            return $this->redirectToRoute('member_request_reset_password');
+        }
+
+        $diffInDays = $passwordReset->getGenerated()->diffInDays();
+        if ($diffInDays > 2) {
+            $this->addFlash('error', $translator->trans('flash.reset.password.invalid'));
+
+            return $this->redirectToRoute('member_request_reset_password');
         }
 
         $form = $this->createFormBuilder()
@@ -160,7 +187,7 @@ class MemberController extends AbstractController
                 'invalid_message' => 'password.must.match',
                 'required' => true,
                 'first_options' => ['label' => 'password'],
-                'second_options' => ['label' => 'Password.repeat'],
+                'second_options' => ['label' => 'password.repeat'],
             ])
             ->getForm();
         $form->handleRequest($request);
@@ -340,7 +367,7 @@ class MemberController extends AbstractController
         return $response;
     }
 
-    private function sendPasswordResetLink(Member $receiver, $subject, $key, Swift_Mailer $mailer)
+    private function sendPasswordResetLink(Member $receiver, $subject, $token, Swift_Mailer $mailer)
     {
         $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
         /** @var Preference $preference */
@@ -351,7 +378,7 @@ class MemberController extends AbstractController
         $html = $this->renderView('emails/reset.password.html.twig', [
             'receiver' => $receiver,
             'subject' => $subject,
-            'key' => $key,
+            'token' => $token,
         ]);
         $converter = new Html2Text($html, [
             'do_links' => 'table',

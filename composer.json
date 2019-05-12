@@ -46,7 +46,8 @@
         "twig/twig": "^2.4",
         "white-october/pagerfanta-bundle": "^1.0",
         "xemlock/htmlpurifier-html5": "^0.1.10",
-        "zendframework/zend-uri": "^2.4"
+        "zendframework/zend-uri": "^2.4",
+      "ext-openssl": "*"
     },
     "conflict": {
         "symfony/symfony": "*"

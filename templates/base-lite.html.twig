@@ -40,8 +40,20 @@
     <main role="main">
 
         <noscript><h1>Please activate Javascript for bewelcome.org</h1><p><small>Without it some function won't work.</small></p></noscript>
-
-        <div class="container container-content p-0">
+        <div class="container">
+            {% for label, messages in app.flashes %}
+                <div class="row">
+                    {% for message in messages %}
+                        <div class="col-12">
+                            <div class="alert alert-{{ label }}">
+                                {{ message }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="container">
             {% block content %}{% endblock %}
         </div>
     </main>

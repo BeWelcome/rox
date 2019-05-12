@@ -60,6 +60,6 @@
     {%- endif %}
 
     {% include 'message/thread.html.twig' %}
-    <div class="col-12"><a class="btn btn-primary mb-1 pull-right" href="{{ path( 'hosting_request_reply', { id: current.id }) }}">{{ label | trans }}</a></div>
+    <div class="col-12"><div class="row justify-content-end"><a class="btn btn-primary mb-1" href="{{ path( 'hosting_request_reply', { id: current.id }) }}">{{ label | trans }}</a></div></div>
 </div>
 {% endblock content %}

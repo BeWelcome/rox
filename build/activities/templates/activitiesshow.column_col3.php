@@ -212,8 +212,8 @@ if (empty($vars)) {
                 <? } ?>
             </div>
     </div>
-    <div class="col-12 col-md-8 col-lg-9 mt-3 order-5 order-md-6">
-        <large><?php echo $purifier->purify($this->activity->description); ?></large>
+    <div id="activity-description" class="col-12 col-md-8 col-lg-9 mt-3 order-5 order-md-6">
+        <?php echo $purifier->purify($this->activity->description); ?>
     </div>
 
     <div class="col-12 mt-3 order-7">

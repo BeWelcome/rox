@@ -30,7 +30,7 @@
                 ?>
             </div>
 
-            <div id="accommodation<?= $accIdSuffix ?>" >
+            <div id="accommodation<?= $accIdSuffix ?>" class="clearfix mb-1">
                 <?php if ($member->MaxGuest != 0 && $member->MaxGuest != "") { ?>
                     <div class="guests h5"><?=$words->get('ProfileNumberOfGuests');?>: <?php echo $member->MaxGuest ?></div>
                 <?php }

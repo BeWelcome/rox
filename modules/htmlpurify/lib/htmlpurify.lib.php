@@ -98,7 +98,7 @@ class MOD_htmlpure
     }
 
     public function getActivitiesHtmlPurifier() {
-        return self::getSophisticatedHtmlPurifier();
+        return self::getSophisticatedHtmlPurifier([ 'figure[class]', 'figcaption' ]);
     }
 
     public function getMessagesHtmlPurifier() {

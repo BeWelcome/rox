@@ -272,3 +272,6 @@ figure > figcaption {
   text-align: center;
 }
 
+.editor, .ck-editor__editable {
+  min-height: 10rem;
+}

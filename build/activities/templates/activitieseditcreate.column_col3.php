@@ -8,8 +8,11 @@ $vars = $this->getRedirectedMem('vars');
 if (empty($vars)) {
     $vars['activity-id'] = $this->activity->id;
     $vars['activity-title'] = $this->activity->title;
-    $vars['activity-location-id'] = 0;
-    $vars['activity-location'] = '';
+    $location = $this->activity->location;
+    $vars['activity-location'] = $location->name;
+    $vars['activity-location-id'] = $vars['activity-location_geoname_id'] = $location->geonameid;
+    $vars['activity-location_latitude'] = $location->latitude;
+    $vars['activity-location_longitude'] = $location->longitude;
     $vars['activity-address'] = $this->activity->address;
     $vars['activity-start-date'] = $this->activity->dateTimeStart;
     $vars['activity-end-date'] = $this->activity->dateTimeEnd;
@@ -57,89 +60,90 @@ if (empty($vars)) {
             </div>
 
             <div class="row">
-                <div class="col-12 col-md-4 order-last order-md-first">
+                <div class="col-12 col-md-8">
                     <div class="form-group mb-1">
-                    <label for="activity-start-date"><?php echo $words->get('ActivityStart'); ?>*</label>
-                    <div class="input-group date"
-                         id="datetimepicker1"
-                         data-target-input="nearest">
-                        <div class="input-group-append"
-                             data-target="#datetimepicker1"
-                             data-toggle="datetimepicker">
-                            <div class="input-group-text">
-                                <i class="fa fa-calendar"></i>
-                            </div>
-                        </div>
-                        <input type="text"
-                               id="activity-start-date"
-                               name="activity-start-date"
-                               class="form-control datetimepicker-input"
-                               data-toggle="datetimepicker"
-                               data-target="#datetimepicker1"/>
+                        <label for="activity-title"
+                               class="form-control-label"><?php echo $words->get('ActivityTitle'); ?>
+                            *</label>
+                        <input type="text" id="activity-title" name="activity-title" maxlength="80" class="form-control"
+                               value="<?php echo $vars['activity-title']; ?>"
+                               placeholder="<?php echo $words->get('ActivityTitle'); ?>*">
                     </div>
-                </div>
-
-                <div class="form-group mb-1">
-                    <label for="activity-end-date"><?php echo $words->get('ActivityEnd'); ?>*</label>
-                    <div class="input-group date"
-                         id="datetimepicker2"
-                         data-target-input="nearest">
-                        <div class="input-group-append"
-                             data-target="#datetimepicker2"
-                             data-toggle="datetimepicker">
-                            <div class="input-group-text">
-                                <i class="fa fa-calendar"></i>
-                            </div>
-                        </div>
-                        <input type="text"
-                               id="activity-end-date"
-                               name="activity-end-date"
-                               class="form-control datetimepicker-input"
-                               data-toggle="datetimepicker"
-                               data-target="#datetimepicker2"/>
-                    </div>
-                </div>
-
-                <div class="form-group mb-1">
-                    <label for="activity-location"><?php echo $words->getBuffered('ActivitiesLocationSearch'); ?></label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fa fa-globe"></i></span>
-                        </div>
-                        <input type="text" id="activity-location" name="activity-location"
-                               class="form-control search-picker" value="<?php echo $vars['activity-location']; ?>"
-                               placeholder="<?php echo $words->get('ActivityLocation'); ?>*">
-                    </div>
-                </div>
-
-                <div class="form-group mb-1">
-                    <label for="activity-address" class="mb-0"><?php echo $words->get('ActivityAddress'); ?></label>
-                    <textarea id="activity-address" name="activity-address" class="form-control"
-                              rows="3"><?php echo $vars['activity-address']; ?></textarea>
-                </div>
-                <input type="hidden" id="activity-location_geoname_id" name="activity-location_geoname_id">
-                <input type="hidden" id="activity-location_latitude" name="activity-location_latitude">
-                <input type="hidden" id="activity-location_longitude" name="activity-location_longitude">
-            </div>
-            <div class="col-12 col-md-8">
-                <div class="form-group mb-1">
-                    <label for="activity-title" class="form-control-label"><?php echo $words->get('ActivityTitle'); ?>
-                        *</label>
-                    <input type="text" id="activity-title" name="activity-title" maxlength="80" class="form-control"
-                           value="<?php echo $vars['activity-title']; ?>"
-                           placeholder="<?php echo $words->get('ActivityTitle'); ?>*">
-                </div>
-                <div class="form-group mb-1">
-                    <label for="activity-description"
-                           class="form-control-label"><?php echo $words->get('ActivityDescription'); ?>*</label>
-                    <textarea id="activity-description" name="activity-description" class="form-control editor">
+                    <div class="form-group mb-1">
+                        <label for="activity-description"
+                               class="form-control-label"><?php echo $words->get('ActivityDescription'); ?>*</label>
+                        <textarea id="activity-description" name="activity-description" class="form-control editor">
                         <?php
                         if (!empty($vars['activity-description'])) {
                             echo $vars['activity-description'];
                         } ?>
                     </textarea>
+                    </div>
                 </div>
-            </div>
+                <div class="col-12 col-md-4">
+                    <div class="form-group mb-1">
+                        <label for="activity-start-date"><?php echo $words->get('ActivityStart'); ?>*</label>
+                        <div class="input-group date"
+                             id="datetimepicker1"
+                             data-target-input="nearest">
+                            <div class="input-group-prepend"
+                                 data-target="#datetimepicker1"
+                                 data-toggle="datetimepicker">
+                                <div class="input-group-text">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                            </div>
+                            <input type="text"
+                                   id="activity-start-date"
+                                   name="activity-start-date"
+                                   class="form-control datetimepicker-input"
+                                   data-toggle="datetimepicker"
+                                   data-target="#datetimepicker1" value="<?= $vars['activity-start-date'] ?>" >
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-1">
+                        <label for="activity-end-date"><?php echo $words->get('ActivityEnd'); ?>*</label>
+                        <div class="input-group date"
+                             id="datetimepicker2"
+                             data-target-input="nearest">
+                            <div class="input-group-prepend"
+                                 data-target="#datetimepicker2"
+                                 data-toggle="datetimepicker">
+                                <div class="input-group-text">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                            </div>
+                            <input type="text"
+                                   id="activity-end-date"
+                                   name="activity-end-date"
+                                   class="form-control datetimepicker-input"
+                                   data-toggle="datetimepicker"
+                                   data-target="#datetimepicker2" value="<?= $vars['activity-end-date'] ?>" >
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-1">
+                        <label for="activity-location"><?php echo $words->getBuffered('ActivitiesLocationSearch'); ?></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-globe"></i></span>
+                            </div>
+                            <input type="text" id="activity-location" name="activity-location"
+                                   class="form-control search-picker" value="<?= $vars['activity-location'] ?? ''; ?>"
+                                   placeholder="<?php echo $words->get('ActivityLocation'); ?>*">
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-1">
+                        <label for="activity-address" class="mb-0"><?php echo $words->get('ActivityAddress'); ?></label>
+                        <textarea id="activity-address" name="activity-address" class="form-control"
+                                  rows="3"><?php echo $vars['activity-address']; ?></textarea>
+                    </div>
+                    <input type="hidden" id="activity-location_geoname_id" name="activity-location_geoname_id" value="<?= $vars['activity-location_geoname_id'] ?? '' ?>">
+                    <input type="hidden" id="activity-location_latitude" name="activity-location_latitude" value="<?= $vars['activity-location_latitude'] ?? '' ?>">
+                    <input type="hidden" id="activity-location_longitude" name="activity-location_longitude" value="<?= $vars['activity-location_longitude'] ?? '' ?>">
+                </div>
 
                 <div class="col-12 mt-3">
                     <?php
@@ -155,22 +159,6 @@ if (empty($vars)) {
             </div>
         </form>
     </div>
-        <form method="post" id="activity-show-form">
-            <div class="form-group row justify-content-center">
-
-                <div class="col-12">
-                    <?php echo $callbackTagsCancelUncancel; ?>
-                    <input class="row" type="hidden" id="activity-id" name="activity-id"
-                           value="<?php echo $this->activity->id; ?>"/>
-                    <?php
-                    if (!$this->activity->status == 1 && $vars['activity-id'] != 0) {
-                        echo '<button type="submit" class="btn btn-danger" id="activity-cancel" name="activity-cancel">' . $words->getSilent('ActivityEditCreateCancel') . '</button>';
-                    }
-                    ?>
-                </div>
-
-            </div>
-        </form>
 </div>
 <script>
     $(function () {
@@ -180,11 +168,13 @@ if (empty($vars)) {
         activityStartDate.datetimepicker({
             locale: lang,
             format: 'YYYY-MM-DD HH:mm',
-            sideBySide: true
+            collapse: false,
+            sideBySide: false
         });
         activityEndDate.datetimepicker({
             locale: lang,
             format: 'YYYY-MM-DD HH:mm',
+            collapse: false,
             sideBySide: true,
             useCurrent: false
         });

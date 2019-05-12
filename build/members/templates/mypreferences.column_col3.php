@@ -1,4 +1,4 @@
-
+<div class="row">
 <form method="post" id="preferences" action="<?=$baseuri.'mypreferences'?>" class="w-100">
     <input type="hidden" name="memberid" value="<?=$this->member->id?>" />
 
@@ -111,7 +111,7 @@
                                 <? } ?>
 
                                 <div class="col-2 col-md-4 small order-2 order-md-3">
-                                    <a tabindex="0" class="btn btn-outline-primary btn-sm ml-1 py-0" data-container="body" data-toggle="popover" data-html="true" data-placement="right" data-trigger="focus" data-html="true" data-content="<?= htmlentities($words->get($rr->codeDescription)) ?>">
+                                    <a tabindex="0" class="btn btn-outline-primary btn-sm ml-1 py-0" data-container="body" data-toggle="popover" data-placement="right" data-trigger="focus" data-html="true" data-content="<?= htmlentities($words->get($rr->codeDescription)) ?>">
                                         <i class="fa fa-question"></i>
                                     </a>
                                 </div>
@@ -135,3 +135,4 @@
         trigger: 'focus'
     })
 </script>
+</div>

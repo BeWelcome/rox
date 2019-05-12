@@ -14,6 +14,7 @@ Encore
     .setPublicPath('/build')
     .cleanupOutputBeforeBuild()
     .addEntry('bewelcome', './assets/js/bewelcome.js')
+//     .addEntry('print', './assets/scss/print.scss')
     .addEntry('jquery_ui', './assets/js/jquery_ui.js')
     .addEntry('backwards', './assets/js/backwards.js')
     .addEntry('signup/signup', './assets/js/signup.js')

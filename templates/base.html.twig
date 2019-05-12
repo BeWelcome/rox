@@ -24,7 +24,8 @@
             <script src="{{ asset('build/backwards.js') }}"></script>
         <![endif]-->
 
-        <link rel="stylesheet" href="{{ asset('build/bewelcome.css') }}" />
+        <link rel="stylesheet" media="screen" href="{{ asset('build/bewelcome.css') }}" />
+        <!-- link rel="stylesheet" media="print" href="{{ asset('build/print.css') }}" / -->
 
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />

@@ -43,7 +43,7 @@
                         {% for message in messages %}
                         <div class="col-12">
                             <div class="alert alert-{{ label }}">
-                                {{ message }}
+                                {{ message | raw }}
                             </div>
                         </div>
                         {% endfor %}

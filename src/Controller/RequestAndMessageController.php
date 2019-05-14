@@ -1019,7 +1019,7 @@ class RequestAndMessageController extends AbstractController
         $expiredSendMessage = $this->translator->trans('flash.request.expired', [
             '%link_start%' => '<a href="' . $this->generateUrl('message_new', [
                 'username' => $receiver->getUsername()
-                ]) . '">',
+                ]) . '" class="text-primary">',
             '%link_end%' => '</a>',
         ]);
         $this->addFlash('notice', $expiredSendMessage);

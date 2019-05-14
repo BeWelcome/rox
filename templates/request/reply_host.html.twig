@@ -26,6 +26,7 @@
             <p class="text-muted">{{ 'request.host.suggest.dates'|trans }}</p>
             <div class="form-group">
                 {{ form_errors(form.request.arrival) }}
+                {{ form_label(form.request.arrival) }}
                 <div class="input-group date" id="arrival" data-target-input="nearest">
                     <div class="input-group-prepend" data-target="#arrival" data-toggle="datetimepicker">
                         <span class="input-group-text">
@@ -34,10 +35,12 @@
                     </div>
                     {{ form_widget(form.request.arrival, { 'attr': {'data-target': '#arrival', 'data-toggle': 'datetimepicker'}}) }}
                 </div>
+                <small class="text-muted">Original: {{ form.request.arrival.vars.value| localizeddate('full', 'none', app.request.locale) }}</small>
             </div>
 
             <div class="form-group">
                 {{ form_errors(form.request.departure) }}
+                {{ form_label(form.request.departure) }}
                 <div class="input-group date" id="departure" data-target-input="nearest">
                     <div class="input-group-prepend" data-target="#departure" data-toggle="datetimepicker">
                         <span class="input-group-text">
@@ -46,12 +49,11 @@
                     </div>
                     {{ form_widget(form.request.departure, { 'attr': {'data-target': '#departure', 'data-toggle': 'datetimepicker'}}) }}
                 </div>
+                <small class="text-muted">Original: {{ form.request.departure.vars.value| localizeddate('full', 'none', app.request.locale) }}</small>
             </div>
 
-            {{ form_widget(form.request.flexible) }}
-            <div class="d-flex align-items-center ml-3">
-                Number of Travellers: {{ form_widget(form.request.numberOfTravellers) }}
-            </div>
+            {{ form_row(form.request.flexible) }}
+            {{ form_row(form.request.numberOfTravellers) }}
         </div>
         <div class="col-12 col-md-8">
             {{ form_row(form.subject.subject) }}

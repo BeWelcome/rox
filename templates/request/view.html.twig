@@ -49,13 +49,13 @@
 
     <div class="col-12 col-sm-6 col-md-4 my-3">
             <div class="h5"><i class="fa fa-calendar mr-1"></i>{{ 'request.arrival' | trans }}</div>
-            <div>{{ request.Arrival | date('l, F d, Y') }}</div>
+            <div>{{ request.arrival|localizeddate('full', 'none', app.request.locale) }}</div>
     </div>
 
     {% if  request.Departure -%}
     <div class="col-12 col-sm-6 col-md-4 my-3">
         <div class="h5"><i class="fa fa-calendar mr-1"></i>{{ 'request.departure' | trans }}</div>
-        <div>{{ request.Departure | date('l, F d, Y') }}</div>
+        <div>{{ request.departure|localizeddate('full', 'none', app.request.locale) }}</div>
     </div>
     {%- endif %}
 

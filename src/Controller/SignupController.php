@@ -30,8 +30,8 @@ class SignupController extends AbstractController
         if (!empty($signupVars)) {
             // \todo Write info in to database
             $email = $signupVars['email'];
-            $username = $signupVars['username'];
-            $key = hash('sha256', $email.' - '.$username);
+            $username = strtolower($signupVars['username']);
+            $key = hash('sha256', strtolower($email).' - '.strtolower($username));
             $subject = $translator->trans('signup.confirm.email');
             $parameters = [
                 'subject' => $subject,
@@ -103,7 +103,7 @@ class SignupController extends AbstractController
             return $this->redirectToRoute('login');
         }
         $email = $member->getEmail();
-        $key = hash('sha256', $email.' - '.$username);
+        $key = hash('sha256', strtolower($email).' - '.strtolower($username));
         if ($regkey === $key) {
             // Yeah, successfully confirmed email address
             $member->setStatus('Active');

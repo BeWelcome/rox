@@ -9,8 +9,8 @@
     {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}{% trans with {'%username%': sender.Username} %}email.request.reply.guest.accepted{% endtrans %}<br>{% endif %}
     {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}{% trans with {'%username%': sender.Username} %}email.request.reply.guest.tentatively{% endtrans %}<br>{% endif %}
     <br>
-    {{ 'request.arrival' | trans }}: {{ request.arrival.toDateString }}<br>
-    {% if request.departure %}{{ 'request.departure' | trans }}: {{ request.departure.toDateString }}<br>{% endif %}
+    {{ 'request.arrival' | trans }}: {{ request.arrival|localizeddate('full', 'none', app.request.locale) }}<br>
+    {% if request.departure %}{{ 'request.departure' | trans }}: {{ request.departure|localizeddate('full', 'none', app.request.locale) }}<br>{% endif %}
     {% if request.flexible %}{{ 'request.flexible' }}<br>{% endif %}
     {{ 'request.number_of_travellers' | trans}}: {{ request.numberOfTravellers }}<br>
     <br>

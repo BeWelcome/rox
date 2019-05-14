@@ -450,20 +450,25 @@ class GroupController extends AbstractController
     {
         // if a file was uploaded move it into the image storage
         $groupImageDir = $this->getParameter('group_directory');
-        $fileName = $this->generateUniqueFileName().'.'.$picture->guessExtension();
+        if ($picture !== null)
+        {
+            $fileName = $this->generateUniqueFileName().'.'.$picture->guessExtension();
 
-        // moves the file to the directory where group images are stored
-        $picture->move(
-            $groupImageDir,
-            $fileName
-        );
-        $img = Image::make($groupImageDir.'/'.$fileName);
-        $img->resize(80, 80, function ($constraint) {
-            $constraint->aspectRatio();
-        });
-        $img->save($groupImageDir.'/thumb'.$fileName);
+            // moves the file to the directory where group images are stored
+            $picture->move(
+                $groupImageDir,
+                $fileName
+            );
+            $img = Image::make($groupImageDir.'/'.$fileName);
+            $img->resize(80, 80, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+            $img->save($groupImageDir.'/thumb'.$fileName);
 
-        return $fileName;
+            return $fileName;
+        }
+
+        return null;
     }
 
     /**

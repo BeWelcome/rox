@@ -28,6 +28,7 @@ class GroupRequest
     /**
      * @var File
      *
+     * @Assert\NotBlank()
      * @Assert\Image(
      *     minWidth = 200,
      *     maxWidth = 400,

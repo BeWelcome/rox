@@ -26,11 +26,12 @@
                 <div class="col-8 col-md-9 mt-3 form-group">
                     <label for="profile_picture"
                            class="alert-primary mb-0"><?= $words->get('uploadselectpicture'); ?></label>
-                    <input id="profile_picture" name="profile_picture" class="form-control btn btn-outline-primary p-0 text-left" type="file"/>
+                    <input id="profile_picture" name="profile_picture" class="form-control-file btn btn-outline-primary p-0 text-left" type="file"/>
                     <br/>
                     <span class="small text-muted"><?= $words->get('Profile_UploadWarning', sprintf("%.1f MB", PFunctions::returnBytes(ini_get('upload_max_filesize')) / 1048576)); ?></span>
+                    <input type="submit" class="btn btn-primary float-right my-2" id="submit" name="submit"
+                           value="<?= $words->getSilent('Upload.Profile.Picture') ?>"/> <?php echo $words->flushBuffer(); ?>
                 </div>
-
                 <? if ($this->adminedit || !$CanTranslate) { // member translator is not allowed to update crypted data ?>
                     <div class="col-12 form-group row mb-1">
                         <label for="FirstName" class="col-md-3 col-form-label"><?= $words->get('FirstName') ?></label>

@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-12 col-md-3">
 
-                <h4 class="text-center mb-2">Step 4/5</h4>
+                <h4 class="text-center mb-2"><?= $words->getFormatted('signup.step', 4); ?></h4>
 
                 <div class="progress mb-2">
                     <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 80%;"
@@ -146,7 +146,7 @@
                             </thead>
                             <tbody>
                             <tr>
-                                <th scope="row" class="float-right border-0 text-nowrap">Full name</th>
+                                <th scope="row" class="float-right border-0 text-nowrap"><?= $words->get('signup.fullname'); ?></th>
                                 <td class="w-100 border-0">
                                     <?php
                                     echo htmlentities(strip_tags($vars['firstname']));

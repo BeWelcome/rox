@@ -45,7 +45,7 @@
                             <td>
                                 <p class="m-0"><small>&nbsp;</small></p>
                                 {% if translation.shortcode == locale %}
-                                    <p class="m-0"><a href="{{ url('translations_edit', { code: translation.code, locale: locale }) }}"><i class="fa fa-edit"></i></a></p>
+                                    <p class="m-0"><a href="{{ url('translation_edit', { code: translation.code, locale: locale }) }}"><i class="fa fa-edit"></i></a></p>
                                 {% else %}
                                     <p class="m-0"><a href="{{ url('translation_add', { code: translation.code, locale: locale }) }}"><i class="fa fa-plus"></i></a></p>
                                 {% endif %}

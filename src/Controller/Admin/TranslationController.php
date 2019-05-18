@@ -4,6 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Entity\Language;
 use App\Entity\Member;
+use App\Entity\Right;
+use App\Entity\RightVolunteer;
 use App\Entity\Word;
 use App\Form\CustomDataClass\Translation\CreateTranslationRequest;
 use App\Form\CustomDataClass\Translation\EditTranslationRequest;
@@ -12,14 +14,17 @@ use App\Form\TranslationFormType;
 use App\Kernel;
 use App\Model\TranslationModel;
 use App\Pagerfanta\TranslationAdapter;
+use App\Repository\LanguageRepository;
 use App\Repository\MemberRepository;
 use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\NonUniqueResultException;
+use Exception;
 use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Contracts\Translation\TranslatorInterface as Translator;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -40,13 +45,17 @@ class TranslationController extends AbstractController
     /** @var TranslationModel */
     private $translationModel;
 
-    public function __construct()
+    /** @var TranslatorInterface */
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator)
     {
         $this->translationModel = new TranslationModel();
+        $this->translator = $translator;
     }
 
     /**
-     * @Route("/admin/translations/edit/{locale}/{code}", name="translations_edit",
+     * @Route("/admin/translations/edit/{locale}/{code}", name="translation_edit",
      *     requirements={"code"=".+"}))
      *
      * Update an existing translation for the locale
@@ -58,7 +67,7 @@ class TranslationController extends AbstractController
      * @param mixed $code
      *
      * @return Response
-     * @throws \Exception
+     * @throws Exception
      * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
      */
     public function editTranslationAction(
@@ -70,19 +79,35 @@ class TranslationController extends AbstractController
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
-        $translationRepository = $this->getDoctrine()
-            ->getRepository(Word::class);
+        // Check that the volunteer has rights for this language
+        if (!$this->checkLanguagePermissions($language)) {
+            return $this->redirectToRoute('translations_locale_code', [
+                'locale' => $language->getShortcode(),
+                'code' => $code
+            ]);
+        }
+
+        $translationRepository = $this->getDoctrine()->getRepository(Word::class);
         /** @var Word $original */
         $original = $translationRepository->findOneBy([
             'code' => $code,
             'shortCode' => 'en',
         ]);
+
+        // Check that there is already a translation for this id/code
         /** @var Word $translation */
         $translation = $translationRepository->findOneBy([
            'code' => $code,
            'shortCode' => $language->getShortCode(),
         ]);
+        if (null === $translation) {
+            return $this->redirectToRoute('translation_add', [
+                'code' => $code,
+                'locale' => $language->getShortcode(),
+            ]);
+        }
         $translationRequest = EditTranslationRequest::fromTranslations($original, $translation);
+
 
         $editForm = $this->createForm(EditTranslationFormType::class, $translationRequest);
 
@@ -95,15 +120,19 @@ class TranslationController extends AbstractController
             $translation->setSentence($data->translatedText);
             $translation->setUpdated(new DateTime());
             $translation->setAuthor($this->getUser());
-            // No need for a description as the English original has one
-            $translation->setDescription('');
+            if ('en' === $language->getShortcode()) {
+                $translation->setDescription($data->description);
+            } else {
+                // No need for a description as the English original has one
+                $translation->setDescription('');
+            }
             $em->persist($translation);
             $em->flush();
             $this->translationModel->removeCacheFile(
                 $kernel,
                 $language->getShortcode()
             );
-            $this->addFlash('notice', $translator->trans('translation.edit'));
+            $this->addFlash('notice', $this->translator->trans('translation.edit'));
 
             $referrer = $request->headers->get('referer');
 
@@ -116,7 +145,7 @@ class TranslationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/translations/create/{locale}/{code}", name="translations_create",
+     * @Route("/admin/translations/create/{locale}/{code}", name="translation_create",
      *     requirements={"code"=".+"}))
      *
      * Creates an English index and the matching translation (if locale != 'en')
@@ -128,7 +157,7 @@ class TranslationController extends AbstractController
      * @param mixed $code
      *
      * @return Response
-     * @throws \Exception
+     * @throws Exception
      * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
      */
     public function createTranslationAction(
@@ -139,22 +168,48 @@ class TranslationController extends AbstractController
         $code)
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
-        $user = $this->getUser();
 
-        $em = $this->getDoctrine()->getManager();
-        $languageRepository = $em->getRepository(Language::class);
+        $translator = $this->getUser();
+
+        // Volunteer needs rights for this language and for English
+        if (!$translator->hasRightsForLocale($language->getShortcode())
+            && !$translator->hasRightsForLocale('en')) {
+            return $this->redirectToRoute('translations');
+        }
+
+        // Check if an English entry already exists
+        $translationRepository = $this->getDoctrine()->getRepository(Word::class);
+        /** @var Word $original */
+        $englishTranslation = $translationRepository->findOneBy([
+            'code' => $code,
+            'shortCode' => 'en',
+        ]);
+
+        if ($englishTranslation !== null) {
+            // There already a translation ID in the database redirect to edit
+            return $this->redirectToRoute('translation_edit', [
+                'locale' => 'en',
+                'code' => $code,
+            ]);
+        }
+
+        /** @var LanguageRepository $languageRepository */
+        $languageRepository = $this->getDoctrine()->getRepository(Language::class);
         /** @var Language $english */
         $english = $languageRepository->findOneBy(['shortcode' => 'en']);
 
         $createTranslationRequest = new CreateTranslationRequest();
         $createTranslationRequest->wordCode = $code;
         $createTranslationRequest->locale = $language->getShortcode();
-        $createTranslationRequest->translatedText = ('en' === $createTranslationRequest->locale) ? 'not needed' : '';
-
+        if ('en' === $language->getShortcode()) {
+            // to ensure form validates correctly
+            $createTranslationRequest->translatedText = 'safely ignored';
+        }
         $createForm = $this->createForm(TranslationFormType::class, $createTranslationRequest);
         $createForm->handleRequest($request);
 
         if ($createForm->isSubmitted() && $createForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
             /** @var CreateTranslationRequest $data */
             $data = $createForm->getData();
             $original = new Word();
@@ -162,7 +217,7 @@ class TranslationController extends AbstractController
             $original->setDescription($data->description);
             $original->setSentence($data->englishText);
             $original->setCreated(new DateTime());
-            $original->setAuthor($user);
+            $original->setAuthor($translator);
             $original->setLanguage($english);
             $em->persist($original);
             if ('en' !== $createTranslationRequest->locale) {
@@ -171,7 +226,7 @@ class TranslationController extends AbstractController
                 $translation->setDescription($data->description);
                 $translation->setSentence($data->translatedText);
                 $translation->setCreated(new DateTime());
-                $translation->setAuthor($user);
+                $translation->setAuthor($translator);
                 $translation->setLanguage($language);
                 $em->persist($translation);
             }
@@ -184,7 +239,7 @@ class TranslationController extends AbstractController
                 $kernel,
                 $language->getShortcode()
             );
-            $flashMessage = $translator->trans('flash.added.translatable.item', [ '%code%' => $code ]);
+            $flashMessage = $this->translator->trans('flash.added.translatable.item', [ '%code%' => $code ]);
             $this->addFlash('notice', $flashMessage);
 
             return $this->redirectToRoute('translations');
@@ -207,12 +262,20 @@ class TranslationController extends AbstractController
      * @param mixed $code
      *
      * @return Response
-     * @throws \Exception
+     * @throws Exception
      * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
      */
-    public function addTranslationAction(Request $request, Language $language, KernelInterface $kernel, TranslatorInterface $translator, $code)
+    public function addTranslationAction(Request $request, Language $language, KernelInterface $kernel, $code)
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
+
+        /** @var Member $ranslator */
+        $translator = $this->getUser();
+
+        // Check that the volunteer has rights for this language
+        if (!$translator->hasRightsForLocale($language->getShortcode())) {
+            return $this->redirectToRoute('translations_locale_code', );
+        }
 
         if ('en' === $language->getShortcode()) {
             $this->addFlash('notice', $translator->trans("flash.translation.weird"));
@@ -233,7 +296,7 @@ class TranslationController extends AbstractController
         // Work around a problem in the database
         // Sometimes the word code do not match between translations
         if (null !== $translation) {
-            return $this->redirectToRoute('translations_edit', ['locale' => $language->getShortCode(), 'code' => $code]);
+            return $this->redirectToRoute('translation_edit', ['locale' => $language->getShortCode(), 'code' => $code]);
         }
 
         $translation = new Word();
@@ -251,7 +314,7 @@ class TranslationController extends AbstractController
             $translation->setSentence($data->translatedText);
             $translation->setLanguage($language);
             $translation->setCreated(new DateTime());
-            $translation->setAuthor($this->getUser());
+            $translation->setAuthor($translator);
             // No need for a description as the English original has one
             $translation->setDescription('');
             $em->persist($translation);
@@ -260,7 +323,7 @@ class TranslationController extends AbstractController
                 $kernel,
                 $language->getShortcode()
             );
-            $this->addFlash('notice', $translator->trans('translation.edit'));
+            $this->addFlash('notice', $this->translator->trans('translation.edit'));
 
             $referrer = $request->headers->get('referer');
 
@@ -283,14 +346,14 @@ class TranslationController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function setTranslationModeAction(Request $request, TranslatorInterface $translator, $mode)
+    public function setTranslationModeAction(Request $request, $mode)
     {
         if ('on' === $mode) {
             $flashId = 'flash.translation.enabled';
         } else {
             $flashId = 'flash.translation.disabled';
         }
-        $this->addFlash('notice', $translator->trans($flashId));
+        $this->addFlash('notice', $this->translator->trans($flashId));
 
         $this->get('session')->set('translation_mode', $mode);
         $referrer = $request->headers->get('referer');
@@ -299,20 +362,57 @@ class TranslationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/translations/{code}", name="translations",
+     * @Route("/admin/translation/no_permissions", name="translations_no_rights")
+     * @param Request $request
+     * @return Response
+     */
+    public function translationNoRightsAction(Request $request)
+    {
+        $locale = $request->getLocale();
+        $locales = $this->getUserLocales();
+        return $this->render('admin/translations/no.right.html.twig', [
+            'locale' => $locale,
+            'locales' => $locales,
+        ]);
+    }
+
+
+    /**
+     * @Route("/admin/translations", name="translations")
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function translationSwitchAction(Request $request)
+    {
+        $locale = $request->getLocale();
+        return $this->redirectToRoute("translations_locale_code", [
+            'locale' => $locale
+        ]);
+    }
+
+
+    /**
+     * @Route("/admin/translations/{locale}/{code}", name="translations_locale_code",
      *     defaults={"code":""},
      *     requirements={"code"=".+"})
      *
      * @param Request $request
-     * @param string code
-     *
+     * @param Language $language
+     * @param string $code
      * @return Response
+     * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
+     *
      */
-    public function listTranslationsAction(Request $request, $code)
+    public function listTranslationsAction(Request $request, Language $language, $code)
     {
+        if (!$this->checkLanguagePermissions($language))
+        {
+            return $this->redirectToRoute("translations_no_rights");
+        }
+
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 20);
-        $locale = $request->get('_locale', 'en');
+        $locale = $language->getShortcode();
 
         $form = $this->createFormBuilder(['wordCode' => $code])
             ->add('wordCode', TextType::class, [
@@ -344,8 +444,58 @@ class TranslationController extends AbstractController
         return $this->render('admin/translations/list.html.twig', [
             'form' => $form->createView(),
             'code' => $code,
+            'locale' => $locale,
             'translations' => $translations,
         ]);
+    }
+
+    /**
+     * Checks if the volunteer has permissions to edit translations for the given language
+     *
+     * @param Language $language
+     *
+     * @return bool
+     */
+    private function checkLanguagePermissions(Language $language)
+    {
+        // We get here because the volunteer has the right to change translations so no need to worry if the filter
+        // actually returns something
+        $volunteer = $this->getUser();
+
+        /** @var RightVolunteer $wordRight */
+        $wordRight = $volunteer->getVolunteerRights()->filter(function(RightVolunteer $volunteerRight) {
+            return $volunteerRight->getRight()->getName() == 'Words';
+        })->first();
+
+        $scope = preg_split('/[,;]/', str_replace('"', '', $wordRight->getScope()));
+
+        if (in_array( 'All', $scope)) {
+            return true;
+        }
+
+        return (in_array($language->getShortcode(), $scope));
+    }
+
+    /**
+     * Returns the locales that the user is allowed to translate
+     *
+     * @return string[]
+     */
+    private function getUserLocales()
+    {
+        $volunteer = $this->getUser();
+
+        /** @var RightVolunteer $wordRight */
+        $wordRight = $volunteer->getVolunteerRights()->filter(function(RightVolunteer $volunteerRight) {
+            return $volunteerRight->getRight()->getName() == 'Words';
+        })->first();
+
+        $scope = preg_split('/[,;]/', str_replace('"', '', $wordRight->getScope()));
+        if (in_array( 'All', $scope)) {
+            return [ 'this', 'should', 'never', 'happen'];
+        }
+
+        return $scope;
     }
 
 }

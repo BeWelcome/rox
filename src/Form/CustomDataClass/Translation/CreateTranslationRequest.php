@@ -26,12 +26,14 @@ class CreateTranslationRequest
 
     /**
      * @var string
+     * @Assert\Length(
+     *     min = 10
+     * )
      */
     public $description;
 
     /**
      * @var string
-     * @Assert\NotBlank()
      */
     public $translatedText;
 }

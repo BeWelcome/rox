@@ -32,7 +32,7 @@ Boston, MA  02111-1307, USA.
         <div class="row">
             <div class="col-12 col-md-3">
 
-                <h4 class="text-center mb-2">Step 5/5</h4>
+                <h4 class="text-center mb-2"><?= $words->getFormatted('signup.step', 5); ?></h4>
 
                 <div class="progress mb-2">
                     <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 100%;"

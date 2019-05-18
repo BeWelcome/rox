@@ -30,7 +30,7 @@
                     <br/>
                     <span class="small text-muted"><?= $words->get('Profile_UploadWarning', sprintf("%.1f MB", PFunctions::returnBytes(ini_get('upload_max_filesize')) / 1048576)); ?></span>
                     <input type="submit" class="btn btn-primary float-right my-2" id="submit" name="submit"
-                           value="<?= $words->getSilent('Upload.Profile.Picture') ?>"/> <?php echo $words->flushBuffer(); ?>
+                           value="<?= $words->getSilent('upload.profile.picture') ?>"/> <?php echo $words->flushBuffer(); ?>
                 </div>
                 <? if ($this->adminedit || !$CanTranslate) { // member translator is not allowed to update crypted data ?>
                     <div class="col-12 form-group row mb-1">

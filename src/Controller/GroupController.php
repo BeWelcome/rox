@@ -423,10 +423,10 @@ class GroupController extends AbstractController
                 AND r.id = rv.IdRight 
                 AND rv.Level = 10 
                 AND rv.IdMember = m.id
-                AND m.Status IN (:active:)
+                AND m.Status IN (:active)
         ");
         $stmt->execute([
-            ':active:' => MemberStatusType::ACTIVE_ALL_ARRAY,
+            ':active' => MemberStatusType::ACTIVE_ALL,
         ]);
         $emails = $stmt->fetchAll();
         $recipients = [];

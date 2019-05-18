@@ -14,7 +14,7 @@ $map_conf = PVars::getObj('map');
             <div class="row">
                 <div class="col-12 col-md-3">
 
-                    <h4 class="text-center mb-2">Step 3/5</h4>
+                    <h4 class="text-center mb-2"><?= $words->getFormatted('signup.step', 3); ?></h4>
 
                     <div class="progress mb-2">
                         <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"><span class="white">60%</span></div>

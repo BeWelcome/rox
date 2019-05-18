@@ -7,6 +7,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 class EditTranslationFormType extends AbstractType
 {
@@ -22,10 +24,6 @@ class EditTranslationFormType extends AbstractType
             ->add('wordCode', TextType::class, [
                 'disabled' => true,
                 'label' => 'label.admin.translation.wordcode',
-            ])
-            ->add('description', TextAreaType::class, [
-                'disabled' => true,
-                'label' => 'label.admin.translation.description',
             ])
             ->add('englishText', TextAreaType::class, [
                 'disabled' => true,
@@ -43,5 +41,21 @@ class EditTranslationFormType extends AbstractType
                 'label' => 'label.update',
             ])
         ;
+        $formBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $translationRequest = $event->getData();
+            $form = $event->getForm();
+            if ('en' === $translationRequest->locale) {
+                $form
+                    ->add('description', TextAreaType::class, [
+                        'label' => 'label.admin.translation.description',
+                    ]);
+            } else {
+                $form
+                    ->add('description', TextAreaType::class, [
+                        'disabled' => true,
+                        'label' => 'label.admin.translation.description',
+                    ]);
+            }
+        });
     }
 }

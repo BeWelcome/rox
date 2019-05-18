@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'translations.title' | trans }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ 'translations.headline' | trans }}</h1>
+    {% trans with {'%locale%': app.request.locale} %}admin.translation.no_right{% endtrans %}
+    {{ 'admin.translations.select.locale' }}
+    {% for locale in locales %}
+    <a href="{{ path('language', locale) }}" class="btn btn-primary mr-2">locale</a>
+    {% endfor %}
+{% endblock content %}

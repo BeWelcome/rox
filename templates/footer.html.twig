@@ -237,11 +237,11 @@
                     <td>
                         <small>&nbsp;</small>
                         {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}
-                            <a href="{{ url('translations_edit', { code: message.id, locale: app.request.locale }) }}" target="_blank"><i class="fa fa-edit"></i></a>
+                            <a href="{{ url('translation_edit', { code: message.id, locale: app.request.locale }) }}" target="_blank"><i class="fa fa-edit"></i></a>
                         {% endif %}
                         {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_MISSING') and hasEnglishRights %}
                             {% if message.id %}
-                                <a href="{{ url('translations_create', { code: message.id, locale: locale }) }}" target="_blank"><i class="fa fa-plus"></i></a>
+                                <a href="{{ url('translation_create', { code: message.id, locale: locale }) }}" target="_blank"><i class="fa fa-plus"></i></a>
                             {% else %}
                                 message.id not correctly set.
                             {% endif %}

@@ -1027,7 +1027,8 @@ class RequestAndMessageController extends AbstractController
 
     private function addTranslatedFlash($type, $flashId)
     {
-        $this->addFlash($type, $this->translator->trans($flashId));
+        $translatedFlash = $this->translator->trans($flashId);
+        $this->addFlash($type, $translatedFlash);
     }
 
     /**

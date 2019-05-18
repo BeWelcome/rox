@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-12 col-md-3">
 
-                <h4 class="text-center mb-2">Step 1/5</h4>
+                <h4 class="text-center mb-2"><?= $words->getFormatted('signup.step', 1); ?></h4>
 
                 <div class="progress mb-2">
                     <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 20%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"><span class="white">20%</span></div>
@@ -111,7 +111,7 @@
                             <?php
                             echo isset($vars['email']) ? 'value="'.htmlentities($vars['email'], ENT_COMPAT, 'utf-8').'" ' : '';
                             ?> />
-                        <button type="button" class="input-group-append btn btn-primary" data-trigger="focus" data-container="body" data-toggle="popover" data-placement="right" data-content="Your e-mail address is most important: we will forward the messages and request to this e-mail address">
+                        <button type="button" class="input-group-append btn btn-primary" data-trigger="focus" data-container="body" data-toggle="popover" data-placement="right" data-content="<?= $words->get('signup.help.email'); ?>">
                             <i class="fa fa-question"></i>
                         </button>
                         <div class="valid-feedback"><?= $words->getSilent('signup.email.wellformed'); ?></div>
@@ -135,7 +135,7 @@
 
                 <div class="form-group">
                     <span class="form-control-label"><?php echo $words->get('Accommodation'); ?></span>
-                    <button type="button" class="btn btn-primary float-right" data-trigger="focus" data-container="body" data-toggle="popover" data-placement="right" data-content="Are you able to provide accommodation?">
+                    <button type="button" class="btn btn-primary float-right" data-trigger="focus" data-container="body" data-toggle="popover" data-placement="right" data-content="<?= $words->get('signup.help.accommodation'); ?>">
                         <i class="fa fa-question"></i>
                     </button>
                     <div class="form-check">
@@ -178,7 +178,7 @@
             <div class="col-12 col-md-3">
                 <!-- Information on data use -->
                 <button type="button" class="btn btn-sm btn-primary pull-right" data-toggle="modal" data-target="#SignupIntroduction">
-                    <i class="fa fa-exclamation-circle"></i> <?php // echo $words->get('SignupIntroductionTitle'); ?>Data visibility
+                    <i class="fa fa-exclamation-circle"></i> <?php // echo $words->get('SignupIntroductionTitle'); ?><?= $words->get('signup.data.visibility'); ?>
                 </button>
             </div>
 

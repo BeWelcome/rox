@@ -14,13 +14,13 @@
         <div class="row invisible d-none">
             <label for="sweet"><?php echo $words->get('SignupSweet'); ?></label>
             <input type="text" class="form-control" id="sweet" name="sweet"
-                   placeholder="<?php echo $words->get('SignupSweet'); ?>" value="" title="Leave free of content"/>
+                   placeholder="<?php echo $words->get('SignupSweet'); ?>" value="" title=""/>
         </div>
 
         <div class="row">
             <div class="col-12 col-md-3">
 
-                <h4 class="text-center mb-2">Step 2/5</h4>
+                <h4 class="text-center mb-2"><?= $words->getFormatted('signup.step', 2); ?></h4>
 
                 <div class="progress mb-2">
                     <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 40%;"
@@ -154,10 +154,10 @@
                         <div class="input-group-prepend" data-target="#datetimepicker1"
                                 data-toggle="datetimepicker"><i class="input-group-text bg-primary white far fa-calendar"></i></div>
                         <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1" id="birthdate"
-                               name="birthdate"/>
+                               name="birthdate" data-toggle="datetimepicker"/>
                         <button type="button" class="input-group-append btn btn-primary" data-trigger="focus" data-container="body"
                                 data-toggle="popover" data-placement="right"
-                                data-content="To use BeWelcome you need to be at least 18 years old.<br><br>Your birth date is never shown on the site. You might also decide to hide your age on your profile.">
+                                data-content="<?= htmlentities($words->get('signup.help.birthdate')); ?>">
                             <i class="fa fa-question"></i>
                         </button>
                     </div>
@@ -211,7 +211,7 @@
                     </div>
                     <button type="button" class="btn btn-primary float-right" data-trigger="focus" data-container="body"
                             data-toggle="popover" data-placement="right"
-                            data-content="Do you consider yourself female, male, none or something else?">
+                            data-content="<?= htmlentities($words->get('signup.help.gender')); ?>">
                         <i class="fa fa-question"></i>
                     </button>
                     <?php if (in_array('SignupErrorProvideGender', $vars['errors'])) {
@@ -235,8 +235,7 @@
                 <!-- Information on data use -->
                 <button type="button" class="btn btn-sm btn-primary pull-right" data-toggle="modal"
                         data-target="#SignupIntroduction">
-                    <i class="fa fa-exclamation-circle"></i> <?php // echo $words->get('SignupIntroductionTitle'); ?>
-                    Data visibility
+                    <i class="fa fa-exclamation-circle"></i><?= $words->get('signup.data.visibility');?>
                 </button>
             </div>
     </form>
@@ -246,7 +245,8 @@
         let maxDate = moment().subtract(18, "years");
         $("#datetimepicker1").datetimepicker({
             format: 'YYYY-MM-DD',
-            maxDate: maxDate
+            maxDate: maxDate,
+            viewMode: 'years'
         });
     });
 </script>

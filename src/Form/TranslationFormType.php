@@ -21,10 +21,6 @@ class TranslationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $formBuilder, array $options)
     {
         $formBuilder
-            ->add('wordCode', TextType::class, [
-                'disabled' => true,
-                'label' => 'translation.wordcode',
-            ])
             ->add('description', TextAreaType::class, [
                 'label' => 'translation.description',
             ])
@@ -41,7 +37,17 @@ class TranslationFormType extends AbstractType
                         'required' => false,
                     ]);
             }
-            $form->add('Create', SubmitType::class);
+            if ($translationRequest->wordCode == '') {
+                $form->add('wordCode', TextType::class, [
+                    'label' => 'translation.wordcode',
+                ]);
+            } else {
+                $form->add('wordCode', TextType::class, [
+                    'disabled' => true,
+                    'label' => 'translation.wordcode',
+                ]);
+            }
+            $form->add('create', SubmitType::class);
         });
     }
 }

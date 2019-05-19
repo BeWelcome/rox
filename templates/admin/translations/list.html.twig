@@ -5,14 +5,17 @@
 {% endblock %}
 
 {% block content %}
-    <h1>{{ 'translations.headline' | trans }}</h1>
+    <h1>{{ headline | trans }}</h1>
     <p>{% trans with { '%locale%': locale } %}translations.abstract{% endtrans %}</p>
     {{ form(form) }}
+    {% if count_all is defined %}
+        <p class="py-2">Translation ratio: {{ (count_translated/count_all*100)|number_format(2) }}% ({{ count_translated }} out of {{ count_all }})</p>
+    {% endif %}
     {% if translations.nbResults == 0  %}
     {% else %}
         {% if translations.haveToPaginate %}
             <div class="row">
-                <div class="col-12 float-left">
+                <div class="col-12">
                     {{ pagerfanta( translations , 'rox_default') }}
                 </div>
             </div>
@@ -58,7 +61,7 @@
         </div>
         {% if translations.haveToPaginate %}
             <div class="row">
-                <div class="float-right">
+                <div class="col-12">
                     {{ pagerfanta( translations, 'rox_default') }}
                 </div>
             </div>

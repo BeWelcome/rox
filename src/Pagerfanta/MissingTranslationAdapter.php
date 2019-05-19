@@ -6,13 +6,16 @@ use Doctrine\DBAL\Driver\Connection;
 use Pagerfanta\Adapter\AdapterInterface;
 use PDO;
 
-class TranslationAdapter implements AdapterInterface
+class MissingTranslationAdapter implements AdapterInterface
 {
     /** @var string */
     private $query;
 
     /** @var string */
     private $code;
+
+    /** @var string */
+    private $locale;
 
     /** @var Connection */
     private $connection;
@@ -25,31 +28,28 @@ class TranslationAdapter implements AdapterInterface
      * @param Connection $connection
      * @param string $locale
      * @param string $code
+     * @param bool $missing
      */
     public function __construct(Connection $connection, string $locale, string $code)
     {
         $this->connection = $connection;
         $this->code = $code;
+        $this->locale = $locale;
 
         $this->query = "
-            SELECT distinct p.code
-                 , COALESCE(pi_lang.shortcode,pi_dflt.shortcode) AS shortcode
-                 , COALESCE(pi_lang.Sentence,pi_dflt.Sentence) AS Sentence
-                 , COALESCE(pi_lang.created,pi_dflt.created) AS created
-              FROM words AS p
-            LEFT OUTER 
-              JOIN words AS pi_dflt 
-                ON pi_dflt.code = p.code
-                AND pi_dflt.shortcode = 'en'
-                AND pi_dflt.isArchived IS NULL
-            LEFT OUTER 
-              JOIN words AS pi_lang 
-                ON pi_lang.code = p.code
-                AND pi_lang.shortcode = '{$locale}'
-                AND pi_lang.isArchived IS NULL
-                ";
-        if (!empty($code)) {
-            $this->query .= " WHERE (pi_lang.code LIKE '%" . $code . "%' OR pi_dflt.code LIKE '%" . $code . "%')";
+            SELECT
+                code,
+                shortcode,
+                Sentence,
+                created
+            FROM 
+                words 
+            WHERE 
+                shortCode = 'en' 
+                AND isArchived IS NULL 
+                AND code NOT IN (SELECT code FROM words WHERE shortCode = '{$this->locale}')";
+        if (!empty($this->code)) {
+            $this->query .= " AND code LIKE '%" . $this->code . "%'";
         }
         $this->query .= "
             ORDER BY created desc";
@@ -62,11 +62,18 @@ class TranslationAdapter implements AdapterInterface
      */
     public function getNbResults()
     {
-        $query = "SELECT count(*) as cnt FROM words WHERE shortcode = 'en' AND isArchived IS NULL";
+        $query = "            
+            SELECT
+                count(*) as cnt
+            FROM 
+                words 
+            WHERE 
+                shortCode = 'en' 
+                AND isArchived IS NULL 
+                AND code NOT IN (SELECT code FROM words WHERE shortCode = '{$this->locale}')";
         if (!empty($this->code)) {
             $query .= " AND code LIKE '%" . $this->code . "%'";
         }
-
         $statement = $this->connection->query($query);
         $result = $statement->fetch(PDO::FETCH_OBJ);
 

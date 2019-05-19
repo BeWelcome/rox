@@ -19,10 +19,10 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
-use Twig_Extension;
-use Twig_Extension_GlobalsInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\Extension\GlobalsInterface;
 
-class MemberTwigExtension extends Twig_Extension implements Twig_Extension_GlobalsInterface
+class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
 {
     /**
      * @var Session

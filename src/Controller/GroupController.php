@@ -16,12 +16,15 @@ use App\Logger\Logger;
 use App\Repository\GroupRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Statement;
+use Exception;
 use Html2Text\Html2Text;
 use Intervention\Image\ImageManagerStatic as Image;
+use Swift_Mailer;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -41,16 +44,16 @@ class GroupController extends AbstractController
      * @param Request             $request
      * @param TranslatorInterface $translator
      * @param Logger              $logger
-     * @param \Swift_Mailer       $mailer
+     * @param Swift_Mailer       $mailer
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @return Response
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * Because of the mix between old code and new code this method is way too long.
      */
-    public function createNewGroupAction(Request $request, TranslatorInterface $translator, Logger $logger, \Swift_Mailer $mailer)
+    public function createNewGroupAction(Request $request, TranslatorInterface $translator, Logger $logger, Swift_Mailer $mailer)
     {
         $groupRequest = new GroupRequest();
         $form = $this->createForm(GroupType::class, $groupRequest);
@@ -145,8 +148,6 @@ class GroupController extends AbstractController
             ]);
             $this->addFlash('notice', $flashMessage);
 
-            $this->sendNewGroupNotifications($group, $member, $mailer);
-
             $logger->write('Group '.$group->getName().' created by '.$member->getUsername().'.', 'Group');
 
             return $this->redirectToRoute('groups_overview');
@@ -224,9 +225,9 @@ class GroupController extends AbstractController
      * @param TranslatorInterface $translator
      * @param Logger              $logger
      *
-     * @throws \Exception
+     * @throws Exception
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function discussGroupAction(Request $request, Group $group, TranslatorInterface $translator, Logger $logger)
     {
@@ -261,9 +262,9 @@ class GroupController extends AbstractController
      * @param TranslatorInterface $translator
      * @param Logger              $logger
      *
-     * @throws \Exception
+     * @throws Exception
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function dismissGroupAction(Request $request, Group $group, TranslatorInterface $translator, Logger $logger)
     {
@@ -297,18 +298,18 @@ class GroupController extends AbstractController
      * @param Group               $group
      * @param TranslatorInterface $translator
      * @param Logger              $logger
-     * @param \Swift_Mailer       $mailer
+     * @param Swift_Mailer       $mailer
      *
-     * @throws \Exception
+     * @throws Exception
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function approveGroupAction(
         Request $request,
         Group $group,
         TranslatorInterface $translator,
         Logger $logger,
-        \Swift_Mailer $mailer
+        Swift_Mailer $mailer
     ) {
         if (!$this->isGranted([Member::ROLE_ADMIN_GROUP])) {
             throw $this->createAccessDeniedException('You need to have the Group right to access this.');
@@ -333,34 +334,7 @@ class GroupController extends AbstractController
         return $this->redirect($referrer);
     }
 
-    private function sendNewGroupNotifications(Group $group, Member $member, \Swift_Mailer $mailer)
-    {
-        $recipients = $this->getNewGroupNotificationRecipients();
-        $subject = '[New Group] '.strip_tags($group->getName());
-        $message = new Swift_Message();
-        $message
-            ->setSubject($subject)
-            ->setFrom(
-                [
-                    'groups@bewelcome.org' => 'BeWelcome - Group Administration',
-                ]
-            )
-            ->setTo($recipients)
-            ->setBody(
-                $this->renderView('emails/new.group.html.twig', [
-                    'subject' => $subject,
-                    'group' => $group,
-                    'member' => $member,
-                ]),
-                'text/html'
-            )
-        ;
-        $recipients = $mailer->send($message);
-
-        return (0 === $recipients) ? false : true;
-    }
-
-    private function sendNewGroupApprovedNotification(Group $group, Member $creator, \Swift_Mailer $mailer)
+    private function sendNewGroupApprovedNotification(Group $group, Member $creator, Swift_Mailer $mailer)
     {
         $recipient = $creator->getEmail();
 
@@ -405,38 +379,6 @@ class GroupController extends AbstractController
         $recipients = $mailer->send($message);
 
         return (0 === $recipients) ? false : true;
-    }
-
-    private function getNewGroupNotificationRecipients()
-    {
-        /** @var Connection $connection */
-        $connection = $this->getDoctrine()->getConnection();
-        $stmt = $connection->prepare("
-            SELECT 
-                m.Email 
-            FROM 
-                members m, 
-                rightsvolunteers rv, 
-                rights r 
-            WHERE 
-                r.Name = 'Group' 
-                AND r.id = rv.IdRight 
-                AND rv.Level = 10 
-                AND rv.IdMember = m.id
-                AND m.Status IN (:active)
-        ");
-        $stmt->execute([
-            ':active' => MemberStatusType::ACTIVE_ALL,
-        ]);
-        $emails = $stmt->fetchAll();
-        $recipients = [];
-        foreach ($emails as $email) {
-            if (!empty($email['Email'])) {
-                $recipients[] = $email['Email'];
-            }
-        }
-
-        return $recipients;
     }
 
     /**

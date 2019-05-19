@@ -6,9 +6,11 @@
 
 {% block content %}
     <h1>{{ 'translations.headline' | trans }}</h1>
-    {% trans with {'%locale%': app.request.locale} %}admin.translation.no_right{% endtrans %}
-    {{ 'admin.translations.select.locale' }}
-    {% for locale in locales %}
-    <a href="{{ path('language', locale) }}" class="btn btn-primary mr-2">locale</a>
-    {% endfor %}
+    <p>{% trans with {'%locale%': app.request.locale} %}admin.translation.no_right{% endtrans %}</p>
+    <p>{{ 'admin.translations.select.locale' | trans }}<br>
+        <br>
+        {%- for locale in locales -%}
+            <a href="{{ path('translations_locale_code', { 'locale' : locale}) }}" class="btn btn-primary mr-2">{{ ('lang_' ~ locale) | trans }} ({{ locale }})</a>&nbsp;
+        {%- endfor -%}
+    </p>
 {% endblock content %}

@@ -22,13 +22,13 @@
                 <tbody>
                     {% for group in groups %}
                         <tr>
-                            <td><p>{{ group.Name }}</p>
-                                <p>{{ group.created|localizeddate }}</p>
+                            <td><p><strong>{{ group.Name }}</strong><br>
+                                    <small>Created: {{ group.created|localizeddate }}</small></p>
                                 {% if group.approved == constant('App\\Entity\\Group::IN_DISCUSSION') %}
                                     <p class="alert alert-danger my-2">{{ 'Group approval under discussion' }}</p>{% endif %}
                                 </td>
                             <td>{% for locale, description in group.descriptions %}
-                                     <small class="text-muted">{{ description.Language.WordCode|trans }} ({{ locale }})</small><br>{{ description.Sentence|purify }}
+                                     <small class="text-muted">{{ description.Language.WordCode|lower|trans }} ({{ locale }})</small><br>{{ description.Sentence|purify }}
                                 {% endfor %}
                                 </td>
                             <td>{% if group.members|first %}{{ macros.avatarstack((group.members|first).Username) }}{% endif %}</td>

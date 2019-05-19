@@ -284,7 +284,7 @@ WHERE
             $l = new stdClass;
             $l->id = 0;
             $l->ShortCode = 'en';
-            $l->WordCode = 'Lang_en';
+            $l->WordCode = 'lang_en';
             $l->Name = 'English';
             $this->profile_language = $l;
         }

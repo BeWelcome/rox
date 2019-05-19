@@ -311,8 +311,7 @@ LIMIT 1
                         AND m.latitude BETWEEN " . $latsw . " AND " . $latne . "
                         AND m.longitude BETWEEN " . $longsw . " AND " . $longne;
             } else {
-                $condition .= "  AND m.latitude = " . $vars['location-latitude'] . "
-                        AND m.longitude  = " . $vars['location-longitude'];
+                $condition .= "  AND m.IdCity = " . $vars['location-geoname-id'];
             }
         }
 

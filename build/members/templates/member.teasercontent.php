@@ -63,8 +63,7 @@
               ?>
               <strong><a href="places/<?php echo urlencode($member->country()) . "/" . urlencode($member->countrycode())
                   . "/" . urlencode($member->region()) . "/" . urlencode($member->regioncode()) . "/"
-                  . urlencode($member->city) . "/" . $member->IdCity; ?>"><?php echo $member->city(); ?></a></strong>
-              <?php if ($member->region() != $member->city()): ?>,
+                  . urlencode($member->city) . "/" . $member->IdCity; ?>"><?php echo $member->city(); ?></a></strong><?php if ($member->region() != $member->city()): ?>,
               <a href="places/<?php echo urlencode($member->country()) . "/" . urlencode($member->countryCode()) . "/"
                   . urlencode($member->region()) . "/" . urlencode($member->regioncode()); ?>"><?php echo $member->region(); ?></a><?php endif; ?>,
               <a href="places/<?php echo urlencode($member->country()) . "/" . urlencode($member->countryCode()); ?>"><?php echo $member->country(); ?></a>

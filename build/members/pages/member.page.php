@@ -188,11 +188,11 @@ class MemberPage extends PageWithActiveSkin
 
             <div class="avatar-box">
                 <?php if ($this->useLightbox) { ?>
-            <a class="avatar-box-inside" href="<?= $picture_url . '/original' ?>" data-toggle="lightbox" data-type="image" title="Picture of <?=$member->Username?>" style="background-image: url('<?= $picture_url . '/500'?>')">
+            <a class="avatar-box-inside" href="<?= $picture_url . '/original' ?>" data-toggle="lightbox" data-type="image" title="<?= $words->get('profile.picture.title', $member->Username); ?>" style="background-image: url('<?= $picture_url . '/500'?>')">
                 <!-- <img src="<?= $picture_url . '/500'?>" class="w-100 h-100" alt="picture of <?= $member->Username ?>"> -->
             </a>
                 <?php } else { ?>}
-            <a class="avatar-box-inside" href="/members/<?=$member->Username?>" data-toggle="lightbox" data-type="image" title="Profile of <?=$member->Username?>" style="background-image: url('<?= $picture_url . '/500'?>')">
+            <a class="avatar-box-inside" href="/members/<?=$member->Username?>" data-toggle="lightbox" data-type="image" title="<?= $words->get('profile.picture.title', $member->Username); ?>" style="background-image: url('<?= $picture_url . '/500'?>')">
                 <!-- <img src="<?= $picture_url . '/500'?>" class="w-100 h-100" alt="picture of <?= $member->Username ?>"> -->
             </a>
             <?php } ?>
@@ -202,7 +202,7 @@ class MemberPage extends PageWithActiveSkin
                 // TODO : change language code (en) and wordcode
                 ?>
         <div>
-            <a href="editmyprofile" class="btn btn-info btn-block">Change Avatar</a>
+            <a href="editmyprofile" class="btn btn-info btn-block"><?= $words->get('profile.change.avatar'); ?></a>
         </div>
                 <? } ?>
 

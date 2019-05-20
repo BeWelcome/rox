@@ -61,8 +61,8 @@ class LocaleListener implements EventSubscriberInterface
         } else {
             // if no explicit locale has been set on this request, use one from the session
             $locale = $request->getSession()->get('_locale', $this->defaultLocale);
-            $request->setLocale($locale);
         }
+        $request->setLocale($locale);
         Carbon::setLocale($locale);
 
         $languageRepository = $this->em->getRepository(Language::class);

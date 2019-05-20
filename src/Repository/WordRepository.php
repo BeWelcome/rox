@@ -40,7 +40,7 @@ class WordRepository extends EntityRepository
         $qb = $this->createQueryBuilder('t');
         $q = $qb
             ->select('count(t.id)')
-            ->where('t.isarchived IS NULL')
+            ->where('(t.isarchived <> 1 OR t.isarchived IS NULL)')
             ->andWhere('t.shortCode = :locale')
             ->setParameter(':locale', $locale)
             ->getQuery();

@@ -5,8 +5,14 @@
 {% endblock %}
 
 {% block content %}
-    <h1>{{ headline | trans }}</h1>
-    <p>{% trans with { '%locale%': locale } %}translations.abstract{% endtrans %}</p>
+    <h1>{{ ('translation.headline.' ~ type) | trans }}</h1>
+    <p>
+        {%- if type == 'missing' %}
+            {% trans with { '%locale%': locale } %}translation.abstract.missing{% endtrans %}
+        {% else %}
+            {% trans with { '%locale%': locale } %}translation.abstract{% endtrans %}
+        {% endif -%}
+    </p>
     {{ form(form) }}
     {% if count_all is defined %}
         <p class="py-2">Translation ratio: {{ (count_translated/count_all*100)|number_format(2) }}% ({{ count_translated }} out of {{ count_all }})</p>

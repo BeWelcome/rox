@@ -19,19 +19,19 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
     endif; ?>
 
 <div class="container">
-    <?php $flashMessages = $this->getFlashError(true);
-    if (strlen($flashMessages) != 0): ?>
+    <?php $flashError = $this->getFlashError(true);
+    if (strlen($flashError) != 0): ?>
         <div class="row">
             <div class="col-12">
-                <div class="alert alert-danger" role="alert"><?= $flashMessages ?></div>
+                <div class="alert alert-danger" role="alert"><?= $flashError ?></div>
             </div>
         </div>
     <?php endif; ?>
-    <?php $flashMessages = $this->getFlashNotice(true);
-    if (strlen($flashMessages) != 0): ?>
+    <?php $flashNotice = $this->getFlashNotice(true);
+    if (strlen($flashNotice) != 0): ?>
         <div class="row">
             <div class="col-12">
-                <div class="alert alert-warning" role="alert"><?= $flashMessages ?></div>
+                <div class="alert alert-warning" role="alert"><?= $flashNotice ?></div>
             </div>
         </div>
     <?php endif; ?>
@@ -39,7 +39,7 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
     if (strlen($flashSuccess) != 0): ?>
         <div class="row">
             <div class="col-12">
-                <div class="alert alert-success" role="alert"><?= $flashMessages ?></div>
+                <div class="alert alert-success" role="alert"><?= $flashSuccess ?></div>
             </div>
         </div>
     <?php endif; ?>

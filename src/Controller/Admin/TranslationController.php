@@ -546,7 +546,7 @@ class TranslationController extends AbstractController
         $countTranslatedIds = $translationRepository->getTranslationIdCount($locale);
 
         return $this->render('admin/translations/list.html.twig', [
-            'headline' => 'translation.missing',
+            'type' => 'missing',
             'form' => $form->createView(),
             'code' => $code,
             'locale' => $locale,
@@ -615,7 +615,7 @@ class TranslationController extends AbstractController
         $translations->setCurrentPage($page);
 
         return $this->render('admin/translations/list.html.twig', [
-            'headline' => 'translation.all',
+            'type' => 'all',
             'form' => $form->createView(),
             'code' => $code,
             'locale' => $locale,

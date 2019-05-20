@@ -76,5 +76,6 @@ class UserLocaleListener
         $request->setLocale($locale);
         $this->session->set('IdLanguage', $language->getId());
         $this->session->set('_locale', $locale);
+        $this->session->set('lang', $locale);
     }
 }

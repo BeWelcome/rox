@@ -20,7 +20,14 @@ class RequestModel extends BaseModel
     {
         $today = (new \DateTime())->setTime(0, 0);
         $departure = $request->getDeparture();
-        $departure = $departure->add(new \DateInterval('P1D'))->setTime(23, 59);
+        if ($departure !== null)
+        {
+            $departure = $departure->add(new \DateInterval('P1D'))->setTime(23, 59);
+        } else {
+            // No departure date given assume an interval of two days max
+            $arrival = $request->getArrival();
+            $departure = $arrival->add(new \DateInterval('P1D'))->setTime(47, 59);
+        }
 
         return ($today < $departure) ? false : true;
     }

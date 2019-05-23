@@ -812,8 +812,13 @@ class RequestAndMessageController extends AbstractController
         // check if request was altered
         $diff = date_diff($data->getRequest()->getArrival(), $hostingRequest->getRequest()->getArrival());
         $newArrival = (0 !== $diff->y) && (0 !== $diff->m) && (0 !== $diff->d);
-        $diff = date_diff($data->getRequest()->getDeparture(), $hostingRequest->getRequest()->getDeparture());
-        $newDeparture = (0 !== $diff->y) && (0 !== $diff->m) && (0 !== $diff->d);
+        if (null != $data->getRequest()->getDeparture() && null  !== $hostingRequest->getRequest()->getDeparture()) {
+            $diff = date_diff($data->getRequest()->getDeparture(), $hostingRequest->getRequest()->getDeparture());
+            $newDeparture = (0 !== $diff->y) && (0 !== $diff->m) && (0 !== $diff->d);
+        } else {
+            // departure date was either set or removed so we set newDeparture to true
+            $newDeparture = true;
+        }
         $newFlexible = ($data->getRequest()->getFlexible() !== $hostingRequest->getRequest()->getFlexible());
         $newNumberOfTravellers = ($data->getRequest()->getNumberOfTravellers()
             !== $hostingRequest->getRequest()->getNumberOfTravellers());

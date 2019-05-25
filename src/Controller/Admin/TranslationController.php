@@ -357,7 +357,7 @@ class TranslationController extends AbstractController
 
         // Check that the volunteer has rights for this language
         if (!$translator->hasRightsForLocale($language->getShortcode())) {
-            return $this->redirectToRoute('translations_locale_code', );
+            return $this->redirectToRoute('translations_locale_code');
         }
 
         if ('en' === $language->getShortcode()) {

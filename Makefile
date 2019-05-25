@@ -1,4 +1,5 @@
 .PHONY: all build phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpmetrics phpunit version
+export COMPOSER_MEMORY_LIMIT := -1
 
 SRC_DIR=src tests/TranslationLoader
 
@@ -15,11 +16,23 @@ phpcsfix:
 	./vendor/bin/phpcbf src
 	./vendor/bin/php-cs-fixer fix -v
 
+deploy: composer npm encore assets
+
+composer:
+	composer install
+
+npm:
+	npm install
+
+encore:
+	./node_modules/.bin/encore production
+
+assets:
+	php bin/console assets:install --env=prod
+
 build:
-	echo "`date`"
 	./node_modules/.bin/encore dev
 	php bin/console assets:install
-	echo "`date`"
 
 phpdox: phploc phpmd php-code-sniffer phpunit
 	./vendor/bin/phpdox
@@ -53,3 +66,4 @@ version:
 
 checkjs:
 	./node_modules/.bin/grunt checkjs
+

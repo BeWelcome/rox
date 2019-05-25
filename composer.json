@@ -6,9 +6,10 @@
     "license": "GPL",
     "require": {
         "ext-gd": "*",
+        "ext-mysqli": "*",
+        "ext-openssl": "*",
         "ext-pdo": "*",
         "ext-pdo_mysql": "*",
-        "ext-mysqli": "*",
         "ext-session": "*",
         "anthonymartin/geo-location": "^1.0",
         "doctrine/doctrine-bundle": "^1.9",
@@ -29,6 +30,7 @@
         "swiftmailer/swiftmailer": "^6.0",
         "symfony/asset": "^4.1",
         "symfony/debug-bundle": "4.2.*",
+        "symfony/dotenv": "4.*",
         "symfony/flex": "^1.1",
         "symfony/form": "^4.1",
         "symfony/monolog-bundle": "^3.3",
@@ -46,8 +48,7 @@
         "twig/twig": "^2.4",
         "white-october/pagerfanta-bundle": "^1.0",
         "xemlock/htmlpurifier-html5": "^0.1.10",
-        "zendframework/zend-uri": "^2.4",
-      "ext-openssl": "*"
+        "zendframework/zend-uri": "^2.4"
     },
     "conflict": {
         "symfony/symfony": "*"
@@ -69,7 +70,6 @@
         "sebastian/phpcpd": "^4.0",
         "squizlabs/php_codesniffer": "^3.0",
         "symfony/debug-pack": "^1.0",
-        "symfony/dotenv": "^4.1",
         "symfony/maker-bundle": "^1.8",
         "symfony/phpunit-bridge": "^4.1",
         "symfony/web-profiler-bundle": "^4.1"

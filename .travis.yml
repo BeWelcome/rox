@@ -32,6 +32,7 @@ install:
 script:
   - php bin/console doctrine:schema:create
   - php bin/console hautelook:fixtures:load --no-interaction
+  - php bin/console cache:clear
   - make version
   - make
   - make build

@@ -1,0 +1,23 @@
+alpha:
+    type: branch
+    stage: staging
+    multiplexing: false
+    forwarding: false
+    symfony_env: production
+    db_host: localhost
+    db_port: 3306
+    db_name: bewelcome
+    db_user: bewelcome
+    db_pass: bewelcome
+
+www:
+    type: branch
+    stage: production
+    multiplexing: false
+    forwarding: false
+    symfony_env: production
+    db_host: localhost
+    db_port: 3306
+    db_name: bewelcome
+    db_user: bewelcome
+    db_pass: bewelcome

@@ -1,7 +1,7 @@
 .PHONY: all build phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpmetrics phpunit version
 export COMPOSER_MEMORY_LIMIT := -1
 
-SRC_DIR=src tests/TranslationLoader
+SRC_DIR=src tests
 
 null  :=
 SPACE := $(null) $(null)
@@ -13,7 +13,7 @@ all: phpci
 phpci: phpcpd phploc phpmd php-code-sniffer phpunit version
 
 phpcsfix:
-	./vendor/bin/phpcbf src
+	./vendor/bin/phpcbf $(SRC_DIR)
 	./vendor/bin/php-cs-fixer fix -v
 
 deploy: composer npm encore assets

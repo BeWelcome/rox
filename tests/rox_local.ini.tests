@@ -1,6 +1,0 @@
-; Just a placeholder for the unit tests
-
-[db]
-dsn = "mysqli:host=localhost;dbname=bewelcome_test"
-user = "bewelcome"
-password = "bewelcome"

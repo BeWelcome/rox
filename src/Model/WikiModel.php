@@ -4,22 +4,20 @@ namespace App\Model;
 
 use App\Entity\Wiki;
 use App\Repository\WikiRepository;
+use App\Utilities\ManagerTrait;
 use App\Utilities\RoxWikiParserBackend;
-use Doctrine\ORM\EntityManagerInterface;
 use Mike42\Wikitext\WikitextParser;
 
 class WikiModel
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    use ManagerTrait;
 
     /** @var RoxWikiParserBackend */
     private $roxWikiParserBackend;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct()
     {
-        $this->entityManager = $entityManager;
-        $this->roxWikiParserBackend = new RoxWikiParserBackend($entityManager, $this);
+        $this->roxWikiParserBackend = new RoxWikiParserBackend($this);
     }
 
     public function getPage($pageTitle)
@@ -27,7 +25,7 @@ class WikiModel
         $pageName = $this->getPagename($pageTitle);
 
         /** @var WikiRepository $wikiRepository */
-        $wikiRepository = $this->entityManager->getRepository(Wiki::class);
+        $wikiRepository = $this->em->getRepository(Wiki::class);
 
         $wikiPage = $wikiRepository->getPageByName($pageName);
 

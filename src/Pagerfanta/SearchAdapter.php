@@ -5,12 +5,12 @@ namespace App\Pagerfanta;
 use App\Entity\Location;
 use App\Entity\Member;
 use App\Form\CustomDataClass\SearchFormRequest;
+use App\Utilities\SessionSingleton;
 use App\Utilities\TranslatorSingleton;
 use Doctrine\ORM\EntityManagerInterface;
 use EnvironmentExplorer;
 use Exception;
 use Pagerfanta\Adapter\AdapterInterface;
-use App\Utilities\SessionSingleton;
 use SearchModel;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -35,7 +35,9 @@ class SearchAdapter implements AdapterInterface
      * @param string $dbPassword
      * @param EntityManagerInterface $em
      *
+     * @param TranslatorInterface $translator
      * @SuppressWarnings(PHPMD.StaticAccess)
+     * @throws AccessDeniedException
      */
     public function __construct($data, $session, $dbHost, $dbName, $dbUser, $dbPassword, EntityManagerInterface $em, TranslatorInterface $translator)
     {
@@ -83,14 +85,13 @@ class SearchAdapter implements AdapterInterface
         $location = null;
         try {
             $location = $repository->find($data->location_geoname_id);
-        } catch(Exception $e)
-        {
+        } catch (Exception $e) {
             // nothing found?
             $e->getCode();
         }
-        if (null !== $location && $location->getFclass() == 'A') {
+        if (null !== $location && 'A' === $location->getFclass()) {
             // check if found unit is a country
-            if (strstr($location->getFcode(), 'PCL') === false) {
+            if (false === strstr($location->getFcode(), 'PCL')) {
                 $admin1 = $location->getAdmin1();
             }
             $country = $location->getCountry()->getCountry();

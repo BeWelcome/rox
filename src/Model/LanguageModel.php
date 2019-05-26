@@ -3,10 +3,13 @@
 namespace App\Model;
 
 use App\Entity\Language;
+use App\Utilities\ManagerTrait;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
-class LanguageModel extends BaseModel
+class LanguageModel
 {
+    use ManagerTrait;
+
     /**
      * Returns all languages for which translations exist.
      *

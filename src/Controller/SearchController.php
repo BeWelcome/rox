@@ -19,9 +19,9 @@ class SearchController extends AbstractController
     /**
      * @Route("/search/members", name="search_members")
      *
-     * @param Request $request
-     *
+     * @param Request             $request
      * @param TranslatorInterface $translator
+     *
      * @return Response
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -99,7 +99,7 @@ class SearchController extends AbstractController
             $results = $searchAdapter->getFullResults();
             $pager = new Pagerfanta($searchAdapter);
             $pager->setMaxPerPage($data->items);
-            $pager->setCurrentPage($request->get('page', 1 ));
+            $pager->setCurrentPage($request->get('page', 1));
             if (!$searchIsValid) {
                 // only set data if the form wasn't submitted from search_members
                 $search->setData($data);
@@ -129,9 +129,9 @@ class SearchController extends AbstractController
      *
      * @Route("/search/map", name="search_map")
      *
-     * @param Request $request
-     *
+     * @param Request             $request
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function showMapAction(Request $request, TranslatorInterface $translator)
@@ -175,9 +175,9 @@ class SearchController extends AbstractController
     /**
      * @Route("/search/members/ajax", name="search_members_ajax")
      *
-     * @param Request $request
-     *
+     * @param Request             $request
      * @param TranslatorInterface $translator
+     *
      * @return Response
      *
      * @SuppressWarnings(PHPMD.StaticAccess)

@@ -159,7 +159,7 @@ class SearchFormRequest
     public function isLocationValid()
     {
         // Check if the form was submitted through the map javascript
-        $showOnMap = boolval($this->showOnMap);
+        $showOnMap = (bool) ($this->showOnMap);
         if (true === $showOnMap) {
             return true;
         }
@@ -199,32 +199,33 @@ class SearchFormRequest
         }
 
         $searchFormRequest->location = self::_getElement($data, 'location', '');
-        $searchFormRequest->accommodation_anytime = self::_getElement(
+        $searchFormRequest->accommodation_anytime = '1' === self::_getElement(
             $data,
             'accommodation_anytime',
-            "0"
-        ) == "1" ? true : false;
-        $searchFormRequest->accommodation_dependonrequest = self::_getElement(
+            '0'
+        ) ? true : false;
+        $searchFormRequest->accommodation_dependonrequest = '1' === self::_getElement(
             $data,
             'accommodation_dependonrequest',
-            "0"
-        ) == "1" ? true : false;
-        $searchFormRequest->accommodation_neverask = self::_getElement(
+            '0'
+        ) ? true : false;
+        $searchFormRequest->accommodation_neverask = '1' === self::_getElement(
             $data,
             'accommodation_neverask',
-            "0"
-        ) == "1" ? true : false;
+            '0'
+        ) ? true : false;
         $searchFormRequest->can_host = self::_getElement($data, 'can_host', 1);
         $searchFormRequest->distance = self::_getElement($data, 'distance', 20);
         $searchFormRequest->keywords = self::_getElement($data, 'keywords', '');
         $searchFormRequest->page = $request->query->get('page', 1);
         $searchFormRequest->groups = self::_getElement($data, 'groups', []);
         $searchFormRequest->languages = self::_getElement($data, 'languages', []);
-        $searchFormRequest->inactive = self::_getElement(
+        $searchFormRequest->inactive = '1' === self::_getElement(
             $data,
             'inactive',
-            "0"
-        ) == "1" ? true : false;;
+            '0'
+        ) ? true : false;
+
         $searchFormRequest->location_geoname_id = self::_getElement($data, 'location_geoname_id', null);
         $searchFormRequest->location_latitude = self::_getElement($data, 'location_latitude', null);
         $searchFormRequest->location_longitude = self::_getElement($data, 'location_longitude', null);
@@ -236,9 +237,12 @@ class SearchFormRequest
         $searchFormRequest->showmap = self::_getElement($data, 'showmap', false);
         $searchFormRequest->showOnMap = self::_getElement($data, 'showOnMap', false);
         $searchFormRequest->showAdvanced = self::_getElement($data, 'showadvanced', false);
-        $searchFormRequest->offerdinner = self::_getElement($data, 'offerdinner', "0") == "1" ? true : false;;
-        $searchFormRequest->offertour = self::_getElement($data, 'offertour', "0") == "1" ? true : false;;
-        $searchFormRequest->accessible = self::_getElement($data, 'accessible', "0") == "1" ? true : false;;
+        $searchFormRequest->offerdinner = '1' === self::_getElement($data, 'offerdinner', '0') ? true : false;
+
+        $searchFormRequest->offertour = '1' === self::_getElement($data, 'offertour', '0') ? true : false;
+
+        $searchFormRequest->accessible = '1' === self::_getElement($data, 'accessible', '0') ? true : false;
+
         $searchFormRequest->ne_latitude = self::_getElement($data, 'ne-latitude', null);
         $searchFormRequest->ne_longitude = self::_getElement($data, 'ne-longitude', null);
         $searchFormRequest->sw_latitude = self::_getElement($data, 'sw-latitude', null);
@@ -250,7 +254,7 @@ class SearchFormRequest
     public static function determineValidationGroups(FormInterface $form)
     {
         $data = $form->getData();
-        $showOnMap = boolval($data->showOnMap);
+        $showOnMap = (bool) ($data->showOnMap);
         if (true === $showOnMap) {
             return ['map-search'];
         }

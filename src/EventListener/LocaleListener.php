@@ -24,8 +24,9 @@ class LocaleListener implements EventSubscriberInterface
 
     /**
      * LocaleListener constructor.
+     *
      * @param EntityManagerInterface $em
-     * @param string $defaultLocale
+     * @param string                 $defaultLocale
      */
     public function __construct(EntityManagerInterface $em, $defaultLocale = 'en')
     {

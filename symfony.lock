@@ -470,8 +470,15 @@
             "repo": "github.com/symfony/recipes",
             "branch": "master",
             "version": "4.1",
-            "ref": "b14c7f62fabeedf256d3211b0f704402b5530ba1"
-        }
+            "ref": "9dbf01cf67d791746ec772fe274c4d91cbf3c9ec"
+        },
+        "files": [
+            "./.env.test",
+            "./bin/phpunit",
+            "./config/bootstrap.php",
+            "./phpunit.xml.dist",
+            "./tests/.gitignore"
+        ]
     },
     "symfony/polyfill-apcu": {
         "version": "v1.9.0"

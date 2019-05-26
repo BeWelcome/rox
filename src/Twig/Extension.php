@@ -10,10 +10,10 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\DataCollector\TranslationDataCollector;
 use Symfony\Component\Translation\DataCollectorTranslator;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-use Twig\Extension\AbstractExtension;
 
 class Extension extends AbstractExtension implements GlobalsInterface
 {
@@ -40,8 +40,8 @@ class Extension extends AbstractExtension implements GlobalsInterface
     /**
      * Extension constructor.
      *
-     * @param SessionInterface $session
-     * @param Registry $registry
+     * @param SessionInterface    $session
+     * @param Registry            $registry
      * @param TranslatorInterface $translator
      * @param $dataDirectory
      */

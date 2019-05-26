@@ -25,12 +25,12 @@ class MemberStatusType extends EnumType
     const PASSED_AWAY = 'PassedAway';
     const BUGGY = 'Buggy';
 
-    const ACTIVE_ALL = "'" .
-        self::ACTIVE . "', '" .
-        self::ACTIVE_HIDDEN . "', '" .
-        self::CHOICE_INACTIVE  . "', '" .
-        self::OUT_OF_REMIND . "', '" .
-        self::PENDING . "'";
+    const ACTIVE_ALL = "'".
+        self::ACTIVE."', '".
+        self::ACTIVE_HIDDEN."', '".
+        self::CHOICE_INACTIVE."', '".
+        self::OUT_OF_REMIND."', '".
+        self::PENDING."'";
 
     const ACTIVE_ALL_ARRAY = [
         self::ACTIVE_HIDDEN,
@@ -40,24 +40,24 @@ class MemberStatusType extends EnumType
         self::PENDING,
     ];
 
-    const ACTIVE_SEARCH = "'" .
-        self::ACTIVE . "', '" .
-        self::ACTIVE_HIDDEN . "', '" .
-        self::OUT_OF_REMIND . "', '" .
-        self::PENDING . "'";
+    const ACTIVE_SEARCH = "'".
+        self::ACTIVE."', '".
+        self::ACTIVE_HIDDEN."', '".
+        self::OUT_OF_REMIND."', '".
+        self::PENDING."'";
 
-    const ACTIVE_WITH_MESSAGES = "'" .
-        self::ACTIVE . "', '" .
-        self::OUT_OF_REMIND . "', '" .
-        self::PENDING . "'";
+    const ACTIVE_WITH_MESSAGES = "'".
+        self::ACTIVE."', '".
+        self::OUT_OF_REMIND."', '".
+        self::PENDING."'";
 
-    const MEMBER_COMMENTS = "'" .
-        self::ACTIVE . "', '" .
-        self::ACTIVE_HIDDEN . "', '" .
-        self::ASKED_TO_LEAVE . "', '" .
-        self::CHOICE_INACTIVE  . "', '" .
-        self::OUT_OF_REMIND . "', '" .
-        self::PENDING . "'";
+    const MEMBER_COMMENTS = "'".
+        self::ACTIVE."', '".
+        self::ACTIVE_HIDDEN."', '".
+        self::ASKED_TO_LEAVE."', '".
+        self::CHOICE_INACTIVE."', '".
+        self::OUT_OF_REMIND."', '".
+        self::PENDING."'";
 
     /** @var string */
     protected $name = 'member_status';

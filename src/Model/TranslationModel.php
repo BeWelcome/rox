@@ -15,12 +15,11 @@ class TranslationModel
      *
      * @return bool
      */
-    public function removeCacheFile(Kernel $kernel, $locale)
+    public function removeCacheFiles(Kernel $kernel)
     {
-        $locale;
         $kernelCacheDir = $kernel->getCacheDir();
         $finder = new Finder();
-        $finder->files()->in($kernelCacheDir . '/translations')->name('/.*/');
+        $finder->files()->in($kernelCacheDir.'/translations')->name('/.*/');
         $deleted = true;
         foreach ($finder as $file) {
             $path = $file->getRealPath();
@@ -28,6 +27,7 @@ class TranslationModel
         }
 
         $finder->files()->in($kernelCacheDir)->name('');
+
         return $deleted;
     }
 }

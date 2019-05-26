@@ -5,9 +5,12 @@ namespace App\Model;
 use App\Entity\HostingRequest;
 use App\Entity\Message;
 use App\Repository\MessageRepository;
+use App\Utilities\ManagerTrait;
 
-class RequestModel extends BaseModel
+class RequestModel
 {
+    use ManagerTrait;
+
     public function getFilteredRequests($member, $folder, $sort, $sortDir, $page = 1, $limit = 10)
     {
         /** @var MessageRepository $repository */
@@ -20,8 +23,7 @@ class RequestModel extends BaseModel
     {
         $today = (new \DateTime())->setTime(0, 0);
         $departure = $request->getDeparture();
-        if ($departure !== null)
-        {
+        if (null !== $departure) {
             $departure = $departure->add(new \DateInterval('P1D'))->setTime(23, 59);
         } else {
             // No departure date given assume an interval of two days max

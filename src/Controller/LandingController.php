@@ -11,6 +11,7 @@ use App\Form\SearchFormType;
 use App\Model\CommunityNewsModel;
 use App\Model\DonateModel;
 use App\Model\LandingModel;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,6 +36,7 @@ class LandingController extends AbstractController
         $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
         /** @var Preference $preference */
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::MESSAGE_AND_REQUEST_FILTER]);
+        /** @var MemberPreference $memberPreference */
         $memberPreference = $member->getMemberPreference($preference);
         if ('1' === $unread) {
             $memberPreference->setValue('Unread');
@@ -45,7 +47,7 @@ class LandingController extends AbstractController
         $em->persist($memberPreference);
         $em->flush();
 
-        $homeModel = new LandingModel($this->getDoctrine());
+        $homeModel = new LandingModel();
         $messages = $homeModel->getMessages($member, $unread, 4);
 
         $content = $this->render('landing/widget/messages.html.twig', [
@@ -64,7 +66,7 @@ class LandingController extends AbstractController
     {
         $member = $this->getUser();
 
-        $homeModel = new LandingModel($this->getDoctrine());
+        $homeModel = new LandingModel();
         $notifications = $homeModel->getNotifications($member, 5);
 
         $content = $this->render('landing/widget/notifications.html.twig', [
@@ -107,7 +109,7 @@ class LandingController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $em->persist($memberPreference);
         $em->flush();
-        $homeModel = new LandingModel($this->getDoctrine());
+        $homeModel = new LandingModel();
         $threads = $homeModel->getThreads($member, $groups, $forum, $following, 5);
 
         $content = $this->render('landing/widget/forums.html.twig', [
@@ -120,12 +122,14 @@ class LandingController extends AbstractController
     /**
      * @Route( "/widget/activities", name="/widget/activities")
      *
+     * @throws Exception
+     *
      * @return Response
      */
     public function showActivitiesAction()
     {
         $member = $this->getUser();
-        $homeModel = new LandingModel($this->getDoctrine());
+        $homeModel = new LandingModel();
         $activities = $homeModel->getActivities($member);
 
         $content = $this->render('landing/widget/activities.html.twig', [
@@ -158,7 +162,7 @@ class LandingController extends AbstractController
 
         $member = $this->getUser();
         if ($valid) {
-            $landingModel = new LandingModel($this->getDoctrine());
+            $landingModel = new LandingModel();
             $member = $landingModel->updateMemberAccommodation($member, $accommodation);
         }
 
@@ -193,13 +197,13 @@ class LandingController extends AbstractController
         }
 
         $member = $this->getUser();
-        $donationModel = new DonateModel($this->getDoctrine());
+        $donationModel = new DonateModel();
         $campaignDetails = $donationModel->getStatForDonations();
 
-        $homeModel = new LandingModel($this->getDoctrine());
+        $homeModel = new LandingModel();
         $travellersInArea = $homeModel->getTravellersInAreaOfMember($member);
 
-        $communityNews = new CommunityNewsModel($this->getDoctrine());
+        $communityNews = new CommunityNewsModel();
         $latestNews = $communityNews->getLatest();
 
         $formFactory = $this->get('form.factory');

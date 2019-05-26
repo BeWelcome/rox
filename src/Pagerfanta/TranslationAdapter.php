@@ -23,8 +23,8 @@ class TranslationAdapter implements AdapterInterface
      * @SuppressWarnings(PHPMD.StaticAccess)
      *
      * @param Connection $connection
-     * @param string $locale
-     * @param string $code
+     * @param string     $locale
+     * @param string     $code
      */
     public function __construct(Connection $connection, string $locale, string $code)
     {
@@ -49,10 +49,10 @@ class TranslationAdapter implements AdapterInterface
                 AND pi_lang.isArchived IS NULL
                 ";
         if (!empty($code)) {
-            $this->query .= " WHERE (pi_lang.code LIKE '%" . $code . "%' OR pi_dflt.code LIKE '%" . $code . "%')";
+            $this->query .= " WHERE (pi_lang.code LIKE '%".$code."%' OR pi_dflt.code LIKE '%".$code."%')";
         }
-        $this->query .= "
-            ORDER BY created desc";
+        $this->query .= '
+            ORDER BY created desc';
     }
 
     /**
@@ -64,7 +64,7 @@ class TranslationAdapter implements AdapterInterface
     {
         $query = "SELECT count(*) as cnt FROM words WHERE shortcode = 'en' AND isArchived IS NULL";
         if (!empty($this->code)) {
-            $query .= " AND code LIKE '%" . $this->code . "%'";
+            $query .= " AND code LIKE '%".$this->code."%'";
         }
 
         $statement = $this->connection->query($query);

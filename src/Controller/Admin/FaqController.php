@@ -92,8 +92,9 @@ class FaqController extends AbstractController
      *
      * @param Request $request
      *
-     * @return Response
      * @throws Exception
+     *
+     * @return Response
      */
     public function createCategoryAction(Request $request)
     {
@@ -347,9 +348,9 @@ class FaqController extends AbstractController
     /**
      * @Route("/admin/faqs/sort", name="admin_faqs_category_sort")
      *
-     * @param Request $request
-     *
+     * @param Request             $request
      * @param TranslatorInterface $translator
+     *
      * @return Response
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */

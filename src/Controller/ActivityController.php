@@ -23,7 +23,7 @@ class ActivityController extends AbstractController
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 15);
 
-        $activityModel = new ActivityModel($this->getDoctrine());
+        $activityModel = new ActivityModel();
         $activities = $activityModel->getLatest($page, $limit);
 
         return $this->render('activity/list.html.twig', [

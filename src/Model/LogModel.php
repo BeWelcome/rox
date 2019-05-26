@@ -3,10 +3,13 @@
 namespace App\Model;
 
 use App\Pagerfanta\LogAdapter;
+use App\Utilities\ManagerTrait;
 use Pagerfanta\Pagerfanta;
 
-class LogModel extends BaseModel
+class LogModel
 {
+    use ManagerTrait;
+
     /**
      * Returns a Pagerfanta object that contains the currently selected logs.
      *

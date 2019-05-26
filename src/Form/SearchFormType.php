@@ -71,13 +71,55 @@ class SearchFormType extends AbstractType
             'allow_extra_fields' => true,
             'error_mapping' => [
                 '.' => 'location',
-            ]
+            ],
         ]);
     }
 
     public function getBlockPrefix()
     {
         return '';
+    }
+
+    /**
+     * Add 'see map' option in case the map shows result from a zoom/pan operation or
+     * an empty search location (\todo).
+     *
+     * @param FormEvent $event
+     *
+     * @throws AlreadySubmittedException
+     * @throws LogicException
+     * @throws UnexpectedTypeException
+     */
+    public function onPostSetData(FormEvent $event)
+    {
+        $data = $event->getData();
+        $choices = [
+            'exact' => 0,
+            '5km (~3mi)' => 5,
+            '10km (~6mi)' => 10,
+            '15km (~10mi)' => 15,
+            '20km (~15mi)' => 20,
+            '50km (~31mi)' => 50,
+            '100km (~63mi)' => 100,
+            '200km (~128mi)' => 200,
+        ];
+        $showOnMap = (bool) ($data->showOnMap);
+        if (true === $showOnMap) {
+            $choices = ['search.see_map' => -1] + $choices;
+        }
+        $form = $event->getForm();
+        $form->add('distance', ChoiceType::class, [
+            'choices' => $choices,
+            'attr' => [
+                'class' => 'select2-inline',
+                'data-minimum-results-for-search' => '-1',
+            ],
+            'label' => 'label.radius',
+            'label_attr' => [
+                'class' => 'mr-1 sr-only',
+            ],
+            'translation_domain' => 'messages',
+        ]);
     }
 
     protected function addVariableSelects(FormBuilderInterface $formBuilder, array $options)
@@ -93,7 +135,7 @@ class SearchFormType extends AbstractType
         $languages = [];
         if (null !== $options['languages']) {
             foreach ($options['languages'] as $language) {
-                $languages['lang_' . $language->getShortCode()] = $language->getId();
+                $languages['lang_'.$language->getShortCode()] = $language->getId();
             }
         }
         $formBuilder
@@ -296,46 +338,5 @@ class SearchFormType extends AbstractType
                 ],
             ])
         ;
-    }
-
-    /**
-     * Add 'see map' option in case the map shows result from a zoom/pan operation or
-     * an empty search location (\todo)
-     *
-     * @param FormEvent $event
-     * @throws AlreadySubmittedException
-     * @throws LogicException
-     * @throws UnexpectedTypeException
-     */
-    public function onPostSetData(FormEvent $event)
-    {
-        $data = $event->getData();
-        $choices = [
-            'exact' => 0,
-            '5km (~3mi)' => 5,
-            '10km (~6mi)' => 10,
-            '15km (~10mi)' => 15,
-            '20km (~15mi)' => 20,
-            '50km (~31mi)' => 50,
-            '100km (~63mi)' => 100,
-            '200km (~128mi)' => 200,
-        ];
-        $showOnMap = boolval($data->showOnMap);
-        if (true === $showOnMap) {
-            $choices = ['search.see_map' => -1] + $choices;
-        }
-        $form = $event->getForm();
-        $form->add('distance', ChoiceType::class, [
-            'choices' => $choices,
-            'attr' => [
-                'class' => 'select2-inline',
-                'data-minimum-results-for-search' => '-1',
-            ],
-            'label' => 'label.radius',
-            'label_attr' => [
-                'class' => 'mr-1 sr-only',
-            ],
-            'translation_domain' => 'messages',
-        ]);
     }
 }

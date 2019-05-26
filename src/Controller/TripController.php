@@ -27,7 +27,7 @@ class TripController extends AbstractController
     public function listAction(Request $request, $items = 10)
     {
         $page = $request->query->get('page', 1);
-        $tripModel = new TripModel($this->getDoctrine());
+        $tripModel = new TripModel();
 
         $trips = $tripModel->findLatest($page, $items);
 

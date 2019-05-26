@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Member;
 use App\Repository\MemberRepository;
 use Html2Text\Html2Text;
-use League\HTMLToMarkdown\HtmlConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,7 +44,7 @@ class SignupController extends AbstractController
             );
             $converter = new Html2Text($body, [
                 'do_links' => 'table',
-                'width' => 75
+                'width' => 75,
             ]);
             $plainText = $converter->getText();
 
@@ -77,6 +76,7 @@ class SignupController extends AbstractController
             // show finish page
             return $this->render('signup/finish.html.twig', $parameters);
         }
+
         return $this->render('signup/error.html.twig');
     }
 
@@ -87,8 +87,9 @@ class SignupController extends AbstractController
      * @param $username
      * @param $regkey
      *
-     * @return Response
      * @throws \Exception
+     *
+     * @return Response
      */
     public function confirmEmailAddressAction(TranslatorInterface $translator, $username, $regkey)
     {

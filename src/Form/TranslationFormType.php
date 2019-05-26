@@ -37,7 +37,7 @@ class TranslationFormType extends AbstractType
                         'required' => false,
                     ]);
             }
-            if ($translationRequest->wordCode == '') {
+            if ('' === $translationRequest->wordCode) {
                 $form->add('wordCode', TextType::class, [
                     'label' => 'translation.wordcode',
                 ]);

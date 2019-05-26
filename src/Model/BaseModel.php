@@ -2,24 +2,10 @@
 
 namespace App\Model;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Driver\Statement;
-use Doctrine\ORM\EntityManager;
 
 class BaseModel
 {
-    /** @var ManagerRegistry */
-    protected $registry;
-
-    /** @var EntityManager */
-    protected $em;
-
-    public function __construct(ManagerRegistry $registry)
-    {
-        $this->registry = $registry;
-        $this->em = $registry->getManager();
-    }
-
     /**
      * @param $sql
      *

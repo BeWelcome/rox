@@ -45,7 +45,8 @@ phploc.xml
 /public/build/
 bewelcome.sql
 bewelcome.sql.bz2
-
+#deployer config
+/config/deployer.yml
 
 ###> symfony/framework-bundle ###
 /.env.local
@@ -63,12 +64,11 @@ bewelcome.sql.bz2
 ###> phpunit/phpunit ###
 /phpunit.xml
 ###< phpunit/phpunit ###
+###> symfony/web-server-bundle ###
+/.web-server-pid
+###< symfony/web-server-bundle ###
 
 ###> symfony/phpunit-bridge ###
 .phpunit
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
-
-###> symfony/web-server-bundle ###
-/.web-server-pid
-###< symfony/web-server-bundle ###

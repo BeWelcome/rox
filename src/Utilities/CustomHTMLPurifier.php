@@ -3,13 +3,14 @@
 namespace App\Utilities;
 
 use HTMLPurifier;
-use HTMLPurifier_Config;
 use HTMLPurifier_HTML5Config;
 
 class CustomHTMLPurifier extends HTMLPurifier
 {
     /**
      * CustomPurifier constructor.
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function __construct()
     {

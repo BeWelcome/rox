@@ -3,9 +3,12 @@
 namespace App\Model;
 
 use App\Entity\Params;
+use App\Utilities\ManagerTrait;
 
 class DonateModel extends BaseModel
 {
+    use ManagerTrait;
+
     public function getStatForDonations()
     {
         $campaignValue = $this->getCampaignValues();

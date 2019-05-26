@@ -31,9 +31,9 @@ class MessageRepository extends EntityRepository
             ->andWhere('m.infolder = :infolder')
             ->setParameter('infolder', InFolderType::NORMAL)
             ->andWhere('NOT (m.deleteRequest LIKE :receiverDeleted)')
-            ->setParameter(':receiverDeleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
+            ->setParameter(':receiverDeleted', '%'.DeleteRequestType::RECEIVER_DELETED.'%')
             ->andWhere('NOT (m.deleteRequest LIKE :receiverPurged)')
-            ->setParameter(':receiverPurged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
+            ->setParameter(':receiverPurged', '%'.DeleteRequestType::RECEIVER_PURGED.'%')
             ->andWhere('m.whenfirstread IS NULL')
             ->andWhere('m.status = :status')
             ->setParameter('status', 'Sent')
@@ -64,9 +64,9 @@ class MessageRepository extends EntityRepository
             ->andWhere('m.infolder = :infolder')
             ->setParameter('infolder', InFolderType::NORMAL)
             ->andWhere('NOT (m.deleteRequest LIKE :receiverDeleted)')
-            ->setParameter(':receiverDeleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
+            ->setParameter(':receiverDeleted', '%'.DeleteRequestType::RECEIVER_DELETED.'%')
             ->andWhere('NOT (m.deleteRequest LIKE :receiverPurged)')
-            ->setParameter(':receiverPurged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
+            ->setParameter(':receiverPurged', '%'.DeleteRequestType::RECEIVER_PURGED.'%')
             ->andWhere('m.whenfirstread IS NULL')
             ->andWhere('m.status = :status')
             ->setParameter(':status', 'Sent')
@@ -182,10 +182,10 @@ class MessageRepository extends EntityRepository
         $qb
             ->setParameter('member', $member)
             ->andWhere('m.request IS NULL')
-            ->andWhere('m.deleteRequest LIKE :deleted ')
-            ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
+            ->andWhere('NOT(m.deleteRequest LIKE :deleted)')
+            ->setParameter('deleted', '%'.DeleteRequestType::RECEIVER_DELETED.'%')
             ->andWhere('NOT(m.deleteRequest LIKE :purged)')
-            ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%');
+            ->setParameter('purged', '%'.DeleteRequestType::RECEIVER_PURGED.'%');
         switch ($folder) {
             case 'inbox':
                 $qb
@@ -244,9 +244,9 @@ class MessageRepository extends EntityRepository
         }
         $qb = $this->createQueryBuilder('m')
             ->where('NOT(m.deleteRequest LIKE :deleted)')
-            ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
+            ->setParameter('deleted', '%'.DeleteRequestType::RECEIVER_DELETED.'%')
             ->andWhere('NOT(m.deleteRequest LIKE :purged)')
-            ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%');
+            ->setParameter('purged', '%'.DeleteRequestType::RECEIVER_PURGED.'%');
         if ('sent' === $folder) {
             $qb->andWhere('m.sender = :member');
         } else {
@@ -306,9 +306,9 @@ class MessageRepository extends EntityRepository
         }
         $qb = $this->createQueryBuilder('m')
             ->where('NOT(m.deleteRequest LIKE :deleted)')
-            ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
+            ->setParameter('deleted', '%'.DeleteRequestType::RECEIVER_DELETED.'%')
             ->andWhere('NOT(m.deleteRequest LIKE :purged)')
-            ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
+            ->setParameter('purged', '%'.DeleteRequestType::RECEIVER_DELETED.'%')
             ->andWhere('m.infolder = :folder')
             ->setParameter('folder', InFolderType::NORMAL)
             ->andWhere('m.receiver = :member')
@@ -358,9 +358,11 @@ class MessageRepository extends EntityRepository
     /**
      * @param Member $loggedInUser
      * @param Member $member
-     * @param int $page
-     * @param int $items
-*
+     * @param int    $page
+     * @param int    $items
+     * @param mixed  $sort
+     * @param mixed  $sortDirection
+     *
      * @return QueryBuilder
      */
     public function queryAllMessagesBetween(Member $loggedInUser, Member $member, $sort, $sortDirection)
@@ -371,9 +373,9 @@ class MessageRepository extends EntityRepository
         $qb = $this->createQueryBuilder('m');
         $qb
             ->where('NOT(m.deleteRequest LIKE :deleted)')
-            ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
+            ->setParameter('deleted', '%'.DeleteRequestType::RECEIVER_DELETED.'%')
             ->andWhere('NOT(m.deleteRequest LIKE :purged)')
-            ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
+            ->setParameter('purged', '%'.DeleteRequestType::RECEIVER_PURGED.'%')
             ->andWhere(
                 $qb
                     ->expr()->orX(
@@ -390,6 +392,7 @@ class MessageRepository extends EntityRepository
             ->setParameter('loggedin', $loggedInUser)
             ->setParameter('member', $member)
             ->orderBy('m.'.$sort, $sortDirection);
+
         return $qb;
     }
 }

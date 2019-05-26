@@ -49,9 +49,10 @@ class DatabaseLoader implements LoaderInterface
         return $catalogue;
     }
 
-    function startsWith ($string, $startString)
+    public function startsWith($string, $startString)
     {
-        $len = strlen($startString);
-        return (substr($string, 0, $len) === $startString);
+        $len = \strlen($startString);
+
+        return substr($string, 0, $len) === $startString;
     }
 }

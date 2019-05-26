@@ -597,6 +597,7 @@ class Message
 
     /**
      * @param Member $member
+     *
      * @return bool
      */
     public function isReceiverDeleted(Member $member)
@@ -619,6 +620,7 @@ class Message
 
     /**
      * @param Member $member
+     *
      * @return bool
      */
     public function isSenderDeleted(Member $member)

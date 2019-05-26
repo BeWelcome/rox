@@ -3,6 +3,8 @@
 namespace App\TranslationLoader;
 
 use App\Entity\Word;
+use App\Repository\WordRepository;
+use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -11,11 +13,14 @@ use Symfony\Component\Translation\MessageCatalogue;
  */
 class DatabaseLoaderTest extends TestCase
 {
+    /**
+     * @return
+     */
     protected function getEmMock()
     {
-        $mockRep = \Mockery::mock('\Doctrine\ORM\EntityRepository');
+        $mockRep = \Mockery::mock(WordRepository::class);
         $mockRep->shouldReceive('findBy')->andReturn([ new Word() ]);
-        $mockEm = \Mockery::mock('\Doctrine\ORM\EntityManager');
+        $mockEm = \Mockery::mock(EntityManager::class);
         $mockEm->shouldReceive('getRepository')->andReturn($mockRep);
         return $mockEm;
     }

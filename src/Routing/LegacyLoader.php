@@ -37,7 +37,7 @@ class LegacyLoader extends Loader
         $this->routes = new RouteCollection();
 
         // Handle current directory (difference between cache clear and web access)
-        $projectDir = realpath(__DIR__ . '/../..');
+        $projectDir = realpath(__DIR__.'/../..');
 
         // Include legacy routes to ensure firewall kicks in
         require_once $projectDir.'/routes.php';
@@ -168,14 +168,14 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('polls', '/polls');
         $this->addRouteDirectly('polls_create', '/polls/create');
         $this->addRouteDirectly('polls_list_all', '/polls/listall');
-        $this->addRouteDirectly('polls_listClose','/polls/listClose');
-        $this->addRouteDirectly('polls_listOpen','/polls/listOpen');
+        $this->addRouteDirectly('polls_listClose', '/polls/listClose');
+        $this->addRouteDirectly('polls_listOpen', '/polls/listOpen');
         $this->addRouteDirectly('polls_listProject', '/polls/listProject');
         $this->addRouteDirectly('polls_cancelvote', '/polls/cancelvote/{pollId}');
-        $this->addRouteDirectly('polls_contribute','/polls/contribute/{pollId}');
+        $this->addRouteDirectly('polls_contribute', '/polls/contribute/{pollId}');
         $this->addRouteDirectly('polls_vote', '/polls/vote');
         $this->addRouteDirectly('polls_update', '/polls/update/{pollId}');
-        $this->addRouteDirectly('polls_doupdatepoll','/polls/doupdatepoll');
+        $this->addRouteDirectly('polls_doupdatepoll', '/polls/doupdatepoll');
         $this->addRouteDirectly('polls_addchoice', '/polls/addchoice');
         $this->addRouteDirectly('polls_updatechoice', '/polls/updatechoice');
         $this->addRouteDirectly('polls_createpoll', '/polls/createpoll');

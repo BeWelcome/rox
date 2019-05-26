@@ -34,7 +34,7 @@ class MessageToMemberType extends AbstractType
             /** @var Message $message */
             $message = $event->getData();
             $form = $event->getForm();
-            if ($message && ($message->getSubject() !== null)) {
+            if ($message && (null !== $message->getSubject())) {
                 // set subject to read only if one exists already
                 $form->add('subject', SubjectType::class, ['disabled' => true]);
             } else {

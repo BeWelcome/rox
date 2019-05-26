@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Doctrine\GroupMembershipStatusType;
-use App\Doctrine\MemberStatusType;
 use App\Entity\Group;
 use App\Entity\GroupMembership;
 use App\Entity\Language;
@@ -14,7 +13,6 @@ use App\Form\CustomDataClass\GroupRequest;
 use App\Form\GroupType;
 use App\Logger\Logger;
 use App\Repository\GroupRepository;
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Statement;
 use Exception;
 use Html2Text\Html2Text;
@@ -44,7 +42,6 @@ class GroupController extends AbstractController
      * @param Request             $request
      * @param TranslatorInterface $translator
      * @param Logger              $logger
-     * @param Swift_Mailer       $mailer
      *
      * @throws Exception
      *
@@ -53,7 +50,7 @@ class GroupController extends AbstractController
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * Because of the mix between old code and new code this method is way too long.
      */
-    public function createNewGroupAction(Request $request, TranslatorInterface $translator, Logger $logger, Swift_Mailer $mailer)
+    public function createNewGroupAction(Request $request, TranslatorInterface $translator, Logger $logger)
     {
         $groupRequest = new GroupRequest();
         $form = $this->createForm(GroupType::class, $groupRequest);
@@ -298,7 +295,7 @@ class GroupController extends AbstractController
      * @param Group               $group
      * @param TranslatorInterface $translator
      * @param Logger              $logger
-     * @param Swift_Mailer       $mailer
+     * @param Swift_Mailer        $mailer
      *
      * @throws Exception
      *
@@ -352,7 +349,7 @@ class GroupController extends AbstractController
 
         $converter = new Html2Text($htmlBody, [
             'do_links' => 'table',
-            'width' => 75
+            'width' => 75,
         ]);
         $body = $converter->getText();
 
@@ -392,8 +389,7 @@ class GroupController extends AbstractController
     {
         // if a file was uploaded move it into the image storage
         $groupImageDir = $this->getParameter('group_directory');
-        if ($picture !== null)
-        {
+        if (null !== $picture) {
             $fileName = $this->generateUniqueFileName().'.'.$picture->guessExtension();
 
             // moves the file to the directory where group images are stored

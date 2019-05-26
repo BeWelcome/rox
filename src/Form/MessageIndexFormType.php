@@ -34,7 +34,7 @@ class MessageIndexFormType extends AbstractType
         if ('deleted' === $options['folder']) {
             $builder
                 ->add('purge', SubmitType::class, [
-                    'label' => 'label.purge'
+                    'label' => 'label.purge',
                 ]);
         }
     }

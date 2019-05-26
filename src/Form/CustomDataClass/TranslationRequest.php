@@ -3,8 +3,8 @@
 namespace App\Form\CustomDataClass;
 
 use App\Entity\Word;
-use Symfony\Component\Validator\Constraint as Assert;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Validator\Constraint as Assert;
 
 class TranslationRequest extends FormType
 {

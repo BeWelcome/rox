@@ -1,26 +1,19 @@
 <?php
 
-
 namespace App\Model;
 
 use App\Entity\Member;
 use App\Entity\PasswordReset;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use App\Utilities\ManagerTrait;
 use Exception as Exception;
 
-class MemberModel extends BaseModel
+class MemberModel
 {
-    /**
-     * MemberModel constructor.
-     * @param ManagerRegistry $em
-     */
-    public function __construct(ManagerRegistry $em)
-    {
-        parent::__construct($em);
-    }
+    use ManagerTrait;
 
     /**
      * @param Member $member
+     *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      *

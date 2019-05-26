@@ -4,11 +4,11 @@ namespace App\Controller;
 
 use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
+use App\Utilities\SessionSingleton;
 use App\Utilities\TranslatorSingleton;
 use Doctrine\DBAL\Statement;
 use EnvironmentExplorer;
 use PDO;
-use App\Utilities\SessionSingleton;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,18 +16,20 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use \Doctrine\DBAL\DBALException;
 
 class LegacyController extends AbstractController
 {
     /**
      * @param Request $request
      * @param ContainerInterface $container
-     *
      * @param TranslatorInterface $translator
+     *
      * @return Response
      *
-     * @throws \Doctrine\DBAL\DBALException
      * @SuppressWarnings(PHPMD.StaticAccess)
+     *
+     * @throws AccessDeniedException
      */
     public function showAction(Request $request, ContainerInterface $container, TranslatorInterface $translator)
     {

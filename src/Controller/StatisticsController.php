@@ -8,8 +8,8 @@
 
 namespace App\Controller;
 
-use EnvironmentExplorer;
 use App\Utilities\SessionSingleton;
+use EnvironmentExplorer;
 use StatsModel;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

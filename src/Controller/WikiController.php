@@ -67,9 +67,9 @@ class WikiController extends AbstractController
     /**
      * @Route("/wiki/{pageTitle}/edit", name="wiki_page_edit")
      *
-     * @param Request $request
+     * @param Request             $request
      * @param TranslatorInterface $translator
-     * @param WikiModel $wikiModel
+     * @param WikiModel           $wikiModel
      * @param $pageTitle
      *
      * @return Response
@@ -114,9 +114,9 @@ class WikiController extends AbstractController
     /**
      * @Route("/wiki/{pageTitle}/create", name="wiki_page_create")
      *
-     * @param Request $request
+     * @param Request             $request
      * @param TranslatorInterface $translator
-     * @param WikiModel $wikiModel
+     * @param WikiModel           $wikiModel
      * @param $pageTitle
      *
      * @return Response

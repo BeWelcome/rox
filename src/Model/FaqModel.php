@@ -5,12 +5,15 @@ namespace App\Model;
 use App\Entity\Faq;
 use App\Entity\FaqCategory;
 use App\Repository\FaqRepository;
+use App\Utilities\ManagerTrait;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\EntityRepository;
 
 class FaqModel extends BaseModel
 {
+    use ManagerTrait;
+
     /**
      * Returns a Pagerfanta object that contains the currently selected logs.
      *

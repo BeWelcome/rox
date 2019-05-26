@@ -3,11 +3,14 @@
 namespace App\Model;
 
 use App\Entity\FeedbackCategory;
+use App\Utilities\ManagerTrait;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 
-class FeedbackModel extends BaseModel
+class FeedbackModel
 {
+    use ManagerTrait;
+
     /**
      * Returns a Pagerfanta object that contains the currently selected logs.
      *
@@ -15,7 +18,7 @@ class FeedbackModel extends BaseModel
      * @param int   $page
      * @param int   $limit
      *
-     * @return \Pagerfanta\Pagerfanta
+     * @return Pagerfanta
      */
     public function getFilteredFeedback(array $categories, $page, $limit)
     {
@@ -31,11 +34,11 @@ class FeedbackModel extends BaseModel
             ->orderBy('f.created', 'DESC');
 
         $adapter = new DoctrineORMAdapter($qb, true);
-        $pagerFanta = new Pagerfanta($adapter);
-        $pagerFanta->setMaxPerPage($limit);
-        $pagerFanta->setCurrentPage($page);
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage($limit);
+        $pagerfanta->setCurrentPage($page);
 
-        return $pagerFanta;
+        return $pagerfanta;
     }
 
     public function getCategories()

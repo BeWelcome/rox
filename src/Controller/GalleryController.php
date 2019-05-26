@@ -7,36 +7,35 @@ use App\Entity\GalleryImage;
 use App\Entity\UploadedImage;
 use App\Form\CustomDataClass\GalleryImageEditRequest;
 use App\Form\GalleryEditImageFormType;
-use Intervention\Image\ImageManagerStatic as Image;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Validator\Constraints\ImageValidator;
+use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Validation;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GalleryController extends AbstractController
 {
     // Limit uploaded files to 8MB
-    const MAX_SIZE = 8*1024*1024;
+    const MAX_SIZE = 8 * 1024 * 1024;
 
     /**
      * @Route("/gallery/show/image/{id}/edit", name="gallery_edit_image",
      *     requirements = {"id": "\d+"}
      * )
      *
-     * @param Request $request
-     * @param GalleryImage $image
-     *
+     * @param Request             $request
+     * @param GalleryImage        $image
      * @param TranslatorInterface $translator
+     *
      * @return Response
+     * @throws AccessDeniedException
      */
     public function editImageAction(Request $request, GalleryImage $image, TranslatorInterface $translator)
     {
@@ -70,12 +69,13 @@ class GalleryController extends AbstractController
     /**
      * @Route("/gallery/upload/image", name="gallery_upload_ckeditor")
      *
-     * @param Request $request
-     *
+     * @param Request             $request
      * @param TranslatorInterface $translator
+     *
      * @return JsonResponse
      *
      * @throw AccessDeniedException
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function uploadImageFromCKEditor5(Request $request, TranslatorInterface $translator)
     {
@@ -85,9 +85,9 @@ class GalleryController extends AbstractController
 
         // Create Image constraint to check if uploaded file is an image and not something else
 
-        $constraint = new \Symfony\Component\Validator\Constraints\Image([
-            'maxSize' => intval($this->getParameter('upload_max_size')),
-            'mimeTypes' => [ 'image/jpeg', 'image/png', 'image/gif' ],
+        $constraint = new Image([
+            'maxSize' => (int) ($this->getParameter('upload_max_size')),
+            'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif'],
             'mimeTypesMessage' => $translator->trans('upload.error.not_supported'),
         ]);
 
@@ -95,13 +95,14 @@ class GalleryController extends AbstractController
         $validator = Validation::createValidator();
         $violations = $validator->validate($image, $constraint);
 
-        if (count($violations) > 0) {
+        if (\count($violations) > 0) {
             $response->setData([
                 'uploaded' => false,
                 'error' => [
                     'message' => $translator->trans('upload.error.no_image'),
                 ],
             ]);
+
             return $response;
         }
 
@@ -112,7 +113,7 @@ class GalleryController extends AbstractController
         // moves the file to the directory where group images are stored
         /** @var UploadedFile */
         $image = $image->move(
-            $this->getParameter('upload_directory'),
+            $uploadDirectory,
             $fileName
         );
 
@@ -145,6 +146,7 @@ class GalleryController extends AbstractController
      *     requirements={"id":"\d+"})
      *
      * @param UploadedImage $image
+     *
      * @return BinaryFileResponse
      *
      * @throw AccessDeniedException
@@ -153,7 +155,7 @@ class GalleryController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        $filepath = $this->getParameter('upload_directory') . '/' . $image->getFilename();
+        $filepath = $this->getParameter('upload_directory').'/'.$image->getFilename();
 
         return new BinaryFileResponse($filepath);
     }

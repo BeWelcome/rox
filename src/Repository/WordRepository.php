@@ -19,6 +19,20 @@ class WordRepository extends EntityRepository
         return $paginator;
     }
 
+    public function getTranslationIdCount($locale)
+    {
+        $qb = $this->createQueryBuilder('t');
+        $q = $qb
+            ->select('count(t.id)')
+            ->where('(t.isarchived <> 1 OR t.isarchived IS NULL)')
+            ->andWhere('t.shortCode = :locale')
+            ->setParameter(':locale', $locale)
+            ->getQuery();
+        $count = $q->getSingleScalarResult();
+
+        return $count;
+    }
+
     private function queryAll($locale, $code = '')
     {
         $qb = $this->createQueryBuilder('t')
@@ -34,18 +48,4 @@ class WordRepository extends EntityRepository
 
         return $qb;
     }
-
-    public function getTranslationIdCount($locale)
-    {
-        $qb = $this->createQueryBuilder('t');
-        $q = $qb
-            ->select('count(t.id)')
-            ->where('(t.isarchived <> 1 OR t.isarchived IS NULL)')
-            ->andWhere('t.shortCode = :locale')
-            ->setParameter(':locale', $locale)
-            ->getQuery();
-        $count = $q->getSingleScalarResult();
-        return $count;
-    }
-
 }

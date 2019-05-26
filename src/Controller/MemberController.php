@@ -2,37 +2,26 @@
 
 namespace App\Controller;
 
-use App\Doctrine\CommentAdminActionType;
-use App\Entity\Comment;
-use App\Entity\FeedbackCategory;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\PasswordReset;
 use App\Entity\Preference;
-use App\Form\CustomDataClass\ReportCommentRequest;
-use App\Form\ReportCommentType;
+use App\Form\FindUserFormType;
+use App\Form\ResetPasswordFormType;
 use App\Model\MemberModel;
 use App\Repository\MemberRepository;
 use App\Repository\MessageRepository;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
+use Exception;
 use Html2Text\Html2Text;
-use League\HTMLToMarkdown\HtmlConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Swift_Mailer;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Finder\Exception\AccessDeniedException;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -77,10 +66,10 @@ class MemberController extends AbstractController
     /**
      * @Route("/resetpassword", name="member_request_reset_password")
      *
-     * @param Request $request
-     * @param Swift_Mailer $mailer
-     *
+     * @param Request             $request
+     * @param Swift_Mailer        $mailer
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function requestResetPasswordAction(Request $request, Swift_Mailer $mailer, TranslatorInterface $translator)
@@ -90,13 +79,7 @@ class MemberController extends AbstractController
             return $this->redirectToRoute('landingpage');
         }
 
-        $form = $this->createFormBuilder()
-            ->add('usernameOrEmail', TextType::class, [
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ])
-            ->getForm();
+        $form = $this->createForm(FindUserFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -112,14 +95,13 @@ class MemberController extends AbstractController
             if (null === $member) {
                 $form->addError(new FormError($translator->trans('flash.email.reset.password')));
             } else {
-                $model = new MemberModel($this->getDoctrine());
+                $model = new MemberModel();
                 $token = null;
                 try {
                     $token = $model->generatePasswordResetToken($member);
-                } catch (OptimisticLockException $e) {
-                } catch (ORMException $e) {
+                } catch (Exception $e) {
                 }
-                if ($token === null) {
+                if (null === $token) {
                     $this->addFlash('error', 'Password can\'t be reset.');
 
                     return $this->redirectToRoute('security_login');
@@ -150,8 +132,8 @@ class MemberController extends AbstractController
      * @Route("/resetpassword/{username}/{token}", name="member_reset_password",
      *     requirements={"key": "[a-z0-9]{32}"})
      *
-     * @param Request $request
-     * @param Member $member
+     * @param Request             $request
+     * @param Member              $member
      * @param TranslatorInterface $translator
      * @param $token
      *
@@ -166,9 +148,9 @@ class MemberController extends AbstractController
 
         $repository = $this->getDoctrine()->getRepository(PasswordReset::class);
         /** @var PasswordReset $passwordReset */
-        $passwordReset = $repository->findOneBy([ 'member' => $member, 'token' => $token]);
+        $passwordReset = $repository->findOneBy(['member' => $member, 'token' => $token]);
 
-        if ($passwordReset === null) {
+        if (null === $passwordReset) {
             $this->addFlash('error', $translator->trans('flash.reset.password.invalid'));
 
             return $this->redirectToRoute('member_request_reset_password');
@@ -181,15 +163,7 @@ class MemberController extends AbstractController
             return $this->redirectToRoute('member_request_reset_password');
         }
 
-        $form = $this->createFormBuilder()
-            ->add('password', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'invalid_message' => 'password.must.match',
-                'required' => true,
-                'first_options' => ['label' => 'password'],
-                'second_options' => ['label' => 'password.repeat'],
-            ])
-            ->getForm();
+        $form = $this->createForm(ResetPasswordFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -206,90 +180,6 @@ class MemberController extends AbstractController
 
         return $this->render('member/reset.password.html.twig', [
             'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/members/{username}/comment/{commentId}/report", name="report_comment",
-     *     requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))
-     *
-     * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
-     * @ParamConverter("comment", class="App\Entity\Comment", options={"mapping": {"commentId": "id"}})
-     *
-     * @param Request $request
-     * @param Member $member
-     * @param Comment $comment
-     * @param Swift_Mailer $mailer
-     *
-     * @param TranslatorInterface $translator
-     * @return Response
-     */
-    public function reportCommentAction(
-        Request $request,
-        Member $member,
-        Comment $comment,
-        Swift_Mailer $mailer,
-        TranslatorInterface $translator
-    )
-    {
-//        \todo Should we only allow the receiver of a comment to report it?
-//        if ($comment->getToMember()->getId() !== $member->getId() && $comment->getFromMember()->getId() !== $member->getId()) {
-//            throw new AccessDeniedException('Hau ab!');
-//        }
-
-        $user = $this->getUser();
-
-        $form = $this->createForm(ReportCommentType::class, new ReportCommentRequest());
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $feedback = trim(str_replace("\xc2\xa0", ' ', strip_tags(html_entity_decode($data->feedback, ENT_HTML5, 'UTF-8'))));
-            if (empty($feedback)) {
-                $form->addError(new FormError('Feedback can not be empty.'));
-            } else {
-                $messageText = $this->render('emails/comment.feedback.html.twig', [
-                    'comment' => $comment,
-                    'feedback' => $feedback,
-                ]);
-                // Get the email address that is associated with admin comments category
-                $feedbackCategoryRepository = $this->getDoctrine()->getRepository(FeedbackCategory::class);
-                $feedbackCategory = $feedbackCategoryRepository->findOneBy(['name' => 'Comment_issue']);
-
-                $message = (new Swift_Message())
-                    ->setSubject('Comment report')
-                    ->setFrom(
-                        [
-                            $user->getEmail() => 'BeWelcome - '.$user->getUsername(),
-                        ]
-                    )
-                    ->setTo([
-                        $feedbackCategory->getEmailToNotify() => 'Comment Issue',
-                    ])
-                    ->setBody(
-                        $messageText,
-                        'text/html'
-                    );
-                $recipients = $mailer->send($message);
-                if (0 === $recipients) {
-                    $this->addFlash('error', $translator->trans('flash.feedback.not.sent'));
-                } else {
-                    $em = $this->getDoctrine()->getManager();
-                    $comment->setAdminAction(CommentAdminActionType::ADMIN_CHECK);
-                    $em->persist($comment);
-                    $em->flush();
-
-                    $this->addFlash('notice', $translator->trans('flash.feedback.safetyteam'));
-
-                    return $this->redirectToRoute('profile_all_comments', ['username' => $member->getUsername()]);
-                }
-            }
-        }
-
-        return $this->render('member/report.comment.html.twig', [
-            'form' => $form->createView(),
-            'comment' => $comment,
-            'member' => $member,
         ]);
     }
 
@@ -382,7 +272,7 @@ class MemberController extends AbstractController
         ]);
         $converter = new Html2Text($html, [
             'do_links' => 'table',
-            'width' => 75
+            'width' => 75,
         ]);
         $plainText = $converter->getText();
         $message = (new Swift_Message())

@@ -51,7 +51,7 @@ class HomeController extends AbstractController
             ->setMethod('POST')
             ->getForm();
 
-        $statisticsModel = new StatisticsModel($this->getDoctrine());
+        $statisticsModel = new StatisticsModel();
         $statistics = $statisticsModel->getStatistics();
         $roxPostHandler = new \RoxPostHandler();
         $roxPostHandler->setClasses([

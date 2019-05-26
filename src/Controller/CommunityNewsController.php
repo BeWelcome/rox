@@ -26,7 +26,7 @@ class CommunityNewsController extends AbstractController
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
 
-        $communityNewsModel = new CommunityNewsModel($this->getDoctrine());
+        $communityNewsModel = new CommunityNewsModel();
         $communityNews = $communityNewsModel->getPaginator($page, $limit);
 
         return $this->render('communitynews/list.html.twig', [
@@ -46,7 +46,7 @@ class CommunityNewsController extends AbstractController
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
 
-        $communityNewsModel = new CommunityNewsModel($this->getDoctrine());
+        $communityNewsModel = new CommunityNewsModel();
         $comments = $communityNewsModel->getCommentsPaginator($communityNews, $page, $limit);
 
         return $this->render('communitynews/show.html.twig', [

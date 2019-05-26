@@ -72,7 +72,7 @@ class VolunteerToolController extends AbstractController
     {
         // check permissions
         $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems) | !array_key_exists(self::CHANGE_USERNAME, $subMenuItems)) {
+        if (empty($subMenuItems) | !\array_key_exists(self::CHANGE_USERNAME, $subMenuItems)) {
             $this->addFlash('notice', 'admin.tools.not.allowed');
             $referrer = $request->headers->get('referer');
 
@@ -141,7 +141,7 @@ class VolunteerToolController extends AbstractController
     {
         // check permissions
         $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems) | !array_key_exists(self::FIND_USER, $subMenuItems)) {
+        if (empty($subMenuItems) | !\array_key_exists(self::FIND_USER, $subMenuItems)) {
             $this->addFlash('notice', 'admin.tools.not.allowed');
             $referrer = $request->headers->get('referer');
 
@@ -186,7 +186,7 @@ class VolunteerToolController extends AbstractController
     {
         // check permissions
         $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems) | !array_key_exists(self::CHECK_FEEDBACK, $subMenuItems)) {
+        if (empty($subMenuItems) | !\array_key_exists(self::CHECK_FEEDBACK, $subMenuItems)) {
             $this->addFlash('notice', 'admin.tools.not.allowed');
             $referrer = $request->headers->get('referer');
 
@@ -238,7 +238,7 @@ class VolunteerToolController extends AbstractController
     {
         // check permissions
         $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems) | !array_key_exists(self::CHECK_SPAM_MESSAGES, $subMenuItems)) {
+        if (empty($subMenuItems) | !\array_key_exists(self::CHECK_SPAM_MESSAGES, $subMenuItems)) {
             $this->addFlash('notice', 'admin.tools.not.allowed');
             $referrer = $request->headers->get('referer');
 
@@ -296,7 +296,7 @@ class VolunteerToolController extends AbstractController
     {
         // check permissions
         $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems) | !array_key_exists(self::DAMAGE_DONE, $subMenuItems)) {
+        if (empty($subMenuItems) | !\array_key_exists(self::DAMAGE_DONE, $subMenuItems)) {
             $this->addFlash('notice', 'admin.tools.not.allowed');
             $referrer = $request->headers->get('referer');
 
@@ -351,7 +351,7 @@ class VolunteerToolController extends AbstractController
     {
         // check permissions
         $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems) | !array_key_exists(self::MESSAGES_LAST_WEEK, $subMenuItems)) {
+        if (empty($subMenuItems) | !\array_key_exists(self::MESSAGES_LAST_WEEK, $subMenuItems)) {
             $this->addFlash('notice', 'admin.tools.not.allowed');
             $referrer = $request->headers->get('referer');
 
@@ -402,7 +402,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
     {
         // check permissions
         $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems) | !array_key_exists(self::AGE_BY_COUNTRY, $subMenuItems)) {
+        if (empty($subMenuItems) | !\array_key_exists(self::AGE_BY_COUNTRY, $subMenuItems)) {
             $this->addFlash('notice', 'admin.tools.not.allowed');
             $referrer = $request->headers->get('referer');
 

@@ -10,9 +10,12 @@ namespace App\Model;
 
 use AnthonyMartin\GeoLocation\GeoLocation;
 use App\Entity\Location;
+use App\Utilities\ManagerTrait;
 
-class LocationModel extends BaseModel
+class LocationModel
 {
+    use ManagerTrait;
+
     public function getLocationIdsAroundLocation($latitude, $longitude, $distance = 25)
     {
         $coordinates = GeoLocation::fromDegrees($latitude, $longitude)->boundingCoordinates($distance, 'km');
@@ -27,16 +30,5 @@ class LocationModel extends BaseModel
             ->where('l.longitude < '.$coordinates[0]->getLongitudeInDegrees())
             ->getQuery()
             ->getResult();
-        //        return $this->newQuery()
-//            ->where('latitude', '<', $coordinates[1]->getLatitudeInDegrees())
-//            ->where('latitude', '>', $coordinates[0]->getLatitudeInDegrees())
-//            ->where('longitude', '<', $coordinates[1]->getLongitudeInDegrees())
-//            ->where('longitude', '>', $coordinates[0]->getLongitudeInDegrees())
-//            ->get(['geonameId'])->map(
-//                function ($location) {
-//                    return $location->geonameId;
-//                }
-//            )
-//            ->all();
     }
 }

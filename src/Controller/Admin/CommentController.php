@@ -32,13 +32,14 @@ class CommentController extends AbstractController
 
     /**
      * CommentController constructor.
+     *
      * @param TranslatorInterface $translator
      */
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
     }
-    
+
     /**
      * @Route("/admin/comment", name="admin_comment_overview")
      *

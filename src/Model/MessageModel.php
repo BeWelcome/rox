@@ -9,6 +9,7 @@ use App\Doctrine\SpamInfoType;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Repository\MessageRepository;
+use App\Utilities\ManagerTrait;
 use Doctrine\DBAL\DBALException;
 use Pagerfanta\Pagerfanta;
 use PDO;
@@ -19,10 +20,12 @@ use PDO;
  * @SuppressWarnings(PHPMD.StaticAccess)
  * Hide logic in DeleteRequestType
  */
-class MessageModel extends BaseModel
+class MessageModel
 {
+    use ManagerTrait;
+
     /**
-     * Mark a message as purged (can not be unmarked)
+     * Mark a message as purged (can not be unmarked).
      *
      * @param Member $member
      * @param array  $messageIds

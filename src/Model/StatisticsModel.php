@@ -3,7 +3,6 @@
 namespace App\Model;
 
 use App\Doctrine\MemberStatusType;
-use App\Entity\Member;
 
 class StatisticsModel extends BaseModel
 {
@@ -49,8 +48,8 @@ class StatisticsModel extends BaseModel
             WHERE
                 c.Quality = 'Good'
                 AND IdFromMember = m.Id
-                AND m.Status IN (".MemberStatusType::ACTIVE_ALL.")
-        ")->fetch();
+                AND m.Status IN (".MemberStatusType::ACTIVE_ALL.')
+        ')->fetch();
 
         $activities = $this->execQuery('
             SELECT
@@ -63,7 +62,7 @@ class StatisticsModel extends BaseModel
 
         $stats = [
             'members' => $members['cnt'],
-            'countries' => count($countries),
+            'countries' => \count($countries),
             'languages' => $languages['cnt'],
             'comments' => $positiveComments['cnt'],
             'activities' => $activities['cnt'],

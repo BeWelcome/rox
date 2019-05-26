@@ -4,15 +4,11 @@ namespace App\Utilities;
 
 use App\Entity\Wiki;
 use App\Model\WikiModel;
-use Doctrine\ORM\EntityManagerInterface;
 use Mike42\Wikitext\DefaultParserBackend;
 
 class RoxWikiParserBackend extends DefaultParserBackend
 {
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    use ManagerTrait;
 
     /**
      * @var WikiModel
@@ -22,12 +18,10 @@ class RoxWikiParserBackend extends DefaultParserBackend
     /**
      * RoxWikiParserBackend constructor.
      *
-     * @param EntityManagerInterface $entityManager
-     * @param WikiModel              $wikiModel
+     * @param WikiModel $wikiModel
      */
-    public function __construct(EntityManagerInterface $entityManager, WikiModel $wikiModel)
+    public function __construct(WikiModel $wikiModel)
     {
-        $this->entityManager = $entityManager;
         $this->wikiModel = $wikiModel;
     }
 
@@ -51,7 +45,7 @@ class RoxWikiParserBackend extends DefaultParserBackend
         }
 
         $title = $this->wikiModel->getPagename($info['title']);
-        $repository = $this->entityManager->getRepository(Wiki::class);
+        $repository = $this->em->getRepository(Wiki::class);
 
         $wikiPage = $repository->findBy(['pagename' => $title]);
         $info['exists'] = ($wikiPage) ? true : false;

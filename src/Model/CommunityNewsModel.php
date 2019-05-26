@@ -10,6 +10,7 @@ namespace App\Model;
 
 use App\Entity\CommunityNews;
 use App\Repository\NotificationRepository;
+use App\Utilities\ManagerTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Pagerfanta\Adapter\DoctrineCollectionAdapter;
 use Pagerfanta\Pagerfanta;
@@ -17,8 +18,10 @@ use Pagerfanta\Pagerfanta;
 /**
  * @method getLatestAdminPaginator($page, $limit)
  */
-class CommunityNewsModel extends BaseModel
+class CommunityNewsModel
 {
+    use ManagerTrait;
+
     /**
      * @param int $page
      * @param int $limit

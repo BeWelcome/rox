@@ -5,10 +5,15 @@ namespace App\Model;
 use App\Entity\Activity;
 use App\Entity\Member;
 use App\Repository\ActivityRepository;
+use App\Utilities\ManagerTrait;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Exception;
 
-class LandingModel extends BaseModel
+class LandingModel
 {
+    use ManagerTrait;
+
     /**
      * Generates messages for display on home page.
      *
@@ -172,26 +177,29 @@ class LandingModel extends BaseModel
 
     /**
      * @param Member $member
+     *
+     * @return array
      */
     public function getTravellersInAreaOfMember(Member $member)
     {
-        $member;
+        return [$member];
     }
 
     /**
      * @param Member $member
      * @param $accommodation
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     *
      * @return Member
      */
     public function updateMemberAccommodation(Member $member, $accommodation)
     {
-        $member->setAccommodation($accommodation);
-        $this->em->persist($member);
-        $this->em->flush($member);
+        try {
+            $member->setAccommodation($accommodation);
+            $this->em->persist($member);
+            $this->em->flush($member);
+        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
+        }
 
         return $member;
     }

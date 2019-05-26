@@ -3714,7 +3714,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 			// just don't write notifications
 			return;
 		}
-        
+
 		$membersTemp = array();
 		while ($row = $res->fetch(PDB::FETCH_OBJ)) {
 			if ($row->subscriber > 0) {
@@ -4180,7 +4180,7 @@ class Board implements Iterator {
 		$query .= "LEFT JOIN `members` AS `first_member` ON (`first`.`IdWriter` = `first_member`.`id`)" ;
 		$query .= "LEFT JOIN `members` AS `last_member` ON (`last`.`IdWriter` = `last_member`.`id`)" ;
 		$query .= "LEFT JOIN `geonames` ON (`forums_threads`.`geonameid` = `geonames`.`geonameid`)";
-		$query .= "LEFT JOIN `geonamesadminunits` ON (`forums_threads`.`admincode` = `geonamesadminunits`.`admin1` AND `forums_threads`.`countrycode` = `geonamesadminunits`.`country`)" ;
+		$query .= "LEFT JOIN `geonamesadminunits` ON (`forums_threads`.`admincode` = `geonamesadminunits`.`admin1` AND `forums_threads`.`countrycode` = `geonamesadminunits`.`country` and `geonamesadminunits`.`fcode` = 'ADM1')" ;
 		$query .= "LEFT JOIN `geonamescountries` ON (`forums_threads`.`countrycode` = `geonamescountries`.`country`)" ;
 		$query .= " WHERE 1 ".$wherethread . $orderby . " LIMIT ".$from.", ".$this->THREADS_PER_PAGE ;
 
@@ -4251,7 +4251,7 @@ class Board implements Iterator {
 				  `last`.`authorid` AS `last_authorid`,
 				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`," ;
 			$query .= "`first_member`.`Username` AS `first_author`,`last_member`.`Username` AS `last_author`,`geonames`.`name` AS `geonames_name`, `geonames`.`geonameid`," ;
-			$query .= "`geonamesadminunits`.`name` AS `adminname`, `geonamesadminunits`.`admin1` AS `admincode`,`geonamescountries`.`name` AS `countryname`, `geonamescountries`.`county` AS `countrycode`" ;
+			$query .= "`geonamesadminunits`.`name` AS `adminname`, `geonamesadminunits`.`admin1` AS `admincode`,`geonamescountries`.`name` AS `countryname`, `geonamescountries`.`country` AS `countrycode`" ;
 			$query .= "FROM `tags_threads`,`forums_threads` LEFT JOIN `forums_posts` AS `first` ON (`forums_threads`.`first_postid` = `first`.`postid`)" ;
 			$query .= "LEFT JOIN `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)" ;
 			$query .= "LEFT JOIN `forums_posts` AS `last` ON (`forums_threads`.`last_postid` = `last`.`postid`)" ;
@@ -4259,7 +4259,7 @@ class Board implements Iterator {
 			$query .= "LEFT JOIN `members` AS `last_member` ON (`last`.`IdWriter` = `last_member`.`id`)" ;
 			$query .= "LEFT JOIN `geonames` ON (`forums_threads`.`geonameid` = `geonames`.`geonameid`)";
 			$query .= "LEFT JOIN `geonamesadminunits` ON (`forums_threads`.`admincode` = `geonamesadminunits`.`admin1` AND `forums_threads`.`countrycode` = `geonamesadminunits`.`country`)" ;
-			$query .= "LEFT JOIN `geonamescountries` ON (`forums_threads`.`countrycode` = `geonames`.`county`)" ;
+			$query .= "LEFT JOIN `geonamescountries` ON (`forums_threads`.`countrycode` = `geonames`.`country`)" ;
 			$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id`  and  `tags_threads`.`IdTag` not in (".$NoInCategoryList.")" ;
 			$query = $query ." and (".$this->PublicThreadVisibility.")" ;
 			$query = $query ." and (".$this->ThreadGroupsRestriction.")" ;
@@ -4293,7 +4293,7 @@ class Board implements Iterator {
 			$query .= "LEFT JOIN `members` AS `first_member` ON (`first`.`IdWriter` = `first_member`.`id`)" ;
 			$query .= "LEFT JOIN `members` AS `last_member` ON (`last`.`IdWriter` = `last_member`.`id`)" ;
 			$query .= "LEFT JOIN `geonames` ON (`forums_threads`.`geonameid` = `geonames`.`geonameid`)";
-			$query .= "LEFT JOIN `geonamesadminunits` ON (`forums_threads`.`admincode` = `geonamesadminunits`.`admin_code` AND `forums_threads`.`countrycode` = `geonamesadminunits`.`country`)" ;
+			$query .= "LEFT JOIN `geonamesadminunits` ON (`forums_threads`.`admincode` = `geonamesadminunits`.`admin1` AND `forums_threads`.`countrycode` = `geonamesadminunits`.`country`)" ;
 			$query .= "LEFT JOIN `geonamescountries` ON (`forums_threads`.`countrycode` = `geonamescountries`.`country`)" ;
 			$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id` and  `tags_threads`.`IdTag`=".$IdTagCategory ;
 			$query = $query ." and (".$this->PublicThreadVisibility.")" ;

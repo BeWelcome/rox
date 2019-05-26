@@ -8,7 +8,6 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
 use App\Form\MessageToMemberType;
-use App\Model\MessageModel;
 use Exception;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -26,7 +25,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  * @SuppressWarnings(PHPMD.CyclomaticComplexity)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
-class MessageController extends AbstractMessageController
+class MessageController extends BaseMessageController
 {
     /**
      * Deals with replies to messages and hosting requests.
@@ -47,8 +46,7 @@ class MessageController extends AbstractMessageController
             throw new AccessDeniedException;
         }
 
-        $messageModel = new MessageModel();
-        $thread = $messageModel->getThreadForMessage($message);
+        $thread = $this->messageModel->getThreadForMessage($message);
         $current = $thread[0];
 
         $isHostingRequest = (null !== $message->getRequest()) ? true : false;
@@ -82,8 +80,7 @@ class MessageController extends AbstractMessageController
 
         $isMessage = (null === $message->getRequest()) ? true : false;
 
-        $messageModel = new MessageModel();
-        $thread = $messageModel->getThreadForMessage($message);
+        $thread = $this->messageModel->getThreadForMessage($message);
         $current = $thread[0];
 
         if ($message->getId() !== $current->getId()) {
@@ -132,8 +129,7 @@ class MessageController extends AbstractMessageController
             return $this->redirect($referrer);
         }
 
-        $messageModel = new MessageModel();
-        if ($messageModel->hasMessageLimitExceeded(
+        if ($this->messageModel->hasMessageLimitExceeded(
             $sender,
             $this->getParameter('new_members_messages_per_hour'),
             $this->getParameter('new_members_messages_per_day')
@@ -206,8 +202,7 @@ class MessageController extends AbstractMessageController
         }
 
         $member = $this->getUser();
-        $messageModel = new MessageModel();
-        $messages = $messageModel->getFilteredMessages($member, $folder, $sort, $sortDir, $page, $limit);
+        $messages = $this->messageModel->getFilteredMessages($member, $folder, $sort, $sortDir, $page, $limit);
 
         return $this->handleFolderRequest($request, $folder, $messages, 'messages');
     }
@@ -221,8 +216,7 @@ class MessageController extends AbstractMessageController
      */
     public function markAsSpamAction(Message $message)
     {
-        $messageModel = new MessageModel();
-        $messageModel->markAsSpam([$message->getId()]);
+        $this->messageModel->markAsSpam([$message->getId()]);
 
         $this->addTranslatedFlash('notice', 'flash.marked.spam');
 
@@ -238,8 +232,7 @@ class MessageController extends AbstractMessageController
      */
     public function unmarkAsSpamAction(Message $message)
     {
-        $messageModel = new MessageModel();
-        $messageModel->unmarkAsSpam([$message->getId()]);
+        $this->messageModel->unmarkAsSpam([$message->getId()]);
 
         $this->addTranslatedFlash('notice', 'flash.marked.nospam');
 
@@ -267,8 +260,7 @@ class MessageController extends AbstractMessageController
         }
 
         $member = $this->getUser();
-        $messageModel = new MessageModel();
-        $messages = $messageModel->getMessagesBetween($member, $other, $sort, $sortDir, $page, $limit);
+        $messages = $this->messageModel->getMessagesBetween($member, $other, $sort, $sortDir, $page, $limit);
 
         return $this->render('message/between.html.twig', [
             'items' => $messages,

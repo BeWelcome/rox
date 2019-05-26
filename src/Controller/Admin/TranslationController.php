@@ -44,9 +44,9 @@ class TranslationController extends AbstractController
     /** @var TranslatorInterface */
     private $translator;
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, TranslationModel $translationModel)
     {
-        $this->translationModel = new TranslationModel();
+        $this->translationModel = $translationModel;
         $this->translator = $translator;
     }
 
@@ -124,9 +124,7 @@ class TranslationController extends AbstractController
             }
             $em->persist($translation);
             $em->flush();
-            $this->translationModel->removeCacheFiles(
-                $kernel
-            );
+            $this->translationModel->removeCacheFiles($kernel);
             $this->addFlash('notice', $this->translator->trans('translation.edit'));
 
             $referrer = $request->headers->get('referer');

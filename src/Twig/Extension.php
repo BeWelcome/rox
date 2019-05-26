@@ -23,9 +23,9 @@ class Extension extends AbstractExtension implements GlobalsInterface
     protected $session;
 
     /**
-     * @var Registry
+     * @var LanguageModel
      */
-    protected $registry;
+    protected $languageModel;
 
     /**
      * @var DataCollectorTranslator
@@ -40,16 +40,16 @@ class Extension extends AbstractExtension implements GlobalsInterface
     /**
      * Extension constructor.
      *
-     * @param SessionInterface    $session
-     * @param Registry            $registry
+     * @param SessionInterface $session
      * @param TranslatorInterface $translator
+     * @param LanguageModel $languageModel
      * @param $dataDirectory
      */
-    public function __construct(SessionInterface $session, Registry $registry, TranslatorInterface $translator, $dataDirectory)
+    public function __construct(SessionInterface $session, TranslatorInterface $translator, LanguageModel $languageModel, $dataDirectory)
     {
         $this->session = $session;
-        $this->registry = $registry;
         $this->translator = $translator;
+        $this->languageModel = $languageModel;
         $this->dataDirectory = $dataDirectory;
     }
 
@@ -140,8 +140,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
     public function getGlobals()
     {
         $locale = $this->session->get('locale', 'en');
-        $languageModel = new LanguageModel($this->registry);
-        $languages = $languageModel->getLanguagesWithTranslations($locale);
+        $languages = $this->languageModel->getLanguagesWithTranslations($locale);
 
         return [
             'version' => trim(file_get_contents('../VERSION')),

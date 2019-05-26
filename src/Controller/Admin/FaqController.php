@@ -28,6 +28,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class FaqController extends AbstractController
 {
     /**
+     * @var FaqModel
+     */
+    private $faqModel;
+
+    public function __construct(FaqModel $faqModel)
+    {
+        $this->faqModel = $faqModel;
+    }
+
+    /**
      * @Route(
      *     "/admin/faqs/{categoryId}",
      *     name="admin_faqs_overview",
@@ -72,8 +82,7 @@ class FaqController extends AbstractController
             }
         }
 
-        $faqModel = new FaqModel($this->getDoctrine());
-        $faqs = $faqModel->getFaqsForCategory($faqCategory);
+        $faqs = $this->faqModel->getFaqsForCategory($faqCategory);
         $faqCategories = $this->getSubMenuItems();
 
         return  $this->render('admin/faqs/index.html.twig', [
@@ -385,9 +394,8 @@ class FaqController extends AbstractController
             }
         }
 
-        $faqModel = new FaqModel($this->getDoctrine());
         $subMenuItems = $this->getSubMenuItems();
-        $faqCategories = $faqModel->getFaqCategories();
+        $faqCategories = $this->faqModel->getFaqCategories();
 
         return $this->render(
             'admin/faqs/sort.categories.html.twig',

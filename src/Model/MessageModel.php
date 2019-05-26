@@ -11,6 +11,8 @@ use App\Entity\Message;
 use App\Repository\MessageRepository;
 use App\Utilities\ManagerTrait;
 use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Pagerfanta\Pagerfanta;
 use PDO;
 
@@ -30,13 +32,15 @@ class MessageModel
      * @param Member $member
      * @param array  $messageIds
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function markPurged(Member $member, array $messageIds)
     {
+        $em = $this->getManager();
+
         /** @var MessageRepository $repository */
-        $repository = $this->em->getRepository(Message::class);
+        $repository = $em->getRepository(Message::class);
 
         $messages = $repository->findBy([
             'id' => $messageIds,
@@ -50,22 +54,24 @@ class MessageModel
                 $deleteRequest = DeleteRequestType::addSenderPurged($message->getDeleteRequest());
             }
             $message->setDeleteRequest($deleteRequest);
-            $this->em->persist($message);
+            $em->persist($message);
         }
-        $this->em->flush();
+        $em->flush();
     }
 
     /**
      * @param Member $member
      * @param array  $messageIds
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function markDeleted(Member $member, array $messageIds)
     {
+        $em = $this->getManager();
+
         /** @var MessageRepository $repository */
-        $repository = $this->em->getRepository(Message::class);
+        $repository = $em->getRepository(Message::class);
 
         $messages = $repository->findBy([
             'id' => $messageIds,
@@ -79,22 +85,23 @@ class MessageModel
                 $deleteRequest = DeleteRequestType::addSenderDeleted($message->getDeleteRequest());
             }
             $message->setDeleteRequest($deleteRequest);
-            $this->em->persist($message);
+            $em->persist($message);
         }
-        $this->em->flush();
+        $em->flush();
     }
 
     /**
      * @param Member $member
      * @param array  $messageIds
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function unmarkDeleted(Member $member, array $messageIds)
     {
+        $em = $this->getManager();
         /** @var MessageRepository $repository */
-        $repository = $this->em->getRepository(Message::class);
+        $repository = $em->getRepository(Message::class);
 
         $messages = $repository->findBy([
             'id' => $messageIds,
@@ -108,21 +115,22 @@ class MessageModel
                 $deleteRequest = DeleteRequestType::removeSenderDeleted($message->getDeleteRequest());
             }
             $message->setDeleteRequest($deleteRequest);
-            $this->em->persist($message);
+            $em->persist($message);
         }
-        $this->em->flush();
+        $em->flush();
     }
 
     /**
      * @param array $messageIds
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function markAsSpamByChecker(array $messageIds)
     {
+        $em = $this->getManager();
         /** @var MessageRepository $repository */
-        $repository = $this->em->getRepository(Message::class);
+        $repository = $em->getRepository(Message::class);
 
         $messages = $repository->findBy([
             'id' => $messageIds,
@@ -133,21 +141,22 @@ class MessageModel
             $message
                 ->setStatus(MessageStatusType::CHECKED)
                 ->addToSpamInfo(SpamInfoType::CHECKER_SAYS_SPAM);
-            $this->em->persist($message);
+            $em->persist($message);
         }
-        $this->em->flush();
+        $em->flush();
     }
 
     /**
      * @param array $messageIds
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function unmarkAsSpamByChecker(array $messageIds)
     {
+        $em = $this->getManager();
         /** @var MessageRepository $repository */
-        $repository = $this->em->getRepository(Message::class);
+        $repository = $em->getRepository(Message::class);
 
         $messages = $repository->findBy([
             'id' => $messageIds,
@@ -161,21 +170,22 @@ class MessageModel
             } else {
                 $message->setStatus(MessageStatusType::CHECKED);
             }
-            $this->em->persist($message);
+            $em->persist($message);
         }
-        $this->em->flush();
+        $em->flush();
     }
 
     /**
      * @param array $messageIds
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function markAsSpam(array $messageIds)
     {
+        $em = $this->getManager();
         /** @var MessageRepository $repository */
-        $repository = $this->em->getRepository(Message::class);
+        $repository = $em->getRepository(Message::class);
 
         $messages = $repository->findBy([
             'id' => $messageIds,
@@ -188,21 +198,22 @@ class MessageModel
                 ->setStatus(MessageStatusType::CHECK)
                 ->addToSpamInfo(SpamInfoType::MEMBER_SAYS_SPAM)
             ;
-            $this->em->persist($message);
+            $em->persist($message);
         }
-        $this->em->flush();
+        $em->flush();
     }
 
     /**
      * @param array $messageIds
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function unmarkAsSpam(array $messageIds)
     {
+        $em = $this->getManager();
         /** @var MessageRepository $repository */
-        $repository = $this->em->getRepository(Message::class);
+        $repository = $em->getRepository(Message::class);
 
         $messages = $repository->findBy([
             'id' => $messageIds,
@@ -215,9 +226,9 @@ class MessageModel
                 ->setStatus(MessageStatusType::CHECKED)
                 ->removeFromSpaminfo(SpamInfoType::MEMBER_SAYS_SPAM)
             ;
-            $this->em->persist($message);
+            $em->persist($message);
         }
-        $this->em->flush();
+        $em->flush();
     }
 
     /**
@@ -229,7 +240,7 @@ class MessageModel
     public function getReportedMessages($page = 1, $limit = 10)
     {
         /** @var MessageRepository $repository */
-        $repository = $this->em->getRepository(Message::class);
+        $repository = $this->getManager()->getRepository(Message::class);
 
         return $repository->findReportedMessages($page, $limit);
     }
@@ -247,7 +258,7 @@ class MessageModel
     public function getFilteredMessages($member, $folder, $sort, $sortDir, $page = 1, $limit = 10)
     {
         /** @var MessageRepository $repository */
-        $repository = $this->em->getRepository(Message::class);
+        $repository = $this->getManager()->getRepository(Message::class);
 
         return $repository->findLatestMessages($member, $folder, $sort, $sortDir, $page, $limit);
     }
@@ -265,7 +276,7 @@ class MessageModel
     public function getFilteredRequests($member, $folder, $sort, $sortDir, $page = 1, $limit = 10)
     {
         /** @var MessageRepository $repository */
-        $repository = $this->em->getRepository(Message::class);
+        $repository = $this->getManager()->getRepository(Message::class);
 
         return $repository->findLatestRequests($member, $folder, $sort, $sortDir, $page, $limit);
     }
@@ -282,7 +293,7 @@ class MessageModel
     public function getFilteredRequestsAndMessages($member, $sort, $sortDir, $page = 1, $limit = 10)
     {
         /** @var MessageRepository $repository */
-        $repository = $this->em->getRepository(Message::class);
+        $repository = $this->getManager()->getRepository(Message::class);
 
         return $repository->findLatestRequestsAndMessages($member, $sort, $sortDir, $page, $limit);
     }
@@ -300,7 +311,7 @@ class MessageModel
     public function getMessagesBetween(Member $member, Member $other, $sort, $sortDir, $page = 1, $limit = 10)
     {
         /** @var MessageRepository $repository */
-        $repository = $this->em->getRepository(Message::class);
+        $repository = $this->getManager()->getRepository(Message::class);
 
         return $repository->findAllMessagesBetween($member, $other, $sort, $sortDir, $page, $limit);
     }
@@ -316,7 +327,7 @@ class MessageModel
     {
         $result = [];
         try {
-            $connection = $this->em->getConnection();
+            $connection = $this->getManager()->getConnection();
             $stmt = $connection->prepare('
                 SELECT 
                     id
@@ -362,7 +373,7 @@ class MessageModel
                 $ids
             );
             /** @var MessageRepository $repository */
-            $repository = $this->em->getRepository(Message::class);
+            $repository = $this->getManager()->getRepository(Message::class);
             $result = $repository->findBy(
                 ['id' => $ids],
                 ['created' => 'DESC']
@@ -431,7 +442,7 @@ class MessageModel
                     )
                 ) AS numberOfMessagesLastDay
             ";
-        $connection = $this->em->getConnection();
+        $connection = $this->getManager()->getConnection();
 
         $row = null;
         try {

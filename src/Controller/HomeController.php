@@ -8,6 +8,7 @@ use App\Form\SearchFormType;
 use App\Model\StatisticsModel;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -16,9 +17,10 @@ class HomeController extends AbstractController
     /**
      * @Route("/", name="homepage")
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param StatisticsModel $statisticsModel
+     * @return Response
      */
-    public function indexAction()
+    public function indexAction(StatisticsModel $statisticsModel)
     {
         $member = $this->getUser();
         if ($member) {
@@ -51,7 +53,6 @@ class HomeController extends AbstractController
             ->setMethod('POST')
             ->getForm();
 
-        $statisticsModel = new StatisticsModel();
         $statistics = $statisticsModel->getStatistics();
         $roxPostHandler = new \RoxPostHandler();
         $roxPostHandler->setClasses([

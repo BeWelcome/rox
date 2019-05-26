@@ -22,7 +22,7 @@ class LogModel
      */
     public function getFilteredLogs(array $types, $member, $page, $limit)
     {
-        $adapter = new LogAdapter($this->em, $types, $member);
+        $adapter = new LogAdapter($this->getManager(), $types, $member);
         $pagerFanta = new Pagerfanta($adapter);
         $pagerFanta->setMaxPerPage($limit);
         $pagerFanta->setCurrentPage($page);

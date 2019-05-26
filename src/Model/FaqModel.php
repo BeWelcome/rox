@@ -10,7 +10,7 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\EntityRepository;
 
-class FaqModel extends BaseModel
+class FaqModel
 {
     use ManagerTrait;
 
@@ -25,7 +25,7 @@ class FaqModel extends BaseModel
     public function getFilteredFaqs($page, $limit)
     {
         /** @var FaqRepository $repository */
-        $repository = $this->em->getRepository(Faq::class);
+        $repository = $this->getManager()->getRepository(Faq::class);
 
         return $repository->findLatest($page, $limit);
     }
@@ -34,7 +34,7 @@ class FaqModel extends BaseModel
     {
         $results = [];
         try {
-            $connection = $this->em->getConnection();
+            $connection = $this->getManager()->getConnection();
             $stmt = $connection->prepare(
                 "SELECT 
     f.*, q.Sentence as Question, a.Sentence as Answer
@@ -66,7 +66,7 @@ ORDER BY
     public function getFaqCategories()
     {
         /** @var EntityRepository $repository */
-        $repository = $this->em->getRepository(FaqCategory::class);
+        $repository = $this->getManager()->getRepository(FaqCategory::class);
 
         return $repository->findBy([], ['sortOrder' => 'ASC']);
     }

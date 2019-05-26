@@ -15,6 +15,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class CommunityNewsController extends AbstractController
 {
     /**
+     * @var CommunityNewsModel
+     */
+    private $communityNewsModel;
+
+    public function __construct(CommunityNewsModel $communityNewsModel)
+    {
+        $this->communityNewsModel = $communityNewsModel;
+    }
+
+    /**
      * @param Request $request
      *
      * @Route("/communitynews", name="communitynews")
@@ -26,8 +36,7 @@ class CommunityNewsController extends AbstractController
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
 
-        $communityNewsModel = new CommunityNewsModel();
-        $communityNews = $communityNewsModel->getPaginator($page, $limit);
+        $communityNews = $this->communityNewsModel->getPaginator($page, $limit);
 
         return $this->render('communitynews/list.html.twig', [
             'communityNews' => $communityNews,
@@ -46,8 +55,7 @@ class CommunityNewsController extends AbstractController
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
 
-        $communityNewsModel = new CommunityNewsModel();
-        $comments = $communityNewsModel->getCommentsPaginator($communityNews, $page, $limit);
+        $comments = $this->communityNewsModel->getCommentsPaginator($communityNews, $page, $limit);
 
         return $this->render('communitynews/show.html.twig', [
             'communityNews' => $communityNews,

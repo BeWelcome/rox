@@ -31,7 +31,7 @@ class CommunityNewsModel
     public function getPaginator($page, $limit)
     {
         /** @var NotificationRepository $repository */
-        $repository = $this->em->getRepository(CommunityNews::class);
+        $repository = $this->getManager()->getRepository(CommunityNews::class);
 
         return $repository->pagePublic($page, $limit);
     }
@@ -45,7 +45,7 @@ class CommunityNewsModel
     public function getAdminPaginator($page, $limit)
     {
         /** @var NotificationRepository $repository */
-        $repository = $this->em->getRepository(CommunityNews::class);
+        $repository = $this->getManager()->getRepository(CommunityNews::class);
 
         return $repository->pageAll($page, $limit);
     }
@@ -53,7 +53,7 @@ class CommunityNewsModel
     public function getLatest()
     {
         /** @var NotificationRepository $repository */
-        $repository = $this->em->getRepository(CommunityNews::class);
+        $repository = $this->getManager()->getRepository(CommunityNews::class);
 
         try {
             return $repository->getLatest();

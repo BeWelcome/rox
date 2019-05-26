@@ -43,7 +43,6 @@
         "symfony/twig-bundle": "^4.1",
         "symfony/validator": "^4.1",
         "symfony/var-dumper": "4.2.*",
-        "symfony/web-server-bundle": "^4.1",
         "twig/extensions": "^1.5",
         "twig/twig": "^2.4",
         "white-october/pagerfanta-bundle": "^1.0",
@@ -72,7 +71,8 @@
         "symfony/debug-pack": "^1.0",
         "symfony/maker-bundle": "^1.8",
         "symfony/phpunit-bridge": "4.*",
-        "symfony/web-profiler-bundle": "^4.1"
+        "symfony/web-profiler-bundle": "^4.1",
+        "symfony/web-server-bundle": "4.*"
     },
     "autoload": {
         "psr-4": {

@@ -10,7 +10,6 @@ use App\Entity\Message;
 use App\Entity\Subject;
 use App\Form\HostingRequestGuest;
 use App\Form\HostingRequestHost;
-use App\Model\MessageModel;
 use App\Model\RequestModel;
 use Exception;
 use InvalidArgumentException;
@@ -28,7 +27,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  * @SuppressWarnings(PHPMD.CyclomaticComplexity)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
-class HostingRequestController extends AbstractMessageController
+class HostingRequestController extends BaseMessageController
 {
     /**
      * Deals with replies to messages and hosting requests.
@@ -50,8 +49,7 @@ class HostingRequestController extends AbstractMessageController
             throw new AccessDeniedException();
         }
 
-        $messageModel = new MessageModel();
-        $thread = $messageModel->getThreadForMessage($message);
+        $thread = $this->messageModel->getThreadForMessage($message);
         $current = $thread[0];
 
         // Forward to MessageController in case something got mixed-up
@@ -93,8 +91,7 @@ class HostingRequestController extends AbstractMessageController
 
         $isMessage = (null === $message->getRequest()) ? true : false;
 
-        $messageModel = new MessageModel();
-        $thread = $messageModel->getThreadForMessage($message);
+        $thread = $this->messageModel->getThreadForMessage($message);
         $current = $thread[0];
 
         if ($isMessage) {
@@ -145,8 +142,7 @@ class HostingRequestController extends AbstractMessageController
         if (!$host->isBrowseable()) {
             $this->addTranslatedFlash('note', 'flash.member.invalid');
         }
-        $messageModel = new MessageModel();
-        if ($messageModel->hasMessageLimitExceeded(
+        if ($this->messageModel->hasMessageLimitExceeded(
             $member,
             $this->getParameter('new_members_messages_per_hour'),
             $this->getParameter('new_members_messages_per_day')
@@ -225,8 +221,7 @@ class HostingRequestController extends AbstractMessageController
         }
 
         $member = $this->getUser();
-        $messageModel = new MessageModel();
-        $messages = $messageModel->getFilteredRequests($member, $folder, $sort, $sortDir, $page, $limit);
+        $messages = $this->messageModel->getFilteredRequests($member, $folder, $sort, $sortDir, $page, $limit);
 
         return $this->handleFolderRequest($request, $folder, $messages, 'requests');
     }
@@ -375,8 +370,7 @@ class HostingRequestController extends AbstractMessageController
             return $this->redirectToRoute('hosting_request_show', ['id' => $newRequest->getId()]);
         }
 
-        $messageModel = new MessageModel();
-        $thread = $messageModel->getThreadForMessage($hostingRequest);
+        $thread = $this->messageModel->getThreadForMessage($hostingRequest);
 
         return $this->render('request/reply_guest.html.twig', [
             'form' => $requestForm->createView(),
@@ -470,8 +464,7 @@ class HostingRequestController extends AbstractMessageController
             return $this->redirectToRoute('hosting_request_show', ['id' => $newRequest->getId()]);
         }
 
-        $messageModel = new MessageModel();
-        $thread = $messageModel->getThreadForMessage($hostingRequest);
+        $thread = $this->messageModel->getThreadForMessage($hostingRequest);
 
         return $this->render('request/reply_host.html.twig', [
             'form' => $requestForm->createView(),

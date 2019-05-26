@@ -9,7 +9,7 @@ use App\Utilities\ManagerTrait;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 
-class TripModel extends BaseModel
+class TripModel
 {
     use ManagerTrait;
 
@@ -22,7 +22,7 @@ class TripModel extends BaseModel
     public function findLatest($page, $items)
     {
         /** @var TripRepository $repository */
-        $repository = $this->em->getRepository(Trip::class);
+        $repository = $this->getManager()->getRepository(Trip::class);
         $query = $repository->queryLatest();
 
         $paginator = new Pagerfanta(new DoctrineORMAdapter($query, false));

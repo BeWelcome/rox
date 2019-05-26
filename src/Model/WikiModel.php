@@ -25,7 +25,7 @@ class WikiModel
         $pageName = $this->getPagename($pageTitle);
 
         /** @var WikiRepository $wikiRepository */
-        $wikiRepository = $this->em->getRepository(Wiki::class);
+        $wikiRepository = $this->getManager()->getRepository(Wiki::class);
 
         $wikiPage = $wikiRepository->getPageByName($pageName);
 

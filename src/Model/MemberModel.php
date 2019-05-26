@@ -33,8 +33,9 @@ class MemberModel
         $passwordReset
             ->setMember($member)
             ->setToken($token);
-        $this->em->persist($passwordReset);
-        $this->em->flush();
+        $em = $this->getManager();
+        $em->persist($passwordReset);
+        $em->flush();
 
         return $token;
     }

@@ -13,7 +13,7 @@ class ActivityModel
     public function getLatest($page, $limit)
     {
         /** @var ActivityRepository $repository */
-        $repository = $this->em->getRepository(Activity::class);
+        $repository = $this->getManager()->getRepository(Activity::class);
 
         return $repository->findLatest($page, $limit);
     }

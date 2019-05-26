@@ -33,7 +33,7 @@ class LandingModel
      */
     public function getMessages(Member $member, $unread, $limit = 0)
     {
-        $qb = $this->em->createQueryBuilder();
+        $qb = $this->getManager()->createQueryBuilder();
         $qb
             ->select('m')
             ->from('App:Message', 'm')
@@ -76,7 +76,7 @@ class LandingModel
      */
     public function getNotifications(Member $member, $limit = 0)
     {
-        $queryBuilder = $this->em->createQueryBuilder();
+        $queryBuilder = $this->getManager()->createQueryBuilder();
         $queryBuilder
             ->select('n')
             ->from('App:Notification', 'n')
@@ -111,9 +111,7 @@ class LandingModel
             return [];
         }
 
-        $em = $this->em;
-
-        $queryBuilder = $em->createQueryBuilder();
+        $queryBuilder = $this->getManager()->createQueryBuilder();
 
         $queryBuilder
             ->select('ft')
@@ -161,7 +159,7 @@ class LandingModel
     public function getActivities(Member $member)
     {
         /** @var ActivityRepository $repository */
-        $repository = $this->em->getRepository(Activity::class);
+        $repository = $this->getManager()->getRepository(Activity::class);
         $activities = $repository->findUpcomingAroundLocation($member->getCity());
 
         return $activities;
@@ -195,8 +193,9 @@ class LandingModel
     {
         try {
             $member->setAccommodation($accommodation);
-            $this->em->persist($member);
-            $this->em->flush($member);
+            $em = $this->getManager();
+            $em->persist($member);
+            $em->flush($member);
         } catch (OptimisticLockException $e) {
         } catch (ORMException $e) {
         }

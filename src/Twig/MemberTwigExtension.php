@@ -12,6 +12,7 @@ use App\Repository\ActivityRepository;
 use App\Repository\CommentRepository;
 use App\Repository\MessageRepository;
 use App\Repository\NotificationRepository;
+use App\Utilities\ManagerTrait;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -24,15 +25,12 @@ use Twig\Extension\GlobalsInterface;
 
 class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
 {
+    use ManagerTrait;
+
     /**
      * @var Session
      */
     protected $session;
-
-    /**
-     * @var EntityManager
-     */
-    protected $em;
 
     /**
      * @var Router
@@ -53,18 +51,15 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
      * MemberTwigExtension constructor.
      *
      * @param SessionInterface       $session
-     * @param EntityManagerInterface $em
      * @param RouterInterface        $router
      * @param Security               $security
      */
     public function __construct(
         SessionInterface $session,
-        EntityManagerInterface $em,
         RouterInterface $router,
         Security $security
     ) {
         $this->session = $session;
-        $this->em = $em;
         $this->router = $router;
         $this->security = $security;
         $this->member = $this->security->getUser();
@@ -205,7 +200,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         $user = $this->security->getUser();
         if ($user &&
             ($this->security->isGranted(Member::ROLE_ADMIN_GROUP))) {
-            $groupsRepository = $this->em->getRepository(Group::class);
+            $groupsRepository = $this->getManager()->getRepository(Group::class);
             $groups = $groupsRepository->findBy([
                 'approved' => [Group::NOT_APPROVED, Group::IN_DISCUSSION],
             ]);
@@ -223,7 +218,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
             ($this->security->isGranted(Member::ROLE_ADMIN_CHECKER) ||
                 $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM))) {
             /** @var CommentRepository $commentRepository */
-            $commentRepository = $this->em->getRepository(Comment::class);
+            $commentRepository = $this->getManager()->getRepository(Comment::class);
             $reportedCommentsCount = $commentRepository->getReportedCommentsCount();
         }
 
@@ -238,7 +233,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
             ($this->security->isGranted(Member::ROLE_ADMIN_CHECKER) ||
                 $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM))) {
             /** @var MessageRepository $messageRepository */
-            $messageRepository = $this->em->getRepository(Message::class);
+            $messageRepository = $this->getManager()->getRepository(Message::class);
 
             $reportedMessagesCount = $messageRepository->getReportedMessagesCount();
         }
@@ -249,7 +244,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
     protected function getUnreadMessagesCount()
     {
         /** @var MessageRepository $messageRepository */
-        $messageRepository = $this->em->getRepository(Message::class);
+        $messageRepository = $this->getManager()->getRepository(Message::class);
 
         return $messageRepository->getUnreadMessagesCount($this->member);
     }
@@ -257,7 +252,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
     protected function getUnreadRequestsCount()
     {
         /** @var MessageRepository $messageRepository */
-        $messageRepository = $this->em->getRepository(Message::class);
+        $messageRepository = $this->getManager()->getRepository(Message::class);
 
         return $messageRepository->getUnreadRequestsCount($this->member);
     }
@@ -265,7 +260,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
     protected function getUncheckedNotificationsCount()
     {
         /** @var NotificationRepository $notificationRepository */
-        $notificationRepository = $this->em->getRepository(Notification::class);
+        $notificationRepository = $this->getManager()->getRepository(Notification::class);
 
         return $notificationRepository->getUncheckedNotificationsCount($this->member);
     }
@@ -276,7 +271,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
     protected function getUpcomingAroundLocationCount()
     {
         /** @var ActivityRepository $activityRepository */
-        $activityRepository = $this->em->getRepository(Activity::class);
+        $activityRepository = $this->getManager()->getRepository(Activity::class);
 
         return $activityRepository->getUpcomingAroundLocationCount($this->member->getCity());
     }

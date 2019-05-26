@@ -30,14 +30,19 @@ class CommentController extends AbstractController
      */
     private $translator;
 
+    /** @var CommentModel */
+    private $commentModel;
+
     /**
      * CommentController constructor.
      *
      * @param TranslatorInterface $translator
+     * @param CommentModel $commentModel
      */
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, CommentModel $commentModel)
     {
         $this->translator = $translator;
+        $this->commentModel = $commentModel;
     }
 
     /**
@@ -52,8 +57,7 @@ class CommentController extends AbstractController
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
 
-        $commentModel = new CommentModel($this->getDoctrine());
-        $comments = $commentModel->getComments($page, $limit);
+        $comments = $this->commentModel->getComments($page, $limit);
 
         return $this->render('admin/comment/overview.html.twig', [
             'headline' => 'admin.comments.all',
@@ -78,8 +82,7 @@ class CommentController extends AbstractController
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
 
-        $commentModel = new CommentModel($this->getDoctrine());
-        $comments = $commentModel->getCommentsByAdminAction(CommentAdminActionType::SAFETY_TEAM_CHECK, $page, $limit);
+        $comments = $this->commentModel->getCommentsByAdminAction(CommentAdminActionType::SAFETY_TEAM_CHECK, $page, $limit);
 
         return $this->render('admin/comment/overview.html.twig', [
             'headline' => 'admin.comment.safetyteam',
@@ -104,8 +107,7 @@ class CommentController extends AbstractController
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
 
-        $commentModel = new CommentModel($this->getDoctrine());
-        $comments = $commentModel->getCommentsByAdminAction(CommentAdminActionType::ADMIN_CHECK, $page, $limit);
+        $comments = $this->commentModel->getCommentsByAdminAction(CommentAdminActionType::ADMIN_CHECK, $page, $limit);
 
         return $this->render('admin/comment/overview.html.twig', [
             'headline' => 'admin.comment.reported',
@@ -130,8 +132,7 @@ class CommentController extends AbstractController
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
 
-        $commentModel = new CommentModel($this->getDoctrine());
-        $comments = $commentModel->getCommentsByQuality(CommentQualityType::NEGATIVE, $page, $limit);
+        $comments = $this->commentModel->getCommentsByQuality(CommentQualityType::NEGATIVE, $page, $limit);
 
         return $this->render('admin/comment/overview.html.twig', [
             'headline' => 'admin.comment.negative',
@@ -337,8 +338,7 @@ class CommentController extends AbstractController
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
 
-        $commentModel = new CommentModel($this->getDoctrine());
-        $comments = $commentModel->getCommentsForMember($member, $page, $limit);
+        $comments = $this->commentModel->getCommentsForMember($member, $page, $limit);
 
         return $this->render('admin/comment/overview.html.twig', [
             'headline' => 'admin.comment.all',
@@ -364,8 +364,7 @@ class CommentController extends AbstractController
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
 
-        $commentModel = new CommentModel($this->getDoctrine());
-        $comments = $commentModel->getCommentsFromMember($member, $page, $limit);
+        $comments = $this->commentModel->getCommentsFromMember($member, $page, $limit);
 
         return $this->render('admin/comment/overview.html.twig', [
             'headline' => 'admin.comment.all',

@@ -3,12 +3,17 @@
 namespace App\Model;
 
 use App\Doctrine\MemberStatusType;
+use App\Utilities\ManagerTrait;
 
-class StatisticsModel extends BaseModel
+class StatisticsModel
 {
+    use ManagerTrait;
+
     public function getStatistics()
     {
-        $members = $this->execQuery('
+        $connection = $this->getManager()->getConnection();
+
+        $members = $connection->executeQuery('
             SELECT
                 COUNT(*) AS cnt
             FROM
@@ -17,7 +22,7 @@ class StatisticsModel extends BaseModel
                 m.status IN ('.MemberStatusType::ACTIVE_ALL.')
         ')->fetch();
 
-        $countries = $this->execQuery("
+        $countries = $connection->executeQuery("
             SELECT
                 DISTINCT gc.country
             FROM
@@ -26,7 +31,7 @@ class StatisticsModel extends BaseModel
                 join members m on g.geonameId = m.IdCity and m.Status IN ('Active', 'OutOfRemind')        
         ")->fetchAll();
 
-        $languages = $this->execQuery('
+        $languages = $connection->executeQuery('
             SELECT
                 COUNT(DISTINCT l.id) AS cnt
             FROM
@@ -39,7 +44,7 @@ class StatisticsModel extends BaseModel
                 AND m.Status IN ('.MemberStatusType::ACTIVE_ALL.')
         ')->fetch();
 
-        $positiveComments = $this->execQuery("
+        $positiveComments = $connection->executeQuery("
             SELECT
                 COUNT(c.id) AS cnt
             FROM
@@ -51,7 +56,7 @@ class StatisticsModel extends BaseModel
                 AND m.Status IN (".MemberStatusType::ACTIVE_ALL.')
         ')->fetch();
 
-        $activities = $this->execQuery('
+        $activities = $connection->executeQuery('
             SELECT
                 COUNT(a.id) AS cnt
             FROM

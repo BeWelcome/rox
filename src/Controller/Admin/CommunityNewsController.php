@@ -8,6 +8,7 @@ use App\Model\CommunityNewsModel;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CommunityNewsController extends AbstractController
@@ -17,14 +18,14 @@ class CommunityNewsController extends AbstractController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param CommunityNewsModel $communityNewsModel
+     * @return Response
      */
-    public function showOverviewAction(Request $request)
+    public function showOverviewAction(Request $request, CommunityNewsModel $communityNewsModel)
     {
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 20);
 
-        $communityNewsModel = new CommunityNewsModel($this->getDoctrine());
         $communityNews = $communityNewsModel->getAdminPaginator($page, $limit);
 
         return $this->render('admin/communitynews/list.html.twig', [
@@ -37,7 +38,8 @@ class CommunityNewsController extends AbstractController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws \Exception
      */
     public function createAction(Request $request)
     {
@@ -70,7 +72,7 @@ class CommunityNewsController extends AbstractController
      * @param Request       $request
      * @param CommunityNews $communityNews
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function editAction(Request $request, CommunityNews $communityNews)
     {
@@ -119,7 +121,7 @@ class CommunityNewsController extends AbstractController
      *
      * @param CommunityNews $communityNews
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function unhideAction(CommunityNews $communityNews)
     {

@@ -6,6 +6,8 @@ use App\Entity\Comment;
 use App\Entity\Member;
 use App\Model\BaseModel;
 use App\Repository\CommentRepository;
+use App\Utilities\ManagerTrait;
+use Pagerfanta\Pagerfanta;
 
 /**
  * Class MessageModel.
@@ -13,18 +15,20 @@ use App\Repository\CommentRepository;
  * @SuppressWarnings(PHPMD.StaticAccess)
  * Hide logic in DeleteRequestType
  */
-class CommentModel extends BaseModel
+class CommentModel
 {
+    use ManagerTrait;
+
     /**
      * @param int $page
      * @param int $limit
      *
-     * @return \Pagerfanta\Pagerfanta
+     * @return Pagerfanta
      */
     public function getComments($page = 1, $limit = 10)
     {
         /** @var CommentRepository $repository */
-        $repository = $this->em->getRepository(Comment::class);
+        $repository = $this->getManager()->getRepository(Comment::class);
 
         return $repository->pageAll($page, $limit);
     }
@@ -34,12 +38,12 @@ class CommentModel extends BaseModel
      * @param int    $page
      * @param int    $limit
      *
-     * @return \Pagerfanta\Pagerfanta
+     * @return Pagerfanta
      */
     public function getCommentsForMember(Member $member, $page = 1, $limit = 10)
     {
         /** @var CommentRepository $repository */
-        $repository = $this->em->getRepository(Comment::class);
+        $repository = $this->getManager()->getRepository(Comment::class);
 
         return $repository->pageAllForMember($member, $page, $limit);
     }
@@ -49,12 +53,12 @@ class CommentModel extends BaseModel
      * @param int    $page
      * @param int    $limit
      *
-     * @return \Pagerfanta\Pagerfanta
+     * @return Pagerfanta
      */
     public function getCommentsFromMember(Member $member, $page = 1, $limit = 10)
     {
         /** @var CommentRepository $repository */
-        $repository = $this->em->getRepository(Comment::class);
+        $repository = $this->getManager()->getRepository(Comment::class);
 
         return $repository->pageAllFromMember($member, $page, $limit);
     }
@@ -64,12 +68,12 @@ class CommentModel extends BaseModel
      * @param int $page
      * @param int $limit
      *
-     * @return \Pagerfanta\Pagerfanta
+     * @return Pagerfanta
      */
     public function getCommentsByQuality($quality, $page = 1, $limit = 10)
     {
         /** @var CommentRepository $repository */
-        $repository = $this->em->getRepository(Comment::class);
+        $repository = $this->getManager()->getRepository(Comment::class);
 
         return $repository->pageAllByQuality($quality, $page, $limit);
     }
@@ -79,12 +83,12 @@ class CommentModel extends BaseModel
      * @param int $page
      * @param int $limit
      *
-     * @return \Pagerfanta\Pagerfanta
+     * @return Pagerfanta
      */
     public function getCommentsByAdminAction($action, $page = 1, $limit = 10)
     {
         /** @var CommentRepository $repository */
-        $repository = $this->em->getRepository(Comment::class);
+        $repository = $this->getManager()->getRepository(Comment::class);
 
         return $repository->pageAllByAdmiNAction($action, $page, $limit);
     }

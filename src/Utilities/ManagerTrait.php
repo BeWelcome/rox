@@ -4,24 +4,20 @@ namespace App\Utilities;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 trait ManagerTrait
 {
-    /** @var ManagerRegistry */
-    protected $registry;
-
     /** @var EntityManager */
-    protected $em;
+    private $em;
 
     /**
      * @required
-     *
-     * @param ManagerRegistry $registry
+     * @param EntityManagerInterface $entityManager
      */
-    public function setManager(ManagerRegistry $registry)
+    public function setManager(EntityManagerInterface $entityManager)
     {
-        $this->registry = $registry;
-        $this->em = $registry->getManager();
+        $this->em = $entityManager;
     }
 
     public function getManager()

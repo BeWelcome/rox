@@ -18,12 +18,11 @@ class ActivityController extends AbstractController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listAction(Request $request)
+    public function listAction(Request $request, ActivityModel $activityModel)
     {
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 15);
 
-        $activityModel = new ActivityModel();
         $activities = $activityModel->getLatest($page, $limit);
 
         return $this->render('activity/list.html.twig', [

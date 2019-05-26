@@ -18,16 +18,14 @@ class TripController extends AbstractController
      * @Route("/trip", name="trip")
      *
      * @param Request $request
-     * @param int     $items
-     *
-     * @throws
+     * @param TripModel $tripModel
+     * @param int $items
      *
      * @return Response
      */
-    public function listAction(Request $request, $items = 10)
+    public function listAction(Request $request, TripModel $tripModel, $items = 10)
     {
         $page = $request->query->get('page', 1);
-        $tripModel = new TripModel();
 
         $trips = $tripModel->findLatest($page, $items);
 

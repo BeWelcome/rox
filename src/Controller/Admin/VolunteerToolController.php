@@ -10,12 +10,14 @@ use App\Form\CustomDataClass\Tools\FindUserRequest;
 use App\Form\FeedbackFormType;
 use App\Form\FindUserFormType;
 use App\Logger\Logger;
-use App\Model\BaseModel;
 use App\Model\FeedbackModel;
 use App\Repository\MemberRepository;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -32,6 +34,14 @@ class VolunteerToolController extends AbstractController
     const DAMAGE_DONE = 'admin.tools.damage_done';
     const AGE_BY_COUNTRY = 'admin.tools.age_by_country';
 
+    /** @var FeedbackModel */
+    private $feedbackModel;
+
+    public function __construct(FeedbackModel $feedbackModel)
+    {
+        $this->feedbackModel = $feedbackModel;
+    }
+
     /**
      * This directly redirects to the first assigned tool if any otherwise it redirects to the referrer page.
      *
@@ -39,7 +49,7 @@ class VolunteerToolController extends AbstractController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function showOverviewAction(Request $request)
     {
@@ -64,9 +74,8 @@ class VolunteerToolController extends AbstractController
      * @param TranslatorInterface $translator
      * @param Logger              $logger
      *
-     * @throws \Exception
-     *
-     * @return \Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpFoundation\RedirectResponse
+     * @return Response|RedirectResponse
+     * @throws Exception
      */
     public function changeUsernameAction(Request $request, TranslatorInterface $translator, Logger $logger)
     {
@@ -133,9 +142,9 @@ class VolunteerToolController extends AbstractController
      * @param Request $request
      * @param Logger  $logger
      *
-     * @throws \Exception
+     * @return Response|RedirectResponse
+     *@throws Exception
      *
-     * @return \Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function findUserAction(Request $request, Logger $logger)
     {
@@ -180,7 +189,7 @@ class VolunteerToolController extends AbstractController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpFoundation\RedirectResponse
+     * @return Response|RedirectResponse
      */
     public function showSignupFeedbackAction(Request $request)
     {
@@ -197,8 +206,7 @@ class VolunteerToolController extends AbstractController
         $limit = $request->query->get('limit', 20);
         $types = $request->query->get('types', []);
 
-        $feedbackModel = new FeedbackModel($this->getDoctrine());
-        $categories = $feedbackModel->getCategories();
+        $categories = $this->feedbackModel->getCategories();
 
         $feedbackForm = $this->createForm(FeedbackFormType::class, [
             'categories' => $categories,
@@ -210,7 +218,7 @@ class VolunteerToolController extends AbstractController
             $types = $data['types'];
         }
 
-        $feedbacks = $feedbackModel->getFilteredFeedback($types, $page, $limit);
+        $feedbacks = $this->feedbackModel->getFilteredFeedback($types, $page, $limit);
 
         return $this->render(
             'admin/tools/check.feedback.html.twig',
@@ -230,9 +238,9 @@ class VolunteerToolController extends AbstractController
      *
      * @param Request $request
      *
-     * @throws \Exception
+     * @throws Exception
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function showTopSpammerAction(Request $request)
     {
@@ -246,8 +254,9 @@ class VolunteerToolController extends AbstractController
         }
 
         // Get all banned members with the number of sent messages for the last two months
-        $baseModel = new BaseModel($this->getDoctrine());
-        $messagesSent = $baseModel->execQuery("
+        $connection = $this->getDoctrine()->getConnection();
+
+        $messagesSent = $connection->executeQuery("
             SELECT 
                 COUNT(*) AS 'MessagesSent',
                 Username AS Username,
@@ -288,9 +297,9 @@ class VolunteerToolController extends AbstractController
      *
      * @param Request $request
      *
-     * @throws \Exception
+     * @throws Exception
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function showDamageDoneAction(Request $request)
     {
@@ -304,9 +313,9 @@ class VolunteerToolController extends AbstractController
         }
 
         // Get all banned members with the number of sent messages for the last two months
-        $baseModel = new BaseModel($this->getDoctrine());
+        $connection = $this->getDoctrine()->getConnection();
 
-        $damageDone = $baseModel->execQuery("
+        $damageDone = $connection->executeQuery("
             SELECT 
                 m1.Username AS 'Receiver',
                 m1.Status AS 'ReceiverStatus',
@@ -343,9 +352,9 @@ class VolunteerToolController extends AbstractController
      *
      * @param Request $request
      *
-     * @throws \Exception
+     * @throws Exception
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function showMessagesLastWeekAction(Request $request)
     {
@@ -358,8 +367,8 @@ class VolunteerToolController extends AbstractController
             return $this->redirect($referrer);
         }
 
-        $baseModel = new BaseModel($this->getDoctrine());
-        $results = $baseModel->execQuery('
+        $connection = $this->getDoctrine()->getConnection();
+        $results = $connection->executeQuery('
         SELECT
 m.username AS Username,
 g.name AS City,
@@ -394,9 +403,9 @@ ORDER BY count(msg.id) DESC')->fetchAll();
      *
      * @param Request $request
      *
-     * @throws \Exception
+     * @throws Exception
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function showAverageAgePerCountryAction(Request $request)
     {
@@ -409,8 +418,8 @@ ORDER BY count(msg.id) DESC')->fetchAll();
             return $this->redirect($referrer);
         }
 
-        $baseModel = new BaseModel($this->getDoctrine());
-        $results = $baseModel->execQuery("
+        $connection = $this->getDoctrine()->getConnection();
+        $results = $connection->executeQuery("
             SELECT 
                 gc.Name AS Name,
                 COUNT(*) AS Count,

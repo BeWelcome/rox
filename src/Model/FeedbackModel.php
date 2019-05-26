@@ -22,7 +22,7 @@ class FeedbackModel
      */
     public function getFilteredFeedback(array $categories, $page, $limit)
     {
-        $qb = $this->em->createQueryBuilder();
+        $qb = $this->getManager()->createQueryBuilder();
         $qb
             ->select('f')
             ->from('App:Feedback', 'f');
@@ -43,7 +43,7 @@ class FeedbackModel
 
     public function getCategories()
     {
-        $categoryRepository = $this->em->getRepository(FeedbackCategory::class);
+        $categoryRepository = $this->getManager()->getRepository(FeedbackCategory::class);
 
         $categories = $categoryRepository->findAll();
         $mapped = [];

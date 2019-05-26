@@ -5,7 +5,7 @@ namespace App\Model;
 use App\Entity\Params;
 use App\Utilities\ManagerTrait;
 
-class DonateModel extends BaseModel
+class DonateModel
 {
     use ManagerTrait;
 
@@ -25,7 +25,8 @@ class DonateModel extends BaseModel
                 WHERE
                     created > '".$campaignValue['campaignstartdate']->format('Y-m-d H:i:s')."'
                 ";
-            $rowYear = $this->execQuery($sql)->fetch();
+            $connection = $this->getManager()->getConnection();
+            $rowYear = $connection->executeQuery($sql)->fetch();
             switch ($rowYear['quarter']) {
                 case 1:
                     $start = $rowYear['yearnow'].'-01-01';
@@ -55,7 +56,7 @@ class DonateModel extends BaseModel
                     AND
                     created < '$end'
                 ";
-            $result = $this->execQuery($query);
+            $result = $connection->executeQuery($query);
             $row = $result->fetch(\PDO::FETCH_OBJ);
             $row->QuarterDonation = sprintf('%d', $row->Total);
             $row->MonthNeededAmount = $requiredPerMonth;
@@ -76,7 +77,7 @@ class DonateModel extends BaseModel
     public function getCampaignValues()
     {
         $query = $this
-            ->em
+            ->getManager()
             ->getRepository(Params::class)
             ->createQueryBuilder('d')
             ->select([

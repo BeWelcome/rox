@@ -19,13 +19,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class AbstractMessageController extends AbstractController
+class BaseMessageController extends AbstractController
 {
     /** @var TranslatorInterface */
     protected $translator;
 
     /** @var Swift_Mailer */
     protected $mailer;
+
+    /** @var MessageModel */
+    protected $messageModel;
+
+    public function __construct(MessageModel $messageModel)
+    {
+        $this->messageModel = $messageModel;
+    }
 
     /**
      * @required
@@ -171,7 +179,6 @@ class AbstractMessageController extends AbstractController
     protected function handleFolderRequest(Request $request, $folder, Pagerfanta $messages, $type)
     {
         $member = $this->getUser();
-        $messageModel = new MessageModel();
         $messageIds = [];
         foreach ($messages->getIterator() as $key => $val) {
             $messageIds[$key] = $val->getId();
@@ -187,31 +194,31 @@ class AbstractMessageController extends AbstractController
             $data = $form->getData();
             $messageIds = $data->getMessages();
             if ($form->get('purge')->isClicked()) {
-                $messageModel->markPurged($member, $messageIds);
+                $this->messageModel->markPurged($member, $messageIds);
                 $this->addTranslatedFlash('notice', 'flash.purged');
 
                 return $this->redirect($request->getRequestUri());
             }
             if ($form->get('delete')->isClicked()) {
                 if ('deleted' === $folder) {
-                    $messageModel->unmarkDeleted($member, $messageIds);
+                    $this->messageModel->unmarkDeleted($member, $messageIds);
                     $this->addTranslatedFlash('notice', 'flash.undeleted');
 
                     return $this->redirect($request->getRequestUri());
                 }
-                $messageModel->markDeleted($member, $messageIds);
+                $this->messageModel->markDeleted($member, $messageIds);
                 $this->addTranslatedFlash('notice', 'flash.deleted');
 
                 return $this->redirect($request->getRequestUri());
             }
             if ($form->get('spam')->isClicked()) {
                 if ('spam' === $folder) {
-                    $messageModel->unmarkAsSpam($messageIds);
+                    $this->messageModel->unmarkAsSpam($messageIds);
                     $this->addTranslatedFlash('notice', 'flash.marked.nospam');
 
                     return $this->redirect($request->getRequestUri());
                 }
-                $messageModel->markAsSpam($messageIds);
+                $this->messageModel->markAsSpam($messageIds);
                 $this->addTranslatedFlash('notice', 'flash.marked.spam');
 
                 return $this->redirect($request->getRequestUri());

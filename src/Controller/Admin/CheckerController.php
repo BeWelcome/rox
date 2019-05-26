@@ -4,9 +4,12 @@ namespace App\Controller\Admin;
 
 use App\Form\CheckerIndexFormType;
 use App\Model\MessageModel;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CheckerController extends AbstractController
@@ -16,16 +19,16 @@ class CheckerController extends AbstractController
      *
      * @param Request $request
      *
-     * @throws \Doctrine\ORM\ORMException
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param MessageModel $messageModel
+     * @return Response
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function showOverview(Request $request)
+    public function showOverview(Request $request, MessageModel $messageModel)
     {
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 2);
 
-        $messageModel = new MessageModel($this->getDoctrine());
         $reportedMessages = $messageModel->getReportedMessages($page, $limit);
         $messageIds = [];
         foreach ($reportedMessages->getIterator() as $key => $val) {

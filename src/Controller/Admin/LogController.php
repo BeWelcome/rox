@@ -6,8 +6,10 @@ use App\Entity\Member;
 use App\Form\LogFormType;
 use App\Model\LogModel;
 use App\Repository\MemberRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class LogController extends AbstractController
@@ -17,11 +19,11 @@ class LogController extends AbstractController
      *
      * @param Request $request
      *
-     * @throws \Doctrine\ORM\ORMException
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param LogModel $logModel
+     * @return Response
+     * @throws NonUniqueResultException
      */
-    public function showOverview(Request $request)
+    public function showOverview(Request $request, LogModel $logModel)
     {
         $member = null;
         $page = $request->query->get('page', 1);
@@ -29,7 +31,6 @@ class LogController extends AbstractController
         $types = $request->query->get('types', []);
         $username = $request->query->get('username', null);
 
-        $logModel = new LogModel($this->getDoctrine());
         $logTypes = $logModel->getLogTypes();
 
         $logForm = $this->createForm(LogFormType::class, [

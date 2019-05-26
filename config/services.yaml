@@ -81,14 +81,15 @@ services:
   rox.twig_extension:
     public: true
     class: App\Twig\Extension
-    arguments: ['@session', '@doctrine', '@translator', '%data_directory%']
+    arguments:
+      $dataDirectory: '%data_directory%'
     tags:
       - { name: 'twig.extension' }
 
   rox.member_twig_extension:
     class: App\Twig\MemberTwigExtension
     public: true
-    arguments: ['@session', '@doctrine.orm.entity_manager', '@router', '@security.helper']
+    arguments: ['@session', '@router', '@security.helper']
     tags:
       - { name: twig.extension }
 

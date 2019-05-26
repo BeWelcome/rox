@@ -19,7 +19,7 @@ class LanguageModel
      */
     public function getLanguagesWithTranslations($locale)
     {
-        $entityManager = $this->em;
+        $entityManager = $this->getManager();
 
         $rsm = new ResultSetMappingBuilder($entityManager);
         $rsm->addRootEntityFromClassMetadata(Language::class, 'l');

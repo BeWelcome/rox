@@ -14,7 +14,7 @@ class RequestModel
     public function getFilteredRequests($member, $folder, $sort, $sortDir, $page = 1, $limit = 10)
     {
         /** @var MessageRepository $repository */
-        $repository = $this->em->getRepository(Message::class);
+        $repository = $this->getManager()->getRepository(Message::class);
 
         return $repository->findLatestRequests($member, 'requests_'.$folder, $sort, $sortDir, $page, $limit);
     }

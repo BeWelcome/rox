@@ -22,6 +22,16 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class LandingController extends AbstractController
 {
     /**
+     * @var LandingModel
+     */
+    private $landingModel;
+
+    public function __construct(LandingModel $landingModel)
+    {
+        $this->landingModel = $landingModel;
+    }
+
+    /**
      * @param Request $request
      *
      * @Route( "/widget/messages", name="/widget/messages")
@@ -47,8 +57,7 @@ class LandingController extends AbstractController
         $em->persist($memberPreference);
         $em->flush();
 
-        $homeModel = new LandingModel();
-        $messages = $homeModel->getMessages($member, $unread, 4);
+        $messages = $this->landingModel->getMessages($member, $unread, 4);
 
         $content = $this->render('landing/widget/messages.html.twig', [
             'messages' => $messages,
@@ -66,8 +75,7 @@ class LandingController extends AbstractController
     {
         $member = $this->getUser();
 
-        $homeModel = new LandingModel();
-        $notifications = $homeModel->getNotifications($member, 5);
+        $notifications = $this->landingModel->getNotifications($member, 5);
 
         $content = $this->render('landing/widget/notifications.html.twig', [
             'notifications' => $notifications,
@@ -109,8 +117,7 @@ class LandingController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $em->persist($memberPreference);
         $em->flush();
-        $homeModel = new LandingModel();
-        $threads = $homeModel->getThreads($member, $groups, $forum, $following, 5);
+        $threads = $this->landingModel->getThreads($member, $groups, $forum, $following, 5);
 
         $content = $this->render('landing/widget/forums.html.twig', [
             'threads' => $threads,
@@ -129,8 +136,7 @@ class LandingController extends AbstractController
     public function showActivitiesAction()
     {
         $member = $this->getUser();
-        $homeModel = new LandingModel();
-        $activities = $homeModel->getActivities($member);
+        $activities = $this->landingModel->getActivities($member);
 
         $content = $this->render('landing/widget/activities.html.twig', [
             'activities' => $activities,
@@ -162,8 +168,7 @@ class LandingController extends AbstractController
 
         $member = $this->getUser();
         if ($valid) {
-            $landingModel = new LandingModel();
-            $member = $landingModel->updateMemberAccommodation($member, $accommodation);
+            $member = $this->landingModel->updateMemberAccommodation($member, $accommodation);
         }
 
         // we need raw HTML and no response therefore we do not use the render method of the controller
@@ -186,25 +191,22 @@ class LandingController extends AbstractController
      *
      * @Route("/", name="landingpage")
      *
-     * @throws AccessDeniedException
-     *
+     * @param CommunityNewsModel $communityNewsModel
+     * @param DonateModel $donateModel
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(CommunityNewsModel $communityNewsModel, DonateModel $donateModel)
     {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw $this->createAccessDeniedException();
         }
 
         $member = $this->getUser();
-        $donationModel = new DonateModel();
-        $campaignDetails = $donationModel->getStatForDonations();
+        $campaignDetails = $donateModel->getStatForDonations();
 
-        $homeModel = new LandingModel();
-        $travellersInArea = $homeModel->getTravellersInAreaOfMember($member);
+        $travellersInArea = $this->landingModel->getTravellersInAreaOfMember($member);
 
-        $communityNews = new CommunityNewsModel();
-        $latestNews = $communityNews->getLatest();
+        $latestNews = $communityNewsModel->getLatest();
 
         $formFactory = $this->get('form.factory');
         // Prepare search form for home location link

@@ -50,19 +50,20 @@ $uri = 'forums/';
 <?php
     if ($threads = $boards->getThreads()) {
 ?>
+        <div class="row">
   <div class="col-12 col-md-8">
     <h3><?php echo $this->words->getFormatted('ForumRecentPosts'); $boards->getTotalThreads(); ?>
     </h3>
   </div><!--  row -->
 
 <?php if (!$noForumNewTopicButton) { ?>
-  <div class="col-12 col-md-4">
+  <div class="col-12 col-md-4 mt-2">
       <a class="btn btn-primary float-right" role="button" href="<?php echo $uri; ?>new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a><?php echo $this->words->flushBuffer(); ?>
   </div>
 <?php
 }
 
 require 'boardthreads.php';
-    }
-// <a href="rss/forumthreads"><img src="images/icons/feed.png" alt="RSS feed" /></a>
 ?>
+        </div>
+    <? } ?>

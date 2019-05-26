@@ -6,29 +6,58 @@
 {% endblock %}
 
 {% block content %}
-    <h1>{{ communityNews.title }}</h1>
-    <p class="small text-muted">{{ 'bewelcome_news.writtenby' | trans }}{{ macros.avatar( communityNews.createdBy.Username, 30, true) }} {{ communityNews.createdAt.DiffForHumans }}
-        {% if communityNews.updatedBy and communityNews.updatedBy.Username != communityNews.createdBy.Username %} {{ 'bewelcome_news.lastupdater' | trans}}{{ macros.avatar( communityNews.updatedBy.Username, 30, true) }} {{ communityNews.updatedAt.DiffForHumans }}{% endif %}</p>
-    <p class="my-0">{{ communityNews.text| raw }}</p>
-    <p class="mt-4">{% set commentsCount = communityNews.comments | length %}{% trans %}%commentsCount% comments{% endtrans %} <a class="btn btn-primary" href="{{ url('communitynews_comment_add', { id: communityNews.id }) }}">{{ 'bewelcome_news.addcomment' | trans }}</a></p>
+
+    <div class="row">
+        <div class="col-12">
+
+            <div class="card">
+                <div class="media">
+
+                   {{ macros.avatar( communityNews.createdBy.Username, 100, true) }}<br>
+
+                    {% if communityNews.updatedBy and communityNews.updatedBy.Username != communityNews.createdBy.Username %}<p>{{ 'bewelcome_news.lastupdater' | trans}}{{ macros.avatar( communityNews.updatedBy.Username, 30, true) }} {{ communityNews.updatedAt.DiffForHumans }}</p>{% endif %}
+
+                    <div class="media-body ml-2">
+                        <h1 class="my-0">{{ communityNews.title }}</h1>
+                        <p class="small text-muted">{{ 'bewelcome_news.writtenby' | trans }} {{ macros.profilelink( communityNews.createdBy.Username ) }} {{ communityNews.createdAt.DiffForHumans }}
+                        {{ communityNews.text| raw }}
+
+                            <p><a class="btn btn-primary" href="{{ url('communitynews_comment_add', { id: communityNews.id }) }}">{{ 'bewelcome_news.addcomment' | trans }}</a></p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <h4 class="font-weight-bold mt-4">{% set commentsCount = communityNews.comments | length %}{% trans %}%commentsCount% comments{% endtrans %}</h4>
+        </div>
     {% if comments.haveToPaginate %}
-        <div class="row">
             <div class="col-12">
                 <div class="float-right">{{ pagerfanta( comments, 'rox_default') }}</div>
             </div>
-        </div>
     {% endif %}
     {% for comment in comments.currentPageResults %}
-        <div class="mt-2">
-            <p class="mt-2"><strong>{{ comment.title }}</strong> <small class="text-muted">{{ comment.author.Username }}, {{ comment.created.DiffForHumans | trans }}</small><p>
-            {{ comment.text | raw }}
+        <div class="col-12">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title font-weight-bold mb-0">
+                        {{ comment.title }}
+                    </h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ macros.profilelink( comment.author.Username ) }}, {{ comment.created.DiffForHumans | trans }}</h6>
+                    {{ comment.text | raw }}
+                </div>
+            </div>
         </div>
     {% endfor %}
+        <div class="col-12">
+            <p><a class="btn btn-primary" href="{{ url('communitynews_comment_add', { id: communityNews.id }) }}">{{ 'bewelcome_news.addcomment' | trans }}</a></p>
+        </div>
     {% if comments.haveToPaginate %}
-        <div class="row">
             <div class="col-12">
                 <div class="float-right">{{ pagerfanta( comments, 'rox_default') }}</div>
             </div>
-        </div>
     {% endif %}
+
+    </div>
 {% endblock content %}

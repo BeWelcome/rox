@@ -7,6 +7,7 @@ use App\Controller\HostingRequestController;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Model\MessageModel;
 use DateInterval;
 use DateTime;
 use PHPUnit\Framework\TestCase;
@@ -43,7 +44,7 @@ class HostingRequestControllerTest extends TestCase
         $method = $reflection->getMethod('getFinalRequest');
         $method->setAccessible(true);
 
-        return $method->invokeArgs(new HostingRequestController(), $parameters);
+        return $method->invokeArgs(new HostingRequestController(new MessageModel()), $parameters);
     }
 
     /**

@@ -22,8 +22,6 @@ class RequestAndMessageController extends BaseMessageController
      * @param string $folder
      *
      * @return Response
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws InvalidArgumentException
      */
     public function requestsAndMessages(Request $request, $folder)

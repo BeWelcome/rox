@@ -194,6 +194,7 @@ class LandingController extends AbstractController
      * @param CommunityNewsModel $communityNewsModel
      * @param DonateModel $donateModel
      * @return Response
+     * @throws AccessDeniedException
      */
     public function indexAction(CommunityNewsModel $communityNewsModel, DonateModel $donateModel)
     {

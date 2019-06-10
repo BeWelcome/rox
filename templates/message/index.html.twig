@@ -49,7 +49,7 @@
         {% for message in items.currentPageResults %}
             {% set directionIn = (member.id == message.receiver.id) %}
             {% set otherMember = directionIn ? message.sender : message.receiver %}
-            {% set unread = (message.whenfirstread == '0000-00-00 00:00.00') or (message.whenfirstread is null) %}
+            {% set unread = (message.firstRead == '0000-00-00 00:00.00') or (message.firstRead is null) %}
 
             <tr>
                 <td class="select align-middle" id="selectcolumn">
@@ -67,7 +67,7 @@
                     >
                         <div>
                             {% if message.subject %}<p class="m-0">
-                                <em>{{- message.subject.subject | striptags -}}</em>
+                                <em>{% if message.parent %}Re: {% endif %}{{- message.subject.subject | striptags -}}</em>
                                 </p>{% endif %}
                     {% set messageText = message.Message | replace({'\n': ' ', '<br />': ' '}) | striptags %}
 

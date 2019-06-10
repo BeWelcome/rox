@@ -628,7 +628,7 @@ class ForumsController extends PAppController
         $this->_model->setGroupId($groupId);
         $this->isTopLevel = false;
         $this->_model->prepareForum($showsticky);
-        $this->_view->uri = 'groups/'.$request[1].'/forum/';
+        $this->_view->uri = 'group/'.$request[1].'/forum/';
         $this->_view->showExternal(true, $showsticky, $showNewTopicButton, $isGroupMember);
     }
 
@@ -846,7 +846,7 @@ class ForumsController extends PAppController
                     $this->_model->setGroupId((int) $request[1]);
                     $this->isTopLevel = false;
                     $this->isTopCategories = false;
-                    $this->uri = 'groups/'.$request[1].'/forum/';
+                    $this->uri = 'group/'.$request[1].'/forum/';
                 }
             }
         }

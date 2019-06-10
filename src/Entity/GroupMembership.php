@@ -7,12 +7,14 @@
 
 namespace App\Entity;
 
+use App\Doctrine\GroupMembershipStatusType;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Membersgroups.
+ * Group Membership.
  *
  * @ORM\Table(name="membersgroups", uniqueConstraints={@ORM\UniqueConstraint(name="UniqueIdMemberIdGroup", columns={"IdMember", "IdGroup"})}, indexes={@ORM\Index(name="IdGroup", columns={"IdGroup"}), @ORM\Index(name="IdMember", columns={"IdMember"})})
  * @ORM\Entity
@@ -24,26 +26,33 @@ use Doctrine\ORM\Mapping as ORM;
 class GroupMembership
 {
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
     private $updated;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
     private $created;
 
     /**
-     * @var MembersTrad
+     * @var int
      *
-     * @ORM\ManyToMany(targetEntity="MembersTrad", fetch="LAZY")
-     * @ORM\JoinTable(name="group_membership_trads",
+     * @ORM\Column(name="comment", type="integer", nullable=false)
+     */
+    private $comment = 0;
+
+    /**
+     * @var MemberTranslation
+     *
+     * @ORM\ManyToMany(targetEntity="MemberTranslation", fetch="LAZY")
+     * @ORM\JoinTable(name="group_memberships_comments",
      *      joinColumns={@ORM\JoinColumn(name="group_membership_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="members_trad_id", referencedColumnName="id", unique=true)}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="member_comment_id", referencedColumnName="id", unique=true)}
      *      )
      */
     private $comments;
@@ -69,7 +78,7 @@ class GroupMembership
      *
      * @ORM\Column(name="Status", type="group_membership_status", nullable=false)
      */
-    private $status = 'WantToBeIn';
+    private $status = GroupMembershipStatusType::APPLIED_FOR_MEMBERSHIP;
 
     /**
      * @var string
@@ -109,7 +118,7 @@ class GroupMembership
     /**
      * Set updated.
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
      * @return GroupMembership
      */
@@ -123,7 +132,7 @@ class GroupMembership
     /**
      * Get updated.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getUpdated()
     {
@@ -133,7 +142,7 @@ class GroupMembership
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return GroupMembership
      */
@@ -147,35 +156,11 @@ class GroupMembership
     /**
      * Get created.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreated()
     {
         return $this->created;
-    }
-
-    /**
-     * Set comment.
-     *
-     * @param int $comment
-     *
-     * @return GroupMembership
-     */
-    public function setComment($comment)
-    {
-        $this->comment = $comment;
-
-        return $this;
-    }
-
-    /**
-     * Get comment.
-     *
-     * @return int
-     */
-    public function getComment()
-    {
-        return $this->comment;
     }
 
     /**
@@ -325,27 +310,36 @@ class GroupMembership
     /**
      * Add a comment for the membership.
      *
-     * @param MembersTrad $comment
+     * @param MemberTranslation $comment
      *
      * @return GroupMembership
      */
-    public function addComment(MembersTrad $comment)
+    public function addComment(MemberTranslation $comment)
     {
         if (!$this->comments->contains($comment)) {
             $this->comments->add($comment);
+            $this->setComment($comment->getId());
         }
 
         return $this;
     }
 
     /**
+     * Sets the comment for the membership.
+     */
+    private function setComment($commentId)
+    {
+        $this->comment = $commentId;
+    }
+
+    /**
      * Remove a comment from the membership.
      *
-     * @param MembersTrad $comment
+     * @param MemberTranslation $comment
      *
      * @return GroupMembership
      */
-    public function removeComment(MembersTrad $comment)
+    public function removeComment(MemberTranslation $comment)
     {
         if ($this->comments->contains($comment)) {
             $this->comments->remove($comment);
@@ -371,7 +365,7 @@ class GroupMembership
      */
     public function onPrePersist()
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
     }
 
     /**
@@ -381,11 +375,11 @@ class GroupMembership
      */
     public function onPreUpdate()
     {
-        $this->updated = new \DateTime('now');
+        $this->updated = new DateTime('now');
     }
 
     /**
-     * @return Collection|MembersTrad[]
+     * @return Collection|MemberTranslation[]
      */
     public function getComments(): Collection
     {

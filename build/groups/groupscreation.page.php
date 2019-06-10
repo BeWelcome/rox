@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
@@ -38,11 +38,11 @@ class GroupsCreationPage extends GroupsBasePage
         $words = $this->getWords();
         ?>
         <div>
-            <h1><a href="groups"><?= $words->get('Groups');?></a> &raquo; <a href="groups/new"><?= $words->get('GroupsCreateNew');?></a></h1>
+            <h1><a href="groups"><?= $words->get('Groups');?></a> &raquo; <a href="new/group"><?= $words->get('GroupsCreateNew');?></a></h1>
         </div>
         <?php
     }
-    
+
     protected function getSubmenuActiveItem()
     {
         return 'new';

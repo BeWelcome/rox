@@ -2,10 +2,12 @@
 
 namespace App\Form;
 
+use App\Entity\HostingRequest;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class HostingRequestGuest extends HostingRequestAbstractType
 {
@@ -15,7 +17,9 @@ class HostingRequestGuest extends HostingRequestAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('request', HostingRequestType::class)
+            ->add('request', HostingRequestType::class, [
+                'reply_guest' => true,
+            ])
         ;
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $messageRequest = $event->getData();
@@ -32,7 +36,6 @@ class HostingRequestGuest extends HostingRequestAbstractType
                 $this->addMessageTextArea($form, 'Please enter a message for your host.');
                 $form->add('cancel', SubmitType::class);
                 $form->add('update', SubmitType::class);
-                $form->add('subject', SubjectType::class, ['disabled' => true]);
             }
         });
     }

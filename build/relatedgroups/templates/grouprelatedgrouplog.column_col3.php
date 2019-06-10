@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 ?>
@@ -30,13 +30,13 @@ Boston, MA  02111-1307, USA.
         <div class="col-12 col-md-6 col-lg-4">
             <div class="float-left h-100 mr-2 groupimg">
                 <!-- group image -->
-                <a href="groups/<?=$group_data->getPKValue() ?>">
-                    <img class="framed groupimg" alt="<?=htmlspecialchars($group_data->Name, ENT_QUOTES) ?>" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>" />
+                <a href="group/<?=$group_data->getPKValue() ?>">
+                    <img class="framed groupimg" alt="<?=htmlspecialchars($group_data->Name, ENT_QUOTES) ?>" src="<?= ((strlen($group_data->Picture) > 0) ? "group/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>" />
                 </a>
             </div>
             <div>
                 <!-- group name -->
-                <a href="groups/<?=$group_data->getPKValue() ?>" class="h4"><?=htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a>
+                <a href="group/<?=$group_data->getPKValue() ?>" class="h4"><?=htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a>
                 <!-- group details -->
                 <ul class="groupul mt-1">
                     <li><i class="fa fa-users pr-1" title="<?php echo $words->get('GroupsMemberCount');?>"></i><?=$group_data->getMemberCount(); ?></li>
@@ -54,12 +54,12 @@ Boston, MA  02111-1307, USA.
             if ($this->isGroupMember())  {
                 ?>
 
-                    <a class="btn btn-primary" role="button" href="groups/<? echo $this->group->id; ?>/selectrelatedgroup">
+                    <a class="btn btn-primary" role="button" href="group/<? echo $this->group->id; ?>/selectrelatedgroup">
                         <?php echo $words->get('AddRelatedGroupButton'); ?>
                     </a>
         <?php
                     if (!empty($relatedgroups)) { ?>
-                        <a class="btn btn-primary" role="button" href="groups/<? echo $this->group->id; ?>/selectdeleterelatedgroup">
+                        <a class="btn btn-primary" role="button" href="group/<? echo $this->group->id; ?>/selectdeleterelatedgroup">
                             <? echo $words->get('RemoveRelatedGroupButton'); ?>
                         </a><?php
                     } ?>
@@ -68,7 +68,7 @@ Boston, MA  02111-1307, USA.
     </div>
     <?php
     if ($this->isGroupAdmin) {
-        ?>        
+        ?>
         <div class="col-12 mt-3">
             <h4><?php echo $words->get('NbOfLogEntries', count($logvar)); ?></h4>
         </div>
@@ -87,7 +87,7 @@ Boston, MA  02111-1307, USA.
                             ?>
                             <?php
                             $memberlink = '<a href="members/' . $value->member->Username . '">' . $value->member->Username . '</a>';
-                            $grouplink =  '<a href="groups/' . $value->relatedgroup->getPKValue() . '">' . htmlspecialchars($value->relatedgroup->Name, ENT_QUOTES) . '</a>';
+                            $grouplink =  '<a href="group/' . $value->relatedgroup->getPKValue() . '">' . htmlspecialchars($value->relatedgroup->Name, ENT_QUOTES) . '</a>';
                             $logentry = $words->get($value->RelatedGroupAction, $memberlink, $grouplink);
                             echo $logentry;
                             echo "<br>" . $layoutbits->ago(strtotime($value->ts)); ?>

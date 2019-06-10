@@ -19,7 +19,7 @@ class Places extends RoxModelBase {
 
     public function __construct() {
         parent::__construct();
-        $langarr = explode('-', $this->_session->get('lang'));
+        $langarr = explode('-', $this->_session->get('_locale'));
         $this->lang = $langarr[0];
     }
 
@@ -407,7 +407,7 @@ class Places extends RoxModelBase {
                 $regions[$row->admin1]['number'] = $row->number;
             }
         }
-        
+
         // remove regions without members
         foreach ($regions as $key=>$region){
             if ($region['number']==0){

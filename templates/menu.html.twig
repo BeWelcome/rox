@@ -227,17 +227,16 @@
             </ul>
         </div>
     </nav>
-    {% if is_granted('ROLE_ADMIN_CHECKER') or is_granted('ROLE_ADMIN_COMMENTS') or is_granted('ROLE_ADMIN_SAFETYTEAM') %}
+    {% if is_granted('ROLE_ADMIN_CHECKER') or is_granted('ROLE_ADMIN_COMMENTS') or is_granted('ROLE_ADMIN_SAFETYTEAM')
+        or is_granted('ROLE_ADMIN_GROUP')%}
         <div class="container">
             <div class="row no-gutters justify-content-end">
                 <div class="py-2">
-                    {% if is_granted('ROLE_ADMIN_GROUP') %}<a class="btn btn-primary btn-sm"
+                    {% if not groupsInApprovalQueue is null %}<a class="btn btn-primary btn-sm"
                                                               href="{{ path('admin_groups_approval') }}">{% transchoice groupsInApprovalQueue %}admin.groups.awaiting.approval{% endtranschoice %}</a>{% endif %}
-                    {% if is_granted('ROLE_ADMIN_COMMENTS') or is_granted('ROLE_ADMIN_SAFETYTEAM') %}<a
-                        class="btn btn-primary btn-sm"
+                    {% if not reportedCommentsCount is null %}<a class="btn btn-primary btn-sm"
                         href="{{ path('admin_comment_reported_overview') }}">{% transchoice reportedCommentsCount %}admin.comments.reported{% endtranschoice %}</a>{% endif %}
-                    {% if is_granted('ROLE_ADMIN_COMMENTS') or is_granted('ROLE_ADMIN_SAFETYTEAM') %}<a
-                        class="btn btn-primary btn-sm"
+                    {% if not reportedMessagesCount is null %}<a class="btn btn-primary btn-sm"
                         href="{{ path('admin_spam_overview') }}">{% transchoice reportedMessagesCount %}admin.spam.reported{% endtranschoice %}</a>{% endif %}
                 </div>
             </div>
@@ -282,7 +281,15 @@
 
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                    <button type="submit" class="btn btn-primary">{{ 'indexpageloginsubmit' | trans }}</button>
+                    <div class="dropdown">
+                        <button type="submit" class="btn btn-primary" id="loginDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ 'indexpageloginsubmit' | trans }}</button>
+                        <div class="dropdown-menu" aria-labelledby="loginDropdownButton">
+                            <label for="login-r">
+                                <input type="checkbox" id="login-r" value="1"
+                                       name="_remember_me">&nbsp;{{ 'stayloggedin' | trans }}
+                            </label>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>

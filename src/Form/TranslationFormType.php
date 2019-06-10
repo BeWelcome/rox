@@ -24,7 +24,9 @@ class TranslationFormType extends AbstractType
             ->add('description', TextAreaType::class, [
                 'label' => 'translation.description',
             ])
-            ->add('englishText', TextAreaType::class);
+            ->add('englishText', TextAreaType::class, [
+                'label' => 'label.admin.translation.englishtext',
+            ]);
         $formBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $translationRequest = $event->getData();
             $form = $event->getForm();

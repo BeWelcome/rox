@@ -10,14 +10,21 @@ use App\Entity\Message;
 use App\Entity\Subject;
 use App\Form\HostingRequestGuest;
 use App\Form\HostingRequestHost;
-use App\Model\RequestModel;
-use Exception;
+use App\Model\HostingRequestModel;
+use App\Repository\MessageRepository;
+use App\Utilities\MailerTrait;
 use InvalidArgumentException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Exception;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * Class HostingRequestController.
@@ -29,6 +36,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class HostingRequestController extends BaseMessageController
 {
+    use MailerTrait;
+
     /**
      * Deals with replies to messages and hosting requests.
      *
@@ -38,25 +47,23 @@ class HostingRequestController extends BaseMessageController
      * @param Request $request
      * @param Message $message
      *
-     * @throws AccessDeniedException
+     * @return RedirectResponse
+     * @throws InvalidArgumentException
      *
-     * @return Response
+     * @throws AccessDeniedException
      */
     public function replyToHostingRequestAction(Request $request, Message $message)
     {
-        $sender = $this->getUser();
-        if (($message->getReceiver() !== $sender) && ($message->getSender() !== $sender)) {
-            throw new AccessDeniedException();
+        if (!$this->isMessageOfMember($message)) {
+            throw $this->createAccessDeniedException('Not your message/hosting request');
+        }
+
+        if ($this->isMessage($message)) {
+            return $this->redirectToMessageReply($message);
         }
 
         $thread = $this->messageModel->getThreadForMessage($message);
         $current = $thread[0];
-
-        // Forward to MessageController in case something got mixed-up
-        $isMessage = (null === $message->getRequest()) ? true : false;
-        if ($isMessage) {
-            return $this->redirectToRoute('message_reply', ['id' => $current->getId()]);
-        }
 
         // Always reply to the last item in the thread
         if ($message->getId() !== $current->getId()) {
@@ -65,11 +72,137 @@ class HostingRequestController extends BaseMessageController
 
         // determine if guest or host reply to a request
         $first = $thread[\count($thread) - 1];
-        if ($sender->getId() === $first->getSender()->getId()) {
-            return $this->hostingRequestGuestReply($request, $thread);
+        if ($this->getUser()->getId() === $first->getSender()->getId()) {
+            return $this->redirectToRoute('hosting_request_reply_guest', [
+                'id' => $message->getId(),
+                'parentId' => $message->getParent()->getId(),
+            ]);
         }
 
-        return $this->hostingRequestHostReply($request, $thread);
+        return $this->redirectToRoute('hosting_request_reply_host', [
+            'id' => $message->getId(),
+            'parentId' => $message->getParent()->getId(),
+        ]);
+    }
+
+    /**
+     * @Route("/request/{id}/reply/guest/{parentId}", name="hosting_request_reply_guest",
+     *     requirements={"id": "\d+"})
+     *
+     * @param Request $request
+     * @param Message $hostingRequest
+     *
+     * @ParamConverter("parent", class="App\Entity\Message", options={"id": "parentId"})
+     *
+     * @param Message $parent
+     * @return Response
+     */
+    public function hostingRequestGuestReply(Request $request, Message $hostingRequest, Message $parent)
+    {
+        $thread = $this->messageModel->getThreadForMessage($hostingRequest);
+        $first = $thread[\count($thread) - 1];
+        $guest = $first->getSender();
+        $host = $first->getReceiver();
+
+        if ($this->checkRequestExpired($thread[0])) {
+            $this->addExpiredFlash($host);
+
+            return $this->redirectToRoute('hosting_request_show', ['id' => ($thread[0])->getId()]);
+        }
+
+        // keep all information from current hosting request except the message text
+        $hostingRequest = $this->getRequestClone($thread[0]);
+
+        // A reply consists of a new message and maybe a change of the status of the hosting request
+        // Additionally the user might change the dates of the request or cancel the request altogether
+        /** @var Form $requestForm */
+        $requestForm = $this->createForm(HostingRequestGuest::class, $hostingRequest);
+        $requestForm->handleRequest($request);
+
+        if ($requestForm->isSubmitted() && $requestForm->isValid()) {
+            $realParent = $this->getParent($parent);
+
+            /** @var Message $newRequest */
+            $newRequest = $this->persistRequest($requestForm, $guest, $host, $realParent);
+
+            $subject = $this->getSubjectForReply($newRequest);
+
+            $this->sendGuestReplyNotification(
+                $guest,
+                $host,
+                $newRequest,
+                $subject
+            );
+            $this->addTranslatedFlash('success', 'flash.notification.updated');
+
+            return $this->redirectToRoute('hosting_request_show', ['id' => $newRequest->getId()]);
+        }
+
+        return $this->render('request/reply_guest.html.twig', [
+            'guest' => $guest,
+            'host' => $host,
+            'form' => $requestForm->createView(),
+            'thread' => $thread,
+        ]);
+    }
+
+    /**
+     * @Route("/request/{id}/reply/host/{parentId}", name="hosting_request_reply_host",
+     *     requirements={"id": "\d+"})
+     *
+     * @param Request $request
+     * @param Message $hostingRequest
+     *
+     * @ParamConverter("parent", class="App\Entity\Message", options={"id": "parentId"})
+     *
+     * @param Message $parent
+     * @return Response
+     */
+    public function hostingRequestHostReply(Request $request, Message $hostingRequest, Message $parent)
+    {
+        $thread = $this->messageModel->getThreadForMessage($hostingRequest);
+        $first = $thread[\count($thread) - 1];
+        $guest = $first->getSender();
+        $host = $first->getReceiver();
+
+        if ($this->checkRequestExpired($thread[0])) {
+            $this->addExpiredFlash($guest);
+
+            return $this->redirectToRoute('hosting_request_show', ['id' => ($thread[0])->getId()]);
+        }
+
+        // keep all information from current hosting request except the message text
+        $hostingRequest = $this->getRequestClone($thread[0]);
+
+        /** @var Form $requestForm */
+        $requestForm = $this->createForm(HostingRequestHost::class, $hostingRequest);
+        $requestForm->handleRequest($request);
+
+        if ($requestForm->isSubmitted() && $requestForm->isValid()) {
+            $realParent = $this->getParent($parent);
+
+            /** @var Message $newRequest */
+            $newRequest = $this->persistRequest($requestForm, $host, $guest, $realParent);
+
+            $subject = $this->getSubjectForReply($newRequest);
+
+            $this->sendHostReplyNotification(
+                $host,
+                $guest,
+                $newRequest,
+                $subject
+            );
+            $this->addTranslatedFlash('notice', 'flash.notification.updated');
+
+            return $this->redirectToRoute('hosting_request_show', ['id' => $newRequest->getId()]);
+        }
+
+        return $this->render('request/reply_host.html.twig', [
+            'guest' => $guest,
+            'host' => $host,
+            'form' => $requestForm->createView(),
+            'thread' => $thread,
+        ]);
     }
 
     /**
@@ -78,37 +211,36 @@ class HostingRequestController extends BaseMessageController
      *
      * @param Message $message
      *
-     * @throws AccessDeniedException
-     *
      * @return Response
+     *
+     * @throws AccessDeniedException
+     * @throws Exception
      */
     public function show(Message $message)
     {
-        $member = $this->getUser();
-        if (($message->getReceiver() !== $member) && ($message->getSender() !== $member)) {
-            throw new AccessDeniedException();
+        if (!$this->isMessageOfMember($message)) {
+            throw $this->createAccessDeniedException('Not your message');
         }
 
-        $isMessage = (null === $message->getRequest()) ? true : false;
+        if ($this->isMessage($message)) {
+            return $this->redirectToMessage($message);
+        }
 
         $thread = $this->messageModel->getThreadForMessage($message);
         $current = $thread[0];
-
-        if ($isMessage) {
-            return $this->redirectToRoute('message_show', ['id' => $current->getId()]);
-        }
 
         if ($message->getId() !== $current->getId()) {
             return $this->redirectToRoute('hosting_request_show', ['id' => $current->getId()]);
         }
 
         // Walk through the thread and mark all messages as read (for current member)
+        $member = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         foreach ($thread as $item) {
             if ($member === $item->getReceiver()) {
                 // Only mark as read if it is a message and when the receiver reads the message,
                 // not when the message is presented to the Sender with url /messages/{id}/sent
-                $item->setWhenFirstRead(new \DateTime());
+                $item->setFirstRead(new \DateTime());
                 $em->persist($item);
             }
         }
@@ -142,6 +274,7 @@ class HostingRequestController extends BaseMessageController
         if (!$host->isBrowseable()) {
             $this->addTranslatedFlash('note', 'flash.member.invalid');
         }
+
         if ($this->messageModel->hasMessageLimitExceeded(
             $member,
             $this->getParameter('new_members_messages_per_hour'),
@@ -159,41 +292,37 @@ class HostingRequestController extends BaseMessageController
             return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
         }
 
-        $requestForm = $this->createForm(HostingRequestGuest::class);
+        $requestForm = $this->createForm(HostingRequestGuest::class, null);
         $requestForm->handleRequest($request);
 
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
             // Write request to database after doing some checks
             /** @var Message $hostingRequest */
-            $guest = $this->getUser();
             $hostingRequest = $requestForm->getData();
-            $hostingRequest->setSender($guest);
+            $hostingRequest->setSender($member);
             $hostingRequest->setReceiver($host);
-            $hostingRequest->setWhenFirstRead(null);
+            $hostingRequest->setFirstRead(null);
             $hostingRequest->setStatus('Sent');
-            $hostingRequest->setInfolder('Normal');
+            $hostingRequest->setFolder('Normal');
             $hostingRequest->setCreated(new \DateTime());
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($hostingRequest);
             $em->flush();
 
-            $success = $this->sendInitialRequestNotification(
+            $this->sendInitialRequestNotification(
                 $host,
-                $guest,
+                $member,
                 $hostingRequest
             );
-            if ($success) {
-                $this->addTranslatedFlash('success', 'flash.request.sent');
-            } else {
-                $this->addTranslatedFlash('notice', 'flash.request.stored');
-            }
+            $this->addTranslatedFlash('success', 'flash.request.sent');
 
             return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
         }
 
         return $this->render('request/request.html.twig', [
-            'receiver' => $host,
+            'guest' => $member,
+            'host' => $host,
             'form' => $requestForm->createView(),
         ]);
     }
@@ -203,60 +332,48 @@ class HostingRequestController extends BaseMessageController
      *     defaults={"folder": "inbox"})
      *
      * @param Request $request
-     * @param string  $folder
-     *
-     * @throws \InvalidArgumentException
+     * @param string $folder
      *
      * @return Response
+     *
+     * @throws InvalidArgumentException
      */
     public function requests(Request $request, $folder)
     {
-        $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', 10);
-        $sort = $request->query->get('sort', 'datesent');
-        $sortDir = $request->query->get('dir', 'desc');
+        list($page, $limit, $sort, $direction) = $this->getOptionsFromRequest($request);
 
-        if (!\in_array($sortDir, ['asc', 'desc'], true)) {
-            throw new \InvalidArgumentException();
+        if (!\in_array($direction, ['asc', 'desc'], true)) {
+            throw new InvalidArgumentException();
         }
 
         $member = $this->getUser();
-        $messages = $this->messageModel->getFilteredRequests($member, $folder, $sort, $sortDir, $page, $limit);
+        $messages = $this->messageModel->getFilteredRequests($member, $folder, $sort, $direction, $page, $limit);
 
         return $this->handleFolderRequest($request, $folder, $messages, 'requests');
     }
 
-    protected function sendRequestNotification(Member $sender, Member $receiver, Message $request, $subject, $template)
+    private function sendRequestNotification(Member $sender, Member $receiver, Message $request, $subject, $template)
     {
-        // Send mail notification with the receiver's preferred locale
-        $this->setTranslatorLocale($receiver);
-
-        $body = $this->renderView($template, [
-            'sender' => $sender,
-            'receiver' => $receiver,
+        // Send mail notification
+        $this->sendTemplateEmail($sender, $receiver, $template, [
             'subject' => $subject,
             'message' => $request,
             'request' => $request->getRequest(),
         ]);
 
-        // Reset to former locale as otherwise flash notification will be shown in receiver's locale
-        $this->setTranslatorLocale($sender);
-
-        return $this->sendEmail($sender, $receiver, $subject, $body);
+        return true;
     }
 
     /**
      * @param Member  $host
      * @param Member  $guest
      * @param Message $request
-     *
-     * @return bool
      */
-    protected function sendInitialRequestNotification(Member $host, Member $guest, Message $request)
+    private function sendInitialRequestNotification(Member $host, Member $guest, Message $request)
     {
         $subject = $request->getSubject()->getSubject();
 
-        return $this->sendRequestNotification($guest, $host, $request, $subject, 'emails/request.html.twig');
+        $this->sendRequestNotification($guest, $host, $request, $subject, 'request');
     }
 
     /**
@@ -264,12 +381,10 @@ class HostingRequestController extends BaseMessageController
      * @param Member  $host
      * @param Message $request
      * @param mixed   $subject
-     *
-     * @return bool
      */
-    protected function sendHostReplyNotification(Member $host, Member $guest, Message $request, $subject)
+    private function sendHostReplyNotification(Member $host, Member $guest, Message $request, $subject)
     {
-        return $this->sendRequestNotification($host, $guest, $request, $subject, 'emails/reply_host.html.twig');
+        $this->sendRequestNotification($host, $guest, $request, $subject, 'reply_host');
     }
 
     /**
@@ -277,199 +392,21 @@ class HostingRequestController extends BaseMessageController
      * @param Member  $host
      * @param Message $request
      * @param mixed   $subject
-     *
-     * @return bool
      */
     protected function sendGuestReplyNotification(Member $host, Member $guest, Message $request, $subject)
     {
-        return $this->sendRequestNotification($guest, $host, $request, $subject, 'emails/reply_guest.html.twig');
-    }
-
-    protected function checkRequestExpired(HostingRequest $request)
-    {
-        $requestModel = new RequestModel();
-
-        return $requestModel->checkRequestExpired($request);
+        $this->sendRequestNotification($guest, $host, $request, $subject, 'reply_guest');
     }
 
     /**
-     * @param Request       $request
-     * @param array Message $thread
-     *
-     * @throws InvalidArgumentException
-     *
-     * @return Response
+     * @param Message $hostingRequest
+     * @return bool
      */
-    private function hostingRequestGuestReply(Request $request, array $thread)
+    protected function checkRequestExpired(Message $hostingRequest)
     {
-        $hostingRequest = $thread[0];
-        if (null === $hostingRequest->getRequest()) {
-            // This should never happen as it is handled in replyToMessageOrHostingRequest
-            //so we throw an exception in this case
-            throw new InvalidArgumentException('wrong call to hosting reply guest');
-        }
+        $requestModel = new HostingRequestModel();
 
-        $user = $this->getUser();
-        /** @var Message $first */
-        $first = $thread[\count($thread) - 1];
-        $guest = $first->getSender();
-        $host = $first->getReceiver();
-
-        if ($user->getId() === $host->getId()) {
-            // This should never happen so we throw an exception in this case
-            throw new InvalidArgumentException('wrong call to hosting reply guest');
-        }
-
-        if ($user->getId() !== $guest->getId()) {
-            // This should never happen so we throw an exception in this case
-            throw new InvalidArgumentException('wrong call to hosting reply guest');
-        }
-
-        if ($this->checkRequestExpired($hostingRequest->getRequest())) {
-            $this->addExpiredFlash($host);
-
-            return $this->redirectToRoute('hosting_request_show', ['id' => $hostingRequest->getId()]);
-        }
-
-        // A reply consists of a new message and maybe a change of the status of the hosting request
-        // Additionally the user might change the dates of the request or cancel the request altogether
-        $requestForm = $this->createForm(HostingRequestGuest::class, $hostingRequest);
-        $requestForm->handleRequest($request);
-
-        if ($requestForm->isSubmitted() && $requestForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $data = $requestForm->getData();
-            $clickedButton = $requestForm->getClickedButton()->getName();
-
-            // handle changes in request and subject
-            $newRequest = $this->getFinalRequest($guest, $host, $hostingRequest, $data, $clickedButton);
-            $newRequest->setWhenFirstRead(null);
-            $newRequest->setStatus(MessageStatusType::SENT);
-            $em->persist($newRequest);
-            $em->flush();
-
-            $subject = $newRequest->getSubject()->getSubject();
-            if ('Re:' !== substr($subject, 0, 3)) {
-                $subject = 'Re: '.$subject;
-            }
-
-            if (HostingRequest::REQUEST_CANCELLED === $newRequest->getRequest()->getStatus()) {
-                if (false === strpos('(Cancelled)', $subject)) {
-                    $subject = $subject.' (Cancelled)';
-                }
-            }
-
-            $this->sendGuestReplyNotification(
-                $host,
-                $guest,
-                $newRequest,
-                $subject
-            );
-            $this->addTranslatedFlash('success', 'flash.notification.updated');
-
-            return $this->redirectToRoute('hosting_request_show', ['id' => $newRequest->getId()]);
-        }
-
-        $thread = $this->messageModel->getThreadForMessage($hostingRequest);
-
-        return $this->render('request/reply_guest.html.twig', [
-            'form' => $requestForm->createView(),
-            'thread' => $thread,
-        ]);
-    }
-
-    /**
-     * @param Request       $request
-     * @param array Message $thread
-     *
-     * @throws InvalidArgumentException
-     *
-     * @return Response
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * Ignore as too strict in this case (function is easily readable)
-     */
-    private function hostingRequestHostReply(Request $request, array $thread)
-    {
-        $hostingRequest = $thread[0];
-
-        $user = $this->getUser();
-        $first = $thread[\count($thread) - 1];
-        /** @var Member $guest */
-        $guest = $first->getSender();
-        /** @var Member $host */
-        $host = $first->getReceiver();
-
-        if ($user->getId() === $guest->getId()) {
-            // This should never happen as it is handled in replyToMessageOrHostingRequest
-            //so we throw an exception in this case
-            throw new InvalidArgumentException('wrong call to hosting reply guest');
-        }
-
-        if ($user->getId() !== $host->getId()) {
-            // This should never happen as it is handled in replyToMessageOrHostingRequest
-            //so we throw an exception in this case
-            throw new InvalidArgumentException('wrong call to hosting reply guest');
-        }
-
-        if ($this->checkRequestExpired($hostingRequest->getRequest())) {
-            $this->addExpiredFlash($guest);
-
-            return $this->redirectToRoute('hosting_request_show', ['id' => $hostingRequest->getId()]);
-        }
-
-        /** @var Form $requestForm */
-        $requestForm = $this->createForm(HostingRequestHost::class, $hostingRequest);
-        $requestForm->handleRequest($request);
-
-        if ($requestForm->isSubmitted() && $requestForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $data = $requestForm->getData();
-            $clickedButton = $requestForm->getClickedButton()->getName();
-            $newRequest = $this->getFinalRequest($host, $guest, $hostingRequest, $data, $clickedButton);
-            $newRequest->setWhenFirstRead(null);
-            $newRequest->setStatus(MessageStatusType::SENT);
-            $em->persist($newRequest);
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($hostingRequest);
-            $em->flush();
-
-            $subject = $newRequest->getSubject()->getSubject();
-            if ('Re:' !== substr($subject, 0, 3)) {
-                $subject = 'Re: '.$subject;
-            }
-
-            if (HostingRequest::REQUEST_DECLINED === $newRequest->getRequest()->getStatus() && (false === strpos('(Declined)', $subject))) {
-                $subject = $subject.' (Declined)';
-            }
-
-            if (HostingRequest::REQUEST_ACCEPTED === $newRequest->getRequest()->getStatus() &&
-                 (false === strpos('(Accepted)', $subject))) {
-                $subject = $subject.' (Accepted)';
-            }
-
-            if (HostingRequest::REQUEST_TENTATIVELY_ACCEPTED === $newRequest->getRequest()->getStatus() &&
-                (false === strpos('(Tentatively accepted)', $subject))) {
-                $subject = $subject.' (Tentatively accepted)';
-            }
-
-            $this->sendHostReplyNotification(
-                $host,
-                $guest,
-                $newRequest,
-                $subject
-            );
-            $this->addTranslatedFlash('notice', 'flash.notification.updated');
-
-            return $this->redirectToRoute('hosting_request_show', ['id' => $newRequest->getId()]);
-        }
-
-        $thread = $this->messageModel->getThreadForMessage($hostingRequest);
-
-        return $this->render('request/reply_host.html.twig', [
-            'form' => $requestForm->createView(),
-            'thread' => $thread,
-        ]);
+        return $requestModel->checkRequestExpired($hostingRequest->getRequest());
     }
 
     /**
@@ -479,7 +416,7 @@ class HostingRequestController extends BaseMessageController
      * @param mixed $sender
      * @param mixed $receiver
      *
-     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return Message
      */
@@ -488,9 +425,10 @@ class HostingRequestController extends BaseMessageController
         $finalRequest = new Message();
         $finalRequest->setSender($sender);
         $finalRequest->setReceiver($receiver);
-        $finalRequest->setParent($hostingRequest->getParent());
+        $finalRequest->setParent($hostingRequest);
+        $finalRequest->setMessage($data->getMessage());
         $finalRequest->setSubject($hostingRequest->getSubject());
-        $finalRequest->setRequest($hostingRequest->getRequest());
+        $finalRequest->setStatus(MessageStatusType::SENT);
 
         $oldState = $hostingRequest->getRequest()->getStatus();
         $newState = $oldState;
@@ -532,8 +470,95 @@ class HostingRequestController extends BaseMessageController
             $newHostingRequest->setFlexible($data->getRequest()->getFlexible());
             $newHostingRequest->setNumberOfTravellers($data->getRequest()->getNumberOfTravellers());
             $finalRequest->setRequest($newHostingRequest);
+        } else {
+            $finalRequest->setRequest($hostingRequest->getRequest());
         }
 
         return $finalRequest;
+    }
+
+    private function addExpiredFlash(Member $receiver)
+    {
+        $this->addTranslatedFlash('notice', 'flash.request.expired', [
+            '%link_start%' => '<a href="'.$this->generateUrl('message_new', [
+                    'username' => $receiver->getUsername(),
+                ]).'" class="text-primary">',
+            '%link_end%' => '</a>',
+        ]);
+    }
+
+    private function getRequestClone(Message $hostingRequest)
+    {
+        // copy only the bare minimum needed
+        $newRequest = new Message();
+        $newRequest->setSubject($hostingRequest->getSubject());
+        $newRequest->setRequest($hostingRequest->getRequest());
+        $newRequest->setMessage('');
+
+        return $newRequest;
+    }
+
+    private function persistRequest(Form $requestForm, Member $sender, Member $receiver, $currentRequest)
+    {
+        $data = $requestForm->getData();
+        $em = $this->getDoctrine()->getManager();
+        $clickedButton = $requestForm->getClickedButton()->getName();
+
+        // handle changes in request and subject
+        $newRequest = $this->getFinalRequest($sender, $receiver, $currentRequest, $data, $clickedButton);
+        $em->persist($newRequest);
+        $em->flush();
+
+        return $newRequest;
+    }
+
+    private function getSubjectForReply(Message $newRequest)
+    {
+        $subject = $newRequest->getSubject()->getSubject();
+        if ('Re:' !== substr($subject, 0, 3)) {
+            $subject = 'Re: '.$subject;
+        }
+
+        if (HostingRequest::REQUEST_CANCELLED === $newRequest->getRequest()->getStatus()) {
+            if (false === strpos('(Cancelled)', $subject)) {
+                $subject = $subject.' (Cancelled)';
+            }
+        }
+
+        if (HostingRequest::REQUEST_DECLINED === $newRequest->getRequest()->getStatus()) {
+            if (false === strpos('(Declined)', $subject)) {
+                $subject = $subject.' (Declined)';
+            }
+        }
+
+
+        if (HostingRequest::REQUEST_ACCEPTED === $newRequest->getRequest()->getStatus()) {
+            if (false === strpos('(Accepted)', $subject)) {
+                $subject = $subject . ' (Accepted)';
+            }
+        }
+
+        if (HostingRequest::REQUEST_TENTATIVELY_ACCEPTED === $newRequest->getRequest()->getStatus()) {
+            if (false === strpos('(Tentatively accepted)', $subject)) {
+                $subject = $subject.' (Tentatively accepted)';
+            }
+        }
+
+        return $subject;
+    }
+
+    private function isMessage(Message $message)
+    {
+        return (null === $message->getRequest()) ? true : false;
+    }
+
+    private function redirectToMessage(Message $message)
+    {
+        return $this->redirectToRoute('message_show', ['id' => $message->getId()]);
+    }
+
+    private function redirectToMessageReply(Message $message)
+    {
+        return $this->redirectToRoute('message_reply', ['id' => $message->getId()]);
     }
 }

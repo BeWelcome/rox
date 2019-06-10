@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="roles", uniqueConstraints={@ORM\UniqueConstraint(name="name", columns={"name"})})
  * @ORM\Entity
  */
-class Roles
+class Role
 {
     /**
      * @var string
@@ -42,7 +42,7 @@ class Roles
      *
      * @param string $name
      *
-     * @return Roles
+     * @return Role
      */
     public function setName($name)
     {
@@ -66,7 +66,7 @@ class Roles
      *
      * @param string $description
      *
-     * @return Roles
+     * @return Role
      */
     public function setDescription($description)
     {

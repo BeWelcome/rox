@@ -70,7 +70,8 @@ class ActivitiesBasePage extends PageWithActiveSkin
         }
         return $items;
     }
-        protected function getColumnNames()
+
+    protected function getColumnNames()
     {
         // we don't need the other columns
         return array('col3');

@@ -8,29 +8,29 @@
                     <form action="groups/search" method="get">
                     <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" class="button" value="<?= $words->get('Search'); ?>" />
                     </form>
-                </div>             
+                </div>
             </div> <!-- subcl -->
         </div> <!-- c62l -->
         <div class="c38r">
             <div class="subcr">
                 <div class="bw-row">
                     <h3><?= $words->get('GroupsCreateHeading'); ?></h3>
-                    <a class="button" role="button" href="groups/new"><span><?= $words->get('GroupsCreateNew'); ?></span></a>
+                    <a class="button" role="button" href="new/group"><span><?= $words->get('GroupsCreateNew'); ?></span></a>
                 </div>
             </div> <!-- subcr -->
         </div> <!-- c38r -->
     </div> <!-- subcolums -->
-            
+
 
     <div class="subcolumns">
         <div class="c62l">
             <div class="subcl">
-            
+
                 <h3><?= $words->get('GroupsList'); ?></h3>
                 <?php
                 foreach($this->featured_groups as $group_data) : ?>
                     <div class="groupbox clearfix">
-                        <a href="groups/<?=$group_data->id ?>"> 
+                        <a href="groups/<?=$group_data->id ?>">
                             <img class="framed float_left"  width="80px" alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
                         </a>
                         <div class="groupinfo">
@@ -47,7 +47,7 @@
                 <p><strong><a href="groups/featured"><?= $words->get('GroupsAllFeaturedLink'); ?></a></strong></p>
             </div> <!-- subcl -->
         </div> <!-- c62l -->
-        
+
         <div class="c38r">
             <div class="subcr">
                 <?php // display my groups, if there are any
@@ -71,7 +71,7 @@
                     <?php endfor; ?>
                     <p><strong><a href="groups/mygroups"><?= $words->get('GroupsAllMyLink'); ?></a></strong></p>
                 <?php endif ; ?>
-                
+
             </div> <!-- subcr -->
         </div> <!-- c38r -->
     </div> <!-- subcolumns -->

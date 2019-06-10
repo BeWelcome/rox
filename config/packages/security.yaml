@@ -1,9 +1,3 @@
-parameters:
-    # Checkbox name in form
-    remember_me.form_parameter: remember
-    # Cookie name
-    remember_me.cookie_name: remember_me
-
 security:
     encoders:
         # For the legacy MySQL PASSWORD()
@@ -32,13 +26,13 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        default:
-            user_checker: rox.user_checker
+        main:
             remember_me:
                 secret: '%env(APP_SECRET)%'
                 lifetime: 31536000 # 1 year in seconds
                 path: /
 
+            user_checker: rox.user_checker
             anonymous: ~
 
             form_login:

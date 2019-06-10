@@ -65,7 +65,7 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
                 echo "<a class=\"username\" href=\"member/",$p->CreatorUsername,"\">",$p->CreatorUsername,"</a>" ;
             }
             if (!empty($p->IdGroupCreator)) {
-                echo $words->getFormatted("Group"),":","<a  href=\"groups/",$p->IdGroupCreator,"\">",$p->GroupCreatorName,"</a>" ;
+                echo $words->getFormatted("Group"),":","<a  href=\"group/",$p->IdGroupCreator,"\">",$p->GroupCreatorName,"</a>" ;
             }
             ?>
         </td>

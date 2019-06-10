@@ -39,7 +39,8 @@ class HomeController extends AbstractController
         $searchFormRequest->inactive = true;
         $searchFormRequest->distance = 100;
 
-        $searchForm = $this->createForm(SearchFormType::class, $searchFormRequest, [
+        $formFactory = $this->get('form.factory');
+        $searchForm = $formFactory->createNamed('map', SearchFormType::class, $searchFormRequest, [
             'action' => '/search/map',
         ]);
 

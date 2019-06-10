@@ -11,6 +11,7 @@ use EnvironmentExplorer;
 use PDO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -22,21 +23,21 @@ class LegacyController extends AbstractController
 {
     /**
      * @param Request $request
-     * @param ContainerInterface $container
      * @param TranslatorInterface $translator
      *
+     * @param ParameterBagInterface $params
      * @return Response
      *
+     * @throws AccessDeniedException
      * @SuppressWarnings(PHPMD.StaticAccess)
      *
-     * @throws AccessDeniedException
      */
-    public function showAction(Request $request, ContainerInterface $container, TranslatorInterface $translator)
+    public function showAction(Request $request, TranslatorInterface $translator, ParameterBagInterface $params)
     {
         // Kick-start the Symfony session. This replaces session_start() in the
         // old code, which is now turned off.
         /** @var Session $session */
-        $session = $container->get('session');
+        $session = $this->get('session');
         $session->start();
 
         // Make sure the Rox classes find this session and the translator
@@ -45,10 +46,10 @@ class LegacyController extends AbstractController
 
         $environmentExplorer = new EnvironmentExplorer();
         $environmentExplorer->initializeGlobalState(
-            $container->getParameter('database_host'),
-            $container->getParameter('database_name'),
-            $container->getParameter('database_user'),
-            $container->getParameter('database_password')
+            $params->get('database_host'),
+            $params->get('database_name'),
+            $params->get('database_user'),
+            $params->get('database_password')
         );
 
         $pathInfo = $request->getPathInfo();
@@ -56,7 +57,7 @@ class LegacyController extends AbstractController
             (false === strpos($pathInfo, '/about')) ||
             (false === strpos($pathInfo, '/signup'));
         if (!$session->has('IdMember')) {
-            $rememberMeToken = unserialize($session->get('_security_default'));
+            $rememberMeToken = unserialize($session->get('_security_main'));
             if (null === $rememberMeToken && !$public) {
                 throw new AccessDeniedException();
             }
@@ -85,7 +86,7 @@ class LegacyController extends AbstractController
             }
         }
 
-        $kernel = $container->get('rox.legacy_kernel');
+        $kernel = $this->get('rox.legacy_kernel');
 
         return $kernel->handle(
             $request

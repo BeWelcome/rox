@@ -5,6 +5,7 @@ namespace App\Twig;
 use App\Model\LanguageModel;
 use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use HtmlTruncator\InvalidHtmlException;
 use HtmlTruncator\Truncator;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\DataCollector\TranslationDataCollector;
@@ -94,7 +95,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
      * @param int    $length   length of returned string, including ellipsis
      * @param string $ellipsis
      *
-     * @throws \HtmlTruncator\InvalidHtmlException
+     * @throws InvalidHtmlException
      *
      * @return string truncated string
      */

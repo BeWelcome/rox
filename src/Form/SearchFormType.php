@@ -118,7 +118,7 @@ class SearchFormType extends AbstractType
             'label_attr' => [
                 'class' => 'mr-1 sr-only',
             ],
-            'translation_domain' => 'messages',
+            'translation_domain' => false,
         ]);
     }
 
@@ -141,7 +141,7 @@ class SearchFormType extends AbstractType
         $formBuilder
             ->add('groups', ChoiceType::class, [
                 'choices' => $groups,
-                'choice_translation_domain' => true,
+                'choice_translation_domain' => false,
                 'label' => 'groups',
                 'attr' => [
                     'class' => 'select2',

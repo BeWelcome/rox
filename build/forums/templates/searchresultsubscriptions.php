@@ -55,8 +55,8 @@ Boston, MA  02111-1307, USA.
             foreach ($TResults->Groups as $group) {
         ?>
         <tr>
-            <th scope="row"><img src="groups/thumbimg/<? echo $group->IdGroup; ?>" width="50" height="50"></th>
-            <td class="align-middle"><a href="groups/<? echo $group->IdGroup; ?>/forum"><? echo htmlspecialchars($group->Name); ?></a></td>
+            <th scope="row"><img src="group/thumbimg/<? echo $group->IdGroup; ?>" width="50" height="50"></th>
+            <td class="align-middle"><a href="group/<? echo $group->IdGroup; ?>/forum"><? echo htmlspecialchars($group->Name); ?></a></td>
             <td class="align-middle">
                 <div class="btn-group" role="group" aria-label="Toggle Subscription On-Off">
                 <? if ($group->AcceptMails == 'yes') { ?>

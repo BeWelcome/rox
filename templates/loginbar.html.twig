@@ -18,6 +18,12 @@
                 <form class="form-inline p-1" method="post" action="{{ url('security_check') }}">
                     {{ macros.input('_username', 'Username') }}
                     {{ macros.input('_password', 'Password', '', 'password') }}
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="login-r" value="1"
+                               name="_remember_me"><label for="login-r" class="form-check-label">
+                            &nbsp;{{ 'stayloggedin' | trans }}
+                        </label>
+                    </div>
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                     {{ macros.submit('Login') }}
                 </form>
@@ -29,11 +35,24 @@
                             {{ macros.input('_username', 'Username') }}
                             {{ macros.input('_password', 'Password', '', 'password') }}
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                            {{ macros.submit('Login') }}
+                            <div class="btn-group">
+                                <button type="submit" class="btn btn-primary border-white" id="loginDropdownButton">{{ 'indexpageloginsubmit' | trans }}</button>
+                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split border-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <div class="dropdown-menu white">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="login-r" value="1"
+                                               name="_remember_me"><label for="login-r" class="form-check-label">
+                                            &nbsp;{{ 'stayloggedin' | trans }}
+                                    </label>
+                                    </div>
+                                </div>
+                            </div>
                         </form>
                     </li>
-                    <li class="d-none d-md-inline-block mt-2"><span class="mt-1 mr-2">{{ 'or' | trans }}</span><a
-                                href="/signup" class="btn btn-primary">{{ 'navbar.button.signup'|trans }}</a></li>
+                    <li class="d-none d-md-inline-block mt-2"><span class="mt-1 mx-2">{{ 'or' | trans }}</span><a
+                                href="/signup" class="btn btn-primary border-white">{{ 'navbar.button.signup'|trans }}</a></li>
                     <li class="d-block d-md-none mx-1"><a href="/signup"
                                                           class="btn btn-block btn-outline-light">{{ 'navbar.button.signup'|trans }}</a>
                     </li>

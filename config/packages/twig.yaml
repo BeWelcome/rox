@@ -7,3 +7,6 @@ twig:
     - 'bootstrap_4_layout.html.twig'
     - 'ckeditor/ckeditor.html.twig'
 
+  paths:
+    # point this wherever your images live
+    '%kernel.project_dir%/public/images': 'images'

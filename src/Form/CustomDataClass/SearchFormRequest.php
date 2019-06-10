@@ -193,6 +193,9 @@ class SearchFormRequest
         if ($request->query->has('search')) {
             $data = $request->query->get('search');
         }
+        if ($request->query->has('map')) {
+            $data = $request->query->get('map');
+        }
         if (empty($data)) {
             // if no data was given return a default object
             return $searchFormRequest;
@@ -234,7 +237,7 @@ class SearchFormRequest
         $searchFormRequest->gender = self::_getElement($data, 'gender', null);
         $searchFormRequest->order = self::_getElement($data, 'order', SearchModel::ORDER_ACCOM);
         $searchFormRequest->items = self::_getElement($data, 'items', 10);
-        $searchFormRequest->showmap = self::_getElement($data, 'showmap', false);
+        $searchFormRequest->showmap = self::_getElement($data, 'showmap', '0') ? true : false;
         $searchFormRequest->showOnMap = self::_getElement($data, 'showOnMap', false);
         $searchFormRequest->showAdvanced = self::_getElement($data, 'showadvanced', false);
         $searchFormRequest->offerdinner = '1' === self::_getElement($data, 'offerdinner', '0') ? true : false;

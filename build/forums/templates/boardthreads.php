@@ -17,8 +17,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -55,7 +55,7 @@ $layoutbits = new MOD_layoutbits();
         foreach ($threads as $cnt =>  $thread) {
 
         if ($thread->IdGroup){
-            $url = ForumsView::threadURL($thread, 'groups/'.$thread->IdGroup.'/forum/');
+            $url = ForumsView::threadURL($thread, 'group/'.$thread->IdGroup.'/forum/');
         }
         else {
             $url = ForumsView::threadURL($thread);
@@ -89,7 +89,7 @@ $layoutbits = new MOD_layoutbits();
             <span class="small gray"><?php
                 // show tags if post is part of a group
                 if ($thread->IdGroup>0) {
-                    echo "<a href=\"groups/".$thread->IdGroup."\"><strong>" . $words->getFormatted('Group'). ": </strong>",$this->_model->getGroupName($thread->GroupName),"</a>" ;
+                    echo "<a href=\"group/".$thread->IdGroup."\"><strong>" . $words->getFormatted('Group'). ": </strong>",$this->_model->getGroupName($thread->GroupName),"</a>" ;
                 }
 
 

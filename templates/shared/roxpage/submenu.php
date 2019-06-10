@@ -13,13 +13,12 @@ foreach ($this->getSubmenuItems() as $index => $item) {
     $url = $item[1];
     $label = $item[2];
     if ($name === $active_menu_item) {
-        $classes = 'nav-link active';
+        echo '<span class="list-group-item nav-link active">' . $label . '</span>';
     } else {
-        $classes = 'nav-link';
+        echo '<a class="list-group-item nav-link" href="' . $url . '">' . $label . '</a>';
     }
-    
+
     ?>
-      <a class="list-group-item <?=$classes ?>" href="<?=$url ?>"><?=$label ?></a>
       <?=$words->flushBuffer(); ?>
     <?php
 }

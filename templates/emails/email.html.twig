@@ -1,89 +1,26 @@
+{% filter inline_css(source('emails/email.css')) %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <style type="text/css"><!--
-        blockquote {
-            color: #444;
-            background: #f8f8f8;
-            border: 1px #ddd solid;
-            border-left: 8px #f37000 solid;
-            padding: 0 0.5em;
-            margin: 0 0 1em 0.5em;
-        }
-
-        body {
-            color: #333;
-            font-family: arial, verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        a {
-            color: #f37000;
-            text-decoration: none;
-        }
-
-        #message {
-            background: #f0f0f0;
-        }
-
-        .header {
-            background-color: #f37000;
-            width:100%;
-        }
-
-        h1{
-            font-size:1em;
-            font-weight: bold;
-            line-height: 1em ;
-            padding-top: 0.2em;
-        }
-
-        .logo {
-            float: right;
-            padding: 0.25em;
-        }
-
-        .content {
-            padding: 0.25em;
-        }
-
-        div.from a:link {
-            color: #000;
-        }
-
-        .footer {
-            background-color: #f37000;
-            width:100%;
-            padding: 0.25em;
-            font-size: 0.8em;
-            color: #eee;
-        }
-
-        .footer a {
-            color: #fff;
-            font-weight: bold;
-        }
-        --></style>
+    <title>{{ subject }}</title>
 </head>
 <body>
 <div id="message">
     <div class="header">
             <a href="{{ url('homepage') }}"><img
-                        src="{{ absolute_url(asset('images/logo_index_top.png')) }}" class="logo" border="0" style="border:0"></a>
+                        src="{{ email.image('@images/logo_index_top.png') }}" class="logo"></a>
 
     </div>
 
     <div class="content">
-        <p>{{ subject }}</p>
-        {% block sender %}{% endblock sender %}
-        <div>{%- block content -%}{%- endblock content -%}</div>
+        {%- block content -%}{%- endblock content -%}
     </div>
     <div class="footer">
-        <p>{{ "now" | date("Y") }} - <a href="{{ url('homepage') }}" target="_blank">BeWelcome</a></p>
+        <p>{{ "now" | date("Y") }} - <a class="footer_a" href="{{ url('homepage') }}" target="_blank">BeWelcome</a></p>
     </div>
 </div>
 
 </body>
 </html>
+{% endfilter %}

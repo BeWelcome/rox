@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="privileges", uniqueConstraints={@ORM\UniqueConstraint(name="controller", columns={"controller", "method", "type"})})
  * @ORM\Entity
  */
-class Privileges
+class Privilege
 {
     /**
      * @var string
@@ -31,7 +31,7 @@ class Privileges
      *
      * @ORM\Column(name="type", type="string", length=64, nullable=false)
      */
-    private $type = '';
+    private $type;
 
     /**
      * @var integer
@@ -42,14 +42,12 @@ class Privileges
      */
     private $id;
 
-
-
     /**
      * Set controller
      *
      * @param string $controller
      *
-     * @return Privileges
+     * @return Privilege
      */
     public function setController($controller)
     {
@@ -73,7 +71,7 @@ class Privileges
      *
      * @param string $method
      *
-     * @return Privileges
+     * @return Privilege
      */
     public function setMethod($method)
     {
@@ -97,7 +95,7 @@ class Privileges
      *
      * @param string $type
      *
-     * @return Privileges
+     * @return Privilege
      */
     public function setType($type)
     {

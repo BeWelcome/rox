@@ -2740,17 +2740,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         return $level;
     }
 
-    /**
-     * Injects responsible ObjectManager and the ClassMetadata into this persistent object.
-     *
-     * @param ObjectManager $objectManager
-     * @param ClassMetadata $classMetadata
-     */
-    public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
-    {
-        $this->em = $objectManager;
-    }
-
     public function isBrowseable()
     {
         if (\in_array(
@@ -2915,6 +2904,34 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     }
 
     /**
+     * @return Language
+     */
+    public function getPreferredLanguage()
+    {
+        // Get preference for locale
+        $preferenceRepository = $this->em->getRepository(Preference::class);
+        /** @var Preference $preference */
+        $preference = $preferenceRepository->findOneBy([
+            'codename' => Preference::LOCALE,
+        ]);
+        $languageId = $this->getMemberPreferenceValue($preference);
+
+        $languageRepository = $this->em->getRepository(Language::class);
+        /** @var Language $language */
+        $language = $languageRepository->findOneBy([
+            'id' => $languageId,
+        ]);
+        if (null === $language) {
+            // Language doesn't exist but should!
+            // Return English in this case
+            $language = $languageRepository->findOneBy([
+                'shortcode' => 'en'
+            ]);
+        }
+        return $language;
+    }
+
+    /**
      * @return Collection|MemberPreference[]
      */
     public function getPreferences(): Collection
@@ -2943,5 +2960,18 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         }
 
         return $this;
+    }
+
+    /**
+     * Injects responsible ObjectManager and the ClassMetadata into this persistent object.
+     *
+     * @param ObjectManager $objectManager
+     * @param ClassMetadata $classMetadata
+     * @return void
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
+    {
+        $this->em = $objectManager;
     }
 }

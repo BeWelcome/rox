@@ -16,14 +16,21 @@
     {% set start = thread | last %}
     {% set current = thread | first %}
     {% set sender =  start.sender %}
+
+    <div class="row no-gutters bg-white mb-1">
+        {% set myself = app.user %}
+        <div class="pull-left">{{ macros.avatarstack(guest.Username, 50, false) }}</div>
+        <div class="col">
+            <h3 id="MessageSubject" class="p-3 text-truncate">{{ current.Subject.Subject }}</h3>
+        </div>
+        <div class="pull-right text-right">{{ macros.avatarstack(host.Username, 50, true) }}</div>
+    </div>
+
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
 
-    <div class="row my-3">
+    <div class="row mb-1">
         <div class="col-12 col-sm-6 col-md-4">
 
-            {{ 'request.sent_by' | trans({'%sender%': sender.Username}) }}
-
-            <p class="text-muted">{{ 'request.host.suggest.dates'|trans }}</p>
             <div class="form-group">
                 {{ form_errors(form.request.arrival) }}
                 {{ form_label(form.request.arrival) }}
@@ -54,12 +61,16 @@
 
             {{ form_row(form.request.flexible) }}
             {{ form_row(form.request.numberOfTravellers) }}
+            {% if current.request.flexible %}
+                <p class="text-muted">{{ 'request.host.suggest.dates'|trans }}</p>
+            {% else %}
+                <p class="text-muted">{{ 'request.host.fixed.dates'|trans }}</p>
+            {% endif %}
         </div>
         <div class="col-12 col-md-8">
-            {{ form_row(form.subject.subject) }}
             {{ form_row(form.message) }}
         </div>
-        <div class="col-12 col-md-8">
+        <div class="col-12 col-md-8 offset-md-4">
             <div class="btn-group-sm mt-2" role="group" aria-label="Reply to request">
                 {{ form_widget(form.accept, {'attr': {'class': 'btn btn-primary'}}) }}
                 {{ form_widget(form.tentatively, {'attr': {'class': 'btn btn-primary'}}) }}
@@ -69,7 +80,7 @@
         </div>
     </div>
 
-    <div class="hidden_row">{{ form_rest(form) }}</div>
+    {{ form_rest(form) }}
     {{ form_end(form) }}
     {% include 'message/thread.html.twig' %}
 {% endblock %}

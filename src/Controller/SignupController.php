@@ -35,7 +35,7 @@ class SignupController extends AbstractController
             $parameters = [
                 'subject' => $subject,
                 'username' => $username,
-                'email' => $email,
+                'email_address' => $email,
                 'key' => $key,
             ];
             $body = $this->renderView(

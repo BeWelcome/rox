@@ -81,7 +81,7 @@ class NotifyAdminSettingsPage extends NotifyBasePage
             <tr>
                 <td><?=MOD_layoutbits::linkWithPicture($member->Username) ?></td>
                 <td><a href="#" class="username"><?=$member->Username ?></a></td>
-                <td><?= (($this->member->getPKValue() == $member->getPKValue()) ? '' : "<a class='accept' href='groups/{$this->group->getPKValue()}/acceptmember/{$member->getPKValue()}'>Accept?</a>");?></td>
+                <td><?= (($this->member->getPKValue() == $member->getPKValue()) ? '' : "<a class='accept' href='group/{$this->group->getPKValue()}/acceptmember/{$member->getPKValue()}'>Accept?</a>");?></td>
             </tr>
         <?php endforeach; ?>
         </table>

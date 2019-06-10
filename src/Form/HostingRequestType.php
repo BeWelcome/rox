@@ -3,11 +3,14 @@
 namespace App\Form;
 
 use App\Entity\HostingRequest;
+use Exception;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\LessThanOrEqual;
@@ -20,8 +23,12 @@ class HostingRequestType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('arrival', DateType::class, [
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $flexibleOptions = [
+                'label' => 'label.flexible',
+                'required' => false,
+            ];
+            $arrivalOptions = [
                 'label' => 'request.arrival',
                 'widget' => 'single_text',
                 'html5' => false,
@@ -36,8 +43,8 @@ class HostingRequestType extends AbstractType
                         'message' => 'request.error.arrival.empty',
                     ]),
                 ],
-            ])
-            ->add('departure', DateType::class, [
+            ];
+            $departureOptions = [
                 'label' => 'request.departure',
                 'widget' => 'single_text',
                 'html5' => false,
@@ -47,29 +54,36 @@ class HostingRequestType extends AbstractType
                     'placeholder' => 'placeholder.departure',
                 ],
                 'invalid_message' => 'request.error.arrival.no_date',
-            ])
-            ->add('flexible', CheckboxType::class, [
-                'label' => 'label.flexible',
-                'required' => false,
-            ])
-            ->add(
-                'numberOfTravellers',
-                IntegerType::class,
-                [
-                    'empty_data' => 1,
-                    'label' => 'request.number_of_travellers',
-                    'attr' => [
-                        'placeholder' => 'placeholder.request.nbtravellers',
-                        'min' => 1,
-                        'max' => 20,
-                    ],
-                    'invalid_message' => 'request.error.number_of_travellers',
-                    'constraints' => [
-                        new LessThanOrEqual(20),
-                        new GreaterThanOrEqual(1),
-                    ],
-                ]
-            );
+            ];
+            $numberOfTravellersOptions = [
+                'label' => 'request.number_of_travellers',
+                'attr' => [
+                    'placeholder' => 'placeholder.request.nbtravellers',
+                    'min' => 1,
+                    'max' => 20,
+                ],
+                'invalid_message' => 'request.error.number_of_travellers',
+                'constraints' => [
+                    new LessThanOrEqual(20),
+                    new GreaterThanOrEqual(1),
+                ],
+            ];
+            $form = $event->getForm();
+            $options = $form->getConfig()->getOptions();
+            $data = $event->getData();
+            if (null !== $data) {
+                if ($options['reply_host'] && !$data->getFlexible()) {
+                    $arrivalOptions['disabled'] = true;
+                    $departureOptions['disabled'] = true;
+                    $flexibleOptions['disabled'] = true;
+                    $numberOfTravellersOptions['disabled'] = true;
+                }
+            }
+            $form->add('arrival', DateType::class, $arrivalOptions);
+            $form->add('departure', DateType::class, $departureOptions);
+            $form->add('flexible', CheckboxType::class, $flexibleOptions);
+            $form->add('numberOfTravellers', IntegerType::class, $numberOfTravellersOptions);
+        });
     }
 
     /**
@@ -80,6 +94,9 @@ class HostingRequestType extends AbstractType
         $resolver
             ->setDefaults([
                 'data_class' => HostingRequest::class,
+                'reply_guest' => false,
+                'reply_host' => false,
+                'new_request' => false,
             ])
         ;
     }

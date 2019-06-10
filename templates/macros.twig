@@ -58,7 +58,7 @@
 {% macro avatarstack(username, size, right, displayname = true) %}
     {% import _self as macros %}
     {% set img %}<img class="profileimg" width="{{ size }}" height="{{ size }}" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">{% endset %}
-    <a href="{{ path( 'members_profile', { 'username': username }) }}">{{ macros.profilelink(username, img) }}</a>
+    {{ macros.profilelink(username, img) }}
     {% if displayname %}<br><small>{{ macros.profilelink(username) }}</small>{% endif %}
 {% endmacro %}
 

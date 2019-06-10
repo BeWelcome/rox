@@ -8,13 +8,16 @@ use App\Entity\Preference;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use PVars;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Component\Security\Http\SecurityEvents;
 
 /**
  * @see http://symfony.com/doc/current/cookbook/session/locale_sticky_session.html
  */
-class UserLocaleListener
+class UserLocaleListener implements EventSubscriberInterface
 {
     /**
      * @var Session
@@ -29,10 +32,10 @@ class UserLocaleListener
     /**
      * UserLocaleListener constructor.
      *
-     * @param Session                $session
+     * @param SessionInterface       $session
      * @param EntityManagerInterface $em
      */
-    public function __construct(Session $session, EntityManagerInterface $em)
+    public function __construct(SessionInterface $session, EntityManagerInterface $em)
     {
         $this->session = $session;
         $this->em = $em;
@@ -50,23 +53,12 @@ class UserLocaleListener
         /** @var Member $user */
         $user = $event->getAuthenticationToken()->getUser();
 
-        // Get preference for locale
-        $preferenceRepository = $this->em->getRepository(Preference::class);
-        /** @var Preference $preference */
-        $preference = $preferenceRepository->findOneBy([
-            'codename' => Preference::LOCALE,
-        ]);
-        $languageId = $user->getMemberPreferenceValue($preference);
-
-        $languageRepository = $this->em->getRepository(Language::class);
-        /** @var Language $language */
-        $language = $languageRepository->findOneBy([
-            'id' => $languageId,
-        ]);
+        $language = $user->getPreferredLanguage();
         if ($language) {
             $locale = $language->getShortCode();
         } else {
             $locale = $this->session->get('_locale', 'en');
+            $languageRepository = $this->em->getRepository(Language::class);
             $language = $languageRepository->findOneBy([
                 'shortcode' => $locale,
             ]);
@@ -78,4 +70,10 @@ class UserLocaleListener
         $this->session->set('_locale', $locale);
         $this->session->set('lang', $locale);
     }
+
+    public static function getSubscribedEvents()
+    {
+        return [
+            SecurityEvents::INTERACTIVE_LOGIN => 'onInteractiveLogin',
+        ];    }
 }

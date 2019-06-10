@@ -6,9 +6,5 @@ BeWelcome - {{ 'signup' | trans }}
 {% endblock title %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-12 col-lg-6 mb-3">
-            <span class="h1 small">{{ 'Error.A.Problem.Occured' | trans }}</span>
-        </div>
-    </div>
+    {% include '_partials/signup/error.html.twig' %}
 {% endblock content %}

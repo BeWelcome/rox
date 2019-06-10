@@ -101,7 +101,7 @@ class GroupSettingsPage extends GroupsBasePage
             <div class="col-8">
                 <h5><?= $words->get('GroupsAddImage'); ?></h5>
                 <div class="float-left">
-                    <img class="float-left framed mr-2 mb-2" src="groups/realimg/<?= $this->group->getPKValue(); ?>" width="100px" alt="Group image">
+                    <img class="float-left framed mr-2 mb-2" src="group/realimg/<?= $this->group->getPKValue(); ?>" width="100px" alt="Group image">
                 </div>
                 <div>
                     <label for="group_image"><?= $words->get('GroupsImage'); ?></label>
@@ -111,8 +111,8 @@ class GroupSettingsPage extends GroupsBasePage
             </div>
 
             <div class="col-4 mt-3">
-                <a class="btn btn-block btn-secondary" role="button" href="groups/<?= $this->group->id; ?>/memberadministration"><i class="fa fa-users mr-1"></i><?= $words->get('GroupsAdministrateMembers'); ?></a>
-                <a class="btn btn-block btn-danger" role="button" href="groups/<?= $this->group->id; ?>/delete"><i class="fa fa-trash mr-1"></i><?= $words->get('GroupsDeleteGroup'); ?></a>
+                <a class="btn btn-block btn-secondary" role="button" href="group/<?= $this->group->id; ?>/memberadministration"><i class="fa fa-users mr-1"></i><?= $words->get('GroupsAdministrateMembers'); ?></a>
+                <a class="btn btn-block btn-danger" role="button" href="group/<?= $this->group->id; ?>/delete"><i class="fa fa-trash mr-1"></i><?= $words->get('GroupsDeleteGroup'); ?></a>
             </div>
         </div>
 

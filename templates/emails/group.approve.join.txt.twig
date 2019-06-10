@@ -1,0 +1,12 @@
+{% extends 'emails/email.txt.twig' %}
+
+{% block content %}
+    {% trans with {'%username%': receiver.Username} %}email.greeting{% endtrans %}<br><br>
+    {% trans with {'%username%': member.Username, '%groupname%': group.Name} %}%username% wants to join the group "%groupname%".{% endtrans %}
+
+    {% trans %}If you would like to approve this, click the following link: [Approve Join]({{ url('group_join_accept', {'groupId': group.id, 'memberId' : member.id}) }}){% endtrans %}
+
+    {% trans %}If you do not want to have this member in the group, please click this link instead: [Decline Join]({{ url('group_join_decline', {'groupId': group.id, 'memberId' : member.id}) }}){% endtrans %}
+
+    {{ 'email.farewell' | trans }}
+{% endblock content %}

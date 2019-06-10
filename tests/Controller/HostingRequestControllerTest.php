@@ -7,25 +7,32 @@ use App\Controller\HostingRequestController;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Entity\Subject;
 use App\Model\MessageModel;
 use DateInterval;
 use DateTime;
+use Doctrine\DBAL\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
 
 class HostingRequestControllerTest extends TestCase
 {
-    /** @var Member  */
+    /** @var Member */
     private $sender;
-    /** @var Member  */
+    /** @var Member */
     private $receiver;
-    /** @var Message  */
+    /** @var Message */
     private $parent;
+    /** @var Subject */
+    private $subject;
 
     public function setUp()
     {
         $this->sender = new Member();
         $this->receiver = new Member();
         $this->parent = new Message();
+        $this->subject = new Subject();
+        $this->subject->setSubject('subject');
         $this->parent->setReceiver($this->sender);
         $this->parent->setSender($this->receiver);
     }
@@ -36,9 +43,9 @@ class HostingRequestControllerTest extends TestCase
      * @param array $parameters Array of parameters to pass into method.
      *
      * @return mixed Method return.
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    private function invokeGetFinalRequest(array $parameters = array())
+    private function invokeGetFinalRequest(array $parameters)
     {
         $reflection = new \ReflectionClass(HostingRequestController::class);
         $method = $reflection->getMethod('getFinalRequest');
@@ -54,14 +61,16 @@ class HostingRequestControllerTest extends TestCase
      * @param $numberOfTravellers
      * @param $state
      * @return Message
-     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    private function setupRequestMessage($arrival, $departure, $flexible, $numberOfTravellers, $state)
+    private function setupRequestMessage($arrival, $departure, $flexible, $numberOfTravellers, $state, $messageText = '')
     {
         $message = new Message();
         $message->setParent($this->parent);
         $message->setSender($this->sender);
         $message->setReceiver($this->receiver);
+        $message->setMessage($messageText);
+        $message->setSubject($this->subject);
 
         $request = new HostingRequest();
         $request->setArrival($arrival);
@@ -97,8 +106,8 @@ class HostingRequestControllerTest extends TestCase
         $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN);
 
         $finalRequestMessage = $this->invokeGetFinalRequest([
-            $hostingRequestMessage->getSender(),
-            $hostingRequestMessage->getSender(),
+            $this->sender,
+            $this->receiver,
             $hostingRequestMessage,
             $formRequestMessage,
             $clickedButton
@@ -107,8 +116,6 @@ class HostingRequestControllerTest extends TestCase
         $this->assertEquals($finalRequestMessage->getRequest()->getStatus(), $expected);
 
         // Check that all other properties didn't change
-        $this->assertEquals($finalRequestMessage->getSender(), $hostingRequestMessage->getSender());
-        $this->assertEquals($finalRequestMessage->getReceiver(), $hostingRequestMessage->getReceiver());
         $this->assertEquals($finalRequestMessage->getRequest()->getArrival(), $hostingRequestMessage->getRequest()->getArrival());
         $this->assertEquals($finalRequestMessage->getRequest()->getDeparture(), $hostingRequestMessage->getRequest()->getDeparture());
         $this->assertEquals($finalRequestMessage->getRequest()->getFlexible(), $hostingRequestMessage->getRequest()->getFlexible());
@@ -124,8 +131,8 @@ class HostingRequestControllerTest extends TestCase
         $formRequestMessage = $this->setupRequestMessage($arrival, $departure, true, 1, HostingRequest::REQUEST_OPEN);
 
         $finalRequestMessage = $this->invokeGetFinalRequest([
-            $hostingRequestMessage->getSender(),
-            $hostingRequestMessage->getSender(),
+            $this->sender,
+            $this->receiver,
             $hostingRequestMessage,
             $formRequestMessage,
             'reply'
@@ -151,8 +158,8 @@ class HostingRequestControllerTest extends TestCase
         $formRequestMessage = $this->setupRequestMessage($departure, $departure, true, 1, HostingRequest::REQUEST_OPEN);
 
         $finalRequestMessage = $this->invokeGetFinalRequest([
-            $hostingRequestMessage->getSender(),
-            $hostingRequestMessage->getSender(),
+            $this->sender,
+            $this->receiver,
             $hostingRequestMessage,
             $formRequestMessage,
             'reply'
@@ -162,8 +169,6 @@ class HostingRequestControllerTest extends TestCase
         $this->assertEquals($finalRequestMessage->getRequest()->getArrival(), $departure);
 
         // Check that all other properties didn't change
-        $this->assertEquals($finalRequestMessage->getSender(), $hostingRequestMessage->getSender());
-        $this->assertEquals($finalRequestMessage->getReceiver(), $hostingRequestMessage->getReceiver());
         $this->assertEquals($finalRequestMessage->getRequest()->getStatus(), $hostingRequestMessage->getRequest()->getStatus());
         $this->assertEquals($finalRequestMessage->getRequest()->getDeparture(), $hostingRequestMessage->getRequest()->getDeparture());
         $this->assertEquals($finalRequestMessage->getRequest()->getFlexible(), $hostingRequestMessage->getRequest()->getFlexible());
@@ -180,8 +185,8 @@ class HostingRequestControllerTest extends TestCase
         $formRequestMessage = $this->setupRequestMessage($arrival, $newDeparture, false, 1, HostingRequest::REQUEST_OPEN);
 
         $finalRequestMessage = $this->invokeGetFinalRequest([
-            $hostingRequestMessage->getSender(),
-            $hostingRequestMessage->getSender(),
+            $this->sender,
+            $this->receiver,
             $hostingRequestMessage,
             $formRequestMessage,
             'reply'
@@ -191,8 +196,6 @@ class HostingRequestControllerTest extends TestCase
         $this->assertEquals($finalRequestMessage->getRequest()->getDeparture(), $newDeparture);
 
         // Check that all other properties didn't change
-        $this->assertEquals($finalRequestMessage->getSender(), $hostingRequestMessage->getSender());
-        $this->assertEquals($finalRequestMessage->getReceiver(), $hostingRequestMessage->getReceiver());
         $this->assertEquals($finalRequestMessage->getRequest()->getStatus(), $hostingRequestMessage->getRequest()->getStatus());
         $this->assertEquals($finalRequestMessage->getRequest()->getArrival(), $hostingRequestMessage->getRequest()->getArrival());
         $this->assertEquals($finalRequestMessage->getRequest()->getFlexible(), $hostingRequestMessage->getRequest()->getFlexible());
@@ -210,8 +213,8 @@ class HostingRequestControllerTest extends TestCase
         $formRequestMessage = $this->setupRequestMessage($newArrival, $newDeparture, false, 1, HostingRequest::REQUEST_OPEN);
 
         $finalRequestMessage = $this->invokeGetFinalRequest([
-            $hostingRequestMessage->getSender(),
-            $hostingRequestMessage->getSender(),
+            $this->sender,
+            $this->receiver,
             $hostingRequestMessage,
             $formRequestMessage,
             'reply'
@@ -223,8 +226,6 @@ class HostingRequestControllerTest extends TestCase
         $this->assertEquals($finalRequestMessage->getRequest()->getDeparture(), $newDeparture);
 
         // Check that all other properties didn't change
-        $this->assertEquals($finalRequestMessage->getSender(), $hostingRequestMessage->getSender());
-        $this->assertEquals($finalRequestMessage->getReceiver(), $hostingRequestMessage->getReceiver());
         $this->assertEquals($finalRequestMessage->getRequest()->getStatus(), $hostingRequestMessage->getRequest()->getStatus());
         $this->assertEquals($finalRequestMessage->getRequest()->getFlexible(), $hostingRequestMessage->getRequest()->getFlexible());
         $this->assertEquals($finalRequestMessage->getRequest()->getNumberOfTravellers(), $hostingRequestMessage->getRequest()->getNumberOfTravellers());
@@ -239,8 +240,8 @@ class HostingRequestControllerTest extends TestCase
         $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 5, HostingRequest::REQUEST_OPEN);
 
         $finalRequestMessage = $this->invokeGetFinalRequest([
-            $hostingRequestMessage->getSender(),
-            $hostingRequestMessage->getSender(),
+            $this->sender,
+            $this->receiver,
             $hostingRequestMessage,
             $formRequestMessage,
             'reply'
@@ -250,11 +251,96 @@ class HostingRequestControllerTest extends TestCase
         $this->assertEquals($finalRequestMessage->getRequest()->getNumberOfTravellers(), 5);
 
         // Check that all other properties didn't change
+        $this->assertEquals($finalRequestMessage->getRequest()->getStatus(), $hostingRequestMessage->getRequest()->getStatus());
+        $this->assertEquals($finalRequestMessage->getRequest()->getFlexible(), $hostingRequestMessage->getRequest()->getFlexible());
+        $this->assertEquals($finalRequestMessage->getRequest()->getDeparture(), $hostingRequestMessage->getRequest()->getDeparture());
+        $this->assertEquals($finalRequestMessage->getRequest()->getArrival(), $hostingRequestMessage->getRequest()->getArrival());
+    }
+
+    public function testGetFinalRequestMessage()
+    {
+        $arrival = new DateTime();
+        $departure = (clone($arrival))->add(new DateInterval('P2D'));
+
+        $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'No Message');
+        $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
+
+        $finalRequestMessage = $this->invokeGetFinalRequest([
+            $this->sender,
+            $this->receiver,
+            $hostingRequestMessage,
+            $formRequestMessage,
+            'reply'
+        ]);
+
+        // Check that the message was set correctly
+        $this->assertEquals($finalRequestMessage->getMessage(), 'Message');
+
+        // Check that all other properties didn't change
         $this->assertEquals($finalRequestMessage->getSender(), $hostingRequestMessage->getSender());
         $this->assertEquals($finalRequestMessage->getReceiver(), $hostingRequestMessage->getReceiver());
         $this->assertEquals($finalRequestMessage->getRequest()->getStatus(), $hostingRequestMessage->getRequest()->getStatus());
         $this->assertEquals($finalRequestMessage->getRequest()->getFlexible(), $hostingRequestMessage->getRequest()->getFlexible());
         $this->assertEquals($finalRequestMessage->getRequest()->getDeparture(), $hostingRequestMessage->getRequest()->getDeparture());
         $this->assertEquals($finalRequestMessage->getRequest()->getArrival(), $hostingRequestMessage->getRequest()->getArrival());
+        $this->assertEquals($finalRequestMessage->getRequest()->getNumberOfTravellers(), $hostingRequestMessage->getRequest()->getNumberOfTravellers());
+    }
+
+    public function testGetFinalRequestParent()
+    {
+        $arrival = new DateTime();
+        $departure = (clone($arrival))->add(new DateInterval('P2D'));
+
+        $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
+        $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
+
+        $finalRequestMessage = $this->invokeGetFinalRequest([
+            $this->sender,
+            $this->receiver,
+            $hostingRequestMessage,
+            $formRequestMessage,
+            'reply'
+        ]);
+
+        // Check that the message was set correctly
+        $this->assertEquals($finalRequestMessage->getParent(), $hostingRequestMessage);
+
+        // Check that all other properties didn't change
+        $this->assertEquals($finalRequestMessage->getSender(), $hostingRequestMessage->getReceiver());
+        $this->assertEquals($finalRequestMessage->getReceiver(), $hostingRequestMessage->getSender());
+        $this->assertEquals($finalRequestMessage->getRequest()->getStatus(), $hostingRequestMessage->getRequest()->getStatus());
+        $this->assertEquals($finalRequestMessage->getRequest()->getFlexible(), $hostingRequestMessage->getRequest()->getFlexible());
+        $this->assertEquals($finalRequestMessage->getRequest()->getDeparture(), $hostingRequestMessage->getRequest()->getDeparture());
+        $this->assertEquals($finalRequestMessage->getRequest()->getArrival(), $hostingRequestMessage->getRequest()->getArrival());
+        $this->assertEquals($finalRequestMessage->getRequest()->getNumberOfTravellers(), $hostingRequestMessage->getRequest()->getNumberOfTravellers());
+    }
+
+    public function testGetFinalRequestSubject()
+    {
+        $arrival = new DateTime();
+        $departure = (clone($arrival))->add(new DateInterval('P2D'));
+
+        $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
+        $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
+
+        $finalRequestMessage = $this->invokeGetFinalRequest([
+            $this->sender,
+            $this->receiver,
+            $hostingRequestMessage,
+            $formRequestMessage,
+            'reply'
+        ]);
+
+        // Check that the message was set correctly
+        $this->assertEquals($finalRequestMessage->getSubject(), $this->subject);
+
+        // Check that all other properties didn't change
+        $this->assertEquals($finalRequestMessage->getSender(), $hostingRequestMessage->getReceiver());
+        $this->assertEquals($finalRequestMessage->getReceiver(), $hostingRequestMessage->getSender());
+        $this->assertEquals($finalRequestMessage->getRequest()->getStatus(), $hostingRequestMessage->getRequest()->getStatus());
+        $this->assertEquals($finalRequestMessage->getRequest()->getFlexible(), $hostingRequestMessage->getRequest()->getFlexible());
+        $this->assertEquals($finalRequestMessage->getRequest()->getDeparture(), $hostingRequestMessage->getRequest()->getDeparture());
+        $this->assertEquals($finalRequestMessage->getRequest()->getArrival(), $hostingRequestMessage->getRequest()->getArrival());
+        $this->assertEquals($finalRequestMessage->getRequest()->getNumberOfTravellers(), $hostingRequestMessage->getRequest()->getNumberOfTravellers());
     }
 }

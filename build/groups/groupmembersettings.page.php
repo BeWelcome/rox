@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
@@ -34,7 +34,7 @@ class GroupMemberSettingsPage extends GroupsBasePage
 {
     protected function column_col3()
     {
-        echo '<div class="col-12">';
+        echo '<div class="row"><div class="col-12">';
 
         $formkit = $this->layoutkit->formkit;
         $callbacktag = $formkit->setPostCallback('GroupsController', 'changeMemberSettings');
@@ -63,23 +63,23 @@ class GroupMemberSettingsPage extends GroupsBasePage
         <?= $problemmsg; ?>
         <form action="" method="post">
         <?= $callbacktag; ?>
-        <fieldset>
-            <legend><?= $words->get('GroupsMemberSettings') ;?><?= htmlspecialchars($this->group->Name, ENT_QUOTES) ?></legend>
+            <h2><?= $words->get('GroupsMemberSettings') ;?><?= htmlspecialchars($this->group->Name, ENT_QUOTES) ?></h2>
             <input type='hidden' name='member_id' value='<?= $this->member->id ;?>' />
             <input type='hidden' name='group_id' value='<?= $membershipinfo->IdGroup ;?>' />
-            <div class="row mt-3">
-                <div class="col-auto">
-                    <label for="comment"><?= $words->get('GroupsMemberComments') ;?></label><br>
-                    <textarea class="mb-3 p-2" id="comment" name="membershipinfo_comment" cols="30" rows="3"><?= (($membershipinfo->Comment != '' ) ? htmlspecialchars($words->mTrad($membershipinfo->Comment)) : '' ); ?></textarea>
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <div class="form-group"><label for="comment"><?= $words->get('GroupsMemberComments') ;?></label><br>
+                    <textarea class="form-control" id="comment" name="membershipinfo_comment" cols="30" rows="3"><?= (($membershipinfo->Comment != '' ) ? htmlspecialchars($words->mTrad($membershipinfo->Comment)) : '' ); ?></textarea>
+                    </div>
                 </div> <!-- row -->
-                <div class="col-auto">
+                <div class="col-12 col-md-6">
                     <label><?= $words->get('GroupsMemberAcceptMail') ;?>:  </label><br>
 
-                    <div class="d-flex btn-group mb-3" data-toggle="buttons">
-                        <label class="btn btn-primary btn-radio active" for="yes_option">
+                    <div class="btn-group w-100" data-toggle="buttons">
+                        <label class="btn btn-primary btn-radio <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'yes') ? 'active' : '' ); ?>" for="yes_option">
                             <input id='yes_option' class="noradio" autocomplete="off" type="radio" value="yes" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'yes') ? 'checked="checked" ' : '' ); ?>>Yes
                         </label>
-                        <label for="no_option" class="btn btn-primary btn-radio">
+                        <label for="no_option" class="btn btn-primary btn-radio <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'no') ? 'active' : '' ); ?>">
                             <input id='no_option' class="noradio" autocomplete="off" type="radio" value="no" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'no' || !$membershipinfo->IacceptMassMailFromThisGroup) ? 'checked="checked" ' : '' ); ?>>No
                         </label>
                     </div>
@@ -88,14 +88,15 @@ class GroupMemberSettingsPage extends GroupsBasePage
             <?php if ($membershipinfo->IdMember < 0) { ?>
                 <p><?= $words->get('GroupMemberSettingsDisabledInfo') ?></p>
             <?php } ?>
-            <input type="submit" class="btn btn-primary" value="<?= $words->getBuffered('GroupsUpdateMemberSettings') ;?>"><?=$words->flushBuffer();?>
-            </fieldset>
+            <div class="col-12">
+            <input type="submit" class="btn btn-primary pull-right" value="<?= $words->getBuffered('GroupsUpdateMemberSettings') ;?>"><?=$words->flushBuffer();?>
+            </div>
         </form>
         <?php
         }
-        echo '</div>';
+        echo '</div></div>';
     }
-    
+
     protected function getSubmenuActiveItem() {
         return 'membersettings';
     }

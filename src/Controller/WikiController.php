@@ -7,6 +7,8 @@ use App\Entity\Member;
 use App\Entity\Wiki;
 use App\Model\WikiModel;
 use App\Repository\WikiRepository;
+use App\Utilities\TranslatedFlashTrait;
+use App\Utilities\TranslatorTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -17,6 +19,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class WikiController extends AbstractController
 {
+    use TranslatorTrait;
+    use TranslatedFlashTrait;
+
     /**
      * @Route("/wiki", name="wiki_front_page")
      *
@@ -24,21 +29,20 @@ class WikiController extends AbstractController
      *
      * @return Response
      */
-    public function showWikiFrontPageAction(TranslatorInterface $translator, WikiModel $wikiModel)
+    public function showWikiFrontPage(WikiModel $wikiModel)
     {
-        return $this->showWikiPageAction($translator, 'WikiFrontPage', $wikiModel);
+        return $this->showWikiPage('WikiFrontPage', $wikiModel);
     }
 
     /**
      * @Route("/wiki/{pageTitle}", name="wiki_page")
      *
-     * @param TranslatorInterface $translator
      * @param $pageTitle
      * @param WikiModel $wikiModel
      *
      * @return Response
      */
-    public function showWikiPageAction(TranslatorInterface $translator, $pageTitle, WikiModel $wikiModel)
+    public function showWikiPage($pageTitle, WikiModel $wikiModel)
     {
         $pageName = $wikiModel->getPageName($pageTitle);
 
@@ -51,9 +55,10 @@ class WikiController extends AbstractController
         if (null === $wikiPage) {
             return $this->redirectToRoute('wiki_page_create', ['pageTitle' => $pageTitle]);
         }
+
         $output = $wikiModel->parseWikiMarkup($wikiPage->getContent());
         if (null === $output) {
-            $this->addFlash('error', $translator->trans('flash.wiki.markup.invalid'));
+            $this->addTranslatedFlash('error', 'flash.wiki.markup.invalid');
 
             return $this->redirectToRoute('wiki_page_edit', ['pageTitle' => $pageTitle]);
         }
@@ -68,13 +73,12 @@ class WikiController extends AbstractController
      * @Route("/wiki/{pageTitle}/edit", name="wiki_page_edit")
      *
      * @param Request             $request
-     * @param TranslatorInterface $translator
      * @param WikiModel           $wikiModel
      * @param $pageTitle
      *
      * @return Response
      */
-    public function editWikiPageAction(Request $request, TranslatorInterface $translator, WikiModel $wikiModel, $pageTitle)
+    public function editWikiPage(Request $request, WikiModel $wikiModel, $pageTitle)
     {
         /** @var Wiki $wikiPage */
         $wikiPage = $wikiModel->getPage($pageTitle);
@@ -100,7 +104,7 @@ class WikiController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($newWikiPage);
             $em->flush();
-            $this->addFlash('notice', $translator->trans('flash.wiki.updated'));
+            $this->addTranslatedFlash('notice', 'flash.wiki.updated');
 
             return $this->redirectToRoute('wiki_page', ['pageTitle' => $pageTitle]);
         }
@@ -115,13 +119,12 @@ class WikiController extends AbstractController
      * @Route("/wiki/{pageTitle}/create", name="wiki_page_create")
      *
      * @param Request             $request
-     * @param TranslatorInterface $translator
      * @param WikiModel           $wikiModel
      * @param $pageTitle
      *
      * @return Response
      */
-    public function createWikiPageAction(Request $request, TranslatorInterface $translator, WikiModel $wikiModel, $pageTitle)
+    public function createWikiPage(Request $request, WikiModel $wikiModel, $pageTitle)
     {
         $wikiPage = $wikiModel->getPage($pageTitle);
 
@@ -146,7 +149,7 @@ class WikiController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($newWikiPage);
             $em->flush();
-            $this->addFlash('notice', $translator->trans('flash.wiki.created'));
+            $this->addTranslatedFlash('notice', 'flash.wiki.created');
 
             return $this->redirectToRoute('wiki_page', ['pageTitle' => $pageTitle]);
         }
@@ -155,84 +158,5 @@ class WikiController extends AbstractController
             'title' => $pageTitle,
             'form' => $form->createView(),
         ]);
-    }
-
-    /**
-     * @Route("/groups/{id}/wiki", name="group_wiki_page")
-     *
-     * @param Group $group
-     *
-     * @return Response
-     */
-    public function showGroupWikiPageAction(Group $group, WikiModel $wikiModel)
-    {
-        $member = $this->getUser();
-
-        $pageName = $wikiModel->getPageName('Group_'.$group->getName());
-
-        $em = $this->getDoctrine();
-        /** @var WikiRepository $wikiRepository */
-        $wikiRepository = $em->getRepository(Wiki::class);
-
-        $wikiPage = $wikiRepository->getPageByName($pageName);
-
-        if (null === $wikiPage) {
-            $output = 'No wiki found for this group.';
-        } else {
-            $output = $wikiModel->parseWikiMarkup($wikiPage->getContent());
-        }
-
-        return $this->render('group/wiki.html.twig', [
-            'title' => 'Group '.$group->getName(),
-            'submenu' => [
-                'active' => 'wiki',
-                'items' => $this->getGroupSubmenuItems($member, $group),
-            ],
-            'wikipage' => $output,
-        ]);
-    }
-
-    /**
-     * \todo move to group controller when the group controller is rewritten.
-     *
-     * @param Member $member
-     * @param Group  $group
-     *
-     * @return array
-     */
-    private function getGroupSubmenuItems(Member $member, Group $group)
-    {
-        $groupId = $group->getId();
-        $submenuItems = [
-            'overview' => [
-                'key' => 'GroupOverview',
-                'url' => $this->generateUrl('group_start', ['group_id' => $groupId]),
-            ],
-            'forum' => [
-                'key' => 'GroupDiscussions',
-                'url' => $this->generateUrl('group_forum', ['group_id' => $groupId]),
-            ],
-            'wiki' => [
-                'key' => 'GroupWiki',
-                'url' => $this->generateUrl('group_wiki_page', ['id' => $groupId]),
-            ],
-            'members' => [
-                'key' => 'GroupMembers',
-                'url' => $this->generateUrl('group_members', ['group_id' => $groupId]),
-            ],
-        ];
-        // \todo: Check if current user is member of this group
-        if (\in_array($member, $group->getCurrentMembers(), true)) {
-            $submenuItems['membersettings'] = [
-                'key' => 'GroupMembersettings',
-                'url' => $this->generateUrl('group_membersettings', ['group_id' => $groupId]),
-            ];
-            $submenuItems['relatedgroupsettings'] = [
-                'key' => 'GroupRelatedGroups',
-                'url' => $this->generateUrl('relatedgroup_log', ['group_id' => $groupId]),
-            ];
-        }
-
-        return $submenuItems;
     }
 }

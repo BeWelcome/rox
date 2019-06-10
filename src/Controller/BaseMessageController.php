@@ -4,10 +4,15 @@ namespace App\Controller;
 
 use App\Entity\Language;
 use App\Entity\Member;
+use App\Entity\Message;
 use App\Entity\Preference;
 use App\Form\CustomDataClass\MessageIndexRequest;
 use App\Form\MessageIndexFormType;
 use App\Model\MessageModel;
+use App\Repository\MessageRepository;
+use App\Utilities\MailerTrait;
+use App\Utilities\TranslatedFlashTrait;
+use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Html2Text\Html2Text;
@@ -21,11 +26,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BaseMessageController extends AbstractController
 {
-    /** @var TranslatorInterface */
-    protected $translator;
-
-    /** @var Swift_Mailer */
-    protected $mailer;
+    use TranslatedFlashTrait;
 
     /** @var MessageModel */
     protected $messageModel;
@@ -33,26 +34,6 @@ class BaseMessageController extends AbstractController
     public function __construct(MessageModel $messageModel)
     {
         $this->messageModel = $messageModel;
-    }
-
-    /**
-     * @required
-     *
-     * @param TranslatorInterface $translator
-     */
-    public function setTranslator(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
-
-    /**
-     * @required
-     *
-     * @param Swift_Mailer $mailer
-     */
-    public function setMailer(Swift_Mailer $mailer)
-    {
-        $this->mailer = $mailer;
     }
 
     protected function getSubMenuItems()
@@ -87,82 +68,6 @@ class BaseMessageController extends AbstractController
                 'url' => $this->generateUrl('messages', ['folder' => 'deleted']),
             ],
         ];
-    }
-
-    /**
-     * @param Member $sender
-     * @param Member $receiver
-     * @param string $subject
-     * @param string $htmlBody
-     *
-     * @return bool
-     */
-    protected function sendEmail(Member $sender, Member $receiver, $subject, $htmlBody)
-    {
-        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
-        /** @var Preference $preference */
-        $preference = $preferenceRepository->findOneBy(['codename' => Preference::HTML_MAILS]);
-        $htmlMails = ('Yes' === $receiver->getMemberPreferenceValue($preference));
-
-        $converter = new Html2Text($htmlBody, [
-            'do_links' => 'table',
-            'width' => 75,
-        ]);
-        $plainText = $converter->getText();
-        $message = (new Swift_Message())
-            ->setSubject($subject)
-            ->setFrom([
-                'message@bewelcome.org' => 'BeWelcome - '.$sender->getUsername(),
-            ])
-            ->setTo($receiver->getEmail())
-            ->setBody(
-                $plainText,
-                'text/plain'
-            );
-
-        if ($htmlMails) {
-            $message
-                ->addPart($htmlBody, 'text/html')
-            ;
-        }
-        $recipients = $this->mailer->send($message);
-
-        return (0 === $recipients) ? false : true;
-    }
-
-    /**
-     * Make sure to sent the email notification in the preferred language of the user.
-     *
-     * @param Member $receiver
-     */
-    protected function setTranslatorLocale(Member $receiver)
-    {
-        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
-        /** @var Preference $preference */
-        $preference = $preferenceRepository->findOneBy(['codename' => Preference::LOCALE]);
-
-        $languageRepository = $this->getDoctrine()->getRepository(Language::class);
-        /** @var Language $language */
-        $language = $languageRepository->find($receiver->getMemberPreferenceValue($preference));
-
-        $this->translator->setLocale($language->getShortcode());
-    }
-
-    protected function addExpiredFlash(Member $receiver)
-    {
-        $expiredSendMessage = $this->translator->trans('flash.request.expired', [
-            '%link_start%' => '<a href="'.$this->generateUrl('message_new', [
-                    'username' => $receiver->getUsername(),
-                ]).'" class="text-primary">',
-            '%link_end%' => '</a>',
-        ]);
-        $this->addFlash('notice', $expiredSendMessage);
-    }
-
-    protected function addTranslatedFlash($type, $flashId)
-    {
-        $translatedFlash = $this->translator->trans($flashId);
-        $this->addFlash($type, $translatedFlash);
     }
 
     /**
@@ -235,5 +140,48 @@ class BaseMessageController extends AbstractController
                 'items' => $this->getSubMenuItems(),
             ],
         ]);
+    }
+
+    /**
+     * @param Message $message
+     * @return bool
+     */
+    protected function isMessageOfMember(Message $message)
+    {
+        $member = $this->getUser();
+        if (($message->getReceiver() !== $member) && ($message->getSender() !== $member)) {
+            throw $this->createAccessDeniedException();
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $probableParent
+     *
+     * @return Message
+     */
+    protected function getParent($probableParent)
+    {
+        // Check if there is already a newer message than the one used for the request
+        // as there might be a clash of replies
+        /** @var MessageRepository */
+        $hostingRequestRepository = $this->getDoctrine()->getRepository(Message::class);
+        $messages = $hostingRequestRepository->findBy([ 'subject' => $probableParent->getSubject() ]);
+        return $messages[\count($messages) - 1];
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    protected function getOptionsFromRequest(Request $request)
+    {
+        $page = $request->query->get('page', 1);
+        $limit = $request->query->get('limit', 10);
+        $sort = $request->query->get('sort', 'dateSent');
+        $direction = $request->query->get('dir', 'desc');
+
+        return [ $page, $limit, $sort, $direction ];
     }
 }

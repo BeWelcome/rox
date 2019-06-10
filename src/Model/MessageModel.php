@@ -6,9 +6,13 @@ use App\Doctrine\DeleteRequestType;
 use App\Doctrine\InFolderType;
 use App\Doctrine\MessageStatusType;
 use App\Doctrine\SpamInfoType;
+use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Entity\Subject;
+use App\Form\HostingRequestType;
 use App\Repository\MessageRepository;
+use App\Utilities\MailerTrait;
 use App\Utilities\ManagerTrait;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\OptimisticLockException;
@@ -24,6 +28,7 @@ use PDO;
  */
 class MessageModel
 {
+    use MailerTrait;
     use ManagerTrait;
 
     /**
@@ -194,7 +199,7 @@ class MessageModel
         /** @var Message $message */
         foreach ($messages as $message) {
             $message
-                ->setInFolder(InFolderType::SPAM)
+                ->setFolder(InFolderType::SPAM)
                 ->setStatus(MessageStatusType::CHECK)
                 ->addToSpamInfo(SpamInfoType::MEMBER_SAYS_SPAM)
             ;
@@ -222,7 +227,7 @@ class MessageModel
         /** @var Message $message */
         foreach ($messages as $message) {
             $message
-                ->setInFolder(InFolderType::NORMAL)
+                ->setFolder(InFolderType::NORMAL)
                 ->setStatus(MessageStatusType::CHECKED)
                 ->removeFromSpaminfo(SpamInfoType::MEMBER_SAYS_SPAM)
             ;
@@ -472,5 +477,53 @@ class MessageModel
         }
 
         return false;
+    }
+
+    /**
+     * Creates a new message and stores it into the database afterwards sends an notification to the receiver
+     * Only used for messages therefore request is set to null!
+     *
+     * @param Member $sender
+     * @param Member $receiver
+     * @param Message|null $parent
+     * @param $subjectText
+     * @param $body
+     * @return Message
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function addMessage(Member $sender, Member $receiver, ?Message $parent, $subjectText, $body)
+    {
+        $em = $this->getManager();
+        $message = new Message();
+        if (null === $parent) {
+            $subject = new Subject();
+            $subject->setSubject($subjectText);
+            $em->persist($subject);
+            $em->flush();
+        } else {
+            $subject = $parent->getSubject();
+        }
+
+        $message->setSubject($subject);
+        $message->setSender($sender);
+        $message->setRequest(null);
+        $message->setParent($parent);
+        $message->setSender($sender);
+        $message->setReceiver($receiver);
+        $message->setMessage($body);
+        $message->setStatus('Sent');
+        $em->persist($message);
+        $em->flush();
+
+        // \todo Send email notification
+        $this->sendTemplateEmail($sender, $receiver, 'message', [
+            'sender' => $sender,
+            'receiver' => $receiver,
+            'message' => $message,
+            'subject' => $subjectText,
+            'body' => $body,
+        ]);
+        return $message;
     }
 }

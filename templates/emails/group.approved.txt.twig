@@ -1,0 +1,16 @@
+Hi {{ creator.Username }},
+
+The group named "{{ group.name }}" you requested has been approved.
+The group's description is:
+
+{% for locale, description in group.descriptions %}
+{{ description.Language.WordCode|lower|trans }} ({{ locale }})
+
+{{ description.Sentence|striptags }}
+
+{% endfor %}
+
+You should see the new group on your profile now. To go to the group pages directly please follow this [link]({{ url('group_start', { 'group_id' : group.id}) }})
+
+Cheers,
+Your mailer daemon

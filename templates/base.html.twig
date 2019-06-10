@@ -37,21 +37,21 @@
         <main role="main">
             <div id="toasts" class="position-fixed w-100 d-flex flex-column px-2" style="z-index:1000">
             </div>
-            <div class="container">
+            {% set sidebar = (submenu is defined) %}
+            {% set contentBlock %}
                 {% for label, messages in app.flashes %}
                     <div class="row">
                         {% for message in messages %}
-                        <div class="col-12">
-                            <div class="alert alert-{{ label }}">
-                                {{ message | raw }}
+                            <div class="col-12">
+                                <div class="alert alert-{{ label }}">
+                                    {{ message | raw }}
+                                </div>
                             </div>
-                        </div>
                         {% endfor %}
                     </div>
                 {% endfor %}
-            </div>
-            {% set sidebar = (submenu is defined) %}
-            {% set contentBlock %} {% block content %}{% endblock %} {% endset %}
+                {% block content %}{% endblock %}
+            {% endset %}
             <div class="container">
                 {% if sidebar %}
                     <div class="row mt-2">
@@ -69,8 +69,12 @@
                             </div>
                             <div class="list-group">
                                 {% for filter,menuItem in submenu.items %}
-                                    <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}"
-                                       href="{{ menuItem.url }}">{{ menuItem.key | lower | trans }}</a>
+                                    {% if submenu.active == filter %}
+                                        <span class="list-group-item nav-link active">{{ menuItem.key | lower | trans }}</span>
+                                    {% else %}
+                                        <a class="list-group-item nav-link "
+                                           href="{{ menuItem.url }}">{{ menuItem.key | lower | trans }}</a>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         </div>

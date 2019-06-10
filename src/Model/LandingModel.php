@@ -43,8 +43,8 @@ class LandingModel
             $qb
                 ->andWhere(
                     $qb->expr()->orX(
-                        $qb->expr()->eq('m.whenfirstread', "'0000-00-00 00:00.00'"),
-                        $qb->expr()->isNull('m.whenfirstread')
+                        $qb->expr()->eq('m.firstRead', "'0000-00-00 00:00.00'"),
+                        $qb->expr()->isNull('m.firstRead')
                     )
                 );
         }

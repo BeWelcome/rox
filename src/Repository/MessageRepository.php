@@ -28,13 +28,13 @@ class MessageRepository extends EntityRepository
             ->select('count(m.id)')
             ->where('m.receiver = :member')
             ->setParameter('member', $member)
-            ->andWhere('m.infolder = :infolder')
+            ->andWhere('m.folder = :infolder')
             ->setParameter('infolder', InFolderType::NORMAL)
             ->andWhere('NOT (m.deleteRequest LIKE :receiverDeleted)')
             ->setParameter(':receiverDeleted', '%'.DeleteRequestType::RECEIVER_DELETED.'%')
             ->andWhere('NOT (m.deleteRequest LIKE :receiverPurged)')
             ->setParameter(':receiverPurged', '%'.DeleteRequestType::RECEIVER_PURGED.'%')
-            ->andWhere('m.whenfirstread IS NULL')
+            ->andWhere('m.firstRead IS NULL')
             ->andWhere('m.status = :status')
             ->setParameter('status', 'Sent')
             ->andWhere('m.request IS NULL')
@@ -61,13 +61,13 @@ class MessageRepository extends EntityRepository
             ->select('count(m.id)')
             ->where('m.receiver = :member')
             ->setParameter('member', $member)
-            ->andWhere('m.infolder = :infolder')
+            ->andWhere('m.folder = :infolder')
             ->setParameter('infolder', InFolderType::NORMAL)
             ->andWhere('NOT (m.deleteRequest LIKE :receiverDeleted)')
             ->setParameter(':receiverDeleted', '%'.DeleteRequestType::RECEIVER_DELETED.'%')
             ->andWhere('NOT (m.deleteRequest LIKE :receiverPurged)')
             ->setParameter(':receiverPurged', '%'.DeleteRequestType::RECEIVER_PURGED.'%')
-            ->andWhere('m.whenfirstread IS NULL')
+            ->andWhere('m.firstRead IS NULL')
             ->andWhere('m.status = :status')
             ->setParameter(':status', 'Sent')
             ->getQuery();
@@ -90,8 +90,8 @@ class MessageRepository extends EntityRepository
             ->select('count(m.id)')
             ->where('m.status = :status')
             ->setParameter('status', MessageStatusType::CHECK)
-            ->andWhere('m.spaminfo LIKE :spaminfo')
-            ->setParameter('spaminfo', SpamInfoType::MEMBER_SAYS_SPAM)
+            ->andWhere('m.spamInfo LIKE :spamInfo')
+            ->setParameter('spamInfo', SpamInfoType::MEMBER_SAYS_SPAM)
             ->getQuery();
 
         $result = 0;
@@ -254,7 +254,7 @@ class MessageRepository extends EntityRepository
         }
         $qb
             ->setParameter('member', $member)
-            ->andWhere('m.infolder = :infolder')
+            ->andWhere('m.folder = :infolder')
             ->setParameter('infolder', InFolderType::NORMAL)
             ->join('m.request', 'r')
             ->orderBy('m.'.$sort, $sortDirection);

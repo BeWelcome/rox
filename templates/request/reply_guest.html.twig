@@ -16,16 +16,22 @@
     {% set start = thread | last %}
     {% set current = thread | first %}
     {% set receiver =  start.receiver %}
+
+    <div class="row no-gutters bg-white mb-1">
+        {% set myself = app.user %}
+        <div class="pull-left">{{ macros.avatarstack(host.Username, 50, false) }}</div>
+        <div class="col">
+            <h3 id="MessageSubject" class="p-3 text-truncate">{{ current.Subject.Subject }}</h3>
+        </div>
+        <div class="pull-right text-right">{{ macros.avatarstack(guest.Username, 50, true) }}</div>
+    </div>
+
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
     <div class="row mb-1">
-        <div class="col-12">
-            {{ 'request.sent_to' | trans({'%receiver%': receiver.Username}) }}
-        </div>
-    </div>
-    <div class="row mb-1">
-        <div class="col-12 col-sm-6 col-md-4">
+        <div class="col-12 col-sm-6 col-md-4 order-md-first">
 
             <div class="form-group">
+                {{ form_label(form.request.arrival) }}
                 <div class="input-group date" id="arrival" data-target-input="nearest">
                     <div class="input-group-prepend" data-target="#arrival" data-toggle="datetimepicker">
                         <span class="input-group-text"><i class="fa fa-calendar"></i></span>
@@ -36,6 +42,7 @@
             </div>
 
             <div class="form-group">
+                {{ form_label(form.request.departure) }}
                 <div class="input-group date" id="departure" data-target-input="nearest">
                     <div class="input-group-prepend" data-target="#departure" data-toggle="datetimepicker">
                         <span class="input-group-text"><i class="fa fa-calendar"></i></span>
@@ -45,23 +52,14 @@
                 {{ form_errors(form.request.departure) }}
             </div>
 
-            {{ form_widget(form.request.flexible) }}
-            <div class="input-group">Number of Travellers: {{ form_widget(form.request.numberOfTravellers) }}</div>
-            {{ form_errors(form.request.numberOfTravellers) }}
+            {{ form_row(form.request.flexible) }}
+            {{ form_row(form.request.numberOfTravellers) }}
 
         </div>
         <div class="col-12 col-md-8">
-            <h2 class="mb-1">
-                {{ form_widget(form.subject.subject) }}
-            </h2>
-            {{ form_errors(form.subject.subject, {'attr': {'class': 'small'}}) }}
-            {{ form_label(form.subject, null, {'label_attr': {'class': 'sr-only '} }) }}
-            {{ form_widget(form.message) }}
-            {{ form_errors(form.message) }}
+            {{ form_row(form.message) }}
         </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
+        <div class="col-12 col-md-8 col-md-offset-4">
             {% if current.sender.Username == app.user.Username %}
                 {% set label = 'update' %}
             {% else %}
@@ -75,7 +73,7 @@
                 'label' : label}) }}
         </div>
     </div>
-    <div class="hidden_row">{{ form_rest(form) }}</div>
+    {{ form_rest(form) }}
     {{ form_end(form) }}
     {% include 'message/thread.html.twig' %}
 {% endblock %}

@@ -10,7 +10,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * MembersTrad.
+ * MemberTranslation.
  *
  * @ORM\Table(name="memberstrads",
  *     uniqueConstraints={@ORM\UniqueConstraint(name="Unique_entry", columns={"IdTrad", "IdOwner", "IdLanguage"})},
@@ -25,7 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
  */
-class MembersTrad
+class MemberTranslation
 {
     /**
      * @var Member
@@ -115,7 +115,7 @@ class MembersTrad
      *
      * @param Member $owner
      *
-     * @return MembersTrad
+     * @return MemberTranslation
      */
     public function setOwner($owner)
     {
@@ -139,7 +139,7 @@ class MembersTrad
      *
      * @param int $idtrad
      *
-     * @return MembersTrad
+     * @return MemberTranslation
      */
     public function setIdtrad($idtrad)
     {
@@ -163,7 +163,7 @@ class MembersTrad
      *
      * @param int $idtranslator
      *
-     * @return MembersTrad
+     * @return MemberTranslation
      */
     public function setIdtranslator($idtranslator)
     {
@@ -187,7 +187,7 @@ class MembersTrad
      *
      * @param \DateTime $updated
      *
-     * @return MembersTrad
+     * @return MemberTranslation
      */
     public function setUpdated($updated)
     {
@@ -211,7 +211,7 @@ class MembersTrad
      *
      * @param \DateTime $created
      *
-     * @return MembersTrad
+     * @return MemberTranslation
      */
     public function setCreated($created)
     {
@@ -235,7 +235,7 @@ class MembersTrad
      *
      * @param string $type
      *
-     * @return MembersTrad
+     * @return MemberTranslation
      */
     public function setType($type)
     {
@@ -259,7 +259,7 @@ class MembersTrad
      *
      * @param string $sentence
      *
-     * @return MembersTrad
+     * @return MemberTranslation
      */
     public function setSentence($sentence)
     {
@@ -283,7 +283,7 @@ class MembersTrad
      *
      * @param int $idrecord
      *
-     * @return MembersTrad
+     * @return MemberTranslation
      */
     public function setIdrecord($idrecord)
     {
@@ -307,7 +307,7 @@ class MembersTrad
      *
      * @param string $tablecolumn
      *
-     * @return MembersTrad
+     * @return MemberTranslation
      */
     public function setTablecolumn($tablecolumn)
     {
@@ -341,7 +341,7 @@ class MembersTrad
      *
      * @param Language $language
      *
-     * @return MembersTrad
+     * @return MemberTranslation
      */
     public function setLanguage(Language $language = null)
     {

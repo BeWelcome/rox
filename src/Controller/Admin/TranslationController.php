@@ -2,8 +2,10 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\HostingRequest;
 use App\Entity\Language;
 use App\Entity\Member;
+use App\Entity\Message;
 use App\Entity\RightVolunteer;
 use App\Entity\Word;
 use App\Form\CustomDataClass\Translation\CreateTranslationRequest;
@@ -14,6 +16,9 @@ use App\Kernel;
 use App\Model\TranslationModel;
 use App\Pagerfanta\TranslationAdapter;
 use App\Repository\LanguageRepository;
+use App\Twig\MockupExtension;
+use App\Utilities\TranslatedFlashTrait;
+use App\Utilities\TranslatorTrait;
 use DateTime;
 use Doctrine\DBAL\Connection;
 use Exception;
@@ -38,16 +43,14 @@ use Symfony\Contracts\Translation\TranslatorInterface as Translator;
  */
 class TranslationController extends AbstractController
 {
+    use TranslatorTrait, TranslatedFlashTrait;
+
     /** @var TranslationModel */
     private $translationModel;
 
-    /** @var TranslatorInterface */
-    private $translator;
-
-    public function __construct(TranslatorInterface $translator, TranslationModel $translationModel)
+    public function __construct(TranslationModel $translationModel)
     {
         $this->translationModel = $translationModel;
-        $this->translator = $translator;
     }
 
     /**
@@ -154,7 +157,6 @@ class TranslationController extends AbstractController
      * @param Request             $request
      * @param Language            $language
      * @param KernelInterface     $kernel
-     * @param TranslatorInterface $translator
      * @param mixed               $code
      *
      * @throws Exception
@@ -166,7 +168,6 @@ class TranslationController extends AbstractController
         Request $request,
         Language $language,
         KernelInterface $kernel,
-        TranslatorInterface $translator,
         $code
     ) {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
@@ -469,11 +470,12 @@ class TranslationController extends AbstractController
 
         return $this->redirectToRoute('translations_locale_code', [
             'locale' => $locale,
+            'type' => 'all',
         ]);
     }
 
     /**
-     * @Route("/admin/translations/{type}/{locale}/{code}", name="translations_locale",
+     * @Route("/admin/translations/{type}/{locale}/{code}", name="translations_locale_code",
      *     defaults={"code":""},
      *     requirements={"code"=".+", "type"="missing|all"})
      *
@@ -485,7 +487,7 @@ class TranslationController extends AbstractController
      *
      * @return RedirectResponse|Response
      */
-    public function listTranslationsAction(Request $request, Language $language, $type, $code)
+    public function listTranslations(Request $request, Language $language, $type, $code)
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
@@ -506,7 +508,9 @@ class TranslationController extends AbstractController
                     new NotBlank(),
                 ],
             ])
-            ->add('search', SubmitType::class)
+            ->add('search', SubmitType::class, [
+                'label' => 'search',
+            ])
             ->getForm();
         $form->handleRequest($request);
 
@@ -537,6 +541,85 @@ class TranslationController extends AbstractController
                 'items' => $this->getSubmenuItems($locale),
             ],
         ]);
+    }
+
+    /**
+     * @Route("/admin/translations/mockups", name="translations_mockups")
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function selectMockup(Request $request)
+    {
+        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
+
+        /** @var Member $translator */
+        $translator = $this->getUser();
+        if (!$translator->hasRightsForLocale($request->getLocale())) {
+            return $this->redirectToRoute('translations_no_rights');
+        }
+
+        $mockups = [
+            'signup/finish' => '_partials/signup/finish.html.twig',
+            'signup/error' => '_partials/signup/error.html.twig',
+            'message' => 'emails/message.html.twig',
+            'request (initial)' => 'emails/request.html.twig',
+            'request (guest)' => 'emails/reply_guest.html.twig',
+            'request (host)' => 'emails/reply_host.html.twig',
+            'group invitation' => 'emails/group.invitation.html.twig',
+        ];
+        return $this->render('admin/translations/mockups.html.twig', [
+            'mockups' => $mockups,
+            'submenu' => [
+                'active' => 'mockups',
+                'items' => $this->getSubmenuItems($request->getLocale()),
+            ]
+        ]);
+    }
+
+    /**
+     * @Route("/admin/translate/mockup/{template}", name="translation_mockup",
+     *     requirements={"template"=".+"})
+     *
+     * @param string $template
+     *
+     * @return Response
+     *
+     */
+    public function translateMockup(Request $request, string $template)
+    {
+        $mockMessage = \Mockery::mock(Message::class, [
+            'getId' => 1,
+            'getMessage' => 'Message text',
+        ]);
+        $mockRequest = \Mockery::mock(HostingRequest::class, [
+            'getId' => 1,
+            'getArrival' => new DateTime(),
+            'getDeparture' => new DateTime(),
+            'getNumberOfTravellers' => 2,
+            'getFlexible' => true,
+            'getStatus' => 0,
+        ]);
+        $params = [
+            'html_template' => $template,
+            'username' => 'username',
+            'email_address' => 'mockup@example.com',
+            'subject' => 'Subject',
+            'sender' => $this->getUser(),
+            'receiver' => $this->getUser(),
+            'email' => new MockupExtension(),
+            'message' => $mockMessage,
+            'request' => $mockRequest,
+            'submenu' => [
+                'active' => 'mockup',
+                'items' => $this->getSubmenuItems($request->getLocale(), 'mockup', $template),
+            ]
+        ];
+        if (strpos($template, 'emails/') === true) {
+            $params['txt_template'] = str_replace('.html.twig', '.txt.twig', $template);
+        }
+
+        return $this->render('admin/translations/mockup.html.twig', $params);
     }
 
     /**
@@ -575,11 +658,21 @@ class TranslationController extends AbstractController
         $submenuItems = [
             'all' => [
                 'key' => 'label.translations.all',
-                'url' => $this->generateUrl('translations_locale_code', ['locale' => $locale]),
+                'url' => $this->generateUrl('translations_locale_code', [
+                    'locale' => $locale,
+                    'type' => 'all',
+                ]),
             ],
             'missing' => [
                 'key' => 'label.translations.missing',
-                'url' => $this->generateUrl('translations_locale_missing', ['locale' => $locale]),
+                'url' => $this->generateUrl('translations_locale_code', [
+                    'locale' => $locale,
+                    'type' => 'missing',
+                ]),
+            ],
+            'translations_mockups' => [
+                'key' => 'label.translations.mockups',
+                'url' => $this->generateUrl('translations_mockups'),
             ],
         ];
         if ($translator->hasRightsForLocale('en')) {
@@ -588,7 +681,7 @@ class TranslationController extends AbstractController
                 'url' => $this->generateUrl('translation_create_direct'),
             ];
         }
-        if ($action && 'create' !== $action) {
+        if ($action && 'create' !== $action && 'mockup' !== $action) {
             $submenuItems[$action] = [
                 'key' => 'label.translations.'.$action,
                 'url' => $this->generateUrl('translation_'.$action, [

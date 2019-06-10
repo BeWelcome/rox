@@ -2,19 +2,23 @@
 
 namespace App\Utilities;
 
+use App\Entity\Language;
+use App\Entity\Member;
+use App\Entity\Preference;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 trait TranslatorTrait
 {
     /** @var TranslatorInterface */
-    public $_translator;
+    private $translator;
 
     /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @Required
+     * @param TranslatorInterface $translator
      */
-    protected function setTranslator()
+    public function setTranslator(TranslatorInterface $translator)
     {
-        $this->_translator = TranslatorSingleton::getTranslator();
+        $this->translator =$translator;
     }
 
     /**
@@ -22,6 +26,17 @@ trait TranslatorTrait
      */
     protected function getTranslator()
     {
-        return $this->_translator;
+        return $this->translator;
+    }
+
+    /**
+     * Make sure to sent the email notification in the preferred language of the user.
+     *
+     * @param Member $receiver
+     */
+    protected function setTranslatorLocale(Member $receiver)
+    {
+        $language = $receiver->getPreferredLanguage();
+        $this->translator->setLocale($language->getShortcode());
     }
 }

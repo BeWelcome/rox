@@ -11,7 +11,7 @@
     <div class="col-12 col-md-8">
 
         <div class="media">
-            <?= ((strlen($this->group->Picture) > 0) ? "<img class=\"float-left framed mr-2 mb-2\" src='groups/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$group_name_html}' />" : ''); ?>
+            <?= ((strlen($this->group->Picture) > 0) ? "<img class=\"float-left framed mr-2 mb-2\" src='group/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$group_name_html}' />" : ''); ?>
             <div class="media-body">
                 <h4><?php echo $words->get('GroupDescription'); ?></h4>
                 <?php echo $purifier->purify(nl2br($this->group->getDescription())) ?>
@@ -68,7 +68,7 @@
                     echo $words->getSilent('GroupsJoinNeedAccept');
                 }
                 if (!$this->isGroupMember()) { ?>
-                    <a class="btn btn-outline-primary btn-block mb-3" href="groups/<?= $this->group->id ?>/join">
+                    <a class="btn btn-outline-primary btn-block mb-3" href="group/<?= $this->group->id ?>/join">
                         <?= $words->getSilent('GroupsJoinTheGroup'); ?>
                     </a>
                     <?php echo $words->flushBuffer(); ?>
@@ -89,7 +89,7 @@
         $loginstr = '<a href="' . $login_url . '#login-widget" alt="login" id="header-login-link">' . $words->getBuffered('GroupsMoreMemberLogin') . '</a>';
         echo $words->get("GroupMoreMembers", $memberCount - $visibleMemberCount, $loginstr);
     } else { ?>
-        <a href="groups/<?= $group_id . '/members'; ?>"
+        <a href="group/<?= $group_id . '/members'; ?>"
            class="btn btn-block btn-outline-primary"><?= $words->get('GroupSeeAllMembers'); ?></a>
     <?php } ?>
 
@@ -116,7 +116,7 @@
         <?php
         if ($this->isGroupMember()) { ?>
 
-            <a class="btn btn-block btn-danger mt-3" href="groups/<?= $this->group->id ?>/leave">
+            <a class="btn btn-block btn-danger mt-3" href="group/<?= $this->group->id ?>/leave">
                 <?= $words->getSilent('GroupsLeaveTheGroup'); ?>
             </a>
 
@@ -134,7 +134,7 @@
     <div class="col-12 col-md-8 h3"><?php echo $words->getFormatted('RelatedGroupsTitle'); ?></div>
     <? if ($this->isGroupMember()) { ?>
         <div class="col-12 col-md-4 float-md-right">
-            <a href="groups/<? echo $this->group->id; ?>/selectrelatedgroup" class="btn btn-block btn-outline-primary"><?= $words->getFormatted('AddRelatedGroupButton'); ?></a>
+            <a href="group/<? echo $this->group->id; ?>/selectrelatedgroup" class="btn btn-block btn-outline-primary"><?= $words->getFormatted('AddRelatedGroupButton'); ?></a>
         </div>
     <? } else {
         echo '<div class="col-12 col-md-4"></div>';

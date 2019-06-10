@@ -38,7 +38,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <a class="btn btn-primary" role="button" href="groups/new"><?= $words->get('GroupsCreateNew'); ?></a>
+                            <a class="btn btn-primary" role="button" href="new/group"><?= $words->get('GroupsCreateNew'); ?></a>
                         </div>
                     </div>
                 </div>

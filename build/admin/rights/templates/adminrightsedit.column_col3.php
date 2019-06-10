@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -34,27 +34,25 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsControlle
 <form class="yform" method="post">
     <?= $callbackTags ?>
     <input type="hidden" name="rightid" value="<?= $this->vars['right'] ?>" />
-    <div class="type-text">
+    <div class="form-group">
         <label for="username"><?php echo $this->words->get("AdminRightsUserName")?></label>
-        <input type="text" id="username" name="username" readonly="readonly" value="<?= $this->vars['username'] ?>"/>
+        <input type="text" class="form-control" id="username" name="username" readonly="readonly" value="<?= $this->vars['username'] ?>"/>
     </div>
-    <div class="type-select">
+    <div class="form-group">
         <label for="right"><?php echo $words->get("AdminRightsRights")?></label>
         <?= $this->rightsSelect($this->rights, $this->vars['right'], true) ?>
     </div>
-    <div class="type-select">
+    <div class="form-group">
         <label for="level"><?php echo $words->get("AdminRightsLevel") ?></label>
         <?= $this->levelSelect($this->vars['level'], false, false) ?>
     </div>
-    <div class="type-text">
+    <div class="form-group">
         <label for="scope"><?php echo $this->words->get("AdminRightsScope") ?></label>
-        <input type="text" id="scope" name="scope" value="<?= htmlentities($this->vars['scope'], ENT_COMPAT, 'utf-8') ?>"/>
+        <input type="text" class="form-control" id="scope" name="scope" value="<?= htmlentities($this->vars['scope'], ENT_COMPAT, 'utf-8') ?>"/>
     </div>
-    <div class="type-text">
+    <div class="form-group">
         <label for="comment"><?php echo $this->words->get("AdminRightsComment") ?></label>
-        <textarea id="comment" name="comment" rows="5"><?= htmlentities($this->vars['comment'], ENT_COMPAT, 'utf-8') ?></textarea>
+        <textarea class="form-control" id="comment" name="comment" rows="5"><?= htmlentities($this->vars['comment'], ENT_COMPAT, 'utf-8') ?></textarea>
     </div>
-    <div class="type-button">
-        <input type="submit" id="AdminRightsSubmit" name="AdminRightsSubmit" value="<?php echo $this->words->getSilent("AdminRightsSubmit")?>" /><?php echo $words->flushBuffer(); ?>
-    </div>
+    <input type="submit" class="btn btn-primary" id="AdminRightsSubmit" name="AdminRightsSubmit" value="<?php echo $this->words->getSilent("AdminRightsSubmit")?>" /><?php echo $words->flushBuffer(); ?>
 </form>

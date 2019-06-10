@@ -11,11 +11,11 @@ class GroupsCreationPage3 extends GroupsBasePage
         // &gt; or &raquo; ?
         ?>
         <div>
-            <h1><a href="groups">Groups</a> &raquo; <a href="groups/new">New</a></h1>
+            <h1><a href="groups">Groups</a> &raquo; <a href="new/group">New</a></h1>
         </div>
         <?php
     }
-    
+
     protected function getSubmenuActiveItem()
     {
         return 'new';

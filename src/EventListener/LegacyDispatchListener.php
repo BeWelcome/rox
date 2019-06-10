@@ -63,7 +63,7 @@ class LegacyDispatchListener
         // old code, which is now turned off.
         $this->session->start();
         if (!$this->session->has('IdMember')) {
-            $rememberMeToken = unserialize($this->session->get('_security_default'));
+            $rememberMeToken = unserialize($this->session->get('_security_main'));
             if (null === $rememberMeToken) {
                 throw new AccessDeniedException();
             }

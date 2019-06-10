@@ -8,6 +8,9 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
 use App\Form\MessageToMemberType;
+use App\Utilities\MailerTrait;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Exception;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,6 +30,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class MessageController extends BaseMessageController
 {
+    use MailerTrait;
+
     /**
      * Deals with replies to messages and hosting requests.
      *
@@ -38,27 +43,26 @@ class MessageController extends BaseMessageController
      *
      * @return Response
      * @throws AccessDeniedException
+     * @throws Exception
      */
-    public function replyToMessageAction(Request $request, Message $message)
+    public function replyToMessage(Request $request, Message $message)
     {
-        $sender = $this->getUser();
-        if (($message->getReceiver() !== $sender) && ($message->getSender() !== $sender)) {
-            throw new AccessDeniedException;
+        if (!$this->isMessageOfMember($message)) {
+            throw $this->createAccessDeniedException('Not your message/hosting request');
+        }
+
+        if ($this->isHostingRequest($message)) {
+            return $this->redirectToHostingRequestReply($message);
         }
 
         $thread = $this->messageModel->getThreadForMessage($message);
         $current = $thread[0];
 
-        $isHostingRequest = (null !== $message->getRequest()) ? true : false;
-        if ($isHostingRequest) {
-            return $this->redirectToRoute('hosting_request_reply', ['id' => $current->getId()]);
-        }
-
         if ($message->getId() !== $current->getId()) {
             return $this->redirectToRoute('message_reply', ['id' => $current->getId()]);
         }
 
-        return $this->messageReply($request, $sender, $thread);
+        return $this->messageReply($request, $this->getUser(), $thread);
     }
 
     /**
@@ -67,37 +71,37 @@ class MessageController extends BaseMessageController
      *
      * @param Message $message
      *
-     * @throws AccessDeniedException
-     *
      * @return Response
+     * @throws Exception
+     *
+     * @throws AccessDeniedException
      */
     public function show(Message $message)
     {
-        $member = $this->getUser();
-        if (($message->getReceiver() !== $member) && ($message->getSender() !== $member)) {
-            throw new AccessDeniedException();
+        if (!$this->isMessageOfMember($message)) {
+            throw $this->createAccessDeniedException('Not your message/hosting request');
         }
 
-        $isMessage = (null === $message->getRequest()) ? true : false;
+        if (!$this->isHostingRequest($message)) {
+            return $this->redirectToHostingRequest($message);
+        }
+
 
         $thread = $this->messageModel->getThreadForMessage($message);
         $current = $thread[0];
 
         if ($message->getId() !== $current->getId()) {
-            if ($isMessage) {
-                return $this->redirectToRoute('message_show', ['id' => $current->getId()]);
-            }
-
-            return $this->redirectToRoute('hosting_request_show', ['id' => $current->getId()]);
+            return $this->redirectToRoute('message_show', ['id' => $current->getId()]);
         }
 
         // Walk through the thread and mark all messages as read (for current member)
+        $member = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         foreach ($thread as $item) {
             if ($member === $item->getReceiver()) {
                 // Only mark as read if it is a message and when the receiver reads the message,
                 // not when the message is presented to the Sender with url /messages/{id}/sent
-                $item->setWhenFirstRead(new \DateTime());
+                $item->setFirstRead(new \DateTime());
                 $em->persist($item);
             }
         }
@@ -115,9 +119,10 @@ class MessageController extends BaseMessageController
      * @Route("/new/message/{username}", name="message_new")
      *
      * @param Request $request
-     * @param Member  $receiver
+     * @param Member $receiver
      *
      * @return Response
+     * @throws Exception
      */
     public function newMessageAction(Request $request, Member $receiver)
     {
@@ -144,31 +149,11 @@ class MessageController extends BaseMessageController
         $messageForm->handleRequest($request);
 
         if ($messageForm->isSubmitted() && $messageForm->isValid()) {
-            // Write request to database after doing some checks
-            $message = $messageForm->getData();
-            $message->setSender($sender);
-            $message->setReceiver($receiver);
-            $message->setInfolder('Normal');
-            $message->setWhenFirstRead(null);
-            $message->setStatus(MessageStatusType::SENT);
-            $message->setCreated(new \DateTime());
+            $subject = $messageForm->get('subject')->get('subject')->getData();
+            $body = $messageForm->get('message')->getData();
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($message);
-            $em->flush();
-
-            $success = $this->sendMessageNotification(
-                $sender,
-                $receiver,
-                $message
-            );
-            if ($success) {
-                $this->addTranslatedFlash('success', 'flash.message.sent');
-                $message->setStatus('Sent');
-                $em->persist($message);
-            } else {
-                $this->addTranslatedFlash('notice', 'flash.message.stored');
-            }
+            $this->messageModel->addMessage($sender, $receiver, null, $subject, $body);
+            $this->addTranslatedFlash('success', 'flash.message.sent');
 
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
         }
@@ -184,17 +169,16 @@ class MessageController extends BaseMessageController
      *     defaults={"folder": "inbox"})
      *
      * @param Request $request
-     * @param string  $folder
-     *
-     * @throws InvalidArgumentException
+     * @param string $folder
      *
      * @return Response
+     * @throws InvalidArgumentException
      */
     public function messages(Request $request, $folder)
     {
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
-        $sort = $request->query->get('sort', 'datesent');
+        $sort = $request->query->get('sort', 'dateSent');
         $sortDir = $request->query->get('dir', 'desc');
 
         if (!\in_array($sortDir, ['asc', 'desc'], true)) {
@@ -250,17 +234,14 @@ class MessageController extends BaseMessageController
      */
     public function allMessagesWithMember(Request $request, Member $other)
     {
-        $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', 10);
-        $sort = $request->query->get('sort', 'datesent');
-        $sortDir = $request->query->get('dir', 'desc');
+        list($page, $limit, $sort, $direction) = $this->getOptionsFromRequest($request);
 
-        if (!\in_array($sortDir, ['asc', 'desc'], true)) {
+        if (!\in_array($direction, ['asc', 'desc'], true)) {
             throw new InvalidArgumentException();
         }
 
         $member = $this->getUser();
-        $messages = $this->messageModel->getMessagesBetween($member, $other, $sort, $sortDir, $page, $limit);
+        $messages = $this->messageModel->getMessagesBetween($member, $other, $sort, $direction, $page, $limit);
 
         return $this->render('message/between.html.twig', [
             'items' => $messages,
@@ -289,52 +270,30 @@ class MessageController extends BaseMessageController
         $receiver = ($message->getReceiver() === $sender) ? $message->getSender() : $message->getReceiver();
 
         $replyMessage = new Message();
-        $replySubject = new Subject();
         $subject = $message->getSubject();
         if (null !== $subject) {
-            $replySubject->setSubject($subject->getSubject());
-            $replyMessage->setSubject($replySubject);
+            $subjectText = $subject->getSubject();
+            if ('Re:' !== substr($subjectText, 0, 3)) {
+                $subjectText = "Re: ".$subjectText;
+            }
+            $replyMessage->setSubject(new Subject());
+            $replyMessage->getSubject()->setSubject($subjectText);
         }
 
         $messageForm = $this->createForm(MessageToMemberType::class, $replyMessage);
         $messageForm->handleRequest($request);
 
         if ($messageForm->isSubmitted() && $messageForm->isValid()) {
-            $replyMessage = $messageForm->getData();
-            $replyMessage->setParent($message);
-            $replyMessage->setSender($sender);
-            $replyMessage->setReceiver($receiver);
-            $replyMessage->setWhenFirstRead(null);
-            $replyMessage->setStatus(MessageStatusType::SENT);
-            $replyMessage->setInfolder('Normal');
-            $replyMessage->setCreated(new \DateTime());
-
-            $replySubject = $replyMessage->getSubject()->getSubject();
-
+            $replySubject = $messageForm->get('subject')->get('subject')->getData();
             if ('Re:' !== substr($replySubject, 0, 3)) {
                 $replySubject = 'Re: '.$replySubject;
             }
 
-            if (null !== $subject && $subject->getSubject() === $replySubject) {
-                $replyMessage->setSubject($subject);
-            }
+            $messageText =  $messageForm->get('message')->getData();
+            $message = $this->messageModel->addMessage($sender, $receiver, $message, $replySubject, $messageText);
+            $this->addTranslatedFlash('success', 'flash.reply.sent');
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($replyMessage);
-            $em->flush();
-
-            $success = $this->sendMessageNotification(
-                $sender,
-                $receiver,
-                $replyMessage
-            );
-            if ($success) {
-                $this->addTranslatedFlash('success', 'flash.reply.sent');
-            } else {
-                $this->addTranslatedFlash('notice', 'flash.reply.stored');
-            }
-
-            return $this->redirectToRoute('message_show', ['id' => $replyMessage->getId()]);
+            return $this->redirectToRoute('message_show', ['id' => $message->getId()]);
         }
 
         return $this->render('message/reply.html.twig', [
@@ -344,28 +303,18 @@ class MessageController extends BaseMessageController
         ]);
     }
 
-    /**
-     * @param Member  $sender   Host/Guest
-     * @param Member  $receiver Guest/Host
-     * @param Message $message
-     *
-     * @return bool
-     */
-    private function sendMessageNotification(Member $sender, Member $receiver, Message $message)
+    private function isHostingRequest(Message $message)
     {
-        // Send mail notification with the receiver's preferred locale
-        $this->setTranslatorLocale($receiver);
-        $subject = $message->getSubject()->getSubject();
-        $body = $this->renderView('emails/message.html.twig', [
-            'sender' => $sender,
-            'receiver' => $receiver,
-            'message' => $message,
-            'subject' => $subject,
-        ]);
+        return (null !== $message->getRequest()) ? true : false;
+    }
 
-        // Reset to former locale as otherwise flash notification will be shown in receiver's locale
-        $this->setTranslatorLocale($sender);
+    private function redirectToHostingRequest(Message $message)
+    {
+        return $this->redirectToRoute('hosting_request_show', ['id' => $message->getId()]);
+    }
 
-        return $this->sendEmail($sender, $receiver, $subject, $body);
+    private function redirectToHostingRequestReply(Message $message)
+    {
+        return $this->redirectToRoute('hosting_request_reply', ['id' => $message->getId()]);
     }
 }

@@ -34,7 +34,7 @@ $layoutbits = new MOD_layoutbits();
 
 <table class="table table-striped table-hover">
     <tbody>
-<?php 
+<?php
 $threadsliced = array_slice($threads, 0, 5);
     foreach ($threadsliced as $cnt =>  $thread) {
         $url = ForumsView::threadURL($thread);
@@ -67,7 +67,7 @@ $threadsliced = array_slice($threads, 0, 5);
                     <span class="small grey"><?php echo $words->getSilent('by');?> <a href="members/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
                     <?php if ($thread->IdGroup > 0 && $showGroups)
                         {
-                            echo $words->getFormatted('in') . ' <a href="groups/' . $thread->IdGroup . '/" title="' . $words->getSilent('Group') . ': ' . $thread->GroupName . '">' . $thread->GroupName . '</a></span>';
+                            echo $words->getFormatted('in') . ' <a href="group/' . $thread->IdGroup . '/" title="' . $words->getSilent('Group') . ': ' . $thread->GroupName . '">' . $thread->GroupName . '</a></span>';
                         } else {
                             echo '</span>';
                     }
@@ -101,7 +101,7 @@ $threadsliced = array_slice($threads, 0, 5);
     if ($showNewTopicButton && $User && $uri != 'forums/') {
     ?>
     <div id="boardnewtopicbottom"><a class="btn btn-primary" href="<?php echo $this->uri; ?>new
-    <?php 
+    <?php
     if (!empty($this->_model->IdGroup)) echo "/u" . $this->_model->IdGroup ;
     echo "\">",$words->getBuffered('ForumNewTopic');
     ?></a><?php echo $words->flushBuffer(); ?></div>

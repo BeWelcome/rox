@@ -13,7 +13,7 @@
 </div>
 <div class="col-12 col-md-6 mb-3">
     <h3><?= $words->get('GroupsCreateHeading'); ?></h3>
-    <a class="btn btn-primary" role="button" href="groups/new"><?= $words->get('GroupsCreateNew'); ?></a>
+    <a class="btn btn-primary" role="button" href="new/group"><?= $words->get('GroupsCreateNew'); ?></a>
 </div>
 
         <?php
@@ -41,7 +41,7 @@
         {
             echo <<<HTML
             <p class="note">
-            {$words->get('GroupsMyGroupsNoResults', '<a href="groups/search">', '</a>', '<a href="groups/new">', '</a>')}
+            {$words->get('GroupsMyGroupsNoResults', '<a href="groups/search">', '</a>', '<a href="new/group">', '</a>')}
             </p>
 HTML;
         }

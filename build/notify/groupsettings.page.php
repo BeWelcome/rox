@@ -31,7 +31,7 @@ class GroupSettingsPage2 extends GroupsBasePage
 
         $formkit = $layoutkit->formkit;
         $callback_tag = $formkit->setPostCallback('GroupsController', 'changeGroupSettings');
-        
+
         if ($redirected = $formkit->mem_from_redirect)
         {
             $GroupDesc_ = ((!empty($redirected->post['GroupDesc_'])) ? $redirected->post['GroupDesc_'] : '');
@@ -89,9 +89,9 @@ class GroupSettingsPage2 extends GroupsBasePage
             <div class="c38r">
                 <div class="subcr">
                     <h3><?= $words->get('GroupsAdministrateMembers'); ?></h3>
-                        <p><a class="button" role="button" href="groups/<?= $this->group->id; ?>/memberadministration"><?= $words->get('GroupsAdministrateMembers'); ?></a></p>
+                        <p><a class="button" role="button" href="group/<?= $this->group->id; ?>/memberadministration"><?= $words->get('GroupsAdministrateMembers'); ?></a></p>
                     <h3><?= $words->get('GroupsDeleteGroup'); ?></h3>
-                        <p><a class="button" role="button" href="groups/<?= $this->group->id; ?>/delete"><?= $words->get('GroupsDeleteGroup'); ?></a></p>
+                        <p><a class="button" role="button" href="group/<?= $this->group->id; ?>/delete"><?= $words->get('GroupsDeleteGroup'); ?></a></p>
                 </div>
             </div>
         </div>

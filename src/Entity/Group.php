@@ -7,9 +7,19 @@
 
 namespace App\Entity;
 
+use App\Doctrine\GroupTypeType;
+use App\Doctrine\MemberStatusType;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Expr\Comparison;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Role;
+use RoxEntityFactory;
+use Symfony\Bridge\Doctrine\DependencyInjection\Security\UserProvider\EntityFactory;
 
 /**
  * Group.
@@ -21,19 +31,15 @@ use Doctrine\ORM\Mapping as ORM;
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
  */
-class Group
+class Group implements ObjectManagerAware
 {
     const NOT_APPROVED = 0;
     const APPROVED = 1;
     const DISMISSED = 2;
     const IN_DISCUSSION = 3;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="HasMembers", type="string", nullable=false)
-     */
-    private $hasMembers = 'HasMember';
+    const APPROVED_CLOSED = 4;
+    const DISMISSED_CLOSED = 5;
+    const IN_DISCUSSION_CLOSED = 6;
 
     /**
      * @var string
@@ -45,23 +51,16 @@ class Group
     /**
      * @var string
      *
-     * @ORM\Column(name="Type", type="string", nullable=false)
+     * @ORM\Column(name="Type", type="group_type", nullable=false)
      */
-    private $type = 'Public';
+    private $type = GroupTypeType::PUBLIC;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
     private $created;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="NbChilds", type="integer", nullable=false)
-     */
-    private $nbchilds = '0';
 
     /**
      * @var string
@@ -75,18 +74,18 @@ class Group
      *
      * @ORM\Column(name="MoreInfo", type="text", length=65535, nullable=false)
      */
-    private $moreInfo;
+    private $moreInfo = '';
 
     /**
-     * @var string
+     * @var int
      *
-     * @ORM\Column(name="DisplayedOnProfile", type="string", nullable=false)
+     * @ORM\Column(name="IdDescription", type="integer", nullable=false)
      */
-    private $displayedOnProfile = 'Yes';
+    private $idDescription = 0;
 
     /** @var ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="MembersTrad", fetch="LAZY")
+     * @ORM\ManyToMany(targetEntity="MemberTranslation", fetch="LAZY")
      * @ORM\JoinTable(name="groups_trads",
      *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="trad_id", referencedColumnName="id", unique=true)}
@@ -123,34 +122,15 @@ class Group
      */
     private $id;
 
+    /**
+     * @var ObjectManager
+     */
+    private $objectManager;
+
     public function __construct()
     {
         $this->descriptions = new ArrayCollection();
         $this->groupMemberships = new ArrayCollection();
-    }
-
-    /**
-     * Set hasmembers.
-     *
-     * @param string $hasMembers
-     *
-     * @return Group
-     */
-    public function setHasMembers($hasMembers)
-    {
-        $this->hasMembers = $hasMembers;
-
-        return $this;
-    }
-
-    /**
-     * Get hasmembers.
-     *
-     * @return string
-     */
-    public function getHasMembers()
-    {
-        return $this->hasMembers;
     }
 
     /**
@@ -204,7 +184,7 @@ class Group
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return Group
      */
@@ -218,35 +198,11 @@ class Group
     /**
      * Get created.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreated()
     {
         return $this->created;
-    }
-
-    /**
-     * Set nbchilds.
-     *
-     * @param int $nbchilds
-     *
-     * @return Group
-     */
-    public function setNbchilds($nbchilds)
-    {
-        $this->nbchilds = $nbchilds;
-
-        return $this;
-    }
-
-    /**
-     * Get nbchilds.
-     *
-     * @return int
-     */
-    public function getNbchilds()
-    {
-        return $this->nbchilds;
     }
 
     /**
@@ -274,51 +230,54 @@ class Group
     }
 
     /**
-     * Set moreinfo.
+     * Get id.
      *
-     * @param string $moreInfo
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Add description.
+     *
+     * @param MemberTranslation $description
      *
      * @return Group
      */
-    public function setMoreInfo($moreInfo)
+    public function addDescription(MemberTranslation $description)
     {
-        $this->moreInfo = $moreInfo;
+        if (!$this->descriptions->contains($description)) {
+            $this->descriptions[] = $description;
+            $this->idDescription = $description->getId();
+        }
 
         return $this;
     }
 
     /**
-     * Get moreinfo.
+     * Remove description.
      *
-     * @return string
+     * @param MemberTranslation $description
      */
-    public function getMoreInfo()
+    public function removeDescription(MemberTranslation $description)
     {
-        return $this->moreInfo;
+        $this->descriptions->removeElement($description);
     }
 
     /**
-     * Set displayedonprofile.
-     *
-     * @param string $displayedonprofile
-     *
-     * @return Group
+     * @return array
      */
-    public function setDisplayedonprofile($displayedonprofile)
+    public function getDescriptions()
     {
-        $this->displayedOnProfile = $displayedonprofile;
+        $descriptions = [];
+        // return array based on locale
+        foreach ($this->descriptions as $description) {
+            $descriptions[$description->getLanguage()->getShortCode()] = $description;
+        }
 
-        return $this;
-    }
-
-    /**
-     * Get displayedonprofile.
-     *
-     * @return string
-     */
-    public function getDisplayedonprofile()
-    {
-        return $this->displayedOnProfile;
+        return $descriptions;
     }
 
     /**
@@ -343,78 +302,6 @@ class Group
     public function getVisibleposts()
     {
         return $this->visibleposts;
-    }
-
-    /**
-     * Set visiblecomments.
-     *
-     * @param string $visiblecomments
-     *
-     * @return Group
-     */
-    public function setVisiblecomments($visiblecomments)
-    {
-        $this->visiblecomments = $visiblecomments;
-
-        return $this;
-    }
-
-    /**
-     * Get visiblecomments.
-     *
-     * @return string
-     */
-    public function getVisiblecomments()
-    {
-        return $this->visiblecomments;
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Add description.
-     *
-     * @param MembersTrad $description
-     *
-     * @return Group
-     */
-    public function addDescription(MembersTrad $description)
-    {
-        $this->descriptions[] = $description;
-
-        return $this;
-    }
-
-    /**
-     * Remove description.
-     *
-     * @param MembersTrad $description
-     */
-    public function removeDescription(MembersTrad $description)
-    {
-        $this->descriptions->removeElement($description);
-    }
-
-    /**
-     * @return array
-     */
-    public function getDescriptions()
-    {
-        $descriptions = [];
-        // return array based on locale
-        foreach ($this->descriptions as $description) {
-            $descriptions[$description->getLanguage()->getShortCode()] = $description;
-        }
-
-        return $descriptions;
     }
 
     /**
@@ -448,12 +335,21 @@ class Group
      */
     public function onPrePersist()
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
     }
 
     public function getGroupMemberships()
     {
         return $this->groupMemberships->toArray();
+    }
+
+    public function getGroupMembership($member)
+    {
+        $expr = new Comparison('member', '=', $member);
+        $criteria = new Criteria();
+        $criteria->where($expr);
+
+        return $this->groupMemberships->matching($criteria)->first();
     }
 
     public function addGroupMembership(GroupMembership $groupMembership)
@@ -486,6 +382,47 @@ class Group
         );
     }
 
+    public function isAdmin(Member $admin)
+    {
+        $admins = $this->getAdmins();
+
+        return \in_array($admin, $admins);
+    }
+
+    public function isMember(Member $member)
+    {
+        $members = $this->getCurrentMembers();
+
+        return \in_array($member, $members);
+    }
+
+    /**
+     * @return array Member
+     */
+    public function getAdmins()
+    {
+        // Unfortunately we need to replicate old code here
+        $roleRepo = $this->objectManager->getRepository(Role::class);
+
+        $role = $roleRepo->findBy([ 'name' => 'GroupOwner']);
+        $privilegeScopesRepo = $this->objectManager->getRepository(PrivilegeScope::class);
+        $privilegeScopes = $privilegeScopesRepo->findBy([ 'role' => $role, 'type' => $this->getId()]);
+
+        if (!$privilegeScopes)
+        {
+            return [];
+        }
+
+        $admins = [];
+        foreach ($privilegeScopes as $privilegeScope) {
+            $admin = $privilegeScope->getMember();
+            if (strpos(MemberStatusType::ACTIVE_WITH_MESSAGES, $admin->getStatus()) !== false) {
+                $admins[] = $admin;
+            }
+        }
+        return $admins;
+    }
+
     public function getCurrentMembers()
     {
         $criteria = Criteria::create()
@@ -497,5 +434,23 @@ class Group
             },
             $this->groupMemberships->matching($criteria)->toArray()
         );
+    }
+
+    public function isPublic()
+    {
+        return $this->type === GroupTypeType::PUBLIC;
+    }
+
+    /**
+     * Injects responsible ObjectManager and the ClassMetadata into this persistent object.
+     *
+     * @param ObjectManager $objectManager
+     * @param ClassMetadata $classMetadata
+     * @return void
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
+    {
+        $this->objectManager = $objectManager;
     }
 }

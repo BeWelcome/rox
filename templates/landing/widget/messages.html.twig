@@ -2,7 +2,7 @@
 <div id="messagesdisplay" class="scrollcontent">
     {% for message in messages %}
         {% if message.request %}{% set route = 'hosting_request_show' %}{% else %}{% set route = 'message_show' %}{% endif %}
-        {% set unread = (message.whenfirstread == '0000-00-00 00:00.00') or (message.whenfirstread is null) %}
+        {% set unread = (message.firstRead == '0000-00-00 00:00.00') or (message.firstRead is null) %}
         <div class="d-flex flex-row justify-content-start align-items-center p-2">
             <div class="pr-2">{{ macros.avatar( message.sender.username, 50, true) }}</div>
             <div class="dashentry w-100">

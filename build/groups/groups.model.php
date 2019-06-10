@@ -367,7 +367,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
                         default:
                             $problems['ImageUpload'] = true;
                     }
-                           
+
                 }
             }
         }
@@ -573,7 +573,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
                         default:
                             return array('ImageUpload' => true);
                     }
-                           
+
                 }
             }
         }
@@ -774,7 +774,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             $param['IdMember'] = $member->getPKValue();
             $param['IdRelMember'] = $acceptedby->getPKValue();
             $param['Type'] = 'message';
-            $param['Link'] = "/groups/{$group->getPKValue()}";
+            $param['Link'] = "/group/{$group->getPKValue()}";
             $param['WordCode'] = '';
             $param['TranslationParams'] = array('GroupsAcceptedIntoGroup', $group->Name);
             $note = $this->createEntity('Note')->createNote($param);
@@ -804,7 +804,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             $msg->SendConfirmation = 'No';
             $msg->Status = 'ToSend';
             $msg->SpamInfo = 'NotSpam';
-            $url = PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue();
+            $url = PVars::getObj('env')->baseuri . 'group/' . $group->getPKValue();
             $urlaccept = '<a href="' . $url . '/acceptinvitation/'. $member->getPKValue() .'">' . $url . '/acceptinvitation/' . $member->getPKValue() . '</a>';
             $urldecline = '<a href="' . $url . '/declineinvitation/'. $member->getPKValue() .'">' . $url . '/declineinvitation/' . $member->getPKValue() . '</a>';
             $words = $this->getWords();
@@ -816,7 +816,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             $param['IdMember'] = $member->getPKValue();
             $param['IdRelMember'] = $from->getPKValue();
             $param['Type'] = 'message';
-            $param['Link'] = "/groups/{$group->getPKValue()}";
+            $param['Link'] = "/group/{$group->getPKValue()}";
             $param['WordCode'] = '';
             $param['TranslationParams'] = array('GroupsInvitedNote', $group->Name);
             $note = $this->createEntity('Note')->createNote($param);
@@ -893,7 +893,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
                 $msg->SendConfirmation = 'No';
                 $msg->Status = 'ToSend';
                 $msg->SpamInfo = 'NotSpam';
-                $url = '<a href="' . PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue() . '/memberadministration">' . PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue() . '/memberadministration</a>';
+                $url = '<a href="' . PVars::getObj('env')->baseuri . 'group/' . $group->getPKValue() . '/memberadministration">' . PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue() . '/memberadministration</a>';
                 $words = $this->getWords();
                 $msg->Message = $words->get('GroupJoinRequest', $admin->Username, $member->Username, $group->Name, $url);
                 $msg->InFolder = 'Normal';

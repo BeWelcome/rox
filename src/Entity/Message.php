@@ -8,10 +8,12 @@
 namespace App\Entity;
 
 use App\Doctrine\DeleteRequestType;
+use App\Doctrine\InFolderType;
 use App\Doctrine\SpamInfoType;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -40,7 +42,7 @@ class Message
      *
      * @ORM\Column(name="MessageType", type="string", nullable=false)
      */
-    private $messagetype = 'MemberToMember';
+    private $messageType = 'MemberToMember';
 
     /**
      * @var DateTime
@@ -61,7 +63,7 @@ class Message
      *
      * @ORM\Column(name="DateSent", type="datetime", nullable=false)
      */
-    private $datesent;
+    private $dateSent;
 
     /**
      * @var string
@@ -79,7 +81,7 @@ class Message
     private $parent;
 
     /**
-     * @var \App\Entity\Member
+     * @var Member
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Member", fetch="EAGER")
      * @ORM\JoinColumn(name="idReceiver", referencedColumnName="id")
@@ -87,7 +89,7 @@ class Message
     private $receiver;
 
     /**
-     * @var \App\Entity\Member
+     * @var Member
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Member", fetch="EAGER")
      * @ORM\JoinColumn(name="idSender", referencedColumnName="id")
@@ -99,7 +101,7 @@ class Message
      *
      * @ORM\Column(name="SpamInfo", type="spam_info", nullable=false)
      */
-    private $spaminfo = SpamInfoType::NO_SPAM;
+    private $spamInfo = SpamInfoType::NO_SPAM;
 
     /**
      * @var string
@@ -122,14 +124,14 @@ class Message
      *
      * @ORM\Column(name="InFolder", type="in_folder", nullable=false)
      */
-    private $infolder = 'Normal';
+    private $folder = InFolderType::NORMAL;
 
     /**
      * @var Carbon
      *
      * @ORM\Column(name="WhenFirstRead", type="datetime", nullable=true)
      */
-    private $whenfirstread;
+    private $firstRead;
 
     /**
      * @var Subject
@@ -158,27 +160,13 @@ class Message
     private $id;
 
     /**
-     * Set messagetype.
-     *
-     * @param string $messagetype
-     *
-     * @return Message
-     */
-    public function setMessagetype($messagetype)
-    {
-        $this->messagetype = $messagetype;
-
-        return $this;
-    }
-
-    /**
      * Get messagetype.
      *
      * @return string
      */
-    public function getMessagetype()
+    public function getMessageType()
     {
-        return $this->messagetype;
+        return $this->messageType;
     }
 
     /**
@@ -232,30 +220,29 @@ class Message
     /**
      * Set datesent.
      *
-     * @param DateTime $datesent
-     * @param mixed    $dateSent
+     * @param DateTime $dateSent
      *
      * @return Message
      */
-    public function setDateSent($dateSent)
+    public function setDateSent(DateTime $dateSent)
     {
-        $this->datesent = $dateSent;
+        $this->dateSent = $dateSent;
 
         return $this;
     }
 
     /**
-     * Get datesent.
+     * Get dateSent.
      *
      * @return Carbon
      */
     public function getDateSent()
     {
-        return Carbon::instance($this->datesent);
+        return Carbon::instance($this->dateSent);
     }
 
     /**
-     * Set deleterequest.
+     * Set deleteRequest.
      *
      * @param string $deleteRequest
      *
@@ -285,7 +272,7 @@ class Message
      *
      * @return Message
      */
-    public function setParent(self $parent)
+    public function setParent(?self $parent)
     {
         $this->parent = $parent;
 
@@ -377,13 +364,13 @@ class Message
     /**
      * Set spaminfo.
      *
-     * @param string $spaminfo
+     * @param string $spamInfo
      *
      * @return Message
      */
-    public function setSpaminfo($spaminfo)
+    public function setSpamInfo($spamInfo)
     {
-        $this->spaminfo = $spaminfo;
+        $this->spamInfo = $spamInfo;
 
         return $this;
     }
@@ -397,14 +384,14 @@ class Message
      */
     public function removeFromSpaminfo($spaminfo)
     {
-        $info = array_filter(explode(',', $this->spaminfo));
+        $info = array_filter(explode(',', $this->spamInfo));
         $key = array_search($spaminfo, $info, true);
         if (false !== $key) {
             unset($info[$key]);
         }
-        $this->spaminfo = implode(',', $info);
-        if (empty($this->spaminfo)) {
-            $this->spaminfo = SpamInfoType::NO_SPAM;
+        $this->spamInfo = implode(',', $info);
+        if (empty($this->spamInfo)) {
+            $this->spamInfo = SpamInfoType::NO_SPAM;
         }
 
         return $this;
@@ -419,15 +406,15 @@ class Message
      */
     public function addToSpamInfo($spaminfo)
     {
-        if (SpamInfoType::NO_SPAM === $this->spaminfo) {
-            $this->spaminfo = '';
+        if (SpamInfoType::NO_SPAM === $this->spamInfo) {
+            $this->spamInfo = '';
         }
-        $info = array_filter(explode(',', $this->spaminfo));
+        $info = array_filter(explode(',', $this->spamInfo));
         $key = array_search($spaminfo, $info, true);
         if (false === $key) {
             $info[] = $spaminfo;
         }
-        $this->spaminfo = implode(',', $info);
+        $this->spamInfo = implode(',', $info);
 
         return $this;
     }
@@ -437,9 +424,9 @@ class Message
      *
      * @return string
      */
-    public function getSpaminfo()
+    public function getSpamInfo()
     {
-        return $this->spaminfo;
+        return $this->spamInfo;
     }
 
     /**
@@ -493,13 +480,13 @@ class Message
     /**
      * Set infolder.
      *
-     * @param string $infolder
+     * @param string $folder
      *
      * @return Message
      */
-    public function setInfolder($infolder)
+    public function setFolder($folder)
     {
-        $this->infolder = $infolder;
+        $this->folder = $folder;
 
         return $this;
     }
@@ -509,37 +496,38 @@ class Message
      *
      * @return string
      */
-    public function getInfolder()
+    public function getFolder()
     {
-        return $this->infolder;
+        return $this->folder;
     }
 
     /**
-     * Set whenfirstread.
+     * Set firstRead.
      *
-     * @param DateTime $whenFirstRead
+     * @param DateTime $firstRead
      *
      * @return Message
      */
-    public function setWhenFirstRead($whenFirstRead)
+    public function setFirstRead($firstRead)
     {
-        $this->whenfirstread = $whenFirstRead;
+        $this->firstRead = $firstRead;
 
         return $this;
     }
 
     /**
-     * Get whenFirstRead.
+     * Get firstRead.
      *
      * @return Carbon
+     * @throws Exception
      */
-    public function getWhenFirstRead()
+    public function getFirstRead()
     {
-        if ($this->whenfirstread === new DateTime('0000-00-00 00:00:00')) {
+        if ($this->firstRead === new DateTime('0000-00-00 00:00:00')) {
             return null;
         }
 
-        return $this->whenfirstread;
+        return $this->firstRead;
     }
 
     /**
@@ -554,7 +542,7 @@ class Message
 
     public function isUnread()
     {
-        return null === $this->whenfirstread;
+        return null === $this->firstRead;
     }
 
     /**

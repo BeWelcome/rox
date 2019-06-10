@@ -133,15 +133,16 @@ class SearchController extends AbstractController
      * @param TranslatorInterface $translator
      *
      * @return Response
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function showMapAction(Request $request, TranslatorInterface $translator)
     {
         $pager = false;
         $results = false;
 
-        $searchFormRequest = new SearchFormRequest($this->getDoctrine()->getManager());
+        $searchFormRequest = SearchFormRequest::fromRequest($request, $this->getDoctrine()->getManager());
         $form = $this->createForm(SearchFormType::class, $searchFormRequest);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

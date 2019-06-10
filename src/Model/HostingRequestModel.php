@@ -7,7 +7,7 @@ use App\Entity\Message;
 use App\Repository\MessageRepository;
 use App\Utilities\ManagerTrait;
 
-class RequestModel
+class HostingRequestModel
 {
     use ManagerTrait;
 

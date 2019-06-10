@@ -1,0 +1,63 @@
+blockquote {
+  color: #444;
+  background: #f8f8f8;
+  border: 1px #ddd solid;
+  border-left: 8px #f37000 solid;
+  padding: 0 0.5em;
+  margin: 0 0 1em 0.5em;
+}
+
+body {
+    color: #333;
+    font-family: arial, verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: #f37000;
+    text-decoration: none;
+}
+
+.footer_a {
+    color: #fff;
+}
+
+#message {
+    background: #f0f0f0;
+}
+
+.header {
+    background-color: #f37000;
+    width:100%;
+}
+
+h1{
+    font-size:1em;
+    font-weight: bold;
+    line-height: 1em ;
+    padding-top: 0.2em;
+}
+
+.logo {
+    float: right;
+    padding: 0.25em;
+    border: 0;
+}
+
+.content {
+    padding: 0.25em;
+}
+
+div.from a:link {
+    color: #000;
+}
+
+.footer {
+    background-color: #f37000;
+    width:100%;
+    padding: 0.25em;
+    font-size: 0.8em;
+    color: #fff;
+    font-weight: bold;
+}

@@ -28,7 +28,7 @@ class RequestAndMessageController extends BaseMessageController
     {
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
-        $sort = $request->query->get('sort', 'datesent');
+        $sort = $request->query->get('sort', 'dateSent');
         $sortDir = $request->query->get('dir', 'desc');
 
         if (!\in_array($sortDir, ['asc', 'desc'], true)) {

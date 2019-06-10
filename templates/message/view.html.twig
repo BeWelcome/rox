@@ -2,19 +2,19 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<div class="row px-3">
-    {% set original = thread | last %}{% set request = original.Request %}
-    {% set myself = app.user %}
-    {% if original.Sender.Username == myself.Username %}{% set otherUser = original.Receiver %}{% else %}{% set otherUser = original.Sender %}{% endif %}
-    {% if current.subject %}{% set currentSubject = current.Subject.Subject %}{% else %}{% set currentSubject = 'Conversation with ' ~ otherUser.Username %}{% endif %}
-    <div class="col-12 sticky-top py-1 bg-white d-inline-block messageheader mb-1">
-        <div class="pull-left">{{ macros.avatarstack(otherUser.Username, 50, false) }}</div>
-        <div class="pull-right">{{ macros.avatarstack(myself.Username, 50, true) }}</div>
-        <div>
-            <h3 id="MessageSubject" class="p-3 text-truncate">{{ currentSubject }}</h3>
+    <div class="row">
+        {% set original = thread | last %}{% set request = original.Request %}
+        {% set myself = app.user %}
+        {% if original.Sender.Username == myself.Username %}{% set otherUser = original.Receiver %}{% else %}{% set otherUser = original.Sender %}{% endif %}
+        {% if current.subject %}{% set currentSubject = current.Subject.Subject %}{% else %}{% set currentSubject = 'Conversation with ' ~ otherUser.Username %}{% endif %}
+        <div class="col-12 sticky-top py-1 bg-white d-inline-block messageheader mb-1">
+            <div class="pull-left">{{ macros.avatarstack(otherUser.Username, 50, false) }}</div>
+            <div class="pull-right">{{ macros.avatarstack(myself.Username, 50, true) }}</div>
+            <div>
+                <h3 id="MessageSubject" class="p-3 text-truncate">{{ currentSubject }}</h3>
+            </div>
         </div>
     </div>
-</div>
     <div class="row">
         <div class="col-12 mb-1">
             <a class="btn btn-sm btn-primary float-right" href="{{ path('message_reply', { id: thread[0].id }) }}">{{ 'message.button.reply' | trans }}</a>

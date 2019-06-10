@@ -20,7 +20,7 @@ trait ManagerTrait
         $this->em = $entityManager;
     }
 
-    public function getManager()
+    protected function getManager()
     {
         return $this->em;
     }

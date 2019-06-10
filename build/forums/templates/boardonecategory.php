@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -39,13 +39,13 @@ Boston, MA  02111-1307, USA.
 
     foreach ($threads as $cnt =>  $thread) {
         $url = ForumsView::threadURL($thread);
-        
+
         $max = $thread->replies + 1;
         $maxPage = ceil($max / $this->_model->POSTS_PER_PAGE);
-        
+
         $last_url = $url.($maxPage != 1 ? '/page'.$maxPage : '').'/#post'.$thread->last_postid;
-        
-        
+
+
         ?>
             <tr class="<?php echo $styles[$cnt%2]; ?>">
                 <td class="forumsboardthreadtitle">
@@ -58,18 +58,18 @@ Boston, MA  02111-1307, USA.
                         echo "[ModOnly]" ;
                     }
                     echo "<a href=\"",$url,"\">" ;
-                    echo $words->fTrad($thread->IdTitle); 
+                    echo $words->fTrad($thread->IdTitle);
                     ?></a>
                     <br />
                     <span class="forumsboardthreadtags"><?php
-                        
+
                         // show tags if post is part of a group
                     if ($thread->IdGroup>0) {
-                            echo "<a href=\"groups/".$thread->IdGroup."\"><strong>Group: </strong>",$this->_model->getGroupName( $thread->GroupName),"</a><br >" ;
+                            echo "<a href=\"group/".$thread->IdGroup."\"><strong>Group: </strong>",$this->_model->getGroupName( $thread->GroupName),"</a><br >" ;
                     }
-                    
+
                         $breadcrumb = '';
-                        
+
 
                         $ShowHelp=false ; // todo process in a better way this hritage of travel book (create a type help for tags)
                         for ($ii=0;$ii<$thread->NbTags;$ii++) {
@@ -90,8 +90,8 @@ Boston, MA  02111-1307, USA.
                                   $ShowHelp=true ; // todo deal with this in a better way
                             }
                         }
-                        
-                    
+
+
 
                     if ($breadcrumb) {
                         // we will later use the 'tags' word, but don't want an edit link inside the html tag!
@@ -106,22 +106,22 @@ Boston, MA  02111-1307, USA.
                         }
                         echo $breadcrumb;
                     }
-                    
-                    
-                    
+
+
+
                     ?></span>
                 </td>
                 <td class="forumsboardthreadreplies"><?php echo $thread->replies; ?></td>
                 <td class="forumsboardthreadauthor"><a href="bw/member.php?cid=<?php echo $thread->first_author; ?>"><?php echo $thread->first_author; ?></a></td>
                 <td class="forumsboardthreadviews"><?php echo number_format($thread->views); ?></td>
                 <td class="forumsboardthreadlastpost">
-                    <span class="small grey"><?php 
-//                  echo "#### [",$thread->last_create_time,"] " ; 
+                    <span class="small grey"><?php
+//                  echo "#### [",$thread->last_create_time,"] " ;
                     echo date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time, $this->getSession()));
                     ?></span><br />
                     <a href="bw/member.php?cid=<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
                     <a href="<?php echo $last_url; ?>"><img src="styles/css/minimal/images/iconsfam/bullet_go.png" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>" /></a><?php echo $words->flushBuffer(); ?>
-                     
+
                 </td>
             </tr>
         <?php

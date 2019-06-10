@@ -113,8 +113,8 @@ This File display a topic and the messages which are inside it
             <?php
             if ($topic->topicinfo->IdGroup > 0) {
                 ?>
-                <p class="m-0 text-muted"><strong><?php echo $words->get("group"); ?>:</strong>
-                    <a href="groups/<?php echo $this->_model->getGroupName($topic->topicinfo->IdGroup); ?>">
+                <p class="m-0 text-muted">hallo<strong><?php echo $words->get("group"); ?>:</strong>
+                    <a href="group/<?php echo $this->_model->getGroupName($topic->topicinfo->IdGroup); ?>">
                         <?php echo $this->_model->getGroupName($topic->topicinfo->GroupName); ?>
                     </a>
 

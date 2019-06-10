@@ -115,7 +115,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                     $memberid = $member->getPKValue();
                     $BWAdmin = $this->isBWAdmin;
                     if ($this->member->getPKValue() == $memberid && !$BWAdmin) {
-                        echo "<a class='resignAdmin' href='groups/{$groupid}/resignAdmin'>{$words->getSilent('resignAsAdmin')}</a>";
+                        echo "<a class='resignAdmin' href='group/{$groupid}/resignAdmin'>{$words->getSilent('resignAsAdmin')}</a>";
                     } elseif ($this->member->getPKValue() == $memberid && $BWAdmin) {
                         echo "SuperAdminPower!";
                     } else {
@@ -123,12 +123,12 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                             echo "<i class='fa fa-user-cog mr-1 mt-3' title='{$words->getSilent('MemberIsAdmin')}'></i>";
                         } elseif ($this->group->isGroupOwner($member) && $BWAdmin) {
                             echo "<i class='fa fa-user-cog' title='{$words->getSilent('MemberIsAdmin')}'></i>";
-                            echo "<div class='btn-group'><a class='kick btn btn-sm btn-warning' href='groups/{$groupid}/kickmember/{$memberid}'><i class='fa fa-user-times' title='{$words->getSilent('GroupsKickMember')}'></i></a>";
-                            echo "<a class='ban btn btn-sm btn-danger' href='groups/{$groupid}/banmember/{$memberid}'><i class='fa fa-user-slash' title='{$words->getSilent('GroupsBanMember')}'></i></a></div>";
+                            echo "<div class='btn-group'><a class='kick btn btn-sm btn-warning' href='group/{$groupid}/kickmember/{$memberid}'><i class='fa fa-user-times' title='{$words->getSilent('GroupsKickMember')}'></i></a>";
+                            echo "<a class='ban btn btn-sm btn-danger' href='group/{$groupid}/banmember/{$memberid}'><i class='fa fa-user-slash' title='{$words->getSilent('GroupsBanMember')}'></i></a></div>";
                         } else {
-                            echo "<div class='btn-group'><a class='addAdmin btn btn-sm btn-info' href='groups/{$groupid}/addAdmin/{$memberid}'><i class='fa fa-user-cog' title='{$words->getSilent('GroupsAddAdmin')}'></i></a>";
-                            echo "<a class='kick btn btn-sm btn-warning' href='groups/{$groupid}/kickmember/{$memberid}'><i class='fa fa-user-times' title='{$words->getSilent('GroupsKickMember')}'></i></a>";
-                            echo "<a class='ban btn btn-sm btn-danger' href='groups/{$groupid}/banmember/{$memberid}'><i class='fa fa-user-slash' title='{$words->getSilent('GroupsBanMember')}'></i></a></div>";
+                            echo "<div class='btn-group'><a class='addAdmin btn btn-sm btn-info' href='group/{$groupid}/addAdmin/{$memberid}'><i class='fa fa-user-cog' title='{$words->getSilent('GroupsAddAdmin')}'></i></a>";
+                            echo "<a class='kick btn btn-sm btn-warning' href='group/{$groupid}/kickmember/{$memberid}'><i class='fa fa-user-times' title='{$words->getSilent('GroupsKickMember')}'></i></a>";
+                            echo "<a class='ban btn btn-sm btn-danger' href='group/{$groupid}/banmember/{$memberid}'><i class='fa fa-user-slash' title='{$words->getSilent('GroupsBanMember')}'></i></a></div>";
                         }
                     } ?>
                 </div>
@@ -201,9 +201,9 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                 </div>
                 <div class="col-4 col-md-3 pt-2">
                     <?= (($this->member->getPKValue() == $member->getPKValue()) ? '' :
-                        "<div class='btn-group'><a class='accept btn btn-sm btn-success' href='groups/{$this->group->getPKValue()}/acceptmember/{$member->getPKValue()}'><i class='fa fa-user-check' title='" . $words->get('GroupsAcceptMember') . "'></i></a>
-                                  <a class='kick btn btn-sm btn-warning' href='groups/{$this->group->getPKValue()}/declinemember/{$member->getPKValue()}'><i class='fa fa-user-times' title='" . $words->get('GroupsDeclineMember') . "'></i></a>
-                                  <a class='ban btn btn-sm btn-danger' href='groups/{$this->group->getPKValue()}/banmember/{$member->getPKValue()}'><i class='fa fa-user-slash' title='" . $words->get('GroupsBanMember') . "'></i></a></div>"); ?>
+                        "<div class='btn-group'><a class='accept btn btn-sm btn-success' href='group/{$this->group->getPKValue()}/acceptmember/{$member->getPKValue()}'><i class='fa fa-user-check' title='" . $words->get('GroupsAcceptMember') . "'></i></a>
+                                  <a class='kick btn btn-sm btn-warning' href='group/{$this->group->getPKValue()}/declinemember/{$member->getPKValue()}'><i class='fa fa-user-times' title='" . $words->get('GroupsDeclineMember') . "'></i></a>
+                                  <a class='ban btn btn-sm btn-danger' href='group/{$this->group->getPKValue()}/banmember/{$member->getPKValue()}'><i class='fa fa-user-slash' title='" . $words->get('GroupsBanMember') . "'></i></a></div>"); ?>
                 </div>
             <?php endforeach;
             ?>
@@ -220,7 +220,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                 <div class="col-12"><div class="container"><div id="search_result" class="row d-none"></div></div></div>
 
                 <div class="col-12">
-                    <form method='get' class="form-inline" action='groups/<?= $this->group->getPKValue(); ?>/invitemembers/search'
+                    <form method='get' class="form-inline" autocomplete="off" action='group/<?= $this->group->getPKValue(); ?>/invitemembers/search'
                           id='invite_form'>
                         <input type='text' placeholder='<?= $words->getSilent('GroupsEnterUsername'); ?>'
                                name='username' id='search_username' class="form-control mr-2"/>
@@ -233,34 +233,35 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                 <?= $words->flushBuffer() ?>
             </div>
         </div>
-        <div class="col-12">
-            <div class="row">
+        <div id="invited_members" class="col-12">
+            <div class="row align-items-center">
                 <div class="col-12">
                     <h4><?= $words->get('GroupsInvitedMembers'); ?></h4>
                 </div>
 
-                <div class="col-6 col-md-3">
+                <div class="col-8 col-md-3">
                     <?= $words->get('Username'); ?>
                 </div>
-
-                <div class="col-6 col-md-3">
+                <div class="col-4 col-md-3">
+                    <?= $words->get('Action'); ?>
+                </div>
+                <div class="col-8 col-md-3 d-none d-md-block">
                     <?= $words->get('Username'); ?>
                 </div>
-
-                <div class="col-6 col-md-3 d-none d-md-block">
-                    <?= $words->get('Username'); ?>
-                </div>
-
-                <div class="col-6 col-md-3 d-none d-md-block">
-                    <?= $words->get('Username'); ?>
+                <div class="col-4 col-md-3 d-none d-md-block">
+                    <?= $words->get('Action'); ?>
                 </div>
 
                 <?php if ($invited) : ?>
                     <?php foreach ($invited as $member) : ?>
-                    <div class="col-6 col-md-3">
-                        <?= MOD_layoutbits::linkWithPicture($member->Username) ?></td>
-                        <a href="members/<?= $member->Username ?>" class="username"><?= $member->Username ?></a>
-                    </div>
+                        <div class="col-8 col-md-3">
+                            <?= MOD_layoutbits::linkWithPicture($member->Username) ?>
+                            <a href="members/<?= $member->Username ?>" class="username"><?= $member->Username ?></a>
+                        </div>
+                        <div class="col-4 col-md-3">
+                            <div class='btn-group'><a class='withdraw btn btn-sm btn-warning' href='group/<?= $groupid ?>/withdraw/<?= $member->id ?>'><i class='fa fa-user-slash' title='<?= $words->getSilent('GroupsWithdrawInvitation')?>'></i></a>
+                            </div>
+                        </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
@@ -278,6 +279,15 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                     $('#possible_members a.kick').click(function (e) {
                         // code goes here
                         if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberKick'));?>')) {
+                            Event.stop(e);
+                        }
+                    });
+                }
+                var invitedmembers = $('#invited_members');
+                if (invitedmembers.length) {
+                    $('#invited_members a.withdraw').click(function (e) {
+                        // code goes here
+                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmWithdrawInvite'));?>')) {
                             Event.stop(e);
                         }
                     });
@@ -304,18 +314,19 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                             "<p><?= $this->javascript_escape($words->getSilent('GroupsCouldNotFindMembers'));?></p>"
                         );
                     }
-                    $('a[id^="invite_member_"').click( search_handler.add_invite );
+                    $('a[id^="invite_member_"]').click( search_handler.add_invite );
                     search_div.toggleClass('d-none');
                 },
                 add_invite: function(e){
                     e.preventDefault();
-                    var it = e.target || e.srcElement;
+                    var it = e.target;
                     var id = it.id.substr(14);
                     $.ajax({
-                        url: 'groups/<?= $this->group->getPKValue(); ?>/invitememberajax/' + id,
-                        type: 'get',
-                        success: function(transport){
-                            if (transport === 'success')
+                        url: '/group/<?= $this->group->getPKValue(); ?>/invite/' + id,
+                        dataType: 'json',
+                        type: 'post',
+                        success: function(data){
+                            if (data.success === true)
                             {
                                 search_handler.add_invite_callback(it);
                             }
@@ -340,11 +351,11 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                 $.ajax({
                     type: 'get',
                     dataType: 'json',
-                    url: '/groups/<?= $this->group->getPKValue(); ?>/membersearchajax/' + $('#search_username').val(),
-                    success: function (transport) {
-                        search_handler.display_result(transport);
+                    url: '/group/<?= $this->group->getPKValue(); ?>/membersearchajax/' + $('#search_username').val(),
+                    success: function (data) {
+                        search_handler.display_result(data);
                     },
-                    error: function(transport){
+                    error: function(data){
                         alert('<?= $this->javascript_escape($words->getSilent('GroupsInviteFailedTechError'));?>');
                     }
                 });

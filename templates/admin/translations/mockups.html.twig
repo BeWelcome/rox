@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'translations.title' | trans }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ 'translations.headline' | trans }}</h1>
+    <div class="row">
+    {% for mockup, template in mockups %}
+        <div class="col-auto mr-1 mb-1"><a href="{{url('translation_mockup', {'template': template})}}" class="btn btn-primary">{{ mockup }}</a></div>
+        {% endfor %}
+    </div>
+{% endblock content %}

@@ -1,1 +1,15 @@
-{{ request_text }}
+{% extends 'emails/email.txt.twig' %}
+
+{% block content%}
+    {% trans with {'%username%': receiver.Username} %}email.greeting{% endtrans %}
+    {% trans with {'%username%': sender.Username} %}email.request.stay{% endtrans %}
+
+    {{ 'request.arrival' | trans }}: {{ request.arrival|localizeddate('full', 'none', app.request.locale) }}
+    {% if request.departure %}{{ 'request.departure' | trans }}: {{ request.departure|localizeddate('full', 'none', app.request.locale) }}{% endif %}
+    {% if request.flexible %}{{ 'request.flexible' }}{% endif %}
+    {{ 'request.number_of_travellers' | trans}}: {{ request.numberOfTravellers }}
+
+    {{ message.message | striptags }}
+
+    [{% trans with {'%username%': sender.Username} %}visit.profile{% endtrans %}]({{ url('members_profile', { 'username': sender.Username}) }}) {{ 'or' | trans }} [{{ 'reply' | trans }}]({{ url('hosting_request_reply', { 'id': message.id }) }}")
+{% endblock %}

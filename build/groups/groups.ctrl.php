@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
     /**
@@ -35,7 +35,7 @@ use App\Entity\Group;
  * @subpackage Groups
  * @author     Fake51 <peter.e.lind@gmail.com>
  */
-class GroupsController extends RoxControllerBase   
+class GroupsController extends RoxControllerBase
 {
 
     public function __construct()
@@ -43,7 +43,7 @@ class GroupsController extends RoxControllerBase
         parent::__construct();
         $this->_model = new GroupsModel();
     }
-    
+
     public function __destruct()
     {
         unset($this->_model);
@@ -583,7 +583,6 @@ class GroupsController extends RoxControllerBase
      * accepts a member to group
      *
      * @access public
-     * @return object $page
      */
     public function acceptMember()
     {
@@ -646,7 +645,7 @@ class GroupsController extends RoxControllerBase
         $pager_params->items = $page->group->getMemberCount();
         $pager_params->items_per_page = 50;
         $page->pager_widget = new PagerWidget($pager_params);
-        return $page;        
+        return $page;
     }
 
 
@@ -868,7 +867,7 @@ class GroupsController extends RoxControllerBase
 
     public function groupForumsOverview()
     {
-        $page = new GroupForumsOverviewPage(); 
+        $page = new GroupForumsOverviewPage();
         return $page;
     }
 
@@ -906,7 +905,7 @@ class GroupsController extends RoxControllerBase
     {
         $count = $action->count;
         $redirect_req = $action->redirect_req;
-        
+
         $mem_redirect->post = $args->post;
 
         $return = implode('/', $args->request);
@@ -919,7 +918,7 @@ class GroupsController extends RoxControllerBase
             // after successful login, the message is recovered.
             return $return;
         }
-        
+
         if ($count < 0)
         {
             // session has expired while user was typing.
@@ -961,7 +960,7 @@ class GroupsController extends RoxControllerBase
             // $mem_resend->already_sent_as = $result->message_id;
             // TODO: return message of success in creating a group
             $this->logWrite("Member #{$this->_model->getLoggedInMember()->getPKValue()} created group #{$result['group_id']}");
-            return "groups/" . $result['group_id'];
+            return "group/" . $result['group_id'];
         }
     }
 
@@ -981,7 +980,7 @@ class GroupsController extends RoxControllerBase
         $count = $action->count;
 
         $return = $args->req;
-        
+
         if (!APP_User::loggedIn())
         {
             return $return;
@@ -1041,7 +1040,7 @@ class GroupsController extends RoxControllerBase
         $count = $action->count;
 
         $return = $args->req;
-        
+
         if (!APP_User::loggedIn())
         {
             return $return;

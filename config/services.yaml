@@ -44,7 +44,7 @@ services:
     class: App\EventListener\UserLocaleListener
     arguments: ['@session', '@doctrine.orm.entity_manager']
     tags:
-      - { name: kernel.event_listener, event: security.interactive_login, method: onInteractiveLogin }
+      - { name: kernel.event_subscriber }
 
   app.userprovider:
     public: true

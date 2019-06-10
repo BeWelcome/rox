@@ -70,20 +70,20 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
      */
     public function getGlobals()
     {
-        $teams = [];
+        $teams = null;
         if (null !== $this->member) {
             $roles = $this->security->getUser()->getRoles();
             $teams = $this->getTeams($roles);
         }
 
         return [
-            'groupsInApprovalQueue' => $this->member ? $this->getGroupsInApprovalQueueCount() : 0,
-            'reportedCommentsCount' => $this->member ? $this->getReportedCommentsCount() : 0,
-            'reportedMessagesCount' => $this->member ? $this->getReportedMessagesCount() : 0,
-            'messageCount' => $this->member ? $this->getUnreadMessagesCount() : 0,
-            'requestCount' => $this->member ? $this->getUnreadRequestsCount() : 0,
-            'notificationCount' => $this->member ? $this->getUncheckedNotificationsCount() : 0,
-            'activityCount' => $this->member ? $this->getUpcomingAroundLocationCount() : 0,
+            'groupsInApprovalQueue' => $this->member ? $this->getGroupsInApprovalQueueCount() : null,
+            'reportedCommentsCount' => $this->member ? $this->getReportedCommentsCount() : null,
+            'reportedMessagesCount' => $this->member ? $this->getReportedMessagesCount() : null,
+            'messageCount' => $this->member ? $this->getUnreadMessagesCount() : null,
+            'requestCount' => $this->member ? $this->getUnreadRequestsCount() : null,
+            'notificationCount' => $this->member ? $this->getUncheckedNotificationsCount() : null,
+            'activityCount' => $this->member ? $this->getUpcomingAroundLocationCount() : null,
             'teams' => $teams,
         ];
     }
@@ -161,7 +161,8 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
                 'trans' => 'AdminVolunteerTools',
                 'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_ADMIN,
                     Member::ROLE_ADMIN_SQLFORVOLUNTEERS, Member::ROLE_ADMIN_PROFILE,
-                    Member::ROLE_ADMIN_CHECKER, Member::ROLE_ADMIN_ACCEPTER, ],
+                    Member::ROLE_ADMIN_CHECKER, Member::ROLE_ADMIN_ACCEPTER,
+                ],
                 'route' => 'admin_volunteer_tools',
             ],
         ];
@@ -196,10 +197,8 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
 
     protected function getGroupsInApprovalQueueCount()
     {
-        $groupsInApprovalCount = 0;
-        $user = $this->security->getUser();
-        if ($user &&
-            ($this->security->isGranted(Member::ROLE_ADMIN_GROUP))) {
+        $groupsInApprovalCount = null;
+        if ($this->security->isGranted(Member::ROLE_ADMIN_GROUP)) {
             $groupsRepository = $this->getManager()->getRepository(Group::class);
             $groups = $groupsRepository->findBy([
                 'approved' => [Group::NOT_APPROVED, Group::IN_DISCUSSION],
@@ -212,11 +211,9 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
 
     protected function getReportedCommentsCount()
     {
-        $reportedCommentsCount = 0;
-        $user = $this->security->getUser();
-        if ($user &&
-            ($this->security->isGranted(Member::ROLE_ADMIN_CHECKER) ||
-                $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM))) {
+        $reportedCommentsCount = null;
+        if ($this->security->isGranted(Member::ROLE_ADMIN_COMMENTS) ||
+                $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)) {
             /** @var CommentRepository $commentRepository */
             $commentRepository = $this->getManager()->getRepository(Comment::class);
             $reportedCommentsCount = $commentRepository->getReportedCommentsCount();
@@ -227,11 +224,9 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
 
     protected function getReportedMessagesCount()
     {
-        $reportedMessagesCount = 0;
-        $user = $this->security->getUser();
-        if ($user &&
-            ($this->security->isGranted(Member::ROLE_ADMIN_CHECKER) ||
-                $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM))) {
+        $reportedMessagesCount = null;
+        if ($this->security->isGranted(Member::ROLE_ADMIN_CHECKER) ||
+                $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)) {
             /** @var MessageRepository $messageRepository */
             $messageRepository = $this->getManager()->getRepository(Message::class);
 

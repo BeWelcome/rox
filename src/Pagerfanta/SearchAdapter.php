@@ -46,7 +46,7 @@ class SearchAdapter implements AdapterInterface
         $session->start();
 
         if (!$session->has('IdMember')) {
-            $rememberMeToken = unserialize($session->get('_security_default'));
+            $rememberMeToken = unserialize($session->get('_security_main'));
             if (null === $rememberMeToken) {
                 throw new AccessDeniedException();
             }

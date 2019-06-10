@@ -125,20 +125,20 @@
                     <?php
                     // display my groups, if there are any
                     for ($i = 0; $i < count($my_groups) && $i < 5; $i++) :
-                        $group_img = ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png');
+                        $group_img = ((strlen($my_groups[$i]->Picture) > 0) ? "group/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png');
                         $group_id = $my_groups[$i]->id;
                         $group_name = htmlspecialchars($my_groups[$i]->Name, ENT_QUOTES);
                         $comment = strip_tags($purifier->purify($words->mInTrad($member->getGroupMembership($my_groups[$i])->Comment, $profile_language)));
                         ?>
                         <div class="mb-3 d-flex d-column">
                             <div>
-                                <a href="groups/<? echo $group_id; ?>">
+                                <a href="group/<? echo $group_id; ?>">
                                 <img class="framed float-left mr-2" width="50" height="50" alt="Group"
                                      src="<? echo $group_img; ?>"/>
                             </a>
                             </div>
                             <div class="text-truncate">
-                                <h4 class="m-0 text-truncate"><a href="groups/<? echo $group_id; ?>"><? echo $group_name; ?></a></h4>
+                                <h4 class="m-0 text-truncate"><a href="group/<? echo $group_id; ?>"><? echo $group_name; ?></a></h4>
                                 <p class="m-0 text-truncate"><? echo $comment; ?></p>
                             </div>  <!-- groupinfo -->
                         </div>

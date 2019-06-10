@@ -15,44 +15,39 @@
      */
 
     // group routes
-    $this->addRoute('group_acceptinvitation','groups/:group_id:/acceptinvitation/:member_id:', 'GroupsController', 'acceptInvitation');
-    $this->addRoute('group_acceptmember','groups/:group_id:/acceptmember/:member_id:', 'GroupsController', 'acceptMember');
-    $this->addRoute('group_banmember','groups/:group_id:/banmember/:member_id:', 'GroupsController', 'banMember');
-    $this->addRoute('group_addadmin','groups/:group_id:/addAdmin/:member_id:', 'GroupsController', 'addMemberAsAdmin');
-    $this->addRoute('group_resignadmin','groups/:group_id:/resignAdmin', 'GroupsController', 'resignAsAdmin');
-    $this->addRoute('group_declineinvitation','groups/:group_id:/declineinvitation/:member_id:', 'GroupsController', 'declineInvitation');
-    $this->addRoute('group_declinemember','groups/:group_id:/declinemember/:member_id:', 'GroupsController', 'declineMember');
-    $this->addRoute('group_delete','groups/:group_id:/delete', 'GroupsController', 'delete');
-    $this->addRoute('group_deleted','groups/:group_id:/delete/true', 'GroupsController', 'delete');
-    $this->addRoute('group_forum','groups/:group_id:/forum', 'GroupsController', 'forum');
-    $this->addRoute('group_forum_thread','groups/:group_id:/forum/:thread:', 'GroupsController', 'forum');
-    $this->addRoute('group_forum_thread_slash','groups/:group_id:/forum/:thread:/', 'GroupsController', 'forum');
-    $this->addRoute('group_forum_action','groups/:group_id:/forum/:thread:/:action:', 'GroupsController', 'forum');
-    $this->addRoute('group_groupsettings','groups/:group_id:/groupsettings', 'GroupsController', 'groupSettings');
-    $this->addRoute('group_invitemember','groups/:group_id:/invitemember/:member_id:', 'GroupsController', 'inviteMember');
-    $this->addRoute('group_invitemember_ajax','groups/:group_id:/invitememberajax/:member_id:', 'GroupsController', 'inviteMemberAjax');
-    $this->addRoute('group_invitepage','groups/:group_id:/invitemember', 'GroupsController', 'inviteMembers');
-    $this->addRoute('group_join','groups/:group_id:/join', 'GroupsController', 'join');
-    $this->addRoute('group_joined','groups/:group_id:/join/true', 'GroupsController', 'joined', true);
-    $this->addRoute('group_kickmember','groups/:group_id:/kickmember/:member_id:', 'GroupsController', 'kickMember');
-    $this->addRoute('group_leave','groups/:group_id:/leave', 'GroupsController', 'leave');
-    $this->addRoute('group_left','groups/:group_id:/leave/true', 'GroupsController', 'left');
-    $this->addRoute('group_memberadministration','groups/:group_id:/memberadministration', 'GroupsController', 'memberAdministration');
-    $this->addRoute('group_memberadministration_paged','groups/:group_id:/memberadministration/page/:page_number:', 'GroupsController', 'memberAdministration');
-    $this->addRoute('group_members','groups/:group_id:/members', 'GroupsController', 'members');
-    $this->addRoute('group_members_paged','groups/:group_id:/members/page/:page_number:', 'GroupsController', 'members');
-    $this->addRoute('group_membersearch_ajax','groups/:group_id:/membersearchajax/:search_term:', 'GroupsController', 'memberSearchAjax');
-    $this->addRoute('group_membersettings','groups/:group_id:/membersettings', 'GroupsController', 'memberSettings');
-    $this->addRoute('group_start','groups/:group_id:', 'GroupsController', 'showGroup');
-    $this->addRoute('group_wiki','groups/:group_id:/wiki', 'GroupsController', 'wiki');
+    $this->addRoute('group_acceptinvitation','group/:group_id:/acceptinvitation/:member_id:', 'GroupsController', 'acceptInvitation');
+    $this->addRoute('group_acceptmember','group/:group_id:/acceptmember/:member_id:', 'GroupsController', 'acceptMember');
+    $this->addRoute('group_banmember','group/:group_id:/banmember/:member_id:', 'GroupsController', 'banMember');
+    $this->addRoute('group_addadmin','group/:group_id:/addAdmin/:member_id:', 'GroupsController', 'addMemberAsAdmin');
+    $this->addRoute('group_resignadmin','group/:group_id:/resignAdmin', 'GroupsController', 'resignAsAdmin');
+    $this->addRoute('group_declineinvitation','group/:group_id:/declineinvitation/:member_id:', 'GroupsController', 'declineInvitation');
+    $this->addRoute('group_declinemember','group/:group_id:/declinemember/:member_id:', 'GroupsController', 'declineMember');
+    $this->addRoute('group_delete','group/:group_id:/delete', 'GroupsController', 'delete');
+    $this->addRoute('group_deleted','group/:group_id:/delete/true', 'GroupsController', 'delete');
+    $this->addRoute('group_forum','group/:group_id:/forum', 'GroupsController', 'forum');
+    $this->addRoute('group_forum_thread','group/:group_id:/forum/:thread:', 'GroupsController', 'forum');
+    $this->addRoute('group_forum_thread_slash','group/:group_id:/forum/:thread:/', 'GroupsController', 'forum');
+    $this->addRoute('group_forum_action','group/:group_id:/forum/:thread:/:action:', 'GroupsController', 'forum');
+    $this->addRoute('group_groupsettings','group/:group_id:/groupsettings', 'GroupsController', 'groupSettings');
+    $this->addRoute('group_kickmember','group/:group_id:/kickmember/:member_id:', 'GroupsController', 'kickMember');
+    $this->addRoute('group_leave','group/:group_id:/leave', 'GroupsController', 'leave');
+    $this->addRoute('group_left','group/:group_id:/leave/true', 'GroupsController', 'left');
+    $this->addRoute('group_memberadministration','group/:group_id:/memberadministration', 'GroupsController', 'memberAdministration');
+    $this->addRoute('group_memberadministration_paged','group/:group_id:/memberadministration/page/:page_number:', 'GroupsController', 'memberAdministration');
+    $this->addRoute('group_members','group/:group_id:/members', 'GroupsController', 'members');
+    $this->addRoute('group_members_paged','group/:group_id:/members/page/:page_number:', 'GroupsController', 'members');
+    $this->addRoute('group_membersearch_ajax','group/:group_id:/membersearchajax/:search_term:', 'GroupsController', 'memberSearchAjax');
+    $this->addRoute('group_membersettings','group/:group_id:/membersettings', 'GroupsController', 'memberSettings');
+    $this->addRoute('group_start','group/:group_id:', 'GroupsController', 'showGroup');
+    $this->addRoute('group_wiki','group/:group_id:/wiki', 'GroupsController', 'wiki');
+    $this->addRoute('group_realimg','group/realimg/:group_id:', 'GroupsController', 'realImg');
+    $this->addRoute('group_thumbimg','group/thumbimg/:group_id:', 'GroupsController', 'thumbImg');
     $this->addRoute('groups_featured','groups/featured', 'GroupsController', 'featured');
     $this->addRoute('groups_forums_overview','groups/forums', 'GroupsController', 'groupForumsOverview');
     $this->addRoute('groups_forums_overview_paged','groups/forums/:page_number:', 'GroupsController', 'groupForumsOverview');
     $this->addRoute('groups_mygroups','groups/mygroups', 'GroupsController', 'myGroups');
     $this->addRoute('groups_overview','groups/search', 'GroupsController', 'search');
-    $this->addRoute('groups_realimg','groups/realimg/:group_id:', 'GroupsController', 'realImg');
     $this->addRoute('groups_search','groups/search', 'GroupsController', 'search');
-    $this->addRoute('groups_thumbimg','groups/thumbimg/:group_id:', 'GroupsController', 'thumbImg');
 
     // related groups routes
     $this->addRoute('relatedgroup_select','groups/:group_id:/selectrelatedgroup', 'RelatedGroupsController', 'selectRelatedGroup');
@@ -91,7 +86,7 @@
     $this->addRoute('admin_comments_list_to', 'admin/comments/list/to/:id:', 'AdminCommentsController', 'to');
     $this->addRoute('admin_comments_list_single', 'admin/comments/list/single/:id:', 'AdminCommentsController', 'single');
     $this->addRoute('admin_comments_list_subset', 'admin/comments/list/:subset:', 'AdminCommentsController', 'subset');
-    
+
     // admin rights
     $this->addRoute('admin_rights', 'admin/rights', 'AdminRightsController', 'assign');
     $this->addRoute('admin_rights_overview', 'admin/rights/overview', 'AdminRightsController', 'overview');
@@ -122,7 +117,7 @@
     // admin words routes
     // the overview route redirects to an empty edit screen,
     // ideally this would become a real overview screen later on
-    $this->addRoute('admin_word_overview', 'admin/word', 'AdminWordController', 'editTranslation');    
+    $this->addRoute('admin_word_overview', 'admin/word', 'AdminWordController', 'editTranslation');
     $this->addRoute('admin_word_editempty', 'admin/word/edit', 'AdminWordController', 'editTranslation');
     $this->addRoute('admin_word_editone', 'admin/word/edit/:wordcode:', 'AdminWordController', 'editTranslation');
     $this->addRoute('admin_word_editlang', 'admin/word/edit/:wordcode:/:shortcode:', 'AdminWordController', 'editTranslation');

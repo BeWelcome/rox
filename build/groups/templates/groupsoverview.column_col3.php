@@ -12,7 +12,7 @@
             <div class="subcr">
                     <h3><?= $words->get('GroupsCreateHeading'); ?></h3>
                     <p><?= $words->get('GroupsCreateDescription'); ?></p>
-                    <a class="button" role="button" href="groups/new"><span><?= $words->get('GroupsCreateNew'); ?></span></a>
+                    <a class="button" role="button" href="new/group"><span><?= $words->get('GroupsCreateNew'); ?></span></a>
             </div> <!-- subcr -->
         </div> <!-- c38r -->
     </div> <!-- subcolums -->
@@ -34,11 +34,11 @@
                     <?php } else { ?>
                     <div class="c50r groupbox clearfix">
                     <?php } ?>
-                        <a href="groups/<?=$group_data->id ?>">
+                        <a href="group/<?=$group_data->id ?>">
                             <img class="framed float_left"  width="80px" height="80px" alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
                         </a>
                         <div class="groupinfo">
-                            <h4><a href="groups/<?=$group_data->id ?>"><?= htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a></h4>
+                            <h4><a href="group/<?=$group_data->id ?>"><?= htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a></h4>
                             <ul>
                                 <li><?= $words->get('GroupsMemberCount');?>: <?=$group_data->getMemberCount(); ?></li>
                                 <li><?= $words->get('GroupsNewMembers');?>: <?=count($group_data->getNewMembers()) ; ?></li>
@@ -68,11 +68,11 @@
                     echo "<h3>{$words->get('GroupsMyGroups')}</h3>";
                     for($i = 0; $i < count($my_groups) && $i < 5; $i++) : ?>
                         <div class="groupbox clearfix">
-                            <a href="groups/<?=$my_groups[$i]->id ?>">
+                            <a href="group/<?=$my_groups[$i]->id ?>">
                                 <img class="framed float_left"  width="80px" height="80px" alt="Group" src="<?= ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png' ) ;?>"/>
                             </a>
                             <div class="groupinfo">
-                            <h4><a href="groups/<?= $my_groups[$i]->id ?>"><?= htmlspecialchars($my_groups[$i]->Name, ENT_QUOTES) ?></a></h4>
+                            <h4><a href="group/<?= $my_groups[$i]->id ?>"><?= htmlspecialchars($my_groups[$i]->Name, ENT_QUOTES) ?></a></h4>
                             <ul>
                                 <li><?= $words->get('GroupsMemberCount');?>: <?=$my_groups[$i]->getMemberCount(); ?> </li>
                                 <li><?= $words->get('GroupsNewMembers');?>: <?=count($my_groups[$i]->getNewMembers()); ?> </li>

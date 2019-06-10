@@ -7,7 +7,7 @@
         <div class="c62l">
             <div class="subcl">
                 <div class="bw-row clearfix">
-                    <?= ((strlen($this->group->Picture) > 0) ? "<img class=\"float_left framed\" src='groups/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$this->group->Name}' />" : ''); ?>
+                    <?= ((strlen($this->group->Picture) > 0) ? "<img class=\"float_left framed\" src='group/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$this->group->Name}' />" : ''); ?>
                     <h3><?= $words->get('GroupDescription'); ?></h3>
                     <p><?=$this->group->getDescription() ?></p>
                 </div> <!--row clearfix -->
@@ -16,13 +16,13 @@
                 <div class="clearfix">
                     <?= $Forums->showExternalGroupThreads($group_id); ?>
                 </div> <!-- clearfix -->
-                
+
             </div> <!-- subcl -->
         </div> <!-- c62l -->
-        
+
         <div class="c38r">
             <div class="subcr">
-            
+
                 <?php
                     $a = new APP_User();
                     if (!$a->isBWLoggedIn('NeedMore,Pending')) : ?>
@@ -43,7 +43,7 @@
                     <?php $memberlist_widget->render() ?>
                 </div>
                 <strong><a href="groups/<?= $group_id.'/members'; ?>"><?= $words->get('GroupSeeAllMembers'); ?></a></strong>
-                
+
             </div> <!-- subcr -->
         </div> <!-- c38r -->
     </div> <!-- subcolumns -->

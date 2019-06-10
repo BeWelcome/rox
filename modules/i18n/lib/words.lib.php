@@ -30,7 +30,7 @@ Boston, MA  02111-1307, USA.
  */
 
 use App\Utilities\SessionTrait;
-use App\Utilities\TranslatorTrait;
+use App\Utilities\TranslatorSingletonTrait;
 
 
 /**
@@ -48,7 +48,7 @@ use App\Utilities\TranslatorTrait;
 class MOD_words
 {
     use SessionTrait;
-    use TranslatorTrait;
+    use TranslatorSingletonTrait;
 
     private $_lang;  // the active language
     private $_trMode;  // the translation mode - can be browse, translate, or edit
@@ -69,7 +69,7 @@ class MOD_words
     public function __construct($category=null)
     {
         $this->setSession();
-        $this->setTranslator();
+        $this->setTranslatorSingleton();
 
         $this->_lang = \PVars::get()->lang;
 

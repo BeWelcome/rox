@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block javascripts %}
+    <script src="{{ asset('build/bsfileselect.js') }}"></script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+{% endblock stylesheets %}
+
+{% block content %}
+    <div class="row">
+        {{ form(form) }}
+    </div>
+{% endblock content %}

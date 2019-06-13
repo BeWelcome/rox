@@ -1,15 +1,8 @@
-{% extends 'emails/email.html.twig' %}
+{% extends 'emails/request.template.html.twig' %}
 
 {% block content%}
-    {% trans with {'%username%': receiver.Username} %}email.greeting{% endtrans %}<br>
-    {% trans with {'%username%': sender.Username} %}email.request.stay{% endtrans %}<br>
     <br>
-    {{ 'request.arrival' | trans }}: {{ request.arrival|localizeddate('full', 'none', app.request.locale) }}<br>
-    {% if request.departure %}{{ 'request.departure' | trans }}: {{ request.departure|localizeddate('full', 'none', app.request.locale) }}<br>{% endif %}
-    {% if request.flexible %}{{ 'request.flexible' }}<br>{% endif %}
-    {{ 'request.number_of_travellers' | trans}}: {{ request.numberOfTravellers }}<br>
     <br>
-    {{ message.message | raw }}<br>
     <br>
-    <a href="{{ url('members_profile', { 'username': sender.Username}) }}">{% trans with {'%username%': sender.Username} %}visit.profile{% endtrans %}</a> {{ 'or' | trans }} <a href="{{ url('hosting_request_reply', { 'id': message.id }) }}">{{ 'reply' | trans }}</a>
+
 {% endblock %}

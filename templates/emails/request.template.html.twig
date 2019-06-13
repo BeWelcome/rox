@@ -1,0 +1,83 @@
+{% filter inky|inline_css(source('emails/email.css')) %}
+<style type="text/css">
+
+    .header {
+        background: #37f000;
+    }
+
+    .header .columns {
+        padding-bottom: 0;
+    }
+
+    .header p {
+        color: blue;
+        margin-bottom: 0;
+    }
+
+    .header .wrapper-inner {
+        padding: 20px; /*controls the height of the header*/
+    }
+
+    .wrapper.secondary {
+        background: #37f000;
+    }
+
+</style>
+<!-- move the above styles into your custom stylesheet -->
+
+<spacer size="16"></spacer>
+
+<wrapper class="header" bgcolor="#37f000">
+    <container>
+        <row class="collapse">
+            <columns small="6" valign="middle"><a href="{{ url('homepage') }}"><img
+                        src="{{ email.image('@images/logo_index_top.png') }}"><</a>
+            </columns>
+            <columns small="6" valign="middle">
+                <p class="text-right">BeWelcome</p>
+            </columns>
+        </row>
+    </container>
+</wrapper>
+
+<container>
+
+    <spacer size="16"></spacer>
+
+    <row>
+        <columns large="7">
+            <h2>{% trans with {'%username%': receiver.Username} %}email.greeting{% endtrans %}</h2>
+            <p>{% trans with {'%username%': sender.Username} %}email.request.stay{% endtrans %}</p>
+            <p></p>
+            <callout class="secondary">
+                {{ message.message | raw }}
+            </callout>
+            <center>
+            <button class="expand" href="{{ url('members_profile', { 'username': sender.Username}) }}">{% trans with {'%username%': sender.Username} %}visit.profile{% endtrans %}</button>
+
+            {{ 'or' | trans }}
+
+            <button class="expand" href="{{ url('hosting_request_reply', { 'id': message.id }) }}">{{ 'reply' | trans }}</button>
+            </center>
+
+        </columns>
+        <columns large="5" class="sidebar">
+            <callout class="secondary">
+                <h5>{{ 'request.details'|trans }}</h5>
+                {{ 'request.arrival' | trans }}:<br>
+                {{ request.arrival|localizeddate('full', 'none', app.request.locale) }}<br>
+                {% if request.departure %}{{ 'request.departure' | trans }}:<br> {{ request.departure|localizeddate('full', 'none', app.request.locale) }}<br>{% endif %}
+                {% if request.flexible %}{{ 'request.flexible' | trans }}<br>{% endif %}
+                {{ 'request.number_of_travellers' | trans}}: {{ request.numberOfTravellers }}<br>
+            </callout>
+        </columns>
+    </row>
+    <row>
+        <columns>
+            <center>
+                    <p>{{ "now" | date("Y") }} - <a href="{{ url('homepage') }}" target="_blank">BeWelcome</a></p>
+            </center>
+        </columns>
+    </row>
+</container>
+{% endfilter %}

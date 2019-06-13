@@ -1,26 +1,62 @@
-{% filter inline_css(source('emails/email.css')) %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>{{ subject }}</title>
-</head>
-<body>
-<div id="message">
-    <div class="header">
-            <a href="{{ url('homepage') }}"><img
-                        src="{{ email.image('@images/logo_index_top.png') }}" class="logo"></a>
+{% filter inky|inline_css(source('emails/email.css')) %}
+    <style type="text/css">
+        .header {
+            background: #8a8a8a;
+        }
+        .header .columns {
+            padding-bottom: 0;
+        }
+        .header p {
+            color: #fff;
+            margin-bottom: 0;
+        }
+        .header .wrapper-inner {
+            padding: 20px; /*controls the height of the header*/
+        }
+        .header .container {
+            background: #8a8a8a;
+        }
+        .wrapper.secondary {
+            background: #f3f3f3;
+        }
+    </style>
+    <!-- move the above styles into your custom stylesheet -->
 
-    </div>
 
-    <div class="content">
-        {%- block content -%}{%- endblock content -%}
-    </div>
-    <div class="footer">
-        <p>{{ "now" | date("Y") }} - <a class="footer_a" href="{{ url('homepage') }}" target="_blank">BeWelcome</a></p>
-    </div>
-</div>
+    <wrapper class="header" bgcolor="#8a8a8a">
+        <container>
+            <row class="collapse">
+                <columns small="6" valign="middle">
+                    <a href="{{ url('homepage') }}"><img
+                            src="{{ email.image('@images/logo_index_top.png') }}"><</a>
+                </columns>
+                <columns small="6" valign="middle">
+                    <p class="text-right">BeWelcome</p>
+                </columns>
+            </row>
+        </container>
+    </wrapper>
 
-</body>
-</html>
+    <container>
+
+        <spacer size="16"></spacer>
+
+        <row>
+            <columns>
+
+                {%- block content -%}{%- endblock content -%}
+
+            </columns>
+        </row>
+
+        <wrapper class="secondary">
+            <spacer size="16"></spacer>
+            <row>
+                <columns>
+                    <p>{{ "now" | date("Y") }} - <a href="{{ url('homepage') }}" target="_blank">BeWelcome</a></p>
+                </columns>
+            </row>
+        </wrapper>
+
+    </container>
 {% endfilter %}

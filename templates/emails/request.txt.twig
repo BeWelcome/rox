@@ -6,7 +6,7 @@
 
     {{ 'request.arrival' | trans }}: {{ request.arrival|localizeddate('full', 'none', app.request.locale) }}
     {% if request.departure %}{{ 'request.departure' | trans }}: {{ request.departure|localizeddate('full', 'none', app.request.locale) }}{% endif %}
-    {% if request.flexible %}{{ 'request.flexible' }}{% endif %}
+    {% if request.flexible %}{{ 'request.flexible' | trans }}{% endif %}
     {{ 'request.number_of_travellers' | trans}}: {{ request.numberOfTravellers }}
 
     {{ message.message | striptags }}

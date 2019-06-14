@@ -19,7 +19,7 @@
         <div class="col-12 mb-1">
             <a class="btn btn-sm btn-primary float-right" href="{{ path('message_reply', { id: thread[0].id }) }}">{{ 'message.button.reply' | trans }}</a>
             {% if current.Sender != myself %}
-                {% if current.infolder == constant('App\\Doctrine\\InFolderType::SPAM') %}
+                {% if current.folder == constant('App\\Doctrine\\InFolderType::SPAM') %}
                     <a class="btn btn-sm btn-primary mr-2 float-left" href="{{ path('message_mark_nospam', { id: thread[0].id }) }}">{{ 'marknospam' | trans }}</a>
                 {% else %}
                     <a class="btn btn-sm btn-primary mr-2 float-left" href="{{ path('message_mark_spam', { id: thread[0].id }) }}"><i class="fas fa-flag"></i> {{ 'markspam' | trans }}</a>
@@ -34,7 +34,7 @@
         <div class="col-12 mb-1">
             <a class="btn btn-sm btn-primary float-right" href="{{ path('message_reply', { id: thread[0].id }) }}">{{ 'message.button.reply' | trans }}</a>
             {% if current.Sender != myself %}
-                {% if current.infolder == constant('App\\Doctrine\\InFolderType::SPAM') %}
+                {% if current.folder == constant('App\\Doctrine\\InFolderType::SPAM') %}
                     <a class="btn btn-sm btn-primary mr-2 float-left" href="{{ path('message_mark_nospam', { id: thread[0].id }) }}">{{ 'marknospam' | trans }}</a>
                 {% else %}
                     <a class="btn btn-sm btn-primary mr-2 float-left" href="{{ path('message_mark_spam', { id: thread[0].id }) }}"><i class="fas fa-flag"></i> {{ 'markspam' | trans }}</a>

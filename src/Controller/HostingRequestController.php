@@ -386,7 +386,7 @@ class HostingRequestController extends BaseMessageController
      */
     private function sendHostReplyNotification(Member $host, Member $guest, Message $request, $subject)
     {
-        $this->sendRequestNotification($host, $guest, $host, $request, $subject, 'reply_host');
+        $this->sendRequestNotification($host, $guest, $host, $request, $subject, 'reply_from_host');
     }
 
     /**
@@ -397,7 +397,7 @@ class HostingRequestController extends BaseMessageController
      */
     protected function sendGuestReplyNotification(Member $host, Member $guest, Message $request, $subject)
     {
-        $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'reply_guest');
+        $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'reply_from_guest');
     }
 
     /**

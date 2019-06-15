@@ -564,8 +564,8 @@ class TranslationController extends AbstractController
             'signup/error' => '_partials/signup/error.html.twig',
             'message' => 'emails/message.html.twig',
             'request (initial)' => 'emails/request.html.twig',
-            'request (guest)' => 'emails/reply_guest.html.twig',
-            'request (host)' => 'emails/reply_host.html.twig',
+            'request (guest)' => 'emails/reply_from_guest.html.twig',
+            'request (host)' => 'emails/reply_from_host.html.twig',
             'group invitation' => 'emails/group.invitation.html.twig',
         ];
         return $this->render('admin/translations/mockups.html.twig', [
@@ -598,15 +598,17 @@ class TranslationController extends AbstractController
             'getDeparture' => new DateTime(),
             'getNumberOfTravellers' => 2,
             'getFlexible' => true,
-            'getStatus' => 0,
+            'getStatus' => HostingRequest::REQUEST_DECLINED,
         ]);
+        // Use the bwadmin account as counter part for all of this
+        $memberRepository = $this->getDoctrine()->getRepository(Member::class);
+        $bwadmin = $memberRepository->find(1);
+
         $params = [
             'html_template' => $template,
             'username' => 'username',
             'email_address' => 'mockup@example.com',
             'subject' => 'Subject',
-            'sender' => $this->getUser(),
-            'receiver' => $this->getUser(),
             'email' => new MockupExtension(),
             'message' => $mockMessage,
             'request' => $mockRequest,
@@ -615,8 +617,20 @@ class TranslationController extends AbstractController
                 'items' => $this->getSubmenuItems($request->getLocale(), 'mockup', $template),
             ]
         ];
-        if (strpos($template, 'emails/') === true) {
-            $params['txt_template'] = str_replace('.html.twig', '.txt.twig', $template);
+        switch ($template) {
+            case 'emails/reply_from_guest.html.twig':
+                $params['host'] = $bwadmin;
+                $params['sender'] = $this->getUser();
+                $params['receiver'] = $bwadmin;
+                break;
+            case 'emails/reply_from_host.html.twig':
+                $params['host'] = $bwadmin;
+                $params['sender'] = $bwadmin;
+                $params['receiver'] = $this->getUser();
+                break;
+            default:
+                $params['host'] = $bwadmin;
+                break;
         }
 
         return $this->render('admin/translations/mockup.html.twig', $params);

@@ -49,6 +49,7 @@ trait MailerTrait
      * @param Member $receiver
      * @param string $template
      * @param mixed ...$params
+     * @throws TransportExceptionInterface
      */
     protected function sendTemplateEmail($sender, Member $receiver, string $template, ...$params)
     {
@@ -61,7 +62,7 @@ trait MailerTrait
         $parameters = array_merge([ 'sender' => $sender, 'receiver' => $receiver], ...$params);
         $subject = $this->getTranslator()->trans($parameters['subject']);
         $email = (new TemplatedEmail())
-            ->to(new Address($receiver->getEmail()))
+            ->to(new NamedAddress($receiver->getEmail(), $receiver->getUsername()))
             ->subject($subject)
             ->context($parameters)
         ;
@@ -84,7 +85,7 @@ trait MailerTrait
         try {
             $this->mailer->send($email);
         } catch (TransportExceptionInterface $e) {
-            // Mail not send; now what?
+            throw $e;
         }
         if (!is_string($sender)) {
             $this->setTranslatorLocale($sender);

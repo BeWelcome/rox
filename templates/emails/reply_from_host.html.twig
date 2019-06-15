@@ -1,9 +1,22 @@
 {% extends 'emails/request.template.html.twig' %}
 
-{% block content%}
-    {% trans with {'%username%': receiver.Username} %}email.greeting{% endtrans %}<br>
-    {% trans with {'%username%': sender.Username} %}email.request.reply.host{% endtrans %}
-    <br>
+{% block message %}
+    <h4>{% trans with {'%username%': receiver.Username} %}email.greeting{% endtrans %}</h4>
+    <p>{% trans with {'%username%': sender.Username} %}email.request.reply.host{% endtrans %}</p>
+    <p></p>
+    <callout class="secondary">
+        {{ message.message | raw }}
+    </callout>
+    <center>
+    <button class="expand" href="{{ url('members_profile', { 'username': sender.Username}) }}">{% trans with {'%username%': sender.Username} %}visit.profile{% endtrans %}</button>
+
+    {{ 'or' | trans }}
+
+    <button class="expand" href="{{ url('hosting_request_reply', { 'id': message.id }) }}">{{ 'reply' | trans }}</button>
+    </center>
+{% endblock message %}
+
+{% block request%}
     {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}{% trans with {'%username%': sender.Username} %}email.request.reply.host.open{% endtrans %}<br>{% endif %}
     {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}{% trans with {'%username%': sender.Username} %}email.request.reply.host.cancelled{% endtrans %}<br>{% endif %}
     {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}{% trans with {'%username%': sender.Username} %}email.request.reply.host.declined{% endtrans %}<br>{% endif %}
@@ -14,8 +27,4 @@
     {% if request.departure %}{{ 'request.departure' | trans }}: {{ request.departure|localizeddate('full', 'none', app.request.locale) }}<br>{% endif %}
     {% if request.flexible %}{{ 'request.flexible' | trans }}<br>{% endif %}
     {{ 'request.number_of_travellers' | trans}}: {{ request.numberOfTravellers }}<br>
-    <br>
-    {{ message.message | raw }}<br>
-    <br>
-    <a href="{{ url('members_profile', { 'username': sender.Username}) }}">{% trans with {'%username%': sender.Username} %}visit.profile{% endtrans %}</a> {{ 'or' | trans }} <a href="{{ url('hosting_request_reply', { 'id': message.id }) }}">{{ 'reply' | trans }}</a>
-{% endblock %}
+{% endblock request %}

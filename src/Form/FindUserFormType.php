@@ -25,6 +25,6 @@ class FindUserFormType extends AbstractType
                     'placeholder' => 'placeholder.username.part',
                 ],
             ])
-            ->add('Search', SubmitType::class);
+            ->add('reset.password', SubmitType::class);
     }
 }

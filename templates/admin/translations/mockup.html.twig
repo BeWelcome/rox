@@ -8,8 +8,4 @@
     <h1>{{ 'translations.headline' | trans }}</h1>
     <h2>{{ html_template }}</h2>
     <div>{% include html_template %}</div>
-    {% if txt_template is defined %}
-    <h2>{{ txt_template }}</h2>
-    <div>{% include txt_template %}</div>
-    {% endif %}
 {% endblock content %}

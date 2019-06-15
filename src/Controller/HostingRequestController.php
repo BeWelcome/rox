@@ -72,16 +72,17 @@ class HostingRequestController extends BaseMessageController
 
         // determine if guest or host reply to a request
         $first = $thread[\count($thread) - 1];
+        $parentId = ($message->getParent()) ? $message->getParent()->getId() : $message->getId();
         if ($this->getUser()->getId() === $first->getSender()->getId()) {
             return $this->redirectToRoute('hosting_request_reply_guest', [
                 'id' => $message->getId(),
-                'parentId' => $message->getParent()->getId(),
+                'parentId' => $parentId,
             ]);
         }
 
         return $this->redirectToRoute('hosting_request_reply_host', [
             'id' => $message->getId(),
-            'parentId' => $message->getParent()->getId(),
+            'parentId' => $parentId,
         ]);
     }
 
@@ -128,8 +129,8 @@ class HostingRequestController extends BaseMessageController
             $subject = $this->getSubjectForReply($newRequest);
 
             $this->sendGuestReplyNotification(
-                $guest,
                 $host,
+                $guest,
                 $newRequest,
                 $subject
             );
@@ -138,7 +139,7 @@ class HostingRequestController extends BaseMessageController
             return $this->redirectToRoute('hosting_request_show', ['id' => $newRequest->getId()]);
         }
 
-        return $this->render('request/reply_guest.html.twig', [
+        return $this->render('request/reply_from_guest.html.twig', [
             'guest' => $guest,
             'host' => $host,
             'form' => $requestForm->createView(),
@@ -197,7 +198,7 @@ class HostingRequestController extends BaseMessageController
             return $this->redirectToRoute('hosting_request_show', ['id' => $newRequest->getId()]);
         }
 
-        return $this->render('request/reply_host.html.twig', [
+        return $this->render('request/reply_from_host.html.twig', [
             'guest' => $guest,
             'host' => $host,
             'form' => $requestForm->createView(),
@@ -352,10 +353,11 @@ class HostingRequestController extends BaseMessageController
         return $this->handleFolderRequest($request, $folder, $messages, 'requests');
     }
 
-    private function sendRequestNotification(Member $sender, Member $receiver, Message $request, $subject, $template)
+    private function sendRequestNotification(Member $sender, Member $receiver, Member $host, Message $request, $subject, $template)
     {
         // Send mail notification
         $this->sendTemplateEmail($sender, $receiver, $template, [
+            'host' => $host,
             'subject' => $subject,
             'message' => $request,
             'request' => $request->getRequest(),
@@ -373,7 +375,7 @@ class HostingRequestController extends BaseMessageController
     {
         $subject = $request->getSubject()->getSubject();
 
-        $this->sendRequestNotification($guest, $host, $request, $subject, 'request');
+        $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'request');
     }
 
     /**
@@ -384,7 +386,7 @@ class HostingRequestController extends BaseMessageController
      */
     private function sendHostReplyNotification(Member $host, Member $guest, Message $request, $subject)
     {
-        $this->sendRequestNotification($host, $guest, $request, $subject, 'reply_host');
+        $this->sendRequestNotification($host, $guest, $host, $request, $subject, 'reply_host');
     }
 
     /**
@@ -395,7 +397,7 @@ class HostingRequestController extends BaseMessageController
      */
     protected function sendGuestReplyNotification(Member $host, Member $guest, Message $request, $subject)
     {
-        $this->sendRequestNotification($guest, $host, $request, $subject, 'reply_guest');
+        $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'reply_guest');
     }
 
     /**

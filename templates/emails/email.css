@@ -80,6 +80,13 @@ table.body {
     width: 100%; }
 
 table.container {
+    background: #f37000;
+    width: 580px;
+    margin: 0 auto;
+    Margin: 0 auto;
+    text-align: inherit; }
+
+table.container.secondary {
     background: #fefefe;
     width: 580px;
     margin: 0 auto;
@@ -1355,3 +1362,25 @@ blockquote {
     padding: 0 0.5em;
     margin: 0 0 1em 0.5em;
 }
+
+.header {
+    background: #f37000;
+}
+
+.header .columns {
+    padding-bottom: 0;
+}
+
+.header p {
+    color: blue;
+    margin-bottom: 0;
+}
+
+.header .wrapper-inner {
+    padding: 20px; /*controls the height of the header*/
+}
+
+.wrapper.secondary {
+    background: #f37000;
+}
+

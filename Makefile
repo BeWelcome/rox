@@ -2,6 +2,7 @@
 export COMPOSER_MEMORY_LIMIT := -1
 
 SRC_DIR=src tests
+SRC_DIR_NO_TESTS=src
 
 null  :=
 SPACE := $(null) $(null)
@@ -41,7 +42,7 @@ mkdocs:
 	mkdocs build
 
 phpcpd:
-	./vendor/bin/phpcpd $(SRC_DIR) --progress --no-interaction --exclude=Entity --exclude=Repository
+	./vendor/bin/phpcpd $(SRC_DIR_NO_TESTS) --progress --no-interaction --exclude=Entity --exclude=Repository
 
 phploc:
 	./vendor/bin/phploc --log-xml=phploc.xml $(SRC_DIR)

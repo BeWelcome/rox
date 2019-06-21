@@ -17,9 +17,6 @@ use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Role;
-use RoxEntityFactory;
-use Symfony\Bridge\Doctrine\DependencyInjection\Security\UserProvider\EntityFactory;
 
 /**
  * Group.
@@ -53,7 +50,7 @@ class Group implements ObjectManagerAware
      *
      * @ORM\Column(name="Type", type="group_type", nullable=false)
      */
-    private $type = GroupTypeType::PUBLIC;
+    private $type = 'Public';
 
     /**
      * @var DateTime
@@ -386,14 +383,14 @@ class Group implements ObjectManagerAware
     {
         $admins = $this->getAdmins();
 
-        return \in_array($admin, $admins);
+        return \in_array($admin, $admins, true);
     }
 
     public function isMember(Member $member)
     {
         $members = $this->getCurrentMembers();
 
-        return \in_array($member, $members);
+        return \in_array($member, $members, true);
     }
 
     /**
@@ -404,22 +401,22 @@ class Group implements ObjectManagerAware
         // Unfortunately we need to replicate old code here
         $roleRepo = $this->objectManager->getRepository(Role::class);
 
-        $role = $roleRepo->findBy([ 'name' => 'GroupOwner']);
+        $role = $roleRepo->findBy(['name' => 'GroupOwner']);
         $privilegeScopesRepo = $this->objectManager->getRepository(PrivilegeScope::class);
-        $privilegeScopes = $privilegeScopesRepo->findBy([ 'role' => $role, 'type' => $this->getId()]);
+        $privilegeScopes = $privilegeScopesRepo->findBy(['role' => $role, 'type' => $this->getId()]);
 
-        if (!$privilegeScopes)
-        {
+        if (!$privilegeScopes) {
             return [];
         }
 
         $admins = [];
         foreach ($privilegeScopes as $privilegeScope) {
             $admin = $privilegeScope->getMember();
-            if (strpos(MemberStatusType::ACTIVE_WITH_MESSAGES, $admin->getStatus()) !== false) {
+            if (false !== strpos(MemberStatusType::ACTIVE_WITH_MESSAGES, $admin->getStatus())) {
                 $admins[] = $admin;
             }
         }
+
         return $admins;
     }
 
@@ -438,7 +435,7 @@ class Group implements ObjectManagerAware
 
     public function isPublic()
     {
-        return $this->type === GroupTypeType::PUBLIC;
+        return GroupTypeType::PUBLIC === $this->type;
     }
 
     /**
@@ -446,7 +443,6 @@ class Group implements ObjectManagerAware
      *
      * @param ObjectManager $objectManager
      * @param ClassMetadata $classMetadata
-     * @return void
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)

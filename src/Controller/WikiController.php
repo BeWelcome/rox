@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Group;
-use App\Entity\Member;
 use App\Entity\Wiki;
 use App\Model\WikiModel;
 use App\Repository\WikiRepository;
@@ -15,7 +13,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class WikiController extends AbstractController
 {
@@ -72,8 +69,8 @@ class WikiController extends AbstractController
     /**
      * @Route("/wiki/{pageTitle}/edit", name="wiki_page_edit")
      *
-     * @param Request             $request
-     * @param WikiModel           $wikiModel
+     * @param Request   $request
+     * @param WikiModel $wikiModel
      * @param $pageTitle
      *
      * @return Response
@@ -118,8 +115,8 @@ class WikiController extends AbstractController
     /**
      * @Route("/wiki/{pageTitle}/create", name="wiki_page_create")
      *
-     * @param Request             $request
-     * @param WikiModel           $wikiModel
+     * @param Request   $request
+     * @param WikiModel $wikiModel
      * @param $pageTitle
      *
      * @return Response

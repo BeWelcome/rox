@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Group;
 use App\Entity\HostingRequest;
 use App\Entity\Language;
 use App\Entity\Member;
@@ -43,7 +44,8 @@ use Symfony\Contracts\Translation\TranslatorInterface as Translator;
  */
 class TranslationController extends AbstractController
 {
-    use TranslatorTrait, TranslatedFlashTrait;
+    use TranslatorTrait;
+    use TranslatedFlashTrait;
 
     /** @var TranslationModel */
     private $translationModel;
@@ -154,10 +156,10 @@ class TranslationController extends AbstractController
      *
      * Creates an English index and the matching translation (if locale != 'en')
      *
-     * @param Request             $request
-     * @param Language            $language
-     * @param KernelInterface     $kernel
-     * @param mixed               $code
+     * @param Request         $request
+     * @param Language        $language
+     * @param KernelInterface $kernel
+     * @param mixed           $code
      *
      * @throws Exception
      *
@@ -547,6 +549,7 @@ class TranslationController extends AbstractController
      * @Route("/admin/translations/mockups", name="translations_mockups")
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function selectMockup(Request $request)
@@ -562,18 +565,19 @@ class TranslationController extends AbstractController
         $mockups = [
             'signup/finish' => '_partials/signup/finish.html.twig',
             'signup/error' => '_partials/signup/error.html.twig',
+            'group invitation' => '_partials/group/invitation.html.twig',
             'message' => 'emails/message.html.twig',
             'request (initial)' => 'emails/request.html.twig',
             'request (guest)' => 'emails/reply_from_guest.html.twig',
             'request (host)' => 'emails/reply_from_host.html.twig',
-            'group invitation' => 'emails/group.invitation.html.twig',
         ];
+
         return $this->render('admin/translations/mockups.html.twig', [
             'mockups' => $mockups,
             'submenu' => [
                 'active' => 'mockups',
                 'items' => $this->getSubmenuItems($request->getLocale()),
-            ]
+            ],
         ]);
     }
 
@@ -584,7 +588,6 @@ class TranslationController extends AbstractController
      * @param string $template
      *
      * @return Response
-     *
      */
     public function translateMockup(Request $request, string $template)
     {
@@ -604,6 +607,10 @@ class TranslationController extends AbstractController
         $memberRepository = $this->getDoctrine()->getRepository(Member::class);
         $bwadmin = $memberRepository->find(1);
 
+        // Use a public group like Berlin
+        $groupRepository = $this->getDoctrine()->getRepository(Group::class);
+        $group = $groupRepository->find(70);
+
         $params = [
             'html_template' => $template,
             'username' => 'username',
@@ -615,7 +622,7 @@ class TranslationController extends AbstractController
             'submenu' => [
                 'active' => 'mockup',
                 'items' => $this->getSubmenuItems($request->getLocale(), 'mockup', $template),
-            ]
+            ],
         ];
         switch ($template) {
             case 'emails/reply_from_guest.html.twig':
@@ -627,6 +634,20 @@ class TranslationController extends AbstractController
                 $params['host'] = $bwadmin;
                 $params['sender'] = $bwadmin;
                 $params['receiver'] = $this->getUser();
+                break;
+            case '_partials/group/invitation.html.twig':
+                $params['sender'] = $bwadmin;
+                $params['receiver'] = $this->getUser();
+                $params['group'] = $group;
+                $acceptUrl = '/group/'.$group->getId().'/acceptinvite/'.$bwadmin->getId();
+                $declineUrl = '/group/'.$group->getId().'/declineinvite/'.$bwadmin->getId();
+
+                $params['accept_start'] = '<a href="'.$acceptUrl.'">';
+                $params['accept_end'] = '</a>';
+                $params['decline_start'] = '<a href="'.$declineUrl.'">';
+                $params['decline_end'] = '</a>';
+                $params['subject'] = 'group.invitation';
+
                 break;
             default:
                 $params['host'] = $bwadmin;

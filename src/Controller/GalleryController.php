@@ -7,7 +7,12 @@ use App\Entity\GalleryImage;
 use App\Entity\UploadedImage;
 use App\Form\CustomDataClass\GalleryImageEditRequest;
 use App\Form\GalleryEditImageFormType;
+use App\Utilities\TranslatedFlashTrait;
+use App\Utilities\TranslatorTrait;
+use App\Utilities\UniqueFilenameTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,10 +23,13 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Validation;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GalleryController extends AbstractController
 {
+    use UniqueFilenameTrait;
+    use TranslatorTrait;
+    use TranslatedFlashTrait;
+
     // Limit uploaded files to 8MB
     const MAX_SIZE = 8 * 1024 * 1024;
 
@@ -30,14 +38,14 @@ class GalleryController extends AbstractController
      *     requirements = {"id": "\d+"}
      * )
      *
-     * @param Request             $request
-     * @param GalleryImage        $image
-     * @param TranslatorInterface $translator
+     * @param Request      $request
+     * @param GalleryImage $image
+     *
+     * @throws AccessDeniedException
      *
      * @return Response
-     * @throws AccessDeniedException
      */
-    public function editImageAction(Request $request, GalleryImage $image, TranslatorInterface $translator)
+    public function editImageAction(Request $request, GalleryImage $image)
     {
         $user = $this->getUser();
         if ($user !== $image->getOwner()) {
@@ -55,7 +63,7 @@ class GalleryController extends AbstractController
             $em->persist($image);
             $em->flush();
 
-            $this->addFlash('notice', $translator->trans('flash.gallery.information.update'));
+            $this->addTranslatedFlash('notice', 'flash.gallery.information.update');
 
             return $this->redirectToRoute('gallery_show_image', ['imageId' => $image->getId()]);
         }
@@ -67,17 +75,45 @@ class GalleryController extends AbstractController
     }
 
     /**
+     * @Route("/gallery/upload_multiple", name="gallery_upload_multiple")
+     *
+     * @param Request $request
+     *
+     * @return Response
+    public function uploadImageToGallery(Request $request)
+    {
+        $uploadImageForm = $this->createFormBuilder()
+            ->add('files', FileType::class, [
+                'label' => 'files',
+                'multiple' => true,
+            ])
+            ->add('upload', SubmitType::class, [
+                'label' => 'upload',
+            ])
+            ->getForm();
+        $uploadImageForm->handleRequest($request);
+        if ($uploadImageForm->isSubmitted() && $uploadImageForm->isValid())
+        {
+            $data = $uploadImageForm->getData();
+        }
+
+        return $this->render('gallery/upload.image.html.twig', [
+            'form' => $uploadImageForm->createView(),
+        ]);
+    }
+     */
+
+    /**
      * @Route("/gallery/upload/image", name="gallery_upload_ckeditor")
      *
-     * @param Request             $request
-     * @param TranslatorInterface $translator
+     * @param Request $request
      *
      * @return JsonResponse
      *
      * @throw AccessDeniedException
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function uploadImageFromCKEditor5(Request $request, TranslatorInterface $translator)
+    public function uploadImageFromCKEditor5(Request $request)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
@@ -88,7 +124,7 @@ class GalleryController extends AbstractController
         $constraint = new Image([
             'maxSize' => (int) ($this->getParameter('upload_max_size')),
             'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif'],
-            'mimeTypesMessage' => $translator->trans('upload.error.not_supported'),
+            'mimeTypesMessage' => 'upload.error.not_supported',
         ]);
 
         $image = $request->files->get('upload');
@@ -99,7 +135,7 @@ class GalleryController extends AbstractController
             $response->setData([
                 'uploaded' => false,
                 'error' => [
-                    'message' => $translator->trans('upload.error.no_image'),
+                    'message' => 'upload.error.no_image',
                 ],
             ]);
 
@@ -158,15 +194,5 @@ class GalleryController extends AbstractController
         $filepath = $this->getParameter('upload_directory').'/'.$image->getFilename();
 
         return new BinaryFileResponse($filepath);
-    }
-
-    /**
-     * @return string
-     */
-    private function generateUniqueFileName()
-    {
-        // md5() reduces the similarity of the file names generated by
-        // uniqid(), which is based on timestamps
-        return md5(uniqid());
     }
 }

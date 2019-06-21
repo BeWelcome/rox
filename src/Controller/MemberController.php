@@ -17,7 +17,6 @@ use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use Html2Text\Html2Text;
-use Swift_Mailer;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -25,7 +24,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class MemberController.
@@ -33,7 +31,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class MemberController extends AbstractController
 {
     use MailerTrait;
-    use TranslatorTrait, TranslatedFlashTrait;
+    use TranslatorTrait;
+    use TranslatedFlashTrait;
 
     /**
      * @Route("/member/autocomplete", name="members_autocomplete")
@@ -72,12 +71,12 @@ class MemberController extends AbstractController
     /**
      * @Route("/resetpassword", name="member_request_reset_password")
      *
-     * @param Request $request
-     * @param Swift_Mailer $mailer
+     * @param Request     $request
      * @param MemberModel $memberModel
+     *
      * @return Response
      */
-    public function requestResetPasswordAction(Request $request, Swift_Mailer $mailer, MemberModel $memberModel)
+    public function requestResetPasswordAction(Request $request, MemberModel $memberModel)
     {
         // Someone obviously lost their way. No sense in resetting your password if you're currently logged in.
         if ($this->isGranted('ROLE_USER')) {
@@ -115,8 +114,7 @@ class MemberController extends AbstractController
                 $sent = $this->sendPasswordResetLink(
                     $member,
                     'Password Reset for BeWelcome',
-                    $token,
-                    $mailer
+                    $token
                 );
                 if ($sent) {
                     $this->addTranslatedFlash('notice', 'flash.email.reset.password');
@@ -136,8 +134,8 @@ class MemberController extends AbstractController
      * @Route("/resetpassword/{username}/{token}", name="member_reset_password",
      *     requirements={"key": "[a-z0-9]{32}"})
      *
-     * @param Request             $request
-     * @param Member              $member
+     * @param Request $request
+     * @param Member  $member
      * @param $token
      *
      * @return Response
@@ -154,7 +152,7 @@ class MemberController extends AbstractController
         $passwordReset = $repository->findOneBy(['member' => $member, 'token' => $token]);
 
         if (null === $passwordReset) {
-            $this->addTranslatedFlash('error','flash.reset.password.invalid');
+            $this->addTranslatedFlash('error', 'flash.reset.password.invalid');
 
             return $this->redirectToRoute('member_request_reset_password');
         }
@@ -260,7 +258,7 @@ class MemberController extends AbstractController
         return $response;
     }
 
-    private function sendPasswordResetLink(Member $receiver, $subject, $token, Swift_Mailer $mailer)
+    private function sendPasswordResetLink(Member $receiver, $subject, $token)
     {
         $this->sendTemplateEmail('password@bewelcome.org', $receiver, 'reset.password', [
             'receiver' => $receiver,
@@ -269,7 +267,6 @@ class MemberController extends AbstractController
         ]);
 
         return true;
-
 //        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
 //        /** @var Preference $preference */
 //        $preference = $preferenceRepository->findOneBy(['codename' => Preference::HTML_MAILS]);

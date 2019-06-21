@@ -16,9 +16,9 @@ class CommunityNewsController extends AbstractController
     /**
      * @Route("/admin/communitynews", name="admin_communitynews_overview")
      *
-     * @param Request $request
-     *
+     * @param Request            $request
      * @param CommunityNewsModel $communityNewsModel
+     *
      * @return Response
      */
     public function showOverviewAction(Request $request, CommunityNewsModel $communityNewsModel)
@@ -38,8 +38,9 @@ class CommunityNewsController extends AbstractController
      *
      * @param Request $request
      *
-     * @return Response
      * @throws \Exception
+     *
+     * @return Response
      */
     public function createAction(Request $request)
     {

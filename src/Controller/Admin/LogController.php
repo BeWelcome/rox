@@ -17,11 +17,12 @@ class LogController extends AbstractController
     /**
      * @Route("/admin/logs", name="admin_logs_overview")
      *
-     * @param Request $request
-     *
+     * @param Request  $request
      * @param LogModel $logModel
-     * @return Response
+     *
      * @throws NonUniqueResultException
+     *
+     * @return Response
      */
     public function showOverview(Request $request, LogModel $logModel)
     {

@@ -17,9 +17,9 @@ class TripController extends AbstractController
     /**
      * @Route("/trip", name="trip")
      *
-     * @param Request $request
+     * @param Request   $request
      * @param TripModel $tripModel
-     * @param int $items
+     * @param int       $items
      *
      * @return Response
      */

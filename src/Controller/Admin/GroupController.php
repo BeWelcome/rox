@@ -2,38 +2,19 @@
 
 namespace App\Controller\Admin;
 
-use App\Doctrine\GroupMembershipStatusType;
 use App\Entity\Group;
-use App\Entity\GroupMembership;
-use App\Entity\Language;
 use App\Entity\Member;
-use App\Entity\MemberTranslation;
-use App\Entity\Preference;
-use App\Entity\Wiki;
-use App\Form\CustomDataClass\GroupRequest;
-use App\Form\GroupType;
 use App\Logger\Logger;
-use App\Model\WikiModel;
-use App\Repository\GroupRepository;
-use App\Repository\WikiRepository;
 use App\Utilities\MailerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
-use Doctrine\DBAL\Statement;
 use Exception;
-use Html2Text\Html2Text;
-use Intervention\Image\ImageManagerStatic as Image;
-use Swift_Mailer;
-use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class GroupController.
@@ -77,9 +58,9 @@ class GroupController extends AbstractController
      *
      * @Route("/admin/groups/{id}/discuss", name="admin_groups_discuss")
      *
-     * @param Request             $request
-     * @param Group               $group
-     * @param Logger              $logger
+     * @param Request $request
+     * @param Group   $group
+     * @param Logger  $logger
      *
      * @throws Exception
      *
@@ -112,9 +93,9 @@ class GroupController extends AbstractController
      *
      * @Route("/admin/groups/{id}/dismiss", name="admin_groups_dismiss")
      *
-     * @param Request             $request
-     * @param Group               $group
-     * @param Logger              $logger
+     * @param Request $request
+     * @param Group   $group
+     * @param Logger  $logger
      *
      * @throws Exception
      *
@@ -147,9 +128,9 @@ class GroupController extends AbstractController
      *
      * @Route("/admin/groups/{id}/approve", name="admin_groups_approve")
      *
-     * @param Request             $request
-     * @param Group               $group
-     * @param Logger              $logger
+     * @param Request $request
+     * @param Group   $group
+     * @param Logger  $logger
      *
      * @throws Exception
      *

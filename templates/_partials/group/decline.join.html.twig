@@ -1,0 +1,4 @@
+<p>
+    {% trans with {'%username%': member.Username} %}email.greeting{% endtrans %}<br><br>
+    {% trans with {'%admin%': admin.Username, '%group_start%': group_start, '%group_end': group_end, '%groupname%': group.Name} %}%admin% declined your application for %group_start%"%groupname%"%group_end%.{% endtrans %}</p>
+<p>{{ 'email.farewell' | trans }}</p>

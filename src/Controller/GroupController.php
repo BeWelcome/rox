@@ -6,10 +6,7 @@ use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\GroupTypeType;
 use App\Entity\Group;
 use App\Entity\GroupMembership;
-use App\Entity\Language;
 use App\Entity\Member;
-use App\Entity\MemberTranslation;
-use App\Entity\Preference;
 use App\Entity\Wiki;
 use App\Form\CustomDataClass\GroupRequest;
 use App\Form\GroupType;
@@ -22,8 +19,6 @@ use App\Repository\WikiRepository;
 use App\Utilities\MailerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Exception;
 use Intervention\Image\ImageManagerStatic as Image;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -35,17 +30,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class GroupController.
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class GroupController extends AbstractController
 {
-    use TranslatorTrait, TranslatedFlashTrait;
     use MailerTrait;
+    use TranslatorTrait;
+    use TranslatedFlashTrait;
 
     /**
      * @var GroupModel
@@ -61,9 +57,14 @@ class GroupController extends AbstractController
      * @Route("/group/{groupId}/join", name="join_group")
      *
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
+     *
      * @param Request $request
-     * @param Group $group
+     * @param Group   $group
+     *
      * @return Response
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function join(Request $request, Group $group)
     {
@@ -76,16 +77,26 @@ class GroupController extends AbstractController
 
         if (GroupTypeType::INVITE_ONLY === $group->getType()) {
             $this->addTranslatedFlash('notice', 'flash.group.need.invite');
+
             return $this->redirectToRoute('groups');
         }
 
+        /** @var GroupMembership $membership */
+        $membership = $group->getGroupMembership($member);
         if (GroupTypeType::NEED_ACCEPTANCE === $group->getType()) {
             // Check if a join request is currently open
-            $membership = $group->getGroupMembership($member);
 
             if (false !== $membership) {
                 $this->addTranslatedFlash('notice', 'flash.group.already.applied');
-                return $this->redirectToRoute('group_start', [ 'group_id' => $group->getId()]);
+
+                return $this->redirectToRoute('group_start', ['group_id' => $group->getId()]);
+            }
+        }
+
+        if (GroupTypeType::PUBLIC === $group->getType()) {
+            if (false !== $membership && GroupMembershipStatusType::INVITED_INTO_GROUP === $membership->getStatus()) {
+                // Accept the invitation
+                return $this->acceptInviteToGroup($group, $member);
             }
         }
 
@@ -105,7 +116,8 @@ class GroupController extends AbstractController
             } else {
                 $this->addTranslatedFlash('notice', 'flash.group.join.failure');
             }
-            return $this->redirectToRoute('group_start', [ 'group_id' => $group->getId()]);
+
+            return $this->redirectToRoute('group_start', ['group_id' => $group->getId()]);
         }
 
         return $this->render('group/join.html.twig', [
@@ -114,7 +126,7 @@ class GroupController extends AbstractController
             'submenu' => [
                 'active' => 'join',
                 'items' => $this->getSubmenuItems($member, $group),
-            ]
+            ],
         ]);
     }
 
@@ -124,8 +136,11 @@ class GroupController extends AbstractController
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
      * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
      *
-     * @param Group $group
+     * @param Group  $group
      * @param Member $member
+     *
+     * @return RedirectResponse
+     * @throws AccessDeniedException
      */
     public function approveJoin(Group $group, Member $member)
     {
@@ -134,22 +149,32 @@ class GroupController extends AbstractController
             throw $this->createAccessDeniedException('No group admin');
         }
 
-        $this->groupModel->acceptJoin($group, $member, $admin);
+        if ($this->groupModel->acceptJoin($group, $member, $admin)) {
+            $this->addTranslatedFlash('notice', 'flash.group.accepted.join', [
+                'name' => $group->getName(),
+                'username' => $member->getUsername(),
+            ]);
+        } else {
+            $this->addTranslatedFlash('notice', 'flash.group.membershipstatus.not.changed', [
+                'name' => $group->getName(),
+                'username' => $member->getUsername(),
+            ]);
+        }
 
-        $this->addTranslatedFlash('notice', 'flash.group.accepted.join', [
-            'name' => $group->getName(),
-            'username' => $member->getUsername(),
-        ]);
+        return $this->redirectToRoute('group_start', ['group_id' => $group->getId()]);
     }
 
     /**
-     * @Route("/group/{groupId}/declinejoin/{memberId}", name="group_accept_join")
+     * @Route("/group/{groupId}/declinejoin/{memberId}", name="group_decline_join")
      *
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
      * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
      *
-     * @param Group $group
+     * @param Group  $group
      * @param Member $member
+     *
+     * @return RedirectResponse
+     * @throws AccessDeniedException
      */
     public function declineJoin(Group $group, Member $member)
     {
@@ -158,12 +183,19 @@ class GroupController extends AbstractController
             throw $this->createAccessDeniedException('No group admin');
         }
 
-        $this->groupModel->declineJoin($group, $member, $admin);
+        if ($this->groupModel->declineJoin($group, $member, $admin)) {
+            $this->addTranslatedFlash('notice', 'flash.group.declined.join', [
+                'name' => $group->getName(),
+                'username' => $member->getUsername(),
+            ]);
+        } else {
+            $this->addTranslatedFlash('notice', 'flash.group.membershipstatus.not.changed', [
+                'name' => $group->getName(),
+                'username' => $member->getUsername(),
+            ]);
+        }
 
-        $this->addTranslatedFlash('notice', 'flash.group.declined.join', [
-            'name' => $group->getName(),
-            'username' => $member->getUsername(),
-        ]);
+        return $this->redirectToRoute('group_start', ['group_id' => $group->getId()]);
     }
 
     /**
@@ -172,11 +204,12 @@ class GroupController extends AbstractController
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
      * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
      *
-     * @param Group $group
+     * @param Group  $group
      * @param Member $member
      *
-     * @return JsonResponse
      * @throws AccessDeniedException
+     *
+     * @return JsonResponse
      */
     public function inviteMemberToGroup(Group $group, Member $member)
     {
@@ -199,7 +232,7 @@ class GroupController extends AbstractController
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
      * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
      *
-     * @param Group $group
+     * @param Group  $group
      * @param Member $member
      *
      * @return RedirectResponse
@@ -216,7 +249,7 @@ class GroupController extends AbstractController
             $this->addTranslatedFlash('error', 'flash.invite.accepted.error');
         }
 
-        return $this->redirectToRoute('group_start', [ 'group_id' => $group->getId()]);
+        return $this->redirectToRoute('group_start', ['group_id' => $group->getId()]);
     }
 
     /**
@@ -225,7 +258,7 @@ class GroupController extends AbstractController
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
      * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
      *
-     * @param Group $group
+     * @param Group  $group
      * @param Member $member
      *
      * @return RedirectResponse
@@ -242,20 +275,7 @@ class GroupController extends AbstractController
             $this->addTranslatedFlash('error', 'flash.invite.declined.error');
         }
 
-        return $this->redirectToRoute('group_start', [ 'group_id' => $group->getId()]);
-    }
-
-    /**
-     * @param Group $group
-     * @param Member $member
-     * @param Member[] $admins
-     */
-    private function sendAdminNotification(Group $group, Member $member, Member ...$admins)
-    {
-        // \todo
-        $group;
-        $member;
-        $admins;
+        return $this->redirectToRoute('group_start', ['group_id' => $group->getId()]);
     }
 
     /**
@@ -265,20 +285,19 @@ class GroupController extends AbstractController
      * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
      *
      * @param Request $request
-     * @param Group $group
-     * @param Member $member
-     * @param TranslatorInterface $translator
+     * @param Group   $group
+     * @param Member  $member
      *
      * @return RedirectResponse
      */
-    public function withdrawInviteMemberGroup(Request $request, Group $group, Member $member, TranslatorInterface $translator)
+    public function withdrawInviteMemberGroup(Request $request, Group $group, Member $member)
     {
         $success = $this->groupModel->withdrawInviteMemberToGroup($group, $member);
 
         if ($success) {
-            $this->addFlash('notice', $translator->trans('flash.group.invite.withdrawn'));
+            $this->addTranslatedFlash('notice', 'flash.group.invite.withdrawn');
         } else {
-            $this->addFlash('error', $translator->trans('flash.group.invite.withdrawn.error'));
+            $this->addTranslatedFlash('error', 'flash.group.invite.withdrawn.error');
         }
         $referer = $request->headers->get('referer');
 
@@ -288,9 +307,8 @@ class GroupController extends AbstractController
     /**
      * @Route("/new/group", name="new_group")
      *
-     * @param Request             $request
-     * @param TranslatorInterface $translator
-     * @param Logger              $logger
+     * @param Request $request
+     * @param Logger  $logger
      *
      * @throws Exception
      *
@@ -299,7 +317,7 @@ class GroupController extends AbstractController
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * Because of the mix between old code and new code this method is way too long.
      */
-    public function createNewGroup(Request $request, TranslatorInterface $translator, Logger $logger)
+    public function createNewGroup(Request $request, Logger $logger)
     {
         $groupRequest = new GroupRequest();
         $form = $this->createForm(GroupType::class, $groupRequest);
@@ -358,13 +376,12 @@ class GroupController extends AbstractController
         ]);
     }
 
-
     /**
      * @Route("/group/{id}/wiki", name="group_wiki_page")
      *
-     * @param Group $group
-     *
+     * @param Group     $group
      * @param WikiModel $wikiModel
+     *
      * @return Response
      */
     public function showGroupWikiPage(Group $group, WikiModel $wikiModel)
@@ -393,6 +410,23 @@ class GroupController extends AbstractController
             ],
             'wikipage' => $output,
         ]);
+    }
+
+    /**
+     * @param Group    $group
+     * @param Member   $member
+     * @param Member[] $admins
+     */
+    private function sendAdminNotification(Group $group, Member $member, $admins)
+    {
+        foreach ($admins as $admin) {
+            $this->sendTemplateEmail('group@bewelcome.org', $admin, 'group/accept.invite', [
+                'subject' => 'group.invitation.accepted',
+                'group' => $group,
+                'invitee' => $member,
+                'admin' => $admin,
+            ]);
+        }
     }
 
     /**
@@ -488,10 +522,10 @@ class GroupController extends AbstractController
         $admins = $group->getAdmins();
 
         if (!empty($admins)) {
-            foreach($admins as $admin)
-            {
+            foreach ($admins as $admin) {
                 $this->sendTemplateEmail('group@bewelcome.org', $admin, 'group.approve.join', [
-                    'member' => $member
+                    'subject' => 'group.join.approved',
+                    'member' => $member,
                 ]);
             }
         }

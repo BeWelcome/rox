@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Utilities;
-
 
 trait UniqueFilenameTrait
 {

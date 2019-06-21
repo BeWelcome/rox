@@ -179,6 +179,9 @@
     "judev/php-htmltruncator": {
         "version": "1.1.0"
     },
+    "league/html-to-markdown": {
+        "version": "4.8.1"
+    },
     "lorenzo/pinky": {
         "version": "1.0.4"
     },
@@ -370,6 +373,9 @@
             "version": "3.3",
             "ref": "e3868d2f4a5104f19f844fe551099a00c6562527"
         }
+    },
+    "symfony/contracts": {
+        "version": "v1.1.0"
     },
     "symfony/css-selector": {
         "version": "v4.3.0"
@@ -641,6 +647,24 @@
             "version": "3.3",
             "ref": "dae9b39fd6717970be7601101ce5aa960bf53d9a"
         }
+    },
+    "symfony/webpack-encore-bundle": {
+        "version": "1.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.0",
+            "ref": "e33393e32759195f8e10c9d4faceb0d232a7e1de"
+        },
+        "files": [
+            "./assets/css/app.css",
+            "./assets/js/app.js",
+            "./config/packages/assets.yaml",
+            "./config/packages/prod/webpack_encore.yaml",
+            "./config/packages/webpack_encore.yaml",
+            "./package.json",
+            "./webpack.config.js"
+        ]
     },
     "symfony/yaml": {
         "version": "v4.1.6"

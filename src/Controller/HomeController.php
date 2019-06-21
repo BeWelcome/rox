@@ -18,6 +18,7 @@ class HomeController extends AbstractController
      * @Route("/", name="homepage")
      *
      * @param StatisticsModel $statisticsModel
+     *
      * @return Response
      */
     public function indexAction(StatisticsModel $statisticsModel)

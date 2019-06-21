@@ -27,16 +27,16 @@ class SearchAdapter implements AdapterInterface
     /**
      * SearchAdapter constructor.
      *
-     * @param SearchFormRequest $data The query parameters for the search
-     * @param SessionInterface $session
-     * @param string $dbHost
-     * @param string $dbName
-     * @param string $dbUser
-     * @param string $dbPassword
+     * @param SearchFormRequest      $data       The query parameters for the search
+     * @param SessionInterface       $session
+     * @param string                 $dbHost
+     * @param string                 $dbName
+     * @param string                 $dbUser
+     * @param string                 $dbPassword
      * @param EntityManagerInterface $em
-     *
-     * @param TranslatorInterface $translator
+     * @param TranslatorInterface    $translator
      * @SuppressWarnings(PHPMD.StaticAccess)
+     *
      * @throws AccessDeniedException
      */
     public function __construct($data, $session, $dbHost, $dbName, $dbUser, $dbPassword, EntityManagerInterface $em, TranslatorInterface $translator)

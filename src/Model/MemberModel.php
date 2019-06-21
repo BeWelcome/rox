@@ -5,6 +5,8 @@ namespace App\Model;
 use App\Entity\Member;
 use App\Entity\PasswordReset;
 use App\Utilities\ManagerTrait;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Exception as Exception;
 
 class MemberModel
@@ -14,8 +16,8 @@ class MemberModel
     /**
      * @param Member $member
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      *
      * @return string
      */

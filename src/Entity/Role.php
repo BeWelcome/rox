@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Roles
+ * Roles.
  *
  * @ORM\Table(name="roles", uniqueConstraints={@ORM\UniqueConstraint(name="name", columns={"name"})})
  * @ORM\Entity
@@ -35,10 +35,8 @@ class Role
      */
     private $id;
 
-
-
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -52,7 +50,7 @@ class Role
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -62,7 +60,7 @@ class Role
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
      *
@@ -76,7 +74,7 @@ class Role
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -86,9 +84,9 @@ class Role
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

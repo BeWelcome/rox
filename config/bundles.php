@@ -22,4 +22,5 @@ return [
     Twig\CssInliner\Bundle\TwigCssInlinerBundle::class => ['all' => true],
     Twig\Inky\Bundle\TwigInkyBundle::class => ['all' => true],
     Twig\Markdown\Bundle\TwigMarkdownBundle::class => ['all' => true],
+    Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
 ];

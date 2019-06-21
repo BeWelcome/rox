@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use App\Entity\HostingRequest;
-use Exception;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;

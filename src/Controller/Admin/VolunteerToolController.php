@@ -74,8 +74,9 @@ class VolunteerToolController extends AbstractController
      * @param TranslatorInterface $translator
      * @param Logger              $logger
      *
-     * @return Response|RedirectResponse
      * @throws Exception
+     *
+     * @return Response|RedirectResponse
      */
     public function changeUsernameAction(Request $request, TranslatorInterface $translator, Logger $logger)
     {
@@ -142,9 +143,9 @@ class VolunteerToolController extends AbstractController
      * @param Request $request
      * @param Logger  $logger
      *
-     * @return Response|RedirectResponse
      *@throws Exception
      *
+     * @return Response|RedirectResponse
      */
     public function findUserAction(Request $request, Logger $logger)
     {

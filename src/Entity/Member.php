@@ -2925,9 +2925,10 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
             // Language doesn't exist but should!
             // Return English in this case
             $language = $languageRepository->findOneBy([
-                'shortcode' => 'en'
+                'shortcode' => 'en',
             ]);
         }
+
         return $language;
     }
 
@@ -2967,7 +2968,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      *
      * @param ObjectManager $objectManager
      * @param ClassMetadata $classMetadata
-     * @return void
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)

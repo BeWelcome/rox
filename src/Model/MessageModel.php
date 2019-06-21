@@ -6,11 +6,9 @@ use App\Doctrine\DeleteRequestType;
 use App\Doctrine\InFolderType;
 use App\Doctrine\MessageStatusType;
 use App\Doctrine\SpamInfoType;
-use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
-use App\Form\HostingRequestType;
 use App\Repository\MessageRepository;
 use App\Utilities\MailerTrait;
 use App\Utilities\ManagerTrait;
@@ -483,14 +481,16 @@ class MessageModel
      * Creates a new message and stores it into the database afterwards sends an notification to the receiver
      * Only used for messages therefore request is set to null!
      *
-     * @param Member $sender
-     * @param Member $receiver
+     * @param Member       $sender
+     * @param Member       $receiver
      * @param Message|null $parent
      * @param $subjectText
      * @param $body
-     * @return Message
+     *
      * @throws ORMException
      * @throws OptimisticLockException
+     *
+     * @return Message
      */
     public function addMessage(Member $sender, Member $receiver, ?Message $parent, $subjectText, $body)
     {
@@ -524,6 +524,7 @@ class MessageModel
             'subject' => $subjectText,
             'body' => $body,
         ]);
+
         return $message;
     }
 }

@@ -4,7 +4,6 @@ namespace App\Twig;
 
 use App\Model\LanguageModel;
 use Carbon\Carbon;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use HtmlTruncator\InvalidHtmlException;
 use HtmlTruncator\Truncator;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -41,9 +40,9 @@ class Extension extends AbstractExtension implements GlobalsInterface
     /**
      * Extension constructor.
      *
-     * @param SessionInterface $session
+     * @param SessionInterface    $session
      * @param TranslatorInterface $translator
-     * @param LanguageModel $languageModel
+     * @param LanguageModel       $languageModel
      * @param $dataDirectory
      */
     public function __construct(SessionInterface $session, TranslatorInterface $translator, LanguageModel $languageModel, $dataDirectory)

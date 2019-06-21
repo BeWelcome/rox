@@ -192,9 +192,11 @@ class LandingController extends AbstractController
      * @Route("/", name="landingpage")
      *
      * @param CommunityNewsModel $communityNewsModel
-     * @param DonateModel $donateModel
-     * @return Response
+     * @param DonateModel        $donateModel
+     *
      * @throws AccessDeniedException
+     *
+     * @return Response
      */
     public function indexAction(CommunityNewsModel $communityNewsModel, DonateModel $donateModel)
     {

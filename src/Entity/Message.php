@@ -518,8 +518,9 @@ class Message
     /**
      * Get firstRead.
      *
-     * @return Carbon
      * @throws Exception
+     *
+     * @return Carbon
      */
     public function getFirstRead()
     {

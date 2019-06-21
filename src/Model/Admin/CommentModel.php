@@ -4,7 +4,6 @@ namespace App\Model\Admin;
 
 use App\Entity\Comment;
 use App\Entity\Member;
-use App\Model\BaseModel;
 use App\Repository\CommentRepository;
 use App\Utilities\ManagerTrait;
 use Pagerfanta\Pagerfanta;

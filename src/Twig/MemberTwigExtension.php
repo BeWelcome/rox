@@ -13,8 +13,6 @@ use App\Repository\CommentRepository;
 use App\Repository\MessageRepository;
 use App\Repository\NotificationRepository;
 use App\Utilities\ManagerTrait;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Router;
@@ -50,9 +48,9 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
     /**
      * MemberTwigExtension constructor.
      *
-     * @param SessionInterface       $session
-     * @param RouterInterface        $router
-     * @param Security               $security
+     * @param SessionInterface $session
+     * @param RouterInterface  $router
+     * @param Security         $security
      */
     public function __construct(
         SessionInterface $session,

@@ -10,27 +10,25 @@ use Doctrine\DBAL\Statement;
 use EnvironmentExplorer;
 use PDO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use \Doctrine\DBAL\DBALException;
 
 class LegacyController extends AbstractController
 {
     /**
-     * @param Request $request
-     * @param TranslatorInterface $translator
-     *
+     * @param Request               $request
+     * @param TranslatorInterface   $translator
      * @param ParameterBagInterface $params
-     * @return Response
      *
      * @throws AccessDeniedException
-     * @SuppressWarnings(PHPMD.StaticAccess)
      *
+     * @return Response
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function showAction(Request $request, TranslatorInterface $translator, ParameterBagInterface $params)
     {

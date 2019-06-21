@@ -6,30 +6,31 @@
     <p>{{ 'group.join.abstract' | trans }}</p>
     {{ form_start(form, { 'attr': { 'novalidate': 'novalidate'}}) }}
     <div class="row">
-    <div class="col-12 col-md-6">
-    {{ form_row(form.reason) }}
-    </div>
-    <div class="col-12 col-md-6">
-        <label class="">{{ form.notifications.vars.label|trans }}</label>
+        <div class="col-12 col-md-6 mb-1">
+            {{ form_row(form.reason) }}
+        </div>
+        <div class="col-12 col-md-6 mb-1">
+            <label class="">{{ form.notifications.vars.label|trans }}</label>
 
-    <div class="btn-group w-100" data-toggle="buttons">
+            <div class="btn-group w-100" data-toggle="buttons">
 
-        {% for key, item in form.notifications.children %}
-            <label for="{{item.vars.id}}" class="btn btn-primary btn-radio{{ item.vars.checked ? ' active' : '' }}">
-            <input
-                type="radio"
-                value="{{item.vars.value}}"
-                id="{{item.vars.id}}"
-                name="{{item.vars.full_name}}"
-                class="form-control noradio"
-                {{ item.vars.checked ? 'checked' : '' }}
-            >{{item.vars.label | trans}}</label>
-            {% do item.setRendered %}
-        {% endfor %}
-    </div>
-    </div>
+                {% for key, item in form.notifications.children %}
+                    <label for="{{ item.vars.id }}"
+                           class="btn btn-primary btn-radio{{ item.vars.checked ? ' active' : '' }}">
+                        <input
+                            type="radio"
+                            value="{{ item.vars.value }}"
+                            id="{{ item.vars.id }}"
+                            name="{{ item.vars.full_name }}"
+                            class="form-control noradio"
+                            {{ item.vars.checked ? 'checked' : '' }}
+                        >{{ item.vars.label | trans }}</label>
+                    {% do item.setRendered %}
+                {% endfor %}
+            </div>
+        </div>
         <div class="col-12">
-    {{ form_row(form.join, { 'attr': { 'class': 'btn-primary pull-right'}}) }}
+            {{ form_row(form.join, { 'attr': { 'class': 'btn-primary pull-right'}}) }}
         </div>
     </div>
     {{ form_end(form) }}

@@ -1,0 +1,5 @@
+{% trans with {'%username%': admin.Username} %}email.greeting{% endtrans %}
+
+{% trans with {'%username%': invitee.Username, '%groupname%': group.Name} %}%username% declined the invitation to "%groupname%".{% endtrans %}
+</p>
+<p>{{ 'email.farewell' | trans }}</p>

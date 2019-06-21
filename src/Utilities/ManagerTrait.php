@@ -2,7 +2,6 @@
 
 namespace App\Utilities;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -13,6 +12,7 @@ trait ManagerTrait
 
     /**
      * @required
+     *
      * @param EntityManagerInterface $entityManager
      */
     public function setManager(EntityManagerInterface $entityManager)

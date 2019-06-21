@@ -325,14 +325,6 @@ class GroupMembership
     }
 
     /**
-     * Sets the comment for the membership.
-     */
-    private function setComment($commentId)
-    {
-        $this->comment = $commentId;
-    }
-
-    /**
      * Remove a comment from the membership.
      *
      * @param MemberTranslation $comment
@@ -384,5 +376,15 @@ class GroupMembership
     public function getComments(): Collection
     {
         return $this->comments;
+    }
+
+    /**
+     * Sets the comment for the membership.
+     *
+     * @param mixed $commentId
+     */
+    private function setComment($commentId)
+    {
+        $this->comment = $commentId;
     }
 }

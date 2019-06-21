@@ -3,7 +3,6 @@
 
 namespace App\Tests\Model;
 
-
 use App\Entity\HostingRequest;
 use App\Model\HostingRequestModel;
 use DateInterval;

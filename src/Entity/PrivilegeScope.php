@@ -6,7 +6,7 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Privilege scopes
+ * Privilege scopes.
  *
  * @ORM\Table(name="privilegescopes")
  * @ORM\Entity
@@ -59,10 +59,8 @@ class PrivilegeScope
      */
     private $type;
 
-
-
     /**
-     * Set updated
+     * Set updated.
      *
      * @param DateTime $updated
      *
@@ -76,7 +74,7 @@ class PrivilegeScope
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return DateTime
      */
@@ -86,9 +84,9 @@ class PrivilegeScope
     }
 
     /**
-     * Set idmember
+     * Set idmember.
      *
-     * @param integer $member
+     * @param int $member
      *
      * @return PrivilegeScope
      */
@@ -100,7 +98,7 @@ class PrivilegeScope
     }
 
     /**
-     * Get member
+     * Get member.
      *
      * @return Member
      */
@@ -110,7 +108,7 @@ class PrivilegeScope
     }
 
     /**
-     * Set role
+     * Set role.
      *
      * @param Role $role
      *
@@ -124,7 +122,7 @@ class PrivilegeScope
     }
 
     /**
-     * Get role
+     * Get role.
      *
      * @return Role
      */
@@ -134,7 +132,7 @@ class PrivilegeScope
     }
 
     /**
-     * Set privilege
+     * Set privilege.
      *
      * @param Privilege $privilege
      *
@@ -148,7 +146,7 @@ class PrivilegeScope
     }
 
     /**
-     * Get privilege
+     * Get privilege.
      *
      * @return Privilege
      */
@@ -158,7 +156,7 @@ class PrivilegeScope
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param string $type
      *
@@ -172,7 +170,7 @@ class PrivilegeScope
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return string
      */

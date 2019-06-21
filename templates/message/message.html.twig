@@ -9,22 +9,49 @@
 {% endblock %}
 
 {% block javascripts %}
-<!--    <script src="{{ asset('build/roxeditor.js') }}"></script> -->
+    <!--    <script src="{{ asset('build/roxeditor.js') }}"></script> -->
 {% endblock %}
 
 {% block content %}
-    <div class="col-12 my-3"><h2>{{ 'message.write_to' | trans | format(receiver.Username) }}</h2></div>
+    <div class="row">
+        <div class="col-12 bg-white p-1">
+            {% set myself = app.user %}
+            <div class="pull-left d-none d-md-block">{{ macros.avatarstack(receiver.Username, 50, false) }}
+                <br/><strong>{{ receiver.city.name }}, {{ receiver.city.country.name }}</strong>
+            </div>
+            <div class="col">
+                <h2>{{ 'message.write_to' | trans | format(receiver.Username) }}</h2>
+                <small class="text-muted">                {{ 'Speaks' | trans }}
+                    {% for level in receiver.languageLevels %}
+                        {% spaceless %}
+                            {{ ('lang_' ~ level.language.shortcode) | trans }}<span class="d-none d-md-inline">
+                            - {{ ('languagelevel_' ~ level.level) | lower | trans }}</span>
+                            {%- if not loop.last -%}
+                                ,
+                            {%- endif -%}
+                        {% endspaceless %}
 
-    <div class="col-12">
-        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-        {{ form_errors(form) }}
-        {{ form_row(form.subject.subject) }}
-        {{ form_row(form.message) }}
-        {{ form_rest(form) }}
-    </div>
+                    {% endfor %}
+                </small>
+                <small class="d-block text-muted pull-right">
+                    <a href="{{ url('all_messages_with', {'username': receiver.Username}) }}">
+                        <i class="fa fa-comments"></i> {{ 'messages_allmessageswith' | trans | format(receiver.Username) }}
+                    </a>
+                </small>
+            </div>
+        </div>
 
-    <div class="col-12">
-        <button type="submit" class="btn btn-primary">{{ 'message.send' | trans }}</button>
+        <div class="col-12">
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+            {{ form_errors(form) }}
+            {{ form_row(form.subject.subject) }}
+            {{ form_row(form.message) }}
+            {{ form_rest(form) }}
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">{{ 'message.send' | trans }}</button>
+        </div>
+        {{ form_end(form) }}
     </div>
-    {{ form_end(form) }}
 {% endblock %}

@@ -11,20 +11,16 @@ use App\Entity\Subject;
 use App\Form\HostingRequestGuest;
 use App\Form\HostingRequestHost;
 use App\Model\HostingRequestModel;
-use App\Repository\MessageRepository;
 use App\Utilities\MailerTrait;
-use InvalidArgumentException;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Exception;
+use InvalidArgumentException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * Class HostingRequestController.
@@ -47,12 +43,12 @@ class HostingRequestController extends BaseMessageController
      * @param Request $request
      * @param Message $message
      *
-     * @return RedirectResponse
      * @throws InvalidArgumentException
-     *
      * @throws AccessDeniedException
+     *
+     * @return RedirectResponse
      */
-    public function replyToHostingRequestAction(Request $request, Message $message)
+    public function replyToHostingRequestAction(Message $message)
     {
         if (!$this->isMessageOfMember($message)) {
             throw $this->createAccessDeniedException('Not your message/hosting request');
@@ -96,6 +92,7 @@ class HostingRequestController extends BaseMessageController
      * @ParamConverter("parent", class="App\Entity\Message", options={"id": "parentId"})
      *
      * @param Message $parent
+     *
      * @return Response
      */
     public function hostingRequestGuestReply(Request $request, Message $hostingRequest, Message $parent)
@@ -157,6 +154,7 @@ class HostingRequestController extends BaseMessageController
      * @ParamConverter("parent", class="App\Entity\Message", options={"id": "parentId"})
      *
      * @param Message $parent
+     *
      * @return Response
      */
     public function hostingRequestHostReply(Request $request, Message $hostingRequest, Message $parent)
@@ -212,10 +210,10 @@ class HostingRequestController extends BaseMessageController
      *
      * @param Message $message
      *
-     * @return Response
-     *
      * @throws AccessDeniedException
      * @throws Exception
+     *
+     * @return Response
      */
     public function show(Message $message)
     {
@@ -333,11 +331,11 @@ class HostingRequestController extends BaseMessageController
      *     defaults={"folder": "inbox"})
      *
      * @param Request $request
-     * @param string $folder
-     *
-     * @return Response
+     * @param string  $folder
      *
      * @throws InvalidArgumentException
+     *
+     * @return Response
      */
     public function requests(Request $request, $folder)
     {
@@ -351,6 +349,29 @@ class HostingRequestController extends BaseMessageController
         $messages = $this->messageModel->getFilteredRequests($member, $folder, $sort, $direction, $page, $limit);
 
         return $this->handleFolderRequest($request, $folder, $messages, 'requests');
+    }
+
+    /**
+     * @param Member  $guest
+     * @param Member  $host
+     * @param Message $request
+     * @param mixed   $subject
+     */
+    protected function sendGuestReplyNotification(Member $host, Member $guest, Message $request, $subject)
+    {
+        $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'reply_from_guest');
+    }
+
+    /**
+     * @param Message $hostingRequest
+     *
+     * @return bool
+     */
+    protected function checkRequestExpired(Message $hostingRequest)
+    {
+        $requestModel = new HostingRequestModel();
+
+        return $requestModel->checkRequestExpired($hostingRequest->getRequest());
     }
 
     private function sendRequestNotification(Member $sender, Member $receiver, Member $host, Message $request, $subject, $template)
@@ -387,28 +408,6 @@ class HostingRequestController extends BaseMessageController
     private function sendHostReplyNotification(Member $host, Member $guest, Message $request, $subject)
     {
         $this->sendRequestNotification($host, $guest, $host, $request, $subject, 'reply_from_host');
-    }
-
-    /**
-     * @param Member  $guest
-     * @param Member  $host
-     * @param Message $request
-     * @param mixed   $subject
-     */
-    protected function sendGuestReplyNotification(Member $host, Member $guest, Message $request, $subject)
-    {
-        $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'reply_from_guest');
-    }
-
-    /**
-     * @param Message $hostingRequest
-     * @return bool
-     */
-    protected function checkRequestExpired(Message $hostingRequest)
-    {
-        $requestModel = new HostingRequestModel();
-
-        return $requestModel->checkRequestExpired($hostingRequest->getRequest());
     }
 
     /**
@@ -533,10 +532,9 @@ class HostingRequestController extends BaseMessageController
             }
         }
 
-
         if (HostingRequest::REQUEST_ACCEPTED === $newRequest->getRequest()->getStatus()) {
             if (false === strpos('(Accepted)', $subject)) {
-                $subject = $subject . ' (Accepted)';
+                $subject = $subject.' (Accepted)';
             }
         }
 

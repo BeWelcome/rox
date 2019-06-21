@@ -1,6 +1,29 @@
 .wrapper {
     width: 100%; }
 
+.header {
+    background: #f37000; }
+
+.header .columns {
+    padding-bottom: 0; }
+
+.header p {
+    color: #fff;
+    margin-bottom: 0; }
+
+.header .wrapper-inner {
+    padding: 20px;
+    /*controls the height of the header*/ }
+
+.header .container {
+    background: #f37000; }
+
+.wrapper.secondary {
+    background: #777777; }
+
+.wrapper {
+    width: 100%; }
+
 #outlook a {
     padding: 0; }
 
@@ -18,6 +41,7 @@ body {
 
 .ExternalClass {
     width: 100%; }
+
 .ExternalClass,
 .ExternalClass p,
 .ExternalClass span,
@@ -80,13 +104,6 @@ table.body {
     width: 100%; }
 
 table.container {
-    background: #f37000;
-    width: 580px;
-    margin: 0 auto;
-    Margin: 0 auto;
-    text-align: inherit; }
-
-table.container.secondary {
     background: #fefefe;
     width: 580px;
     margin: 0 auto;
@@ -100,6 +117,7 @@ table.row {
 
 table.spacer {
     width: 100%; }
+
 table.spacer td {
     mso-line-height-rule: exactly; }
 
@@ -114,6 +132,7 @@ th.column {
     Margin: 0 auto;
     padding-left: 16px;
     padding-bottom: 16px; }
+
 td.columns .column,
 td.columns .columns,
 td.column .column,
@@ -124,6 +143,7 @@ th.column .column,
 th.column .columns {
     padding-left: 0 !important;
     padding-right: 0 !important; }
+
 td.columns .column center,
 td.columns .columns center,
 td.column .column center,
@@ -679,6 +699,7 @@ table.container.radius {
 .block-grid {
     width: 100%;
     max-width: 580px; }
+
 .block-grid td {
     display: inline-block;
     padding: 8px; }
@@ -791,6 +812,7 @@ th.float-center {
     font-size: 0;
     width: 0;
     line-height: 0; }
+
 @media only screen and (max-width: 596px) {
     .hide-for-large {
         display: block !important;
@@ -884,9 +906,11 @@ th {
 p {
     margin-bottom: 10px;
     Margin-bottom: 10px; }
+
 p.lead {
     font-size: 20px;
     line-height: 1.6; }
+
 p.subheader {
     margin-top: 4px;
     margin-bottom: 8px;
@@ -901,14 +925,17 @@ small {
     color: #cacaca; }
 
 a {
-    color: #2199e8;
+    color: #f37000;
     text-decoration: none; }
+
 a:hover {
-    color: #147dc2; }
+    color: #c05800; }
+
 a:active {
-    color: #147dc2; }
+    color: #c05800; }
+
 a:visited {
-    color: #2199e8; }
+    color: #f37000; }
 
 h1 a,
 h1 a:visited,
@@ -922,23 +949,27 @@ h5 a,
 h5 a:visited,
 h6 a,
 h6 a:visited {
-    color: #2199e8; }
+    color: #f37000; }
 
 pre {
     background: #f3f3f3;
     margin: 30px 0;
     Margin: 30px 0; }
+
 pre code {
     color: #cacaca; }
+
 pre code span.callout {
     color: #8a8a8a;
     font-weight: bold; }
+
 pre code span.callout-strong {
     color: #ff6908;
     font-weight: bold; }
 
 table.hr {
     width: 100%; }
+
 table.hr th {
     height: 0;
     max-width: 580px;
@@ -953,6 +984,7 @@ table.hr th {
 .stat {
     font-size: 40px;
     line-height: 1; }
+
 p + .stat {
     margin-top: -16px;
     Margin-top: -16px; }
@@ -973,11 +1005,13 @@ table.button {
     width: auto;
     margin: 0 0 16px 0;
     Margin: 0 0 16px 0; }
+
 table.button table td {
     text-align: left;
     color: #fefefe;
-    background: #2199e8;
-    border: 2px solid #2199e8; }
+    background: #f37000;
+    border: 2px solid #f37000; }
+
 table.button table td a {
     font-family: Helvetica, Arial, sans-serif;
     font-size: 16px;
@@ -986,11 +1020,13 @@ table.button table td a {
     text-decoration: none;
     display: inline-block;
     padding: 8px 16px 8px 16px;
-    border: 0 solid #2199e8;
+    border: 0 solid #f37000;
     border-radius: 3px; }
+
 table.button.radius table td {
     border-radius: 3px;
     border: none; }
+
 table.button.rounded table td {
     border-radius: 500px;
     border: none; }
@@ -1029,15 +1065,18 @@ table.button.large table a {
 table.button.expand,
 table.button.expanded {
     width: 100% !important; }
+
 table.button.expand table,
 table.button.expanded table {
     width: 100%; }
+
 table.button.expand table a,
 table.button.expanded table a {
     text-align: center;
     width: 100%;
     padding-left: 0;
     padding-right: 0; }
+
 table.button.expand center,
 table.button.expanded center {
     min-width: 0; }
@@ -1045,13 +1084,13 @@ table.button.expanded center {
 table.button:hover table td,
 table.button:visited table td,
 table.button:active table td {
-    background: #147dc2;
+    background: #c05800;
     color: #fefefe; }
 
 table.button:hover table a,
 table.button:visited table a,
 table.button:active table a {
-    border: 0 solid #147dc2; }
+    border: 0 solid #c05800; }
 
 table.button.secondary table td {
     background: #777777;
@@ -1126,22 +1165,27 @@ th.callout-inner {
     border: 1px solid #cbcbcb;
     padding: 10px;
     background: #fefefe; }
+
 th.callout-inner.primary {
-    background: #def0fc;
+    background: #ffe9d7;
     border: 1px solid #444444;
     color: #0a0a0a; }
+
 th.callout-inner.secondary {
     background: #ebebeb;
     border: 1px solid #444444;
     color: #0a0a0a; }
+
 th.callout-inner.success {
     background: #e1faea;
     border: 1px solid #1b9448;
     color: #fefefe; }
+
 th.callout-inner.warning {
     background: #fff3d9;
     border: 1px solid #996800;
     color: #fefefe; }
+
 th.callout-inner.alert {
     background: #fce6e2;
     border: 1px solid #b42912;
@@ -1156,24 +1200,28 @@ th.callout-inner.alert {
     transition: box-shadow 200ms ease-out;
     border-radius: 3px;
     margin-bottom: 16px; }
+
 .thumbnail:hover, .thumbnail:focus {
-    box-shadow: 0 0 6px 1px rgba(33, 153, 232, 0.5); }
+    box-shadow: 0 0 6px 1px rgba(243, 112, 0, 0.5); }
 
 table.menu {
     width: 580px; }
+
 table.menu td.menu-item,
 table.menu th.menu-item {
     padding: 10px;
     padding-right: 10px; }
+
 table.menu td.menu-item a,
 table.menu th.menu-item a {
-    color: #2199e8; }
+    color: #f37000; }
 
 table.menu.vertical td.menu-item,
 table.menu.vertical th.menu-item {
     padding: 10px;
     padding-right: 0;
     display: block; }
+
 table.menu.vertical td.menu-item a,
 table.menu.vertical th.menu-item a {
     width: 100%; }
@@ -1353,34 +1401,3 @@ body.outlook p {
     table.button.small-expand center,
     table.button.small-expanded center {
         min-width: 0; } }
-
-blockquote {
-    color: #444;
-    background: #f8f8f8;
-    border: 1px #ddd solid;
-    border-left: 8px #f37000 solid;
-    padding: 0 0.5em;
-    margin: 0 0 1em 0.5em;
-}
-
-.header {
-    background: #f37000;
-}
-
-.header .columns {
-    padding-bottom: 0;
-}
-
-.header p {
-    color: blue;
-    margin-bottom: 0;
-}
-
-.header .wrapper-inner {
-    padding: 20px; /*controls the height of the header*/
-}
-
-.wrapper.secondary {
-    background: #f37000;
-}
-

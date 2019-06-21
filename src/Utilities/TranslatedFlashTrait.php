@@ -2,19 +2,10 @@
 
 namespace App\Utilities;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
-use Swift_Mailer;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-use Symfony\Contracts\Translation\TranslatorInterface;
-
 /**
- * Trait TranslatedFlashTrait
+ * Trait TranslatedFlashTrait.
  *
  * Expects that TranslatorTrait is used as well
- *
- * @package App\Utilities
  */
 trait TranslatedFlashTrait
 {

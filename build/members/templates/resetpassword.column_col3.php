@@ -17,9 +17,9 @@
 <form method="post" action="resetpassword">
 <?php echo $callback_tag; ?>
 <input type="hidden" name="action" value="sendpassword">
-<label for="UsernameOrEmail"><?php echo $words->get("UserNameOrEmail"); ?></label><br />
+<label for="usernameOrEmail"><?php echo $words->get("UserNameOrEmail"); ?></label><br />
 <br />
-<input type="text" name="UsernameOrEmail" id="UsernameOrEmail" size="40" >
+<input type="text" name="usernameOrEmail" id="usernameOrEmail" size="40" >
 <input type="submit" class="button" id="submit" name="submit" value="<?php echo $words->getBuffered("submit"); ?>"><?php echo $words->flushBuffer();?>
 </form>
 </div>

@@ -4,19 +4,16 @@ namespace App\Model;
 
 use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\GroupTypeType;
-use App\Doctrine\InFolderType;
-use App\Doctrine\SpamInfoType;
 use App\Entity\Group;
 use App\Entity\GroupMembership;
 use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\MemberTranslation;
-use App\Entity\Message;
 use App\Entity\Notification;
-use App\Entity\Subject;
-use App\Form\JoinGroupType;
 use App\Utilities\MailerTrait;
 use App\Utilities\ManagerTrait;
+use App\Utilities\MessageTrait;
+use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
 use Doctrine\DBAL\DBALException;
@@ -24,66 +21,47 @@ use Doctrine\DBAL\Statement;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
-use PDepend\Engine;
-use Swift_Message;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Bridge\Twig\TwigEngine;
-use Symfony\Component\Mailer\Mailer;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\NamedAddress;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Templating\EngineInterface;
 
 class GroupModel
 {
-    use ManagerTrait;
     use MailerTrait;
+    use MessageTrait;
+    use ManagerTrait;
     use TranslatorTrait;
+    use TranslatedFlashTrait;
 
     /**
      * @var UrlGenerator
      */
     private $urlGenerator;
-    /**
-     * @var EngineInterface
-     */
-    private $engine;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator, EngineInterface $engine)
+    public function __construct(UrlGeneratorInterface $urlGenerator)
     {
         $this->urlGenerator = $urlGenerator;
-        $this->engine = $engine;
     }
 
     /**
-     * @param Group $group
+     * @param Group  $group
      * @param Member $member
      * @param Member $admin
      *
-     * @return boolean
+     * @return bool
      */
     public function inviteMemberToGroup(Group $group, Member $member, Member $admin)
     {
+        $em = $this->getManager();
         $membership = new GroupMembership();
         $membership->setGroup($group);
         $membership->setMember($member);
         $membership->setStatus(GroupMembershipStatusType::INVITED_INTO_GROUP);
-        $success = false;
         try {
-            $this->getManager()->persist($membership);
-            $this->getManager()->flush();
-            $success = true;
+            $em->persist($membership);
+            $em->flush();
 
-            $msg = new Message();
-            $msg->setMessageType('MemberToMember');
-            $msg->setParent(null);
-            $msg->setReceiver($member);
-            $msg->setSender($admin);
-            $msg->setStatus('Sent');
-            $msg->setSpamInfo(SpamInfoType::NO_SPAM);
-            $url = $this->urlGenerator->generate('group_start', [ 'group_id' => $group->getId()]);
+            // Send email to invitee
+            $url = $this->urlGenerator->generate('group_start', ['group_id' => $group->getId()]);
             $acceptUrl = $this->urlGenerator->generate('accept_invite_to_group', [
                 'groupId' => $group->getId(),
                 'memberId' => $member->getId(),
@@ -94,28 +72,22 @@ class GroupModel
                 'memberId' => $member->getId(),
             ], UrlGenerator::ABSOLUTE_URL);
 
-            $acceptTag = '<a href="' . $acceptUrl . '">';
-            $declineTag = '<a href="' . $declineUrl . '">';
-            $subjectText = $this->getTranslator()->trans('group.invitation');
-            $subject = new Subject();
-            $subject->setSubject($subjectText);
-            $this->getManager()->persist($subject);
-            $this->getManager()->flush();
+            $acceptTag = '<a href="'.$acceptUrl.'">';
+            $declineTag = '<a href="'.$declineUrl.'">';
 
-            $this->sendTemplateEmail($admin, $member, 'group.invitation', [
+            $params = [
                 'subject' => 'group.invitation',
+                'receiver' => $member,
+                'sender' => $admin,
                 'group' => $group,
                 'accept_start' => $acceptTag,
                 'accept_end' => '</a>',
                 'decline_start' => $declineTag,
                 'decline_end' => '</a>',
-            ]);
-            $msg->setSubject($subject);
-            // \todo get content of email into this message
-            $msg->setMessage('You got an email...');
+            ];
+            $this->createTemplateMessage($member, $admin, '_partials/group/invitation.html.twig', $params);
 
-            $msg->setFolder(InFolderType::NORMAL);
-            $this->getManager()->persist($msg);
+            $this->sendTemplateEmail($admin, $member, 'group.invitation', $params);
 
             $note = new Notification();
             $note->setMember($member);
@@ -124,34 +96,31 @@ class GroupModel
             $note->setLink($url);
             $note->setWordCode('');
             $note->setTranslationparams(serialize(['GroupsInvitedNote', $group->getName()]));
-            $this->getManager()->persist($note);
-            $this->getManager()->flush();
+            $em->persist($note);
+            $em->flush();
+
+            $success = true;
         } catch (Exception $e) {
+            $success = false;
         }
 
         return $success;
     }
 
     /**
-     * @param Group $group
+     * @param Group  $group
      * @param Member $member
      *
-     * @return boolean
+     * @return bool
      */
     public function acceptInviteToGroup(Group $group, Member $member)
     {
         $success = false;
-        $membershipRepository = $this->getManager()->getRepository(GroupMembership::class);
-
-        $membership = null;
         try {
-            $membership = $membershipRepository->findOneBy([
-                'group' => $group,
-                'member' => $member,
-            ]);
+            $membership = $this->getMembership($group, $member);
 
             if ($membership) {
-                $membership->setStatus('In');
+                $membership->setStatus(GroupMembershipStatusType::CURRENT_MEMBER);
                 $this->getManager()->persist($membership);
                 $this->getManager()->flush();
                 $success = true;
@@ -163,22 +132,40 @@ class GroupModel
     }
 
     /**
-     * @param Group $group
+     * @param Group  $group
      * @param Member $member
      *
-     * @return boolean
+     * @return bool
+     */
+    public function declineInviteToGroup(Group $group, Member $member)
+    {
+        $success = false;
+        try {
+            $membership = $this->getMembership($group, $member);
+
+            if ($membership) {
+                $this->getManager()->remove($membership);
+                $this->getManager()->flush();
+                $success = true;
+            }
+        } catch (Exception $e) {
+        }
+
+        return $success;
+    }
+
+    /**
+     * @param Group  $group
+     * @param Member $member
+     *
+     * @return bool
      */
     public function withdrawInviteMemberToGroup(Group $group, Member $member)
     {
         $success = false;
-        $membershipRepository = $this->getManager()->getRepository(GroupMembership::class);
 
-        $membership = null;
         try {
-            $membership = $membershipRepository->findOneBy([
-                'group' => $group,
-                'member' => $member,
-            ]);
+            $membership = $this->getMembership($group, $member);
 
             if ($membership) {
                 $this->getManager()->remove($membership);
@@ -201,7 +188,7 @@ class GroupModel
             $em = $this->getManager();
             $languageRepository = $em->getRepository(Language::class);
             /** @var Language $language */
-            $language = $languageRepository->findOneBy([ 'shortcode' => $locale]);
+            $language = $languageRepository->findOneBy(['shortcode' => $locale]);
 
             $comment = new MemberTranslation();
             $comment->setLanguage($language);
@@ -216,17 +203,42 @@ class GroupModel
             $membership->setGroup($group);
             $membership->setMember($member);
             $membership->addComment($comment);
-            $membership->setNotificationsenabled($notifications === 'yes' ? true : false);
+            $membership->setNotificationsenabled('yes' === $notifications ? true : false);
             if (GroupTypeType::NEED_ACCEPTANCE === $group->getType()) {
                 $membership->setStatus(GroupMembershipStatusType::APPLIED_FOR_MEMBERSHIP);
 
-                // \todo send message to group admins
+                $acceptUrl = $this->urlGenerator->generate('group_accept_join', [
+                    'groupId' => $group->getId(),
+                    'memberId' => $member->getId(),
+                ], UrlGenerator::ABSOLUTE_URL);
+
+                $declineUrl = $this->urlGenerator->generate('group_decline_join', [
+                    'groupId' => $group->getId(),
+                    'memberId' => $member->getId(),
+                ], UrlGenerator::ABSOLUTE_URL);
+
+                $acceptTag = '<a href="'.$acceptUrl.'">';
+                $declineTag = '<a href="'.$declineUrl.'">';
+
+                /** @var Member[] $admins */
+                $params = [
+                    'subject' => 'group.joined',
+                    'accept_start' => $acceptTag,
+                    'decline_start' => $declineTag,
+                    'accept_end' => '</a>',
+                    'decline_end' => '</a>',
+                    'group' => $group,
+                ];
+                $admins = $group->getAdmins();
+                foreach ($admins as $admin) {
+                    $this->createTemplateMessage($member, $admin, '_partials/group/wantin.html.twig', $params);
+                }
             } else {
                 $membership->setStatus(GroupMembershipStatusType::CURRENT_MEMBER);
             }
 
-            $this->getManager()->persist($membership);
-            $this->getManager()->flush();
+            $em->persist($membership);
+            $em->flush();
             $success = true;
         } catch (OptimisticLockException $e) {
         } catch (ORMException $e) {
@@ -240,11 +252,12 @@ class GroupModel
      * @param $locale
      * @param Member $member
      * @param $groupPicture
-     * @return Group
      *
      * @throws DBALException
      * @throws ORMException
      * @throws OptimisticLockException
+     *
+     * @return Group
      */
     public function new($data, $locale, Member $member, $groupPicture)
     {
@@ -330,31 +343,85 @@ class GroupModel
 
     public function acceptJoin(Group $group, Member $member, Member $admin)
     {
+        if (!$this->checkMembershipStatus($group, $member, GroupMembershipStatusType::APPLIED_FOR_MEMBERSHIP)) {
+            return false;
+        }
+
         $this->updateMembership($group, $member, GroupMembershipStatusType::CURRENT_MEMBER);
-        $this->sendTemplateEmail($admin, $member, 'group.approved.join');
+        $this->sendTemplateEmail($admin, $member, 'group/approve.join', [
+            'subject' => 'group.approved.join',
+            'group' => $group,
+            'group_start' => '<a href="'.$this->urlGenerator->generate('group_start', [
+                    'group_id' => $group->getId(),
+                ], UrlGenerator::ABSOLUTE_URL).'">',
+            'group_end' => '</a>',
+            'member' => $member,
+            'admin' => $admin,
+        ]);
+
+        return true;
     }
 
     public function declineJoin(Group $group, Member $member, Member $admin)
     {
+        if (!$this->checkMembershipStatus($group, $member, GroupMembershipStatusType::APPLIED_FOR_MEMBERSHIP)) {
+            return false;
+        }
         $this->updateMembership($group, $member, GroupMembershipStatusType::KICKED_FROM_GROUP);
-        $this->sendTemplateEmail($admin, $member, 'group.declined.join');
+        $this->sendTemplateEmail($admin, $member, 'group/decline.join', [
+            'subject' => 'group.approved.join',
+            'group' => $group,
+            'group_start' => '<a href="'.$this->urlGenerator->generate('group_start', [
+                    'group_id' => $group->getId(),
+                ], UrlGenerator::ABSOLUTE_URL).'">',
+            'group_end' => '</a>',
+            'member' => $member,
+            'admin' => $admin,
+        ]);
+
+        return true;
     }
 
+    /**
+     * @param $group
+     * @param $member
+     *
+     * @return object|null
+     */
+    private function getMembership($group, $member)
+    {
+        $membershipRepository = $this->getManager()->getRepository(GroupMembership::class);
+        $membership = $membershipRepository->findOneBy([
+            'group' => $group,
+            'member' => $member,
+        ]);
+
+        return $membership;
+    }
 
     /**
-     * @param Group $group
+     * @param Group  $group
      * @param Member $member
-     * @param string $CURRENT_MEMBER
+     * @param string $status
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    private function updateMembership(Group $group, Member $member, string $CURRENT_MEMBER)
+    private function updateMembership(Group $group, Member $member, string $status)
     {
         $membershipRepository = $this->getManager()->getRepository(GroupMembership::class);
-        $membership = $membershipRepository->findOneBy([ 'group' => $group, 'member' => $member]);
+        $membership = $membershipRepository->findOneBy(['group' => $group, 'member' => $member]);
 
-        $membership->setStatus();
+        $membership->setStatus($status);
         $this->getManager()->persist($membership);
         $this->getManager()->flush();
+    }
+
+    private function checkMembershipStatus(Group $group, Member $member, string $status)
+    {
+        $membershipRepository = $this->getManager()->getRepository(GroupMembership::class);
+        $membership = $membershipRepository->findOneBy(['group' => $group, 'member' => $member]);
+
+        return $status === $membership->getStatus();
     }
 }

@@ -2,15 +2,11 @@
 
 namespace App\Controller;
 
-use App\Doctrine\MessageStatusType;
-use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
 use App\Form\MessageToMemberType;
 use App\Utilities\MailerTrait;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Exception;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -41,9 +37,10 @@ class MessageController extends BaseMessageController
      * @param Request $request
      * @param Message $message
      *
-     * @return Response
      * @throws AccessDeniedException
      * @throws Exception
+     *
+     * @return Response
      */
     public function replyToMessage(Request $request, Message $message)
     {
@@ -71,10 +68,10 @@ class MessageController extends BaseMessageController
      *
      * @param Message $message
      *
-     * @return Response
      * @throws Exception
-     *
      * @throws AccessDeniedException
+     *
+     * @return Response
      */
     public function show(Message $message)
     {
@@ -82,10 +79,9 @@ class MessageController extends BaseMessageController
             throw $this->createAccessDeniedException('Not your message/hosting request');
         }
 
-        if (!$this->isHostingRequest($message)) {
+        if ($this->isHostingRequest($message)) {
             return $this->redirectToHostingRequest($message);
         }
-
 
         $thread = $this->messageModel->getThreadForMessage($message);
         $current = $thread[0];
@@ -119,10 +115,11 @@ class MessageController extends BaseMessageController
      * @Route("/new/message/{username}", name="message_new")
      *
      * @param Request $request
-     * @param Member $receiver
+     * @param Member  $receiver
+     *
+     * @throws Exception
      *
      * @return Response
-     * @throws Exception
      */
     public function newMessageAction(Request $request, Member $receiver)
     {
@@ -169,10 +166,11 @@ class MessageController extends BaseMessageController
      *     defaults={"folder": "inbox"})
      *
      * @param Request $request
-     * @param string $folder
+     * @param string  $folder
+     *
+     * @throws InvalidArgumentException
      *
      * @return Response
-     * @throws InvalidArgumentException
      */
     public function messages(Request $request, $folder)
     {
@@ -229,8 +227,9 @@ class MessageController extends BaseMessageController
      * @param Request $request
      * @param Member  $other
      *
-     * @return Response
      * @throws InvalidArgumentException
+     *
+     * @return Response
      */
     public function allMessagesWithMember(Request $request, Member $other)
     {
@@ -274,7 +273,7 @@ class MessageController extends BaseMessageController
         if (null !== $subject) {
             $subjectText = $subject->getSubject();
             if ('Re:' !== substr($subjectText, 0, 3)) {
-                $subjectText = "Re: ".$subjectText;
+                $subjectText = 'Re: '.$subjectText;
             }
             $replyMessage->setSubject(new Subject());
             $replyMessage->getSubject()->setSubject($subjectText);
@@ -289,7 +288,7 @@ class MessageController extends BaseMessageController
                 $replySubject = 'Re: '.$replySubject;
             }
 
-            $messageText =  $messageForm->get('message')->getData();
+            $messageText = $messageForm->get('message')->getData();
             $message = $this->messageModel->addMessage($sender, $receiver, $message, $replySubject, $messageText);
             $this->addTranslatedFlash('success', 'flash.reply.sent');
 

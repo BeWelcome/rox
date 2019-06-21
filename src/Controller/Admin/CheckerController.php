@@ -17,12 +17,13 @@ class CheckerController extends AbstractController
     /**
      * @Route("/admin/spamchecker", name="admin_spam_overview")
      *
-     * @param Request $request
-     *
+     * @param Request      $request
      * @param MessageModel $messageModel
-     * @return Response
+     *
      * @throws ORMException
      * @throws OptimisticLockException
+     *
+     * @return Response
      */
     public function showOverview(Request $request, MessageModel $messageModel)
     {

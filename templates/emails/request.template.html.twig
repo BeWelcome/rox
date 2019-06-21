@@ -21,10 +21,10 @@
     <spacer size="16"></spacer>
 
     <row>
-        <columns large="7">
+        <columns small="12" large="7">
             {% block message %}{% endblock %}
         </columns>
-        <columns large="5" class="sidebar">
+        <columns small="12" large="5" class="sidebar">
             <callout class="secondary">
                 <h5>{{ 'request.details'|trans }}</h5>
                 {% block request %}{% endblock %}

@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,10 +17,11 @@ class RequestAndMessageController extends BaseMessageController
      *     defaults={"folder": "inbox"})
      *
      * @param Request $request
-     * @param string $folder
+     * @param string  $folder
+     *
+     * @throws InvalidArgumentException
      *
      * @return Response
-     * @throws InvalidArgumentException
      */
     public function requestsAndMessages(Request $request, $folder)
     {

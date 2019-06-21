@@ -2,27 +2,19 @@
 
 namespace App\Controller;
 
-use App\Entity\Language;
-use App\Entity\Member;
 use App\Entity\Message;
-use App\Entity\Preference;
 use App\Form\CustomDataClass\MessageIndexRequest;
 use App\Form\MessageIndexFormType;
 use App\Model\MessageModel;
 use App\Repository\MessageRepository;
-use App\Utilities\MailerTrait;
 use App\Utilities\TranslatedFlashTrait;
-use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Html2Text\Html2Text;
 use Pagerfanta\Pagerfanta;
-use Swift_Mailer;
-use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class BaseMessageController extends AbstractController
 {
@@ -144,7 +136,9 @@ class BaseMessageController extends AbstractController
 
     /**
      * @param Message $message
+     *
      * @return bool
+     * @throws AccessDeniedException
      */
     protected function isMessageOfMember(Message $message)
     {
@@ -167,12 +161,14 @@ class BaseMessageController extends AbstractController
         // as there might be a clash of replies
         /** @var MessageRepository */
         $hostingRequestRepository = $this->getDoctrine()->getRepository(Message::class);
-        $messages = $hostingRequestRepository->findBy([ 'subject' => $probableParent->getSubject() ]);
+        $messages = $hostingRequestRepository->findBy(['subject' => $probableParent->getSubject()]);
+
         return $messages[\count($messages) - 1];
     }
 
     /**
      * @param Request $request
+     *
      * @return array
      */
     protected function getOptionsFromRequest(Request $request)
@@ -182,6 +178,6 @@ class BaseMessageController extends AbstractController
         $sort = $request->query->get('sort', 'dateSent');
         $direction = $request->query->get('dir', 'desc');
 
-        return [ $page, $limit, $sort, $direction ];
+        return [$page, $limit, $sort, $direction];
     }
 }

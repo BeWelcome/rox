@@ -4,7 +4,6 @@ namespace App\EventListener;
 
 use App\Entity\Language;
 use App\Entity\Member;
-use App\Entity\Preference;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use PVars;
@@ -75,5 +74,6 @@ class UserLocaleListener implements EventSubscriberInterface
     {
         return [
             SecurityEvents::INTERACTIVE_LOGIN => 'onInteractiveLogin',
-        ];    }
+        ];
+    }
 }

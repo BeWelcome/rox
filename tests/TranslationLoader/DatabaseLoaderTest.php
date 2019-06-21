@@ -29,7 +29,7 @@ class DatabaseLoaderTest extends TestCase
     {
         $mockEm = $this->getEmMock();
 
-        $loader = new DatabaseLoader( $mockEm );
+        $loader = new DatabaseLoader($mockEm);
 
         $result = $loader->load(null, 'en');
 

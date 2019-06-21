@@ -4,21 +4,21 @@ namespace App\Utilities;
 
 use App\Entity\Language;
 use App\Entity\Member;
-use App\Entity\Preference;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 trait TranslatorTrait
 {
     /** @var TranslatorInterface */
-    private $translator;
+    private $translator1;
 
     /**
      * @Required
+     *
      * @param TranslatorInterface $translator
      */
-    public function setTranslator(TranslatorInterface $translator)
+    public function humpdidumpdi(TranslatorInterface $translator)
     {
-        $this->translator =$translator;
+        $this->translator1 = $translator;
     }
 
     /**
@@ -26,7 +26,7 @@ trait TranslatorTrait
      */
     protected function getTranslator()
     {
-        return $this->translator;
+        return $this->translator1;
     }
 
     /**
@@ -37,6 +37,6 @@ trait TranslatorTrait
     protected function setTranslatorLocale(Member $receiver)
     {
         $language = $receiver->getPreferredLanguage();
-        $this->translator->setLocale($language->getShortcode());
+        $this->translator1->setLocale($language->getShortcode());
     }
 }

@@ -12,6 +12,7 @@ use App\Entity\Subject;
 use App\Repository\MessageRepository;
 use App\Utilities\MailerTrait;
 use App\Utilities\ManagerTrait;
+use App\Utilities\TranslatorTrait;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -28,6 +29,7 @@ class MessageModel
 {
     use MailerTrait;
     use ManagerTrait;
+    use TranslatorTrait;
 
     /**
      * Mark a message as purged (can not be unmarked).

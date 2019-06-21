@@ -8,6 +8,7 @@ use App\Form\MessageIndexFormType;
 use App\Model\MessageModel;
 use App\Repository\MessageRepository;
 use App\Utilities\TranslatedFlashTrait;
+use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Pagerfanta\Pagerfanta;
@@ -18,6 +19,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class BaseMessageController extends AbstractController
 {
+    use TranslatorTrait;
     use TranslatedFlashTrait;
 
     /** @var MessageModel */

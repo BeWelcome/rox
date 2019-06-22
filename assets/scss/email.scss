@@ -1,0 +1,120 @@
+// Foundation for Emails by ZURB
+// foundation.zurb.com
+// Licensed under MIT Open Source
+
+////
+/// @group global
+////
+
+/// Primary color for interactive components like links and buttons.
+/// @type Color
+$primary-color: #f37000;
+
+/// Secondary color, used with components that support the `.secondary` class.
+/// @type Color
+$secondary-color: #777777;
+
+/// Color to indicate a positive status or action, used with the `.success` class.
+/// @type Color
+$success-color: #3adb76;
+
+/// Color to indicate a caution status or action, used with the `.warning` class.
+/// @type Color
+$warning-color: #ffae00;
+
+/// Color to indicate a negative status or action, used with the `.alert` class.
+/// @type Color
+$alert-color: #ec5840;
+
+/// Color used for light gray UI items within Foundation.
+/// @type Color
+$light-gray: #f3f3f3;
+
+/// Color used for medium gray UI items within Foundation.
+/// @type Color
+$medium-gray: #cacaca;
+
+/// Color used for dark gray UI items within Foundation.
+/// @type Color
+$dark-gray: #8a8a8a;
+
+/// Color used for black ui items within Foundation
+/// @type Color
+$black: #0a0a0a;
+
+/// Color used for white ui items within Foundation
+/// @type Color
+$white: #fefefe;
+
+/// Color used code.
+/// @type Color
+$pre-color: #ff6908;
+
+/// Width of the container.
+/// @type Number
+$global-width: 580px;
+
+/// Width of the container on small screens.
+/// @type Length
+$global-width-small: 95%;
+
+/// Gutter for grid elements.
+/// @type length
+$global-gutter: 16px;
+
+/// Body background color.
+/// @type Length
+$body-background: $light-gray;
+
+/// Color for the container background
+/// @type Color
+$container-background: $white;
+
+/// Global padding.
+/// @type Number
+$global-padding: 16px;
+
+/// Global margin. Margin requires a capital 'M' to workin Outlook.com
+/// @type Number
+$global-margin: 16px;
+
+/// Global raidus of radius-corners.
+/// @type Number
+$global-radius: 3px;
+
+/// Global rounded radius of rounded-corners.
+/// @type Number
+$global-rounded: 500px;
+
+/// Global media query to switch from desktop to mobile styles.
+/// @type String
+$global-breakpoint: $global-width + $global-gutter;
+
+.wrapper {
+  width: 100%;
+}
+
+.header {
+      background: $primary-color;
+}
+
+.header .columns {
+  padding-bottom: 0;
+}
+.header p {
+  color: #fff;
+  margin-bottom: 0;
+}
+
+.header .wrapper-inner {
+  padding: 20px; /*controls the height of the header*/
+}
+.header .container {
+  background: $primary-color;
+}
+
+.wrapper.secondary {
+  background: $secondary-color;
+}
+
+@import "~foundation-emails/scss/foundation-emails";

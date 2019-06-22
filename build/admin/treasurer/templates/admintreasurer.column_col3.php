@@ -15,17 +15,17 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
-    /** 
-     * @author crumbking  
+    /**
+     * @author crumbking
      */
 
-    /** 
+    /**
      * Tresasurer management overview template
-     * 
+     *
      * @package Apps
      * @subpackage Admin
      */
@@ -39,19 +39,19 @@ if ($this->_session->has( 'AdminTreasurerStatus' )) {
         case 'StartSuccess':
             $class = 'success';
             $word = $words->get('AdminTreasurerCampaignStarted');
-            break;  
+            break;
         case 'StartFailed':
             $class = 'error';
             $word = $words->get('AdminTreasurerCampaignStartFailed');
-            break;  
+            break;
         case 'StopSuccess':
             $class = 'success';
             $word = $words->get('AdminTreasurerCampaignStopped');
-            break;  
+            break;
         case 'StopFailed':
             $class = 'error';
             $word = $words->get('AdminTreasurerCampaignStopFailed');
-            break;  
+            break;
     }
     echo '<div class="' . $class . '">' . $word . '</div>';
     $this->_session->remove('AdminTreasurerStatus');
@@ -60,7 +60,7 @@ if($this->campaign) {
     echo '<h3>' . $words->get("AdminTreasurerCurrentCampaign") . '</h3>';
 } else {
     echo '<h3>' . $words->get("AdminTreasurerRecentDonations") . '</h3>';
-} 
+}
 echo '<p>';
 echo $words->get("AdminTreasurerCampaignStart", $this->campaignStartDate) . '<br />'
    . $words->get("AdminTreasurerCampaignNeededPerYear", $this->neededPerYear) . '<br />'
@@ -77,7 +77,7 @@ echo '</p>';
 <th><?php echo $words->get('AdminTreasurerOverviewDetails');?></th>
 <th><?php echo $words->get('AdminTreasurerOverviewEdit');?></th>
 </tr>
-<?php 
+<?php
 $ii = 0;
 foreach($this->donations as $donation) {
     if ($ii % 2 == 1) {
@@ -92,7 +92,9 @@ foreach($this->donations as $donation) {
 <td><?php echo $donation->CountryName; ?></td>
 <td><?php if ($donation->IdMember) {
     $member = MOD_member::getMember_userId($donation->IdMember);
-    echo $member->getUsername(). " " . $donation->referencepaypal; }?></td>
+    if ($member) {
+        echo $member->getUsername(). " " . $donation->referencepaypal; }    }
+?></td>
 <td><?php echo '<a href="admin/treasurer/edit/' . $donation->id . '">' . $words->get('AdminTreasurerOverviewEdit') . '</a>'; ?></td>
 </tr>
 <?php

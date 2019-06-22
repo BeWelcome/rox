@@ -48,7 +48,7 @@ class AdminTreasurerModel extends RoxModelBase {
             FROM
                 geonames AS g
             WHERE
-                g.fcode LIKE 'PCL%'
+                g.fcode LIKE 'PCL%' AND NOT g.fcode = 'PCLH'
                 AND g.country = '" . $countrycode . "'";
         $cc = $this->singleLookup($query);
         if ($cc) {

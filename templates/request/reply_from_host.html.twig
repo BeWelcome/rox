@@ -42,7 +42,7 @@
                     </div>
                     {{ form_widget(form.request.arrival, { 'attr': {'data-target': '#arrival', 'data-toggle': 'datetimepicker'}}) }}
                 </div>
-                <small class="text-muted">Original: {{ form.request.arrival.vars.value| localizeddate('full', 'none', app.request.locale) }}</small>
+                <small id="arrival-original" class="text-muted d-none">{{ 'original' | trans}}: {{ form.request.arrival.vars.value| localizeddate('full', 'none', app.request.locale) }}</small>
             </div>
 
             <div class="form-group">
@@ -56,7 +56,7 @@
                     </div>
                     {{ form_widget(form.request.departure, { 'attr': {'data-target': '#departure', 'data-toggle': 'datetimepicker'}}) }}
                 </div>
-                <small class="text-muted">Original: {{ form.request.departure.vars.value| localizeddate('full', 'none', app.request.locale) }}</small>
+                <small id="departure-original" class="text-muted d-none">{{ 'original' | trans}}: {{ form.request.departure.vars.value| localizeddate('full', 'none', app.request.locale) }}</small>
             </div>
 
             {{ form_row(form.request.flexible) }}

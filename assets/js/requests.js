@@ -18,8 +18,16 @@ $(function () {
     });
     arrival.on("change.datetimepicker", function (e) {
         $('#departure').datetimepicker('minDate', e.date.add(1, 'days'));
+        let original = $('#arrival-original');
+        if (original.length) {
+            original.removeClass('d-none');
+        }
     });
     departure.on("change.datetimepicker", function (e) {
         $('#arrival').datetimepicker('maxDate', e.date.subtract(1, 'days'));
+        let original = $('#departure-original');
+        if (original.length) {
+            original.removeClass('d-none');
+        }
     });
 });

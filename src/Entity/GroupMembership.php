@@ -50,9 +50,9 @@ class GroupMembership
      * @var MemberTranslation
      *
      * @ORM\ManyToMany(targetEntity="MemberTranslation", fetch="LAZY")
-     * @ORM\JoinTable(name="group_memberships_comments",
+     * @ORM\JoinTable(name="group_membership_trads",
      *      joinColumns={@ORM\JoinColumn(name="group_membership_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="member_comment_id", referencedColumnName="id", unique=true)}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="members_trad_id", referencedColumnName="id", unique=true)}
      *      )
      */
     private $comments;

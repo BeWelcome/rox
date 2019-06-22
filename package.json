@@ -41,7 +41,9 @@
     "raw-loader": "~1.0.0",
     "sass-loader": "^7.1.0",
     "scrollmagic": "^2.0.6",
-    "style-loader": "^0.23.1"
+    "style-loader": "^0.23.1",
+    "tar": ">=2.2.2",
+    "fstream": ">=1.0.12"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.8.1",

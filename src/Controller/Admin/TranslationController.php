@@ -130,7 +130,7 @@ class TranslationController extends AbstractController
             $em->persist($translation);
             $em->flush();
             $this->translationModel->removeCacheFiles($kernel);
-            $this->addFlash('notice', $this->translator->trans('translation.edit'));
+            $this->addTranslatedFlash('notice', 'translation.edit');
 
             $referrer = $request->headers->get('referer');
 
@@ -237,8 +237,7 @@ class TranslationController extends AbstractController
             }
             $em->flush();
             $this->translationModel->removeCacheFiles($kernel);
-            $flashMessage = $this->translator->trans('flash.added.translatable.item', ['%code%' => $code]);
-            $this->addFlash('notice', $flashMessage);
+            $this->addTranslatedFlash('notice', 'flash.added.translatable.item', ['%code%' => $code]);
 
             return $this->redirectToRoute('translations');
         }
@@ -304,8 +303,7 @@ class TranslationController extends AbstractController
             $em->persist($newTranslatableItem);
             $em->flush();
             $this->translationModel->removeCacheFiles($kernel);
-            $flashMessage = $this->translator->trans('flash.added.translatable.item', ['%code%' => $data->wordCode]);
-            $this->addFlash('notice', $flashMessage);
+            $this->addTranslatedFlash('notice', 'flash.added.translatable.item', ['%code%' => $data->wordCode]);
 
             return $this->redirectToRoute('translations');
         }
@@ -348,7 +346,7 @@ class TranslationController extends AbstractController
         }
 
         if ('en' === $language->getShortcode()) {
-            $this->addFlash('notice', $translator->trans('flash.translation.weird'));
+            $this->addTranslatedFlash('notice', 'flash.translation.weird');
             $this->redirectToRoute('translations');
         }
         $translationRepository = $this->getDoctrine()
@@ -393,7 +391,7 @@ class TranslationController extends AbstractController
             $em->persist($translation);
             $em->flush();
             $this->translationModel->removeCacheFiles($kernel);
-            $this->addFlash('notice', $this->translator->trans('translation.edit'));
+            $this->addTranslatedFlash('notice', 'translation.edit');
 
             $referrer = $request->headers->get('referer');
 
@@ -431,7 +429,7 @@ class TranslationController extends AbstractController
         } else {
             $flashId = 'flash.translation.disabled';
         }
-        $this->addFlash('notice', $this->translator->trans($flashId));
+        $this->addTranslatedFlash('notice', $flashId);
 
         $this->get('session')->set('translation_mode', $mode);
         $referrer = $request->headers->get('referer');

@@ -97,19 +97,20 @@ class HostingRequestController extends BaseMessageController
      */
     public function hostingRequestGuestReply(Request $request, Message $hostingRequest, Message $parent)
     {
-        $thread = $this->messageModel->getThreadForMessage($hostingRequest);
-        $first = $thread[\count($thread) - 1];
-        $guest = $first->getSender();
-        $host = $first->getReceiver();
+        /** @var Message $first */
+        /** @var Message $last */
+        /** @var Member $guest */
+        /** @var Member $host */
+        list($thread, $first, $last, $guest, $host) = $this->messageModel->getThreadInformationForMessage($hostingRequest);
 
-        if ($this->checkRequestExpired($thread[0])) {
+        if ($this->checkRequestExpired($last)) {
             $this->addExpiredFlash($host);
 
-            return $this->redirectToRoute('hosting_request_show', ['id' => ($thread[0])->getId()]);
+            return $this->redirectToRoute('hosting_request_show', ['id' => $last->getId()]);
         }
 
         // keep all information from current hosting request except the message text
-        $hostingRequest = $this->getRequestClone($thread[0]);
+        $hostingRequest = $this->getRequestClone($last);
 
         // A reply consists of a new message and maybe a change of the status of the hosting request
         // Additionally the user might change the dates of the request or cancel the request altogether
@@ -129,7 +130,8 @@ class HostingRequestController extends BaseMessageController
                 $host,
                 $guest,
                 $newRequest,
-                $subject
+                $subject,
+                ($newRequest->getRequest()->getId() !== $realParent->getRequest()->getId())
             );
             $this->addTranslatedFlash('success', 'flash.notification.updated');
 
@@ -159,19 +161,20 @@ class HostingRequestController extends BaseMessageController
      */
     public function hostingRequestHostReply(Request $request, Message $hostingRequest, Message $parent)
     {
-        $thread = $this->messageModel->getThreadForMessage($hostingRequest);
-        $first = $thread[\count($thread) - 1];
-        $guest = $first->getSender();
-        $host = $first->getReceiver();
+        /** @var Message $first */
+        /** @var Message $last */
+        /** @var Member $guest */
+        /** @var Member $host */
+        list($thread, $first, $last, $guest, $host) = $this->messageModel->getThreadInformationForMessage($hostingRequest);
 
-        if ($this->checkRequestExpired($thread[0])) {
+        if ($this->checkRequestExpired($last)) {
             $this->addExpiredFlash($guest);
 
-            return $this->redirectToRoute('hosting_request_show', ['id' => ($thread[0])->getId()]);
+            return $this->redirectToRoute('hosting_request_show', ['id' => $last->getId()]);
         }
 
         // keep all information from current hosting request except the message text
-        $hostingRequest = $this->getRequestClone($thread[0]);
+        $hostingRequest = $this->getRequestClone($last);
 
         /** @var Form $requestForm */
         $requestForm = $this->createForm(HostingRequestHost::class, $hostingRequest);
@@ -189,7 +192,8 @@ class HostingRequestController extends BaseMessageController
                 $host,
                 $guest,
                 $newRequest,
-                $subject
+                $subject,
+                ($newRequest->getRequest()->getId() !== $realParent->getRequest()->getId())
             );
             $this->addTranslatedFlash('notice', 'flash.notification.updated');
 
@@ -352,14 +356,15 @@ class HostingRequestController extends BaseMessageController
     }
 
     /**
-     * @param Member  $guest
-     * @param Member  $host
+     * @param Member $host
+     * @param Member $guest
      * @param Message $request
-     * @param mixed   $subject
+     * @param mixed $subject
+     * @param $requestChanged
      */
-    protected function sendGuestReplyNotification(Member $host, Member $guest, Message $request, $subject)
+    protected function sendGuestReplyNotification(Member $host, Member $guest, Message $request, $subject, $requestChanged)
     {
-        $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'reply_from_guest');
+        $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'reply_from_guest', $requestChanged);
     }
 
     /**
@@ -374,7 +379,7 @@ class HostingRequestController extends BaseMessageController
         return $requestModel->checkRequestExpired($hostingRequest->getRequest());
     }
 
-    private function sendRequestNotification(Member $sender, Member $receiver, Member $host, Message $request, $subject, $template)
+    private function sendRequestNotification(Member $sender, Member $receiver, Member $host, Message $request, $subject, $template, $requestChanged)
     {
         // Send mail notification
         $this->sendTemplateEmail($sender, $receiver, $template, [
@@ -382,6 +387,7 @@ class HostingRequestController extends BaseMessageController
             'subject' => $subject,
             'message' => $request,
             'request' => $request->getRequest(),
+            'changed' => $requestChanged,
         ]);
 
         return true;
@@ -405,9 +411,9 @@ class HostingRequestController extends BaseMessageController
      * @param Message $request
      * @param mixed   $subject
      */
-    private function sendHostReplyNotification(Member $host, Member $guest, Message $request, $subject)
+    private function sendHostReplyNotification(Member $host, Member $guest, Message $request, $subject, $requestChanged)
     {
-        $this->sendRequestNotification($host, $guest, $host, $request, $subject, 'reply_from_host');
+        $this->sendRequestNotification($host, $guest, $host, $request, $subject, 'reply_from_host', $requestChanged);
     }
 
     /**
@@ -493,7 +499,12 @@ class HostingRequestController extends BaseMessageController
         // copy only the bare minimum needed
         $newRequest = new Message();
         $newRequest->setSubject($hostingRequest->getSubject());
-        $newRequest->setRequest($hostingRequest->getRequest());
+        $newHostingRequest = new HostingRequest();
+        $newHostingRequest->setArrival($hostingRequest->getRequest()->getArrival());
+        $newHostingRequest->setDeparture($hostingRequest->getRequest()->getDeparture());
+        $newHostingRequest->setFlexible($hostingRequest->getRequest()->getFlexible());
+        $newHostingRequest->setNumberOfTravellers($hostingRequest->getRequest()->getNumberOfTravellers());
+        $newRequest->setRequest($newHostingRequest);
         $newRequest->setMessage('');
 
         return $newRequest;

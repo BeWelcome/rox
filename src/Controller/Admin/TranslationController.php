@@ -568,6 +568,9 @@ class TranslationController extends AbstractController
             'request (initial)' => 'emails/request.html.twig',
             'request (guest)' => 'emails/reply_from_guest.html.twig',
             'request (host)' => 'emails/reply_from_host.html.twig',
+            'error 403' => 'bundles/TwigBundle/Exception/error403.html.twig',
+            'error 404' => 'bundles/TwigBundle/Exception/error404.html.twig',
+            'error 500' => 'bundles/TwigBundle/Exception/error500.html.twig',
         ];
 
         return $this->render('admin/translations/mockups.html.twig', [

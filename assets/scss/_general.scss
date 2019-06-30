@@ -25,6 +25,7 @@ main {
 .container-content {
   @extend .container;
   margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 // standard framed box with slight shadow

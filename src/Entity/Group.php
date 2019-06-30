@@ -38,6 +38,18 @@ class Group implements ObjectManagerAware
     const DISMISSED_CLOSED = 5;
     const IN_DISCUSSION_CLOSED = 6;
 
+    const OPEN = [
+        self::NOT_APPROVED, self::IN_DISCUSSION
+    ];
+
+    const HANDLED = [
+        self::APPROVED, self::DISMISSED
+    ];
+
+    const CLOSED = [
+        self::APPROVED_CLOSED, self::DISMISSED_CLOSED, self::IN_DISCUSSION_CLOSED
+    ];
+
     /**
      * @var string
      *

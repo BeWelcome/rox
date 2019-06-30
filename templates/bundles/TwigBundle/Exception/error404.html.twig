@@ -1,0 +1,10 @@
+{# app/Resources/TwigBundle/views/Exception/error403.html.twig #}
+{% extends 'error.html.twig' %}
+
+{% block content %}
+    <p>
+        The page you tried to open ({{ app.request.pathInfo }}) doesn't exist.<br>
+        <br>
+        <a href="{{ url('homepage') }}">Return to the homepage</a>.
+    </p>
+{% endblock %}

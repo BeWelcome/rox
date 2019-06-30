@@ -3,6 +3,7 @@
 namespace App\Logger;
 
 use App\Entity\Log;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 

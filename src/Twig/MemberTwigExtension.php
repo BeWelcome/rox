@@ -197,11 +197,14 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
     {
         $groupsInApprovalCount = null;
         if ($this->security->isGranted(Member::ROLE_ADMIN_GROUP)) {
-            $groupsRepository = $this->getManager()->getRepository(Group::class);
-            $groups = $groupsRepository->findBy([
-                'approved' => [Group::NOT_APPROVED, Group::IN_DISCUSSION],
-            ]);
-            $groupsInApprovalCount = \count($groups);
+            $level = $this->member->getLevelForRight(Member::ROLE_ADMIN_GROUP);
+            if ($level == 10) {
+                $groupsRepository = $this->getManager()->getRepository(Group::class);
+                $groups = $groupsRepository->findBy([
+                    'approved' => Group::OPEN,
+                ]);
+                $groupsInApprovalCount = \count($groups);
+            }
         }
 
         return $groupsInApprovalCount;

@@ -529,4 +529,15 @@ class MessageModel
 
         return $message;
     }
+
+    public function getThreadInformationForMessage(Message $hostingRequest)
+    {
+        $thread = $this->getThreadForMessage($hostingRequest);
+        $first = $thread[\count($thread) - 1];
+        $last = $thread[0];
+        $guest = $first->getSender();
+        $host = $first->getReceiver();
+
+        return [$thread, $first, $last, $guest, $host];
+    }
 }

@@ -6,7 +6,6 @@ use App\Entity\Member;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
-use Rox\Core\Exception\NotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -41,15 +40,7 @@ class UserProvider implements UserProviderInterface
     public function loadUserByUsername($username)
     {
         try {
-            throw new \Exception('Meine');
-
             return $this->entityManager->getRepository(Member::class)->loadUserByUsername($username);
-        } catch (NotFoundException $e) {
-            throw new UsernameNotFoundException(
-                sprintf('Username "%s" does not exist.', $username),
-                0,
-                $e
-            );
         } catch (NonUniqueResultException $e) {
             throw new UsernameNotFoundException(
                 sprintf('Username "%s" isn\'t unique.', $username),

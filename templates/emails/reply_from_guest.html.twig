@@ -17,6 +17,7 @@
 {% endblock message %}
 
 {% block request%}
+    {% if changed %}<callout class="warning"><p>{{ 'request.details.changed'|trans }}</p></callout>{% endif %}
     {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}{% trans with {'%username%': sender.Username} %}email.request.reply.guest.open{% endtrans %}<br>{% endif %}
     {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}{% trans with {'%username%': sender.Username} %}email.request.reply.guest.cancelled{% endtrans %}<br>{% endif %}
     {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}{% trans with {'%username%': sender.Username} %}email.request.reply.guest.declined{% endtrans %}<br>{% endif %}

@@ -41,6 +41,10 @@ class HostingRequestType extends AbstractType
                     new NotBlank([
                         'message' => 'request.error.arrival.empty',
                     ]),
+                    new LessThanOrEqual([
+                        'propertyPath' => 'parent.all[departure].data',
+                        'message' => 'request.error.arrival.after.departure',
+                    ]),
                 ],
             ];
             $departureOptions = [
@@ -52,7 +56,11 @@ class HostingRequestType extends AbstractType
                     'class' => 'datepicker',
                     'placeholder' => 'placeholder.departure',
                 ],
-                'invalid_message' => 'request.error.arrival.no_date',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'request.error.departure.empty',
+                    ]),
+                ],
             ];
             $numberOfTravellersOptions = [
                 'label' => 'request.number_of_travellers',
@@ -105,6 +113,6 @@ class HostingRequestType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'App_request';
+        return 'request';
     }
 }

@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Group;
 use App\Entity\Member;
+use App\Entity\Right;
 use App\Logger\Logger;
 use App\Utilities\MailerTrait;
 use App\Utilities\TranslatedFlashTrait;
@@ -39,6 +40,10 @@ class GroupController extends AbstractController
     public function approveGroups()
     {
         if (!$this->isGranted([Member::ROLE_ADMIN_GROUP])) {
+            throw $this->createAccessDeniedException('You need to have Group right to access this.');
+        }
+
+        if (!$this->hasGroupRightLevel(10)) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
         }
 
@@ -168,5 +173,11 @@ class GroupController extends AbstractController
             'group' => $group,
             'creator' => $creator,
         ]);
+    }
+
+    private function hasGroupRightLevel(int $level)
+    {
+        $admin = $this->getUser();
+        return ($admin->getLevelForRight(Member::ROLE_ADMIN_GROUP) == $level);
     }
 }

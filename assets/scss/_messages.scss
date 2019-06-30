@@ -34,20 +34,28 @@
     min-width: 50%;
     max-width: 80%;
     padding: $pagination-padding-x;
-    margin-bottom: 1rem;
+    margin-bottom: .5rem;
     border-radius: $border-radius;
     border: 1px solid #bbb;
     background-color: #df9;
+  }
+
+  .message_own p {
+    margin-bottom: 0;
   }
 
   .message_other {
     min-width: 50%;
     max-width: 80%;
     padding: $pagination-padding-x;
-    margin-bottom: 1rem;
+    margin-bottom: .5rem;
     border-radius: $border-radius;
     border: 1px solid #bbb;
     background-color: #ddd;
+  }
+
+  .message_other p {
+    margin-bottom: 0;
   }
 
   blockquote {

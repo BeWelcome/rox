@@ -1,0 +1,10 @@
+{# app/Resources/TwigBundle/views/Exception/error403.html.twig #}
+{% extends 'error.html.twig' %}
+
+{% block content %}
+    <p>
+        Unfortunately the server ran into an error and your request can't be fulfilled.<br>
+
+        <a href="{{ url('homepage') }}">Return to the homepage</a>.
+    </p>
+{% endblock %}

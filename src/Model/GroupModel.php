@@ -29,8 +29,6 @@ class GroupModel
     use MailerTrait;
     use MessageTrait;
     use ManagerTrait;
-    use TranslatorTrait;
-    use TranslatedFlashTrait;
 
     /**
      * @var UrlGenerator

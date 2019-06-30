@@ -16,7 +16,7 @@ class WikiCreateForm extends AbstractType
     public function buildForm(FormBuilderInterface $formBuilder, array $options)
     {
         $formBuilder
-            ->add('wikipage', CKEditorType::class, [
+            ->add('wikipage', CkEditorType::class, [
                 'inline' => true,
                 'config_name' => 'roxconfig',
                 'required' => false,

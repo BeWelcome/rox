@@ -1,0 +1,62 @@
+<html lang="{{ lang }}">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <title>
+        {%- spaceless -%}
+            {% if block('title') is defined %}
+                {{ block('title') | trim }} |
+            {% endif %} BeWelcome
+        {%- endspaceless -%}
+    </title>
+
+    <meta name="description" content="{{ 'default_meta_description' | trans }}">
+    <meta name="keywords" content="{{ 'default_meta_keyword' | trans }}">
+    <meta name="robots" content="{{ robots }}">
+
+    <link rel="stylesheet" media="screen" href="{{ asset('build/bewelcome.css') }}" />
+    <!-- link rel="stylesheet" media="print" href="{{ asset('build/print.css') }}" / -->
+
+    {% block stylesheets %}{% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    <link rel="stylesheet" href="{{ asset('build/bewelcome.css') }}" />
+</head>
+<body>
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
+    <div class="container">
+        <a class="navbar-brand d-none d-lg-inline" href="{{ url('homepage') }}"><img
+                src="{{ asset('images/logo_index_top.png') }}"
+                alt="BeWelcome"/></a>
+        <a class="navbar-brand d-inline d-lg-none" href="{{ url('homepage') }}"><img
+                src="{{ asset('images/logo_no_text.png') }}"
+                alt="BeWelcome"/></a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#smallNavBar"
+                aria-controls="smallNavBar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>&nbsp;<i class="fas fa-caret-down"></i>
+        </button>
+    </div>
+</nav>
+<main role="main">
+    <div class="container">
+        <h1>Page not found</h1>
+
+    {% set blockcontent %}{% block content %}{% endblock content %}{% endset %}
+
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <p>
+            Hi {{ app.user.Username }},<br>
+            {{ blockcontent | raw }}
+        </p>
+    {% else %}
+        <p>
+            {{ blockcontent | raw }}
+        </p>
+    {% endif %}
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{# app/Resources/TwigBundle/views/Exception/error403.html.twig #}
+{% extends 'error.html.twig' %}
+
+{% block content %}
+<p>
+    You tried to access a page that needs special rights which you do not have.<br>
+
+    <a href="{{ url('homepage') }}">Return to the homepage</a>.
+</p>
+{% endblock %}

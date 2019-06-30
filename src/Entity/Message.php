@@ -290,30 +290,6 @@ class Message
     }
 
     /**
-     * Set child.
-     *
-     * @param Message $child
-     *
-     * @return Message
-     */
-    public function setChild(self $child)
-    {
-        $this->child = $child;
-
-        return $this;
-    }
-
-    /**
-     * Get child.
-     *
-     * @return Message|null
-     */
-    public function getChild()
-    {
-        return $this->child;
-    }
-
-    /**
      * Set Receiver.
      *
      * @param Member $receiver

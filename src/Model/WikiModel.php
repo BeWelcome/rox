@@ -15,9 +15,14 @@ class WikiModel
     /** @var RoxWikiParserBackend */
     private $roxWikiParserBackend;
 
-    public function __construct()
+    /**
+     * @required
+     *
+     * @param RoxWikiParserBackend $wikiParserBackend
+     */
+    public function setWikiParserBackend(RoxWikiParserBackend $wikiParserBackend)
     {
-        $this->roxWikiParserBackend = new RoxWikiParserBackend($this);
+        $this->roxWikiParserBackend = $wikiParserBackend;
     }
 
     public function getPage($pageTitle)
@@ -34,6 +39,14 @@ class WikiModel
 
     public function getPagename($pageTitle)
     {
+        if (substr($pageTitle, 0, 6) === 'Group ' ) {
+            $pageTitle = str_replace('Group ', 'Group_', trim($pageTitle));
+        }
+
+        if (substr($pageTitle, 0, 6) === 'Group_' ) {
+            return str_replace(' ', '', trim($pageTitle));
+        }
+
         return str_replace(' ', '_', trim($pageTitle));
     }
 

@@ -4,7 +4,7 @@
 //------------------------------------------------------------------------------------
 /**
  * page showing latest images and albums of a user
- * 
+ *
  *
  */
 
@@ -13,6 +13,7 @@ class GalleryUserGalleriesPage extends GalleryUserPage
     protected function init()
     {
         $this->page_title = $this->words->getBuffered("GalleryTitleSets");
+        $this->addLateLoadScriptFile('build/gallery.js');
     }
 
     protected function getSubmenuActiveItem()
@@ -24,7 +25,7 @@ class GalleryUserGalleriesPage extends GalleryUserPage
         $words = $this->words;
         return '<h1><a href="gallery">'.$words->get('Gallery').'</a> &raquo; <a href="gallery/show/user/'.$this->member->Username.'">'.ucfirst($this->member->Username).'</a></h1>';
     }
-    
+
     public function leftSidebar()
     {
         $galleries = $this->galleries;

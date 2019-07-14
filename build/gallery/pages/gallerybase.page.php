@@ -16,7 +16,7 @@ class GalleryBasePage extends PageWithActiveSkin
         $this->model = new GalleryModel();
         $this->addLateLoadScriptFile('build/lightbox.js');
     }
-    
+
     protected function teaser() {
         ?>
         <div class="d-flex d-inline d-inline-block">
@@ -36,17 +36,17 @@ class GalleryBasePage extends PageWithActiveSkin
     protected function teaserHeadline() {
         echo $this->getWords()->getBuffered('Gallery') . $this->getWords()->flushBuffer();
     }
-    
+
     protected function getTopmenuActiveItem()
     {
         return 'gallery';
     }
-    
+
     protected function getSubmenuActiveItem()
     {
         return 'overview';
     }
-   
+
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'build/lightbox.css';
@@ -57,12 +57,12 @@ class GalleryBasePage extends PageWithActiveSkin
     {
         return $this->message;
     }
-    
+
     /*
     *  Custom functions
     *
     */
-    
+
     protected function getSubmenuItems()
     {
         return array();
@@ -111,7 +111,7 @@ class GalleryBasePage extends PageWithActiveSkin
         }
         echo '</div>';
     }
-    
+
     protected function userLinks()
     {
         $member = $this->loggedInMember;
@@ -124,7 +124,7 @@ class GalleryBasePage extends PageWithActiveSkin
             return $user_links;
         }
     }
-    
+
     protected function getUserLinksItems()
     {
         if ($member = $this->loggedInMember) {
@@ -138,5 +138,3 @@ class GalleryBasePage extends PageWithActiveSkin
         }
     }
 }
-
-?>

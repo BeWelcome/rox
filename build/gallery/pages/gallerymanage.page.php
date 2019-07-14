@@ -10,6 +10,11 @@
 
 class GalleryManagePage extends GalleryUserPage
 {
+    protected function init()
+    {
+        $this->addLateLoadScriptFile('build/gallery.js');
+    }
+
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
         return $stylesheets;
@@ -19,7 +24,7 @@ class GalleryManagePage extends GalleryUserPage
     {
         return 'manage';
     }
-    
+
     public function leftSidebar()
     {
         $galleries = $this->galleries;
@@ -37,7 +42,7 @@ class GalleryManagePage extends GalleryUserPage
         $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
         $formkit = $this->layoutkit->formkit;
         $callback_tag = $formkit->setPostCallback('GalleryController', 'manageCallback');
-        
+
         $itemsPerPage = 12;
         require SCRIPT_BASE . 'build/gallery/templates/gallerymanage.column_col3.php';
     }

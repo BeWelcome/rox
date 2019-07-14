@@ -9,6 +9,11 @@
 
 class GalleryOverviewPage extends GalleryBasePage
 {
+    protected function init()
+    {
+        $this->addLateLoadScriptFile('build/gallery.js');
+    }
+
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3_75percent.css';
@@ -19,7 +24,7 @@ class GalleryOverviewPage extends GalleryBasePage
     {
         return 'overview';
     }
-    
+
     protected function teaser() {
         echo '<div id="teaser" class="page-teaser clearfix">'.$this->teaserHeadline().'</div>';
     }
@@ -27,7 +32,7 @@ class GalleryOverviewPage extends GalleryBasePage
     protected function teaserHeadline() {
         return '<h1>'.$this->getWords()->get('Gallery').'</h1>';
     }
-    
+
     public function leftSidebar()
     {
         $loggedInMember = $this->loggedInMember;
@@ -44,7 +49,4 @@ class GalleryOverviewPage extends GalleryBasePage
         $itemsPerPage = 12;
         require SCRIPT_BASE . 'build/gallery/templates/galleries_overview.php';
     }
-
 }
-
-?>

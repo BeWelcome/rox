@@ -1,4 +1,4 @@
-<div class="row"><?php
+<?php
 $request = PRequest::get()->request;
 $Gallery = new GalleryController;
 $callbackId = $Gallery->updateGalleryProcess();
@@ -24,24 +24,29 @@ $p = PFunctions::paginate($statement, $page, $itemsPerPage);
 $statement = $p[0];
 
 ?>
-<div class="col-12 card-columns">
+<div id="masonry-grid" class="row">
     <?
     foreach ($statement as $d) {
+        echo '<div class="col-sm-6 col-lg-4 mb-4">';
         echo '<div class="card">';
         $title_short = ((strlen($d->title) >= 26) ? substr($d->title,0,25).'...' : $d->title);
-        echo '<a href="gallery/img?id='.$d->id.'" id="image_link_'.$d->id.'" data-toggle="lightbox" data-type="image" data-title="' . $d->title . '" data-gallery="a"><img class="framed w-100" src="gallery/thumbimg?id='.$d->id.($thumbsize ? '&t='.$thumbsize : '').'" alt="image"></a>';
-        echo '<div class="w-100 bg-white h5 px-2">';
+        echo '<a href="gallery/img?id='.$d->id.'" id="image_link_'.$d->id.'" data-toggle="lightbox" data-type="image" data-title="' . $d->title . '" data-gallery="a" class="text-center"><img class="img-fluid mx-auto d-block" src="gallery/thumbimg?id='.$d->id.($thumbsize ? '&t='.$thumbsize : '').'" alt="image"></a>';
+        echo '<div class="card-body p-1"><h6 class="card-title text-truncate">';
         if ($this->loggedInMember && $this->loggedInMember->Username == $d->user_handle) {
-            echo '<input type="checkbox" class="thumb_check input_check mr-2" name="imageId[]" value="'.$d->id.'">';
+            echo '<input type="checkbox" class="thumb_check input_check mr-1" name="imageId[]" value="'.$d->id.'">';
         }
         echo '<a href="gallery/img?id='.$d->id.'" title="'.$d->title.'">'.$title_short.'</a><a href="gallery/img?id='.$d->id.'">
-        <i class="fa fa-expand" title="'.$words->getSilent('Preview image').'"></i></a>'.$words->flushBuffer().'</div>';
-        echo '<p class="small p-2">'.$layoutbits->ago(strtotime($d->created)).' '.$words->getFormatted('by') .' <a href="members/'.$d->user_handle.'">'.$d->user_handle.'</a>';
+        <i class="fa fa-expand" title="'.$words->getSilent('Preview image').'"></i></a>'.$words->flushBuffer().'</h6></div>';
+        echo '<div class="card-text">';
+        echo '<p class="small">'.$layoutbits->ago(strtotime($d->created)).' '.$words->getFormatted('by') .' <a href="members/'.$d->user_handle.'">'.$d->user_handle.'</a>';
         echo '<a href="gallery/show/user/'.$d->user_handle.'" title="'.$words->getSilent('galleryUserOthers',$d->user_handle).'"><i class="fa fa-image ml-1"></i></a>'.$words->flushBuffer().'</p>';
+        echo '</div>';
+        echo '</div>';
         echo '</div>';
     }
     ?>
 </div>
+<div class="row">
 <div class="col-12">
 <?
     $pages = $p[1];

@@ -94,6 +94,8 @@ class HostingRequestController extends BaseMessageController
      * @param Message $parent
      *
      * @return Response
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function hostingRequestGuestReply(Request $request, Message $hostingRequest, Message $parent)
     {
@@ -158,6 +160,8 @@ class HostingRequestController extends BaseMessageController
      * @param Message $parent
      *
      * @return Response
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function hostingRequestHostReply(Request $request, Message $hostingRequest, Message $parent)
     {

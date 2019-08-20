@@ -22,6 +22,15 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
         $this->engine = $engine;
     }
 
+    /**
+     * @param Request $request
+     * @param AccessDeniedException $accessDeniedException
+     *
+     * @return Response
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
     public function handle(Request $request, AccessDeniedException $accessDeniedException)
     {
         $content = $this->getEngine()->render('security/access.denied.html.twig', [

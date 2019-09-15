@@ -106,6 +106,15 @@ This File display a topic and the messages which are inside it
                         . $words->getBuffered('ForumSubscribe') . '</a>' . $words->flushBuffer() . PHP_EOL;
                 }
             }
+            $replyuri = preg_replace('#/page.{1,3}/#', '/', $uri . 'reply');
+
+            if ((!$topic->topicinfo->IsClosed) and ($topic->topicinfo->CanReply)) {
+                ?>
+                <a class="btn btn-primary btn-sm float-right"
+                   href="<?= $replyuri ?>"><?= $words->getBuffered('ForumReply') ?></a><?= $words->flushBuffer() ?>
+                <?
+            }
+
         }
 
         echo "</h2>";
@@ -113,23 +122,12 @@ This File display a topic and the messages which are inside it
             <?php
             if ($topic->topicinfo->IdGroup > 0) {
                 ?>
-                <p class="m-0 text-muted">hallo<strong><?php echo $words->get("group"); ?>:</strong>
+                <p class="m-0 text-muted"><strong><?php echo $words->get("group"); ?>:</strong>
                     <a href="group/<?php echo $this->_model->getGroupName($topic->topicinfo->IdGroup); ?>">
                         <?php echo $this->_model->getGroupName($topic->topicinfo->GroupName); ?>
                     </a>
 
                     <?
-                    if ($User) {
-
-                        $replyuri = preg_replace('#/page.{1,3}/#', '/', $uri . 'reply');
-
-                        if ((!$topic->topicinfo->IsClosed) and ($topic->topicinfo->CanReply)) {
-                            ?>
-                            <a class="btn btn-primary float-right"
-                               href="<?= $replyuri ?>"><?= $words->getBuffered('ForumReply') ?></a><?= $words->flushBuffer() ?>
-                            <?
-                        }
-                    }
                     }
                     ?>
                 </p>
@@ -210,7 +208,7 @@ if ($User) {
     if (!$topic->topicinfo->IsClosed) {
         ?>
         <div class="col-12 mb-2">
-            <a href="<?php echo $replyuri; ?>" class="btn btn-primary float-right"><?php echo $words->getBuffered('ForumReply');; ?></a>
+            <a href="<?php echo $replyuri; ?>" class="btn btn-primary btn-sm float-right"><?php echo $words->getBuffered('ForumReply');; ?></a>
             <?php echo $words->flushBuffer() ?>
         </div>
         <?php

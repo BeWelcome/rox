@@ -14,13 +14,18 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-12 bg-white p-1">
+        <div class="col-12 mb-2">
+            <div class="row bg-white p-1 no-gutters">
             {% set myself = app.user %}
-            <div class="pull-left d-none d-md-block">{{ macros.avatarstack(receiver.Username, 50, false) }}
-                <br/><strong>{{ receiver.city.name }}, {{ receiver.city.country.name }}</strong>
+            <div class="d-none d-md-block mr-1">{{ macros.avatar(receiver.Username, 50, true) }}
+                <br/><small>{{ receiver.city.name }},<br>{{ receiver.city.country.name }}</small>
             </div>
             <div class="col">
-                <h2>{{ 'message.write_to' | trans | format(receiver.Username) }}</h2>
+                <h2>{{ 'message.write_to' | trans | format(receiver.Username) }}
+                        <a class="small" href="{{ url('all_messages_with', {'username': receiver.Username}) }}">
+                            <i class="far fa-envelope-open" title="{{ 'messages_allmessageswith' | trans | format(receiver.Username) }}"></i>
+                        </a>
+                </h2>
                 <small class="text-muted">                {{ 'Speaks' | trans }}
                     {% for level in receiver.languageLevels %}
                         {% spaceless %}
@@ -33,11 +38,9 @@
 
                     {% endfor %}
                 </small>
-                <small class="d-block text-muted pull-right">
-                    <a href="{{ url('all_messages_with', {'username': receiver.Username}) }}">
-                        <i class="fa fa-comments"></i> {{ 'messages_allmessageswith' | trans | format(receiver.Username) }}
-                    </a>
-                </small>
+            </div>
+            </div>
+            <div class="col text-right">
             </div>
         </div>
 

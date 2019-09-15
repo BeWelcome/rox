@@ -275,3 +275,30 @@ figure > figcaption {
 .editor, .ck-editor__editable {
   min-height: 10rem;
 }
+
+// Masonry
+.grid-item {
+  width:100%;
+}
+
+.grid-item-content img {
+  display: block;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.grid-item-content {
+  margin: .25rem;
+  padding: .25rem;
+  background: #ddd;
+  border: 1px solid #ccc;
+}
+
+.custom-file-label-fix {
+  overflow: hidden;
+  white-space: nowrap;
+  // For text overflow we need also padding-right.
+  // problem is the button width is not constant.
+  padding-right: 6em;
+  text-overflow: ellipsis;
+}

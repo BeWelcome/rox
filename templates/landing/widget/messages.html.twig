@@ -30,7 +30,7 @@
                     </div>
                 {% endif %}
                     <div class="small">
-                        from {{ macros.profilelink(message.sender.username) }} <span title="{{ message.created.toDateTimeString }}">{{ message.created.DiffForHumans }}</span>
+                        {{ 'from' | trans}} {% if message.sender %}{{ macros.profilelink(message.sender.username) }}{% else %} BeWelcome {% endif %}<span title="{{ message.created.toDateTimeString }}">{{ message.created.DiffForHumans }}</span>
                     </div>
             </div>
             <div class="ml-auto"><a href="{{ path(route, { id: message.id } ) }}"><i

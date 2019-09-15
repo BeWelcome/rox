@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
@@ -58,8 +58,7 @@ class GroupMembership extends RoxEntityBase
             return false;
         }
 
-        return $this->findByWhere("IdMember = {$member_id} AND IdGroup = {$group_id}");
-        
+        return $this->findByWhere("IdMember = {$member_id} AND IdGroup = {$group_id} and Approved = " . \App\Entity\Group::APPROVED);
     }
 
     /**
@@ -90,10 +89,10 @@ class GroupMembership extends RoxEntityBase
             return array();
         }
 
-        $sql = "SELECT COUNT(*) AS count FROM members AS m, " . $this->getTableName() 
+        $sql = "SELECT COUNT(*) AS count FROM members AS m, " . $this->getTableName()
             . " AS mg WHERE mg.IdGroup = " . $group_id . " AND mg.Status = 'In' "
             . " AND mg.IdMember = m.id AND m.Status IN (" . MemberStatusType::ACTIVE_ALL . ")";
-        
+
         $rr = $this->dao->query($sql);
         $count = 0;
         if ($rr) {
@@ -102,7 +101,7 @@ class GroupMembership extends RoxEntityBase
         }
         return $count;
     }
-    
+
     /**
      * return the members of the group
      *
@@ -127,7 +126,7 @@ class GroupMembership extends RoxEntityBase
         if (isset($where) && strlen($where))
         {
             $where_clause .= " AND {$where}";
-        }        
+        }
         $where_clause .= " ORDER BY created";
 
         $links = $this->findByWhereMany($where_clause);
@@ -151,12 +150,12 @@ class GroupMembership extends RoxEntityBase
         {
             $offset_clause = " OFFSET {$this->dao->escape($offset)}";
         }
-        
+
         $orderby = "mg.created ASC";
         if ($bylastlogin == TRUE){
             $orderby = "covertracks DESC";
         }
-        
+
         $sql = "
             SELECT
                 m.*,
@@ -164,7 +163,7 @@ class GroupMembership extends RoxEntityBase
                 FROM members AS m, {$this->getTableName()} AS mg";
         if ($notLoggedIn) {
             $sql .= ", memberspublicprofiles as mp ";
-        }        
+        }
         $sql .= " WHERE m.Status IN ( " . MemberStatusType::ACTIVE_ALL . ") AND m.id IN ('" . implode("','", $members) . "') AND mg.IdMember = m.id AND mg.IdGroup = {$group_id}";
         if ($notLoggedIn) {
             $sql .= " AND mp.IdMember=m.id";
@@ -248,7 +247,7 @@ class GroupMembership extends RoxEntityBase
             return false;
         }
 
-        // only bother if member is not already ... a member        
+        // only bother if member is not already ... a member
         if (!$this->isMember($group, $member, false))
         {
             $this->Status = $this->dao->escape($status);

@@ -128,7 +128,10 @@
                         $group_img = ((strlen($my_groups[$i]->Picture) > 0) ? "group/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png');
                         $group_id = $my_groups[$i]->id;
                         $group_name = htmlspecialchars($my_groups[$i]->Name, ENT_QUOTES);
-                        $comment = strip_tags($purifier->purify($words->mInTrad($member->getGroupMembership($my_groups[$i])->Comment, $profile_language)));
+                        $comment = '';
+                        if ($member->getGroupMembership($my_groups[$i])) {
+                            $comment = strip_tags($purifier->purify($words->mInTrad($member->getGroupMembership($my_groups[$i])->Comment, $profile_language)));
+                        }
                         ?>
                         <div class="mb-3 d-flex d-column">
                             <div>

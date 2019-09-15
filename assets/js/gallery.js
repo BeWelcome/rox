@@ -9,7 +9,7 @@ $(function () {
         percentPosition: true
     });
 
-    imagesLoaded( grid ).on( 'progress', function() {
+    imagesLoaded( grid ).on( 'done', function() {
         // layout Masonry after each image loads
         msnry.layout();
     });

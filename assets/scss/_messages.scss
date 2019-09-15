@@ -40,7 +40,7 @@
     background-color: #df9;
   }
 
-  .message_own p {
+  .message_own p:last-of-type {
     margin-bottom: 0;
   }
 
@@ -54,7 +54,7 @@
     background-color: #ddd;
   }
 
-  .message_other p {
+  .message_other p:last-of-type {
     margin-bottom: 0;
   }
 

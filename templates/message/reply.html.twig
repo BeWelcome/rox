@@ -1,5 +1,8 @@
 {% extends 'base.html.twig' %}
 
+{% block javascripts %}
+{% endblock javascripts %}
+
 {% block content %}
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
     {{ form_errors(form) }}

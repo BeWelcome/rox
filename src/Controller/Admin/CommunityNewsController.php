@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\CommunityNews;
 use App\Form\CommunityNewsType;
 use App\Model\CommunityNewsModel;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,7 +51,7 @@ class CommunityNewsController extends AbstractController
         $communityNewsForm->handleRequest($request);
         if ($communityNewsForm->isSubmitted() && $communityNewsForm->isValid()) {
             $data = $communityNewsForm->getData();
-            $now = new \DateTime();
+            $now = new DateTime();
             $data->setCreatedBy($this->getUser());
             $data->setCreatedAt($now);
             $data->setUpdatedBy($this->getUser());
@@ -82,7 +83,7 @@ class CommunityNewsController extends AbstractController
         $communityNewsForm->handleRequest($request);
         if ($communityNewsForm->isSubmitted() && $communityNewsForm->isValid()) {
             $data = $communityNewsForm->getData();
-            $data->setUpdatedAt(new \DateTime());
+            $data->setUpdatedAt(new DateTime());
             $data->setUpdatedby($this->getUser());
             $em = $this->getDoctrine()->getManager();
             $em->persist($data);
@@ -106,7 +107,7 @@ class CommunityNewsController extends AbstractController
     public function hideAction(CommunityNews $communityNews)
     {
         $communityNews->setPublic(false);
-        $communityNews->setUpdatedAt(new \DateTime());
+        $communityNews->setUpdatedAt(new DateTime());
         $communityNews->setUpdatedby($this->getUser());
         $em = $this->getDoctrine()->getManager();
         $em->persist($communityNews);
@@ -127,7 +128,7 @@ class CommunityNewsController extends AbstractController
     public function unhideAction(CommunityNews $communityNews)
     {
         $communityNews->setPublic(true);
-        $communityNews->setUpdatedAt(new \DateTime());
+        $communityNews->setUpdatedAt(new DateTime());
         $communityNews->setUpdatedby($this->getUser());
         $em = $this->getDoctrine()->getManager();
         $em->persist($communityNews);

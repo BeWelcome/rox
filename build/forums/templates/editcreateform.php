@@ -211,4 +211,4 @@ $vars =& PPostHandler::getVars($callbackId);
     </form>
     </div>
 </div>
-<script src="script/ckeditor.js"></script>
+<script src="script/ckeditor.js?1"></script>

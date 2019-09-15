@@ -68,7 +68,7 @@
         "nelmio/alice": "^3.0",
         "nikic/php-parser": "^4.0",
         "phploc/phploc": "^5.0",
-        "phpmd/phpmd": "^2.6",
+        "phpmd/phpmd": "2.6.1",
         "phpmetrics/phpmetrics": "^2.0",
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.11.8",

@@ -61,6 +61,7 @@ class ActivitiesEditCreatePage extends ActivitiesBasePage
         $scripts[] = 'build/jquery_ui.js';
         $scripts[] = 'build/search/searchpicker.js';
         $scripts[] = 'script/ckeditor.js?1';
+        $scripts[] = 'script/ckeditorinit.js?1';
         return $scripts;
     }
 }

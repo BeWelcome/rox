@@ -106,12 +106,11 @@ $vars =& PPostHandler::getVars($callbackId);
 
             ?>
             <!-- input title -->
-                <div class="input-group mb-2">
-                    <div class="input-group-prepend h5 m-0" id="forumaddtitle">
-                        <div class="input-group-text"><label class="m-0"
+                <div class="form-group mb-2">
+                        <label class="m-0"
                                                              for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label>
-                        </div>
-                    </div>
+
+
                     <?php
                     $topic_titletrad = "";
                     if (isset($vars['topic_title'])) {
@@ -130,8 +129,8 @@ $vars =& PPostHandler::getVars($callbackId);
         <? } ?>
     </div>
     <div class="col-12 mb-2">
-
-            <label for="topic_text" class="sr-only"><?php echo $words->getFormatted("forum_label_text"); ?></label>
+        <div class="form-group">
+            <label for="topic_text"><?php echo $words->getFormatted("forum_label_text"); ?></label>
 
             <textarea name="topic_text" id="topic_text" class="form-control editor" rows="10" style="min-height: 10em;" placeholder="<?= $words->get('forum.post.placeholder'); ?>"><?php
                 if (isset($void_string)) {
@@ -152,14 +151,15 @@ $vars =& PPostHandler::getVars($callbackId);
                 }
             } ?>
         </div>
-        <div class="col-12 col-md-4 order-1 order-md-2 form-inline mb-2">
-            <div class="form-check">
-                <input type="checkbox" name="NotifyMe" id="NotifyMe" class="form-check-input" <?php echo $notifymecheck ?>>
-                <label for="NotifyMe" class="form-check-label"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
-            </div>
+    </div>
+    <div class="col-12 col-md-4 order-1 order-md-2 form-inline mb-1 px-1">
+        <div class="form-check">
+            <input type="checkbox" name="NotifyMe" id="NotifyMe" class="form-check-input" <?php echo $notifymecheck ?>>
+            <label for="NotifyMe" class="form-check-label"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
         </div>
+    </div>
 
-        <div class="col-12 col-md-4 order-2 order-md-3 form-inline mb-2">
+        <div class="col-12 col-md-4 order-2 order-md-3 form-inline mb-1 px-1">
                     <legend class="sr-only"><?= $words->getFormatted("forum_label_visibility") ?></legend>
                     <?php
                     // visibility can only be set on groups with 'VisiblePosts' set to 'yes'.
@@ -212,3 +212,4 @@ $vars =& PPostHandler::getVars($callbackId);
     </div>
 </div>
 <script src="script/ckeditor.js?1"></script>
+<script src="script/ckeditorinit.js?1"></script>

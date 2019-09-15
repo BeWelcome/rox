@@ -10,6 +10,12 @@
 
 class GallerySetPage extends GalleryBasePage
 {
+    protected function init()
+    {
+        parent::init();
+        $this->addLateLoadScriptFile('build/gallery.js');
+    }
+
     protected function breadcrumbs() {
         $words = $this->words;
         return '<h3>'.$words->get('Gallery').' &raquo; <a href="gallery/show/user/'.$this->member->Username.'">'.ucfirst($this->member->Username).'</a> &raquo; <a href="gallery/show/user/'.$this->member->Username.'/sets">'.$words->get("Photosets").'</a></h3>';
@@ -19,7 +25,7 @@ class GallerySetPage extends GalleryBasePage
         $words = $this->words;
         return '<h2><i class="fa fa-image mr-1"></i>'.htmlspecialchars($this->gallery->title).'</h2>';
     }
-    
+
     protected function teaser() {
         ?>
         <div>
@@ -32,18 +38,18 @@ class GallerySetPage extends GalleryBasePage
         </div>
         <?
     }
-    
+
     protected function getTopmenuActiveItem()
     {
         return 'gallery';
     }
-    
+
     protected function getSubmenuActiveItem()
     {
         if ($this->upload) return 'upload';
         return 'thumbnails';
     }
-    
+
     protected function getSubmenuItems()
     {
         $username = $this->member->Username;
@@ -58,11 +64,12 @@ class GallerySetPage extends GalleryBasePage
             // $tt[]= array('details', 'gallery/show/sets/'.$gallery->id.'/details/'.$this->page.'', $ww->GalleryDetails);
         if ($this->myself) {
             $tt[]= array("manage", 'gallery/manage', $ww->GalleryManage, 'manage');
+            $tt[]= array("upload", 'gallery/upload_multiple', $ww->GalleryUpload, 'upload');
             $tt[]= array("delete", 'gallery/show/sets/'.$gallery->id.'/delete', $ww->GalleryDelete, 'delete');
         }
         return($tt) ;
     }
-    
+
     protected function column_col3() {
         // $mem_redirect = $this->layoutkit->formkit->getMemFromRedirect();
         //         if ($mem_redirect) $this->message = $mem_redirect->message_gallery;
@@ -75,7 +82,7 @@ class GallerySetPage extends GalleryBasePage
         $num_rows = ($this->num_rows) ? $this->num_rows : 0;
         require SCRIPT_BASE . 'build/gallery/templates/galleryset.column_col3.php';
     }
-    
+
     public function leftSidebar() {
     }
 

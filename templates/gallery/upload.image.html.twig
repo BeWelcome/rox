@@ -3,13 +3,123 @@
 
 {% block javascripts %}
     <script src="{{ asset('build/bsfileselect.js') }}"></script>
+    <script type="text/javascript">
+        document.getElementById("upload").addEventListener("click", uploadFiles);
+        document.getElementById("abort").addEventListener("click", uploadAbort);
+
+        let clients = [];
+
+        function uploadFiles() {
+            let files = document.getElementById("form_files").files;
+
+            $('#upload').prop('disabled', true);
+            $('#abort').prop('disabled', false);
+
+            for (let i = 0; i < files.length; i++) {
+                let template = $('#template');
+                let newbar = template.clone();
+                $(newbar).attr('id', 'progress-' + i);
+                $(newbar).children().eq(0).attr('id', 'percent-' + i);
+                $(newbar).children().eq(1).attr('id', 'filename-' + i);
+                $(newbar).removeClass('d-none');
+                $(newbar).appendTo('#progressbars');
+                $('#filename-' + i).html(files.item(i).name);
+
+                uploadFile(i, files.item(i));
+            }
+
+            $('#progress-bars').removeClass('d-none');
+
+            return false;
+        }
+
+        function uploadFile(index, file) {
+
+            //FormData Objekt erzeugen
+            let formData = new FormData();
+            //XMLHttpRequest Objekt erzeugen
+            let client = new XMLHttpRequest();
+            clients.push(client);
+
+            //Fügt dem formData Objekt unser File Objekt hinzu
+            formData.append("file", file);
+
+            client.onerror = function(e) {
+                alert("onError");
+            };
+
+            client.onload = function(e) {
+                $("#progress-" + index).remove();
+                let response = JSON.parse(client.responseText);
+                if (response.success) {
+                    $('#images').append('<div class="mb-1"><img src={{ path('gallery_thumbnail') }}?id=' + response.imageId + '> ' + response.filename + ' - uploaded successfully</div>');
+                } else {
+                    $('#images').append('<div class="mb-1">' + response.filename + ' - ' + response.error + '</div>');
+                }
+                clients = clients.filter((value)=>value!==client);
+                if (clients.length === 0) {
+                    $('#upload').prop('disabled', false);
+                    $('#abort').prop('disabled', true);
+                }
+            };
+
+            client.upload.onprogress = function(e) {
+                let p = Math.round(100 / e.total * e.loaded);
+                $("#percent-" + index).width(p + "%");
+                $("#filename-" + index).html(file.name + ' - ' + p + "%");
+            };
+
+            client.onabort = function(e) {
+                clients = clients.filter((value)=>value!==client);
+            };
+
+            client.open("POST", "{{ path('gallery_upload_new') }}");
+            client.send(formData);
+        }
+
+        function uploadAbort() {
+            for(let i = 0; i < clients.length; i++) {
+                $("#progress-" + i).remove();
+                clients[i].abort();
+            }
+            alert("{{ 'upload.canceled'|trans }}");
+            $('#upload').prop('disabled', false);
+            $('#abort').prop('disabled', true);
+
+            return false;
+        }
+    </script>
 {% endblock javascripts %}
 
 {% block stylesheets %}
 {% endblock stylesheets %}
 
 {% block content %}
-    <div class="row">
-        {{ form(form) }}
+   <div class="row no-gutters">
+       <div class="col-12"><h1><span class="d-none d.md-block">{{ 'gallery' | trans }} - </span>{{ 'upload' | trans }}</h1>
+       <p>{{ 'gallery.upload.helptext' | trans}}</p></div>
+       {{ form_start(form, {'attr': {'class': 'col-12'}}) }}
+       <div class="custom-file col-12 mb-2">
+           <input type="file" class="custom-file-input" multiple="multiple" id="form_files">
+           <label class="custom-file-label custom-file-label-fix" for="inputGroupFile01">Choose file</label>
+       </div>
+
+       <button id="upload" class="btn btn-primary col-4 col-md-2 mr-2 mb-2" type="button"">{{ 'upload'|trans }}</button>
+       <button id="abort" class="btn btn-danger col-4 col-md-2 mb-2" type="button" disabled="disabled" onclick="uploadAbort()">{{ 'abort'|trans }}</button>
+
+       <div id="template" class="progress position-relative p-0 mt-2 d-none">
+           <div class="progress-bar" role="progressbar" style="width: 0;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+           <small class="justify-content-center d-flex position-absolute w-100">{filename}</small>
+       </div>
+
+       <div class="col-12 p-0 mt-2" id="progressbars">
+       </div>
+
+       <div class="col-12 p-0 mt-2" id="images">
+       </div>
+       {% do form.files.setRendered %}
+       {% do form.upload.setRendered %}
+       {% do form.abort.setRendered %}
+       {{ form_end(form) }}
     </div>
 {% endblock content %}

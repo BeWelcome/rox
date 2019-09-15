@@ -4,13 +4,17 @@ namespace App\Controller;
 
 use App\Entity\Gallery;
 use App\Entity\GalleryImage;
+use App\Entity\Group;
+use App\Entity\Member;
 use App\Entity\UploadedImage;
 use App\Form\CustomDataClass\GalleryImageEditRequest;
 use App\Form\GalleryEditImageFormType;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
+use Intervention\Image\ImageManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -23,12 +27,13 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class GalleryController extends AbstractController
 {
-    use UniqueFilenameTrait;
     use TranslatorTrait;
     use TranslatedFlashTrait;
+    use UniqueFilenameTrait;
 
     // Limit uploaded files to 8MB
     const MAX_SIZE = 8 * 1024 * 1024;
@@ -75,45 +80,141 @@ class GalleryController extends AbstractController
     }
 
     /**
+     * @Route("/new/image/upload", name="gallery_upload_new")
+     *
+     * @param Request $request
+     *
+     * @param ValidatorInterface $validator
+     * @return JsonResponse
+     */
+    public function handleImageUploadToGallery(Request $request, ValidatorInterface $validator)
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        /** @var Member $member */
+        $member = $this->getUser();
+
+        $response = new JsonResponse();
+        // Create Image constraint to check if uploaded file is an image and not something else
+
+        $constraint = new Image([
+            'maxSize' => (int) ($this->getParameter('upload_max_size')),
+            'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif'],
+            'mimeTypesMessage' => 'upload.error.not_supported'
+        ]);
+
+        /** @var UploadedFile $image */
+        $this->getTranslator()->setLocale($request->getLocale());
+
+        $image = $request->files->get('file');
+        $violations = $validator->validate($image, $constraint);
+
+        $originalName = $image->getClientOriginalName();
+        if (\count($violations) > 0) {
+            $response->setData([
+                'success' => false,
+                'filename' => $originalName,
+                'error' => $violations->get(0)->getMessage(),
+            ]);
+            $response->setStatusCode(415);
+            return $response;
+        }
+
+        // We got an image and need to create a thumbnail for it and put it into the correct place
+        list($width, $height) = getimagesize($image);
+        $uploadDirectory = $this->getParameter('gallery_directory') . '/member' . $member->getId();
+        $fileName = $this->generateUniqueFileName().'.'.$image->guessExtension();
+
+        // moves the file to the directory where gallery images are stored
+        /** @var UploadedFile */
+        $image = $image->move(
+            $uploadDirectory,
+            $fileName
+        );
+
+        // creates a thumb nail for the current image
+        $imageManager = new ImageManager();
+        $img = $imageManager->make($image->getRealPath());
+        if ($width > 240 || $height > 240) {
+            $img->resize(240, 240, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+        }
+        $img->save($uploadDirectory.'/thumb'.$fileName);
+
+        // Create doctrine entity for image and save to database
+        $galleryImage = new GalleryImage();
+        $galleryImage->setFile($fileName);
+        $galleryImage->setFlags('');
+        $galleryImage->setOriginal($originalName);
+        $galleryImage->setHeight($height);
+        $galleryImage->setWidth($width);
+        $galleryImage->setOwner($member);
+        $galleryImage->setMimetype($image->getMimeType());
+        $galleryImage->setTitle('');
+        $galleryImage->setDescription('');
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($galleryImage);
+        $em->flush();
+
+        $response->setData([
+            'success' => true,
+            'filename' => $originalName,
+            'imageId' => $galleryImage->getId(),
+        ]);
+
+        return $response;
+    }
+
+    /**
      * @Route("/gallery/upload_multiple", name="gallery_upload_multiple")
      *
      * @param Request $request
      *
      * @return Response
-    public function uploadImageToGallery(Request $request)
+     */
+    public function uploadImagesToGallery(Request $request)
     {
         $uploadImageForm = $this->createFormBuilder()
             ->add('files', FileType::class, [
                 'label' => 'files',
-                'multiple' => true,
+                // 'multiple' => true,
             ])
             ->add('upload', SubmitType::class, [
                 'label' => 'upload',
             ])
+            ->add('abort', SubmitType::class, [
+                'label' => 'abort',
+            ])
             ->getForm();
         $uploadImageForm->handleRequest($request);
-        if ($uploadImageForm->isSubmitted() && $uploadImageForm->isValid())
-        {
-            $data = $uploadImageForm->getData();
+        if ($uploadImageForm->isSubmitted() && $uploadImageForm->isValid()) {
+            // if this is called someone tries to hack the system as the Javascript on the upload page
+            // takes care of uploading the files so we return an 403
+            return new Response(403);
         }
 
         return $this->render('gallery/upload.image.html.twig', [
             'form' => $uploadImageForm->createView(),
+            'submenu' => [
+                'active' => 'upload',
+                'items' => $this->getSubmenuItems(),
+            ],
         ]);
     }
-     */
 
     /**
      * @Route("/gallery/upload/image", name="gallery_upload_ckeditor")
      *
      * @param Request $request
      *
+     * @param ValidatorInterface $validator
      * @return JsonResponse
      *
      * @throw AccessDeniedException
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function uploadImageFromCKEditor5(Request $request)
+    public function uploadImageFromCKEditor5(Request $request, ValidatorInterface $validator)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
@@ -128,14 +229,13 @@ class GalleryController extends AbstractController
         ]);
 
         $image = $request->files->get('upload');
-        $validator = Validation::createValidator();
         $violations = $validator->validate($image, $constraint);
 
         if (\count($violations) > 0) {
             $response->setData([
                 'uploaded' => false,
                 'error' => [
-                    'message' => 'upload.error.no_image',
+                    'message' => $violations->get(0)->getMessage(),
                 ],
             ]);
 
@@ -194,5 +294,29 @@ class GalleryController extends AbstractController
         $filepath = $this->getParameter('upload_directory').'/'.$image->getFilename();
 
         return new BinaryFileResponse($filepath);
+    }
+
+    /**
+     * @return array
+     */
+    private function getSubmenuItems()
+    {
+        $member = $this->getUser();
+        $submenuItems = [
+            'manage' => [
+                'key' => 'GalleryManage',
+                'url' => $this->generateUrl('gallery_manage'),
+            ],
+            'upload' => [
+                'key' => 'GalleryUpload',
+                'url' => $this->generateUrl('gallery_upload_multiple'),
+            ],
+            'albums' => [
+                'key' => 'GalleryMy',
+                'url' => $this->generateUrl('gallery_show_user_albums', ['username' => $member->getUsername()]),
+            ],
+        ];
+
+        return $submenuItems;
     }
 }

@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="gallery_items", indexes={@ORM\Index(name="file", columns={"file"}), @ORM\Index(name="user_id_foreign", columns={"user_id_foreign"})})
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
@@ -103,7 +104,7 @@ class GalleryImage
     /**
      * Set owner.
      *
-     * @param TBUser $owner
+     * @param Member $owner
      *
      * @return GalleryImage
      */
@@ -115,9 +116,9 @@ class GalleryImage
     }
 
     /**
-     * Get userIdForeign.
+     * Get owner.
      *
-     * @return TBUser
+     * @return Member
      */
     public function getOwner()
     {
@@ -348,5 +349,14 @@ class GalleryImage
     public function getId()
     {
         return $this->id;
+    }
+    /**
+     * Triggered on insert.
+     *
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created = new \DateTime('now');
     }
 }

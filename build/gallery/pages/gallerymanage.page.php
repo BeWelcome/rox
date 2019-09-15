@@ -12,6 +12,7 @@ class GalleryManagePage extends GalleryUserPage
 {
     protected function init()
     {
+        parent::init();
         $this->addLateLoadScriptFile('build/gallery.js');
     }
 

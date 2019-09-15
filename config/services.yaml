@@ -8,6 +8,7 @@ parameters:
   new_members_messages_per_day: "%env(new_members_messages_per_day)%"
   data_directory: "%kernel.project_dir%/data"
   group_directory: "%kernel.project_dir%/%env(group_directory)%"
+  gallery_directory: "%kernel.project_dir%/%env(gallery_directory)%"
   upload_directory: "%kernel.project_dir%/%env(upload_directory)%"
   upload_max_size: "%env(upload_max_size)%"
 

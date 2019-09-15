@@ -11,6 +11,7 @@ class GalleryOverviewPage extends GalleryBasePage
 {
     protected function init()
     {
+        parent::init();
         $this->addLateLoadScriptFile('build/gallery.js');
     }
 

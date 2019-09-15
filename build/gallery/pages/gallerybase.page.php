@@ -19,7 +19,7 @@ class GalleryBasePage extends PageWithActiveSkin
 
     protected function teaser() {
         ?>
-        <div class="d-flex d-inline d-inline-block">
+        <div class="">
             <div><?=$this->breadcrumbs()?></div>
             <div class="ml-3"><?=$this->teaserHeadline()?></div>
         </div>
@@ -133,7 +133,7 @@ class GalleryBasePage extends PageWithActiveSkin
             $items = array();
             $items[] = array('user', 'gallery/manage', $ww->GalleryManage, 'bigbuttongrey');
             $items[] = array('user', 'gallery/show/user/'.$member->Username, $ww->GalleryMy, 'bigbuttongrey');
-            $items[] = array('upload', 'gallery/upload', $ww->GalleryUpload, 'bigbuttongrey');
+            $items[] = array('upload', 'gallery/upload_multiple', $ww->GalleryUpload, 'bigbuttongrey');
             return $items;
         }
     }

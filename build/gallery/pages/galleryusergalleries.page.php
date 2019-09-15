@@ -12,6 +12,7 @@ class GalleryUserGalleriesPage extends GalleryUserPage
 {
     protected function init()
     {
+        parent::init();
         $this->page_title = $this->words->getBuffered("GalleryTitleSets");
         $this->addLateLoadScriptFile('build/gallery.js');
     }

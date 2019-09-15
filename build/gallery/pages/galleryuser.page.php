@@ -4,7 +4,7 @@
 //------------------------------------------------------------------------------------
 /**
  * page showing latest images and albums of a user
- * 
+ *
  *
  */
 
@@ -27,16 +27,16 @@ class GalleryUserPage extends GalleryBasePage
         $tt = array();
         if ($this->myself) {
             $tt[]= array("manage", 'gallery/manage', $ww->GalleryManage, 'manage');
-            $tt[]= array("upload", 'gallery/upload', $ww->GalleryUpload, 'upload');
+            $tt[]= array("upload", 'gallery/upload_multiple', $ww->GalleryUpload, 'upload');
         } else {
             $tt[]= array('images', 'gallery/show/user/'.$member->Username.'/images'.$this->page.'', $ww->GalleryTitleLatest);
         }
         $tt[]= array('overview', 'gallery/show/user/'.$member->Username.'/'.$this->page.'', $ww->GalleryTitleSets);
         echo $words->flushBuffer();
         return($tt) ;
-        
+
     }
-    
+
     protected function submenu() {
         $active_menu_item = $this->getSubmenuActiveItem();
         echo '<div class="col-md-3 offcanvas-collapse mb-2" id="sidebar">';
@@ -81,7 +81,7 @@ class GalleryUserPage extends GalleryBasePage
         echo '</div>';
         */
     }
-    
+
     protected function teaser() {
 
         /*

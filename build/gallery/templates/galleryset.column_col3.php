@@ -1,5 +1,4 @@
-<div class="row">
-    <div class="col-12 card-columns">
+<div id="masonry-grid" class="row">
         <?php
 /* Template for showing the col3-content of a single gallery */
 
@@ -18,31 +17,26 @@ if (!isset($vars['errors'])) {
 }
 if ($statement){
 foreach ($statement as $d) { ?>
-
-        <div class="card h-100 p-2 mb-2">
+<div class="col-12 col-sm-6 col-md-4">
+        <div class="card p-2 mb-2">
             <?
             $formkit = $this->layoutkit->formkit;
             $callback_tag = $formkit->setPostCallback('GalleryController', 'updateGalleryCallback');
             ?>
-            <form method="POST" action=""><?= $callback_tag; ?>
-            <a href="gallery/img?id=<?= $d->id ?>" data-toggle="lightbox" data-type="image"><img class="w-100 mb-1" src="gallery/thumbimg?id=<?= $d->id ?>&amp;t=1" alt="<?= $d->title ?>"></a>
+            <form method="POST"><?= $callback_tag; ?>
+            <a href="gallery/img?id=<?= $d->id ?>" data-toggle="lightbox" data-type="image"><img class="img-fluid d-block mx-auto mb-1" src="gallery/thumbimg?id=<?= $d->id ?>&amp;t=1" alt="<?= $d->title ?>"></a>
             <? if ($this->myself) { ?>
-             <a href="gallery/img?id=<?= $d->id ?>" class="btn btn-primary"><i class="fa fa-edit mr-1"></i><?= $words->get('Edit'); ?></a>
-                <input type="submit" class="btn btn-danger" name="button" value="<?= $words->getBuffered('GalleryRemoveImagesFromPhotoset') ?>">
+             <a href="gallery/img?id=<?= $d->id ?>" class="btn btn-sm btn-primary"><i class="fa fa-edit mr-1"></i><?= $words->get('Edit'); ?></a>
+                <input type="submit" class="btn btn-sm btn-danger" name="button" value="<?= $words->getBuffered('GalleryRemoveImagesFromPhotoset') ?>">
                 <input type="checkbox" class="form-check-input d-none" name="imageId[]" value="<?= $d->id ?>" checked>
                 <input name="gallery" type="hidden" value="<?= $g->id ?>">
                 <input name="removeOnly" type="hidden" value="1">
             </form>
             <? } ?>
         </div>
-<?
-}
-}
-?>
-    </div><?php
-if ($this->myself) {
-// Display the upload form
-require SCRIPT_BASE . 'build/gallery/templates/uploadform.php';
-}
-?>
     </div>
+    <?
+    }
+}
+?>
+</div>

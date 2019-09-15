@@ -2,12 +2,12 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    <div class="row">
+    <div class="row no-gutters">
         {% set original = thread | last %}{% set request = original.Request %}
         {% set myself = app.user %}
         {% if original.Sender.Username == myself.Username %}{% set otherUser = original.Receiver %}{% else %}{% set otherUser = original.Sender %}{% endif %}
         {% if current.subject %}{% set currentSubject = current.Subject.Subject %}{% else %}{% set currentSubject = 'Conversation with ' ~ otherUser.Username %}{% endif %}
-        <div class="col-12 sticky-top py-1 bg-white d-inline-block messageheader mb-1">
+        <div class="col-12 sticky-top py-1 bg-white messageheader mb-1 px-1">
             <div class="pull-left">{{ macros.avatarstack(otherUser.Username, 50, false) }}</div>
             <div class="pull-right">{{ macros.avatarstack(myself.Username, 50, true) }}</div>
             <div>

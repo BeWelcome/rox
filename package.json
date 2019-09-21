@@ -31,7 +31,7 @@
     "@symfony/webpack-encore": "^0.28.0",
     "@ttskch/select2-bootstrap4-theme": "^1.2.3",
     "autoprefixer": "^9.6.1",
-    "bootstrap": "^4.3.1",
+    "bootstrap": "4.3.0",
     "bootstrap4": "0.0.1-security",
     "css-loader": "^1.0.1",
     "file-loader": "^3.0.1",

@@ -51,7 +51,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('bwforum', 'forums/bwforum');
         $this->addRouteDirectly('forum_permalink', '/forums/s{threadId}/');
         $this->addRouteDirectly('forum_thread', '/forums/s{threadId}');
-        $this->addRouteDirectly('forum_thread', '/forums/s{threadId}/page{pageId}');
+        $this->addRouteDirectly('forum_thread_pages', '/forums/s{threadId}/page{pageId}');
         $this->addRouteDirectly('forum_admin', '/forums/modfulleditpost/{postId}');
         $this->addRouteDirectly('forum_admin_edit', '/forums/modeditpost/{postId}');
         $this->addRouteDirectly('forum_admin_edit_trailing', '/forums/modeditpost/{postId}/');

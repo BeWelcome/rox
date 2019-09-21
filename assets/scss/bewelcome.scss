@@ -32,7 +32,8 @@ $font-family-bold: Signika;
 
 // select2
 @import "~select2/src/scss/core";
-@import "~@ttskch/select2-bootstrap4-theme/src/layout";
+@import "~select2-theme-bootstrap4/src/select2-bootstrap";
+// @import "~@ttskch/select2-bootstrap4-theme/src/layout";
 
 // Set yaml classes to keep old style alive and consistent
 @import "yaml";

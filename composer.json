@@ -29,6 +29,7 @@
         "psr/log": "*",
         "sensio/framework-extra-bundle": "^5.2",
         "swiftmailer/swiftmailer": "^6.0",
+        "symfony/apache-pack": "^1.0",
         "symfony/asset": "^4.1",
         "symfony/debug-bundle": "4.2.*",
         "symfony/dotenv": "4.*",

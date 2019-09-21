@@ -57,12 +57,9 @@ main {
   user-select: none;
   border: $input-btn-border-width solid transparent;
   margin-right: 1rem;
-  @include button-size($input-btn-padding-y, $input-btn-padding-x, $font-size-base, $line-height-base, $btn-border-radius);
+  @include button-size($input-btn-padding-y, $input-btn-padding-x, $font-size-base, $btn-border-radius);
   @include transition(all .2s ease-in-out);
 
-  @include hover-focus {
-    text-decoration: none;
-  }
   &.focus {
     text-decoration: none;
   }

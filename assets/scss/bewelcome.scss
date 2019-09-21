@@ -32,7 +32,7 @@ $font-family-bold: Signika;
 
 // select2
 @import "~select2/src/scss/core";
-@import "~select2-theme-bootstrap4/src/select2-bootstrap";
+@import "~@ttskch/select2-bootstrap4-theme/src/layout";
 
 // Set yaml classes to keep old style alive and consistent
 @import "yaml";
@@ -48,8 +48,8 @@ $font-family-bold: Signika;
 @import "footer";
 
 .badge-warning {
-  @include badge-variant(white);
-  color: $brand-primary;
+    background-color: white;
+    color: $brand-primary;
 }
 
 .map {
@@ -213,10 +213,6 @@ a.active .metric .value {
     background-color: $secondary;
     color: white;
     @include border-top-radius($nav-tabs-border-radius);
-
-    @include hover-focus {
-      border-color: $nav-tabs-link-hover-border-color;
-    }
 
     &.disabled {
       color: $nav-link-disabled-color;

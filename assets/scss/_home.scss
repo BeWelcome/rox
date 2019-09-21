@@ -27,7 +27,7 @@
   box-shadow: 0 3px 8px -2px #999696;
   border-radius: 0 0.25rem 0.25rem 0.25rem;
   border: 1px solid #e1e1e1;
-  border-top: none;  
+  border-top: none;
 }
 
 .shadow{
@@ -156,9 +156,4 @@
   background-color: transparent;
   color: $link-color;
   text-decoration: $link-decoration;
-
-  @include hover-focus {
-    color: $link-hover-color;
-    text-decoration: $link-hover-decoration;
-  }
 }

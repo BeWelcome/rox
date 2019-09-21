@@ -1,7 +1,7 @@
 import 'jquery';
 import 'popper.js';
 
-import 'bootstrap/js/src/index.js';
+import 'bootstrap';
 import '../../public/script/common/common.js';
 import '../scss/bewelcome.scss';
 import 'cookieconsent/src/cookieconsent.js';

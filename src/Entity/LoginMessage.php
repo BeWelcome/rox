@@ -1,16 +1,25 @@
 <?php
+/*
+ * @codingStandardsIgnoreFile
+ *
+ * Auto generated file ignore for Code Sniffer
+ */
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * LoginMessages
  *
  * @ORM\Table(name="login_messages")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\LoginMessageRepository")
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
-class LoginMessages
+class LoginMessage
 {
     /**
      * @var string
@@ -20,14 +29,14 @@ class LoginMessages
     private $text;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
     private $created = 'CURRENT_TIMESTAMP';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -35,14 +44,12 @@ class LoginMessages
      */
     private $id;
 
-
-
     /**
      * Set text
      *
      * @param string $text
      *
-     * @return LoginMessages
+     * @return LoginMessage
      */
     public function setText($text)
     {
@@ -64,9 +71,9 @@ class LoginMessages
     /**
      * Set created
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
-     * @return LoginMessages
+     * @return LoginMessage
      */
     public function setCreated($created)
     {
@@ -78,7 +85,7 @@ class LoginMessages
     /**
      * Get created
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreated()
     {
@@ -88,7 +95,7 @@ class LoginMessages
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

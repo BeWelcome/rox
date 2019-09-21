@@ -1650,7 +1650,7 @@
       }
       .type-button {
         input {
-          @include button-size($input-padding-x, $input-padding-y, $font-size-base, $line-height, $border-radius);
+          @include button-size($input-padding-x, $input-padding-y, $font-size-base, $border-radius);
           padding: .5em 1.2em;
           width: auto;
           cursor: pointer;

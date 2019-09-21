@@ -5,14 +5,17 @@ namespace App\Twig;
 use App\Entity\Activity;
 use App\Entity\Comment;
 use App\Entity\Group;
+use App\Entity\LoginMessage;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Notification;
 use App\Repository\ActivityRepository;
 use App\Repository\CommentRepository;
+use App\Repository\LoginMessageRepository;
 use App\Repository\MessageRepository;
 use App\Repository\NotificationRepository;
 use App\Utilities\ManagerTrait;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Router;
@@ -75,6 +78,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         }
 
         return [
+            'loginmessages' => $this->member ? $this->getLoginMessages(): null,
             'groupsInApprovalQueue' => $this->member ? $this->getGroupsInApprovalQueueCount() : null,
             'reportedCommentsCount' => $this->member ? $this->getReportedCommentsCount() : null,
             'reportedMessagesCount' => $this->member ? $this->getReportedMessagesCount() : null,
@@ -270,5 +274,16 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         $activityRepository = $this->getManager()->getRepository(Activity::class);
 
         return $activityRepository->getUpcomingAroundLocationCount($this->member->getCity());
+    }
+
+    /**
+     * @return int
+     */
+    protected function getLoginMessages()
+    {
+        /** @var LoginMessageRepository $loginMessagsRepository */
+        $loginMessageRepository = $this->getManager()->getRepository(LoginMessage::class);
+
+        return $loginMessageRepository->getLoginMessages($this->member);
     }
 }

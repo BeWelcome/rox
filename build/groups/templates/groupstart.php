@@ -85,7 +85,7 @@
 
     <?php
     if ($memberCount != $visibleMemberCount) {
-        $login_url = 'login/groups/' . $this->group->id;
+        $login_url = 'login/group/' . $this->group->id;
         $loginstr = '<a href="' . $login_url . '#login-widget" alt="login" id="header-login-link">' . $words->getBuffered('GroupsMoreMemberLogin') . '</a>';
         echo $words->get("GroupMoreMembers", $memberCount - $visibleMemberCount, $loginstr);
     } else { ?>

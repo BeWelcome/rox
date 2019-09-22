@@ -1,5 +1,5 @@
         <div class="card">
-            <a id="link_<?= $d->id ?>" href="gallery/img?id=<?= $d->id ?>" title="<?= $d->title ?>" rel="image"
+            <a id="link_<?= $d->id ?>" href="gallery/img?id=<?= $d->id ?>" class="p-1" title="<?= $d->title ?>" rel="image"
                data-toggle="lightbox" data-type="image">
                 <img src="gallery/thumbimg?id=<?= $d->id ?>"
                      class="card-img-top" alt="<?= $d->title ?>">

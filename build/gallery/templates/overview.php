@@ -28,8 +28,8 @@ if ($statement) {
         foreach ($statement as $d) {
         echo '<div class="col-sm-6 col-lg-4 mb-4">';
         echo '<div class="card">';
-        echo '<a href="gallery/img?id='. $d->id .'" title="'. $d->title .'" data-toggle="lightbox" data-type="image">';
-        echo '<img class="mx-auto d-block" src="gallery/thumbimg?id='.$d->id.
+        echo '<a href="gallery/img?id='. $d->id .'" class="p-1" title="'. $d->title .'" data-toggle="lightbox" data-type="image">';
+        echo '<img class="mx-auto d-block img-fluid img-thumbnail" src="gallery/thumbimg?id='.$d->id.
             ($thumbsize ? '&t='.$thumbsize : '' ) . '" alt="' . $d->title . '">';
         echo '</a>';
         $title_short = ((strlen($d->title) >= 26) ? substr($d->title,0,20).'...' : $d->title);

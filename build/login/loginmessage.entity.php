@@ -58,14 +58,16 @@ class LoginMessage extends RoxEntityBase
         if (!$this->_has_loaded && $member) {
             return;
         }
+        $messageId = $this->getPKValue();
+        $memberId = $member->id;
         $q = $this->dao->prepare("
             REPLACE INTO
                 `login_messages_acknowledged`
                 (messageId, memberId, acknowledged)
             VALUES
                 (?, ?, 1)");
-        $q->bindParam(0, $this->getPKValue());
-        $q->bindParam(1, $member->id);
+        $q->bindParam(0, $messageId);
+        $q->bindParam(1, $memberId);
         $q->execute();
     }
 }

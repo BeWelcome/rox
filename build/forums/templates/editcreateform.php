@@ -31,7 +31,7 @@ $words = new MOD_words();
 
 $request = PRequest::get()->request;
 $uri = implode('/', $request);
-$groupsforum = ($request[0] == 'groups' && is_numeric($request[1])) ? $request[1] : false;
+$groupsforum = ($request[0] == 'group' && is_numeric($request[1])) ? $request[1] : false;
 
 if (isset($this->suggestionsGroupId)) {
     $groupsforum = $this->suggestionsGroupId;

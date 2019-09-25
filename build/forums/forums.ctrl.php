@@ -73,7 +73,7 @@ class ForumsController extends PAppController
         $request = $this->request;
         if (isset($request[0]) && $request[0] != 'forums') {
             // if this is a ./groups url get the group number if any
-            if (($request[0] == "groups") && (isset($request[1]))) {
+            if (($request[0] == "group") && (isset($request[1]))) {
                 $IdGroup = intval($request[1]);
             }
             $new_request = array();
@@ -835,7 +835,7 @@ class ForumsController extends PAppController
           $this->action = self::ACTION_VIEW;
       }
 
-      if (isset($request[0]) && $request[0] == 'groups') {
+      if (isset($request[0]) && $request[0] == 'group') {
             if (isset($request[1])) {
                 if ($request[1] == 'forums') {
                     $this->_model->setTopMode(Forums::CV_TOPMODE_GROUPS);

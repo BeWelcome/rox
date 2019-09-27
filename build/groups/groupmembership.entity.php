@@ -58,7 +58,7 @@ class GroupMembership extends RoxEntityBase
             return false;
         }
 
-        return $this->findByWhere("IdMember = {$member_id} AND IdGroup = {$group_id} and Approved = " . \App\Entity\Group::APPROVED);
+        return $this->findByWhere("IdMember = {$member_id} AND IdGroup = {$group_id}");
     }
 
     /**

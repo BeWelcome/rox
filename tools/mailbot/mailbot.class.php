@@ -550,7 +550,7 @@ class ForumNotificationMailbot extends Mailbot
         $msg['subject'] = $NotificationType . $post->thread_title;
         if ($post->groupId) {
             $msg['subject'] .= ' [' . $this->_getGroupName($post->groupId)->Name . ']';
-            $msg['title'] = '<a href="' .$this->baseuri. 'groups/' . $post->groupId . '/forum/s' . $post->IdThread .'">' . $msg['subject'] . '</a>  (<a href="' .$this->baseuri. 'groups/' . $post->groupId . '/forum/s' . $post->IdThread .'/reply">' .
+            $msg['title'] = '<a href="' .$this->baseuri. 'group/' . $post->groupId . '/forum/s' . $post->IdThread .'">' . $msg['subject'] . '</a>  (<a href="' .$this->baseuri. 'group/' . $post->groupId . '/forum/s' . $post->IdThread .'/reply">' .
                 $this->words->getFormattedInLang('reply', $language) . '</a>)';
         } else {
             $msg['title'] = '<a href="' .$this->baseuri. 'forums/s' . $post->IdThread . '">' . $msg['subject'] . '</a> (<a href="' .$this->baseuri. 'forums/s' . $post->IdThread . '">' . $this->words->getFormattedInLang('reply', $language) . '</a>)';

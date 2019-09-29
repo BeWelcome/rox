@@ -544,7 +544,7 @@ LIMIT 1
                 m.FirstName,
                 m.SecondName,
                 m.LastName,
-                hes.current,
+                IF(hes.current IS NULL, -1, hes.current),
                 date_format(m.LastLogin,'%Y-%m-%d') AS LastLogin,
                 IF(m.ProfileSummary != 0, 1, 0) AS HasProfileSummary,
                 IF(mp.photoCount IS NULL, 0, 1) AS HasProfilePhoto,
@@ -552,8 +552,15 @@ LIMIT 1
                 g.country,
                 m.latitude,
                 m.longitude,
-                ((m.latitude - " . $vars['location-latitude'] . ") * (m.latitude - " . $vars['location-latitude'] . ") +
-                        (m.longitude - " . $vars['location-longitude'] . ") * (m.longitude - " . $vars['location-longitude'] . "))  AS Distance,
+                (
+      6371 * acos (
+      cos ( radians( " . $vars['location-latitude'] . ") )
+      * cos( radians( m.latitude ) )
+      * cos( radians( m.longitude ) - radians(" . $vars['location-longitude'] . ") )
+      + sin ( radians(" . $vars['location-latitude'] . ") )
+      * sin( radians( m.latitude ) )
+    )
+) AS distance,
                 IF(c.IdToMember IS NULL, 0, c.commentCount) AS CommentCount
             *FROM*
                 " . $this->tables . "

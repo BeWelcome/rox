@@ -58,7 +58,8 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @Route("/groups/{groupId}", name="groups_redirect")
+     * @Route("/groups/{groupId}", name="groups_redirect",
+     *     requirements = {"groupId": "\d+"})
      *
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
      *

@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
@@ -51,7 +51,7 @@ class GroupForumPage extends GroupsBasePage
 
                 $Forums = new ForumsController;
                 $Forums->setEngine($this->engine);
-                $Forums->index('groups');
+                $Forums->index('group');
                 //$forums_widget->setGroup($this->getGroup());
 
                 //include "templates/groupforum.column_col3.php";
@@ -62,7 +62,7 @@ class GroupForumPage extends GroupsBasePage
     protected function getSubmenuActiveItem() {
         return 'forum';
     }
-    
+
 }
 
 
@@ -74,7 +74,7 @@ class GroupForumsOverviewPage extends GroupsBasePage
 
     ?>
         <div class="row">
-    <?php 
+    <?php
         $Forums = new ForumsController;
         $Forums->setEngine($this->engine);
         $Forums->index();
@@ -90,7 +90,7 @@ class GroupForumsOverviewPage extends GroupsBasePage
             <h1><a href="forums"><?= $words->get('CommunityLanding');?></a> &raquo <a href="groups/forums"><?= $words->get('Groups');?></a></h1>
         </div>
         <?php
-    }    
+    }
 }
 
 ?>

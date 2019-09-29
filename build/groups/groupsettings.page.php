@@ -37,7 +37,7 @@ class GroupSettingsPage extends GroupsBasePage
         $words = $this->getWords();
         ?>
         <div>
-            <h1><a href="groups/mygroups"><?= $words->get('Groups');?></a> &raquo; <a href="groups/<?=$this->group->getPKValue(); ?>"><? echo htmlspecialchars($this->getGroupTitle(),ENT_QUOTES); ?></a>  &raquo;  <a href=""><?= $words->get('GroupsAdministrateGroup');?></a></h1>
+            <h1><a href="groups/mygroups"><?= $words->get('Groups');?></a> &raquo; <a href="group/<?=$this->group->getPKValue(); ?>"><? echo htmlspecialchars($this->getGroupTitle(),ENT_QUOTES); ?></a>  &raquo;  <a href=""><?= $words->get('GroupsAdministrateGroup');?></a></h1>
         </div>
         <?php
     }

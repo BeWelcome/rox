@@ -17,6 +17,7 @@ use App\Model\WikiModel;
 use App\Repository\GroupRepository;
 use App\Repository\WikiRepository;
 use App\Utilities\MailerTrait;
+use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
@@ -41,6 +42,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class GroupController extends AbstractController
 {
     use MailerTrait;
+    use ManagerTrait;
     use TranslatorTrait;
     use TranslatedFlashTrait;
     use UniqueFilenameTrait;
@@ -53,6 +55,20 @@ class GroupController extends AbstractController
     public function __construct(GroupModel $groupModel)
     {
         $this->groupModel = $groupModel;
+    }
+
+    /**
+     * @Route("/groups/{groupId}", name="groups_redirect")
+     *
+     * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
+     *
+     * @param Request $request
+     * @param Group   $group
+     * @return RedirectResponse
+     */
+    public function groupsRedirect(Request $request, Group $group)
+    {
+        return new RedirectResponse($this->generateUrl('group_start', ['group_id' => $group->getId()]));
     }
 
     /**
@@ -112,7 +128,6 @@ class GroupController extends AbstractController
             if ($success) {
                 if (!$group->isPublic()) {
                     $this->addTranslatedFlash('notice', 'flash.group.join.await.acceptance');
-                    $this->informGroupAdmins($group, $member);
                 } else {
                     $this->addTranslatedFlash('notice', 'flash.group.join.success');
                 }
@@ -509,19 +524,5 @@ class GroupController extends AbstractController
         }
 
         return null;
-    }
-
-    private function informGroupAdmins(Group $group, $member)
-    {
-        $admins = $group->getAdmins();
-
-        if (!empty($admins)) {
-            foreach ($admins as $admin) {
-                $this->sendTemplateEmail('group@bewelcome.org', $admin, 'group.approve.join', [
-                    'subject' => 'group.join.approved',
-                    'member' => $member,
-                ]);
-            }
-        }
     }
 }

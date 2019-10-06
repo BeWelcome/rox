@@ -15,6 +15,7 @@ use App\Form\EditTranslationFormType;
 use App\Form\TranslationFormType;
 use App\Kernel;
 use App\Model\TranslationModel;
+use App\Pagerfanta\MissingTranslationAdapter;
 use App\Pagerfanta\TranslationAdapter;
 use App\Repository\LanguageRepository;
 use App\Twig\MockupExtension;
@@ -525,7 +526,11 @@ class TranslationController extends AbstractController
 
         /** @var Connection $connection */
         $connection = $this->getDoctrine()->getConnection();
-        $translationAdapter = new TranslationAdapter($connection, $locale, $code);
+        if ('missing' === $type) {
+            $translationAdapter = new MissingTranslationAdapter($connection, $locale, $code);
+        } else {
+            $translationAdapter = new TranslationAdapter($connection, $locale, $code, $type);
+        }
         $translations = new Pagerfanta($translationAdapter);
         $translations->setMaxPerPage($limit);
         $translations->setCurrentPage($page);
@@ -537,7 +542,7 @@ class TranslationController extends AbstractController
             'locale' => $locale,
             'translations' => $translations,
             'submenu' => [
-                'active' => 'all',
+                'active' => $type,
                 'items' => $this->getSubmenuItems($locale),
             ],
         ]);

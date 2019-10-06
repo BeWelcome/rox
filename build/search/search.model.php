@@ -104,10 +104,10 @@ class SearchModel extends RoxModelBase
         switch ($orderType) {
             case self::ORDER_ACCOM:
             case self::ORDER_COMMENTS:
-                $order .= ', Distance ASC, HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
+                $order .= ',LocationCoords ASC, Distance ASC, HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
                 break;
             case self::ORDER_DISTANCE:
-                $order .= ', (m.Accomodation * 12441600 + COALESCE(hes.current, 0)) DESC, HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
+                $order = 'LocationCoords ASC,'.$order.', (m.Accomodation * 12441600 + COALESCE(hes.current, 0)) DESC, HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
                 break;
         }
 
@@ -544,7 +544,7 @@ LIMIT 1
                 m.FirstName,
                 m.SecondName,
                 m.LastName,
-                IF(hes.current IS NULL, -1, hes.current),
+                hes.current,
                 date_format(m.LastLogin,'%Y-%m-%d') AS LastLogin,
                 IF(m.ProfileSummary != 0, 1, 0) AS HasProfileSummary,
                 IF(mp.photoCount IS NULL, 0, 1) AS HasProfilePhoto,
@@ -552,15 +552,9 @@ LIMIT 1
                 g.country,
                 m.latitude,
                 m.longitude,
-                (
-      6371 * acos (
-      cos ( radians( " . $vars['location-latitude'] . ") )
-      * cos( radians( m.latitude ) )
-      * cos( radians( m.longitude ) - radians(" . $vars['location-longitude'] . ") )
-      + sin ( radians(" . $vars['location-latitude'] . ") )
-      * sin( radians( m.latitude ) )
-    )
-) AS distance,
+                (m.latitude = {$vars['location-latitude']}) + (m.longitude = {$vars['location-longitude']}) AS LocationCoords,
+                ((m.latitude - " . $vars['location-latitude'] . ") * (m.latitude - " . $vars['location-latitude'] . ") +
+                        (m.longitude - " . $vars['location-longitude'] . ") * (m.longitude - " . $vars['location-longitude'] . "))  AS Distance,
                 IF(c.IdToMember IS NULL, 0, c.commentCount) AS CommentCount
             *FROM*
                 " . $this->tables . "

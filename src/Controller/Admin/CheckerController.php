@@ -28,7 +28,7 @@ class CheckerController extends AbstractController
     public function showOverview(Request $request, MessageModel $messageModel)
     {
         $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', 2);
+        $limit = $request->query->get('limit', 10);
 
         $reportedMessages = $messageModel->getReportedMessages($page, $limit);
         $messageIds = [];

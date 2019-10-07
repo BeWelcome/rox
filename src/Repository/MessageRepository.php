@@ -90,7 +90,7 @@ class MessageRepository extends EntityRepository
             ->select('count(m.id)')
             ->where('m.status = :status')
             ->setParameter('status', MessageStatusType::CHECK)
-            ->andWhere('m.spamInfo LIKE :spamInfo')
+            ->andWhere('m.spaminfo LIKE :spamInfo')
             ->setParameter('spamInfo', SpamInfoType::MEMBER_SAYS_SPAM)
             ->getQuery();
 

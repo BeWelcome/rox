@@ -7,6 +7,7 @@ use App\Entity\Message;
 use App\Entity\Subject;
 use App\Form\MessageToMemberType;
 use App\Utilities\MailerTrait;
+use App\Utilities\ManagerTrait;
 use Exception;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,6 +28,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class MessageController extends BaseMessageController
 {
     use MailerTrait;
+    use ManagerTrait;
 
     /**
      * Deals with replies to messages and hosting requests.

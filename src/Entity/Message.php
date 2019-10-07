@@ -101,7 +101,7 @@ class Message
      *
      * @ORM\Column(name="SpamInfo", type="spam_info", nullable=false)
      */
-    private $spamInfo = SpamInfoType::NO_SPAM;
+    private $spaminfo = SpamInfoType::NO_SPAM;
 
     /**
      * @var string
@@ -340,13 +340,13 @@ class Message
     /**
      * Set spaminfo.
      *
-     * @param string $spamInfo
+     * @param string $spaminfo
      *
      * @return Message
      */
-    public function setSpamInfo($spamInfo)
+    public function setSpaminfo($spaminfo)
     {
-        $this->spamInfo = $spamInfo;
+        $this->spaminfo = $spaminfo;
 
         return $this;
     }
@@ -360,14 +360,14 @@ class Message
      */
     public function removeFromSpaminfo($spaminfo)
     {
-        $info = array_filter(explode(',', $this->spamInfo));
+        $info = array_filter(explode(',', $this->spaminfo));
         $key = array_search($spaminfo, $info, true);
         if (false !== $key) {
             unset($info[$key]);
         }
-        $this->spamInfo = implode(',', $info);
-        if (empty($this->spamInfo)) {
-            $this->spamInfo = SpamInfoType::NO_SPAM;
+        $this->spaminfo = implode(',', $info);
+        if (empty($this->spaminfo)) {
+            $this->spaminfo = SpamInfoType::NO_SPAM;
         }
 
         return $this;
@@ -382,15 +382,15 @@ class Message
      */
     public function addToSpamInfo($spaminfo)
     {
-        if (SpamInfoType::NO_SPAM === $this->spamInfo) {
-            $this->spamInfo = '';
+        if (SpamInfoType::NO_SPAM === $this->spaminfo) {
+            $this->spaminfo = '';
         }
-        $info = array_filter(explode(',', $this->spamInfo));
+        $info = array_filter(explode(',', $this->spaminfo));
         $key = array_search($spaminfo, $info, true);
         if (false === $key) {
             $info[] = $spaminfo;
         }
-        $this->spamInfo = implode(',', $info);
+        $this->spaminfo = implode(',', $info);
 
         return $this;
     }
@@ -400,9 +400,9 @@ class Message
      *
      * @return string
      */
-    public function getSpamInfo()
+    public function getSpaminfo()
     {
-        return $this->spamInfo;
+        return $this->spaminfo;
     }
 
     /**

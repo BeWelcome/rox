@@ -8,6 +8,7 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,7 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Activity
 {
     /**
-     * @var \App\Entity\Member
+     * @var Member
      *
      * @ORM\OneToOne(targetEntity="\App\Entity\Member")
      * @ORM\JoinColumns({
@@ -34,14 +35,14 @@ class Activity
     private $createdBy;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="dateTimeStart", type="datetime", nullable=false)
      */
     private $starts;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="dateTimeEnd", type="datetime", nullable=true)
      */
@@ -116,11 +117,11 @@ class Activity
     /**
      * Set createdBy.
      *
-     * @param \App\Entity\Member $createdBy
+     * @param Member $createdBy
      *
      * @return Activity
      */
-    public function setCreatedBy(\App\Entity\Member $createdBy = null)
+    public function setCreatedBy(Member $createdBy = null)
     {
         $this->createdBy = $createdBy;
 
@@ -130,7 +131,7 @@ class Activity
     /**
      * Get createdBy.
      *
-     * @return \App\Entity\Member
+     * @return Member
      */
     public function getCreatedBy()
     {
@@ -140,7 +141,7 @@ class Activity
     /**
      * Set starts.
      *
-     * @param \DateTime $starts
+     * @param DateTime $starts
      *
      * @return Activity
      */
@@ -164,7 +165,7 @@ class Activity
     /**
      * Set ends.
      *
-     * @param \DateTime $ends
+     * @param DateTime $ends
      *
      * @return Activity
      */
@@ -353,7 +354,7 @@ class Activity
     public function getAttendeesYes()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('status', '1'))
+            ->where(Criteria::expr()->eq('status', ActivityAttendee::ATTENDS_YES))
         ;
 
         $attendeesYes = $this->attendees->matching($criteria);
@@ -367,7 +368,7 @@ class Activity
     public function getAttendeesNo()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('status', '0'))
+            ->where(Criteria::expr()->eq('status', ActivityAttendee::ATTENDS_NO))
         ;
 
         $attendeesNo = $this->attendees->matching($criteria);
@@ -381,7 +382,7 @@ class Activity
     public function getAttendeesMaybe()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('status', '2'))
+            ->where(Criteria::expr()->eq('status', ActivityAttendee::ATTENDS_MAYBE))
         ;
 
         $attendeesMaybe = $this->attendees->matching($criteria);
@@ -406,11 +407,11 @@ class Activity
     /**
      * Add attendee.
      *
-     * @param \App\Entity\ActivityAttendee $attendee
+     * @param ActivityAttendee $attendee
      *
      * @return Activity
      */
-    public function addAttendee(\App\Entity\ActivityAttendee $attendee)
+    public function addAttendee(ActivityAttendee $attendee)
     {
         $this->attendees[] = $attendee;
 
@@ -420,9 +421,9 @@ class Activity
     /**
      * Remove attendee.
      *
-     * @param \App\Entity\ActivityAttendee $attendee
+     * @param ActivityAttendee $attendee
      */
-    public function removeAttendee(\App\Entity\ActivityAttendee $attendee)
+    public function removeAttendee(ActivityAttendee $attendee)
     {
         $this->attendees->removeElement($attendee);
     }

@@ -3,12 +3,17 @@
 namespace App\Repository;
 
 use AnthonyMartin\GeoLocation\GeoLocation;
+use App\Entity\Activity;
+use App\Entity\Language;
 use App\Entity\Location;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 
@@ -42,6 +47,36 @@ class ActivityRepository extends EntityRepository
                 FROM App:Activity a
                 ORDER BY a.id DESC
             ');
+    }
+
+    /**
+     * Returns a Pagerfanta object encapsulating the matching paginated activities.
+     *
+     * Only lists activities which do have only banned admins.
+     *
+     * @param int $page
+     * @param int $items
+     *
+     * @return Pagerfanta
+     */
+    public function findLatestBannedAdmins($page = 1, $items = 10)
+    {
+        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatestBannedAdmins(), false));
+        $paginator->setMaxPerPage($items);
+        $paginator->setCurrentPage($page);
+
+        return $paginator;
+    }
+
+    /**
+     * @return Query
+     */
+    public function queryLatestBannedAdmins()
+    {
+        return $this->createQueryBuilder('a')
+            ->join('App:ActivityAttendee', 'aa', Join::WITH, 'aa.activity = a and aa.organizer = 1')
+            ->join('App:Member', 'm', Join::WITH, "aa.attendee = m and m.status = 'Banned'")
+            ->getQuery();
     }
 
     /**

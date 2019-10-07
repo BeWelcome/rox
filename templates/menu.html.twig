@@ -237,7 +237,7 @@
                     {% if not reportedCommentsCount is null %}<a class="btn btn-primary btn-sm"
                         href="{{ path('admin_comment_reported_overview') }}">{% transchoice reportedCommentsCount %}admin.comments.reported{% endtranschoice %}</a>{% endif %}
                     {% if not reportedMessagesCount is null %}<a class="btn btn-primary btn-sm"
-                        href="{{ path('admin_spam_overview') }}">{% transchoice reportedMessagesCount %}admin.spam.reported{% endtranschoice %}</a>{% endif %}
+                        href="{{ path('admin_spam_messages') }}">{% transchoice reportedMessagesCount %}admin.spam.reported{% endtranschoice %}</a>{% endif %}
                 </div>
             </div>
         </div>

@@ -13,12 +13,12 @@
             <div class="card">
                 <div class="media">
 
-                   {{ macros.avatar( communityNews.createdBy.Username, 100, true) }}<br>
+                   {{ macros.avatar( communityNews.createdBy.Username, 100, true, 'mr-2') }}
 
-                    <div class="media-body ml-2">
+                    <div class="media-body">
                         <h1 class="my-0">{{ communityNews.title }}</h1>
                         <small class="text-muted">{{ 'bewelcome_news.writtenby' | trans }} {{ macros.profilelink( communityNews.createdBy.Username ) }} {{ communityNews.createdAt.DiffForHumans }}
-                        {% if communityNews.updatedBy and communityNews.updatedBy.Username != communityNews.createdBy.Username %}<small class="text-muted">{{ 'bewelcome_news.lastupdater' | trans}}{{ macros.avatar( communityNews.updatedBy.Username, 30, true) }} {{ communityNews.updatedAt.DiffForHumans }}</small>{% endif %}
+                        {% if communityNews.updatedBy and communityNews.updatedBy.Username != communityNews.createdBy.Username %}{{ 'bewelcome_news.lastupdater' | trans}}{{ macros.avatar( communityNews.updatedBy.Username, 30, true) }} {{ communityNews.updatedAt.DiffForHumans }}{% endif %}</small>
 
                         {{ communityNews.text| raw }}
 
@@ -27,18 +27,23 @@
                 </div>
             </div>
         </div>
-
+    </div>
+    <div class="row">
         <div class="col-12">
             <h4 class="font-weight-bold mt-4">{% set commentsCount = communityNews.comments | length %}{% trans %}%commentsCount% comments{% endtrans %}</h4>
         </div>
+    </div>
     {% if comments.haveToPaginate %}
+        <div class="row">
             <div class="col-12">
                 <div class="float-right">{{ pagerfanta( comments, 'rox_default') }}</div>
             </div>
+        </div>
     {% endif %}
-    {% for comment in comments.currentPageResults %}
-        <div class="col-12">
-            <div class="card mb-3">
+    <div class="row">
+        {% for comment in comments.currentPageResults %}
+            <div class="col-12">
+                <div class="card p-2 mb-3">
                 <div class="card-body">
                     <h5 class="card-title font-weight-bold mb-0">
                         {{ comment.title }}
@@ -46,17 +51,20 @@
                     <h6 class="card-subtitle mb-2 text-muted">{{ macros.profilelink( comment.author.Username ) }}, {{ comment.created.DiffForHumans | trans }}</h6>
                     {{ comment.text | raw }}
                 </div>
+                </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
+    <div class="row">
         <div class="col-12">
             <p><a class="btn btn-primary" href="{{ url('communitynews_comment_add', { id: communityNews.id }) }}">{{ 'bewelcome_news.addcomment' | trans }}</a></p>
         </div>
+    </div>
     {% if comments.haveToPaginate %}
+        <div class="row">
             <div class="col-12">
                 <div class="float-right">{{ pagerfanta( comments, 'rox_default') }}</div>
             </div>
+        </div>
     {% endif %}
-
-    </div>
 {% endblock content %}

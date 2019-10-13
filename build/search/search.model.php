@@ -104,10 +104,10 @@ class SearchModel extends RoxModelBase
         switch ($orderType) {
             case self::ORDER_ACCOM:
             case self::ORDER_COMMENTS:
-                $order .= ',LocationCoords ASC, Distance ASC, HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
+                $order .= ', Distance ASC, HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
                 break;
             case self::ORDER_DISTANCE:
-                $order = 'LocationCoords ASC,'.$order.', (m.Accomodation * 12441600 + COALESCE(hes.current, 0)) DESC, HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
+                $order = $order.', (m.Accomodation * 12441600 + COALESCE(hes.current, 0)) DESC, HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
                 break;
         }
 
@@ -308,8 +308,8 @@ LIMIT 1
                 }
                 // now fetch all location from geonames which are in that given rectangle
                 $condition .= "
-                        AND m.latitude BETWEEN " . $latsw . " AND " . $latne . "
-                        AND m.longitude BETWEEN " . $longsw . " AND " . $longne;
+                        AND g.latitude BETWEEN " . $latsw . " AND " . $latne . "
+                        AND g.longitude BETWEEN " . $longsw . " AND " . $longne;
             } else {
                 $condition .= "  AND m.IdCity = " . $vars['location-geoname-id'];
             }
@@ -464,7 +464,7 @@ LIMIT 1
         // Fetch count of public members at/around the given place
         $str = "
             SELECT
-                COUNT(DISTINCT m.id) cnt
+                COUNT(m.id) cnt
             FROM
             " . $this->tables;
         $str .= "
@@ -482,11 +482,11 @@ LIMIT 1
             " . $this->typicalOfferCondition;
 
         // check if we search for in country or for an admin unit in which case we need
-        if (strpos($this->locationCondition, 'g.country') === false)
+/*        if (strpos($this->locationCondition, 'g.country') === false)
         {
             $str = str_replace('geonames g,', '', $str);
         }
-        $count = $this->dao->query($str);
+*/        $count = $this->dao->query($str);
 
         $row = $count->fetch(PDB::FETCH_OBJ);
 
@@ -552,7 +552,6 @@ LIMIT 1
                 g.country,
                 m.latitude,
                 m.longitude,
-                (m.latitude = {$vars['location-latitude']}) + (m.longitude = {$vars['location-longitude']}) AS LocationCoords,
                 ((m.latitude - " . $vars['location-latitude'] . ") * (m.latitude - " . $vars['location-latitude'] . ") +
                         (m.longitude - " . $vars['location-longitude'] . ") * (m.longitude - " . $vars['location-longitude'] . "))  AS Distance,
                 IF(c.IdToMember IS NULL, 0, c.commentCount) AS CommentCount

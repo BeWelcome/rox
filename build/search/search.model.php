@@ -543,10 +543,10 @@ LIMIT 1
                 IF(mp.photoCount IS NULL, 0, 1) AS HasProfilePhoto,
                 g.geonameid,
                 g.country,
-                m.latitude,
-                m.longitude,
-                ((m.latitude - " . $vars['location-latitude'] . ") * (m.latitude - " . $vars['location-latitude'] . ") +
-                        (m.longitude - " . $vars['location-longitude'] . ") * (m.longitude - " . $vars['location-longitude'] . "))  AS Distance,
+                g.latitude,
+                g.longitude,
+                ((g.latitude - " . $vars['location-latitude'] . ") * (g.latitude - " . $vars['location-latitude'] . ") +
+                        (g.longitude - " . $vars['location-longitude'] . ") * (g.longitude - " . $vars['location-longitude'] . "))  AS Distance,
                 IF(c.IdToMember IS NULL, 0, c.commentCount) AS CommentCount
             *FROM*
                 " . $this->tables . "

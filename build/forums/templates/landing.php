@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -40,7 +40,7 @@ if (!$User) {
     </div>
 <?php
 } // end if not User
-?> 
+?>
 <!-- Now displays the recent groups post list -->
 <?php
     echo $this->words->flushBuffer();
@@ -57,7 +57,7 @@ if (!$User) {
 if ($threads = $groups->getThreads()) {
     $groups->getTotalThreads(); ?>
 <?php
-        //force pagination render to abort by feeding it's pager variables 
+        //force pagination render to abort by feeding it's pager variables
         //invalid values because we want to call it separately later
         $multipages = null;
         $currentPage = null;
@@ -70,7 +70,7 @@ if ($threads = $groups->getThreads()) {
 <?php
     if ($User && $moreLessThreadsCallbackId) {
 ?>
-        <div class="col-12 col-md-6 mb-2 d-flex flex-row justify-content-center justify-content-lg-start">
+        <div class="col-12 col-md-6 mb-2 ">
             <a href="/forums/less/group" class="btn btn-primary mr-2"><?php echo $this->words->getSilent('ShowLess'); ?></a>
             <a href="/forums/more/group" class="btn btn-primary mr-2"><?php echo $this->words->getSilent('ShowMore'); ?></a>
 <?php
@@ -93,7 +93,7 @@ if ($threads = $groups->getThreads()) {
     }
 ?>
         </div>
-<div class="col-12 col-md-6 d-flex flex-row justify-content-center justify-content-lg-end">
+<div class="col-12 col-md-6">
 <?php
 
     $multipages = array($currentForumPage, $groupspages);
@@ -119,12 +119,12 @@ if ($User) {
 ?>
     <h4><a href="forums/bwforum"><?php echo $this->words->getFormatted('AgoraForum'); ?></a> <span class="small">&ndash; <?php echo $this->words->get('AgoraTagLine'); ?></span></h4>
 </div>
-<?php 
+<?php
     $uri = 'forums/';
 if ($threads = $forum->getThreads()) {
     $forum->getTotalThreads(); ?>
 <?php
-        //force pagination render to abort by feeding it's pager variables 
+        //force pagination render to abort by feeding it's pager variables
         //invalid values because we want to call it separately later
         $multipages = null;
         $currentPage = null;

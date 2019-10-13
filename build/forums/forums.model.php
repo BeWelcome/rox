@@ -312,8 +312,8 @@ function FindAppropriatedLanguage($IdPost=0) {
 		$rr=$qq->fetch(PDB::FETCH_OBJ) ;
 		if (empty($rr->Value)) {
 			$ss= "
-                INSERT INTO 
-                    memberspreferences('created', 'IdPreference' ,'IdMember', 'Value') 
+                INSERT INTO
+                    memberspreferences('created', 'IdPreference' ,'IdMember', 'Value')
 			    VALUES(
 			      now(),
 			      " . $rr->IdPreference . ",
@@ -555,11 +555,7 @@ WHERE
 
         $groups = new Board($this->dao, 'Groups', '.', $this->getSession(), false, false, false, false, false, false, false, false, true);
         $groups->THREADS_PER_PAGE = max(1, min($groupsthreads, $MAX_THREADS));
-        $groups->initThreads($groupspage, $showsticky);
-        $groupsMaxPage = ceil($groups->getNumberOfThreads() / $groups->THREADS_PER_PAGE);
-        if ($groupspage > $groupsMaxPage) {
-            $groups->initThreads($groupsMaxPage, $showsticky);
-        }
+        $groups->initThreads($groupspage, false);
 
         $this->board->add($forum);
         $this->board->add($groups);
@@ -1493,7 +1489,7 @@ WHERE `threadid` = '%d' ",
 			else {
 				$PostComment=$UsernameAddTime.$this->cleanupText($vars['PostComment']) ;
 				$ss="
-                    insert into reports_to_moderators(PostComment,created,IdPost,IdReporter,Status) 
+                    insert into reports_to_moderators(PostComment,created,IdPost,IdReporter,Status)
                         values('".$this->dao->escape($PostComment)."',now(),".$IdPost.",".$this->_session->get("IdMember") .",'".$Status."')" ;
 				$this->dao->query($ss);
 			}
@@ -2344,11 +2340,11 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d,'%s')
     `forums_threads`.`stickyvalue`,
     `forums_threads`.`continent`,
     `forums_threads`.`IdGroup`,
-    `forums_threads`.`geonameid`, 
+    `forums_threads`.`geonameid`,
     `geonames`.`name` AS `geonames_name`,
-    `forums_threads`.`admincode`, 
+    `forums_threads`.`admincode`,
     `geonamesadminunits`.`name` AS `adminname`,
-    `forums_threads`.`countrycode`, 
+    `forums_threads`.`countrycode`,
     `geonamescountries`.`name` AS `countryname`,
 	 `groups`.`Name` AS `GroupName`
 FROM `forums_threads`
@@ -3642,7 +3638,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
             WHERE
                 p.IdPost = $postId
                 AND Status = 'ToSend'
-            ORDER BY 
+            ORDER BY
                 IdMember
             ";
         $res = $this->dao->query($query);

@@ -416,7 +416,7 @@ WHERE
         }
     }
 
-    
+
     /**
      * Set preference if comment guidelines have been read.
      */
@@ -439,7 +439,7 @@ WHERE
         $membersModel = new MembersModel($this->_session);
         $membersModel->set_preference($this->getLoggedInMember()->id, $readCommentGuidlinesPref->id, 1);
     }
-    
+
     public function getCommentGuidelinesRead() {
         $layoutbits = new MOD_layoutbits();
         $loggedInMember = $this->getLoggedInMember();
@@ -644,7 +644,7 @@ WHERE
                 'reportLink'  => 'members/reportcomment/' . $commentRecipient->Username . '/' . $commentId,
                 'WordCode' => $noteWordCode
             );
-            
+
             if (!$TCom || $TCom->DisplayInPublic == 1) {
                 $this->sendCommentNotification($note, $messageWordCode, $messageSubjectWordCode);
             }
@@ -1205,11 +1205,12 @@ ORDER BY
 
         // Update hosting eagerness data if necessary
         $hesData = $this->getHostingEagernessData($m);
-        if ($hesData->endDate !== $vars['hes-duration']) {
+        $hesBoost = ($hesData->step < 0) ? 'No' : 'Yes';
+        if (($hesData->endDate !== $vars['hes-duration']) || ($hesBoost !== $vars['hes-boost'])) {
             $this->setHostingEagernessData($m, $vars['hes-id'], $vars['hes-duration'], $vars['hes-boost']);
         }
 
-        if ($hesData->step < 0 && ($vars['hes-dont-boost'] === false)) {
+        if ($hesData->step < 0 && ($vars['hes-boost'] === 'Yes')) {
             $this->setHostingEagernessData($m, $vars['hes-id'], $vars['hes-duration'], $vars['hes-boost']);
         }
 

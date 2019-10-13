@@ -264,17 +264,15 @@ LIMIT 1
      */
     private function getLocationCondition(&$vars, $admin1, $country)
     {
-        $condition = '';
+        $condition = "AND m.IdCity = g.geonameid ";
         if ($country) {
             if ($admin1) {
                 // We run based on an admin unit
-                $condition = "AND m.IdCity = g.geonameid
-                AND g.admin1 = '" . $admin1 . "'
+                $condition .= "AND g.admin1 = '" . $admin1 . "'
                 AND g.country = '" . $country . "'";
             } else {
                 // we're looking for all members of a country
-                $condition = "AND m.IdCity = g.geonameid
-                AND g.country = '" . $country . "'";
+                $condition = "AND g.country = '" . $country . "'";
             }
         } else {
             // a simple place with a square rectangle around it
@@ -481,12 +479,7 @@ LIMIT 1
             " . $this->accommodationCondition . "
             " . $this->typicalOfferCondition;
 
-        // check if we search for in country or for an admin unit in which case we need
-/*        if (strpos($this->locationCondition, 'g.country') === false)
-        {
-            $str = str_replace('geonames g,', '', $str);
-        }
-*/        $count = $this->dao->query($str);
+        $count = $this->dao->query($str);
 
         $row = $count->fetch(PDB::FETCH_OBJ);
 

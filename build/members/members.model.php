@@ -1917,20 +1917,25 @@ VALUES
      */
     private function setHostingEagernessData(\Member $member, $hesId, $hesEnddate, $hesBoost)
     {
-        $endDate = Carbon::createFromFormat('Y-m-d', $hesEnddate);
-        $time = mktime(23,59,0,$endDate->month, $endDate->day, $endDate->year);
-        $current = time();
-        $duration = floor(($time - $current) / 3600);
-        $step = floor(6220800 / ($duration * $duration));
-        if ($hesBoost === 'No') {
-            $step = -$step;
-        }
-        $current = $duration * $step;
-
-        if ($hesId == 0) {
-            $query = "INSERT INTO `hosting_eagerness_slider` SET `member_id` = {$member->id}, `endDate` = '{$hesEnddate}', `step` = {$step}, `remaining` = {$duration}, `current` = {$current}, `initialized` = NOW(), `updated` = NOW()";
+        if ($hesEnddate === '') {
+            // Remove the hosting eagerness row for this member
+            $query = "DELETE FROM  `hosting_eagerness_slider` WHERE `member_id` = {$member->id}";
         } else {
-            $query = "UPDATE `hosting_eagerness_slider` SET `member_id` = {$member->id}, `endDate` = '{$hesEnddate}', `step` = {$step}, `remaining` = {$duration}, `current` = {$current}, `initialized` = NOW(), `updated` = NOW() WHERE `id` = {$hesId}";
+            $endDate = Carbon::createFromFormat('Y-m-d', $hesEnddate);
+            $time = mktime(23,59,0,$endDate->month, $endDate->day, $endDate->year);
+            $current = time();
+            $duration = floor(($time - $current) / 3600);
+            $step = floor(6220800 / ($duration * $duration));
+            if ($hesBoost === 'No') {
+                $step = -$step;
+            }
+            $current = $duration * $step;
+
+            if ($hesId == 0) {
+                $query = "INSERT INTO `hosting_eagerness_slider` SET `member_id` = {$member->id}, `endDate` = '{$hesEnddate}', `step` = {$step}, `remaining` = {$duration}, `current` = {$current}, `initialized` = NOW(), `updated` = NOW()";
+            } else {
+                $query = "UPDATE `hosting_eagerness_slider` SET `member_id` = {$member->id}, `endDate` = '{$hesEnddate}', `step` = {$step}, `remaining` = {$duration}, `current` = {$current}, `initialized` = NOW(), `updated` = NOW() WHERE `id` = {$hesId}";
+            }
         }
         $this->dao->query($query);
     }

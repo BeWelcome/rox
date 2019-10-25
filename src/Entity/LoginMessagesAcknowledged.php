@@ -29,7 +29,7 @@ class LoginMessagesAcknowledged
     /**
      * @var LoginMessage
      *
-     * @ORM\OneToMany(targetEntity="LoginMessage", mappedBy="id")
+     * @ORM\OneToOne(targetEntity="\App\Entity\LoginMessage")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="messageid", referencedColumnName="id")
      * })

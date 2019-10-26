@@ -47,11 +47,8 @@
         </div>
 
 
-        <div class="col col-auto col-lg-7 order-2 mt-3">
         <?php
         $search_result = $this->search_result;
-
-        $this->pager->render();
 
         if ($search_result) :
         $act_order = (($this->result_order == "actdesc") ? 'actasc' : 'actdesc');
@@ -60,8 +57,7 @@
         $created_order = (($this->result_order == "createdasc") ? 'createddesc' : 'createdasc');
         $category_order = (($this->result_order == "categoryasc") ? 'categorydesc' : 'categoryasc');
         ?>
-        </div>
-        <div class="col col-lg-5 order-1 mt-3">
+        <div class="col-12 col-md-6 mt-3">
             <h3><?= $words->get('GroupsSearchResult'); ?></h3>
             <label class="font-weight-bold"><?php echo $words->get('GroupsSearchOrdered'); ?>:</label>
             <span class="dropdown">
@@ -78,7 +74,13 @@
                 </div>
             </span>
         </div>
+        <?php
+         $this->pager->render();
+         ?>
 
+
+<div class="col-12">
+    <div class="row">
 <?
         foreach ($search_result as $group_data) :
 
@@ -86,7 +88,9 @@
 
         endforeach;
         ?>
-      <div class="order-12 mt-3">
+    </div>
+</div>
+      <div class="mt-3">
 <?php
 $this->pager->render();
 ?>

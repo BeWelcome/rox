@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
@@ -68,9 +68,9 @@ class Group extends RoxEntityBase
 
     /*
      * Loads the entity based on the data array.
-     * 
+     *
      * Additionally gets the timestamp of the latest post to the group
-     * 
+     *
      */
     protected function loadEntity(array $data)
     {
@@ -93,6 +93,46 @@ AND t.last_postid = p.id";
     }
 
     /**
+     * @inheritDoc
+     */
+    public function countAll()
+    {
+        $sql = <<<SQL
+SELECT
+    count(id) as count
+FROM
+(SELECT
+    g.id
+FROM
+    groups g,
+    forums_threads ft,
+    forums_posts fp
+where g.id = ft.IdGroup AND g.approved AND ft.last_postId = fp.id AND DateDIFF(now(), fp.create_time) < 365
+group by g.id) as id
+SQL;
+        return $this->sqlCount($sql);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findAll($offset = 0, $limit = 0)
+    {
+        $sql = <<<SQL
+SELECT
+    g.*
+FROM
+    groups g,
+    forums_threads ft,
+    forums_posts fp
+WHERE g.id = ft.IdGroup AND g.approved = 1 AND ft.last_postId = fp.id AND DateDIFF(NOW(), fp.create_time) < 4000
+GROUP BY g.id
+LIMIT $limit OFFSET $offset
+SQL;
+        return $this->findBySQLMany($sql);
+    }
+
+    /**
      * Uses an array of terms to create a create to search for groups with
      * simple or search on names for now
      *
@@ -107,7 +147,7 @@ AND t.last_postid = p.id";
         {
             return $this->findAll($offset, 10);
         }
-        
+
         foreach ($terms as &$term)
         {
             if (is_string($term))
@@ -119,16 +159,11 @@ AND t.last_postid = p.id";
                 unset($term);
             }
         }
-        
+
         $clause = implode(' or ', $terms);
 
         return $this->findByWhereMany('approved = 1 AND (' . $clause . ')', $offset, $limit);
 
-    }
-
-    public function findAll($offset = 0, $limit = 0)
-    {
-        return $this->findByWhereMany('approved = 1');
     }
 
     /**
@@ -165,7 +200,7 @@ AND t.last_postid = p.id";
         }
 
         $status = (($status) ? $status : 'In');
-        
+
         return $this->createEntity('GroupMembership')->getGroupMembers($this, $status, '', $offset, $limit);
     }
 
@@ -183,7 +218,7 @@ AND t.last_postid = p.id";
         {
             return false;
         }
-        
+
         $bylastlogin = true;
         $memberships = $this->createEntity('GroupMembership')->getGroupMembers($this, 'In', '', 0, null, $bylastlogin);
         $ms_lastloggedin = array_slice($memberships, 0, $numberOfMembers);
@@ -226,7 +261,7 @@ AND t.last_postid = p.id";
         $status = (($status) ? $status : 'In');
 
         return $this->createEntity('GroupMembership')->getGroupMembersCount($this);
-        
+
     }
 
 
@@ -389,7 +424,7 @@ AND t.last_postid = p.id";
         {
             return '';
         }
-        
+
         return $this->getWords()->mTrad($this->IdDescription);
     }
 
@@ -413,7 +448,7 @@ AND t.last_postid = p.id";
         {
             return false;
         }
-        
+
         $this->Type = $this->dao->escape($type);
         $this->VisiblePosts = $this->dao->escape($visible_posts);
         $this->Picture = (($picture) ? $this->dao->escape($picture) : $this->Picture);
@@ -542,11 +577,11 @@ m     */
             return false;
         }
         $where = "{$this->_table_name}.id IN  (
-SELECT gr.related_id 
+SELECT gr.related_id
 FROM groups_related as gr
 WHERE gr.group_id = " . intval($groupId) . " AND gr.deletedby IS NULL
 ORDER BY group_id)";
-        
+
         return $this->findByWhereMany($where, $offset, $limit);
     }
 

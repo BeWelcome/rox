@@ -3,7 +3,7 @@
             <label class="h3" for="GroupsSearchInput"><?= $words->get('GroupsSearchHeading'); ?></label>
             <form action="groups/search" method="get">
                 <div class="input-group">
-                    <input type="text" class="form-control" name="GroupsSearchInput" value="" id="GroupsSearchInput"/>
+                    <input type="text" class="form-control" name="GroupsSearchInput" value="<?= $this->search_terms ?>" id="GroupsSearchInput"/>
                     <span class="input-group-append">
                             <button class="btn btn-primary"
                                     type="submit"><?= $words->getSilent('GroupsSearchSubmit'); ?></button>
@@ -57,8 +57,10 @@
         $created_order = (($this->result_order == "createdasc") ? 'createddesc' : 'createdasc');
         $category_order = (($this->result_order == "categoryasc") ? 'categorydesc' : 'categoryasc');
         ?>
-        <div class="col-12 col-md-6 mt-3">
+        <div class="col-12 mt-3">
             <h3><?= $words->get('GroupsSearchResult'); ?></h3>
+        </div>
+        <div class="col-12 col-md-6 mt-1">
             <label class="font-weight-bold"><?php echo $words->get('GroupsSearchOrdered'); ?>:</label>
             <span class="dropdown">
                 <button class="btn btn-sm btn-secondary " type="button" id="dropdownVisibility" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $words->get('GroupsSearchOrdered' . $this->result_order) ?></button>
@@ -90,16 +92,15 @@
         ?>
     </div>
 </div>
-      <div class="mt-3">
 <?php
 $this->pager->render();
 ?>
-      </div>
 <?php else :
     echo <<<HTML
-            <p class="note">
+            <div class="col-12 mt-3"><div class="alert alert-info">
             {$words->get('GroupSearchNoResults')}
-            </p>
+            </div>
+</div>
 HTML;
 endif;
 ?>

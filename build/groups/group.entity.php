@@ -107,7 +107,7 @@ FROM
     groups g,
     forums_threads ft,
     forums_posts fp
-where g.id = ft.IdGroup AND g.approved AND ft.last_postId = fp.id AND DateDIFF(now(), fp.create_time) < 365
+where g.id = ft.IdGroup AND g.approved AND NOT (g.Name LIKE '[Archived]%')  AND ft.last_postId = fp.id AND DateDIFF(now(), fp.create_time) < 4000
 group by g.id) as id
 SQL;
         return $this->sqlCount($sql);
@@ -125,10 +125,14 @@ FROM
     groups g,
     forums_threads ft,
     forums_posts fp
-WHERE g.id = ft.IdGroup AND g.approved = 1 AND ft.last_postId = fp.id AND DateDIFF(NOW(), fp.create_time) < 4000
+WHERE g.id = ft.IdGroup AND g.approved = 1 AND NOT (g.Name LIKE '[Archived]%') AND ft.last_postId = fp.id AND DateDIFF(NOW(), fp.create_time) < 4000
 GROUP BY g.id
-LIMIT $limit OFFSET $offset
 SQL;
+        if ($this->sql_order !== '') {
+            $sql .= "\nORDER BY " . $this->sql_order;
+        }
+        $sql .= " LIMIT {$limit} OFFSET {$offset}";
+
         return $this->findBySQLMany($sql);
     }
 

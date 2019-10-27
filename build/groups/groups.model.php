@@ -122,10 +122,9 @@ class GroupsModel extends  RoxModelBase
         {
             return $group->countAll();
         }
-        $terms_array = explode(' ', $terms);
         $strings = array();
 
-        foreach ($terms_array as $term)
+        foreach ($terms as $term)
         {
             $strings[] = "Name LIKE '%" . $this->dao->escape($term) . "%'";
         }
@@ -136,7 +135,7 @@ class GroupsModel extends  RoxModelBase
     /**
      * Find and return groups, using search terms from search page
      *
-     * @param string $terms - search terms
+     * @param array $terms - search terms
      * @param int $page - offset to start from
      * @param string $order - sortorder
      * @param int $amount how many results to find
@@ -155,16 +154,16 @@ class GroupsModel extends  RoxModelBase
                     $order = 'Name DESC';
                     break;
                 case "membersasc":
-                    $order = "(SELECT COUNT(*) FROM membersgroups AS mg, members as m WHERE mg.IdGroup = groups.id AND mg.Status = 'In' AND m.id = mg.idmember AND m.status IN (" . MemberStatusType::ACTIVE_ALL . ")) ASC, Name ASC";
+                    $order = "(SELECT COUNT(*) FROM membersgroups AS mg, members as m WHERE mg.IdGroup = g.id AND mg.Status = 'In' AND m.id = mg.idmember AND m.status IN (" . MemberStatusType::ACTIVE_ALL . ")) ASC, Name ASC";
                     break;
                 case "membersdesc":
-                    $order = "(SELECT COUNT(*) FROM membersgroups AS mg, members as m WHERE mg.IdGroup = groups.id AND mg.Status = 'In' AND m.id = mg.idmember AND m.status IN (" . MemberStatusType::ACTIVE_ALL . ")) DESC, Name ASC";
+                    $order = "(SELECT COUNT(*) FROM membersgroups AS mg, members as m WHERE mg.IdGroup = g.id AND mg.Status = 'In' AND m.id = mg.idmember AND m.status IN (" . MemberStatusType::ACTIVE_ALL . ")) DESC, Name ASC";
                     break;
                 case "actasc":
-                    $order = "(SELECT MAX(forums_posts.create_time) FROM forums_threads, forums_posts WHERE groups.id = forums_threads.IdGroup AND forums_posts.postid = forums_threads.last_postid) ASC, Name ASC";
+                    $order = "(SELECT MAX(forums_posts.create_time) FROM forums_threads, forums_posts WHERE g.id = forums_threads.IdGroup AND forums_posts.postid = forums_threads.last_postid) ASC, Name ASC";
                     break;
                 case "actdesc":
-                    $order = "(SELECT MAX(forums_posts.create_time) FROM forums_threads, forums_posts WHERE groups.id = forums_threads.IdGroup AND forums_posts.postid = forums_threads.last_postid) DESC, Name ASC";
+                    $order = "(SELECT MAX(forums_posts.create_time) FROM forums_threads, forums_posts WHERE g.id = forums_threads.IdGroup AND forums_posts.postid = forums_threads.last_postid) DESC, Name ASC";
                     break;
                 case "createdasc":
                     $order = 'created ASC, Name ASC';
@@ -183,6 +182,7 @@ class GroupsModel extends  RoxModelBase
             $order = 'Name ASC';
         }
 
+        /** @var Group $group */
         $group = $this->createEntity('Group');
         $group->sql_order = $order;
         return $this->_group_list = $group->findBySearchTerms($terms, (($page - 1) * $amount), $amount);

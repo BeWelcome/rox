@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block content %}
+    {% if groups|length %}
+        {% if groups.haveToPaginate %}
+            <div class="pull-right">{{ pagerfanta( groups, 'twitter_bootstrap4_ajax_translated' ) }}</div>
+        {% endif %}
+
+        <div class="table-responsive ">
+            <table class="table table-striped w-100">
+                <colgroup>
+                    <col style="width:20%">
+                    <col style="width:55%">
+                    <col style="width:15%">
+                    <col style="width:10%">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th scope="col">{{ 'admin.group.info'|trans }}</th>
+                        <th scope="col" class="w-100">{{ 'admin.group.description'|trans }}</th>
+                        <th scope="col">{{ 'admin.group.creator'|trans }}</th>
+                        <th scope="col">{{ 'admin.group.actions'|trans }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for group in groups %}
+                        <tr>
+                            <td><p><strong>{{ group.Name }}</strong><br>
+                                    <small>Created: {{ group.created|localizeddate }}</small></p>
+                            <td>{% for locale, description in group.descriptions %}
+                                     <small class="text-muted">{{ description.Language.WordCode|lower|trans }} ({{ locale }})</small><br>{{ description.Sentence|purify }}
+                                {% endfor %}
+                                </td>
+                            <td>{% if group.members|first %}{{ macros.avatarstack((group.members|first).Username) }}{% endif %}</td>
+                            <td class="text-center">
+                                {% if group.name starts with '[Archived] ' %}
+                                    <a href="{{ path('admin_groups_unarchive', { 'id': group.id }) }}"><i class="fas fa-fw fa-2x fa-box-open" title="{{ 'Unarchive group'|trans }}"></i></a><br>
+                                {% else %}
+                                    <a href="{{ path('admin_groups_archive', { 'id': group.id }) }}"><i class="fas fa-fw fa-2x fa-archive" title="{{ 'Archive group'|trans }}"></i></a><br>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if groups.haveToPaginate %}
+            <div class="pull-right">{{ pagerfanta( groups, 'twitter_bootstrap4_ajax_translated' ) }}</div>
+        {% endif %}
+    {% else %}
+        {{ 'admin.group.no.group' | trans }}
+    {% endif %}
+{% endblock %}

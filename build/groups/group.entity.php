@@ -140,16 +140,18 @@ SQL;
      * Uses an array of terms to create a create to search for groups with
      * simple or search on names for now
      *
-     * @todo implement proper group search - this will wait on various db implementations
      * @param array $terms - array of strings to be used in search
+     * @param int $offset
+     * @param int $limit
      * @return mixed false or group of arrays that match any of the terms
      * @access public
+     * @todo implement proper group search - this will wait on various db implementations
      */
     public function findBySearchTerms($terms = array(), $offset = 0, $limit = 10)
     {
         if (empty($terms))
         {
-            return $this->findAll($offset, 10);
+            return $this->findAll($offset, $limit);
         }
 
         foreach ($terms as &$term)

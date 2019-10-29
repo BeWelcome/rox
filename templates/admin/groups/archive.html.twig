@@ -26,7 +26,7 @@
                 <tbody>
                     {% for group in groups %}
                         <tr>
-                            <td><p><strong>{{ group.Name }}</strong><br>
+                            <td><p><strong><a href="{{ url('group_start', {'group_id': group.id}) }}">{{ group.Name }}</a></strong><br>
                                     <small>Created: {{ group.created|localizeddate }}</small></p>
                             <td>{% for locale, description in group.descriptions %}
                                      <small class="text-muted">{{ description.Language.WordCode|lower|trans }} ({{ locale }})</small><br>{{ description.Sentence|purify }}

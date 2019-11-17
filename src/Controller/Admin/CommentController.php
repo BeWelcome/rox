@@ -146,6 +146,31 @@ class CommentController extends AbstractController
     }
 
     /**
+     * @Route("/admin/comment/checked", name="admin_checked_overview")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function adminCheckedOverview(Request $request)
+    {
+        $page = $request->query->get('page', 1);
+        $limit = $request->query->get('limit', 10);
+
+        $comments = $this->commentModel->getCommentsByAdminAction(CommentAdminActionType::ADMIN_CHECKED, $page, $limit);
+
+        return $this->render('admin/comment/overview.html.twig', [
+            'headline' => 'admin.comment.checked.headline',
+            'route' => 'admin_checked_overview',
+            'comments' => $comments,
+            'submenu' => [
+                'items' => $this->getSubMenuItems(),
+                'active' => 'checkedcomment',
+            ],
+        ]);
+    }
+
+    /**
      * @Route("/admin/comment/{commentId}", name="admin_comment")
      *
      * @param Request $request
@@ -394,6 +419,10 @@ class CommentController extends AbstractController
             'negativecomment' => [
                 'key' => 'AdminNegativeComment',
                 'url' => $this->generateUrl('admin_negative_overview'),
+            ],
+            'checkedcomment' => [
+                'key' => 'AdminCheckedComment',
+                'url' => $this->generateUrl('admin_checked_overview'),
             ],
             'overview' => [
                 'key' => 'AdminComment',

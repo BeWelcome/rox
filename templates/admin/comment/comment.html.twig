@@ -3,7 +3,7 @@
 
 {% block content %}
     <h1>{{ 'admin.comment.headline' | trans }}</h1>
-    <div class="row">
+    <div class="row no-gutters">
         <div class="col-12 mb-2">
             {% if comment.displayinpublic %}{{ 'Comment is visible to everyone.' }}{% else %}{{ 'Comment is currently hidden.' }}{% endif %}
         </div>

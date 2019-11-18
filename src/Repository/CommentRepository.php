@@ -123,6 +123,20 @@ class CommentRepository extends EntityRepository
     }
 
     /**
+     * @param $action
+     *
+     * @return QueryBuilder
+     */
+    public function queryAllByQuality($quality)
+    {
+        $qb = $this->queryAll()
+            ->where('c.quality = :quality')
+            ->setParameter('quality', $quality);
+
+        return $qb;
+    }
+
+    /**
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
      * @param $action

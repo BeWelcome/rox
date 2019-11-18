@@ -121,6 +121,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('editmyprofile_locale', '/editmyprofile/{locale}');
         $this->addRouteDirectly('donate', '/donate');
         $this->addRouteDirectly('donate_list', '/donate/list');
+        $this->addRouteDirectly('donate_done', '/donate/done');
         $this->addRouteDirectly('gallery_show_user', '/gallery/show/user/{username}');
         $this->addRouteDirectly('gallery_show_user_images', '/gallery/show/user/{username}/pictures');
         $this->addRouteDirectly('gallery_show_user_images_pages', '/gallery/show/user/{username}/pictures/=page{pageNo}');

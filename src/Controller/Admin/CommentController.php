@@ -140,7 +140,7 @@ class CommentController extends AbstractController
             'comments' => $comments,
             'submenu' => [
                 'items' => $this->getSubMenuItems(),
-                'active' => 'reportedcomment',
+                'active' => 'negativecomment',
             ],
         ]);
     }

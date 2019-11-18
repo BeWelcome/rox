@@ -19,8 +19,6 @@ return [
     Symfony\Bundle\MakerBundle\MakerBundle::class => ['dev' => true],
     App\AppBundle::class => ['all' => true],
     Exercise\HTMLPurifierBundle\ExerciseHTMLPurifierBundle::class => ['all' => true],
-    Twig\CssInliner\Bundle\TwigCssInlinerBundle::class => ['all' => true],
-    Twig\Inky\Bundle\TwigInkyBundle::class => ['all' => true],
-    Twig\Markdown\Bundle\TwigMarkdownBundle::class => ['all' => true],
     Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
+    Twig\Extra\TwigExtraBundle\TwigExtraBundle::class => ['all' => true],
 ];

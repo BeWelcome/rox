@@ -146,7 +146,7 @@ class GroupController extends AbstractController
             'groups' => $pagerfanta,
             'submenu' => [
                 'items' => $this->getSubmenuItems(),
-                'active' => 'archival',
+                'active' => 'unarchival',
             ],
         ]);
     }
@@ -339,6 +339,7 @@ class GroupController extends AbstractController
 
     private function hasGroupRightLevel(int $level)
     {
+        /** @var Member $admin */
         $admin = $this->getUser();
         return ($admin->getLevelForRight(Member::ROLE_ADMIN_GROUP) == $level);
     }

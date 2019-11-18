@@ -26,9 +26,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class GroupModel
 {
+    use ManagerTrait;
     use MailerTrait;
     use MessageTrait;
-    use ManagerTrait;
 
     /**
      * @var UrlGenerator
@@ -83,7 +83,7 @@ class GroupModel
                 'decline_start' => $declineTag,
                 'decline_end' => '</a>',
             ];
-            $this->createTemplateMessage($member, $admin, '_partials/group/invitation.html.twig', $params);
+            $this->createTemplateMessage($member, $admin, 'group', 'invitation', $params);
 
             $this->sendTemplateEmail($admin, $member, 'group.invitation', $params);
 
@@ -220,16 +220,18 @@ class GroupModel
 
                 /** @var Member[] $admins */
                 $params = [
-                    'subject' => 'group.joined',
+                    'subject' => 'group.wantin',
                     'accept_start' => $acceptTag,
                     'decline_start' => $declineTag,
                     'accept_end' => '</a>',
                     'decline_end' => '</a>',
                     'group' => $group,
+                    'template' => 'wantin',
                 ];
                 $admins = $group->getAdmins();
                 foreach ($admins as $admin) {
-                    $this->createTemplateMessage($member, $admin, '_partials/group/wantin.html.twig', $params);
+                    $this->createTemplateMessage($member, $admin, 'group', 'wantin', $params);
+                    $this->sendTemplateEmail($member, $admin, 'group', $params);
                 }
             } else {
                 $membership->setStatus(GroupMembershipStatusType::CURRENT_MEMBER);
@@ -321,7 +323,7 @@ class GroupModel
         $connection = $this->getManager()->getConnection();
         /** @var Statement $stmt */
         $stmt = $connection->prepare('
-                REPLACE INTO 
+                REPLACE INTO
                     `privilegescopes`
                 SET
                     `Idmember` = :memberId,
@@ -422,4 +424,19 @@ class GroupModel
 
         return $status === $membership->getStatus();
     }
+
+/*    private function informGroupAdmins(Group $group, $member)
+    {
+        $admins = $group->getAdmins();
+
+        if (!empty($admins)) {
+            foreach ($admins as $admin) {
+                $this->sendTemplateEmail('group@bewelcome.org', $admin, 'group.approve.join', [
+                    'subject' => 'group.approve.join',
+                    'member' => $member,
+                ]);
+            }
+        }
+    }
+*/
 }

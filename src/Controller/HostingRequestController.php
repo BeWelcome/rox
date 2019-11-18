@@ -12,6 +12,8 @@ use App\Form\HostingRequestGuest;
 use App\Form\HostingRequestHost;
 use App\Model\HostingRequestModel;
 use App\Utilities\MailerTrait;
+use App\Utilities\ManagerTrait;
+use App\Utilities\TranslatorTrait;
 use Exception;
 use InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -33,6 +35,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class HostingRequestController extends BaseMessageController
 {
     use MailerTrait;
+    use ManagerTrait;
+    use TranslatorTrait;
 
     /**
      * Deals with replies to messages and hosting requests.
@@ -40,7 +44,6 @@ class HostingRequestController extends BaseMessageController
      * @Route("/request/{id}/reply", name="hosting_request_reply",
      *     requirements={"id": "\d+"})
      *
-     * @param Request $request
      * @param Message $message
      *
      * @throws InvalidArgumentException

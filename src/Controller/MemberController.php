@@ -12,6 +12,7 @@ use App\Model\MemberModel;
 use App\Repository\MemberRepository;
 use App\Repository\MessageRepository;
 use App\Utilities\MailerTrait;
+use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\NonUniqueResultException;
@@ -31,6 +32,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class MemberController extends AbstractController
 {
     use MailerTrait;
+    use ManagerTrait;
     use TranslatorTrait;
     use TranslatedFlashTrait;
 
@@ -97,7 +99,7 @@ class MemberController extends AbstractController
             } catch (NonUniqueResultException $e) {
             }
             if (null === $member) {
-                $form->addError(new FormError($this->translator->trans('flash.email.reset.password')));
+                $form->addError(new FormError($this->getTranslator()->trans('flash.email.reset.password')));
             } else {
                 $token = null;
                 try {

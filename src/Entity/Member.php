@@ -2740,6 +2740,32 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         return $level;
     }
 
+    /**
+     * @param $rightName
+     *
+     * @return array
+     */
+    public function getScopeForRight($rightName)
+    {
+        $rightName = strtolower(str_replace('ROLE_ADMIN_', '', $rightName));
+        $scope = [];
+        $volunteerRights = $this->getVolunteerRights();
+        if (null !== $volunteerRights) {
+            // first check if member has the word right
+            $right = $this->em->getRepository(Right::class)->findOneBy(['name' => $rightName]);
+
+            /** @var RightVolunteer $volunteerRight */
+            foreach ($volunteerRights->getIterator() as $volunteerRight) {
+                if ($volunteerRight->getRight() === $right) {
+                    $scopes = str_replace(';', ',', str_replace('"','', $volunteerRight->getScope()));
+                    $scope = explode(',', $scopes);
+                }
+            }
+        }
+
+        return $scope;
+    }
+
     public function isBrowseable()
     {
         if (\in_array(

@@ -32,7 +32,7 @@ Boston, MA  02111-1307, USA.
  */
 class MOD_htmlpure
 {
-    const ALLOWED_HTML = 'p,b,a[href],br,u,i,strong,em,ol,ul,li,dl,dt,dd,img[src|alt|width|height],blockquote,strike,del';
+    const ALLOWED_HTML = 'p,b,a[href],br,u,i,strong,em,ol,ul,li,dl,dt,dd,img[src|alt|width|height],blockquote,del';
 
     /**
      * Singleton instance

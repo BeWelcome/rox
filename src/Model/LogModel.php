@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Entity\Member;
 use App\Pagerfanta\LogAdapter;
 use App\Utilities\ManagerTrait;
 use Pagerfanta\Pagerfanta;
@@ -30,7 +31,11 @@ class LogModel
         return $pagerFanta;
     }
 
-    public function getLogTypes()
+    /**
+     * @param Member $member
+     * @return array|false
+     */
+    public function getLogTypes(Member $member)
     {
         $types = [
             'accepting',
@@ -106,6 +111,11 @@ class LogModel
             'uploadphoto',
             'VerifyMember',
         ];
+        // Reduce list of types to scope
+        $allowedTypes = $member->getScopeForRight(Member::ROLE_ADMIN_LOGS);
+        if ($allowedTypes[0] !== 'All') {
+            $types = array_intersect($allowedTypes, $types);
+        }
         $logTypes = array_combine($types, $types);
 
         return $logTypes;

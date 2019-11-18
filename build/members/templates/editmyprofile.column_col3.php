@@ -62,8 +62,8 @@ require_once 'editprofile_form.php';
         $('button.remove_lang').click( removeLang );
         initLanguageSelect2s();
 
-        let minDate = moment();
-        let maxDate = moment().add(30, 'days');
+        let minDate = moment().subtract(24, 'hours');
+        let maxDate = moment().add(60, 'days');
         $("#hes-duration-div").datetimepicker({
             format: 'YYYY-MM-DD',
             minDate: minDate,

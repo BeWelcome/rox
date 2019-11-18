@@ -738,14 +738,8 @@
     "tijsverkoyen/css-to-inline-styles": {
         "version": "2.2.1"
     },
-    "twig/cssinliner-extension": {
-        "version": "1.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "1.0",
-            "ref": "3460ba58f2609c9f1a38c6e9f2a416ff911f0861"
-        }
+    "twig/cssinliner-extra": {
+        "version": "v2.12.2"
     },
     "twig/extensions": {
         "version": "1.0",
@@ -756,23 +750,14 @@
             "ref": "ddb2e0a77773b7fd75d8d649545f174e664500ab"
         }
     },
-    "twig/inky-extension": {
-        "version": "1.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "1.0",
-            "ref": "98aa25792ca5b18aebbac6644a150ac90867408d"
-        }
+    "twig/extra-bundle": {
+        "version": "v3.0.0"
     },
-    "twig/markdown-extension": {
-        "version": "1.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "1.0",
-            "ref": "709b663eeb863ec3011db883d795c1122d85be85"
-        }
+    "twig/inky-extra": {
+        "version": "v2.12.2"
+    },
+    "twig/markdown-extra": {
+        "version": "v2.12.2"
     },
     "twig/twig": {
         "version": "v2.5.0"

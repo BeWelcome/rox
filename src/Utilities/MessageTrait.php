@@ -11,7 +11,6 @@ use Symfony\Component\Templating\EngineInterface;
 
 trait MessageTrait
 {
-    use ManagerTrait;
     use TranslatorTrait;
 
     /** @var EngineInterface */
@@ -35,15 +34,13 @@ trait MessageTrait
     /**
      * @param Member $sender
      * @param Member $receiver
+     * @param string $parent
      * @param string $template
-     * @param mixed  ...$params
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @param mixed ...$params
      */
-    protected function createTemplateMessage(Member $sender, Member $receiver, string $template, ...$params)
+    protected function createTemplateMessage(Member $sender, Member $receiver, string $parent, string $template, ...$params)
     {
-        $parameters = array_merge(['sender' => $sender, 'receiver' => $receiver], ...$params);
+        $parameters = array_merge(['sender' => $sender, 'receiver' => $receiver, 'template' => $template], ...$params);
 
         $em = $this->getManager();
 
@@ -59,11 +56,10 @@ trait MessageTrait
         $message->setReceiver($receiver);
         $message->setSubject($subject);
 
-        $body = $this->getEngine()->render($template, $parameters);
+        $body = $this->getEngine()->render('_partials/'.$parent.'/'.$template.'.html.twig', $parameters);
         $message->setMessage($body);
         $em->persist($message);
         $em->flush();
-
         $this->setTranslatorLocale($sender);
     }
 }

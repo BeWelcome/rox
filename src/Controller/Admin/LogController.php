@@ -26,14 +26,25 @@ class LogController extends AbstractController
      */
     public function showOverview(Request $request, LogModel $logModel)
     {
+        if (!$this->isGranted([Member::ROLE_ADMIN_GROUP])) {
+            throw $this->createAccessDeniedException('You need to have Logs right to access this.');
+        }
+
         $member = null;
+        $logViewer = $this->getUser();
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 20);
         $types = $request->query->get('types', []);
         $username = $request->query->get('username', null);
 
-        $logTypes = $logModel->getLogTypes();
-
+        $logTypes = $logModel->getLogTypes($logViewer);
+        if (count($logTypes) == 1) {
+            $request->query->set('types', $logTypes);
+            $types = $logTypes;
+        }
+        if (empty($types)) {
+            $types = $logTypes;
+        }
         $logForm = $this->createForm(LogFormType::class, [
             'logTypes' => $logTypes,
         ]);
@@ -44,7 +55,7 @@ class LogController extends AbstractController
             $types = $data['types'];
             $username = $data['username'];
         }
-        if (null !== $username) {
+        if (!empty($username)) {
             /** @var MemberRepository $memberRepository */
             $memberRepository = $this->getDoctrine()->getRepository(Member::class);
             $member = $memberRepository->loadUserByUsername($username);

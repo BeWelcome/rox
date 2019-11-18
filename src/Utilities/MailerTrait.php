@@ -3,17 +3,21 @@
 namespace App\Utilities;
 
 use App\Entity\Member;
-use App\Entity\Preference;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\NamedAddress;
 
+/**
+ * Trait MailerTrait
+ * @package App\Utilities
+ *
+ * Need ManagerTrait and TranslatorTrait to be included beforehand
+ *
+ */
 trait MailerTrait
 {
-    use ManagerTrait;
-
     /** @var Mailer */
     private $mailer;
 
@@ -54,7 +58,7 @@ trait MailerTrait
         $htmlMails = ('Yes' === $receiver->getMemberPreferenceValue($preference));
         */
         $this->setTranslatorLocale($receiver);
-        $parameters = array_merge(['sender' => $sender, 'receiver' => $receiver], ...$params);
+        $parameters = array_merge(['sender' => $sender, 'receiver' => $receiver, 'tenplate' => $template], ...$params);
         $subject = $this->getTranslator()->trans($parameters['subject']);
         $email = (new TemplatedEmail())
             ->to(new NamedAddress($receiver->getEmail(), $receiver->getUsername()))
@@ -66,7 +70,7 @@ trait MailerTrait
         if (\is_string($sender)) {
             $email->from($sender);
         } else {
-            $email->from(new NamedAddress('message@bewelcome.org', $sender->getUsername()));
+            $email->from(new NamedAddress('message@bewelcome.org', $sender->getUsername().' - BeWelcome'));
         }
         try {
             $this->mailer->send($email);

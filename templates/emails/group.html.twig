@@ -1,6 +1,6 @@
 {% extends 'emails/email.html.twig' %}
 
 {% block content %}
-    {% include '_partials/group/accept.invite.html.twig' %}
+    {% include '_partials/group/' ~ template ~ '.html.twig' %}
     <p>{{ 'email.farewell' | trans }}</p>
 {% endblock content %}

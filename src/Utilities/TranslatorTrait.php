@@ -9,16 +9,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 trait TranslatorTrait
 {
     /** @var TranslatorInterface */
-    private $translator1;
+    private $translator;
 
     /**
      * @Required
      *
      * @param TranslatorInterface $translator
      */
-    public function humpdidumpdi(TranslatorInterface $translator)
+    public function setTranslator(TranslatorInterface $translator)
     {
-        $this->translator1 = $translator;
+        $this->translator = $translator;
     }
 
     /**
@@ -26,7 +26,7 @@ trait TranslatorTrait
      */
     protected function getTranslator()
     {
-        return $this->translator1;
+        return $this->translator;
     }
 
     /**
@@ -37,6 +37,6 @@ trait TranslatorTrait
     protected function setTranslatorLocale(Member $receiver)
     {
         $language = $receiver->getPreferredLanguage();
-        $this->translator1->setLocale($language->getShortcode());
+        $this->translator->setLocale($language->getShortcode());
     }
 }

@@ -217,8 +217,8 @@
     });
 
     let passwordCheck = $( "#register-passwordcheck" );
-    $( "#register-password" ).change(function() {
-        let password = $( "#register-passwordcheck" );
+    let password = $( "#register-password" );
+    $( password ).change(function() {
         password[0].setCustomValidity('');
         var valid = password[0].checkValidity();
         if (valid) {
@@ -234,6 +234,9 @@
         var valid = passwordCheck[0].checkValidity();
         if (valid) {
             $(passwordCheck).addClass('is-valid').removeClass('is-invalid');
+            if ($(password).val() != $(passwordCheck).val()) {
+                $(passwordCheck).addClass('is-invalid').removeClass('is-valid');
+            }
         } else {
             $(passwordCheck).addClass('is-invalid').removeClass('is-valid');
         }

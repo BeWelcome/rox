@@ -83,7 +83,7 @@ class GroupModel
                 'decline_start' => $declineTag,
                 'decline_end' => '</a>',
             ];
-            $this->createTemplateMessage($member, $admin, 'group', 'invitation', $params);
+            $this->createTemplateMessage($admin, $member, 'group', 'invitation', $params);
 
             $this->sendTemplateEmail($admin, $member, 'group.invitation', $params);
 

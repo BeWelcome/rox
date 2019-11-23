@@ -4,20 +4,33 @@ namespace App\Model;
 
 use App\Kernel;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\MailerInterface;
 
 class TranslationModel
 {
+    /** @var Kernel */
+    private $kernel;
+
+    /**
+     * @required
+     *
+     * @param KernelInterface $kernel
+     */
+    public function setKernel(KernelInterface $kernel)
+    {
+        $this->kernel = $kernel;
+    }
+
     /**
      * Remove the cache file corresponding to the given locale.
      *
-     * @param Kernel $kernel
-     * @param string $locale
-     *
      * @return bool
      */
-    public function removeCacheFiles(Kernel $kernel)
+    public function removeCacheFiles()
     {
-        $kernelCacheDir = $kernel->getCacheDir();
+        $kernelCacheDir = $this->kernel->getCacheDir();
         $finder = new Finder();
         $finder->files()->in($kernelCacheDir.'/translations')->name('/.*/');
         $deleted = true;

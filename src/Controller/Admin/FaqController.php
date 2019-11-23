@@ -4,17 +4,23 @@ namespace App\Controller\Admin;
 
 use App\Entity\Faq;
 use App\Entity\FaqCategory;
+use App\Entity\Language;
+use App\Entity\Member;
 use App\Entity\Word;
 use App\Form\CustomDataClass\FaqCategoryRequest;
 use App\Form\CustomDataClass\FaqRequest;
 use App\Form\FaqCategoryFormType;
 use App\Form\FaqFormType;
+use App\Kernel;
 use App\Model\FaqModel;
+use App\Model\TranslationModel;
 use Doctrine\ORM\EntityRepository;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -101,11 +107,11 @@ class FaqController extends AbstractController
      *
      * @param Request $request
      *
-     * @throws Exception
-     *
+     * @param TranslationModel $translationModel
      * @return Response
+     * @throws Exception
      */
-    public function createCategoryAction(Request $request)
+    public function createCategoryAction(Request $request, TranslationModel $translationModel)
     {
         $faqCategories = $this->getSubMenuItems();
 
@@ -122,10 +128,17 @@ class FaqController extends AbstractController
             $check = $wordRepository->findBy(['code' => $data->wordCode, 'shortCode' => 'en']);
             $valid = empty($check);
             if ($valid) {
+                /** @var Member $author */
+                $author = $this->getUser();
+                $languageRepository = $em->getRepository(Language::class);
+                /** @var Language $english */
+                $english = $languageRepository->findOneBy(['shortcode' => 'en']);
+
                 $word = new Word();
+                $word->setAuthor($author);
                 $word->setCode($data->wordCode);
                 $word->setSentence($data->description);
-                $word->setIdlanguage(0);
+                $word->setlanguage($english);
                 $word->setCreated(new \DateTime());
                 $word->setDescription('FAQ category');
                 $em->persist($word);
@@ -135,10 +148,10 @@ class FaqController extends AbstractController
                 $em->persist($faqCategory);
                 $em->flush();
 
-                $this->removeCacheFile('en');
+                $translationModel->removeCacheFiles();
                 $this->addFlash('notice', "Faq category '{$data->wordCode}' created.");
 
-                return $this->redirectToRoute('admin_faqs_overview', ['id' => $faqCategory->getId()]);
+                return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faqCategory->getId()]);
             }
         }
 
@@ -161,12 +174,14 @@ class FaqController extends AbstractController
      *
      * @ParamConverter("faqCategory", class="App\Entity\FaqCategory", options={"id" = "categoryId"})
      *
-     * @param Request     $request
+     * @param Request $request
      * @param FaqCategory $faqCategory
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @param TranslationModel $translationModel
+     * @return RedirectResponse|Response
+     * @throws Exception
      */
-    public function createFaqInCategoryAction(Request $request, FaqCategory $faqCategory)
+    public function createFaqInCategoryAction(Request $request, FaqCategory $faqCategory, TranslationModel $translationModel)
     {
         $faqCategories = $this->getSubMenuItems();
 
@@ -175,7 +190,7 @@ class FaqController extends AbstractController
         $faqForm->handleRequest($request);
 
         if ($faqForm->isSubmitted() && $faqForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+           $em = $this->getDoctrine()->getManager();
             /** @var FaqRequest $data */
             $data = $faqForm->getData();
 
@@ -184,18 +199,26 @@ class FaqController extends AbstractController
             $checkAnswer = $wordRepository->findBy(['code' => 'FaqA_'.$data->wordCode, 'shortCode' => 'en']);
             $valid = (empty($checkQuestion) && empty($checkAnswer));
             if ($valid) {
+                /** @var Member $author */
+                $author = $this->getUser();
+                $languageRepository = $em->getRepository(Language::class);
+                /** @var Language $english */
+                $english = $languageRepository->findOneBy(['shortcode' => 'en']);
+
                 $question = new Word();
+                $question->setAuthor($author);
                 $question->setCode('FaqQ_'.$data->wordCode);
                 $question->setSentence($data->question);
-                $question->setIdlanguage(0);
+                $question->setlanguage($english);
                 $question->setCreated(new \DateTime());
                 $question->setDescription('FAQ Question');
                 $em->persist($question);
 
                 $answer = new Word();
+                $answer->setAuthor($author);
                 $answer->setCode('FaqA_'.$data->wordCode);
                 $answer->setSentence($data->question);
-                $answer->setIdlanguage(0);
+                $answer->setlanguage($english);
                 $answer->setCreated(new \DateTime());
                 $answer->setDescription('FAQ Question');
                 $em->persist($answer);
@@ -207,10 +230,18 @@ class FaqController extends AbstractController
                 $em->persist($faq);
                 $em->flush();
 
-                $this->removeCacheFile('en');
+                $translationModel->removeCacheFiles();
                 $this->addFlash('notice', "Faq '{$data->wordCode}' created.");
 
-                return $this->redirectToRoute('admin_faqs_overview', ['id' => $faqCategory->getId()]);
+                return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faqCategory->getId()]);
+            } else {
+                // Add form error so that user gets informed
+                if (!empty($checkAnswer)) {
+                    $faqForm->get('answer')->addError(new FormError('Answer already exists for this FAQ keyword.'));
+                }
+                if (!empty($checkQuestion)) {
+                    $faqForm->get('question')->addError(new FormError('Question already exists for this FAQ keyword.'));
+                }
             }
         }
 
@@ -232,12 +263,13 @@ class FaqController extends AbstractController
      * @Route("/admin/faqs/category/{id}/edit", name="admin_faqs_category_edit",
      *     requirements={"id": "\d+"})
      *
-     * @param Request     $request
+     * @param Request $request
      * @param FaqCategory $faqCategory
      *
+     * @param TranslationModel $translationModel
      * @return Response
      */
-    public function editCategoryAction(Request $request, FaqCategory $faqCategory)
+    public function editCategoryAction(Request $request, FaqCategory $faqCategory, TranslationModel $translationModel)
     {
         $faqCategories = $this->getSubMenuItems($faqCategory);
 
@@ -254,7 +286,7 @@ class FaqController extends AbstractController
             $description->setSentence($data->description);
             $em->persist($description);
             $em->flush();
-            $this->removeCacheFile('en');
+            $translationModel->removeCacheFiles();
 
             return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faqCategory->getId()]);
         }
@@ -277,9 +309,10 @@ class FaqController extends AbstractController
      *     requirements={"id": "\d+"})
      *
      * @param Request $request
-     * @param Faq     $faq
+     * @param Faq $faq
      *
      * @return Response
+     * @throws Exception
      */
     public function editFaqAction(Request $request, Faq $faq)
     {

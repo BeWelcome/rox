@@ -1,6 +1,5 @@
 {% block ckeditor_widget %}
     <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
-
     {% if not async %}
         {{ block( '_ckeditor_javascript' ) }}
         {{ block( '_ckeditor_stylesheet' ) }}
@@ -12,16 +11,6 @@
     {% if locale != 'en' %}
         <script src="{{ asset('script/translations/' ~ locale ~ '.js') }}"></script>
     {% endif %}
-    <script>
-        ClassicEditor
-            .create( document.querySelector( '.editor' ) , {
-                // The language code is defined in the https://en.wikipedia.org/wiki/ISO_639-1 standard.
-                language: '{{ locale }}'
-            } )
-            .catch( error => {
-                console.error( error );
-            } );
-    </script>
 {% endblock %}
 
 {% block _ckeditor_stylesheet %}

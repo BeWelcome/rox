@@ -14,7 +14,8 @@
     {% else %}
         <h1>{{ 'admin.faq.create' | trans }}</h1>
     {% endif %}
-    {{ form_start(form) }}
+    {{ form_start(form, {"attr": {"novalidate":"novalidate"}}) }}
+    {{ form_errors(form) }}
     <div class="form-group">
         {{ form_label(form.faqCategory) }}
         {{ form_widget(form.faqCategory) }}

@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -62,6 +63,42 @@ class MessageController extends BaseMessageController
         }
 
         return $this->messageReply($request, $this->getUser(), $thread);
+    }
+
+    /**
+     * Deals with deletion of messages and hosting requests.
+     *
+     * @Route("/message/{id}/delete/{redirect}", name="message_delete",
+     *     requirements={"id": "\d+"})
+     *
+     * @param Request $request
+     * @param Message $message
+     * @ParamConverter("redirect", class="App\Entity\Message", options={"id": "redirect"})
+     *
+     * @throws AccessDeniedException
+     * @throws Exception
+     *
+     * @return Response
+     */
+    public function deleteMessageOrRequest(Request $request, Message $message, Message $redirect)
+    {
+        if (!$this->isMessageOfMember($message)) {
+            throw $this->createAccessDeniedException('Not your message/hosting request');
+        }
+
+        /** @var Member $member */
+        $member = $this->getUser();
+
+        $this->messageModel->markDeleted($member, [$message->getId()]);
+        $this->addTranslatedFlash('notice', 'flash.message.deleted');
+
+        if ($message->getId() === $redirect->getId()) {
+            return $this->redirectToRoute('messages', ['folder' => 'deleted']);
+        }
+        else
+        {
+            return $this->redirectToRoute('message_show', ['id' => $redirect->getId()]);
+        }
     }
 
     /**
@@ -241,6 +278,7 @@ class MessageController extends BaseMessageController
             throw new InvalidArgumentException();
         }
 
+        /** @var Member $member */
         $member = $this->getUser();
         $messages = $this->messageModel->getMessagesBetween($member, $other, $sort, $direction, $page, $limit);
 

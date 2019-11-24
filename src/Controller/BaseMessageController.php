@@ -166,6 +166,7 @@ class BaseMessageController extends AbstractController
         // as there might be a clash of replies
         /** @var MessageRepository */
         $hostingRequestRepository = $this->getDoctrine()->getRepository(Message::class);
+        /** @var Message[] $messages */
         $messages = $hostingRequestRepository->findBy(['subject' => $probableParent->getSubject()]);
 
         return $messages[\count($messages) - 1];

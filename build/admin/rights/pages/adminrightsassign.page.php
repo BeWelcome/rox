@@ -11,7 +11,8 @@ class AdminRightsAssignPage extends AdminRightsBasePage
     public function __construct($model = false) {
         parent::__construct();
         $this->setCurrent('AdminRightsAssign');
-        $this->addLateLoadScriptFile('/script/adminrightsajax.js');
+        $this->addLateLoadScriptFile('build/jquery_ui.js');
+        $this->addLateLoadScriptFile('build/member/autocomplete.js');
     }
 
     public function teaserHeadline()
@@ -23,7 +24,7 @@ class AdminRightsAssignPage extends AdminRightsBasePage
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery-ui-1.10.4.custom.min.css';
+        $stylesheets[] = 'build/jquery_ui.css';
         return $stylesheets;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Doctrine\MemberStatusType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -23,6 +24,8 @@ class MemberRepository extends EntityRepository implements UserLoaderInterface
             ->select('u.username')
             ->where('u.username Like :username')
             ->setParameter('username', '%'.$username.'%')
+            ->andWhere('u.status in (:status)')
+            ->setParameter(':status', MemberStatusType::ACTIVE_ALL_ARRAY)
             ->setMaxResults(10)
             ->orderBy('u.username', 'DESC')
             ->getQuery()

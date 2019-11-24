@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Member;
 use App\Entity\Message;
 use App\Form\CustomDataClass\MessageIndexRequest;
 use App\Form\MessageIndexFormType;
@@ -77,6 +78,7 @@ class BaseMessageController extends AbstractController
      */
     protected function handleFolderRequest(Request $request, $folder, Pagerfanta $messages, $type)
     {
+        /** @var Member $member */
         $member = $this->getUser();
         $messageIds = [];
         foreach ($messages->getIterator() as $key => $val) {
@@ -92,13 +94,14 @@ class BaseMessageController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $messageIds = $data->getMessages();
-            if ($form->get('purge')->isClicked()) {
+
+            if ($form->has('purge') && $form->get('purge')->isClicked()) {
                 $this->messageModel->markPurged($member, $messageIds);
                 $this->addTranslatedFlash('notice', 'flash.purged');
 
                 return $this->redirect($request->getRequestUri());
             }
-            if ($form->get('delete')->isClicked()) {
+            if ($form->has('delete') && $form->get('delete')->isClicked()) {
                 if ('deleted' === $folder) {
                     $this->messageModel->unmarkDeleted($member, $messageIds);
                     $this->addTranslatedFlash('notice', 'flash.undeleted');

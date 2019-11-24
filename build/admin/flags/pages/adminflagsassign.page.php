@@ -11,6 +11,8 @@ class AdminFlagsAssignPage extends AdminFlagsBasePage
     public function __construct($model = false) {
         parent::__construct($model);
         $this->setCurrent('AdminFlagsAssign');
+        $this->addLateLoadScriptFile('build/jquery_ui.js');
+        $this->addLateLoadScriptFile('build/member/autocomplete.js');
     }
 
     public function teaserHeadline()
@@ -22,14 +24,7 @@ class AdminFlagsAssignPage extends AdminFlagsBasePage
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery-ui-1.10.4.custom.min.css';
+        $stylesheets[] = 'build/jquery_ui.css';
         return $stylesheets;
-    }
-
-    public function getLateLoadScriptFiles()
-    {
-        $scripts = parent::getLateLoadScriptfiles();
-        $scripts[] = 'adminflagsajax.js';
-        return $scripts;
     }
 }

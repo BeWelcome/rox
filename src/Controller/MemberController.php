@@ -20,11 +20,14 @@ use Exception;
 use Html2Text\Html2Text;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Class MemberController.
@@ -85,7 +88,16 @@ class MemberController extends AbstractController
             return $this->redirectToRoute('landingpage');
         }
 
-        $form = $this->createForm(FindUserFormType::class);
+        $form = $this->createFormBuilder()
+            ->add('username', TextType::class, [
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+            ->add('reset.password', SubmitType::class)
+            ->setMethod('POST')
+            ->getForm();
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -95,7 +107,7 @@ class MemberController extends AbstractController
             $memberRepository = $this->getDoctrine()->getRepository(Member::class);
             try {
                 /** @var Member $member */
-                $member = $memberRepository->loadUserByUsername($data['term']);
+                $member = $memberRepository->loadUserByUsername($data['username']);
             } catch (NonUniqueResultException $e) {
             }
             if (null === $member) {

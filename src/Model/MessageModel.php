@@ -288,6 +288,7 @@ class MessageModel
 
     /**
      * @param $member
+     * @param $folder
      * @param $sort
      * @param $sortDir
      * @param int $page
@@ -295,12 +296,12 @@ class MessageModel
      *
      * @return Pagerfanta
      */
-    public function getFilteredRequestsAndMessages($member, $sort, $sortDir, $page = 1, $limit = 10)
+    public function getFilteredRequestsAndMessages($member, $folder, $sort, $sortDir, $page = 1, $limit = 10)
     {
         /** @var MessageRepository $repository */
         $repository = $this->getManager()->getRepository(Message::class);
 
-        return $repository->findLatestRequestsAndMessages($member, $sort, $sortDir, $page, $limit);
+        return $repository->findLatestRequestsAndMessages($member, $folder, $sort, $sortDir, $page, $limit);
     }
 
     /**
@@ -334,18 +335,18 @@ class MessageModel
         try {
             $connection = $this->getManager()->getConnection();
             $stmt = $connection->prepare('
-                SELECT 
+                SELECT
                     id
                 FROM
-                (SELECT 
+                (SELECT
                         id, parent, IF(ancestry, @cl:=@cl + 1, level + @cl) AS level
                     FROM
-                    (SELECT 
+                    (SELECT
                         TRUE AS ancestry, _id AS id, parent, level
                     FROM
-                    (SELECT 
+                    (SELECT
                         @r AS _id,
-                            (SELECT 
+                            (SELECT
                                     @r:=Idparent
                                 FROM
                                     messages
@@ -356,10 +357,10 @@ class MessageModel
                     (SELECT @r:=:message_id, @l:=0, @cl:=0) vars, messages h
                     WHERE
                         @r <> 0
-                    ORDER BY level DESC) qi UNION ALL SELECT 
+                    ORDER BY level DESC) qi UNION ALL SELECT
                         FALSE, hi.id, Idparent, level
                     FROM
-                    (SELECT 
+                    (SELECT
                         HIERARCHY_CONNECT_BY_PARENT_EQ_PRIOR_ID(id) AS id,
                             @level AS level
                     FROM

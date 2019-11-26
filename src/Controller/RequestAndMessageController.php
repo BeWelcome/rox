@@ -35,7 +35,7 @@ class RequestAndMessageController extends BaseMessageController
         }
 
         $member = $this->getUser();
-        $messages = $this->messageModel->getFilteredRequestsAndMessages($member, $sort, $sortDir, $page, $limit);
+        $messages = $this->messageModel->getFilteredRequestsAndMessages($member, $folder, $sort, $sortDir, $page, $limit);
 
         return $this->handleFolderRequest($request, $folder, $messages, 'both');
     }

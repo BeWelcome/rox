@@ -60,7 +60,7 @@ class BaseMessageController extends AbstractController
             ],
             'messages_deleted' => [
                 'key' => 'MessagesDeleted',
-                'url' => $this->generateUrl('messages', ['folder' => 'deleted']),
+                'url' => $this->generateUrl('both', ['folder' => 'deleted']),
             ],
         ];
     }

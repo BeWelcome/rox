@@ -18,9 +18,14 @@
             </div>
         </div>
 
-        <div class="pt-3"><h3 class="float-left m-0 mb-2"><?php echo $words->getFormatted('ForumRecentPostsLong'); ?></h3><a
+        <div class="pt-3"><h3 class="float-left m-0 mb-2"><?php echo $words->getFormatted('ForumRecentPostsLong'); ?></h3>
+        <?php if ($this->isGroupMember()) { ?>
+            <a
             href="<? echo $uri; ?>/forum/new"
-            class="btn btn-primary float-right"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a></div>
+            class="btn btn-primary float-right"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a>
+        <?php } ?>
+
+        </div>
 
         <div class="w-100 pt-5">
             <?php

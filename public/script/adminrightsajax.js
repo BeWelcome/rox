@@ -1,16 +1,16 @@
 jQuery(function () {
     jQuery("#username").autocomplete({
-        source: function (request, response) {
-            jQuery.ajax({
+        source: function( request, response ) {
+            $.ajax( {
                 url: "/member/autocomplete",
                 dataType: "jsonp",
                 data: {
                     term: request.term
                 },
-                success: function success(data) {
-                response(data);
-            }
-        });
+                success: function( data ) {
+                    response( data );
+                }
+            } );
         },
         change: function (event, ui) {
             if (ui.item == null) {

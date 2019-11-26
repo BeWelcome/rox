@@ -266,6 +266,7 @@ class MessageRepository extends EntityRepository
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
      * @param Member $member
+     * @param $folder
      * @param $sort
      * @param $sortDirection
      * @param int $page
@@ -275,6 +276,7 @@ class MessageRepository extends EntityRepository
      */
     public function findLatestRequestsAndMessages(
         Member $member,
+        $folder,
         $sort,
         $sortDirection,
         $page = 1,
@@ -282,7 +284,7 @@ class MessageRepository extends EntityRepository
     ) {
         $paginator = new Pagerfanta(
             new DoctrineORMAdapter(
-                $this->queryLatestRequestsAndMessages($member, $sort, $sortDirection),
+                $this->queryLatestRequestsAndMessages($member, $folder, $sort, $sortDirection),
                 false
             )
         );
@@ -294,26 +296,40 @@ class MessageRepository extends EntityRepository
 
     /**
      * @param Member $member
+     * @param $folder
      * @param $sort
      * @param $sortDirection
      *
      * @return QueryBuilder
      */
-    public function queryLatestRequestsAndMessages(Member $member, $sort, $sortDirection)
+    public function queryLatestRequestsAndMessages(Member $member, $folder, $sort, $sortDirection)
     {
         if ('date' === $sort) {
             $sort = 'created';
         }
-        $qb = $this->createQueryBuilder('m')
-            ->where('NOT(m.deleteRequest LIKE :deleted)')
-            ->setParameter('deleted', '%'.DeleteRequestType::RECEIVER_DELETED.'%')
-            ->andWhere('NOT(m.deleteRequest LIKE :purged)')
-            ->setParameter('purged', '%'.DeleteRequestType::RECEIVER_DELETED.'%')
-            ->andWhere('m.folder = :folder')
-            ->setParameter('folder', InFolderType::NORMAL)
-            ->andWhere('m.receiver = :member')
-            ->setParameter('member', $member)
-            ->orderBy('m.'.$sort, $sortDirection);
+        switch($folder) {
+            case 'deleted':
+                $qb = $this->createQueryBuilder('m')
+                    ->where('m.deleteRequest LIKE :deleted')
+                    ->setParameter('deleted', '%'.DeleteRequestType::RECEIVER_DELETED.'%')
+                    ->andWhere('m.receiver = :member')
+                    ->setParameter('member', $member)
+                    ->orderBy('m.'.$sort, $sortDirection);
+                break;
+            case 'inbox':
+            default:
+                $qb = $this->createQueryBuilder('m')
+                    ->where('NOT(m.deleteRequest LIKE :deleted)')
+                    ->setParameter('deleted', '%'.DeleteRequestType::RECEIVER_DELETED.'%')
+                    ->andWhere('NOT(m.deleteRequest LIKE :purged)')
+                    ->setParameter('purged', '%'.DeleteRequestType::RECEIVER_DELETED.'%')
+                    ->andWhere('m.folder = :folder')
+                    ->setParameter('folder', InFolderType::NORMAL)
+                    ->andWhere('m.receiver = :member')
+                    ->setParameter('member', $member)
+                    ->orderBy('m.'.$sort, $sortDirection);
+                break;
+        }
 
         return $qb;
     }

@@ -76,7 +76,7 @@ class ActivityRepository extends EntityRepository
         return $this->createQueryBuilder('a')
             ->join('App:ActivityAttendee', 'aa', Join::WITH, 'aa.activity = a and aa.organizer = 1')
             ->join('App:Member', 'm', Join::WITH, "aa.attendee = m and m.status = 'Banned'")
-            ->orderBy('a.starts', 'desc')
+            ->orderBy(c, 'desc')
             ->getQuery();
     }
 

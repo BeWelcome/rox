@@ -39,6 +39,7 @@ class GroupType extends AbstractType
                 'choices' => [
                     'label.group.join.public' => 'Public',
                     'label.group.join.approve' => 'NeedAcceptance',
+                    'label.group.join.invite' => 'NeedInvitation',
                 ],
                 'expanded' => true,
                 'multiple' => false,

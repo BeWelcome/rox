@@ -345,6 +345,7 @@ class GroupController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
+            /** @var Member $member */
             $member = $this->getUser();
 
             $groupPicture = $this->handleGroupPicture($data->picture);

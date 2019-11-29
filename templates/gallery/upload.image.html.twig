@@ -52,7 +52,7 @@
                 $("#progress-" + index).remove();
                 let response = JSON.parse(client.responseText);
                 if (response.success) {
-                    $('#images').append('<div class="mb-1"><img src={{ path('gallery_thumbnail') }}?id=' + response.imageId + '> ' + response.filename + ' - uploaded successfully</div>');
+                    $('#images').append('<div class="mb-1"><a href="{{ path('gallery_manage') }}"><img src={{ path('gallery_thumbnail') }}?id=' + response.imageId + '></a> ' + response.filename + ' - uploaded successfully</div>');
                 } else {
                     $('#images').append('<div class="mb-1">' + response.filename + ' - ' + response.error + '</div>');
                 }

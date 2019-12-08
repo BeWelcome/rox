@@ -96,7 +96,7 @@ if (count($languages) > 1 || $myself) {
 <script type="text/javascript">//<!--
     $('#add_language').change(function () {
             var lang = $("#add_language option:selected").val();
-            window.location.href = http_baseuri + 'editmyprofile/' + lang;
+            window.location.href = http_baseuri + 'editmyprofile/' + lang + '/add';
         }
     )
     //-->

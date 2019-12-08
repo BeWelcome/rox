@@ -56,18 +56,18 @@ if (!$this->passedAway){
                                <img class="float-left mr-2"  src="members/avatar/<?=$c->UsernameFromMember?>/50"  height="50"  width="50"  alt="<?=$c->UsernameFromMember?>" />
                            </a>
                            <div>
-                                   <?php if (!$this->passedAway) { ?>
                                <p class="m-0" style="line-height: 0.6;">
+                                   <?php if (!$this->passedAway) { ?>
                                        <span class="commenttitle <?=$quality?>"><?= $words->get('CommentQuality_'.$c->comQuality.''); ?></span>
                                        <span class="float-right">
                                        <?php if ($this->loggedInMember){ ?>
                                            <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $c->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="gray"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
                                        <? } ?>
                                    </span>
-                               </p>
                                    <?php }?>
-                                   <p class="small grey m-0 p-0"><?=$words->get('CommentFrom','<a href="members/'.$c->UsernameFromMember.'">'.$c->UsernameFromMember.'</a>')?>
-                                   <br><span><?=$c->created?></span></p>
+                                   <br><?=$words->get('CommentFrom','<a href="members/'.$c->UsernameFromMember.'">'.$c->UsernameFromMember.'</a>')?>
+                                   <br><span title="<?=$c->created?>"><?=$layoutbits->ago($c->created)?></span>
+                               </p>
                            </div>
                        </div>
                            <div class="w-100 pt-2">

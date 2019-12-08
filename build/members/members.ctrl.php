@@ -160,6 +160,12 @@ class MembersController extends RoxControllerBase
                     if (isset($request[2]) && $request[2] == 'delete') {
                         $page = new DeleteTranslationPage();
                     }
+                    if (isset($request[2]) && $request[2] == 'add') {
+                        $page->_session->getFlashBag()->add('notice',  $this->getWords()->getSilent('new_language_added'));
+                        $url = 'editmyprofile/' . $request[1];
+                        $this->redirect($url);
+                        PPHP::PExit();
+                    }
                 }
                 if (in_array('finish',$request))
                     $page->status = "finish";
@@ -533,8 +539,8 @@ class MembersController extends RoxControllerBase
                 $mem_redirect->problems = array(0 => 'ChangePasswordNotUpdated');
             }
             $this->setFlashNotice($this->getWords()->get('PasswordSetFlashNotice'));
-        }        
- 
+        }
+
         return false;
     }
 
@@ -782,7 +788,7 @@ class MembersController extends RoxControllerBase
         // Update database
         $member->inactivateProfile();
         // Update session
-        $this->_session->set( "Status", 'ChoiceInactive'); 
+        $this->_session->set( "Status", 'ChoiceInactive');
         $this->_session->set( "MemberStatus",  'ChoiceInactive');
         $this->setFlashNotice($this->model->getWords()->get('ProfileSetInactiveSuccess'));
         return 'editmyprofile';

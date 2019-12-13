@@ -8,6 +8,7 @@
 namespace App\Entity;
 
 use App\Doctrine\GroupMembershipStatusType;
+use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -156,11 +157,11 @@ class GroupMembership
     /**
      * Get created.
      *
-     * @return DateTime
+     * @return Carbon
      */
     public function getCreated()
     {
-        return $this->created;
+        return Carbon::instance($this->created);
     }
 
     /**

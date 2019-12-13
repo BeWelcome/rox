@@ -8,6 +8,7 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -53,7 +54,7 @@ class ForumPost
     private $author;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="create_time", type="datetime", nullable=false)
      */
@@ -81,7 +82,7 @@ class ForumPost
     private $ownercanstilledit = 'Yes';
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="last_edittime", type="datetime", nullable=true)
      */
@@ -240,30 +241,6 @@ class ForumPost
     }
 
     /**
-     * Set createTime.
-     *
-     * @param \DateTime $createTime
-     *
-     * @return ForumPost
-     */
-    public function setCreateTime($createTime)
-    {
-        $this->createTime = $createTime;
-
-        return $this;
-    }
-
-    /**
-     * Get createTime.
-     *
-     * @return \DateTime
-     */
-    public function getCreateTime()
-    {
-        return $this->createTime;
-    }
-
-    /**
      * Set message.
      *
      * @param string $message
@@ -338,7 +315,7 @@ class ForumPost
     /**
      * Set lastEdittime.
      *
-     * @param \DateTime $lastEdittime
+     * @param DateTime $lastEdittime
      *
      * @return ForumPost
      */
@@ -352,7 +329,7 @@ class ForumPost
     /**
      * Get lastEdittime.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getLastEdittime()
     {
@@ -602,7 +579,7 @@ class ForumPost
     /**
      * Get author.
      *
-     * @return \App\Entity\Member
+     * @return Member
      */
     public function getAuthor()
     {
@@ -612,7 +589,7 @@ class ForumPost
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return ForumPost
      */
@@ -636,7 +613,7 @@ class ForumPost
     /**
      * Set updated.
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
      * @return ForumPost
      */

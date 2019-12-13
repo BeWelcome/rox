@@ -15,18 +15,18 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
-    /** 
+    /**
      * @author Micha
      * @author Globetrotter_tt
      */
 
-    /** 
+    /**
      * members base page
-     * 
+     *
      * @package    Apps
      * @subpackage Members
      * @author     Micha
@@ -44,8 +44,8 @@ class MemberPage extends PageWithActiveSkin
     {
         return 'profile';
     }
-    
-    
+
+
     protected function getSubmenuItems()
     {
         $username = $this->member->Username;
@@ -84,6 +84,7 @@ class MemberPage extends PageWithActiveSkin
             $tt=array(
                 array('editmyprofile', 'editmyprofile/' . $profile_language_code, '<i class="fa fa-fw fa-edit"></i> ' . $ww->EditMyProfile, 'editmyprofile'),
                 array('mypreferences', 'mypreferences', '<i class="fa fa-fw fa-cogs"></i> ' . $ww->MyPreferences, 'mypreferences'),
+                array('mydata', 'mydata/'.$username, '<i class="fa fa-fw fa-database"></i> ' . $ww->MyData, 'mydata'),
                 array('mynotes', 'mynotes', '<i class="fa fa-fw fa-sticky-note"></i> ' . $words->get('MyNotes', '<span class="badge badge-primary pull-right">' . $mynotes_count . '</span>'), 'mynotes')
                 );
 
@@ -143,6 +144,9 @@ class MemberPage extends PageWithActiveSkin
         if (MOD_right::get()->HasRight('SafetyTeam') || MOD_right::get()->HasRight('Admin'))
         {
             $tt[] = array('adminedit',"members/{$username}/adminedit", '<i class="fa fa-fw fa-bed invisible"></i> Admin: Edit Profile');
+        }
+        if (MOD_right::get()->HasRight('SafetyTeam') || MOD_right::get()->HasRight('Admin') || Mod_right::get()->HasRight('Profile')) {
+            $tt[] = array('mydata', 'mydata/'.$username, '<i class="fa fa-fw fa-database"></i> ' . $ww->PersonalData, 'personaldata');
         }
         if (MOD_right::get()->HasRight('Rights')) {
             array_push($tt,array('adminrights','admin/rights/list/members/'.$username, '<i class="fa fa-fw fa-bed invisible"></i> ' .  $ww->AdminRights) ) ;

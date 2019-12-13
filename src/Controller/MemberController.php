@@ -2,7 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Activity;
+use App\Entity\ForumPost;
+use App\Entity\GroupMembership;
+use App\Entity\Log;
 use App\Entity\Member;
+use App\Entity\MembersPhoto;
 use App\Entity\Message;
 use App\Entity\PasswordReset;
 use App\Entity\Preference;
@@ -18,16 +23,27 @@ use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use Html2Text\Html2Text;
+use Mockery\Container;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use ZipArchive;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * Class MemberController.
@@ -38,6 +54,90 @@ class MemberController extends AbstractController
     use ManagerTrait;
     use TranslatorTrait;
     use TranslatedFlashTrait;
+
+    /**
+     * @Route("/mydata/{username}", name="member_get_data")
+     *
+     * @param Request $request
+     * @param Member $member
+     * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
+     * @param ContainerBagInterface $params
+     * @return BinaryFileResponse
+     * @throws Exception
+     */
+    public function getPersonalData(Request $request, Member $member, ContainerBagInterface $params)
+    {
+        // Either the member themselves or a person from the safety or profile team and the admin can access
+        if ($member != $this->getUser()) {
+            $this->denyAccessUnlessGranted(
+                [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_ADMIN, Member::ROLE_ADMIN_PROFILE],
+                null,
+                'Unable to access this page!');
+        }
+
+        // Create temp directory
+        $i = 0;
+        while ($i < 1000) {
+            $dirname = sys_get_temp_dir().'/'.uniqid('mydata_', true);
+            if (!is_file($dirname) && !is_dir($dirname)) {
+                mkdir($dirname);
+                break;
+            }
+        }
+        if ($i === 1000) {
+            // 1000 tries to create a temp directory failed, oh my
+            throw new Exception('Can\'t generate temp dir');
+        }
+        // Ensure directory name ends with /
+        $dirname = $dirname."/";
+
+        // Collect information and store in directory
+        $this->collectPersonalData($params, $dirname);
+
+        $zipFilename = $dirname.'bewelcome-data-'.date('Y-m-d').'.zip';
+        $zip = new ZipArchive();
+        $zip->open($zipFilename, ZipArchive::CREATE);
+        $files = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($dirname),
+            RecursiveIteratorIterator::LEAVES_ONLY
+        );
+
+        $filesToDelete = [];
+        foreach ($files as $name => $file)
+        {
+            // Skip directories (they would be added automatically)
+            if (!$file->isDir())
+            {
+                // Get real and relative path for current file
+                $filePath = $file->getRealPath();
+                $relativePath = substr($filePath, strlen($dirname));
+
+                // Add current file to archive
+                $zip->addFile($filePath, $relativePath);
+                $filesToDelete[] = $filePath;
+            }
+        }
+
+        // Zip archive will be created only after closing object
+        $zip->close();
+
+        // Cleanup as this is personal data
+        foreach($filesToDelete as $name => $file) {
+            unlink($file);
+        }
+
+        // main dir is left over!
+        $member = $this->getUser();
+        $response = new BinaryFileResponse( $zipFilename, 200, [
+            'refresh' => "5;" . $this->generateUrl('members_profile', [ 'username' => $member->getUsername()], UrlGenerator::ABSOLUTE_URL)
+        ] );
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT
+        );
+        $response->deleteFileAfterSend(true);
+
+        return $response;
+    }
 
     /**
      * @Route("/member/autocomplete", name="members_autocomplete")
@@ -281,43 +381,125 @@ class MemberController extends AbstractController
         ]);
 
         return true;
-//        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
-//        /** @var Preference $preference */
-//        $preference = $preferenceRepository->findOneBy(['codename' => Preference::HTML_MAILS]);
-//        $htmlMails = ('Yes' === $receiver->getMemberPreferenceValue($preference));
-//
-//        // Send mail notification
-//        $html = $this->renderView('emails/reset.password.html.twig', [
-//            'receiver' => $receiver,
-//            'subject' => $subject,
-//            'token' => $token,
-//        ]);
-//        $converter = new Html2Text($html, [
-//            'do_links' => 'table',
-//            'width' => 75,
-//        ]);
-//        $plainText = $converter->getText();
-//        $message = (new Swift_Message())
-//            ->setSubject($subject)
-//            ->setFrom(
-//                [
-//                    'password@bewelcome.org' => 'BeWelcome',
-//                ]
-//            )
-//            ->setTo($receiver->getEmail())
-//            ->addPart(
-//                $plainText,
-//                'text/plain'
-//            );
-//        if ($htmlMails) {
-//            $message->addPart(
-//                $html,
-//                'text/html'
-//            );
-//        }
-//
-//        $recipients = $mailer->send($message);
-//
-//        return (0 === $recipients) ? false : true;
+    }
+
+    private function collectPersonalData(ContainerBagInterface $params, string $dirname)
+    {
+        /** @var Member $member */
+        $member = $this->getUser();
+
+        $memberId = $member->getId();
+
+        $filesystem = new Filesystem();
+        $projectDir = $params->get('kernel.project_dir');
+        $galleryPath = $projectDir.'/data/gallery/member-'.$memberId.'/';
+
+        // First copy all files for the gallery into the gallery subdirectory
+        if (is_dir($galleryPath)) {
+            // create gallery sub directory
+            $galleryDir = $dirname.'gallery/';
+            @mkdir($galleryDir);
+            if ($dh = opendir($galleryPath)) {
+                while (($file = readdir($dh)) !== false) {
+                    if (!is_dir($file)) {
+                        $filesystem->copy($galleryPath . $file, $galleryDir . $file);
+                    }
+                }
+                closedir($dh);
+            }
+        }
+
+        // Copy all profile photos
+        $photoDir = $dirname.'photos/';
+        @mkdir($photoDir);
+        $em = $this->getDoctrine()->getManager();
+        $photoRepository = $em->getRepository(MembersPhoto::class);
+        /** @var MembersPhoto[] $photos */
+        $photos = $photoRepository->findBy(['idmember' => $memberId]);
+        foreach($photos as $photo)
+        {
+            if (is_file($photo->getFilepath())) {
+                $filesystem->copy($photo->getFilepath(), $photoDir . basename($photo->getFilepath()));
+            }
+        }
+
+        // Write all messages into files
+        $messageDir = $dirname.'messages/';
+        @mkdir($messageDir);
+        $messageRepository = $em->getRepository(Message::class);
+        /** @var Message[] $messages */
+        $messages = $messageRepository->findBy(['sender' => $member]);
+        $i = 1;
+        foreach($messages as $message)
+        {
+            $handle = fopen($messageDir."message.".$i.".txt", "w");
+            fwrite($handle, $message->getMessage());
+            fclose($handle);
+            $i++;
+        }
+
+        // Add all log information about member
+        $logRepository = $em->getRepository(Log::class);
+        /** @var Log[] $logs */
+        $logs = $logRepository->findBy([ 'member' => $member]);
+        if (!empty($logs)) {
+            $handle = fopen($dirname."logs.txt", "w");
+            foreach($logs as $log)
+            {
+                fwrite($handle, $log->getType() . ": " . $log->getLogMessage() . " (" . $log->getCreated()->toDateTimeString() . ")".PHP_EOL);
+            }
+            fclose($handle);
+        }
+
+        // now all posts to the forum or groups including status
+        $forumRepository = $em->getRepository(ForumPost::class);
+        /** @var ForumPost $posts */
+        $posts = $forumRepository->findBy(['author' => $member]);
+        $postsDir = $dirname.'posts/';
+        @mkdir($postsDir);
+        foreach($posts as $post)
+        {
+            $handle = fopen($postsDir."post.".$i.".html", "w");
+            fwrite($handle, "<p>Created: ".$post->getCreated()->toDateTimeString()."<br>Status: ".$post->getPostDeleted()."</p>".PHP_EOL);
+            fwrite($handle, $post->getMessage());
+            fclose($handle);
+            $i++;
+        }
+
+        // Groups the member is in and why
+        $groupMembershipRepository = $em->getRepository(GroupMembership::class);
+        /** @var GroupMembership[] $groupMemberships */
+        $groupMemberships = $groupMembershipRepository->findBy(['member' => $member]);
+        if (!empty($groupMemberships)) {
+            $handle = fopen($dirname."groups.txt", "w");
+            foreach($groupMemberships as $groupMembership)
+            {
+                fwrite($handle, $groupMembership->getGroup()->getName() . ": " . $groupMembership->getStatus() . " (" . $groupMembership->getCreated()->toDateTimeString() . ")".PHP_EOL);
+                foreach($groupMembership->getComments()->getValues() as $comment) {
+                    fwrite($handle, $comment->getSentence() . PHP_EOL);
+                }
+            }
+            fclose($handle);
+        }
+
+        // Activities the member joined with comment
+        $activityRepository = $em->getRepository(Activity::class);
+        /** @var Activity[] $activities */
+        $activities = $activityRepository->findActivitiesOfMember($member);
+        if (!empty($activities)) {
+            $handle = fopen($dirname."activitites.txt", "w");
+            foreach($activities as $activity)
+            {
+                fwrite($handle, $activity->getDescription()."(".$activity->getId().")".PHP_EOL);
+                $attendee = $activity->getAttendees()->filter(function($item) use ($member){
+                    return ($item->getAttendee() == $member);
+                })->first();
+                fwrite($handle, $attendee->getComment() . PHP_EOL);
+            }
+            fclose($handle);
+        }
+
+
+
     }
 }

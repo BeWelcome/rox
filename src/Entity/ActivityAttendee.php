@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * ActivityAttendee.
  *
  * @ORM\Table(name="activitiesattendees")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\ActivityAttendeeRepository")
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess

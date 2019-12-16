@@ -3,11 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Activity;
+use App\Entity\ActivityAttendee;
+use App\Entity\Comment;
+use App\Entity\CryptedField;
 use App\Entity\ForumPost;
 use App\Entity\GroupMembership;
 use App\Entity\Log;
 use App\Entity\Member;
 use App\Entity\MembersPhoto;
+use App\Entity\MemberTranslation;
 use App\Entity\Message;
 use App\Entity\PasswordReset;
 use App\Entity\Preference;
@@ -467,14 +471,18 @@ class MemberController extends AbstractController
         }
 
         // Groups the member is in and why
-        $groupMembershipRepository = $em->getRepository(GroupMembership::class);
-        /** @var GroupMembership[] $groupMemberships */
-        $groupMemberships = $groupMembershipRepository->findBy(['member' => $member]);
+        $groupMemberships = $member->getGroupMemberships();
         if (!empty($groupMemberships)) {
             $handle = fopen($dirname."groups.txt", "w");
             foreach($groupMemberships as $groupMembership)
             {
-                fwrite($handle, $groupMembership->getGroup()->getName() . ": " . $groupMembership->getStatus() . " (" . $groupMembership->getCreated()->toDateTimeString() . ")".PHP_EOL);
+                try {
+                    fwrite($handle, $groupMembership->getGroup()->getName() . ": " . $groupMembership->getStatus() . " (" . $groupMembership->getCreated()->toDateTimeString() . ")".PHP_EOL);
+                }
+                catch (Exception $e) {
+                    fwrite($handle, "Delected Group: " . $groupMembership->getStatus() . " (" . $groupMembership->getCreated()->toDateTimeString() . ")".PHP_EOL);
+                }
+                /** @var MemberTranslation $comment */
                 foreach($groupMembership->getComments()->getValues() as $comment) {
                     fwrite($handle, $comment->getSentence() . PHP_EOL);
                 }
@@ -483,23 +491,62 @@ class MemberController extends AbstractController
         }
 
         // Activities the member joined with comment
-        $activityRepository = $em->getRepository(Activity::class);
-        /** @var Activity[] $activities */
-        $activities = $activityRepository->findActivitiesOfMember($member);
-        if (!empty($activities)) {
-            $handle = fopen($dirname."activitites.txt", "w");
-            foreach($activities as $activity)
+        $commentsDir = $dirname.'activities/';
+        @mkdir($commentsDir);
+        $attendeeRepository = $em->getRepository(ActivityAttendee::class);
+        /** @var ActivityAttendee[] $activities */
+        $activitiesOfMember = $attendeeRepository->findActivitiesOfMember($member);
+        if (!empty($activitiesOfMember)) {
+            /** @var ActivityAttendee $attendee */
+            $i = 0;
+            foreach($activitiesOfMember as $attendee)
             {
-                fwrite($handle, $activity->getDescription()."(".$activity->getId().")".PHP_EOL);
-                $attendee = $activity->getAttendees()->filter(function($item) use ($member){
-                    return ($item->getAttendee() == $member);
-                })->first();
+                $handle = fopen($commentsDir."activitity".$i.".txt", "w");
+                fwrite($handle, $attendee->getActivity()->getTitle()."(".$attendee->getActivity()->getId().")".PHP_EOL);
+                fwrite($handle, $attendee->getActivity()->getDescription()."(".$attendee->getActivity()->getId().")".PHP_EOL);
+                if($attendee->getOrganizer()) {
+                    fwrite($handle, "You organized this activity" .PHP_EOL);
+                }
                 fwrite($handle, $attendee->getComment() . PHP_EOL);
+                fclose($handle);
+                $i++;
             }
-            fclose($handle);
         }
 
 
+        // Comments the member left others
+        $commentsDir = $dirname.'comments/';
+        @mkdir($commentsDir);
+        /** @var Comment[] $comments */
+        $comments = $member->getComments();
+        if (!empty($comments)) {
+            /** @var Comment $comment */
+            $i = 0;
+            foreach($comments as $comment)
+            {
+                $handle = fopen($commentsDir."comment".$i.".txt", "w");
+                fwrite($handle, $comment->getType()."(".$comment->getQuality().")".PHP_EOL);
+                fwrite($handle, $comment->getTextwhere() . PHP_EOL);
+                fwrite($handle, $comment->getTextfree() . PHP_EOL);
+                fclose($handle);
+                $i++;
+            }
+        }
+
+        // Write member information into file:
+        $handle = fopen($dirname."memberinfo.txt", "w");
+        fwrite($handle, "Username: ".$member->getUsername().PHP_EOL);
+        fwrite($handle, "Location:".$member->getCity()->getName().PHP_EOL);
+        fwrite($handle, "Birthdate:".$member->getBirthdate().PHP_EOL);
+        fwrite($handle, "Email address:".$member->getEmail().PHP_EOL);
+        fwrite($handle, "Accommodation".$member->getAccommodation().PHP_EOL);
+
+        $cryptedFields = $member->getCryptedFields();
+        /** @var CryptedField $crypted*/
+        foreach($cryptedFields as $crypted) {
+            fwrite($handle, $crypted->getTablecolumn().":".$crypted->getMemberCryptedValue().PHP_EOL);
+        }
+        fclose($handle);
 
     }
 }

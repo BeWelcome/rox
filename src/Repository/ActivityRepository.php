@@ -6,6 +6,7 @@ use AnthonyMartin\GeoLocation\GeoLocation;
 use App\Entity\Activity;
 use App\Entity\Language;
 use App\Entity\Location;
+use App\Entity\Member;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
@@ -14,6 +15,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
+use Exception;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 
@@ -87,7 +89,7 @@ class ActivityRepository extends EntityRepository
      * @param int      $limit
      * @param int      $distance
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @return array
      *
@@ -150,7 +152,7 @@ class ActivityRepository extends EntityRepository
 
         try {
             $coordinates = $edison->boundingCoordinates($distance, 'km');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return 0;
         }
 

@@ -517,15 +517,16 @@ class MemberController extends AbstractController
         // Comments the member left others
         $commentsDir = $dirname.'comments/';
         @mkdir($commentsDir);
+        $commentRepository = $em->getRepository(Comment::class);
         /** @var Comment[] $comments */
-        $comments = $member->getComments();
+        $comments = $commentRepository->findBy(['fromMember' => $member]);
         if (!empty($comments)) {
             /** @var Comment $comment */
             $i = 0;
             foreach($comments as $comment)
             {
                 $handle = fopen($commentsDir."comment".$i.".txt", "w");
-                fwrite($handle, $comment->getType()."(".$comment->getQuality().")".PHP_EOL);
+                fwrite($handle, $comment->getToMember()->getUsername()."(".$comment->getQuality().")".PHP_EOL);
                 fwrite($handle, $comment->getTextwhere() . PHP_EOL);
                 fwrite($handle, $comment->getTextfree() . PHP_EOL);
                 fclose($handle);

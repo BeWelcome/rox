@@ -96,7 +96,7 @@ class MemberController extends AbstractController
         $dirname = $dirname."/";
 
         // Collect information and store in directory
-        $this->collectPersonalData($params, $dirname);
+        $this->collectPersonalData($params, $dirname, $member);
 
         $zipFilename = $dirname.'bewelcome-data-'.date('Y-m-d').'.zip';
         $zip = new ZipArchive();
@@ -387,11 +387,12 @@ class MemberController extends AbstractController
         return true;
     }
 
-    private function collectPersonalData(ContainerBagInterface $params, string $dirname)
+    private function collectPersonalData(ContainerBagInterface $params, string $dirname, Member $member)
     {
-        /** @var Member $member */
-        $member = $this->getUser();
+        $memoryLimit = ini_get('memory_limit');
+        ini_set('memory_limit','128M');
 
+        /** @var Member $member */
         $memberId = $member->getId();
 
         $filesystem = new Filesystem();
@@ -548,6 +549,6 @@ class MemberController extends AbstractController
             fwrite($handle, $crypted->getTablecolumn().":".$crypted->getMemberCryptedValue().PHP_EOL);
         }
         fclose($handle);
-
+        ini_set('memory_limit', $memoryLimit);
     }
 }

@@ -628,6 +628,11 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * @var ArrayCollection
      */
+    private $memberFields;
+
+    /**
+     * @var ArrayCollection
+     */
     private $comments;
 
     /**
@@ -2605,7 +2610,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * Get cryptedFields.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getCryptedFields()
     {
@@ -2987,6 +2992,22 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         }
 
         return $this;
+    }
+
+    /**
+     * Provides an array collection of all translated items of a profile
+     *
+     * Needs to be called explicitly
+     *
+     * @return array
+     */
+    public function getMemberFields() : array
+    {
+        $memberTranslationRepository = $this->em->getRepository(MemberTranslation::class);
+        $memberTranslations = $memberTranslationRepository->findBy(['owner' => $this]);
+        $this->memberFields = $memberTranslations;
+
+        return $this->memberFields;
     }
 
     /**

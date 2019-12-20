@@ -97,7 +97,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                 }
 
                 echo '<small class="text-muted">';
-                if (isset($TheReports[0]->IdReporter)) {
+                if (isset($TheReports[0]->IdReporter) && ($TheReports[0]->IdReporter == $this->_session->get("IdMember"))) {
                     echo "<a href='forums/reporttomod/", $post->IdPost, "'>", $words->getBuffered('ForumViewMyReportToMod'), "</a>";
                 } else {
                     echo "<a href='forums/reporttomod/", $post->IdPost, "'><i class=\"fa fa-flag\"></i> ", $words->getBuffered('ForumMyReportToMod'), "</a>";

@@ -183,7 +183,7 @@ This File display a topic and the messages which are inside it
 // counting for background switch trick
 $cntx = '1';
 
-for ($ii = count($topic->posts) - 1; $ii >= 0; $ii--) {
+for ($ii = 0; $ii < count($topic->posts); $ii++) {
     $post = $topic->posts[$ii];
     $cnt = $ii + 1;
     require 'singlepost.php';

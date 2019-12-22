@@ -478,6 +478,8 @@ class ForumsController extends PAppController
                 default :
                     $this->searchSubscriptions();
             }
+        } else if ($this->action == self::ACTION_REVERSE) {
+            $this->redirectReverse();
         } else {
             if (PVars::get()->debug) {
                 throw new PException('unexpected forum action!');
@@ -513,6 +515,17 @@ class ForumsController extends PAppController
             }
         }
         header('Location: ' . $redirect);
+        exit;
+    }
+
+    private function redirectReverse() {
+        if (!isset($_SERVER['HTTP_REFERER'])) {
+            $redirect = PVars::getObj('env')->baseuri . 'forums/';
+        } else {
+            $referrer = $_SERVER['HTTP_REFERER'];
+            $referrer = str_replace('/reverse', '', $referrer);
+        }
+        header('Location: ' . $referrer);
         exit;
     }
 
@@ -819,6 +832,7 @@ class ForumsController extends PAppController
     const ACTION_VIEW_FORUM = 21;
     const ACTION_VIEW_GROUPS = 22;
     const ACTION_NOT_LOGGED_IN = 24;
+    const ACTION_REVERSE = 25;
 
 
     /**
@@ -916,7 +930,8 @@ class ForumsController extends PAppController
                 } else if ($r == 'modedittag') {
                     $this->action = self::ACTION_MODERATOR_EDITTAG;
                 } else if ($r == 'reverse') {  // This mean user has click on the reverse order box
-                    $this->_model->switchForumOrderList() ;
+                    $this->_model->switchForumOrderList();
+                    $this->action = self::ACTION_REVERSE;
                 } else if ($r == 'delete') {
                     $this->action = self::ACTION_DELETE;
                 } else if (preg_match_all('/page([0-9]+)/i', $r, $regs)) {

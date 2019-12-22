@@ -61,11 +61,7 @@ This File display a topic and the messages which are inside it
 
         echo $words->fTrad($topic->topicinfo->IdTitle);
         if ($User) {
-            $url = $_SERVER['REQUEST_URI'];
-            if (strpos($url, "/reverse") === false) { // THis in order to avoid to concatenate /reverse twice
-                $url .= "/reverse";
-            }
-            echo '<a href="' . $url . '" class="h6 ml-2" title="' . $words->getSilent('ReverseOrder') . '" ><i class="fa fa-exchange-alt fa-rotate-90" alt="'
+            echo '<a href="/forums/reverse" class="h6 ml-2" title="' . $words->getSilent('ReverseOrder') . '" ><i class="fa fa-exchange-alt fa-rotate-90" title="'
                 . $words->getSilent('ReverseOrder') . '" /></i></a> ' . $words->flushBuffer();
         }
 
@@ -187,20 +183,11 @@ This File display a topic and the messages which are inside it
 // counting for background switch trick
 $cntx = '1';
 
-if ($this->_model->ForumOrderList == "No") {
-    for ($ii = count($topic->posts) - 1; $ii >= 0; $ii--) {
-        $post = $topic->posts[$ii];
-        $cnt = $ii + 1;
-        require 'singlepost.php';
-        $cntx = $cnt;
-    }
-} else { // Not logged member will always see the forum in ascending order
-    for ($ii = 0; $ii < count($topic->posts); $ii++) {
-        $post = $topic->posts[$ii];
-        $cnt = $ii + 1;
-        require 'singlepost.php';
-        $cntx = $cnt;
-    }
+for ($ii = count($topic->posts) - 1; $ii >= 0; $ii--) {
+    $post = $topic->posts[$ii];
+    $cnt = $ii + 1;
+    require 'singlepost.php';
+    $cntx = $cnt;
 }
 
 if ($User) {

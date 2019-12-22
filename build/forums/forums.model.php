@@ -2426,6 +2426,7 @@ and ($this->ThreadGroupsRestriction)
 
 
         $from = $this->POSTS_PER_PAGE * ($this->getPage() - 1);
+        $order = ($this->ForumOrderList == "Yes") ? "DESC" : "ASC";
 
         $query = sprintf("
 SELECT
@@ -2463,7 +2464,7 @@ WHERE
     AND ({$this->PublicPostVisibility})
     AND ({$this->ThreadGroupsRestriction})
 ORDER BY
-    posttime ASC
+    posttime {$order}
 LIMIT %d, %d",$this->threadid,$from,$this->POSTS_PER_PAGE);
 
         $s = $this->dao->query($query);

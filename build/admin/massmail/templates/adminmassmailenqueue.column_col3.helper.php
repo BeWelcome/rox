@@ -1,10 +1,10 @@
 <?php
     // get countries
     if (count($this->enqueueCountries) <> 0) {
-        $query = "SELECT iso_alpha2,name FROM geonames_countries WHERE iso_alpha2 IN ('"
+        $query = "SELECT country,name FROM geonamescountries WHERE country IN ('"
             . implode("', '", $this->enqueueCountries) . "') ORDER BY name";
     } else {
-        $query = "SELECT iso_alpha2,name FROM geonames_countries ORDER BY name";
+        $query = "SELECT country,name FROM geonamescountries ORDER BY name";
     }
     $countries = $this->model->BulkLookup($query);
 

@@ -59,7 +59,7 @@ security:
         - { path: ^/stats, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/safety, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/signup, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/newsletters, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/newsletter, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetpassword, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/rox/in, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/search/locations/all, roles: IS_AUTHENTICATED_ANONYMOUSLY }

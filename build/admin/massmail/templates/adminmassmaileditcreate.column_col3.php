@@ -93,7 +93,7 @@
     </div>
     <div class="form-group">
         <label for="Body">Text of the mail</label>
-        <textarea class="form-control" id="Body" name="Body" rows="10"></textarea>
+        <textarea class="form-control" id="Body" name="Body" rows="20"><?php echo $body;?></textarea>
         <small id="bodyHelp" class="form-text text-muted">Body of the newsletter (%username%, if any, will be replaced by the username at sending)</small>
     </div>
     <div class="form-group">

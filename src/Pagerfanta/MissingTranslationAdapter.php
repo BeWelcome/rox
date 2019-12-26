@@ -42,11 +42,11 @@ class MissingTranslationAdapter implements AdapterInterface
                 shortcode,
                 Sentence,
                 created
-            FROM 
-                words 
-            WHERE 
-                shortCode = 'en' 
-                AND isArchived IS NULL 
+            FROM
+                words
+            WHERE
+                shortCode = 'en'
+                AND (isArchived IS NULL OR isArchived = 0)
                 AND code NOT IN (SELECT code FROM words WHERE shortCode = '{$this->locale}')";
         if (!empty($this->code)) {
             $this->query .= " AND code LIKE '%".$this->code."%'";
@@ -62,14 +62,14 @@ class MissingTranslationAdapter implements AdapterInterface
      */
     public function getNbResults()
     {
-        $query = "            
+        $query = "
             SELECT
                 count(*) as cnt
-            FROM 
-                words 
-            WHERE 
-                shortCode = 'en' 
-                AND isArchived IS NULL 
+            FROM
+                words
+            WHERE
+                shortCode = 'en'
+                AND (isArchived IS NULL OR isArchived = 0)
                 AND code NOT IN (SELECT code FROM words WHERE shortCode = '{$this->locale}')";
         if (!empty($this->code)) {
             $query .= " AND code LIKE '%".$this->code."%'";

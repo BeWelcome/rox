@@ -529,7 +529,7 @@ class TranslationController extends AbstractController
         if ('missing' === $type) {
             $translationAdapter = new MissingTranslationAdapter($connection, $locale, $code);
         } else {
-            $translationAdapter = new TranslationAdapter($connection, $locale, $code, $type);
+            $translationAdapter = new TranslationAdapter($connection, $locale, $code);
         }
         $translations = new Pagerfanta($translationAdapter);
         $translations->setMaxPerPage($limit);

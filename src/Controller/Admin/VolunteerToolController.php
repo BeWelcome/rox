@@ -472,12 +472,12 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                 if ($sender !== $member) {
                     $result['direction'] = $result['direction'] | 1;
                     if ($message->getCreated() > $result['last_sent']) {
-                        $result['last_sent'] = $message->getCreated();
+                        $result['last_received'] = $message->getCreated();
                     }
                 } else {
                     $result['direction'] |= $result['direction'] | 2;
                     if ($message->getCreated() > $result['last_received']) {
-                        $result['last_received'] = $message->getCreated();
+                        $result['last_sent'] = $message->getCreated();
                     }
                 }
                 $results[$username] = $result;

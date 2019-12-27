@@ -261,18 +261,14 @@
                         <a href="{{ url('about') }}" class="nav-link px-3 menuborder">{{ 'menu.about' | trans }}</a>
                     </li>
                     <li class="menuborder">
-                        <a href="{{ url('safety') }}" class="nav-link px-3">{{ 'safety' | trans }}</a>
-                    </li>
-                    <li class="menuborder">
-                        <a href="{{ url('volunteer') }}"
-                           class="nav-link px-3 menuborder-r">{{ 'volunteer' | trans }}</a>
+                        <a href="{{ url('safety') }}" class="nav-link px-3 menuborder-r">{{ 'safety' | trans }}</a>
                     </li>
                 </ul>
             </div>
             <div>
                 <ul class="nav navbar-nav mr-auto ml-md-3">
                     <li class="nav-item float-left d-none d-md-block">
-                        <form class="form-inline p-1" method="post" action="{{ url('security_check') }}">
+                        <form class="form-inline p-0" method="post" action="{{ url('security_check') }}">
                             {{ macros.input('_username', 'Username') }}
                             {{ macros.input('_password', 'Password', '', 'password') }}
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
@@ -290,9 +286,11 @@
                                     </div>
                                 </div>
                             </div>
+                            <div><span class="mt-1 mx-2">{{ 'or' | trans }}</span><a
+                                href="/signup" class="btn btn-primary border-white">{{ 'navbar.button.signup'|trans }}</a>
+                            </div>
                         </form>
-                    <span class="mt-1 mx-2">{{ 'or' | trans }}</span><a
-                            href="/signup" class="btn btn-primary border-white">{{ 'navbar.button.signup'|trans }}</a></a>
+
                     </li>
                 </ul>
             </div>

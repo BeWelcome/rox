@@ -411,4 +411,28 @@ class MessageRepository extends EntityRepository
 
         return $qb;
     }
+
+    /**
+     * @param Member $member
+     *
+     * @return Message[]
+     */
+    public function findAllMessagesWithMember(Member $member)
+    {
+        $qb = $this->createQueryBuilder('m');
+        $qb
+            ->where(
+                $qb
+                    ->expr()->orX(
+                        $qb->expr()->eq('m.sender', ':member'),
+                        $qb->expr()->eq('m.receiver', ':member')
+                    )
+            )
+            ->setParameter('member', $member)
+            ->orderBy('m.created', 'DESC')
+            ->setMaxResults(250)
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
 }

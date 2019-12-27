@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Feedback;
 use App\Entity\Member;
+use App\Entity\Message;
 use App\Form\ChangeUsernameFormType;
 use App\Form\CustomDataClass\Tools\ChangeUsernameRequest;
 use App\Form\CustomDataClass\Tools\FindUserRequest;
@@ -12,13 +13,18 @@ use App\Form\FindUserFormType;
 use App\Logger\Logger;
 use App\Model\FeedbackModel;
 use App\Repository\MemberRepository;
+use App\Repository\MessageRepository;
+use DateTime;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -29,6 +35,7 @@ class VolunteerToolController extends AbstractController
     const CHANGE_USERNAME = 'admin.tools.change_username';
     const FIND_USER = 'admin.tools.find_user';
     const MESSAGES_LAST_WEEK = 'admin.tools.messages_last_week';
+    const MESSAGES_BY_MEMBER = 'admin.tools.messages_by_member';
     const CHECK_FEEDBACK = 'admin.tools.check_feedback';
     const CHECK_SPAM_MESSAGES = 'admin.tools.check_spam_messages';
     const DAMAGE_DONE = 'admin.tools.damage_done';
@@ -258,7 +265,7 @@ class VolunteerToolController extends AbstractController
         $connection = $this->getDoctrine()->getConnection();
 
         $messagesSent = $connection->executeQuery("
-            SELECT 
+            SELECT
                 COUNT(*) AS 'MessagesSent',
                 Username AS Username,
                 members.Status AS Status,
@@ -317,7 +324,7 @@ class VolunteerToolController extends AbstractController
         $connection = $this->getDoctrine()->getConnection();
 
         $damageDone = $connection->executeQuery("
-            SELECT 
+            SELECT
                 m1.Username AS 'Receiver',
                 m1.Status AS 'ReceiverStatus',
                 m1.updated 'LastUpdated',
@@ -400,6 +407,98 @@ ORDER BY count(msg.id) DESC')->fetchAll();
     }
 
     /**
+     * @Route("/admin/tools/messages/member", name="admin_tools_messages_by_member")
+     *
+     * @param Request $request
+     *
+     * @throws Exception
+     *
+     * @return Response
+     */
+    public function showMessagesByMember(Request $request)
+    {
+        // check permissions
+        $subMenuItems = $this->getSubMenuItems();
+
+        if (empty($subMenuItems) | !\array_key_exists(self::MESSAGES_BY_MEMBER, $subMenuItems)) {
+            $this->addFlash('notice', 'admin.tools.not.allowed');
+            $referrer = $request->headers->get('referer');
+
+            return $this->redirect($referrer);
+        }
+
+        $usernameForm = $this->createFormBuilder()
+            ->add('username', TextType::class, [
+                'attr' => [
+                    'class' => 'member-autocomplete',
+                ],
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+            ->add('submit', SubmitType::class)
+            ->setMethod('POST')
+            ->getForm();
+        $usernameForm->handleRequest($request);
+
+        $results = [];
+        $member = null;
+        if ($usernameForm->isSubmitted() && $usernameForm->isValid()) {
+            $data = $usernameForm->getData();
+            /** @var MemberRepository $memberRepository */
+            $memberRepository = $this->getDoctrine()->getRepository(Member::class);
+            /** @var Member $member */
+            $member = $memberRepository->findOneBy(['username' => $data['username']]);
+
+            /** @var MessageRepository $messageRepository */
+            $messageRepository = $this->getDoctrine()->getRepository(Message::class);
+            $messages = $messageRepository->findAllMessagesWithMember($member);
+
+            // Work through all messages and create list of members involved
+            foreach($messages as $message) {
+                $sender = $message->getSender();
+                $receiver = $message->getReceiver();
+                $correspondent = ($sender === $member) ? $receiver : $sender;
+                $username = $correspondent->getUsername();
+                if (!array_key_exists($username, $results)) {
+                    $results[$username] = [
+                        'username' => $username,
+                        'direction' => 0,
+                        'last_sent' => DateTime::createFromFormat ( 'Y-m-d', '1900-01-01'),
+                        'last_received' => DateTime::createFromFormat ( 'Y-m-d', '1900-01-01'),
+                    ];
+                }
+                $result = $results[$username];
+                if ($sender !== $member) {
+                    $result['direction'] = $result['direction'] | 1;
+                    if ($message->getCreated() > $result['last_sent']) {
+                        $result['last_sent'] = $message->getCreated();
+                    }
+                } else {
+                    $result['direction'] |= $result['direction'] | 2;
+                    if ($message->getCreated() > $result['last_received']) {
+                        $result['last_received'] = $message->getCreated();
+                    }
+                }
+                $results[$username] = $result;
+            }
+        }
+
+        return $this->render(
+            'admin/tools/messages.by.member.html.twig',
+            [
+                'form' => $usernameForm->createView(),
+                'member' => $member,
+                'results' => $results,
+                'submenu' => [
+                    'items' => $subMenuItems,
+                    'active' => 'admin.tools.messages.by.member',
+                ],
+            ]
+        );
+    }
+
+    /**
      * @Route("/admin/tools/countryage", name="admin_tools_age_by_country")
      *
      * @param Request $request
@@ -421,7 +520,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
 
         $connection = $this->getDoctrine()->getConnection();
         $results = $connection->executeQuery("
-            SELECT 
+            SELECT
                 gc.Name AS Name,
                 COUNT(*) AS Count,
                 ROUND(AVG(m.BirthDate) / 10000) AS BirthYear,
@@ -494,7 +593,13 @@ ORDER BY count(msg.id) DESC')->fetchAll();
             $subMenu[self::MESSAGES_LAST_WEEK] = [
                 'key' => self::MESSAGES_LAST_WEEK,
                 'url' => $this->generateUrl('admin_tools_messages_last_week'),
-                ];
+            ];
+        }
+        if ($this->isGranted([Member::ROLE_ADMIN_SAFETYTEAM])) {
+            $subMenu[self::MESSAGES_BY_MEMBER] = [
+                'key' => self::MESSAGES_BY_MEMBER,
+                'url' => $this->generateUrl('admin_tools_messages_by_member'),
+            ];
         }
 
         return $subMenu;

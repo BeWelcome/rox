@@ -97,7 +97,7 @@ class Word
      *
      * @ORM\Column(name="isarchived", type="boolean", nullable=true)
      */
-    private $isarchived;
+    private $isarchived = null;
 
     /**
      * @var \DateTime

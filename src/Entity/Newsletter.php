@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use App\Entity\Member as Member;
+use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,14 +13,17 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="broadcast")
  * @ORM\Entity
  */
-class Broadcast
+class Newsletter
 {
     /**
-     * @var integer
+     * @var Member
      *
-     * @ORM\Column(name="IdCreator", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdCreator", referencedColumnName="id")
+     * })
      */
-    private $idcreator;
+    private $createdBy;
 
     /**
      * @var string
@@ -27,11 +33,11 @@ class Broadcast
     private $name;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created = 'CURRENT_TIMESTAMP';
+    private $created;
 
     /**
      * @var string
@@ -52,10 +58,10 @@ class Broadcast
      *
      * @ORM\Column(name="EmailFrom", type="text", length=65535, nullable=true)
      */
-    private $emailfrom;
+    private $emailFrom;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -63,30 +69,28 @@ class Broadcast
      */
     private $id;
 
-
-
     /**
-     * Set idcreator
+     * Set createdBy
      *
-     * @param integer $idcreator
+     * @param Member $createdBy
      *
-     * @return Broadcast
+     * @return Newsletter
      */
-    public function setIdcreator($idcreator)
+    public function setCreatedBy($createdBy)
     {
-        $this->idcreator = $idcreator;
+        $this->createdBy = $createdBy;
 
         return $this;
     }
 
     /**
-     * Get idcreator
+     * Get createdBy
      *
-     * @return integer
+     * @return Member
      */
-    public function getIdcreator()
+    public function getCreatedBy()
     {
-        return $this->idcreator;
+        return $this->createdBy;
     }
 
     /**
@@ -94,7 +98,7 @@ class Broadcast
      *
      * @param string $name
      *
-     * @return Broadcast
+     * @return Newsletter
      */
     public function setName($name)
     {
@@ -116,9 +120,9 @@ class Broadcast
     /**
      * Set created
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
-     * @return Broadcast
+     * @return Newsletter
      */
     public function setCreated($created)
     {
@@ -130,11 +134,11 @@ class Broadcast
     /**
      * Get created
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getCreated()
     {
-        return $this->created;
+        return Carbon::instance($this->created);
     }
 
     /**
@@ -142,7 +146,7 @@ class Broadcast
      *
      * @param string $status
      *
-     * @return Broadcast
+     * @return Newsletter
      */
     public function setStatus($status)
     {
@@ -166,7 +170,7 @@ class Broadcast
      *
      * @param string $type
      *
-     * @return Broadcast
+     * @return Newsletter
      */
     public function setType($type)
     {
@@ -186,27 +190,27 @@ class Broadcast
     }
 
     /**
-     * Set emailfrom
+     * Set emailFrom
      *
-     * @param string $emailfrom
+     * @param string $emailFrom
      *
-     * @return Broadcast
+     * @return Newsletter
      */
-    public function setEmailfrom($emailfrom)
+    public function setEmailFrom($emailFrom)
     {
-        $this->emailfrom = $emailfrom;
+        $this->emailFrom = $emailFrom;
 
         return $this;
     }
 
     /**
-     * Get emailfrom
+     * Get emailFrom
      *
      * @return string
      */
-    public function getEmailfrom()
+    public function getEmailFrom()
     {
-        return $this->emailfrom;
+        return $this->emailFrom;
     }
 
     /**

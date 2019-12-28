@@ -4,6 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Activity;
 use App\Entity\ActivityAttendee;
+use App\Entity\BroadcastMessage;
+use App\Entity\CommunityNews;
+use App\Entity\CommunityNewsComment;
+use App\Entity\Donation;
+use App\Entity\Newsletter;
 use App\Entity\Comment;
 use App\Entity\CryptedField;
 use App\Entity\ForumPost;
@@ -17,6 +22,7 @@ use App\Entity\PasswordReset;
 use App\Entity\Preference;
 use App\Form\FindUserFormType;
 use App\Form\ResetPasswordFormType;
+use App\Logger\Logger;
 use App\Model\MemberModel;
 use App\Repository\MemberRepository;
 use App\Repository\MessageRepository;
@@ -64,12 +70,13 @@ class MemberController extends AbstractController
      *
      * @param Request $request
      * @param Member $member
-     * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
+     * @param Logger $logger
      * @param ContainerBagInterface $params
      * @return BinaryFileResponse
      * @throws Exception
+     * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
      */
-    public function getPersonalData(Request $request, Member $member, ContainerBagInterface $params)
+    public function getPersonalData(Request $request, Member $member, Logger $logger, ContainerBagInterface $params)
     {
         // Either the member themselves or a person from the safety or profile team and the admin can access
         if ($member != $this->getUser()) {
@@ -77,6 +84,7 @@ class MemberController extends AbstractController
                 [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_ADMIN, Member::ROLE_ADMIN_PROFILE],
                 null,
                 'Unable to access this page!');
+            $logger->write('Extracting personal data for '.$member->getUsername(), 'Members');
         }
 
         // Create temp directory
@@ -390,7 +398,7 @@ class MemberController extends AbstractController
     private function collectPersonalData(ContainerBagInterface $params, string $dirname, Member $member)
     {
         $memoryLimit = ini_get('memory_limit');
-        ini_set('memory_limit','128M');
+        ini_set('memory_limit','512M');
 
         /** @var Member $member */
         $memberId = $member->getId();
@@ -514,7 +522,6 @@ class MemberController extends AbstractController
             }
         }
 
-
         // Comments the member left others
         $commentsDir = $dirname.'comments/';
         @mkdir($commentsDir);
@@ -554,8 +561,104 @@ class MemberController extends AbstractController
         foreach($memberFields as $memberField) {
             fwrite($handle, $memberField->getTablecolumn()." (" .$memberField->getLanguage()->getName()."): ".$memberField->getSentence().PHP_EOL);
         }
-
         fclose($handle);
+
+        // Get newsletters the member wrote
+        $newsletterRepository = $em->getRepository(Newsletter::class);
+        $newsletters = $newsletterRepository->findBy(['createdBy' => $member]);
+        if (!empty($newsletters)) {
+            $newslettersDir = $dirname.'newsletters/';
+            @mkdir($newslettersDir);
+            $i = 0;
+            /** @var Newsletter $newsletter */
+            foreach($newsletters as $newsletter)
+            {
+                $handle = fopen($newslettersDir."newsletter".$i.".txt", "w");
+                fwrite($handle, $newsletter->getName()." (".$newsletter->getCreated().")".PHP_EOL);
+                fclose($handle);
+                $i++;
+            }
+        }
+
+        // Get all broadcasts the member received
+        $broadcastMessageRepository = $em->getRepository(BroadcastMessage::class);
+        $broadcastMessages = $broadcastMessageRepository->findBy(['receiver' => $member]);
+        if (!empty($broadcastMessages)) {
+            $newslettersDir = $dirname.'newsletters/';
+            @mkdir($newslettersDir);
+            $handle = fopen($newslettersDir."received.txt", "w");
+            /** @var BroadcastMessage $broadcastMessage */
+            foreach($broadcastMessages as $broadcastMessage)
+            {
+                fwrite($handle, $broadcastMessage->getNewsletter()->getName()." on ".$broadcastMessage->getUpdated().PHP_EOL);
+            }
+            fclose($handle);
+        }
+
+        // Get community news the member wrote
+        $newsRepository = $em->getRepository(CommunityNews::class);
+        $news = $newsRepository->findBy(['createdBy' => $member]);
+        if (!empty($news)) {
+            $communityNewsDir = $dirname.'communitynews/';
+            @mkdir($communityNewsDir);
+            $i = 0;
+            /** @var CommunityNews $communityNews */
+            foreach($news as $communityNews)
+            {
+                $handle = fopen($communityNewsDir."communitynews".$i.".txt", "w");
+                fwrite($handle, $communityNews->getTitle()." (".$communityNews->getCreatedAt().")".PHP_EOL);
+                fwrite($handle, $communityNews->getText());
+                fclose($handle);
+                $i++;
+            }
+        }
+
+        // Get community news comments the member wrote
+        $commentRepository = $em->getRepository(CommunityNewsComment::class);
+        $comments = $commentRepository->findBy(['author' => $member]);
+        if (!empty($comments)) {
+            $communityNewsDir = $dirname.'communitynews/';
+            @mkdir($communityNewsDir);
+            $i = 0;
+            /** @var CommunityNewsComment $comment */
+            foreach($comments as $comment)
+            {
+                $handle = fopen($communityNewsDir."comment".$i.".txt", "w");
+                fwrite($handle, $comment->getTitle()." (".$comment->getCreated().")".PHP_EOL);
+                fwrite($handle, $comment->getText());
+                fclose($handle);
+                $i++;
+            }
+        }
+
+        // Get donations the member did
+        $donationRepository = $em->getRepository(Donation::class);
+        $donations = $donationRepository->findBy(['donor' => $member]);
+        if (!empty($donations)) {
+            $donationDir = $dirname.'donations/';
+            @mkdir($donationDir);
+            $i = 0;
+            /** @var Donation $donation */
+            foreach($donations as $donation)
+            {
+                $handle = fopen($donationDir."donation".$i.".txt", "w");
+                fwrite($handle, "Name: ". $donation->getNamegiven().PHP_EOL);
+                fwrite($handle, "Amount: ". $donation->getAmount().PHP_EOL);
+                fwrite($handle, "Paypal: ". $donation->getReferencepaypal().PHP_EOL);
+                fwrite($handle, "Donated: ". $donation->getCreated().PHP_EOL);
+                fwrite($handle, "System comment: ". $donation->getSystemcomment().PHP_EOL);
+                fwrite($handle, "Member comment: ". $donation->getMembercomment().PHP_EOL);
+                fwrite($handle, "Member comment: ". $donation->getStatusprivate().PHP_EOL);
+                if ($donation->getStatusprivate() === 'showamountonly') {
+                    fwrite($handle, "Visible on site: Amount only");
+                } else {
+                    fwrite($handle, "Visible on site: Full details");
+                }
+                fclose($handle);
+                $i++;
+            }
+        }
+
         ini_set('memory_limit', $memoryLimit);
     }
 }

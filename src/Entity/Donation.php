@@ -7,7 +7,12 @@
 
 namespace App\Entity;
 
+use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Member as Member;
+use App\Entity\Country as Country;
+
 
 /**
  * DonationEntity.
@@ -22,71 +27,88 @@ use Doctrine\ORM\Mapping as ORM;
 class Donation
 {
     /**
-     * @var int
+     * @var Member
      *
-     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
+     * })
      */
-    private $idmember = '0';
+    private $donor;
+
     /**
      * @var string
      *
      * @ORM\Column(name="Email", type="text", length=255, nullable=false)
      */
     private $email;
+
     /**
      * @var string
      *
      * @ORM\Column(name="StatusPrivate", type="string", nullable=false)
      */
     private $statusprivate = 'showamountonly';
+
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
     private $created;
+
     /**
      * @var string
      *
      * @ORM\Column(name="Amount", type="decimal", precision=10, scale=2, nullable=false)
      */
     private $amount;
+
     /**
      * @var string
      *
      * @ORM\Column(name="Money", type="string", length=10, nullable=false)
      */
     private $money;
+
     /**
-     * @var int
+     * @var Country
      *
-     * @ORM\Column(name="IdCountry", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Country")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdCountry", referencedColumnName="country")
+     * })
      */
-    private $idcountry;
+    private $country;
+
     /**
      * @var string
      *
      * @ORM\Column(name="namegiven", type="text", length=65535, nullable=false)
      */
     private $namegiven;
+
     /**
      * @var string
      *
      * @ORM\Column(name="referencepaypal", type="text", length=65535, nullable=false)
      */
     private $referencepaypal;
+
     /**
      * @var string
      *
      * @ORM\Column(name="membercomment", type="text", length=65535, nullable=false)
      */
     private $membercomment;
+
     /**
      * @var string
      *
      * @ORM\Column(name="SystemComment", type="text", length=65535, nullable=false)
      */
     private $systemcomment;
+
     /**
      * @var int
      *
@@ -97,27 +119,27 @@ class Donation
     private $id;
 
     /**
-     * Set idmember.
+     * Set donor.
      *
-     * @param int $idmember
+     * @param Member $donor
      *
      * @return Donation
      */
-    public function setIdmember($idmember)
+    public function setDonor($donor)
     {
-        $this->idmember = $idmember;
+        $this->donor = $donor;
 
         return $this;
     }
 
     /**
-     * Get idmember.
+     * Get donor.
      *
-     * @return int
+     * @return Member
      */
-    public function getIdmember()
+    public function getDonor()
     {
-        return $this->idmember;
+        return $this->donor;
     }
 
     /**
@@ -171,7 +193,7 @@ class Donation
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return Donation
      */
@@ -185,11 +207,11 @@ class Donation
     /**
      * Get created.
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getCreated()
     {
-        return $this->created;
+        return Carbon::instance($this->created);
     }
 
     /**
@@ -241,27 +263,27 @@ class Donation
     }
 
     /**
-     * Set idcountry.
+     * Set country.
      *
-     * @param int $idcountry
+     * @param Country $country
      *
      * @return Donation
      */
-    public function setIdcountry($idcountry)
+    public function setCountry($country)
     {
-        $this->idcountry = $idcountry;
+        $this->country = $country;
 
         return $this;
     }
 
     /**
-     * Get idcountry.
+     * Get country.
      *
-     * @return int
+     * @return Country
      */
-    public function getIdcountry()
+    public function getCountry()
     {
-        return $this->idcountry;
+        return $this->country;
     }
 
     /**
@@ -377,6 +399,6 @@ class Donation
      */
     public function onPrePersist()
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
     }
 }

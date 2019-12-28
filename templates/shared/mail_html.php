@@ -49,6 +49,12 @@
             padding: 0.25em;
         }
 
+        .subheader{
+            font-weight: bold;
+            line-height: 1.2em;
+            margin-bottom: 1.2em;
+        }
+
         div.from a:link {
             color: #000;
         }
@@ -75,7 +81,7 @@
     <div class="content">
         <?php if($title) { ?>
             <div class="subheader">
-                <p><?= $title ?></p>
+                <?= $title ?>
             </div>
         <?php } ?>
 

@@ -37,7 +37,7 @@ class VolunteerToolController extends AbstractController
     const MESSAGES_LAST_WEEK = 'admin.tools.messages_last_week';
     const MESSAGES_BY_MEMBER = 'admin.tools.messages_by_member';
     const CHECK_FEEDBACK = 'admin.tools.check_feedback';
-    const CHECK_SPAM_MESSAGES = 'admin.tools.check_spam_messages';
+    const CHECK_TOP_SPAMMER = 'admin.tools.check_spam_messages';
     const DAMAGE_DONE = 'admin.tools.damage_done';
     const AGE_BY_COUNTRY = 'admin.tools.age_by_country';
 
@@ -254,7 +254,7 @@ class VolunteerToolController extends AbstractController
     {
         // check permissions
         $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems) | !\array_key_exists(self::CHECK_SPAM_MESSAGES, $subMenuItems)) {
+        if (empty($subMenuItems) | !\array_key_exists(self::CHECK_TOP_SPAMMER, $subMenuItems)) {
             $this->addFlash('notice', 'admin.tools.not.allowed');
             $referrer = $request->headers->get('referer');
 
@@ -283,18 +283,13 @@ class VolunteerToolController extends AbstractController
             LIMIT 100;
         ")->fetchAll();
 
-        /*        $damageDone = $baseModel->execQuery("select m1.Username as receiver,m1.Status,m1.updated 'LastUpdate',m2.Username Sender,m2.Status as 'Sender Status' from members as m1,members as m2,messages
-        where messages.IdSender=m2.id and messages.IdReceiver=m1.id and m2.Status in ('Banned','Rejected') and m1.Status in ('TakenOut','AskToLeave') order  by m1.updated desc ,m1.id limit 40
-        ");
-        */
         return $this->render(
             'admin/tools/top.spammer.html.twig',
             [
                 'messagesSent' => $messagesSent,
-            //                'damageDone' => $damageDone,
                 'submenu' => [
                     'items' => $subMenuItems,
-                    'active' => 'admin.tools.top.spammer',
+                    'active' => self::CHECK_TOP_SPAMMER,
                 ],
             ]
         );
@@ -349,7 +344,7 @@ class VolunteerToolController extends AbstractController
                 'damageDone' => $damageDone,
                 'submenu' => [
                     'items' => $subMenuItems,
-                    'active' => 'admin.tools.top.spammer',
+                    'active' => self::DAMAGE_DONE,
                 ],
             ]
         );
@@ -400,7 +395,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                 'results' => $results,
                 'submenu' => [
                     'items' => $subMenuItems,
-                    'active' => 'admin.tools.change.username',
+                    'active' => self::MESSAGES_LAST_WEEK,
                 ],
             ]
         );
@@ -464,19 +459,19 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                     $results[$username] = [
                         'username' => $username,
                         'direction' => 0,
-                        'last_sent' => DateTime::createFromFormat ( 'Y-m-d', '1900-01-01'),
-                        'last_received' => DateTime::createFromFormat ( 'Y-m-d', '1900-01-01'),
+                        'last_sent' => DateTime::createFromFormat ( 'Y-m-d H:i:s', '1900-01-01 00:00:00'),
+                        'last_received' => DateTime::createFromFormat ( 'Y-m-d H:i:s', '1900-01-01 00:00:00'),
                     ];
                 }
                 $result = $results[$username];
                 if ($sender !== $member) {
                     $result['direction'] = $result['direction'] | 1;
-                    if ($message->getCreated() > $result['last_sent']) {
+                    if ($message->getCreated() > $result['last_received']) {
                         $result['last_received'] = $message->getCreated();
                     }
                 } else {
                     $result['direction'] |= $result['direction'] | 2;
-                    if ($message->getCreated() > $result['last_received']) {
+                    if ($message->getCreated() > $result['last_sent']) {
                         $result['last_sent'] = $message->getCreated();
                     }
                 }
@@ -492,7 +487,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                 'results' => $results,
                 'submenu' => [
                     'items' => $subMenuItems,
-                    'active' => 'admin.tools.messages.by.member',
+                    'active' => self::MESSAGES_BY_MEMBER,
                 ],
             ]
         );
@@ -574,8 +569,8 @@ ORDER BY count(msg.id) DESC')->fetchAll();
             ];
         }
         if ($this->isGranted([Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_CHECKER])) {
-            $subMenu[self::CHECK_SPAM_MESSAGES] = [
-                'key' => self::CHECK_SPAM_MESSAGES,
+            $subMenu[self::CHECK_TOP_SPAMMER] = [
+                'key' => self::CHECK_TOP_SPAMMER,
                 'url' => $this->generateUrl('admin_tools_top_spammer'),
             ];
             $subMenu[self::DAMAGE_DONE] = [

@@ -59,7 +59,7 @@
     </div>
 
     <div class="d-flex row align-items-stretch flex-wrap pb-3">
-        
+
         {# messages box #}
         <div class="col-12 col-lg-5 align-items-stretch">
 
@@ -80,12 +80,12 @@
                 {# messages #}
                 <div role="tabpanel" class="tab-pane h-100 active" id="messages">
                     {# all / unread messages toggle #}
-                    <div class="d-flex btn-group justify-content-center m-1" data-toggle="buttons">
-                        <label class="btn btn-primary btn-radio{% if messageFilter == 'All' %} active{% endif %}" id="all">
+                    <div class="d-flex btn-group justify-content-center m-1" data-toggle="buttons" role="radiogroup">
+                        <label class="btn btn-primary btn-radio{% if messageFilter == 'All' %} active{% endif %}" id="all" role="radio">
                             <input type="radio" name="options" autocomplete="off" onclick="updateMessages()"
                                    {% if messageFilter == 'All' %}checked{% endif %} hidden>{{ 'landing.button.all' | trans }}
                         </label>
-                        <label for="unread" class="btn btn-primary btn-radio{% if messageFilter == 'Unread' %} active{% endif %}" id="unread">
+                        <label for="unread" class="btn btn-primary btn-radio{% if messageFilter == 'Unread' %} active{% endif %}" id="unread" role="radio">
                             <input type="radio" name="options" autocomplete="off" onclick="updateMessages()" {% if messageFilter == 'Unread' %}checked{% endif %} hidden>{{ 'landing.button.unread' | trans }}
                         </label>
                     </div>
@@ -100,7 +100,7 @@
                     {# message buttons #}
                     <div class="text-center">
                         <a href="{{ url( 'both' )}}" class="btn btn-outline-primary btn-homewhite"><i
-                                    class="fa fa-envelope"></i>{{ 'landing.button.myinbox' | trans }}{% if messageCount + requestCount %} <span
+                                    class="fa fa-envelope px-2"></i>{{ 'landing.button.myinbox' | trans }}{% if messageCount + requestCount %} <span
                                     class="badge badge-primary">{{ messageCount + requestCount }}</span>{% endif %}</a>
                     </div>
                 </div>
@@ -158,7 +158,7 @@
                             <a href="/groups/mygroups" class="btn btn-outline-primary btn-homewhite"><i
                                         class="fa fa-users mr-1"></i>{{ 'landing.button.mygroups' | trans }}</a>
                             <a href="/forums/subscriptions" class="btn btn-outline-primary btn-homewhite"><i
-                                        class="fa fa-check-square-o mr-1"></i>{{ 'landing.button.subscriptions' | trans }}</a>
+                                        class="fa fa-check-square mr-1"></i>{{ 'landing.button.subscriptions' | trans }}</a>
                         </div>
                     </div>
 

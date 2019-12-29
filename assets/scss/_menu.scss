@@ -67,3 +67,10 @@ $input-padding-x:         .75rem !default;
   left: auto;
   right: 0;
 }
+
+.hamburgerbutton:hover{
+  /* filter: invert(0%); */
+    .hamburger {
+      filter: invert(80%);
+    }
+}

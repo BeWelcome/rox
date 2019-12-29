@@ -30,23 +30,35 @@ class OneNewsLetterPage extends RoxPageView  /* HelloUniversePage doesn't work! 
      */
     protected function column_col3()
     {
-		if (empty($this->_session->get('Username'))) {
-			echo '<p>',$this->getWords()->getInLang('BroadCast_Body_'.$this->Data->LetterName,$this->Data->Lang,'member'),'</p>' ;
-		}
-		else {
-			if ($this->Data->CountSent > 10) {
-				echo '<p>Sent to '.$this->Data->CountSent,' members</p>' ;
-				echo '<p>',$this->getWords()->getFormattedInLang('BroadCast_Body_'.$this->Data->LetterName,$this->Data->Lang,$this->_session->get('Username')),'</p>' ;
-			}
-			else {
-				echo '<p>',$this->getWords()->getBuffered('BroadCast_Body_'.$this->Data->LetterName,$this->_session->get('Username')),'</p>' ;
-			}
-				
-			if ($this->Data->CountToSend > 0) 
-				echo '<p>Still to be sent to '.$this->Data->CountToSend,' members</p>' ;
-		}
+        // $this->Data->Lang is set to the language to be displayed.
+        //Search for it in the broadcast array and update the %s/%username% placeholder
+        /* \todo Replace username and %s correctly */
+        $member = $this->getWords()->getInLang('member', $this->Data->Lang);
+        $username = $this->_session->get('Username', $member);
+        $body = "";
+        for($i=0;$i<count($this->Data->BroadCast->Lang);$i++)
+        {
+            if($this->Data->BroadCast->Lang[$i]->ShortCode === $this->Data->Lang) {
+                $body = $this->Data->BroadCast->Lang[$i]->Sentence;
+            }
+        }
+        $body = str_replace('%s', $username, $body);
+        $body = str_replace('%username%', $username, $body);
+        $body = str_replace('%UserName%', $username, $body);
+        $body = str_replace('%Username%', $username, $body);
+        $body = str_replace('%%', '%', $body);
+        if ($this->Data->CountSent > 10) {
+            echo '<p>Sent to '.$this->Data->CountSent,' members</p>' ;
+            echo '<p>',$body,'</p>' ;
+        }
+        else {
+            echo '<p>',$body,'</p>' ;
+        }
+
+        if ($this->Data->CountToSend > 0)
+            echo '<p>Still to be sent to '.$this->Data->CountToSend,' members</p>' ;
     }
-    
+
     /**
      * which item in the top menu should be activated when showing this page?
      * Let's use the 'getanswers' menu item for this one.
@@ -62,7 +74,7 @@ class OneNewsLetterPage extends RoxPageView  /* HelloUniversePage doesn't work! 
     protected function teaserHeadline() {
         echo $this->getWords()->get('BroadCast_Title_'.$this->Data->LetterName);
     }
-    
+
     /**
      * configure the page title (what appears in your browser's title bar)
      * @return string the page title
@@ -71,7 +83,7 @@ class OneNewsLetterPage extends RoxPageView  /* HelloUniversePage doesn't work! 
 		$ss=$this->getWords()->getInLang('BroadCast_Title_'.$this->Data->LetterName,$this->Data->Lang);
 		return($ss) ;
     }
-    
+
     /**
      * configure the sidebar
      */

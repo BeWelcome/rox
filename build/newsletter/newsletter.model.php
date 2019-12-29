@@ -1,7 +1,7 @@
 <?php
 /**
  * News letter archive model
- * 
+ *
  * @package about
  * @author JeanYves
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
@@ -10,7 +10,7 @@
 class NewsletterModel extends RoxModelBase
 {
 /*
-// Load teh data for a news letter 
+// Load teh data for a news letter
 // @$LetterName is assumed to be the seed of an existing news letter
 // for exemple: NewsJuly2007 to retrieve the words data for 	BroadCast_Title_NewsJuly2007
 //														and for 	BroadCast_Body_NewsJuly2007
@@ -21,7 +21,7 @@ class NewsletterModel extends RoxModelBase
 //		die ($sql) ;
         $BroadCast=$this->singleLookup($sql) ;
 		if (empty($BroadCast)) return(NULL) ;
-		$sql="select languages.Name as Name,words.ShortCode from words,languages where words.code='BroadCast_Body_".$LetterName."' and languages.id=words.IdLanguage" ;
+		$sql="select languages.Name as Name,words.ShortCode,words.Sentence from words,languages where words.code='BroadCast_Body_".$LetterName."' and languages.id=words.IdLanguage" ;
         $BroadCast->Lang=$this->bulkLookup($sql) ;
         $Data = new \stdClass();
 		$Data->LetterName=$LetterName ;

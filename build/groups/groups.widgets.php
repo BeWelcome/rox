@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
@@ -39,7 +39,7 @@ class GroupForumWidget  // extends ForumBoardWidget
     {
         echo 'group forum';
     }
-    
+
     public function setGroup($group)
     {
         // extract information from the $group object
@@ -56,20 +56,20 @@ class GroupForumWidget  // extends ForumBoardWidget
 class GroupMemberlistWidget  // extends MemberlistWidget?
 {
     private $_group;
-    
+
     public function render()
     {
         $numberOfMembers = 24;
         $memberships = $this->_group->getLastLoggedInMembers($numberOfMembers);
         foreach ($memberships as $membership)
         { ?>
-            <div class="p-1">
+            <div class="pb-1">
             <?= MOD_layoutbits::PIC_50_50($membership->Username); ?>
             </div>
         <?
         }
     }
-    
+
     public function setGroup($group)
     {
         // extract memberlist information from the $group object

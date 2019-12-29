@@ -10,24 +10,26 @@
 
     <div class="col-12 col-md-8">
 
-        <div class="media">
-            <?= ((strlen($this->group->Picture) > 0) ? "<img class=\"float-left framed mr-2 mb-2\" src='group/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$group_name_html}' />" : ''); ?>
-            <div class="media-body">
-                <h4><?php echo $words->get('GroupDescription'); ?></h4>
+        <div class="card">
+            <h5 class="card-header bg-groupheader">
+                <?= ((strlen($this->group->Picture) > 0) ? "<img class=\"float-left mr-2 mb-2 img-thumbnail\" src='group/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$group_name_html}' />" : ''); ?>
+
+                <?= $group_name_html; ?></h5>
+            <div class="card-body">
                 <?php echo $purifier->purify(nl2br($this->group->getDescription())) ?>
+                <?php if ($this->isGroupMember()) { ?>
+                    <a href="<? echo $uri; ?>/forum/new"
+                        class="btn btn-primary float-left"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a>
+                <?php } else { ?>
+                    <a class="btn btn-primary float-left" href="group/<?= $this->group->id ?>/join">
+                        <?= $words->getSilent('GroupsJoinTheGroup'); ?>
+                    </a>
+                <? } ?>
             </div>
         </div>
 
-        <div class="pt-3"><h3 class="float-left m-0 mb-2"><?php echo $words->getFormatted('ForumRecentPostsLong'); ?></h3>
-        <?php if ($this->isGroupMember()) { ?>
-            <a
-            href="<? echo $uri; ?>/forum/new"
-            class="btn btn-primary float-right"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a>
-        <?php } ?>
-
-        </div>
-
-        <div class="w-100 pt-5">
+        <div class="w-100 mt-3">
+            <h3 class="float-left w-100"><?php echo $words->getFormatted('ForumRecentPostsLong'); ?></h3>
             <?php
             if (!$this->isGroupMember() && $this->group->latestPost) {
                 echo '<div class="small">' . $words->get('GroupInfoLastActivity', date('Y-m-d H:i', $this->group->latestPost)) . '</div>';
@@ -73,7 +75,7 @@
                     echo $words->getSilent('GroupsJoinNeedAccept');
                 }
                 if (!$this->isGroupMember()) { ?>
-                    <a class="btn btn-outline-primary btn-block mb-3" href="group/<?= $this->group->id ?>/join">
+                    <a class="btn btn-primary btn-block mb-3" href="group/<?= $this->group->id ?>/join">
                         <?= $words->getSilent('GroupsJoinTheGroup'); ?>
                     </a>
                     <?php echo $words->flushBuffer(); ?>
@@ -82,7 +84,21 @@
     } // endif logged in member
     ?>
 
-    <div class="h3"><?= $words->get('GroupMembers'); ?></div>
+    <div class="h4"><?php echo $words->get('GroupAdmins'); ?></div>
+
+    <?php $admins = $this->group->getGroupOwners();
+    if (isset($admins) && !empty($admins)) {
+        foreach ($admins as $admin) {
+            echo '<div class="w-100 mb-1">';
+            echo MOD_layoutbits::PIC_50_50($admin->Username);
+            echo '<a href="members/' . $admin->Username . '" class="small"> ' . $admin->Username . '</a>';
+            echo '</div>';
+        }
+    } else {
+        echo $words->get('GroupNoAdmin');
+    } ?>
+
+    <div class="h4 mt-2 mb-0"><?= $words->get('GroupMembers'); ?></div>
 
     <div class="row justify-content-between px-3">
     <?php $memberlist_widget->render() ?>
@@ -104,20 +120,6 @@
 
         ?>
 
-        <h4 class="mt-3"><?php echo $words->get('GroupAdmins'); ?></h4>
-
-        <?php $admins = $this->group->getGroupOwners();
-        if (isset($admins) && !empty($admins)) {
-            foreach ($admins as $admin) {
-                echo '<div class="w-100 mb-1">';
-                echo MOD_layoutbits::PIC_50_50($admin->Username);
-                echo '<a href="members/' . $admin->Username . '" class="small"> ' . $admin->Username . '</a>';
-                echo '</div>';
-            }
-        } else {
-            echo $words->get('GroupNoAdmin');
-        } ?>
-
         <?php
         if ($this->isGroupMember()) { ?>
 
@@ -132,7 +134,7 @@
 </div>
 
 </div>
-<div class="pt-3 row">
+<div class="mt-5 row">
 
     <?php
     $relatedgroups = $this->group->findRelatedGroups($group_id); ?>

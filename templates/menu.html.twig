@@ -189,9 +189,8 @@
             </div>
             <ul class="nav mr-0">
                 <li class="nav-item dropdown">
-                    <a href="#member_menu" class="nav-link dropdown-toggle"
-                       style="padding-left: .25rem; padding-right: .25rem;"
-                       data-target="member_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
+                    <a href="#member_menu" class="nav-link dropdown-toggle px-1"
+                       data-target="member_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'profile' | trans }}"><i
                                 class="fa fa-user"></i><span
                                 class="d-none d-sm-inline">&nbsp;{{ member.Username }}</span></a>
                     <ul id="member_menu" class="dropdown-menu" role="menu">
@@ -221,8 +220,7 @@
                     {% include 'widgets/requestscount.html.twig' %}
                 </li>
                 {# logout #}
-                <li class="nav-item"><a href="{{ url( 'security_logout' ) }}" class="nav-link"
-                                        style="padding-left: .25rem; padding-right: .25rem;"><i
+                <li class="nav-item"><a href="{{ url( 'security_logout' ) }}" class="nav-link px-1" aria-label="{{ 'logout' | trans }}"><i
                                 class="fa fa-lg fa-sign-out-alt"></i></a></li>
             </ul>
         </div>

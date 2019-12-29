@@ -1,5 +1,5 @@
 <div id="messageCount" data-count="{{ messageCount }}">
-    <a href="{{ path('messages') }}" class="nav-link">
+    <a href="{{ path('messages') }}" class="nav-link" aria-label="{{ 'landing.button.myinbox' | trans }}">
         <i class="fa fa-lg fa-envelope pr-1"></i><span
                 class="badge badge-warning d-md-none d-xl-inline-block">{{ messageCount }}</span>
     </a>

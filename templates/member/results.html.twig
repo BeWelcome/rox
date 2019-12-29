@@ -96,11 +96,11 @@
                     <tr class="d-lg-none"><td colspan="4" class="p-0 pb-3" style="background-color: #f0f0f0;">
 
                         <div>
-                            <a class="btn btn-block btn-secondary" data-toggle="collapse" href="#collapse{{ member.Username }}" role="button" aria-expanded="false" aria-controls="collapse{{ member.Username }}">
+                            <a class="btn btn-block btn-secondary" data-toggle="collapse" href="#collapse-{{ loop.index }}" role="button" aria-expanded="false" aria-controls="collapse-{{ loop.index }}">
                                 {{ 'profilesummary' | trans | capitalize }}
                             </a>
                         </div>
-                        <div class="collapse" id="collapse{{ member.Username }}">
+                        <div class="collapse" id="collapse-{{ loop.index }}">
                             <div class="card card-body">
                                 {% if member.Occupation|length %}<p class="m-0 mb-1 font-italic">{{ 'occupation' | trans }}: {{ member.Occupation | raw }}</p>{% endif %}
                                 <a href="/members/{{ member.Username }}"

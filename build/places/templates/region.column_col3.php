@@ -1,8 +1,8 @@
 <div class="row">
 <?php
-echo '<div class="col-12 p-0"><h2>' . $words->get('Cities') . '</h2></div>';
+echo '<div class="col-12"><h2>' . $words->get('Cities') . '</h2></div>';
 
-echo '<div class="col-12 col-md-6 col-lg-3 p-0">';
+echo '<div class="col-12 col-md-6 col-lg-3">';
 $listcnt = 0;
 $number_of_cities = count($this->cities);
 $per_column = round($number_of_cities/4);
@@ -11,7 +11,7 @@ foreach ($this->cities as $city) {
     $listcnt++;
 
     if ($listcnt > $per_column) {
-        echo '</div><div class="col-12 col-md-6 col-lg-3 p-0">';
+        echo '</div><div class="col-12 col-md-6 col-lg-3">';
         $listcnt = 1;
     }
 

@@ -5,8 +5,10 @@ class FullPagePager extends RoxWidget
     const block_links = 2;
     private $style;
 
-    public function __construct()
+    public function __construct($style = 'right')
     {
+        parent::__construct();
+        $this->style = $style;
     }
 
     /**
@@ -59,17 +61,17 @@ class FullPagePager extends RoxWidget
         {
             if ($this->pages > self::block_links)
             {
-                $return .= "<li class='page-item'>{$this->pager->outputLink(1, '&lt;&lt;', $this->getWords()->getSilent('PagerToFirstPage'))}</li>\n";
+                $return .= "<li class='page-item'>{$this->pager->outputLink(1, '&laquo;', $this->getWords()->getSilent('PagerToFirstPage'))}</li>\n";
             }
-            $return .= "<li class='page-item'>{$this->pager->outputLink($this->active_page - 1, '&lt;',$this->getWords()->getSilent('PagerToFirstPage'))}</li>\n";
+            $return .= "<li class='page-item'>{$this->pager->outputLink($this->active_page - 1, '&lsaquo;',$this->getWords()->getSilent('PagerToFirstPage'))}</li>\n";
         }
         else
         {
             if ($this->pages > self::block_links)
             {
-                $return .= "<li class='page-item disabled'><a class='page-link'>&lt;&lt;</a></li>\n";
+                $return .= "<li class='page-item disabled'><a class='page-link'>&laquo;</a></li>\n";
             }
-            $return .= "<li class='page-item disabled'><a class='page-link'>&lt;</a></li>\n";
+            $return .= "<li class='page-item disabled'><a class='page-link'>&lsaquo;</a></li>\n";
         }
         for ($i = 1; $i <= self::block_links && $i <= $this->pages; $i++)
         {
@@ -86,7 +88,7 @@ class FullPagePager extends RoxWidget
 
             if (($this->active_page - 1) > (self::block_links + 1))
             {
-                $return .= "<li class='page-item disabled'><a class='page-link'>...</a></li>\n";
+                $return .= "<li class='page-item disabled'><a class='page-link'>&hellip;</a></li>\n";
             }
 
             if ($this->active_page >= self::block_links && $this->active_page <= $end_range)
@@ -103,7 +105,7 @@ class FullPagePager extends RoxWidget
 
             if ($end_range > ($this->active_page + 1) && $end_range > (self::block_links + 1))
             {
-                $return .= "<li class='page-item disabled'><a class='page-link'>...</a></li>\n";
+                $return .= "<li class='page-item disabled'><a class='page-link'>&hellip;</a></li>\n";
             }
 
             while ($end_range <= $this->pages)
@@ -115,18 +117,18 @@ class FullPagePager extends RoxWidget
 
         if ($this->active_page < $this->pages)
         {
-            $return .= "<li class='page-item'>{$this->pager->outputLink($this->active_page + 1, '&gt;', $this->getWords()->getSilent('PagerToNextPage'))}</li>\n";
+            $return .= "<li class='page-item'>{$this->pager->outputLink($this->active_page + 1, '&rsaquo;', $this->getWords()->getSilent('PagerToNextPage'))}</li>\n";
             if ($this->pages > self::block_links)
             {
-                $return .= "<li class='page-item'>{$this->pager->outputLink($this->pages, '&gt;&gt;', $this->getWords()->getSilent('PagerToLastPage'))}</li>\n";
+                $return .= "<li class='page-item'>{$this->pager->outputLink($this->pages, '&raquo;', $this->getWords()->getSilent('PagerToLastPage'))}</li>\n";
             }
         }
         else
         {
-            $return .= "<li class='page-item'><a class='page-link disabled'>&gt;</a></li>\n";
+            $return .= "<li class='page-item'><a class='page-link disabled'>&rsaquo;</a></li>\n";
             if ($this->pages > self::block_links)
             {
-                $return .= "<li class='page-item'><a class='page-link disabled'>&gt;&gt;</a></li>\n";
+                $return .= "<li class='page-item'><a class='page-link disabled'>&raquo;</a></li>\n";
             }
         }
         $return .= '</ul>

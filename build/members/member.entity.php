@@ -431,22 +431,6 @@ FROM
     }
 
     /**
-     * Get member's public profile
-     *
-     * @return mixed Public profile entity or false if not public
-     */
-    public function get_publicProfile()
-    {
-        $s = $this->singleLookup(
-            "
-SELECT *
-FROM memberspublicprofiles
-WHERE IdMember = ".$this->id
-         );
-        return $s;
-    }
-
-    /**
      * Find out if member's profile is public
      *
      * @return bool True if public, false if not
@@ -1657,7 +1641,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
     {
         $pwn = trim($pw);
         $pwn = $this->dao->escape($pwn);
-        return $pwn;    
+        return $pwn;
     }
 
     /**

@@ -17,24 +17,22 @@
         $language->TranslatedName = $words->getSilent($language->WordCode);
     }
     usort($languages, "cmpPrefLang");
-    $value = $this->member->get_publicProfile();
-    $pref_publicprofile = (isset($value) && $value) ? true : false;
     $p = $this->member->preferences;
-    
+
     //get baseuri
     $baseuri = PVars::getObj('env')->baseuri;
     if (PVars::getObj('env')->force_ssl_sensitive) {
         $baseuri = PVars::getObj('env')->baseuri_https;
     }
-    
- 
+
+
     // Check if preferred language is set
     if (!isset($p['PreferenceLanguage']->Value)) {
         $p['PreferenceLanguage']->Value = $this->_session->get('IdLanguage');
     }
     // var_dump ($p);
     $ii = 1;
-    
+
     if (!$memory = $formkit->getMemFromRedirect()) {
         // no memory
     } else {

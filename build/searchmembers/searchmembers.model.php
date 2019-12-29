@@ -169,8 +169,6 @@ SQL;
             $where .= ' AND members.HideBirthDate=\'No\'';
         }
 
-        $visitorsWhere = $this->generateVisitorsOnlyCond($vars);
-
         // if there is a condition using membertrads table, include it in table list for query
         if (preg_match('/memberstrads/i',$where)) {
             $tablelist .= ', memberstrads';
@@ -197,26 +195,12 @@ SQL;
         $where = preg_replace('/ AND 1=1/','',$where);
         $fullWhere = $where;
         $tablelistAll = $tablelist;
-        if ($visitorsWhere) { // hide non-public profiles from visitors
-            $fullWhere = $where . ' AND ' . $visitorsWhere;
-            $tablelist .= ', memberspublicprofiles';
-        }
 
         // perform search
         $TMember = $this->doSearch($vars, $tablelist, $fullWhere, $OrderBy, $start_rec, $limitcount);
 
         // get full count of search results if not logged in
         $rCountFull = -1;
-        if ($visitorsWhere) {
-            $result = $this->dao->query('
-                SELECT
-                    COUNT(DISTINCT members.id) AS fullCount
-                FROM
-                    (' . $tablelistAll . ')
-                ' . $where);
-            $row = $result->fetch(PDB::FETCH_OBJ);
-            $rCountFull = $row->fullCount;
-        }
         $vars['rCountFull'] = $rCountFull;
 
         return($TMember);
@@ -663,22 +647,6 @@ SQL;
                     AND membersgroups.IdMember=members.id";
         }
         return '1=1';
-    }
-
-   /**
-    *
-    * Checks if search is performed without login and adds condition for
-    * visitors to only see public profiles
-    *
-    * @param array		$vars: Variables from query (passed by reference)
-    *
-    * @return  string/boolean  WHERE condition (false if logged in)
-    */
-    private function generateVisitorsOnlyCond(&$vars) {
-        if ($this->getLoggedInMember()) {
-            return false;
-        }
-        return "memberspublicprofiles.IdMember=members.id";
     }
 
     //------------------------------------------------------------------------------

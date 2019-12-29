@@ -23,6 +23,7 @@ class ForumsView extends RoxAppView {
     public $uri;
     public $forum_uri;
     public $BW_Right;
+    private $package;
 
     public function __construct(Forums &$model) {
         $this->setSession();
@@ -676,5 +677,10 @@ class ForumsView extends RoxAppView {
                 $this->SetPageTitle('Feature Closed - Bewelcome') ;
         require 'templates/featureclosed.php';
         } // end of showFeatureIsClosed()
+
+    protected function getUrl($path)
+    {
+        return $this->package->getUrl($path);
+    }
+
 }
-?>

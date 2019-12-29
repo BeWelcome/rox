@@ -7,13 +7,12 @@
 {% endblock %}
 
 {% block _ckeditor_javascript %}
-    <script src="{{ asset('script/ckeditor.js?1') }}"></script>
-    {% if locale != 'en' %}
-        <script src="{{ asset('script/translations/' ~ locale ~ '.js') }}"></script>
-    {% endif %}
+    <script src="{{ asset('build/roxeditor.js') }}"></script>
+    <script src="{{ asset('build/cktranslations/' ~ locale ~ '.js') }}"></script>
 {% endblock %}
 
 {% block _ckeditor_stylesheet %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('build/roxeditor.css') }}">
     <style>
         .ck-editor__editable {
             min-height: 10em;

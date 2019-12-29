@@ -378,46 +378,6 @@ SQL;
     }
 
     /**
-     * Set a member's profile public/private
-     */
-    public function set_public_profile ($IdMember,$Public = false)
-    {
-        $rr = $this->singleLookup(
-            "
-SELECT *
-FROM memberspublicprofiles
-WHERE IdMember = ".$IdMember
-         );
-        if (!$rr && $Public == true) {
-        $s = $this->dao->query("
-INSERT INTO
-    memberspublicprofiles
-    (
-    IdMember,
-    created,
-    Type
-    )
-VALUES
-    (
-    '$IdMember',
-    NOW(),
-    'normal'
-    )
-        ");
-            $this->logWrite("Set public profile", "Update Preference");
-        } elseif ($rr && $Public == false) {
-        $s = $this->dao->query("
-DELETE FROM
-    memberspublicprofiles
-WHERE
-    id = ". $rr->id
-        );
-            $this->logWrite("Remove public profile", "Update Preference");
-        }
-    }
-
-
-    /**
      * Set preference if comment guidelines have been read.
      */
     public function setCommentGuidelinesRead() {

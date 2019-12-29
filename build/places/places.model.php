@@ -60,12 +60,6 @@ class Places extends RoxModelBase {
      */
     private function getMembersFiltered($query) {
         // this condition makes sure that unlogged people won't see non-public profiles
-        $a = new APP_User();
-        if (!($a->isBWLoggedIn('NeedMore,Pending')))
-        {
-            $query = str_ireplace("FROM","FROM memberspublicprofiles mpp,",$query);
-            $query = str_ireplace("WHERE","WHERE m.id = mpp.IdMember AND",$query);
-        }
         $result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve members list.');
@@ -466,7 +460,7 @@ class Places extends RoxModelBase {
                 ) allA
             GROUP BY geonameid
             ) AByGid,
-            members m 
+            members m
             WHERE m.idcity = AByGid.geonameid
                 AND m.status = 'Active'
                 AND m.MaxGuest >= 1

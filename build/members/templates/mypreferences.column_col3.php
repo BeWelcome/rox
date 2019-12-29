@@ -18,15 +18,15 @@
                     <div id="MyPreferences1" class="show editprofilebox" role="tabpanel">
                         <p><?=$words->get('PreferencesPasswordDescription')?></p>
                         <div class="form-group row">
-                            <label for="passwordold" class="col-md-3 col-form-label"><?=$words->get('PreferencesPasswordOld')?></label>
+                            <label for="passwordold" class="col-md-3"><?=$words->get('PreferencesPasswordOld')?></label>
                             <div class="col-12 col-md-9"><input type="password" name="passwordold" class="form-control" /></div>
                         </div>
-                        <div class="form-group row">    
-                            <label for="passwordnew" class="col-md-3 col-form-label"><?=$words->get('PreferencesPasswordNew')?></label>
+                        <div class="form-group row">
+                            <label for="passwordnew" class="col-md-3"><?=$words->get('PreferencesPasswordNew')?></label>
                             <div class="col-12 col-md-9"><input type="password" name="passwordnew" class="form-control" /></div>
                         </div>
-                        <div class="form-group row">    
-                            <label for="passwordconfirm" class="col-md-3 col-form-label"><?=$words->get('PreferencesPasswordConfirm')?></label>
+                        <div class="form-group row">
+                            <label for="passwordconfirm" class="col-md-3"><?=$words->get('PreferencesPasswordConfirm')?></label>
                             <div class="col-12 col-md-9"><input type="password" name="passwordconfirm" class="form-control" /></div>
                         </div>
 
@@ -42,7 +42,7 @@
                     </div>
                     <div id="MyPreferences2" class="collapse editprofilebox" role="tabpanel">
                         <div class="form-row">
-                            <label for="PreferenceLanguage" class="col-md-3 col-form-label"><?=$words->get('PreferenceLanguageDesc')?></label>
+                            <label for="PreferenceLanguage" class="col-md-3"><?=$words->get('PreferenceLanguageDesc')?></label>
                             <div class="col-12 col-md-9">
                                 <select name="PreferenceLanguage" class="select2">
                                     <?php foreach ($languages as $lang) { ?>
@@ -69,7 +69,7 @@
                             if (!in_array($rr->codeName, $doNotShow)) {
                             ?>
                         <div class="form-group row mb-3">
-                            <label for="<?= $rr->codeName; ?>" class="col-10 col-md-4 col-form-label"><?=$words->get($rr->codeName)?></label>
+                            <label for="<?= $rr->codeName; ?>" class="col-10 col-md-4"><?=$words->get($rr->codeName)?></label>
                             <?php
                             if (isset($rr->Value) && $rr->Value != "") {
                                 $Value = $rr->Value;
@@ -80,7 +80,7 @@
 
                             <?php $PossibleValueArray = explode((strpos($rr->PossibleValues,',') ? ',' : ';'),$rr->PossibleValues); ?>
                             <?php if ($rr->codeName == 'PreferenceLocalTime') { ?>
-                                <div class="col-12 col-md-4 order-3 order-md-2"><select name="PreferenceLocalTime" class="prefsel">
+                                <div class="col-12 col-md-4 order-3 order-md-2"><select name="PreferenceLocalTime" class="prefsel select2">
                                     <?php
                                     foreach($timezones as $timezone) {
                                         $option = '<option value="' . $timezone['timeshift'] . '"';

@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-class NewsletterController extends RoxControllerBase  
+class NewsletterController extends RoxControllerBase
 {
     /**
      * decide which page to show.
@@ -18,7 +18,7 @@ class NewsletterController extends RoxControllerBase
     {
         $request = PRequest::get()->request;
         $model = new NewsletterModel();
-        
+
         // look at the request.
         if (!isset($request[1])) {
 			$Data=$model->PreviousLetters() ;
@@ -38,7 +38,7 @@ class NewsletterController extends RoxControllerBase
 				$page = new OneNewsLetterPage($Data);
 			}
         }
-        
+
         // return the $page object, so the "$page->render()" function can be called somewhere else.
         return $page;
     }

@@ -211,5 +211,6 @@ $vars =& PPostHandler::getVars($callbackId);
     </form>
     </div>
 </div>
-<script src="script/ckeditor.js?1"></script>
-<script src="script/ckeditorinit.js?1"></script>
+<link rel="stylesheet" type="text/css" href="<?= $this->getUrl('build/roxeditor.css');?>">
+<script src="<?= $this->getUrl('build/roxeditor.js');?>"></script>
+<script src="build/cktranslations/<?= $this->_session->get('lang', 'en');?>.js"></script>

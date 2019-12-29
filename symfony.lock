@@ -116,9 +116,6 @@
     "egulias/email-validator": {
         "version": "2.1.6"
     },
-    "electrolinux/php-html5lib": {
-        "version": "0.1.0"
-    },
     "exercise/htmlpurifier-bundle": {
         "version": "0.2",
         "recipe": {
@@ -188,6 +185,9 @@
     "lorenzo/pinky": {
         "version": "1.0.4"
     },
+    "masterminds/html5": {
+        "version": "2.7.0"
+    },
     "mockery/mockery": {
         "version": "0.9.9"
     },
@@ -256,6 +256,9 @@
     },
     "phar-io/version": {
         "version": "2.0.1"
+    },
+    "php": {
+        "version": "7.3.1"
     },
     "php-cs-fixer/diff": {
         "version": "v1.3.0"

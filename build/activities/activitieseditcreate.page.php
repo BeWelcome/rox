@@ -51,6 +51,7 @@ class ActivitiesEditCreatePage extends ActivitiesBasePage
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'build/jquery_ui.css';
+        $stylesheets[] = 'build/roxeditor.css';
         return $stylesheets;
     }
 
@@ -60,8 +61,8 @@ class ActivitiesEditCreatePage extends ActivitiesBasePage
         $scripts[] = 'build/tempusdominus.js';
         $scripts[] = 'build/jquery_ui.js';
         $scripts[] = 'build/search/searchpicker.js';
-        $scripts[] = 'script/ckeditor.js?1';
-        $scripts[] = 'script/ckeditorinit.js?1';
+        $scripts[] = 'build/roxeditor.js';
+        $scripts[] = 'build/cktranslations/'.$this->getSession()->get('lang', 'en').'.js';
         return $scripts;
     }
 }

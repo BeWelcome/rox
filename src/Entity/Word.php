@@ -7,6 +7,8 @@
 
 namespace App\Entity;
 
+use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -42,7 +44,7 @@ class Word
     private $sentence;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
@@ -79,7 +81,7 @@ class Word
     private $description;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
@@ -100,7 +102,7 @@ class Word
     private $isarchived = null;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="majorupdate", type="datetime", nullable=false)
      */
@@ -190,7 +192,7 @@ class Word
     /**
      * Set updated.
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
      * @return Word
      */
@@ -204,7 +206,7 @@ class Word
     /**
      * Get updated.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getUpdated()
     {
@@ -311,7 +313,7 @@ class Word
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return Word
      */
@@ -325,18 +327,17 @@ class Word
     /**
      * Get created.
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getCreated()
     {
-        return $this->created;
+        return Carbon::instance($this->created);
     }
 
     /**
      * Set translationpriority.
      *
      * @param int   $translationpriority
-     * @param mixed $translationPriority
      *
      * @return Word
      */
@@ -384,7 +385,7 @@ class Word
     /**
      * Set majorupdate.
      *
-     * @param \DateTime $majorUpdate
+     * @param DateTime $majorUpdate
      *
      * @return Word
      */
@@ -398,7 +399,7 @@ class Word
     /**
      * Get majorUpdate.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getMajorUpdate()
     {

@@ -17,6 +17,7 @@ use App\Entity\MemberTranslation;
 use App\Entity\Message;
 use App\Entity\Newsletter;
 use App\Entity\PasswordReset;
+use App\Entity\Word;
 use App\Repository\ActivityAttendeeRepository;
 use App\Repository\MessageRepository;
 use App\Utilities\ManagerTrait;
@@ -139,6 +140,7 @@ class MemberModel
         $this->prepareNewsletterInformation($tempDir, $member);
         $this->prepareCommunityNewsInformation($tempDir, $member);
         $this->prepareDonations($tempDir, $member);
+        $this->prepareTranslations($tempDir, $member);
 
         ini_set('memory_limit', $memoryLimit);
     }
@@ -229,6 +231,29 @@ class MemberModel
         }
     }
 
+    private function saveMessageOrRequest(Message $message, $dir, $number)
+    {
+        // Test if message contains html tags
+        $messageText = $message->getMessage();
+        $isHtml = ($messageText != strip_tags($messageText));
+        $isRequest = ($message->getRequest() !== null);
+        $ext = ($isHtml)?".html":".txt";
+        $filename = ($isRequest)?"request":"message";
+        $handle = fopen($dir . $filename.$message->getCreated()->toDateString()."-".$number.$ext, "w");
+        if ($message->getSubject()) {
+            fwrite($handle, '<p>Subject: '. $message->getSubject()->getSubject() .'</p>');
+        }
+        if ($isRequest) {
+            $request = $message->getRequest();
+            fwrite($handle, '<p>Arrival: '. $request->getArrival() .'<br>');
+            fwrite($handle, 'Departure: '. $request->getDeparture() .'<br>');
+            fwrite($handle, '#Travellers: '. $request->getNumberOfTravellers() .'<br>');
+            fwrite($handle, 'Flexible'. $request->getFlexible().'</p>');
+        }
+        fwrite($handle, $message->getMessage());
+        fclose($handle);
+    }
+
     /**
      * @param string $tempDir
      * @param Member $member
@@ -244,9 +269,7 @@ class MemberModel
         $messages = $messageRepository->getMessagesSentBy($member);
         $i = 1;
         foreach ($messages as $message) {
-            $handle = fopen($messageDir . "message-".$message->getCreated()->toDateString()."-".$i.".html", "w");
-            fwrite($handle, $message->getMessage());
-            fclose($handle);
+            $this->saveMessageOrRequest($message, $messageDir, $i);
             $i++;
         }
     }
@@ -266,9 +289,7 @@ class MemberModel
         $requests = $messageRepository->getRequestsSentBy($member);
         $i = 1;
         foreach ($requests as $request) {
-            $handle = fopen($requestDir . "request-".$request->getCreated()->toDateString()."-".$i.".html", "w");
-            fwrite($handle, $request->getMessage());
-            fclose($handle);
+            $this->saveMessageOrRequest($request, $requestDir, $i);
             $i++;
         }
     }
@@ -556,6 +577,31 @@ class MemberModel
                 fclose($handle);
                 $i++;
             }
+        }
+    }
+
+    /**
+     * @param string $tempDir
+     * @param Member $member
+     */
+    private function prepareTranslations(string $tempDir, Member $member): void
+    {
+        // Get translations the member did
+        $translationRepository = $this->getManager()->getRepository(Word::class);
+        $translations = $translationRepository->findBy(['author' => $member]);
+        if (!empty($translations)) {
+            $translationDir = $tempDir . 'translations/';
+            @mkdir($translationDir);
+            $handle = fopen($translationDir . "translations.txt", "w");
+            /** @var Word $translation */
+            foreach ($translations as $translation) {
+                fwrite($handle, "Wordcode: " . $translation->getCode() . PHP_EOL);
+                fwrite($handle, "Language: " . $translation->getLanguage()->getEnglishname() . PHP_EOL);
+                fwrite($handle, "Created: " . $translation->getCreated() . PHP_EOL);
+                fwrite($handle, "Text: " . $translation->getSentence() . PHP_EOL);
+                fwrite($handle, PHP_EOL);
+            }
+            fclose($handle);
         }
     }
 }

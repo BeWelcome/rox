@@ -15,9 +15,6 @@ class ActivityAttendeeRepository extends EntityRepository
      * Get all activities for a member.
      *
      * @param Member      $member
-     *
-     * @throws Exception
-     *
      * @return array
      *
      * @SuppressWarnings(PHPMD.StaticAccess)

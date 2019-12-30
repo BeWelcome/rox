@@ -26,7 +26,8 @@ class EditTranslationFormType extends AbstractType
                 'label' => 'label.admin.translation.wordcode',
             ])
             ->add('englishText', TextAreaType::class, [
-                'disabled' => true,
+                'disabled' => false,
+                'readonly' => true,
                 'label' => 'label.admin.translation.englishtext',
             ])
             ->add('locale', TextType::class, [

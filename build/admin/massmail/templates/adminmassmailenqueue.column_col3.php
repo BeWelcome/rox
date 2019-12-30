@@ -143,7 +143,7 @@ $words = new MOD_words();
                             <small class="text-muted"><?php echo $words->get('AdminMassMailEnqueueUsernamesInfo'); ?></small>
                 </div>
                 </div>
-                <div><input class="button float-right" type="submit" name="enqueuemembers"
+                <div><input class="btn btn-primary float-right" type="submit" name="enqueuemembers"
                                                      value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitMembers'); ?>"/><?php echo $words->flushBuffer(); ?>
                 </div>
             </div>
@@ -174,7 +174,7 @@ $words = new MOD_words();
                     </select>
                 </div>
                 <div>
-                    <input class="button float-right" type="submit" name="enqueuelocation"
+                    <input class="btn btn-primary float-right" type="submit" name="enqueuelocation"
                         value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitLocation'); ?>"/>
                     <?php echo $words->flushBuffer(); ?>
                 </div>

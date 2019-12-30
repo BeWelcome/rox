@@ -508,7 +508,7 @@ SQL;
         foreach ($priv_scopes as $priv_scope) {
             $group_owner = $this->createEntity('Member', $priv_scope->IdMember);
             if (strpos(MemberStatusType::ACTIVE_WITH_MESSAGES, $group_owner->Status) !== false) {
-                if ($loggedIn || $group_owner->get_publicProfile()) {
+                if ($loggedIn) {
                     $group_owners[] = $group_owner;
                 }
             }

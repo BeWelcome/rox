@@ -8,6 +8,7 @@ use App\Doctrine\MessageStatusType;
 use App\Doctrine\SpamInfoType;
 use App\Entity\Member;
 use App\Entity\Message;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query;
@@ -435,4 +436,49 @@ class MessageRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * @param Member $member
+     *
+     * @return Collection
+     */
+    public function getMessagesSentBy(Member $member)
+    {
+        return $this->createQueryBuilder('m')
+            ->where('NOT(m.deleteRequest LIKE :deleted)')
+            ->setParameter('deleted', '%'.DeleteRequestType::RECEIVER_DELETED.'%')
+            ->andWhere('NOT(m.deleteRequest LIKE :purged)')
+            ->setParameter('purged', '%'.DeleteRequestType::RECEIVER_PURGED.'%')
+            ->andWhere('m.sender = :member')
+            ->setParameter('member', $member)
+            ->andWhere('m.folder = :folder')
+            ->setParameter('folder', InFolderType::NORMAL)
+            ->andWhere('m.request IS NULL')
+            ->orderBy('m.created', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param Member $member
+     *
+     * @return Collection
+     */
+    public function getRequestsSentBy(Member $member)
+    {
+        return $this->createQueryBuilder('m')
+            ->where('NOT(m.deleteRequest LIKE :deleted)')
+            ->setParameter('deleted', '%'.DeleteRequestType::RECEIVER_DELETED.'%')
+            ->andWhere('NOT(m.deleteRequest LIKE :purged)')
+            ->setParameter('purged', '%'.DeleteRequestType::RECEIVER_PURGED.'%')
+            ->andWhere('m.sender = :member')
+            ->setParameter('member', $member)
+            ->andWhere('m.folder = :folder')
+            ->setParameter('folder', InFolderType::NORMAL)
+            ->join('m.request', 'r')
+            ->orderBy('m.created', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
 }

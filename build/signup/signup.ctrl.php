@@ -189,7 +189,7 @@ class SignupController extends RoxControllerBase {
             default:
                 $step = (isset($request[1]) && $request[1]) ? $request[1] : '1';
                 $page = new SignupPage($step);
-				$StrLog="Entering Signup step: #".$page->step ;
+				$StrLog="Entering Signup step: #".$step ;
 				MOD_log::get()->write($StrLog,"Signup") ;
                 $page->model = $model;
         }

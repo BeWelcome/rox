@@ -7,6 +7,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -29,11 +30,14 @@ class MembersPhoto
     private $filepath;
 
     /**
-     * @var int
+     * @var Member
      *
-     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
+     * })
      */
-    private $idmember;
+    private $member;
 
     /**
      * @var int
@@ -43,14 +47,14 @@ class MembersPhoto
     private $sortOrder = '0';
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
     private $updated;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
@@ -97,27 +101,27 @@ class MembersPhoto
     }
 
     /**
-     * Set idmember.
+     * Set member.
      *
-     * @param int $idmember
+     * @param Member $member
      *
      * @return MembersPhoto
      */
-    public function setIdmember($idmember)
+    public function setMember($member)
     {
-        $this->idmember = $idmember;
+        $this->member = $member;
 
         return $this;
     }
 
     /**
-     * Get idmember.
+     * Get member.
      *
-     * @return int
+     * @return Member
      */
-    public function getIdmember()
+    public function getMember()
     {
-        return $this->idmember;
+        return $this->member;
     }
 
     /**
@@ -147,7 +151,7 @@ class MembersPhoto
     /**
      * Set updated.
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
      * @return MembersPhoto
      */
@@ -161,7 +165,7 @@ class MembersPhoto
     /**
      * Get updated.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getUpdated()
     {
@@ -171,7 +175,7 @@ class MembersPhoto
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return MembersPhoto
      */
@@ -185,7 +189,7 @@ class MembersPhoto
     /**
      * Get created.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreated()
     {
@@ -233,7 +237,7 @@ class MembersPhoto
      */
     public function onPrePersist()
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
     }
 
     /**
@@ -243,6 +247,6 @@ class MembersPhoto
      */
     public function onPreUpdate()
     {
-        $this->updated = new \DateTime('now');
+        $this->updated = new DateTime('now');
     }
 }

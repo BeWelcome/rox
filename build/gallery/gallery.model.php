@@ -154,7 +154,7 @@ VALUES
     protected function deleteThisImage($image)
     {
         $filename = $image->file;
-        $userDir = new PDataDir('gallery/memebr'.$image->user_id_foreign);
+        $userDir = new PDataDir('gallery/member'.$image->user_id_foreign);
         $userDir->delFile($filename);
         $userDir->delFile('thumb'.$filename);
         $userDir->delFile('thumb1'.$filename);
@@ -337,7 +337,7 @@ LEFT JOIN `gallery_items_to_gallery` AS gi ON
     g.`id` = gi.`gallery_id_foreign`
 WHERE
     g.`id` = gi.`gallery_id_foreign`
-    AND 
+    AND
     g.`user_id_foreign` = ' . (int)$UserId . '
 ORDER BY `id` DESC';
         $s = $this->dao->query($query);

@@ -50,11 +50,11 @@
     $this->addRoute('groups_search','groups/search', 'GroupsController', 'search');
 
     // related groups routes
-    $this->addRoute('relatedgroup_select','groups/:group_id:/selectrelatedgroup', 'RelatedGroupsController', 'selectRelatedGroup');
-    $this->addRoute('relatedgroup_add','groups/:group_id:/addrelatedgroup/:related_id:', 'RelatedGroupsController', 'addRelatedGroup');
-    $this->addRoute('relatedgroup_selectdelete','groups/:group_id:/selectdeleterelatedgroup', 'RelatedGroupsController', 'selectdeleteRelatedGroup');
-    $this->addRoute('relatedgroup_delete','groups/:group_id:/deleterelatedgroup/:related_id:', 'RelatedGroupsController', 'deleteRelatedGroup');
-    $this->addRoute('relatedgroup_log','groups/:group_id:/relatedgroupsettings', 'RelatedGroupsController', 'showRelatedGroupLog');
+    $this->addRoute('relatedgroup_select','group/:group_id:/selectrelatedgroup', 'RelatedGroupsController', 'selectRelatedGroup');
+    $this->addRoute('relatedgroup_add','group/:group_id:/addrelatedgroup/:related_id:', 'RelatedGroupsController', 'addRelatedGroup');
+    $this->addRoute('relatedgroup_selectdelete','group/:group_id:/selectdeleterelatedgroup', 'RelatedGroupsController', 'selectdeleteRelatedGroup');
+    $this->addRoute('relatedgroup_delete','group/:group_id:/deleterelatedgroup/:related_id:', 'RelatedGroupsController', 'deleteRelatedGroup');
+    $this->addRoute('relatedgroup_log','group/:group_id:/relatedgroupsettings', 'RelatedGroupsController', 'showRelatedGroupLog');
 
     // member app routes
     $this->addRoute('members_profile', '/members/:username:', 'MembersController', 'index');

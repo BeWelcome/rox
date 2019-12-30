@@ -161,9 +161,6 @@ class GroupMembership extends RoxEntityBase
                 m.*,
                 IF(m.LastLogin >= CURDATE() - INTERVAL 1 week, (CURDATE() - INTERVAL FLOOR(RAND() * 100) MINUTE), m.LastLogin) as covertracks
                 FROM members AS m, {$this->getTableName()} AS mg";
-        if ($notLoggedIn) {
-            $sql .= ", memberspublicprofiles as mp ";
-        }
         $sql .= " WHERE m.Status IN ( " . MemberStatusType::ACTIVE_ALL . ") AND m.id IN ('" . implode("','", $members) . "') AND mg.IdMember = m.id AND mg.IdGroup = {$group_id}";
         if ($notLoggedIn) {
             $sql .= " AND mp.IdMember=m.id";

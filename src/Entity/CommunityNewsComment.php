@@ -32,7 +32,7 @@ class CommunityNewsComment
 
     /**
      * @var Member
-     *             A comment has one author
+     * A comment has one author
      *
      * @ORM\OneToOne(targetEntity="Member")
      */

@@ -235,14 +235,13 @@ class SignupController extends RoxControllerBase {
             }
             if ($step < '4') {
                 $step++;
+                $model->polishFormValues($vars);
                 $this->_session->set( 'SignupBWVars', $vars );
                 $mem_redirect->post = $vars;
                 return 'signup/' . ($step);
             }
 
             // step 4 successfully done register new member
-            $model->polishFormValues($vars);
-
             if (!$idTB = $model->registerTBMember($vars)) {
                 // MyTB registration didn't work
             } else {

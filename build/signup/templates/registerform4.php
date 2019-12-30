@@ -117,13 +117,7 @@
                                 <th scope="row" class="float-right border-0 text-nowrap">
                                     <?php echo $words->get('SignupPassword'); ?>
                                 </th>
-                                <td class="border-0">
-                                    <?php
-                                    // TODO: replace special characters
-                                    $password = preg_replace("^[A-Za-z0-9]^", "*", $vars['password']);
-                                    echo $password;
-                                    ?>
-                                </td>
+                                <td class="border-0">***********</td>
                             </tr>
                             <tr>
                                 <th scope="row" class="float-right border-top-0 text-nowrap">
@@ -185,7 +179,7 @@
                                 <td class="border-0">
                                     <?php
                                     // TODO: Select the name of the language ID
-                                    echo $vars['mothertongue'];
+                                    echo $vars['mothertonguename'];
                                     ?>
                                 </td>
                             </tr>

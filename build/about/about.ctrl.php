@@ -100,8 +100,10 @@ class AboutController extends RoxControllerBase
             $mem_redirect->post = $args->post;
             if (!$model->getLoggedInMember() && !filter_var($args->post['FeedbackEmail'], FILTER_VALIDATE_EMAIL))
             {
-                $mem_redirect->errors = array('FeedbackErrorBadEmail');
-                return false;
+                if (!isset($args->post['answernotneeded']) || ('on' !== $args->post['answernotneeded'])) {
+                    $mem_redirect->errors = array('FeedbackErrorBadEmail');
+                    return false;
+                }
             }
             if (isset($args->post['IdCategory']) && $args->post['FeedbackQuestion'] != '')
             {

@@ -53,7 +53,7 @@ if ($errors = $this->getRedirectedMem('errors'))
 {
     foreach ($errors as $error)
     {
-        echo '<div class="col-12 alert alert-danger">{$words->get($error)}</div>';
+        echo '<div class="col-12 alert alert-danger">' . $words->get($error) . '</div>';
     }
 }
 ?>
@@ -72,7 +72,7 @@ if ($errors = $this->getRedirectedMem('errors'))
 
     <div class="form-group">
         <label for="IdCategory"><?php echo $words->get("FeedBackChooseYourCategory")?></label>
-        <select class="form-control" id="IdCategory" name="IdCategory">
+        <select class="form-control select2" data-minimum-results-for-search="Infinity" id="IdCategory" name="IdCategory">
             <?php foreach ($categories as $cat) { ?>
                 <option value="<?php echo $cat->id ?>" <?=($cat->id == $IdCategory) ? 'selected="selected"': '' ?>>
                     <?php echo $words->getSilent("FeedBackName_" . $cat->name) ?>
@@ -87,7 +87,7 @@ if ($errors = $this->getRedirectedMem('errors'))
         if (in_array('FeedbackErrorDataMissing', $errors))
         {
             echo '<div class="alert alert-danger">';
-            foreach ($errors as $error) 
+            foreach ($errors as $error)
             {
                 echo $words->get($error) . '<br>';
             }
@@ -105,7 +105,7 @@ if ($errors = $this->getRedirectedMem('errors'))
         if (in_array('FeedbackErrorBadEmail', $errors))
         {
             echo "error \">";
-            foreach ($errors as $error) 
+            foreach ($errors as $error)
             {
                 echo "<strong class=\"message\">{$words->get($error)}</strong>";
             }
@@ -115,7 +115,7 @@ if ($errors = $this->getRedirectedMem('errors'))
     </div>
     <div class="form-group">
         <label for="FeedbackEmail"><?php echo $words->get("FeedBackEmail")?></label>
-        <input type="text" id="FeedbackEmail" name="FeedbackEmail" value="<?php echo $FeedbackEmail;?>"/>
+        <input class="form-control" type="text" id="FeedbackEmail" name="FeedbackEmail" value="<?php echo $FeedbackEmail;?>"/>
     </div>
     <?php endif; ?>
 

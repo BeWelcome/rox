@@ -554,7 +554,10 @@ VALUES
                 $vars[$formfield] = $this->dao->escape($vars[$formfield]);
             }
         }
-
+        if (isset($vars['mothertongue'])) {
+            $language = $this->createEntity('Language', $vars['mothertongue']);
+            $vars['mothertonguename'] = $language->Name;
+        }
     }
 
     private function checkStepOne(&$vars)

@@ -255,6 +255,7 @@ FROM `user` WHERE
             return(true) ; // found a still used Username
         }
 
+/*      \todo shevek: Remove this part of code as old usernames are no longer recorded
         $query = 'SELECT `UsernameNotToUse` FROM `recorded_usernames_of_left_members` WHERE `UsernameNotToUse` = \''.
 				$this->dao->escape(strtolower($Username)).'\'';
         $s = $this->dao->query($query);
@@ -265,6 +266,7 @@ FROM `user` WHERE
         if (isset($row->UsernameNotToUse)) {
             return(true); // found an ex used Username
         }
+*/
         return(false);
     } // end of UsernameInUse
 
@@ -552,7 +554,7 @@ VALUES
                 $vars[$formfield] = $this->dao->escape($vars[$formfield]);
             }
         }
-        
+
     }
 
     private function checkStepOne(&$vars)

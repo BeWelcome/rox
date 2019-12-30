@@ -4,5 +4,5 @@ App\Entity\CommunityNews:
     text: '<text(300)>'
     public: 1
     createdAt: '<dateTime()>'
-    createdBy: '@member_1'
+    createdBy: '@member_2'
     updatedAt: '@self->createdAt'

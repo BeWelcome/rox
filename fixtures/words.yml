@@ -6,11 +6,11 @@ App\Entity\Word:
         updated: <dateTime()>
         donottranslate : no
         Language: '@language_en'
-        author: '@member_1'
+        author: '@bwadmin'
         created: <dateTime()>
         TranslationPriority: 1
         Description: 'Description'
-        isarchived: 0
+        isarchived: null
         majorupdate: <dateTime()>
     WelcomeToSignup_fr:
         code: welcometosignup
@@ -23,6 +23,6 @@ App\Entity\Word:
         created: <dateTime()>
         TranslationPriority: 1
         Description: 'Description'
-        isarchived: 0
+        isarchived: null
         majorupdate: <dateTime()>
 

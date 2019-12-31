@@ -142,7 +142,9 @@ class SearchController extends AbstractController
         $results = false;
 
         $searchFormRequest = SearchFormRequest::fromRequest($request, $this->getDoctrine()->getManager());
-        $form = $this->createForm(SearchFormType::class, $searchFormRequest);
+
+        $formFactory = $this->get('form.factory');
+        $form = $formFactory->createNamed('map', SearchFormType::class, $searchFormRequest);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
